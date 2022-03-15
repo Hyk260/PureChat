@@ -2,5 +2,15 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import '@/assets/icons'; // svg
+// import '@/styles/index.scss'
+import { loadAllPlugins } from './plugins'
+import { loadAllassembly } from './components';
 
-createApp(App).use(store).use(router).mount("#app");
+const app = createApp(App)
+// 加载所有插件
+loadAllPlugins(app)
+// 自动加载组件
+loadAllassembly(app)
+
+app.use(store).use(router).mount('#app')
