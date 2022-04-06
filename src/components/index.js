@@ -5,6 +5,9 @@
 export function loadAllassembly(app) {
   const files = require.context('./', true, /\.vue$/)
   files.keys().forEach(key => {
-    app.component(key.replace(/\/index.vue/, ``).slice(2), files(key).default)
+    const name = key.replace(/\/index.vue/, ``).slice(2)
+    const meter = files(key).default
+    console.log(name,meter)
+    app.component(name, meter)
   })
 }

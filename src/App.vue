@@ -1,21 +1,13 @@
 <template>
   <div>
-   <!-- <router-view /> -->
-   123
-
-   <svg-icon icon-class="arrow-right"></svg-icon>
-    <el-button type="primary">Primary</el-button>
+   <router-view />
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
-import SvgIcon from '@/components/SvgIcon/index.vue'
-export default defineComponent({
-  components: {
-    SvgIcon
-  }
-})
+<script setup>
+// import { onMounted, toRefs } from "vue";
+
+
 </script>
 
 <style lang="scss" scoped>

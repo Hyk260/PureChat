@@ -32,8 +32,8 @@
 import ElementPlus from 'element-plus'
 import "element-plus/dist/index.css";
 
-import i18n from '@/locales'
-import { useStore } from '@/store'
+// import i18n from '@/locales'
+// import { useStore } from '@/store'
 
 export default function loadComponent(app) {
   app.use(ElementPlus)

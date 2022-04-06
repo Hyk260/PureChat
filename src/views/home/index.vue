@@ -1,10 +1,12 @@
 
-<script>
-import { defineComponent } from 'vue'
+<template>
+  
+</template>
 
-export default defineComponent({
-  setup() {
-    
-  },
-})
+<script setup>
+
 </script>
+
+<style>
+
+</style>
