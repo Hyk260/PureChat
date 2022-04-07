@@ -1,10 +1,22 @@
-import https from '@/utils/https'
+import http from '@/utils/http'
 
-export function Login (params) {
-  const data = https({
+/**
+ * 登录接口
+ */ 
+export const Login = (params) => {
+  return http({
     url: '/login',
     method: 'get',
     params
-  })
-  return data
-}
+  });
+};
+
+/**
+ * 获取菜单列表
+ */ 
+ export const getMenu = () => {
+  return http({
+    url: '/menu/query',
+    method: 'get',
+  });
+};

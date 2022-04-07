@@ -1,7 +1,6 @@
 import axios from 'axios'
-
-// const baseURL = 'http://localhost:3030/';
-const baseURL = 'https://netease-cloud-music-ruby.vercel.app/';
+import storeLocal from 'storejs'
+const baseURL = 'http://localhost:8082/';
 
 // 公共地址
 const service = axios.create({
@@ -12,6 +11,8 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   config => {
+    const token = storeLocal.get('token')
+    if(token) config.headers['authorization'] = token;
     return config
   },
   error => {
@@ -25,6 +26,7 @@ service.interceptors.response.use(
     const { data, config } = response
     const { code, msg } = data
     if (response.status === 200) {
+      storeLocal.set('token',response.headers["x-token"])
       return data
     }
   },

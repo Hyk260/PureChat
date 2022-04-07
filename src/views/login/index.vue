@@ -10,8 +10,8 @@
       </header>
 
       <el-form ref="ruleFormRef" :model="state.user" :rules="state.rules">
-        <el-form-item prop="name">
-          <el-input v-model="state.user.name" placeholder="用户账号">
+        <el-form-item prop="username">
+          <el-input v-model="state.user.username" placeholder="用户账号">
             <i class="el-icon-user"></i>
           </el-input>
         </el-form-item>
@@ -31,20 +31,33 @@
 
 <script setup>
 import { reactive } from "vue"
+import { Login, getMenu } from "@/api/user"
 
-  const state = reactive({
+   const state = reactive({
     user:{
-      name: "admin",
+      username: "admin",
       password: "123456",
     },
     keep:false,
     rules:{
-      name: [{ required: true, message: "用户名是必须的", trigger: "blur" }],
+      username: [{ required: true, message: "用户名是必须的", trigger: "blur" }],
       password: [{ required: true, message: "密码是必须的", trigger: "blur" }]
     }
   })
-  const login = ()=>{
-
+  /**
+   * 登录
+   * */ 
+  const login = async () => {
+    const { username, password } = state.user
+    const res = await Login({ username, password })
+    
+    console.log(res,"登录信息")
+    if(!res) return;
+    const { code, msg } = res
+    if(code === 200){
+      const menu = await getMenu()
+      console.log(menu)
+    }
   }
 
 </script>
