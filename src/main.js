@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import '@/assets/icons';
+import '@/styles/index.scss'
 
 import { loadAllPlugins } from './plugins'
 import { loadAllassembly } from './components';

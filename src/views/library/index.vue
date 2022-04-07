@@ -1,15 +1,15 @@
-
 <template>
-    
   <h1>
-    home
+   library
   </h1>
 </template>
 
 <script setup>
 
+
+
 </script>
 
-<style>
+<style lang="scss" scoped>
 
 </style>

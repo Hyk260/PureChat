@@ -18,7 +18,7 @@ const messages = {
 }
 
 const i18n = createI18n({
-  locale: 'zh',
+  locale: 'zh-cn',
   messages: messages
 })
 

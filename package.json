@@ -11,14 +11,12 @@
     "axios": "^0.26.1",
     "core-js": "^3.6.5",
     "element-plus": "^2.0.4",
-    "express": "^4.17.3",
-    "express-session": "^1.17.2",
-    "lowdb": "^3.0.0",
-    "socket.io": "^4.4.1",
+    "storejs": "^2.0.1",
     "svg-sprite-loader": "^6.0.11",
     "vue": "^3.0.0",
     "vue-i18n": "^9.1.9",
     "vue-router": "^4.0.0-0",
+    "vue-slider-component": "^3.2.15",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

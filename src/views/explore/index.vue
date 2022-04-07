@@ -1,15 +1,14 @@
-
 <template>
-    
   <h1>
-    home
+    explore
   </h1>
 </template>
 
 <script setup>
 
+
 </script>
 
-<style>
+<style lang="scss" scoped>
 
 </style>

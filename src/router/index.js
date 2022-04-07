@@ -5,12 +5,30 @@ const routes = [
   {
     path: "/home",
     name: "home",
-    component: () => import(/* webpackChunkName: "home" */ "../views/home/index.vue"),
+    component: () => import(/* webpackChunkName: "home" */ "@/views/home/index.vue"),
+  },
+  {
+    path: '/explore',
+    name: 'explore',
+    meta: {
+      keepAlive: true,
+      savePosition: true,
+    },
+    component: () => import(/* webpackChunkName: "explore" */ '@/views/explore/index'),
+  },
+  {
+    path: '/library',
+    name: 'library',
+    meta: {
+      keepAlive: true,
+      requireAuth: true,
+    },
+    component: () => import(/* webpackChunkName: "library" */ '@/views/library/index'),
   },
   {
     path: "/login",
     name: "login",
-    component: () => import(/* webpackChunkName: "login" */ "../views/login/index.vue"),
+    component: () => import(/* webpackChunkName: "login" */ "@/views/login/index.vue"),
   },
 ];
 

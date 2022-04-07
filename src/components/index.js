@@ -7,7 +7,7 @@ export function loadAllassembly(app) {
   files.keys().forEach(key => {
     const name = key.replace(/\/index.vue/, ``).slice(2)
     const meter = files(key).default
-    console.log(name,meter)
+    // console.log(name,meter)
     app.component(name, meter)
   })
 }
