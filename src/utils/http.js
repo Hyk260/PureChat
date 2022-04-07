@@ -23,11 +23,15 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   response => {
-    const { data, config } = response
+    const { data, config, status } = response
     const { code, msg } = data
-    if (response.status === 200) {
+    if (status === 200) {
       storeLocal.set('token',response.headers["x-token"])
       return data
+    }
+    if(status === 401){
+      storeLocal.remove('token')
+      // router.replace('/login')
     }
   },
   error => {

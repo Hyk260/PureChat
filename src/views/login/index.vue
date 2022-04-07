@@ -32,11 +32,16 @@
 <script setup>
 import { reactive } from "vue"
 import { Login, getMenu } from "@/api/user"
+import ToTree from "@/utils/ToTree";
+import { successMessage, warnMessage } from "@/utils/message"
+import views from "@/utils/assembly.js"
+import storeLocal from 'storejs'
+
 
    const state = reactive({
     user:{
       username: "admin",
-      password: "123456",
+      password: "12345",
     },
     keep:false,
     rules:{
@@ -54,9 +59,41 @@ import { Login, getMenu } from "@/api/user"
     console.log(res,"登录信息")
     if(!res) return;
     const { code, msg } = res
+    verification(code,msg)
+
     if(code === 200){
-      const menu = await getMenu()
+      let menu = await getMenu()
+      console.log(menu,"菜单列表")
+      successMessage('登录成功')
+      // Menulist
+      menu.forEach((t) => {
+        if (t.componentName) t.component = views[t.componentName];
+      });
       console.log(menu)
+      // 根目录
+      let root = menu.find((t) => (t.path = "/"));
+
+      ToTree(root, menu);
+
+      // 添加路由
+      root.children.forEach((item) => {
+        console.log(item)
+        // this.$router.addRoute(item);
+      });
+
+      storeLocal.set("menu", root.children);
+      // this.$router.push('/systemManage/menu')
+    }
+  }
+
+  function verification(code,msg){
+    switch(code){
+      case 401:
+        warnMessage(msg)
+        break
+      case 400:
+        warnMessage(msg)
+        break
     }
   }
 
