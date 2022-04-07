@@ -1,0 +1,50 @@
+{
+  "role": [
+    {
+      "id": "5346d441-ac35-4948-960e-c2d0c2b94a67",
+      "roleName": "ROLE_USER",
+      "info": "普通用户",
+      "createTime": 1621480197410,
+      "updateTime": 1621480197410,
+      "isDefaultRole": true
+    },
+    {
+      "id": "6b2d9d80-e1b1-4584-bf7b-f10852794e4a",
+      "roleName": "ROLE_ADMIN",
+      "info": "管理员用户",
+      "createTime": 1621480190410,
+      "updateTime": 1621480194410,
+      "isDefaultRole": false
+    },
+    {
+      "id": "390ff205-f85e-4fde-8344-405fc9f42899",
+      "roleName": "王杰",
+      "info": "运营用户",
+      "createTime": 1622877793922,
+      "updateTime": 1622877793922,
+      "isDefaultRole": "false"
+    },
+    {
+      "id": "8262d4f3-ae13-4acd-827d-68e23963f75a",
+      "roleName": "郑子杰",
+      "info": "普通用户",
+      "createTime": 1624425309232,
+      "updateTime": 1624425309232,
+      "isDefaultRole": "true"
+    },
+    {
+      "id": "9584b3dc-08de-4025-be90-ef43eb81e81b",
+      "roleName": "123",
+      "info": "普通用户",
+      "createTime": 1639640457573,
+      "updateTime": 1639640457573
+    },
+    {
+      "id": "cf23d2a6-459e-4453-8eb2-7b28cef4f70e",
+      "roleName": "321",
+      "info": "普通用户",
+      "createTime": 1639640488418,
+      "updateTime": 1639640488418
+    }
+  ]
+}

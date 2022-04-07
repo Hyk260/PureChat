@@ -1,0 +1,96 @@
+{
+  "menu": [
+    {
+      "id": "d17d701b-6257-40bd-a6c3-a4672d4823d4",
+      "url": "",
+      "path": "/",
+      "meta": {
+        "title": "侧边栏菜单",
+        "icon": "el-",
+        "auth": []
+      },
+      "children": [
+        "57c79357-0309-41b9-919a-253c3dfe6690",
+        "7b3c2013-5f52-4191-8080-e18641eda5df"
+      ]
+    },
+    {
+      "id": "57c79357-0309-41b9-919a-253c3dfe6690",
+      "url": "/systemManage",
+      "path": "/systemManage",
+      "name": "systemManage",
+      "componentName": "SystemManage",
+      "meta": {
+        "title": "系统管理",
+        "icon": "el-icon-setting",
+        "auth": []
+      },
+      "children": [
+        "3936c425-a286-49c3-bc92-5b364b9f4261",
+        "4fb62491-8274-4cfd-bfd7-2f0702c7fe6c",
+        "0fe77c86-6751-42c7-bde7-cdd4a8c207b9"
+      ]
+    },
+    {
+      "id": "3936c425-a286-49c3-bc92-5b364b9f4261",
+      "url": "/systemManage/user",
+      "path": "user",
+      "name": "user",
+      "componentName": "User",
+      "meta": {
+        "title": "用户权限",
+        "icon": "el-icon-more"
+      },
+      "children": []
+    },
+    {
+      "id": "4fb62491-8274-4cfd-bfd7-2f0702c7fe6c",
+      "url": "/systemManage/menu",
+      "path": "menu",
+      "name": "menu",
+      "componentName": "Menu",
+      "meta": {
+        "title": "菜单列表",
+        "icon": "el-icon-user-solid"
+      },
+      "children": []
+    },
+    {
+      "id": "0fe77c86-6751-42c7-bde7-cdd4a8c207b9",
+      "url": "/systemManage/role",
+      "path": "role",
+      "name": "role",
+      "componentName": "Role",
+      "meta": {
+        "title": "角色权限",
+        "icon": "el-icon-circle-check"
+      },
+      "children": []
+    },
+    {
+      "id": "7b3c2013-5f52-4191-8080-e18641eda5df",
+      "url": "/personalSetting/homepage",
+      "path": "homepage",
+      "name": "homepage",
+      "meta": {
+        "title": "个人中心",
+        "icon": "el-icon-help"
+      },
+      "children": [
+        "00b35297-7658-48ec-a1fe-0d3ed3225762"
+      ]
+    },
+    {
+      "id": "00b35297-7658-48ec-a1fe-0d3ed3225762",
+      "url": "/personalSetting/homepage/home",
+      "path": "home",
+      "componentName": "SystemManage",
+      "meta": {
+        "title": "标题",
+        "icon": "el-icon-eleme",
+        "auth": []
+      },
+      "children": []
+    }
+  ]
+}

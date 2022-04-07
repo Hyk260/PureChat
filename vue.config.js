@@ -4,16 +4,6 @@ function resolve(dir) {
 }
 module.exports = {
   lintOnSave: false,// 是否在保存的时候检查
-  pwa: {
-    name: 'PlayMusic',
-    iconPaths: {
-      favicon32: 'img/icons/favicon-32x32.png',
-    },
-    themeColor: '#ffffff00',
-    manifestOptions: {
-      background_color: '#335eea',
-    },
-  },
   chainWebpack(config) {
     // svg-sprite-loader 配置
     config.module.rules.delete('svg');
@@ -33,7 +23,7 @@ module.exports = {
     config.resolve.alias.set("@", resolve("src"))
     // 修改标题
     config.plugin('html').tap((args) => {
-      args[0].title = "PlayMusic";
+      args[0].title = "Admain";
       return args;
     })
   },

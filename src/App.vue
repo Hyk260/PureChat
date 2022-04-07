@@ -1,20 +1,13 @@
 <template>
-    <Navbar/>
-    <main>
-      <router-view />
-    </main>
-    <Player v-show="state.showPlayer" ref="player" />
+    <router-view />
 </template>
 
-<script setup>
-import Navbar from "./views/Navbar/Navbar.vue"
-import Player from "./views/Player/Player.vue"
+<script>
+import { defineComponent } from "vue";
 
-import { onMounted,reactive, toRefs } from "vue";
-
-const state = reactive({
-  showPlayer:true,
-})
+export default defineComponent({
+  name: "app",
+});
 
 
 </script>

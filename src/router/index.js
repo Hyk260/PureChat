@@ -1,30 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
-  { path: '/', redirect: '/home' },
+  { path: '/', redirect: '/login' },
   {
     path: "/home",
     name: "home",
     component: () => import(/* webpackChunkName: "home" */ "@/views/home/index.vue"),
   },
-  {
-    path: '/explore',
-    name: 'explore',
-    meta: {
-      keepAlive: true,
-      savePosition: true,
-    },
-    component: () => import(/* webpackChunkName: "explore" */ '@/views/explore/index'),
-  },
-  {
-    path: '/library',
-    name: 'library',
-    meta: {
-      keepAlive: true,
-      requireAuth: true,
-    },
-    component: () => import(/* webpackChunkName: "library" */ '@/views/library/index'),
-  },
+  // {
+  //   path: '/explore',
+  //   name: 'explore',
+  //   component: () => import(/* webpackChunkName: "explore" */ '@/views/explore/index'),
+  // },
+  // {
+  //   path: '/library',
+  //   name: 'library',
+  //   component: () => import(/* webpackChunkName: "library" */ '@/views/library/index'),
+  // },
   {
     path: "/login",
     name: "login",

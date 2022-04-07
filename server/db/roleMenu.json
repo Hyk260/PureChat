@@ -1,0 +1,44 @@
+{
+  "role_menu": [
+    {
+      "id": "72791caa-a53e-48b0-8551-0041ccb10d85",
+      "roleId": "5346d441-ac35-4948-960e-c2d0c2b94a67",
+      "checkedMenu": [
+        "57c79357-0309-41b9-919a-253c3dfe6690",
+        "3936c425-a286-49c3-bc92-5b364b9f4261",
+        "7040575a-5ff5-4398-a410-d9c7b010f6e8",
+        "4fb62491-8274-4cfd-bfd7-2f0702c7fe6c",
+        "0fe77c86-6751-42c7-bde7-cdd4a8c207b9"
+      ]
+    },
+    {
+      "id": "30a7d5af-3aae-438b-b077-75a21cc7efd8",
+      "roleId": "6b2d9d80-e1b1-4584-bf7b-f10852794e4a",
+      "checkedMenu": [
+        "4fb62491-8274-4cfd-bfd7-2f0702c7fe6c",
+        "0fe77c86-6751-42c7-bde7-cdd4a8c207b9"
+      ],
+      "halfCheckedMenu": [
+        "57c79357-0309-41b9-919a-253c3dfe6690"
+      ]
+    },
+    {
+      "id": "b42fb4cf-9517-4620-bf83-5d03ae97d78b",
+      "roleId": "317e2ae4-48f4-4a85-aa35-ff01d2066168",
+      "checkedMenu": [
+        "0fe77c86-6751-42c7-bde7-cdd4a8c207b9"
+      ],
+      "halfCheckedMenu": [
+        "57c79357-0309-41b9-919a-253c3dfe6690"
+      ]
+    },
+    {
+      "id": "bc1477a2-e9a6-476d-a507-d6220c26b26c",
+      "roleId": "8262d4f3-ae13-4acd-827d-68e23963f75a",
+      "checkedMenu": [
+        "d8bb34c7-d00b-436b-b18f-33f73c37148c",
+        "7b3c2013-5f52-4191-8080-e18641eda5df"
+      ]
+    }
+  ]
+}
