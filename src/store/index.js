@@ -47,9 +47,9 @@ export default createStore({
     },
     dailyTracks: [], // 每日推荐歌曲ID
     showLyrics: false, // 歌词页
-    data: storeLocal.get('data') || account, // 用户信息
+    // data: storeLocal.get('data') || account, // 用户信息
     player: storeLocal.get('player'), // 播放实例
-    settings: storeLocal.get('settings') || DefaultSetting, // 全局设置
+    // settings: storeLocal.get('settings') || DefaultSetting, // 全局设置s
   },
   mutations: {},
   actions: {},
