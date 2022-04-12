@@ -17,13 +17,4 @@ export default function arrayToTree(node,Menu){
   }
 }
 
-// children: (2) ['57c79357-0309-41b9-919a-253c3dfe6690', 'd8bb34c7-d00b-436b-b18f-33f73c37148c']
-// id: "d17d701b-6257-40bd-a6c3-a4672d4823d4"
-// meta:
-// auth: []
-// icon: "el-"
-// title: "侧边栏菜单"
-// [[Prototype]]: Object
-// path: "/"
-// url: ""
 

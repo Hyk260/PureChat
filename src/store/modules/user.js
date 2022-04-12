@@ -1,22 +1,16 @@
-// import storeLocal from 'storejs'
-// import { getCookie, removeCookie, isLooseLoggedIn, isAccountLoggedIn } from '@/utils/auth'
-// import { logout } from '@/api/auth'
+import storeLocal from 'storejs'
+import ToTree from "@/utils/ToTree";
+import { Login, getMenu } from "@/api/user"
 
-// import {
-//   userPlaylist,
-//   userPlayHistory,
-//   userLikedSongsIDs,
-//   likedAlbums,
-//   likedArtists,
-//   likedMVs,
-//   cloudDisk,
-//   userAccount
-// } from '@/api/user'
 
 const user = {
   state: {},
   getters: {},
-  mutations: {},
+  mutations: {
+    setRoutingTable(state){
+      
+    }
+  },
   actions: {},
 }
 

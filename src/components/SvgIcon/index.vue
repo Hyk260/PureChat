@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { defineComponent, computed,reactive } from "vue";
+import { defineComponent, computed, reactive } from "vue";
 export default defineComponent({
   props: {
     iconClass: {

@@ -16,8 +16,14 @@ import storeLocal from "storejs"
 export default createStore({
   modules,
   state: {
+    RoutingTable:null,
+    isCollapse:false,
   },
-  mutations: {},
+  mutations: {
+    setCollapse(state){
+      state.isCollapse = !state.isCollapse
+    },
+  },
   actions: {},
   modules: {},
 });

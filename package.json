@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "server":"cd server && nodemon app"
   },
   "dependencies": {
     "axios": "^0.26.1",
@@ -14,6 +15,7 @@
     "storejs": "^2.0.1",
     "svg-sprite-loader": "^6.0.11",
     "vue": "^3.0.0",
+    "vue-fragment": "^1.5.2",
     "vue-i18n": "^9.1.9",
     "vue-router": "^4.0.0-0",
     "vue-slider-component": "^3.2.15",

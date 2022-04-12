@@ -36,12 +36,14 @@ import ToTree from "@/utils/ToTree";
 import { successMessage, warnMessage } from "@/utils/message"
 import views from "@/utils/assembly.js"
 import storeLocal from 'storejs'
+import { useRouter } from "vue-router";
 
+  const router = useRouter();   
 
-   const state = reactive({
+  const state = reactive({
     user:{
       username: "admin",
-      password: "12345",
+      password: "123456",
     },
     keep:false,
     rules:{
@@ -67,22 +69,20 @@ import storeLocal from 'storejs'
       successMessage('登录成功')
       // Menulist
       menu.forEach((t) => {
-        if (t.componentName) t.component = views[t.componentName];
+        if (t.componentName){
+          t.component = views[t.componentName];
+        } 
       });
-      console.log(menu)
-      // 根目录
       let root = menu.find((t) => (t.path = "/"));
-
       ToTree(root, menu);
 
-      // 添加路由
+      // 动态添加路由
       root.children.forEach((item) => {
-        console.log(item)
-        // this.$router.addRoute(item);
+        router.addRoute(item);
       });
 
       storeLocal.set("menu", root.children);
-      // this.$router.push('/systemManage/menu')
+      router.push("/home");
     }
   }
 

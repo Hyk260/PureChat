@@ -1,11 +1,10 @@
 <template>
-  <h1>
-    explore
-  </h1>
+  <div>
+    User
+  </div>
 </template>
 
 <script setup>
-
 
 </script>
 

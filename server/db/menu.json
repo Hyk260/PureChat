@@ -10,9 +10,23 @@
         "auth": []
       },
       "children": [
+        "57c79357-0309-41b9-919a-253c3dfe6691",
         "57c79357-0309-41b9-919a-253c3dfe6690",
-        "7b3c2013-5f52-4191-8080-e18641eda5df"
+        "7b3c2013-5f52-4191-8080-e18641eda5df",
+        "7b3c2013-5f52-4191-8080-e18641eda5d1"
       ]
+    },
+    {
+      "id": "57c79357-0309-41b9-919a-253c3dfe6691",
+      "url": "/home",
+      "path": "/home",
+      "name": "home",
+      "componentName": "Home",
+      "meta": {
+        "title": "首页",
+        "icon": "home-filled",
+        "auth": []
+      }
     },
     {
       "id": "57c79357-0309-41b9-919a-253c3dfe6690",
@@ -22,7 +36,7 @@
       "componentName": "SystemManage",
       "meta": {
         "title": "系统管理",
-        "icon": "el-icon-setting",
+        "icon": "setting",
         "auth": []
       },
       "children": [
@@ -39,7 +53,7 @@
       "componentName": "User",
       "meta": {
         "title": "用户权限",
-        "icon": "el-icon-more"
+        "icon": "chat-dot-round"
       },
       "children": []
     },
@@ -51,7 +65,7 @@
       "componentName": "Menu",
       "meta": {
         "title": "菜单列表",
-        "icon": "el-icon-user-solid"
+        "icon": "grid"
       },
       "children": []
     },
@@ -63,34 +77,46 @@
       "componentName": "Role",
       "meta": {
         "title": "角色权限",
-        "icon": "el-icon-circle-check"
+        "icon": "link"
       },
       "children": []
     },
     {
       "id": "7b3c2013-5f52-4191-8080-e18641eda5df",
-      "url": "/personalSetting/homepage",
-      "path": "homepage",
-      "name": "homepage",
+      "url": "/personal",
+      "path": "/personal",
+      "name": "personal",
+      "componentName": "Personal",
       "meta": {
         "title": "个人中心",
-        "icon": "el-icon-help"
+        "icon": "User"
+      }
+    },
+    {
+      "id": "7b3c2013-5f52-4191-8080-e18641eda5d1",
+      "url": "/assembly",
+      "path": "/assembly",
+      "name": "assembly",
+      "componentName": "Assembly",
+      "meta": {
+        "title": "组件",
+        "icon": "grid",
+        "auth": []
       },
       "children": [
-        "00b35297-7658-48ec-a1fe-0d3ed3225762"
+        "3936c425-a286-49c3-bc92-5b364b9f4264"
       ]
     },
     {
-      "id": "00b35297-7658-48ec-a1fe-0d3ed3225762",
-      "url": "/personalSetting/homepage/home",
-      "path": "home",
-      "componentName": "SystemManage",
+      "id": "3936c425-a286-49c3-bc92-5b364b9f4264",
+      "url": "/assembly/draggable",
+      "path": "draggable",
+      "name": "draggable",
+      "componentName": "Draggable",
       "meta": {
-        "title": "标题",
-        "icon": "el-icon-eleme",
-        "auth": []
-      },
-      "children": []
+        "title": "拖拽",
+        "icon": "User"
+      }
     }
   ]
 }
