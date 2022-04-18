@@ -30,14 +30,18 @@
 </template>
 
 <script setup>
-import { reactive } from "vue"
+import { ElNotification } from 'element-plus'
+import { reactive,computed } from "vue"
 import { Login, getMenu } from "@/api/user"
 import ToTree from "@/utils/ToTree";
 import { successMessage, warnMessage } from "@/utils/message"
 import views from "@/utils/assembly.js"
 import storeLocal from 'storejs'
 import { useRouter } from "vue-router";
+import { useStore } from 'vuex'
 
+
+  const store = useStore();
   const router = useRouter();   
 
   const state = reactive({
@@ -57,31 +61,25 @@ import { useRouter } from "vue-router";
   const login = async () => {
     const { username, password } = state.user
     const res = await Login({ username, password })
-    
     console.log(res,"登录信息")
     if(!res) return;
     const { code, msg } = res
     verification(code,msg)
 
     if(code === 200){
+      ElNotification({
+        title: 'Success',
+        message: '登录成功',
+        type: 'success',
+      })
+
       let menu = await getMenu()
-      console.log(menu,"菜单列表")
-      successMessage('登录成功')
+      // console.log(menu,"菜单列表")
+      store.commit('updateData', { key: 'user', value: state.user })
       // Menulist
-      menu.forEach((t) => {
-        if (t.componentName){
-          t.component = views[t.componentName];
-        } 
-      });
-      let root = menu.find((t) => (t.path = "/"));
-      ToTree(root, menu);
+      await store.dispatch('updateRoute',menu)
+      // console.log(router.options.routes)
 
-      // 动态添加路由
-      root.children.forEach((item) => {
-        router.addRoute(item);
-      });
-
-      storeLocal.set("menu", root.children);
       router.push("/home");
     }
   }

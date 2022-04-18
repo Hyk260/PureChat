@@ -1,7 +1,4 @@
 const home = () => import('@/views/home/index') //首页
-const systemManage = () => import(`@/views/systemManage/index`)//系统管理
-const homepage = () => import('@/views/homepage/index') //个人中心
-const assembly = () => import('@/views/assembly/index') //组件
 
 const views = {
   Home: home,

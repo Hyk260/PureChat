@@ -8,18 +8,26 @@
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+import { reactive, toRefs, computed } from 'vue'
 import storeLocal from 'storejs'
 import Theme from "@/layout/theme/index.vue"
 import SideBar from "@/layout/SideBar/index.vue"
+import { useStore } from 'vuex'
 
 export default {
   components:{ Theme,SideBar },
   setup () {
-    const RoutingTable = storeLocal.get("menu")
+    const store = useStore();
+
+    const RoutingTable = computed(()=>{
+      return store.state.data.Routingtable
+    })
+    // const userdata = storeLocal.get('userdata')
+    // userdata && store.dispatch('updateRoute',userdata)
+
     return {
       RoutingTable
-      // ...toRefs(state),
+      // ...toRefs(RoutingTable),
     }
   }
 }

@@ -1,30 +1,35 @@
 <template>
-  <!-- <div class="nav-header"> -->
-    <el-icon :size="18">
-      <component class="fold-menu-custom" :is="props.iconName">
-      </component>
-    </el-icon>
-  <!-- </div> -->
+  <el-icon :size="props.size">
+    <component :is="props.iconName">
+    </component>
+  </el-icon>
 </template>
 
 <script setup>
-  const props = defineProps({
-    // elementPlus https://element-plus.gitee.io/zh-CN/component/icon.html
-    iconName: {
-      type: String,
-      default:'Place'
-    },
-  });
-
+const props = defineProps({
+  // elementPlus https://element-plus.gitee.io/zh-CN/component/icon.html
+  iconName: {
+    type: String,
+    default: 'Pouring',
+  },
+  custom: {
+    type: String,
+    default: '',
+    // required:true,
+  },
+  size: {
+    type: Number,
+    default: 18,
+  },
+})
 </script>
 
 <style lang="scss" scoped>
-// .fold-menu {
-//   cursor: pointer;
-// }
-.fold-menu-custom { 
+.el-icon {
   cursor: pointer;
-  color: "#409EFC";
 }
-
+.fold-menu-custom {
+  cursor: pointer;
+  color: '#409EFC';
+}
 </style>

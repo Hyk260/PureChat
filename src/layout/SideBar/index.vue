@@ -29,7 +29,7 @@
   const store = useStore();
 
   const isCollapse = computed(() => {
-    return store.state.isCollapse
+    return store.state.data.isCollapse
   })
 
   const props = defineProps({

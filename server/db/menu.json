@@ -36,7 +36,7 @@
       "componentName": "SystemManage",
       "meta": {
         "title": "系统管理",
-        "icon": "setting",
+        "icon": "Setting",
         "auth": []
       },
       "children": [
@@ -53,7 +53,7 @@
       "componentName": "User",
       "meta": {
         "title": "用户权限",
-        "icon": "chat-dot-round"
+        "icon": ""
       },
       "children": []
     },
@@ -65,7 +65,7 @@
       "componentName": "Menu",
       "meta": {
         "title": "菜单列表",
-        "icon": "grid"
+        "icon": ""
       },
       "children": []
     },
@@ -77,7 +77,7 @@
       "componentName": "Role",
       "meta": {
         "title": "角色权限",
-        "icon": "link"
+        "icon": ""
       },
       "children": []
     },
@@ -115,7 +115,7 @@
       "componentName": "Draggable",
       "meta": {
         "title": "拖拽",
-        "icon": "User"
+        "icon": ""
       }
     }
   ]

@@ -26,16 +26,19 @@ service.interceptors.response.use(
     const { data, config, status } = response
     const { code, msg } = data
     if (status === 200) {
-      storeLocal.set('token',response.headers["x-token"])
+      const ToKen = response.headers["x-token"]
+      ToKen && storeLocal.set('token',ToKen) 
       return data
     }
     if(status === 401){
       storeLocal.remove('token')
-      // router.replace('/login')
+      router.replace('/login')
     }
   },
   error => {
   
-  })
+  }
+)
+
 
 export default service

@@ -23,7 +23,7 @@ module.exports = {
     config.resolve.alias.set("@", resolve("src"))
     // 修改标题
     config.plugin('html').tap((args) => {
-      args[0].title = "Admain";
+      args[0].title = "后台管理";
       return args;
     })
   },
