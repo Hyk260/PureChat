@@ -1,5 +1,6 @@
 import http from '@/utils/http'
-import storeLocal from 'storejs'
+import storage from 'storejs'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 /**
  * 登录接口
@@ -26,5 +27,18 @@ export const getMenu = () => {
  * 退出登录
  */ 
 export const logout = () => {
-  storeLocal.remove("token"); 
+  storage.remove(ACCESS_TOKEN)
+  storage.remove('userdata')
+};
+
+/**
+ * 更新菜单
+ * @param{ id,path,title,icon }
+ */ 
+export const updateMenu = (params) => {
+  return http({
+    url: '/menu/update',
+    method: 'get',
+    params
+  });
 };

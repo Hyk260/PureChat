@@ -22,7 +22,7 @@
 
 <script setup>
   import { computed } from 'vue';
-  import storeLocal from 'storejs'
+  import storage from 'storejs'
   import FontIcon from '@/layout/FontIcon/indx.vue';
   const props = defineProps({
     tree: {

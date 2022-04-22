@@ -1,26 +1,11 @@
 <template>
-  <h1>
-    首页
-  </h1>
   <div>
-    {{state.count}}
+    首页
   </div>
 </template>
 
-<script>
-import { reactive, toRefs } from 'vue'
+<script setup>
 
-export default {
-  setup () {
-    const state = reactive({
-      count: 10,
-    })
-  
-    return {
-      ...toRefs(state),
-    }
-  }
-}
 </script>
 
 <style lang="scss" scoped>

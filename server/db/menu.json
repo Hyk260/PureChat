@@ -12,6 +12,7 @@
       "children": [
         "57c79357-0309-41b9-919a-253c3dfe6691",
         "57c79357-0309-41b9-919a-253c3dfe6690",
+        "3936c425-1286-49c3-bc92-5b364b9f4264",
         "7b3c2013-5f52-4191-8080-e18641eda5df",
         "7b3c2013-5f52-4191-8080-e18641eda5d1"
       ]
@@ -24,15 +25,15 @@
       "componentName": "Home",
       "meta": {
         "title": "首页",
-        "icon": "home-filled",
+        "icon": "Eleme",
         "auth": []
       }
     },
     {
       "id": "57c79357-0309-41b9-919a-253c3dfe6690",
-      "url": "/systemManage",
-      "path": "/systemManage",
-      "name": "systemManage",
+      "url": "/system",
+      "path": "/system",
+      "name": "system",
       "componentName": "SystemManage",
       "meta": {
         "title": "系统管理",
@@ -47,7 +48,7 @@
     },
     {
       "id": "3936c425-a286-49c3-bc92-5b364b9f4261",
-      "url": "/systemManage/user",
+      "url": "/system/user",
       "path": "user",
       "name": "user",
       "componentName": "User",
@@ -59,7 +60,7 @@
     },
     {
       "id": "4fb62491-8274-4cfd-bfd7-2f0702c7fe6c",
-      "url": "/systemManage/menu",
+      "url": "/system/menu",
       "path": "menu",
       "name": "menu",
       "componentName": "Menu",
@@ -71,7 +72,7 @@
     },
     {
       "id": "0fe77c86-6751-42c7-bde7-cdd4a8c207b9",
-      "url": "/systemManage/role",
+      "url": "/system/role",
       "path": "role",
       "name": "role",
       "componentName": "Role",
@@ -97,11 +98,9 @@
       "url": "/assembly",
       "path": "/assembly",
       "name": "assembly",
-      "componentName": "Assembly",
       "meta": {
         "title": "组件",
-        "icon": "grid",
-        "auth": []
+        "icon": "Menu"
       },
       "children": [
         "3936c425-a286-49c3-bc92-5b364b9f4264"
@@ -112,10 +111,20 @@
       "url": "/assembly/draggable",
       "path": "draggable",
       "name": "draggable",
-      "componentName": "Draggable",
       "meta": {
         "title": "拖拽",
-        "icon": ""
+        "icon": "Lightning"
+      }
+    },
+    {
+      "id": "3936c425-1286-49c3-bc92-5b364b9f4264",
+      "url": "/editor",
+      "path": "/editor",
+      "name": "editor",
+      "componentName": "Editor",
+      "meta": {
+        "title": "编辑器",
+        "icon": "Edit"
       }
     }
   ]

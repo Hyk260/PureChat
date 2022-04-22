@@ -21,20 +21,31 @@
           <el-input
             class="me-input"
             placeholder="输入菜单名称搜索"
-            prefix-icon="el-icon-search"
             v-model="filterText"
-            @change="filter(filterText)"
+            clearable
           ></el-input>
           <el-tree
-            ref="Tree"
+            ref="treeRef"
+            class="filter-tree"
             :data="data"
             show-checkbox
+            default-expand-all
             node-key="id"
             @check="checkBox"
             :props="defaultProps"
-          />
+            :filter-node-method="filterNode"
+          >
+            <template #default="scope">
+              <div class="custom-node">
+                <FontIcon
+                  v-if="scope.data.meta.icon"
+                  :iconName="scope.data.meta.icon"
+                />
+                <span>{{scope.node.label}}</span>
+              </div>
+            </template>
+          </el-tree>
         </div>
-
       </el-aside>
       <el-main>
         <el-row class="mb-4">
@@ -51,19 +62,24 @@
               :label-position="labelPosition"
               label-width="100px"
               :model="formLabelAlign"
-              style="max-width: 460px"
             >
               <el-form-item label="标题">
-                <el-input v-model="formLabelAlign.name" />
+                <el-input
+                  v-model="formLabelAlign.name"
+                  disabled
+                />
               </el-form-item>
               <el-form-item label="路径">
-                <el-input v-model="formLabelAlign.path" />
+                <el-input
+                  v-model="formLabelAlign.path"
+                  disabled
+                />
               </el-form-item>
               <el-form-item label="图标">
                 <!-- <el-input v-model="formLabelAlign.icon" /> -->
                 <el-select
                   v-model="value"
-                  class="m-2"
+                  class="m-2 year"
                   placeholder="请选择图标"
                 >
                   <el-option
@@ -100,8 +116,14 @@ import { ElMessageBox } from 'element-plus'
 import * as ElIcons from '@element-plus/icons-vue'
 import FontIcon from '@/layout/FontIcon/indx.vue'
 
+import { updateMenu } from '@/api/user'
+
 const labelPosition = ref('right')
-const Tree = ref(null)
+const treeRef = ref(null)
+
+const state = reactive({
+  treeData: null,
+})
 const value = ref('')
 const defaultProps = {
   children: 'children',
@@ -112,42 +134,24 @@ const formLabelAlign = reactive({
   path: '',
   icon: '',
 })
-const options = [
-  {
-    value: 'Option1',
-    label: 'Option1',
-  },
-  {
-    value: 'Option2',
-    label: 'Option2',
-  },
-  {
-    value: 'Option3',
-    label: 'Option3',
-  },
-]
+
 const store = useStore()
 const filterText = ref('')
 
 const data = computed(() => {
   return store.state.data.Routingtable
 })
-// watch(
-//   () => filterText.value,
-//   (val) => {
-//     console.log(val)
-//     // Tree.value.filter(val)
-//   }
-// )
-
-function filter(val) {
-  // Tree.value.data.label.filter(val)
-  // console.log(Tree.value.data)
+watch(filterText, (val) => {
+  treeRef.value.filter(val)
+})
+const filterNode = (value, data) => {
+  if (!value) return true
+  return data.label.includes(value)
 }
-
 // 选中时触发
 function checkBox(node, key) {
-  // console.log(node.meta)
+  console.log(node)
+  state.treeData = node
   const { label, meta, path } = node
   const { icon } = meta
   formLabelAlign.name = label
@@ -155,9 +159,6 @@ function checkBox(node, key) {
   value.value = icon
 }
 
-// function changeTree(node,attribute,event){
-//   console.log(node,attribute,event)
-// }
 // 保存修改
 function onSubmit() {
   ElMessageBox.confirm('是否保存修改?', '提示', {
@@ -165,14 +166,24 @@ function onSubmit() {
     cancelButtonText: '取消',
     type: 'warning',
   })
-    .then(() => {})
+    .then(() => {
+      modifyMenu()
+    })
     .catch(() => {})
+}
+
+const modifyMenu = async () => {
+  const { id, path, meta, componentName } = state.treeData
+  const { title } = meta
+  const icon = value.value
+  const route = await updateMenu({ id, path, title, icon })
+  route && store.dispatch('updateRoute', route)
 }
 // 全部收起
 function Putall() {
   const tree = data.value
   tree.map((t, i) => {
-    Tree.value.store.nodesMap[tree[i].id].expanded = false
+    treeRef.value.store.nodesMap[tree[i].id].expanded = false
   })
 }
 </script>
@@ -188,8 +199,27 @@ function Putall() {
 .el-select-dropdown {
   width: 400px;
 }
+.el-form .el-input {
+  width: 500px;
+}
 </style>
 <style lang="scss" scoped>
+.custom-node {
+  .el-icon {
+    vertical-align: top;
+  }
+}
+
+.year {
+  ::v-deep .el-input__inner {
+    background: url('~@/assets/images/log.png') no-repeat;
+    background-size: 26px 26px;
+    background-position: 0px 3px;
+    padding: 0 0 0 26px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+}
 .common-layout {
   height: 100%;
   .el-container {

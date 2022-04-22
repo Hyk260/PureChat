@@ -54,11 +54,12 @@
             首页
           </el-tag>
           <el-tag
-            :type="CurTitle === tag.title?'':'info'"
+            v-show="tags"
             v-for="tag in tags"
             :key="tag.title"
             class="mx-1"
             closable
+            :type="CurTitle === tag.title?'':'info'"
             @click.native="tagClick(tag.path)"
             @close="handleClose(tag)"
           >
@@ -127,11 +128,18 @@ watch(
   () => router.currentRoute.value.path,
   () => {
     const Tag = router.currentRoute.value.meta?.title
-    const index = tags.value.findIndex((t) => {
+    if(!tags.value){
+      tags.value.push({
+        title: Tag,
+        path: router.currentRoute.value.path,
+      })
+    }
+    const index = tags.value?.findIndex((t) => {
       return t?.title === Tag
     })
     if (Tag === '首页') return
     if (router.currentRoute.value.path === '/login') return
+
     if (index < 0) {
       tags.value.push({
         title: Tag,

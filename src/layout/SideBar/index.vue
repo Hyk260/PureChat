@@ -18,11 +18,10 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import storeLocal from 'storejs'
+  import { ref,computed } from 'vue'
+  import storage from 'storejs'
   import { useRoute, useRouter } from "vue-router"
   import { useStore } from 'vuex'
-  import { computed } from 'vue';
   
   const route = useRoute();
   const showLogo = ref(true)

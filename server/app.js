@@ -49,6 +49,7 @@ app.use(
   }).unless({ path: ["/login", "/favicon.ico"] })
 );
 
+// 登录
 app.get("/login", async (req, res, next) => {
   console.log(req.query,"req")
   let { username, password } = req.query;
@@ -177,11 +178,13 @@ app.get("/menu/delete", async (req, res, next) => {
 app.get("/menu/update", async (req, res, next) => {
   if (_.has(req.query, "id", "path", "title", "icon", "componentName")) {
     let { id, path, title, icon, componentName } = req.query;
+    console.log(icon,"180")
     db_menu
       .get("menu")
       .find({ id })
       .assign({ path, meta: { title, icon }, componentName })
       .write();
+      
     res.json(db_menu.get("menu").value());
   } else {
     res.json({ code: 400, msg: "参数不合法" });
@@ -260,7 +263,6 @@ app.get("/role/update", async (req, res, next) => {
 });
 
 // 删除角色
-
 app.get("/role/delete", async (req, res, next) => {
   if (_.has(req.query, "ids") && _.isArray(req.query.ids)) {
     let origin = db_role.get("role").value();

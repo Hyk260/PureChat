@@ -1,6 +1,6 @@
 <template>
   <div>
-    role
+      个人中心
   </div>
 </template>
 

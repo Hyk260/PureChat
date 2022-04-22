@@ -3,12 +3,20 @@
     <Header />
     <div class="continer-theme">
       <router-view />
-      <div v-if="route.name === 'personal'">
-        personal
-      </div>
-      <div v-if="route.name === 'home'">
-        home
-      </div>
+      <template v-if="page.includes(route.name)">
+        <component
+          v-if="route.name === 'home'"
+          :is="home"
+        ></component>
+        <component
+          v-if="route.name === 'editor'"
+          :is="editor"
+        ></component>
+        <component
+          v-if="route.name === 'personal'"
+          :is="personal"
+        ></component>
+      </template>
     </div>
   </div>
 </template>
@@ -17,32 +25,21 @@
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import storeLocal from 'storejs'
+import storage from 'storejs'
 import views from '@/utils/assembly.js'
 import Header from './Header.vue'
 
+import editor from '@/views/Editor/index.vue'
+import home from '@/views/welcome/index.vue'
+import personal from '@/views/Personal/index.vue'
+
+
 const route = useRoute()
-const table = storeLocal.get('userdata')
+const router = useRouter()
 
-// onMounted(() => {
-//   console.log(123)
-//   tree(table.Routingtable)
-//   table.Routingtable.forEach((item) => {
-//     useRouter().addRoute(item)
-//   })
-// })
+const table = storage.get('userdata')
+const page = ['home', 'personal', 'editor']
 
-//  function tree(arr) {
-//   arr.forEach((item) => {
-//     if (item.componentName) {
-//       item.component = views[item.componentName]
-//     }
-//     console.log(item.children)
-//     if (item?.children?.length > 0) {
-//       tree(item.children)
-//     }
-//   })
-// }
 </script>
 
 <style lang="scss" scoped>

@@ -6,19 +6,23 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "app":"cd server && nodemon app"
+    "app": "cd server && nodemon app"
   },
   "dependencies": {
+    "@wangeditor/editor": "^5.0.1",
+    "@wangeditor/editor-for-vue": "^5.1.10",
     "axios": "^0.26.1",
     "core-js": "^3.6.5",
     "element-plus": "^2.0.4",
+    "lodash": "^4.17.21",
+    "nprogress": "^0.2.0",
     "storejs": "^2.0.1",
     "svg-sprite-loader": "^6.0.11",
     "vue": "^3.0.0",
-    "vue-fragment": "^1.5.2",
     "vue-i18n": "^9.1.9",
     "vue-router": "^4.0.0-0",
     "vue-slider-component": "^3.2.15",
+    "vuedraggable": "^2.24.3",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

@@ -1,17 +1,18 @@
 import axios from 'axios'
-import storeLocal from 'storejs'
+import storage from 'storejs'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
 const baseURL = 'http://localhost:8082/';
 
 // 公共地址
 const service = axios.create({
   baseURL,
-  timeout: 15000, // 相应时间 2.5秒后报错
+  timeout: 6000, // 请求超时时间
 })
 
 // 请求拦截器
 service.interceptors.request.use(
   config => {
-    const token = storeLocal.get('token')
+    const token = storage.get(ACCESS_TOKEN)
     if(token) config.headers['authorization'] = token;
     return config
   },
@@ -27,11 +28,11 @@ service.interceptors.response.use(
     const { code, msg } = data
     if (status === 200) {
       const ToKen = response.headers["x-token"]
-      ToKen && storeLocal.set('token',ToKen) 
+      ToKen && storage.set(ACCESS_TOKEN,ToKen) 
       return data
     }
     if(status === 401){
-      storeLocal.remove('token')
+      storage.remove(ACCESS_TOKEN)
       router.replace('/login')
     }
   },

@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
 
-import storeLocal from "storejs"
+import storage from "storejs"
 
 import router from "@/router";
 import ToTree from "@/utils/ToTree";
@@ -28,7 +28,7 @@ export default createStore({
   modules,
   state: {
     views,
-    data: storeLocal.get('userdata') || account,
+    data: storage.get('userdata') || account,
   },
   mutations: {
     // 折叠侧边栏
@@ -38,12 +38,12 @@ export default createStore({
     // 更新用户信息
     updateData(state, { key, value }) {
       state.data[key] = value
-      storeLocal.set('userdata', state.data)
+      storage.set('userdata', state.data)
     },
   },
   actions: {
     updateRoute({ commit, state }, route) {
-      route.forEach((t) => {
+      route.map((t) => {
         if (t.componentName) {
           t.component = views[t.componentName];
         }
@@ -51,15 +51,14 @@ export default createStore({
       let root = route.find((t) => (t.path = "/"));
       ToTree(root, route);
       // 动态添加路由
-      root.children.forEach((item) => {
-        router.addRoute(item);
-      });
-      
+      // root.children.forEach((item) => {
+      //   router.addRoute(item);
+      // });
       commit('updateData', { key: 'Routingtable', value: root.children })
     },
     logout(){
       router.push("/login");
-      storeLocal.remove('userdata')
+      storage.remove('userdata')
     }
   },
   getters: {

@@ -22,5 +22,4 @@ loadAllassembly(app)
 
 app.use(store)
 app.use(router)
-// app.use(fragment.Plugin);
 app.mount('#app')

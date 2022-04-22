@@ -1,17 +1,25 @@
-import storeLocal from 'storejs'
-import ToTree from "@/utils/ToTree";
+import storage from 'storejs'
 import { Login, getMenu } from "@/api/user"
+import router from "@/router";
+import ToTree from "@/utils/ToTree";
+import views from "@/utils/assembly.js"
+import initLocalStorage from '@/store/data/initLocalStorage'
+
 
 
 const user = {
   state: {
+   
+  },
+  getters: {
 
   },
-  getters: {},
   mutations: {
     
   },
-  actions: {},
+  actions: {
+   
+  },
 }
 
 export default user
