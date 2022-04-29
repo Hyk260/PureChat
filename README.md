@@ -40,7 +40,7 @@ yarn install
 cd server && yarn install
 ```
 
-- 运行服务器 `nodemon` 需全局安装  或者 `cd server && node app`
+- 运行服务器 需全局安装 `nodemon`  或者 `cd server && node app`
 
 ```
 yarn app

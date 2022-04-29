@@ -2,7 +2,7 @@ import { createStore } from "vuex";
 // import { useRouter } from "vue-router";
 
 import storage from "storejs"
-
+import { logout } from '../api/user';
 import router from "@/router";
 import ToTree from "@/utils/ToTree";
 import views from "@/utils/assembly.js"
@@ -51,12 +51,17 @@ export default createStore({
       let root = route.find((t) => (t.path = "/"));
       ToTree(root, route);
       // 动态添加路由
-      // root.children.forEach((item) => {
-      //   router.addRoute(item);
-      // });
+      root.children.forEach((item) => {
+        router.addRoute(item);
+      });
+      console.log(root.children)
       commit('updateData', { key: 'Routingtable', value: root.children })
     },
+    preservation(){
+
+    },
     logout(){
+      logout()
       router.push("/login");
       storage.remove('userdata')
     }

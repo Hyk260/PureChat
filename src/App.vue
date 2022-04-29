@@ -12,12 +12,11 @@
   const table = storeLocal.get('userdata')
 
   onMounted(() => {
-    // if(!table?.Routingtable) return
-    // tree(table.Routingtable)
-    // table.Routingtable.forEach((item) => {
-    //   console.log(item)
-    //   useRouter().addRoute(item)
-    // })
+    if(!table?.Routingtable) return
+    tree(table.Routingtable)
+    table.Routingtable.forEach((item) => {
+      useRouter().addRoute(item)
+    })
   })
 
   function tree(arr) {

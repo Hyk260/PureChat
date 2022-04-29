@@ -178,13 +178,13 @@ app.get("/menu/delete", async (req, res, next) => {
 app.get("/menu/update", async (req, res, next) => {
   if (_.has(req.query, "id", "path", "title", "icon", "componentName")) {
     let { id, path, title, icon, componentName } = req.query;
-    console.log(icon,"180")
+    console.log(icon,"icon")
     db_menu
       .get("menu")
       .find({ id })
-      .assign({ path, meta: { title, icon }, componentName })
+      .assign({ path, meta: { title, icon } })
       .write();
-      
+      // componentName
     res.json(db_menu.get("menu").value());
   } else {
     res.json({ code: 400, msg: "参数不合法" });

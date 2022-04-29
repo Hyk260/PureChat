@@ -110,17 +110,19 @@ defineExpose({
   }
 }
 
-.menu :v-deep.item {
+.menu ::v-deep .item {
   font-weight: 600;
   font-size: 14px;
   padding: 10px 14px;
   border-radius: 7px;
   cursor: default;
-  color: var(--color-text);
+  // color: var(--color-text);
+  color: #606266;
   display: flex;
   align-items: center;
 
   &:hover {
+    
     color: var(--color-primary);
     background: var(--color-primary-bg-for-transparent);
   }

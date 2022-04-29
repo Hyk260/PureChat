@@ -1,6 +1,7 @@
 <template>
 <div>
-  <el-table :data="tableData" style="width: 100%">
+  <h1>角色</h1>
+  <!-- <el-table :data="tableData" style="width: 100%">
     <el-table-column fixed prop="date" label="Date" width="150" />
     <el-table-column prop="name" label="Name" width="120" />
     <el-table-column prop="state" label="State" width="120" />
@@ -15,7 +16,7 @@
         <el-button type="text" size="small">Edit</el-button>
       </template>
     </el-table-column>
-  </el-table>
+  </el-table> -->
 </div>
   
 </template>

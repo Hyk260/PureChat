@@ -34,7 +34,7 @@
       "url": "/system",
       "path": "/system",
       "name": "system",
-      "componentName": "SystemManage",
+      "componentName": "System",
       "meta": {
         "title": "系统管理",
         "icon": "Setting",
@@ -54,7 +54,7 @@
       "componentName": "User",
       "meta": {
         "title": "用户权限",
-        "icon": ""
+        "icon": "CopyDocument"
       },
       "children": []
     },
@@ -66,7 +66,7 @@
       "componentName": "Menu",
       "meta": {
         "title": "菜单列表",
-        "icon": ""
+        "icon": "More"
       },
       "children": []
     },
@@ -78,7 +78,19 @@
       "componentName": "Role",
       "meta": {
         "title": "角色权限",
-        "icon": ""
+        "icon": "User"
+      },
+      "children": []
+    },
+    {
+      "id": "3936c425-1286-49c3-bc92-5b364b9f4264",
+      "url": "/editor",
+      "path": "/editor",
+      "name": "editor",
+      "componentName": "Editor",
+      "meta": {
+        "title": "编辑器",
+        "icon": "Edit"
       },
       "children": []
     },
@@ -95,9 +107,10 @@
     },
     {
       "id": "7b3c2013-5f52-4191-8080-e18641eda5d1",
-      "url": "/assembly",
+      "url": "/assembly/draggable",
       "path": "/assembly",
       "name": "assembly",
+      "componentName": "Assembly",
       "meta": {
         "title": "组件",
         "icon": "Menu"
@@ -111,20 +124,10 @@
       "url": "/assembly/draggable",
       "path": "draggable",
       "name": "draggable",
+      "componentName": "Draggable",
       "meta": {
         "title": "拖拽",
         "icon": "Lightning"
-      }
-    },
-    {
-      "id": "3936c425-1286-49c3-bc92-5b364b9f4264",
-      "url": "/editor",
-      "path": "/editor",
-      "name": "editor",
-      "componentName": "Editor",
-      "meta": {
-        "title": "编辑器",
-        "icon": "Edit"
       }
     }
   ]

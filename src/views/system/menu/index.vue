@@ -32,6 +32,7 @@
             default-expand-all
             node-key="id"
             @check="checkBox"
+            @click.right.native="showUserProfileMenu"
             :props="defaultProps"
             :filter-node-method="filterNode"
           >
@@ -41,12 +42,13 @@
                   v-if="scope.data.meta.icon"
                   :iconName="scope.data.meta.icon"
                 />
-                <span>{{scope.node.label}}</span>
+                <span>{{ scope.node.label }}</span>
               </div>
             </template>
           </el-tree>
         </div>
       </el-aside>
+
       <el-main>
         <el-row class="mb-4">
           编辑菜单：角色权限管理
@@ -75,8 +77,13 @@
                   disabled
                 />
               </el-form-item>
+              <el-form-item label="组件">
+                <el-input
+                  v-model="formLabelAlign.component"
+                  disabled
+                />
+              </el-form-item>
               <el-form-item label="图标">
-                <!-- <el-input v-model="formLabelAlign.icon" /> -->
                 <el-select
                   v-model="value"
                   class="m-2 year"
@@ -98,7 +105,7 @@
                   type="primary"
                   @click="onSubmit"
                 >保存修改</el-button>
-                <el-button>重置</el-button>
+                <el-button @click="Reset">重置</el-button>
               </el-form-item>
             </el-form>
           </el-row>
@@ -106,6 +113,16 @@
 
       </el-main>
     </el-container>
+    <ContextMenu ref="ProfileMenu">
+      <div class="item">
+        <FontIcon iconName="apple" />
+        <span>删除</span>
+      </div>
+       <div class="item">
+        <FontIcon iconName="apple" />
+        <span>新建子级菜单</span>
+      </div>
+    </ContextMenu>
   </div>
 </template>
 
@@ -120,7 +137,7 @@ import { updateMenu } from '@/api/user'
 
 const labelPosition = ref('right')
 const treeRef = ref(null)
-
+const ProfileMenu = ref(null)
 const state = reactive({
   treeData: null,
 })
@@ -133,6 +150,7 @@ const formLabelAlign = reactive({
   name: '',
   path: '',
   icon: '',
+  component: '',
 })
 
 const store = useStore()
@@ -152,11 +170,15 @@ const filterNode = (value, data) => {
 function checkBox(node, key) {
   console.log(node)
   state.treeData = node
-  const { label, meta, path } = node
+  const { label, meta, path, componentName } = node
   const { icon } = meta
+  value.value = icon
   formLabelAlign.name = label
   formLabelAlign.path = path
-  value.value = icon
+  formLabelAlign.component = componentName
+}
+function showUserProfileMenu(e){
+  ProfileMenu.value.openMenu(e)
 }
 
 // 保存修改
@@ -171,6 +193,7 @@ function onSubmit() {
     })
     .catch(() => {})
 }
+function Reset() {}
 
 const modifyMenu = async () => {
   const { id, path, meta, componentName } = state.treeData
@@ -193,12 +216,15 @@ function Putall() {
   display: flex;
   flex-wrap: wrap;
 }
+
 .el-select-dropdown__item {
   padding: 0;
 }
+
 .el-select-dropdown {
   width: 400px;
 }
+
 .el-form .el-input {
   width: 500px;
 }
@@ -220,38 +246,49 @@ function Putall() {
     font-size: 14px;
   }
 }
+
 .common-layout {
   height: 100%;
+
   .el-container {
     height: 100%;
+
     .el-aside,
     .el-main {
       background: #fff;
     }
+
     .el-main {
       margin-left: 20px;
       padding: 0;
+
       .Edit-menu {
         padding: 0 17px;
       }
+
       .el-alert {
         margin: 24px 0 18px 0;
       }
+
       .mb-4 {
         height: 52px;
         display: flex;
         align-items: center;
       }
     }
+
     .el-aside {
       width: 536px;
+
       .el-input {
         margin: 24px 0 18px 0;
       }
+
       .common-box {
         padding: 0 17px;
       }
     }
+
     .mb-4 {
       padding: 12px 0 15px 17px;
       border-bottom: 1px solid #e8eaec;

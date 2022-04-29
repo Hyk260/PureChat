@@ -28,12 +28,11 @@ export const getMenu = () => {
  */ 
 export const logout = () => {
   storage.remove(ACCESS_TOKEN)
-  storage.remove('userdata')
 };
 
 /**
  * 更新菜单
- * @param{ id,path,title,icon }
+ * @param{ id,path,title,icon,component }
  */ 
 export const updateMenu = (params) => {
   return http({

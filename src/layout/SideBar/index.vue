@@ -11,7 +11,7 @@
         router
         @open="handleOpen"
         @close="handleClose">
-        <SideItem :tree="props.tree"/>
+        <SideItem :tree="RoutingTable"/>
       </el-menu>
     </el-scrollbar>
   </div>
@@ -30,13 +30,9 @@
   const isCollapse = computed(() => {
     return store.state.data.isCollapse
   })
-
-  const props = defineProps({
-    tree: {
-      type: Object,
-      required: true,
-    },
-  });
+  const RoutingTable = computed(()=>{
+    return store.state.data.Routingtable
+  })
 
   const handleOpen = (key, keyPath) => {
     // console.log(key, keyPath)

@@ -22,20 +22,31 @@
         </el-breadcrumb-item>
       </el-breadcrumb>
       <div class="arrow-setup">
-        <!-- <div>
-
-        </div> -->
-        <div class="setup">
+        <div class="user">
           <el-dropdown>
-            <span class="el-dropdown-link">
-              <FontIcon iconName="switch-button" />
+            <span class="el-dropdown-link">      
+              <el-avatar
+                :size="24"
+                :src="circleUrl"
+              />
+              <p>admain</p>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item @click="Logout">退出登录</el-dropdown-item>
+                <el-dropdown-item @click="Logout">
+                 <FontIcon iconName="switch-button" />
+                  退出登录
+                </el-dropdown-item>
+                 <el-dropdown-item>
+                 <FontIcon iconName="user" />
+                  个人中心
+                </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
+        </div>
+        <div class="setup" @click="drawer = true">
+          <FontIcon iconName="setting" />
         </div>
       </div>
     </div>
@@ -43,7 +54,10 @@
     <div class="tags-view">
       <div>
         <div class="arrow-left">
-          <FontIcon iconName="arrow-left" class="cursor-w"/>
+          <FontIcon
+            iconName="arrow-left"
+            class="cursor-w"
+          />
         </div>
         <div class="scroll-container">
           <el-tag
@@ -67,7 +81,10 @@
           </el-tag>
         </div>
         <div class="arrow-right">
-          <FontIcon iconName="arrow-right" class="cursor-w"/>
+          <FontIcon
+            iconName="arrow-right"
+            class="cursor-w"
+          />
         </div>
       </div>
       <div class="dropdown">
@@ -100,7 +117,11 @@
         </el-dropdown>
       </div>
     </div>
+    
   </div>
+  <el-drawer v-model="drawer" title="I am the title" :with-header="false">
+    <span>Hi there!</span>
+  </el-drawer>
 </template>
 
 <script setup>
@@ -108,7 +129,7 @@ import { Upload, Minus, Close, Plus, ArrowRight } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import { reactive } from '@vue/reactivity'
 import { useStore } from 'vuex'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import storeLocal from 'storejs'
 import FontIcon from '@/layout/FontIcon/indx.vue'
@@ -117,8 +138,15 @@ const router = useRouter()
 const route = useRoute()
 const store = useStore()
 
-// const current = ref(null)
-// const tags = ref([])
+const drawer = ref(false)
+const state = reactive({
+  circleUrl:
+    'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+  squareUrl:
+    'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+  sizeList: ['small', '', 'large'],
+})
+const { circleUrl, squareUrl, sizeList } = toRefs(state)
 
 const tags = computed(() => {
   return store.state.data.elTag
@@ -128,7 +156,7 @@ watch(
   () => router.currentRoute.value.path,
   () => {
     const Tag = router.currentRoute.value.meta?.title
-    if(!tags.value){
+    if (!tags.value) {
       tags.value.push({
         title: Tag,
         path: router.currentRoute.value.path,
@@ -150,12 +178,11 @@ watch(
         value: tags.value,
       })
     }
-    // console.log(tags.value)
   }
 )
 
 const isActive = computed(() => {
-  return store.state.isCollapse
+  return store.state.data.isCollapse
 })
 
 const CurTitle = computed(() => {
@@ -167,15 +194,11 @@ const handleClose = (tag) => {
 }
 // 退出登录
 const Logout = () => {
-  ElMessageBox.confirm(
-    '确定退出登录?',
-    '提示',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  )
+  ElMessageBox.confirm('确定退出登录?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
     .then(() => {
       store.dispatch('logout')
     })
@@ -235,16 +258,16 @@ const toggleClick = () => {
 }
 </style>
 <style lang="scss" scoped>
-.cursor-w{
+.cursor-w {
   cursor: w-resize;
 }
-::v-deep.el-dropdown-menu{
-.Left-rotation .el-icon {
-  transform: rotate(-90deg);
-}
-.Right-rotation .el-icon{
-  transform: rotate(90deg);
-}
+::v-deep.el-dropdown-menu {
+  .Left-rotation .el-icon {
+    transform: rotate(-90deg);
+  }
+  .Right-rotation .el-icon {
+    transform: rotate(90deg);
+  }
 }
 .navbar {
   display: flex;
@@ -260,9 +283,19 @@ const toggleClick = () => {
     .setup {
       width: 40px;
       text-align: center;
+      border-left: 1px solid #ccc;
       // &:hover{
       // background: #f6f6f6;
       // }
+    }
+    .user ::v-deep .el-dropdown-link {
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      cursor: pointer;
+      .el-avatar {
+        margin-right: 10px;
+      }
     }
   }
 }
