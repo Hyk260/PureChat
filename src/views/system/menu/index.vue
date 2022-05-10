@@ -87,6 +87,7 @@
                 <el-select
                   v-model="value"
                   class="m-2 year"
+                  popper-class="style-select"
                   placeholder="请选择图标"
                 >
                   <el-option
@@ -118,7 +119,7 @@
         <FontIcon iconName="apple" />
         <span>删除</span>
       </div>
-       <div class="item">
+      <div class="item">
         <FontIcon iconName="apple" />
         <span>新建子级菜单</span>
       </div>
@@ -177,7 +178,7 @@ function checkBox(node, key) {
   formLabelAlign.path = path
   formLabelAlign.component = componentName
 }
-function showUserProfileMenu(e){
+function showUserProfileMenu(e) {
   ProfileMenu.value.openMenu(e)
 }
 
@@ -211,23 +212,22 @@ function Putall() {
 }
 </script>
 
-<style>
-.el-scrollbar__view {
-  display: flex;
-  flex-wrap: wrap;
+<style lang="scss">
+.style-select{
+  background:#fff;
+  .el-scrollbar__view {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .el-select-dropdown__item {
+    padding: 0;
+  }
+
+  .el-select-dropdown {
+    width: 400px;
+  }
 }
 
-.el-select-dropdown__item {
-  padding: 0;
-}
-
-.el-select-dropdown {
-  width: 400px;
-}
-
-.el-form .el-input {
-  width: 500px;
-}
 </style>
 <style lang="scss" scoped>
 .custom-node {
@@ -245,11 +245,13 @@ function Putall() {
     box-sizing: border-box;
     font-size: 14px;
   }
+  ::v-deep .el-input {
+    width: 500px;
+  }
 }
 
 .common-layout {
   height: 100%;
-
   .el-container {
     height: 100%;
 

@@ -7,6 +7,7 @@ var { v4: uuid } = require("uuid");
 // 生成token
 var jwt = require("jsonwebtoken");
 
+var fs = require("fs");
 // 解析token
 var expressJwt = require("express-jwt");
 
@@ -205,6 +206,7 @@ app.get("/role/query", async (req, res, next) => {
 app.get("/role/add", async (req, res, next) => {
   if (_.has(req.query, "roleName", "info", "isDefaultRole")) {
     let { roleName, info, isDefaultRole } = req.query;
+    console.log(req.query)
     let id = uuid();
     let currentTime = Date.now();
     let roleData = {
@@ -213,7 +215,7 @@ app.get("/role/add", async (req, res, next) => {
       info,
       createTime: currentTime,
       updateTime: currentTime,
-      isDefaultRole
+      isDefaultRole:false
     };
     db_role
       .get("role")
@@ -241,7 +243,7 @@ app.get("/role/update", async (req, res, next) => {
       roleName,
       info,
       updateTime: currentTime,
-      isDefaultRole
+      isDefaultRole:false,
     };
     db_role
       .get("role")
@@ -410,7 +412,10 @@ app.use(function(err, req, res, next) {
   }
   next();
 });
-// 跑起來了
-console.log("跑起來了")
-app.listen(8082);
 
+const server = app.listen(8082,function() {
+  let host = server.address().address
+  let port = server.address().port
+  // console.log(host)
+  console.log("应用实例，访问地址为 http://%s:%s", 'localhost', port)
+})

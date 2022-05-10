@@ -12,8 +12,8 @@
           iconName="Expand"
         />
       </div>
-      <!-- 面包屑 -->
-      <el-breadcrumb :separator-icon="ArrowRight">
+      <!-- 面包屑 :separator-icon="ArrowRight" > icon-->
+      <el-breadcrumb>
         <el-breadcrumb-item
           :key="value.title"
           v-for="value in route.matched.map((item) => item.meta)"
@@ -190,7 +190,8 @@ const CurTitle = computed(() => {
 })
 
 const handleClose = (tag) => {
-  tags.value.splice(tags.value.indexOf(tag), 1)
+  let data = tags.value.splice(tags.value.indexOf(tag), 1)
+  store.commit('updateData', {elTag:data});
 }
 // 退出登录
 const Logout = () => {

@@ -3,17 +3,9 @@
     {
       "id": "5346d441-ac35-4948-960e-c2d0c2b94a67",
       "roleName": "ROLE_USER",
-      "info": "普通用户",
+      "info": "管理员",
       "createTime": 1621480197410,
-      "updateTime": 1621480197410,
-      "isDefaultRole": true
-    },
-    {
-      "id": "6b2d9d80-e1b1-4584-bf7b-f10852794e4a",
-      "roleName": "ROLE_ADMIN",
-      "info": "管理员用户",
-      "createTime": 1621480190410,
-      "updateTime": 1621480194410,
+      "updateTime": 1652077470543,
       "isDefaultRole": false
     },
     {
@@ -22,7 +14,7 @@
       "info": "运营用户",
       "createTime": 1622877793922,
       "updateTime": 1622877793922,
-      "isDefaultRole": "false"
+      "isDefaultRole": false
     },
     {
       "id": "8262d4f3-ae13-4acd-827d-68e23963f75a",
@@ -30,21 +22,31 @@
       "info": "普通用户",
       "createTime": 1624425309232,
       "updateTime": 1624425309232,
-      "isDefaultRole": "true"
+      "isDefaultRole": false
     },
     {
-      "id": "9584b3dc-08de-4025-be90-ef43eb81e81b",
+      "id": "3a62a61b-ef44-4596-8ff5-c04458882f23",
+      "roleName": "仁丹",
+      "info": "管理员",
+      "createTime": 1651997232778,
+      "updateTime": 1652080095609,
+      "isDefaultRole": false
+    },
+    {
+      "id": "d17c2355-4ad9-4ddb-ba8c-ff962b9821b5",
+      "roleName": "刘继承",
+      "info": "管理员",
+      "createTime": 1652000927793,
+      "updateTime": 1652080099753,
+      "isDefaultRole": false
+    },
+    {
+      "id": "3573014a-8027-47c3-8eb2-e32addd8139d",
       "roleName": "123",
       "info": "普通用户",
-      "createTime": 1639640457573,
-      "updateTime": 1639640457573
-    },
-    {
-      "id": "cf23d2a6-459e-4453-8eb2-7b28cef4f70e",
-      "roleName": "321",
-      "info": "普通用户",
-      "createTime": 1639640488418,
-      "updateTime": 1639640488418
+      "createTime": 1652084369681,
+      "updateTime": 1652084369681,
+      "isDefaultRole": false
     }
   ]
 }

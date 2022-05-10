@@ -1,20 +1,20 @@
 <template>
   <div class="theme">
+    <!-- :style="`width:calc(100% - ${isActive? '64px':'200px'})`" -->
     <Header />
+    <!-- el-scrollbar -->
     <div class="continer-theme">
-      <transition-group name="fade-transform" mode="out-in">
+      <!-- <transition-group name="fade-transform" mode="out-in">
         <template v-if="page.includes(route.name)">
           <component v-if="route.name === 'home'" :is="home"></component>
-          <!-- <component v-if="route.name === 'editor'" :is="editor"></component> -->
+          <component v-if="route.name === 'editor'" :is="editor"></component>
           <component v-if="route.name === 'personal'" :is="personal"></component>
         </template> 
-      </transition-group>
-      
+      </transition-group> -->
+      <!-- <keep-alive :include="isCached"></keep-alive> -->
       <router-view v-slot="{ Component }">
         <transition name="fade-transform" mode="out-in">
-          <!-- <keep-alive :include="isCached"> -->
           <component :is="Component" />
-          <!-- </keep-alive> -->
         </transition>
       </router-view>
     </div>
@@ -24,7 +24,7 @@
 <script setup>
 import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useStore } from "vuex";
+import store from "@/store";
 import storage from "storejs";
 import views from "@/utils/assembly.js";
 import Header from "./Header.vue";
@@ -38,9 +38,11 @@ const router = useRouter();
 
 const table = storage.get("userdata");
 const page = ["home", "personal", "editor"];
+const isActive = computed(() => {
+  return store.state.data.isCollapse;
+});
 </script>
 <style>
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.28s;
@@ -69,12 +71,20 @@ const page = ["home", "personal", "editor"];
 <style lang="scss" scoped>
 .theme {
   width: 100%;
+  transition: all 0.1s;
 }
 .continer-theme {
+  width: 100%;
   height: calc(100vh - 86px);
   background: #f0f2f5;
   padding: 24px;
+
   box-sizing: border-box;
   overflow: hidden;
+  // max-width: 1336px;
+  // max-width: 1472px;
+}
+::v-deep .el-scrollbar__view {
+  // margin: 24px;
 }
 </style>

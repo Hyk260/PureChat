@@ -3,16 +3,16 @@
     <!-- <Logo v-if="showLogo"  /> -->
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu 
-        :default-active="route.path" 
         class="el-menu-vertical-demo" 
         :collapse-transition="true"
-        :unique-opened="true"
+        :unique-opened="false"
         :collapse="isCollapse"
         router
         @open="handleOpen"
         @close="handleClose">
         <SideItem :tree="RoutingTable"/>
       </el-menu>
+              <!-- :default-active="route.path"  -->
     </el-scrollbar>
   </div>
 </template>
@@ -58,4 +58,9 @@
   .el-menu--collapse ::v-deep .el-sub-menu__title .el-sub-menu__icon-arrow {
     display: none;
   }
+  /* .sidebar-container{
+    position: fixed;
+    left: 0;
+    top:0;
+  } */
 </style>

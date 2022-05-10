@@ -17,11 +17,16 @@ const store = useStore();
 
 
 
+
 </script>
 
 <style lang="scss" scoped>
 .content{
   display: flex;
-  height: 100vh;
+  height: 100%;
+  // overflow-x: hidden;
+  // ::-webkit-scrollbar {
+  //   width: 0px;
+  // }
 }
 </style>
