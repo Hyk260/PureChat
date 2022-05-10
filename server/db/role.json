@@ -3,15 +3,31 @@
     {
       "id": "5346d441-ac35-4948-960e-c2d0c2b94a67",
       "roleName": "ROLE_USER",
-      "info": "管理员",
+      "info": "运营用户",
       "createTime": 1621480197410,
       "updateTime": 1652077470543,
-      "isDefaultRole": false
+      "isDefaultRole": true
+    },
+    {
+      "id": "6b2d9d80-e1b1-4584-bf7b-f10852794e4a",
+      "roleName": "ROLE_ADMIN",
+      "info": "超级管理员",
+      "createTime": 1621480190410,
+      "updateTime": 1621480194410,
+      "isDefaultRole": true
+    },
+    {
+      "id": "6b2d9d80-e1b1-4584-bf7b-f10852794e4a",
+      "roleName": "黄泳康",
+      "info": "系统管理员",
+      "createTime": 1621480190410,
+      "updateTime": 1621480194410,
+      "isDefaultRole": true
     },
     {
       "id": "390ff205-f85e-4fde-8344-405fc9f42899",
       "roleName": "王杰",
-      "info": "运营用户",
+      "info": "普通用户",
       "createTime": 1622877793922,
       "updateTime": 1622877793922,
       "isDefaultRole": false
@@ -26,10 +42,10 @@
     },
     {
       "id": "3a62a61b-ef44-4596-8ff5-c04458882f23",
-      "roleName": "仁丹",
+      "roleName": "任丹",
       "info": "管理员",
       "createTime": 1651997232778,
-      "updateTime": 1652080095609,
+      "updateTime": 1652169479815,
       "isDefaultRole": false
     },
     {
@@ -42,10 +58,26 @@
     },
     {
       "id": "3573014a-8027-47c3-8eb2-e32addd8139d",
-      "roleName": "123",
+      "roleName": "王云霜",
       "info": "普通用户",
       "createTime": 1652084369681,
-      "updateTime": 1652084369681,
+      "updateTime": 1652149355553,
+      "isDefaultRole": false
+    },
+    {
+      "id": "994343a6-a218-4b42-b6ea-12579541ac98",
+      "roleName": "柳函",
+      "info": "普通用户",
+      "createTime": 1652149305135,
+      "updateTime": 1652149327041,
+      "isDefaultRole": false
+    },
+    {
+      "id": "a01a4648-fa01-4aeb-a61f-4a3d084bb20c",
+      "roleName": "测试",
+      "info": "普通用户",
+      "createTime": 1652170078716,
+      "updateTime": 1652170078716,
       "isDefaultRole": false
     }
   ]

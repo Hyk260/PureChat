@@ -16,31 +16,35 @@
     </div>
 
     <div class="role-header">
+
       <header>
-        <p>
+        <!-- <p>
           角色列表
-        </p>
+        </p> -->
         <div>
           <el-button type="primary" @click="AddRoleBtn">新增角色</el-button>
           <el-button v-show="ShowDelBtn" type="danger" @click="Deletelot">删除角色</el-button>
         </div>
       </header>
-      <el-table tooltip-effect="dark" :data="tableData" @selection-change="handleSelectionChange">
+      <!-- 表格 -->
+      <el-table tooltip-effect="dark" border height="410" :data="tableData" @selection-change="handleSelectionChange">
+        
         <el-table-column type="selection" />
-        <el-table-column prop="roleName" label="角色名称" width="180" />
-        <el-table-column prop="info" label="说明" width="180" />
+        <el-table-column prop="roleName" label="角色名称" width="200" />
+        <el-table-column prop="info" label="说明" width="200" />
 
-        <el-table-column prop="createTime" label="创建时间" width="180">
+        <el-table-column prop="createTime" label="创建时间" width="200">
           <template #default="scope">
             {{formatTime(scope.row.createTime)}}
           </template>
         </el-table-column>
 
-        <el-table-column prop="updateTime" label="更新时间" width="180">
+        <el-table-column prop="updateTime" label="更新时间" sortable width="200">
           <template #default="scope">
             {{formatTime(scope.row.updateTime)}}
           </template>
         </el-table-column>
+
         <el-table-column prop="isDefaultRole" label="角色类型" width="180">
           <template #default="scope">
             <el-tag :type="scope.row.isDefaultRole? 'primary' : 'success'">
@@ -48,18 +52,32 @@
             </el-tag>
           </template>
         </el-table-column>
+
         <el-table-column fixed="right" label="操作" width="180">
           <template #default="scope">
             <el-button type="text" size="small" @click="DelColumn(scope,tableData)">删除</el-button>
             <el-button type="text" size="small" @click="ModifyBtn(scope,tableData)">修改</el-button>
           </template>
         </el-table-column>
+
       </el-table>
       <!-- 分页 -->
-      <el-pagination small background layout="prev, pager, next" :total="50" class="mt-4" />
+      <el-pagination 
+        small 
+        background
+        align='center' 
+        @size-change="handleSizeChange"
+        @current-change="handlePageChange"
+        :page-sizes="[5, 10, 15, 20]"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData.length"
+        class="mt-4">
+      </el-pagination>
+
     </div>
     <!-- 弹框 -->
     <el-dialog v-model="dialogFormVisible" :title="infoText? '添加角色':'编辑角色'">
+
       <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="120px" class="demo-ruleForm">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="ruleForm.name" autocomplete="off" />
@@ -77,7 +95,7 @@
           <el-input v-model.number="ruleForm.age" />
         </el-form-item> -->
       </el-form>
-      <!-- <el-button @click="resetForm(ruleFormRef)">Reset</el-button> -->
+
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="resetForm(ruleFormRef)">
@@ -91,6 +109,7 @@
           </el-button>
         </span>
       </template>
+
     </el-dialog>
   </div>
 </template>
@@ -124,33 +143,36 @@
     region: '',
     type: '',
   })
-  // const formLabel = reactive({
-  //   name: '',
-  //   info: '',
-  //   type: '',
-  // })
 
   const rules = reactive({
     name: [{ validator: checkName, trigger: 'blur' }],
     info: [{ validator: checkInfo, trigger: 'blur' }],
     age: [{ validator: checkAge, trigger: 'blur' }],
   })
-  const form = reactive({
-    name: '',
-    region: '',
-    date1: '',
-    date2: '',
-    delivery: false,
-    type: [],
-    resource: '',
-    desc: '',
-  })
+
+  // const form = reactive({
+  //   name: '',
+  //   region: '',
+  //   date1: '',
+  //   date2: '',
+  //   delivery: false,
+  //   type: [],
+  //   resource: '',
+  //   desc: '',
+  // })
 
   function handleSelectionChange(val) {
     console.log(val)
     ShowDelBtn.value = val.length > 0
     ruleForm.ids = val.map(t => t.id)
     console.log(ruleForm.ids)
+  }
+  // 每页显示个数
+  function handleSizeChange(val){
+    console.log(val)
+  }
+  function handlePageChange(val){
+    console.log(val)
   }
   const AddRoleBtn = () => {
     dialogFormVisible.value = true
@@ -230,7 +252,7 @@
   }
   // 多选删除
   const Deletelot = () => {
-    delRoles(ruleForm.ids)
+    // delRoles(ruleForm.ids)
   }
   // 修改按钮
   const ModifyBtn = (index, data) => {

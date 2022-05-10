@@ -252,7 +252,7 @@ app.get("/role/update", async (req, res, next) => {
       .write();
     res.json({
       code: 200,
-      msg: "添加成功",
+      msg: "更新成功",
       result: roleData
     });
   } else {

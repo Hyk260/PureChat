@@ -1,47 +1,23 @@
 <template>
   <div class="common-layout">
     <el-container>
+
       <el-aside>
         <el-row class="mb-4">
-          <el-button
-            size="small"
-            plain
-          >添加菜单</el-button>
-          <el-button
-            @click="Putall"
-            size="small"
-            plain
-          >全部收起</el-button>
-          <el-button
-            size="small"
-            type="danger"
-          >删除</el-button>
+          <el-button size="small" plain @click="addMenuBtn">添加菜单</el-button>
+          <el-button @click="Putall(isExpand)" size="small" plain>
+            {{isExpand? '全部展开':' 全部收起'}}
+          </el-button>
+          <el-button size="small" type="danger" v-show="showDelBtn">删除</el-button>
         </el-row>
         <div class="common-box">
-          <el-input
-            class="me-input"
-            placeholder="输入菜单名称搜索"
-            v-model="filterText"
-            clearable
-          ></el-input>
-          <el-tree
-            ref="treeRef"
-            class="filter-tree"
-            :data="data"
-            show-checkbox
-            default-expand-all
-            node-key="id"
-            @check="checkBox"
-            @click.right.native="showUserProfileMenu"
-            :props="defaultProps"
-            :filter-node-method="filterNode"
-          >
+          <el-input class="me-input" placeholder="输入菜单名称搜索" v-model="filterText" clearable></el-input>
+          <el-tree ref="treeRef" class="filter-tree" :data="data" show-checkbox default-expand-all node-key="id"
+            @check="checkBox" @click.right.native="showUserProfileMenu" :props="defaultProps"
+            :filter-node-method="filterNode">
             <template #default="scope">
               <div class="custom-node">
-                <FontIcon
-                  v-if="scope.data.meta.icon"
-                  :iconName="scope.data.meta.icon"
-                />
+                <FontIcon v-if="scope.data.meta.icon" :iconName="scope.data.meta.icon" />
                 <span>{{ scope.node.label }}</span>
               </div>
             </template>
@@ -54,58 +30,29 @@
           编辑菜单：角色权限管理
         </el-row>
         <div class="Edit-menu">
-          <el-alert
-            title="从菜单列表选择一项后,进行编辑"
-            :closable="false"
-          />
+          <el-alert title="从菜单列表选择一项后,进行编辑" :closable="false" />
           <!-- close-text="知道了" -->
           <el-row>
-            <el-form
-              :label-position="labelPosition"
-              label-width="100px"
-              :model="formLabelAlign"
-            >
-              <el-form-item label="标题">
-                <el-input
-                  v-model="formLabelAlign.name"
-                  disabled
-                />
+            <el-form ref="ruleLabelRef" :label-position="labelPosition" label-width="100px" :model="formLabelAlign">
+              <el-form-item label="标题" prop="name">
+                <el-input v-model="formLabelAlign.name" disabled />
               </el-form-item>
-              <el-form-item label="路径">
-                <el-input
-                  v-model="formLabelAlign.path"
-                  disabled
-                />
+              <el-form-item label="路径" prop="path">
+                <el-input v-model="formLabelAlign.path" disabled />
               </el-form-item>
-              <el-form-item label="组件">
-                <el-input
-                  v-model="formLabelAlign.component"
-                  disabled
-                />
+              <el-form-item label="组件" prop="component">
+                <el-input v-model="formLabelAlign.component" disabled />
               </el-form-item>
-              <el-form-item label="图标">
-                <el-select
-                  v-model="value"
-                  class="m-2 year"
-                  popper-class="style-select"
-                  placeholder="请选择图标"
-                >
-                  <el-option
-                    class="dropdown"
-                    v-for="item in ElIcons"
-                    :key="item.name"
-                    :label="item.name"
-                    :value="item.name"
-                  >
+              <el-form-item label="图标" prop="icon">
+                <el-select v-model="formLabelAlign.icon" class="m-2 year" popper-class="style-select" placeholder="请选择图标">
+                  <el-option class="dropdown" v-for="item in ElIcons" :key="item.name" :label="item.name"
+                    :value="item.name">
                     <FontIcon :iconName="item.name" />
                   </el-option>
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-button
-                  type="primary"
-                  @click="onSubmit"
-                >保存修改</el-button>
+                <el-button type="primary" @click="onSubmit">保存修改</el-button>
                 <el-button @click="Reset">重置</el-button>
               </el-form-item>
             </el-form>
@@ -114,6 +61,37 @@
 
       </el-main>
     </el-container>
+
+    <!-- 弹框 -->
+    <el-dialog v-model="dialogFormVisible" :title="'添加菜单'">
+      123
+      <!-- <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="120px" class="demo-ruleForm">
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="ruleForm.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="说明" prop="info">
+         
+        </el-form-item>
+      </el-form> -->
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="resetForm(ruleFormRef)">
+            重置
+          </el-button>
+          <el-button @click="dialogFormVisible = false">
+            取消
+          </el-button>
+          <el-button type="primary" @click="dialogFormVisible = false">
+            确定
+            <!-- determine(infoText,ruleFormRef) -->
+          </el-button>
+        </span>
+      </template>
+
+    </el-dialog>
+
+    <!-- 右键菜单 -->
     <ContextMenu ref="ProfileMenu">
       <div class="item">
         <FontIcon iconName="apple" />
@@ -128,181 +106,217 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
-import { useStore } from 'vuex'
-import { ElMessageBox } from 'element-plus'
-import * as ElIcons from '@element-plus/icons-vue'
-import FontIcon from '@/layout/FontIcon/indx.vue'
+  import { ref, reactive, computed, watch } from 'vue'
+  import { useStore } from 'vuex'
+  import { ElMessageBox } from 'element-plus'
+  import * as ElIcons from '@element-plus/icons-vue'
+  import FontIcon from '@/layout/FontIcon/indx.vue'
+  import { updateMenu } from '@/api/user'
 
-import { updateMenu } from '@/api/user'
+  const store = useStore()
 
-const labelPosition = ref('right')
-const treeRef = ref(null)
-const ProfileMenu = ref(null)
-const state = reactive({
-  treeData: null,
-})
-const value = ref('')
-const defaultProps = {
-  children: 'children',
-  label: 'label',
-}
-const formLabelAlign = reactive({
-  name: '',
-  path: '',
-  icon: '',
-  component: '',
-})
+  const defaultProps = {
+    children: 'children',
+    label: 'label',
+  }
+  const showDelBtn = ref(false)
 
-const store = useStore()
-const filterText = ref('')
+  const isExpand = ref(false)
+  const ruleLabelRef = ref()
+  const ruleFormRef = ref()
+  const labelPosition = ref('right')
+  const filterText = ref('')
+  // const value = ref('')
+  const treeRef = ref(null)
+  const ProfileMenu = ref(null)
+  const dialogFormVisible = ref(false)
 
-const data = computed(() => {
-  return store.state.data.Routingtable
-})
-watch(filterText, (val) => {
-  treeRef.value.filter(val)
-})
-const filterNode = (value, data) => {
-  if (!value) return true
-  return data.label.includes(value)
-}
-// 选中时触发
-function checkBox(node, key) {
-  console.log(node)
-  state.treeData = node
-  const { label, meta, path, componentName } = node
-  const { icon } = meta
-  value.value = icon
-  formLabelAlign.name = label
-  formLabelAlign.path = path
-  formLabelAlign.component = componentName
-}
-function showUserProfileMenu(e) {
-  ProfileMenu.value.openMenu(e)
-}
-
-// 保存修改
-function onSubmit() {
-  ElMessageBox.confirm('是否保存修改?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
+  const state = reactive({
+    treeData: null,
   })
-    .then(() => {
-      modifyMenu()
+
+
+  const formLabelAlign = reactive({
+    name: '',
+    path: '',
+    icon: '',
+    component: '',
+    icon:''
+  })
+
+  const data = computed(() => {
+    return store.state.data.Routingtable
+  })
+
+  watch(filterText, (val) => {
+    treeRef.value.filter(val)
+  })
+
+  // 添加菜单按钮
+  const addMenuBtn = () => {
+    dialogFormVisible.value = true
+  }
+
+  const filterNode = (value, data) => {
+    if (!value) return true
+    return data.label.includes(value)
+  }
+  // 选中时触发
+  function checkBox(node, key) {
+    console.log(node,key)
+    const { checkedKeys } = key
+    const { id, label, meta, path, componentName } = node
+    const { icon } = meta
+    state.treeData = node
+    const exist = checkedKeys.length > 0
+    // 显示隐藏删除按钮
+    showDelBtn.value = exist
+    if(exist){
+      formLabelAlign.icon = icon
+      formLabelAlign.name = label
+      formLabelAlign.path = path
+      formLabelAlign.component = componentName
+    }else{
+      resetForm(ruleLabelRef.value) 
+    } 
+  }
+
+  function showUserProfileMenu(e) {
+    ProfileMenu.value.openMenu(e)
+  }
+
+  // 保存修改
+  function onSubmit() {
+    ElMessageBox.confirm('是否保存修改?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+      .then(() => {
+        modifyMenu()
+      })
+      .catch(() => {})
+  }
+
+  function Reset() {}
+
+  const modifyMenu = async () => {
+    console.log(state.treeData)
+    const { id, path, meta, componentName } = state.treeData
+    const { title, icon } = meta
+    const route = await updateMenu({ id, path, title, icon })
+    route && store.dispatch('updateRoute', route)
+  }
+  // 全部收起
+  function Putall(val) {
+    const tree = data.value
+    isExpand.value = !isExpand.value
+    tree.map((t, i) => {
+      treeRef.value.store.nodesMap[tree[i].id].expanded = val
     })
-    .catch(() => {})
-}
-function Reset() {}
+  }
 
-const modifyMenu = async () => {
-  const { id, path, meta, componentName } = state.treeData
-  const { title } = meta
-  const icon = value.value
-  const route = await updateMenu({ id, path, title, icon })
-  route && store.dispatch('updateRoute', route)
-}
-// 全部收起
-function Putall() {
-  const tree = data.value
-  tree.map((t, i) => {
-    treeRef.value.store.nodesMap[tree[i].id].expanded = false
-  })
-}
+  const resetForm = (formEl) => {
+    if (!formEl) return
+    console.log(formEl)
+    formEl.resetFields()
+  }
 </script>
 
 <style lang="scss">
-.style-select{
-  background:#fff;
-  .el-scrollbar__view {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .el-select-dropdown__item {
-    padding: 0;
-  }
+  .style-select {
+    background: #fff;
 
-  .el-select-dropdown {
-    width: 400px;
-  }
-}
-
-</style>
-<style lang="scss" scoped>
-.custom-node {
-  .el-icon {
-    vertical-align: top;
-  }
-}
-
-.year {
-  ::v-deep .el-input__inner {
-    background: url('~@/assets/images/log.png') no-repeat;
-    background-size: 26px 26px;
-    background-position: 0px 3px;
-    padding: 0 0 0 26px;
-    box-sizing: border-box;
-    font-size: 14px;
-  }
-  ::v-deep .el-input {
-    width: 500px;
-  }
-}
-
-.common-layout {
-  height: 100%;
-  .el-container {
-    height: 100%;
-
-    .el-aside,
-    .el-main {
-      background: #fff;
+    .el-scrollbar__view {
+      display: flex;
+      flex-wrap: wrap;
     }
 
-    .el-main {
-      margin-left: 20px;
+    .el-select-dropdown__item {
       padding: 0;
+    }
 
-      .Edit-menu {
-        padding: 0 17px;
+    .el-select-dropdown {
+      width: 400px;
+    }
+  }
+</style>
+<style lang="scss" scoped>
+  .custom-node {
+    .el-icon {
+      vertical-align: top;
+    }
+  }
+
+  .year {
+    ::v-deep .el-input__inner {
+      background: url('~@/assets/images/log.png') no-repeat;
+      background-size: 26px 26px;
+      background-position: 0px 3px;
+      padding: 0 0 0 26px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    ::v-deep .el-input {
+      width: 500px;
+    }
+  }
+
+  .common-layout {
+    height: 100%;
+
+    .el-container {
+      height: 100%;
+
+      .el-aside,
+      .el-main {
+        background: #fff;
       }
 
-      .el-alert {
-        margin: 24px 0 18px 0;
+      .el-main {
+        margin-left: 20px;
+        padding: 0;
+
+        .Edit-menu {
+          padding: 0 17px;
+        }
+
+        .el-alert {
+          margin: 24px 0 18px 0;
+        }
+
+        .mb-4 {
+          height: 52px;
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .el-aside {
+        width: 536px;
+
+        .el-input {
+          margin: 24px 0 18px 0;
+        }
+
+        .common-box {
+          padding: 0 17px;
+        }
       }
 
       .mb-4 {
-        height: 52px;
-        display: flex;
-        align-items: center;
+        padding: 12px 0 15px 17px;
+        border-bottom: 1px solid #e8eaec;
       }
-    }
-
-    .el-aside {
-      width: 536px;
-
-      .el-input {
-        margin: 24px 0 18px 0;
-      }
-
-      .common-box {
-        padding: 0 17px;
-      }
-    }
-
-    .mb-4 {
-      padding: 12px 0 15px 17px;
-      border-bottom: 1px solid #e8eaec;
     }
   }
-}
 
-.dropdown {
-  width: 50px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  .dropdown {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 </style>
