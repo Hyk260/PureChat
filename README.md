@@ -2,7 +2,7 @@
   <a href="" target="blank">
     <img src="./images/log.png" alt="Logo" width="168" height="168">
   </a>
-  <h2 align="center" style="font-weight: 600">vue-pure-admin</h2>
+  <h2 align="center" style="font-weight: 600;font: bold 200% Consolas, Monaco, monospace;color: #999;">PURE ADMIN</h2>
   <p align="center">
     使用vue3 + Element-Plus开发 用于学习参考
     <br />
@@ -16,7 +16,7 @@
 
 ### 🎉 特性
 
-- 🛠 更多特性开发中
+- 🛠 更多特性开发中 
 - 全栈项目
 
 

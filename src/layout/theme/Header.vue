@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed-header">
+  <div :class="['fixed-header',sidebar? 'style-fixed':'']" :style="`width:calc(100% - ${isActive? '64px':'201px'})`">
 
     <div class="navbar">
       <div
@@ -21,15 +21,19 @@
           {{value.title}}
         </el-breadcrumb-item>
       </el-breadcrumb>
+
       <div class="arrow-setup">
+        <!-- 全屏 -->
+        <screenfull id="header-screenfull" />
+        <!-- 个人中心 退出登录 -->
         <div class="user">
           <el-dropdown>
             <span class="el-dropdown-link">      
               <el-avatar
                 :size="24"
-                :src="circleUrl"
+                :src="picture"
               />
-              <p>admain</p>
+              <p>ADMIN</p>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
@@ -45,6 +49,7 @@
             </template>
           </el-dropdown>
         </div>
+        <!-- 设置 -->
         <div class="setup" @click="drawer = true">
           <FontIcon iconName="setting" />
         </div>
@@ -119,9 +124,36 @@
     </div>
     
   </div>
+
   <el-drawer v-model="drawer" title="I am the title" :with-header="false">
-    <span>Hi there!</span>
+     <ul class="setting">
+      <li>
+        <span>关闭侧边栏</span>
+        <el-switch
+          v-model="sidebar"
+          inline-prompt
+          inactive-color="#a6a6a6"
+          active-text="开"
+          inactive-text="关"
+          @change="greyChange"
+        />
+      </li>
+      <li>
+        <span>侧边栏Logo</span>
+        <el-switch
+          v-model="logoVal"
+          inline-prompt
+          inactive-color="#a6a6a6"
+          active-text="开"
+          inactive-text="关"
+          @change="LogoChange"
+        />
+      </li>
+
+    </ul>
+
   </el-drawer>
+  
 </template>
 
 <script setup>
@@ -133,11 +165,11 @@ import { computed, ref, watch, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import storeLocal from 'storejs'
 import FontIcon from '@/layout/FontIcon/indx.vue'
+import screenfull from '../components/screenfull.vue'
 
 const router = useRouter()
 const route = useRoute()
 const store = useStore()
-
 const drawer = ref(false)
 const state = reactive({
   circleUrl:
@@ -145,11 +177,19 @@ const state = reactive({
   squareUrl:
     'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
   sizeList: ['small', '', 'large'],
+  picture:require('../../assets/images/picture.jpg')
 })
-const { circleUrl, squareUrl, sizeList } = toRefs(state)
+const { circleUrl, squareUrl, sizeList, picture } = toRefs(state)
+
 
 const tags = computed(() => {
   return store.state.data.elTag
+})
+const sidebar = computed(() => {
+  return !store.state.settings.sidebar
+})
+const logoVal = computed(() => {
+  return !store.state.settings.logoIcon
 })
 
 watch(
@@ -189,9 +229,24 @@ const CurTitle = computed(() => {
   return router.currentRoute.value.meta?.title
 })
 
+
+
 const handleClose = (tag) => {
   let data = tags.value.splice(tags.value.indexOf(tag), 1)
   store.commit('updateData', {elTag:data});
+}
+
+const LogoChange = (val) => {
+  store.commit('updateSettings',{
+    key:'logoIcon',
+    value:!val
+  });
+}
+const greyChange = (val) => {
+  store.commit('updateSettings',{
+    key:'sidebar',
+    value:!val
+  });
 }
 // 退出登录
 const Logout = () => {
@@ -243,8 +298,6 @@ const toggleClick = () => {
   store.commit('setCollapse')
 }
 </script>
-<style lang="scss">
-</style>
 <style module="classes" scoped>
 .container {
   padding: 0 15px;
@@ -259,6 +312,27 @@ const toggleClick = () => {
 }
 </style>
 <style lang="scss" scoped>
+.setting {
+  width: 100%;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 25px;
+  }
+}
+.style-fixed{
+  width:100% !important;
+}
+.fixed-header{
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  right: 0;
+  transition: width .1s;
+  background: var(--color-body-bg);
+}
 .cursor-w {
   cursor: w-resize;
 }
@@ -325,8 +399,9 @@ const toggleClick = () => {
     width: 100%;
     display: flex;
     align-items: center;
+    min-width: 500px;
     padding: 0 5px;
-
+    overflow: hidden;
     span {
       cursor: pointer;
       margin-right: 3px;

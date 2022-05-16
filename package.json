@@ -9,6 +9,7 @@
     "app": "cd server && nodemon app"
   },
   "dependencies": {
+    "@vueuse/core": "^8.4.2",
     "@wangeditor/editor": "^5.0.1",
     "@wangeditor/editor-for-vue": "^5.1.10",
     "axios": "^0.26.1",

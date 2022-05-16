@@ -21,9 +21,29 @@
 
         <div class="login-options">
           <el-checkbox v-model="keep">记住密码</el-checkbox>
-          <div>忘记密码</div>
+          <div class="forget">忘记密码?</div>
         </div>
-        <el-button type="primary" class="login-btn" @click="login()">登录</el-button>
+        <el-button type="primary" class="login-btn" @click="LoginBtn(ruleFormRef)" :loading="showload">
+          <template #loading>
+            <div class="custom-loading">
+              <svg class="circular" viewBox="-10, -10, 50, 50">
+                <path
+                  class="path"
+                  d="
+                  M 30 15
+                  L 28 17
+                  M 25.61 25.61
+                  A 15 15, 0, 0, 1, 15 30
+                  A 15 15, 0, 1, 1, 27.99 7.5
+                  L 15 15
+                "
+                  style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"
+                />
+              </svg>
+            </div>
+          </template>
+          登录
+        </el-button>
       </el-form>
     </div>
   </div>
@@ -33,17 +53,17 @@
   import { Lock, User } from '@element-plus/icons-vue'
   import { ElNotification } from 'element-plus'
   import { reactive, ref, computed } from "vue"
-  import { Login, getMenu } from "@/api/user"
-  import ToTree from "@/utils/ToTree";
+  import { Login } from "@/api/user"
+  import { getMenu } from "@/api/menu"
   import { successMessage, warnMessage } from "@/utils/message"
-  import views from "@/utils/assembly.js"
-  import storeLocal from 'storejs'
   import { useRouter } from "vue-router";
   import { useStore } from 'vuex'
 
   const store = useStore();
   const router = useRouter();
+  const showload = ref(false)
   const keep = ref(false)
+  const ruleFormRef = ref()
   const user = reactive({
     username: "admin",
     password: "123456",
@@ -53,10 +73,18 @@
     password: [{ required: true, message: "密码是必须的", trigger: "blur" }]
   })
 
-  /**
-   * 登录
-   * */
+  const LoginBtn = (formEl) => {
+    formEl.validate((valid) => {
+      if (valid) {
+        login()
+      } else {
+        return false
+      }
+    })
+  }
+  
   const login = async () => {
+    showload.value = true
     const { username, password } = user
     const res = await Login({ username, password })
     console.log(res, "登录信息")
@@ -65,20 +93,22 @@
     verification(code, msg)
 
     if (code === 200) {
-      ElNotification({
-        title: 'Success',
-        message: '登录成功',
-        type: 'success',
-      })
-
       let menu = await getMenu()
       // console.log(menu,"菜单列表")
       store.commit('updateData', { key: 'user', value: user })
       // Menulist
       await store.dispatch('updateRoute', menu)
       // console.log(router.options.routes)
-
-      router.push("/home");
+      setTimeout(() => {
+        ElNotification({
+          title: 'Success',
+          message: '登录成功',
+          type: 'success',
+        })
+        router.push("/home");
+      },1000)
+    }else{
+      showload.value = false
     }
   }
 
@@ -94,12 +124,27 @@
   }
 </script>
 <style style="scss" scoped>
-.login-form h2 {
-  text-transform: uppercase;
-  margin: 15px 0;
-  color: #999;
-  font: bold 200% Consolas, Monaco, monospace;
-}
+  .el-button .custom-loading .circular {
+    margin-right: 6px;
+    width: 18px;
+    height: 18px;
+    animation: loading-rotate 2s linear infinite;
+  }
+  .el-button .custom-loading .circular .path {
+    animation: loading-dash 1.5s ease-in-out infinite;
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: 0;
+    stroke-width: 2;
+    stroke: var(--el-button-text-color);
+    stroke-linecap: round;
+  }
+
+  .login-form h2 {
+    text-transform: uppercase;
+    margin: 15px 0;
+    color: #999;
+    font: bold 200% Consolas, Monaco, monospace;
+  }
   .login {
     height: 100vh;
     display: flex;

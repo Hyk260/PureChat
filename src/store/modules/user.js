@@ -1,5 +1,5 @@
 import storage from 'storejs'
-import { Login, getMenu } from "@/api/user"
+import { Login } from "@/api/user"
 import router from "@/router";
 import ToTree from "@/utils/ToTree";
 import views from "@/utils/assembly.js"

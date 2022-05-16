@@ -8,7 +8,8 @@ import ToTree from "@/utils/ToTree";
 import views from "@/utils/assembly.js"
 import initLocalStorage from './data/initLocalStorage'
 
-const account = initLocalStorage.data // 账号信息
+const data = storage.get('userdata') || initLocalStorage.data // 账号信息
+const settings = storage.get('setup') || initLocalStorage.settings // 设置
 // const router = useRouter();
 
 /**
@@ -28,12 +29,22 @@ export default createStore({
   modules,
   state: {
     views,
-    data: storage.get('userdata') || account,
+    data,
+    settings,
   },
   mutations: {
     // 折叠侧边栏
     setCollapse(state) {
       state.data.isCollapse = !state.data.isCollapse
+    },
+    // 显示隐藏侧边栏
+    // setSidebar(state){
+    //   console.log(state)
+    //   state.settings.sidebar = !state.settings.sidebar
+    // },
+    // 更新用户设置
+    updateSettings(state, { key, value }) {
+      state.settings[key] = value
     },
     // 更新用户信息
     updateData(state, { key, value }) {

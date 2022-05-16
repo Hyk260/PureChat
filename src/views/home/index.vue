@@ -14,19 +14,11 @@ import Theme from "@/layout/theme/index.vue"
 import SideBar from "@/layout/SideBar/index.vue"
 import { useStore } from 'vuex'
 const store = useStore();
-
-
-
-
 </script>
 
 <style lang="scss" scoped>
 .content{
   display: flex;
   height: 100%;
-  // overflow-x: hidden;
-  // ::-webkit-scrollbar {
-  //   width: 0px;
-  // }
 }
 </style>

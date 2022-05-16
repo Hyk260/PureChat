@@ -3,8 +3,6 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-// import '@/assets/svg';
-
 import '@/styles/index.scss'
 import '@/styles/nprogress.css'
 
@@ -15,6 +13,7 @@ import { loadAllassembly } from './components';
 import NProgress from 'nprogress'
 
 import FontIcon from './layout/FontIcon/indx.vue'
+import registerSvgIcon from './assets/icons';
 
 
 NProgress.configure({
@@ -32,6 +31,7 @@ NProgress.configure({
 
 const app = createApp(App)
 app.component(FontIcon)
+
 for (const name in ElIcons){
   app.component(name,ElIcons[name])
 }
@@ -41,6 +41,7 @@ for (const name in ElIcons){
 loadAllPlugins(app)
 // 自动加载组件
 loadAllassembly(app)
+registerSvgIcon(app)
 
 app.use(store)
 app.use(router)

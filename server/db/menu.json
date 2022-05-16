@@ -14,7 +14,15 @@
         "57c79357-0309-41b9-919a-253c3dfe6690",
         "3936c425-1286-49c3-bc92-5b364b9f4264",
         "7b3c2013-5f52-4191-8080-e18641eda5df",
-        "7b3c2013-5f52-4191-8080-e18641eda5d1"
+        "7b3c2013-5f52-4191-8080-e18641eda5d1",
+        "34221911-5c1b-451b-933d-143b8cea20dd",
+        "86eee801-ffd1-4769-b09a-6a2a8a516af5",
+        "a88db623-810c-4ee6-834f-a292941dea86",
+        "53983958-5807-4bbc-9cc1-23412c776f8a",
+        "be63ff4f-0462-4171-bb65-cdd2ff052b31",
+        "26191e4f-4f67-4dcf-a1d3-d06f279ddb6e",
+        "8ba31b42-b46a-4424-a0de-a65a30928df7",
+        "ca3f8c29-e786-4521-991c-bfe2a76b9c1b"
       ]
     },
     {
@@ -26,7 +34,8 @@
       "meta": {
         "title": "首页",
         "icon": "Eleme",
-        "auth": []
+        "auth": [],
+        "modify": true
       }
     },
     {
@@ -38,7 +47,8 @@
       "meta": {
         "title": "系统管理",
         "icon": "Setting",
-        "auth": []
+        "auth": [],
+        "modify": true
       },
       "children": [
         "3936c425-a286-49c3-bc92-5b364b9f4261",
@@ -127,8 +137,112 @@
       "componentName": "Draggable",
       "meta": {
         "title": "拖拽",
-        "icon": "Mic"
+        "icon": "Folder"
       }
+    },
+    {
+      "id": "34221911-5c1b-451b-933d-143b8cea20dd",
+      "url": "/system1",
+      "path": "/system1",
+      "componentName": "System",
+      "meta": {
+        "title": "测试1",
+        "icon": "Edit"
+      },
+      "children": []
+    },
+    {
+      "id": "86eee801-ffd1-4769-b09a-6a2a8a516af5",
+      "url": "/system2",
+      "path": "/system2",
+      "componentName": "System",
+      "meta": {
+        "title": "测试2",
+        "icon": "DCaret"
+      },
+      "children": []
+    },
+    {
+      "id": "a88db623-810c-4ee6-834f-a292941dea86",
+      "url": "/system3",
+      "path": "/system3",
+      "componentName": "System",
+      "meta": {
+        "title": "测试3",
+        "icon": "DataAnalysis"
+      },
+      "children": []
+    },
+    {
+      "id": "53983958-5807-4bbc-9cc1-23412c776f8a",
+      "url": "/system4",
+      "path": "/system4",
+      "componentName": "System",
+      "meta": {
+        "title": "测试4",
+        "icon": "Folder",
+        "auth": []
+      },
+      "children": []
+    },
+    {
+      "id": "be63ff4f-0462-4171-bb65-cdd2ff052b31",
+      "url": "/system5",
+      "path": "/system5",
+      "componentName": "System",
+      "meta": {
+        "title": "测试5",
+        "icon": "Folder",
+        "auth": []
+      },
+      "children": []
+    },
+    {
+      "id": "26191e4f-4f67-4dcf-a1d3-d06f279ddb6e",
+      "url": "/system6",
+      "path": "/system6",
+      "componentName": "System",
+      "meta": {
+        "title": "测试6",
+        "icon": "Folder",
+        "auth": []
+      },
+      "children": []
+    },
+    {
+      "id": "8ba31b42-b46a-4424-a0de-a65a30928df7",
+      "url": "/system7",
+      "path": "/system7",
+      "componentName": "System",
+      "meta": {
+        "title": "测试7",
+        "icon": "Folder",
+        "auth": []
+      },
+      "children": []
+    },
+    {
+      "id": "ca3f8c29-e786-4521-991c-bfe2a76b9c1b",
+      "url": "/system8",
+      "path": "/system8",
+      "componentName": "System",
+      "meta": {
+        "title": "测试8",
+        "icon": "FullScreen"
+      },
+      "children": []
+    },
+    {
+      "id": "4f888a02-1308-4589-b406-8f303dc4db0c",
+      "url": "/system9/system91",
+      "path": "/system91",
+      "componentName": "System",
+      "meta": {
+        "title": "测试91",
+        "icon": "Folder",
+        "auth": []
+      },
+      "children": []
     }
   ]
 }

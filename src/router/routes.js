@@ -6,25 +6,6 @@
 const Home = () => import("@/views/home/index.vue")
 const Login = () => import("@/views/login/index.vue")
 const NotFound = () => import("@/views/notfound/index.vue")
-
-const routes = [
-  { path: '/', redirect: '/home' },
-  {
-    path: "/login",
-    name: "login",
-    component: Login,
-  },
-  
-  {
-    path: "/404",
-    name: "notFound",
-    component: NotFound,
-    meta: {
-      title: '页面不存在'
-    }
-  },
-];
-
 const model = [
   {
     path: "/home",
@@ -113,10 +94,22 @@ const model = [
   {
     path: "/404",
     name: "notFound",
-    // component: NotFound,
+    component: NotFound,
     meta: {
       title: '页面不存在'
     }
   },
 ]
+
+const routes = [
+  { path: '/', redirect: '/home' },
+  {
+    path: "/login",
+    name: "login",
+    component: Login,
+  },
+  // ...model
+];
+
+
 export default routes

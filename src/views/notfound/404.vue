@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <h1>404</h1>
-  </div>
+  <div>404</div>
 </template>
 
 <script setup>
-
+import { reactive, ref, onMounted, computed } from 'vue'
+    
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang='scss'>
 
 </style>

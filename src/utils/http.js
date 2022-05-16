@@ -30,7 +30,7 @@ const errorHandler = (error) => {
 service.interceptors.request.use(
   config => {
     const token = storage.get(ACCESS_TOKEN)
-    if(token) config.headers['authorization'] = token;
+    if (token) config.headers['authorization'] = token;
     return config
   },
   errorHandler)
@@ -43,14 +43,14 @@ service.interceptors.response.use(
     // console.log(response)
     if (status === 200) {
       const ToKen = response.headers["x-token"]
-      ToKen && storage.set(ACCESS_TOKEN,ToKen) 
+      ToKen && storage.set(ACCESS_TOKEN, ToKen)
       return data
     }
     // if(status === 401){
     //   storage.remove(ACCESS_TOKEN)
     //   router.replace('/login')
     // }
-  },errorHandler)
+  }, errorHandler)
 
 
 export default service

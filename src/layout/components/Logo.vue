@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="logo">
     Logo
   </div>
 </template>
@@ -9,5 +9,8 @@
 </script>
 
 <style lang="scss" scoped>
-
+.logo{
+  height: 48px;
+  background: #ccc;
+}
 </style>

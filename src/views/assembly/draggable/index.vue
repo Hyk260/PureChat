@@ -47,12 +47,15 @@
 
 <template>
  
- <div>
+ <div class="text">
    推拽
  </div>
 </template>
 
 <style lang="scss" scoped>
+  .text{
+    height: 100%;
+  }
   /* grid列表拖拽 */
   .grid-container {
     display: grid;

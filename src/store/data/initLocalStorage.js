@@ -1,7 +1,8 @@
 const localStorage = {
   // 设置
   settings: {
-    
+    sidebar:true,//侧边栏
+    logoIcon:true,
   },
   // 用户信息
   data: {

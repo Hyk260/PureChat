@@ -31,5 +31,9 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.content-wrap{
+  padding: 24px;
+  height: calc(100vh - 86px);
+}
 </style>

@@ -28,7 +28,7 @@ const router = createRouter({
 
 let isF = false
 router.beforeEach(async (to, from, next) => {
-  console.log(to, from)
+  // console.log(to, from)
   if (from.path === to.path) return
   const token = storage.get(ACCESS_TOKEN)
 

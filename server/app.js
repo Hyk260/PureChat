@@ -98,8 +98,8 @@ app.get("/menu/query", async (req, res, next) => {
 app.get("/menu/add", async (req, res, next) => {
   // id为父级id
   let { parentId, path, title, icon, componentName } = req.query;
-  console.log({ parentId, path, title, icon, componentName },"参数")
   if (parentId && path && title && icon && componentName) {
+    console.log(parentId,'parentId')
     let parentMenu = db_menu
       .get("menu")
       .find({ id: parentId })
@@ -119,7 +119,6 @@ app.get("/menu/add", async (req, res, next) => {
         },
         children: []
       };
-      // console.log("生成的菜单表")
       db_menu
         .get("menu")
         .push(currentMenu)
@@ -132,7 +131,7 @@ app.get("/menu/add", async (req, res, next) => {
         .write();
       res.json(db_menu.get("menu").value()); //返回新菜单表
     } else {
-      //
+      res.json({ code: 400, msg: "参数不合法" });
     }
   } else {
     res.json({ code: 400, msg: "参数不合法" });
@@ -142,8 +141,8 @@ app.get("/menu/add", async (req, res, next) => {
 // 删除菜单 菜单id 数组
 app.get("/menu/delete", async (req, res, next) => {
   let { ids } = req.query;
-  console.log(ids,"删除菜单——参数");
-  if (ids.length) {
+  console.log(ids,"ids参数");
+  if (ids?.length) {
     ids.forEach(id => {
       let parentNode = db_menu
         .get("menu")
@@ -151,9 +150,9 @@ app.get("/menu/delete", async (req, res, next) => {
           return item.children.indexOf(id) > -1;
         })
         .value();
-      // console.log(parentNode,"parentNode");
+        console.log(parentNode,"parentNode参数")
       let updatedChildren = parentNode.children.filter(v => v !== id);
-      // console.log(updatedChildren,"updatedChildren");
+
       db_menu
         .get("menu")
         .find(item => {
@@ -166,8 +165,8 @@ app.get("/menu/delete", async (req, res, next) => {
         .remove({ id })
         .write();
     });
-    // res.json(db_menu.get("menu").value());
-    res.json({ code: 200, msg: "测试" });
+    res.json(db_menu.get("menu").value());
+    // res.json({ code: 200, msg: "测试" });
 
   } else {
     res.json({ code: 400, msg: "参数不合法" });
