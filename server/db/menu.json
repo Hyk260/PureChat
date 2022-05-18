@@ -126,7 +126,8 @@
         "icon": "Menu"
       },
       "children": [
-        "3936c425-a286-49c3-bc92-5b364b9f4264"
+        "3936c425-a286-49c3-bc92-5b364b9f4264",
+        "1ab98979-3c7b-4e4d-a10d-26a86c57d3e1"
       ]
     },
     {
@@ -139,6 +140,18 @@
         "title": "拖拽",
         "icon": "Folder"
       }
+    },
+    {
+      "id": "1ab98979-3c7b-4e4d-a10d-26a86c57d3e1",
+      "url": "/assembly/jigsaw",
+      "path": "jigsaw",
+      "name": "jigsaw",
+      "componentName": "Jigsaw",
+      "meta": {
+        "title": "拼图",
+        "icon": "Cpu"
+      },
+      "children": []
     },
     {
       "id": "34221911-5c1b-451b-933d-143b8cea20dd",

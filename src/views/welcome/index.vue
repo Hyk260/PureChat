@@ -1,6 +1,6 @@
 <template>
   <div>
-    首页
+    首页home
   </div>
 </template>
 

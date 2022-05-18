@@ -1,8 +1,9 @@
 <template>
   <div :class="['fixed-header',sidebar? 'style-fixed':'']" :style="`width:calc(100% - ${isActive? '64px':'201px'})`">
 
-    <div class="navbar">
+    <div class="navbar" >
       <div
+        v-show="!sidebar"
         :class="classes.container"
         :title="!isActive ? '点击折叠' : '点击展开'"
         @click="toggleClick"
@@ -13,7 +14,7 @@
         />
       </div>
       <!-- 面包屑 :separator-icon="ArrowRight" > icon-->
-      <el-breadcrumb>
+      <el-breadcrumb v-show="!sidebar">
         <el-breadcrumb-item
           :key="value.title"
           v-for="value in route.matched.map((item) => item.meta)"

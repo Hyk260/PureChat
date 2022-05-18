@@ -23,7 +23,7 @@
               mode="out-in"
             >
               <component v-if="Component" :is="Component" />
-              <component v-else :is="home"></component>
+              <component v-else :is="welcome"></component>
             </transition>
           </router-view>
         </el-scrollbar>
@@ -41,7 +41,7 @@ import views from '@/utils/assembly.js'
 import Header from './Header.vue'
 
 import editor from '@/views/Editor/index.vue'
-import home from '@/views/welcome/index.vue'
+import welcome from '@/views/welcome/index.vue'
 import personal from '@/views/Personal/index.vue'
 
 const route = useRoute()

@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="" target="blank">
+  <a target="blank">
     <img src="./images/log.png" alt="Logo" width="168" height="168">
   </a>
   <h2 align="center" style="font-weight: 600;font: bold 200% Consolas, Monaco, monospace;color: #999;">PURE ADMIN</h2>
@@ -72,7 +72,6 @@ yarn build
 │   ├── assets                 // 主题字体图片svg icons等静态资源
 │   ├── components             // 全局公用组件
 │   ├── directive              // 全局指令
-│   ├── filtres                // 全局过滤
 │   ├── locale                 // 国际化语言
 │   ├── mock                   // mock服务
 │   ├── plugins				   // 插件

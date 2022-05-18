@@ -8,6 +8,7 @@ var { v4: uuid } = require("uuid");
 var jwt = require("jsonwebtoken");
 
 var fs = require("fs");
+
 // 解析token
 var expressJwt = require("express-jwt");
 
@@ -33,7 +34,7 @@ var app = express();
 
 const SECRET_KEY = "7040575a-5ff5-4398-a410-d9c7b010f6e8";
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   // 允许前端自定义请求头 authorization
   // 前端通过请求头中的authorization带token到后台
   // 注意默认情况 Token 必须以 Bearer+空格 开头
@@ -52,7 +53,7 @@ app.use(
 
 // 登录
 app.get("/login", async (req, res, next) => {
-  console.log(req.query,"req")
+  console.log(req.query, "req")
   let { username, password } = req.query;
   if (username && password) {
     let user = db_user
@@ -65,9 +66,9 @@ app.get("/login", async (req, res, next) => {
       res.setHeader(
         "X-token",
         "Bearer " +
-          jwt.sign(user, SECRET_KEY, {
-            expiresIn: 3600 * 24 * 3
-          })
+        jwt.sign(user, SECRET_KEY, {
+          expiresIn: 3600 * 24 * 3
+        })
       );
       res.json({
         code: 200,
@@ -99,12 +100,12 @@ app.get("/menu/add", async (req, res, next) => {
   // id为父级id
   let { parentId, path, title, icon, componentName } = req.query;
   if (parentId && path && title && icon && componentName) {
-    console.log(parentId,'parentId')
+    console.log(parentId, 'parentId')
     let parentMenu = db_menu
       .get("menu")
       .find({ id: parentId })
       .value();
-    console.log(parentMenu,"查找当前选中菜单表")
+    console.log(parentMenu, "查找当前选中菜单表")
     if (parentMenu) {
       let currentId = uuid(); //生成唯一ID
       let currentMenu = {
@@ -123,7 +124,7 @@ app.get("/menu/add", async (req, res, next) => {
         .get("menu")
         .push(currentMenu)
         .write();//数据库添加菜单表
-      parentMenu.children.push(currentId); 
+      parentMenu.children.push(currentId);
       db_menu
         .get("menu")
         .find({ id: parentId })
@@ -141,7 +142,7 @@ app.get("/menu/add", async (req, res, next) => {
 // 删除菜单 菜单id 数组
 app.get("/menu/delete", async (req, res, next) => {
   let { ids } = req.query;
-  console.log(ids,"ids参数");
+  console.log(ids, "ids参数");
   if (ids?.length) {
     ids.forEach(id => {
       let parentNode = db_menu
@@ -150,7 +151,7 @@ app.get("/menu/delete", async (req, res, next) => {
           return item.children.indexOf(id) > -1;
         })
         .value();
-        console.log(parentNode,"parentNode参数")
+      console.log(parentNode, "parentNode参数")
       let updatedChildren = parentNode.children.filter(v => v !== id);
 
       db_menu
@@ -173,24 +174,24 @@ app.get("/menu/delete", async (req, res, next) => {
   }
   next();
 });
-
 // 更新菜单
 app.get("/menu/update", async (req, res, next) => {
   if (_.has(req.query, "id", "path", "title", "icon", "componentName")) {
     let { id, path, title, icon, componentName } = req.query;
-    console.log(icon,"icon")
+    console.log(icon, "icon")
     db_menu
       .get("menu")
       .find({ id })
       .assign({ path, meta: { title, icon } })
       .write();
-      // componentName
+    // componentName
     res.json(db_menu.get("menu").value());
   } else {
     res.json({ code: 400, msg: "参数不合法" });
   }
   next();
 });
+
 // 获取全部角色
 app.get("/role/query", async (req, res, next) => {
   let result = db_role.get("role").value();
@@ -214,7 +215,7 @@ app.get("/role/add", async (req, res, next) => {
       info,
       createTime: currentTime,
       updateTime: currentTime,
-      isDefaultRole:false
+      isDefaultRole: false
     };
     db_role
       .get("role")
@@ -242,7 +243,7 @@ app.get("/role/update", async (req, res, next) => {
       roleName,
       info,
       updateTime: currentTime,
-      isDefaultRole:false,
+      isDefaultRole: false,
     };
     db_role
       .get("role")
@@ -262,7 +263,6 @@ app.get("/role/update", async (req, res, next) => {
   }
   next();
 });
-
 // 删除角色
 app.get("/role/delete", async (req, res, next) => {
   if (_.has(req.query, "ids") && _.isArray(req.query.ids)) {
@@ -405,14 +405,14 @@ app.get("user/add", async (req, res, next) => {
 });
 //
 
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   if (err.name === "UnauthorizedError") {
     res.status(401).send({ msg: "不合法的请求" });
   }
   next();
 });
 
-const server = app.listen(8082,function() {
+const server = app.listen(8082, function () {
   let host = server.address().address
   let port = server.address().port
   // console.log(host)
