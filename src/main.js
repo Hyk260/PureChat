@@ -13,7 +13,7 @@ import { loadAllassembly } from './components';
 import NProgress from 'nprogress'
 
 import FontIcon from './layout/FontIcon/indx.vue'
-import registerSvgIcon from './assets/icons';
+import { registerSvgIcon } from './assets/icons/index';
 
 
 NProgress.configure({

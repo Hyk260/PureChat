@@ -1,7 +1,6 @@
 <template>
   <el-icon :size="props.size">
-    <component :is="props.iconName">
-    </component>
+    <component :is="props.iconName"> </component>
   </el-icon>
 </template>
 

@@ -11,7 +11,7 @@ const service = axios.create({
 })
 // 异常拦截处理器
 const errorHandler = (error) => {
-  console.log(error)
+  // console.log(error)
   if (error.response) {
     const { data, status } = error.response
     // 登录过期
@@ -29,6 +29,7 @@ const errorHandler = (error) => {
 // 请求拦截器
 service.interceptors.request.use(
   config => {
+    // console.log(config)
     const token = storage.get(ACCESS_TOKEN)
     if (token) config.headers['authorization'] = token;
     return config
@@ -46,10 +47,6 @@ service.interceptors.response.use(
       ToKen && storage.set(ACCESS_TOKEN, ToKen)
       return data
     }
-    // if(status === 401){
-    //   storage.remove(ACCESS_TOKEN)
-    //   router.replace('/login')
-    // }
   }, errorHandler)
 
 

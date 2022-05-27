@@ -7,9 +7,9 @@
   import { useStore } from 'vuex';
   import views from "@/utils/assembly"
   import { useRouter } from "vue-router";
-  import storeLocal from 'storejs'
+  import storage from 'storejs'
 
-  const table = storeLocal.get('userdata')
+  const table = storage.get('userdata')
 
   onMounted(() => {
     if(!table?.Routingtable) return

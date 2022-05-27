@@ -28,6 +28,8 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 export default createStore({
   modules,
   state: {
+    // 前端生成的验证码（按实际需求替换）
+    verifyCode: "",
     views,
     data,
     settings,
@@ -53,6 +55,8 @@ export default createStore({
     },
   },
   actions: {
+
+    // 更新路由
     updateRoute({ commit, state }, route) {
       route.map((t) => {
         if (t.componentName) {
@@ -70,6 +74,10 @@ export default createStore({
     },
     preservation(){
 
+    },
+    SET_VERIFYCODE(state,verifyCode) {
+      console.log(verifyCode)
+      state.verifyCode = verifyCode
     },
     logout(){
       logout()

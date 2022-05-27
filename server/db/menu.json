@@ -64,7 +64,8 @@
       "componentName": "User",
       "meta": {
         "title": "用户权限",
-        "icon": "CopyDocument"
+        "icon": "CopyDocument",
+        "modify": true
       },
       "children": []
     },
@@ -76,7 +77,8 @@
       "componentName": "Menu",
       "meta": {
         "title": "菜单列表",
-        "icon": "More"
+        "icon": "More",
+        "modify": true
       },
       "children": []
     },
@@ -88,7 +90,8 @@
       "componentName": "Role",
       "meta": {
         "title": "角色权限",
-        "icon": "User"
+        "icon": "User",
+        "modify": true
       },
       "children": []
     },
@@ -100,7 +103,8 @@
       "componentName": "Editor",
       "meta": {
         "title": "编辑器",
-        "icon": "Edit"
+        "icon": "Edit",
+        "modify": true
       },
       "children": []
     },
@@ -112,7 +116,8 @@
       "componentName": "Personal",
       "meta": {
         "title": "个人中心",
-        "icon": "User"
+        "icon": "User",
+        "modify": true
       }
     },
     {
@@ -123,11 +128,13 @@
       "componentName": "Assembly",
       "meta": {
         "title": "组件",
-        "icon": "Menu"
+        "icon": "Menu",
+        "modify": true
       },
       "children": [
         "3936c425-a286-49c3-bc92-5b364b9f4264",
-        "1ab98979-3c7b-4e4d-a10d-26a86c57d3e1"
+        "1ab98979-3c7b-4e4d-a10d-26a86c57d3e1",
+        "b402218d-1f87-41a5-ad18-f16eb4451efc"
       ]
     },
     {
@@ -138,7 +145,8 @@
       "componentName": "Draggable",
       "meta": {
         "title": "拖拽",
-        "icon": "Folder"
+        "icon": "Folder",
+        "modify": true
       }
     },
     {
@@ -149,7 +157,21 @@
       "componentName": "Jigsaw",
       "meta": {
         "title": "拼图",
-        "icon": "Cpu"
+        "icon": "Cpu",
+        "modify": true
+      },
+      "children": []
+    },
+    {
+      "id": "b402218d-1f87-41a5-ad18-f16eb4451efc",
+      "url": "/assembly/animation",
+      "path": "Animation",
+      "name": "Animation",
+      "componentName": "Animation",
+      "meta": {
+        "title": "动画",
+        "icon": "DocumentChecked",
+        "auth": []
       },
       "children": []
     },
@@ -159,8 +181,10 @@
       "path": "/system1",
       "componentName": "System",
       "meta": {
-        "title": "测试1",
-        "icon": "Edit"
+        "title": "关于",
+        "icon": "Warning",
+        "auth": [],
+        "modify": false
       },
       "children": []
     },

@@ -9,12 +9,12 @@ import SvgIcon from '@/components/SvgIcon' // svg component
 * regExp：匹配引入文件的正则表达式
 */
 
-const registerSvgIcon = (app) => {
+export const registerSvgIcon = (app) => {
   app.component('svg-icon', SvgIcon) // 注册全局组件
-  
-  const req = require.context('./svg', false, /\.svg$/);  
-  const requireAll = requireContext => requireContext.keys().map(requireContext);
-  requireAll(req);
-}
+  // const req = require.context('./svg', false, /\.svg$/);  
 
-export default registerSvgIcon;
+  const requireAll = (requireContext) => requireContext.keys().map(requireContext)
+  const req = require.context('./', true, /\.svg$/)
+  requireAll(req)
+  // console.log(requireAll)
+}

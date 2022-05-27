@@ -7,8 +7,8 @@ var { v4: uuid } = require("uuid");
 // 生成token
 var jwt = require("jsonwebtoken");
 
-var fs = require("fs");
-
+const fs = require("fs");
+const path = require('path')
 // 解析token
 var expressJwt = require("express-jwt");
 
@@ -34,7 +34,8 @@ var app = express();
 
 const SECRET_KEY = "7040575a-5ff5-4398-a410-d9c7b010f6e8";
 
-app.use(function (req, res, next) {
+
+app.use((req, res, next) => {
   // 允许前端自定义请求头 authorization
   // 前端通过请求头中的authorization带token到后台
   // 注意默认情况 Token 必须以 Bearer+空格 开头
@@ -42,6 +43,9 @@ app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   next();
 });
+
+//设置静态文件目录 static 
+app.use(express.static(path.join(__dirname, 'public')))
 
 
 app.use(
@@ -51,9 +55,9 @@ app.use(
   }).unless({ path: ["/login", "/favicon.ico"] })
 );
 
+
 // 登录
 app.get("/login", async (req, res, next) => {
-  console.log(req.query, "req")
   let { username, password } = req.query;
   if (username && password) {
     let user = db_user
@@ -182,7 +186,7 @@ app.get("/menu/update", async (req, res, next) => {
     db_menu
       .get("menu")
       .find({ id })
-      .assign({ path, meta: { title, icon } })
+      .assign({ path, meta: { title, icon, auth:[], modify: false } })
       .write();
     // componentName
     res.json(db_menu.get("menu").value());
@@ -403,18 +407,20 @@ app.get("user/add", async (req, res, next) => {
   }
   next();
 });
-//
 
-app.use(function (err, req, res, next) {
+
+app.use((err, req, res, next) => {
+  // 未经授权的错误
   if (err.name === "UnauthorizedError") {
     res.status(401).send({ msg: "不合法的请求" });
   }
   next();
 });
 
-const server = app.listen(8082, function () {
-  let host = server.address().address
-  let port = server.address().port
-  // console.log(host)
-  console.log("应用实例，访问地址为 http://%s:%s", 'localhost', port)
+
+const server = app.listen(8082, () => {
+  const host = null // server.address().address 
+  const port = server.address().port
+  // console.log("应用实例，访问地址为 http://%s:%s", 'localhost', port)
+  console.log(`server running @ http://${host ? host : 'localhost'}:${port}`)
 })

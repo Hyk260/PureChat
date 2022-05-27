@@ -22,6 +22,7 @@
         :key="puzzle"
         :class="puzzle === '0' || puzzle === 0? 'cell cells':'cell'"
       >
+      <!-- {{puzzle}} -->
       <img class="picture" v-if="!puzzle == 0 " :src="`http://ybadmin.aju.cn/Uploads/version1/${puzzle}.jpg`" alt="">
       </div>
     </transition-group>
@@ -35,12 +36,13 @@ const puzzles = ref([1, 2, 3, 4, 5, 6, 7, 8, 0])
 const state = reactive({})
 
 onMounted(() => {
-  shuffle()
+  
 })
 
 const shuffle = () => {
   puzzles.value = _.shuffle(puzzles.value)
 }
+shuffle()
 const aotoPlay = () => {
   let Setting = {
     originalNode: _.chunk(puzzles.value, 3),
@@ -287,18 +289,24 @@ const autoPuzzles = (Setting) => {
 </script>
 
 <style lang="scss" scoped>
+
 .picture{
   width: 100%;
   height: 100%;
+  -webkit-user-drag:none;
+  user-select:none;
+  cursor: pointer;
 }
 .container {
   display: flex;
   flex-wrap: wrap;
-  width: 308px;
-  height: 308px;
+  width: 300px;
+  height: 300px;
   margin-top: 10px;
   // border: 1px solid #ccc;
   background: #896530;
+  position: relative;
+  overflow: hidden;
 }
 .cell {
   color: #fff;
@@ -308,7 +316,7 @@ const autoPuzzles = (Setting) => {
   align-items: center;
   width: 100px;
   height: 100px;
-  margin: 1px;
+  // margin: 1px;
   -moz-box-shadow: 0px 0px 3px #333333;
   -webkit-box-shadow: 0px 0px 3px #333333;
   box-shadow: 0px 0px 3px #333333;

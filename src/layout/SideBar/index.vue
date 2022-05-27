@@ -1,6 +1,6 @@
 <template>
   <div :class="['sidebar-container', showLogo ? 'has-logo' : '']" v-show="sidebar">
-    <Logo v-if="showLogo"  />
+    <Logo v-if="showLogo && false"  />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         class="el-menu-vertical-demo"

@@ -8,24 +8,14 @@
       <!-- el-scrollbar -->
       <main class="app-main">
         <el-scrollbar class="continer-theme">
-
-        <!-- <transition-group name="home">
-          <template v-if="page.includes(route.name)">
-            <component v-if="route.name === 'home'" :is="home"></component>
-            <component v-if="route.name === 'editor'" :is="editor"></component>
-            <component v-if="route.name === 'personal'" :is="personal"></component>
-          </template> 
-        </transition-group> -->
           <!-- <keep-alive :include="isCached"></keep-alive> -->
           <router-view v-slot="{ Component }">
-            <transition
-              name="fade-transform"
-              mode="out-in"
-            >
+            <transition name="fade-transform" mode="out-in">
               <component v-if="Component" :is="Component" />
-              <component v-else :is="welcome"></component>
+              <component v-else :is="typeComponentMap[pageParams.type] || error"></component>
             </transition>
           </router-view>
+
         </el-scrollbar>
       </main>
     </div>
@@ -33,28 +23,44 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, watch, reactive, defineAsyncComponent } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import store from '@/store'
 import storage from 'storejs'
 import views from '@/utils/assembly.js'
 import Header from './Header.vue'
 
+import error from '@/views/notfound/index.vue'
 import editor from '@/views/Editor/index.vue'
 import welcome from '@/views/welcome/index.vue'
 import personal from '@/views/Personal/index.vue'
 
-const route = useRoute()
+const route = useRoute() 
 const router = useRouter()
 
-const table = storage.get('userdata')
-const page = ['home', 'personal', 'editor']
+const typeComponentMap = {
+	'home': welcome,
+	'personal': personal,
+	'editor': editor,
+}
+const pageParams = reactive({
+	type: ''
+})
+
+watch(
+  () => route.name, 
+  (val) => {
+  pageParams.type = val
+})
+
+
 const isActive = computed(() => {
   return store.state.data.isCollapse
 })
 const sidebar = computed(() => {
   return store.state.settings.sidebar
 })
+
 </script>
 <style>
 .fade-enter-active,

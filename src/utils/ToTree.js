@@ -8,7 +8,7 @@ export default function arrayToTree(node, Menu) {
       let child = Menu.find(item => item.id === id);
       // 如果子级里面仍然存在子级 在次调用本身
       // console.log(child)
-      if (child.children && child.children.length > 0) {
+      if (child.children?.length > 0) {
         arrayToTree(child, Menu);
       }
       child.label = child.meta.title
