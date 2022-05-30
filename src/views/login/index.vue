@@ -209,6 +209,7 @@
   :deep(.el-input-group__append, .el-input-group__prepend) {
     padding: 0;
     box-shadow: none;
+    background-color:transparent;
   }
   .wave{
     position: fixed;
