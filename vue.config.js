@@ -8,6 +8,7 @@ module.exports = {
   lintOnSave: false,// 是否在保存的时候检查
   // 开发以及生产环境的路径配置
   publicPath: environment ? './' : '/',
+  
   chainWebpack(config) {
     // svg-sprite-loader 配置
     // config.module

@@ -14,6 +14,7 @@ const views = {
     Draggable: () => import(`@/views/Assembly/draggable/index`), //拖拽
     Jigsaw:() => import(`@/views/Assembly/Jigsaw/index`), //拼图游戏
     Animation:() => import(`@/views/Assembly/animation/index`), //动画
+  About:home, //关于
 }
 
 export default views;

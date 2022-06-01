@@ -3,7 +3,7 @@
     :class="['app-wrapper',sidebar?'':'style-wrapper']"
     :style="`margin-left:${isActive? '64px':'200px'}`"
   >
-    <div>
+    <!-- <div> -->
       <Header />
       <!-- el-scrollbar -->
       <main class="app-main">
@@ -15,33 +15,33 @@
               <component v-else :is="typeComponentMap[pageParams.type] || error"></component>
             </transition>
           </router-view>
-
         </el-scrollbar>
       </main>
-    </div>
+    <!-- </div> -->
   </div>
 </template>
 
 <script setup>
 import { computed, onMounted, watch, reactive, defineAsyncComponent } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import store from '@/store'
 import storage from 'storejs'
-import views from '@/utils/assembly.js'
+import store from '@/store'
 import Header from './Header.vue'
 
 import error from '@/views/notfound/index.vue'
 import editor from '@/views/Editor/index.vue'
 import welcome from '@/views/welcome/index.vue'
 import personal from '@/views/Personal/index.vue'
+import about from '@/views/about/index.vue'
 
 const route = useRoute() 
 const router = useRouter()
 
 const typeComponentMap = {
-	'home': welcome,
-	'personal': personal,
-	'editor': editor,
+	'home': welcome, //首页
+	'personal': personal, //个人中心
+	'editor': editor, //编辑器
+  'about':about, //关于
 }
 const pageParams = reactive({
 	type: ''
@@ -51,6 +51,9 @@ watch(
   () => route.name, 
   (val) => {
   pageParams.type = val
+},{
+  immediate: true, //立即执行
+  // deep:true // 深度监听
 })
 
 

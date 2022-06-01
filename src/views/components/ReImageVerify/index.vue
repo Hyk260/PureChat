@@ -12,6 +12,7 @@
 import { watch, defineComponent, defineEmits } from 'vue'
 import { useImageVerify } from '@/utils/hooks'
 
+const emit = defineEmits()
 // defineOptions({
 //   name: "ReImageVerify"
 // });
@@ -19,8 +20,6 @@ import { useImageVerify } from '@/utils/hooks'
 const props = defineProps({
   code: '',
 })
-
-const emit = defineEmits()
 
 const { domRef, imgCode, setImgCode, getImgCode } = useImageVerify()
 

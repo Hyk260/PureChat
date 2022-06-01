@@ -177,9 +177,10 @@
     },
     {
       "id": "34221911-5c1b-451b-933d-143b8cea20dd",
-      "url": "/system1",
-      "path": "/system1",
-      "componentName": "System",
+      "url": "/about",
+      "path": "/about",
+      "name": "about",
+      "componentName": "About",
       "meta": {
         "title": "关于",
         "icon": "Warning",
@@ -195,7 +196,9 @@
       "componentName": "System",
       "meta": {
         "title": "测试2",
-        "icon": "DCaret"
+        "icon": "Folder",
+        "auth": [],
+        "modify": false
       },
       "children": []
     },
@@ -206,7 +209,9 @@
       "componentName": "System",
       "meta": {
         "title": "测试3",
-        "icon": "DataAnalysis"
+        "icon": "Folder",
+        "auth": [],
+        "modify": false
       },
       "children": []
     },
@@ -218,7 +223,8 @@
       "meta": {
         "title": "测试4",
         "icon": "Folder",
-        "auth": []
+        "auth": [],
+        "modify": false
       },
       "children": []
     },
@@ -265,7 +271,9 @@
       "componentName": "System",
       "meta": {
         "title": "测试8",
-        "icon": "FullScreen"
+        "icon": "Folder",
+        "auth": [],
+        "modify": false
       },
       "children": []
     },

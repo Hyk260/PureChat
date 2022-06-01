@@ -76,7 +76,6 @@ export default createStore({
 
     },
     SET_VERIFYCODE(state,verifyCode) {
-      console.log(verifyCode)
       state.verifyCode = verifyCode
     },
     logout(){
