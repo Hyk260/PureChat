@@ -73,7 +73,7 @@ const model = [
       {
         path: '/assembly/draggable',
         name: 'draggable',
-        component: () => import(`@/views/Assembly/draggable/index`),
+        component: () => import(`@/views/assembly/draggable/index`),
         meta: {
           icon: "el-icon-more",
           title: "拖拽"

@@ -11,9 +11,9 @@ const views = {
 
   Personal: home, // 个人中心
   Assembly: home, // 组件
-    Draggable: () => import(`@/views/Assembly/draggable/index`), //拖拽
-    Jigsaw:() => import(`@/views/Assembly/Jigsaw/index`), //拼图游戏
-    Animation:() => import(`@/views/Assembly/animation/index`), //动画
+    Draggable: () => import(`@/views/assembly/draggable/index`), //拖拽
+    Jigsaw:() => import(`@/views/assembly/Jigsaw/index`), //拼图游戏
+    Animation:() => import(`@/views/assembly/animation/index`), //动画
   About:home, //关于
 }
 
