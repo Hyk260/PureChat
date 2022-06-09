@@ -1,17 +1,13 @@
 <template>
-  <div :class="['fixed-header',sidebar? 'style-fixed':'']" :style="`width:calc(100% - ${isActive? '64px':'201px'})`">
-
-    <div class="navbar" >
+  <div :class="['fixed-header',sidebar? 'style-fixed':'']" :style="fnStyle(isActive)">
+    <div class="navbar">
       <div
         v-show="!sidebar"
         :class="classes.container"
         :title="!isActive ? '点击折叠' : '点击展开'"
         @click="toggleClick"
       >
-        <FontIcon
-          :class="{'active':true,rotate:isActive}"
-          iconName="Expand"
-        />
+        <FontIcon :class="{'active':true,rotate:isActive}" iconName="Expand"/>
       </div>
       <!-- 面包屑 :separator-icon="ArrowRight" > icon-->
       <el-breadcrumb v-show="!sidebar">
@@ -30,10 +26,7 @@
         <div class="user">
           <el-dropdown>
             <span class="el-dropdown-link">      
-              <el-avatar
-                :size="24"
-                :src="picture"
-              />
+              <el-avatar :size="24" :src="picture"/>
               <p>ADMIN</p>
             </span>
             <template #dropdown>
@@ -56,14 +49,10 @@
         </div>
       </div>
     </div>
-
     <div class="tags-view">
       <div>
         <div class="arrow-left">
-          <FontIcon
-            iconName="arrow-left"
-            class="cursor-w"
-          />
+          <FontIcon iconName="arrow-left" class="cursor-w" />
         </div>
         <div class="scroll-container">
           <el-tag
@@ -87,10 +76,7 @@
           </el-tag>
         </div>
         <div class="arrow-right">
-          <FontIcon
-            iconName="arrow-right"
-            class="cursor-w"
-          />
+          <FontIcon  iconName="arrow-right"  class="cursor-w" />
         </div>
       </div>
       <div class="dropdown">
@@ -123,7 +109,6 @@
         </el-dropdown>
       </div>
     </div>
-    
   </div>
 
   <el-drawer v-model="drawer" title="I am the title" :with-header="false">
@@ -164,7 +149,7 @@ import { reactive } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { computed, ref, watch, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import storeLocal from 'storejs'
+import storage from 'storejs'
 import FontIcon from '@/layout/FontIcon/indx.vue'
 import screenfull from '../components/screenfull.vue'
 
@@ -230,7 +215,9 @@ const CurTitle = computed(() => {
   return router.currentRoute.value.meta?.title
 })
 
-
+const fnStyle = (off) => {
+ return `width:calc(100% - ${off? '64px':'200px'})`
+}
 
 const handleClose = (tag) => {
   let data = tags.value.splice(tags.value.indexOf(tag), 1)

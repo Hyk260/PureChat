@@ -250,7 +250,7 @@
     let RootDir = 'd17d701b-6257-40bd-a6c3-a4672d4823d4'
     // 默认根目录新建 || 自选目录
     const ID = state.checkedKeys
-    if (ID && ID.length > 0 && showDelBtn.value) {
+    if (ID?.length > 0 && showDelBtn.value) {
       RootDir = formLabelAlign.ID
     }
     console.log(RootDir)

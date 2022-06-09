@@ -33,8 +33,8 @@ service.interceptors.request.use(
     const token = storage.get(ACCESS_TOKEN)
     if (token) config.headers['authorization'] = token;
     return config
-  },
-  errorHandler)
+  }, errorHandler)
+
 
 // 响应拦截器
 service.interceptors.response.use(

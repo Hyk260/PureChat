@@ -34,7 +34,6 @@ module.exports = {
       .loader('svg-sprite-loader')
       .options({ symbolId: 'icon-[name]' })
 
-
     // 为生产环境修改配置...
     if (environment) {
       // 清除css,js版本号
@@ -50,7 +49,7 @@ module.exports = {
     config.resolve.alias.set("@", resolve("src"))
     // 修改标题
     config.plugin('html').tap((args) => {
-      args[0].title = "后台管理";
+      args[0].title = "PURE ADMIN";
       return args;
     })
   },

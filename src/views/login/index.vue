@@ -22,7 +22,7 @@
           <el-input v-model="user.password" placeholder="用户密码" :prefix-icon="Lock" size="large" show-password clearable>
           </el-input>
         </el-form-item>
-
+        <!-- 验证码 -->
         <el-form-item prop="verifyCode">
           <el-input v-model="user.verifyCode" @keydown.enter="LoginBtn(ruleFormRef)" size="large" :prefix-icon="Key"  placeholder="验证码" clearable>
               <template v-slot:append>
@@ -35,7 +35,7 @@
           <el-checkbox v-model="keep">记住密码</el-checkbox>
           <div class="forget">忘记密码?</div>
         </div>
-
+        <!-- 登录 -->
         <el-button type="primary" class="login-btn" @click="LoginBtn(ruleFormRef)"  :loading="showload">
           <template #loading>
             <div class="custom-loading">
@@ -48,8 +48,7 @@
                   M 25.61 25.61
                   A 15 15, 0, 0, 1, 15 30
                   A 15 15, 0, 1, 1, 27.99 7.5
-                  L 15 15
-                "
+                  L 15 15"
                   style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"
                 />
               </svg>
@@ -57,6 +56,7 @@
           </template>
           登录
         </el-button>
+
          <el-form-item v-if="false">
             <div class="w-full h-20px flex justify-between items-center">
               <el-button
