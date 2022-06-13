@@ -1,23 +1,22 @@
 <template>
   <div class="login">
     <div class="login-inner">
-      <svg-icon iconClass="loginBg" class="wave"></svg-icon>
-      <!-- <svg-icon iconClass="undraw_innovative" class="img"></svg-icon> -->
+      <svg-icon iconClass="loginBg" class="wave"/>
+
       <header class="login-form">
         <p class="tip">
-          <!-- <img src="../../assets/images/loginBg.svg" alt="" /> -->
           <br />
           <h2>PURE ADMIN</h2>
         </p>
       </header>
 
       <el-form ref="ruleFormRef" :model="user" :rules="rules">
-        
+        <!-- 账号 -->
         <el-form-item prop="username">
           <el-input v-model="user.username" placeholder="用户账号" :prefix-icon="User" size="large" clearable>
           </el-input>
         </el-form-item>
-
+        <!-- 密码 -->
         <el-form-item prop="password">
           <el-input v-model="user.password" placeholder="用户密码" :prefix-icon="Lock" size="large" show-password clearable>
           </el-input>
@@ -30,7 +29,7 @@
               </template>
             </el-input>
         </el-form-item>
-
+        <!-- keep -->
         <div class="login-options">
           <el-checkbox v-model="keep">记住密码</el-checkbox>
           <div class="forget">忘记密码?</div>
@@ -38,7 +37,7 @@
         <!-- 登录 -->
         <el-button type="primary" class="login-btn" @click="LoginBtn(ruleFormRef)"  :loading="showload">
           <template #loading>
-            <div class="custom-loading">
+            <div~ class="custom-loading">
               <svg class="circular" viewBox="-10, -10, 50, 50">
                 <path
                   class="path"
@@ -52,12 +51,12 @@
                   style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"
                 />
               </svg>
-            </div>
+            </div~>
           </template>
           登录
         </el-button>
-
-         <el-form-item v-if="false">
+        <!-- other -->
+        <el-form-item v-if="false">
             <div class="w-full h-20px flex justify-between items-center">
               <el-button
                 v-for="(item, index) in operates"
@@ -69,7 +68,7 @@
                 {{ item.title }}
               </el-button>
             </div>
-          </el-form-item>
+        </el-form-item>
       </el-form>
     </div>
   </div>

@@ -2,7 +2,7 @@ import { createStore } from "vuex";
 // import { useRouter } from "vue-router";
 
 import storage from "storejs"
-import { logout } from '../api/user';
+import { logout } from '@/api/user';
 import router from "@/router";
 import ToTree from "@/utils/ToTree";
 import views from "@/utils/assembly.js"
@@ -55,7 +55,6 @@ export default createStore({
     },
   },
   actions: {
-
     // 更新路由
     updateRoute({ commit, state }, route) {
       route.map((t) => {
@@ -75,6 +74,7 @@ export default createStore({
     preservation(){
 
     },
+    // 设置验证码
     SET_VERIFYCODE(state,verifyCode) {
       state.verifyCode = verifyCode
     },

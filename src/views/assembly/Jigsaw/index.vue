@@ -6,7 +6,10 @@
       <el-button @click="aotoPlay" class="autoplay">自动</el-button>
     </div>
     <transition-group name="cell" tag="div" class="container">
-      <div @click.prevent="clickBlock(index)" v-for="(puzzle,index) in puzzles" :key="puzzle"
+      <div 
+        @click.prevent="clickBlock(index)" 
+        v-for="(puzzle,index) in puzzles" 
+        :key="puzzle"
         :class="puzzle === '0' || puzzle === 0? 'cell cells':'cell'">
         <!-- {{puzzle}} -->
         <img class="picture" v-if="!puzzle == 0 " :src="`http://ybadmin.aju.cn/Uploads/version1/${puzzle}.jpg`" alt="">
@@ -18,13 +21,14 @@
 <script setup>
   import { reactive, ref, onMounted, computed } from 'vue'
   import _ from 'lodash'
+
   const puzzles = ref([1, 2, 3, 4, 5, 6, 7, 8, 0])
-  const state = reactive({})
 
   const shuffle = () => {
     puzzles.value = _.shuffle(puzzles.value)
   }
   shuffle()
+  
   const aotoPlay = () => {
     let Setting = {
       originalNode: _.chunk(puzzles.value, 3),

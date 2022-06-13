@@ -5,48 +5,49 @@
 </template>
 
 <script>
-import { defineComponent, computed, reactive } from "vue";
-export default defineComponent({
-  props: {
-    iconClass: {
-      type: String,
-      default: () => null
+  import { defineComponent, computed, reactive } from "vue";
+  export default defineComponent({
+    props: {
+      iconClass: {
+        type: String,
+        default: () => null
+      },
+      className: {
+        type: String,
+        default: () => null
+      }
     },
-    className:{
-      type: String,
-      default: () => null
-    }
-  },
-  setup(props) {
-    const state = reactive({
-      visible: false,
-      isMoving: false,
-      interval: 0
-    })
-    
-    const svgClass = computed(() => 
-      props.className
-    );
+    setup(props) {
+      const state = reactive({
+        visible: false,
+        isMoving: false,
+        interval: 0
+      })
 
-    const iconName = computed(() =>
-      `#icon-${props.iconClass}`
-    );
+      const svgClass = computed(() => {
+        return props.className
+      });
 
-    return {
-      svgClass,iconName
+      const iconName = computed(() => {
+        return `#icon-${props.iconClass}`
+      });
+
+      return {
+        svgClass,
+        iconName
+      }
     }
-  }
-})
+  })
 </script>
 
 <style lang="scss" scoped>
-.svg-icon {
-  font-size: 16px;
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
-  cursor: pointer;
-}
+  .svg-icon {
+    font-size: 16px;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+    cursor: pointer;
+  }
 </style>

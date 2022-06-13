@@ -20,10 +20,11 @@
 
 <script setup>
   import { computed } from 'vue';
-  import storage from 'storejs'
   import FontIcon from '@/layout/FontIcon/indx.vue';
   import { useStore } from 'vuex'
+
   const store = useStore()
+
   const props = defineProps({
     tree: {
       type: Object,
@@ -34,12 +35,14 @@
       default: true,
     }
   });
+
   const isCollapse = computed(() => {
     return store.state.data.isCollapse
   })
   const disappear = computed(() => {
     return props.hidden
   })
+
   const fn = (item) => {
     return !item.children || item.children.length === 0
   }

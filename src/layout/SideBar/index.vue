@@ -1,9 +1,9 @@
 <template>
   <div :class="['sidebar-container', showLogo ? 'has-logo' : '']" v-show="sidebar">
-    <Logo v-if="showLogo && false"  />
+    <Logo class="logo-icon" v-show="showLogo && false"/>
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
-        class="el-menu-vertical-demo"
+        class="el-menu-vertical"
         :default-active="route.path"
         :collapse-transition="false"
         :unique-opened="false"
@@ -12,7 +12,7 @@
         @open="handleOpen"
         @close="handleClose"
       >
-        <SideItem :tree="RoutingTable" />
+        <SideItem :tree="routing" />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -20,9 +20,9 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import storage from 'storejs'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import storage from 'storejs'
 import Logo from "../components/Logo.vue"
 
 const route = useRoute()
@@ -31,7 +31,8 @@ const store = useStore()
 const isCollapse = computed(() => {
   return store.state.data.isCollapse
 })
-const RoutingTable = computed(() => {
+// 侧边栏数据
+const routing = computed(() => {
   return store.state.data.Routingtable
 })
 const sidebar = computed(() => {
@@ -49,13 +50,13 @@ const handleClose = (key, keyPath) => {
 }
 </script>
 
-<style style="scss" scoped>
-.el-menu-vertical-demo:not(.el-menu--collapse) {
+<style lang="scss" scoped>
+.el-menu-vertical:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
   /* height: 100%; */
 }
-.el-menu-vertical-demo {
+.el-menu-vertical {
   height: 100vh;
 }
 .sidebar-container {
@@ -76,7 +77,7 @@ const handleClose = (key, keyPath) => {
   display: none;
 }
 /* 卡頓bug */
-.el-menu-vertical-demo ::v-deep .el-icon {
+.el-menu-vertical ::v-deep .el-icon {
   width: auto;
 }
 </style>
