@@ -347,9 +347,6 @@ const toggleClick = () => {
       width: 40px;
       text-align: center;
       border-left: 1px solid #ccc;
-      // &:hover{
-      // background: #f6f6f6;
-      // }
     }
     .user ::v-deep .el-dropdown-link {
       display: flex;
@@ -366,10 +363,12 @@ const toggleClick = () => {
 .tags-view {
   width: 100%;
   height: 38px;
-  box-shadow: 0 0 1px #888;
+  box-shadow: 1px 0 1px #888;
   display: flex;
+  justify-content: space-between;
   & > div {
-    width: calc(100% - 40px);
+    width: 100%;
+    // width: calc(100% - 40px);
     display: flex;
   }
   .arrow-left {
@@ -387,7 +386,7 @@ const toggleClick = () => {
     width: 100%;
     display: flex;
     align-items: center;
-    min-width: 500px;
+    // min-width: 500px;
     padding: 0 5px;
     overflow: hidden;
     span {
@@ -421,7 +420,9 @@ const toggleClick = () => {
 .el-breadcrumb {
   font-size: 14px;
   line-height: 48px;
-
+  height: 100%;
+  overflow: hidden;
+  min-width: 130px;
   .breadcrumb__item {
     display: flex;
     align-items: center;

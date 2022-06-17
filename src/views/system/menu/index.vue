@@ -1,8 +1,8 @@
 <template>
   <div class="common-layout content-wrap">
     <el-container>
-
-      <el-aside>
+      <!-- 菜单列表 -->
+      <el-aside class="style-aside">
         <el-row class="mb-4">
           <el-button size="small" plain @click="addMenuBtn">添加菜单</el-button>
           <el-button @click="Putall(isExpand)" size="small" plain>
@@ -38,8 +38,8 @@
           </el-scrollbar>
         </div>
       </el-aside>
-
-      <el-main>
+      <!-- 编辑菜单 -->
+      <el-main class="style-main">
         <el-row class="mb-4">
           编辑菜单：角色权限管理
         </el-row>
@@ -367,6 +367,12 @@
   }
 </style>
 <style lang="scss" scoped>
+.style-aside,.style-main{
+  background: #fff;
+}
+.style-aside{
+  width: 536px;
+}
   .custom-node {
     .el-icon {
       vertical-align: top;
@@ -389,10 +395,6 @@
   }
 
   .common-layout {
-
-    // height: calc(100vh - 86px);
-    // height: 100%;
-    // padding: 24px;
     .input-style {
       padding: 0 17px;
     }

@@ -27,7 +27,7 @@
 - 获取项目代码
 
 ```bash
-git clone git@gitee.com:H260788/vue3-project.git
+git clone git@gitee.com:H260788/PureAdmin.git
 ```
 
 - 安装依赖

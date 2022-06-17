@@ -1,6 +1,6 @@
 <template>
   <div :class="['sidebar-container', showLogo ? 'has-logo' : '']" v-show="sidebar">
-    <Logo class="logo-icon" v-show="showLogo && false"/>
+    <Logo class="logo-icon" v-show="showLogo"/>
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         class="el-menu-vertical"
@@ -54,7 +54,7 @@ const handleClose = (key, keyPath) => {
 .el-menu-vertical:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
-  /* height: 100%; */
+  height: 100%;
 }
 .el-menu-vertical {
   height: 100vh;
