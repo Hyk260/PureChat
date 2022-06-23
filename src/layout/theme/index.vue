@@ -2,7 +2,8 @@
   <div :class="['app-wrapper',sidebar?'':'style-wrapper']" :style="fnStyle(isActive)">
       <Header />
       <main class="app-main">
-        <el-scrollbar class="continer-theme">
+        <!-- el-scrollbar -->
+        <div class="continer-theme">
           <!-- <keep-alive :include="isCached"></keep-alive> -->
           <router-view v-slot="{ Component }">
             <transition name="fade-transform" mode="out-in">
@@ -10,7 +11,7 @@
               <component v-else :is="ComponentMap[page.type] || error"></component>
             </transition>
           </router-view>
-        </el-scrollbar>
+        </div>
       </main>
   </div>
 </template>
@@ -109,6 +110,6 @@ const fnStyle = (off) => {
   box-sizing: border-box;
 }
 .continer-theme {
-
+  height: 100%;
 }
 </style>

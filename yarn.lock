@@ -1744,10 +1744,10 @@
     scroll-into-view-if-needed "^2.2.28"
     slate-history "^0.66.0"
 
-"@wangeditor/editor-for-vue@^5.1.10":
-  version "5.1.10"
-  resolved "https://registry.npmmirror.com/@wangeditor/editor-for-vue/-/editor-for-vue-5.1.10.tgz#0dbab6227c46950a63ad23898edc1c37cfc294de"
-  integrity sha512-OdtMnMt0HpYriY1+Efo3KHviUB5zwlZIaHypNw5MPRn8uFq3MFLET5u8pbB/PiEF5Ff88YAp7T9Xw1dvJzT8sA==
+"@wangeditor/editor-for-vue@^5.1.11":
+  version "5.1.11"
+  resolved "https://registry.npmmirror.com/@wangeditor/editor-for-vue/-/editor-for-vue-5.1.11.tgz#2f2f7ec83c1ebea6c58d30a0e090988528c3924c"
+  integrity sha512-gzo6A9VMWKUVgOTtucNTplb7K1KUvnBoQ76AaB5vmh+9LXv+6jAI4QXADH46PVGwvQJcQ3zqZ/P1pIj/QthjYQ==
 
 "@wangeditor/editor@^5.0.1":
   version "5.0.1"
