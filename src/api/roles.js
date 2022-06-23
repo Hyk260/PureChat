@@ -1,48 +1,46 @@
-import http from '@/utils/http'
+import http from "@/utils/http";
 /**
  * 获取角色列表
- */ 
- export const getRoles = () => {
+ */
+export const getRoles = () => {
   return http({
-    url: '/role/query',
-    method: 'get',
+    url: "/role/query",
+    method: "get",
   });
 };
 
 /**
  * 添加角色
  * @param{  }
- */ 
- export const addRoles = (params) => {
+ */
+export const addRoles = (params) => {
   return http({
-    url: '/role/add',
-    method: 'get',
-    params
+    url: "/role/add",
+    method: "get",
+    params,
   });
 };
 
 /**
  * 更新角色
  * @param{  }
- */ 
- export const updateRoles = (params) => {
+ */
+export const updateRoles = (params) => {
   return http({
-    url: '/role/update',
-    method: 'get',
-    params
+    url: "/role/update",
+    method: "get",
+    params,
   });
 };
 
 /**
  * 删除角色
  * @param{ Array }
- */ 
- export const deleteRoles = (params) => {
+ */
+export const deleteRoles = (params) => {
   return http({
-    url: '/role/delete',
-    method: 'get',
-    params
+    url: "/role/delete",
+    method: "get",
+    params,
   });
 };
-
-
