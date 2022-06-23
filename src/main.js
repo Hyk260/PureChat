@@ -5,6 +5,7 @@ import store from "./store";
 
 import '@/styles/index.scss'
 import '@/styles/nprogress.css'
+import pkg from '../package.json';
 
 import * as ElIcons from '@element-plus/icons-vue'
 import { loadAllPlugins } from './plugins'
@@ -36,6 +37,7 @@ for (const name in ElIcons){
   app.component(name,ElIcons[name])
 }
 
+app.config.globalProperties.__APP_INFO__ = pkg;
 
 // 加载所有插件
 loadAllPlugins(app)

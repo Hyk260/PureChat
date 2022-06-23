@@ -4,9 +4,8 @@ import { ACCESS_TOKEN } from '@/store/mutation-types'
 import router from '@/router'
 const baseURL = 'http://localhost:8082/';
 
-// 公共地址
 const service = axios.create({
-  baseURL,
+  baseURL,// 公共地址
   timeout: 6000, // 请求超时时间
 })
 // 异常拦截处理器

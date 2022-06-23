@@ -60,20 +60,12 @@ app.use(
 app.get("/login", async (req, res, next) => {
   let { username, password } = req.query;
   if (username && password) {
-    let user = db_user
-      .get("user")
-      .find({ username, password })
-      .value();
+    const user = db_user.get("user").find({ username, password }).value();
     if (user) {
       res.setHeader("Access-Control-Expose-Headers", "x-token");
       // 注意默认情况 Token 必须以 Bearer+空格 开头
-      res.setHeader(
-        "X-token",
-        "Bearer " +
-        jwt.sign(user, SECRET_KEY, {
-          expiresIn: 3600 * 24 * 3
-        })
-      );
+      const token = jwt.sign(user, SECRET_KEY, { expiresIn: 3600 * 24 * 3 })
+      res.setHeader("X-token","Bearer " + token);
       res.json({
         code: 200,
         msg: "登录成功!",

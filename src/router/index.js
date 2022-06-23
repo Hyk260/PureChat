@@ -21,6 +21,7 @@ const whiteList = [] // 'login','home'
 const loginRoutePath = '/login'
 const defaultRoutePath = '/home'
 
+console.log(process.env,'环境变量')
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
@@ -34,8 +35,6 @@ router.beforeEach(async (to, from, next) => {
 
   if (token) {
     NProgress.start() // start progress bar
-    // console.log(router.options)
-    // console.log(store.state.data)
     if (isF) {
       next();
     } else {

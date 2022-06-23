@@ -18,12 +18,6 @@
       }
     },
     setup(props) {
-      const state = reactive({
-        visible: false,
-        isMoving: false,
-        interval: 0
-      })
-
       const svgClass = computed(() => {
         return props.className
       });
