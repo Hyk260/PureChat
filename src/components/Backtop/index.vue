@@ -18,71 +18,77 @@
 </template>
 
 <script>
-import { defineComponent, onBeforeUnmount, onMounted, reactive, toRefs } from 'vue'
+import {
+  defineComponent,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  toRefs,
+} from "vue";
 
 export default defineComponent({
   props: {
     customStyle: Object,
     visibilityHeight: {
       type: Number,
-      default: 400
+      default: 400,
     },
     transitionName: {
       type: String,
-      default: 'fade'
+      default: "fade",
     },
     backPosition: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   setup(props) {
     const state = reactive({
       visible: false,
       isMoving: false,
-      interval: 0
-    })
+      interval: 0,
+    });
     const handleScroll = () => {
-      state.visible = window.pageYOffset > props.visibilityHeight
-    }
+      state.visible = window.pageYOffset > props.visibilityHeight;
+    };
 
     const easeInOutQuad = (t, b, c, d) => {
-      if ((t /= d / 2) < 1) return (c / 2) * t * t + b
-      return (-c / 2) * (--t * (t - 2) - 1) + b
-    }
+      if ((t /= d / 2) < 1) return (c / 2) * t * t + b;
+      return (-c / 2) * (--t * (t - 2) - 1) + b;
+    };
 
     const backToTop = () => {
-      if (state.isMoving) return
-      const start = window.pageYOffset
-      let i = 0
-      state.isMoving = true
+      if (state.isMoving) return;
+      const start = window.pageYOffset;
+      let i = 0;
+      state.isMoving = true;
       const interval = setInterval(() => {
-        const next = Math.floor(easeInOutQuad(10 * i, start, -start, 500))
+        const next = Math.floor(easeInOutQuad(10 * i, start, -start, 500));
         if (next <= props.backPosition) {
-          window.scrollTo(0, props.backPosition)
-          clearInterval(interval)
-          state.isMoving = false
+          window.scrollTo(0, props.backPosition);
+          clearInterval(interval);
+          state.isMoving = false;
         } else {
-          window.scrollTo(0, next)
+          window.scrollTo(0, next);
         }
-        i++
-      }, 16.7)
-    }
+        i++;
+      }, 16.7);
+    };
 
     onMounted(() => {
-      window.addEventListener('scroll', handleScroll)
-    })
+      window.addEventListener("scroll", handleScroll);
+    });
 
     onBeforeUnmount(() => {
-      window.removeEventListener('scroll', handleScroll)
-    })
+      window.removeEventListener("scroll", handleScroll);
+    });
 
     return {
       backToTop,
-      ...toRefs(state)
-    }
-  }
-})
+      ...toRefs(state),
+    };
+  },
+});
 </script>
 
 <style lang="scss" scoped>

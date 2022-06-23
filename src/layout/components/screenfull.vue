@@ -2,17 +2,17 @@
   <div
     class="screen-full"
     @click="toggle"
-    :title="isFullscreen?'退出全屏':'全屏'"
+    :title="isFullscreen ? '退出全屏' : '全屏'"
   >
     <!-- <SvgIcon icon-class="Fullscreen" /> -->
-    <FontIcon iconName="FullScreen"/>
+    <FontIcon iconName="FullScreen" />
   </div>
 </template>
 
 <script setup>
-import FontIcon from '@/layout/FontIcon/indx.vue'
-import { useFullscreen } from '@vueuse/core'
-const { isFullscreen, toggle } = useFullscreen()
+import FontIcon from "@/layout/FontIcon/indx.vue";
+import { useFullscreen } from "@vueuse/core";
+const { isFullscreen, toggle } = useFullscreen();
 </script>
 
 <style lang="scss" scoped>

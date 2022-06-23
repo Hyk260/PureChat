@@ -1,15 +1,11 @@
 <template>
-  <div class="logo">
-    Logo
-  </div>
+  <div class="logo">Logo</div>
 </template>
 
-<script setup>
-
-</script>
+<script setup></script>
 
 <style lang="scss" scoped>
-.logo{
+.logo {
   height: 48px;
   background: #ccc;
 }

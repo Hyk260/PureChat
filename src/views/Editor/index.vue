@@ -42,7 +42,7 @@ import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 const editorRef = shallowRef();
 
 // 内容 HTML
-const valueHtml = ref("<p>hello</p>");
+const valueHtml = ref("");
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
@@ -53,18 +53,17 @@ onMounted(() => {
 
 // 工具栏配置
 const toolbarConfig = {
-  toolbarKeys: ["emotion" /* 显示哪些菜单，如何排序、分组 */],
-  excludeKeys: [
-    /* 隐藏哪些菜单 */
-  ],
+  /* 显示哪些菜单，如何排序、分组 */
+  toolbarKeys: ["emotion"],
+  /* 隐藏哪些菜单 */
+  excludeKeys: [],
 };
 
 // 编辑器配置
 const editorConfig = {
   placeholder: "请输入内容...",
-  MENU_CONF: {
-    /* 菜单配置，下文解释 */
-  },
+  /* 菜单配置 */
+  MENU_CONF: {},
 };
 
 const handleCreated = (editor) => {

@@ -1,5 +1,5 @@
 <template>
-   <div>
+  <div>
     <el-card class="box-card mb-4" shadow="never">
       <template #header>
         <div class="card-header">
@@ -21,7 +21,11 @@
         <el-descriptions-item label="版本" label-align="left" align="left">
           <el-tag>{{ version }}</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="最后编译时间" label-align="left" align="left">
+        <el-descriptions-item
+          label="最后编译时间"
+          label-align="left"
+          align="left"
+        >
           <el-tag>{{ lastBuildTime }}</el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="文档地址" label-align="left" align="left">
@@ -35,11 +39,10 @@
           </a>
         </el-descriptions-item>
         <el-descriptions-item label="Github" label-align="left" align="left">
-          <a href="" target="_blank" >
+          <a href="" target="_blank">
             <span style="color: var(--el-color-primary)">Github</span>
           </a>
         </el-descriptions-item>
-       
       </el-descriptions>
     </el-card>
 
@@ -57,7 +60,10 @@
           v-for="(item, index) in schema"
           :key="index"
         >
-          <a :href="'https://www.npmjs.com/package/' + item.label" target="_blank">
+          <a
+            :href="'https://www.npmjs.com/package/' + item.label"
+            target="_blank"
+          >
             <span style="color: var(--el-color-primary)">{{ item.field }}</span>
           </a>
         </el-descriptions-item>
@@ -78,7 +84,10 @@
           v-for="(item, index) in devSchema"
           :key="index"
         >
-          <a :href="'https://www.npmjs.com/package/' + item.label" target="_blank" >
+          <a
+            :href="'https://www.npmjs.com/package/' + item.label"
+            target="_blank"
+          >
             <span style="color: var(--el-color-primary)">{{ item.field }}</span>
           </a>
         </el-descriptions-item>
@@ -88,26 +97,25 @@
 </template>
 
 <script setup>
-import { getCurrentInstance } from 'vue'
+import { getCurrentInstance } from "vue";
 
 const { proxy } = getCurrentInstance();
-const { dependencies, devDependencies, version } = proxy.__APP_INFO__
+const { dependencies, devDependencies, version } = proxy.__APP_INFO__;
 
 const schema = [];
 const devSchema = [];
 
-Object.keys(dependencies).forEach(key => {
+Object.keys(dependencies).forEach((key) => {
   schema.push({ field: dependencies[key], label: key });
 });
 
-Object.keys(devDependencies).forEach(key => {
+Object.keys(devDependencies).forEach((key) => {
   devSchema.push({ field: devDependencies[key], label: key });
 });
-
 </script>
 
-<style scoped lang='scss'>
-.m-4{
+<style scoped lang="scss">
+.m-4 {
   margin: 1rem;
 }
 </style>

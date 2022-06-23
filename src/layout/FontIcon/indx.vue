@@ -9,18 +9,18 @@ const props = defineProps({
   // elementPlus https://element-plus.gitee.io/zh-CN/component/icon.html
   iconName: {
     type: String,
-    default: 'Pouring',
+    default: "Pouring",
   },
   custom: {
     type: String,
-    default: '',
+    default: "",
     // required:true,
   },
   size: {
     type: Number,
     default: 18,
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>
@@ -29,6 +29,6 @@ const props = defineProps({
 }
 .fold-menu-custom {
   cursor: pointer;
-  color: '#409EFC';
+  color: "#409EFC";
 }
 </style>
