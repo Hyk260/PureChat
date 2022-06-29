@@ -7,16 +7,25 @@
         <p v-for="item in 20" :key="item" class="scrollbar-item">{{ item }}</p>
       </el-scrollbar>
     </div>
-    <div class="message-right">
+    <div class="message-right" id="svgBox">
       <header class="message-info-view-header"></header>
-      <section class="message-info-view-content">
+      <section
+        class="message-info-view-content"
+        id="svgTop"
+        :style="{ height: `calc( 100% - 70px - ${newRect}px )` }"
+      >
         <el-scrollbar class="scrollbar-content">
           <p v-for="item in 20" :key="item" class="scrollbar-item">
             {{ item }}
           </p>
         </el-scrollbar>
       </section>
-      <div class="Editor-style">
+      <div id="svgResize" @mouseover="dragControllerDiv"></div>
+      <div
+        class="Editor-style"
+        id="svgDown"
+        :style="{ height: msgHeight + 'px' }"
+      >
         <Toolbar
           class="toolbar"
           :editor="editorRef"
@@ -55,6 +64,9 @@ const editorRef = shallowRef();
 
 // 内容 HTML
 const valueHtml = ref("");
+const newRect = ref(206);
+const msgHeight = ref(206);
+
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
@@ -97,7 +109,6 @@ const handleCreated = (editor) => {
   // 查看所有工具栏key
   console.log(editor.getAllMenuKeys());
   console.log(editor.getConfig());
-
 };
 // 回车
 const handleEnter = () => {
@@ -133,6 +144,46 @@ const customPaste = (editor, event, callback) => {
 
   // 返回 true ，继续默认的粘贴行为
   // callback(true)
+};
+
+const dragControllerDiv = () => {
+  let svgResize = document.getElementById("svgResize");
+  let svgTop = document.getElementById("svgTop");
+  let svgDown = document.getElementById("svgDown");
+  let svgBox = document.getElementById("svgBox");
+  // 按下鼠标执行
+  svgResize.onmousedown = (e) => {
+    let startY = e.clientY; //鼠标按下 起始Y
+    console.log(startY);
+    svgResize.top = svgResize.offsetTop;
+    // 事件会在鼠标指针移到指定的对象时发生。
+    document.onmousemove = function (e) {
+      let endY = e.clientY; //鼠标移动 结束得y
+      //移动距离 = 原来高度+（结束y-开始y）
+      let moveLen = svgResize.top + (endY - startY);
+      // 最大移动距离 = 整个盒子高度 - 现在高度
+      let maxT = svgBox.clientHeight - svgResize.offsetHeight;
+      // 控制移动最小
+      if (moveLen < 200) moveLen = 200;
+      // 控制移动最大
+      if (moveLen > maxT - 200) moveLen = maxT - 200;
+      console.log(moveLen);
+      svgResize.style.top = moveLen;
+      svgTop.style.height = moveLen + "px";
+
+      svgDown.style.height = svgBox.clientHeight - moveLen - 8 + "px";
+    };
+    // 鼠标按键被松开时执行
+    document.onmouseup = (evt) => {
+      document.onmousemove = null;
+      document.onmouseup = null;
+      svgDown.style.height = msgHeight.value + "px";
+      // this.svgDownHeight = parseInt(svgDown.style.height)
+      svgResize.releaseCapture && svgResize.releaseCapture();
+    };
+    svgResize.setCapture && svgResize.setCapture();
+    return false;
+  };
 };
 
 // 组件销毁时，及时销毁编辑器
@@ -222,5 +273,12 @@ onBeforeUnmount(() => {
   font-size: 14px;
   border-radius: 3px;
   text-align: center;
+}
+#svgResize {
+  position: relative;
+  height: 5px;
+  // border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+  width: 100%;
+  cursor: row-resize;
 }
 </style>
