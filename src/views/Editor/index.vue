@@ -1,31 +1,84 @@
 # 编辑器
 <template>
   <div class="list-container">
+    <!-- 聊天列表 -->
     <div class="message-left">
-      <div class="header-bar"></div>
+      <div class="header-bar">
+        <!-- 搜索 -->
+        <div class="header-search">
+           <el-input
+            placeholder="搜索"
+            v-model="appoint"
+            :prefix-icon="Search"
+            class="text-input"
+            clearable
+            >
+            </el-input>
+        </div>
+      </div>
       <el-scrollbar class="scrollbar-list">
-        <p v-for="item in 20" :key="item" class="scrollbar-item">{{ item }}</p>
+        <div class="message-item is-active" v-for="item in Friends" :key="item">
+          <!-- 头像 -->
+          <el-avatar class="portrait" shape="square" size="small" :src="squareUrl" />
+          <!-- 消息 -->
+          <div class="message-item-right">
+            <div class="message-item-right-top">
+              <div class="message-chat-name">
+               {{item.roleName}}
+              </div>
+              <div class="message-Time">
+                昨天
+              </div>
+            </div>
+            <span class="message-item-right-bottom">
+              消息
+            </span>
+          </div>
+        </div>
       </el-scrollbar>
     </div>
     <div class="message-right" id="svgBox">
-      <header class="message-info-view-header"></header>
+      <header class="message-info-view-header">
+        <div class="message-info-views">
+          <p>
+            临江仙
+          </p>
+        </div>
+        <div class="message-info-setup">
+          <FontIcon iconName="MoreFilled"/>
+        </div>
+      </header>
+      <!-- 聊天窗口 -->
       <section
         class="message-info-view-content"
         id="svgTop"
-        :style="{ height: `calc( 100% - 70px - ${newRect}px )` }"
+        
       >
+      <!-- :style="{ height: `calc( 100% - 70px - ${newRect}px )` }" -->
         <el-scrollbar class="scrollbar-content">
-          <p v-for="item in 20" :key="item" class="scrollbar-item">
+          <div v-for="(item,index) in 20" :key="item" class="scrollbar-item">
+          <!-- 加载更多 -->
+          <div class="viewref" v-if="index === 0">
+            <div :class="`showMore no-more ${noMore ? '' : 'loading-more'}`">
+                {{ noMore ? '没有更多了' : '' }}
+            </div>
+          </div>
             {{ item }}
-          </p>
+          <!-- 时间 -->
+          <div class="message-view__item--time-divider" v-if="false">
+              {{ TimeFormat(item.time * 1000, true) }}
+          </div>
+          </div>
         </el-scrollbar>
       </section>
       <div id="svgResize" @mouseover="dragControllerDiv"></div>
+      <!-- 编辑器 -->
       <div
         class="Editor-style"
         id="svgDown"
-        :style="{ height: msgHeight + 'px' }"
+        
       >
+      <!-- :style="{ height: msgHeight + 'px' }" -->
         <Toolbar
           class="toolbar"
           :editor="editorRef"
@@ -56,24 +109,46 @@
 
 <script setup>
 import "@wangeditor/editor/dist/css/style.css";
-import { onBeforeUnmount, ref, shallowRef, onMounted } from "vue";
+import { onBeforeUnmount, ref, shallowRef, onMounted, reactive, toRefs } from "vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
+import FontIcon from '@/layout/FontIcon/indx.vue'
+import { Search } from '@element-plus/icons-vue'
+import { getRoles } from '@/api/roles'
 
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
+
+const state = reactive({
+  circleUrl:
+    'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+  squareUrl:
+    'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+  sizeList: ['small', '', 'large'],
+})
+const { circleUrl, squareUrl, sizeList } = toRefs(state)
 
 // 内容 HTML
 const valueHtml = ref("");
 const newRect = ref(206);
 const msgHeight = ref(206);
-
+const appoint = ref("")
+const noMore = ref(true)
+const Friends = ref([])
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
+  getRolesList()
   // setTimeout(() => {
   //     valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
   // }, 1500)
 });
+
+const getRolesList = async () => {
+  let { code, result } = await getRoles()
+  if (code === 200) {
+    Friends.value = result
+  }
+}
 
 // 工具栏配置
 const toolbarConfig = {
@@ -81,12 +156,12 @@ const toolbarConfig = {
   toolbarKeys: [
     "emotion", //表情
     "uploadImage",
-    {
-      key: "group-more-style", // 必填，要以 group 开头
-      title: "更多样式", // 必填
-      iconSvg: "<svg>....</svg>", // 可选
-      menuKeys: ["through", "code", "clearStyle"], // 下级菜单 key ，必填
-    },
+    // {
+    //   key: "group-more-style", // 必填，要以 group 开头
+    //   title: "更多样式", // 必填
+    //   iconSvg: "<svg>....</svg>", // 可选
+    //   menuKeys: ["through", "code", "clearStyle"], // 下级菜单 key ，必填
+    // },
   ],
   // insertKeys: {
   //   index: 2, // 插入的位置，基于当前的 toolbarKeys
@@ -112,7 +187,7 @@ const handleCreated = (editor) => {
 };
 // 回车
 const handleEnter = () => {
-  console.log("huiche");
+  console.log("回车");
 };
 // 发送消息
 const sendMessage = () => {};
@@ -147,9 +222,9 @@ const customPaste = (editor, event, callback) => {
 };
 
 const dragControllerDiv = () => {
-  let svgResize = document.getElementById("svgResize");
-  let svgTop = document.getElementById("svgTop");
-  let svgDown = document.getElementById("svgDown");
+  let svgResize = document.getElementById("svgResize"); // 滑块
+  let svgTop = document.getElementById("svgTop"); //聊天框
+  let svgDown = document.getElementById("svgDown"); //编辑器
   let svgBox = document.getElementById("svgBox");
   // 按下鼠标执行
   svgResize.onmousedown = (e) => {
@@ -169,22 +244,20 @@ const dragControllerDiv = () => {
       if (moveLen > maxT - 200) moveLen = maxT - 200;
       console.log(moveLen);
       svgResize.style.top = moveLen;
-      svgTop.style.height = moveLen + "px";
-
-      svgDown.style.height = svgBox.clientHeight - moveLen - 8 + "px";
+      svgTop.style.height = moveLen - 60 + "px";
+      svgDown.style.height = (svgBox.clientHeight - moveLen - 5) + "px";
     };
     // 鼠标按键被松开时执行
     document.onmouseup = (evt) => {
       document.onmousemove = null;
       document.onmouseup = null;
-      svgDown.style.height = msgHeight.value + "px";
-      // this.svgDownHeight = parseInt(svgDown.style.height)
       svgResize.releaseCapture && svgResize.releaseCapture();
     };
     svgResize.setCapture && svgResize.setCapture();
     return false;
   };
 };
+
 
 // 组件销毁时，及时销毁编辑器
 onBeforeUnmount(() => {
@@ -230,11 +303,22 @@ onBeforeUnmount(() => {
   background: #fff;
   border-left: 1px solid rgba(0, 0, 0, 0.09);
   width: calc(100% - 280px);
+  height: 100%;
+  position: relative;
+  overflow: hidden;
 }
 .message-info-view-header {
   height: 60px;
   background: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  .message-info-views{
+    
+  }
 }
 .message-info-view-content {
   height: calc(100% - 70px - 206px);
@@ -243,6 +327,7 @@ onBeforeUnmount(() => {
 .header-bar {
   background: #fff;
   height: 60px;
+  padding: 14px;
 }
 .scrollbar-list {
   background: #fff;
@@ -258,6 +343,54 @@ onBeforeUnmount(() => {
   border-radius: 4px;
   background: var(--el-color-primary-light-9);
   color: var(--el-color-primary);
+}
+.message-item{
+  padding: 12px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  &:hover{
+    background: #f0f2f5;
+  }
+  .portrait{
+    width: 40px;
+    height: 40px;
+  }
+  .message-item-right{
+    width: 200px;
+    margin-left: 11px;
+    height: 44px;
+    .message-item-right-top{
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 7px;
+      width: 100%;
+      .message-chat-name{
+        font-size: 14px;
+        display: block;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        overflow: hidden;
+        max-height: 18px;
+        line-height: 18px;
+        color: rgba(0, 0, 0, 0.85);
+        max-width: 140px;
+      }
+      .message-Time{
+        font-size: 10px;
+        color: rgba(0, 0, 0, 0.45);
+      }
+    }
+    .message-item-right-bottom{
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      pointer-events: none;
+    }
+  }
 }
 .btn-send {
   cursor: pointer;
@@ -279,6 +412,7 @@ onBeforeUnmount(() => {
   height: 5px;
   // border-bottom: 1px solid rgba(0, 0, 0, 0.09);
   width: 100%;
-  cursor: row-resize;
+  cursor: s-resize;
+  // cursor: row-resize;
 }
 </style>
