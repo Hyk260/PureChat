@@ -66,7 +66,7 @@
 
               <div class="message-view__item--blank"></div>
               <!-- 时间 -->
-              <div class="message-view__item--time-divider" v-if="false">
+              <div class="message-view__item--time-divider" v-if="true">
                   {{ timeFormat(item.updateTime, true) }}
               </div>
               <!-- 消息 -->
