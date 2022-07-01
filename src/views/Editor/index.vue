@@ -6,33 +6,36 @@
       <div class="header-bar">
         <!-- 搜索 -->
         <div class="header-search">
-           <el-input
+          <el-input
             placeholder="搜索"
             v-model="appoint"
             :prefix-icon="Search"
             class="text-input"
             clearable
-            >
-            </el-input>
+          >
+          </el-input>
         </div>
       </div>
       <el-scrollbar class="scrollbar-list">
         <div class="message-item is-active" v-for="item in Friends" :key="item">
           <!-- 头像 -->
-          <el-avatar class="portrait" shape="square" size="small" :src="squareUrl" />
+          <el-avatar
+            class="portrait"
+            shape="square"
+            size="small"
+            :src="squareUrl"
+          />
           <!-- 消息 -->
           <div class="message-item-right">
             <div class="message-item-right-top">
               <div class="message-chat-name">
-               {{item.roleName}}
+                {{ item.roleName }}
               </div>
               <div class="message-Time">
-               {{timeFormat(item.updateTime)}}
+                {{ timeFormat(item.updateTime) }}
               </div>
             </div>
-            <span class="message-item-right-bottom">
-              消息
-            </span>
+            <span class="message-item-right-bottom"> 消息 </span>
           </div>
         </div>
       </el-scrollbar>
@@ -40,52 +43,41 @@
     <div class="message-right" id="svgBox">
       <header class="message-info-view-header">
         <div class="message-info-views">
-          <p>
-            临江仙
-          </p>
+          <p>临江仙</p>
         </div>
         <div class="message-info-setup">
-          <FontIcon iconName="MoreFilled"/>
+          <FontIcon iconName="MoreFilled" />
         </div>
       </header>
       <!-- 聊天窗口 -->
-      <section
-        class="message-info-view-content"
-        id="svgTop"
-      >
+      <section class="message-info-view-content" id="svgTop">
         <el-scrollbar class="scrollbar-content">
           <div class="message-view">
-            <div v-for="(item,index) in Friends" :key="item">
-
+            <div v-for="(item, index) in Friends" :key="item">
               <!-- 加载更多 -->
               <div class="viewref" v-if="index === Friends.length - 1">
-                <div :class="`showMore no-more ${noMore ? '' : 'loading-more'}`">
-                    {{ noMore ? '没有更多了' : '' }}
+                <div
+                  :class="`showMore no-more ${noMore ? '' : 'loading-more'}`"
+                >
+                  {{ noMore ? "没有更多了" : "" }}
                 </div>
               </div>
 
               <div class="message-view__item--blank"></div>
               <!-- 时间 -->
               <div class="message-view__item--time-divider" v-if="true">
-                  {{ timeFormat(item.updateTime, true) }}
+                {{ timeFormat(item.updateTime, true) }}
               </div>
               <!-- 消息 -->
-              <div class="message-view__item">
-
-              </div>
-
+              <div class="message-view__item"></div>
             </div>
           </div>
         </el-scrollbar>
       </section>
       <div id="svgResize" @mouseover="dragControllerDiv"></div>
       <!-- 编辑器 -->
-      <div
-        class="Editor-style"
-        id="svgDown"
-        
-      >
-      <!-- :style="{ height: msgHeight + 'px' }" -->
+      <div class="Editor-style" id="svgDown">
+        <!-- :style="{ height: msgHeight + 'px' }" -->
         <Toolbar
           class="toolbar"
           :editor="editorRef"
@@ -116,47 +108,54 @@
 
 <script setup>
 import "@wangeditor/editor/dist/css/style.css";
-import { onBeforeUnmount, ref, shallowRef, onMounted, reactive, toRefs } from "vue";
+import {
+  onBeforeUnmount,
+  ref,
+  shallowRef,
+  onMounted,
+  reactive,
+  toRefs,
+} from "vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
-import FontIcon from '@/layout/FontIcon/indx.vue'
-import { Search } from '@element-plus/icons-vue'
-import { getRoles } from '@/api/roles'
-import { timeFormat } from '@/utils/timeFormat'
+import FontIcon from "@/layout/FontIcon/indx.vue";
+import { Search } from "@element-plus/icons-vue";
+import { getRoles } from "@/api/roles";
+import { timeFormat } from "@/utils/timeFormat";
 
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
 
 const state = reactive({
   circleUrl:
-    'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+    "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
   squareUrl:
-    'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
-  sizeList: ['small', '', 'large'],
-})
-const { circleUrl, squareUrl, sizeList } = toRefs(state)
+    "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
+  sizeList: ["small", "", "large"],
+});
+const { circleUrl, squareUrl, sizeList } = toRefs(state);
 
 // 内容 HTML
 const valueHtml = ref("");
 const newRect = ref(206);
 const msgHeight = ref(206);
-const appoint = ref("")
-const noMore = ref(false)
-const Friends = ref([])
+const appoint = ref("");
+const noMore = ref(false);
+const Friends = ref([]);
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
-  getRolesList()
+  getRolesList();
   // setTimeout(() => {
   //     valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
   // }, 1500)
 });
 
 const getRolesList = async () => {
-  let { code, result } = await getRoles()
+  let { code, result } = await getRoles();
   if (code === 200) {
-    Friends.value = result
+    Friends.value = result;
   }
-}
+};
 
 // 工具栏配置
 const toolbarConfig = {
@@ -253,7 +252,7 @@ const dragControllerDiv = () => {
       console.log(moveLen);
       svgResize.style.top = moveLen;
       svgTop.style.height = moveLen - 60 + "px";
-      svgDown.style.height = (svgBox.clientHeight - moveLen - 5) + "px";
+      svgDown.style.height = svgBox.clientHeight - moveLen - 5 + "px";
     };
     // 鼠标按键被松开时执行
     document.onmouseup = (evt) => {
@@ -265,7 +264,6 @@ const dragControllerDiv = () => {
     return false;
   };
 };
-
 
 // 组件销毁时，及时销毁编辑器
 onBeforeUnmount(() => {
@@ -324,8 +322,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  .message-info-views{
-    
+  .message-info-views {
   }
 }
 .message-info-view-content {
@@ -352,30 +349,30 @@ onBeforeUnmount(() => {
   background: var(--el-color-primary-light-9);
   color: var(--el-color-primary);
 }
-.message-item{
+.message-item {
   padding: 12px;
   height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  &:hover{
+  &:hover {
     background: #f0f2f5;
   }
-  .portrait{
+  .portrait {
     width: 40px;
     height: 40px;
   }
-  .message-item-right{
+  .message-item-right {
     width: 200px;
     margin-left: 11px;
     height: 44px;
-    .message-item-right-top{
+    .message-item-right-top {
       display: flex;
       justify-content: space-between;
       padding-bottom: 7px;
       width: 100%;
-      .message-chat-name{
+      .message-chat-name {
         font-size: 14px;
         display: block;
         text-overflow: ellipsis;
@@ -386,12 +383,12 @@ onBeforeUnmount(() => {
         color: rgba(0, 0, 0, 0.85);
         max-width: 140px;
       }
-      .message-Time{
+      .message-Time {
         font-size: 10px;
         color: rgba(0, 0, 0, 0.45);
       }
     }
-    .message-item-right-bottom{
+    .message-item-right-bottom {
       font-size: 12px;
       color: rgba(0, 0, 0, 0.45);
       overflow: hidden;
@@ -459,7 +456,7 @@ onBeforeUnmount(() => {
   width: 32px;
   height: 32px;
   line-height: 32px;
-  background: url('../../assets/icons/svg/loading.svg');
+  background: url("../../assets/icons/svg/loading.svg");
   animation: load 1.1s infinite linear;
 }
 
