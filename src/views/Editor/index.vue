@@ -27,7 +27,7 @@
                {{item.roleName}}
               </div>
               <div class="message-Time">
-                昨天
+               {{timeFormat(item.updateTime)}}
               </div>
             </div>
             <span class="message-item-right-bottom">
@@ -52,22 +52,29 @@
       <section
         class="message-info-view-content"
         id="svgTop"
-        
       >
-      <!-- :style="{ height: `calc( 100% - 70px - ${newRect}px )` }" -->
         <el-scrollbar class="scrollbar-content">
-          <div v-for="(item,index) in 20" :key="item" class="scrollbar-item">
-          <!-- 加载更多 -->
-          <div class="viewref" v-if="index === 0">
-            <div :class="`showMore no-more ${noMore ? '' : 'loading-more'}`">
-                {{ noMore ? '没有更多了' : '' }}
+          <div class="message-view">
+            <div v-for="(item,index) in Friends" :key="item">
+
+              <!-- 加载更多 -->
+              <div class="viewref" v-if="index === Friends.length - 1">
+                <div :class="`showMore no-more ${noMore ? '' : 'loading-more'}`">
+                    {{ noMore ? '没有更多了' : '' }}
+                </div>
+              </div>
+
+              <div class="message-view__item--blank"></div>
+              <!-- 时间 -->
+              <div class="message-view__item--time-divider" v-if="false">
+                  {{ timeFormat(item.updateTime, true) }}
+              </div>
+              <!-- 消息 -->
+              <div class="message-view__item">
+
+              </div>
+
             </div>
-          </div>
-            {{ item }}
-          <!-- 时间 -->
-          <div class="message-view__item--time-divider" v-if="false">
-              {{ TimeFormat(item.time * 1000, true) }}
-          </div>
           </div>
         </el-scrollbar>
       </section>
@@ -114,6 +121,7 @@ import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import FontIcon from '@/layout/FontIcon/indx.vue'
 import { Search } from '@element-plus/icons-vue'
 import { getRoles } from '@/api/roles'
+import { timeFormat } from '@/utils/timeFormat'
 
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
@@ -132,7 +140,7 @@ const valueHtml = ref("");
 const newRect = ref(206);
 const msgHeight = ref(206);
 const appoint = ref("")
-const noMore = ref(true)
+const noMore = ref(false)
 const Friends = ref([])
 
 // 模拟 ajax 异步获取内容
@@ -414,5 +422,54 @@ onBeforeUnmount(() => {
   width: 100%;
   cursor: s-resize;
   // cursor: row-resize;
+}
+
+.message-view__item--time-divider {
+  position: relative;
+  top: 8px;
+  margin: 20px 0;
+  max-height: 20px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+.message-view {
+  display: flex;
+  flex-direction: column-reverse;
+  height: 100%;
+  overflow-y: overlay;
+  overflow-x: hidden;
+  padding: 0 16px 16px 16px;
+  box-sizing: border-box;
+
+  .message-view-item {
+    flex: 1;
+  }
+}
+.viewref {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 100%;
+  overflow: hidden;
+}
+.loading-more {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  background: url('../../assets/icons/svg/loading.svg');
+  animation: load 1.1s infinite linear;
+}
+
+@keyframes load {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
