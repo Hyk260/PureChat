@@ -65,11 +65,34 @@
 
               <div class="message-view__item--blank"></div>
               <!-- 时间 -->
-              <div class="message-view__item--time-divider" v-if="true">
+              <div class="message-view__item--time-divider" v-if="false">
                 {{ timeFormat(item.updateTime, true) }}
               </div>
-              <!-- 消息 -->
-              <div class="message-view__item"></div>
+              <!-- 消息 is-self is-other-->
+              <div class="message-view__item is-self">
+                <div class="picture">
+                  <el-avatar
+                    :size="36"
+                    shape="square"
+                    :src="squareUrl"
+                  />
+                 </div>
+                <!-- 内容 -->
+                <div class="message-view__item--index">
+                  <!-- 文本 -->
+                  <div class="message-view__text">
+                    <div class="message_name">{{item.roleName}}</div>
+                    <div class="message">
+                      <span class="message-view__item--text text right-menu-item">
+                        <span class="text linkUrl">
+                          123
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
             </div>
           </div>
         </el-scrollbar>
@@ -77,7 +100,6 @@
       <div id="svgResize" @mouseover="dragControllerDiv"></div>
       <!-- 编辑器 -->
       <div class="Editor-style" id="svgDown">
-        <!-- :style="{ height: msgHeight + 'px' }" -->
         <Toolbar
           class="toolbar"
           :editor="editorRef"
@@ -139,7 +161,7 @@ const valueHtml = ref("");
 const newRect = ref(206);
 const msgHeight = ref(206);
 const appoint = ref("");
-const noMore = ref(false);
+const noMore = ref(true);
 const Friends = ref([]);
 
 // 模拟 ajax 异步获取内容
@@ -451,6 +473,16 @@ onBeforeUnmount(() => {
   height: 32px;
   width: 100%;
   overflow: hidden;
+  .showMore{
+    padding-top: 12px;
+    text-align: center;
+    color: #00f;
+    font-size: 12px;
+    line-height: 20px;
+    cursor: pointer;
+    color: rgba(0,0,0,0.45);
+  }
+
 }
 .loading-more {
   width: 32px;
@@ -468,5 +500,106 @@ onBeforeUnmount(() => {
   to {
     transform: rotate(360deg);
   }
+}
+.message-view__item {
+  display: flex;
+  flex-direction: row;
+  margin-top: 12px;
+}
+.message-view__text{
+
+}
+.message-view__item--index{
+  .message_name {
+    margin-bottom: 5px;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 12px;
+  }
+}
+
+.message-view__item{
+
+}
+.message{
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    padding: 10px 14px;
+    max-width: 360px;
+    padding: 10px 14px;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+.is-other {
+  .message{
+    background: #f0f2f5;
+  }
+  .picture{
+    margin-left: 0;
+    margin-right: 8px;
+  }
+  .message-view__img {
+    margin-bottom: 5px;
+    width: fit-content;
+  }
+
+  .message-view__file {
+    margin-bottom: 5px;
+  }
+
+  .message-view__text {
+    width: fit-content;
+    margin-bottom: 5px;
+  }
+}
+.is-self {
+  flex-direction: row-reverse;
+  display: flex;
+  .message{
+    background: #c2e8ff;
+  }
+  .picture{
+    margin-right: 0;
+    margin-left: 8px;
+    width: 36px;
+    height: 36px;
+  }
+  .message_name{
+    display: none;
+  }
+  .message-view__img {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 5px;
+    align-items: center;
+  }
+
+  .message-view__file {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 5px;
+    align-items: center;
+  }
+
+  .message-view__text {
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .face-url {
+    margin-right: 0;
+    margin-left: 8px;
+  }
+
+  // .message-view__item--text {
+  //   max-width: 360px;
+  //   width: fit-content;
+  //   padding: 10px 14px;
+  //   box-sizing: border-box;
+  //   background: #c2e8ff;
+  //   border-radius: 3px;
+  // }
 }
 </style>
