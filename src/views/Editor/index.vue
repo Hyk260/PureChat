@@ -143,9 +143,15 @@ import FontIcon from "@/layout/FontIcon/indx.vue";
 import { Search } from "@element-plus/icons-vue";
 import { getRoles } from "@/api/roles";
 import { timeFormat } from "@/utils/timeFormat";
+import { useStore } from "vuex";
 
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
+
+
+const store = useStore();
+
+
 
 const state = reactive({
   circleUrl:
@@ -156,10 +162,8 @@ const state = reactive({
 });
 const { circleUrl, squareUrl, sizeList } = toRefs(state);
 
-// 内容 HTML
-const valueHtml = ref("");
-const newRect = ref(206);
-const msgHeight = ref(206);
+
+const valueHtml = ref("");// 内容 HTML
 const appoint = ref("");
 const noMore = ref(true);
 const Friends = ref([]);
@@ -217,9 +221,19 @@ const handleCreated = (editor) => {
 // 回车
 const handleEnter = () => {
   console.log("回车");
+
+  
 };
 // 发送消息
-const sendMessage = () => {};
+const sendMessage = async () => {
+
+  // const result = await sendMsg({})
+  // 更新消息
+  store.commit('SET_HISTORYMESSAGE', {
+      type: 'UPDATE_MESSAGES',
+      payload: {},
+  })
+};
 // 粘贴事件
 const customPaste = (editor, event, callback) => {
   console.log(editor);

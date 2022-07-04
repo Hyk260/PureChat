@@ -24,6 +24,7 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   modules[moduleName] = value.default
   return modules
 }, {})
+console.log(modules,"modules")
 
 export default createStore({
   modules,
@@ -39,11 +40,6 @@ export default createStore({
     setCollapse(state) {
       state.data.isCollapse = !state.data.isCollapse
     },
-    // 显示隐藏侧边栏
-    // setSidebar(state){
-    //   console.log(state)
-    //   state.settings.sidebar = !state.settings.sidebar
-    // },
     // 更新用户设置
     updateSettings(state, { key, value }) {
       state.settings[key] = value
