@@ -17,7 +17,7 @@
         </div>
       </div>
       <el-scrollbar class="scrollbar-list">
-        <div class="message-item is-active" v-for="item in Friends" :key="item">
+        <div class="message-item is-active" v-for="item in Friends" :key="item" v-contextmenu:contextmenu @contextmenu.prevent="handleContextMenuEvent()">
           <!-- 头像 -->
           <el-avatar
             class="portrait"
@@ -36,10 +36,18 @@
               </div>
             </div>
             <span class="message-item-right-bottom"> 消息 </span>
+            <svg-icon iconClass="DontDisturb" class="dont"/>
           </div>
+          <!-- 置顶图标 -->
+          <div class="pinned-tag"></div>
         </div>
+        <!-- 右键菜单 -->
+        <contextmenu ref="contextmenu" class="style-menu" classnames="qwer">
+          <contextmenu-item v-for="item in convMenuItem" :key="item.id">{{item.text}}</contextmenu-item>
+        </contextmenu>
       </el-scrollbar>
     </div>
+    <!-- 聊天框 -->
     <div class="message-right" id="svgBox">
       <header class="message-info-view-header">
         <div class="message-info-views">
@@ -69,7 +77,7 @@
                 {{ timeFormat(item.updateTime, true) }}
               </div>
               <!-- 消息 is-self is-other-->
-              <div class="message-view__item is-self">
+              <div class="message-view__item is-other">
                 <div class="picture">
                   <el-avatar
                     :size="36"
@@ -125,6 +133,8 @@
         </el-tooltip>
       </div>
     </div>
+
+   
   </div>
 </template>
 
@@ -144,14 +154,23 @@ import { Search } from "@element-plus/icons-vue";
 import { getRoles } from "@/api/roles";
 import { timeFormat } from "@/utils/timeFormat";
 import { useStore } from "vuex";
+// import basic from "./basic.vue";
+import { Contextmenu, ContextmenuItem } from "v-contextmenu";
+import "v-contextmenu/dist/themes/default.css";
 
+  
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
 
 
 const store = useStore();
 
-
+const convMenuItem = [
+                        { id: 'pinged', text: '会话置顶' },
+                        { id: 'disable', text: '消息免打扰' },
+                        { id: 'remove', text: '移除会话' },
+                        // { id: 'clean', text: '清除消息' },
+                    ]
 
 const state = reactive({
   circleUrl:
@@ -165,7 +184,7 @@ const { circleUrl, squareUrl, sizeList } = toRefs(state);
 
 const valueHtml = ref("");// 内容 HTML
 const appoint = ref("");
-const noMore = ref(true);
+const noMore = ref(false);
 const Friends = ref([]);
 
 // 模拟 ajax 异步获取内容
@@ -210,7 +229,9 @@ const editorConfig = {
   /* 菜单配置 */
   MENU_CONF: {},
 };
-
+const handleContextMenuEvent = ()=>{
+  console.log(123)
+}
 const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 
@@ -337,6 +358,16 @@ onBeforeUnmount(() => {
   height: 100%;
   display: flex;
 }
+.v-contextmenu{
+  width: 154px;
+  .v-contextmenu-item{
+    height: 32px;
+    line-height: 32px;
+    padding: 0px 16px;
+    color: rgba(0, 0, 0, 0.65);
+    font-size: 12px;
+  }
+}
 
 .message-left {
   width: 280px;
@@ -392,8 +423,18 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  position: relative;
   &:hover {
     background: #f0f2f5;
+  }
+  .pinned-tag{
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border: 8px solid #f28078;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
   }
   .portrait {
     width: 40px;
@@ -403,6 +444,12 @@ onBeforeUnmount(() => {
     width: 200px;
     margin-left: 11px;
     height: 44px;
+    position: relative;
+    .dont{
+      position: absolute;
+      right: 0;
+      color: rgb(29 33 41 / 30%);
+    }
     .message-item-right-top {
       display: flex;
       justify-content: space-between;
@@ -502,8 +549,9 @@ onBeforeUnmount(() => {
   width: 32px;
   height: 32px;
   line-height: 32px;
-  background: url("../../assets/icons/svg/loading.svg");
+  background: url("../../assets/images/loading.png");
   animation: load 1.1s infinite linear;
+  background-size: 32px;
 }
 
 @keyframes load {

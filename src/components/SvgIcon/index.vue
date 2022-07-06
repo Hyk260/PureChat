@@ -7,6 +7,7 @@
 <script>
 import { defineComponent, computed, reactive } from "vue";
 export default defineComponent({
+  // <svg-icon iconClass="loginBg" class="wave" />
   props: {
     iconClass: {
       type: String,

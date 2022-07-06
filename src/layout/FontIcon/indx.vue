@@ -7,6 +7,7 @@
 <script setup>
 const props = defineProps({
   // elementPlus https://element-plus.gitee.io/zh-CN/component/icon.html
+  // <FontIcon iconName="***" />
   iconName: {
     type: String,
     default: "Pouring",

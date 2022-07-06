@@ -10,6 +10,7 @@ import pkg from "../package.json";
 import * as ElIcons from "@element-plus/icons-vue";
 import { loadAllPlugins } from "./plugins";
 import { loadAllassembly } from "./components";
+import { directive } from "v-contextmenu";
 
 import NProgress from "nprogress";
 
@@ -35,6 +36,8 @@ app.component(FontIcon);
 for (const name in ElIcons) {
   app.component(name, ElIcons[name]);
 }
+
+app.directive('contextmenu',directive);
 
 app.config.globalProperties.__APP_INFO__ = pkg;
 
