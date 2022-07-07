@@ -42,7 +42,7 @@
           <div class="pinned-tag"></div>
         </div>
         <!-- 右键菜单 -->
-        <contextmenu ref="contextmenu" class="style-menu" classnames="qwer">
+        <contextmenu ref="contextmenu">
           <contextmenu-item v-for="item in convMenuItem" :key="item.id">{{item.text}}</contextmenu-item>
         </contextmenu>
       </el-scrollbar>
@@ -61,9 +61,9 @@
       <section class="message-info-view-content" id="svgTop">
         <el-scrollbar class="scrollbar-content">
           <div class="message-view">
-            <div v-for="(item, index) in Friends" :key="item">
+            <div v-for="(item, index) in currentMessageList" :key="item">
               <!-- 加载更多 -->
-              <div class="viewref" v-if="index === Friends.length - 1">
+              <div class="viewref" v-if="index === currentMessageList.length - 1">
                 <div
                   :class="`showMore no-more ${noMore ? '' : 'loading-more'}`"
                 >
@@ -77,7 +77,9 @@
                 {{ timeFormat(item.updateTime, true) }}
               </div>
               <!-- 消息 is-self is-other-->
-              <div class="message-view__item is-other">
+              <div class="message-view__item" 
+                :class="item.message_is_from_self ? 'is-self': 'is-other'"                              
+              >
                 <div class="picture">
                   <el-avatar
                     :size="36"
@@ -89,11 +91,11 @@
                 <div class="message-view__item--index">
                   <!-- 文本 -->
                   <div class="message-view__text">
-                    <div class="message_name">{{item.roleName}}</div>
+                    <div class="message_name">{{item.message_sender_profile.user_profile_nick_name}}</div>
                     <div class="message">
                       <span class="message-view__item--text text right-menu-item">
                         <span class="text linkUrl">
-                          123
+                          {{item.message_elem_array[0].text_elem_content}}
                         </span>
                       </span>
                     </div>
@@ -152,9 +154,10 @@ import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { Search } from "@element-plus/icons-vue";
 import { getRoles } from "@/api/roles";
+import { getChat } from "@/api/chat";
+import { generateTemplateElement, getMessageElemItem } from "@/utils/message-input-utils";;
 import { timeFormat } from "@/utils/timeFormat";
 import { useStore } from "vuex";
-// import basic from "./basic.vue";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import "v-contextmenu/dist/themes/default.css";
 
@@ -166,11 +169,11 @@ const editorRef = shallowRef();
 const store = useStore();
 
 const convMenuItem = [
-                        { id: 'pinged', text: '会话置顶' },
-                        { id: 'disable', text: '消息免打扰' },
-                        { id: 'remove', text: '移除会话' },
-                        // { id: 'clean', text: '清除消息' },
-                    ]
+    { id: 'pinged', text: '会话置顶' },
+    { id: 'disable', text: '消息免打扰' },
+    { id: 'remove', text: '移除会话' },
+    { id: 'clean', text: '清除消息' },
+]
 
 const state = reactive({
   circleUrl:
@@ -184,12 +187,14 @@ const { circleUrl, squareUrl, sizeList } = toRefs(state);
 
 const valueHtml = ref("");// 内容 HTML
 const appoint = ref("");
-const noMore = ref(false);
+const noMore = ref(true);
 const Friends = ref([]);
+const currentMessageList = ref([])
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
   getRolesList();
+  getChatList()
   // setTimeout(() => {
   //     valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
   // }, 1500)
@@ -199,6 +204,14 @@ const getRolesList = async () => {
   let { code, result } = await getRoles();
   if (code === 200) {
     Friends.value = result;
+  }
+};
+
+const getChatList = async () => {
+  let { code, result } = await getChat();
+  if (code === 200) {
+    currentMessageList.value = result;
+    console.log(result)
   }
 };
 
@@ -241,29 +254,61 @@ const handleCreated = (editor) => {
 };
 // 回车
 const handleEnter = () => {
-  console.log("回车");
-
-  
+  sendMessage()
 };
+const sendMsgBefore = () => {
+  const text = editorRef.value.getText()
+  const content = getMessageElemItem('text', { text:text }) //文本
+  console.log(content)
+  return { content }
+}
 // 发送消息
 const sendMessage = async () => {
-
+  const { content } = sendMsgBefore()
+  const text = editorRef.value.getText()
   // const result = await sendMsg({})
+  const message = content
+  const messageId = '123'
+  const userProfile = {
+    user_profile_nick_name: "临江仙"
+  }
+  const conv_id = 123
+  const conv_type = 2
+  const templateElement = await generateTemplateElement(
+    conv_id,
+    conv_type,
+    userProfile,
+    messageId,
+    message,
+    {}
+  )
+  console.log(templateElement)
+
+  currentMessageList.value.unshift(templateElement)
+  
+
+  clearInputInfo()
   // 更新消息
   store.commit('SET_HISTORYMESSAGE', {
       type: 'UPDATE_MESSAGES',
-      payload: {},
+      payload: {
+        convId:'123',
+        message: templateElement
+      },
   })
 };
+const clearInputInfo = () => {
+  editorRef.value.clear()
+}
 // 粘贴事件
 const customPaste = (editor, event, callback) => {
   console.log(editor);
   console.log("ClipboardEvent 粘贴事件对象", event);
   // const html = event.clipboardData.getData("text/html"); // 获取粘贴的 html
-  // const text = event.clipboardData.getData("text/plain"); // 获取粘贴的纯文本
+  const text = event.clipboardData.getData("text/plain"); // 获取粘贴的纯文本
   // const rtf = event.clipboardData.getData("text/rtf"); // 获取 rtf 数据（如从 word wsp 复制粘贴）
   // // console.log(html);
-  // console.log(text);
+  console.log(text);
   // console.log(rtf);
 
   if (event.clipboardData && event.clipboardData.items) {
@@ -275,7 +320,7 @@ const customPaste = (editor, event, callback) => {
   }
 
   // 自定义插入内容
-  // editor.insertText("xxx");
+  editor.insertText(text);
 
   // 返回 false ，阻止默认粘贴行为
   event.preventDefault();

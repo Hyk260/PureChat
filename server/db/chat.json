@@ -1,0 +1,51 @@
+{
+  "chat": [
+    {
+      "message_client_time": 1657077846,
+      "message_cloud_custom_str": "",
+      "message_conv_id": "100002138",
+      "message_conv_type": 1,
+      "message_custom_int": 0,
+      "message_custom_str": "",
+      "message_elem_array": [
+        {
+          "elem_type": 0,
+          "text_elem_content": "[怒]"
+        }
+      ],
+      "message_excluded_from_last_message": false,
+      "message_group_receipt_read_count": 0,
+      "message_group_receipt_unread_count": -1,
+      "message_has_sent_receipt": false,
+      "message_is_excluded_from_unread_count": false,
+      "message_is_from_self": false,
+      "message_is_online_msg": false,
+      "message_is_peer_read": true,
+      "message_is_read": true,
+      "message_msg_id": "111792-1657077846-80828448",
+      "message_need_read_receipt": false,
+      "message_platform": 0,
+      "message_priority": 1,
+      "message_rand": 80828448,
+      "message_sender": "100122232",
+      "message_sender_profile": {
+        "user_profile_add_permission": 1,
+        "user_profile_birthday": 0,
+        "user_profile_custom_string_array": [],
+        "user_profile_face_url": "https://files.95579.com.cn/6/20220211/2320283/man.png",
+        "user_profile_gender": 0,
+        "user_profile_identifier": "100122232",
+        "user_profile_language": 0,
+        "user_profile_level": 0,
+        "user_profile_location": "",
+        "user_profile_nick_name": "任丹",
+        "user_profile_role": 0,
+        "user_profile_self_signature": ""
+      },
+      "message_seq": 3824184703,
+      "message_server_time": 1657077846,
+      "message_status": 2,
+      "message_unique_id": 7117095155576953000
+    }
+  ]
+}

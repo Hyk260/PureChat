@@ -7,8 +7,6 @@
       </div>
     </el-card>
 
-
-
   </div>
 </template>
 
@@ -36,7 +34,6 @@ const openDepot = () => {
 
 
 </script>
-
 <style lang="scss" scoped>
 .main-content {
   margin: 0 !important;

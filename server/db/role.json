@@ -263,6 +263,14 @@
       "createTime": 1652264138478,
       "updateTime": 1652264138478,
       "isDefaultRole": false
+    },
+    {
+      "id": "7349e5b9-be5f-4286-8231-9636562f8b3c",
+      "roleName": "赵云",
+      "info": "管理员",
+      "createTime": 1657161010487,
+      "updateTime": 1657161010487,
+      "isDefaultRole": false
     }
   ]
 }

@@ -18,6 +18,8 @@ const user = new FileSync("./db/user.json");
 
 const role = new FileSync("./db/role.json");
 
+const chat = new FileSync("./db/chat.json");
+
 const menu = new FileSync("./db/menu.json");
 
 const roleMenu = new FileSync("./db/roleMenu.json");
@@ -25,6 +27,8 @@ const roleMenu = new FileSync("./db/roleMenu.json");
 const db_user = lowdb(user);
 // 角色表
 const db_role = lowdb(role);
+// 聊天内容
+const db_chat = lowdb(chat);
 // 菜单表
 const db_menu = lowdb(menu);
 // 角色菜单
@@ -185,6 +189,17 @@ app.get("/menu/update", async (req, res, next) => {
   } else {
     res.json({ code: 400, msg: "参数不合法" });
   }
+  next();
+});
+
+// 获取聊天内容
+app.get("/chat/record", async (req, res, next) => {
+  let result = db_chat.get("chat").value();
+  res.json({
+    code: 200,
+    msg: "ok",
+    result
+  });
   next();
 });
 
