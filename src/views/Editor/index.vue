@@ -17,7 +17,13 @@
         </div>
       </div>
       <el-scrollbar class="scrollbar-list">
-        <div class="message-item is-active" v-for="item in Friends" :key="item" v-contextmenu:contextmenu @contextmenu.prevent="handleContextMenuEvent()">
+        <div
+          class="message-item is-active"
+          v-for="item in Friends"
+          :key="item"
+          v-contextmenu:contextmenu
+          @contextmenu.prevent="handleContextMenuEvent()"
+        >
           <!-- 头像 -->
           <el-avatar
             class="portrait"
@@ -36,14 +42,16 @@
               </div>
             </div>
             <span class="message-item-right-bottom"> 消息 </span>
-            <svg-icon iconClass="DontDisturb" class="dont"/>
+            <svg-icon iconClass="DontDisturb" class="dont" />
           </div>
           <!-- 置顶图标 -->
           <div class="pinned-tag"></div>
         </div>
         <!-- 右键菜单 -->
         <contextmenu ref="contextmenu">
-          <contextmenu-item v-for="item in convMenuItem" :key="item.id">{{item.text}}</contextmenu-item>
+          <contextmenu-item v-for="item in convMenuItem" :key="item.id">{{
+            item.text
+          }}</contextmenu-item>
         </contextmenu>
       </el-scrollbar>
     </div>
@@ -63,7 +71,10 @@
           <div class="message-view">
             <div v-for="(item, index) in currentMessageList" :key="item">
               <!-- 加载更多 -->
-              <div class="viewref" v-if="index === currentMessageList.length - 1">
+              <div
+                class="viewref"
+                v-if="index === currentMessageList.length - 1"
+              >
                 <div
                   :class="`showMore no-more ${noMore ? '' : 'loading-more'}`"
                 >
@@ -77,30 +88,30 @@
                 {{ timeFormat(item.updateTime, true) }}
               </div>
               <!-- 消息 is-self is-other-->
-              <div class="message-view__item" 
-                :class="item.message_is_from_self ? 'is-self': 'is-other'"                              
+              <div
+                class="message-view__item"
+                :class="item.message_is_from_self ? 'is-self' : 'is-other'"
               >
                 <div class="picture">
-                  <el-avatar
-                    :size="36"
-                    shape="square"
-                    :src="squareUrl"
-                  />
-                 </div>
+                  <el-avatar :size="36" shape="square" :src="squareUrl" />
+                </div>
                 <!-- 内容 -->
                 <div class="message-view__item--index">
                   <!-- 文本 -->
                   <div class="message-view__text">
-                    <div class="message_name">{{item.message_sender_profile.user_profile_nick_name}}</div>
+                    <div class="message_name">
+                      {{ item.message_sender_profile.user_profile_nick_name }}
+                    </div>
                     <div class="message">
-                      <span class="message-view__item--text text right-menu-item">
+                      <span
+                        class="message-view__item--text text right-menu-item"
+                      >
                         <span class="text linkUrl">
-                          {{item.message_elem_array[0].text_elem_content}}
+                          {{ item.message_elem_array[0].text_elem_content }}
                         </span>
                       </span>
                     </div>
                   </div>
-
                 </div>
               </div>
             </div>
@@ -135,8 +146,6 @@
         </el-tooltip>
       </div>
     </div>
-
-   
   </div>
 </template>
 
@@ -155,25 +164,26 @@ import FontIcon from "@/layout/FontIcon/indx.vue";
 import { Search } from "@element-plus/icons-vue";
 import { getRoles } from "@/api/roles";
 import { getChat } from "@/api/chat";
-import { generateTemplateElement, getMessageElemItem } from "@/utils/message-input-utils";;
+import {
+  generateTemplateElement,
+  getMessageElemItem,
+} from "@/utils/message-input-utils";
 import { timeFormat } from "@/utils/timeFormat";
 import { useStore } from "vuex";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import "v-contextmenu/dist/themes/default.css";
 
-  
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
-
 
 const store = useStore();
 
 const convMenuItem = [
-    { id: 'pinged', text: '会话置顶' },
-    { id: 'disable', text: '消息免打扰' },
-    { id: 'remove', text: '移除会话' },
-    { id: 'clean', text: '清除消息' },
-]
+  { id: "pinged", text: "会话置顶" },
+  { id: "disable", text: "消息免打扰" },
+  { id: "remove", text: "移除会话" },
+  { id: "clean", text: "清除消息" },
+];
 
 const state = reactive({
   circleUrl:
@@ -184,17 +194,16 @@ const state = reactive({
 });
 const { circleUrl, squareUrl, sizeList } = toRefs(state);
 
-
-const valueHtml = ref("");// 内容 HTML
+const valueHtml = ref(""); // 内容 HTML
 const appoint = ref("");
 const noMore = ref(true);
 const Friends = ref([]);
-const currentMessageList = ref([])
+const currentMessageList = ref([]);
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
   getRolesList();
-  getChatList()
+  getChatList();
   // setTimeout(() => {
   //     valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
   // }, 1500)
@@ -211,7 +220,7 @@ const getChatList = async () => {
   let { code, result } = await getChat();
   if (code === 200) {
     currentMessageList.value = result;
-    console.log(result)
+    console.log(result);
   }
 };
 
@@ -242,9 +251,9 @@ const editorConfig = {
   /* 菜单配置 */
   MENU_CONF: {},
 };
-const handleContextMenuEvent = ()=>{
-  console.log(123)
-}
+const handleContextMenuEvent = () => {
+  console.log(123);
+};
 const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 
@@ -254,26 +263,26 @@ const handleCreated = (editor) => {
 };
 // 回车
 const handleEnter = () => {
-  sendMessage()
+  sendMessage();
 };
 const sendMsgBefore = () => {
-  const text = editorRef.value.getText()
-  const content = getMessageElemItem('text', { text:text }) //文本
-  console.log(content)
-  return { content }
-}
+  const text = editorRef.value.getText();
+  const content = getMessageElemItem("text", { text: text }); //文本
+  console.log(content);
+  return { content };
+};
 // 发送消息
 const sendMessage = async () => {
-  const { content } = sendMsgBefore()
-  const text = editorRef.value.getText()
+  const { content } = sendMsgBefore();
+  const text = editorRef.value.getText();
   // const result = await sendMsg({})
-  const message = content
-  const messageId = '123'
+  const message = content;
+  const messageId = "123";
   const userProfile = {
-    user_profile_nick_name: "临江仙"
-  }
-  const conv_id = 123
-  const conv_type = 2
+    user_profile_nick_name: "临江仙",
+  };
+  const conv_id = 123;
+  const conv_type = 2;
   const templateElement = await generateTemplateElement(
     conv_id,
     conv_type,
@@ -281,25 +290,24 @@ const sendMessage = async () => {
     messageId,
     message,
     {}
-  )
-  console.log(templateElement)
+  );
+  console.log(templateElement);
 
-  currentMessageList.value.unshift(templateElement)
-  
+  currentMessageList.value.unshift(templateElement);
 
-  clearInputInfo()
+  clearInputInfo();
   // 更新消息
-  store.commit('SET_HISTORYMESSAGE', {
-      type: 'UPDATE_MESSAGES',
-      payload: {
-        convId:'123',
-        message: templateElement
-      },
-  })
+  store.commit("SET_HISTORYMESSAGE", {
+    type: "UPDATE_MESSAGES",
+    payload: {
+      convId: "123",
+      message: templateElement,
+    },
+  });
 };
 const clearInputInfo = () => {
-  editorRef.value.clear()
-}
+  editorRef.value.clear();
+};
 // 粘贴事件
 const customPaste = (editor, event, callback) => {
   console.log(editor);
@@ -403,9 +411,9 @@ onBeforeUnmount(() => {
   height: 100%;
   display: flex;
 }
-.v-contextmenu{
+.v-contextmenu {
   width: 154px;
-  .v-contextmenu-item{
+  .v-contextmenu-item {
     height: 32px;
     line-height: 32px;
     padding: 0px 16px;
@@ -472,7 +480,7 @@ onBeforeUnmount(() => {
   &:hover {
     background: #f0f2f5;
   }
-  .pinned-tag{
+  .pinned-tag {
     display: block;
     position: absolute;
     left: 0;
@@ -490,7 +498,7 @@ onBeforeUnmount(() => {
     margin-left: 11px;
     height: 44px;
     position: relative;
-    .dont{
+    .dont {
       position: absolute;
       right: 0;
       color: rgb(29 33 41 / 30%);
@@ -579,16 +587,15 @@ onBeforeUnmount(() => {
   height: 32px;
   width: 100%;
   overflow: hidden;
-  .showMore{
+  .showMore {
     padding-top: 12px;
     text-align: center;
     color: #00f;
     font-size: 12px;
     line-height: 20px;
     cursor: pointer;
-    color: rgba(0,0,0,0.45);
+    color: rgba(0, 0, 0, 0.45);
   }
-
 }
 .loading-more {
   width: 32px;
@@ -613,10 +620,9 @@ onBeforeUnmount(() => {
   flex-direction: row;
   margin-top: 12px;
 }
-.message-view__text{
-
+.message-view__text {
 }
-.message-view__item--index{
+.message-view__item--index {
   .message_name {
     margin-bottom: 5px;
     color: rgba(0, 0, 0, 0.45);
@@ -624,24 +630,23 @@ onBeforeUnmount(() => {
   }
 }
 
-.message-view__item{
-
+.message-view__item {
 }
-.message{
-    width: -webkit-fit-content;
-    width: -moz-fit-content;
-    width: fit-content;
-    padding: 10px 14px;
-    max-width: 360px;
-    padding: 10px 14px;
-    box-sizing: border-box;
-    border-radius: 3px;
+.message {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 10px 14px;
+  max-width: 360px;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  border-radius: 3px;
 }
 .is-other {
-  .message{
+  .message {
     background: #f0f2f5;
   }
-  .picture{
+  .picture {
     margin-left: 0;
     margin-right: 8px;
   }
@@ -662,16 +667,16 @@ onBeforeUnmount(() => {
 .is-self {
   flex-direction: row-reverse;
   display: flex;
-  .message{
+  .message {
     background: #c2e8ff;
   }
-  .picture{
+  .picture {
     margin-right: 0;
     margin-left: 8px;
     width: 36px;
     height: 36px;
   }
-  .message_name{
+  .message_name {
     display: none;
   }
   .message-view__img {
