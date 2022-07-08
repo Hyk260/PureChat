@@ -22,7 +22,7 @@
           v-for="item in Friends"
           :key="item"
           v-contextmenu:contextmenu
-          @contextmenu.prevent="handleContextMenuEvent()"
+          @contextmenu.prevent="handleContextMenuEvent($event, item)"
         >
           <!-- 头像 -->
           <el-avatar
@@ -49,9 +49,13 @@
         </div>
         <!-- 右键菜单 -->
         <contextmenu ref="contextmenu">
-          <contextmenu-item v-for="item in convMenuItem" :key="item.id">{{
-            item.text
-          }}</contextmenu-item>
+          <contextmenu-item
+            v-for="item in convMenuItem"
+            :key="item.id"
+            @click="handleClickMenuItem(item)"
+          >
+            {{ item.text }}
+          </contextmenu-item>
         </contextmenu>
       </el-scrollbar>
     </div>
@@ -68,7 +72,7 @@
       <!-- 聊天窗口 -->
       <section class="message-info-view-content" id="svgTop">
         <el-scrollbar class="scrollbar-content">
-          <div class="message-view">
+          <div class="message-view" ref="messageViewRef">
             <div v-for="(item, index) in currentMessageList" :key="item">
               <!-- 加载更多 -->
               <div
@@ -158,6 +162,8 @@ import {
   onMounted,
   reactive,
   toRefs,
+  watch,
+  nextTick,
 } from "vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
@@ -198,7 +204,9 @@ const valueHtml = ref(""); // 内容 HTML
 const appoint = ref("");
 const noMore = ref(true);
 const Friends = ref([]);
+const messageViewRef = ref(null);
 const currentMessageList = ref([]);
+const contextMenuItemInfo = ref([]);
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
@@ -208,6 +216,18 @@ onMounted(() => {
   //     valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
   // }, 1500)
 });
+
+watch(
+  () => currentMessageList.value,
+  () => {
+    nextTick(() => {
+      messageViewRef.value.firstElementChild?.scrollIntoView();
+    });
+  },
+  {
+    deep: true, //深度监听
+  }
+);
 
 const getRolesList = async () => {
   let { code, result } = await getRoles();
@@ -251,9 +271,38 @@ const editorConfig = {
   /* 菜单配置 */
   MENU_CONF: {},
 };
-const handleContextMenuEvent = () => {
-  console.log(123);
+// 右键菜单
+const handleContextMenuEvent = (e, item) => {
+  console.log(e, item);
+  contextMenuItemInfo.value = item;
 };
+
+const handleClickMenuItem = (item) => {
+  const Info = contextMenuItemInfo.value;
+  switch (item.id) {
+    case "pinged": // 置顶
+      pingConv(Info, true);
+      break;
+    case "unpinged": // 取消置顶
+      pingConv(Info, false);
+      break;
+    case "remove": // 删除会话
+      removeConv(Info);
+      break;
+    case "disable": // 消息免打扰
+      disableRecMsg(Info, true);
+      break;
+    case "undisable": // 取消消息免打扰
+      disableRecMsg(Info, false);
+      break;
+  }
+};
+const disableRecMsg = () => {};
+const removeConv = (conv) => {
+  console.log(conv)
+};
+const pingConv = () => {};
+
 const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 
@@ -274,7 +323,6 @@ const sendMsgBefore = () => {
 // 发送消息
 const sendMessage = async () => {
   const { content } = sendMsgBefore();
-  const text = editorRef.value.getText();
   // const result = await sendMsg({})
   const message = content;
   const messageId = "123";
