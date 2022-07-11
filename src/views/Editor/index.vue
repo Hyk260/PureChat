@@ -1,6 +1,6 @@
 # 编辑器
 <template>
-  <div class="list-container">
+  <div class="list-container" @contextmenu.prevent>
     <!-- 聊天列表 -->
     <div class="message-left">
       <div class="header-bar">
@@ -100,7 +100,11 @@
                   <el-avatar :size="36" shape="square" :src="squareUrl" />
                 </div>
                 <!-- 内容 -->
-                <div class="message-view__item--index">
+                <div 
+                  class="message-view__item--index" 
+                  v-contextmenu:contextmenus
+                  @contextmenu.prevent="ContextMenuEvent($event, item)"
+                >
                   <!-- 文本 -->
                   <div class="message-view__text">
                     <div class="message_name">
@@ -119,6 +123,16 @@
                 </div>
               </div>
             </div>
+            <!-- 右键菜单 -->
+            <contextmenu ref="contextmenus">
+              <contextmenu-item
+                v-for="item in RIGHT_CLICK_MENU_LIST"
+                :key="item.id"
+                @click="ClickMenuItem(item)"
+              >
+                {{ item.text }}
+              </contextmenu-item>
+            </contextmenu>
           </div>
         </el-scrollbar>
       </section>
@@ -155,6 +169,7 @@
 
 <script setup>
 import "@wangeditor/editor/dist/css/style.css";
+import "v-contextmenu/dist/themes/default.css";
 import {
   onBeforeUnmount,
   ref,
@@ -165,6 +180,7 @@ import {
   watch,
   nextTick,
 } from "vue";
+
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { Search } from "@element-plus/icons-vue";
@@ -177,28 +193,12 @@ import {
 import { timeFormat } from "@/utils/timeFormat";
 import { useStore } from "vuex";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
-import "v-contextmenu/dist/themes/default.css";
+import { squareUrl, convMenuItem, RIGHT_CLICK_MENU_LIST } from './utils/menu';
 
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
 
 const store = useStore();
-
-const convMenuItem = [
-  { id: "pinged", text: "会话置顶" },
-  { id: "disable", text: "消息免打扰" },
-  { id: "remove", text: "移除会话" },
-  { id: "clean", text: "清除消息" },
-];
-
-const state = reactive({
-  circleUrl:
-    "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-  squareUrl:
-    "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
-  sizeList: ["small", "", "large"],
-});
-const { circleUrl, squareUrl, sizeList } = toRefs(state);
 
 const valueHtml = ref(""); // 内容 HTML
 const appoint = ref("");
@@ -240,7 +240,6 @@ const getChatList = async () => {
   let { code, result } = await getChat();
   if (code === 200) {
     currentMessageList.value = result;
-    console.log(result);
   }
 };
 
@@ -271,9 +270,14 @@ const editorConfig = {
   /* 菜单配置 */
   MENU_CONF: {},
 };
+const ContextMenuEvent = () => {
+
+}
+const ClickMenuItem = () => {
+
+}
 // 右键菜单
 const handleContextMenuEvent = (e, item) => {
-  console.log(e, item);
   contextMenuItemInfo.value = item;
 };
 
@@ -297,10 +301,13 @@ const handleClickMenuItem = (item) => {
       break;
   }
 };
+// 消息免打扰
 const disableRecMsg = () => {};
+// 删除会话
 const removeConv = (conv) => {
   console.log(conv)
 };
+// 置顶
 const pingConv = () => {};
 
 const handleCreated = (editor) => {
