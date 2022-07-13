@@ -177,6 +177,7 @@ import {
   onMounted,
   reactive,
   toRefs,
+  computed,
   watch,
   nextTick,
 } from "vue";
@@ -191,7 +192,7 @@ import {
   getMessageElemItem,
 } from "@/utils/message-input-utils";
 import { timeFormat } from "@/utils/timeFormat";
-import { useStore } from "vuex";
+import { useStore, mapMutations, mapState } from "vuex";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { squareUrl, convMenuItem, RIGHT_CLICK_MENU_LIST } from './utils/menu';
 
@@ -207,6 +208,21 @@ const Friends = ref([]);
 const messageViewRef = ref(null);
 const currentMessageList = ref([]);
 const contextMenuItemInfo = ref([]);
+
+// console.log(mapMutations)
+// const storeMutations = mapMutations(["setCollapse", "updateSettings"])
+// console.log(storeMutations)
+
+// const storemapState = mapState({
+//   currentMessageList: (state) => state.conversation.currentMessageList,
+// })
+
+
+
+// const Data = computed(() => { return store.conversationModules });
+  
+
+// console.log(Data)
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
@@ -305,7 +321,10 @@ const handleClickMenuItem = (item) => {
 const disableRecMsg = () => {};
 // 删除会话
 const removeConv = (conv) => {
-  console.log(conv)
+  const Info = Friends.value;
+  Friends.value = Info.filter(t=>{
+    return t.id != conv.id
+  })
 };
 // 置顶
 const pingConv = () => {};

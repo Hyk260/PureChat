@@ -3,9 +3,8 @@
 </template>
 
 <script setup>
-  import { computed, onMounted } from "vue";
-  import { useStore } from 'vuex';
-  import views from "@/utils/assembly"
+  import { onMounted } from "vue";
+  import { tree } from "@/utils/ToTree";
   import { useRouter } from "vue-router";
   import storage from 'storejs'
 
@@ -19,16 +18,6 @@
     })
   })
 
-  function tree(arr) {
-    arr.forEach((item) => {
-      if (item.componentName) {
-        item.component = views[item.componentName]
-      }
-      if (item?.children?.length > 0) {
-        tree(item.children)
-      }
-    })
-  }
 </script>
 
 <style lang="scss">

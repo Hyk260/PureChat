@@ -3,7 +3,7 @@ import {
   createWebHistory
 } from "vue-router";
 import storage from "storejs"
-import NProgress from 'nprogress'
+import NProgress from "@/utils/progress";
 import routes from './routes'
 import store from '@/store'
 import { ACCESS_TOKEN } from '@/store/mutation-types'

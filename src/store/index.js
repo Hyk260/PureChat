@@ -1,15 +1,15 @@
 import { createStore } from "vuex";
-// import { useRouter } from "vue-router";
 
 import storage from "storejs"
 import { logout } from '@/api/user';
 import router from "@/router";
-import ToTree from "@/utils/ToTree";
+import { ToTree } from "@/utils/ToTree";
 import views from "@/utils/assembly.js"
 import initLocalStorage from './data/initLocalStorage'
 
 const data = storage.get('userdata') || initLocalStorage.data // 账号信息
-const settings = storage.get('setup') || initLocalStorage.settings // 设置
+const settings = storage.get('setup') || initLocalStorage.settings // 
+// import { useRouter } from "vue-router";
 // const router = useRouter();
 
 /**
