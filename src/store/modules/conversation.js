@@ -1,4 +1,4 @@
-import { CONVERSATIONTYPE } from '../../mutation-types'
+import { CONVERSATIONTYPE } from '../mutation-types'
 
 const conversationModules = {
   state:{

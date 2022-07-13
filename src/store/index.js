@@ -15,6 +15,9 @@ const settings = storage.get('setup') || initLocalStorage.settings //
 /**
  * 不需要手动导入应用模块
  * 自动导入模块文件中的所有vuex模块
+ * 
+ * 辅助函数
+ * mapState、mapGetters、mapMutations、mapActions
  */
 const modulesFiles = require.context('./modules', true, /\.js$/)
 const modules = modulesFiles.keys().reduce((modules, modulePath) => {
@@ -26,7 +29,7 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 }, {})
 console.log(modules,"modules")
 
-export default createStore({
+const store = createStore({
   modules,
   state: {
     // 前端生成的验证码（按实际需求替换）
@@ -85,3 +88,5 @@ export default createStore({
     // allRoutes: state => state.allRoutes,
   },
 });
+console.log(store,'vuex数据')
+export default store

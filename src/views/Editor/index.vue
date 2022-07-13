@@ -196,6 +196,7 @@ import { useStore, mapMutations, mapState } from "vuex";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { squareUrl, convMenuItem, RIGHT_CLICK_MENU_LIST } from './utils/menu';
 
+import { useState } from '@/utils/hooks/useMapper'
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
 
@@ -209,20 +210,9 @@ const messageViewRef = ref(null);
 const currentMessageList = ref([]);
 const contextMenuItemInfo = ref([]);
 
-// console.log(mapMutations)
-// const storeMutations = mapMutations(["setCollapse", "updateSettings"])
-// console.log(storeMutations)
+// const { data } = useState('conversation',['historyMessageList'])
 
-// const storemapState = mapState({
-//   currentMessageList: (state) => state.conversation.currentMessageList,
-// })
-
-
-
-// const Data = computed(() => { return store.conversationModules });
-  
-
-// console.log(Data)
+console.log(data)
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {

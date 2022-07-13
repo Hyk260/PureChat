@@ -8,7 +8,7 @@ import initLocalStorage from '@/store/data/initLocalStorage'
 
 const user = {
   state: {
-   
+
   },
   getters: {
 
