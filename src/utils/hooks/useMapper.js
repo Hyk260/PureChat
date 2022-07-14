@@ -15,9 +15,13 @@ const useMapper = (mapper, mapFn) => {
 
   return storeState
 }
+
 /**
  * 使用方法
- * const data = useState('modules',['name'])
+ * 
+ * const { currentMessageList } = useState({
+ *  currentMessageList: (state) => state.conversation.currentMessageList,
+ * });
  * 
  */
 export const useState = (moduleName, mapper) => {

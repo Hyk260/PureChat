@@ -71,7 +71,7 @@
       </header>
       <!-- 聊天窗口 -->
       <section class="message-info-view-content" id="svgTop">
-        <el-scrollbar class="scrollbar-content">
+        <el-scrollbar class="scrollbar-content" ref="scrollbarRef">
           <div class="message-view" ref="messageViewRef">
             <div v-for="(item, index) in currentMessageList" :key="item">
               <!-- 加载更多 -->
@@ -100,8 +100,8 @@
                   <el-avatar :size="36" shape="square" :src="squareUrl" />
                 </div>
                 <!-- 内容 -->
-                <div 
-                  class="message-view__item--index" 
+                <div
+                  class="message-view__item--index"
                   v-contextmenu:contextmenus
                   @contextmenu.prevent="ContextMenuEvent($event, item)"
                 >
@@ -152,9 +152,7 @@
           @customPaste="customPaste"
           @keyup.enter="handleEnter"
         />
-        <!-- @contextmenu.prevent -->
         <el-tooltip
-          class="item"
           effect="dark"
           content="按Enter发送消息,Enter+Shift换行"
           placement="left-start"
@@ -175,44 +173,46 @@ import {
   ref,
   shallowRef,
   onMounted,
+  onUpdated,
   reactive,
   toRefs,
   computed,
   watch,
   nextTick,
 } from "vue";
-
+import {
+  generateTemplateElement,
+  getMessageElemItem,
+} from "@/utils/message-input-utils";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { Search } from "@element-plus/icons-vue";
 import { getRoles } from "@/api/roles";
 import { getChat } from "@/api/chat";
-import {
-  generateTemplateElement,
-  getMessageElemItem,
-} from "@/utils/message-input-utils";
 import { timeFormat } from "@/utils/timeFormat";
 import { useStore, mapMutations, mapState } from "vuex";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
-import { squareUrl, convMenuItem, RIGHT_CLICK_MENU_LIST } from './utils/menu';
+import { squareUrl, convMenuItem, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
+import { toolbarConfig, editorConfig } from "./utils/configure";
+import { useState } from "@/utils/hooks/useMapper";
+import { debounce } from '@/utils/debounce';
 
-import { useState } from '@/utils/hooks/useMapper'
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
 
-const store = useStore();
-
 const valueHtml = ref(""); // 内容 HTML
 const appoint = ref("");
-const noMore = ref(true);
 const Friends = ref([]);
 const messageViewRef = ref(null);
-const currentMessageList = ref([]);
+const scrollbarRef = ref(null);
 const contextMenuItemInfo = ref([]);
+const { state, getters, dispatch, commit } = useStore();
 
-// const { data } = useState('conversation',['historyMessageList'])
-
-console.log(data)
+const { currentMessageList, historyMessageList, noMore } = useState({
+  currentMessageList: (state) => state.conversation.currentMessageList,
+  historyMessageList: (state) => state.conversation.historyMessageList,
+  noMore: (state) => state.conversation.noMore,
+});
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
@@ -221,6 +221,16 @@ onMounted(() => {
   // setTimeout(() => {
   //     valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
   // }, 1500)
+});
+onUpdated(() => {
+  console.log(scrollbarRef);
+  scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
+});
+// 组件销毁时，及时销毁编辑器
+onBeforeUnmount(() => {
+  const editor = editorRef.value;
+  if (editor == null) return;
+  editor.destroy();
 });
 
 watch(
@@ -235,6 +245,21 @@ watch(
   }
 );
 
+const scrollbar = (e) => {
+  // 会话是否大于50条 ? 显示loading : 没有更多
+  debounce(() => {
+    // if (!this.noMore) {}
+    const current = currentMessageList.value.length - 1
+    // 第一条消息 加载更多 节点
+    const offsetTopScreen = messageViewRef.value?.children?.[current]
+    const top = offsetTopScreen?.getBoundingClientRect().top
+    const canLoadData = top > 50 //滚动到顶部
+    canLoadData && getMoreMsg()
+  }); //防抖处理
+};
+const getMoreMsg = () =>{
+  console.log("更多消息")
+}
 const getRolesList = async () => {
   let { code, result } = await getRoles();
   if (code === 200) {
@@ -245,43 +270,18 @@ const getRolesList = async () => {
 const getChatList = async () => {
   let { code, result } = await getChat();
   if (code === 200) {
-    currentMessageList.value = result;
+    commit("SET_HISTORYMESSAGE", {
+      type: "RECIVE_MESSAGE",
+      payload: {
+        convId: "123",
+        message: result,
+      },
+    });
   }
 };
-
-// 工具栏配置
-const toolbarConfig = {
-  /* 显示哪些菜单，如何排序、分组 */
-  toolbarKeys: [
-    "emotion", //表情
-    "uploadImage",
-    // {
-    //   key: "group-more-style", // 必填，要以 group 开头
-    //   title: "更多样式", // 必填
-    //   iconSvg: "<svg>....</svg>", // 可选
-    //   menuKeys: ["through", "code", "clearStyle"], // 下级菜单 key ，必填
-    // },
-  ],
-  // insertKeys: {
-  //   index: 2, // 插入的位置，基于当前的 toolbarKeys
-  //   keys: ["menu-key1", "menu-key2"],
-  // },
-  /* 隐藏哪些菜单 */
-  excludeKeys: [],
-};
-
-// 编辑器配置
-const editorConfig = {
-  placeholder: "请输入内容...",
-  /* 菜单配置 */
-  MENU_CONF: {},
-};
-const ContextMenuEvent = () => {
-
-}
-const ClickMenuItem = () => {
-
-}
+scrollbarRef;
+const ContextMenuEvent = () => {};
+const ClickMenuItem = () => {};
 // 右键菜单
 const handleContextMenuEvent = (e, item) => {
   contextMenuItemInfo.value = item;
@@ -312,9 +312,9 @@ const disableRecMsg = () => {};
 // 删除会话
 const removeConv = (conv) => {
   const Info = Friends.value;
-  Friends.value = Info.filter(t=>{
-    return t.id != conv.id
-  })
+  Friends.value = Info.filter((t) => {
+    return t.id != conv.id;
+  });
 };
 // 置顶
 const pingConv = () => {};
@@ -357,11 +357,11 @@ const sendMessage = async () => {
   );
   console.log(templateElement);
 
-  currentMessageList.value.unshift(templateElement);
+  // currentMessageList.value.unshift(templateElement);
 
   clearInputInfo();
   // 更新消息
-  store.commit("SET_HISTORYMESSAGE", {
+  commit("SET_HISTORYMESSAGE", {
     type: "UPDATE_MESSAGES",
     payload: {
       convId: "123",
@@ -410,7 +410,6 @@ const dragControllerDiv = () => {
   // 按下鼠标执行
   svgResize.onmousedown = (e) => {
     let startY = e.clientY; //鼠标按下 起始Y
-    console.log(startY);
     svgResize.top = svgResize.offsetTop;
     // 事件会在鼠标指针移到指定的对象时发生。
     document.onmousemove = function (e) {
@@ -423,7 +422,6 @@ const dragControllerDiv = () => {
       if (moveLen < 200) moveLen = 200;
       // 控制移动最大
       if (moveLen > maxT - 200) moveLen = maxT - 200;
-      console.log(moveLen);
       svgResize.style.top = moveLen;
       svgTop.style.height = moveLen - 60 + "px";
       svgDown.style.height = svgBox.clientHeight - moveLen - 5 + "px";
@@ -438,13 +436,6 @@ const dragControllerDiv = () => {
     return false;
   };
 };
-
-// 组件销毁时，及时销毁编辑器
-onBeforeUnmount(() => {
-  const editor = editorRef.value;
-  if (editor == null) return;
-  editor.destroy();
-});
 </script>
 
 <style lang="scss" scoped>

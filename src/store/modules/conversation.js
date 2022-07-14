@@ -1,9 +1,11 @@
 import { CONVERSATIONTYPE } from '../mutation-types'
 
-const conversationModules = {
+const conversation = {
+  // namespaced: true,
   state:{
     historyMessageList: new Map(),//历史消息
     currentMessageList:[],//当前消息列表
+    noMore:true, // 加载更多  false ? 显示loading : 没有更多
   },
   mutations:{
     // 设置历史消息
@@ -13,6 +15,8 @@ const conversationModules = {
         // 更新消息
         case CONVERSATIONTYPE.UPDATE_MESSAGES: {
           console.log(payload)
+          const { convId, message } = payload
+          state.currentMessageList.unshift(message)
           break;
         }
         // 删除消息
@@ -26,9 +30,15 @@ const conversationModules = {
           state.currentMessageList = []
           break;
         }
+        // 接收消息
+        case CONVERSATIONTYPE.RECIVE_MESSAGE: {
+          const { convId, message } = payload
+          state.currentMessageList = message;
+          break;
+        }
       }
     }
   }
 }
 
-export default conversationModules
+export default conversation
