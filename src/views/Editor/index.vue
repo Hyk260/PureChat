@@ -195,7 +195,8 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { squareUrl, convMenuItem, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
 import { toolbarConfig, editorConfig } from "./utils/configure";
 import { useState } from "@/utils/hooks/useMapper";
-import { debounce } from '@/utils/debounce';
+import { debounce } from "@/utils/debounce";
+import { copyFile } from "fs";
 
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
@@ -206,12 +207,14 @@ const Friends = ref([]);
 const messageViewRef = ref(null);
 const scrollbarRef = ref(null);
 const contextMenuItemInfo = ref([]);
-const { state, getters, dispatch, commit } = useStore();
+const MenuItemInfo = ref([]);
 
-const { currentMessageList, historyMessageList, noMore } = useState({
+const { state, getters, dispatch, commit } = useStore();
+const { currentMessageList, historyMessageList, noMore, userInfo } = useState({
   currentMessageList: (state) => state.conversation.currentMessageList,
   historyMessageList: (state) => state.conversation.historyMessageList,
   noMore: (state) => state.conversation.noMore,
+  userInfo: (state) => state.data,
 });
 
 // 模拟 ajax 异步获取内容
@@ -249,17 +252,17 @@ const scrollbar = (e) => {
   // 会话是否大于50条 ? 显示loading : 没有更多
   debounce(() => {
     // if (!this.noMore) {}
-    const current = currentMessageList.value.length - 1
+    const current = currentMessageList.value.length - 1;
     // 第一条消息 加载更多 节点
-    const offsetTopScreen = messageViewRef.value?.children?.[current]
-    const top = offsetTopScreen?.getBoundingClientRect().top
-    const canLoadData = top > 50 //滚动到顶部
-    canLoadData && getMoreMsg()
+    const offsetTopScreen = messageViewRef.value?.children?.[current];
+    const top = offsetTopScreen?.getBoundingClientRect().top;
+    const canLoadData = top > 50; //滚动到顶部
+    canLoadData && getMoreMsg();
   }); //防抖处理
 };
-const getMoreMsg = () =>{
-  console.log("更多消息")
-}
+const getMoreMsg = () => {
+  console.log("更多消息");
+};
 const getRolesList = async () => {
   let { code, result } = await getRoles();
   if (code === 200) {
@@ -279,9 +282,35 @@ const getChatList = async () => {
     });
   }
 };
-scrollbarRef;
-const ContextMenuEvent = () => {};
-const ClickMenuItem = () => {};
+
+const ContextMenuEvent = (event,item) => {
+  MenuItemInfo.value = item;
+};
+const ClickMenuItem = (item) => {
+  const info = MenuItemInfo.value
+  switch (item.id) {
+    case "revoke": // 撤回
+
+      break;
+    case "delete": // 删除
+
+      break;
+    case "copy": // 复制
+      fncopy(info)
+      break;
+    case "folder": // 另存为
+
+      break;
+  }
+};
+const fncopy = (data) =>{
+  let { message_elem_array } = data || {}
+  let { elem_type, text_elem_content:elem_content } = message_elem_array[0]
+  // 文本
+  if(elem_type === 0){
+
+  }
+}
 // 右键菜单
 const handleContextMenuEvent = (e, item) => {
   contextMenuItemInfo.value = item;
