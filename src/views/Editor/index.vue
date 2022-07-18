@@ -16,48 +16,65 @@
           </el-input>
         </div>
       </div>
-      <el-scrollbar class="scrollbar-list">
-        <div
-          class="message-item is-active"
-          v-for="item in Friends"
-          :key="item"
-          v-contextmenu:contextmenu
-          @contextmenu.prevent="handleContextMenuEvent($event, item)"
-        >
-          <!-- 头像 -->
-          <el-avatar
-            class="portrait"
-            shape="square"
-            size="small"
-            :src="squareUrl"
-          />
-          <!-- 消息 -->
-          <div class="message-item-right">
-            <div class="message-item-right-top">
-              <div class="message-chat-name">
-                {{ item.roleName }}
-              </div>
-              <div class="message-Time">
-                {{ timeFormat(item.updateTime) }}
-              </div>
-            </div>
-            <span class="message-item-right-bottom"> 消息 </span>
-            <svg-icon iconClass="DontDisturb" class="dont" />
-          </div>
-          <!-- 置顶图标 -->
-          <div class="pinned-tag"></div>
-        </div>
-        <!-- 右键菜单 -->
-        <contextmenu ref="contextmenu">
-          <contextmenu-item
-            v-for="item in convMenuItem"
-            :key="item.id"
-            @click="handleClickMenuItem(item)"
+      <div class="scroll-container">
+        <el-scrollbar class="scrollbar-list">
+          <!-- <div class="broken-links" v-if="false">
+            <svg-icon iconClass="link"  class="link-style"/>
+            <span>连接已断开</span>
+          </div> -->
+          <div
+            class="message-item is-active"
+            v-for="item in Friends"
+            :key="item"
+            v-contextmenu:contextmenu
+            @contextmenu.prevent="handleContextMenuEvent($event, item)"
           >
-            {{ item.text }}
-          </contextmenu-item>
-        </contextmenu>
-      </el-scrollbar>
+            <!-- 头像 -->
+            <el-avatar
+              class="portrait"
+              shape="square"
+              size="small"
+              :src="squareUrl"
+            />
+            <!-- 消息 -->
+            <div class="message-item-right">
+              <div class="message-item-right-top">
+                <div class="message-chat-name">
+                  {{ item.roleName }}
+                </div>
+                <div class="message-Time">
+                  {{ timeFormat(item.updateTime) }}
+                </div>
+              </div>
+              <span class="message-item-right-bottom"> 消息 </span>
+              <svg-icon iconClass="DontDisturb" class="dont" />
+            </div>
+            <!-- 置顶图标 -->
+            <div class="pinned-tag"></div>
+          </div>
+          <!-- 右键菜单 -->
+          <contextmenu ref="contextmenu">
+            <contextmenu-item
+              v-for="item in convMenuItem"
+              :key="item.id"
+              @click="handleClickMenuItem(item)"
+            >
+              {{ item.text }}
+            </contextmenu-item>
+          </contextmenu>
+        </el-scrollbar>
+        <!-- <el-tabs
+          v-model="activeName"
+          class="demo-tabs"
+          @tab-click="handleClick"
+        >
+          <el-tab-pane label="User" name="first">
+            
+          </el-tab-pane>
+          <el-tab-pane label="Config" name="second"> Config </el-tab-pane>
+          <el-tab-pane label="Role" name="third"> Role </el-tab-pane>
+        </el-tabs> -->
+      </div>
     </div>
     <!-- 聊天框 -->
     <div class="message-right" id="svgBox">
@@ -208,6 +225,7 @@ const messageViewRef = ref(null);
 const scrollbarRef = ref(null);
 const contextMenuItemInfo = ref([]);
 const MenuItemInfo = ref([]);
+const activeName = ref("first");
 
 const { state, getters, dispatch, commit } = useStore();
 const { currentMessageList, historyMessageList, noMore, userInfo } = useState({
@@ -216,6 +234,10 @@ const { currentMessageList, historyMessageList, noMore, userInfo } = useState({
   noMore: (state) => state.conversation.noMore,
   userInfo: (state) => state.data,
 });
+
+const handleClick = (tab, event) => {
+  console.log(tab, event);
+};
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
@@ -283,34 +305,30 @@ const getChatList = async () => {
   }
 };
 
-const ContextMenuEvent = (event,item) => {
+const ContextMenuEvent = (event, item) => {
   MenuItemInfo.value = item;
 };
 const ClickMenuItem = (item) => {
-  const info = MenuItemInfo.value
+  const info = MenuItemInfo.value;
   switch (item.id) {
     case "revoke": // 撤回
-
       break;
     case "delete": // 删除
-
       break;
     case "copy": // 复制
-      fncopy(info)
+      fncopy(info);
       break;
     case "folder": // 另存为
-
       break;
   }
 };
-const fncopy = (data) =>{
-  let { message_elem_array } = data || {}
-  let { elem_type, text_elem_content:elem_content } = message_elem_array[0]
+const fncopy = (data) => {
+  let { message_elem_array } = data || {};
+  let { elem_type, text_elem_content: elem_content } = message_elem_array[0];
   // 文本
-  if(elem_type === 0){
-
+  if (elem_type === 0) {
   }
-}
+};
 // 右键菜单
 const handleContextMenuEvent = (e, item) => {
   contextMenuItemInfo.value = item;
@@ -468,6 +486,30 @@ const dragControllerDiv = () => {
 </script>
 
 <style lang="scss" scoped>
+.demo-tabs {
+  height: 100%;
+  ::v-deep .el-tabs__header {
+    margin: 0;
+  }
+  & > .el-tabs__content {
+    padding: 32px;
+    color: #6b778c;
+    font-size: 32px;
+    font-weight: 600;
+    // height: calc(100% - 40px);
+  }
+}
+.link-style {
+  font-size: 14px;
+  margin-right: 10px;
+}
+.broken-links {
+  height: 34px;
+  background: rgba(248, 217, 173, 0.5);
+  line-height: 34px;
+  text-align: center;
+  color: #c0843d;
+}
 .Editor-style {
   height: 206px;
   .toolbar {
@@ -538,9 +580,13 @@ const dragControllerDiv = () => {
   height: 60px;
   padding: 14px;
 }
+.scroll-container {
+  height: calc(100% - 60px);
+}
 .scrollbar-list {
   background: #fff;
-  height: calc(100% - 60px);
+  height: 100%;
+  // height: calc(100% - 40px);
 }
 .scrollbar-item {
   display: flex;

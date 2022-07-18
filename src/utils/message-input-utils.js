@@ -57,7 +57,10 @@ const getImageType = str => {
   const reg = /\.(png|jpg|gif|jpeg|webp)$/;
   return str.match(reg)[1];
 }
-
+/**
+ * 用于同步检查给定路径中是​​否已存在文件。它返回一个布尔值，该值指示文件的存在。
+ * 
+ * */ 
 export const checkFileExist = (path) => {
   return fs.existsSync(path)
 }
