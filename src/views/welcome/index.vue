@@ -6,15 +6,12 @@
         <span>{{ greetings }}</span>
       </div>
     </el-card>
-
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed } from "vue";
 import avatars from "@/assets/images/picture.jpg";
-
-
 
 const date = new Date();
 let greetings = computed(() => {
@@ -30,9 +27,6 @@ let greetings = computed(() => {
 const openDepot = () => {
   window.open("https://gitee.com/H260788");
 };
-
-
-
 </script>
 <style lang="scss" scoped>
 .main-content {

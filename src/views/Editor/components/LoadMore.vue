@@ -13,10 +13,9 @@ const props = defineProps({
   noMore: {
     type: Boolean,
     default: true,
-  }
+  },
 });
-const { noMore } = props
-
+const { noMore } = props;
 </script>
 
 <style lang="scss" scoped>

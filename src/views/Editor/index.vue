@@ -116,11 +116,7 @@
                 >
                   <!-- 文本 -->
                   <div :class="msgOne(item)">
-                    <component 
-                      :is="TextElemItem"
-                      :message="item"
-                    >
-                    </component>
+                    <component :is="TextElemItem" :message="item"> </component>
                   </div>
                 </div>
               </div>
@@ -199,9 +195,9 @@ import { toolbarConfig, editorConfig } from "./utils/configure";
 import { useState } from "@/utils/hooks/useMapper";
 import { debounce } from "@/utils/debounce";
 import { copyFile } from "fs";
-import networklink from './components/networklink.vue';
-import LoadMore from './components/LoadMore.vue';
-import TextElemItem from './components/TextElemItem';
+import networklink from "./components/networklink.vue";
+import LoadMore from "./components/LoadMore.vue";
+import TextElemItem from "./components/TextElemItem";
 
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
@@ -259,34 +255,36 @@ watch(
 );
 
 const msgOne = (item) => {
-  const { message_elem_array } = item || {}
-  const { elem_type } = message_elem_array[0]
+  const { message_elem_array } = item || {};
+  const { elem_type } = message_elem_array[0];
+  let resp = null;
   switch (elem_type) {
     case 0:
-    return 'message-view__text'   
-    break
+      resp = "message-view__text";
+      break;
   }
+  return resp;
 };
-const loadMsgComponents = (item)=> {
-  const { message_elem_array } = item || {}
-  const { elem_type } = message_elem_array[0]
-  let resp = null
+const loadMsgComponents = (item) => {
+  const { message_elem_array } = item || {};
+  const { elem_type } = message_elem_array[0];
+  let resp = null;
   switch (elem_type) {
     case 0:
-        resp = 'TextElemItem' // 文本消息
-        break
+      resp = "TextElemItem"; // 文本消息
+      break;
     case 1:
-        resp = 'pic-elem-item' //图片消息
-        break
+      resp = "pic-elem-item"; //图片消息
+      break;
     case 4:
-        resp = 'file-elem' // 文件消息
-        break
+      resp = "file-elem"; // 文件消息
+      break;
     case 6:
-        resp = 'emoji-elem' // 表情消息
-        break
+      resp = "emoji-elem"; // 表情消息
+      break;
   }
-  console.log(resp)
-  return resp
+  console.log(resp);
+  return resp;
 };
 const scrollbar = (e) => {
   // 会话是否大于50条 ? 显示loading : 没有更多

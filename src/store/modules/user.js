@@ -1,24 +1,14 @@
-import storage from 'storejs'
-import { Login } from "@/api/user"
+import storage from "storejs";
+import { Login } from "@/api/user";
 import router from "@/router";
-import views from "@/utils/assembly.js"
-import initLocalStorage from '@/store/data/initLocalStorage'
-
-
+import views from "@/utils/assembly.js";
+import initLocalStorage from "@/store/data/initLocalStorage";
 
 const user = {
-  state: {
+  state: {},
+  getters: {},
+  mutations: {},
+  actions: {},
+};
 
-  },
-  getters: {
-
-  },
-  mutations: {
-    
-  },
-  actions: {
-   
-  },
-}
-
-export default user
+export default user;
