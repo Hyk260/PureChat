@@ -18,10 +18,8 @@
       </div>
       <div class="scroll-container">
         <el-scrollbar class="scrollbar-list">
-          <!-- <div class="broken-links" v-if="false">
-            <svg-icon iconClass="link"  class="link-style"/>
-            <span>连接已断开</span>
-          </div> -->
+          <!-- 连接已断开 -->
+          <networklink />
           <div
             class="message-item is-active"
             v-for="item in Friends"
@@ -92,16 +90,10 @@
           <div class="message-view" ref="messageViewRef">
             <div v-for="(item, index) in currentMessageList" :key="item">
               <!-- 加载更多 -->
-              <div
-                class="viewref"
+              <LoadMore
+                :noMore="noMore"
                 v-if="index === currentMessageList.length - 1"
-              >
-                <div
-                  :class="`showMore no-more ${noMore ? '' : 'loading-more'}`"
-                >
-                  {{ noMore ? "没有更多了" : "" }}
-                </div>
-              </div>
+              />
 
               <div class="message-view__item--blank"></div>
               <!-- 时间 -->
@@ -123,19 +115,12 @@
                   @contextmenu.prevent="ContextMenuEvent($event, item)"
                 >
                   <!-- 文本 -->
-                  <div class="message-view__text">
-                    <div class="message_name">
-                      {{ item.message_sender_profile.user_profile_nick_name }}
-                    </div>
-                    <div class="message">
-                      <span
-                        class="message-view__item--text text right-menu-item"
-                      >
-                        <span class="text linkUrl">
-                          {{ item.message_elem_array[0].text_elem_content }}
-                        </span>
-                      </span>
-                    </div>
+                  <div :class="msgOne(item)">
+                    <component 
+                      :is="TextElemItem"
+                      :message="item"
+                    >
+                    </component>
                   </div>
                 </div>
               </div>
@@ -214,6 +199,9 @@ import { toolbarConfig, editorConfig } from "./utils/configure";
 import { useState } from "@/utils/hooks/useMapper";
 import { debounce } from "@/utils/debounce";
 import { copyFile } from "fs";
+import networklink from './components/networklink.vue';
+import LoadMore from './components/LoadMore.vue';
+import TextElemItem from './components/TextElemItem';
 
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
@@ -270,6 +258,36 @@ watch(
   }
 );
 
+const msgOne = (item) => {
+  const { message_elem_array } = item || {}
+  const { elem_type } = message_elem_array[0]
+  switch (elem_type) {
+    case 0:
+    return 'message-view__text'   
+    break
+  }
+};
+const loadMsgComponents = (item)=> {
+  const { message_elem_array } = item || {}
+  const { elem_type } = message_elem_array[0]
+  let resp = null
+  switch (elem_type) {
+    case 0:
+        resp = 'TextElemItem' // 文本消息
+        break
+    case 1:
+        resp = 'pic-elem-item' //图片消息
+        break
+    case 4:
+        resp = 'file-elem' // 文件消息
+        break
+    case 6:
+        resp = 'emoji-elem' // 表情消息
+        break
+  }
+  console.log(resp)
+  return resp
+};
 const scrollbar = (e) => {
   // 会话是否大于50条 ? 显示loading : 没有更多
   debounce(() => {
@@ -499,17 +517,7 @@ const dragControllerDiv = () => {
     // height: calc(100% - 40px);
   }
 }
-.link-style {
-  font-size: 14px;
-  margin-right: 10px;
-}
-.broken-links {
-  height: 34px;
-  background: rgba(248, 217, 173, 0.5);
-  line-height: 34px;
-  text-align: center;
-  color: #c0843d;
-}
+
 .Editor-style {
   height: 206px;
   .toolbar {
@@ -710,58 +718,20 @@ const dragControllerDiv = () => {
     flex: 1;
   }
 }
-.viewref {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 32px;
-  width: 100%;
-  overflow: hidden;
-  .showMore {
-    padding-top: 12px;
-    text-align: center;
-    color: #00f;
-    font-size: 12px;
-    line-height: 20px;
-    cursor: pointer;
-    color: rgba(0, 0, 0, 0.45);
-  }
-}
-.loading-more {
-  width: 32px;
-  height: 32px;
-  line-height: 32px;
-  background: url("../../assets/images/loading.png");
-  animation: load 1.1s infinite linear;
-  background-size: 32px;
-}
 
-@keyframes load {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
 .message-view__item {
   display: flex;
   flex-direction: row;
   margin-top: 12px;
 }
-.message-view__text {
-}
 .message-view__item--index {
-  .message_name {
+  ::v-deep .message_name {
     margin-bottom: 5px;
     color: rgba(0, 0, 0, 0.45);
     font-size: 12px;
   }
 }
 
-.message-view__item {
-}
 .message {
   width: -webkit-fit-content;
   width: -moz-fit-content;
@@ -773,7 +743,7 @@ const dragControllerDiv = () => {
   border-radius: 3px;
 }
 .is-other {
-  .message {
+  ::v-deep .message {
     background: #f0f2f5;
   }
   .picture {
@@ -797,7 +767,7 @@ const dragControllerDiv = () => {
 .is-self {
   flex-direction: row-reverse;
   display: flex;
-  .message {
+  ::v-deep .message {
     background: #c2e8ff;
   }
   .picture {
@@ -806,7 +776,7 @@ const dragControllerDiv = () => {
     width: 36px;
     height: 36px;
   }
-  .message_name {
+  ::v-deep .message_name {
     display: none;
   }
   .message-view__img {
@@ -834,14 +804,5 @@ const dragControllerDiv = () => {
     margin-right: 0;
     margin-left: 8px;
   }
-
-  // .message-view__item--text {
-  //   max-width: 360px;
-  //   width: fit-content;
-  //   padding: 10px 14px;
-  //   box-sizing: border-box;
-  //   background: #c2e8ff;
-  //   border-radius: 3px;
-  // }
 }
 </style>

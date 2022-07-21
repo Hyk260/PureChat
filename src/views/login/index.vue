@@ -110,7 +110,7 @@ import { operates, thirdParty } from "./utils/enums";
 import { successMessage, warnMessage } from "@/utils/message";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-
+import { user } from './utils/validation.js';
 const store = useStore();
 const router = useRouter();
 
@@ -118,12 +118,6 @@ const showload = ref(false);
 const keep = ref(false);
 const ruleFormRef = ref();
 const imgCode = ref("");
-
-const user = reactive({
-  username: "admin",
-  password: "123456",
-  verifyCode: "",
-});
 
 // 表单校验
 const rules = reactive({
@@ -145,13 +139,13 @@ const rules = reactive({
   ],
 });
 
+
 watch(imgCode, (value) => {
   store.dispatch("SET_VERIFYCODE", value);
 });
 // const myKeydown = async ()=>{
 
 // }
-
 const LoginBtn = async (formEl) => {
   if (!formEl) return;
   await formEl.validate((valid) => {
