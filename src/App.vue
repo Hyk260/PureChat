@@ -3,25 +3,24 @@
 </template>
 
 <script setup>
-  import { onMounted } from "vue";
-  import { tree } from "@/utils/ToTree";
-  import { useRouter } from "vue-router";
-  import storage from 'storejs'
+import { onMounted } from "vue";
+import { tree } from "@/utils/ToTree";
+import { useRouter } from "vue-router";
+import storage from "storejs";
 
-  const table = storage.get('userdata')
+const table = storage.get("userdata");
 
-  onMounted(() => {
-    if(!table?.Routingtable) return
-    tree(table.Routingtable)
-    table.Routingtable.forEach((item) => {
-      useRouter().addRoute(item)
-    })
-  })
-
+onMounted(() => {
+  if (!table?.Routingtable) return;
+  tree(table.Routingtable);
+  table.Routingtable.forEach((item) => {
+    useRouter().addRoute(item);
+  });
+});
 </script>
 
 <style lang="scss">
-.content-wrap{
+.content-wrap {
   padding: 24px;
   height: calc(100vh - 86px);
 }

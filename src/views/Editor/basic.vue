@@ -20,6 +20,6 @@ export default {
   components: {
     [Contextmenu.name]: Contextmenu,
     [ContextmenuItem.name]: ContextmenuItem,
-  }
-}
+  },
+};
 </script>

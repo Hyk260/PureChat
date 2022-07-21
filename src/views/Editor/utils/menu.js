@@ -8,17 +8,17 @@ const convMenuItem = [
 ];
 const RIGHT_CLICK_MENU_LIST = [
   {
-    id: 'revoke',
-    text: '撤回'
+    id: "revoke",
+    text: "撤回",
   },
   {
-    id: 'delete',
-    text: '删除'
+    id: "delete",
+    text: "删除",
   },
-  { 
-    id: 'copy',
-    text: '复制' 
-  }
+  {
+    id: "copy",
+    text: "复制",
+  },
   // {
   //   id: 'transimit',
   //   text: '转发'
@@ -34,14 +34,12 @@ const RIGHT_CLICK_MENU_LIST = [
 ];
 
 const state = reactive({
-  circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-  squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
+  circleUrl:
+    "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+  squareUrl:
+    "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
   sizeList: ["small", "", "large"],
 });
 const { circleUrl, squareUrl, sizeList } = toRefs(state);
 
-export {
-  squareUrl,
-  convMenuItem,
-  RIGHT_CLICK_MENU_LIST,
-}
+export { squareUrl, convMenuItem, RIGHT_CLICK_MENU_LIST };
