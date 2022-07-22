@@ -1,5 +1,6 @@
-const fs = require('fs')
-
+import fs from 'fs';
+import path from 'path';
+import os from 'os'
 /**
  * userProfile 
  *  
@@ -53,7 +54,20 @@ export const bufferToBase64Url = (data, type) => {
   return `data:image/${type};base64,` + buffer.toString('base64');
 }
 
-const getImageType = str => {
+// 得到图片的base64
+export const fileImgToBase64Url = async (file) => {
+  return new Promise((res) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const base64Value = e.target.result;
+      // target.result 该属性表示目标对象的DataURL
+      res(base64Value);
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
+export const getImageType = str => {
   const reg = /\.(png|jpg|gif|jpeg|webp)$/;
   return str.match(reg)[1];
 }
@@ -63,6 +77,19 @@ const getImageType = str => {
  * */ 
 export const checkFileExist = (path) => {
   return fs.existsSync(path)
+}
+export const getFileByPath = async (filePath) => {
+  const size = fs.statSync(filePath).size;
+  const name = path.parse(filePath).base;
+  const type = name.split('.')[1];
+  const fileContent = await fs.readFileSync(filePath);
+  return {
+    path: filePath,
+    size,
+    name,
+    type,
+    fileContent
+  }
 }
 
 export const getMessageElemItem = (
