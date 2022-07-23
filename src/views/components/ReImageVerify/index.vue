@@ -9,31 +9,29 @@
 </template>
 
 <script setup>
-import { watch, defineComponent, defineEmits } from 'vue'
-import { useImageVerify } from '@/utils/hooks'
+import { watch, defineComponent, defineEmits } from "vue";
+import { useImageVerify } from "@/utils/hooks";
 
-const emit = defineEmits()
+const emit = defineEmits();
 // defineOptions({
 //   name: "ReImageVerify"
 // });
 
 const props = defineProps({
-  code: '',
-})
+  code: "",
+});
 
-const { domRef, imgCode, setImgCode, getImgCode } = useImageVerify()
+const { domRef, imgCode, setImgCode, getImgCode } = useImageVerify();
 
 watch(
   () => props.code,
   (newValue) => {
-    setImgCode(newValue)
+    setImgCode(newValue);
   }
-)
+);
 watch(imgCode, (newValue) => {
-  emit('update:code', newValue)
-})
+  emit("update:code", newValue);
+});
 
-defineExpose({ getImgCode })
+defineExpose({ getImgCode });
 </script>
-
-
