@@ -1,24 +1,31 @@
-import fs from 'fs';
-import path from 'path';
-import os from 'os'
+import fs from "fs";
+import path from "path";
+import os from "os";
 /**
- * userProfile 
- *  
+ * userProfile
+ *
  * **/
 
-export const generateTemplateElement = async (convId, convType, userProfile, messageId, element, groupMemberProfile) => {
+export const generateTemplateElement = async (
+  convId,
+  convType,
+  userProfile,
+  messageId,
+  element,
+  groupMemberProfile
+) => {
   let formatedElement;
-  if(element.elem_type === 1) {
+  if (element.elem_type === 1) {
     const base64Url = await localFileToBase64(element.image_elem_orig_path);
-     formatedElement = {
+    formatedElement = {
       ...element,
-      image_elem_orig_url: base64Url
-    }
+      image_elem_orig_url: base64Url,
+    };
   } else {
     formatedElement = element;
   }
   return {
-    message_client_time:Math.round(new Date().getTime() /  1000),
+    message_client_time: Math.round(new Date().getTime() / 1000),
     message_server_time: 0,
     message_is_peer_read: false,
     message_status: 1,
@@ -28,31 +35,31 @@ export const generateTemplateElement = async (convId, convType, userProfile, mes
     message_elem_array: [formatedElement],
     message_msg_id: messageId,
     message_sender_profile: userProfile,
-    message_sender_group_member_info: groupMemberProfile || {}
-  }
-}
+    message_sender_group_member_info: groupMemberProfile || {},
+  };
+};
 
 export const localFileToBase64 = (url) => {
   return new Promise((resolve, reject) => {
-    try{
-      fs.readFile(url, 'binary', (err, data) => {
-        if(err) {
+    try {
+      fs.readFile(url, "binary", (err, data) => {
+        if (err) {
           reject(err);
         } else {
           const base64Url = bufferToBase64Url(data, getImageType(url));
           resolve(base64Url);
         }
-      })
-    }catch(e){
-      console.log(e)
+      });
+    } catch (e) {
+      console.log(e);
     }
   });
-}
+};
 
 export const bufferToBase64Url = (data, type) => {
-  const buffer = new Buffer(data, 'binary');
-  return `data:image/${type};base64,` + buffer.toString('base64');
-}
+  const buffer = new Buffer(data, "binary");
+  return `data:image/${type};base64,` + buffer.toString("base64");
+};
 
 // 得到图片的base64
 export const fileImgToBase64Url = async (file) => {
@@ -67,37 +74,33 @@ export const fileImgToBase64Url = async (file) => {
   });
 };
 
-export const getImageType = str => {
+export const getImageType = (str) => {
   const reg = /\.(png|jpg|gif|jpeg|webp)$/;
   return str.match(reg)[1];
-}
+};
 /**
  * 用于同步检查给定路径中是​​否已存在文件。它返回一个布尔值，该值指示文件的存在。
- * 
- * */ 
+ *
+ * */
 export const checkFileExist = (path) => {
-  return fs.existsSync(path)
-}
+  return fs.existsSync(path);
+};
 export const getFileByPath = async (filePath) => {
   const size = fs.statSync(filePath).size;
   const name = path.parse(filePath).base;
-  const type = name.split('.')[1];
+  const type = name.split(".")[1];
   const fileContent = await fs.readFileSync(filePath);
   return {
     path: filePath,
     size,
     name,
     type,
-    fileContent
-  }
-}
+    fileContent,
+  };
+};
 
-export const getMessageElemItem = (
-  type,
-  data,
-  videoInfoList
-) => {
-  console.log(data)
+export const getMessageElemItem = (type, data, videoInfoList) => {
+  console.log(data);
   switch (type) {
     case "text": {
       return {

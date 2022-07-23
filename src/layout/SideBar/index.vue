@@ -1,6 +1,9 @@
 <template>
-  <div :class="['sidebar-container', showLogo ? 'has-logo' : '']" v-show="sidebar">
-    <Logo class="logo-icon" v-show="showLogo"/>
+  <div
+    :class="['sidebar-container', showLogo ? 'has-logo' : '']"
+    v-show="sidebar"
+  >
+    <Logo class="logo-icon" v-show="showLogo" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         class="el-menu-vertical"
@@ -19,35 +22,35 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-import storage from 'storejs'
-import Logo from "../components/Logo.vue"
+import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
+import storage from "storejs";
+import Logo from "../components/Logo.vue";
 
-const route = useRoute()
-const store = useStore()
+const route = useRoute();
+const store = useStore();
 
 const isCollapse = computed(() => {
-  return store.state.data.isCollapse
-})
+  return store.state.data.isCollapse;
+});
 // 侧边栏数据
 const routing = computed(() => {
-  return store.state.data.Routingtable
-})
+  return store.state.data.Routingtable;
+});
 const sidebar = computed(() => {
-  return store.state.settings.sidebar
-})
+  return store.state.settings.sidebar;
+});
 const showLogo = computed(() => {
-  return store.state.settings.logoIcon
-})
+  return store.state.settings.logoIcon;
+});
 
 const handleOpen = (key, keyPath) => {
   // console.log(key, keyPath)
-}
+};
 const handleClose = (key, keyPath) => {
   // console.log(key, keyPath)
-}
+};
 </script>
 
 <style lang="scss" scoped>

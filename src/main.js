@@ -15,7 +15,7 @@ import { registerSvgIcon } from "./assets/icons/index";
 
 const app = createApp(App);
 app.component(FontIcon);
-app.directive('contextmenu',directive);
+app.directive("contextmenu", directive);
 app.config.globalProperties.__APP_INFO__ = pkg;
 
 // 加载所有插件
