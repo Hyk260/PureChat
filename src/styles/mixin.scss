@@ -1,8 +1,11 @@
 /* Mixins */
 @mixin clearfix {
-  &::after {
+  &:before,
+  &:after {
     content: "";
     display: table;
+  }
+  &:after {
     clear: both;
   }
 }
@@ -28,3 +31,10 @@
   height: 100%;
 }
 
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+//调用 @include clearfix;

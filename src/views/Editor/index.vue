@@ -181,6 +181,7 @@ import {
 import {
   generateTemplateElement,
   getMessageElemItem,
+  getImageType,
 } from "@/utils/message-input-utils";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
