@@ -1,14 +1,55 @@
-const path = require('path');
+const path = require("path");
 const resolve = (dir) => {
   return path.join(__dirname, dir);
-}
-const environment = process.env.NODE_ENV === 'production'
+};
+const { title, production } = require("./src/config/vue.custom.config");
 
 module.exports = {
-  lintOnSave: false,// 是否在保存的时候检查
+  // 是否在保存的时候检查
+  lintOnSave: false,
   // 开发以及生产环境的路径配置
-  publicPath: environment ? './' : '/',
-  
+  publicPath: production ? "./" : "/",
+  devServer: {
+    // 是否自动打开浏览器.
+    open: false,
+    // 局域网和本地访问.
+    host: "0.0.0.0",
+    // 端口.
+    port: process.env.VUE_APP_PORT || 9585,
+    // 代理.
+    proxy:
+      process.env.VUE_APP_PROXY === "false"
+        ? null
+        : {
+            "/proxy": {
+              // 目标代理服务器地址.
+              target: "http://localhost:8888",
+              // 是否允许跨域.
+              changeOrigin: true,
+              secure: true,
+              pathRewrite: {
+                "^/proxy": "/",
+              },
+            },
+          },
+  },
+  // css相关配置.
+  css: {
+    // css文件名是否可省略module,默认为false.
+    // requireModuleExtension: false,
+    // 是否使用css分离插件 默认生产环境下是true, 开发环境下是false.
+    extract: false,
+    // 是否为CSS开启source map.设置为true之后可能会影响构建的性能.
+    sourceMap: false,
+    // 向CSS相关的loader传递选项(支持:css-loader postcss-loader sass-loader less-loader stylus-loader).
+    /* loaderOptions: {
+      sass: {
+        // 引入全局scss全局样式
+        prependData: `@import '~@/assets/sass/element.scss';`
+      }
+    } */
+  },
+  // 对内部的webpack配置(比如修改、增加Loader选项)(链式操作).
   chainWebpack(config) {
     // svg-sprite-loader 配置
     // config.module
@@ -25,33 +66,34 @@ module.exports = {
     //   .options({ symbolId: 'icon-[name]' })
     //   .end()
 
-    const svgRule = config.module.rule('svg') // 找到svg-loader
-    svgRule.uses.clear() // 清除已有的loader, 如果不这样做会添加在此loader之后
-    svgRule.exclude.add(/node_modules/) // 正则匹配排除node_modules目录
+    const svgRule = config.module.rule("svg"); // 找到svg-loader
+    svgRule.uses.clear(); // 清除已有的loader, 如果不这样做会添加在此loader之后
+    svgRule.exclude.add(/node_modules/); // 正则匹配排除node_modules目录
     svgRule
       .test(/\.svg$/)
-      .use('svg-sprite-loader')
-      .loader('svg-sprite-loader')
-      .options({ symbolId: 'icon-[name]' })
+      .use("svg-sprite-loader")
+      .loader("svg-sprite-loader")
+      .options({ symbolId: "icon-[name]" });
 
     // 为生产环境修改配置...
-    if (environment) {
+    if (production) {
       // 清除css,js版本号
-      config.output.filename('static/js/[name].js').end();
-      config.output.chunkFilename('static/js/[name].js').end();
-      config.plugin('extract-css').tap(args => [{
-        filename: `static/css/[name].css`,
-        chunkFilename: `static/css/[name].css`
-      }])
+      config.output.filename("static/js/[name].js").end();
+      config.output.chunkFilename("static/js/[name].js").end();
+      config.plugin("extract-css").tap((args) => [
+        {
+          filename: `static/css/[name].css`,
+          chunkFilename: `static/css/[name].css`,
+        },
+      ]);
     }
 
     // 根路径
-    config.resolve.alias.set("@", resolve("src"))
+    config.resolve.alias.set("@", resolve("src"));
     // 修改标题
-    config.plugin('html').tap((args) => {
-      args[0].title = "PURE ADMIN";
+    config.plugin("html").tap((args) => {
+      args[0].title = title;
       return args;
-    })
+    });
   },
-
-}
+};

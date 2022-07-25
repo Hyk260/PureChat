@@ -8,7 +8,7 @@ var { v4: uuid } = require("uuid");
 var jwt = require("jsonwebtoken");
 
 const fs = require("fs");
-const path = require('path')
+const path = require("path");
 // 解析token
 var expressJwt = require("express-jwt");
 
@@ -38,7 +38,6 @@ var app = express();
 
 const SECRET_KEY = "7040575a-5ff5-4398-a410-d9c7b010f6e8";
 
-
 app.use((req, res, next) => {
   // 允许前端自定义请求头 authorization
   // 前端通过请求头中的authorization带token到后台
@@ -48,17 +47,15 @@ app.use((req, res, next) => {
   next();
 });
 
-//设置静态文件目录 static 
-app.use(express.static(path.join(__dirname, 'public')))
-
+//设置静态文件目录 static
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   expressJwt({
     secret: SECRET_KEY,
-    algorithms: ["HS256"] //指定解析密文的算法
+    algorithms: ["HS256"], //指定解析密文的算法
   }).unless({ path: ["/login", "/favicon.ico"] })
 );
-
 
 // 登录
 app.get("/login", async (req, res, next) => {
@@ -68,23 +65,23 @@ app.get("/login", async (req, res, next) => {
     if (user) {
       res.setHeader("Access-Control-Expose-Headers", "x-token");
       // 注意默认情况 Token 必须以 Bearer+空格 开头
-      const token = jwt.sign(user, SECRET_KEY, { expiresIn: 3600 * 24 * 3 })
-      res.setHeader("X-token","Bearer " + token);
+      const token = jwt.sign(user, SECRET_KEY, { expiresIn: 3600 * 24 * 3 });
+      res.setHeader("X-token", "Bearer " + token);
       res.json({
         code: 200,
         msg: "登录成功!",
-        result: user
+        result: user,
       });
     } else {
       res.json({
         code: 401,
-        msg: "账号或则密码不正确"
+        msg: "账号或则密码不正确",
       });
     }
   } else {
     res.json({
       code: 400,
-      msg: "请求不合法"
+      msg: "请求不合法",
     });
   }
   next();
@@ -100,12 +97,9 @@ app.get("/menu/add", async (req, res, next) => {
   // id为父级id
   let { parentId, path, title, icon, componentName } = req.query;
   if (parentId && path && title && icon && componentName) {
-    console.log(parentId, 'parentId')
-    let parentMenu = db_menu
-      .get("menu")
-      .find({ id: parentId })
-      .value();
-    console.log(parentMenu, "查找当前选中菜单表")
+    console.log(parentId, "parentId");
+    let parentMenu = db_menu.get("menu").find({ id: parentId }).value();
+    console.log(parentMenu, "查找当前选中菜单表");
     if (parentMenu) {
       let currentId = uuid(); //生成唯一ID
       let currentMenu = {
@@ -116,14 +110,11 @@ app.get("/menu/add", async (req, res, next) => {
         meta: {
           title,
           icon,
-          auth: []
+          auth: [],
         },
-        children: []
+        children: [],
       };
-      db_menu
-        .get("menu")
-        .push(currentMenu)
-        .write();//数据库添加菜单表
+      db_menu.get("menu").push(currentMenu).write(); //数据库添加菜单表
       parentMenu.children.push(currentId);
       db_menu
         .get("menu")
@@ -144,31 +135,27 @@ app.get("/menu/delete", async (req, res, next) => {
   let { ids } = req.query;
   console.log(ids, "ids参数");
   if (ids?.length) {
-    ids.forEach(id => {
+    ids.forEach((id) => {
       let parentNode = db_menu
         .get("menu")
-        .find(item => {
+        .find((item) => {
           return item.children.indexOf(id) > -1;
         })
         .value();
-      console.log(parentNode, "parentNode参数")
-      let updatedChildren = parentNode.children.filter(v => v !== id);
+      console.log(parentNode, "parentNode参数");
+      let updatedChildren = parentNode.children.filter((v) => v !== id);
 
       db_menu
         .get("menu")
-        .find(item => {
+        .find((item) => {
           return item.children.indexOf(id) > -1;
         })
         .assign({ children: updatedChildren })
         .write();
-      db_menu
-        .get("menu")
-        .remove({ id })
-        .write();
+      db_menu.get("menu").remove({ id }).write();
     });
     res.json(db_menu.get("menu").value());
     // res.json({ code: 200, msg: "测试" });
-
   } else {
     res.json({ code: 400, msg: "参数不合法" });
   }
@@ -178,11 +165,11 @@ app.get("/menu/delete", async (req, res, next) => {
 app.get("/menu/update", async (req, res, next) => {
   if (_.has(req.query, "id", "path", "title", "icon", "componentName")) {
     let { id, path, title, icon, componentName } = req.query;
-    console.log(icon, "icon")
+    console.log(icon, "icon");
     db_menu
       .get("menu")
       .find({ id })
-      .assign({ path, meta: { title, icon, auth:[], modify: false } })
+      .assign({ path, meta: { title, icon, auth: [], modify: false } })
       .write();
     // componentName
     res.json(db_menu.get("menu").value());
@@ -198,7 +185,7 @@ app.get("/chat/record", async (req, res, next) => {
   res.json({
     code: 200,
     msg: "ok",
-    result
+    result,
   });
   next();
 });
@@ -209,7 +196,7 @@ app.get("/role/query", async (req, res, next) => {
   res.json({
     code: 200,
     msg: "ok",
-    result
+    result,
   });
   next();
 });
@@ -217,7 +204,7 @@ app.get("/role/query", async (req, res, next) => {
 app.get("/role/add", async (req, res, next) => {
   if (_.has(req.query, "roleName", "info", "isDefaultRole")) {
     let { roleName, info, isDefaultRole } = req.query;
-    console.log(req.query)
+    console.log(req.query);
     let id = uuid();
     let currentTime = Date.now();
     let roleData = {
@@ -226,21 +213,18 @@ app.get("/role/add", async (req, res, next) => {
       info,
       createTime: currentTime,
       updateTime: currentTime,
-      isDefaultRole: false
+      isDefaultRole: false,
     };
-    db_role
-      .get("role")
-      .push(roleData)
-      .write();
+    db_role.get("role").push(roleData).write();
     res.json({
       code: 200,
       msg: "添加成功",
-      result: roleData
+      result: roleData,
     });
   } else {
     res.json({
       code: 400,
-      msg: "参数错误"
+      msg: "参数错误",
     });
   }
   next();
@@ -256,20 +240,16 @@ app.get("/role/update", async (req, res, next) => {
       updateTime: currentTime,
       isDefaultRole: false,
     };
-    db_role
-      .get("role")
-      .find({ id })
-      .assign(roleData)
-      .write();
+    db_role.get("role").find({ id }).assign(roleData).write();
     res.json({
       code: 200,
       msg: "更新成功",
-      result: roleData
+      result: roleData,
     });
   } else {
     res.json({
       code: 400,
-      msg: "参数错误"
+      msg: "参数错误",
     });
   }
   next();
@@ -278,16 +258,16 @@ app.get("/role/update", async (req, res, next) => {
 app.get("/role/delete", async (req, res, next) => {
   if (_.has(req.query, "ids") && _.isArray(req.query.ids)) {
     let origin = db_role.get("role").value();
-    let current = origin.filter(item => req.query.ids.indexOf(item.id) < 0);
+    let current = origin.filter((item) => req.query.ids.indexOf(item.id) < 0);
     db_role.set("role", current).write();
     res.json({
       code: 200,
-      msg: "删除成功!"
+      msg: "删除成功!",
     });
   } else {
     res.json({
       code: 400,
-      msg: "参数错误"
+      msg: "参数错误",
     });
   }
   next();
@@ -297,10 +277,7 @@ app.get("/role/delete", async (req, res, next) => {
 app.get("/roleMenu/update", async (req, res, next) => {
   if (_.has(req.query, "checkedMenu", "halfCheckedMenu", "roleId")) {
     let { checkedMenu, halfCheckedMenu, roleId } = req.query;
-    let target = db_role_menu
-      .get("role_menu")
-      .find({ roleId })
-      .value();
+    let target = db_role_menu.get("role_menu").find({ roleId }).value();
     if (target) {
       db_role_menu
         .get("role_menu")
@@ -309,7 +286,7 @@ app.get("/roleMenu/update", async (req, res, next) => {
         .write();
       res.json({
         code: 200,
-        msg: "更新成功"
+        msg: "更新成功",
       });
     } else {
       db_role_menu
@@ -318,18 +295,18 @@ app.get("/roleMenu/update", async (req, res, next) => {
           id: uuid(),
           roleId,
           checkedMenu,
-          halfCheckedMenu
+          halfCheckedMenu,
         })
         .write();
       res.json({
         code: 200,
-        msg: "新建成功"
+        msg: "新建成功",
       });
     }
   } else {
     res.json({
       code: 400,
-      msg: "参数错误"
+      msg: "参数错误",
     });
   }
   next();
@@ -339,14 +316,11 @@ app.get("/roleMenu/query", async (req, res, next) => {
   if (_.has(req.query, "roleId")) {
     let { roleId } = req.query;
     console.log(roleId);
-    let roleMenu = db_role_menu
-      .get("role_menu")
-      .find({ roleId })
-      .value();
+    let roleMenu = db_role_menu.get("role_menu").find({ roleId }).value();
     res.json({
       code: 200,
       msg: "ok",
-      result: roleMenu || {}
+      result: roleMenu || {},
     });
   }
   next();
@@ -354,11 +328,11 @@ app.get("/roleMenu/query", async (req, res, next) => {
 
 // 查询用户
 app.get("user/query", async (req, res, next) => {
-  let result = db_user.get('user').value();
+  let result = db_user.get("user").value();
   res.json({
     code: 200,
-    result
-  })
+    result,
+  });
   next();
 });
 // 新增用户
@@ -376,45 +350,39 @@ app.get("user/add", async (req, res, next) => {
       "desc"
     )
   ) {
-    let {
-      username,
-      phone,
-      email,
-      gender,
-      status,
-      roleId,
-      account,
-      desc
-    } = req.query;
+    let { username, phone, email, gender, status, roleId, account, desc } =
+      req.query;
     let uid = uuid();
     let createTime = Date.now();
-    db_user.get('user').push({
-      uid,
-      createTime,
-      loginTime: -1,
-      username,
-      phone,
-      email,
-      gender,
-      status,
-      roleId,
-      account,
-      desc
-    }).write();
+    db_user
+      .get("user")
+      .push({
+        uid,
+        createTime,
+        loginTime: -1,
+        username,
+        phone,
+        email,
+        gender,
+        status,
+        roleId,
+        account,
+        desc,
+      })
+      .write();
     res.json({
       code: 200,
-      msg: '参数不合法',
-      result: { uid, createTime }
-    })
+      msg: "参数不合法",
+      result: { uid, createTime },
+    });
   } else {
     res.json({
       code: 400,
-      msg: '参数不合法'
-    })
+      msg: "参数不合法",
+    });
   }
   next();
 });
-
 
 app.use((err, req, res, next) => {
   // 未经授权的错误
@@ -424,10 +392,9 @@ app.use((err, req, res, next) => {
   next();
 });
 
-
 const server = app.listen(8082, () => {
-  const host = null // server.address().address 
-  const port = server.address().port
+  const host = null; // server.address().address
+  const port = server.address().port;
   // console.log("应用实例，访问地址为 http://%s:%s", 'localhost', port)
-  console.log(`server running @ http://${host ? host : 'localhost'}:${port}`)
-})
+  console.log(`server running @ http://${host ? host : "localhost"}:${port}`);
+});
