@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "app": "cd server && nodemon app"
+    "app": "cd server && nodemon app",
+    "server": "cd server && nodemon server"
   },
   "dependencies": {
     "@vueuse/core": "^8.4.2",

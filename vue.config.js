@@ -9,6 +9,11 @@ module.exports = {
   lintOnSave: false,
   // 开发以及生产环境的路径配置
   publicPath: production ? "./" : "/",
+  // 打包时输出的文件目录
+  outputDir: 'dist',
+  //是否为生产环境构建生成 source map?
+  productionSourceMap: false,
+  // 配置 webpack-dev-server 
   devServer: {
     // 是否自动打开浏览器.
     open: false,

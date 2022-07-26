@@ -1,0 +1,66 @@
+{
+  "users": [
+    {
+      "uid": "1cd426",
+      "nickName": "临江仙",
+      "phone": "17671697956",
+      "password": "abc"
+    },
+    {
+      "uid": "1cd423",
+      "nickName": "测试",
+      "phone": "17671697955",
+      "password": "abc"
+    }
+  ],
+  "DW2009": [
+    {
+      "uid": "1cd426",
+      "createTime": 1618126013975,
+      "msg": "我是临江仙\n",
+      "nickName": "临江仙"
+    },
+    {
+      "uid": "1cd423",
+      "createTime": 1618126025286,
+      "msg": "我是王杰\n",
+      "nickName": "杰哥"
+    },
+    {
+      "uid": "1cd426",
+      "createTime": 1618126142712,
+      "msg": "临江仙\n",
+      "nickName": "临江仙"
+    },
+    {
+      "uid": "1cd423",
+      "createTime": 1618126147302,
+      "msg": "王杰\n",
+      "nickName": "杰哥"
+    },
+    {
+      "uid": "1cd426",
+      "createTime": 1618126272421,
+      "msg": "我是王杰爸爸\n",
+      "nickName": "临江仙"
+    },
+    {
+      "uid": "1cd423",
+      "createTime": 1618126281102,
+      "msg": "我是王杰\n",
+      "nickName": "杰哥"
+    },
+    {
+      "uid": "1cd423",
+      "createTime": 1618126295753,
+      "msg": "康哥 流弊\n",
+      "nickName": "杰哥"
+    },
+    {
+      "uid": "1cd426",
+      "createTime": 1618126308262,
+      "msg": "嘿嘿 低调 低调\n",
+      "nickName": "临江仙"
+    }
+  ]
+}

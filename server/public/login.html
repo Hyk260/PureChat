@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录页</title>
+</head>
+<body>
+    <input class="phone" type="text" placeholder="手机号" value="17671697956"/><br/>
+    <input class="password"type="text" placeholder="密码" value="abc"/> 
+    <button class="loginButton">登录</button>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(function(){
+        $(".loginButton").click(function(){
+            $.ajax({
+                url:'http://localhost:3131/login',
+                data: { 
+                  phone: $(".phone").val(),
+                  password: $(".password").val()
+                },
+                success (res) {
+                    if(res.code === 2000){
+                        location.href = 'http://localhost:3131/chat.html';
+                    }
+                },
+                fail (err) {
+                    console.log(err)
+                }
+            })
+        })
+
+        
+    })
+
+</script>
+</html>
