@@ -589,6 +589,7 @@ const dragControllerDiv = () => {
 }
 .scroll-container {
   height: calc(100% - 60px);
+  position: relative;
 }
 .scrollbar-list {
   background: #fff;
