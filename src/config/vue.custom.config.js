@@ -18,6 +18,30 @@ const vueDefaultConfig = {
   providePlugin: {},
   build7z: false,
   startMessage: "",
+  devServer: {
+    // 是否自动打开浏览器.
+    open: false,
+    // 局域网和本地访问.
+    host: "0.0.0.0",
+    // 端口.
+    port: process.env.VUE_APP_PORT || 9585,
+    // 代理.
+    proxy:
+      process.env.VUE_APP_PROXY === "false"
+        ? null
+        : {
+            "/proxy": {
+              // 目标代理服务器地址.
+              target: "http://localhost:8888",
+              // 是否允许跨域.
+              changeOrigin: true,
+              secure: true,
+              pathRewrite: {
+                "^/proxy": "/",
+              },
+            },
+          },
+  },
 };
 
 module.exports = vueDefaultConfig;

@@ -1,4 +1,4 @@
-let timer = null
+let timer = null;
 /**
  * 防抖原理：一定时间内，只有最后一次操作，再过wait毫秒后才执行函数
  *
@@ -9,13 +9,13 @@ let timer = null
  */
 export function debounce(fn, wait = 300) {
   return (function () {
-    const context = this
-    const args = arguments
-    if (timer) clearTimeout(timer)
+    const context = this;
+    const args = arguments;
+    if (timer) clearTimeout(timer);
     timer = setTimeout(() => {
-      fn.apply(context, args)
-    }, wait)
-  })()
+      fn.apply(context, args);
+    }, wait);
+  })();
 }
 
 /**
@@ -24,12 +24,13 @@ export function debounce(fn, wait = 300) {
  */
 
 // 延迟函数
-export const delay = (timeout) => new Promise((resolve) => setTimeout(resolve, timeout))
+export const delay = (timeout) =>
+  new Promise((resolve) => setTimeout(resolve, timeout));
 
 export const debounceCopy = (fn, timeout = 300) => {
-  let timmer
+  let timmer;
   return (function () {
-    timmer ? clearTimeout(timmer) : null
-    timmer = setTimeout(fn, timeout)
-  })()
-}
+    timmer ? clearTimeout(timmer) : null;
+    timmer = setTimeout(fn, timeout);
+  })();
+};

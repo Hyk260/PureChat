@@ -1,5 +1,8 @@
 <template>
-  <div :class="['fixed-header',sidebar? 'style-fixed':'']" :style="fnStyle(isActive)">
+  <div
+    :class="['fixed-header', sidebar ? 'style-fixed' : '']"
+    :style="fnStyle(isActive)"
+  >
     <div class="navbar">
       <div
         v-show="!sidebar"
@@ -7,7 +10,10 @@
         :title="!isActive ? '点击折叠' : '点击展开'"
         @click="toggleClick"
       >
-        <FontIcon :class="{'active':true,rotate:isActive}" iconName="Expand"/>
+        <FontIcon
+          :class="{ active: true, rotate: isActive }"
+          iconName="Expand"
+        />
       </div>
       <!-- 面包屑 :separator-icon="ArrowRight" > icon-->
       <el-breadcrumb v-show="!sidebar">
@@ -15,7 +21,7 @@
           :key="value.title"
           v-for="value in route.matched.map((item) => item.meta)"
         >
-          {{value.title}}
+          {{ value.title }}
         </el-breadcrumb-item>
       </el-breadcrumb>
 
@@ -25,18 +31,18 @@
         <!-- 个人中心 退出登录 -->
         <div class="user">
           <el-dropdown>
-            <span class="el-dropdown-link">      
-              <el-avatar :size="24" :src="picture"/>
+            <span class="el-dropdown-link">
+              <el-avatar :size="24" :src="picture" />
               <p>ADMIN</p>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="Logout">
-                 <FontIcon iconName="switch-button" />
+                  <FontIcon iconName="switch-button" />
                   退出登录
                 </el-dropdown-item>
-                 <el-dropdown-item>
-                 <FontIcon iconName="user" />
+                <el-dropdown-item>
+                  <FontIcon iconName="user" />
                   个人中心
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -56,7 +62,7 @@
         </div>
         <div class="scroll-container">
           <el-tag
-            :type="CurTitle === '首页'?'':'info'"
+            :type="CurTitle === '首页' ? '' : 'info'"
             @click="tagClick('/home')"
             class="mx-1"
           >
@@ -68,7 +74,7 @@
             :key="tag.title"
             class="mx-1"
             closable
-            :type="CurTitle === tag.title?'':'info'"
+            :type="CurTitle === tag.title ? '' : 'info'"
             @click.native="tagClick(tag.path)"
             @close="handleClose(tag)"
           >
@@ -76,7 +82,7 @@
           </el-tag>
         </div>
         <div class="arrow-right">
-          <FontIcon  iconName="arrow-right"  class="cursor-w" />
+          <FontIcon iconName="arrow-right" class="cursor-w" />
         </div>
       </div>
       <div class="dropdown">
@@ -90,20 +96,20 @@
                 class="Left-rotation"
                 :icon="Upload"
                 @click="closing('left')"
-              >关闭左侧</el-dropdown-item>
+                >关闭左侧</el-dropdown-item
+              >
               <el-dropdown-item
                 class="Right-rotation"
                 :icon="Upload"
                 @click="closing('right')"
-              >关闭右侧</el-dropdown-item>
-              <el-dropdown-item
-                :icon="Minus"
-                @click="closing('other')"
-              >关闭其他</el-dropdown-item>
-              <el-dropdown-item
-                :icon="Close"
-                @click="closing('all')"
-              >全部关闭</el-dropdown-item>
+                >关闭右侧</el-dropdown-item
+              >
+              <el-dropdown-item :icon="Minus" @click="closing('other')"
+                >关闭其他</el-dropdown-item
+              >
+              <el-dropdown-item :icon="Close" @click="closing('all')"
+                >全部关闭</el-dropdown-item
+              >
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -112,7 +118,7 @@
   </div>
 
   <el-drawer v-model="drawer" title="I am the title" :with-header="false">
-     <ul class="setting">
+    <ul class="setting">
       <li>
         <span>关闭侧边栏</span>
         <el-switch
@@ -135,156 +141,158 @@
           @change="LogoChange"
         />
       </li>
-
     </ul>
-
   </el-drawer>
-  
 </template>
 
 <script setup>
-import { Upload, Minus, Close, Plus, ArrowRight } from '@element-plus/icons-vue'
-import { ElMessageBox } from 'element-plus'
-import { reactive } from '@vue/reactivity'
-import { useStore } from 'vuex'
-import { computed, ref, watch, toRefs } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import storage from 'storejs'
-import FontIcon from '@/layout/FontIcon/indx.vue'
-import screenfull from '../components/screenfull.vue'
+import {
+  Upload,
+  Minus,
+  Close,
+  Plus,
+  ArrowRight,
+} from "@element-plus/icons-vue";
+import { ElMessageBox } from "element-plus";
+import { reactive } from "@vue/reactivity";
+import { useStore } from "vuex";
+import { computed, ref, watch, toRefs } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import storage from "storejs";
+import FontIcon from "@/layout/FontIcon/indx.vue";
+import screenfull from "../components/screenfull.vue";
 
-const router = useRouter()
-const route = useRoute()
-const store = useStore()
-const drawer = ref(false)
+const router = useRouter();
+const route = useRoute();
+const store = useStore();
+const drawer = ref(false);
 const state = reactive({
   circleUrl:
-    'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+    "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
   squareUrl:
-    'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
-  sizeList: ['small', '', 'large'],
-  picture:require('../../assets/images/picture.jpg')
-})
-const { circleUrl, squareUrl, sizeList, picture } = toRefs(state)
-
+    "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
+  sizeList: ["small", "", "large"],
+  picture: require("../../assets/images/picture.jpg"),
+});
+const { circleUrl, squareUrl, sizeList, picture } = toRefs(state);
 
 const tags = computed(() => {
-  return store.state.data.elTag
-})
+  return store.state.data.elTag;
+});
 const sidebar = computed(() => {
-  return !store.state.settings.sidebar
-})
+  return !store.state.settings.sidebar;
+});
 const logoVal = computed(() => {
-  return !store.state.settings.logoIcon
-})
+  return !store.state.settings.logoIcon;
+});
 
 watch(
   () => router.currentRoute.value.path,
   () => {
-    const Tag = router.currentRoute.value.meta?.title
+    const Tag = router.currentRoute.value.meta?.title;
     if (!tags.value) {
       tags.value.push({
         title: Tag,
         path: router.currentRoute.value.path,
-      })
+      });
     }
     const index = tags.value?.findIndex((t) => {
-      return t?.title === Tag
-    })
-    if (Tag === '首页') return
-    if (router.currentRoute.value.path === '/login') return
+      return t?.title === Tag;
+    });
+    if (Tag === "首页") return;
+    if (router.currentRoute.value.path === "/login") return;
 
     if (index < 0) {
       tags.value.push({
         title: Tag,
         path: router.currentRoute.value.path,
-      })
-      store.commit('updateData', {
-        key: 'elTag',
+      });
+      store.commit("updateData", {
+        key: "elTag",
         value: tags.value,
-      })
+      });
     }
   }
-)
+);
 
 const isActive = computed(() => {
-  return store.state.data.isCollapse
-})
+  return store.state.data.isCollapse;
+});
 
 const CurTitle = computed(() => {
-  return router.currentRoute.value.meta?.title
-})
+  return router.currentRoute.value.meta?.title;
+});
 
 const fnStyle = (off) => {
- return `width:calc(100% - ${off? '64px':'200px'})`
-}
+  return `width:calc(100% - ${off ? "64px" : "200px"})`;
+};
 
 const handleClose = (tag) => {
-  let data = tags.value.splice(tags.value.indexOf(tag), 1)
-  store.commit('updateData', {elTag:data});
-}
+  let data = tags.value.splice(tags.value.indexOf(tag), 1);
+  store.commit("updateData", { elTag: data });
+};
 
 const LogoChange = (val) => {
-  store.commit('updateSettings',{
-    key:'logoIcon',
-    value:!val
+  store.commit("updateSettings", {
+    key: "logoIcon",
+    value: !val,
   });
-}
+};
 const greyChange = (val) => {
-  store.commit('updateSettings',{
-    key:'sidebar',
-    value:!val
+  store.commit("updateSettings", {
+    key: "sidebar",
+    value: !val,
   });
-}
+};
 // 退出登录
 const Logout = () => {
-  ElMessageBox.confirm('确定退出登录?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
+  ElMessageBox.confirm("确定退出登录?", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
   })
     .then(() => {
-      store.dispatch('logout')
+      store.dispatch("logout");
     })
-    .catch(() => {})
-}
+    .catch(() => {});
+};
 
 const closing = (tag) => {
   const find = tags.value.findIndex((t) => {
-    return t?.title === CurTitle.value
-  })
+    return t?.title === CurTitle.value;
+  });
   switch (tag) {
-    case 'left':
-      tags.value.splice(0, find)
-      break
-    case 'right':
-      tags.value.splice(find + 1, tags.value.length)
-      break
-    case 'other':
-      tags.value.splice(0, tags.value.length)
+    case "left":
+      tags.value.splice(0, find);
+      break;
+    case "right":
+      tags.value.splice(find + 1, tags.value.length);
+      break;
+    case "other":
+      tags.value.splice(0, tags.value.length);
       tags.value.push({
         title: CurTitle.value,
         path: router.currentRoute.value.path,
-      })
-      break
-    case 'all':
-      tags.value.splice(0, tags.value.length)
-      break
+      });
+      break;
+    case "all":
+      tags.value.splice(0, tags.value.length);
+      break;
   }
-  store.commit('updateData', {
-    key: 'elTag',
+  store.commit("updateData", {
+    key: "elTag",
     value: tags.value,
-  })
-}
+  });
+};
 
 const tagClick = (path) => {
-  router.push(path)
-}
+  router.push(path);
+};
 
 // 侧边栏 展开 折叠
 const toggleClick = () => {
-  store.commit('setCollapse')
-}
+  store.commit("setCollapse");
+};
 </script>
 <style module="classes" scoped>
 .container {
@@ -310,15 +318,15 @@ const toggleClick = () => {
     margin: 25px;
   }
 }
-.style-fixed{
-  width:100% !important;
+.style-fixed {
+  width: 100% !important;
 }
-.fixed-header{
+.fixed-header {
   z-index: 10;
   position: fixed;
   top: 0;
   right: 0;
-  transition: width .1s;
+  transition: width 0.1s;
   background: var(--color-body-bg);
 }
 .cursor-w {

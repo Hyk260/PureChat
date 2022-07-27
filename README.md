@@ -17,7 +17,10 @@
 ### 🎉 特性
 
 - 📦️ 后端路由动态渲染
-- 🛠  更多特性开发中 
+- 📃 角色权限管理
+- ☁️ 聊天工作室 开发中...
+- 🔴 拼图游戏
+- 🛠 更多特性开发中 
 - 全栈项目
 
 
@@ -68,14 +71,14 @@ yarn build
 ├── dist                       // 打包文件
 ├── node_modules               // 依赖包
 ├── public                     // 静态目录
+├── server                     // 服务器
 ├── src                        // 源代码
 │   ├── api                    // 所有请求
 │   ├── assets                 // 主题字体图片svg icons等静态资源
 │   ├── components             // 全局公用组件
-│   ├── directive              // 全局指令
-│   ├── locale                 // 国际化语言
+│   ├── locales                // 国际化语言
 │   ├── mock                   // mock服务
-│   ├── plugins				   // 插件
+│   ├── plugins				         // 插件
 │   ├── router                 // 路由
 │   ├── store                  // 全局 store管理
 │   ├── styles                 // 全局样式

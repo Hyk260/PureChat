@@ -2,7 +2,11 @@ const path = require("path");
 const resolve = (dir) => {
   return path.join(__dirname, dir);
 };
-const { title, production } = require("./src/config/vue.custom.config");
+const {
+  title,
+  production,
+  devServer,
+} = require("./src/config/vue.custom.config");
 
 module.exports = {
   // 是否在保存的时候检查
@@ -10,34 +14,11 @@ module.exports = {
   // 开发以及生产环境的路径配置
   publicPath: production ? "./" : "/",
   // 打包时输出的文件目录
-  outputDir: 'dist',
+  outputDir: "dist",
   //是否为生产环境构建生成 source map?
   productionSourceMap: false,
-  // 配置 webpack-dev-server 
-  devServer: {
-    // 是否自动打开浏览器.
-    open: false,
-    // 局域网和本地访问.
-    host: "0.0.0.0",
-    // 端口.
-    port: process.env.VUE_APP_PORT || 9585,
-    // 代理.
-    proxy:
-      process.env.VUE_APP_PROXY === "false"
-        ? null
-        : {
-            "/proxy": {
-              // 目标代理服务器地址.
-              target: "http://localhost:8888",
-              // 是否允许跨域.
-              changeOrigin: true,
-              secure: true,
-              pathRewrite: {
-                "^/proxy": "/",
-              },
-            },
-          },
-  },
+  // 配置 webpack-dev-server
+  // devServer,
   // css相关配置.
   css: {
     // css文件名是否可省略module,默认为false.
