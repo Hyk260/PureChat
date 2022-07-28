@@ -21,9 +21,10 @@
           <!-- 连接已断开 -->
           <networklink />
           <div
-            class="message-item is-active"
+            class="message-item"
             v-for="item in Friends"
             :key="item"
+            :class="fnClass(item)"
             v-contextmenu:contextmenu
             @contextmenu.prevent="handleContextMenuEvent($event, item)"
           >
@@ -48,12 +49,12 @@
               <svg-icon iconClass="DontDisturb" class="dont" />
             </div>
             <!-- 置顶图标 -->
-            <div class="pinned-tag"></div>
+            <div class="pinned-tag" v-if="item && item.pinned"></div>
           </div>
           <!-- 右键菜单 -->
           <contextmenu ref="contextmenu">
             <contextmenu-item
-              v-for="item in convMenuItem"
+              v-for="item in RIGHT_CLICK_CHAT_LIST"
               :key="item.id"
               @click="handleClickMenuItem(item)"
             >
@@ -163,7 +164,7 @@ import { dragControllerDiv } from './utils/utils';
 import { timeFormat } from "@/utils/timeFormat";
 import { useStore, mapMutations, mapState } from "vuex";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
-import { squareUrl, convMenuItem, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
+import { squareUrl, RIGHT_CLICK_CHAT_LIST, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
 import { useState } from "@/utils/hooks/useMapper";
 import { debounce } from "@/utils/debounce";
 import { copyFile } from "fs";
@@ -173,6 +174,7 @@ import TextElemItem from "./components/TextElemItem";
 import Editor from "./Editor.vue"
 
 const appoint = ref("");
+const MenuList = ref([])
 const Friends = ref([]);
 const messageViewRef = ref(null);
 const scrollbarRef = ref(null);
@@ -212,7 +214,9 @@ watch(
     deep: true, //深度监听
   }
 );
-
+const fnClass = (item) => {
+  return item?.pinned ? 'is-active' : '';
+};
 const msgOne = (item) => {
   const { message_elem_array } = item || {};
   const { elem_type } = message_elem_array[0];
@@ -304,16 +308,32 @@ const fncopy = (data) => {
   if (elem_type === 0) {
   }
 };
-// 右键菜单
+// 消息列表 右键菜单
 const handleContextMenuEvent = (e, item) => {
   contextMenuItemInfo.value = item;
+  console.log(item)
+  // 会话定值
+  if(item?.pinned){
+    RIGHT_CLICK_CHAT_LIST.map(t=>{
+      if(t.id == "pinged"){
+        t.text = '取消置顶'
+      }
+    })
+  }else{
+    RIGHT_CLICK_CHAT_LIST.map(t=>{
+      if(t.id == "pinged"){
+        t.text = '会话置顶'
+      }
+    })
+  }
+ 
 };
 
 const handleClickMenuItem = (item) => {
   const Info = contextMenuItemInfo.value;
   switch (item.id) {
     case "pinged": // 置顶
-      pingConv(Info, true);
+      pingConv(Info);
       break;
     case "unpinged": // 取消置顶
       pingConv(Info, false);
@@ -339,7 +359,23 @@ const removeConv = (conv) => {
   });
 };
 // 置顶
-const pingConv = () => {};
+const pingConv = (data) => {
+  console.log(data)
+  let { id } = data;
+  let off = null
+  if(data?.pinned){
+    off = false
+  }else{
+    off = true
+  }
+  console.log(off)
+  Friends.value.map(t=>{
+    if(t.id == id){
+      t.pinned = off
+    }
+  })
+  console.log(Friends.value)
+};
 
 </script>
 
@@ -409,6 +445,10 @@ const pingConv = () => {};
 .scroll-container {
   height: calc(100% - 60px);
   position: relative;
+  .is-active{
+    // background: #f0f2f5;
+    background: #00000008;
+  }
 }
 .scrollbar-list {
   background: #fff;

@@ -1,6 +1,9 @@
 import { reactive, toRefs } from "vue";
 
-const convMenuItem = [
+/**
+ * 左侧会话聊天列表数据
+*/
+const RIGHT_CLICK_CHAT_LIST = [
   { id: "pinged", text: "会话置顶" },
   { id: "disable", text: "消息免打扰" },
   { id: "remove", text: "移除会话" },
@@ -42,4 +45,4 @@ const state = reactive({
 });
 const { circleUrl, squareUrl, sizeList } = toRefs(state);
 
-export { squareUrl, convMenuItem, RIGHT_CLICK_MENU_LIST };
+export { squareUrl, RIGHT_CLICK_CHAT_LIST, RIGHT_CLICK_MENU_LIST };

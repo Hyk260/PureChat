@@ -2,8 +2,8 @@
 export const toolbarConfig = {
   /* 显示哪些菜单，如何排序、分组 */
   toolbarKeys: [
-    "emotion", //表情
-    "uploadImage",
+    "emotion", // 表情
+    "uploadImage", //上传图片
     // {
     //   key: "group-more-style", // 必填，要以 group 开头
     //   title: "更多样式", // 必填

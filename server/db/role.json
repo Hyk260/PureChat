@@ -6,7 +6,8 @@
       "info": "运营用户",
       "createTime": 1621480197410,
       "updateTime": 1652077470543,
-      "isDefaultRole": true
+      "isDefaultRole": true,
+      "pinned":true
     },
     {
       "id": "6b2d9d80-e1b1-4584-bf7b-f10852794e4a",
@@ -17,7 +18,7 @@
       "isDefaultRole": true
     },
     {
-      "id": "6b2d9d80-e1b1-4584-bf7b-f10852794e4a",
+      "id": "6b2d9d87-e1b1-4584-bf7b-f10852794e4a",
       "roleName": "黄泳康",
       "info": "系统管理员",
       "createTime": 1621480190410,
