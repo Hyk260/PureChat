@@ -3,9 +3,11 @@ import { CONVERSATIONTYPE } from "../mutation-types";
 const conversation = {
   // namespaced: true,
   state: {
+    noMore: true, // 加载更多  false ? 显示loading : 没有更多
+    needScrollDown: -1, // 是否向下滚动
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表
-    noMore: true, // 加载更多  false ? 显示loading : 没有更多
+    currentSelectedConversation: null, //跳转窗口的属性
   },
   mutations: {
     // 设置历史消息
@@ -34,6 +36,22 @@ const conversation = {
         case CONVERSATIONTYPE.RECIVE_MESSAGE: {
           const { convId, message } = payload;
           state.currentMessageList = message;
+          break;
+        }
+      }
+    },
+    // 设置会话
+    SET_CONVERSATION(state, action) {
+      const { type, payload } = action;
+      switch (type) {
+        // 跳转会话
+        case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
+          if (payload) {
+            if (payload?.id == state.currentSelectedConversation?.id) return;
+            state.needScrollDown = 0;
+            // state.noMore = false;
+            state.currentSelectedConversation = payload;
+          }
           break;
         }
       }

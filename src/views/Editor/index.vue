@@ -1,6 +1,6 @@
 # 编辑器
 <template>
-  <div class="list-container" @contextmenu.prevent>
+  <div class="list-container">
     <!-- 聊天列表 -->
     <div class="message-left">
       <div class="header-bar">
@@ -27,6 +27,7 @@
             :class="fnClass(item)"
             v-contextmenu:contextmenu
             @contextmenu.prevent="handleContextMenuEvent($event, item)"
+            @click="handleConvListClick(item)"
           >
             <!-- 头像 -->
             <el-avatar
@@ -78,8 +79,8 @@
     <!-- 聊天框 -->
     <div class="message-right" id="svgBox">
       <header class="message-info-view-header">
-        <div class="message-info-views">
-          <p>临江仙</p>
+        <div class="message-info-views" v-if="currentSelectedConversation">
+          <p>{{ currentSelectedConversation.roleName }}</p>
         </div>
         <div class="message-info-setup">
           <FontIcon iconName="MoreFilled" />
@@ -136,7 +137,7 @@
       </section>
       <div id="svgResize" @mouseover="dragControllerDiv"></div>
       <!-- 编辑器 -->
-      <Editor/>
+      <Editor />
     </div>
   </div>
 </template>
@@ -160,21 +161,25 @@ import FontIcon from "@/layout/FontIcon/indx.vue";
 import { Search } from "@element-plus/icons-vue";
 import { getRoles } from "@/api/roles";
 import { getChat } from "@/api/chat";
-import { dragControllerDiv } from './utils/utils';
+import { dragControllerDiv } from "./utils/utils";
 import { timeFormat } from "@/utils/timeFormat";
 import { useStore, mapMutations, mapState } from "vuex";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
-import { squareUrl, RIGHT_CLICK_CHAT_LIST, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
+import {
+  squareUrl,
+  RIGHT_CLICK_CHAT_LIST,
+  RIGHT_CLICK_MENU_LIST,
+} from "./utils/menu";
 import { useState } from "@/utils/hooks/useMapper";
 import { debounce } from "@/utils/debounce";
 import { copyFile } from "fs";
 import networklink from "./components/networklink.vue";
 import LoadMore from "./components/LoadMore.vue";
 import TextElemItem from "./components/TextElemItem";
-import Editor from "./Editor.vue"
+import Editor from "./Editor.vue";
 
 const appoint = ref("");
-const MenuList = ref([])
+const MenuList = ref([]);
 const Friends = ref([]);
 const messageViewRef = ref(null);
 const scrollbarRef = ref(null);
@@ -183,9 +188,17 @@ const MenuItemInfo = ref([]);
 const activeName = ref("first");
 
 const { state, getters, dispatch, commit } = useStore();
-const { currentMessageList, historyMessageList, noMore, userInfo } = useState({
+const {
+  currentMessageList,
+  historyMessageList,
+  noMore,
+  userInfo,
+  currentSelectedConversation,
+} = useState({
   currentMessageList: (state) => state.conversation.currentMessageList,
   historyMessageList: (state) => state.conversation.historyMessageList,
+  currentSelectedConversation: (state) =>
+    state.conversation.currentSelectedConversation,
   noMore: (state) => state.conversation.noMore,
   userInfo: (state) => state.data,
 });
@@ -214,8 +227,26 @@ watch(
     deep: true, //深度监听
   }
 );
+// 会话点击
+const handleConvListClick = (data) => {
+  commit("SET_CONVERSATION", {
+    type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
+    payload: data,
+  });
+};
 const fnClass = (item) => {
-  return item?.pinned ? 'is-active' : '';
+  let current = currentSelectedConversation.value;
+  let select = item?.id == current?.id;
+  if (item?.pinned && select) {
+    return "is-active";
+  }
+  if (item?.pinned) {
+    return "is-actives";
+  }
+  if (select) {
+    return "is-active";
+  }
+  // return item?.pinned || select ? "is-active" : "";
 };
 const msgOne = (item) => {
   const { message_elem_array } = item || {};
@@ -311,22 +342,21 @@ const fncopy = (data) => {
 // 消息列表 右键菜单
 const handleContextMenuEvent = (e, item) => {
   contextMenuItemInfo.value = item;
-  console.log(item)
+  console.log(item);
   // 会话定值
-  if(item?.pinned){
-    RIGHT_CLICK_CHAT_LIST.map(t=>{
-      if(t.id == "pinged"){
-        t.text = '取消置顶'
+  if (item?.pinned) {
+    RIGHT_CLICK_CHAT_LIST.map((t) => {
+      if (t.id == "pinged") {
+        t.text = "取消置顶";
       }
-    })
-  }else{
-    RIGHT_CLICK_CHAT_LIST.map(t=>{
-      if(t.id == "pinged"){
-        t.text = '会话置顶'
+    });
+  } else {
+    RIGHT_CLICK_CHAT_LIST.map((t) => {
+      if (t.id == "pinged") {
+        t.text = "会话置顶";
       }
-    })
+    });
   }
- 
 };
 
 const handleClickMenuItem = (item) => {
@@ -360,23 +390,22 @@ const removeConv = (conv) => {
 };
 // 置顶
 const pingConv = (data) => {
-  console.log(data)
+  console.log(data);
   let { id } = data;
-  let off = null
-  if(data?.pinned){
-    off = false
-  }else{
-    off = true
+  let off = null;
+  if (data?.pinned) {
+    off = false;
+  } else {
+    off = true;
   }
-  console.log(off)
-  Friends.value.map(t=>{
-    if(t.id == id){
-      t.pinned = off
+  console.log(off);
+  Friends.value.map((t) => {
+    if (t.id == id) {
+      t.pinned = off;
     }
-  })
-  console.log(Friends.value)
+  });
+  console.log(Friends.value);
 };
-
 </script>
 
 <style lang="scss" scoped>
@@ -445,9 +474,12 @@ const pingConv = (data) => {
 .scroll-container {
   height: calc(100% - 60px);
   position: relative;
-  .is-active{
-    // background: #f0f2f5;
-    background: #00000008;
+  .is-active {
+    background: #f0f2f5;
+    // background: #00000008;
+  }
+  .is-actives {
+    background: rgba(0, 0, 0, 0.03);
   }
 }
 .scrollbar-list {
