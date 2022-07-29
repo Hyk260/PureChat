@@ -45,61 +45,62 @@
         </el-descriptions-item>
       </el-descriptions>
     </el-card>
-
-    <el-card class="box-card m-4" shadow="hover">
-      <template #header>
-        <div class="card-header">
-          <span class="font-medium">生产环境依赖</span>
-        </div>
-      </template>
-      <el-descriptions border>
-        <el-descriptions-item
-          :label="item.label"
-          label-align="left"
-          align="left"
-          v-for="(item, index) in schema"
-          :key="index"
-        >
-          <a
-            :href="'https://www.npmjs.com/package/' + item.label"
-            target="_blank"
+    <Motion :delay="100">
+      <el-card class="box-card m-4" shadow="hover">
+        <template #header>
+          <div class="card-header">
+            <span class="font-medium">生产环境依赖</span>
+          </div>
+        </template>
+        <el-descriptions border>
+          <el-descriptions-item
+            :label="item.label"
+            label-align="left"
+            align="left"
+            v-for="(item, index) in schema"
+            :key="index"
           >
-            <span style="color: var(--el-color-primary)">{{ item.field }}</span>
-          </a>
-        </el-descriptions-item>
-      </el-descriptions>
-    </el-card>
-
-    <el-card class="box-card m-4" shadow="hover">
-      <template #header>
-        <div class="card-header">
-          <span class="font-medium">开发环境依赖</span>
-        </div>
-      </template>
-      <el-descriptions border>
-        <el-descriptions-item
-          :label="item.label"
-          label-align="left"
-          align="left"
-          v-for="(item, index) in devSchema"
-          :key="index"
-        >
-          <a
-            :href="'https://www.npmjs.com/package/' + item.label"
-            target="_blank"
+            <a
+              :href="'https://www.npmjs.com/package/' + item.label"
+              target="_blank"
+            >
+              <span style="color: var(--el-color-primary)">{{ item.field }}</span>
+            </a>
+          </el-descriptions-item>
+        </el-descriptions>
+      </el-card>
+    </Motion>
+    <Motion :delay="200">
+      <el-card class="box-card m-4" shadow="hover">
+        <template #header>
+          <div class="card-header">
+            <span class="font-medium">开发环境依赖</span>
+          </div>
+        </template>
+        <el-descriptions border>
+          <el-descriptions-item
+            :label="item.label"
+            label-align="left"
+            align="left"
+            v-for="(item, index) in devSchema"
+            :key="index"
           >
-            <span style="color: var(--el-color-primary)">{{ item.field }}</span>
-          </a>
-        </el-descriptions-item>
-      </el-descriptions>
-    </el-card>
-
-    <el-tooltip placement="top" content="返回顶部">UP</el-tooltip>
+            <a
+              :href="'https://www.npmjs.com/package/' + item.label"
+              target="_blank"
+            >
+              <span style="color: var(--el-color-primary)">{{ item.field }}</span>
+            </a>
+          </el-descriptions-item>
+        </el-descriptions>
+      </el-card>
+    </Motion>
   </div>
 </template>
 
 <script setup>
 import { getCurrentInstance } from "vue";
+import Motion from "@/utils/motion";
 
 const { proxy } = getCurrentInstance();
 const { dependencies, devDependencies, version } = proxy.__APP_INFO__;

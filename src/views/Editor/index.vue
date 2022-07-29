@@ -20,38 +20,40 @@
         <el-scrollbar class="scrollbar-list">
           <!-- 连接已断开 -->
           <networklink />
-          <div
-            class="message-item"
-            v-for="item in Friends"
-            :key="item"
-            :class="fnClass(item)"
-            v-contextmenu:contextmenu
-            @contextmenu.prevent="handleContextMenuEvent($event, item)"
-            @click="handleConvListClick(item)"
-          >
-            <!-- 头像 -->
-            <el-avatar
-              class="portrait"
-              shape="square"
-              size="small"
-              :src="squareUrl"
-            />
-            <!-- 消息 -->
-            <div class="message-item-right">
-              <div class="message-item-right-top">
-                <div class="message-chat-name">
-                  {{ item.roleName }}
+          <transition-group name="fade-transform">
+            <div
+              class="message-item"
+              v-for="item in Friends"
+              :key="item"
+              :class="fnClass(item)"
+              v-contextmenu:contextmenu
+              @contextmenu.prevent="handleContextMenuEvent($event, item)"
+              @click="handleConvListClick(item)"
+            >
+              <!-- 头像 -->
+              <el-avatar
+                class="portrait"
+                shape="square"
+                size="small"
+                :src="squareUrl"
+              />
+              <!-- 消息 -->
+              <div class="message-item-right">
+                <div class="message-item-right-top">
+                  <div class="message-chat-name">
+                    {{ item.roleName }}
+                  </div>
+                  <div class="message-Time">
+                    {{ timeFormat(item.updateTime) }}
+                  </div>
                 </div>
-                <div class="message-Time">
-                  {{ timeFormat(item.updateTime) }}
-                </div>
+                <span class="message-item-right-bottom"> 消息 </span>
+                <svg-icon iconClass="DontDisturb" class="dont" />
               </div>
-              <span class="message-item-right-bottom"> 消息 </span>
-              <svg-icon iconClass="DontDisturb" class="dont" />
+              <!-- 置顶图标 -->
+              <div class="pinned-tag" v-if="item && item.pinned"></div>
             </div>
-            <!-- 置顶图标 -->
-            <div class="pinned-tag" v-if="item && item.pinned"></div>
-          </div>
+          </transition-group>
           <!-- 右键菜单 -->
           <contextmenu ref="contextmenu">
             <contextmenu-item
@@ -177,6 +179,7 @@ import networklink from "./components/networklink.vue";
 import LoadMore from "./components/LoadMore.vue";
 import TextElemItem from "./components/TextElemItem";
 import Editor from "./Editor.vue";
+import Motion from "@/utils/motion";
 
 const appoint = ref("");
 const MenuList = ref([]);
@@ -409,6 +412,20 @@ const pingConv = (data) => {
 </script>
 
 <style lang="scss" scoped>
+.abc-enter,
+.abc-leave-to {
+  opacity: 0;
+  /* //设置元素的不透明级别： */
+  transform: translateY(80px);
+  /* // 开始和结束位置在Y轴的80px处 */
+}
+.abc-enter-active,
+.abc-leave-active {
+  transition: all 0.6s ease;
+  /* // 从Y轴的80px处渐渐移动到上面 */
+}
+
+
 .demo-tabs {
   height: 100%;
   ::v-deep .el-tabs__header {

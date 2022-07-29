@@ -9,6 +9,7 @@ import pkg from "../package.json";
 import { loadAllPlugins } from "./plugins";
 import { loadAllassembly } from "./components";
 import { directive } from "v-contextmenu";
+import { MotionPlugin } from '@vueuse/motion'
 
 import FontIcon from "./layout/FontIcon/indx.vue";
 import { registerSvgIcon } from "./assets/icons/index";
@@ -26,4 +27,5 @@ registerSvgIcon(app);
 
 app.use(store);
 app.use(router);
+app.use(MotionPlugin);
 app.mount("#app");

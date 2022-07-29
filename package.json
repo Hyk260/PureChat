@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^8.4.2",
+    "@vueuse/motion": "^2.0.0-beta.12",
     "@wangeditor/editor": "^5.0.1",
     "@wangeditor/editor-for-vue": "^5.1.11",
     "axios": "^0.26.1",
