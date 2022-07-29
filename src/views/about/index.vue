@@ -93,6 +93,8 @@
         </el-descriptions-item>
       </el-descriptions>
     </el-card>
+
+    <el-tooltip placement="top" content="返回顶部">UP</el-tooltip>
   </div>
 </template>
 

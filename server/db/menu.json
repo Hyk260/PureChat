@@ -22,7 +22,8 @@
         "be63ff4f-0462-4171-bb65-cdd2ff052b31",
         "26191e4f-4f67-4dcf-a1d3-d06f279ddb6e",
         "8ba31b42-b46a-4424-a0de-a65a30928df7",
-        "ca3f8c29-e786-4521-991c-bfe2a76b9c1b"
+        "ca3f8c29-e786-4521-991c-bfe2a76b9c1b",
+        "2b98c485-4597-4928-a01f-0e8afcbdcd8f"
       ]
     },
     {
@@ -275,7 +276,9 @@
         "auth": [],
         "modify": false
       },
-      "children": []
+      "children": [
+        "830d9e18-264c-4dcb-a560-4e49a8eb839f"
+      ]
     },
     {
       "id": "4f888a02-1308-4589-b406-8f303dc4db0c",
@@ -284,6 +287,30 @@
       "componentName": "System",
       "meta": {
         "title": "测试91",
+        "icon": "Folder",
+        "auth": []
+      },
+      "children": []
+    },
+    {
+      "id": "830d9e18-264c-4dcb-a560-4e49a8eb839f",
+      "url": "/system8/system1",
+      "path": "/system1",
+      "componentName": "System",
+      "meta": {
+        "title": "测试",
+        "icon": "Folder",
+        "auth": []
+      },
+      "children": []
+    },
+    {
+      "id": "2b98c485-4597-4928-a01f-0e8afcbdcd8f",
+      "url": "/system1",
+      "path": "/system1",
+      "componentName": "System",
+      "meta": {
+        "title": "测试",
         "icon": "Folder",
         "auth": []
       },
