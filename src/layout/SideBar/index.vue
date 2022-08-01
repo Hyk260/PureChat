@@ -60,7 +60,8 @@ const handleClose = (key, keyPath) => {
   height: 100%;
 }
 .el-menu-vertical {
-  height: 100vh;
+  // height: 100vh;
+  height: 100%;
 }
 .sidebar-container {
   z-index: 10;

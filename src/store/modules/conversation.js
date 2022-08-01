@@ -6,13 +6,12 @@ const conversation = {
     noMore: true, // 加载更多  false ? 显示loading : 没有更多
     /**
      * 网络状态
-    */
-    networkStatus:true,
+     */
+    networkStatus: true,
     needScrollDown: -1, // 是否向下滚动
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表
     currentSelectedConversation: null, //跳转窗口的属性
-    
   },
   mutations: {
     // 设置历史消息
@@ -40,7 +39,7 @@ const conversation = {
         // 接收消息
         case CONVERSATIONTYPE.RECIVE_MESSAGE: {
           const { convId, message } = payload;
-          state.currentMessageList = message;
+          state.currentMessageList = message.reverse();
           break;
         }
       }

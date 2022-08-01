@@ -28,7 +28,7 @@ export const generateTemplateElement = async (
     message_client_time: Math.round(new Date().getTime() / 1000),
     message_server_time: 0,
     message_is_peer_read: false,
-    message_status: 1,
+    message_status: 1, // 消息发送状态 1 2
     message_conv_type: convType,
     message_conv_id: convId,
     message_is_from_self: true,

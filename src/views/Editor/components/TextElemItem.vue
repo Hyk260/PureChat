@@ -12,16 +12,15 @@
 </template>
 
 <script setup>
-import { computed, defineProps } from "vue";
+import { defineProps, toRefs } from "vue";
 
 const props = defineProps({
   message: {
     type: Array,
-    default: [],
-  }
+    // default: [],
+  },
 });
-const { message } = props
-
+const { message } = props;
 </script>
 
 <style lang="scss" scoped>

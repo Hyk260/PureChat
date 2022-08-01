@@ -47,7 +47,9 @@ import {
   getImageType,
 } from "@/utils/message-input-utils";
 import { useStore } from "vuex";
+import { sendMsg } from "@/api/chat";
 import { useState } from "@/utils/hooks/useMapper";
+import { generateUUID } from "@/utils/index";
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
 const valueHtml = ref(""); // 内容 HTML
@@ -71,8 +73,8 @@ const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 
   // 查看所有工具栏key
-  console.log(editor.getAllMenuKeys());
-  console.log(editor.getConfig());
+  // console.log(editor.getAllMenuKeys());
+  // console.log(editor.getConfig());
 };
 
 // 粘贴事件
@@ -113,40 +115,48 @@ const clearInputInfo = () => {
 };
 const sendMsgBefore = () => {
   const text = editorRef.value.getText();
-  const content = getMessageElemItem("text", { text: text }); //文本
-  console.log(content);
-  return { content };
+  const message = getMessageElemItem("text", { text: text }); //文本
+  console.log(message);
+  return { message };
 };
 // 发送消息
 const sendMessage = async () => {
-  const { content } = sendMsgBefore();
-  // const result = await sendMsg({})
-  const message = content;
-  const messageId = "123";
+  const { message } = sendMsgBefore();
+  const messageId = generateUUID();
   const userProfile = {
     user_profile_nick_name: "临江仙",
   };
-  const conv_id = 123;
+  const conv_id = 100002138;
   const conv_type = 2;
   const templateElement = await generateTemplateElement(
-    conv_id,
-    conv_type,
-    userProfile,
-    messageId,
+    conv_id, // 会话ID
+    conv_type, // 消息类型 1 2
+    userProfile, // 发送方数据
+    messageId, // UUID
     message,
     {}
   );
   console.log(templateElement);
-
   clearInputInfo();
   // 更新消息
   commit("SET_HISTORYMESSAGE", {
     type: "UPDATE_MESSAGES",
     payload: {
-      convId: "123",
+      convId: conv_id,
       message: templateElement,
     },
   });
+  // 会话消息发送
+  let { code, result } = await sendMsg({
+    conv_id,
+    conv_type,
+    userProfile,
+    message,
+  });
+  if (code == 200) {
+    console.log("发送成功");
+    console.log(result);
+  }
 };
 </script>
 

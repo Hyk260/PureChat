@@ -9,3 +9,14 @@ export const getChat = () => {
     method: "get",
   });
 };
+
+/**
+ * 聊天记录
+ */
+export const sendMsg = (data) => {
+  return http({
+    url: "/chat/sendMsg",
+    method: "get",
+    params: data,
+  });
+};

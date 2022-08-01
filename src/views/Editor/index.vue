@@ -16,7 +16,7 @@
           </el-input>
         </div>
       </div>
-      <div  :class="['scroll-container', networkStatus ? 'style-net' : '']">
+      <div :class="['scroll-container', networkStatus ? 'style-net' : '']">
         <!-- 连接已断开 -->
         <networklink :show="networkStatus" />
         <el-scrollbar class="scrollbar-list">
@@ -30,12 +30,16 @@
               @contextmenu.prevent="handleContextMenuEvent($event, item)"
               @click="handleConvListClick(item)"
             >
-            <!-- 置顶图标 -->
-            <div class="pinned-tag" v-if="item && item.pinned"></div>
-            <!-- 关闭按钮 -->
-            <FontIcon iconName="close" class="close-btn" @click.stop="closeMsg(item)"/>
+              <!-- 置顶图标 -->
+              <div class="pinned-tag" v-if="item && item.pinned"></div>
+              <!-- 关闭按钮 -->
+              <FontIcon
+                iconName="close"
+                class="close-btn"
+                @click.stop="closeMsg(item)"
+              />
               <!-- 头像 -->
-              <img :src="squareUrl" class="portrait" alt="">
+              <img :src="squareUrl" class="portrait" alt="" />
               <!-- 消息 -->
               <div class="message-item-right">
                 <div class="message-item-right-top">
@@ -48,7 +52,11 @@
                 </div>
                 <span class="message-item-right-bottom"> 消息 </span>
                 <!-- 消息免打扰 -->
-                <svg-icon iconClass="DontDisturb" v-if="item.conv_recv_opt == 2" class="dont" />
+                <svg-icon
+                  v-if="item.conv_recv_opt == 2"
+                  iconClass="DontDisturb"
+                  class="dont"
+                />
               </div>
             </div>
           </transition-group>
@@ -203,7 +211,7 @@ const {
     state.conversation.currentSelectedConversation,
   noMore: (state) => state.conversation.noMore,
   userInfo: (state) => state.data,
-  networkStatus: (state) => state.conversation.networkStatus
+  networkStatus: (state) => state.conversation.networkStatus,
 });
 
 const handleClick = (tab, event) => {
@@ -211,12 +219,19 @@ const handleClick = (tab, event) => {
 };
 
 onMounted(() => {
+  scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
   getRolesList();
   getChatList();
 });
 
+
+
 onUpdated(() => {
-  scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
+  console.log(scrollbarRef.value);
+  // scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", scrollbar);
 });
 
 watch(
@@ -237,12 +252,12 @@ const handleConvListClick = (data) => {
     payload: data,
   });
 };
-const closeMsg = (conv) =>{
+const closeMsg = (conv) => {
   const Info = Friends.value;
   Friends.value = Info.filter((t) => {
     return t.id != conv.id;
   });
-}
+};
 const fnClass = (item) => {
   let current = currentSelectedConversation.value;
   let select = item?.id == current?.id;
@@ -257,8 +272,8 @@ const fnClass = (item) => {
   }
 };
 const Megtype = (item) => {
-  const { message_elem_array } = item || {};
-  const { elem_type } = message_elem_array[0];
+  const { message_elem_array } = item || [];
+  const { elem_type } = message_elem_array[0] || {};
   let resp = null;
   switch (elem_type) {
     case 0:
@@ -417,12 +432,12 @@ const pingConv = (data) => {
 </script>
 
 <style lang="scss" scoped>
-.close-btn{
+.close-btn {
   font-size: 12px !important;
   position: absolute;
   left: 1.5px;
   display: none;
-  &:hover{
+  &:hover {
     color: #409eff;
   }
 }
@@ -500,13 +515,16 @@ const pingConv = (data) => {
     background: rgba(0, 0, 0, 0.03);
   }
 }
-.style-net{
-   height: calc(100% - 60px - 34px);
+.style-net {
+  height: calc(100% - 60px - 34px);
 }
 .scrollbar-list {
   background: #fff;
   height: 100%;
   // height: calc(100% - 40px);
+  // ::v-deep .el-scrollbar__wrap{
+  //   overflow-x: hidden;
+  // }
 }
 .scrollbar-item {
   display: flex;
@@ -530,7 +548,7 @@ const pingConv = (data) => {
   &:hover {
     background: #f0f2f5;
   }
-  &:hover .close-btn{
+  &:hover .close-btn {
     display: block;
   }
   .pinned-tag {

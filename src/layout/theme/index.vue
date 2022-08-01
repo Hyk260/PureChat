@@ -85,9 +85,11 @@ const fnStyle = (off) => {
   width: 100%;
 }
 .app-main {
-  padding-top: 86px;
+  // padding-top: 86px;
+  // height: 100vh;
+  height: calc(100vh - 86px);
+  margin-top: 86px;
   width: 100%;
-  height: 100vh;
   position: relative;
   overflow-x: hidden;
   background: #f0f2f5;

@@ -190,6 +190,33 @@ app.get("/chat/record", async (req, res, next) => {
   next();
 });
 
+// 发送消息
+app.get("/chat/sendMsg", async (req, res, next) => {
+  let id = uuid();
+  let { conv_id, conv_type, userProfile, message } = req.query;
+  let chat = {
+    message_client_time: Math.round(new Date().getTime() / 1000),
+    message_conv_id: conv_id,
+    message_conv_type: conv_type,
+    message_elem_array: [JSON.parse(message)],
+    message_is_from_self: true,
+    message_is_peer_read: false,
+    message_msg_id: id,
+    message_sender_group_member_info: {},
+    message_sender_profile: JSON.parse(userProfile),
+    message_server_time: 0,
+    message_status: 1,
+  };
+  db_chat.get("chat").push(chat).write();
+  let result = db_chat.get("chat").value();
+  res.json({
+    code: 200,
+    msg: "ok",
+    result,
+  });
+  next();
+});
+
 // 获取全部角色
 app.get("/role/query", async (req, res, next) => {
   let result = db_role.get("role").value();
