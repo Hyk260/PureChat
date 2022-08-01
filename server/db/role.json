@@ -7,7 +7,8 @@
       "createTime": 1621480197410,
       "updateTime": 1652077470543,
       "isDefaultRole": true,
-      "pinned":true
+      "pinned":true,
+      "conv_recv_opt":2
     },
     {
       "id": "6b2d9d80-e1b1-4584-bf7b-f10852794e4a",

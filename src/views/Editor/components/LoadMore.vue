@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps } from "vue";
+import { defineProps, toRefs } from "vue";
 
 const props = defineProps({
   noMore: {
@@ -15,7 +15,7 @@ const props = defineProps({
     default: true,
   },
 });
-const { noMore } = props;
+const { noMore } = toRefs(props);
 </script>
 
 <style lang="scss" scoped>

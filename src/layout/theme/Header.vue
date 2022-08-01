@@ -32,7 +32,10 @@
         <div class="user">
           <el-dropdown>
             <span class="el-dropdown-link">
-              <el-avatar :size="24" :src="picture" />
+              <el-avatar
+                :size="24"
+                :src="picture"
+              />
               <p>ADMIN</p>
             </span>
             <template #dropdown>
@@ -41,7 +44,7 @@
                   <FontIcon iconName="switch-button" />
                   退出登录
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item @click="topersonal">
                   <FontIcon iconName="user" />
                   个人中心
                 </el-dropdown-item>
@@ -50,7 +53,10 @@
           </el-dropdown>
         </div>
         <!-- 设置 -->
-        <div class="setup" @click="drawer = true">
+        <div
+          class="setup"
+          @click="drawer = true"
+        >
           <FontIcon iconName="setting" />
         </div>
       </div>
@@ -58,7 +64,10 @@
     <div class="tags-view">
       <div>
         <div class="arrow-left">
-          <FontIcon iconName="arrow-left" class="cursor-w" />
+          <FontIcon
+            iconName="arrow-left"
+            class="cursor-w"
+          />
         </div>
         <div class="scroll-container">
           <el-tag
@@ -82,7 +91,10 @@
           </el-tag>
         </div>
         <div class="arrow-right">
-          <FontIcon iconName="arrow-right" class="cursor-w" />
+          <FontIcon
+            iconName="arrow-right"
+            class="cursor-w"
+          />
         </div>
       </div>
       <div class="dropdown">
@@ -96,20 +108,20 @@
                 class="Left-rotation"
                 :icon="Upload"
                 @click="closing('left')"
-                >关闭左侧</el-dropdown-item
-              >
+              >关闭左侧</el-dropdown-item>
               <el-dropdown-item
                 class="Right-rotation"
                 :icon="Upload"
                 @click="closing('right')"
-                >关闭右侧</el-dropdown-item
-              >
-              <el-dropdown-item :icon="Minus" @click="closing('other')"
-                >关闭其他</el-dropdown-item
-              >
-              <el-dropdown-item :icon="Close" @click="closing('all')"
-                >全部关闭</el-dropdown-item
-              >
+              >关闭右侧</el-dropdown-item>
+              <el-dropdown-item
+                :icon="Minus"
+                @click="closing('other')"
+              >关闭其他</el-dropdown-item>
+              <el-dropdown-item
+                :icon="Close"
+                @click="closing('all')"
+              >全部关闭</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -117,7 +129,11 @@
     </div>
   </div>
 
-  <el-drawer v-model="drawer" title="I am the title" :with-header="false">
+  <el-drawer
+    v-model="drawer"
+    title="I am the title"
+    :with-header="false"
+  >
     <ul class="setting">
       <li>
         <span>关闭侧边栏</span>
@@ -146,153 +162,150 @@
 </template>
 
 <script setup>
-import {
-  Upload,
-  Minus,
-  Close,
-  Plus,
-  ArrowRight,
-} from "@element-plus/icons-vue";
-import { ElMessageBox } from "element-plus";
-import { reactive } from "@vue/reactivity";
-import { useStore } from "vuex";
-import { computed, ref, watch, toRefs } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import storage from "storejs";
-import FontIcon from "@/layout/FontIcon/indx.vue";
-import screenfull from "../components/screenfull.vue";
+import { Upload, Minus, Close, Plus, ArrowRight } from '@element-plus/icons-vue'
+import { ElMessageBox } from 'element-plus'
+import { reactive } from '@vue/reactivity'
+import { useStore } from 'vuex'
+import { computed, ref, watch, toRefs } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import storage from 'storejs'
+import FontIcon from '@/layout/FontIcon/indx.vue'
+import screenfull from '../components/screenfull.vue'
 
-const router = useRouter();
-const route = useRoute();
-const store = useStore();
-const drawer = ref(false);
+const router = useRouter()
+const route = useRoute()
+const store = useStore()
+const drawer = ref(false)
 const state = reactive({
   circleUrl:
-    "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+    'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
   squareUrl:
-    "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
-  sizeList: ["small", "", "large"],
-  picture: require("../../assets/images/picture.jpg"),
-});
-const { circleUrl, squareUrl, sizeList, picture } = toRefs(state);
+    'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+  sizeList: ['small', '', 'large'],
+  picture: require('../../assets/images/picture.jpg'),
+})
+const { circleUrl, squareUrl, sizeList, picture } = toRefs(state)
 
 const tags = computed(() => {
-  return store.state.data.elTag;
-});
+  return store.state.data.elTag
+})
 const sidebar = computed(() => {
-  return !store.state.settings.sidebar;
-});
+  return !store.state.settings.sidebar
+})
 const logoVal = computed(() => {
-  return !store.state.settings.logoIcon;
-});
+  return !store.state.settings.logoIcon
+})
 
 watch(
   () => router.currentRoute.value.path,
   () => {
-    const Tag = router.currentRoute.value.meta?.title;
+    const Tag = router.currentRoute.value.meta?.title
     if (!tags.value) {
       tags.value.push({
         title: Tag,
         path: router.currentRoute.value.path,
-      });
+      })
     }
     const index = tags.value?.findIndex((t) => {
-      return t?.title === Tag;
-    });
-    if (Tag === "首页") return;
-    if (router.currentRoute.value.path === "/login") return;
+      return t?.title === Tag
+    })
+    if (Tag === '首页') return
+    if (router.currentRoute.value.path === '/login') return
 
     if (index < 0) {
       tags.value.push({
         title: Tag,
         path: router.currentRoute.value.path,
-      });
-      store.commit("updateData", {
-        key: "elTag",
+      })
+      store.commit('updateData', {
+        key: 'elTag',
         value: tags.value,
-      });
+      })
     }
   }
-);
+)
 
 const isActive = computed(() => {
-  return store.state.data.isCollapse;
-});
+  return store.state.data.isCollapse
+})
 
 const CurTitle = computed(() => {
-  return router.currentRoute.value.meta?.title;
-});
+  return router.currentRoute.value.meta?.title
+})
 
 const fnStyle = (off) => {
-  return `width:calc(100% - ${off ? "64px" : "200px"})`;
-};
+  return `width:calc(100% - ${off ? '64px' : '200px'})`
+}
 
 const handleClose = (tag) => {
-  let data = tags.value.splice(tags.value.indexOf(tag), 1);
-  store.commit("updateData", { elTag: data });
-};
+  let data = tags.value.splice(tags.value.indexOf(tag), 1)
+  store.commit('updateData', { elTag: data })
+}
+const topersonal = () => {
+  router.push({ name: 'personal' })
+}
 
 const LogoChange = (val) => {
-  store.commit("updateSettings", {
-    key: "logoIcon",
+  store.commit('updateSettings', {
+    key: 'logoIcon',
     value: !val,
-  });
-};
+  })
+}
 const greyChange = (val) => {
-  store.commit("updateSettings", {
-    key: "sidebar",
+  store.commit('updateSettings', {
+    key: 'sidebar',
     value: !val,
-  });
-};
+  })
+}
 // 退出登录
 const Logout = () => {
-  ElMessageBox.confirm("确定退出登录?", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
+  ElMessageBox.confirm('确定退出登录?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
   })
     .then(() => {
-      store.dispatch("logout");
+      store.dispatch('logout')
     })
-    .catch(() => {});
-};
+    .catch(() => {})
+}
 
 const closing = (tag) => {
   const find = tags.value.findIndex((t) => {
-    return t?.title === CurTitle.value;
-  });
+    return t?.title === CurTitle.value
+  })
   switch (tag) {
-    case "left":
-      tags.value.splice(0, find);
-      break;
-    case "right":
-      tags.value.splice(find + 1, tags.value.length);
-      break;
-    case "other":
-      tags.value.splice(0, tags.value.length);
+    case 'left':
+      tags.value.splice(0, find)
+      break
+    case 'right':
+      tags.value.splice(find + 1, tags.value.length)
+      break
+    case 'other':
+      tags.value.splice(0, tags.value.length)
       tags.value.push({
         title: CurTitle.value,
         path: router.currentRoute.value.path,
-      });
-      break;
-    case "all":
-      tags.value.splice(0, tags.value.length);
-      break;
+      })
+      break
+    case 'all':
+      tags.value.splice(0, tags.value.length)
+      break
   }
-  store.commit("updateData", {
-    key: "elTag",
+  store.commit('updateData', {
+    key: 'elTag',
     value: tags.value,
-  });
-};
+  })
+}
 
 const tagClick = (path) => {
-  router.push(path);
-};
+  router.push(path)
+}
 
 // 侧边栏 展开 折叠
 const toggleClick = () => {
-  store.commit("setCollapse");
-};
+  store.commit('setCollapse')
+}
 </script>
 <style module="classes" scoped>
 .container {

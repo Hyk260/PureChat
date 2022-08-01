@@ -16,10 +16,10 @@
           </el-input>
         </div>
       </div>
-      <div class="scroll-container">
+      <div  :class="['scroll-container', networkStatus ? 'style-net' : '']">
+        <!-- 连接已断开 -->
+        <networklink :show="networkStatus" />
         <el-scrollbar class="scrollbar-list">
-          <!-- 连接已断开 -->
-          <networklink />
           <transition-group name="fade-transform">
             <div
               class="message-item"
@@ -30,13 +30,12 @@
               @contextmenu.prevent="handleContextMenuEvent($event, item)"
               @click="handleConvListClick(item)"
             >
+            <!-- 置顶图标 -->
+            <div class="pinned-tag" v-if="item && item.pinned"></div>
+            <!-- 关闭按钮 -->
+            <FontIcon iconName="close" class="close-btn" @click.stop="closeMsg(item)"/>
               <!-- 头像 -->
-              <el-avatar
-                class="portrait"
-                shape="square"
-                size="small"
-                :src="squareUrl"
-              />
+              <img :src="squareUrl" class="portrait" alt="">
               <!-- 消息 -->
               <div class="message-item-right">
                 <div class="message-item-right-top">
@@ -48,10 +47,9 @@
                   </div>
                 </div>
                 <span class="message-item-right-bottom"> 消息 </span>
-                <svg-icon iconClass="DontDisturb" class="dont" />
+                <!-- 消息免打扰 -->
+                <svg-icon iconClass="DontDisturb" v-if="item.conv_recv_opt == 2" class="dont" />
               </div>
-              <!-- 置顶图标 -->
-              <div class="pinned-tag" v-if="item && item.pinned"></div>
             </div>
           </transition-group>
           <!-- 右键菜单 -->
@@ -118,7 +116,7 @@
                   @contextmenu.prevent="ContextMenuEvent($event, item)"
                 >
                   <!-- 文本 -->
-                  <div :class="msgOne(item)">
+                  <div :class="Megtype(item)">
                     <component :is="TextElemItem" :message="item"> </component>
                   </div>
                 </div>
@@ -196,6 +194,7 @@ const {
   historyMessageList,
   noMore,
   userInfo,
+  networkStatus,
   currentSelectedConversation,
 } = useState({
   currentMessageList: (state) => state.conversation.currentMessageList,
@@ -204,6 +203,7 @@ const {
     state.conversation.currentSelectedConversation,
   noMore: (state) => state.conversation.noMore,
   userInfo: (state) => state.data,
+  networkStatus: (state) => state.conversation.networkStatus
 });
 
 const handleClick = (tab, event) => {
@@ -237,6 +237,12 @@ const handleConvListClick = (data) => {
     payload: data,
   });
 };
+const closeMsg = (conv) =>{
+  const Info = Friends.value;
+  Friends.value = Info.filter((t) => {
+    return t.id != conv.id;
+  });
+}
 const fnClass = (item) => {
   let current = currentSelectedConversation.value;
   let select = item?.id == current?.id;
@@ -249,9 +255,8 @@ const fnClass = (item) => {
   if (select) {
     return "is-active";
   }
-  // return item?.pinned || select ? "is-active" : "";
 };
-const msgOne = (item) => {
+const Megtype = (item) => {
   const { message_elem_array } = item || {};
   const { elem_type } = message_elem_array[0];
   let resp = null;
@@ -412,19 +417,15 @@ const pingConv = (data) => {
 </script>
 
 <style lang="scss" scoped>
-.abc-enter,
-.abc-leave-to {
-  opacity: 0;
-  /* //设置元素的不透明级别： */
-  transform: translateY(80px);
-  /* // 开始和结束位置在Y轴的80px处 */
+.close-btn{
+  font-size: 12px !important;
+  position: absolute;
+  left: 1.5px;
+  display: none;
+  &:hover{
+    color: #409eff;
+  }
 }
-.abc-enter-active,
-.abc-leave-active {
-  transition: all 0.6s ease;
-  /* // 从Y轴的80px处渐渐移动到上面 */
-}
-
 
 .demo-tabs {
   height: 100%;
@@ -499,6 +500,9 @@ const pingConv = (data) => {
     background: rgba(0, 0, 0, 0.03);
   }
 }
+.style-net{
+   height: calc(100% - 60px - 34px);
+}
 .scrollbar-list {
   background: #fff;
   height: 100%;
@@ -516,7 +520,7 @@ const pingConv = (data) => {
   color: var(--el-color-primary);
 }
 .message-item {
-  padding: 12px;
+  padding: 12px 12px 12px 16px;
   height: 64px;
   display: flex;
   align-items: center;
@@ -525,6 +529,9 @@ const pingConv = (data) => {
   position: relative;
   &:hover {
     background: #f0f2f5;
+  }
+  &:hover .close-btn{
+    display: block;
   }
   .pinned-tag {
     display: block;

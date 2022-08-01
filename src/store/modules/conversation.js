@@ -4,10 +4,15 @@ const conversation = {
   // namespaced: true,
   state: {
     noMore: true, // 加载更多  false ? 显示loading : 没有更多
+    /**
+     * 网络状态
+    */
+    networkStatus:true,
     needScrollDown: -1, // 是否向下滚动
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表
     currentSelectedConversation: null, //跳转窗口的属性
+    
   },
   mutations: {
     // 设置历史消息
