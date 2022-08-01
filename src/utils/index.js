@@ -2,7 +2,7 @@
  * @description: 生成UUID
  * @param {*}
  * @return {*}
- * @author: gumingchen
+ * @author:
  */
 export function generateUUID() {
   let result = "";
@@ -13,4 +13,13 @@ export function generateUUID() {
     return value.toString(16);
   });
   return result;
+}
+
+/**
+ * @description: 生成随机数
+ * @param {*}
+ * @return {*}
+ */
+export function randomNum(min = 0, max = 100) {
+  return Math.floor(Math.random() * (min - max) + max);
 }

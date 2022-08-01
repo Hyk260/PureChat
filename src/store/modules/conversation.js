@@ -42,6 +42,11 @@ const conversation = {
           state.currentMessageList = message.reverse();
           break;
         }
+        // 加载更多状态
+        case CONVERSATIONTYPE.UPDATE_NOMORE: {
+          state.noMore = payload;
+          break;
+        }
       }
     },
     // 设置会话

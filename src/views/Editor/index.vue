@@ -168,7 +168,7 @@ import {
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { Search } from "@element-plus/icons-vue";
 import { getRoles } from "@/api/roles";
-import { getChat } from "@/api/chat";
+import { getChat, getMsgList } from "@/api/chat";
 import { dragControllerDiv } from "./utils/utils";
 import { timeFormat } from "@/utils/timeFormat";
 import { useStore, mapMutations, mapState } from "vuex";
@@ -219,16 +219,13 @@ const handleClick = (tab, event) => {
 };
 
 onMounted(() => {
-  scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
+  Monitorscrollbar();
   getRolesList();
   getChatList();
 });
 
-
-
 onUpdated(() => {
-  console.log(scrollbarRef.value);
-  // scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
+  // Monitorscrollbar();
 });
 onBeforeUnmount(() => {
   window.removeEventListener("scroll", scrollbar);
@@ -251,6 +248,10 @@ const handleConvListClick = (data) => {
     type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
     payload: data,
   });
+};
+const Monitorscrollbar = () => {
+  console.log(scrollbarRef.value);
+  scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
 };
 const closeMsg = (conv) => {
   const Info = Friends.value;
@@ -315,7 +316,32 @@ const scrollbar = (e) => {
     canLoadData && getMoreMsg();
   }); //防抖处理
 };
-const getMoreMsg = () => {
+
+const getMoreMsg = async () => {
+  try {
+    // 获取指定会话的消息列表
+    const Response = await getMsgList({
+      conv_id: 123,
+      conv_type: 2,
+      msg_id: 123,
+    });
+    console.log(Response);
+    if (Response?.length === 0) {
+      console.log("没有更多消息了！！！");
+      commit("SET_HISTORYMESSAGE", {
+        type: "UPDATE_NOMORE",
+        payload: true,
+      });
+      return;
+    }
+  } catch (e) {
+    // 解析报错 关闭加载动画
+    commit("SET_HISTORYMESSAGE", {
+      type: "UPDATE_NOMORE",
+      payload: true,
+    });
+  }
+
   console.log("更多消息");
 };
 const getRolesList = async () => {
@@ -546,7 +572,7 @@ const pingConv = (data) => {
   cursor: pointer;
   position: relative;
   &:hover {
-    background: #f0f2f5;
+    // background: #f0f2f5;
   }
   &:hover .close-btn {
     display: block;

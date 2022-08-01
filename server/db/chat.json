@@ -32,7 +32,7 @@
         "user_profile_add_permission": 1,
         "user_profile_birthday": 0,
         "user_profile_custom_string_array": [],
-        "user_profile_face_url": "https://files.95579.com.cn/6/20220211/2320283/man.png",
+        "user_profile_face_url": "",
         "user_profile_gender": 0,
         "user_profile_identifier": "100122232",
         "user_profile_language": 0,
@@ -260,6 +260,66 @@
       "message_is_from_self": true,
       "message_is_peer_read": false,
       "message_msg_id": "a96301ed-8b16-4ec5-9b56-6be3d122c794",
+      "message_sender_group_member_info": {},
+      "message_sender_profile": {
+        "user_profile_nick_name": "临江仙"
+      },
+      "message_server_time": 0,
+      "message_status": 1
+    },
+    {
+      "message_client_time": 1659355367,
+      "message_conv_id": "100002138",
+      "message_conv_type": "2",
+      "message_elem_array": [
+        {
+          "elem_type": 0,
+          "text_elem_content": "仁丹吃\n💩"
+        }
+      ],
+      "message_is_from_self": true,
+      "message_is_peer_read": false,
+      "message_msg_id": "328d8d0b-eb6c-4190-9f42-fa046c6fc01a",
+      "message_sender_group_member_info": {},
+      "message_sender_profile": {
+        "user_profile_nick_name": "临江仙"
+      },
+      "message_server_time": 0,
+      "message_status": 1
+    },
+    {
+      "message_client_time": 1659355530,
+      "message_conv_id": "100002138",
+      "message_conv_type": "2",
+      "message_elem_array": [
+        {
+          "elem_type": 0,
+          "text_elem_content": "上班\n"
+        }
+      ],
+      "message_is_from_self": true,
+      "message_is_peer_read": false,
+      "message_msg_id": "daa815ff-9399-4259-a036-a4653efe2b89",
+      "message_sender_group_member_info": {},
+      "message_sender_profile": {
+        "user_profile_nick_name": "临江仙"
+      },
+      "message_server_time": 0,
+      "message_status": 1
+    },
+    {
+      "message_client_time": 1659362246,
+      "message_conv_id": "100002138",
+      "message_conv_type": "2",
+      "message_elem_array": [
+        {
+          "elem_type": 0,
+          "text_elem_content": "测试\n"
+        }
+      ],
+      "message_is_from_self": true,
+      "message_is_peer_read": false,
+      "message_msg_id": "df21830c-3cb6-4d3c-a80f-3a8995c62c63",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
         "user_profile_nick_name": "临江仙"
