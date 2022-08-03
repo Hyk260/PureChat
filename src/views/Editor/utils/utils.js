@@ -2,7 +2,7 @@ export const dragControllerDiv = () => {
   let svgResize = document.getElementById("svgResize"); // 滑块
   let svgTop = document.getElementById("svgTop"); //聊天框
   let svgDown = document.getElementById("svgDown"); //编辑器
-  let svgBox = document.getElementById("svgBox");
+  let svgBox = document.getElementById("svgBox"); //整个盒子
   // 按下鼠标执行
   svgResize.onmousedown = (e) => {
     let startY = e.clientY; //鼠标按下 起始Y
@@ -31,4 +31,50 @@ export const dragControllerDiv = () => {
     svgResize.setCapture && svgResize.setCapture();
     return false;
   };
+};
+
+// 返回消息类型
+export const Megtype = (item) => {
+  const { message_elem_array } = item || [];
+  const { elem_type } = message_elem_array[0] || {};
+  let resp = null;
+  switch (elem_type) {
+    case 0:
+      resp = "message-view__text";
+      break;
+  }
+  return resp;
+};
+
+// 动态组件 
+export const loadMsgComponents = (item) => {
+  const { message_elem_array } = item || {};
+  const { elem_type } = message_elem_array[0];
+  let resp = null;
+  switch (elem_type) {
+    case 0:
+      resp = "TextElemItem"; // 文本消息
+      break;
+    case 1:
+      resp = "pic-elem-item"; //图片消息
+      break;
+    case 4:
+      resp = "file-elem"; // 文件消息
+      break;
+    case 6:
+      resp = "emoji-elem"; // 表情消息
+      break;
+  }
+  console.log(resp);
+  return resp;
+};
+
+// 复制
+export const fncopy = (data) => {
+  let { message_elem_array } = data || {};
+  let { elem_type: type, text_elem_content: content } = message_elem_array[0];
+  // 文本
+  if (type === 0) {
+    console.log(content)
+  }
 };

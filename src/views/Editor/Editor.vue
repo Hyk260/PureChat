@@ -14,19 +14,17 @@
       @keyup.enter="handleEnter"
     />
     <el-tooltip
-      effect="dark"
-      content="按Enter发送消息,Enter+Shift换行"
-      placement="left-start"
-      :open-delay="800"
-    >
-      <div class="btn-send" @click="sendMessage">发送</div>
-    </el-tooltip>
+        effect="dark"
+        content="按Enter发送消息,Enter+Shift换行"
+        placement="left-start"
+      >
+        <el-button class="btn-send" @click="sendMessage">发送</el-button>
+      </el-tooltip>
   </div>
 </template>
 
 <script setup>
 import "@wangeditor/editor/dist/css/style.css";
-import "v-contextmenu/dist/themes/default.css";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { toolbarConfig, editorConfig } from "./utils/configure";
 import {
@@ -161,6 +159,7 @@ const sendMessage = async () => {
 </script>
 
 <style lang="scss" scoped>
+
 .Editor-style {
   height: 206px;
   .toolbar {
@@ -183,18 +182,8 @@ const sendMessage = async () => {
 }
 
 .btn-send {
-  cursor: pointer;
-  position: absolute;
-  bottom: 8px;
-  right: 16px;
-  padding: 6px 6px 4px 4px;
-  line-height: 20px;
-  width: 60px;
-  background-color: #f44336;
-  color: #fff;
-  border: 1px solid #e7e7e7;
-  font-size: 14px;
-  border-radius: 3px;
-  text-align: center;
+    position: absolute;
+    bottom: 8px;
+    right: 16px;
 }
 </style>

@@ -16,8 +16,8 @@ import { defineProps, toRefs } from "vue";
 
 const props = defineProps({
   message: {
-    type: Array,
-    // default: [],
+    type: Object,
+    default: null,
   },
 });
 const { message } = props;

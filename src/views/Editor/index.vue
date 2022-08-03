@@ -86,19 +86,12 @@
     </div>
     <!-- 聊天框 -->
     <div class="message-right" id="svgBox">
-      <header class="message-info-view-header">
-        <div class="message-info-views" v-if="currentSelectedConversation">
-          <p>{{ currentSelectedConversation.roleName }}</p>
-        </div>
-        <div class="message-info-setup">
-          <FontIcon iconName="MoreFilled" />
-        </div>
-      </header>
+      <Header/>
       <!-- 聊天窗口 -->
       <section class="message-info-view-content" id="svgTop">
         <el-scrollbar class="scrollbar-content" ref="scrollbarRef">
           <div class="message-view" ref="messageViewRef">
-            <div v-for="(item, index) in currentMessageList" :key="item">
+            <div v-for="(item, index) in currentMessageList" :key="item.message_msg_id">
               <!-- 加载更多 -->
               <LoadMore
                 :noMore="noMore"
@@ -151,7 +144,6 @@
 </template>
 
 <script setup>
-import "@wangeditor/editor/dist/css/style.css";
 import "v-contextmenu/dist/themes/default.css";
 import {
   onBeforeUnmount,
@@ -165,27 +157,32 @@ import {
   watch,
   nextTick,
 } from "vue";
-import FontIcon from "@/layout/FontIcon/indx.vue";
-import { Search } from "@element-plus/icons-vue";
-import { getRoles } from "@/api/roles";
-import { getChat, getMsgList } from "@/api/chat";
-import { dragControllerDiv } from "./utils/utils";
-import { timeFormat } from "@/utils/timeFormat";
+import { copyFile } from "fs";
 import { useStore, mapMutations, mapState } from "vuex";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
+
+import { getRoles } from "@/api/roles";
+import { getChat, getMsgList } from "@/api/chat";
+
 import {
   squareUrl,
   RIGHT_CLICK_CHAT_LIST,
   RIGHT_CLICK_MENU_LIST,
 } from "./utils/menu";
-import { useState } from "@/utils/hooks/useMapper";
+
 import { debounce } from "@/utils/debounce";
-import { copyFile } from "fs";
-import networklink from "./components/networklink.vue";
-import LoadMore from "./components/LoadMore.vue";
-import TextElemItem from "./components/TextElemItem";
+import { timeFormat } from "@/utils/timeFormat";
+import { useState } from "@/utils/hooks/useMapper";
+import { dragControllerDiv, loadMsgComponents, Megtype, fncopy } from "./utils/utils";
+
 import Editor from "./Editor.vue";
 import Motion from "@/utils/motion";
+import { Search } from "@element-plus/icons-vue";
+import LoadMore from "./components/LoadMore.vue";
+import FontIcon from "@/layout/FontIcon/indx.vue";
+import TextElemItem from "./components/TextElemItem";
+import Header from './components/Header.vue';
+import networklink from "./components/networklink.vue";
 
 const appoint = ref("");
 const MenuList = ref([]);
@@ -250,7 +247,7 @@ const handleConvListClick = (data) => {
   });
 };
 const Monitorscrollbar = () => {
-  console.log(scrollbarRef.value);
+  // console.log(scrollbarRef.value.wrap$);
   scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
 };
 const closeMsg = (conv) => {
@@ -272,38 +269,7 @@ const fnClass = (item) => {
     return "is-active";
   }
 };
-const Megtype = (item) => {
-  const { message_elem_array } = item || [];
-  const { elem_type } = message_elem_array[0] || {};
-  let resp = null;
-  switch (elem_type) {
-    case 0:
-      resp = "message-view__text";
-      break;
-  }
-  return resp;
-};
-const loadMsgComponents = (item) => {
-  const { message_elem_array } = item || {};
-  const { elem_type } = message_elem_array[0];
-  let resp = null;
-  switch (elem_type) {
-    case 0:
-      resp = "TextElemItem"; // 文本消息
-      break;
-    case 1:
-      resp = "pic-elem-item"; //图片消息
-      break;
-    case 4:
-      resp = "file-elem"; // 文件消息
-      break;
-    case 6:
-      resp = "emoji-elem"; // 表情消息
-      break;
-  }
-  console.log(resp);
-  return resp;
-};
+
 const scrollbar = (e) => {
   // 会话是否大于50条 ? 显示loading : 没有更多
   debounce(() => {
@@ -381,17 +347,10 @@ const ClickMenuItem = (item) => {
       break;
   }
 };
-const fncopy = (data) => {
-  let { message_elem_array } = data || {};
-  let { elem_type, text_elem_content: elem_content } = message_elem_array[0];
-  // 文本
-  if (elem_type === 0) {
-  }
-};
+
 // 消息列表 右键菜单
 const handleContextMenuEvent = (e, item) => {
   contextMenuItemInfo.value = item;
-  console.log(item);
   // 会话定值
   if (item?.pinned) {
     RIGHT_CLICK_CHAT_LIST.map((t) => {
@@ -406,6 +365,7 @@ const handleContextMenuEvent = (e, item) => {
       }
     });
   }
+
 };
 
 const handleClickMenuItem = (item) => {
@@ -509,18 +469,7 @@ const pingConv = (data) => {
   position: relative;
   overflow: hidden;
 }
-.message-info-view-header {
-  height: 60px;
-  background: #fff;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.09);
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  .message-info-views {
-  }
-}
+
 .message-info-view-content {
   height: calc(100% - 70px - 206px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.09);
