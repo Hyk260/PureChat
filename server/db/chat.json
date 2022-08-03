@@ -426,6 +426,26 @@
       },
       "message_server_time": 0,
       "message_status": 1
+    },
+    {
+      "message_client_time": 1659511920,
+      "message_conv_id": "100002138",
+      "message_conv_type": "2",
+      "message_elem_array": [
+        {
+          "elem_type": 0,
+          "text_elem_content": "干哈\n"
+        }
+      ],
+      "message_is_from_self": true,
+      "message_is_peer_read": false,
+      "message_msg_id": "081e512f-0f3c-43e5-9bc5-73f4612bcf65",
+      "message_sender_group_member_info": {},
+      "message_sender_profile": {
+        "user_profile_nick_name": "临江仙"
+      },
+      "message_server_time": 0,
+      "message_status": 1
     }
   ]
 }

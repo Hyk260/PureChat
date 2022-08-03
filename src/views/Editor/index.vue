@@ -19,69 +19,8 @@
       <div :class="['scroll-container', networkStatus ? 'style-net' : '']">
         <!-- 连接已断开 -->
         <networklink :show="networkStatus" />
-        <el-scrollbar class="scrollbar-list">
-          <transition-group name="fade-transform">
-            <div
-              class="message-item"
-              v-for="item in Friends"
-              :key="item"
-              :class="fnClass(item)"
-              v-contextmenu:contextmenu
-              @contextmenu.prevent="handleContextMenuEvent($event, item)"
-              @click="handleConvListClick(item)"
-            >
-              <!-- 置顶图标 -->
-              <div class="pinned-tag" v-if="item && item.pinned"></div>
-              <!-- 关闭按钮 -->
-              <FontIcon
-                iconName="close"
-                class="close-btn"
-                @click.stop="closeMsg(item)"
-              />
-              <!-- 头像 -->
-              <img :src="squareUrl" class="portrait" alt="" />
-              <!-- 消息 -->
-              <div class="message-item-right">
-                <div class="message-item-right-top">
-                  <div class="message-chat-name">
-                    {{ item.roleName }}
-                  </div>
-                  <div class="message-Time">
-                    {{ timeFormat(item.updateTime) }}
-                  </div>
-                </div>
-                <span class="message-item-right-bottom"> 消息 </span>
-                <!-- 消息免打扰 -->
-                <svg-icon
-                  v-if="item.conv_recv_opt == 2"
-                  iconClass="DontDisturb"
-                  class="dont"
-                />
-              </div>
-            </div>
-          </transition-group>
-          <!-- 右键菜单 -->
-          <contextmenu ref="contextmenu">
-            <contextmenu-item
-              v-for="item in RIGHT_CLICK_CHAT_LIST"
-              :key="item.id"
-              @click="handleClickMenuItem(item)"
-            >
-              {{ item.text }}
-            </contextmenu-item>
-          </contextmenu>
-        </el-scrollbar>
-        <!-- <el-tabs
-          v-model="activeName"
-          class="demo-tabs"
-          @tab-click="handleClick"
-        >
-          <el-tab-pane label="User" name="first">
-            
-          </el-tab-pane>
-          <el-tab-pane label="Config" name="second"> Config </el-tab-pane>
-          <el-tab-pane label="Role" name="third"> Role </el-tab-pane>
-        </el-tabs> -->
+        <!-- 会话列表 -->
+        <ConversationList/>
       </div>
     </div>
     <!-- 聊天框 -->
@@ -161,7 +100,6 @@ import { copyFile } from "fs";
 import { useStore, mapMutations, mapState } from "vuex";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 
-import { getRoles } from "@/api/roles";
 import { getChat, getMsgList } from "@/api/chat";
 
 import {
@@ -183,6 +121,7 @@ import FontIcon from "@/layout/FontIcon/indx.vue";
 import TextElemItem from "./components/TextElemItem";
 import Header from './components/Header.vue';
 import networklink from "./components/networklink.vue";
+import ConversationList from './ConversationList.vue';
 
 const appoint = ref("");
 const MenuList = ref([]);
@@ -191,7 +130,6 @@ const messageViewRef = ref(null);
 const scrollbarRef = ref(null);
 const contextMenuItemInfo = ref([]);
 const MenuItemInfo = ref([]);
-const activeName = ref("first");
 
 const { state, getters, dispatch, commit } = useStore();
 const {
@@ -217,7 +155,6 @@ const handleClick = (tab, event) => {
 
 onMounted(() => {
   Monitorscrollbar();
-  getRolesList();
   getChatList();
 });
 
@@ -239,36 +176,13 @@ watch(
     deep: true, //深度监听
   }
 );
-// 会话点击
-const handleConvListClick = (data) => {
-  commit("SET_CONVERSATION", {
-    type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
-    payload: data,
-  });
-};
+
 const Monitorscrollbar = () => {
   // console.log(scrollbarRef.value.wrap$);
   scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
 };
-const closeMsg = (conv) => {
-  const Info = Friends.value;
-  Friends.value = Info.filter((t) => {
-    return t.id != conv.id;
-  });
-};
-const fnClass = (item) => {
-  let current = currentSelectedConversation.value;
-  let select = item?.id == current?.id;
-  if (item?.pinned && select) {
-    return "is-active";
-  }
-  if (item?.pinned) {
-    return "is-actives";
-  }
-  if (select) {
-    return "is-active";
-  }
-};
+
+
 
 const scrollbar = (e) => {
   // 会话是否大于50条 ? 显示loading : 没有更多
@@ -307,14 +221,7 @@ const getMoreMsg = async () => {
       payload: true,
     });
   }
-
   console.log("更多消息");
-};
-const getRolesList = async () => {
-  let { code, result } = await getRoles();
-  if (code === 200) {
-    Friends.value = result;
-  }
 };
 
 const getChatList = async () => {
@@ -348,46 +255,7 @@ const ClickMenuItem = (item) => {
   }
 };
 
-// 消息列表 右键菜单
-const handleContextMenuEvent = (e, item) => {
-  contextMenuItemInfo.value = item;
-  // 会话定值
-  if (item?.pinned) {
-    RIGHT_CLICK_CHAT_LIST.map((t) => {
-      if (t.id == "pinged") {
-        t.text = "取消置顶";
-      }
-    });
-  } else {
-    RIGHT_CLICK_CHAT_LIST.map((t) => {
-      if (t.id == "pinged") {
-        t.text = "会话置顶";
-      }
-    });
-  }
 
-};
-
-const handleClickMenuItem = (item) => {
-  const Info = contextMenuItemInfo.value;
-  switch (item.id) {
-    case "pinged": // 置顶
-      pingConv(Info);
-      break;
-    case "unpinged": // 取消置顶
-      pingConv(Info, false);
-      break;
-    case "remove": // 删除会话
-      removeConv(Info);
-      break;
-    case "disable": // 消息免打扰
-      disableRecMsg(Info, true);
-      break;
-    case "undisable": // 取消消息免打扰
-      disableRecMsg(Info, false);
-      break;
-  }
-};
 // 消息免打扰
 const disableRecMsg = () => {};
 // 删除会话
@@ -397,50 +265,10 @@ const removeConv = (conv) => {
     return t.id != conv.id;
   });
 };
-// 置顶
-const pingConv = (data) => {
-  console.log(data);
-  let { id } = data;
-  let off = null;
-  if (data?.pinned) {
-    off = false;
-  } else {
-    off = true;
-  }
-  console.log(off);
-  Friends.value.map((t) => {
-    if (t.id == id) {
-      t.pinned = off;
-    }
-  });
-  console.log(Friends.value);
-};
+
 </script>
 
 <style lang="scss" scoped>
-.close-btn {
-  font-size: 12px !important;
-  position: absolute;
-  left: 1.5px;
-  display: none;
-  &:hover {
-    color: #409eff;
-  }
-}
-
-.demo-tabs {
-  height: 100%;
-  ::v-deep .el-tabs__header {
-    margin: 0;
-  }
-  & > .el-tabs__content {
-    padding: 32px;
-    color: #6b778c;
-    font-size: 32px;
-    font-weight: 600;
-    // height: calc(100% - 40px);
-  }
-}
 
 .list-container {
   width: 100%;
@@ -482,25 +310,18 @@ const pingConv = (data) => {
 .scroll-container {
   height: calc(100% - 60px);
   position: relative;
-  .is-active {
+  ::v-deep .is-active {
     background: #f0f2f5;
     // background: #00000008;
   }
-  .is-actives {
+  ::v-deep .is-actives {
     background: rgba(0, 0, 0, 0.03);
   }
 }
 .style-net {
   height: calc(100% - 60px - 34px);
 }
-.scrollbar-list {
-  background: #fff;
-  height: 100%;
-  // height: calc(100% - 40px);
-  // ::v-deep .el-scrollbar__wrap{
-  //   overflow-x: hidden;
-  // }
-}
+
 .scrollbar-item {
   display: flex;
   align-items: center;
@@ -512,73 +333,7 @@ const pingConv = (data) => {
   background: var(--el-color-primary-light-9);
   color: var(--el-color-primary);
 }
-.message-item {
-  padding: 12px 12px 12px 16px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-  &:hover {
-    // background: #f0f2f5;
-  }
-  &:hover .close-btn {
-    display: block;
-  }
-  .pinned-tag {
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    border: 8px solid #f28078;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-  }
-  .portrait {
-    width: 40px;
-    height: 40px;
-  }
-  .message-item-right {
-    width: 200px;
-    margin-left: 11px;
-    height: 44px;
-    position: relative;
-    .dont {
-      position: absolute;
-      right: 0;
-      color: rgb(29 33 41 / 30%);
-    }
-    .message-item-right-top {
-      display: flex;
-      justify-content: space-between;
-      padding-bottom: 7px;
-      width: 100%;
-      .message-chat-name {
-        font-size: 14px;
-        display: block;
-        text-overflow: ellipsis;
-        word-wrap: break-word;
-        overflow: hidden;
-        max-height: 18px;
-        line-height: 18px;
-        color: rgba(0, 0, 0, 0.85);
-        max-width: 140px;
-      }
-      .message-Time {
-        font-size: 10px;
-        color: rgba(0, 0, 0, 0.45);
-      }
-    }
-    .message-item-right-bottom {
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.45);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      pointer-events: none;
-    }
-  }
-}
+
 #svgResize {
   position: relative;
   height: 5px;

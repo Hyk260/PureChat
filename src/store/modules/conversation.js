@@ -4,10 +4,7 @@ const conversation = {
   // namespaced: true,
   state: {
     noMore: true, // 加载更多  false ? 显示loading : 没有更多
-    /**
-     * 网络状态
-     */
-    networkStatus: true,
+    networkStatus: false, // 网络状态
     needScrollDown: -1, // 是否向下滚动
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表

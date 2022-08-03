@@ -1,8 +1,8 @@
 <template>
   <header class="message-info-view-header">
     <div class="message-info-views">
-      <p v-if="currentSelectedConversation">
-        {{ currentSelectedConversation.roleName }}
+      <p v-if="Conver">
+        {{ Conver.roleName }}
       </p>
     </div>
     <div class="message-info-setup">
@@ -15,13 +15,9 @@
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState } from "@/utils/hooks/useMapper";
 
-const {
-  currentSelectedConversation,
-} = useState({
-  currentSelectedConversation: (state) =>
-    state.conversation.currentSelectedConversation,
+const { Conver } = useState({
+  Conver: (state) => state.conversation.currentSelectedConversation,
 });
-
 </script>
 
 <style lang="scss" scoped>
