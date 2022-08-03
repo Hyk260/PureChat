@@ -97,7 +97,7 @@
           width="200"
         >
           <template #default="scope">
-            <el-tag :type="scope.row.isDefaultRole? 'primary' : 'success'">
+            <el-tag :type="scope.row.isDefaultRole? '' : 'success'">
               {{scope.row.isDefaultRole?'内置':'自定义'}}
             </el-tag>
           </template>
