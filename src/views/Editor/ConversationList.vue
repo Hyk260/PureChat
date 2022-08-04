@@ -161,6 +161,15 @@ const handleClickMenuItem = (item) => {
       break;
   }
 };
+// 消息免打扰
+const disableRecMsg = () => {};
+// 删除会话
+const removeConv = (conv) => {
+  const Info = Friends.value;
+  Friends.value = Info.filter((t) => {
+    return t.id != conv.id;
+  });
+};
 // 置顶
 const pingConv = (data) => {
   console.log(data);
