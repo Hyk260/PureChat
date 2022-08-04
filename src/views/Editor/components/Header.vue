@@ -14,10 +14,14 @@
 <script setup>
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState } from "@/utils/hooks/useMapper";
+import { GET_MESSAGE_LIST } from "@/store/mutation-types";
+import { useStore } from "vuex";
 
+const { dispatch } = useStore();
 const { Conver } = useState({
   Conver: (state) => state.conversation.currentConversation,
 });
+dispatch(GET_MESSAGE_LIST);
 </script>
 
 <style lang="scss" scoped>

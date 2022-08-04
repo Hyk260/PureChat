@@ -1,4 +1,5 @@
-import { CONVERSATIONTYPE } from "../mutation-types";
+import { CONVERSATIONTYPE, GET_MESSAGE_LIST } from "../mutation-types";
+import { getRoles } from "@/api/roles";
 
 const conversation = {
   // namespaced: true,
@@ -63,7 +64,15 @@ const conversation = {
       }
     },
   },
-  actions: {},
+  actions: {
+    async [GET_MESSAGE_LIST]({ commit, state }) {
+      // 初始化加载默认选中第一条会话
+      if (!state.currentConversation) {
+        let { code, result } = await getRoles();
+        state.currentConversation = result[0];
+      }
+    },
+  },
 };
 
 export default conversation;

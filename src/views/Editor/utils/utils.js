@@ -1,5 +1,5 @@
 export const dragControllerDiv = (node) => {
-  let svgResize = document.getElementById("svgResize"); // 滑块
+  let svgResize = document.getElementById("svgResize"); //滑块
   let svgTop = document.getElementById("svgTop"); //聊天框
   let svgDown = document.getElementById("svgDown"); //编辑器
   let svgBox = document.getElementById("svgBox"); //整个盒子
@@ -8,7 +8,7 @@ export const dragControllerDiv = (node) => {
     let startY = e.clientY; //鼠标按下 起始Y
     svgResize.top = svgResize.offsetTop;
     // 事件会在鼠标指针移到指定的对象时发生。
-    document.onmousemove = function (e) {
+    document.onmousemove = (e) => {
       let endY = e.clientY; //鼠标移动 结束得y
       //移动距离 = 原来高度+（结束y-开始y）
       let moveLen = svgResize.top + (endY - startY);
@@ -27,7 +27,8 @@ export const dragControllerDiv = (node) => {
       document.onmousemove = null;
       document.onmouseup = null;
       svgResize.releaseCapture && svgResize.releaseCapture();
-      node.SizeChange();
+      // 手动更新滚动条高度
+      node.UpdateScrollbar();
     };
     svgResize.setCapture && svgResize.setCapture();
     return false;
@@ -47,7 +48,7 @@ export const Megtype = (item) => {
   return resp;
 };
 
-// 动态组件 
+// 动态组件
 export const loadMsgComponents = (item) => {
   const { message_elem_array } = item || {};
   const { elem_type } = message_elem_array[0];

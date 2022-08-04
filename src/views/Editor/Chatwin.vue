@@ -59,8 +59,6 @@ import {
   ref,
   onMounted,
   onUpdated,
-  reactive,
-  toRefs,
   computed,
   watch,
   nextTick,
@@ -82,24 +80,13 @@ import { squareUrl, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
 import { debounce } from "@/utils/debounce";
 import { getChat, getMsgList } from "@/api/chat";
 
-const scrollbarRef = ref(null);
 const MenuItemInfo = ref([]);
+const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
-const { state, getters, dispatch, commit } = useStore();
-const {
-  currentMessageList,
-  historyMessageList,
-  noMore,
-  userInfo,
-  networkStatus,
-  currentConversation,
-} = useState({
-  currentMessageList: (state) => state.conversation.currentMessageList,
-  historyMessageList: (state) => state.conversation.historyMessageList,
-  currentConversation: (state) => state.conversation.currentConversation,
+const { state, dispatch, commit } = useStore();
+const { currentMessageList, noMore } = useState({
   noMore: (state) => state.conversation.noMore,
-  userInfo: (state) => state.data,
-  networkStatus: (state) => state.conversation.networkStatus,
+  currentMessageList: (state) => state.conversation.currentMessageList,
 });
 
 watch(
@@ -136,7 +123,7 @@ const scrollbar = (e) => {
   }); //防抖处理
 };
 
-const SizeChange = () => {
+const UpdateScrollbar = () => {
   scrollbarRef.value.update();
 };
 
@@ -189,7 +176,7 @@ const ContextMenuEvent = (event, item) => {
   MenuItemInfo.value = item;
 };
 
-defineExpose({ SizeChange });
+defineExpose({ UpdateScrollbar });
 </script>
 
 <style lang="scss" scoped>

@@ -55,18 +55,7 @@
 
 <script setup>
 import "v-contextmenu/dist/themes/default.css";
-import {
-  onBeforeUnmount,
-  ref,
-  shallowRef,
-  onMounted,
-  onUpdated,
-  reactive,
-  toRefs,
-  computed,
-  watch,
-  nextTick,
-} from "vue";
+import { ref, onMounted } from "vue";
 import {
   squareUrl,
   RIGHT_CLICK_CHAT_LIST,
@@ -76,7 +65,7 @@ import { getRoles } from "@/api/roles";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { timeFormat } from "@/utils/timeFormat";
-import { useStore, mapMutations, mapState } from "vuex";
+import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
 
 const contextMenuItemInfo = ref([]);
