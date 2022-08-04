@@ -16,7 +16,7 @@ import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState } from "@/utils/hooks/useMapper";
 
 const { Conver } = useState({
-  Conver: (state) => state.conversation.currentSelectedConversation,
+  Conver: (state) => state.conversation.currentConversation,
 });
 </script>
 

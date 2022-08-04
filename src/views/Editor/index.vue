@@ -3,34 +3,26 @@
   <div class="list-container">
     <!-- 聊天列表 -->
     <div class="message-left">
-      <div class="header-bar">
-        <!-- 搜索 -->
-        <div class="header-search">
-          <el-input
-            placeholder="搜索"
-            v-model="appoint"
-            :prefix-icon="Search"
-            class="text-input"
-            clearable
-          >
-          </el-input>
-        </div>
-      </div>
+      <!-- 搜索框 -->
+      <Search />
       <div :class="['scroll-container', networkStatus ? 'style-net' : '']">
         <!-- 连接已断开 -->
         <networklink :show="networkStatus" />
         <!-- 会话列表 -->
-        <ConversationList/>
+        <ConversationList />
       </div>
     </div>
     <!-- 聊天框 -->
     <div class="message-right" id="svgBox">
-      <Header/>
+      <Header />
       <!-- 聊天窗口 -->
       <section class="message-info-view-content" id="svgTop">
         <el-scrollbar class="scrollbar-content" ref="scrollbarRef">
           <div class="message-view" ref="messageViewRef">
-            <div v-for="(item, index) in currentMessageList" :key="item.message_msg_id">
+            <div
+              v-for="(item, index) in currentMessageList"
+              :key="item.message_msg_id"
+            >
               <!-- 加载更多 -->
               <LoadMore
                 :noMore="noMore"
@@ -87,7 +79,6 @@ import "v-contextmenu/dist/themes/default.css";
 import {
   onBeforeUnmount,
   ref,
-  shallowRef,
   onMounted,
   onUpdated,
   reactive,
@@ -97,7 +88,7 @@ import {
   nextTick,
 } from "vue";
 import { copyFile } from "fs";
-import { useStore, mapMutations, mapState } from "vuex";
+import { useStore } from "vuex";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 
 import { getChat, getMsgList } from "@/api/chat";
@@ -111,19 +102,24 @@ import {
 import { debounce } from "@/utils/debounce";
 import { timeFormat } from "@/utils/timeFormat";
 import { useState } from "@/utils/hooks/useMapper";
-import { dragControllerDiv, loadMsgComponents, Megtype, fncopy } from "./utils/utils";
+import {
+  dragControllerDiv,
+  loadMsgComponents,
+  Megtype,
+  fncopy,
+} from "./utils/utils";
 
 import Editor from "./Editor.vue";
 import Motion from "@/utils/motion";
-import { Search } from "@element-plus/icons-vue";
+
+import Search from "./components/Search.vue";
 import LoadMore from "./components/LoadMore.vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import TextElemItem from "./components/TextElemItem";
-import Header from './components/Header.vue';
+import Header from "./components/Header.vue";
 import networklink from "./components/networklink.vue";
-import ConversationList from './ConversationList.vue';
+import ConversationList from "./ConversationList.vue";
 
-const appoint = ref("");
 const MenuList = ref([]);
 const Friends = ref([]);
 const messageViewRef = ref(null);
@@ -138,12 +134,11 @@ const {
   noMore,
   userInfo,
   networkStatus,
-  currentSelectedConversation,
+  currentConversation,
 } = useState({
   currentMessageList: (state) => state.conversation.currentMessageList,
   historyMessageList: (state) => state.conversation.historyMessageList,
-  currentSelectedConversation: (state) =>
-    state.conversation.currentSelectedConversation,
+  currentConversation: (state) => state.conversation.currentConversation,
   noMore: (state) => state.conversation.noMore,
   userInfo: (state) => state.data,
   networkStatus: (state) => state.conversation.networkStatus,
@@ -181,8 +176,6 @@ const Monitorscrollbar = () => {
   // console.log(scrollbarRef.value.wrap$);
   scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
 };
-
-
 
 const scrollbar = (e) => {
   // 会话是否大于50条 ? 显示loading : 没有更多
@@ -255,7 +248,6 @@ const ClickMenuItem = (item) => {
   }
 };
 
-
 // 消息免打扰
 const disableRecMsg = () => {};
 // 删除会话
@@ -265,11 +257,9 @@ const removeConv = (conv) => {
     return t.id != conv.id;
   });
 };
-
 </script>
 
 <style lang="scss" scoped>
-
 .list-container {
   width: 100%;
   height: 100%;
@@ -302,11 +292,7 @@ const removeConv = (conv) => {
   height: calc(100% - 70px - 206px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.09);
 }
-.header-bar {
-  background: #fff;
-  height: 60px;
-  padding: 14px;
-}
+
 .scroll-container {
   height: calc(100% - 60px);
   position: relative;

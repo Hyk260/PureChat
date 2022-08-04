@@ -104,8 +104,9 @@
       "componentName": "Editor",
       "meta": {
         "title": "编辑器",
-        "icon": "Edit",
-        "modify": true
+        "icon": "ForkSpoon",
+        "auth": [],
+        "modify": false
       },
       "children": []
     },

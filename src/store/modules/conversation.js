@@ -8,7 +8,7 @@ const conversation = {
     needScrollDown: -1, // 是否向下滚动
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表
-    currentSelectedConversation: null, //跳转窗口的属性
+    currentConversation: null, //跳转窗口的属性
   },
   mutations: {
     // 设置历史消息
@@ -53,10 +53,10 @@ const conversation = {
         // 跳转会话
         case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
           if (payload) {
-            if (payload?.id == state.currentSelectedConversation?.id) return;
+            if (payload?.id == state.currentConversation?.id) return;
             state.needScrollDown = 0;
             // state.noMore = false;
-            state.currentSelectedConversation = payload;
+            state.currentConversation = payload;
           }
           break;
         }

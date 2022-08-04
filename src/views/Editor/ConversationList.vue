@@ -81,17 +81,14 @@ import { useState } from "@/utils/hooks/useMapper";
 
 const contextMenuItemInfo = ref([]);
 const Friends = ref([]);
+
 onMounted(() => {
   getRolesList();
 });
 
 const { state, getters, dispatch, commit } = useStore();
-const {
-  Selected,
-} = useState({
-  Selected: (state) =>
-    state.conversation.currentSelectedConversation,
-
+const { Selected } = useState({
+  Selected: (state) => state.conversation.currentConversation,
 });
 
 const getRolesList = async () => {
@@ -136,7 +133,6 @@ const handleContextMenuEvent = (e, item) => {
       }
     });
   }
-
 };
 // 会话点击
 const handleConvListClick = (data) => {

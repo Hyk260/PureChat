@@ -14,12 +14,12 @@
       @keyup.enter="handleEnter"
     />
     <el-tooltip
-        effect="dark"
-        content="按Enter发送消息,Enter+Shift换行"
-        placement="left-start"
-      >
-        <el-button class="btn-send" @click="sendMessage">发送</el-button>
-      </el-tooltip>
+      effect="dark"
+      content="按Enter发送消息,Enter+Shift换行"
+      placement="left-start"
+    >
+      <el-button class="btn-send" @click="sendMessage">发送</el-button>
+    </el-tooltip>
   </div>
 </template>
 
@@ -108,6 +108,7 @@ const customPaste = (editor, event, callback) => {
 const handleEnter = () => {
   sendMessage();
 };
+// 清空输入框
 const clearInputInfo = () => {
   editorRef.value.clear();
 };
@@ -159,7 +160,6 @@ const sendMessage = async () => {
 </script>
 
 <style lang="scss" scoped>
-
 .Editor-style {
   height: 206px;
   .toolbar {
@@ -182,8 +182,8 @@ const sendMessage = async () => {
 }
 
 .btn-send {
-    position: absolute;
-    bottom: 8px;
-    right: 16px;
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
 }
 </style>
