@@ -16,8 +16,8 @@
     <div class="message-right" id="svgBox">
       <Header />
       <!-- 聊天窗口 -->
-      <Chatwin />
-      <div id="svgResize" @mouseover="dragControllerDiv"></div>
+      <Chatwin ref="ChatRef" />
+      <div id="svgResize" @mouseover="dragControllerDiv(ChatRef)"></div>
       <!-- 编辑器 -->
       <Editor />
     </div>
@@ -25,62 +25,37 @@
 </template>
 
 <script setup>
-import {
-  onBeforeUnmount,
-  ref,
-  onMounted,
-  onUpdated,
-  reactive,
-  toRefs,
-  computed,
-  watch,
-  nextTick,
-} from "vue";
+import { ref, reactive, toRefs } from "vue";
 import { copyFile } from "fs";
 import { useStore } from "vuex";
-
 import { getChat, getMsgList } from "@/api/chat";
-
-import { debounce } from "@/utils/debounce";
-import { timeFormat } from "@/utils/timeFormat";
 import { useState } from "@/utils/hooks/useMapper";
-import {
-  dragControllerDiv,
-  loadMsgComponents,
-  Megtype,
-  fncopy,
-} from "./utils/utils";
+import { dragControllerDiv } from "./utils/utils";
 
 import Editor from "./Editor.vue";
-import Motion from "@/utils/motion";
-
 import Search from "./components/Search.vue";
-import FontIcon from "@/layout/FontIcon/indx.vue";
 import Header from "./components/Header.vue";
 import Chatwin from "./Chatwin.vue";
 import networklink from "./components/networklink.vue";
 import ConversationList from "./ConversationList.vue";
 
-const { state, getters, dispatch, commit } = useStore();
+const ChatRef = ref(null);
+const { state, dispatch, commit } = useStore();
 const {
-  currentMessageList,
-  historyMessageList,
   noMore,
   userInfo,
   networkStatus,
+  currentMessageList,
+  historyMessageList,
   currentConversation,
 } = useState({
+  userInfo: (state) => state.data,
+  noMore: (state) => state.conversation.noMore,
+  networkStatus: (state) => state.conversation.networkStatus,
   currentMessageList: (state) => state.conversation.currentMessageList,
   historyMessageList: (state) => state.conversation.historyMessageList,
   currentConversation: (state) => state.conversation.currentConversation,
-  noMore: (state) => state.conversation.noMore,
-  userInfo: (state) => state.data,
-  networkStatus: (state) => state.conversation.networkStatus,
 });
-
-const handleClick = (tab, event) => {
-  console.log(tab, event);
-};
 </script>
 
 <style lang="scss" scoped>
@@ -100,11 +75,6 @@ const handleClick = (tab, event) => {
   height: 100%;
   position: relative;
   overflow: hidden;
-}
-
-.message-info-view-content {
-  height: calc(100% - 70px - 206px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.09);
 }
 
 .scroll-container {

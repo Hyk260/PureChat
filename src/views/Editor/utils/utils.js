@@ -1,4 +1,4 @@
-export const dragControllerDiv = () => {
+export const dragControllerDiv = (node) => {
   let svgResize = document.getElementById("svgResize"); // 滑块
   let svgTop = document.getElementById("svgTop"); //聊天框
   let svgDown = document.getElementById("svgDown"); //编辑器
@@ -27,6 +27,7 @@ export const dragControllerDiv = () => {
       document.onmousemove = null;
       document.onmouseup = null;
       svgResize.releaseCapture && svgResize.releaseCapture();
+      node.SizeChange();
     };
     svgResize.setCapture && svgResize.setCapture();
     return false;

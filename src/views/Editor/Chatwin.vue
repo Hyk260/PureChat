@@ -1,3 +1,4 @@
+<!-- eslint-disable no-undef -->
 <template>
   <section class="message-info-view-content" id="svgTop">
     <el-scrollbar class="scrollbar-content" ref="scrollbarRef">
@@ -65,6 +66,7 @@ import {
   nextTick,
 } from "vue";
 import "v-contextmenu/dist/themes/default.css";
+import { timeFormat } from "@/utils/timeFormat";
 import TextElemItem from "./components/TextElemItem";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { useStore } from "vuex";
@@ -134,6 +136,10 @@ const scrollbar = (e) => {
   }); //防抖处理
 };
 
+const SizeChange = () => {
+  scrollbarRef.value.update();
+};
+
 const Monitorscrollbar = () => {
   // console.log(scrollbarRef.value.wrap$);
   scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
@@ -182,24 +188,14 @@ const getChatList = async () => {
 const ContextMenuEvent = (event, item) => {
   MenuItemInfo.value = item;
 };
+
+defineExpose({ SizeChange });
 </script>
 
 <style lang="scss" scoped>
 .message-info-view-content {
   height: calc(100% - 70px - 206px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.09);
-}
-
-.scroll-container {
-  height: calc(100% - 60px);
-  position: relative;
-  ::v-deep .is-active {
-    background: #f0f2f5;
-    // background: #00000008;
-  }
-  ::v-deep .is-actives {
-    background: rgba(0, 0, 0, 0.03);
-  }
 }
 
 .scrollbar-item {
