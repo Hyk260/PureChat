@@ -7,7 +7,8 @@ import { onMounted } from "vue";
 import { tree } from "@/utils/ToTree";
 import { useRouter } from "vue-router";
 import storage from "storejs";
-
+import { useStore } from "vuex";
+const { state, dispatch, commit } = useStore();
 const table = storage.get("userdata");
 
 onMounted(() => {
@@ -16,7 +17,27 @@ onMounted(() => {
   table.Routingtable.forEach((item) => {
     useRouter().addRoute(item);
   });
+
+  window.onresize = () =>{
+    let dom = document.getElementsByClassName("content")[0]
+    console.log(dom.offsetWidth)
+    let setWidth = dom.offsetWidth
+    if(setWidth <= 760){
+      // commit('setCollapse')
+    }else if(setWidth <= 990){
+
+    }else if(setWidth > 990){
+
+    }
+  }
 });
+
+  /** width app-wrapper类容器宽度
+   * 0 < width <= 760 隐藏侧边栏
+   * 760 < width <= 990 折叠侧边栏
+   * width > 990 展开侧边栏
+   */
+  
 </script>
 
 <style lang="scss">

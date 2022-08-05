@@ -171,12 +171,13 @@ import { useRoute, useRouter } from 'vue-router'
 import storage from 'storejs'
 import FontIcon from '@/layout/FontIcon/indx.vue'
 import screenfull from '../components/screenfull.vue'
+import { useState } from "@/utils/hooks/useMapper";
 
 const router = useRouter()
 const route = useRoute()
-const store = useStore()
+const { state, dispatch, commit } = useStore();
 const drawer = ref(false)
-const state = reactive({
+const states = reactive({
   circleUrl:
     'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
   squareUrl:
@@ -184,16 +185,13 @@ const state = reactive({
   sizeList: ['small', '', 'large'],
   picture: require('../../assets/images/picture.jpg'),
 })
-const { circleUrl, squareUrl, sizeList, picture } = toRefs(state)
+const { circleUrl, squareUrl, sizeList, picture } = toRefs(states)
 
-const tags = computed(() => {
-  return store.state.data.elTag
-})
 const sidebar = computed(() => {
-  return !store.state.settings.sidebar
+  return !state.settings.sidebar
 })
 const logoVal = computed(() => {
-  return !store.state.settings.logoIcon
+  return !state.settings.logoIcon
 })
 
 watch(
@@ -217,7 +215,7 @@ watch(
         title: Tag,
         path: router.currentRoute.value.path,
       })
-      store.commit('updateData', {
+      commit('updateData', {
         key: 'elTag',
         value: tags.value,
       })
@@ -225,9 +223,14 @@ watch(
   }
 )
 
-const isActive = computed(() => {
-  return store.state.data.isCollapse
-})
+const {
+  isActive,
+  tags,
+} = useState({
+  isActive: (state) => state.data.isCollapse,
+  tags: (state) => state.data.elTag,
+});
+
 
 const CurTitle = computed(() => {
   return router.currentRoute.value.meta?.title
@@ -239,20 +242,20 @@ const fnStyle = (off) => {
 
 const handleClose = (tag) => {
   let data = tags.value.splice(tags.value.indexOf(tag), 1)
-  store.commit('updateData', { elTag: data })
+  commit('updateData', { elTag: data })
 }
 const topersonal = () => {
   router.push({ name: 'personal' })
 }
 
 const LogoChange = (val) => {
-  store.commit('updateSettings', {
+  commit('updateSettings', {
     key: 'logoIcon',
     value: !val,
   })
 }
 const greyChange = (val) => {
-  store.commit('updateSettings', {
+  commit('updateSettings', {
     key: 'sidebar',
     value: !val,
   })
@@ -265,7 +268,7 @@ const Logout = () => {
     type: 'warning',
   })
     .then(() => {
-      store.dispatch('logout')
+      dispatch('logout')
     })
     .catch(() => {})
 }
@@ -292,7 +295,7 @@ const closing = (tag) => {
       tags.value.splice(0, tags.value.length)
       break
   }
-  store.commit('updateData', {
+  commit('updateData', {
     key: 'elTag',
     value: tags.value,
   })
@@ -304,7 +307,7 @@ const tagClick = (path) => {
 
 // 侧边栏 展开 折叠
 const toggleClick = () => {
-  store.commit('setCollapse')
+  commit('setCollapse')
 }
 </script>
 <style module="classes" scoped>
