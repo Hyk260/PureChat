@@ -33,8 +33,9 @@ import {
 import { useRoute, useRouter } from "vue-router";
 import storage from "storejs";
 import store from "@/store";
-import Header from "./Header.vue";
+import { useState } from "@/utils/hooks/useMapper";
 
+import Header from "./Header.vue";
 import error from "@/views/notfound/index.vue";
 import editor from "@/views/Editor/index.vue";
 import welcome from "@/views/welcome/index.vue";
@@ -54,6 +55,11 @@ const page = reactive({
   type: "",
 });
 
+const { isActive, sidebar } = useState({
+  isActive: (state) => state.data.isCollapse,
+  sidebar: (state) => state.settings.sidebar,
+});
+
 watch(
   () => route.name,
   (val) => {
@@ -64,14 +70,6 @@ watch(
     // deep:true // 深度监听
   }
 );
-
-const isActive = computed(() => {
-  return store.state.data.isCollapse;
-});
-
-const sidebar = computed(() => {
-  return store.state.settings.sidebar;
-});
 
 const fnStyle = (off) => {
   return `margin-left:${off ? "64px" : "200px"}`;

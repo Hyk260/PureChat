@@ -5,10 +5,18 @@ import views from "@/utils/assembly.js";
 import initLocalStorage from "@/store/data/initLocalStorage";
 
 const user = {
-  state: {},
+  state: {
+    // 前端生成的验证码（按实际需求替换）
+    verifyCode: "",
+  },
   getters: {},
   mutations: {},
-  actions: {},
+  actions: {
+    // 设置验证码
+    SET_VERIFYCODE(state, verifyCode) {
+      state.verifyCode = verifyCode;
+    },
+  },
 };
 
 export default user;

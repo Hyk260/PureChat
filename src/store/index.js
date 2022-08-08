@@ -32,16 +32,14 @@ console.log(modules, "modules");
 const store = createStore({
   modules,
   state: {
-    // 前端生成的验证码（按实际需求替换）
-    verifyCode: "",
     views,
     data,
     settings,
   },
   mutations: {
     // 折叠侧边栏
-    setCollapse(state) {
-      state.data.isCollapse = !state.data.isCollapse;
+    setCollapse(state, action) {
+      state.data.isCollapse = action;
     },
     // 更新用户设置
     updateSettings(state, { key, value }) {
@@ -71,20 +69,14 @@ const store = createStore({
       commit("updateData", { key: "Routingtable", value: root.children });
     },
     preservation() {},
-    // 设置验证码
-    SET_VERIFYCODE(state, verifyCode) {
-      state.verifyCode = verifyCode;
-    },
+    // 退出登录
     logout() {
       logout();
       router.push("/login");
       storage.remove("userdata");
     },
   },
-  getters: {
-    // userInfo: state => state.userInfo,
-    // allRoutes: state => state.allRoutes,
-  },
+  getters: {},
 });
 console.log(store, "vuex数据");
 export default store;

@@ -1,9 +1,9 @@
 <template>
   <div
-    :class="['sidebar-container', showLogo ? 'has-logo' : '']"
+    :class="['sidebar-container', logoVal ? 'has-logo' : '']"
     v-show="sidebar"
   >
-    <Logo class="logo-icon" v-show="showLogo" />
+    <Logo class="logo-icon" v-show="logoVal" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         class="el-menu-vertical"
@@ -22,27 +22,21 @@
 </template>
 
 <script setup>
+import storage from "storejs";
+import { useStore } from "vuex";
 import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useStore } from "vuex";
-import storage from "storejs";
+import { useState } from "@/utils/hooks/useMapper";
 import Logo from "../components/Logo.vue";
 
 const route = useRoute();
 const store = useStore();
 
-const isCollapse = computed(() => {
-  return store.state.data.isCollapse;
-});
-// 侧边栏数据
-const routing = computed(() => {
-  return store.state.data.Routingtable;
-});
-const sidebar = computed(() => {
-  return store.state.settings.sidebar;
-});
-const showLogo = computed(() => {
-  return store.state.settings.logoIcon;
+const { isCollapse, sidebar, routing, logoVal } = useState({
+  isCollapse: (state) => state.data.isCollapse,
+  sidebar: (state) => state.settings.sidebar,
+  logoVal: (state) => state.settings.logoIcon,
+  routing: (state) => state.data.Routingtable,
 });
 
 const handleOpen = (key, keyPath) => {
