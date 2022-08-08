@@ -165,18 +165,6 @@
         </span>
       </template>
     </el-dialog>
-
-    <!-- 右键菜单 -->
-    <ContextMenu ref="ProfileMenu" v-if="false">
-      <div class="item">
-        <FontIcon iconName="apple" />
-        <span>删除</span>
-      </div>
-      <div class="item">
-        <FontIcon iconName="apple" />
-        <span>新建子级菜单</span>
-      </div>
-    </ContextMenu>
   </div>
 </template>
 

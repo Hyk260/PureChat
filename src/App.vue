@@ -20,7 +20,7 @@ onMounted(() => {
 
   window.onresize = () => {
     let dom = document.getElementsByClassName("content")[0];
-    console.log(dom.offsetWidth);
+    // console.log(dom.offsetWidth);
     let setWidth = dom.offsetWidth;
     // if (setWidth <= 760) {
     //   commit("updateSettings", {

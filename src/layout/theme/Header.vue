@@ -5,9 +5,8 @@
   >
     <div class="navbar">
       <div
-        v-show="!sidebar"
         :class="classes.container"
-        :title="!isActive ? '点击折叠' : '点击展开'"
+        :title="isActive ? '点击展开' : '点击折叠'"
         @click="toggleClick"
       >
         <FontIcon
@@ -16,10 +15,10 @@
         />
       </div>
       <!-- 面包屑 :separator-icon="ArrowRight" > icon-->
-      <el-breadcrumb v-show="!sidebar">
+      <el-breadcrumb>
         <el-breadcrumb-item
           :key="value.title"
-          v-for="value in route.matched.map((item) => item.meta)"
+          v-for="value in route.matched.map((t) => t.meta)"
         >
           {{ value.title }}
         </el-breadcrumb-item>

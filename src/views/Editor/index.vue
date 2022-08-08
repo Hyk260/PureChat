@@ -64,7 +64,6 @@ const {
   height: 100%;
   display: flex;
 }
-
 .message-left {
   width: 280px;
 }

@@ -6,4 +6,3 @@ export const user = reactive({
   password: "123456",
   verifyCode: "",
 });
-

@@ -76,6 +76,7 @@
                   style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"
                 />
               </svg>
+              <FontIcon iconName="Eleme" class="circular" v-if="false" />
             </div>
           </template>
           登录
@@ -111,13 +112,14 @@ import { successMessage, warnMessage } from "@/utils/message";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { user } from "./utils/validation.js";
-const store = useStore();
-const router = useRouter();
+import FontIcon from "@/layout/FontIcon/indx.vue";
 
+const router = useRouter();
 const showload = ref(false);
 const keep = ref(false);
 const ruleFormRef = ref();
 const imgCode = ref("");
+const { dispatch, commit } = useStore();
 
 // 表单校验
 const rules = reactive({
@@ -140,7 +142,7 @@ const rules = reactive({
 });
 
 watch(imgCode, (value) => {
-  store.dispatch("SET_VERIFYCODE", value);
+  dispatch("SET_VERIFYCODE", value);
 });
 // const myKeydown = async ()=>{
 
@@ -168,9 +170,9 @@ const login = async () => {
   if (code === 200) {
     let menu = await getMenu();
     // console.log(menu,"菜单列表")
-    store.commit("updateData", { key: "user", value: user });
+    commit("updateData", { key: "user", value: user });
     // Menulist
-    await store.dispatch("updateRoute", menu);
+    await dispatch("updateRoute", menu);
     // console.log(router.options.routes)
     setTimeout(() => {
       ElNotification({
