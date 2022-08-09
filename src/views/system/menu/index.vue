@@ -103,7 +103,6 @@
         </div>
       </el-main>
     </el-container>
-
     <!-- 弹框 -->
     <el-dialog v-model="dialogFormVisible" :title="'添加菜单'">
       <el-form
@@ -176,6 +175,7 @@ import * as ElIcons from "@element-plus/icons-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { updateMenu, AddMenu, getMenu, DeleteMenu } from "@/api/menu";
 import { Message, errorMessage, warnMessage } from "@/utils/message";
+import WrapDialog from '@/views/components/WrapDialog/index.vue';
 const store = useStore();
 
 const defaultProps = {
@@ -190,8 +190,8 @@ const ruleFormRef = ref();
 const labelPosition = ref("right");
 const filterText = ref("");
 const treeRef = ref(null);
-const ProfileMenu = ref(null);
 const dialogFormVisible = ref(false);
+const dialogRef = ref(null);
 
 const state = reactive({
   treeData: null,
@@ -251,7 +251,6 @@ const determine = (formEl) => {
   });
 };
 const nodeClick = (data) => {
-  // const { id } = data
   console.log(data);
 };
 
@@ -286,6 +285,7 @@ const delMenu = async () => {
 };
 // 新建菜单
 const newlyAddeMenu = async () => {
+  // const { icon, title, path } = data
   // 根目录ID
   let RootDir = "d17d701b-6257-40bd-a6c3-a4672d4823d4";
   // 默认根目录新建 || 自选目录
@@ -294,18 +294,19 @@ const newlyAddeMenu = async () => {
     RootDir = formLabelAlign.ID;
   }
   console.log(RootDir);
-  const data = await AddMenu({
+  const datas = await AddMenu({
     parentId: RootDir,
     path: ruleForm.path,
     title: ruleForm.title,
     icon: ruleForm.icon,
     componentName: "System",
   });
-  data && update(data);
+  datas && update(datas);
 };
 // 添加菜单按钮
 const addMenuBtn = () => {
-  dialogFormVisible.value = true;
+  dialogFormVisible.value = true
+  // dialogRef.value.dialogFormVisible = true
 };
 
 const filterNode = (value, data) => {
@@ -335,7 +336,7 @@ function checkBox(node, key) {
 }
 
 function showUserProfileMenu(e) {
-  ProfileMenu.value.openMenu(e);
+
 }
 
 // 保存修改

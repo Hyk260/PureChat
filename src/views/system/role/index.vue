@@ -1,6 +1,5 @@
 <template>
   <div class="content-role content-wrap">
-
     <div class="Role-top">
       <el-form
         label-width="100px"
@@ -24,13 +23,8 @@
         </el-form-item>
       </el-form>
     </div>
-
     <div class="role-header">
-
       <header>
-        <!-- <p>
-          角色列表
-        </p> -->
         <div>
           <el-button
             type="primary"
@@ -52,13 +46,7 @@
         :data="tableData"
         @selection-change="handleSelectionChange"
       >
-
         <el-table-column type="selection" />
-        <!-- <el-table-column
-          prop="id"
-          label="ID"
-          width="200"
-        /> -->
         <el-table-column
           prop="roleName"
           label="角色名称"
@@ -69,7 +57,6 @@
           label="说明"
           width="200"
         />
-
         <el-table-column
           prop="createTime"
           label="创建时间"
@@ -79,7 +66,6 @@
             {{formatTime(scope.row.createTime)}}
           </template>
         </el-table-column>
-
         <el-table-column
           prop="updateTime"
           label="更新时间"
@@ -90,7 +76,6 @@
             {{formatTime(scope.row.updateTime)}}
           </template>
         </el-table-column>
-
         <el-table-column
           prop="isDefaultRole"
           label="角色类型"
@@ -102,7 +87,6 @@
             </el-tag>
           </template>
         </el-table-column>
-
         <el-table-column
           fixed="right"
           label="操作"
@@ -120,7 +104,6 @@
             >修改</el-button>
           </template>
         </el-table-column>
-
       </el-table>
       <!-- 分页 -->
       <el-pagination
@@ -135,14 +118,13 @@
         class="mt-4"
       >
       </el-pagination>
-
     </div>
+
     <!-- 弹框 -->
     <el-dialog
       v-model="dialogFormVisible"
       :title="infoText? '添加角色':'编辑角色'"
     >
-
       <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -178,12 +160,6 @@
             />
           </el-select>
         </el-form-item>
-        <!-- <el-form-item
-          label="Age"
-          prop="age"
-        >
-          <el-input v-model.number="ruleForm.age" />
-        </el-form-item> -->
       </el-form>
 
       <template #footer>
@@ -214,7 +190,7 @@ import { reactive, ref } from 'vue'
 import { successMessage } from '@/utils/message'
 import { warnMessage } from '@/utils/message'
 import { getRoles, addRoles, deleteRoles, updateRoles } from '@/api/roles'
-
+import WrapDialog from '@/views/components/WrapDialog/index.vue'
 import { formatTime } from '@/utils/filter'
 
 const ruleFormRef = ref()
@@ -254,6 +230,7 @@ function handleSelectionChange(val) {
 function handleSizeChange(val) {
   console.log(val)
 }
+
 function handlePageChange(val) {
   console.log(val)
 }
@@ -410,7 +387,7 @@ const resetForm = (formEl) => {
 }
 </script>
 <style scoped>
-.el-button--text {
+/* .el-button--text {
   margin-right: 15px;
 }
 
@@ -424,12 +401,12 @@ const resetForm = (formEl) => {
 
 .dialog-footer button:first-child {
   margin-right: 10px;
-}
+} */
 </style>
 <style lang="scss" scoped>
 .content-role {
-  
 }
+
 .Role-top {
   background: var(--color-body-bg);
 
