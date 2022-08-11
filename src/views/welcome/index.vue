@@ -6,14 +6,31 @@
         <span>{{ greetings }}</span>
       </div>
     </el-card>
+    <el-row :gutter="24" style="margin: 20px">
+      <el-col>
+        <el-card>
+          <template #header>
+            <span style="font-size: 16px; font-weight: 500">
+              GitHub饼图信息
+            </span>
+          </template>
+          <el-skeleton animated :rows="7" :loading="loading">
+            <template #default>
+              <div></div>
+            </template>
+          </el-skeleton>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import avatars from "@/assets/images/picture.jpg";
-
+let loading = ref(true);
 const date = new Date();
+
 let greetings = computed(() => {
   if (date.getHours() >= 0 && date.getHours() < 12) {
     return "上午阳光明媚，祝你薪水翻倍🌞！";

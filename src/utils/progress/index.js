@@ -12,7 +12,7 @@ NProgress.configure({
   // 自动递增间隔
   trickleSpeed: 200,
   // 初始化时的最小百分比
-  minimum: 0.3
+  minimum: 0.3,
 });
 
 export default NProgress;
