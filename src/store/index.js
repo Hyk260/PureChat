@@ -7,11 +7,11 @@ import { ToTree } from "@/utils/ToTree";
 import views from "@/utils/assembly.js";
 import initLocalStorage from "./data/initLocalStorage";
 import { changeAppearance } from "@/utils/common";
+import saveToLocalStorage from "./plugins/localStorage"; // 自定义插件
 
+const plugins = [saveToLocalStorage];
 const data = storage.get("userdata") || initLocalStorage.data; // 账号信息
-const settings = storage.get("setup") || initLocalStorage.settings; //
-// import { useRouter } from "vue-router";
-// const router = useRouter();
+const settings = storage.get("setup") || initLocalStorage.settings; // 全局设置
 
 /**
  * 不需要手动导入应用模块
@@ -74,6 +74,8 @@ const store = createStore({
     },
   },
   getters: {},
+  // 自定义属性
+  plugins,
 });
 /**
  * 刷新页面保存当前主题色
