@@ -1,6 +1,6 @@
 export default {
   common: {
-    play: 'PLAY',
-    songs: 'Songs',
+    play: "PLAY",
+    songs: "Songs",
   },
-}
+};
