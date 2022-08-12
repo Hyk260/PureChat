@@ -10,6 +10,8 @@ export function changeAppearance(appearance = "auto") {
   document.body.setAttribute("data-theme", appearance);
   // let dom = document.querySelector('meta[name="theme-color"]');
   // dom?.setAttribute("content", appearance === "dark" ? "#222" : "#fff");
+  let text = appearance === "dark" ? "黑色" : "白色";
+  console.log(appearance, `${text}-主题`);
 }
 
 /**
