@@ -6,7 +6,8 @@
         <span>{{ greetings }}</span>
       </div>
     </el-card>
-    <el-row :gutter="24" style="margin: 20px">
+
+    <el-row :gutter="16" style="margin: 20px">
       <el-col>
         <el-card>
           <template #header>

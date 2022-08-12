@@ -1,29 +1,29 @@
 <template>
   <div>
-    <template v-for="item in props.tree" :key="item.id">
+    <template v-for="item in tree" :key="item.id">
       <el-menu-item
         :class="{ 'active-item': $route.name === item.name }"
         v-if="fn(item)"
         :index="item.url"
       >
-        <font-icon v-if="item.meta.icon" :iconName="item.meta.icon" />
+        <font-icon :iconName="item.meta.icon" />
         <template #title>
           <span>{{ item.meta.title }}</span>
         </template>
       </el-menu-item>
       <el-sub-menu v-else :index="item.url">
         <template #title>
-          <font-icon v-if="item.meta.icon" :iconName="item.meta.icon" />
+          <font-icon :iconName="item.meta.icon" />
           <span>{{ item.meta.title }}</span>
         </template>
-        <SideItem :tree="item.children" :hidden="false" />
+        <SideItem :tree="item.children"/>
       </el-sub-menu>
     </template>
   </div>
 </template>
 
 <script setup>
-import { computed, defineProps } from "vue";
+import { computed, defineProps, toRefs } from "vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useStore } from "vuex";
 
@@ -39,12 +39,10 @@ const props = defineProps({
     default: true,
   },
 });
+const { tree } = toRefs(props)
 
 const isCollapse = computed(() => {
   return store.state.data.isCollapse;
-});
-const disappear = computed(() => {
-  return props.hidden;
 });
 
 const fn = (item) => {

@@ -4,7 +4,7 @@
     @click="toggle"
     :title="isFullscreen ? '退出全屏' : '全屏'"
   >
-    <!-- <SvgIcon icon-class="Fullscreen" /> -->
+    <!-- <svg-icon icon-class="Fullscreen" /> -->
     <FontIcon iconName="FullScreen" />
   </div>
 </template>
