@@ -56,7 +56,7 @@ const page = reactive({
 });
 
 const { isActive, sidebar } = useState({
-  isActive: (state) => state.data.isCollapse,
+  isActive: (state) => state.settings.isCollapse,
   sidebar: (state) => state.settings.sidebar,
 });
 

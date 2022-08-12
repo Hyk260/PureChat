@@ -201,10 +201,10 @@ watch(
 );
 
 const { isActive, tags, sidebar, logoVal } = useState({
-  isActive: (state) => state.data.isCollapse,
   tags: (state) => state.data.elTag,
   sidebar: (state) => !state.settings.sidebar,
   logoVal: (state) => !state.settings.logoIcon,
+  isActive: (state) => state.settings.isCollapse,
 });
 
 const CurTitle = computed(() => {
@@ -282,7 +282,10 @@ const tagClick = (path) => {
 
 // 侧边栏 展开 折叠
 const toggleClick = () => {
-  commit("setCollapse", !isActive.value);
+  commit("updateSettings", {
+    key: "isCollapse",
+    value: !isActive.value,
+  });
 };
 </script>
 <style module="classes" scoped>

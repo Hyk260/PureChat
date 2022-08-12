@@ -6,6 +6,7 @@ import router from "@/router";
 import { ToTree } from "@/utils/ToTree";
 import views from "@/utils/assembly.js";
 import initLocalStorage from "./data/initLocalStorage";
+import { changeAppearance } from "@/utils/common";
 
 const data = storage.get("userdata") || initLocalStorage.data; // 账号信息
 const settings = storage.get("setup") || initLocalStorage.settings; //
@@ -32,18 +33,14 @@ console.log(modules, "modules");
 const store = createStore({
   modules,
   state: {
-    views,
     data,
     settings,
   },
   mutations: {
-    // 折叠侧边栏
-    setCollapse(state, action) {
-      state.data.isCollapse = action;
-    },
     // 更新用户设置
     updateSettings(state, { key, value }) {
       state.settings[key] = value;
+      storage.set("setup", state.settings);
     },
     // 更新用户信息
     updateData(state, { key, value }) {
@@ -78,5 +75,10 @@ const store = createStore({
   },
   getters: {},
 });
+/**
+ * 刷新页面保存当前主题色
+ */
+changeAppearance(store.state.settings.appearance);
+
 console.log(store, "vuex数据");
 export default store;
