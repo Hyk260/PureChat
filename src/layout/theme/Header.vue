@@ -140,6 +140,17 @@
           @change="LogoChange"
         />
       </li>
+      <li>
+        <span>主题颜色</span>
+        <el-select v-model="themecolor" class="m-2" placeholder="主题颜色">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </li>
     </ul>
   </el-drawer>
 </template>
@@ -161,11 +172,26 @@ import storage from "storejs";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import screenfull from "../components/screenfull.vue";
 import { useState } from "@/utils/hooks/useMapper";
-
+import { changeAppearance } from "@/utils/common";
+const options = [
+  {
+    value: "auto",
+    label: "自动",
+  },
+  {
+    value: "light",
+    label: "浅色",
+  },
+  {
+    value: "dark",
+    label: "深色",
+  },
+];
 const { state, dispatch, commit } = useStore();
 const router = useRouter();
 const route = useRoute();
 const drawer = ref(false);
+const value = ref("");
 const states = reactive({
   picture: require("../../assets/images/picture.jpg"),
 });
@@ -200,15 +226,25 @@ watch(
   }
 );
 
-const { isActive, tags, sidebar, logoVal } = useState({
+const { isActive, tags, sidebar, logoVal, appearance } = useState({
   tags: (state) => state.data.elTag,
   sidebar: (state) => !state.settings.sidebar,
   logoVal: (state) => !state.settings.logoIcon,
   isActive: (state) => state.settings.isCollapse,
+  appearance: (state) => state.settings.appearance,
 });
 
 const CurTitle = computed(() => {
   return router.currentRoute.value.meta?.title;
+});
+
+const themecolor = computed({
+  get() {
+    return appearance.value;
+  },
+  set(val) {
+    ThemeColorChange(val);
+  },
 });
 
 const fnStyle = (off) => {
@@ -234,6 +270,13 @@ const greyChange = (val) => {
     key: "sidebar",
     value: !val,
   });
+};
+const ThemeColorChange = (val) => {
+  commit("updateSettings", {
+    key: "appearance",
+    value: val,
+  });
+  changeAppearance(val);
 };
 // 退出登录
 const Logout = () => {

@@ -1,3 +1,5 @@
+import store from "vuex";
+
 /** 切换主题风格
  * @param {string}  appearance light || dark
  */
@@ -8,8 +10,8 @@ export function changeAppearance(appearance = "auto") {
       : "light";
   }
   document.body.setAttribute("data-theme", appearance);
-  // let dom = document.querySelector('meta[name="theme-color"]');
-  // dom?.setAttribute("content", appearance === "dark" ? "#222" : "#fff");
+  let dom = document.querySelector('meta[name="theme-color"]');
+  dom?.setAttribute("content", appearance === "dark" ? "#222" : "#fff");
   let text = appearance === "dark" ? "黑色" : "白色";
   console.log(appearance, `${text}-主题`);
 }
@@ -25,10 +27,11 @@ export function bytesToSize(bytes) {
   const megaBytes = marker * marker;
   const gigaBytes = marker * marker * marker;
 
-  const lang = store.state.settings.lang;
-
-  if (bytes < kiloBytes) return bytes + (lang === "en" ? " Bytes" : "字节");
-  else if (bytes < megaBytes) {
+  // const lang = store.state.settings.lang;
+  const lang = "zh";
+  if (bytes < kiloBytes) {
+    return bytes + (lang === "en" ? " Bytes" : "字节");
+  } else if (bytes < megaBytes) {
     return (bytes / kiloBytes).toFixed(decimal) + " KB";
   } else if (bytes < gigaBytes) {
     return (bytes / megaBytes).toFixed(decimal) + " MB";
