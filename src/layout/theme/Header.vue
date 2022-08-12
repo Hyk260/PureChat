@@ -138,6 +138,8 @@
           active-text="开"
           inactive-text="关"
           @change="LogoChange"
+          :active-icon="Check"
+          :inactive-icon="Close"
         />
       </li>
       <li>
@@ -160,6 +162,7 @@ import {
   Upload,
   Minus,
   Close,
+  Check,
   Plus,
   ArrowRight,
 } from "@element-plus/icons-vue";
@@ -173,6 +176,7 @@ import FontIcon from "@/layout/FontIcon/indx.vue";
 import screenfull from "../components/screenfull.vue";
 import { useState } from "@/utils/hooks/useMapper";
 import { changeAppearance } from "@/utils/common";
+
 const options = [
   {
     value: "auto",
@@ -364,7 +368,8 @@ const toggleClick = () => {
   top: 0;
   right: 0;
   transition: width 0.1s;
-  background: var(--color-body-bg);
+  background: #fff;
+  // background: var(--color-body-bg);
 }
 .cursor-w {
   cursor: w-resize;
