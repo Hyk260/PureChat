@@ -22,16 +22,6 @@ onMounted(() => {
     let dom = document.getElementsByClassName("content")[0];
     // console.log(dom.offsetWidth);
     let setWidth = dom.offsetWidth;
-    // if (setWidth <= 760) {
-    //   commit("updateSettings", {
-    //     key: "sidebar",
-    //     value: false,
-    //   });
-    // } else if (setWidth <= 990) {
-    //   commit("setCollapse", false);
-    // } else if (setWidth > 990) {
-    //   commit("setCollapse", true);
-    // }
     if (setWidth <= 760) {
       commit("updateSettings", {
         key: "sidebar",
@@ -42,11 +32,6 @@ onMounted(() => {
         key: "sidebar",
         value: true,
       });
-      // if (setWidth < 990) {
-      //   commit("setCollapse", false);
-      // } else if (setWidth > 990) {
-      //   commit("setCollapse", true);
-      // }
     }
   };
 });

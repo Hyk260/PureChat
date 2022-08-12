@@ -26,7 +26,7 @@ export const useImageVerify = (width = 120, height = 40) => {
     domRef,
     imgCode,
     setImgCode,
-    getImgCode
+    getImgCode,
   };
 };
 
