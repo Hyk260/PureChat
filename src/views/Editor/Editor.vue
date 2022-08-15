@@ -86,12 +86,24 @@ const customPaste = (editor, event, callback) => {
   console.log(text);
   // console.log(rtf);
 
-  if (event.clipboardData && event.clipboardData.items) {
+  if (event?.clipboardData?.items) {
     const items = event.clipboardData.items;
     console.log(items);
-    // for (const { index, key } of items) {
-    //   console.log(key);
-    // }
+    for (const key of items) {
+      console.log(key);
+      let { kind, type } = key;
+      console.log(kind, type)
+      if(kind === 'file'){
+        if(type.match('^image/')){
+          parsepicture()
+        }else{
+          parsefile(items)
+        }
+      }
+      if(kind === 'string'){
+        parsetext()
+      }
+    }
   }
 
   // 自定义插入内容
@@ -104,6 +116,18 @@ const customPaste = (editor, event, callback) => {
   // 返回 true ，继续默认的粘贴行为
   // callback(true)
 };
+
+const parsefile = (item) => {
+  let pasteFile = item?.getAsFile()
+  console.log(pasteFile)
+}
+const parsetext = () => {
+
+}
+const parsepicture = () => {
+
+}
+
 // 回车
 const handleEnter = () => {
   sendMessage();
