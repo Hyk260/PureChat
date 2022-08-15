@@ -15,8 +15,10 @@
 </p>
 
 ### 🎉 特性
+前端 vue3 + Element-Plus开发
+后端 Node + Express + lowdb
 
-- 📦️ 后端路由动态渲染
+- 📦️ 后端路由动态渲染 
 - 📃 RBAC 模型 + JWT 权限控制
 - ☁️ 聊天工作室 开发中...
 - 🔴 拼图游戏
@@ -79,7 +81,7 @@ yarn build
 │   ├── components             // 全局公用组件
 │   ├── locales                // 国际化语言
 │   ├── mock                   // mock服务
-│   ├── plugins				         // 插件
+│   ├── plugins				   // 插件
 │   ├── router                 // 路由
 │   ├── store                  // 全局 store管理
 │   ├── styles                 // 全局样式
