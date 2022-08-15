@@ -3,9 +3,10 @@ const localStorage = {
   settings: {
     lang: "zh-CN", // 默认语言
     sidebar: true, // 侧边栏隐藏
-    logoIcon: true, // login
-    appearance: "auto", // 主题
+    logoIcon: true, // login图标
+    appearance: "auto", // 主题颜色
     isCollapse: false, // 侧边栏是否折叠
+    setswitch: false, // 设置按钮开关
   },
   // 用户信息
   data: {

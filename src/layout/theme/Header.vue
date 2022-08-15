@@ -49,7 +49,7 @@
           </el-dropdown>
         </div>
         <!-- 设置 -->
-        <div class="setup" @click="drawer = true">
+        <div class="setup" @click="opensetup(setswitch)">
           <FontIcon iconName="setting" />
         </div>
       </div>
@@ -115,86 +115,22 @@
       </div>
     </div>
   </div>
-
-  <el-drawer v-model="drawer" title="I am the title" :with-header="false">
-    <ul class="setting">
-      <li>
-        <span>关闭侧边栏</span>
-        <el-switch
-          v-model="sidebar"
-          inline-prompt
-          inactive-color="#a6a6a6"
-          active-text="开"
-          inactive-text="关"
-          @change="greyChange"
-        />
-      </li>
-      <li>
-        <span>侧边栏Logo</span>
-        <el-switch
-          v-model="logoVal"
-          inline-prompt
-          inactive-color="#a6a6a6"
-          active-text="开"
-          inactive-text="关"
-          @change="LogoChange"
-          :active-icon="Check"
-          :inactive-icon="Close"
-        />
-      </li>
-      <li>
-        <span>主题颜色</span>
-        <el-select v-model="themecolor" class="m-2" placeholder="主题颜色">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </li>
-    </ul>
-  </el-drawer>
 </template>
 
 <script setup>
-import {
-  Upload,
-  Minus,
-  Close,
-  Check,
-  Plus,
-  ArrowRight,
-} from "@element-plus/icons-vue";
+import { Upload, Minus, Plus, ArrowRight } from "@element-plus/icons-vue";
 import { ElMessageBox } from "element-plus";
 import { reactive } from "@vue/reactivity";
 import { useStore } from "vuex";
 import { computed, ref, watch, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import storage from "storejs";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import screenfull from "../components/screenfull.vue";
 import { useState } from "@/utils/hooks/useMapper";
-import { changeAppearance } from "@/utils/common";
 
-const options = [
-  {
-    value: "auto",
-    label: "自动",
-  },
-  {
-    value: "light",
-    label: "浅色",
-  },
-  {
-    value: "dark",
-    label: "深色",
-  },
-];
 const { state, dispatch, commit } = useStore();
 const router = useRouter();
 const route = useRoute();
-const drawer = ref(false);
 const value = ref("");
 const states = reactive({
   picture: require("../../assets/images/picture.jpg"),
@@ -230,25 +166,16 @@ watch(
   }
 );
 
-const { isActive, tags, sidebar, logoVal, appearance } = useState({
+const { isActive, tags, sidebar, logoVal, setswitch } = useState({
   tags: (state) => state.data.elTag,
   sidebar: (state) => !state.settings.sidebar,
   logoVal: (state) => !state.settings.logoIcon,
   isActive: (state) => state.settings.isCollapse,
-  appearance: (state) => state.settings.appearance,
+  setswitch: (state) => state.settings.setswitch,
 });
 
 const CurTitle = computed(() => {
   return router.currentRoute.value.meta?.title;
-});
-
-const themecolor = computed({
-  get() {
-    return appearance.value;
-  },
-  set(val) {
-    ThemeColorChange(val);
-  },
 });
 
 const fnStyle = (off) => {
@@ -259,29 +186,18 @@ const handleClose = (tag) => {
   let data = tags.value.splice(tags.value.indexOf(tag), 1);
   commit("updateData", { elTag: data });
 };
+
 const topersonal = () => {
   router.push({ name: "personal" });
 };
 
-const LogoChange = (val) => {
+const opensetup = (val) => {
   commit("updateSettings", {
-    key: "logoIcon",
-    value: !val,
+    key: "setswitch",
+    value: true,
   });
 };
-const greyChange = (val) => {
-  commit("updateSettings", {
-    key: "sidebar",
-    value: !val,
-  });
-};
-const ThemeColorChange = (val) => {
-  commit("updateSettings", {
-    key: "appearance",
-    value: val,
-  });
-  changeAppearance(val);
-};
+
 // 退出登录
 const Logout = () => {
   ElMessageBox.confirm("确定退出登录?", "提示", {
@@ -349,16 +265,6 @@ const toggleClick = () => {
 }
 </style>
 <style lang="scss" scoped>
-.setting {
-  width: 100%;
-
-  li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 25px;
-  }
-}
 .style-fixed {
   width: 100% !important;
 }
