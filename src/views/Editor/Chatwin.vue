@@ -175,6 +175,9 @@ const getChatList = async () => {
 const ContextMenuEvent = (event, item) => {
   MenuItemInfo.value = item;
 };
+const ClickMenuItem = (data) =>{
+  console.log(data)
+}
 
 defineExpose({ UpdateScrollbar });
 </script>

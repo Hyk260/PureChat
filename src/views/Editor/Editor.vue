@@ -48,6 +48,8 @@ import { useStore } from "vuex";
 import { sendMsg } from "@/api/chat";
 import { useState } from "@/utils/hooks/useMapper";
 import { generateUUID } from "@/utils/index";
+import { bytesToSize } from "@/utils/common"
+import { fileImgToBase64Url } from "@/utils/message-input-utils";
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
 const valueHtml = ref(""); // 内容 HTML
@@ -82,26 +84,28 @@ const customPaste = (editor, event, callback) => {
   // const html = event.clipboardData.getData("text/html"); // 获取粘贴的 html
   const text = event.clipboardData.getData("text/plain"); // 获取粘贴的纯文本
   // const rtf = event.clipboardData.getData("text/rtf"); // 获取 rtf 数据（如从 word wsp 复制粘贴）
-  // // console.log(html);
+  // console.log(html);
   console.log(text);
   // console.log(rtf);
 
   if (event?.clipboardData?.items) {
     const items = event.clipboardData.items;
     console.log(items);
-    for (const key of items) {
-      console.log(key);
-      let { kind, type } = key;
+    for (let i = 0; i < items.length; i++) {
+      let item = items[i]
+      const { kind, type } = item
       console.log(kind, type)
       if(kind === 'file'){
+        // DataTransferItemList 转换成 File
+        let pasteFile = item?.getAsFile?.()
         if(type.match('^image/')){
-          parsepicture()
+          parsepicture(pasteFile)
         }else{
-          parsefile(items)
+          parsefile(pasteFile)
         }
       }
       if(kind === 'string'){
-        parsetext()
+        parsetext(item)
       }
     }
   }
@@ -117,15 +121,25 @@ const customPaste = (editor, event, callback) => {
   // callback(true)
 };
 
-const parsefile = (item) => {
-  let pasteFile = item?.getAsFile()
-  console.log(pasteFile)
+const parsefile = async (file) => {
+  console.log(file,"文件")
+  const { size } = file
+  let fileSize = bytesToSize(size)
+  const base64Url = await fileImgToBase64Url(file)
+
+
+  console.log(fileSize)
 }
-const parsetext = () => {
+const parsetext = (item) => {
 
 }
-const parsepicture = () => {
-
+const parsepicture = async (file) => {
+  console.log(file,"图片")
+  const base64Url = await fileImgToBase64Url(file)
+  let path = file?.path
+  if(path == undefined){
+    console.log(123)
+  }
 }
 
 // 回车
