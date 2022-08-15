@@ -15,6 +15,8 @@
 </p>
 
 ### 🎉 特性
+前端 vue3 + Element-Plus开发
+后端 Node + Express + lowdb
 
 - 📦️ 后端路由动态渲染
 - 📃 RBAC 模型 + JWT 权限控制
