@@ -15,7 +15,7 @@
 </p>
 
 ### 🎉 特性
-前端 vue3 + Element-Plus开发
+前端 vue3 + Element-Plus
 后端 Node + Express + lowdb
 
 - 📦️ 后端路由动态渲染
