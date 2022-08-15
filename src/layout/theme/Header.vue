@@ -138,7 +138,20 @@
           active-text="开"
           inactive-text="关"
           @change="LogoChange"
+          :active-icon="Check"
+          :inactive-icon="Close"
         />
+      </li>
+      <li>
+        <span>主题颜色</span>
+        <el-select v-model="themecolor" class="m-2" placeholder="主题颜色">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </li>
     </ul>
   </el-drawer>
@@ -149,6 +162,7 @@ import {
   Upload,
   Minus,
   Close,
+  Check,
   Plus,
   ArrowRight,
 } from "@element-plus/icons-vue";
@@ -161,11 +175,27 @@ import storage from "storejs";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import screenfull from "../components/screenfull.vue";
 import { useState } from "@/utils/hooks/useMapper";
+import { changeAppearance } from "@/utils/common";
 
+const options = [
+  {
+    value: "auto",
+    label: "自动",
+  },
+  {
+    value: "light",
+    label: "浅色",
+  },
+  {
+    value: "dark",
+    label: "深色",
+  },
+];
 const { state, dispatch, commit } = useStore();
 const router = useRouter();
 const route = useRoute();
 const drawer = ref(false);
+const value = ref("");
 const states = reactive({
   picture: require("../../assets/images/picture.jpg"),
 });
@@ -200,15 +230,25 @@ watch(
   }
 );
 
-const { isActive, tags, sidebar, logoVal } = useState({
-  isActive: (state) => state.data.isCollapse,
+const { isActive, tags, sidebar, logoVal, appearance } = useState({
   tags: (state) => state.data.elTag,
   sidebar: (state) => !state.settings.sidebar,
   logoVal: (state) => !state.settings.logoIcon,
+  isActive: (state) => state.settings.isCollapse,
+  appearance: (state) => state.settings.appearance,
 });
 
 const CurTitle = computed(() => {
   return router.currentRoute.value.meta?.title;
+});
+
+const themecolor = computed({
+  get() {
+    return appearance.value;
+  },
+  set(val) {
+    ThemeColorChange(val);
+  },
 });
 
 const fnStyle = (off) => {
@@ -234,6 +274,13 @@ const greyChange = (val) => {
     key: "sidebar",
     value: !val,
   });
+};
+const ThemeColorChange = (val) => {
+  commit("updateSettings", {
+    key: "appearance",
+    value: val,
+  });
+  changeAppearance(val);
 };
 // 退出登录
 const Logout = () => {
@@ -282,7 +329,10 @@ const tagClick = (path) => {
 
 // 侧边栏 展开 折叠
 const toggleClick = () => {
-  commit("setCollapse", !isActive.value);
+  commit("updateSettings", {
+    key: "isCollapse",
+    value: !isActive.value,
+  });
 };
 </script>
 <style module="classes" scoped>
@@ -318,7 +368,8 @@ const toggleClick = () => {
   top: 0;
   right: 0;
   transition: width 0.1s;
-  background: var(--color-body-bg);
+  background: #fff;
+  // background: var(--color-body-bg);
 }
 .cursor-w {
   cursor: w-resize;

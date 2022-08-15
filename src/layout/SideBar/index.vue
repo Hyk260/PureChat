@@ -33,7 +33,7 @@ const route = useRoute();
 const store = useStore();
 
 const { isCollapse, sidebar, routing, logoVal } = useState({
-  isCollapse: (state) => state.data.isCollapse,
+  isCollapse: (state) => state.settings.isCollapse,
   sidebar: (state) => state.settings.sidebar,
   logoVal: (state) => state.settings.logoIcon,
   routing: (state) => state.data.Routingtable,

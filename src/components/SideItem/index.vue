@@ -39,11 +39,7 @@ const props = defineProps({
     default: true,
   },
 });
-const { tree } = toRefs(props)
-
-const isCollapse = computed(() => {
-  return store.state.data.isCollapse;
-});
+const { tree } = toRefs(props);
 
 const fn = (item) => {
   return !item.children || item.children.length === 0;
