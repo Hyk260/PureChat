@@ -4,17 +4,11 @@ export const toolbarConfig = {
   toolbarKeys: [
     "emotion", // 表情
     "uploadImage", //上传图片
-    // {
-    //   key: "group-more-style", // 必填，要以 group 开头
-    //   title: "更多样式", // 必填
-    //   iconSvg: "<svg>....</svg>", // 可选
-    //   menuKeys: ["through", "code", "clearStyle"], // 下级菜单 key ，必填
-    // },
   ],
-  // insertKeys: {
-  //   index: 2, // 插入的位置，基于当前的 toolbarKeys
-  //   keys: ["menu-key1", "menu-key2"],
-  // },
+  insertKeys: {
+    index: 3, // 插入的位置，基于当前的 toolbarKeys
+    keys: ["menu1"],
+  },
   /* 隐藏哪些菜单 */
   excludeKeys: [],
 };

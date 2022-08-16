@@ -25,6 +25,7 @@
 
 <script setup>
 import "@wangeditor/editor/dist/css/style.css";
+import "./utils/custom-menu";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { toolbarConfig, editorConfig } from "./utils/configure";
 import {
@@ -201,10 +202,15 @@ const sendMessage = async () => {
 .Editor-style {
   height: 206px;
   .toolbar {
-    // 表情
+    // 表情包
     ::v-deep .w-e-bar-item .w-e-drop-panel {
       top: -292px;
       margin: 0;
+    }
+    ::v-deep .w-e-bar-item .w-e-panel-content-emotion li{
+      width: 30px;
+      font-size: 18px;
+      text-align: center;
     }
   }
   .editor-content {
