@@ -23,6 +23,8 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+// 默认是  Hash  模式, 手动设置为  History  模式
+// 更新视图但不重新请求页面是前端路由原理的核心之一
 
 let isF = false;
 router.beforeEach(async (to, from, next) => {
