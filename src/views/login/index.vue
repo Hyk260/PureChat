@@ -76,7 +76,7 @@
                   style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"
                 />
               </svg>
-              <FontIcon iconName="Eleme" class="circular" v-if="false" />
+              <!-- <FontIcon iconName="Eleme" class="circular" /> -->
             </div>
           </template>
           登录
@@ -181,7 +181,7 @@ const login = async () => {
         type: "success",
       });
       router.push("/home");
-    }, 1000);
+    }, 1500);
   } else {
     showload.value = false;
   }

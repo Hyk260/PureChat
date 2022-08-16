@@ -11,7 +11,7 @@
       </span>
     </el-card>
 
-    <el-card class="box-card m-4" shadow="hover" v-if="false">
+    <el-card class="box-card m-4" shadow="hover">
       <template #header>
         <div class="card-header">
           <span class="font-medium">项目信息</span>
@@ -21,25 +21,25 @@
         <el-descriptions-item label="版本" label-align="left" align="left">
           <el-tag>{{ version }}</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item
+        <!-- <el-descriptions-item
           label="最后编译时间"
           label-align="left"
           align="left"
         >
           <el-tag>{{ lastBuildTime }}</el-tag>
-        </el-descriptions-item>
+        </el-descriptions-item> -->
         <el-descriptions-item label="文档地址" label-align="left" align="left">
-          <a href="" target="_blank">
+          <a href="#" target="_blank">
             <span style="color: var(--el-color-primary)">文档地址</span>
           </a>
         </el-descriptions-item>
         <el-descriptions-item label="预览地址" label-align="left" align="left">
-          <a href="" target="_blank">
+          <a href="#" target="_blank">
             <span style="color: var(--el-color-primary)">预览地址</span>
           </a>
         </el-descriptions-item>
         <el-descriptions-item label="Github" label-align="left" align="left">
-          <a href="" target="_blank">
+          <a href="#" target="_blank">
             <span style="color: var(--el-color-primary)">Github</span>
           </a>
         </el-descriptions-item>
