@@ -137,7 +137,7 @@
         <el-form-item :label="ruleFormText.icon" prop="icon">
           <el-select
             v-model="ruleForm.icon"
-            class="m-2 year"
+            class="year"
             popper-class="style-select"
             placeholder="请选择图标"
           >

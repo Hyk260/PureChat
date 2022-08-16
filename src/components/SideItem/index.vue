@@ -1,6 +1,7 @@
 <template>
   <div>
     <template v-for="item in tree" :key="item.id">
+      <!-- 一级菜单 -->
       <el-menu-item
         :class="{ 'active-item': $route.name === item.name }"
         v-if="fn(item)"
@@ -11,12 +12,13 @@
           <span>{{ item.meta.title }}</span>
         </template>
       </el-menu-item>
+      <!-- 二级菜单 -->
       <el-sub-menu v-else :index="item.url">
         <template #title>
           <font-icon :iconName="item.meta.icon" />
           <span>{{ item.meta.title }}</span>
         </template>
-        <SideItem :tree="item.children"/>
+        <SideItem :tree="item.children" />
       </el-sub-menu>
     </template>
   </div>

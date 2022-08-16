@@ -27,7 +27,7 @@
       </li>
       <li>
         <span>主题颜色</span>
-        <el-select v-model="themecolor" class="m-2" placeholder="主题颜色">
+        <el-select v-model="themecolor" placeholder="主题颜色">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -38,7 +38,7 @@
       </li>
       <li>
         <span>语言</span>
-        <el-select v-model="language" class="m-2" placeholder="选择语言">
+        <el-select v-model="language" placeholder="选择语言">
           <el-option
             v-for="item in languages"
             :key="item.value"
@@ -58,7 +58,7 @@ import { useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
 import { changeAppearance } from "@/utils/common";
 import i18n from "@/locales";
-// const drawer = ref(false);
+
 const options = [
   {
     value: "auto",
@@ -106,7 +106,6 @@ const greyChange = (val) => {
     key: "sidebar",
     value: !val,
   });
-  console.log(!val)
 };
 
 const drawer = computed({
@@ -159,7 +158,6 @@ const languageChange = (val) => {
 <style lang="scss" scoped>
 .setting {
   width: 100%;
-
   li {
     display: flex;
     justify-content: space-between;
