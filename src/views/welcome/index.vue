@@ -34,6 +34,7 @@ let loading = ref(true);
 const date = new Date();
 const { t } = useI18n();
 console.log(t('common.play'))
+
 let greetings = computed(() => {
   if (date.getHours() >= 0 && date.getHours() < 12) {
     return "上午阳光明媚，祝你薪水翻倍🌞！";

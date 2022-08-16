@@ -215,7 +215,6 @@ function verification(code, msg) {
   stroke: var(--el-button-text-color);
   stroke-linecap: round;
 }
-
 .login-form h2 {
   text-transform: uppercase;
   margin: 15px 0;
