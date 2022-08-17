@@ -12,13 +12,13 @@ const vueDefaultConfig = {
   title: "PURE ADMIN", // 标题
   // pwa 渐进式网页应用
   pwa: {
-    name: 'PURE ADMIN',
+    name: "PURE ADMIN",
     iconPaths: {
-      favicon32: 'img/icons/favicon-32x32.png',
+      favicon32: "img/icons/favicon-32x32.png",
     },
-    themeColor: '#ffffff00',
+    themeColor: "#ffffff00",
     manifestOptions: {
-      background_color: '#335eea',
+      background_color: "#335eea",
     },
   },
   titleSeparator: " - ",
@@ -54,23 +54,15 @@ const vueDefaultConfig = {
   },
   cdn: {
     // https://unpkg.com/browse/vue@2.6.10/
-    css:[
-      'https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css'
-    ],
-    js: [
-      'https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/vue-router/3.2.0/vue-router.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/vuex/3.5.1/vuex.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/axios/0.24.0/axios.min.js'
-    ]
+    css: ["https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css"],
+    js: ["https://cdn.jsdelivr.net/npm/vue"],
   },
   // webpack 打包忽略项
   externals: {
-    vue: 'Vue',
-    vuex: 'Vuex',
-    'vue-router': 'VueRouter',
-    axios: 'axios',
-  }
+    vue: "Vue",
+    // vuex: "Vuex",
+    // axios: "axios",
+  },
 };
 
 module.exports = vueDefaultConfig;

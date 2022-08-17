@@ -8,6 +8,7 @@ import { tree } from "@/utils/ToTree";
 import { useRouter } from "vue-router";
 import storage from "storejs";
 import { useStore } from "vuex";
+import { debounce } from "@/utils/debounce";
 const { state, dispatch, commit } = useStore();
 const table = storage.get("userdata");
 
@@ -19,22 +20,29 @@ onMounted(() => {
   });
 
   window.onresize = () => {
-    let dom = document.getElementsByClassName("content")[0];
-    // console.log(dom.offsetWidth);
-    let setWidth = dom.offsetWidth;
-    if (setWidth <= 760) {
-      commit("updateSettings", {
-        key: "sidebar",
-        value: false,
-      });
-    } else {
-      commit("updateSettings", {
-        key: "sidebar",
-        value: true,
-      });
-    }
+    debounce?.(() => {
+      fnresize();
+    }, 300);
   };
 });
+
+const fnresize = () => {
+  let dom = document.getElementById("app");
+  console.log(dom);
+  let setWidth = dom?.offsetWidth;
+  if (!setWidth) return;
+  if (setWidth <= 760) {
+    commit("updateSettings", {
+      key: "sidebar",
+      value: false,
+    });
+  } else {
+    commit("updateSettings", {
+      key: "sidebar",
+      value: true,
+    });
+  }
+};
 
 /** width app-wrapper类容器宽度
  * 0 < width <= 760 隐藏侧边栏

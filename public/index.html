@@ -19,11 +19,17 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
-  </body>
   <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.js) { %>
     <script src="<%= htmlWebpackPlugin.options.cdn.js[i] %>"></script>
-  <% } %>
+  <% } %>    
+  </body>
   <script>
-      console.log(window)
+    if(Vue){
+      console.log(Vue,"vue实例");
+      const app = Vue;
+      const { version } = app;
+
+      console.log(version,"VUE版本号")
+    }
   </script>
 </html>

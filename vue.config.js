@@ -63,9 +63,9 @@ module.exports = {
 
     // 根路径
     config.resolve.alias.set("@", resolve("src"));
-    
+
     config.plugin("html").tap((args) => {
-      args[0].title = title;// 修改标题
+      args[0].title = title; // 修改标题
       args[0].cdn = cdn; // CDN外链
       return args;
     });
@@ -79,6 +79,6 @@ module.exports = {
     //     __filename: true
     //   }
     // })
-    config.externals = externals
+    config.externals = externals;
   },
 };
