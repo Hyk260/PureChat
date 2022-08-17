@@ -44,10 +44,8 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-// @import "./styles/mixin.scss";
 #app {
   height: 100%;
-  // @include clearfix;
 }
 .content-wrap {
   padding: 24px;

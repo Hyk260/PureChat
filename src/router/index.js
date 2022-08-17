@@ -4,7 +4,8 @@ import NProgress from "@/utils/progress";
 import routes from "./routes";
 import store from "@/store";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
-
+const { title } = require("@/config/vue.custom.config");
+  
 // hack router push callback
 const originalPush = createRouter.prototype.push;
 createRouter.prototype.push = function push(location, onResolve, onReject) {
@@ -30,6 +31,7 @@ let isF = false;
 router.beforeEach(async (to, from, next) => {
   // console.log(to, from)
   if (from.path === to.path) return;
+  document.title = `${to.meta.title} | ${title}` || document.title
   const token = storage.get(ACCESS_TOKEN);
 
   if (token) {

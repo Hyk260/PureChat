@@ -82,6 +82,9 @@ const fnStyle = (off) => {
 .app-wrapper {
   width: 100%;
 }
+.continer-theme {
+  height: 100%;
+}
 .app-main {
   // padding-top: 86px;
   // height: 100vh;
@@ -92,8 +95,5 @@ const fnStyle = (off) => {
   overflow-x: hidden;
   background: #f0f2f5;
   box-sizing: border-box;
-}
-.continer-theme {
-  height: 100%;
 }
 </style>
