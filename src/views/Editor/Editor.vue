@@ -91,22 +91,22 @@ const customPaste = (editor, event, callback) => {
 
   if (event?.clipboardData?.items) {
     const items = event.clipboardData.items;
-    console.log(items);
-    for (let i = 0; i < items.length; i++) {
-      let item = items[i]
-      const { kind, type } = item
-      console.log(kind, type)
+    // console.log(items);
+    for (let [key,value] of Object.entries(items)){
+      // console.log(key,value)
+      const { kind, type } = value;
+      // console.log(kind, type)
       if(kind === 'file'){
         // DataTransferItemList 转换成 File
-        let pasteFile = item?.getAsFile?.()
-        if(type.match('^image/')){
+        let pasteFile = value?.getAsFile?.()
+        if (type.match('^image/')){
           parsepicture(pasteFile)
-        }else{
+        } else {
           parsefile(pasteFile)
         }
       }
       if(kind === 'string'){
-        parsetext(item)
+        parsetext(value)
       }
     }
   }
@@ -139,7 +139,7 @@ const parsepicture = async (file) => {
   const base64Url = await fileImgToBase64Url(file)
   let path = file?.path
   if(path == undefined){
-    console.log(123)
+
   }
 }
 

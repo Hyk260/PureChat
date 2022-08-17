@@ -11,10 +11,7 @@
         <router-view v-slot="{ Component }">
           <transition name="fade-transform" mode="out-in">
             <component v-if="Component" :is="Component" />
-            <component
-              v-else
-              :is="ComponentMap[page.type] || error"
-            ></component>
+            <component v-else :is="CompMap[page.type] || error" />
           </transition>
         </router-view>
       </div>
@@ -45,7 +42,7 @@ import about from "@/views/about/index.vue";
 const route = useRoute();
 const router = useRouter();
 
-const ComponentMap = {
+const CompMap = {
   home: welcome, //首页
   personal: personal, //个人中心
   editor: editor, //编辑器

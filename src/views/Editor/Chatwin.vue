@@ -143,10 +143,10 @@ const getMoreMsg = async () => {
     console.log(Response);
     if (Response?.length === 0) {
       console.log("没有更多消息了！！！");
-      commit("SET_HISTORYMESSAGE", {
-        type: "UPDATE_NOMORE",
-        payload: true,
-      });
+      // commit("SET_HISTORYMESSAGE", {
+      //   type: "UPDATE_NOMORE",
+      //   payload: true,
+      // });
       return;
     }
   } catch (e) {
