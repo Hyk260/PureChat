@@ -1,7 +1,7 @@
 const localStorage = {
   // 设置
   settings: {
-    lang: "zh-CN", // 默认语言
+    lang: "zh", // 默认语言
     sidebar: true, // 侧边栏隐藏
     logoIcon: true, // login图标
     appearance: "auto", // 主题颜色

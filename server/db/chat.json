@@ -386,6 +386,26 @@
       },
       "message_server_time": 0,
       "message_status": 1
+    },
+    {
+      "message_client_time": 1660805967,
+      "message_conv_id": "100002138",
+      "message_conv_type": "2",
+      "message_elem_array": [
+        {
+          "elem_type": 0,
+          "text_elem_content": "👻✋💀\n"
+        }
+      ],
+      "message_is_from_self": true,
+      "message_is_peer_read": false,
+      "message_msg_id": "b6926096-fb3d-4a0d-a8ad-4a1e95c6421b",
+      "message_sender_group_member_info": {},
+      "message_sender_profile": {
+        "user_profile_nick_name": "临江仙"
+      },
+      "message_server_time": 0,
+      "message_status": 1
     }
   ]
 }

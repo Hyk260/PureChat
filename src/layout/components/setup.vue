@@ -76,7 +76,7 @@ const options = [
 
 const languages = [
   {
-    value: "zh-cn",
+    value: "zh",
     label: "中文",
   },
   {

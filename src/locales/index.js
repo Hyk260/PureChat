@@ -21,7 +21,7 @@ const i18n = createI18n({
   locale: "zh",
   messages,
 });
-i18n.global.locale = "en";
+// i18n.global.locale = "en";
 
 console.log(messages, "语言包");
 export default i18n;

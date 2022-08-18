@@ -25,11 +25,14 @@
   </body>
   <script>
     if(Vue){
-      console.log(Vue,"vue实例");
+      // console.log(Vue,"vue实例");
       const app = Vue;
       const { version } = app;
 
       console.log(version,"VUE版本号")
+      // console.log(navigator)
+      const isMacBrowser = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+      
     }
   </script>
 </html>

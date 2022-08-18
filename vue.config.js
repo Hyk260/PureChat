@@ -79,6 +79,6 @@ module.exports = {
     //     __filename: true
     //   }
     // })
-    config.externals = externals;
+    // config.externals = externals;
   },
 };
