@@ -104,14 +104,6 @@ watch(
 onMounted(() => {
   Monitorscrollbar();
   getChatList();
-
-  window.addEventListener('online', (event) => {
-      console.log(navigator.onLine ? 'online' : 'offline')
-  });
-
-  window.addEventListener('offline', (event) => {
-      console.log(navigator.onLine ? 'online' : 'offline')
-  });
 });
 
 onBeforeUnmount(() => {
@@ -188,11 +180,11 @@ const ClickMenuItem = (data) => {
   const Info = MenuItemInfo.value;
   const { id, text } = data;
   switch (id) {
-    case "copy": 
+    case "copy":
       fncopy(Info);
       break;
   }
-}
+};
 
 defineExpose({ UpdateScrollbar });
 </script>

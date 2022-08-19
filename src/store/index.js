@@ -81,8 +81,6 @@ const store = createStore({
  * 刷新页面保存当前主题色
  */
 changeAppearance(store.state.settings.appearance);
-const lang = store.state.settings.lang;
-const yuyan = lang == 'zh' ? '中文' : '英文'
-console.log(yuyan,'语言')
+
 console.log(store, "vuex数据");
 export default store;

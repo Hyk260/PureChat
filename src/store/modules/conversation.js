@@ -63,6 +63,11 @@ const conversation = {
         }
       }
     },
+    // 设置网络状态
+    SET_NETWORK_STATUS(state, action) {
+      state.networkStatus = action;
+      console.log(action)
+    },
   },
   actions: {
     async [GET_MESSAGE_LIST]({ commit, state }) {

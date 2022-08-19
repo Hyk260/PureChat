@@ -5,9 +5,9 @@
     <div class="message-left">
       <!-- 搜索框 -->
       <Search />
-      <div :class="['scroll-container', networkStatus ? 'style-net' : '']">
+      <div :class="['scroll-container', !networkStatus ? 'style-net' : '']">
         <!-- 连接已断开 -->
-        <networklink :show="networkStatus" />
+        <networklink :show="!networkStatus" />
         <!-- 会话列表 -->
         <ConversationList />
       </div>
@@ -25,11 +25,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, toRefs } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { copyFile } from "fs";
 import { useState } from "@/utils/hooks/useMapper";
 import { dragControllerDiv } from "./utils/utils";
-
+import { useStore } from "vuex";
 import Editor from "./Editor.vue";
 import Search from "./components/Search.vue";
 import Header from "./components/Header.vue";
@@ -38,14 +38,25 @@ import networklink from "./components/networklink.vue";
 import ConversationList from "./ConversationList.vue";
 
 const ChatRef = ref(null);
+const { state, dispatch, commit } = useStore();
 
-const {
-  networkStatus,
-} = useState({
+const { networkStatus } = useState({
   networkStatus: (state) => state.conversation.networkStatus,
 });
 
+const monitoring = () => {
+  console.log(navigator);
+  let status = navigator?.onLine;
+  commit("SET_NETWORK_STATUS", status);
+};
 
+window.addEventListener("online", monitoring);
+window.addEventListener("offline", monitoring);
+
+onBeforeUnmount(() => {
+  window.removeEventListener("online", monitoring);
+  window.removeEventListener("offline", monitoring);
+});
 </script>
 
 <style lang="scss" scoped>
