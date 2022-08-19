@@ -97,7 +97,6 @@ export const getFileByPath = async (filePath) => {
 };
 
 export const getMessageElemItem = (type, data, videoInfoList) => {
-  console.log(data);
   switch (type) {
     case "text": {
       return {

@@ -11,11 +11,12 @@
       :defaultConfig="editorConfig"
       @onCreated="handleCreated"
       @customPaste="customPaste"
+      @customAlert="customAlert"
       @keyup.enter="handleEnter"
     />
     <el-tooltip
       effect="dark"
-      content="按Enter发送消息,Enter+Shift换行"
+      content="按Enter发送消息,Ctrl+Enter换行"
       placement="left-start"
     >
       <el-button class="btn-send" @click="sendMessage">发送</el-button>
@@ -45,6 +46,7 @@ import {
   getMessageElemItem,
   getImageType,
 } from "@/utils/message-input-utils";
+import { empty } from '@/utils';
 import { useStore } from "vuex";
 import { sendMsg } from "@/api/chat";
 import { useState } from "@/utils/hooks/useMapper";
@@ -77,6 +79,27 @@ const handleCreated = (editor) => {
   // console.log(editor.getAllMenuKeys());
   // console.log(editor.getConfig());
 };
+
+const customAlert = (s, t) => {
+  console.log(s,t)
+  switch (t) {
+      case 'success':
+          
+          break
+      case 'info':
+          
+          break
+      case 'warning':
+          
+          break
+      case 'error':
+          
+          break
+      default:
+          
+          break
+  }
+}
 
 // 粘贴事件
 const customPaste = (editor, event, callback) => {
@@ -121,7 +144,7 @@ const customPaste = (editor, event, callback) => {
   // 返回 true ，继续默认的粘贴行为
   // callback(true)
 };
-
+// 插入文件
 const parsefile = async (file) => {
   console.log(file,"文件")
   const { size } = file
@@ -134,32 +157,51 @@ const parsefile = async (file) => {
 const parsetext = (item) => {
 
 }
+// 插入图片
 const parsepicture = async (file) => {
   console.log(file,"图片")
   const base64Url = await fileImgToBase64Url(file)
   let path = file?.path
   if(path == undefined){
-
+    console.log(base64Url)
+    const el = `<img src=${base64Url} class="uuid" style="max-width: 200px;"/>`
+    valueHtml.value = el
   }
 }
-
 // 回车
 const handleEnter = () => {
-  sendMessage();
+  // 判断当前编辑器内容是否为空
+  let isEmpty = editorRef.value.isEmpty();
+  // 纯文本内容
+  const text = editorRef.value.getText(); 
+  if (!isEmpty && !empty(text)) {
+    sendMessage();
+  } else {  
+    console.log("请输入内容");
+    clearInputInfo();
+  } 
+  
+  const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
+  // console.log(text)
+  // console.log(isEmpty)
+  // console.log(HtmlText)
+  // console.log(empty(text))
 };
 // 清空输入框
 const clearInputInfo = () => {
   editorRef.value.clear();
 };
+
 const sendMsgBefore = () => {
-  const text = editorRef.value.getText();
+  const text = editorRef.value.getText(); // 纯文本内容
   const message = getMessageElemItem("text", { text: text }); //文本
-  console.log(message);
+  console.log(message)
   return { message };
 };
 // 发送消息
 const sendMessage = async () => {
   const { message } = sendMsgBefore();
+  
   const messageId = generateUUID();
   const userProfile = {
     user_profile_nick_name: "临江仙",
@@ -203,13 +245,32 @@ const sendMessage = async () => {
   height: 206px;
   .toolbar {
     // 表情包
-    ::v-deep .w-e-bar-item .w-e-drop-panel {
-      top: -292px;
-      margin: 0;
+    ::v-deep .w-e-bar-item {
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      // 自定义滚动条
+      ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: rgba(222, 223, 225);
+      }
+      ::-webkit-scrollbar-track {
+        border-radius: 0;
+      }
+      // 弹框位置
+      .w-e-drop-panel {
+        top: -207px;
+        height: 200px;
+        overflow: overlay;
+        padding: 10px 14px 10px 10px;
+        margin: 0;
+      }
     }
     ::v-deep .w-e-bar-item .w-e-panel-content-emotion li{
       width: 30px;
+      height: 30px;
       font-size: 18px;
+      line-height: 30px;
       text-align: center;
     }
   }
