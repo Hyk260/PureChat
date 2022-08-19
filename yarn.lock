@@ -1820,6 +1820,11 @@
   resolved "https://registry.npmmirror.com/@wangeditor/list-module/-/list-module-1.0.1.tgz#c8e9ffa336c363856c247168b7bc315976c294cc"
   integrity sha512-hlVwoXCK01eMqwwbZpSAjwHYDeZJei6mvPddcHkT5xws6r4wlT+8Xv3iBiAuutfdPbJTlXBRIWmNDFqN5aRtQg==
 
+"@wangeditor/plugin-ctrl-enter@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.npmmirror.com/@wangeditor/plugin-ctrl-enter/-/plugin-ctrl-enter-1.1.2.tgz#3f5d8680317e34e9aea6ceac210becff8ed0909d"
+  integrity sha512-TbYXcCbpwmgjb+Bwi+cy5q6BlNLtV8uIavxeUns+TRwXTNZDiItfDqduTH/fyMvhpKmt6cDMeXRgX4UVb0V75Q==
+
 "@wangeditor/table-module@^1.0.1":
   version "1.0.1"
   resolved "https://registry.npmmirror.com/@wangeditor/table-module/-/table-module-1.0.1.tgz#c015cf4bf885c2355cd5c2bc5994cc538e64c936"

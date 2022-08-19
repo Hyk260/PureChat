@@ -1,7 +1,3 @@
-const path = require("path");
-const resolve = (dir) => {
-  return path.join(__dirname, dir);
-};
 const {
   cdn,
   title,
@@ -9,6 +5,11 @@ const {
   devServer,
   production,
 } = require("./src/config/vue.custom.config");
+
+const path = require("path");
+const resolve = (dir) => {
+  return path.join(__dirname, dir);
+};
 
 module.exports = {
   // 是否在保存的时候检查
