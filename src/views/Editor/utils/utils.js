@@ -1,3 +1,6 @@
+import useClipboard from "vue-clipboard3";
+const { toClipboard } = useClipboard();
+
 export const dragControllerDiv = (node) => {
   let svgResize = document.getElementById("svgResize"); //滑块
   let svgTop = document.getElementById("svgTop"); //聊天框
@@ -72,11 +75,11 @@ export const loadMsgComponents = (item) => {
 };
 
 // 复制
-export const fncopy = (data) => {
+export const fncopy = async (data) => {
   let { message_elem_array } = data || {};
   let { elem_type: type, text_elem_content: content } = message_elem_array[0];
   // 文本
   if (type === 0) {
-    console.log(content)
+    await toClipboard(content);
   }
 };
