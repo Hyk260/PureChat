@@ -104,6 +104,14 @@ watch(
 onMounted(() => {
   Monitorscrollbar();
   getChatList();
+
+  window.addEventListener('online', (event) => {
+      console.log(navigator.onLine ? 'online' : 'offline')
+  });
+
+  window.addEventListener('offline', (event) => {
+      console.log(navigator.onLine ? 'online' : 'offline')
+  });
 });
 
 onBeforeUnmount(() => {
@@ -175,8 +183,15 @@ const getChatList = async () => {
 const ContextMenuEvent = (event, item) => {
   MenuItemInfo.value = item;
 };
-const ClickMenuItem = (data) =>{
-  console.log(data)
+
+const ClickMenuItem = (data) => {
+  const Info = MenuItemInfo.value;
+  const { id, text } = data;
+  switch (id) {
+    case "copy": 
+      fncopy(Info);
+      break;
+  }
 }
 
 defineExpose({ UpdateScrollbar });

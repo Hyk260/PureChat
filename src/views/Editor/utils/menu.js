@@ -9,7 +9,12 @@ const RIGHT_CLICK_CHAT_LIST = [
   { id: "remove", text: "移除会话" },
   { id: "clean", text: "清除消息" },
 ];
+
 const RIGHT_CLICK_MENU_LIST = [
+  {
+    id: "copy",
+    text: "复制",
+  },
   {
     id: "revoke",
     text: "撤回",
@@ -17,10 +22,6 @@ const RIGHT_CLICK_MENU_LIST = [
   {
     id: "delete",
     text: "删除",
-  },
-  {
-    id: "copy",
-    text: "复制",
   },
   // {
   //   id: 'transimit',

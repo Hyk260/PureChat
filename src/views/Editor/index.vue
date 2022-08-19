@@ -27,8 +27,6 @@
 <script setup>
 import { ref, reactive, toRefs } from "vue";
 import { copyFile } from "fs";
-import { useStore } from "vuex";
-import { getChat, getMsgList } from "@/api/chat";
 import { useState } from "@/utils/hooks/useMapper";
 import { dragControllerDiv } from "./utils/utils";
 
@@ -40,22 +38,14 @@ import networklink from "./components/networklink.vue";
 import ConversationList from "./ConversationList.vue";
 
 const ChatRef = ref(null);
-const { state, dispatch, commit } = useStore();
+
 const {
-  noMore,
-  userInfo,
   networkStatus,
-  currentMessageList,
-  historyMessageList,
-  currentConversation,
 } = useState({
-  userInfo: (state) => state.data,
-  noMore: (state) => state.conversation.noMore,
   networkStatus: (state) => state.conversation.networkStatus,
-  currentMessageList: (state) => state.conversation.currentMessageList,
-  historyMessageList: (state) => state.conversation.historyMessageList,
-  currentConversation: (state) => state.conversation.currentConversation,
 });
+
+
 </script>
 
 <style lang="scss" scoped>

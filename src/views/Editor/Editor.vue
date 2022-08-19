@@ -100,7 +100,6 @@ const customAlert = (s, t) => {
           break
   }
 }
-
 // 粘贴事件
 const customPaste = (editor, event, callback) => {
   console.log(editor);
