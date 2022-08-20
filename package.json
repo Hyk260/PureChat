@@ -22,6 +22,7 @@
     "element-plus": "^2.0.4",
     "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
+    "socket.io-client": "^4.5.1",
     "storejs": "^2.0.1",
     "svg-sprite-loader": "^6.0.11",
     "v-contextmenu": "^3.0.0",

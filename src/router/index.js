@@ -5,7 +5,7 @@ import routes from "./routes";
 import store from "@/store";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 const { title } = require("@/config/vue.custom.config");
-  
+
 // hack router push callback
 const originalPush = createRouter.prototype.push;
 createRouter.prototype.push = function push(location, onResolve, onReject) {

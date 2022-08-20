@@ -34,9 +34,9 @@ const db_menu = lowdb(menu);
 // 角色菜单
 const db_role_menu = lowdb(roleMenu);
 
-var app = express();
-
-const SECRET_KEY = "7040575a-5ff5-4398-a410-d9c7b010f6e8";
+const app = express();
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
 
 app.use((req, res, next) => {
   // 允许前端自定义请求头 authorization
@@ -50,12 +50,30 @@ app.use((req, res, next) => {
 //设置静态文件目录 static
 app.use(express.static(path.join(__dirname, "public")));
 
+const SECRET_KEY = "7040575a-5ff5-4398-a410-d9c7b010f6e8";
 app.use(
   expressJwt({
     secret: SECRET_KEY,
     algorithms: ["HS256"], //指定解析密文的算法
   }).unless({ path: ["/login", "/favicon.ico"] })
 );
+
+app.get("/", function (req, res) {
+  res.send({
+    data: "hello world!",
+  });
+});
+
+io.on("connect", (client) => {
+  console.log("连接成功");
+  client.emit("message", "你好啊！赛利亚");
+});
+io.on("connection", (client) => {
+  client.emit("message", "你好！");
+  client.on("eventname", (msg) => {
+    console.log("接收到来自客户端的eventname事件", msg);
+  });
+});
 
 // 登录
 app.get("/login", async (req, res, next) => {
