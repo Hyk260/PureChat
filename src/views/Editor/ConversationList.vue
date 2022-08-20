@@ -67,7 +67,7 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { timeFormat } from "@/utils/timeFormat";
 import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
-
+import socket from "@/utils/socket";
 const contextMenuItemInfo = ref([]);
 const Friends = ref([]);
 
@@ -84,8 +84,30 @@ const getRolesList = async () => {
   let { code, result } = await getRoles();
   if (code === 200) {
     Friends.value = result;
+    console.log(result);
   }
 };
+const userdata = {
+  id: "5346d441-ac35-4948-960e-c2d0c2b94a67",
+  roleName: "ROLE_USER",
+  info: "运营用户",
+  createTime: 1621480197410,
+  updateTime: 1652077470543,
+  isDefaultRole: true,
+  pinned: true,
+  conv_recv_opt: 2,
+};
+// 显示在线人员
+socket.on("disUser", (usersInfo) => {
+  console.log(usersInfo);
+  let data = [];
+  usersInfo.forEach((t)=>{
+    userdata.roleName = t.name
+    data.push(userdata)
+  })
+  // Friends.value = data;
+});
+
 const fnClass = (item) => {
   let current = Selected.value;
   let select = item?.id == current?.id;

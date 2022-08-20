@@ -55,25 +55,8 @@ app.use(
   expressJwt({
     secret: SECRET_KEY,
     algorithms: ["HS256"], //指定解析密文的算法
-  }).unless({ path: ["/login", "/favicon.ico"] })
+  }).unless({ path: ["/login", "/test", "/socket.io", "/favicon.ico"] })
 );
-
-app.get("/", function (req, res) {
-  res.send({
-    data: "hello world!",
-  });
-});
-
-io.on("connect", (client) => {
-  console.log("连接成功");
-  client.emit("message", "你好啊！赛利亚");
-});
-io.on("connection", (client) => {
-  client.emit("message", "你好！");
-  client.on("eventname", (msg) => {
-    console.log("接收到来自客户端的eventname事件", msg);
-  });
-});
 
 // 登录
 app.get("/login", async (req, res, next) => {

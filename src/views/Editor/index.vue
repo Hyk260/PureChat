@@ -36,12 +36,14 @@ import Header from "./components/Header.vue";
 import Chatwin from "./Chatwin.vue";
 import networklink from "./components/networklink.vue";
 import ConversationList from "./ConversationList.vue";
+import socket from "@/utils/socket";
 
 const ChatRef = ref(null);
 const { state, dispatch, commit } = useStore();
 
-const { networkStatus } = useState({
+const { networkStatus, user } = useState({
   networkStatus: (state) => state.conversation.networkStatus,
+  user: (state) => state.data.user,
 });
 
 const monitoring = () => {
@@ -49,6 +51,12 @@ const monitoring = () => {
   let status = navigator?.onLine;
   commit("SET_NETWORK_STATUS", status);
 };
+
+const { username } = user.value;
+console.log(user.value);
+socket.emit("login", {
+  name: username,
+});
 
 window.addEventListener("online", monitoring);
 window.addEventListener("offline", monitoring);
