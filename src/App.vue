@@ -27,21 +27,20 @@ onMounted(() => {
 });
 
 const fnresize = () => {
-  let dom = document.getElementById("app");
-  console.log(dom);
-  let setWidth = dom?.offsetWidth;
-  if (!setWidth) return;
-  if (setWidth <= 760) {
-    commit("updateSettings", {
-      key: "sidebar",
-      value: false,
-    });
-  } else {
-    commit("updateSettings", {
-      key: "sidebar",
-      value: true,
-    });
-  }
+  // let dom = document.getElementById("app");
+  // let setWidth = dom?.offsetWidth;
+  // if (!setWidth) return;
+  // if (setWidth <= 760) {
+  //   commit("updateSettings", {
+  //     key: "sidebar",
+  //     value: false,
+  //   });
+  // } else {
+  //   commit("updateSettings", {
+  //     key: "sidebar",
+  //     value: true,
+  //   });
+  // }
 };
 
 /** width app-wrapper类容器宽度

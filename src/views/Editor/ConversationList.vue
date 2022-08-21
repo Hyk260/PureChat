@@ -79,17 +79,9 @@ const { state, getters, dispatch, commit } = useStore();
 const { Selected } = useState({
   Selected: (state) => state.conversation.currentConversation,
 });
-
-const getRolesList = async () => {
-  let { code, result } = await getRoles();
-  if (code === 200) {
-    Friends.value = result;
-    console.log(result);
-  }
-};
 const userdata = {
-  id: "5346d441-ac35-4948-960e-c2d0c2b94a67",
-  roleName: "ROLE_USER",
+  id: "5346d441-bc35-4948-960e-c2d0c2b94a67",
+  roleName: "群聊",
   info: "运营用户",
   createTime: 1621480197410,
   updateTime: 1652077470543,
@@ -97,15 +89,23 @@ const userdata = {
   pinned: true,
   conv_recv_opt: 2,
 };
+
+const getRolesList = async () => {
+  let { code, result } = await getRoles();
+  if (code === 200) {
+    // Friends.value = result;
+    console.log(result);
+    Friends.value = [userdata];
+  }
+};
+
 // 显示在线人员
 socket.on("disUser", (usersInfo) => {
   console.log(usersInfo);
-  let data = [];
-  usersInfo.forEach((t)=>{
-    userdata.roleName = t.name
-    data.push(userdata)
-  })
-  // Friends.value = data;
+});
+socket.on("system", (user) => {
+  var data = new Date().toTimeString().substr(0, 8);
+  console.log(`${data} ${user.name}  ${user.status}了聊天室`)
 });
 
 const fnClass = (item) => {

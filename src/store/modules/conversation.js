@@ -54,10 +54,12 @@ const conversation = {
         // 跳转会话
         case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
           if (payload) {
+            console.log(payload)
             if (payload?.id == state.currentConversation?.id) return;
             state.needScrollDown = 0;
             // state.noMore = false;
             state.currentConversation = payload;
+            console.log(payload)
           }
           break;
         }
@@ -66,7 +68,6 @@ const conversation = {
     // 设置网络状态
     SET_NETWORK_STATUS(state, action) {
       state.networkStatus = action;
-      console.log(action)
     },
   },
   actions: {

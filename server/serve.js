@@ -20,30 +20,39 @@ io.on("connect", (socket) => {
 });
 
 io.on("connection", (socket) => {
-  socket.emit("message", "你好！");
   // 在线人员
-  io.emit("disUser", usersInfo);
+  io.emit("disUser", users);
   // 检测用户上线
   socket.on("login", (user) => {
-    if (users.indexOf(user) > -1) {
-      // socket.emit("loginError");
-    } else {
-      users.push(user);
-      usersInfo.push(user);
-
-      socket.emit("loginSuc");
-      socket.nickname = user;
+    const { name } = user;
+    console.log(user, "用户信息");
+    if (users.indexOf(name) == -1) {
+      users.push(name);
+      socket.nickname = name;
       io.emit("system", {
-        name: user.name,
+        name,
         status: "进入",
       });
-      io.emit("disUser", usersInfo);
+      io.emit("disUser", users);
       console.log("当前在线用户人数" + users.length);
     }
   });
+  // 检测用户下线
+  socket.on("disconnect", () => {
+    var index = users.indexOf(socket.nickname);
+    if (index > -1) {
+      // 避免是undefined
+      users.splice(index, 1); // 删除用户信息
 
-  socket.on("eventname", (msg) => {
-    console.log("接收到来自客户端的eventname事件", msg);
+      io.emit("system", {
+        // 系统通知
+        name: socket.nickname,
+        status: "离开",
+      });
+
+      io.emit("disUser", users);
+      console.log(`${socket.nickname}用户离开`);
+    }
   });
 });
 

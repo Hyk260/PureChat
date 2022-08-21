@@ -52,10 +52,8 @@ const monitoring = () => {
   commit("SET_NETWORK_STATUS", status);
 };
 
-const { username } = user.value;
-console.log(user.value);
 socket.emit("login", {
-  name: username,
+  name: user.value.username,
 });
 
 window.addEventListener("online", monitoring);
