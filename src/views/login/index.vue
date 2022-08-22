@@ -164,13 +164,13 @@ const login = async () => {
   const res = await Login({ username, password });
   console.log(res, "登录信息");
   if (!res) return;
-  const { code, msg } = res;
+  const { code, msg, result } = res;
   verification(code, msg);
 
   if (code === 200) {
     let menu = await getMenu();
     // console.log(menu,"菜单列表")
-    commit("updateData", { key: "user", value: user });
+    commit("updateData", { key: "user", value: result });
     // Menulist
     await dispatch("updateRoute", menu);
     // console.log(router.options.routes)

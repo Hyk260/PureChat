@@ -25,13 +25,13 @@ io.on("connection", (socket) => {
   // 检测用户上线
   socket.on("login", (user) => {
     const { name } = user;
-    console.log(user, "用户信息");
+    console.log(user, "用户上线");
     if (users.indexOf(name) == -1) {
       users.push(name);
       socket.nickname = name;
       io.emit("system", {
         name,
-        status: "进入",
+        status: 6,
       });
       io.emit("disUser", users);
       console.log("当前在线用户人数" + users.length);
@@ -47,7 +47,7 @@ io.on("connection", (socket) => {
       io.emit("system", {
         // 系统通知
         name: socket.nickname,
-        status: "离开",
+        status: 5,
       });
 
       io.emit("disUser", users);

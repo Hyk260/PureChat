@@ -229,6 +229,16 @@ const sendMessage = async () => {
     console.log(result);
   }
 };
+elem_type: 5
+group_tips_elem_group_change_info_array: []
+group_tips_elem_group_id: "@TGS#1DL5WDSOBF"
+group_tips_elem_group_name: "黄涛、王义祥等"
+group_tips_elem_member_num: 0
+group_tips_elem_op_group_memberinfo: Object
+group_tips_elem_op_user: "100122232"
+group_tips_elem_op_user_info: Object
+group_tips_elem_platform: "Other"
+group_tips_elem_tip_type: 6
 </script>
 
 <style lang="scss" scoped>

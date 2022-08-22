@@ -57,11 +57,18 @@
 import "v-contextmenu/dist/themes/default.css";
 import { ref, onMounted } from "vue";
 import {
+  generateTemplateElement,
+  getMessageElemItem,
+  getImageType,
+} from "@/utils/message-input-utils";
+import {
   squareUrl,
   RIGHT_CLICK_CHAT_LIST,
   RIGHT_CLICK_MENU_LIST,
 } from "./utils/menu";
+import { debounce } from '@/utils/debounce';
 import { getRoles } from "@/api/roles";
+import { generateUUID } from "@/utils/index";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { timeFormat } from "@/utils/timeFormat";
@@ -76,7 +83,8 @@ onMounted(() => {
 });
 
 const { state, getters, dispatch, commit } = useStore();
-const { Selected } = useState({
+const { Selected, UserInfo } = useState({
+  UserInfo: (state) => state.data.user,
   Selected: (state) => state.conversation.currentConversation,
 });
 const userdata = {
@@ -101,11 +109,48 @@ const getRolesList = async () => {
 
 // 显示在线人员
 socket.on("disUser", (usersInfo) => {
-  console.log(usersInfo);
+  console.log(usersInfo,'在线人员');
 });
-socket.on("system", (user) => {
+// 系统消息
+socket.on("system", async (user) => {
   var data = new Date().toTimeString().substr(0, 8);
-  console.log(`${data} ${user.name}  ${user.status}了聊天室`)
+  let states = user.status == 6 ? "进入" : "离开"
+  console.log(`${data} ${user.name}  ${states}了聊天室`)
+  if(UserInfo.value.username == user.name) return
+  let message = {
+    "elem_type": 5,
+    "tips_elem_group_info_array": [
+      {
+        "tips_info_flag": 1,
+        "tips_info_value": user.name
+      }
+    ],
+    "group_tips_elem_tip_type": user.status
+  }
+  const messageId = generateUUID();
+  const userProfile = {
+    user_profile_nick_name: "系统",
+  };
+  const conv_id = "window";
+  const conv_type = 2;
+  const templateElement = await generateTemplateElement(
+    conv_id, // 会话ID
+    conv_type, // 消息类型 1 2
+    userProfile, // 发送方数据
+    messageId, // UUID
+    message,
+    {}
+  );
+  debounce(() => {
+    commit("SET_HISTORYMESSAGE", {
+      type: "UPDATE_MESSAGES",
+      payload: {
+        convId: conv_id,
+        message: templateElement,
+      },
+    });
+  },500)
+  
 });
 
 const fnClass = (item) => {

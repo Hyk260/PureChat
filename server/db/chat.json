@@ -428,46 +428,6 @@
       "message_status": 1
     },
     {
-      "message_client_time": 1660914860,
-      "message_conv_id": "100002138",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": ""
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "0439640f-6b04-4bb9-b31f-e98ee3f45cc8",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
-      "message_client_time": 1660914861,
-      "message_conv_id": "100002138",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": ""
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "9585aacf-6d84-429c-a1ae-6f464ffc2b52",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
       "message_client_time": 1660914921,
       "message_conv_id": "100002138",
       "message_conv_type": "2",
@@ -480,26 +440,6 @@
       "message_is_from_self": true,
       "message_is_peer_read": false,
       "message_msg_id": "5c778ee6-0f9f-41e1-91d1-f5f2ae734fdc",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
-      "message_client_time": 1661055852,
-      "message_conv_id": "100002138",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": "😒"
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "3fc1dded-a1e5-4603-9546-29da7ee093d2",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
         "user_profile_nick_name": "临江仙"

@@ -19,9 +19,11 @@
           </div>
           <!-- 消息 is-self is-other-->
           <div
+            v-if="item.message_elem_array[0].elem_type !== 5"
             class="message-view__item"
             :class="item.message_is_from_self ? 'is-self' : 'is-other'"
-          >
+          > 
+            <!-- 头像 -->
             <div class="picture">
               <el-avatar :size="36" shape="square" :src="squareUrl" />
             </div>
@@ -36,6 +38,14 @@
                 <component :is="TextElemItem" :message="item"> </component>
               </div>
             </div>
+          </div>
+          <!-- tips提示 -->
+          <div
+            v-else
+            class="message-view__item" 
+            style="justify-content: center;"
+          >
+          <TipsElemItem :msgRow="item.message_elem_array[0]" />
           </div>
         </div>
         <!-- 右键菜单 -->
@@ -70,6 +80,7 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
 import LoadMore from "./components/LoadMore.vue";
+import TipsElemItem from './components/TipsElemItem.vue';
 import {
   dragControllerDiv,
   loadMsgComponents,
@@ -88,7 +99,7 @@ const { currentMessageList, noMore } = useState({
   noMore: (state) => state.conversation.noMore,
   currentMessageList: (state) => state.conversation.currentMessageList,
 });
-
+console.log(currentMessageList)
 watch(
   () => currentMessageList.value,
   () => {
@@ -190,6 +201,18 @@ defineExpose({ UpdateScrollbar });
 </script>
 
 <style lang="scss" scoped>
+.message-view__item--text {
+    font-size: 12px;
+    border-radius: 3px;
+    background: rgba(0,0,0,0.05);
+    vertical-align: middle;
+    word-wrap: normal;
+    word-break: break-all;
+    color: rgba(0,0,0,0.45);
+    margin-top: 5px;
+    padding: 4px 6px;
+    line-height: 16px;
+}
 .message-info-view-content {
   height: calc(100% - 70px - 206px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.09);

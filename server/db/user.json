@@ -4,18 +4,21 @@
       "id": "1b2d9d10-e1b1-4584-bf1b-f19852794f4e",
       "username": "ROLE_USER",
       "password": "123456",
+      "portrait":"picture",
       "roleId": "6b2d9d80-e1b1-4584-bf7b-f10852794e4a"
     },
     {
       "id": "2b2d9d10-e1b1-4584-bf1b-f19852794f4e",
       "username": "黄泳康",
       "password": "123456",
+      "portrait":"hyk",
       "roleId": "7b2d9d80-e1b1-4584-bf7b-f10852794e4a"
     },
     {
       "id": "3b2d9d10-e1b1-4584-bf1b-f19852794f4e",
       "username": "任丹",
       "password": "123456",
+      "portrait":"rendan",
       "roleId": "8b2d9d80-e1b1-4584-bf7b-f10852794e4a"
     }
   ]

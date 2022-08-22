@@ -45,7 +45,10 @@ export const Megtype = (item) => {
   let resp = null;
   switch (elem_type) {
     case 0:
-      resp = "message-view__text";
+      resp = "message-view__text"; // 文本
+      break;
+    case 5:
+      resp = "group-tips-elem-item"; // 系统提示
       break;
   }
   return resp;

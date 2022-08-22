@@ -31,7 +31,7 @@
         <div class="user">
           <el-dropdown>
             <span class="el-dropdown-link">
-              <el-avatar :size="24" :src="avatars" />
+              <Avatar :size="28" />
               <p>ADMIN</p>
             </span>
             <template #dropdown>
@@ -104,12 +104,14 @@ watch(
   }
 );
 
-const { isActive, tags, sidebar, setswitch } = useState({
+const { isActive, tags, sidebar, setswitch, userInfo } = useState({
+  userInfo: (state) => state.data,
   tags: (state) => state.data.elTag,
   sidebar: (state) => !state.settings.sidebar,
   isActive: (state) => state.settings.isCollapse,
   setswitch: (state) => state.settings.setswitch,
 });
+// console.log(userInfo.value.user.portrait)
 
 const fnStyle = (off) => {
   return `width:calc(100% - ${off ? "64px" : "200px"})`;
