@@ -21,11 +21,25 @@
           <div
             v-if="item.message_elem_array[0].elem_type !== 5"
             class="message-view__item"
-            :class="item.message_is_from_self ? 'is-self' : 'is-other'"
+            :class="item.message_sender_profile.user_profile_nick_name == userInfo.user.username ? 'is-self' : 'is-other'"
           > 
+            <!-- :class="item.message_is_from_self ? 'is-self' : 'is-other'" -->
             <!-- 头像 -->
             <div class="picture">
-              <el-avatar :size="36" shape="square" :src="squareUrl" />
+              <Avatar
+                v-if="item.message_sender_profile.user_profile_nick_name == userInfo.user.username" 
+                :size="36" 
+                :shape="'square'"
+              />
+              <el-avatar
+                v-else 
+                :size="36" 
+                shape="square" 
+                @error="() => true"
+                :src="require(`@/assets/images/${item.message_sender_profile.user_profile_face_url}.jpg`)" 
+              >
+              <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
+             </el-avatar>
             </div>
             <!-- 内容 -->
             <div
@@ -42,8 +56,7 @@
           <!-- tips提示 -->
           <div
             v-else
-            class="message-view__item" 
-            style="justify-content: center;"
+            class="message-view__item tips" 
           >
           <TipsElemItem :msgRow="item.message_elem_array[0]" />
           </div>
@@ -65,41 +78,43 @@
 
 <script setup>
 import {
-  onBeforeUnmount,
   ref,
+  watch,
+  nextTick,
   onMounted,
   onUpdated,
   computed,
-  watch,
-  nextTick,
+  onBeforeUnmount,
 } from "vue";
-import "v-contextmenu/dist/themes/default.css";
-import { timeFormat } from "@/utils/timeFormat";
-import TextElemItem from "./components/TextElemItem";
-import { Contextmenu, ContextmenuItem } from "v-contextmenu";
-import { useStore } from "vuex";
-import { useState } from "@/utils/hooks/useMapper";
-import LoadMore from "./components/LoadMore.vue";
-import TipsElemItem from './components/TipsElemItem.vue';
 import {
+  fncopy,
+  Megtype,
   dragControllerDiv,
   loadMsgComponents,
-  Megtype,
-  fncopy,
 } from "./utils/utils";
-import { squareUrl, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
+import { useStore } from "vuex";
+import "v-contextmenu/dist/themes/default.css";
+import { timeFormat } from "@/utils/timeFormat";
 import { debounce } from "@/utils/debounce";
+import { useState } from "@/utils/hooks/useMapper";
+import { squareUrl, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
+import { Contextmenu, ContextmenuItem } from "v-contextmenu";
+import TextElemItem from "./components/TextElemItem";
+import LoadMore from "./components/LoadMore.vue";
+import TipsElemItem from './components/TipsElemItem.vue';
 import { getChat, getMsgList } from "@/api/chat";
 
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
+
 const { state, dispatch, commit } = useStore();
-const { currentMessageList, noMore } = useState({
+const { currentMessageList, noMore, userInfo } = useState({
+  userInfo: (state) => state.data,
   noMore: (state) => state.conversation.noMore,
   currentMessageList: (state) => state.conversation.currentMessageList,
 });
-console.log(currentMessageList)
+
 watch(
   () => currentMessageList.value,
   () => {
@@ -251,6 +266,9 @@ defineExpose({ UpdateScrollbar });
 
   .message-view-item {
     flex: 1;
+  }
+  .tips{
+    justify-content: center;
   }
 }
 

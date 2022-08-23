@@ -46,6 +46,7 @@ import {
   getMessageElemItem,
   getImageType,
 } from "@/utils/message-input-utils";
+import socket from "@/utils/socket";
 import { empty } from "@/utils";
 import { useStore } from "vuex";
 import { sendMsg } from "@/api/chat";
@@ -62,9 +63,8 @@ const { currentMessageList, historyMessageList, noMore, userInfo } = useState({
   currentMessageList: (state) => state.conversation.currentMessageList,
   historyMessageList: (state) => state.conversation.historyMessageList,
   noMore: (state) => state.conversation.noMore,
-  userInfo: (state) => state.data,
+  userInfo: (state) => state.data.user,
 });
-
 // 组件销毁时，及时销毁编辑器
 onBeforeUnmount(() => {
   const editor = editorRef.value;
@@ -166,7 +166,7 @@ const handleEnter = () => {
   // 纯文本内容
   const text = editorRef.value.getText();
   if (!isEmpty && !empty(text)) {
-    // sendMessage();
+    sendMessage();
   } else {
     console.log("请输入内容");
     clearInputInfo();
@@ -195,9 +195,10 @@ const sendMessage = async () => {
 
   const messageId = generateUUID();
   const userProfile = {
-    user_profile_nick_name: "临江仙",
+    user_profile_nick_name: userInfo.value.username,
+    user_profile_face_url: userInfo.value.portrait
   };
-  const conv_id = 100002138;
+  const conv_id = '';
   const conv_type = 2;
   const templateElement = await generateTemplateElement(
     conv_id, // 会话ID
@@ -217,28 +218,21 @@ const sendMessage = async () => {
       message: templateElement,
     },
   });
+  socket.emit("sendMsg", templateElement)
+  
   // 会话消息发送
-  let { code, result } = await sendMsg({
-    conv_id,
-    conv_type,
-    userProfile,
-    message,
-  });
-  if (code == 200) {
-    console.log("发送成功");
-    console.log(result);
-  }
+  // let { code, result } = await sendMsg({
+  //   conv_id,
+  //   conv_type,
+  //   userProfile,
+  //   message,
+  // });
+  // if (code == 200) {
+  //   console.log("发送成功");
+  //   console.log(result);
+  // }
 };
-elem_type: 5
-group_tips_elem_group_change_info_array: []
-group_tips_elem_group_id: "@TGS#1DL5WDSOBF"
-group_tips_elem_group_name: "黄涛、王义祥等"
-group_tips_elem_member_num: 0
-group_tips_elem_op_group_memberinfo: Object
-group_tips_elem_op_user: "100122232"
-group_tips_elem_op_user_info: Object
-group_tips_elem_platform: "Other"
-group_tips_elem_tip_type: 6
+
 </script>
 
 <style lang="scss" scoped>

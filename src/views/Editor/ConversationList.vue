@@ -6,9 +6,12 @@
         v-for="item in Friends"
         :key="item"
         :class="fnClass(item)"
+        @click="handleConvListClick(item)"
+        @drop="(e) => dropHandler(e, item)"
+        @dragenter="dragenterHandler"
+        @dragleave="dragleaveHandler"
         v-contextmenu:contextmenu
         @contextmenu.prevent="handleContextMenuEvent($event, item)"
-        @click="handleConvListClick(item)"
       >
         <!-- 置顶图标 -->
         <div class="pinned-tag" v-if="item && item.pinned"></div>
@@ -30,7 +33,10 @@
               {{ timeFormat(item.updateTime) }}
             </div>
           </div>
-          <span class="message-item-right-bottom"> 消息 </span>
+          <span class="message-item-right-bottom"> 
+            {{currentMessageList[0].message_sender_profile.user_profile_nick_name}}:
+            {{currentMessageList[0].message_elem_array[0].text_elem_content}}
+          </span>
           <!-- 消息免打扰 -->
           <svg-icon
             v-if="item.conv_recv_opt == 2"
@@ -75,18 +81,22 @@ import { timeFormat } from "@/utils/timeFormat";
 import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
 import socket from "@/utils/socket";
+
 const contextMenuItemInfo = ref([]);
 const Friends = ref([]);
-
-onMounted(() => {
-  getRolesList();
-});
-
-const { state, getters, dispatch, commit } = useStore();
-const { Selected, UserInfo } = useState({
-  UserInfo: (state) => state.data.user,
-  Selected: (state) => state.conversation.currentConversation,
-});
+// {
+//   conv_active_time: 0000,
+//   conv_id: "@",
+//   conv_is_has_draft: false,
+//   conv_is_has_lastmsg: true,
+//   conv_is_pinned: true,
+//   conv_last_msg: {},
+//   conv_profile: {},
+//   conv_recv_opt: 0,
+//   conv_show_name: "群聊",
+//   conv_type: 2,
+//   conv_unread_num: 0
+// }
 const userdata = {
   id: "5346d441-bc35-4948-960e-c2d0c2b94a67",
   roleName: "群聊",
@@ -97,6 +107,17 @@ const userdata = {
   pinned: true,
   conv_recv_opt: 2,
 };
+
+onMounted(() => {
+  getRolesList();
+});
+
+const { state, getters, dispatch, commit } = useStore();
+const { Selected, UserInfo, currentMessageList } = useState({
+  UserInfo: (state) => state.data.user,
+  Selected: (state) => state.conversation.currentConversation,
+  currentMessageList: (state) => state.conversation.currentMessageList,
+});
 
 const getRolesList = async () => {
   let { code, result } = await getRoles();
@@ -110,6 +131,7 @@ const getRolesList = async () => {
 // 显示在线人员
 socket.on("disUser", (usersInfo) => {
   console.log(usersInfo,'在线人员');
+  console.log(currentMessageList.value)
 });
 // 系统消息
 socket.on("system", async (user) => {
@@ -150,8 +172,22 @@ socket.on("system", async (user) => {
       },
     });
   },500)
-  
 });
+// 接受消息
+socket.on("receiveMsg", (data) => {
+  console.log(data,"接受消息")
+  const { message_sender_profile } = data
+  const { user_profile_nick_name } = message_sender_profile
+  if (UserInfo.value.username == user_profile_nick_name) return
+  commit("SET_HISTORYMESSAGE", {
+    type: "UPDATE_MESSAGES",
+    payload: {
+      convId: '',
+      message: data,
+    },
+  });
+})
+
 
 const fnClass = (item) => {
   let current = Selected.value;
@@ -190,6 +226,16 @@ const handleContextMenuEvent = (e, item) => {
     });
   }
 };
+//
+const dropHandler = (e, item) => {
+
+}
+const dragenterHandler = (e) => {
+
+}
+const dragleaveHandler = (e) => {
+
+}
 // 会话点击
 const handleConvListClick = (data) => {
   commit("SET_CONVERSATION", {
@@ -197,6 +243,7 @@ const handleConvListClick = (data) => {
     payload: data,
   });
 };
+
 const handleClickMenuItem = (item) => {
   const Info = contextMenuItemInfo.value;
   switch (item.id) {

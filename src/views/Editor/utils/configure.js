@@ -25,4 +25,4 @@ export const editorConfig = {
 //   emotions: `😀 😃 😄 🌞 😁 😆 🤖 😅 😂 🤣 😊 😇 🙂 🙃 😉`.split(' ') // 数组
 // }
 
-console.log(editorConfig.MENU_CONF['emotion'])
+// console.log(editorConfig.MENU_CONF['emotion'])

@@ -54,6 +54,10 @@ io.on("connection", (socket) => {
       console.log(`${socket.nickname}用户离开`);
     }
   });
+  // 发送消息
+  socket.on("sendMsg", (data) => {
+    socket.broadcast.emit('receiveMsg', data);
+  })
 });
 
 // 查询在线人数user 信息

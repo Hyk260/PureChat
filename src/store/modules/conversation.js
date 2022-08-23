@@ -10,6 +10,7 @@ const conversation = {
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表
     currentConversation: null, //跳转窗口的属性
+    conversationList: [], //会话列表数据
   },
   mutations: {
     // 设置历史消息

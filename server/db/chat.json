@@ -3,7 +3,7 @@
     {
       "message_client_time": 1657077846,
       "message_cloud_custom_str": "",
-      "message_conv_id": "100002138",
+      "message_conv_id": "",
       "message_conv_type": 1,
       "message_custom_int": 0,
       "message_custom_str": "",
@@ -27,14 +27,14 @@
       "message_platform": 0,
       "message_priority": 1,
       "message_rand": 80828448,
-      "message_sender": "100122232",
+      "message_sender": "",
       "message_sender_profile": {
         "user_profile_add_permission": 1,
         "user_profile_birthday": 0,
         "user_profile_custom_string_array": [],
-        "user_profile_face_url": "",
+        "user_profile_face_url": "rendan",
         "user_profile_gender": 0,
-        "user_profile_identifier": "100122232",
+        "user_profile_identifier": "",
         "user_profile_language": 0,
         "user_profile_level": 0,
         "user_profile_location": "",
@@ -48,48 +48,8 @@
       "message_unique_id": 7117095155576953000
     },
     {
-      "message_client_time": 1659342792,
-      "message_conv_id": "100002138",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": "sd \n"
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "d4dae9f6-0f6e-4599-ae08-7163223de7ce",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
-      "message_client_time": 1659342965,
-      "message_conv_id": "100002138",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": "sd \n"
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "18081643-c838-4529-a95c-639ff2dfdc64",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
       "message_client_time": 1659343190,
-      "message_conv_id": "100002138",
+      "message_conv_id": "",
       "message_conv_type": "2",
       "message_elem_array": [
         {
@@ -102,14 +62,15 @@
       "message_msg_id": "2fe11c0a-1bd0-469a-8691-8d2960bdbaa3",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
+        "user_profile_nick_name": "临江仙",
+        "user_profile_face_url": "hyk"
       },
       "message_server_time": 0,
       "message_status": 1
     },
     {
       "message_client_time": 1659343355,
-      "message_conv_id": "100002138",
+      "message_conv_id": "",
       "message_conv_type": "2",
       "message_elem_array": [
         {
@@ -122,54 +83,15 @@
       "message_msg_id": "1bee2964-8158-425f-9f00-28df28cac291",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
-      "message_client_time": 1659343842,
-      "message_conv_id": "100002138",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": "df \n"
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "7b6744c7-59fb-4f19-a1ee-a22944a378bb",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
-      "message_client_time": 1659343897,
-      "message_conv_id": "100002138",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": "sd \n"
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "3023d0e3-745b-4936-92af-93673c985b52",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
+        "user_profile_nick_name": "临江仙",
+        "user_profile_face_url": "hyk"
       },
       "message_server_time": 0,
       "message_status": 1
     },
     {
       "message_client_time": 1659344025,
-      "message_conv_id": "100002138",
+      "message_conv_id": "",
       "message_conv_type": "2",
       "message_elem_array": [
         {
@@ -182,47 +104,8 @@
       "message_msg_id": "05f4964f-fd35-4885-8f79-14c921154b6f",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
-      "message_client_time": 1659344041,
-      "message_conv_id": "100002138",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": "是否\n"
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "1e38f08d-b667-4765-8c7e-9958b4ea3610",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
-      "message_client_time": 1659344185,
-      "message_conv_id": "100002138",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": "dfdf \n"
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "7441867e-76d0-4650-9fee-c66d2100e792",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
+        "user_profile_nick_name": "临江仙",
+        "user_profile_face_url": "hyk"
       },
       "message_server_time": 0,
       "message_status": 1
@@ -242,7 +125,8 @@
       "message_msg_id": "308f8e2d-c84d-43db-bad9-955e8027be7a",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
+        "user_profile_nick_name": "临江仙",
+        "user_profile_face_url": "hyk"
       },
       "message_server_time": 0,
       "message_status": 1
@@ -262,14 +146,15 @@
       "message_msg_id": "a96301ed-8b16-4ec5-9b56-6be3d122c794",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
+        "user_profile_nick_name": "临江仙",
+        "user_profile_face_url": "hyk"
       },
       "message_server_time": 0,
       "message_status": 1
     },
     {
       "message_client_time": 1659355367,
-      "message_conv_id": "100002138",
+      "message_conv_id": "",
       "message_conv_type": "2",
       "message_elem_array": [
         {
@@ -282,14 +167,15 @@
       "message_msg_id": "328d8d0b-eb6c-4190-9f42-fa046c6fc01a",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
+        "user_profile_nick_name": "临江仙",
+        "user_profile_face_url": "hyk"
       },
       "message_server_time": 0,
       "message_status": 1
     },
     {
       "message_client_time": 1659355530,
-      "message_conv_id": "100002138",
+      "message_conv_id": "",
       "message_conv_type": "2",
       "message_elem_array": [
         {
@@ -302,14 +188,15 @@
       "message_msg_id": "daa815ff-9399-4259-a036-a4653efe2b89",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
+        "user_profile_nick_name": "临江仙",
+        "user_profile_face_url": "hyk"
       },
       "message_server_time": 0,
       "message_status": 1
     },
     {
       "message_client_time": 1659362246,
-      "message_conv_id": "100002138",
+      "message_conv_id": "",
       "message_conv_type": "2",
       "message_elem_array": [
         {
@@ -322,14 +209,15 @@
       "message_msg_id": "df21830c-3cb6-4d3c-a80f-3a8995c62c63",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
+        "user_profile_nick_name": "临江仙",
+        "user_profile_face_url": "hyk"
       },
       "message_server_time": 0,
       "message_status": 1
     },
     {
       "message_client_time": 1659404090,
-      "message_conv_id": "100002138",
+      "message_conv_id": "",
       "message_conv_type": "2",
       "message_elem_array": [
         {
@@ -342,47 +230,8 @@
       "message_msg_id": "b9085130-a109-477b-aec0-4d29bf0456c3",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
-      "message_client_time": 1659405299,
-      "message_conv_id": "100002138",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": "深V"
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "e8e92aa8-e820-47eb-9d6d-44acec667928",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
-      "message_client_time": 1659511920,
-      "message_conv_id": "100002138",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": "干哈\n"
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "081e512f-0f3c-43e5-9bc5-73f4612bcf65",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
+        "user_profile_nick_name": "临江仙",
+        "user_profile_face_url": "hyk"
       },
       "message_server_time": 0,
       "message_status": 1
@@ -402,7 +251,8 @@
       "message_msg_id": "b6926096-fb3d-4a0d-a8ad-4a1e95c6421b",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
+        "user_profile_nick_name": "临江仙",
+        "user_profile_face_url": "hyk"
       },
       "message_server_time": 0,
       "message_status": 1
@@ -422,27 +272,8 @@
       "message_msg_id": "57ac152e-187c-4cfb-aa2f-f4427cef4ba3",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
-      "message_client_time": 1660914921,
-      "message_conv_id": "100002138",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": "qw "
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "5c778ee6-0f9f-41e1-91d1-f5f2ae734fdc",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙"
+        "user_profile_nick_name": "临江仙",
+        "user_profile_face_url": "hyk"
       },
       "message_server_time": 0,
       "message_status": 1
