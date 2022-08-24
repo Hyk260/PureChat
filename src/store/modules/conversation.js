@@ -19,7 +19,6 @@ const conversation = {
       switch (type) {
         // 更新消息
         case CONVERSATIONTYPE.UPDATE_MESSAGES: {
-          console.log(payload);
           const { convId, message } = payload;
           state.currentMessageList.unshift(message);
           break;
@@ -55,12 +54,10 @@ const conversation = {
         // 跳转会话
         case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
           if (payload) {
-            console.log(payload)
             if (payload?.id == state.currentConversation?.id) return;
             state.needScrollDown = 0;
             // state.noMore = false;
             state.currentConversation = payload;
-            console.log(payload)
           }
           break;
         }
@@ -80,6 +77,7 @@ const conversation = {
       }
     },
   },
+  getters: {},
 };
 
 export default conversation;

@@ -21,7 +21,7 @@ const props = defineProps({
     default: 'circle', // 'circle' | 'square'
   }
 });
-const { size } = toRefs(props);
+const { size, shape } = toRefs(props);
 const { userInfo } = useState({
   userInfo: (state) => state.data.user,
 });

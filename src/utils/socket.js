@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 const socket = io(
-  "http://localhost:3001/", //#'ws://127.0.0.1:3000',
+  "http://localhost:3001/", // http://localhost:8080/
   {
     path: "", //# socket.io 库默认服务端path为/socket.io
     transports: ["websocket", "xhr-polling", "jsonp-polling"],

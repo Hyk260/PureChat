@@ -3,7 +3,9 @@
     <el-card class="box-card mb-4" shadow="never">
       <template #header>
         <div class="card-header">
-          <span class="font-medium">关于</span>
+          <span class="font-medium">
+            关于
+          </span>
         </div>
       </template>
       <span style="font-size: 15px">
@@ -11,41 +13,43 @@
       </span>
     </el-card>
 
-    <el-card class="box-card m-4" shadow="hover">
-      <template #header>
-        <div class="card-header">
-          <span class="font-medium">项目信息</span>
-        </div>
-      </template>
-      <el-descriptions :column="2" border>
-        <el-descriptions-item label="版本" label-align="left" align="left">
-          <el-tag>{{ version }}</el-tag>
-        </el-descriptions-item>
-        <!-- <el-descriptions-item
-          label="最后编译时间"
-          label-align="left"
-          align="left"
-        >
-          <el-tag>{{ lastBuildTime }}</el-tag>
-        </el-descriptions-item> -->
-        <el-descriptions-item label="文档地址" label-align="left" align="left">
-          <a href="#" target="_blank">
-            <span style="color: var(--el-color-primary)">文档地址</span>
-          </a>
-        </el-descriptions-item>
-        <el-descriptions-item label="预览地址" label-align="left" align="left">
-          <a href="#" target="_blank">
-            <span style="color: var(--el-color-primary)">预览地址</span>
-          </a>
-        </el-descriptions-item>
-        <el-descriptions-item label="Github" label-align="left" align="left">
-          <a href="#" target="_blank">
-            <span style="color: var(--el-color-primary)">Github</span>
-          </a>
-        </el-descriptions-item>
-      </el-descriptions>
-    </el-card>
     <Motion :delay="100">
+      <el-card class="box-card m-4" shadow="hover">
+        <template #header>
+          <div class="card-header">
+            <span class="font-medium">项目信息</span>
+          </div>
+        </template>
+        <el-descriptions :column="2" border>
+          <el-descriptions-item label="版本" label-align="left" align="left">
+            <el-tag>{{ version }}</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item
+            label="最后编译时间"
+            label-align="left"
+            align="left"
+          >
+            <el-tag>{{ lastBuildTime }}</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="文档地址" label-align="left" align="left">
+            <a href="#" target="_blank">
+              <span style="color: var(--el-color-primary)">文档地址</span>
+            </a>
+          </el-descriptions-item>
+          <el-descriptions-item label="预览地址" label-align="left" align="left">
+            <a href="#" target="_blank">
+              <span style="color: var(--el-color-primary)">预览地址</span>
+            </a>
+          </el-descriptions-item>
+          <el-descriptions-item label="Github" label-align="left" align="left">
+            <a href="https://github.com/Hyk260" target="_blank">
+              <span style="color: var(--el-color-primary)">Github</span>
+            </a>
+          </el-descriptions-item>
+        </el-descriptions>
+      </el-card>
+    </Motion>
+    <Motion :delay="200">
       <el-card class="box-card m-4" shadow="hover">
         <template #header>
           <div class="card-header">
@@ -70,7 +74,7 @@
         </el-descriptions>
       </el-card>
     </Motion>
-    <Motion :delay="200">
+    <Motion :delay="300">
       <el-card class="box-card m-4" shadow="hover">
         <template #header>
           <div class="card-header">
@@ -105,6 +109,7 @@ import Motion from "@/utils/motion";
 const { proxy } = getCurrentInstance();
 const { dependencies, devDependencies, version } = proxy.__APP_INFO__;
 
+const lastBuildTime = 345346
 const schema = [];
 const devSchema = [];
 

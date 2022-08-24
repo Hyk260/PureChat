@@ -2,7 +2,8 @@
   <header class="message-info-view-header">
     <div class="message-info-views">
       <p v-if="Conver">
-        {{ Conver.roleName }}
+        <!-- {{ Conver.roleName }} -->
+        群聊
       </p>
     </div>
     <div class="message-info-setup">

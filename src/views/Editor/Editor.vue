@@ -84,14 +84,19 @@ const customAlert = (s, t) => {
   console.log(s, t);
   switch (t) {
     case "success":
+      console.log("success")
       break;
     case "info":
+       console.log("info")
       break;
     case "warning":
+       console.log("warning")
       break;
     case "error":
+       console.log("error")
       break;
     default:
+       console.log("default")
       break;
   }
 };

@@ -33,10 +33,12 @@
               {{ timeFormat(item.updateTime) }}
             </div>
           </div>
-          <span class="message-item-right-bottom"> 
-            {{currentMessageList[0].message_sender_profile.user_profile_nick_name}}:
-            {{currentMessageList[0].message_elem_array[0].text_elem_content}}
-          </span>
+          <div class="message-item-right-bottom"> 
+            <span>
+              {{currentMessageList[0].message_sender_profile.user_profile_nick_name}}:
+              {{currentMessageList[0].message_elem_array[0].text_elem_content}}
+            </span>
+          </div>
           <!-- 消息免打扰 -->
           <svg-icon
             v-if="item.conv_recv_opt == 2"
@@ -356,12 +358,13 @@ const pingConv = (data) => {
     .dont {
       position: absolute;
       right: 0;
+      top: 26px;
       color: rgb(29 33 41 / 30%);
     }
     .message-item-right-top {
       display: flex;
       justify-content: space-between;
-      padding-bottom: 7px;
+      padding-bottom: 10px;
       width: 100%;
       .message-chat-name {
         font-size: 14px;
@@ -383,8 +386,10 @@ const pingConv = (data) => {
       font-size: 12px;
       color: rgba(0, 0, 0, 0.45);
       overflow: hidden;
-      text-overflow: ellipsis;
       pointer-events: none;
+      width: 179px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 }
