@@ -114,7 +114,7 @@
         class="demo-ruleForm"
       >
         <el-form-item label="姓名" prop="name">
-          <el-input v-model="ruleForm.name" autocomplete="off" />
+          <el-input v-model="ruleForm.name" autocomplete="off" style="width:216px" />
         </el-form-item>
         <el-form-item label="说明" prop="info">
           <el-select v-model="ruleForm.info" placeholder="角色类型">
@@ -336,30 +336,11 @@ const checkInfo = (rule, value, callback) => {
  */
 const resetForm = (formEl) => {
   if (!formEl) return;
-  console.log(formEl, "重置");
   formEl.resetFields();
 };
 </script>
-<style scoped>
-/* .el-button--text {
-  margin-right: 15px;
-}
 
-.el-select {
-  width: 300px;
-}
-
-.el-input {
-  width: 300px;
-}
-
-.dialog-footer button:first-child {
-  margin-right: 10px;
-} */
-</style>
 <style lang="scss" scoped>
-.content-role {
-}
 .pagination {
   padding: 10px 0;
 }

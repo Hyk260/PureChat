@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
 import storage from "storejs";
 import NProgress from "@/utils/progress";
 import routes from "./routes";
@@ -20,8 +20,10 @@ const loginRoutePath = "/login";
 const defaultRoutePath = "/home";
 
 console.log(process.env, "环境变量");
+// createWebHashHistory()
+// createWebHistory(process.env.BASE_URL)
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(),
   routes,
 });
 // 默认是  Hash  模式, 手动设置为  History  模式

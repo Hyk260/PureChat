@@ -26,7 +26,7 @@
             <!-- :class="item.message_is_from_self ? 'is-self' : 'is-other'" -->
             <!-- 头像 -->
             <div class="picture">
-              <Avatar
+              <Portrait
                 v-if="item.message_sender_profile.user_profile_nick_name == userInfo.user.username" 
                 :size="36" 
                 :shape="'square'"

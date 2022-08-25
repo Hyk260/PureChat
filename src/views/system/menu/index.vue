@@ -4,7 +4,9 @@
       <!-- 菜单列表 -->
       <el-aside class="style-aside">
         <el-row class="mb-4">
-          <el-button size="small" plain @click="addMenuBtn">添加菜单</el-button>
+          <el-button size="small" plain @click="addMenuBtn">
+            添加菜单
+          </el-button>
           <el-button @click="Putall(isExpand)" size="small" plain>
             {{ isExpand ? "全部展开" : " 全部收起" }}
           </el-button>
@@ -13,7 +15,9 @@
             type="danger"
             @click="delMenuBtn"
             v-show="showDelBtn"
-            >删除</el-button
+          >
+            删除
+          </el-button
           >
         </el-row>
         <div class="input-style">
@@ -22,7 +26,8 @@
             placeholder="输入菜单名称搜索"
             v-model="filterText"
             clearable
-          ></el-input>
+          >
+          </el-input>
         </div>
         <div class="common-box">
           <el-scrollbar>
@@ -36,7 +41,6 @@
                 node-key="id"
                 @node-click="nodeClick"
                 @check="checkBox"
-                @click.right.native="showUserProfileMenu"
                 :props="defaultProps"
                 :filter-node-method="filterNode"
               >
@@ -58,8 +62,8 @@
       <el-main class="style-main">
         <el-row class="mb-4"> 编辑菜单：角色权限管理 </el-row>
         <div class="Edit-menu">
-          <el-alert title="从菜单列表选择一项后,进行编辑" :closable="false" />
           <!-- close-text="知道了" -->
+          <el-alert title="从菜单列表选择一项后,进行编辑" :closable="false" /> 
           <el-row>
             <el-form
               ref="ruleLabelRef"
@@ -333,10 +337,6 @@ function checkBox(node, key) {
   } else {
     resetForm(ruleLabelRef.value);
   }
-}
-
-function showUserProfileMenu(e) {
-
 }
 
 // 保存修改

@@ -7,10 +7,9 @@
 </template>
 
 <script setup>
-import avatars from "@/assets/images/picture.jpg";
 import { computed, defineProps, toRefs } from "vue";
 import { useState } from "@/utils/hooks/useMapper";
-// <Avatar />
+// <Portrait />
 const props = defineProps({
   size: {
     type: Number,

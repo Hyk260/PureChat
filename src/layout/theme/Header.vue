@@ -31,7 +31,7 @@
         <div class="user">
           <el-dropdown>
             <span class="el-dropdown-link">
-              <Avatar :size="28" />
+              <Portrait :size="28" />
               <p>ADMIN</p>
             </span>
             <template #dropdown>
@@ -126,15 +126,15 @@ const opensetup = (val) => {
 };
 // 退出登录
 const Logout = async () => {
-  const result = await ElMessageBox.confirm("确定退出登录?", "提示", {
+  ElMessageBox.confirm("确定退出登录?", "提示", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
-  })
-
-  if (result == "confirm") {
+  }).then(()=>{
     dispatch("LOG_OUT");
-  }
+  }).catch((err)=>{
+    console.log(err)
+  })
 };
 // 侧边栏 展开 折叠
 const toggleClick = (val) => {

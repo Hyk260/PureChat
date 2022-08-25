@@ -15,7 +15,7 @@ module.exports = {
   // 是否在保存的时候检查
   lintOnSave: false,
   // 开发以及生产环境的路径配置
-  publicPath: production ? "./" : "/",
+  publicPath: production ? "/" : "/",
   // 打包时输出的文件目录
   outputDir: "dist",
   //是否为生产环境构建生成 source map?
@@ -80,6 +80,6 @@ module.exports = {
     //     __filename: true
     //   }
     // })
-    // config.externals = externals;
+    config.externals = externals;
   },
 };

@@ -3,6 +3,7 @@ import { Login } from "@/api/user";
 import router from "@/router";
 import views from "@/utils/assembly.js";
 import initLocalStorage from "@/store/data/initLocalStorage";
+import { ACCESS_TOKEN } from "@/store/mutation-types";
 
 const user = {
   state: {

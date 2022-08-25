@@ -133,7 +133,6 @@ const getRolesList = async () => {
 // 显示在线人员
 socket.on("disUser", (usersInfo) => {
   console.log(usersInfo,'在线人员');
-  console.log(currentMessageList.value)
 });
 // 系统消息
 socket.on("system", async (user) => {

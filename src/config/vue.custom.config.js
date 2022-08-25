@@ -60,8 +60,6 @@ const vueDefaultConfig = {
   // webpack 打包忽略项
   externals: {
     vue: "Vue",
-    // vuex: "Vuex",
-    // axios: "axios",
   },
 };
 
