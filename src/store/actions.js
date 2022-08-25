@@ -21,13 +21,6 @@ const actions = {
     console.log(root.children);
     commit("updateData", { key: "Routingtable", value: root.children });
   },
-  preservation() {},
-  // 退出登录
-  logout() {
-    router.push("/login");
-    storage.remove("userdata");
-    storage.remove(ACCESS_TOKEN);
-  },
 };
 
 export default actions;

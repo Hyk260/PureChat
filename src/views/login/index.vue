@@ -1,15 +1,18 @@
 <template>
   <div class="login">
     <div class="login-inner">
+      <!-- 背景 -->
       <svg-icon iconClass="loginBg" class="wave" />
-
-      <header class="login-form">
-        <div class="tip">
-          <br />
-          <h2>PURE ADMIN</h2>
-        </div>
-      </header>
-
+      <!-- 标题 -->
+      <Motion>
+        <header class="login-form">
+          <div class="tip">
+            <br />
+            <h2>PURE ADMIN</h2>
+          </div>
+        </header>
+      </Motion>
+      <!-- 表单 -->
       <el-form ref="ruleFormRef" :model="user" :rules="rules">
         <!-- 账号 -->
         <el-form-item prop="username">
@@ -111,42 +114,21 @@ import { operates, thirdParty } from "./utils/enums";
 import { successMessage, warnMessage } from "@/utils/message";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { user } from "./utils/validation.js";
+import { user, rules } from "./utils/validation";
 import FontIcon from "@/layout/FontIcon/indx.vue";
-
+import Motion from "@/utils/motion";
+// 
 const router = useRouter();
 const showload = ref(false);
 const keep = ref(false);
 const ruleFormRef = ref();
 const imgCode = ref("");
-const { dispatch, commit } = useStore();
-
-// 表单校验
-const rules = reactive({
-  username: [{ required: true, message: "用户名是必须的", trigger: "blur" }],
-  password: [{ required: true, message: "密码是必须的", trigger: "blur" }],
-  verifyCode: [
-    {
-      validator: (rule, value, callback) => {
-        if (value === "") {
-          callback(new Error("请输入验证码"));
-        } else if (imgCode.value !== value) {
-          callback(new Error("请输入正确的验证码"));
-        } else {
-          callback();
-        }
-      },
-      trigger: "blur",
-    },
-  ],
-});
+const { state, dispatch, commit } = useStore();
 
 watch(imgCode, (value) => {
   dispatch("SET_VERIFYCODE", value);
 });
-// const myKeydown = async ()=>{
 
-// }
 const LoginBtn = async (formEl) => {
   if (!formEl) return;
   await formEl.validate((valid) => {
@@ -186,10 +168,12 @@ const login = async () => {
     showload.value = false;
   }
 };
+
 const onHandle = (index) => {
   console.log(index);
 };
-function verification(code, msg) {
+
+const verification = (code, msg) => {
   switch (code) {
     case 401:
       warnMessage(msg);

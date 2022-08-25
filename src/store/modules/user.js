@@ -13,9 +13,15 @@ const user = {
   mutations: {},
   actions: {
     // 设置验证码
-    SET_VERIFYCODE(state, verifyCode) {
+    SET_VERIFYCODE({state, commit, dispatch, getters, rootGetters, rootState}, verifyCode) {
       state.verifyCode = verifyCode;
     },
+    // 退出登陆
+    LOG_OUT(){
+      router.push("/login");
+      storage.remove("userdata");
+      storage.remove(ACCESS_TOKEN);
+    }
   },
 };
 

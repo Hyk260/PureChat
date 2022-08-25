@@ -59,15 +59,13 @@
 </template>
 
 <script setup>
-import { ElMessageBox } from "element-plus";
-import { reactive } from "@vue/reactivity";
 import { useStore } from "vuex";
+import { ElMessageBox } from "element-plus";
 import { computed, ref, watch, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useState } from "@/utils/hooks/useMapper";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import screenfull from "../components/screenfull.vue";
-import { useState } from "@/utils/hooks/useMapper";
-import avatars from "@/assets/images/picture.jpg";
 import Tags from '../components/Tags.vue';
 
 const { state, dispatch, commit } = useStore();
@@ -105,13 +103,12 @@ watch(
 );
 
 const { isActive, tags, sidebar, setswitch, userInfo } = useState({
-  userInfo: (state) => state.data,
+  userInfo: (state) => state.data.user,
   tags: (state) => state.data.elTag,
   sidebar: (state) => !state.settings.sidebar,
   isActive: (state) => state.settings.isCollapse,
   setswitch: (state) => state.settings.setswitch,
 });
-// console.log(userInfo.value.user.portrait)
 
 const fnStyle = (off) => {
   return `width:calc(100% - ${off ? "64px" : "200px"})`;
@@ -127,20 +124,18 @@ const opensetup = (val) => {
     value: true,
   });
 };
-
 // 退出登录
-const Logout = () => {
-  ElMessageBox.confirm("确定退出登录?", "提示", {
+const Logout = async () => {
+  const result = await ElMessageBox.confirm("确定退出登录?", "提示", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
   })
-    .then(() => {
-      dispatch("logout");
-    })
-    .catch(() => {});
-};
 
+  if (result == "confirm") {
+    dispatch("LOG_OUT");
+  }
+};
 // 侧边栏 展开 折叠
 const toggleClick = (val) => {
   commit("updateSettings", {

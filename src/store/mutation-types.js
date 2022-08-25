@@ -1,5 +1,6 @@
 export const ACCESS_TOKEN = "Access-Token";
 
+
 export const CONVERSATIONTYPE = {
   UPDATE_NOMORE: "UPDATE_NOMORE", //更新加载更多
   UPDATE_MESSAGES: "UPDATE_MESSAGES", //更新消息
@@ -11,6 +12,7 @@ export const CONVERSATIONTYPE = {
 
 export const GET_MESSAGE_LIST = "GET_MESSAGE_LIST"; //获取消息列表
 export const HISTORY_MESSAGE_COUNT = 20; //历史消息计数
+
 
 export const CONTENT_WIDTH_TYPE = {
   Fluid: "Fluid",
