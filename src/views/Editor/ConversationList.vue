@@ -7,7 +7,7 @@
         :key="item"
         :class="fnClass(item)"
         @click="handleConvListClick(item)"
-        @drop="(e) => dropHandler(e, item)"
+        @drop="dropHandler(e, item)"
         @dragenter="dragenterHandler"
         @dragleave="dragleaveHandler"
         v-contextmenu:contextmenu
@@ -22,7 +22,7 @@
           @click.stop="closeMsg(item)"
         />
         <!-- 头像 :value="100" :max="99" value="new" is-dot-->
-        <el-badge :value="11" :max="10">
+        <el-badge :value="11" :max="9">
           <img :src="squareUrl" class="portrait" alt="头像" />
         </el-badge>
         <!-- 消息 -->
@@ -31,22 +31,19 @@
             <div class="message-chat-name">
               {{ item.roleName }}
             </div>
-            <div class="message-Time">
+            <div class="message-time">
               {{ timeFormat(item.updateTime) }}
             </div>
           </div>
-          <div class="message-item-right-bottom"> 
+          <div class="message-item-right-bottom">
             <span>
-              {{currentMessageList[0].message_sender_profile.user_profile_nick_name}}:
-              {{currentMessageList[0].message_elem_array[0].text_elem_content}}
+              {{ fnNews(currentMessageList) }}
             </span>
           </div>
           <!-- 消息免打扰 -->
-          <svg-icon
-            v-if="item.conv_recv_opt == 2"
-            iconClass="DontDisturb"
-            class="dont"
-          />
+          <template v-if="item.conv_recv_opt == 2">
+            <svg-icon iconClass="DontDisturb" class="dont" />
+          </template>
         </div>
       </div>
     </transition-group>
@@ -76,7 +73,7 @@ import {
   RIGHT_CLICK_CHAT_LIST,
   RIGHT_CLICK_MENU_LIST,
 } from "./utils/menu";
-import { debounce } from '@/utils/debounce';
+import { debounce } from "@/utils/debounce";
 import { getRoles } from "@/api/roles";
 import { generateUUID } from "@/utils/index";
 import FontIcon from "@/layout/FontIcon/indx.vue";
@@ -123,6 +120,12 @@ const { Selected, UserInfo, currentMessageList } = useState({
   currentMessageList: (state) => state.conversation.currentMessageList,
 });
 
+const fnNews = (data) => {
+  let name = data?.[0]?.message_sender_profile?.user_profile_nick_name;
+  let message = data?.[0]?.message_elem_array?.[0].text_elem_content;
+  return `${name}:${message}` || "[]";
+};
+
 const getRolesList = async () => {
   let { code, result } = await getRoles();
   if (code === 200) {
@@ -134,24 +137,24 @@ const getRolesList = async () => {
 
 // 显示在线人员
 socket.on("disUser", (usersInfo) => {
-  console.log(usersInfo,'在线人员');
+  console.log(usersInfo, "在线人员");
 });
 // 系统消息
 socket.on("system", async (user) => {
   var data = new Date().toTimeString().substr(0, 8);
-  let states = user.status == 6 ? "进入" : "离开"
-  console.log(`${data} ${user.name}  ${states}了聊天室`)
-  if(UserInfo.value.username == user.name) return
+  let states = user.status == 6 ? "进入" : "离开";
+  console.log(`${data} ${user.name}  ${states}了聊天室`);
+  if (UserInfo.value.username == user.name) return;
   let message = {
-    "elem_type": 5,
-    "tips_elem_group_info_array": [
+    elem_type: 5,
+    tips_elem_group_info_array: [
       {
-        "tips_info_flag": 1,
-        "tips_info_value": user.name
-      }
+        tips_info_flag: 1,
+        tips_info_value: user.name,
+      },
     ],
-    "group_tips_elem_tip_type": user.status
-  }
+    group_tips_elem_tip_type: user.status,
+  };
   const messageId = generateUUID();
   const userProfile = {
     user_profile_nick_name: "系统",
@@ -174,23 +177,22 @@ socket.on("system", async (user) => {
         message: templateElement,
       },
     });
-  },500)
+  }, 500);
 });
 // 接受消息
 socket.on("receiveMsg", (data) => {
-  console.log(data,"接受消息")
-  const { message_sender_profile } = data
-  const { user_profile_nick_name } = message_sender_profile
-  if (UserInfo.value.username == user_profile_nick_name) return
+  console.log(data, "接受消息");
+  const { message_sender_profile } = data;
+  const { user_profile_nick_name } = message_sender_profile;
+  if (UserInfo.value.username == user_profile_nick_name) return;
   commit("SET_HISTORYMESSAGE", {
     type: "UPDATE_MESSAGES",
     payload: {
-      convId: '',
+      convId: "",
       message: data,
     },
   });
-})
-
+});
 
 const fnClass = (item) => {
   let current = Selected.value;
@@ -231,15 +233,9 @@ const handleContextMenuEvent = (e, item) => {
   }
 };
 //
-const dropHandler = (e, item) => {
-
-}
-const dragenterHandler = (e) => {
-
-}
-const dragleaveHandler = (e) => {
-
-}
+const dropHandler = (e, item) => {};
+const dragenterHandler = (e) => {};
+const dragleaveHandler = (e) => {};
 // 会话点击
 const handleConvListClick = (data) => {
   commit("SET_CONVERSATION", {
@@ -354,7 +350,7 @@ const pingConv = (data) => {
   }
   .message-item-right {
     width: 200px;
-    margin-left: 11px;
+    margin-left: 14px;
     height: 44px;
     position: relative;
     .dont {
@@ -379,7 +375,7 @@ const pingConv = (data) => {
         color: rgba(0, 0, 0, 0.85);
         max-width: 140px;
       }
-      .message-Time {
+      .message-time {
         font-size: 10px;
         color: rgba(0, 0, 0, 0.45);
       }

@@ -31,8 +31,8 @@
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
-import { useStore } from '@/store'
-import i18n from '@/locales'
+import { useStore } from "@/store";
+import i18n from "@/locales";
 
 export default function loadComponent(app) {
   // app.use(ElementPlus, {
@@ -58,6 +58,5 @@ export default function loadComponent(app) {
   // app.use(ElMenu)
   // app.use(ElSubmenu)
   // app.use(ElMenuItem)
-
   // app.config.globalProperties.$message = ElMessage
 }

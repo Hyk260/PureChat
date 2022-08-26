@@ -3,9 +3,9 @@ import { useI18n } from "vue-i18n";
 
 import saveToLocalStorage from "./plugins/localStorage"; // 自定义插件
 import { changeAppearance } from "@/utils/common";
-import mutations from './mutations';
-import actions from './actions';
-import state from './state';
+import mutations from "./mutations";
+import actions from "./actions";
+import state from "./state";
 
 const plugins = [saveToLocalStorage];
 const modulesFiles = require.context("./modules", true, /\.js$/);

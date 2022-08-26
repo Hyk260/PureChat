@@ -1,4 +1,3 @@
-
 import storage from "storejs";
 
 const mutations = {

@@ -16,7 +16,7 @@ const routes = [
     meta: {
       title: "登录",
       icon: "Eleme",
-    }
+    },
   },
 ];
 

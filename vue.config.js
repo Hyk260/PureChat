@@ -4,12 +4,12 @@ const {
   externals,
   devServer,
   production,
-  publicPath
+  publicPath,
 } = require("./src/config/vue.custom.config");
 
-const AutoImport = require('unplugin-auto-import/webpack')
-const Components = require('unplugin-vue-components/webpack')// 组件按需引入
-const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
+const AutoImport = require("unplugin-auto-import/webpack");
+const Components = require("unplugin-vue-components/webpack"); // 组件按需引入
+const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
 
 const path = require("path");
 const resolve = (dir) => {
@@ -107,6 +107,6 @@ module.exports = {
       Components({
         resolvers: [ElementPlusResolver()],
       }),
-    ]
-  }
+    ],
+  },
 };

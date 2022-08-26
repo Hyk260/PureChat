@@ -31,7 +31,7 @@
     </div>
     <div class="dropdown">
       <!-- trigger="click" -->
-      <el-dropdown> 
+      <el-dropdown>
         <span class="el-dropdown-link">
           <FontIcon iconName="arrow-down" />
         </span>
@@ -51,16 +51,10 @@
             >
               关闭右侧
             </el-dropdown-item>
-            <el-dropdown-item 
-              :icon="Minus" 
-              @click="closing('other')"
-            >
+            <el-dropdown-item :icon="Minus" @click="closing('other')">
               关闭其他
             </el-dropdown-item>
-            <el-dropdown-item 
-              :icon="Close" 
-              @click="closing('all')"
-            >
+            <el-dropdown-item :icon="Close" @click="closing('all')">
               全部关闭
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -81,7 +75,13 @@
 </template>
 
 <script setup>
-import { Upload, Minus, Plus, ArrowRight, Close } from "@element-plus/icons-vue";
+import {
+  Upload,
+  Minus,
+  Plus,
+  ArrowRight,
+  Close,
+} from "@element-plus/icons-vue";
 import { computed, ref, watch, toRefs } from "vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState } from "@/utils/hooks/useMapper";
@@ -117,13 +117,13 @@ const RIGHT_CLICK_TAGS_LIST = [
     id: "all",
     text: "关闭全部",
   },
-]
+];
 const ContextMenuEvent = (event, tag) => {
-  console.log(tag)
+  console.log(tag);
 };
 const ClickMenuItem = (item) => {
-  console.log(item)
-}
+  console.log(item);
+};
 
 const tagClick = (path) => {
   router.push(path);
@@ -175,13 +175,11 @@ const closing = (tag) => {
   }
 }
 
-::v-deep.el-dropdown-menu {
-  .Left-rotation .el-icon {
-    transform: rotate(-90deg);
-  }
-  .Right-rotation .el-icon {
-    transform: rotate(90deg);
-  }
+:deep(.Left-rotation .el-icon) {
+  transform: rotate(-90deg);
+}
+:deep(.Right-rotation .el-icon) {
+  transform: rotate(90deg);
 }
 .tags-view {
   width: 100%;

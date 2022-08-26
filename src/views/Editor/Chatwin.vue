@@ -21,25 +21,23 @@
           <div
             v-if="item.message_elem_array[0].elem_type !== 5"
             class="message-view__item"
-            :class="item.message_sender_profile.user_profile_nick_name == userInfo.user.username ? 'is-self' : 'is-other'"
-          > 
+            :class="ISown(item) ? 'is-self' : 'is-other'"
+          >
             <!-- :class="item.message_is_from_self ? 'is-self' : 'is-other'" -->
             <!-- 头像 -->
             <div class="picture">
-              <Portrait
-                v-if="item.message_sender_profile.user_profile_nick_name == userInfo.user.username" 
-                :size="36" 
-                :shape="'square'"
-              />
+              <Portrait v-if="ISown(item)" :size="36" :shape="'square'" />
               <el-avatar
-                v-else 
-                :size="36" 
-                shape="square" 
+                v-else
+                :size="36"
+                shape="square"
                 @error="() => true"
-                :src="require(`@/assets/images/${item.message_sender_profile.user_profile_face_url}.jpg`)" 
+                :src="
+                  require(`@/assets/images/${item.message_sender_profile.user_profile_face_url}.jpg`)
+                "
               >
-              <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
-             </el-avatar>
+                <img :src="damage" />
+              </el-avatar>
             </div>
             <!-- 内容 -->
             <div
@@ -54,11 +52,8 @@
             </div>
           </div>
           <!-- tips提示 -->
-          <div
-            v-else
-            class="message-view__item tips" 
-          >
-          <TipsElemItem :msgRow="item.message_elem_array[0]" />
+          <div v-else class="message-view__item tips">
+            <TipsElemItem :msgRow="item.message_elem_array[0]" />
           </div>
         </div>
         <!-- 右键菜单 -->
@@ -101,16 +96,18 @@ import { squareUrl, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import TextElemItem from "./components/TextElemItem";
 import LoadMore from "./components/LoadMore.vue";
-import TipsElemItem from './components/TipsElemItem.vue';
+import TipsElemItem from "./components/TipsElemItem.vue";
 import { getChat, getMsgList } from "@/api/chat";
 
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
+const damage =
+  "https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png";
 
 const { state, dispatch, commit } = useStore();
 const { currentMessageList, noMore, userInfo } = useState({
-  userInfo: (state) => state.data,
+  userInfo: (state) => state.data.user,
   noMore: (state) => state.conversation.noMore,
   currentMessageList: (state) => state.conversation.currentMessageList,
 });
@@ -135,6 +132,17 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener("scroll", scrollbar);
 });
+
+const NickName = (item) => {
+  return item?.message_sender_profile.user_profile_nick_name;
+};
+const FaceUrl = (item) => {
+  return item?.message_sender_profile.user_profile_face_url;
+};
+
+const ISown = (item) => {
+  return NickName(item) == userInfo.value.username;
+};
 
 const scrollbar = (e) => {
   // 会话是否大于50条 ? 显示loading : 没有更多
@@ -212,21 +220,24 @@ const ClickMenuItem = (data) => {
   }
 };
 
+// eslint-disable-next-line no-undef
 defineExpose({ UpdateScrollbar });
 </script>
 
 <style lang="scss" scoped>
+$other-msg-color: #f0f2f5;
+$self-msg-color: #c2e8ff;
 .message-view__item--text {
-    font-size: 12px;
-    border-radius: 3px;
-    background: rgba(0,0,0,0.05);
-    vertical-align: middle;
-    word-wrap: normal;
-    word-break: break-all;
-    color: rgba(0,0,0,0.45);
-    margin-top: 5px;
-    padding: 4px 6px;
-    line-height: 16px;
+  font-size: 12px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.05);
+  vertical-align: middle;
+  word-wrap: normal;
+  word-break: break-all;
+  color: rgba(0, 0, 0, 0.45);
+  margin-top: 5px;
+  padding: 4px 6px;
+  line-height: 16px;
 }
 .message-info-view-content {
   height: calc(100% - 70px - 206px);
@@ -267,7 +278,7 @@ defineExpose({ UpdateScrollbar });
   .message-view-item {
     flex: 1;
   }
-  .tips{
+  .tips {
     justify-content: center;
   }
 }
@@ -277,17 +288,8 @@ defineExpose({ UpdateScrollbar });
   flex-direction: row;
   margin-top: 12px;
 }
-.message-view__item--index {
-  ::v-deep .message_name {
-    margin-bottom: 5px;
-    color: rgba(0, 0, 0, 0.45);
-    font-size: 12px;
-  }
-}
 
 .message {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   padding: 10px 14px;
   max-width: 360px;
@@ -296,8 +298,8 @@ defineExpose({ UpdateScrollbar });
   border-radius: 3px;
 }
 .is-other {
-  ::v-deep .message {
-    background: #f0f2f5;
+  :deep(.message) {
+    background: $other-msg-color;
   }
   .picture {
     margin-left: 0;
@@ -320,8 +322,8 @@ defineExpose({ UpdateScrollbar });
 .is-self {
   flex-direction: row-reverse;
   display: flex;
-  ::v-deep .message {
-    background: #c2e8ff;
+  :deep(.message) {
+    background: $self-msg-color;
   }
   .picture {
     margin-right: 0;
@@ -329,7 +331,7 @@ defineExpose({ UpdateScrollbar });
     width: 36px;
     height: 36px;
   }
-  ::v-deep .message_name {
+  :deep(.message_name) {
     display: none;
   }
   .message-view__img {

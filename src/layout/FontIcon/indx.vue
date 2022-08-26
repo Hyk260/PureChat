@@ -1,11 +1,11 @@
 <template>
   <el-icon :size="size" v-if="iconName">
-    <component :is="iconName"/>
+    <component :is="iconName" />
   </el-icon>
 </template>
 
 <script setup>
-import { toRefs } from 'vue';
+import { toRefs } from "vue";
 const props = defineProps({
   // elementPlus https://element-plus.gitee.io/zh-CN/component/icon.html
   // <FontIcon iconName="***" />
@@ -23,7 +23,7 @@ const props = defineProps({
     default: 18,
   },
 });
-const { iconName, size } = toRefs(props)
+const { iconName, size } = toRefs(props);
 </script>
 
 <style lang="scss" scoped>

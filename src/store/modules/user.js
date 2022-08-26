@@ -13,16 +13,17 @@ const user = {
   getters: {},
   mutations: {},
   actions: {
+    // state, commit, dispatch, getters, rootGetters, rootState
     // 设置验证码
-    SET_VERIFYCODE({state, commit, dispatch, getters, rootGetters, rootState}, verifyCode) {
+    SET_VERIFYCODE({ state }, verifyCode) {
       state.verifyCode = verifyCode;
     },
     // 退出登陆
-    LOG_OUT(){
+    LOG_OUT() {
       router.push("/login");
       storage.remove("userdata");
       storage.remove(ACCESS_TOKEN);
-    }
+    },
   },
 };
 

@@ -117,7 +117,7 @@ import { useStore } from "vuex";
 import { user, rules } from "./utils/validation";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import Motion from "@/utils/motion";
-// 
+
 const router = useRouter();
 const showload = ref(false);
 const keep = ref(false);
@@ -182,7 +182,7 @@ const verification = (code, msg) => {
       warnMessage(msg);
       break;
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .el-button .custom-loading .circular {

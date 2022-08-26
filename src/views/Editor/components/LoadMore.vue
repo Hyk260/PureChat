@@ -4,7 +4,9 @@
       {{ noMore ? "没有更多了" : "" }}
     </div>
     <div class="showMore bouncing-loader" v-if="false">
-      <div></div><div></div><div></div>
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
   </div>
 </template>
@@ -12,6 +14,7 @@
 <script setup>
 import { toRefs } from "vue";
 
+// eslint-disable-next-line no-undef
 const props = defineProps({
   noMore: {
     type: Boolean,
