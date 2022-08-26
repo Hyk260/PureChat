@@ -12,8 +12,6 @@
 </template>
 
 <script setup>
-import { defineProps, toRefs } from "vue";
-
 const props = defineProps({
   message: {
     type: Object,

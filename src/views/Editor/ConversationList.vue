@@ -21,8 +21,10 @@
           class="close-btn"
           @click.stop="closeMsg(item)"
         />
-        <!-- 头像 -->
-        <img :src="squareUrl" class="portrait" alt="" />
+        <!-- 头像 :value="100" :max="99" value="new" is-dot-->
+        <el-badge :value="11" :max="10">
+          <img :src="squareUrl" class="portrait" alt="头像" />
+        </el-badge>
         <!-- 消息 -->
         <div class="message-item-right">
           <div class="message-item-right-top">
@@ -203,6 +205,7 @@ const fnClass = (item) => {
     return "is-active";
   }
 };
+
 const closeMsg = (conv) => {
   const Info = Friends.value;
   Friends.value = Info.filter((t) => {

@@ -46,10 +46,7 @@
               >
                 <template #default="scope">
                   <div class="custom-node">
-                    <FontIcon
-                      v-if="scope.data.meta.icon"
-                      :iconName="scope.data.meta.icon"
-                    />
+                    <FontIcon :iconName="scope.data.meta.icon" />
                     <span>{{ scope.node.label }}</span>
                   </div>
                 </template>
@@ -278,8 +275,6 @@ const delMenuBtn = () => {
 const delMenu = async () => {
   const Keys = state.checkedKeys;
   let ids = [formLabelAlign.ID];
-  console.log(ids);
-  return;
   const result = await DeleteMenu({ ids });
   if (result) {
     update(result);

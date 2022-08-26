@@ -174,6 +174,7 @@ const closing = (tag) => {
     font-size: 12px;
   }
 }
+
 ::v-deep.el-dropdown-menu {
   .Left-rotation .el-icon {
     transform: rotate(-90deg);

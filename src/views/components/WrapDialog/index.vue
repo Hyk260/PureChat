@@ -106,7 +106,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineProps, toRefs } from "vue";
+import { ref, reactive, toRefs } from "vue";
 import * as ElIcons from "@element-plus/icons-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 

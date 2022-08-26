@@ -22,7 +22,7 @@
         "be63ff4f-0462-4171-bb65-cdd2ff052b31",
         "26191e4f-4f67-4dcf-a1d3-d06f279ddb6e",
         "8ba31b42-b46a-4424-a0de-a65a30928df7",
-        "ca3f8c29-e786-4521-991c-bfe2a76b9c1b"
+        "ac3c5cdb-156e-49d0-923f-2bde14d795a3"
       ]
     },
     {
@@ -266,13 +266,13 @@
       "children": []
     },
     {
-      "id": "ca3f8c29-e786-4521-991c-bfe2a76b9c1b",
-      "url": "/system8",
-      "path": "/system8",
+      "id": "ac3c5cdb-156e-49d0-923f-2bde14d795a3",
+      "url": "/system1",
+      "path": "/system1",
       "componentName": "System",
       "meta": {
         "title": "测试8",
-        "icon": "Folder",
+        "icon": "Compass",
         "auth": [],
         "modify": false
       },

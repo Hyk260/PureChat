@@ -28,16 +28,16 @@
  *  2.引入babel-plugin-component库
  *  3.放开babel.config 注释
  */
+import zhCn from "element-plus/es/locale/lang/zh-cn";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
-import zhCn from "element-plus/es/locale/lang/zh-cn";
-// import i18n from '@/locales'
-// import { useStore } from '@/store'
+import { useStore } from '@/store'
+import i18n from '@/locales'
 
 export default function loadComponent(app) {
-  app.use(ElementPlus, {
-    locale: zhCn,
-  });
+  // app.use(ElementPlus, {
+  //   locale: zhCn,
+  // });
   // { size: 'small', zIndex: 3000,i18n: i18n.global.t}
   // app.use(ElButton)
   // app.use(ElSelect)

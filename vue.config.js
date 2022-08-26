@@ -4,7 +4,12 @@ const {
   externals,
   devServer,
   production,
+  publicPath
 } = require("./src/config/vue.custom.config");
+
+const AutoImport = require('unplugin-auto-import/webpack')
+const Components = require('unplugin-vue-components/webpack')// 组件按需引入
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 
 const path = require("path");
 const resolve = (dir) => {
@@ -72,14 +77,36 @@ module.exports = {
     });
   },
   // webpack配置
-  configureWebpack: (config) => {
-    // Object.assign(config, {
-    //   node: {
-    //     global: true,
-    //     __dirname: true,
-    //     __filename: true
-    //   }
-    // })
-    config.externals = externals;
-  },
+  // configureWebpack: (config) => {
+  //   // Object.assign(config, {
+  //   //   node: {
+  //   //     global: true,
+  //   //     __dirname: true,
+  //   //     __filename: true
+  //   //   }
+  //   // })
+  //   config.externals = externals;
+  //   // config.plugins = [
+  //   //   // 自动按需引入 vue\vue-router\vuex 等的 api
+  //   //   AutoImport({
+  //   //     resolvers: [ElementPlusResolver()],
+  //   //   }),
+  //   //   // 按需引入Element-plus
+  //   //   Components({
+  //   //     resolvers: [ElementPlusResolver()],
+  //   //   }),
+  //   // ]
+  // },
+  configureWebpack: {
+    plugins: [
+      // 自动按需引入 vue\vue-router\vuex 等的 api
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      // 按需引入Element-plus
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
+    ]
+  }
 };

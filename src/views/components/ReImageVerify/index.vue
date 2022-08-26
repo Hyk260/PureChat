@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { watch, defineComponent, defineEmits } from "vue";
+import { watch, defineComponent } from "vue";
 import { useImageVerify } from "@/utils/hooks";
 
 const emit = defineEmits();

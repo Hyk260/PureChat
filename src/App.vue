@@ -1,16 +1,21 @@
 <template>
-  <router-view />
+  <el-config-provider :locale="locale">
+    <router-view />
+  </el-config-provider>
 </template>
 
 <script setup>
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import { onMounted } from "vue";
 import { tree } from "@/utils/ToTree";
 import { useRouter } from "vue-router";
 import storage from "storejs";
 import { useStore } from "vuex";
 import { debounce } from "@/utils/debounce";
+
 const { state, dispatch, commit } = useStore();
 const table = storage.get("userdata");
+const locale = zhCn
 
 onMounted(() => {
   if (!table?.Routingtable) return;
