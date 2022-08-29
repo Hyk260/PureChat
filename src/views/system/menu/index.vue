@@ -176,7 +176,7 @@ import * as ElIcons from "@element-plus/icons-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { updateMenu, AddMenu, getMenu, DeleteMenu } from "@/api/menu";
 import { Message, errorMessage, warnMessage } from "@/utils/message";
-import WrapDialog from '@/views/components/WrapDialog/index.vue';
+// import WrapDialog from '@/views/components/WrapDialog/index.vue';
 const store = useStore();
 
 const defaultProps = {

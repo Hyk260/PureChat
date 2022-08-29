@@ -67,15 +67,15 @@ const handleClose = (key, keyPath) => {
   left: 0;
 }
 /*隐藏文字*/
-.el-menu--collapse ::v-deep .el-sub-menu__title span {
+.el-menu--collapse :deep(.el-sub-menu__title span) {
   display: none;
 }
 /*隐藏 > */
-.el-menu--collapse ::v-deep .el-sub-menu__title .el-sub-menu__icon-arrow {
+.el-menu--collapse :deep(.el-sub-menu__title .el-sub-menu__icon-arrow) {
   display: none;
 }
 /* 卡頓bug */
-.el-menu-vertical ::v-deep .el-icon {
+.el-menu-vertical :deep(.el-icon) {
   width: auto;
 }
 </style>

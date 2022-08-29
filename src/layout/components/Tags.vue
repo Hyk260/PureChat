@@ -37,18 +37,10 @@
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item
-              class="Left-rotation"
-              :icon="Upload"
-              @click="closing('left')"
-            >
+            <el-dropdown-item :icon="Back" @click="closing('left')">
               关闭左侧
             </el-dropdown-item>
-            <el-dropdown-item
-              class="Right-rotation"
-              :icon="Upload"
-              @click="closing('right')"
-            >
+            <el-dropdown-item :icon="Right" @click="closing('right')">
               关闭右侧
             </el-dropdown-item>
             <el-dropdown-item :icon="Minus" @click="closing('other')">
@@ -76,17 +68,16 @@
 
 <script setup>
 import {
-  Upload,
+  Back,
+  Right,
   Minus,
   Plus,
-  ArrowRight,
   Close,
 } from "@element-plus/icons-vue";
 import { computed, ref, watch, toRefs } from "vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState } from "@/utils/hooks/useMapper";
 import { useRoute, useRouter } from "vue-router";
-import "v-contextmenu/dist/themes/default.css";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { useStore } from "vuex";
 const { state, dispatch, commit } = useStore();
@@ -96,7 +87,7 @@ const CurTitle = computed(() => {
   return router.currentRoute.value.meta?.title;
 });
 
-const { tags, sidebar } = useState({
+const { tags } = useState({
   tags: (state) => state.data.elTag,
 });
 

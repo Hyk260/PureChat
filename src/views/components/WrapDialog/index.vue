@@ -176,7 +176,7 @@ defineExpose({ dialogFormVisible });
 
 <style lang="scss" scoped>
 .year {
-  ::v-deep .el-input__inner {
+  :deep(.el-input__inner) {
     background: url("~@/assets/images/log.png") no-repeat;
     background-size: 26px 26px;
     background-position: 0px 3px;
@@ -184,8 +184,7 @@ defineExpose({ dialogFormVisible });
     box-sizing: border-box;
     font-size: 14px;
   }
-
-  ::v-deep .el-input {
+  :deep(.el-input)  {
     width: 500px;
   }
 }

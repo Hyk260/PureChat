@@ -88,7 +88,6 @@ import {
   loadMsgComponents,
 } from "./utils/utils";
 import { useStore } from "vuex";
-import "v-contextmenu/dist/themes/default.css";
 import { timeFormat } from "@/utils/timeFormat";
 import { debounce } from "@/utils/debounce";
 import { useState } from "@/utils/hooks/useMapper";

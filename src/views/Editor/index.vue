@@ -86,11 +86,11 @@ onBeforeUnmount(() => {
 .scroll-container {
   height: calc(100% - 60px);
   position: relative;
-  ::v-deep .is-active {
+
+  :deep(.is-active) {
     background: #f0f2f5;
-    // background: #00000008;
   }
-  ::v-deep .is-actives {
+  :deep(.is-actives) {
     background: rgba(0, 0, 0, 0.03);
   }
 }

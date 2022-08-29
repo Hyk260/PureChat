@@ -245,7 +245,7 @@ const sendMessage = async () => {
   height: 206px;
   .toolbar {
     // 表情包
-    ::v-deep .w-e-bar-item {
+    :deep(.w-e-bar-item) {
       ::-webkit-scrollbar {
         width: 6px;
       }
@@ -266,7 +266,7 @@ const sendMessage = async () => {
         margin: 0;
       }
     }
-    ::v-deep .w-e-bar-item .w-e-panel-content-emotion li {
+    :deep(.w-e-bar-item .w-e-panel-content-emotion li){
       width: 30px;
       height: 30px;
       font-size: 18px;
@@ -277,10 +277,10 @@ const sendMessage = async () => {
   .editor-content {
     height: calc(100% - 40px) !important;
     overflow-y: hidden;
-    ::v-deep .w-e-text-container p {
+    :deep(.w-e-text-container p) {
       margin: 0;
     }
-    ::v-deep .w-e-text-placeholder {
+    :deep(.w-e-text-placeholder) {
       top: 2px;
     }
   }

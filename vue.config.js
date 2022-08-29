@@ -10,6 +10,7 @@ const {
 const AutoImport = require("unplugin-auto-import/webpack");
 const Components = require("unplugin-vue-components/webpack"); // 组件按需引入
 const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin; // 打包文件分析工具
 
 const path = require("path");
 const resolve = (dir) => {
@@ -32,9 +33,9 @@ module.exports = {
     // css文件名是否可省略module,默认为false.
     // requireModuleExtension: false,
     // 是否使用css分离插件 默认生产环境下是true, 开发环境下是false.
-    // extract: false,
+    extract: production,
     // 是否为CSS开启source map.设置为true之后可能会影响构建的性能.
-    // sourceMap: false,
+    sourceMap: false,
     // 向CSS相关的loader传递选项(支持:css-loader postcss-loader sass-loader less-loader stylus-loader).
     /* loaderOptions: {
       sass: {
@@ -56,6 +57,11 @@ module.exports = {
           chunkFilename: `static/css/[name].css`,
         },
       ]);
+
+      const analyzer = new BundleAnalyzerPlugin({
+        analyzerPort: 9999
+      })
+      config.plugin('webpack-bundle-analyzer').use(analyzer)
     }
     // svg-sprite-loader 配置
     const svgRule = config.module.rule("svg"); // 找到svg-loader
@@ -98,6 +104,7 @@ module.exports = {
   //   // ]
   // },
   configureWebpack: {
+    externals,
     plugins: [
       // 自动按需引入 vue\vue-router\vuex 等的 api
       AutoImport({
@@ -108,5 +115,18 @@ module.exports = {
         resolvers: [ElementPlusResolver()],
       }),
     ],
+    // webpack 的性能提示
+    performance: {
+      // 提示类型
+      hints: 'warning',
+      // 入口起点的最大体积
+      maxEntrypointSize: 1000 * 500,
+      // 生成文件的最大体积
+      maxAssetSize: 1024 * 1000,
+      // 只给出 js 文件性能提示
+      assetFilter: (FileName) => {
+        return FileName.endsWith('.js');
+      },
+    }
   },
 };

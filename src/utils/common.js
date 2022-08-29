@@ -1,4 +1,4 @@
-import store from "vuex";
+// import store from '@/store/index';
 
 /** 切换主题风格
  * @param {string}  appearance light || dark
@@ -26,7 +26,6 @@ export function bytesToSize(bytes) {
   const kiloBytes = marker;
   const megaBytes = marker * marker;
   const gigaBytes = marker * marker * marker;
-
   // const lang = store.state.settings.lang;
   const lang = "zh";
   if (bytes < kiloBytes) {

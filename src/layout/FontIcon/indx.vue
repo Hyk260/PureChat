@@ -1,5 +1,5 @@
 <template>
-  <el-icon :size="size" v-if="iconName">
+  <el-icon :size="size" :color="color" v-if="iconName">
     <component :is="iconName" />
   </el-icon>
 </template>
@@ -14,6 +14,10 @@ const props = defineProps({
     required: true,
     default: "",
   },
+  color: {
+    type: String,
+    default: "",
+  },
   custom: {
     type: String,
     default: "",
@@ -23,7 +27,7 @@ const props = defineProps({
     default: 18,
   },
 });
-const { iconName, size } = toRefs(props);
+const { iconName, size, color } = toRefs(props);
 </script>
 
 <style lang="scss" scoped>

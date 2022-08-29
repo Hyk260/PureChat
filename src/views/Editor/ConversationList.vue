@@ -61,7 +61,6 @@
 </template>
 
 <script setup>
-import "v-contextmenu/dist/themes/default.css";
 import { ref, onMounted } from "vue";
 import {
   generateTemplateElement,
@@ -317,9 +316,6 @@ const pingConv = (data) => {
   background: #fff;
   height: 100%;
   // height: calc(100% - 40px);
-  // ::v-deep .el-scrollbar__wrap{
-  //   overflow-x: hidden;
-  // }
 }
 .message-item {
   padding: 12px 12px 12px 16px;

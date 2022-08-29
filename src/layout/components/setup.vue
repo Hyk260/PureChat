@@ -1,6 +1,6 @@
 <template>
   <el-drawer v-model="drawer" title="设置" :with-header="false">
-    <ul class="setting">
+    <ul class="setting width-full">
       <li>
         <span>关闭侧边栏</span>
         <el-switch
@@ -156,13 +156,10 @@ const languageChange = (val) => {
 </script>
 
 <style lang="scss" scoped>
-.setting {
-  width: 100%;
-  li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 25px;
-  }
+.setting li{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 25px;
 }
 </style>

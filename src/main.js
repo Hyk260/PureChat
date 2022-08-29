@@ -9,6 +9,7 @@ import pkg from "../package.json";
 import { loadAllPlugins } from "./plugins";
 import { loadAllassembly } from "./components";
 import { directive } from "v-contextmenu";
+import "v-contextmenu/dist/themes/default.css";
 import { MotionPlugin } from "@vueuse/motion";
 
 import FontIcon from "./layout/FontIcon/indx.vue";

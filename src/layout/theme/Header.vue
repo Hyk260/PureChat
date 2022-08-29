@@ -9,10 +9,8 @@
         :title="isActive ? '点击展开' : '点击折叠'"
         @click="toggleClick(isActive)"
       >
-        <FontIcon
-          :class="{ active: true, rotate: isActive }"
-          iconName="Expand"
-        />
+        <FontIcon v-if="isActive" class="active" iconName="Expand" />
+        <FontIcon v-else class="active" iconName="Fold"/>
       </div>
       <!-- 面包屑 :separator-icon="ArrowRight" > icon-->
       <el-breadcrumb>
@@ -190,7 +188,7 @@ const toggleClick = (val) => {
       text-align: center;
       border-left: 1px solid #ccc;
     }
-    .user ::v-deep .el-dropdown-link {
+    .user :deep(.el-dropdown-link) {
       display: flex;
       align-items: center;
       padding: 0 10px;
@@ -206,10 +204,6 @@ const toggleClick = (val) => {
   &:hover {
     color: #409eff;
   }
-}
-
-.rotate {
-  transform: rotate(180deg);
 }
 
 .el-breadcrumb {
