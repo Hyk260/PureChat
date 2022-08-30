@@ -19,6 +19,7 @@
     "@wangeditor/plugin-ctrl-enter": "^1.1.2",
     "axios": "^0.26.1",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "compression-webpack-plugin": "6.1.1",
     "core-js": "^3.6.5",
     "dayjs": "^1.11.2",
     "element-plus": "^2.0.4",

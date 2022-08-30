@@ -31,6 +31,7 @@
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import avatars from "@/assets/images/picture.jpg";
+import { decodeText } from '@/utils/decodeText';
 let loading = ref(true);
 const date = new Date();
 // const { t } = useI18n();
@@ -48,6 +49,7 @@ let greetings = computed(() => {
 const openDepot = () => {
   window.open("https://gitee.com/H260788");
 };
+
 </script>
 <style lang="scss" scoped>
 .main-content {

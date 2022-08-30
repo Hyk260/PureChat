@@ -9,6 +9,7 @@ const {
 
 const AutoImport = require("unplugin-auto-import/webpack");
 const Components = require("unplugin-vue-components/webpack"); // 组件按需引入
+const CompressionPlugin = require('compression-webpack-plugin') // gzip压缩
 const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin; // 打包文件分析工具
 
@@ -58,10 +59,10 @@ module.exports = {
         },
       ]);
 
-      const analyzer = new BundleAnalyzerPlugin({
-        analyzerPort: 9999
-      })
-      config.plugin('webpack-bundle-analyzer').use(analyzer)
+      // const analyzer = new BundleAnalyzerPlugin({
+      //   analyzerPort: 9999
+      // })
+      // config.plugin('webpack-bundle-analyzer').use(analyzer)
     }
     // svg-sprite-loader 配置
     const svgRule = config.module.rule("svg"); // 找到svg-loader
@@ -114,6 +115,13 @@ module.exports = {
       Components({
         resolvers: [ElementPlusResolver()],
       }),
+      // 压缩配置
+      // new CompressionPlugin({
+      //   test: /\.(js|css|html)?$/i, // 压缩文件格式
+      //   filename: '[path].gz[query]', // 压缩后的文件名
+      //   algorithm: 'gzip', // 使用gzip压缩
+      //   minRatio: 0.8 // 压缩率小于1才会压缩
+      // })
     ],
     // webpack 的性能提示
     performance: {

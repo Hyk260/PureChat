@@ -9,8 +9,7 @@
         :title="isActive ? '点击展开' : '点击折叠'"
         @click="toggleClick(isActive)"
       >
-        <FontIcon v-if="isActive" class="active" iconName="Expand" />
-        <FontIcon v-else class="active" iconName="Fold"/>
+        <FontIcon class="active" :iconName="isActive ? 'Expand' : 'Fold'" />
       </div>
       <!-- 面包屑 :separator-icon="ArrowRight" > icon-->
       <el-breadcrumb>
@@ -24,7 +23,7 @@
 
       <div class="arrow-setup">
         <!-- 全屏 -->
-        <screenfull id="header-screenfull" />
+        <screenfull />
         <!-- 个人中心 退出登录 -->
         <div class="user">
           <el-dropdown>
