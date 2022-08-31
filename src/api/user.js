@@ -1,6 +1,6 @@
-import http from "@/utils/http";
-import storage from "storejs";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
+import http from "@/utils/http/index";
+import storage from "storejs";
 
 /**
  * 登录接口

@@ -1,4 +1,4 @@
-import http from "@/utils/http";
+import http from "@/utils/http/index";
 /**
  * 获取角色列表
  */

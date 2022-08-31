@@ -88,13 +88,14 @@
       <!-- 分页 -->
       <el-pagination
         small
-        class="pagination"
         background
         align="center"
+        class="pagination"
+        :default-current-page="5"
+        :total="tableData.length"
+        :page-sizes="[10, 15, 20]"
         @size-change="handleSizeChange"
         @current-change="handlePageChange"
-        :page-sizes="[5, 10, 15, 20]"
-        :total="tableData.length"
         layout="total, sizes, prev, pager, next, jumper"
       >
       </el-pagination>
@@ -145,10 +146,12 @@ import { getRoles, addRoles, deleteRoles, updateRoles } from "@/api/roles";
 import { successMessage } from "@/utils/message";
 import { warnMessage } from "@/utils/message";
 import { formatTime } from "@/utils/filter";
+import { chunk } from "lodash";
 // import WrapDialog from "@/views/components/WrapDialog/index.vue";
 
 const ruleFormRef = ref();
 const tableData = ref([]);
+const PageData = ref([])
 const dialogTableVisible = ref(false);
 const dialogFormVisible = ref(false);
 const infoText = ref(true);
@@ -184,10 +187,14 @@ function handleSelectionChange(val) {
 // 每页显示个数
 function handleSizeChange(val) {
   console.log(val);
+  PageData.value = chunk(tableData.value,val)
+  // console.log(PageData.value)
 }
 
 function handlePageChange(val) {
   console.log(val);
+  // tableData.value = PageData.value[val-1]
+  // console.log(PageData.value)
 }
 const AddRoleBtn = () => {
   dialogFormVisible.value = true;

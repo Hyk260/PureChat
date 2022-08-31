@@ -1,13 +1,29 @@
+import qs from "qs";
 import axios from "axios";
 import storage from "storejs";
-import { ACCESS_TOKEN } from "@/store/mutation-types";
 import router from "@/router";
-const baseURL = "http://localhost:8082/";
+import NProgress from "@/utils/progress";
+import { ACCESS_TOKEN } from "@/store/mutation-types";
 
+const baseURL = "http://localhost:8082/";
+const { formats, parse, stringify } = qs
+
+// www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const service = axios.create({
   baseURL, // 公共地址
   timeout: 6000, // 请求超时时间
+  // headers: {
+  //   Accept: "application/json, text/plain, */*",
+  //   "Content-Type": "application/json",
+  //   "X-Requested-With": "XMLHttpRequest"
+  // },
+  // 数组格式参数序列化
+  // paramsSerializer: (params) => {
+  //   console.log(params,"params")
+  //   return stringify(params, { indices: false })
+  // }
 });
+
 // 异常拦截处理器
 const errorHandler = (error) => {
   // console.log(error)
@@ -74,6 +90,8 @@ const errorHandler = (error) => {
 // 请求拦截器
 service.interceptors.request.use((config) => {
   // console.log(config)
+  // 开启进度条动画
+  NProgress.start();
   const token = storage.get(ACCESS_TOKEN);
   if (token) config.headers["authorization"] = token;
   return config;
@@ -83,6 +101,8 @@ service.interceptors.request.use((config) => {
 service.interceptors.response.use((response) => {
   const { data, config, status } = response;
   const { code, msg } = data;
+   // 关闭进度条动画
+   NProgress.done();
   // console.log(response)
   if (status === 200) {
     const ToKen = response.headers["x-token"];
