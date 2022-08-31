@@ -6,6 +6,7 @@
 
 <script setup>
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import { loader } from "@/utils/loaders";
 import { onMounted } from "vue";
 import { tree } from "@/utils/ToTree";
 import { useRouter } from "vue-router";
@@ -29,6 +30,9 @@ onMounted(() => {
       fnresize();
     }, 300);
   };
+  // "https://unpkg.com/ace-builds/src-noconflict/ace.js"
+  // loader.loadScript().then(() => {});
+      
 });
 
 const fnresize = () => {

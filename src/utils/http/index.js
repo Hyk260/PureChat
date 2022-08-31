@@ -1,3 +1,4 @@
+'use strict'
 import qs from "qs";
 import axios from "axios";
 import storage from "storejs";
