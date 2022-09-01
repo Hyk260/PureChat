@@ -25,7 +25,9 @@ export function randomNum(min = 0, max = 100) {
 }
 
 /**
- * 判断是否为空
+ * @description: 判断是否为空
+ * @param {*}
+ * @return {*}
  */
 export function empty(value) {
   switch (typeof value) {
@@ -48,4 +50,17 @@ export function empty(value) {
       return true
   }
   return false
+}
+
+/**
+ * @description: 判断数据类型
+ * @param {*}
+ * @return {*}
+ * 示例 typOf({}) === "object";
+ */
+export function typeOf(operand) {
+  const toString = Object.prototype.toString;
+  let type = toString.call(operand).split(" ")[1];
+  type = type.substring(0, type.length - 1).toLowerCase();
+  return type;
 }

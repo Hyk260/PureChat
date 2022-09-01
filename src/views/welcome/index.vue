@@ -1,4 +1,5 @@
 <template>
+  <el-scrollbar>
   <div class="welcome">
     <el-card class="top-content">
       <div class="left-mark">
@@ -24,7 +25,24 @@
         </el-card>
       </el-col>
     </el-row>
+    <el-row :gutter="16" style="margin: 20px">
+      <el-col>
+        <el-card>
+          <template #header>
+            <span style="font-size: 16px; font-weight: 500">
+              GitHub饼图信息
+            </span>
+          </template>
+          <el-skeleton animated :rows="7" :loading="loading">
+            <template #default>
+              <div></div>
+            </template>
+          </el-skeleton>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
+  </el-scrollbar>
 </template>
 
 <script setup>
@@ -32,7 +50,7 @@ import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import avatars from "@/assets/images/picture.jpg";
 import { decodeText } from '@/utils/decodeText';
-import { cloneDeep } from '@/utils/clone';
+import { deepClone } from '@/utils/clone';
 let loading = ref(true);
 const date = new Date();
 // const { t } = useI18n();

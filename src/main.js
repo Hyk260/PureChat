@@ -12,11 +12,11 @@ import { directive } from "v-contextmenu";
 import "v-contextmenu/dist/themes/default.css";
 import { MotionPlugin } from "@vueuse/motion";
 
-import FontIcon from "./layout/FontIcon/indx.vue";
+// import FontIcon from "./layout/FontIcon/indx.vue";
 import { registerSvgIcon } from "./assets/icons/index";
 
 const app = createApp(App);
-app.component(FontIcon);
+// app.component(FontIcon);
 app.directive("contextmenu", directive);
 app.config.globalProperties.__APP_INFO__ = pkg;
 

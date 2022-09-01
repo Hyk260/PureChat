@@ -34,7 +34,9 @@ export function bytesToSize(bytes) {
     return (bytes / kiloBytes).toFixed(decimal) + " KB";
   } else if (bytes < gigaBytes) {
     return (bytes / megaBytes).toFixed(decimal) + " MB";
-  } else return (bytes / gigaBytes).toFixed(decimal) + " GB";
+  } else {
+    return (bytes / gigaBytes).toFixed(decimal) + " GB";
+  } 
 }
 
 export function randomNum(minNum, maxNum) {

@@ -3,7 +3,7 @@
     :class="['sidebar-container', logoVal ? 'has-logo' : '']"
     v-show="sidebar"
   >
-    <Logo class="logo-icon" v-show="logoVal" />
+    <Logo class="logo-icon" :show="logoVal" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         class="el-menu-vertical"

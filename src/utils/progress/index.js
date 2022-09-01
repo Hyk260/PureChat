@@ -14,5 +14,5 @@ NProgress.configure({
   // 初始化时的最小百分比
   minimum: 0.3,
 });
-
+// console.log(NProgress)
 export default NProgress;
