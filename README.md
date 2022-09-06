@@ -8,11 +8,12 @@
     <br />
     <a><strong>🌎 访问DEMO</strong></a>
       &nbsp;&nbsp;|&nbsp;&nbsp;
-    <a><strong>💬 加入交流群</strong></a>
+    <a><strong>💬 联系作者</strong></a>
     <br />
     <br />
   </p>
 </p>
+
 
 ### 🎉 特性
 前端 vue3 + Element-Plus
@@ -102,7 +103,8 @@ yarn build
 
 
 
+<img src="./images/55CE273A-045F-41BF-946A-D91FEB259006.png">
 
 
 
-
+<img src="./images/71FF3533-FF8F-437E-852C-BDF5A1341B54.png">
