@@ -28,7 +28,7 @@ class loaderProxy {
       const len = srcList.length;
       if (len > 0) {
         let count = 0;
-        srcList.map(src => {
+        srcList.map((src) => {
           if (src) {
             this.loadScript(src).then(() => {
               count++;

@@ -3,9 +3,7 @@
     <el-card class="box-card mb-4" shadow="never">
       <template #header>
         <div class="card-header">
-          <span class="font-medium">
-            关于
-          </span>
+          <span class="font-medium"> 关于 </span>
         </div>
       </template>
       <span style="font-size: 15px">
@@ -31,12 +29,20 @@
           >
             <el-tag>{{ lastBuildTime }}</el-tag>
           </el-descriptions-item>
-          <el-descriptions-item label="文档地址" label-align="left" align="left">
+          <el-descriptions-item
+            label="文档地址"
+            label-align="left"
+            align="left"
+          >
             <a href="#" target="_blank">
               <span style="color: var(--el-color-primary)">文档地址</span>
             </a>
           </el-descriptions-item>
-          <el-descriptions-item label="预览地址" label-align="left" align="left">
+          <el-descriptions-item
+            label="预览地址"
+            label-align="left"
+            align="left"
+          >
             <a href="#" target="_blank">
               <span style="color: var(--el-color-primary)">预览地址</span>
             </a>
@@ -68,7 +74,9 @@
               :href="'https://www.npmjs.com/package/' + item.label"
               target="_blank"
             >
-              <span style="color: var(--el-color-primary)">{{ item.field }}</span>
+              <span style="color: var(--el-color-primary)">{{
+                item.field
+              }}</span>
             </a>
           </el-descriptions-item>
         </el-descriptions>
@@ -93,7 +101,9 @@
               :href="'https://www.npmjs.com/package/' + item.label"
               target="_blank"
             >
-              <span style="color: var(--el-color-primary)">{{ item.field }}</span>
+              <span style="color: var(--el-color-primary)">{{
+                item.field
+              }}</span>
             </a>
           </el-descriptions-item>
         </el-descriptions>
@@ -109,7 +119,7 @@ import Motion from "@/utils/motion";
 const { proxy } = getCurrentInstance();
 const { dependencies, devDependencies, version } = proxy.__APP_INFO__;
 
-const lastBuildTime = 345346
+const lastBuildTime = 345346;
 const schema = [];
 const devSchema = [];
 

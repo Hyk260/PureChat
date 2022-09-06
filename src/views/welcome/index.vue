@@ -1,47 +1,47 @@
 <template>
   <el-scrollbar>
-  <div class="welcome">
-    <el-card class="top-content">
-      <div class="left-mark">
-        <!-- <img :src="avatars" title="直达仓库地址" @click="openDepot" /> -->
-        <Portrait :size="45" @click="openDepot" />
-        <span>{{ greetings }}</span>
-      </div>
-    </el-card>
+    <div class="welcome">
+      <el-card class="top-content">
+        <div class="left-mark">
+          <!-- <img :src="avatars" title="直达仓库地址" @click="openDepot" /> -->
+          <Portrait :size="45" @click="openDepot" />
+          <span>{{ greetings }}</span>
+        </div>
+      </el-card>
 
-    <el-row :gutter="16" style="margin: 20px">
-      <el-col>
-        <el-card>
-          <template #header>
-            <span style="font-size: 16px; font-weight: 500">
-              GitHub饼图信息
-            </span>
-          </template>
-          <el-skeleton animated :rows="7" :loading="loading">
-            <template #default>
-              <div></div>
+      <el-row :gutter="16" style="margin: 20px">
+        <el-col>
+          <el-card>
+            <template #header>
+              <span style="font-size: 16px; font-weight: 500">
+                GitHub饼图信息
+              </span>
             </template>
-          </el-skeleton>
-        </el-card>
-      </el-col>
-    </el-row>
-    <el-row :gutter="16" style="margin: 20px">
-      <el-col>
-        <el-card>
-          <template #header>
-            <span style="font-size: 16px; font-weight: 500">
-              GitHub饼图信息
-            </span>
-          </template>
-          <el-skeleton animated :rows="7" :loading="loading">
-            <template #default>
-              <div></div>
+            <el-skeleton animated :rows="7" :loading="loading">
+              <template #default>
+                <div></div>
+              </template>
+            </el-skeleton>
+          </el-card>
+        </el-col>
+      </el-row>
+      <el-row :gutter="16" style="margin: 20px">
+        <el-col>
+          <el-card>
+            <template #header>
+              <span style="font-size: 16px; font-weight: 500">
+                GitHub饼图信息
+              </span>
             </template>
-          </el-skeleton>
-        </el-card>
-      </el-col>
-    </el-row>
-  </div>
+            <el-skeleton animated :rows="7" :loading="loading">
+              <template #default>
+                <div></div>
+              </template>
+            </el-skeleton>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
   </el-scrollbar>
 </template>
 
@@ -49,8 +49,8 @@
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import avatars from "@/assets/images/picture.jpg";
-import { decodeText } from '@/utils/decodeText';
-import { deepClone } from '@/utils/clone';
+import { decodeText } from "@/utils/decodeText";
+import { deepClone } from "@/utils/clone";
 let loading = ref(true);
 const date = new Date();
 // const { t } = useI18n();
@@ -68,7 +68,6 @@ let greetings = computed(() => {
 const openDepot = () => {
   window.open("https://gitee.com/H260788");
 };
-
 </script>
 <style lang="scss" scoped>
 .main-content {

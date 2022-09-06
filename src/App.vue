@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import { loader } from "@/utils/loaders";
 import { onMounted } from "vue";
 import { tree } from "@/utils/ToTree";
@@ -16,7 +16,7 @@ import { debounce } from "@/utils/debounce";
 
 const { state, dispatch, commit } = useStore();
 const table = storage.get("userdata");
-const locale = zhCn
+const locale = zhCn;
 
 onMounted(() => {
   if (!table?.Routingtable) return;
@@ -31,8 +31,8 @@ onMounted(() => {
     }, 300);
   };
   // "https://unpkg.com/ace-builds/src-noconflict/ace.js"
-  // loader.loadScript().then(() => {});
-      
+  // let data = 'https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.js'
+  // loader.loadScript(data).then(() => {});
 });
 
 const fnresize = () => {

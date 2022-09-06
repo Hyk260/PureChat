@@ -3,8 +3,8 @@
  * @param {*}
  * @return {*}
  * isType('Array',[])
- */ 
- export function isType(type, val) {
+ */
+export function isType(type, val) {
   return Object.prototype.toString.call(val) === `[object ${type}]`;
 }
 
@@ -55,8 +55,8 @@ export function deepClone(target, map = new WeakMap()) {
   }
 
   map.set(target, true);
-  
-  let cloneResult = isType('Array',target) ? [] : {};
+
+  let cloneResult = isType("Array", target) ? [] : {};
   // 不克隆原型链上的属性 只克隆对象本身属性
   // Object.getOwnPropertyNames 指定对象的所有自身属性的属性名(包括不可枚举属性但不包括 Symbol 值作为名称的属性)组成的数组
   Object.getOwnPropertyNames(target).forEach((key) => {
