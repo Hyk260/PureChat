@@ -102,8 +102,8 @@ service.interceptors.request.use((config) => {
 service.interceptors.response.use((response) => {
   const { data, config, status } = response;
   const { code, msg } = data;
-   // 关闭进度条动画
-   NProgress.done();
+  // 关闭进度条动画
+  NProgress.done();
   // console.log(response)
   if (status === 200) {
     const ToKen = response.headers["x-token"];
