@@ -1,7 +1,12 @@
 <!-- eslint-disable no-undef -->
 <template>
   <section class="message-info-view-content" id="svgTop">
-    <el-scrollbar class="scrollbar-content" ref="scrollbarRef">
+    <el-scrollbar
+      class="scrollbar-content"
+      ref="scrollbarRef"
+      @scroll="scroll"
+      always
+    >
       <div class="message-view" ref="messageViewRef">
         <div
           v-for="(item, index) in currentMessageList"
@@ -89,7 +94,8 @@ import {
 } from "./utils/utils";
 import { useStore } from "vuex";
 import { timeFormat } from "@/utils/timeFormat";
-import { debounce } from "@/utils/debounce";
+import { debounce, delay } from "@/utils/debounce";
+import { throttle } from "@/utils/throttle";
 import { useState } from "@/utils/hooks/useMapper";
 import { squareUrl, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
@@ -115,7 +121,7 @@ watch(
   () => currentMessageList.value,
   () => {
     nextTick(() => {
-      messageViewRef.value.firstElementChild?.scrollIntoView();
+      UpdataScrollInto();
     });
   },
   {
@@ -158,6 +164,22 @@ const scrollbar = (e) => {
 
 const UpdateScrollbar = () => {
   scrollbarRef.value.update();
+};
+const UpdataScrollInto = () => {
+  messageViewRef.value.firstElementChild?.scrollIntoView();
+  // console.log(messageViewRef.value);
+  // console.log(messageViewRef.value.firstElementChild);
+};
+
+const scroll = async ({ scrollTop }) => {
+  // throttle(() => {
+  //   const maxScroll = messageViewRef.value?.clientHeight - 401;
+  //   let client = maxScroll / 2;
+  //   console.log(scrollTop);
+  //   console.log(client,maxScroll);
+  //   let off = scrollTop < client;
+  //   console.log(off);
+  // }, 500);
 };
 
 const Monitorscrollbar = () => {
@@ -220,7 +242,7 @@ const ClickMenuItem = (data) => {
 };
 
 // eslint-disable-next-line no-undef
-defineExpose({ UpdateScrollbar });
+defineExpose({ UpdateScrollbar, UpdataScrollInto });
 </script>
 
 <style lang="scss" scoped>
@@ -271,7 +293,7 @@ $self-msg-color: #c2e8ff;
   height: 100%;
   overflow-y: overlay;
   overflow-x: hidden;
-  padding: 0 16px 16px 16px;
+  padding: 0 16px 30px 16px;
   box-sizing: border-box;
 
   .message-view-item {

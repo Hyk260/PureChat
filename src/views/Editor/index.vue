@@ -17,7 +17,14 @@
       <Header />
       <!-- 聊天窗口 -->
       <Chatwin ref="ChatRef" />
-      <div id="svgResize" @mouseover="dragControllerDiv(ChatRef)"></div>
+      <div id="svgResize" @mouseover="dragControllerDiv(ChatRef)">
+        <div class="back-to-the-bottom" @click="toBottom">
+          <el-icon style="transform: rotate(-90deg)">
+            <DArrowLeft />
+          </el-icon>
+          <span>回到底部</span>
+        </div>
+      </div>
       <!-- 编辑器 -->
       <Editor />
     </div>
@@ -51,6 +58,9 @@ const monitoring = () => {
   let status = navigator?.onLine;
   commit("SET_NETWORK_STATUS", status);
 };
+const toBottom = () => {
+  ChatRef.value.UpdataScrollInto();
+};
 
 socket.emit("login", {
   name: user.value.username,
@@ -82,7 +92,6 @@ onBeforeUnmount(() => {
   position: relative;
   overflow: hidden;
 }
-
 .scroll-container {
   height: calc(100% - 60px);
   position: relative;
@@ -104,5 +113,21 @@ onBeforeUnmount(() => {
   width: 100%;
   cursor: s-resize;
   // cursor: row-resize;
+  font-size: 12px;
+}
+.back-to-the-bottom {
+  position: absolute;
+  width: 70px;
+  height: 20px;
+  background: #17a7f6;
+  top: -30px;
+  right: 15px;
+  z-index: 1;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  cursor: pointer;
 }
 </style>
