@@ -78,7 +78,7 @@ onBeforeUnmount(() => {
 const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 
-  console.log(editor)
+  console.log(editor);
   // 查看所有工具栏key
   // console.log(editor.getAllMenuKeys());
   // console.log(editor.getConfig());
@@ -157,10 +157,10 @@ const parsefile = async (file) => {
   console.log(fileSize);
 };
 const parsetext = (item) => {};
-function innerHTML(data,item) {
-  console.log(data)
-  let $el = `<img class="emoji" src=${data}  alt="${item}" style="width: 25px; height: 25px" />`
-  let text = valueHtml.value
+function innerHTML(data, item) {
+  console.log(data);
+  let $el = `<img class="emoji" src=${data}  alt="${item}" style="width: 25px; height: 25px" />`;
+  let text = valueHtml.value;
   valueHtml.value = text + $el;
   //  <span class="emo"">${item}</span>
 }
@@ -201,6 +201,7 @@ const clearInputInfo = () => {
 
 const sendMsgBefore = () => {
   const text = editorRef.value.getText(); // 纯文本内容
+  console.log(text);
   const message = getMessageElemItem("text", { text: text }); //文本
   console.log(message);
   return { message };
@@ -208,7 +209,6 @@ const sendMsgBefore = () => {
 // 发送消息
 const sendMessage = async () => {
   const { message } = sendMsgBefore();
-
   const messageId = generateUUID();
   const userProfile = {
     user_profile_nick_name: userInfo.value.username,
@@ -250,12 +250,12 @@ const sendMessage = async () => {
 };
 </script>
 <style>
-  .w-e-image-container{
-    margin: 0 !important;
-  }
-  .w-e-bar-show{
-    display: none;
-  }
+.w-e-image-container {
+  margin: 0 !important;
+}
+.w-e-bar-show {
+  display: none;
+}
 </style>
 <style lang="scss" scoped>
 .Editor-style {

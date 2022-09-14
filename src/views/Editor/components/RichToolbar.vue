@@ -4,11 +4,18 @@
     <el-popover
       placement="top-start"
       popper-class="style-emo"
+      :show-arrow="false"
       :width="200"
+      :teleported="false"
       trigger="click"
     >
       <template #reference>
-        <span class="emoticon" title="选择表情">
+        <span
+          class="emoticon"
+          title="选择表情"
+          ref="buttonRef"
+          v-click-outside="onClickOutside"
+        >
           <svg-icon iconClass="iconxiaolian" />
         </span>
       </template>
@@ -19,7 +26,30 @@
           :key="item"
           @click="SelectEmoticon(item)"
         >
-          <img :src="emojiUrl + emojiMap[item]" />
+          <img :src="emojiUrl + emojiMap[item]" :title="item" />
+        </div>
+      </div>
+    </el-popover>
+    <!-- 最近表情 -->
+    <el-popover
+      ref="popoverRef"
+      :show-after="200"
+      :hide-after="300"
+      :show-arrow="false"
+      :teleported="false"
+      :virtual-ref="buttonRef"
+      placement="top-start"
+      trigger="hover"
+      virtual-triggering
+    >
+      <div class="lately-emoji">
+        <div
+          v-for="item in emojiName.slice(0, 16)"
+          class="emoji"
+          :key="item"
+          @click="SelectEmoticon(item)"
+        >
+          <img :src="emojiUrl + emojiMap[item]" :title="item" />
         </div>
       </div>
     </el-popover>
@@ -77,40 +107,46 @@
 </template>
 
 <script setup>
-import { ref, toRefs, defineEmits } from "vue";
+import { ref, unref, toRefs, defineEmits } from "vue";
 import { emojiName, emojiUrl, emojiMap } from "@/utils/emoji-map";
+import { ClickOutside as vClickOutside } from "element-plus";
 
+const buttonRef = ref();
+const popoverRef = ref();
 const emit = defineEmits(["innerHTML"]);
 const imagePicker = ref();
 const filePicker = ref();
+const visible = ref(false);
 
+const onClickOutside = () => {
+  unref(popoverRef).popperRef?.delayHide?.();
+};
 const SelectEmoticon = (item) => {
   let url = emojiUrl + emojiMap[item];
-  emit("innerHTML",url,item)
+  emit("innerHTML", url, item);
 };
 const SendImageClick = () => {
-  let $el = imagePicker.value
-  $el.value = null
+  let $el = imagePicker.value;
+  $el.value = null;
   $el.click();
 };
 const SendFileClick = () => {
-  let $el = filePicker.value
+  let $el = filePicker.value;
   $el.click();
 };
 const clickCscreenshot = () => {
   // screenshot
 };
 function sendImage(e) {
-  console.log(e.target.files[0])
+  console.log(e.target.files[0]);
 }
-function sendFile(e){
-  console.log(e.target.files[0])
+function sendFile(e) {
+  console.log(e.target.files[0]);
 }
-
-
 </script>
 <style>
 .style-emo {
+  z-index: 2032 !important;
   width: auto !important;
 }
 </style>
@@ -129,11 +165,15 @@ function sendFile(e){
     position: relative;
     text-align: center;
     color: #808080;
+    svg:hover {
+      color: #1989fa;
+    }
   }
 }
-.emojis {
+.emojis,
+.lately-emoji {
   width: 400px;
-  height: 220px;
+  height: 202px;
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
@@ -146,16 +186,23 @@ function sendFile(e){
     }
   }
 }
+.lately-emoji {
+  width: 125px;
+  height: 140px;
+}
 ::-webkit-scrollbar {
-  width: 6px;
+  display: none;
 }
-::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background: rgba(222, 223, 225);
-}
-::-webkit-scrollbar-track {
-  border-radius: 0;
-}
+// ::-webkit-scrollbar {
+//   width: 6px;
+// }
+// ::-webkit-scrollbar-thumb {
+//   border-radius: 10px;
+//   background: rgba(222, 223, 225);
+// }
+// ::-webkit-scrollbar-track {
+//   border-radius: 0;
+// }
 .emoticon {
 }
 </style>
