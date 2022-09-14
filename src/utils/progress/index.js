@@ -1,6 +1,6 @@
 import NProgress from "nprogress";
-// import "nprogress/nprogress.css";
-import "@/styles/nprogress.css"; // 自定义样式
+import "nprogress/nprogress.css";
+// import "@/styles/nprogress.css"; // 自定义样式
 
 NProgress.configure({
   // 动画方式
@@ -12,7 +12,7 @@ NProgress.configure({
   // 自动递增间隔
   trickleSpeed: 200,
   // 初始化时的最小百分比
-  minimum: 0.3,
+  minimum: 0.3, // 0.3
 });
 // console.log(NProgress)
 export default NProgress;

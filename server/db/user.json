@@ -20,6 +20,13 @@
       "password": "123456",
       "portrait":"rendan",
       "roleId": "8b2d9d80-e1b1-4584-bf7b-f10852794e4a"
+    },
+    {
+      "id": "3b2d9d12-e1b1-4584-bf1b-f19852794f4e",
+      "username": "徐奥星",
+      "password": "123456",
+      "portrait":"rendan",
+      "roleId": "8b2d9d80-e1b1-3284-bf7b-f10852794e4a"
     }
   ]
 }

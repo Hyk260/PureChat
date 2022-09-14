@@ -1,10 +1,12 @@
 <template>
   <div class="Editor-style" id="svgDown">
-    <Toolbar
+    <!-- <Toolbar
       class="toolbar"
       :editor="editorRef"
       :defaultConfig="toolbarConfig"
-    />
+    /> -->
+    <!-- 自定义工具栏 -->
+    <RichToolbar @innerHTML="innerHTML" />
     <Editor
       class="editor-content"
       v-model="valueHtml"
@@ -28,6 +30,7 @@
 import "@wangeditor/editor/dist/css/style.css";
 import "./utils/custom-menu";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
+import RichToolbar from "./components/RichToolbar.vue";
 import { toolbarConfig, editorConfig } from "./utils/configure";
 import {
   onBeforeUnmount,
@@ -75,6 +78,7 @@ onBeforeUnmount(() => {
 const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 
+  console.log(editor)
   // 查看所有工具栏key
   // console.log(editor.getAllMenuKeys());
   // console.log(editor.getConfig());
@@ -84,19 +88,19 @@ const customAlert = (s, t) => {
   console.log(s, t);
   switch (t) {
     case "success":
-      console.log("success")
+      console.log("success");
       break;
     case "info":
-       console.log("info")
+      console.log("info");
       break;
     case "warning":
-       console.log("warning")
+      console.log("warning");
       break;
     case "error":
-       console.log("error")
+      console.log("error");
       break;
     default:
-       console.log("default")
+      console.log("default");
       break;
   }
 };
@@ -153,6 +157,13 @@ const parsefile = async (file) => {
   console.log(fileSize);
 };
 const parsetext = (item) => {};
+function innerHTML(data,item) {
+  console.log(data)
+  let $el = `<img class="emoji" src=${data}  alt="${item}" style="width: 25px; height: 25px" />`
+  let text = valueHtml.value
+  valueHtml.value = text + $el;
+  //  <span class="emo"">${item}</span>
+}
 // 插入图片
 const parsepicture = async (file) => {
   console.log(file, "图片");
@@ -201,9 +212,9 @@ const sendMessage = async () => {
   const messageId = generateUUID();
   const userProfile = {
     user_profile_nick_name: userInfo.value.username,
-    user_profile_face_url: userInfo.value.portrait
+    user_profile_face_url: userInfo.value.portrait,
   };
-  const conv_id = '';
+  const conv_id = "";
   const conv_type = 2;
   const templateElement = await generateTemplateElement(
     conv_id, // 会话ID
@@ -223,8 +234,8 @@ const sendMessage = async () => {
       message: templateElement,
     },
   });
-  socket.emit("sendMsg", templateElement)
-  
+  socket.emit("sendMsg", templateElement);
+
   // 会话消息发送
   // let { code, result } = await sendMsg({
   //   conv_id,
@@ -237,19 +248,25 @@ const sendMessage = async () => {
   //   console.log(result);
   // }
 };
-
 </script>
-
+<style>
+  .w-e-image-container{
+    margin: 0 !important;
+  }
+  .w-e-bar-show{
+    display: none;
+  }
+</style>
 <style lang="scss" scoped>
 .Editor-style {
   height: 206px;
   .toolbar {
     // 表情包
     :deep(.w-e-bar-item) {
+      // 自定义滚动条
       ::-webkit-scrollbar {
         width: 6px;
       }
-      // 自定义滚动条
       ::-webkit-scrollbar-thumb {
         border-radius: 10px;
         background: rgba(222, 223, 225);
@@ -266,7 +283,7 @@ const sendMessage = async () => {
         margin: 0;
       }
     }
-    :deep(.w-e-bar-item .w-e-panel-content-emotion li){
+    :deep(.w-e-bar-item .w-e-panel-content-emotion li) {
       width: 30px;
       height: 30px;
       font-size: 18px;

@@ -7,3 +7,9 @@
 // );
 
 // @import "element-plus/theme-chalk/src/index.scss";
+
+.el-popper{
+  .el-popper__arrow{
+    display: none;
+  }
+}

@@ -19,7 +19,7 @@
       <Chatwin ref="ChatRef" />
       <div id="svgResize" @mouseover="dragControllerDiv(ChatRef)">
         <div class="back-to-the-bottom" @click="toBottom">
-          <el-icon style="transform: rotate(-90deg)">
+          <el-icon class="svg-left">
             <DArrowLeft />
           </el-icon>
           <span>回到底部</span>

@@ -37,7 +37,8 @@ router.beforeEach(async (to, from, next) => {
   const token = storage.get(ACCESS_TOKEN);
 
   if (token) {
-    NProgress.start(); // start progress bar
+    // start progress bar
+    NProgress.start(); 
     if (isF) {
       next();
     } else {
@@ -55,7 +56,8 @@ router.beforeEach(async (to, from, next) => {
 
 // 后置守卫
 router.afterEach(async (to, from, next) => {
-  NProgress.done(); // finish progress bar
+  // finish progress bar
+  NProgress.done(); 
 });
 // 应用场景，进入页面登录判断、管理员权限判断、浏览器判断
 

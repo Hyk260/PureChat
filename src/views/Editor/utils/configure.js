@@ -24,5 +24,9 @@ export const editorConfig = {
 // editorConfig.MENU_CONF['emotion'] = {
 //   emotions: `😀 😃 😄 🌞 😁 😆 🤖 😅 😂 🤣 😊 😇 🙂 🙃 😉`.split(' ') // 数组
 // }
+// 行高
+// editorConfig.MENU_CONF['lineHeight'] = {
+//   lineHeightList: ['1', '1.5', '2', '2.5']
+// }
 
 // console.log(editorConfig.MENU_CONF['emotion'])
