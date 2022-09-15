@@ -5,13 +5,15 @@ const {
   devServer,
   production,
   publicPath,
+  performance,
 } = require("./src/config/vue.custom.config");
 
 const AutoImport = require("unplugin-auto-import/webpack");
 const Components = require("unplugin-vue-components/webpack"); // 组件按需引入
-const CompressionPlugin = require('compression-webpack-plugin') // gzip压缩
+const CompressionPlugin = require("compression-webpack-plugin"); // gzip压缩
 const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin; // 打包文件分析工具
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin; // 打包文件分析工具
 
 const path = require("path");
 const resolve = (dir) => {
@@ -124,17 +126,6 @@ module.exports = {
       // })
     ],
     // webpack 的性能提示
-    performance: {
-      // 提示类型
-      hints: 'warning',
-      // 入口起点的最大体积
-      maxEntrypointSize: 1000 * 500,
-      // 生成文件的最大体积
-      maxAssetSize: 1024 * 2000,
-      // 只给出 js 文件性能提示
-      assetFilter: (FileName) => {
-        return FileName.endsWith('.js');
-      },
-    }
+    performance,
   },
 };

@@ -56,15 +56,27 @@ const vueDefaultConfig = {
     // https://unpkg.com/browse/vue@2.6.10/
     css: ["https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css"],
     js: [
-      "https://cdn.jsdelivr.net/npm/vue", // Vue
-      "https://unpkg.com/@element-plus/icons-vue", // ElementPlusIconsVue
+      //"https://cdn.jsdelivr.net/npm/vue", // Vue
+      //"https://unpkg.com/@element-plus/icons-vue", // ElementPlusIconsVue
     ],
   },
   /*
    * webpack 打包忽略项
    */
   externals: {
-    vue: "Vue",
+    //vue: "Vue",
+  },
+  performance: {
+    // 提示类型
+    hints: "warning",
+    // 入口起点的最大体积
+    maxEntrypointSize: 1000 * 500,
+    // 生成文件的最大体积
+    maxAssetSize: 1024 * 2000,
+    // 只给出 js 文件性能提示
+    assetFilter: (FileName) => {
+      return FileName.endsWith(".js");
+    },
   },
 };
 
