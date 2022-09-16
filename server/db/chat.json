@@ -153,27 +153,6 @@
       "message_status": 1
     },
     {
-      "message_client_time": 1659355367,
-      "message_conv_id": "",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": "仁丹吃\n💩"
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "328d8d0b-eb6c-4190-9f42-fa046c6fc01a",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙",
-        "user_profile_face_url": "hyk"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
       "message_client_time": 1659355530,
       "message_conv_id": "",
       "message_conv_type": "2",
@@ -249,27 +228,6 @@
       "message_is_from_self": true,
       "message_is_peer_read": false,
       "message_msg_id": "b6926096-fb3d-4a0d-a8ad-4a1e95c6421b",
-      "message_sender_group_member_info": {},
-      "message_sender_profile": {
-        "user_profile_nick_name": "临江仙",
-        "user_profile_face_url": "hyk"
-      },
-      "message_server_time": 0,
-      "message_status": 1
-    },
-    {
-      "message_client_time": 1660914858,
-      "message_conv_id": "",
-      "message_conv_type": "2",
-      "message_elem_array": [
-        {
-          "elem_type": 0,
-          "text_elem_content": "任丹吃💩💩 一吃吃一大坨"
-        }
-      ],
-      "message_is_from_self": true,
-      "message_is_peer_read": false,
-      "message_msg_id": "57ac152e-187c-4cfb-aa2f-f4427cef4ba3",
       "message_sender_group_member_info": {},
       "message_sender_profile": {
         "user_profile_nick_name": "临江仙",

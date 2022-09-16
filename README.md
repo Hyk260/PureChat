@@ -2,12 +2,16 @@
   <a target="blank">
     <img src="./images/log.png" alt="Logo" width="168" height="168">
   </a>
-  <h2 align="center" style="font-weight: 600;font: bold 200% Consolas, Monaco, monospace;color: #999;">PURE ADMIN</h2>
+  <h2 align="center" style="font-weight: 600;font: bold 200% Consolas, Monaco, monospace;color: #999;">
+    PURE ADMIN
+  </h2>
   <p align="center">
     使用vue3 + Element-Plus开发 用于学习参考
     <br />
-    <a><strong>🌎 访问DEMO</strong></a>
-      &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="https://pureadmin-7gm44ilzda12fda2-1307934606.ap-shanghai.app.tcloudbase.com" target="blank">
+      <strong>🌎 访问DEMO</strong>
+    </a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
     <a><strong>💬 联系作者</strong></a>
     <br />
     <br />
@@ -83,7 +87,7 @@ yarn build
 │   ├── components             // 全局公用组件
 │   ├── locales                // 国际化语言
 │   ├── mock                   // mock服务
-│   ├── plugins				         // 插件
+│   ├── plugins				   // 插件
 │   ├── router                 // 路由
 │   ├── store                  // 全局 store管理
 │   ├── styles                 // 全局样式
@@ -108,3 +112,4 @@ yarn build
 
 
 <img src="./images/71FF3533-FF8F-437E-852C-BDF5A1341B54.png">
+

@@ -7,8 +7,8 @@
       "createTime": 1621480197410,
       "updateTime": 1652077470543,
       "isDefaultRole": true,
-      "pinned":true,
-      "conv_recv_opt":2
+      "pinned": true,
+      "conv_recv_opt": 2
     },
     {
       "id": "6b2d9d80-e1b1-4584-bf7b-f10852794e4a",
@@ -261,9 +261,9 @@
     {
       "id": "7744ca1c-3836-4016-9240-44f2d7bc8ba6",
       "roleName": "张婉柔",
-      "info": "普通用户",
+      "info": "管理员",
       "createTime": 1652264138478,
-      "updateTime": 1652264138478,
+      "updateTime": 1663307125622,
       "isDefaultRole": false
     }
   ]

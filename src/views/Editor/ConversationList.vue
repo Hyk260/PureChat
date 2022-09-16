@@ -22,9 +22,8 @@
           @click.stop="closeMsg(item)"
         />
         <!-- 头像 :value="100" :max="99" value="new" is-dot-->
-        <el-badge :value="11" :max="9">
-          <img :src="squareUrl" class="portrait" alt="头像" />
-        </el-badge>
+        <!-- <el-badge :value="11" :max="9"></el-badge> -->
+        <img :src="squareUrl" class="portrait" alt="头像" />
         <!-- 消息 -->
         <div class="message-item-right">
           <div class="message-item-right-top">

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-scrollbar>
     <el-card class="box-card mb-4" shadow="never">
       <template #header>
         <div class="card-header">
@@ -10,7 +10,6 @@
         Pure-Admin 是一个基于Vue3、Element-Plus的后台管理模板
       </span>
     </el-card>
-
     <Motion :delay="100">
       <el-card class="box-card m-4" shadow="hover">
         <template #header>
@@ -35,7 +34,7 @@
             align="left"
           >
             <a href="#" target="_blank">
-              <span style="color: var(--el-color-primary)">文档地址</span>
+              <span class="style-color">文档地址</span>
             </a>
           </el-descriptions-item>
           <el-descriptions-item
@@ -44,12 +43,12 @@
             align="left"
           >
             <a href="#" target="_blank">
-              <span style="color: var(--el-color-primary)">预览地址</span>
+              <span class="style-color">预览地址</span>
             </a>
           </el-descriptions-item>
           <el-descriptions-item label="Github" label-align="left" align="left">
             <a href="https://github.com/Hyk260" target="_blank">
-              <span style="color: var(--el-color-primary)">Github</span>
+              <span class="style-color">Github</span>
             </a>
           </el-descriptions-item>
         </el-descriptions>
@@ -74,9 +73,9 @@
               :href="'https://www.npmjs.com/package/' + item.label"
               target="_blank"
             >
-              <span style="color: var(--el-color-primary)">{{
-                item.field
-              }}</span>
+              <span class="style-color">
+                {{ item.field }}
+              </span>
             </a>
           </el-descriptions-item>
         </el-descriptions>
@@ -101,15 +100,15 @@
               :href="'https://www.npmjs.com/package/' + item.label"
               target="_blank"
             >
-              <span style="color: var(--el-color-primary)">{{
-                item.field
-              }}</span>
+              <span class="style-color">
+                {{ item.field }}
+              </span>
             </a>
           </el-descriptions-item>
         </el-descriptions>
       </el-card>
     </Motion>
-  </div>
+  </el-scrollbar>
 </template>
 
 <script setup>
@@ -133,6 +132,9 @@ Object.keys(devDependencies).forEach((key) => {
 </script>
 
 <style scoped lang="scss">
+.style-color {
+  color: var(--el-color-primary)
+}
 .m-4 {
   margin: 1rem;
 }
