@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
+import {
+  createRouter,
+  createWebHistory,
+  createWebHashHistory,
+} from "vue-router";
 import storage from "storejs";
 import NProgress from "@/utils/progress";
 import routes from "./routes";
@@ -15,7 +19,7 @@ createRouter.prototype.push = function push(location, onResolve, onReject) {
 };
 
 // 登录验证白名单
-const whiteList = []; // 'login','home'
+const whiteList = ["login", "home"];
 const loginRoutePath = "/login";
 const defaultRoutePath = "/home";
 
@@ -33,12 +37,12 @@ let isF = false;
 router.beforeEach(async (to, from, next) => {
   // console.log(to, from)
   if (from.path === to.path) return;
-  document.title = `${to.meta.title} | ${title}` || document.title
+  document.title = `${to.meta.title} | ${title}` || document.title;
   const token = storage.get(ACCESS_TOKEN);
 
   if (token) {
     // start progress bar
-    NProgress.start(); 
+    NProgress.start();
     if (isF) {
       next();
     } else {
@@ -57,7 +61,7 @@ router.beforeEach(async (to, from, next) => {
 // 后置守卫
 router.afterEach(async (to, from, next) => {
   // finish progress bar
-  NProgress.done(); 
+  NProgress.done();
 });
 // 应用场景，进入页面登录判断、管理员权限判断、浏览器判断
 

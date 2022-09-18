@@ -7,7 +7,7 @@ import NProgress from "@/utils/progress";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 
 const baseURL = "http://localhost:8082/";
-const { formats, parse, stringify } = qs
+const { formats, parse, stringify } = qs;
 
 // www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const service = axios.create({

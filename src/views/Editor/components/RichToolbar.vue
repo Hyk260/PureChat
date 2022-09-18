@@ -146,7 +146,7 @@ function sendFile(e) {
 </script>
 <style>
 .style-emo {
-  z-index: 2032 !important;
+  z-index: 9999 !important;
   width: auto !important;
 }
 </style>

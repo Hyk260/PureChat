@@ -36,7 +36,7 @@ export function bytesToSize(bytes) {
     return (bytes / megaBytes).toFixed(decimal) + " MB";
   } else {
     return (bytes / gigaBytes).toFixed(decimal) + " GB";
-  } 
+  }
 }
 
 export function randomNum(minNum, maxNum) {

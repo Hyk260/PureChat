@@ -126,6 +126,6 @@ module.exports = {
       // })
     ],
     // webpack 的性能提示
-    performance,
+    // performance,
   },
 };

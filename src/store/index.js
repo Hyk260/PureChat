@@ -5,6 +5,7 @@ import saveToLocalStorage from "./plugins/localStorage"; // 自定义插件
 import { changeAppearance } from "@/utils/common";
 import mutations from "./mutations";
 import actions from "./actions";
+import getters from "./getters";
 import state from "./state";
 
 const plugins = [saveToLocalStorage];
@@ -29,7 +30,7 @@ const store = createStore({
   state,
   mutations,
   actions,
-  getters: {},
+  getters,
   // 自定义属性
   plugins,
 });

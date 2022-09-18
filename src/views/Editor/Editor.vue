@@ -158,11 +158,10 @@ const parsefile = async (file) => {
 };
 const parsetext = (item) => {};
 function innerHTML(data, item) {
-  console.log(data);
-  let $el = `<img class="emoji" src=${data}  alt="${item}" style="width: 25px; height: 25px" />`;
-  let text = valueHtml.value;
-  valueHtml.value = text + $el;
-  //  <span class="emo"">${item}</span>
+  console.log(data, item);
+  let $el = `<img src=${data} class="${item} emjo" alt="${item}" style="width: 25px; height: 25px" />`;
+  valueHtml.value += $el;
+  console.log($el)
 }
 // 插入图片
 const parsepicture = async (file) => {
@@ -201,9 +200,13 @@ const clearInputInfo = () => {
 
 const sendMsgBefore = () => {
   const text = editorRef.value.getText(); // 纯文本内容
+  const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
   console.log(text);
   const message = getMessageElemItem("text", { text: text }); //文本
   console.log(message);
+  console.log(HtmlText);
+  let innHTML = HtmlText.replace(/<(?!img).*?>/g, '')
+  console.log(innHTML)
   return { message };
 };
 // 发送消息
@@ -225,6 +228,7 @@ const sendMessage = async () => {
     {}
   );
   console.log(templateElement);
+  return;
   clearInputInfo();
   // 更新消息
   commit("SET_HISTORYMESSAGE", {
@@ -234,19 +238,19 @@ const sendMessage = async () => {
       message: templateElement,
     },
   });
-  socket.emit("sendMsg", templateElement);
+  // socket.emit("sendMsg", templateElement);
 
   // 会话消息发送
-  // let { code, result } = await sendMsg({
-  //   conv_id,
-  //   conv_type,
-  //   userProfile,
-  //   message,
-  // });
-  // if (code == 200) {
-  //   console.log("发送成功");
-  //   console.log(result);
-  // }
+  let { code, result } = await sendMsg({
+    conv_id,
+    conv_type,
+    userProfile,
+    message,
+  });
+  if (code == 200) {
+    console.log("发送成功");
+    console.log(result);
+  }
 };
 </script>
 <style>
@@ -258,6 +262,9 @@ const sendMessage = async () => {
 }
 </style>
 <style lang="scss" scoped>
+.emoji {
+  font-size: 16px;
+}
 .Editor-style {
   height: 206px;
   .toolbar {
