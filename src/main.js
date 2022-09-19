@@ -24,6 +24,7 @@ app.config.globalProperties.__APP_INFO__ = pkg;
 loadAllPlugins(app);
 // 自动加载组件
 loadAllassembly(app);
+// svg组件
 registerSvgIcon(app);
 
 app.use(store);

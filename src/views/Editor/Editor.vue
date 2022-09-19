@@ -228,7 +228,7 @@ const sendMessage = async () => {
     {}
   );
   console.log(templateElement);
-  return;
+  // return;
   clearInputInfo();
   // 更新消息
   commit("SET_HISTORYMESSAGE", {
@@ -238,7 +238,7 @@ const sendMessage = async () => {
       message: templateElement,
     },
   });
-  // socket.emit("sendMsg", templateElement);
+  socket.emit("sendMsg", templateElement);
 
   // 会话消息发送
   let { code, result } = await sendMsg({

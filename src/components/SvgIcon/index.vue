@@ -37,12 +37,9 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .svg-icon {
-  font-size: 16px;
+  font-size:16px;
   width: 1em;
   height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
   cursor: pointer;
 }
 </style>

@@ -1,10 +1,8 @@
 /* Recommended css code for vue-svgicon */
 .svg-icon {
   display: inline-block;
-  width: 16px;
-  height: 16px;
   color: inherit;
-  fill: none;
+  fill: currentColor; //none
   stroke: currentColor;
   vertical-align: -0.15em;
 }

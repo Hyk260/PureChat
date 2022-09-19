@@ -58,7 +58,7 @@ ul {
   display: none !important;
 }
 // 外边框
-@for $i from 1 through 50 {
+@for $i from 1 through 20 {
   .margin-#{$i} {
     margin: #{$i}px;
   }
@@ -85,7 +85,7 @@ ul {
   }
 }
 // 内边框
-@for $i from 1 through 50 {
+@for $i from 1 through 20 {
   .padding-#{$i} {
     padding: #{$i}px;
   }
