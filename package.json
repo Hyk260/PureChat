@@ -28,6 +28,8 @@
     "socket.io-client": "^4.5.1",
     "storejs": "^2.0.1",
     "svg-sprite-loader": "^6.0.11",
+    "tim-js-sdk": "^2.23.0",
+    "tim-upload-plugin": "^1.0.5",
     "unplugin-auto-import": "^0.11.2",
     "unplugin-vue-components": "^0.22.4",
     "v-contextmenu": "^3.0.0",
