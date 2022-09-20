@@ -117,7 +117,7 @@ import { useStore } from "vuex";
 import { user, rules } from "./utils/validation";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import Motion from "@/utils/motion";
-
+import { tim } from '@/utils/im-sdk';
 const router = useRouter();
 const showload = ref(false);
 const keep = ref(false);
@@ -139,6 +139,22 @@ const LoginBtn = async (formEl) => {
     }
   });
 };
+console.log(window.genTestUserSig('').SDKAppID)
+console.log(window.genTestUserSig('123').userSig,'密码')
+
+// let name = window.genTestUserSig('').SDKAppID;
+// let mise = window.genTestUserSig('临江仙').userSig;
+// console.log(name,mise)
+// // console.log(tim)
+// tim.login({userID: name, userSig: mise}).then(function(imResponse) {
+//   console.log(imResponse.data); // 登录成功
+//   if (imResponse.data.repeatLogin === true) {
+//     // 标识帐号已登录，本次登录操作为重复登录。v2.5.1 起支持
+//     console.log(imResponse.data.errorInfo);
+//   }
+// }).catch(function(imError) {
+//   console.warn('login error:', imError); // 登录失败的相关信息
+// });
 
 const login = async () => {
   showload.value = true;
