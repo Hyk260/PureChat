@@ -1,16 +1,18 @@
 <template>
   <div class="Editor-style" id="svgDown">
-    <!-- <Toolbar
+    <Toolbar
       class="toolbar"
       :editor="editorRef"
       :defaultConfig="toolbarConfig"
-    /> -->
+      :mode="mode"
+    />
     <!-- 自定义工具栏 -->
-    <RichToolbar @innerHTML="innerHTML" />
+    <!-- <RichToolbar @innerHTML="innerHTML" /> -->
     <Editor
       class="editor-content"
       v-model="valueHtml"
       :defaultConfig="editorConfig"
+      :mode="mode"
       @onCreated="handleCreated"
       @customPaste="customPaste"
       @customAlert="customAlert"
@@ -60,6 +62,7 @@ import { fileImgToBase64Url } from "@/utils/message-input-utils";
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
 const valueHtml = ref(""); // 内容 HTML
+const mode = 'simple' // 'default' 或 'simple'
 
 const { state, getters, dispatch, commit } = useStore();
 const { currentMessageList, historyMessageList, noMore, userInfo } = useState({
@@ -78,7 +81,7 @@ onBeforeUnmount(() => {
 const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 
-  console.log(editor);
+  console.log(editor,'实例');
   // 查看所有工具栏key
   // console.log(editor.getAllMenuKeys());
   // console.log(editor.getConfig());
@@ -255,10 +258,10 @@ const sendMessage = async () => {
 </script>
 <style>
 .w-e-image-container {
-  margin: 0 !important;
+  /* margin: 0 !important; */
 }
 .w-e-bar-show {
-  display: none;
+  /* display: none; */
 }
 </style>
 <style lang="scss" scoped>
