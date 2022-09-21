@@ -15,7 +15,6 @@ tim.setLogLevel(0); // 普通级别，日志量较多，接入时建议使用
 // 注册 COS SDK 插件
 tim.registerPlugin({ "tim-upload-plugin": TIMUploadPlugin });
 
-export default {
-  tim,
-  TIM,
-};
+export default tim
+  
+

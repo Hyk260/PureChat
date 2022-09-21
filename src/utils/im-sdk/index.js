@@ -18,12 +18,12 @@ tim.registerPlugin({ "tim-upload-plugin": TIMUploadPlugin });
 
 // SDK 进入 ready 状态时触发，接入侧监听此事件，然后可调用 SDK 发送消息等 API，使用 SDK 的各项功能
 let onSdkReady = function (event) {
-  let message = tim.createTextMessage({
-    to: "user1",
-    conversationType: "C2C",
-    payload: { text: "Hello world!" },
-  });
-  tim.sendMessage(message);
+  // let message = tim.createTextMessage({
+  //   to: "user1",
+  //   conversationType: "C2C",
+  //   payload: { text: "Hello world!" },
+  // });
+  // tim.sendMessage(message);
 };
 tim.on(TIM.EVENT.SDK_READY, onSdkReady);
 
@@ -185,10 +185,5 @@ let onNetStateChange = function (event) {
   // TIM.TYPES.NET_STATE_DISCONNECTED - 未接入网络。接入侧可根据此状态提示“当前网络不可用”。SDK 仍会继续重试，若用户网络恢复，SDK 会自动同步消息
 };
 tim.on(TIM.EVENT.NET_STATE_CHANGE, onNetStateChange);
-let str = 'eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwk92bHm2cf6T3TOhksUp2YkFBZkpSlaGJgYGphYWxoYGEJmSzNxUoKiZmbGZpQFQHCKaWlGQWQQUNzMwsTCAqizOTAeanB1Wmh2ib65vmRMQYGSZElGSYVTgVmacb1rumF2QWpJW6lZaGZ7o6WahHWqrVAsAaSI16A__';
-tim.login({userID: '临江仙', userSig: str}).then(res=>{
-  console.log(res)
-}).catch(err=>{
-  console.log(err)
-})
+
 export { tim };

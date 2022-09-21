@@ -61,6 +61,10 @@ const conversation = {
           }
           break;
         }
+        // 获取会话列表数据
+        case CONVERSATIONTYPE.REPLACE_CONV_LIST: {
+          state.conversationList = payload
+        }
       }
     },
     // 设置网络状态

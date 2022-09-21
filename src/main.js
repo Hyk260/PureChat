@@ -2,7 +2,7 @@ import { createApp, version } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import { tim } from "./utils/im-sdk";
+import tim from "./utils/im-sdk/tim";
 
 import "@/styles/index.scss";
 import pkg from "../package.json";
