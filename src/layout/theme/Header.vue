@@ -63,7 +63,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useState } from "@/utils/hooks/useMapper";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import screenfull from "../components/screenfull.vue";
-import Tags from '../components/Tags.vue';
+import Tags from "../components/Tags.vue";
 
 const { state, dispatch, commit } = useStore();
 const router = useRouter();
@@ -127,11 +127,14 @@ const Logout = async () => {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
-  }).then(()=>{
-    dispatch("LOG_OUT");
-  }).catch((err)=>{
-    console.log(err)
   })
+    .then(() => {
+      dispatch("LOG_OUT");
+      dispatch("TIM_LOG_OUT");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 // 侧边栏 展开 折叠
 const toggleClick = (val) => {

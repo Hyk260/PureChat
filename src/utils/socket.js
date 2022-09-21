@@ -1,13 +1,13 @@
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 
-const socket = io(
-  "http://localhost:3001/", // http://localhost:8080/
-  {
-    path: "", //# socket.io 库默认服务端path为/socket.io
-    transports: ["websocket", "xhr-polling", "jsonp-polling"],
-  }
-);
-console.log(socket);
+// const socket = io(
+//   "http://localhost:3001/", // http://localhost:8080/
+//   {
+//     path: "", //# socket.io 库默认服务端path为/socket.io
+//     transports: ["websocket", "xhr-polling", "jsonp-polling"],
+//   }
+// );
+// console.log(socket);
 
 // socket.on("message", (res) => {
 //   console.log("#message: ", res);
@@ -19,4 +19,4 @@ console.log(socket);
 //   console.log("断开连接");
 // });
 
-export default socket;
+// export default socket;

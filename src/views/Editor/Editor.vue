@@ -51,7 +51,7 @@ import {
   getMessageElemItem,
   getImageType,
 } from "@/utils/message-input-utils";
-import socket from "@/utils/socket";
+// import socket from "@/utils/socket";
 import { empty } from "@/utils";
 import { useStore } from "vuex";
 import { sendMsg } from "@/api/chat";
@@ -241,7 +241,7 @@ const sendMessage = async () => {
       message: templateElement,
     },
   });
-  socket.emit("sendMsg", templateElement);
+  // socket.emit("sendMsg", templateElement);
 
   // 会话消息发送
   let { code, result } = await sendMsg({

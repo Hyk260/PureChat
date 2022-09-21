@@ -54,16 +54,18 @@ const conversation = {
         // 跳转会话
         case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
           if (payload) {
-            if (payload?.id == state.currentConversation?.id) return;
-            state.needScrollDown = 0;
+            // console.log(payload)
+            // if (payload?.id == state.currentConversation?.id) return;
+            // state.needScrollDown = 0;
             // state.noMore = false;
-            state.currentConversation = payload;
+            // state.currentConversation = payload;
+            
           }
           break;
         }
         // 获取会话列表数据
         case CONVERSATIONTYPE.REPLACE_CONV_LIST: {
-          state.conversationList = payload
+          state.conversationList = payload;
         }
       }
     },

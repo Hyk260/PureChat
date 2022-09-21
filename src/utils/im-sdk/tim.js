@@ -9,12 +9,21 @@ let options = {
 let tim = TIM.create(options); // SDK 实例通常用 tim 表示
 
 // 设置 SDK 日志输出级别，详细分级请参见 setLogLevel 接口的说明
-tim.setLogLevel(0); // 普通级别，日志量较多，接入时建议使用
-// tim.setLogLevel(1); // release级别，SDK 输出关键信息，生产环境时建议使用
+tim.setLogLevel(3);
+// 0 普通级别，日志量较多，接入时建议使用
+// 1 release级别，SDK 输出关键信息，生产环境时建议使用
+// 2 告警级别，SDK 只输出告警和错误级别的日志
+// 3 错误级别，SDK 只输出错误级别的日志
+// 4 无日志级别，SDK 将不打印任何日志
 
 // 注册 COS SDK 插件
 tim.registerPlugin({ "tim-upload-plugin": TIMUploadPlugin });
 
-export default tim
-  
+// 监听事件，如：
+tim.on(TIM.EVENT.SDK_READY, function (event) {
+  console.log(event)
+  // 收到离线消息和会话列表同步完毕通知，接入侧可以调用 sendMessage 等需要鉴权的接口
+  // event.name - TIM.EVENT.SDK_READY
+});
 
+export default tim;

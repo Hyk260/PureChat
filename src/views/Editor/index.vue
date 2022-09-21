@@ -43,7 +43,7 @@ import Header from "./components/Header.vue";
 import Chatwin from "./Chatwin.vue";
 import networklink from "./components/networklink.vue";
 import ConversationList from "./ConversationList.vue";
-import socket from "@/utils/socket";
+// import socket from "@/utils/socket";
 
 const ChatRef = ref(null);
 const { state, dispatch, commit } = useStore();
@@ -62,9 +62,9 @@ const toBottom = () => {
   ChatRef.value.UpdataScrollInto();
 };
 
-socket.emit("login", {
-  name: user.value.username,
-});
+// socket.emit("login", {
+//   name: user.value.username,
+// });
 
 window.addEventListener("online", monitoring);
 window.addEventListener("offline", monitoring);

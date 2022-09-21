@@ -9,7 +9,7 @@ import TIM from "tim-js-sdk";
 import tim from "./utils/im-sdk/tim";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import { loader } from "@/utils/loaders";
-import { onMounted } from "vue";
+import { onMounted, nextTick } from "vue";
 import { tree } from "@/utils/ToTree";
 import { useRouter } from "vue-router";
 import storage from "storejs";
@@ -54,15 +54,44 @@ const fnresize = () => {
   //   });
   // }
 };
-function initListener(){
-  // 收到推送的单聊、群聊、群提示、群系统通知的新消息，可通过遍历 event.data 获取消息列表数据并渲染到页面
-  tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, onUpdateConversationList)
+function initListener() {
+  nextTick(() => {
+    setTimeout(() => {
+      dispatch("TIM_LOG_IN", "黄泳康");
+    }, 500);
+  });
+  // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
+  tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate);
+  // SDK NOT READT
+  tim.on(TIM.EVENT.SDK_NOT_READY, onReadyStateUpdate);
+  // 会话列表更新
+  tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, onUpdateConversationList);
+  // 收到新消息
+  tim.on(TIM.EVENT.MESSAGE_RECEIVED, onReceiveMessage);
+  // 群组列表更新
+  tim.on(TIM.EVENT.GROUP_LIST_UPDATED, onUpdateGroupList);
 }
 function onUpdateConversationList(event) {
-  console.log(event.data)
-  // commit('updateConversationList', event.data)
+  console.log(event.data, "会话列表");
+  commit("SET_CONVERSATION", {
+    type: "REPLACE_CONV_LIST",
+    payload: event.data,
+  });
 }
-
+function onReceiveMessage(data) {
+  console.log(data);
+}
+function onReadyStateUpdate({ name }) {
+  const isSDKReady = name === TIM.EVENT.SDK_READY ? true : false;
+  commit("toggleIsSDKReady", isSDKReady);
+  if (isSDKReady) {
+    dispatch("GET_MYPROFILE");
+  }
+}
+function onUpdateGroupList(event) {
+  // commit('updateGroupList', event.data)
+  console.log(event, "onUpdateGroupList");
+}
 /** width app-wrapper类容器宽度
  * 0 < width <= 760 隐藏侧边栏
  * 760 < width <= 990 折叠侧边栏

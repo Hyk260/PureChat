@@ -3,7 +3,7 @@
     <transition-group name="fade-transform">
       <div
         class="message-item"
-        v-for="item in Friends"
+        v-for="item in conversationList"
         :key="item"
         :class="fnClass(item)"
         @click="handleConvListClick(item)"
@@ -14,7 +14,7 @@
         @contextmenu.prevent="handleContextMenuEvent($event, item)"
       >
         <!-- 置顶图标 -->
-        <div class="pinned-tag" v-if="item && item.pinned"></div>
+        <div class="pinned-tag" v-if="item && item.isPinned"></div>
         <!-- 关闭按钮 -->
         <FontIcon
           iconName="close"
@@ -28,21 +28,41 @@
         <div class="message-item-right">
           <div class="message-item-right-top">
             <div class="message-chat-name">
-              {{ item.roleName }}
+              <!-- {{ item.roleName }} -->
+              <!-- {{ item.unreadCount }} -->
+              <span
+                :title="item.userProfile.nick || item.userProfile.userID"
+                v-if="item.type === TIM.TYPES.CONV_C2C"
+                >{{
+                  item.userProfile.userID ||
+                  item.remark ||
+                  item.userProfile.nick
+                }}
+              </span>
+              <span
+                :title="item.groupProfile.name || item.groupProfile.groupID"
+                v-else-if="item.type === TIM.TYPES.CONV_GROUP"
+                >{{ item.groupProfile.name || item.groupProfile.groupID }}
+              </span>
+              <span v-else-if="item.type === TIM.TYPES.CONV_SYSTEM"
+                >系统通知
+              </span>
             </div>
             <div class="message-time">
-              {{ timeFormat(item.updateTime) }}
+              <!-- {{ timeFormat(item.updateTime) }} -->
+              {{ timeFormat(item.lastMessage.lastSequence) }}
             </div>
           </div>
           <div class="message-item-right-bottom">
             <span>
-              {{ fnNews(currentMessageList) }}
+              <!-- {{ fnNews(currentMessageList) }} -->
+              {{ item.lastMessage.messageForShow }}
             </span>
           </div>
           <!-- 消息免打扰 -->
-          <template v-if="item.conv_recv_opt == 2">
+          <!-- <template v-if="item.conv_recv_opt == 2">
             <svg-icon iconClass="DontDisturb" class="dont" />
-          </template>
+          </template> -->
         </div>
       </div>
     </transition-group>
@@ -79,8 +99,9 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { timeFormat } from "@/utils/timeFormat";
 import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
-import socket from "@/utils/socket";
-
+// import socket from "@/utils/socket";
+import TIM from "tim-js-sdk";
+import tim from "@/utils/im-sdk/tim";
 const contextMenuItemInfo = ref([]);
 const Friends = ref([]);
 // {
@@ -112,10 +133,11 @@ onMounted(() => {
 });
 
 const { state, getters, dispatch, commit } = useStore();
-const { Selected, UserInfo, currentMessageList } = useState({
+const { Selected, UserInfo, currentMessageList, conversationList } = useState({
   UserInfo: (state) => state.data.user,
   Selected: (state) => state.conversation.currentConversation,
   currentMessageList: (state) => state.conversation.currentMessageList,
+  conversationList: (state) => state.conversation.conversationList,
 });
 
 const fnNews = (data) => {
@@ -134,65 +156,66 @@ const getRolesList = async () => {
 };
 
 // 显示在线人员
-socket.on("disUser", (usersInfo) => {
-  console.log(usersInfo, "在线人员");
-});
+// socket.on("disUser", (usersInfo) => {
+//   console.log(usersInfo, "在线人员");
+// });
 // 系统消息
-socket.on("system", async (user) => {
-  var data = new Date().toTimeString().substr(0, 8);
-  let states = user.status == 6 ? "进入" : "离开";
-  console.log(`${data} ${user.name}  ${states}了聊天室`);
-  if (UserInfo.value.username == user.name) return;
-  let message = {
-    elem_type: 5,
-    tips_elem_group_info_array: [
-      {
-        tips_info_flag: 1,
-        tips_info_value: user.name,
-      },
-    ],
-    group_tips_elem_tip_type: user.status,
-  };
-  const messageId = generateUUID();
-  const userProfile = {
-    user_profile_nick_name: "系统",
-  };
-  const conv_id = "window";
-  const conv_type = 2;
-  const templateElement = await generateTemplateElement(
-    conv_id, // 会话ID
-    conv_type, // 消息类型 1 2
-    userProfile, // 发送方数据
-    messageId, // UUID
-    message,
-    {}
-  );
-  debounce(() => {
-    commit("SET_HISTORYMESSAGE", {
-      type: "UPDATE_MESSAGES",
-      payload: {
-        convId: conv_id,
-        message: templateElement,
-      },
-    });
-  }, 500);
-});
+// socket.on("system", async (user) => {
+//   var data = new Date().toTimeString().substr(0, 8);
+//   let states = user.status == 6 ? "进入" : "离开";
+//   console.log(`${data} ${user.name}  ${states}了聊天室`);
+//   if (UserInfo.value.username == user.name) return;
+//   let message = {
+//     elem_type: 5,
+//     tips_elem_group_info_array: [
+//       {
+//         tips_info_flag: 1,
+//         tips_info_value: user.name,
+//       },
+//     ],
+//     group_tips_elem_tip_type: user.status,
+//   };
+//   const messageId = generateUUID();
+//   const userProfile = {
+//     user_profile_nick_name: "系统",
+//   };
+//   const conv_id = "window";
+//   const conv_type = 2;
+//   const templateElement = await generateTemplateElement(
+//     conv_id, // 会话ID
+//     conv_type, // 消息类型 1 2
+//     userProfile, // 发送方数据
+//     messageId, // UUID
+//     message,
+//     {}
+//   );
+//   debounce(() => {
+//     commit("SET_HISTORYMESSAGE", {
+//       type: "UPDATE_MESSAGES",
+//       payload: {
+//         convId: conv_id,
+//         message: templateElement,
+//       },
+//     });
+//   }, 500);
+// });
 // 接受消息
-socket.on("receiveMsg", (data) => {
-  console.log(data, "接受消息");
-  const { message_sender_profile } = data;
-  const { user_profile_nick_name } = message_sender_profile;
-  if (UserInfo.value.username == user_profile_nick_name) return;
-  commit("SET_HISTORYMESSAGE", {
-    type: "UPDATE_MESSAGES",
-    payload: {
-      convId: "",
-      message: data,
-    },
-  });
-});
+// socket.on("receiveMsg", (data) => {
+//   console.log(data, "接受消息");
+//   const { message_sender_profile } = data;
+//   const { user_profile_nick_name } = message_sender_profile;
+//   if (UserInfo.value.username == user_profile_nick_name) return;
+//   commit("SET_HISTORYMESSAGE", {
+//     type: "UPDATE_MESSAGES",
+//     payload: {
+//       convId: "",
+//       message: data,
+//     },
+//   });
+// });
 
 const fnClass = (item) => {
+  return
   let current = Selected.value;
   let select = item?.id == current?.id;
   if (item?.pinned && select) {
@@ -234,12 +257,39 @@ const handleContextMenuEvent = (e, item) => {
 const dropHandler = (e, item) => {};
 const dragenterHandler = (e) => {};
 const dragleaveHandler = (e) => {};
+
 // 会话点击
 const handleConvListClick = (data) => {
   commit("SET_CONVERSATION", {
     type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
     payload: data,
   });
+  return
+  let message = tim.createTextMessage({
+    to: "临江仙",
+    conversationType: TIM.TYPES.CONV_C2C,
+    // 消息优先级，用于群聊（v2.4.2起支持）。如果某个群的消息超过了频率限制，后台会优先下发高优先级的消息，详细请参考：https://cloud.tencent.com/document/product/269/3663#.E6.B6.88.E6.81.AF.E4.BC.98.E5.85.88.E7.BA.A7.E4.B8.8E.E9.A2.91.E7.8E.87.E6.8E.A7.E5.88.B6)
+    // 支持的枚举值：TIM.TYPES.MSG_PRIORITY_HIGH, TIM.TYPES.MSG_PRIORITY_NORMAL（默认）, TIM.TYPES.MSG_PRIORITY_LOW, TIM.TYPES.MSG_PRIORITY_LOWEST
+    // priority: TIM.TYPES.MSG_PRIORITY_NORMAL,
+    payload: {
+      text: "Hello world!",
+    },
+    // v2.20.0起支持C2C消息已读回执功能，如果您发消息需要已读回执，需购买旗舰版套餐，并且创建消息时将 needReadReceipt 设置为 true
+    needReadReceipt: true,
+    // 消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到，v2.10.2起支持）
+    // cloudCustomData: 'your cloud custom data'
+  });
+  // 2. 发送消息
+  let promise = tim.sendMessage(message);
+  promise
+    .then(function (imResponse) {
+      // 发送成功
+      console.log(imResponse);
+    })
+    .catch(function (imError) {
+      // 发送失败
+      console.warn("sendMessage error:", imError);
+    });
 };
 
 const handleClickMenuItem = (item) => {

@@ -117,7 +117,6 @@ import { useStore } from "vuex";
 import { user, rules } from "./utils/validation";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import Motion from "@/utils/motion";
-import { tim } from '@/utils/im-sdk';
 const router = useRouter();
 const showload = ref(false);
 const keep = ref(false);
@@ -144,7 +143,7 @@ const login = async () => {
   showload.value = true;
   const { username, password } = user;
   const res = await Login({ username, password });
-  dispatch('LOG_IN', '临江仙')
+  dispatch("TIM_LOG_IN", "黄泳康");
   // return
   console.log(res, "登录信息");
   if (!res) return;
