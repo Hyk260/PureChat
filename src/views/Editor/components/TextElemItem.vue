@@ -1,11 +1,18 @@
 <template>
   <div class="message_name">
-    {{ message.message_sender_profile.user_profile_nick_name }}
+    <!-- {{ message.message_sender_profile.user_profile_nick_name }} -->
+    <span v-if="message.from == '@TIM#SYSTEM'">
+      系统
+    </span>
+    <span v-else>
+      {{message.from}}
+    </span>
   </div>
   <div class="message">
     <span class="message-view__item--text text right-menu-item">
       <span class="text linkUrl">
-        {{ message.message_elem_array[0].text_elem_content }}
+        {{message.payload.text}}
+        <!-- {{ message.message_elem_array[0].text_elem_content }} -->
       </span>
     </span>
   </div>

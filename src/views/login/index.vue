@@ -143,7 +143,7 @@ const login = async () => {
   showload.value = true;
   const { username, password } = user;
   const res = await Login({ username, password });
-  dispatch("TIM_LOG_IN", "黄泳康");
+  dispatch("TIM_LOG_IN", username);
   // return
   console.log(res, "登录信息");
   if (!res) return;

@@ -10,15 +10,22 @@ import tim from "./utils/im-sdk/tim";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import { loader } from "@/utils/loaders";
 import { onMounted, nextTick } from "vue";
+import { useState } from "@/utils/hooks/useMapper";
 import { tree } from "@/utils/ToTree";
 import { useRouter } from "vue-router";
 import storage from "storejs";
 import { useStore } from "vuex";
 import { debounce } from "@/utils/debounce";
+import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 
-const { state, dispatch, commit } = useStore();
-const table = storage.get("userdata");
 const locale = zhCn;
+const table = storage.get("userdata");
+const { state, dispatch, commit } = useStore();
+
+const { currentConversation, userInfo } = useState({
+  currentConversation: (state) => state.conversation.currentConversation,
+  userInfo: (state) => state.data.user,
+});
 
 onMounted(() => {
   if (!table?.Routingtable) return;
@@ -27,11 +34,11 @@ onMounted(() => {
     useRouter().addRoute(item);
   });
 
-  window.onresize = () => {
-    debounce?.(() => {
-      fnresize();
-    }, 300);
-  };
+  // window.onresize = () => {
+  //   debounce?.(() => {
+  //     fnresize();
+  //   }, 300);
+  // };
   // "https://unpkg.com/ace-builds/src-noconflict/ace.js"
   // let data = 'https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.js'
   // loader.loadScript(data).then(() => {});
@@ -54,11 +61,14 @@ const fnresize = () => {
   //   });
   // }
 };
+
 function initListener() {
+  let nick = state.data?.user?.username
+  let isSDKReady = state.user.isSDKReady
   nextTick(() => {
     setTimeout(() => {
-      dispatch("TIM_LOG_IN", "黄泳康");
-    }, 500);
+      if(!isSDKReady) dispatch("TIM_LOG_IN", nick);
+    }, 300);
   });
   // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
   tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate);
@@ -70,17 +80,35 @@ function initListener() {
   tim.on(TIM.EVENT.MESSAGE_RECEIVED, onReceiveMessage);
   // 群组列表更新
   tim.on(TIM.EVENT.GROUP_LIST_UPDATED, onUpdateGroupList);
+  // 被踢出
+  tim.on(TIM.EVENT.KICKED_OUT, onKickOut);
 }
+
 function onUpdateConversationList(event) {
-  console.log(event.data, "会话列表");
+  console.log(event.data, "会话列表更新");
   commit("SET_CONVERSATION", {
     type: "REPLACE_CONV_LIST",
     payload: event.data,
   });
+  // dispatch(GET_MESSAGE_LIST);
 }
-function onReceiveMessage(data) {
-  console.log(data);
+
+function onReceiveMessage(event) {
+  const { data, name } = event;
+  const { toAccount } = currentConversation.value;
+  console.log(event.data, "收到新消息");
+  // console.log(currentConversation.value)
+  if(event.data[0].to == toAccount){
+    commit("SET_HISTORYMESSAGE", {
+      type: "UPDATE_MESSAGES",
+      payload: {
+        convId: '',
+        message: data[0],
+      },
+    });
+  }
 }
+
 function onReadyStateUpdate({ name }) {
   const isSDKReady = name === TIM.EVENT.SDK_READY ? true : false;
   commit("toggleIsSDKReady", isSDKReady);
@@ -88,9 +116,31 @@ function onReadyStateUpdate({ name }) {
     dispatch("GET_MYPROFILE");
   }
 }
+
 function onUpdateGroupList(event) {
+  const { data, name } = event;
   // commit('updateGroupList', event.data)
-  console.log(event, "onUpdateGroupList");
+  console.log(data, "群组列表更新");
+}
+
+function onKickOut(event){
+  let message = kickedOutReason(event.data.type)
+  console.log(message)
+  commit('toggleIsLogin', false)
+  commit('reset')
+}
+
+function kickedOutReason(type) {
+  switch (type) {
+    case TIM.TYPES.KICKED_OUT_MULT_ACCOUNT:
+      return '由于多实例登录'
+    case TIM.TYPES.KICKED_OUT_MULT_DEVICE:
+      return '由于多设备登录'
+    case TIM.TYPES.KICKED_OUT_USERSIG_EXPIRED:
+      return '由于 userSig 过期'
+    default:
+      return ''
+  }
 }
 /** width app-wrapper类容器宽度
  * 0 < width <= 760 隐藏侧边栏

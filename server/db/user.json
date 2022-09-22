@@ -15,6 +15,13 @@
       "roleId": "7b2d9d80-e1b1-4584-bf7b-f10852794e4a"
     },
     {
+      "id": "1b2d9d10-e1b1-4584-bf1b-f19852794f4e",
+      "username": "黄泳康",
+      "password": "123456",
+      "portrait":"hyk",
+      "roleId": "7b2d9d80-e1b1-4584-bf77-f10852794e4a"
+    },
+    {
       "id": "3b2d9d10-e1b1-4584-bf1b-f19852794f4e",
       "username": "任丹",
       "password": "123456",
@@ -27,6 +34,13 @@
       "password": "123456",
       "portrait":"xax",
       "roleId": "8b2d9d80-e1b1-3284-bf7b-f10852794e4a"
+    },
+    {
+      "id": "342d9d12-e1b1-4584-bf1b-f19852794f4e",
+      "username": "刘继承",
+      "password": "123456",
+      "portrait":"ljc",
+      "roleId": "8b2d9d83-e1b1-3284-bf7b-f10852794e4a"
     }
   ]
 }

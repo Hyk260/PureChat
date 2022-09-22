@@ -48,7 +48,8 @@ const user = {
       state.verifyCode = verifyCode;
     },
     // 登录im
-    async TIM_LOG_IN({ state, commit }, userID) {
+    async TIM_LOG_IN({ state, rootState, commit }, userID) {
+      // console.log(state,rootState.data.user.username)
       const result = await tim.login({
         userID,
         userSig: window?.genTestUserSig(userID).userSig,
@@ -75,11 +76,11 @@ const user = {
       let promise = tim.getMyProfile();
       promise
         .then(({ data }) => {
-          console.log(data, "个人资料"); // 个人资料 - Profile 实例
+          console.log(data, "个人资料"); 
           commit("updateCurrentUserProfile", data);
         })
         .catch((imError) => {
-          console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
+          console.warn("getMyProfile error:", imError); 
         });
     },
     // 退出登陆

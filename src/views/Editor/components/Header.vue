@@ -2,8 +2,15 @@
   <header class="message-info-view-header">
     <div class="message-info-views">
       <p v-if="Conver">
-        <!-- {{ Conver.roleName }} -->
-        群聊
+        <span
+          v-if="Conver.type === TIM.TYPES.CONV_C2C"
+          >{{ Conver.userProfile.userID || Conver.remark || Conver.userProfile.nick }}
+        </span>
+        <span
+          v-else-if="Conver.type === TIM.TYPES.CONV_GROUP"
+          >{{ Conver.groupProfile.name || Conver.groupProfile.groupID }}
+        </span>
+        <span v-else-if="Conver.type === TIM.TYPES.CONV_SYSTEM">系统通知 </span>
       </p>
     </div>
     <div class="message-info-setup">
@@ -13,6 +20,7 @@
 </template>
 
 <script setup>
+  import TIM from "tim-js-sdk";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState } from "@/utils/hooks/useMapper";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
@@ -22,7 +30,7 @@ const { dispatch } = useStore();
 const { Conver } = useState({
   Conver: (state) => state.conversation.currentConversation,
 });
-dispatch(GET_MESSAGE_LIST);
+// dispatch(GET_MESSAGE_LIST);
 </script>
 
 <style lang="scss" scoped>

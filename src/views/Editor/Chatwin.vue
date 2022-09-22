@@ -10,7 +10,7 @@
       <div class="message-view" ref="messageViewRef">
         <div
           v-for="(item, index) in currentMessageList"
-          :key="item.message_msg_id"
+          :key="item.ID"
         >
           <!-- 加载更多 -->
           <LoadMore
@@ -20,28 +20,22 @@
           <div class="message-view__item--blank"></div>
           <!-- 时间 -->
           <div class="message-view__item--time-divider" v-if="false">
-            {{ timeFormat(item.updateTime, true) }}
+            {{ timeFormat(item.clientTime, true) }}
           </div>
           <!-- 消息 is-self is-other-->
+          <!-- v-if="item.message_elem_array[0].elem_type !== 5" -->
           <div
-            v-if="item.message_elem_array[0].elem_type !== 5"
             class="message-view__item"
             :class="ISown(item) ? 'is-self' : 'is-other'"
           >
-            <!-- :class="item.message_is_from_self ? 'is-self' : 'is-other'" -->
             <!-- 头像 -->
             <div class="picture">
-              <Portrait v-if="ISown(item)" :size="36" :shape="'square'" />
+              <!-- <Portrait :size="36"  :shape="'square'" /> -->
               <el-avatar
-                v-else
                 :size="36"
                 shape="square"
-                @error="() => true"
-                :src="
-                  require(`@/assets/images/${item.message_sender_profile.user_profile_face_url}.jpg`)
-                "
+                :src="item.avatar || 'https://imgcache.qq.com/open/qcloud/video/act/webim-avatar/avatar-1.png'"
               >
-                <img :src="damage" />
               </el-avatar>
             </div>
             <!-- 内容 -->
@@ -50,16 +44,16 @@
               v-contextmenu:contextmenu
               @contextmenu.prevent="ContextMenuEvent($event, item)"
             >
-              <!-- 文本 -->
-              <div :class="Megtype(item)">
+              <!-- 文本 :class="Megtype(item)" -->
+              <div class="message-view__text">
                 <component :is="TextElemItem" :message="item"> </component>
               </div>
             </div>
           </div>
           <!-- tips提示 -->
-          <div v-else class="message-view__item tips">
+          <!-- <div v-else class="message-view__item tips">
             <TipsElemItem :msgRow="item.message_elem_array[0]" />
-          </div>
+          </div> -->
         </div>
         <!-- 右键菜单 -->
         <contextmenu ref="contextmenu">
@@ -122,6 +116,7 @@ watch(
   () => {
     nextTick(() => {
       UpdataScrollInto();
+      // console.log(currentMessageList.value)
     });
   },
   {
@@ -146,7 +141,7 @@ const FaceUrl = (item) => {
 };
 
 const ISown = (item) => {
-  return NickName(item) == userInfo.value.username;
+  return item.from == userInfo.value.username;
 };
 
 const scrollbar = (e) => {
@@ -217,13 +212,13 @@ const getMoreMsg = async () => {
 const getChatList = async () => {
   let { code, result } = await getChat();
   if (code === 200) {
-    commit("SET_HISTORYMESSAGE", {
-      type: "RECIVE_MESSAGE",
-      payload: {
-        convId: "123",
-        message: result,
-      },
-    });
+    // commit("SET_HISTORYMESSAGE", {
+    //   type: "RECIVE_MESSAGE",
+    //   payload: {
+    //     convId: "123",
+    //     message: result,
+    //   },
+    // });
   }
 };
 
