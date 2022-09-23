@@ -67,6 +67,7 @@ const user = {
     // 退出im
     async TIM_LOG_OUT({ commit }) {
       const result = await tim.logout();
+      // tim.destroy();
       commit("toggleIsLogin");
       commit("reset");
       console.log(result, "TIM_LOG_OUT");

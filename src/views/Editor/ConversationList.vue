@@ -1,71 +1,62 @@
 <template>
   <el-scrollbar class="scrollbar-list">
-    <transition-group name="fade-transform">
-      <div
-        class="message-item"
-        v-for="item in conversationList"
-        :key="item"
-        :class="fnClass(item)"
-        @click="handleConvListClick(item)"
-        @drop="dropHandler(e, item)"
-        @dragenter="dragenterHandler"
-        @dragleave="dragleaveHandler"
-        v-contextmenu:contextmenu
-        @contextmenu.prevent="handleContextMenuEvent($event, item)"
-      >
-        <!-- 置顶图标 -->
-        <div class="pinned-tag" v-if="item && item.isPinned"></div>
-        <!-- 关闭按钮 -->
-        <FontIcon
-          iconName="close"
-          class="close-btn"
-          @click.stop="closeMsg(item)"
-        />
-        <!-- 头像 :value="100" :max="99" value="new" is-dot-->
-        <!-- <el-badge :value="11" :max="9"></el-badge> -->
+    <!-- <transition-group name="fade-transform">
+    </transition-group> -->
+    <div
+      class="message-item"
+      v-for="item in conversationList"
+      :key="item"
+      :class="fnClass(item)"
+      @click="handleConvListClick(item)"
+      @drop="dropHandler(e, item)"
+      @dragenter="dragenterHandler"
+      @dragleave="dragleaveHandler"
+      v-contextmenu:contextmenu
+      @contextmenu.prevent="handleContextMenuEvent($event, item)"
+    >
+      <!-- 置顶图标 -->
+      <div class="pinned-tag" v-if="item.isPinned"></div>
+      <!-- 关闭按钮 -->
+      <FontIcon
+        iconName="close"
+        class="close-btn"
+        @click.stop="closeMsg(item)"
+      />
+      <!-- 头像 :value="100" :max="99" value="new" is-dot-->
+      <el-badge :hidden="item.unreadCount == 0" :value="item.unreadCount" :max="9">
         <img :src="squareUrl" class="portrait" alt="头像" />
-        <!-- 消息 -->
-        <div class="message-item-right">
-          <div class="message-item-right-top">
-            <div class="message-chat-name">
-              <!-- {{ item.roleName }} -->
-              <!-- {{ item.unreadCount }} -->
-              <span
-                :title="item.userProfile.nick || item.userProfile.userID"
-                v-if="item.type === TIM.TYPES.CONV_C2C"
-                >{{
-                  item.userProfile.userID ||
-                  item.remark ||
-                  item.userProfile.nick
-                }}
-              </span>
-              <span
-                :title="item.groupProfile.name || item.groupProfile.groupID"
-                v-else-if="item.type === TIM.TYPES.CONV_GROUP"
-                >{{ item.groupProfile.name || item.groupProfile.groupID }}
-              </span>
-              <span v-else-if="item.type === TIM.TYPES.CONV_SYSTEM"
-                >系统通知
-              </span>
-            </div>
-            <div class="message-time">
-              <!-- {{ timeFormat(item.updateTime) }} -->
-              {{ timeFormat(item.lastMessage.lastSequence) }}
-            </div>
-          </div>
-          <div class="message-item-right-bottom">
-            <span>
-              <!-- {{ fnNews(currentMessageList) }} -->
-              {{ item.lastMessage.messageForShow }}
+      </el-badge>
+      <!-- 消息 -->
+      <div class="message-item-right">
+        <div class="message-item-right-top">
+          <div class="message-chat-name">
+            <span v-if="item.type === TIM.TYPES.CONV_C2C">
+              {{ item.userProfile.userID }}
+            </span>
+            <span v-else-if="item.type === TIM.TYPES.CONV_GROUP">
+              {{ item.groupProfile.name }}
+            </span>
+            <span v-else-if="item.type === TIM.TYPES.CONV_SYSTEM">
+              系统通知
             </span>
           </div>
-          <!-- 消息免打扰 -->
-          <!-- <template v-if="item.conv_recv_opt == 2">
-            <svg-icon iconClass="DontDisturb" class="dont" />
-          </template> -->
+          <div class="message-time">
+            {{ timeFormat(item.lastMessage.lastTime * 1000) }}
+          </div>
         </div>
+        <div class="message-item-right-bottom">
+
+          <span>
+            <!-- {{ fnNews(currentMessageList) }} -->
+            {{ item.lastMessage.messageForShow }}
+          </span>
+        </div>
+        <!-- 消息免打扰 -->
+        <template v-if="false">
+          <svg-icon iconClass="DontDisturb" class="dont" />
+        </template>
       </div>
-    </transition-group>
+    </div>
     <!-- 右键菜单 -->
     <contextmenu ref="contextmenu">
       <contextmenu-item
@@ -100,36 +91,14 @@ import { timeFormat } from "@/utils/timeFormat";
 import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
+import { addTimeDivider } from '@/utils/addTimeDivider';
 import TIM from "tim-js-sdk";
 import tim from "@/utils/im-sdk/tim";
+
 const contextMenuItemInfo = ref([]);
-const Friends = ref([]);
-// {
-//   conv_active_time: 0000,
-//   conv_id: "@",
-//   conv_is_has_draft: false,
-//   conv_is_has_lastmsg: true,
-//   conv_is_pinned: true,
-//   conv_last_msg: {},
-//   conv_profile: {},
-//   conv_recv_opt: 0,
-//   conv_show_name: "群聊",
-//   conv_type: 2,
-//   conv_unread_num: 0
-// }
-const userdata = {
-  id: "5346d441-bc35-4948-960e-c2d0c2b94a67",
-  roleName: "群聊",
-  info: "运营用户",
-  createTime: 1621480197410,
-  updateTime: 1652077470543,
-  isDefaultRole: true,
-  pinned: true,
-  conv_recv_opt: 2,
-};
 
 onMounted(() => {
-  getRolesList();
+
 });
 
 const { state, getters, dispatch, commit } = useStore();
@@ -146,102 +115,22 @@ const fnNews = (data) => {
   return `${name}:${message}` || "[]";
 };
 
-const getRolesList = async () => {
-  let { code, result } = await getRoles();
-  if (code === 200) {
-    // Friends.value = result;
-    console.log(result);
-    Friends.value = [userdata];
-  }
-};
-
-// 显示在线人员
-// socket.on("disUser", (usersInfo) => {
-//   console.log(usersInfo, "在线人员");
-// });
-// 系统消息
-// socket.on("system", async (user) => {
-//   var data = new Date().toTimeString().substr(0, 8);
-//   let states = user.status == 6 ? "进入" : "离开";
-//   console.log(`${data} ${user.name}  ${states}了聊天室`);
-//   if (UserInfo.value.username == user.name) return;
-//   let message = {
-//     elem_type: 5,
-//     tips_elem_group_info_array: [
-//       {
-//         tips_info_flag: 1,
-//         tips_info_value: user.name,
-//       },
-//     ],
-//     group_tips_elem_tip_type: user.status,
-//   };
-//   const messageId = generateUUID();
-//   const userProfile = {
-//     user_profile_nick_name: "系统",
-//   };
-//   const conv_id = "window";
-//   const conv_type = 2;
-//   const templateElement = await generateTemplateElement(
-//     conv_id, // 会话ID
-//     conv_type, // 消息类型 1 2
-//     userProfile, // 发送方数据
-//     messageId, // UUID
-//     message,
-//     {}
-//   );
-//   debounce(() => {
-//     commit("SET_HISTORYMESSAGE", {
-//       type: "UPDATE_MESSAGES",
-//       payload: {
-//         convId: conv_id,
-//         message: templateElement,
-//       },
-//     });
-//   }, 500);
-// });
-// 接受消息
-// socket.on("receiveMsg", (data) => {
-//   console.log(data, "接受消息");
-//   const { message_sender_profile } = data;
-//   const { user_profile_nick_name } = message_sender_profile;
-//   if (UserInfo.value.username == user_profile_nick_name) return;
-//   commit("SET_HISTORYMESSAGE", {
-//     type: "UPDATE_MESSAGES",
-//     payload: {
-//       convId: "",
-//       message: data,
-//     },
-//   });
-// });
-
 const fnClass = (item) => {
-  // console.log(item,Selected)
-  // return
   let current = Selected.value;
   let select = item?.conversationID == current?.conversationID;
-  
-  // if (item?.pinned && select) {
-  //   return "is-active";
-  // }
-  // if (item?.pinned) {
-  //   return "is-actives";
-  // }
   if (select) {
     return "is-active";
   }
 };
 
 const closeMsg = (conv) => {
-  const Info = Friends.value;
-  Friends.value = Info.filter((t) => {
-    return t.id != conv.id;
-  });
+  console.log(conv)
 };
 // 消息列表 右键菜单
 const handleContextMenuEvent = (e, item) => {
   contextMenuItemInfo.value = item;
-  // 会话定值
-  if (item?.pinned) {
+  // 会话
+  if (item?.isPinned) {
     RIGHT_CLICK_CHAT_LIST.map((t) => {
       if (t.id == "pinged") {
         t.text = "取消置顶";
@@ -266,9 +155,31 @@ const handleConvListClick = (data) => {
     type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
     payload: data,
   });
-  dispatch(GET_MESSAGE_LIST);
+  getMessageList(data)
 };
 
+const getMessageList = async (event) => {
+  // console.log(event)
+  const { conversationID, type } = event;
+  let param = {
+    conversationID: conversationID,
+    count:15
+  }
+  const result = await tim.getMessageList(param);
+  console.log(result)
+  const { code, data } = result
+  if(code !== 0) return
+  const { isCompleted, messageList, nextReqMessageID } = data;
+  console.log(messageList)
+  const addTimeDividerResponse = addTimeDivider(messageList).reverse()
+  commit("SET_HISTORYMESSAGE", {
+    type: "ADD_MESSAGE",
+    payload: {
+      convId: '',
+      message: addTimeDividerResponse,
+    },
+  });
+}
 const handleClickMenuItem = (item) => {
   const Info = contextMenuItemInfo.value;
   switch (item.id) {
@@ -293,28 +204,16 @@ const handleClickMenuItem = (item) => {
 const disableRecMsg = () => {};
 // 删除会话
 const removeConv = (conv) => {
-  const Info = Friends.value;
-  Friends.value = Info.filter((t) => {
-    return t.id != conv.id;
-  });
+
 };
 // 置顶
 const pingConv = (data) => {
   console.log(data);
-  let { id } = data;
-  let off = null;
-  if (data?.pinned) {
-    off = false;
-  } else {
-    off = true;
-  }
-  console.log(off);
-  Friends.value.map((t) => {
-    if (t.id == id) {
-      t.pinned = off;
-    }
+  const { conversationID, isPinned  } = data
+  tim.pinConversation({
+    conversationID,
+    isPinned:!isPinned,
   });
-  console.log(Friends.value);
 };
 </script>
 

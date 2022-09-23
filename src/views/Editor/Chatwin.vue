@@ -19,12 +19,13 @@
           />
           <div class="message-view__item--blank"></div>
           <!-- 时间 -->
-          <div class="message-view__item--time-divider" v-if="false">
-            {{ timeFormat(item.clientTime, true) }}
+          <div class="message-view__item--time-divider" v-if="item.isTimeDivider">
+            {{ timeFormat(item.time * 1000, true) }}
           </div>
           <!-- 消息 is-self is-other-->
           <!-- v-if="item.message_elem_array[0].elem_type !== 5" -->
           <div
+            v-if="!item.isTimeDivider"
             class="message-view__item"
             :class="ISown(item) ? 'is-self' : 'is-other'"
           >

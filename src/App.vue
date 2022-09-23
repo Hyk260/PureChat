@@ -82,6 +82,8 @@ function initListener() {
   tim.on(TIM.EVENT.GROUP_LIST_UPDATED, onUpdateGroupList);
   // 被踢出
   tim.on(TIM.EVENT.KICKED_OUT, onKickOut);
+  // SDK内部出错
+  tim.on(TIM.EVENT.ERROR, onError);
 }
 
 function onUpdateConversationList(event) {
@@ -90,7 +92,6 @@ function onUpdateConversationList(event) {
     type: "REPLACE_CONV_LIST",
     payload: event.data,
   });
-  // dispatch(GET_MESSAGE_LIST);
 }
 
 function onReceiveMessage(event) {
@@ -98,6 +99,7 @@ function onReceiveMessage(event) {
   const { toAccount } = currentConversation.value;
   console.log(event.data, "收到新消息");
   // console.log(currentConversation.value)
+  // 收到新消息 且 为当前选中会话 更新消息
   if(event.data[0].to == toAccount){
     commit("SET_HISTORYMESSAGE", {
       type: "UPDATE_MESSAGES",
@@ -128,6 +130,7 @@ function onKickOut(event){
   console.log(message)
   commit('toggleIsLogin', false)
   commit('reset')
+  commit('LOG_OUT')
 }
 
 function kickedOutReason(type) {
@@ -141,6 +144,10 @@ function kickedOutReason(type) {
     default:
       return ''
   }
+}
+
+function onError(event){
+  console.log(event, "onError")
 }
 /** width app-wrapper类容器宽度
  * 0 < width <= 760 隐藏侧边栏

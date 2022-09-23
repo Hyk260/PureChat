@@ -30,7 +30,6 @@ const { dispatch } = useStore();
 const { Conver } = useState({
   Conver: (state) => state.conversation.currentConversation,
 });
-// dispatch(GET_MESSAGE_LIST);
 </script>
 
 <style lang="scss" scoped>

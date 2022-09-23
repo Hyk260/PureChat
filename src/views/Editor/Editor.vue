@@ -219,7 +219,7 @@ const sendMsgBefore = () => {
 // 发送消息
 const sendMessage = async () => {
   console.log(currentConversation.value,11111111111111)
-  const { type,conversationID, toAccount } = currentConversation.value
+  const { type, conversationID, toAccount } = currentConversation.value
   const { message } = sendMsgBefore();
   console.log(message)
   console.log(TIM.TYPES.CONV_C2C)
@@ -244,9 +244,17 @@ const sendMessage = async () => {
 let promise = tim.sendMessage(message1);
 promise.then(function(imResponse) {
   // 发送成功
-  console.log(imResponse);
+  console.log(imResponse.data.message);
+
   clearInputInfo();
-  dispatch(GET_MESSAGE_LIST);
+  commit("SET_HISTORYMESSAGE", {
+    type: "UPDATE_MESSAGES",
+    payload: {
+      convId: '',
+      message: imResponse.data.message,
+    },
+  });
+
 }).catch(function(imError) {
   // 发送失败
   console.warn('sendMessage error:', imError);
@@ -260,38 +268,8 @@ promise.then(function(imResponse) {
   };
   const conv_id = "";
   const conv_type = 2;
-  const templateElement = await generateTemplateElement(
-    conv_id, // 会话ID
-    conv_type, // 消息类型 1 2
-    userProfile, // 发送方数据
-    messageId, // UUID
-    message,
-    {}
-  );
   console.log(templateElement);
-  // return;
   clearInputInfo();
-  // 更新消息
-  // commit("SET_HISTORYMESSAGE", {
-  //   type: "UPDATE_MESSAGES",
-  //   payload: {
-  //     convId: conv_id,
-  //     message: templateElement,
-  //   },
-  // });
-  // socket.emit("sendMsg", templateElement);
-
-  // 会话消息发送
-  // let { code, result } = await sendMsg({
-  //   conv_id,
-  //   conv_type,
-  //   userProfile,
-  //   message,
-  // });
-  // if (code == 200) {
-  //   console.log("发送成功");
-  //   console.log(result);
-  // }
 };
 </script>
 <style>
