@@ -63,11 +63,11 @@ const fnresize = () => {
 };
 
 function initListener() {
-  let nick = state.data?.user?.username
-  let isSDKReady = state.user.isSDKReady
+  let nick = state.data?.user?.username;
+  let isSDKReady = state.user.isSDKReady;
   nextTick(() => {
     setTimeout(() => {
-      if(!isSDKReady) dispatch("TIM_LOG_IN", nick);
+      if (!isSDKReady) dispatch("TIM_LOG_IN", nick);
     }, 300);
   });
   // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
@@ -92,6 +92,12 @@ function onUpdateConversationList(event) {
     type: "REPLACE_CONV_LIST",
     payload: event.data,
   });
+  if (!currentConversation.value) {
+    let data = event.data?.[0];
+    if (data && data.type !== "@TIM#SYSTEM") {
+      // dispatch("GET_MESSAGE_LIST", data);
+    }
+  }
 }
 
 function onReceiveMessage(event) {
@@ -100,15 +106,14 @@ function onReceiveMessage(event) {
   console.log(event.data, "收到新消息");
   // console.log(currentConversation.value)
   // 收到新消息 且 为当前选中会话 更新消息
-  if(event.data[0].to == toAccount){
-    commit("SET_HISTORYMESSAGE", {
-      type: "UPDATE_MESSAGES",
-      payload: {
-        convId: '',
-        message: data[0],
-      },
-    });
-  }
+  if (event.data?.[0].to !== toAccount) return;
+  commit("SET_HISTORYMESSAGE", {
+    type: "UPDATE_MESSAGES",
+    payload: {
+      convId: "",
+      message: data[0],
+    },
+  });
 }
 
 function onReadyStateUpdate({ name }) {
@@ -125,29 +130,29 @@ function onUpdateGroupList(event) {
   console.log(data, "群组列表更新");
 }
 
-function onKickOut(event){
-  let message = kickedOutReason(event.data.type)
-  console.log(message)
-  commit('toggleIsLogin', false)
-  commit('reset')
-  commit('LOG_OUT')
+function onKickOut(event) {
+  let message = kickedOutReason(event.data.type);
+  console.log(message);
+  commit("toggleIsLogin", false);
+  commit("reset");
+  commit("LOG_OUT");
 }
 
 function kickedOutReason(type) {
   switch (type) {
     case TIM.TYPES.KICKED_OUT_MULT_ACCOUNT:
-      return '由于多实例登录'
+      return "由于多实例登录";
     case TIM.TYPES.KICKED_OUT_MULT_DEVICE:
-      return '由于多设备登录'
+      return "由于多设备登录";
     case TIM.TYPES.KICKED_OUT_USERSIG_EXPIRED:
-      return '由于 userSig 过期'
+      return "由于 userSig 过期";
     default:
-      return ''
+      return "";
   }
 }
 
-function onError(event){
-  console.log(event, "onError")
+function onError(event) {
+  console.log(event, "onError");
 }
 /** width app-wrapper类容器宽度
  * 0 < width <= 760 隐藏侧边栏

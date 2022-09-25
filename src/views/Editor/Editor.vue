@@ -65,10 +65,16 @@ import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
 const valueHtml = ref(""); // 内容 HTML
-const mode = 'simple' // 'default' 或 'simple'
+const mode = "simple"; // 'default' 或 'simple'
 
 const { state, getters, dispatch, commit } = useStore();
-const { currentConversation, currentMessageList, historyMessageList, noMore, userInfo } = useState({
+const {
+  currentConversation,
+  currentMessageList,
+  historyMessageList,
+  noMore,
+  userInfo,
+} = useState({
   currentConversation: (state) => state.conversation.currentConversation,
   currentMessageList: (state) => state.conversation.currentMessageList,
   historyMessageList: (state) => state.conversation.historyMessageList,
@@ -85,7 +91,7 @@ onBeforeUnmount(() => {
 const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 
-  console.log(editor,'实例');
+  console.log(editor, "实例");
   // 查看所有工具栏key
   // console.log(editor.getAllMenuKeys());
   // console.log(editor.getConfig());
@@ -168,7 +174,7 @@ function innerHTML(data, item) {
   console.log(data, item);
   let $el = `<img src=${data} class="${item} emjo" alt="${item}" style="width: 25px; height: 25px" />`;
   valueHtml.value += $el;
-  console.log($el)
+  console.log($el);
 }
 // 插入图片
 const parsepicture = async (file) => {
@@ -212,54 +218,55 @@ const sendMsgBefore = () => {
   const message = getMessageElemItem("text", { text: text }); //文本
   console.log(message);
   console.log(HtmlText);
-  let innHTML = HtmlText.replace(/<(?!img).*?>/g, '')
-  console.log(innHTML)
+  let innHTML = HtmlText.replace(/<(?!img).*?>/g, "");
+  console.log(innHTML);
   return { message };
 };
 // 发送消息
 const sendMessage = async () => {
-  console.log(currentConversation.value,11111111111111)
-  const { type, conversationID, toAccount } = currentConversation.value
+  console.log(currentConversation.value, 11111111111111);
+  const { type, conversationID, toAccount } = currentConversation.value;
   const { message } = sendMsgBefore();
-  console.log(message)
-  console.log(TIM.TYPES.CONV_C2C)
+  console.log(message);
+  console.log(TIM.TYPES.CONV_C2C);
   // return
   let message1 = tim.createTextMessage({
-  // to: '黄泳康',
-  to:toAccount,
-  // conversationType: TIM.TYPES.CONV_C2C,
-  conversationType: type,
-  // 消息优先级，用于群聊（v2.4.2起支持）。如果某个群的消息超过了频率限制，后台会优先下发高优先级的消息，详细请参考：https://cloud.tencent.com/document/product/269/3663#.E6.B6.88.E6.81.AF.E4.BC.98.E5.85.88.E7.BA.A7.E4.B8.8E.E9.A2.91.E7.8E.87.E6.8E.A7.E5.88.B6)
-  // 支持的枚举值：TIM.TYPES.MSG_PRIORITY_HIGH, TIM.TYPES.MSG_PRIORITY_NORMAL（默认）, TIM.TYPES.MSG_PRIORITY_LOW, TIM.TYPES.MSG_PRIORITY_LOWEST
-  // priority: TIM.TYPES.MSG_PRIORITY_NORMAL,
-  payload: {
-    text: message.text_elem_content
-  },
-  // v2.20.0起支持C2C消息已读回执功能，如果您发消息需要已读回执，需购买旗舰版套餐，并且创建消息时将 needReadReceipt 设置为 true
-  needReadReceipt: true
-  // 消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到，v2.10.2起支持）
-  // cloudCustomData: 'your cloud custom data'
-});
-// 2. 发送消息
-let promise = tim.sendMessage(message1);
-promise.then(function(imResponse) {
-  // 发送成功
-  console.log(imResponse.data.message);
-
-  clearInputInfo();
-  commit("SET_HISTORYMESSAGE", {
-    type: "UPDATE_MESSAGES",
+    // to: '黄泳康',
+    to: toAccount,
+    // conversationType: TIM.TYPES.CONV_C2C,
+    conversationType: type,
+    // 消息优先级，用于群聊（v2.4.2起支持）。如果某个群的消息超过了频率限制，后台会优先下发高优先级的消息，详细请参考：https://cloud.tencent.com/document/product/269/3663#.E6.B6.88.E6.81.AF.E4.BC.98.E5.85.88.E7.BA.A7.E4.B8.8E.E9.A2.91.E7.8E.87.E6.8E.A7.E5.88.B6)
+    // 支持的枚举值：TIM.TYPES.MSG_PRIORITY_HIGH, TIM.TYPES.MSG_PRIORITY_NORMAL（默认）, TIM.TYPES.MSG_PRIORITY_LOW, TIM.TYPES.MSG_PRIORITY_LOWEST
+    // priority: TIM.TYPES.MSG_PRIORITY_NORMAL,
     payload: {
-      convId: '',
-      message: imResponse.data.message,
+      text: message.text_elem_content,
     },
+    // v2.20.0起支持C2C消息已读回执功能，如果您发消息需要已读回执，需购买旗舰版套餐，并且创建消息时将 needReadReceipt 设置为 true
+    needReadReceipt: true,
+    // 消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到，v2.10.2起支持）
+    // cloudCustomData: 'your cloud custom data'
   });
+  // 2. 发送消息
+  let promise = tim.sendMessage(message1);
+  promise
+    .then(function (imResponse) {
+      // 发送成功
+      console.log(imResponse.data.message);
 
-}).catch(function(imError) {
-  // 发送失败
-  console.warn('sendMessage error:', imError);
-});
-  return
+      clearInputInfo();
+      commit("SET_HISTORYMESSAGE", {
+        type: "UPDATE_MESSAGES",
+        payload: {
+          convId: "",
+          message: imResponse.data.message,
+        },
+      });
+    })
+    .catch(function (imError) {
+      // 发送失败
+      console.warn("sendMessage error:", imError);
+    });
+  return;
   // const { message } = sendMsgBefore();
   const messageId = generateUUID();
   const userProfile = {

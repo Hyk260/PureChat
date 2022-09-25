@@ -1,4 +1,5 @@
 import useClipboard from "vue-clipboard3";
+import tim from "@/utils/im-sdk/tim";
 const { toClipboard } = useClipboard();
 
 export const dragControllerDiv = (node) => {
@@ -79,10 +80,29 @@ export const loadMsgComponents = (item) => {
 
 // 复制
 export const fncopy = async (data) => {
-  let { message_elem_array } = data || {};
-  let { elem_type: type, text_elem_content: content } = message_elem_array[0];
+  console.log(data);
+  const { elements } = data;
+  const { content, type } = elements[0];
   // 文本
-  if (type === 0) {
-    await toClipboard(content);
+  if (type === "TIMTextElem") {
+    await toClipboard(content.text);
   }
+};
+
+//删除消息
+export const fndelete = (data) => {
+  console.log(data)
+  const { ID } = data;
+  let message = [];
+  message.push(ID);
+  return
+  let promise = tim.deleteMessage(data);
+  promise
+    .then(function (imResponse) {
+      // 删除消息成功
+    })
+    .catch(function (imError) {
+      // 删除消息失败
+      console.warn("deleteMessage error:", imError);
+    });
 };

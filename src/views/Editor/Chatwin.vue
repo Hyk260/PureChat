@@ -8,10 +8,7 @@
       always
     >
       <div class="message-view" ref="messageViewRef">
-        <div
-          v-for="(item, index) in currentMessageList"
-          :key="item.ID"
-        >
+        <div v-for="(item, index) in currentMessageList" :key="item.ID">
           <!-- 加载更多 -->
           <LoadMore
             :noMore="noMore"
@@ -19,7 +16,10 @@
           />
           <div class="message-view__item--blank"></div>
           <!-- 时间 -->
-          <div class="message-view__item--time-divider" v-if="item.isTimeDivider">
+          <div
+            class="message-view__item--time-divider"
+            v-if="item.isTimeDivider"
+          >
             {{ timeFormat(item.time * 1000, true) }}
           </div>
           <!-- 消息 is-self is-other-->
@@ -35,7 +35,7 @@
               <el-avatar
                 :size="36"
                 shape="square"
-                :src="item.avatar || 'https://imgcache.qq.com/open/qcloud/video/act/webim-avatar/avatar-1.png'"
+                :src="item.avatar || circleUrl"
               >
               </el-avatar>
             </div>
@@ -83,6 +83,7 @@ import {
 } from "vue";
 import {
   fncopy,
+  fndelete,
   Megtype,
   dragControllerDiv,
   loadMsgComponents,
@@ -92,7 +93,7 @@ import { timeFormat } from "@/utils/timeFormat";
 import { debounce, delay } from "@/utils/debounce";
 import { throttle } from "@/utils/throttle";
 import { useState } from "@/utils/hooks/useMapper";
-import { squareUrl, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
+import { squareUrl, circleUrl, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import TextElemItem from "./components/TextElemItem";
 import LoadMore from "./components/LoadMore.vue";
@@ -233,6 +234,9 @@ const ClickMenuItem = (data) => {
   switch (id) {
     case "copy":
       fncopy(Info);
+      break;
+    case "delete":
+      fndelete(Info);
       break;
   }
 };

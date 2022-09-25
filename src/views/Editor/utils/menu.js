@@ -2,7 +2,7 @@ import { reactive, toRefs } from "vue";
 
 /**
  * 左侧会话聊天列表数据
-*/
+ */
 const RIGHT_CLICK_CHAT_LIST = [
   { id: "pinged", text: "会话置顶" },
   { id: "disable", text: "消息免打扰" },
@@ -15,10 +15,10 @@ const RIGHT_CLICK_MENU_LIST = [
     id: "copy",
     text: "复制",
   },
-  {
-    id: "revoke",
-    text: "撤回",
-  },
+  // {
+  //   id: "revoke",
+  //   text: "撤回",
+  // },
   {
     id: "delete",
     text: "删除",
@@ -46,4 +46,4 @@ const state = reactive({
 });
 const { circleUrl, squareUrl, sizeList } = toRefs(state);
 
-export { squareUrl, RIGHT_CLICK_CHAT_LIST, RIGHT_CLICK_MENU_LIST };
+export { squareUrl, circleUrl, RIGHT_CLICK_CHAT_LIST, RIGHT_CLICK_MENU_LIST };

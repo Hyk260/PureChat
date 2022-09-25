@@ -1,4 +1,5 @@
 import { CONVERSATIONTYPE, GET_MESSAGE_LIST } from "../mutation-types";
+import { addTimeDivider } from "@/utils/addTimeDivider";
 import { getRoles } from "@/api/roles";
 import TIM from "tim-js-sdk";
 import tim from "@/utils/im-sdk/tim";
@@ -59,16 +60,14 @@ const conversation = {
     SET_CONVERSATION(state, action) {
       const { type, payload } = action;
       switch (type) {
-        // 跳转会话
+        // 切换 跳转 会话 
         case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
           if (payload) {
-            console.log(payload,"切换会话")
-           
+            console.log(payload, "切换会话");
             // if (payload?.id == state.currentConversation?.id) return;
             // state.needScrollDown = 0;
             // state.noMore = false;
             state.currentConversation = payload;
-           
           }
           break;
         }
@@ -86,12 +85,32 @@ const conversation = {
   },
   actions: {
     // 获取消息列表
-    async [GET_MESSAGE_LIST]({ commit, dispatch, state }) {
-        if(state.currentConversation){
-          const { conversationID } = state.currentConversation
-
-
-        }
+    async [GET_MESSAGE_LIST]({ commit, dispatch, state }, action) {
+      // 当前会话有值
+      if (state.currentConversation) {
+        // const { conversationID } = state.currentConversation;
+        const { conversationID, type } = action;
+        let param = {
+          conversationID: conversationID,
+          count: 15,
+        };
+        const result = await tim.getMessageList(param);
+        console.log(result);
+        const { code, data } = result;
+        if (code !== 0) return;
+        const { isCompleted, messageList, nextReqMessageID } = data;
+        console.log(messageList);
+        const addTimeDividerResponse = addTimeDivider(messageList).reverse();
+        commit("SET_HISTORYMESSAGE", {
+          type: "ADD_MESSAGE",
+          payload: {
+            convId: "",
+            message: addTimeDividerResponse,
+          },
+        });
+      } else {
+        console.log(123)
+      }
     },
   },
   getters: {},

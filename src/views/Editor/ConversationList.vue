@@ -23,8 +23,18 @@
         @click.stop="closeMsg(item)"
       />
       <!-- 头像 :value="100" :max="99" value="new" is-dot-->
-      <el-badge :hidden="item.unreadCount == 0" :value="item.unreadCount" :max="9">
-        <img :src="squareUrl" class="portrait" alt="头像" />
+      <el-badge
+        :hidden="item.unreadCount == 0"
+        :value="item.unreadCount"
+        :max="9"
+      >
+        <img
+          v-if="item.type == 'C2C'"
+          :src="item.userProfile.avatar || squareUrl"
+          class="portrait"
+          alt="头像"
+        />
+        <img v-else :src="squareUrl" class="portrait" alt="头像" />
       </el-badge>
       <!-- 消息 -->
       <div class="message-item-right">
@@ -45,7 +55,6 @@
           </div>
         </div>
         <div class="message-item-right-bottom">
-
           <span>
             <!-- {{ fnNews(currentMessageList) }} -->
             {{ item.lastMessage.messageForShow }}
@@ -91,15 +100,13 @@ import { timeFormat } from "@/utils/timeFormat";
 import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
-import { addTimeDivider } from '@/utils/addTimeDivider';
+import { addTimeDivider } from "@/utils/addTimeDivider";
 import TIM from "tim-js-sdk";
 import tim from "@/utils/im-sdk/tim";
 
 const contextMenuItemInfo = ref([]);
 
-onMounted(() => {
-
-});
+onMounted(() => {});
 
 const { state, getters, dispatch, commit } = useStore();
 const { Selected, UserInfo, currentMessageList, conversationList } = useState({
@@ -124,7 +131,7 @@ const fnClass = (item) => {
 };
 
 const closeMsg = (conv) => {
-  console.log(conv)
+  console.log(conv);
 };
 // 消息列表 右键菜单
 const handleContextMenuEvent = (e, item) => {
@@ -155,31 +162,9 @@ const handleConvListClick = (data) => {
     type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
     payload: data,
   });
-  getMessageList(data)
+  dispatch("GET_MESSAGE_LIST", data);
 };
 
-const getMessageList = async (event) => {
-  // console.log(event)
-  const { conversationID, type } = event;
-  let param = {
-    conversationID: conversationID,
-    count:15
-  }
-  const result = await tim.getMessageList(param);
-  console.log(result)
-  const { code, data } = result
-  if(code !== 0) return
-  const { isCompleted, messageList, nextReqMessageID } = data;
-  console.log(messageList)
-  const addTimeDividerResponse = addTimeDivider(messageList).reverse()
-  commit("SET_HISTORYMESSAGE", {
-    type: "ADD_MESSAGE",
-    payload: {
-      convId: '',
-      message: addTimeDividerResponse,
-    },
-  });
-}
 const handleClickMenuItem = (item) => {
   const Info = contextMenuItemInfo.value;
   switch (item.id) {
@@ -201,18 +186,46 @@ const handleClickMenuItem = (item) => {
   }
 };
 // 消息免打扰
-const disableRecMsg = () => {};
+const disableRecMsg = (data, off) => {
+  console.log(TIM.TYPES.MSG_REMIND_ACPT_NOT_NOTE);
+  console.log(data);
+  const { type, toAccount, messageRemindType } = data;
+  // 系统消息
+  if (type == "@TIM#SYSTEM") return;
+  if (messageRemindType == "") return;
+  return;
+  // eslint-disable-next-line prettier/prettier
+  tim.setMessageRemindType({
+      groupID: toAccount,
+      messageRemindType,
+    })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 // 删除会话
-const removeConv = (conv) => {
-
+const removeConv = (data) => {
+  console.log(data);
+  let promise = tim.deleteMessage();
+  promise
+    .then(function (imResponse) {
+      // 删除消息成功
+    })
+    .catch(function (imError) {
+      // 删除消息失败
+      console.warn("deleteMessage error:", imError);
+    });
 };
 // 置顶
 const pingConv = (data) => {
   console.log(data);
-  const { conversationID, isPinned  } = data
+  const { conversationID, isPinned } = data;
   tim.pinConversation({
     conversationID,
-    isPinned:!isPinned,
+    isPinned: !isPinned,
   });
 };
 </script>
@@ -268,6 +281,7 @@ const pingConv = (data) => {
   .portrait {
     width: 40px;
     height: 40px;
+    border-radius: 3px;
   }
   .message-item-right {
     width: 200px;

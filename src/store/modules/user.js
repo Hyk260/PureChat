@@ -77,16 +77,17 @@ const user = {
       let promise = tim.getMyProfile();
       promise
         .then(({ data }) => {
-          console.log(data, "个人资料"); 
+          console.log(data, "个人资料");
           commit("updateCurrentUserProfile", data);
         })
         .catch((imError) => {
-          console.warn("getMyProfile error:", imError); 
+          console.warn("getMyProfile error:", imError);
         });
     },
     // 退出登陆
     LOG_OUT() {
       router.push("/login");
+      storage.clear();
       storage.remove("userdata");
       storage.remove(ACCESS_TOKEN);
     },
