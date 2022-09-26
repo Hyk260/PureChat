@@ -5,8 +5,8 @@ import TIM from "tim-js-sdk";
 import tim from "@/utils/im-sdk/tim";
 
 const getBaseTime = (list) => {
-  return list?.length > 0 ? list.find(t => t.isTimeDivider).time : 0;
-}
+  return list?.length > 0 ? list.find((t) => t.isTimeDivider).time : 0;
+};
 
 const conversation = {
   // namespaced: true,
@@ -32,16 +32,19 @@ const conversation = {
         }
         // 添加缓存消息
         case CONVERSATIONTYPE.ADD_MORE_MESSAGE: {
-
+          console.log("添加缓存消息");
+          break;
         }
         // 更新消息
         case CONVERSATIONTYPE.UPDATE_MESSAGES: {
           const { convId, message } = payload;
-          let newMessageList = state.currentMessageList
+          let newMessageList = [];
+          newMessageList = state.currentMessageList;
           let baseTime = getBaseTime(newMessageList);
-          let timeDividerResult = addTimeDivider(message, baseTime).reverse();
-          console.log(timeDividerResult)
-          state.currentMessageList.unshift(message);
+          let timeDividerResult = addTimeDivider([message], baseTime).reverse();
+          newMessageList.unshift(...timeDividerResult);
+          state.currentMessageList = newMessageList;
+          // state.currentMessageList.unshift(message);
           break;
         }
         // 删除消息
@@ -72,7 +75,7 @@ const conversation = {
     SET_CONVERSATION(state, action) {
       const { type, payload } = action;
       switch (type) {
-        // 切换 跳转 会话 
+        // 切换 跳转 会话
         case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
           if (payload) {
             console.log(payload, "切换会话");
@@ -121,7 +124,7 @@ const conversation = {
           },
         });
       } else {
-        console.log(123)
+        console.log(123);
       }
     },
   },

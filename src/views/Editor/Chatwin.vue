@@ -23,7 +23,6 @@
             {{ timeFormat(item.time * 1000, true) }}
           </div>
           <!-- 消息 is-self is-other-->
-          <!-- v-if="item.message_elem_array[0].elem_type !== 5" -->
           <div
             v-if="!item.isTimeDivider"
             class="message-view__item"
@@ -103,8 +102,6 @@ import { getChat, getMsgList } from "@/api/chat";
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
-const damage =
-  "https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png";
 
 const { state, dispatch, commit } = useStore();
 const { currentMessageList, noMore, userInfo } = useState({
@@ -118,7 +115,6 @@ watch(
   () => {
     nextTick(() => {
       UpdataScrollInto();
-      // console.log(currentMessageList.value)
     });
   },
   {

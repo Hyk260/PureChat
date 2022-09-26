@@ -258,7 +258,7 @@ const sendMessage = async () => {
         type: "UPDATE_MESSAGES",
         payload: {
           convId: "",
-          message: [imResponse.data.message],
+          message: imResponse.data.message,
         },
       });
     })
