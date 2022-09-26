@@ -3,7 +3,8 @@ export const ACCESS_TOKEN = "Access-Token";
 export const CONVERSATIONTYPE = {
   UPDATE_NOMORE: "UPDATE_NOMORE", //更新加载更多
   UPDATE_MESSAGES: "UPDATE_MESSAGES", //更新消息
-  ADD_MESSAGE:'ADD_MESSAGE',
+  ADD_MORE_MESSAGE: 'ADD_MORE_MESSAGE',
+  ADD_MESSAGE: 'ADD_MESSAGE',
   CLEAR_HISTORY: "CLEAR_HISTORY", //清除历史记录
   DELETE_MESSAGE: "DELETE_MESSAGE", //删除消息
   RECIVE_MESSAGE: "RECIVE_MESSAGE", //接收消息
@@ -14,12 +15,3 @@ export const CONVERSATIONTYPE = {
 export const GET_MESSAGE_LIST = "GET_MESSAGE_LIST"; //获取消息列表
 export const HISTORY_MESSAGE_COUNT = 20; //历史消息计数
 
-export const CONTENT_WIDTH_TYPE = {
-  Fluid: "Fluid",
-  Fixed: "Fixed",
-};
-
-export const NAV_THEME = {
-  LIGHT: "light",
-  DARK: "dark",
-};

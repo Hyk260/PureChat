@@ -4,6 +4,10 @@ import { getRoles } from "@/api/roles";
 import TIM from "tim-js-sdk";
 import tim from "@/utils/im-sdk/tim";
 
+const getBaseTime = (list) => {
+  return list?.length > 0 ? list.find(t => t.isTimeDivider).time : 0;
+}
+
 const conversation = {
   // namespaced: true,
   state: {
@@ -26,9 +30,17 @@ const conversation = {
           state.currentMessageList = message;
           break;
         }
+        // 添加缓存消息
+        case CONVERSATIONTYPE.ADD_MORE_MESSAGE: {
+
+        }
         // 更新消息
         case CONVERSATIONTYPE.UPDATE_MESSAGES: {
           const { convId, message } = payload;
+          let newMessageList = state.currentMessageList
+          let baseTime = getBaseTime(newMessageList);
+          let timeDividerResult = addTimeDivider(message, baseTime).reverse();
+          console.log(timeDividerResult)
           state.currentMessageList.unshift(message);
           break;
         }

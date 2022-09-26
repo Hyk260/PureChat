@@ -3,8 +3,9 @@ const duration = 5 * 60;
 
 const isInFiveTime = (curTime, baseTime) => Math.abs(curTime - baseTime)  <= duration;
 
-export const addTimeDivider = (messageList, baseTime = 0) => {
-    return messageList.reduce((acc, cur) => {
+export const addTimeDivider = (list, baseTime = 0) => {
+  console.log(list)
+    return list.reduce((acc, cur) => {
         const curTime =  cur.clientTime;
         // console.log(curTime, '消息时间')
         // console.log(baseTime, '比较时间')
