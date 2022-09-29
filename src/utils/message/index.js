@@ -35,4 +35,15 @@ const errorMessage = (message) => {
   });
 };
 
-export { Message, successMessage, warnMessage, errorMessage };
+const verification = (code, msg) => {
+  switch (code) {
+    case 401:
+      warnMessage(msg);
+      break;
+    case 400:
+      warnMessage(msg);
+      break;
+  }
+};
+
+export { Message, successMessage, warnMessage, errorMessage, verification };

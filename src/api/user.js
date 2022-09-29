@@ -5,7 +5,7 @@ import storage from "storejs";
 /**
  * 登录接口
  */
-export const Login = (params) => {
+export const login = (params) => {
   return http({
     url: "/login",
     method: "get",

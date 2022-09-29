@@ -1,10 +1,15 @@
 import storage from "storejs";
-import { Login } from "@/api/user";
+import { login } from "@/api/user";
+import { getMenu } from "@/api/menu";
 import router from "@/router";
 import views from "@/utils/assembly.js";
 import initLocalStorage from "@/store/data/initLocalStorage";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 import tim from "@/utils/im-sdk/tim";
+import { nextTick } from "vue";
+import { getMyProfile, logout } from '@/api/im-sdk-api';
+import { verification } from "@/utils/message";
+import { ElNotification } from "element-plus";
 
 const user = {
   state: {
@@ -66,23 +71,50 @@ const user = {
     },
     // 退出im
     async TIM_LOG_OUT({ commit }) {
-      const result = await tim.logout();
-      // tim.destroy();
+      const result = await logout();
       commit("toggleIsLogin");
       commit("reset");
       console.log(result, "TIM_LOG_OUT");
     },
     // 获取个人资料
     async GET_MYPROFILE({ commit }) {
-      let promise = tim.getMyProfile();
-      promise
-        .then(({ data }) => {
-          console.log(data, "个人资料");
-          commit("updateCurrentUserProfile", data);
-        })
-        .catch((imError) => {
-          console.warn("getMyProfile error:", imError);
+      let result = await getMyProfile()
+      commit("updateCurrentUserProfile", result);
+    },
+    // 重新登陆
+    RE_LOGIN({ state, rootState, dispatch }) {
+      let nick = rootState.data?.user?.username;
+      let isSDKReady = state?.isSDKReady;
+      nextTick(() => {
+        setTimeout(() => {
+          if (!isSDKReady) dispatch("TIM_LOG_IN", nick);
+        }, 300);
+      });
+    },
+    // 菜单列表
+    async GET_MENU({ dispatch }){
+      let menu = await getMenu();
+      dispatch("updateRoute", menu);
+    },
+    // 登录
+    async LOG_IN({ state, commit, dispatch }, data) {
+      const { username, password } = data
+      const res = await login({ username, password });
+      console.log(res, "登录信息");
+      const { code, msg, result } = res;
+      if (code !== 200) return;
+      console.log(result)
+      verification(code, msg);
+      commit("updateData", { key: "user", value: result });
+      dispatch('GET_MENU')
+      setTimeout(() => {
+        router.push("/home");
+        ElNotification({
+          title: "Success",
+          message: "登录成功",
+          type: "success",
         });
+      }, 1000);
     },
     // 退出登陆
     LOG_OUT() {

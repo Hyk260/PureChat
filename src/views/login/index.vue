@@ -108,10 +108,9 @@ import { Lock, User, Key } from "@element-plus/icons-vue";
 import ReImageVerify from "@/views/components/ReImageVerify/index.vue";
 import { ElNotification } from "element-plus";
 import { reactive, ref, computed, watch } from "vue";
-import { Login } from "@/api/user";
+import { login } from "@/api/user";
 import { getMenu } from "@/api/menu";
 import { operates, thirdParty } from "./utils/enums";
-import { successMessage, warnMessage } from "@/utils/message";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { user, rules } from "./utils/validation";
@@ -131,59 +130,21 @@ watch(imgCode, (value) => {
 const LoginBtn = async (formEl) => {
   if (!formEl) return;
   await formEl.validate((valid) => {
-    if (valid) {
-      login();
-    } else {
-      return false;
-    }
+    if (valid) Signin();
   });
 };
 
-const login = async () => {
-  showload.value = true;
+const Signin = () => {
+  // showload.value = true;
   const { username, password } = user;
-  const res = await Login({ username, password });
+  dispatch("LOG_IN", user);
   dispatch("TIM_LOG_IN", username);
-  // return
-  console.log(res, "登录信息");
-  if (!res) return;
-  const { code, msg, result } = res;
-  verification(code, msg);
-
-  if (code === 200) {
-    let menu = await getMenu();
-    // console.log(menu,"菜单列表")
-    commit("updateData", { key: "user", value: result });
-    // Menulist
-    await dispatch("updateRoute", menu);
-    // console.log(router.options.routes)
-    setTimeout(() => {
-      ElNotification({
-        title: "Success",
-        message: "登录成功",
-        type: "success",
-      });
-      router.push("/home");
-    }, 1500);
-  } else {
-    showload.value = false;
-  }
-};
+}
 
 const onHandle = (index) => {
   console.log(index);
 };
 
-const verification = (code, msg) => {
-  switch (code) {
-    case 401:
-      warnMessage(msg);
-      break;
-    case 400:
-      warnMessage(msg);
-      break;
-  }
-};
 </script>
 <style lang="scss" scoped>
 .el-button .custom-loading .circular {

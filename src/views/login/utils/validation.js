@@ -3,7 +3,7 @@ import store from '@/store/index';
 
 // 账号
 export const user = reactive({
-  username: "黄泳康",
+  username: "临江仙",
   password: "123456",
   verifyCode: "",
 });

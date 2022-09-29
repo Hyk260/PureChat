@@ -1,8 +1,6 @@
 import { CONVERSATIONTYPE, GET_MESSAGE_LIST } from "../mutation-types";
 import { addTimeDivider } from "@/utils/addTimeDivider";
-import { getRoles } from "@/api/roles";
-import TIM from "tim-js-sdk";
-import tim from "@/utils/im-sdk/tim";
+import { getMsgList } from '@/api/im-sdk-api';
 
 const getBaseTime = (list) => {
   return list?.length > 0 ? list.find((t) => t.isTimeDivider).time : 0;
@@ -11,6 +9,7 @@ const getBaseTime = (list) => {
 const conversation = {
   // namespaced: true,
   state: {
+    showMsgBox: false, //是否显示输入框
     noMore: true, // 加载更多  false ? 显示loading : 没有更多
     networkStatus: true, // 网络状态
     needScrollDown: -1, // 是否向下滚动
@@ -79,7 +78,13 @@ const conversation = {
         case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
           if (payload) {
             console.log(payload, "切换会话");
-            // if (payload?.id == state.currentConversation?.id) return;
+            const { conversationID } = payload;
+            if (conversationID == state.currentConversation?.conversationID) return;
+            if (conversationID == '@TIM#SYSTEM') {
+              state.showMsgBox = false
+            } else {
+              state.showMsgBox = true
+            }
             // state.needScrollDown = 0;
             // state.noMore = false;
             state.currentConversation = payload;
@@ -100,21 +105,17 @@ const conversation = {
   },
   actions: {
     // 获取消息列表
-    async [GET_MESSAGE_LIST]({ commit, dispatch, state }, action) {
+    async [GET_MESSAGE_LIST]({ commit, dispatch, state, rootState }, action) {
+      let isSDKReady = rootState.user.isSDKReady
       // 当前会话有值
-      if (state.currentConversation) {
+      if (state.currentConversation && isSDKReady) {
         // const { conversationID } = state.currentConversation;
         const { conversationID, type } = action;
-        let param = {
+        const result = await getMsgList({
           conversationID: conversationID,
           count: 15,
-        };
-        const result = await tim.getMessageList(param);
-        console.log(result);
-        const { code, data } = result;
-        if (code !== 0) return;
-        const { isCompleted, messageList, nextReqMessageID } = data;
-        console.log(messageList);
+        });
+        const { isCompleted, messageList, nextReqMessageID } = result;
         const addTimeDividerResponse = addTimeDivider(messageList).reverse();
         commit("SET_HISTORYMESSAGE", {
           type: "ADD_MESSAGE",
