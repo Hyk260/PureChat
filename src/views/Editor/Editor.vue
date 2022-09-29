@@ -1,13 +1,13 @@
 <template>
   <div class="Editor-style" id="svgDown">
-    <Toolbar
+    <!-- <Toolbar
       class="toolbar"
       :editor="editorRef"
       :defaultConfig="toolbarConfig"
       :mode="mode"
-    />
+    /> -->
     <!-- 自定义工具栏 -->
-    <!-- <RichToolbar @innerHTML="innerHTML" /> -->
+    <RichToolbar @innerHTML="innerHTML" />
     <Editor
       class="editor-content"
       v-model="valueHtml"

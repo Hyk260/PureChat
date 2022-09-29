@@ -1,6 +1,5 @@
 <template>
   <div class="message_name">
-    <!-- {{ message.message_sender_profile.user_profile_nick_name }} -->
     <span v-if="message.from == '@TIM#SYSTEM'">
       系统
     </span>
@@ -10,15 +9,18 @@
   </div>
   <div class="message">
     <span class="message-view__item--text text right-menu-item">
-      <span class="text linkUrl">
+      <span class="text" v-if="message.conversationType == '@TIM#SYSTEM'">
+        {{ GroupSystemNotice(message) }}
+      </span>
+      <span v-else class="text linkUrl">
         {{message.payload.text}}
-        <!-- {{ message.message_elem_array[0].text_elem_content }} -->
       </span>
     </span>
   </div>
 </template>
 
 <script setup>
+import  { GroupSystemNotice } from '../utils/utils';
 const props = defineProps({
   message: {
     type: Object,

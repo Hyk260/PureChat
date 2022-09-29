@@ -23,10 +23,15 @@
     <script src="<%= htmlWebpackPlugin.options.cdn.js[i] %>"></script>
   <% } %>    
   </body>
-  <script src=./debug/GenerateTestUserSig.js></script>
-  <script src=./debug/lib-generate-test-usersig.min.js></script>
+  <script src=./config/GenerateTestUserSig.js></script>
+  <script src=./config/lib-generate-test-usersig.min.js></script>
   <script>
-    if(Vue){
+    try {
+      init(Vue)
+    } catch(e) {
+      console.log(e)
+    }
+    function init(Vue){
       // console.log(Vue,"vue实例");
       const app = Vue;
       const { version } = app;
@@ -36,7 +41,6 @@
       const isMacBrowser = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
       
       // console.log(window.performance)
-      
     }
   </script>
 </html>

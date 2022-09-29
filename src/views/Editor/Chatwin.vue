@@ -1,6 +1,10 @@
 <!-- eslint-disable no-undef -->
 <template>
-  <section class="message-info-view-content" id="svgTop">
+  <section 
+    class="message-info-view-content" 
+    :class="[showMsgBox? '':'style-MsgBox']" 
+    id="svgTop"
+  >
     <el-scrollbar
       class="scrollbar-content"
       ref="scrollbarRef"
@@ -104,9 +108,10 @@ const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
 
 const { state, dispatch, commit } = useStore();
-const { currentMessageList, noMore, userInfo } = useState({
+const { currentMessageList, noMore, userInfo, showMsgBox } = useState({
   userInfo: (state) => state.data.user,
   noMore: (state) => state.conversation.noMore,
+  showMsgBox: (state) => state.conversation.showMsgBox,
   currentMessageList: (state) => state.conversation.currentMessageList,
 });
 
@@ -256,9 +261,13 @@ $self-msg-color: #c2e8ff;
   padding: 4px 6px;
   line-height: 16px;
 }
+
 .message-info-view-content {
   height: calc(100% - 70px - 206px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+}
+.style-MsgBox{
+  height: calc(100% - 60px);
 }
 
 .scrollbar-item {

@@ -63,13 +63,14 @@ const fnresize = () => {
 };
 
 function initListener() {
-  let nick = state.data?.user?.username;
-  let isSDKReady = state.user.isSDKReady;
-  nextTick(() => {
-    setTimeout(() => {
-      if (!isSDKReady) dispatch("TIM_LOG_IN", nick);
-    }, 300);
-  });
+  // let nick = state.data?.user?.username;
+  // let isSDKReady = state.user.isSDKReady;
+  // nextTick(() => {
+  //   setTimeout(() => {
+  //     if (!isSDKReady) dispatch("TIM_LOG_IN", nick);
+  //   }, 300);
+  // });
+  dispatch("RE_LOGIN");
   // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
   tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate);
   // SDK NOT READT

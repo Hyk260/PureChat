@@ -15,9 +15,10 @@
     <!-- 聊天框 -->
     <div class="message-right" id="svgBox">
       <Header />
-      <!-- 聊天窗口 -->
+      <!-- 聊天窗口 --> 
       <Chatwin ref="ChatRef" />
-      <div id="svgResize" @mouseover="dragControllerDiv(ChatRef)">
+
+      <div id="svgResize" @mouseover="dragControllerDiv(ChatRef)" v-if="showMsgBox">
         <div class="back-to-the-bottom" @click="toBottom">
           <el-icon class="svg-left">
             <DArrowLeft />
@@ -26,7 +27,7 @@
         </div>
       </div>
       <!-- 编辑器 -->
-      <Editor />
+      <Editor v-show="showMsgBox" />
     </div>
   </div>
 </template>
@@ -48,9 +49,10 @@ import ConversationList from "./ConversationList.vue";
 const ChatRef = ref(null);
 const { state, dispatch, commit } = useStore();
 
-const { networkStatus, user } = useState({
+const { networkStatus, user, showMsgBox } = useState({
   networkStatus: (state) => state.conversation.networkStatus,
   user: (state) => state.data.user,
+  showMsgBox: (state) => state.conversation.showMsgBox,
 });
 
 const monitoring = () => {

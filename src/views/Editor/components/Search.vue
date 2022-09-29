@@ -10,6 +10,11 @@
         clearable
       >
       </el-input>
+      <div class="header-search-add">
+        <el-icon>
+          <Plus />
+        </el-icon>
+      </div>
     </div>
   </div>
 </template>
@@ -25,5 +30,24 @@ const appoint = ref("");
   background: #fff;
   height: 60px;
   padding: 14px;
+  .header-search{
+    :deep(.el-input){
+      width: 210px;
+    }
+    display: flex;
+    justify-content: space-between;
+  }
+}
+.header-search-add{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  background: #409eff80;
+  border-radius: 2px;
+  font-size: 24px;
+  color: #fff;
+  cursor: pointer;
 }
 </style>
