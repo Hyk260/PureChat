@@ -44,8 +44,6 @@ function genTestUserSig(userID) {
    * 文档：https://cloud.tencent.com/document/product/647/17275#Server
    */
   var SECRETKEY = '5a6b2154e55174f685569c6a0498ff1d4b02352bc7d76ea8cd0f8075e223aaf2'
-  // ''
-  // '6044d4b009f98014ff3cf6d833de1c2ac2acdee173cbd11fbf773f1ad1dd606f';
 
   var generator = new window.LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME);
   var userSig = generator.genTestUserSig(userID);
