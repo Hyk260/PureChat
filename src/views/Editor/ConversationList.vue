@@ -56,8 +56,7 @@
         </div>
         <div class="message-item-right-bottom">
           <span>
-            <!-- {{ fnNews(currentMessageList) }} -->
-            {{ item.lastMessage.messageForShow }}
+            {{ fnNews(item) }}
           </span>
         </div>
         <!-- 消息免打扰 -->
@@ -117,9 +116,13 @@ const { Selected, UserInfo, currentMessageList, conversationList } = useState({
 });
 
 const fnNews = (data) => {
-  let name = data?.[0]?.message_sender_profile?.user_profile_nick_name;
-  let message = data?.[0]?.message_elem_array?.[0].text_elem_content;
-  return `${name}:${message}` || "[]";
+  const { type, lastMessage } = data
+  const { messageForShow, fromAccount } = lastMessage
+  const { username } = UserInfo.value
+  if(type == 'GROUP' && username !== fromAccount){
+    return `${fromAccount}: ${messageForShow}`
+  }
+  return messageForShow
 };
 
 const fnClass = (item) => {

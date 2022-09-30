@@ -44,3 +44,5 @@ class loaderProxy {
 }
 
 export const loader = new loaderProxy();
+
+// loader.loadScript(data).then(() => {});

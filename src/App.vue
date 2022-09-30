@@ -11,15 +11,11 @@ import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import { loader } from "@/utils/loaders";
 import { onMounted, nextTick } from "vue";
 import { useState } from "@/utils/hooks/useMapper";
-import { tree } from "@/utils/ToTree";
-import { useRouter } from "vue-router";
-import storage from "storejs";
 import { useStore } from "vuex";
 import { debounce } from "@/utils/debounce";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 
 const locale = zhCn;
-const table = storage.get("userdata");
 const { state, dispatch, commit } = useStore();
 
 const { currentConversation, userInfo } = useState({
@@ -28,24 +24,21 @@ const { currentConversation, userInfo } = useState({
 });
 
 onMounted(() => {
-  if (!table?.Routingtable) return;
-  tree(table.Routingtable);
-  table.Routingtable.forEach((item) => {
-    useRouter().addRoute(item);
-  });
-
+  commit('ADD_ROUTE')
   // window.onresize = () => {
   //   debounce?.(() => {
   //     fnresize();
   //   }, 300);
   // };
-  // "https://unpkg.com/ace-builds/src-noconflict/ace.js"
-  // let data = 'https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.js'
-  // loader.loadScript(data).then(() => {});
   initListener();
 });
 
 const fnresize = () => {
+  /** width app-wrapper类容器宽度
+ * 0 < width <= 760 隐藏侧边栏
+ * 760 < width <= 990 折叠侧边栏
+ * width > 990 展开侧边栏
+ */
   // let dom = document.getElementById("app");
   // let setWidth = dom?.offsetWidth;
   // if (!setWidth) return;
@@ -63,13 +56,6 @@ const fnresize = () => {
 };
 
 function initListener() {
-  // let nick = state.data?.user?.username;
-  // let isSDKReady = state.user.isSDKReady;
-  // nextTick(() => {
-  //   setTimeout(() => {
-  //     if (!isSDKReady) dispatch("TIM_LOG_IN", nick);
-  //   }, 300);
-  // });
   dispatch("RE_LOGIN");
   // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
   tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate);
@@ -155,11 +141,7 @@ function kickedOutReason(type) {
 function onError(event) {
   console.log(event, "onError");
 }
-/** width app-wrapper类容器宽度
- * 0 < width <= 760 隐藏侧边栏
- * 760 < width <= 990 折叠侧边栏
- * width > 990 展开侧边栏
- */
+
 </script>
 
 <style lang="scss">

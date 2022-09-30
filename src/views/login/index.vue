@@ -136,9 +136,7 @@ const LoginBtn = async (formEl) => {
 
 const Signin = () => {
   // showload.value = true;
-  const { username, password } = user;
   dispatch("LOG_IN", user);
-  dispatch("TIM_LOG_IN", username);
 }
 
 const onHandle = (index) => {

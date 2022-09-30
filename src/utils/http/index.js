@@ -6,7 +6,8 @@ import router from "@/router";
 import NProgress from "@/utils/progress";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 
-const baseURL = "http://localhost:8082/";
+const baseURL = "http://localhost:8081/";
+
 const { formats, parse, stringify } = qs;
 
 // www.axios-js.com/zh-cn/docs/#axios-request-config-1

@@ -129,7 +129,7 @@ watch(
 
 onMounted(() => {
   Monitorscrollbar();
-  getChatList();
+  // getChatList();
 });
 
 onBeforeUnmount(() => {

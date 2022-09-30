@@ -8,7 +8,7 @@ import { ACCESS_TOKEN } from "@/store/mutation-types";
 import tim from "@/utils/im-sdk/tim";
 import { nextTick } from "vue";
 import { getMyProfile, logout } from '@/api/im-sdk-api';
-import { verification } from "@/utils/message";
+import { verification } from "@/utils/message/index";
 import { ElNotification } from "element-plus";
 
 const user = {
@@ -102,19 +102,22 @@ const user = {
       const res = await login({ username, password });
       console.log(res, "登录信息");
       const { code, msg, result } = res;
-      if (code !== 200) return;
       console.log(result)
-      verification(code, msg);
-      commit("updateData", { key: "user", value: result });
-      dispatch('GET_MENU')
-      setTimeout(() => {
-        router.push("/home");
-        ElNotification({
-          title: "Success",
-          message: "登录成功",
-          type: "success",
-        });
-      }, 1000);
+      if (code == 200){
+        commit("updateData", { key: "user", value: result });
+        dispatch("TIM_LOG_IN", username);
+        dispatch('GET_MENU')
+        setTimeout(() => {
+          router.push("/home");
+          ElNotification({
+            title: "Success",
+            message: "登录成功",
+            type: "success",
+          });
+        }, 1000);
+      } else {
+        verification(code, msg)
+      }
     },
     // 退出登陆
     LOG_OUT() {
