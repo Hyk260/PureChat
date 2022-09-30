@@ -18,8 +18,6 @@ const user = new FileSync("./db/user.json");
 
 const role = new FileSync("./db/role.json");
 
-const chat = new FileSync("./db/chat.json");
-
 const menu = new FileSync("./db/menu.json");
 
 const roleMenu = new FileSync("./db/roleMenu.json");
@@ -27,16 +25,12 @@ const roleMenu = new FileSync("./db/roleMenu.json");
 const db_user = lowdb(user);
 // 角色表
 const db_role = lowdb(role);
-// 聊天内容
-const db_chat = lowdb(chat);
 // 菜单表
 const db_menu = lowdb(menu);
 // 角色菜单
 const db_role_menu = lowdb(roleMenu);
 
 const app = express();
-const http = require("http").Server(app);
-const io = require("socket.io")(http);
 
 app.use((req, res, next) => {
   // 允许前端自定义请求头 authorization
@@ -48,7 +42,7 @@ app.use((req, res, next) => {
 });
 
 //设置静态文件目录 static
-app.use(express.static(path.join(__dirname, "public")));
+app.use('/',express.static(path.join(__dirname, "public")));
 
 const SECRET_KEY = "7040575a-5ff5-4398-a410-d9c7b010f6e8";
 app.use(
@@ -61,12 +55,13 @@ app.use(
 // 登录
 app.get("/login", async (req, res, next) => {
   let { username, password } = req.query;
+  console.log(req.query,"login")
   if (username && password) {
     const user = db_user.get("user").find({ username, password }).value();
     if (user) {
       res.setHeader("Access-Control-Expose-Headers", "x-token");
       // 注意默认情况 Token 必须以 Bearer+空格 开头
-      const token = jwt.sign(user, SECRET_KEY, { expiresIn: 3600 * 24 * 3 });
+      const token = jwt.sign(user, SECRET_KEY, { expiresIn: 60 * 60 * 24 * 3 });
       res.setHeader("X-token", "Bearer " + token);
       res.json({
         code: 200,
@@ -88,43 +83,6 @@ app.get("/login", async (req, res, next) => {
   next();
 });
 
-// 获取聊天内容
-app.get("/chat/record", async (req, res, next) => {
-  let result = db_chat.get("chat").value();
-  res.json({
-    code: 200,
-    msg: "ok",
-    result,
-  });
-  next();
-});
-// 发送消息
-app.get("/chat/sendMsg", async (req, res, next) => {
-  let id = uuid();
-  let { conv_id, conv_type, userProfile, message } = req.query;
-  let chat = {
-    message_client_time: Math.round(new Date().getTime() / 1000),
-    message_conv_id: conv_id,
-    message_conv_type: conv_type,
-    message_elem_array: [JSON.parse(message)],
-    message_is_from_self: true,
-    message_is_peer_read: false,
-    message_msg_id: id,
-    message_sender_group_member_info: {},
-    message_sender_profile: JSON.parse(userProfile),
-    message_server_time: 0,
-    message_status: 1,
-  };
-  db_chat.get("chat").push(chat).write();
-  let result = db_chat.get("chat").value();
-  res.json({
-    code: 200,
-    msg: "ok",
-    result,
-  });
-  next();
-});
-
 // 返回菜单列表
 app.get("/menu/query", async (req, res, next) => {
   res.json(db_menu.get("menu").value());
@@ -135,9 +93,7 @@ app.get("/menu/add", async (req, res, next) => {
   // id为父级id
   let { parentId, path, title, icon, componentName } = req.query;
   if (parentId && path && title && icon && componentName) {
-    console.log(parentId, "parentId");
     let parentMenu = db_menu.get("menu").find({ id: parentId }).value();
-    console.log(parentMenu, "查找当前选中菜单表");
     if (parentMenu) {
       let currentId = uuid(); //生成唯一ID
       let currentMenu = {
@@ -171,7 +127,6 @@ app.get("/menu/add", async (req, res, next) => {
 // 删除菜单 菜单id 数组
 app.get("/menu/delete", async (req, res, next) => {
   let { ids } = req.query;
-  console.log(ids, "ids参数");
   if (ids?.length) {
     ids.forEach((id) => {
       let parentNode = db_menu
@@ -180,7 +135,6 @@ app.get("/menu/delete", async (req, res, next) => {
           return item.children.indexOf(id) > -1;
         })
         .value();
-      console.log(parentNode, "parentNode参数");
       let updatedChildren = parentNode.children.filter((v) => v !== id);
 
       db_menu
@@ -193,7 +147,6 @@ app.get("/menu/delete", async (req, res, next) => {
       db_menu.get("menu").remove({ id }).write();
     });
     res.json(db_menu.get("menu").value());
-    // res.json({ code: 200, msg: "测试" });
   } else {
     res.json({ code: 400, msg: "参数不合法" });
   }
@@ -202,8 +155,6 @@ app.get("/menu/delete", async (req, res, next) => {
 // 更新菜单
 app.get("/menu/update", async (req, res, next) => {
   if (_.has(req.query, "id", "path", "title", "icon", "componentName")) {
-    let { id, path, title, icon, componentName } = req.query;
-    console.log(icon, "icon");
     db_menu
       .get("menu")
       .find({ id })
@@ -231,7 +182,6 @@ app.get("/role/query", async (req, res, next) => {
 app.get("/role/add", async (req, res, next) => {
   if (_.has(req.query, "roleName", "info", "isDefaultRole")) {
     let { roleName, info, isDefaultRole } = req.query;
-    console.log(req.query);
     let id = uuid();
     let currentTime = Date.now();
     let roleData = {
@@ -341,7 +291,6 @@ app.get("/roleMenu/update", async (req, res, next) => {
 app.get("/roleMenu/query", async (req, res, next) => {
   if (_.has(req.query, "roleId")) {
     let { roleId } = req.query;
-    console.log(roleId);
     let roleMenu = db_role_menu.get("role_menu").find({ roleId }).value();
     res.json({
       code: 200,
@@ -418,7 +367,7 @@ app.use((err, req, res, next) => {
   next();
 });
 
-const server = app.listen(8082, () => {
+const server = app.listen(8081, () => {
   const host = null; // server.address().address
   const port = server.address().port;
   // console.log("应用实例，访问地址为 http://%s:%s", 'localhost', port)
