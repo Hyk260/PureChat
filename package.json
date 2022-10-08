@@ -8,7 +8,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "app": "cd server && nodemon app",
-    "build:app:win": "cd server && pkg -t win app.js",
+    "build:pkg:win": "cd server && pkg -t win app.js",
+    "build:pkg:mac": "cd server && pkg -t macos app.js",
     "server": "cd server && nodemon server"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
     "element-plus": "^2.0.4",
     "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
+    "pkg": "^5.8.0",
     "socket.io-client": "^4.5.1",
     "storejs": "^2.0.1",
     "svg-sprite-loader": "^6.0.11",

@@ -7,7 +7,7 @@ import initLocalStorage from "@/store/data/initLocalStorage";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 import tim from "@/utils/im-sdk/tim";
 import { nextTick } from "vue";
-import { getMyProfile, logout } from '@/api/im-sdk-api';
+import { getMyProfile, logout } from "@/api/im-sdk-api";
 import { verification } from "@/utils/message/index";
 import { ElNotification } from "element-plus";
 
@@ -78,7 +78,7 @@ const user = {
     },
     // 获取个人资料
     async GET_MYPROFILE({ commit }) {
-      let result = await getMyProfile()
+      let result = await getMyProfile();
       commit("updateCurrentUserProfile", result);
     },
     // 重新登陆
@@ -92,21 +92,21 @@ const user = {
       });
     },
     // 菜单列表
-    async GET_MENU({ dispatch }){
+    async GET_MENU({ dispatch }) {
       let menu = await getMenu();
       dispatch("updateRoute", menu);
     },
     // 登录
     async LOG_IN({ state, commit, dispatch }, data) {
-      const { username, password } = data
+      const { username, password } = data;
       const res = await login({ username, password });
       console.log(res, "登录信息");
       const { code, msg, result } = res;
-      console.log(result)
-      if (code == 200){
+      console.log(result);
+      if (code == 200) {
         commit("updateData", { key: "user", value: result });
         dispatch("TIM_LOG_IN", username);
-        dispatch('GET_MENU')
+        dispatch("GET_MENU");
         setTimeout(() => {
           router.push("/home");
           ElNotification({
@@ -116,7 +116,7 @@ const user = {
           });
         }, 1000);
       } else {
-        verification(code, msg)
+        verification(code, msg);
       }
     },
     // 退出登陆

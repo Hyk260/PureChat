@@ -15,10 +15,13 @@
     <!-- 聊天框 -->
     <div class="message-right" id="svgBox">
       <Header />
-      <!-- 聊天窗口 --> 
+      <!-- 聊天窗口 -->
       <Chatwin ref="ChatRef" />
-
-      <div id="svgResize" @mouseover="dragControllerDiv(ChatRef)" v-if="showMsgBox">
+      <div
+        id="svgResize"
+        @mouseover="dragControllerDiv(ChatRef)"
+        v-if="showMsgBox"
+      >
         <div class="back-to-the-bottom" @click="toBottom">
           <el-icon class="svg-left">
             <DArrowLeft />
@@ -44,7 +47,6 @@ import Header from "./components/Header.vue";
 import Chatwin from "./Chatwin.vue";
 import networklink from "./components/networklink.vue";
 import ConversationList from "./ConversationList.vue";
-// import socket from "@/utils/socket";
 
 const ChatRef = ref(null);
 const { state, dispatch, commit } = useStore();
@@ -63,10 +65,6 @@ const monitoring = () => {
 const toBottom = () => {
   ChatRef.value.UpdataScrollInto();
 };
-
-// socket.emit("login", {
-//   name: user.value.username,
-// });
 
 window.addEventListener("online", monitoring);
 window.addEventListener("offline", monitoring);
