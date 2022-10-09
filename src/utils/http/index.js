@@ -6,9 +6,8 @@ import router from "@/router";
 import NProgress from "@/utils/progress";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 
-// const baseURL = "http://localhost:8081/";
-const baseURL =
-  "https://service-2v8ie360-1307934606.gz.apigw.tencentcs.com/release/";
+const baseURL = process.env.VUE_APP_PROXY_DOMAIN_REAL;
+console.log(baseURL);
 const { formats, parse, stringify } = qs;
 
 // www.axios-js.com/zh-cn/docs/#axios-request-config-1
