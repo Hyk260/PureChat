@@ -94,6 +94,7 @@ const user = {
     // 菜单列表
     async GET_MENU({ dispatch }) {
       let menu = await getMenu();
+      console.log(menu)
       dispatch("updateRoute", menu);
     },
     // 登录

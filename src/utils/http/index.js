@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 import qs from "qs";
 import axios from "axios";
 import storage from "storejs";
@@ -6,8 +6,9 @@ import router from "@/router";
 import NProgress from "@/utils/progress";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 
-const baseURL = "http://localhost:8081/";
-
+// const baseURL = "http://localhost:8081/";
+const baseURL =
+  "https://service-2v8ie360-1307934606.gz.apigw.tencentcs.com/release/";
 const { formats, parse, stringify } = qs;
 
 // www.axios-js.com/zh-cn/docs/#axios-request-config-1
@@ -105,9 +106,10 @@ service.interceptors.response.use((response) => {
   const { code, msg } = data;
   // 关闭进度条动画
   NProgress.done();
-  // console.log(response)
+  // console.log(response.headers, "response");
   if (status === 200) {
-    const ToKen = response.headers["x-token"];
+    const ToKen =
+      response.headers["x-token"] || response.headers["x-api-requestid"];
     ToKen && storage.set(ACCESS_TOKEN, ToKen);
     return data;
   }
