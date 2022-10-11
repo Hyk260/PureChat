@@ -3,6 +3,7 @@ import qs from "qs";
 import axios from "axios";
 import storage from "storejs";
 import router from "@/router";
+import { ElMessage } from 'element-plus'
 import NProgress from "@/utils/progress";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 
@@ -36,7 +37,7 @@ const errorHandler = (error) => {
         console.log("错误请求");
         break;
       case 401:
-        console.log("未授权，请重新登录");
+        ElMessage('未授权,请重新登录!')
         storage.remove(ACCESS_TOKEN);
         router.replace("/login");
         break;

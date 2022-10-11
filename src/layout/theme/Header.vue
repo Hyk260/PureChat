@@ -29,7 +29,7 @@
           <el-dropdown>
             <span class="el-dropdown-link">
               <Portrait :size="28" />
-              <p>ADMIN</p>
+              <p>{{ userInfo.username }}</p>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
@@ -106,6 +106,7 @@ const { isActive, tags, sidebar, setswitch, userInfo } = useState({
   isActive: (state) => state.settings.isCollapse,
   setswitch: (state) => state.settings.setswitch,
 });
+
 
 const fnStyle = (off) => {
   return `width:calc(100% - ${off ? "64px" : "200px"})`;

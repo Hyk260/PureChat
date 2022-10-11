@@ -246,6 +246,7 @@ const sendMessage = async () => {
     // 消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到，v2.10.2起支持）
     // cloudCustomData: 'your cloud custom data'
   });
+  console.log(message1)
   // 2. 发送消息
   let promise = tim.sendMessage(message1);
   promise
@@ -266,17 +267,6 @@ const sendMessage = async () => {
       // 发送失败
       console.warn("sendMessage error:", imError);
     });
-  return;
-  // const { message } = sendMsgBefore();
-  const messageId = generateUUID();
-  const userProfile = {
-    user_profile_nick_name: userInfo.value.username,
-    user_profile_face_url: userInfo.value.portrait,
-  };
-  const conv_id = "";
-  const conv_type = 2;
-  console.log(templateElement);
-  clearInputInfo();
 };
 </script>
 <style>

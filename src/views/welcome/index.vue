@@ -32,7 +32,7 @@
               GitHub饼图信息
             </span>
           </template>
-          <el-skeleton animated :rows="7" :loading="false">
+          <el-skeleton animated :rows="7" :loading="loading">
             <template #default>
               <div>测试</div>
             </template>

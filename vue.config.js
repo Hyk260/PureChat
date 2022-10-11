@@ -86,26 +86,6 @@ module.exports = {
     });
   },
   // webpack配置
-  // configureWebpack: (config) => {
-  //   // Object.assign(config, {
-  //   //   node: {
-  //   //     global: true,
-  //   //     __dirname: true,
-  //   //     __filename: true
-  //   //   }
-  //   // })
-  //   config.externals = externals;
-  //   // config.plugins = [
-  //   //   // 自动按需引入 vue\vue-router\vuex 等的 api
-  //   //   AutoImport({
-  //   //     resolvers: [ElementPlusResolver()],
-  //   //   }),
-  //   //   // 按需引入Element-plus
-  //   //   Components({
-  //   //     resolvers: [ElementPlusResolver()],
-  //   //   }),
-  //   // ]
-  // },
   configureWebpack: {
     externals,
     plugins: [

@@ -19,11 +19,4 @@ tim.setLogLevel(3);
 // 注册 COS SDK 插件
 tim.registerPlugin({ "tim-upload-plugin": TIMUploadPlugin });
 
-// // 监听事件，如：
-// tim.on(TIM.EVENT.SDK_READY, function (event) {
-//   console.log(event)
-//   // 收到离线消息和会话列表同步完毕通知，接入侧可以调用 sendMessage 等需要鉴权的接口
-//   // event.name - TIM.EVENT.SDK_READY
-// });
-
 export default tim;

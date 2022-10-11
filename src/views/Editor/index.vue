@@ -51,10 +51,11 @@ import ConversationList from "./ConversationList.vue";
 const ChatRef = ref(null);
 const { state, dispatch, commit } = useStore();
 
-const { networkStatus, user, showMsgBox } = useState({
+const { networkStatus, user, showMsgBox, conversationList } = useState({
   networkStatus: (state) => state.conversation.networkStatus,
   user: (state) => state.data.user,
   showMsgBox: (state) => state.conversation.showMsgBox,
+  conversationList: (state) => state.conversation.conversationList,
 });
 
 const monitoring = () => {

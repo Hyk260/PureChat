@@ -2,6 +2,12 @@
   <el-scrollbar class="scrollbar-list">
     <!-- <transition-group name="fade-transform">
     </transition-group> -->
+    <div class="no-msg"  v-if="conversationList.length == 0">
+      <img src="@/assets/images/wushuju.png" alt="" />     
+      <p>
+        <span>暂无会话。</span>
+      </p>                      
+    </div>
     <div
       class="message-item"
       v-for="item in conversationList"
@@ -234,6 +240,17 @@ const pingConv = (data) => {
     padding: 0px 16px;
     color: rgba(0, 0, 0, 0.65);
     font-size: 12px;
+  }
+}
+.no-msg{
+  color: rgba(0,0,0,0.45);
+  text-align: center;
+  font-size: 14px;
+  margin-top: 50%;
+  transform: translate(0px, 50%);
+  img{
+    width: 160px;
+    height: 100px;
   }
 }
 .close-btn {
