@@ -36,6 +36,7 @@ export const generateTemplateElement = async (
   };
 };
 
+// 本地文件地址 to Base64
 export const localFileToBase64 = (url) => {
   return new Promise((resolve, reject) => {
     try {
@@ -58,7 +59,7 @@ export const bufferToBase64Url = (data, type) => {
   return `data:image/${type};base64,` + buffer.toString("base64");
 };
 
-// 得到图片的base64
+// File to base64
 export const fileImgToBase64Url = async (file) => {
   return new Promise((res) => {
     const reader = new FileReader();
@@ -70,18 +71,36 @@ export const fileImgToBase64Url = async (file) => {
     reader.readAsDataURL(file);
   });
 };
+// 网络地址 to base64
+export const urlToBase64 = (url) => {
+  return new Promise ((resolve,reject) => {
+      let image = new Image();
+      image.onload = function() {
+          let canvas = document.createElement('canvas');
+          canvas.width = this.naturalWidth;
+          canvas.height = this.naturalHeight;
+          canvas.getContext('2d').drawImage(image, 0, 0);
+          let result = canvas.toDataURL('image/png')
+          resolve(result);
+      };
+      image.setAttribute("crossOrigin",'Anonymous');
+      image.src = url;
+      image.onerror = () => {
+          reject(new Error('转换失败'));
+      };
+  });
+}
 
 export const getImageType = (str) => {
   const reg = /\.(png|jpg|gif|jpeg|webp)$/;
   return str.match(reg)[1];
 };
-/**
- * 用于同步检查给定路径中是​​否已存在文件,它返回一个布尔值，该值指示文件的存在。
- *
- * */
+
+//用于同步检查给定路径中是​​否已存在文件,它返回一个布尔值，该值指示文件的存在。
 export const checkFileExist = (path) => {
   return fs.existsSync(path);
 };
+
 export const getFileByPath = async (filePath) => {
   const size = fs.statSync(filePath).size;
   const name = path.parse(filePath).base;

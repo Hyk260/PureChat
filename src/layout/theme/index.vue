@@ -29,10 +29,7 @@ import {
   defineAsyncComponent,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import storage from "storejs";
-import store from "@/store";
 import { useState } from "@/utils/hooks/useMapper";
-
 import Header from "./Header.vue";
 import error from "@/views/notfound/index.vue";
 import editor from "@/views/Editor/index.vue";

@@ -2,14 +2,14 @@
   <div class="content-wrap">
     <el-row :gutter="20">
       <el-col :span="8">
-        <el-card shadow="hover" class="box-card">
+        <el-card class="box-card">
           <div v-for="o in 4" :key="o" class="text item">
             {{ "List item " + o }}
           </div>
         </el-card>
       </el-col>
       <el-col :span="16">
-        <el-card shadow="hover">
+        <el-card>
           <div v-for="o in 4" :key="o" class="text item">
             {{ "List item " + o }}
           </div>
