@@ -54,7 +54,9 @@ const vueDefaultConfig = {
   },
   cdn: {
     // https://unpkg.com/browse/vue@2.6.10/
-    css: ["https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css"],
+    css: [
+      // "https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css"
+    ],
     js: [
       //"https://cdn.jsdelivr.net/npm/vue", // Vue
       //"https://unpkg.com/@element-plus/icons-vue", // ElementPlusIconsVue
