@@ -3,7 +3,8 @@ const home = () => import("@/views/home/index"); //首页
 const views = {
   Home: home, //首页
   System: home, //系统管理
-    Menu: () => import(/* webpackChunkName: "Menu" */ `@/views/system/menu/index`), //菜单
+    // Menu: () => import(/* webpackChunkName: "Menu" */ `@/views/system/menu/index`), //菜单
+    Menu: () => import(/* webpackChunkName: "Menu" */ `@/views/system/menu/indexcopy`), //菜单
     User: () => import(/* webpackChunkName: "User" */ `@/views/system/user/index`), //用户
     Role: () => import(/* webpackChunkName: "Role" */ `@/views/system/role/index`), //角色
   Editor: home, // 编辑器
