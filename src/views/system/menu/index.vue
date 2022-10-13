@@ -237,6 +237,7 @@ const data = computed(() => {
 });
 
 watch(filterText, (val) => {
+  console.log(treeRef.value)
   treeRef.value.filter(val);
 });
 
