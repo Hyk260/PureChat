@@ -7,4 +7,6 @@
 // );
 
 // @import "element-plus/theme-chalk/src/index.scss";
-
+.el-message-box__status{
+  position: absolute !important;
+}

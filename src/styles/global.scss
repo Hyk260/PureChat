@@ -1,19 +1,13 @@
+* {
+  box-sizing: border-box;
+}
 
-/**
- * todo: n->none    没有
- * todo: t->top     上
- * todo: r->right   右
- * todo: b->bottom  下
- * todo: l->left    左
- * todo: a->auto    自动
- */
+a {
+  text-decoration: none;
+}
 
- // 怪异盒子模型
-* { box-sizing: border-box; }
-
-a { text-decoration: none; }
-  
-html, body {
+html,
+body {
   height: 100%;
   // background-color: var(--color-body-bg);
 }
@@ -26,7 +20,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizelegibility;
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 // 通用ul li
 ul {
@@ -114,7 +109,8 @@ $directions: row, row-reverse, column, column-reverse;
 $alignItems: flex-start, flex-end, center, baseline, stretch;
 $alignSelfs: auto, flex-start, flex-end, center, baseline, stretch;
 $justifyContents: flex-start, flex-end, center, space-between, space-around;
-$alignContents: flex-start, flex-end, center, space-between, space-around, stretch;
+$alignContents: flex-start, flex-end, center, space-between, space-around,
+  stretch;
 .flex {
   // todo: 容器属性
   &-box {
@@ -172,5 +168,3 @@ $alignContents: flex-start, flex-end, center, space-between, space-around, stret
     }
   }
 }
-
-
