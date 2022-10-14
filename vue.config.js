@@ -12,8 +12,8 @@ const AutoImport = require("unplugin-auto-import/webpack");
 const Components = require("unplugin-vue-components/webpack"); // 组件按需引入
 const CompressionPlugin = require("compression-webpack-plugin"); // gzip压缩
 const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
-const BundleAnalyzerPlugin =
-  require("webpack-bundle-analyzer").BundleAnalyzerPlugin; // 打包文件分析工具
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer"); // 打包文件分析工具
+const DefineOptions = require('unplugin-vue-define-options/webpack')
 
 const path = require("path");
 const resolve = (dir) => {
@@ -89,8 +89,11 @@ module.exports = {
   configureWebpack: {
     externals,
     plugins: [
+      // setup语法糖通过defineOptions定义组件name
+      // DefineOptions()
       // 自动按需引入 vue\vue-router\vuex 等的 api
       AutoImport({
+        imports: ["vue"],
         resolvers: [ElementPlusResolver()],
       }),
       // 按需引入Element-plus
