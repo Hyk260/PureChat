@@ -6,7 +6,8 @@ const views = {
     // Menu: () => import(/* webpackChunkName: "Menu" */ `@/views/system/menu/index`), //菜单
     Menu: () => import(/* webpackChunkName: "Menu" */ `@/views/system/menu/indexcopy`), //菜单
     User: () => import(/* webpackChunkName: "User" */ `@/views/system/user/index`), //用户
-    Role: () => import(/* webpackChunkName: "Role" */ `@/views/system/role/index`), //角色
+    // Role: () => import(/* webpackChunkName: "Role" */ `@/views/system/role/index`), //角色
+    Role: () => import(/* webpackChunkName: "Role" */ `@/views/system/role/indexcopy`), //角色
   Editor: home, // 编辑器
 
   Personal: home, // 个人中心
