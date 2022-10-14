@@ -54,10 +54,11 @@ const handleClose = (key, keyPath) => {
   height: 100%;
 }
 .el-menu-vertical {
-  // height: 100vh;
+  border: none;
   height: 100%;
 }
 .sidebar-container {
+  border-right: 1px solid #e6e6e6;
   z-index: 10;
   height: 100%;
   position: fixed;

@@ -69,7 +69,7 @@
                 <span> 编辑菜单 </span>
               </div>
             </template>
-            <el-skeleton animated :rows="12" :loading="true">
+            <el-skeleton animated :rows="12" :loading="false">
               <template #default>
                 <!-- close-text="知道了" -->
                 <el-alert
@@ -423,7 +423,7 @@ const onSubmit = () => {
 }
 .style-tree,
 .style-menu {
-  min-height: 380px;
+  min-height: 410px;
 }
 .input-style,
 .el-alert {

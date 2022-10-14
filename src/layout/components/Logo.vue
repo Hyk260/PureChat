@@ -31,17 +31,13 @@ const { show, collapse } = toRefs(props);
   width: 100%;
   height: 48px;
   overflow: hidden;
-  border-right: 1px solid #e8e8e8;
-  // background: #002140;
-  // text-align: center;
-  // line-height: 48px;
+  // border-right: 1px solid #e8e8e8;
 }
 .sidebar-logo-link {
   height: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  // margin-top: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,7 +45,6 @@ const { show, collapse } = toRefs(props);
     color: #1890ff;
     font-weight: 600;
     font-size: 20px;
-    // margin-top: 10px;
     font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
   }
 }

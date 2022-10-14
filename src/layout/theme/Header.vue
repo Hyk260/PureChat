@@ -47,7 +47,7 @@
         </div>
         <!-- 设置 -->
         <div class="setup" @click="opensetup(setswitch)">
-          <FontIcon iconName="setting" />
+          <FontIcon class="active" iconName="setting" />
         </div>
       </div>
     </div>
@@ -107,9 +107,8 @@ const { isActive, tags, sidebar, setswitch, userInfo } = useState({
   setswitch: (state) => state.settings.setswitch,
 });
 
-
 const fnStyle = (off) => {
-  return `width:calc(100% - ${off ? "64px" : "200px"})`;
+  return `width:calc(100% - ${off ? "65px" : "201px"})`;
 };
 
 const topersonal = () => {
@@ -205,7 +204,7 @@ const toggleClick = (val) => {
 
 .active {
   &:hover {
-    color: #409eff;
+    color: var(--color-icon-hover);
   }
 }
 

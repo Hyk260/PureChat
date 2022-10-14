@@ -5,7 +5,7 @@
     :title="isFullscreen ? '退出全屏' : '全屏'"
   >
     <!-- <svg-icon icon-class="Fullscreen" /> -->
-    <FontIcon iconName="FullScreen" />
+    <FontIcon iconName="FullScreen" class="active" />
   </div>
 </template>
 
@@ -22,5 +22,10 @@ const { isFullscreen, toggle } = useFullscreen();
   display: flex;
   align-items: center;
   justify-content: space-around;
+}
+.active {
+  &:hover {
+    color: var(--color-icon-hover);
+  }
 }
 </style>

@@ -10,7 +10,7 @@
         @click.prevent="fnclickBlock(index)"
         v-for="(puzzle, index) in puzzles"
         :key="puzzle"
-        :class="puzzle == '0'? 'cell cells' : 'cell'"
+        :class="puzzle == '0' ? 'cell cells' : 'cell'"
       >
         <!-- <img
           class="picture"
@@ -21,16 +21,17 @@
         <img
           class="picture"
           v-if="puzzle !== 0"
-          :src="require(`@/assets/Ubisoft/${puzzle}.jpg`)"
+          :src="`http://ybadmin.aju.cn/Uploads/version1/${puzzle}.jpg`"
           alt=""
         />
+        <!-- require(`@/assets/Ubisoft/${puzzle}.jpg`) -->
+        <!-- http://ybadmin.aju.cn/Uploads/version1/${puzzle}.jpg -->
       </div>
     </transition-group>
   </div>
 </template>
 
 <script setup>
-  
 import { reactive, ref, onMounted, computed } from "vue";
 import _ from "lodash";
 import { throttle } from "@/utils/throttle";
@@ -80,7 +81,7 @@ const pass = () => {
     const newPuzzles = puzzles.value.slice(0, 8);
     const isPass = newPuzzles.every((e, i) => e === i + 1);
     if (isPass) {
-      console.log('通过')
+      console.log("通过");
     }
   }
 };

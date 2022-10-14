@@ -12,9 +12,7 @@
       <el-col>
         <el-card>
           <template #header>
-            <span>
-              GitHub饼图信息
-            </span>
+            <span> GitHub饼图信息 </span>
           </template>
           <el-skeleton animated :rows="7" :loading="loading">
             <template #default>
@@ -28,9 +26,7 @@
       <el-col>
         <el-card>
           <template #header>
-            <span>
-              GitHub饼图信息
-            </span>
+            <span> GitHub饼图信息 </span>
           </template>
           <el-skeleton animated :rows="7" :loading="loading">
             <template #default>
@@ -66,36 +62,36 @@ const openDepot = () => {
 };
 </script>
 <style lang="scss" scoped>
-.style-row{
+.style-row {
   margin: 20px !important;
 }
 // .main-content {
 //   margin: 0 !important;
 // }
 .top-content {
+  display: flex;
+  // justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  // background: #fff;
+
+  .left-mark {
     display: flex;
-    // justify-content: space-between;
     align-items: center;
-    height: 60px;
-    // background: #fff;
 
-    .left-mark {
-      display: flex;
-      align-items: center;
+    img {
+      display: block;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+      cursor: pointer;
+    }
 
-      img {
-        display: block;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 10px;
-        cursor: pointer;
-      }
-
-      span {
-        margin-left: 10px;
-        font-size: 14px;
-      }
+    span {
+      margin-left: 10px;
+      font-size: 14px;
     }
   }
+}
 </style>
