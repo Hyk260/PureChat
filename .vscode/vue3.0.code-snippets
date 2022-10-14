@@ -1,0 +1,22 @@
+{
+  "Vue3.0快速生成模板": {
+    "prefix": "Vue3.0",
+    "body": [
+      "<template>",
+      "\t<div>\n",
+      "\t</div>",
+      "</template>\n",
+      "<script>",
+      "export default {",
+      "\tsetup(){",
+      "\t\treturn{\n\n\t\t}",
+      "\t},",
+      "}",
+      "</script>\n",
+      "<style lang='scss' scoped>\n",
+      "</style>",
+      "$2"
+    ],
+    "description": "Vue3.0"
+  }
+}
