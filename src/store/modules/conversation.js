@@ -1,6 +1,6 @@
 import { CONVERSATIONTYPE, GET_MESSAGE_LIST } from "../mutation-types";
 import { addTimeDivider } from "@/utils/addTimeDivider";
-import { getMsgList } from '@/api/im-sdk-api';
+import { getMsgList } from "@/api/im-sdk-api";
 
 const getBaseTime = (list) => {
   return list?.length > 0 ? list.find((t) => t.isTimeDivider).time : 0;
@@ -26,12 +26,21 @@ const conversation = {
         // 添加消息
         case CONVERSATIONTYPE.ADD_MESSAGE: {
           const { convId, message } = payload;
-          state.currentMessageList = message;
+          console.log(convId, message);
+          state.historyMessageList.set(convId, message);
+          if (state.currentConversation) {
+            state.currentMessageList = state.historyMessageList.get(convId);
+          } else {
+            state.currentMessageList = [];
+          }
+          console.log(state.historyMessageList);
+          // state.currentMessageList = message;
           break;
         }
-        // 添加缓存消息
+        // 添加更多消息
         case CONVERSATIONTYPE.ADD_MORE_MESSAGE: {
-          console.log("添加缓存消息");
+          console.log("添加更多消息");
+          // state.historyMessageList =
           break;
         }
         // 更新消息
@@ -57,7 +66,7 @@ const conversation = {
           state.currentMessageList = [];
           break;
         }
-        // 接收消息
+        // #接收消息
         case CONVERSATIONTYPE.RECIVE_MESSAGE: {
           const { convId, message } = payload;
           state.currentMessageList = message.reverse();
@@ -66,6 +75,11 @@ const conversation = {
         // 加载更多状态
         case CONVERSATIONTYPE.UPDATE_NOMORE: {
           state.noMore = payload;
+          break;
+        }
+        // 将消息标记为已读
+        case CONVERSATIONTYPE.MARKE_MESSAGE_AS_READED: {
+          console.log("将消息标记为已读");
           break;
         }
       }
@@ -79,11 +93,12 @@ const conversation = {
           if (payload) {
             console.log(payload, "切换会话");
             const { conversationID } = payload;
-            if (conversationID == state.currentConversation?.conversationID) return;
-            if (conversationID == '@TIM#SYSTEM') {
-              state.showMsgBox = false
+            if (conversationID == state.currentConversation?.conversationID)
+              return;
+            if (conversationID == "@TIM#SYSTEM") {
+              state.showMsgBox = false;
             } else {
-              state.showMsgBox = true
+              state.showMsgBox = true;
             }
             // state.needScrollDown = 0;
             // state.noMore = false;
@@ -106,7 +121,8 @@ const conversation = {
   actions: {
     // 获取消息列表
     async [GET_MESSAGE_LIST]({ commit, dispatch, state, rootState }, action) {
-      let isSDKReady = rootState.user.isSDKReady
+      let isSDKReady = rootState.user.isSDKReady;
+      
       // 当前会话有值
       if (state.currentConversation && isSDKReady) {
         // const { conversationID } = state.currentConversation;
@@ -120,7 +136,7 @@ const conversation = {
         commit("SET_HISTORYMESSAGE", {
           type: "ADD_MESSAGE",
           payload: {
-            convId: "",
+            convId: conversationID,
             message: addTimeDividerResponse,
           },
         });

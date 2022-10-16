@@ -30,15 +30,15 @@ const appoint = ref("");
   background: #fff;
   height: 60px;
   padding: 14px;
-  .header-search{
-    :deep(.el-input){
+  .header-search {
+    :deep(.el-input) {
       width: 210px;
     }
     display: flex;
     justify-content: space-between;
   }
 }
-.header-search-add{
+.header-search-add {
   display: flex;
   justify-content: center;
   align-items: center;

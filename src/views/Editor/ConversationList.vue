@@ -2,11 +2,11 @@
   <el-scrollbar class="scrollbar-list">
     <!-- <transition-group name="fade-transform">
     </transition-group> -->
-    <div class="no-msg"  v-if="conversationList.length == 0">
-      <img src="@/assets/images/wushuju.png" alt="" />     
+    <div class="no-msg" v-if="conversationList.length == 0">
+      <img src="@/assets/images/wushuju.png" alt="" />
       <p>
         <span>暂无会话。</span>
-      </p>                      
+      </p>
     </div>
     <div
       class="message-item"
@@ -122,13 +122,13 @@ const { Selected, UserInfo, currentMessageList, conversationList } = useState({
 });
 
 const fnNews = (data) => {
-  const { type, lastMessage } = data
-  const { messageForShow, fromAccount } = lastMessage
-  const { username } = UserInfo.value
-  if(type == 'GROUP' && username !== fromAccount){
-    return `${fromAccount}: ${messageForShow}`
+  const { type, lastMessage } = data;
+  const { messageForShow, fromAccount } = lastMessage;
+  const { username } = UserInfo.value;
+  if (type == "GROUP" && username !== fromAccount) {
+    return `${fromAccount}: ${messageForShow}`;
   }
-  return messageForShow
+  return messageForShow;
 };
 
 const fnClass = (item) => {
@@ -163,6 +163,7 @@ const handleConvListClick = (data) => {
     type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
     payload: data,
   });
+  // 获取会话列表
   dispatch("GET_MESSAGE_LIST", data);
 };
 
@@ -242,13 +243,13 @@ const pingConv = (data) => {
     font-size: 12px;
   }
 }
-.no-msg{
-  color: rgba(0,0,0,0.45);
+.no-msg {
+  color: rgba(0, 0, 0, 0.45);
   text-align: center;
   font-size: 14px;
   margin-top: 50%;
   transform: translate(0px, 50%);
-  img{
+  img {
     width: 160px;
     height: 100px;
   }
