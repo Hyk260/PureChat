@@ -1,6 +1,6 @@
 <template>
   <el-scrollbar>
-    <el-card class="box-card mb-4" shadow="never">
+    <el-card class="" shadow="never">
       <template #header>
         <div class="card-header">
           <span class="font-medium"> 关于 </span>
@@ -10,8 +10,8 @@
         Pure-Admin 是一个基于Vue3、Element-Plus的后台管理模板
       </span>
     </el-card>
-    <Motion :delay="100">
-      <el-card class="box-card m-4" shadow="hover">
+    <!-- <Motion :delay="100"> -->
+      <el-card class="style-card" shadow="hover">
         <template #header>
           <div class="card-header">
             <span class="font-medium">项目信息</span>
@@ -53,9 +53,9 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-card>
-    </Motion>
-    <Motion :delay="200">
-      <el-card class="box-card m-4" shadow="hover">
+    <!-- </Motion> -->
+    <!-- <Motion :delay="200"> -->
+      <el-card class="style-card" shadow="hover">
         <template #header>
           <div class="card-header">
             <span class="font-medium">生产环境依赖</span>
@@ -80,9 +80,9 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-card>
-    </Motion>
-    <Motion :delay="300">
-      <el-card class="box-card m-4" shadow="hover">
+    <!-- </Motion> -->
+    <!-- <Motion :delay="300"> -->
+      <el-card class="style-card" shadow="hover">
         <template #header>
           <div class="card-header">
             <span class="font-medium">开发环境依赖</span>
@@ -107,7 +107,7 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-card>
-    </Motion>
+    <!-- </Motion> -->
   </el-scrollbar>
 </template>
 
@@ -133,9 +133,9 @@ Object.keys(devDependencies).forEach((key) => {
 
 <style scoped lang="scss">
 .style-color {
-  color: var(--el-color-primary)
+  color: var(--el-color-primary);
 }
-.m-4 {
-  margin: 1rem;
+.style-card {
+  margin: 20px !important;
 }
 </style>

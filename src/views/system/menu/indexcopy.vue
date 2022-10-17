@@ -2,11 +2,11 @@
   <el-scrollbar>
     <div class="content-wrap">
       <el-row :gutter="20">
-        <el-col :span="10" style="margin-bottom: 24px;">
+        <el-col :span="10" class="style-el-col">
           <el-card>
             <template #header>
               <div class="style-header">
-                <el-button size="small" plain @click="addMenuBtn">
+                <el-button v-if="false" size="small" plain @click="addMenuBtn">
                   添加菜单
                 </el-button>
                 <el-button size="small" plain @click="Putall(isExpand)">
@@ -16,7 +16,7 @@
                   size="small"
                   type="danger"
                   @click="delMenuBtn"
-                  v-if="showDelBtn"
+                  v-if="showDelBtn && false"
                 >
                   删除
                 </el-button>
@@ -62,7 +62,7 @@
             </el-skeleton>
           </el-card>
         </el-col>
-        <el-col :span="14" style="margin-bottom: 24px;">
+        <el-col :span="14" class="style-el-col">
           <el-card>
             <template #header>
               <div class="style-header">
@@ -413,6 +413,9 @@ const onSubmit = () => {
 }
 </style>
 <style lang="scss" scoped>
+.style-el-col {
+  margin-bottom: 24px;
+}
 .el-card {
   min-width: 300px;
 }

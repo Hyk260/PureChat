@@ -1,6 +1,6 @@
 import useClipboard from "vue-clipboard3";
-import tim from "@/utils/im-sdk/tim";
 import TIM from "tim-js-sdk";
+
 const { toClipboard } = useClipboard();
 
 export const dragControllerDiv = (node) => {
@@ -90,24 +90,6 @@ export const fncopy = async (data) => {
   }
 };
 
-//删除消息
-export const fndelete = (data) => {
-  console.log(data)
-  const { ID } = data;
-  let message = [];
-  message.push(ID);
-  return
-  let promise = tim.deleteMessage(data);
-  promise
-    .then(function (imResponse) {
-      // 删除消息成功
-    })
-    .catch(function (imError) {
-      // 删除消息失败
-      console.warn("deleteMessage error:", imError);
-    });
-};
-
 export const GroupSystemNotice = (message) => {
   const groupName = message.payload.groupProfile.name || message.payload.groupProfile.groupID
   switch (message.payload.operationType) {
@@ -146,7 +128,7 @@ export const GroupTipContent = (message) => {
   let userID = ''
   let currentUserProfile = ''
   // 群通话tips
-  let nick = message.nick || ((message.from === userID) && currentUserProfile?.nick) ||  message.from
+  let nick = message.nick || ((message.from === userID) && currentUserProfile?.nick) || message.from
   const userName = message.nick || message.payload.userIDList.join(',')
   switch (message.payload.operationType) {
     case TIM.TYPES.GRP_TIP_MBR_JOIN:
@@ -162,9 +144,9 @@ export const GroupTipContent = (message) => {
     case TIM.TYPES.GRP_TIP_GRP_PROFILE_UPDATED:
       return '群资料修改'
     case callTips:
-      if(message.payload.text.indexOf('结束群聊')> -1) {
+      if (message.payload.text.indexOf('结束群聊') > -1) {
         return `"${message.payload.text}"`
-      }else {
+      } else {
         return `"${nick}" ${message.payload.text}`
       }
     case TIM.TYPES.GRP_TIP_MBR_PROFILE_UPDATED:

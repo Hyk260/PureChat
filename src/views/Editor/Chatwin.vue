@@ -1,8 +1,8 @@
 <!-- eslint-disable no-undef -->
 <template>
-  <section 
-    class="message-info-view-content" 
-    :class="[showMsgBox? '':'style-MsgBox']" 
+  <section
+    class="message-info-view-content"
+    :class="[showMsgBox ? '' : 'style-MsgBox']"
     id="svgTop"
   >
     <el-scrollbar
@@ -28,9 +28,10 @@
           </div>
           <!-- 消息 is-self is-other-->
           <div
-            v-if="!item.isTimeDivider"
+            v-if="!item.isTimeDivider && !item.isDeleted"
             class="message-view__item"
             :class="ISown(item) ? 'is-self' : 'is-other'"
+            :id="item.ID"
           >
             <!-- 头像 -->
             <div class="picture">
@@ -86,7 +87,6 @@ import {
 } from "vue";
 import {
   fncopy,
-  fndelete,
   Megtype,
   dragControllerDiv,
   loadMsgComponents,
@@ -101,7 +101,8 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import TextElemItem from "./components/TextElemItem";
 import LoadMore from "./components/LoadMore.vue";
 import TipsElemItem from "./components/TipsElemItem.vue";
-import { getChat, getMsgList } from "@/api/chat";
+// import { getChat, getMsgList } from "@/api/chat";
+import { deleteMsgList } from "@/api/im-sdk-api";
 
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
@@ -129,19 +130,11 @@ watch(
 
 onMounted(() => {
   Monitorscrollbar();
-  // getChatList();
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("scroll", scrollbar);
 });
-
-const NickName = (item) => {
-  return item?.message_sender_profile.user_profile_nick_name;
-};
-const FaceUrl = (item) => {
-  return item?.message_sender_profile.user_profile_face_url;
-};
 
 const ISown = (item) => {
   return item.from == userInfo.value.username;
@@ -212,19 +205,6 @@ const getMoreMsg = async () => {
   console.log("更多消息");
 };
 
-const getChatList = async () => {
-  let { code, result } = await getChat();
-  if (code === 200) {
-    // commit("SET_HISTORYMESSAGE", {
-    //   type: "RECIVE_MESSAGE",
-    //   payload: {
-    //     convId: "123",
-    //     message: result,
-    //   },
-    // });
-  }
-};
-
 const ContextMenuEvent = (event, item) => {
   MenuItemInfo.value = item;
 };
@@ -232,6 +212,8 @@ const ContextMenuEvent = (event, item) => {
 const ClickMenuItem = (data) => {
   const Info = MenuItemInfo.value;
   const { id, text } = data;
+  console.log(data);
+  //
   switch (id) {
     case "copy":
       fncopy(Info);
@@ -239,6 +221,20 @@ const ClickMenuItem = (data) => {
     case "delete":
       fndelete(Info);
       break;
+  }
+};
+//删除消息
+const fndelete = async (data) => {
+  let { code } = await deleteMsgList(data);
+  if (code == 0) {
+    const { conversationID } = data;
+    commit("SET_HISTORYMESSAGE", {
+      type: "DELETE_MESSAGE",
+      payload: {
+        convId: conversationID,
+        message: data,
+      },
+    });
   }
 };
 
@@ -266,7 +262,7 @@ $self-msg-color: #c2e8ff;
   height: calc(100% - 70px - 206px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.09);
 }
-.style-MsgBox{
+.style-MsgBox {
   height: calc(100% - 60px);
 }
 

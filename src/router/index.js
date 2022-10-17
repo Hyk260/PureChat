@@ -8,7 +8,7 @@ import NProgress from "@/utils/progress";
 import routes from "./routes";
 import store from "@/store";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
-const { title } = require("@/config/vue.custom.config");
+const { title, production } = require("@/config/vue.custom.config");
 
 // hack router push callback
 const originalPush = createRouter.prototype.push;
@@ -24,10 +24,10 @@ const loginRoutePath = "/login";
 const defaultRoutePath = "/home";
 
 console.log(process.env, "环境变量");
-// createWebHashHistory()
-// createWebHistory(process.env.BASE_URL)
+// createWebHashHistory() hash模式
+// createWebHistory() history模式
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: production ? createWebHashHistory() : createWebHistory(),
   routes,
 });
 // 默认是  Hash  模式, 手动设置为  History  模式

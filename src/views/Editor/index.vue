@@ -22,12 +22,12 @@
         @mouseover="dragControllerDiv(ChatRef)"
         v-if="showMsgBox"
       >
-        <div class="back-to-the-bottom" @click="toBottom">
+        <!-- <div class="back-to-the-bottom" @click="toBottom">
           <el-icon class="svg-left">
             <DArrowLeft />
           </el-icon>
           <span>回到底部</span>
-        </div>
+        </div> -->
       </div>
       <!-- 编辑器 -->
       <Editor v-show="showMsgBox" />

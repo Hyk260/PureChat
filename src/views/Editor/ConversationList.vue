@@ -46,15 +46,13 @@
       <div class="message-item-right">
         <div class="message-item-right-top">
           <div class="message-chat-name">
-            <span v-if="item.type === TIM.TYPES.CONV_C2C">
+            <span v-if="item.type === 'C2C'">
               {{ item.userProfile.userID }}
             </span>
-            <span v-else-if="item.type === TIM.TYPES.CONV_GROUP">
+            <span v-else-if="item.type === 'GROUP'">
               {{ item.groupProfile.name }}
             </span>
-            <span v-else-if="item.type === TIM.TYPES.CONV_SYSTEM">
-              系统通知
-            </span>
+            <span v-else-if="item.type === '@TIM#SYSTEM'"> 系统通知 </span>
           </div>
           <div class="message-time">
             {{ timeFormat(item.lastMessage.lastTime * 1000) }}
@@ -106,8 +104,7 @@ import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 import { addTimeDivider } from "@/utils/addTimeDivider";
-import TIM from "tim-js-sdk";
-import tim from "@/utils/im-sdk/tim";
+import { TIMpingConv } from "@/api/im-sdk-api";
 
 const contextMenuItemInfo = ref([]);
 
@@ -189,7 +186,6 @@ const handleClickMenuItem = (item) => {
 };
 // 消息免打扰
 const disableRecMsg = (data, off) => {
-  console.log(TIM.TYPES.MSG_REMIND_ACPT_NOT_NOTE);
   console.log(data);
   const { type, toAccount, messageRemindType } = data;
   // 系统消息
@@ -197,7 +193,8 @@ const disableRecMsg = (data, off) => {
   if (messageRemindType == "") return;
   return;
   // eslint-disable-next-line prettier/prettier
-  tim.setMessageRemindType({
+  tim
+    .setMessageRemindType({
       groupID: toAccount,
       messageRemindType,
     })
@@ -209,25 +206,16 @@ const disableRecMsg = (data, off) => {
     });
 };
 // 删除会话
-const removeConv = (data) => {
+const removeConv = async (data) => {
   console.log(data);
-  let promise = tim.deleteMessage();
-  promise
-    .then(function (imResponse) {
-      // 删除消息成功
-    })
-    .catch(function (imError) {
-      // 删除消息失败
-      console.warn("deleteMessage error:", imError);
-    });
 };
 // 置顶
-const pingConv = (data) => {
+const pingConv = async (data, off) => {
   console.log(data);
   const { conversationID, isPinned } = data;
-  tim.pinConversation({
+  await TIMpingConv({
     conversationID,
-    isPinned: !isPinned,
+    isPinned,
   });
 };
 </script>

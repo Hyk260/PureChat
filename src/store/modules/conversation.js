@@ -34,13 +34,11 @@ const conversation = {
             state.currentMessageList = [];
           }
           console.log(state.historyMessageList);
-          // state.currentMessageList = message;
           break;
         }
         // 添加更多消息
         case CONVERSATIONTYPE.ADD_MORE_MESSAGE: {
           console.log("添加更多消息");
-          // state.historyMessageList =
           break;
         }
         // 更新消息
@@ -52,12 +50,16 @@ const conversation = {
           let timeDividerResult = addTimeDivider([message], baseTime).reverse();
           newMessageList.unshift(...timeDividerResult);
           state.currentMessageList = newMessageList;
-          // state.currentMessageList.unshift(message);
           break;
         }
         // 删除消息
         case CONVERSATIONTYPE.DELETE_MESSAGE: {
-          console.log(payload);
+          const { convId, message } = payload
+          const history = state.historyMessageList.get(convId);
+          const newHistory = history.filter(item => !item.isTimeDivider && !item.isDeleted);
+          const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
+          state.historyMessageList.set(convId, newHistoryList)
+          state.currentMessageList = newHistoryList
           break;
         }
         // 清除历史记录
@@ -93,16 +95,21 @@ const conversation = {
           if (payload) {
             console.log(payload, "切换会话");
             const { conversationID } = payload;
-            if (conversationID == state.currentConversation?.conversationID)
-              return;
-            if (conversationID == "@TIM#SYSTEM") {
-              state.showMsgBox = false;
+            let oldConvId = state.currentConversation?.conversationID
+            if (conversationID == oldConvId) return;
+
+            state.currentConversation = payload;
+            // 系统消息关闭聊天框
+            state.showMsgBox = conversationID == "@TIM#SYSTEM" ? false : true;
+
+            if (state.currentConversation) {
+              state.currentMessageList = state.historyMessageList.get(conversationID)
+              console.log(state.historyMessageList.get(conversationID))
             } else {
-              state.showMsgBox = true;
+              state.currentMessageList = []
             }
             // state.needScrollDown = 0;
             // state.noMore = false;
-            state.currentConversation = payload;
           }
           break;
         }
@@ -122,16 +129,18 @@ const conversation = {
     // 获取消息列表
     async [GET_MESSAGE_LIST]({ commit, dispatch, state, rootState }, action) {
       let isSDKReady = rootState.user.isSDKReady;
-      
+      let status = !state.currentMessageList || state.currentMessageList.length == 0
       // 当前会话有值
-      if (state.currentConversation && isSDKReady) {
-        // const { conversationID } = state.currentConversation;
+      if (state.currentConversation && isSDKReady && status) {
         const { conversationID, type } = action;
         const result = await getMsgList({
           conversationID: conversationID,
           count: 15,
         });
+
         const { isCompleted, messageList, nextReqMessageID } = result;
+
+        // 添加时间
         const addTimeDividerResponse = addTimeDivider(messageList).reverse();
         commit("SET_HISTORYMESSAGE", {
           type: "ADD_MESSAGE",
