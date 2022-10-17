@@ -1,14 +1,15 @@
 {
   // 控制编辑器在键入一行后是否自动格式化该行。
-  "editor.formatOnType": false,
+  "editor.formatOnType": true,
   // 在保存时格式化文件。格式化程序必须可用，延迟后文件不能保存，并且编辑器不能关闭。
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "editor.tabSize": 2,
   "editor.formatOnPaste": true,
-  "files.autoSave": "afterDelay",
+  // 控制具有未保存更改的编辑器的 自动保存。
+  // "files.autoSave": "afterDelay",
   "git.confirmSync": false,
   "workbench.startupEditor": "newUntitledFile",
   "editor.suggestSelection": "first",
