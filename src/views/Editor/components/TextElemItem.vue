@@ -1,26 +1,43 @@
 <template>
   <div class="message_name">
-    <span v-if="message.from == '@TIM#SYSTEM'">
-      系统
-    </span>
+    <span v-if="message.from == '@TIM#SYSTEM'"> 系统 </span>
     <span v-else>
-      {{message.from}}
+      {{ message.from }}
     </span>
   </div>
   <div class="message">
-    <span class="message-view__item--text text right-menu-item">
-      <span class="text" v-if="message.conversationType == '@TIM#SYSTEM'">
+    <template v-if="false">
+      <span
+        class="message-view__item--text text right-menu-item"
+        v-for="item in lookText"
+        :key="item"
+      >
+        <!-- <span v-if="item.name === 'text'" class="text linkUrl">
+          {{ item.text }}
+        </span>
+        <img class="emoji" v-else :src="item.src" alt="" /> -->
+        {{ message.payload.text }}
+      </span>
+    </template>
+    <!-- 用户 -->
+    <template v-if="message.conversationType == 'GROUP' || 'C2C'">
+      <span class="message-view__item--text text right-menu-item">
+        {{ message.payload.text }}
+      </span>
+    </template>
+    <!-- 系统 -->
+    <template v-if="message.conversationType == '@TIM#SYSTEM'">
+      <span class="message-view__item--text text right-menu-item">
         {{ GroupSystemNotice(message) }}
       </span>
-      <span v-else class="text linkUrl">
-        {{message.payload.text}}
-      </span>
-    </span>
+    </template>
   </div>
 </template>
 
 <script setup>
-import  { GroupSystemNotice } from '../utils/utils';
+import { GroupSystemNotice } from "../utils/utils";
+import { decodeText } from "@/utils/decodeText";
+import { computed } from "vue-demi";
 const props = defineProps({
   message: {
     type: Object,
@@ -28,6 +45,24 @@ const props = defineProps({
   },
 });
 const { message } = props;
+// console.log(message);
+
+// const isemote = computed(() => {
+//   const { conversationType, payload } = message;
+//   let isconv = conversationType == "GROUP" || "C2C";
+//   if (payload.text.indexOf("[") != -1 && isconv) {
+//     return true;
+//   }
+//   return false;
+// });
+
+// const lookText = computed(() => {
+//   if (isemote.value) {
+//     return decodeText(message.payload.text);
+//   }
+//   return [];
+// });
+// console.log(lookText);
 </script>
 
 <style lang="scss" scoped>
@@ -49,5 +84,9 @@ const { message } = props;
 .message-view__text {
   width: fit-content;
   margin-bottom: 5px;
+}
+.emoji {
+  width: 24px;
+  vertical-align: bottom;
 }
 </style>

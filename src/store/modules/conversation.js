@@ -7,7 +7,7 @@ const getBaseTime = (list) => {
 };
 
 const conversation = {
-  // namespaced: true,
+  // namespaced: true, //命名空间
   state: {
     showMsgBox: false, //是否显示输入框
     noMore: true, // 加载更多  false ? 显示loading : 没有更多
@@ -93,7 +93,6 @@ const conversation = {
         // 切换 跳转 会话
         case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
           if (payload) {
-            console.log(payload, "切换会话");
             const { conversationID } = payload;
             let oldConvId = state.currentConversation?.conversationID
             if (conversationID == oldConvId) return;
@@ -104,7 +103,6 @@ const conversation = {
 
             if (state.currentConversation) {
               state.currentMessageList = state.historyMessageList.get(conversationID)
-              console.log(state.historyMessageList.get(conversationID))
             } else {
               state.currentMessageList = []
             }
@@ -150,7 +148,7 @@ const conversation = {
           },
         });
       } else {
-        console.log(123);
+        console.log("获取缓存");
       }
     },
   },

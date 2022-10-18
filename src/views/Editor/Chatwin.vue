@@ -49,16 +49,12 @@
               v-contextmenu:contextmenu
               @contextmenu.prevent="ContextMenuEvent($event, item)"
             >
-              <!-- 文本 :class="Megtype(item)" -->
-              <div class="message-view__text">
-                <component :is="TextElemItem" :message="item"> </component>
+              <div :class="Megtype(item.type)">
+                <component :is="loadMsgComponents(item.type)" :message="item">
+                </component>
               </div>
             </div>
           </div>
-          <!-- tips提示 -->
-          <!-- <div v-else class="message-view__item tips">
-            <TipsElemItem :msgRow="item.message_elem_array[0]" />
-          </div> -->
         </div>
         <!-- 右键菜单 -->
         <contextmenu ref="contextmenu">
@@ -85,12 +81,7 @@ import {
   computed,
   onBeforeUnmount,
 } from "vue";
-import {
-  fncopy,
-  Megtype,
-  dragControllerDiv,
-  loadMsgComponents,
-} from "./utils/utils";
+import { fncopy, dragControllerDiv } from "./utils/utils";
 import { useStore } from "vuex";
 import { timeFormat } from "@/utils/timeFormat";
 import { debounce, delay } from "@/utils/debounce";
@@ -144,7 +135,7 @@ const scrollbar = (e) => {
   // 会话是否大于50条 ? 显示loading : 没有更多
   debounce(() => {
     // if (!this.noMore) {}
-    const current = currentMessageList.value.length - 1;
+    const current = currentMessageList.value?.length - 1;
     // 第一条消息 加载更多 节点
     const offsetTopScreen = messageViewRef.value?.children?.[current];
     const top = offsetTopScreen?.getBoundingClientRect().top;
@@ -181,20 +172,20 @@ const Monitorscrollbar = () => {
 const getMoreMsg = async () => {
   try {
     // 获取指定会话的消息列表
-    const Response = await getMsgList({
-      conv_id: 123,
-      conv_type: 2,
-      msg_id: 123,
-    });
-    console.log(Response);
-    if (Response?.length === 0) {
-      console.log("没有更多消息了！！！");
-      // commit("SET_HISTORYMESSAGE", {
-      //   type: "UPDATE_NOMORE",
-      //   payload: true,
-      // });
-      return;
-    }
+    // const Response = await getMsgList({
+    //   conv_id: 123,
+    //   conv_type: 2,
+    //   msg_id: 123,
+    // });
+    // console.log(Response);
+    // if (Response?.length === 0) {
+    //   console.log("没有更多消息了！！！");
+    //   // commit("SET_HISTORYMESSAGE", {
+    //   //   type: "UPDATE_NOMORE",
+    //   //   payload: true,
+    //   // });
+    //   return;
+    // }
   } catch (e) {
     // 解析报错 关闭加载动画
     commit("SET_HISTORYMESSAGE", {
@@ -205,15 +196,48 @@ const getMoreMsg = async () => {
   console.log("更多消息");
 };
 
+// 动态组件
+const loadMsgComponents = (elem_type, custom, item) => {
+  let resp = null;
+  switch (elem_type) {
+    case "TIMTextElem":
+      resp = "TextElemItem"; // 文本消息
+      break;
+    default:
+      resp = "TextElemItem";
+      break;
+  }
+  let CompMap = {
+    TextElemItem: TextElemItem,
+  };
+  // console.log(resp);
+  return CompMap[resp];
+};
+// 动态class
+const Megtype = (elem_type) => {
+  let resp = "";
+  switch (elem_type) {
+    case "TIMTextElem":
+      resp = "message-view__text"; // 文本
+      break;
+    case "TIMGroupTipElem":
+      resp = "group-tips-elem-item"; // 系统提示
+      break;
+    default:
+      resp = "";
+      break;
+  }
+  return resp;
+};
+
 const ContextMenuEvent = (event, item) => {
+  console.log(item, "currentMessageList");
   MenuItemInfo.value = item;
 };
 
 const ClickMenuItem = (data) => {
   const Info = MenuItemInfo.value;
   const { id, text } = data;
-  console.log(data);
-  //
   switch (id) {
     case "copy":
       fncopy(Info);

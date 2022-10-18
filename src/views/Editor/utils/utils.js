@@ -40,45 +40,6 @@ export const dragControllerDiv = (node) => {
   };
 };
 
-// 返回消息类型
-export const Megtype = (item) => {
-  const { message_elem_array } = item || [];
-  const { elem_type } = message_elem_array[0] || {};
-  let resp = null;
-  switch (elem_type) {
-    case 0:
-      resp = "message-view__text"; // 文本
-      break;
-    case 5:
-      resp = "group-tips-elem-item"; // 系统提示
-      break;
-  }
-  return resp;
-};
-
-// 动态组件
-export const loadMsgComponents = (item) => {
-  const { message_elem_array } = item || {};
-  const { elem_type } = message_elem_array[0];
-  let resp = null;
-  switch (elem_type) {
-    case 0:
-      resp = "TextElemItem"; // 文本消息
-      break;
-    case 1:
-      resp = "pic-elem-item"; //图片消息
-      break;
-    case 4:
-      resp = "file-elem"; // 文件消息
-      break;
-    case 6:
-      resp = "emoji-elem"; // 表情消息
-      break;
-  }
-  console.log(resp);
-  return resp;
-};
-
 // 复制
 export const fncopy = async (data) => {
   console.log(data);

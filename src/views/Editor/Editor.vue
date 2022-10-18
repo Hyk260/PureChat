@@ -16,6 +16,7 @@
       @onCreated="handleCreated"
       @customPaste="customPaste"
       @customAlert="customAlert"
+      @onChange="onChange"
       @keyup.enter="handleEnter"
     />
     <el-tooltip
@@ -53,10 +54,8 @@ import {
   getMessageElemItem,
   getImageType,
 } from "@/utils/message-input-utils";
-// import socket from "@/utils/socket";
 import { empty } from "@/utils";
 import { useStore } from "vuex";
-// import { sendMsg } from "@/api/chat";
 import { useState } from "@/utils/hooks/useMapper";
 import { generateUUID } from "@/utils/index";
 import { bytesToSize } from "@/utils/common";
@@ -92,10 +91,13 @@ onBeforeUnmount(() => {
 const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 
-  console.log(editor, "实例");
+  // console.log(editor, "实例");
   // 查看所有工具栏key
   // console.log(editor.getAllMenuKeys());
   // console.log(editor.getConfig());
+};
+const onChange = (editor) => {
+  console.log("content", editor.children);
 };
 
 const customAlert = (s, t) => {
@@ -171,12 +173,15 @@ const parsefile = async (file) => {
   console.log(fileSize);
 };
 const parsetext = (item) => {};
-function innerHTML(data, item) {
-  console.log(data, item);
-  let $el = `<img src=${data} class="${item} emjo" alt="${item}" style="width: 25px; height: 25px" />`;
-  valueHtml.value += $el;
-  console.log($el);
-}
+const innerHTML = (data, item) => {
+  // console.log(data, item);
+  // let $el = `<img src=${data} class="${item} emjo" alt="${item}" style="width: 25px; height: 25px" />`;
+  // valueHtml.value = 123;
+  // console.log(valueHtml.value);
+  // const node = { type: "paragraph", children: [{ text: "123" }] };
+  const node = { text: item };
+  editorRef.value.insertNode(node);
+};
 // 插入图片
 const parsepicture = async (file) => {
   console.log(file, "图片");
@@ -201,10 +206,10 @@ const handleEnter = () => {
     clearInputInfo();
   }
 
-  const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
+  // const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
   // console.log(text)
-  console.log(isEmpty);
-  console.log(HtmlText);
+  // console.log(isEmpty);
+  // console.log(HtmlText);
   // console.log(empty(text))
 };
 // 清空输入框
@@ -214,24 +219,25 @@ const clearInputInfo = () => {
 
 const sendMsgBefore = () => {
   const text = editorRef.value.getText(); // 纯文本内容
-  const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
+  // const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
+  // const message = getMessageElemItem("text", { text: text }); //文本
+  // const innHTML = HtmlText.replace(/<(?!img).*?>/g, "");
   console.log(text);
-  const message = getMessageElemItem("text", { text: text }); //文本
-  console.log(message);
-  console.log(HtmlText);
-  let innHTML = HtmlText.replace(/<(?!img).*?>/g, "");
-  console.log(innHTML);
-  return { message };
+  // console.log(message);
+  // console.log(HtmlText);
+
+  // console.log(innHTML);
+  return { text };
 };
 // 发送消息
 const sendMessage = async () => {
   const { type, conversationID, toAccount } = currentConversation.value;
-  const { message } = sendMsgBefore();
+  const { text } = sendMsgBefore();
 
   let TextMsg = await CreateTextMsg({
     convId: toAccount,
     convType: type,
-    textMsg: message.text_elem_content,
+    textMsg: text,
   });
   // console.log(TextMsg);
   // 发送消息
