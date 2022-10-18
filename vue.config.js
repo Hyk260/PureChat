@@ -13,7 +13,7 @@ const Components = require("unplugin-vue-components/webpack"); // 组件按需�
 const CompressionPlugin = require("compression-webpack-plugin"); // gzip压缩
 const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer"); // 打包文件分析工具
-const DefineOptions = require('unplugin-vue-define-options/webpack')
+// const DefineOptions = require('unplugin-vue-define-options/webpack')
 
 const path = require("path");
 const resolve = (dir) => {
