@@ -6,7 +6,7 @@
   >
     <div>{{ item }}</div>
   </div> -->
-  <div class="message-view__item--text text right-menu-item">
+  <div @contextmenu.prevent.stop class="message-view__item--text">
     {{ getChangeType(msgRow) }}
   </div>
 </template>

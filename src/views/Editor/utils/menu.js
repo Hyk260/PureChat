@@ -9,8 +9,21 @@ const RIGHT_CLICK_CHAT_LIST = [
   { id: "remove", text: "移除会话" },
   { id: "clean", text: "清除消息" },
 ];
-
-const RIGHT_CLICK_MENU_LIST = [
+let RIGHT_CLICK_MENU_LIST = reactive([
+  {
+    id: "copy",
+    text: "复制",
+  },
+  {
+    id: "revoke",
+    text: "撤回",
+  },
+  {
+    id: "delete",
+    text: "删除",
+  },
+]);
+let RIGHT_CLICK_MENU_LISTcopy = [
   {
     id: "copy",
     text: "复制",

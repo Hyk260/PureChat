@@ -1,5 +1,9 @@
 {
   "recommendations": [
+    "ritwickdey.LiveServer",
+    "kisstkondoros.vscode-gutter-preview",
+    "wix.vscode-import-cost",
+    "techer.open-in-browser",
     "vscode-icons-team.vscode-icons",
     "davidanson.vscode-markdownlint",
     "stylelint.vscode-stylelint",

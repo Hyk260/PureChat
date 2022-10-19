@@ -45,7 +45,7 @@
             </div>
             <!-- 内容 -->
             <div
-              class="message-view__item--index"
+              :class="msgOne(item)"
               v-contextmenu:contextmenu
               @contextmenu.prevent="ContextMenuEvent($event, item)"
             >
@@ -95,7 +95,6 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import TextElemItem from "./components/TextElemItem";
 import TipsElemItem from "./components/TipsElemItem";
 import LoadMore from "./components/LoadMore.vue";
-// import { getChat, getMsgList } from "@/api/chat";
 import { deleteMsgList, revokeMsg } from "@/api/im-sdk-api";
 
 const MenuItemInfo = ref([]);
@@ -239,13 +238,24 @@ const Megtype = (elem_type) => {
   return resp;
 };
 
+const msgOne = (item) => {
+  const { isRevoked } = item;
+  if (isRevoked) {
+    return "group-tips-elem-item";
+  } else {
+    return "message-view__item--index";
+  }
+};
+
 const ContextMenuEvent = (event, item) => {
   console.log(item, "currentMessageList");
   const nowtime = parseInt(new Date().getTime() / 1000);
   const { time } = item;
   MenuItemInfo.value = item;
   const relinquish = nowtime - time < 120 ? true : false;
-
+  RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.filter(
+    (t) => t.id !== "revoke"
+  );
   console.log(relinquish);
 };
 
@@ -289,19 +299,21 @@ defineExpose({ UpdateScrollbar, UpdataScrollInto });
 <style lang="scss" scoped>
 $other-msg-color: #f0f2f5;
 $self-msg-color: #c2e8ff;
-.message-view__item--text {
-  font-size: 12px;
-  border-radius: 3px;
-  background: rgba(0, 0, 0, 0.05);
-  vertical-align: middle;
-  word-wrap: normal;
-  word-break: break-all;
-  color: rgba(0, 0, 0, 0.45);
-  margin-top: 5px;
-  padding: 4px 6px;
-  line-height: 16px;
+// .message-view__item--text {
+//   font-size: 12px;
+//   border-radius: 3px;
+//   background: rgba(0, 0, 0, 0.05);
+//   vertical-align: middle;
+//   word-wrap: normal;
+//   word-break: break-all;
+//   color: rgba(0, 0, 0, 0.45);
+//   margin-top: 5px;
+//   padding: 4px 6px;
+//   line-height: 16px;
+// }
+.group-tips-elem-item {
+  margin: auto;
 }
-
 .message-info-view-content {
   height: calc(100% - 70px - 206px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.09);

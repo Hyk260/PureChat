@@ -8,7 +8,7 @@
   <div class="message">
     <template v-if="false">
       <span
-        class="message-view__item--text text right-menu-item"
+        class="message-view__item--text text"
         v-for="item in lookText"
         :key="item"
       >
@@ -21,13 +21,13 @@
     </template>
     <!-- 用户 -->
     <template v-if="message.conversationType == 'GROUP' || 'C2C'">
-      <span class="message-view__item--text text right-menu-item">
+      <span class="message-view__item--text">
         {{ message.payload.text }}
       </span>
     </template>
     <!-- 系统 -->
     <template v-if="message.conversationType == '@TIM#SYSTEM'">
-      <span class="message-view__item--text text right-menu-item">
+      <span class="message-view__item--text">
         {{ GroupSystemNotice(message) }}
       </span>
     </template>
