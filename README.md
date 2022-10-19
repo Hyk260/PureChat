@@ -18,14 +18,16 @@
   </p>
 </p>
 
+[![fork](https://gitee.com/H260788/PureAdmin/badge/fork.svg?theme=white)](https://gitee.com/H260788/PureAdmin/members)[![star](https://gitee.com/H260788/PureAdmin/badge/star.svg?theme=white)](https://gitee.com/H260788/PureAdmin/stargazers)
 
 ### 🎉 特性
+
 前端 vue3 + Element-Plus
 后端 Node + Express + lowdb
 
 - 📦️ 后端路由动态渲染
 - 📃 RBAC 模型 + JWT 权限控制
-- ☁️ 聊天工作室 开发中...
+- ☁️ 聊天工作室 
 - 🔴 拼图游戏
 - 🌚 主题切换 开发中...
 - 🛠 自定义SVG图标组件
