@@ -18,7 +18,7 @@
   </p>
 </p>
 
-[![fork](https://gitee.com/H260788/PureAdmin/badge/fork.svg?theme=white)](https://gitee.com/H260788/PureAdmin/members)[![star](https://gitee.com/H260788/PureAdmin/badge/star.svg?theme=white)](https://gitee.com/H260788/PureAdmin/stargazers)
+[![fork](https://gitee.com/H260788/PureAdmin/badge/fork.svg?theme=white)](https://gitee.com/H260788/PureAdmin/members) [![star](https://gitee.com/H260788/PureAdmin/badge/star.svg?theme=white)](https://gitee.com/H260788/PureAdmin/stargazers)
 
 ### 🎉 特性
 
@@ -79,6 +79,7 @@ yarn build
 ### 🎨 目录结构
 
 ```
+├── .vscode                    // 编辑器配置
 ├── dist                       // 打包文件
 ├── node_modules               // 依赖包
 ├── public                     // 静态目录
@@ -89,7 +90,7 @@ yarn build
 │   ├── components             // 全局公用组件
 │   ├── locales                // 国际化语言
 │   ├── mock                   // mock服务
-│   ├── plugins				         // 插件
+│   ├── plugins				   // 插件
 │   ├── router                 // 路由
 │   ├── store                  // 全局 store管理
 │   ├── styles                 // 全局样式
@@ -100,6 +101,8 @@ yarn build
 ├── .babelrc                   // babel-loader 配置
 ├── eslintrc.js                // eslint 配置项
 ├── .prettierrc
+├── .env.development           // 开发环境变量
+├── .env.production			   // 生产环境变量
 ├── .gitignore                 // git 忽略项
 ├── README.md                  // 说明
 ├── jsconfig.json

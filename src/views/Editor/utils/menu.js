@@ -15,10 +15,10 @@ const RIGHT_CLICK_MENU_LIST = [
     id: "copy",
     text: "复制",
   },
-  // {
-  //   id: "revoke",
-  //   text: "撤回",
-  // },
+  {
+    id: "revoke",
+    text: "撤回",
+  },
   {
     id: "delete",
     text: "删除",

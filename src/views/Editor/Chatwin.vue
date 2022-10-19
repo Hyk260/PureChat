@@ -34,7 +34,7 @@
             :id="item.ID"
           >
             <!-- 头像 -->
-            <div class="picture">
+            <div class="picture" v-if="!item.isRevoked">
               <!-- <Portrait :size="36"  :shape="'square'" /> -->
               <el-avatar
                 :size="36"
@@ -50,7 +50,10 @@
               @contextmenu.prevent="ContextMenuEvent($event, item)"
             >
               <div :class="Megtype(item.type)">
-                <component :is="loadMsgComponents(item.type)" :message="item">
+                <component
+                  :is="loadMsgComponents(item.type, item)"
+                  :message="item"
+                >
                 </component>
               </div>
             </div>
@@ -90,10 +93,10 @@ import { useState } from "@/utils/hooks/useMapper";
 import { squareUrl, circleUrl, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import TextElemItem from "./components/TextElemItem";
+import TipsElemItem from "./components/TipsElemItem";
 import LoadMore from "./components/LoadMore.vue";
-import TipsElemItem from "./components/TipsElemItem.vue";
 // import { getChat, getMsgList } from "@/api/chat";
-import { deleteMsgList } from "@/api/im-sdk-api";
+import { deleteMsgList, revokeMsg } from "@/api/im-sdk-api";
 
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
@@ -197,8 +200,17 @@ const getMoreMsg = async () => {
 };
 
 // 动态组件
-const loadMsgComponents = (elem_type, custom, item) => {
+const loadMsgComponents = (elem_type, item) => {
   let resp = null;
+  let CompMap = {
+    TextElemItem: TextElemItem,
+    TipsElemItem: TipsElemItem,
+  };
+  // 撤回消息
+  if (item.isRevoked) {
+    resp = "TipsElemItem";
+    return CompMap[resp];
+  }
   switch (elem_type) {
     case "TIMTextElem":
       resp = "TextElemItem"; // 文本消息
@@ -207,9 +219,6 @@ const loadMsgComponents = (elem_type, custom, item) => {
       resp = "TextElemItem";
       break;
   }
-  let CompMap = {
-    TextElemItem: TextElemItem,
-  };
   // console.log(resp);
   return CompMap[resp];
 };
@@ -232,7 +241,12 @@ const Megtype = (elem_type) => {
 
 const ContextMenuEvent = (event, item) => {
   console.log(item, "currentMessageList");
+  const nowtime = parseInt(new Date().getTime() / 1000);
+  const { time } = item;
   MenuItemInfo.value = item;
+  const relinquish = nowtime - time < 120 ? true : false;
+
+  console.log(relinquish);
 };
 
 const ClickMenuItem = (data) => {
@@ -241,6 +255,9 @@ const ClickMenuItem = (data) => {
   switch (id) {
     case "copy":
       fncopy(Info);
+      break;
+    case "revoke":
+      revokes(Info);
       break;
     case "delete":
       fndelete(Info);
@@ -261,7 +278,10 @@ const fndelete = async (data) => {
     });
   }
 };
-
+// 撤回消息
+const revokes = (data) => {
+  revokeMsg(data);
+};
 // eslint-disable-next-line no-undef
 defineExpose({ UpdateScrollbar, UpdataScrollInto });
 </script>

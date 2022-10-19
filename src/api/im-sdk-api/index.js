@@ -74,3 +74,14 @@ export const TIMpingConv = async (params) => {
   console.log(result)
   return
 }
+// 撤回消息
+export const revokeMsg = (params) => {
+  let promise = tim.revokeMessage(params);
+  promise.then(function (imResponse) {
+    // 消息撤回成功
+    console.log(imResponse)
+  }).catch(function (imError) {
+    // 消息撤回失败
+    console.warn('revokeMessage error:', imError);
+  });
+}

@@ -24,7 +24,7 @@ const { currentConversation, userInfo } = useState({
 });
 
 onMounted(() => {
-  commit('ADD_ROUTE')
+  commit("ADD_ROUTE");
   // window.onresize = () => {
   //   debounce?.(() => {
   //     fnresize();
@@ -35,10 +35,10 @@ onMounted(() => {
 
 const fnresize = () => {
   /** width app-wrapper类容器宽度
- * 0 < width <= 760 隐藏侧边栏
- * 760 < width <= 990 折叠侧边栏
- * width > 990 展开侧边栏
- */
+   * 0 < width <= 760 隐藏侧边栏
+   * 760 < width <= 990 折叠侧边栏
+   * width > 990 展开侧边栏
+   */
   // let dom = document.getElementById("app");
   // let setWidth = dom?.offsetWidth;
   // if (!setWidth) return;
@@ -65,6 +65,12 @@ function initListener() {
   tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, onUpdateConversationList);
   // 收到新消息
   tim.on(TIM.EVENT.MESSAGE_RECEIVED, onReceiveMessage);
+  // 收到消息被撤回的通知
+  tim.on(TIM.EVENT.MESSAGE_REVOKED, function (event) {
+    console.log(event);
+    // event.name - TIM.EVENT.MESSAGE_REVOKED
+    // event.data - 存储 Message 对象的数组 - [Message] - 每个 Message 对象的 isRevoked 属性值为 true
+  });
   // 群组列表更新
   tim.on(TIM.EVENT.GROUP_LIST_UPDATED, onUpdateGroupList);
   // 被踢出
@@ -141,7 +147,6 @@ function kickedOutReason(type) {
 function onError(event) {
   console.log(event, "onError");
 }
-
 </script>
 
 <style lang="scss">
