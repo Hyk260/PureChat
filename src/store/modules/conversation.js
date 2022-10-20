@@ -56,26 +56,28 @@ const conversation = {
         }
         // 删除消息
         case CONVERSATIONTYPE.DELETE_MESSAGE: {
-          const { convId, message } = payload
+          const { convId, message } = payload;
           const history = state.historyMessageList.get(convId);
-          if (!history) return
-          const newHistory = history.filter(item => !item.isTimeDivider && !item.isDeleted);
+          if (!history) return;
+          const newHistory = history.filter(
+            (item) => !item.isTimeDivider && !item.isDeleted
+          );
           const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
-          state.historyMessageList.set(convId, newHistoryList)
-          state.currentMessageList = newHistoryList
+          state.historyMessageList.set(convId, newHistoryList);
+          state.currentMessageList = newHistoryList;
           break;
         }
         // 撤回消息
         case CONVERSATIONTYPE.RECALL_MESSAGE: {
           const { convId, message } = payload;
-          let oldConvId = state.currentConversation?.toAccount
-          let history = state.historyMessageList.get(convId)
-          if (!history) return
-          if (oldConvId !== convId) return
-          const newHistory = history.filter(item => !item.isTimeDivider);
+          let oldConvId = state.currentConversation?.toAccount;
+          let history = state.historyMessageList.get(convId);
+          if (!history) return;
+          if (oldConvId !== convId) return;
+          const newHistory = history.filter((item) => !item.isTimeDivider);
           const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
-          state.historyMessageList.set(convId, newHistoryList)
-          state.currentMessageList = newHistoryList
+          state.historyMessageList.set(convId, newHistoryList);
+          state.currentMessageList = newHistoryList;
           break;
         }
         // 清除历史记录
@@ -108,19 +110,21 @@ const conversation = {
       switch (type) {
         // 切换 跳转 会话
         case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
+          state.needScrollDown = -1;
           if (payload) {
             const { conversationID, toAccount } = payload;
-            let oldConvId = state.currentConversation?.toAccount
+            let oldConvId = state.currentConversation?.toAccount;
             if (toAccount == oldConvId) return;
 
             state.currentConversation = payload;
             // 系统消息关闭聊天框
-            state.showMsgBox = toAccount == "@TIM#SYSTEM" ? false : true;
+            state.showMsgBox = conversationID == "@TIM#SYSTEM" ? false : true;
 
             if (state.currentConversation) {
-              state.currentMessageList = state.historyMessageList.get(toAccount)
+              state.currentMessageList =
+                state.historyMessageList.get(toAccount);
             } else {
-              state.currentMessageList = []
+              state.currentMessageList = [];
             }
 
             state.needScrollDown = 0;
@@ -138,7 +142,6 @@ const conversation = {
           state.needScrollDown = payload;
           break;
         }
-
       }
     },
     // 设置网络状态
@@ -150,7 +153,8 @@ const conversation = {
     // 获取消息列表
     async [GET_MESSAGE_LIST]({ commit, dispatch, state, rootState }, action) {
       let isSDKReady = rootState.user.isSDKReady;
-      let status = !state.currentMessageList || state.currentMessageList?.length == 0
+      let status =
+        !state.currentMessageList || state.currentMessageList?.length == 0;
 
       // 当前会话有值
       if (state.currentConversation && isSDKReady && status) {

@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
 import { copyFile } from "fs";
 import { useState } from "@/utils/hooks/useMapper";
 import { dragControllerDiv } from "./utils/utils";
@@ -60,33 +60,33 @@ const { networkStatus, user, showMsgBox, conversationList, needScrollDown } =
     conversationList: (state) => state.conversation.conversationList,
     needScrollDown: (state) => state.conversation.needScrollDown,
   });
+console.log(needScrollDown);
 
-// watch(
-//   () => needScrollDown.value,
-//   (data) => {
-//     console.log(data);
-//     nextTick(() => {
-//       toBottom();
-//     });
-//   },
-//   {
-//     deep: true, //深度监听
-//   }
-// );
+const scrollInto = () => {
+  nextTick(() => {
+    ChatRef?.value.UpdataScrollInto();
+  });
+};
+
+watch(
+  needScrollDown,
+  () => {
+    scrollInto();
+  },
+  {
+    deep: true, //深度监听
+    immediate: true,
+  }
+);
 
 const monitoring = () => {
   console.log(navigator);
   let status = navigator?.onLine;
   commit("SET_NETWORK_STATUS", status);
 };
-const toBottom = () => {
-  ChatRef.value.UpdataScrollInto();
-};
 // 消息发送回调
 const sendMsgCallback = (data) => {
-  nextTick(() => {
-    ChatRef.value.UpdataScrollInto();
-  });
+  scrollInto();
 };
 
 window.addEventListener("online", monitoring);
