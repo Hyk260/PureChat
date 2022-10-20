@@ -18,8 +18,9 @@ import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 const locale = zhCn;
 const { state, dispatch, commit } = useStore();
 
-const { currentConversation, userInfo } = useState({
+const { currentConversation, userInfo, currentMessageList } = useState({
   currentConversation: (state) => state.conversation.currentConversation,
+  currentMessageList: (state) => state.conversation.currentMessageList,
   userInfo: (state) => state.data.user,
 });
 
@@ -66,11 +67,7 @@ function initListener() {
   // 收到新消息
   tim.on(TIM.EVENT.MESSAGE_RECEIVED, onReceiveMessage);
   // 收到消息被撤回的通知
-  tim.on(TIM.EVENT.MESSAGE_REVOKED, function (event) {
-    console.log(event);
-    // event.name - TIM.EVENT.MESSAGE_REVOKED
-    // event.data - 存储 Message 对象的数组 - [Message] - 每个 Message 对象的 isRevoked 属性值为 true
-  });
+  tim.on(TIM.EVENT.MESSAGE_REVOKED, onMessageRevoked);
   // 群组列表更新
   tim.on(TIM.EVENT.GROUP_LIST_UPDATED, onUpdateGroupList);
   // 被踢出
@@ -80,15 +77,23 @@ function initListener() {
 }
 
 function onUpdateConversationList(event) {
-  console.log(event.data, "会话列表更新");
+  console.log(event, "onUpdateConversationList_会话列表更新");
+  const { data } = event;
   commit("SET_CONVERSATION", {
     type: "REPLACE_CONV_LIST",
-    payload: event.data,
+    payload: data,
   });
   if (!currentConversation.value) {
-    let data = event.data?.[0];
-    if (data && data.type !== "@TIM#SYSTEM") {
-      // dispatch("GET_MESSAGE_LIST", data);
+    if (data?.[0]?.type !== "@TIM#SYSTEM") {
+      commit("SET_CONVERSATION", {
+        type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
+        payload: data[0],
+      });
+      nextTick(() => {
+        setTimeout(() => {
+          dispatch("GET_MESSAGE_LIST", data[0]);
+        }, 250);
+      });
     }
   }
 }
@@ -97,7 +102,7 @@ function onReceiveMessage(event) {
   const { data, name } = event;
   const { toAccount } = currentConversation.value;
   console.log(event.data, "收到新消息");
-  // console.log(currentConversation.value)
+  console.log(currentConversation.value);
   // 收到新消息 且 为当前选中会话 更新消息
   if (event.data?.[0].to !== toAccount) return;
   commit("SET_HISTORYMESSAGE", {
@@ -120,7 +125,20 @@ function onReadyStateUpdate({ name }) {
 function onUpdateGroupList(event) {
   const { data, name } = event;
   // commit('updateGroupList', event.data)
-  console.log(data, "群组列表更新");
+  console.log(event, "onUpdateGroupList_群组列表更新");
+}
+function onMessageRevoked(event) {
+  console.log(event, "onMessageRevoked_撤回消息");
+  const { data, name } = event;
+  commit("SET_HISTORYMESSAGE", {
+    type: "RECALL_MESSAGE",
+    payload: {
+      convId: data[0].to,
+      message: data,
+    },
+  });
+  // event.name - TIM.EVENT.MESSAGE_REVOKED
+  // event.data - 存储 Message 对象的数组 - [Message] - 每个 Message 对象的 isRevoked 属性值为 true
 }
 
 function onKickOut(event) {

@@ -12,7 +12,9 @@ const conversation = {
     showMsgBox: false, //是否显示输入框
     noMore: true, // 加载更多  false ? 显示loading : 没有更多
     networkStatus: true, // 网络状态
-    needScrollDown: -1, // 是否向下滚动
+    needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
+    uploadProgress: new Map(), //上传进度
+    downloadProgress: new Map(), //下载进度
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
@@ -33,12 +35,12 @@ const conversation = {
           } else {
             state.currentMessageList = [];
           }
-          console.log(state.historyMessageList);
+          console.log(state.historyMessageList, "添加消息_ADD_MESSAGE");
           break;
         }
         // 添加更多消息
         case CONVERSATIONTYPE.ADD_MORE_MESSAGE: {
-          console.log("添加更多消息");
+          console.log("ADD_MORE_MESSAGE_添加更多消息");
           break;
         }
         // 更新消息
@@ -56,7 +58,21 @@ const conversation = {
         case CONVERSATIONTYPE.DELETE_MESSAGE: {
           const { convId, message } = payload
           const history = state.historyMessageList.get(convId);
+          if (!history) return
           const newHistory = history.filter(item => !item.isTimeDivider && !item.isDeleted);
+          const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
+          state.historyMessageList.set(convId, newHistoryList)
+          state.currentMessageList = newHistoryList
+          break;
+        }
+        // 撤回消息
+        case CONVERSATIONTYPE.RECALL_MESSAGE: {
+          const { convId, message } = payload;
+          let oldConvId = state.currentConversation?.toAccount
+          let history = state.historyMessageList.get(convId)
+          if (!history) return
+          if (oldConvId !== convId) return
+          const newHistory = history.filter(item => !item.isTimeDivider);
           const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
           state.historyMessageList.set(convId, newHistoryList)
           state.currentMessageList = newHistoryList
@@ -93,20 +109,21 @@ const conversation = {
         // 切换 跳转 会话
         case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
           if (payload) {
-            const { conversationID } = payload;
-            let oldConvId = state.currentConversation?.conversationID
-            if (conversationID == oldConvId) return;
+            const { conversationID, toAccount } = payload;
+            let oldConvId = state.currentConversation?.toAccount
+            if (toAccount == oldConvId) return;
 
             state.currentConversation = payload;
             // 系统消息关闭聊天框
-            state.showMsgBox = conversationID == "@TIM#SYSTEM" ? false : true;
+            state.showMsgBox = toAccount == "@TIM#SYSTEM" ? false : true;
 
             if (state.currentConversation) {
-              state.currentMessageList = state.historyMessageList.get(conversationID)
+              state.currentMessageList = state.historyMessageList.get(toAccount)
             } else {
               state.currentMessageList = []
             }
-            // state.needScrollDown = 0;
+
+            state.needScrollDown = 0;
             // state.noMore = false;
           }
           break;
@@ -116,6 +133,12 @@ const conversation = {
           state.conversationList = payload;
           break;
         }
+        // 更新滚动条位置
+        case CONVERSATIONTYPE.UPDATE_SCROLL_DOWN: {
+          state.needScrollDown = payload;
+          break;
+        }
+
       }
     },
     // 设置网络状态
@@ -127,10 +150,12 @@ const conversation = {
     // 获取消息列表
     async [GET_MESSAGE_LIST]({ commit, dispatch, state, rootState }, action) {
       let isSDKReady = rootState.user.isSDKReady;
-      let status = !state.currentMessageList || state.currentMessageList.length == 0
+      let status = !state.currentMessageList || state.currentMessageList?.length == 0
+
       // 当前会话有值
       if (state.currentConversation && isSDKReady && status) {
-        const { conversationID, type } = action;
+        const { conversationID, type, toAccount } = action;
+
         const result = await getMsgList({
           conversationID: conversationID,
           count: 15,
@@ -143,7 +168,7 @@ const conversation = {
         commit("SET_HISTORYMESSAGE", {
           type: "ADD_MESSAGE",
           payload: {
-            convId: conversationID,
+            convId: toAccount,
             message: addTimeDividerResponse,
           },
         });

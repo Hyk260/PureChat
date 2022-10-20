@@ -66,6 +66,7 @@ import { CreateTextMsg, sendMsg } from "@/api/im-sdk-api";
 const editorRef = shallowRef();
 const valueHtml = ref(""); // 内容 HTML
 const mode = "simple"; // 'default' 或 'simple'
+const emit = defineEmits(["sendMsgCallback"]);
 
 const { state, getters, dispatch, commit } = useStore();
 const {
@@ -97,7 +98,7 @@ const handleCreated = (editor) => {
   // console.log(editor.getConfig());
 };
 const onChange = (editor) => {
-  console.log("content", editor.children);
+  console.log(editor.children, "编辑器内容");
 };
 
 const customAlert = (s, t) => {
@@ -253,6 +254,7 @@ const sendMessage = async () => {
         message: data.message,
       },
     });
+    emit("sendMsgCallback", imResponse);
   } else {
     console.log(data);
   }

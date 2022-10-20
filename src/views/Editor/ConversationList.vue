@@ -156,6 +156,7 @@ const dragleaveHandler = (e) => {};
 
 // 会话点击
 const handleConvListClick = (data) => {
+  // 切换会话
   commit("SET_CONVERSATION", {
     type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
     payload: data,

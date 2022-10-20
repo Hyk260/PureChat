@@ -30,7 +30,7 @@
         </div> -->
       </div>
       <!-- 编辑器 -->
-      <Editor v-show="showMsgBox" />
+      <Editor v-show="showMsgBox" @sendMsgCallback="sendMsgCallback" />
     </div>
   </div>
 </template>
@@ -47,16 +47,32 @@ import Header from "./components/Header.vue";
 import Chatwin from "./Chatwin.vue";
 import networklink from "./components/networklink.vue";
 import ConversationList from "./ConversationList.vue";
+// import { nextTick } from "process";
 
 const ChatRef = ref(null);
 const { state, dispatch, commit } = useStore();
 
-const { networkStatus, user, showMsgBox, conversationList } = useState({
-  networkStatus: (state) => state.conversation.networkStatus,
-  user: (state) => state.data.user,
-  showMsgBox: (state) => state.conversation.showMsgBox,
-  conversationList: (state) => state.conversation.conversationList,
-});
+const { networkStatus, user, showMsgBox, conversationList, needScrollDown } =
+  useState({
+    networkStatus: (state) => state.conversation.networkStatus,
+    user: (state) => state.data.user,
+    showMsgBox: (state) => state.conversation.showMsgBox,
+    conversationList: (state) => state.conversation.conversationList,
+    needScrollDown: (state) => state.conversation.needScrollDown,
+  });
+
+// watch(
+//   () => needScrollDown.value,
+//   (data) => {
+//     console.log(data);
+//     nextTick(() => {
+//       toBottom();
+//     });
+//   },
+//   {
+//     deep: true, //深度监听
+//   }
+// );
 
 const monitoring = () => {
   console.log(navigator);
@@ -65,6 +81,12 @@ const monitoring = () => {
 };
 const toBottom = () => {
   ChatRef.value.UpdataScrollInto();
+};
+// 消息发送回调
+const sendMsgCallback = (data) => {
+  nextTick(() => {
+    ChatRef.value.UpdataScrollInto();
+  });
 };
 
 window.addEventListener("online", monitoring);

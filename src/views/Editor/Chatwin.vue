@@ -90,7 +90,12 @@ import { timeFormat } from "@/utils/timeFormat";
 import { debounce, delay } from "@/utils/debounce";
 import { throttle } from "@/utils/throttle";
 import { useState } from "@/utils/hooks/useMapper";
-import { squareUrl, circleUrl, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
+import {
+  squareUrl,
+  circleUrl,
+  MENU_LIST,
+  RIGHT_CLICK_MENU_LIST,
+} from "./utils/menu";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import TextElemItem from "./components/TextElemItem";
 import TipsElemItem from "./components/TipsElemItem";
@@ -109,17 +114,17 @@ const { currentMessageList, noMore, userInfo, showMsgBox } = useState({
   currentMessageList: (state) => state.conversation.currentMessageList,
 });
 
-watch(
-  () => currentMessageList.value,
-  () => {
-    nextTick(() => {
-      UpdataScrollInto();
-    });
-  },
-  {
-    deep: true, //深度监听
-  }
-);
+// watch(
+//   () => currentMessageList.value,
+//   () => {
+//     nextTick(() => {
+//       UpdataScrollInto();
+//     });
+//   },
+//   {
+//     deep: true, //深度监听
+//   }
+// );
 
 onMounted(() => {
   Monitorscrollbar();
@@ -151,8 +156,6 @@ const UpdateScrollbar = () => {
 };
 const UpdataScrollInto = () => {
   messageViewRef.value.firstElementChild?.scrollIntoView();
-  // console.log(messageViewRef.value);
-  // console.log(messageViewRef.value.firstElementChild);
 };
 
 const scroll = async ({ scrollTop }) => {
@@ -167,7 +170,6 @@ const scroll = async ({ scrollTop }) => {
 };
 
 const Monitorscrollbar = () => {
-  // console.log(scrollbarRef.value.wrap$);
   scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
 };
 
@@ -253,10 +255,14 @@ const ContextMenuEvent = (event, item) => {
   const { time } = item;
   MenuItemInfo.value = item;
   const relinquish = nowtime - time < 120 ? true : false;
-  RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.filter(
-    (t) => t.id !== "revoke"
-  );
-  console.log(relinquish);
+  const self = ISown(item);
+  RIGHT_CLICK_MENU_LIST.value = MENU_LIST;
+  if (!self) {
+    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter((t) => t.id !== "revoke");
+  }
+  if (!relinquish) {
+    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter((t) => t.id !== "revoke");
+  }
 };
 
 const ClickMenuItem = (data) => {
@@ -278,11 +284,11 @@ const ClickMenuItem = (data) => {
 const fndelete = async (data) => {
   let { code } = await deleteMsgList(data);
   if (code == 0) {
-    const { conversationID } = data;
+    const { conversationID, toAccount, to } = data;
     commit("SET_HISTORYMESSAGE", {
       type: "DELETE_MESSAGE",
       payload: {
-        convId: conversationID,
+        convId: to,
         message: data,
       },
     });
