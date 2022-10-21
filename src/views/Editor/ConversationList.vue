@@ -107,7 +107,7 @@ import { addTimeDivider } from "@/utils/addTimeDivider";
 import { TIMpingConv } from "@/api/im-sdk-api";
 
 const contextMenuItemInfo = ref([]);
-
+const emit = defineEmits(["convChange"]);
 onMounted(() => {});
 
 const { state, getters, dispatch, commit } = useStore();
@@ -163,6 +163,7 @@ const handleConvListClick = (data) => {
   });
   // 获取会话列表
   dispatch("GET_MESSAGE_LIST", data);
+  emit("convChange");
 };
 
 const handleClickMenuItem = (item) => {

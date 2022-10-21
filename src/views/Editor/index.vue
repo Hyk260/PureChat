@@ -9,7 +9,7 @@
         <!-- 连接已断开 -->
         <networklink :show="!networkStatus" />
         <!-- 会话列表 -->
-        <ConversationList />
+        <ConversationList @convChange="convChange" />
       </div>
     </div>
     <!-- 聊天框 -->
@@ -52,32 +52,18 @@ import ConversationList from "./ConversationList.vue";
 const ChatRef = ref(null);
 const { state, dispatch, commit } = useStore();
 
-const { networkStatus, user, showMsgBox, conversationList, needScrollDown } =
-  useState({
-    networkStatus: (state) => state.conversation.networkStatus,
-    user: (state) => state.data.user,
-    showMsgBox: (state) => state.conversation.showMsgBox,
-    conversationList: (state) => state.conversation.conversationList,
-    needScrollDown: (state) => state.conversation.needScrollDown,
-  });
-console.log(needScrollDown);
+const { networkStatus, user, showMsgBox, conversationList } = useState({
+  networkStatus: (state) => state.conversation.networkStatus,
+  user: (state) => state.data.user,
+  showMsgBox: (state) => state.conversation.showMsgBox,
+  conversationList: (state) => state.conversation.conversationList,
+});
 
 const scrollInto = () => {
   nextTick(() => {
     ChatRef?.value.UpdataScrollInto();
   });
 };
-
-watch(
-  needScrollDown,
-  () => {
-    scrollInto();
-  },
-  {
-    deep: true, //深度监听
-    immediate: true,
-  }
-);
 
 const monitoring = () => {
   console.log(navigator);
@@ -87,6 +73,11 @@ const monitoring = () => {
 // 消息发送回调
 const sendMsgCallback = (data) => {
   scrollInto();
+};
+// 切换会话回调
+const convChange = (data) => {
+  // console.log("切换会话回调_convChange");
+  // scrollInto();
 };
 
 window.addEventListener("online", monitoring);

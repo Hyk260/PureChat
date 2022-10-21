@@ -1,4 +1,4 @@
-import { CONVERSATIONTYPE, GET_MESSAGE_LIST } from "../mutation-types";
+import { CONVERSATIONTYPE, GET_MESSAGE_LIST, HISTORY_MESSAGE_COUNT } from "../mutation-types";
 import { addTimeDivider } from "@/utils/addTimeDivider";
 import { getMsgList } from "@/api/im-sdk-api";
 
@@ -10,7 +10,7 @@ const conversation = {
   // namespaced: true, //命名空间
   state: {
     showMsgBox: false, //是否显示输入框
-    noMore: true, // 加载更多  false ? 显示loading : 没有更多
+    noMore: false, // 加载更多  false ? 显示loading : 没有更多
     networkStatus: true, // 网络状态
     needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
     uploadProgress: new Map(), //上传进度
@@ -27,24 +27,33 @@ const conversation = {
       switch (type) {
         // 添加消息
         case CONVERSATIONTYPE.ADD_MESSAGE: {
+          console.log("ADD_MESSAGE_添加消息");
           const { convId, message } = payload;
-          console.log(convId, message);
           state.historyMessageList.set(convId, message);
           if (state.currentConversation) {
             state.currentMessageList = state.historyMessageList.get(convId);
           } else {
             state.currentMessageList = [];
           }
-          console.log(state.historyMessageList, "添加消息_ADD_MESSAGE");
           break;
         }
         // 添加更多消息
         case CONVERSATIONTYPE.ADD_MORE_MESSAGE: {
           console.log("ADD_MORE_MESSAGE_添加更多消息");
+          const { convId, messages } = payload
+          let history = state.historyMessageList.get(convId)
+          let baseTime = getBaseTime(history);
+          let timeDividerResult = addTimeDivider(messages, baseTime).reverse();
+          state.historyMessageList.set(
+            convId,
+            history ? history.concat(timeDividerResult) : timeDividerResult
+          )
+          state.currentMessageList = state.historyMessageList.get(convId)
           break;
         }
         // 更新消息
         case CONVERSATIONTYPE.UPDATE_MESSAGES: {
+          console.log("UPDATE_MESSAGES_更新消息")
           const { convId, message } = payload;
           let newMessageList = [];
           newMessageList = state.currentMessageList;
@@ -110,7 +119,6 @@ const conversation = {
       switch (type) {
         // 切换 跳转 会话
         case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
-          state.needScrollDown = -1;
           if (payload) {
             const { conversationID, toAccount } = payload;
             let oldConvId = state.currentConversation?.toAccount;
@@ -121,14 +129,18 @@ const conversation = {
             state.showMsgBox = conversationID == "@TIM#SYSTEM" ? false : true;
 
             if (state.currentConversation) {
-              state.currentMessageList =
-                state.historyMessageList.get(toAccount);
+              const history = state.historyMessageList.get(toAccount);
+              state.currentMessageList = history
             } else {
               state.currentMessageList = [];
             }
 
             state.needScrollDown = 0;
-            // state.noMore = false;
+            state.noMore = false;
+            // 当前会话少于历史条数关闭loading
+            if (state.currentMessageList?.length < HISTORY_MESSAGE_COUNT) {
+              state.noMore = true;
+            }
           }
           break;
         }

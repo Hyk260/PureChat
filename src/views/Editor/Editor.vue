@@ -237,7 +237,7 @@ const sendMessage = async () => {
 
   let TextMsg = await CreateTextMsg({
     convId: toAccount,
-    convType: type,
+    convType: type, //"C2C"
     textMsg: text,
   });
   // console.log(TextMsg);

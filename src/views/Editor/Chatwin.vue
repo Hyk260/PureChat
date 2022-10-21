@@ -35,7 +35,6 @@
           >
             <!-- 头像 -->
             <div class="picture" v-if="!item.isRevoked">
-              <!-- <Portrait :size="36"  :shape="'square'" /> -->
               <el-avatar
                 :size="36"
                 shape="square"
@@ -84,50 +83,86 @@ import {
   computed,
   onBeforeUnmount,
 } from "vue";
-import { fncopy, dragControllerDiv } from "./utils/utils";
-import { useStore } from "vuex";
-import { timeFormat } from "@/utils/timeFormat";
-import { debounce, delay } from "@/utils/debounce";
-import { throttle } from "@/utils/throttle";
-import { useState } from "@/utils/hooks/useMapper";
 import {
   squareUrl,
   circleUrl,
   MENU_LIST,
   RIGHT_CLICK_MENU_LIST,
 } from "./utils/menu";
+import { useStore } from "vuex";
+import { fncopy, dragControllerDiv } from "./utils/utils";
+import { timeFormat } from "@/utils/timeFormat";
+import { debounce, delay } from "@/utils/debounce";
+import { throttle } from "@/utils/throttle";
+import { useState } from "@/utils/hooks/useMapper";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import TextElemItem from "./components/TextElemItem";
 import TipsElemItem from "./components/TipsElemItem";
 import LoadMore from "./components/LoadMore.vue";
-import { deleteMsgList, revokeMsg } from "@/api/im-sdk-api";
+import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
+import { deleteMsgList, revokeMsg, getMsgList } from "@/api/im-sdk-api";
 
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
-
 const { state, dispatch, commit } = useStore();
-const { currentMessageList, noMore, userInfo, showMsgBox } = useState({
+const {
+  noMore,
+  userInfo,
+  showMsgBox,
+  needScrollDown,
+  currentMessageList,
+  currentConversation,
+} = useState({
   userInfo: (state) => state.data.user,
   noMore: (state) => state.conversation.noMore,
   showMsgBox: (state) => state.conversation.showMsgBox,
+  needScrollDown: (state) => state.conversation.needScrollDown,
   currentMessageList: (state) => state.conversation.currentMessageList,
+  currentConversation: (state) => state.conversation.currentConversation,
 });
 
-// watch(
-//   () => currentMessageList.value,
-//   () => {
-//     nextTick(() => {
-//       UpdataScrollInto();
-//     });
-//   },
-//   {
-//     deep: true, //深度监听
-//   }
-// );
+const UpdataScrollInto = () => {
+  nextTick(async () => {
+    console.log(messageViewRef.value);
+    console.log(messageViewRef.value.firstElementChild);
+    messageViewRef.value.firstElementChild?.scrollIntoView();
+  });
+};
+const updateLoadMore = (newValue) => {
+  nextTick(() => {
+    const ViewRef = messageViewRef.value;
+    if (newValue > 0) {
+      console.log(ViewRef?.children?.[newValue - 1]);
+      ViewRef?.children?.[newValue - 1]?.scrollIntoView({
+        block: "start",
+      });
+      // ({ behavior: 'smooth', block: 'center' })
+    } else {
+      console.log(ViewRef?.children?.[newValue]);
+      ViewRef?.children?.[newValue]?.scrollIntoViewIfNeeded();
+    }
+  });
+};
+
+watch(
+  needScrollDown,
+  (data) => {
+    console.log(data, "needScrollDown");
+    updateLoadMore(data);
+  },
+  {
+    deep: true, //深度监听
+    immediate: true,
+  }
+);
 
 onMounted(() => {
   Monitorscrollbar();
+});
+onUpdated(() => {
+  console.log(needScrollDown.value, "onUpdated_needScrollDown");
+  updateLoadMore(needScrollDown.value);
 });
 
 onBeforeUnmount(() => {
@@ -139,23 +174,20 @@ const ISown = (item) => {
 };
 
 const scrollbar = (e) => {
-  // 会话是否大于50条 ? 显示loading : 没有更多
   debounce(() => {
-    // if (!this.noMore) {}
-    const current = currentMessageList.value?.length - 1;
-    // 第一条消息 加载更多 节点
-    const offsetTopScreen = messageViewRef.value?.children?.[current];
-    const top = offsetTopScreen?.getBoundingClientRect().top;
-    const canLoadData = top > 50; //滚动到顶部
-    canLoadData && getMoreMsg();
+    if (!noMore.value) {
+      const current = currentMessageList.value?.length - 1;
+      // 第一条消息 加载更多 节点
+      const offsetTopScreen = messageViewRef.value?.children?.[current];
+      const top = offsetTopScreen?.getBoundingClientRect().top;
+      const canLoadData = top > 50; //滚动到顶部
+      canLoadData && getMoreMsg();
+    }
   }); //防抖处理
 };
 
 const UpdateScrollbar = () => {
   scrollbarRef.value.update();
-};
-const UpdataScrollInto = () => {
-  messageViewRef.value.firstElementChild?.scrollIntoView();
 };
 
 const scroll = async ({ scrollTop }) => {
@@ -172,32 +204,64 @@ const scroll = async ({ scrollTop }) => {
 const Monitorscrollbar = () => {
   scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
 };
+const validatelastMessage = (msglist) => {
+  let msg = null;
+  for (let i = msglist.length - 1; i > -1; i--) {
+    if (msglist[i].ID) {
+      msg = msglist[i];
+      break;
+    }
+  }
+  return msg;
+};
 
 const getMoreMsg = async () => {
   try {
     // 获取指定会话的消息列表
-    // const Response = await getMsgList({
-    //   conv_id: 123,
-    //   conv_type: 2,
-    //   msg_id: 123,
-    // });
-    // console.log(Response);
-    // if (Response?.length === 0) {
-    //   console.log("没有更多消息了！！！");
-    //   // commit("SET_HISTORYMESSAGE", {
-    //   //   type: "UPDATE_NOMORE",
-    //   //   payload: true,
-    //   // });
-    //   return;
-    // }
+    const Conv = currentConversation.value;
+    const msglist = currentMessageList.value;
+    const { conversationID, toAccount } = Conv;
+    const msg = validatelastMessage(msglist);
+    const { ID } = msg;
+    console.log(ID);
+    const result = await getMsgList({
+      conversationID: conversationID,
+      nextReqMessageID: ID,
+    });
+    console.log(result, "getMsgList");
+    const { isCompleted, messageList, nextReqMessageID } = result;
+    let noMore = true;
+    let Loadmore = messageList.length < HISTORY_MESSAGE_COUNT;
+    if (messageList.length > 0) noMore = Loadmore;
+    const Response = messageList;
+    const payload = {
+      convId: toAccount,
+      messages: Response,
+    };
+    commit("SET_HISTORYMESSAGE", {
+      type: "ADD_MORE_MESSAGE",
+      payload,
+    });
+    commit("SET_CONVERSATION", {
+      type: "UPDATE_SCROLL_DOWN",
+      payload: msglist.length,
+    });
+    if (isCompleted || messageList.length == 0) {
+      console.log("没有更多消息了！！！");
+      commit("SET_HISTORYMESSAGE", {
+        type: "UPDATE_NOMORE",
+        payload: noMore,
+      });
+      return;
+    }
   } catch (e) {
     // 解析报错 关闭加载动画
     commit("SET_HISTORYMESSAGE", {
       type: "UPDATE_NOMORE",
       payload: true,
     });
+    console.log(e, "err更多消息");
   }
-  console.log("更多消息");
 };
 
 // 动态组件

@@ -1,12 +1,14 @@
 import TIM from "tim-js-sdk";
 import tim from "@/utils/im-sdk/tim";
+import { HISTORY_MESSAGE_COUNT } from '@/store/mutation-types';
 
 // 获取消息列表
 export const getMsgList = async (params) => {
-  const { conversationID, count } = params;
+  const { conversationID, count, nextReqMessageID } = params;
   const { code, data } = await tim.getMessageList({
     conversationID: conversationID,
-    count: count || 15,
+    count: count || HISTORY_MESSAGE_COUNT,
+    nextReqMessageID: nextReqMessageID || ''
   });
   if (code == 0) {
     return data

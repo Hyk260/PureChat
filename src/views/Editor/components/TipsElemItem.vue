@@ -24,7 +24,6 @@ const props = defineProps({
 const { msgRow } = toRefs(props);
 
 const getChangeType = (data) => {
-  console.log(data);
   return "撤回一条消息";
 };
 </script>
