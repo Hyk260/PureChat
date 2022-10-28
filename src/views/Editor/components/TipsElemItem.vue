@@ -6,7 +6,7 @@
   >
     <div>{{ item }}</div>
   </div> -->
-  <div @contextmenu.prevent.stop class="message-view__item--text">
+  <div @contextmenu.prevent.stop class="message-view_withdraw">
     {{ getChangeType(msgRow) }}
   </div>
 </template>
@@ -29,7 +29,7 @@ const getChangeType = (data) => {
 </script>
 
 <style lang="scss" scoped>
-.message-view__item--text {
+.message-view_withdraw {
   font-size: 12px;
   border-radius: 3px;
   background: rgba(0, 0, 0, 0.05);

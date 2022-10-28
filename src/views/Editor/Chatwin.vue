@@ -50,10 +50,11 @@
             >
               <div class="message_name">
                 <span v-if="item.from == '@TIM#SYSTEM'"> 系统 </span>
-                <span v-else>
+                <span v-else-if="item.conversationType !== 'C2C'">
                   {{ item.from }}
                 </span>
               </div>
+              <!-- message-view__text message-view__img -->
               <div :class="Megtype(item.type)">
                 <component
                   :is="loadMsgComponents(item.type, item)"
@@ -324,7 +325,7 @@ const Megtype = (elem_type) => {
       resp = "message-view__text"; // 文本
       break;
     case "TIMGroupTipElem":
-      resp = "group-tips-elem-item"; // 系统提示
+      resp = "message-view__tips-elem"; // 系统提示
       break;
     case "TIMImageElem":
       resp = "message-view__img"; // 图片消息
@@ -339,7 +340,7 @@ const Megtype = (elem_type) => {
 const msgOne = (item) => {
   const { isRevoked } = item;
   if (isRevoked) {
-    return "group-tips-elem-item";
+    return "message-view__tips-elem";
   } else {
     return "message-view__item--index";
   }
@@ -407,7 +408,7 @@ $self-msg-color: #c2e8ff;
   color: rgba(0, 0, 0, 0.45);
   font-size: 12px;
 }
-.group-tips-elem-item {
+.message-view__tips-elem {
   margin: auto;
 }
 .message-info-view-content {
@@ -448,24 +449,13 @@ $self-msg-color: #c2e8ff;
   overflow-x: hidden;
   padding: 0 16px 30px 16px;
   box-sizing: border-box;
-
-  .message-view-item {
-    flex: 1;
-  }
-  .tips {
-    justify-content: center;
-  }
 }
-
 .message-view__item {
   display: flex;
   flex-direction: row;
   margin-top: 12px;
 }
 .is-other {
-  :deep(.message) {
-    background: $other-msg-color;
-  }
   .picture {
     margin-left: 0;
     margin-right: 8px;
@@ -473,6 +463,9 @@ $self-msg-color: #c2e8ff;
   .message-view__img {
     margin-bottom: 5px;
     width: fit-content;
+    :deep(.image_preview) {
+      background: $other-msg-color;
+    }
   }
 
   .message-view__file {
@@ -482,14 +475,14 @@ $self-msg-color: #c2e8ff;
   .message-view__text {
     width: fit-content;
     margin-bottom: 5px;
+    :deep(.message-view__item--text) {
+      background: $other-msg-color;
+    }
   }
 }
 .is-self {
   flex-direction: row-reverse;
   display: flex;
-  :deep(.message) {
-    background: $self-msg-color;
-  }
   .picture {
     margin-right: 0;
     margin-left: 8px;
@@ -504,6 +497,9 @@ $self-msg-color: #c2e8ff;
     justify-content: flex-end;
     margin-bottom: 5px;
     align-items: center;
+    :deep(.image_preview) {
+      background: $self-msg-color;
+    }
   }
 
   .message-view__file {
@@ -518,11 +514,9 @@ $self-msg-color: #c2e8ff;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-  }
-
-  .face-url {
-    margin-right: 0;
-    margin-left: 8px;
+    :deep(.message-view__item--text) {
+      background: $self-msg-color;
+    }
   }
 }
 

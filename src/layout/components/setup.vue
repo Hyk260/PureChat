@@ -57,6 +57,7 @@ import { computed, ref, watch } from "vue";
 import { useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
 import { changeAppearance } from "@/utils/common";
+import { useDark, useToggle } from "@vueuse/core";
 import i18n from "@/locales";
 
 const options = [
@@ -156,7 +157,7 @@ const languageChange = (val) => {
 </script>
 
 <style lang="scss" scoped>
-.setting li{
+.setting li {
   display: flex;
   justify-content: space-between;
   align-items: center;

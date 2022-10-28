@@ -255,24 +255,24 @@ const sendMsgBefore = () => {
 const sendMessage = async () => {
   const { type, conversationID, toAccount } = currentConversation.value;
   const { text, image } = sendMsgBefore();
-  console.log(image);
-  let file = dataURLtoFile(image[0].src, "123.png");
-  console.log(file);
+  // console.log(image);
+  // let file = dataURLtoFile(image[0].src, "123.png");
+  // console.log(file);
   // return;
-  let ImageMsg = await CreateImgtMsg({
-    convId: toAccount,
-    convType: type, //"C2C"
-    image: file,
-  });
-  // let TextMsg = await CreateTextMsg({
+  // let ImageMsg = await CreateImgtMsg({
   //   convId: toAccount,
   //   convType: type, //"C2C"
-  //   textMsg: text,
+  //   image: file,
   // });
-  console.log(ImageMsg);
+  let TextMsg = await CreateTextMsg({
+    convId: toAccount,
+    convType: type, //"C2C"
+    textMsg: text,
+  });
+  // console.log(ImageMsg);
   // return;
   // 发送消息
-  let imResponse = await sendMsg(ImageMsg);
+  let imResponse = await sendMsg(TextMsg);
   // console.log(imResponse);
   const { code, data } = imResponse;
   if (code == 0) {
@@ -292,11 +292,10 @@ const sendMessage = async () => {
 </script>
 
 <style lang="scss" scoped>
-.emoji {
-  font-size: 16px;
-}
+// .emoji {
+//   font-size: 16px;
+// }
 .Editor-style {
-  // position: relative;
   height: 206px;
   .toolbar {
     // 表情包

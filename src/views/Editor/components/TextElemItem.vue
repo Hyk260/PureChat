@@ -1,13 +1,12 @@
 <template>
-  <div class="message">
+  <div class="message-view__item--text">
     <!-- 用户 -->
     <template v-if="message.conversationType == 'GROUP' || 'C2C'">
-      <span class="message-view__item--text">
+      <span>
         {{ message.payload.text }}
       </span>
-      <template v-if="false">
+      <!-- <template v-if="false">
         <span
-          class="message-view__item--text text"
           v-for="item in decodeText(message.payload.text)"
           :key="item"
         >
@@ -16,11 +15,11 @@
           </span>
           <img class="emoji" v-else :src="item.src" alt="" />
         </span>
-      </template>
+      </template> -->
     </template>
     <!-- 系统 -->
     <template v-if="message.conversationType == '@TIM#SYSTEM'">
-      <span class="message-view__item--text">
+      <span>
         {{ GroupSystemNotice(message) }}
       </span>
     </template>
@@ -61,17 +60,13 @@ const { message } = props;
 </script>
 
 <style lang="scss" scoped>
-.message {
+.message-view__item--text {
   width: fit-content;
   padding: 10px 14px;
   max-width: 360px;
   padding: 10px 14px;
   box-sizing: border-box;
   border-radius: 3px;
-}
-.message-view__text {
-  width: fit-content;
-  margin-bottom: 5px;
 }
 .emoji {
   width: 24px;
