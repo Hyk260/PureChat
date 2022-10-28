@@ -59,13 +59,15 @@ import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
 import { generateUUID } from "@/utils/index";
 import { bytesToSize } from "@/utils/common";
-import { fileImgToBase64Url } from "@/utils/message-input-utils";
+import { fileImgToBase64Url, dataURLtoFile } from "@/utils/message-input-utils";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
-import { CreateTextMsg, sendMsg } from "@/api/im-sdk-api";
-// 编辑器实例，必须用 shallowRef，重要！
+import { CreateTextMsg, CreateImgtMsg, sendMsg } from "@/api/im-sdk-api";
+// 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef();
 const valueHtml = ref(""); // 内容 HTML
+const messages = ref(null);
 const mode = "simple"; // 'default' 或 'simple'
+// eslint-disable-next-line no-undef
 const emit = defineEmits(["sendMsgCallback"]);
 
 const { state, getters, dispatch, commit } = useStore();
@@ -98,6 +100,8 @@ const handleCreated = (editor) => {
   // console.log(editor.getConfig());
 };
 const onChange = (editor) => {
+  const content = editor.children;
+  messages.value = content;
   console.log(editor.children, "编辑器内容");
 };
 
@@ -190,17 +194,32 @@ const parsepicture = async (file) => {
   let path = file?.path;
   if (path == undefined) {
     console.log(base64Url);
-    const el = `<img src=${base64Url} class="uuid" style="max-width: 200px;"/>`;
-    valueHtml.value = el;
+    // const el = `<img src=${base64Url} class="uuid" style="max-width: 200px;"/>`;
+    // valueHtml.value = el;
+    const ImageElement = {
+      type: "image",
+      class: "img",
+      src: base64Url,
+      alt: "",
+      href: "",
+      style: { width: "30%" },
+      children: [{ text: "" }],
+    };
+    editorRef.value.insertNode(ImageElement);
   }
 };
 // 回车
 const handleEnter = () => {
+  const editor = editorRef.value;
   // 判断当前编辑器内容是否为空
-  let isEmpty = editorRef.value.isEmpty();
+  let isEmpty = editor.isEmpty();
   // 纯文本内容
-  const text = editorRef.value.getText();
-  if (!isEmpty && !empty(text)) {
+  const text = editor.getText();
+  const imageall = editor.getElemsByType("image"); // 所有图片
+  console.log(imageall);
+  console.log(messages.value);
+
+  if ((!isEmpty && !empty(text)) || imageall.length > 0) {
     sendMessage();
   } else {
     console.log("请输入内容");
@@ -219,30 +238,41 @@ const clearInputInfo = () => {
 };
 
 const sendMsgBefore = () => {
+  const editor = editorRef.value;
   const text = editorRef.value.getText(); // 纯文本内容
   // const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
   // const message = getMessageElemItem("text", { text: text }); //文本
   // const innHTML = HtmlText.replace(/<(?!img).*?>/g, "");
+  const image = editor.getElemsByType("image"); // 所有图片
   console.log(text);
   // console.log(message);
   // console.log(HtmlText);
 
   // console.log(innHTML);
-  return { text };
+  return { text, image };
 };
 // 发送消息
 const sendMessage = async () => {
   const { type, conversationID, toAccount } = currentConversation.value;
-  const { text } = sendMsgBefore();
-
-  let TextMsg = await CreateTextMsg({
+  const { text, image } = sendMsgBefore();
+  console.log(image);
+  let file = dataURLtoFile(image[0].src, "123.png");
+  console.log(file);
+  // return;
+  let ImageMsg = await CreateImgtMsg({
     convId: toAccount,
     convType: type, //"C2C"
-    textMsg: text,
+    image: file,
   });
-  // console.log(TextMsg);
+  // let TextMsg = await CreateTextMsg({
+  //   convId: toAccount,
+  //   convType: type, //"C2C"
+  //   textMsg: text,
+  // });
+  console.log(ImageMsg);
+  // return;
   // 发送消息
-  let imResponse = await sendMsg(TextMsg);
+  let imResponse = await sendMsg(ImageMsg);
   // console.log(imResponse);
   const { code, data } = imResponse;
   if (code == 0) {
@@ -266,6 +296,7 @@ const sendMessage = async () => {
   font-size: 16px;
 }
 .Editor-style {
+  // position: relative;
   height: 206px;
   .toolbar {
     // 表情包

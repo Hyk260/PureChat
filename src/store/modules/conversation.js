@@ -1,4 +1,8 @@
-import { CONVERSATIONTYPE, GET_MESSAGE_LIST, HISTORY_MESSAGE_COUNT } from "../mutation-types";
+import {
+  CONVERSATIONTYPE,
+  GET_MESSAGE_LIST,
+  HISTORY_MESSAGE_COUNT,
+} from "../mutation-types";
 import { addTimeDivider } from "@/utils/addTimeDivider";
 import { getMsgList } from "@/api/im-sdk-api";
 
@@ -40,20 +44,20 @@ const conversation = {
         // 添加更多消息
         case CONVERSATIONTYPE.ADD_MORE_MESSAGE: {
           console.log("ADD_MORE_MESSAGE_添加更多消息");
-          const { convId, messages } = payload
-          let history = state.historyMessageList.get(convId)
+          const { convId, messages } = payload;
+          let history = state.historyMessageList.get(convId);
           let baseTime = getBaseTime(history);
           let timeDividerResult = addTimeDivider(messages, baseTime).reverse();
           state.historyMessageList.set(
             convId,
             history ? history.concat(timeDividerResult) : timeDividerResult
-          )
-          state.currentMessageList = state.historyMessageList.get(convId)
+          );
+          state.currentMessageList = state.historyMessageList.get(convId);
           break;
         }
         // 更新消息
         case CONVERSATIONTYPE.UPDATE_MESSAGES: {
-          console.log("UPDATE_MESSAGES_更新消息")
+          console.log("UPDATE_MESSAGES_更新消息");
           const { convId, message } = payload;
           let newMessageList = [];
           newMessageList = state.currentMessageList;
@@ -61,6 +65,7 @@ const conversation = {
           let timeDividerResult = addTimeDivider([message], baseTime).reverse();
           newMessageList.unshift(...timeDividerResult);
           state.currentMessageList = newMessageList;
+          state.needScrollDown = 0;
           break;
         }
         // 删除消息
@@ -130,7 +135,7 @@ const conversation = {
 
             if (state.currentConversation) {
               const history = state.historyMessageList.get(toAccount);
-              state.currentMessageList = history
+              state.currentMessageList = history;
             } else {
               state.currentMessageList = [];
             }
@@ -189,11 +194,29 @@ const conversation = {
           },
         });
       } else {
-        console.log("获取缓存");
+        console.log(state.historyMessageList, "获取缓存");
       }
     },
   },
-  getters: {},
+  getters: {
+    toAccount: (state) => {
+      if (
+        !state.currentConversation ||
+        !state.currentConversation.conversationID
+      ) {
+        return "";
+      }
+      console.log(state.currentConversation);
+      switch (state.currentConversation.type) {
+        case "C2C":
+          return state.currentConversation.conversationID.replace("C2C", "");
+        case "GROUP":
+          return state.currentConversation.conversationID.replace("GROUP", "");
+        default:
+          return state.currentConversation.conversationID;
+      }
+    },
+  },
 };
 
 export default conversation;

@@ -104,9 +104,10 @@ import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 import { addTimeDivider } from "@/utils/addTimeDivider";
-import { TIMpingConv } from "@/api/im-sdk-api";
+import { TIMpingConv, setMessageRemindType } from "@/api/im-sdk-api";
 
 const contextMenuItemInfo = ref([]);
+// eslint-disable-next-line no-undef
 const emit = defineEmits(["convChange"]);
 onMounted(() => {});
 
@@ -193,19 +194,7 @@ const disableRecMsg = (data, off) => {
   // 系统消息
   if (type == "@TIM#SYSTEM") return;
   if (messageRemindType == "") return;
-  return;
-  // eslint-disable-next-line prettier/prettier
-  tim
-    .setMessageRemindType({
-      groupID: toAccount,
-      messageRemindType,
-    })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  // setMessageRemindType
 };
 // 删除会话
 const removeConv = async (data) => {

@@ -32,13 +32,15 @@
       <!-- 编辑器 -->
       <Editor v-show="showMsgBox" @sendMsgCallback="sendMsgCallback" />
     </div>
+    <!-- 群详情 -->
+    <!-- <div class="group-details"></div> -->
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
 import { copyFile } from "fs";
-import { useState } from "@/utils/hooks/useMapper";
+import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { dragControllerDiv } from "./utils/utils";
 import { useStore } from "vuex";
 import Editor from "./Editor.vue";
@@ -52,6 +54,7 @@ import ConversationList from "./ConversationList.vue";
 const ChatRef = ref(null);
 const { state, dispatch, commit } = useStore();
 
+const { toAccount } = useGetters(["toAccount"]);
 const { networkStatus, user, showMsgBox, conversationList } = useState({
   networkStatus: (state) => state.conversation.networkStatus,
   user: (state) => state.data.user,
@@ -60,9 +63,7 @@ const { networkStatus, user, showMsgBox, conversationList } = useState({
 });
 
 const scrollInto = () => {
-  nextTick(() => {
-    ChatRef?.value.UpdataScrollInto();
-  });
+  ChatRef?.value.UpdataScrollInto();
 };
 
 const monitoring = () => {
@@ -77,12 +78,13 @@ const sendMsgCallback = (data) => {
 // 切换会话回调
 const convChange = (data) => {
   // console.log("切换会话回调_convChange");
-  // scrollInto();
+  scrollInto();
 };
 
-window.addEventListener("online", monitoring);
-window.addEventListener("offline", monitoring);
-
+onMounted(() => {
+  window.addEventListener("online", monitoring);
+  window.addEventListener("offline", monitoring);
+});
 onBeforeUnmount(() => {
   window.removeEventListener("online", monitoring);
   window.removeEventListener("offline", monitoring);
@@ -119,6 +121,9 @@ onBeforeUnmount(() => {
 }
 .style-net {
   height: calc(100% - 60px - 34px);
+}
+.group-details {
+  width: 200px;
 }
 
 #svgResize {

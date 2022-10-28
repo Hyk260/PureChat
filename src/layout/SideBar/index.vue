@@ -58,6 +58,7 @@ const handleClose = (key, keyPath) => {
   height: 100%;
 }
 .sidebar-container {
+  background: var(--color-body-bg);
   border-right: 1px solid #e6e6e6;
   z-index: 10;
   height: 100%;

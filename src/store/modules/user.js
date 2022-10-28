@@ -36,7 +36,7 @@ const user = {
       state.sdkAppID = payload.sdkAppID;
     },
     toggleIsLogin(state, isLogin) {
-      state.isLogin = typeof isLogin === "undefined" ? !state.isLogin : isLogin;
+      state.isLogin = isLogin;
     },
     reset(state) {
       Object.assign(state, {
@@ -72,7 +72,7 @@ const user = {
     // 退出im
     async TIM_LOG_OUT({ commit }) {
       const result = await logout();
-      commit("toggleIsLogin");
+      commit("toggleIsLogin", false);
       commit("reset");
       console.log(result, "TIM_LOG_OUT");
     },
@@ -94,7 +94,7 @@ const user = {
     // 菜单列表
     async GET_MENU({ dispatch }) {
       let menu = await getMenu();
-      console.log(menu)
+      console.log(menu);
       dispatch("updateRoute", menu);
     },
     // 登录

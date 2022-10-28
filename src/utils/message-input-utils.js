@@ -1,5 +1,5 @@
 /* eslint-disable no-irregular-whitespace */
-import fs from "fs";
+import url from "url";
 import path from "path";
 import os from "os";
 
@@ -33,85 +33,6 @@ export const generateTemplateElement = async (
     message_msg_id: messageId,
     message_sender_profile: userProfile,
     message_sender_group_member_info: groupMemberProfile || {},
-  };
-};
-
-// 本地文件地址 to Base64
-export const localFileToBase64 = (url) => {
-  return new Promise((resolve, reject) => {
-    try {
-      fs.readFile(url, "binary", (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          const base64Url = bufferToBase64Url(data, getImageType(url));
-          resolve(base64Url);
-        }
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  });
-};
-
-export const bufferToBase64Url = (data, type) => {
-  const buffer = new Buffer(data, "binary");
-  return `data:image/${type};base64,` + buffer.toString("base64");
-};
-
-// File to base64
-export const fileImgToBase64Url = async (file) => {
-  return new Promise((res) => {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const base64Value = e.target.result;
-      // target.result 该属性表示目标对象的DataURL
-      res(base64Value);
-    };
-    reader.readAsDataURL(file);
-  });
-};
-// 网络地址 to base64
-export const urlToBase64 = (url) => {
-  return new Promise ((resolve,reject) => {
-      let image = new Image();
-      image.onload = function() {
-          let canvas = document.createElement('canvas');
-          canvas.width = this.naturalWidth;
-          canvas.height = this.naturalHeight;
-          canvas.getContext('2d').drawImage(image, 0, 0);
-          let result = canvas.toDataURL('image/png')
-          resolve(result);
-      };
-      image.setAttribute("crossOrigin",'Anonymous');
-      image.src = url;
-      image.onerror = () => {
-          reject(new Error('转换失败'));
-      };
-  });
-}
-
-export const getImageType = (str) => {
-  const reg = /\.(png|jpg|gif|jpeg|webp)$/;
-  return str.match(reg)[1];
-};
-
-//用于同步检查给定路径中是​​否已存在文件,它返回一个布尔值，该值指示文件的存在。
-export const checkFileExist = (path) => {
-  return fs.existsSync(path);
-};
-
-export const getFileByPath = async (filePath) => {
-  const size = fs.statSync(filePath).size;
-  const name = path.parse(filePath).base;
-  const type = name.split(".")[1];
-  const fileContent = await fs.readFileSync(filePath);
-  return {
-    path: filePath,
-    size,
-    name,
-    type,
-    fileContent,
   };
 };
 
@@ -165,4 +86,75 @@ export const getMessageElemItem = (type, data, videoInfoList) => {
       };
     }
   }
+};
+
+// 本地文件地址 to Base64
+export const localFileToBase64 = (url) => {
+  return new Promise((resolve, reject) => {
+    try {
+      fs.readFile(url, "binary", (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          const base64Url = bufferToBase64Url(data, getImageType(url));
+          resolve(base64Url);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  });
+};
+// buffer to Base64
+export const bufferToBase64Url = (data, type) => {
+  const buffer = new Buffer(data, "binary");
+  return `data:image/${type};base64,` + buffer.toString("base64");
+};
+// File to base64
+export const fileImgToBase64Url = async (file) => {
+  return new Promise((res) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const base64Value = e.target.result;
+      // target.result 该属性表示目标对象的DataURL
+      res(base64Value);
+    };
+    reader.readAsDataURL(file);
+  });
+};
+// 网络地址 to base64
+export const urlToBase64 = (url) => {
+  return new Promise((resolve, reject) => {
+    let image = new Image();
+    image.onload = function () {
+      let canvas = document.createElement("canvas");
+      canvas.width = this.naturalWidth;
+      canvas.height = this.naturalHeight;
+      canvas.getContext("2d").drawImage(image, 0, 0);
+      let result = canvas.toDataURL("image/png");
+      resolve(result);
+    };
+    image.setAttribute("crossOrigin", "Anonymous");
+    image.src = url;
+    image.onerror = () => {
+      reject(new Error("转换失败"));
+    };
+  });
+};
+// 图片类型
+export const getImageType = (str) => {
+  const reg = /\.(png|jpg|gif|jpeg|webp)$/;
+  return str.match(reg)[1];
+};
+// base64 to File
+export const dataURLtoFile = (dataUrl, fileName) => {
+  var arr = dataUrl.split(","),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], fileName, { type: mime });
 };

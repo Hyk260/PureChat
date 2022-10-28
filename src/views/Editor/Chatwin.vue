@@ -48,6 +48,12 @@
               v-contextmenu:contextmenu
               @contextmenu.prevent="ContextMenuEvent($event, item)"
             >
+              <div class="message_name">
+                <span v-if="item.from == '@TIM#SYSTEM'"> 系统 </span>
+                <span v-else>
+                  {{ item.from }}
+                </span>
+              </div>
               <div :class="Megtype(item.type)">
                 <component
                   :is="loadMsgComponents(item.type, item)"
@@ -80,6 +86,7 @@ import {
   nextTick,
   onMounted,
   onUpdated,
+  onBeforeUpdate,
   computed,
   onBeforeUnmount,
 } from "vue";
@@ -98,10 +105,12 @@ import { useState } from "@/utils/hooks/useMapper";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import TextElemItem from "./components/TextElemItem";
 import TipsElemItem from "./components/TipsElemItem";
+import ImageElemItem from "./components/ImageElemItem";
 import LoadMore from "./components/LoadMore.vue";
 import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 import { deleteMsgList, revokeMsg, getMsgList } from "@/api/im-sdk-api";
 
+const max = ref(0);
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
@@ -123,10 +132,15 @@ const {
 });
 
 const UpdataScrollInto = () => {
-  nextTick(async () => {
-    console.log(messageViewRef.value);
-    console.log(messageViewRef.value.firstElementChild);
+  nextTick(() => {
+    // console.log(messageViewRef.value);
+    // console.log(messageViewRef.value.firstElementChild);
+    // messageViewRef.value.firstElementChild?.scrollIntoView();
+    // setTimeout(() => {
+    // max.value = messageViewRef.value.clientHeight - 380;
+    // scrollbarRef.value.setScrollTop(max.value);
     messageViewRef.value.firstElementChild?.scrollIntoView();
+    // }, 10);
   });
 };
 const updateLoadMore = (newValue) => {
@@ -144,12 +158,23 @@ const updateLoadMore = (newValue) => {
     }
   });
 };
-
+watch(
+  currentMessageList,
+  (data) => {
+    // console.log(data, "needScrollDown");
+    // updateLoadMore(data);
+    UpdataScrollInto();
+  },
+  {
+    deep: true, //深度监听
+    immediate: true,
+  }
+);
 watch(
   needScrollDown,
   (data) => {
     console.log(data, "needScrollDown");
-    updateLoadMore(data);
+    // updateLoadMore(data);
   },
   {
     deep: true, //深度监听
@@ -161,10 +186,9 @@ onMounted(() => {
   Monitorscrollbar();
 });
 onUpdated(() => {
-  console.log(needScrollDown.value, "onUpdated_needScrollDown");
-  updateLoadMore(needScrollDown.value);
+  // console.log(needScrollDown.value, "onUpdated_needScrollDown");
+  // updateLoadMore(needScrollDown.value);
 });
-
 onBeforeUnmount(() => {
   window.removeEventListener("scroll", scrollbar);
 });
@@ -266,10 +290,12 @@ const getMoreMsg = async () => {
 
 // 动态组件
 const loadMsgComponents = (elem_type, item) => {
+  // console.log(elem_type);
   let resp = null;
   let CompMap = {
     TextElemItem: TextElemItem,
     TipsElemItem: TipsElemItem,
+    ImageElemItem: ImageElemItem,
   };
   // 撤回消息
   if (item.isRevoked) {
@@ -279,6 +305,9 @@ const loadMsgComponents = (elem_type, item) => {
   switch (elem_type) {
     case "TIMTextElem":
       resp = "TextElemItem"; // 文本消息
+      break;
+    case "TIMImageElem":
+      resp = "ImageElemItem"; // 图片消息
       break;
     default:
       resp = "TextElemItem";
@@ -296,6 +325,9 @@ const Megtype = (elem_type) => {
       break;
     case "TIMGroupTipElem":
       resp = "group-tips-elem-item"; // 系统提示
+      break;
+    case "TIMImageElem":
+      resp = "message-view__img"; // 图片消息
       break;
     default:
       resp = "";
@@ -369,18 +401,12 @@ defineExpose({ UpdateScrollbar, UpdataScrollInto });
 <style lang="scss" scoped>
 $other-msg-color: #f0f2f5;
 $self-msg-color: #c2e8ff;
-// .message-view__item--text {
-//   font-size: 12px;
-//   border-radius: 3px;
-//   background: rgba(0, 0, 0, 0.05);
-//   vertical-align: middle;
-//   word-wrap: normal;
-//   word-break: break-all;
-//   color: rgba(0, 0, 0, 0.45);
-//   margin-top: 5px;
-//   padding: 4px 6px;
-//   line-height: 16px;
-// }
+
+.message_name {
+  margin-bottom: 5px;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+}
 .group-tips-elem-item {
   margin: auto;
 }
@@ -436,15 +462,6 @@ $self-msg-color: #c2e8ff;
   flex-direction: row;
   margin-top: 12px;
 }
-
-.message {
-  width: fit-content;
-  padding: 10px 14px;
-  max-width: 360px;
-  padding: 10px 14px;
-  box-sizing: border-box;
-  border-radius: 3px;
-}
 .is-other {
   :deep(.message) {
     background: $other-msg-color;
@@ -479,7 +496,7 @@ $self-msg-color: #c2e8ff;
     width: 36px;
     height: 36px;
   }
-  :deep(.message_name) {
+  .message_name {
     display: none;
   }
   .message-view__img {
