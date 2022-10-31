@@ -5,17 +5,21 @@
   >
     <Header />
     <main class="app-main">
-      <!-- el-scrollbar -->
       <div class="continer-theme">
-        <!-- <keep-alive :include="isCached"></keep-alive> -->
         <router-view v-slot="{ Component }">
           <transition name="fade-transform" mode="out-in">
-            <component v-if="Component" :is="Component" />
-            <component v-else :is="CompMap[page.type] || error" />
+            <!-- :include="['editor']" -->
+            <keep-alive v-if="$route.meta.keep" max="3">
+              <component v-if="Component" :is="Component" />
+              <component v-else :is="CompMap[page.type] || error" />
+            </keep-alive>
+            <template v-else>
+              <component v-if="Component" :is="Component" />
+              <component v-else :is="CompMap[page.type] || error" />
+            </template>
           </transition>
         </router-view>
       </div>
-      
     </main>
   </div>
 </template>

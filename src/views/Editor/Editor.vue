@@ -140,7 +140,7 @@ const customPaste = (editor, event, callback) => {
     const items = event.clipboardData.items;
     // console.log(items);
     for (let [key, value] of Object.entries(items)) {
-      // console.log(key,value)
+      console.log(key, value);
       const { kind, type } = value;
       // console.log(kind, type)
       if (kind === "file") {
@@ -153,7 +153,9 @@ const customPaste = (editor, event, callback) => {
         }
       }
       if (kind === "string") {
-        parsetext(value);
+        value.getAsString((str) => {
+          parsetext(str);
+        });
       }
     }
   }
@@ -171,13 +173,19 @@ const customPaste = (editor, event, callback) => {
 // 插入文件
 const parsefile = async (file) => {
   console.log(file, "文件");
-  const { size } = file;
-  let fileSize = bytesToSize(size);
-  const base64Url = await fileImgToBase64Url(file);
-
-  console.log(fileSize);
+  try {
+    const { size } = file;
+    const fileSize = bytesToSize(size);
+    const base64Url = await fileImgToBase64Url(file);
+    console.log(base64Url);
+    console.log(fileSize);
+  } catch (error) {
+    console.log(error);
+  }
 };
-const parsetext = (item) => {};
+const parsetext = (item) => {
+  console.log(item);
+};
 const innerHTML = (data, item) => {
   // console.log(data, item);
   // let $el = `<img src=${data} class="${item} emjo" alt="${item}" style="width: 25px; height: 25px" />`;

@@ -38,7 +38,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
+import {
+  ref,
+  onActivated,
+  onDeactivated,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+  nextTick,
+} from "vue";
 import { copyFile } from "fs";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { dragControllerDiv } from "./utils/utils";
@@ -81,6 +89,10 @@ const convChange = (data) => {
   scrollInto();
 };
 
+onActivated(() => {
+  console.log("onActivated");
+});
+onDeactivated(() => {});
 onMounted(() => {
   window.addEventListener("online", monitoring);
   window.addEventListener("offline", monitoring);
