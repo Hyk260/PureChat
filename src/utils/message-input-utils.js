@@ -87,24 +87,6 @@ export const getMessageElemItem = (type, data, videoInfoList) => {
     }
   }
 };
-
-// 本地文件地址 to Base64
-export const localFileToBase64 = (url) => {
-  return new Promise((resolve, reject) => {
-    try {
-      fs.readFile(url, "binary", (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          const base64Url = bufferToBase64Url(data, getImageType(url));
-          resolve(base64Url);
-        }
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  });
-};
 // buffer to Base64
 export const bufferToBase64Url = (data, type) => {
   const buffer = new Buffer(data, "binary");
