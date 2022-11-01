@@ -1,8 +1,12 @@
 <template>
   <div class="login">
-    <div class="login-inner">
+    <div class="login-inner select-none">
       <!-- 背景 -->
       <svg-icon iconClass="loginBg" class="wave" />
+      <label class="switch">
+        <input type="checkbox" />
+        <span class="slider"></span>
+      </label>
       <!-- 标题 -->
       <Motion>
         <header class="login-form">
@@ -41,7 +45,6 @@
         <el-form-item prop="verifyCode">
           <el-input
             v-model="user.verifyCode"
-            @keydown.enter="LoginBtn(ruleFormRef)"
             size="large"
             :prefix-icon="Key"
             placeholder="验证码"
@@ -107,7 +110,14 @@
 import { Lock, User, Key } from "@element-plus/icons-vue";
 import ReImageVerify from "@/views/components/ReImageVerify/index.vue";
 import { ElNotification } from "element-plus";
-import { reactive, ref, computed, watch } from "vue";
+import {
+  reactive,
+  ref,
+  computed,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+} from "vue";
 import { login } from "@/api/user";
 import { getMenu } from "@/api/menu";
 import { operates, thirdParty } from "./utils/enums";
@@ -116,16 +126,13 @@ import { useStore } from "vuex";
 import { user, rules } from "./utils/validation";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import Motion from "@/utils/motion";
+
 const router = useRouter();
 const showload = ref(false);
 const keep = ref(false);
 const ruleFormRef = ref();
 const imgCode = ref("");
 const { state, dispatch, commit } = useStore();
-
-watch(imgCode, (value) => {
-  dispatch("SET_VERIFYCODE", value);
-});
 
 const LoginBtn = async (formEl) => {
   if (!formEl) return;
@@ -137,12 +144,29 @@ const LoginBtn = async (formEl) => {
 const Signin = () => {
   // showload.value = true;
   dispatch("LOG_IN", user);
-}
+};
 
 const onHandle = (index) => {
   console.log(index);
 };
 
+const onkeypress = ({ code }) => {
+  if (code === "Enter") {
+    LoginBtn(ruleFormRef.value);
+  }
+};
+
+onMounted(() => {
+  window.document.addEventListener("keypress", onkeypress);
+});
+
+onBeforeUnmount(() => {
+  window.document.removeEventListener("keypress", onkeypress);
+});
+
+watch(imgCode, (value) => {
+  dispatch("SET_VERIFYCODE", value);
+});
 </script>
 <style lang="scss" scoped>
 .el-button .custom-loading .circular {
@@ -185,11 +209,6 @@ const onHandle = (index) => {
 .login-inner {
   width: 400px;
   margin: auto;
-  // .img{
-  //   display: flex;
-  //   justify-content: flex-end;
-  //   align-items: center;
-  // }
 }
 
 .login-btn {
@@ -215,8 +234,58 @@ const onHandle = (index) => {
     font-size: 18px;
     color: #9e9e9e;
   }
-  img {
-    width: 300px;
-  }
+}
+/* From www.lingdaima.com */
+/* The switch - the box around the slider */
+.switch {
+  /* --moon-mask: ; */
+  font-size: 17px;
+  position: relative;
+  display: inline-block;
+  width: 3.5em;
+  height: 2em;
+  zoom: 0.7;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #f4f4f5;
+  transition: 0.4s;
+  border-radius: 30px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 1.4em;
+  width: 1.4em;
+  border-radius: 20px;
+  left: 0.3em;
+  bottom: 0.3em;
+  background: linear-gradient(40deg, #ff0080, #ff8c00 70%);
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #303136;
+}
+
+input:checked + .slider:before {
+  transform: translateX(1.5em);
+  background: #303136;
+  box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -5px 0 0 #a3dafb;
 }
 </style>

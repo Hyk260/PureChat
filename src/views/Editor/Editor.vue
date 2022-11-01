@@ -30,10 +30,8 @@
 </template>
 
 <script setup>
-import TIM from "tim-js-sdk";
-import tim from "@/utils/im-sdk/tim";
-import "@wangeditor/editor/dist/css/style.css";
 import "./utils/custom-menu";
+import "@wangeditor/editor/dist/css/style.css";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import RichToolbar from "./components/RichToolbar.vue";
 import { toolbarConfig, editorConfig } from "./utils/configure";

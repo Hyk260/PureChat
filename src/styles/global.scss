@@ -11,6 +11,16 @@ body {
   height: 100%;
   // background-color: var(--color-body-bg);
 }
+audio,
+canvas,
+embed,
+iframe,
+img,
+object,
+svg,
+video {
+  vertical-align: middle;
+}
 
 html {
   overflow: hidden;
@@ -31,12 +41,15 @@ ul {
     list-style-type: none;
   }
 }
-// 高度 宽度
 .height-full {
   height: 100%;
 }
 .width-full {
   width: 100%;
+}
+.select-none {
+  -webkit-user-select: none;
+  user-select: none;
 }
 .clearfix {
   &::after {
