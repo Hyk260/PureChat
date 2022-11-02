@@ -8,7 +8,7 @@
   <p align="center">
     使用vue3 + Element-Plus开发 用于学习参考
     <br />
-    <a href="https://pureadmin-7gm44ilzda12fda2-1307934606.ap-shanghai.app.tcloudbase.com" target="blank">
+    <a href="https://pureadmin.cn" target="blank">
       <strong>🌎 访问DEMO</strong>
     </a>
     &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -18,7 +18,7 @@
   </p>
 </p>
 
-[![fork](https://gitee.com/H260788/PureAdmin/badge/fork.svg?theme=white)](https://gitee.com/H260788/PureAdmin/members) [![star](https://gitee.com/H260788/PureAdmin/badge/star.svg?theme=white)](https://gitee.com/H260788/PureAdmin/stargazers)
+[![GitHub license](https://img.shields.io/github/license/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/issues) [![GitHub stars](https://img.shields.io/github/stars/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/stargazers) [![GitHub forks](https://img.shields.io/github/forks/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/network) 
 
 ### 🎉 特性
 
@@ -29,8 +29,8 @@
 - 📃 RBAC 模型 + JWT 权限控制
 - ☁️ 聊天工作室 
 - 🔴 拼图游戏
-- 🌚 主题切换 开发中...
-- 🛠 自定义SVG图标组件
+- 🌚 光明/黑暗模式切换 开发中...
+- ⚡️自定义SVG图标组件
 - 🛠 更多特性开发中 
 - 全栈项目
 
@@ -38,37 +38,37 @@
 
 ### ✨ 安装使用
 
-- 获取项目代码
+Clone 这个 project
 
 ```bash
 git clone git@gitee.com:H260788/PureAdmin.git
 ```
 
-- 安装依赖
+安装依赖
 
 ```
 yarn install
 ```
 
-- 安装服务器依赖
+安装服务器依赖
 
 ```
 cd server && yarn install
 ```
 
-- 运行服务器 需全局安装 `nodemon`  或者 `cd server && node app`
+运行服务器 需全局安装 `nodemon`  或者 `cd server && node app`
 
 ```
 yarn app
 ```
 
-- 启动项目
+启动项目
 
 ```
 yarn serve
 ```
 
-- 打包
+打包
 
 ```
 yarn build
@@ -90,7 +90,7 @@ yarn build
 │   ├── components             // 全局公用组件
 │   ├── locales                // 国际化语言
 │   ├── mock                   // mock服务
-│   ├── plugins				   // 插件
+│   ├── plugins				         // 插件
 │   ├── router                 // 路由
 │   ├── store                  // 全局 store管理
 │   ├── styles                 // 全局样式
@@ -102,7 +102,7 @@ yarn build
 ├── eslintrc.js                // eslint 配置项
 ├── .prettierrc
 ├── .env.development           // 开发环境变量
-├── .env.production			   // 生产环境变量
+├── .env.production			       // 生产环境变量
 ├── .gitignore                 // git 忽略项
 ├── README.md                  // 说明
 ├── jsconfig.json
@@ -110,14 +110,13 @@ yarn build
 └── vue.config.js              // vue配置文件
 ```
 
+
+
 ### 🖼️ 截图
 
 <img src="./images/55CE273A-045F-41BF-946A-D91FEB259006.png">
 
-
-
 <img src="./images/71FF3533-FF8F-437E-852C-BDF5A1341B54.png">
 
-
-
 <img src="./images/8B4FA7B0-B2AA-4279-A767-C370CC33C448.png">
+
