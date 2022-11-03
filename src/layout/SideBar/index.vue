@@ -1,5 +1,6 @@
 <template>
   <div
+    class="select-none"
     :class="['sidebar-container', logoVal ? 'has-logo' : '']"
     v-show="sidebar"
   >

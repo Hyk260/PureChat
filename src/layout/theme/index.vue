@@ -83,6 +83,7 @@ const fnStyle = (off) => {
 }
 .continer-theme {
   height: 100%;
+  background: var(--color-body-bg);
 }
 .app-main {
   // padding-top: 86px;

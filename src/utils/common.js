@@ -1,21 +1,41 @@
 // import store from '@/store/index';
 
-/** 切换主题风格
+/**
+ * 切换主题风格
  * @param {string}  appearance light || dark
  */
 export function changeAppearance(appearance = "auto") {
   if (appearance === "auto") {
-    const media = window.matchMedia("(prefers-color-scheme: light)")
-    appearance = media.matches ? "dark" : "light";
+    // 查询系统主题色
+    const media = window.matchMedia("(prefers-color-scheme: light)");
+    media.onchange = autotaggTheme;
+    // console.log(media);
+    appearance = media.matches ? "light" : "dark";
   }
+  // 设置element主题色
   if (appearance == "dark") {
     document.documentElement.classList.add("dark");
   } else {
     document.documentElement.classList.remove("dark");
   }
+  // 自定义主题设色
   document.body.setAttribute("data-theme", appearance);
   let text = appearance === "dark" ? "黑色" : "白色";
   console.log(appearance, `${text}-主题`);
+}
+
+/**
+ * 根据系统主题颜色自动切换
+ * @param {event}
+ */
+export function autotaggTheme(e) {
+  if (e.matches) {
+    document.body.setAttribute("data-theme", "light");
+    document.documentElement.classList.remove("dark");
+  } else {
+    document.body.setAttribute("data-theme", "dark");
+    document.documentElement.classList.add("dark");
+  }
 }
 
 /**

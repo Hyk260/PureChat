@@ -4,7 +4,7 @@
       <div class="left-mark">
         <!-- <img :src="avatars" title="直达仓库地址" @click="openDepot" /> -->
         <Portrait :size="45" @click="openDepot" />
-        <span>{{ greetings }}</span>
+        <span class="style-text">{{ greetings }}</span>
       </div>
     </el-card>
 
@@ -12,7 +12,7 @@
       <el-col>
         <el-card>
           <template #header>
-            <span> GitHub饼图信息 </span>
+            <span class="style-text"> GitHub饼图信息 </span>
           </template>
           <el-skeleton animated :rows="7" :loading="loading">
             <template #default>
@@ -26,7 +26,7 @@
       <el-col>
         <el-card>
           <template #header>
-            <span> GitHub饼图信息 </span>
+            <span class="style-text"> GitHub饼图信息 </span>
           </template>
           <el-skeleton animated :rows="7" :loading="loading">
             <template #default>
@@ -68,11 +68,15 @@ const openDepot = () => {
 // .main-content {
 //   margin: 0 !important;
 // }
+.style-text {
+  color: var(--color-text);
+}
 .top-content {
   display: flex;
   // justify-content: space-between;
   align-items: center;
   height: 60px;
+  border: none;
   // background: #fff;
 
   .left-mark {

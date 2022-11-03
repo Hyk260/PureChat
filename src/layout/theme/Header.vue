@@ -1,5 +1,6 @@
 <template>
   <div
+    class="select-none"
     :class="['fixed-header', sidebar ? 'style-fixed' : '']"
     :style="fnStyle(isActive)"
   >
