@@ -17,7 +17,7 @@
     <br />
   </p>
 </p>
-[![GitHub license](https://img.shields.io/github/license/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/issues) [![GitHub stars](https://img.shields.io/github/stars/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/stargazers) [![GitHub forks](https://img.shields.io/github/forks/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/network) 
+[![GitHub license](https://img.shields.io/github/license/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/blob/master/LICENSE)[![GitHub issues](https://img.shields.io/github/issues/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/issues)[![GitHub stars](https://img.shields.io/github/stars/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/stargazers)[![GitHub forks](https://img.shields.io/github/forks/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/network)
 
 ### 🎉 特性
 
