@@ -17,7 +17,6 @@
     <br />
   </p>
 </p>
-
 [![GitHub license](https://img.shields.io/github/license/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/issues) [![GitHub stars](https://img.shields.io/github/stars/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/stargazers) [![GitHub forks](https://img.shields.io/github/forks/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/network) 
 
 ### 🎉 特性
@@ -114,9 +113,9 @@ yarn build
 
 ### 🖼️ 截图
 
-<img src="./images/55CE273A-045F-41BF-946A-D91FEB259006.png">
+<img src="./images/login.png">
 
-<img src="./images/71FF3533-FF8F-437E-852C-BDF5A1341B54.png">
+<img src="./images/about.png">
 
 <img src="./images/8B4FA7B0-B2AA-4279-A767-C370CC33C448.png">
 

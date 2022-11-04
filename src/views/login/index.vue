@@ -3,8 +3,9 @@
     <div class="login-inner select-none">
       <!-- 背景 -->
       <svg-icon iconClass="loginBg" class="wave" />
+      <!-- 主题开关 -->
       <label class="switch">
-        <input type="checkbox" />
+        <input type="checkbox" v-model="themecolor" :checked="true" />
         <span class="slider"></span>
       </label>
       <!-- 标题 -->
@@ -126,6 +127,8 @@ import { useStore } from "vuex";
 import { user, rules } from "./utils/validation";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import Motion from "@/utils/motion";
+import { changeAppearance } from "@/utils/common";
+import { useState } from "@/utils/hooks/useMapper";
 
 const router = useRouter();
 const showload = ref(false);
@@ -133,6 +136,28 @@ const keep = ref(false);
 const ruleFormRef = ref();
 const imgCode = ref("");
 const { state, dispatch, commit } = useStore();
+const { appearance } = useState({
+  appearance: (state) => state.settings.appearance,
+});
+
+const themecolor = computed({
+  get() {
+    let theme = appearance.value == "dark" ? true : false;
+    return theme;
+  },
+  set(val) {
+    let theme = val ? "dark" : "light";
+    ThemeColorChange(theme);
+  },
+});
+
+const ThemeColorChange = (val) => {
+  commit("updateSettings", {
+    key: "appearance",
+    value: val,
+  });
+  changeAppearance(val);
+};
 
 const LoginBtn = async (formEl) => {
   if (!formEl) return;
@@ -199,6 +224,7 @@ watch(imgCode, (value) => {
   background-color: transparent;
 }
 .wave {
+  background: var(--color-body-bg);
   position: fixed;
   height: 100%;
   width: 100%;
