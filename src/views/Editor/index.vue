@@ -1,6 +1,19 @@
 # 聊天工作室
 <template>
   <div class="list-container">
+    <el-aside width="68px">
+      <div class="touxiang">
+        <Portrait :size="40" shape="square" />
+      </div>
+      <ul v-for="item in array" :key="item.icon">
+        <li class="aside-item" @click="active = item.icon">
+          <div :class="['aside-list', active == item.icon ? 'current' : '']">
+            <svg-icon :iconClass="item.icon" class="style-svg" />
+            <div class="icon-title">{{ item.title }}</div>
+          </div>
+        </li>
+      </ul>
+    </el-aside>
     <!-- 聊天列表 -->
     <div class="message-left">
       <!-- 搜索框 -->
@@ -59,6 +72,21 @@ import networklink from "./components/networklink.vue";
 import ConversationList from "./ConversationList.vue";
 // import { nextTick } from "process";
 
+const array = [
+  {
+    icon: "news",
+    title: "消息",
+  },
+  {
+    icon: "mail_list",
+    title: "通讯录",
+  },
+  {
+    icon: "application",
+    title: "应用",
+  },
+];
+const active = ref("news");
 const ChatRef = ref(null);
 const { state, dispatch, commit } = useStore();
 
@@ -115,7 +143,7 @@ onBeforeUnmount(() => {
 .message-right {
   background: #fff;
   border-left: 1px solid rgba(0, 0, 0, 0.09);
-  width: calc(100% - 280px);
+  width: calc(100% - 280px - 68px);
   height: 100%;
   position: relative;
   overflow: hidden;
@@ -160,5 +188,38 @@ onBeforeUnmount(() => {
   align-items: center;
   color: #fff;
   cursor: pointer;
+}
+.el-aside {
+  z-index: 9;
+  box-shadow: 1px 0px 5px 0px rgb(0 0 0 / 10%);
+  .aside-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .style-svg {
+    color: #303133;
+    font-size: 1.25rem;
+  }
+  .aside-list {
+    width: 54px;
+    height: 54px;
+    text-align: center;
+    padding-top: 0.625rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .current {
+    background: #d9ecff;
+  }
+  .icon-title {
+    font-size: 12px;
+    margin-top: 3px;
+  }
+}
+.touxiang {
+  height: 42px;
+  margin: 16px 0 10px 0;
+  text-align: center;
 }
 </style>
