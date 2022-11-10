@@ -89,7 +89,7 @@ const fnStyle = (off) => {
   // padding-top: 86px;
   // height: 100vh;
   height: calc(100vh - 86px);
-  margin-top: 86px;
+  // margin-top: 86px;
   width: 100%;
   position: relative;
   overflow-x: hidden;

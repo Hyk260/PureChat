@@ -1,7 +1,36 @@
 /* 暗黑模式适配 */
 html.dark {
   /* 自定义深色背景颜色 */
-  // --el-bg-color: #020409;
-  $border-style: #303030;
+  $border-style: #414243;
   $color-white: #fff;
+  $backg-color: #222222;
+
+  // --el-color-white: $backg-color;
+  // --el-card-border-color: $border-style;
+  --el-menu-hover-bg-color: #4091f7;
+
+  .el-card {
+    // border: 1px solid #627eb5;
+  }
+
+  .el-menu-item {
+    color: $color-white;
+    background-color: $backg-color;
+  }
+
+  .el-sub-menu {
+    background-color: $backg-color;
+
+    // .el-sub-menu__title:hover {
+    //   background: var(--color-primary);
+    // }
+
+    // .el-icon {
+    //   color: $color-white;
+    // }
+
+    span {
+      color: $color-white;
+    }
+  }
 }

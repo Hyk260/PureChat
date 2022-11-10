@@ -2,8 +2,8 @@
   <div
     class="select-none"
     :class="['fixed-header', sidebar ? 'style-fixed' : '']"
-    :style="fnStyle(isActive)"
   >
+    <!-- :style="fnStyle(isActive)" -->
     <div class="navbar">
       <div
         :class="classes.container"
@@ -164,12 +164,14 @@ const toggleClick = (val) => {
 }
 .fixed-header {
   z-index: 10;
-  position: fixed;
-  top: 0;
-  right: 0;
+  // position: fixed;
+  position: relative;
+  // top: 0;
+  // right: 0;
   transition: width 0.1s;
-  background: #fff;
-  // background: var(--color-body-bg);
+  // background: #fff;
+  // box-shadow: 0 0 1px #888;
+  background: var(--color-body-bg);
 }
 .cursor-w {
   cursor: w-resize;

@@ -17,12 +17,11 @@
     <br />
   </p>
 </p>
-[![GitHub license](https://img.shields.io/github/license/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/blob/master/LICENSE)[![GitHub issues](https://img.shields.io/github/issues/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/issues)[![GitHub stars](https://img.shields.io/github/stars/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/stargazers)[![GitHub forks](https://img.shields.io/github/forks/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/network)
+
+
+[![GitHub license](https://img.shields.io/github/license/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/blob/master/LICENSE)
 
 ### 🎉 特性
-
-前端 vue3 + Element-Plus
-后端 Node + Express + lowdb
 
 - 📦️ 后端路由动态渲染
 - 📃 RBAC 模型 + JWT 权限控制
@@ -31,7 +30,6 @@
 - 🌚 光明/黑暗模式切换 开发中...
 - ⚡️自定义SVG图标组件
 - 🛠 更多特性开发中 
-- 全栈项目
 
 
 

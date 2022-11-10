@@ -1,5 +1,5 @@
 <template>
-  <el-icon :size="size" :color="color" v-if="iconName">
+  <el-icon :size="size" :color="color" class="style-icon" v-if="iconName">
     <component :is="iconName" />
   </el-icon>
 </template>
@@ -31,6 +31,9 @@ const { iconName, size, color } = toRefs(props);
 </script>
 
 <style lang="scss" scoped>
+.style-icon {
+  color: var(--color-text);
+}
 .el-icon {
   cursor: pointer;
 }

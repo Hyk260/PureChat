@@ -50,19 +50,24 @@ const handleClose = (key, keyPath) => {
 
 <style lang="scss" scoped>
 .el-menu-vertical:not(.el-menu--collapse) {
+  background: var(--color-body-bg);
   width: 200px;
   min-height: 400px;
   height: 100%;
+  span {
+    color: var(--color-text);
+  }
 }
 .el-menu-vertical {
   border: none;
   height: 100%;
 }
 .sidebar-container {
-  background: #fff;
-  // background: var(--color-body-bg);
-  border-right: 1px solid #e6e6e6;
-  z-index: 10;
+  // background: #fff;
+  background: var(--color-body-bg);
+  // border-right: 1px solid #e6e6e6;
+  box-shadow: 0 0 1px #888;
+  z-index: 11;
   height: 100%;
   position: fixed;
   font-size: 0;
