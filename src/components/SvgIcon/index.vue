@@ -12,6 +12,13 @@ export default defineComponent({
     iconClass: {
       type: String,
       default: () => null,
+      // validator: (val) => {
+      //   return [
+      //     "link",
+      //     "text",
+      //     "default",
+      //   ].includes(val);
+      // },
     },
     className: {
       type: String,

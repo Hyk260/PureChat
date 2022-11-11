@@ -20,9 +20,14 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { Search } from "@element-plus/icons-vue";
-const appoint = ref("");
+import { useDebouncedRef } from "@/utils";
+// const appoint = ref("");
+const appoint = useDebouncedRef("", 50);
+watch(appoint, (value) => {
+  console.log(value);
+});
 </script>
 
 <style lang="scss" scoped>

@@ -2,6 +2,10 @@
   "name": "pure-admin",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "name": "huangyk",
+    "email": "2607881950@qq.com"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "dev": "vue-cli-service serve --report",
@@ -58,5 +62,6 @@
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "webpack-bundle-analyzer": "^4.6.1"
-  }
+  },
+  "license": "MIT"
 }

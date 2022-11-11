@@ -1,3 +1,4 @@
+import { customRef } from "vue";
 /**
  * @description: 生成UUID
  * @param {*}
@@ -31,25 +32,26 @@ export function randomNum(min = 0, max = 100) {
  */
 export function empty(value) {
   switch (typeof value) {
-    case 'undefined':
-      return true
-    case 'string':
-      if (value.replace(/(^[ \t\n\r]*)|([ \t\n\r]*$)/g, '').length == 0) return true
-      break
-    case 'boolean':
-      if (!value) return true
-      break
-    case 'number':
-      if (value === 0 || isNaN(value)) return true
-      break
-    case 'object':
-      if (value === null || value.length === 0) return true
+    case "undefined":
+      return true;
+    case "string":
+      if (value.replace(/(^[ \t\n\r]*)|([ \t\n\r]*$)/g, "").length == 0)
+        return true;
+      break;
+    case "boolean":
+      if (!value) return true;
+      break;
+    case "number":
+      if (value === 0 || isNaN(value)) return true;
+      break;
+    case "object":
+      if (value === null || value.length === 0) return true;
       for (var i in value) {
-        return false
+        return false;
       }
-      return true
+      return true;
   }
-  return false
+  return false;
 }
 
 /**
@@ -63,4 +65,30 @@ export function typeOf(operand) {
   let type = toString.call(operand).split(" ")[1];
   type = type.substring(0, type.length - 1).toLowerCase();
   return type;
+}
+
+/**
+ * @description: 防抖ref
+ * @param {*}
+ * @return {*}
+ * 示例 const text = useDebouncedRef('hello')
+ */
+export function useDebouncedRef(value, delay = 200) {
+  let timer;
+  return customRef((track, trigger) => {
+    return {
+      get() {
+        track();
+        return value;
+      },
+      set(val) {
+        if (timer) return;
+        timer = setTimeout(() => {
+          timer = null;
+          value = val;
+          trigger();
+        }, delay);
+      },
+    };
+  });
 }
