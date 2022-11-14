@@ -1,5 +1,5 @@
 <template>
-  <div class="image_preview" @click="geiPic()">
+  <div class="image_preview" @click="geiPic(url)">
     <!-- :preview-src-list="srcList" -->
     <el-image
       :src="url"
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { loadFile } from "@/api/index";
+import { loadFile, loadFileCopy } from "@/api/index";
 const props = defineProps({
   message: {
     type: Object,
@@ -26,10 +26,11 @@ const srcList = [];
 srcList.push(url);
 
 const geiPic = async (url) => {
-  // const res = await loadFile({
-  //   file_url: url,
-  // });
-  // console.log(res);
+  console.log(url);
+  const res = await loadFileCopy({
+    file_url: url,
+  });
+  console.log(res);
 };
 </script>
 

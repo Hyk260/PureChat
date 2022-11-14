@@ -1,12 +1,11 @@
 <template>
   <div class="viewref">
-    <div :class="`showMore no-more ${noMore ? '' : 'loading-more'}`">
+    <!-- ${noMore ? 'no-more' : 'loading-more'} -->
+    <div :class="`showMore`">
       {{ noMore ? "没有更多了" : "" }}
     </div>
-    <div class="showMore bouncing-loader" v-if="false">
-      <div></div>
-      <div></div>
-      <div></div>
+    <div class="showMore bouncing-loader" v-show="!noMore">
+      <div v-for="item in 3" :key="item"></div>
     </div>
   </div>
 </template>
@@ -22,6 +21,7 @@ const props = defineProps({
   },
 });
 const { noMore } = toRefs(props);
+// const noMore = true;
 </script>
 
 <style lang="scss" scoped>
@@ -29,7 +29,7 @@ const { noMore } = toRefs(props);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 32px;
+  height: 30px;
   width: 100%;
   overflow: hidden;
 }
@@ -76,9 +76,9 @@ const { noMore } = toRefs(props);
   }
 }
 .bouncing-loader > div {
-  width: 0.6rem;
-  height: 0.6rem;
-  margin: 3rem 0.2rem;
+  width: 8px;
+  height: 8px;
+  margin: 0 3px;
   background: #8385aa;
   border-radius: 50%;
   animation: bouncing-loader 0.6s infinite alternate;

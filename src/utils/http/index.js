@@ -3,7 +3,7 @@ import qs from "qs";
 import axios from "axios";
 import storage from "storejs";
 import router from "@/router";
-import { ElMessage } from 'element-plus'
+import { ElMessage } from "element-plus";
 import NProgress from "@/utils/progress";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 
@@ -25,6 +25,10 @@ const service = axios.create({
   //   console.log(params,"params")
   //   return stringify(params, { indices: false })
   // }
+  onUploadProgress: (progressEvent) => {
+    let persent = ((progressEvent.loaded / progressEvent.total) * 100) | 0; //上传进度百分比
+    console.log(persent);
+  },
 });
 
 // 异常拦截处理器
@@ -37,7 +41,7 @@ const errorHandler = (error) => {
         console.log("错误请求");
         break;
       case 401:
-        ElMessage('未授权,请重新登录!')
+        ElMessage("未授权,请重新登录!");
         storage.remove(ACCESS_TOKEN);
         router.replace("/login");
         break;

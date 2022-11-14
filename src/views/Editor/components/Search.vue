@@ -23,8 +23,8 @@
 import { ref, watch } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import { useDebouncedRef } from "@/utils";
-// const appoint = ref("");
-const appoint = useDebouncedRef("", 50);
+const appoint = ref("");
+// const appoint = useDebouncedRef("");
 watch(appoint, (value) => {
   console.log(value);
 });

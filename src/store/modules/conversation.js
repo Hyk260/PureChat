@@ -141,10 +141,11 @@ const conversation = {
             }
 
             state.needScrollDown = 0;
-            state.noMore = false;
             // 当前会话少于历史条数关闭loading
             if (state.currentMessageList?.length < HISTORY_MESSAGE_COUNT) {
               state.noMore = true;
+            } else {
+              state.noMore = false;
             }
           }
           break;
