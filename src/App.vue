@@ -25,7 +25,7 @@ const { currentConversation, userInfo, currentMessageList } = useState({
 });
 
 onMounted(() => {
-  commit("ADD_ROUTE");
+  commit("updataRoute");
   // window.onresize = () => {
   //   debounce?.(() => {
   //     fnresize();

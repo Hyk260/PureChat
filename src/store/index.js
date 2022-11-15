@@ -8,8 +8,9 @@ import actions from "./actions";
 import getters from "./getters";
 import state from "./state";
 
+const modules = {}
 const plugins = [saveToLocalStorage];
-const modulesFiles = require.context("./modules", true, /\.js$/);
+const requireModules = require.context('./modules/', true, /index\.(ts|js)$/iu)
 /**
  * 不需要手动导入应用模块
  * 自动导入模块文件中的所有vuex模块
@@ -17,12 +18,16 @@ const modulesFiles = require.context("./modules", true, /\.js$/);
  * 辅助函数
  * mapState、mapGetters、mapMutations、mapActions
  */
-const modules = modulesFiles.keys().reduce((modules, modulePath) => {
-  const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, "$1");
-  const value = modulesFiles(modulePath);
-  modules[moduleName] = value.default;
-  return modules;
-}, {});
+requireModules.keys().forEach((filePath) => {
+  const modular = requireModules(filePath)
+  const name = filePath.replace(/\.\/|\/index.(js|ts)/g, '')
+  console.log(name)
+  modules[name] = {
+    // namespaced: true,
+    ...modular.default
+  }
+})
+
 console.log(modules, "modules");
 
 const store = createStore({

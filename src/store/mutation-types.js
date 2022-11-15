@@ -1,4 +1,7 @@
 export const ACCESS_TOKEN = "Access-Token";
+export const SET_UP = "setup";
+export const USER_DATA = "userdata";
+
 
 export const CONVERSATIONTYPE = {
   UPDATE_NOMORE: "UPDATE_NOMORE", //更新加载更多

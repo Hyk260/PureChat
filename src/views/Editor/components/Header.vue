@@ -2,12 +2,14 @@
   <header class="message-info-view-header">
     <div class="message-info-views">
       <p v-if="Conver">
-        <span
-          v-if="Conver.type === TIM.TYPES.CONV_C2C"
-          >{{ Conver.userProfile.userID || Conver.remark || Conver.userProfile.nick }}
+        <span v-if="Conver.type === TIM.TYPES.CONV_C2C"
+          >{{
+            Conver.userProfile.userID ||
+            Conver.remark ||
+            Conver.userProfile.nick
+          }}
         </span>
-        <span
-          v-else-if="Conver.type === TIM.TYPES.CONV_GROUP"
+        <span v-else-if="Conver.type === TIM.TYPES.CONV_GROUP"
           >{{ Conver.groupProfile.name || Conver.groupProfile.groupID }}
         </span>
         <span v-else-if="Conver.type === TIM.TYPES.CONV_SYSTEM">系统通知 </span>
@@ -20,7 +22,7 @@
 </template>
 
 <script setup>
-  import TIM from "tim-js-sdk";
+import TIM from "tim-js-sdk";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState } from "@/utils/hooks/useMapper";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";

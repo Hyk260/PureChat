@@ -319,6 +319,7 @@ const loadMsgComponents = (elem_type, item) => {
 };
 // 动态class
 const Megtype = (elem_type) => {
+  console.log(elem_type);
   let resp = "";
   switch (elem_type) {
     case "TIMTextElem":
@@ -329,6 +330,9 @@ const Megtype = (elem_type) => {
       break;
     case "TIMImageElem":
       resp = "message-view__img"; // 图片消息
+      break;
+    case "TIMGroupSystemNoticeElem":
+      resp = "message-view__system"; // 系统通知
       break;
     default:
       resp = "";
@@ -475,6 +479,11 @@ $self-msg-color: #c2e8ff;
   .message-view__text {
     width: fit-content;
     margin-bottom: 5px;
+    :deep(.message-view__item--text) {
+      background: $other-msg-color;
+    }
+  }
+  .message-view__system {
     :deep(.message-view__item--text) {
       background: $other-msg-color;
     }
