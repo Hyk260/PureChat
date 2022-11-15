@@ -24,8 +24,17 @@ export const getMyProfile = async () => {
     console.log(e);
   }
 };
-//退出登陆
-export const logout = async () => {
+//登录
+export const TIM_login = async (params) => {
+  const { userID } = params
+  const result = await tim.login({
+    userID,
+    userSig: window?.genTestUserSig(userID).userSig,
+  });
+  return result;
+};
+//退出登录
+export const TIM_logout = async () => {
   try {
     const { code, data } = await tim.logout();
     // tim.destroy();
@@ -95,7 +104,7 @@ export const TIMpingConv = async (params) => {
     isPinned: !isPinned,
   });
   console.log(result);
-  return;
+  return result;
 };
 // 撤回消息
 export const revokeMsg = (params) => {

@@ -207,14 +207,14 @@ const conversation = {
       ) {
         return "";
       }
-      console.log(state.currentConversation);
-      switch (state.currentConversation.type) {
+      const { type, conversationID } = state.currentConversation;
+      switch (type) {
         case "C2C":
-          return state.currentConversation.conversationID.replace("C2C", "");
+          return conversationID.replace("C2C", "");
         case "GROUP":
-          return state.currentConversation.conversationID.replace("GROUP", "");
+          return conversationID.replace("GROUP", "");
         default:
-          return state.currentConversation.conversationID;
+          return conversationID;
       }
     },
   },

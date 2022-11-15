@@ -134,65 +134,26 @@ const {
 
 const UpdataScrollInto = () => {
   nextTick(() => {
-    // console.log(messageViewRef.value);
-    // console.log(messageViewRef.value.firstElementChild);
-    // messageViewRef.value.firstElementChild?.scrollIntoView();
-    // setTimeout(() => {
-    // max.value = messageViewRef.value.clientHeight - 380;
-    // scrollbarRef.value.setScrollTop(max.value);
     messageViewRef.value.firstElementChild?.scrollIntoView();
-    // }, 10);
   });
 };
+
 const updateLoadMore = (newValue) => {
   nextTick(() => {
     const ViewRef = messageViewRef.value;
+    const elRef = ViewRef?.children?.[newValue - 1];
     if (newValue > 0) {
-      console.log(ViewRef?.children?.[newValue - 1]);
-      ViewRef?.children?.[newValue - 1]?.scrollIntoView({
+      console.log(elRef);
+      elRef?.scrollIntoView({
         block: "start",
       });
       // ({ behavior: 'smooth', block: 'center' })
     } else {
-      console.log(ViewRef?.children?.[newValue]);
-      ViewRef?.children?.[newValue]?.scrollIntoViewIfNeeded();
+      console.log(elRef);
+      elRef?.scrollIntoViewIfNeeded();
     }
   });
 };
-watch(
-  currentMessageList,
-  (data) => {
-    // console.log(data, "needScrollDown");
-    // updateLoadMore(data);
-    UpdataScrollInto();
-  },
-  {
-    deep: true, //深度监听
-    immediate: true,
-  }
-);
-watch(
-  needScrollDown,
-  (data) => {
-    console.log(data, "needScrollDown");
-    // updateLoadMore(data);
-  },
-  {
-    deep: true, //深度监听
-    immediate: true,
-  }
-);
-
-onMounted(() => {
-  Monitorscrollbar();
-});
-onUpdated(() => {
-  // console.log(needScrollDown.value, "onUpdated_needScrollDown");
-  // updateLoadMore(needScrollDown.value);
-});
-onBeforeUnmount(() => {
-  window.removeEventListener("scroll", scrollbar);
-});
 
 const ISown = (item) => {
   return item.from == userInfo.value.username;
@@ -215,19 +176,25 @@ const UpdateScrollbar = () => {
   scrollbarRef.value.update();
 };
 
-const scroll = async ({ scrollTop }) => {
-  // throttle(() => {
-  //   const maxScroll = messageViewRef.value?.clientHeight - 401;
-  //   let client = maxScroll / 2;
-  //   console.log(scrollTop);
-  //   console.log(client,maxScroll);
-  //   let off = scrollTop < client;
-  //   console.log(off);
-  // }, 500);
+const scroll = async ({ scrollLeft, scrollTop }) => {
+  throttle(() => {
+    console.log(scrollTop);
+    // const maxScroll = messageViewRef.value?.clientHeight - 401;
+    // let client = maxScroll / 2;
+    // console.log(scrollTop);
+    // console.log(client,maxScroll);
+    // let off = scrollTop < client;
+    // console.log(off);
+  }, 500);
 };
 
-const Monitorscrollbar = () => {
-  scrollbarRef.value.wrap$.addEventListener("scroll", scrollbar);
+const Monitorscrollbar = (val) => {
+  const elRef = scrollbarRef.value.wrap$;
+  if (val) {
+    elRef.addEventListener("scroll", scrollbar);
+  } else {
+    elRef.removeEventListener("scroll", scrollbar);
+  }
 };
 const validatelastMessage = (msglist) => {
   let msg = null;
@@ -319,7 +286,7 @@ const loadMsgComponents = (elem_type, item) => {
 };
 // 动态class
 const Megtype = (elem_type) => {
-  console.log(elem_type);
+  // console.log(elem_type);
   let resp = "";
   switch (elem_type) {
     case "TIMTextElem":
@@ -371,13 +338,13 @@ const ClickMenuItem = (data) => {
   const { id, text } = data;
   switch (id) {
     case "copy":
-      fncopy(Info);
+      fncopy(Info); //复制
       break;
     case "revoke":
-      revokes(Info);
+      revokes(Info); //撤回
       break;
     case "delete":
-      fndelete(Info);
+      fndelete(Info); //删除
       break;
   }
 };
@@ -399,6 +366,44 @@ const fndelete = async (data) => {
 const revokes = (data) => {
   revokeMsg(data);
 };
+
+// watch(
+//   currentMessageList,
+//   (data) => {
+//     // console.log(data, "needScrollDown");
+//     // updateLoadMore(data);
+//     // UpdataScrollInto();
+//   },
+//   {
+//     deep: true, //深度监听
+//     immediate: true,
+//   }
+// );
+watch(
+  needScrollDown,
+  (data) => {
+    console.log(data, "needScrollDown");
+    updateLoadMore(data);
+  },
+  {
+    deep: true, //深度监听
+    immediate: true,
+  }
+);
+
+onMounted(() => {
+  Monitorscrollbar(true);
+});
+
+onUpdated(() => {
+  // console.log(needScrollDown.value, "onUpdated_needScrollDown");
+  // updateLoadMore(needScrollDown.value);
+});
+
+onBeforeUnmount(() => {
+  Monitorscrollbar(false);
+});
+
 // eslint-disable-next-line no-undef
 defineExpose({ UpdateScrollbar, UpdataScrollInto });
 </script>

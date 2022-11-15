@@ -10,6 +10,8 @@ const localStorage = {
   },
   // 用户信息
   data: {
+    // 前端生成的验证码（按实际需求替换）
+    verifyCode: '', // 验证码
     user: null,
     token: null,
     elTag: [],

@@ -11,17 +11,17 @@ export const user = reactive({
 // 表单校验
 export const rules = reactive({
   username: [
-    { 
+    {
       required: true,
       message: "用户名是必须的",
-      trigger: "blur" 
+      trigger: "blur"
     }
   ],
   password: [
-    { 
+    {
       required: true,
       message: "密码是必须的",
-      trigger: "blur" 
+      trigger: "blur"
     }
   ],
   verifyCode: [
@@ -29,7 +29,7 @@ export const rules = reactive({
       validator: (rule, value, callback) => {
         if (value === "") {
           callback(new Error("请输入验证码"));
-        } else if (store.state.user.verifyCode !== value) {
+        } else if (store.state.data.verifyCode !== value) {
           callback(new Error("请输入正确的验证码"));
         } else {
           callback();

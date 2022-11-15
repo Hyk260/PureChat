@@ -20,3 +20,11 @@ export const CONVERSATIONTYPE = {
 
 export const GET_MESSAGE_LIST = "GET_MESSAGE_LIST"; //获取消息列表
 export const HISTORY_MESSAGE_COUNT = 20; //历史消息计数
+
+// 请求头-内容类型
+export const ContentType = {
+  JSON: 'application/json;charset=UTF-8',
+  FORM: 'application/x-www-form-urlencoded;charset=UTF-8',
+  UPLOAD: 'multipart/form-data',
+  STREAM: 'application/octet-stream;charset=UTF-8'
+}

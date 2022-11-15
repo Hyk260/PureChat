@@ -146,7 +146,7 @@ function onKickOut(event) {
   console.log(message);
   commit("toggleIsLogin", false);
   commit("reset");
-  commit("LOG_OUT");
+  dispatch("LOG_OUT");
 }
 
 function kickedOutReason(type) {
