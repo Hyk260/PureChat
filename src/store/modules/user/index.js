@@ -6,7 +6,7 @@ import { getMyProfile, TIM_logout, TIM_login } from "@/api/im-sdk-api";
 const user = {
   state: {
     currentUserProfile: {},
-    isLogin: false,
+    isLogin: false, // IM登陆状态
     isSDKReady: false, // TIM SDK 是否 ready
     userID: 0,
     userSig: "",
@@ -32,32 +32,37 @@ const user = {
       Object.assign(state, {
         currentUserProfile: {},
         isLogin: false,
-        isSDKReady: false, // TIM SDK 是否 ready
+        isSDKReady: false,
       });
     },
   },
   actions: {
     // state, commit, dispatch, getters, rootGetters, rootState
     // 登录im
-    async TIM_LOG_IN({ state, rootState, commit }, userID) {
-      // console.log(state,rootState.data.user.username)
-      const result = TIM_login({ userID })
+    async TIM_LOG_IN({ commit }, user) {
+      const { userID, userSig } = user;
+      const result = await TIM_login({ userID, userSig })
       console.log(result, "TIM_LOG_IN");
-      commit("toggleIsLogin", true);
-      let data = {
-        userID: userID,
-        userSig: window?.genTestUserSig(userID).userSig,
-        sdkAppID: window?.genTestUserSig("").SDKAppID,
-      };
-      commit("GET_USER_INFO", data);
-      console.log(data, "GET_USER_INFO");
+      const { code, data } = result
+      if (code == 0) {
+        let info = {
+          userID,
+          userSig,
+          sdkAppID: "",
+        };
+        commit("toggleIsLogin", true);
+        commit("GET_USER_INFO", info);
+        console.log(info, "GET_USER_INFO");
+      } else {
+        console.log("err")
+      }
     },
     // 退出im
     async TIM_LOG_OUT({ commit }) {
       const result = await TIM_logout();
+      console.log(result, "TIM_LOG_OUT");
       commit("toggleIsLogin", false);
       commit("reset");
-      console.log(result, "TIM_LOG_OUT");
     },
     // 获取个人资料
     async GET_MYPROFILE({ commit }) {
@@ -66,11 +71,15 @@ const user = {
     },
     // 重新登陆
     RE_LOGIN({ state, rootState, dispatch }) {
-      let nick = rootState.data?.user?.username;
-      let isSDKReady = state?.isSDKReady;
       nextTick(() => {
+        let nick = rootState.data?.user?.username;
+        let userSig = rootState.data?.user?.userSig;
+        let isSDKReady = state?.isSDKReady;
         setTimeout(() => {
-          if (!isSDKReady) dispatch("TIM_LOG_IN", nick);
+          if (!isSDKReady) dispatch("TIM_LOG_IN", {
+            userID: nick,
+            userSig: userSig
+          });
         }, 300);
       });
     },

@@ -8,10 +8,9 @@ import NProgress from "@/utils/progress";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 
 const baseURL = process.env.VUE_APP_PROXY_DOMAIN_REAL;
-console.log(baseURL);
+console.log(baseURL, "baseURL");
 const { formats, parse, stringify } = qs;
 
-// www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const service = axios.create({
   baseURL, // 公共地址
   timeout: 6000, // 请求超时时间
@@ -100,6 +99,7 @@ service.interceptors.request.use((config) => {
   // 开启进度条动画
   NProgress.start();
   const token = storage.get(ACCESS_TOKEN);
+  // 携带自定义请求头token到后台
   if (token) config.headers["authorization"] = token;
   return config;
 }, errorHandler);
@@ -110,10 +110,9 @@ service.interceptors.response.use((response) => {
   const { code, msg } = data;
   // 关闭进度条动画
   NProgress.done();
-  // console.log(response.headers, "response");
+  // console.log(response, "response");
   if (status === 200) {
-    const ToKen =
-      response.headers["x-token"] || response.headers["x-api-requestid"];
+    const ToKen = response.headers["x-token"]
     ToKen && storage.set(ACCESS_TOKEN, ToKen);
     return data;
   }

@@ -2,7 +2,6 @@ import storage from "storejs";
 import router from "@/router";
 import views from "@/utils/assembly.js";
 import { ToTree } from "@/utils/ToTree";
-import { ACCESS_TOKEN } from "@/store/mutation-types";
 import { login, logout } from "@/api/user";
 import { getMenu } from "@/api/menu";
 import { verification } from "@/utils/message/index";
@@ -43,7 +42,10 @@ const actions = {
     console.log(result);
     if (code == 200) {
       commit("updateData", { key: "user", value: result });
-      dispatch("TIM_LOG_IN", username);
+      // dispatch("TIM_LOG_IN", {
+      //   userID: username,
+      //   userSig: result.userSig
+      // });
       dispatch("GET_MENU");
       setTimeout(() => {
         router.push("/home");

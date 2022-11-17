@@ -26,10 +26,10 @@ export const getMyProfile = async () => {
 };
 //登录
 export const TIM_login = async (params) => {
-  const { userID } = params
+  const { userID, userSig } = params
   const result = await tim.login({
     userID,
-    userSig: window?.genTestUserSig(userID).userSig,
+    userSig,
   });
   return result;
 };

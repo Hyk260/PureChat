@@ -21,7 +21,6 @@ const requireModules = require.context('./modules/', true, /index\.(ts|js)$/iu)
 requireModules.keys().forEach((filePath) => {
   const modular = requireModules(filePath)
   const name = filePath.replace(/\.\/|\/index.(js|ts)/g, '')
-  console.log(name)
   modules[name] = {
     // namespaced: true,
     ...modular.default
