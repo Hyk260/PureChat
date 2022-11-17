@@ -12,20 +12,12 @@
         :key="puzzle"
         :class="puzzle == '0' ? 'cell cells' : 'cell'"
       >
-        <!-- <img
-          class="picture"
-          v-if="puzzle !== 0"
-          :src="`http://ybadmin.aju.cn/Uploads/version1/${puzzle}.jpg`"
-          alt=""
-        /> -->
         <img
           class="picture"
           v-if="puzzle !== 0"
-          :src="`http://ybadmin.aju.cn/Uploads/version1/${puzzle}.jpg`"
+          :src="picture(puzzle)"
           alt=""
         />
-        <!-- require(`@/assets/Ubisoft/${puzzle}.jpg`) -->
-        <!-- http://ybadmin.aju.cn/Uploads/version1/${puzzle}.jpg -->
       </div>
     </transition-group>
   </div>
@@ -35,6 +27,20 @@
 import { reactive, ref, onMounted, computed } from "vue";
 import _ from "lodash";
 import { throttle } from "@/utils/throttle";
+
+function picture(i) {
+  const num = {
+    1: require("@/assets/Ubisoft/1.jpg"),
+    2: require("@/assets/Ubisoft/2.jpg"),
+    3: require("@/assets/Ubisoft/3.jpg"),
+    4: require("@/assets/Ubisoft/4.jpg"),
+    5: require("@/assets/Ubisoft/5.jpg"),
+    6: require("@/assets/Ubisoft/6.jpg"),
+    7: require("@/assets/Ubisoft/7.jpg"),
+    8: require("@/assets/Ubisoft/8.jpg"),
+  }[i];
+  return num;
+}
 const puzzles = ref([1, 2, 3, 4, 5, 6, 7, 8, 0]);
 
 puzzles.value = _.shuffle(puzzles.value);
@@ -48,7 +54,7 @@ const shuffle = () => {
 const fnclickBlock = (index) => {
   throttle(() => {
     clickBlock(index);
-  }, 30);
+  }, 50);
 };
 
 // 点击方块
