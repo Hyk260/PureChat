@@ -5,7 +5,6 @@ import { ToTree } from "@/utils/ToTree";
 import { login, logout } from "@/api/user";
 import { getMenu } from "@/api/menu";
 import { verification } from "@/utils/message/index";
-import { ElNotification } from "element-plus";
 
 const actions = {
   // 更新路由
@@ -42,18 +41,14 @@ const actions = {
     console.log(result);
     if (code == 200) {
       commit("updateData", { key: "user", value: result });
-      // dispatch("TIM_LOG_IN", {
-      //   userID: username,
-      //   userSig: result.userSig
-      // });
+      dispatch("TIM_LOG_IN", {
+        userID: username,
+        userSig: result.userSig
+      });
       dispatch("GET_MENU");
       setTimeout(() => {
         router.push("/home");
-        ElNotification({
-          title: "Success",
-          message: "登录成功",
-          type: "success",
-        });
+        verification(code, msg);
       }, 1000);
     } else {
       verification(code, msg);

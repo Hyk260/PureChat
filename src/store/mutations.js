@@ -7,21 +7,23 @@ const mutations = {
   // 更新用户设置
   updateSettings(state, { key, value }) {
     state.settings[key] = value;
-    storage.set(SET_UP, state.settings);
   },
   // 更新用户信息
   updateData(state, { key, value }) {
     state.data[key] = value;
-    storage.set(USER_DATA, state.data);
   },
   // 添加动态路由
   updataRoute() {
-    const table = storage.get(USER_DATA);
-    if (!table?.Routingtable) return;
-    tree(table.Routingtable);
-    table.Routingtable.forEach((item) => {
-      router.addRoute(item);
-    });
+    try {
+      const { Routingtable } = storage.get(USER_DATA);
+      if (!Routingtable) return;
+      tree(Routingtable);
+      Routingtable.forEach((item) => {
+        router.addRoute(item);
+      });
+    } catch (error) {
+      console.log(error)
+    }
   }
 };
 

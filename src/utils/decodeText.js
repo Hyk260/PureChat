@@ -1,4 +1,4 @@
-import { emojiMap, emojiUrl } from "./emoji-map"
+import { emojiMap, emojiUrl, localemojiUrl } from "./emoji-map"
 
 export function decodeText(text) {
   let renderDom = []
@@ -20,6 +20,8 @@ export function decodeText(text) {
           let _emoji = temp.slice(0, right + 1)
           let emoji = emojiMap[_emoji]
           if (emoji) {
+            // let url = require(`@/assets/expression/${emoji}`)
+            // console.log(url)
             renderDom.push({
               name: 'img',
               src: emojiUrl + emojiMap[_emoji]

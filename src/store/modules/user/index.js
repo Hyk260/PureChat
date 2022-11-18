@@ -1,5 +1,5 @@
 import storage from "storejs";
-import tim from "@/utils/im-sdk/tim";
+import { useRouter, useRoute } from "vue-router";
 import { nextTick } from "vue";
 import { getMyProfile, TIM_logout, TIM_login } from "@/api/im-sdk-api";
 
@@ -71,17 +71,15 @@ const user = {
     },
     // 重新登陆
     RE_LOGIN({ state, rootState, dispatch }) {
-      nextTick(() => {
-        let nick = rootState.data?.user?.username;
-        let userSig = rootState.data?.user?.userSig;
-        let isSDKReady = state?.isSDKReady;
-        setTimeout(() => {
-          if (!isSDKReady) dispatch("TIM_LOG_IN", {
-            userID: nick,
-            userSig: userSig
-          });
-        }, 300);
-      });
+      // let userID = rootState.data?.user?.username;
+      // let userSig = rootState.data?.user?.userSig;
+      // let isSDKReady = state?.isSDKReady;
+      // setTimeout(() => {
+      //   if (!isSDKReady) dispatch("TIM_LOG_IN", {
+      //     userID,
+      //     userSig
+      //   });
+      // }, 500);
     },
   },
 };

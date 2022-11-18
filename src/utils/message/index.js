@@ -37,6 +37,9 @@ const errorMessage = (message) => {
 
 const verification = (code, msg) => {
   switch (code) {
+    case 200:
+      successMessage(msg);
+      break;
     case 401:
       warnMessage(msg);
       break;

@@ -14,8 +14,12 @@ import { useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
 import { debounce } from "@/utils/debounce";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
+import { errorMessage } from "@/utils/message";
+import { useRoute, useRouter } from "vue-router";
 
 const locale = zhCn;
+const route = useRoute();
+const router = useRouter();
 const { state, dispatch, commit } = useStore();
 
 const { currentConversation, userInfo, currentMessageList } = useState({
@@ -26,11 +30,11 @@ const { currentConversation, userInfo, currentMessageList } = useState({
 
 onMounted(() => {
   commit("updataRoute");
-  // window.onresize = () => {
-  //   debounce?.(() => {
-  //     fnresize();
-  //   }, 300);
-  // };
+  setTimeout(() => {
+    if (route.name !== "login") {
+      dispatch("RE_LOGIN");
+    }
+  }, 200);
   initListener();
 });
 
@@ -57,7 +61,6 @@ const fnresize = () => {
 };
 
 function initListener() {
-  dispatch("RE_LOGIN");
   // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
   tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate);
   // SDK NOT READT
@@ -144,9 +147,9 @@ function onMessageRevoked(event) {
 function onKickOut(event) {
   let message = kickedOutReason(event.data.type);
   console.log(message);
-  commit("toggleIsLogin", false);
-  commit("reset");
+  errorMessage(message);
   dispatch("LOG_OUT");
+  dispatch("TIM_LOG_OUT");
 }
 
 function kickedOutReason(type) {

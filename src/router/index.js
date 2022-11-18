@@ -35,7 +35,7 @@ const router = createRouter({
 
 let isF = false;
 router.beforeEach(async (to, from, next) => {
-  console.log(to, "to")
+  // console.log(to, "to")
   // console.log(from,"from")
   if (from.path === to.path) return;
   document.title = `${to.meta.title} | ${title}` || document.title;

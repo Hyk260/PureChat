@@ -108,7 +108,12 @@
 
 <script setup>
 import { ref, unref, toRefs, defineEmits } from "vue";
-import { emojiName, emojiUrl, emojiMap } from "@/utils/emoji-map";
+import {
+  emojiName,
+  emojiUrl,
+  emojiMap,
+  localemojiUrl,
+} from "@/utils/emoji-map";
 import { ClickOutside as vClickOutside } from "element-plus";
 
 const buttonRef = ref();

@@ -1,10 +1,17 @@
 import storage from "storejs";
+import { USER_DATA, SET_UP } from '@/store/mutation-types';
 
 export default (store) => {
   store.subscribe((mutation, state) => {
-    console.log(mutation, state)
-    // storage.set("settings", state.settings); // 全局设置
-    // storage.set("data", state.data); // 用户信息
-    // console.log(mutation);
+    const { data, settings } = state;
+    const { payload, type } = mutation;
+    switch (type) {
+      case "updateData":
+        storage.set(USER_DATA, data);
+        break;
+      case "updateSettings":
+        storage.set(SET_UP, settings);
+        break;
+    }
   });
 };

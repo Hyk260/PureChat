@@ -149,7 +149,7 @@ const updateLoadMore = (newValue) => {
       });
       // ({ behavior: 'smooth', block: 'center' })
     } else {
-      console.log(elRef);
+      // console.log(elRef);
       elRef?.scrollIntoViewIfNeeded();
     }
   });
