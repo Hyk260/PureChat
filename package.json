@@ -17,6 +17,8 @@
     "server": "cd server && nodemon server"
   },
   "dependencies": {
+    "@commitlint/cli": "^17.2.0",
+    "@commitlint/config-conventional": "^17.2.0",
     "@vueuse/core": "^8.4.2",
     "@vueuse/motion": "^2.0.0-beta.12",
     "@wangeditor/editor": "^5.0.1",
@@ -28,6 +30,7 @@
     "core-js": "^3.6.5",
     "dayjs": "^1.11.2",
     "element-plus": "^2.0.4",
+    "husky": "^8.0.2",
     "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
     "socket.io-client": "^4.5.1",
