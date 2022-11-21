@@ -27,6 +27,7 @@ const { currentConversation, userInfo, currentMessageList } = useState({
   currentMessageList: (state) => state.conversation.currentMessageList,
   userInfo: (state) => state.data.user,
 });
+console.log("dev");
 
 onMounted(() => {
   commit("updataRoute");
