@@ -12,6 +12,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "app": "cd server && nodemon app",
+    "build:staging": "vue-cli-service build --mode staging",
     "build:pkg:win": "cd server && pkg -t win app.js",
     "build:pkg:mac": "cd server && pkg -t macos app.js",
     "server": "cd server && nodemon server"
