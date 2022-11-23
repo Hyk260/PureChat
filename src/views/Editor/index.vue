@@ -17,7 +17,7 @@
     <div class="message-right" id="svgBox">
       <Header />
       <!-- 聊天窗口 -->
-      <Chatwin ref="ChatRef" />
+      <Chatwin ref="ChatRef" v-show="conver" />
       <div
         id="svgResize"
         @mouseover="dragControllerDiv(ChatRef)"
@@ -65,9 +65,10 @@ const ChatRef = ref(null);
 const { state, dispatch, commit } = useStore();
 
 const { toAccount } = useGetters(["toAccount"]);
-const { networkStatus, user, showMsgBox, conversationList } = useState({
+const { networkStatus, conver, user, showMsgBox, conversationList } = useState({
   networkStatus: (state) => state.conversation.networkStatus,
   user: (state) => state.data.user,
+  conver: (state) => state.conversation.currentConversation,
   showMsgBox: (state) => state.conversation.showMsgBox,
   conversationList: (state) => state.conversation.conversationList,
 });

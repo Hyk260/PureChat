@@ -1,12 +1,12 @@
 <template>
   <el-aside width="68px">
     <div class="touxiang">
-      <Portrait :size="40" shape="square" />
+      <Portrait :size="40" shape="square" @click="dialogVisible = true" />
     </div>
     <!-- h -->
     <list-component :list="list" :active-index="activeIndex" @toggle="toggle" />
 
-    <!-- <ul v-show="false" v-for="item in list" :key="item.icon">
+    <!-- <ul v-for="item in list" :key="item.icon">
       <li
         class="aside-item"
         v-debounce-click:200="onClick"
@@ -18,6 +18,24 @@
         </div>
       </li>
     </ul> -->
+
+    <el-dialog
+      v-model="dialogVisible"
+      append-to-body="true"
+      title="上传头像"
+      width="30%"
+      draggable
+    >
+      <div>123</div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false"> 取消 </el-button>
+          <el-button type="primary" @click="dialogVisible = false">
+            确定
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </el-aside>
 </template>
 
@@ -31,9 +49,12 @@ import {
   onBeforeUnmount,
   watch,
   nextTick,
+  reactive,
+  toRefs,
 } from "vue";
 import SvgIcon from "@/components/SvgIcon";
 
+const dialogVisible = ref(false);
 const active = ref("news");
 const activeIndex = ref(0);
 const list = [

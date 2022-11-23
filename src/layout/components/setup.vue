@@ -19,7 +19,7 @@
         />
       </li>
       <li>
-        <span>侧边栏Logo</span>
+        <span>侧边栏logo</span>
         <el-switch
           v-model="logoVal"
           inline-prompt

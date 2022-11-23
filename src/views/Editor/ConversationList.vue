@@ -84,11 +84,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import {
-  generateTemplateElement,
-  getMessageElemItem,
-  getImageType,
-} from "@/utils/message-input-utils";
+import { getImageType } from "@/utils/message-input-utils";
 import {
   squareUrl,
   RIGHT_CLICK_CHAT_LIST,

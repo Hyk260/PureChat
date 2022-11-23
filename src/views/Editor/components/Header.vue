@@ -1,5 +1,5 @@
 <template>
-  <header class="message-info-view-header">
+  <header class="message-info-view-header" v-show="Conver">
     <div class="message-info-views">
       <p v-if="Conver">
         <span v-if="Conver.type === TIM.TYPES.CONV_C2C"

@@ -47,11 +47,7 @@ import {
   watch,
   nextTick,
 } from "vue";
-import {
-  generateTemplateElement,
-  getMessageElemItem,
-  getImageType,
-} from "@/utils/message-input-utils";
+import { getImageType } from "@/utils/message-input-utils";
 import { empty } from "@/utils";
 import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
@@ -247,7 +243,6 @@ const sendMsgBefore = () => {
   const editor = editorRef.value;
   const text = editorRef.value.getText(); // 纯文本内容
   // const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
-  // const message = getMessageElemItem("text", { text: text }); //文本
   // const innHTML = HtmlText.replace(/<(?!img).*?>/g, "");
   const image = editor.getElemsByType("image"); // 所有图片
   console.log(text);

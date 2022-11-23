@@ -88,10 +88,10 @@ function onUpdateConversationList(event) {
   });
   if (!currentConversation.value) {
     if (data?.[0]?.type !== "@TIM#SYSTEM") {
-      commit("SET_CONVERSATION", {
-        type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
-        payload: data[0],
-      });
+      // commit("SET_CONVERSATION", {
+      //   type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
+      //   payload: data[0],
+      // });
       // nextTick(() => {
       //   setTimeout(() => {
       //     dispatch("GET_MESSAGE_LIST", data[0]);

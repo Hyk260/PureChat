@@ -29,8 +29,7 @@
         <FontIcon iconName="arrow-right" class="cursor-w" />
       </div>
     </div>
-    <div class="dropdown">
-      <!-- trigger="click" -->
+    <div v-if="false" class="dropdown">
       <el-dropdown>
         <span class="el-dropdown-link">
           <FontIcon iconName="arrow-down" />
@@ -67,13 +66,7 @@
 </template>
 
 <script setup>
-import {
-  Back,
-  Right,
-  Minus,
-  Plus,
-  Close,
-} from "@element-plus/icons-vue";
+import { Back, Right, Minus, Plus, Close } from "@element-plus/icons-vue";
 import { computed, ref, watch, toRefs } from "vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState } from "@/utils/hooks/useMapper";
@@ -113,7 +106,7 @@ const ContextMenuEvent = (event, tag) => {
   console.log(tag);
 };
 const ClickMenuItem = (item) => {
-  console.log(item);
+  closing(item.id);
 };
 
 const tagClick = (path) => {
@@ -125,7 +118,7 @@ const handleClose = (tag) => {
   commit("updateData", { elTag: data });
 };
 
-const closing = (tag) => {
+function closing(tag) {
   const find = tags.value.findIndex((t) => {
     return t?.title === CurTitle.value;
   });
@@ -151,7 +144,7 @@ const closing = (tag) => {
     key: "elTag",
     value: tags.value,
   });
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -190,7 +183,7 @@ const closing = (tag) => {
 
   .arrow-right {
     box-shadow: -5px 0 5px -6px #ccc;
-    border-right: 1px solid #ccc;
+    // border-right: 1px solid #ccc;
     cursor: e-resize;
   }
 

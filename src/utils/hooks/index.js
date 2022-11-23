@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from "vue";
 
 /**
  * @description: 切换状态的可组合函数
@@ -7,22 +7,21 @@ import { ref, onMounted, onUnmounted } from 'vue'
  * const [state, toggle] = useToggle()
  */
 export function useToggle(flag = false) {
-  const state = ref(flag)
+  const state = ref(flag);
   const toggle = () => {
-    state.value = !state.value
-  }
-  return [state, toggle]
+    state.value = !state.value;
+  };
+  return [state, toggle];
 }
-
 
 function useEventListener(target, event, callback) {
   onMounted(() => {
-    target.addEventListener(event, callback, false)
-  })
+    target.addEventListener(event, callback, false);
+  });
 
   onUnmounted(() => {
-    target.removeEventListener(event, callback, false)
-  })
+    target.removeEventListener(event, callback, false);
+  });
 }
 
 /**
@@ -32,14 +31,14 @@ function useEventListener(target, event, callback) {
  * const { x, y } = useMouse()
  */
 export function useMouse() {
-  let x = ref(0)
-  let y = ref(0)
+  let x = ref(0);
+  let y = ref(0);
   useEventListener(window, "mousemove", (e) => {
-    x.value = e.clientX
-    y.value = e.clientY
-  })
+    x.value = e.clientX;
+    y.value = e.clientY;
+  });
   return {
-    x, y
-  }
+    x,
+    y,
+  };
 }
-
