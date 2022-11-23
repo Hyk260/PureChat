@@ -8,6 +8,10 @@
 
 @import "element-plus/theme-chalk/src/index.scss";
 
+.el-drawer__header {
+  margin: 0 !important;
+}
+
 .el-message-box__status {
   position: absolute !important;
 }

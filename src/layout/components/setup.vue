@@ -1,5 +1,11 @@
 <template>
-  <el-drawer v-model="drawer" title="设置" :with-header="false">
+  <el-drawer
+    v-model="drawer"
+    size="285px"
+    title="设置"
+    :with-header="true"
+    :show-close="true"
+  >
     <ul class="setting width-full">
       <li>
         <span>关闭侧边栏</span>
@@ -26,7 +32,7 @@
         />
       </li>
       <li>
-        <span>主题颜色</span>
+        <span>主题</span>
         <el-select v-model="themecolor" placeholder="主题颜色">
           <el-option
             v-for="item in options"
@@ -57,6 +63,7 @@ import { computed, ref, watch } from "vue";
 import { useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
 import { changeAppearance } from "@/utils/common";
+import { CircleCloseFilled } from "@element-plus/icons-vue";
 import { useDark, useToggle } from "@vueuse/core";
 import i18n from "@/locales";
 
@@ -161,6 +168,6 @@ const languageChange = (val) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 25px;
+  margin: 20px 0;
 }
 </style>

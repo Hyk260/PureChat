@@ -178,7 +178,7 @@ const UpdateScrollbar = () => {
 
 const scroll = async ({ scrollLeft, scrollTop }) => {
   throttle(() => {
-    console.log(scrollTop);
+    // console.log(scrollTop);
     // const maxScroll = messageViewRef.value?.clientHeight - 401;
     // let client = maxScroll / 2;
     // console.log(scrollTop);

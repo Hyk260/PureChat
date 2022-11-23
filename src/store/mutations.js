@@ -1,7 +1,7 @@
-import router from '@/router';
+import router from "@/router";
 import storage from "storejs";
 import { tree } from "@/utils/ToTree";
-import { USER_DATA, SET_UP } from '@/store/mutation-types';
+import { USER_DATA, SET_UP } from "@/store/mutation-types";
 
 const mutations = {
   // 更新用户设置
@@ -15,16 +15,16 @@ const mutations = {
   // 添加动态路由
   updataRoute() {
     try {
-      const { Routingtable } = storage.get(USER_DATA);
-      if (!Routingtable) return;
-      tree(Routingtable);
-      Routingtable.forEach((item) => {
+      const routing = storage.get(USER_DATA)?.Routingtable;
+      if (!routing) return;
+      tree(routing);
+      routing.forEach((item) => {
         router.addRoute(item);
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  },
 };
 
 export default mutations;

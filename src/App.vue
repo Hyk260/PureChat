@@ -28,7 +28,7 @@ const { currentConversation, userInfo, currentMessageList } = useState({
   userInfo: (state) => state.data.user,
 });
 
-onMounted(() => {
+onMounted(async () => {
   commit("updataRoute");
   setTimeout(() => {
     if (route.name !== "login") {
@@ -92,11 +92,11 @@ function onUpdateConversationList(event) {
         type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
         payload: data[0],
       });
-      nextTick(() => {
-        setTimeout(() => {
-          dispatch("GET_MESSAGE_LIST", data[0]);
-        }, 250);
-      });
+      // nextTick(() => {
+      //   setTimeout(() => {
+      //     dispatch("GET_MESSAGE_LIST", data[0]);
+      //   }, 250);
+      // });
     }
   }
 }

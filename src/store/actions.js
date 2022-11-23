@@ -43,7 +43,7 @@ const actions = {
       commit("updateData", { key: "user", value: result });
       dispatch("TIM_LOG_IN", {
         userID: username,
-        userSig: result.userSig
+        userSig: result.userSig,
       });
       dispatch("GET_MENU");
       setTimeout(() => {
