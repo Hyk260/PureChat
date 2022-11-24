@@ -115,5 +115,5 @@ yarn build
 
 <img src="./images/about.png">
 
-<img src="./images/8B4FA7B0-B2AA-4279-A767-C370CC33C448.png">
+<img src="./images/editor.png">
 
