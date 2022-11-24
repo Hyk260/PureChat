@@ -2,7 +2,7 @@ import TIM from "tim-js-sdk";
 import TIMUploadPlugin from "tim-upload-plugin";
 
 let options = {
-  SDKAppID: 1400588310, 
+  SDKAppID: process.env.VUE_APP_SDK_APPID,
 };
 // 创建 SDK 实例实例通常用 tim 表示
 let tim = TIM.create(options);

@@ -8,24 +8,23 @@ import actions from "./actions";
 import getters from "./getters";
 import state from "./state";
 
-const modules = {}
+const modules = {};
 const plugins = [saveToLocalStorage];
-const requireModules = require.context('./modules/', true, /index\.(ts|js)$/iu)
+const requireModules = require.context("./modules/", true, /index\.(ts|js)$/iu);
+
 /**
- * 不需要手动导入应用模块
- * 自动导入模块文件中的所有vuex模块
- *
- * 辅助函数
- * mapState、mapGetters、mapMutations、mapActions
+ * @description: 自动导入模块文件中的所有vuex模块
+ * @param {*}
+ * @return {*}
  */
 requireModules.keys().forEach((filePath) => {
-  const modular = requireModules(filePath)
-  const name = filePath.replace(/\.\/|\/index.(js|ts)/g, '')
+  const modular = requireModules(filePath);
+  const name = filePath.replace(/\.\/|\/index.(js|ts)/g, "");
   modules[name] = {
     // namespaced: true,
-    ...modular.default
-  }
-})
+    ...modular.default,
+  };
+});
 
 console.log(modules, "modules");
 
@@ -39,10 +38,8 @@ const store = createStore({
   plugins,
 });
 
-/**
- * 刷新页面保存当前主题色
- */
+// 刷新页面保存当前主题色
 changeAppearance(store.state.settings.appearance);
 
-console.log(store, "vuex数据");
+console.log(store, "store实例");
 export default store;

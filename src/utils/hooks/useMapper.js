@@ -1,6 +1,6 @@
 import { computed } from "vue";
 import { mapGetters, mapState, useStore, createNamespacedHelpers } from "vuex";
-
+// import store from "@/store";
 // createNamespacedHelpers 函数获取模块中的属性
 
 const useMapper = (mapper, mapFn) => {

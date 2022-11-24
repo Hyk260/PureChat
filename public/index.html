@@ -1,43 +1,56 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"
+    />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title><%= htmlWebpackPlugin.options.title %></title>
     <!-- require cdn assets css -->
-    <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.css) { %>
-      <link rel="stylesheet" href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" />
+    <% for (var i in htmlWebpackPlugin.options.cdn &&
+    htmlWebpackPlugin.options.cdn.css) { %>
+    <link rel="stylesheet" href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" />
     <% } %>
   </head>
   <body>
     <noscript>
       <strong>
-        We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.
+        We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to continue.
       </strong>
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
-  <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.js) { %>
+    <% for (var i in htmlWebpackPlugin.options.cdn &&
+    htmlWebpackPlugin.options.cdn.js) { %>
     <script src="<%= htmlWebpackPlugin.options.cdn.js[i] %>"></script>
-  <% } %>    
+    <% } %>
   </body>
   <script>
     try {
-      init(Vue)
-    } catch(e) {
-      console.log(e)
+      // init(Vue)
+      console.log(
+        " %c "
+          .concat("Pure-Admin", "  %c 基于Vue3、Element-Plus ")
+          .concat(" 构建 "),
+        "color: #fadfa3; background: #030307; padding:5px 0;",
+        "background: #fadfa3; padding:5px 0;"
+      );
+    } catch (e) {
+      console.log(e);
     }
-    function init(Vue){
+    function init(Vue) {
       // console.log(Vue,"vue实例");
       const app = Vue;
       const { version } = app;
 
-      console.log(version,"VUE版本号")
+      console.log(version, "VUE版本号");
       // console.log(navigator)
       const isMacBrowser = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-      
+
       // console.log(window.performance)
     }
   </script>

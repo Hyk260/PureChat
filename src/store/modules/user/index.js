@@ -3,6 +3,8 @@ import { useRouter, useRoute } from "vue-router";
 import { nextTick } from "vue";
 import { verification } from "@/utils/message/index";
 import { getMyProfile, TIM_logout, TIM_login } from "@/api/im-sdk-api";
+import IM from "@/utils/IM";
+const tim = new IM();
 
 const user = {
   state: {
