@@ -5,6 +5,7 @@ import storage from "storejs";
 import router from "@/router";
 import { ElMessage } from "element-plus";
 import NProgress from "@/utils/progress";
+import store from "@/store";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 
 const baseURL = process.env.VUE_APP_PROXY_DOMAIN_REAL;
@@ -41,8 +42,8 @@ const errorHandler = (error) => {
         break;
       case 401:
         ElMessage("未授权,请重新登录!");
-        storage.remove(ACCESS_TOKEN);
-        router.replace("/login");
+        store.dispatch("LOG_OUT");
+        store.dispatch("TIM_LOG_OUT");
         break;
       case 403:
         console.log("拒绝访问");
@@ -112,7 +113,7 @@ service.interceptors.response.use((response) => {
   NProgress.done();
   // console.log(response, "response");
   if (status === 200) {
-    const ToKen = response.headers["x-token"]
+    const ToKen = response.headers["x-token"];
     ToKen && storage.set(ACCESS_TOKEN, ToKen);
     return data;
   }

@@ -52,8 +52,10 @@ import {
   reactive,
   toRefs,
 } from "vue";
+import { useStore } from "vuex";
 import SvgIcon from "@/components/SvgIcon";
 
+const { state, dispatch, commit } = useStore();
 const dialogVisible = ref(false);
 const active = ref("news");
 const activeIndex = ref(0);
@@ -97,6 +99,7 @@ function onClick() {
 }
 
 function toggle(index) {
+  // console.log(window.TIMProxy.notifyMe());
   activeIndex.value = index;
 }
 

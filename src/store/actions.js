@@ -48,7 +48,7 @@ const actions = {
       dispatch("GET_MENU");
       setTimeout(() => {
         router.push("/home");
-        verification(code, msg);
+        commit("showMessage", { message: msg });
       }, 1000);
     } else {
       verification(code, msg);

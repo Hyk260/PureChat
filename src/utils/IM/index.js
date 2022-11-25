@@ -16,9 +16,27 @@ function kickedOutReason(type) {
       return "";
   }
 }
+function checkoutNetState(state) {
+  switch (state) {
+    case TIM.TYPES.NET_STATE_CONNECTED:
+      return { message: "已接入网络", type: "success" };
+    case TIM.TYPES.NET_STATE_CONNECTING:
+      return { message: "当前网络不稳定", type: "warning" };
+    case TIM.TYPES.NET_STATE_DISCONNECTED:
+      return { message: "当前网络不可用", type: "error" };
+    default:
+      return "";
+  }
+}
 
 export default class {
   constructor() {
+    this.userProfile = {}; // IM用户信息
+    this.isLogin = false; // IM登陆状态
+    this.isSDKReady = false; // TIM SDK 是否 ready
+    this.userID = 0;
+    this.userSig = "";
+    this.sdkAppID = 0;
     // 初始化
     this.init();
     // 暴露给全局
@@ -46,6 +64,15 @@ export default class {
     tim.on(TIM.EVENT.KICKED_OUT, this.onKickOut);
     // SDK内部出错
     tim.on(TIM.EVENT.ERROR, this.onError);
+    // 网络监测
+    tim.on(TIM.EVENT.NET_STATE_CHANGE, this.onNetStateChange);
+    // 收到好友申请列表更新通知
+    tim.on(
+      TIM.EVENT.FRIEND_APPLICATION_LIST_UPDATED,
+      this.onFriendApplicationListUpdated
+    );
+    // 收到好友分组列表更新通知
+    tim.on(TIM.EVENT.FRIEND_GROUP_LIST_UPDATED, this.onFriendGroupListUpdated);
   }
   onReadyStateUpdate({ name }) {
     const isSDKReady = name === TIM.EVENT.SDK_READY ? true : false;
@@ -86,15 +113,56 @@ export default class {
   }
   onUpdateGroupList({ data, name }) {
     console.log(data, "onUpdateGroupList_群组列表更新");
-    // commit('updateGroupList', event.data)
+    // commit('updateGroupList', data)
   }
   onKickOut({ data }) {
     const message = kickedOutReason(data.type);
-    errorMessage(message);
+    store.commit("showMessage", {
+      message: `${message}被踢出，请重新登录。`,
+      type: "error",
+    });
     store.dispatch("LOG_OUT");
     store.dispatch("TIM_LOG_OUT");
   }
   onError(event) {
     console.log(event, "onError");
+  }
+  onNetStateChange({ data }) {
+    store.commit("showMessage", checkoutNetState(data.state));
+  }
+  onFriendApplicationListUpdated(event) {
+    console.log(event);
+  }
+  onFriendGroupListUpdated(event) {
+    console.log(event);
+  }
+  /**
+   * 使用 window.Notification 进行全局的系统通知
+   * @param {Message} message
+   */
+  notifyMe(message) {
+    // 需检测浏览器支持和用户授权
+    if (!("Notification" in window)) {
+      return;
+    } else if (window.Notification.permission === "granted") {
+      this.handleNotify(message);
+    } else if (window.Notification.permission !== "denied") {
+      window.Notification.requestPermission().then((permission) => {
+        // 如果用户同意，就可以向他们发送通知
+        if (permission === "granted") {
+          this.handleNotify(message);
+        }
+      });
+    }
+  }
+  handleNotify(message) {
+    const notification = new window.Notification("有人提到了你", {
+      icon: "https://web.sdk.qcloud.com/im/assets/images/logo.png",
+      body: message.payload.text,
+    });
+    notification.onclick = () => {
+      window.focus();
+      notification.close();
+    };
   }
 }

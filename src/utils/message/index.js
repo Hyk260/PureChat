@@ -4,7 +4,7 @@ import { ElMessage } from "element-plus";
 const Message = (message) => {
   return ElMessage({
     showClose: true,
-    message
+    message,
   });
 };
 
@@ -13,7 +13,7 @@ const successMessage = (message) => {
   return ElMessage({
     showClose: true,
     message,
-    type: "success"
+    type: "success",
   });
 };
 
@@ -22,7 +22,7 @@ const warnMessage = (message) => {
   return ElMessage({
     showClose: true,
     message,
-    type: "warning"
+    type: "warning",
   });
 };
 
@@ -31,7 +31,7 @@ const errorMessage = (message) => {
   return ElMessage({
     showClose: true,
     message,
-    type: "error"
+    type: "error",
   });
 };
 

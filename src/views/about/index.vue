@@ -11,102 +11,94 @@
       </span>
     </el-card>
     <!-- <Motion :delay="100"> -->
-      <el-card class="style-card" shadow="hover">
-        <template #header>
-          <div class="card-header">
-            <span class="font-medium">项目信息</span>
-          </div>
-        </template>
-        <el-descriptions :column="2" border>
-          <el-descriptions-item label="版本" label-align="left" align="left">
-            <el-tag>{{ version }}</el-tag>
-          </el-descriptions-item>
-          <el-descriptions-item
-            label="最后编译时间"
-            label-align="left"
-            align="left"
-          >
-            <el-tag>{{ lastBuildTime }}</el-tag>
-          </el-descriptions-item>
-          <el-descriptions-item
-            label="文档地址"
-            label-align="left"
-            align="left"
-          >
-            <a href="#" target="_blank">
-              <span class="style-color">文档地址</span>
-            </a>
-          </el-descriptions-item>
-          <el-descriptions-item
-            label="预览地址"
-            label-align="left"
-            align="left"
-          >
-            <a href="#" target="_blank">
-              <span class="style-color">预览地址</span>
-            </a>
-          </el-descriptions-item>
-          <el-descriptions-item label="Github" label-align="left" align="left">
-            <a href="https://github.com/Hyk260" target="_blank">
-              <span class="style-color">Github</span>
-            </a>
-          </el-descriptions-item>
-        </el-descriptions>
-      </el-card>
+    <el-card class="style-card" shadow="hover">
+      <template #header>
+        <div class="card-header">
+          <span class="font-medium">项目信息</span>
+        </div>
+      </template>
+      <el-descriptions :column="2" border>
+        <el-descriptions-item label="版本" label-align="left" align="left">
+          <el-tag>{{ version }}</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item
+          label="最后编译时间"
+          label-align="left"
+          align="left"
+        >
+          <el-tag>{{ lastBuildTime }}</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="文档地址" label-align="left" align="left">
+          <a href="#" target="_blank">
+            <span class="style-color">文档地址</span>
+          </a>
+        </el-descriptions-item>
+        <el-descriptions-item label="预览地址" label-align="left" align="left">
+          <a href="#" target="_blank">
+            <span class="style-color">预览地址</span>
+          </a>
+        </el-descriptions-item>
+        <el-descriptions-item label="Github" label-align="left" align="left">
+          <a href="https://github.com/Hyk260" target="_blank">
+            <span class="style-color">Github</span>
+          </a>
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-card>
     <!-- </Motion> -->
     <!-- <Motion :delay="200"> -->
-      <el-card class="style-card" shadow="hover">
-        <template #header>
-          <div class="card-header">
-            <span class="font-medium">生产环境依赖</span>
-          </div>
-        </template>
-        <el-descriptions border>
-          <el-descriptions-item
-            :label="item.label"
-            label-align="left"
-            align="left"
-            v-for="(item, index) in schema"
-            :key="index"
+    <el-card class="style-card" shadow="hover">
+      <template #header>
+        <div class="card-header">
+          <span class="font-medium">生产环境依赖</span>
+        </div>
+      </template>
+      <el-descriptions border>
+        <el-descriptions-item
+          :label="item.label"
+          label-align="left"
+          align="left"
+          v-for="(item, index) in schema"
+          :key="index"
+        >
+          <a
+            :href="'https://www.npmjs.com/package/' + item.label"
+            target="_blank"
           >
-            <a
-              :href="'https://www.npmjs.com/package/' + item.label"
-              target="_blank"
-            >
-              <span class="style-color">
-                {{ item.field }}
-              </span>
-            </a>
-          </el-descriptions-item>
-        </el-descriptions>
-      </el-card>
+            <span class="style-color">
+              {{ item.field }}
+            </span>
+          </a>
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-card>
     <!-- </Motion> -->
     <!-- <Motion :delay="300"> -->
-      <el-card class="style-card" shadow="hover">
-        <template #header>
-          <div class="card-header">
-            <span class="font-medium">开发环境依赖</span>
-          </div>
-        </template>
-        <el-descriptions border>
-          <el-descriptions-item
-            :label="item.label"
-            label-align="left"
-            align="left"
-            v-for="(item, index) in devSchema"
-            :key="index"
+    <el-card class="style-card" shadow="hover">
+      <template #header>
+        <div class="card-header">
+          <span class="font-medium">开发环境依赖</span>
+        </div>
+      </template>
+      <el-descriptions border>
+        <el-descriptions-item
+          :label="item.label"
+          label-align="left"
+          align="left"
+          v-for="(item, index) in devSchema"
+          :key="index"
+        >
+          <a
+            :href="'https://www.npmjs.com/package/' + item.label"
+            target="_blank"
           >
-            <a
-              :href="'https://www.npmjs.com/package/' + item.label"
-              target="_blank"
-            >
-              <span class="style-color">
-                {{ item.field }}
-              </span>
-            </a>
-          </el-descriptions-item>
-        </el-descriptions>
-      </el-card>
+            <span class="style-color">
+              {{ item.field }}
+            </span>
+          </a>
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-card>
     <!-- </Motion> -->
   </el-scrollbar>
 </template>

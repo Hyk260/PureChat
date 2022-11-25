@@ -3,6 +3,7 @@ import { useRouter, useRoute } from "vue-router";
 import { nextTick } from "vue";
 import { verification } from "@/utils/message/index";
 import { getMyProfile, TIM_logout, TIM_login } from "@/api/im-sdk-api";
+import { ElMessage } from "element-plus";
 import IM from "@/utils/IM";
 const tim = new IM();
 
@@ -14,6 +15,8 @@ const user = {
     userID: 0,
     userSig: "",
     sdkAppID: 0,
+    message: null,
+    tim,
   },
   getters: {},
   mutations: {
@@ -38,6 +41,17 @@ const user = {
         isSDKReady: false,
       });
     },
+    showMessage(state, options) {
+      if (state.message) {
+        state.message.close();
+      }
+      state.message = ElMessage({
+        message: options.message,
+        type: options.type || "success",
+        duration: options.duration || 2000,
+        // offset: 40,
+      });
+    },
   },
   actions: {
     // state, commit, dispatch, getters, rootGetters, rootState
@@ -53,7 +67,7 @@ const user = {
           userSig,
           sdkAppID: "",
         };
-        verification(200, "IM登陆成功!");
+        commit("showMessage", { message: "IM登陆成功!" });
         commit("toggleIsLogin", true);
         commit("GET_USER_INFO", info);
         console.log(info, "GET_USER_INFO");
@@ -79,7 +93,7 @@ const user = {
       let userSig = rootState.data?.user?.userSig;
       let isSDKReady = state?.isSDKReady;
       setTimeout(() => {
-        dispatch("TIM_LOG_IN", { userID, userSig });
+        // dispatch("TIM_LOG_IN", { userID, userSig });
       }, 500);
     },
   },
