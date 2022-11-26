@@ -124,8 +124,13 @@ export default class {
     store.dispatch("LOG_OUT");
     store.dispatch("TIM_LOG_OUT");
   }
-  onError(event) {
-    console.log(event, "onError");
+  onError({ data }) {
+    if (data.message !== "Network Error") {
+      store.commit("showMessage", {
+        message: data.message,
+        type: "error",
+      });
+    }
   }
   onNetStateChange({ data }) {
     store.commit("showMessage", checkoutNetState(data.state));

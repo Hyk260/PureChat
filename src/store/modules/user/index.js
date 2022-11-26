@@ -93,7 +93,7 @@ const user = {
       let userSig = rootState.data?.user?.userSig;
       let isSDKReady = state?.isSDKReady;
       setTimeout(() => {
-        // dispatch("TIM_LOG_IN", { userID, userSig });
+        dispatch("TIM_LOG_IN", { userID, userSig });
       }, 500);
     },
   },

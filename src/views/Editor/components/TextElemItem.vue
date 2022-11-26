@@ -2,20 +2,20 @@
   <div class="message-view__item--text">
     <!-- 用户 -->
     <template v-if="message.conversationType == 'GROUP' || 'C2C'">
-      <span>
+      <!-- <span>
         {{ message.payload.text }}
-      </span>
-      <!-- <template v-if="false">
-        <span
-          v-for="item in decodeText(message.payload.text)"
-          :key="item"
-        >
-          <span v-if="item.name === 'text'" class="text linkUrl">
-            {{ item.text }}
-          </span>
-          <img class="emoji" v-else :src="item.src" alt="" />
+      </span> -->
+      <template v-for="item in decodeText(message.payload.text)" :key="item">
+        <span v-if="item.name === 'text'" class="text linkUrl">
+          {{ item.text }}
         </span>
-      </template> -->
+        <img
+          class="emoji"
+          v-else-if="item.name === 'img'"
+          :src="item.src"
+          alt="表情包"
+        />
+      </template>
     </template>
     <!-- 系统 -->
     <template v-if="message.conversationType == '@TIM#SYSTEM'">
@@ -29,7 +29,7 @@
 <script setup>
 import { GroupSystemNotice } from "../utils/utils";
 import { decodeText } from "@/utils/decodeText";
-import { computed } from "vue-demi";
+import { toRefs } from "vue";
 // eslint-disable-next-line no-undef
 const props = defineProps({
   message: {
@@ -37,8 +37,7 @@ const props = defineProps({
     default: null,
   },
 });
-const { message } = props;
-// console.log(message);
+const { message } = toRefs(props);
 
 // const isemote = computed(() => {
 //   const { conversationType, payload } = message;

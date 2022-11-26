@@ -5,7 +5,7 @@
       <svg-icon iconClass="loginBg" class="wave" />
       <!-- 主题开关 -->
       <label class="switch">
-        <input type="checkbox" v-model="themecolor" :checked="true" />
+        <input type="checkbox" v-model="themecolor" :checked="themecolor" />
         <span class="slider"></span>
       </label>
       <!-- 标题 -->
@@ -34,11 +34,11 @@
         <el-form-item prop="password">
           <el-input
             v-model="user.password"
+            type="password"
             placeholder="用户密码"
             :prefix-icon="Lock"
             size="large"
             show-password
-            clearable
           >
           </el-input>
         </el-form-item>
@@ -47,11 +47,13 @@
           <el-input
             v-model="user.verifyCode"
             size="large"
-            :prefix-icon="Key"
             placeholder="验证码"
             clearable
           >
-            <template v-slot:append>
+            <template #prefix>
+              <el-icon class="el-input__icon"><Key /></el-icon>
+            </template>
+            <template #append>
               <ReImageVerify v-model:code="imgCode" />
             </template>
           </el-input>

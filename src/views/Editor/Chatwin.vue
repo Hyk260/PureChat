@@ -277,8 +277,11 @@ const loadMsgComponents = (elem_type, item) => {
     case "TIMImageElem":
       resp = "ImageElemItem"; // 图片消息
       break;
+    case "TIMFileElem":
+      resp = ""; // 文件消息
+      break;
     default:
-      resp = "TextElemItem";
+      resp = "";
       break;
   }
   // console.log(resp);
@@ -297,6 +300,9 @@ const Megtype = (elem_type) => {
       break;
     case "TIMImageElem":
       resp = "message-view__img"; // 图片消息
+      break;
+    case "TIMFileElem":
+      resp = "message-view__file"; // 文件消息
       break;
     case "TIMGroupSystemNoticeElem":
       resp = "message-view__system"; // 系统通知
