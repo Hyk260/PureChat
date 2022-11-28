@@ -6,7 +6,7 @@
     PURE ADMIN
   </h2>
   <p align="center">
-    使用vue3 + Element-Plus开发 用于学习参考
+    使用 vue3 + Element-Plus开发 用于学习参考
     <br />
     <a href="https://pureadmin.cn" target="blank">
       <strong>🌎 访问DEMO</strong>
@@ -19,21 +19,31 @@
 </p>
 
 
+
 [![GitHub license](https://img.shields.io/github/license/Hyk260/PureAdmin)](https://github.com/Hyk260/PureAdmin/blob/master/LICENSE)
 
 ### 🎉 特性
 
-- 📦️ 后端路由动态渲染
+- 📦️ 后端路由动态渲染 `node + express`
 - 📃 RBAC 模型 + JWT 权限控制
-- ☁️ IM即时通讯 聊天工作室 (开发中)
-- 🔴 拼图游戏(九宫格)
-- 🌚 光明/黑暗模式切换(自动根据系统主题改变) 开发中...
-- ⚡️自定义SVG图标组件
-- 🛠 更多特性开发中 
+- ☁️ 聊天工作室 `基于IM即时通讯sdk`
+  - 「动态表情包」
+  - 截图功能(开发中)
+  - 支持消息撤回
+  - 消息输入框使用富文本框 `wangEditor 5`开发(后续支持多类型消息混发)。
+
+- 🎮 九宫格拼图游戏(自动拼图)
+- 🌚 光明/黑暗 模式切换`自动根据系统主题改变)`开发中...
+- ⚡️ 自定义SVG图标组件
+- 🔴 国际化(开发中)
+- 🔧 ESLint  + Prettier规范 `自动格式化`
+- 🛠 更多特性开发中
 
 
 
 ### ✨ 安装使用
+
+本项目由 [node-admin](https://gitee.com/H260788/node-admin) 提供 API。本地运行 node-admin，或者将 API [部署至 Vercel](https://vercel.com)
 
 Clone 这个 project
 
@@ -47,7 +57,7 @@ git clone git@gitee.com:H260788/PureAdmin.git
 yarn install
 ```
 
-安装服务器依赖
+根目录创建文件夹`server`并安装服务器依赖
 
 ```
 cd server && yarn install
