@@ -110,6 +110,7 @@ import ImageElemItem from "./components/ImageElemItem";
 import LoadMore from "./components/LoadMore.vue";
 import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 import { deleteMsgList, revokeMsg, getMsgList } from "@/api/im-sdk-api";
+import emitter from "@/utils/mitt-bus";
 
 const max = ref(0);
 const MenuItemInfo = ref([]);
@@ -143,7 +144,7 @@ const updateLoadMore = (newValue) => {
     const ViewRef = messageViewRef.value;
     const elRef = ViewRef?.children?.[newValue - 1];
     if (newValue > 0) {
-      console.log(elRef);
+      // console.log(elRef);
       elRef?.scrollIntoView({
         block: "start",
       });
@@ -373,22 +374,9 @@ const revokes = (data) => {
   revokeMsg(data);
 };
 
-// watch(
-//   currentMessageList,
-//   (data) => {
-//     // console.log(data, "needScrollDown");
-//     // updateLoadMore(data);
-//     // UpdataScrollInto();
-//   },
-//   {
-//     deep: true, //深度监听
-//     immediate: true,
-//   }
-// );
 watch(
   needScrollDown,
   (data) => {
-    console.log(data, "needScrollDown");
     updateLoadMore(data);
   },
   {
@@ -397,13 +385,21 @@ watch(
   }
 );
 
+emitter.on("updataScroll", (e) => {
+  UpdataScrollInto();
+});
+
 onMounted(() => {
   Monitorscrollbar(true);
 });
 
 onUpdated(() => {
   // console.log(needScrollDown.value, "onUpdated_needScrollDown");
-  // updateLoadMore(needScrollDown.value);
+  // updateLoadMore(0);
+  console.log(11111111);
+  nextTick(() => {
+    UpdataScrollInto();
+  });
 });
 
 onBeforeUnmount(() => {

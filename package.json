@@ -33,6 +33,7 @@
     "element-plus": "^2.0.4",
     "husky": "^8.0.2",
     "lodash": "^4.17.21",
+    "mitt": "^3.0.0",
     "nprogress": "^0.2.0",
     "socket.io-client": "^4.5.1",
     "storejs": "^2.0.1",

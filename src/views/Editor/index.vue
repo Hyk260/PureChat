@@ -10,7 +10,7 @@
         <!-- 连接已断开 -->
         <networklink :show="!networkStatus" />
         <!-- 会话列表 -->
-        <ConversationList @convChange="convChange" />
+        <ConversationList />
       </div>
     </div>
     <!-- 聊天框 -->
@@ -34,7 +34,7 @@
         </div> -->
       </div>
       <!-- 编辑器 -->
-      <Editor v-show="showMsgBox" @sendMsgCallback="sendMsgCallback" />
+      <Editor v-show="showMsgBox" />
     </div>
     <!-- 群详情 -->
     <GroupDetails />
@@ -86,36 +86,43 @@ const {
   conversationList: (state) => state.conversation.conversationList,
 });
 
-const scrollInto = () => {
-  ChatRef?.value.UpdataScrollInto();
-};
-
-const monitoring = () => {
-  console.log(navigator);
-  let status = navigator?.onLine;
+// const scrollInto = () => {
+//   ChatRef?.value.UpdataScrollInto();
+// };
+const SET_NETWORK = () => {
+  const status = navigator?.onLine;
   commit("SET_NETWORK_STATUS", status);
 };
+
+const monitoring = (off) => {
+  if (off) {
+    window.addEventListener("online", SET_NETWORK);
+    window.addEventListener("offline", SET_NETWORK);
+  } else {
+    window.removeEventListener("online", SET_NETWORK);
+    window.removeEventListener("offline", SET_NETWORK);
+  }
+};
+
 // 消息发送回调
-const sendMsgCallback = (data) => {
-  scrollInto();
-};
+// const sendMsgCallback = (data) => {
+//   scrollInto();
+// };
 // 切换会话回调
-const convChange = (data) => {
-  // console.log("切换会话回调_convChange");
-  scrollInto();
-};
+// const convChange = (data) => {
+//   // console.log("切换会话回调_convChange");
+//   scrollInto();
+// };
 
 onActivated(() => {
   console.log("onActivated");
 });
 onDeactivated(() => {});
 onMounted(() => {
-  window.addEventListener("online", monitoring);
-  window.addEventListener("offline", monitoring);
+  monitoring(true);
 });
 onBeforeUnmount(() => {
-  window.removeEventListener("online", monitoring);
-  window.removeEventListener("offline", monitoring);
+  monitoring(false);
 });
 </script>
 

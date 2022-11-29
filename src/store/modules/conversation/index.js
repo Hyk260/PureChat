@@ -140,7 +140,7 @@ const conversation = {
               state.currentMessageList = [];
             }
 
-            state.needScrollDown = 0;
+            // state.needScrollDown = 0;
             // 当前会话少于历史条数关闭loading
             if (state.currentMessageList?.length < HISTORY_MESSAGE_COUNT) {
               state.noMore = true;
@@ -181,13 +181,12 @@ const conversation = {
       if (state.currentConversation && isSDKReady && status) {
         const { conversationID, type, toAccount } = action;
 
-        const result = await getMsgList({
-          conversationID: conversationID,
-          count: 15,
-        });
-
-        const { isCompleted, messageList, nextReqMessageID } = result;
-
+        const { isCompleted, messageList, nextReqMessageID } = await getMsgList(
+          {
+            conversationID: conversationID,
+            count: 15,
+          }
+        );
         // 添加时间
         const addTimeDividerResponse = addTimeDivider(messageList).reverse();
         commit("SET_HISTORYMESSAGE", {
@@ -197,6 +196,7 @@ const conversation = {
             message: addTimeDividerResponse,
           },
         });
+        commit("updataScroll");
         if (type == "GROUP") {
           const { groupID } = action.groupProfile;
           dispatch("getGroupMemberList", { groupID });

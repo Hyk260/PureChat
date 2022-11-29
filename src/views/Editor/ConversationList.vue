@@ -104,7 +104,7 @@ import { TIMpingConv, setMessageRemindType } from "@/api/im-sdk-api";
 
 const contextMenuItemInfo = ref([]);
 // eslint-disable-next-line no-undef
-const emit = defineEmits(["convChange"]);
+// const emit = defineEmits(["convChange"]);
 onMounted(() => {});
 
 const { state, getters, dispatch, commit } = useStore();
@@ -160,9 +160,11 @@ const handleConvListClick = (data) => {
   });
   // 关闭群窗口
   commit("setgroupDrawer", false);
+  //
+
   // 获取会话列表
   dispatch("GET_MESSAGE_LIST", data);
-  emit("convChange");
+  // emit("convChange");
 };
 
 const handleClickMenuItem = (item) => {

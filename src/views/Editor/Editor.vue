@@ -62,7 +62,7 @@ const valueHtml = ref(""); // 内容 HTML
 const messages = ref(null);
 const mode = "simple"; // 'default' 或 'simple'
 // eslint-disable-next-line no-undef
-const emit = defineEmits(["sendMsgCallback"]);
+// const emit = defineEmits(["sendMsgCallback"]);
 
 const { state, getters, dispatch, commit } = useStore();
 const {
@@ -285,7 +285,8 @@ const sendMessage = async () => {
         message: data.message,
       },
     });
-    emit("sendMsgCallback", imResponse);
+    commit("updataScroll");
+    // emit("sendMsgCallback", imResponse);
   } else {
     console.log(data);
   }
