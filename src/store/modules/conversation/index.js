@@ -169,7 +169,10 @@ const conversation = {
   },
   actions: {
     // 获取消息列表
-    async [GET_MESSAGE_LIST]({ commit, dispatch, state, rootState }, action) {
+    async [GET_MESSAGE_LIST](
+      { commit, dispatch, state, getters, rootState },
+      action
+    ) {
       let isSDKReady = rootState.user.isSDKReady;
       let status =
         !state.currentMessageList || state.currentMessageList?.length == 0;
@@ -194,7 +197,16 @@ const conversation = {
             message: addTimeDividerResponse,
           },
         });
+        if (type == "GROUP") {
+          const { groupID } = action.groupProfile;
+          dispatch("getGroupMemberList", { groupID });
+        }
       } else {
+        const { conversationID, type, toAccount } = action;
+        if (type == "GROUP") {
+          const { groupID } = action.groupProfile;
+          dispatch("getGroupMemberList", { groupID });
+        }
         console.log(state.historyMessageList, "获取缓存");
       }
     },

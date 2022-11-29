@@ -99,7 +99,8 @@ function onClick() {
 }
 
 function toggle(index) {
-  // console.log(window.TIMProxy.notifyMe());
+  // window.TIMProxy.notifyMe();
+  // window.TIMProxy.saveSelfToLocalStorage();
   activeIndex.value = index;
 }
 

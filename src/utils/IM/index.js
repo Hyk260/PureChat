@@ -1,7 +1,7 @@
 "use strict";
 import TIM from "tim-js-sdk";
 import tim from "@/utils/im-sdk/tim";
-import { errorMessage } from "@/utils/message";
+import storage from "storejs";
 import store from "@/store";
 
 function kickedOutReason(type) {
@@ -37,10 +37,36 @@ export default class {
     this.userID = 0;
     this.userSig = "";
     this.sdkAppID = 0;
+    this.tim = null;
     // 初始化
     this.init();
+    /**
+     * value:属性的值
+     * writable:如果为false 属性的值就不能被重写,只能为只读了
+     * configurable:总开关,一旦为false,就不能再设置他的（value，writable，configurable）
+     * enumerable:是否能在for...in循环中遍历出来或在Object.keys中列举出来。
+     * https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
+     */
+    Object.defineProperty(this, "tim", { enumerable: false });
     // 暴露给全局
     window.TIMProxy = this;
+  }
+  // 保存IM信息
+  saveSelfToLocalStorage() {
+    const player = {};
+    for (const [key, value] of Object.entries(this)) {
+      player[key] = value;
+    }
+    console.log(player);
+    // storage.set("player", player); // 播放器设置
+  }
+  // 设置IM信息
+  loadSelfFromLocalStorage() {
+    const player = storage.get("player");
+    if (!player) return;
+    for (const [key, value] of Object.entries(player)) {
+      this[key] = value;
+    }
   }
   init() {
     console.log("init");
@@ -143,6 +169,8 @@ export default class {
   }
   /**
    * 使用 window.Notification 进行全局的系统通知
+   * 本地调试仅支持 http://localhost:8080/
+   * https://developer.mozilla.org/zh-CN/docs/Web/API/notification
    * @param {Message} message
    */
   notifyMe(message) {
@@ -163,7 +191,8 @@ export default class {
   handleNotify(message) {
     const notification = new window.Notification("有人提到了你", {
       icon: "https://web.sdk.qcloud.com/im/assets/images/logo.png",
-      body: message.payload.text,
+      // body: message.payload.text,
+      body: "测试",
     });
     notification.onclick = () => {
       window.focus();

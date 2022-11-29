@@ -158,6 +158,8 @@ const handleConvListClick = (data) => {
     type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
     payload: data,
   });
+  // 关闭群窗口
+  commit("setgroupDrawer", false);
   // 获取会话列表
   dispatch("GET_MESSAGE_LIST", data);
   emit("convChange");

@@ -18,6 +18,15 @@
     <div class="message-info-setup">
       <FontIcon iconName="MoreFilled" />
     </div>
+    <!-- 群聊开关 -->
+    <div
+      class="group-chat-switch"
+      @click="openGroup"
+      v-show="!groupDrawer"
+      v-if="Conver && Conver.type == 'GROUP'"
+    >
+      <FontIcon iconName="ArrowLeft" />
+    </div>
   </header>
 </template>
 
@@ -28,10 +37,15 @@ import { useState } from "@/utils/hooks/useMapper";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 import { useStore } from "vuex";
 
-const { dispatch } = useStore();
-const { Conver } = useState({
+const { state, commit, dispatch } = useStore();
+const { Conver, groupDrawer } = useState({
+  groupDrawer: (state) => state.groupinfo.groupDrawer,
   Conver: (state) => state.conversation.currentConversation,
 });
+const openGroup = () => {
+  commit("setgroupDrawer", true);
+};
+console.log(Conver);
 </script>
 
 <style lang="scss" scoped>
@@ -44,6 +58,7 @@ const { Conver } = useState({
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  position: relative;
   // .message-info-views {}
 }
 </style>

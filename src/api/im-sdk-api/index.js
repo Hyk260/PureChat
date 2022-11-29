@@ -15,6 +15,20 @@ export const getMsgList = async (params) => {
   }
   return {};
 };
+// 获取成员列表
+export const getGroupMemberList = async (params) => {
+  try {
+    const { groupID, count, offset } = params;
+    const { code, data } = await tim.getGroupMemberList({
+      groupID,
+      count: 15,
+      offset: 0,
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 // 获取个人资料
 export const getMyProfile = async () => {
   try {
@@ -26,7 +40,7 @@ export const getMyProfile = async () => {
 };
 //登录
 export const TIM_login = async (params) => {
-  const { userID, userSig } = params
+  const { userID, userSig } = params;
   const result = await tim.login({
     userID,
     userSig,

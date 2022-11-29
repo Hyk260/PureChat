@@ -1,7 +1,6 @@
 import storage from "storejs";
 import { useRouter, useRoute } from "vue-router";
 import { nextTick } from "vue";
-import { verification } from "@/utils/message/index";
 import { getMyProfile, TIM_logout, TIM_login } from "@/api/im-sdk-api";
 import { ElMessage } from "element-plus";
 import IM from "@/utils/IM";
@@ -67,7 +66,7 @@ const user = {
           userSig,
           sdkAppID: "",
         };
-        commit("showMessage", { message: "IM登陆成功!" });
+        commit("showMessage", { message: "IM初始化成功!" });
         commit("toggleIsLogin", true);
         commit("GET_USER_INFO", info);
         console.log(info, "GET_USER_INFO");
