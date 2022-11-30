@@ -115,16 +115,18 @@ export default class {
     });
   }
   onReceiveMessage({ data, name }) {
-    // const { toAccount } = store.state.conversation.currentConversation;
-    const { toAccount } = store.getters;
+    const { conversationID } = store.state.conversation.currentConversation;
+    // const { toAccount } = store.getters;
+    // console.log(store.state.conversation);
+    console.log(conversationID, "当前会话ID");
     console.log(data, "收到新消息");
     // 收到新消息 且 为当前选中会话 更新消息
-    if (data?.[0].to !== toAccount) return;
+    if (data?.[0].conversationID !== conversationID) return;
     // 更新当前会话消息
     store.commit("SET_HISTORYMESSAGE", {
       type: "UPDATE_MESSAGES",
       payload: {
-        convId: toAccount,
+        convId: conversationID,
         message: data[0],
       },
     });
@@ -136,7 +138,7 @@ export default class {
     store.commit("SET_HISTORYMESSAGE", {
       type: "RECALL_MESSAGE",
       payload: {
-        convId: data[0].to,
+        convId: data[0].conversationID,
         message: data,
       },
     });

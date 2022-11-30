@@ -53,6 +53,8 @@ const closeGroup = () => {
 const toggle = (item) => {
   const { userID } = item;
   nick.value = userID;
+  console.log(item);
+  dispatch("checkoutConversation", { convId: `C2C${userID}` });
 };
 </script>
 

@@ -142,3 +142,16 @@ export const setMessageRemindType = async (params) => {
   });
   return result;
 };
+
+// 获取会话信息
+export const getConversationProfile = async (params) => {
+  try {
+    const { conversationID } = params;
+    const { code, data } = await tim.getConversationProfile(conversationID);
+    if (code == 0) {
+      return data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

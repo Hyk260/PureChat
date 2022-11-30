@@ -228,7 +228,7 @@ const getMoreMsg = async () => {
     if (messageList.length > 0) noMore = Loadmore;
     const Response = messageList;
     const payload = {
-      convId: toAccount,
+      convId: conversationID,
       messages: Response,
     };
     commit("SET_HISTORYMESSAGE", {
@@ -363,7 +363,7 @@ const fndelete = async (data) => {
     commit("SET_HISTORYMESSAGE", {
       type: "DELETE_MESSAGE",
       payload: {
-        convId: to,
+        convId: conversationID,
         message: data,
       },
     });
@@ -396,7 +396,6 @@ onMounted(() => {
 onUpdated(() => {
   // console.log(needScrollDown.value, "onUpdated_needScrollDown");
   // updateLoadMore(0);
-  console.log(11111111);
   nextTick(() => {
     UpdataScrollInto();
   });

@@ -4,7 +4,7 @@ import {
   HISTORY_MESSAGE_COUNT,
 } from "@/store/mutation-types";
 import { addTimeDivider } from "@/utils/addTimeDivider";
-import { getMsgList } from "@/api/im-sdk-api";
+import { getMsgList, getConversationProfile } from "@/api/im-sdk-api";
 
 const getBaseTime = (list) => {
   return list?.length > 0 ? list.find((t) => t.isTimeDivider).time : 0;
@@ -84,7 +84,7 @@ const conversation = {
         // 撤回消息
         case CONVERSATIONTYPE.RECALL_MESSAGE: {
           const { convId, message } = payload;
-          let oldConvId = state.currentConversation?.toAccount;
+          let oldConvId = state.currentConversation?.conversationID;
           let history = state.historyMessageList.get(convId);
           if (!history) return;
           if (oldConvId !== convId) return;
@@ -126,15 +126,15 @@ const conversation = {
         case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
           if (payload) {
             const { conversationID, toAccount } = payload;
-            let oldConvId = state.currentConversation?.toAccount;
-            if (toAccount == oldConvId) return;
+            let oldConvId = state.currentConversation?.conversationID;
+            if (conversationID == oldConvId) return;
 
             state.currentConversation = payload;
             // 系统消息关闭聊天框
             state.showMsgBox = conversationID == "@TIM#SYSTEM" ? false : true;
 
             if (state.currentConversation) {
-              const history = state.historyMessageList.get(toAccount);
+              const history = state.historyMessageList.get(conversationID);
               state.currentMessageList = history;
             } else {
               state.currentMessageList = [];
@@ -169,10 +169,7 @@ const conversation = {
   },
   actions: {
     // 获取消息列表
-    async [GET_MESSAGE_LIST](
-      { commit, dispatch, state, getters, rootState },
-      action
-    ) {
+    async [GET_MESSAGE_LIST]({ commit, dispatch, state, rootState }, action) {
       let isSDKReady = rootState.user.isSDKReady;
       let status =
         !state.currentMessageList || state.currentMessageList?.length == 0;
@@ -192,7 +189,7 @@ const conversation = {
         commit("SET_HISTORYMESSAGE", {
           type: "ADD_MESSAGE",
           payload: {
-            convId: toAccount,
+            convId: conversationID,
             message: addTimeDividerResponse,
           },
         });
@@ -209,6 +206,13 @@ const conversation = {
         }
         console.log(state.historyMessageList, "获取缓存");
       }
+    },
+    async checkoutConversation({ state, commit }, action) {
+      const { convId } = action;
+      const { conversation } = await getConversationProfile({
+        conversationID: convId,
+      });
+      console.log(conversation);
     },
   },
   getters: {

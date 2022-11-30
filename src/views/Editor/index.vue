@@ -46,8 +46,10 @@ import {
   ref,
   onActivated,
   onDeactivated,
+  onBeforeMount,
   onMounted,
   onBeforeUnmount,
+  onUnmounted,
   watch,
   nextTick,
 } from "vue";
@@ -89,18 +91,18 @@ const {
 // const scrollInto = () => {
 //   ChatRef?.value.UpdataScrollInto();
 // };
-const SET_NETWORK = () => {
+const setNetwork = () => {
   const status = navigator?.onLine;
   commit("SET_NETWORK_STATUS", status);
 };
 
 const monitoring = (off) => {
   if (off) {
-    window.addEventListener("online", SET_NETWORK);
-    window.addEventListener("offline", SET_NETWORK);
+    window.addEventListener("online", setNetwork);
+    window.addEventListener("offline", setNetwork);
   } else {
-    window.removeEventListener("online", SET_NETWORK);
-    window.removeEventListener("offline", SET_NETWORK);
+    window.removeEventListener("online", setNetwork);
+    window.removeEventListener("offline", setNetwork);
   }
 };
 
@@ -116,12 +118,15 @@ const monitoring = (off) => {
 
 onActivated(() => {
   console.log("onActivated");
+  commit("updataScroll");
 });
-onDeactivated(() => {});
+onDeactivated(() => {
+  console.log("onDeactivated");
+});
 onMounted(() => {
   monitoring(true);
 });
-onBeforeUnmount(() => {
+onUnmounted(() => {
   monitoring(false);
 });
 </script>
