@@ -14,6 +14,7 @@
           :key="item.userID"
           :class="nick == item.userID ? 'style-action' : ''"
           @click="toggle(item)"
+          @dblclick="navigate(item)"
         >
           <el-avatar :size="25" :icon="UserFilled" :src="item.avatar" />
           <span class="member-list">{{ item.userID }}</span>
@@ -53,7 +54,9 @@ const closeGroup = () => {
 const toggle = (item) => {
   const { userID } = item;
   nick.value = userID;
-  console.log(item);
+};
+const navigate = (item) => {
+  const { userID } = item;
   dispatch("checkoutConversation", { convId: `C2C${userID}` });
 };
 </script>

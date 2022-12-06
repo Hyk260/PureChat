@@ -105,6 +105,16 @@
           </div>
         </el-form-item>
       </el-form>
+      <div class="margin_t-20 flex-box flex_j_c-space-between">
+        <el-button
+          v-for="(item, index) in operates"
+          :key="item.title"
+          size="default"
+          @click="onHandle(index + 1)"
+        >
+          {{ item.title }}
+        </el-button>
+      </div>
     </div>
   </div>
 </template>

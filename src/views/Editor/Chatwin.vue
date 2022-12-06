@@ -135,7 +135,7 @@ const {
 
 const UpdataScrollInto = () => {
   nextTick(() => {
-    messageViewRef.value.firstElementChild?.scrollIntoView();
+    messageViewRef.value?.firstElementChild?.scrollIntoView();
   });
 };
 

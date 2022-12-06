@@ -1,32 +1,32 @@
 const operates = [
   {
-    title: "手机登录"
+    title: "手机登录",
   },
   {
-    title: "二维码登录"
+    title: "二维码登录",
   },
   {
-    title: "注册"
-  }
+    title: "注册",
+  },
 ];
 
 const thirdParty = [
   {
     title: "微信",
-    icon: "wechat"
+    icon: "wechat",
   },
   {
     title: "支付宝",
-    icon: "alipay"
+    icon: "alipay",
   },
   {
     title: "QQ",
-    icon: "qq"
+    icon: "qq",
   },
   {
     title: "微博",
-    icon: "weibo"
-  }
+    icon: "weibo",
+  },
 ];
 
 export { operates, thirdParty };

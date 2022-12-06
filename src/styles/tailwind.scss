@@ -1,0 +1,142 @@
+// 外边框
+@for $i from 1 through 20 {
+  .margin-#{$i} {
+    margin: #{$i}px;
+  }
+
+  .margin-#{$i}-a {
+    margin: #{$i}px auto;
+  }
+
+  .margin-#{$i}-n {
+    margin: #{$i}px 0px;
+  }
+
+  .margin-n-#{$i} {
+    margin: 0px #{$i}px;
+  }
+
+  .margin_t-#{$i} {
+    margin-top: #{$i}px;
+  }
+
+  .margin_r-#{$i} {
+    margin-right: #{$i}px;
+  }
+
+  .margin_b-#{$i} {
+    margin-bottom: #{$i}px;
+  }
+
+  .margin_l-#{$i} {
+    margin-left: #{$i}px;
+  }
+}
+
+// 内边框
+@for $i from 1 through 20 {
+  .padding-#{$i} {
+    padding: #{$i}px;
+  }
+
+  .padding-#{$i}-n {
+    padding: #{$i}px 0px;
+  }
+
+  .padding-n-#{$i} {
+    padding: 0px #{$i}px;
+  }
+
+  .padding_t-#{$i} {
+    padding-top: #{$i}px;
+  }
+
+  .padding_r-#{$i} {
+    padding-right: #{$i}px;
+  }
+
+  .padding_b-#{$i} {
+    padding-bottom: #{$i}px;
+  }
+
+  .padding_l-#{$i} {
+    padding-left: #{$i}px;
+  }
+}
+
+// todo: flex 布局
+$wraps: nowrap, wrap, wrap-reverse;
+$directions: row, row-reverse, column, column-reverse;
+$alignItems: flex-start, flex-end, center, baseline, stretch;
+$alignSelfs: auto, flex-start, flex-end, center, baseline, stretch;
+$justifyContents: flex-start, flex-end, center, space-between, space-around;
+$alignContents: flex-start, flex-end, center, space-between, space-around,
+  stretch;
+
+.flex {
+
+  // todo: 容器属性
+  &-box {
+    display: flex;
+    display: -webkit-flex;
+    /* Safari */
+  }
+
+  // flex-direction
+  &_d {
+    @each $var in $directions {
+      &-#{$var} {
+        flex-direction: #{$var};
+      }
+    }
+  }
+
+  // flex-wrap
+  &_w {
+    @each $var in $wraps {
+      &-#{$var} {
+        flex-wrap: #{$var};
+      }
+    }
+  }
+
+  // justify-content
+  &_j_c {
+    @each $var in $justifyContents {
+      &-#{$var} {
+        justify-content: #{$var};
+      }
+    }
+  }
+
+  // align-items
+  &_a_i {
+    @each $var in $alignItems {
+      &-#{$var} {
+        align-items: #{$var};
+      }
+    }
+  }
+
+  // align-content
+  &_a_c {
+    @each $var in $alignContents {
+      &-#{$var} {
+        align-content: #{$var};
+      }
+    }
+  }
+
+  // todo: 子元素属性
+  &-item {
+
+    // flex: flex-grow flex-shrink flex-basis
+    &_f-a {
+      flex: auto;
+    }
+
+    &_f-n {
+      flex: none;
+    }
+  }
+}
