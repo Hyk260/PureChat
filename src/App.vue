@@ -39,6 +39,7 @@ onMounted(() => {
 });
 
 const fnresize = () => {
+  console.log("测试1");
   /** width app-wrapper类容器宽度
    * 0 < width <= 760 隐藏侧边栏
    * 760 < width <= 990 折叠侧边栏
