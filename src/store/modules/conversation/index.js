@@ -29,7 +29,7 @@ const conversation = {
     SET_HISTORYMESSAGE(state, action) {
       const { type, payload } = action;
       switch (type) {
-        // 添加消息
+        // 添加消息 首次进入会话是调用
         case CONVERSATIONTYPE.ADD_MESSAGE: {
           console.log("ADD_MESSAGE_添加消息");
           const { convId, message } = payload;
@@ -114,6 +114,17 @@ const conversation = {
         // 将消息标记为已读
         case CONVERSATIONTYPE.MARKE_MESSAGE_AS_READED: {
           console.log("将消息标记为已读");
+          break;
+        }
+        // 更新缓存数据
+        case CONVERSATIONTYPE.UPDATE_CACHE: {
+          console.log("更新缓存数据");
+          const { convId, message } = payload;
+          let history = state.historyMessageList.get(convId);
+          if (!history) return;
+          let baseTime = getBaseTime(history);
+          let timeDivider = addTimeDivider(message, baseTime).reverse();
+          history.unshift(...timeDivider);
           break;
         }
       }

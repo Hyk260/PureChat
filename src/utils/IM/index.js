@@ -116,12 +116,20 @@ export default class {
   }
   onReceiveMessage({ data, name }) {
     const { conversationID } = store.state.conversation.currentConversation;
-    // const { toAccount } = store.getters;
-    // console.log(store.state.conversation);
+    const { historyMessageList } = store.state.conversation.historyMessageList;
     console.log(conversationID, "当前会话ID");
     console.log(data, "收到新消息");
-    // 收到新消息 且 为当前选中会话 更新消息
-    if (data?.[0].conversationID !== conversationID) return;
+    // 收到新消息 且 为当前选中会话 更新对应ID消息
+    if (data?.[0].conversationID !== conversationID) {
+      store.commit("SET_HISTORYMESSAGE", {
+        type: "UPDATE_CACHE",
+        payload: {
+          convId: data?.[0].conversationID,
+          message: data,
+        },
+      });
+      return;
+    }
     // 更新当前会话消息
     store.commit("SET_HISTORYMESSAGE", {
       type: "UPDATE_MESSAGES",

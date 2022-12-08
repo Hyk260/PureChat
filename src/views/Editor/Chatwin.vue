@@ -48,7 +48,7 @@
               v-contextmenu:contextmenu
               @contextmenu.prevent="ContextMenuEvent($event, item)"
             >
-              <div class="message_name">
+              <div class="message_name" v-show="!item.isRevoked">
                 <span v-if="item.from == '@TIM#SYSTEM'"> 系统 </span>
                 <span v-else-if="item.conversationType !== 'C2C'">
                   {{ item.from }}
@@ -259,7 +259,7 @@ const getMoreMsg = async () => {
 
 // 动态组件
 const loadMsgComponents = (elem_type, item) => {
-  // console.log(elem_type);
+  console.log(elem_type);
   let resp = null;
   let CompMap = {
     TextElemItem: TextElemItem,
@@ -280,6 +280,9 @@ const loadMsgComponents = (elem_type, item) => {
       break;
     case "TIMFileElem":
       resp = ""; // 文件消息
+      break;
+    case "TIMGroupTipElem":
+      resp = ""; // 系统提示
       break;
     default:
       resp = "";

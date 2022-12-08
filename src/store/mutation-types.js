@@ -2,11 +2,11 @@ export const ACCESS_TOKEN = "Access-Token";
 export const SET_UP = "setup";
 export const USER_DATA = "userdata";
 
-
 export const CONVERSATIONTYPE = {
   UPDATE_NOMORE: "UPDATE_NOMORE", //更新加载更多
   UPDATE_MESSAGES: "UPDATE_MESSAGES", //更新消息
   ADD_MORE_MESSAGE: "ADD_MORE_MESSAGE",
+  UPDATE_CACHE: "UPDATE_CACHE",
   ADD_MESSAGE: "ADD_MESSAGE",
   RECALL_MESSAGE: "RECALL_MESSAGE",
   MARKE_MESSAGE_AS_READED: "MARKE_MESSAGE_AS_READED",
@@ -23,8 +23,8 @@ export const HISTORY_MESSAGE_COUNT = 20; //历史消息计数
 
 // 请求头-内容类型
 export const ContentType = {
-  JSON: 'application/json;charset=UTF-8',
-  FORM: 'application/x-www-form-urlencoded;charset=UTF-8',
-  UPLOAD: 'multipart/form-data',
-  STREAM: 'application/octet-stream;charset=UTF-8'
-}
+  JSON: "application/json;charset=UTF-8",
+  FORM: "application/x-www-form-urlencoded;charset=UTF-8",
+  UPLOAD: "multipart/form-data",
+  STREAM: "application/octet-stream;charset=UTF-8",
+};
