@@ -55,9 +55,11 @@ const actions = {
     }
   },
   // 退出登录
-  LOG_OUT() {
+  LOG_OUT({ state, commit, dispatch }) {
     logout();
     router.push("/login");
+    // 清除消息记录
+    commit("SET_HISTORYMESSAGE", { type: "CLEAR_HISTORY" });
   },
 };
 
