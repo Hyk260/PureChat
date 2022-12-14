@@ -1,3 +1,4 @@
+import store from "@/store/index";
 // 工具栏配置
 export const toolbarConfig = {
   /* 显示哪些菜单，如何排序、分组 */
@@ -12,12 +13,25 @@ export const toolbarConfig = {
   /* 隐藏哪些菜单 */
   excludeKeys: [],
 };
-
+// 显示 modal 弹框
+function showModal() {
+  store.commit("setMentionModal", { type: "show" });
+}
+// 隐藏 modal
+function hideModal() {
+  store.commit("setMentionModal", { type: "hide" });
+}
 // 编辑器配置
 export const editorConfig = {
   placeholder: "请输入内容...",
   /* 菜单配置 */
   MENU_CONF: {},
+  EXTEND_CONF: {
+    mentionConfig: {
+      showModal, // 必须
+      hideModal, // 必须
+    },
+  },
 };
 
 // 自定义表情
