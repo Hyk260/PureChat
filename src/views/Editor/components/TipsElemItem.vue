@@ -1,32 +1,62 @@
-<template>
-  <!-- <div
-    class="message-view__item--text text right-menu-item"
-    v-for="(item, index) in getChangeType(msgRow)"
-    :key="index"
+<!-- <template>
+  <div
+    @click="addItem()"
+    class="message-view_withdraw"
   >
-    <div>{{ item }}</div>
-  </div> -->
-  <div @contextmenu.prevent.stop class="message-view_withdraw">
-    {{ getChangeType(msgRow) }}
+    {{ getChangeType() }}
   </div>
-</template>
+</template> -->
 
-<script setup>
-import { toRefs } from "vue";
-
-// eslint-disable-next-line no-undef
-const props = defineProps({
-  msgRow: {
-    type: Object,
-    default: () => {},
+<script>
+import { toRefs, reactive, defineComponent } from "vue";
+export default defineComponent({
+  name: "TipElement",
+  components: {},
+  directives: {},
+  props: {
+    message: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  data() {
+    return {
+      text: "test",
+      extra: [],
+    };
+  },
+  setup(props, { attrs, emit, expose, slots }) {
+    const state = reactive({
+      text: "wewe",
+      visible: false,
+      isMoving: false,
+      interval: 0,
+      abc: 1,
+    });
+    const getChangeType = () => {
+      return "撤回一条消息";
+    };
+    return {
+      getChangeType,
+      ...toRefs(state),
+    };
+  },
+  methods: {
+    addItem(type = "item") {
+      this.extra.push(type);
+    },
+    removeItem() {
+      this.extra.pop();
+    },
+  },
+  render() {
+    return (
+      <div class="message-view_withdraw" onClick={this.addItem()}>
+        {this.getChangeType()}
+      </div>
+    );
   },
 });
-
-const { msgRow } = toRefs(props);
-
-const getChangeType = (data) => {
-  return "撤回一条消息";
-};
 </script>
 
 <style lang="scss" scoped>

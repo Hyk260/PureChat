@@ -1,57 +1,55 @@
-<template>
-  <div class="group-tip-element-wrapper">{{}}</div>
-</template>
+<!-- <template>
+  <div class="group-tip-element-wrapper">{{ getGroupTipContent() }}</div>
+</template> -->
 
 <script>
 import {
   defineComponent,
   onBeforeUnmount,
   onMounted,
+  computed,
   reactive,
   toRefs,
 } from "vue";
-
+import TIM from "tim-js-sdk";
 export default defineComponent({
+  name: "GroupTipElement",
   props: {
     message: {
       type: Object,
       default: () => {},
     },
   },
-  setup(props) {
+  setup(props, { attrs, emit, expose, slots }) {
     const state = reactive({
+      text: "wewe",
       visible: false,
       isMoving: false,
       interval: 0,
     });
-    console.log(props);
-    const getGroupTipContent = (message) => {
-      // 群通话tips
-      let nick =
-        message.nick ||
-        (message.from === this.userID && this.currentUserProfile.nick) ||
-        message.from;
+    const getGroupTipContent = () => {
+      const message = props.message;
       const userName = message.nick || message.payload.userIDList.join(",");
       switch (message.payload.operationType) {
-        case this.TIM.TYPES.GRP_TIP_MBR_JOIN:
+        case TIM.TYPES.GRP_TIP_MBR_JOIN:
           return `群成员：${userName} 加入群组`;
-        case this.TIM.TYPES.GRP_TIP_MBR_QUIT:
+        case TIM.TYPES.GRP_TIP_MBR_QUIT:
           return `群成员：${userName} 退出群组`;
-        case this.TIM.TYPES.GRP_TIP_MBR_KICKED_OUT:
+        case TIM.TYPES.GRP_TIP_MBR_KICKED_OUT:
           return `群成员：${userName} 被${message.payload.operatorID}踢出群组`;
-        case this.TIM.TYPES.GRP_TIP_MBR_SET_ADMIN:
+        case TIM.TYPES.GRP_TIP_MBR_SET_ADMIN:
           return `群成员：${userName} 成为管理员`;
-        case this.TIM.TYPES.GRP_TIP_MBR_CANCELED_ADMIN:
+        case TIM.TYPES.GRP_TIP_MBR_CANCELED_ADMIN:
           return `群成员：${userName} 被撤销管理员`;
-        case this.TIM.TYPES.GRP_TIP_GRP_PROFILE_UPDATED:
+        case TIM.TYPES.GRP_TIP_GRP_PROFILE_UPDATED:
           return "群资料修改";
-        case this.callTips:
+        case "256":
           if (message.payload.text.indexOf("结束群聊") > -1) {
             return `"${message.payload.text}"`;
           } else {
-            return `"${nick}" ${message.payload.text}`;
+            return `${message.payload.text}`;
           }
-        case this.TIM.TYPES.GRP_TIP_MBR_PROFILE_UPDATED:
+        case TIM.TYPES.GRP_TIP_MBR_PROFILE_UPDATED:
           for (let member of message.payload.memberList) {
             if (member.muteTime > 0) {
               return `群成员：${member.userID}被禁言${member.muteTime}秒`;
@@ -69,8 +67,14 @@ export default defineComponent({
     onBeforeUnmount(() => {});
 
     return {
+      getGroupTipContent,
       ...toRefs(state),
     };
+  },
+  render() {
+    return (
+      <div class="group-tip-element-wrapper">{this.getGroupTipContent()}</div>
+    );
   },
 });
 </script>
