@@ -115,12 +115,20 @@ export default class {
     });
   }
   onReceiveMessage({ data, name }) {
-    const { conversationID } = store.state.conversation.currentConversation;
-    const { historyMessageList } = store.state.conversation.historyMessageList;
-    console.log(conversationID, "当前会话ID");
+    const convId =
+      store.state.conversation?.currentConversation?.conversationID;
+    const userProfile = store.state.user.currentUserProfile;
+    const { atUserList } = data[0];
+    console.log(convId, "当前会话ID");
     console.log(data, "收到新消息");
-    // 收到新消息 且 为当前选中会话 更新对应ID消息
-    if (data?.[0].conversationID !== conversationID) {
+    if (atUserList.length > 0) {
+      let userId = userProfile?.userID;
+      let off = atUserList.includes(userId);
+      off && window.TIMProxy.notifyMe(data[0]);
+    }
+    if (!convId) return;
+    // 收到新消息 且 不为当前选中会话 更新对应ID消息
+    if (data?.[0].conversationID !== convId) {
       store.commit("SET_HISTORYMESSAGE", {
         type: "UPDATE_CACHE",
         payload: {
@@ -134,7 +142,7 @@ export default class {
     store.commit("SET_HISTORYMESSAGE", {
       type: "UPDATE_MESSAGES",
       payload: {
-        convId: conversationID,
+        convId: convId,
         message: data[0],
       },
     });
@@ -205,8 +213,7 @@ export default class {
   handleNotify(message) {
     const notification = new window.Notification("有人提到了你", {
       icon: "https://web.sdk.qcloud.com/im/assets/images/logo.png",
-      // body: message.payload.text,
-      body: "测试",
+      body: message.payload.text,
     });
     notification.onclick = () => {
       window.focus();

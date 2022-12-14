@@ -294,16 +294,19 @@ const sendMsgBefore = () => {
   // console.log(text);
   if (str.includes("mention")) {
     aitStr = str.replace(/<[^>]+>/g, "");
+    aitStr = aitStr.replace(/&nbsp;/gi, "");
     newmsg = content.filter((t) => t.type == "mention");
     newmsg.map((t) => aitlist.push(t.info.id));
     aitlist = Array.from(new Set(aitlist));
   }
   // console.log(HtmlText);
   // console.log(innHTML);
+  console.log(aitStr);
   return { text, image, aitStr, aitlist };
 };
 // 发送消息
 const sendMessage = async () => {
+  let TextMsg = null;
   const { type, conversationID, toAccount } = currentConversation.value;
   const { text, aitStr, image, aitlist } = sendMsgBefore();
   // console.log(image);
@@ -317,17 +320,18 @@ const sendMessage = async () => {
   //   image: file,
   // });
 
-  let TextMsg = await CreateTextMsg({
-    convId: toAccount,
-    convType: type, //"C2C"
-    textMsg: text,
-  });
   if (aitStr) {
     TextMsg = await CreateTextAtMsg({
       convId: toAccount,
       convType: type,
       textMsg: aitStr,
       atUserList: aitlist,
+    });
+  } else {
+    TextMsg = await CreateTextMsg({
+      convId: toAccount,
+      convType: type, //"C2C"
+      textMsg: text,
     });
   }
   // 发送消息
