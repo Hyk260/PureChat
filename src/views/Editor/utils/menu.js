@@ -48,4 +48,10 @@ const state = reactive({
 });
 const { circleUrl, squareUrl } = toRefs(state);
 
-export { squareUrl, circleUrl, RIGHT_CLICK_CHAT_LIST, MENU_LIST, RIGHT_CLICK_MENU_LIST };
+export {
+  squareUrl,
+  circleUrl,
+  RIGHT_CLICK_CHAT_LIST,
+  MENU_LIST,
+  RIGHT_CLICK_MENU_LIST,
+};

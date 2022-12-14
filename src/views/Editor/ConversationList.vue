@@ -28,20 +28,14 @@
         class="close-btn"
         @click.stop="closeMsg(item)"
       />
-      <!-- 头像 :value="100" :max="99" value="new" is-dot-->
-      <el-badge
-        :hidden="item.unreadCount == 0"
-        :value="item.unreadCount"
-        :max="9"
-      >
-        <img
-          v-if="item.type == 'C2C'"
-          :src="item.userProfile.avatar || squareUrl"
-          class="portrait"
-          alt="头像"
-        />
-        <img v-else :src="squareUrl" class="portrait" alt="头像" />
-      </el-badge>
+      <img
+        v-if="item.type == 'C2C'"
+        :src="item.userProfile.avatar || squareUrl"
+        class="portrait"
+        alt="头像"
+      />
+      <img v-else :src="squareUrl" class="portrait" alt="头像" />
+      <!-- </el-badge> -->
       <!-- 消息 -->
       <div class="message-item-right">
         <div class="message-item-right-top">
@@ -63,6 +57,10 @@
             {{ fnNews(item) }}
           </span>
         </div>
+        <!-- 未读消息红点 -->
+        <template v-if="item.unreadCount !== 0">
+          <el-badge :value="item.unreadCount" :max="9" />
+        </template>
         <!-- 消息免打扰 -->
         <template v-if="false">
           <svg-icon iconClass="DontDisturb" class="dont" />
@@ -160,11 +158,10 @@ const handleConvListClick = (data) => {
   });
   // 关闭群窗口
   commit("setgroupDrawer", false);
-  //
-
+  // 群详情信息
+  commit("setGroupProfile", data);
   // 获取会话列表
   dispatch("GET_MESSAGE_LIST", data);
-  // emit("convChange");
 };
 
 const handleClickMenuItem = (item) => {
@@ -266,7 +263,7 @@ const pingConv = async (data, off) => {
     position: absolute;
     left: 0;
     top: 0;
-    border: 8px solid #f28078;
+    border: 8px solid rgb(84, 180, 239);
     border-right-color: transparent;
     border-bottom-color: transparent;
   }
@@ -315,6 +312,15 @@ const pingConv = async (data, off) => {
       width: 179px;
       white-space: nowrap;
       text-overflow: ellipsis;
+      position: relative;
+    }
+    .el-badge {
+      position: absolute;
+      right: 0px;
+      bottom: -2px;
+      sup {
+        top: 0;
+      }
     }
   }
 }

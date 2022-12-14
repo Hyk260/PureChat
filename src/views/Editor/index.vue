@@ -1,4 +1,3 @@
-# 聊天工作室
 <template>
   <div class="list-container">
     <Sidebar />
@@ -88,9 +87,6 @@ const {
   conversationList: (state) => state.conversation.conversationList,
 });
 
-// const scrollInto = () => {
-//   ChatRef?.value.UpdataScrollInto();
-// };
 const setNetwork = () => {
   const status = navigator?.onLine;
   commit("SET_NETWORK_STATUS", status);
@@ -106,21 +102,12 @@ const monitoring = (off) => {
   }
 };
 
-// 消息发送回调
-// const sendMsgCallback = (data) => {
-//   scrollInto();
-// };
-// 切换会话回调
-// const convChange = (data) => {
-//   // console.log("切换会话回调_convChange");
-//   scrollInto();
-// };
-
 onActivated(() => {
   console.log("onActivated");
   commit("updataScroll");
 });
 onDeactivated(() => {
+  commit("setgroupDrawer", false);
   console.log("onDeactivated");
 });
 onMounted(() => {
@@ -147,6 +134,7 @@ onUnmounted(() => {
   height: 100%;
   position: relative;
   overflow: hidden;
+  min-width: 274px;
 }
 .style-group {
   width: calc(100% - 280px - 68px - 220px);
