@@ -38,6 +38,15 @@ export const getMyProfile = async () => {
     console.log(e);
   }
 };
+export const getGroupProfile = async (params) => {
+  const { groupID } = params;
+  const { data, code } = await tim.getGroupProfile({
+    groupID: groupID,
+    // groupCustomFieldFilter: ["key1", "key2"],
+  });
+  return data.group;
+};
+
 //登录
 export const TIM_login = async (params) => {
   const { userID, userSig } = params;
@@ -76,6 +85,19 @@ export const CreateTextMsg = async (params) => {
   });
   return message;
 };
+// 创建@ 提醒功能的文本消息
+export const CreateTextAtMsg = async (params) => {
+  const { convId, convType, textMsg, atUserList } = params;
+  let message = await tim.createTextAtMessage({
+    to: convId,
+    conversationType: convType || TIM.TYPES.CONV_GROUP,
+    payload: {
+      text: textMsg, // '@denny @lucy @所有人 今晚聚餐，收到的请回复',
+      atUserList: atUserList, // ['denny', 'lucy', TIM.TYPES.MSG_AT_ALL] // 'denny' 'lucy' 都是 userID，而非昵称
+    },
+  });
+  return message;
+};
 // 创建图片消息
 export const CreateImgtMsg = async (params) => {
   const { convId, convType, image } = params;
@@ -100,14 +122,11 @@ export const CreateImgtMsg = async (params) => {
 // 发送消息
 export const sendMsg = async (params) => {
   const result = await tim.sendMessage(params);
-  // console.log(result)
-  // const { code, data } = result
   return result;
 };
 // 删除消息
 export const deleteMsgList = async (params) => {
   const result = await tim.deleteMessage([params]);
-  console.log(result);
   return result;
 };
 // 会话顶置
@@ -117,7 +136,6 @@ export const TIMpingConv = async (params) => {
     conversationID,
     isPinned: !isPinned,
   });
-  console.log(result);
   return result;
 };
 // 撤回消息
@@ -142,7 +160,6 @@ export const setMessageRemindType = async (params) => {
   });
   return result;
 };
-
 // 获取会话信息
 export const getConversationProfile = async (params) => {
   try {
@@ -154,4 +171,17 @@ export const getConversationProfile = async (params) => {
   } catch (error) {
     console.log(error);
   }
+};
+// 消息已读上报
+export const setMessageRead = async (convId) => {
+  let promise = tim.setMessageRead({ conversationID: convId });
+  promise
+    .then(function (imResponse) {
+      // 已读上报成功，指定 ID 的会话的 unreadCount 属性值被置为0
+      console.log("已读上报成功", imResponse);
+    })
+    .catch(function (imError) {
+      // 已读上报失败
+      console.warn("setMessageRead error:", imError);
+    });
 };
