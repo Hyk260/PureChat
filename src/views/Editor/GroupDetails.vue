@@ -18,6 +18,12 @@
         >
           <el-avatar :size="25" :icon="UserFilled" :src="item.avatar" />
           <span class="member-list">{{ item.userID }}</span>
+          <span class="owner" v-if="groupProfile.ownerID == item.userID">
+            群主
+          </span>
+          <span class="admin" v-if="userProfile.userID == item.userID">
+            自己
+          </span>
         </li>
       </ul>
     </div>
@@ -30,24 +36,30 @@ import { UserFilled } from "@element-plus/icons-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
-
+import tim from "@/utils/im-sdk/tim";
+import { getGroupProfile } from "@/api/im-sdk-api";
 const nick = ref("");
 const { state, commit, dispatch } = useStore();
 const {
   user,
   conver,
+  userProfile,
   groupDrawer,
   showMsgBox,
+  groupProfile,
   conversationList,
   currentMemberList,
 } = useState({
   user: (state) => state.data.user,
+  userProfile: (state) => state.user.currentUserProfile,
   conver: (state) => state.conversation.currentConversation,
   showMsgBox: (state) => state.conversation.showMsgBox,
   groupDrawer: (state) => state.groupinfo.groupDrawer,
+  groupProfile: (state) => state.groupinfo.groupProfile,
   currentMemberList: (state) => state.groupinfo.currentMemberList,
   conversationList: (state) => state.conversation.conversationList,
 });
+const { isOwner } = useGetters(["isOwner"]);
 const closeGroup = () => {
   commit("setgroupDrawer", false);
 };
@@ -90,6 +102,10 @@ const navigate = (item) => {
       cursor: pointer;
       .member-list {
         margin-left: 5px;
+        font-size: 12px;
+      }
+      .owner,
+      .admin {
         font-size: 12px;
       }
     }
