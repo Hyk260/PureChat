@@ -19,12 +19,20 @@
       @onChange="onChange"
       @keyup.enter="handleEnter"
     />
+    <!-- @ mention弹框 -->
+    <mention-modal
+      v-if="isShowModal"
+      :isOwner="isOwner"
+      :memberlist="currentMemberList"
+      @hideMentionModal="hideMentionModal"
+      @insertMention="insertMention"
+    />
     <el-tooltip
       effect="dark"
       content="按Enter发送消息,Ctrl+Enter换行"
       placement="left-start"
     >
-      <el-button class="btn-send" @click="sendMessage">发送</el-button>
+      <el-button class="btn-send" @click="handleEnter">发送</el-button>
     </el-tooltip>
   </div>
 </template>
@@ -50,33 +58,43 @@ import {
 import { getImageType } from "@/utils/message-input-utils";
 import { empty } from "@/utils";
 import { useStore } from "vuex";
-import { useState } from "@/utils/hooks/useMapper";
+import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { generateUUID } from "@/utils/index";
+import MentionModal from "./components/MentionModal.vue";
 import { bytesToSize } from "@/utils/common";
 import { fileImgToBase64Url, dataURLtoFile } from "@/utils/message-input-utils";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
-import { CreateTextMsg, CreateImgtMsg, sendMsg } from "@/api/im-sdk-api";
-// 编辑器实例，必须用 shallowRef
-const editorRef = shallowRef();
+import {
+  CreateTextMsg,
+  CreateTextAtMsg,
+  CreateImgtMsg,
+  sendMsg,
+} from "@/api/im-sdk-api";
+const editorRef = shallowRef(); // 编辑器实例，必须用 shallowRef
 const valueHtml = ref(""); // 内容 HTML
-const messages = ref(null);
+const messages = ref(null); //编辑器内容 对象格式
 const mode = "simple"; // 'default' 或 'simple'
 // eslint-disable-next-line no-undef
 // const emit = defineEmits(["sendMsgCallback"]);
 
 const { state, getters, dispatch, commit } = useStore();
+const { isOwner } = useGetters(["isOwner"]);
 const {
   currentConversation,
   currentMessageList,
   historyMessageList,
   noMore,
   userInfo,
+  isShowModal,
+  currentMemberList,
 } = useState({
+  currentMemberList: (state) => state.groupinfo.currentMemberList,
   currentConversation: (state) => state.conversation.currentConversation,
   currentMessageList: (state) => state.conversation.currentMessageList,
   historyMessageList: (state) => state.conversation.historyMessageList,
   noMore: (state) => state.conversation.noMore,
   userInfo: (state) => state.data.user,
+  isShowModal: (state) => state.conversation.isShowModal,
 });
 // 组件销毁时，及时销毁编辑器
 onBeforeUnmount(() => {
@@ -93,10 +111,30 @@ const handleCreated = (editor) => {
   // console.log(editor.getAllMenuKeys());
   // console.log(editor.getConfig());
 };
+const insertMention = (id, name) => {
+  const editor = editorRef.value;
+  const mentionNode = {
+    type: "mention", // 必须是 'mention'
+    value: `${name} `, // 文本
+    info: { id }, // 其他信息，自定义
+    children: [{ text: "" }], // 必须有一个空 text 作为 children
+  };
+  // // 不存在才添加
+  // if (!userlist.includes(id)) {
+  //   userlist.push(id);
+  // }
+  editor.restoreSelection(); // 恢复选区
+  editor.deleteBackward("character"); // 删除 '@'
+  editor.insertNode(mentionNode); // 插入 mention
+  editor.move(1); // 移动光标
+};
+const hideMentionModal = () => {
+  commit("setMentionModal", { type: "hide" });
+};
 const onChange = (editor) => {
   const content = editor.children;
   messages.value = content;
-  console.log(editor.children, "编辑器内容");
+  console.log(messages.value, "编辑器内容");
 };
 
 const customAlert = (s, t) => {
@@ -217,17 +255,20 @@ const handleEnter = () => {
   let isEmpty = editor.isEmpty();
   // 纯文本内容
   const text = editor.getText();
-  const imageall = editor.getElemsByType("image"); // 所有图片
-  console.log(imageall);
-  console.log(messages.value);
-
+  // 所有图片
+  const imageall = editor.getElemsByType("image");
+  console.log(text);
   if ((!isEmpty && !empty(text)) || imageall.length > 0) {
     sendMessage();
   } else {
-    console.log("请输入内容");
-    clearInputInfo();
+    const { aitStr } = sendMsgBefore();
+    if (aitStr) {
+      sendMessage();
+    } else {
+      console.log("请输入内容");
+      clearInputInfo();
+    }
   }
-
   // const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
   // console.log(text)
   // console.log(isEmpty);
@@ -240,42 +281,58 @@ const clearInputInfo = () => {
 };
 
 const sendMsgBefore = () => {
+  let aitStr = "";
+  let aitlist = [];
+  let newmsg = [];
+  let str = valueHtml.value;
+  let content = messages.value[0].children;
   const editor = editorRef.value;
   const text = editorRef.value.getText(); // 纯文本内容
   // const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
   // const innHTML = HtmlText.replace(/<(?!img).*?>/g, "");
   const image = editor.getElemsByType("image"); // 所有图片
-  console.log(text);
-  // console.log(message);
+  // console.log(text);
+  if (str.includes("mention")) {
+    aitStr = str.replace(/<[^>]+>/g, "");
+    newmsg = content.filter((t) => t.type == "mention");
+    newmsg.map((t) => aitlist.push(t.info.id));
+    aitlist = Array.from(new Set(aitlist));
+  }
   // console.log(HtmlText);
-
   // console.log(innHTML);
-  return { text, image };
+  return { text, image, aitStr, aitlist };
 };
 // 发送消息
 const sendMessage = async () => {
   const { type, conversationID, toAccount } = currentConversation.value;
-  const { text, image } = sendMsgBefore();
+  const { text, aitStr, image, aitlist } = sendMsgBefore();
   // console.log(image);
   // let file = dataURLtoFile(image[0].src, "123.png");
-  // console.log(file);
+  console.log(aitlist);
+  console.log(aitStr);
   // return;
   // let ImageMsg = await CreateImgtMsg({
   //   convId: toAccount,
   //   convType: type, //"C2C"
   //   image: file,
   // });
+
   let TextMsg = await CreateTextMsg({
     convId: toAccount,
     convType: type, //"C2C"
     textMsg: text,
   });
-  // console.log(ImageMsg);
-  // return;
+  if (aitStr) {
+    TextMsg = await CreateTextAtMsg({
+      convId: toAccount,
+      convType: type,
+      textMsg: aitStr,
+      atUserList: aitlist,
+    });
+  }
   // 发送消息
-  let imResponse = await sendMsg(TextMsg);
-  // console.log(imResponse);
-  const { code, data } = imResponse;
+  let { code, data } = await sendMsg(TextMsg);
+  console.log(data, "sendMsg");
   if (code == 0) {
     clearInputInfo();
     commit("SET_HISTORYMESSAGE", {
@@ -286,7 +343,6 @@ const sendMessage = async () => {
       },
     });
     commit("updataScroll");
-    // emit("sendMsgCallback", imResponse);
   } else {
     console.log(data);
   }
@@ -294,9 +350,6 @@ const sendMessage = async () => {
 </script>
 
 <style lang="scss" scoped>
-// .emoji {
-//   font-size: 16px;
-// }
 .Editor-style {
   height: 206px;
   .toolbar {

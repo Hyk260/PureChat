@@ -1,6 +1,7 @@
-import { IButtonMenu, IDomEditor } from "@wangeditor/editor";
+import { IButtonMenu, IDomEditor, Boot } from "@wangeditor/editor";
 import ctrlEnterModule from "@wangeditor/plugin-ctrl-enter";
-import { Boot } from "@wangeditor/editor";
+import mentionModule, { MentionElement } from "@wangeditor/plugin-mention";
+
 class YourMenuClass {
   constructor() {
     this.title = "表情"; // 自定义菜单标题
@@ -46,6 +47,7 @@ const menu1Conf = {
     return new YourMenuClass(); // 把 `YourMenuClass` 替换为你菜单的 class
   },
 };
-
+// 注册。要在创建编辑器之前注册，且只能注册一次，不可重复注册。
 Boot.registerMenu(menu1Conf);
+Boot.registerModule(mentionModule);
 Boot.registerModule(ctrlEnterModule);

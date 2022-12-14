@@ -25,6 +25,7 @@
     "@wangeditor/editor": "^5.0.1",
     "@wangeditor/editor-for-vue": "^5.1.11",
     "@wangeditor/plugin-ctrl-enter": "^1.1.2",
+    "@wangeditor/plugin-mention": "^1.0.0",
     "axios": "^0.26.1",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "compression-webpack-plugin": "6.1.1",

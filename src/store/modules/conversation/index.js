@@ -4,7 +4,11 @@ import {
   HISTORY_MESSAGE_COUNT,
 } from "@/store/mutation-types";
 import { addTimeDivider } from "@/utils/addTimeDivider";
-import { getMsgList, getConversationProfile } from "@/api/im-sdk-api";
+import {
+  getMsgList,
+  getConversationProfile,
+  setMessageRead,
+} from "@/api/im-sdk-api";
 
 const getBaseTime = (list) => {
   return list?.length > 0 ? list.find((t) => t.isTimeDivider).time : 0;
@@ -14,6 +18,7 @@ const conversation = {
   // namespaced: true, //命名空间
   state: {
     showMsgBox: false, //是否显示输入框
+    isShowModal: false, // @好友弹框
     noMore: false, // 加载更多  false ? 显示loading : 没有更多
     networkStatus: true, // 网络状态
     needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
@@ -98,6 +103,7 @@ const conversation = {
         case CONVERSATIONTYPE.CLEAR_HISTORY: {
           state.historyMessageList = new Map();
           state.currentMessageList = [];
+          state.currentMessageList = [];
           break;
         }
         // #接收消息
@@ -138,6 +144,7 @@ const conversation = {
           if (payload) {
             const { conversationID, toAccount } = payload;
             let oldConvId = state.currentConversation?.conversationID;
+
             if (conversationID == oldConvId) return;
 
             state.currentConversation = payload;
@@ -177,18 +184,29 @@ const conversation = {
     SET_NETWORK_STATUS(state, action) {
       state.networkStatus = action;
     },
+    setMentionModal(state, action) {
+      const { type, payload } = action;
+      const { type: SessionType } = state.currentConversation;
+      if (SessionType !== "GROUP") return;
+      switch (type) {
+        case "show":
+          state.isShowModal = true;
+          break;
+        case "hide":
+          state.isShowModal = false;
+          break;
+      }
+    },
   },
   actions: {
     // 获取消息列表
     async [GET_MESSAGE_LIST]({ commit, dispatch, state, rootState }, action) {
       let isSDKReady = rootState.user.isSDKReady;
+      const { conversationID, type, toAccount } = action;
       let status =
         !state.currentMessageList || state.currentMessageList?.length == 0;
-
       // 当前会话有值
       if (state.currentConversation && isSDKReady && status) {
-        const { conversationID, type, toAccount } = action;
-
         const { isCompleted, messageList, nextReqMessageID } = await getMsgList(
           {
             conversationID: conversationID,
@@ -217,6 +235,8 @@ const conversation = {
         }
         console.log(state.historyMessageList, "获取缓存");
       }
+      // 消息已读上报
+      setMessageRead(conversationID);
     },
     async checkoutConversation({ state, commit }, action) {
       const { convId } = action;
