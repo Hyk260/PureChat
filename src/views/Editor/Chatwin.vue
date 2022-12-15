@@ -90,6 +90,7 @@ import {
   onBeforeUpdate,
   computed,
   onBeforeUnmount,
+  toRefs,
 } from "vue";
 import {
   squareUrl,
@@ -138,7 +139,7 @@ const NameComponent = (props) => {
   const { item } = props;
   // 撤回消息 群提示消息 不显示
   const { isRevoked, type, from, conversationType } = item;
-  const show = !isRevoked && type !== "TIMGroupTipElem";
+  const show = isRevoked || type == "TIMGroupTipElem";
   // 系统消息
   const isSystem = from == "@TIM#SYSTEM";
   // 非单聊消息
@@ -149,7 +150,7 @@ const NameComponent = (props) => {
   return h(
     "div",
     {
-      style: { display: show ? "" : "none" },
+      style: { display: show ? "none" : "" },
       class: "message_name",
     },
     [
@@ -451,9 +452,7 @@ onMounted(() => {
 onUpdated(() => {
   // console.log(needScrollDown.value, "onUpdated_needScrollDown");
   // updateLoadMore(0);
-  nextTick(() => {
-    UpdataScrollInto();
-  });
+  UpdataScrollInto();
 });
 
 onBeforeUnmount(() => {
@@ -475,6 +474,9 @@ $self-msg-color: #c2e8ff;
 }
 .message-view__tips-elem {
   margin: auto;
+  .message_name {
+    display: none;
+  }
 }
 .message-info-view-content {
   height: calc(100% - 70px - 206px);

@@ -19,7 +19,7 @@
       </li>
     </ul> -->
 
-    <el-dialog
+    <!-- <el-dialog
       v-model="dialogVisible"
       append-to-body="true"
       title="上传头像"
@@ -35,7 +35,7 @@
           </el-button>
         </span>
       </template>
-    </el-dialog>
+    </el-dialog> -->
   </el-aside>
 </template>
 
