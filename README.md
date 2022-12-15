@@ -126,5 +126,5 @@ yarn build
 
 <img src="./images/about.png">
 
-<img src="./images/editor.png">
+<img src="./images/chat.png">
 
