@@ -30,7 +30,7 @@ import {
   toRefs,
   ref,
 } from "vue";
-
+import TIM from "tim-js-sdk";
 export default defineComponent({
   name: "MentionModal",
   props: {
@@ -91,7 +91,7 @@ export default defineComponent({
       // list 信息
       searchVal: "",
       list: [
-        { joinTime: 0, userID: "all", nick: "全体成员" },
+        { joinTime: 0, userID: TIM.TYPES.MSG_AT_ALL, nick: "全体成员" },
         ...memberlist.value,
         // { id: "a", name: "A张三" },
       ],

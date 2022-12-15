@@ -68,8 +68,8 @@ export default class {
       this[key] = value;
     }
   }
+  // 初始化
   init() {
-    console.log("init");
     // 监听SDK
     this.initListener();
   }
@@ -124,7 +124,10 @@ export default class {
     if (atUserList.length > 0) {
       let userId = userProfile?.userID;
       let off = atUserList.includes(userId);
-      off && window.TIMProxy.notifyMe(data[0]);
+      let all = atUserList.includes(TIM.TYPES.MSG_AT_ALL);
+      if (off || all) {
+        window.TIMProxy.notifyMe(data[0]);
+      }
     }
     if (!convId) return;
     // 收到新消息 且 不为当前选中会话 更新对应ID消息
