@@ -1,14 +1,16 @@
 import TIM from "tim-js-sdk";
 import TIMUploadPlugin from "tim-upload-plugin";
 
-let options = {
-  SDKAppID: process.env.VUE_APP_SDK_APPID,
+const appid = process.env.VUE_APP_SDK_APPID;
+const level = process.env.VUE_APP_LOG_LEVEL;
+const options = {
+  SDKAppID: Number(appid),
 };
 // 创建 SDK 实例实例通常用 tim 表示
-let tim = TIM.create(options);
+const tim = TIM.create(options);
 
 // 设置 SDK 日志输出级别
-tim.setLogLevel(process.env.VUE_APP_LOG_LEVEL);
+tim.setLogLevel(level);
 // 0 普通级别，日志量较多，接入时建议使用
 // 1 release级别，SDK 输出关键信息，生产环境时建议使用
 // 2 告警级别，SDK 只输出告警和错误级别的日志
