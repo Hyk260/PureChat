@@ -1,12 +1,12 @@
 {
-  "Vue3.2+快速生成模板": {
+  "Vue3.2+setup快速生成模板": {
     "prefix": "Vue3.2+",
     "body": [
       "<template>",
-      "\t<div>\n",
-      "\t</div>",
+      "\t<div></div>",
       "</template>\n",
       "<script setup>",
+      "import { ref, reactive, toRefs, computed, watch, nextTick } from 'vue'\n",
       "</script>\n",
       "<style lang='scss' scoped>\n",
       "</style>",
