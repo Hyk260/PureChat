@@ -26,6 +26,7 @@ export default defineComponent({
     };
   },
   setup(props, { attrs, emit, expose, slots }) {
+    const { message } = toRefs(props);
     const state = reactive({
       text: "wewe",
       visible: false,
@@ -34,7 +35,15 @@ export default defineComponent({
       abc: 1,
     });
     const getChangeType = () => {
-      return "撤回一条消息";
+      const { conversationType, flow, from } = message.value;
+      const isMine = flow == "out";
+      if (conversationType === "C2C" && !isMine) {
+        return "对方撤回了一条消息";
+      }
+      if (conversationType === "GROUP" && !isMine) {
+        return `${from}撤回了一条消息`;
+      }
+      return "你撤回了一条消息";
     };
     return {
       getChangeType,
