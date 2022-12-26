@@ -9,6 +9,7 @@
       </p>
     </div>
     <div
+      draggable="true"
       class="message-item"
       v-for="item in conversationList"
       :key="item"
@@ -35,7 +36,6 @@
         alt="头像"
       />
       <img v-else :src="squareUrl" class="portrait" alt="头像" />
-      <!-- </el-badge> -->
       <!-- 消息 -->
       <div class="message-item-right">
         <div class="message-item-right-top">
@@ -62,7 +62,7 @@
           <el-badge :value="item.unreadCount" :max="9" />
         </template>
         <!-- 消息免打扰 -->
-        <template v-if="false">
+        <template v-if="item.messageRemindType == 'AcceptNotNotify'">
           <svg-icon iconClass="DontDisturb" class="dont" />
         </template>
       </div>
@@ -103,7 +103,6 @@ import { TIMpingConv, setMessageRemindType } from "@/api/im-sdk-api";
 const contextMenuItemInfo = ref([]);
 // eslint-disable-next-line no-undef
 // const emit = defineEmits(["convChange"]);
-onMounted(() => {});
 
 const { state, getters, dispatch, commit } = useStore();
 const { Selected, UserInfo, currentMessageList, conversationList } = useState({
@@ -136,16 +135,23 @@ const closeMsg = (conv) => {
 };
 // 消息列表 右键菜单
 const handleContextMenuEvent = (e, item) => {
+  console.log(item);
   contextMenuItemInfo.value = item;
   // 会话
   RIGHT_CLICK_CHAT_LIST.map((t) => {
     if (t.id == "pinged") {
       t.text = item.isPinned ? "取消置顶" : "会话置顶";
     }
+    if (t.id == "disable") {
+      let off = item.messageRemindType == "AcceptNotNotify";
+      t.text = off ? "关闭消息免打扰" : "开启消息免打扰";
+    }
   });
 };
-//
-const dropHandler = (e, item) => {};
+
+const dropHandler = (e, item) => {
+  console.log(e, item);
+};
 const dragenterHandler = (e) => {};
 const dragleaveHandler = (e) => {};
 
@@ -170,28 +176,28 @@ const handleClickMenuItem = (item) => {
     case "pinged": // 置顶
       pingConv(Info);
       break;
-    case "unpinged": // 取消置顶
-      pingConv(Info, false);
-      break;
     case "remove": // 删除会话
       removeConv(Info);
       break;
-    case "disable": // 消息免打扰
-      disableRecMsg(Info, true);
+    case "clean": // 清除消息
+      console.log("清除消息");
       break;
-    case "undisable": // 取消消息免打扰
-      disableRecMsg(Info, false);
+    case "disable": // 消息免打扰
+      disableRecMsg(Info);
       break;
   }
 };
 // 消息免打扰
-const disableRecMsg = (data, off) => {
-  console.log(data);
+const disableRecMsg = async (data, off) => {
   const { type, toAccount, messageRemindType } = data;
   // 系统消息
   if (type == "@TIM#SYSTEM") return;
-  if (messageRemindType == "") return;
-  // setMessageRemindType
+  // if (messageRemindType == "") return;
+  await setMessageRemindType({
+    userID: toAccount,
+    RemindType: messageRemindType,
+    type,
+  });
 };
 // 删除会话
 const removeConv = async (data) => {
@@ -199,13 +205,14 @@ const removeConv = async (data) => {
 };
 // 置顶
 const pingConv = async (data, off) => {
-  console.log(data);
   const { conversationID, isPinned } = data;
   await TIMpingConv({
     conversationID,
     isPinned,
   });
 };
+
+onMounted(() => {});
 </script>
 
 <style lang="scss" scoped>

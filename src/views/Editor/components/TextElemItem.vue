@@ -2,9 +2,6 @@
   <div class="message-view__item--text">
     <!-- 用户 -->
     <template v-if="message.conversationType == 'GROUP' || 'C2C'">
-      <!-- <span>
-        {{ message.payload.text }}
-      </span> -->
       <template v-for="item in decodeText(message.payload.text)" :key="item">
         <span v-if="item.name === 'text'" class="text linkUrl">
           {{ item.text }}
@@ -18,11 +15,11 @@
       </template>
     </template>
     <!-- 系统 -->
-    <template v-if="message.conversationType == '@TIM#SYSTEM'">
+    <!-- <template v-if="message.conversationType == '@TIM#SYSTEM'">
       <span>
         {{ GroupSystemNotice(message) }}
       </span>
-    </template>
+    </template> -->
   </div>
 </template>
 
@@ -38,7 +35,7 @@ const props = defineProps({
   },
 });
 const { message } = toRefs(props);
-
+// console.log(message);
 // const isemote = computed(() => {
 //   const { conversationType, payload } = message;
 //   let isconv = conversationType == "GROUP" || "C2C";

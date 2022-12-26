@@ -46,7 +46,6 @@ export const getGroupProfile = async (params) => {
   });
   return data.group;
 };
-
 //登录
 export const TIM_login = async (params) => {
   const { userID, userSig } = params;
@@ -153,12 +152,33 @@ export const revokeMsg = (params) => {
 };
 // 消息免打扰
 export const setMessageRemindType = async (params) => {
-  const { conversationID, toAccount, messageRemindType } = params;
-  const result = await tim.setMessageRemindType({
-    groupID: toAccount,
-    messageRemindType,
-  });
-  return result;
+  const { userID, RemindType, type } = params;
+  let parameter = null;
+  let isDisable = RemindType == "AcceptNotNotify";
+  if (type == "C2C") {
+    // 单人会话
+    parameter = {
+      userIDList: [userID],
+      messageRemindType: isDisable ? "" : "AcceptNotNotify",
+    };
+  } else {
+    // 群聊
+    parameter = {
+      groupID: userID,
+      // TIM.TYPES.MSG_REMIND_ACPT_AND_NOTE  AcceptAndNotify
+      // （SDK 接收消息并通知接入侧，接入侧做提示）
+      // TIM.TYPES.MSG_REMIND_ACPT_NOT_NOTE  AcceptNotNotify
+      // （SDK 接收消息并通知接入侧，接入侧不做提示，一般用于实现“消息免打扰”）
+      // TIM.TYPES.MSG_REMIND_DISCARD
+      // （SDK 拒收消息）
+      messageRemindType: isDisable ? "AcceptAndNotify" : "AcceptNotNotify",
+    };
+  }
+  let { code, data } = await tim.setMessageRemindType(parameter);
+  if (code == 0) {
+    // const { failureUserIDList, successUserIDList } = data;
+    return data;
+  }
 };
 // 获取会话信息
 export const getConversationProfile = async (params) => {

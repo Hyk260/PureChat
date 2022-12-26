@@ -316,17 +316,20 @@ const loadMsgComponents = (elem_type, item) => {
     return CompMap[resp];
   }
   switch (elem_type) {
-    case "TIMTextElem":
-      resp = "TextElemItem"; // 文本消息
+    case "TIMTextElem": // 文本消息
+      resp = "TextElemItem";
       break;
-    case "TIMImageElem":
-      resp = "ImageElemItem"; // 图片消息
+    case "TIMImageElem": // 图片消息
+      resp = "ImageElemItem";
       break;
-    case "TIMFileElem":
-      resp = ""; // 文件消息
+    case "TIMFileElem": // 文件消息
+      resp = "";
       break;
-    case "TIMGroupTipElem":
-      resp = "groupTipElement"; // 群消息提示
+    case "TIMGroupTipElem": // 群消息提示
+      resp = "groupTipElement";
+      break;
+    case "TIMGroupSystemNoticeElem": // 系统通知
+      resp = "";
       break;
     default:
       resp = "";

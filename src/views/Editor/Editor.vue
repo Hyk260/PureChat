@@ -301,7 +301,7 @@ const sendMsgBefore = () => {
   }
   // console.log(HtmlText);
   // console.log(innHTML);
-  console.log(aitStr);
+  // console.log(aitStr);
   return { text, image, aitStr, aitlist };
 };
 // 发送消息
@@ -311,8 +311,6 @@ const sendMessage = async () => {
   const { text, aitStr, image, aitlist } = sendMsgBefore();
   // console.log(image);
   // let file = dataURLtoFile(image[0].src, "123.png");
-  console.log(aitlist);
-  console.log(aitStr);
   // return;
   // let ImageMsg = await CreateImgtMsg({
   //   convId: toAccount,
