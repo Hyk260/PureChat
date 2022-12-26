@@ -32,6 +32,7 @@
     "core-js": "^3.6.5",
     "dayjs": "^1.11.2",
     "element-plus": "^2.0.4",
+    "html2canvas": "^1.4.1",
     "husky": "^8.0.2",
     "lodash": "^4.17.21",
     "lottie-web": "^5.10.0",

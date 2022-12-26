@@ -107,6 +107,7 @@
 </template>
 
 <script setup>
+import html2canvas from "html2canvas";
 import { ref, unref, toRefs, defineEmits } from "vue";
 import {
   emojiName,
@@ -141,6 +142,17 @@ const SendFileClick = () => {
 };
 const clickCscreenshot = () => {
   // screenshot
+  html2canvas(document.body, {
+    allowTaint: true,
+    // useCORS: true,
+    dpi: 150,
+    scale: 2,
+  }).then((canvas) => {
+    console.log(canvas);
+    // let dataURL = canvas.toDataURL("image/png");
+    // console.log(dataURL);
+    // document.body.appendChild(canvas);
+  });
 };
 function sendImage(e) {
   console.log(e.target.files[0]);
