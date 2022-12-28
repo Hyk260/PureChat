@@ -5,6 +5,7 @@
         <div class="group-chat-switch" @click="closeGroup">
           <FontIcon iconName="ArrowRight" />
         </div>
+        <div class="notice-title">群公告</div>
       </div>
     </div>
     <div class="group-box">
@@ -21,7 +22,7 @@
           <span class="owner" v-if="groupProfile.ownerID == item.userID">
             群主
           </span>
-          <span class="admin" v-if="userProfile.userID == item.userID">
+          <span class="admin" v-if="userProfile.userID == item.userID && false">
             自己
           </span>
         </li>
@@ -36,8 +37,6 @@ import { UserFilled } from "@element-plus/icons-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
-import tim from "@/utils/im-sdk/tim";
-import { getGroupProfile } from "@/api/im-sdk-api";
 const nick = ref("");
 const { state, commit, dispatch } = useStore();
 const {
@@ -91,6 +90,12 @@ const navigate = (item) => {
       left: 0;
       justify-content: end;
       border-radius: 0 2px 2px 0;
+    }
+    .notice-titl {
+      position: absolute;
+      left: 18px;
+      font-size: 12px;
+      top: 18px;
     }
   }
 

@@ -71,7 +71,6 @@ map.set("name", "botaoxy");
 
 const set = new Set();
 set.add("billows");
-set.add("botaoxy");
 
 const obj = {
   field: 1,
