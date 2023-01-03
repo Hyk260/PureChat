@@ -144,7 +144,7 @@ const handleContextMenuEvent = (e, item) => {
     }
     if (t.id == "disable") {
       let off = item.messageRemindType == "AcceptNotNotify";
-      t.text = off ? "关闭消息免打扰" : "开启消息免打扰";
+      t.text = off ? "关闭消息免打扰" : "消息免打扰";
     }
   });
 };

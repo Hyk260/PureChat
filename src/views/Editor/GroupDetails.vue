@@ -91,7 +91,7 @@ const navigate = (item) => {
       justify-content: end;
       border-radius: 0 2px 2px 0;
     }
-    .notice-titl {
+    .notice-title {
       position: absolute;
       left: 18px;
       font-size: 12px;

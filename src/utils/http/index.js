@@ -25,10 +25,10 @@ const service = axios.create({
   //   console.log(params,"params")
   //   return stringify(params, { indices: false })
   // }
-  onUploadProgress: (progressEvent) => {
-    let persent = ((progressEvent.loaded / progressEvent.total) * 100) | 0; //上传进度百分比
-    console.log(persent);
-  },
+  // onUploadProgress: (progressEvent) => {
+  //   let persent = ((progressEvent.loaded / progressEvent.total) * 100) | 0; //上传进度百分比
+  //   console.log(persent);
+  // },
 });
 
 // 异常拦截处理器

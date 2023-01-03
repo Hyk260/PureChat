@@ -29,7 +29,8 @@ function checkoutNetState(state) {
   }
 }
 
-export default class {
+export default class TIMProxy {
+  // 静态方法
   constructor() {
     this.userProfile = {}; // IM用户信息
     this.isLogin = false; // IM登陆状态
@@ -38,6 +39,7 @@ export default class {
     this.userSig = "";
     this.sdkAppID = 0;
     this.tim = null;
+    this.TIM = null;
     // 初始化
     this.init();
     /**
@@ -58,7 +60,7 @@ export default class {
       player[key] = value;
     }
     console.log(player);
-    // storage.set("player", player); // 播放器设置
+    // storage.set("player", player);
   }
   // 设置IM信息
   loadSelfFromLocalStorage() {
@@ -70,6 +72,8 @@ export default class {
   }
   // 初始化
   init() {
+    this.tim = tim;
+    this.TIM = TIM;
     // 监听SDK
     this.initListener();
   }

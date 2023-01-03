@@ -27,10 +27,10 @@ srcList.push(url);
 
 const geiPic = async (url) => {
   console.log(url);
-  const res = await loadFileCopy({
-    file_url: url,
-  });
-  console.log(res);
+  // const res = await loadFileCopy({
+  //   file_url: url,
+  // });
+  // console.log(res);
 };
 </script>
 

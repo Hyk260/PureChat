@@ -306,26 +306,34 @@ const sendMsgBefore = () => {
 };
 // 发送消息
 const sendMessage = async () => {
+  let flag = true;
   let TextMsg = null;
+  let ImgtMsg = false;
   const { type, conversationID, toAccount } = currentConversation.value;
   const { text, aitStr, image, aitlist } = sendMsgBefore();
   // console.log(image);
-  // let file = dataURLtoFile(image[0].src, "123.png");
+  ImgtMsg = image.length > 0 ? true : false;
   // return;
-  // let ImageMsg = await CreateImgtMsg({
-  //   convId: toAccount,
-  //   convType: type, //"C2C"
-  //   image: file,
-  // });
-
+  // 图片消息
+  if (ImgtMsg) {
+    let file = dataURLtoFile(image[0].src, "test.png");
+    TextMsg = await CreateImgtMsg({
+      convId: toAccount,
+      convType: type, //"C2C"
+      image: file,
+    });
+    flag = false;
+  }
   if (aitStr) {
+    // @消息
     TextMsg = await CreateTextAtMsg({
       convId: toAccount,
       convType: type,
       textMsg: aitStr,
       atUserList: aitlist,
     });
-  } else {
+  } else if (flag) {
+    // 文本消息
     TextMsg = await CreateTextMsg({
       convId: toAccount,
       convType: type, //"C2C"
