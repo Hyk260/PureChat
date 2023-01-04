@@ -44,6 +44,12 @@ const conversation = {
           } else {
             state.currentMessageList = [];
           }
+          // 当前会话少于历史条数关闭loading
+          if (state.currentMessageList?.length < HISTORY_MESSAGE_COUNT) {
+            state.noMore = true;
+          } else {
+            state.noMore = false;
+          }
           break;
         }
         // 添加更多消息
