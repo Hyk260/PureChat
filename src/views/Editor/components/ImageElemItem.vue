@@ -38,7 +38,7 @@ const geiPic = async (url) => {
 .image_preview {
   width: fit-content;
   padding: 10px 14px;
-  max-width: 360px;
+  max-width: 140px;
   padding: 10px 14px;
   box-sizing: border-box;
   border-radius: 3px;

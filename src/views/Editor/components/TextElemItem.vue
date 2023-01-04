@@ -3,8 +3,14 @@
     <!-- 用户 -->
     <template v-if="message.conversationType == 'GROUP' || 'C2C'">
       <template v-for="item in decodeText(message.payload.text)" :key="item">
-        <span v-if="item.name === 'text'" class="text linkUrl">
-          {{ item.text }}
+        <span
+          v-if="item.name === 'text'"
+          :class="{
+            // linkUrl: verifyLink(item.text),
+          }"
+          class="text"
+        >
+          <analysis-url :text="item.text" />
         </span>
         <img
           class="emoji"
@@ -26,7 +32,9 @@
 <script setup>
 import { GroupSystemNotice } from "../utils/utils";
 import { decodeText } from "@/utils/decodeText";
-import { toRefs } from "vue";
+import { toRefs, h } from "vue";
+const reg =
+  /^(((ht|f)tps?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/;
 // eslint-disable-next-line no-undef
 const props = defineProps({
   message: {
@@ -35,6 +43,40 @@ const props = defineProps({
   },
 });
 const { message } = toRefs(props);
+// 标签转义
+function html2Escape(str) {
+  return str.replace(/[<>&"]/g, function (c) {
+    return { "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c];
+  });
+}
+function verifyLink(str) {
+  return reg.test(str);
+}
+function shellOne(e) {
+  console.log(e);
+}
+function AnalysisUrl(props) {
+  const { text } = props;
+  let str = html2Escape(text);
+  // console.log(str);
+  let reg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-|:|;|\+|\%|\#)+)/g;
+  let flag = reg.test(str);
+  let htmlStr = str.replace(
+    reg,
+    `<a data-link="$1$2" href="$1$2" class="linkUrl" target="_blank"> $1$2 </a>`
+  );
+  // console.log(htmlStr);
+  return flag
+    ? h("span", {
+        // class: "linkUrl",
+        innerHTML: htmlStr,
+        onClick: () => {
+          // console.log(123);
+        },
+      })
+    : text;
+}
+
 // console.log(message);
 // const isemote = computed(() => {
 //   const { conversationType, payload } = message;
@@ -63,6 +105,11 @@ const { message } = toRefs(props);
   padding: 10px 14px;
   box-sizing: border-box;
   border-radius: 3px;
+  :deep(.linkUrl) {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+  }
 }
 .emoji {
   width: 24px;
