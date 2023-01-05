@@ -3,9 +3,20 @@ import { useRouter, useRoute } from "vue-router";
 import { nextTick } from "vue";
 import { getMyProfile, TIM_logout, TIM_login } from "@/api/im-sdk-api";
 import { ElMessage } from "element-plus";
-import IM from "@/utils/IM";
-const tim = new IM();
-
+import TIMProxy from "@/utils/IM";
+let tim = new TIMProxy();
+// new Proxy(tim, {
+//   set(target, key, val) {
+//     console.log(val);
+//     return Reflect.set(target, key, val);
+//   },
+//   get(target, key) {
+//     const value = Reflect.get(target, key);
+//     console.log(value);
+//     return value;
+//   },
+// });
+// console.log(tim);
 const user = {
   state: {
     currentUserProfile: {}, // IM用户信息
@@ -15,7 +26,6 @@ const user = {
     userSig: "",
     sdkAppID: 0,
     message: null,
-    tim,
   },
   getters: {},
   mutations: {
