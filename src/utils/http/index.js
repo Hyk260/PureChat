@@ -90,6 +90,8 @@ const errorHandler = (error) => {
       default:
         console.log(`连接错误${status}`);
     }
+    // 关闭进度条动画
+    NProgress.done();
   }
   return Promise.reject(error);
 };

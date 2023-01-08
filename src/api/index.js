@@ -1,5 +1,6 @@
 import http from "@/utils/http/index";
 import axios from "axios";
+import qs from "qs";
 
 const onHandleUploadProgress = (progressEvent) => {
   if (progressEvent.lengthComputable) {
@@ -25,24 +26,36 @@ let config = {
 };
 
 /**
- * 下载文件
+ * 上传文件
  */
 export const loadFile = (params) => {
-  console.log(config);
+  console.log(params);
+  const { file_url } = params;
+  const formData = new FormData();
+  formData.append("img", file_url);
+  console.log(formData);
   return http({
     url: "/downloadFile",
-    method: "get",
-    params,
-    config,
+    method: "post",
+    // params: "", // query参数
+    data: {
+      file_url: file_url,
+    }, // body参数
+    // headers: config,
   });
 };
 
 export const loadFileCopy = (params) => {
+  const { formData } = params;
+  console.log(params);
   return axios({
-    url: params.file_url,
+    url: "http://localhost:8081/downloadFile",
     method: "post",
+    data: formData,
     onDownloadProgress(progress) {
       console.log(Math.round((progress.loaded / progress.total) * 100) + "%");
     },
+  }).then((res) => {
+    console.log(res, "loadFileCopy");
   });
 };

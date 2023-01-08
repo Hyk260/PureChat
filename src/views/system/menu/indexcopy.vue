@@ -2,11 +2,12 @@
   <el-scrollbar>
     <div class="content-wrap">
       <el-row :gutter="20">
+        <!-- 菜单列表 -->
         <el-col :span="10" class="style-el-col">
           <el-card>
             <template #header>
               <div class="style-header">
-                <el-button v-if="false" size="small" plain @click="addMenuBtn">
+                <el-button v-if="true" size="small" plain @click="addMenuBtn">
                   添加菜单
                 </el-button>
                 <el-button size="small" plain @click="Putall(isExpand)">
@@ -16,7 +17,7 @@
                   size="small"
                   type="danger"
                   @click="delMenuBtn"
-                  v-if="showDelBtn && false"
+                  v-if="showDelBtn"
                 >
                   删除
                 </el-button>
@@ -62,6 +63,7 @@
             </el-skeleton>
           </el-card>
         </el-col>
+        <!-- 编辑菜单 -->
         <el-col :span="14" class="style-el-col">
           <el-card>
             <template #header>
