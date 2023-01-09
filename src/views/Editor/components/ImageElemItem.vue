@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { loadFile, loadFileCopy } from "@/api/index";
+import { loadFileCopy } from "@/api/index";
 const props = defineProps({
   message: {
     type: Object,

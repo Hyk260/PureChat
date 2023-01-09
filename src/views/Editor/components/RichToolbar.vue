@@ -116,7 +116,7 @@ import {
   localemojiUrl,
 } from "@/utils/emoji-map";
 import { ClickOutside as vClickOutside } from "element-plus";
-import { loadFile, loadFileCopy } from "@/api/index";
+import { uploadFiles, loadFileCopy } from "@/api/index";
 
 const buttonRef = ref();
 const popoverRef = ref();
@@ -155,19 +155,18 @@ const clickCscreenshot = () => {
     // document.body.appendChild(canvas);
   });
 };
+
 async function sendImage(e) {
   console.log(e.target.files[0]);
-
-  const formData = new FormData();
-  formData.append("file", e.target.files[0]);
-  // console.log(formData);
-  const res = await loadFileCopy({
-    formData,
+  const res = await uploadFiles({
+    files: e.target.files[0],
   });
-  console.log(res);
 }
-function sendFile(e) {
+async function sendFile(e) {
   console.log(e.target.files[0]);
+  const res = await uploadFiles({
+    files: e.target.files[0],
+  });
 }
 </script>
 <style>
