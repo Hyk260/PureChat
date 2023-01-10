@@ -453,8 +453,6 @@ onMounted(() => {
 });
 
 onUpdated(() => {
-  // console.log(needScrollDown.value, "onUpdated_needScrollDown");
-  // updateLoadMore(0);
   UpdataScrollInto();
 });
 

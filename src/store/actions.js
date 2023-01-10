@@ -5,6 +5,7 @@ import { ToTree } from "@/utils/ToTree";
 import { login, logout } from "@/api/user";
 import { getMenu } from "@/api/menu";
 import { verification } from "@/utils/message/index";
+import emitter from "@/utils/mitt-bus";
 
 const actions = {
   // 更新路由
@@ -36,6 +37,7 @@ const actions = {
   async LOG_IN({ state, commit, dispatch }, data) {
     const { username, password } = data;
     const res = await login({ username, password });
+    emitter.emit("showload", true);
     console.log(res, "登录信息");
     const { code, msg, result } = res;
     console.log(result);
@@ -47,11 +49,13 @@ const actions = {
       });
       dispatch("GET_MENU");
       setTimeout(() => {
-        router.push("/home");
+        emitter.emit("showload", false);
         commit("showMessage", { message: msg });
+        router.push("/home");
       }, 1000);
     } else {
       verification(code, msg);
+      emitter.emit("showload", false);
     }
   },
   // 退出登录

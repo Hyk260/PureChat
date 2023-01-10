@@ -2,11 +2,12 @@
   <div
     class="select-none"
     :class="['sidebar-container', logoVal ? 'has-logo' : '']"
-    v-show="sidebar"
+    v-show="vislbile || sidebar"
   >
     <Logo class="logo-icon" :show="logoVal" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
+        ref="Refelmenu"
         class="el-menu-vertical"
         :default-active="route.path"
         :collapse-transition="false"
@@ -25,13 +26,26 @@
 <script setup>
 import storage from "storejs";
 import { useStore } from "vuex";
-import { ref, computed } from "vue";
+import { ref, toRefs, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useState } from "@/utils/hooks/useMapper";
 import Logo from "../components/Logo.vue";
 
+const Refelmenu = ref();
 const route = useRoute();
 const store = useStore();
+const props = defineProps({
+  vislbile: {
+    type: Boolean,
+    default: false,
+  },
+  collapse: {
+    type: Boolean,
+    default: false,
+  },
+});
+const { vislbile, collapse } = toRefs(props);
+console.log(toRefs(props));
 
 const { isCollapse, sidebar, routing, logoVal } = useState({
   isCollapse: (state) => state.settings.isCollapse,
@@ -46,6 +60,9 @@ const handleOpen = (key, keyPath) => {
 const handleClose = (key, keyPath) => {
   // console.log(key, keyPath)
 };
+onMounted(() => {
+  console.log(Refelmenu.value);
+});
 </script>
 
 <style lang="scss" scoped>

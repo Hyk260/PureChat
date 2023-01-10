@@ -53,6 +53,14 @@
       </div>
     </div>
     <Tags />
+    <el-drawer
+      v-model="drawer"
+      :direction="'ltr'"
+      size="200px"
+      :with-header="false"
+    >
+      <SideBar :vislbile="true" />
+    </el-drawer>
   </div>
 </template>
 
@@ -65,11 +73,12 @@ import { useState } from "@/utils/hooks/useMapper";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import screenfull from "../components/screenfull.vue";
 import Tags from "../components/Tags.vue";
-
+import SideBar from "../SideBar/index.vue";
 const { state, dispatch, commit } = useStore();
 const router = useRouter();
 const route = useRoute();
 const value = ref("");
+const drawer = ref(false);
 
 watch(
   () => router.currentRoute.value.path,
@@ -139,10 +148,18 @@ const Logout = async () => {
 };
 // 侧边栏 展开 折叠
 const toggleClick = (val) => {
-  commit("updateSettings", {
-    key: "isCollapse",
-    value: !val,
-  });
+  if (sidebar.value) {
+    drawer.value = true;
+    commit("updateSettings", {
+      key: "isCollapse",
+      value: false,
+    });
+  } else {
+    commit("updateSettings", {
+      key: "isCollapse",
+      value: !val,
+    });
+  }
 };
 </script>
 <style module="classes" scoped>

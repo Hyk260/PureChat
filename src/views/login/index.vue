@@ -141,7 +141,8 @@ import FontIcon from "@/layout/FontIcon/indx.vue";
 import Motion from "@/utils/motion";
 import { changeAppearance } from "@/utils/common";
 import { useState } from "@/utils/hooks/useMapper";
-
+import emitter from "@/utils/mitt-bus";
+const { production } = require("@/config/vue.custom.config");
 const router = useRouter();
 const showload = ref(false);
 const keep = ref(false);
@@ -179,7 +180,6 @@ const LoginBtn = async (formEl) => {
 };
 
 const Signin = () => {
-  // showload.value = true;
   dispatch("LOG_IN", user);
 };
 
@@ -193,6 +193,10 @@ const onkeypress = ({ code }) => {
   }
 };
 
+emitter.on("showload", (flag) => {
+  showload.value = flag;
+});
+
 onMounted(() => {
   window.document.addEventListener("keypress", onkeypress);
 });
@@ -203,6 +207,10 @@ onBeforeUnmount(() => {
 
 watch(imgCode, (value) => {
   dispatch("SET_VERIFYCODE", value);
+  // 测试环境自动填充图形验证码
+  if (!production) {
+    user.verifyCode = value;
+  }
 });
 </script>
 <style lang="scss" scoped>
