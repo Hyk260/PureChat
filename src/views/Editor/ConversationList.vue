@@ -29,13 +29,15 @@
         class="close-btn"
         @click.stop="closeMsg(item)"
       />
-      <img
-        v-if="item.type == 'C2C'"
-        :src="item.userProfile.avatar || squareUrl"
-        class="portrait"
-        alt="头像"
-      />
-      <img v-else :src="squareUrl" class="portrait" alt="头像" />
+      <el-badge is-dot :hidden="isShowCount(item) || !isNotify(item)">
+        <img
+          v-if="item.type == 'C2C'"
+          :src="item.userProfile.avatar || squareUrl"
+          class="portrait"
+          alt="头像"
+        />
+        <img v-else :src="squareUrl" class="portrait" alt="头像" />
+      </el-badge>
       <!-- 消息 -->
       <div class="message-item-right">
         <div class="message-item-right-top">
@@ -58,11 +60,11 @@
           </span>
         </div>
         <!-- 未读消息红点 -->
-        <template v-if="item.unreadCount !== 0">
+        <template v-if="!isShowCount(item) && !isNotify(item)">
           <el-badge :value="item.unreadCount" :max="9" />
         </template>
         <!-- 消息免打扰 -->
-        <template v-if="item.messageRemindType == 'AcceptNotNotify'">
+        <template v-if="isNotify(item)">
           <svg-icon iconClass="DontDisturb" class="dont" />
         </template>
       </div>
@@ -120,6 +122,13 @@ const fnNews = (data) => {
     return `${fromAccount}: ${messageForShow}`;
   }
   return messageForShow;
+};
+
+const isNotify = (item) => {
+  return item.messageRemindType == "AcceptNotNotify";
+};
+const isShowCount = (item) => {
+  return item.unreadCount == 0;
 };
 
 const fnClass = (item) => {

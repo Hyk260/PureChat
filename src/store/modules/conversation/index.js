@@ -108,8 +108,9 @@ const conversation = {
         // 清除历史记录
         case CONVERSATIONTYPE.CLEAR_HISTORY: {
           state.historyMessageList = new Map();
+          state.currentConversation = null;
           state.currentMessageList = [];
-          state.currentMessageList = [];
+          state.showMsgBox = false;
           break;
         }
         // #接收消息
