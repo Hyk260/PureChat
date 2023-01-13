@@ -118,6 +118,22 @@ export const CreateImgtMsg = async (params) => {
   });
   return message;
 };
+// 创建文件消息
+export const CreateFiletMsg = async (params) => {
+  const { convId, convType, files } = params;
+  let message = tim.createFileMessage({
+    to: convId,
+    conversationType: convType,
+    payload: {
+      file: files,
+    },
+    onProgress: function (event) {
+      console.log("file uploading:", event);
+    },
+  });
+  return message;
+};
+
 // 发送消息
 export const sendMsg = async (params) => {
   const result = await tim.sendMessage(params);

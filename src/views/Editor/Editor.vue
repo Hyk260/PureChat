@@ -18,6 +18,7 @@
       @customAlert="customAlert"
       @onChange="onChange"
       @keyup.enter="handleEnter"
+      @drop="dropHandler"
     />
     <!-- @ mention弹框 -->
     <mention-modal
@@ -67,6 +68,7 @@ import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 import {
   CreateTextMsg,
   CreateTextAtMsg,
+  CreateFiletMsg,
   CreateImgtMsg,
   sendMsg,
 } from "@/api/im-sdk-api";
@@ -119,10 +121,6 @@ const insertMention = (id, name) => {
     info: { id }, // 其他信息，自定义
     children: [{ text: "" }], // 必须有一个空 text 作为 children
   };
-  // // 不存在才添加
-  // if (!userlist.includes(id)) {
-  //   userlist.push(id);
-  // }
   editor.restoreSelection(); // 恢复选区
   editor.deleteBackward("character"); // 删除 '@'
   editor.insertNode(mentionNode); // 插入 mention
@@ -134,7 +132,7 @@ const hideMentionModal = () => {
 const onChange = (editor) => {
   const content = editor.children;
   messages.value = content;
-  console.log(messages.value, "编辑器内容");
+  // console.log(messages.value, "编辑器内容");
 };
 
 const customAlert = (s, t) => {
@@ -159,7 +157,7 @@ const customAlert = (s, t) => {
 };
 // 粘贴事件
 const customPaste = (editor, event, callback) => {
-  console.log(editor);
+  // console.log(editor,"编辑器实例");
   console.log("ClipboardEvent 粘贴事件对象", event);
   // const html = event.clipboardData.getData("text/html"); // 获取粘贴的 html
   const text = event.clipboardData.getData("text/plain"); // 获取粘贴的纯文本
@@ -186,7 +184,7 @@ const customPaste = (editor, event, callback) => {
       }
       if (kind === "string") {
         value.getAsString((str) => {
-          parsetext(str);
+          parsetext(str, editor);
         });
       }
     }
@@ -201,6 +199,13 @@ const customPaste = (editor, event, callback) => {
 
   // 返回 true ，继续默认的粘贴行为
   // callback(true)
+};
+// 拖拽事件
+const dropHandler = (e) => {
+  const files = e.dataTransfer.files || [];
+  console.log(e);
+
+  console.log(files);
 };
 // 插入文件
 const parsefile = async (file) => {
@@ -219,11 +224,6 @@ const parsetext = (item) => {
   console.log(item);
 };
 const innerHTML = (data, item) => {
-  // console.log(data, item);
-  // let $el = `<img src=${data} class="${item} emjo" alt="${item}" style="width: 25px; height: 25px" />`;
-  // valueHtml.value = 123;
-  // console.log(valueHtml.value);
-  // const node = { type: "paragraph", children: [{ text: "123" }] };
   const node = { text: item };
   editorRef.value.insertNode(node);
 };
