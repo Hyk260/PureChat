@@ -7,7 +7,7 @@
       :mode="mode"
     /> -->
     <!-- 自定义工具栏 -->
-    <RichToolbar @innerHTML="innerHTML" />
+    <RichToolbar @setEmoj="setEmoj" />
     <Editor
       class="editor-content"
       v-model="valueHtml"
@@ -223,7 +223,7 @@ const parsefile = async (file) => {
 const parsetext = (item) => {
   console.log(item);
 };
-const innerHTML = (data, item) => {
+const setEmoj = (data, item) => {
   const node = { text: item };
   editorRef.value.insertNode(node);
 };

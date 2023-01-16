@@ -14,7 +14,13 @@ export function useToggle(flag = false) {
   return [state, toggle];
 }
 
-function useEventListener(target, event, callback) {
+/**
+ * @description: 事件监听器
+ * @param {*}
+ * @return {x,y}
+ * 
+ */
+export function useEventListener(target, event, callback) {
   onMounted(() => {
     target.addEventListener(event, callback, false);
   });

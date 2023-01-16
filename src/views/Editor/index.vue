@@ -52,7 +52,7 @@ import {
   watch,
   nextTick,
 } from "vue";
-import { copyFile } from "fs";
+import { useEventListener } from "@/utils/hooks/index";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { dragControllerDiv } from "./utils/utils";
 import { useStore } from "vuex";
@@ -87,35 +87,23 @@ const {
   conversationList: (state) => state.conversation.conversationList,
 });
 
-const setNetwork = () => {
-  const status = navigator?.onLine;
-  commit("SET_NETWORK_STATUS", status);
-};
-
-const monitoring = (off) => {
-  if (off) {
-    window.addEventListener("online", setNetwork);
-    window.addEventListener("offline", setNetwork);
-  } else {
-    window.removeEventListener("online", setNetwork);
-    window.removeEventListener("offline", setNetwork);
-  }
-};
-
+useEventListener(window, "online", () => {
+  console.log(navigator, "navigator");
+  commit("SET_NETWORK_STATUS", true);
+});
+useEventListener(window, "offline", () => {
+  commit("SET_NETWORK_STATUS", false);
+});
 onActivated(() => {
   console.log("onActivated");
   commit("updataScroll");
 });
 onDeactivated(() => {
-  commit("setgroupDrawer", false);
   console.log("onDeactivated");
+  commit("setgroupDrawer", false);
 });
-onMounted(() => {
-  monitoring(true);
-});
-onUnmounted(() => {
-  monitoring(false);
-});
+onMounted(() => {});
+onUnmounted(() => {});
 </script>
 
 <style lang="scss" scoped>

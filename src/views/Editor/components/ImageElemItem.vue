@@ -11,7 +11,6 @@
 </template>
 
 <script setup>
-import { loadFileCopy } from "@/api/index";
 const props = defineProps({
   message: {
     type: Object,
@@ -27,10 +26,6 @@ srcList.push(url);
 
 const geiPic = async (url) => {
   console.log(url);
-  // const res = await loadFileCopy({
-  //   file_url: url,
-  // });
-  // console.log(res);
 };
 </script>
 

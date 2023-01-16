@@ -59,73 +59,9 @@ export const uploadFiles = async (params) => {
         let persent = ((progressEvent.loaded / progressEvent.total) * 100) | 0; //上传进度百分比
         console.log(persent + '%');
       },
-
     });
     console.log(uploadedResult)
   } catch (error) {
     console.log(error)
   }
-};
-
-
-
-export const loadFileCopy = async (params) => {
-  const { files } = params;
-  const { name, type, size } = files || {}
-  console.log(files)
-  let uploadedSize = 0
-  const CHUNK_SIZE = 64 * 1024;
-  let uploadedResult = null
-  // return
-  console.log(params);
-  const fileName = new Date().getTime() + '_' + name
-  console.log(fileName)
-  // return;
-  // formData.append("file", files);
-  // while (uploadedSize < size) {
-  //   const fileChunk = files.slice(uploadedSize, uploadedSize + CHUNK_SIZE)
-  //   const formData = createForData({
-  //     name,
-  //     type,
-  //     size,
-  //     fileName,
-  //     uploadedSize,
-  //     file: fileChunk,
-  //   })
-  //   try {
-  //     uploadedResult = await axios({
-  //       url: "http://localhost:8081/downloadFile",
-  //       method: "post",
-  //       data: formData,
-  //       // onDownloadProgress(progress) {
-  //       //   console.log(Math.round((progress.loaded / progress.total) * 100) + "%");
-  //       // },
-  //     })
-  //   } catch (error) {
-  //     console.log(error)
-  //     return;
-  //   }
-  //   uploadedSize += fileChunk.size
-  //   console.log(uploadedResult)
-  //   console.log(Math.round((uploadedSize / size) * 100) + "%")
-  // }
-  const formData = createForData({
-    name,
-    type,
-    size,
-    fileName,
-    uploadedSize,
-    file: files,
-  })
-  return axios({
-    url: "http://localhost:8081/downloadFile",
-    method: "post",
-    data: formData,
-    onUploadProgress: (progressEvent) => {
-      let persent = ((progressEvent.loaded / progressEvent.total) * 100) | 0; //上传进度百分比
-      console.log(persent + '%');
-    },
-  }).then((res) => {
-    console.log(res, "loadFileCopy");
-  });
 };

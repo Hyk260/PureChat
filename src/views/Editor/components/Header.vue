@@ -45,7 +45,6 @@ const { Conver, groupDrawer } = useState({
 const openGroup = () => {
   commit("setgroupDrawer", true);
 };
-console.log(Conver);
 </script>
 
 <style lang="scss" scoped>

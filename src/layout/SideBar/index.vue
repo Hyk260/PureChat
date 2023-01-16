@@ -45,7 +45,6 @@ const props = defineProps({
   },
 });
 const { vislbile, collapse } = toRefs(props);
-console.log(toRefs(props));
 
 const { isCollapse, sidebar, routing, logoVal } = useState({
   isCollapse: (state) => state.settings.isCollapse,
@@ -61,7 +60,7 @@ const handleClose = (key, keyPath) => {
   // console.log(key, keyPath)
 };
 onMounted(() => {
-  console.log(Refelmenu.value);
+  // console.log(Refelmenu.value);
 });
 </script>
 

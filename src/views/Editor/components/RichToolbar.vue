@@ -2,6 +2,7 @@
   <div class="toolbar">
     <!-- 表情包 -->
     <el-popover
+      ref="popoverRef"
       placement="top-start"
       popper-class="style-emo"
       :show-arrow="false"
@@ -32,6 +33,7 @@
     </el-popover>
     <!-- 最近表情 -->
     <el-popover
+      v-if="false"
       ref="popoverRef"
       :show-after="200"
       :hide-after="300"
@@ -116,21 +118,22 @@ import {
   localemojiUrl,
 } from "@/utils/emoji-map";
 import { ClickOutside as vClickOutside } from "element-plus";
-import { uploadFiles, loadFileCopy } from "@/api/index";
+import { uploadFiles } from "@/api/index";
 
 const buttonRef = ref();
 const popoverRef = ref();
-const emit = defineEmits(["innerHTML"]);
 const imagePicker = ref();
 const filePicker = ref();
 const visible = ref(false);
+const emit = defineEmits(["setEmoj"]);
 
 const onClickOutside = () => {
   unref(popoverRef).popperRef?.delayHide?.();
 };
 const SelectEmoticon = (item) => {
   let url = emojiUrl + emojiMap[item];
-  emit("innerHTML", url, item);
+  emit("setEmoj", url, item);
+  unref(popoverRef).hide();
 };
 const SendImageClick = () => {
   let $el = imagePicker.value;
@@ -158,15 +161,15 @@ const clickCscreenshot = () => {
 
 async function sendImage(e) {
   console.log(e.target.files[0]);
-  const res = await uploadFiles({
-    files: e.target.files[0],
-  });
+  // const res = await uploadFiles({
+  //   files: e.target.files[0],
+  // });
 }
 async function sendFile(e) {
   console.log(e.target.files[0]);
-  const res = await uploadFiles({
-    files: e.target.files[0],
-  });
+  // const res = await uploadFiles({
+  //   files: e.target.files[0],
+  // });
 }
 </script>
 <style>
