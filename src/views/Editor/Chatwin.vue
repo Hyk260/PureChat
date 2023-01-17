@@ -8,7 +8,7 @@
     <el-scrollbar
       class="scrollbar-content"
       ref="scrollbarRef"
-      @scroll="scroll"
+      @scroll="scrollbar"
       always
     >
       <div class="message-view" ref="messageViewRef">
@@ -100,9 +100,11 @@ import {
 } from "./utils/menu";
 import { useStore } from "vuex";
 import { fncopy, dragControllerDiv } from "./utils/utils";
+
 import { timeFormat } from "@/utils/timeFormat";
 import { debounce, delay } from "@/utils/debounce";
 import { throttle } from "@/utils/throttle";
+import { useEventListener } from "@/utils/hooks/index";
 import { useState } from "@/utils/hooks/useMapper";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import TextElemItem from "./components/TextElemItem";
@@ -203,7 +205,7 @@ const ISown = (item) => {
   return item.from == userInfo.value.username;
 };
 
-const scrollbar = (e) => {
+const scrollbar = ({ scrollLeft, scrollTop }) => {
   debounce(() => {
     if (!noMore.value) {
       const current = currentMessageList.value?.length - 1;
@@ -220,26 +222,6 @@ const UpdateScrollbar = () => {
   scrollbarRef.value.update();
 };
 
-const scroll = async ({ scrollLeft, scrollTop }) => {
-  throttle(() => {
-    // console.log(scrollTop);
-    // const maxScroll = messageViewRef.value?.clientHeight - 401;
-    // let client = maxScroll / 2;
-    // console.log(scrollTop);
-    // console.log(client,maxScroll);
-    // let off = scrollTop < client;
-    // console.log(off);
-  }, 500);
-};
-
-const Monitorscrollbar = (val) => {
-  const elRef = scrollbarRef.value.wrap$;
-  if (val) {
-    elRef.addEventListener("scroll", scrollbar);
-  } else {
-    elRef.removeEventListener("scroll", scrollbar);
-  }
-};
 const validatelastMessage = (msglist) => {
   let msg = null;
   for (let i = msglist.length - 1; i > -1; i--) {
@@ -448,17 +430,13 @@ emitter.on("updataScroll", (e) => {
   UpdataScrollInto();
 });
 
-onMounted(() => {
-  Monitorscrollbar(true);
-});
+onMounted(() => {});
 
 onUpdated(() => {
   UpdataScrollInto();
 });
 
-onBeforeUnmount(() => {
-  Monitorscrollbar(false);
-});
+onBeforeUnmount(() => {});
 
 // eslint-disable-next-line no-undef
 defineExpose({ UpdateScrollbar, UpdataScrollInto });

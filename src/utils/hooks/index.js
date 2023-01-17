@@ -17,7 +17,7 @@ export function useToggle(flag = false) {
 /**
  * @description: 事件监听器
  * @param {*}
- * @return {x,y}
+ * @return {*}
  * 
  */
 export function useEventListener(target, event, callback) {

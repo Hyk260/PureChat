@@ -88,7 +88,6 @@ const {
 });
 
 useEventListener(window, "online", () => {
-  console.log(navigator, "navigator");
   commit("SET_NETWORK_STATUS", true);
 });
 useEventListener(window, "offline", () => {

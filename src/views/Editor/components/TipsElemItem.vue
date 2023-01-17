@@ -1,14 +1,23 @@
-<!-- <template>
-  <div
-    @click="addItem()"
-    class="message-view_withdraw"
-  >
+<template>
+  <div @click="addItem()" class="message-view_withdraw">
     {{ getChangeType() }}
   </div>
-</template> -->
+</template>
 
 <script>
-import { toRefs, reactive, defineComponent } from "vue";
+import {
+  toRefs,
+  reactive,
+  defineComponent,
+  onMounted,
+  onBeforeUnmount,
+} from "vue";
+import {
+  CONVERSATIONTYPE,
+  GET_MESSAGE_LIST,
+  HISTORY_MESSAGE_COUNT,
+} from "@/store/mutation-types";
+import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
 export default defineComponent({
   name: "TipElement",
   components: {},
@@ -19,11 +28,25 @@ export default defineComponent({
       default: () => {},
     },
   },
+  computed: {
+    ...mapState({
+      currentConversation: (state) => state.conversation.currentConversation,
+    }),
+    ...mapGetters(["toAccount", "isOwner"]),
+  },
   data() {
     return {
       text: "test",
       extra: [],
     };
+  },
+  methods: {
+    ...mapMutations(["SET_NETWORK_STATUS"]),
+    ...mapActions([GET_MESSAGE_LIST]),
+    // this[GET_MESSAGE_LIST]();
+    // this.SET_NETWORK_STATUS();
+    addItem() {},
+    removeItem() {},
   },
   setup(props, { attrs, emit, expose, slots }) {
     const { message } = toRefs(props);
@@ -45,26 +68,21 @@ export default defineComponent({
       }
       return "你撤回了一条消息";
     };
+    onMounted(() => {});
+
+    onBeforeUnmount(() => {});
     return {
       getChangeType,
       ...toRefs(state),
     };
   },
-  methods: {
-    addItem(type = "item") {
-      this.extra.push(type);
-    },
-    removeItem() {
-      this.extra.pop();
-    },
-  },
-  render() {
-    return (
-      <div class="message-view_withdraw" onClick={this.addItem()}>
-        {this.getChangeType()}
-      </div>
-    );
-  },
+  // render() {
+  //   return (
+  //     <div class="message-view_withdraw" onClick={this.addItem()}>
+  //       {this.getChangeType()}
+  //     </div>
+  //   );
+  // },
 });
 </script>
 
