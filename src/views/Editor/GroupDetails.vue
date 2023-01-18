@@ -67,8 +67,7 @@ const toggle = (item) => {
   nick.value = userID;
 };
 const navigate = (item) => {
-  const { userID } = item;
-  dispatch("checkoutConversation", { convId: `C2C${userID}` });
+  dispatch("CHEC_OUT_CONVERSATION", { convId: `C2C${item.userID}` });
 };
 </script>
 

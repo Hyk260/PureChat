@@ -127,7 +127,7 @@ const insertMention = (id, name) => {
   editor.move(1); // 移动光标
 };
 const hideMentionModal = () => {
-  commit("setMentionModal", { type: "hide" });
+  commit("SET_MENTION_MODAL", false);
 };
 const onChange = (editor) => {
   const content = editor.children;

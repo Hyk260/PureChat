@@ -15,11 +15,11 @@ export const toolbarConfig = {
 };
 // 显示 modal 弹框
 function showModal() {
-  store.commit("setMentionModal", { type: "show" });
+  store.commit("SET_MENTION_MODAL", true);
 }
 // 隐藏 modal
 function hideModal() {
-  store.commit("setMentionModal", { type: "hide" });
+  store.commit("SET_MENTION_MODAL", false);
 }
 // 编辑器配置
 export const editorConfig = {

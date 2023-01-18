@@ -133,7 +133,6 @@ export const CreateFiletMsg = async (params) => {
   });
   return message;
 };
-
 // 发送消息
 export const sendMsg = async (params) => {
   const result = await tim.sendMessage(params);

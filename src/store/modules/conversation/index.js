@@ -113,12 +113,6 @@ const conversation = {
           state.showMsgBox = false;
           break;
         }
-        // #接收消息
-        case CONVERSATIONTYPE.RECIVE_MESSAGE: {
-          const { convId, message } = payload;
-          state.currentMessageList = message.reverse();
-          break;
-        }
         // 加载更多状态
         case CONVERSATIONTYPE.UPDATE_NOMORE: {
           state.noMore = payload;
@@ -126,7 +120,9 @@ const conversation = {
         }
         // 将消息标记为已读
         case CONVERSATIONTYPE.MARKE_MESSAGE_AS_READED: {
-          console.log("将消息标记为已读");
+          const { convId, message: { unreadCount } } = payload
+          if (unreadCount == "0") return
+          setMessageRead(convId);
           break;
         }
         // 更新缓存数据
@@ -187,22 +183,19 @@ const conversation = {
         }
       }
     },
-    // 设置网络状态
+    /**
+     * @description: 设置网络状态
+     */
     SET_NETWORK_STATUS(state, action) {
       state.networkStatus = action;
     },
-    setMentionModal(state, action) {
-      const { type, payload } = action;
-      const { type: SessionType } = state.currentConversation;
-      if (SessionType !== "GROUP") return;
-      switch (type) {
-        case "show":
-          state.isShowModal = true;
-          break;
-        case "hide":
-          state.isShowModal = false;
-          break;
-      }
+    /**
+     * @description: 设置提及弹框显示隐藏
+     */
+    SET_MENTION_MODAL(state, action) {
+      const { type } = state.currentConversation;
+      if (type !== "GROUP") return;
+      state.isShowModal = action
     },
   },
   actions: {
@@ -243,9 +236,16 @@ const conversation = {
         console.log(state.historyMessageList, "获取缓存");
       }
       // 消息已读上报
-      setMessageRead(conversationID);
+      commit('SET_HISTORYMESSAGE', {
+        type: "MARKE_MESSAGE_AS_READED",
+        payload: {
+          convId: conversationID,
+          message: action
+        }
+      })
     },
-    async checkoutConversation({ state, commit }, action) {
+    // 新增会话列表
+    async CHEC_OUT_CONVERSATION({ state, commit }, action) {
       const { convId } = action;
       const { conversation } = await getConversationProfile({
         conversationID: convId,
