@@ -21,14 +21,25 @@
       <el-form ref="ruleFormRef" :model="user" :rules="rules">
         <!-- 账号 -->
         <el-form-item prop="username">
-          <el-input
+          <!-- <el-input
             v-model="user.username"
             placeholder="用户账号"
             :prefix-icon="User"
             size="large"
             clearable
           >
-          </el-input>
+          </el-input> -->
+          <el-autocomplete
+            clearable
+            debounce
+            size="large"
+            :prefix-icon="User"
+            v-model="user.username"
+            placeholder="用户账号"
+            @select="handleSelect"
+            class="inline-input w-50"
+            :fetch-suggestions="querySearch"
+          />
         </el-form-item>
         <!-- 密码 -->
         <el-form-item prop="password">
@@ -143,11 +154,14 @@ import { changeAppearance } from "@/utils/common";
 import { useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 const { production } = require("@/config/vue.custom.config");
-const router = useRouter();
+
+const restaurants = ref([]);
 const showload = ref(false);
 const keep = ref(false);
 const ruleFormRef = ref();
 const imgCode = ref("");
+
+const router = useRouter();
 const { state, dispatch, commit } = useStore();
 const { appearance } = useState({
   appearance: (state) => state.settings.appearance,
@@ -170,6 +184,23 @@ const ThemeColorChange = (val) => {
     value: val,
   });
   changeAppearance(val);
+};
+
+const handleSelect = (item) => {
+  console.log(item);
+};
+const createFilter = (queryString) => {
+  return (restaurant) => {
+    return (
+      restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+    );
+  };
+};
+const querySearch = (queryString, cb) => {
+  const results = queryString
+    ? restaurants.value.filter(createFilter(queryString))
+    : restaurants.value;
+  cb(results);
 };
 
 const LoginBtn = async (formEl) => {
@@ -197,7 +228,16 @@ emitter.on("showload", (flag) => {
   showload.value = flag;
 });
 
+const loadAll = () => {
+  return [
+    { value: "临江仙", link: "" },
+    { value: "黄泳康", link: "" },
+    { value: "ROLE_USER", link: "" },
+  ];
+};
+
 onMounted(() => {
+  restaurants.value = loadAll();
   window.document.addEventListener("keypress", onkeypress);
 });
 
@@ -237,6 +277,9 @@ watch(imgCode, (value) => {
 .login {
   height: 100vh;
   display: flex;
+}
+:deep(.el-autocomplete) {
+  width: 100%;
 }
 :deep(.el-input-group__append, .el-input-group__prepend) {
   padding: 0;
