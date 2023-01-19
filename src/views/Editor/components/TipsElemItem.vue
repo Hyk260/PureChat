@@ -32,7 +32,7 @@ export default defineComponent({
     ...mapState({
       currentConversation: (state) => state.conversation.currentConversation,
     }),
-    ...mapGetters(["toAccount", "isOwner"]),
+    ...mapGetters(["toAccount", "isOwner", "tabList"]),
   },
   data() {
     return {
@@ -45,7 +45,9 @@ export default defineComponent({
     ...mapActions([GET_MESSAGE_LIST]),
     // this[GET_MESSAGE_LIST]();
     // this.SET_NETWORK_STATUS();
-    addItem() {},
+    addItem() {
+      console.log(this.tabList);
+    },
     removeItem() {},
   },
   setup(props, { attrs, emit, expose, slots }) {

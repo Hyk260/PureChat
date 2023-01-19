@@ -1,5 +1,5 @@
 <template>
-  <div class="broken-links" v-if="show">
+  <div class="broken-links" v-show="show">
     <svg-icon iconClass="link" class="link-style" />
     <span>连接已断开</span>
   </div>

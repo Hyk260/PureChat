@@ -9,6 +9,7 @@ import {
   getConversationProfile,
   setMessageRead,
 } from "@/api/im-sdk-api";
+import { deepClone } from '@/utils/clone';
 
 const getBaseTime = (list) => {
   return list?.length > 0 ? list.find((t) => t.isTimeDivider).time : 0;
@@ -28,6 +29,7 @@ const conversation = {
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
     conversationList: [], //会话列表数据
+    activetab: 'whole',
   },
   mutations: {
     // 设置历史消息
@@ -197,6 +199,12 @@ const conversation = {
       if (type !== "GROUP") return;
       state.isShowModal = action
     },
+    /**
+    * @description: 切换列表 全部 未读 提及我
+    */
+    TOGGLE_LIST(state, action) {
+      state.activetab = action
+    }
   },
   actions: {
     // 获取消息列表
@@ -271,6 +279,17 @@ const conversation = {
           return conversationID;
       }
     },
+    tabList(state) {
+      const { activetab } = state
+      switch (activetab) {
+        case "unread":
+          return state.conversationList.filter((t) => t.unreadCount > 0)
+        case "mention":
+          return state.conversationList.filter((t) => t?.text)
+        default:
+          return state.conversationList
+      }
+    }
   },
 };
 

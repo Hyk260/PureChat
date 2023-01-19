@@ -2,7 +2,7 @@
   <el-scrollbar class="scrollbar-list">
     <!-- <transition-group name="fade-transform">
     </transition-group> -->
-    <div class="no-msg" v-if="conversationList.length == 0">
+    <div class="no-msg" v-if="tabList.length == 0">
       <img src="@/assets/images/wushuju.png" alt="" />
       <p>
         <span>暂无会话。</span>
@@ -11,7 +11,7 @@
     <div
       draggable="true"
       class="message-item"
-      v-for="item in conversationList"
+      v-for="item in tabList"
       :key="item"
       :class="fnClass(item)"
       @click="handleConvListClick(item)"
@@ -97,7 +97,7 @@ import FontIcon from "@/layout/FontIcon/indx.vue";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { timeFormat } from "@/utils/timeFormat";
 import { useStore } from "vuex";
-import { useState } from "@/utils/hooks/useMapper";
+import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 import { addTimeDivider } from "@/utils/addTimeDivider";
 import { TIMpingConv, setMessageRemindType } from "@/api/im-sdk-api";
@@ -107,6 +107,7 @@ const contextMenuItemInfo = ref([]);
 // const emit = defineEmits(["convChange"]);
 
 const { state, getters, dispatch, commit } = useStore();
+const { tabList } = useGetters(["tabList"]);
 const { Selected, UserInfo, currentMessageList, conversationList } = useState({
   UserInfo: (state) => state.data.user,
   Selected: (state) => state.conversation.currentConversation,

@@ -5,6 +5,11 @@
     <div class="message-left">
       <!-- 搜索框 -->
       <Search />
+      <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+        <el-tab-pane label="全部" name="whole"></el-tab-pane>
+        <el-tab-pane label="未读" name="unread"></el-tab-pane>
+        <el-tab-pane label="@我" name="mention"></el-tab-pane>
+      </el-tabs>
       <div :class="['scroll-container', !networkStatus ? 'style-net' : '']">
         <!-- 连接已断开 -->
         <networklink :show="!networkStatus" />
@@ -68,6 +73,7 @@ import ConversationList from "./ConversationList.vue";
 
 const ChatRef = ref(null);
 const showGroup = ref(false);
+const activeName = ref("whole");
 const { state, dispatch, commit } = useStore();
 
 const { toAccount } = useGetters(["toAccount"]);
@@ -86,7 +92,10 @@ const {
   groupDrawer: (state) => state.groupinfo.groupDrawer,
   conversationList: (state) => state.conversation.conversationList,
 });
-
+const handleClick = ({ props }, event) => {
+  const { label, name } = props;
+  commit("TOGGLE_LIST", name);
+};
 useEventListener(window, "online", () => {
   commit("SET_NETWORK_STATUS", true);
 });
@@ -106,6 +115,15 @@ onUnmounted(() => {});
 </script>
 
 <style lang="scss" scoped>
+.demo-tabs {
+  :deep(.el-tabs__header) {
+    margin: 0;
+    padding: 0 16px;
+  }
+  :deep(.el-tabs__nav-wrap) {
+    margin: 0;
+  }
+}
 .list-container {
   width: 100%;
   height: 100%;
@@ -127,7 +145,7 @@ onUnmounted(() => {});
   width: calc(100% - 280px - 68px - 220px);
 }
 .scroll-container {
-  height: calc(100% - 60px);
+  height: calc(100% - 60px - 40px);
   position: relative;
 
   :deep(.is-active) {
@@ -138,7 +156,7 @@ onUnmounted(() => {});
   }
 }
 .style-net {
-  height: calc(100% - 60px - 34px);
+  height: calc(100% - 60px - 34px - 40px);
 }
 
 #svgResize {

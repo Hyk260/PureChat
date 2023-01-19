@@ -433,6 +433,7 @@ emitter.on("updataScroll", (e) => {
 onMounted(() => {});
 
 onUpdated(() => {
+  console.log("onUpdated");
   UpdataScrollInto();
 });
 
