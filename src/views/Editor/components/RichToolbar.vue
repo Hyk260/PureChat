@@ -17,7 +17,7 @@
           ref="buttonRef"
           v-click-outside="onClickOutside"
         >
-          <svg-icon iconClass="iconxiaolian" />
+          <svg-icon iconClass="iconxiaolian" class="icon-hover" />
         </span>
       </template>
       <div class="emojis">
@@ -57,15 +57,15 @@
     </el-popover>
     <!-- 图片 -->
     <span class="" title="图片" @click="SendImageClick">
-      <svg-icon iconClass="icontupian" />
+      <svg-icon iconClass="icontupian" class="icon-hover" />
     </span>
     <!-- 文件 -->
     <span class="" title="文件" @click="SendFileClick">
-      <svg-icon iconClass="iconwenjianjia" />
+      <svg-icon iconClass="iconwenjianjia" class="icon-hover" />
     </span>
     <!-- 截图 -->
     <span class="" title="截图" @click="clickCscreenshot">
-      <svg-icon iconClass="iconjietu" />
+      <svg-icon iconClass="iconjietu" class="icon-hover" />
     </span>
     <!-- 更多 -->
     <el-popover
@@ -77,7 +77,7 @@
     >
       <template #reference>
         <span class="">
-          <svg-icon iconClass="icondiandiandian" />
+          <svg-icon iconClass="icondiandiandian" class="icon-hover" />
         </span>
       </template>
       <div>更多</div>
@@ -193,9 +193,6 @@ async function sendFile(e) {
     position: relative;
     text-align: center;
     color: #808080;
-    svg:hover {
-      color: #1989fa;
-    }
   }
 }
 .emojis,

@@ -1,6 +1,5 @@
 <template>
   <div class="message-view__item--text">
-    <!-- 用户 -->
     <template v-if="message.conversationType == 'GROUP' || 'C2C'">
       <template v-for="item in decodeText(message.payload.text)" :key="item">
         <span
@@ -20,17 +19,10 @@
         />
       </template>
     </template>
-    <!-- 系统 -->
-    <!-- <template v-if="message.conversationType == '@TIM#SYSTEM'">
-      <span>
-        {{ GroupSystemNotice(message) }}
-      </span>
-    </template> -->
   </div>
 </template>
 
 <script setup>
-import { GroupSystemNotice } from "../utils/utils";
 import { decodeText } from "@/utils/decodeText";
 import { toRefs, h } from "vue";
 const reg =

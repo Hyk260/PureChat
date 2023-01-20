@@ -10,7 +10,7 @@
         :title="isActive ? '点击展开' : '点击折叠'"
         @click="toggleClick(isActive)"
       >
-        <FontIcon class="active" :iconName="isActive ? 'Expand' : 'Fold'" />
+        <FontIcon class="icon-hover" :iconName="isActive ? 'Expand' : 'Fold'" />
       </div>
       <!-- 面包屑 :separator-icon="ArrowRight" > icon-->
       <el-breadcrumb>
@@ -48,7 +48,7 @@
         </div>
         <!-- 设置 -->
         <div class="setup" @click="opensetup(setswitch)">
-          <FontIcon class="active" iconName="setting" />
+          <FontIcon class="icon-hover" iconName="setting" />
         </div>
       </div>
     </div>
@@ -219,12 +219,6 @@ const toggleClick = (val) => {
         margin-right: 10px;
       }
     }
-  }
-}
-
-.active {
-  &:hover {
-    color: var(--color-icon-hover);
   }
 }
 

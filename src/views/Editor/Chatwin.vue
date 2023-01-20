@@ -110,6 +110,7 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import TextElemItem from "./components/TextElemItem";
 import TipsElemItem from "./components/TipsElemItem";
 import groupTipElement from "./components/groupTipElement.vue";
+import GroupSystemNoticeElem from "./components/GroupSystemNoticeElem.vue";
 import ImageElemItem from "./components/ImageElemItem";
 import LoadMore from "./components/LoadMore.vue";
 import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
@@ -284,13 +285,14 @@ const getMoreMsg = async () => {
 
 // 动态组件
 const loadMsgComponents = (elem_type, item) => {
-  // console.log(elem_type, item);
+  console.log(elem_type, item);
   let resp = "";
   let CompMap = {
     TextElemItem: TextElemItem,
     TipsElemItem: TipsElemItem,
     ImageElemItem: ImageElemItem,
     groupTipElement: groupTipElement,
+    GroupSystemNoticeElem: GroupSystemNoticeElem,
   };
   // 撤回消息
   if (item.isRevoked) {
@@ -311,7 +313,7 @@ const loadMsgComponents = (elem_type, item) => {
       resp = "groupTipElement";
       break;
     case "TIMGroupSystemNoticeElem": // 系统通知
-      resp = "";
+      resp = "GroupSystemNoticeElem";
       break;
     default:
       resp = "";

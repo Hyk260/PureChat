@@ -6,6 +6,7 @@
 
 <script setup>
 import { toRefs } from "vue";
+// eslint-disable-next-line no-undef
 const props = defineProps({
   // elementPlus https://element-plus.gitee.io/zh-CN/component/icon.html
   // <FontIcon iconName="***" />

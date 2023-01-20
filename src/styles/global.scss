@@ -58,6 +58,12 @@ ul {
   user-select: none;
 }
 
+.icon-hover {
+  &:hover {
+    color: var(--color-icon-hover) !important;
+  }
+}
+
 .clearfix {
   &::after {
     visibility: hidden;

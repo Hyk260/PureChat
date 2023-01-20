@@ -5,7 +5,7 @@
     :title="isFullscreen ? '退出全屏' : '全屏'"
   >
     <!-- <svg-icon icon-class="Fullscreen" /> -->
-    <FontIcon iconName="FullScreen" class="active" />
+    <FontIcon iconName="FullScreen" class="icon-hover" />
   </div>
 </template>
 

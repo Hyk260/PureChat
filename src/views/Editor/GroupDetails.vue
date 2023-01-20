@@ -7,6 +7,7 @@
         </div>
         <div class="notice-title">群公告</div>
       </div>
+      <div class="group-view-content"></div>
     </div>
     <div class="group-box">
       <ul>
@@ -76,12 +77,20 @@ const navigate = (item) => {
   width: 220px;
   background: rgb(246, 247, 249);
   border-left: 1px solid rgb(0 0 0 / 5%);
+  position: relative;
   .group-notice {
     height: 170px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+    .group-view-content {
+      position: absolute;
+      width: 100%;
+      top: 42px;
+      height: calc(170px - 42px);
+    }
   }
   .group-view-header {
-    position: relative;
+    position: absolute;
+    width: 100%;
     height: 59px;
     display: flex;
     align-items: center;

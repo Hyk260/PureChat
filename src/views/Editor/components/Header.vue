@@ -1,5 +1,5 @@
 <template>
-  <header class="message-info-view-header" v-show="Conver">
+  <header class="message-info-view-header" v-if="Conver">
     <div class="message-info-views">
       <p v-if="Conver">
         <span v-if="Conver.type === TIM.TYPES.CONV_C2C"
@@ -15,8 +15,15 @@
         <span v-else-if="Conver.type === TIM.TYPES.CONV_SYSTEM">系统通知 </span>
       </p>
     </div>
-    <div class="message-info-setup">
-      <FontIcon iconName="MoreFilled" />
+    <!-- <div class="message-info-setup" v-show="Conver.type == 'GROUP'">
+      <FontIcon iconName="MoreFilled" class="icon-hover" />
+    </div> -->
+    <div
+      class="message-info-add"
+      v-show="Conver.type == 'GROUP'"
+      title="添加成员"
+    >
+      <svg-icon iconClass="tianjia" class="icon-hover" />
     </div>
     <!-- 群聊开关 -->
     <div
@@ -43,6 +50,7 @@ const { Conver, groupDrawer } = useState({
   Conver: (state) => state.conversation.currentConversation,
 });
 const openGroup = () => {
+  console.log(Conver.value.type);
   commit("setgroupDrawer", true);
 };
 </script>
