@@ -285,7 +285,7 @@ const getMoreMsg = async () => {
 
 // 动态组件
 const loadMsgComponents = (elem_type, item) => {
-  console.log(elem_type, item);
+  // console.log(elem_type, item);
   let resp = "";
   let CompMap = {
     TextElemItem: TextElemItem,

@@ -220,3 +220,23 @@ export const setMessageRead = async (convId) => {
       console.warn("setMessageRead error:", imError);
     });
 };
+// 修改群消息
+export const updateGroupProfile = async (params) => {
+  const { convId, modify = "", text = "" } = params;
+  let parameter = {
+    groupID: convId,
+    [modify]: text,
+    // name: "", // 修改群名称
+    // introduction: "", // 修改群简介
+    // notification: " ", // 修改群公告
+    // groupCustomField: [{ key: "group_level", value: "high" }], // 修改群组维度自定义字段
+  };
+  let promise = tim.updateGroupProfile(parameter);
+  promise
+    .then(function (imResponse) {
+      console.log(imResponse.data.group); // 修改成功后的群组详细资料
+    })
+    .catch(function (imError) {
+      console.warn("updateGroupProfile error:", imError); // 修改群组资料失败的相关信息
+    });
+};
