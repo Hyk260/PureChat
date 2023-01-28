@@ -19,6 +19,7 @@
     "eamodio.gitlens",
     "antfu.iconify",
     "antfu.unocss",
+    "NicholasHsiang.vscode-javascript-comment",
     "Vue.volar"
   ]
 }
