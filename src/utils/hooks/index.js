@@ -5,14 +5,29 @@ import { ref, onMounted, onUnmounted } from "vue";
  * @return { Array } [boolean,Function]
  * @author hyk <2607881950@qq.com>
  * @example
- * const [sate, toggle] = useToggle()
+ * const { sate, toggle } = useToggle()
  */
 export function useToggle(flag = false) {
   const state = ref(flag);
-  const toggle = () => {
-    state.value = !state.value;
+  function setBool(value) {
+    state.value = value;
+  }
+  function setTrue() {
+    setBool(true);
+  }
+  function setFalse() {
+    setBool(false);
+  }
+  function toggle() {
+    setBool(!state.value);
+  }
+  return {
+    state,
+    setBool,
+    setTrue,
+    setFalse,
+    toggle,
   };
-  return [state, toggle];
 }
 /**
  * @description: 事件监听器

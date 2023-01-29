@@ -2,6 +2,7 @@
   <div
     :class="['app-wrapper', sidebar ? '' : 'style-wrapper']"
     :style="fnStyle(isActive)"
+    v-resize
   >
     <Header />
     <main class="app-main">
@@ -40,7 +41,44 @@ import editor from "@/views/Editor/index.vue";
 import welcome from "@/views/welcome/index.vue";
 import personal from "@/views/Personal/index.vue";
 import about from "@/views/about/index.vue";
-
+import elementResizeDetectorMaker from "element-resize-detector";
+import emitter from "@/utils/mitt-bus";
+const erd = elementResizeDetectorMaker({
+  strategy: "scroll",
+});
+const VResize = {
+  mounted(el, binding, vnode) {
+    erd.listenTo(el, (elem) => {
+      const width = elem.offsetWidth;
+      const height = elem.offsetHeight;
+      if (binding?.instance) {
+        emitter.emit("resize", { detail: { width, height } });
+      } else {
+        vnode.el.dispatchEvent(
+          new CustomEvent("resize", { detail: { width, height } })
+        );
+      }
+    });
+  },
+  unmounted(el) {
+    erd.uninstall(el);
+  },
+};
+emitter.on("resize", ({ detail }) => {
+  const { width } = detail;
+  /** width app-wrapper类容器宽度
+   * 0 < width <= 760 隐藏侧边栏
+   * 760 < width <= 990 折叠侧边栏
+   * width > 990 展开侧边栏
+   */
+  if (width > 0 && width <= 760) {
+    // toggle("mobile", false);
+  } else if (width > 760 && width <= 990) {
+    // toggle("desktop", false);
+  } else if (width > 990) {
+    // toggle("desktop", true);
+  }
+});
 const route = useRoute();
 const router = useRouter();
 
