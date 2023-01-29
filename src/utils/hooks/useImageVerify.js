@@ -1,7 +1,7 @@
 import { ref, onMounted } from "vue";
 
 /**
- * 绘制图形验证码
+ * @description: 绘制图形验证码
  * @param width - 图形宽度
  * @param height - 图形高度
  */
@@ -31,8 +31,7 @@ export const useImageVerify = (width = 120, height = 40) => {
 };
 
 function randomNum(min, max) {
-  const num = Math.floor(Math.random() * (max - min) + min);
-  return num;
+  return Math.floor(Math.random() * (max - min) + min);
 }
 
 function randomColor(min, max) {

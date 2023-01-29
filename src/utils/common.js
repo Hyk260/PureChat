@@ -39,8 +39,8 @@ export function autotaggTheme(e) {
 }
 
 /**
- * 格式化文件大小
- * @param {Number}  bytes
+ * @description: 格式化文件大小
+ * @param { Number }  bytes
  */
 export function bytesToSize(bytes) {
   const marker = 1024; // Change to 1000 if required
@@ -60,7 +60,9 @@ export function bytesToSize(bytes) {
     return (bytes / gigaBytes).toFixed(decimal) + " GB";
   }
 }
-
+/**
+ * @description: 生成随机数
+ */
 export function randomNum(minNum, maxNum) {
   switch (arguments.length) {
     case 1:

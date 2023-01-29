@@ -58,6 +58,10 @@ ul {
   user-select: none;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .icon-hover {
   &:hover {
     color: var(--color-icon-hover) !important;

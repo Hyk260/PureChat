@@ -9,7 +9,7 @@
     使用 vue3 + Element-Plus开发 用于学习参考
     <br />
     <a href="https://pureadmin.cn" target="blank">
-      <strong>🌎 访问DEMO</strong>
+      <strong>🌎 在线预览</strong>
     </a>
     &nbsp;&nbsp;|&nbsp;&nbsp;
     <a><strong>💬 联系作者</strong></a>
@@ -24,15 +24,15 @@
 
 ### 🎉 特性
 
-- 📦️ 后端路由动态渲染 `node + express`
+- 📦️ 使用 Vue CLI 5 构建
 - 📃 RBAC 模型 + JWT 权限控制
+  - 后端路由动态渲染 `express`
 - ☁️ 聊天工作室 `基于IM即时通讯sdk`
-  - 支持「动态表情包」发送
+  - 支持「文字」「图片」「动态表情包」发送
   - @好友功能
   - 截图功能(开发中)
   - 支持消息撤回
   - 消息输入框使用富文本框 `wangEditor 5`开发(后续支持多类型消息混发)。
-  
 - 🎮 九宫格拼图游戏(自动拼图)
 - 🌚 光明/黑暗 模式切换`自动根据系统主题改变`(开发中)
 - ⚡️ 自定义SVG图标组件`svg-sprite-loader`
