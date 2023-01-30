@@ -65,6 +65,10 @@ export const TIM_logout = async () => {
     console.log(e);
   }
 };
+//退出登录
+export const TIM_Destroy = async () => {
+  await tim.destroy();
+};
 // 创建文本消息
 export const CreateTextMsg = async (params) => {
   const { convId, convType, textMsg } = params;

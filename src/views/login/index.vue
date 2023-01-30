@@ -4,10 +4,7 @@
       <!-- 背景 -->
       <svg-icon iconClass="loginBg" class="wave" />
       <!-- 主题开关 -->
-      <label class="switch">
-        <input type="checkbox" v-model="themecolor" :checked="themecolor" />
-        <span class="slider"></span>
-      </label>
+      <ThemeSwitch />
       <!-- 标题 -->
       <Motion>
         <header class="login-form">
@@ -132,8 +129,6 @@
 
 <script setup>
 import { Lock, User, Key } from "@element-plus/icons-vue";
-import ReImageVerify from "@/views/components/ReImageVerify/index.vue";
-import { ElNotification } from "element-plus";
 import {
   reactive,
   ref,
@@ -143,15 +138,14 @@ import {
   watch,
 } from "vue";
 import { login } from "@/api/user";
-import { getMenu } from "@/api/menu";
 import { operates, thirdParty } from "./utils/enums";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { user, rules } from "./utils/validation";
-import FontIcon from "@/layout/FontIcon/indx.vue";
 import Motion from "@/utils/motion";
-import { changeAppearance } from "@/utils/common";
-import { useState } from "@/utils/hooks/useMapper";
+import FontIcon from "@/layout/FontIcon/indx.vue";
+import ThemeSwitch from "../components/ThemeSwitch";
+import ReImageVerify from "@/views/components/ReImageVerify/index.vue";
 import emitter from "@/utils/mitt-bus";
 const { production } = require("@/config/vue.custom.config");
 
@@ -163,28 +157,6 @@ const imgCode = ref("");
 
 const router = useRouter();
 const { state, dispatch, commit } = useStore();
-const { appearance } = useState({
-  appearance: (state) => state.settings.appearance,
-});
-
-const themecolor = computed({
-  get() {
-    let theme = appearance.value == "dark" ? true : false;
-    return theme;
-  },
-  set(val) {
-    let theme = val ? "dark" : "light";
-    ThemeColorChange(theme);
-  },
-});
-
-const ThemeColorChange = (val) => {
-  commit("updateSettings", {
-    key: "appearance",
-    value: val,
-  });
-  changeAppearance(val);
-};
 
 const handleSelect = (item) => {
   console.log(item);
@@ -323,58 +295,5 @@ watch(imgCode, (value) => {
     font-size: 18px;
     color: #9e9e9e;
   }
-}
-/* From www.lingdaima.com */
-/* The switch - the box around the slider */
-.switch {
-  /* --moon-mask: ; */
-  font-size: 17px;
-  position: relative;
-  display: inline-block;
-  width: 3.5em;
-  height: 2em;
-  zoom: 0.7;
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* The slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #f4f4f5;
-  transition: 0.4s;
-  border-radius: 30px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 1.4em;
-  width: 1.4em;
-  border-radius: 20px;
-  left: 0.3em;
-  bottom: 0.3em;
-  background: linear-gradient(40deg, #ff0080, #ff8c00 70%);
-  transition: 0.4s;
-}
-
-input:checked + .slider {
-  background-color: #303136;
-}
-
-input:checked + .slider:before {
-  transform: translateX(1.5em);
-  background: #303136;
-  box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -5px 0 0 #a3dafb;
 }
 </style>

@@ -8,7 +8,6 @@
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import { loader } from "@/utils/loaders";
 import { onMounted, nextTick } from "vue";
-import { useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 
@@ -16,12 +15,6 @@ const locale = zhCn;
 const route = useRoute();
 const router = useRouter();
 const { state, dispatch, commit } = useStore();
-
-const { currentConversation, userInfo, currentMessageList } = useState({
-  currentConversation: (state) => state.conversation.currentConversation,
-  currentMessageList: (state) => state.conversation.currentMessageList,
-  userInfo: (state) => state.data.user,
-});
 
 onMounted(async () => {
   commit("updataRoute");

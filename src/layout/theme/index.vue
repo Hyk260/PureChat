@@ -2,8 +2,8 @@
   <div
     :class="['app-wrapper', sidebar ? '' : 'style-wrapper']"
     :style="fnStyle(isActive)"
-    v-resize
   >
+    <!-- v-resize -->
     <Header />
     <main class="app-main">
       <div class="continer-theme">
@@ -33,6 +33,7 @@ import {
   reactive,
   defineAsyncComponent,
 } from "vue";
+import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { useState } from "@/utils/hooks/useMapper";
 import Header from "./Header.vue";
@@ -43,9 +44,28 @@ import personal from "@/views/Personal/index.vue";
 import about from "@/views/about/index.vue";
 import elementResizeDetectorMaker from "element-resize-detector";
 import emitter from "@/utils/mitt-bus";
+
+const route = useRoute();
+const router = useRouter();
+const { state, dispatch, commit } = useStore();
+const CompMap = {
+  home: welcome, //首页
+  personal: personal, //个人中心
+  editor: editor, //编辑器
+  about: about, //关于
+};
+const page = reactive({
+  type: "",
+});
+
+const { isActive, sidebar } = useState({
+  isActive: (state) => state.settings.isCollapse,
+  sidebar: (state) => state.settings.sidebar,
+});
 const erd = elementResizeDetectorMaker({
   strategy: "scroll",
 });
+
 const VResize = {
   mounted(el, binding, vnode) {
     erd.listenTo(el, (elem) => {
@@ -71,30 +91,18 @@ emitter.on("resize", ({ detail }) => {
    * 760 < width <= 990 折叠侧边栏
    * width > 990 展开侧边栏
    */
+  console.log(detail);
   if (width > 0 && width <= 760) {
     // toggle("mobile", false);
   } else if (width > 760 && width <= 990) {
     // toggle("desktop", false);
   } else if (width > 990) {
     // toggle("desktop", true);
+    // commit("updateSettings", {
+    //   key: "sidebar",
+    //   value: true,
+    // });
   }
-});
-const route = useRoute();
-const router = useRouter();
-
-const CompMap = {
-  home: welcome, //首页
-  personal: personal, //个人中心
-  editor: editor, //编辑器
-  about: about, //关于
-};
-const page = reactive({
-  type: "",
-});
-
-const { isActive, sidebar } = useState({
-  isActive: (state) => state.settings.isCollapse,
-  sidebar: (state) => state.settings.sidebar,
 });
 
 watch(

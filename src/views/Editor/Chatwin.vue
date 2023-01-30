@@ -33,6 +33,12 @@
             :class="ISown(item) ? 'is-self' : 'is-other'"
             :id="item.ID"
           >
+            <el-checkbox
+              v-if="!ISown(item)"
+              v-show="showCheckbox"
+              class="check-other"
+              size="large"
+            />
             <!-- 头像 -->
             <div
               class="picture"
@@ -61,6 +67,12 @@
                 </component>
               </div>
             </div>
+            <el-checkbox
+              v-if="ISown(item)"
+              v-show="showCheckbox"
+              class="check-self"
+              size="large"
+            />
           </div>
         </div>
         <!-- 右键菜单 -->
@@ -117,6 +129,7 @@ import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 import { deleteMsgList, revokeMsg, getMsgList } from "@/api/im-sdk-api";
 import emitter from "@/utils/mitt-bus";
 
+const checked = ref(false);
 const isRight = ref(true);
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
@@ -126,6 +139,7 @@ const {
   noMore,
   userInfo,
   showMsgBox,
+  showCheckbox,
   needScrollDown,
   currentMessageList,
   currentConversation,
@@ -133,6 +147,7 @@ const {
   userInfo: (state) => state.data.user,
   noMore: (state) => state.conversation.noMore,
   showMsgBox: (state) => state.conversation.showMsgBox,
+  showCheckbox: (state) => state.conversation.showCheckbox,
   needScrollDown: (state) => state.conversation.needScrollDown,
   currentMessageList: (state) => state.conversation.currentMessageList,
   currentConversation: (state) => state.conversation.currentConversation,
@@ -393,12 +408,15 @@ const ClickMenuItem = (data) => {
     case "revoke":
       revokes(Info); //撤回
       break;
+    case "multiSelect":
+      multiSelect(Info); //多选
+      break;
     case "delete":
       fndelete(Info); //删除
       break;
   }
 };
-//删除消息
+// 删除消息
 const fndelete = async (data) => {
   let { code } = await deleteMsgList(data);
   if (code == 0) {
@@ -411,6 +429,11 @@ const fndelete = async (data) => {
       },
     });
   }
+};
+// 多选
+const multiSelect = (data) => {
+  commit("SET_CHEC_BOX", true);
+  // console.log(data);
 };
 // 撤回消息
 const revokes = (data) => {
@@ -499,10 +522,21 @@ $self-msg-color: #c2e8ff;
   padding: 0 16px 30px 16px;
   box-sizing: border-box;
 }
+.style-select {
+  border-radius: 3px;
+  background: hsl(220deg 20% 91%);
+}
 .message-view__item {
   display: flex;
   flex-direction: row;
   margin-top: 12px;
+  .check-other {
+    margin: 0 10px;
+  }
+  .check-self {
+    margin: 0 10px;
+    flex: auto;
+  }
 }
 .is-other {
   .picture {

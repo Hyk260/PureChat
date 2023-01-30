@@ -36,12 +36,11 @@ const actions = {
   // 登录
   async LOG_IN({ state, commit, dispatch }, data) {
     const { username, password } = data;
-    const res = await login({ username, password });
+    const { code, msg, result } = await login({ username, password });
     emitter.emit("showload", true);
-    console.log(res, "登录信息");
-    const { code, msg, result } = res;
-    console.log(result);
+    console.log({ code, msg, result }, "登录信息");
     if (code == 200) {
+      window.TIMProxy.init()
       commit("updateData", { key: "user", value: result });
       dispatch("TIM_LOG_IN", {
         userID: username,

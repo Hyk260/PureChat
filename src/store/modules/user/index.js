@@ -67,9 +67,8 @@ const user = {
     // 登录im
     async TIM_LOG_IN({ commit }, user) {
       const { userID, userSig } = user;
-      const result = await TIM_login({ userID, userSig });
-      console.log(result, "TIM_LOG_IN");
-      const { code, data } = result;
+      const { code, data } = await TIM_login({ userID, userSig });
+      console.log({ code, data }, "TIM_LOG_IN");
       if (code == 0) {
         let info = {
           userID,
@@ -102,6 +101,7 @@ const user = {
       let userSig = rootState.data?.user?.userSig;
       let isSDKReady = state?.isSDKReady;
       setTimeout(() => {
+        window.TIMProxy.init()
         dispatch("TIM_LOG_IN", { userID, userSig });
       }, 500);
     },

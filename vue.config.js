@@ -52,14 +52,14 @@ module.exports = {
     // 为生产环境修改配置...
     if (production) {
       // 清除css,js版本号
-      config.output.filename("static/js/[name].js").end();
-      config.output.chunkFilename("static/js/[name].js").end();
-      config.plugin("extract-css").tap((args) => [
-        {
-          filename: `static/css/[name].css`,
-          chunkFilename: `static/css/[name].css`,
-        },
-      ]);
+      // config.output.filename("static/js/[name].js").end();
+      // config.output.chunkFilename("static/js/[name].js").end();
+      // config.plugin("extract-css").tap((args) => [
+      //   {
+      //     filename: `static/css/[name].css`,
+      //     chunkFilename: `static/css/[name].css`,
+      //   },
+      // ]);
 
       // const analyzer = new BundleAnalyzerPlugin({
       //   analyzerPort: 9999

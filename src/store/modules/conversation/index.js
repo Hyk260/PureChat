@@ -19,6 +19,7 @@ const conversation = {
   // namespaced: true, //命名空间
   state: {
     showMsgBox: false, //是否显示输入框
+    showCheckbox: false, //是否显示多选框
     isShowModal: false, // @好友弹框
     noMore: false, // 加载更多  false ? 显示loading : 没有更多
     networkStatus: true, // 网络状态
@@ -113,6 +114,7 @@ const conversation = {
           state.currentConversation = null;
           state.currentMessageList = [];
           state.showMsgBox = false;
+          state.showCheckbox = false;
           break;
         }
         // 加载更多状态
@@ -155,7 +157,7 @@ const conversation = {
             state.currentConversation = payload;
             // 系统消息关闭聊天框
             state.showMsgBox = conversationID == "@TIM#SYSTEM" ? false : true;
-
+            state.showCheckbox = false
             if (state.currentConversation) {
               const history = state.historyMessageList.get(conversationID);
               state.currentMessageList = history;
@@ -204,7 +206,13 @@ const conversation = {
     */
     TOGGLE_LIST(state, action) {
       state.activetab = action
-    }
+    },
+    /**
+   * @description: 设置多选框状态
+   */
+    SET_CHEC_BOX(state, flag) {
+      state.showCheckbox = flag
+    },
   },
   actions: {
     // 获取消息列表

@@ -43,8 +43,7 @@ export default class TIMProxy {
     this.sdkAppID = 0;
     this.tim = null;
     this.TIM = null;
-    // 初始化
-    this.init();
+    // this.init();
     /**
      * value:属性的值
      * writable:如果为false 属性的值就不能被重写,只能为只读了
@@ -75,6 +74,7 @@ export default class TIMProxy {
   }
   // 初始化
   init() {
+    console.log("TIMProxy init")
     this.tim = tim;
     this.TIM = TIM;
     // 监听SDK
