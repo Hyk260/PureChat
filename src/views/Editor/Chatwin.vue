@@ -222,7 +222,7 @@ const updateLoadMore = (newValue) => {
     }
   });
 };
-
+// 多选框
 const handleCilck = (e, item) => {
   // 处理触发两次bug
   if (e.target.tagName == "INPUT") return;
@@ -231,8 +231,8 @@ const handleCilck = (e, item) => {
 };
 
 const handleChecked = (e, item) => {
-  const el = e.target.getElementsByTagName("input")[0];
   const _el = document.getElementById(`${item.ID}`);
+  const el = _el.getElementsByTagName("input")[0];
   _el.parentNode.classList.toggle("style-select");
   if (el.checked) {
     el.checked = false;

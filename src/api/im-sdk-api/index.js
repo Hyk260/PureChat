@@ -65,8 +65,9 @@ export const TIM_logout = async () => {
     console.log(e);
   }
 };
-//退出登录
+// 销毁 SDK 实例
 export const TIM_Destroy = async () => {
+  // SDK 会先 logout，然后断开 WebSocket 长连接，并释放资源
   await tim.destroy();
 };
 // 创建文本消息
@@ -136,6 +137,22 @@ export const CreateFiletMsg = async (params) => {
     },
   });
   return message;
+};
+// 创建合并消息
+export const createMergerMsg = async (params) => {
+  const { convId, convType, messageList, title, abstractList } = params;
+  let mergerMessage = tim.createMergerMessage({
+    to: convId,
+    conversationType: convType,
+    payload: {
+      messageList: list,
+      title: "大湾区前端人才中心的聊天记录",
+      abstractList: ["allen: 666", "iris: [图片]", "linda: [文件]"],
+      compatibleText: "请升级IMSDK到v2.10.1或更高版本查看此消息",
+    },
+    // 消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到，v2.10.2起支持）
+    // cloudCustomData: 'your cloud custom data'
+  });
 };
 // 发送消息
 export const sendMsg = async (params) => {
