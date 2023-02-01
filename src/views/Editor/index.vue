@@ -17,14 +17,14 @@
         <ConversationList />
       </div>
     </div>
-    <!-- 聊天框 -->
+    <!-- 聊天框 :class="['message-right', groupDrawer ? 'style-group' : '']"-->
     <div
-      :class="['message-right', groupDrawer ? 'style-group' : '']"
+      :class="{ 'message-right': true, 'style-group': groupDrawer }"
       id="svgBox"
     >
       <Header />
       <!-- 聊天窗口 -->
-      <Chatwin ref="ChatRef" v-show="conver" />
+      <Chatwin ref="ChatRef" />
       <div
         id="svgResize"
         @mouseover="dragControllerDiv(ChatRef)"
@@ -37,8 +37,10 @@
           <span>回到底部</span>
         </div> -->
       </div>
+      <!-- 多选框 -->
+      <MultiChoiceBox />
       <!-- 编辑器 -->
-      <Editor v-show="showMsgBox" />
+      <Editor />
     </div>
     <!-- 群详情 -->
     <GroupDetails />
@@ -70,6 +72,7 @@ import Chatwin from "./Chatwin.vue";
 import GroupDetails from "./GroupDetails.vue";
 import networklink from "./components/networklink.vue";
 import ConversationList from "./ConversationList.vue";
+import MultiChoiceBox from "./components/MultiChoiceBox.vue";
 
 const ChatRef = ref(null);
 const showGroup = ref(false);

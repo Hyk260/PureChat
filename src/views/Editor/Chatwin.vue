@@ -2,6 +2,7 @@
 <template>
   <section
     class="message-info-view-content"
+    v-show="currentConversation"
     :class="[showMsgBox ? '' : 'style-MsgBox']"
     id="svgTop"
   >
@@ -12,7 +13,11 @@
       always
     >
       <div class="message-view" ref="messageViewRef">
-        <div v-for="(item, index) in currentMessageList" :key="item.ID">
+        <div
+          v-for="(item, index) in currentMessageList"
+          :key="item.ID"
+          :class="{ 'reset-select': !showCheckbox }"
+        >
           <!-- 加载更多 -->
           <LoadMore
             :noMore="noMore"
@@ -30,14 +35,18 @@
           <div
             v-if="!item.isTimeDivider && !item.isDeleted"
             class="message-view__item"
-            :class="ISown(item) ? 'is-self' : 'is-other'"
+            :class="{
+              'is-self': ISown(item),
+              'is-other': !ISown(item),
+              'style-choice': showCheckbox,
+            }"
             :id="item.ID"
+            @click="handleChecked($event, item)"
           >
-            <el-checkbox
-              v-if="!ISown(item)"
+            <Checkbox
+              @click.stop="handleCilck($event, item, 'input')"
               v-show="showCheckbox"
-              class="check-other"
-              size="large"
+              class="input-check"
             />
             <!-- 头像 -->
             <div
@@ -67,14 +76,9 @@
                 </component>
               </div>
             </div>
-            <el-checkbox
-              v-if="ISown(item)"
-              v-show="showCheckbox"
-              class="check-self"
-              size="large"
-            />
           </div>
         </div>
+
         <!-- 右键菜单 -->
         <contextmenu ref="contextmenu">
           <contextmenu-item
@@ -119,6 +123,7 @@ import { throttle } from "@/utils/throttle";
 import { useEventListener } from "@/utils/hooks/index";
 import { useState } from "@/utils/hooks/useMapper";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
+import Checkbox from "./components/Checkbox.vue";
 import TextElemItem from "./components/TextElemItem";
 import TipsElemItem from "./components/TipsElemItem";
 import groupTipElement from "./components/groupTipElement.vue";
@@ -129,7 +134,6 @@ import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 import { deleteMsgList, revokeMsg, getMsgList } from "@/api/im-sdk-api";
 import emitter from "@/utils/mitt-bus";
 
-const checked = ref(false);
 const isRight = ref(true);
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
@@ -139,6 +143,7 @@ const {
   noMore,
   userInfo,
   showMsgBox,
+  forwardData,
   showCheckbox,
   needScrollDown,
   currentMessageList,
@@ -147,6 +152,7 @@ const {
   userInfo: (state) => state.data.user,
   noMore: (state) => state.conversation.noMore,
   showMsgBox: (state) => state.conversation.showMsgBox,
+  forwardData: (state) => state.conversation.forwardData,
   showCheckbox: (state) => state.conversation.showCheckbox,
   needScrollDown: (state) => state.conversation.needScrollDown,
   currentMessageList: (state) => state.conversation.currentMessageList,
@@ -215,6 +221,32 @@ const updateLoadMore = (newValue) => {
       elRef?.scrollIntoViewIfNeeded();
     }
   });
+};
+
+const handleCilck = (e, item) => {
+  // 处理触发两次bug
+  if (e.target.tagName == "INPUT") return;
+  const el = document.getElementById(`${item.ID}`);
+  el.parentNode.classList.toggle("style-select");
+};
+
+const handleChecked = (e, item) => {
+  const el = e.target.getElementsByTagName("input")[0];
+  const _el = document.getElementById(`${item.ID}`);
+  _el.parentNode.classList.toggle("style-select");
+  if (el.checked) {
+    el.checked = false;
+    commit("SET_FORWARD_DATA", {
+      type: "del",
+      payload: item,
+    });
+  } else {
+    el.checked = true;
+    commit("SET_FORWARD_DATA", {
+      type: "set",
+      payload: item,
+    });
+  }
 };
 
 const ISown = (item) => {
@@ -433,7 +465,6 @@ const fndelete = async (data) => {
 // 多选
 const multiSelect = (data) => {
   commit("SET_CHEC_BOX", true);
-  // console.log(data);
 };
 // 撤回消息
 const revokes = (data) => {
@@ -461,7 +492,7 @@ onUpdated(() => {
   console.log("onUpdated");
   UpdataScrollInto();
 });
-
+onBeforeUpdate(() => {});
 onBeforeUnmount(() => {});
 
 // eslint-disable-next-line no-undef
@@ -488,7 +519,7 @@ $self-msg-color: #c2e8ff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.09);
 }
 .style-MsgBox {
-  height: calc(100% - 60px);
+  height: calc(100% - 60px) !important;
 }
 
 .scrollbar-item {
@@ -526,16 +557,25 @@ $self-msg-color: #c2e8ff;
   border-radius: 3px;
   background: hsl(220deg 20% 91%);
 }
+.reset-select {
+  border-radius: 3px;
+  background: #fff;
+}
+.style-choice {
+  padding-left: 35px;
+}
 .message-view__item {
   display: flex;
   flex-direction: row;
   margin-top: 12px;
-  .check-other {
+  position: relative;
+  .input-check {
+    font-size: 12px;
     margin: 0 10px;
-  }
-  .check-self {
-    margin: 0 10px;
-    flex: auto;
+    position: absolute;
+    left: 0;
+    // width: 100%;
+    height: 100%;
   }
 }
 .is-other {

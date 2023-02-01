@@ -24,6 +24,7 @@ const conversation = {
     noMore: false, // 加载更多  false ? 显示loading : 没有更多
     networkStatus: true, // 网络状态
     needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
+    forwardData: new Map(),
     uploadProgress: new Map(), //上传进度
     downloadProgress: new Map(), //下载进度
     historyMessageList: new Map(), //历史消息
@@ -207,12 +208,30 @@ const conversation = {
     TOGGLE_LIST(state, action) {
       state.activetab = action
     },
+    SET_FORWARD_DATA(state, action) {
+      const { type, payload } = action
+      const { ID } = payload
+      switch (type) {
+        case 'set':
+          state.forwardData.set(ID, payload)
+          break;
+        case 'del':
+          state.forwardData.delete(ID)
+          break;
+      }
+    },
     /**
    * @description: 设置多选框状态
    */
     SET_CHEC_BOX(state, flag) {
       state.showCheckbox = flag
     },
+    /**
+   * @description: 设置聊天框状态
+   */
+    SET_SHOW_MSG_BOX(state, flag) {
+      state.showMsgBox = flag
+    }
   },
   actions: {
     // 获取消息列表

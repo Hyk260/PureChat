@@ -1,5 +1,10 @@
 <template>
-  <div class="Editor-style" id="svgDown">
+  <div
+    class="Editor-style"
+    id="svgDown"
+    v-if="showMsgBox"
+    v-show="!showCheckbox"
+  >
     <!-- <Toolbar
       class="toolbar"
       :editor="editorRef"
@@ -43,6 +48,7 @@ import "./utils/custom-menu";
 import "@wangeditor/editor/dist/css/style.css";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import RichToolbar from "./components/RichToolbar.vue";
+import MultiChoiceBox from "./components/MultiChoiceBox.vue";
 import { toolbarConfig, editorConfig } from "./utils/configure";
 import {
   onBeforeUnmount,
@@ -86,6 +92,8 @@ const {
   currentMessageList,
   historyMessageList,
   noMore,
+  showMsgBox,
+  showCheckbox,
   userInfo,
   isShowModal,
   currentMemberList,
@@ -96,6 +104,8 @@ const {
   historyMessageList: (state) => state.conversation.historyMessageList,
   noMore: (state) => state.conversation.noMore,
   userInfo: (state) => state.data.user,
+  showCheckbox: (state) => state.conversation.showCheckbox,
+  showMsgBox: (state) => state.conversation.showMsgBox,
   isShowModal: (state) => state.conversation.isShowModal,
 });
 // 组件销毁时，及时销毁编辑器
