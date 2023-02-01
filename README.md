@@ -28,10 +28,11 @@
 - 📃 RBAC 模型 + JWT 权限控制
   - 后端路由动态渲染 `express`
 - ☁️ 聊天工作室 `基于IM即时通讯sdk`
-  - 支持「文字」「图片」「动态表情包」发送
   - @好友功能
-  - 截图功能(开发中)
   - 支持消息撤回
+  - 截图功能(开发中)
+  - 聊天消息多选转发功能(开发中)
+  - 支持「文字」「图片」「动态表情包」发送
   - 消息输入框使用富文本框 `wangEditor 5`开发(后续支持多类型消息混发)。
 - 🎮 九宫格拼图游戏(自动拼图)
 - 🌚 光明/黑暗 模式切换`自动根据系统主题改变`(开发中)
@@ -98,7 +99,7 @@ yarn build
 │   ├── components             // 全局公用组件
 │   ├── locales                // 国际化语言
 │   ├── mock                   // mock服务
-│   ├── plugins				         // 插件
+│   ├── plugins				   // 插件
 │   ├── router                 // 路由
 │   ├── store                  // 全局 store管理
 │   ├── styles                 // 全局样式
@@ -110,7 +111,7 @@ yarn build
 ├── eslintrc.js                // eslint 配置项
 ├── .prettierrc
 ├── .env.development           // 开发环境变量
-├── .env.production			       // 生产环境变量
+├── .env.production			    // 生产环境变量
 ├── .gitignore                 // git 忽略项
 ├── README.md                  // 说明
 ├── jsconfig.json
