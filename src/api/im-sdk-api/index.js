@@ -140,12 +140,12 @@ export const CreateFiletMsg = async (params) => {
 };
 // 创建合并消息
 export const createMergerMsg = async (params) => {
-  const { convId, convType, messageList, title, abstractList } = params;
+  const { convId, convType, List, title, abstractList } = params;
   let mergerMessage = tim.createMergerMessage({
     to: convId,
     conversationType: convType,
     payload: {
-      messageList: list,
+      messageList: List,
       title: "大湾区前端人才中心的聊天记录",
       abstractList: ["allen: 666", "iris: [图片]", "linda: [文件]"],
       compatibleText: "请升级IMSDK到v2.10.1或更高版本查看此消息",
