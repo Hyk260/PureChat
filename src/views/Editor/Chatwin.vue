@@ -133,12 +133,15 @@ import LoadMore from "./components/LoadMore.vue";
 import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 import { deleteMsgList, revokeMsg, getMsgList } from "@/api/im-sdk-api";
 import emitter from "@/utils/mitt-bus";
+import { useWatermark } from "@/utils/hooks/useWatermark";
 
 const isRight = ref(true);
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
+const watermarkText = ref("pure-admin");
 const { state, dispatch, commit } = useStore();
+const { setWatermark, clear } = useWatermark();
 const {
   noMore,
   userInfo,
@@ -486,14 +489,20 @@ emitter.on("updataScroll", (e) => {
   UpdataScrollInto();
 });
 
-onMounted(() => {});
+onMounted(() => {
+  nextTick(() => {
+    setWatermark(watermarkText.value);
+  });
+});
 
 onUpdated(() => {
   console.log("onUpdated");
   UpdataScrollInto();
 });
 onBeforeUpdate(() => {});
-onBeforeUnmount(() => {});
+onBeforeUnmount(() => {
+  clear();
+});
 
 // eslint-disable-next-line no-undef
 defineExpose({ UpdateScrollbar, UpdataScrollInto });

@@ -65,3 +65,25 @@ export function useMouse() {
     y,
   };
 }
+
+/**
+ * @description:
+ * @param { DOM }
+ * @param { String }
+ * @param { Functin }
+ * @return {*}
+ * @example
+ *
+ */
+export function useResizeListener() {
+  function addResizeListener(target, callback) {
+    window.addEventListener("resize", callback, false);
+  }
+  function removeResizeListener(target, callback) {
+    window.removeEventListener("resize", callback, false);
+  }
+  return {
+    addResizeListener,
+    removeResizeListener,
+  };
+}
