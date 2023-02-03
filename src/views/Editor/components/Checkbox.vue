@@ -20,7 +20,6 @@ export default defineComponent({
   components: {},
   computed: {},
   props: {},
-  data() {},
   methods: {},
   setup(props, { attrs, emit, expose, slots }) {
     onMounted(() => {});

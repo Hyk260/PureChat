@@ -51,7 +51,7 @@ const { state, dispatch, commit } = useStore();
 const CompMap = {
   home: welcome, //首页
   personal: personal, //个人中心
-  editor: editor, //编辑器
+  chatstudio: editor, //编辑器
   about: about, //关于
 };
 const page = reactive({

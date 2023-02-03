@@ -16,7 +16,6 @@ import {
 import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
 export default defineComponent({
   name: "Componentname",
-  components: {},
   computed: {
     ...mapState({
       showMsgBox: (state) => state.conversation.showMsgBox,
@@ -24,8 +23,6 @@ export default defineComponent({
       showCheckbox: (state) => state.conversation.showCheckbox,
     }),
   },
-  props: {},
-  data() {},
   methods: {
     ...mapMutations(["SET_CHEC_BOX"]),
     shutdown() {

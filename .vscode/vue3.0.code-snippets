@@ -13,7 +13,7 @@
       "\tcomponents: {},",
       "\tcomputed: {},",
       "\tprops: {},",
-      "\tdata() {},",
+      "\tdata() { return {} },",
       "\tmethods: {},",
       "\tsetup(props, { attrs, emit, expose, slots }) {",
       "\t\tconst state = reactive({ text: 'wewe' });\n",

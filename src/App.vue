@@ -24,28 +24,6 @@ onMounted(async () => {
     }
   }, 200);
 });
-
-const fnresize = () => {
-  /** width app-wrapper类容器宽度
-   * 0 < width <= 760 隐藏侧边栏
-   * 760 < width <= 990 折叠侧边栏
-   * width > 990 展开侧边栏
-   */
-  // let dom = document.getElementById("app");
-  // let setWidth = dom?.offsetWidth;
-  // if (!setWidth) return;
-  // if (setWidth <= 760) {
-  //   commit("updateSettings", {
-  //     key: "sidebar",
-  //     value: false,
-  //   });
-  // } else {
-  //   commit("updateSettings", {
-  //     key: "sidebar",
-  //     value: true,
-  //   });
-  // }
-};
 </script>
 
 <style lang="scss">
