@@ -5,14 +5,10 @@
     </div>
     <!-- h -->
     <list-component :list="list" :active-index="activeIndex" @toggle="toggle" />
-
+    <!-- list -->
     <!-- <ul v-for="item in list" :key="item.icon">
-      <li
-        class="aside-item"
-        v-debounce-click:200="onClick"
-        @click="active = item.icon"
-      >
-        <div :class="['aside-list', active == item.icon ? 'current' : '']">
+      <li class="aside-item" @click="active = item.icon">
+        <div class="aside-list" :class="{ current: active == item.icon }">
           <svg-icon :iconClass="item.icon" class="style-svg" />
           <div class="icon-title">{{ item.title }}</div>
         </div>
@@ -98,12 +94,13 @@ function onClick() {
   console.log("Only triggered once when clicked many times quickly");
 }
 
-function toggle(index) {
+function toggle({ index, item }) {
   // window.TIMProxy.notifyMe();
   // window.TIMProxy.saveSelfToLocalStorage();
+  commit("TAGGLE_OUE_SIDE", item);
   activeIndex.value = index;
 }
-
+// v-debounce-click:200="onClick"
 const VDebounceClick = {
   mounted(el, binding) {
     const { arg, value } = binding;
@@ -126,7 +123,7 @@ const ListComponent = (props, { slots, emit, attrs }) => {
           key: index,
           class: "aside-item",
           onClick: () => {
-            emit("toggle", index);
+            emit("toggle", { index, item: item.icon });
           },
         },
         [

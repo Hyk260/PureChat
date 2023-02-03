@@ -7,9 +7,9 @@
     <Header />
     <main class="app-main">
       <div class="continer-theme">
+        <!-- :include="['editor']" -->
         <router-view v-slot="{ Component }">
           <transition name="fade-transform" mode="out-in">
-            <!-- :include="['editor']" -->
             <keep-alive v-if="$route.meta.keep" max="3">
               <component v-if="Component" :is="Component" />
               <component v-else :is="CompMap[page.type] || error" />

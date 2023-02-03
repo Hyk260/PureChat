@@ -32,6 +32,7 @@ const conversation = {
     currentConversation: null, //跳转窗口的属性
     conversationList: [], //会话列表数据
     activetab: 'whole',
+    outside: 'news', // 侧边栏初始状态
   },
   mutations: {
     // 设置历史消息
@@ -188,23 +189,17 @@ const conversation = {
         }
       }
     },
-    /**
-     * @description: 设置网络状态
-     */
+    // 设置网络状态
     SET_NETWORK_STATUS(state, action) {
       state.networkStatus = action;
     },
-    /**
-     * @description: 设置提及弹框显示隐藏
-     */
+    // 设置提及弹框显示隐藏
     SET_MENTION_MODAL(state, action) {
       const { type } = state.currentConversation;
       if (type !== "GROUP") return;
       state.isShowModal = action
     },
-    /**
-    * @description: 切换列表 全部 未读 提及我
-    */
+    //  切换列表 全部 未读 提及我
     TOGGLE_LIST(state, action) {
       state.activetab = action
     },
@@ -220,17 +215,17 @@ const conversation = {
           break;
       }
     },
-    /**
-   * @description: 设置多选框状态
-   */
+    // 设置多选框状态
     SET_CHEC_BOX(state, flag) {
       state.showCheckbox = flag
     },
-    /**
-   * @description: 设置聊天框状态
-   */
+    // 设置聊天框状态
     SET_SHOW_MSG_BOX(state, flag) {
       state.showMsgBox = flag
+    },
+    // 切换侧边栏
+    TAGGLE_OUE_SIDE(state, item) {
+      state.outside = item
     }
   },
   actions: {

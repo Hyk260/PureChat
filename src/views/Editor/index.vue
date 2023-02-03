@@ -1,49 +1,61 @@
 <template>
   <div class="list-container">
     <Sidebar />
-    <!-- 聊天列表 -->
-    <div class="message-left">
-      <!-- 搜索框 -->
-      <Search />
-      <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-        <el-tab-pane label="全部" name="whole"></el-tab-pane>
-        <el-tab-pane label="未读" name="unread"></el-tab-pane>
-        <el-tab-pane label="@我" name="mention"></el-tab-pane>
-      </el-tabs>
-      <div :class="['scroll-container', !networkStatus ? 'style-net' : '']">
-        <!-- 连接已断开 -->
-        <networklink :show="!networkStatus" />
-        <!-- 会话列表 -->
-        <ConversationList />
+    <template v-if="outside == 'news'">
+      <!-- 聊天列表 -->
+      <div class="message-left">
+        <!-- 搜索框 -->
+        <Search />
+        <el-tabs
+          v-model="activeName"
+          class="demo-tabs"
+          @tab-click="handleClick"
+        >
+          <el-tab-pane label="全部" name="whole"></el-tab-pane>
+          <el-tab-pane label="未读" name="unread"></el-tab-pane>
+          <el-tab-pane label="@我" name="mention"></el-tab-pane>
+        </el-tabs>
+        <div :class="['scroll-container', !networkStatus ? 'style-net' : '']">
+          <!-- 连接已断开 -->
+          <networklink :show="!networkStatus" />
+          <!-- 会话列表 -->
+          <ConversationList />
+        </div>
       </div>
-    </div>
-    <!-- 聊天框 :class="['message-right', groupDrawer ? 'style-group' : '']"-->
-    <div
-      :class="{ 'message-right': true, 'style-group': groupDrawer }"
-      id="svgBox"
-    >
-      <Header />
-      <!-- 聊天窗口 -->
-      <Chatwin ref="ChatRef" />
+      <!-- 聊天框 :class="['message-right', groupDrawer ? 'style-group' : '']"-->
       <div
-        id="svgResize"
-        @mouseover="dragControllerDiv(ChatRef)"
-        v-if="showMsgBox"
+        :class="{ 'message-right': true, 'style-group': groupDrawer }"
+        id="svgBox"
       >
-        <!-- <div class="back-to-the-bottom" @click="toBottom">
+        <Header />
+        <!-- 聊天窗口 -->
+        <Chatwin ref="ChatRef" />
+        <div
+          id="svgResize"
+          @mouseover="dragControllerDiv(ChatRef)"
+          v-if="showMsgBox"
+        >
+          <!-- <div class="back-to-the-bottom" @click="toBottom">
           <el-icon class="svg-left">
             <DArrowLeft />
           </el-icon>
           <span>回到底部</span>
         </div> -->
+        </div>
+        <!-- 多选框 -->
+        <MultiChoiceBox />
+        <!-- 编辑器 -->
+        <Editor />
       </div>
-      <!-- 多选框 -->
-      <MultiChoiceBox />
-      <!-- 编辑器 -->
-      <Editor />
-    </div>
-    <!-- 群详情 -->
-    <GroupDetails />
+      <!-- 群详情 -->
+      <GroupDetails />
+    </template>
+    <template v-if="outside == 'mail_list'">
+      <div>mail_list</div>
+    </template>
+    <template v-if="outside == 'application'">
+      <div>application</div>
+    </template>
   </div>
 </template>
 
@@ -84,10 +96,12 @@ const {
   networkStatus,
   conver,
   user,
+  outside,
   groupDrawer,
   showMsgBox,
   conversationList,
 } = useState({
+  outside: (state) => state.conversation.outside,
   networkStatus: (state) => state.conversation.networkStatus,
   user: (state) => state.data.user,
   conver: (state) => state.conversation.currentConversation,
