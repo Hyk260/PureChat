@@ -103,6 +103,7 @@ import {
   nextTick,
   onMounted,
   onUpdated,
+  onUnmounted,
   onBeforeUpdate,
   computed,
   onBeforeUnmount,
@@ -490,15 +491,20 @@ emitter.on("updataScroll", (e) => {
 });
 
 onMounted(() => {
+  console.log("onMounted");
   nextTick(() => {
     setWatermark(watermarkText.value);
   });
 });
-
+// onUnmounted(() => {
+//   console.log("onUnmounted");
+//   UpdataScrollInto();
+// });
 onUpdated(() => {
   console.log("onUpdated");
   UpdataScrollInto();
 });
+
 onBeforeUpdate(() => {});
 onBeforeUnmount(() => {
   clear();

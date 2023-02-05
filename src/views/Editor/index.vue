@@ -127,8 +127,12 @@ onDeactivated(() => {
   console.log("onDeactivated");
   commit("setgroupDrawer", false);
 });
-onMounted(() => {});
-onUnmounted(() => {});
+onMounted(() => {
+  console.log("onMounted");
+});
+onUnmounted(() => {
+  console.log("onUnmounted");
+});
 </script>
 
 <style lang="scss" scoped>
