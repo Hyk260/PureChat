@@ -142,6 +142,7 @@ const messageViewRef = ref(null);
 const watermarkText = ref("pure-admin");
 const { state, dispatch, commit } = useStore();
 const { setWatermark, clear } = useWatermark();
+
 const {
   noMore,
   userInfo,
