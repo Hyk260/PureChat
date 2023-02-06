@@ -68,6 +68,10 @@ const list = [
     icon: "application",
     title: "应用",
   },
+  {
+    icon: "yuying",
+    title: "测试",
+  },
 ];
 
 function Debounce(fn, delay, immediate) {

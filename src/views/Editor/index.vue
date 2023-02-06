@@ -8,6 +8,8 @@
     <mailList v-show="outside == 'mail_list'" />
     <!-- 应用 -->
     <application v-show="outside == 'application'" />
+    <!-- 测试 -->
+    <test v-show="outside == 'yuying'" />
   </div>
 </template>
 
@@ -30,6 +32,7 @@ import Sidebar from "./Sidebar.vue";
 import application from "./application.vue";
 import mailList from "./mailList.vue";
 import news from "./news.vue";
+import test from "./test.vue";
 
 const { state, dispatch, commit } = useStore();
 

@@ -29,6 +29,24 @@ export const getGroupMemberList = async (params) => {
     console.log(error);
   }
 };
+// 获取群组列表
+export const getGroupList = async (params) => {
+  let promise = tim.getGroupList();
+  promise.then(function (imResponse) {
+    console.log(imResponse.data.groupList); // 群组列表
+  }).catch(function (imError) {
+    console.warn('getGroupList error:', imError); // 获取群组列表失败的相关信息
+  });
+};
+// 获取 SDK 缓存的好友列表
+export const getFriendList = async (params) => {
+  let promise = tim.getFriendList();
+  promise.then(function (imResponse) {
+    const friendList = imResponse.data; // 好友列表
+  }).catch(function (imError) {
+    console.warn('getFriendList error:', imError); // 获取好友列表失败的相关信息
+  });
+};
 // 获取个人资料
 export const getMyProfile = async () => {
   try {
