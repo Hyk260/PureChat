@@ -1,6 +1,5 @@
 <template>
-  <label class="container">
-    <!-- checked="checked" -->
+  <label class="container input-check">
     <input type="checkbox" class="check-btn" />
     <div class="checkmark"></div>
   </label>
@@ -30,6 +29,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.input-check {
+  font-size: 12px;
+  margin: 0 10px;
+  position: absolute;
+  left: 0;
+  height: 100%;
+}
 .container input {
   position: absolute;
   opacity: 0;
@@ -39,10 +45,10 @@ export default defineComponent({
 }
 
 .container {
-  display: block;
-  position: relative;
+  // display: block;
+  // position: relative;
+  // font-size: 20px;
   cursor: pointer;
-  font-size: 20px;
   user-select: none;
 }
 

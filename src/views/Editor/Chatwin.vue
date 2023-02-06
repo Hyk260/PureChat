@@ -46,7 +46,6 @@
             <Checkbox
               @click.stop="handleCilck($event, item, 'input')"
               v-show="showCheckbox"
-              class="input-check"
             />
             <!-- 头像 -->
             <div
@@ -143,7 +142,6 @@ const messageViewRef = ref(null);
 const watermarkText = ref("pure-admin");
 const { state, dispatch, commit } = useStore();
 const { setWatermark, clear } = useWatermark();
-
 const {
   noMore,
   userInfo,
@@ -492,7 +490,6 @@ emitter.on("updataScroll", (e) => {
 });
 
 onMounted(() => {
-  console.log("onMounted");
   nextTick(() => {
     setWatermark(watermarkText.value);
   });
@@ -502,7 +499,6 @@ onMounted(() => {
 //   UpdataScrollInto();
 // });
 onUpdated(() => {
-  console.log("onUpdated");
   UpdataScrollInto();
 });
 
@@ -585,14 +581,6 @@ $self-msg-color: #c2e8ff;
   flex-direction: row;
   margin-top: 12px;
   position: relative;
-  .input-check {
-    font-size: 12px;
-    margin: 0 10px;
-    position: absolute;
-    left: 0;
-    // width: 100%;
-    height: 100%;
-  }
 }
 .is-other {
   .picture {
