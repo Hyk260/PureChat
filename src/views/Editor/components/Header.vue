@@ -50,7 +50,6 @@ const { Conver, groupDrawer } = useState({
   Conver: (state) => state.conversation.currentConversation,
 });
 const openGroup = () => {
-  console.log(Conver.value.type);
   commit("setgroupDrawer", true);
 };
 </script>

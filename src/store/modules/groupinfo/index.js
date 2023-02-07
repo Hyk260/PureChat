@@ -1,9 +1,9 @@
-import { getGroupMemberList, getGroupProfile } from "@/api/im-sdk-api/index";
+import { getGroupMemberList, getGroupProfile, getGroupList } from "@/api/im-sdk-api/index";
 export default {
   // namespaced: true,
   state: {
     groupDrawer: false, // 群聊开关
-    groupList: [],
+    groupList: [],  //群组列表
     groupProfile: null,
     currentMemberList: [], // 当前群组成员列表
   },
@@ -50,5 +50,11 @@ export default {
       state.currentMemberList = memberList;
       console.log(memberList);
     },
+    async getGroupList({ state }, payload) {
+      // state.groupList = 
+      const list = await getGroupList()
+      console.log(list)
+      state.groupList = list
+    }
   },
 };

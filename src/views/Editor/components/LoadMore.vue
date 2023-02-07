@@ -1,7 +1,7 @@
 <template>
   <div class="viewref">
     <!-- ${noMore ? 'no-more' : 'loading-more'} -->
-    <div :class="`showMore`">
+    <div class="showMore">
       {{ noMore ? "没有更多了" : "" }}
     </div>
     <div class="showMore bouncing-loader" v-show="!noMore">
@@ -12,7 +12,6 @@
 
 <script setup>
 import { toRefs } from "vue";
-
 // eslint-disable-next-line no-undef
 const props = defineProps({
   noMore: {
@@ -21,7 +20,6 @@ const props = defineProps({
   },
 });
 const { noMore } = toRefs(props);
-// const noMore = true;
 </script>
 
 <style lang="scss" scoped>

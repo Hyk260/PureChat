@@ -50,6 +50,7 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import SvgIcon from "@/components/SvgIcon";
+import { useState, useGetters } from "@/utils/hooks/useMapper";
 
 const { state, dispatch, commit } = useStore();
 const dialogVisible = ref(false);
@@ -73,6 +74,9 @@ const list = [
     title: "测试",
   },
 ];
+const { outside } = useState({
+  outside: (state) => state.conversation.outside,
+});
 
 function Debounce(fn, delay, immediate) {
   let timer = null;
@@ -134,7 +138,10 @@ const ListComponent = (props, { slots, emit, attrs }) => {
           h(
             "div",
             {
-              class: ["aside-list", index === activeIndex ? "current" : ""],
+              class: [
+                "aside-list",
+                item.icon === outside.value ? "current" : "",
+              ],
             },
             h(SvgIcon, { iconClass: item.icon, class: "style-svg" }),
             h("div", { class: "icon-title" }, item.title)

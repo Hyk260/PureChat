@@ -31,12 +31,12 @@ export const getGroupMemberList = async (params) => {
 };
 // 获取群组列表
 export const getGroupList = async (params) => {
-  let promise = tim.getGroupList();
-  promise.then(function (imResponse) {
-    console.log(imResponse.data.groupList); // 群组列表
-  }).catch(function (imError) {
-    console.warn('getGroupList error:', imError); // 获取群组列表失败的相关信息
-  });
+  try {
+    const { code, data: { groupList } } = await tim.getGroupList();
+    if (code == 0) return groupList;
+  } catch (e) {
+    console.log(e);
+  }
 };
 // 获取 SDK 缓存的好友列表
 export const getFriendList = async (params) => {

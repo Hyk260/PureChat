@@ -2,6 +2,11 @@
   <div>
     <el-button type="primary" @click="test1">获取群组列表</el-button>
     <el-button type="primary" @click="test2">获取 SDK 缓存的好友列表</el-button>
+    <div v-for="item in groupList" :key="item.groupID">
+      <p @click="handleGroupClick(item.groupID)">
+        {{ item.name }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -18,17 +23,27 @@ import { getGroupList, getFriendList } from "@/api/im-sdk-api";
 export default defineComponent({
   name: "Componentname",
   components: {},
-  computed: {},
+  computed: {
+    ...mapState({
+      groupList: (state) => state.groupinfo.groupList,
+    }),
+  },
   props: {},
   data() {
     return {};
   },
   methods: {
+    ...mapMutations(["TAGGLE_OUE_SIDE"]),
+    ...mapActions(["getGroupList", "CHEC_OUT_CONVERSATION"]),
     test1() {
-      getGroupList();
+      this.getGroupList();
     },
     test2() {
       getFriendList();
+    },
+    handleGroupClick(groupID) {
+      this.TAGGLE_OUE_SIDE("news");
+      this.CHEC_OUT_CONVERSATION({ convId: `GROUP${groupID}` });
     },
   },
   setup(props, { attrs, emit, expose, slots }) {

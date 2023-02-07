@@ -5,7 +5,7 @@
     <!-- 消息 -->
     <news v-show="outside == 'news'" />
     <!-- 通讯录 -->
-    <mailList v-show="outside == 'mail_list'" />
+    <mailList v-if="outside == 'mail_list'" />
     <!-- 应用 -->
     <application v-show="outside == 'application'" />
     <!-- 测试 -->
