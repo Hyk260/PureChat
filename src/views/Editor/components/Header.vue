@@ -1,19 +1,7 @@
 <template>
   <header class="message-info-view-header" v-if="Conver">
     <div class="message-info-views">
-      <p v-if="Conver">
-        <span v-if="Conver.type === TIM.TYPES.CONV_C2C"
-          >{{
-            Conver.userProfile.userID ||
-            Conver.remark ||
-            Conver.userProfile.nick
-          }}
-        </span>
-        <span v-else-if="Conver.type === TIM.TYPES.CONV_GROUP"
-          >{{ Conver.groupProfile.name || Conver.groupProfile.groupID }}
-        </span>
-        <span v-else-if="Conver.type === TIM.TYPES.CONV_SYSTEM">系统通知 </span>
-      </p>
+      <header-view :list="Conver" />
     </div>
     <!-- <div class="message-info-setup" v-show="Conver.type == 'GROUP'">
       <FontIcon iconName="MoreFilled" class="icon-hover" />
@@ -51,6 +39,34 @@ const { Conver, groupDrawer } = useState({
 });
 const openGroup = () => {
   commit("setgroupDrawer", true);
+};
+const HeaderView = (props) => {
+  const { list } = props;
+  if (!list) return;
+  const { type } = list;
+  let fn = null;
+  switch (type) {
+    case "C2C":
+      const {
+        userProfile: { userID, nick },
+        remark,
+      } = list || {};
+      fn = h("span", { class: "style-c2c" }, nick || userID || remark);
+      break;
+    case "GROUP":
+      const {
+        groupProfile: { name, groupID },
+      } = list;
+      fn = h("span", { class: "style-group" }, name || groupID);
+      break;
+    case "@TIM#SYSTEM":
+      fn = h("span", { class: "style-system" }, "系统通知");
+      break;
+    default:
+      fn = null;
+      break;
+  }
+  return h("p", fn);
 };
 </script>
 
