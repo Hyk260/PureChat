@@ -4,10 +4,12 @@
  *
  */
 
-export default {
+const config = {
   menu: {
     locale: false,
   },
   iconfontUrl: "",
-  BASE_API: "",
+  REST_API: process.env.VUE_APP_PROXY_REST_API,
+  BASE_API: process.env.VUE_APP_PROXY_DOMAIN_REAL,
 };
+export default config
