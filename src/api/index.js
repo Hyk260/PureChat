@@ -17,7 +17,14 @@ let config = {
   },
 };
 
-export const createForData = ({ name, type, size, fileName, uploadedSize = 0, file }) => {
+export const createForData = ({
+  name,
+  type,
+  size,
+  fileName,
+  uploadedSize = 0,
+  file,
+}) => {
   const formData = new FormData();
   formData.append("name", name);
   formData.append("type", type);
@@ -26,21 +33,21 @@ export const createForData = ({ name, type, size, fileName, uploadedSize = 0, fi
   formData.append("uploadedSize", uploadedSize);
   formData.append("file", file);
   return formData;
-}
+};
 
 /**
  * @description: 文件上传
  * @param { params }  File
  * @return {*}
- * 
+ *
  */
 export const uploadFiles = async (params) => {
   const { files } = params || {};
   if (!files) return;
-  let uploadedSize = 0
-  let uploadedResult = null
-  const { name, type, size } = files || {}
-  const fileName = new Date().getTime() + '_' + name
+  let uploadedSize = 0;
+  let uploadedResult = null;
+  const { name, type, size } = files || {};
+  const fileName = new Date().getTime() + "_" + name;
 
   const formData = createForData({
     name,
@@ -49,7 +56,7 @@ export const uploadFiles = async (params) => {
     fileName,
     uploadedSize,
     file: files,
-  })
+  });
   try {
     uploadedResult = await http({
       url: "/upload_files",
@@ -57,11 +64,11 @@ export const uploadFiles = async (params) => {
       data: formData, // body参数
       onUploadProgress: (progressEvent) => {
         let persent = ((progressEvent.loaded / progressEvent.total) * 100) | 0; //上传进度百分比
-        console.log(persent + '%');
+        console.log(persent + "%");
       },
     });
-    console.log(uploadedResult)
+    console.log(uploadedResult);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="flex-box width-full style-mail">
     <div class="abv">
-      <el-tabs v-model="activeName" class="demo-tabs" @tab-click="taggleClick">
+      <el-tabs v-model="activeName" class="style-tabs" @tab-click="taggleClick">
         <el-tab-pane label="通讯录" name="first">
           <el-tree
             :data="group_list"
@@ -96,7 +96,7 @@ watch(
   width: calc(100% - 200px);
   padding: 0 16px 0 16px;
 }
-.demo-tabs > .el-tabs__content {
+.style-tabs > .el-tabs__content {
   padding: 32px;
   color: #6b778c;
   font-size: 32px;

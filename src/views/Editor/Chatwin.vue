@@ -181,24 +181,8 @@ const NameComponent = (props) => {
       class: "message_name",
     },
     [
-      isSystem
-        ? h(
-            "span",
-            {
-              class: "isSystem",
-            },
-            "系统"
-          )
-        : null,
-      isGroup
-        ? h(
-            "span",
-            {
-              class: "isGroup",
-            },
-            from
-          )
-        : null,
+      isSystem ? h("span", { class: "isSystem" }, "系统") : null,
+      isGroup ? h("span", { class: "isGroup" }, from) : null,
     ]
   );
 };
