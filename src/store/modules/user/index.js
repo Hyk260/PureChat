@@ -23,7 +23,8 @@ const user = {
     isLogin: false, // IM登陆状态
     isSDKReady: false, // TIM SDK 是否 ready
     userID: 0,
-    userSig: "",
+    userSig:
+      "eJwtzF0LgjAYBeD-stvC3qnzC7qoQCrsxoIiulls2cuYjTnCjP57Zl6e5xzOmxyKvfeUlmTE94BMh4xC1g5vODAXGmtsnOXuYcdBIxQ3BgXJaAjAkiSg8G9ka9DK3hljPsCoDvXPopilYQpBNL5g1f-D1Z7yoyj9WHPOi-NufZnhpK2WXVgtXiuVYxnDnXYbulVz8vkCh-M01A__",
     sdkAppID: 0,
     message: null,
   },
@@ -101,7 +102,7 @@ const user = {
       let userSig = rootState.data?.user?.userSig;
       let isSDKReady = state?.isSDKReady;
       setTimeout(() => {
-        window.TIMProxy.init()
+        window.TIMProxy.init();
         dispatch("TIM_LOG_IN", { userID, userSig });
       }, 500);
     },

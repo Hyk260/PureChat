@@ -12,4 +12,4 @@ const config = {
   REST_API: process.env.VUE_APP_PROXY_REST_API,
   BASE_API: process.env.VUE_APP_PROXY_DOMAIN_REAL,
 };
-export default config
+export default config;

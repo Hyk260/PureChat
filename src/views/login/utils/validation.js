@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import store from '@/store/index';
+import store from "@/store/index";
 
 // 账号
 export const user = reactive({
@@ -14,15 +14,15 @@ export const rules = reactive({
     {
       required: true,
       message: "用户名是必须的",
-      trigger: "blur"
-    }
+      trigger: "blur",
+    },
   ],
   password: [
     {
       required: true,
       message: "密码是必须的",
-      trigger: "blur"
-    }
+      trigger: "blur",
+    },
   ],
   verifyCode: [
     {
