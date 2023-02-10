@@ -164,8 +164,9 @@ const {
 
 const NameComponent = (props) => {
   const { item } = props;
+  console.log(item);
   // 撤回消息 群提示消息 不显示
-  const { isRevoked, type, from, conversationType } = item;
+  const { isRevoked, type, from, nick, conversationType } = item;
   const show = isRevoked || type == "TIMGroupTipElem";
   // 系统消息
   const isSystem = from == "@TIM#SYSTEM";
@@ -182,7 +183,7 @@ const NameComponent = (props) => {
     },
     [
       isSystem ? h("span", { class: "isSystem" }, "系统") : null,
-      isGroup ? h("span", { class: "isGroup" }, from) : null,
+      isGroup ? h("span", { class: "isGroup" }, nick) : null,
     ]
   );
 };

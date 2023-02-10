@@ -30,7 +30,7 @@
           <el-dropdown>
             <span class="el-dropdown-link">
               <Portrait :size="28" />
-              <p>{{ userInfo.username }}</p>
+              <p>{{ userProfile.nick }}</p>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
@@ -109,7 +109,8 @@ watch(
   }
 );
 
-const { isActive, tags, sidebar, setswitch, userInfo } = useState({
+const { isActive, userProfile, tags, sidebar, setswitch, userInfo } = useState({
+  userProfile: (state) => state.user.currentUserProfile,
   userInfo: (state) => state.data.user,
   tags: (state) => state.data.elTag,
   sidebar: (state) => !state.settings.sidebar,

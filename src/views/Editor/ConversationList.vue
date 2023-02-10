@@ -43,7 +43,7 @@
         <div class="message-item-right-top">
           <div class="message-chat-name">
             <span v-if="item.type === 'C2C'">
-              {{ item.userProfile.userID }}
+              {{ item.userProfile.nick }}
             </span>
             <span v-else-if="item.type === 'GROUP'">
               {{ item.groupProfile.name }}

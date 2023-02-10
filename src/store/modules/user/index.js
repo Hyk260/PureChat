@@ -23,8 +23,7 @@ const user = {
     isLogin: false, // IM登陆状态
     isSDKReady: false, // TIM SDK 是否 ready
     userID: 0,
-    userSig:
-      "eJwtzF0LgjAYBeD-stvC3qnzC7qoQCrsxoIiulls2cuYjTnCjP57Zl6e5xzOmxyKvfeUlmTE94BMh4xC1g5vODAXGmtsnOXuYcdBIxQ3BgXJaAjAkiSg8G9ka9DK3hljPsCoDvXPopilYQpBNL5g1f-D1Z7yoyj9WHPOi-NufZnhpK2WXVgtXiuVYxnDnXYbulVz8vkCh-M01A__",
+    userSig: "",
     sdkAppID: 0,
     message: null,
   },

@@ -25,7 +25,7 @@
           @dblclick="navigate(item)"
         >
           <el-avatar :size="25" :icon="UserFilled" :src="item.avatar" />
-          <span class="member-list">{{ item.userID }}</span>
+          <span class="member-list">{{ item.nick }}</span>
           <span class="owner" v-if="groupProfile.ownerID == item.userID">
             群主
           </span>

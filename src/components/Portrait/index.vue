@@ -1,5 +1,5 @@
 <template>
-  <el-avatar :size="size" :src="portrait" :shape="shape" />
+  <el-avatar :size="size" :src="userProfile.avatar" :shape="shape" />
 </template>
 
 <script setup>
@@ -18,7 +18,8 @@ const props = defineProps({
   },
 });
 const { size, shape } = toRefs(props);
-const { userInfo } = useState({
+const { userInfo, userProfile } = useState({
+  userProfile: (state) => state.user.currentUserProfile,
   userInfo: (state) => state.data.user,
 });
 let portrait = "";
