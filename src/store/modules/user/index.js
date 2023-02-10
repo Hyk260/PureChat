@@ -72,7 +72,7 @@ const user = {
         commit("showMessage", { message: "IM初始化成功!" });
         commit("GET_USER_INFO", { userID, userSig });
         commit("toggleIsLogin", true);
-        console.log(info, "GET_USER_INFO");
+        console.log({ userID, userSig }, "GET_USER_INFO");
       } else {
         console.log("err");
       }

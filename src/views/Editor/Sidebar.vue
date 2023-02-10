@@ -51,6 +51,7 @@ import {
 import { useStore } from "vuex";
 import SvgIcon from "@/components/SvgIcon";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
+const { production } = require("@/config/vue.custom.config");
 
 const { state, dispatch, commit } = useStore();
 const dialogVisible = ref(false);
@@ -69,10 +70,10 @@ const list = [
     icon: "application",
     title: "应用",
   },
-  {
-    icon: "yuying",
-    title: "测试",
-  },
+  // {
+  //   icon: "yuying",
+  //   title: "测试",
+  // },
 ];
 const { outside } = useState({
   outside: (state) => state.conversation.outside,

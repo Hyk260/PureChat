@@ -120,7 +120,7 @@ const fnNews = (data) => {
   const { messageForShow, fromAccount } = lastMessage;
   const { username } = UserInfo.value;
   if (type == "GROUP" && username !== fromAccount) {
-    return `${fromAccount}: ${messageForShow}`;
+    return `${lastMessage.nick}: ${messageForShow}`;
   }
   return messageForShow;
 };
