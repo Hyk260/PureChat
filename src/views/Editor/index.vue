@@ -9,7 +9,7 @@
     <!-- 应用 -->
     <application v-show="outside == 'application'" />
     <!-- 测试 -->
-    <test v-show="outside == 'yuying'" />
+    <test v-show="outside == 'test'" />
   </div>
 </template>
 

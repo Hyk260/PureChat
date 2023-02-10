@@ -19,6 +19,7 @@
   "dependencies": {
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
+    "@element-plus/icons-vue": "^2.0.10",
     "@vueuse/core": "^8.4.2",
     "@vueuse/motion": "^2.0.0-beta.12",
     "@wangeditor/editor": "^5.0.1",
@@ -47,7 +48,7 @@
     "unplugin-auto-import": "^0.11.2",
     "unplugin-vue-components": "^0.22.4",
     "v-contextmenu": "^3.0.0",
-    "vue": "^3.0.0",
+    "vue": "^3.2.36",
     "vue-clipboard3": "^2.0.0",
     "vue-i18n": "^9.1.9",
     "vue-router": "^4.0.0-0",

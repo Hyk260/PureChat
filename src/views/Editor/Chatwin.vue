@@ -164,7 +164,6 @@ const {
 
 const NameComponent = (props) => {
   const { item } = props;
-  console.log(item);
   // 撤回消息 群提示消息 不显示
   const { isRevoked, type, from, nick, conversationType } = item;
   const show = isRevoked || type == "TIMGroupTipElem";
