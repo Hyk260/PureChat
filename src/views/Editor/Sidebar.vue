@@ -16,7 +16,7 @@
             :iconClass="item.icon"
             class="style-svg"
           />
-          <el-icon v-else v-show="!production"><SwitchFilled /></el-icon>
+          <el-icon v-else><SwitchFilled /></el-icon>
           <div class="icon-title">{{ item.title }}</div>
         </div>
       </li>
