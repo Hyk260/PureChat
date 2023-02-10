@@ -28,6 +28,10 @@ const actions = {
   SET_VERIFYCODE({ state }, verifyCode) {
     state.data.verifyCode = verifyCode;
   },
+  // 清除 eltag 标签
+  CLEAR_EL_TAG({ state }) {
+    state.data.elTag = []
+  },
   // 菜单列表
   async GET_MENU({ dispatch }) {
     let menu = await getMenu();
@@ -63,6 +67,8 @@ const actions = {
     router.push("/login");
     // 清除消息记录
     commit("SET_HISTORYMESSAGE", { type: "CLEAR_HISTORY" });
+    // 清除 eltag 标签
+    dispatch('CLEAR_EL_TAG')
   },
 };
 
