@@ -38,7 +38,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useState } from "@/utils/hooks/useMapper";
 import Header from "./Header.vue";
 import error from "@/views/notfound/index.vue";
-import editor from "@/views/Editor/index.vue";
+import ChatStudio from "@/views/ChatStudio/index.vue";
 import welcome from "@/views/welcome/index.vue";
 import personal from "@/views/Personal/index.vue";
 import about from "@/views/about/index.vue";
@@ -51,7 +51,7 @@ const { state, dispatch, commit } = useStore();
 const CompMap = {
   home: welcome, //首页
   personal: personal, //个人中心
-  chatstudio: editor, //编辑器
+  chatstudio: ChatStudio, //编辑器
   about: about, //关于
 };
 const page = reactive({
