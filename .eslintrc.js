@@ -13,6 +13,7 @@ module.exports = {
     'no-unused-vars': 'off', // 禁止未使用过的变量
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    'no-case-declarations': 'off', // 不允许在case/default子句中使用词法声明
   },
 };
 
