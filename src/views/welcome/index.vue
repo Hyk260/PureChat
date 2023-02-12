@@ -58,7 +58,7 @@ let greetings = computed(() => {
 });
 
 const openDepot = () => {
-  window.open("https://gitee.com/H260788");
+  window.open("https://github.com/Hyk260");
 };
 </script>
 <style lang="scss" scoped>
