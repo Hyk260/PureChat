@@ -3,42 +3,66 @@
     <div class="message-info-views">
       <header-view :list="Conver" />
     </div>
-    <!-- <div class="message-info-setup" v-show="Conver.type == 'GROUP'">
-      <FontIcon iconName="MoreFilled" class="icon-hover" />
-    </div> -->
-    <div
-      class="message-info-add"
-      v-show="Conver.type == 'GROUP'"
-      title="添加成员"
-    >
-      <svg-icon iconClass="tianjia" class="icon-hover" />
+    <div class="flex-box">
+      <div
+        class="message-info-add"
+        v-show="Conver.type == 'GROUP'"
+        title="添加成员"
+      >
+        <svg-icon iconClass="tianjia" class="icon-hover" />
+      </div>
+      <div
+        class="message-info-setup"
+        v-show="Conver.type == 'GROUP'"
+        title="设置"
+        @click="openSetup"
+      >
+        <FontIcon iconName="MoreFilled" class="icon-hover" />
+      </div>
     </div>
     <!-- 群聊开关 -->
-    <div
+    <!-- <div
       class="group-chat-switch"
       @click="openGroup"
       v-show="!groupDrawer"
       v-if="Conver && Conver.type == 'GROUP'"
     >
       <FontIcon iconName="ArrowLeft" />
-    </div>
+    </div> -->
+    <Drawer
+      title="群详情"
+      classModal="drawer-group"
+      className="123"
+      size="360px"
+      :modal="true"
+      ref="Refdrawer"
+    >
+      <template #center>
+        <GroupDetails />
+      </template>
+    </Drawer>
   </header>
 </template>
 
 <script setup>
-import TIM from "tim-js-sdk";
+import { h, ref } from "vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState } from "@/utils/hooks/useMapper";
+import GroupDetails from "@/views/ChatStudio/GroupDetails.vue";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 import { useStore } from "vuex";
 
+const Refdrawer = ref();
 const { state, commit, dispatch } = useStore();
 const { Conver, groupDrawer } = useState({
   groupDrawer: (state) => state.groupinfo.groupDrawer,
   Conver: (state) => state.conversation.currentConversation,
 });
-const openGroup = () => {
-  commit("setgroupDrawer", true);
+// const openGroup = () => {
+//   commit("setgroupDrawer", true);
+// };
+const openSetup = () => {
+  Refdrawer.value.handleOpen();
 };
 const HeaderView = (props) => {
   const { list } = props;
@@ -82,5 +106,8 @@ const HeaderView = (props) => {
   width: 100%;
   position: relative;
   // .message-info-views {}
+}
+.message-info-setup {
+  margin-left: 10px;
 }
 </style>

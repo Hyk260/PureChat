@@ -43,7 +43,7 @@
       <Editor />
     </div>
     <!-- 群详情 -->
-    <GroupDetails />
+    <!-- <GroupDetails /> -->
   </div>
 </template>
 
@@ -113,7 +113,7 @@ onActivated(() => {
 });
 onDeactivated(() => {
   // console.log("onDeactivated");
-  commit("setgroupDrawer", false);
+  // commit("setgroupDrawer", false);
 });
 onMounted(() => {
   // console.log("onMounted");

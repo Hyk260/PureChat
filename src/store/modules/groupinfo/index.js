@@ -1,9 +1,13 @@
-import { getGroupMemberList, getGroupProfile, getGroupList } from "@/api/im-sdk-api/index";
+import {
+  getGroupMemberList,
+  getGroupProfile,
+  getGroupList,
+} from "@/api/im-sdk-api/index";
 export default {
   // namespaced: true,
   state: {
     groupDrawer: false, // 群聊开关
-    groupList: [],  //群组列表
+    groupList: [], //群组列表
     groupProfile: null,
     currentMemberList: [], // 当前群组成员列表
   },
@@ -28,16 +32,16 @@ export default {
     },
   },
   mutations: {
-    setgroupDrawer(state, payload) {
-      state.groupDrawer = payload;
-    },
+    // setgroupDrawer(state, payload) {
+    //   state.groupDrawer = payload;
+    // },
     setGroupProfile(state, payload) {
       const { type } = payload;
       if (type == "GROUP") {
         const { groupID } = payload.groupProfile;
         getGroupProfile({ groupID }).then((data) => {
           state.groupProfile = data;
-          console.log(state.groupProfile);
+          // console.log(state.groupProfile);
         });
       }
     },
@@ -51,10 +55,10 @@ export default {
       console.log(memberList);
     },
     async getGroupList({ state }, payload) {
-      // state.groupList = 
-      const list = await getGroupList()
-      console.log(list)
-      state.groupList = list
-    }
+      // state.groupList =
+      const list = await getGroupList();
+      console.log(list);
+      state.groupList = list;
+    },
   },
 };
