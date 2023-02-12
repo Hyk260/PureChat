@@ -146,17 +146,17 @@ const SendFileClick = () => {
 };
 const clickCscreenshot = () => {
   // screenshot
-  html2canvas(document.body, {
-    allowTaint: true,
-    // useCORS: true,
-    dpi: 150,
-    scale: 2,
-  }).then((canvas) => {
-    console.log(canvas);
-    // let dataURL = canvas.toDataURL("image/png");
-    // console.log(dataURL);
-    // document.body.appendChild(canvas);
-  });
+  // html2canvas(document.body, {
+  //   allowTaint: true,
+  //   // useCORS: true,
+  //   dpi: 150,
+  //   scale: 2,
+  // }).then((canvas) => {
+  //   console.log(canvas);
+  //   // let dataURL = canvas.toDataURL("image/png");
+  //   // console.log(dataURL);
+  //   // document.body.appendChild(canvas);
+  // });
 };
 
 async function sendImage(e) {
