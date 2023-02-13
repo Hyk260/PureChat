@@ -83,7 +83,6 @@ export default defineComponent({
   setup(props, { attrs, emit, expose, slots }) {
     const input = ref(null);
     const { memberlist, isOwner } = toRefs(props);
-    console.log(memberlist);
     const state = reactive({
       // 定位信息
       top: "",

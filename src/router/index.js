@@ -23,7 +23,7 @@ const whiteList = ["login", "home"];
 const loginRoutePath = "/login";
 const defaultRoutePath = "/home";
 
-console.log(process.env, "环境变量");
+// console.log(process.env, "环境变量");
 // createWebHashHistory() hash模式
 // createWebHistory() history模式
 const router = createRouter({

@@ -22,13 +22,6 @@ const { userInfo, userProfile } = useState({
   userProfile: (state) => state.user.currentUserProfile,
   userInfo: (state) => state.data.user,
 });
-let portrait = "";
-try {
-  portrait = require(`@/assets/images/${userInfo.value.portrait}.jpg`);
-} catch (e) {
-  portrait = require("@/assets/images/picture.jpg");
-  console.log(e);
-}
 </script>
 
 <style lang="scss" scoped></style>

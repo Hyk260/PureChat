@@ -18,9 +18,8 @@ const props = defineProps({
   },
 });
 const { message } = props;
-console.log(message);
-const url = message.payload.imageInfoArray[0].url;
 
+const url = message.payload.imageInfoArray[0].url;
 const srcList = [];
 srcList.push(url);
 

@@ -52,7 +52,6 @@ export default {
       // groupID offset count
       const { memberList, offset } = await getGroupMemberList({ groupID });
       state.currentMemberList = memberList;
-      console.log(memberList);
     },
     async getGroupList({ state }, payload) {
       // state.groupList =

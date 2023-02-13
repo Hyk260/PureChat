@@ -21,7 +21,6 @@ export function changeAppearance(appearance = "auto") {
   // 自定义主题设色
   document.body.setAttribute("data-theme", appearance);
   let text = appearance === "dark" ? "黑色" : "白色";
-  console.log(appearance, `${text}-主题`);
 }
 
 /**

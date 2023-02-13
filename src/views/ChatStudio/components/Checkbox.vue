@@ -45,14 +45,10 @@ export default defineComponent({
 }
 
 .container {
-  // display: block;
-  // position: relative;
-  // font-size: 20px;
   cursor: pointer;
   user-select: none;
 }
 
-/* Create a custom checkbox */
 .checkmark {
   position: relative;
   top: 0;
@@ -64,26 +60,22 @@ export default defineComponent({
   transition: 0.15s;
 }
 
-/* When the checkbox is checked, add a blue background */
 .container input:checked ~ .checkmark {
   background-color: limegreen;
   border-radius: 25px;
   transition: 0.15s;
 }
 
-/* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
   content: "";
   position: absolute;
   display: none;
 }
 
-/* Show the checkmark when checked */
 .container input:checked ~ .checkmark:after {
   display: block;
 }
 
-/* Style the checkmark/indicator */
 .container .checkmark:after {
   left: 0.45em;
   top: 0.25em;

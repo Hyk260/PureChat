@@ -24,6 +24,6 @@ const i18n = createI18n({
 // i18n.global.locale = "en";
 const lang = store.state.settings.lang;
 const yuyan = lang == "zh" ? "中文" : "英文";
-console.log(yuyan, "语言");
-console.log(messages, "语言包");
+// console.log(yuyan, "语言");
+// console.log(messages, "语言包");
 export default i18n;

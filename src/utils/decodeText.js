@@ -54,4 +54,3 @@ export function decodeText(text) {
   }
   return renderDom
 }
-console.log(decodeText('qwer [嘘][疑问][咒骂][奋斗]'))
