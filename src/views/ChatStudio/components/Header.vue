@@ -32,7 +32,6 @@
     <Drawer
       title="群详情"
       classModal="drawer-group"
-      className="123"
       size="360px"
       :modal="true"
       ref="Refdrawer"
@@ -58,12 +57,10 @@ const { Conver, groupDrawer } = useState({
   groupDrawer: (state) => state.groupinfo.groupDrawer,
   Conver: (state) => state.conversation.currentConversation,
 });
-// const openGroup = () => {
-//   commit("setgroupDrawer", true);
-// };
 const openSetup = () => {
   Refdrawer.value.handleOpen();
 };
+
 const HeaderView = (props) => {
   const { list } = props;
   if (!list) return;

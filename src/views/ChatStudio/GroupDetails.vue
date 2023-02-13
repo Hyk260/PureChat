@@ -1,45 +1,8 @@
 <template>
   <div class="group-details">
-    <!-- v-show="groupDrawer" -->
-    <!-- <div class="group-notice">
-      <div class="group-view-header">
-        <div class="group-chat-switch" @click="closeGroup">
-          <FontIcon iconName="ArrowRight" />
-        </div>
-        <div class="notice-title" @click="onclick">群公告</div>
-      </div>
-      <div class="group-view-content" v-if="groupProfile">
-        <el-scrollbar>
-          <p v-for="item in 10" :key="item">
-            {{ groupProfile.notification }}
-          </p>
-        </el-scrollbar>
-      </div>
-    </div>
-    <div class="group-box">
-      <ul>
-        <li
-          v-for="item in currentMemberList"
-          :key="item.userID"
-          :class="nick == item.userID ? 'style-action' : ''"
-          @click="toggle(item)"
-          @dblclick="navigate(item)"
-        >
-          <el-avatar :size="25" :icon="UserFilled" :src="item.avatar" />
-          <span class="member-list">{{ item.nick }}</span>
-          <span class="owner" v-if="groupProfile.ownerID == item.userID">
-            群主
-          </span>
-          <span class="admin" v-if="userProfile.userID == item.userID && false">
-            自己
-          </span>
-        </li>
-      </ul>
-    </div> -->
+    <!-- info -->
     <div class="group-base-info">
-      <div class="avatar default">
-        {{ displayInfo(groupProfile.groupID) }}
-      </div>
+      <UserAvatar :nickName="groupProfile.groupID" />
       <div class="group-base-info--text">
         <div>
           <span class="group-base-info--text__name">
@@ -53,28 +16,38 @@
       </div>
     </div>
     <div class="divider"></div>
+    <!-- 群公告 -->
+    <div class="group-accountecment">
+      <div class="group-accountecment--title">
+        <span>群公告</span>
+        <span class="edit-icon"></span>
+      </div>
+      <div class="group-accountecment--info">
+        {{ groupProfile.notification }}
+      </div>
+    </div>
+    <div class="divider"></div>
+    <!-- 群成员 -->
     <div class="group-member">
       <div class="group-member--title">
         <span> 群成员 </span>
         <span class="group-member--title__right">
           <span>{{ currentMemberList.length }}人 </span>
-          <span><a>查看</a></span>
+          <span><a @click="openDetails">查看</a></span>
         </span>
       </div>
       <div class="group-member--avatar">
-        <div
-          class="avatar default"
+        <UserAvatar
           v-for="item in currentMemberList"
           :key="item.userID"
-          @click="navigate(item)"
-          :style="`background-image: url(${item.avatar})`"
-        >
-          {{ item.avatar ? "" : displayInfo(item.nick) }}
-        </div>
-        <span class="group-member--add"> </span>
+          :url="item.avatar"
+          :nickName="item.nick"
+        />
+        <span class="group-member--add" @click="groupMemberAdd"> </span>
       </div>
     </div>
     <div class="divider"></div>
+    <!-- 免打扰 -->
     <div class="group-flag-message">
       <div class="group-flag-message--title">
         <span class="group-flag-message--title__text"> 消息免打扰 </span>
@@ -82,13 +55,54 @@
       </div>
     </div>
     <div class="divider"></div>
+    <!-- 退出 转让 -->
     <div class="group-operator">
       <el-button type="danger" @click="handleQuitGroup"> 退出群组 </el-button>
       <div class="group-operator--divider"></div>
-      <el-button type="primary" plain @click="transferGroup">
+      <el-button type="primary" plain v-show="isOwner" @click="transferGroup">
         转让群组
       </el-button>
     </div>
+    <!-- 人员详情 -->
+    <Drawer
+      title="人员详情"
+      classModal="drawer-group"
+      size="360px"
+      ref="Refdrawerlist"
+    >
+      <template #center>
+        <div
+          class="member-list-drawer--item"
+          v-for="item in currentMemberList"
+          :key="item.userID"
+        >
+          <UserAvatar :url="item.avatar" :nickName="item.nick" />
+          <span class="member-list-drawer--item__name">
+            {{ item.nick }}
+          </span>
+          <span class="owner" v-if="groupProfile.ownerID == item.userID">
+            群主
+          </span>
+          <span class="admin" v-if="userProfile.userID == item.userID && false">
+            自己
+          </span>
+        </div>
+      </template>
+    </Drawer>
+    <!-- 添加成员弹框 -->
+    <el-dialog v-model="dialogVisible" title="添加成员" width="30%" draggable>
+      <div>
+        <el-input v-model="input" placeholder="请输入用户uid" clearable />
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false"> 取消 </el-button>
+          <el-button type="primary" @click="dialogVisible = false">
+            确认
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -99,36 +113,33 @@ import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
 import { updateGroupProfile } from "@/api/im-sdk-api";
-const nick = ref("");
+
 const { state, commit, dispatch } = useStore();
 const {
   user,
-  conver,
   userProfile,
   groupDrawer,
   showMsgBox,
   groupProfile,
-  conversationList,
   currentMemberList,
 } = useState({
   user: (state) => state.data.user,
   userProfile: (state) => state.user.currentUserProfile,
-  conver: (state) => state.conversation.currentConversation,
   showMsgBox: (state) => state.conversation.showMsgBox,
   groupDrawer: (state) => state.groupinfo.groupDrawer,
   groupProfile: (state) => state.groupinfo.groupProfile,
   currentMemberList: (state) => state.groupinfo.currentMemberList,
-  conversationList: (state) => state.conversation.conversationList,
 });
-const { isOwner } = useGetters(["isOwner"]);
+const { isOwner, isAdmin } = useGetters(["isOwner", "isAdmin"]);
+const input = ref("");
 const value = ref(true);
-const closeGroup = () => {
-  // commit("setgroupDrawer", false);
+const Refdrawerlist = ref();
+const dialogVisible = ref(false);
+
+const openDetails = () => {
+  Refdrawerlist.value.handleOpen();
 };
-const toggle = (item) => {
-  const { userID } = item;
-  nick.value = userID;
-};
+
 const onclick = () => {
   const { groupID } = groupProfile.value;
   // updateGroupProfile({
@@ -140,88 +151,29 @@ const onclick = () => {
 const navigate = (item) => {
   dispatch("CHEC_OUT_CONVERSATION", { convId: `C2C${item.userID}` });
 };
+const groupMemberAdd = () => {
+  dialogVisible.value = true;
+};
 const transferGroup = () => {};
 const handleQuitGroup = () => {};
-const displayInfo = (info) => {
-  if (!info) {
-    return "unknown";
-  }
-  return info.slice(0, 2).toUpperCase();
-};
 </script>
 
 <style lang="scss" scoped>
-// .group-details {
-//   width: 220px;
-//   background: rgb(246, 247, 249);
-//   border-left: 1px solid rgb(0 0 0 / 5%);
-//   position: relative;
-//   .group-notice {
-//     height: 170px;
-//     border-bottom: 1px solid rgba(0, 0, 0, 0.09);
-//     .group-view-content {
-//       position: absolute;
-//       width: 100%;
-//       top: 42px;
-//       height: calc(170px - 42px);
-//     }
-//   }
-//   .group-view-header {
-//     position: absolute;
-//     width: 100%;
-//     height: 59px;
-//     display: flex;
-//     align-items: center;
-//     .group-chat-switch {
-//       left: 0;
-//       justify-content: end;
-//       border-radius: 0 2px 2px 0;
-//     }
-//     .notice-title {
-//       position: absolute;
-//       left: 18px;
-//       font-size: 12px;
-//       top: 18px;
-//     }
-//   }
-
-//   .group-box {
-//     li {
-//       padding: 2px 5px;
-//       display: flex;
-//       align-items: center;
-//       cursor: pointer;
-//       .member-list {
-//         margin-left: 5px;
-//         font-size: 12px;
-//       }
-//       .owner,
-//       .admin {
-//         font-size: 12px;
-//       }
-//     }
-//     .style-action {
-//       background: rgb(229, 229, 229);
-//     }
-//   }
-// }
-.avatar {
-  border-radius: 50%;
-  overflow: hidden;
-  cursor: pointer;
-  background-position: 0 0;
-  background-repeat: no-repeat;
-  text-align: center;
-  font-size: 12px;
-  background-color: #5cadff;
-  color: #ffffff;
-  font-weight: 400;
+.member-list-drawer--item {
+  display: flex;
+  align-items: center;
 }
-.default {
-  width: 40px;
-  height: 40px;
-  background-size: 40px 40px;
-  line-height: 40px;
+.group-accountecment {
+  padding: 12px 0;
+  .group-accountecment--title {
+  }
+  .group-accountecment--info {
+    font-size: 12px;
+    font-weight: 400;
+    color: #999999;
+    line-height: 16px;
+    min-height: 12px;
+  }
 }
 .group-base-info {
   padding-bottom: 20px;
@@ -269,11 +221,6 @@ const displayInfo = (info) => {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    div {
-      margin-right: 12px;
-      margin-bottom: 12px;
-    }
-
     .group-member--add {
       width: 38px;
       height: 38px;

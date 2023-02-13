@@ -56,5 +56,6 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     SideItem: typeof import('./src/components/SideItem/index.vue')['default']
     SvgIcon: typeof import('./src/components/SvgIcon/index.vue')['default']
+    UserAvatar: typeof import('./src/components/UserAvatar/index.vue')['default']
   }
 }
