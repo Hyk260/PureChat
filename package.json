@@ -35,6 +35,7 @@
     "element-resize-detector": "^1.2.4",
     "html2canvas": "^1.4.1",
     "husky": "^8.0.2",
+    "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
     "lottie-web": "^5.10.0",
     "mitt": "^3.0.0",
