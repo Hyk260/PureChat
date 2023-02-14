@@ -7,7 +7,7 @@ import "@/styles/index.scss";
 import pkg from "../package.json";
 
 import { useI18n } from "./plugins/i18n";
-import { useElIcons } from './plugins/icons';
+import { useElIcons } from "./plugins/icons";
 // import * as ElIcons from "@element-plus/icons-vue";
 // import { loadAllPlugins } from "./plugins";
 import { loadAllassembly } from "./components";
@@ -19,9 +19,9 @@ import { registerSvgIcon } from "./assets/icons/index";
 const app = createApp(App);
 
 app.directive("contextmenu", directive);
-for (const name in ElIcons) {
-  app.component(name, ElIcons[name]);
-}
+// for (const name in ElIcons) {
+//   app.component(name, ElIcons[name]);
+// }
 app.config.globalProperties.__APP_INFO__ = pkg;
 // 加载所有插件
 // loadAllPlugins(app);
@@ -32,7 +32,7 @@ registerSvgIcon(app);
 
 app.use(store);
 app.use(router);
-app.use(useI18n)
-app.use(useElIcons)
+app.use(useI18n);
+app.use(useElIcons);
 app.use(MotionPlugin);
 app.mount("#app");
