@@ -43,7 +43,7 @@
         </el-select>
       </li>
       <li>
-        <span>语言</span>
+        <span>{{ t("common.language") }}</span>
         <el-select v-model="language" placeholder="选择语言">
           <el-option
             v-for="item in languages"
@@ -65,7 +65,9 @@ import { useStore } from "vuex";
 import { changeAppearance } from "@/utils/common";
 import { CircleCloseFilled } from "@element-plus/icons-vue";
 import { useDark, useToggle } from "@vueuse/core";
-import i18n from "@/locales";
+import { useI18n } from "vue-i18n";
+
+const { locale, t } = useI18n();
 
 const options = [
   {
@@ -84,7 +86,7 @@ const options = [
 
 const languages = [
   {
-    value: "zh",
+    value: "zh-CN",
     label: "中文",
   },
   {
@@ -159,7 +161,7 @@ const languageChange = (val) => {
     key: "lang",
     value: val,
   });
-  i18n.global.locale = val;
+  locale.value = val;
 };
 </script>
 

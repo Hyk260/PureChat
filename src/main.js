@@ -6,7 +6,10 @@ import store from "./store";
 import "@/styles/index.scss";
 import pkg from "../package.json";
 
-import { loadAllPlugins } from "./plugins";
+import { useI18n } from "./plugins/i18n";
+import { useElIcons } from './plugins/icons';
+// import * as ElIcons from "@element-plus/icons-vue";
+// import { loadAllPlugins } from "./plugins";
 import { loadAllassembly } from "./components";
 import { directive } from "v-contextmenu";
 import "v-contextmenu/dist/themes/default.css";
@@ -14,10 +17,14 @@ import { MotionPlugin } from "@vueuse/motion";
 import { registerSvgIcon } from "./assets/icons/index";
 
 const app = createApp(App);
+
 app.directive("contextmenu", directive);
+for (const name in ElIcons) {
+  app.component(name, ElIcons[name]);
+}
 app.config.globalProperties.__APP_INFO__ = pkg;
 // 加载所有插件
-loadAllPlugins(app);
+// loadAllPlugins(app);
 // 自动加载组件
 loadAllassembly(app);
 // svg组件
@@ -25,5 +32,7 @@ registerSvgIcon(app);
 
 app.use(store);
 app.use(router);
+app.use(useI18n)
+app.use(useElIcons)
 app.use(MotionPlugin);
 app.mount("#app");

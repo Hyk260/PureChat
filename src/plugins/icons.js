@@ -1,6 +1,6 @@
 import * as ElIcons from "@element-plus/icons-vue";
 // console.log(ElementPlusIconsVue)
-export default function loadComponent(app) {
+export function useElIcons(app) {
   // 本地引入
   for (const name in ElIcons) {
     app.component(name, ElIcons[name]);
