@@ -29,13 +29,21 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
+  // 翻译文件夹路径 (相对于项目根目录)
   "i18n-ally.localesPaths": "locales",
+  // 翻译路径格式
   "i18n-ally.keystyle": "nested",
+  // 保存排序后的JSON/YAML
   "i18n-ally.sortKeys": true,
+  // 启用命名空间。查看文档了解更多详细信息。
   "i18n-ally.namespace": true,
+  // 指定启用文件格式
   "i18n-ally.enabledParsers": ["yaml", "js"],
+  // 翻译源语言
   "i18n-ally.sourceLanguage": "en",
+  // 显示语言
   "i18n-ally.displayLanguage": "zh-CN",
+  // 指定要使用的框架支持。
   "i18n-ally.enabledFrameworks": ["vue"],
   "iconify.excludes": ["el"]
 }
