@@ -8,27 +8,12 @@ html.dark {
   // --el-color-white: $backg-color;
   // --el-card-border-color: $border-style;
   --el-menu-hover-bg-color: #4091f7;
-
-  .el-card {
-    // border: 1px solid #627eb5;
-  }
-
   .el-menu-item {
     color: $color-white;
     background-color: $backg-color;
   }
-
   .el-sub-menu {
     background-color: $backg-color;
-
-    // .el-sub-menu__title:hover {
-    //   background: var(--color-primary);
-    // }
-
-    // .el-icon {
-    //   color: $color-white;
-    // }
-
     span {
       color: $color-white;
     }

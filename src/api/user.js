@@ -17,7 +17,8 @@ export const login = (params) => {
  * 退出登录
  */
 export const logout = () => {
-  storage.remove(SET_UP);
-  storage.remove(USER_DATA);
-  storage.remove(ACCESS_TOKEN);
+  storage.clear();
+  // storage.remove(SET_UP);
+  // storage.remove(USER_DATA);
+  // storage.remove(ACCESS_TOKEN);
 };

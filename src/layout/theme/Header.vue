@@ -140,8 +140,8 @@ const Logout = async () => {
     type: "warning",
   })
     .then(() => {
-      dispatch("LOG_OUT");
       dispatch("TIM_LOG_OUT");
+      dispatch("LOG_OUT");
     })
     .catch((err) => {
       console.log(err);
