@@ -1,8 +1,8 @@
 <template>
   <el-drawer
     v-model="drawer"
-    size="285px"
-    title="设置"
+    size="360px"
+    :title="t('common.setup')"
     :with-header="true"
     :show-close="true"
   >
