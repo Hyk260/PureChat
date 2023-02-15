@@ -8,7 +8,7 @@
   >
     <ul class="setting width-full">
       <li>
-        <span>关闭侧边栏</span>
+        <span>{{ t("common.closeSidebar") }}</span>
         <el-switch
           v-model="sidebar"
           inline-prompt
@@ -19,7 +19,7 @@
         />
       </li>
       <li>
-        <span>侧边栏logo</span>
+        <span>{{ t("common.sidebarLogo") }}</span>
         <el-switch
           v-model="logoVal"
           inline-prompt
@@ -32,7 +32,7 @@
         />
       </li>
       <li>
-        <span>主题</span>
+        <span>{{ t("common.theme") }}</span>
         <el-select v-model="themecolor" placeholder="主题颜色">
           <el-option
             v-for="item in options"
@@ -59,7 +59,7 @@
 
 <script setup>
 import { Close, Check } from "@element-plus/icons-vue";
-import { computed, ref, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import { useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
 import { changeAppearance } from "@/utils/common";
@@ -68,21 +68,23 @@ import { useDark, useToggle } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 
 const { locale, t } = useI18n();
-
-const options = [
-  {
-    value: "auto",
-    label: "自动",
-  },
-  {
-    value: "light",
-    label: "浅色",
-  },
-  {
-    value: "dark",
-    label: "深色",
-  },
-];
+console.log();
+const options = computed(() => {
+  return [
+    {
+      value: "auto",
+      label: t("common.auto"),
+    },
+    {
+      value: "light",
+      label: t("common.light"),
+    },
+    {
+      value: "dark",
+      label: t("common.dark"),
+    },
+  ];
+});
 
 const languages = [
   {

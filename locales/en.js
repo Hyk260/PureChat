@@ -1,8 +1,14 @@
 // en
 export default {
   common: {
-    language: "language",
-    setup: "setup",
+    language: "Language",
+    setup: "Setup",
+    theme: "Theme",
+    closeSidebar: "Close Sidebar",
+    sidebarLogo: "Sidebar Logo",
+    auto: "Auto",
+    light: "Light",
+    dark: "Dark",
   },
   status: {
     hsLoad: "Loading...",

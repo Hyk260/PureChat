@@ -37,6 +37,13 @@
             <span class="style-color">预览地址</span>
           </a>
         </el-descriptions-item> -->
+        <el-descriptions-item label="QQ交流群" label-align="left" align="left">
+          <a href="https://jq.qq.com/?_wv=1027&k=Cd4Ihd2J" target="_blank">
+            <span class="style-color">
+              点击链接加入群聊【PureAdmin交流群】
+            </span>
+          </a>
+        </el-descriptions-item>
         <el-descriptions-item label="Github" label-align="left" align="left">
           <a href="https://github.com/Hyk260" target="_blank">
             <span class="style-color">Github</span>

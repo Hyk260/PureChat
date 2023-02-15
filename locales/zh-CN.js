@@ -3,6 +3,12 @@ export default {
   common: {
     language: "语言",
     setup: "设置",
+    theme: "主题",
+    closeSidebar: "关闭侧边栏",
+    sidebarLogo: "侧边栏logo",
+    auto: "自动",
+    light: "浅色",
+    dark: "深色",
   },
   status: {
     hsLoad: "加载中...",
