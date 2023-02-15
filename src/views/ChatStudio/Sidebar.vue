@@ -10,7 +10,11 @@
         :key="item.icon"
         @click="toggle(item)"
       >
-        <div class="aside-list" :class="{ current: outside == item.icon }">
+        <div
+          v-show="visibile(item)"
+          class="aside-list"
+          :class="{ current: outside == item.icon }"
+        >
           <svg-icon
             v-if="item.icon !== 'test'"
             :iconClass="item.icon"
@@ -80,12 +84,19 @@ const list = [
   {
     icon: "test",
     title: "测试",
+    show: production,
   },
 ];
 const { outside } = useState({
   outside: (state) => state.conversation.outside,
 });
-
+function visibile(item) {
+  if (item.icon == "test" && item.show) {
+    return false;
+  } else {
+    return true;
+  }
+}
 function onClick() {
   console.log("Only triggered once when clicked many times quickly");
 }
