@@ -32,6 +32,7 @@
   <script>
     try {
       // init(Vue)
+      window.__APP_INFO__ = '<%= htmlWebpackPlugin.options.__APP_INFO__ %>'
       console.log(
         " %c "
           .concat("Pure-Admin", "  %c 基于Vue3、Element-Plus ")

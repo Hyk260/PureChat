@@ -3,14 +3,13 @@
     <el-card class="" shadow="never">
       <template #header>
         <div class="card-header">
-          <span class="font-medium"> 关于 </span>
+          <span class="font-medium"> {{ name }} </span>
         </div>
       </template>
       <span style="font-size: 15px">
         Pure-Admin 是一个基于Vue3、Element-Plus的后台管理模板
       </span>
     </el-card>
-    <!-- <Motion :delay="100"> -->
     <el-card class="style-card" shadow="hover">
       <template #header>
         <div class="card-header">
@@ -28,16 +27,16 @@
         >
           <el-tag>{{ lastBuildTime }}</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="文档地址" label-align="left" align="left">
-          <a href="#" target="_blank">
+        <!-- <el-descriptions-item label="文档地址" label-align="left" align="left">
+          <a target="_blank">
             <span class="style-color">文档地址</span>
           </a>
-        </el-descriptions-item>
-        <el-descriptions-item label="预览地址" label-align="left" align="left">
-          <a href="#" target="_blank">
+        </el-descriptions-item> -->
+        <!-- <el-descriptions-item label="预览地址" label-align="left" align="left">
+          <a href="https://github.com/Hyk260" target="_blank">
             <span class="style-color">预览地址</span>
           </a>
-        </el-descriptions-item>
+        </el-descriptions-item> -->
         <el-descriptions-item label="Github" label-align="left" align="left">
           <a href="https://github.com/Hyk260" target="_blank">
             <span class="style-color">Github</span>
@@ -45,8 +44,6 @@
         </el-descriptions-item>
       </el-descriptions>
     </el-card>
-    <!-- </Motion> -->
-    <!-- <Motion :delay="200"> -->
     <el-card class="style-card" shadow="hover">
       <template #header>
         <div class="card-header">
@@ -72,8 +69,6 @@
         </el-descriptions-item>
       </el-descriptions>
     </el-card>
-    <!-- </Motion> -->
-    <!-- <Motion :delay="300"> -->
     <el-card class="style-card" shadow="hover">
       <template #header>
         <div class="card-header">
@@ -99,7 +94,6 @@
         </el-descriptions-item>
       </el-descriptions>
     </el-card>
-    <!-- </Motion> -->
   </el-scrollbar>
 </template>
 
@@ -108,9 +102,10 @@ import { getCurrentInstance } from "vue";
 import Motion from "@/utils/motion";
 
 const { proxy } = getCurrentInstance();
-const { dependencies, devDependencies, version } = proxy.__APP_INFO__;
+const APP_INFO = JSON.parse(window.__APP_INFO__);
+const { pkg, lastBuildTime } = APP_INFO;
+const { dependencies, devDependencies, version, name } = pkg;
 
-const lastBuildTime = 345346;
 const schema = [];
 const devSchema = [];
 

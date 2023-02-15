@@ -1,3 +1,5 @@
+const pkg = require("./package.json");
+const dayjs = require("dayjs");
 const {
   cdn,
   title,
@@ -14,6 +16,12 @@ const CompressionPlugin = require("compression-webpack-plugin"); // gzip压缩
 const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer"); // 打包文件分析工具
 // const DefineOptions = require('unplugin-vue-define-options/webpack')
+
+const { dependencies, devDependencies, name, version } = pkg;
+const __APP_INFO__ = {
+  pkg: { dependencies, devDependencies, name, version },
+  lastBuildTime: dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss")
+};
 
 const path = require("path");
 const resolve = (dir) => {
@@ -82,6 +90,7 @@ module.exports = {
     config.plugin("html").tap((args) => {
       args[0].title = title; // 修改标题
       args[0].cdn = cdn; // CDN外链
+      args[0].__APP_INFO__ = JSON.stringify(__APP_INFO__);
       return args;
     });
   },

@@ -8,8 +8,6 @@ import pkg from "../package.json";
 
 import { useI18n } from "./plugins/i18n";
 import { useElIcons } from "./plugins/icons";
-// import * as ElIcons from "@element-plus/icons-vue";
-// import { loadAllPlugins } from "./plugins";
 import { loadAllassembly } from "./components";
 import { directive } from "v-contextmenu";
 import "v-contextmenu/dist/themes/default.css";
@@ -19,10 +17,6 @@ import { registerSvgIcon } from "./assets/icons/index";
 const app = createApp(App);
 
 app.directive("contextmenu", directive);
-// for (const name in ElIcons) {
-//   app.component(name, ElIcons[name]);
-// }
-app.config.globalProperties.__APP_INFO__ = pkg;
 // 加载所有插件
 // loadAllPlugins(app);
 // 自动加载组件
