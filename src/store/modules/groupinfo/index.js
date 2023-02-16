@@ -47,10 +47,13 @@ export default {
     },
   },
   actions: {
-    async getGroupMemberList({ state, commit }, payload) {
-      const { groupID } = payload;
+    async getGroupMemberList({ state, commit, getters }, payload) {
+      // const { groupID } = payload;
+      console.log(getters.toAccount)
+      const groupID = getters.toAccount
       // groupID offset count
       const { memberList, offset } = await getGroupMemberList({ groupID });
+      console.log(memberList)
       state.currentMemberList = memberList;
     },
     async getGroupList({ state }, payload) {

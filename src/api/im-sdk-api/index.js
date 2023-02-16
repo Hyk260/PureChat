@@ -60,8 +60,22 @@ export const addGroupMember = async (params) => {
     console.warn('addGroupMember error:', imError); // 错误信息
   });
 };
-
-
+// 删除群成员
+export const deleteGroupMember = async (params) => {
+  const { groupID, user } = params
+  const parameter = {
+    groupID: groupID,
+    userIDList: [user],
+    // reason: '你违规了，我要踢你！'
+  }
+  let promise = tim.deleteGroupMember(parameter);
+  promise.then(function (imResponse) {
+    console.log(imResponse.data.group); // 删除后的群组信息
+    console.log(imResponse.data.userIDList); // 被删除的群成员的 userID 列表
+  }).catch(function (imError) {
+    console.warn('deleteGroupMember error:', imError); // 错误信息
+  });
+};
 // 获取 SDK 缓存的好友列表
 export const getFriendList = async (params) => {
   let promise = tim.getFriendList();

@@ -44,6 +44,7 @@
         >
           <el-icon
             class="style-close"
+            v-show="isOwner"
             :class="{ isown: userProfile.userID == item.userID }"
             @click="RemovePeople(item)"
           >
@@ -115,16 +116,33 @@
         </span>
       </template>
     </el-dialog>
+
+    <!-- <el-dialog v-model="dialogVisible1" title="删除成员" width="30%" draggable>
+      <span>确定将 {{ groupMember.nick }} 移出群聊！</span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible1 = false"> 取消 </el-button>
+          <el-button type="primary" @click="delGroupmembers()">
+            确定
+          </el-button>
+        </span>
+      </template>
+    </el-dialog> -->
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
+import { ElMessageBox } from "element-plus";
 import { UserFilled } from "@element-plus/icons-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
-import { updateGroupProfile, addGroupMember } from "@/api/im-sdk-api";
+import {
+  updateGroupProfile,
+  addGroupMember,
+  deleteGroupMember,
+} from "@/api/im-sdk-api";
 
 const { state, commit, dispatch } = useStore();
 const {
@@ -142,11 +160,17 @@ const {
   groupProfile: (state) => state.groupinfo.groupProfile,
   currentMemberList: (state) => state.groupinfo.currentMemberList,
 });
-const { isOwner, isAdmin } = useGetters(["isOwner", "isAdmin"]);
+const { isOwner, isAdmin, toAccount } = useGetters([
+  "isOwner",
+  "isAdmin",
+  "toAccount",
+]);
 const input = ref("");
 const value = ref(true);
 const Refdrawerlist = ref();
 const dialogVisible = ref(false);
+const dialogVisible1 = ref(false);
+const groupMember = ref([]);
 
 const openDetails = () => {
   Refdrawerlist.value.handleOpen();
@@ -156,13 +180,38 @@ const close = () => {
   input.value = "";
   dialogVisible.value = false;
 };
+const delGroupmembers = () => {
+  // dialogVisible1.value = false;
+  // const { userID } = groupMember.value;
+  // console.log(userID);
+};
 const RemovePeople = (item) => {
-  console.log(item);
+  ElMessageBox.confirm(`确定将 ${item.nick} 移出群聊?`, "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(() => {
+      deleteGroupMember({
+        groupID: toAccount.value,
+        user: item.userID,
+      });
+      updataGroup();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 const addGroupMemberBtn = () => {
   const { groupID } = groupProfile.value;
   addGroupMember({ groupID, user: input.value });
+  updataGroup();
   close();
+};
+const updataGroup = () => {
+  setTimeout(() => {
+    dispatch("getGroupMemberList");
+  }, 500);
 };
 const onclick = () => {
   const { groupID } = groupProfile.value;

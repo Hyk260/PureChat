@@ -172,8 +172,6 @@ const handleConvListClick = (data) => {
     type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
     payload: data,
   });
-  // 关闭群窗口
-  // commit("setgroupDrawer", false);
   // 群详情信息
   commit("setGroupProfile", data);
   // 获取会话列表
