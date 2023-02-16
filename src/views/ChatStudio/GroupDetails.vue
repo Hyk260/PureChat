@@ -37,12 +37,24 @@
         </span>
       </div>
       <div class="group-member--avatar">
-        <UserAvatar
+        <div
+          class="avatar"
           v-for="item in currentMemberList"
           :key="item.userID"
-          :url="item.avatar"
-          :nickName="item.nick"
-        />
+        >
+          <el-icon
+            class="style-close"
+            :class="{ isown: userProfile.userID == item.userID }"
+            @click="RemovePeople(item)"
+          >
+            <CircleCloseFilled />
+          </el-icon>
+          <UserAvatar
+            :className="'avatar-item'"
+            :url="item.avatar"
+            :nickName="item.nick"
+          />
+        </div>
         <span class="group-member--add" @click="groupMemberAdd"> </span>
       </div>
     </div>
@@ -96,8 +108,8 @@
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogVisible = false"> 取消 </el-button>
-          <el-button type="primary" @click="dialogVisible = false">
+          <el-button @click="close"> 取消 </el-button>
+          <el-button type="primary" @click="addGroupMemberBtn">
             确认
           </el-button>
         </span>
@@ -112,7 +124,7 @@ import { UserFilled } from "@element-plus/icons-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
-import { updateGroupProfile } from "@/api/im-sdk-api";
+import { updateGroupProfile, addGroupMember } from "@/api/im-sdk-api";
 
 const { state, commit, dispatch } = useStore();
 const {
@@ -140,6 +152,18 @@ const openDetails = () => {
   Refdrawerlist.value.handleOpen();
 };
 
+const close = () => {
+  input.value = "";
+  dialogVisible.value = false;
+};
+const RemovePeople = (item) => {
+  console.log(item);
+};
+const addGroupMemberBtn = () => {
+  const { groupID } = groupProfile.value;
+  addGroupMember({ groupID, user: input.value });
+  close();
+};
 const onclick = () => {
   const { groupID } = groupProfile.value;
   // updateGroupProfile({
@@ -159,14 +183,25 @@ const handleQuitGroup = () => {};
 </script>
 
 <style lang="scss" scoped>
+.avatar:hover .style-close {
+  visibility: visible;
+}
+.style-close {
+  visibility: hidden;
+  position: absolute;
+  right: -7px;
+  top: -7px;
+  color: #f44336 !important;
+  cursor: pointer;
+}
 .member-list-drawer--item {
   display: flex;
   align-items: center;
 }
 .group-accountecment {
   padding: 12px 0;
-  .group-accountecment--title {
-  }
+  // .group-accountecment--title {
+  // }
   .group-accountecment--info {
     font-size: 12px;
     font-weight: 400;
@@ -221,6 +256,14 @@ const handleQuitGroup = () => {};
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    .avatar {
+      position: relative;
+      margin-right: 12px;
+      margin-bottom: 12px;
+      .isown {
+        display: none;
+      }
+    }
     .group-member--add {
       width: 38px;
       height: 38px;

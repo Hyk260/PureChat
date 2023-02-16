@@ -4,13 +4,12 @@ import router from "./router";
 import store from "./store";
 
 import "@/styles/index.scss";
-import pkg from "../package.json";
+import "v-contextmenu/dist/themes/default.css";
 
 import { useI18n } from "./plugins/i18n";
 import { useElIcons } from "./plugins/icons";
 import { loadAllassembly } from "./components";
 import { directive } from "v-contextmenu";
-import "v-contextmenu/dist/themes/default.css";
 import { MotionPlugin } from "@vueuse/motion";
 import { registerSvgIcon } from "./assets/icons/index";
 

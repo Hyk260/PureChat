@@ -38,6 +38,30 @@ export const getGroupList = async (params) => {
     console.log(e);
   }
 };
+
+// 添加群成员
+export const addGroupMember = async (params) => {
+  const { groupID, user } = params;
+  const parameter = {
+    groupID: groupID,
+    userIDList: [user]
+    // ['user1', 'user2', 'user3'] 
+  }
+  let promise = tim.addGroupMember(parameter);
+  promise.then(function (imResponse) {
+    console.log(imResponse.data.successUserIDList); // 添加成功的群成员 userIDList
+    console.log(imResponse.data.failureUserIDList); // 添加失败的群成员 userIDList
+    console.log(imResponse.data.existedUserIDList); // 已在群中的群成员 userIDList
+    // 一个用户 userX 最多允许加入 N 个群，如果已经加入了 N 个群，此时再尝试添加 userX 为群成员，则 userX 不能正常加群
+    // SDK 将 userX 的信息放入 overLimitUserIDList，供接入侧处理
+    console.log(imResponse.data.overLimitUserIDList); // 超过了“单个用户可加入群组数”限制的用户列表，v2.10.2起支持
+    console.log(imResponse.data.group); // 添加后的群组信息
+  }).catch(function (imError) {
+    console.warn('addGroupMember error:', imError); // 错误信息
+  });
+};
+
+
 // 获取 SDK 缓存的好友列表
 export const getFriendList = async (params) => {
   let promise = tim.getFriendList();

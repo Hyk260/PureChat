@@ -4,6 +4,7 @@ import {
   toRefs,
   reactive,
   onMounted,
+  h,
   onBeforeUnmount,
 } from "vue";
 import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
@@ -12,6 +13,10 @@ export default defineComponent({
   components: {},
   computed: {},
   props: {
+    className: {
+      type: String,
+      default: "",
+    },
     url: {
       type: String,
       default: "",
@@ -40,12 +45,12 @@ export default defineComponent({
     return [
       this.url
         ? h("div", {
-            class: "avatar default",
+            class: `avatar default ${this.className}`,
             style: { backgroundImage: `url(${this.url})` },
           })
         : h(
             "div",
-            { class: "avatar default" },
+            { class: `avatar default ${this.className}` },
             this.displayInfo(this.nickName)
           ),
     ];
@@ -54,10 +59,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-div {
-  margin-right: 12px;
-  margin-bottom: 12px;
-}
+// div {
+//   margin-right: 12px;
+//   margin-bottom: 12px;
+// }
 .avatar {
   border-radius: 50%;
   overflow: hidden;

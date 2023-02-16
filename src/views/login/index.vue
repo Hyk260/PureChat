@@ -203,8 +203,9 @@ emitter.on("showload", (flag) => {
 const loadAll = () => {
   return [
     { value: "linjx", link: "" },
-    { value: "huangyk", link: "" },
-    // { value: "ROLE_USER", link: "" },
+    { value: "admin", link: "" },
+    { value: "zhangal", link: "" },
+    // { value: "huangyk", link: "" },
   ];
 };
 

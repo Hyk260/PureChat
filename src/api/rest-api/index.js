@@ -4,15 +4,15 @@ import { randomNum } from "@/utils/index";
 
 function parameter(url) {
   const appid = process.env.VUE_APP_SDK_APPID;
-  const admin = process.env.VUE_APP_IDENTIFIER;
+  const admin = store.state.user.userID
   const usersig = store.state.user.userSig;
   const random = randomNum(0, 4294967295);
   return `${url}?sdkappid=${appid}&identifier=${admin}&usersig=${usersig}&random=${random}&contenttype=json`;
 }
 
-// 查询帐号
+// 查询帐号 只有管理员身份才能调用
 export const accountCheck = async (params) => {
-  // const { url='' } = params
+  const { userid } = params
   const url = "v4/im_open_login_svc/account_check";
   const result = await service({
     url: parameter(url),
@@ -20,14 +20,13 @@ export const accountCheck = async (params) => {
     data: {
       CheckItem: [
         {
-          UserID: "临江仙12",
+          UserID: userid || "临江仙",
         },
       ],
     },
   });
-  if (ErrorCode !== 0) return false;
   const { ErrorCode, ResultItem } = result;
-  const { AccountStatus } = ResultItem[0];
-  console.log(result);
-  return AccountStatus == "Imported";
+  if (ErrorCode !== 0) return;
+  // const { AccountStatus } = ResultItem[0]; // "Imported"
+  return ResultItem
 };
