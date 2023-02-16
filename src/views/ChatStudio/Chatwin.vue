@@ -45,7 +45,11 @@
           >
             <Checkbox
               @click.stop="handleCilck($event, item, 'input')"
-              v-show="showCheckbox"
+              v-show="
+                showCheckbox &&
+                !item.isRevoked &&
+                item.type !== 'TIMGroupTipElem'
+              "
             />
             <!-- 头像 -->
             <div
@@ -218,6 +222,8 @@ const handleCilck = (e, item) => {
 };
 
 const handleChecked = (e, item) => {
+  if (item.type == "TIMGroupTipElem") return;
+  if (item.isRevoked) return;
   const _el = document.getElementById(`${item.ID}`);
   const el = _el.getElementsByTagName("input")[0];
   _el.parentNode.classList.toggle("style-select");
