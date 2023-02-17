@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "author": {
-    "name": "huangyk",
+    "name": "Hyk260",
     "email": "2607881950@qq.com"
   },
   "scripts": {
@@ -14,7 +14,8 @@
     "app": "cd server && nodemon app",
     "build:staging": "vue-cli-service build --mode staging",
     "build:pkg:win": "cd server && pkg -t win app.js",
-    "build:pkg:mac": "cd server && pkg -t macos app.js"
+    "build:pkg:mac": "cd server && pkg -t macos app.js",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@commitlint/cli": "^17.2.0",
@@ -34,8 +35,9 @@
     "element-plus": "^2.0.4",
     "element-resize-detector": "^1.2.4",
     "html2canvas": "^1.4.1",
-    "husky": "^8.0.2",
+    "husky": ">=6",
     "js-cookie": "^3.0.1",
+    "lint-staged": ">=10",
     "lodash": "^4.17.21",
     "lottie-web": "^5.10.0",
     "mitt": "^3.0.0",
@@ -73,6 +75,27 @@
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "webpack-bundle-analyzer": "^4.6.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,vue,html}": [
+      "prettier --write",
+      "eslint --fix",
+      "git add -n"
+    ],
+    "*.{css,sass,scss}": [
+      "prettier --write",
+      "git add -n"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hyk260"
   },
   "license": "MIT"
 }
