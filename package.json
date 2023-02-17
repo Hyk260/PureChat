@@ -10,7 +10,7 @@
     "serve": "vue-cli-service serve",
     "dev": "vue-cli-service serve --report",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
+    "lint": "vue-cli-service lint --fix",
     "app": "cd server && nodemon app",
     "build:staging": "vue-cli-service build --mode staging",
     "build:pkg:win": "cd server && pkg -t win app.js",

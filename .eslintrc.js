@@ -15,8 +15,8 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-case-declarations': 'off', // 不允许在case/default子句中使用词法声明
     'prettier/prettier': 'off',
-    'arrow-body-style': 'off',
-    'prefer-arrow-callback': 'off',
+    // "arrow-body-style": ["error", "always"], // 该规则可以强制或禁止箭头函数体使用大括号。
+    // 'prefer-arrow-callback': 'off',
   },
 };
 

@@ -6,7 +6,7 @@
   "proseWrap": "preserve",
   "arrowParens": "avoid",
   "semi": true,
-  "singleQuote": true,
+  "singleQuote": false,
   "jsxSingleQuote": true,
   "endOfLine":"auto"
 }
