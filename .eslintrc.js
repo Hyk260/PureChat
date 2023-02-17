@@ -4,16 +4,19 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: ["plugin:vue/vue3-essential", "eslint:recommended", "@vue/prettier"],
+  extends: ['plugin:prettier/recommended', 'plugin:vue/vue3-essential', 'eslint:recommended', '@vue/prettier'],
   parserOptions: {
-    parser: "babel-eslint",
+    parser: 'babel-eslint',
   },
   // 自定义规则
   rules: {
     'no-unused-vars': 'off', // 禁止未使用过的变量
-    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-case-declarations': 'off', // 不允许在case/default子句中使用词法声明
+    'prettier/prettier': 'off',
+    'arrow-body-style': 'off',
+    'prefer-arrow-callback': 'off',
   },
 };
 
