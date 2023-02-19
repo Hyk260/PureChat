@@ -68,17 +68,14 @@ const vueDefaultConfig = {
   externals: {
     //vue: "Vue",
   },
+  // 用于配置如何展示性能提示，以及如何限制资源体积，从而优化网站性能。
   performance: {
-    // 提示类型
+    // 提示类型 error
     hints: "warning",
-    // 入口起点的最大体积
-    maxEntrypointSize: 1000 * 500,
-    // 生成文件的最大体积
-    maxAssetSize: 1024 * 2000,
-    // 只给出 js 文件性能提示
-    assetFilter: (FileName) => {
-      return FileName.endsWith(".js");
-    },
+    // 限制入口文件（即webpack.config.js中配置的entry属性）的体积不超过100KB。
+    maxEntrypointSize: 102400 * 1,
+    // 限制单个资源（如js文件、css文件等）的体积不超过100KB。
+    maxAssetSize: 102400 * 1,
   },
 };
 

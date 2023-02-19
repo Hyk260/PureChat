@@ -1,14 +1,6 @@
 const pkg = require("./package.json");
 const dayjs = require("dayjs");
-const {
-  cdn,
-  title,
-  externals,
-  devServer,
-  production,
-  publicPath,
-  performance,
-} = require("./src/config/vue.custom.config");
+const { cdn, title, externals, devServer, production, publicPath, performance } = require("./src/config/vue.custom.config");
 
 const AutoImport = require("unplugin-auto-import/webpack");
 const Components = require("unplugin-vue-components/webpack"); // 组件按需引入
@@ -20,11 +12,11 @@ const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer"); // 打包�
 const { dependencies, devDependencies, name, version } = pkg;
 const __APP_INFO__ = {
   pkg: { dependencies, devDependencies, name, version },
-  lastBuildTime: dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss")
+  lastBuildTime: dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"),
 };
 
 const path = require("path");
-const resolve = (dir) => {
+const resolve = dir => {
   return path.join(__dirname, dir);
 };
 
@@ -68,7 +60,6 @@ module.exports = {
       //     chunkFilename: `static/css/[name].css`,
       //   },
       // ]);
-
       // const analyzer = new BundleAnalyzerPlugin({
       //   analyzerPort: 9999
       // })
@@ -87,7 +78,7 @@ module.exports = {
     // 根路径
     config.resolve.alias.set("@", resolve("src"));
 
-    config.plugin("html").tap((args) => {
+    config.plugin("html").tap(args => {
       args[0].title = title; // 修改标题
       args[0].cdn = cdn; // CDN外链
       args[0].__APP_INFO__ = JSON.stringify(__APP_INFO__);
@@ -109,13 +100,13 @@ module.exports = {
       Components({
         resolvers: [ElementPlusResolver()],
       }),
-      // 压缩配置
-      // new CompressionPlugin({
-      //   test: /\.(js|css|html)?$/i, // 压缩文件格式
-      //   filename: '[path].gz[query]', // 压缩后的文件名
-      //   algorithm: 'gzip', // 使用gzip压缩
-      //   minRatio: 0.8 // 压缩率小于1才会压缩
-      // })
+      // 压缩配置 用于生成Gzip压缩的文件，从而减小文件的体积，加快网站的加载速度
+      new CompressionPlugin({
+        algorithm: "gzip", // 使用gzip压缩
+        test: /\.(js|css|html)?$/i, // 压缩文件格式
+        threshold: 10240,
+        minRatio: 0.8, // 压缩率小于1才会压缩
+      }),
     ],
     // webpack 的性能提示
     // performance,
