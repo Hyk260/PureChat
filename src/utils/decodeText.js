@@ -57,7 +57,6 @@ export function decodeText(text) {
       remainingText = remainingText.substring(leftBracketIndex);
     }
   }
-  console.log(renderDom, "renderDom");
   return renderDom;
 }
 // console.log(decodeText('[睡]123[呲牙]'))

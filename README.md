@@ -67,13 +67,7 @@ git clone git@gitee.com:H260788/PureAdmin.git
 yarn install
 ```
 
-根目录创建文件夹`server`并安装服务器依赖
-
-```
-cd server && yarn install
-```
-
-运行服务器 需全局安装 `nodemon`  或者 `cd server && node app`
+运行服务器 需全局安装 `nodemon`  或者 `node app`
 
 ```
 yarn app
@@ -107,7 +101,7 @@ yarn build
 │   ├── components             // 全局公用组件
 │   ├── locales                // 国际化语言
 │   ├── mock                   // mock服务
-│   ├── plugins				   // 插件
+│   ├── plugins				         // 插件
 │   ├── router                 // 路由
 │   ├── store                  // 全局 store管理
 │   ├── styles                 // 全局样式
@@ -119,7 +113,7 @@ yarn build
 ├── eslintrc.js                // eslint 配置项
 ├── .prettierrc
 ├── .env.development           // 开发环境变量
-├── .env.production			    // 生产环境变量
+├── .env.production			       // 生产环境变量
 ├── .gitignore                 // git 忽略项
 ├── README.md                  // 说明
 ├── jsconfig.json

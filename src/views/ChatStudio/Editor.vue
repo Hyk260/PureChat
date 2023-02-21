@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="Editor-style"
-    id="svgDown"
-    v-if="showMsgBox"
-    v-show="!showCheckbox"
-  >
+  <div class="Editor-style" id="svgDown" v-if="showMsgBox" v-show="!showCheckbox">
     <!-- <Toolbar
       class="toolbar"
       :editor="editorRef"
@@ -33,11 +28,7 @@
       @hideMentionModal="hideMentionModal"
       @insertMention="insertMention"
     />
-    <el-tooltip
-      effect="dark"
-      content="按Enter发送消息,Ctrl+Enter换行"
-      placement="left-start"
-    >
+    <el-tooltip effect="dark" content="按Enter发送消息,Ctrl+Enter换行" placement="left-start">
       <el-button class="btn-send" @click="handleEnter">发送</el-button>
     </el-tooltip>
   </div>
@@ -71,6 +62,7 @@ import MentionModal from "./components/MentionModal.vue";
 import { bytesToSize } from "@/utils/common";
 import { fileImgToBase64Url, dataURLtoFile } from "@/utils/message-input-utils";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
+import { SendMessageCd } from "@/api/index";
 import {
   CreateTextMsg,
   CreateTextAtMsg,
@@ -95,18 +87,20 @@ const {
   showMsgBox,
   showCheckbox,
   userInfo,
+  userProfile,
   isShowModal,
   currentMemberList,
 } = useState({
-  currentMemberList: (state) => state.groupinfo.currentMemberList,
-  currentConversation: (state) => state.conversation.currentConversation,
-  currentMessageList: (state) => state.conversation.currentMessageList,
-  historyMessageList: (state) => state.conversation.historyMessageList,
-  noMore: (state) => state.conversation.noMore,
-  userInfo: (state) => state.data.user,
-  showCheckbox: (state) => state.conversation.showCheckbox,
-  showMsgBox: (state) => state.conversation.showMsgBox,
-  isShowModal: (state) => state.conversation.isShowModal,
+  currentMemberList: state => state.groupinfo.currentMemberList,
+  currentConversation: state => state.conversation.currentConversation,
+  currentMessageList: state => state.conversation.currentMessageList,
+  historyMessageList: state => state.conversation.historyMessageList,
+  noMore: state => state.conversation.noMore,
+  userInfo: state => state.data.user,
+  userProfile: state => state.user.currentUserProfile,
+  showCheckbox: state => state.conversation.showCheckbox,
+  showMsgBox: state => state.conversation.showMsgBox,
+  isShowModal: state => state.conversation.isShowModal,
 });
 // 组件销毁时，及时销毁编辑器
 onBeforeUnmount(() => {
@@ -115,7 +109,7 @@ onBeforeUnmount(() => {
   editor.destroy();
 });
 
-const handleCreated = (editor) => {
+const handleCreated = editor => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 
   // console.log(editor, "实例");
@@ -139,7 +133,7 @@ const insertMention = (id, name) => {
 const hideMentionModal = () => {
   commit("SET_MENTION_MODAL", false);
 };
-const onChange = (editor) => {
+const onChange = editor => {
   const content = editor.children;
   messages.value = content;
   // console.log(messages.value, "编辑器内容");
@@ -193,7 +187,7 @@ const customPaste = (editor, event, callback) => {
         }
       }
       if (kind === "string") {
-        value.getAsString((str) => {
+        value.getAsString(str => {
           parsetext(str, editor);
         });
       }
@@ -211,14 +205,14 @@ const customPaste = (editor, event, callback) => {
   // callback(true)
 };
 // 拖拽事件
-const dropHandler = (e) => {
+const dropHandler = e => {
   const files = e.dataTransfer.files || [];
   console.log(e);
 
   console.log(files);
 };
 // 插入文件
-const parsefile = async (file) => {
+const parsefile = async file => {
   console.log(file, "文件");
   try {
     const { size } = file;
@@ -230,7 +224,7 @@ const parsefile = async (file) => {
     console.log(error);
   }
 };
-const parsetext = (item) => {
+const parsetext = item => {
   console.log(item);
 };
 const setEmoj = (data, item) => {
@@ -238,7 +232,7 @@ const setEmoj = (data, item) => {
   editorRef.value.insertNode(node);
 };
 // 插入图片
-const parsepicture = async (file) => {
+const parsepicture = async file => {
   console.log(file, "图片");
   const base64Url = await fileImgToBase64Url(file);
   let path = file?.path;
@@ -305,8 +299,8 @@ const sendMsgBefore = () => {
   if (str.includes("mention")) {
     aitStr = str.replace(/<[^>]+>/g, "");
     aitStr = aitStr.replace(/&nbsp;/gi, "");
-    newmsg = content.filter((t) => t.type == "mention");
-    newmsg.map((t) => aitlist.push(t.info.id));
+    newmsg = content.filter(t => t.type == "mention");
+    newmsg.map(t => aitlist.push(t.info.id));
     aitlist = Array.from(new Set(aitlist));
   }
   // console.log(HtmlText);
@@ -354,6 +348,11 @@ const sendMessage = async () => {
   let { code, data } = await sendMsg(TextMsg);
   console.log(data, "sendMsg");
   if (code == 0) {
+    SendMessageCd({
+      sender: data.message.from,
+      receiver: toAccount,
+      message: text,
+    });
     clearInputInfo();
     commit("SET_HISTORYMESSAGE", {
       type: "UPDATE_MESSAGES",
