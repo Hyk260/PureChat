@@ -52,7 +52,6 @@ export const fncopy = async (data) => {
 };
 
 export const GroupSystemNotice = (message) => {
-  console.log(message);
   const groupName =
     message.payload.groupProfile.name || message.payload.groupProfile.groupID;
   switch (message.payload.operationType) {

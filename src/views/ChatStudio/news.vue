@@ -17,19 +17,11 @@
       </div>
     </div>
     <!-- 聊天框 -->
-    <div
-      class="message-right"
-      :class="{ 'style-group': groupDrawer }"
-      id="svgBox"
-    >
+    <div class="message-right" :class="{ 'style-group': groupDrawer }" id="svgBox">
       <Header />
       <!-- 聊天窗口 -->
       <Chatwin ref="ChatRef" />
-      <div
-        id="svgResize"
-        @mouseover="dragControllerDiv(ChatRef)"
-        v-if="showMsgBox"
-      >
+      <div id="svgResize" @mouseover="dragControllerDiv(ChatRef)" v-if="showMsgBox">
         <!-- <div class="back-to-the-bottom" @click="toBottom">
           <el-icon class="svg-left">
             <DArrowLeft />
@@ -80,23 +72,16 @@ const activeName = ref("whole");
 const { state, dispatch, commit } = useStore();
 
 const { toAccount } = useGetters(["toAccount"]);
-const {
-  networkStatus,
-  conver,
-  user,
-  outside,
-  groupDrawer,
-  showMsgBox,
-  conversationList,
-} = useState({
-  outside: (state) => state.conversation.outside,
-  networkStatus: (state) => state.conversation.networkStatus,
-  user: (state) => state.data.user,
-  conver: (state) => state.conversation.currentConversation,
-  showMsgBox: (state) => state.conversation.showMsgBox,
-  groupDrawer: (state) => state.groupinfo.groupDrawer,
-  conversationList: (state) => state.conversation.conversationList,
-});
+const { networkStatus, conver, user, outside, groupDrawer, showMsgBox, conversationList } =
+  useState({
+    outside: state => state.conversation.outside,
+    networkStatus: state => state.conversation.networkStatus,
+    user: state => state.data.user,
+    conver: state => state.conversation.currentConversation,
+    showMsgBox: state => state.conversation.showMsgBox,
+    groupDrawer: state => state.groupinfo.groupDrawer,
+    conversationList: state => state.conversation.conversationList,
+  });
 const handleClick = ({ props }, event) => {
   const { label, name } = props;
   commit("TOGGLE_LIST", name);
@@ -176,24 +161,6 @@ onUnmounted(() => {
   cursor: s-resize;
   // cursor: row-resize;
   font-size: 12px;
-}
-:deep(.group-chat-switch) {
-  position: absolute;
-  right: 0;
-  background: rgb(218, 218, 218);
-  border-radius: 2px 0 0 2px;
-  width: 10px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  &:hover {
-    background: rgb(137, 210, 243);
-  }
-  .el-icon {
-    font-size: 14px !important;
-    color: #fff;
-  }
 }
 .back-to-the-bottom {
   position: absolute;

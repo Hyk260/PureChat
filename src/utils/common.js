@@ -4,7 +4,7 @@
  * 切换主题风格
  * @param {string}  appearance light || dark
  */
-export function changeAppearance(appearance = "auto") {
+export function changeAppearance(appearance = "light") {
   if (appearance === "auto") {
     // 查询系统主题色
     const media = window.matchMedia("(prefers-color-scheme: light)");

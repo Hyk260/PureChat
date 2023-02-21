@@ -1,22 +1,26 @@
-let timer = null;
 /**
  * 防抖原理：一定时间内，只有最后一次操作，再过wait毫秒后才执行函数
  *
- * @param {Function} fn 要执行的回调函数
+ * @param {Function} func 要执行的回调函数
  * @param {Number} wait 延时的时间
  * @param {Boolean} immediate 是否立即执行
- * @return null
+ * const debouncedFunc = debounce(fn, 250);
  */
-export function debounce(fn, wait = 300) {
-  return (function () {
+export function debounce(func, wait = 300, immediate = false) {
+  let timer;
+  return function debounced(...args) {
     const context = this;
-    const args = arguments;
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      fn.apply(context, args);
-    }, wait);
-  })();
+    const later = function () {
+      timer = null;
+      if (!immediate) func.apply(context, args);
+    };
+    const callNow = immediate && !timer;
+    clearTimeout(timer);
+    timer = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
 }
+
 
 /**
  * call()方法接受的是参数列表  call(thisArg, arg1, arg2, ...);

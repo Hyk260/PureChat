@@ -11,12 +11,7 @@
         >
           <analysis-url :text="item.text" />
         </span>
-        <img
-          class="emoji"
-          v-else-if="item.name === 'img'"
-          :src="item.src"
-          alt="表情包"
-        />
+        <img class="emoji" v-else-if="item.name === 'img'" :src="item.src" alt="表情包" />
       </template>
     </template>
   </div>
@@ -69,7 +64,6 @@ function AnalysisUrl(props) {
     : text;
 }
 
-// console.log(message);
 // const isemote = computed(() => {
 //   const { conversationType, payload } = message;
 //   let isconv = conversationType == "GROUP" || "C2C";

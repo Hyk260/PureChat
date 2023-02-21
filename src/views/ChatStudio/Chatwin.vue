@@ -6,12 +6,7 @@
     :class="[showMsgBox ? '' : 'style-MsgBox']"
     id="svgTop"
   >
-    <el-scrollbar
-      class="scrollbar-content"
-      ref="scrollbarRef"
-      @scroll="scrollbar"
-      always
-    >
+    <el-scrollbar class="scrollbar-content" ref="scrollbarRef" @scroll="scrollbar" always>
       <div class="message-view" ref="messageViewRef">
         <div
           v-for="(item, index) in currentMessageList"
@@ -19,16 +14,10 @@
           :class="{ 'reset-select': !showCheckbox }"
         >
           <!-- 加载更多 -->
-          <LoadMore
-            :noMore="noMore"
-            v-if="index === currentMessageList.length - 1"
-          />
+          <LoadMore :noMore="noMore" v-if="index === currentMessageList.length - 1" />
           <div class="message-view__item--blank"></div>
           <!-- 时间 -->
-          <div
-            class="message-view__item--time-divider"
-            v-if="item.isTimeDivider"
-          >
+          <div class="message-view__item--time-divider" v-if="item.isTimeDivider">
             {{ timeFormat(item.time * 1000, true) }}
           </div>
           <!-- 消息 is-self is-other-->
@@ -45,23 +34,11 @@
           >
             <Checkbox
               @click.stop="handleCilck($event, item, 'input')"
-              v-show="
-                showCheckbox &&
-                !item.isRevoked &&
-                item.type !== 'TIMGroupTipElem'
-              "
+              v-show="showCheckbox && !item.isRevoked && item.type !== 'TIMGroupTipElem'"
             />
             <!-- 头像 -->
-            <div
-              class="picture"
-              v-if="!item.isRevoked && item.type !== 'TIMGroupTipElem'"
-            >
-              <el-avatar
-                :size="36"
-                shape="square"
-                :src="item.avatar || circleUrl"
-              >
-              </el-avatar>
+            <div class="picture" v-if="!item.isRevoked && item.type !== 'TIMGroupTipElem'">
+              <el-avatar :size="36" shape="square" :src="item.avatar || circleUrl"> </el-avatar>
             </div>
             <!-- 内容 -->
             <div
@@ -72,11 +49,7 @@
               <name-component :item="item" />
               <!-- message-view__text message-view__img -->
               <div :class="Megtype(item.type)">
-                <component
-                  :is="loadMsgComponents(item.type, item)"
-                  :message="item"
-                >
-                </component>
+                <component :is="loadMsgComponents(item.type, item)" :message="item"> </component>
               </div>
             </div>
           </div>
@@ -112,12 +85,7 @@ import {
   onBeforeUnmount,
   toRefs,
 } from "vue";
-import {
-  squareUrl,
-  circleUrl,
-  MENU_LIST,
-  RIGHT_CLICK_MENU_LIST,
-} from "./utils/menu";
+import { squareUrl, circleUrl, MENU_LIST, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
 import { useStore } from "vuex";
 import { fncopy, dragControllerDiv } from "./utils/utils";
 
@@ -156,17 +124,17 @@ const {
   currentMessageList,
   currentConversation,
 } = useState({
-  userInfo: (state) => state.data.user,
-  noMore: (state) => state.conversation.noMore,
-  showMsgBox: (state) => state.conversation.showMsgBox,
-  forwardData: (state) => state.conversation.forwardData,
-  showCheckbox: (state) => state.conversation.showCheckbox,
-  needScrollDown: (state) => state.conversation.needScrollDown,
-  currentMessageList: (state) => state.conversation.currentMessageList,
-  currentConversation: (state) => state.conversation.currentConversation,
+  userInfo: state => state.data.user,
+  noMore: state => state.conversation.noMore,
+  showMsgBox: state => state.conversation.showMsgBox,
+  forwardData: state => state.conversation.forwardData,
+  showCheckbox: state => state.conversation.showCheckbox,
+  needScrollDown: state => state.conversation.needScrollDown,
+  currentMessageList: state => state.conversation.currentMessageList,
+  currentConversation: state => state.conversation.currentConversation,
 });
 
-const NameComponent = (props) => {
+const NameComponent = props => {
   const { item } = props;
   // 撤回消息 群提示消息 不显示
   const { isRevoked, type, from, nick, conversationType } = item;
@@ -197,7 +165,7 @@ const UpdataScrollInto = () => {
   });
 };
 
-const updateLoadMore = (newValue) => {
+const updateLoadMore = newValue => {
   nextTick(() => {
     const ViewRef = messageViewRef.value;
     const elRef = ViewRef?.children?.[newValue - 1];
@@ -242,28 +210,29 @@ const handleChecked = (e, item) => {
   }
 };
 
-const ISown = (item) => {
+const ISown = item => {
   return item.from == userInfo.value.username;
 };
-
+const loadMoreFn = () => {
+  if (!noMore.value) {
+    const current = currentMessageList.value?.length - 1;
+    // 第一条消息 加载更多 节点
+    const offsetTopScreen = messageViewRef.value?.children?.[current];
+    const top = offsetTopScreen?.getBoundingClientRect().top;
+    const canLoadData = top > 50; //滚动到顶部
+    canLoadData && getMoreMsg();
+  }
+};
+const debouncedFunc = debounce(loadMoreFn, 250); //防抖处理
 const scrollbar = ({ scrollLeft, scrollTop }) => {
-  debounce(() => {
-    if (!noMore.value) {
-      const current = currentMessageList.value?.length - 1;
-      // 第一条消息 加载更多 节点
-      const offsetTopScreen = messageViewRef.value?.children?.[current];
-      const top = offsetTopScreen?.getBoundingClientRect().top;
-      const canLoadData = top > 50; //滚动到顶部
-      canLoadData && getMoreMsg();
-    }
-  }); //防抖处理
+  debouncedFunc();
 };
 
 const UpdateScrollbar = () => {
   scrollbarRef.value.update();
 };
 
-const validatelastMessage = (msglist) => {
+const validatelastMessage = msglist => {
   let msg = null;
   for (let i = msglist.length - 1; i > -1; i--) {
     if (msglist[i].ID) {
@@ -363,7 +332,7 @@ const loadMsgComponents = (elem_type, item) => {
   return CompMap[resp];
 };
 // 动态class
-const Megtype = (elem_type) => {
+const Megtype = elem_type => {
   // console.log(elem_type);
   let resp = "";
   switch (elem_type) {
@@ -389,7 +358,7 @@ const Megtype = (elem_type) => {
   return resp;
 };
 
-const msgOne = (item) => {
+const msgOne = item => {
   const { isRevoked, type } = item;
   if (isRevoked) {
     return "message-view__tips-elem";
@@ -416,14 +385,14 @@ const ContextMenuEvent = (event, item) => {
   const self = ISown(item);
   RIGHT_CLICK_MENU_LIST.value = MENU_LIST;
   if (!self) {
-    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter((t) => t.id !== "revoke");
+    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter(t => t.id !== "revoke");
   }
   if (!relinquish) {
-    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter((t) => t.id !== "revoke");
+    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter(t => t.id !== "revoke");
   }
 };
 
-const ClickMenuItem = (data) => {
+const ClickMenuItem = data => {
   const Info = MenuItemInfo.value;
   const { id, text } = data;
   switch (id) {
@@ -442,7 +411,7 @@ const ClickMenuItem = (data) => {
   }
 };
 // 删除消息
-const fndelete = async (data) => {
+const fndelete = async data => {
   let { code } = await deleteMsgList(data);
   if (code == 0) {
     const { conversationID, toAccount, to } = data;
@@ -456,17 +425,17 @@ const fndelete = async (data) => {
   }
 };
 // 多选
-const multiSelect = (data) => {
+const multiSelect = data => {
   commit("SET_CHEC_BOX", true);
 };
 // 撤回消息
-const revokes = (data) => {
+const revokes = data => {
   revokeMsg(data);
 };
 
 watch(
   needScrollDown,
-  (data) => {
+  data => {
     updateLoadMore(data);
   },
   {
@@ -475,7 +444,7 @@ watch(
   }
 );
 
-emitter.on("updataScroll", (e) => {
+emitter.on("updataScroll", e => {
   UpdataScrollInto();
 });
 

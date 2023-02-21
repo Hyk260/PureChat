@@ -3,14 +3,7 @@
 </template> -->
 
 <script>
-import {
-  defineComponent,
-  onBeforeUnmount,
-  onMounted,
-  computed,
-  reactive,
-  toRefs,
-} from "vue";
+import { defineComponent, onBeforeUnmount, onMounted, computed, reactive, toRefs } from "vue";
 import TIM from "tim-js-sdk";
 export default defineComponent({
   name: "GroupTipElement",
@@ -72,9 +65,7 @@ export default defineComponent({
     };
   },
   render() {
-    return (
-      <div class="group-tip-element-wrapper">{this.getGroupTipContent()}</div>
-    );
+    return <div class='group-tip-element-wrapper'>{this.getGroupTipContent()}</div>;
   },
 });
 </script>

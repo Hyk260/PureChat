@@ -96,18 +96,6 @@
         </span>
       </template>
     </el-dialog>
-
-    <!-- <el-dialog v-model="dialogVisible1" title="删除成员" width="30%" draggable>
-      <span>确定将 {{ groupMember.nick }} 移出群聊！</span>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible1 = false"> 取消 </el-button>
-          <el-button type="primary" @click="delGroupmembers()">
-            确定
-          </el-button>
-        </span>
-      </template>
-    </el-dialog> -->
   </div>
 </template>
 
@@ -134,7 +122,6 @@ const input = ref("");
 const value = ref(true);
 const Refdrawerlist = ref();
 const dialogVisible = ref(false);
-const dialogVisible1 = ref(false);
 const groupMember = ref([]);
 
 const openDetails = () => {
@@ -144,11 +131,6 @@ const openDetails = () => {
 const close = () => {
   input.value = "";
   dialogVisible.value = false;
-};
-const delGroupmembers = () => {
-  // dialogVisible1.value = false;
-  // const { userID } = groupMember.value;
-  // console.log(userID);
 };
 const RemovePeople = item => {
   ElMessageBox.confirm(`确定将 ${item.nick} 移出群聊?`, "提示", {
@@ -211,6 +193,10 @@ const handleQuitGroup = () => {};
 .member-list-drawer--item {
   display: flex;
   align-items: center;
+  padding: 5px 0;
+  .member-list-drawer--item__name {
+    margin-left: 8px;
+  }
 }
 .group-accountecment {
   padding: 12px 0;

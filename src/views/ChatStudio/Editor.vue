@@ -348,11 +348,11 @@ const sendMessage = async () => {
   let { code, data } = await sendMsg(TextMsg);
   console.log(data, "sendMsg");
   if (code == 0) {
-    SendMessageCd({
-      sender: data.message.from,
-      receiver: toAccount,
-      message: text,
-    });
+    // SendMessageCd({
+    //   sender: data.message.from,
+    //   receiver: toAccount,
+    //   message: text,
+    // });
     clearInputInfo();
     commit("SET_HISTORYMESSAGE", {
       type: "UPDATE_MESSAGES",

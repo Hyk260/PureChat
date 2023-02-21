@@ -6,7 +6,7 @@ const localStorage = {
     lang: "zh-CN", // 默认语言
     sidebar: true, // 侧边栏隐藏
     logoIcon: true, // login图标
-    appearance: "auto", // 主题颜色
+    appearance: "light", // 主题颜色
     isCollapse: true, // 侧边栏是否折叠
     setswitch: false, // 设置按钮开关
   },
