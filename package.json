@@ -1,6 +1,6 @@
 {
   "name": "pure-admin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "author": {
     "name": "Hyk260",
@@ -83,7 +83,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,json,vue,html}": [
+    "*.{js,vue,html}": [
       "prettier --write",
       "eslint --fix",
       "git add -n"
