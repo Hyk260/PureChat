@@ -22,14 +22,7 @@
 </template>
 
 <script>
-import {
-  defineComponent,
-  ref,
-  toRefs,
-  reactive,
-  onMounted,
-  onBeforeUnmount,
-} from "vue";
+import { defineComponent, ref, toRefs, reactive, onMounted, onBeforeUnmount } from "vue";
 import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
 export default defineComponent({
   name: "Drawer",
@@ -74,13 +67,13 @@ export default defineComponent({
       visible.value = true;
     };
     // 关闭
-    const handleClose = (done) => {
+    const handleClose = done => {
       done();
     };
     onMounted(() => {});
     onBeforeUnmount(() => {});
     return {
-      drawerRef,
+      // drawerRef,
       handleOpen,
       handleClose,
       visible,

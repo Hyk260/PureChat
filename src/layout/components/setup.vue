@@ -68,7 +68,7 @@ import { useDark, useToggle } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 
 const { locale, t } = useI18n();
-console.log();
+
 const options = computed(() => {
   return [
     {
@@ -99,21 +99,21 @@ const languages = [
 
 const { state, dispatch, commit } = useStore();
 const { sidebar, logoVal, appearance, lang, setswitch } = useState({
-  sidebar: (state) => !state.settings.sidebar,
-  logoVal: (state) => !state.settings.logoIcon,
-  appearance: (state) => state.settings.appearance,
-  setswitch: (state) => state.settings.setswitch,
-  lang: (state) => state.settings.lang,
+  sidebar: state => !state.settings.sidebar,
+  logoVal: state => !state.settings.logoIcon,
+  appearance: state => state.settings.appearance,
+  setswitch: state => state.settings.setswitch,
+  lang: state => state.settings.lang,
 });
 
-const LogoChange = (val) => {
+const LogoChange = val => {
   commit("updateSettings", {
     key: "logoIcon",
     value: !val,
   });
 };
 
-const greyChange = (val) => {
+const greyChange = val => {
   commit("updateSettings", {
     key: "sidebar",
     value: !val,
@@ -141,7 +141,7 @@ const themecolor = computed({
   },
 });
 
-const ThemeColorChange = (val) => {
+const ThemeColorChange = val => {
   commit("updateSettings", {
     key: "appearance",
     value: val,
@@ -158,7 +158,7 @@ const language = computed({
   },
 });
 
-const languageChange = (val) => {
+const languageChange = val => {
   commit("updateSettings", {
     key: "lang",
     value: val,

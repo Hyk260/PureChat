@@ -6,12 +6,13 @@ import elementZhLocale from "element-plus/lib/locale/lang/zh-cn";
 // User defined lang
 import enLocale from "../../locales/en";
 import zhLocale from "../../locales/zh-CN";
-// function siphonI18n(prefix = "zh-cn") {
+
+// function siphonI18n(prefix = "zh-CN") {
 //   return Object.fromEntries(
-//     Object.entries(import.meta.globEager("../../locales/*.y(a)?ml")).map(
+//     Object.entries(import.meta.globEager("../../locales/*.js")).map(
 //       ([key, value]) => {
-//         const matched = key.match(/([A-Za-z0-9-_]+)\./i)[1];
-//         return [matched, value.default];
+//         // const matched = key.match(/([A-Za-z0-9-_]+)\./i)[1];
+//         // return [matched, value.default];
 //       }
 //     )
 //   )[prefix];
@@ -28,7 +29,6 @@ const localesConfigs = {
   },
 };
 const lang = store.state.settings.lang;
-// i18n.global.locale = "en";
 const yuyan = lang == "zh-CN" ? "中文" : "英文";
 // console.log(yuyan, "语言");
 console.log(localesConfigs, "语言包");
@@ -39,6 +39,14 @@ export const i18n = createI18n({
   fallbackLocale: "en",
   messages: localesConfigs,
 });
+/**
+ * 可以在全局模版语法直接使用 $t("common.setup")
+ */
+export const i18nPlugin = {
+  install: app => {
+    app.config.globalProperties.$t = i18n.global.t;
+  },
+};
 
 export function useI18n(app) {
   app.use(i18n);
