@@ -3,7 +3,7 @@ import tim from "@/utils/im-sdk/tim";
 import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 
 // 获取消息列表
-export const getMsgList = async (params) => {
+export const getMsgList = async params => {
   const { conversationID, count, nextReqMessageID } = params;
   const { code, data } = await tim.getMessageList({
     conversationID: conversationID,
@@ -16,7 +16,7 @@ export const getMsgList = async (params) => {
   return {};
 };
 // 获取成员列表
-export const getGroupMemberList = async (params) => {
+export const getGroupMemberList = async params => {
   try {
     const { groupID, count, offset } = params;
     const { code, data } = await tim.getGroupMemberList({
@@ -30,60 +30,97 @@ export const getGroupMemberList = async (params) => {
   }
 };
 // 获取群组列表
-export const getGroupList = async (params) => {
+export const getGroupList = async params => {
   try {
-    const { code, data: { groupList } } = await tim.getGroupList();
+    const {
+      code,
+      data: { groupList },
+    } = await tim.getGroupList();
     if (code == 0) return groupList;
   } catch (e) {
     console.log(e);
   }
 };
 
+// 创建群
+export const createGroup = params => {
+  const { groupName } = params;
+  let promise = tim.createGroup({
+    type: TIM.TYPES.GRP_WORK,
+    name: groupName,
+    // memberList: [{
+    //   userID: 'user1',
+    //   // 群成员维度的自定义字段，默认情况是没有的，需要开通，详情请参阅自定义字段
+    //   memberCustomField: [{ key: 'group_member_test', value: 'test' }]
+    // }, {
+    //   userID: 'user2'
+    // }] // 如果填写了 memberList，则必须填写 userID
+  });
+  promise
+    .then(function (imResponse) {
+      // 创建成功
+      console.log(imResponse.data.group); // 创建的群的资料
+      // 创建群时指定了成员列表，但是成员中存在超过了“单个用户可加入群组数”限制的情况
+      // 一个用户 userX 最多允许加入 N 个群，如果已经加入了 N 个群，此时创建群再指定 userX 为群成员，则 userX 不能正常加群
+      // SDK 将 userX 的信息放入 overLimitUserIDList，供接入侧处理
+      console.log(imResponse.data.overLimitUserIDList); // 超过了“单个用户可加入群组数”限制的用户列表，v2.10.2起支持
+    })
+    .catch(function (imError) {
+      console.warn("createGroup error:", imError); // 创建群组失败的相关信息
+    });
+};
+
 // 添加群成员
-export const addGroupMember = async (params) => {
+export const addGroupMember = async params => {
   const { groupID, user } = params;
   const parameter = {
     groupID: groupID,
-    userIDList: [user]
-    // ['user1', 'user2', 'user3'] 
-  }
+    userIDList: [user],
+    // ['user1', 'user2', 'user3']
+  };
   let promise = tim.addGroupMember(parameter);
-  promise.then(function (imResponse) {
-    console.log(imResponse.data.successUserIDList); // 添加成功的群成员 userIDList
-    console.log(imResponse.data.failureUserIDList); // 添加失败的群成员 userIDList
-    console.log(imResponse.data.existedUserIDList); // 已在群中的群成员 userIDList
-    // 一个用户 userX 最多允许加入 N 个群，如果已经加入了 N 个群，此时再尝试添加 userX 为群成员，则 userX 不能正常加群
-    // SDK 将 userX 的信息放入 overLimitUserIDList，供接入侧处理
-    console.log(imResponse.data.overLimitUserIDList); // 超过了“单个用户可加入群组数”限制的用户列表，v2.10.2起支持
-    console.log(imResponse.data.group); // 添加后的群组信息
-  }).catch(function (imError) {
-    console.warn('addGroupMember error:', imError); // 错误信息
-  });
+  promise
+    .then(function (imResponse) {
+      console.log(imResponse.data.successUserIDList); // 添加成功的群成员 userIDList
+      console.log(imResponse.data.failureUserIDList); // 添加失败的群成员 userIDList
+      console.log(imResponse.data.existedUserIDList); // 已在群中的群成员 userIDList
+      // 一个用户 userX 最多允许加入 N 个群，如果已经加入了 N 个群，此时再尝试添加 userX 为群成员，则 userX 不能正常加群
+      // SDK 将 userX 的信息放入 overLimitUserIDList，供接入侧处理
+      console.log(imResponse.data.overLimitUserIDList); // 超过了“单个用户可加入群组数”限制的用户列表，v2.10.2起支持
+      console.log(imResponse.data.group); // 添加后的群组信息
+    })
+    .catch(function (imError) {
+      console.warn("addGroupMember error:", imError); // 错误信息
+    });
 };
 // 删除群成员
-export const deleteGroupMember = async (params) => {
-  const { groupID, user } = params
+export const deleteGroupMember = async params => {
+  const { groupID, user } = params;
   const parameter = {
     groupID: groupID,
     userIDList: [user],
     // reason: '你违规了，我要踢你！'
-  }
+  };
   let promise = tim.deleteGroupMember(parameter);
-  promise.then(function (imResponse) {
-    console.log(imResponse.data.group); // 删除后的群组信息
-    console.log(imResponse.data.userIDList); // 被删除的群成员的 userID 列表
-  }).catch(function (imError) {
-    console.warn('deleteGroupMember error:', imError); // 错误信息
-  });
+  promise
+    .then(function (imResponse) {
+      console.log(imResponse.data.group); // 删除后的群组信息
+      console.log(imResponse.data.userIDList); // 被删除的群成员的 userID 列表
+    })
+    .catch(function (imError) {
+      console.warn("deleteGroupMember error:", imError); // 错误信息
+    });
 };
 // 获取 SDK 缓存的好友列表
-export const getFriendList = async (params) => {
+export const getFriendList = async params => {
   let promise = tim.getFriendList();
-  promise.then(function (imResponse) {
-    const friendList = imResponse.data; // 好友列表
-  }).catch(function (imError) {
-    console.warn('getFriendList error:', imError); // 获取好友列表失败的相关信息
-  });
+  promise
+    .then(function (imResponse) {
+      const friendList = imResponse.data; // 好友列表
+    })
+    .catch(function (imError) {
+      console.warn("getFriendList error:", imError); // 获取好友列表失败的相关信息
+    });
 };
 // 获取个人资料
 export const getMyProfile = async () => {
@@ -94,7 +131,7 @@ export const getMyProfile = async () => {
     console.log(e);
   }
 };
-export const getGroupProfile = async (params) => {
+export const getGroupProfile = async params => {
   const { groupID } = params;
   const { data, code } = await tim.getGroupProfile({
     groupID: groupID,
@@ -103,7 +140,7 @@ export const getGroupProfile = async (params) => {
   return data.group;
 };
 //登录
-export const TIM_login = async (params) => {
+export const TIM_login = async params => {
   const { userID, userSig } = params;
   const result = await tim.login({
     userID,
@@ -127,7 +164,7 @@ export const TIM_Destroy = async () => {
   await tim.destroy();
 };
 // 创建文本消息
-export const CreateTextMsg = async (params) => {
+export const CreateTextMsg = async params => {
   const { convId, convType, textMsg } = params;
   let message = await tim.createTextMessage({
     to: convId, // 接受放ID
@@ -146,7 +183,7 @@ export const CreateTextMsg = async (params) => {
   return message;
 };
 // 创建@ 提醒功能的文本消息
-export const CreateTextAtMsg = async (params) => {
+export const CreateTextAtMsg = async params => {
   const { convId, convType, textMsg, atUserList } = params;
   let message = await tim.createTextAtMessage({
     to: convId,
@@ -159,7 +196,7 @@ export const CreateTextAtMsg = async (params) => {
   return message;
 };
 // 创建图片消息
-export const CreateImgtMsg = async (params) => {
+export const CreateImgtMsg = async params => {
   const { convId, convType, image } = params;
   let message = tim.createImageMessage({
     to: convId,
@@ -180,7 +217,7 @@ export const CreateImgtMsg = async (params) => {
   return message;
 };
 // 创建文件消息
-export const CreateFiletMsg = async (params) => {
+export const CreateFiletMsg = async params => {
   const { convId, convType, files } = params;
   let message = tim.createFileMessage({
     to: convId,
@@ -195,7 +232,7 @@ export const CreateFiletMsg = async (params) => {
   return message;
 };
 // 创建合并消息
-export const createMergerMsg = async (params) => {
+export const createMergerMsg = async params => {
   const { convId, convType, List, title, abstractList } = params;
   let mergerMessage = tim.createMergerMessage({
     to: convId,
@@ -211,17 +248,17 @@ export const createMergerMsg = async (params) => {
   });
 };
 // 发送消息
-export const sendMsg = async (params) => {
+export const sendMsg = async params => {
   const result = await tim.sendMessage(params);
   return result;
 };
 // 删除消息
-export const deleteMsgList = async (params) => {
+export const deleteMsgList = async params => {
   const result = await tim.deleteMessage([params]);
   return result;
 };
 // 会话顶置
-export const TIMpingConv = async (params) => {
+export const TIMpingConv = async params => {
   const { conversationID, isPinned } = params;
   const result = await tim.pinConversation({
     conversationID,
@@ -230,7 +267,7 @@ export const TIMpingConv = async (params) => {
   return result;
 };
 // 撤回消息
-export const revokeMsg = (params) => {
+export const revokeMsg = params => {
   let promise = tim.revokeMessage(params);
   promise
     .then(function (imResponse) {
@@ -243,7 +280,7 @@ export const revokeMsg = (params) => {
     });
 };
 // 消息免打扰
-export const setMessageRemindType = async (params) => {
+export const setMessageRemindType = async params => {
   const { userID, RemindType, type } = params;
   let parameter = null;
   let isDisable = RemindType == "AcceptNotNotify";
@@ -273,7 +310,7 @@ export const setMessageRemindType = async (params) => {
   }
 };
 // 获取会话信息
-export const getConversationProfile = async (params) => {
+export const getConversationProfile = async params => {
   try {
     const { conversationID } = params;
     const { code, data } = await tim.getConversationProfile(conversationID);
@@ -285,7 +322,7 @@ export const getConversationProfile = async (params) => {
   }
 };
 // 消息已读上报
-export const setMessageRead = async (convId) => {
+export const setMessageRead = async convId => {
   let promise = tim.setMessageRead({ conversationID: convId });
   promise
     .then(function (imResponse) {
@@ -298,7 +335,7 @@ export const setMessageRead = async (convId) => {
     });
 };
 // 修改群消息
-export const updateGroupProfile = async (params) => {
+export const updateGroupProfile = async params => {
   const { convId, modify = "", text = "" } = params;
   let parameter = {
     groupID: convId,
