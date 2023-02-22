@@ -1,8 +1,5 @@
 import { createI18n } from "vue-i18n";
 import store from "@/store";
-// element-plus国际化
-import elementEnLocale from "element-plus/lib/locale/lang/en";
-import elementZhLocale from "element-plus/lib/locale/lang/zh-cn";
 // User defined lang
 import enLocale from "../../locales/en";
 import zhLocale from "../../locales/zh-CN";
@@ -21,11 +18,9 @@ import zhLocale from "../../locales/zh-CN";
 const localesConfigs = {
   en: {
     ...enLocale,
-    ...elementEnLocale,
   },
   "zh-CN": {
     ...zhLocale,
-    ...elementZhLocale,
   },
 };
 const lang = store.state.settings.lang;
@@ -40,7 +35,9 @@ export const i18n = createI18n({
   messages: localesConfigs,
 });
 /**
- * 可以在全局模版语法直接使用 $t("common.setup")
+ * 可以在全局模版语法直接使用 
+ * $t("common.setup")
+ * $t("el.messagebox.confirm")
  */
 export const i18nPlugin = {
   install: app => {

@@ -1,5 +1,8 @@
+// element-plus国际化
+import elementZhLocale from "element-plus/lib/locale/lang/zh-cn";
 // zh-CN
 export default {
+  ...elementZhLocale,
   common: {
     language: "语言",
     setup: "设置",
