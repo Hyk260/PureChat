@@ -6,7 +6,7 @@
 
 <script>
 import { onMounted, nextTick, defineComponent } from "vue";
-import { useStore } from "vuex";
+import { useStore, mapState } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { ElConfigProvider } from "element-plus";
 
@@ -19,13 +19,14 @@ export default defineComponent({
     [ElConfigProvider.name]: ElConfigProvider,
   },
   computed: {
+    ...mapState({
+      lang: state => state.settings.lang,
+    }),
     currentLocale() {
-      return en;
-      // this.$storage.locale?.locale === "zh" ? zhCn : en;
+      return this.lang === "zh-CN" ? zhCn : en;
     },
   },
   setup() {
-    // const locale = zhCn;
     const route = useRoute();
     const router = useRouter();
     const { state, dispatch, commit } = useStore();
@@ -39,7 +40,6 @@ export default defineComponent({
       }, 200);
     });
     return {
-      //  locale,
       route,
     };
   },
