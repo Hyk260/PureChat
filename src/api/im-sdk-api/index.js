@@ -70,6 +70,19 @@ export const createGroup = params => {
     });
 };
 
+// 退出群
+export const quitGroup = params => {
+  const { groupId } = params;
+  let promise = tim.quitGroup(groupId);
+  promise
+    .then(function (imResponse) {
+      console.log(imResponse.data.groupID); // 退出成功的群 ID
+    })
+    .catch(function (imError) {
+      console.warn("quitGroup error:", imError); // 退出群组失败的相关信息
+    });
+};
+
 // 添加群成员
 export const addGroupMember = async params => {
   const { groupID, user } = params;

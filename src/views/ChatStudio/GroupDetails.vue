@@ -106,7 +106,7 @@ import { UserFilled } from "@element-plus/icons-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
-import { updateGroupProfile, addGroupMember, deleteGroupMember } from "@/api/im-sdk-api";
+import { updateGroupProfile, addGroupMember, deleteGroupMember, quitGroup } from "@/api/im-sdk-api";
 
 const { state, commit, dispatch } = useStore();
 const { user, userProfile, groupDrawer, showMsgBox, groupProfile, currentMemberList } = useState({
@@ -175,7 +175,11 @@ const groupMemberAdd = () => {
   dialogVisible.value = true;
 };
 const transferGroup = () => {};
-const handleQuitGroup = () => {};
+const handleQuitGroup = () => {
+  quitGroup({
+    groupId: toAccount.value,
+  });
+};
 </script>
 
 <style lang="scss" scoped>

@@ -1,8 +1,4 @@
-import {
-  getGroupMemberList,
-  getGroupProfile,
-  getGroupList,
-} from "@/api/im-sdk-api/index";
+import { getGroupMemberList, getGroupProfile, getGroupList } from "@/api/im-sdk-api/index";
 export default {
   // namespaced: true,
   state: {
@@ -32,32 +28,23 @@ export default {
     },
   },
   mutations: {
-    // setgroupDrawer(state, payload) {
-    //   state.groupDrawer = payload;
-    // },
     setGroupProfile(state, payload) {
       const { type } = payload;
       if (type == "GROUP") {
         const { groupID } = payload.groupProfile;
-        getGroupProfile({ groupID }).then((data) => {
+        getGroupProfile({ groupID }).then(data => {
           state.groupProfile = data;
-          // console.log(state.groupProfile);
         });
       }
     },
   },
   actions: {
     async getGroupMemberList({ state, commit, getters }, payload) {
-      // const { groupID } = payload;
-      console.log(getters.toAccount)
-      const groupID = getters.toAccount
-      // groupID offset count
+      const groupID = getters.toAccount;
       const { memberList, offset } = await getGroupMemberList({ groupID });
-      console.log(memberList)
       state.currentMemberList = memberList;
     },
     async getGroupList({ state }, payload) {
-      // state.groupList =
       const list = await getGroupList();
       console.log(list);
       state.groupList = list;
