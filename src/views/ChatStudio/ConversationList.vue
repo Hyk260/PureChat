@@ -24,11 +24,7 @@
       <!-- 置顶图标 -->
       <div class="pinned-tag" v-if="item.isPinned"></div>
       <!-- 关闭按钮 -->
-      <FontIcon
-        iconName="close"
-        class="close-btn"
-        @click.stop="closeMsg(item)"
-      />
+      <FontIcon iconName="close" class="close-btn" @click.stop="closeMsg(item)" />
       <el-badge is-dot :hidden="isShowCount(item) || !isNotify(item)">
         <img
           v-if="item.type == 'C2C'"
@@ -85,11 +81,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { getImageType } from "@/utils/message-input-utils";
-import {
-  squareUrl,
-  RIGHT_CLICK_CHAT_LIST,
-  RIGHT_CLICK_MENU_LIST,
-} from "./utils/menu";
+import { squareUrl, RIGHT_CLICK_CHAT_LIST, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
 import { debounce } from "@/utils/debounce";
 import { getRoles } from "@/api/roles";
 import { generateUUID } from "@/utils/index";
@@ -109,13 +101,13 @@ const contextMenuItemInfo = ref([]);
 const { state, getters, dispatch, commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
 const { Selected, UserInfo, currentMessageList, conversationList } = useState({
-  UserInfo: (state) => state.data.user,
-  Selected: (state) => state.conversation.currentConversation,
-  currentMessageList: (state) => state.conversation.currentMessageList,
-  conversationList: (state) => state.conversation.conversationList,
+  UserInfo: state => state.data.user,
+  Selected: state => state.conversation.currentConversation,
+  currentMessageList: state => state.conversation.currentMessageList,
+  conversationList: state => state.conversation.conversationList,
 });
 
-const fnNews = (data) => {
+const fnNews = data => {
   const { type, lastMessage } = data;
   const { messageForShow, fromAccount } = lastMessage;
   const { username } = UserInfo.value;
@@ -125,14 +117,14 @@ const fnNews = (data) => {
   return messageForShow;
 };
 
-const isNotify = (item) => {
+const isNotify = item => {
   return item.messageRemindType == "AcceptNotNotify";
 };
-const isShowCount = (item) => {
+const isShowCount = item => {
   return item.unreadCount == 0;
 };
 
-const fnClass = (item) => {
+const fnClass = item => {
   let current = Selected.value;
   let select = item?.conversationID == current?.conversationID;
   if (select) {
@@ -140,7 +132,7 @@ const fnClass = (item) => {
   }
 };
 
-const closeMsg = (conv) => {
+const closeMsg = conv => {
   console.log(conv);
 };
 // 消息列表 右键菜单
@@ -148,7 +140,7 @@ const handleContextMenuEvent = (e, item) => {
   console.log(item);
   contextMenuItemInfo.value = item;
   // 会话
-  RIGHT_CLICK_CHAT_LIST.map((t) => {
+  RIGHT_CLICK_CHAT_LIST.map(t => {
     if (t.id == "pinged") {
       t.text = item.isPinned ? "取消置顶" : "会话置顶";
     }
@@ -162,11 +154,11 @@ const handleContextMenuEvent = (e, item) => {
 const dropHandler = (e, item) => {
   console.log(e, item);
 };
-const dragenterHandler = (e) => {};
-const dragleaveHandler = (e) => {};
+const dragenterHandler = e => {};
+const dragleaveHandler = e => {};
 
 // 会话点击
-const handleConvListClick = (data) => {
+const handleConvListClick = data => {
   // 切换会话
   commit("SET_CONVERSATION", {
     type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
@@ -178,7 +170,7 @@ const handleConvListClick = (data) => {
   dispatch("GET_MESSAGE_LIST", data);
 };
 
-const handleClickMenuItem = (item) => {
+const handleClickMenuItem = item => {
   const Info = contextMenuItemInfo.value;
   switch (item.id) {
     case "pinged": // 置顶
@@ -208,8 +200,10 @@ const disableRecMsg = async (data, off) => {
   });
 };
 // 删除会话
-const removeConv = async (data) => {
+const removeConv = async data => {
   console.log(data);
+  const { conversationID } = data;
+  dispatch("DELETE_SESSION", { id: conversationID });
 };
 // 置顶
 const pingConv = async (data, off) => {

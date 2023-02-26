@@ -367,3 +367,15 @@ export const updateGroupProfile = async params => {
       console.warn("updateGroupProfile error:", imError); // 修改群组资料失败的相关信息
     });
 };
+// 删除会话
+export const deleteConversation = params => {
+  const { convId } = params;
+  let promise = tim.deleteConversation(convId);
+  promise
+    .then(function (imResponse) {
+      const { conversationID } = imResponse.data; // 被删除的会话 ID
+    })
+    .catch(function (imError) {
+      console.warn("deleteConversation error:", imError); // 删除会话失败的相关信息
+    });
+};

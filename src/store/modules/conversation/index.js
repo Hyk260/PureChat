@@ -1,18 +1,15 @@
-import {
-  CONVERSATIONTYPE,
-  GET_MESSAGE_LIST,
-  HISTORY_MESSAGE_COUNT,
-} from "@/store/mutation-types";
+import { CONVERSATIONTYPE, GET_MESSAGE_LIST, HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 import { addTimeDivider } from "@/utils/addTimeDivider";
 import {
   getMsgList,
+  deleteConversation,
   getConversationProfile,
   setMessageRead,
 } from "@/api/im-sdk-api";
-import { deepClone } from '@/utils/clone';
+import { deepClone } from "@/utils/clone";
 
-const getBaseTime = (list) => {
-  return list?.length > 0 ? list.find((t) => t.isTimeDivider).time : 0;
+const getBaseTime = list => {
+  return list?.length > 0 ? list.find(t => t.isTimeDivider).time : 0;
 };
 
 const conversation = {
@@ -31,8 +28,8 @@ const conversation = {
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
     conversationList: [], //会话列表数据
-    activetab: 'whole',
-    outside: 'news', // 侧边栏初始状态
+    activetab: "whole",
+    outside: "news", // 侧边栏初始状态
   },
   mutations: {
     // 设置历史消息
@@ -89,9 +86,7 @@ const conversation = {
           const { convId, message } = payload;
           const history = state.historyMessageList.get(convId);
           if (!history) return;
-          const newHistory = history.filter(
-            (item) => !item.isTimeDivider && !item.isDeleted
-          );
+          const newHistory = history.filter(item => !item.isTimeDivider && !item.isDeleted);
           const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
           state.historyMessageList.set(convId, newHistoryList);
           state.currentMessageList = newHistoryList;
@@ -104,7 +99,7 @@ const conversation = {
           let history = state.historyMessageList.get(convId);
           if (!history) return;
           if (oldConvId !== convId) return;
-          const newHistory = history.filter((item) => !item.isTimeDivider);
+          const newHistory = history.filter(item => !item.isTimeDivider);
           const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
           state.historyMessageList.set(convId, newHistoryList);
           state.currentMessageList = newHistoryList;
@@ -126,8 +121,11 @@ const conversation = {
         }
         // 将消息标记为已读
         case CONVERSATIONTYPE.MARKE_MESSAGE_AS_READED: {
-          const { convId, message: { unreadCount } } = payload
-          if (unreadCount == "0") return
+          const {
+            convId,
+            message: { unreadCount },
+          } = payload;
+          if (unreadCount == "0") return;
           setMessageRead(convId);
           break;
         }
@@ -159,7 +157,7 @@ const conversation = {
             state.currentConversation = payload;
             // 系统消息关闭聊天框
             state.showMsgBox = conversationID == "@TIM#SYSTEM" ? false : true;
-            state.showCheckbox = false
+            state.showCheckbox = false;
             if (state.currentConversation) {
               const history = state.historyMessageList.get(conversationID);
               state.currentMessageList = history;
@@ -197,52 +195,49 @@ const conversation = {
     SET_MENTION_MODAL(state, action) {
       const { type } = state.currentConversation;
       if (type !== "GROUP") return;
-      state.isShowModal = action
+      state.isShowModal = action;
     },
     //  切换列表 全部 未读 提及我
     TOGGLE_LIST(state, action) {
-      state.activetab = action
+      state.activetab = action;
     },
     SET_FORWARD_DATA(state, action) {
-      const { type, payload } = action
-      const { ID } = payload
+      const { type, payload } = action;
+      const { ID } = payload;
       switch (type) {
-        case 'set':
-          state.forwardData.set(ID, payload)
+        case "set":
+          state.forwardData.set(ID, payload);
           break;
-        case 'del':
-          state.forwardData.delete(ID)
+        case "del":
+          state.forwardData.delete(ID);
           break;
       }
     },
     // 设置多选框状态
     SET_CHEC_BOX(state, flag) {
-      state.showCheckbox = flag
+      state.showCheckbox = flag;
     },
     // 设置聊天框状态
     SET_SHOW_MSG_BOX(state, flag) {
-      state.showMsgBox = flag
+      state.showMsgBox = flag;
     },
     // 切换侧边栏
     TAGGLE_OUE_SIDE(state, item) {
-      state.outside = item
-    }
+      state.outside = item;
+    },
   },
   actions: {
     // 获取消息列表
     async [GET_MESSAGE_LIST]({ commit, dispatch, state, rootState }, action) {
       let isSDKReady = rootState.user.isSDKReady;
       const { conversationID, type, toAccount } = action;
-      let status =
-        !state.currentMessageList || state.currentMessageList?.length == 0;
+      let status = !state.currentMessageList || state.currentMessageList?.length == 0;
       // 当前会话有值
       if (state.currentConversation && isSDKReady && status) {
-        const { isCompleted, messageList, nextReqMessageID } = await getMsgList(
-          {
-            conversationID: conversationID,
-            count: 15,
-          }
-        );
+        const { isCompleted, messageList, nextReqMessageID } = await getMsgList({
+          conversationID: conversationID,
+          count: 15,
+        });
         // 添加时间
         const addTimeDividerResponse = addTimeDivider(messageList).reverse();
         commit("SET_HISTORYMESSAGE", {
@@ -266,13 +261,13 @@ const conversation = {
         console.log(state.historyMessageList, "获取缓存");
       }
       // 消息已读上报
-      commit('SET_HISTORYMESSAGE', {
+      commit("SET_HISTORYMESSAGE", {
         type: "MARKE_MESSAGE_AS_READED",
         payload: {
           convId: conversationID,
-          message: action
-        }
-      })
+          message: action,
+        },
+      });
     },
     // 新增会话列表
     async CHEC_OUT_CONVERSATION({ state, commit }, action) {
@@ -282,13 +277,15 @@ const conversation = {
       });
       console.log(conversation);
     },
+    // 删除会话列表
+    async DELETE_SESSION({ state, commit }, action) {
+      const { id } = action;
+      deleteConversation({ convId: id });
+    },
   },
   getters: {
-    toAccount: (state) => {
-      if (
-        !state.currentConversation ||
-        !state.currentConversation.conversationID
-      ) {
+    toAccount: state => {
+      if (!state.currentConversation || !state.currentConversation.conversationID) {
         return "";
       }
       const { type, conversationID } = state.currentConversation;
@@ -302,16 +299,16 @@ const conversation = {
       }
     },
     tabList(state) {
-      const { activetab } = state
+      const { activetab } = state;
       switch (activetab) {
         case "unread":
-          return state.conversationList.filter((t) => t.unreadCount > 0)
+          return state.conversationList.filter(t => t.unreadCount > 0);
         case "mention":
-          return state.conversationList.filter((t) => t?.text)
+          return state.conversationList.filter(t => t?.text);
         default:
-          return state.conversationList
+          return state.conversationList;
       }
-    }
+    },
   },
 };
 
