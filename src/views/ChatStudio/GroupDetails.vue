@@ -51,7 +51,11 @@
           >
             <CircleCloseFilled />
           </el-icon>
-          <UserAvatar :className="'avatar-item'" :url="item.avatar" :nickName="item.nick" />
+          <UserAvatar
+            :className="'avatar-item'"
+            :url="item.avatar"
+            :nickName="item.nick"
+          />
         </div>
         <span class="group-member--add" @click="groupMemberAdd"> </span>
       </div>
@@ -67,20 +71,40 @@
     <div class="divider"></div>
     <!-- 退出 转让 -->
     <div class="group-operator">
-      <el-button type="danger" @click="handleQuitGroup"> 退出群组 </el-button>
+      <el-button v-if="isOwner" type="danger" @click="dismissGroup">
+        解散群组
+      </el-button>
+      <el-button v-else type="danger" @click="handleQuitGroup">
+        退出群组
+      </el-button>
       <div class="group-operator--divider"></div>
-      <el-button type="primary" plain v-show="isOwner" @click="transferGroup"> 转让群组 </el-button>
+      <el-button type="primary" plain v-show="isOwner" @click="transferGroup">
+        转让群组
+      </el-button>
     </div>
     <!-- 人员详情 -->
-    <Drawer title="人员详情" classModal="drawer-group" size="360px" ref="Refdrawerlist">
+    <Drawer
+      title="人员详情"
+      classModal="drawer-group"
+      size="360px"
+      ref="Refdrawerlist"
+    >
       <template #center>
-        <div class="member-list-drawer--item" v-for="item in currentMemberList" :key="item.userID">
+        <div
+          class="member-list-drawer--item"
+          v-for="item in currentMemberList"
+          :key="item.userID"
+        >
           <UserAvatar :url="item.avatar" :nickName="item.nick" />
           <span class="member-list-drawer--item__name">
             {{ item.nick }}
           </span>
-          <span class="owner" v-if="groupProfile.ownerID == item.userID"> 群主 </span>
-          <span class="admin" v-if="userProfile.userID == item.userID && false"> 自己 </span>
+          <span class="owner" v-if="groupProfile.ownerID == item.userID">
+            群主
+          </span>
+          <span class="admin" v-if="userProfile.userID == item.userID && false">
+            自己
+          </span>
         </div>
       </template>
     </Drawer>
@@ -92,7 +116,9 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="close"> 取消 </el-button>
-          <el-button type="primary" @click="addGroupMemberBtn"> 确认 </el-button>
+          <el-button type="primary" @click="addGroupMemberBtn">
+            确认
+          </el-button>
         </span>
       </template>
     </el-dialog>
@@ -106,10 +132,24 @@ import { UserFilled } from "@element-plus/icons-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
-import { updateGroupProfile, addGroupMember, deleteGroupMember, quitGroup } from "@/api/im-sdk-api";
+import {
+  updateGroupProfile,
+  addGroupMember,
+  deleteGroupMember,
+  quitGroup,
+} from "@/api/im-sdk-api";
+import { useI18n } from "vue-i18n";
 
+const { locale, t } = useI18n();
 const { state, commit, dispatch } = useStore();
-const { user, userProfile, groupDrawer, showMsgBox, groupProfile, currentMemberList } = useState({
+const {
+  user,
+  userProfile,
+  groupDrawer,
+  showMsgBox,
+  groupProfile,
+  currentMemberList,
+} = useState({
   user: state => state.data.user,
   userProfile: state => state.user.currentUserProfile,
   showMsgBox: state => state.conversation.showMsgBox,
@@ -117,7 +157,11 @@ const { user, userProfile, groupDrawer, showMsgBox, groupProfile, currentMemberL
   groupProfile: state => state.groupinfo.groupProfile,
   currentMemberList: state => state.groupinfo.currentMemberList,
 });
-const { isOwner, isAdmin, toAccount } = useGetters(["isOwner", "isAdmin", "toAccount"]);
+const { isOwner, isAdmin, toAccount } = useGetters([
+  "isOwner",
+  "isAdmin",
+  "toAccount",
+]);
 const input = ref("");
 const value = ref(true);
 const Refdrawerlist = ref();
@@ -134,8 +178,8 @@ const close = () => {
 };
 const RemovePeople = item => {
   ElMessageBox.confirm(`确定将 ${item.nick} 移出群聊?`, "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+    confirmButtonText: `${t("el.datepicker.confirm")}`,
+    cancelButtonText: `${t("el.datepicker.cancel")}`,
     type: "warning",
   })
     .then(() => {
@@ -174,11 +218,34 @@ const navigate = item => {
 const groupMemberAdd = () => {
   dialogVisible.value = true;
 };
+const dismissGroup = () => {
+  ElMessageBox.confirm("确定解散群聊?", "提示", {
+    confirmButtonText: `${t("el.datepicker.confirm")}`,
+    cancelButtonText: `${t("el.datepicker.cancel")}`,
+    type: "warning",
+  })
+    .then(() => {
+      dispatch("DISMISS_GROUP", { groupId: toAccount.value });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
 const transferGroup = () => {};
+
 const handleQuitGroup = () => {
-  quitGroup({
-    groupId: toAccount.value,
-  });
+  ElMessageBox.confirm("确定退出群聊?", "提示", {
+    confirmButtonText: `${t("el.datepicker.confirm")}`,
+    cancelButtonText: `${t("el.datepicker.cancel")}`,
+    type: "warning",
+  })
+    .then(() => {
+      dispatch("QUIT_GROUP", { groupId: toAccount.value });
+    })
+    .catch(err => {
+      console.log(err);
+      console.log(groupProfile.value);
+    });
 };
 </script>
 

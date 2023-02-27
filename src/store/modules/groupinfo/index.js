@@ -1,4 +1,15 @@
-import { getGroupMemberList, getGroupProfile, getGroupList } from "@/api/im-sdk-api/index";
+import {
+  getGroupMemberList,
+  getGroupProfile,
+  getGroupList,
+  quitGroup,
+  createGroup,
+} from "@/api/im-sdk-api/index";
+
+import {
+  dismissGroup,
+} from "@/api/im-sdk-api/group";
+
 export default {
   // namespaced: true,
   state: {
@@ -46,8 +57,22 @@ export default {
     },
     async getGroupList({ state }, payload) {
       const list = await getGroupList();
-      console.log(list);
       state.groupList = list;
     },
+    // 退出群聊
+    QUIT_GROUP({ state }, payload) {
+      const { groupId } = payload
+      quitGroup({ groupId });
+    },
+    // 创建群聊
+    CREATE_GROUP({ state }, payload) {
+      const { groupName } = payload;
+      createGroup({ groupName });
+    },
+    // 解散群组
+    DISMISS_GROUP({ state }, payload) {
+      const { groupId } = payload;
+      dismissGroup(groupId)
+    }
   },
 };

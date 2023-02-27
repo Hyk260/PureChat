@@ -1,6 +1,7 @@
 <template>
   <div class="message-view__item--text">
-    {{ message.from }}
+    <!-- {{ message.from }} -->
+    待开发
   </div>
 </template>
 

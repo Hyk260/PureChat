@@ -6,7 +6,6 @@ import {
   getCurrentInstance,
 } from "vue";
 import { throttle } from "lodash";
-// import { throttle } from "@/utils/throttle";
 import { useResizeListener } from "@/utils/hooks";
 const { addResizeListener, removeResizeListener } = useResizeListener();
 

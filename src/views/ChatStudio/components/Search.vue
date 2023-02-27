@@ -28,7 +28,9 @@
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">{{ $t("el.messagebox.cancel") }}</el-button>
+          <el-button @click="dialogVisible = false">{{
+            $t("el.messagebox.cancel")
+          }}</el-button>
           <el-button type="primary" @click="createGroupBtn">
             {{ $t("el.messagebox.confirm") }}
           </el-button>
@@ -40,19 +42,22 @@
 
 <script setup>
 import { ref, watch } from "vue";
-import { Search } from "@element-plus/icons-vue";
+import { Search, Plus } from "@element-plus/icons-vue";
 import { useDebouncedRef } from "@/utils";
 import { createGroup } from "@/api/im-sdk-api";
+import { useStore } from "vuex";
 const appoint = ref("");
 const input = ref("");
 // const appoint = useDebouncedRef("");
 const dialogVisible = ref(false);
+const { state, commit, dispatch } = useStore();
+
 const opendialog = () => {
   dialogVisible.value = true;
 };
 const createGroupBtn = () => {
   dialogVisible.value = false;
-  createGroup({
+  dispatch("CREATE_GROUP", {
     groupName: input.value,
   });
   input.value = "";
@@ -84,7 +89,7 @@ watch(appoint, value => {
   align-items: center;
   width: 32px;
   height: 32px;
-  background: #409eff80;
+  background: #54b4ef;
   border-radius: 2px;
   font-size: 24px;
   color: #fff;

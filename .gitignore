@@ -3,9 +3,10 @@ node_modules
 /server
 /dist
 
+yarn.lock
 
 # local env files
-.env.local
+.env.local 
 .env.*.local
 
 # Log files
