@@ -45,16 +45,13 @@ export const getGroupList = async params => {
 // 创建群
 export const createGroup = params => {
   const { groupName } = params;
+  // GRP_PUBLIC  "Public"  陌生人社交群
+  // GRP_PRIVATE "Private"好友工作群
+  // GRP_CHATROOM "ChatRoom" 临时会议群
+  console.log(TIM.TYPES)
   let promise = tim.createGroup({
-    type: TIM.TYPES.GRP_WORK,
+    type: TIM.TYPES.GRP_PUBLIC,
     name: groupName,
-    // memberList: [{
-    //   userID: 'user1',
-    //   // 群成员维度的自定义字段，默认情况是没有的，需要开通，详情请参阅自定义字段
-    //   memberCustomField: [{ key: 'group_member_test', value: 'test' }]
-    // }, {
-    //   userID: 'user2'
-    // }] // 如果填写了 memberList，则必须填写 userID
   });
   promise
     .then(function (imResponse) {
