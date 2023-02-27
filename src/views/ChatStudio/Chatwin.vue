@@ -6,7 +6,12 @@
     :class="[showMsgBox ? '' : 'style-MsgBox']"
     id="svgTop"
   >
-    <el-scrollbar class="scrollbar-content" ref="scrollbarRef" @scroll="scrollbar" always>
+    <el-scrollbar
+      class="scrollbar-content"
+      ref="scrollbarRef"
+      @scroll="scrollbar"
+      always
+    >
       <div class="message-view" ref="messageViewRef">
         <div
           v-for="(item, index) in currentMessageList"
@@ -14,10 +19,16 @@
           :class="{ 'reset-select': !showCheckbox }"
         >
           <!-- 加载更多 -->
-          <LoadMore :noMore="noMore" v-if="index === currentMessageList.length - 1" />
+          <LoadMore
+            :noMore="noMore"
+            v-if="index === currentMessageList.length - 1"
+          />
           <div class="message-view__item--blank"></div>
           <!-- 时间 -->
-          <div class="message-view__item--time-divider" v-if="item.isTimeDivider">
+          <div
+            class="message-view__item--time-divider"
+            v-if="item.isTimeDivider"
+          >
             {{ timeFormat(item.time * 1000, true) }}
           </div>
           <!-- 消息 is-self is-other-->
@@ -34,11 +45,23 @@
           >
             <Checkbox
               @click.stop="handleCilck($event, item, 'input')"
-              v-show="showCheckbox && !item.isRevoked && item.type !== 'TIMGroupTipElem'"
+              v-show="
+                showCheckbox &&
+                !item.isRevoked &&
+                item.type !== 'TIMGroupTipElem'
+              "
             />
             <!-- 头像 -->
-            <div class="picture" v-if="!item.isRevoked && item.type !== 'TIMGroupTipElem'">
-              <el-avatar :size="36" shape="square" :src="item.avatar || circleUrl"> </el-avatar>
+            <div
+              class="picture"
+              v-if="!item.isRevoked && item.type !== 'TIMGroupTipElem'"
+            >
+              <el-avatar
+                :size="36"
+                shape="square"
+                :src="item.avatar || circleUrl"
+              >
+              </el-avatar>
             </div>
             <!-- 内容 -->
             <div
@@ -49,7 +72,11 @@
               <name-component :item="item" />
               <!-- message-view__text message-view__img -->
               <div :class="Megtype(item.type)">
-                <component :is="loadMsgComponents(item.type, item)" :message="item"> </component>
+                <component
+                  :is="loadMsgComponents(item.type, item)"
+                  :message="item"
+                >
+                </component>
               </div>
             </div>
           </div>
@@ -84,8 +111,14 @@ import {
   computed,
   onBeforeUnmount,
   toRefs,
+  defineAsyncComponent,
 } from "vue";
-import { squareUrl, circleUrl, MENU_LIST, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
+import {
+  squareUrl,
+  circleUrl,
+  MENU_LIST,
+  RIGHT_CLICK_MENU_LIST,
+} from "./utils/menu";
 import { useStore } from "vuex";
 import { fncopy, dragControllerDiv } from "./utils/utils";
 
@@ -96,11 +129,12 @@ import { useEventListener } from "@/utils/hooks/index";
 import { useState } from "@/utils/hooks/useMapper";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import Checkbox from "./components/Checkbox.vue";
-import TextElemItem from "./components/TextElemItem";
-import TipsElemItem from "./components/TipsElemItem";
-import groupTipElement from "./components/groupTipElement.vue";
-import GroupSystemNoticeElem from "./components/GroupSystemNoticeElem.vue";
-import ImageElemItem from "./components/ImageElemItem";
+// import TextElemItem from "./components/TextElemItem";
+// import TipsElemItem from "./components/TipsElemItem";
+// import groupTipElement from "./components/groupTipElement.vue";
+// import ImageElemItem from "./components/ImageElemItem";
+// import GroupSystemNoticeElem from "./components/GroupSystemNoticeElem.vue";
+
 import LoadMore from "./components/LoadMore.vue";
 import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 import { deleteMsgList, revokeMsg, getMsgList } from "@/api/im-sdk-api";
@@ -251,12 +285,11 @@ const getMoreMsg = async () => {
     const { conversationID, toAccount } = Conv;
     const msg = validatelastMessage(msglist);
     const { ID } = msg;
-    console.log(ID);
     const result = await getMsgList({
       conversationID: conversationID,
       nextReqMessageID: ID,
     });
-    console.log(result, "getMsgList");
+    // console.log(result, "getMsgList");
     const { isCompleted, messageList, nextReqMessageID } = result;
     let noMore = true;
     let Loadmore = messageList.length < HISTORY_MESSAGE_COUNT;
@@ -288,7 +321,7 @@ const getMoreMsg = async () => {
       type: "UPDATE_NOMORE",
       payload: true,
     });
-    console.log(e, "err更多消息");
+    // console.log(e, "err更多消息");
   }
 };
 
@@ -296,12 +329,25 @@ const getMoreMsg = async () => {
 const loadMsgComponents = (elem_type, item) => {
   // console.log(elem_type, item);
   let resp = "";
-  let CompMap = {
-    TextElemItem: TextElemItem,
-    TipsElemItem: TipsElemItem,
-    ImageElemItem: ImageElemItem,
-    groupTipElement: groupTipElement,
-    GroupSystemNoticeElem: GroupSystemNoticeElem,
+  const CompMap = {
+    TextElemItem: defineAsyncComponent(() =>
+      import("./ElemItemTypes/TextElemItem.vue")
+    ),
+    TipsElemItem: defineAsyncComponent(() =>
+      import("./ElemItemTypes/TipsElemItem.vue")
+    ),
+    ImageElemItem: defineAsyncComponent(() =>
+      import("./ElemItemTypes/ImageElemItem.vue")
+    ),
+    CustomElemItem: defineAsyncComponent(() =>
+      import("./ElemItemTypes/CustomElemItem.vue")
+    ),
+    groupTipElement: defineAsyncComponent(() =>
+      import("./ElemItemTypes/groupTipElement.vue")
+    ),
+    GroupSystemNoticeElem: defineAsyncComponent(() =>
+      import("./ElemItemTypes/GroupSystemNoticeElem.vue")
+    ),
   };
   // 撤回消息
   if (item.isRevoked) {
@@ -316,13 +362,16 @@ const loadMsgComponents = (elem_type, item) => {
       resp = "ImageElemItem";
       break;
     case "TIMFileElem": // 文件消息
-      resp = "";
+      resp = "FileElemItem";
       break;
     case "TIMGroupTipElem": // 群消息提示
       resp = "groupTipElement";
       break;
     case "TIMGroupSystemNoticeElem": // 系统通知
       resp = "GroupSystemNoticeElem";
+      break;
+    case "TIMCustomElem": // 自定义消息
+      resp = "CustomElemItem";
       break;
     default:
       resp = "";
@@ -350,6 +399,9 @@ const Megtype = elem_type => {
       break;
     case "TIMGroupSystemNoticeElem":
       resp = "message-view__system"; // 系统通知
+      break;
+    case "TIMCustomElem":
+      resp = "message-view__text message-view__custom"; // 自定义消息
       break;
     default:
       resp = "";
