@@ -278,10 +278,18 @@ const conversation = {
       console.log(conversation);
     },
     // 删除会话列表
-    async DELETE_SESSION({ state, commit }, action) {
-      const { id } = action;
-      deleteConversation({ convId: id });
+    async DELETE_SESSION({ state, commit, dispatch }, action) {
+      const { convId } = action;
+      const { code } = await deleteConversation({ convId });
+      if (code !== 0) return
+      dispatch("CLEAR_CURRENT_MSG")
     },
+    // 清除当前消息记录
+    async CLEAR_CURRENT_MSG({ state, commit }, action) {
+      state.currentConversation = null;
+      state.currentMessageList = [];
+      commit("SET_SHOW_MSG_BOX", false)
+    }
   },
   getters: {
     toAccount: state => {

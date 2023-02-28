@@ -42,44 +42,6 @@ export const getGroupList = async params => {
   }
 };
 
-// 创建群
-export const createGroup = params => {
-  const { groupName } = params;
-  // GRP_PUBLIC  "Public"  陌生人社交群
-  // GRP_PRIVATE "Private"好友工作群
-  // GRP_CHATROOM "ChatRoom" 临时会议群
-  console.log(TIM.TYPES)
-  let promise = tim.createGroup({
-    type: TIM.TYPES.GRP_PUBLIC,
-    name: groupName,
-  });
-  promise
-    .then(function (imResponse) {
-      // 创建成功
-      console.log(imResponse.data.group); // 创建的群的资料
-      // 创建群时指定了成员列表，但是成员中存在超过了“单个用户可加入群组数”限制的情况
-      // 一个用户 userX 最多允许加入 N 个群，如果已经加入了 N 个群，此时创建群再指定 userX 为群成员，则 userX 不能正常加群
-      // SDK 将 userX 的信息放入 overLimitUserIDList，供接入侧处理
-      console.log(imResponse.data.overLimitUserIDList); // 超过了“单个用户可加入群组数”限制的用户列表，v2.10.2起支持
-    })
-    .catch(function (imError) {
-      console.warn("createGroup error:", imError); // 创建群组失败的相关信息
-    });
-};
-
-// 退出群
-export const quitGroup = params => {
-  const { groupId } = params;
-  let promise = tim.quitGroup(groupId);
-  promise
-    .then(function (imResponse) {
-      console.log(imResponse.data.groupID); // 退出成功的群 ID
-    })
-    .catch(function (imError) {
-      console.warn("quitGroup error:", imError); // 退出群组失败的相关信息
-    });
-};
-
 // 添加群成员
 export const addGroupMember = async params => {
   const { groupID, user } = params;
@@ -365,14 +327,13 @@ export const updateGroupProfile = async params => {
     });
 };
 // 删除会话
-export const deleteConversation = params => {
+export const deleteConversation = async params => {
   const { convId } = params;
-  let promise = tim.deleteConversation(convId);
-  promise
-    .then(function (imResponse) {
-      const { conversationID } = imResponse.data; // 被删除的会话 ID
-    })
-    .catch(function (imError) {
-      console.warn("deleteConversation error:", imError); // 删除会话失败的相关信息
-    });
+  const {
+    code,
+    data: { conversationID: ID }
+  } = await tim.deleteConversation(convId)
+  return {
+    code, ID
+  }
 };

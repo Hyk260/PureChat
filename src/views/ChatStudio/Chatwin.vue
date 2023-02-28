@@ -129,11 +129,6 @@ import { useEventListener } from "@/utils/hooks/index";
 import { useState } from "@/utils/hooks/useMapper";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import Checkbox from "./components/Checkbox.vue";
-// import TextElemItem from "./components/TextElemItem";
-// import TipsElemItem from "./components/TipsElemItem";
-// import groupTipElement from "./components/groupTipElement.vue";
-// import ImageElemItem from "./components/ImageElemItem";
-// import GroupSystemNoticeElem from "./components/GroupSystemNoticeElem.vue";
 
 import LoadMore from "./components/LoadMore.vue";
 import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";

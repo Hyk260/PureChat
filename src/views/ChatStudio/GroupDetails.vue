@@ -136,7 +136,6 @@ import {
   updateGroupProfile,
   addGroupMember,
   deleteGroupMember,
-  quitGroup,
 } from "@/api/im-sdk-api";
 import { useI18n } from "vue-i18n";
 
@@ -149,6 +148,7 @@ const {
   showMsgBox,
   groupProfile,
   currentMemberList,
+  currentConversation,
 } = useState({
   user: state => state.data.user,
   userProfile: state => state.user.currentUserProfile,
@@ -156,6 +156,7 @@ const {
   groupDrawer: state => state.groupinfo.groupDrawer,
   groupProfile: state => state.groupinfo.groupProfile,
   currentMemberList: state => state.groupinfo.currentMemberList,
+  currentConversation: state => state.conversation.currentConversation,
 });
 const { isOwner, isAdmin, toAccount } = useGetters([
   "isOwner",
@@ -225,13 +226,19 @@ const dismissGroup = () => {
     type: "warning",
   })
     .then(() => {
-      dispatch("DISMISS_GROUP", { groupId: toAccount.value });
+      const { conversationID } = currentConversation.value;
+      dispatch("DISMISS_GROUP", {
+        convId: conversationID,
+        groupId: toAccount.value,
+      });
     })
     .catch(err => {
       console.log(err);
     });
 };
-const transferGroup = () => {};
+const transferGroup = () => {
+  console.log();
+};
 
 const handleQuitGroup = () => {
   ElMessageBox.confirm("确定退出群聊?", "提示", {
@@ -240,7 +247,11 @@ const handleQuitGroup = () => {
     type: "warning",
   })
     .then(() => {
-      dispatch("QUIT_GROUP", { groupId: toAccount.value });
+      const { conversationID } = currentConversation.value;
+      dispatch("QUIT_GROUP", {
+        convId: conversationID,
+        groupId: toAccount.value,
+      });
     })
     .catch(err => {
       console.log(err);

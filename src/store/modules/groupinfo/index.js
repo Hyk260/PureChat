@@ -2,11 +2,12 @@ import {
   getGroupMemberList,
   getGroupProfile,
   getGroupList,
-  quitGroup,
-  createGroup,
+  deleteConversation,
 } from "@/api/im-sdk-api/index";
 
 import {
+  quitGroup,
+  createGroup,
   dismissGroup,
 } from "@/api/im-sdk-api/group";
 
@@ -60,19 +61,23 @@ export default {
       state.groupList = list;
     },
     // 退出群聊
-    QUIT_GROUP({ state }, payload) {
-      const { groupId } = payload
-      quitGroup({ groupId });
+    async QUIT_GROUP({ state, dispatch }, payload) {
+      const { groupId, convId } = payload
+      const { code } = await quitGroup({ groupId });
+      if (code !== 0) return
+      dispatch("DELETE_SESSION", { convId });
     },
     // 创建群聊
-    CREATE_GROUP({ state }, payload) {
+    async CREATE_GROUP({ state }, payload) {
       const { groupName } = payload;
-      createGroup({ groupName });
+      await createGroup({ groupName });
     },
     // 解散群组
-    DISMISS_GROUP({ state }, payload) {
-      const { groupId } = payload;
-      dismissGroup(groupId)
+    async DISMISS_GROUP({ state, dispatch, commit }, payload) {
+      const { groupId, convId } = payload;
+      const { code, groupID } = await dismissGroup(groupId)
+      if (code !== 0) return
+      dispatch("DELETE_SESSION", { convId });
     }
   },
 };

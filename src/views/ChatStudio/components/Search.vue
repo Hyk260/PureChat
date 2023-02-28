@@ -44,7 +44,6 @@
 import { ref, watch } from "vue";
 import { Search, Plus } from "@element-plus/icons-vue";
 import { useDebouncedRef } from "@/utils";
-import { createGroup } from "@/api/im-sdk-api";
 import { useStore } from "vuex";
 const appoint = ref("");
 const input = ref("");

@@ -12,7 +12,7 @@
       draggable="true"
       class="message-item"
       v-for="item in tabList"
-      :key="item"
+      :key="item.conversationID"
       :class="fnClass(item)"
       @click="handleConvListClick(item)"
       @drop="dropHandler(e, item)"
@@ -24,7 +24,11 @@
       <!-- 置顶图标 -->
       <div class="pinned-tag" v-if="item.isPinned"></div>
       <!-- 关闭按钮 -->
-      <FontIcon iconName="close" class="close-btn" @click.stop="closeMsg(item)" />
+      <FontIcon
+        iconName="close"
+        class="close-btn"
+        @click.stop="closeMsg(item)"
+      />
       <el-badge is-dot :hidden="isShowCount(item) || !isNotify(item)">
         <img
           v-if="item.type == 'C2C'"
@@ -81,7 +85,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { getImageType } from "@/utils/message-input-utils";
-import { squareUrl, RIGHT_CLICK_CHAT_LIST, RIGHT_CLICK_MENU_LIST } from "./utils/menu";
+import {
+  squareUrl,
+  RIGHT_CLICK_CHAT_LIST,
+  RIGHT_CLICK_MENU_LIST,
+} from "./utils/menu";
 import { debounce } from "@/utils/debounce";
 import { getRoles } from "@/api/roles";
 import { generateUUID } from "@/utils/index";
@@ -95,8 +103,6 @@ import { addTimeDivider } from "@/utils/addTimeDivider";
 import { TIMpingConv, setMessageRemindType } from "@/api/im-sdk-api";
 
 const contextMenuItemInfo = ref([]);
-// eslint-disable-next-line no-undef
-// const emit = defineEmits(["convChange"]);
 
 const { state, getters, dispatch, commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
@@ -190,9 +196,7 @@ const handleClickMenuItem = item => {
 // 消息免打扰
 const disableRecMsg = async (data, off) => {
   const { type, toAccount, messageRemindType } = data;
-  // 系统消息
   if (type == "@TIM#SYSTEM") return;
-  // if (messageRemindType == "") return;
   await setMessageRemindType({
     userID: toAccount,
     RemindType: messageRemindType,
@@ -201,9 +205,8 @@ const disableRecMsg = async (data, off) => {
 };
 // 删除会话
 const removeConv = async data => {
-  console.log(data);
   const { conversationID } = data;
-  dispatch("DELETE_SESSION", { id: conversationID });
+  dispatch("DELETE_SESSION", { convId: conversationID });
 };
 // 置顶
 const pingConv = async (data, off) => {
