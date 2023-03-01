@@ -17,11 +17,19 @@
       </div>
     </div>
     <!-- 聊天框 -->
-    <div class="message-right" :class="{ 'style-group': groupDrawer }" id="svgBox">
+    <div
+      class="message-right"
+      :class="{ 'style-group': groupDrawer }"
+      id="svgBox"
+    >
       <Header />
       <!-- 聊天窗口 -->
       <Chatwin ref="ChatRef" />
-      <div id="svgResize" @mouseover="dragControllerDiv(ChatRef)" v-if="showMsgBox">
+      <div
+        id="svgResize"
+        @mouseover="dragControllerDiv(ChatRef)"
+        v-if="showMsgBox"
+      >
         <!-- <div class="back-to-the-bottom" @click="toBottom">
           <el-icon class="svg-left">
             <DArrowLeft />
@@ -72,16 +80,23 @@ const activeName = ref("whole");
 const { state, dispatch, commit } = useStore();
 
 const { toAccount } = useGetters(["toAccount"]);
-const { networkStatus, conver, user, outside, groupDrawer, showMsgBox, conversationList } =
-  useState({
-    outside: state => state.conversation.outside,
-    networkStatus: state => state.conversation.networkStatus,
-    user: state => state.data.user,
-    conver: state => state.conversation.currentConversation,
-    showMsgBox: state => state.conversation.showMsgBox,
-    groupDrawer: state => state.groupinfo.groupDrawer,
-    conversationList: state => state.conversation.conversationList,
-  });
+const {
+  networkStatus,
+  conver,
+  user,
+  outside,
+  groupDrawer,
+  showMsgBox,
+  conversationList,
+} = useState({
+  outside: (state) => state.conversation.outside,
+  networkStatus: (state) => state.conversation.networkStatus,
+  user: (state) => state.data.user,
+  conver: (state) => state.conversation.currentConversation,
+  showMsgBox: (state) => state.conversation.showMsgBox,
+  groupDrawer: (state) => state.groupinfo.groupDrawer,
+  conversationList: (state) => state.conversation.conversationList,
+});
 const handleClick = ({ props }, event) => {
   const { label, name } = props;
   commit("TOGGLE_LIST", name);

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-box height-full">
+  <div class="flex height-full">
     <!-- 侧边栏 -->
     <SideBar />
     <!-- 主体 -->

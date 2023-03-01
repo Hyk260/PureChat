@@ -3,8 +3,12 @@
     <div class="message-info-views">
       <header-view :list="Conver" />
     </div>
-    <div class="flex-box">
-      <div class="message-info-add" v-show="Conver.type == 'GROUP'" title="添加成员">
+    <div class="flex">
+      <div
+        class="message-info-add"
+        v-show="Conver.type == 'GROUP'"
+        title="添加成员"
+      >
         <svg-icon iconClass="tianjia" class="icon-hover" />
       </div>
       <div
@@ -17,7 +21,13 @@
       </div>
     </div>
 
-    <Drawer title="群详情" classModal="drawer-group" size="360px" :modal="true" ref="Refdrawer">
+    <Drawer
+      title="群详情"
+      classModal="drawer-group"
+      size="360px"
+      :modal="true"
+      ref="Refdrawer"
+    >
       <template #center>
         <GroupDetails />
       </template>
@@ -36,14 +46,14 @@ import { useStore } from "vuex";
 const Refdrawer = ref();
 const { state, commit, dispatch } = useStore();
 const { Conver, groupDrawer } = useState({
-  groupDrawer: state => state.groupinfo.groupDrawer,
-  Conver: state => state.conversation.currentConversation,
+  groupDrawer: (state) => state.groupinfo.groupDrawer,
+  Conver: (state) => state.conversation.currentConversation,
 });
 const openSetup = () => {
   Refdrawer.value.handleOpen();
 };
 
-const HeaderView = props => {
+const HeaderView = (props) => {
   const { list } = props;
   if (!list) return;
   const { type } = list;
@@ -60,7 +70,11 @@ const HeaderView = props => {
       const {
         groupProfile: { name, groupID },
       } = list;
-      fn = h("span", { onClick: () => openSetup(), class: "style-group" }, name || groupID);
+      fn = h(
+        "span",
+        { onClick: () => openSetup(), class: "style-group" },
+        name || groupID
+      );
       break;
     case "@TIM#SYSTEM":
       fn = h("span", { class: "style-system" }, "系统通知");

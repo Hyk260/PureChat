@@ -9,7 +9,7 @@
                 <el-form
                   label-width="100px"
                   :model="formLabelAlign"
-                  class="flex-box"
+                  class="flex"
                 >
                   <el-form-item label="角色名称">
                     <el-input
@@ -31,7 +31,7 @@
             </template>
             <el-skeleton animated :rows="12" :loading="false">
               <template #default>
-                <div class="margin_b-5">
+                <div class="mb-5">
                   <el-button size="small" plain @click="AddRoleBtn">
                     新增角色
                   </el-button>
@@ -114,7 +114,7 @@
                   small
                   background
                   align="center"
-                  class="margin_t-5"
+                  class="mt-5"
                   :default-current-page="5"
                   :total="tableData.length"
                   :page-sizes="[10, 15, 20]"

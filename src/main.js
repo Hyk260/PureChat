@@ -22,7 +22,7 @@ loadAllassembly(app);
 // 自定义svg组件
 registerSvgIcon(app);
 
-getServerConfig(app).then(async config => {
+getServerConfig(app).then(async (config) => {
   app.use(router);
   await router.isReady();
   app.use(store);
@@ -31,4 +31,3 @@ getServerConfig(app).then(async config => {
   app.use(MotionPlugin);
   app.mount("#app");
 });
-

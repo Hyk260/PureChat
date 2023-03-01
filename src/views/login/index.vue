@@ -98,22 +98,9 @@
           </template>
           登录
         </el-button>
-        <!-- other -->
-        <el-form-item v-if="false">
-          <div class="w-full h-20px flex justify-between items-center">
-            <el-button
-              v-for="(item, index) in operates"
-              :key="index"
-              class="w-full mt-4"
-              size="default"
-              @click="onHandle(index + 1)"
-            >
-              {{ item.title }}
-            </el-button>
-          </div>
-        </el-form-item>
       </el-form>
-      <div class="margin_t-20 flex-box flex_j_c-space-between">
+      <!-- other -->
+      <div hidden class="mt-20 flex flex_j_c-space-between">
         <el-button
           v-for="(item, index) in operates"
           :key="item.title"

@@ -24,7 +24,7 @@ const __APP_INFO__ = {
 };
 
 const path = require("path");
-const resolve = dir => {
+const resolve = (dir) => {
   return path.join(__dirname, dir);
 };
 
@@ -86,7 +86,7 @@ module.exports = {
     // 根路径
     config.resolve.alias.set("@", resolve("src"));
 
-    config.plugin("html").tap(args => {
+    config.plugin("html").tap((args) => {
       args[0].title = title; // 修改标题
       args[0].cdn = cdn; // CDN外链
       args[0].__APP_INFO__ = JSON.stringify(__APP_INFO__);

@@ -1,65 +1,37 @@
 // 外边框
 @for $i from 1 through 20 {
-  .margin-#{$i} {
-    margin: #{$i}px;
-  }
-
-  .margin-#{$i}-a {
-    margin: #{$i}px auto;
-  }
-
-  .margin-#{$i}-n {
-    margin: #{$i}px 0px;
-  }
-
-  .margin-n-#{$i} {
-    margin: 0px #{$i}px;
-  }
-
-  .margin_t-#{$i} {
+  .mt-#{$i} {
     margin-top: #{$i}px;
   }
 
-  .margin_r-#{$i} {
+  .mr-#{$i} {
     margin-right: #{$i}px;
   }
 
-  .margin_b-#{$i} {
+  .mb-#{$i} {
     margin-bottom: #{$i}px;
   }
 
-  .margin_l-#{$i} {
+  .ml-#{$i} {
     margin-left: #{$i}px;
   }
 }
 
 // 内边框
 @for $i from 1 through 20 {
-  .padding-#{$i} {
-    padding: #{$i}px;
-  }
-
-  .padding-#{$i}-n {
-    padding: #{$i}px 0px;
-  }
-
-  .padding-n-#{$i} {
-    padding: 0px #{$i}px;
-  }
-
-  .padding_t-#{$i} {
+  .pt-#{$i} {
     padding-top: #{$i}px;
   }
 
-  .padding_r-#{$i} {
+  .pr-#{$i} {
     padding-right: #{$i}px;
   }
 
-  .padding_b-#{$i} {
+  .pb-#{$i} {
     padding-bottom: #{$i}px;
   }
 
-  .padding_l-#{$i} {
+  .pl-#{$i} {
     padding-left: #{$i}px;
   }
 }
@@ -74,13 +46,10 @@ $alignContents: flex-start, flex-end, center, space-between, space-around,
   stretch;
 
 .flex {
-
   // todo: 容器属性
-  &-box {
-    display: flex;
-    display: -webkit-flex;
-    /* Safari */
-  }
+  display: flex;
+  display: -webkit-flex;
+  /* Safari */
 
   // flex-direction
   &_d {
@@ -129,7 +98,6 @@ $alignContents: flex-start, flex-end, center, space-between, space-around,
 
   // todo: 子元素属性
   &-item {
-
     // flex: flex-grow flex-shrink flex-basis
     &_f-a {
       flex: auto;

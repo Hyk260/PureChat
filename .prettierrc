@@ -4,7 +4,7 @@
   "tabWidth": 2,
   "printWidth": 80,
   "proseWrap": "preserve",
-  "arrowParens": "avoid",
+  "arrowParens": "always",
   "semi": true,
   "singleQuote": false,
   "jsxSingleQuote": true,

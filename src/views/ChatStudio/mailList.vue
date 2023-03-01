@@ -1,9 +1,13 @@
 <template>
-  <div class="flex-box width-full style-mail">
+  <div class="flex width-full style-mail">
     <div class="abv" v-if="false">
       <el-tabs v-model="activeName" class="style-tabs" @tab-click="taggleClick">
         <el-tab-pane label="通讯录" name="first">
-          <el-tree :data="group_list" :props="defaultProps" @node-click="handleNodeClick">
+          <el-tree
+            :data="group_list"
+            :props="defaultProps"
+            @node-click="handleNodeClick"
+          >
             <template #default="{ node, data }">
               <div class="custom-node">
                 <span @click="handleClick(node, data)">
@@ -32,7 +36,7 @@ const defaultProps = {
 const activeName = ref("first");
 const { state, dispatch, commit } = useStore();
 const { groupList } = useState({
-  groupList: state => state.groupinfo.groupList,
+  groupList: (state) => state.groupinfo.groupList,
 });
 
 const taggleClick = (tab, event) => {
@@ -43,7 +47,7 @@ const handleClick = (node, { groupID = "" }) => {
   dispatch("CHEC_OUT_CONVERSATION", { convId: `GROUP${groupID}` });
   commit("TAGGLE_OUE_SIDE", "news");
 };
-const handleNodeClick = data => {
+const handleNodeClick = (data) => {
   // console.log(data);
 };
 

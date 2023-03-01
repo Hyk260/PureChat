@@ -42,7 +42,6 @@ export const dragControllerDiv = (node) => {
 
 // 复制
 export const fncopy = async (data) => {
-  console.log(data);
   const { elements } = data;
   const { content, type } = elements[0];
   // 文本
