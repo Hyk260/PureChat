@@ -5,7 +5,7 @@ module.exports = {
     node: true,
   },
   extends: [
-    'plugin:prettier/recommended',
+    // 'plugin:prettier/recommended',
     'plugin:vue/vue3-essential', //  检查 Vue3 语法
     'eslint:recommended', // 使用 ESLint 推荐规则
     '@vue/prettier' // 集成 Prettier，确保 ESLint 规则和 Prettier 规则相一致。
@@ -23,12 +23,7 @@ module.exports = {
     'arrow-parens': ['error', 'always'], // 规则用于控制箭头函数的参数括号，'always'表示参数必须加上括号。
     // "arrow-body-style": ["error", "always"], // 该规则可以强制或禁止箭头函数体使用大括号。
     // 'prefer-arrow-callback': 'off',
-    'prettier/prettier': [
-      'warn',
-      {
-        endOfLine: 'auto',
-      },
-    ],
+    'prettier/prettier': 'off'
   },
 };
 

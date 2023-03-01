@@ -2,11 +2,12 @@ import { createApp, version } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import { getServerConfig } from "./config";
 
 import "@/styles/index.scss";
 import "v-contextmenu/dist/themes/default.css";
 
-import { i18nPlugin, useI18n } from "./plugins/i18n";
+import { useI18n } from "./plugins/i18n";
 import { useElIcons } from "./plugins/icons";
 import { loadAllassembly } from "./components";
 import { directive } from "v-contextmenu";
@@ -16,17 +17,18 @@ import { registerSvgIcon } from "./assets/icons/index";
 const app = createApp(App);
 
 app.directive("contextmenu", directive);
-// 加载所有插件
-// loadAllPlugins(app);
 // 自动加载组件
 loadAllassembly(app);
-// svg组件
+// 自定义svg组件
 registerSvgIcon(app);
 
-app.use(store);
-app.use(router);
-app.use(useI18n);
-app.use(i18nPlugin);
-app.use(useElIcons);
-app.use(MotionPlugin);
-app.mount("#app");
+getServerConfig(app).then(async config => {
+  app.use(router);
+  await router.isReady();
+  app.use(store);
+  app.use(useI18n);
+  app.use(useElIcons);
+  app.use(MotionPlugin);
+  app.mount("#app");
+});
+
