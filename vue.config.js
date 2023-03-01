@@ -1,6 +1,14 @@
 const pkg = require("./package.json");
 const dayjs = require("dayjs");
-const { cdn, title, externals, devServer, production, publicPath, performance } = require("./src/config/vue.custom.config");
+const {
+  cdn,
+  title,
+  externals,
+  devServer,
+  production,
+  publicPath,
+  performance,
+} = require("./src/config/vue.custom.config");
 
 const AutoImport = require("unplugin-auto-import/webpack");
 const Components = require("unplugin-vue-components/webpack"); // 组件按需引入

@@ -4,7 +4,14 @@ import qs from "qs";
 import config from "@/config/defaultSettings";
 const { BASE_API } = config;
 
-export const createForData = ({ name, type, size, fileName, uploadedSize = 0, file }) => {
+export const createForData = ({
+  name,
+  type,
+  size,
+  fileName,
+  uploadedSize = 0,
+  file,
+}) => {
   const formData = new FormData();
   formData.append("name", name);
   formData.append("type", type);

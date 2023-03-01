@@ -6,11 +6,12 @@ export const dismissGroup = async (params) => {
   const groupId = params;
   const {
     code,
-    data: { groupID }
-  } = await tim.dismissGroup(groupId)
+    data: { groupID },
+  } = await tim.dismissGroup(groupId);
   return {
-    code, groupID
-  }
+    code,
+    groupID,
+  };
 };
 
 /**
@@ -22,7 +23,7 @@ const GroupType = {
   GRP_WORK: TIM.TYPES.GRP_WORK, // 好友工作群，默认
   GRP_PUBLIC: TIM.TYPES.GRP_PUBLIC, // 陌生人社交群
   GRP_MEETING: TIM.TYPES.GRP_MEETING, // 临时会议群
-  GRP_AVCHATROOM: TIM.TYPES.GRP_AVCHATROOM // 直播群
+  GRP_AVCHATROOM: TIM.TYPES.GRP_AVCHATROOM, // 直播群
 };
 
 /**
@@ -35,21 +36,22 @@ export const createGroup = async (params, type = GroupType.GRP_MEETING) => {
   const { groupName } = params;
   const {
     code,
-    data: { group, overLimitUserIDList }
+    data: { group, overLimitUserIDList },
   } = await tim.createGroup({
     type,
     name: groupName,
   });
   return {
     code,
-    group
+    group,
   };
 };
 // 退出群
-export const quitGroup = async params => {
+export const quitGroup = async (params) => {
   const { groupId } = params;
-  const { code, data } = await tim.quitGroup(groupId)
+  const { code, data } = await tim.quitGroup(groupId);
   return {
-    code, data
-  }
+    code,
+    data,
+  };
 };

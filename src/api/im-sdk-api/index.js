@@ -331,9 +331,10 @@ export const deleteConversation = async params => {
   const { convId } = params;
   const {
     code,
-    data: { conversationID: ID }
-  } = await tim.deleteConversation(convId)
+    data: { conversationID: ID },
+  } = await tim.deleteConversation(convId);
   return {
-    code, ID
-  }
+    code,
+    ID,
+  };
 };
