@@ -3,10 +3,16 @@
   "editor.formatOnType": true,
   // 在保存时格式化文件。格式化程序必须可用，延迟后文件不能保存，并且编辑器不能关闭。
   "editor.formatOnSave": true,
+  // 针对某种语言，配置替代编辑器设置。
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // 一个制表符等于的空格数
   "editor.tabSize": 2,
+  // 控制编辑器是否自动格式化粘贴的内容。格式化程序必须可用，并且能针对文档中的某一范围进行格式化。
   "editor.formatOnPaste": true,
   // 控制具有未保存更改的编辑器的 自动保存。
   // "files.autoSave": "afterDelay",
@@ -23,9 +29,7 @@
   "files.associations": {
     "editor.snippetSuggestions": "top"
   },
-  "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
+  // 要在保存时运行的代码操作种类
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
