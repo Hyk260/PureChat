@@ -138,16 +138,12 @@ const VDebounceClick = {
 .el-aside {
   z-index: 9;
   box-shadow: 1px 0px 5px 0px rgb(0 0 0 / 10%);
-  :deep(.aside-item) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  :deep(.style-svg) {
-    color: #303133;
-    font-size: 1.25rem;
-  }
-  :deep(.aside-list) {
+}
+.aside-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .aside-list {
     width: 54px;
     height: 54px;
     text-align: center;
@@ -155,14 +151,21 @@ const VDebounceClick = {
     border-radius: 4px;
     cursor: pointer;
   }
-  :deep(.current) {
+  .style-svg {
+    color: #303133;
+    font-size: 1.25rem;
+  }
+
+  .current {
     background: #d9ecff;
   }
-  :deep(.icon-title) {
+  .icon-title {
+    color: var(--color-text);
     font-size: 12px;
     margin-top: 3px;
   }
 }
+
 .touxiang {
   height: 42px;
   margin: 16px 0 10px 0;

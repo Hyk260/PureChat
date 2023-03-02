@@ -7,15 +7,22 @@ html.dark {
 
   // --el-color-white: $backg-color;
   // --el-card-border-color: $border-style;
-  --el-menu-hover-bg-color: #4091f7;
-  .el-menu-item {
-    color: $color-white;
-    background-color: $backg-color;
-  }
-  .el-sub-menu {
-    background-color: $backg-color;
-    span {
-      color: $color-white;
-    }
-  }
+  // --el-menu-hover-bg-color: #4091f7;
+  // --el-text-color-regular: #fff;
+  // --el-text-color-primary: #fff;
+  // --el-drawer-bg-color: var(--color-body-bg);
+  // --el-color-white: #222222;
+
+  // .el-menu-item {
+  //   color: $color-white;
+  //   background-color: $backg-color;
+  // }
+
+  // .el-sub-menu {
+  //   background-color: $backg-color;
+
+  //   span {
+  //     color: $color-white;
+  //   }
+  // }
 }

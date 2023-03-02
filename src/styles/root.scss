@@ -10,10 +10,11 @@
   --color-primary-bg-for-transparent: rgba(189, 207, 255, 0.28);
   --color-secondary-bg-for-transparent: rgba(209, 209, 214, 0.28);
   --html-overflow-y: overlay;
-  --color-icon-hover:#409eff;
+  --color-icon-hover: #409eff;
 }
+
 // 暗黑主题
-[data-theme='dark'] {
+[data-theme="dark"] {
   --color-body-bg: #222222;
   --color-text: #ffffff;
   --color-primary: #335eea;

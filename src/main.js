@@ -5,6 +5,7 @@ import store from "./store";
 import { getServerConfig } from "./config";
 
 import "@/styles/index.scss";
+import "element-plus/theme-chalk/dark/css-vars.css";
 import "v-contextmenu/dist/themes/default.css";
 
 import { useI18n } from "./plugins/i18n";
