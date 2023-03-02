@@ -1,20 +1,9 @@
 <template>
-  <div>test</div>
+  <div>123</div>
 </template>
 
-<script>
-import { reactive, onMounted, onBeforeUnmount } from "vue";
-import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
-export default {
-  name: "Componentname",
-  components: {},
-  computed: {},
-  props: {},
-  data() {
-    return {};
-  },
-  methods: {},
-};
+<script setup>
+import { ref, reactive, toRefs, computed, watch, nextTick } from "vue";
 </script>
 
 <style lang="scss" scoped></style>
