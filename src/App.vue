@@ -20,7 +20,7 @@ export default defineComponent({
   },
   computed: {
     ...mapState({
-      lang: state => state.settings.lang,
+      lang: (state) => state.settings.lang,
     }),
     currentLocale() {
       return this.lang === "zh-CN" ? zhCn : en;

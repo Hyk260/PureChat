@@ -270,12 +270,20 @@ const conversation = {
       });
     },
     // 新增会话列表
-    async CHEC_OUT_CONVERSATION({ state, commit }, action) {
+    async CHEC_OUT_CONVERSATION({ state, commit, dispatch }, action) {
       const { convId } = action;
       const { conversation } = await getConversationProfile({
         conversationID: convId,
       });
-      console.log(conversation);
+      // 切换会话
+      commit("SET_CONVERSATION", {
+        type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
+        payload: conversation,
+      });
+      // 群详情信息
+      commit("setGroupProfile", conversation);
+      // 获取会话列表
+      dispatch("GET_MESSAGE_LIST", conversation);
     },
     // 删除会话列表
     async DELETE_SESSION({ state, commit, dispatch }, action) {

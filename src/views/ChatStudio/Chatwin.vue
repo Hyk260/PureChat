@@ -153,17 +153,17 @@ const {
   currentMessageList,
   currentConversation,
 } = useState({
-  userInfo: state => state.data.user,
-  noMore: state => state.conversation.noMore,
-  showMsgBox: state => state.conversation.showMsgBox,
-  forwardData: state => state.conversation.forwardData,
-  showCheckbox: state => state.conversation.showCheckbox,
-  needScrollDown: state => state.conversation.needScrollDown,
-  currentMessageList: state => state.conversation.currentMessageList,
-  currentConversation: state => state.conversation.currentConversation,
+  userInfo: (state) => state.data.user,
+  noMore: (state) => state.conversation.noMore,
+  showMsgBox: (state) => state.conversation.showMsgBox,
+  forwardData: (state) => state.conversation.forwardData,
+  showCheckbox: (state) => state.conversation.showCheckbox,
+  needScrollDown: (state) => state.conversation.needScrollDown,
+  currentMessageList: (state) => state.conversation.currentMessageList,
+  currentConversation: (state) => state.conversation.currentConversation,
 });
 
-const NameComponent = props => {
+const NameComponent = (props) => {
   const { item } = props;
   // 撤回消息 群提示消息 不显示
   const { isRevoked, type, from, nick, conversationType } = item;
@@ -194,7 +194,7 @@ const UpdataScrollInto = () => {
   });
 };
 
-const updateLoadMore = newValue => {
+const updateLoadMore = (newValue) => {
   nextTick(() => {
     const ViewRef = messageViewRef.value;
     const elRef = ViewRef?.children?.[newValue - 1];
@@ -203,7 +203,6 @@ const updateLoadMore = newValue => {
       elRef?.scrollIntoView({
         block: "start",
       });
-      // ({ behavior: 'smooth', block: 'center' })
     } else {
       // console.log(elRef);
       elRef?.scrollIntoViewIfNeeded();
@@ -239,7 +238,7 @@ const handleChecked = (e, item) => {
   }
 };
 
-const ISown = item => {
+const ISown = (item) => {
   return item.from == userInfo.value.username;
 };
 const loadMoreFn = () => {
@@ -261,7 +260,7 @@ const UpdateScrollbar = () => {
   scrollbarRef.value.update();
 };
 
-const validatelastMessage = msglist => {
+const validatelastMessage = (msglist) => {
   let msg = null;
   for (let i = msglist.length - 1; i > -1; i--) {
     if (msglist[i].ID) {
@@ -376,7 +375,7 @@ const loadMsgComponents = (elem_type, item) => {
   return CompMap[resp];
 };
 // 动态class
-const Megtype = elem_type => {
+const Megtype = (elem_type) => {
   // console.log(elem_type);
   let resp = "";
   switch (elem_type) {
@@ -405,7 +404,7 @@ const Megtype = elem_type => {
   return resp;
 };
 
-const msgOne = item => {
+const msgOne = (item) => {
   const { isRevoked, type } = item;
   if (isRevoked) {
     return "message-view__tips-elem";
@@ -432,14 +431,14 @@ const ContextMenuEvent = (event, item) => {
   const self = ISown(item);
   RIGHT_CLICK_MENU_LIST.value = MENU_LIST;
   if (!self) {
-    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter(t => t.id !== "revoke");
+    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter((t) => t.id !== "revoke");
   }
   if (!relinquish) {
-    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter(t => t.id !== "revoke");
+    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter((t) => t.id !== "revoke");
   }
 };
 
-const ClickMenuItem = data => {
+const ClickMenuItem = (data) => {
   const Info = MenuItemInfo.value;
   const { id, text } = data;
   switch (id) {
@@ -458,7 +457,7 @@ const ClickMenuItem = data => {
   }
 };
 // 删除消息
-const fndelete = async data => {
+const fndelete = async (data) => {
   let { code } = await deleteMsgList(data);
   if (code == 0) {
     const { conversationID, toAccount, to } = data;
@@ -472,17 +471,17 @@ const fndelete = async data => {
   }
 };
 // 多选
-const multiSelect = data => {
+const multiSelect = (data) => {
   commit("SET_CHEC_BOX", true);
 };
 // 撤回消息
-const revokes = data => {
+const revokes = (data) => {
   revokeMsg(data);
 };
 
 watch(
   needScrollDown,
-  data => {
+  (data) => {
     updateLoadMore(data);
   },
   {
@@ -491,7 +490,7 @@ watch(
   }
 );
 
-emitter.on("updataScroll", e => {
+emitter.on("updataScroll", (e) => {
   UpdataScrollInto();
 });
 

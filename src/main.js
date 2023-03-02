@@ -24,7 +24,6 @@ registerSvgIcon(app);
 
 getServerConfig(app).then(async (config) => {
   app.use(router);
-  await router.isReady();
   app.use(store);
   app.use(useI18n);
   app.use(useElIcons);

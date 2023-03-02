@@ -52,7 +52,7 @@
             <CircleCloseFilled />
           </el-icon>
           <UserAvatar
-            :className="'avatar-item'"
+            className="avatar-item"
             :url="item.avatar"
             :nickName="item.nick"
           />
@@ -150,13 +150,13 @@ const {
   currentMemberList,
   currentConversation,
 } = useState({
-  user: state => state.data.user,
-  userProfile: state => state.user.currentUserProfile,
-  showMsgBox: state => state.conversation.showMsgBox,
-  groupDrawer: state => state.groupinfo.groupDrawer,
-  groupProfile: state => state.groupinfo.groupProfile,
-  currentMemberList: state => state.groupinfo.currentMemberList,
-  currentConversation: state => state.conversation.currentConversation,
+  user: (state) => state.data.user,
+  userProfile: (state) => state.user.currentUserProfile,
+  showMsgBox: (state) => state.conversation.showMsgBox,
+  groupDrawer: (state) => state.groupinfo.groupDrawer,
+  groupProfile: (state) => state.groupinfo.groupProfile,
+  currentMemberList: (state) => state.groupinfo.currentMemberList,
+  currentConversation: (state) => state.conversation.currentConversation,
 });
 const { isOwner, isAdmin, toAccount } = useGetters([
   "isOwner",
@@ -164,7 +164,7 @@ const { isOwner, isAdmin, toAccount } = useGetters([
   "toAccount",
 ]);
 const input = ref("");
-const value = ref(true);
+const value = ref(false);
 const Refdrawerlist = ref();
 const dialogVisible = ref(false);
 const groupMember = ref([]);
@@ -177,7 +177,7 @@ const close = () => {
   input.value = "";
   dialogVisible.value = false;
 };
-const RemovePeople = item => {
+const RemovePeople = (item) => {
   ElMessageBox.confirm(`确定将 ${item.nick} 移出群聊?`, "提示", {
     confirmButtonText: `${t("el.datepicker.confirm")}`,
     cancelButtonText: `${t("el.datepicker.cancel")}`,
@@ -190,7 +190,7 @@ const RemovePeople = item => {
       });
       updataGroup();
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 };
@@ -213,7 +213,7 @@ const onclick = () => {
   //   text: "公告12",
   // });
 };
-const navigate = item => {
+const navigate = (item) => {
   dispatch("CHEC_OUT_CONVERSATION", { convId: `C2C${item.userID}` });
 };
 const groupMemberAdd = () => {
@@ -232,7 +232,7 @@ const dismissGroup = () => {
         groupId: toAccount.value,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 };
@@ -253,7 +253,7 @@ const handleQuitGroup = () => {
         groupId: toAccount.value,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       console.log(groupProfile.value);
     });
