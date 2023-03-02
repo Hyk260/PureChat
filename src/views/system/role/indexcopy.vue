@@ -206,7 +206,8 @@ const formLabelAlign = reactive({
 const rules = reactive({
   name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
   info: [],
-  age: [{ validator: checkAge, trigger: "blur" }],
+  age: [],
+  // { validator: checkAge, trigger: "blur" }
 });
 
 function handleSelectionChange(val) {

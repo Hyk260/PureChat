@@ -8,7 +8,7 @@
     <main class="app-main">
       <div class="continer-theme">
         <!-- :include="['editor']" -->
-        <router-view v-slot="{ Component }">
+        <router-view v-slot="{ Component }" :key="$route.fullPath">
           <transition name="fade-transform" mode="out-in">
             <keep-alive v-if="$route.meta.keep" max="3">
               <component v-if="Component" :is="Component" />
