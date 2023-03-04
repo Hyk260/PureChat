@@ -309,6 +309,7 @@ onMounted(() => {});
         max-width: 140px;
       }
       .message-time {
+        font-family: MicrosoftYaHei;
         font-size: 10px;
         color: rgba(0, 0, 0, 0.45);
       }

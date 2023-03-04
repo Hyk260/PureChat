@@ -14,6 +14,7 @@ import {
 export default {
   // namespaced: true,
   state: {
+    isShowAddBook: false, // 地址本状态
     groupDrawer: false, // 群聊开关
     groupList: [], //群组列表
     groupProfile: null,
@@ -44,11 +45,14 @@ export default {
       const { type } = payload;
       if (type == "GROUP") {
         const { groupID } = payload.groupProfile;
-        getGroupProfile({ groupID }).then(data => {
+        getGroupProfile({ groupID }).then((data) => {
           state.groupProfile = data;
         });
       }
     },
+    setAddbookStatus(state, flag) {
+      state.isShowAddBook = flag
+    }
   },
   actions: {
     async getGroupMemberList({ state, commit, getters }, payload) {

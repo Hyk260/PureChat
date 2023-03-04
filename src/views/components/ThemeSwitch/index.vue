@@ -60,9 +60,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 /* From www.lingdaima.com */
-/* The switch - the box around the slider */
 .switch {
-  /* --moon-mask: ; */
   font-size: 17px;
   position: relative;
   display: inline-block;
@@ -71,14 +69,12 @@ export default defineComponent({
   zoom: 0.7;
 }
 
-/* Hide default HTML checkbox */
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-/* The slider */
 .slider {
   position: absolute;
   cursor: pointer;

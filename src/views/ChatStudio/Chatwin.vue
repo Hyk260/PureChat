@@ -44,7 +44,7 @@
             @click="handleChecked($event, item)"
           >
             <Checkbox
-              @click.stop="handleCilck($event, item, 'input')"
+              @click.stop="handleCilck($event, item)"
               v-show="
                 showCheckbox &&
                 !item.isRevoked &&
@@ -62,7 +62,12 @@
                 :src="item.avatar || circleUrl"
               >
               </el-avatar>
+              <!-- <MyPopover
+                :circleUrl="item.avatar || circleUrl"
+                :content="circleUrl"
+              /> -->
             </div>
+
             <!-- 内容 -->
             <div
               :class="msgOne(item)"
@@ -131,6 +136,7 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import Checkbox from "./components/Checkbox.vue";
 
 import LoadMore from "./components/LoadMore.vue";
+import MyPopover from "@/views/components/MyPopover/index.vue";
 import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 import { deleteMsgList, revokeMsg, getMsgList } from "@/api/im-sdk-api";
 import emitter from "@/utils/mitt-bus";
@@ -532,7 +538,7 @@ $self-msg-color: #c2e8ff;
   }
 }
 .message-info-view-content {
-  height: calc(100% - 70px - 206px);
+  height: calc(100% - 60px - 206px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.09);
 }
 .style-MsgBox {

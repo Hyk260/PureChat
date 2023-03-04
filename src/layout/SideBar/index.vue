@@ -33,7 +33,7 @@ import Logo from "../components/Logo.vue";
 
 const Refelmenu = ref();
 const route = useRoute();
-const store = useStore();
+
 const props = defineProps({
   vislbile: {
     type: Boolean,
@@ -59,9 +59,6 @@ const handleOpen = (key, keyPath) => {
 const handleClose = (key, keyPath) => {
   // console.log(key, keyPath)
 };
-onMounted(() => {
-  // console.log(Refelmenu.value);
-});
 </script>
 
 <style lang="scss" scoped>

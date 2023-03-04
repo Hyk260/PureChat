@@ -54,10 +54,4 @@ export default defineComponent({
   padding: 24px;
   height: calc(100vh - 86px);
 }
-.drawer-group {
-  background-color: rgba(255, 255, 255, 0) !important;
-  .el-drawer {
-    border-radius: 5px 0 0 5px;
-  }
-}
 </style>
