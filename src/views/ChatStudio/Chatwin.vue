@@ -59,15 +59,11 @@
               <el-avatar
                 :size="36"
                 shape="square"
+                @click.stop="onclickavatar($event, item)"
                 :src="item.avatar || circleUrl"
               >
               </el-avatar>
-              <!-- <MyPopover
-                :circleUrl="item.avatar || circleUrl"
-                :content="circleUrl"
-              /> -->
             </div>
-
             <!-- 内容 -->
             <div
               :class="msgOne(item)"
@@ -86,7 +82,8 @@
             </div>
           </div>
         </div>
-
+        <!-- 卡片 -->
+        <MyPopover :cardData="cardData" />
         <!-- 右键菜单 -->
         <contextmenu ref="contextmenu">
           <contextmenu-item
@@ -146,6 +143,7 @@ const isRight = ref(true);
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
+const cardData = ref(null);
 const watermarkText = ref("pure-admin");
 const { state, dispatch, commit } = useStore();
 const { setWatermark, clear } = useWatermark();
@@ -247,6 +245,17 @@ const handleChecked = (e, item) => {
 const ISown = (item) => {
   return item.from == userInfo.value.username;
 };
+
+const onclickavatar = (e, item) => {
+  const isSelf = ISown(item);
+  if (isSelf) return;
+  cardData.value = item;
+  commit("setPopoverStatus", {
+    status: true,
+    seat: e,
+  });
+};
+
 const loadMoreFn = () => {
   if (!noMore.value) {
     const current = currentMessageList.value?.length - 1;

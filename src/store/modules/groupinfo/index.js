@@ -15,6 +15,8 @@ export default {
   // namespaced: true,
   state: {
     isShowAddBook: false, // 地址本状态
+    popover: false, // 卡片
+    seat: null,
     groupDrawer: false, // 群聊开关
     groupList: [], //群组列表
     groupProfile: null,
@@ -50,8 +52,13 @@ export default {
         });
       }
     },
-    setAddbookStatus(state, flag) {
-      state.isShowAddBook = flag
+    setAddbookStatus(state, status) {
+      state.isShowAddBook = status
+    },
+    setPopoverStatus(state, payload) {
+      const { status, seat } = payload
+      state.popover = status;
+      state.seat = seat;
     }
   },
   actions: {

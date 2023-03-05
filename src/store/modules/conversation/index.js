@@ -8,8 +8,8 @@ import {
 } from "@/api/im-sdk-api";
 import { deepClone } from "@/utils/clone";
 
-const getBaseTime = list => {
-  return list?.length > 0 ? list.find(t => t.isTimeDivider).time : 0;
+const getBaseTime = (list) => {
+  return list?.length > 0 ? list.find((t) => t.isTimeDivider).time : 0;
 };
 
 const conversation = {
@@ -86,7 +86,7 @@ const conversation = {
           const { convId, message } = payload;
           const history = state.historyMessageList.get(convId);
           if (!history) return;
-          const newHistory = history.filter(item => !item.isTimeDivider && !item.isDeleted);
+          const newHistory = history.filter((item) => !item.isTimeDivider && !item.isDeleted);
           const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
           state.historyMessageList.set(convId, newHistoryList);
           state.currentMessageList = newHistoryList;
@@ -99,7 +99,7 @@ const conversation = {
           let history = state.historyMessageList.get(convId);
           if (!history) return;
           if (oldConvId !== convId) return;
-          const newHistory = history.filter(item => !item.isTimeDivider);
+          const newHistory = history.filter((item) => !item.isTimeDivider);
           const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
           state.historyMessageList.set(convId, newHistoryList);
           state.currentMessageList = newHistoryList;
@@ -300,7 +300,7 @@ const conversation = {
     }
   },
   getters: {
-    toAccount: state => {
+    toAccount: (state) => {
       if (!state.currentConversation || !state.currentConversation.conversationID) {
         return "";
       }
@@ -318,9 +318,9 @@ const conversation = {
       const { activetab } = state;
       switch (activetab) {
         case "unread":
-          return state.conversationList.filter(t => t.unreadCount > 0);
+          return state.conversationList.filter((t) => t.unreadCount > 0);
         case "mention":
-          return state.conversationList.filter(t => t?.text);
+          return state.conversationList.filter((t) => t?.text);
         default:
           return state.conversationList;
       }
