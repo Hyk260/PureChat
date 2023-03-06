@@ -23,7 +23,7 @@ module.exports = {
     'arrow-parens': ['error', 'always'], // 规则用于控制箭头函数的参数括号，'always'表示参数必须加上括号。
     // "arrow-body-style": ["error", "always"], // 该规则可以强制或禁止箭头函数体使用大括号。
     // 'prefer-arrow-callback': 'off',
-    'prettier/prettier': 'off'
+    'prettier/prettier': 'warn'
   },
 };
 
