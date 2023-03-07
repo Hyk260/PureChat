@@ -1,4 +1,3 @@
-<!-- eslint-disable no-undef -->
 <template>
   <section
     class="message-info-view-content"
@@ -547,7 +546,7 @@ $self-msg-color: #c2e8ff;
   }
 }
 .message-info-view-content {
-  height: calc(100% - 60px - 206px);
+  height: calc(100% - 70px - 206px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.09);
 }
 .style-MsgBox {
