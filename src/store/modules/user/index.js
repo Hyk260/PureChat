@@ -25,6 +25,7 @@ const user = {
     userID: 0,
     userSig: "",
     message: null,
+    showload: false,
   },
   getters: {},
   mutations: {

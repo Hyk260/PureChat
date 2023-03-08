@@ -192,7 +192,6 @@ const loadAll = () => {
     { value: "linjx", link: "" },
     { value: "admin", link: "" },
     { value: "zhangal", link: "" },
-    // { value: "huangyk", link: "" },
   ];
 };
 

@@ -5,11 +5,7 @@ import {
   deleteConversation,
 } from "@/api/im-sdk-api/index";
 
-import {
-  quitGroup,
-  createGroup,
-  dismissGroup,
-} from "@/api/im-sdk-api/group";
+import { quitGroup, createGroup, dismissGroup } from "@/api/im-sdk-api/group";
 
 export default {
   // namespaced: true,
@@ -53,13 +49,13 @@ export default {
       }
     },
     setAddbookStatus(state, status) {
-      state.isShowAddBook = status
+      state.isShowAddBook = status;
     },
     setPopoverStatus(state, payload) {
-      const { status, seat } = payload
+      const { status, seat } = payload;
       state.popover = status;
       state.seat = seat;
-    }
+    },
   },
   actions: {
     async getGroupMemberList({ state, commit, getters }, payload) {
@@ -73,9 +69,9 @@ export default {
     },
     // 退出群聊
     async QUIT_GROUP({ state, dispatch }, payload) {
-      const { groupId, convId } = payload
+      const { groupId, convId } = payload;
       const { code } = await quitGroup({ groupId });
-      if (code !== 0) return
+      if (code !== 0) return;
       dispatch("DELETE_SESSION", { convId });
     },
     // 创建群聊
@@ -86,9 +82,9 @@ export default {
     // 解散群组
     async DISMISS_GROUP({ state, dispatch, commit }, payload) {
       const { groupId, convId } = payload;
-      const { code, groupID } = await dismissGroup(groupId)
-      if (code !== 0) return
+      const { code, groupID } = await dismissGroup(groupId);
+      if (code !== 0) return;
       dispatch("DELETE_SESSION", { convId });
-    }
+    },
   },
 };
