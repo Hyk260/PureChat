@@ -25,7 +25,7 @@ const user = {
     userID: 0,
     userSig: "",
     message: null,
-    showload: false,
+    showload: false, // 登录按钮加载状态
   },
   getters: {},
   mutations: {
@@ -65,7 +65,7 @@ const user = {
   actions: {
     // state, commit, dispatch, getters, rootGetters, rootState
     // 登录im
-    async TIM_LOG_IN({ commit }, user) {
+    async TIM_LOG_IN({ commit, dispatch }, user) {
       const { userID, userSig } = user;
       const { code, data } = await TIM_login({ userID, userSig });
       console.log({ code, data }, "TIM_LOG_IN");
@@ -96,6 +96,10 @@ const user = {
       let userSig = rootState.data?.user?.userSig;
       let isSDKReady = state?.isSDKReady;
       setTimeout(() => {
+        if (!isSDKReady) {
+          dispatch("LOG_OUT");
+          return;
+        }
         window.TIMProxy.init();
         dispatch("TIM_LOG_IN", { userID, userSig });
       }, 500);

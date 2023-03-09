@@ -1,4 +1,8 @@
-import { CONVERSATIONTYPE, GET_MESSAGE_LIST, HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
+import {
+  CONVERSATIONTYPE,
+  GET_MESSAGE_LIST,
+  HISTORY_MESSAGE_COUNT,
+} from "@/store/mutation-types";
 import { addTimeDivider } from "@/utils/addTimeDivider";
 import {
   getMsgList,
@@ -86,7 +90,9 @@ const conversation = {
           const { convId, message } = payload;
           const history = state.historyMessageList.get(convId);
           if (!history) return;
-          const newHistory = history.filter((item) => !item.isTimeDivider && !item.isDeleted);
+          const newHistory = history.filter(
+            (item) => !item.isTimeDivider && !item.isDeleted
+          );
           const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
           state.historyMessageList.set(convId, newHistoryList);
           state.currentMessageList = newHistoryList;
@@ -231,13 +237,16 @@ const conversation = {
     async [GET_MESSAGE_LIST]({ commit, dispatch, state, rootState }, action) {
       let isSDKReady = rootState.user.isSDKReady;
       const { conversationID, type, toAccount } = action;
-      let status = !state.currentMessageList || state.currentMessageList?.length == 0;
+      let status =
+        !state.currentMessageList || state.currentMessageList?.length == 0;
       // 当前会话有值
       if (state.currentConversation && isSDKReady && status) {
-        const { isCompleted, messageList, nextReqMessageID } = await getMsgList({
-          conversationID: conversationID,
-          count: 15,
-        });
+        const { isCompleted, messageList, nextReqMessageID } = await getMsgList(
+          {
+            conversationID: conversationID,
+            count: 15,
+          }
+        );
         // 添加时间
         const addTimeDividerResponse = addTimeDivider(messageList).reverse();
         commit("SET_HISTORYMESSAGE", {
@@ -289,19 +298,22 @@ const conversation = {
     async DELETE_SESSION({ state, commit, dispatch }, action) {
       const { convId } = action;
       const { code } = await deleteConversation({ convId });
-      if (code !== 0) return
-      dispatch("CLEAR_CURRENT_MSG")
+      if (code !== 0) return;
+      dispatch("CLEAR_CURRENT_MSG");
     },
     // 清除当前消息记录
     async CLEAR_CURRENT_MSG({ state, commit }, action) {
       state.currentConversation = null;
       state.currentMessageList = [];
-      commit("SET_SHOW_MSG_BOX", false)
-    }
+      commit("SET_SHOW_MSG_BOX", false);
+    },
   },
   getters: {
     toAccount: (state) => {
-      if (!state.currentConversation || !state.currentConversation.conversationID) {
+      if (
+        !state.currentConversation ||
+        !state.currentConversation.conversationID
+      ) {
         return "";
       }
       const { type, conversationID } = state.currentConversation;

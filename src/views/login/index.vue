@@ -76,7 +76,7 @@
           type="primary"
           class="login-btn"
           @click="LoginBtn(ruleFormRef)"
-          :loading="showload"
+          :loading="false"
         >
           <template #loading>
             <div class="custom-loading">
@@ -137,7 +137,6 @@ import emitter from "@/utils/mitt-bus";
 const { production } = require("@/config/vue.custom.config");
 
 const restaurants = ref([]);
-const showload = ref(false);
 const keep = ref(false);
 const ruleFormRef = ref();
 const imgCode = ref("");
@@ -182,10 +181,6 @@ const onkeypress = ({ code }) => {
     LoginBtn(ruleFormRef.value);
   }
 };
-
-emitter.on("showload", (flag) => {
-  showload.value = flag;
-});
 
 const loadAll = () => {
   return [
