@@ -8,6 +8,7 @@ import NProgress from "@/utils/progress";
 import store from "@/store";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 import config from "@/config/defaultSettings";
+import { setCookies } from "@/utils/Cookies";
 const { BASE_API } = config;
 
 console.log(BASE_API, "BASE_API");
@@ -118,6 +119,9 @@ service.interceptors.response.use((response) => {
   if (status === 200) {
     const ToKen = response.headers["x-token"];
     ToKen && storage.set(ACCESS_TOKEN, ToKen);
+    if (ToKen) {
+      setCookies(ACCESS_TOKEN, ToKen);
+    }
     return data;
   }
 }, errorHandler);

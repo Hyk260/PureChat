@@ -31,6 +31,8 @@ import {
 import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
 import { getGroupList, getFriendList } from "@/api/im-sdk-api";
 import { accountCheck } from "@/api/rest-api";
+import { ACCESS_TOKEN } from "@/store/mutation-types";
+import { setCookies, getCookies } from "@/utils/Cookies";
 import io from "socket.io-client";
 
 export default defineComponent({
@@ -57,6 +59,14 @@ export default defineComponent({
           title: "地址本",
           onclick: () => this.openAddress(),
         },
+        {
+          title: "设置Cookes",
+          onclick: () => this.setCookies(),
+        },
+        {
+          title: "获取Cookes",
+          onclick: () => this.getCookies(),
+        },
       ],
       message: "Hello, world!",
     };
@@ -72,6 +82,12 @@ export default defineComponent({
     },
     test1() {
       this.getGroupList();
+    },
+    setCookies() {
+      setCookies("key", "123", 10);
+    },
+    getCookies() {
+      console.log(getCookies(ACCESS_TOKEN));
     },
     async test2() {
       const res = await accountCheck({ userid: "wangj" });

@@ -96,10 +96,10 @@ const user = {
       let userSig = rootState.data?.user?.userSig;
       let isSDKReady = state?.isSDKReady;
       setTimeout(() => {
-        if (!isSDKReady) {
-          dispatch("LOG_OUT");
-          return;
-        }
+        // if (!isSDKReady) {
+        //   dispatch("LOG_OUT");
+        //   return;
+        // }
         window.TIMProxy.init();
         dispatch("TIM_LOG_IN", { userID, userSig });
       }, 500);

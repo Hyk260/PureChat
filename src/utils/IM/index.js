@@ -4,6 +4,7 @@ import tim from "@/utils/im-sdk/tim";
 import storage from "storejs";
 import store from "@/store";
 import emitter from "@/utils/mitt-bus";
+
 function kickedOutReason(type) {
   switch (type) {
     case TIM.TYPES.KICKED_OUT_MULT_ACCOUNT:
@@ -74,7 +75,7 @@ export default class TIMProxy {
   }
   // 初始化
   init() {
-    console.log("TIMProxy init")
+    console.log("TIMProxy init");
     this.tim = tim;
     this.TIM = TIM;
     // 监听SDK
@@ -183,6 +184,7 @@ export default class TIMProxy {
     store.dispatch("TIM_LOG_OUT");
   }
   onError({ data }) {
+    console.log(data);
     if (data.message !== "Network Error") {
       store.commit("showMessage", {
         message: data.message,
