@@ -47,7 +47,7 @@
             class="style-close"
             v-show="isOwner"
             :class="{ isown: userProfile.userID == item.userID }"
-            @click="RemovePeople(item)"
+            @click.stop="RemovePeople(item)"
           >
             <CircleCloseFilled />
           </el-icon>
