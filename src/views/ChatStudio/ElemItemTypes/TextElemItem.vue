@@ -100,6 +100,7 @@ function AnalysisUrl(props) {
     color: blue;
     cursor: pointer;
     text-decoration: underline;
+    word-wrap: break-word;
   }
 }
 .emoji {

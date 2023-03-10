@@ -106,12 +106,14 @@ const contextMenuItemInfo = ref([]);
 
 const { state, getters, dispatch, commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
-const { Selected, UserInfo, currentMessageList, conversationList } = useState({
-  UserInfo: (state) => state.data.user,
-  Selected: (state) => state.conversation.currentConversation,
-  currentMessageList: (state) => state.conversation.currentMessageList,
-  conversationList: (state) => state.conversation.conversationList,
-});
+const { Selected, UserInfo, currentMessageList, conversationList, Conver } =
+  useState({
+    UserInfo: (state) => state.data.user,
+    Selected: (state) => state.conversation.currentConversation,
+    currentMessageList: (state) => state.conversation.currentMessageList,
+    conversationList: (state) => state.conversation.conversationList,
+    Conver: (state) => state.conversation.currentConversation,
+  });
 
 const fnNews = (data) => {
   const { type, lastMessage } = data;
@@ -161,7 +163,11 @@ const dragleaveHandler = (e) => {};
 
 // 会话点击
 const handleConvListClick = (data) => {
-  console.log(data);
+  if (Conver.value) {
+    const { conversationID: id } = Conver.value;
+    const newId = data?.conversationID;
+    if (id == newId) return;
+  }
   // 切换会话
   commit("SET_CONVERSATION", {
     type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
@@ -171,6 +177,7 @@ const handleConvListClick = (data) => {
   commit("setGroupProfile", data);
   // 获取会话列表
   dispatch("GET_MESSAGE_LIST", data);
+  commit("updataScroll");
 };
 
 const handleClickMenuItem = (item) => {

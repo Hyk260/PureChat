@@ -255,13 +255,15 @@ const scrollbar = ({ scrollLeft, scrollTop }) => {
   debouncedFunc();
 };
 
-const UpdataScrollInto = () => {
+const updateScrollBarHeight = () => {
   nextTick(() => {
-    messageViewRef.value?.firstElementChild?.scrollIntoView();
+    // messageViewRef.value?.firstElementChild?.scrollIntoView();
+    const ViewRef = messageViewRef.value;
+    scrollbarRef.value?.scrollTo(0, ViewRef?.scrollHeight);
   });
 };
 
-const UpdateScrollbar = () => {
+const updateScrollbar = () => {
   scrollbarRef.value.update();
 };
 
@@ -485,7 +487,7 @@ watch(
 );
 
 emitter.on("updataScroll", (e) => {
-  UpdataScrollInto();
+  updateScrollBarHeight();
 });
 
 onMounted(() => {
@@ -493,21 +495,15 @@ onMounted(() => {
     setWatermark(watermarkText.value);
   });
 });
-// onUnmounted(() => {
-//   console.log("onUnmounted");
-//   UpdataScrollInto();
-// });
-onUpdated(() => {
-  // UpdataScrollInto();
-});
-
+onUnmounted(() => {});
+onUpdated(() => {});
 onBeforeUpdate(() => {});
 onBeforeUnmount(() => {
   clear();
 });
 
 // eslint-disable-next-line no-undef
-defineExpose({ UpdateScrollbar, UpdataScrollInto });
+defineExpose({ updateScrollbar, updateScrollBarHeight });
 </script>
 
 <style lang="scss" scoped>
