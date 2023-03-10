@@ -17,22 +17,13 @@
           :key="item.ID"
           :class="{ 'reset-select': !showCheckbox }"
         >
-          <!-- 加载更多 -->
-          <LoadMore
-            :noMore="noMore"
-            v-if="index === currentMessageList.length - 1"
-          />
+          <LoadMore :index="index" />
           <div class="message-view__item--blank"></div>
-          <!-- 时间 -->
-          <div
-            class="message-view__item--time-divider"
-            v-if="item.isTimeDivider"
-          >
+          <div class="message-view__item--time-divider" v-if="isTime(item)">
             {{ timeFormat(item.time * 1000, true) }}
           </div>
-          <!-- 消息 is-self is-other-->
           <div
-            v-if="!item.isTimeDivider && !item.isDeleted"
+            v-if="!isTime(item) && !item.isDeleted"
             class="message-view__item"
             :class="{
               'is-self': ISown(item),
@@ -42,15 +33,7 @@
             :id="item.ID"
             @click="handleChecked($event, item)"
           >
-            <Checkbox
-              @click.stop="handleCilck($event, item)"
-              v-show="
-                showCheckbox &&
-                !item.isRevoked &&
-                item.type !== 'TIMGroupTipElem'
-              "
-            />
-            <!-- 头像 -->
+            <Checkbox :item="item" @click.stop="handleCilck($event, item)" />
             <div
               class="picture"
               v-if="!item.isRevoked && item.type !== 'TIMGroupTipElem'"
@@ -63,16 +46,15 @@
               >
               </el-avatar>
             </div>
-            <!-- 内容 -->
             <div
               :class="msgOne(item)"
               v-contextmenu:contextmenu
               @contextmenu.prevent="ContextMenuEvent($event, item)"
             >
               <name-component :item="item" />
-              <!-- message-view__text message-view__img -->
               <div :class="Megtype(item.type)">
                 <component
+                  :key="item.ID"
                   :is="loadMsgComponents(item.type, item)"
                   :message="item"
                 >
@@ -81,21 +63,19 @@
             </div>
           </div>
         </div>
-        <!-- 卡片 -->
-        <MyPopover :cardData="cardData" />
-        <!-- 右键菜单 -->
-        <contextmenu ref="contextmenu">
-          <contextmenu-item
-            v-for="item in RIGHT_CLICK_MENU_LIST"
-            :key="item.id"
-            @click="ClickMenuItem(item)"
-            v-show="isRight"
-          >
-            {{ item.text }}
-          </contextmenu-item>
-        </contextmenu>
       </div>
     </el-scrollbar>
+    <MyPopover :cardData="cardData" />
+    <contextmenu ref="contextmenu">
+      <contextmenu-item
+        v-for="item in RIGHT_CLICK_MENU_LIST"
+        :key="item.id"
+        @click="ClickMenuItem(item)"
+        v-show="isRight"
+      >
+        {{ item.text }}
+      </contextmenu-item>
+    </contextmenu>
   </section>
 </template>
 
@@ -130,13 +110,20 @@ import { useEventListener } from "@/utils/hooks/index";
 import { useState } from "@/utils/hooks/useMapper";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import Checkbox from "./components/Checkbox.vue";
-
 import LoadMore from "./components/LoadMore.vue";
 import MyPopover from "@/views/components/MyPopover/index.vue";
 import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 import { deleteMsgList, revokeMsg, getMsgList } from "@/api/im-sdk-api";
 import emitter from "@/utils/mitt-bus";
 import { useWatermark } from "@/utils/hooks/useWatermark";
+
+import TextElemItem from "./ElemItemTypes/TextElemItem.vue";
+import TipsElemItem from "./ElemItemTypes/TipsElemItem.vue";
+import ImageElemItem from "./ElemItemTypes/ImageElemItem.vue";
+import FileElemItem from "./ElemItemTypes/FileElemItem.vue";
+import CustomElemItem from "./ElemItemTypes/CustomElemItem.vue";
+import groupTipElement from "./ElemItemTypes/groupTipElement.vue";
+import GroupSystemNoticeElem from "./ElemItemTypes/GroupSystemNoticeElem.vue";
 
 const isRight = ref(true);
 const MenuItemInfo = ref([]);
@@ -191,12 +178,6 @@ const NameComponent = (props) => {
   );
 };
 
-const UpdataScrollInto = () => {
-  nextTick(() => {
-    messageViewRef.value?.firstElementChild?.scrollIntoView();
-  });
-};
-
 const updateLoadMore = (newValue) => {
   nextTick(() => {
     const ViewRef = messageViewRef.value;
@@ -221,6 +202,7 @@ const handleCilck = (e, item) => {
 };
 
 const handleChecked = (e, item) => {
+  if (!showCheckbox.value) return;
   if (item.type == "TIMGroupTipElem") return;
   if (item.isRevoked) return;
   const _el = document.getElementById(`${item.ID}`);
@@ -241,6 +223,9 @@ const handleChecked = (e, item) => {
   }
 };
 
+const isTime = (item) => {
+  return item?.isTimeDivider;
+};
 const ISown = (item) => {
   return item.from == userInfo.value.username;
 };
@@ -268,6 +253,12 @@ const loadMoreFn = () => {
 const debouncedFunc = debounce(loadMoreFn, 250); //防抖处理
 const scrollbar = ({ scrollLeft, scrollTop }) => {
   debouncedFunc();
+};
+
+const UpdataScrollInto = () => {
+  nextTick(() => {
+    messageViewRef.value?.firstElementChild?.scrollIntoView();
+  });
 };
 
 const UpdateScrollbar = () => {
@@ -338,24 +329,13 @@ const loadMsgComponents = (elem_type, item) => {
   // console.log(elem_type, item);
   let resp = "";
   const CompMap = {
-    TextElemItem: defineAsyncComponent(() =>
-      import("./ElemItemTypes/TextElemItem.vue")
-    ),
-    TipsElemItem: defineAsyncComponent(() =>
-      import("./ElemItemTypes/TipsElemItem.vue")
-    ),
-    ImageElemItem: defineAsyncComponent(() =>
-      import("./ElemItemTypes/ImageElemItem.vue")
-    ),
-    CustomElemItem: defineAsyncComponent(() =>
-      import("./ElemItemTypes/CustomElemItem.vue")
-    ),
-    groupTipElement: defineAsyncComponent(() =>
-      import("./ElemItemTypes/groupTipElement.vue")
-    ),
-    GroupSystemNoticeElem: defineAsyncComponent(() =>
-      import("./ElemItemTypes/GroupSystemNoticeElem.vue")
-    ),
+    TextElemItem: TextElemItem,
+    TipsElemItem: TipsElemItem,
+    ImageElemItem: ImageElemItem,
+    FileElemItem: FileElemItem,
+    CustomElemItem: CustomElemItem,
+    groupTipElement: groupTipElement,
+    GroupSystemNoticeElem: GroupSystemNoticeElem,
   };
   // 撤回消息
   if (item.isRevoked) {
@@ -518,7 +498,7 @@ onMounted(() => {
 //   UpdataScrollInto();
 // });
 onUpdated(() => {
-  UpdataScrollInto();
+  // UpdataScrollInto();
 });
 
 onBeforeUpdate(() => {});
@@ -531,9 +511,12 @@ defineExpose({ UpdateScrollbar, UpdataScrollInto });
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/mixin.scss";
 $other-msg-color: #f0f2f5;
 $self-msg-color: #c2e8ff;
-
+.scrollbar-content {
+  height: 100%;
+}
 .message_name {
   margin-bottom: 5px;
   color: rgba(0, 0, 0, 0.45);

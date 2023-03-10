@@ -1,6 +1,5 @@
 <template>
-  <div class="viewref">
-    <!-- ${noMore ? 'no-more' : 'loading-more'} -->
+  <div class="viewref" v-if="index == currentMessageList.length - 1">
     <div class="showMore">
       {{ noMore ? "没有更多了" : "" }}
     </div>
@@ -11,15 +10,27 @@
 </template>
 
 <script setup>
-import { toRefs } from "vue";
-// eslint-disable-next-line no-undef
+import { toRefs, defineProps } from "vue";
+import { useState } from "@/utils/hooks/useMapper";
+
 const props = defineProps({
-  noMore: {
-    type: Boolean,
-    default: true,
+  index: {
+    type: Number,
   },
+  // noMore: {
+  //   type: Boolean,
+  //   default: true,
+  // },
 });
-const { noMore } = toRefs(props);
+const {
+  // noMore,
+  index,
+} = toRefs(props);
+
+const { noMore, currentMessageList } = useState({
+  noMore: (state) => state.conversation.noMore,
+  currentMessageList: (state) => state.conversation.currentMessageList,
+});
 </script>
 
 <style lang="scss" scoped>
@@ -40,29 +51,12 @@ const { noMore } = toRefs(props);
   cursor: pointer;
   color: rgba(0, 0, 0, 0.45);
 }
-.loading-more {
-  width: 32px;
-  height: 32px;
-  line-height: 32px;
-  background: url("../../../assets/images/loading.png");
-  animation: load 1.1s infinite linear;
-  background-size: 32px;
-}
-
-@keyframes load {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
 
 .bouncing-loader {
   display: flex;
   justify-content: center;
 }
+
 @keyframes bouncing-loader {
   from {
     opacity: 1;

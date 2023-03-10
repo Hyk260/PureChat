@@ -1,5 +1,5 @@
 <template>
-  <label class="container input-check">
+  <label class="container input-check" v-show="isShowCheck">
     <input type="checkbox" class="check-btn" />
     <div class="checkmark"></div>
   </label>
@@ -17,8 +17,24 @@ import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
 export default defineComponent({
   name: "Componentname",
   components: {},
-  computed: {},
-  props: {},
+  computed: {
+    ...mapState({
+      showCheckbox: (state) => state.conversation.showCheckbox,
+    }),
+    isShowCheck() {
+      return (
+        this.showCheckbox &&
+        !this.item.isRevoked &&
+        this.item.type !== "TIMGroupTipElem"
+      );
+    },
+  },
+  props: {
+    item: {
+      type: Object,
+      default: null,
+    },
+  },
   methods: {},
   setup(props, { attrs, emit, expose, slots }) {
     onMounted(() => {});

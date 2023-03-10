@@ -36,7 +36,7 @@ import { setCookies, getCookies } from "@/utils/Cookies";
 import io from "socket.io-client";
 
 export default defineComponent({
-  name: "Componentname",
+  name: "Test",
   components: {},
   computed: {
     ...mapState({

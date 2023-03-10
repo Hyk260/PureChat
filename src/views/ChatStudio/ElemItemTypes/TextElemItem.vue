@@ -11,7 +11,12 @@
         >
           <analysis-url :text="item.text" />
         </span>
-        <img class="emoji" v-else-if="item.name === 'img'" :src="item.src" alt="表情包" />
+        <img
+          class="emoji"
+          v-else-if="item.name === 'img'"
+          :src="item.src"
+          alt="表情包"
+        />
       </template>
     </template>
   </div>

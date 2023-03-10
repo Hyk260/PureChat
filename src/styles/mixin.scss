@@ -12,7 +12,7 @@
 
 @mixin scrollBar {
   &::-webkit-scrollbar-track-piece {
-    background: #d3dce6;
+    background: #fff;
   }
 
   &::-webkit-scrollbar {
@@ -20,7 +20,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #99a9bf;
+    background: #90939957;
     border-radius: 20px;
   }
 }
@@ -38,7 +38,7 @@
 }
 
 //文本n行溢出隐藏
-@mixin ellipsisBasic($clamp:2) {
+@mixin ellipsisBasic($clamp: 2) {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;

@@ -8,14 +8,13 @@
           <span class="file-size">{{
             bytesToSize(message.payload.fileSize)
           }}</span>
-          <span class="file-status">已经下载</span>
+          <span class="file-status">测试</span>
           <span class="file-icon">
             <img src="@/assets/message/勾.png" alt="" />
           </span>
         </div>
       </div>
     </div>
-    <!-- <div></div> -->
   </div>
 </template>
 
