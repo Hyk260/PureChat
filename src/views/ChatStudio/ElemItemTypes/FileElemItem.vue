@@ -1,0 +1,112 @@
+<template>
+  <div class="file-Box flex" :style="{ background: backgroundStyle }">
+    <div class="file-data flex">
+      <img :src="renderFileIcon()" alt="" />
+      <div class="fileBoxContentEM">
+        <div class="file-name">{{ message.payload.fileName }}</div>
+        <div class="fileBoxContentEMsize">
+          <span class="file-size">{{
+            bytesToSize(message.payload.fileSize)
+          }}</span>
+          <span class="file-status">已经下载</span>
+          <span class="file-icon">
+            <img src="@/assets/message/勾.png" alt="" />
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- <div></div> -->
+  </div>
+</template>
+
+<script setup>
+import {
+  ref,
+  reactive,
+  toRefs,
+  computed,
+  watch,
+  nextTick,
+  defineProps,
+} from "vue";
+import { bytesToSize } from "@/utils/common";
+const props = defineProps({
+  message: {
+    type: Object,
+    default: null,
+  },
+});
+const { message } = toRefs(props);
+console.log(message);
+const backgroundStyle = ref("");
+
+const backstyle = (status = 1, percentage = 100) => {
+  return status === 1
+    ? `linear-gradient(to right, rgba(24, 144, 255, 0.09) ${percentage}%, white 0%, white 100%)`
+    : "";
+};
+// backgroundStyle.value = backstyle();
+const renderFileIcon = (fileType = "zip") => {
+  let type;
+  if (fileType == "xlsx" || fileType == "xls") {
+    type = "表格";
+  } else if (fileType == "doc" || fileType == "docx") {
+    type = "文档";
+  } else if (fileType == "pptx" || fileType == "ppt") {
+    type = "ppt";
+  } else if (fileType == "rar" || fileType == "zip") {
+    type = "压缩包";
+  } else if (fileType == "txt") {
+    type = "txt";
+  } else if (fileType == "pdf") {
+    type = "pdf";
+  } else {
+    type = "通用";
+  }
+  return require(`@/assets/message/${type}.png`);
+};
+</script>
+
+<style lang="scss" scoped>
+@import "@/styles/mixin.scss";
+.file-Box {
+  height: 70px;
+  padding: 12px;
+  width: 248px;
+  background: #ffffff;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  user-select: none;
+  cursor: pointer;
+  .file-data {
+    .fileBoxContentEM {
+      margin-left: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: space-around;
+      .file-name {
+        color: #000000ad;
+        font-size: 14px;
+        width: 160px;
+        @include text-ellipsis;
+      }
+      .fileBoxContentEMsize {
+        font-weight: 400;
+        color: #999999;
+        line-height: 18px;
+        font-size: 12px;
+        .file-status,
+        .file-icon {
+          margin-left: 5px;
+        }
+        .file-size {
+        }
+        .file-status {
+        }
+        .file-icon {
+        }
+      }
+    }
+  }
+}
+</style>
