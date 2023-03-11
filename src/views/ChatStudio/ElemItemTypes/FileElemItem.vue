@@ -1,13 +1,15 @@
 <template>
   <div class="file-Box flex" :style="{ background: backgroundStyle }">
     <div class="file-data flex">
-      <img :src="renderFileIcon()" alt="" />
+      <img :src="renderFileIcon(FileType)" alt="" />
       <div class="fileBoxContentEM">
-        <div class="file-name">{{ message.payload.fileName }}</div>
+        <div class="file-name">
+          {{ payload.fileName }}
+        </div>
         <div class="fileBoxContentEMsize">
-          <span class="file-size">{{
-            bytesToSize(message.payload.fileSize)
-          }}</span>
+          <span class="file-size">
+            {{ bytesToSize(payload.fileSize) }}
+          </span>
           <span class="file-status">测试</span>
           <span class="file-icon">
             <img src="@/assets/message/勾.png" alt="" />
@@ -29,6 +31,7 @@ import {
   defineProps,
 } from "vue";
 import { bytesToSize } from "@/utils/common";
+import { getFileType } from "@/utils/message-input-utils";
 const props = defineProps({
   message: {
     type: Object,
@@ -37,7 +40,10 @@ const props = defineProps({
 });
 const { message } = toRefs(props);
 console.log(message);
+const { payload } = message.value;
+
 const backgroundStyle = ref("");
+const FileType = getFileType(payload?.fileName);
 
 const backstyle = (status = 1, percentage = 100) => {
   return status === 1
@@ -45,7 +51,7 @@ const backstyle = (status = 1, percentage = 100) => {
     : "";
 };
 // backgroundStyle.value = backstyle();
-const renderFileIcon = (fileType = "zip") => {
+const renderFileIcon = (fileType = "") => {
   let type;
   if (fileType == "xlsx" || fileType == "xls") {
     type = "表格";

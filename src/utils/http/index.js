@@ -118,8 +118,8 @@ service.interceptors.response.use((response) => {
   // console.log(response, "response");
   if (status === 200) {
     const ToKen = response.headers["x-token"];
-    ToKen && storage.set(ACCESS_TOKEN, ToKen);
     if (ToKen) {
+      storage.set(ACCESS_TOKEN, ToKen);
       setCookies(ACCESS_TOKEN, ToKen);
     }
     return data;

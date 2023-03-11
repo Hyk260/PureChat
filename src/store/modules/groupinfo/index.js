@@ -52,9 +52,10 @@ export default {
       state.isShowAddBook = status;
     },
     setPopoverStatus(state, payload) {
-      const { status, seat } = payload;
+      const { status, seat, cardData } = payload;
       state.popover = status;
       state.seat = seat;
+      state.cardData = cardData;
     },
     setGroupStatus(state, status) {
       state.groupDrawer = status;

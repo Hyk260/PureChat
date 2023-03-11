@@ -1,10 +1,11 @@
 import Cookies from "js-cookie";
 
-/*
- * 获取cookies
- * */
 export function getCookies(key) {
   return Cookies.get(key);
+}
+
+export function removeCookies(key) {
+  Cookies.remove(key);
 }
 /**
  * 设置具有给定键和值以及到期时间的cookie（以秒为单位）
@@ -16,10 +17,4 @@ export function getCookies(key) {
 export function setCookies(key, value, seconds = 86400) {
   const expires = new Date(new Date() * 1 + seconds * 1000);
   Cookies.set(key, value, { expires: expires, path: "" });
-}
-/*
- * 移除Cookies
- * */
-export function removeCookies(key) {
-  Cookies.remove(key);
 }

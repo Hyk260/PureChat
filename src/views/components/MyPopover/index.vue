@@ -5,11 +5,15 @@
     :class="{
       'is-robot': isRobot(cardData),
     }"
+    :style="{
+      left: left,
+      top: top,
+    }"
     v-show="drawer"
     ref="popoverRef"
   >
     <div class="title">
-      <img :src="cardData.avatar" alt="头像" />
+      <img :src="cardData.avatar || squareUrl" alt="头像" />
       <span>{{ cardData.nick }}</span>
     </div>
     <div class="content">
@@ -29,14 +33,14 @@ import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
 import { onClickOutside } from "@vueuse/core";
 import config from "@/config/defaultSettings";
-
+import { squareUrl, circleUrl } from "../../ChatStudio/utils/menu";
 // eslint-disable-next-line no-undef
 const props = defineProps({
-  cardData: {
-    type: Object,
-    require: true,
-    default: () => {},
-  },
+  // cardData: {
+  //   type: Object,
+  //   require: true,
+  //   default: () => {},
+  // },
   // seat: {
   //   type: PointerEvent,
   //   require: true,
@@ -44,19 +48,22 @@ const props = defineProps({
   // },
 });
 const popoverRef = ref();
+const left = ref("");
+const top = ref("");
 const state = reactive({
   sculpture: require("@/assets/images/ChatGPT.png"),
   back: require("@/assets/images/gptBack.png"),
 });
-const {
-  // seat,
-  cardData,
-} = toRefs(props);
+// const {
+//   // seat,
+//   cardData,
+// } = toRefs(props);
 const { sculpture, back } = toRefs(state);
 
 const { dispatch, commit } = useStore();
-const { popover, seat } = useState({
+const { popover, seat, cardData } = useState({
   seat: (state) => state.groupinfo.seat,
+  cardData: (state) => state.groupinfo.cardData,
   popover: (state) => state.groupinfo.popover,
 });
 
@@ -77,20 +84,17 @@ const define = () => {
 
 onClickOutside(popoverRef, (event) => {
   if (!popover.value) return;
-  const { avatar, nick } = cardData.value;
-  console.log(avatar, nick);
   closeModal();
 });
 
 const setPosition = (popover) => {
   if (!popover) return;
   try {
-    const avatar = document.querySelector(".robot-box");
     const { x, y } = popover;
     const l = x + 30;
     const t = y - 80;
-    avatar.style.left = l + "px";
-    avatar.style.top = t + "px";
+    left.value = l + "px";
+    top.value = t + "px";
   } catch (error) {
     console.log(error);
   }

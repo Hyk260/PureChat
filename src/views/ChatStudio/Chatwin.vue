@@ -65,7 +65,7 @@
         </div>
       </div>
     </el-scrollbar>
-    <MyPopover :cardData="cardData" />
+    <MyPopover />
     <contextmenu ref="contextmenu">
       <contextmenu-item
         v-for="item in RIGHT_CLICK_MENU_LIST"
@@ -129,7 +129,7 @@ const isRight = ref(true);
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
-const cardData = ref(null);
+// const cardData = ref(null);
 const watermarkText = ref("pure-admin");
 const { state, dispatch, commit } = useStore();
 const { setWatermark, clear } = useWatermark();
@@ -233,10 +233,11 @@ const ISown = (item) => {
 const onclickavatar = (e, item) => {
   const isSelf = ISown(item);
   if (isSelf) return;
-  cardData.value = item;
+  // cardData.value = item;
   commit("setPopoverStatus", {
     status: true,
     seat: e,
+    cardData: item,
   });
 };
 

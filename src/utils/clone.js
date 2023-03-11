@@ -55,7 +55,7 @@ export function deepClone(target, map = new WeakMap()) {
     map.set(target, true);
 
     // 递归克隆 Set 对象的每个元素
-    target.forEach(value => {
+    target.forEach((value) => {
       cloneSet.add(deepClone(value, map));
     });
     return cloneSet;
@@ -68,7 +68,7 @@ export function deepClone(target, map = new WeakMap()) {
 
   // 不克隆原型链上的属性 只克隆对象本身属性
   // 使用 Object.getOwnPropertyNames 获取对象本身所有属性的属性名组成的数组
-  Object.getOwnPropertyNames(target).forEach(key => {
+  Object.getOwnPropertyNames(target).forEach((key) => {
     cloneResult[key] = deepClone(target[key], map);
   });
 

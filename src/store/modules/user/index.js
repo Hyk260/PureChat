@@ -4,6 +4,8 @@ import { nextTick } from "vue";
 import { getMyProfile, TIM_logout, TIM_login } from "@/api/im-sdk-api";
 import { ElMessage } from "element-plus";
 import TIMProxy from "@/utils/IM";
+import { ACCESS_TOKEN } from "@/store/mutation-types";
+import { getCookies } from "@/utils/Cookies";
 let tim = new TIMProxy();
 // new Proxy(tim, {
 //   set(target, key, val) {
@@ -96,10 +98,8 @@ const user = {
       let userSig = rootState.data?.user?.userSig;
       let isSDKReady = state?.isSDKReady;
       setTimeout(() => {
-        // if (!isSDKReady) {
-        //   dispatch("LOG_OUT");
-        //   return;
-        // }
+        const token = getCookies(ACCESS_TOKEN);
+        if (!token) dispatch("LOG_OUT");
         window.TIMProxy.init();
         dispatch("TIM_LOG_IN", { userID, userSig });
       }, 500);

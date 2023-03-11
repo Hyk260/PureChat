@@ -20,8 +20,8 @@ const MENU_LIST = [
     text: "撤回",
   },
   {
-    id: 'multiSelect',
-    text: '多选',
+    id: "multiSelect",
+    text: "多选",
   },
   {
     id: "delete",
@@ -39,8 +39,8 @@ const RIGHT_CLICK_MENU_LIST = ref([
     text: "撤回",
   },
   {
-    id: 'multiSelect',
-    text: '多选',
+    id: "multiSelect",
+    text: "多选",
   },
   {
     id: "delete",

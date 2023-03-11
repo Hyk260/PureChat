@@ -1,5 +1,10 @@
 <template>
-  <div class="Editor-style" id="svgDown" v-if="showMsgBox" v-show="!showCheckbox">
+  <div
+    class="Editor-style"
+    id="svgDown"
+    v-if="showMsgBox"
+    v-show="!showCheckbox"
+  >
     <!-- <Toolbar
       class="toolbar"
       :editor="editorRef"
@@ -7,7 +12,7 @@
       :mode="mode"
     /> -->
     <!-- 自定义工具栏 -->
-    <RichToolbar @setEmoj="setEmoj" />
+    <RichToolbar @setEmoj="setEmoj" @setPicture="setPicture" />
     <Editor
       class="editor-content"
       v-model="valueHtml"
@@ -28,7 +33,11 @@
       @hideMentionModal="hideMentionModal"
       @insertMention="insertMention"
     />
-    <el-tooltip effect="dark" content="按Enter发送消息,Ctrl+Enter换行" placement="left-start">
+    <el-tooltip
+      effect="dark"
+      content="按Enter发送消息,Ctrl+Enter换行"
+      placement="left-start"
+    >
       <el-button class="btn-send" @click="handleEnter">发送</el-button>
     </el-tooltip>
   </div>
@@ -91,16 +100,16 @@ const {
   isShowModal,
   currentMemberList,
 } = useState({
-  currentMemberList: state => state.groupinfo.currentMemberList,
-  currentConversation: state => state.conversation.currentConversation,
-  currentMessageList: state => state.conversation.currentMessageList,
-  historyMessageList: state => state.conversation.historyMessageList,
-  noMore: state => state.conversation.noMore,
-  userInfo: state => state.data.user,
-  userProfile: state => state.user.currentUserProfile,
-  showCheckbox: state => state.conversation.showCheckbox,
-  showMsgBox: state => state.conversation.showMsgBox,
-  isShowModal: state => state.conversation.isShowModal,
+  currentMemberList: (state) => state.groupinfo.currentMemberList,
+  currentConversation: (state) => state.conversation.currentConversation,
+  currentMessageList: (state) => state.conversation.currentMessageList,
+  historyMessageList: (state) => state.conversation.historyMessageList,
+  noMore: (state) => state.conversation.noMore,
+  userInfo: (state) => state.data.user,
+  userProfile: (state) => state.user.currentUserProfile,
+  showCheckbox: (state) => state.conversation.showCheckbox,
+  showMsgBox: (state) => state.conversation.showMsgBox,
+  isShowModal: (state) => state.conversation.isShowModal,
 });
 // 组件销毁时，及时销毁编辑器
 onBeforeUnmount(() => {
@@ -109,7 +118,7 @@ onBeforeUnmount(() => {
   editor.destroy();
 });
 
-const handleCreated = editor => {
+const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 
   // console.log(editor, "实例");
@@ -133,7 +142,7 @@ const insertMention = (id, name) => {
 const hideMentionModal = () => {
   commit("SET_MENTION_MODAL", false);
 };
-const onChange = editor => {
+const onChange = (editor) => {
   const content = editor.children;
   messages.value = content;
   // console.log(messages.value, "编辑器内容");
@@ -187,7 +196,7 @@ const customPaste = (editor, event, callback) => {
         }
       }
       if (kind === "string") {
-        value.getAsString(str => {
+        value.getAsString((str) => {
           parsetext(str, editor);
         });
       }
@@ -205,14 +214,14 @@ const customPaste = (editor, event, callback) => {
   // callback(true)
 };
 // 拖拽事件
-const dropHandler = e => {
+const dropHandler = (e) => {
   const files = e.dataTransfer.files || [];
   console.log(e);
 
   console.log(files);
 };
 // 插入文件
-const parsefile = async file => {
+const parsefile = async (file) => {
   console.log(file, "文件");
   try {
     const { size } = file;
@@ -224,33 +233,30 @@ const parsefile = async file => {
     console.log(error);
   }
 };
-const parsetext = item => {
+const parsetext = (item) => {
   console.log(item);
 };
 const setEmoj = (data, item) => {
   const node = { text: item };
   editorRef.value.insertNode(node);
 };
+const setPicture = (data) => {
+  parsepicture(data);
+};
 // 插入图片
-const parsepicture = async file => {
+const parsepicture = async (file) => {
   console.log(file, "图片");
   const base64Url = await fileImgToBase64Url(file);
-  let path = file?.path;
-  if (path == undefined) {
-    console.log(base64Url);
-    // const el = `<img src=${base64Url} class="uuid" style="max-width: 200px;"/>`;
-    // valueHtml.value = el;
-    const ImageElement = {
-      type: "image",
-      class: "img",
-      src: base64Url,
-      alt: "",
-      href: "",
-      style: { width: "30%" },
-      children: [{ text: "" }],
-    };
-    editorRef.value.insertNode(ImageElement);
-  }
+  const ImageElement = {
+    type: "image",
+    class: "img",
+    src: base64Url,
+    alt: "",
+    href: "",
+    style: { width: "125px" },
+    children: [{ text: "" }],
+  };
+  editorRef.value.insertNode(ImageElement);
 };
 // 回车
 const handleEnter = () => {
@@ -299,8 +305,8 @@ const sendMsgBefore = () => {
   if (str.includes("mention")) {
     aitStr = str.replace(/<[^>]+>/g, "");
     aitStr = aitStr.replace(/&nbsp;/gi, "");
-    newmsg = content.filter(t => t.type == "mention");
-    newmsg.map(t => aitlist.push(t.info.id));
+    newmsg = content.filter((t) => t.type == "mention");
+    newmsg.map((t) => aitlist.push(t.info.id));
     aitlist = Array.from(new Set(aitlist));
   }
   // console.log(HtmlText);
@@ -320,7 +326,7 @@ const sendMessage = async () => {
   // return;
   // 图片消息
   if (ImgtMsg) {
-    let file = dataURLtoFile(image[0].src, "test.png");
+    let file = dataURLtoFile(image[0].src);
     TextMsg = await CreateImgtMsg({
       convId: toAccount,
       convType: type, //"C2C"

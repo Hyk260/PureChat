@@ -88,23 +88,23 @@
       ref="imagePicker"
       accept=".jpg, .jpeg, .png, .gif, .bmp"
       @change="sendImage"
-      style="display: none"
+      hidden
     />
     <input
       type="file"
       id="filePicker"
       ref="filePicker"
       @change="sendFile"
-      style="display: none"
+      hidden
     />
-    <input
+    <!-- <input
       type="file"
       id="videoPicker"
       ref="videoPicker"
       @change="sendVideo"
-      style="display: none"
       accept=".mp4"
-    />
+      hidden
+    /> -->
   </div>
 </template>
 
@@ -125,7 +125,7 @@ const popoverRef = ref();
 const imagePicker = ref();
 const filePicker = ref();
 const visible = ref(false);
-const emit = defineEmits(["setEmoj"]);
+const emit = defineEmits(["setEmoj", "setPicture"]);
 
 const onClickOutside = () => {
   unref(popoverRef).popperRef?.delayHide?.();
@@ -160,7 +160,8 @@ const clickCscreenshot = () => {
 };
 
 async function sendImage(e) {
-  console.log(e.target.files[0]);
+  // console.log(e.target.files[0]);
+  emit("setPicture", e.target.files[0]);
   // const res = await uploadFiles({
   //   files: e.target.files[0],
   // });
@@ -217,17 +218,5 @@ async function sendFile(e) {
 }
 ::-webkit-scrollbar {
   display: none;
-}
-// ::-webkit-scrollbar {
-//   width: 6px;
-// }
-// ::-webkit-scrollbar-thumb {
-//   border-radius: 10px;
-//   background: rgba(222, 223, 225);
-// }
-// ::-webkit-scrollbar-track {
-//   border-radius: 0;
-// }
-.emoticon {
 }
 </style>
