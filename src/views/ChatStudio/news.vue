@@ -17,11 +17,7 @@
       </div>
     </div>
     <!-- 聊天框 -->
-    <div
-      class="message-right"
-      :class="{ 'style-group': groupDrawer }"
-      id="svgBox"
-    >
+    <div class="message-right" id="svgBox">
       <Header />
       <!-- 聊天窗口 -->
       <Chatwin ref="ChatRef" />
@@ -43,7 +39,7 @@
       <Editor />
     </div>
     <!-- 群详情 -->
-    <!-- <GroupDetails /> -->
+    <GroupDetails />
   </div>
 </template>
 
@@ -149,10 +145,6 @@ onUnmounted(() => {
   position: relative;
   overflow: hidden;
   min-width: 274px;
-}
-.style-group {
-  width: calc(100% - 280px - 220px);
-  // - 68px
 }
 .scroll-container {
   height: calc(100% - 60px - 40px);

@@ -256,7 +256,7 @@ const conversation = {
             message: addTimeDividerResponse,
           },
         });
-        // commit("updataScroll");
+        commit("updataScroll");
         if (type == "GROUP") {
           const { groupID } = action.groupProfile;
           dispatch("getGroupMemberList", { groupID });

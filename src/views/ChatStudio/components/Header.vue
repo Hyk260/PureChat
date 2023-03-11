@@ -20,18 +20,6 @@
         <FontIcon iconName="MoreFilled" class="icon-hover" />
       </div>
     </div>
-
-    <Drawer
-      title="群详情"
-      classModal="drawer-group"
-      size="360px"
-      :modal="true"
-      ref="Refdrawer"
-    >
-      <template #center>
-        <GroupDetails />
-      </template>
-    </Drawer>
   </header>
 </template>
 
@@ -39,18 +27,16 @@
 import { h, ref } from "vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
 import { useState } from "@/utils/hooks/useMapper";
-import GroupDetails from "@/views/ChatStudio/GroupDetails.vue";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 import { useStore } from "vuex";
 
-const Refdrawer = ref();
 const { state, commit, dispatch } = useStore();
 const { Conver, groupDrawer } = useState({
   groupDrawer: (state) => state.groupinfo.groupDrawer,
   Conver: (state) => state.conversation.currentConversation,
 });
 const openSetup = () => {
-  Refdrawer.value.handleOpen();
+  commit("setGroupStatus", true);
 };
 
 const HeaderView = (props) => {

@@ -33,7 +33,7 @@ export const dragControllerDiv = (node) => {
       document.onmouseup = null;
       svgResize.releaseCapture && svgResize.releaseCapture();
       // 手动更新滚动条高度
-      node.UpdateScrollbar();
+      node.updateScrollbar();
     };
     svgResize.setCapture && svgResize.setCapture();
     return false;

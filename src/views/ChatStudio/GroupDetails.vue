@@ -1,89 +1,102 @@
 <template>
-  <div class="group-details">
-    <!-- info -->
-    <div class="group-base-info">
-      <UserAvatar :nickName="groupProfile.groupID" />
-      <div class="group-base-info--text">
-        <div>
-          <span class="group-base-info--text__name">
-            {{ groupProfile.name }}
+  <el-drawer
+    ref="drawerRef"
+    v-model="visible"
+    title="群详情"
+    size="360px"
+    :modal="true"
+    modal-class="drawer-group"
+    :before-close="handleClose"
+    :close-on-press-escape="true"
+    :append-to-body="false"
+    :show-close="true"
+    :with-header="true"
+  >
+    <div class="group-details">
+      <!-- info -->
+      <div class="group-base-info">
+        <UserAvatar :nickName="groupProfile.groupID" />
+        <div class="group-base-info--text">
+          <div>
+            <span class="group-base-info--text__name">
+              {{ groupProfile.name }}
+            </span>
+            <span class="edit-icon"></span>
+          </div>
+          <span class="group-base-info--text__type">
+            {{ groupProfile.type }}
           </span>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <!-- 群公告 -->
+      <div class="group-accountecment">
+        <div class="group-accountecment--title">
+          <span>群公告</span>
           <span class="edit-icon"></span>
         </div>
-        <span class="group-base-info--text__type">
-          {{ groupProfile.type }}
-        </span>
-      </div>
-    </div>
-    <div class="divider"></div>
-    <!-- 群公告 -->
-    <div class="group-accountecment">
-      <div class="group-accountecment--title">
-        <span>群公告</span>
-        <span class="edit-icon"></span>
-      </div>
-      <div class="group-accountecment--info">
-        {{ groupProfile.notification }}
-      </div>
-    </div>
-    <div class="divider"></div>
-    <!-- 群成员 -->
-    <div class="group-member">
-      <div class="group-member--title">
-        <span> 群成员 </span>
-        <span class="group-member--title__right">
-          <span>{{ currentMemberList.length }}人 </span>
-          <span><a @click="openDetails">查看</a></span>
-        </span>
-      </div>
-      <div class="group-member--avatar">
-        <div
-          class="avatar"
-          v-for="item in currentMemberList"
-          :key="item.userID"
-          @click="navigate(item)"
-        >
-          <el-icon
-            class="style-close"
-            v-show="isOwner"
-            :class="{ isown: userProfile.userID == item.userID }"
-            @click.stop="RemovePeople(item)"
-          >
-            <CircleCloseFilled />
-          </el-icon>
-          <UserAvatar
-            className="avatar-item"
-            :url="item.avatar"
-            :nickName="item.nick"
-          />
+        <div class="group-accountecment--info">
+          {{ groupProfile.notification }}
         </div>
-        <span class="group-member--add" @click="groupMemberAdd"> </span>
       </div>
-    </div>
-    <div class="divider"></div>
-    <!-- 免打扰 -->
-    <div class="group-flag-message">
-      <div class="group-flag-message--title">
-        <span class="group-flag-message--title__text"> 消息免打扰 </span>
-        <el-switch v-model="value" />
+      <div class="divider"></div>
+      <!-- 群成员 -->
+      <div class="group-member">
+        <div class="group-member--title">
+          <span> 群成员 </span>
+          <span class="group-member--title__right">
+            <span>{{ currentMemberList.length }}人 </span>
+            <span><a @click="openDetails">查看</a></span>
+          </span>
+        </div>
+        <div class="group-member--avatar">
+          <div
+            class="avatar"
+            v-for="item in currentMemberList"
+            :key="item.userID"
+            @click="navigate(item)"
+          >
+            <el-icon
+              class="style-close"
+              v-show="isOwner"
+              :class="{ isown: userProfile.userID == item.userID }"
+              @click.stop="RemovePeople(item)"
+            >
+              <CircleCloseFilled />
+            </el-icon>
+            <UserAvatar
+              className="avatar-item"
+              :url="item.avatar"
+              :nickName="item.nick"
+            />
+          </div>
+          <span class="group-member--add" @click="groupMemberAdd"> </span>
+        </div>
       </div>
-    </div>
-    <div class="divider"></div>
-    <!-- 退出 转让 -->
-    <div class="group-operator">
-      <el-button v-if="isOwner" type="danger" @click="dismissGroup">
-        解散群组
-      </el-button>
-      <el-button v-else type="danger" @click="handleQuitGroup">
-        退出群组
-      </el-button>
-      <div class="group-operator--divider"></div>
-      <el-button type="primary" plain v-show="isOwner" @click="transferGroup">
-        转让群组
-      </el-button>
-    </div>
-    <!-- 人员详情 -->
-    <Drawer
+      <div class="divider"></div>
+      <!-- 免打扰 -->
+      <div class="group-flag-message">
+        <div class="group-flag-message--title">
+          <span class="group-flag-message--title__text"> 消息免打扰 </span>
+          <el-switch v-model="value" />
+        </div>
+      </div>
+      <div class="divider"></div>
+      <!-- 退出 转让 -->
+      <div class="group-operator">
+        <el-button v-if="isOwner" type="danger" @click="dismissGroup">
+          解散群组
+        </el-button>
+        <el-button v-else type="danger" @click="handleQuitGroup">
+          退出群组
+        </el-button>
+        <div class="group-operator--divider"></div>
+        <el-button type="primary" plain v-show="isOwner" @click="transferGroup">
+          转让群组
+        </el-button>
+      </div>
+      <!-- 人员详情 -->
+      <!-- <Drawer
       title="人员详情"
       classModal="drawer-group"
       size="360px"
@@ -107,26 +120,27 @@
           </span>
         </div>
       </template>
-    </Drawer>
-    <!-- 添加成员弹框 -->
-    <el-dialog v-model="dialogVisible" title="添加成员" width="30%" draggable>
-      <div>
-        <el-input v-model="input" placeholder="请输入用户uid" clearable />
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="close"> 取消 </el-button>
-          <el-button type="primary" @click="addGroupMemberBtn">
-            确认
-          </el-button>
-        </span>
-      </template>
-    </el-dialog>
-  </div>
+    </Drawer> -->
+      <!-- 添加成员弹框 -->
+      <el-dialog v-model="dialogVisible" title="添加成员" width="30%" draggable>
+        <div>
+          <el-input v-model="input" placeholder="请输入用户uid" clearable />
+        </div>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="close"> 取消 </el-button>
+            <el-button type="primary" @click="addGroupMemberBtn">
+              确认
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
+    </div>
+  </el-drawer>
 </template>
 
 <script setup>
-import { nextTick, ref } from "vue";
+import { nextTick, ref, computed } from "vue";
 import { ElMessageBox } from "element-plus";
 import { UserFilled } from "@element-plus/icons-vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
@@ -169,8 +183,20 @@ const Refdrawerlist = ref();
 const dialogVisible = ref(false);
 const groupMember = ref([]);
 
+const visible = computed({
+  get() {
+    return groupDrawer.value;
+  },
+  set() {
+    commit("setGroupStatus", false);
+  },
+});
+
 const openDetails = () => {
   Refdrawerlist.value.handleOpen();
+};
+const handleClose = (done) => {
+  done();
 };
 
 const close = () => {

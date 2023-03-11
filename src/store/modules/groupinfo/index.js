@@ -56,6 +56,9 @@ export default {
       state.popover = status;
       state.seat = seat;
     },
+    setGroupStatus(state, status) {
+      state.groupDrawer = status;
+    },
   },
   actions: {
     async getGroupMemberList({ state, commit, getters }, payload) {
