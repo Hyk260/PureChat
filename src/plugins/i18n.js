@@ -27,7 +27,7 @@ export const i18n = createI18n({
 
 /**
  * app.config.globalProperties.$t = i18n.global.t;
- * 可以在全局模版语法直接使用 
+ * 可以在全局模版语法直接使用
  * $t("common.setup")
  * $t("el.messagebox.confirm")
  */

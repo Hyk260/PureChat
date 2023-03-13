@@ -1,4 +1,5 @@
 // import store from '@/store/index';
+const { title } = require("@/config/vue.custom.config");
 
 /**
  * 切换主题风格
@@ -9,7 +10,6 @@ export function changeAppearance(appearance = "light") {
     // 查询系统主题色
     const media = window.matchMedia("(prefers-color-scheme: light)");
     media.onchange = autotaggTheme;
-    // console.log(media);
     appearance = media.matches ? "light" : "dark";
   }
   // 设置element主题色
@@ -20,7 +20,6 @@ export function changeAppearance(appearance = "light") {
   }
   // 自定义主题设色
   document.body.setAttribute("data-theme", appearance);
-  let text = appearance === "dark" ? "黑色" : "白色";
 }
 
 /**
@@ -38,8 +37,9 @@ export function autotaggTheme(e) {
 }
 
 /**
- * @description: 格式化文件大小
- * @param { Number }  bytes
+ * 将字节数转换为可读性更强的单位
+ * @param {number} bytes - 需要转换的字节数值
+ * @returns {string} - 转换后的字符串，表示合适的单位和对应的数值
  */
 export function bytesToSize(bytes) {
   const marker = 1024; // Change to 1000 if required
@@ -59,16 +59,7 @@ export function bytesToSize(bytes) {
     return (bytes / gigaBytes).toFixed(decimal) + " GB";
   }
 }
-/**
- * @description: 生成随机数
- */
-export function randomNum(minNum, maxNum) {
-  switch (arguments.length) {
-    case 1:
-      return parseInt(Math.random() * minNum + 1, 10);
-    case 2:
-      return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
-    default:
-      return 0;
-  }
+
+export function setPageTitle(routerTitle) {
+  document.title = routerTitle ? `${routerTitle} | ${title}` || title : title;
 }

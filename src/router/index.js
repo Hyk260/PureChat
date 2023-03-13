@@ -9,6 +9,7 @@ import routes from "./routes";
 import store from "@/store";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 const { title, production } = require("@/config/vue.custom.config");
+import { setPageTitle } from "@/utils/common";
 
 // hack router push callback
 const originalPush = createRouter.prototype.push;
@@ -38,7 +39,7 @@ router.beforeEach(async (to, from, next) => {
   // console.log(to, "to")
   // console.log(from,"from")
   if (from.path === to.path) return;
-  document.title = `${to.meta.title} | ${title}` || document.title;
+  setPageTitle(to.meta.title);
   const token = storage.get(ACCESS_TOKEN);
 
   if (token) {

@@ -1,13 +1,13 @@
 <template>
   <el-scrollbar>
-    <div class="content-wrap">
+    <div class="content-wrap select-none">
       <el-row :gutter="20">
         <!-- 菜单列表 -->
         <el-col :span="10" class="style-el-col">
           <el-card>
             <template #header>
               <div class="style-header">
-                <el-button v-if="true" size="small" plain @click="addMenuBtn">
+                <el-button size="small" plain @click="addMenuBtn">
                   添加菜单
                 </el-button>
                 <el-button size="small" plain @click="Putall(isExpand)">
@@ -17,13 +17,13 @@
                   size="small"
                   type="danger"
                   @click="delMenuBtn"
-                  v-if="showDelBtn"
+                  v-show="showDelBtn"
                 >
                   删除
                 </el-button>
               </div>
             </template>
-            <el-skeleton animated :rows="12" :loading="false">
+            <el-skeleton animated :rows="12" :loading="loading">
               <template #default>
                 <div>
                   <div class="input-style">
@@ -42,6 +42,8 @@
                         class="filter-tree"
                         :data="routingtable"
                         show-checkbox
+                        accordion
+                        highlight-current
                         default-expand-all
                         node-key="id"
                         @node-click="nodeClick"
@@ -71,7 +73,7 @@
                 <span> 编辑菜单 </span>
               </div>
             </template>
-            <el-skeleton animated :rows="12" :loading="false">
+            <el-skeleton animated :rows="12" :loading="loading">
               <template #default>
                 <!-- close-text="知道了" -->
                 <el-alert
@@ -191,7 +193,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from "vue";
+import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
 import FontIcon from "@/layout/FontIcon/indx.vue";
@@ -240,6 +242,7 @@ const rules = reactive({
   component: [{ required: true, message: "请输入组件名", trigger: "blur" }],
 });
 
+const loading = ref(true);
 const showDelBtn = ref(false);
 const isExpand = ref(false);
 const ruleLabelRef = ref();
@@ -395,6 +398,11 @@ const onSubmit = () => {
     })
     .catch(() => {});
 };
+onMounted(() => {
+  setTimeout(() => {
+    loading.value = false;
+  }, 100);
+});
 </script>
 <style lang="scss">
 .style-select {
@@ -415,15 +423,26 @@ const onSubmit = () => {
 }
 </style>
 <style lang="scss" scoped>
-.style-el-col {
-  margin-bottom: 24px;
+.el-col {
+  min-width: 300px;
 }
 .el-card {
   min-width: 300px;
 }
+.is-current {
+  .custom-node {
+    // background-color: #d5e8fc;
+  }
+}
 .custom-node {
   .el-icon {
-    vertical-align: top;
+    vertical-align: bottom;
+  }
+  i {
+    color: #2b4157;
+  }
+  span {
+    margin-left: 3px;
   }
 }
 .style-tree,
@@ -443,12 +462,12 @@ const onSubmit = () => {
 }
 .year {
   :deep(.el-input__inner) {
-    background: url("~@/assets/images/log.png") no-repeat;
-    background-size: 26px 26px;
-    background-position: 0px 3px;
-    padding: 0 0 0 26px;
-    box-sizing: border-box;
-    font-size: 14px;
+    // background: url("~@/assets/images/log.png") no-repeat;
+    // background-size: 26px 26px;
+    // background-position: 0px 3px;
+    // padding: 0 0 0 26px;
+    // box-sizing: border-box;
+    // font-size: 14px;
   }
 
   :deep(.el-input) {
@@ -461,5 +480,7 @@ const onSubmit = () => {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.custom-node {
 }
 </style>

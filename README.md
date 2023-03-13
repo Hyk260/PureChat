@@ -28,8 +28,10 @@
 ### 🎉 特性
 
 - 📦️ 使用 Vue CLI 5 构建
+
 - 📃 RBAC 模型 + JWT 权限控制
   - 后端路由动态渲染 `express`
+  
 - ☁️ 聊天工作室 `基于IM即时通讯sdk`
   - @好友功能
   - 支持消息撤回
@@ -40,17 +42,41 @@
   - 聊天消息多选转发功能(开发中)
   - 支持「文字」「图片」「动态表情包」「文件」「自定义」等格式消息发送
   - 消息输入框使用富文本框 `wangEditor 5`开发(后续支持多类型消息混发)。
+  
 - 🎮 九宫格拼图游戏(自动拼图)
+
 - 🌚 光明/黑暗 模式切换`自动根据系统主题改变`(完善中)
+
 - ⚡️ 自定义 SVG 图标组件`svg-sprite-loader`
+
 - 🔴 国际化`vue-i18n`(开发中)
   - vscode 扩展插件 `i18n-ally`自动翻译
+  
 - ⚙️ vscode 配置文件
   - vue3.0 vue3.2 快速度生成模板语法配置 `code-snippets`
   - vscode 扩展插件推荐 `extensions`
+  
 - 🔧 Prettier + ESLint 规范 `自动格式化`
+
 - 💡Commitlint 提交规范
+
 - 🛠 更多特性开发中
+
+  
+
+### 按需引入 element-plus 组件
+
+全量引入组件库太过臃肿，项目中使用 `unplugin-vue-components` 插件进行按需自动引入组件，可通过[官方文档](https://element-plus.org/zh-CN/guide/quickstart.html#按需导入)了解更多。
+
+
+
+### SVG 图标使用
+
+将 svg 图标文件放在 `src/icons/svg` 目录下
+
+在项目中直接使用 `<svg-icon iconClass="svg图标文件命名" />` 即可
+
+
 
 ### ✨ 安装使用
 
