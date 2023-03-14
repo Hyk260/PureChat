@@ -45,15 +45,15 @@ export const accountCheck = async (params) => {
 // 单发单聊消息
 export const restSendMsg = async (params) => {
   const { From, To, content } = params;
-  if (From !== "R00001") return;
+  if (To !== "R00001") return;
   const url = "v4/openim/sendmsg";
   const result = await service({
     url: buildURL(url),
     method: "post",
     data: {
       SyncOtherMachine: 1, // 消息同步1 不同步 2
-      From_Account: From,
-      To_Account: To || store.state.user.userID,
+      From_Account: To || store.state.user.userID,
+      To_Account: From,
       MsgSeq: 93847636,
       MsgRandom: 1287657,
       MsgBody: [

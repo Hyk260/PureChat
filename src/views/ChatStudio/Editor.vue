@@ -353,7 +353,7 @@ const sendMessage = async () => {
   }
   // 发送消息
   let { code, data } = await sendMsg(TextMsg);
-  restSendMsg({ To: "", From: data.message.from });
+  restSendMsg({ To: toAccount, From: data.message.from });
   console.log(data, "sendMsg");
   if (code == 0) {
     // SendMessageCd({
