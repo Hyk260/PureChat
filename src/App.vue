@@ -4,45 +4,32 @@
   </el-config-provider>
 </template>
 
-<script>
-import { onMounted, nextTick, defineComponent } from "vue";
+<script setup>
+import { onMounted, nextTick, computed, defineComponent } from "vue";
 import { useStore, mapState } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { ElConfigProvider } from "element-plus";
+import { useState } from "@/utils/hooks/useMapper";
 
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import en from "element-plus/lib/locale/lang/en";
 
-export default defineComponent({
-  name: "app",
-  components: {
-    [ElConfigProvider.name]: ElConfigProvider,
-  },
-  computed: {
-    ...mapState({
-      lang: (state) => state.settings.lang,
-    }),
-    currentLocale() {
-      return this.lang === "zh-CN" ? zhCn : en;
-    },
-  },
-  setup() {
-    const route = useRoute();
-    const router = useRouter();
-    const { state, dispatch, commit } = useStore();
+const route = useRoute();
+const router = useRouter();
+const { dispatch, commit } = useStore();
+const { lang } = useState({
+  lang: (state) => state.settings.lang,
+});
+const currentLocale = computed(() => {
+  return lang.value === "zh-CN" ? zhCn : en;
+});
 
-    onMounted(async () => {
-      commit("updataRoute");
-      setTimeout(() => {
-        if (route.name !== "login") {
-          dispatch("RE_LOGIN");
-        }
-      }, 200);
-    });
-    return {
-      route,
-    };
-  },
+onMounted(async () => {
+  commit("updataRoute");
+  setTimeout(() => {
+    if (route.name == "login") return;
+    dispatch("RE_LOGIN");
+  }, 200);
 });
 </script>
 
