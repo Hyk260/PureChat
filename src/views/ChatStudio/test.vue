@@ -30,7 +30,7 @@ import {
 } from "vue";
 import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
 import { getGroupList, getFriendList } from "@/api/im-sdk-api";
-import { accountCheck } from "@/api/rest-api";
+import { accountCheck, restSendMsg } from "@/api/rest-api";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 import { setCookies, getCookies } from "@/utils/Cookies";
 import io from "socket.io-client";
@@ -67,6 +67,10 @@ export default defineComponent({
           title: "获取Cookes",
           onclick: () => this.getCookies(),
         },
+        {
+          title: "单发单聊消息",
+          onclick: () => this.sendMsg(),
+        },
       ],
       message: "Hello, world!",
     };
@@ -89,8 +93,11 @@ export default defineComponent({
     getCookies() {
       console.log(getCookies(ACCESS_TOKEN));
     },
+    sendMsg() {
+      restSendMsg();
+    },
     async test2() {
-      const res = await accountCheck({ userid: "wangj" });
+      const res = await accountCheck({ userid: "admin" });
       console.log(res);
     },
     handleGroupClick(groupID) {

@@ -72,6 +72,7 @@ import { bytesToSize } from "@/utils/common";
 import { fileImgToBase64Url, dataURLtoFile } from "@/utils/message-input-utils";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 import { SendMessageCd } from "@/api/index";
+import { accountCheck, restSendMsg } from "@/api/rest-api";
 import {
   CreateTextMsg,
   CreateTextAtMsg,
@@ -352,6 +353,7 @@ const sendMessage = async () => {
   }
   // 发送消息
   let { code, data } = await sendMsg(TextMsg);
+  restSendMsg({ To: "", From: data.message.from });
   console.log(data, "sendMsg");
   if (code == 0) {
     // SendMessageCd({

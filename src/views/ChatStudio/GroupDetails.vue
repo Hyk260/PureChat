@@ -193,7 +193,7 @@ const visible = computed({
 });
 
 const openDetails = () => {
-  Refdrawerlist.value.handleOpen();
+  // Refdrawerlist.value.handleOpen();
 };
 const handleClose = (done) => {
   done();
