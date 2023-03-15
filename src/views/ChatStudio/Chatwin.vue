@@ -101,6 +101,7 @@ import {
   RIGHT_CLICK_MENU_LIST,
 } from "./utils/menu";
 import { useStore } from "vuex";
+import { ElMessageBox } from "element-plus";
 import { fncopy, dragControllerDiv } from "./utils/utils";
 
 import { timeFormat } from "@/utils/timeFormat";
@@ -439,24 +440,31 @@ const ClickMenuItem = (data) => {
   const Info = MenuItemInfo.value;
   const { id, text } = data;
   switch (id) {
-    case "copy":
-      fncopy(Info); //复制
+    case "copy": //复制
+      fncopy(Info);
       break;
-    case "revoke":
-      revokes(Info); //撤回
+    case "revoke": //撤回
+      revokes(Info);
       break;
-    case "multiSelect":
-      multiSelect(Info); //多选
+    case "multiSelect": //多选
+      multiSelect(Info);
       break;
-    case "delete":
-      fndelete(Info); //删除
+    case "delete": //删除
+      fndelete(Info);
       break;
   }
 };
 // 删除消息
 const fndelete = async (data) => {
-  let { code } = await deleteMsgList(data);
-  if (code == 0) {
+  try {
+    const formEl = await ElMessageBox.confirm("确定删除?", "提示", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    });
+    if (formEl == "cancel") return;
+    const { code } = await deleteMsgList(data);
+    if (code !== 0) return;
     const { conversationID, toAccount, to } = data;
     commit("SET_HISTORYMESSAGE", {
       type: "DELETE_MESSAGE",
@@ -465,6 +473,8 @@ const fndelete = async (data) => {
         message: data,
       },
     });
+  } catch (error) {
+    console.log(error);
   }
 };
 // 多选
@@ -473,7 +483,7 @@ const multiSelect = (data) => {
 };
 // 撤回消息
 const revokes = (data) => {
-  revokeMsg(data);
+  const { code, message } = revokeMsg(data);
 };
 
 watch(

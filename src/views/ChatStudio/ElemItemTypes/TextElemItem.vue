@@ -96,6 +96,7 @@ function AnalysisUrl(props) {
   padding: 10px 14px;
   box-sizing: border-box;
   border-radius: 3px;
+  word-break: break-all;
   :deep(.linkUrl) {
     color: blue;
     cursor: pointer;

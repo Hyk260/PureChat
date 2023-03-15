@@ -241,6 +241,7 @@ const onclick = () => {
 };
 const navigate = (item) => {
   dispatch("CHEC_OUT_CONVERSATION", { convId: `C2C${item.userID}` });
+  commit("setGroupStatus", false);
 };
 const groupMemberAdd = () => {
   dialogVisible.value = true;

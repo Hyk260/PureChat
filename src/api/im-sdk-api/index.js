@@ -3,7 +3,7 @@ import tim from "@/utils/im-sdk/tim";
 import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 
 // 获取消息列表
-export const getMsgList = async params => {
+export const getMsgList = async (params) => {
   const { conversationID, count, nextReqMessageID } = params;
   const { code, data } = await tim.getMessageList({
     conversationID: conversationID,
@@ -16,7 +16,7 @@ export const getMsgList = async params => {
   return {};
 };
 // 获取成员列表
-export const getGroupMemberList = async params => {
+export const getGroupMemberList = async (params) => {
   try {
     const { groupID, count, offset } = params;
     const { code, data } = await tim.getGroupMemberList({
@@ -30,7 +30,7 @@ export const getGroupMemberList = async params => {
   }
 };
 // 获取群组列表
-export const getGroupList = async params => {
+export const getGroupList = async (params) => {
   try {
     const {
       code,
@@ -43,7 +43,7 @@ export const getGroupList = async params => {
 };
 
 // 添加群成员
-export const addGroupMember = async params => {
+export const addGroupMember = async (params) => {
   const { groupID, user } = params;
   const parameter = {
     groupID: groupID,
@@ -66,7 +66,7 @@ export const addGroupMember = async params => {
     });
 };
 // 删除群成员
-export const deleteGroupMember = async params => {
+export const deleteGroupMember = async (params) => {
   const { groupID, user } = params;
   const parameter = {
     groupID: groupID,
@@ -84,7 +84,7 @@ export const deleteGroupMember = async params => {
     });
 };
 // 获取 SDK 缓存的好友列表
-export const getFriendList = async params => {
+export const getFriendList = async (params) => {
   let promise = tim.getFriendList();
   promise
     .then(function (imResponse) {
@@ -103,7 +103,7 @@ export const getMyProfile = async () => {
     console.log(e);
   }
 };
-export const getGroupProfile = async params => {
+export const getGroupProfile = async (params) => {
   const { groupID } = params;
   const { data, code } = await tim.getGroupProfile({
     groupID: groupID,
@@ -112,7 +112,7 @@ export const getGroupProfile = async params => {
   return data.group;
 };
 //登录
-export const TIM_login = async params => {
+export const TIM_login = async (params) => {
   const { userID, userSig } = params;
   const result = await tim.login({
     userID,
@@ -136,7 +136,7 @@ export const TIM_Destroy = async () => {
   await tim.destroy();
 };
 // 创建文本消息
-export const CreateTextMsg = async params => {
+export const CreateTextMsg = async (params) => {
   const { convId, convType, textMsg } = params;
   let message = await tim.createTextMessage({
     to: convId, // 接受放ID
@@ -155,7 +155,7 @@ export const CreateTextMsg = async params => {
   return message;
 };
 // 创建@ 提醒功能的文本消息
-export const CreateTextAtMsg = async params => {
+export const CreateTextAtMsg = async (params) => {
   const { convId, convType, textMsg, atUserList } = params;
   let message = await tim.createTextAtMessage({
     to: convId,
@@ -168,20 +168,14 @@ export const CreateTextAtMsg = async params => {
   return message;
 };
 // 创建图片消息
-export const CreateImgtMsg = async params => {
+export const CreateImgtMsg = (params) => {
   const { convId, convType, image } = params;
-  let message = tim.createImageMessage({
+  const message = tim.createImageMessage({
     to: convId,
     conversationType: convType,
-    // 消息优先级，用于群聊（v2.4.2起支持）。如果某个群的消息超过了频率限制，后台会优先下发高优先级的消息，详细请参考：https://cloud.tencent.com/document/product/269/3663#.E6.B6.88.E6.81.AF.E4.BC.98.E5.85.88.E7.BA.A7.E4.B8.8E.E9.A2.91.E7.8E.87.E6.8E.A7.E5.88.B6)
-    // 支持的枚举值：TIM.TYPES.MSG_PRIORITY_HIGH, TIM.TYPES.MSG_PRIORITY_NORMAL（默认）, TIM.TYPES.MSG_PRIORITY_LOW, TIM.TYPES.MSG_PRIORITY_LOWEST
-    // priority: TIM.TYPES.MSG_PRIORITY_NORMAL,
     payload: {
       file: image,
-      // file: document.getElementById("imagePicker"),
     },
-    // 消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到，v2.10.2起支持）
-    // cloudCustomData: 'your cloud custom data'
     onProgress: function (event) {
       console.log("file uploading:", event);
     },
@@ -189,9 +183,9 @@ export const CreateImgtMsg = async params => {
   return message;
 };
 // 创建文件消息
-export const CreateFiletMsg = async params => {
+export const CreateFiletMsg = async (params) => {
   const { convId, convType, files } = params;
-  let message = tim.createFileMessage({
+  const message = tim.createFileMessage({
     to: convId,
     conversationType: convType,
     payload: {
@@ -204,7 +198,7 @@ export const CreateFiletMsg = async params => {
   return message;
 };
 // 创建合并消息
-export const createMergerMsg = async params => {
+export const createMergerMsg = async (params) => {
   const { convId, convType, List, title, abstractList } = params;
   let mergerMessage = tim.createMergerMessage({
     to: convId,
@@ -220,17 +214,29 @@ export const createMergerMsg = async params => {
   });
 };
 // 发送消息
-export const sendMsg = async params => {
-  const result = await tim.sendMessage(params);
-  return result;
+export const sendMsg = async (params) => {
+  const {
+    code,
+    data: { message },
+  } = await tim.sendMessage(params);
+  return {
+    code,
+    message,
+  };
 };
 // 删除消息
-export const deleteMsgList = async params => {
-  const result = await tim.deleteMessage([params]);
-  return result;
+export const deleteMsgList = async (params) => {
+  const {
+    code,
+    data: { messageList },
+  } = await tim.deleteMessage([params]);
+  return {
+    code,
+    messageList,
+  };
 };
 // 会话顶置
-export const TIMpingConv = async params => {
+export const TIMpingConv = async (params) => {
   const { conversationID, isPinned } = params;
   const result = await tim.pinConversation({
     conversationID,
@@ -239,20 +245,18 @@ export const TIMpingConv = async params => {
   return result;
 };
 // 撤回消息
-export const revokeMsg = params => {
-  let promise = tim.revokeMessage(params);
-  promise
-    .then(function (imResponse) {
-      // 消息撤回成功
-      console.log(imResponse);
-    })
-    .catch(function (imError) {
-      // 消息撤回失败
-      console.warn("revokeMessage error:", imError);
-    });
+export const revokeMsg = async (params) => {
+  const {
+    code,
+    data: { message },
+  } = await tim.revokeMessage(params);
+  return {
+    code,
+    message,
+  };
 };
 // 消息免打扰
-export const setMessageRemindType = async params => {
+export const setMessageRemindType = async (params) => {
   const { userID, RemindType, type } = params;
   let parameter = null;
   let isDisable = RemindType == "AcceptNotNotify";
@@ -282,7 +286,7 @@ export const setMessageRemindType = async params => {
   }
 };
 // 获取会话信息
-export const getConversationProfile = async params => {
+export const getConversationProfile = async (params) => {
   try {
     const { conversationID } = params;
     const { code, data } = await tim.getConversationProfile(conversationID);
@@ -294,7 +298,7 @@ export const getConversationProfile = async params => {
   }
 };
 // 消息已读上报
-export const setMessageRead = async convId => {
+export const setMessageRead = async (convId) => {
   let promise = tim.setMessageRead({ conversationID: convId });
   promise
     .then(function (imResponse) {
@@ -307,7 +311,7 @@ export const setMessageRead = async convId => {
     });
 };
 // 修改群消息
-export const updateGroupProfile = async params => {
+export const updateGroupProfile = async (params) => {
   const { convId, modify = "", text = "" } = params;
   let parameter = {
     groupID: convId,
@@ -327,7 +331,7 @@ export const updateGroupProfile = async params => {
     });
 };
 // 删除会话
-export const deleteConversation = async params => {
+export const deleteConversation = async (params) => {
   const { convId } = params;
   const {
     code,

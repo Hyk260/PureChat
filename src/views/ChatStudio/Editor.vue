@@ -228,8 +228,14 @@ const parsefile = async (file) => {
     const { size } = file;
     const fileSize = bytesToSize(size);
     const base64Url = await fileImgToBase64Url(file);
-    console.log(base64Url);
+    // console.log(base64Url);
     console.log(fileSize);
+    const FileElement = {
+      type: "file",
+      style: { width: "125px" },
+      children: [{ text: "" }],
+    };
+    editorRef.value.insertNode(FileElement);
   } catch (error) {
     console.log(error);
   }
@@ -320,7 +326,7 @@ const sendMessage = async () => {
   let flag = true;
   let TextMsg = null;
   let ImgtMsg = false;
-  const { type, conversationID, toAccount } = currentConversation.value;
+  const { type, toAccount } = currentConversation.value;
   const { text, aitStr, image, aitlist } = sendMsgBefore();
   // console.log(image);
   ImgtMsg = image.length > 0 ? true : false;
@@ -328,16 +334,16 @@ const sendMessage = async () => {
   // 图片消息
   if (ImgtMsg) {
     let file = dataURLtoFile(image[0].src);
-    TextMsg = await CreateImgtMsg({
+    TextMsg = CreateImgtMsg({
       convId: toAccount,
-      convType: type, //"C2C"
+      convType: type,
       image: file,
     });
     flag = false;
   }
   if (aitStr) {
     // @消息
-    TextMsg = await CreateTextAtMsg({
+    TextMsg = CreateTextAtMsg({
       convId: toAccount,
       convType: type,
       textMsg: aitStr,
@@ -345,16 +351,16 @@ const sendMessage = async () => {
     });
   } else if (flag) {
     // 文本消息
-    TextMsg = await CreateTextMsg({
+    TextMsg = CreateTextMsg({
       convId: toAccount,
-      convType: type, //"C2C"
+      convType: type,
       textMsg: text,
     });
   }
   // 发送消息
-  let { code, data } = await sendMsg(TextMsg);
-  restSendMsg({ To: toAccount, From: data.message.from });
-  console.log(data, "sendMsg");
+  let { code, message } = await sendMsg(TextMsg);
+  restSendMsg({ To: toAccount, From: message.from });
+  console.log(message, "sendMsg");
   if (code == 0) {
     // SendMessageCd({
     //   sender: data.message.from,
@@ -366,12 +372,12 @@ const sendMessage = async () => {
       type: "UPDATE_MESSAGES",
       payload: {
         convId: "",
-        message: data.message,
+        message: message,
       },
     });
     commit("updataScroll");
   } else {
-    console.log(data);
+    console.log(message);
   }
 };
 </script>

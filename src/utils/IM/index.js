@@ -116,7 +116,7 @@ export default class TIMProxy {
     }
   }
   onUpdateConversationList({ data, name }) {
-    console.log(data, "onUpdateConversationList_会话列表更新");
+    console.log(data, "会话列表更新");
     store.commit("SET_CONVERSATION", {
       type: "REPLACE_CONV_LIST",
       payload: data,
@@ -161,7 +161,7 @@ export default class TIMProxy {
     store.commit("updataScroll");
   }
   onMessageRevoked({ data, name }) {
-    console.log(data, "onMessageRevoked_撤回消息");
+    console.log(data, "撤回消息");
     store.commit("SET_HISTORYMESSAGE", {
       type: "RECALL_MESSAGE",
       payload: {
@@ -171,7 +171,7 @@ export default class TIMProxy {
     });
   }
   onUpdateGroupList({ data, name }) {
-    console.log(data, "onUpdateGroupList_群组列表更新");
+    console.log(data, "群组列表更新");
     // commit('updateGroupList', data)
   }
   onKickOut({ data }) {
