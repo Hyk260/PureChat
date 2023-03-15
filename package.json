@@ -97,5 +97,8 @@
     "type": "git",
     "url": "https://github.com/Hyk260"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "peerDependencies": {
+    "snabbdom": "^3.5.1"
+  }
 }

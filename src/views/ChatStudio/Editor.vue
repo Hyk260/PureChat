@@ -230,12 +230,29 @@ const parsefile = async (file) => {
     const base64Url = await fileImgToBase64Url(file);
     // console.log(base64Url);
     console.log(fileSize);
-    const FileElement = {
-      type: "file",
-      style: { width: "125px" },
-      children: [{ text: "" }],
+    // const FileElement = {
+    //   type: "file",
+    //   style: { width: "125px" },
+    //   children: [{ text: "" }],
+    // };
+    // var fileNode = {
+    //   type: "div",
+    //   class: { "file-node": true },
+    //   data: { className: "file-node" },
+    //   style: { width: "125px" },
+    //   children: [
+    //     { type: "span", class: "name", text: "name" },
+    //     { type: "span", class: "type", text: "type" },
+    //     { type: "span", class: "size", text: fileSize },
+    //   ],
+    // };
+    const resume = {
+      type: "attachment",
+      fileName: "resume.pdf",
+      link: "https://xxx.com/files/resume.pdf",
+      children: [{ text: "" }], // void 元素必须有一个 children ，其中只有一个空字符串，重要！！！
     };
-    editorRef.value.insertNode(FileElement);
+    editorRef.value.insertNode(resume);
   } catch (error) {
     console.log(error);
   }
@@ -334,7 +351,7 @@ const sendMessage = async () => {
   // 图片消息
   if (ImgtMsg) {
     let file = dataURLtoFile(image[0].src);
-    TextMsg = CreateImgtMsg({
+    TextMsg = await CreateImgtMsg({
       convId: toAccount,
       convType: type,
       image: file,
@@ -343,7 +360,7 @@ const sendMessage = async () => {
   }
   if (aitStr) {
     // @消息
-    TextMsg = CreateTextAtMsg({
+    TextMsg = await CreateTextAtMsg({
       convId: toAccount,
       convType: type,
       textMsg: aitStr,
@@ -351,7 +368,7 @@ const sendMessage = async () => {
     });
   } else if (flag) {
     // 文本消息
-    TextMsg = CreateTextMsg({
+    TextMsg = await CreateTextMsg({
       convId: toAccount,
       convType: type,
       textMsg: text,
