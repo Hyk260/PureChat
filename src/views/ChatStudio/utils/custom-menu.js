@@ -135,12 +135,12 @@ function renderAttachment(elem, children, editor) {
     {
       props: { contentEditable: false }, // HTML 属性，驼峰式写法
       style: {
-        marginLeft: "3px",
         width: "200px",
         height: "60px",
         borderRadius: "3px",
         border: "1px solid #eeeeee",
-        display: "flex",
+        display: "inline-flex",
+        // display: "inline-block",
         alignItems: "center",
         userSelect: "none",
       },
@@ -155,14 +155,65 @@ function renderAttachment(elem, children, editor) {
   return attachVnode;
 }
 
+/**
+ * 生成“附件”元素的 HTML
+ * @param elem 附件元素，即上文的 myResume
+ * @param childrenHtml 子节点的 HTML 代码，void 元素可忽略
+ * @returns “附件”元素的 HTML 字符串
+ * editor.getHtml()
+ */
+function attachmentToHtml(elem, childrenHtml) {
+  const { link = "", fileName = "" } = elem;
+  // data-w-e-is-void
+  // data-w-e-is-inline
+  const html = `<span
+        data-w-e-type="attachment"
+        data-link="${link}"
+        data-fileName="${fileName}"
+    >${fileName}</span>`;
+  return html;
+}
+
+/**
+ * 解析 HTML 字符串，生成“附件”元素
+ * @param domElem HTML 对应的 DOM Element
+ * @param children 子节点
+ * @param editor editor 实例
+ * @returns “附件”元素，如上文的 myResume
+ * editor.setHtml(html)
+ */
+function parseAttachmentHtml(domElem, children, editor) {
+  // 从 DOM element 中获取“附件”的信息
+  const link = domElem.getAttribute("data-link") || "";
+  const fileName = domElem.getAttribute("data-fileName") || "";
+  // 生成“附件”元素（按照此前约定的数据结构）
+  const myResume = {
+    type: "attachment",
+    link,
+    fileName,
+    children: [{ text: "" }],
+  };
+  return myResume;
+}
+
 const renderElemConf = {
-  type: "attachment", // 新元素 type ，重要！！！
+  type: "attachment",
   renderElem: renderAttachment,
 };
-Boot.registerRenderElem(renderElemConf);
+const elemToHtmlConf = {
+  type: "attachment",
+  elemToHtml: attachmentToHtml,
+};
+const parseHtmlConf = {
+  selector: 'span[data-w-e-type="attachment"]', // CSS 选择器，匹配特定的 HTML 标签
+  parseElemHtml: parseAttachmentHtml,
+};
 
 // 注册。要在创建编辑器之前注册，且只能注册一次，不可重复注册。
+Boot.registerParseElemHtml(parseHtmlConf);
+Boot.registerElemToHtml(elemToHtmlConf);
+Boot.registerRenderElem(renderElemConf);
 Boot.registerPlugin(withAttachment);
 Boot.registerMenu(menu1Conf);
 Boot.registerModule(mentionModule);
-Boot.registerModule(ctrlEnterModule);
+Boot.registerModule(ctrlEnterModule); // ctrl+Enter 换行

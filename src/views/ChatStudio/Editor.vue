@@ -272,18 +272,34 @@ const handleEnter = () => {
   let isEmpty = editor.isEmpty();
   // 纯文本内容
   const text = editor.getText();
+  const html = editor.getHtml();
+
+  // const matchStr = html.match(/data-link="([^"]*)"/);
+  // const link = matchStr?.[1];
+
+  // console.log(link); // 输出"data-link"属性的值
+  // 获取包含数据属性的元素
+  // const attachmentElem = document.querySelector(
+  //   'span[data-w-e-type="attachment"]'
+  // );
+  // console.log(attachmentElem);
+  // 获取数据属性的值
+  // const link = attachmentElem?.getAttribute("data-link");
+
+  // console.log(link); // 输出数据属性的值
+  // console.log(html);
   // 所有图片
   const imageall = editor.getElemsByType("image");
   console.log(text);
   if ((!isEmpty && !empty(text)) || imageall.length > 0) {
     sendMessage();
   } else {
-    const { aitStr } = sendMsgBefore();
-    if (aitStr) {
+    const { aitStr, files } = sendMsgBefore();
+    if (aitStr || files) {
       sendMessage();
     } else {
       console.log("请输入内容");
-      clearInputInfo();
+      clearInputInfo(editor);
     }
   }
   // const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
@@ -294,7 +310,11 @@ const handleEnter = () => {
 };
 // 清空输入框
 const clearInputInfo = () => {
-  editorRef.value.clear();
+  const editor = editorRef.value;
+  // valueHtml.value = "";
+  editor.setHtml("<p></p>");
+  editor.deleteForward();
+  editor.clear();
 };
 
 const sendMsgBefore = () => {
@@ -305,7 +325,7 @@ const sendMsgBefore = () => {
   let content = messages.value[0].children;
   const editor = editorRef.value;
   const text = editorRef.value.getText(); // 纯文本内容
-  // const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
+  const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
   // const innHTML = HtmlText.replace(/<(?!img).*?>/g, "");
   const image = editor.getElemsByType("image"); // 所有图片
   // console.log(text);
@@ -316,10 +336,23 @@ const sendMsgBefore = () => {
     newmsg.map((t) => aitlist.push(t.info.id));
     aitlist = Array.from(new Set(aitlist));
   }
+  const matchStr = HtmlText.match(/data-link="([^"]*)"/);
+  const matchStrName = HtmlText.match(/data-fileName="([^"]*)"/);
+
+  const fileName = matchStrName?.[1];
+  const link = matchStr?.[1];
+
+  // console.log(link);
   // console.log(HtmlText);
   // console.log(innHTML);
   // console.log(aitStr);
-  return { text, image, aitStr, aitlist };
+  return {
+    text,
+    image,
+    aitStr,
+    aitlist,
+    files: link ? { fileName, src: link } : null,
+  };
 };
 // 发送消息
 const sendMessage = async () => {
@@ -327,10 +360,22 @@ const sendMessage = async () => {
   let TextMsg = null;
   let ImgtMsg = false;
   const { type, toAccount } = currentConversation.value;
-  const { text, aitStr, image, aitlist } = sendMsgBefore();
+  const { text, aitStr, image, aitlist, files } = sendMsgBefore();
   // console.log(image);
   ImgtMsg = image.length > 0 ? true : false;
+
   // return;
+  if (files) {
+    const { fileName, src } = files;
+    let file = dataURLtoFile(src, fileName);
+    console.log(file);
+    TextMsg = await CreateFiletMsg({
+      convId: toAccount,
+      convType: type,
+      files: file,
+    });
+    flag = false;
+  }
   // 图片消息
   if (ImgtMsg) {
     let file = dataURLtoFile(image[0].src);
