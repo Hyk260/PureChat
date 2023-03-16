@@ -32,6 +32,7 @@ import {
 } from "vue";
 import { bytesToSize } from "@/utils/common";
 import { getFileType } from "@/utils/message-input-utils";
+import { renderFileIcon } from "../utils/utils";
 const props = defineProps({
   message: {
     type: Object,
@@ -51,25 +52,6 @@ const backstyle = (status = 1, percentage = 100) => {
     : "";
 };
 // backgroundStyle.value = backstyle();
-const renderFileIcon = (fileType = "") => {
-  let type;
-  if (fileType == "xlsx" || fileType == "xls") {
-    type = "表格";
-  } else if (fileType == "doc" || fileType == "docx") {
-    type = "文档";
-  } else if (fileType == "pptx" || fileType == "ppt") {
-    type = "ppt";
-  } else if (fileType == "rar" || fileType == "zip") {
-    type = "压缩包";
-  } else if (fileType == "txt") {
-    type = "txt";
-  } else if (fileType == "pdf") {
-    type = "pdf";
-  } else {
-    type = "通用";
-  }
-  return require(`@/assets/message/${type}.png`);
-};
 </script>
 
 <style lang="scss" scoped>

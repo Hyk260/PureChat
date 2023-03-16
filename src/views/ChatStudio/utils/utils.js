@@ -84,3 +84,23 @@ export const GroupSystemNotice = (message) => {
       return "自定义群系统通知: " + message.payload.userDefinedField;
   }
 };
+
+export const renderFileIcon = (fileType = "") => {
+  let type;
+  if (fileType == "xlsx" || fileType == "xls") {
+    type = "表格";
+  } else if (fileType == "doc" || fileType == "docx") {
+    type = "文档";
+  } else if (fileType == "pptx" || fileType == "ppt") {
+    type = "ppt";
+  } else if (fileType == "rar" || fileType == "zip") {
+    type = "压缩包";
+  } else if (fileType == "txt") {
+    type = "txt";
+  } else if (fileType == "pdf") {
+    type = "pdf";
+  } else {
+    type = "通用";
+  }
+  return require(`@/assets/message/${type}.png`);
+};

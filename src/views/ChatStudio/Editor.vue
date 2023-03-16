@@ -225,34 +225,17 @@ const dropHandler = (e) => {
 const parsefile = async (file) => {
   console.log(file, "文件");
   try {
-    const { size } = file;
+    const { size, name } = file;
     const fileSize = bytesToSize(size);
     const base64Url = await fileImgToBase64Url(file);
-    // console.log(base64Url);
-    console.log(fileSize);
-    // const FileElement = {
-    //   type: "file",
-    //   style: { width: "125px" },
-    //   children: [{ text: "" }],
-    // };
-    // var fileNode = {
-    //   type: "div",
-    //   class: { "file-node": true },
-    //   data: { className: "file-node" },
-    //   style: { width: "125px" },
-    //   children: [
-    //     { type: "span", class: "name", text: "name" },
-    //     { type: "span", class: "type", text: "type" },
-    //     { type: "span", class: "size", text: fileSize },
-    //   ],
-    // };
-    const resume = {
+    const FileElement = {
       type: "attachment",
-      fileName: "resume.pdf",
-      link: "https://xxx.com/files/resume.pdf",
+      fileName: name,
+      fileSize: fileSize,
+      link: base64Url,
       children: [{ text: "" }], // void 元素必须有一个 children ，其中只有一个空字符串，重要！！！
     };
-    editorRef.value.insertNode(resume);
+    editorRef.value.insertNode(FileElement);
   } catch (error) {
     console.log(error);
   }
