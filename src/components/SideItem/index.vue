@@ -7,7 +7,12 @@
         v-if="fn(item)"
         :index="item.url"
       >
-        <font-icon :iconName="item.meta.icon" />
+        <el-badge
+          :value="unreadMsg"
+          :hidden="item.meta.icon !== 'ForkSpoon' || unreadMsg == 0"
+        >
+          <font-icon :iconName="item.meta.icon" />
+        </el-badge>
         <template #title>
           <span>{{ item.meta.title }}</span>
         </template>
@@ -27,6 +32,7 @@
 <script setup>
 import { computed, toRefs } from "vue";
 import FontIcon from "@/layout/FontIcon/indx.vue";
+import { useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
 
 const store = useStore();
@@ -42,6 +48,10 @@ const props = defineProps({
   },
 });
 const { tree } = toRefs(props);
+
+const { unreadMsg } = useState({
+  unreadMsg: (state) => state.conversation.TotalUnreadMsg,
+});
 
 const fn = (item) => {
   return !item.children || item.children.length === 0;

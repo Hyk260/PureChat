@@ -125,7 +125,7 @@ const popoverRef = ref();
 const imagePicker = ref();
 const filePicker = ref();
 const visible = ref(false);
-const emit = defineEmits(["setEmoj", "setPicture"]);
+const emit = defineEmits(["setEmoj", "setPicture", "setParsefile"]);
 
 const onClickOutside = () => {
   unref(popoverRef).popperRef?.delayHide?.();
@@ -167,7 +167,8 @@ async function sendImage(e) {
   // });
 }
 async function sendFile(e) {
-  console.log(e.target.files[0]);
+  // console.log(e.target.files[0]);
+  emit("setParsefile", e.target.files[0]);
   // const res = await uploadFiles({
   //   files: e.target.files[0],
   // });

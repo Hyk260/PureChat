@@ -15,12 +15,17 @@
           class="aside-list"
           :class="{ current: outside == item.icon }"
         >
-          <svg-icon
-            v-if="item.icon !== 'test'"
-            :iconClass="item.icon"
-            class="style-svg"
-          />
-          <el-icon v-else><SwitchFilled /></el-icon>
+          <el-badge
+            :value="unreadMsg"
+            :hidden="item.icon !== 'news' || unreadMsg == 0"
+          >
+            <svg-icon
+              v-if="item.icon !== 'test'"
+              :iconClass="item.icon"
+              class="style-svg"
+            />
+            <el-icon v-else><SwitchFilled /></el-icon>
+          </el-badge>
           <div class="icon-title">{{ item.title }}</div>
         </div>
       </li>
@@ -87,7 +92,8 @@ const list = [
     show: production,
   },
 ];
-const { outside } = useState({
+const { outside, unreadMsg } = useState({
+  unreadMsg: (state) => state.conversation.TotalUnreadMsg,
   outside: (state) => state.conversation.outside,
 });
 function visibile(item) {

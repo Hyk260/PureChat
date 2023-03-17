@@ -23,7 +23,7 @@ function hideModal() {
 }
 // 编辑器配置
 export const editorConfig = {
-  placeholder: "请输入内容...",
+  placeholder: "", // 请输入内容...
   /* 菜单配置 */
   MENU_CONF: {},
   EXTEND_CONF: {

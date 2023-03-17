@@ -9,6 +9,7 @@ import {
   deleteConversation,
   getConversationProfile,
   setMessageRead,
+  getUnreadMsg,
 } from "@/api/im-sdk-api";
 import { deepClone } from "@/utils/clone";
 
@@ -19,6 +20,7 @@ const getBaseTime = (list) => {
 const conversation = {
   // namespaced: true, //命名空间
   state: {
+    TotalUnreadMsg: 0, // 未读消息总数
     showMsgBox: false, //是否显示输入框
     showCheckbox: false, //是否显示多选框
     isShowModal: false, // @好友弹框
@@ -218,6 +220,10 @@ const conversation = {
           state.forwardData.delete(ID);
           break;
       }
+    },
+    // 获取未读消息总数
+    GET_TOTAL_UNREAD_MSG(state) {
+      state.TotalUnreadMsg = getUnreadMsg();
     },
     // 设置多选框状态
     SET_CHEC_BOX(state, flag) {

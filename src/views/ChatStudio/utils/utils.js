@@ -1,5 +1,12 @@
 import useClipboard from "vue-clipboard3";
 import TIM from "tim-js-sdk";
+import {
+  CreateTextMsg,
+  CreateTextAtMsg,
+  CreateFiletMsg,
+  CreateImgtMsg,
+  sendMsg,
+} from "@/api/im-sdk-api";
 
 const { toClipboard } = useClipboard();
 
@@ -103,4 +110,21 @@ export const renderFileIcon = (fileType = "") => {
     type = "通用";
   }
   return require(`@/assets/message/${type}.png`);
+};
+
+export const getMsgElemItem = (type, data, videoInfoList) => {
+  switch (type) {
+    case "text": {
+      return "";
+    }
+    case "block-video": {
+      return "";
+    }
+    case "block-file": {
+      return "";
+    }
+    case "block-image": {
+      return "";
+    }
+  }
 };

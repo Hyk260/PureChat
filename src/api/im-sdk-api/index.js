@@ -2,6 +2,9 @@ import TIM from "tim-js-sdk";
 import tim from "@/utils/im-sdk/tim";
 import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 
+export const getUnreadMsg = () => {
+  return tim.getTotalUnreadMessageCount();
+};
 // 获取消息列表
 export const getMsgList = async (params) => {
   const { conversationID, count, nextReqMessageID } = params;

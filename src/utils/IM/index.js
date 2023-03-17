@@ -117,6 +117,7 @@ export default class TIMProxy {
   }
   onUpdateConversationList({ data, name }) {
     console.log(data, "会话列表更新");
+    store.commit("GET_TOTAL_UNREAD_MSG");
     store.commit("SET_CONVERSATION", {
       type: "REPLACE_CONV_LIST",
       payload: data,

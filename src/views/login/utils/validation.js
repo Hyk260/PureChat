@@ -14,7 +14,7 @@ export const rules = reactive({
     {
       required: true,
       message: "用户名是必须的",
-      trigger: "blur",
+      trigger: "change",
     },
   ],
   password: [

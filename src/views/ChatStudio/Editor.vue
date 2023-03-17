@@ -12,7 +12,11 @@
       :mode="mode"
     /> -->
     <!-- 自定义工具栏 -->
-    <RichToolbar @setEmoj="setEmoj" @setPicture="setPicture" />
+    <RichToolbar
+      @setEmoj="setEmoj"
+      @setPicture="parsepicture"
+      @setParsefile="parsefile"
+    />
     <Editor
       class="editor-content"
       v-model="valueHtml"
@@ -38,7 +42,7 @@
       content="按Enter发送消息,Ctrl+Enter换行"
       placement="left-start"
     >
-      <el-button class="btn-send" @click="handleEnter">发送</el-button>
+      <el-button class="btn-send" @click="handleEnter()"> 发送 </el-button>
     </el-tooltip>
   </div>
 </template>
@@ -63,10 +67,11 @@ import {
   nextTick,
 } from "vue";
 import { getImageType } from "@/utils/message-input-utils";
+import { getMsgElemItem } from "./utils/utils";
 import { empty } from "@/utils";
 import { useStore } from "vuex";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
-import { generateUUID } from "@/utils/index";
+// import { generateUUID } from "@/utils/index";
 import MentionModal from "./components/MentionModal.vue";
 import { bytesToSize } from "@/utils/common";
 import { fileImgToBase64Url, dataURLtoFile } from "@/utils/message-input-utils";
@@ -112,19 +117,12 @@ const {
   showMsgBox: (state) => state.conversation.showMsgBox,
   isShowModal: (state) => state.conversation.isShowModal,
 });
-// 组件销毁时，及时销毁编辑器
-onBeforeUnmount(() => {
-  const editor = editorRef.value;
-  if (editor == null) return;
-  editor.destroy();
-});
 
 const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 
   // console.log(editor, "实例");
-  // 查看所有工具栏key
-  // console.log(editor.getAllMenuKeys());
+  // console.log(editor.getAllMenuKeys());// 查看所有工具栏key
   // console.log(editor.getConfig());
 };
 const insertMention = (id, name) => {
@@ -235,7 +233,9 @@ const parsefile = async (file) => {
       link: base64Url,
       children: [{ text: "" }], // void 元素必须有一个 children ，其中只有一个空字符串，重要！！！
     };
+    // editorRef.value.restoreSelection(); // 恢复选区
     editorRef.value.insertNode(FileElement);
+    // editorRef.value.move(1); // 移动光标
   } catch (error) {
     console.log(error);
   }
@@ -249,6 +249,10 @@ const setEmoj = (data, item) => {
 };
 const setPicture = (data) => {
   parsepicture(data);
+};
+
+const setParsefile = (data) => {
+  parsefile(data);
 };
 // 插入图片
 const parsepicture = async (file) => {
@@ -268,45 +272,25 @@ const parsepicture = async (file) => {
 // 回车
 const handleEnter = () => {
   const editor = editorRef.value;
-  // 判断当前编辑器内容是否为空
-  let isEmpty = editor.isEmpty();
-  // 纯文本内容
-  const text = editor.getText();
-  const html = editor.getHtml();
-
-  // const matchStr = html.match(/data-link="([^"]*)"/);
-  // const link = matchStr?.[1];
-
-  // console.log(link); // 输出"data-link"属性的值
+  const isEmpty = editor.isEmpty(); // 判断当前编辑器内容是否为空
+  const { text, aitStr, files, image } = sendMsgBefore();
   // 获取包含数据属性的元素
   // const attachmentElem = document.querySelector(
   //   'span[data-w-e-type="attachment"]'
   // );
-  // console.log(attachmentElem);
   // 获取数据属性的值
   // const link = attachmentElem?.getAttribute("data-link");
 
-  // console.log(link); // 输出数据属性的值
-  // console.log(html);
-  // 所有图片
-  const imageall = editor.getElemsByType("image");
-  console.log(text);
-  if ((!isEmpty && !empty(text)) || imageall.length > 0) {
+  if ((!isEmpty && !empty(text)) || image) {
     sendMessage();
   } else {
-    const { aitStr, files } = sendMsgBefore();
     if (aitStr || files) {
       sendMessage();
     } else {
       console.log("请输入内容");
-      clearInputInfo(editor);
+      clearInputInfo();
     }
   }
-  // const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
-  // console.log(text)
-  // console.log(isEmpty);
-  // console.log(HtmlText);
-  // console.log(empty(text))
 };
 // 清空输入框
 const clearInputInfo = () => {
@@ -326,9 +310,8 @@ const sendMsgBefore = () => {
   const editor = editorRef.value;
   const text = editorRef.value.getText(); // 纯文本内容
   const HtmlText = editorRef.value.getHtml(); // 非格式化的 html
-  // const innHTML = HtmlText.replace(/<(?!img).*?>/g, "");
   const image = editor.getElemsByType("image"); // 所有图片
-  // console.log(text);
+
   if (str.includes("mention")) {
     aitStr = str.replace(/<[^>]+>/g, "");
     aitStr = aitStr.replace(/&nbsp;/gi, "");
@@ -338,17 +321,18 @@ const sendMsgBefore = () => {
   }
   const matchStr = HtmlText.match(/data-link="([^"]*)"/);
   const matchStrName = HtmlText.match(/data-fileName="([^"]*)"/);
-
   const fileName = matchStrName?.[1];
   const link = matchStr?.[1];
 
+  // console.log(text);
   // console.log(link);
+  // console.log(image);
   // console.log(HtmlText);
   // console.log(innHTML);
   // console.log(aitStr);
   return {
     text,
-    image,
+    image: image?.length > 0 ? image : null,
     aitStr,
     aitlist,
     files: link ? { fileName, src: link } : null,
@@ -358,13 +342,9 @@ const sendMsgBefore = () => {
 const sendMessage = async () => {
   let flag = true;
   let TextMsg = null;
-  let ImgtMsg = false;
   const { type, toAccount } = currentConversation.value;
   const { text, aitStr, image, aitlist, files } = sendMsgBefore();
-  // console.log(image);
-  ImgtMsg = image.length > 0 ? true : false;
-
-  // return;
+  // return
   if (files) {
     const { fileName, src } = files;
     let file = dataURLtoFile(src, fileName);
@@ -377,7 +357,7 @@ const sendMessage = async () => {
     flag = false;
   }
   // 图片消息
-  if (ImgtMsg) {
+  if (image) {
     let file = dataURLtoFile(image[0].src);
     TextMsg = await CreateImgtMsg({
       convId: toAccount,
@@ -425,6 +405,13 @@ const sendMessage = async () => {
     console.log(message);
   }
 };
+
+// 组件销毁时，及时销毁编辑器
+onBeforeUnmount(() => {
+  const editor = editorRef.value;
+  if (editor == null) return;
+  editor.destroy();
+});
 </script>
 
 <style lang="scss" scoped>

@@ -40,18 +40,18 @@ const props = defineProps({
   },
 });
 const { message } = toRefs(props);
-console.log(message);
+// console.log(message);
 const { payload } = message.value;
 
 const backgroundStyle = ref("");
 const FileType = getFileType(payload?.fileName);
 
-const backstyle = (status = 1, percentage = 100) => {
+const backstyle = (status = 1, percentage = 0) => {
   return status === 1
     ? `linear-gradient(to right, rgba(24, 144, 255, 0.09) ${percentage}%, white 0%, white 100%)`
     : "";
 };
-// backgroundStyle.value = backstyle();
+backgroundStyle.value = backstyle();
 </script>
 
 <style lang="scss" scoped>
@@ -86,12 +86,12 @@ const backstyle = (status = 1, percentage = 100) => {
         .file-icon {
           margin-left: 5px;
         }
-        .file-size {
-        }
-        .file-status {
-        }
-        .file-icon {
-        }
+        // .file-size {
+        // }
+        // .file-status {
+        // }
+        // .file-icon {
+        // }
       }
     }
   }

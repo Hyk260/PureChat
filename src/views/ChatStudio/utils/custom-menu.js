@@ -214,6 +214,7 @@ Boot.registerParseElemHtml(parseHtmlConf);
 Boot.registerElemToHtml(elemToHtmlConf);
 Boot.registerRenderElem(renderElemConf);
 Boot.registerPlugin(withAttachment);
+
 Boot.registerMenu(menu1Conf);
 Boot.registerModule(mentionModule);
 Boot.registerModule(ctrlEnterModule); // ctrl+Enter 换行

@@ -124,7 +124,7 @@ import {
   onBeforeUnmount,
   watch,
 } from "vue";
-import { login } from "@/api/user";
+import { login, getuser } from "@/api/user";
 import { operates, thirdParty } from "./utils/enums";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -182,16 +182,9 @@ const onkeypress = ({ code }) => {
   }
 };
 
-const loadAll = () => {
-  return [
-    { value: "linjx", link: "" },
-    { value: "admin", link: "" },
-    { value: "zhangal", link: "" },
-  ];
-};
-
-onMounted(() => {
-  restaurants.value = loadAll();
+onMounted(async () => {
+  const { loadAll } = await getuser();
+  restaurants.value = loadAll;
   window.document.addEventListener("keypress", onkeypress);
 });
 
