@@ -44,7 +44,7 @@ const conversation = {
       switch (type) {
         // 添加消息 首次进入会话是调用
         case CONVERSATIONTYPE.ADD_MESSAGE: {
-          console.log("ADD_MESSAGE_添加消息");
+          console.log("添加消息");
           const { convId, message } = payload;
           state.historyMessageList.set(convId, message);
           if (state.currentConversation) {
@@ -62,7 +62,7 @@ const conversation = {
         }
         // 添加更多消息
         case CONVERSATIONTYPE.ADD_MORE_MESSAGE: {
-          console.log("ADD_MORE_MESSAGE_添加更多消息");
+          console.log("添加更多消息");
           const { convId, messages } = payload;
           let history = state.historyMessageList.get(convId);
           let baseTime = getBaseTime(history);
@@ -76,7 +76,7 @@ const conversation = {
         }
         // 更新消息
         case CONVERSATIONTYPE.UPDATE_MESSAGES: {
-          console.log("UPDATE_MESSAGES_更新消息");
+          console.log("更新消息");
           const { convId, message } = payload;
           let newMessageList = [];
           newMessageList = state.currentMessageList;
@@ -221,10 +221,6 @@ const conversation = {
           break;
       }
     },
-    // 获取未读消息总数
-    GET_TOTAL_UNREAD_MSG(state) {
-      state.TotalUnreadMsg = getUnreadMsg();
-    },
     // 设置多选框状态
     SET_CHEC_BOX(state, flag) {
       state.showCheckbox = flag;
@@ -313,28 +309,29 @@ const conversation = {
       state.currentMessageList = [];
       commit("SET_SHOW_MSG_BOX", false);
     },
+    // 获取未读消息总数
+    async GET_TOTAL_UNREAD_MSG({ state, rootState }) {
+      const isSDKReady = rootState.user.isSDKReady;
+      if (!isSDKReady) return;
+      state.TotalUnreadMsg = await getUnreadMsg();
+    },
   },
   getters: {
     toAccount: (state) => {
-      if (
-        !state.currentConversation ||
-        !state.currentConversation.conversationID
-      ) {
-        return "";
-      }
-      const { type, conversationID } = state.currentConversation;
+      const { currentConversation: Conve } = state;
+      if (!Conve || !Conve.conversationID) return "";
+      const { type, conversationID: ID } = Conve;
       switch (type) {
         case "C2C":
-          return conversationID.replace("C2C", "");
+          return ID.replace("C2C", "");
         case "GROUP":
-          return conversationID.replace("GROUP", "");
+          return ID.replace("GROUP", "");
         default:
-          return conversationID;
+          return ID;
       }
     },
     tabList(state) {
-      const { activetab } = state;
-      switch (activetab) {
+      switch (state.activetab) {
         case "unread":
           return state.conversationList.filter((t) => t.unreadCount > 0);
         case "mention":

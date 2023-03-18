@@ -2,8 +2,9 @@ import TIM from "tim-js-sdk";
 import tim from "@/utils/im-sdk/tim";
 import { HISTORY_MESSAGE_COUNT } from "@/store/mutation-types";
 
-export const getUnreadMsg = () => {
-  return tim.getTotalUnreadMessageCount();
+// 未读总数
+export const getUnreadMsg = async () => {
+  return await tim.getTotalUnreadMessageCount();
 };
 // 获取消息列表
 export const getMsgList = async (params) => {
@@ -18,20 +19,6 @@ export const getMsgList = async (params) => {
   }
   return {};
 };
-// 获取成员列表
-export const getGroupMemberList = async (params) => {
-  try {
-    const { groupID, count, offset } = params;
-    const { code, data } = await tim.getGroupMemberList({
-      groupID,
-      count: 15,
-      offset: 0,
-    });
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
 // 获取群组列表
 export const getGroupList = async (params) => {
   try {
@@ -43,48 +30,6 @@ export const getGroupList = async (params) => {
   } catch (e) {
     console.log(e);
   }
-};
-
-// 添加群成员
-export const addGroupMember = async (params) => {
-  const { groupID, user } = params;
-  const parameter = {
-    groupID: groupID,
-    userIDList: [user],
-    // ['user1', 'user2', 'user3']
-  };
-  let promise = tim.addGroupMember(parameter);
-  promise
-    .then(function (imResponse) {
-      console.log(imResponse.data.successUserIDList); // 添加成功的群成员 userIDList
-      console.log(imResponse.data.failureUserIDList); // 添加失败的群成员 userIDList
-      console.log(imResponse.data.existedUserIDList); // 已在群中的群成员 userIDList
-      // 一个用户 userX 最多允许加入 N 个群，如果已经加入了 N 个群，此时再尝试添加 userX 为群成员，则 userX 不能正常加群
-      // SDK 将 userX 的信息放入 overLimitUserIDList，供接入侧处理
-      console.log(imResponse.data.overLimitUserIDList); // 超过了“单个用户可加入群组数”限制的用户列表，v2.10.2起支持
-      console.log(imResponse.data.group); // 添加后的群组信息
-    })
-    .catch(function (imError) {
-      console.warn("addGroupMember error:", imError); // 错误信息
-    });
-};
-// 删除群成员
-export const deleteGroupMember = async (params) => {
-  const { groupID, user } = params;
-  const parameter = {
-    groupID: groupID,
-    userIDList: [user],
-    // reason: '你违规了，我要踢你！'
-  };
-  let promise = tim.deleteGroupMember(parameter);
-  promise
-    .then(function (imResponse) {
-      console.log(imResponse.data.group); // 删除后的群组信息
-      console.log(imResponse.data.userIDList); // 被删除的群成员的 userID 列表
-    })
-    .catch(function (imError) {
-      console.warn("deleteGroupMember error:", imError); // 错误信息
-    });
 };
 // 获取 SDK 缓存的好友列表
 export const getFriendList = async (params) => {
@@ -313,26 +258,7 @@ export const setMessageRead = async (convId) => {
       console.warn("setMessageRead error:", imError);
     });
 };
-// 修改群消息
-export const updateGroupProfile = async (params) => {
-  const { convId, modify = "", text = "" } = params;
-  let parameter = {
-    groupID: convId,
-    [modify]: text,
-    // name: "", // 修改群名称
-    // introduction: "", // 修改群简介
-    // notification: " ", // 修改群公告
-    // groupCustomField: [{ key: "group_level", value: "high" }], // 修改群组维度自定义字段
-  };
-  let promise = tim.updateGroupProfile(parameter);
-  promise
-    .then(function (imResponse) {
-      console.log(imResponse.data.group); // 修改成功后的群组详细资料
-    })
-    .catch(function (imError) {
-      console.warn("updateGroupProfile error:", imError); // 修改群组资料失败的相关信息
-    });
-};
+
 // 删除会话
 export const deleteConversation = async (params) => {
   const { convId } = params;

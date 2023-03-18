@@ -1,9 +1,10 @@
 import {
-  getGroupMemberList,
   getGroupProfile,
   getGroupList,
   deleteConversation,
 } from "@/api/im-sdk-api/index";
+
+import { getGroupMemberList } from "@/api/im-sdk-api/group";
 
 import { quitGroup, createGroup, dismissGroup } from "@/api/im-sdk-api/group";
 

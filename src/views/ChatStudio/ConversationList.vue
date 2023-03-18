@@ -22,7 +22,7 @@
       @contextmenu.prevent="handleContextMenuEvent($event, item)"
     >
       <!-- 置顶图标 -->
-      <div class="pinned-tag" v-if="item.isPinned"></div>
+      <div class="pinned-tag" v-show="item.isPinned"></div>
       <!-- 关闭按钮 -->
       <FontIcon
         iconName="close"
@@ -106,14 +106,12 @@ const contextMenuItemInfo = ref([]);
 
 const { state, getters, dispatch, commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
-const { Selected, UserInfo, currentMessageList, conversationList, Conver } =
-  useState({
-    UserInfo: (state) => state.data.user,
-    Selected: (state) => state.conversation.currentConversation,
-    currentMessageList: (state) => state.conversation.currentMessageList,
-    conversationList: (state) => state.conversation.conversationList,
-    Conver: (state) => state.conversation.currentConversation,
-  });
+const { Selected, UserInfo, messageList, Conver } = useState({
+  UserInfo: (state) => state.data.user,
+  Selected: (state) => state.conversation.currentConversation,
+  messageList: (state) => state.conversation.currentMessageList,
+  Conver: (state) => state.conversation.currentConversation,
+});
 
 const fnNews = (data) => {
   const { type, lastMessage } = data;
@@ -199,11 +197,11 @@ const handleClickMenuItem = (item) => {
 };
 // 消息免打扰
 const disableRecMsg = async (data, off) => {
-  const { type, toAccount, messageRemindType } = data;
+  const { type, toAccount, messageRemindType: remindType } = data;
   if (type == "@TIM#SYSTEM") return;
   await setMessageRemindType({
     userID: toAccount,
-    RemindType: messageRemindType,
+    RemindType: remindType,
     type,
   });
 };

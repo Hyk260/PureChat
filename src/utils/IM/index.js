@@ -24,6 +24,8 @@ function checkoutNetState(state) {
     case TIM.TYPES.NET_STATE_CONNECTING:
       return { message: "当前网络不稳定", type: "warning" };
     case TIM.TYPES.NET_STATE_DISCONNECTED:
+      store.dispatch("LOG_OUT");
+      store.dispatch("TIM_LOG_OUT");
       return { message: "当前网络不可用", type: "error" };
     default:
       return "";
@@ -37,11 +39,9 @@ export default class TIMProxy {
   // 静态方法
   constructor() {
     this.userProfile = {}; // IM用户信息
-    this.isLogin = false; // IM登陆状态
     this.isSDKReady = false; // TIM SDK 是否 ready
-    this.userID = 0;
+    this.userID = "";
     this.userSig = "";
-    this.sdkAppID = 0;
     this.tim = null;
     this.TIM = null;
     // this.init();
@@ -109,15 +109,14 @@ export default class TIMProxy {
     tim.on(TIM.EVENT.FRIEND_GROUP_LIST_UPDATED, this.onFriendGroupListUpdated);
   }
   onReadyStateUpdate({ name }) {
-    const isSDKReady = name === TIM.EVENT.SDK_READY ? true : false;
+    const isSDKReady = name === TIM.EVENT.SDK_READY;
     store.commit("toggleIsSDKReady", isSDKReady);
-    if (isSDKReady) {
-      store.dispatch("GET_MYPROFILE");
-    }
+    if (!isSDKReady) return;
+    store.dispatch("GET_MY_PROFILE");
   }
   onUpdateConversationList({ data, name }) {
     console.log(data, "会话列表更新");
-    store.commit("GET_TOTAL_UNREAD_MSG");
+    store.dispatch("GET_TOTAL_UNREAD_MSG");
     store.commit("SET_CONVERSATION", {
       type: "REPLACE_CONV_LIST",
       payload: data,

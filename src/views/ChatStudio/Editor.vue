@@ -74,7 +74,11 @@ import { useState, useGetters } from "@/utils/hooks/useMapper";
 // import { generateUUID } from "@/utils/index";
 import MentionModal from "./components/MentionModal.vue";
 import { bytesToSize } from "@/utils/common";
-import { fileImgToBase64Url, dataURLtoFile } from "@/utils/message-input-utils";
+import {
+  fileImgToBase64Url,
+  dataURLtoFile,
+  urlToBase64,
+} from "@/utils/message-input-utils";
 import { GET_MESSAGE_LIST } from "@/store/mutation-types";
 import { SendMessageCd } from "@/api/index";
 import { accountCheck, restSendMsg } from "@/api/rest-api";
@@ -358,7 +362,10 @@ const sendMessage = async () => {
   }
   // 图片消息
   if (image) {
+    console.log(image);
+    // let file = await urlToBase64(image[0].src);
     let file = dataURLtoFile(image[0].src);
+    console.log(file);
     TextMsg = await CreateImgtMsg({
       convId: toAccount,
       convType: type,

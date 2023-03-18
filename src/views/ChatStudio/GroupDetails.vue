@@ -150,7 +150,7 @@ import {
   updateGroupProfile,
   addGroupMember,
   deleteGroupMember,
-} from "@/api/im-sdk-api";
+} from "@/api/im-sdk-api/group";
 import { useI18n } from "vue-i18n";
 
 const { locale, t } = useI18n();

@@ -28,7 +28,7 @@ onMounted(async () => {
   commit("updataRoute");
   setTimeout(() => {
     if (route.name == "login") return;
-    dispatch("RE_LOGIN");
+    dispatch("LOG_IN_AGAIN");
   }, 200);
 });
 </script>

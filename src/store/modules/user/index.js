@@ -22,10 +22,9 @@ let tim = new TIMProxy();
 const user = {
   state: {
     currentUserProfile: {}, // IM用户信息
-    isLogin: false, // IM登陆状态
     isSDKReady: false, // TIM SDK 是否 ready
-    userID: 0,
-    userSig: "",
+    userID: "", // 用户名
+    userSig: "", // 密钥
     message: null,
     showload: false, // 登录按钮加载状态
   },
@@ -37,18 +36,13 @@ const user = {
     updateCurrentUserProfile(state, userProfile) {
       state.currentUserProfile = userProfile;
     },
-    GET_USER_INFO(state, payload) {
+    getUserInfo(state, payload) {
       state.userID = payload.userID;
       state.userSig = payload.userSig;
-      state.sdkAppID = payload.sdkAppID;
-    },
-    toggleIsLogin(state, isLogin) {
-      state.isLogin = isLogin;
     },
     reset(state) {
       Object.assign(state, {
         currentUserProfile: {},
-        isLogin: false,
         isSDKReady: false,
       });
     },
@@ -73,9 +67,9 @@ const user = {
       console.log({ code, data }, "TIM_LOG_IN");
       if (code == 0) {
         commit("showMessage", { message: "IM初始化成功!" });
-        commit("GET_USER_INFO", { userID, userSig });
-        commit("toggleIsLogin", true);
-        console.log({ userID, userSig }, "GET_USER_INFO");
+        commit("getUserInfo", { userID, userSig });
+        // commit("toggleIsLogin", true);
+        console.log({ userID, userSig }, "getUserInfo");
       } else {
         console.log("err");
       }
@@ -84,22 +78,26 @@ const user = {
     async TIM_LOG_OUT({ commit }) {
       const result = await TIM_logout();
       console.log(result, "TIM_LOG_OUT");
-      commit("toggleIsLogin", false);
+      // commit("toggleIsLogin", false);
       commit("reset");
     },
     // 获取个人资料
-    async GET_MYPROFILE({ commit }) {
+    async GET_MY_PROFILE({ commit }) {
       let result = await getMyProfile();
       commit("updateCurrentUserProfile", result);
     },
     // 重新登陆
-    RE_LOGIN({ state, rootState, dispatch }) {
+    LOG_IN_AGAIN({ state, rootState, dispatch }) {
       let userID = rootState.data?.user?.username;
       let userSig = rootState.data?.user?.userSig;
       let isSDKReady = state?.isSDKReady;
       setTimeout(() => {
         const token = getCookies(ACCESS_TOKEN);
-        if (!token) dispatch("LOG_OUT");
+        if (!token) {
+          dispatch("TIM_LOG_OUT");
+          dispatch("LOG_OUT");
+          return;
+        }
         window.TIMProxy.init();
         dispatch("TIM_LOG_IN", { userID, userSig });
       }, 500);
