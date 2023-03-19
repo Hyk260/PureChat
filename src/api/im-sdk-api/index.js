@@ -258,7 +258,6 @@ export const setMessageRead = async (convId) => {
       console.warn("setMessageRead error:", imError);
     });
 };
-
 // 删除会话
 export const deleteConversation = async (params) => {
   const { convId } = params;

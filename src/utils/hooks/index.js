@@ -1,42 +1,32 @@
 import { ref, onMounted, onUnmounted } from "vue";
+
 /**
- * @description: 切换状态的可组合函数
- * @param { boolean } [flag]
- * @return { Array } [boolean,Function]
- * @author hyk <2607881950@qq.com>
- * @example
- * const [ sate, toggle ] = useToggle()
+ * useToggle - 一个提供布尔类型状态和一些辅助函数以用于切换状态的钩子函数。
+ * @param {Boolean} initialState - 初始状态。默认值为false。
+ * @returns {Array} - 返回一个数组
  */
 export function useToggle(flag = false) {
   const state = ref(flag);
-  function setBool(value) {
+  function setState(value) {
     state.value = value;
   }
   function setTrue() {
-    setBool(true);
+    setState(true);
   }
   function setFalse() {
-    setBool(false);
+    setState(false);
   }
   function toggle() {
-    setBool(!state.value);
+    setState(!state.value);
   }
-  return [
-    state,
-    setBool,
-    setTrue,
-    setFalse,
-    toggle,
-  ];
+  return [state, setState, setTrue, setFalse, toggle];
 }
+
 /**
- * @description: 事件监听器
- * @param { DOM } target dom节点
- * @param { String } event 事件
- * @param { Functin } callback 回调函数
- * @return {*}
- * @example
- * useEventListener(window, "click", () => {});
+ * useEventListener - 一个钩子函数，用于将事件监听器添加到给定的目标元素，并在组件卸载时将其移除。
+ * @param {EventTarget} target - 要添加事件监听器的目标元素。
+ * @param {String} event - 要监听的事件名称。
+ * @param {Function} callback - 事件回调函数。
  */
 export function useEventListener(target, event, callback) {
   onMounted(() => {
@@ -46,35 +36,24 @@ export function useEventListener(target, event, callback) {
     target.removeEventListener(event, callback, false);
   });
 }
+
 /**
- * @description: 鼠标坐标
- * @param {*}
- * @return {x,y}
- * @example
- * const { x, y } = useMouse()
+ * useMouse - 一个钩子函数，用于获取鼠标的位置坐标。
+ * @return {Object} - 包含当前鼠标 x 和 y 坐标的对象。
  */
 export function useMouse() {
-  let x = ref(0);
-  let y = ref(0);
+  // 创建 x 和 y 两个响应式变量
+  const x = ref(0);
+  const y = ref(0);
+  // 在组件加载时添加鼠标移动事件的监听器
   useEventListener(window, "mousemove", (e) => {
     x.value = e.clientX;
     y.value = e.clientY;
   });
-  return {
-    x,
-    y,
-  };
+  // 返回包含 x 和 y 变量的对象
+  return { x, y };
 }
 
-/**
- * @description:
- * @param { DOM }
- * @param { String }
- * @param { Functin }
- * @return {*}
- * @example
- *
- */
 export function useResizeListener() {
   function addResizeListener(target, callback) {
     window.addEventListener("resize", callback, false);

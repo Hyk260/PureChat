@@ -12,7 +12,7 @@ const defaultSettings = {
 
 // 默认用户信息
 const defaultData = {
-  verifyCode: '',
+  verifyCode: "",
   user: null,
   token: null,
   elTag: [], // Tag 标签
@@ -23,7 +23,6 @@ const defaultData = {
 const settings = storage.get("setup") || defaultSettings;
 const data = storage.get("userdata") || defaultData;
 
-// 导出状态对象
 export default {
   settings,
   data,

@@ -1,5 +1,13 @@
 <template>
   <div>
+    <el-button type="primary" @click="setTheme('light')">白色</el-button>
+    <el-button type="primary" @click="setTheme('dark')">黑色</el-button>
+    <p>设置主题色 {{ theme }}</p>
+    <br />
+    <el-button type="primary" @click="setState(true)">true</el-button>
+    <el-button type="primary" @click="setState(false)">false</el-button>
+    <p>useToggle {{ state }}</p>
+    <br />
     <el-button
       v-for="{ title, onclick } in buttons"
       :key="title"
@@ -33,6 +41,9 @@ import { getGroupList, getFriendList } from "@/api/im-sdk-api";
 import { accountCheck, restSendMsg } from "@/api/rest-api";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 import { setCookies, getCookies } from "@/utils/Cookies";
+import { useDataThemeChange } from "@/utils/hooks/useDataThemeChange";
+import { useToggle } from "@/utils/hooks/index";
+
 import io from "socket.io-client";
 
 export default defineComponent({
@@ -113,13 +124,19 @@ export default defineComponent({
     },
   },
   setup(props, { attrs, emit, expose, slots }) {
-    const state = reactive({ text: "" });
+    // const state = reactive({ text: "" });
+    const { theme, setTheme } = useDataThemeChange();
+    const [state, setState] = useToggle();
 
     onMounted(() => {});
     onBeforeUnmount(() => {});
     return {
+      state,
+      setState,
+      theme,
+      setTheme,
       accountCheck,
-      ...toRefs(state),
+      // ...toRefs(state),
     };
   },
 });
