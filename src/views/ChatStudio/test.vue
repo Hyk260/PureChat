@@ -44,8 +44,10 @@ import { ACCESS_TOKEN } from "@/store/mutation-types";
 import { setCookies, getCookies } from "@/utils/Cookies";
 import { useDataThemeChange } from "@/utils/hooks/useDataThemeChange";
 import { useToggle } from "@/utils/hooks/index";
-
+import axios from "axios";
 import io from "socket.io-client";
+
+const variable = process.env;
 
 export default defineComponent({
   name: "Test",
@@ -82,6 +84,18 @@ export default defineComponent({
         {
           title: "单发单聊消息",
           onclick: () => this.sendMsg(),
+        },
+        {
+          title: "环境变量",
+          onclick: () => {
+            console.log(variable);
+          },
+        },
+        {
+          title: "openapi",
+          onclick: () => {
+            this.callApi();
+          },
         },
       ],
       message: "Hello, world!",
@@ -122,6 +136,37 @@ export default defineComponent({
     },
     handleonClick(key) {
       console.log(key);
+    },
+    callApi() {
+      console.log(process.env.VUE_APP_API_URL);
+      console.log(process.env.VUE_APP_API_KEY);
+      // axios.defaults.withCredentials = true;
+      const apiKey = process.env.VUE_APP_API_KEY;
+      const prompt = "你好 叫什么名字";
+
+      axios.defaults.headers.common["Authorization"] = `Bearer ${apiKey}`;
+      axios.defaults.headers.post["Content-Type"] = "application/json";
+      axios
+        .post(
+          process.env.VUE_APP_API_URL,
+          {
+            prompt: prompt,
+            max_tokens: 128,
+          }
+          // {
+          //   headers: {
+          //     Authorization: `Bearer ${process.env.VUE_APP_API_KEY}`,
+          //     "Access-Control-Allow-Credentials": "true",
+          //     "Access-Control-Allow-Origin": "http://localhost:8082",
+          //   },
+          // }
+        )
+        .then((response) => {
+          console.log(response.data.choices[0].text);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   setup(props, { attrs, emit, expose, slots }) {

@@ -236,7 +236,7 @@ const onclick = () => {
   updateGroupProfile({
     convId: groupID,
     modify: "notification",
-    text: "公告12",
+    value: "公告12",
   });
 };
 const navigate = (item) => {

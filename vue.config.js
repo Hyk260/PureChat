@@ -68,10 +68,10 @@ module.exports = {
       //     chunkFilename: `static/css/[name].css`,
       //   },
       // ]);
-      // const analyzer = new BundleAnalyzerPlugin({
-      //   analyzerPort: 9999
-      // })
-      // config.plugin('webpack-bundle-analyzer').use(analyzer)
+      const analyzer = new BundleAnalyzerPlugin({
+        analyzerPort: 9999,
+      });
+      config.plugin("webpack-bundle-analyzer").use(analyzer);
     }
     // svg-sprite-loader 配置
     const svgRule = config.module.rule("svg"); // 找到svg-loader

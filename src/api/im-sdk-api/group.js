@@ -13,6 +13,13 @@ const GroupType = {
   GRP_AVCHATROOM: TIM.TYPES.GRP_AVCHATROOM, // 直播群
 };
 
+const ModifyType = {
+  GROUP_NAME: "name", // 修改群名称
+  GROUP_INTRODUCTION: "introduction", // 修改群简介
+  GROUP_NOTIFICATION: "notification", // 修改群公告
+  GROUP_CUSTOM_FIELD: "groupCustomField", // 修改群组维度自定义字段
+};
+
 // 解散群组
 export const dismissGroup = async (params) => {
   const groupId = params;
@@ -72,16 +79,19 @@ export const getGroupMemberList = async (params) => {
   };
 };
 
-// 修改群消息
+/**
+ * 更新群组资料
+ * @param {Object} params - 参数对象
+ * @param {string} params.convId - 群组 ID
+ * @param {string} params.modify - 待修改的属性名称，可选值为：name、introduction、notification、groupCustomField
+ * @param {string} params.value - 待修改的属性值，当 modify 为 groupCustomField 时，需传入数组类型的值 [{key: "xxx", value: "xxx"}]
+ * @returns {Object} - 包含状态码和群组资料的对象
+ */
 export const updateGroupProfile = async (params) => {
-  const { convId, modify = "", text = "" } = params;
+  const { convId, modify = ModifyType.GROUP_NAME, value = "" } = params;
   const parameter = {
     groupID: convId,
-    [modify]: text,
-    // name: "", // 修改群名称
-    // introduction: "", // 修改群简介
-    // notification: " ", // 修改群公告
-    // groupCustomField: [{ key: "group_level", value: "high" }], // 修改群组维度自定义字段
+    [modify]: value,
   };
   const {
     code,
