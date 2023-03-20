@@ -17,13 +17,21 @@ const formatDate = function (date, format) {
   const YEAR_REGEX = /(y+)/;
   // 处理年份的情况
   if (YEAR_REGEX.test(format)) {
-    format = format.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+    format = format.replace(
+      RegExp.$1,
+      (date.getFullYear() + "").substr(4 - RegExp.$1.length)
+    );
   }
 
   // 根据 options 对象替换 format 中对应的部分
   for (const option in options) {
     if (new RegExp("(" + option + ")").test(format)) {
-      format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? options[option] : ("00" + options[option]).substr(("" + options[option]).length));
+      format = format.replace(
+        RegExp.$1,
+        RegExp.$1.length == 1
+          ? options[option]
+          : ("00" + options[option]).substr(("" + options[option]).length)
+      );
     }
   }
   return format;
@@ -47,7 +55,9 @@ export function timeFormat(timestamp, mustIncludeTime = false) {
   const srcDateD = srcDate.getDate();
 
   let ret = "";
-  const timeExtraStr = mustIncludeTime ? " " + formatDate(srcDate, "hh:mm") : "";
+  const timeExtraStr = mustIncludeTime
+    ? " " + formatDate(srcDate, "hh:mm")
+    : "";
 
   if (currentYear === srcYear) {
     // 同一年
@@ -62,16 +72,34 @@ export function timeFormat(timestamp, mustIncludeTime = false) {
     } else {
       // 不同天
       const yesterdayDate = new Date(currentDate.getTime() - 24 * 3600 * 1000);
-      const beforeYesterdayDate = new Date(currentDate.getTime() - 2 * 24 * 3600 * 1000);
+      const beforeYesterdayDate = new Date(
+        currentDate.getTime() - 2 * 24 * 3600 * 1000
+      );
 
-      if (srcMonth === yesterdayDate.getMonth() + 1 && srcDateD === yesterdayDate.getDate()) ret = "昨天" + timeExtraStr;
-      else if (srcMonth === beforeYesterdayDate.getMonth() + 1 && srcDateD === beforeYesterdayDate.getDate()) ret = "前天" + timeExtraStr;
+      if (
+        srcMonth === yesterdayDate.getMonth() + 1 &&
+        srcDateD === yesterdayDate.getDate()
+      )
+        ret = "昨天" + timeExtraStr;
+      else if (
+        srcMonth === beforeYesterdayDate.getMonth() + 1 &&
+        srcDateD === beforeYesterdayDate.getDate()
+      )
+        ret = "前天" + timeExtraStr;
       else {
         // 三天前
         const deltaHour = deltaTime / (3600 * 1000);
         if (deltaHour <= 6 * 24) {
           // 一周内，显示星期几
-          const weekday = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+          const weekday = [
+            "星期日",
+            "星期一",
+            "星期二",
+            "星期三",
+            "星期四",
+            "星期五",
+            "星期六",
+          ];
           const weekdayDesc = weekday[srcDate.getDay()];
           ret = weekdayDesc + timeExtraStr;
         } else ret = formatDate(srcDate, "yyyy/M/d") + timeExtraStr;
