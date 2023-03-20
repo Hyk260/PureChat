@@ -233,11 +233,11 @@ const updataGroup = () => {
 };
 const onclick = () => {
   const { groupID } = groupProfile.value;
-  // updateGroupProfile({
-  //   convId: groupID,
-  //   modify: "notification",
-  //   text: "公告12",
-  // });
+  updateGroupProfile({
+    convId: groupID,
+    modify: "notification",
+    text: "公告12",
+  });
 };
 const navigate = (item) => {
   dispatch("CHEC_OUT_CONVERSATION", { convId: `C2C${item.userID}` });

@@ -37,7 +37,8 @@ import {
   onBeforeUnmount,
 } from "vue";
 import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
-import { getGroupList, getFriendList } from "@/api/im-sdk-api";
+import { getFriendList } from "@/api/im-sdk-api";
+import { getGroupList } from "@/api/im-sdk-api/group";
 import { accountCheck, restSendMsg } from "@/api/rest-api";
 import { ACCESS_TOKEN } from "@/store/mutation-types";
 import { setCookies, getCookies } from "@/utils/Cookies";

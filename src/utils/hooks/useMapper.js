@@ -21,7 +21,7 @@ const useMapper = (mapper, mapFn) => {
 };
 
 /**
- * 在 <script setup> 中解构 vuex 中的 state
+ * 在 script setup 中解构 vuex 中的 state
  * @param {string|object} moduleName - 模块名称或者 mapper 对象
  * @param {object} mapper - mapper 对象，用于映射 state 的值
  * @returns {object} - 包含 state 的对象

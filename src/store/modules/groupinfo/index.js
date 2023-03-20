@@ -1,8 +1,5 @@
-import {
-  getGroupProfile,
-  getGroupList,
-  deleteConversation,
-} from "@/api/im-sdk-api/index";
+import { getGroupProfile, deleteConversation } from "@/api/im-sdk-api/index";
+import { getGroupList } from "@/api/im-sdk-api/group";
 
 import { getGroupMemberList } from "@/api/im-sdk-api/group";
 
@@ -65,12 +62,13 @@ export default {
   actions: {
     async getGroupMemberList({ state, commit, getters }, payload) {
       const groupID = getters.toAccount;
-      const { memberList, offset } = await getGroupMemberList({ groupID });
+      const { memberList, code } = await getGroupMemberList({ groupID });
       state.currentMemberList = memberList;
     },
     async getGroupList({ state }, payload) {
-      const list = await getGroupList();
-      state.groupList = list;
+      const { code, groupList } = await getGroupList();
+      if (code !== 0) return;
+      state.groupList = groupList;
     },
     // 退出群聊
     async QUIT_GROUP({ state, dispatch }, payload) {

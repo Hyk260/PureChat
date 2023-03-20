@@ -19,18 +19,6 @@ export const getMsgList = async (params) => {
   }
   return {};
 };
-// 获取群组列表
-export const getGroupList = async (params) => {
-  try {
-    const {
-      code,
-      data: { groupList },
-    } = await tim.getGroupList();
-    if (code == 0) return groupList;
-  } catch (e) {
-    console.log(e);
-  }
-};
 // 获取 SDK 缓存的好友列表
 export const getFriendList = async (params) => {
   let promise = tim.getFriendList();
