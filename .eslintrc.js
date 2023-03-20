@@ -2,7 +2,9 @@ module.exports = {
   root: true,
   // 指定环境
   env: {
+    // browser: true,
     node: true,
+    // es6: true
   },
   extends: [
     // 'plugin:prettier/recommended',

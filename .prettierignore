@@ -1,2 +1,5 @@
+# Prettier 会忽略的文件
 dist
 node_modules
+*.local
+*.d.ts
