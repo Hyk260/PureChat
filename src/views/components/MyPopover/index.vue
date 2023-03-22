@@ -28,10 +28,18 @@
 </template>
 
 <script setup>
-import { ref, reactive, toRefs, computed, onMounted, onUnmounted } from "vue";
+import {
+  ref,
+  reactive,
+  toRefs,
+  computed,
+  watchEffect,
+  onMounted,
+  onUnmounted,
+} from "vue";
 import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
-import { onClickOutside } from "@vueuse/core";
+import { onClickOutside, onLongPress, useElementBounding } from "@vueuse/core";
 import config from "@/config/defaultSettings";
 import { squareUrl, circleUrl } from "../../ChatStudio/utils/menu";
 // eslint-disable-next-line no-undef

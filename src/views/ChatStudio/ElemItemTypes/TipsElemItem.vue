@@ -22,6 +22,7 @@ export default defineComponent({
   name: "TipElement",
   components: {},
   directives: {},
+  emits: [],
   props: {
     message: {
       type: Object,

@@ -100,9 +100,7 @@ const { state, getters, dispatch, commit } = useStore();
 const { isOwner } = useGetters(["isOwner"]);
 const {
   currentConversation,
-  currentMessageList,
   historyMessageList,
-  noMore,
   showMsgBox,
   showCheckbox,
   userInfo,
@@ -112,9 +110,7 @@ const {
 } = useState({
   currentMemberList: (state) => state.groupinfo.currentMemberList,
   currentConversation: (state) => state.conversation.currentConversation,
-  currentMessageList: (state) => state.conversation.currentMessageList,
   historyMessageList: (state) => state.conversation.historyMessageList,
-  noMore: (state) => state.conversation.noMore,
   userInfo: (state) => state.data.user,
   userProfile: (state) => state.user.currentUserProfile,
   showCheckbox: (state) => state.conversation.showCheckbox,
@@ -300,8 +296,8 @@ const handleEnter = () => {
 const clearInputInfo = () => {
   const editor = editorRef.value;
   // valueHtml.value = "";
-  editor.setHtml("<p></p>");
-  editor.deleteForward();
+  // editor.setHtml("<p></p>");
+  // editor.deleteForward();
   editor.clear();
 };
 
@@ -389,9 +385,11 @@ const sendMessage = async () => {
       textMsg: text,
     });
   }
+  console.log(TextMsg);
+  // return;
   // 发送消息
   let { code, message } = await sendMsg(TextMsg);
-  restSendMsg({ To: toAccount, From: message.from });
+  // restSendMsg({ To: toAccount, From: message.from });
   console.log(message, "sendMsg");
   if (code == 0) {
     // SendMessageCd({

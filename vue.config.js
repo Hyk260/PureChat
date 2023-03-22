@@ -86,6 +86,16 @@ module.exports = {
     // 根路径
     config.resolve.alias.set("@", resolve("src"));
 
+    // // 删除预加载
+    // config.plugins.delete('preload');
+    // config.plugins.delete('prefetch');
+    // // 压缩代码
+    // config.optimization.minimize(true);
+    // // 分割代码
+    // config.optimization.splitChunks({
+    //   chunks: 'all',
+    // });
+
     config.plugin("html").tap((args) => {
       args[0].title = title; // 修改标题
       args[0].cdn = cdn; // CDN外链

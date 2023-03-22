@@ -71,6 +71,24 @@ export const TIM_Destroy = async () => {
   // SDK 会先 logout，然后断开 WebSocket 长连接，并释放资源
   await tim.destroy();
 };
+// 创建自定义消息
+export const createCustomMsg = async (params) => {
+  const { convId, convType, textMsg } = params;
+  function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+  // 2. 创建消息实例，接口返回的实例可以上屏
+  const message = tim.createCustomMessage({
+    to: convId,
+    conversationType: convType,
+    payload: {
+      data: "dice", // 用于标识该消息是骰子类型消息
+      description: String(random(1, 6)), // 获取骰子点数
+      extension: "",
+    },
+  });
+  console.log(message);
+};
 // 创建文本消息
 export const CreateTextMsg = async (params) => {
   const { convId, convType, textMsg } = params;
@@ -151,14 +169,18 @@ export const createMergerMsg = async (params) => {
 };
 // 发送消息
 export const sendMsg = async (params) => {
-  const {
-    code,
-    data: { message },
-  } = await tim.sendMessage(params);
-  return {
-    code,
-    message,
-  };
+  try {
+    const {
+      code,
+      data: { message },
+    } = await tim.sendMessage(params);
+    return {
+      code,
+      message,
+    };
+  } catch (error) {
+    console.log(error);
+  }
 };
 // 删除消息
 export const deleteMsgList = async (params) => {
