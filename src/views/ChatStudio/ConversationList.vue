@@ -61,7 +61,7 @@
         </div>
         <!-- 未读消息红点 -->
         <template v-if="!isShowCount(item) && !isNotify(item)">
-          <el-badge :value="item.unreadCount" :max="9" />
+          <el-badge :value="item.unreadCount" :max="99" />
         </template>
         <!-- 消息免打扰 -->
         <template v-if="isNotify(item)">

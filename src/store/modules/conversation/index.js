@@ -34,6 +34,8 @@ const conversation = {
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
     conversationList: [], //会话列表数据
+    currentReplyMsg: null,
+    currentReplyUser: null,
     activetab: "whole",
     outside: "news", // 侧边栏初始状态
   },
@@ -120,6 +122,8 @@ const conversation = {
           state.currentMessageList = [];
           state.showMsgBox = false;
           state.showCheckbox = false;
+          state.currentReplyUser = null;
+          state.currentReplyMsg = null;
           break;
         }
         // 加载更多状态

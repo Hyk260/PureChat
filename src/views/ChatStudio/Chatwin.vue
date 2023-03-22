@@ -30,7 +30,6 @@
               'is-other': !ISown(item),
               'style-choice': showCheckbox,
             }"
-            :id="item.ID"
             @click="handleChecked($event, item)"
           >
             <Checkbox :item="item" @click.stop="handleCilck($event, item)" />
@@ -52,7 +51,7 @@
               @contextmenu.prevent="ContextMenuEvent($event, item)"
             >
               <name-component :item="item" />
-              <div :class="Megtype(item.type)">
+              <div :class="Megtype(item.type)" :id="item.ID">
                 <component
                   :key="item.ID"
                   :is="loadMsgComponents(item.type, item)"

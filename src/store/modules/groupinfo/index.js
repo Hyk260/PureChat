@@ -1,9 +1,11 @@
 import { getGroupProfile, deleteConversation } from "@/api/im-sdk-api/index";
-import { getGroupList } from "@/api/im-sdk-api/group";
-
-import { getGroupMemberList } from "@/api/im-sdk-api/group";
-
-import { quitGroup, createGroup, dismissGroup } from "@/api/im-sdk-api/group";
+import {
+  getGroupList,
+  getGroupMemberList,
+  quitGroup,
+  createGroup,
+  dismissGroup,
+} from "@/api/im-sdk-api/group";
 
 export default {
   // namespaced: true,
