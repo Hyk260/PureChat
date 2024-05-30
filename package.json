@@ -1,5 +1,5 @@
 {
-  "name": "vue-project",
+  "name": "purechat",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "dayjs": "^1.11.11",
     "pinia": "^2.0.32",
+    "vite-plugin-inspect": "^0.8.4",
+    "vite-plugin-progress": "^0.0.7",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },
@@ -17,6 +20,8 @@
     "eslint": "^8.34.0",
     "eslint-plugin-vue": "^9.9.0",
     "prettier": "^2.8.4",
-    "vite": "^4.1.4"
+    "vite": "^4.1.4",
+    "vite-plugin-remove-console": "^2.2.0",
+    "vite-plugin-vue-devtools": "0.5.1"
   }
 }

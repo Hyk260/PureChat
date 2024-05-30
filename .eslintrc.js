@@ -1,10 +1,7 @@
 module.exports = {
   root: true,
-  // 指定环境
   env: {
-    // browser: true,
     node: true,
-    // es6: true
   },
   extends: [
     // 'plugin:prettier/recommended',
@@ -28,9 +25,3 @@ module.exports = {
     "prettier/prettier": "warn", // off warn
   },
 };
-
-/*
- * "off" -> 0 关闭规则
- * "warn" -> 1 开启警告规则
- * "error" -> 2 开启错误规则
- */
