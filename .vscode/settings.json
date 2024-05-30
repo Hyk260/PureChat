@@ -35,7 +35,7 @@
   },
   // 要在保存时运行的代码操作种类
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   // 翻译文件夹路径 (相对于项目根目录)
   "i18n-ally.localesPaths": "locales",
