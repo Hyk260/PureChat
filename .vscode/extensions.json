@@ -1,10 +1,15 @@
 {
   "recommendations": [
+    "DavidAnson.vscode-markdownlint",
+    "aminer.codegeex",
     "ritwickdey.LiveServer",
     "kisstkondoros.vscode-gutter-preview",
     "wix.vscode-import-cost",
     "MS-CEINTL.vscode-language-pack-zh-hans",
     "techer.open-in-browser",
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag",
+    "xabikos.JavaScriptSnippets",
     "ecmel.vscode-html-css",
     "pranaygp.vscode-css-peek",
     "VisualStudioExptTeam.intellicode-api-usage-examples",
@@ -17,9 +22,8 @@
     "lokalise.i18n-ally",
     "mikestead.dotenv",
     "eamodio.gitlens",
-    "antfu.iconify",
-    "antfu.unocss",
     "NicholasHsiang.vscode-javascript-comment",
-    "Vue.volar"
+    "Vue.volar",
+    "VisualStudioExptTeam.vscodeintellicode"
   ]
 }

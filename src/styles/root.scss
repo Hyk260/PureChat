@@ -1,0 +1,81 @@
+@mixin light {
+  --color-range: #fff;
+  --hover-color: #f3f3f3;
+  --color-body-bg: #ffffff;
+  --color-text: #000;
+  --color-text-default: #442c2c;
+  --color-primary-bg: #eaeffd;
+  --color-secondary: #7a7a7b;
+  --color-secondary-bg: #f5f5f7;
+  --color-navbar-bg: rgba(255, 255, 255, 0.86);
+  --color-primary-bg-for-transparent: rgba(189, 207, 255, 0.28);
+  --color-secondary-bg-for-transparent: rgba(209, 209, 214, 0.28);
+  --html-overflow-y: overlay;
+  --color-icon-hover: #409eff;
+  --color-aside-list-action: #d9ecff;
+  --color-border-default: rgba(0, 0, 0, 0.09);
+  --color-border-color-split: #f2f4f7;
+  --color-time-divider: rgba(0, 0, 0, 0.45);
+  --color-message-chat-name: rgba(0, 0, 0, 0.85);
+  --color-group-tip: rgba(0, 0, 0, 0.05);
+  --color-draggable-body: #f5f5f5;
+  // 消息框颜色
+  --other-msg-color: #f0f2f5;
+  --self-msg-color: #c2e8ff;
+  --color-message-active: #f0f2f5;
+
+  --color-multiple-choice: hsl(220deg 20% 91%);
+  --color-mention-active: #f0f2f5;
+}
+
+@mixin dark {
+  --hover-color: #323232;
+  --color-body-bg: #222222;
+  --color-text: #fff;
+  --color-text-default: #fff;
+  --color-border-color-split: #252431;
+  --color-primary-bg: #bbcdff;
+  --color-secondary: #7a7a7b;
+  --color-secondary-bg: #323232;
+  --color-navbar-bg: rgba(34, 34, 34, 0.86);
+  --color-primary-bg-for-transparent: rgba(255, 255, 255, 0.12);
+  --color-secondary-bg-for-transparent: rgba(255, 255, 255, 0.08);
+  --color-aside-list-action: #3879ba;
+  --color-message-active: rgb(64 158 255 / 10%);
+  --color-border-default: #90939957;
+  --color-time-divider: #fff;
+  --color-message-chat-name: #fff;
+  --color-draggable-body: rgba(0, 0, 0, 0.85);
+  // 消息框颜色
+  --other-msg-color: #000;
+  --self-msg-color: #000;
+
+  --color-range: #141414;
+  --color-group-tip: rgba(0, 0, 0, 0.05);
+  --color-toolbar: reg(27, 27, 27);
+  // wangEditor
+  --w-e-textarea-bg-color: rgb(38, 38, 38);
+  --w-e-textarea-color: #fff;
+  --w-e-textarea-slight-bg-color: #333;
+
+  --color-multiple-choice: #333;
+  --color-mention-active: #333;
+}
+
+.light {
+  @include light;
+}
+
+.dark {
+  @include dark;
+}
+
+:root {
+  @include light;
+}
+
+[data-theme="dark"] {
+  @include dark;
+}
+
+// 调用var(--color-body-bg)

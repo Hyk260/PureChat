@@ -17,6 +17,7 @@ export default defineConfig(({ mode }) => {
     server: {
       // 端口号
       port: viteEnv.VITE_PORT,
+      open: true,
       host: "0.0.0.0",
       // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
       proxy: {},

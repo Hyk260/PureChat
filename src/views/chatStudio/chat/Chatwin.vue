@@ -1,0 +1,618 @@
+<template>
+  <section
+    class="message-info-view-content"
+    v-show="currentConversation"
+    :class="{ 'style-MsgBox': !showMsgBox, 'stlyle-Reply': currentReplyMsg }"
+    id="chat-box"
+  >
+    <el-scrollbar class="h-full" ref="scrollbarRef" @scroll="scrollbar">
+      <div class="message-view" ref="messageViewRef">
+        <div
+          v-for="(item, index) in currentMessageList"
+          :key="item.ID"
+          :class="{ 'reset-select': item.isRevoked }"
+        >
+          <!-- 加载更多 -->
+          <LoadMore :index="index" />
+          <!-- <div class="message-view__item--blank"></div> -->
+          <!-- 时间 -->
+          <div v-if="isTime(item)" class="message-view__item--time-divider">
+            {{ timeFormat(item.time * 1000, true) }}
+          </div>
+          <!-- 消息体 -->
+          <div
+            v-else-if="item.ID && !isTime(item) && !item.isDeleted"
+            class="message-view__item"
+            :class="[
+              ISown(item) ? 'is-self' : 'is-other',
+              showCheckbox && !item.isRevoked ? 'style-choice' : '',
+            ]"
+            @click="handleSelect($event, item, 'outside')"
+            :id="`choice${item.ID}`"
+          >
+            <!-- 多选框 -->
+            <Checkbox
+              :item="item"
+              :isRevoked="item.isRevoked"
+              @click.stop="handleSelect($event, item, 'initial')"
+            />
+            <div class="picture select-none" v-if="showAvatar(item)">
+              <el-avatar
+                :size="36"
+                shape="square"
+                @click.stop="onclickavatar($event, item)"
+                :src="item.avatar || circleUrl"
+                @error="() => true"
+                v-contextmenu:contextmenu
+                @contextmenu.prevent="handleContextAvatarMenuEvent($event, item)"
+              >
+                <img :src="circleUrl" />
+              </el-avatar>
+            </div>
+            <div
+              :class="msgOne(item)"
+              v-contextmenu:contextmenu
+              @contextmenu.prevent="handleContextMenuEvent($event, item)"
+            >
+              <NameComponent :item="item" />
+              <div :class="msgType(item.type)" :id="item.ID">
+                <component
+                  :key="item.ID"
+                  :is="loadMsgModule(item)"
+                  :message="item"
+                  :status="item.status"
+                  :self="ISown(item)"
+                >
+                </component>
+              </div>
+            </div>
+            <!-- 消息发送加载状态 -->
+            <Stateful :item="item" :status="item.status" :isown="ISown(item)" />
+          </div>
+        </div>
+      </div>
+    </el-scrollbar>
+    <!-- 卡片 -->
+    <MyPopover />
+    <contextmenu ref="contextmenu" :disabled="!isRight">
+      <contextmenu-item
+        v-for="item in RIGHT_CLICK_MENU_LIST"
+        :key="item.id"
+        @click="handlRightClick(item)"
+      >
+        <p :class="['item', currentType == 'GROUP' ? 'group' : 'C2C']">{{ item.text }}</p>
+      </contextmenu-item>
+    </contextmenu>
+  </section>
+</template>
+
+<script setup>
+import { showConfirmationBox } from "@/utils/message";
+import {
+  nextTick,
+  onBeforeUnmount,
+  onBeforeUpdate,
+  onMounted,
+  onUnmounted,
+  onUpdated,
+  ref,
+  watch,
+} from "vue";
+import { useStore } from "vuex";
+import { AVATAR_LIST, MENU_LIST, RIGHT_CLICK_MENU_LIST, circleUrl } from "../utils/menu";
+import { handleCopyMsg, loadMsgModule, msgOne, msgType, validatelastMessage } from "../utils/utils";
+
+import { deleteMsgList, getMsgList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
+import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX } from "@/constants/index";
+import TIM from "@/utils/IM/chat/index";
+import { download, isRobot } from "@/utils/chat/index";
+import { useGetters, useState } from "@/utils/hooks/useMapper";
+import emitter from "@/utils/mitt-bus";
+import MyPopover from "@/views/components/MyPopover/index.vue";
+import { debounce } from "lodash-es";
+import { timeFormat } from "pure-tools";
+import { Contextmenu, ContextmenuItem } from "v-contextmenu";
+import Checkbox from "../components/Checkbox.vue";
+import LoadMore from "../components/LoadMore.vue";
+import NameComponent from "../components/NameComponent.vue";
+import Stateful from "../components/Stateful.vue";
+
+const timeout = ref(false);
+const isRight = ref(true);
+const MenuItemInfo = ref([]);
+const scrollbarRef = ref(null);
+const messageViewRef = ref(null);
+const { dispatch, commit } = useStore();
+const { isOwner, toAccount, currentType } = useGetters(["isOwner", "toAccount", "currentType"]);
+const {
+  noMore,
+  showMsgBox,
+  forwardData,
+  showCheckbox,
+  needScrollDown,
+  currentReplyMsg,
+  userProfile,
+  currentMessageList,
+  currentConversation,
+} = useState({
+  noMore: (state) => state.conversation.noMore,
+  showMsgBox: (state) => state.conversation.showMsgBox,
+  forwardData: (state) => state.conversation.forwardData,
+  showCheckbox: (state) => state.conversation.showCheckbox,
+  needScrollDown: (state) => state.conversation.needScrollDown,
+  userProfile: (state) => state.user.userProfile,
+  currentReplyMsg: (state) => state.conversation.currentReplyMsg,
+  currentMessageList: (state) => state.conversation.currentMessageList,
+  currentConversation: (state) => state.conversation.currentConversation,
+});
+
+const updateLoadMore = (newValue) => {
+  nextTick(() => {
+    const ViewRef = messageViewRef.value;
+    const elRef = ViewRef?.children?.[newValue - 1];
+    if (newValue > 0) {
+      elRef?.scrollIntoView({
+        block: "start",
+      });
+    } else {
+      elRef?.scrollIntoViewIfNeeded();
+    }
+  });
+};
+
+const showAvatar = (item) => {
+  return (
+    !item.isRevoked && item.type !== "TIMGroupTipElem" && item?.payload?.description !== "dithering"
+  );
+};
+
+const getElementById = (ID) => {
+  return document.getElementById(`choice${ID}`);
+};
+const setSelect = (el) => {
+  el.classList.toggle("style-select");
+};
+const handleSelect = (e, item, type = "initial") => {
+  // tip消息 撤回消息 抖动消息
+  if (
+    !showCheckbox.value ||
+    item.type == "TIMGroupTipElem" ||
+    item.isRevoked ||
+    item.payload?.description === "dithering"
+  ) {
+    return;
+  }
+  const _el = getElementById(item.ID);
+  const el = _el.getElementsByClassName("check-btn")[0];
+  if (!el.checked && forwardData.value.size >= MULTIPLE_CHOICE_MAX) {
+    commit("showMessage", {
+      message: `最多只能选择${MULTIPLE_CHOICE_MAX}条`,
+      type: "error",
+    });
+    return;
+  }
+  setSelect(_el.parentNode);
+  // 点击input框
+  if (type == "initial" && e.target.tagName !== "INPUT") {
+    const el = getElementById(item.ID);
+    setSelect(el.parentNode);
+  }
+  // 首次右键打开多选 默认选中当前
+  if (type == "choice") {
+    el.checked = true;
+    commit("SET_FORWARD_DATA", {
+      type: "set",
+      payload: item,
+    });
+  } else {
+    el.checked = !el.checked;
+    commit("SET_FORWARD_DATA", {
+      type: el.checked ? "set" : "del",
+      payload: item,
+    });
+  }
+};
+
+const isTime = (item) => {
+  return item?.isTimeDivider;
+};
+const ISown = (item) => {
+  return item.from == userProfile.value.userID;
+};
+
+const onclickavatar = (e, item) => {
+  const isSelf = ISown(item);
+  if (isSelf || showCheckbox.value) return;
+  emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item });
+};
+const scrollBottom = () => {
+  try {
+    const { scrollTop, clientHeight, scrollHeight } = scrollbarRef.value?.wrapRef;
+    const height = scrollTop + clientHeight;
+    const isbot = scrollHeight - height < 1;
+    isbot && console.log("到底部");
+    return isbot;
+  } catch (error) {
+    return false;
+  }
+};
+const loadMoreFn = () => {
+  // if (!noMore.value) {
+  const current = currentMessageList.value?.length - 1;
+  // 第一条消息 加载更多 节点
+  const offsetTopScreen = messageViewRef.value?.children?.[current];
+  const top = offsetTopScreen?.getBoundingClientRect().top;
+  const canLoadData = top > 50; //滚动到顶部
+  canLoadData && getMoreMsg();
+  // }
+  const isbot = scrollBottom();
+  emitter.emit("onisbot", isbot);
+};
+const debouncedFunc = debounce(loadMoreFn, 250); //防抖处理
+
+const scrollbar = ({ scrollLeft, scrollTop }) => {
+  debouncedFunc();
+};
+
+const updateScrollBarHeight = (data) => {
+  if (data == "instantly") {
+    scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight);
+  } else {
+    nextTick(() => {
+      // messageViewRef.value?.firstElementChild?.scrollIntoView();
+      scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight);
+    });
+  }
+};
+
+const updateScrollbar = () => {
+  nextTick(() => {
+    scrollbarRef.value.update();
+  });
+};
+
+const getMoreMsg = async () => {
+  try {
+    // 获取指定会话的消息列表
+    const conv = currentConversation.value;
+    const msglist = currentMessageList.value;
+    const { conversationID } = conv;
+    const result = await getMsgList({
+      conversationID: conversationID,
+      nextReqMessageID: validatelastMessage(msglist).ID,
+    });
+    console.log("ID:", validatelastMessage(msglist).ID);
+    console.log("msglist:", msglist);
+    const { isCompleted, messageList, nextReqMessageID } = result;
+    let noMore = true;
+    let Loadmore = messageList.length < HISTORY_MESSAGE_COUNT;
+    if (messageList.length > 0) noMore = Loadmore;
+    if (isCompleted || messageList.length == 0) {
+      console.log("[chat] 没有更多消息了 getMoreMsg:");
+      commit("SET_HISTORYMESSAGE", { type: "UPDATE_NOMORE", payload: noMore });
+      return;
+    }
+    commit("SET_HISTORYMESSAGE", {
+      type: "ADD_MORE_MESSAGE",
+      payload: { convId: conversationID, messages: messageList },
+    });
+    commit("SET_CONVERSATION", {
+      type: "UPDATE_SCROLL_DOWN",
+      payload: msglist.length,
+    });
+  } catch (e) {
+    // 解析报错 关闭加载动画
+    commit("SET_HISTORYMESSAGE", {
+      type: "UPDATE_NOMORE",
+      payload: true,
+    });
+  }
+};
+
+const handleContextAvatarMenuEvent = (event, item) => {
+  const { flow } = item;
+  const type = currentType.value;
+  if (type == "C2C" || flow == "out") {
+    isRight.value = false;
+    return;
+  }
+  isRight.value = true;
+  MenuItemInfo.value = item;
+  RIGHT_CLICK_MENU_LIST.value = AVATAR_LIST;
+};
+const handleContextMenuEvent = (event, item) => {
+  const { isRevoked, time, type, payload } = item;
+  console.log(item, "右键菜单数据");
+  const isTip = type == "TIMGroupTipElem";
+  const isFile = type == "TIMFileElem";
+  const isRelay = type == "TIMRelayElem";
+  const isDithering = payload?.description === "dithering";
+  const isCheckStatus = showCheckbox.value; // 多选状态
+  // 撤回消息 提示类型消息
+  if (isRevoked || isTip || isCheckStatus || isDithering) {
+    isRight.value = false;
+    return;
+  }
+  timeout.value = false;
+  isRight.value = true;
+  const nowtime = parseInt(new Date().getTime() / 1000);
+  MenuItemInfo.value = item;
+  const relinquish = nowtime - time < 120 ? true : false;
+  const self = ISown(item);
+  RIGHT_CLICK_MENU_LIST.value = MENU_LIST;
+  // 对方消息
+  if (!self) {
+    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter((t) => t.id !== "revoke");
+  }
+  // 超过撤回时间
+  if (!relinquish) {
+    timeout.value = true;
+    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter((t) => t.id !== "revoke");
+  }
+  // 群主 & 群聊 & 撤回时间不限制2分钟
+  if (isOwner.value && currentType.value === TIM.TYPES.CONV_GROUP) {
+    // if (!self)
+    RIGHT_CLICK_MENU_LIST.value = MENU_LIST;
+  }
+  // 合并消息
+  if (isRelay) {
+    RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.value.filter((t) => t.id !== "copy");
+  }
+  // 非文件消息
+  if (!isFile) {
+    RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.value.filter((t) => t.id !== "saveAs");
+  } else {
+    RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.value.filter((t) => t.id !== "copy");
+  }
+  // 机器人消息过滤回复
+  if (isRobot(toAccount.value)) {
+    RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.value.filter((t) => t.id !== "reply");
+  }
+};
+const handlRightClick = (data) => {
+  const info = MenuItemInfo.value;
+  const { id, text } = data;
+  switch (id) {
+    case "send": // 发起会话
+      handleSendMessage(info);
+      break;
+    case "ait": // @对方
+      handleAt(info);
+      break;
+    case "copy": //复制
+      handleCopyMsg(info);
+      break;
+    case "translate": // 翻译
+      handleTranslate(info);
+      break;
+    case "revoke": //撤回
+      handleRevokeMsg(info);
+      break;
+    case "forward": // 转发
+      handleForward(info);
+      break;
+    case "saveAs": //另存为
+      handleSave(info);
+      break;
+    case "reply": // 回复
+      handleReplyMsg(info);
+      break;
+    case "multiSelect": //多选
+      handleMultiSelectMsg(info);
+      break;
+    case "delete": //删除
+      handleDeleteMsg(info);
+      break;
+  }
+};
+const handleAt = (data) => {
+  const { from, nick, conversationType: type } = data;
+  if (type === "C2C") return;
+  emitter.emit("handleAt", { id: from, name: nick });
+};
+const handleSendMessage = (data) => {
+  dispatch("CHEC_OUT_CONVERSATION", { convId: `C2C${data.from}` });
+};
+// 另存为
+const handleSave = ({ payload }) => {
+  download(payload.fileUrl, payload.fileName);
+};
+
+const handleTranslate = (data) => {
+  translateText({ textList: data.payload.text });
+};
+// 转发
+const handleForward = (data) => {};
+// 回复消息
+const handleReplyMsg = (data) => {
+  commit("setReplyMsg", data);
+  !ISown(data) && handleAt(data);
+  // 重置编辑器高度
+  const chatBox = document.getElementById("chat-box"); //聊天框
+  const editor = document.getElementById("editor");
+  chatBox.style.height = `calc(100% - 60px - 200px)`;
+  editor.style.height = `${200}px`;
+};
+// 删除消息
+const handleDeleteMsg = async (data) => {
+  try {
+    const message = { message: "确定删除?", iconType: "warning" };
+    const result = await showConfirmationBox(message);
+    if (result === "cancel") return;
+    const { code } = await deleteMsgList([data]);
+    if (code !== 0) return;
+    commit("SET_HISTORYMESSAGE", {
+      type: "DELETE_MESSAGE",
+      payload: { convId: data.conversationID },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+// 多选
+const handleMultiSelectMsg = (item) => {
+  commit("SET_CHEC_BOX", true);
+  handleSelect(null, item, "choice");
+};
+const handleRevokeChange = (msg, type) => {
+  if (msg.type !== "TIMTextElem") return;
+  commit("setRevokeMsg", { data: msg, type: type });
+};
+// 撤回消息
+const handleRevokeMsg = async (data) => {
+  if (timeout.value) {
+    const result = await showConfirmationBox({ message: "确定撤回这条消息?", iconType: "warning" });
+    if (result == "cancel") return;
+  }
+  const { code, message } = await revokeMsg(data);
+  if (code !== 0) return;
+  if (message.flow !== "out") return;
+  handleRevokeChange(message, "set");
+  setTimeout(() => {
+    handleRevokeChange(message, "delete");
+  }, 60000);
+};
+
+watch(
+  needScrollDown,
+  (data) => {
+    updateLoadMore(data);
+  },
+  {
+    deep: true, //深度监听
+    immediate: true,
+  }
+);
+watch(currentReplyMsg, (data) => {
+  updateScrollbar();
+});
+
+emitter.on("updataScroll", (data) => {
+  if (data == "bottom") {
+    scrollBottom() && updateScrollBarHeight();
+  } else {
+    updateScrollBarHeight(data);
+  }
+});
+
+onMounted(() => {});
+onUnmounted(() => {});
+onUpdated(() => {});
+onBeforeUpdate(() => {});
+onBeforeUnmount(() => {});
+
+defineExpose({ updateScrollbar, updateScrollBarHeight });
+</script>
+
+<style lang="scss" scoped>
+@import url("../style/elemType.scss");
+.message-info-view-content {
+  height: calc(100% - 60px - 200px);
+  // border-bottom: 1px solid var(--color-border-default);
+  // transition: all 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.style-MsgBox {
+  height: calc(100% - 60px) !important;
+}
+.stlyle-Reply {
+  height: calc(100% - 60px - 200px - 60px) !important;
+}
+.message-view__item--time-divider {
+  user-select: none;
+  position: relative;
+  top: 8px;
+  margin: 20px 0;
+  max-height: 20px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--color-time-divider);
+}
+.message-view {
+  display: flex;
+  flex-direction: column-reverse;
+  height: 100%;
+  overflow-y: overlay;
+  overflow-x: hidden;
+  padding: 0 16px 16px 16px;
+  box-sizing: border-box;
+  .picture {
+    --el-border-radius-base: 6px;
+    cursor: pointer;
+  }
+}
+.style-select {
+  border-radius: 3px;
+  background: var(--color-multiple-choice);
+}
+.reset-select {
+  border-radius: 3px;
+  // background: #fff;
+}
+.style-choice {
+  padding-left: 35px;
+}
+.message-view__item {
+  display: flex;
+  flex-direction: row;
+  // margin-top: 12px;
+  margin: 8px 0;
+  position: relative;
+}
+.is-other {
+  .picture {
+    margin-left: 0;
+    margin-right: 8px;
+  }
+  .message-view__img {
+    margin-bottom: 5px;
+    width: fit-content;
+  }
+
+  .message-view__file {
+    margin-bottom: 5px;
+  }
+
+  .message-view__text {
+    width: fit-content;
+    margin-bottom: 5px;
+  }
+}
+.is-self {
+  flex-direction: row-reverse;
+  display: flex;
+  .picture {
+    margin-right: 0;
+    margin-left: 8px;
+    width: 36px;
+    height: 36px;
+  }
+  .message_name {
+    display: none;
+  }
+  .message-view__img {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .message-view__file {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .message-view__text {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}
+
+.v-contextmenu {
+  width: 200px;
+  .item {
+    margin: 0;
+  }
+}
+</style>

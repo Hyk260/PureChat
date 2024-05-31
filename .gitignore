@@ -1,9 +1,7 @@
-.DS_Store
+# .gitignore
 node_modules
 /server
 /dist
-
-yarn.lock
 
 # local env files
 *.d.ts
@@ -27,3 +25,15 @@ pnpm-debug.log*
 
 #Electron-builder output
 /dist_electron
+
+# Yarn lock file
+yarn.lock
+
+# pnpm lock file
+pnpm-lock.yaml
+
+# TypeScript declaration file for components
+components.d.ts
+
+# TypeScript declaration file for auto-imports
+auto-imports.d.ts
