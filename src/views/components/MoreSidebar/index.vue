@@ -17,7 +17,7 @@
               class="dragArea list-group w-full"
               :list="fnSelect(item.list)"
               tag="transition-group"
-              filter=".fixed"
+              filter=".fix-ed"
               :move="onMove"
               @update="onUpdate"
               @remove="onRemove"
@@ -252,7 +252,7 @@ export default defineComponent({
       opacity: 0 !important;
     }
   }
-  .fixed {
+  .fix-ed {
     opacity: 0.5;
     cursor: not-allowed !important;
     .svg-icon {

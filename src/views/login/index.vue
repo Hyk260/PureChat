@@ -23,7 +23,7 @@
 
 <script setup>
 import { useState } from "@/utils/hooks/useMapper";
-import ThemeSwitch from "../components/ThemeSwitch";
+import ThemeSwitch from "../components/ThemeSwitch/index.vue";
 import Account from "./components/Account.vue";
 import QrCode from "./components/qrCode.vue";
 import Register from "./components/Register.vue";

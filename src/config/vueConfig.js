@@ -39,9 +39,9 @@ module.exports = {
     // 局域网和本地访问.
     // host: "0.0.0.0",
     // 端口.
-    port: process.env.VITE_PORT || 8080,
+    port: import.meta.env.VITE_PORT || 8080,
     // 代理.
-    proxy: process.env.VITE_PROXY === "false" ? null : proxy,
+    proxy: import.meta.env.VITE_PROXY === "false" ? null : proxy,
   },
   cdn: {
     css: [],

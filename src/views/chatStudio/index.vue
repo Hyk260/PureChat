@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full flex m-36">
+  <div class="h-full w-full flex">
     <!-- 侧边栏 -->
     <sidebar />
     <!-- chat -->

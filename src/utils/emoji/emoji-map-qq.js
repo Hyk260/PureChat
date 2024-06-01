@@ -448,3 +448,8 @@ export const emojiName = [
   "[墨镜]",
   "[棒]",
 ];
+
+export default {
+  emojiMap,
+  emojiName,
+};

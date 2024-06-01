@@ -24,8 +24,8 @@ import { getUserProfile } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/index";
 import emitter from "@/utils/mitt-bus";
 import { mapState } from "vuex";
-import CardGrid from "./CardGrid";
-import ListGrid from "./ListGrid";
+import CardGrid from "./CardGrid.vue";
+import ListGrid from "./ListGrid.vue";
 
 export default {
   name: "AddressBook",

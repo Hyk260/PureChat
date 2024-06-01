@@ -7,7 +7,84 @@
     <title>%VITE_APP_NAME%</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <style>
+        .loading {
+          color: #999;
+          position: fixed;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        .loading-title {
+          font-weight: 500;
+          font-size: 28px;
+          margin: 15px 0;
+        }
+        .bouncing-loader {
+          padding-top: 12px;
+          text-align: center;
+          font-size: 12px;
+          cursor: pointer;
+          color: rgba(0, 0, 0, 0.45);
+          display: flex;
+          justify-content: center;
+        }
+        .bouncing-loader > div {
+          width: 8px;
+          height: 8px;
+          margin: 0 3px;
+          background: #8385aa;
+          border-radius: 50%;
+          animation: bouncing-loader 0.6s infinite alternate;
+        }
+        .bouncing-loader > div:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+        .bouncing-loader > div:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+        @keyframes bouncing-loader {
+          from {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          to {
+            opacity: 0.1;
+            transform: translateY(-1rem);
+          }
+        }
+      </style>
+      <div class="loading">
+        <div class="bouncing-loader">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.js"></script>
+    <script>
+      try {
+        window.__APP_INFO__ = "<%= htmlWebpackPlugin.options.__APP_INFO__ %>";
+      } catch (error) {
+        console.log(error);
+      }
+      console.log(
+        " %c ".concat("PureChat", "  %c 基于Vue3、Element-Plus ").concat(" 构建 "),
+        "color: #fadfa3; background: #030307; padding:5px 0;",
+        "background: #fadfa3; padding:5px 0;"
+      );
+      console.log(
+        "%cHi! 我是PureChat的作者，\n作为一名开发者，很高兴能以这样的方式与你认识，\n如果你对项目有什么要吐槽的或者好的想法分享",
+        "line-height: 30px"
+      );
+      console.log("欢迎给我发送邮件交流: %c2607881950@qq.com", "line-height: 30px; color: red");
+    </script>
   </body>
 </html>

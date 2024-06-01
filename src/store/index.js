@@ -2,8 +2,14 @@ import { USER_MODEL, USER_SETUP } from "@/constants/index";
 import { setTheme } from "@/utils/common";
 import storage from "@/utils/localforage/index";
 import { createStore } from "vuex";
-import { importModules } from "./importModules";
+// import { importModules } from "./importModules";
 import saveToLocalStorage from "./plugins/localStorage"; // 自定义插件
+
+import conversation from "./modules/conversation/index";
+import groupinfo from "./modules/groupinfo";
+import robot from "./modules/robot";
+import sidebar from "./modules/sidebar";
+import user from "./modules/user";
 
 // 默认设置
 const defaultSettings = {
@@ -18,9 +24,16 @@ const defaultData = {
   verifyCode: "",
   user: null,
 };
-
+// console.log(importModules());
 const store = createStore({
-  modules: importModules(),
+  // modules: importModules(),
+  modules: {
+    conversation,
+    groupinfo,
+    robot,
+    sidebar,
+    user,
+  },
   state: {
     data: storage.get(USER_MODEL) || defaultData,
     settings: storage.get(USER_SETUP) || defaultSettings,

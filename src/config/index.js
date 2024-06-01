@@ -1,9 +1,9 @@
-const axios = require("axios");
-const pkg = require("../../package.json");
+import axios from "axios";
+import pkg from "../../package.json";
 
 let config = {};
 const { version } = pkg;
-const VITE_PUBLIC_PATH = process.env.VITE_PUBLIC_PATH;
+const VITE_PUBLIC_PATH = import.meta.env.VITE_PUBLIC_PATH;
 
 /**
  * 设置配置项

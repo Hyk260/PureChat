@@ -1,5 +1,6 @@
 import { $t } from "@/plugins/i18n";
 import { computed } from "vue";
+const title = import.meta.env.VITE_APP_NAME;
 // const { title } = require("@/config/vueConfig");
 
 export const list = computed(() => {
@@ -8,10 +9,10 @@ export const list = computed(() => {
       title: $t("common.currency"),
       icon: "ForkSpoon",
     },
-    // {
-    //   title: `${$t("common.about")} ${title}`,
-    //   icon: "WarningFilled",
-    // },
+    {
+      title: `${$t("common.about")} ${title}`,
+      icon: "WarningFilled",
+    },
     // {
     //   title: "外观",
     //   icon: "IceCreamRound",

@@ -93,7 +93,9 @@ const { toAccount } = useGetters(["toAccount"]);
 
 function initModel() {
   const model = getModelType(toAccount.value);
+  console.log(model)
   const value = cloneDeep(modelValue[model]);
+  console.log(modelValue)
   Object.values(value).map((v) => {
     return (v.defaultValue = useAccessStore(model)[v.ID]);
   });

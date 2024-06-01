@@ -1,8 +1,8 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import store from "./store/index";
+import "virtual:svg-icons-register";
 
-// import { registerSvgIcon } from "./assets/icons/index";
 import { loadAllassembly } from "./components/index";
 import { getServerConfig } from "./config/index";
 import { setupDirectives } from "./directives/index";
@@ -14,7 +14,6 @@ async function setupApp() {
   // vue custom directives
   setupDirectives(app);
   loadAllassembly(app);
-  // registerSvgIcon(app);
   setupPlugins(app);
   // 获取全局配置
   await getServerConfig(app);

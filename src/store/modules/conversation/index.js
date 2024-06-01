@@ -16,7 +16,12 @@ import {
   HISTORY_MESSAGE_COUNT,
 } from "@/constants/index";
 import TIM from "@/utils/IM/chat/index";
-import { addTimeDivider, checkTextNotEmpty, getBaseTime, transformData } from "@/utils/chat/index";
+import {
+  addTimeDivider,
+  checkTextNotEmpty,
+  getBaseTime,
+  transformData
+} from "@/utils/chat/index";
 import storage from "@/utils/localforage/index";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
@@ -263,13 +268,13 @@ const conversation = {
     },
     // 设置会话草稿
     SET_SESSION_DRAFT(state, action) {
-      if (!action) return;
-      const { ID, payload } = action;
-      if (!checkTextNotEmpty(payload)) {
-        state.sessionDraftMap.delete(ID);
-      } else {
-        state.sessionDraftMap.set(ID, payload);
-      }
+      // if (!action) return;
+      // const { ID, payload } = action;
+      // if (!checkTextNotEmpty(payload)) {
+      //   state.sessionDraftMap.delete(ID);
+      // } else {
+      //   state.sessionDraftMap.set(ID, payload);
+      // }
     },
     // 设置撤回消息重新编辑
     setRevokeMsg(state, action) {

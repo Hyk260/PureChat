@@ -83,7 +83,7 @@
 
 <script setup>
 import { computed } from "vue";
-const { repository } = require("../../../package.json");
+// import { repository } from "../../../package.json";
 const APP_INFO = JSON.parse(window.__APP_INFO__);
 const { pkg, lastBuildTime } = APP_INFO;
 const { dependencies, devDependencies, version } = pkg;
@@ -112,7 +112,7 @@ const data = [
   },
   {
     label: "Github",
-    url: repository.url,
+    // url: repository.url,
     title: "Github",
   },
   {

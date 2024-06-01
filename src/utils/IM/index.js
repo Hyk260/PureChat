@@ -215,7 +215,7 @@ export class TIMProxy {
     console.log("[chat] handleNotify", message);
     const { ID, payload, avatar } = message;
     const tip = "有人提到了你";
-    const icon = avatar || `${process.env.VITE_CLOUD_BASE_URL}log.png`;
+    const icon = avatar || `${import.meta.env.VITE_CLOUD_BASE_URL}log.png`;
     const notification = new window.Notification(tip, {
       icon: icon,
       body: payload.text,

@@ -9,11 +9,12 @@ import { prefixRobotIDs } from "./utils";
 export const ROLES = ["system", "user", "assistant"];
 
 // chatgpt机器人id
-export const CHATGPT_ROBOT = process.env.VITE_ROBOT_GPT;
+export const CHATGPT_ROBOT = import.meta.env.VITE_ROBOT_GPT;
+
 // 智谱机器人id
-export const CHATGLM_ROBOT = process.env.VITE_ROBOT_GLM;
+export const CHATGLM_ROBOT = import.meta.env.VITE_ROBOT_GLM;
 // 零一万物机器人id
-export const CHATYI_ROBOT = process.env.VITE_ROBOT_ZEROONE;
+export const CHATYI_ROBOT = import.meta.env.VITE_ROBOT_ZEROONE;
 
 export const ROBOT_COLLECT = [CHATGPT_ROBOT, CHATGLM_ROBOT, CHATYI_ROBOT];
 

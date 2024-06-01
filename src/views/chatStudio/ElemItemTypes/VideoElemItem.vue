@@ -8,7 +8,8 @@
 import Artplayer from "artplayer";
 import state from "../icons/state";
 import indicator from "../icons/indicator";
-const loading = require("../icons/ploading.gif");
+const loading = ''
+// require("../icons/ploading.gif");
 export default {
   data() {
     return {

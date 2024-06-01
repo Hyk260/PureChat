@@ -1,34 +1,34 @@
 <template>
-  <svg class="svg-icon" :class="svgClass" aria-hidden="true">
-    <use :xlink:href="iconName" />
+  <svg class="svg-icon" aria-hidden="true">
+    <use :href="symbolId" :fill="color" />
   </svg>
 </template>
 
 <script>
-/* <svg-icon iconClass="loginBg" class="wave" /> */
-export default {
-  name: "SvgIcon",
+import { defineComponent, computed } from 'vue'
+
+export default defineComponent({
+  name: 'SvgIcon',
   props: {
+    prefix: {
+      type: String,
+      default: 'icon',
+    },
     iconClass: {
       type: String,
-      default: "",
+      required: true,
     },
-    className: {
+    color: {
       type: String,
-      default: "",
+      default: '#333',
     },
   },
-  computed: {
-    svgClass() {
-      return this.className;
-    },
-    iconName() {
-      return `#icon-${this.iconClass}`;
-    },
+  setup(props) {
+    const symbolId = computed(() => `#${props.prefix}-${props.iconClass}`)
+    return { symbolId }
   },
-};
+})
 </script>
-
 <style lang="scss" scoped>
 .svg-icon {
   font-size: 16px;
@@ -37,8 +37,8 @@ export default {
   cursor: pointer;
   display: inline-block;
   color: inherit;
-  fill: currentColor;
-  stroke: currentColor;
+  // fill: currentColor;
+  // stroke: currentColor;
   vertical-align: -0.15em;
 }
 </style>

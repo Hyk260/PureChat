@@ -24,8 +24,8 @@ export const OpenaiConfig = {
    * @default 0
    */
   frequency_penalty: 0,
-  token: process.env.VITE_OPENAI_API_KEY,
-  openaiUrl: process.env.VITE_BASE_URL,
+  token: import.meta.env.VITE_OPENAI_API_KEY,
+  openaiUrl: import.meta.env.VITE_BASE_URL,
   historyMessageCount: 1,
   compressMessageLengthThreshold: 1000,
 };

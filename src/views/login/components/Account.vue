@@ -90,7 +90,7 @@ import { useStore } from "vuex";
 import { authorizedLogin, oauthAuthorize } from "../utils/auth";
 import { operates, thirdParty } from "../utils/enums";
 import { rules, user } from "../utils/validation";
-import loadingSvg from "./loadingSvg";
+import loadingSvg from "./loadingSvg.vue";
 
 const router = useRouter();
 const restaurants = ref([]);

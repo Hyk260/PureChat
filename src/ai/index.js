@@ -29,7 +29,7 @@ const updataMessage = (msg, message = "") => {
 
 const avatar = (id) => {
   const suffix = RobotAvatar[getModelType(id)] || "";
-  return `${process.env.VITE_CLOUD_BASE_URL}${suffix}`;
+  return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}`;
 };
 
 const fnCreateLodMsg = (params) => {

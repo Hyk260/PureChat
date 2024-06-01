@@ -15,13 +15,25 @@ export const scrollBehavior = (to, from) => {
   });
 };
 
-export const generateRoutes = () => {
+export const generateRoutes = async () => {
   const routes = [];
-  const files = require.context("./modules/", false, /\.js$/);
-  files.keys().forEach((key) => {
-    if (key === "./remaining.js") return;
-    routes.push(...files(key).default);
+  const modules = import.meta.glob(
+    ["./modules/**/*.js", "!./modules/**/remaining.js"],
+    {
+      eager: true,
+    }
+  );
+  Object.keys(modules).forEach((key) => {
+    routes.push(modules[key].default);
   });
-  routes.unshift(...remainingRouter);
+  // Object.keys(files).forEach(async (filePath) => {
+  //   if (filePath.indexOf("remaining") !== -1) return;
+  //   console.log(filePath);
+  //   const module = await import(filePath);
+  //   console.log(module);
+  //   routes.push(...module.default);
+  // });
+  // routes.unshift(...remainingRouter);
+  console.log(routes);
   return routes;
 };

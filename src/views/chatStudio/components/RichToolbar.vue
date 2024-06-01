@@ -78,8 +78,9 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 import EmotionPackBox from "./EmotionPackBox.vue";
 import RobotOptions from "./RobotOptions.vue";
-const emojiQq = require("@/utils/emoji/emoji-map-qq");
-const emojiDouyin = require("@/utils/emoji/emoji-map-douyin");
+import { getAssetsFile } from "../utils/utils";
+import emojiQq from "@/utils/emoji/emoji-map-qq";
+import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
 
 const emjRef = ref();
 const tobottom = ref();
@@ -103,9 +104,9 @@ function openRobotBox() {
 const setEmoji = (item, table) => {
   let url = "";
   if (table == "QQ") {
-    url = require("@/assets/emoji/" + emojiQq.emojiMap[item]);
+    url = getAssetsFile(emojiQq.emojiMap[item]);
   } else {
-    url = require("@/assets/emoji/" + emojiDouyin.emojiMap[item]);
+    url = getAssetsFile(emojiDouyin.emojiMap[item]);
   }
   emit("setToolbar", { data: { url, item }, key: "setEmoj" });
 };

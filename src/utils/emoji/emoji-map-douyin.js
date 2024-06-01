@@ -118,3 +118,8 @@ export const emojiName = [
   "[做鬼脸]",
   "[胡瓜]",
 ];
+
+export default {
+  emojiMap,
+  emojiName,
+};

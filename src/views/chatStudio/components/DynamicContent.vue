@@ -9,13 +9,14 @@
     <img
       v-else-if="item.name === 'img'"
       class="emoji"
-      :src="require('@/assets/emoji/' + item.localSrc)"
+      :src="getAssetsFile(item.localSrc)"
       alt="表情包"
     />
   </template>
 </template>
 
 <script setup>
+import { getAssetsFile } from "../utils/utils";
 import { decodeText } from "@/utils/chat/index";
 import AnalysisUrl from "../components/AnalysisUrl.vue";
 

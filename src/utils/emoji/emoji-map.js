@@ -1,13 +1,10 @@
+import { emojiMap as qqMap, emojiName as qqName } from "./emoji-map-qq";
+import { emojiMap as doMap, emojiName as doName } from "./emoji-map-douyin";
+
 export const emojiUrl = "https://www.emojiall.com/img/platform/qq/";
 
 export const localemojiUrl = "@/assets/emoji/";
 
-export const emojiMap = {
-  ...require("./emoji-map-qq").emojiMap,
-  ...require("./emoji-map-douyin").emojiMap,
-};
+export const emojiMap = {...qqMap,...doMap,};
 
-export const emojiName = [
-  ...require("./emoji-map-qq").emojiName,
-  ...require("./emoji-map-douyin").emojiName,
-];
+export const emojiName = [...qqName, ...doName];

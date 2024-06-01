@@ -6,7 +6,7 @@
         <div :class="['emoji_QQ', systemOs]" v-show="table == 'QQ'">
           <p class="title" v-show="recentlyUsed.length">最近使用</p>
           <span v-for="item in recentlyUsed" class="emoji" :key="item" @click="setEmoji(item)">
-            <img :src="require('@/assets/emoji/' + emojiQq.emojiMap[item])" :title="item" />
+            <img :src="getAssetsFile(emojiQq.emojiMap[item])" :title="item" />
           </span>
           <p class="title">小黄脸表情</p>
           <template v-if="!rolling">
@@ -16,7 +16,7 @@
               :key="item"
               @click="setEmoji(item, 'QQ')"
             >
-              <img :src="require('@/assets/emoji/' + emojiQq.emojiMap[item])" :title="item" />
+              <img :src="getAssetsFile(emojiQq.emojiMap[item])" :title="item" />
             </span>
           </template>
           <!-- 二维数组 css 滚动贴合 -->
@@ -28,7 +28,7 @@
                 :key="item"
                 @click="setEmoji(item)"
               >
-                <img :src="require('@/assets/emoji/' + emojiQq.emojiMap[item])" :title="item" />
+                <img :src="getAssetsFile(emojiQq.emojiMap[item])" :title="item" />
               </span>
             </div>
           </template>
@@ -42,7 +42,7 @@
             :key="item"
             @click="setEmoji(item)"
           >
-            <img :src="require('@/assets/emoji/' + emojiDouyin.emojiMap[item])" :title="item" />
+            <img :src="getAssetsFile(emojiDouyin.emojiMap[item])" :title="item" />
           </span>
         </div>
       </el-scrollbar>
@@ -67,10 +67,10 @@ import { ClickOutside as vClickOutside } from "element-plus";
 import { chunk } from "lodash-es";
 import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { getOperatingSystem } from "../utils/utils";
+import { getOperatingSystem, getAssetsFile } from "../utils/utils";
 
-const emojiQq = require("@/utils/emoji/emoji-map-qq");
-const emojiDouyin = require("@/utils/emoji/emoji-map-douyin");
+import emojiQq from "@/utils/emoji/emoji-map-qq";
+import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
 
 const rolling = false;
 const toolDate = [

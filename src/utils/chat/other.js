@@ -48,7 +48,7 @@ export const renderFileIcon = (fileType = "") => {
   } else if (fileType == "mp3") {
     type = "audio";
   }
-  return require(`@/assets/message/${type}.png`);
+  // return require(`@/assets/message/${type}.png`);
 };
 
 export function screenshot(fn) {

@@ -3,20 +3,10 @@ export default [
   {
     path: "/login",
     name: "login",
-    component: () => import(/* webpackChunkName: "Login" */ "@/views/login/index"),
+    component: () => import("@/views/login/index.vue"),
     meta: {
       title: "登录",
       icon: "Eleme",
     },
   },
-  // {
-  //   path: "/desktop",
-  //   name: "desktop",
-  //   component: () => import(/* webpackChunkName: "Desktop" */ "@/views/desktop/index"),
-  //   meta: {
-  //     title: "",
-  //     locale: "",
-  //     icon: "",
-  //   },
-  // },
 ];

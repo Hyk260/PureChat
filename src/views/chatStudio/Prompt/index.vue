@@ -24,7 +24,7 @@
 <script setup>
 import { getPrompt } from "@/api/node-admin-api/index";
 import { ref } from "vue";
-import AgentCard from "./AgentCard";
+import AgentCard from "./AgentCard.vue";
 const input = ref("");
 const market = ref("");
 

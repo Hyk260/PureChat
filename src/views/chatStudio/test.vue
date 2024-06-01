@@ -73,7 +73,7 @@ export default defineComponent({
           onclick: () => {
             this.timProxy.saveSelfToLocalStorage();
             console.log(this.timProxy);
-            console.log(process.env);
+            console.log(import.meta.env);
           },
         },
         {

@@ -87,7 +87,6 @@
 </template>
 
 <script setup>
-import { showConfirmationBox } from "@/utils/message";
 import {
   nextTick,
   onBeforeUnmount,
@@ -98,6 +97,7 @@ import {
   ref,
   watch,
 } from "vue";
+import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
 import { AVATAR_LIST, MENU_LIST, RIGHT_CLICK_MENU_LIST, circleUrl } from "../utils/menu";
 import { handleCopyMsg, loadMsgModule, msgOne, msgType, validatelastMessage } from "../utils/utils";
@@ -505,7 +505,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
 </script>
 
 <style lang="scss" scoped>
-@import url("../style/elemType.scss");
+// @import url("../style/elemType.scss");
 .message-info-view-content {
   height: calc(100% - 60px - 200px);
   // border-bottom: 1px solid var(--color-border-default);
