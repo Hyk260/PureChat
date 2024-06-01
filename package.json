@@ -52,7 +52,7 @@
     "vuex": "4.1.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.0.0",
+    "@vitejs/plugin-vue": "^5.0.4",
     "cross-env": "7.0.3",
     "eslint": "^8.34.0",
     "eslint-plugin-vue": "^9.9.0",
@@ -60,9 +60,9 @@
     "sass": "^1.77.4",
     "sass-loader": "^13.3.0",
     "unocss": "0.54.1",
-    "vite": "^4.1.4",
+    "vite": "^5.2.11",
     "vite-plugin-pwa": "0.16.4",
     "vite-plugin-remove-console": "^2.2.0",
-    "vite-plugin-vue-devtools": "0.5.1"
+    "vite-plugin-vue-devtools": "7.2.0"
   }
 }

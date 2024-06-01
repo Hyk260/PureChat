@@ -230,7 +230,7 @@ const scrollBottom = () => {
     const { scrollTop, clientHeight, scrollHeight } = scrollbarRef.value?.wrapRef;
     const height = scrollTop + clientHeight;
     const isbot = scrollHeight - height < 1;
-    isbot && console.log("到底部");
+    // isbot && console.log("到底部");
     return isbot;
   } catch (error) {
     return false;
@@ -285,8 +285,8 @@ const getMoreMsg = async () => {
     console.log("msglist:", msglist);
     const { isCompleted, messageList, nextReqMessageID } = result;
     let noMore = true;
-    let Loadmore = messageList.length < HISTORY_MESSAGE_COUNT;
-    if (messageList.length > 0) noMore = Loadmore;
+    let more = messageList.length < HISTORY_MESSAGE_COUNT;
+    if (messageList.length > 0) noMore = more;
     if (isCompleted || messageList.length == 0) {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
       commit("SET_HISTORYMESSAGE", { type: "UPDATE_NOMORE", payload: noMore });
@@ -505,7 +505,17 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
 </script>
 
 <style lang="scss" scoped>
-// @import url("../style/elemType.scss");
+.message-view__tips-elem {
+  margin: auto;
+}
+
+.message-view__tips-elem .message_name {
+  display: none;
+}
+
+.message-view__item--index {
+  max-width: 85%;
+}
 .message-info-view-content {
   height: calc(100% - 60px - 200px);
   // border-bottom: 1px solid var(--color-border-default);

@@ -1,7 +1,6 @@
 import { $t } from "@/plugins/i18n";
 import { computed } from "vue";
 const title = import.meta.env.VITE_APP_NAME;
-// const { title } = require("@/config/vueConfig");
 
 export const list = computed(() => {
   return [
