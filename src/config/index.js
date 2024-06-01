@@ -1,9 +1,9 @@
 import axios from "axios";
-import pkg from "../../package.json";
-
+import pkg from "~/package.json";
+console.log(pkg);
 let config = {};
 const { version } = pkg;
-const VITE_PUBLIC_PATH = import.meta.env.VITE_PUBLIC_PATH;
+const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 /**
  * 设置配置项
@@ -43,7 +43,7 @@ const getConfig = (key) => {
  */
 export const getServerConfig = async (app) => {
   try {
-    const { data: configData } = await axios.get(`${VITE_PUBLIC_PATH}serverConfig.json`);
+    const { data: configData } = await axios.get(`${VITE_BASE_URL}serverConfig.json`);
     let $config = getConfig();
     // 自动注入项目配置
     if (app && $config && typeof configData === "object") {

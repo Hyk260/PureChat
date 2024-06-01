@@ -9,7 +9,7 @@ import "element-plus/theme-chalk/dark/css-vars.css";
 // https://animate.style/
 import "@/styles/index.scss";
 import "animate.css";
-import "uno.css";
+// import "uno.css";
 
 export function setupPlugins(app) {
   app.use(useI18n);

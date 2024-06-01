@@ -1,6 +1,11 @@
 import { defineConfig, presetAttributify, presetUno } from "unocss";
 
 export default defineConfig({
+  content: {
+    pipeline: {
+      exclude: ["node_modules", "dist"],
+    },
+  },
   presets: [presetUno(), presetAttributify()],
   shortcuts: {
     "wh-full": "w-full h-full",

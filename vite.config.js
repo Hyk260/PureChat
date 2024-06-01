@@ -1,6 +1,6 @@
 import { resolve } from "path";
 import { defineConfig, loadEnv } from "vite";
-import { getSrcPath, setupVitePlugins, viteDefine } from "./build";
+import { setupVitePlugins, viteDefine } from "./build";
 
 /** 启动`node`进程时所在工作目录的绝对路径 */
 export const root = process.cwd();
@@ -10,17 +10,18 @@ const pathResolve = (dir) => {
   return resolve(__dirname, ".", dir);
 };
 
+/** 设置别名 */
+const alias = {
+  "@": pathResolve("src"),
+  "~": pathResolve("./"),
+};
+
 export default defineConfig(({ mode }) => {
   const viteEnv = loadEnv(mode, root);
-  console.log(viteEnv);
   return {
-    base: viteEnv.VITE_PUBLIC_PATH,
+    base: viteEnv.VITE_BASE_URL,
     define: viteDefine,
-    resolve: {
-      alias: {
-        "@": getSrcPath(),
-      },
-    },
+    resolve: { alias },
     server: {
       // 端口号
       port: viteEnv.VITE_PORT,
@@ -45,7 +46,8 @@ export default defineConfig(({ mode }) => {
     build: {
       // https://cn.vitejs.dev/guide/build.html#browser-compatibility
       // target: "es2015",
-      sourcemap: false,
+      // 生成生产源映射
+      sourcemap: viteEnv.VITE_SOURCE_MAP === "Y",
       // 消除打包大小超过500kb警告
       chunkSizeWarningLimit: 4000,
       rollupOptions: {
