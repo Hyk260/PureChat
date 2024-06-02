@@ -2,34 +2,61 @@
   <div class="w-full">
     <div class="prompt">
       <div class="header">助手</div>
-      <div class="layout-box">
-        <el-input v-model="input" placeholder="搜索助手名称介绍或关键词..." clearable>
-          <template #prefix>
-            <el-icon class="el-input__icon"><search /></el-icon>
-          </template>
-        </el-input>
-        <div class="tags">
-          <button class="item-tags" v-for="item in market.tags" :key="item">
-            {{ item }}
-          </button>
+      <el-scrollbar class="h-full w-full">
+        <div class="layout-body">
+          <div class="layout-box">
+            <el-input v-model="input" placeholder="搜索助手名称介绍或关键词..." clearable>
+              <template #prefix>
+                <el-icon class="el-input__icon">
+                  <search />
+                </el-icon>
+              </template>
+            </el-input>
+            <div class="tags">
+              <button 
+                :class="['item-tags', cur === item ? 'active' : '']" 
+                v-for="item in market.tags" :key="item"
+                @click="handleClick(item)"
+              >
+                {{ item }}
+              </button>
+            </div>
+            <div class="agent-list">
+              <AgentCard v-for="item in filterInput" :key="item.identifier" :agents="item" />
+            </div>
+          </div>
         </div>
-        <div>
-          <AgentCard v-for="item in market.agents" :key="item.identifier" :agents="item" />
-        </div>
-      </div>
+      </el-scrollbar>
     </div>
   </div>
 </template>
 
 <script setup>
 import { getPrompt } from "@/api/node-admin-api/index";
-import { ref } from "vue";
+import { nextTick, ref, watch } from "vue";
 import AgentCard from "./AgentCard.vue";
+
+const cur = ref('');
 const input = ref("");
 const market = ref("");
+const filterInput = ref("");
+
+function handleClick(key) {
+  cur.value = key;
+  filterInput.value = market.value.agents.filter((item) => {
+    return item.meta.title.includes(key) || item.meta.tags.includes(key) || item.meta.description.includes(key);
+  });
+  console.log("🚀 ~ filterInput.value:", filterInput.value);
+}
+
+watch(input, (newVal) => {
+  console.log("🚀 ~ newVal:", newVal);
+  handleClick(newVal)
+});
 
 getPrompt().then((res) => {
   market.value = res;
+  filterInput.value = res.agents;
   console.log("🚀 ~ getPrompt ~ res:", res);
 });
 </script>
@@ -43,29 +70,49 @@ getPrompt().then((res) => {
   height: 60px;
   border-block-end: 1px solid #dddddd;
 }
+
+.layout-body {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  height: calc(100vh - 60px);
+}
+
 .layout-box {
   display: flex;
   justify-items: center;
   flex-direction: column;
-  width: 1024px;
+  min-width: 400px;
   max-width: 1024px;
 }
+
 .prompt {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-content: space-between;
   align-items: center;
+  background: rgb(248 248 248);
+
   .el-input {
     margin-top: 20px;
   }
 }
+
+.agent-list {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
 .tags {
   margin-top: 20px;
   flex-wrap: wrap;
   display: flex;
   flex-direction: row;
   gap: 6px;
+
   .item-tags {
     color: rgb(8, 8, 8);
     height: 27px;
@@ -82,11 +129,16 @@ getPrompt().then((res) => {
     font-weight: 400;
     white-space: nowrap;
     text-align: center;
+
     &:hover {
       color: #333333;
       border-color: #333333;
       background: rgba(0, 0, 0, 0.12);
     }
   }
+}
+.active {
+  background: #222 !important;
+  color: #f8f8f8 !important;
 }
 </style>
