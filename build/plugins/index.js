@@ -6,7 +6,7 @@ import progress from "vite-plugin-progress";
 import removeConsole from "vite-plugin-remove-console";
 import VueDevtools from "vite-plugin-vue-devtools";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
-import pwa from "./pwa";
+// import pwa from "./pwa";
 
 /**
  * vite插件
