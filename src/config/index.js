@@ -1,6 +1,6 @@
 import axios from "axios";
 import pkg from "~/package.json";
-console.log(pkg);
+
 let config = {};
 const { version } = pkg;
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;

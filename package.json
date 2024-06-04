@@ -60,7 +60,6 @@
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-require": "^1.2.14",
     "vite-plugin-svg-icons": "2.0.1",
-    "vite-plugin-pwa": "0.16.4",
     "vite-plugin-remove-console": "^2.2.0",
     "vite-plugin-vue-devtools": "7.2.0"
   },
