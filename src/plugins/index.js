@@ -9,6 +9,7 @@ import "element-plus/theme-chalk/dark/css-vars.css";
 // https://animate.style/
 import "@/styles/index.scss";
 import "animate.css";
+import "virtual:svg-icons-register";
 // import "uno.css";
 
 export function setupPlugins(app) {
