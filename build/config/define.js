@@ -18,7 +18,7 @@ export const __APP_INFO__ = {
     dependencies,
     devDependencies,
   },
-  lastBuildTime: dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+  lastBuildTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
 };
 
 export const viteDefine = {

@@ -6,6 +6,7 @@ import progress from "vite-plugin-progress";
 import removeConsole from "vite-plugin-remove-console";
 import VueDevtools from "vite-plugin-vue-devtools";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+import { setupHtmlPlugin } from './html';
 // import pwa from "./pwa";
 
 /**
@@ -29,6 +30,7 @@ export function setupVitePlugins(viteEnv) {
       inject: "body-last",
       customDomId: "__SVG_ICON_LOCAL__",
     }),
+    setupHtmlPlugin()
   ];
   if (viteEnv.VITE_PWA === "Y" || viteEnv.VITE_VERCEL === "Y") {
     // plugins.push(pwa(viteEnv));
