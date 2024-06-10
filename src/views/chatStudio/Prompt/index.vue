@@ -22,18 +22,21 @@
               </button>
             </div>
             <div class="agent-list">
-              <AgentCard v-for="item in filterInput" :key="item.identifier" :agents="item" />
+              <AgentCard @click="cardClick(item)" v-for="item in filterInput" :key="item.identifier" :agents="item" />
             </div>
           </div>
         </div>
       </el-scrollbar>
+      <AgentCardBanner />
     </div>
   </div>
 </template>
 
 <script setup>
+import AgentCardBanner from './AgentCardBanner.vue';
 import { getPrompt } from "@/api/node-admin-api/index";
-import { nextTick, ref, watch } from "vue";
+import { ref, watch } from "vue";
+import emitter from '@/utils/mitt-bus';
 import AgentCard from "./AgentCard.vue";
 
 const cur = ref('');
@@ -41,6 +44,9 @@ const input = ref("");
 const market = ref("");
 const filterInput = ref("");
 
+function cardClick(item) {
+  emitter.emit('openAgentCard',item)
+}
 function handleClick(key) {
   cur.value = key;
   filterInput.value = market.value.agents.filter((item) => {
@@ -72,6 +78,7 @@ getPrompt().then((res) => {
 }
 
 .layout-body {
+  padding: 0 16px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -82,7 +89,7 @@ getPrompt().then((res) => {
   display: flex;
   justify-items: center;
   flex-direction: column;
-  min-width: 400px;
+  width: 100%;
   max-width: 1024px;
 }
 

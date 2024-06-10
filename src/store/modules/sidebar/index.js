@@ -23,7 +23,7 @@ const outsideList = [
     only: "prompt",
     icon: "MagicStick",
     locale: "",
-    title: "提示词",
+    title: "AI助理",
     type: "el-icon",
   },
   {
