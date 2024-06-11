@@ -6,7 +6,7 @@
     PureChat
   </h2>
   <p align="center">
-    <span>聊天应用与开发框架</span>
+    <span>聊天应用与AI开发框架</span>
     <br />
     <a href="https://pureadmin.cn" target="blank">
       <strong>🌎 在线预览</strong>
@@ -46,12 +46,12 @@
 
 ### 🎉 特性
 
-- 📦️ 使用 Vue CLI 5 构建
+- 📦️ 使用 Vite5 构建
 - 📃 RBAC 模型 + JWT 权限控制
 - 🤖 接入 openai 语言模型
 - ☁️ 聊天工作室 `基于IM即时通讯sdk`
 - 🌚 光明/黑暗 模式主题切换`自动根据系统主题改变`
-- ⚡️ 自定义 SVG 图标组件`svg-sprite-loader`
+- ⚡️ 自定义 SVG 图标组件
 - 🔴 国际化`vue-i18n` 支持 English, 简体中文
 - 🔧 Prettier + ESLint 规范
 - 💡 Commitlint 提交规范
@@ -62,7 +62,7 @@
 环境配置
 
 ```
-本地环境需要安装 Node.js 16.15+ 和 Git
+本地环境需要安装 Node.js 18.20+ 和 Git
 ```
 
 克隆代码
