@@ -7,8 +7,9 @@ import removeConsole from "vite-plugin-remove-console";
 import VueDevtools from "vite-plugin-vue-devtools";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import { setupHtmlPlugin } from './html';
+import { __APP_INFO__ } from '../config/index';
 // import pwa from "./pwa";
-
+const buildTime = __APP_INFO__.lastBuildTime
 /**
  * vite插件
  * @param viteEnv - 环境变量配置
@@ -30,7 +31,7 @@ export function setupVitePlugins(viteEnv) {
       inject: "body-last",
       customDomId: "__SVG_ICON_LOCAL__",
     }),
-    setupHtmlPlugin()
+    setupHtmlPlugin(buildTime)
   ];
   if (viteEnv.VITE_PWA === "Y" || viteEnv.VITE_VERCEL === "Y") {
     // plugins.push(pwa(viteEnv));
