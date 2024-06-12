@@ -19,13 +19,13 @@ const outsideList = [
     if_fixed: 1,
     type: "el-icon",
   },
-  // {
-  //   only: "prompt",
-  //   icon: "MagicStick",
-  //   locale: "",
-  //   title: "AI助理",
-  //   type: "el-icon",
-  // },
+  {
+    only: "prompt",
+    icon: "MagicStick",
+    locale: "",
+    title: "AI助理",
+    type: "el-icon",
+  },
   {
     only: "document",
     icon: "Document",

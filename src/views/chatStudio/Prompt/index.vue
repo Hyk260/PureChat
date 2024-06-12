@@ -13,11 +13,8 @@
               </template>
             </el-input>
             <div class="tags">
-              <button 
-                :class="['item-tags', cur === item ? 'active' : '']" 
-                v-for="item in market.tags" :key="item"
-                @click="handleClick(item)"
-              >
+              <button :class="['item-tags', cur === item ? 'active' : '']" v-for="item in market.tags" :key="item"
+                @click="handleClick(item)">
                 {{ item }}
               </button>
             </div>
@@ -37,17 +34,40 @@ import AgentCardBanner from './AgentCardBanner.vue';
 import { getPrompt } from "@/api/node-admin-api/index";
 import { ref, watch } from "vue";
 import emitter from '@/utils/mitt-bus';
+import storage from "@/utils/localforage/index";
 import AgentCard from "./AgentCard.vue";
+import { useStore } from "vuex";
+import {
+  StoreKey,
+  CHATGPT_ROBOT,
+  ModelProvider,
+} from "@/ai/constant";
 
 const cur = ref('');
 const input = ref("");
 const market = ref("");
 const filterInput = ref("");
+const { commit, dispatch } = useStore();
 
 function cardClick(item) {
-  emitter.emit('openAgentCard',item)
+  // emitter.emit('openAgentCard',item)
+  const { identifier, meta } = item
+  storage.set(StoreKey.Prompt, {
+    [ModelProvider.GPT]: {
+      id: identifier,
+      lang: "cn",
+      prompt: [{ role: "system", content: meta.systemRole }],
+    },
+  });
+  commit("TAGGLE_OUE_SIDE", "message");
+  dispatch("CHEC_OUT_CONVERSATION", { convId: `${'C2C'}${CHATGPT_ROBOT}` });
 }
 function handleClick(key) {
+  if (cur.value == key) {
+    cur.value = ''
+    filterInput.value = market.value.agents
+    return
+  }
   cur.value = key;
   filterInput.value = market.value.agents.filter((item) => {
     return item.meta.title.includes(key) || item.meta.tags.includes(key) || item.meta.description.includes(key);
@@ -144,6 +164,7 @@ getPrompt().then((res) => {
     }
   }
 }
+
 .active {
   background: #222 !important;
   color: #f8f8f8 !important;

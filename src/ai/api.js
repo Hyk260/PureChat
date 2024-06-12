@@ -24,7 +24,7 @@ export class ClientApi {
     return this._config;
   }
   prompts() {
-    return this._prompts[0].prompt.filter((t) => t.content) || [];
+    return this._prompts.prompt?.filter((t) => t.content) || [];
   }
   masks() {}
   async share() {}
