@@ -25,6 +25,7 @@ import {
 import storage from "@/utils/localforage/index";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
+import { timProxy } from "@/utils/IM/index";
 
 const conversation = {
   // namespaced: true, //命名空间
@@ -306,7 +307,7 @@ const conversation = {
   actions: {
     // 获取消息列表
     async [GET_MESSAGE_LIST]({ commit, dispatch, state }, action) {
-      const isSDKReady = window.TIMProxy.isSDKReady;
+      const isSDKReady = timProxy.isSDKReady;
       const { conversationID, type } = action;
       let status = !state.currentMessageList || state.currentMessageList?.length == 0;
       // 当前会话有值
@@ -391,7 +392,7 @@ const conversation = {
     },
     // 获取未读消息总数
     async GET_TOTAL_UNREAD_MSG({ state }) {
-      const isSDKReady = window.TIMProxy.isSDKReady;
+      const isSDKReady = timProxy.isSDKReady;
       if (!isSDKReady) return;
       state.totalUnreadMsg = await getUnreadMsg();
     },
