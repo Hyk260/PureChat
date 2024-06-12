@@ -20,7 +20,7 @@ export default defineComponent({
     },
     color: {
       type: String,
-      default: '#333',
+      default: '#808080',
     },
   },
   setup(props) {
@@ -36,8 +36,8 @@ export default defineComponent({
   height: 1em;
   cursor: pointer;
   display: inline-block;
-  color: inherit;
-  // fill: currentColor;
+  color: #ccc;
+  // fill: currentColor; 
   // stroke: currentColor;
   vertical-align: -0.15em;
 }
