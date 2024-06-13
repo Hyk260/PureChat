@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
- const title = import.meta.env.VITE_APP_NAME;
+const title = import.meta.env.VITE_APP_NAME;
 
 /**
  * 切换主题风格

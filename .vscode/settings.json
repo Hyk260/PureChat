@@ -5,7 +5,7 @@
     // 控制是否应在文件保存时运行"整理 import 语句"操作
     "source.organizeImports": "never"
   },
-  "prettier.enable": false,
+  // "prettier.enable": false,
   "eslint.experimental.useFlatConfig": true,
   // 在保存时格式化文件。格式化程序必须可用，延迟后文件不能保存，并且编辑器不能关闭。
   "editor.formatOnSave": false,
