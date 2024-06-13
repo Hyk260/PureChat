@@ -14,8 +14,7 @@
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "preview:build": "vite build && vite preview",
-    "build:debug": "vite build --debug",
-    "lint:eslint": "eslint --cache --max-warnings 0  \"{src,build}/**/*.{vue,js}\" --fix"
+    "build:debug": "vite build --debug"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
@@ -42,6 +41,7 @@
     "tim-upload-plugin": "^1.0.5",
     "v-contextmenu": "3.0.0",
     "vite-plugin-cdn-import": "^1.0.1",
+    "vite-plugin-vue-inspector": "^5.1.2",
     "vue": "^3.2.47",
     "vue-draggable-next": "^2.1.1",
     "vue-i18n": "^9.1.9",
@@ -50,17 +50,14 @@
     "vuex": "4.1.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.3.0",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-prettier": "^7.1.0",
-    "eslint": "^9.4.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-define-config": "^2.1.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "eslint-plugin-vue": "^9.26.0",
-    "vue-eslint-parser": "9.4.2",
-    "prettier": "^3.2.5",
+    "eslint": "^8.34.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.9.0",
+    "prettier": "^2.8.4",
     "sass": "^1.77.4",
+    "unocss": "0.54.1",
     "vite": "^5.2.11",
     "vite-plugin-inspect": "^0.8.4",
     "vite-plugin-progress": "^0.0.7",
@@ -68,10 +65,10 @@
     "vite-plugin-require": "^1.2.14",
     "vite-plugin-svg-icons": "2.0.1",
     "vite-plugin-vue-devtools": "7.2.0",
-    "vite-plugin-vue-inspector": "^5.1.2"
+    "vue-eslint-parser": "9.4.2"
   },
   "engines": {
-    "node": ">=18.20"
+    "node": ">=18"
   },
   "bugs": {
     "url": "https://github.com/Hyk260/PureChat/issues"
