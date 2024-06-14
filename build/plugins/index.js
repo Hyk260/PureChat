@@ -1,8 +1,8 @@
 import process from "node:process";
 import path from "node:path";
 // import unocss from "@unocss/vite";
-import Inspector from "vite-plugin-vue-inspector";
-import Inspect from "vite-plugin-inspect";
+// import Inspector from "vite-plugin-vue-inspector";
+// import Inspect from "vite-plugin-inspect";
 import vue from "@vitejs/plugin-vue";
 import progress from "vite-plugin-progress";
 import removeConsole from "vite-plugin-remove-console";
@@ -19,9 +19,10 @@ import { cdn } from "./cdn";
 export function setupVitePlugins(viteEnv) {
   const plugins = [
     vue(),
-    Inspect(),
+    // 查看代码编译源码
+    // Inspect(),
     // 按下Command(⌘)+Shift(⇧)(Mac),ctrl+shift(Window)然后点击页面元素会自动打开本地编辑器并跳转到对应的代码位置
-    Inspector(),
+    // Inspector(),
     VueDevtools(),
     // 打包进度
     progress(),

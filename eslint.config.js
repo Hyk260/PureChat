@@ -17,12 +17,6 @@ export default defineFlatConfig([
       ...pluginPrettier.configs.recommended.rules,
       "no-debugger": "off",
       "no-unused-vars": "off",
-      // "prettier/prettier": [
-      //   "error",
-      //   {
-      //     endOfLine: "auto",
-      //   },
-      // ],
     },
   },
   {

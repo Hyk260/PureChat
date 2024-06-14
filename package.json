@@ -1,6 +1,6 @@
 {
   "name": "purechat",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "PureChat",
   "type": "module",
   "author": {
@@ -29,6 +29,7 @@
     "axios": "^0.26.1",
     "dayjs": "^1.11.11",
     "element-plus": "^2.7.0",
+    "eslint-define-config": "^2.1.0",
     "js-web-screen-shot": "^1.9.9-rc.18",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.0",
@@ -40,8 +41,6 @@
     "storejs": "^2.0.1",
     "tim-upload-plugin": "^1.0.5",
     "v-contextmenu": "3.0.0",
-    "vite-plugin-cdn-import": "^1.0.1",
-    "vite-plugin-vue-inspector": "^5.1.2",
     "vue": "^3.2.47",
     "vue-draggable-next": "^2.1.1",
     "vue-i18n": "^9.1.9",
@@ -59,10 +58,11 @@
     "sass": "^1.77.4",
     "unocss": "0.54.1",
     "vite": "^5.2.11",
+    "vite-plugin-cdn-import": "^1.0.1",
+    "vite-plugin-vue-inspector": "^5.1.2",
     "vite-plugin-inspect": "^0.8.4",
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-remove-console": "^2.2.0",
-    "vite-plugin-require": "^1.2.14",
     "vite-plugin-svg-icons": "2.0.1",
     "vite-plugin-vue-devtools": "7.2.0",
     "vue-eslint-parser": "9.4.2"

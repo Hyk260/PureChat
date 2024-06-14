@@ -52,11 +52,10 @@
 - ☁️ 聊天工作室 `基于IM即时通讯sdk`
 - 🌚 光明/黑暗 模式主题切换`自动根据系统主题改变`
 - ⚡️ 自定义 SVG 图标组件
-- 🔴 国际化`vue-i18n` 支持 English, 简体中文
+- 🔴 国际化支持 English, 简体中文
 - 🔧 Prettier + ESLint 规范
-- 💡 Commitlint 提交规范
 - 🛡️ GitHub快速登录享受无缝的社交体验
-- ✨ electron 版本 支持 macOS(.dmg)、Windows(.exe)双平台
+- ✨ 提供桌面应用electron版本 支持 macOS(.dmg)、Windows(.exe)双平台
 - 🛠 更多特性开发中
 
 环境配置
