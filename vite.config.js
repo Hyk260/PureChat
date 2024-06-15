@@ -2,26 +2,23 @@ import { resolve } from "path";
 import { defineConfig, loadEnv } from "vite";
 import { setupVitePlugins, viteDefine } from "./build";
 
-/** 启动`node`进程时所在工作目录的绝对路径 */
-export const root = process.cwd();
-
 /** 路径查找 */
 const pathResolve = (dir) => {
   return resolve(__dirname, ".", dir);
 };
 
-/** 设置别名 */
-const alias = {
-  "@": pathResolve("src"),
-  "~": pathResolve("./"),
-};
-
 export default defineConfig(({ mode }) => {
-  const viteEnv = loadEnv(mode, root);
+  const viteEnv = loadEnv(mode, process.cwd());
   return {
     base: viteEnv.VITE_BASE_URL,
     define: viteDefine,
-    resolve: { alias },
+    resolve: {
+      /** 设置别名 */
+      alias: {
+        "@": pathResolve("src"),
+        "~": pathResolve("./"),
+      }
+    },
     server: {
       // 端口号
       port: viteEnv.VITE_PORT,
