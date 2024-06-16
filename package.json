@@ -2,7 +2,6 @@
   "name": "purechat",
   "version": "0.4.2",
   "description": "PureChat",
-  "type": "module",
   "author": {
     "name": "Hyk260",
     "email": "2607881950@qq.com"
@@ -27,8 +26,10 @@
     "animate.css": "^4.1.1",
     "artplayer": "^5.1.1",
     "axios": "^0.26.1",
+    "babel-eslint": "^10.1.0",
     "dayjs": "^1.11.11",
     "element-plus": "^2.7.0",
+    "eslint-plugin-vue": "^9.26.0",
     "fast-glob": "^3.3.2",
     "html-to-image": "^1.11.11",
     "js-web-screen-shot": "^1.9.9-rc.18",
@@ -50,13 +51,13 @@
     "vuex": "4.1.0"
   },
   "devDependencies": {
-    "sass": "^1.77.4",
-    "vite": "^5.2.11",
+    "@vitejs/plugin-vue": "^5.0.4",
     "eslint": "^8.49.0",
-    "prettier": "^3.0.2",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "prettier": "^3.0.2",
+    "sass": "^1.77.4",
+    "vite": "^5.2.11",
     "vite-plugin-cdn-import": "^1.0.1",
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-remove-console": "^2.2.0",

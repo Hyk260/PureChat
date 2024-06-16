@@ -1,0 +1,6 @@
+public
+dist
+*.d.ts
+/src/assets
+.eslintrc.js
+.prettierrc.js
