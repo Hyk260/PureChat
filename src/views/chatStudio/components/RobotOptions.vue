@@ -93,15 +93,12 @@ const { toAccount } = useGetters(["toAccount"]);
 
 function initModel() {
   const model = getModelType(toAccount.value);
-  console.log(model)
   const value = cloneDeep(modelValue[model]);
-  console.log(modelValue)
   Object.values(value).map((v) => {
     return (v.defaultValue = useAccessStore(model)[v.ID]);
   });
   if (model === "GPT") {
     maskData.value = cloneDeep(usePromptStore(model));
-    console.log(maskData.value)
   } else {
     maskData.value = [];
   }

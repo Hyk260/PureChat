@@ -2,6 +2,7 @@
   "name": "purechat",
   "version": "0.4.2",
   "description": "PureChat",
+  "type": "module",
   "author": {
     "name": "Hyk260",
     "email": "2607881950@qq.com"
@@ -19,12 +20,14 @@
     "@element-plus/icons-vue": "^2.0.10",
     "@fortaine/fetch-event-source": "^3.0.6",
     "@tencentcloud/chat": "3.3.2",
+    "@vue/eslint-config-prettier": "^9.0.0",
     "@vueuse/components": "^10.7.0",
     "@vueuse/core": "^8.4.2",
     "@wangeditor/editor": "^5.0.1",
     "@wangeditor/editor-for-vue": "^5.1.11",
     "animate.css": "^4.1.1",
     "artplayer": "^5.1.1",
+    "autoprefixer": "^10.4.19",
     "axios": "^0.26.1",
     "babel-eslint": "^10.1.0",
     "dayjs": "^1.11.11",
@@ -37,10 +40,12 @@
     "mitt": "^3.0.0",
     "nprogress": "^0.2.0",
     "pinyin-pro": "^3.18.5",
+    "postcss": "^8.4.38",
     "pure-tools": "^0.0.4",
     "qrcode": "^1.5.3",
     "snabbdom": "^3.5.1",
     "storejs": "^2.0.1",
+    "tailwindcss": "^3.4.4",
     "tim-upload-plugin": "^1.0.5",
     "v-contextmenu": "3.0.0",
     "vue": "^3.2.47",
@@ -51,13 +56,14 @@
     "vuex": "4.1.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.24.7",
     "@vitejs/plugin-vue": "^5.0.4",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^3.0.2",
     "sass": "^1.77.4",
-    "vite": "^5.2.11",
+    "vite": "5.2.11",
     "vite-plugin-cdn-import": "^1.0.1",
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-remove-console": "^2.2.0",
@@ -65,7 +71,7 @@
     "vite-plugin-vue-devtools": "7.2.0"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "bugs": {
     "url": "https://github.com/Hyk260/PureChat/issues"

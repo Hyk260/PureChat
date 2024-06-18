@@ -1,6 +1,5 @@
 // 调用 @include flex-center;
 @mixin clearfix {
-
   &:before,
   &:after {
     content: "";
@@ -18,12 +17,13 @@
   }
 
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 0.75em;
+      height: 0.75em;
   }
 
   &::-webkit-scrollbar-thumb {
     background: #90939957;
-    border-radius: 20px;
+    border-radius: 10px;
   }
 }
 
