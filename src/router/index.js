@@ -6,6 +6,7 @@ import { createRouter, createWebHashHistory, createWebHistory } from "vue-router
 import { scrollBehavior } from "./utils";
 import layout from "./modules/layout";
 import remaining from "./modules/remaining";
+import { noService } from '@/config/index';
 
 let isF = false;
 const historyMode = {
@@ -23,7 +24,7 @@ router.beforeEach((to, from, next) => {
   if (from.path === to.path) return;
   setPageTitle(to.meta.title);
   const token = storage.get(ACCESS_TOKEN);
-  if (token) {
+  if (token || noService) {
     NProgress.start();
     if (isF) {
       next();

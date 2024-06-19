@@ -20,7 +20,6 @@
     "@element-plus/icons-vue": "^2.0.10",
     "@fortaine/fetch-event-source": "^3.0.6",
     "@tencentcloud/chat": "3.3.2",
-    "@vue/eslint-config-prettier": "^9.0.0",
     "@vueuse/components": "^10.7.0",
     "@vueuse/core": "^8.4.2",
     "@wangeditor/editor": "^5.0.1",
@@ -29,10 +28,8 @@
     "artplayer": "^5.1.1",
     "autoprefixer": "^10.4.19",
     "axios": "^0.26.1",
-    "babel-eslint": "^10.1.0",
     "dayjs": "^1.11.11",
     "element-plus": "^2.7.0",
-    "eslint-plugin-vue": "^9.26.0",
     "fast-glob": "^3.3.2",
     "html-to-image": "^1.11.11",
     "js-web-screen-shot": "^1.9.9-rc.18",
@@ -56,23 +53,20 @@
     "vuex": "4.1.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.24.7",
     "@vitejs/plugin-vue": "^5.0.4",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^3.0.2",
     "sass": "^1.77.4",
-    "vite": "5.2.11",
+    "vite": "5.3.0",
     "vite-plugin-cdn-import": "^1.0.1",
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-remove-console": "^2.2.0",
     "vite-plugin-svg-icons": "2.0.1",
-    "vite-plugin-vue-devtools": "7.2.0"
+    "vite-plugin-vue-devtools": "7.2.1"
   },
-  "engines": {
-    "node": ">=18"
-  },
+  "engines": {},
   "bugs": {
     "url": "https://github.com/Hyk260/PureChat/issues"
   },

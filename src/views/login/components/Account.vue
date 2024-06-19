@@ -15,7 +15,7 @@
       />
     </el-form-item>
     <!-- 密码 -->
-    <el-form-item prop="password">
+    <el-form-item prop="password" v-if="!noService">
       <el-input
         v-model="user.password"
         type="password"
@@ -27,7 +27,7 @@
       </el-input>
     </el-form-item>
     <!-- 验证码 -->
-    <el-form-item prop="verifyCode">
+    <el-form-item prop="verifyCode" v-if="!noService">
       <el-input
         v-model="user.verifyCode"
         size="large"
@@ -43,7 +43,7 @@
       </el-input>
     </el-form-item>
     <!-- keep -->
-    <div class="login-options">
+    <div class="login-options" v-if="!noService">
       <el-checkbox v-model="user.keep">{{ $t("login.remember") }}</el-checkbox>
       <div class="forget">{{ $t("login.forget") }}</div>
     </div>
@@ -67,7 +67,7 @@
     </el-button>
   </div>
   <!-- 第三方登录 -->
-  <el-form-item>
+  <el-form-item v-if="!noService">
     <el-divider>
       <p class="text-gray-500 text-xs">{{ $t("login.thirdLogin") }}</p>
     </el-divider>
@@ -91,7 +91,7 @@ import { authorizedLogin, oauthAuthorize } from "../utils/auth";
 import { operates, thirdParty } from "../utils/enums";
 import { rules, user } from "../utils/validation";
 import loadingSvg from "./loadingSvg.vue";
-
+import { noService } from '@/config/index';
 const router = useRouter();
 const restaurants = ref([]);
 const ruleFormRef = ref();
@@ -115,6 +115,10 @@ const querySearch = (queryString, cb) => {
 };
 
 const loginBtn = async (formEl) => {
+  if (noService) {
+    dispatch("loginLocalIm", user);
+    return
+  }
   if (!formEl) return;
   await formEl.validate((valid) => {
     if (valid) dispatch("LOG_IN", user);

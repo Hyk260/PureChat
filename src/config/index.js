@@ -4,6 +4,7 @@ import pkg from "~/package.json";
 let config = {};
 const { version } = pkg;
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+export const noService = import.meta.env.VITE_NO_SERVICE === "Y"
 
 /**
  * 设置配置项

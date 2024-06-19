@@ -8,6 +8,7 @@ import { verification } from "@/utils/message/index";
 import emitter from "@/utils/mitt-bus";
 import { ElMessage } from "element-plus";
 import { nextTick } from "vue";
+import { genTestUserSig } from '@/utils/generateUserSig/index';
 
 const user = {
   state: {
@@ -64,6 +65,17 @@ const user = {
     // 注册
     async REGISTER({ state }, data) {
       const result = await register(data);
+    },
+    loginLocalIm({ commit, dispatch }, data) {
+      const { userSig, userID } = genTestUserSig({ userID: data.username })
+      window.TIMProxy.init();
+      dispatch("TIM_LOG_IN", { userID, userSig, });
+      commit("UPDATE_USER_INFO", {
+        key: "user", value: {
+          username: userID,
+          userSig,
+      } });
+      router.push("/chatstudio");
     },
     // 登录
     async LOG_IN({ state, commit, dispatch }, data) {
