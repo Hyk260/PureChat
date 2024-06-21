@@ -23,7 +23,6 @@ import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
 
 const conversation = {
-  // namespaced: true, //命名空间
   state: {
     sessionDraftMap: new Map(), //会话草稿
     totalUnreadMsg: 0, // 未读消息总数
@@ -264,13 +263,13 @@ const conversation = {
     },
     // 设置会话草稿
     SET_SESSION_DRAFT(state, action) {
-      // if (!action) return;
-      // const { ID, payload } = action;
-      // if (!checkTextNotEmpty(payload)) {
-      //   state.sessionDraftMap.delete(ID);
-      // } else {
-      //   state.sessionDraftMap.set(ID, payload);
-      // }
+      if (!action) return;
+      const { ID, payload } = action;
+      if (!checkTextNotEmpty(payload)) {
+        state.sessionDraftMap.delete(ID);
+      } else {
+        state.sessionDraftMap.set(ID, payload);
+      }
     },
     // 设置撤回消息重新编辑
     setRevokeMsg(state, action) {
