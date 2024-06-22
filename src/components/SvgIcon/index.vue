@@ -36,7 +36,7 @@ export default defineComponent({
   height: 1em;
   cursor: pointer;
   display: inline-block;
-  color: #ccc;
+  // color: #ccc; 
   // fill: currentColor; 
   // stroke: currentColor;
   vertical-align: -0.15em;

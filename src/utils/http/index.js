@@ -8,7 +8,7 @@ import { errorHandler } from "./tools";
 const service = axios.create({
   // baseURL: "https://apichat.fun/", // 生产
   // baseURL: "http://localhost:8081/", // 开发
-  baseURL: import.meta.env.VITE_PROXY_DOMAIN_REAL, // 公共地址
+  baseURL: import.meta.env.VITE_SERVICE_BASE_URL, // 公共地址
   timeout: 50000, // 请求超时时间
 });
 const whiteList = ["/imCallback", "/rest-api"];
