@@ -1,4 +1,4 @@
-import LibGenerateTestUserSig from './usersig';
+// import LibGenerateTestUserSig from './usersig';
 /**
  * Signature expiration time, which should not be too short
  * Time unit: second
