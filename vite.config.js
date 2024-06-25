@@ -55,13 +55,16 @@ export default defineConfig(({ mode }) => {
         output: {
           chunkFileNames: "static/js/[name]-[hash].js",
           entryFileNames: "static/js/[name]-[hash].js",
+          // #https://cn.rollupjs.org/configuration-options/#output-assetfilenames
           assetFileNames: "static/[ext]/[name]-[hash].[ext]",
+          // 手动分包 #https://cn.rollupjs.org/configuration-options/#output-manualchunks
+          manualChunks(id) {
+            if (id.includes('node_modules')) return 'vendor';
+          },
         },
       },
+      // 启用/ 禁用 gzip 压缩大小报告
       reportCompressedSize: false,
-      commonjsOptions: {
-        ignoreTryCatch: false,
-      },
     },
   };
 });

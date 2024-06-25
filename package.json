@@ -11,10 +11,10 @@
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "build:debug": "vite build --debug",
+    "build:preview": "vite build && vite preview",
     "preview": "vite preview",
-    "lint": "eslint . --fix",
-    "preview:build": "vite build && vite preview",
-    "build:debug": "vite build --debug"
+    "lint": "eslint . --fix"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",

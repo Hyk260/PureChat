@@ -32,6 +32,9 @@
   "editor.formatOnPaste": true,
   // 控制具有未保存更改的编辑器的 自动保存。
   "files.autoSave": "off",
+  "files.associations": {
+    "editor.snippetSuggestions": "top"
+  },
   "workbench.startupEditor": "newUntitledFile",
   "editor.suggestSelection": "first",
   "editor.acceptSuggestionOnCommitCharacter": false,
@@ -39,9 +42,6 @@
     "other": true,
     "comments": true,
     "strings": true
-  },
-  "files.associations": {
-    "editor.snippetSuggestions": "top"
   },
   // 翻译文件夹路径 (相对于项目根目录)
   "i18n-ally.localesPaths": ["locales"],
