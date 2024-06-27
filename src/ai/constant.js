@@ -128,6 +128,12 @@ export const RobotAvatar = {
   [ModelProvider.ZeroOne]: "ZeroOne.svg",
 };
 
+export const RobotModel = {
+  [ModelProvider.GPT]: openaiModels,
+  [ModelProvider.ChatGLM]: zhipuModels,
+  [ModelProvider.ZeroOne]: yiModels,
+};
+
 // 默认配置
 export const modelConfig = {
   [ModelProvider.GPT]: { ...OpenaiConfig },

@@ -1,7 +1,7 @@
 <template>
   <div class="toolbar">
     <!-- 表情包 -->
-    <span v-show="!fullScreen" :title="$t('chat.emoji')" class="emoticon" @click="sendEmojiClick">
+    <span v-show="!fullScreen && !isRobot(toAccount)" :title="$t('chat.emoji')" class="emoticon" @click="sendEmojiClick">
       <svg-icon iconClass="iconxiaolian" class="icon-hover" />
     </span>
     <!-- 图片 -->
@@ -15,6 +15,10 @@
     <!-- 截图 -->
     <span v-show="!isRobot(toAccount)" :title="$t('chat.screenshot')" @click="clickCscreenshot">
       <svg-icon iconClass="iconjietu" class="icon-hover" />
+    </span>
+    <!-- 选模型 -->
+    <span v-show="isRobot(toAccount)" @click="selectModel">
+      <svg-icon iconClass="model" class="icon-hover robot" />
     </span>
     <!-- 机器人配置 -->
     <span v-show="isRobot(toAccount)" :title="$t('chat.configuration')" @click="openRobotBox">
@@ -63,6 +67,7 @@
       accept=".mp4"
       hidden
     /> -->
+    <RobotModel v-if="isRobot(toAccount)" />
     <RobotOptions v-if="isRobot(toAccount)" />
     <EmotionPackBox @setEmoji="setEmoji" ref="emjRef" />
   </div>
@@ -78,6 +83,7 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 import EmotionPackBox from "./EmotionPackBox.vue";
 import RobotOptions from "./RobotOptions.vue";
+import RobotModel from "./RobotModel.vue";
 import { getAssetsFile } from "../utils/utils";
 import emojiQq from "@/utils/emoji/emoji-map-qq";
 import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
@@ -100,6 +106,9 @@ const sendEmojiClick = () => {
 };
 function openRobotBox() {
   emitter.emit("onRobotBox", true);
+}
+function selectModel() {
+  emitter.emit("openModeList", true);
 }
 const setEmoji = (item, table) => {
   let url = "";

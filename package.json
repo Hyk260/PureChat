@@ -34,6 +34,7 @@
     "html-to-image": "^1.11.11",
     "js-web-screen-shot": "^1.9.9-rc.18",
     "lodash-es": "^4.17.21",
+    "marked": "^13.0.1",
     "mitt": "^3.0.0",
     "nprogress": "^0.2.0",
     "pinyin-pro": "^3.18.5",
