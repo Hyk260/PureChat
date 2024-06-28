@@ -12,14 +12,23 @@
                 </el-icon>
               </template>
             </el-input>
-            <div class="tags">
-              <button :class="['item-tags', cur === item ? 'active' : '']" v-for="item in market.tags" :key="item"
-                @click="handleClick(item)">
+            <div class="tags" v-if="market">
+              <button
+                :class="['item-tags', cur === item ? 'active' : '']"
+                v-for="item in market.tags"
+                :key="item"
+                @click="handleClick(item)"
+              >
                 {{ item }}
               </button>
             </div>
             <div class="agent-list">
-              <AgentCard @click="cardClick(item)" v-for="item in filterInput" :key="item.identifier" :agents="item" />
+              <AgentCard
+                @click="cardClick(item)"
+                v-for="item in filterInput"
+                :key="item.identifier"
+                :agents="item"
+              />
             </div>
           </div>
         </div>
@@ -30,28 +39,25 @@
 </template>
 
 <script setup>
-import AgentCardBanner from './AgentCardBanner.vue';
+import AgentCardBanner from "./AgentCardBanner.vue";
 import { getPrompt } from "@/api/node-admin-api/index";
-import { ref, watch } from "vue";
-import emitter from '@/utils/mitt-bus';
+import { ref, watch, onMounted, onBeforeMount } from "vue";
+import emitter from "@/utils/mitt-bus";
+import marketJson from "@/assets/db/market.json";
 import storage from "@/utils/localforage/index";
 import AgentCard from "./AgentCard.vue";
 import { useStore } from "vuex";
-import {
-  StoreKey,
-  CHATGPT_ROBOT,
-  ModelProvider,
-} from "@/ai/constant";
+import { StoreKey, CHATGPT_ROBOT, ModelProvider } from "@/ai/constant";
 
-const cur = ref('');
+const cur = ref("");
 const input = ref("");
-const market = ref("");
+const market = ref(null);
 const filterInput = ref("");
 const { commit, dispatch } = useStore();
 
 function cardClick(item) {
   // emitter.emit('openAgentCard',item)
-  const { identifier, meta } = item
+  const { identifier, meta } = item;
   storage.set(StoreKey.Prompt, {
     [ModelProvider.GPT]: {
       id: identifier,
@@ -60,30 +66,54 @@ function cardClick(item) {
     },
   });
   commit("TAGGLE_OUE_SIDE", "message");
-  dispatch("CHEC_OUT_CONVERSATION", { convId: `${'C2C'}${CHATGPT_ROBOT}` });
+  dispatch("CHEC_OUT_CONVERSATION", { convId: `${"C2C"}${CHATGPT_ROBOT}` });
 }
+
 function handleClick(key) {
   if (cur.value == key) {
-    cur.value = ''
-    filterInput.value = market.value.agents
-    return
+    cur.value = "";
+    filterInput.value = market.value.agents;
+    return;
   }
   cur.value = key;
   filterInput.value = market.value.agents.filter((item) => {
-    return item.meta.title.includes(key) || item.meta.tags.includes(key) || item.meta.description.includes(key);
+    return (
+      item.meta.title.includes(key) ||
+      item.meta.tags.includes(key) ||
+      item.meta.description.includes(key)
+    );
   });
   console.log("🚀 ~ filterInput.value:", filterInput.value);
 }
 
+function initPrompt() {
+  const marketLocal = storage.get("marketJson");
+  if (marketLocal) {
+    market.value = marketLocal;
+    filterInput.value = marketLocal.agents;
+  }
+
+  getPrompt()
+    .then((res) => {
+      market.value = res;
+      filterInput.value = res.agents;
+      storage.set("marketJson", res);
+      console.log("🚀 ~ getPrompt ~ res:", res);
+    })
+    .catch((err) => {
+      market.value = marketJson;
+      filterInput.value = marketJson.agents;
+      storage.set("marketJson", marketJson);
+    });
+}
+
 watch(input, (newVal) => {
   console.log("🚀 ~ newVal:", newVal);
-  handleClick(newVal)
+  handleClick(newVal);
 });
 
-getPrompt().then((res) => {
-  market.value = res;
-  filterInput.value = res.agents;
-  console.log("🚀 ~ getPrompt ~ res:", res);
+onBeforeMount(() => {
+  initPrompt();
 });
 </script>
 

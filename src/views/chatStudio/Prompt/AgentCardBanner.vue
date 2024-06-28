@@ -1,9 +1,7 @@
 <template>
   <el-dialog v-model="dialog" width="500" class="agent-card-modal" :before-close="handleClose">
     <div class="agent-card-banner">
-      <div class="top">
-
-      </div>
+      <div class="top"></div>
       <div class="content">
         <h2>
           {{ cardData.meta.title }}
@@ -17,38 +15,34 @@
           {{ cardData.meta.description }}
         </div>
         <div>
-          <el-button @click="toTant" type="primary">
-            添加助手并会话
-          </el-button>
+          <el-button @click="toTant" type="primary"> 添加助手并会话 </el-button>
         </div>
       </div>
       <div>
-         {{ cardData.meta.systemRole }}
+        {{ cardData.meta.systemRole }}
       </div>
     </div>
   </el-dialog>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import emitter from '@/utils/mitt-bus';
-import { useBoolean } from '@/utils/hooks/index';
-const cardData = ref({})
-const [dialog, setDialog] = useBoolean()
+import { ref } from "vue";
+import emitter from "@/utils/mitt-bus";
+import { useBoolean } from "@/utils/hooks/index";
+const cardData = ref({});
+const [dialog, setDialog] = useBoolean();
 
-function toTant() {
-  
-}
+function toTant() {}
 function handleClose() {
-  setDialog(false)
+  setDialog(false);
 }
-emitter.on('openAgentCard', (data) => {
-  cardData.value = data
-  setDialog(true)
-})
+emitter.on("openAgentCard", (data) => {
+  cardData.value = data;
+  setDialog(true);
+});
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 :global(body .agent-card-modal) {
   padding: 0;
 }
@@ -77,7 +71,7 @@ emitter.on('openAgentCard', (data) => {
 
     span {
       color: #666666;
-    background: rgba(0, 0, 0, 0.06);
+      background: rgba(0, 0, 0, 0.06);
       height: 20px;
       line-height: 20px;
       padding: 0 7px;
@@ -93,8 +87,7 @@ emitter.on('openAgentCard', (data) => {
         background: rgba(0, 0, 0, 0.12);
       }
     }
-    .desc{
-
+    .desc {
     }
   }
 }

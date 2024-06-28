@@ -72,7 +72,7 @@ emitter.on("openModeList", () => {
 
 <style lang="scss" scoped>
 .robot-model-box {
-  overflow-y: scroll;
+  overflow-y: auto;
   position: absolute;
   padding: 4px;
   z-index: 1;

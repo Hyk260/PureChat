@@ -11,7 +11,7 @@ const service = axios.create({
   baseURL: import.meta.env.VITE_SERVICE_BASE_URL, // 公共地址
   timeout: 50000, // 请求超时时间
 });
-const whiteList = ["/imCallback", "/rest-api"];
+const whiteList = ["/imCallback", "/rest-api","/market"];
 // 请求拦截器
 service.interceptors.request.use((config) => {
   const { url } = config;
