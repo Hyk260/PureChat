@@ -6,11 +6,11 @@ export const list = computed(() => {
   return [
     {
       title: $t("common.currency"),
-      icon: "ForkSpoon",
+      icon: "Operation",
     },
     {
-      title: `${$t("common.about")} ${title}`,
-      icon: "WarningFilled",
+      title: `${$t("common.about")}`,
+      icon: "Warning",
     },
     // {
     //   title: "外观",

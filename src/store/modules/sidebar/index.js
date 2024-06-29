@@ -21,10 +21,10 @@ const outsideList = [
   },
   {
     only: "prompt",
-    icon: "MagicStick",
+    icon: "assistant",
     locale: "",
     title: "AI助理",
-    type: "el-icon",
+    // type: "el-icon",
   },
   {
     only: "document",

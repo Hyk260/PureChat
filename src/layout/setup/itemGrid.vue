@@ -4,7 +4,7 @@
       <span>{{ item.title }}</span>
       <FontIcon class="icon-hover" iconName="CloseBold" @click="emit('onClose')" />
     </div>
-    <div v-if="item.icon === 'ForkSpoon'">
+    <div v-if="item.icon === 'Operation'">
       <ul class="setting w-full">
         <li>
           <span>{{ t("common.theme") }}</span>
