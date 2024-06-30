@@ -38,12 +38,17 @@
     </div>
     <div v-else>
       <div class="ui-row">
-        <div>
-          <img src="@/assets/images/log.png" alt="" />
+        <div class="flex">
+          <div>
+            <img src="@/assets/images/log.png" alt="" />
+          </div>
+          <div class="ui-col">
+            <div class="col-title">{{ $config.Title }}</div>
+            <div class="version">当前版本 {{ $config.Version }}</div>
+          </div>
         </div>
-        <div class="ui-col">
-          <div class="col-title">{{ $config.Title }} {{ $config.Version }}</div>
-          <div class="version">当前版本 {{ $config.Version }}</div>
+        <div>
+          <el-button @click="log"> 更新日志 </el-button>
         </div>
       </div>
       <div class="divider"></div>
@@ -79,6 +84,10 @@ const { appearance, lang } = useState({
 
 function onBlur() {
   emit("onItem");
+}
+
+function log() {
+  open("https://hyk260.github.io/pure-docs/other/logs.html");
 }
 
 function logout() {
@@ -132,9 +141,11 @@ const language = computed({
 }
 .ui-row {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   img {
-    height: 88px;
-    height: 88px;
+    height: 52px;
+    height: 52px;
   }
   .ui-col {
     margin-left: 1rem;
