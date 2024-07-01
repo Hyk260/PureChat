@@ -97,12 +97,11 @@ function initModel() {
   Object.values(value).map((v) => {
     return (v.defaultValue = useAccessStore(model)[v.ID]);
   });
-  maskData.value = cloneDeep(usePromptStore('GPT'));
-  // if (model === "GPT") {
-  //   maskData.value = cloneDeep(usePromptStore(model));
-  // } else {
-  //   maskData.value = [];
-  // }
+  if (model === "GPT") {
+    maskData.value = cloneDeep(usePromptStore(model));
+  } else {
+    maskData.value = [];
+  }
   modelData.value = value;
 }
 

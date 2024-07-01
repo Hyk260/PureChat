@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialog" width="500" class="agent-card-modal" :before-close="handleClose">
+  <el-dialog v-model="dialog" width="520" class="agent-card-modal" :before-close="handleClose">
     <div class="agent-card-banner">
       <div class="top"></div>
       <div class="content">
@@ -15,24 +15,39 @@
           {{ cardData.meta.description }}
         </div>
         <div>
-          <el-button @click="toTant" type="primary"> 添加助手并会话 </el-button>
+          <el-button @click="toTant()"> 开始会话 </el-button>
         </div>
       </div>
-      <div>
-        {{ cardData.meta.systemRole }}
-      </div>
+      <div class="market" v-html="marked.parse(cardData.meta.systemRole)"></div>
     </div>
   </el-dialog>
 </template>
 
 <script setup>
+import { marked } from "marked";
 import { ref } from "vue";
 import emitter from "@/utils/mitt-bus";
 import { useBoolean } from "@/utils/hooks/index";
+import storage from "@/utils/localforage/index";
+import { useStore } from "vuex";
+import { StoreKey, CHATGPT_ROBOT, ModelProvider } from "@/ai/constant";
+
 const cardData = ref({});
+const { commit, dispatch } = useStore();
 const [dialog, setDialog] = useBoolean();
 
-function toTant() {}
+function toTant(item = cardData.value) {
+  const { identifier, meta } = item;
+  storage.set(StoreKey.Prompt, {
+    [ModelProvider.GPT]: {
+      id: identifier,
+      lang: "cn",
+      prompt: [{ role: "system", content: meta.systemRole }],
+    },
+  });
+  commit("TAGGLE_OUE_SIDE", "message");
+  dispatch("CHEC_OUT_CONVERSATION", { convId: `${"C2C"}${CHATGPT_ROBOT}` });
+}
 function handleClose() {
   setDialog(false);
 }
@@ -61,14 +76,12 @@ emitter.on("openAgentCard", (data) => {
     align-items: center;
     gap: 16px;
   }
-
   .tags {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 6px;
-
     span {
       color: #666666;
       background: rgba(0, 0, 0, 0.06);
@@ -88,7 +101,15 @@ emitter.on("openAgentCard", (data) => {
       }
     }
     .desc {
+      color: #666666;
+      text-align: center;
+      line-height:22px;
     }
+  }
+  .market{
+    max-height: 350px;
+    overflow: auto;
+    padding: 16px;
   }
 }
 </style>

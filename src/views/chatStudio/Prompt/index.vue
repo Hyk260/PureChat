@@ -56,17 +56,7 @@ const filterInput = ref("");
 const { commit, dispatch } = useStore();
 
 function cardClick(item) {
-  // emitter.emit('openAgentCard',item)
-  const { identifier, meta } = item;
-  storage.set(StoreKey.Prompt, {
-    [ModelProvider.GPT]: {
-      id: identifier,
-      lang: "cn",
-      prompt: [{ role: "system", content: meta.systemRole }],
-    },
-  });
-  commit("TAGGLE_OUE_SIDE", "message");
-  dispatch("CHEC_OUT_CONVERSATION", { convId: `${"C2C"}${CHATGPT_ROBOT}` });
+  emitter.emit('openAgentCard', item)
 }
 
 function handleClick(key) {

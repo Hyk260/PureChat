@@ -39,9 +39,8 @@
                   <FontIcon
                     v-if="element?.type == 'el-icon'"
                     :iconName="element.icon"
-                    class="style-svg"
                   />
-                  <svg-icon v-else :iconClass="element.icon" class="style-svg" />
+                  <svg-icon v-else :iconClass="element.icon" class="svg-icon" />
                   <span>{{ element.title }}</span>
                   <svg-icon iconClass="drag" class="dragIcon" />
                 </div>
@@ -229,12 +228,11 @@ export default defineComponent({
     color: #1890ff;
   }
 }
-.style-svg {
-  margin-right: 10px;
+.svg-icon {
+  margin-right: 5px;
 }
 .draggable {
   justify-content: space-between;
-  // height: 200px;
   .container {
     border-radius: 4px;
     width: 195px;
