@@ -14,7 +14,7 @@
         <div class="desc">
           {{ cardData.meta.description }}
         </div>
-        <div>
+        <div class="button">
           <el-button @click="toTant()"> 开始会话 </el-button>
         </div>
       </div>
@@ -103,13 +103,16 @@ emitter.on("openAgentCard", (data) => {
     .desc {
       color: #666666;
       text-align: center;
-      line-height:22px;
+      line-height: 22px;
     }
   }
-  .market{
+  .market {
     max-height: 350px;
     overflow: auto;
     padding: 16px;
   }
+}
+.el-button {
+  width: 306px;
 }
 </style>
