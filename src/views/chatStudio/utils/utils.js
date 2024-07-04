@@ -579,7 +579,6 @@ export const dragoverHandler = (e) => {
   e.preventDefault();
 };
 
-
 export const getAssetsFile = (url) => {
   return new URL(`../../../assets/emoji/${url}`, import.meta.url).href;
 };

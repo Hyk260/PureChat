@@ -1,10 +1,16 @@
 import http from "@/utils/http/index";
+import market from '@/assets/db/market.json';
+import { noService } from '@/config/index';
 
-export const getPrompt = () => {
-  return http({
-    url: "/market", // github qq
-    method: "get",
-  });
+export const getPrompt = async () => {
+  if (noService) {
+    return market
+  } else {
+    return http({
+      url: "/market",
+      method: "get",
+    });
+  }
 };
 
 export const createForData = ({ files }) => {

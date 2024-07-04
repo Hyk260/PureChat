@@ -1,5 +1,5 @@
 export const OpenaiConfig = {
-  model: "gpt-3.5-turbo",
+  model: "gpt-3.5-turbo-16k",
   /**
    * 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 0.6
@@ -25,7 +25,7 @@ export const OpenaiConfig = {
    */
   frequency_penalty: 0,
   token: import.meta.env.VITE_OPENAI_API_KEY,
-  openaiUrl: import.meta.env.VITE_BASE_URL,
+  openaiUrl: import.meta.env.VITE_OPENAI_BASE_URL,
   historyMessageCount: 1,
   compressMessageLengthThreshold: 1000,
 };

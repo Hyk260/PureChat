@@ -1,8 +1,9 @@
 import dayjs from "dayjs";
 import {
-  // engines,
+  engines,
   dependencies,
   devDependencies,
+  repository,
   name,
   version,
 } from "../../package.json";
@@ -12,11 +13,12 @@ export const __APP_INFO__ = {
   pkg: {
     name,
     version,
-    // engines,
+    engines,
+    repository,
     dependencies,
     devDependencies,
   },
-  lastBuildTime: dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+  lastBuildTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
 };
 
 export const viteDefine = {

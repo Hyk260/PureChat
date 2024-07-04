@@ -1,4 +1,8 @@
-# eslint 忽略检查 (根据项目需要自行添加)
-node_modules
+public
+build
 dist
-dist_electron
+node_modules
+*.d.ts
+/src/assets
+.eslintrc.js
+.prettierrc.js

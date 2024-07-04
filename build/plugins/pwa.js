@@ -1,12 +1,13 @@
 import { VitePWA } from "vite-plugin-pwa";
 
-export default function setupVitePwa() {
+// https://vite-pwa-org.netlify.app
+export default function setupVitePwa(viteEnv) {
   return VitePWA({
     registerType: "autoUpdate",
     includeAssets: ["favicon.ico"],
     manifest: {
-      name: "PureChat",
-      short_name: "PureChat",
+      name: viteEnv.VITE_APP_NAME,
+      short_name: viteEnv.VITE_APP_NAME,
       theme_color: "#fff",
       icons: [
         {

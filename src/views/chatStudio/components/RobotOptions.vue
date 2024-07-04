@@ -10,21 +10,21 @@
     <div>
       <ul class="container">
         <!-- prompt -->
-        <div class="prompt" v-for="item in maskData" :key="item.id">
-          <template v-for="(m, i) in item.prompt" :key="i">
+        <div class="prompt" v-for="item in maskData.prompt" :key="item.id">
+          <!-- <template v-for="(m, i) in item" :key="i"> -->
             <svg-icon v-show="false" iconClass="drag" class="dragIcon" />
-            <el-select class="prompt-select" v-model="m.role">
-              <el-option v-for="item in ROLES" :key="item.id" :label="item" :value="item" />
+            <el-select class="prompt-select" v-model="item.role">
+              <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
             </el-select>
             <el-input
               class="prompt-input"
-              v-model="m.content"
+              v-model="item.content"
               :autosize="{ minRows: 1, maxRows: 4 }"
               type="textarea"
               placeholder="prompt"
             />
             <el-icon v-show="false" @click="onClose"><CircleCloseFilled /></el-icon>
-          </template>
+          <!-- </template> -->
         </div>
         <li class="list-item" v-for="item in modelData" :key="item.ID">
           <div>
@@ -93,9 +93,7 @@ const { toAccount } = useGetters(["toAccount"]);
 
 function initModel() {
   const model = getModelType(toAccount.value);
-  console.log(model)
   const value = cloneDeep(modelValue[model]);
-  console.log(modelValue)
   Object.values(value).map((v) => {
     return (v.defaultValue = useAccessStore(model)[v.ID]);
   });
@@ -156,7 +154,7 @@ function handleConfirm() {
     model[t.ID] = t.defaultValue;
   });
   storeRobotModel(model);
-  if (model === "GPT") storeRobotMask(maskData.value);
+  // if (model === "GPT") storeRobotMask(maskData.value);
 }
 
 function onClose() {}

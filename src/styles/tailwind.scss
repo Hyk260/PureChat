@@ -1,55 +1,18 @@
-// 外边框
-@for $i from 0 through 20 {
-  .mt-#{$i} {
-    margin-top: #{$i}px;
-  }
-
-  .mr-#{$i} {
-    margin-right: #{$i}px;
-  }
-
-  .mb-#{$i} {
-    margin-bottom: #{$i}px;
-  }
-
-  .ml-#{$i} {
-    margin-left: #{$i}px;
-  }
-
-  .m-#{$i} {
-    margin: #{$i}px;
-  }
-}
-
-// 内边框
-@for $i from 0 through 20 {
-  .pt-#{$i} {
-    padding-top: #{$i}px;
-  }
-
-  .pr-#{$i} {
-    padding-right: #{$i}px;
-  }
-
-  .pb-#{$i} {
-    padding-bottom: #{$i}px;
-  }
-
-  .pl-#{$i} {
-    padding-left: #{$i}px;
-  }
-}
-
 .opacity-0 {
   opacity: 0;
+}
+
+.w-full {
+  width: 100%;
 }
 
 .h-full {
   height: 100%;
 }
 
-.w-full {
+.wh-full {
   width: 100%;
+  height: 100%;
 }
 
 .relative {

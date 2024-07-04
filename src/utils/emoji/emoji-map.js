@@ -5,6 +5,6 @@ export const emojiUrl = "https://www.emojiall.com/img/platform/qq/";
 
 export const localemojiUrl = "@/assets/emoji/";
 
-export const emojiMap = {...qqMap,...doMap,};
+export const emojiMap = { ...qqMap, ...doMap };
 
 export const emojiName = [...qqName, ...doName];

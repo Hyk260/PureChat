@@ -1,9 +1,6 @@
 import { resolve } from "path";
 import { defineConfig, loadEnv } from "vite";
-import { getSrcPath, setupVitePlugins, viteDefine } from "./build";
-
-/** 启动`node`进程时所在工作目录的绝对路径 */
-export const root = process.cwd();
+import { setupVitePlugins, viteDefine } from "./build";
 
 /** 路径查找 */
 const pathResolve = (dir) => {
@@ -11,15 +8,16 @@ const pathResolve = (dir) => {
 };
 
 export default defineConfig(({ mode }) => {
-  const viteEnv = loadEnv(mode, root);
-  console.log(viteEnv);
+  const viteEnv = loadEnv(mode, process.cwd());
   return {
-    base: viteEnv.VITE_PUBLIC_PATH,
+    base: viteEnv.VITE_BASE_URL,
     define: viteDefine,
     resolve: {
+      /** 设置别名 */
       alias: {
-        "@": getSrcPath(),
-      },
+        "@": pathResolve("src"),
+        "~": pathResolve("./"),
+      }
     },
     server: {
       // 端口号
@@ -45,7 +43,8 @@ export default defineConfig(({ mode }) => {
     build: {
       // https://cn.vitejs.dev/guide/build.html#browser-compatibility
       // target: "es2015",
-      sourcemap: false,
+      // 生成生产源映射
+      sourcemap: viteEnv.VITE_SOURCE_MAP === "Y",
       // 消除打包大小超过500kb警告
       chunkSizeWarningLimit: 4000,
       rollupOptions: {
@@ -56,13 +55,16 @@ export default defineConfig(({ mode }) => {
         output: {
           chunkFileNames: "static/js/[name]-[hash].js",
           entryFileNames: "static/js/[name]-[hash].js",
+          // #https://cn.rollupjs.org/configuration-options/#output-assetfilenames
           assetFileNames: "static/[ext]/[name]-[hash].[ext]",
+          // 手动分包 #https://cn.rollupjs.org/configuration-options/#output-manualchunks
+          manualChunks(id) {
+            if (id.includes('node_modules')) return 'vendor';
+          },
         },
       },
+      // 启用/ 禁用 gzip 压缩大小报告
       reportCompressedSize: false,
-      commonjsOptions: {
-        ignoreTryCatch: false,
-      },
     },
   };
 });

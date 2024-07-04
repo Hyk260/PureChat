@@ -16,18 +16,13 @@ import {
   HISTORY_MESSAGE_COUNT,
 } from "@/constants/index";
 import TIM from "@/utils/IM/chat/index";
-import {
-  addTimeDivider,
-  checkTextNotEmpty,
-  getBaseTime,
-  transformData
-} from "@/utils/chat/index";
+import { addTimeDivider, checkTextNotEmpty, getBaseTime, transformData } from "@/utils/chat/index";
 import storage from "@/utils/localforage/index";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
+import { timProxy } from "@/utils/IM/index";
 
 const conversation = {
-  // namespaced: true, //命名空间
   state: {
     sessionDraftMap: new Map(), //会话草稿
     totalUnreadMsg: 0, // 未读消息总数
@@ -268,13 +263,13 @@ const conversation = {
     },
     // 设置会话草稿
     SET_SESSION_DRAFT(state, action) {
-      // if (!action) return;
-      // const { ID, payload } = action;
-      // if (!checkTextNotEmpty(payload)) {
-      //   state.sessionDraftMap.delete(ID);
-      // } else {
-      //   state.sessionDraftMap.set(ID, payload);
-      // }
+      if (!action) return;
+      const { ID, payload } = action;
+      if (!checkTextNotEmpty(payload)) {
+        state.sessionDraftMap.delete(ID);
+      } else {
+        state.sessionDraftMap.set(ID, payload);
+      }
     },
     // 设置撤回消息重新编辑
     setRevokeMsg(state, action) {
@@ -306,7 +301,7 @@ const conversation = {
   actions: {
     // 获取消息列表
     async [GET_MESSAGE_LIST]({ commit, dispatch, state }, action) {
-      const isSDKReady = window.TIMProxy.chat.isReady();
+      const isSDKReady = timProxy.isSDKReady;
       const { conversationID, type } = action;
       let status = !state.currentMessageList || state.currentMessageList?.length == 0;
       // 当前会话有值
@@ -391,7 +386,7 @@ const conversation = {
     },
     // 获取未读消息总数
     async GET_TOTAL_UNREAD_MSG({ state }) {
-      const isSDKReady = window.TIMProxy.chat.isReady();
+      const isSDKReady = timProxy.isSDKReady;
       if (!isSDKReady) return;
       state.totalUnreadMsg = await getUnreadMsg();
     },

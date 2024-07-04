@@ -10,10 +10,10 @@ import { useWindowFocus } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
 import {
-    fnCheckoutNetState,
-    getConversationID,
-    getConversationList,
-    kickedOutReason,
+  fnCheckoutNetState,
+  getConversationID,
+  getConversationList,
+  kickedOutReason,
 } from "./utils/index";
 
 const isFocused = useWindowFocus(); // 判断浏览器窗口是否在前台可见状态
@@ -27,6 +27,7 @@ export class TIMProxy {
     this.chat = null; // im实例
     this.TIM = null; // 命名空间
     this.once = false; // 防止重复初始化
+    this.isSDKReady = false;
     // 暴露给全局
     window.TIMProxy = new Proxy(this, {
       set(target, key, val) {
@@ -97,8 +98,8 @@ export class TIMProxy {
   }
   onReadyStateUpdate({ name }) {
     console.log("[chat] onReadyStateUpdate:", name);
-    const isSDKReady = name === TIM.EVENT.SDK_READY;
-    if (!isSDKReady) return;
+    this.isSDKReady = name === TIM.EVENT.SDK_READY;
+    if (!this.isSDKReady) return;
     this.chat.getMyProfile().then(({ code, data }) => {
       this.userProfile = data;
       this.userID = this.chat.getLoginUser();

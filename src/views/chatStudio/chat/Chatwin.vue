@@ -281,8 +281,6 @@ const getMoreMsg = async () => {
       conversationID: conversationID,
       nextReqMessageID: validatelastMessage(msglist).ID,
     });
-    console.log("ID:", validatelastMessage(msglist).ID);
-    console.log("msglist:", msglist);
     const { isCompleted, messageList, nextReqMessageID } = result;
     let noMore = true;
     let more = messageList.length < HISTORY_MESSAGE_COUNT;

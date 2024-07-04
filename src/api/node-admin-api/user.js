@@ -34,9 +34,9 @@ export const getuser = async () => {
 
 // 退出登录
 export const logout = () => {
-  // storage.clear();
-  storage.remove(USER_SETUP);
-  storage.remove(USER_MODEL);
-  storage.remove(ACCESS_TOKEN);
-  storage.remove(StoreKey.Access);
+  storage.clear();
+  // storage.remove(USER_SETUP);
+  // storage.remove(USER_MODEL);
+  // storage.remove(ACCESS_TOKEN);
+  // storage.remove(StoreKey.Access);
 };

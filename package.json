@@ -1,7 +1,8 @@
 {
   "name": "purechat",
-  "version": "0.3.6",
+  "version": "0.4.3",
   "description": "PureChat",
+  "type": "module",
   "author": {
     "name": "Hyk260",
     "email": "2607881950@qq.com"
@@ -10,11 +11,10 @@
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
-    "preview": "vite preview",
-    "lint": "eslint . --fix",
-    "preview:build": "vite build && vite preview",
     "build:debug": "vite build --debug",
-    "update-pkg": "sa update-pkg"
+    "build:preview": "vite build && vite preview",
+    "preview": "vite preview",
+    "lint": "eslint . --fix"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
@@ -26,24 +26,28 @@
     "@wangeditor/editor-for-vue": "^5.1.11",
     "animate.css": "^4.1.1",
     "artplayer": "^5.1.1",
+    "autoprefixer": "^10.4.19",
     "axios": "^0.26.1",
     "dayjs": "^1.11.11",
     "element-plus": "^2.7.0",
+    "fast-glob": "^3.3.2",
+    "highlight.js": "11.9.0",
+    "html-to-image": "^1.11.11",
     "js-web-screen-shot": "^1.9.9-rc.18",
     "lodash-es": "^4.17.21",
+    "marked": "^13.0.1",
+    "marked-highlight": "^2.1.3",
     "mitt": "^3.0.0",
     "nprogress": "^0.2.0",
     "pinyin-pro": "^3.18.5",
+    "postcss": "^8.4.38",
     "pure-tools": "^0.0.4",
     "qrcode": "^1.5.3",
+    "snabbdom": "^3.5.1",
     "storejs": "^2.0.1",
+    "tailwindcss": "^3.4.4",
     "tim-upload-plugin": "^1.0.5",
     "v-contextmenu": "3.0.0",
-    "vite-plugin-inspect": "^0.8.4",
-    "vite-plugin-progress": "^0.0.7",
-    "vite-plugin-require": "^1.2.14",
-    "vite-plugin-sass": "^0.1.0",
-    "vite-plugin-svg-icons": "2.0.1",
     "vue": "^3.2.47",
     "vue-draggable-next": "^2.1.1",
     "vue-i18n": "^9.1.9",
@@ -53,16 +57,33 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
-    "cross-env": "7.0.3",
-    "eslint": "^8.34.0",
-    "eslint-plugin-vue": "^9.9.0",
-    "prettier": "^2.8.4",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^3.0.2",
     "sass": "^1.77.4",
-    "sass-loader": "^13.3.0",
-    "unocss": "0.54.1",
-    "vite": "^5.2.11",
-    "vite-plugin-pwa": "0.16.4",
+    "vite": "5.3.0",
+    "vite-plugin-cdn-import": "^1.0.1",
+    "vite-plugin-progress": "^0.0.7",
     "vite-plugin-remove-console": "^2.2.0",
-    "vite-plugin-vue-devtools": "7.2.0"
-  }
+    "vite-plugin-svg-icons": "2.0.1",
+    "vite-plugin-vue-devtools": "7.2.1"
+  },
+  "engines": {},
+  "bugs": {
+    "url": "https://github.com/Hyk260/PureChat/issues"
+  },
+  "keywords": [
+    "Vue",
+    "Vue3",
+    "openai",
+    "chatgpt",
+    "Vite",
+    "wangeditor",
+    "element-plus"
+  ],
+  "repository": {
+    "url": "https://github.com/Hyk260/PureChat.git"
+  },
+  "license": "MIT"
 }

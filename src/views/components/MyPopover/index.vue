@@ -139,6 +139,8 @@ onBeforeUnmount(() => {
   background-size: 320px;
   .title {
     height: 54px;
+    display: flex;
+    align-items: center;
     img {
       border-radius: 5px;
       height: 54px;

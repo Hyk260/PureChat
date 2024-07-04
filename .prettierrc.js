@@ -1,5 +1,5 @@
 /** 配置项文档：https://prettier.io/docs/en/configuration.html */
-module.exports = {
+export default {
   trailingComma: "es5",
   useTabs: false,
   /** Tab 键的空格数 */
