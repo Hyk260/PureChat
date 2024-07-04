@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => {
         rollupOptions: {
           input: {
             index: resolve(__dirname, 'index.html')
-          }
+          },
         }
       }
     }

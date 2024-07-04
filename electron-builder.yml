@@ -13,6 +13,7 @@ asarUnpack:
 win:
   executableName: PureChat
 nsis:
+  # 安装包名称
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}

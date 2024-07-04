@@ -1,71 +1,54 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import "./config";
+import { app, BrowserWindow, protocol } from 'electron'
+import { electronApp, optimizer } from '@electron-toolkit/utils'
+import { isMac } from "./platform";
+import { createWindow } from "./utils/create-window";
 
-function createWindow() {
-  const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
-    show: false,
-    autoHideMenuBar: true,
-    webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
-    }
-  })
+class Background {
+  constructor() {
+    this.init();
+  }
+  init() {
+    this.handleAppEvents();
+  }
+  createWindow(_options) {
+    createWindow()
+  }
+  handleAppEvents() {
+    // 注册协议
+    protocol.registerSchemesAsPrivileged([
+      { scheme: "app", privileges: { secure: true, standard: true } },
+    ]);
+    // 关闭所有窗口后退出
+    app.on("window-all-closed", () => {
+      // 在macOS上，应用程序及其菜单栏通常保持活动状态，直到用户使用Cmd+Q明确退出
+      if (!isMac) {
+        app.quit();
+      }
+    });
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
-  })
+    app.on("activate", () => {
+      // 在macOS上，当 dock图标被单击，并且没有其他窗口打开。
+      if (BrowserWindow.getAllWindows().length === 0) this.createWindow();
+    });
+    // 此方法将在Electron完成后调用 初始化，并准备创建浏览器窗口。 某些API只能在此事件发生后使用。
+    app.whenReady().then(() => {
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
-    return { action: 'deny' }
-  })
+      this.createWindow();
 
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-  } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+      electronApp.setAppUserModelId('com.electron')
+
+      app.on('browser-window-created', (_, window) => {
+        optimizer.watchWindowShortcuts(window)
+      })
+    })
+
+    // macOS 下通过协议URL启动
+    app.on("open-url", (event, url) => {
+      const win = global.mainWin;
+      win.webContents.send("awaken", url);
+    });
   }
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
-  // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
-
-  // Default open or close DevTools by F12 in development
-  // and ignore CommandOrControl + R in production.
-  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
-  app.on('browser-window-created', (_, window) => {
-    optimizer.watchWindowShortcuts(window)
-  })
-
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
-
-  createWindow()
-
-  app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
-})
-
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
-
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
+new Background();

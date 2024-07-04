@@ -1,9 +1,27 @@
-import { app, session, ipcMain, BrowserWindow, shell } from "electron";
+import { app, session, ipcMain, BrowserWindow, shell, protocol } from "electron";
 import { join } from "path";
 import __cjs_mod__ from "node:module";
 const __filename = import.meta.filename;
 const __dirname = import.meta.dirname;
 const require2 = __cjs_mod__.createRequire(import.meta.url);
+global.mainWinOptions = {
+  width: 1038,
+  height: 706,
+  minWidth: 1038,
+  minHeight: 706
+};
+global.loginWinOptions = {
+  width: 380,
+  height: 550,
+  maxWidth: 380,
+  maxHeight: 550,
+  minWidth: 380,
+  minHeight: 550,
+  frame: false,
+  // 创建无边框窗口
+  resizable: false
+  //禁止改变窗口尺寸
+};
 const is = {
   dev: !app.isPackaged
 };
@@ -97,43 +115,94 @@ const optimizer = {
     });
   }
 };
-function createWindow() {
-  const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+const isWindows = process.platform === "win32";
+const isMac = process.platform === "darwin";
+process.env.NODE_ENV === "development";
+process.env.NODE_ENV === "production";
+const electronRendererUrl = process.env["ELECTRON_RENDERER_URL"];
+const createWindow = (_options) => {
+  const options = {
+    ...global.mainWinOptions,
+    // mainWinOptions loginWinOptions
     show: false,
+    frame: isWindows ? false : true,
     autoHideMenuBar: true,
+    titleBarStyle: isWindows ? "hiddenInset" : "default",
+    // 在上阅读更多信息https://www.electronjs.org/docs/latest/tutorial/context-isolation
     webPreferences: {
+      // 在外部浏览器中打开链接
+      // nativeWindowOpen: true,
+      // // 否启用 Node.js 的集成
+      // nodeIntegration: true,
+      // // 是否启用渲染进程的上下文隔离
+      // contextIsolation: false,
+      // // 是否启用渲染进程访问 Electron 的 remote 模块
+      // enableRemoteModule: true,
+      // 预加载文件preload
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false
     }
+  };
+  const win = new BrowserWindow(options);
+  if (is.dev && electronRendererUrl) {
+    win.loadURL(electronRendererUrl);
+  } else {
+    win.loadURL("app://./index.html");
+  }
+  win.webContents.on("did-finish-load", () => {
+    let argv = process.argv;
+    if (argv.length > (app.isPackaged ? 1 : 2)) {
+      app.emit("second-instance", null, argv);
+    }
   });
-  mainWindow.on("ready-to-show", () => {
-    mainWindow.show();
+  win.on("ready-to-show", () => {
+    win.show();
   });
-  mainWindow.webContents.setWindowOpenHandler((details) => {
+  win.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
     return { action: "deny" };
   });
-  if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-    mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
-  } else {
-    mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
+  win.on("maximize", () => {
+    win.webContents.send("toggleSize", { type: "maximize", win: "mainWin" });
+  });
+  win.on("unmaximize", () => {
+    win.webContents.send("toggleSize", { type: "unmaximize", win: "mainWin" });
+  });
+  global.mainWin = win;
+};
+class Background {
+  constructor() {
+    this.init();
+  }
+  init() {
+    this.handleAppEvents();
+  }
+  createWindow(_options) {
+    createWindow();
+  }
+  handleAppEvents() {
+    protocol.registerSchemesAsPrivileged([
+      { scheme: "app", privileges: { secure: true, standard: true } }
+    ]);
+    app.on("window-all-closed", () => {
+      if (!isMac) {
+        app.quit();
+      }
+    });
+    app.on("activate", () => {
+      if (BrowserWindow.getAllWindows().length === 0) this.createWindow();
+    });
+    app.whenReady().then(() => {
+      this.createWindow();
+      electronApp.setAppUserModelId("com.electron");
+      app.on("browser-window-created", (_, window) => {
+        optimizer.watchWindowShortcuts(window);
+      });
+    });
+    app.on("open-url", (event, url) => {
+      const win = global.mainWin;
+      win.webContents.send("awaken", url);
+    });
   }
 }
-app.whenReady().then(() => {
-  electronApp.setAppUserModelId("com.electron");
-  app.on("browser-window-created", (_, window) => {
-    optimizer.watchWindowShortcuts(window);
-  });
-  ipcMain.on("ping", () => console.log("pong"));
-  createWindow();
-  app.on("activate", function() {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
-});
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
+new Background();
