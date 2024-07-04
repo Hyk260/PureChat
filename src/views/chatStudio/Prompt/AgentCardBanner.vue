@@ -29,10 +29,7 @@
 </template>
 
 <script setup>
-import { marked } from "marked";
-import { markedHighlight } from "marked-highlight";
-import hljs from "highlight.js";
-import "highlight.js/styles/base16/default-light.css";
+import { fnMarked } from "@/utils/marked/index";
 import { ref } from "vue";
 import emitter from "@/utils/mitt-bus";
 import { useBoolean } from "@/utils/hooks/index";
@@ -43,20 +40,6 @@ import { StoreKey, CHATGPT_ROBOT, ModelProvider } from "@/ai/constant";
 const cardData = ref({});
 const { commit, dispatch } = useStore();
 const [dialog, setDialog] = useBoolean();
-
-marked.use(
-  markedHighlight({
-    langPrefix: "hljs language-",
-    highlight(code, lang) {
-      const language = hljs.getLanguage(lang) ? lang : "js";
-      return hljs.highlight(code, { language }).value;
-    },
-  })
-);
-
-function fnMarked(markdownString) {
-  return marked.parse(markdownString);
-}
 
 function toTant(item = cardData.value) {
   const { identifier, meta } = item;
