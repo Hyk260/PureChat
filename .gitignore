@@ -2,6 +2,7 @@
 node_modules
 /server
 /dist
+/out
 
 # local env files
 *.d.ts

@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header class="header" v-if="isWindows">
     <div class="has-custom-titlebar">
       <div class="log">
         <img class="log-img" :src="logSrc" alt="log" />
@@ -20,9 +20,8 @@
 
 <script>
 import logSrc from '@/assets/images/log.png';
-// import { isWindows } from "@/electron/utils/index";
 import { showConfirmationBox } from "@/utils/message";
-// const { ipcRenderer } = require("electron");
+
 const button = [
   {
     type: "minimize",
@@ -45,12 +44,12 @@ export default {
   data() {
     return {
       logSrc,
-      // isWindows,
+      isWindows: window.api.isWindows,
       button,
     };
   },
   mounted() {
-    // ipcRenderer.on("toggleSize", (e, { type }) => {
+    // electron.ipcRenderer.on("toggleSize", (e, { type }) => {
     //   if (type === "maximize") {
     //     this.showRestoreIcon();
     //   } else {
@@ -76,9 +75,9 @@ export default {
           iconType: "warning",
         });
         if (result == "cancel") return;
-        this.$store.commit("ipcRenderer", { key: name });
+        window.electron.ipcRenderer.send('quitApp')
       } else {
-        this.$store.commit("ipcRenderer", { key: name });
+        window.electron.ipcRenderer.send('win:invoke', 'min')
       }
     },
   },

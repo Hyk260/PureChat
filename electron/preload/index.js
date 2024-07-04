@@ -1,7 +1,10 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { isWindows } from '../main/platform';
 
-const api = {}
+const api = {
+  isWindows
+}
 
 if (process.contextIsolated) {
   try {

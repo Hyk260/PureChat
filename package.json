@@ -19,8 +19,8 @@
     "app:dev": "electron-vite dev --watch",
     "app:preview": "electron-vite preview",
     "app:build": "electron-vite build",
-    "build:win": "npm run build && electron-builder --win",
-    "build:mac": "npm run build && electron-builder --mac"
+    "build:win": "npm run app:build && electron-builder --win",
+    "build:mac": "npm run app:build && electron-builder --mac"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",

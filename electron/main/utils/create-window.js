@@ -21,19 +21,19 @@ export const createWindow = (_options) => {
       // // 是否启用渲染进程访问 Electron 的 remote 模块
       // enableRemoteModule: true,
       // 预加载文件preload
-      preload: join(__dirname, "../preload/index.js"),
+      preload: join(__dirname, "../preload/index.mjs"),
       sandbox: false
     },
   };
   // 创建浏览器窗口
   const win = new BrowserWindow(options);
-
+  win.webContents.openDevTools()
   if (is.dev && electronRendererUrl) {
     // 如果处于开发模式，则加载开发服务器的url
     win.loadURL(electronRendererUrl);
   } else {
     // 生产环境下加载打包后的文件
-    win.loadURL("app://./index.html");
+    win.loadFile(join(__dirname, '../renderer/index.html'))
   }
   // 在窗口加载完成后
   win.webContents.on("did-finish-load", () => {
