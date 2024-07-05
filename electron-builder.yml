@@ -12,7 +12,7 @@ asarUnpack:
   - resources/**
 win:
   executableName: PureChat
-  # icon: "build/log.png",
+  # icon: "build/icon.png",
   # 安装包和免安装版
   target:
     - nsis
@@ -42,7 +42,7 @@ nsis:
   uninstallDisplayName: ${productName}
 mac:
   entitlementsInherit: build/entitlements.mac.plist
-  # icon: "build/log-512x512.png"
+  icon: "build/icon-512x512.png"
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
     - NSMicrophoneUsageDescription: Application requests access to the device's microphone.

@@ -14,11 +14,11 @@ export const createWindow = (_options) => {
     webPreferences: {
       // 在外部浏览器中打开链接
       // nativeWindowOpen: true,
-      // // 否启用 Node.js 的集成
+      // 否启用 Node.js 的集成
       // nodeIntegration: true,
-      // // 是否启用渲染进程的上下文隔离
+      // 是否启用渲染进程的上下文隔离
       // contextIsolation: false,
-      // // 是否启用渲染进程访问 Electron 的 remote 模块
+      // 是否启用渲染进程访问 Electron 的 remote 模块
       // enableRemoteModule: true,
       // 预加载文件preload
       preload: join(__dirname, "../preload/index.mjs"),

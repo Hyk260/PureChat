@@ -2,11 +2,13 @@ import "./config";
 import { app, BrowserWindow, protocol } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { isMac } from "./platform";
-import { createWindow, winSingle, ipcEvent } from "./utils/index";
+import { createWindow, winSingle, ipcEvent, setDefaultProtocol } from "./utils/index";
+// import { initFolder } from './utils/folder';
 
 class Background {
   constructor() {
     winSingle();
+    // initFolder();
     this.init();
   }
   init() {
@@ -34,6 +36,9 @@ class Background {
     });
     // 此方法将在Electron完成后调用 初始化，并准备创建浏览器窗口。 某些API只能在此事件发生后使用。
     app.whenReady().then(() => {
+
+      setDefaultProtocol()
+
       ipcEvent();
 
       this.createWindow();

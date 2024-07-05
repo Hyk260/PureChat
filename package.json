@@ -23,6 +23,8 @@
     "build:mac": "electron-builder --mac"
   },
   "dependencies": {
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/utils": "^3.0.0",
     "@element-plus/icons-vue": "^2.0.10",
     "@fortaine/fetch-event-source": "^3.0.6",
     "@tencentcloud/chat": "3.3.2",
@@ -35,6 +37,7 @@
     "autoprefixer": "^10.4.19",
     "axios": "^0.26.1",
     "dayjs": "^1.11.11",
+    "electron-updater": "^6.1.7",
     "element-plus": "^2.7.0",
     "fast-glob": "^3.3.2",
     "highlight.js": "11.9.0",
@@ -47,6 +50,7 @@
     "nprogress": "^0.2.0",
     "pinyin-pro": "^3.18.5",
     "postcss": "^8.4.38",
+    "progress-stream": "^2.0.0",
     "pure-tools": "^0.0.4",
     "qrcode": "^1.5.3",
     "snabbdom": "^3.5.1",
@@ -59,13 +63,13 @@
     "vue-i18n": "^9.1.9",
     "vue-router": "^4.1.6",
     "vue-virtual-scroller": "2.0.0-beta.8",
-    "vuex": "4.1.0",
-    "@electron-toolkit/preload": "^3.0.1",
-    "@electron-toolkit/utils": "^3.0.0",
-    "electron-updater": "^6.1.7"
+    "vuex": "4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
+    "electron": "^31.0.2",
+    "electron-builder": "^24.13.3",
+    "electron-vite": "^2.3.0",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -76,10 +80,7 @@
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-remove-console": "^2.2.0",
     "vite-plugin-svg-icons": "2.0.1",
-    "vite-plugin-vue-devtools": "7.2.1",
-    "electron": "^31.0.2",
-    "electron-builder": "^24.13.3",
-    "electron-vite": "^2.3.0"
+    "vite-plugin-vue-devtools": "7.2.1"
   },
   "engines": {},
   "bugs": {
