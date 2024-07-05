@@ -1,5 +1,6 @@
 <template>
   <div class="login flex">
+    <DragBox />
     <div class="login-inner select-none">
       <!-- 背景 -->
       <svg-icon iconClass="loginBg" class="wave" />

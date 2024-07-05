@@ -12,14 +12,37 @@ asarUnpack:
   - resources/**
 win:
   executableName: PureChat
+  # icon: "build/log.png",
+  # 安装包和免安装版
+  target:
+    - nsis
+    - zip
 nsis:
   # 安装包名称
-  artifactName: ${name}-${version}-setup.${ext}
+  artifactName: ${name}-${version}.${ext}
+  # 安装图标
+  # installerIcon: "build/icon.png", 
+  # 卸载图标
+  # uninstallerIcon: "build/icon.png", 
+  # 安装时头部图标
+  # installerHeaderIcon: "build/icon.png",
+  # true: 一键安装 false: 辅助安装
+  oneClick: false
+  # false: 可选择为所有人或当前用户安装 true: 为所有人安装
+  perMachine: true
+  # 是否允许请求提升（仅辅助安装程序）
+  allowElevation: true
+  # 是否允许用户修改安装目录
+  allowToChangeInstallationDirectory: true 
+  # 是否创建桌面快捷方式
+  createDesktopShortcut: always
+  # 是否创建开始菜单快捷方式
+  createStartMenuShortcut: true
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
-  createDesktopShortcut: always
 mac:
   entitlementsInherit: build/entitlements.mac.plist
+  # icon: "build/log-512x512.png"
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
     - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
