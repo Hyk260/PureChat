@@ -1,10 +1,11 @@
-import axios from "axios";
 import pkg from "~/package.json";
-
-let config = {};
-const { version } = pkg;
-const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 export const noService = import.meta.env.VITE_NO_SERVICE === "Y"
+
+const { version, description } = pkg;
+let config = {
+  Version: "",
+  Title: description,
+};
 
 /**
  * 设置配置项
@@ -40,22 +41,20 @@ const getConfig = (key) => {
 /**
  * 获取项目动态全局配置
  * @param {Object} app - Vue app 对象
- * @returns {Promise<Object>} - 返回包含项目配置的 Promise 对象
  */
-export const getServerConfig = async (app) => {
+export const getServerConfig = (app) => {
   try {
-    const { data: configData } = await axios.get(`${VITE_BASE_URL}serverConfig.json`);
     let $config = getConfig();
     // 自动注入项目配置
-    if (app && $config && typeof configData === "object") {
-      $config = { ...$config, ...configData, Version: version };
+    if (app && $config) {
+      $config = { ...$config, Version: version };
       app.config.globalProperties.$config = $config;
       // 设置全局配置
       setConfig($config);
     }
     return $config;
   } catch (error) {
-    throw "请在public文件夹下添加serverConfig.json配置文件";
+    throw error;
   }
 };
 

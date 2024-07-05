@@ -15,7 +15,7 @@ async function setupApp() {
   loadAllassembly(app);
   setupPlugins(app);
   // 获取全局配置
-  await getServerConfig(app);
+  getServerConfig(app);
   // vue router
   await setupRouter(app);
   app.use(store);
