@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import logSrc from '@/assets/images/log.png';
+import logSrc from "@/assets/images/log.png";
 import { showConfirmationBox } from "@/utils/message";
 
 const button = [
@@ -29,9 +29,9 @@ const button = [
     name: "minMainWindow",
   },
   {
-    type: "maximize", // restored maximize
+    type: "maximize",
     title: "最大化",
-    name: "maxMainWindow", // restoredMainWin maxMainWin
+    name: "maxMainWindow",
   },
   {
     type: "exit",
@@ -49,22 +49,23 @@ export default {
     };
   },
   mounted() {
-    // electron.ipcRenderer.on("toggleSize", (e, { type }) => {
-    //   if (type === "maximize") {
-    //     this.showRestoreIcon();
-    //   } else {
-    //     this.showMaximizeIcon();
-    //   }
-    // });
+    electron.ipcRenderer.on("toggleSize", (e, { type }) => {
+      this.toggleSize(type);
+    });
   },
   methods: {
+    toggleSize(type) {
+      if (type === "maximize") {
+        this.showRestoreIcon();
+      } else {
+        this.showMaximizeIcon();
+      }
+    },
     showRestoreIcon() {
-      // this.button[1].name = "restoredMainWin";
       this.button[1].title = "向下还原";
       this.button[1].type = "restored";
     },
     showMaximizeIcon() {
-      // this.button[1].name = "maxMainWin";
       this.button[1].title = "最大化";
       this.button[1].type = "maximize";
     },
@@ -74,10 +75,12 @@ export default {
           message: "确定退出程序吗?",
           iconType: "warning",
         });
-        if (result == "cancel") return;
-        window.electron.ipcRenderer.send('quitApp')
+        if (result === "cancel") return;
+        window.electron.ipcRenderer.send("win:invoke", "close");
+      } else if (name === "minMainWindow") {
+        window.electron.ipcRenderer.send("win:invoke", "min");
       } else {
-        window.electron.ipcRenderer.send('win:invoke', 'min')
+        window.electron.ipcRenderer.send("win:invoke", "max");
       }
     },
   },

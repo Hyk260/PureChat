@@ -27,8 +27,9 @@ export const createWindow = (_options) => {
   };
   // 创建浏览器窗口
   const win = new BrowserWindow(options);
-  win.webContents.openDevTools()
+  
   if (is.dev && electronRendererUrl) {
+    win.webContents.openDevTools()
     // 如果处于开发模式，则加载开发服务器的url
     win.loadURL(electronRendererUrl);
   } else {

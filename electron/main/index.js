@@ -2,10 +2,11 @@ import "./config";
 import { app, BrowserWindow, protocol } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { isMac } from "./platform";
-import { createWindow } from "./utils/create-window";
+import { createWindow, winSingle, ipcEvent } from "./utils/index";
 
 class Background {
   constructor() {
+    winSingle();
     this.init();
   }
   init() {
@@ -33,14 +34,16 @@ class Background {
     });
     // 此方法将在Electron完成后调用 初始化，并准备创建浏览器窗口。 某些API只能在此事件发生后使用。
     app.whenReady().then(() => {
+      ipcEvent();
 
       this.createWindow();
 
       electronApp.setAppUserModelId('com.electron')
+      
+      optimizer.registerFramelessWindowIpc()
 
       app.on('browser-window-created', (_, window) => {
         optimizer.watchWindowShortcuts(window)
-        optimizer.registerFramelessWindowIpc()
       })
     })
 
