@@ -372,6 +372,20 @@ function offEmitter() {
   emitter.off("setHandleFile");
 }
 
+electron.ipcRenderer.on("captureScreenBack", (e, url) => {
+  const ImageElement = {
+    type: "image",
+    class: "img",
+    src: url,
+    alt: "",
+    href: "",
+    style: { width: "125px" },
+    children: [{ text: "" }],
+  };
+  const editor = editorRef.value;
+  editor.insertNode(ImageElement);
+});
+
 watch(showMsgBox, () => {
   handleEditorKeyDown();
 });

@@ -131,7 +131,7 @@ const sendFileClick = () => {
 };
 // 截图
 const clickCscreenshot = () => {
-  screenshot(() => {});
+  electron.ipcRenderer.send("screenshot");
 };
 const onShake = () => {};
 const onEnlarge = (value) => {
