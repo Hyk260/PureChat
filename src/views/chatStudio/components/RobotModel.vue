@@ -78,7 +78,7 @@ emitter.on("openModeList", () => {
   z-index: 1;
   border-radius: 5px;
   bottom: 46px;
-  width: 255px;
+  max-width: 250px;
   max-height: 300px;
   background: #fff;
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);

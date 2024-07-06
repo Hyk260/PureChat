@@ -5,14 +5,14 @@
       <ListGrid />
     </div>
     <div class="main h-full w-full">
-      <div class="head">{{ title }}</div>
+      <div class="head px-10">{{ title }}</div>
       <div class="list">
-        <el-scrollbar class="">
+        <div>
           <CardGrid v-if="active === 'ForkSpoon'" type="C2C" :item="friend" />
           <CardGrid v-else-if="active === 'Sugar'" type="C2C" :item="robotList" />
           <CardGrid v-else-if="active === 'IceCreamRound'" type="GROUP" :item="groupList" />
           <!-- <CardGrid v-else-if="active === 'CollectionTag'" type="GROUP" :item="groupListInfo" /> -->
-        </el-scrollbar>
+        </div>
       </div>
     </div>
   </div>
@@ -104,9 +104,9 @@ export default {
   padding: 3px 8px 8px;
   border-right: 1px solid #00000017;
 }
-.main {
-  padding: 0 10px;
-}
+// .main {
+//   padding: 0 10px;
+// }
 .head {
   height: 36px;
   display: flex;
@@ -114,5 +114,6 @@ export default {
 }
 .list {
   height: calc(100% - 36px);
+  overflow: auto;
 }
 </style>

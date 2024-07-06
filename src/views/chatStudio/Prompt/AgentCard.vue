@@ -22,7 +22,7 @@
 <script setup>
 defineProps({
   agents: {
-    type: [Array,Object],
+    type: [Array, Object],
     default: () => [],
   },
 });
@@ -33,7 +33,7 @@ defineProps({
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: 332px;
+  // width: 332px;
   padding: 16px;
   cursor: pointer;
   background: #fff;
@@ -62,31 +62,31 @@ defineProps({
       @include text-ellipsis;
     }
   }
-  .desc{
+  .desc {
     @include ellipsisBasic;
-        min-height: 44px;
+    min-height: 44px;
     line-height: 1.5;
   }
-  .tags{
+  .tags {
     display: flex;
     flex-direction: row;
     gap: 6px;
     flex-wrap: wrap;
-    span{
+    span {
       cursor: pointer;
       line-height: 20px;
       font-size: 12px;
       border-radius: 3px;
       color: #666;
-      border:5px;
+      border: 5px;
       height: auto;
       display: inline-block;
       padding: 0 7px;
       text-align: start;
       transform: all 0.2s;
-      background: rgb(0, 0, 0,0.06);
+      background: rgb(0, 0, 0, 0.06);
       &:hover {
-        background: rgb(0, 0, 0,0.12);
+        background: rgb(0, 0, 0, 0.12);
       }
     }
   }
