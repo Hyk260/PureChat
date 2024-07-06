@@ -8,6 +8,7 @@
 import QRCode from "qrcode";
 
 export default {
+  name: 'QrCode',
   data() {
     return {
       text: "https://pureadmin.cn",

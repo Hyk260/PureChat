@@ -16,7 +16,11 @@
 <script setup>
 import { toRefs } from "vue";
 import { useState } from "@/utils/hooks/useMapper";
-// <UserAvatar/>
+
+defineOptions({
+  name: "UserAvatar"
+});
+
 const props = defineProps({
   className: {
     type: String,

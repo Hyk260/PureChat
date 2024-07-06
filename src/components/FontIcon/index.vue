@@ -7,6 +7,10 @@
 <script setup>
 // elementPlus https://element-plus.gitee.io/zh-CN/component/icon.html
 // <FontIcon iconName="*" />
+defineOptions({
+  name: "FontIcon"
+});
+
 const props = defineProps({
   iconName: {
     type: String,
