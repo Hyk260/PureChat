@@ -1,9 +1,9 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import request from "request";
 import { shell, ipcRenderer } from "electron";
-import progressStream from "progress-stream";
+const request = require("request");
+const progressStream = require("progress-stream");
 
 const folderDir = "File";
 const mainDir = "Pure Files";

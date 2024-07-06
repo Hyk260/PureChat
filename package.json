@@ -53,6 +53,7 @@
     "progress-stream": "^2.0.0",
     "pure-tools": "^0.0.4",
     "qrcode": "^1.5.3",
+    "request": "^2.88.2",
     "snabbdom": "^3.5.1",
     "storejs": "^2.0.1",
     "tailwindcss": "^3.4.4",
