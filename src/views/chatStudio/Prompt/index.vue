@@ -56,7 +56,7 @@ const filterInput = ref("");
 const { commit, dispatch } = useStore();
 
 function cardClick(item) {
-  emitter.emit('openAgentCard', item)
+  emitter.emit("openAgentCard", item);
 }
 
 function handleClick(key) {
@@ -147,10 +147,19 @@ onBeforeMount(() => {
 }
 
 .agent-list {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  --rows: 3;
+  --max-item-width: 240px;
+  --gap: 1em;
+  display: grid !important;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(
+      max(var(--max-item-width), calc((100% - var(--gap) * (var(--rows) - 1)) / var(--rows))),
+      1fr
+    )
+  );
+  gap: 1em;
+  padding: 20px 0;
 }
 
 .tags {
