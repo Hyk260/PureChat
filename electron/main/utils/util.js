@@ -18,7 +18,7 @@ const sendCapturedImageData = (win) => {
 export const handleScreenshot = () => {
   const mainWin = global.mainWin;
   if (isWindows) {
-    const capturePath = app.isPackaged ? "../ScreenCapture.exe" : "../static/ScreenCapture.exe";
+    const capturePath = app.isPackaged ? "../ScreenCapture.exe" : "../../resources/ScreenCapture.exe";
     const filePath = path.join(__dirname, capturePath);
     const screenWindow = execFile(filePath);
     screenWindow.on("exit", (code, stdout, stderr) => {
