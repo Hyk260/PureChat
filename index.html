@@ -81,5 +81,10 @@
       );
       console.log("欢迎给我发送邮件交流: %c2607881950@qq.com", "line-height: 30px; color: red");
     </script>
+    <script>
+      electron.ipcRenderer.on("awaken", (event, data) => {
+        console.log("awaken:", data);
+      });
+    </script>
   </body>
 </html>

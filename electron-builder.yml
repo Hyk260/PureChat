@@ -16,7 +16,7 @@ win:
   # 安装包和免安装版
   target:
     - nsis
-    - zip
+    # - zip
 nsis:
   # 安装包名称
   artifactName: ${name}-${version}.${ext}
@@ -38,6 +38,8 @@ nsis:
   createDesktopShortcut: always
   # 是否创建开始菜单快捷方式
   createStartMenuShortcut: true
+  # 定制安装程序脚本的路径
+  include: './installer.nsh'
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
 mac:
