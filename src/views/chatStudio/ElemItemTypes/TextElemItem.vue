@@ -10,7 +10,8 @@
         v-if="message.cloudCustomData"
         :originalMsg="message.cloudCustomData && JSON.parse(message.cloudCustomData)"
       />
-      <DynamicContent islink :text="message.payload.text" />
+      <div v-if="isRobot(toAccount) && message.flow == 'in'" v-html="fnMarked(message.payload.text)"></div>
+      <DynamicContent v-else islink :text="message.payload.text" />
     </template>
   </div>
 </template>
@@ -18,6 +19,11 @@
 <script setup>
 import ReplyElem from "./ReplyElem.vue";
 import DynamicContent from "../components/DynamicContent.vue";
+import { useGetters } from "@/utils/hooks/useMapper";
+import { isRobot } from "@/utils/chat/index";
+import { fnMarked } from "@/utils/marked/index";
+const { toAccount } = useGetters(["toAccount"]);
+
 const props = defineProps({
   msgType: {
     type: String,
