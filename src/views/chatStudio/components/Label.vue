@@ -2,13 +2,24 @@
   <span :class="['label', labelClass()]">
     <span class="all" v-if="isallStaff(item)">全员</span>
     <svg-icon iconClass="robot" v-else-if="isRobot(userID)" />
-    <span class="model" v-if="isRobot(userID) && model">{{ model }}</span>
+    <span class="model" v-if="isRobot(userID) && model">
+        <svg-icon :iconClass="data[getModelType(userID.replace('C2C', ''))]" />
+      {{ model }}
+    </span>
   </span>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { isRobot } from "@/utils/chat/index";
 import { isallStaff } from "../utils/utils";
+import { getModelType } from "@/ai/utils";
+
+const data = ref({
+  GPT: "openai",
+  ChatGLM: "zhipu",
+  ZeroOne: "zeroone",
+});
 
 const props = defineProps({
   userID: {
