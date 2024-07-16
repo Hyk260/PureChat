@@ -1,5 +1,5 @@
 import { OpenaiPath, REQUEST_TIMEOUT_MS } from "@/ai/constant";
-import { prettyObject, useAccessStore } from "@/ai/utils";
+import { prettyObject, useAccessStore, usePromptStore } from "@/ai/utils";
 import { EventStreamContentType, fetchEventSource } from "@fortaine/fetch-event-source";
 
 export class ChatGPTApi {
@@ -10,31 +10,34 @@ export class ChatGPTApi {
     let openaiUrl = this.accessStore().openaiUrl;
     return openaiUrl + path;
   }
+  userPromptMessages(messages, modelConfig) {
+    let message = [];
+    const prompts = usePromptStore(this.provider).prompt?.filter((t) => t.content) || []
+    const countMessage = messages.slice(-Number(modelConfig.historyMessageCount));
+    if (prompts.at(0)) {
+      message = [...prompts, ...countMessage]; // prompt
+    } else {
+      message = countMessage; // 上下文
+    }
+    return message
+  }
   accessStore(model = this.provider) {
     return useAccessStore(model);
   }
   getHeaders() {
-    let headers = {
+    const headers = {
       "Content-Type": "application/json",
       "x-requested-with": "XMLHttpRequest",
+      "Authorization": `Bearer ${this.accessStore().token.trim()}`
     };
-    const makeBearer = (token) => `Bearer ${token.trim()}`;
-    headers.Authorization = makeBearer(this.accessStore().token);
     return headers;
   }
   extractMessage(res) {
     return res.choices?.at(0)?.message?.content ?? "";
   }
   generateRequestPayload(messages, modelConfig, options) {
-    let message = [];
-    const countMessage = messages.slice(-Number(modelConfig.historyMessageCount));
-    if (options.prompts.at(0)) {
-      message = [...options.prompts, ...countMessage]; // prompt
-    } else {
-      message = countMessage; // 上下文
-    }
     return {
-      messages: message,
+      messages: this.userPromptMessages(messages, modelConfig),
       stream: options.stream, // 流式传输
       model: modelConfig.model, // 模型
       max_tokens: modelConfig.max_tokens, // 单次回复限制
@@ -198,12 +201,10 @@ export class ChatGPTApi {
     const res = await fetch(url, { method: "GET", headers: { ...this.getHeaders() } });
     const resJson = await res.json();
     const chatModels = resJson.data.filter((m) => m.id.startsWith("gpt-"));
-    // console.log("[Models]", chatModels);
     const formattedModels = chatModels.map((m) => ({
       name: m.id,
       available: true,
     }));
-    // console.log("[formattedModels]", formattedModels);
     return formattedModels;
   }
 }
