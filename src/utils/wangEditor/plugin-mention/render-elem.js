@@ -14,8 +14,8 @@ function renderMention(elem, children, editor) {
         contentEditable: false, // 不可编辑
       },
       style: {
-        marginLeft: "3px",
-        marginRight: "3px",
+        // marginLeft: "3px",
+        // marginRight: "3px",
         // backgroundColor: "var(--w-e-textarea-slight-bg-color)",
         border: selected // 选中/不选中，样式不一样
           ? "2px solid var(--w-e-textarea-selected-border-color)" // wangEditor 提供了 css var https://www.wangeditor.com/v5/theme.html

@@ -1,5 +1,5 @@
 <template>
-  <div class="message_name" v-show="this.isGroup && !shouldDisplay">
+  <div class="message-name" v-show="this.isGroup && !shouldDisplay">
     <span v-if="isSystem" class="isSystem">系统通知</span>
     <span v-else-if="isFound" class="isFound">管理员</span>
     <span v-else-if="isGroup" class="isGroup" @click="handleAt">
@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.message_name {
+.message-name {
   margin-bottom: 5px;
   color: var(--color-time-divider);
   font-size: 12px;

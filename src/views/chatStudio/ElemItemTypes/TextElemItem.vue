@@ -64,8 +64,8 @@ const onClick = (data) => {
   word-break: break-all;
   white-space: pre-wrap;
   color: var(--color-text);
-  ::selection {
-    background-color: rgb(193, 203, 244);
-  }
+  // ::selection {
+  //   background-color: rgb(193, 203, 244);
+  // }
 }
 </style>
