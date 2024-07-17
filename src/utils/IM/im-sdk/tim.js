@@ -1,7 +1,7 @@
 import TencentCloudChat from "@/utils/IM/chat/index";
 import TIMUploadPlugin from "tim-upload-plugin";
 
-const appid = import.meta.env.VITE_SDK_APPID;
+const appid = import.meta.env.VITE_IM_SDK_APPID;
 const level = import.meta.env.VITE_LOG_LEVEL;
 
 const options = {
