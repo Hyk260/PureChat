@@ -225,10 +225,10 @@ const customPaste = (editor, event, callback) => {
 };
 // 拖拽事件
 const dropHandler = (event) => {
-  event.preventDefault();
   let draggedText = event.dataTransfer.getData("text/plain");
-  if(draggedText) return
+  if (draggedText) return;
   customPaste(editorRef.value, event);
+  event.preventDefault();
 };
 // 插入文件
 const parseFile = async (file, editor = editorRef.value) => {

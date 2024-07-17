@@ -1,6 +1,7 @@
 import { ModelProvider } from "@/ai/constant";
 import { ChatGPTApi } from "@/ai/platforms/openai/index";
 import { ChatYiApi } from "@/ai/platforms/zeroone/index";
+import { QwenApi } from "@/ai/platforms/alibaba/index";
 import { ChatZhipuApi } from "@/ai/platforms/zhipu/index";
 import { useAccessStore, usePromptStore } from "@/ai/utils";
 
@@ -8,6 +9,7 @@ const API_PROVIDERS = {
   [ModelProvider.ChatGLM]: ChatZhipuApi,
   [ModelProvider.ZeroOne]: ChatYiApi,
   [ModelProvider.GPT]: ChatGPTApi,
+  [ModelProvider.Qwen]: QwenApi,
 };
 
 export class ClientApi {

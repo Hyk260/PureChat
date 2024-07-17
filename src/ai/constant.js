@@ -1,22 +1,29 @@
 import { OpenaiConfig } from "@/ai/platforms/openai/config";
 import { openaiModelValue } from "@/ai/platforms/openai/modelValue";
+
 import { YiConfig } from "@/ai/platforms/zeroone/config";
 import { yiModelValue } from "@/ai/platforms/zeroone/modelValue";
+
 import { ZhiPuConfig } from "@/ai/platforms/zhipu/config";
 import { zhipuModelValue } from "@/ai/platforms/zhipu/modelValue";
+
+import { QwenConfig } from "@/ai/platforms/alibaba/config";
+import { qwenModelValue } from "@/ai/platforms/alibaba/modelValue";
+
 import { prefixRobotIDs } from "./utils";
 
 export const ROLES = ["system", "user", "assistant"];
 
 // chatgpt机器人id
 export const CHATGPT_ROBOT = import.meta.env.VITE_ROBOT_GPT;
-
 // 智谱机器人id
 export const CHATGLM_ROBOT = import.meta.env.VITE_ROBOT_GLM;
 // 零一万物机器人id
 export const CHATYI_ROBOT = import.meta.env.VITE_ROBOT_ZEROONE;
+// 通义千问机器人id
+export const CHATQWEN_ROBOT = import.meta.env.VITE_ROBOT_QWEN;
 
-export const ROBOT_COLLECT = [CHATGPT_ROBOT, CHATGLM_ROBOT, CHATYI_ROBOT];
+export const ROBOT_COLLECT = [CHATGPT_ROBOT, CHATGLM_ROBOT, CHATYI_ROBOT, CHATQWEN_ROBOT];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
 
@@ -31,6 +38,7 @@ export const ModelProvider = {
   GPT: "GPT", // chatgpt
   ChatGLM: "ChatGLM", // 智谱
   ZeroOne: "ZeroOne", // 零一万物
+  Qwen: "Qwen", // 通义千问
 };
 
 export const OpenaiPath = {
@@ -47,6 +55,10 @@ export const ChatGLMPath = {
 
 export const ZeroOnePath = {
   ChatPath: "v1/chat/completions",
+};
+
+export const QwenPath = {
+  ChatPath: "services/aigc/text-generation/generation",
 };
 
 export const prompt = [
@@ -89,6 +101,16 @@ const yiModels = [
   "yi-large-rag-preview",
 ];
 
+const alibabaModes = [
+  "qwen-turbo",
+  "qwen-plus",
+  "qwen-max",
+  "qwen-max-0428",
+  "qwen-max-0403",
+  "qwen-max-0107",
+  "qwen-max-longcontext",
+];
+
 export const DEFAULT_MODELS = [
   ...openaiModels.map((name) => ({
     name,
@@ -120,18 +142,29 @@ export const DEFAULT_MODELS = [
       providerType: "zeroone",
     },
   })),
+  ...alibabaModes.map((name) => ({
+    name,
+    available: true,
+    provider: {
+      id: "alibaba",
+      providerName: "Alibaba",
+      providerType: "alibaba",
+    },
+  })),
 ];
 
 export const RobotAvatar = {
   [ModelProvider.GPT]: "open-ai-icon.png",
   [ModelProvider.ChatGLM]: "chatglm.svg",
   [ModelProvider.ZeroOne]: "ZeroOne.svg",
+  [ModelProvider.Qwen]: "qwen.svg",
 };
 
 export const RobotModel = {
   [ModelProvider.GPT]: openaiModels,
   [ModelProvider.ChatGLM]: zhipuModels,
   [ModelProvider.ZeroOne]: yiModels,
+  [ModelProvider.Qwen]: alibabaModes,
 };
 
 // 默认配置
@@ -139,10 +172,12 @@ export const modelConfig = {
   [ModelProvider.GPT]: { ...OpenaiConfig },
   [ModelProvider.ChatGLM]: { ...ZhiPuConfig },
   [ModelProvider.ZeroOne]: { ...YiConfig },
+  [ModelProvider.Qwen]: { ...QwenConfig },
 };
 
 export const modelValue = {
   [ModelProvider.GPT]: openaiModelValue(DEFAULT_MODELS),
   [ModelProvider.ChatGLM]: zhipuModelValue(DEFAULT_MODELS),
   [ModelProvider.ZeroOne]: yiModelValue(DEFAULT_MODELS),
+  [ModelProvider.Qwen]: qwenModelValue(DEFAULT_MODELS),
 };

@@ -7,8 +7,6 @@
     <div class="model flex" v-for="item in model" :key="item" @click="storeRobotModel(item)">
       <div :class="['icon', robotIcon]">
         <svg-icon :iconClass="robotIcon" />
-        <!-- <svg-icon class="zeroone" iconClass="zeroone" />
-        <svg-icon class="openai" iconClass="openai" /> -->
       </div>
       <span>{{ item }}</span>
     </div>
@@ -20,23 +18,19 @@ import { useBoolean } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { ref, reactive, toRefs, computed, watch, nextTick } from "vue";
-import { getModelType, useAccessStore } from "@/ai/utils";
+import { getModelType, getModelSvg, useAccessStore } from "@/ai/utils";
 import { DEFAULT_MODELS, StoreKey, RobotModel } from "@/ai/constant";
 import { useGetters } from "@/utils/hooks/useMapper";
 import storage from "@/utils/localforage/index";
 import { useStore } from "vuex";
 
-const data = ref({
-  GPT: "openai",
-  ChatGLM: "zhipu",
-  ZeroOne: "zeroone",
-});
-
 const title = ref({
   GPT: "OpenAI",
   ChatGLM: "ZhiPu",
   ZeroOne: "01.AI",
+  Qwen: "通义千问",
 });
+
 const robotTitle = ref("");
 const robotIcon = ref("");
 const model = ref([]);
@@ -63,7 +57,7 @@ function storeRobotModel(model) {
 }
 
 emitter.on("openModeList", () => {
-  robotIcon.value = data.value[getModelType(toAccount.value)];
+  robotIcon.value = getModelSvg(toAccount.value);
   robotTitle.value = title.value[getModelType(toAccount.value)];
   model.value = RobotModel[getModelType(toAccount.value)];
   setFlag(true);
@@ -108,6 +102,9 @@ emitter.on("openModeList", () => {
 }
 .zhipu {
   background: linear-gradient(-45deg, rgb(52, 133, 255), rgb(80, 74, 244));
+}
+.tongyi {
+  background: rgb(97, 92, 237);
 }
 .zeroone {
   background: rgb(0, 52, 37);
