@@ -197,11 +197,11 @@ const handleString = (item, editor) => {
   if (item.type === "text/plain") {
     item.getAsString((text) => {
       parsetext(text, editor);
-      // console.log("plain:", text);
+      console.log("plain:", text);
     });
   } else if (item.type === "text/html") {
     item.getAsString((html) => {
-      // console.log("html:", html);
+      console.log("html:", html);
     });
   }
 };
@@ -225,6 +225,9 @@ const customPaste = (editor, event, callback) => {
 };
 // 拖拽事件
 const dropHandler = (event) => {
+  event.preventDefault();
+  let draggedText = event.dataTransfer.getData("text/plain");
+  if(draggedText) return
   customPaste(editorRef.value, event);
 };
 // 插入文件
