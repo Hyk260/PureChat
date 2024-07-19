@@ -14,9 +14,11 @@
 .markdown-body ul {
   margin-top: 0;
   margin-bottom: 0;
-  padding-left: 1em;
+  padding-left: 1.5em;
 }
-
+.markdown-body :last-child {
+  margin-bottom: 0;
+}
 .markdown-body li {
   list-style-type: unset;
 }
@@ -25,8 +27,8 @@
   position: relative;
   padding: 0;
 }
-.markdown-body code:not(:has(span)) {
-  /* display: inline;
+/* .markdown-body code:not(:has(span)) {
+  display: inline;
   margin-inline: 0.25em;
   padding-block: 0.2em;
   padding-inline: 0.4em;
@@ -36,8 +38,8 @@
   white-space: break-spaces;
   background: rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(227, 227, 227, 0.5);
-  border-radius: 0.25em; */
-}
+  border-radius: 0.25em;
+} */
 .markdown-body {
   line-height: 1.6;
   letter-spacing: 0.02em;
@@ -85,11 +87,11 @@
   padding: 3px 5px;
 }
 
-.markdown-body .hljs,
+/* .markdown-body .hljs,
 .markdown-body pre {
-  /* background: #1a1b26; */
-  /* color: #cbd2ea; */
-}
+  background: #1a1b26;
+  color: #cbd2ea;
+} */
 
 .markdown-body .hljs-comment,
 .markdown-body .hljs-meta {
