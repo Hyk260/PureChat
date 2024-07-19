@@ -1,8 +1,8 @@
 // 主窗口配置
 global.mainWinOptions = {
-  width: 1038,
+  width: 1078,
   height: 706,
-  minWidth: 1038,
+  minWidth: 1078,
   minHeight: 706,
 };
 
