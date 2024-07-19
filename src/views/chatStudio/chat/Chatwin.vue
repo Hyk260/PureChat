@@ -572,7 +572,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   }
   .message-view__img {
     margin-bottom: 5px;
-    width: fit-content;
+    width: 100%;
   }
 
   .message-view__file {
@@ -580,7 +580,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   }
 
   .message-view__text {
-    width: fit-content;
+    width: 100%;
     margin-bottom: 5px;
   }
 }

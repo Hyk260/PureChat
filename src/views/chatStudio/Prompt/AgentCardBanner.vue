@@ -23,13 +23,13 @@
           <el-button @click="toTant()"> 开始会话 </el-button>
         </div>
       </div>
-      <div class="market" v-html="fnMarked(cardData.meta.systemRole)"></div>
+      <Markdown class="market" :marked="cardData.meta.systemRole" />
     </div>
   </el-dialog>
 </template>
 
 <script setup>
-import { fnMarked } from "@/utils/marked/index";
+import { Markdown, addCopyButton } from "@/utils/marked/index";
 import { ref } from "vue";
 import emitter from "@/utils/mitt-bus";
 import { useBoolean } from "@/utils/hooks/index";
@@ -46,7 +46,7 @@ function toTant(item = cardData.value) {
   const { identifier, meta } = item;
   forIn(ModelProvider, (value, key) => {
     storage.set(StoreKey.Prompt, {
-     ...storage.get(StoreKey.Prompt),
+      ...storage.get(StoreKey.Prompt),
       [value]: {
         id: identifier,
         lang: "cn",
@@ -64,6 +64,7 @@ function handleClose() {
 emitter.on("openAgentCard", (data) => {
   cardData.value = data;
   setDialog(true);
+  addCopyButton();
 });
 </script>
 
