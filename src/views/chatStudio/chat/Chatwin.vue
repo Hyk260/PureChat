@@ -230,7 +230,7 @@ const scrollBottom = () => {
     const { scrollTop, clientHeight, scrollHeight } = scrollbarRef.value?.wrapRef;
     const height = scrollTop + clientHeight;
     const isbot = scrollHeight - height < 1;
-    isbot && console.log("到底部");
+    // isbot && console.log("到底部");
     return isbot;
   } catch (error) {
     return false;

@@ -167,7 +167,8 @@ watchEffect(() => {
 .message-right {
   background: var(--color-body-bg);
   border-left: 1px solid var(--color-border-default);
-  width: calc(100% - 280px);
+  // width: calc(100% - 280px);
+  flex: 1;
   height: 100%;
   position: relative;
   overflow: hidden;

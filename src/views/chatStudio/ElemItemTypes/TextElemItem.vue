@@ -86,6 +86,7 @@ onMounted(() => {
 .markdown-body {
   position: relative;
   overflow: hidden;
-  max-width: 100%;
+  max-width: 600px;
+  
 }
 </style>
