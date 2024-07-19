@@ -2,6 +2,7 @@ import {
   CHATGLM_ROBOT,
   CHATGPT_ROBOT,
   CHATYI_ROBOT,
+  CHATQWEN_ROBOT,
   ModelProvider,
   StoreKey,
   modelConfig,
@@ -30,8 +31,8 @@ export const usePromptStore = (model = ModelProvider.GPT) => {
 
 /**
  * 根据提供的模型ID获取模型类型。
- * @param {string} modelId - 模型ID，用于识别不同的模型类型。
- * @returns {ModelProvider | string} - 返回对应的模型类型，如果模型ID无效则返回''。
+ * @param {string} modelId - '@RBT#001' 模型ID，用于识别不同的模型类型。
+ * @returns {ModelProvider | string} - 'GPT' 返回对应的模型类型，如果模型ID无效则返回''。
  */
 export function getModelType(modelId) {
   if (!isRobot(modelId)) return "";
@@ -39,8 +40,20 @@ export function getModelType(modelId) {
     [CHATGPT_ROBOT]: ModelProvider.GPT,
     [CHATGLM_ROBOT]: ModelProvider.ChatGLM,
     [CHATYI_ROBOT]: ModelProvider.ZeroOne,
+    [CHATQWEN_ROBOT]: ModelProvider.Qwen,
   };
   return modelMapping[modelId] || "";
+}
+
+export function getModelSvg(id) {
+  const modelId = getModelType(id)
+  const data = {
+    GPT: "openai",
+    ChatGLM: "zhipu",
+    ZeroOne: "zeroone",
+    Qwen: "tongyi",
+  };
+  return data[modelId] || "";
 }
 
 export function prettyObject(msg) {

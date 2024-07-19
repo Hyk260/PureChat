@@ -23,19 +23,20 @@
           <el-button @click="toTant()"> 开始会话 </el-button>
         </div>
       </div>
-      <div class="market" v-html="fnMarked(cardData.meta.systemRole)"></div>
+      <Markdown class="market" :marked="cardData.meta.systemRole" />
     </div>
   </el-dialog>
 </template>
 
 <script setup>
-import { fnMarked } from "@/utils/marked/index";
+import { Markdown, addCopyButton } from "@/utils/marked/index";
 import { ref } from "vue";
 import emitter from "@/utils/mitt-bus";
 import { useBoolean } from "@/utils/hooks/index";
 import storage from "@/utils/localforage/index";
 import { useStore } from "vuex";
 import { StoreKey, CHATGPT_ROBOT, ModelProvider } from "@/ai/constant";
+import { forIn } from "lodash-es";
 
 const cardData = ref({});
 const { commit, dispatch } = useStore();
@@ -43,13 +44,17 @@ const [dialog, setDialog] = useBoolean();
 
 function toTant(item = cardData.value) {
   const { identifier, meta } = item;
-  storage.set(StoreKey.Prompt, {
-    [ModelProvider.GPT]: {
-      id: identifier,
-      lang: "cn",
-      prompt: [{ role: "system", content: meta.systemRole }],
-    },
+  forIn(ModelProvider, (value, key) => {
+    storage.set(StoreKey.Prompt, {
+      ...storage.get(StoreKey.Prompt),
+      [value]: {
+        id: identifier,
+        lang: "cn",
+        prompt: [{ role: "system", content: meta.systemRole }],
+      },
+    });
   });
+
   commit("TAGGLE_OUE_SIDE", "message");
   dispatch("CHEC_OUT_CONVERSATION", { convId: `${"C2C"}${CHATGPT_ROBOT}` });
 }
@@ -59,6 +64,7 @@ function handleClose() {
 emitter.on("openAgentCard", (data) => {
   cardData.value = data;
   setDialog(true);
+  addCopyButton();
 });
 </script>
 

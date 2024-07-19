@@ -27,5 +27,4 @@ export const OpenaiConfig = {
   token: import.meta.env.VITE_OPENAI_API_KEY,
   openaiUrl: import.meta.env.VITE_OPENAI_BASE_URL,
   historyMessageCount: 1,
-  compressMessageLengthThreshold: 1000,
 };

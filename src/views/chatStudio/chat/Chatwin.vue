@@ -2,7 +2,7 @@
   <section
     class="message-info-view-content"
     v-show="currentConversation"
-    :class="{ 'style-MsgBox': !showMsgBox, 'stlyle-Reply': currentReplyMsg }"
+    :class="{ 'style-msg-box': !showMsgBox, 'style-reply': currentReplyMsg }"
     id="chat-box"
   >
     <el-scrollbar class="h-full" ref="scrollbarRef" @scroll="scrollbar">
@@ -485,16 +485,18 @@ watch(currentReplyMsg, (data) => {
   updateScrollbar();
 });
 
-emitter.on("updataScroll", (data) => {
-  if (data == "bottom") {
-    scrollBottom() && updateScrollBarHeight();
-  } else {
-    updateScrollBarHeight(data);
-  }
+onMounted(() => {
+  emitter.on("updataScroll", (data) => {
+    if (data == "bottom") {
+      scrollBottom() && updateScrollBarHeight('instantly');
+    } else {
+      updateScrollBarHeight(data);
+    }
+  });
 });
-
-onMounted(() => {});
-onUnmounted(() => {});
+onUnmounted(() => {
+  emitter.off("updataScroll")
+});
 onUpdated(() => {});
 onBeforeUpdate(() => {});
 onBeforeUnmount(() => {});
@@ -505,24 +507,22 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
 <style lang="scss" scoped>
 .message-view__tips-elem {
   margin: auto;
+  .message-name {
+    display: none;
+  }
 }
-
-.message-view__tips-elem .message_name {
-  display: none;
-}
-
 .message-view__item--index {
-  max-width: 85%;
+  max-width: 75%;
 }
 .message-info-view-content {
   height: calc(100% - 60px - 200px);
   // border-bottom: 1px solid var(--color-border-default);
   // transition: all 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
-.style-MsgBox {
+.style-msg-box {
   height: calc(100% - 60px) !important;
 }
-.stlyle-Reply {
+.style-reply {
   height: calc(100% - 60px - 200px - 60px) !important;
 }
 .message-view__item--time-divider {
@@ -555,7 +555,6 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
 }
 .reset-select {
   border-radius: 3px;
-  // background: #fff;
 }
 .style-choice {
   padding-left: 35px;
@@ -563,7 +562,6 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
 .message-view__item {
   display: flex;
   flex-direction: row;
-  // margin-top: 12px;
   margin: 8px 0;
   position: relative;
 }
@@ -574,7 +572,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   }
   .message-view__img {
     margin-bottom: 5px;
-    width: fit-content;
+    width: 100%;
   }
 
   .message-view__file {
@@ -582,7 +580,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   }
 
   .message-view__text {
-    width: fit-content;
+    width: 100%;
     margin-bottom: 5px;
   }
 }
@@ -595,7 +593,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
     width: 36px;
     height: 36px;
   }
-  .message_name {
+  .message-name {
     display: none;
   }
   .message-view__img {
@@ -614,13 +612,6 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
     display: flex;
     justify-content: flex-end;
     align-items: center;
-  }
-}
-
-.v-contextmenu {
-  width: 200px;
-  .item {
-    margin: 0;
   }
 }
 </style>

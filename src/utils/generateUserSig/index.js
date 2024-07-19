@@ -6,8 +6,8 @@
  */
 const EXPIRETIME = 604800;
 
-const appid = import.meta.env.VITE_SDK_APPID;
-const appkey = import.meta.env.VITE_SDK_KEY
+const appid = import.meta.env.VITE_IM_SDK_APPID;
+const appkey = import.meta.env.VITE_IM_SDK_KEY
 /**
  * Module: GenerateTestUserSig
  *
