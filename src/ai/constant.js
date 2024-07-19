@@ -23,7 +23,12 @@ export const CHATYI_ROBOT = import.meta.env.VITE_ROBOT_ZEROONE;
 // 通义千问机器人id
 export const CHATQWEN_ROBOT = import.meta.env.VITE_ROBOT_QWEN;
 
-export const ROBOT_COLLECT = [CHATGPT_ROBOT, CHATGLM_ROBOT, CHATYI_ROBOT, CHATQWEN_ROBOT];
+export const ROBOT_COLLECT = [
+  CHATGPT_ROBOT,
+  CHATGLM_ROBOT,
+  CHATYI_ROBOT,
+  // CHATQWEN_ROBOT
+];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
 
