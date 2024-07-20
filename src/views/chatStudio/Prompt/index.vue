@@ -114,7 +114,7 @@ onBeforeMount(() => {
   width: 100%;
   padding: 0 16px;
   height: 60px;
-  border-block-end: 1px solid #dddddd;
+  border-block-end: 1px solid var(--color-border-default);
 }
 
 .layout-body {
@@ -140,8 +140,7 @@ onBeforeMount(() => {
   flex-direction: column;
   align-content: space-between;
   align-items: center;
-  background: rgb(248 248 248);
-
+  background: var(--color-body-bg);
   .el-input {
     margin-top: 20px;
   }
@@ -171,13 +170,13 @@ onBeforeMount(() => {
   gap: 6px;
 
   .item-tags {
-    color: rgb(8, 8, 8);
+    color: var(--color-text);
     height: 27px;
     line-height: 27px;
     border-radius: 27px;
     padding-inline-start: 13.5px;
     padding-inline-end: 13.5px;
-    background: rgba(0, 0, 0, 0.03);
+    background: var(--color-text-tags);
     border: none;
     outline: none;
     display: flex;

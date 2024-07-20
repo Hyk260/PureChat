@@ -78,8 +78,8 @@ emitter.on("openAgentCard", (data) => {
 }
 
 :global(body .agent-card-modal p) {
-  margin: revert;
-  color: rgb(8, 8, 8);
+  // margin: revert;
+  // color: rgb(8, 8, 8);
 }
 
 .agent-card-banner {

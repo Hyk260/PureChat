@@ -14,6 +14,7 @@
   --hover-color: #f3f3f3;
   --color-body-bg: #ffffff;
   --color-text: #000;
+  --color-text-tags: rgba(0, 0, 0, 0.03);
   --color-text-default: #442c2c;
   --color-primary-bg: #eaeffd;
   --color-secondary: #7a7a7b;
@@ -38,7 +39,7 @@
   --color-mention-active: #f0f2f5;
 
   --pure-markdown-color: #f8f8f8;
-
+  /* markdown */
   --color-prettylights-syntax-comment: #6e7781;
   --color-prettylights-syntax-constant: #0550ae;
   --color-prettylights-syntax-entity: #8250df;
@@ -96,6 +97,7 @@
   --hover-color: #323232;
   --color-body-bg: #222222;
   --color-text: #fff;
+  --color-text-tags: #111111;
   --color-text-default: #fff;
   --color-border-color-split: #252431;
   --color-primary-bg: #bbcdff;
@@ -126,7 +128,7 @@
   --color-mention-active: #333;
 
   --pure-markdown-color: #1a1b26;
-
+  /* markdown */
   --color-prettylights-syntax-comment: #8b949e;
   --color-prettylights-syntax-constant: #79c0ff;
   --color-prettylights-syntax-entity: #d2a8ff;
