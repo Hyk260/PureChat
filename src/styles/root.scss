@@ -1,4 +1,10 @@
 @mixin light {
+  --tags-back: rgb(0, 0, 0, 0.06);
+  --color-card: rgba(0, 0, 0, 0.12);
+  --color-tags-active-back: #222;
+  --color-tags-active: #f8f8f8;
+  --color-tags-color: #333333;
+  --color-tags-back: rgba(0, 0, 0, 0.12);
   /* color */
   --white: white;
   --black: rgb(48, 48, 48);
@@ -11,7 +17,7 @@
   --color-robot-model: #fff;
   --color-button-border: #e3e3e3;
   --color-range: #fff;
-  --hover-color: #f3f3f3;
+  --hover-color: #00000008;
   --color-body-bg: #ffffff;
   --color-text: #000;
   --color-text-tags: rgba(0, 0, 0, 0.03);
@@ -23,7 +29,6 @@
   --color-primary-bg-for-transparent: rgba(189, 207, 255, 0.28);
   --color-secondary-bg-for-transparent: rgba(209, 209, 214, 0.28);
   --color-icon-hover: #409eff;
-  --color-aside-list-action: #d9ecff;
   --color-border-default: rgba(0, 0, 0, 0.09);
   --color-border-color-split: #f2f4f7;
   --color-time-divider: rgba(0, 0, 0, 0.45);
@@ -85,6 +90,12 @@
 }
 
 @mixin dark {
+  --tags-back: rgba(255, 255, 255, 0.10);
+  --color-card: rgba(255, 255, 255, 0.10);
+  --color-tags-active: #000000;
+  --color-tags-active-back: #eeeeee;
+  --color-tags-color: #ffffff;
+  --color-tags-back: rgb(34, 34, 34);
   /* color */
   --white: rgb(30, 30, 30);
   --black: rgb(187, 187, 187);
@@ -94,7 +105,7 @@
 
   --color-robot-model: #333;
   --color-button-border: #2d2d2d;
-  --hover-color: #323232;
+  --hover-color: #ffffff0f;
   --color-body-bg: #222222;
   --color-text: #fff;
   --color-text-tags: #111111;
@@ -106,8 +117,7 @@
   --color-navbar-bg: rgba(34, 34, 34, 0.86);
   --color-primary-bg-for-transparent: rgba(255, 255, 255, 0.12);
   --color-secondary-bg-for-transparent: rgba(255, 255, 255, 0.08);
-  --color-aside-list-action: #3879ba;
-  --color-message-active: rgb(64 158 255 / 10%);
+  --color-message-active: rgba(255, 255, 255, 0.10);
   --color-border-default: #90939957;
   --color-time-divider: #fff;
   --color-message-chat-name: #fff;

@@ -127,7 +127,7 @@ emitter.on("openAgentCard", (data) => {
     gap: 6px;
     span {
       color: #666666;
-      background: rgba(0, 0, 0, 0.06);
+      background: var(--tags-back);
       height: 20px;
       line-height: 20px;
       padding: 0 7px;

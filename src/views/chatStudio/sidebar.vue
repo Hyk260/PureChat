@@ -98,7 +98,8 @@ function operation() {
   }
 
   .current {
-    background: var(--color-aside-list-action) !important;
+    // --color-aside-list-action
+    background: var(--color-message-active) !important;
   }
   .icon-title {
     padding: 0 5px;

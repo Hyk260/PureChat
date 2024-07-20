@@ -39,7 +39,7 @@ defineProps({
   border-radius: 8px;
   transition: box-shadow 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   &:hover {
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0 1px 1px var(--color-card);
   }
   .top {
     display: flex;
@@ -81,10 +81,10 @@ defineProps({
       padding: 0 7px;
       text-align: start;
       transform: all 0.2s;
-      background: rgb(0, 0, 0, 0.06);
+      background: var(--tags-back);
       &:hover {
         background: rgb(0, 0, 0, 0.12);
-      }
+      } 
     }
   }
 }

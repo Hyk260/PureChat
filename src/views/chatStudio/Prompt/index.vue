@@ -185,17 +185,16 @@ onBeforeMount(() => {
     font-weight: 400;
     white-space: nowrap;
     text-align: center;
-
     &:hover {
-      color: #333333;
-      border-color: #333333;
-      background: rgba(0, 0, 0, 0.12);
+      color: var(--color-tags-color);
+      border-color: var(--color-tags-color);
+      background: var(--color-tags-back);
     }
   }
 }
 
 .active {
-  background: #222 !important;
-  color: #f8f8f8 !important;
+  background: var(--color-tags-active-back) !important;
+  color: var(--color-tags-active) !important;
 }
 </style>

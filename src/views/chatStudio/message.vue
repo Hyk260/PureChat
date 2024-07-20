@@ -152,9 +152,11 @@ watchEffect(() => {
 .message-left {
   width: 280px;
   position: relative;
+  border-right: 1px solid var(--color-border-default);
   transition: width 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .style-layoutkit {
+  border-right: 0px;
   width: 0px;
 }
 .chat-h-full {
@@ -166,8 +168,6 @@ watchEffect(() => {
 }
 .message-right {
   background: var(--color-body-bg);
-  border-left: 1px solid var(--color-border-default);
-  // width: calc(100% - 280px);
   flex: 1;
   height: 100%;
   position: relative;

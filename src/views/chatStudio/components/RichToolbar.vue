@@ -13,7 +13,7 @@
       <svg-icon iconClass="iconwenjianjia" class="icon-hover" />
     </span>
     <!-- 截图 -->
-    <span v-show="!isRobot(toAccount)" :title="$t('chat.screenshot')" @click="clickCscreenshot">
+    <span v-show="!isRobot(toAccount) && isElectron" :title="$t('chat.screenshot')" @click="clickCscreenshot">
       <svg-icon iconClass="iconjietu" class="icon-hover" />
     </span>
     <!-- 选模型 -->
