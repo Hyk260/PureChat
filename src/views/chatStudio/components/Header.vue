@@ -89,7 +89,7 @@ watch(toAccount, (data) => {
     }
     .single,
     .group {
-      max-width: 250px;
+      max-width: 260px;
       display: flex;
       align-items: center;
       // display: inline-block;

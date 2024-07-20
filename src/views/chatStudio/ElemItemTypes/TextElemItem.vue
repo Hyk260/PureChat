@@ -14,7 +14,7 @@
 
 <script setup>
 import { onMounted } from "vue";
-import "@/styles/css/hljs.css";
+import "@/styles/highlight.scss";
 import ReplyElem from "./ReplyElem.vue";
 import DynamicContent from "../components/DynamicContent.vue";
 import { useGetters } from "@/utils/hooks/useMapper";

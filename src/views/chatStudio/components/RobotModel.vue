@@ -79,7 +79,7 @@ emitter.on("openModeList", () => {
   bottom: 46px;
   // max-width: 250px;
   max-height: 300px;
-  background: #fff;
+  background: var(--color-robot-model);
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
 }
 .model {

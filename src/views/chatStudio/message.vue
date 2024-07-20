@@ -214,7 +214,7 @@ watchEffect(() => {
   display: flex;
   align-items: center;
   top: 0;
-  right: -16px;
+  right: -17px;
   width: 16px;
   height: 100%;
   display: flex;
@@ -228,9 +228,8 @@ watchEffect(() => {
     cursor: pointer;
     color: #999999;
     background: rgba(0, 0, 0, 0.03);
-    border-color: #e3e3e3;
-    border-style: solid;
-    border-width: 1px;
+    border: 1px solid var(--color-button-border);
+    border-left-width: 0;
     display: none;
   }
   &:hover > div {
