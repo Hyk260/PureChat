@@ -19,7 +19,6 @@
     <br />
   </p>
 </p>
-
 [![Web][Web-image]][web-url]
 [![Windows][Windows-image]][download-url]
 [![MacOS][MacOS-image]][download-url]
