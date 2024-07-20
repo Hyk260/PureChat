@@ -34,10 +34,10 @@
           <!-- 模型 -->
           <el-select v-if="item.options" v-model="item.defaultValue">
             <el-option
-              v-for="item in item.options"
-              :key="item.name"
-              :label="item.name + `(${item.provider.providerName})`"
-              :value="item.name"
+              v-for="models in item.options.chatModels"
+              :key="models.id"
+              :label="models.id + `(${item.options.name})`"
+              :value="models.id"
             />
           </el-select>
           <div class="range" v-else-if="item.Range">

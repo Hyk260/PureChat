@@ -51,7 +51,7 @@ function fnStyle() {
 }
 
 onMounted(() => {
-  addCopyButton()
+  addCopyButton();
 });
 </script>
 
@@ -87,6 +87,5 @@ onMounted(() => {
   position: relative;
   overflow: hidden;
   max-width: 600px;
-  
 }
 </style>

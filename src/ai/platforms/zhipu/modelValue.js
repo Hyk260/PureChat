@@ -1,13 +1,13 @@
-import { CHATGLM_ROBOT } from "@/ai/constant";
+import ZeroOne from './models';
 
-export const zhipuModelValue = (models) => {
+export const zhipuModelValue = () => {
   return {
     Model: {
       ID: "model",
       Title: "模型 (model)",
       SubTitle: "ChatGLM 模型",
       defaultValue: "",
-      options: models.filter((t) => t.provider.convId === CHATGLM_ROBOT),
+      options: ZeroOne,
     },
     OpenaiUrl: {
       ID: "openaiUrl",

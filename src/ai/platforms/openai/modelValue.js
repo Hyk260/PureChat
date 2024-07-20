@@ -1,12 +1,13 @@
-import { CHATGPT_ROBOT } from "@/ai/constant";
-export const openaiModelValue = (DEFAULT_MODELS) => {
+import OpenAI from "./models";
+
+export const openaiModelValue = () => {
   return {
     Model: {
       ID: "model",
       Title: "模型 (model)",
       SubTitle: "ChatGPT 模型",
       defaultValue: "",
-      options: DEFAULT_MODELS.filter((t) => t.provider.convId === CHATGPT_ROBOT),
+      options: OpenAI,
     },
     OpenaiUrl: {
       ID: "openaiUrl",

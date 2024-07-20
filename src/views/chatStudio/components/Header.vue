@@ -89,9 +89,9 @@ watch(toAccount, (data) => {
     }
     .single,
     .group {
-      max-width: 230px;
+      max-width: 250px;
       display: flex;
-    align-items: center;
+      align-items: center;
       // display: inline-block;
       @include text-ellipsis();
       .nick {
