@@ -69,7 +69,7 @@ export default {
   padding-left: 5px;
 }
 .selectd {
-  background-color: #f5f5f5;
+  background-color: var(--color-message-active);
   color: rgb(114, 184, 249);
   .el-icon {
     color: rgb(114, 184, 249);

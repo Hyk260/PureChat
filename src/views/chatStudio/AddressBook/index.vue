@@ -102,11 +102,8 @@ export default {
   min-width: 180px;
   height: 100%;
   padding: 3px 8px 8px;
-  border-right: 1px solid #00000017;
+  border-right: 1px solid var(--color-border-default)
 }
-// .main {
-//   padding: 0 10px;
-// }
 .head {
   height: 36px;
   display: flex;

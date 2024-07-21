@@ -187,12 +187,12 @@ watchEffect(() => {
   height: 3px;
   z-index: 10;
   width: 100%;
-  border-radius: 5px;
   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .resize-hover:hover {
-  cursor: s-resize;
-  background: #22222230;
+  cursor: row-resize;
+  background: #eeeeee;
+  // --color-drag-hover: #eeeeee;
 }
 .back-to-the-bottom {
   @include flex-center;

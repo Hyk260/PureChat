@@ -1,24 +1,25 @@
-
 .markdown-body pre .copy-code-button {
   position: absolute;
   right: 10px;
   top: 1em;
   cursor: pointer;
   padding: 0 5px;
-  background-color: var(--black);
   color: var(--white);
   border: var(--border-in-light);
-  border-radius: 10px;
   transform: translateX(10px);
   pointer-events: none;
   opacity: 0;
   transition: all 0.3s ease;
+  border-radius: 5px;
+  height: 24px;
+  width: 24px;
 }
 
 .markdown-body pre:hover .copy-code-button {
   pointer-events: all;
   transform: translateX(0);
   opacity: 0.5;
+  background-color: var(--black);
 }
 
 .markdown-body {

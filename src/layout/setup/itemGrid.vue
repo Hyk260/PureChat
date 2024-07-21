@@ -158,7 +158,6 @@ const language = computed({
       line-height: 30px;
     }
     .version {
-      color: rgba(16, 24, 40, 0.56);
       margin-top: 0.25rem;
       font-size: 14px;
       font-weight: 400;
