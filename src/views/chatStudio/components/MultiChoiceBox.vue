@@ -10,15 +10,25 @@
       </span>
     </div>
   </div>
+  <ShareModal />
   <MagforwardingPopup @confirm="confirm" ref="wardingRef" />
 </template>
 
 <script>
+import emitter from "@/utils/mitt-bus";
 import { createForwardMsg, createMergerMsg, deleteMsgList, sendMsg } from "@/api/im-sdk-api/index";
 import { showConfirmationBox } from "@/utils/message";
 import { mapMutations, mapState } from "vuex";
 import MagforwardingPopup from "./MagforwardingPopup.vue";
+import ShareModal from '@/views/components/ShareModal/index.vue';
+
 const buttonList = [
+  {
+    type: "share",
+    value: "截图分享",
+    icon: "share",
+    class: "",
+  },
   {
     type: "MergeForward",
     value: "合并转发",
@@ -48,6 +58,7 @@ export default {
     };
   },
   components: {
+    ShareModal,
     MagforwardingPopup,
   },
   computed: {
@@ -67,6 +78,9 @@ export default {
     ...mapMutations(["SET_CHEC_BOX"]),
     onClock(item) {
       switch (item.type) {
+        case "share": // 截图分享
+          emitter.emit('onShareModal')
+         break;
         case "MergeForward": // 合并转发
           this.setDialogVisible(item.type);
           break;
@@ -252,7 +266,6 @@ export default {
 .checkbox-style {
   position: relative;
   z-index: 1;
-  background: #fff;
   height: 206px;
   display: flex;
   justify-content: space-evenly;

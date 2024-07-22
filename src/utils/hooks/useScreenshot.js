@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { useBoolean } from './other';
 import { domToJpeg, domToPng, domToSvg, domToWebp } from 'modern-screenshot';
 
-export const useScreenshot = (imageType, title) => {
+export const useScreenshot = (imageType = 'SVG', title) => {
   const [loading, setLoading] = useBoolean();
 
   const handleDownload = async () => {
