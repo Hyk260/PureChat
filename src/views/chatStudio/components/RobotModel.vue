@@ -2,7 +2,7 @@
   <div v-show="flag" class="robot-model-box" v-click-outside="onClickOutside">
     <div class="item-group-title">
       <svg-icon :iconClass="robotIcon" />
-      <span>{{ robotTitle }}</span>
+       {{ model.name }}
     </div>
     <div
       class="model flex"
@@ -29,14 +29,6 @@ import { useGetters } from "@/utils/hooks/useMapper";
 import storage from "@/utils/localforage/index";
 import { useStore } from "vuex";
 
-const title = ref({
-  GPT: "OpenAI",
-  ChatGLM: "ZhiPu",
-  ZeroOne: "01.AI",
-  Qwen: "通义千问",
-});
-
-const robotTitle = ref("");
 const robotIcon = ref("");
 const model = ref({});
 const [flag, setFlag] = useBoolean();
@@ -63,7 +55,6 @@ function storeRobotModel(model) {
 
 emitter.on("openModeList", () => {
   robotIcon.value = getModelSvg(toAccount.value);
-  robotTitle.value = title.value[getModelType(toAccount.value)];
   model.value = modelValue[getModelType(toAccount.value)].Model.options;
   setFlag(true);
 });

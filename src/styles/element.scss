@@ -2,6 +2,18 @@
   margin: 0 !important;
 }
 
+.el-overlay-dialog {
+  // backdrop-filter: blur(2px);
+}
+
+.el-drawer {
+  -webkit-app-region: no-drag;
+}
+
+.el-message {
+  --el-message-padding: 8px 15px;
+}
+
 .popover-style {
   width: 320px !important;
   padding: 0 !important;
@@ -14,12 +26,4 @@
   .el-drawer {
     border-radius: 5px 0 0 5px;
   }
-}
-
-.el-drawer {
-  -webkit-app-region: no-drag;
-}
-
-.el-message {
-  --el-message-padding: 8px 15px;
 }

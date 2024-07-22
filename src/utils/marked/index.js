@@ -33,6 +33,7 @@ export function addCopyButton() {
     buttons.forEach((button) => {
       button.onclick = function (e) {
         const code = e.target.nextElementSibling.innerText;
+        console.log(e.target.nextElementSibling)
         copyToClipboard(code);
       };
     });
@@ -52,8 +53,23 @@ export const md = markdownit({
       } catch (__) { }
     }
     return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
-  }
+  },
 });
+
+// 自定义插件
+function newWindowLinksPlugin(md) {
+  // 重写链接的渲染
+  md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+    // 获取链接的目标
+    const target = tokens[idx].attrGet('href');
+    // 添加 target="_blank" 属性
+    tokens[idx].attrSet('target', '_blank');
+    tokens[idx].attrSet('rel', 'noopener noreferrer'); // 安全性考虑
+    return self.renderToken(tokens, idx, options);
+  };
+}
+
+md.use(newWindowLinksPlugin);
 
 export function Markdown(props) {
   const { marked } = props

@@ -1,4 +1,4 @@
-import ScreenShot from "js-web-screen-shot";
+// import ScreenShot from "js-web-screen-shot";
 
 export function checkTextNotEmpty(arr) {
   return arr.some((obj) => {
@@ -52,10 +52,10 @@ export const renderFileIcon = (fileType = "") => {
 };
 
 export function screenshot(fn) {
-  new ScreenShot({
-    enableWebRtc: true,
-    level: 999,
-    completeCallback: fn,
-    closeCallback: fn,
-  });
+  // new ScreenShot({
+  //   enableWebRtc: true,
+  //   level: 999,
+  //   completeCallback: fn,
+  //   closeCallback: fn,
+  // });
 }
