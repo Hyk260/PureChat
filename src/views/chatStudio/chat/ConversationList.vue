@@ -231,6 +231,10 @@ const handleConvListClick = (data) => {
   // 获取会话列表 read
   dispatch("GET_MESSAGE_LIST", data);
   commit("setReplyMsg", null);
+  commit("SET_FORWARD_DATA", {
+    type: "clear",
+    payload: null,
+  });
   emitter.emit("handleInsertDraft", data);
   emitter.emit("updataScroll");
 };

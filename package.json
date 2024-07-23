@@ -1,6 +1,6 @@
 {
   "name": "purechat",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "PureChat",
   "type": "module",
   "author": {
@@ -69,6 +69,7 @@
     "vite-plugin-vue-devtools": "7.2.1"
   },
   "engines": {},
+  "homepage": "https://github.com/Hyk260/PureChat",
   "bugs": {
     "url": "https://github.com/Hyk260/PureChat/issues"
   },

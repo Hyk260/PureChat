@@ -8,66 +8,86 @@
     title="截图分享"
     width="700px"
   >
-    <div class="flex">
-      <div id="preview" class="segmented w-full">
-        <div class="preview p-20">
-          <div class="h-70"></div>
-          <div class="item">
-            <div
-              class="flex py-10"
-              v-for="item in fnForwardData"
-              :key="item.ID"
-              :class="ISown(item) ? 'is-self' : 'is-other'"
-            >
-              <div class="avatar">
-                <el-avatar :size="36" shape="square" :src="item.avatar" @error="() => true">
-                  <!-- <img :src="circleUrl" /> -->
-                </el-avatar>
-              </div>
-              <div class="item" :class="msgOne(item.type)">
-                <p class="nick">
-                  <!-- <span>{{ item.nick }}</span> -->
-                </p>
-                <div :class="msgType(item.type)">
-                  <component
-                    :key="item.ID"
-                    :is="loadMsgModule(item)"
-                    :msgType="item.conversationType"
-                    :message="item"
-                    :self="ISown(item)"
-                  >
-                  </component>
+    <div class="share-modal">
+      <div class="segmented w-full">
+        <div id="preview" class="preview">
+          <div class="content">
+            <Header />
+            <div class="item">
+              <div
+                class="message flex p-10"
+                v-for="item in fnForwardData"
+                :key="item.ID"
+                :class="ISown(item) ? 'is-self' : 'is-other'"
+              >
+                <div class="avatar">
+                  <el-avatar :size="36" shape="square" :src="item.avatar" @error="() => true">
+                    <!-- <img :src="circleUrl" /> -->
+                  </el-avatar>
+                </div>
+                <div class="item" :class="msgOne(item.type)">
+                  <p class="nick">
+                    <!-- <span>{{ item.nick }}</span> -->
+                  </p>
+                  <div :class="msgType(item.type)">
+                    <component
+                      :key="item.ID"
+                      :is="loadMsgModule(item)"
+                      :msgType="item.conversationType"
+                      :message="item"
+                      :self="ISown(item)"
+                    >
+                    </component>
+                  </div>
                 </div>
               </div>
             </div>
+            <div v-show="isFooter" class="footer p-16">
+              <div class="flex justify-center items-center">
+                <img class="size-22" src="@/assets/images/log.png" alt="" />
+                <div class="title ml-8">{{ $config.Title }}</div>
+              </div>
+              <span class="link"> {{ homepage }}</span>
+            </div>
           </div>
         </div>
-        <el-button @click="onDownload()"> 下载截图 </el-button>
+      </div>
+      <div class="form-item-props">
+        <div class="flex justify-between items-center">
+          <div>包含页脚</div>
+          <div><el-switch v-model="isFooter" /></div>
+        </div>
+      </div>
+      <div>
+        <el-button class="w-full" @click="onDownload()"> 下载截图 </el-button>
       </div>
     </div>
   </el-dialog>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed,ref } from "vue";
 import emitter from "@/utils/mitt-bus";
+import Header from "@/views/chatStudio/components/Header.vue";
 import { useBoolean } from "@/utils/hooks/index";
 import { useScreenshot } from "@/utils/hooks/useScreenshot";
 import { useState } from "@/utils/hooks/useMapper";
 import { loadMsgModule, msgOne, msgType } from "@/views/chatStudio/utils/utils";
-const [dialogVisible, setDialogVisible] = useBoolean();
 
+const { pkg } = __APP_INFO__;
+const homepage = pkg.homepage;
+const isFooter = ref(false)
+const [dialogVisible, setDialogVisible] = useBoolean();
+const { loading, onDownload, title } = useScreenshot();
 const { forwardData, userProfile } = useState({
   userProfile: (state) => state.user.userProfile,
   forwardData: (state) => state.conversation.forwardData,
 });
 
-const { loading, onDownload, title } = useScreenshot();
-
 const fnForwardData = computed(() => {
   let myObj = Object.fromEntries(forwardData.value);
   const obj = Object.values(myObj).map((item) => item);
-  return obj;
+  return obj.sort((a, b) => a.clientTime - b.clientTime);
 });
 
 const ISown = (item) => {
@@ -84,6 +104,14 @@ emitter.on("onShareModal", (val) => {
 </script>
 
 <style lang="scss" scoped>
+.share-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  :deep(.message-info-setup) {
+    display: none;
+  }
+}
 .segmented {
   overflow: hidden scroll;
   width: 100%;
@@ -92,13 +120,53 @@ emitter.on("onShareModal", (val) => {
   border: 1px solid #dddddd;
   border-radius: 8px;
 }
-
+.form-item-props {
+  overflow: hidden;
+  padding-inline: 16px;
+  background: rgba(0, 0, 0, 0.015);
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+}
 .preview {
-  // min-height: 300px;
-  background: url("@/assets/images/screenshot_background.webp") no-repeat;
+  padding: 24px;
+  background-image: url("@/assets/images/screenshot_background.webp");
+  background-position: center;
+  background-color: #f8f8f8;
   background-size: 100% 100%;
-  & > .item {
-    padding: 20px 0;
+  .content {
+    overflow: hidden;
+    border: 2px solid #dddddd;
+    border-radius: 8px;
+    background: #f8f8f8;
+    pointer-events: none;
+  }
+  .footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 16px;
+    border-block-start: 1px solid #dddddd;
+    .title {
+      font:
+        bold 130% Consolas,
+        Monaco,
+        monospace;
+    }
+    .link {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #999999;
+    }
+  }
+}
+.message {
+  .message-view__item--text {
+    max-width: 500px;
+  }
+  .avatar {
+    --el-border-radius-base: 6px;
+    --el-text-color-disabled: #ffffff00;
   }
 }
 .is-self {
