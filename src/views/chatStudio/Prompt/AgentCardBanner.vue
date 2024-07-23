@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { Markdown, addCopyButton } from "@/utils/marked/index";
+import { Markdown, handleCopyClick } from "@/utils/marked/index";
 import { ref } from "vue";
 import emitter from "@/utils/mitt-bus";
 import { useBoolean } from "@/utils/hooks/index";
@@ -64,7 +64,7 @@ function handleClose() {
 emitter.on("openAgentCard", (data) => {
   cardData.value = data;
   setDialog(true);
-  addCopyButton();
+  handleCopyClick();
 });
 </script>
 

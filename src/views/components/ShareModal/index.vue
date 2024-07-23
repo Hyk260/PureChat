@@ -21,9 +21,7 @@
                 :class="ISown(item) ? 'is-self' : 'is-other'"
               >
                 <div class="avatar">
-                  <el-avatar :size="36" shape="square" :src="item.avatar" @error="() => true">
-                    <!-- <img :src="circleUrl" /> -->
-                  </el-avatar>
+                  <img decoding="async" :src="item.avatar" />
                 </div>
                 <div class="item" :class="msgOne(item.type)">
                   <p class="nick">
@@ -66,7 +64,7 @@
 </template>
 
 <script setup>
-import { computed,ref } from "vue";
+import { computed, ref } from "vue";
 import emitter from "@/utils/mitt-bus";
 import Header from "@/views/chatStudio/components/Header.vue";
 import { useBoolean } from "@/utils/hooks/index";
@@ -76,7 +74,7 @@ import { loadMsgModule, msgOne, msgType } from "@/views/chatStudio/utils/utils";
 
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
-const isFooter = ref(false)
+const isFooter = ref(false);
 const [dialogVisible, setDialogVisible] = useBoolean();
 const { loading, onDownload, title } = useScreenshot();
 const { forwardData, userProfile } = useState({
@@ -165,8 +163,11 @@ emitter.on("onShareModal", (val) => {
     max-width: 500px;
   }
   .avatar {
-    --el-border-radius-base: 6px;
-    --el-text-color-disabled: #ffffff00;
+    img {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+    }
   }
 }
 .is-self {

@@ -1,4 +1,4 @@
-import { h, nextTick } from "vue";
+import { h, ref, nextTick, watch, onMounted } from "vue";
 import store from "@/store/index";
 import markdownit from 'markdown-it'
 import hljs from "highlight.js";
@@ -27,24 +27,28 @@ export async function copyToClipboard(text) {
 }
 
 // 添加复制功能
-export function addCopyButton() {
+export function handleCopyClick() {
   nextTick(() => {
     const buttons = document.querySelectorAll(".copy-code-button");
     buttons.forEach((button) => {
       button.onclick = function (e) {
-        const code = e.target.nextElementSibling.innerText;
-        console.log(e.target.nextElementSibling)
-        copyToClipboard(code);
+        const codeElement = e.currentTarget.nextElementSibling;
+        // 检查 codeElement 是否存在
+        if (codeElement) {
+          const code = codeElement.innerText;
+          copyToClipboard(code);
+        } else {
+          console.error('Code element not found');
+        }
       };
     });
   });
 }
 
-export const md = markdownit({
+ const md = markdownit({
   highlight: function (str, lang) {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        // <button class="copy-code-button">Copy</button>
         return '<pre class="hljs">' +
           '<button class="copy-code-button">' + svg + '</button>' +
           '<code>' +
@@ -52,7 +56,11 @@ export const md = markdownit({
           '</code></pre>';
       } catch (__) { }
     }
-    return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
+    return '<pre class="hljs">' +
+      '<button class="copy-code-button">' + svg + '</button>' +
+      '<code>' +
+      md.utils.escapeHtml(str) +
+      '</code></pre>';
   },
 });
 
@@ -77,5 +85,6 @@ export function Markdown(props) {
     innerHTML: md.render(marked),
     class: 'markdown-body'
   });
+
   return mark
 }

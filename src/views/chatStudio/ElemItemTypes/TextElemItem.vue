@@ -1,5 +1,5 @@
 <template>
-  <div class="message-view__item--text" :class="fnStyle()">
+  <div class="message-view__item--text" :class="fnStyle()" @click="onClick(message)">
     <template v-if="(message?.conversationType || msgType) == 'GROUP' || 'C2C'">
       <!-- 回复消息 -->
       <ReplyElem
@@ -19,7 +19,7 @@ import ReplyElem from "./ReplyElem.vue";
 import DynamicContent from "../components/DynamicContent.vue";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { isRobot } from "@/utils/chat/index";
-import { Markdown, addCopyButton } from "@/utils/marked/index";
+import { Markdown, handleCopyClick } from "@/utils/marked/index";
 
 const props = defineProps({
   msgType: {
@@ -51,8 +51,9 @@ function fnStyle() {
 }
 
 onMounted(() => {
-  addCopyButton();
+  handleCopyClick();
 });
+
 </script>
 
 <style lang="scss" scoped>
