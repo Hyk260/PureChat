@@ -28,13 +28,10 @@
       :isOwner="isOwner"
       @insertMention="insertMention"
     />
-    <el-tooltip
-      effect="dark"
-      :content="placeholderMap[getOperatingSystem()]"
-      placement="left-start"
-    >
-      <el-button class="btn-send" @click="handleEnter()"> {{ $t("chat.sending") }} </el-button>
-    </el-tooltip>
+    <div class="btn-send">
+      <span class="mr-8 text-[12px]">{{ placeholderMap[getOperatingSystem()] }}</span>
+      <el-button @click="handleEnter()"> {{ $t("chat.sending") }} </el-button>
+    </div>
   </div>
 </template>
 
@@ -379,7 +376,7 @@ watch(showMsgBox, () => {
   handleEditorKeyDown();
 });
 watch(lang, () => {
-  handleToggleLanguage();
+  // handleToggleLanguage();
 });
 onActivated(() => {
   handleEditorKeyDown();
@@ -405,8 +402,10 @@ onBeforeUnmount(() => {
   word-break: break-all;
   border-top: 1px solid var(--color-border-default);
   height: 200px;
+  display: flex;
+  flex-direction: column;
   .editor-content {
-    height: calc(100% - 40px) !important;
+    flex: 1;
     overflow-y: hidden;
     :deep(.w-e-text-container p) {
       margin: 0;
@@ -428,8 +427,13 @@ onBeforeUnmount(() => {
   }
 }
 .btn-send {
-  position: absolute;
-  bottom: 8px;
-  right: 16px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0px 10px 10px;
+  span {
+    color: rgb(153, 153, 153);
+  }
 }
 </style>
