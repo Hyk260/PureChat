@@ -85,6 +85,7 @@ import {
   dragleaveHandler,
   dragoverHandler,
   dropHandler,
+  html2Escape
 } from "../utils/utils";
 
 const loading = ref(true);
@@ -185,7 +186,8 @@ const CustomMention = (props) => {
   const { messageForShow } = lastMessage;
   const draft = sessionDraftMap.value.get(ID);
   if (draft && isdraft(item)) {
-    return h("span", { innerHTML: `${createElement(1)}${parseData(draft)}` });
+    const str = html2Escape(parseData(draft))
+    return h("span", { innerHTML: `${createElement(1)}${str}` });
   }
   return h("span", {
     innerHTML: `${unreadCount !== 0 ? createElement() : ""}${lastMessage.nick}: ${messageForShow}`,
@@ -231,6 +233,10 @@ const handleConvListClick = (data) => {
   // 获取会话列表 read
   dispatch("GET_MESSAGE_LIST", data);
   commit("setReplyMsg", null);
+  commit("SET_FORWARD_DATA", {
+    type: "clear",
+    payload: null,
+  });
   emitter.emit("handleInsertDraft", data);
   emitter.emit("updataScroll");
 };
@@ -348,7 +354,6 @@ watch(activetab, (data) => {
       font-size: 12px;
       color: var(--color-time-divider);
       overflow: hidden;
-      pointer-events: none;
       width: 179px;
       white-space: nowrap;
       text-overflow: ellipsis;

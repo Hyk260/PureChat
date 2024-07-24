@@ -1,6 +1,6 @@
 {
   "name": "purechat",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "PureChat",
   "type": "module",
   "main": "./out/main/index.js",
@@ -42,11 +42,10 @@
     "element-plus": "^2.7.0",
     "fast-glob": "^3.3.2",
     "highlight.js": "11.9.0",
-    "html-to-image": "^1.11.11",
-    "js-web-screen-shot": "^1.9.9-rc.18",
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",
     "mitt": "^3.0.0",
+    "modern-screenshot": "^4.4.39",
     "nprogress": "^0.2.0",
     "pinyin-pro": "^3.18.5",
     "postcss": "^8.4.38",
@@ -84,6 +83,7 @@
     "vite-plugin-vue-devtools": "7.2.1"
   },
   "engines": {},
+  "homepage": "https://github.com/Hyk260/PureChat",
   "bugs": {
     "url": "https://github.com/Hyk260/PureChat/issues"
   },

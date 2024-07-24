@@ -1,13 +1,13 @@
-import { CHATYI_ROBOT } from "@/ai/constant";
+import ZhiPu from './models';
 
-export const yiModelValue = (models) => {
+export const yiModelValue = () => {
   return {
     Model: {
       ID: "model",
       Title: "模型 (model)",
       SubTitle: "01.AI 零一万物 模型",
       defaultValue: "",
-      options: models.filter((t) => t.provider.convId === CHATYI_ROBOT),
+      options: ZhiPu,
     },
     OpenaiUrl: {
       ID: "openaiUrl",

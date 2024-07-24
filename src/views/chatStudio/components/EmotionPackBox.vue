@@ -143,8 +143,9 @@ defineExpose({ setFlag });
   z-index: 1;
   border-radius: 5px;
   bottom: 46px;
-  background: #fff;
+  background: var(--color-body-bg);
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--color-border-default);
   :deep(.custom-scrollbar-wrap) {
     scroll-snap-type: y mandatory;
   }
@@ -179,7 +180,7 @@ defineExpose({ setFlag });
   display: flex;
   align-items: center;
   padding: 0 10px;
-  background: #fff;
+  background: var(--color-body-bg);
   border-radius: 0 0 5px 5px;
   border-top: 1px solid #cccccc4a;
   div:not(:nth-child(1)) {
@@ -194,13 +195,12 @@ defineExpose({ setFlag });
     align-items: center;
     cursor: pointer;
     &:hover {
-      background: #e6e6e6a8;
+      background: var(--color-message-active);
     }
   }
 }
 .isHover {
-  background: #e6e6e6a8 !important;
-  // color: var(--color-icon-hover) !important;
+  background: var(--color-message-active) !important;
 }
 .scroll-snap {
   // scroll-snap-align: start;

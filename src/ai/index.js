@@ -1,6 +1,6 @@
 import { ClientApi } from "@/ai/api";
 import { RobotAvatar } from "@/ai/constant";
-import { getModelType, useAccessStore } from "@/ai/utils";
+import { getModelType, useAccessStore, getModelSvg } from "@/ai/utils";
 import { createCustomMsg } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
 import store from "@/store";
@@ -30,6 +30,8 @@ const updataMessage = (msg, message = "") => {
 const avatar = (id) => {
   const suffix = RobotAvatar[getModelType(id)] || "";
   return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}`;
+  // const svg = getModelSvg(id) + '.svg'
+  // return new URL(`../assets/images/robot/${svg}`, import.meta.url).href;
 };
 
 const fnCreateLodMsg = (params) => {

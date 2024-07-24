@@ -5,6 +5,7 @@ import {
   devDependencies,
   repository,
   name,
+  homepage,
   version,
 } from "../../package.json";
 
@@ -14,6 +15,7 @@ export const __APP_INFO__ = {
     name,
     version,
     engines,
+    homepage,
     repository,
     dependencies,
     devDependencies,

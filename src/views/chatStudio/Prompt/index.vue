@@ -46,14 +46,11 @@ import emitter from "@/utils/mitt-bus";
 import marketJson from "@/assets/db/market.json";
 import storage from "@/utils/localforage/index";
 import AgentCard from "./AgentCard.vue";
-import { useStore } from "vuex";
-import { StoreKey, CHATGPT_ROBOT, ModelProvider } from "@/ai/constant";
 
 const cur = ref("");
 const input = ref("");
 const market = ref(null);
 const filterInput = ref("");
-const { commit, dispatch } = useStore();
 
 function cardClick(item) {
   emitter.emit("openAgentCard", item);
@@ -114,7 +111,7 @@ onBeforeMount(() => {
   width: 100%;
   padding: 0 16px;
   height: 60px;
-  border-block-end: 1px solid #dddddd;
+  border-block-end: 1px solid var(--color-border-default);
 }
 
 .layout-body {
@@ -140,8 +137,7 @@ onBeforeMount(() => {
   flex-direction: column;
   align-content: space-between;
   align-items: center;
-  background: rgb(248 248 248);
-
+  background: var(--color-body-bg);
   .el-input {
     margin-top: 20px;
   }
@@ -171,13 +167,13 @@ onBeforeMount(() => {
   gap: 6px;
 
   .item-tags {
-    color: rgb(8, 8, 8);
+    color: var(--color-text);
     height: 27px;
     line-height: 27px;
     border-radius: 27px;
     padding-inline-start: 13.5px;
     padding-inline-end: 13.5px;
-    background: rgba(0, 0, 0, 0.03);
+    background: var(--color-text-tags);
     border: none;
     outline: none;
     display: flex;
@@ -186,17 +182,16 @@ onBeforeMount(() => {
     font-weight: 400;
     white-space: nowrap;
     text-align: center;
-
     &:hover {
-      color: #333333;
-      border-color: #333333;
-      background: rgba(0, 0, 0, 0.12);
+      color: var(--color-tags-color);
+      border-color: var(--color-tags-color);
+      background: var(--color-tags-back);
     }
   }
 }
 
 .active {
-  background: #222 !important;
-  color: #f8f8f8 !important;
+  background: var(--color-tags-active-back) !important;
+  color: var(--color-tags-active) !important;
 }
 </style>

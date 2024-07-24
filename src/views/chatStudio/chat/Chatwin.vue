@@ -73,7 +73,7 @@
       </div>
     </el-scrollbar>
     <!-- 卡片 -->
-    <MyPopover />
+    <!-- <MyPopover /> -->
     <contextmenu ref="contextmenu" :disabled="!isRight">
       <contextmenu-item
         v-for="item in RIGHT_CLICK_MENU_LIST"
@@ -546,6 +546,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   box-sizing: border-box;
   .picture {
     --el-border-radius-base: 6px;
+    --el-text-color-disabled: #ffffff00;
     cursor: pointer;
   }
 }

@@ -77,6 +77,7 @@ function operation() {
   flex-direction: column;
   border-radius: 0 7px 7px 0;
   box-shadow: 1px 0px 5px 0px rgb(0 0 0 / 10%);
+  border-inline-end: 1px solid var(--color-border-default);
 }
 .aside-item {
   @include flex-center;
@@ -97,7 +98,8 @@ function operation() {
   }
 
   .current {
-    background: var(--color-aside-list-action) !important;
+    // --color-aside-list-action
+    background: var(--color-message-active) !important;
   }
   .icon-title {
     padding: 0 5px;

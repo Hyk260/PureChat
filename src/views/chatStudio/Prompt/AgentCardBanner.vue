@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { Markdown, addCopyButton } from "@/utils/marked/index";
+import { Markdown, handleCopyClick } from "@/utils/marked/index";
 import { ref } from "vue";
 import emitter from "@/utils/mitt-bus";
 import { useBoolean } from "@/utils/hooks/index";
@@ -58,13 +58,15 @@ function toTant(item = cardData.value) {
   commit("TAGGLE_OUE_SIDE", "message");
   dispatch("CHEC_OUT_CONVERSATION", { convId: `${"C2C"}${CHATGPT_ROBOT}` });
 }
+
 function handleClose() {
   setDialog(false);
 }
+
 emitter.on("openAgentCard", (data) => {
   cardData.value = data;
   setDialog(true);
-  addCopyButton();
+  handleCopyClick();
 });
 </script>
 
@@ -78,8 +80,8 @@ emitter.on("openAgentCard", (data) => {
 }
 
 :global(body .agent-card-modal p) {
-  margin: revert;
-  color: rgb(8, 8, 8);
+  // margin: revert;
+  // color: rgb(8, 8, 8);
 }
 
 .agent-card-banner {
@@ -127,7 +129,7 @@ emitter.on("openAgentCard", (data) => {
     gap: 6px;
     span {
       color: #666666;
-      background: rgba(0, 0, 0, 0.06);
+      background: var(--tags-back);
       height: 20px;
       line-height: 20px;
       padding: 0 7px;

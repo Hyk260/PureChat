@@ -12,8 +12,7 @@ export const placeholderMap = computed(() => {
 });
 // 编辑器配置
 export const editorConfig = {
-  // 请输入内容...
-  placeholder: placeholderMap.value[systemOs] || $t("chat.buttonPrompt"),
+  placeholder: "请输入内容...",
   // 配置编辑器是否只读，默认为 false
   // readOnly: true,
   /* 菜单配置 */

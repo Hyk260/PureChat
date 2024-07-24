@@ -74,102 +74,11 @@ export const prompt = [
   },
 ];
 
-const openaiModels = [
-  "gpt-3.5-turbo",
-  "gpt-3.5-turbo-0301",
-  "gpt-3.5-turbo-0613",
-  // "gpt-3.5-turbo-1106",
-  // "gpt-3.5-turbo-0125",
-  "gpt-3.5-turbo-16k",
-  "gpt-3.5-turbo-16k-0613",
-  "gpt-4",
-  "gpt-4-0613",
-  "gpt-4-32k",
-  "gpt-4-32k-0613",
-  "gpt-4-turbo",
-  // "gpt-4-turbo-preview",
-  // "gpt-4-vision-preview",
-  // "gpt-4-turbo-2024-04-09",
-];
-
-const zhipuModels = ["glm-3-turbo", "glm-4", "glm-4v"];
-
-const yiModels = [
-  "yi-large",
-  "yi-medium",
-  "yi-vision",
-  "yi-medium-200k",
-  "yi-spark",
-  "yi-large-rag",
-  "yi-large-turbo",
-  "yi-large-preview",
-  "yi-large-rag-preview",
-];
-
-const alibabaModes = [
-  "qwen-turbo",
-  "qwen-plus",
-  "qwen-max",
-  "qwen-max-0428",
-  "qwen-max-0403",
-  "qwen-max-0107",
-  "qwen-max-longcontext",
-];
-
-export const DEFAULT_MODELS = [
-  ...openaiModels.map((name) => ({
-    name,
-    available: true,
-    provider: {
-      id: "openai",
-      convId: CHATGPT_ROBOT,
-      providerName: "OpenAI",
-      providerType: "openai",
-    },
-  })),
-  ...zhipuModels.map((name) => ({
-    name,
-    available: true,
-    provider: {
-      id: "zhipu",
-      convId: CHATGLM_ROBOT,
-      providerName: "ZhiPu",
-      providerType: "zhipu",
-    },
-  })),
-  ...yiModels.map((name) => ({
-    name,
-    available: true,
-    provider: {
-      id: "zeroone",
-      convId: CHATYI_ROBOT,
-      providerName: "ZeroOne",
-      providerType: "zeroone",
-    },
-  })),
-  ...alibabaModes.map((name) => ({
-    name,
-    available: true,
-    provider: {
-      id: "alibaba",
-      providerName: "Alibaba",
-      providerType: "alibaba",
-    },
-  })),
-];
-
 export const RobotAvatar = {
   [ModelProvider.GPT]: "open-ai-icon.png",
   [ModelProvider.ChatGLM]: "chatglm.svg",
   [ModelProvider.ZeroOne]: "ZeroOne.svg",
   [ModelProvider.Qwen]: "qwen.svg",
-};
-
-export const RobotModel = {
-  [ModelProvider.GPT]: openaiModels,
-  [ModelProvider.ChatGLM]: zhipuModels,
-  [ModelProvider.ZeroOne]: yiModels,
-  [ModelProvider.Qwen]: alibabaModes,
 };
 
 // 默认配置
@@ -181,8 +90,8 @@ export const modelConfig = {
 };
 
 export const modelValue = {
-  [ModelProvider.GPT]: openaiModelValue(DEFAULT_MODELS),
-  [ModelProvider.ChatGLM]: zhipuModelValue(DEFAULT_MODELS),
-  [ModelProvider.ZeroOne]: yiModelValue(DEFAULT_MODELS),
-  [ModelProvider.Qwen]: qwenModelValue(DEFAULT_MODELS),
+  [ModelProvider.GPT]: openaiModelValue(),
+  [ModelProvider.ChatGLM]: zhipuModelValue(),
+  [ModelProvider.ZeroOne]: yiModelValue(),
+  [ModelProvider.Qwen]: qwenModelValue(),
 };

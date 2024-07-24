@@ -25,6 +25,6 @@ export const OpenaiConfig = {
    */
   frequency_penalty: 0,
   token: import.meta.env.VITE_OPENAI_API_KEY,
-  openaiUrl: import.meta.env.VITE_OPENAI_BASE_URL,
+  openaiUrl: import.meta.env.VITE_OPENAI_PROXY_URL,
   historyMessageCount: 1,
 };

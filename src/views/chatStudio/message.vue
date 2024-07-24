@@ -152,9 +152,11 @@ watchEffect(() => {
 .message-left {
   width: 280px;
   position: relative;
+  border-right: 1px solid var(--color-border-default);
   transition: width 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .style-layoutkit {
+  border-right: 0px;
   width: 0px;
 }
 .chat-h-full {
@@ -166,8 +168,6 @@ watchEffect(() => {
 }
 .message-right {
   background: var(--color-body-bg);
-  border-left: 1px solid var(--color-border-default);
-  // width: calc(100% - 280px);
   flex: 1;
   height: 100%;
   position: relative;
@@ -187,12 +187,12 @@ watchEffect(() => {
   height: 3px;
   z-index: 10;
   width: 100%;
-  border-radius: 5px;
   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .resize-hover:hover {
-  cursor: s-resize;
-  background: #22222230;
+  cursor: row-resize;
+  background: #eeeeee;
+  // --color-drag-hover: #eeeeee;
 }
 .back-to-the-bottom {
   @include flex-center;
@@ -214,7 +214,7 @@ watchEffect(() => {
   display: flex;
   align-items: center;
   top: 0;
-  right: -16px;
+  right: -17px;
   width: 16px;
   height: 100%;
   display: flex;
@@ -228,9 +228,8 @@ watchEffect(() => {
     cursor: pointer;
     color: #999999;
     background: rgba(0, 0, 0, 0.03);
-    border-color: #e3e3e3;
-    border-style: solid;
-    border-width: 1px;
+    border: 1px solid var(--color-button-border);
+    border-left-width: 0;
     display: none;
   }
   &:hover > div {

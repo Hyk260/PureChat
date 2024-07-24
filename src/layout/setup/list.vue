@@ -52,8 +52,8 @@ defineExpose({ onClick });
   font-size: 1.125rem;
 }
 .selectd {
-  color: rgb(147, 115, 238);
-  background-color: rgb(236, 240, 252);
+  color: rgb(114, 184, 249);
+  background-color: var(--color-message-active);
 }
 .ui-menu-vertical {
   margin: 0 20px;

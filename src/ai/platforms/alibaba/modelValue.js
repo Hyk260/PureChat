@@ -1,5 +1,3 @@
-import { CHATQWEN_ROBOT } from "@/ai/constant";
-
 export const qwenModelValue = (models) => {
   return {
     Model: {
@@ -7,7 +5,7 @@ export const qwenModelValue = (models) => {
       Title: "模型 (model)",
       SubTitle: " 模型",
       defaultValue: "",
-      options: models.filter((t) => t.provider.convId === CHATQWEN_ROBOT),
+      // options: ,
     },
     OpenaiUrl: {
       ID: "openaiUrl",

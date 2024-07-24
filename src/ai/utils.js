@@ -48,10 +48,10 @@ export function getModelType(modelId) {
 export function getModelSvg(id) {
   const modelId = getModelType(id)
   const data = {
-    GPT: "openai",
-    ChatGLM: "zhipu",
-    ZeroOne: "zeroone",
-    Qwen: "tongyi",
+    [ModelProvider.GPT]: "openai",
+    [ModelProvider.ChatGLM]: "zhipu",
+    [ModelProvider.ZeroOne]: "zeroone",
+    [ModelProvider.Qwen]: "tongyi",
   };
   return data[modelId] || "";
 }

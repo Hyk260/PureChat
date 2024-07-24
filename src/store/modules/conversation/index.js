@@ -481,6 +481,7 @@ const conversation = {
     },
     // 用于当前会话的图片预览
     imgUrlList(state) {
+      if (!state.currentMessageList) return []
       const filteredMessages = state.currentMessageList.filter(
         (item) => item.type === TIM.TYPES.MSG_IMAGE && !item.isRevoked && !item.isDeleted
       );

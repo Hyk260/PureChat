@@ -99,11 +99,11 @@ const user = {
     // 退出登录
     async LOG_OUT({ state, commit, dispatch }) {
       router.push("/login");
-      nextTick(() => {
+      setTimeout(() => {
         logout();
         emitter.all.clear();
         dispatch("TIM_LOG_OUT");
-      });
+      },500);
     },
     // 登录im
     async TIM_LOG_IN({ state, commit, dispatch }, user) {
