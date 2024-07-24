@@ -58,9 +58,11 @@ function toTant(item = cardData.value) {
   commit("TAGGLE_OUE_SIDE", "message");
   dispatch("CHEC_OUT_CONVERSATION", { convId: `${"C2C"}${CHATGPT_ROBOT}` });
 }
+
 function handleClose() {
   setDialog(false);
 }
+
 emitter.on("openAgentCard", (data) => {
   cardData.value = data;
   setDialog(true);

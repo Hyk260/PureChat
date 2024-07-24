@@ -46,14 +46,11 @@ import emitter from "@/utils/mitt-bus";
 import marketJson from "@/assets/db/market.json";
 import storage from "@/utils/localforage/index";
 import AgentCard from "./AgentCard.vue";
-import { useStore } from "vuex";
-import { StoreKey, CHATGPT_ROBOT, ModelProvider } from "@/ai/constant";
 
 const cur = ref("");
 const input = ref("");
 const market = ref(null);
 const filterInput = ref("");
-const { commit, dispatch } = useStore();
 
 function cardClick(item) {
   emitter.emit("openAgentCard", item);

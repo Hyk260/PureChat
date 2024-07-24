@@ -1,4 +1,4 @@
-import { h, ref, nextTick, watch, onMounted } from "vue";
+import { h, nextTick } from "vue";
 import store from "@/store/index";
 import markdownit from 'markdown-it'
 import hljs from "highlight.js";
@@ -45,23 +45,28 @@ export function handleCopyClick() {
   });
 }
 
- const md = markdownit({
-  highlight: function (str, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return '<pre class="hljs">' +
-          '<button class="copy-code-button">' + svg + '</button>' +
-          '<code>' +
-          hljs.highlight(lang, str, true).value +
-          '</code></pre>';
-      } catch (__) { }
-    }
-    return '<pre class="hljs">' +
-      '<button class="copy-code-button">' + svg + '</button>' +
-      '<code>' +
-      md.utils.escapeHtml(str) +
-      '</code></pre>';
-  },
+function highlight(str, lang) {
+  if (lang && hljs.getLanguage(lang)) {
+    try {
+      return '<pre class="hljs">' +
+        '<button class="copy-code-button">' + svg + '</button>' +
+        '<code>' +
+        hljs.highlight(lang, str, true).value +
+        '</code></pre>';
+    } catch (__) { }
+  }
+  return '<pre class="hljs">' +
+    '<button class="copy-code-button">' + svg + '</button>' +
+    '<code>' +
+    md.utils.escapeHtml(str) +
+    '</code></pre>';
+}
+
+const md = markdownit({
+  breaks: true, // 转换段落里的 '\n' 到 <br>。
+  langPrefix: 'language-',  // 给围栏代码块的 CSS 语言前缀。对于额外的高亮代码非常有用。
+  typographer: true,  // 启用一些语言中立的替换 + 引号美化
+  highlight: highlight,
 });
 
 // 自定义插件
@@ -81,6 +86,7 @@ md.use(newWindowLinksPlugin);
 
 export function Markdown(props) {
   const { marked } = props
+  console.log('Markdown:', marked)
   const mark = h("div", {
     innerHTML: md.render(marked),
     class: 'markdown-body'
