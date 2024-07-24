@@ -14,7 +14,6 @@
         >
           <!-- 加载更多 -->
           <LoadMore :index="index" />
-          <!-- <div class="message-view__item--blank"></div> -->
           <!-- 时间 -->
           <div v-if="isTime(item)" class="message-view__item--time-divider">
             {{ timeFormat(item.time * 1000, true) }}
@@ -512,7 +511,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   }
 }
 .message-view__item--index {
-  max-width: 75%;
+  max-width: 70%;
 }
 .message-info-view-content {
   height: calc(100% - 60px - 200px);

@@ -23,6 +23,8 @@ export function setTheme(appearance = "light") {
   }
 }
 
+export const isElectron = window && window?.electron
+
 export function setPageTitle(routerTitle) {
   if (isElectron) return;
   document.title = routerTitle ? `${routerTitle} | ${title}` || title : title;
@@ -36,4 +38,4 @@ export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Oper
   navigator.userAgent
 );
 
-export const isElectron = window && window.process && window.process.type;
+
