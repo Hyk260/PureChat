@@ -1,7 +1,7 @@
 <template>
   <div
     class="file-box"
-    @click="handleOpen"
+    @click="handleOpen(payload)"
     :id="payload.uuid"
     :style="{ background: backgroundStyle }"
   >
@@ -52,7 +52,7 @@ const isStatus = (value) => {
   return status.value == value;
 };
 
-function handleOpen() { 
+function handleOpen({ fileName }) { 
   if (isElectron) {
     console.log('Open electron:')
   } else {
@@ -76,6 +76,10 @@ const uploading = ({ uuid, num, type = "up" }) => {
     if (type == "up") {
       const upProgress = dom.querySelector(".upload_progress");
       upProgress.innerText = num + "%";
+    }
+    if (type == "dow") {
+      const downProgress = dom.querySelector(".download_progress");
+      downProgress.innerText = num + "%";
     }
   } catch (error) {
     console.error("[upload]:", error);
@@ -124,14 +128,9 @@ onBeforeUnmount(() => {
       color: #999999;
       line-height: 18px;
       font-size: 12px;
-      .file-status,
-      .file-icon {
-        margin-left: 5px;
-      }
     }
   }
 }
-.download_progress,
 .upload_progress {
   display: inline-block;
   width: 30px;
