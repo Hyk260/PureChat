@@ -1,7 +1,7 @@
 <template>
   <div
     class="file-box"
-    @click.stop="handleOpen(payload)"
+    @click="handleOpen(payload)"
     :id="payload.uuid"
     title="打开文件"
     :style="{ background: backgroundStyle }"
@@ -54,7 +54,7 @@ const isStatus = (value) => {
   return status.value == value;
 };
 
-function handleOpen({ fileName }) {
+function handleOpen({ fileName }) { 
   if (isElectron) {
     console.log("Open electron:");
     electron.ipcRenderer.send("openFolder", { type: "openPath", fileName });
@@ -80,7 +80,7 @@ const uploading = ({ uuid, num, type = "up" }) => {
       const upProgress = dom.querySelector(".upload_progress");
       upProgress.innerText = num + "%";
     }
-     if (type == "dow") {
+    if (type == "dow") {
       const downProgress = dom.querySelector(".download_progress");
       downProgress.innerText = num + "%";
     }
@@ -131,14 +131,9 @@ onBeforeUnmount(() => {
       color: #999999;
       line-height: 18px;
       font-size: 12px;
-      .file-status,
-      .file-icon {
-        margin-left: 5px;
-      }
     }
   }
 }
-.download_progress,
 .upload_progress {
   display: inline-block;
   width: 30px;
