@@ -1,8 +1,9 @@
 import { isWindows, isMac, isProduction } from "../platform";
 import { app, clipboard, shell } from "electron";
 import { execFile, exec } from "child_process";
-import path from "path";
+import path from "node:path";
 import { fnFilePath } from './folder';
+import log from '../logger/index';
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -19,8 +20,14 @@ const sendCapturedImageData = (win) => {
 export const handleScreenshot = () => {
   const mainWin = global.mainWin;
   if (isWindows) {
-    const capturePath = app.isPackaged ? "../ScreenCapture.exe" : "../../resources/ScreenCapture.exe";
-    const filePath = path.join(__dirname, capturePath);
+    let filePath = ''
+    if (app.isPackaged) {
+      filePath = path.join(process.cwd(), '/resources/app.asar.unpacked/resources/ScreenCapture.exe')
+    } else {
+      filePath = path.join(__dirname, "../../resources/ScreenCapture.exe");
+    }
+    console.log(`windows:filePath:${filePath}`)
+    log.info(`windows:filePath:${filePath}`)
     const screenWindow = execFile(filePath);
     screenWindow.on("exit", (code, stdout, stderr) => {
       console.log("退出码 code:", code, "输出流 stdout:", stdout, "错误流 stderr:", stderr);
