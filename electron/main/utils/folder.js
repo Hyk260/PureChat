@@ -1,25 +1,30 @@
-import fs from "fs";
-import os from "os";
-import path from "path";
-import { shell, ipcRenderer } from "electron";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 const request = require("request");
 const progressStream = require("progress-stream");
 
-const folderDir = "File";
-const mainDir = "Pure Files";
+export const folderDir = "File";
+export const mainDir = "Pure Files";
+
 const rootDir = path.resolve(os.homedir(), "Documents", mainDir);
+
+export const fnFilePath = (fileName) => {
+  return path.join(rootDir, folderDir, fileName);
+}
 
 export const initFolder = () => {
   createFolder();
 };
 
+// 检查文件是否存在
 export const checkFileExist = (fileName) => {
-  const filePath = path.join(rootDir, folderDir, fileName);
+  const filePath = fnFilePath(fileName);
   return fs.existsSync(filePath);
 };
 
 /**
- * 创建文件夹
+ * 创建主文件夹
  * @param {string} dirPath - 要创建的文件夹路径
  * @returns {boolean} - 返回是否成功创建文件夹
  * C:\Users\{user}\Documents\Pure Files
@@ -51,33 +56,6 @@ export const createFolderChild = (folder = folderDir) => {
 };
 
 /**
- * 打开文件
- */
-export const openFile = ({ folder = folderDir, fileName = "" }) => {
-  const filePath = path.join(rootDir, folder, fileName);
-  if (fs.existsSync(filePath)) {
-    // shell.openPath(filePath);
-    // 使用主进程打开文件夹
-    ipcRenderer.send("openFolder", { type: "openPath", data: filePath });
-  } else {
-    console.log("文件路径不存在 openFile:", filePath);
-  }
-};
-
-/**
- * 打开文件夹
- */
-export const openFolder = ({ folder = folderDir, fileName = "" }) => {
-  const filePath = path.join(rootDir, folder, fileName);
-  if (fs.existsSync(filePath)) {
-    // shell.showItemInFolder(filePath);
-    ipcRenderer.send("openFolder", { type: "showItemInFolder", data: filePath });
-  } else {
-    console.log("文件路径不存在 openFolder:", filePath);
-  }
-};
-
-/**
  * 下载文件
  */
 export const downloadFolder = ({
@@ -85,8 +63,7 @@ export const downloadFolder = ({
   fileName,
   fileSize,
   fileUrl,
-  onFinish,
-  onProgress,
+  uuid,
 }) => {
   const isFolder = createFolderChild();
   if (!isFolder) {
@@ -113,7 +90,8 @@ export const downloadFolder = ({
       //下载完成后重命名文件
       if (fs.existsSync(file_path_temp)) {
         fs.renameSync(file_path_temp, file_path);
-        onFinish(file_path);
+        global.mainWin.webContents.send("downloadFinish", { file_path, uuid });
+        console.log('file_path:', file_path)
       }
     });
   const requestItem = request(requestParams);
@@ -123,7 +101,7 @@ export const downloadFolder = ({
   });
   stream.on("progress", ({ percentage }) => {
     let progress = Math.round(percentage);
-    onProgress(progress);
+    global.mainWin.webContents.send("downloadProgress", { progress, uuid });
   });
   requestItem.pipe(stream).pipe(fileStream);
 };

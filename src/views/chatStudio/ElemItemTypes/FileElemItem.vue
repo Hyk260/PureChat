@@ -1,8 +1,9 @@
 <template>
   <div
     class="file-box"
-    @click="handleOpen"
+    @click.stop="handleOpen(payload)"
     :id="payload.uuid"
+    title="打开文件"
     :style="{ background: backgroundStyle }"
   >
     <div class="file-data">
@@ -16,6 +17,7 @@
             {{ bytesToSize(payload.fileSize) }}
           </span>
           <span class="upload_progress" v-show="!isStatus('success')"></span>
+          <HandleFolder :folder="payload" :self="self" :isStatus="isStatus('success')" />
         </div>
       </div>
     </div>
@@ -52,11 +54,12 @@ const isStatus = (value) => {
   return status.value == value;
 };
 
-function handleOpen() { 
+function handleOpen({ fileName }) {
   if (isElectron) {
-    console.log('Open electron:')
+    console.log("Open electron:");
+    electron.ipcRenderer.send("openFolder", { type: "openPath", fileName });
   } else {
-    console.log('Open web:')
+    console.log("Open web:");
   }
 }
 
@@ -76,6 +79,10 @@ const uploading = ({ uuid, num, type = "up" }) => {
     if (type == "up") {
       const upProgress = dom.querySelector(".upload_progress");
       upProgress.innerText = num + "%";
+    }
+     if (type == "dow") {
+      const downProgress = dom.querySelector(".download_progress");
+      downProgress.innerText = num + "%";
     }
   } catch (error) {
     console.error("[upload]:", error);

@@ -1,7 +1,8 @@
 import { isWindows, isMac, isProduction } from "../platform";
-import { app, clipboard } from "electron";
+import { app, clipboard, shell } from "electron";
 import { execFile, exec } from "child_process";
 import path from "path";
+import { fnFilePath } from './folder';
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -37,6 +38,14 @@ export const handleScreenshot = () => {
     });
   }
 };
+
+export const handleOpenFolder = ({ type, fileName }) => {
+  console.log('handleOpenFolder:', { type, fileName })
+  const filePath = fnFilePath(fileName)
+  console.log('filePath:', filePath)
+  // showItemInFolder openPath
+  shell[type](filePath);
+}
 
 /**
  * 注册协议

@@ -17,3 +17,4 @@ global.loginWinOptions = {
   frame: false, // 创建无边框窗口
   resizable: false, //禁止改变窗口尺寸
 };
+

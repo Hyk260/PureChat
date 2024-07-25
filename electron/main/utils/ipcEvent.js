@@ -1,12 +1,31 @@
-import { ipcMain, app, shell, dialog } from "electron";
+import { ipcMain } from "electron";
 
 import {
+  handleOpenFolder,
   handleScreenshot,
 } from "../utils/util";
 
+import { checkFileExist, createFolderChild, downloadFolder } from './folder';
+
 export const ipcEvent = () => {
   //截图
-  ipcMain.on("screenshot", (event, data) => {
+  ipcMain.on("screenshot", (e, data) => {
     handleScreenshot();
   });
+  // 打开文件 & 文件夹
+  ipcMain.on("openFolder", (e, data) => {
+    handleOpenFolder(data)
+  });
+
+  ipcMain.handle('checkFileExist', async (e, fileName) => {
+    return checkFileExist(fileName)
+  })
+
+  ipcMain.handle('createFolderChild', async (e) => {
+    return createFolderChild()
+  })
+
+  ipcMain.on('downloadFolder', async (e, data) => {
+    downloadFolder(data)
+  })
 };
