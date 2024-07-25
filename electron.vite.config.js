@@ -1,10 +1,11 @@
-import { defineConfig, loadEnv } from 'electron-vite'
+import { defineConfig, loadEnv, bytecodePlugin } from 'electron-vite'
 import { resolve } from 'path'
 import renderer from './vite.config';
 
 export default defineConfig(({ mode }) => {
   return {
     main: {
+      plugins: [bytecodePlugin()],
       build: {
         rollupOptions: {
           input: {
@@ -14,6 +15,7 @@ export default defineConfig(({ mode }) => {
       }
     },
     preload: {
+      plugins: [bytecodePlugin()],
       build: {
         rollupOptions: {
           input: {
