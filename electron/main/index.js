@@ -2,10 +2,12 @@ import "./config";
 import { app, BrowserWindow, protocol } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { isMac } from "./platform";
+import log from './logger/index';
 import { createWindow, winSingle, ipcEvent, setDefaultProtocol, initFolder } from "./utils/index";
 
 class Background {
   constructor() {
+    log.info('init')
     winSingle();
     initFolder();
     this.init();

@@ -25,13 +25,13 @@
       <svg-icon iconClass="robot" class="icon-hover robot" />
     </span>
     <!-- 窗口抖动 -->
-    <span
+    <!-- <span
       v-show="currentType === 'C2C' && isElectron"
       :title="$t('chat.windowJitter')"
       @click="onShake"
     >
       <FontIcon class="icon-hover" iconName="Iphone" />
-    </span>
+    </span> -->
     <!-- 自定义消息 -->
     <span @click="customMessage" v-if="false">
       <FontIcon class="icon-hover" iconName="Sunny" />
