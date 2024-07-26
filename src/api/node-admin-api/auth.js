@@ -1,15 +1,12 @@
 import http from "@/utils/http/index";
-import { isElectron } from "@/utils/common";
-
-const client = isElectron ? 'app' : 'web'
 
 export const openAuthUrl = (params) => {
   return http({
     url: '/auth/github',
     method: "get",
     params: {
-      client,
-      // ...params
+      // client,
+      ...params
     },
   });
 };
@@ -20,7 +17,7 @@ export const githubAuth = (params) => {
     method: "get",
     params: {
       // code:'',
-      client,
+      // client,
       ...params,
     },
   });
