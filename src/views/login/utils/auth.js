@@ -3,15 +3,13 @@ import { isElectron } from "@/utils/common";
 import { isDev } from "@/config/env";
 import store from "@/store";
 
-const client = isElectron ? 'app' : 'web'
-
 // github 授权登录
 export const oauthAuthorize = async () => {
-  const { url } = await openAuthUrl({ client });
-  if (client === 'web') {
-    window.open(url, "_self");
-  } else {
+  const { url } = await openAuthUrl();
+  if (isElectron) {
     window.open(url);
+  } else {
+    window.open(url, "_self");
   }
 };
 
@@ -25,7 +23,7 @@ export const authorizedLogin = async (_code = "") => {
     code = params.get("code");
   }
   if (!code) return;
-  const data = await githubAuth({ code, client });
+  const data = await githubAuth({ code });
   // { code: 200, msg: "登录成功", result: data }
   store.dispatch("authorized", data);
 };
