@@ -86,7 +86,6 @@ md.use(newWindowLinksPlugin);
 
 export function Markdown(props) {
   const { marked } = props
-  console.log('Markdown:', marked)
   const mark = h("div", {
     innerHTML: md.render(marked),
     class: 'markdown-body'

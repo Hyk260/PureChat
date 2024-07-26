@@ -1,17 +1,27 @@
 import http from "@/utils/http/index";
+import { isElectron } from "@/utils/common";
 
-export const openAuthUrl = (id, params = null) => {
+const client = isElectron ? 'app' : 'web'
+
+export const openAuthUrl = (params) => {
   return http({
-    url: `/auth/${id}`, // github qq
+    url: '/auth/github',
     method: "get",
-    params,
+    params: {
+      client,
+      // ...params
+    },
   });
 };
 
 export const githubAuth = (params) => {
   return http({
-    url: "/github/callback",
+    url: "/auth/github/callback",
     method: "get",
-    params,
+    params: {
+      // code:'',
+      client,
+      ...params,
+    },
   });
 };

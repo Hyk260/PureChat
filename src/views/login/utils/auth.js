@@ -2,13 +2,13 @@ import { githubAuth, openAuthUrl } from "@/api/node-admin-api/index";
 import { isDev } from "@/config/env";
 import store from "@/store";
 
-// github 授权
-export const oauthAuthorize = async (id) => {
-  const res = await openAuthUrl(id);
-  window.open(res, "_self");
+// github 授权登录
+export const oauthAuthorize = async () => {
+  const { url } = await openAuthUrl();
+  window.open(url, "_self");
 };
 
-// github 授权回调 username userSig
+// github 授权成功回调 username userSig
 export const authorizedLogin = async (_code = "") => {
   let code = _code;
   // 生产环境 hash

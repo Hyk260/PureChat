@@ -42,21 +42,21 @@
 [文档](https://hyk260.github.io/pure-docs) /
 [更新日志](https://hyk260.github.io/pure-docs/other/logs.html)
 
-[PureChat](https://github.com/Hyk260/PureChat) 是一个聊天工作室(腾讯 IM 即时通讯) 集成 ChatGPT(openai)
+[PureChat](https://github.com/Hyk260/PureChat) 是一个集成 ChatGPT 的聊天工作室，基于腾讯 IM 即时通讯。
 
 ### 🎉 特性
 
-- 📦️ 使用 Vite5 构建
-- 📃 RBAC 模型 + JWT 权限控制
-- 🤖 接入 openai 语言模型
-- ☁️ 聊天工作室 `基于IM即时通讯sdk`
-- 🌚 光明/黑暗 模式主题切换`自动根据系统主题改变`
-- 📝 支持完整的`Markdown`渲染 流程图、代码高亮等
-- 🔴 国际化支持 English, 简体中文
-- 🔧 Prettier + ESLint 规范
-- 🛡️ GitHub快速登录享受无缝的社交体验
-- ✨ 提供桌面应用electron版本 支持 macOS(.dmg)、Windows(.exe)双平台
-- 🛠 更多特性开发中
+- 📦️ 基于 Vite5 构建
+- 📃 RBAC 模型与 JWT 权限控制
+- 🤖 接入 OpenAI 语言模型
+- ☁️ 聊天工作室基于 IM 即时通讯 SDK
+- 🌚 自动切换光明/黑暗模式
+- 📝 完整支持 Markdown 渲染，流程图与代码高亮
+- 🔴 多语言支持：英语与简体中文
+- 🔧 采用 Prettier 与 ESLint 规范
+- 🛡️ GitHub 快速登录，享受无缝社交体验
+- ✨ 提供桌面应用 Electron 版本，支持 macOS (.dmg) 与 Windows (.exe)
+- 🛠 更多特性持续开发中
 
 环境配置
 
