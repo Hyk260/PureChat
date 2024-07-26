@@ -58,6 +58,7 @@ export const handleOpenFolder = ({ type, fileName }) => {
  * 注册协议
  * 并通过浏览器打开 PureApp 程序 pure://
  * pure://groupShare?groupID=@TGS#2P5E55UNV
+ * pure://authorized?code=5ef9ae63fa285965025f
  */
 export const setDefaultProtocol = () => {
   if (isProduction) {

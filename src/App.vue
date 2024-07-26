@@ -10,6 +10,7 @@ import en from "element-plus/dist/locale/en.mjs";
 import zhCn from "element-plus/dist/locale/zh-cn.mjs";
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
+import { appIpcEmit } from '@/utils/appEmit';
 
 export default defineComponent({
   name: "app",
@@ -26,6 +27,7 @@ export default defineComponent({
   },
   mounted() {
     this.loginAgain(this.$route);
+    appIpcEmit()
   },
   methods: {
     loginAgain({ name }) {
