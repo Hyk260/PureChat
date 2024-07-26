@@ -91,7 +91,7 @@ import { authorizedLogin, oauthAuthorize } from "../utils/auth";
 import { operates, thirdParty } from "../utils/enums";
 import { rules, user } from "../utils/validation";
 import loadingSvg from "./loadingSvg.vue";
-import { noService } from '@/config/index';
+import { noService } from "@/config/index";
 const router = useRouter();
 const restaurants = ref([]);
 const ruleFormRef = ref();
@@ -117,7 +117,7 @@ const querySearch = (queryString, cb) => {
 const loginBtn = async (formEl) => {
   if (noService) {
     dispatch("loginLocalIm", user);
-    return
+    return;
   }
   if (!formEl) return;
   await formEl.validate((valid) => {
@@ -126,7 +126,9 @@ const loginBtn = async (formEl) => {
 };
 
 const onClick = async ({ icon }) => {
-  oauthAuthorize(icon);
+  if (icon === "github") {
+    oauthAuthorize();
+  }
 };
 
 const onHandle = (index) => {
