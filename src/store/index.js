@@ -14,7 +14,7 @@ import user from "./modules/user";
 // 默认设置
 const defaultSettings = {
   lang: "zh-CN", // 默认语言
-  appearance: "light", // 主题颜色
+  appearance: "auto", // 主题颜色
   arrowRight: false, // 聊天会话列表折叠 true ？'折叠' : '不折叠'
   fullScreen: false, // 全屏输入框是否启用
 };
@@ -24,7 +24,7 @@ const defaultData = {
   verifyCode: "",
   user: null,
 };
-// console.log(importModules());
+
 const store = createStore({
   // modules: importModules(),
   modules: {

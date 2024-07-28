@@ -53,11 +53,11 @@ const onFocus = () => {};
   padding: 14px;
   position: relative;
   .header-search {
+    display: flex;
+    justify-content: space-between;
     :deep(.el-input) {
       width: 210px;
     }
-    display: flex;
-    justify-content: space-between;
   }
 }
 .header-search-add {
