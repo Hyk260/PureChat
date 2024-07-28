@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { Markdown, handleCopyClick } from "@/utils/marked/index";
+import { Markdown, handleCopyClick } from "@/utils/markdown/index";
 import { ref } from "vue";
 import emitter from "@/utils/mitt-bus";
 import { useBoolean } from "@/utils/hooks/index";

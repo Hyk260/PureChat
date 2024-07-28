@@ -135,7 +135,7 @@ emitter.on("onShareModal", (val) => {
     overflow: hidden;
     border: 2px solid #dddddd;
     border-radius: 8px;
-    background: #f8f8f8;
+    background: var(--color-body-bg);
     pointer-events: none;
   }
   .footer {

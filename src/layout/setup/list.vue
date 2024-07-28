@@ -64,12 +64,12 @@ defineExpose({ onClick });
     align-items: center;
     height: 40px;
     padding: 0 16px;
-    &:hover .title-content {
-      color: rgb(147, 115, 238);
-    }
-    &:hover .el-icon {
-      color: rgb(147, 115, 238);
-    }
+    // &:hover .title-content {
+    //   color: rgb(147, 115, 238);
+    // }
+    // &:hover .el-icon {
+    //   color: rgb(147, 115, 238);
+    // }
   }
   .title-content {
     margin-left: 10px;

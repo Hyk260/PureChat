@@ -19,7 +19,7 @@ import ReplyElem from "./ReplyElem.vue";
 import DynamicContent from "../components/DynamicContent.vue";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { isRobot } from "@/utils/chat/index";
-import { Markdown, handleCopyClick } from "@/utils/marked/index";
+import { Markdown, handleCopyClick } from "@/utils/markdown/index";
 
 const props = defineProps({
   msgType: {
