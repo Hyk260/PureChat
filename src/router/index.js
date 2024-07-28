@@ -1,5 +1,5 @@
 import { ACCESS_TOKEN } from "@/constants/index";
-import { setPageTitle } from "@/utils/common";
+import { setPageTitle, isElectron } from "@/utils/common";
 import storage from "@/utils/localforage/index";
 import NProgress from "@/utils/progress";
 import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
@@ -25,7 +25,7 @@ router.beforeEach((to, from, next) => {
   setPageTitle(to.meta.title);
   const token = storage.get(ACCESS_TOKEN);
   if (token || noService) {
-    NProgress.start();
+    !isElectron && NProgress.start();
     if (isF) {
       next();
     } else {
