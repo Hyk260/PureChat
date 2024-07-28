@@ -94,4 +94,6 @@ pnpm build
 
 <img src="./images/chatgpt.png">
 
+<img src="./images/assistant.png">
+
 <img src="./images/config.png">

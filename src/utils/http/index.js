@@ -1,4 +1,3 @@
-"use strict";
 import { ACCESS_TOKEN } from "@/constants/index";
 import storage from "@/utils/localforage/index";
 import NProgress from "@/utils/progress";
