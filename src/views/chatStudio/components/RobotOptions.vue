@@ -53,7 +53,10 @@
           <div class="number" v-else-if="['max_tokens'].includes(item.ID)">
             <input v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
           </div>
-          <div class="input" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
+          <div class="input flex items-center" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
+            <span class="mr-5" v-if="item.ID === 'token'">
+              <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
+            </span>
             <el-input
               v-model="item.defaultValue"
               :placeholder="item.Placeholder"
@@ -158,7 +161,11 @@ function handleConfirm() {
   // if (model === "GPT") storeRobotMask(maskData.value);
 }
 
-function onClose() {}
+function onClose() { }
+
+function toUrl(url) {
+  window.open(url, "_blank");
+}
 
 emitter.on("onRobotBox", (state) => {
   initModel();

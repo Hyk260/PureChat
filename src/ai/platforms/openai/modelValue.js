@@ -22,6 +22,7 @@ export const openaiModelValue = () => {
       SubTitle: "使用自己的 OpenAI API Key",
       Placeholder: "OpenAI API Key",
       defaultValue: "",
+      doubt: "",
     },
     Temperature: {
       ID: "temperature",

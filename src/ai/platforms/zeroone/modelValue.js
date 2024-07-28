@@ -22,6 +22,7 @@ export const yiModelValue = () => {
       SubTitle: "使用自己的 01.AI 零一万物 API Key",
       Placeholder: "ZeroOne API Key",
       defaultValue: "",
+      doubt: "https://platform.lingyiwanwu.com/apikeys",
     },
     Temperature: {
       ID: "temperature",

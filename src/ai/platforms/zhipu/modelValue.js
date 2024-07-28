@@ -15,6 +15,7 @@ export const zhipuModelValue = () => {
       SubTitle: "除默认地址外，必须包含 http(s)://",
       Placeholder: "https://open.bigmodel.cn",
       defaultValue: "",
+      doubt: "",
     },
     Token: {
       ID: "token",
