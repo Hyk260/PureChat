@@ -260,8 +260,6 @@ input[type="range"]::-ms-thumb:hover {
   justify-content: space-between;
 }
 input[type="range"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   background-color: var(--color-range);
   color: #303030;
@@ -271,8 +269,6 @@ input[type="range"] {
 input[type="number"],
 input[type="text"],
 input[type="password"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   border-radius: 10px;
   border: 1px solid #dedede;

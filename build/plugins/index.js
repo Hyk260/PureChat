@@ -3,7 +3,7 @@ import path from "node:path";
 import vue from "@vitejs/plugin-vue";
 import progress from "vite-plugin-progress";
 import removeConsole from "vite-plugin-remove-console";
-// import VueDevtools from "vite-plugin-vue-devtools";
+import VueDevtools from "vite-plugin-vue-devtools";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import { setupHtmlPlugin } from "./html";
 import { cdn } from "./cdn";
@@ -15,8 +15,8 @@ import { cdn } from "./cdn";
  */
 export function setupVitePlugins(viteEnv) {
   const plugins = [
+    VueDevtools(),
     vue(),
-    // VueDevtools(),
     // 打包进度
     progress(),
     // 线上环境删除console
