@@ -45,21 +45,14 @@ export function handleCopyClick() {
   });
 }
 
+const copyButton = `<button class="copy-code-button" title="copy">${svg}</button>`;
+
 function highlight(str, lang) {
-  if (lang && hljs.getLanguage(lang)) {
-    try {
-      return '<pre class="hljs">' +
-        '<button class="copy-code-button">' + svg + '</button>' +
-        '<code>' +
-        hljs.highlight(lang, str, true).value +
-        '</code></pre>';
-    } catch (__) { }
-  }
-  return '<pre class="hljs">' +
-    '<button class="copy-code-button">' + svg + '</button>' +
-    '<code>' +
-    md.utils.escapeHtml(str) +
-    '</code></pre>';
+  const codeContent = lang && hljs.getLanguage(lang)
+    ? hljs.highlight(lang, str, true).value
+    : md.utils.escapeHtml(str);
+
+  return `<pre class="hljs">${copyButton}<code>${codeContent}</code></pre>`;
 }
 
 const md = markdownit({

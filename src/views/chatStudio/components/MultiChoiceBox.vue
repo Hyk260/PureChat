@@ -284,6 +284,9 @@ export default {
     flex-direction: column;
     align-items: center;
   }
+  svg{
+    color: rgb(128, 128, 128)
+  }
 }
 .icon {
   @include flex-center;
