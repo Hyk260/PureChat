@@ -159,7 +159,7 @@ export function download(url, filename) {
 
 /**
  * 将查询字符串转换为对象
- * @param {string} String - 查询字符串，例如 "https://pureadmin.cn?name=John&age=30"
+ * @param {string} String - 查询字符串，例如 "https://purechat.cn?name=John&age=30"
  * @return {object} - 转换后的对象，例如 { name: "John", age: "30" }
  */
 export function queryStringToObject(queryString) {

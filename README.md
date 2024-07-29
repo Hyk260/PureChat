@@ -8,7 +8,7 @@
   <p align="center">
     <span>聊天应用与AI开发框架</span>
     <br />
-    <a href="https://pureadmin.cn" target="blank">
+    <a href="https://purechat.cn" target="blank">
       <strong>🌎 在线预览</strong>
     </a>
     &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -24,7 +24,7 @@
 [![Windows][Windows-image]][download-url]
 [![MacOS][MacOS-image]][download-url]
 
-[web-url]: https://pureadmin.cn
+[web-url]: https://purechat.cn
 [download-url]: https://github.com/Hyk260/PureChat/releases
 [Web-image]: https://img.shields.io/badge/Web-orange?logo=microsoftedge
 [Windows-image]: https://img.shields.io/badge/-Windows-blue?logo=windows
