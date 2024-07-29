@@ -1,10 +1,12 @@
 import pkg from "~/package.json";
 export const noService = import.meta.env.VITE_NO_SERVICE === "Y"
 
-const { version, description } = pkg;
+const title = import.meta.env.VITE_APP_NAME;
+
+const { version } = pkg;
 let config = {
   Version: "",
-  Title: description,
+  Title: title,
 };
 
 /**

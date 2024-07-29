@@ -7,6 +7,7 @@
 <script setup>
 import { nextTick, onMounted, ref, unref } from "vue";
 
+const docs = __APP_INFO__.pkg.docs
 const props = defineProps({
   type: {
     type: String,
@@ -14,7 +15,7 @@ const props = defineProps({
   },
 });
 const frameSrc = {
-  document: "https://hyk260.github.io/pure-docs",
+  document: docs,
   github: "https://github.com/Hyk260",
   gitee: "https://gitee.com",
 };

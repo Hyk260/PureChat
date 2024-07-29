@@ -11,20 +11,18 @@
       <ul class="container">
         <!-- prompt -->
         <div class="prompt" v-for="item in maskData.prompt" :key="item.id">
-          <!-- <template v-for="(m, i) in item" :key="i"> -->
-            <svg-icon v-show="false" iconClass="drag" class="dragIcon" />
-            <el-select class="prompt-select" v-model="item.role">
-              <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
-            </el-select>
-            <el-input
-              class="prompt-input"
-              v-model="item.content"
-              :autosize="{ minRows: 1, maxRows: 4 }"
-              type="textarea"
-              placeholder="prompt"
-            />
-            <el-icon v-show="false" @click="onClose"><CircleCloseFilled /></el-icon>
-          <!-- </template> -->
+          <svg-icon v-show="false" iconClass="drag" class="dragIcon" />
+          <el-select class="prompt-select" v-model="item.role">
+            <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
+          </el-select>
+          <el-input
+            class="prompt-input"
+            v-model="item.content"
+            :autosize="{ minRows: 1, maxRows: 4 }"
+            type="textarea"
+            placeholder="prompt"
+          />
+          <el-icon v-show="false" @click="onClose"><CircleCloseFilled /></el-icon>
         </div>
         <li class="list-item" v-for="item in modelData" :key="item.ID">
           <div>
@@ -53,7 +51,10 @@
           <div class="number" v-else-if="['max_tokens'].includes(item.ID)">
             <input v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
           </div>
-          <div class="input" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
+          <div class="input flex items-center" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
+            <span class="flex mr-5 cursor-pointer" v-if="item.ID === 'token'">
+              <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
+            </span>
             <el-input
               v-model="item.defaultValue"
               :placeholder="item.Placeholder"
@@ -159,6 +160,10 @@ function handleConfirm() {
 }
 
 function onClose() {}
+
+function toUrl(url) {
+  window.open(url, "_blank");
+}
 
 emitter.on("onRobotBox", (state) => {
   initModel();

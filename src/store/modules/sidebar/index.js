@@ -1,5 +1,7 @@
 import { isDev } from "@/config/env";
 
+const docs = __APP_INFO__.pkg.docs
+
 const outsideList = [
   {
     only: "message",
@@ -33,7 +35,7 @@ const outsideList = [
     title: "文档",
     type: "el-icon",
     openType: "outside",
-    url: "https://hyk260.github.io/pure-docs",
+    url: docs,
   },
   {
     only: "test",

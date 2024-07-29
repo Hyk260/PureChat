@@ -27,7 +27,7 @@
       </el-input>
     </el-form-item>
     <!-- 验证码 -->
-    <el-form-item prop="verifyCode" v-if="!noService">
+    <el-form-item prop="verifyCode" v-if="!noService && isVerifyCode">
       <el-input
         v-model="user.verifyCode"
         size="large"
@@ -92,6 +92,8 @@ import { operates, thirdParty } from "../utils/enums";
 import { rules, user } from "../utils/validation";
 import loadingSvg from "./loadingSvg.vue";
 import { noService } from "@/config/index";
+
+const isVerifyCode = false
 const router = useRouter();
 const restaurants = ref([]);
 const ruleFormRef = ref();
