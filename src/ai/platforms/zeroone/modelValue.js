@@ -1,5 +1,7 @@
 import ZhiPu from './models';
 
+const docs = __APP_INFO__.pkg.docs;
+
 export const yiModelValue = () => {
   return {
     Model: {
@@ -22,7 +24,7 @@ export const yiModelValue = () => {
       SubTitle: "使用自己的 01.AI 零一万物 API Key",
       Placeholder: "ZeroOne API Key",
       defaultValue: "",
-      doubt: "https://platform.lingyiwanwu.com/apikeys",
+      doubt: `${docs}/guides/model-provider.html#zeroone-api-key`,
     },
     Temperature: {
       ID: "temperature",

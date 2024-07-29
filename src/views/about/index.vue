@@ -84,7 +84,7 @@
 <script setup>
 import { computed } from "vue";
 const { pkg, lastBuildTime } = __APP_INFO__;
-const { dependencies, devDependencies, repository, version } = pkg;
+const { dependencies, devDependencies, repository, version, docs } = pkg;
 
 const schema = [];
 const devSchema = [];
@@ -100,7 +100,7 @@ const data = [
   },
   {
     label: "文档地址",
-    url: "https://hyk260.github.io/pure-docs",
+    url: docs, 
     title: "文档地址",
   },
   {
@@ -120,7 +120,7 @@ const data = [
   },
   {
     label: "更新日志",
-    url: "https://hyk260.github.io/pure-docs/other/logs.html",
+    url: `${docs}/other/logs.html`,
     title: "更新日志",
   },
 ];

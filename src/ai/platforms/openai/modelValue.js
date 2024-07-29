@@ -1,5 +1,7 @@
 import OpenAI from "./models";
 
+const docs = __APP_INFO__.pkg.docs;
+
 export const openaiModelValue = () => {
   return {
     Model: {
@@ -22,7 +24,7 @@ export const openaiModelValue = () => {
       SubTitle: "使用自己的 OpenAI API Key",
       Placeholder: "OpenAI API Key",
       defaultValue: "",
-      doubt: "",
+      doubt: `${docs}/guides/model-provider.html#openai-api-key`,
     },
     Temperature: {
       ID: "temperature",

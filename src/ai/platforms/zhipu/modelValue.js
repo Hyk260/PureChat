@@ -1,5 +1,7 @@
 import ZeroOne from './models';
 
+const docs = __APP_INFO__.pkg.docs;
+
 export const zhipuModelValue = () => {
   return {
     Model: {
@@ -15,7 +17,6 @@ export const zhipuModelValue = () => {
       SubTitle: "除默认地址外，必须包含 http(s)://",
       Placeholder: "https://open.bigmodel.cn",
       defaultValue: "",
-      doubt: "",
     },
     Token: {
       ID: "token",
@@ -23,6 +24,7 @@ export const zhipuModelValue = () => {
       SubTitle: "使用自己的 ZhiPu API Key",
       Placeholder: "ZhiPu API Key",
       defaultValue: "",
+      doubt: `${docs}/guides/model-provider.html#zhipu-api-key`,
     },
     Temperature: {
       ID: "temperature",

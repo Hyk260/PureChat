@@ -75,6 +75,7 @@ const props = defineProps({
   },
 });
 
+const docs = __APP_INFO__.pkg.docs
 const { locale, t } = useI18n();
 const { commit, dispatch } = useStore();
 const { appearance, lang } = useState({
@@ -87,7 +88,7 @@ function onBlur() {
 }
 
 function log() {
-  open("https://hyk260.github.io/pure-docs/other/logs.html");
+  open(`${docs}/other/logs.html`);
 }
 
 function logout() {

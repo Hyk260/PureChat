@@ -1,7 +1,7 @@
 {
   "name": "purechat",
   "version": "0.4.5",
-  "description": "PureChat",
+  "description": "PureChat - A chat application built with Vue and Vite",
   "type": "module",
   "author": {
     "name": "Hyk260",
@@ -68,7 +68,9 @@
     "vite-plugin-svg-icons": "2.0.1",
     "vite-plugin-vue-devtools": "7.3.6"
   },
-  "engines": {},
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "homepage": "https://github.com/Hyk260/PureChat",
   "bugs": {
     "url": "https://github.com/Hyk260/PureChat/issues"
@@ -85,5 +87,6 @@
   "repository": {
     "url": "https://github.com/Hyk260/PureChat.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "docs": "https://hyk260.github.io/pure-docs"
 }
