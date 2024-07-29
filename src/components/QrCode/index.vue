@@ -11,7 +11,7 @@ export default {
   name: 'QrCode',
   data() {
     return {
-      text: "https://pureadmin.cn",
+      text: "https://purechat.cn",
       qrCodeUrl: "",
       opts: {
         errorCorrectionLevel: "H",
