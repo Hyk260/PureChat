@@ -37,6 +37,6 @@ function fnClass() {
   box-sizing: border-box;
 }
 .windowStyle {
-  height: calc(100vh - 42px);
+  height: calc(100vh - 32px);
 }
 </style>
