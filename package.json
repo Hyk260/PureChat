@@ -16,7 +16,7 @@
     "build:preview": "vite build && vite preview",
     "preview": "vite preview",
     "lint": "eslint . --fix",
-    "app:dev": "electron-vite dev --watch",
+    "app:dev": "chcp 65001 && electron-vite dev --watch",
     "app:preview": "electron-vite preview",
     "app:build": "electron-vite build",
     "build:win": "electron-builder --win",

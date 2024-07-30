@@ -30,6 +30,7 @@ export const handleScreenshot = () => {
     log.info(`windows:filePath:${filePath}`)
     const screenWindow = execFile(filePath);
     screenWindow.on("exit", (code, stdout, stderr) => {
+      log.info(`退出码 code:${code}, 输出流 stdout:${stdout},错误流 stderr:${stderr}`)
       console.log("退出码 code:", code, "输出流 stdout:", stdout, "错误流 stderr:", stderr);
       // 粘贴
       if (code == 7) {
