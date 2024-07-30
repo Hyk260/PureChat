@@ -3,6 +3,12 @@ import { is } from '@electron-toolkit/utils'
 import { isWindows, electronRendererUrl } from "../platform";
 import { join } from 'path'
 
+import {
+  registerTitleBarListener,
+  attachTitleBarToWindow
+} from '../titlebar/main'
+
+
 export const createWindow = (_options) => {
   const options = {
     ...global.mainWinOptions, // mainWinOptions loginWinOptions
@@ -25,8 +31,13 @@ export const createWindow = (_options) => {
       sandbox: false
     },
   };
+  // Register title bar IPC listeners
+  registerTitleBarListener()
   // 创建浏览器窗口
   const win = new BrowserWindow(options);
+
+  //  Attach a title bar to the window
+  attachTitleBarToWindow(win)
   
   if (is.dev && electronRendererUrl) {
     win.webContents.openDevTools()
