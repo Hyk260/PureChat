@@ -1,6 +1,7 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { isWindows } from '../main/platform';
+console.log('main:preload.js')
 
 function authorized(url) {
   const parsedUrl = new URL(url);

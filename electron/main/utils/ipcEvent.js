@@ -16,6 +16,10 @@ export const ipcEvent = () => {
   ipcMain.on("openFolder", (e, data) => {
     handleOpenFolder(data)
   });
+  // 托盘闪烁
+  ipcMain.on("trayFlashIng", (e, option) => {
+    global.mainWin.flashFrame(true);
+  });
 
   ipcMain.handle('checkFileExist', async (e, fileName) => {
     return checkFileExist(fileName)
@@ -25,7 +29,7 @@ export const ipcEvent = () => {
     return createFolderChild()
   })
 
-  ipcMain.on('downloadFolder', async (e, data) => {
+  ipcMain.on('downloadFolder', (e, data) => {
     downloadFolder(data)
   })
 };

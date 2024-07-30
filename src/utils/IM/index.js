@@ -9,6 +9,7 @@ import emitter from "@/utils/mitt-bus";
 import { useWindowFocus } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
+import { handleTrayFlashIng, handlesOnShake, handleNotification } from "./utils/app";
 import {
   fnCheckoutNetState,
   getConversationID,
@@ -129,6 +130,9 @@ export class TIMProxy {
   onReceiveMessage({ data }) {
     console.log("[chat] 收到新消息 onReceiveMessage:", data);
     const current = getConversationID() == data?.[0].conversationID;
+    // handleNotification(data)
+    // handlesOnShake(data);
+    handleTrayFlashIng(data);
     this.handleQuitGroupTip(data);
     this.handleNotificationTip(data);
     this.handleGroupSystemNoticeTip(data);

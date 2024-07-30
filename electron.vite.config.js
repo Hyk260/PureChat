@@ -19,7 +19,8 @@ export default defineConfig(({ mode }) => {
       build: {
         rollupOptions: {
           input: {
-            index: resolve(__dirname, 'electron/preload/index.js')
+            index: resolve(__dirname, 'electron/preload/index.js'),
+            notif: resolve(__dirname, 'electron/main/notification/preload.js')
           }
         }
       }

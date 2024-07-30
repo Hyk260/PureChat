@@ -28,6 +28,7 @@
     "@element-plus/icons-vue": "^2.0.10",
     "@fortaine/fetch-event-source": "^3.0.6",
     "@tencentcloud/chat": "3.3.2",
+    "@tiny-libs/typed-event-emitter": "^1.0.0",
     "@vueuse/components": "^10.7.0",
     "@vueuse/core": "^8.4.2",
     "@wangeditor/editor": "^5.0.1",

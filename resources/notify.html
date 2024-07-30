@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Notifications</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: "Segoe UI", Arial, "Microsoft Yahei", sans-serif;
+        transition:
+          color 0.4s,
+          background-color 0.4s;
+        background-color: #f6f6f6;
+        -webkit-font-smoothing: antialiased;
+        user-select: none;
+      }
+
+      .close {
+        position: absolute;
+        height: 10px;
+        width: 10px;
+        right: 8px;
+        top: 8px;
+        cursor: pointer;
+      }
+
+      .close:before,
+      .close:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -1px;
+        width: 12px;
+        height: 1px;
+        background-color: #111;
+      }
+
+      .close:before {
+        transform: rotate(45deg) translateZ(0);
+      }
+
+      .close:after {
+        transform: rotate(-45deg) translateZ(0);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #1f1f1f;
+        }
+
+        .close:before,
+        .close:after {
+          background-color: #f1f1f1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="desktop-crad">
+      <div class="container border animate__animated" :class="fnStyle(mode)">
+        <span id="close" class="close"></span>
+        <div></div>
+      </div>
+    </div>
+  </body>
+  <script>
+    window.addEventListener("notification-message", (e) => {
+      const { title, body, icon, extraData } = e.detail;
+      console.log("message:", e.detail);
+    });
+    document.getElementById("close").addEventListener("click", () => {
+      console.log("close");
+      window.notification.close();
+    });
+    document.body.addEventListener("click", () => {
+      console.log("click");
+      // window.notification.doClick({});
+    });
+  </script>
+</html>

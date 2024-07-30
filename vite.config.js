@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@": pathResolve("src"),
         "~": pathResolve("./"),
-        "@electron": pathResolve('electron'),
+        "@m": pathResolve('electron'),
       }
     },
     server: {
