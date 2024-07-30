@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper">
-    <main class="app-main" :class="fnClass()">
+    <main class="app-main windowStyle" :class="fnClass()">
       <div class="continer-theme">
         <router-view v-slot="{ Component, route }">
           <transition name="fade-slide" :appear="true" mode="out-in">

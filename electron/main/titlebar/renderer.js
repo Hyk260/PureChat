@@ -7,7 +7,9 @@ import {
 const SHADOW_ROOT_CSS = `
 :host {
   position: relative;
-  background-color: var(--tb-theme-color, #ffffff);
+  height: 32px;
+  display: block;
+  background-color: var(--tb-theme-color, #eee);
   -webkit-user-select: none;
   --tb-title-text-color: #333333;
   --tb-title-font-family: -apple-system, BlinkMacSystemFont, Ubuntu, 'Segoe UI';
@@ -24,7 +26,7 @@ const SHADOW_ROOT_CSS = `
 }
 @media (prefers-color-scheme: dark) {
   :host {
-    background-color: var(--tb-theme-color, #1f1f1f);
+    background-color: var(--tb-theme-color, #000);
     --tb-title-text-color: #cccccc;
     --tb-control-symbol-color: #cccccc;
     --tb-control-hover-color: #373737;

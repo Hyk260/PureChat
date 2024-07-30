@@ -13,9 +13,9 @@ export const createWindow = (_options) => {
   const options = {
     ...global.mainWinOptions, // mainWinOptions loginWinOptions
     show: false,
-    frame: isWindows ? false : true,
+    frame: false,
     autoHideMenuBar: true,
-    titleBarStyle: isWindows ? "hiddenInset" : "default",
+    titleBarStyle: 'hiddenInset', //? "hiddenInset" : "default",
     // 在上阅读更多信息https://www.electronjs.org/docs/latest/tutorial/context-isolation
     webPreferences: {
       // 在外部浏览器中打开链接
