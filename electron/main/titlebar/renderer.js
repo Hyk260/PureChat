@@ -7,32 +7,33 @@ import {
 const SHADOW_ROOT_CSS = `
 :host {
   position: relative;
+  width: 100%;
   height: 32px;
   display: block;
-  background-color: var(--tb-theme-color, #eee);
   -webkit-user-select: none;
-  --tb-title-text-color: #333333;
   --tb-title-font-family: -apple-system, BlinkMacSystemFont, Ubuntu, 'Segoe UI';
-  --tb-control-height: 26px;
+  --tb-control-height: 32px;
   --tb-control-width: 34px;
   --tb-control-margin: 3px;
   --tb-control-radius: 5px;
-  --tb-control-symbol-color: #585c65;
-  --tb-control-hover-color: #e1e1e1;
-  --tb-control-close-symbol-color: #090909;
+  background-color: var(--tb-theme-color, #eee);
+  // --tb-title-text-color: #333333;
+  // --tb-control-symbol-color: #585c65;
+  // --tb-control-hover-color: #e1e1e1;
+  // --tb-control-close-symbol-color: #090909;
 }
 ::slotted(:not(.window__control)) {
   display: none;
 }
-@media (prefers-color-scheme: dark) {
-  :host {
-    background-color: var(--tb-theme-color, #000);
-    --tb-title-text-color: #cccccc;
-    --tb-control-symbol-color: #cccccc;
-    --tb-control-hover-color: #373737;
-    --tb-control-close-symbol-color: #fcfcfc;
-  }
-}
+// @media (prefers-color-scheme: dark) {
+//   :host {
+//     background-color: var(--tb-theme-color, #000);
+//     --tb-title-text-color: #cccccc;
+//     --tb-control-symbol-color: #cccccc;
+//     --tb-control-hover-color: #373737;
+//     --tb-control-close-symbol-color: #fcfcfc;
+//   }
+// }
 .titlebar__drag-region {
   position: absolute;
   top: 0;
@@ -59,7 +60,6 @@ const SHADOW_ROOT_CSS = `
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 10000;
   display: flex;
   -webkit-app-region: no-drag;
 }

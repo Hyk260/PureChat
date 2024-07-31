@@ -6,12 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>%VITE_APP_NAME%</title>
   </head>
+  <style>
+    body {
+      margin: 0;
+    }
+  </style>
   <script type="module">
     import "/electron/main/titlebar/renderer.js";
   </script>
   <body>
-    <title-bar windowtitle="%VITE_APP_NAME%" class="titlebar">
-    </title-bar>
+    <title-bar windowtitle="%VITE_APP_NAME%" class="titlebar"> </title-bar>
     <div id="app">
       <style>
         .loading {
@@ -85,13 +89,6 @@
         "line-height: 30px"
       );
       console.log("欢迎给我发送邮件交流: %c2607881950@qq.com", "line-height: 30px; color: red");
-    </script>
-    <script>
-      if (window.electron) {
-        window.electron.ipcRenderer.on("awaken", (event, data) => {
-          console.log("awaken:", data);
-        });
-      }
     </script>
   </body>
 </html>

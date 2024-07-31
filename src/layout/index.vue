@@ -1,6 +1,5 @@
 <template>
   <div class="w-full">
-    <Navbar />
     <div class="flex h-full w-full relative">
       <!-- 主体 -->
       <AppMain />

@@ -34,3 +34,9 @@ if (process.contextIsolated) {
   window.electron = electronAPI
   window.api = api
 }
+
+if (window.electron) {
+  window.electron.ipcRenderer.on("awaken", (event, data) => {
+    console.log("awaken:", data);
+  });
+}
