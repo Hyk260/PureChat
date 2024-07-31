@@ -20,6 +20,7 @@
     "app:preview": "electron-vite preview",
     "app:build": "electron-vite build",
     "build:win": "electron-builder --win",
+    "build:win32": "electron-builder --win --ia32",
     "build:mac": "electron-builder --mac"
   },
   "dependencies": {
