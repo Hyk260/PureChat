@@ -130,8 +130,7 @@ export class TIMProxy {
   onReceiveMessage({ data }) {
     console.log("[chat] 收到新消息 onReceiveMessage:", data);
     const current = getConversationID() == data?.[0].conversationID;
-    // handleNotification(data)
-    // handlesOnShake(data);
+    handlesOnShake(data);
     handleTrayFlashIng(data);
     this.handleQuitGroupTip(data);
     this.handleNotificationTip(data);
@@ -335,7 +334,7 @@ export class TIMProxy {
     if (!massage || massage?.[0]?.messageRemindType === "AcceptNotNotify") return;
     let off = atUserList.includes(userID);
     let all = atUserList.includes(TIM.TYPES.MSG_AT_ALL);
-    if (off || all) this.notifyUser(data[0]);
+    if (off || all) handleNotification(data[0])
   }
 }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper">
-    <main class="app-main windowStyle" :class="fnClass()">
+    <main class="app-main windowStyle">
       <div class="continer-theme">
         <router-view v-slot="{ Component, route }">
           <transition name="fade-slide" :appear="true" mode="out-in">
@@ -17,11 +17,7 @@
   </div>
 </template>
 
-<script setup>
-function fnClass() {
-  return window.api.isWindows ? "windowStyle" : "";
-}
-</script>
+<script setup></script>
 <style lang="scss" scoped>
 .app-wrapper {
   width: 100%;

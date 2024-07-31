@@ -45,6 +45,13 @@ const outsideList = [
     type: "el-icon",
   },
   {
+    only: "electron",
+    icon: "Eleme",
+    title: "electron",
+    show: isDev ? "" : "hide",
+    type: "el-icon",
+  },
+  {
     only: "more",
     icon: "MoreFilled",
     locale: "more",

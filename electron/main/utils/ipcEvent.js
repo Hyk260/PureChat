@@ -1,6 +1,7 @@
 import { ipcMain } from "electron";
 
 import {
+  mainTop,
   handleOpenFolder,
   handleScreenshot,
 } from "../utils/util";
@@ -8,6 +9,10 @@ import {
 import { checkFileExist, createFolderChild, downloadFolder } from './folder';
 
 export const ipcEvent = () => {
+  // 置顶主窗口
+  ipcMain.on("mainTop", (event) => {
+    mainTop();
+  });
   //截图
   ipcMain.on("screenshot", (e, data) => {
     handleScreenshot();

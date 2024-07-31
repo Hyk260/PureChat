@@ -15,7 +15,7 @@ const historyMode = {
 };
 
 const router = createRouter({
-  history: historyMode[import.meta.env.VITE_ROUTER_HISTORY],
+  history: historyMode['hash'],
   routes: [...remaining, ...layout],
   scrollBehavior,
 });

@@ -14,6 +14,7 @@
 <script setup>
 import { useState } from "@/utils/hooks/useMapper";
 import AddressBook from "./AddressBook/index.vue";
+import application from '../application/index.vue';
 import Prompt from "./Prompt/index.vue";
 import frameView from "./frameView.vue";
 import Message from "./message.vue";
@@ -34,6 +35,7 @@ const Component = {
   test: test, // 测试;
   prompt: Prompt,
   notebook: AddressBook,
+  electron: application,
 };
 const { outside, outsideList } = useState({
   outsideList: (state) => state.sidebar.outsideList,

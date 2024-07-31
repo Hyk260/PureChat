@@ -7,6 +7,15 @@ import log from '../logger/index';
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+/* 置顶主窗口 */
+export const mainTop = () => {
+  const win = global.mainWin;
+  win.show();
+  win.focus();
+  win.moveTop();
+  // win.center();
+};
+
 /**
  * 发送截图数据到主窗口
  * @param {BrowserWindow} win - 主窗口对象

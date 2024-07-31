@@ -20,6 +20,7 @@ function authorized(url) {
 
 const api = {
   isWindows,
+  isTitlebar: true,
   authorized,
 }
 

@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 import { join } from 'node:path'
+import { electronRendererUrl, isDevelopment } from "../platform";
 import {
   app,
   ipcMain,
@@ -72,7 +73,9 @@ class Notification extends TypedEventEmitter {
     win.setAlwaysOnTop(true, 'screen-saver')
 
     win.on('ready-to-show', () => {
-      win.webContents.send(NOTIFICATION_SHOW_CHANNEL, info)
+      setTimeout(() => {
+        win.webContents.send(NOTIFICATION_SHOW_CHANNEL, info)
+      }, 100)
       win.showInactive()
       if (this.debug && !!this.customPage) win.webContents.openDevTools()
     })
@@ -106,9 +109,13 @@ class Notification extends TypedEventEmitter {
     ipcMain.on(NOTIFICATION_ON_CLICK_CHANNEL, onClick)
     ipcMain.on(NOTIFICATION_CLOSE_CHANNEL, onClose)
 
-    win.loadFile(
-      this.customPage || fileURLToPath(new URL('index.html', import.meta.url))
-    )
+    const winURL = isDevelopment ? electronRendererUrl : join(__dirname, '../renderer/index.html');
+    // console.log(winURL + `#${'desktop'}`)
+    win.loadURL(winURL + `#${'desktop'}`);
+
+    // win.loadFile(
+    //   this.customPage || fileURLToPath(new URL('index.html', import.meta.url))
+    // )
 
     this.window = win
   }

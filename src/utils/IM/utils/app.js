@@ -1,7 +1,7 @@
 import { getConversationList } from "./index";
 
 export const handleNotification = (data) => {
-  window.electron.ipcRenderer.send("uikit:notification", { title: '', body: data });
+  window.electron.ipcRenderer.send("uikit:notification", { title: `${data.nick}提到了你`, body: data });
 }
 
 // 托盘闪烁

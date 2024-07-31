@@ -42,6 +42,8 @@ contextBridge.exposeInMainWorld('notification', {
   }
 })
 
+contextBridge.exposeInMainWorld('electron', {})
+
 function h(
   title,
   subtitle,

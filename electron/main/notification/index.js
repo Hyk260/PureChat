@@ -1,6 +1,7 @@
 import { registerNotificationListener, notification } from './main'
 import { app, shell } from "electron";
 import path from "node:path";
+import { mainTop } from "../utils/util";
 
 function notify() {
   registerNotificationListener()
@@ -13,12 +14,19 @@ function notify() {
   }
 
   notification.config({
-    title: 'Electron UIKit',
-    duration: 100000,
+    title: 'Electron',
+    // duration: 100000,
     customPage: filePath,
-    height: 300,
-    width: 300,
-    debug: true // Open the devTool for debugging
+    width: 320,
+    height: 80,
+    // debug: true // Open the devTool for debugging
+  })
+
+  notification.on('click', (data) => {
+    if (!data) return
+    const win = global.mainWin;
+    mainTop()
+    win.webContents.send("notif:click", data);
   })
 }
 

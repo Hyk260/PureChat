@@ -148,7 +148,7 @@ const SHADOW_ROOT_CSS = `
   transform: rotate(-45deg) translateZ(0);
 }
 `
-export const core = ((globalThis || window).uikit ||
+const core = ((globalThis || window).uikit ||
   (globalThis || window).electron)
 
 export default class TitleBar extends HTMLElement {
@@ -158,6 +158,8 @@ export default class TitleBar extends HTMLElement {
 
   connectedCallback() {
     const shadow = this.attachShadow({ mode: 'open' })
+
+    if (!(window && window?.api?.isTitlebar)) return null
 
     const style = document.createElement('style')
     style.textContent = SHADOW_ROOT_CSS

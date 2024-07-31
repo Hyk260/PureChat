@@ -9,4 +9,14 @@ export default [
       icon: "Eleme",
     },
   },
+  {
+    path: "/desktop",
+    name: "desktop",
+    component: () => import("@/views/desktop/index.vue"),
+    meta: {
+      title: "desktop",
+      locale: "",
+      icon: "",
+    },
+  },
 ];
