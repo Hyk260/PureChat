@@ -7,31 +7,40 @@ import {
 
 let timeout = null
 
-ipcRenderer.on(
-  NOTIFICATION_SHOW_CHANNEL,
-  (_, data) => {
-    let ms
-    if (data) {
-      ms = data.duration
-      if (data.custom) {
-        const { title, body, icon, extraData } = data
-        window.dispatchEvent(
-          new CustomEvent('notification-message', {
-            detail: { title, body, icon, extraData }
-          })
-        )
-      } else {
-        h(data.title, data.body, data.icon, data.extraData)
-      }
+ipcRenderer.on(NOTIFICATION_SHOW_CHANNEL, (_, data) => {
+  let duration; // 通知持续时间
+
+  if (data) {
+    // 如果有数据，设置持续时间
+    duration = data.duration || 2000; // 默认持续时间为2000毫秒
+
+    // 根据数据的自定义标志，选择不同的处理方式
+    if (data.custom) {
+      const { title, body, icon, extraData } = data; // 解构数据
+
+      // 触发自定义事件，传递通知信息
+      window.dispatchEvent(
+        new CustomEvent('notification-message', {
+          detail: { title, body, icon, extraData }
+        })
+      );
     } else {
-      ms = 2000
+      // 如果不是自定义通知，调用h函数显示通知
+      h(data.title, data.body, data.icon, data.extraData);
     }
-    if (timeout) clearTimeout(timeout)
-    timeout = setTimeout(() => {
-      ipcRenderer.send(NOTIFICATION_CLOSE_CHANNEL, false)
-    }, ms)
+  } else {
+    // 如果没有数据，设置默认持续时间
+    duration = 2000;
   }
-)
+
+  // 清除之前的定时器
+  if (timeout) clearTimeout(timeout);
+
+  // 设置定时器，发送关闭通知的消息
+  timeout = setTimeout(() => {
+    ipcRenderer.send(NOTIFICATION_CLOSE_CHANNEL, false);
+  }, duration);
+});
 
 contextBridge.exposeInMainWorld('notification', {
   close: () => {

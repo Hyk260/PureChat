@@ -1,3 +1,4 @@
+import { isWindows } from '../platform';
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 import { join } from 'node:path'
@@ -200,7 +201,7 @@ class Notification extends TypedEventEmitter {
       custom: !!this.customPage
     }
 
-    if (process.platform === 'win32') {
+    if (isWindows) {
       if (this.window && !this.window.isDestroyed()) {
         this.window.webContents.send(NOTIFICATION_SHOW_CHANNEL, _info)
 
@@ -229,18 +230,20 @@ class Notification extends TypedEventEmitter {
 export const notification = new Notification()
 
 /**
- * Register the notification ipc listener for use by the renderer.
+ * 注册通知 IPC 监听器，以供渲染进程使用。
  */
 export function registerNotificationListener() {
-  if (ipcMain.eventNames().some((ename) => ename === NOTIFICATION_CHANNEL)) {
-    return
+  // 检查是否已经注册了通知通道
+  if (ipcMain.eventNames().includes(NOTIFICATION_CHANNEL)) {
+    return;
   }
 
+  // 注册通知通道的监听器
   ipcMain.on(NOTIFICATION_CHANNEL, (_, info) => {
     if (info) {
-      notification.show(info)
+      notification.show(info);
     } else {
-      notification.destroy()
+      notification.destroy();
     }
-  })
+  });
 }

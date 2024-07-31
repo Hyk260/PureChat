@@ -14,7 +14,7 @@ function notify() {
   }
 
   notification.config({
-    title: 'Electron',
+    title: 'PureChat',
     // duration: 100000,
     customPage: filePath,
     width: 320,
