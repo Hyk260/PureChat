@@ -47,18 +47,117 @@ export class ChatGPTApi {
       top_p: modelConfig.top_p, // 核采样
     };
   }
+  // 处理流式聊天
+  async handleStreamingChat(
+    chatPath,
+    chatPayload,
+    options,
+    controller,
+    requestTimeoutId
+  ) {
+    let responseText = "";
+    let remainText = "";
+    let finished = false;
+
+    const animateResponseText = () => {
+      if (finished || controller.signal.aborted) {
+        responseText += remainText;
+        console.log("[Response Animation] finished");
+        return;
+      }
+
+      if (remainText.length > 0) {
+        const fetchCount = Math.max(1, Math.round(remainText.length / 60));
+        const fetchText = remainText.slice(0, fetchCount);
+        responseText += fetchText;
+        remainText = remainText.slice(fetchCount);
+        options.onUpdate?.(responseText, fetchText);
+      }
+
+      requestAnimationFrame(animateResponseText);
+    };
+
+    animateResponseText();
+
+    const finish = () => {
+      if (!finished) {
+        finished = true;
+        options.onFinish(responseText + remainText);
+      }
+    };
+
+    controller.signal.onabort = finish;
+
+    fetchEventSource(chatPath, {
+      ...chatPayload,
+      async onopen(res) {
+        clearTimeout(requestTimeoutId);
+        const contentType = res.headers.get("content-type");
+        console.log("[OpenAI] request response content type: ", contentType);
+
+        if (contentType?.startsWith("text/plain")) {
+          responseText = await res.clone().text();
+          return finish();
+        }
+        const stream = !contentType?.startsWith(EventStreamContentType);
+        const isRequestError = !res.ok || stream || res.status !== 200;
+
+        if (isRequestError) {
+          const responseTexts = [responseText];
+          let extraInfo = await res.clone().text();
+          try {
+            const resJson = await res.clone().json();
+            extraInfo = prettyObject(resJson);
+          } catch (e) {
+            console.log("[resJson]", e);
+          }
+
+          if (res.status === 401) {
+            options.onError?.(extraInfo);
+          }
+
+          if (extraInfo) {
+            responseTexts.push(extraInfo);
+          }
+
+          responseText = responseTexts.join("\n\n");
+          return finish();
+        } else {
+          console.log(res);
+        }
+      },
+      onmessage(msg) {
+        if (msg.data === "[DONE]" || finished) {
+          return finish();
+        }
+        const text = msg.data;
+        try {
+          const json = JSON.parse(text);
+          const delta = json.choices[0].delta.content;
+          if (delta) {
+            remainText += delta;
+          }
+        } catch (e) {
+          console.error("[Request] parse error", text, msg);
+        }
+      },
+      onclose() {
+        finish();
+      },
+      onerror(e) {
+        options.onError?.(e);
+        throw e;
+      },
+      openWhenHidden: true,
+    });
+  }
   // 生成聊天消息
   async chat(options) {
-    const messages = options.messages.map((v) => ({
-      role: v.role,
-      content: v.content,
-    }));
+    const messages = options.messages.map(({ role, content }) => ({ role, content }));
 
     const modelConfig = {
       ...this.accessStore(),
-      ...{
-        model: options.config.model,
-      },
+      model: options.config.model,
     };
 
     const requestPayload = this.generateRequestPayload(messages, modelConfig, options.config);
@@ -81,107 +180,7 @@ export class ChatGPTApi {
       const requestTimeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
       // 流式输出
       if (shouldStream) {
-        let responseText = "";
-        let remainText = "";
-        let finished = false; // 是否已完成。
-
-        // 通过逐步添加文本的方式，以一种动画效果显示响应文本
-        function animateResponseText() {
-          if (finished || controller.signal.aborted) {
-            responseText += remainText;
-            console.log("[Response Animation] finished");
-            return;
-          }
-
-          if (remainText.length > 0) {
-            const fetchCount = Math.max(1, Math.round(remainText.length / 60));
-            const fetchText = remainText.slice(0, fetchCount);
-            responseText += fetchText;
-            remainText = remainText.slice(fetchCount);
-            options.onUpdate?.(responseText, fetchText);
-          }
-
-          requestAnimationFrame(animateResponseText);
-        }
-
-        // start animaion
-        animateResponseText();
-
-        const finish = () => {
-          if (!finished) {
-            finished = true;
-            options.onFinish(responseText + remainText);
-          }
-        };
-
-        controller.signal.onabort = finish;
-
-        fetchEventSource(chatPath, {
-          ...chatPayload,
-          // 建立连接的回调
-          async onopen(res) {
-            clearTimeout(requestTimeoutId);
-            const contentType = res.headers.get("content-type");
-            console.log("[OpenAI] request response content type: ", contentType);
-
-            if (contentType?.startsWith("text/plain")) {
-              responseText = await res.clone().text();
-              return finish();
-            }
-            const stream = !contentType?.startsWith(EventStreamContentType);
-            const isRequestError = !res.ok || stream || res.status !== 200;
-            if (isRequestError) {
-              const responseTexts = [responseText];
-              let extraInfo = await res.clone().text();
-              try {
-                const resJson = await res.clone().json();
-                extraInfo = prettyObject(resJson);
-              } catch (e) {
-                console.log("[resJson]", e);
-              }
-
-              if (res.status === 401) {
-                options.onError?.(extraInfo);
-              }
-
-              if (extraInfo) {
-                responseTexts.push(extraInfo);
-              }
-
-              responseText = responseTexts.join("\n\n");
-
-              return finish();
-            } else {
-              console.log(res);
-            }
-          },
-          // 接收一次数据段时回调流式返回
-          onmessage(msg) {
-            if (msg.data === "[DONE]" || finished) {
-              return finish();
-            }
-            const text = msg.data;
-            try {
-              const json = JSON.parse(text);
-              const delta = json.choices[0].delta.content;
-              if (delta) {
-                remainText += delta;
-              }
-            } catch (e) {
-              console.error("[Request] parse error", text, msg);
-            }
-          },
-          // 正常结束的回调
-          onclose() {
-            finish();
-          },
-          // 连接出现异常回调
-          onerror(e) {
-            options.onError?.(e);
-            throw e;
-          },
-          openWhenHidden: true,
-        });
+        await this.handleStreamingChat(chatPath, chatPayload, options, controller, requestTimeoutId);
       } else {
         const res = await fetch(chatPath, chatPayload);
         clearTimeout(requestTimeoutId);

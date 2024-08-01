@@ -30,8 +30,6 @@ const updataMessage = (msg, message = "") => {
 const avatar = (id) => {
   const suffix = RobotAvatar[getModelType(id)] || "";
   return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}`;
-  // const svg = getModelSvg(id) + '.svg'
-  // return new URL(`../assets/images/robot/${svg}`, import.meta.url).href;
 };
 
 const fnCreateLodMsg = (params) => {
@@ -49,20 +47,27 @@ const fnCreateLodMsg = (params) => {
   return msg;
 };
 
-export const chatService = async (params) => {
-  const { messages, chat } = params;
-  const mode = getModelType(chat.to);
-  const api = new ClientApi(mode);
-  const msg = fnCreateLodMsg(chat);
+function beforeSend(api, msg) {
   if (!api.config().token) {
     setTimeout(() => {
-      updataMessage(msg, "API Key 不正确或为空，请检查 API Key 后重试");
-    }, 1000);
-    return;
+      updataMessage(msg, "API Key 为空，请检查 API Key 后重试");
+    }, 800);
+    return true;
   }
+  return false
+}
+
+export const chatService = async (params) => {
+  const { messages, chat } = params;
+  const provider = getModelType(chat.to);
+  const api = new ClientApi(provider);
+  const msg = fnCreateLodMsg(chat);
+  if (beforeSend(api, msg)) return
+  const { model } = useAccessStore(provider)
+
   await api.llm.chat({
     messages,
-    config: { model: useAccessStore(mode).model, stream: true },
+    config: { model, stream: true },
     onUpdate(message) {
       console.log("[chat] onUpdate:", message);
       emitter.emit("updataScroll", "instantly");
@@ -75,7 +80,7 @@ export const chatService = async (params) => {
         updataMessage(msg, message);
         await restSendMsg(chat, message);
       } else {
-        await restSendMsg(chat, "网络异常请稍后再试");
+        // await restSendMsg(chat, "网络异常请稍后再试");
       }
     },
     onError(error) {
