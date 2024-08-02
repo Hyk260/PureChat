@@ -100,7 +100,7 @@ const loadImg = (e) => {};
   max-width: 142px;
   box-sizing: border-box;
   border-radius: 5px;
-  border: 1px solid rgb(208, 221, 215);
+  border: 1px solid var(--color-border-default);
   :deep(.el-image) {
     border-radius: 5px;
     vertical-align: bottom;
