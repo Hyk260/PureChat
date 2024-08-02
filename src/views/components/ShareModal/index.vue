@@ -6,7 +6,7 @@
     :append-to-body="true"
     @close="onClose"
     title="截图分享"
-    width="700px"
+    width="60%"
   >
     <div class="share-modal">
       <div class="segmented w-full">
@@ -50,14 +50,28 @@
           </div>
         </div>
       </div>
-      <div class="form-item-props">
-        <div class="flex justify-between items-center">
+      <div class="form-item-props px-5">
+        <div class="flex justify-between items-center my-5 h-32">
           <div>包含页脚</div>
           <div><el-switch v-model="isFooter" /></div>
         </div>
+        <el-divider class="my-10" />
+        <div class="image-type flex justify-between items-center my-5 h-32">
+          <div>图片格式</div>
+          <div>
+            <el-radio-group v-model="fieldType" size="small">
+              <el-radio-button
+                v-for="item in imageTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-radio-group>
+          </div>
+        </div>
       </div>
       <div>
-        <el-button class="w-full" @click="onDownload()"> 下载截图 </el-button>
+        <el-button class="w-full" @click="onDownload(fieldType)"> 下载截图 </el-button>
       </div>
     </div>
   </el-dialog>
@@ -68,13 +82,14 @@ import { computed, ref } from "vue";
 import emitter from "@/utils/mitt-bus";
 import Header from "@/views/chatStudio/components/Header.vue";
 import { useBoolean } from "@/utils/hooks/index";
-import { useScreenshot } from "@/utils/hooks/useScreenshot";
+import { useScreenshot, ImageType, imageTypeOptions } from "@/utils/hooks/useScreenshot";
 import { useState } from "@/utils/hooks/useMapper";
 import { loadMsgModule, msgOne, msgType } from "@/views/chatStudio/utils/utils";
 
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
 const isFooter = ref(false);
+const fieldType = ref(ImageType.JPG);
 const [dialogVisible, setDialogVisible] = useBoolean();
 const { loading, onDownload, title } = useScreenshot();
 const { forwardData, userProfile } = useState({
@@ -113,7 +128,7 @@ emitter.on("onShareModal", (val) => {
 .segmented {
   overflow: hidden scroll;
   width: 100%;
-  max-height: 40dvh;
+  max-height: 50vh;
   background: #f8f8f8;
   border: 1px solid #dddddd;
   border-radius: 8px;
@@ -164,8 +179,8 @@ emitter.on("onShareModal", (val) => {
   }
   .avatar {
     img {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       border-radius: 6px;
     }
   }

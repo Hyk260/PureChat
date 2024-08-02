@@ -98,7 +98,6 @@ const loadImg = (e) => {};
 .image_preview {
   width: fit-content;
   max-width: 142px;
-  // padding: 10px 14px;
   box-sizing: border-box;
   border-radius: 5px;
   border: 1px solid rgb(208, 221, 215);
