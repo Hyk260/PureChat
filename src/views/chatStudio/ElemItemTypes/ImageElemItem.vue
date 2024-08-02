@@ -10,7 +10,7 @@
       :style="imgStyle"
       :preview-src-list="showCheckbox ? null : imgUrlList"
       :hide-on-click-modal="true"
-      :initial-index="index"
+      :initial-index="initialIndex"
       :infinite="false"
       fit="cover"
     />
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs } from "vue";
+import { ref, toRefs, computed } from "vue";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { showIMPic, getImageSize } from "../utils/utils";
 
@@ -32,19 +32,20 @@ const props = defineProps({
     default: false,
   },
 });
+
 const imgStyle = ref({});
-const index = ref(0);
 const { message, self } = toRefs(props);
 const { imgUrlList } = useGetters(["imgUrlList"]);
 const { showCheckbox } = useState({
   showCheckbox: (state) => state.conversation.showCheckbox,
 });
 
-function getImageProperties(num = 1) {
+function getImageProperties(num = 0) {
   try {
     const {
       payload: { imageInfoArray },
     } = message.value;
+    console.log(message.value);
     const imageInfo = imageInfoArray[num];
     return imageInfo;
   } catch (error) {
@@ -52,11 +53,14 @@ function getImageProperties(num = 1) {
   }
 }
 
-index.value = imgUrlList.value.findIndex((item) => {
-  return item == getImageProperties(0)?.url;
+const url = getImageProperties()?.url;
+
+const initialIndex = computed(() => {
+  return imgUrlList.value.findIndex((item) => {
+    return item == getImageProperties(0)?.url;
+  });
 });
 
-const url = getImageProperties()?.url;
 
 async function initImageSize() {
   try {
@@ -77,10 +81,7 @@ async function initImageSize() {
 
 initImageSize();
 
-const geiPic = async (url) => {
-  console.log(message.value);
-  console.log(imgStyle.value);
-};
+const geiPic = (url) => {};
 const loadImg = (e) => {};
 </script>
 

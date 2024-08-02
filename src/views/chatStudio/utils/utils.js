@@ -469,25 +469,31 @@ export function filterMentionList(Str, Html) {
  * @param {number} height - 图片高度
  * @returns {Object} - 包含展示图片的宽度和高度的样式对象
  */
-export const showIMPic = (width, height) => {
-  let picStyle = {};
+export const showIMPic = (width = 0, height = 0) => {
+  // 确保高度不小于40px
+  const minHeight = 40;
+
+  // 计算宽度和高度的逻辑
+  let computedWidth;
+  let computedHeight;
+
   if (width >= 140) {
-    picStyle = {
-      width: 140 + "px",
-      height: Math.round((140 / width) * height) + "px",
-    };
+    computedWidth = 140;
+    computedHeight = Math.max(Math.round((140 / width) * height), minHeight);
   } else if (width <= 35) {
-    picStyle = {
-      width: 45 + "px",
-      height: Math.round((45 / width) * height) + "px",
-    };
+    computedWidth = 45;
+    computedHeight = Math.max(Math.round((45 / width) * height), minHeight);
   } else {
-    picStyle = {
-      width: width + "px",
-      height: height + "px",
-    };
+    computedWidth = width;
+    computedHeight = Math.max(height, minHeight);
   }
-  return picStyle;
+
+  const imageStyle = {
+    width: `${computedWidth}px`,
+    height: `${computedHeight}px`,
+  };
+
+  return imageStyle;
 };
 
 /**
