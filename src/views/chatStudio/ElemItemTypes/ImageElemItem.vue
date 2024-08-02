@@ -12,6 +12,10 @@
       :hide-on-click-modal="true"
       :initial-index="initialIndex"
       :infinite="false"
+      :zoom-rate="1.2"
+      :max-scale="3"
+      :min-scale="0.3"
+      :preview-teleported="true"
       fit="cover"
     />
   </div>
@@ -45,7 +49,6 @@ function getImageProperties(num = 0) {
     const {
       payload: { imageInfoArray },
     } = message.value;
-    console.log(message.value);
     const imageInfo = imageInfoArray[num];
     return imageInfo;
   } catch (error) {
