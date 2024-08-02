@@ -1,6 +1,6 @@
 import { ClientApi } from "@/ai/api";
 import { RobotAvatar } from "@/ai/constant";
-import { getModelType, useAccessStore, getModelSvg } from "@/ai/utils";
+import { getModelType, useAccessStore, prettyObject, getModelSvg } from "@/ai/utils";
 import { createCustomMsg } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
 import store from "@/store";
@@ -83,8 +83,14 @@ export const chatService = async (params) => {
         // await restSendMsg(chat, "网络异常请稍后再试");
       }
     },
-    onError(error) {
+    async onError(error) {
       console.error("[chat] failed:", error);
+      // const isAborted = error.message.includes("aborted");
+      const content = "\n\n" + prettyObject({
+        error: true,
+        message: error.message,
+      });
+      await restSendMsg(chat, content);
     },
     onController(controller) {
       console.log("[chat] onController:", controller);

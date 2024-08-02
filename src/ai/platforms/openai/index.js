@@ -47,7 +47,17 @@ export class ChatGPTApi {
       top_p: modelConfig.top_p, // 核采样
     };
   }
-  // 处理流式聊天
+  /**
+   * 处理流式聊天的响应。
+   * 
+   * @param {string} chatPath - 聊天请求的路径。
+   * @param {object} chatPayload - 聊天请求的有效负载。
+   * @param {object} options - 处理选项，包括错误处理、更新和完成回调。
+   * @param {AbortController} controller - 用于控制请求的 AbortController。
+   * @param {number} requestTimeoutId - 请求超时的 ID。
+   * 
+   * @returns {Promise<void>} - 无返回值的 Promise。
+   */
   async handleStreamingChat(
     chatPath,
     chatPayload,
@@ -55,17 +65,26 @@ export class ChatGPTApi {
     controller,
     requestTimeoutId
   ) {
-    let responseText = "";
-    let remainText = "";
-    let finished = false;
+    let responseText = ""; // 用于存储完整的响应文本
+    let remainText = ""; // 用于存储尚未处理的文本
+    let finished = false; // 用于标记动画是否已完成
 
-    const animateResponseText = () => {
+    /**
+    * 动画响应文本的显示。
+    * 根据剩余文本的长度逐步更新响应文本。
+    */
+    function animateResponseText() {
+      // 如果动画已完成或请求已被中止，结束动画
       if (finished || controller.signal.aborted) {
         responseText += remainText;
         console.log("[Response Animation] finished");
+        // 如果响应文本为空，触发错误回调
+        if (responseText?.length === 0) {
+          options.onError?.(new Error("empty response from server"));
+        }
         return;
       }
-
+      // 如果有剩余文本，进行文本动画更新
       if (remainText.length > 0) {
         const fetchCount = Math.max(1, Math.round(remainText.length / 60));
         const fetchText = remainText.slice(0, fetchCount);
@@ -77,6 +96,7 @@ export class ChatGPTApi {
       requestAnimationFrame(animateResponseText);
     };
 
+    // start animaion
     animateResponseText();
 
     const finish = () => {
@@ -86,7 +106,7 @@ export class ChatGPTApi {
       }
     };
 
-    controller.signal.onabort = finish;
+    controller.signal.onabort = finish; // 设置请求中止时的处理函数
 
     fetchEventSource(chatPath, {
       ...chatPayload,
