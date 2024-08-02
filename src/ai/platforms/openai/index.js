@@ -40,7 +40,7 @@ export class ChatGPTApi {
       messages: this.userPromptMessages(messages, modelConfig),
       stream: options.stream, // 流式传输
       model: modelConfig.model, // 模型
-      max_tokens: modelConfig.max_tokens, // 单次回复限制
+      // max_tokens: modelConfig.max_tokens, // 单次回复限制
       temperature: Number(modelConfig.temperature), // 随机性
       presence_penalty: modelConfig.presence_penalty, //话题新鲜度
       frequency_penalty: modelConfig.frequency_penalty, // 频率惩罚度
