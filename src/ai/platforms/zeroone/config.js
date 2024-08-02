@@ -5,5 +5,5 @@ export const YiConfig = {
   max_tokens: 1024,
   token: import.meta.env.VITE_ZEROONE_API_KEY,
   openaiUrl: import.meta.env.VITE_ZEROONE_BASE_URL,
-  historyMessageCount: 5,
+  historyMessageCount: 12,
 };

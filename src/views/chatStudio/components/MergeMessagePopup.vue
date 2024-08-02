@@ -10,7 +10,7 @@
       <div class="merg-dialog">
         <div
           class="flex"
-          :class="ISown(item) ? 'is-self' : 'is-other'"
+          :class="isOwn(item) ? 'is-self' : 'is-other'"
           v-for="item in mergValue.payload.messageList"
           :key="item.ID"
         >
@@ -25,7 +25,7 @@
             </el-avatar>
           </div>
           <div class="item" :class="msgOne(item.messageBody[0].type)">
-            <p class="nick">
+            <p class="nick mb-5">
               <span>{{ item.nick }}</span>
               <span>{{ timeFormat(item.clientTime * 1000, true) }}</span>
             </p>
@@ -35,7 +35,7 @@
                 :is="loadMsgModule(item.messageBody[0])"
                 :msgType="mergValue.conversationType"
                 :message="item.messageBody[0]"
-                :self="ISown(item)"
+                :self="isOwn(item)"
               >
               </component>
             </div>
@@ -47,6 +47,7 @@
 </template>
 
 <script setup>
+import storage from "@/utils/localforage/index";
 import { downloadMergerMessage } from "@/api/im-sdk-api/index";
 import { useBoolean } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
@@ -54,12 +55,13 @@ import { timeFormat } from "pure-tools";
 import { ref } from "vue";
 import { circleUrl } from "../utils/menu";
 import { loadMsgModule, msgOne, msgType } from "../utils/utils";
+import { TIM_PROXY } from "@/constants/index";
 
 const [dialogVisible, setDialogVisible] = useBoolean();
 const mergValue = ref({});
 
-const ISown = (item) => {
-  return item.from == window.TIMProxy.userProfile.userID;
+const isOwn = (item) => {
+  return item.from === storage.get(TIM_PROXY)?.userProfile?.userID
 };
 
 function handleClose(done) {

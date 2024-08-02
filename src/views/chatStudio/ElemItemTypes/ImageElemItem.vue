@@ -12,6 +12,10 @@
       :hide-on-click-modal="true"
       :initial-index="initialIndex"
       :infinite="false"
+      :zoom-rate="1.2"
+      :max-scale="3"
+      :min-scale="0.3"
+      :preview-teleported="true"
       fit="cover"
     />
   </div>
@@ -45,7 +49,6 @@ function getImageProperties(num = 0) {
     const {
       payload: { imageInfoArray },
     } = message.value;
-    console.log(message.value);
     const imageInfo = imageInfoArray[num];
     return imageInfo;
   } catch (error) {
@@ -95,10 +98,9 @@ const loadImg = (e) => {};
 .image_preview {
   width: fit-content;
   max-width: 142px;
-  // padding: 10px 14px;
   box-sizing: border-box;
   border-radius: 5px;
-  border: 1px solid rgb(208, 221, 215);
+  border: 1px solid var(--color-border-default);
   :deep(.el-image) {
     border-radius: 5px;
     vertical-align: bottom;

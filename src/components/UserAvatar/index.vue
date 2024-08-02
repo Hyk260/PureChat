@@ -6,9 +6,9 @@
   >
     {{ url ? null : displayInfo(nickName) }}
   </div>
-  <img v-else-if="type == 'single'" class="avatar" :src="url || shapeObj[shape]" alt="头像" />
+  <img draggable="false"  v-else-if="type == 'single'" class="avatar" :src="url || shapeObj[shape]" alt="头像" />
   <div v-else-if="type == 'self'" class="badge" :style="{ height: `${size}px` }">
-    <el-avatar :size="size" :src="userProfile?.avatar || shapeObj['circle']" :shape="shape" />
+    <el-avatar :draggable="false" :size="size" :src="userProfile?.avatar || shapeObj['circle']" :shape="shape" />
     <sup v-show="isdot" class="is-dot"></sup>
   </div>
 </template>
@@ -86,6 +86,7 @@ const backgInfo = (url) => {
 </script>
 
 <style lang="scss" scoped>
+
 .user-avatar {
   border-radius: 50%;
   overflow: hidden;
@@ -119,6 +120,8 @@ const backgInfo = (url) => {
   border-radius: 3px;
 }
 .badge {
+  -webkit-user-drag:none;
+  user-select: none;
   position: relative;
   .is-dot {
     position: absolute;

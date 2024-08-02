@@ -2,27 +2,54 @@ import dayjs from 'dayjs';
 import { useBoolean } from './other';
 import { domToJpeg, domToPng, domToSvg, domToWebp } from 'modern-screenshot';
 
-export const useScreenshot = (imageType = 'PNG', title='') => {
+export const ImageType = {
+  JPG: "jpg",
+  PNG: "png",
+  SVG: "svg",
+  WEBP: "webp",
+};
+
+export const imageTypeOptions = [
+  {
+    label: "JPG",
+    value: ImageType.JPG,
+  },
+  {
+    label: "PNG",
+    value: ImageType.PNG,
+  },
+  {
+    label: "SVG",
+    value: ImageType.SVG,
+  },
+  {
+    label: "WEBP",
+    value: ImageType.WEBP,
+  },
+];
+
+export const useScreenshot = (title = '') => {
+  
   const [loading, setLoading] = useBoolean();
 
-  const handleDownload = async () => {
+  const handleDownload = async (imageType = ImageType.JPG) => {
     setLoading(true);
     try {
       let screenshotFn = null;
       switch (imageType) {
-        case 'JPG': {
+        case ImageType.JPG: {
           screenshotFn = domToJpeg;
           break;
         }
-        case 'PNG': {
+        case ImageType.PNG: {
           screenshotFn = domToPng;
           break;
         }
-        case 'SVG': {
+        case ImageType.SVG: {
           screenshotFn = domToSvg;
           break;
         }
-        case 'WEBP': {
+        case ImageType.WEBP: {
           screenshotFn = domToWebp;
           break;
         }
