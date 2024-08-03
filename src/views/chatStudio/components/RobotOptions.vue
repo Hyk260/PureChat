@@ -38,7 +38,7 @@
               :value="models.id"
             />
           </el-select>
-          <div class="range" v-else-if="item.Range">
+          <div class="range" v-else-if="isRange(item.ID)">
             {{ item.defaultValue }}
             <input
               v-model="item.defaultValue"
@@ -91,6 +91,16 @@ const maskData = ref([]);
 const { commit } = useStore();
 const [state, setState] = useBoolean();
 const { toAccount } = useGetters(["toAccount"]);
+
+function isRange(id) {
+  return [
+    "temperature",
+    "top_p",
+    "presence_penalty",
+    "frequency_penalty",
+    "historyMessageCount",
+  ].includes(id);
+}
 
 function initModel() {
   const model = getModelType(toAccount.value);
