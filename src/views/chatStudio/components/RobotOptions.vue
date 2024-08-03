@@ -99,11 +99,6 @@ function initModel() {
     return (v.defaultValue = useAccessStore(model)[v.ID]);
   });
   maskData.value = cloneDeep(usePromptStore(model));
-  // if (model === "GPT") {
-  //   maskData.value = cloneDeep(usePromptStore(model));
-  // } else {
-  //   maskData.value = [];
-  // }
   modelData.value = value;
 }
 
@@ -142,10 +137,20 @@ function resetRobotModel() {
   storage.set(StoreKey.Access, filteredConfig);
   commit("setRobotModel", modelConfig[account].model);
 }
+
+function resetRobotMask() {
+  const prompt = storage.get(StoreKey.Prompt);
+  if (!prompt) return;
+  const account = getModelType(toAccount.value);
+  const filteredConfig = Object.fromEntries(
+    Object.entries(prompt).filter(([key, _]) => !key.includes(account))
+  );
+  storage.set(StoreKey.Prompt, filteredConfig);
+}
 // 重置
 function handleCancel() {
   resetRobotModel();
-  storage.remove(StoreKey.Prompt);
+  resetRobotMask();
   setState(false);
 }
 // 保存
@@ -156,7 +161,7 @@ function handleConfirm() {
     model[t.ID] = t.defaultValue;
   });
   storeRobotModel(model);
-  // if (model === "GPT") storeRobotMask(maskData.value);
+  storeRobotMask(maskData.value);
 }
 
 function onClose() {}

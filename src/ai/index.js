@@ -76,18 +76,16 @@ export const chatService = async (params) => {
     async onFinish(message) {
       console.log("[chat] onFinish:", message);
       emitter.emit("updataScroll", "instantly");
-      if (message) {
-        updataMessage(msg, message);
-        await restSendMsg(chat, message);
-      } else {
-        // await restSendMsg(chat, "网络异常请稍后再试");
-      }
+      if (!message) return
+      updataMessage(msg, message);
+      await restSendMsg(chat, message);
+
     },
     async onError(error) {
       console.error("[chat] failed:", error);
       // const isAborted = error.message.includes("aborted");
       const content = "\n\n" + prettyObject({ error: true, message: error.message });
-      await restSendMsg(chat, content);
+      error.message && await restSendMsg(chat, content);
     },
     onController(controller) {
       console.log("[chat] onController:", controller);

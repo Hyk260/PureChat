@@ -22,7 +22,7 @@ export const useAccessStore = (model = ModelProvider.GPT) => {
 
 export const usePromptStore = (model = ModelProvider.GPT) => {
   try {
-    return storage.get(StoreKey.Prompt)?.[model] || prompt;
+    return storage.get(StoreKey.Prompt)?.[model] || prompt[0];
   } catch (error) {
     storage.remove(StoreKey.Prompt);
     return {};
