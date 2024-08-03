@@ -400,11 +400,12 @@ const conversation = {
     async SESSION_MESSAGE_SENDING({ state, commit, dispatch }, action) {
       const { payload } = action;
       const { convId, message } = payload;
+      // 消息上屏 预加载
       commit("SET_HISTORYMESSAGE", {
         type: "UPDATE_MESSAGES",
         payload: { convId, message },
       });
-      emitter.emit("updataScroll");
+      setTimeout(() => { emitter.emit("updataScroll") }, 50)
       // 发送消息
       const { code, message: result } = await sendMsg(message);
       if (code === 0) {

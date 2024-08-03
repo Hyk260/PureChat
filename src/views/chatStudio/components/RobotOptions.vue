@@ -102,10 +102,6 @@ function initModel() {
   modelData.value = value;
 }
 
-function handleClose(done) {
-  done();
-}
-
 function storeRobotModel(model) {
   const access = storage.get(StoreKey.Access);
   const account = getModelType(toAccount.value);
@@ -146,6 +142,10 @@ function resetRobotMask() {
     Object.entries(prompt).filter(([key, _]) => !key.includes(account))
   );
   storage.set(StoreKey.Prompt, filteredConfig);
+}
+
+function handleClose(done) {
+  done();
 }
 // 重置
 function handleCancel() {
