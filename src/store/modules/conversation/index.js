@@ -405,7 +405,7 @@ const conversation = {
         type: "UPDATE_MESSAGES",
         payload: { convId, message },
       });
-      setTimeout(() => { emitter.emit("updataScroll") }, 50)
+      emitter.emit("updataScroll");
       // 发送消息
       const { code, message: result } = await sendMsg(message);
       if (code === 0) {

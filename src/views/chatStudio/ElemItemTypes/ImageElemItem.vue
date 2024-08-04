@@ -64,7 +64,6 @@ const initialIndex = computed(() => {
   });
 });
 
-
 async function initImageSize() {
   try {
     let width = getImageProperties()?.width || 0;
@@ -104,6 +103,7 @@ const loadImg = (e) => {};
   :deep(.el-image) {
     border-radius: 5px;
     vertical-align: bottom;
+    min-height: 82px;
   }
 }
 </style>

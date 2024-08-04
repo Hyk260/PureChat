@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "bradlc.vscode-tailwindcss",
     "DavidAnson.vscode-markdownlint",
     "aminer.codegeex",
     "ritwickdey.LiveServer",

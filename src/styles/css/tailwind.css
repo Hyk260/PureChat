@@ -14,8 +14,4 @@
   .flex-bc {
     @apply flex justify-between items-center;
   }
-
-  .navbar-bg-hover {
-    @apply dark:text-white dark:hover:!bg-[#242424];
-  }
 }
