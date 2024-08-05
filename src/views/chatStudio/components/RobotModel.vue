@@ -2,7 +2,7 @@
   <div v-show="flag" class="robot-model-box" v-click-outside="onClickOutside">
     <div class="item-group-title">
       <svg-icon :iconClass="robotIcon" />
-       {{ model.name }}
+      {{ model.name }}
     </div>
     <div
       class="model flex"
@@ -11,7 +11,12 @@
       @click="storeRobotModel(item.id)"
     >
       <div :class="['icon', robotIcon]">
-        <svg-icon :iconClass="robotIcon" />
+        <div class="tongyi icon" v-if="model.id === 'ollama'">
+          <svg-icon iconClass="tongyi" /> 
+        </div>
+        <span v-else>
+          <svg-icon :iconClass="robotIcon" />
+        </span>
       </div>
       <span>{{ item.id }}</span>
     </div>

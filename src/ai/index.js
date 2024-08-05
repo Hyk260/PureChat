@@ -1,5 +1,5 @@
 import { ClientApi } from "@/ai/api";
-import { RobotAvatar } from "@/ai/constant";
+import { RobotAvatar, ModelProvider } from "@/ai/constant";
 import { getModelType, useAccessStore, prettyObject, getModelSvg } from "@/ai/utils";
 import { createCustomMsg } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
@@ -48,6 +48,7 @@ const fnCreateLodMsg = (params) => {
 };
 
 function beforeSend(api, msg) {
+  if ([ModelProvider.Ollama].includes(api.llm.provider)) return false
   if (!api.config().token) {
     setTimeout(() => {
       updataMessage(msg, "API Key 为空，请检查 API Key 后重试");
@@ -64,7 +65,6 @@ export const chatService = async (params) => {
   const msg = fnCreateLodMsg(chat);
   if (beforeSend(api, msg)) return
   const { model } = useAccessStore(provider)
-
   await api.llm.chat({
     messages,
     config: { model, stream: true },

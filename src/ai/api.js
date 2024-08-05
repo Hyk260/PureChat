@@ -2,6 +2,7 @@ import { ModelProvider } from "@/ai/constant";
 import { ChatGPTApi } from "@/ai/platforms/openai/index";
 import { ChatYiApi } from "@/ai/platforms/zeroone/index";
 import { QwenApi } from "@/ai/platforms/qwen/index";
+import { OllamaApi } from "@/ai/platforms/ollama/index";
 import { ChatZhipuApi } from "@/ai/platforms/zhipu/index";
 import { useAccessStore, usePromptStore } from "@/ai/utils";
 
@@ -36,6 +37,9 @@ export class ClientApi {
         break;
       case ModelProvider.Qwen:
         ApiClass = QwenApi;
+        break;
+      case ModelProvider.Ollama:
+        ApiClass = OllamaApi;
         break;
       default:
         ApiClass = ChatGPTApi; // 默认使用 ChatGPTApi

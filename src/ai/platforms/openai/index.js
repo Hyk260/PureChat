@@ -113,14 +113,16 @@ export class ChatGPTApi {
       async onopen(res) {
         clearTimeout(requestTimeoutId);
         const contentType = res.headers.get("content-type");
+        // text/event-stream; charset=utf-8
         console.log("[OpenAI] request response content type: ", contentType);
 
         if (contentType?.startsWith("text/plain")) {
           responseText = await res.clone().text();
           return finish();
         }
-        const stream = !contentType?.startsWith(EventStreamContentType);
-        const isRequestError = !res.ok || stream || res.status !== 200;
+        // text/event-stream
+        const stream = contentType?.startsWith(EventStreamContentType);
+        const isRequestError = !res.ok || !stream || res.status !== 200;
 
         if (isRequestError) {
           const responseTexts = [responseText];

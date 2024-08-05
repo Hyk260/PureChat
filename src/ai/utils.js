@@ -3,6 +3,7 @@ import {
   CHATGPT_ROBOT,
   CHATYI_ROBOT,
   CHATQWEN_ROBOT,
+  CHATOLLAMA_ROBOT,
   ModelProvider,
   StoreKey,
   modelConfig,
@@ -41,6 +42,7 @@ export function getModelType(modelId) {
     [CHATGLM_ROBOT]: ModelProvider.ChatGLM,
     [CHATYI_ROBOT]: ModelProvider.ZeroOne,
     [CHATQWEN_ROBOT]: ModelProvider.Qwen,
+    [CHATOLLAMA_ROBOT]: ModelProvider.Ollama,
   };
   return modelMapping[modelId] || "";
 }
@@ -52,6 +54,7 @@ export function getModelSvg(id) {
     [ModelProvider.ChatGLM]: "zhipu",
     [ModelProvider.ZeroOne]: "zeroone",
     [ModelProvider.Qwen]: "tongyi",
+    [ModelProvider.Ollama]: "ollama",
   };
   return data[modelId] || "";
 }
