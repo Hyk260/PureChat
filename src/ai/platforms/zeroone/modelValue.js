@@ -21,7 +21,7 @@ export const yiModelValue = () => {
     Token: {
       ID: "token",
       Title: "API Key",
-      SubTitle: "使用自己的 01.AI 零一万物 API Key",
+      SubTitle: "请填写你的 01.AI API Key",
       Placeholder: "ZeroOne API Key",
       defaultValue: "",
       doubt: `${docs}/guides/model-provider.html#zeroone-api-key`,

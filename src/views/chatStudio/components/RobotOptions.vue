@@ -52,7 +52,7 @@
             <input v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
           </div>
           <div class="input flex items-center" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
-            <span class="flex mr-5 cursor-pointer" v-if="item.ID === 'token'">
+            <span class="flex mr-5 cursor-pointer" v-if="item.doubt && item.ID === 'token'">
               <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
             </span>
             <el-input

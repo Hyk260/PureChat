@@ -7,8 +7,8 @@ import { yiModelValue } from "@/ai/platforms/zeroone/modelValue";
 import { ZhiPuConfig } from "@/ai/platforms/zhipu/config";
 import { zhipuModelValue } from "@/ai/platforms/zhipu/modelValue";
 
-import { QwenConfig } from "@/ai/platforms/alibaba/config";
-import { qwenModelValue } from "@/ai/platforms/alibaba/modelValue";
+import { QwenConfig } from "@/ai/platforms/qwen/config";
+import { qwenModelValue } from "@/ai/platforms/qwen/modelValue";
 
 import { prefixRobotIDs } from "./utils";
 
@@ -27,7 +27,7 @@ export const ROBOT_COLLECT = [
   CHATGPT_ROBOT,
   CHATGLM_ROBOT,
   CHATYI_ROBOT,
-  // CHATQWEN_ROBOT
+  CHATQWEN_ROBOT
 ];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
@@ -64,6 +64,7 @@ export const ZeroOnePath = {
 
 export const QwenPath = {
   ChatPath: "services/aigc/text-generation/generation",
+  // ChatPath: "api/chat",
 };
 
 export const prompt = [

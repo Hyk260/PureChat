@@ -21,7 +21,7 @@ export const zhipuModelValue = () => {
     Token: {
       ID: "token",
       Title: "API Key",
-      SubTitle: "使用自己的 ZhiPu API Key",
+      SubTitle: "请填写你的 ZhiPu API Key",
       Placeholder: "ZhiPu API Key",
       defaultValue: "",
       doubt: `${docs}/guides/model-provider.html#zhipu-api-key`,

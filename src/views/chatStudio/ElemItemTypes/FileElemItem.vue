@@ -6,7 +6,9 @@
     :style="{ background: backgroundStyle }"
   >
     <div class="file-data">
-      <img :src="renderFileIcon(FileType)" alt="" />
+      <div class="w-45 h-45">
+        <img class="h-full" :src="renderFileIcon(FileType)" alt="" />
+      </div>
       <div class="file-box__content">
         <div class="file-name">
           {{ payload.fileName }}

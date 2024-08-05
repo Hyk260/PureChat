@@ -1,7 +1,7 @@
 import { ModelProvider } from "@/ai/constant";
 import { ChatGPTApi } from "@/ai/platforms/openai/index";
 import { ChatYiApi } from "@/ai/platforms/zeroone/index";
-import { QwenApi } from "@/ai/platforms/alibaba/index";
+import { QwenApi } from "@/ai/platforms/qwen/index";
 import { ChatZhipuApi } from "@/ai/platforms/zhipu/index";
 import { useAccessStore, usePromptStore } from "@/ai/utils";
 
