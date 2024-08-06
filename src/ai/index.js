@@ -1,11 +1,12 @@
 import { ClientApi } from "@/ai/api";
 import { RobotAvatar, ModelProvider } from "@/ai/constant";
-import { getModelType, useAccessStore, prettyObject, getModelSvg } from "@/ai/utils";
+import { getModelType, useAccessStore, prettyObject } from "@/ai/utils";
 import { createCustomMsg } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
 import store from "@/store";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
+import { OllamaAI } from './platforms/ollama/index';
 
 const restSendMsg = async (params, message) => {
   return await restApi({
@@ -57,6 +58,18 @@ function beforeSend(api, msg) {
   }
   return false
 }
+const fetchOnClient = async (params) => {
+  return await new OllamaAI({}).chat(null, { signal: '' });
+};
+
+const fetcher = async () => {
+  try {
+    return await fetchOnClient(
+      // { payload, provider, signal }
+    );
+  } catch (e) {
+  }
+};
 
 export const chatService = async (params) => {
   const { messages, chat } = params;
@@ -67,6 +80,7 @@ export const chatService = async (params) => {
   const { model } = useAccessStore(provider)
   await api.llm.chat({
     messages,
+    fetcher: fetcher,
     config: { model, stream: true },
     onUpdate(message) {
       console.log("[chat] onUpdate:", message);

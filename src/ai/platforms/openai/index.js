@@ -1,4 +1,5 @@
 import { OpenaiPath, REQUEST_TIMEOUT_MS } from "@/ai/constant";
+import { ModelProvider } from "@/ai/constant";
 import { prettyObject, useAccessStore, usePromptStore } from "@/ai/utils";
 import { EventStreamContentType, fetchEventSource } from "@fortaine/fetch-event-source";
 
@@ -65,6 +66,7 @@ export class ChatGPTApi {
     controller,
     requestTimeoutId
   ) {
+    const _this = this;
     let responseText = ""; // 用于存储完整的响应文本
     let remainText = ""; // 用于存储尚未处理的文本
     let finished = false; // 用于标记动画是否已完成
@@ -111,6 +113,7 @@ export class ChatGPTApi {
     fetchEventSource(chatPath, {
       ...chatPayload,
       async onopen(res) {
+        console.log('[OpenAI] fetchEventSource', res)
         clearTimeout(requestTimeoutId);
         const contentType = res.headers.get("content-type");
         // text/event-stream; charset=utf-8
@@ -120,13 +123,15 @@ export class ChatGPTApi {
           responseText = await res.clone().text();
           return finish();
         }
-        // text/event-stream
+
+        // text/event-stream EventStreamContentType
         const stream = contentType?.startsWith(EventStreamContentType);
         const isRequestError = !res.ok || !stream || res.status !== 200;
 
         if (isRequestError) {
           const responseTexts = [responseText];
           let extraInfo = await res.clone().text();
+
           try {
             const resJson = await res.clone().json();
             extraInfo = prettyObject(resJson);
@@ -149,15 +154,20 @@ export class ChatGPTApi {
         }
       },
       onmessage(msg) {
+        console.log('[OpenAI] onmessage:', msg)
         if (msg.data === "[DONE]" || finished) {
           return finish();
         }
         const text = msg.data;
         try {
-          const json = JSON.parse(text);
-          const delta = json.choices[0].delta.content;
-          if (delta) {
-            remainText += delta;
+          if ([ModelProvider.Ollama].includes(_this.provider)) {
+            if (text) remainText += text;
+          } else {
+            const json = JSON.parse(text);
+            const delta = json.choices[0].delta.content;
+            if (delta) {
+              remainText += delta;
+            }
           }
         } catch (e) {
           console.error("[Request] parse error", text, msg);
@@ -194,6 +204,7 @@ export class ChatGPTApi {
       const chatPath = this.path(OpenaiPath.ChatPath);
       const chatPayload = {
         method: "POST",
+        fetch: options?.fetcher,
         body: JSON.stringify(requestPayload),
         signal: controller.signal,
         headers: this.getHeaders(),

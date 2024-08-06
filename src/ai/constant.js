@@ -38,7 +38,7 @@ export const ROBOT_COLLECT = [
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
 
-export const REQUEST_TIMEOUT_MS = 6000;
+export const REQUEST_TIMEOUT_MS = 8000;
 
 export const StoreKey = {
   Access: "access-control",
@@ -87,6 +87,8 @@ export const RobotAvatar = {
   [ModelProvider.ChatGLM]: "chatglm.svg",
   [ModelProvider.ZeroOne]: "ZeroOne.svg",
   [ModelProvider.Qwen]: "qwen.svg",
+  [ModelProvider.Ollama]: "ollama.svg",
+
 };
 
 // 默认配置
