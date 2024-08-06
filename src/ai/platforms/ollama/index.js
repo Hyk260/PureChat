@@ -100,8 +100,7 @@ export class OllamaAI {
 
       const response = await this.client.chat({
         messages: [{ role: 'user', content: '你好' }],
-        model: 'qwen2:7b',
-        // payload.model,
+        model: payload.model,
         // options: {
         //   frequency_penalty: payload.frequency_penalty,
         //   presence_penalty: payload.presence_penalty,

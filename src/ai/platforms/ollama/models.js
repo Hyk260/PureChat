@@ -6,6 +6,10 @@ const OllamaAI = {
       id: 'qwen2:7b',
       tokens: 32_768,
     },
+    {
+      enabled: true,
+      id: 'llama3.1:8b',
+    }
   ],
   checkModel: 'qwen2:7b',
   id: 'ollama',

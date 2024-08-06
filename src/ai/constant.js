@@ -71,7 +71,6 @@ export const ZeroOnePath = {
 
 export const QwenPath = {
   ChatPath: "services/aigc/text-generation/generation",
-  // ChatPath: "api/chat",
 };
 
 export const prompt = [
@@ -88,7 +87,6 @@ export const RobotAvatar = {
   [ModelProvider.ZeroOne]: "ZeroOne.svg",
   [ModelProvider.Qwen]: "qwen.svg",
   [ModelProvider.Ollama]: "ollama.svg",
-
 };
 
 // 默认配置
