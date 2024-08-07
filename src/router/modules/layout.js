@@ -13,7 +13,7 @@ export default [
         name: "chatStudio",
         component: () => import("@/views/chatStudio/index.vue"),
         meta: {
-          title: "聊天工作室",
+          title: "chat",
           locale: "chatStudio",
           icon: "ForkSpoon",
           keep: true,
@@ -24,7 +24,7 @@ export default [
         name: "about",
         component: () => import("@/views/about/index.vue"),
         meta: {
-          title: "关于",
+          title: "about",
           locale: "about",
           icon: "Warning",
         },

@@ -3,6 +3,7 @@ import {
   CHATGPT_ROBOT,
   CHATYI_ROBOT,
   CHATQWEN_ROBOT,
+  CHATOLLAMA_ROBOT,
   ModelProvider,
   StoreKey,
   modelConfig,
@@ -10,6 +11,7 @@ import {
 } from "@/ai/constant";
 import { isRobot } from "@/utils/chat/index";
 import storage from "@/utils/localforage/index";
+import { OllamaAI } from "./platforms/ollama/ollama";
 
 export const useAccessStore = (model = ModelProvider.GPT) => {
   try {
@@ -41,17 +43,19 @@ export function getModelType(modelId) {
     [CHATGLM_ROBOT]: ModelProvider.ChatGLM,
     [CHATYI_ROBOT]: ModelProvider.ZeroOne,
     [CHATQWEN_ROBOT]: ModelProvider.Qwen,
+    [CHATOLLAMA_ROBOT]: ModelProvider.Ollama,
   };
   return modelMapping[modelId] || "";
 }
 
 export function getModelSvg(id) {
-  const modelId = getModelType(id)
+  const modelId = getModelType(id);
   const data = {
     [ModelProvider.GPT]: "openai",
     [ModelProvider.ChatGLM]: "zhipu",
     [ModelProvider.ZeroOne]: "zeroone",
     [ModelProvider.Qwen]: "tongyi",
+    [ModelProvider.Ollama]: "ollama",
   };
   return data[modelId] || "";
 }
@@ -73,3 +77,75 @@ export function prettyObject(msg) {
 export function prefixRobotIDs(robotIDs) {
   return robotIDs.map((id) => "C2C" + id);
 }
+
+export const createSmoothMessage = (params) => {
+  let buffer = "";
+
+  let outputQueue = [];
+
+  let animationTimeoutId = null;
+  let isAnimationActive = false;
+
+  // 当需要停止动画时，调用此函数
+  const stopAnimation = () => {
+    isAnimationActive = false;
+    if (animationTimeoutId !== null) {
+      clearTimeout(animationTimeoutId);
+      animationTimeoutId = null;
+    }
+  };
+
+  // 定义startAnimation函数以在缓冲区中平滑显示文本
+  // 当需要启动动画时，调用此函数
+  const startAnimation = (speed = 2) =>
+    new Promise((resolve) => {
+      if (isAnimationActive) {
+        resolve();
+        return;
+      }
+
+      isAnimationActive = true;
+
+      const updateText = () => {
+        // 如果动画已经不再激活，则停止更新文本
+        if (!isAnimationActive) {
+          clearTimeout(animationTimeoutId);
+          animationTimeoutId = null;
+          resolve();
+        }
+
+        // 如果还有文本没有显示
+        // 检查队列中是否有字符待显示
+        if (outputQueue.length > 0) {
+          // 从队列中获取前两个字符（如果存在）
+          const charsToAdd = outputQueue.splice(0, speed).join("");
+          buffer += charsToAdd;
+
+          // 更新消息内容，这里可能需要结合实际情况调整
+          params.onTextUpdate(charsToAdd, buffer);
+
+          // 设置下一个字符的延迟
+          animationTimeoutId = setTimeout(updateText, 16); // 16 毫秒的延迟模拟打字机效果
+        } else {
+          // 当所有字符都显示完毕时，清除动画状态
+          isAnimationActive = false;
+          animationTimeoutId = null;
+          resolve();
+        }
+      };
+
+      updateText();
+    });
+
+  const pushToQueue = (text) => {
+    outputQueue.push(...text.split(""));
+  };
+
+  return {
+    isAnimationActive,
+    isTokenRemain: () => outputQueue.length > 0,
+    pushToQueue,
+    startAnimation,
+    stopAnimation,
+  };
+};

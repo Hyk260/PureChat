@@ -83,7 +83,7 @@ export const handleCopyMsg = async (data) => {
   }
   // 图片
   if (type === "TIMImageElem") {
-    const url = content.imageInfoArray[1].imageUrl;
+    const url = content.imageInfoArray[0].imageUrl;
     const imageBlob = await getBlob(url);
     // 创建一个空的 ClipboardItem 对象，并将图片添加到其中
     const clipboardItem = new ClipboardItem({ "image/png": imageBlob });

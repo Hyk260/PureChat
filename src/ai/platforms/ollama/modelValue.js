@@ -1,37 +1,29 @@
-import ZeroOne from './models';
+import OllamaAI from "./models";
 
 const docs = __APP_INFO__.pkg.docs;
 
-export const zhipuModelValue = () => {
+export const ollamaModelValue = () => {
   return {
     Model: {
       ID: "model",
       Title: "模型 (model)",
-      SubTitle: "ChatGLM 模型",
+      SubTitle: "ollama 模型",
       defaultValue: "",
-      options: ZeroOne,
+      options: OllamaAI,
     },
     OpenaiUrl: {
       ID: "openaiUrl",
       Title: "接口地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
-      Placeholder: "https://open.bigmodel.cn",
-      defaultValue: "",
-    },
-    Token: {
-      ID: "token",
-      Title: "API Key",
-      SubTitle: "请填写你的 ZhiPu API Key",
-      Placeholder: "ZhiPu API Key",
-      defaultValue: "",
-      doubt: `${docs}/guides/model-provider.html#zhipu-api-key`,
+      Placeholder: "http://127.0.0.1:11434/",
+      defaultValue: "http://127.0.0.1:11434/",
     },
     Temperature: {
       ID: "temperature",
       Title: "随机性 (temperature)",
       SubTitle: "值越大，回复越随机",
       defaultValue: "",
-      step: 0.01,
+      step: 0.1,
       min: 0,
       max: 1,
     },
@@ -44,14 +36,24 @@ export const zhipuModelValue = () => {
       min: 0,
       max: 1,
     },
-    // MaxTokens: {
-    //   ID: "max_tokens",
-    //   Title: "单次回复限制 (max_tokens)",
-    //   SubTitle: "单次交互所用的最大 Token 数",
-    //   defaultValue: "",
-    //   min: 1024,
-    //   max: 512000,
-    // },
+    PresencePenalty: {
+      ID: "presence_penalty",
+      Title: "话题新鲜度 (presence_penalty)",
+      SubTitle: "值越大，越有可能扩展到新话题",
+      defaultValue: "",
+      step: 0.1,
+      min: 0,
+      max: 2,
+    },
+    FrequencyPenalty: {
+      ID: "frequency_penalty",
+      Title: "频率惩罚度 (frequency_penalty)",
+      SubTitle: "值越大，越有可能降低重复字词",
+      defaultValue: "",
+      step: 0.1,
+      min: 0,
+      max: 2,
+    },
     historyMessageCount: {
       ID: "historyMessageCount",
       Title: "附带历史消息数",

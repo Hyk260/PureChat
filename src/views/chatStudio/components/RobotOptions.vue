@@ -38,7 +38,7 @@
               :value="models.id"
             />
           </el-select>
-          <div class="range" v-else-if="item.Range">
+          <div class="range" v-else-if="isRange(item.ID)">
             {{ item.defaultValue }}
             <input
               v-model="item.defaultValue"
@@ -52,7 +52,7 @@
             <input v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
           </div>
           <div class="input flex items-center" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
-            <span class="flex mr-5 cursor-pointer" v-if="item.ID === 'token'">
+            <span class="flex mr-5 cursor-pointer" v-if="item.doubt && item.ID === 'token'">
               <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
             </span>
             <el-input
@@ -92,6 +92,16 @@ const { commit } = useStore();
 const [state, setState] = useBoolean();
 const { toAccount } = useGetters(["toAccount"]);
 
+function isRange(id) {
+  return [
+    "temperature",
+    "top_p",
+    "presence_penalty",
+    "frequency_penalty",
+    "historyMessageCount",
+  ].includes(id);
+}
+
 function initModel() {
   const model = getModelType(toAccount.value);
   const value = cloneDeep(modelValue[model]);
@@ -100,10 +110,6 @@ function initModel() {
   });
   maskData.value = cloneDeep(usePromptStore(model));
   modelData.value = value;
-}
-
-function handleClose(done) {
-  done();
 }
 
 function storeRobotModel(model) {
@@ -146,6 +152,10 @@ function resetRobotMask() {
     Object.entries(prompt).filter(([key, _]) => !key.includes(account))
   );
   storage.set(StoreKey.Prompt, filteredConfig);
+}
+
+function handleClose(done) {
+  done();
 }
 // 重置
 function handleCancel() {

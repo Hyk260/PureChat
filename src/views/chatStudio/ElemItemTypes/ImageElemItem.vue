@@ -13,7 +13,7 @@
       :initial-index="initialIndex"
       :infinite="false"
       :zoom-rate="1.2"
-      :max-scale="3"
+      :max-scale="2.5"
       :min-scale="0.3"
       :preview-teleported="true"
       fit="cover"
@@ -22,6 +22,7 @@
 </template>
 
 <script setup>
+import emitter from "@/utils/mitt-bus";
 import { ref, toRefs, computed } from "vue";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { showIMPic, getImageSize } from "../utils/utils";
@@ -64,7 +65,6 @@ const initialIndex = computed(() => {
   });
 });
 
-
 async function initImageSize() {
   try {
     let width = getImageProperties()?.width || 0;
@@ -85,7 +85,9 @@ async function initImageSize() {
 initImageSize();
 
 const geiPic = (url) => {};
-const loadImg = (e) => {};
+const loadImg = (e) => {
+  emitter.emit("updataScroll","instantly");
+};
 </script>
 
 <style lang="scss" scoped>
@@ -104,6 +106,7 @@ const loadImg = (e) => {};
   :deep(.el-image) {
     border-radius: 5px;
     vertical-align: bottom;
+    min-height: 82px;
   }
 }
 </style>

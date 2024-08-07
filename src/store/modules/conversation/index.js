@@ -400,6 +400,7 @@ const conversation = {
     async SESSION_MESSAGE_SENDING({ state, commit, dispatch }, action) {
       const { payload } = action;
       const { convId, message } = payload;
+      // 消息上屏 预加载
       commit("SET_HISTORYMESSAGE", {
         type: "UPDATE_MESSAGES",
         payload: { convId, message },

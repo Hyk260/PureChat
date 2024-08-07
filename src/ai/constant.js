@@ -7,8 +7,11 @@ import { yiModelValue } from "@/ai/platforms/zeroone/modelValue";
 import { ZhiPuConfig } from "@/ai/platforms/zhipu/config";
 import { zhipuModelValue } from "@/ai/platforms/zhipu/modelValue";
 
-import { QwenConfig } from "@/ai/platforms/alibaba/config";
-import { qwenModelValue } from "@/ai/platforms/alibaba/modelValue";
+import { QwenConfig } from "@/ai/platforms/qwen/config";
+import { qwenModelValue } from "@/ai/platforms/qwen/modelValue";
+
+import { OllamaConfig } from "@/ai/platforms/ollama/config";
+import { ollamaModelValue } from "@/ai/platforms/ollama/modelValue";
 
 import { prefixRobotIDs } from "./utils";
 
@@ -22,17 +25,20 @@ export const CHATGLM_ROBOT = import.meta.env.VITE_ROBOT_GLM;
 export const CHATYI_ROBOT = import.meta.env.VITE_ROBOT_ZEROONE;
 // 通义千问机器人id
 export const CHATQWEN_ROBOT = import.meta.env.VITE_ROBOT_QWEN;
+// OLLAMA
+export const CHATOLLAMA_ROBOT = import.meta.env.VITE_ROBOT_OLLAMA;
 
 export const ROBOT_COLLECT = [
   CHATGPT_ROBOT,
   CHATGLM_ROBOT,
   CHATYI_ROBOT,
-  // CHATQWEN_ROBOT
+  // CHATQWEN_ROBOT,
+  CHATOLLAMA_ROBOT,
 ];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
 
-export const REQUEST_TIMEOUT_MS = 6000;
+export const REQUEST_TIMEOUT_MS = 8000;
 
 export const StoreKey = {
   Access: "access-control",
@@ -44,6 +50,7 @@ export const ModelProvider = {
   ChatGLM: "ChatGLM", // 智谱
   ZeroOne: "ZeroOne", // 零一万物
   Qwen: "Qwen", // 通义千问
+  Ollama: "Ollama",
 };
 
 export const OpenaiPath = {
@@ -79,6 +86,7 @@ export const RobotAvatar = {
   [ModelProvider.ChatGLM]: "chatglm.svg",
   [ModelProvider.ZeroOne]: "ZeroOne.svg",
   [ModelProvider.Qwen]: "qwen.svg",
+  [ModelProvider.Ollama]: "ollama.svg",
 };
 
 // 默认配置
@@ -87,6 +95,7 @@ export const modelConfig = {
   [ModelProvider.ChatGLM]: { ...ZhiPuConfig },
   [ModelProvider.ZeroOne]: { ...YiConfig },
   [ModelProvider.Qwen]: { ...QwenConfig },
+  [ModelProvider.Ollama]: { ...OllamaConfig },
 };
 
 export const modelValue = {
@@ -94,4 +103,5 @@ export const modelValue = {
   [ModelProvider.ChatGLM]: zhipuModelValue(),
   [ModelProvider.ZeroOne]: yiModelValue(),
   [ModelProvider.Qwen]: qwenModelValue(),
+  [ModelProvider.Ollama]: ollamaModelValue(),
 };
