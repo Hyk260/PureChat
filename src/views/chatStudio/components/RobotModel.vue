@@ -11,8 +11,8 @@
       @click="storeRobotModel(item.id)"
     >
       <div :class="['icon', robotIcon]">
-        <div class="tongyi icon" v-if="model.id === 'ollama'">
-          <svg-icon iconClass="tongyi" /> 
+        <div :class="['icon', item.icon]" v-if="model.id === 'ollama'">
+          <svg-icon :iconClass="item.icon" />
         </div>
         <span v-else>
           <svg-icon :iconClass="robotIcon" />
@@ -83,6 +83,7 @@ emitter.on("openModeList", () => {
   display: flex;
   align-items: center;
   gap: 8px;
+  cursor: pointer;
   &:hover {
     background-color: rgba(0, 0, 0, 0.03);
   }
@@ -109,6 +110,9 @@ emitter.on("openModeList", () => {
 }
 .zeroone {
   background: rgb(0, 52, 37);
+}
+.meta {
+  background: linear-gradient(45deg, rgb(0, 127, 248), rgb(6, 104, 225), rgb(0, 127, 248));
 }
 .item-group-title {
   display: flex;

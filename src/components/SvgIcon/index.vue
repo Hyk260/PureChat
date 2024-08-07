@@ -34,7 +34,7 @@ export default defineComponent({
   font-size: 16px;
   width: 1em;
   height: 1em;
-  cursor: pointer;
+  // cursor: pointer;
   display: inline-block;
   // color: #ccc; 
   // fill: currentColor; 
