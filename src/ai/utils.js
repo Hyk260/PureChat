@@ -11,6 +11,7 @@ import {
 } from "@/ai/constant";
 import { isRobot } from "@/utils/chat/index";
 import storage from "@/utils/localforage/index";
+import { OllamaAI } from "./platforms/ollama/ollama";
 
 export const useAccessStore = (model = ModelProvider.GPT) => {
   try {

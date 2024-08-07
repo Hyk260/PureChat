@@ -161,7 +161,12 @@ export class ChatGPTApi {
         const text = msg.data;
         try {
           if ([ModelProvider.Ollama].includes(_this.provider)) {
-            if (text) remainText += text;
+            const json = JSON.parse(text);
+            if (json === '[DONE]') return finish();
+            const delta = json.message.content;
+            if (delta) {
+              remainText += delta;
+            }
           } else {
             const json = JSON.parse(text);
             const delta = json.choices[0].delta.content;
@@ -204,11 +209,12 @@ export class ChatGPTApi {
       const chatPath = this.path(OpenaiPath.ChatPath);
       const chatPayload = {
         method: "POST",
-        fetch: options?.fetcher,
         body: JSON.stringify(requestPayload),
         signal: controller.signal,
         headers: this.getHeaders(),
       };
+
+      if ([ModelProvider.Ollama].includes(this.provider)) chatPayload.fetch = options?.fetcher
 
       const requestTimeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
       // 流式输出

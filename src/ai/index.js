@@ -1,12 +1,12 @@
 import { ClientApi } from "@/ai/api";
 import { RobotAvatar, ModelProvider } from "@/ai/constant";
-import { getModelType, useAccessStore, useAccessStore, prettyObject } from "@/ai/utils";
+import { getModelType, useAccessStore, prettyObject } from "@/ai/utils";
 import { createCustomMsg } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
 import store from "@/store";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
-import { OllamaAI } from "./platforms/ollama/index";
+import { OllamaAI } from './platforms/ollama/ollama';
 
 const restSendMsg = async (params, message) => {
   return await restApi({
@@ -58,31 +58,35 @@ function beforeSend(api, msg) {
   }
   return false;
 }
-const fetchOnClient = async (params) => {
-  return await new OllamaAI().chat({
-    model: params.model
-  }, {
-    callback: {
-
-
-    },
-    // signal: ""
-  });
-};
-
-const fetcher = async ({ provider, model }) => {
-  try {
-    return await fetchOnClient({
-      model,
-      payload: useAccessStore(provider),
-      // provider,
-      // signal
-    });
-  } catch (e) { }
-};
 
 export const chatService = async (params) => {
   const { messages, chat } = params;
+
+  const fetchOnClient = async () => {
+
+    const payload = useAccessStore(ModelProvider.Ollama);
+
+    try {
+      return await new OllamaAI().chat(messages, payload, {
+        callback: {
+
+        },
+        // signal: ""
+      });
+    } catch (e) {
+      console.log(e)
+    }
+
+  };
+
+  const fetcher = async () => {
+    try {
+      return await fetchOnClient();
+    } catch (e) {
+      console.log(e)
+    }
+  };
+
   const provider = getModelType(chat.to);
   const api = new ClientApi(provider);
   const msg = fnCreateLodMsg(chat);
@@ -90,7 +94,7 @@ export const chatService = async (params) => {
   const { model } = useAccessStore(provider);
   await api.llm.chat({
     messages,
-    fetcher: fetcher({ provider, model }),
+    fetcher: fetcher,
     config: { model, stream: true },
     onUpdate(message) {
       console.log("[chat] onUpdate:", message);

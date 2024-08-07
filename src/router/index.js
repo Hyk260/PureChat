@@ -22,7 +22,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (from.path === to.path) return;
-  setPageTitle(to.meta.title);
+  // setPageTitle(to.meta.title);
   const token = storage.get(ACCESS_TOKEN);
   if (token || noService) {
     !isElectron && NProgress.start();
