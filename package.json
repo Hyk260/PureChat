@@ -34,6 +34,7 @@
     "element-plus": "^2.7.0",
     "fast-glob": "^3.3.2",
     "highlight.js": "11.9.0",
+    "js-cookie": "^3.0.5",
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",
     "mitt": "^3.0.0",

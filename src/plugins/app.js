@@ -1,9 +1,15 @@
-import { h } from "vue";
 import { ElNotification, ElButton } from "element-plus";
+import { setCookie, getCookie } from '@/utils/cookie';
+import { isElectron } from "@/utils/common";
 import { isDev } from "@/config/env";
 import { $t } from "./i18n";
+import { h } from "vue";
 
 let Notification = null;
+
+function setPageNotif() {
+  !getCookie('onUpdate') && setCookie('onUpdate', true, 1)
+}
 
 function notify() {
   if (Notification) Notification.close();
@@ -16,6 +22,7 @@ function notify() {
         {
           onClick() {
             Notification.close();
+            setPageNotif()
           },
         },
         () => $t("system.updateCancel")
@@ -26,12 +33,13 @@ function notify() {
           type: "primary",
           onClick() {
             location.reload();
+            setPageNotif()
           },
         },
         () => $t("system.updateConfirm")
       ),
     ]),
-    duration: 6000, // 6000
+    duration: 6000,
   });
 }
 
@@ -50,7 +58,9 @@ async function getHtmlBuildTime() {
 }
 
 export function setupAppVersionNotification() {
+  if (isElectron) return
   document.addEventListener("visibilitychange", async () => {
+    if (getCookie('onUpdate')) return
     const buildTime = await getHtmlBuildTime();
     const BUILD_TIME = __APP_INFO__.lastBuildTime;
     if (
