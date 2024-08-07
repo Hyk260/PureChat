@@ -9,7 +9,6 @@ import Artplayer from "artplayer";
 import state from "../icons/state";
 import indicator from "../icons/indicator";
 const loading = ''
-// require("../icons/ploading.gif");
 export default {
   data() {
     return {
@@ -65,6 +64,9 @@ export default {
   position: relative;
   border-radius: 6px;
   overflow: hidden;
+}
+.art-video-player{
+  z-index: 1;
 }
 .artplayer {
   width: 240px;
