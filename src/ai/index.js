@@ -98,14 +98,14 @@ export const chatService = async (params) => {
     config: { model, stream: true },
     onUpdate(message) {
       console.log("[chat] onUpdate:", message);
-      emitter.emit("updataScroll", "instantly");
       updataMessage(msg, message);
+      emitter.emit("updataScroll", "robot");
     },
     async onFinish(message) {
       console.log("[chat] onFinish:", message);
-      emitter.emit("updataScroll", "instantly");
       if (!message) return;
       updataMessage(msg, message);
+      emitter.emit("updataScroll", "robot");
       await restSendMsg(chat, message);
     },
     async onError(error) {

@@ -39,7 +39,7 @@
               <el-avatar
                 :size="36"
                 shape="square"
-                @click.stop="onclickavatar($event, item)"
+                @click.stop="onClickAvatar($event, item)"
                 :src="item.avatar || circleUrl"
                 @error="() => true"
                 v-contextmenu:contextmenu
@@ -79,7 +79,7 @@
         :key="item.id"
         @click="handlRightClick(item)"
       >
-        <p :class="['item', currentType == 'GROUP' ? 'group' : 'C2C']">{{ item.text }}</p>
+        <p :class="['item']">{{ item.text }}</p>
       </contextmenu-item>
     </contextmenu>
   </section>
@@ -145,17 +145,13 @@ const {
   currentConversation: (state) => state.conversation.currentConversation,
 });
 
-const updateLoadMore = (newValue) => {
+const updateLoadMore = (value) => {
   nextTick(() => {
-    const ViewRef = messageViewRef.value;
-    const elRef = ViewRef?.children?.[newValue - 1];
-    if (newValue > 0) {
-      elRef?.scrollIntoView({
-        block: "start",
-      });
-    } else {
-      elRef?.scrollIntoViewIfNeeded();
-    }
+    const elRef = messageViewRef.value?.children?.[value - 1];
+    console.log('messageViewRef:', elRef)
+    if (!elRef) return;
+    console.log('updateLoadMore:', value)
+    value > 0 ? elRef.scrollIntoView({ block: "start" }) : elRef.scrollIntoViewIfNeeded();
   });
 };
 
@@ -168,9 +164,11 @@ const showAvatar = (item) => {
 const getElementById = (ID) => {
   return document.getElementById(`choice${ID}`);
 };
+
 const setSelect = (el) => {
   el.classList.toggle("style-select");
 };
+
 const handleSelect = (e, item, type = "initial") => {
   // tip消息 撤回消息 抖动消息
   if (
@@ -215,50 +213,57 @@ const handleSelect = (e, item, type = "initial") => {
 const isTime = (item) => {
   return item?.isTimeDivider;
 };
+
 const ISown = (item) => {
   return item.from == userProfile.value.userID;
 };
 
-const onclickavatar = (e, item) => {
+const onClickAvatar = (e, item) => {
   const isSelf = ISown(item);
   if (isSelf || showCheckbox.value) return;
   emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item });
 };
-const scrollBottom = () => {
+
+// 检查滚动条是否到达页面底部
+const isScrolledToBottom = (lower = 1) => {
   try {
     const { scrollTop, clientHeight, scrollHeight } = scrollbarRef.value?.wrapRef;
+    // 计算当前可视区域的高度加上滚动条顶部的位置（即实际已加载的内容高度）
     const height = scrollTop + clientHeight;
-    const isbot = scrollHeight - height < 1;
-    // isbot && console.log("到底部");
+    // 判断页面是否完全加载，即底部距离小于或等于1个像素
+    const isbot = scrollHeight - height < lower;
+    // console.log(scrollHeight - height);
+    if (isbot) console.log("isScrolledToBottom: 到底部");
     return isbot;
-  } catch (error) {
+  } catch (e) {
     return false;
   }
 };
-const loadMoreFn = () => {
-  // if (!noMore.value) {
+// 加载更多消息的函数
+const loadMoreMessages = () => {
   const current = currentMessageList.value?.length - 1;
   // 第一条消息 加载更多 节点
   const offsetTopScreen = messageViewRef.value?.children?.[current];
   const top = offsetTopScreen?.getBoundingClientRect().top;
-  const canLoadData = top > 50; //滚动到顶部
-  canLoadData && getMoreMsg();
-  // }
-  const isbot = scrollBottom();
-  emitter.emit("onisbot", isbot);
+  // 滚动到顶部
+  const canLoadData = top >= 36;
+  if (canLoadData) getMoreMsg();
+  emitter.emit("onisbot", isScrolledToBottom());
 };
-const debouncedFunc = debounce(loadMoreFn, 250); //防抖处理
+
+const debouncedFunc = debounce(loadMoreMessages, 250); //防抖处理
 
 const scrollbar = ({ scrollLeft, scrollTop }) => {
+  // console.log("scrollLeft:", scrollLeft);
+  // console.log("scrollTop:", scrollTop);
   debouncedFunc();
 };
 
-const updateScrollBarHeight = (data) => {
-  if (data == "instantly") {
+const updateScrollBarHeight = (type) => {
+  if (type === "instantly") {
     scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight);
   } else {
     nextTick(() => {
-      // messageViewRef.value?.firstElementChild?.scrollIntoView();
       scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight);
     });
   }
@@ -485,16 +490,18 @@ watch(currentReplyMsg, (data) => {
 });
 
 onMounted(() => {
-  emitter.on("updataScroll", (data) => {
-    if (data == "bottom") {
-      scrollBottom() && updateScrollBarHeight('instantly');
+  emitter.on("updataScroll", (type) => {
+    if (type === "bottom") {
+      isScrolledToBottom() && updateScrollBarHeight();
+    } else if(type === 'robot') {
+      isScrolledToBottom(10) && updateScrollBarHeight();
     } else {
-      updateScrollBarHeight(data);
+      updateScrollBarHeight(type);
     }
   });
 });
 onUnmounted(() => {
-  emitter.off("updataScroll")
+  emitter.off("updataScroll");
 });
 onUpdated(() => {});
 onBeforeUpdate(() => {});

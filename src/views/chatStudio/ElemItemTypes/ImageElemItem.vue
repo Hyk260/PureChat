@@ -13,7 +13,7 @@
       :initial-index="initialIndex"
       :infinite="false"
       :zoom-rate="1.2"
-      :max-scale="2.5"
+      :max-scale="5"
       :min-scale="0.3"
       :preview-teleported="true"
       fit="cover"
@@ -85,9 +85,7 @@ async function initImageSize() {
 initImageSize();
 
 const geiPic = (url) => {};
-const loadImg = (e) => {
-  emitter.emit("updataScroll","instantly");
-};
+const loadImg = (e) => {};
 </script>
 
 <style lang="scss" scoped>
