@@ -22,7 +22,23 @@
                 {{ item }}
               </button>
             </div>
+            <div class="mt-20" v-else>
+              <el-skeleton :rows="5" animated />
+            </div>
             <div class="agent-list">
+              <el-skeleton class="skeleton" v-if="!market" v-for="item in 9" :key="item">
+                <template #template>
+                  <el-skeleton-item variant="image" class="h-40 w-40 ml-auto" />
+                  <div>
+                    <el-skeleton-item variant="p" />
+                    <el-skeleton-item variant="p" />
+                    <div>
+                      <el-skeleton-item variant="text" style="margin-right: 16px" />
+                      <el-skeleton-item variant="text" style="width: 30%" />
+                    </div>
+                  </div>
+                </template>
+              </el-skeleton>
               <AgentCard
                 @click="cardClick(item)"
                 v-for="item in filterInput"
@@ -157,6 +173,12 @@ onBeforeMount(() => {
   );
   gap: 1em;
   padding: 20px 0;
+}
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
 }
 
 .tags {

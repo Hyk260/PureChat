@@ -6,8 +6,8 @@
     :style="{ background: backgroundStyle }"
   >
     <div class="file-data">
-      <div class="w-45 h-45">
-        <img class="h-full" :src="renderFileIcon(FileType)" alt="" />
+      <div class="min-w-45 h-45">
+        <img draggable="false" class="h-full" :src="icon" alt="" />
       </div>
       <div class="file-box__content">
         <div class="file-name">
@@ -48,7 +48,8 @@ const { message, status } = toRefs(props);
 const { payload } = message.value;
 
 const backgroundStyle = ref("");
-const FileType = getFileType(payload?.fileName);
+const fileType = getFileType(payload?.fileName);
+const icon = renderFileIcon(fileType)
 
 const isStatus = (value) => {
   return status.value == value;
@@ -69,17 +70,15 @@ const backstyle = (status = 0, percentage = 0) => {
     : "";
 };
 
-backgroundStyle.value = backstyle();
-
 const uploading = ({ uuid, num, type = "up" }) => {
   try {
     const dom = document.getElementById(`${uuid}`);
     dom.style.background = backstyle(1, num);
-    if (type == "up") {
+    if (type === "up") {
       const upProgress = dom.querySelector(".upload_progress");
       upProgress.innerText = num + "%";
     }
-    if (type == "dow") {
+    if (type === "dow") {
       const downProgress = dom.querySelector(".download_progress");
       downProgress.innerText = num + "%";
     }
@@ -92,6 +91,7 @@ onMounted(() => {
   emitter.on("fileUploading", (data) => {
     uploading(data);
   });
+  backgroundStyle.value = backstyle();
 });
 
 onBeforeUnmount(() => {
