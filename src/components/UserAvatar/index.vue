@@ -8,7 +8,7 @@
   </div>
   <img draggable="false"  v-else-if="type == 'single'" class="avatar" :src="url || shapeObj[shape]" alt="头像" />
   <div v-else-if="type == 'self'" class="badge" :style="{ height: `${size}px` }">
-    <el-avatar :draggable="false" :size="size" :src="userProfile?.avatar || shapeObj['circle']" :shape="shape" />
+    <el-avatar :size="size" :src="userProfile?.avatar || shapeObj['circle']" :shape="shape" />
     <sup v-show="isdot" class="is-dot"></sup>
   </div>
 </template>

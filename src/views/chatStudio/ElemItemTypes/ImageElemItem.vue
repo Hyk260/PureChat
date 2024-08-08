@@ -22,7 +22,6 @@
 </template>
 
 <script setup>
-import emitter from "@/utils/mitt-bus";
 import { ref, toRefs, computed } from "vue";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { showIMPic, getImageSize } from "../utils/utils";
@@ -84,7 +83,9 @@ async function initImageSize() {
 
 initImageSize();
 
-const geiPic = (url) => {};
+const geiPic = (url) => {
+  console.log("pic:", url);
+};
 const loadImg = (e) => {};
 </script>
 

@@ -78,6 +78,7 @@ emitter.on("openMergePopup", (data) => {
 <style lang="scss" scoped>
 .merg-dialog {
   height: 550px;
+  pointer-events: none;
   & > div {
     padding: 10px 0 10px 0;
   }
