@@ -71,7 +71,9 @@
         </div>
       </div>
       <div>
-        <el-button class="w-full" @click="onDownload(fieldType)"> 下载截图 </el-button>
+        <el-button class="w-full" @click="onDownload(fieldType)"> 
+          {{  fieldType === ImageType.Blob ? '复制截图' : '下载截图' }}
+         </el-button>
       </div>
     </div>
   </el-dialog>
@@ -89,7 +91,7 @@ import { loadMsgModule, msgOne, msgType } from "@/views/chatStudio/utils/utils";
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
 const isFooter = ref(false);
-const fieldType = ref(ImageType.JPG);
+const fieldType = ref(ImageType.Blob);
 const [dialogVisible, setDialogVisible] = useBoolean();
 const { loading, onDownload, title } = useScreenshot();
 const { forwardData, userProfile } = useState({
