@@ -5,6 +5,7 @@ import { notify } from './notification/index';
 import { isMac } from "./platform";
 import log from './logger/index';
 import { createWindow, winSingle, ipcEvent, setDefaultProtocol, initFolder } from "./utils/index";
+import { trayFn } from './tray/index';
 
 class Background {
   constructor() {
@@ -38,6 +39,8 @@ class Background {
     });
     // 此方法将在Electron完成后调用 初始化，并准备创建浏览器窗口。 某些API只能在此事件发生后使用。
     app.whenReady().then(() => {
+
+      trayFn()
 
       notify()
 

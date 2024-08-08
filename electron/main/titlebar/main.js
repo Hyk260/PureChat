@@ -44,7 +44,8 @@ export function registerTitleBarListener() {
             win.maximize()
           }
         } else if (action === 'close') {
-          win.close()
+          // win.close()
+          win.hide()
         }
       }
     }
