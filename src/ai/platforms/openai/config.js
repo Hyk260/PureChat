@@ -1,5 +1,5 @@
 export const OpenaiConfig = {
-  model: "gpt-3.5-turbo-16k",
+  model: "gpt-4o-mini",
   /**
    * 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 0.6

@@ -34,6 +34,23 @@ export const imageTypeOptions = [
   },
 ];
 
+/**
+ * 将图像数据URL写入系统的剪贴板。
+ *
+ * @param {string} dataUrl - 图像数据URL。
+ */
+function copyImageToClipboard(dataUrl) {
+  const clipboardItem = new ClipboardItem({ "image/png": dataUrl });
+  navigator.clipboard
+    .write([clipboardItem])
+    .then(() => {
+      store.commit("showMessage", { message: "图片复制成功" });
+    })
+    .catch((error) => {
+      console.error("写入剪贴板时出错:", error);
+    });
+}
+
 export const useScreenshot = (title = '') => {
 
   const [loading, setLoading] = useBoolean();
@@ -74,15 +91,7 @@ export const useScreenshot = (title = '') => {
         scale: 2,
       });
       if (imageType === ImageType.Blob) {
-        const clipboardItem = new ClipboardItem({ "image/png": dataUrl });
-        navigator.clipboard
-          .write([clipboardItem])
-          .then(() => {
-            store.commit("showMessage", { message: "图片复制成功" });
-          })
-          .catch((error) => {
-            console.error("写入剪贴板时出错:", error);
-          });
+        copyImageToClipboard(dataUrl)
       } else {
         const link = document.createElement('a');
         link.download = `PureChat_${title}_${dayjs().format('YYYY-MM-DD')}.${imageType}`;
