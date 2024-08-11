@@ -1,5 +1,6 @@
 import { Tray, app, Menu } from 'electron'
 import path from "node:path";
+import { isMac } from '../platform';
 
 let tray = null
 let icon = null
@@ -7,8 +8,14 @@ const toolTip = import.meta.env.VITE_APP_NAME || "PureChat"
 
 if (app.isPackaged) {
   icon = path.join(process.cwd(), '/resources/app.asar.unpacked/resources/icon.png')
+  if (isMac) {
+    icon = path.join(process.cwd(), '/resources/app.asar.unpacked/resources/icon-32x32@2x.png')
+  }
 } else {
   icon = path.join(__dirname, "../../resources/icon.png");
+  if (isMac) {
+    icon = path.join(__dirname, "../../resources/icon-32x32@2x.png");
+  }
 }
 
 export function trayFn() {
