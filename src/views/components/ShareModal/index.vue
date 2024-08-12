@@ -13,7 +13,10 @@
         <div id="preview" class="preview">
           <div class="content">
             <Header />
-            <div class="item">
+            <div v-if="isRobot(toAccount) && isPrompt" class="markdown">
+              <Markdown :marked="robotPrompt()" />
+            </div>
+            <div class="min-h-60 item">
               <div
                 class="message flex p-10"
                 v-for="item in fnForwardData"
@@ -51,12 +54,17 @@
         </div>
       </div>
       <div class="form-item-props px-5">
-        <div class="flex justify-between items-center my-5 h-32">
+        <div class="flex-bc my-5 h-32">
+          <div>包含助手提示词</div>
+          <div><el-switch v-model="isPrompt" /></div>
+        </div>
+        <el-divider class="my-10" />
+        <div class="flex-bc my-5 h-32">
           <div>包含页脚</div>
           <div><el-switch v-model="isFooter" /></div>
         </div>
         <el-divider class="my-10" />
-        <div class="image-type flex justify-between items-center my-5 h-32">
+        <div class="image-type flex-bc my-5 h-32">
           <div>图片格式</div>
           <div>
             <el-radio-group v-model="fieldType" size="small">
@@ -71,9 +79,9 @@
         </div>
       </div>
       <div>
-        <el-button class="w-full" @click="onDownload(fieldType)"> 
-          {{  fieldType === ImageType.Blob ? '复制截图' : '下载截图' }}
-         </el-button>
+        <el-button class="w-full" @click="onDownload(fieldType)">
+          {{ fieldType === ImageType.Blob ? "复制截图" : "下载截图" }}
+        </el-button>
       </div>
     </div>
   </el-dialog>
@@ -81,23 +89,36 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import { isRobot } from "@/utils/chat/index";
+import { Markdown } from "@/utils/markdown/index";
 import emitter from "@/utils/mitt-bus";
 import Header from "@/views/chatStudio/components/Header.vue";
 import { useBoolean } from "@/utils/hooks/index";
 import { useScreenshot, ImageType, imageTypeOptions } from "@/utils/hooks/useScreenshot";
 import { useState } from "@/utils/hooks/useMapper";
 import { loadMsgModule, msgOne, msgType } from "@/views/chatStudio/utils/utils";
+import { useGetters } from "@/utils/hooks/useMapper";
+import { getModelType, usePromptStore } from "@/ai/utils";
 
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
 const isFooter = ref(false);
+const isPrompt = ref(false);
 const fieldType = ref(ImageType.Blob);
+
+const { toAccount } = useGetters(["toAccount"]);
 const [dialogVisible, setDialogVisible] = useBoolean();
 const { loading, onDownload, title } = useScreenshot();
 const { forwardData, userProfile } = useState({
   userProfile: (state) => state.user.userProfile,
   forwardData: (state) => state.conversation.forwardData,
 });
+
+function robotPrompt() {
+  const model = getModelType(toAccount.value);
+  console.log(usePromptStore(model));
+  return usePromptStore(model).prompt[0].content || "";
+}
 
 const fnForwardData = computed(() => {
   let myObj = Object.fromEntries(forwardData.value);
@@ -119,6 +140,10 @@ emitter.on("onShareModal", (val) => {
 </script>
 
 <style lang="scss" scoped>
+.markdown {
+  padding: 16px;
+  border-bottom: 1px solid var(--color-border-default);
+}
 .share-modal {
   display: flex;
   flex-direction: column;

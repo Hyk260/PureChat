@@ -224,7 +224,7 @@ export class ChatGPTApi {
     options.onController?.(controller);
 
     try {
-      let fetcher = null //  typeof fetch | undefined = undefined;
+      let fetcher = null //  typeof fetch
       const chatPath = this.path(OpenaiPath.ChatPath);
       const chatPayload = {
         method: "POST",
