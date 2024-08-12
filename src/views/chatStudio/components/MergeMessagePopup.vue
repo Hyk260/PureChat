@@ -2,7 +2,7 @@
   <el-dialog
     v-model="dialogVisible"
     :title="mergValue?.payload?.title"
-    width="680px"
+    width="55%"
     align-center
     :before-close="handleClose"
   >
@@ -61,7 +61,7 @@ const [dialogVisible, setDialogVisible] = useBoolean();
 const mergValue = ref({});
 
 const isOwn = (item) => {
-  return item.from === storage.get(TIM_PROXY)?.userProfile?.userID
+  return item.from === storage.get(TIM_PROXY)?.userProfile?.userID;
 };
 
 function handleClose(done) {
@@ -92,6 +92,9 @@ emitter.on("openMergePopup", (data) => {
       font-size: 12px;
       color: var(--color-time-divider);
     }
+  }
+  .message-view__item--index {
+    width: 80%;
   }
 }
 

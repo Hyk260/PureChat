@@ -1,7 +1,12 @@
 <template>
   <div class="toolbar">
     <!-- 表情包 -->
-    <span v-show="!fullScreen && !isRobot(toAccount)" :title="$t('chat.emoji')" class="emoticon" @click="sendEmojiClick">
+    <span
+      v-show="!fullScreen && !isRobot(toAccount)"
+      :title="$t('chat.emoji')"
+      class="emoticon"
+      @click="sendEmojiClick"
+    >
       <svg-icon iconClass="iconxiaolian" class="icon-hover" />
     </span>
     <!-- 图片 -->
@@ -13,7 +18,11 @@
       <svg-icon iconClass="iconwenjianjia" class="icon-hover" />
     </span>
     <!-- 截图 -->
-    <span v-show="!isRobot(toAccount) && isElectron" :title="$t('chat.screenshot')" @click="clickCscreenshot">
+    <span
+      v-show="!isRobot(toAccount) && isElectron"
+      :title="$t('chat.screenshot')"
+      @click="clickCscreenshot"
+    >
       <svg-icon iconClass="iconjietu" class="icon-hover" />
     </span>
     <!-- 选模型 -->
@@ -189,6 +198,9 @@ emitter.on("onisbot", (state) => {
     text-align: center;
     color: #808080;
   }
+  .svg-icon {
+    cursor: pointer;
+  }
   .robot {
     stroke: unset;
     cursor: pointer;
@@ -211,10 +223,12 @@ emitter.on("onisbot", (state) => {
   }
 }
 .chat_vot {
-  cursor: pointer;
   animation: chat_top 0.3s ease;
   .svg-left {
     transform: rotate(-90deg);
+  }
+  .el-icon {
+    cursor: pointer;
   }
 }
 .style-enlarge {

@@ -3,8 +3,9 @@
     v-model="state"
     title="配置"
     :append-to-body="true"
-    width="750px"
+    width="60%"
     align-center
+    class="robot-options-dialog"
     :before-close="handleClose"
   >
     <div>
@@ -187,6 +188,10 @@ emitter.on("onRobotBox", (state) => {
 </script>
 
 <style lang="scss" scoped>
+:global(body .robot-options-dialog) {
+  min-width: 500px;
+  max-width: 980px;
+}
 .el-input {
   width: 200px;
 }

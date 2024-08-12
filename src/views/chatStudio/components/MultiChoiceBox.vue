@@ -20,7 +20,7 @@ import { createForwardMsg, createMergerMsg, deleteMsgList, sendMsg } from "@/api
 import { showConfirmationBox } from "@/utils/message";
 import { mapMutations, mapState } from "vuex";
 import MagforwardingPopup from "./MagforwardingPopup.vue";
-import ShareModal from '@/views/components/ShareModal/index.vue';
+import ShareModal from "@/views/components/ShareModal/index.vue";
 
 const buttonList = [
   {
@@ -79,8 +79,8 @@ export default {
     onClock(item) {
       switch (item.type) {
         case "share": // 截图分享
-          emitter.emit('onShareModal')
-         break;
+          emitter.emit("onShareModal");
+          break;
         case "MergeForward": // 合并转发
           this.setDialogVisible(item.type);
           break;
@@ -284,8 +284,8 @@ export default {
     flex-direction: column;
     align-items: center;
   }
-  svg{
-    color: rgb(128, 128, 128)
+  svg {
+    color: rgb(128, 128, 128);
   }
 }
 .icon {
@@ -294,6 +294,7 @@ export default {
   height: 56px;
   background: #e5e6eb;
   border-radius: 50%;
+  cursor: pointer;
   .svg-icon {
     font-size: 22px;
   }
