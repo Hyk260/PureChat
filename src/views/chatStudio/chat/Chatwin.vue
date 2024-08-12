@@ -95,6 +95,7 @@ import {
   onUpdated,
   ref,
   watch,
+  watchEffect,
 } from "vue";
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
@@ -148,9 +149,9 @@ const {
 const updateLoadMore = (value) => {
   nextTick(() => {
     const elRef = messageViewRef.value?.children?.[value - 1];
-    console.log('messageViewRef:', elRef)
+    console.log("messageViewRef:", elRef);
     if (!elRef) return;
-    console.log('updateLoadMore:', value)
+    console.log("updateLoadMore:", value);
     value > 0 ? elRef.scrollIntoView({ block: "start" }) : elRef.scrollIntoViewIfNeeded();
   });
 };
@@ -251,7 +252,7 @@ const loadMoreMessages = () => {
   emitter.emit("onisbot", isScrolledToBottom());
 };
 
-const debouncedFunc = debounce(loadMoreMessages, 250); //防抖处理
+const debouncedFunc = debounce(loadMoreMessages, 300); //防抖处理
 
 const scrollbar = ({ scrollLeft, scrollTop }) => {
   // console.log("scrollLeft:", scrollLeft);
@@ -474,6 +475,22 @@ const handleRevokeMsg = async (data) => {
     handleRevokeChange(message, "delete");
   }, 60000);
 };
+// watchEffect(() => {});
+function onEmitter() {
+  emitter.on("updataScroll", (type) => {
+    if (type === "bottom") {
+      isScrolledToBottom() && updateScrollBarHeight();
+    } else if (type === "robot") {
+      isScrolledToBottom(10) && updateScrollBarHeight();
+    } else {
+      updateScrollBarHeight(type);
+    }
+  });
+}
+
+function offEmitter() {
+  emitter.off("updataScroll");
+}
 
 watch(
   needScrollDown,
@@ -485,23 +502,16 @@ watch(
     immediate: true,
   }
 );
-watch(currentReplyMsg, (data) => {
+
+watch(currentReplyMsg, () => {
   updateScrollbar();
 });
 
 onMounted(() => {
-  emitter.on("updataScroll", (type) => {
-    if (type === "bottom") {
-      isScrolledToBottom() && updateScrollBarHeight();
-    } else if(type === 'robot') {
-      isScrolledToBottom(10) && updateScrollBarHeight();
-    } else {
-      updateScrollBarHeight(type);
-    }
-  });
+  onEmitter();
 });
 onUnmounted(() => {
-  emitter.off("updataScroll");
+  offEmitter();
 });
 onUpdated(() => {});
 onBeforeUpdate(() => {});

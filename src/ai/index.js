@@ -51,7 +51,7 @@ function beforeSend(api, msg) {
   if ([ModelProvider.Ollama].includes(api.llm.provider)) return false;
   if (!api.config().token) {
     setTimeout(() => {
-      updataMessage(msg, "API Key 为空，请检查 API Key 后重试");
+      updataMessage(msg, "API Key 为空，请在ai配置窗口填入你的 API Key 后重试");
     }, 800);
     return true;
   }
