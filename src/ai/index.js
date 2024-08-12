@@ -6,7 +6,6 @@ import { restApi } from "@/api/node-admin-api/rest";
 import store from "@/store";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
-import { OllamaAI } from './platforms/ollama/ollama';
 
 const restSendMsg = async (params, message) => {
   return await restApi({
@@ -61,32 +60,6 @@ function beforeSend(api, msg) {
 
 export const chatService = async (params) => {
   const { messages, chat } = params;
-
-  const fetchOnClient = async () => {
-
-    const payload = useAccessStore(ModelProvider.Ollama);
-
-    try {
-      return await new OllamaAI().chat(messages, payload, {
-        callback: {
-
-        },
-        // signal: ""
-      });
-    } catch (e) {
-      console.log(e)
-    }
-
-  };
-
-  const fetcher = async () => {
-    try {
-      return await fetchOnClient();
-    } catch (e) {
-      console.log(e)
-    }
-  };
-
   const provider = getModelType(chat.to);
   const api = new ClientApi(provider);
   const msg = fnCreateLodMsg(chat);
@@ -94,7 +67,6 @@ export const chatService = async (params) => {
   const { model } = useAccessStore(provider);
   await api.llm.chat({
     messages,
-    fetcher: fetcher,
     config: { model, stream: true },
     onUpdate(message) {
       console.log("[chat] onUpdate:", message);

@@ -2,8 +2,10 @@ import { OpenaiPath, REQUEST_TIMEOUT_MS } from "@/ai/constant";
 import { ModelProvider } from "@/ai/constant";
 import { prettyObject, useAccessStore, usePromptStore } from "@/ai/utils";
 import { EventStreamContentType, fetchEventSource } from "@fortaine/fetch-event-source";
+import OllamaAI from '../ollama/ollama';
 
 export class ChatGPTApi {
+  messages;
   constructor(provider) {
     this.provider = provider;
   }
@@ -36,6 +38,23 @@ export class ChatGPTApi {
   extractMessage(res) {
     return res.choices?.at(0)?.message?.content ?? "";
   }
+  async fetchOnClient(messages = this.messages) {
+
+    const payload = this.accessStore();
+
+    try {
+      return await new OllamaAI().chat(messages, payload, {
+        callback: {
+
+        },
+        // signal: ""
+      });
+
+    } catch (e) {
+      console.log(e)
+    }
+
+  };
   generateRequestPayload(messages, modelConfig, options) {
     return {
       messages: this.userPromptMessages(messages, modelConfig),
@@ -191,12 +210,11 @@ export class ChatGPTApi {
   // 生成聊天消息
   async chat(options) {
     const messages = options.messages.map(({ role, content }) => ({ role, content }));
-
     const modelConfig = {
       ...this.accessStore(),
       model: options.config.model,
     };
-
+    this.messages = messages
     const requestPayload = this.generateRequestPayload(messages, modelConfig, options.config);
 
     console.log("[Request] openai payload: ", requestPayload);
@@ -206,17 +224,38 @@ export class ChatGPTApi {
     options.onController?.(controller);
 
     try {
+      let fetcher = null //  typeof fetch | undefined = undefined;
       const chatPath = this.path(OpenaiPath.ChatPath);
       const chatPayload = {
         method: "POST",
         body: JSON.stringify(requestPayload),
+        // fetch: () => {},
         signal: controller.signal,
         headers: this.getHeaders(),
       };
 
-      if ([ModelProvider.Ollama].includes(this.provider)) chatPayload.fetch = options?.fetcher
+      // ollama本地模型使用自定义 fetch 请求
+      if ([ModelProvider.Ollama].includes(this.provider)) {
+        fetcher = async () => {
+          try {
+            return await this.fetchOnClient();
+          } catch (e) {
+            const {
+              errorType = '400',
+              error: errorContent,
+              ...res
+            } = e;
+
+            const error = errorContent || e;
+            // track the error at server side
+            console.error(`Route: [${this.provider}] ${errorType}:`, error);
+          }
+        }
+        chatPayload.fetch = fetcher
+      }
 
       const requestTimeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
       // 流式输出
       if (shouldStream) {
         await this.handleStreamingChat(chatPath, chatPayload, options, controller, requestTimeoutId);

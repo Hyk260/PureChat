@@ -17,7 +17,7 @@
             />
           </el-select>
         </li>
-        <li>
+        <li v-if="isDev">
           <span>{{ t("common.language") }}</span>
           <el-select v-model="language" placeholder="选择语言">
             <el-option
@@ -66,6 +66,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { languages, options } from "./enums";
+import { isDev } from "@/config/env";
 
 const emit = defineEmits(["onClose", "onItem"]);
 const props = defineProps({

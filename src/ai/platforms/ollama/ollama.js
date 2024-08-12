@@ -1,5 +1,5 @@
 import { ModelProvider } from "@/ai/constant";
-import { useAccessStore, usePromptStore } from "@/ai/utils";
+import { useAccessStore } from "@/ai/utils";
 import { Ollama } from 'ollama/browser';
 import { customAlphabet } from 'nanoid/non-secure';
 import { readableFromAsyncIterable } from 'ai';
@@ -53,24 +53,12 @@ export class OllamaAI {
   constructor() {
     this.provider = ModelProvider.Ollama
     this.payload = useAccessStore(this.provider);
-    this.client = new Ollama({ host: DEFAULT_BASE_URL });
+    this.client = new Ollama({ host: this.payload.openaiUrl || DEFAULT_BASE_URL });
   }
-  userPromptMessages(messages, payload) {
-    let message = [];
-    const prompts = usePromptStore(this.provider).prompt?.filter((t) => t.content) || []
-    const countMessage = messages.slice(-Number(payload.historyMessageCount));
-    if (prompts.at(0)) {
-      message = [...prompts, ...countMessage]; // prompt
-    } else {
-      message = countMessage; // 上下文
-    }
-    return message
-  }
-
   async chat(messages, payload, options) {
     try {
       const response = await this.client.chat({
-        messages: this.userPromptMessages(messages, payload),
+        messages,
         model: payload.model,
         options: {
           frequency_penalty: payload.frequency_penalty,
@@ -88,4 +76,13 @@ export class OllamaAI {
       console.log(error)
     }
   }
+
+  async models() {
+    const list = await this.client.list();
+    return list.models.map((model) => ({
+      id: model.name,
+    }));
+  }
 }
+
+export default OllamaAI
