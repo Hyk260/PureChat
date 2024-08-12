@@ -1,17 +1,11 @@
 import { registerNotificationListener, notification } from './main'
-import { app, shell } from "electron";
-import path from "node:path";
 import { mainTop } from "../utils/util";
+import { getIconPath } from '../utils/util';
 
 function notify() {
   registerNotificationListener()
 
-  let filePath = ''
-  if (app.isPackaged) {
-    filePath = path.join(process.cwd(), '/resources/app.asar.unpacked/resources/notify.html')
-  } else {
-    filePath = path.join(__dirname, "../../resources/notify.html");
-  }
+  let filePath = getIconPath('notify.html')
 
   notification.config({
     title: 'PureChat',

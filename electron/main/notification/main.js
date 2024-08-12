@@ -1,6 +1,5 @@
 import { isWindows } from '../platform';
 import { fileURLToPath } from 'node:url'
-import { resolve } from 'node:path'
 import { join } from 'node:path'
 import { electronRendererUrl, isDevelopment } from "../platform";
 import {

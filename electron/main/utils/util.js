@@ -2,10 +2,35 @@ import { isWindows, isMac, isProduction } from "../platform";
 import { app, clipboard, shell } from "electron";
 import { execFile, exec } from "child_process";
 import path from "node:path";
+import fs from "node:fs";
 import { fnFilePath } from './folder';
 import log from '../logger/index';
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * 获取图标文件的完整路径
+ * @param {string} iconName - 图标文件的名称，例如 'icon.png'
+ * @returns {string} - 图标文件的完整路径
+ */
+export function getIconPath(iconName) {
+  let iconPath;
+
+  if (app.isPackaged) {
+    // 打包后的路径
+    iconPath = path.join(process.cwd(), 'resources/app.asar.unpacked/resources', iconName);
+  } else {
+    // 开发模式下的路径
+    iconPath = path.join(__dirname, '../../resources', iconName);
+  }
+
+  // 检查图标路径是否存在
+  if (!fs.existsSync(iconPath)) {
+    console.error(`Icon file does not exist: ${iconPath}`);
+  }
+
+  return iconPath;
+}
 
 /* 置顶主窗口 */
 export const mainTop = () => {
@@ -29,12 +54,7 @@ const sendCapturedImageData = (win) => {
 export const handleScreenshot = () => {
   const mainWin = global.mainWin;
   if (isWindows) {
-    let filePath = ''
-    if (app.isPackaged) {
-      filePath = path.join(process.cwd(), '/resources/app.asar.unpacked/resources/ScreenCapture.exe')
-    } else {
-      filePath = path.join(__dirname, "../../resources/ScreenCapture.exe");
-    }
+    let filePath = getIconPath('ScreenCapture.exe')
     console.log(`windows:filePath:${filePath}`)
     log.info(`windows:filePath:${filePath}`)
     const screenWindow = execFile(filePath);
@@ -79,4 +99,3 @@ export const setDefaultProtocol = () => {
     console.log("注册协议", isSet ? "成功" : "失败");
   }
 };
-

@@ -1,21 +1,15 @@
-import { Tray, app, Menu } from 'electron'
-import path from "node:path";
+import { Tray, Menu } from 'electron'
 import { isMac } from '../platform';
+import { getIconPath } from '../utils/util';
 
 let tray = null
 let icon = null
 const toolTip = import.meta.env.VITE_APP_NAME || "PureChat"
 
-if (app.isPackaged) {
-  icon = path.join(process.cwd(), '/resources/app.asar.unpacked/resources/icon.png')
-  if (isMac) {
-    icon = path.join(process.cwd(), '/resources/app.asar.unpacked/resources/icon-32x32@2x.png')
-  }
+if (isMac) {
+  icon = getIconPath('icon-32x32@2x.png')
 } else {
-  icon = path.join(__dirname, "../../resources/icon.png");
-  if (isMac) {
-    icon = path.join(__dirname, "../../resources/icon-32x32@2x.png");
-  }
+  icon = getIconPath('icon.png')
 }
 
 export function trayFn() {
