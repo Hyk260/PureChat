@@ -73,7 +73,8 @@ const user = {
         key: "user", value: {
           username: userID,
           userSig,
-      } });
+        }
+      });
       router.push("/chatstudio");
     },
     // 登录
@@ -102,7 +103,7 @@ const user = {
         logout();
         emitter.all.clear();
         dispatch("TIM_LOG_OUT");
-      },500);
+      }, 500);
     },
     // 登录im
     async TIM_LOG_IN({ state, commit, dispatch }, user) {

@@ -8,6 +8,7 @@
     </span>
     <img
       v-else-if="item.name === 'img'"
+      draggable="false"
       class="emoji"
       :src="getAssetsFile(item.localSrc)"
       alt="表情包"
