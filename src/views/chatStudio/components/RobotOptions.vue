@@ -31,6 +31,7 @@
             <div class="subTitle">{{ item.SubTitle }}</div>
           </div>
           <!-- 模型 -->
+          <el-icon class="refresh" v-if="isRefresh(item)" @click="onRefresh()"><Refresh /></el-icon>
           <el-select v-if="item.options" v-model="item.defaultValue">
             <el-option
               v-for="models in item.options.chatModels"
@@ -76,7 +77,7 @@
 </template>
 
 <script setup>
-import { ROLES, StoreKey, modelConfig, modelValue } from "@/ai/constant";
+import { ROLES, StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
 import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
 import { useBoolean } from "@/utils/hooks/index";
 import { useGetters } from "@/utils/hooks/useMapper";
@@ -85,6 +86,7 @@ import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { ref } from "vue";
 import { useStore } from "vuex";
+import OllamaAI from "@/ai/platforms/ollama/ollama";
 
 const modelData = ref(null);
 const maskData = ref([]);
@@ -101,6 +103,16 @@ function isRange(id) {
     "frequency_penalty",
     "historyMessageCount",
   ].includes(id);
+}
+
+function isRefresh(item) {
+  const model = getModelType(toAccount.value);
+  return item.options && [ModelProvider.Ollama].includes(model);
+}
+
+async function onRefresh() {
+  const list = await new OllamaAI().models();
+  modelData.value.Model.options.chatModels = list;
 }
 
 function initModel() {
@@ -194,6 +206,11 @@ emitter.on("onRobotBox", (state) => {
 }
 .el-input {
   width: 200px;
+}
+.refresh {
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 5px;
 }
 @mixin thumb() {
   appearance: none;

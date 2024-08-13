@@ -81,6 +81,7 @@ export class OllamaAI {
     const list = await this.client.list();
     return list.models.map((model) => ({
       id: model.name,
+      icon: 'meta',
     }));
   }
 }
