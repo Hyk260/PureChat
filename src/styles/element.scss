@@ -5,6 +5,9 @@
 .el-overlay-dialog {
   // backdrop-filter: blur(2px);
 }
+.el-popper__arrow{
+  display: none;
+}
 
 .el-drawer {
   -webkit-app-region: no-drag;

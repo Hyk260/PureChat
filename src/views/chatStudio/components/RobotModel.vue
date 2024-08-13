@@ -18,7 +18,21 @@
           <svg-icon :iconClass="robotIcon" />
         </span>
       </div>
-      <span>{{ item.id }}</span>
+      <div class="flex flex-bc w-full">
+        <span>{{ item.id }}</span>
+        <span class="box">
+          <el-tooltip v-if="item.vision" content="该模型支持视觉识别" placement="right-start">
+            <svg-icon class="vision" iconClass="vision" />
+          </el-tooltip>
+          <el-tooltip
+            v-if="item.functionCall"
+            content="该模型支持函数调用（Function Call）"
+            placement="right-start"
+          >
+            <svg-icon class="function-call" iconClass="functionCall" />
+          </el-tooltip>
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -98,6 +112,22 @@ emitter.on("openModeList", () => {
   color: rgb(255, 255, 255);
   height: 20px;
   width: 20px;
+}
+.box {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  margin-left: 15px;
+  svg {
+    height: 15px;
+    width: 15px;
+  }
+}
+.function-call {
+  color: #369eff;
+}
+.vision {
+  color: #55b467;
 }
 .openai {
   background: rgb(25, 195, 125);
