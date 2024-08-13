@@ -13,7 +13,7 @@
         <div id="preview" class="preview">
           <div class="content">
             <Header />
-            <div v-if="isRobot(toAccount) && isPrompt" class="markdown">
+            <div v-if="isRobot(toAccount) && isPrompt" class="prompt p-16">
               <Markdown :marked="robotPrompt()" />
             </div>
             <div class="min-h-60 item">
@@ -140,8 +140,7 @@ emitter.on("onShareModal", (val) => {
 </script>
 
 <style lang="scss" scoped>
-.markdown {
-  padding: 16px;
+.prompt {
   border-bottom: 1px solid var(--color-border-default);
 }
 .share-modal {

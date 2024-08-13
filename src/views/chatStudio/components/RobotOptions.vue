@@ -181,7 +181,11 @@ function handleConfirm() {
   setState(false);
   const model = {};
   Object.values(modelData.value).map((t) => {
-    model[t.ID] = t.defaultValue;
+    if (isRange(t.ID)) {
+      model[t.ID] = Number(t.defaultValue);
+    } else {
+      model[t.ID] = t.defaultValue;
+    }
   });
   storeRobotModel(model);
   storeRobotMask(maskData.value);

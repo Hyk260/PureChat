@@ -63,7 +63,7 @@ export class OllamaAI {
         options: {
           frequency_penalty: payload.frequency_penalty,
           presence_penalty: payload.presence_penalty,
-          temperature: payload.temperature,
+          temperature: payload.temperature, // 随机性
           top_p: payload.top_p,
         },
         stream: true,

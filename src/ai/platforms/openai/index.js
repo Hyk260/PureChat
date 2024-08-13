@@ -5,7 +5,6 @@ import { EventStreamContentType, fetchEventSource } from "@fortaine/fetch-event-
 import OllamaAI from '../ollama/ollama';
 
 export class ChatGPTApi {
-  messages;
   constructor(provider) {
     this.provider = provider;
   }
@@ -38,7 +37,7 @@ export class ChatGPTApi {
   extractMessage(res) {
     return res.choices?.at(0)?.message?.content ?? "";
   }
-  async fetchOnClient(messages = this.messages) {
+  async fetchOnClient(messages) {
 
     const payload = this.accessStore();
 
@@ -61,7 +60,7 @@ export class ChatGPTApi {
       stream: options.stream, // 流式传输
       model: modelConfig.model, // 模型
       // max_tokens: modelConfig.max_tokens, // 单次回复限制
-      temperature: Number(modelConfig.temperature), // 随机性
+      temperature: modelConfig.temperature, // 随机性
       presence_penalty: modelConfig.presence_penalty, //话题新鲜度
       frequency_penalty: modelConfig.frequency_penalty, // 频率惩罚度
       top_p: modelConfig.top_p, // 核采样
@@ -214,7 +213,6 @@ export class ChatGPTApi {
       ...this.accessStore(),
       model: options.config.model,
     };
-    this.messages = messages
     const requestPayload = this.generateRequestPayload(messages, modelConfig, options.config);
 
     console.log("[Request] openai payload: ", requestPayload);
@@ -236,9 +234,10 @@ export class ChatGPTApi {
 
       // ollama本地模型使用自定义 fetch 请求
       if ([ModelProvider.Ollama].includes(this.provider)) {
+        const message = this.userPromptMessages(messages, modelConfig)
         fetcher = async () => {
           try {
-            return await this.fetchOnClient();
+            return await this.fetchOnClient(message);
           } catch (e) {
             const {
               errorType = '400',

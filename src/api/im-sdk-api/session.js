@@ -36,7 +36,6 @@ export const modifyMessage = async (params) => {
   try {
     const { data: message } = await tim.modifyMessage(params);
     // 修改消息成功，message 是最新的消息
-    console.log(message);
     return message;
   } catch (imError) {
     const { code, data } = imError;
