@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="form-item-props px-5">
-        <div class="flex-bc my-5 h-32">
+        <div class="flex-bc my-5 h-32" v-if="robotPrompt()">
           <div>包含助手提示词</div>
           <div><el-switch v-model="isPrompt" /></div>
         </div>
