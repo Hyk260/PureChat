@@ -1,7 +1,7 @@
 import { OpenaiPath, REQUEST_TIMEOUT_MS } from "@/ai/constant";
 import { ModelProvider } from "@/ai/constant";
 import { prettyObject, useAccessStore, usePromptStore } from "@/ai/utils";
-import { EventStreamContentType, fetchEventSource } from "@fortaine/fetch-event-source";
+import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
 import OllamaAI from '../ollama/ollama';
 
 export class ChatGPTApi {

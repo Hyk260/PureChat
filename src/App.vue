@@ -6,8 +6,8 @@
 
 <script>
 import { ElConfigProvider } from "element-plus";
-import en from "element-plus/dist/locale/en.mjs";
-import zhCn from "element-plus/dist/locale/zh-cn.mjs";
+import en from "element-plus/es/locale/lang/en";
+import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
 
