@@ -205,40 +205,41 @@ export const html2Escape = (str) => {
 /**
  * 发送聊天消息
  */
-export function sendChatMessage(options) {
+export async function sendChatMessage(options) {
   console.log("options", options);
-  let Message = [];
-  const { convId, convType, textMsg, aitStr, aitlist, files, video, image, reply } = options;
+  const Message = [];
+  const { convId, convType, textMsg, aitStr, aitlist, files = [], video = [], image = [], reply } = options;
+
   // @消息
   if (aitStr) {
-    Message.push(
-      createTextAtMsg({ convId, convType, textMsg: aitStr, atUserList: aitlist, reply })
-    );
+    Message.push(createTextAtMsg({ convId, convType, textMsg: aitStr, atUserList: aitlist, reply }));
   }
   // 文本消息
   else if (textMsg) {
     Message.push(createTextMsg({ convId, convType, textMsg, reply }));
   }
-  // 图片消息
-  if (image.length) {
-    image.map((t) => {
-      Message.push(createImgtMsg({ convId, convType, image: dataURLtoFile(t.src) }));
-    });
+
+  // 处理图片消息
+  for (const t of image) {
+    const img = await createImgtMsg({ convId, convType, image: dataURLtoFile(t.src) });
+    Message.push(img);
   }
-  // 文件消息
-  if (files.length) {
-    files.map((t) => {
-      Message.push(createFiletMsg({ convId, convType, files: dataURLtoFile(t.link, t.fileName) }));
-    });
+
+  // 处理文件消息
+  for (const t of files) {
+    const file = createFiletMsg({ convId, convType, files: dataURLtoFile(t.link, t.fileName) });
+    Message.push(file);
   }
-  // 视频消息
-  if (video.length) {
-    video.map((t) => {
-      Message.push(createVideoMsg({ convId, convType, video: dataURLtoFile(t.link, t.fileName) }));
-    });
+
+  // 处理视频消息
+  for (const t of video) {
+    const vid = createVideoMsg({ convId, convType, video: dataURLtoFile(t.link, t.fileName) });
+    Message.push(vid);
   }
+
   return Message;
 }
+
 
 export const customAlert = (s, t) => {
   switch (t) {
