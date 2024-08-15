@@ -1,5 +1,4 @@
 import store from "@/store";
-import NProgress from "@/utils/progress";
 // 异常拦截处理器
 export const errorHandler = (error) => {
   let errMessage = "未知错误";
@@ -61,7 +60,5 @@ export const errorHandler = (error) => {
   } else {
     errMessage = "无法连接到服务器！";
   }
-  // 关闭进度条动画
-  NProgress.done();
   return Promise.reject(error);
 };
