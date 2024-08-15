@@ -331,10 +331,10 @@ const sendMsgBefore = (editor = editorRef.value) => {
   };
 };
 // 发送消息
-const sendMessage = () => {
+const sendMessage = async () => {
   const data = sendMsgBefore();
   console.log("sendMsgBefore:", data);
-  const message = sendChatMessage(data);
+  const message = await sendChatMessage(data);
   console.log("sendChatMessage:", message);
   clearInputInfo();
   message.map((message) => {
@@ -390,7 +390,7 @@ watch(showMsgBox, () => {
   handleEditorKeyDown();
 });
 watch(lang, () => {
-  // handleToggleLanguage();
+  handleToggleLanguage();
 });
 onActivated(() => {
   handleEditorKeyDown();

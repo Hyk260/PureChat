@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import store from "@/store/index";
 import storage from "@/utils/localforage/index";
-import { $t } from "@/plugins/i18n";
+import { $t } from "@/locales/index";
 import { ACCOUNT } from "@/constants/index";
 
 /** 6位数字验证码正则 */

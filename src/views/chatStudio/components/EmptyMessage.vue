@@ -1,6 +1,6 @@
 <template>
   <div :class="[classNmae]">
-    <el-empty :description="$t('el.table.emptyText')" :image-size="150" />
+    <el-empty :description="$t('common.emptyText')" :image-size="150" />
     <div
       v-if="classNmae == 'no-msg' && activetab == 'whole'"
       class="flex justify-center launch"

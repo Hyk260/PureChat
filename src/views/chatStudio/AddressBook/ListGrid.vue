@@ -31,7 +31,7 @@ export default {
           icon: "IceCreamRound",
         },
         {
-          title: "机器人",
+          title: "AI大模型",
           icon: "Sugar",
         },
         // {

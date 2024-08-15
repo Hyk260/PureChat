@@ -6,8 +6,7 @@
 
 <script>
 import { ElConfigProvider } from "element-plus";
-import en from "element-plus/dist/locale/en.mjs";
-import zhCn from "element-plus/dist/locale/zh-cn.mjs";
+import { elementPlusLocales } from "@/locales/element-plus";
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
 import { appIpcEmit } from '@/utils/appEmit';
@@ -22,7 +21,7 @@ export default defineComponent({
       lang: (state) => state.settings.lang,
     }),
     locale() {
-      return this.lang === "zh" ? zhCn : en;
+      return elementPlusLocales[this.lang];
     },
   },
   mounted() {

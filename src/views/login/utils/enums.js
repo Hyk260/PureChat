@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { $t } from "@/plugins/i18n";
+import { $t } from "@/locales/index";
 const operates = computed(() => {
   return [
     // {

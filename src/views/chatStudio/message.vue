@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { $t } from "@/plugins/i18n";
+import { $t } from "@/locales/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 import { useEventListener } from "@vueuse/core";

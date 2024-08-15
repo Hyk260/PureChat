@@ -2,7 +2,7 @@ import { ElNotification, ElButton } from "element-plus";
 import { setCookie, getCookie } from '@/utils/cookie';
 import { isElectron } from "@/utils/common";
 import { isDev } from "@/config/env";
-import { $t } from "./i18n";
+import { $t } from "@/locales/index";
 import { h } from "vue";
 
 let Notification = null;
@@ -14,7 +14,7 @@ function setPageNotif() {
 function notify() {
   if (Notification) Notification.close();
   Notification = ElNotification({
-    title: "检测到系统有新版本发布，是否立即刷新页面？",
+    title: $t('system.updateContent'),
     dangerouslyUseHTMLString: true,
     message: h("div", [
       h(

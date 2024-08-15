@@ -1,18 +1,19 @@
 import { computed } from "vue";
 import store from "@/store/index";
-import { $t } from "@/plugins/i18n";
+import { $t } from "@/locales/index";
 import { getOperatingSystem } from "./utils";
-const systemOs = getOperatingSystem();
 
 export const placeholderMap = computed(() => {
   return {
     Windows: $t("chat.buttonPrompt"),
     macOS: $t("chat.buttonPromptMac"),
+    input: $t("chat.PromptInputContent")
   };
 });
+
 // 编辑器配置
 export const editorConfig = {
-  placeholder: "请输入内容...",
+  placeholder: placeholderMap.value['input'],
   // 配置编辑器是否只读，默认为 false
   // readOnly: true,
   /* 菜单配置 */

@@ -2,6 +2,7 @@ import tim from "@/utils/IM/im-sdk/tim";
 import TIM from "@/utils/IM/chat/index";
 import emitter from "@/utils/mitt-bus";
 import { createProgressHandler } from "@/utils/chat/index";
+import { getImageSize } from "@/views/chatStudio/utils/utils";
 import { getReplyMsgContent, getCustomMsgContent } from "@/utils/chat/index";
 const handleProgressUpdate = createProgressHandler();
 
@@ -61,17 +62,27 @@ export const createTextAtMsg = (params) => {
     cloudCustomData: replyMsgContent,
   });
 };
+// 计算图片宽高
+async function fnImageSize(image) {
+  let num = 0
+  const { width, height } = await getImageSize(image.payload.imageInfoArray[num].url)
+  image.payload.imageInfoArray[num].width = width
+  image.payload.imageInfoArray[num].height = height
+  return image
+}
 // 创建图片消息
-export const createImgtMsg = (params) => {
+export const createImgtMsg = async (params) => {
   const { convId, convType, image } = params;
-  return tim.createImageMessage({
+  const message = tim.createImageMessage({
     to: convId,
     conversationType: convType,
     payload: { file: image },
     onProgress: (event) => {
       console.log("file uploading:", event);
     },
-  });
+  }); 
+  const imageMessage = await fnImageSize(message)
+  return imageMessage
 };
 // 创建文件消息
 export const createFiletMsg = (params) => {
