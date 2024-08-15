@@ -7,7 +7,7 @@
     <div v-if="item.icon === 'Operation'">
       <ul class="setting w-full">
         <li>
-          <span>{{ t("common.theme") }}</span>
+          <span>{{ $t("common.theme") }}</span>
           <el-select v-model="themecolor" placeholder="主题颜色">
             <el-option
               v-for="item in options"
@@ -18,7 +18,7 @@
           </el-select>
         </li>
         <li v-if="isDev">
-          <span>{{ t("common.language") }}</span>
+          <span>{{ $t("common.language") }}</span>
           <el-select v-model="language" placeholder="选择语言">
             <el-option
               v-for="item in languages"
@@ -31,7 +31,7 @@
         </li>
         <li class="logout">
           <el-button @click="logout" type="primary">
-            {{ t("login.logout") }}
+            {{ $t("login.logout") }}
           </el-button>
         </li>
       </ul>
@@ -63,7 +63,7 @@
 import { setTheme } from "@/utils/common";
 import { useState } from "@/utils/hooks/useMapper";
 import { computed } from "vue";
-import { useI18n } from "vue-i18n";
+import { setLocale } from '@/locales/index';
 import { useStore } from "vuex";
 import { languages, options } from "./enums";
 import { isDev } from "@/config/env";
@@ -77,7 +77,6 @@ const props = defineProps({
 });
 
 const docs = __APP_INFO__.pkg.docs
-const { locale, t } = useI18n();
 const { commit, dispatch } = useStore();
 const { appearance, lang } = useState({
   appearance: (state) => state.settings.appearance,
@@ -119,7 +118,7 @@ const language = computed({
       key: "lang",
       value: val,
     });
-    locale.value = val;
+    setLocale(val)
   },
 });
 </script>

@@ -20,10 +20,10 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="handleCancel()">
-          {{ $t("el.datepicker.cancel") }}
+          {{ $t("common.cancel") }}
         </el-button>
         <el-button type="primary" @click="handleConfirm()">
-          {{ $t("el.datepicker.confirm") }}
+          {{ $t("common.confirm") }}
         </el-button>
       </span>
     </template>

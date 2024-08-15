@@ -1,5 +1,5 @@
 import { ElMessage, ElMessageBox } from "element-plus";
-import { $t } from "@/plugins/i18n";
+import { $t } from "@/locales/index";
 
 // 成功
 export const successMessage = (message) => {
@@ -54,9 +54,9 @@ export const verification = (code, msg) => {
 export const showConfirmationBox = async (data, Type = "confirm") => {
   const {
     message,
-    confirmText = `${$t("el.datepicker.confirm")}`, //"确认",
-    cancelText = `${$t("el.datepicker.cancel")}`, //"取消",
-    tip = `${$t("el.messagebox.title")}`,
+    confirmText = `${$t('common.confirm') }`, //"确认",
+    cancelText = `${$t('common.cancel') }`, //"取消",
+    tip = `${$t("messagebox.title")}`,
     iconType = "", // warning
     inputValue = "", // input
     draggable = false,

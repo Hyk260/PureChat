@@ -376,7 +376,7 @@ watch(showMsgBox, () => {
   handleEditorKeyDown();
 });
 watch(lang, () => {
-  // handleToggleLanguage();
+  handleToggleLanguage();
 });
 onActivated(() => {
   handleEditorKeyDown();

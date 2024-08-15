@@ -149,8 +149,8 @@ const {
 const updateLoadMore = (value) => {
   nextTick(() => {
     const elRef = messageViewRef.value?.children?.[value - 1];
-    console.log("messageViewRef:", elRef);
     if (!elRef) return;
+    console.log("messageViewRef:", elRef);
     console.log("updateLoadMore:", value);
     value > 0 ? elRef.scrollIntoView({ block: "start" }) : elRef.scrollIntoViewIfNeeded();
   });

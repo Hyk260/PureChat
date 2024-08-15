@@ -529,9 +529,8 @@ export function getOperatingSystem(userAgent = navigator.userAgent) {
 }
 
 export const handleToggleLanguage = () => {
-  const systemOs = getOperatingSystem();
   const placeholder = document.querySelector(".w-e-text-placeholder");
-  if (placeholder) placeholder.innerHTML = placeholderMap.value[systemOs];
+  if (placeholder) placeholder.innerHTML = placeholderMap.value['input'];
 };
 
 export const handleEditorKeyDown = async () => {

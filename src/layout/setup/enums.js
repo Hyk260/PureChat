@@ -1,4 +1,4 @@
-import { $t } from "@/plugins/i18n";
+import { $t } from "@/locales/index";
 import { computed } from "vue";
 const title = import.meta.env.VITE_APP_NAME;
 

@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import store from "./store/index";
 
+import { setupI18n } from './locales/index';
 import { loadAllassembly } from "./components/index";
 import { getServerConfig } from "./config/index";
 import { setupDirectives } from "./directives/index";
@@ -18,6 +19,7 @@ async function setupApp() {
   getServerConfig(app);
   // vue router
   await setupRouter(app);
+  setupI18n(app);
   app.use(store);
   app.mount("#app");
 }
