@@ -1,12 +1,12 @@
 <template>
-  <el-dialog v-model="dialog" width="520" class="agent-card-modal" :before-close="handleClose">
+  <el-dialog v-model="dialog" width="40%" class="agent-card-modal" :before-close="handleClose">
     <div class="agent-card-banner">
-      <!-- <div class="top">
+      <div class="top">
         <div class="back"></div>
         <div class="avatar-square">
           {{ cardData.meta.avatar }}
         </div>
-      </div> -->
+      </div>
       <div class="content">
         <h2>
           {{ cardData.meta.title }}
@@ -19,11 +19,11 @@
         <div class="desc">
           {{ cardData.meta.description }}
         </div>
-        <div class="button">
-          <el-button @click="toTant()"> 开始会话 </el-button>
-        </div>
       </div>
       <Markdown class="market" :marked="cardData.meta.systemRole" />
+      <div class="button flex-c pb-20">
+        <el-button @click="toTant()"> 开始会话 </el-button>
+      </div>
     </div>
   </el-dialog>
 </template>
@@ -79,17 +79,12 @@ emitter.on("openAgentCard", (data) => {
   display: none;
 }
 
-:global(body .agent-card-modal p) {
-  // margin: revert;
-  // color: rgb(8, 8, 8);
-}
-
 .agent-card-banner {
   .top {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 180px;
+    height: 120px;
     .back {
       height: 120px;
       margin-bottom: -60px;
@@ -100,7 +95,7 @@ emitter.on("openAgentCard", (data) => {
       background: rgba(0, 0, 0, 0.06);
     }
     .avatar-square {
-      font-size: 80px;
+      font-size: 50px;
       height: 120px;
       display: flex;
       flex: none;
