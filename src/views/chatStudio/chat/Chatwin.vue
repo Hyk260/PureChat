@@ -23,7 +23,7 @@
             v-else-if="item.ID && !isTime(item) && !item.isDeleted"
             class="message-view__item"
             :class="[
-              ISown(item) ? 'is-self' : 'is-other',
+              isSelf(item) ? 'is-self' : 'is-other',
               showCheckbox && !item.isRevoked ? 'style-choice' : '',
             ]"
             @click="handleSelect($event, item, 'outside')"
@@ -60,13 +60,13 @@
                   :is="loadMsgModule(item)"
                   :message="item"
                   :status="item.status"
-                  :self="ISown(item)"
+                  :self="isSelf(item)"
                 >
                 </component>
               </div>
             </div>
             <!-- 消息发送加载状态 -->
-            <Stateful :item="item" :status="item.status" :isown="ISown(item)" />
+            <Stateful :item="item" :status="item.status" :isown="isSelf(item)" />
           </div>
         </div>
       </div>
@@ -100,7 +100,7 @@ import {
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
 import { AVATAR_LIST, MENU_LIST, RIGHT_CLICK_MENU_LIST, circleUrl } from "../utils/menu";
-import { handleCopyMsg, loadMsgModule, msgOne, msgType, validatelastMessage } from "../utils/utils";
+import { handleCopyMsg, loadMsgModule, msgOne, msgType, validatelastMessage, isSelf } from "../utils/utils";
 
 import { deleteMsgList, getMsgList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
 import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX } from "@/constants/index";
@@ -131,7 +131,6 @@ const {
   showCheckbox,
   needScrollDown,
   currentReplyMsg,
-  userProfile,
   currentMessageList,
   currentConversation,
 } = useState({
@@ -140,7 +139,6 @@ const {
   forwardData: (state) => state.conversation.forwardData,
   showCheckbox: (state) => state.conversation.showCheckbox,
   needScrollDown: (state) => state.conversation.needScrollDown,
-  userProfile: (state) => state.user.userProfile,
   currentReplyMsg: (state) => state.conversation.currentReplyMsg,
   currentMessageList: (state) => state.conversation.currentMessageList,
   currentConversation: (state) => state.conversation.currentConversation,
@@ -212,16 +210,12 @@ const handleSelect = (e, item, type = "initial") => {
 };
 
 const isTime = (item) => {
-  return item?.isTimeDivider;
-};
-
-const ISown = (item) => {
-  return item.from == userProfile.value.userID;
+  return item?.isTimeDivider && item.time !== "undefined";
 };
 
 const onClickAvatar = (e, item) => {
-  const isSelf = ISown(item);
-  if (isSelf || showCheckbox.value) return;
+  const self = isSelf(item);
+  if (self || showCheckbox.value) return;
   emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item });
 };
 
@@ -341,7 +335,7 @@ const handleContextMenuEvent = (event, item) => {
   const nowtime = parseInt(new Date().getTime() / 1000);
   MenuItemInfo.value = item;
   const relinquish = nowtime - time < 120 ? true : false;
-  const self = ISown(item);
+  const self = isSelf(item);
   RIGHT_CLICK_MENU_LIST.value = MENU_LIST;
   // 对方消息
   if (!self) {
@@ -429,7 +423,7 @@ const handleForward = (data) => {};
 // 回复消息
 const handleReplyMsg = (data) => {
   commit("setReplyMsg", data);
-  !ISown(data) && handleAt(data);
+  !isSelf(data) && handleAt(data);
   // 重置编辑器高度
   const chatBox = document.getElementById("chat-box"); //聊天框
   const editor = document.getElementById("editor");

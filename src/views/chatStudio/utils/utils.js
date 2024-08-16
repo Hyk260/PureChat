@@ -6,6 +6,8 @@ import {
   createVideoMsg,
 } from "@/api/im-sdk-api/index";
 import store from "@/store/index";
+import { TIM_PROXY } from "@/constants/index";
+import storage from "@/utils/localforage/index";
 import { dataURLtoFile, getBlob, getFileType } from "@/utils/chat/index";
 import emitter from "@/utils/mitt-bus";
 import { useClipboard } from "@vueuse/core";
@@ -587,4 +589,8 @@ export const dragoverHandler = (e) => {
 
 export const getAssetsFile = (url) => {
   return new URL(`../../../assets/emoji/${url}`, import.meta.url).href;
+};
+
+export const isSelf = (item) => {
+  return item.from === storage.get(TIM_PROXY)?.userProfile?.userID;
 };
