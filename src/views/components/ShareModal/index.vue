@@ -116,7 +116,6 @@ const { forwardData, userProfile } = useState({
 
 function robotPrompt() {
   const model = getModelType(toAccount.value);
-  console.log(usePromptStore(model));
   return usePromptStore(model).prompt[0].content || "";
 }
 
