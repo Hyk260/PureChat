@@ -1,7 +1,6 @@
 import { computed } from "vue";
 import store from "@/store/index";
 import { $t } from "@/locales/index";
-import { getOperatingSystem } from "./utils";
 
 export const placeholderMap = computed(() => {
   return {
