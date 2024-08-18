@@ -83,7 +83,7 @@ defineProps({
       transform: all 0.2s;
       background: var(--tags-back);
       &:hover {
-        background: rgb(0, 0, 0, 0.12);
+        background: var(--tags-back-hover);
       } 
     }
   }

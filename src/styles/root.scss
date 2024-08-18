@@ -1,4 +1,5 @@
 @mixin light {
+  --tags-back-hover: rgb(0, 0, 0, 0.12);
   --tags-back: rgb(0, 0, 0, 0.06);
   --color-card: rgba(0, 0, 0, 0.12);
   --color-tags-active-back: #222;
@@ -91,6 +92,7 @@
 }
 
 @mixin dark {
+  --tags-back-hover: rgba(255, 255, 255, 0.16);
   --tags-back: rgba(255, 255, 255, 0.10);
   --color-card: rgba(255, 255, 255, 0.10);
   --color-tags-active: #000000;
