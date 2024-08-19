@@ -153,11 +153,11 @@ onBeforeUnmount(() => {
   window.document.removeEventListener("keypress", onkeypress);
 });
 
-watch(imgCode, (value) => {
-  commit("UPDATE_USER_INFO", { key: "verifyCode", value });
-  // 测试环境自动填充图形验证码
-  if (isDev) user.verifyCode = value;
-});
+// watch(imgCode, (value) => {
+//   // 测试环境自动填充图形验证码
+//   if (isDev) user.verifyCode = value;
+// });
+
 watch(
   () => router.currentRoute.value.query,
   (data) => {

@@ -7,6 +7,8 @@
 <script>
 import { ElConfigProvider } from "element-plus";
 import { elementPlusLocales } from "@/locales/element-plus";
+import { initThemeSettings } from "@/theme/settings"
+import { setTheme } from "@/utils/common";
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
 
@@ -17,13 +19,14 @@ export default defineComponent({
   },
   computed: {
     ...mapState({
-      lang: (state) => state.settings.lang,
+      lang: (state) => state.user.lang,
     }),
     locale() {
       return elementPlusLocales[this.lang];
     },
   },
   mounted() {
+    setTheme(initThemeSettings()) 
     this.loginAgain(this.$route);
   },
   methods: {

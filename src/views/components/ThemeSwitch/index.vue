@@ -7,35 +7,34 @@
 
 <script setup>
 import { setTheme } from "@/utils/common";
-import { useState } from "@/utils/hooks/useMapper";
-import { usePreferredColorScheme } from '@vueuse/core';
-import { computed } from "vue";
 import { useStore } from "vuex";
+import { useState } from "@/utils/hooks/useMapper";
+import { usePreferredColorScheme } from "@vueuse/core";
+import { computed } from "vue";
 
-const { commit } = useStore();
 const osTheme = usePreferredColorScheme();
-const { appearance } = useState({
-  appearance: (state) => state.settings.appearance,
+const { commit } = useStore();
+const { themeScheme } = useState({
+  themeScheme: (state) => state.user.themeScheme,
+});
+
+/** Dark mode */
+const darkMode = computed(() => {
+  if (themeScheme.value === "auto") {
+    return osTheme.value === "dark";
+  }
+  return themeScheme.value === "dark";
 });
 
 const themecolor = computed({
   get() {
-    let theme = appearance.value == "dark" ? true : false;
-    return theme;
+    return darkMode.value;
   },
   set(val) {
-    let theme = val ? "dark" : "light";
-    ThemeColorChange(theme);
+    commit("setThemeScheme", val ? "dark" : "light")
+    setTheme(val ? "dark" : "light");
   },
 });
-
-const ThemeColorChange = (val) => {
-  commit("UPDATE_USER_SETUP", {
-    key: "appearance",
-    value: val,
-  });
-  setTheme(val);
-};
 </script>
 
 <style lang="scss" scoped>
