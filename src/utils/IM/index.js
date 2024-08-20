@@ -3,7 +3,7 @@ import { TIM_PROXY } from "@/constants/index";
 import store from "@/store";
 import TIM from "@/utils/IM/chat/index";
 import tim from "@/utils/IM/im-sdk/tim";
-import { scrollToDomPostion } from "@/utils/chat/index";
+import { scrollToDomPostion, setChatListCache } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import { useWindowFocus } from "@vueuse/core";
@@ -109,6 +109,7 @@ export class TIMProxy {
   }
   onUpdateConversationList({ data }) {
     console.log("[chat] 会话列表更新 onUpdateConversationList:", data);
+    setChatListCache(data)
     const convId = getConversationID();
     const conv = data.filter((t) => t.conversationID == convId);
     // 更新会话列表

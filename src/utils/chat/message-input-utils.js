@@ -1,6 +1,9 @@
 import store from "@/store";
 import { throttle } from "lodash-es";
+import { USER_MODEL } from "@/constants/index";
 import { msgContent } from "@/api/im-sdk-api/custom";
+import { localStg } from "@/utils/storage";
+
 /**
  * 将二进制数据转换为 base64 URL 格式
  * @param {string | Buffer} data 要转换的数据，可以是一个字符串或一个 Buffer 对象
@@ -274,6 +277,22 @@ export const createProgressHandler = () => {
 // 匹配机器人账号
 export const isRobot = (text) => {
   return /@RBT#/.test(text);
+};
+
+export const getChatListCache = () => {
+  let appid = import.meta.env.VITE_IM_SDK_APPID
+  const { username } = localStg.get(USER_MODEL) || {}
+  if (!username) return []
+  let id = `TIM_${appid}_${username}_conversationListMap`
+  return localStg.get(id) || []
+};
+
+export const setChatListCache = (data) => {
+  let appid = import.meta.env.VITE_IM_SDK_APPID
+  const { username } = localStg.get(USER_MODEL) || {}
+  if (!username) return
+  let id = `TIM_${appid}_${username}_conversationListMap`
+  localStg.set(id, data) || []
 };
 
 export function readFromFile() {
