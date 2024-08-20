@@ -5,60 +5,63 @@
     v-model="dialogVisible"
     :append-to-body="true"
     @close="onClose"
+    align-center
     title="截图分享"
     width="60%"
   >
     <div class="share-modal">
       <div class="segmented w-full">
-        <div id="preview" class="preview">
-          <div class="content">
-            <Header />
-            <div v-if="isRobot(toAccount) && isPrompt" class="prompt p-16">
-              <Markdown :marked="robotPrompt()" />
-            </div>
-            <div class="min-h-60 item">
-              <div
-                class="message flex p-10"
-                v-for="item in fnForwardData"
-                :key="item.ID"
-                :class="isSelf(item) ? 'is-self' : 'is-other'"
-              >
-                <div class="avatar">
-                  <img decoding="async" :src="item.avatar" />
-                </div>
-                <div class="item" :class="msgOne(item.type)">
-                  <p class="nick">
-                    <!-- <span>{{ item.nick }}</span> -->
-                  </p>
-                  <div :class="msgType(item.type)">
-                    <component
-                      :key="item.ID"
-                      :is="loadMsgModule(item)"
-                      :msgType="item.conversationType"
-                      :message="item"
-                      :self="isSelf(item)"
-                    >
-                    </component>
+        <el-scrollbar class="scrollbar">
+          <div id="preview" class="preview">
+            <div class="content">
+              <Header />
+              <div v-if="isRobot(toAccount) && isPrompt" class="prompt p-16">
+                <Markdown :marked="robotPrompt()" />
+              </div>
+              <div class="min-h-60 item">
+                <div
+                  class="message flex p-10"
+                  v-for="item in fnForwardData"
+                  :key="item.ID"
+                  :class="isSelf(item) ? 'is-self' : 'is-other'"
+                >
+                  <div class="avatar">
+                    <img decoding="async" :src="item.avatar" />
+                  </div>
+                  <div class="item" :class="msgOne(item.type)">
+                    <p class="nick">
+                      <!-- <span>{{ item.nick }}</span> -->
+                    </p>
+                    <div :class="msgType(item.type)">
+                      <component
+                        :key="item.ID"
+                        :is="loadMsgModule(item)"
+                        :msgType="item.conversationType"
+                        :message="item"
+                        :self="isSelf(item)"
+                      >
+                      </component>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div v-show="isFooter" class="footer p-16">
-              <div class="flex justify-center items-center">
-                <img class="size-22" src="@/assets/images/log.png" alt="" />
-                <div class="title ml-8">{{ $config.Title }}</div>
+              <div v-show="isFooter" class="footer p-16">
+                <div class="flex justify-center items-center">
+                  <img class="size-22" src="@/assets/images/log.png" alt="" />
+                  <div class="title ml-8">{{ $config.Title }}</div>
+                </div>
+                <span class="link"> {{ homepage }}</span>
               </div>
-              <span class="link"> {{ homepage }}</span>
             </div>
           </div>
-        </div>
+        </el-scrollbar>
       </div>
       <div class="form-item-props px-5">
         <div class="flex-bc my-5 h-32" v-if="robotPrompt()">
           <div>包含助手提示词</div>
           <div><el-switch v-model="isPrompt" /></div>
         </div>
-        <el-divider class="my-10" />
+        <el-divider v-if="robotPrompt()" class="my-10" />
         <div class="flex-bc my-5 h-32">
           <div>包含页脚</div>
           <div><el-switch v-model="isFooter" /></div>
@@ -146,12 +149,14 @@ emitter.on("onShareModal", (val) => {
   }
 }
 .segmented {
-  overflow: hidden scroll;
   width: 100%;
   max-height: 50vh;
   background: #f8f8f8;
   border: 1px solid #dddddd;
   border-radius: 8px;
+  .scrollbar {
+    height: 50vh;
+  }
 }
 .form-item-props {
   overflow: hidden;
