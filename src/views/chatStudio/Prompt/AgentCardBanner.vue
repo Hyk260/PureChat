@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialog" width="40%" class="agent-card-modal" :before-close="handleClose">
+  <el-dialog v-model="dialog" width="40%" align-center class="agent-card-modal" :before-close="handleClose">
     <div class="agent-card-banner">
       <div class="top">
         <div class="avatar-square">

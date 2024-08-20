@@ -16,7 +16,7 @@ import {
   HISTORY_MESSAGE_COUNT,
 } from "@/constants/index";
 import TIM from "@/utils/IM/chat/index";
-import { addTimeDivider, checkTextNotEmpty, getBaseTime, transformData } from "@/utils/chat/index";
+import { addTimeDivider, checkTextNotEmpty, getBaseTime, transformData, getChatListCache } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
@@ -37,7 +37,7 @@ const conversation = {
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
-    conversationList: [], // 会话列表数据
+    conversationList: getChatListCache() ?? [], // 会话列表数据
     currentReplyMsg: null, // 回复数据
     activetab: "whole", // 全部 未读 提及我
     outside: "message", // 侧边栏初始状态
