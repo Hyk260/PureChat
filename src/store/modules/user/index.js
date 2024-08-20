@@ -7,8 +7,10 @@ import storage from "@/utils/localforage/index";
 import { verification } from "@/utils/message/index";
 import emitter from "@/utils/mitt-bus";
 import { ElMessage } from "element-plus";
-import { nextTick } from "vue";
+import { initThemeSettings } from "@/theme/settings"
 import { genTestUserSig } from '@/utils/generateUserSig/index';
+
+const themeScheme = initThemeSettings()
 
 const user = {
   state: {
@@ -17,6 +19,8 @@ const user = {
     showload: false, // 登录按钮加载状态
     currentPage: 0,
     userProfile: storage.get(TIM_PROXY)?.userProfile || {}, // IM用户信息
+    lang: storage.get('lang') || "zh-CN", // 默认语言
+    themeScheme,// 主题方案
   },
   mutations: {
     setCurrentPage(state, num) {
@@ -24,6 +28,12 @@ const user = {
     },
     setCurrentProfile(state, user) {
       state.userProfile = user;
+    },
+    setLang(state, lang) {
+      state.lang = lang;
+    },
+    setThemeScheme(state, theme) {
+      state.themeScheme = theme;
     },
     reset(state) {
       Object.assign(state, {
@@ -54,7 +64,7 @@ const user = {
           userID: result.username,
           userSig: result.userSig,
         });
-        commit("UPDATE_USER_INFO", { key: "user", value: result });
+        storage.set(USER_MODEL, result)
         router.push("/chatstudio");
         verification(code, msg);
       } else {
@@ -69,12 +79,7 @@ const user = {
       const { userSig, userID } = genTestUserSig({ userID: data.username })
       window.TIMProxy.init();
       dispatch("TIM_LOG_IN", { userID, userSig, });
-      commit("UPDATE_USER_INFO", {
-        key: "user", value: {
-          username: userID,
-          userSig,
-        }
-      });
+      storage.set(USER_MODEL, { username: userID, userSig })
       router.push("/chatstudio");
     },
     // 登录
@@ -87,7 +92,7 @@ const user = {
           userID: result.username,
           userSig: result.userSig,
         });
-        commit("UPDATE_USER_INFO", { key: "user", value: result });
+        storage.set(USER_MODEL, result)
         // 保存登录信息 keep
         data?.keep && storage.set(ACCOUNT, data);
         router.push("/chatstudio");
@@ -132,10 +137,10 @@ const user = {
     // 重新登陆
     LOG_IN_AGAIN({ state, dispatch }) {
       try {
-        const { user } = storage.get(USER_MODEL) || {};
-        if (user) {
-          const { username: userID, userSig } = user;
-          console.log({ userID, userSig }, "LOG_IN_AGAIN");
+        const data = storage.get(USER_MODEL) || {};
+        if (data) {
+          const { username: userID, userSig } = data;
+          console.log("LOG_IN_AGAIN", { userID, userSig });
           window.TIMProxy.init();
           dispatch("TIM_LOG_IN", { userID, userSig });
         } else {

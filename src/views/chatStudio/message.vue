@@ -91,8 +91,8 @@ const { networkStatus, conver, showMsgBox, totalUnreadMsg, arrowRight, fullScree
   totalUnreadMsg: (state) => state.conversation.totalUnreadMsg,
   conver: (state) => state.conversation.currentConversation,
   showMsgBox: (state) => state.conversation.showMsgBox,
-  arrowRight: (state) => state.settings.arrowRight,
-  fullScreen: (state) => state.settings.fullScreen,
+  arrowRight: (state) => state.conversation.arrowRight,
+  fullScreen: (state) => state.conversation.fullScreen,
 });
 
 const fnTotalUnreadMsg = () => {
@@ -106,7 +106,7 @@ const handleClick = ({ props }, event) => {
   commit("TOGGLE_LIST", name);
 };
 const onRight = (value) => {
-  commit("UPDATE_USER_SETUP", { key: "arrowRight", value: !value });
+  commit("SET_CONVERSATION_VALUE", { key: "arrowRight", value: !value });
 };
 useEventListener(window, "online", () => {
   commit("SET_NETWORK_STATUS", true);
@@ -130,7 +130,7 @@ onActivated(() => {
 });
 onDeactivated(() => {});
 onMounted(() => {
-  commit("UPDATE_USER_SETUP", { key: "arrowRight", value: false });
+  commit("SET_CONVERSATION_VALUE", { key: "arrowRight", value: false });
 });
 onUnmounted(() => {});
 watchEffect(() => {

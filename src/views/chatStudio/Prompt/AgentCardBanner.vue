@@ -1,12 +1,11 @@
 <template>
-  <el-dialog v-model="dialog" width="520" class="agent-card-modal" :before-close="handleClose">
+  <el-dialog v-model="dialog" width="40%" class="agent-card-modal" :before-close="handleClose">
     <div class="agent-card-banner">
-      <!-- <div class="top">
-        <div class="back"></div>
+      <div class="top">
         <div class="avatar-square">
           {{ cardData.meta.avatar }}
         </div>
-      </div> -->
+      </div>
       <div class="content">
         <h2>
           {{ cardData.meta.title }}
@@ -19,11 +18,11 @@
         <div class="desc">
           {{ cardData.meta.description }}
         </div>
-        <div class="button">
-          <el-button @click="toTant()"> 开始会话 </el-button>
-        </div>
       </div>
       <Markdown class="market" :marked="cardData.meta.systemRole" />
+      <div class="button flex-c py-20">
+        <el-button @click="toTant()"> 开始会话 </el-button>
+      </div>
     </div>
   </el-dialog>
 </template>
@@ -73,15 +72,11 @@ emitter.on("openAgentCard", (data) => {
 <style lang="scss" scoped>
 :global(body .agent-card-modal) {
   padding: 0;
+  min-width: 500px;
 }
 
 :global(body .agent-card-modal .el-dialog__header) {
   display: none;
-}
-
-:global(body .agent-card-modal p) {
-  // margin: revert;
-  // color: rgb(8, 8, 8);
 }
 
 .agent-card-banner {
@@ -89,28 +84,18 @@ emitter.on("openAgentCard", (data) => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 180px;
-    .back {
-      height: 120px;
-      margin-bottom: -60px;
-      position: relative;
-      overflow: hidden;
-      height: 64px;
-      margin-block-end: -56px;
-      background: rgba(0, 0, 0, 0.06);
-    }
+    height: 100px;
     .avatar-square {
-      font-size: 80px;
+      font-size: 50px;
       height: 120px;
       display: flex;
       flex: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: 120px;
-      height: 120px;
+      width: 100px;
+      height: 100px;
     }
-    // height: 60px;
   }
   .content {
     position: relative;
@@ -140,9 +125,7 @@ emitter.on("openAgentCard", (data) => {
       text-align: center;
 
       &:hover {
-        color: #333333;
-        border-color: #333333;
-        background: rgba(0, 0, 0, 0.12);
+        background: var(--tags-back-hover);
       }
     }
     .desc {

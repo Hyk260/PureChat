@@ -106,7 +106,7 @@ const { commit, dispatch } = useStore();
 const emit = defineEmits(["setToolbar"]);
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
 const { fullScreen, currentConversation } = useState({
-  fullScreen: (state) => state.settings.fullScreen,
+  fullScreen: (state) => state.conversation.fullScreen,
   currentConversation: (state) => state.conversation.currentConversation,
 });
 
@@ -144,7 +144,7 @@ const clickCscreenshot = () => {
 };
 const onShake = () => {};
 const onEnlarge = (value) => {
-  commit("UPDATE_USER_SETUP", { key: "fullScreen", value: !value });
+  commit("SET_CONVERSATION_VALUE", { key: "fullScreen", value: !value });
 };
 
 function customMessage() {

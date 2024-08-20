@@ -63,7 +63,7 @@
 import { setTheme } from "@/utils/common";
 import { useState } from "@/utils/hooks/useMapper";
 import { computed } from "vue";
-import { setLocale } from '@/locales/index';
+import { changeLocale } from "@/locales/index";
 import { useStore } from "vuex";
 import { languages, options } from "./enums";
 import { isDev } from "@/config/env";
@@ -76,11 +76,11 @@ const props = defineProps({
   },
 });
 
-const docs = __APP_INFO__.pkg.docs
+const docs = __APP_INFO__.pkg.docs;
 const { commit, dispatch } = useStore();
-const { appearance, lang } = useState({
-  appearance: (state) => state.settings.appearance,
-  lang: (state) => state.settings.lang,
+const { themeScheme, lang } = useState({
+  themeScheme: (state) => state.user.themeScheme,
+  lang: (state) => state.user.lang,
 });
 
 function onBlur() {
@@ -98,13 +98,10 @@ function logout() {
 
 const themecolor = computed({
   get() {
-    return appearance.value;
+    return themeScheme.value;
   },
   set(val) {
-    commit("UPDATE_USER_SETUP", {
-      key: "appearance",
-      value: val,
-    });
+    commit("setThemeScheme", val)
     setTheme(val);
   },
 });
@@ -114,11 +111,8 @@ const language = computed({
     return lang.value;
   },
   set(val) {
-    commit("UPDATE_USER_SETUP", {
-      key: "lang",
-      value: val,
-    });
-    setLocale(val)
+    commit("setLang", val);
+    changeLocale(val);
   },
 });
 </script>

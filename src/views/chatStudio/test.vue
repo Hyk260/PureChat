@@ -36,7 +36,6 @@ export default defineComponent({
   name: "Test",
   computed: {
     ...mapState({
-      appearance: (state) => state.settings.appearance,
       groupList: (state) => state.groupinfo.groupList,
       timProxy: (state) => state.user.timProxy,
     }),
@@ -86,7 +85,7 @@ export default defineComponent({
     };
   },
   methods: {
-    ...mapMutations(["TAGGLE_OUE_SIDE", "UPDATE_USER_SETUP"]),
+    ...mapMutations(["TAGGLE_OUE_SIDE"]),
     ...mapActions(["getGroupList", "CHEC_OUT_CONVERSATION"]),
     confetti() {
       if (!confetti) return;

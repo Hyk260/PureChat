@@ -21,7 +21,7 @@
                 class="message flex p-10"
                 v-for="item in fnForwardData"
                 :key="item.ID"
-                :class="ISown(item) ? 'is-self' : 'is-other'"
+                :class="isSelf(item) ? 'is-self' : 'is-other'"
               >
                 <div class="avatar">
                   <img decoding="async" :src="item.avatar" />
@@ -36,7 +36,7 @@
                       :is="loadMsgModule(item)"
                       :msgType="item.conversationType"
                       :message="item"
-                      :self="ISown(item)"
+                      :self="isSelf(item)"
                     >
                     </component>
                   </div>
@@ -96,7 +96,7 @@ import Header from "@/views/chatStudio/components/Header.vue";
 import { useBoolean } from "@/utils/hooks/index";
 import { useScreenshot, ImageType, imageTypeOptions } from "@/utils/hooks/useScreenshot";
 import { useState } from "@/utils/hooks/useMapper";
-import { loadMsgModule, msgOne, msgType } from "@/views/chatStudio/utils/utils";
+import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils/utils";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { getModelType, usePromptStore } from "@/ai/utils";
 
@@ -109,8 +109,7 @@ const fieldType = ref(ImageType.Blob);
 const { toAccount } = useGetters(["toAccount"]);
 const [dialogVisible, setDialogVisible] = useBoolean();
 const { loading, onDownload, title } = useScreenshot();
-const { forwardData, userProfile } = useState({
-  userProfile: (state) => state.user.userProfile,
+const { forwardData } = useState({
   forwardData: (state) => state.conversation.forwardData,
 });
 
@@ -124,10 +123,6 @@ const fnForwardData = computed(() => {
   const obj = Object.values(myObj).map((item) => item);
   return obj.sort((a, b) => a.clientTime - b.clientTime);
 });
-
-const ISown = (item) => {
-  return item.from == userProfile.value.userID;
-};
 
 function onClose() {
   setDialogVisible(false);

@@ -1,12 +1,11 @@
 import { githubAuth, openAuthUrl } from "@/api/node-admin-api/index";
-import { isElectron } from "@/utils/common";
 import { isDev } from "@/config/env";
 import store from "@/store";
 
 // github 授权登录
 export const oauthAuthorize = async () => {
   const { url } = await openAuthUrl();
-  if (isElectron) {
+  if (window?.electron) {
     window.open(url);
   } else {
     window.open(url, "_self");

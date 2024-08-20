@@ -230,7 +230,7 @@ export function bytesToSize(bytes) {
   const kiloBytes = marker;
   const megaBytes = marker * marker;
   const gigaBytes = marker * marker * marker;
-  // const lang = store.state.settings.lang;
+  // const lang = store.state.user.lang;
   const lang = "zh";
   if (bytes < kiloBytes) {
     return bytes + (lang === "en" ? " Bytes" : "字节");

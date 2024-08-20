@@ -5,53 +5,39 @@
   </label>
 </template>
 
-<script>
+<script setup>
 import { setTheme } from "@/utils/common";
-import { useState } from "@/utils/hooks/useMapper";
-import { computed, defineComponent, onBeforeUnmount, onMounted, toRefs } from "vue";
 import { useStore } from "vuex";
-export default defineComponent({
-  name: "ThemeSwitch",
-  components: {},
-  computed: {},
-  props: {},
-  setup(props, { attrs, emit, expose, slots }) {
-    const { state, dispatch, commit } = useStore();
-    const { appearance } = useState({
-      appearance: (state) => state.settings.appearance,
-    });
-    const themecolor = computed({
-      get() {
-        let theme = appearance.value == "dark" ? true : false;
-        return theme;
-      },
-      set(val) {
-        let theme = val ? "dark" : "light";
-        ThemeColorChange(theme);
-      },
-    });
+import { useState } from "@/utils/hooks/useMapper";
+import { usePreferredColorScheme } from "@vueuse/core";
+import { computed } from "vue";
 
-    const ThemeColorChange = (val) => {
-      commit("UPDATE_USER_SETUP", {
-        key: "appearance",
-        value: val,
-      });
-      setTheme(val);
-    };
-    onMounted(() => {});
-    onBeforeUnmount(() => {});
-    return {
-      appearance,
-      themecolor,
-      ThemeColorChange,
-      ...toRefs(state),
-    };
+const osTheme = usePreferredColorScheme();
+const { commit } = useStore();
+const { themeScheme } = useState({
+  themeScheme: (state) => state.user.themeScheme,
+});
+
+/** Dark mode */
+const darkMode = computed(() => {
+  if (themeScheme.value === "auto") {
+    return osTheme.value === "dark";
+  }
+  return themeScheme.value === "dark";
+});
+
+const themecolor = computed({
+  get() {
+    return darkMode.value;
+  },
+  set(val) {
+    commit("setThemeScheme", val ? "dark" : "light")
+    setTheme(val ? "dark" : "light");
   },
 });
 </script>
 
 <style lang="scss" scoped>
-/* From www.lingdaima.com */
 .switch {
   font-size: 17px;
   position: relative;
@@ -98,6 +84,8 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(1.5em);
   background: #303136;
-  box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -5px 0 0 #a3dafb;
+  box-shadow:
+    inset -3px -2px 5px -2px #8983f7,
+    inset -10px -5px 0 0 #a3dafb;
 }
 </style>

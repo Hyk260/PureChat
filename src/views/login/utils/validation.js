@@ -21,6 +21,7 @@ export const user = reactive({
   keep: keep || false,
   verifyCode: "",
 });
+
 export const rules = reactive({
   username: [
     {
@@ -60,6 +61,7 @@ export const ruleForm = reactive({
   password: "",
   repeatPassword: "",
 });
+
 export const updateRules = reactive({
   username: [
     {

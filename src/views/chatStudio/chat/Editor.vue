@@ -88,14 +88,14 @@ const {
   sessionDraftMap,
   fullScreen,
 } = useState({
-  lang: (state) => state.settings.lang,
+  lang: (state) => state.user.lang,
   sessionDraftMap: (state) => state.conversation.sessionDraftMap,
   currentConversation: (state) => state.conversation.currentConversation,
   showCheckbox: (state) => state.conversation.showCheckbox,
   showMsgBox: (state) => state.conversation.showMsgBox,
   isShowModal: (state) => state.conversation.isShowModal,
   currentReplyMsg: (state) => state.conversation.currentReplyMsg,
-  fullScreen: (state) => state.settings.fullScreen,
+  fullScreen: (state) => state.conversation.fullScreen,
 });
 
 const handleEditor = (editor, created = true) => {
@@ -303,7 +303,7 @@ const handleEnter = (event) => {
 // 清空输入框
 const clearInputInfo = () => {
   commit("setReplyMsg", null);
-  commit("UPDATE_USER_SETUP", { key: "fullScreen", value: false });
+  commit("SET_CONVERSATION_VALUE", { key: "fullScreen", value: false });
   const editor = editorRef.value;
   editor && editor.clear();
 };
