@@ -22,6 +22,28 @@ const defaultConfig = {
   // }
 };
 
+function setStart({ url }) {
+  const whiteList = ['/login']
+  const isBar = whiteList.includes(url);
+  // 开启进度条动画
+  isBar && window.NProgress?.start?.();
+}
+
+function setxToken(response) {
+  const token = response.headers['x-token'];
+  if (token) {
+    localStg.set(ACCESS_TOKEN, token);
+  }
+}
+
+function setAuthorization(config) {
+  const token = localStg.get(ACCESS_TOKEN);
+  if (token) {
+    // 携带自定义请求头token到服务器
+    config.headers['Authorization'] = token;
+  }
+}
+
 class PureHttp {
   constructor() {
     this.service = axios.create({ ...defaultConfig });
@@ -32,12 +54,8 @@ class PureHttp {
   httpInterceptorsRequest() {
     this.service.interceptors.request.use(
       (config) => {
-        this.NProgressStart(config)
-        const token = localStg.get(ACCESS_TOKEN);
-        if (token) {
-          // 携带自定义请求头token到服务器
-          config.headers['Authorization'] = token;
-        }
+        setStart(config)
+        setAuthorization(config)
         return config;
       },
       errorHandler
@@ -49,14 +67,10 @@ class PureHttp {
       (response) => {
         const { data, status } = response;
         window.NProgress?.done?.();
-        if (status === 200) {
-          const token = response.headers['x-token'];
-          if (token) {
-            localStg.set(ACCESS_TOKEN, token);
-          }
+        if (status === 200) { 
+          setxToken(response)
           return data;
         }
-
         return Promise.reject(data); // 处理非200状态
       },
       errorHandler
@@ -65,12 +79,6 @@ class PureHttp {
   /** 通用请求工具函数 */
   request(config) {
     return this.service.request(config);
-  }
-  NProgressStart({ url }) {
-    const whiteList = ['/login']
-    const isBar = whiteList.includes(url);
-    // 开启进度条动画
-    isBar && window.NProgress?.start?.();
   }
 }
 
