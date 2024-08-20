@@ -3,25 +3,25 @@
 ### Get 请求
 
 ```
-import http from "@/utils/http/index";
+import { http } from "@/utils/http";
 
 // params传参
-http('get', '/xxx', { params: param });
+http.request('get', '/xxx', { params: param });
 
 // url拼接传参
-http('get', '/xxx?message=' + msg);
+http.request('get', '/xxx?message=' + msg);
 ```
 
 ### Post 请求
 
 ```
-import http from "@/utils/http/index";
+import { http } from "@/utils/http";
 
 // params传参
-http('post', '/xxx', { params: param });
+http.request('post', '/xxx', { params: param });
 
 // data传参
-http('post', '/xxx', { data: param });
+http.request('post', '/xxx', { data: param });
 ```
 
 ## 两种方式的比较

@@ -48,7 +48,7 @@
       <div class="forget">{{ $t("login.forget") }}</div>
     </div>
     <!-- 登录 -->
-    <el-button type="primary" class="login-btn" @click="loginBtn(ruleFormRef)" :loading="false">
+    <el-button type="primary" class="login-btn" @click="loginBtn(ruleFormRef)" :loading="loading">
       <template #loading>
         <loadingSvg />
       </template>
@@ -82,6 +82,7 @@
 <script setup>
 import { getuser } from "@/api/node-admin-api/index";
 import { isDev } from "@/config/env";
+import { useBoolean } from "@/utils/hooks/index";
 import ImageVerify from "@/views/components/ImageVerify/index.vue";
 import { Lock, User } from "@element-plus/icons-vue";
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
@@ -93,13 +94,14 @@ import { rules, user } from "../utils/validation";
 import loadingSvg from "./loadingSvg.vue";
 import { noService } from "@/config/index";
 
-const isVerifyCode = false
+const isVerifyCode = false;
 const router = useRouter();
 const restaurants = ref([]);
 const ruleFormRef = ref();
 const imgCode = ref("");
 
 const { dispatch, commit } = useStore();
+const [loading, setLoading] = useBoolean();
 
 const handleSelect = (item) => {
   console.log(item);
@@ -123,7 +125,9 @@ const loginBtn = async (formEl) => {
   }
   if (!formEl) return;
   await formEl.validate((valid) => {
-    if (valid) dispatch("LOG_IN", user);
+    if (!valid) return;
+    setLoading(true);
+    dispatch("LOG_IN", user);
   });
 };
 
