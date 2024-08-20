@@ -45,7 +45,7 @@ import { ref } from "vue";
 import { getModelType, getModelSvg, useAccessStore } from "@/ai/utils";
 import { StoreKey, modelValue } from "@/ai/constant";
 import { useGetters } from "@/utils/hooks/useMapper";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
 
 const robotIcon = ref("");
@@ -59,14 +59,14 @@ function onClickOutside() {
 }
 
 function storeRobotModel(model) {
-  const access = storage.get(StoreKey.Access);
+  const access = localStg.get(StoreKey.Access);
   const account = getModelType(toAccount.value);
   const config = useAccessStore(account);
   const modelConfig = { ...config, model };
   if (access) {
-    storage.set(StoreKey.Access, { ...access, [account]: { ...modelConfig } });
+    localStg.set(StoreKey.Access, { ...access, [account]: { ...modelConfig } });
   } else {
-    storage.set(StoreKey.Access, { [account]: { ...modelConfig } });
+    localStg.set(StoreKey.Access, { [account]: { ...modelConfig } });
   }
   commit("setRobotModel", model);
   setFlag(false);

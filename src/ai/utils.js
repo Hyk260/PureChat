@@ -10,22 +10,22 @@ import {
   prompt,
 } from "@/ai/constant";
 import { isRobot } from "@/utils/chat/index";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 
 export const useAccessStore = (model = ModelProvider.GPT) => {
   try {
-    return storage.get(StoreKey.Access)?.[model] || modelConfig[model];
+    return localStg.get(StoreKey.Access)?.[model] || modelConfig[model];
   } catch (error) {
-    storage.remove(StoreKey.Access);
+    localStg.remove(StoreKey.Access);
     return {};
   }
 };
 
 export const usePromptStore = (model = ModelProvider.GPT) => {
   try {
-    return storage.get(StoreKey.Prompt)?.[model] || prompt[0];
+    return localStg.get(StoreKey.Prompt)?.[model] || prompt[0];
   } catch (error) {
-    storage.remove(StoreKey.Prompt);
+    localStg.remove(StoreKey.Prompt);
     return {};
   }
 };

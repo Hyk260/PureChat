@@ -1,8 +1,8 @@
 import { createI18n } from 'vue-i18n';
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import messages from './locale';
 
-const lang = storage.get('lang') || "zh-CN";
+const lang = localStg.get('lang') || "zh-CN";
 
 const i18n = createI18n({
   locale: lang,
@@ -23,5 +23,5 @@ export function setLocale(locale) {
 
 export function changeLocale(lang) {
   setLocale(lang);
-  storage.set('lang', lang);
+  localStg.set('lang', lang);
 }

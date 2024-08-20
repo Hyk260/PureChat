@@ -3,7 +3,7 @@ import { ACCOUNT, TIM_PROXY, USER_MODEL } from "@/constants/index";
 import router from "@/router";
 import chat from "@/utils/IM/im-sdk/tim";
 import { timProxy } from "@/utils/IM/index";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import { verification } from "@/utils/message/index";
 import emitter from "@/utils/mitt-bus";
 import { ElMessage } from "element-plus";
@@ -18,8 +18,8 @@ const user = {
     message: null,
     showload: false, // 登录按钮加载状态
     currentPage: 0,
-    userProfile: storage.get(TIM_PROXY)?.userProfile || {}, // IM用户信息
-    lang: storage.get('lang') || "zh-CN", // 默认语言
+    userProfile: localStg.get(TIM_PROXY)?.userProfile || {}, // IM用户信息
+    lang: localStg.get('lang') || "zh-CN", // 默认语言
     themeScheme,// 主题方案
   },
   mutations: {
@@ -64,7 +64,7 @@ const user = {
           userID: result.username,
           userSig: result.userSig,
         });
-        storage.set(USER_MODEL, result)
+        localStg.set(USER_MODEL, result)
         router.push("/chatstudio");
         verification(code, msg);
       } else {
@@ -79,7 +79,7 @@ const user = {
       const { userSig, userID } = genTestUserSig({ userID: data.username })
       window.TIMProxy.init();
       dispatch("TIM_LOG_IN", { userID, userSig, });
-      storage.set(USER_MODEL, { username: userID, userSig })
+      localStg.set(USER_MODEL, { username: userID, userSig })
       router.push("/chatstudio");
     },
     // 登录
@@ -92,9 +92,9 @@ const user = {
           userID: result.username,
           userSig: result.userSig,
         });
-        storage.set(USER_MODEL, result)
+        localStg.set(USER_MODEL, result)
         // 保存登录信息 keep
-        data?.keep && storage.set(ACCOUNT, data);
+        data?.keep && localStg.set(ACCOUNT, data);
         router.push("/chatstudio");
         verification(code, msg);
       } else {
@@ -137,7 +137,7 @@ const user = {
     // 重新登陆
     LOG_IN_AGAIN({ state, dispatch }) {
       try {
-        const data = storage.get(USER_MODEL) || {};
+        const data = localStg.get(USER_MODEL) || {};
         if (data) {
           const { username: userID, userSig } = data;
           console.log("LOG_IN_AGAIN", { userID, userSig });

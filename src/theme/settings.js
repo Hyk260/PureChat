@@ -1,4 +1,4 @@
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 
 /** Default theme settings */
 export const themeSettings = {
@@ -10,11 +10,11 @@ const DARK_CLASS = 'dark';
 /** Init theme settings */
 export function initThemeSettings() {
 
-  const settings = storage.get('themeSettings') || themeSettings.themeScheme;
+  const settings = localStg.get('themeSettings') || themeSettings.themeScheme;
 
   return settings;
 }
 
 export function localStgThemeScheme(theme) {
-  storage.set('themeSettings', theme)
+  localStg.set('themeSettings', theme)
 }

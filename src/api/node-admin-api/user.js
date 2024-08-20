@@ -1,7 +1,7 @@
 import { StoreKey } from "@/ai/constant";
 import { ACCESS_TOKEN, USER_MODEL, USER_SETUP } from "@/constants/index";
 import http from "@/utils/http/index";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 
 // 登录接口
 export const login = (data) => {
@@ -34,9 +34,9 @@ export const getuser = async () => {
 
 // 退出登录
 export const logout = () => {
-  storage.clear();
-  // storage.remove(USER_SETUP);
-  // storage.remove(USER_MODEL);
-  // storage.remove(ACCESS_TOKEN);
-  // storage.remove(StoreKey.Access);
+  localStg.clear();
+  // localStg.remove(USER_SETUP);
+  // localStg.remove(USER_MODEL);
+  // localStg.remove(ACCESS_TOKEN);
+  // localStg.remove(StoreKey.Access);
 };

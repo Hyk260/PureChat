@@ -81,7 +81,7 @@ import { ROLES, StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/co
 import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
 import { useBoolean } from "@/utils/hooks/index";
 import { useGetters } from "@/utils/hooks/useMapper";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { ref } from "vue";
@@ -126,45 +126,45 @@ function initModel() {
 }
 
 function storeRobotModel(model) {
-  const access = storage.get(StoreKey.Access);
+  const access = localStg.get(StoreKey.Access);
   const account = getModelType(toAccount.value);
   if (access) {
-    storage.set(StoreKey.Access, { ...access, [account]: { ...model } });
+    localStg.set(StoreKey.Access, { ...access, [account]: { ...model } });
   } else {
-    storage.set(StoreKey.Access, { [account]: { ...model } });
+    localStg.set(StoreKey.Access, { [account]: { ...model } });
   }
   commit("setRobotModel", model.model);
 }
 
 function storeRobotMask(model) {
-  const access = storage.get(StoreKey.Prompt);
+  const access = localStg.get(StoreKey.Prompt);
   const account = getModelType(toAccount.value);
   if (access) {
-    storage.set(StoreKey.Prompt, { ...access, [account]: { ...model } });
+    localStg.set(StoreKey.Prompt, { ...access, [account]: { ...model } });
   } else {
-    storage.set(StoreKey.Prompt, { [account]: { ...model } });
+    localStg.set(StoreKey.Prompt, { [account]: { ...model } });
   }
 }
 
 function resetRobotModel() {
-  const access = storage.get(StoreKey.Access);
+  const access = localStg.get(StoreKey.Access);
   if (!access) return;
   const account = getModelType(toAccount.value);
   const filteredConfig = Object.fromEntries(
     Object.entries(access).filter(([key, _]) => !key.includes(account))
   );
-  storage.set(StoreKey.Access, filteredConfig);
+  localStg.set(StoreKey.Access, filteredConfig);
   commit("setRobotModel", modelConfig[account].model);
 }
 
 function resetRobotMask() {
-  const prompt = storage.get(StoreKey.Prompt);
+  const prompt = localStg.get(StoreKey.Prompt);
   if (!prompt) return;
   const account = getModelType(toAccount.value);
   const filteredConfig = Object.fromEntries(
     Object.entries(prompt).filter(([key, _]) => !key.includes(account))
   );
-  storage.set(StoreKey.Prompt, filteredConfig);
+  localStg.set(StoreKey.Prompt, filteredConfig);
 }
 
 function handleClose(done) {

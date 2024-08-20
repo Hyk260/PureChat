@@ -1,6 +1,6 @@
 import { reactive } from "vue";
 import store from "@/store/index";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import { $t } from "@/locales/index";
 import { ACCOUNT } from "@/constants/index";
 
@@ -13,7 +13,7 @@ const REGEXP_PWD =
 
 const pattern = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/;
 
-const { username, password, keep } = storage.get(ACCOUNT) || {};
+const { username, password, keep } = localStg.get(ACCOUNT) || {};
 
 export const user = reactive({
   username: username || "",

@@ -17,7 +17,7 @@ import {
 } from "@/constants/index";
 import TIM from "@/utils/IM/chat/index";
 import { addTimeDivider, checkTextNotEmpty, getBaseTime, transformData } from "@/utils/chat/index";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
@@ -291,9 +291,9 @@ const conversation = {
           const oldestElement = iterator.next().value;
           state.recently.delete(oldestElement);
         }
-        storage.set(EMOJI_RECENTLY, [...state.recently]);
+        localStg.set(EMOJI_RECENTLY, [...state.recently]);
       } else if (type == "revert") {
-        const recently = storage.get(EMOJI_RECENTLY);
+        const recently = localStg.get(EMOJI_RECENTLY);
         if (recently) state.recently = new Set([...recently]);
       } else if (type == "clean") {
         state.recently.clear();
