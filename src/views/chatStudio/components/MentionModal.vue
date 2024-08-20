@@ -2,23 +2,25 @@
   <div class="mention-modal" :style="{ top: top, left: left }" v-show="isVisibile">
     <ul class="mention-list" ref="listRef">
       <el-scrollbar>
-        <li
-          v-for="(item, i) in searchedList"
-          :key="item.joinTime"
-          :class="{ active: isActive(item) }"
-          @mouseover="setActive(i)"
-          @click="insertMentionHandler(item.userID, item.nick)"
-        >
-          <UserAvatar
-            words="3"
-            className="mention"
-            shape="square"
-            :url="item.avatar"
-            :type="item.avatar ? 'single' : 'group'"
-            :nickName="item.userID === magAtAll ? '@' : item.nick"
-          />
-          <span class="nick">{{ item.nick || item.userID }}</span>
-        </li>
+        <div class="max-h-123">
+          <li
+            v-for="(item, i) in searchedList"
+            :key="item.joinTime"
+            :class="{ 'mention-active': isActive(item) }"
+            @mouseover="setActive(i)"
+            @click="insertMentionHandler(item.userID, item.nick)"
+          >
+            <UserAvatar
+              words="3"
+              className="mention"
+              shape="square"
+              :url="item.avatar"
+              :type="item.avatar ? 'single' : 'group'"
+              :nickName="item.userID === magAtAll ? '@' : item.nick"
+            />
+            <span class="nick">{{ item.nick || item.userID }}</span>
+          </li>
+        </div>
       </el-scrollbar>
     </ul>
   </div>
@@ -122,16 +124,17 @@ export default {
         const { content = [], type, searchlength = 0 } = cloneDeep(data);
         console.log(content, type, searchlength);
         this.filtering = type; // all success empty
-        if (type == "all") {
+        if (type === "all") {
           this.initList();
-        } else if (type == "empty") {
+        } else if (type === "empty") {
           this.setMentionStatus();
-        } else if (type == "success") {
+        } else if (type === "success") {
           this.initList(false, content);
           this.searchValue = searchlength;
-        } else {
-          this.updateMention();
         }
+        this.$nextTick(() => {
+          this.updateMention();
+        });
       });
     },
     setMentionStatus(status = false) {
@@ -179,7 +182,7 @@ export default {
       }
     },
     scrollToSelectedItem() {
-      const element = document.querySelector(".active");
+      const element = document.querySelector(".mention-active");
       if (!element) return;
       element.scrollIntoView({ behavior: "smooth", block: "center" });
     },
@@ -215,8 +218,7 @@ export default {
   outline: none;
 }
 .mention-list {
-  height: 95px;
-  overflow: hidden;
+  max-height: 123px;
   .avatar {
     width: 18px;
     height: 18px;
@@ -236,7 +238,7 @@ export default {
     display: flex;
   }
 }
-.active {
+.mention-active {
   background: var(--color-mention-active);
 }
 </style>
