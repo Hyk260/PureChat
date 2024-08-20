@@ -84,17 +84,14 @@ emitter.on("openAgentCard", (data) => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100px;
+    padding-top: 20px;
     .avatar-square {
       font-size: 50px;
-      height: 120px;
       display: flex;
       flex: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: 100px;
-      height: 100px;
     }
   }
   .content {

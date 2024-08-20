@@ -1,19 +1,21 @@
 <template>
   <div
-    v-if="type == 'group'"
+    v-if="type === 'group'"
     :class="['user-avatar', 'default', className, shape]"
     :style="backgInfo(url)"
   >
     {{ url ? null : displayInfo(nickName) }}
   </div>
-  <img draggable="false"  v-else-if="type == 'single'" class="avatar" :src="url || shapeObj[shape]" alt="头像" />
-  <div v-else-if="type == 'self'" class="badge" :style="{ height: `${size}px` }">
-    <el-avatar :size="size" :src="userProfile?.avatar || shapeObj['circle']" :shape="shape" />
+  <img draggable="false"  v-else-if="type === 'single'" class="avatar" :src="url || shapeObj[shape]" alt="头像" />
+  <div v-else-if="type === 'self'" class="badge" :style="{ height: `${size}px` }">
+    <el-avatar :size="size" :src="avatar || shapeObj['circle']" :shape="shape" />
     <sup v-show="isdot" class="is-dot"></sup>
   </div>
 </template>
 
 <script setup>
+import { localStg } from "@/utils/storage";
+import { TIM_PROXY } from "@/constants/index";
 import { toRefs } from "vue";
 import { useState } from "@/utils/hooks/useMapper";
 
@@ -69,9 +71,7 @@ const shapeObj = {
   square: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
 };
 
-const { userProfile } = useState({
-  userProfile: (state) => state.user.userProfile,
-});
+const { avatar } = localStg.get(TIM_PROXY)?.userProfile
 
 const displayInfo = (info) => {
   if (!info) {
@@ -86,7 +86,6 @@ const backgInfo = (url) => {
 </script>
 
 <style lang="scss" scoped>
-
 .user-avatar {
   border-radius: 50%;
   overflow: hidden;
