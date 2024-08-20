@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import { localStgThemeScheme } from "@/theme/settings"
 const title = import.meta.env.VITE_APP_NAME;
 
@@ -22,7 +22,7 @@ export function setTheme(themeScheme = "light") {
   // 监听系统主题变化，仅在自动模式下生效
   if (isAuto) {
     systemThemeQuery.addEventListener("change", (e) => {
-      if (storage.get('themeSettings') === 'auto') {
+      if (localStg.get('themeSettings') === 'auto') {
         toggleHtmlClass(e.matches ? "light" : "dark")
       }
     });

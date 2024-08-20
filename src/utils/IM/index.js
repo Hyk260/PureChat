@@ -4,7 +4,7 @@ import store from "@/store";
 import TIM from "@/utils/IM/chat/index";
 import tim from "@/utils/IM/im-sdk/tim";
 import { scrollToDomPostion } from "@/utils/chat/index";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import { useWindowFocus } from "@vueuse/core";
 import { ElNotification } from "element-plus";
@@ -44,11 +44,11 @@ export class TIMProxy {
     for (const [key, value] of Object.entries(this)) {
       player[key] = value;
     }
-    storage.set(TIM_PROXY, player);
+    localStg.set(TIM_PROXY, player);
   }
   // 更新IM信息
   loadSelfFromLocalStorage() {
-    const player = storage.get(TIM_PROXY);
+    const player = localStg.get(TIM_PROXY);
     if (!player) return;
     for (const [key, value] of Object.entries(player)) {
       this[key] = value;

@@ -60,7 +60,7 @@ import { getPrompt } from "@/api/node-admin-api/index";
 import { ref, watch, onMounted, onBeforeMount } from "vue";
 import emitter from "@/utils/mitt-bus";
 import marketJson from "@/assets/db/market.json";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import AgentCard from "./AgentCard.vue";
 
 const cur = ref("");
@@ -90,7 +90,7 @@ function handleClick(key) {
 }
 
 function initPrompt() {
-  const marketLocal = storage.get("marketJson");
+  const marketLocal = localStg.get("marketJson");
   if (marketLocal) {
     market.value = marketLocal;
     filterInput.value = marketLocal.agents;
@@ -100,13 +100,13 @@ function initPrompt() {
     .then((res) => {
       market.value = res;
       filterInput.value = res.agents;
-      storage.set("marketJson", res);
+      localStg.set("marketJson", res);
       console.log("🚀 ~ getPrompt ~ res:", res);
     })
     .catch((err) => {
       market.value = marketJson;
       filterInput.value = marketJson.agents;
-      storage.set("marketJson", marketJson);
+      localStg.set("marketJson", marketJson);
     });
 }
 

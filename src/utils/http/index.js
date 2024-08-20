@@ -1,5 +1,5 @@
 import { ACCESS_TOKEN } from "@/constants/index";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import axios from "axios";
 import { errorHandler } from "./tools";
 
@@ -12,7 +12,7 @@ const service = axios.create({
 
 // 请求拦截器
 service.interceptors.request.use((config) => {
-  const token = storage.get(ACCESS_TOKEN);
+  const token = localStg.get(ACCESS_TOKEN);
   // 携带自定义请求头token到后台
   if (token) config.headers["authorization"] = token;
   return config;
@@ -25,7 +25,7 @@ service.interceptors.response.use((response) => {
   if (status === 200) {
     const ToKen = response.headers["x-token"];
     if (ToKen) {
-      storage.set(ACCESS_TOKEN, ToKen);
+      localStg.set(ACCESS_TOKEN, ToKen);
     }
     return data;
   }

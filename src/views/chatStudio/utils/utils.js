@@ -7,7 +7,7 @@ import {
 } from "@/api/im-sdk-api/index";
 import store from "@/store/index";
 import { TIM_PROXY } from "@/constants/index";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import { dataURLtoFile, getBlob, getFileType } from "@/utils/chat/index";
 import emitter from "@/utils/mitt-bus";
 import { useClipboard } from "@vueuse/core";
@@ -592,5 +592,5 @@ export const getAssetsFile = (url) => {
 };
 
 export const isSelf = (item) => {
-  return item.from === storage.get(TIM_PROXY)?.userProfile?.userID;
+  return item.from === localStg.get(TIM_PROXY)?.userProfile?.userID;
 };

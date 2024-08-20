@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import { downloadMergerMessage } from "@/api/im-sdk-api/index";
 import { useBoolean } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
@@ -62,7 +62,7 @@ const [dialogVisible, setDialogVisible] = useBoolean();
 const mergValue = ref({});
 
 const isOwn = (item) => {
-  return item.from === storage.get(TIM_PROXY)?.userProfile?.userID;
+  return item.from === localStg.get(TIM_PROXY)?.userProfile?.userID;
 };
 
 function handleClose(done) {

@@ -32,7 +32,7 @@ import { Markdown, handleCopyClick } from "@/utils/markdown/index";
 import { ref } from "vue";
 import emitter from "@/utils/mitt-bus";
 import { useBoolean } from "@/utils/hooks/index";
-import storage from "@/utils/localforage/index";
+import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
 import { StoreKey, CHATGPT_ROBOT, ModelProvider } from "@/ai/constant";
 import { forIn } from "lodash-es";
@@ -44,8 +44,8 @@ const [dialog, setDialog] = useBoolean();
 function toTant(item = cardData.value) {
   const { identifier, meta } = item;
   forIn(ModelProvider, (value, key) => {
-    storage.set(StoreKey.Prompt, {
-      ...storage.get(StoreKey.Prompt),
+    localStg.set(StoreKey.Prompt, {
+      ...localStg.get(StoreKey.Prompt),
       [value]: {
         id: identifier,
         lang: "cn",
