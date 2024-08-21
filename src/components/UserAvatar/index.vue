@@ -1,13 +1,13 @@
 <template>
   <div
-    v-if="type == 'group'"
+    v-if="type === 'group'"
     :class="['user-avatar', 'default', className, shape]"
     :style="backgInfo(url)"
   >
     {{ url ? null : displayInfo(nickName) }}
   </div>
-  <img draggable="false"  v-else-if="type == 'single'" class="avatar" :src="url || shapeObj[shape]" alt="头像" />
-  <div v-else-if="type == 'self'" class="badge" :style="{ height: `${size}px` }">
+  <img draggable="false"  v-else-if="type === 'single'" class="avatar" :src="url || shapeObj[shape]" alt="头像" />
+  <div v-else-if="type === 'self'" class="badge" :style="{ height: `${size}px` }">
     <el-avatar :size="size" :src="userProfile?.avatar || shapeObj['circle']" :shape="shape" />
     <sup v-show="isdot" class="is-dot"></sup>
   </div>
@@ -86,7 +86,6 @@ const backgInfo = (url) => {
 </script>
 
 <style lang="scss" scoped>
-
 .user-avatar {
   border-radius: 50%;
   overflow: hidden;

@@ -1,5 +1,5 @@
 <template>
-  <div class="group-tip-element-wrapper">
+  <div class="group-tip-element-wrapper" @click="onClick(message)">
     {{ getGroupTipContent(message) }}
   </div>
 </template>
@@ -7,6 +7,7 @@
 <script>
 import { mapState } from "vuex";
 import TIM from "@/utils/IM/chat/index";
+
 export default {
   name: "GroupTipElement",
   props: {
@@ -20,31 +21,27 @@ export default {
       userProfile: (state) => state.user.userProfile,
       memberList: (state) => state.groupinfo.currentMemberList,
     }),
-    details() {
-      return this.memberList.filter((t) => t.userID == this.message.payload.operatorID)?.[0] || {};
+    isSme() {
+      return this.userProfile?.userID === this.message.payload.operatorID;
     },
   },
   methods: {
+    onClick(data) {
+      console.log("group-tip:", data);
+    },
     memberJoin(message) {
-      const { groupJoinType, userIDList, memberList } = message.payload;
-      // groupJoinType 1: "申请加群", 2: "邀请加群",
-      // 被邀请入群
-      if (groupJoinType == "2") {
-        return `${this.details.nick || "管理员"} 邀请 ${message.nick || userIDList[0]} 加入群聊 🎉`;
-      }
-      if (userIDList.length == 1) {
-        if (this.userProfile?.userID == userIDList[0]) {
-          return "你已经是群成员了，和大家打个招呼吧！";
+      // groupJoinType 1: "申请加群" 2: "邀请加群"
+      const { groupJoinType, userIDList } = message.payload;
+      if (userIDList.length === 1) {
+        if (this.userProfile?.userID === userIDList[0]) {
+          return "你已经是群成员了，和大家打个招呼吧！🎉";
         }
       }
-      return `${message.nick || userIDList[0]} 加入群聊 🎉`;
-    },
-    endGroupChat(message) {
-      if (message.payload.text.indexOf("结束群聊") > -1) {
-        return `"${message.payload.text}"`;
-      } else {
-        return `${message.payload.text}`;
+      // 被邀请入群
+      if (groupJoinType === 2) {
+        return `${this.operator(message) || "管理员"} 邀请 ${message.nick || userIDList[0]} 加入群聊`;
       }
+      return `${message.nick || userIDList[0]} 加入群聊 🎉`;
     },
     memberProfileUpdated(message) {
       for (let member of message.payload.memberList) {
@@ -55,23 +52,36 @@ export default {
         }
       }
     },
+    operator(message) {
+      const { operatorInfo } = message.payload || {};
+      const { userID, nick, role } = operatorInfo || {};
+      if (role === 0) return "管理员";
+      if (this.isSme) return "你";
+      return nick || userID;
+    },
     getGroupTipContent(message) {
-      const userName = message?.nick || message.payload.userIDList.join(",");
-      switch (message.payload.operationType) {
-        case TIM.TYPES.GRP_TIP_MBR_JOIN: // 1	有成员加群
+      const { userIDList, operationType } = message.payload;
+      const userName = message?.nick || userIDList.join(",");
+      switch (operationType) {
+        // 1 有成员加群
+        case TIM.TYPES.GRP_TIP_MBR_JOIN:
           return this.memberJoin(message);
+        // 2	有群成员退群
         case TIM.TYPES.GRP_TIP_MBR_QUIT:
           return `${userName} 退出群聊`;
+        // 3	有群成员被踢出群
         case TIM.TYPES.GRP_TIP_MBR_KICKED_OUT:
-          return `${this.details.nick || ""} 将 ${userName} 移出群聊`;
+          return `${this.operator(message)} 将 ${userName} 移出群聊`;
+        // 4	有群成员被设为管理员
         case TIM.TYPES.GRP_TIP_MBR_SET_ADMIN:
           return `${userName} 被设置为管理员`;
+        // 5	有群成员被撤销管理员
         case TIM.TYPES.GRP_TIP_MBR_CANCELED_ADMIN:
-          return `群成员：${userName} 被撤销管理员`;
-        case TIM.TYPES.GRP_TIP_GRP_PROFILE_UPDATED: // 6
+          return `${userName} 被撤销管理员`;
+        // 6	群组资料变更
+        case TIM.TYPES.GRP_TIP_GRP_PROFILE_UPDATED:
           return "群资料修改";
-        case "256":
-          return this.endGroupChat(message);
+        // 7	群成员资料变更，例如：群成员被禁言
         case TIM.TYPES.GRP_TIP_MBR_PROFILE_UPDATED:
           return this.memberProfileUpdated(message);
         default:
@@ -86,15 +96,12 @@ export default {
 .group-tip-element-wrapper {
   font-size: 12px;
   border-radius: 3px;
-  // background: var(--color-group-tip);
   vertical-align: middle;
   word-wrap: normal;
   word-break: break-all;
-  // color: rgba(0, 0, 0, 0.45);
   color: var(--color-time-divider);
   margin-top: 5px;
   padding: 4px 6px;
   line-height: 16px;
-  justify-content: center;
 }
 </style>

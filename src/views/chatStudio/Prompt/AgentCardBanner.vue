@@ -56,6 +56,9 @@ function toTant(item = cardData.value) {
 
   commit("TAGGLE_OUE_SIDE", "message");
   dispatch("CHEC_OUT_CONVERSATION", { convId: `${"C2C"}${CHATGPT_ROBOT}` });
+  setTimeout(() => {
+    emitter.emit("updataScroll");
+  },50)
 }
 
 function handleClose() {
@@ -84,17 +87,14 @@ emitter.on("openAgentCard", (data) => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100px;
+    padding-top: 20px;
     .avatar-square {
       font-size: 50px;
-      height: 120px;
       display: flex;
       flex: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: 100px;
-      height: 100px;
     }
   }
   .content {

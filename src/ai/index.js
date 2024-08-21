@@ -1,5 +1,5 @@
 import { ClientApi } from "@/ai/api";
-import { RobotAvatar, ModelProvider } from "@/ai/constant";
+import { RobotAvatar, ModelProvider, modelValue } from "@/ai/constant";
 import { getModelType, useAccessStore, prettyObject } from "@/ai/utils";
 import { createCustomMsg } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
@@ -47,12 +47,23 @@ const fnCreateLodMsg = (params) => {
   return msg;
 };
 
+function getPrompt(api) {
+  let writing = "API Key 为空，请在配置页填入你的 API Key 后重试"
+  try {
+    let doubt = modelValue[api.llm.provider].Token.doubt
+    let text = `[文档](${doubt})`
+    return `${writing}-${text}`
+  } catch (error) {
+    return writing
+  }
+}
+
 function beforeSend(api, msg) {
   if ([ModelProvider.Ollama].includes(api.llm.provider)) return false;
   if (!api.config().token) {
     setTimeout(() => {
-      updataMessage(msg, "API Key 为空，请在ai配置窗口填入你的 API Key 后重试");
-    }, 800);
+      updataMessage(msg, getPrompt(api));
+    }, 500);
     return true;
   }
   return false;

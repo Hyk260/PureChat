@@ -1,9 +1,9 @@
-import http from "@/utils/http/index";
+import { http } from "@/utils/http/index";
 
 const client = window?.electron ? 'app' : 'web'
 
 export const openAuthUrl = (params) => {
-  return http({
+  return http.request({
     url: '/auth/github',
     method: "get",
     params: {
@@ -14,7 +14,7 @@ export const openAuthUrl = (params) => {
 };
 
 export const githubAuth = (params) => {
-  return http({
+  return http.request({
     url: "/auth/github/callback",
     method: "get",
     params: {

@@ -14,25 +14,17 @@
         :type="isGroup ? 'group' : 'single'"
       />
     </div>
-    <div
-      class="right-item"
-      :class="{
-        between: item.selfSignature,
-      }"
-    >
+    <div class="right-item" :class="{ between: item.selfSignature }">
       <p>{{ item.Name || item.name || item.nick }}</p>
       <p class="describe">
         {{ item.selfSignature }}
       </p>
-      <!-- <FontIcon
-        iconName="Position"
-        @click="onFriend({ id: item.GroupId || item.groupID || item.userID })"
-      /> -->
     </div>
   </div>
 </template>
 
 <script>
+import { scrollToMessage } from "@/utils/chat/index";
 export default {
   name: "CardGrid",
   props: {
@@ -54,15 +46,11 @@ export default {
     return {};
   },
   methods: {
-    onFriend({ id, type = "C2C" }) {
+    onFriend({ id }) {
       // "GROUP" : "C2C";
       this.$store.commit("TAGGLE_OUE_SIDE", "message");
       this.$store.dispatch("CHEC_OUT_CONVERSATION", { convId: `${this.type}${id}` });
-      setTimeout(() => {
-        const dom = document.getElementById(`message_C2C${id}`);
-        if (!dom) return;
-        dom.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 300);
+      scrollToMessage(`message_${this.type}${id}`);
     },
   },
 };

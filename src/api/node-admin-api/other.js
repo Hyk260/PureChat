@@ -1,4 +1,4 @@
-import http from "@/utils/http/index";
+import { http } from "@/utils/http/index";
 import market from '@/assets/db/market.json';
 import { noService } from '@/config/index';
 
@@ -6,7 +6,7 @@ export const getPrompt = async () => {
   if (noService) {
     return market
   } else {
-    return http({
+    return http.request({
       url: "/market",
       method: "get",
     });
@@ -25,7 +25,7 @@ export const uploadFiles = async (params) => {
   let uploadedResult = null;
   const formData = createForData({ files });
   try {
-    uploadedResult = await http({
+    uploadedResult = await http.request({
       url: "/upload_files",
       method: "post",
       data: formData,
