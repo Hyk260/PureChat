@@ -263,6 +263,14 @@ export const scrollToDomPostion = (msgid) => {
   }, 2000);
 };
 
+export function scrollToMessage(id, delay = 300) {
+  setTimeout(() => {
+    const dom = document.getElementById(id);
+    if (!dom) return;
+    dom.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, delay);
+}
+
 export const createProgressHandler = () => {
   let lastNum = 0;
   const handleProgressUpdate = throttle((progress, cd) => {
@@ -294,6 +302,14 @@ export const setChatListCache = (data) => {
   let id = `TIM_${appid}_${username}_conversationListMap`
   localStg.set(id, data) || []
 };
+
+export function setMessageCaching(key ,data) {
+  let appid = import.meta.env.VITE_IM_SDK_APPID
+  const { username } = localStg.get(USER_MODEL) || {}
+  if (!username) return
+  let bond = `TIM_${appid}_${username}_${key}_historyMessageListMap`
+  localStg.set(bond, data.get(key))
+}
 
 export function readFromFile() {
   return new Promise((res, rej) => {

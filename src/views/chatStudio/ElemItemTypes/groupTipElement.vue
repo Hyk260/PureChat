@@ -22,7 +22,7 @@ export default {
       memberList: (state) => state.groupinfo.currentMemberList,
     }),
     isSme() {
-      return this.userProfile?.userID === this.message.payload.operatorID
+      return this.userProfile?.userID === this.message.payload.operatorID;
     },
   },
   methods: {
@@ -54,8 +54,9 @@ export default {
     },
     operator(message) {
       const { operatorInfo } = message.payload;
-      const { userID, nick } = operatorInfo;
-      if (this.isSme) return '你'
+      const { userID, nick, role } = operatorInfo;
+      if (role === 0) return "管理员";
+      if (this.isSme) return "你";
       return nick || userID;
     },
     getGroupTipContent(message) {

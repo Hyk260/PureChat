@@ -16,7 +16,7 @@ import {
   HISTORY_MESSAGE_COUNT,
 } from "@/constants/index";
 import TIM from "@/utils/IM/chat/index";
-import { addTimeDivider, checkTextNotEmpty, getBaseTime, transformData, getChatListCache } from "@/utils/chat/index";
+import { addTimeDivider, checkTextNotEmpty, getBaseTime, transformData, getChatListCache, setMessageCaching } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
@@ -56,6 +56,7 @@ const conversation = {
           console.log("[chat] 添加消息 ADD_MESSAGE:", payload);
           const { convId, isDone, message } = payload;
           state.historyMessageList.set(convId, message);
+          // setMessageCaching(convId, state.historyMessageList)
           if (state.currentConversation) {
             state.currentMessageList = state.historyMessageList.get(convId);
           } else {
@@ -77,6 +78,7 @@ const conversation = {
             convId,
             history ? history.concat(timeDividerResult) : timeDividerResult
           );
+          // setMessageCaching(convId, state.historyMessageList)
           state.currentMessageList = state.historyMessageList.get(convId);
           break;
         }
@@ -103,6 +105,7 @@ const conversation = {
           }
           // 更新历史消息
           state.historyMessageList.set(convId, newMessageList);
+          // setMessageCaching(convId, state.historyMessageList)
           // 当前会有列表有值
           if (state.currentConversation) {
             if (state.currentConversation.conversationID === convId) {
@@ -120,6 +123,7 @@ const conversation = {
           const newHistory = history.reverse();
           const newHistoryList = addTimeDivider(newHistory).reverse();
           state.historyMessageList.set(convId, newHistoryList);
+          // setMessageCaching(convId, state.historyMessageList)
           state.currentMessageList = newHistoryList;
           break;
         }

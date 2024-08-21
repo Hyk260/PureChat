@@ -1,4 +1,5 @@
 import tim from "@/utils/IM/im-sdk/tim";
+// import { getMessageCaching } from '@/utils/chat/index';
 /**
  * 获取未读消息总数
  * @returns {Promise<number>} 未读消息总数
@@ -22,6 +23,7 @@ export const getMsgList = async (params) => {
       nextReqMessageID: nextReqMessageID || "",
     });
     if (code === 0) {
+      // getMessageCaching(conversationID, nextReqMessageID, data)
       return data;
     } else {
       throw new Error("Failed to get message list");

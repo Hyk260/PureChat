@@ -21,7 +21,6 @@
 <script>
 import { ROBOT_COLLECT } from "@/ai/constant";
 import { getUserProfile } from "@/api/im-sdk-api/index";
-import { restApi } from "@/api/node-admin-api/index";
 import emitter from "@/utils/mitt-bus";
 import { mapState } from "vuex";
 import CardGrid from "./CardGrid.vue";
@@ -54,43 +53,19 @@ export default {
       this.active = icon;
       this.title = title;
     });
-    // this.getGroupList();
     this.$store.dispatch("getGroupList");
   },
   methods: {
+    // 获取机器人列表
     async getRobot() {
-      let list = ROBOT_COLLECT;
-      // 获取机器人列表
-      const { code, data } = await getUserProfile(list);
+      const { code, data } = await getUserProfile(ROBOT_COLLECT);
       this.robotList = data;
     },
+    // 获取好友列表
     async getFriend() {
       let list = ["huangyk", "admin", "linjx", "jinwx", "zhangal"];
-      // 获取好友列表
       const { code, data } = await getUserProfile(list);
       this.friend = data;
-    },
-    async getGroupList() {
-      const { GroupIdList } = await restApi({
-        funName: "getAppidGroupList",
-      });
-      const result = GroupIdList.map((t) => t.GroupId);
-      const { GroupInfo } = await restApi({
-        params: result,
-        funName: "getGroupInfo",
-      });
-      console.log(GroupInfo);
-      this.groupListInfo = GroupInfo;
-    },
-    onFriend({ id, type = "C2C" }) {
-      // "GROUP" : "C2C";
-      this.$store.commit("TAGGLE_OUE_SIDE", "message");
-      this.$store.dispatch("CHEC_OUT_CONVERSATION", { convId: `${type}${id}` });
-      setTimeout(() => {
-        const dom = document.getElementById(`message_C2C${id}`);
-        if (!dom) return;
-        dom.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 300);
     },
   },
 };
@@ -102,7 +77,7 @@ export default {
   min-width: 180px;
   height: 100%;
   padding: 3px 8px 8px;
-  border-right: 1px solid var(--color-border-default)
+  border-right: 1px solid var(--color-border-default);
 }
 .head {
   height: 36px;
