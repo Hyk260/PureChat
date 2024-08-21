@@ -157,7 +157,7 @@ const components = [
   ElFormItem,
   ElIcon,
   ElImage,
-  // ElImageViewer,
+  ElImageViewer,
   ElInput,
   ElInputNumber,
   // ElLink,
