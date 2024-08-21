@@ -18,9 +18,12 @@ import {
 
 const isFocused = useWindowFocus(); // 判断浏览器窗口是否在前台可见状态
 
+function isRobotId(data) {
+  return C2C_ROBOT_COLLECT.includes(data?.[0].conversationID);
+}
+
 export class TIMProxy {
   constructor() {
-    this.robotList = C2C_ROBOT_COLLECT;
     this.userProfile = {}; // IM用户信息
     this.userID = "";
     this.userSig = "";
@@ -275,8 +278,7 @@ export class TIMProxy {
   // 消息更新
   handleUpdateMessage(data, read = true) {
     if (!getConversationID()) return;
-    const isRobot = this.robotList.includes(data?.[0].conversationID);
-    if (isRobot) {
+    if (isRobotId(data)) {
       store.dispatch("GET_ROBOT_MESSAGE_LIST", {
         convId: data?.[0].conversationID,
       });
@@ -327,7 +329,7 @@ export class TIMProxy {
     const { userID } = this.userProfile || {};
     const { atUserList } = data[0];
     const massage = getConversationList(data);
-    if (atUserList.length == 0) return;
+    if (atUserList.length === 0) return;
     // 消息免打扰
     if (!massage || massage?.[0]?.messageRemindType === "AcceptNotNotify") return;
     let off = atUserList.includes(userID);

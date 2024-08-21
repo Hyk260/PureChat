@@ -259,7 +259,7 @@ const handleQuitGroup = async () => {
 };
 
 watchEffect(() => {
-  isNotify.value = currentConversation.value.messageRemindType === "AcceptNotNotify" ? true : false;
+  isNotify.value = currentConversation.value.messageRemindType === "AcceptNotNotify";
 });
 
 onMounted(() => {
