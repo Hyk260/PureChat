@@ -1,16 +1,9 @@
 import { DomEditor } from "@wangeditor/editor";
+import emitter from "@/utils/mitt-bus";
 import { getFileType, renderFileIcon } from "@/utils/chat/index";
 import { h } from "snabbdom";
-/**
- * @param elem 附件元素，即上文的 myResume
- * @param children 元素子节点，void 元素可忽略
- * @param editor 编辑器实例
- * @returns vnode 节点（通过 snabbdom.js 的 h 函数生成）
- */
-function renderMention(elem, children, editor) {
-  const { fileName = "", link = "", fileSize } = elem;
-  const fileType = getFileType(fileName);
-  const selected = DomEditor.isNodeSelected(editor, elem);
+
+function rendering(fileName, fileType, fileSize, selected) {
   // 附件 icon 图标 vnode
   const iconVnode = h("img", {
     props: { src: renderFileIcon(fileType) },
@@ -63,27 +56,42 @@ function renderMention(elem, children, editor) {
   const attachVnode = h(
     "div",
     {
-      props: { contentEditable: false }, // HTML 属性，驼峰式写法
+      props: { contentEditable: false },
       style: {
         width: "200px",
         height: "60px",
-        display: "inline-flex",
+        display: "flex",
         alignItems: "center",
         borderRadius: "3px",
-        border: selected // 选中/不选中，样式不一样
-          ? "1px solid var(--w-e-textarea-selected-border-color)" // wangEditor 提供了 css var https://www.wangeditor.com/v5/theme.html
-          : "1px solid #eeeeee",
+        // wangEditor 提供了 css var https://www.wangeditor.com/v5/theme.html
+        border: selected
+          ? "1px solid var(--w-e-textarea-selected-border-color)"
+          : "1px solid rgb(0 0 0 / 20%)",
         userSelect: "none",
       },
       on: {
         click() {
           console.log("clicked", editor);
+          // emitter.emit('onFileViewer', '')
         },
       },
     },
     [iconVnode, divVnode]
   );
   return attachVnode;
+}
+
+/**
+ * @param elem 附件元素
+ * @param children 元素子节点，void 元素可忽略
+ * @param editor 编辑器实例
+ * @returns vnode 节点
+ */
+function renderMention(elem, children, editor) {
+  const { fileName = "", link = "", fileSize } = elem;
+  const fileType = getFileType(fileName);
+  const selected = DomEditor.isNodeSelected(editor, elem);
+  return rendering(fileName, fileType, fileSize, selected)
 }
 
 const config = {
