@@ -110,21 +110,25 @@ const handleEditor = (editor, created = true) => {
 const insertMention = ({ id, name, backward = true, deleteDigit = 0 }) => {
   const editor = editorRef.value;
   const mentionNode = {
-    type: "mention", // 必须是 'mention'
-    value: `${name} `, // 文本
-    info: { id }, // 其他信息，自定义
-    children: [{ text: "" }], // 必须有一个空 text 作为 children
+    type: "mention",
+    value: `${name} `,
+    info: { id },
+    children: [{ text: "" }],
   };
-  editor?.restoreSelection(); // 恢复选区
+  // 恢复选区
+  editor?.restoreSelection();
   if (deleteDigit) {
     for (let i = 0; i < deleteDigit; i++) {
       editor.deleteBackward("character");
     }
   } else if (backward) {
-    editor.deleteBackward("character"); // 删除 '@'
+    // 删除 '@'
+    editor.deleteBackward("character");
   }
-  editor.insertNode(mentionNode); // 插入 mention
-  editor.move(1); // 移动光标
+  // 插入 mention
+  editor.insertNode(mentionNode);
+  // 移动光标
+  editor.move(1);
 };
 
 const setToolbar = (item) => {
@@ -404,26 +408,23 @@ onBeforeUnmount(() => {
   height: 200px;
   display: flex;
   flex-direction: column;
-  .editor-content {
-    flex: 1;
-    overflow-y: hidden;
-    :deep(.w-e-text-container p) {
-      margin: 0;
-    }
-    :deep(.w-e-image-dragger) {
-      display: none;
-    }
-    :deep(.w-e-text-placeholder) {
-      font-style: normal;
-      font-size: 15px;
-      top: 5px;
-    }
-    :deep(.w-e-selected-image-container) {
-      overflow: visible;
-    }
-    :deep(.w-e-scroll) {
-      @include scrollBar;
-    }
+}
+.editor-content {
+  flex: 1;
+  overflow-y: hidden;
+  :deep(.w-e-text-container p) {
+    margin: 0;
+  }
+  :deep(.w-e-image-dragger) {
+    display: none;
+  }
+  :deep(.w-e-text-placeholder) {
+    font-style: normal;
+    font-size: 15px;
+    top: 5px;
+  }
+  :deep(.w-e-selected-image-container) {
+    overflow: visible;
   }
 }
 .btn-send {

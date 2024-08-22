@@ -11,14 +11,15 @@ function renderMention(elem, children, editor) {
     "span",
     {
       props: {
-        contentEditable: false, // 不可编辑
+        contentEditable: false,
       },
       style: {
         // marginLeft: "3px",
         // marginRight: "3px",
         // backgroundColor: "var(--w-e-textarea-slight-bg-color)",
-        border: selected // 选中/不选中，样式不一样
-          ? "2px solid var(--w-e-textarea-selected-border-color)" // wangEditor 提供了 css var https://www.wangeditor.com/v5/theme.html
+        // wangEditor 提供了 css var https://www.wangeditor.com/v5/theme.html
+        border: selected
+          ? "2px solid var(--w-e-textarea-selected-border-color)" 
           : "2px solid transparent",
         borderRadius: "3px",
         padding: "0 3px",
