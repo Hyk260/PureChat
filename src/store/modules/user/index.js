@@ -98,6 +98,9 @@ const user = {
         router.push("/chatstudio");
         verification(code, msg);
       } else {
+        setTimeout(() => {
+          emitter.emit('setLoginLoading', false);
+        }, 1000)
         verification(code, msg);
       }
     },

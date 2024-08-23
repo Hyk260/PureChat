@@ -1,7 +1,8 @@
 import { ACCESS_TOKEN } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { errorHandler } from "./tools";
-import axios from "axios";
+import axios from "axios"; 
+import { isElectron } from "@/utils/common";
 // import { stringify } from "qs";
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
@@ -23,6 +24,7 @@ const defaultConfig = {
 };
 
 function setStart({ url }) {
+  if (isElectron) return;
   const whiteList = ['/login']
   const isBar = whiteList.includes(url);
   // 开启进度条动画

@@ -80,6 +80,7 @@
 </template>
 
 <script setup>
+import emitter from "@/utils/mitt-bus";
 import { getuser } from "@/api/node-admin-api/index";
 import { isDev } from "@/config/env";
 import { useBoolean } from "@/utils/hooks/index";
@@ -151,10 +152,15 @@ onMounted(async () => {
   const { loadAll } = await getuser();
   restaurants.value = loadAll;
   window.document.addEventListener("keypress", onkeypress);
+
+  emitter.on('setLoginLoading', (val) => {
+    setLoading(val)
+  })
 });
 
 onBeforeUnmount(() => {
   window.document.removeEventListener("keypress", onkeypress);
+    emitter.off('setLoginLoading')
 });
 
 // watch(imgCode, (value) => {
