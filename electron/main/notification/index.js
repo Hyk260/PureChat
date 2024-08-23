@@ -7,7 +7,7 @@ function notify() {
   notification.config({
     title: 'PureChat',
     // duration: 100000,
-    customPage: '',
+    customPage: true,
     width: 320,
     height: 80,
     // debug: true // Open the devTool for debugging

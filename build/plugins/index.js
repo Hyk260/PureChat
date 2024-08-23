@@ -21,7 +21,9 @@ export function setupVitePlugins(viteEnv) {
     // 打包进度
     progress(),
     // 线上环境删除console
-    removeConsole(),
+    removeConsole({
+      external: [path.join(process.cwd(), "src/utils/appEmit.js")]
+    }),
     // svg-icon
     createSvgIconsPlugin({
       iconDirs: [path.join(process.cwd(), "src/assets/icons/svg")],
