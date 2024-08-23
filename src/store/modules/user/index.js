@@ -16,7 +16,7 @@ const user = {
   state: {
     timProxy,
     message: null,
-    showload: false, // 登录按钮加载状态
+    loading: false, // 登录按钮加载状态
     currentPage: 0,
     userProfile: localStg.get(TIM_PROXY)?.userProfile || {}, // IM用户信息
     lang: localStg.get('lang') || "zh-CN", // 默认语言
@@ -35,9 +35,12 @@ const user = {
     setThemeScheme(state, theme) {
       state.themeScheme = theme;
     },
+    setLoading(state, val) {
+      state.loading = val;
+    },
     reset(state) {
       Object.assign(state, {
-        showload: false,
+        loading: false,
         currentPage: 0,
         userProfile: {},
       });
@@ -84,6 +87,7 @@ const user = {
     },
     // 登录
     async LOG_IN({ state, commit, dispatch }, data) {
+      commit("setLoading", true);
       const { code, msg, result } = await login(data);
       console.log({ code, msg, result }, "登录信息");
       if (code == 200) {
@@ -98,10 +102,10 @@ const user = {
         router.push("/chatstudio");
         verification(code, msg);
       } else {
-        setTimeout(() => {
-          emitter.emit('setLoginLoading', false);
-        }, 1000)
         verification(code, msg);
+        setTimeout(() => {
+          commit("setLoading", false);
+        }, 1000)
       }
     },
     // 退出登录

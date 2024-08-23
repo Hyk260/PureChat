@@ -80,10 +80,8 @@
 </template>
 
 <script setup>
-import emitter from "@/utils/mitt-bus";
 import { getuser } from "@/api/node-admin-api/index";
 import { isDev } from "@/config/env";
-import { useBoolean } from "@/utils/hooks/index";
 import ImageVerify from "@/views/components/ImageVerify/index.vue";
 import { Lock, User } from "@element-plus/icons-vue";
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
@@ -94,6 +92,7 @@ import { operates, thirdParty } from "../utils/enums";
 import { rules, user } from "../utils/validation";
 import loadingSvg from "./loadingSvg.vue";
 import { noService } from "@/config/index";
+import { useState } from "@/utils/hooks/useMapper";
 
 const isVerifyCode = false;
 const router = useRouter();
@@ -102,11 +101,14 @@ const ruleFormRef = ref();
 const imgCode = ref("");
 
 const { dispatch, commit } = useStore();
-const [loading, setLoading] = useBoolean();
+const { loading } = useState({
+  loading: (state) => state.user.loading,
+});
 
 const handleSelect = (item) => {
   console.log(item);
 };
+
 const createFilter = (queryString) => {
   return (restaurant) => {
     return restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0;
@@ -127,7 +129,6 @@ const loginBtn = async (formEl) => {
   if (!formEl) return;
   await formEl.validate((valid) => {
     if (!valid) return;
-    setLoading(true);
     dispatch("LOG_IN", user);
   });
 };
@@ -152,15 +153,11 @@ onMounted(async () => {
   const { loadAll } = await getuser();
   restaurants.value = loadAll;
   window.document.addEventListener("keypress", onkeypress);
-
-  emitter.on('setLoginLoading', (val) => {
-    setLoading(val)
-  })
 });
 
 onBeforeUnmount(() => {
   window.document.removeEventListener("keypress", onkeypress);
-    emitter.off('setLoginLoading')
+  commit("setLoading", false);
 });
 
 // watch(imgCode, (value) => {
