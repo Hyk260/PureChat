@@ -228,13 +228,13 @@ export function findNonImageString(arr) {
  * @returns {string} - 转换后的字符串，表示合适的单位和对应的数值
  */
 export function bytesToSize(bytes) {
-  const marker = 1024; // Change to 1000 if required
-  const decimal = 2; // Change as required
+  const marker = 1024;
+  const decimal = 2;
   const kiloBytes = marker;
   const megaBytes = marker * marker;
   const gigaBytes = marker * marker * marker;
-  // const lang = store.state.user.lang;
-  const lang = "zh";
+  const lang = localStg.get('lang') || "en";
+
   if (bytes < kiloBytes) {
     return bytes + (lang === "en" ? " Bytes" : "字节");
   } else if (bytes < megaBytes) {

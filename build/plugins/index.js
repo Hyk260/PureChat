@@ -4,6 +4,7 @@ import vue from "@vitejs/plugin-vue";
 import progress from "vite-plugin-progress";
 import removeConsole from "vite-plugin-remove-console";
 import VueDevtools from "vite-plugin-vue-devtools";
+import { visualizer } from "rollup-plugin-visualizer";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import { setupHtmlPlugin } from "./html";
 import { cdn } from "./cdn";
@@ -30,6 +31,10 @@ export function setupVitePlugins(viteEnv) {
     }),
     setupHtmlPlugin(),
   ];
+  // 打包视图分析
+  if (process.env.npm_lifecycle_event === "report") {
+    plugins.push(visualizer({ open: true, brotliSize: true, filename: "report.html" }))
+  }
   if (viteEnv.VITE_PWA === "Y" || viteEnv.VITE_VERCEL === "Y") {
     // plugins.push(pwa(viteEnv));
   }

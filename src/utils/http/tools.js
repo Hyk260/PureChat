@@ -36,6 +36,8 @@ export const errorHandler = (error) => {
   } else {
     errMessage = "无法连接到服务器！";
   }
-  console.error('errMessage:', errMessage)
+  window.NProgress?.done?.(); // 关闭加载条
+  store.commit("setLoading", false);
+  store.commit("showMessage", { message: errMessage, type: "error" });
   return Promise.reject(error);
 };

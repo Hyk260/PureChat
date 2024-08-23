@@ -3,6 +3,7 @@ node_modules
 /server
 /dist
 /out
+/report.html
 
 # local env files
 *.d.ts
