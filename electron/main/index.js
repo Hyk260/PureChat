@@ -1,15 +1,15 @@
 import "./config";
 import { app, BrowserWindow, protocol } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
+import { createWindow, winSingle, ipcEvent, setDefaultProtocol, initFolder } from "./utils/index";
 import { notify } from './notification/index';
 import { isMac } from "./platform";
-import log from './logger/index';
-import { createWindow, winSingle, ipcEvent, setDefaultProtocol, initFolder } from "./utils/index";
+import { logger } from './logger/index';
 import { trayFn } from './tray/index';
 
 class Background {
   constructor() {
-    log.info('init')
+    logger.info('init')
     winSingle();
     initFolder();
     this.init();

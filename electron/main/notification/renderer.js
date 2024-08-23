@@ -1,5 +1,5 @@
-import { core } from './common'
 import { NOTIFICATION_CHANNEL } from './constants'
+const core = ((globalThis || window).uikit || (globalThis || window).electron)
 
 export const notification = {
   show: (info) => {

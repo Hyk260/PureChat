@@ -4,7 +4,7 @@ import { execFile, exec } from "child_process";
 import path from "node:path";
 import fs from "node:fs";
 import { fnFilePath } from './folder';
-import log from '../logger/index';
+import { logger } from '../logger/index';
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -56,10 +56,10 @@ export const handleScreenshot = () => {
   if (isWindows) {
     let filePath = getIconPath('ScreenCapture.exe')
     console.log(`windows:filePath:${filePath}`)
-    log.info(`windows:filePath:${filePath}`)
+    logger.info(`windows:filePath:${filePath}`)
     const screenWindow = execFile(filePath);
     screenWindow.on("exit", (code, stdout, stderr) => {
-      log.info(`退出码 code:${code}, 输出流 stdout:${stdout},错误流 stderr:${stderr}`)
+      logger.info(`退出码 code:${code}, 输出流 stdout:${stdout},错误流 stderr:${stderr}`)
       console.log("退出码 code:", code, "输出流 stdout:", stdout, "错误流 stderr:", stderr);
       // 粘贴
       if (code == 7) {
@@ -92,10 +92,12 @@ export const handleOpenFolder = ({ type, fileName }) => {
  */
 export const setDefaultProtocol = () => {
   if (isProduction) {
-    const agreement = "pure"; // 自定义协议名
-    let isSet = false; // 是否注册成功
-    app.removeAsDefaultProtocolClient(agreement); // 每次运行都删除自定义协议 然后再重新注册
+    const agreement = "pure";
+    let isSet = false;
+    // 每次运行都删除自定义协议 然后再重新注册
+    app.removeAsDefaultProtocolClient(agreement);
     isSet = app.setAsDefaultProtocolClient(agreement);
+    logger.info(`注册协议`, isSet ? "成功" : "失败");
     console.log("注册协议", isSet ? "成功" : "失败");
   }
 };

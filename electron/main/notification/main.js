@@ -110,13 +110,8 @@ class Notification extends TypedEventEmitter {
     ipcMain.on(NOTIFICATION_CLOSE_CHANNEL, onClose)
 
     const winURL = isDevelopment ? electronRendererUrl : join(__dirname, '../renderer/index.html');
-    // console.log(winURL + `#${'desktop'}`)
     win.loadURL(winURL + `#${'desktop'}`);
-
-    // win.loadFile(
-    //   this.customPage || fileURLToPath(new URL('index.html', import.meta.url))
-    // )
-
+    
     this.window = win
   }
 

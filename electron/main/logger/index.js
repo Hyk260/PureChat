@@ -17,26 +17,7 @@ const dateStr = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.ge
 const folder = isDevelopment ? "dev" : "pro";
 // 自定义文件保存位置为安装目录下 \log\年-月-日.log
 // C:\Users\{user}\Documents\{mainDir}\log\{dev|pro}\{年-月-日.log}
-log.transports.file.resolvePath = () => path.join(rootDir, "log", folder, dateStr + ".log");
+log.transports.file.resolvePathFn = () => path.join(rootDir, "log", folder, dateStr + ".log");
 
-// 有六个日志级别error, warn, info, verbose, debug, silly
-export default {
-  info(param) {
-    log.info(param);
-  },
-  warn(param) {
-    log.warn(param);
-  },
-  error(param) {
-    log.error(param);
-  },
-  debug(param) {
-    log.debug(param);
-  },
-  verbose(param) {
-    log.verbose(param);
-  },
-  silly(param) {
-    log.silly(param);
-  },
-};
+// 有六个日志级别 error, warn, info, verbose, debug, silly
+export const logger = log;
