@@ -7,6 +7,7 @@ import {
 const SHADOW_ROOT_CSS = `
 :host {
   position: relative;
+  z-index: 10;
   width: 100%;
   height: 32px;
   display: block;
