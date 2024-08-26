@@ -18,6 +18,7 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "@pure/utils": "workspace:*",
     "@element-plus/icons-vue": "^2.0.10",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@tencentcloud/chat": "3.4.2",
