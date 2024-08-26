@@ -5,10 +5,10 @@ import {
   TITLE_BAR_FULLSCREEN_REPLY_CHANNEL
 } from './constants'
 
-const isMacintosh = process.platform === 'darwin'
+const isMac = process.platform === 'darwin'
 
 export function registerTitleBarListener() {
-  if (isMacintosh) {
+  if (isMac) {
     return
   }
 
@@ -21,11 +21,11 @@ export function registerTitleBarListener() {
     (
       e,
       action,
-      // | 'show'
-      // | 'showInactive'
-      // | 'minimize'
-      // | 'maximizeOrUnmaximize'
-      // | 'close'
+      // 'show'
+      // 'showInactive'
+      // 'minimize'
+      // 'maximizeOrUnmaximize'
+      // 'close'
     ) => {
       const win = BrowserWindow.fromWebContents(e.sender)
 
@@ -44,8 +44,8 @@ export function registerTitleBarListener() {
             win.maximize()
           }
         } else if (action === 'close') {
-          // win.close()
-          win.hide()
+          win.close()
+          // win.hide()
         }
       }
     }
@@ -67,7 +67,7 @@ export function attachTitleBarToWindow(win) {
     })
   }
 
-  if (isMacintosh) {
+  if (isMac) {
     return
   }
 

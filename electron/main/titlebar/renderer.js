@@ -166,7 +166,7 @@ export default class TitleBar extends HTMLElement {
     style.textContent = SHADOW_ROOT_CSS
     shadow.appendChild(style)
 
-    const isMacintosh = core.process.platform === 'darwin'
+    const isMac = core.process.platform === 'darwin'
 
     const overlay = this.hasAttribute('overlay')
 
@@ -180,7 +180,7 @@ export default class TitleBar extends HTMLElement {
       if (title) {
         const el = document.createElement('div')
         el.classList.add('titlebar__title')
-        if (isMacintosh) {
+        if (isMac) {
           el.classList.add('mac')
         }
         el.innerText = title
@@ -188,17 +188,17 @@ export default class TitleBar extends HTMLElement {
       }
     }
 
-    if (!isMacintosh || this.hasChildNodes()) {
+    if (!isMac || this.hasChildNodes()) {
       const controls = document.createElement('div')
       controls.classList.add('titlebar__window-controls')
 
-      if (isMacintosh) {
+      if (isMac) {
         controls.classList.add('mac')
       }
 
       controls.appendChild(document.createElement('slot'))
 
-      if (!isMacintosh) {
+      if (!isMac) {
         const minimizable = !this.hasAttribute('nominimize')
 
         if (minimizable) {

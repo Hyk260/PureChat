@@ -1,11 +1,11 @@
 import "./config";
 import { app, BrowserWindow, protocol } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
-import { createWindow, winSingle, ipcEvent, setDefaultProtocol, initFolder } from "./utils/index";
 import { notify } from './notification/index';
 import { isMac } from "./platform";
 import { logger } from './logger/index';
-import { trayFn } from './tray/index';
+// import { trayFn } from './tray/index';
+import { createWindow, winSingle, ipcEvent, setDefaultProtocol, initFolder } from "./utils/index";
 
 class Background {
   constructor() {
@@ -44,7 +44,7 @@ class Background {
       setDefaultProtocol()
       ipcEvent();
       this.createWindow();
-      trayFn()
+      // trayFn()
       electronApp.setAppUserModelId('com.electron')
       optimizer.registerFramelessWindowIpc()
       app.on('browser-window-created', (_, window) => {

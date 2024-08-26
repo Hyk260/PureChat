@@ -13,6 +13,7 @@ if (isMac) {
 }
 
 export function trayFn() {
+  if (tray) return
   // 设置托盘图标
   tray = new Tray(icon)
 
@@ -32,4 +33,6 @@ export function trayFn() {
   tray.on('right-click', () => {
     tray.popUpContextMenu(trayContextMenu)
   })
+
+  global.tray = tray
 }
