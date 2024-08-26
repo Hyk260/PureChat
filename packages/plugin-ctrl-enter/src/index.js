@@ -10,7 +10,6 @@ function withCtrlEnter(editor) {
     $textArea.on("keydown", (event) => {
       const isCtrl = event.ctrlKey || event.metaKey;
       if (event.key === "Enter" && isCtrl) {
-        // ctrl+enter
         newEditor.insertBreak();
       }
     });
@@ -32,3 +31,5 @@ const module = {
 };
 
 export default module;
+
+

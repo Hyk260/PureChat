@@ -110,7 +110,7 @@ import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 import MyPopover from "@/views/components/MyPopover/index.vue";
 import { debounce } from "lodash-es";
-import { timeFormat } from "pure-tools";
+import { timeFormat } from "@pure/utils";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import Checkbox from "../components/Checkbox.vue";
 import LoadMore from "../components/LoadMore.vue";

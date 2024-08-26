@@ -1,0 +1,17 @@
+{
+  "name": "@pure/plugin-file",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./src/*"
+      ]
+    }
+  },
+  "dependencies": {
+    "snabbdom": "^3.5.1"
+  }
+}
