@@ -6,7 +6,7 @@ import { join } from 'path'
 import {
   registerTitleBarListener,
   attachTitleBarToWindow
-} from '../titlebar/main'
+} from '@pure/titlebar'
 
 
 export const createWindow = (_options) => {
