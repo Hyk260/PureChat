@@ -89,7 +89,7 @@ export default {
             const name = this.userProfile.nick == revokerInfo?.nick ? "你" : revokerInfo?.nick;
             return `${name} 撤回了成员 ${nick} 的一条消息`;
           }
-          return `${nick}撤回了一条消息`;
+          return `${nick} 撤回了一条消息`;
         }
       }
     },

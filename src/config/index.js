@@ -1,5 +1,4 @@
 import pkg from "~/package.json";
-export const noService = import.meta.env.VITE_NO_SERVICE === "Y"
 
 const title = import.meta.env.VITE_APP_NAME;
 

@@ -15,7 +15,7 @@
       />
     </el-form-item>
     <!-- 密码 -->
-    <el-form-item prop="password" v-if="!noService">
+    <el-form-item prop="password">
       <el-input
         v-model="user.password"
         type="password"
@@ -27,7 +27,7 @@
       </el-input>
     </el-form-item>
     <!-- 验证码 -->
-    <el-form-item prop="verifyCode" v-if="!noService && isVerifyCode">
+    <el-form-item prop="verifyCode" v-if="isVerifyCode">
       <el-input
         v-model="user.verifyCode"
         size="large"
@@ -43,7 +43,7 @@
       </el-input>
     </el-form-item>
     <!-- keep -->
-    <div class="login-options" v-if="!noService">
+    <div class="login-options">
       <el-checkbox v-model="user.keep">{{ $t("login.remember") }}</el-checkbox>
       <div class="forget">{{ $t("login.forget") }}</div>
     </div>
@@ -67,7 +67,7 @@
     </el-button>
   </div>
   <!-- 第三方登录 -->
-  <el-form-item v-if="!noService">
+  <el-form-item>
     <el-divider>
       <p class="text-gray-500 text-xs">{{ $t("login.thirdLogin") }}</p>
     </el-divider>
@@ -91,7 +91,6 @@ import { authorizedLogin, oauthAuthorize } from "../utils/auth";
 import { operates, thirdParty } from "../utils/enums";
 import { rules, user } from "../utils/validation";
 import loadingSvg from "./loadingSvg.vue";
-import { noService } from "@/config/index";
 import { useState } from "@/utils/hooks/useMapper";
 
 const isVerifyCode = false;
@@ -122,10 +121,6 @@ const querySearch = (queryString, cb) => {
 };
 
 const loginBtn = async (formEl) => {
-  if (noService) {
-    dispatch("loginLocalIm", user);
-    return;
-  }
   if (!formEl) return;
   await formEl.validate((valid) => {
     if (!valid) return;

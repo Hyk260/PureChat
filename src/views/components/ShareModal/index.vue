@@ -150,7 +150,7 @@ emitter.on("onShareModal", (val) => {
 }
 .segmented {
   width: 100%;
-  max-height: 50vh;
+  height: 50vh;
   background: #f8f8f8;
   border: 1px solid #dddddd;
   border-radius: 8px;
@@ -172,6 +172,7 @@ emitter.on("onShareModal", (val) => {
   background-color: #f8f8f8;
   background-size: 100% 100%;
   .content {
+    
     overflow: hidden;
     border: 2px solid #dddddd;
     border-radius: 8px;

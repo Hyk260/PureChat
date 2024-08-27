@@ -112,6 +112,7 @@ function isRefresh(item) {
 
 async function onRefresh() {
   const list = await new OllamaAI().models();
+  console.log(list)
   modelData.value.Model.options.chatModels = list;
 }
 
