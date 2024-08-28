@@ -2,9 +2,15 @@
   <div class="sidebar">
     <div>
       <div class="touxiang">
-        <!-- ref="buttonRef"
-          v-click-outside="onClickOutside" -->
-        <UserAvatar type="self" isdot :size="40" shape="square" @click="openUploadAvatarDialog" />
+        <UserAvatar
+          ref="buttonRef"
+          v-click-outside="onClickOutside"
+          type="self"
+          isdot
+          :size="40"
+          shape="square"
+          @click="openUploadAvatarDialog"
+        />
       </div>
       <div class="aside-item" v-for="item in outsideList" :key="item.only">
         <div
@@ -30,7 +36,7 @@
     <!-- <UploadAvatarDialog /> -->
     <!-- 侧边栏拖拽排序弹框 -->
     <SidebarEditDialog />
-    <!-- <el-popover
+    <el-popover
       popper-class="popover-card"
       ref="popoverRef"
       placement="right-start"
@@ -39,8 +45,8 @@
       trigger="click"
       virtual-triggering
     >
-      <CardPopover />
-    </el-popover> -->
+      <CardPopover @hide="hide" />
+    </el-popover>
   </div>
 </template>
 
@@ -56,6 +62,9 @@ import { useStore } from "vuex";
 
 const buttonRef = ref();
 const popoverRef = ref();
+const hide = () => {
+  popoverRef.value?.hide()
+};
 const onClickOutside = () => {
   unref(popoverRef).popperRef?.delayHide?.();
 };
@@ -90,6 +99,7 @@ function operation() {
 <style lang="scss" scoped>
 :global(body .popover-card) {
   padding: 0 !important;
+  inset: 14px auto auto 71px !important;
 }
 .sidebar {
   width: 68px;
