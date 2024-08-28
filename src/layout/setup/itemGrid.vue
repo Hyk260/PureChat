@@ -44,7 +44,7 @@
           </div>
           <div class="ui-col">
             <div class="col-title">{{ $config.Title }}</div>
-            <div class="version">当前版本 {{ $config.Version }}</div>
+            <div class="version">v{{ $config.Version }}</div>
           </div>
         </div>
         <div>

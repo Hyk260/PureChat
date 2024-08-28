@@ -2,7 +2,15 @@
   <div class="sidebar">
     <div>
       <div class="touxiang">
-        <UserAvatar type="self" isdot :size="40" shape="square" @click="openUploadAvatarDialog" />
+        <UserAvatar
+          ref="buttonRef"
+          v-click-outside="onClickOutside"
+          type="self"
+          isdot
+          :size="40"
+          shape="square"
+          @click="openUploadAvatarDialog"
+        />
       </div>
       <div class="aside-item" v-for="item in outsideList" :key="item.only">
         <div
@@ -28,15 +36,38 @@
     <!-- <UploadAvatarDialog /> -->
     <!-- 侧边栏拖拽排序弹框 -->
     <SidebarEditDialog />
+    <el-popover
+      popper-class="popover-card"
+      ref="popoverRef"
+      placement="right-start"
+      :width="300"
+      :virtual-ref="buttonRef"
+      trigger="click"
+      virtual-triggering
+    >
+      <CardPopover @hide="hide" />
+    </el-popover>
   </div>
 </template>
 
 <script setup>
+import { ref, unref } from "vue";
+import { ClickOutside as vClickOutside } from "element-plus";
 import { useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 // import UploadAvatarDialog from "@/views/chatStudio/components/UploadAvatarDialog.vue";
 import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
+import CardPopover from "./components/CardPopover.vue";
 import { useStore } from "vuex";
+
+const buttonRef = ref();
+const popoverRef = ref();
+const hide = () => {
+  popoverRef.value?.hide()
+};
+const onClickOutside = () => {
+  unref(popoverRef).popperRef?.delayHide?.();
+};
 
 const { commit, dispatch } = useStore();
 const { outside, unreadMsg, outsideList } = useState({
@@ -66,6 +97,10 @@ function operation() {
 </script>
 
 <style lang="scss" scoped>
+:global(body .popover-card) {
+  padding: 0 !important;
+  inset: 14px auto auto 71px !important;
+}
 .sidebar {
   width: 68px;
   min-width: 68px;
@@ -109,7 +144,6 @@ function operation() {
     @include text-ellipsis;
   }
 }
-
 .touxiang {
   height: 42px;
   margin: 16px 0 10px 0;

@@ -8,7 +8,6 @@ import { verification } from "@/utils/message/index";
 import emitter from "@/utils/mitt-bus";
 import { ElMessage } from "element-plus";
 import { initThemeSettings } from "@/theme/settings"
-import { genTestUserSig } from '@/utils/generateUserSig/index';
 
 const themeScheme = initThemeSettings()
 
@@ -73,17 +72,6 @@ const user = {
       } else {
         verification(code, msg);
       }
-    },
-    // 注册
-    async REGISTER({ state }, data) {
-      const result = await register(data);
-    },
-    loginLocalIm({ commit, dispatch }, data) {
-      const { userSig, userID } = genTestUserSig({ userID: data.username })
-      window.TIMProxy.init();
-      dispatch("TIM_LOG_IN", { userID, userSig, });
-      localStg.set(USER_MODEL, { username: userID, userSig })
-      router.push("/chatstudio");
     },
     // 登录
     async LOG_IN({ state, commit, dispatch }, data) {

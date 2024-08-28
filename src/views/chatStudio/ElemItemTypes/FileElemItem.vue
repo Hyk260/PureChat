@@ -122,6 +122,7 @@ onBeforeUnmount(() => {
     .file-name {
       color: #000000ad;
       font-size: 14px;
+      height: 18px;
       width: 160px;
       @include text-ellipsis;
     }
