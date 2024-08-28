@@ -20,7 +20,7 @@
 
     <el-menu class="el-menu-vertical" :collapse="true">
       <template v-for="item in menuItems" :key="item.index">
-        <el-menu-item v-if="item.index !== 4" :index="item.index" @click="item.action">
+        <el-menu-item v-if="item.index !== '4'" :index="item.index" @click="fnAction()">
           <FontIcon :iconName="item.icon" />
           <span>{{ item.label }}</span>
         </el-menu-item>
@@ -31,7 +31,7 @@
             <el-icon class="!ml-auto"><ArrowRight /></el-icon>
           </template>
           <el-menu-item-group>
-            <el-menu-item v-for="help in helpItems" :key="help" @click="help.action">
+            <el-menu-item v-for="help in helpItems" :key="help" @click="fnAction()">
               {{ help.label }}
             </el-menu-item>
           </el-menu-item-group>
@@ -43,33 +43,39 @@
 
 <script setup>
 import { nextTick, ref } from "vue";
+import { useStore } from "vuex";
 import emitter from "@/utils/mitt-bus";
 import { useState } from "@/utils/hooks/useMapper";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 
-const docs = __APP_INFO__.pkg.docs;
+const { bugs, docs, homepage } = __APP_INFO__.pkg;
+// const emit = defineEmits(["hide"]);
+const { commit, dispatch } = useStore();
 
 const helpItems = ref([
   {
     // docs
     label: "使用文档",
-    action: () => {
-       open(`${docs}`);
-    },
+    // action: () => {
+    //    open(`${docs}`);
+    // },
   },
   {
     // feedback
     label: "反馈与意见",
+    // action: () => {
+    //    open(`${bugs.url}`);
+    // },
   },
 ]);
 
 const menuItems = ref([
   {
-    index: 1,
+    index: '1',
     label: "应用设置",
     icon: "Operation",
-    action: operation,
+    // action: operation,
   },
   // {
   //   index: 2,
@@ -78,26 +84,35 @@ const menuItems = ref([
   //   action: () => {},
   // },
   {
-    index: 3,
+    index: '3',
     label: "社区支持",
     icon: "PieChart",
-    action: () => {},
+    // action: () => {
+    //   // emit("hide");
+    //   open(`${homepage}`);
+    // },
   },
   {
-    index: 4,
+    index: '4',
     label: "",
     icon: "PieChart",
-    action: () => {},
+    // action: () => {},
   },
   {
-    index: 5,
+    index: '5',
     label: "退出登录",
     icon: "CollectionTag",
-    action: () => {},
+    // action: () => {
+    //   // emit("hide");
+    //   // dispatch("LOG_OUT");
+    // },
   },
 ]);
 
-const emit = defineEmits(["hide"]);
+function fnAction() {
+  
+}
+
 const dataStatistics = ref({
   messages: "消息",
   sessions: "助手",
@@ -112,9 +127,9 @@ const { nick, userID, avatar } = localStg.get(TIM_PROXY)?.userProfile;
 
 function operation() {
   emitter.emit("openSetup", true);
-  nextTick(() => {
-    emit("hide");
-  });
+  // nextTick(() => {
+  //   // emit("hide");
+  // });
 }
 </script>
 <style lang="scss" scoped>
