@@ -8,6 +8,7 @@ import {
   StoreKey,
   modelConfig,
   prompt,
+  RobotAvatar,
 } from "@/ai/constant";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
@@ -148,3 +149,20 @@ export const createSmoothMessage = (params) => {
     stopAnimation,
   };
 };
+
+export const avatar = (id, type = "local") => {
+  const suffix = RobotAvatar[getModelType(id)] || "";
+  if (type === "local") {
+    return new URL(`../assets/images/aI-avatar/${suffix}`, import.meta.url).href;
+  } else {
+    return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}`;
+  }
+};
+
+export function fnAvatar(convId) {
+  if (/@RBT#/.test(convId)) {
+    return avatar(convId.replace("C2C", ""));
+  } else {
+    return "";
+  }
+}
