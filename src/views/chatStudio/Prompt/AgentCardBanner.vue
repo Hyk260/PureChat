@@ -135,7 +135,7 @@ emitter.on("openAgentCard", (data) => {
     }
   }
   .market {
-    max-height: 350px;
+    max-height: 320px;
     overflow: auto;
     padding: 16px;
   }
