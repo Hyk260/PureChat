@@ -3,8 +3,6 @@
     <div>
       <div class="touxiang">
         <UserAvatar
-          ref="buttonRef"
-          v-click-outside="onClickOutside"
           type="self"
           isdot
           :size="40"
@@ -36,23 +34,12 @@
     <!-- <UploadAvatarDialog /> -->
     <!-- 侧边栏拖拽排序弹框 -->
     <SidebarEditDialog />
-    <el-popover
-      popper-class="popover-card"
-      ref="popoverRef"
-      placement="right-start"
-      :width="300"
-      :virtual-ref="buttonRef"
-      trigger="click"
-      virtual-triggering
-    >
-      <CardPopover @hide="hide" />
-    </el-popover>
+    <CardPopover />
   </div>
 </template>
 
 <script setup>
-import { ref, unref } from "vue";
-import { ClickOutside as vClickOutside } from "element-plus";
+import { ref } from "vue";
 import { useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 // import UploadAvatarDialog from "@/views/chatStudio/components/UploadAvatarDialog.vue";
@@ -60,16 +47,7 @@ import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
 import CardPopover from "./components/CardPopover.vue";
 import { useStore } from "vuex";
 
-const buttonRef = ref();
-const popoverRef = ref();
-const hide = () => {
-  popoverRef.value?.hide()
-};
-const onClickOutside = () => {
-  unref(popoverRef).popperRef?.delayHide?.();
-};
-
-const { commit, dispatch } = useStore();
+const { commit } = useStore();
 const { outside, unreadMsg, outsideList } = useState({
   outsideList: (state) => state.sidebar.outsideList,
   unreadMsg: (state) => state.conversation.totalUnreadMsg,
@@ -79,8 +57,10 @@ const { outside, unreadMsg, outsideList } = useState({
 function visibile(item) {
   return item?.show == "hide" ? false : true;
 }
+
 function openUploadAvatarDialog() {
   // emitter.emit("uploadAvatarDialog", true);
+  emitter.emit("setPopover");
 }
 function toggle(item) {
   if (item?.openType) {

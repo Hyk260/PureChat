@@ -1,81 +1,59 @@
 <template>
-  <div class="card-popover">
+  <div class="card-popover animate__fadeIn" ref="cardRef" v-if="card">
     <div class="top">
-      <UserAvatar type="self" :size="40" shape="circle" />
+      <UserAvatar type="self" :size="40" shape="square" />
       <div>
-        <div class="nick">{{ nick || "-" }}</div>
-        <div class="userID">{{ userID }}</div>
+        <div class="nick">{{ profile.nick || "-" }}</div>
+        <div class="userID">{{ profile.userID }}</div>
       </div>
     </div>
     <div class="card-item">
       <div v-for="(item, i) in dataStatistics" :key="item">
         <div>
           <div v-if="i === 'messages'">{{ unreadMsg }}</div>
-          <div v-else>14</div>
+          <div v-else-if="i === 'sessions'">{{ market.length || 0 }}</div>
+          <div v-else>{{ conversationList?.length || 0 }}</div>
         </div>
         <div>{{ item }}</div>
       </div>
     </div>
-    <el-divider />
-
-    <el-menu class="el-menu-vertical" :collapse="true">
-      <template v-for="item in menuItems" :key="item.index">
-        <el-menu-item v-if="item.index !== '4'" :index="item.index" @click="fnAction()">
-          <FontIcon :iconName="item.icon" />
-          <span>{{ item.label }}</span>
-        </el-menu-item>
-        <el-sub-menu v-else :index="item.index">
-          <template #title>
-            <el-icon><Help /></el-icon>
-            <span>帮助中心</span>
-            <el-icon class="!ml-auto"><ArrowRight /></el-icon>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item v-for="help in helpItems" :key="help" @click="fnAction()">
-              {{ help.label }}
-            </el-menu-item>
-          </el-menu-item-group>
-        </el-sub-menu>
-      </template>
-    </el-menu>
+    <div>
+      <div class="menu-root" v-for="item in menuItems" :key="item.index">
+        <div class="menu-item">
+          <div @click="closeCard(item)">
+            <svg-icon v-if="item.svg" :iconClass="item.svg" />
+            <FontIcon v-else :iconName="item.icon" />
+            <span>{{ item.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { nextTick, ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useStore } from "vuex";
+import { onClickOutside } from "@vueuse/core";
+import { useBoolean } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 import { useState } from "@/utils/hooks/useMapper";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 
 const { bugs, docs, homepage } = __APP_INFO__.pkg;
-// const emit = defineEmits(["hide"]);
-const { commit, dispatch } = useStore();
-
-const helpItems = ref([
-  {
-    // docs
-    label: "使用文档",
-    // action: () => {
-    //    open(`${docs}`);
-    // },
-  },
-  {
-    // feedback
-    label: "反馈与意见",
-    // action: () => {
-    //    open(`${bugs.url}`);
-    // },
-  },
-]);
+const cardRef = ref();
+const profile = ref({});
+const market = ref([])
+const [card, setCard] = useBoolean();
+const { dispatch } = useStore();
 
 const menuItems = ref([
   {
-    index: '1',
+    index: "1",
     label: "应用设置",
     icon: "Operation",
-    // action: operation,
+    action: operation,
   },
   // {
   //   index: 2,
@@ -84,34 +62,29 @@ const menuItems = ref([
   //   action: () => {},
   // },
   {
-    index: '3',
+    index: "3",
     label: "社区支持",
     icon: "PieChart",
-    // action: () => {
-    //   // emit("hide");
-    //   open(`${homepage}`);
-    // },
+    action: () => {
+      open(`${homepage}`);
+    },
   },
+  // {
+  //   index: "4",
+  //   label: "",
+  //   icon: "PieChart",
+  //   action: () => {},
+  // },
   {
-    index: '4',
-    label: "",
-    icon: "PieChart",
-    // action: () => {},
-  },
-  {
-    index: '5',
+    index: "5",
     label: "退出登录",
     icon: "CollectionTag",
-    // action: () => {
-    //   // emit("hide");
-    //   // dispatch("LOG_OUT");
-    // },
+    svg: "log-out",
+    action: () => {
+      dispatch("LOG_OUT");
+    },
   },
 ]);
-
-function fnAction() {
-  
-}
 
 const dataStatistics = ref({
   messages: "消息",
@@ -119,53 +92,80 @@ const dataStatistics = ref({
   topics: "话题",
 });
 
-const { unreadMsg } = useState({
+const { unreadMsg, conversationList } = useState({
+  conversationList: (state) => state.conversation.conversationList,
   unreadMsg: (state) => state.conversation.totalUnreadMsg,
 });
 
-const { nick, userID, avatar } = localStg.get(TIM_PROXY)?.userProfile;
+function closeCard(item) {
+  if (item) item.action?.();
+  setCard(false);
+}
+
+onClickOutside(cardRef, () => {
+  closeCard();
+});
 
 function operation() {
   emitter.emit("openSetup", true);
-  // nextTick(() => {
-  //   // emit("hide");
-  // });
 }
+const openCard = (data) => {
+  setCard(true);
+  profile.value = localStg.get(TIM_PROXY)?.userProfile || {};
+  market.value = localStg.get("marketJson")?.agents || [];
+};
+
+onMounted(() => {
+  emitter.on("setPopover", (data) => {
+    openCard(data);
+  });
+});
+
+onBeforeUnmount(() => {
+  emitter.off("setPopover");
+});
 </script>
 <style lang="scss" scoped>
-.el-menu {
-  --el-menu-item-height: 40px;
-  border-right: none;
+.svg-icon,
+.el-icon {
+  width: 24px;
 }
-.el-menu-item.is-active {
-  color: unset;
+.card-popover {
+  --valid-offset-x: 12px;
+  --arrow-y: -2.5px;
+  left: 70px;
+  top: 14px;
+  width: 300px;
+  overflow: hidden;
+  position: fixed;
+  z-index: 9;
+  background-color: var(--color-body-bg);
+  background-clip: padding-box;
+  border: 1px solid var(--color-border-default);
+  border-radius: 8px;
+  box-shadow:
+    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+
+  transform-origin: var(--valid-offset-x, 50%) var(--arrow-y, 50%);
 }
-:deep(.el-menu-item) {
-  height: 40px;
+.menu-item {
+  height: unset;
+  min-height: 2rem;
+  padding: 3px 4px;
+  line-height: 2;
+  cursor: pointer;
+  & > div {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    width: 100%;
+  }
+  & > div:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
 }
-:deep(.el-menu-item-group__title) {
-  display: none;
-}
-.el-menu--collapse > .el-menu-item > span {
-  width: auto;
-  height: auto;
-  visibility: visible;
-}
-.el-menu--collapse > .el-sub-menu > .el-sub-menu__title > span {
-  width: auto;
-  height: auto;
-  visibility: visible;
-}
-.el-menu--collapse {
-  width: auto;
-}
-.el-divider {
-  margin: 2px 0;
-}
-</style>
-<style lang="scss" scoped>
-// .card-popover {
-// }
 .card-item {
   display: flex;
   flex-direction: row;
