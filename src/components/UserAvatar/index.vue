@@ -10,11 +10,11 @@
     <img
       draggable="false"
       v-else-if="type === 'single'"
-      class="avatar"
+      :class="['avatar', className]"
       :src="url || fnAvatar(convId) || shapeObj[shape]"
       alt="头像"
     />
-    <div v-else-if="type === 'self'" class="badge" :style="{ height: `${size}px` }">
+    <div v-else-if="type === 'self'" class="badge" :style="{ height: `${size}px`, width: `${size}px` }">
       <el-avatar :size="size" :src="userProfile?.avatar || shapeObj['circle']" :shape="shape" />
       <sup v-if="isdot" class="is-dot"></sup>
     </div>
@@ -122,7 +122,7 @@ const backgInfo = (url) => {
   background-size: 40px 40px;
   line-height: 40px;
 }
-.mention {
+.mention-avatar {
   width: 18px;
   height: 18px;
   background-size: 18px 18px;
@@ -139,7 +139,7 @@ const backgInfo = (url) => {
     position: absolute;
     height: 8px;
     width: 8px;
-    right: 10px;
+    right: -4px;
     top: 36px;
     border-radius: 50%;
     display: inline-flex;

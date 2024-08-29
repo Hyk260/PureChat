@@ -1,60 +1,46 @@
 <template>
-  <el-dialog
-    ref="editRef"
-    :modal="true"
-    v-model="dialogVisible"
-    :append-to-body="true"
-    @close="onClose"
-    align-center
-    title="截图分享"
-    width="60%"
-  >
+  <el-dialog ref="editRef" :modal="true" v-model="dialogVisible" :append-to-body="true" @close="onClose" align-center
+    title="截图分享" width="60%">
     <div class="share-modal">
       <div class="segmented w-full">
-        <el-scrollbar class="scrollbar">
-          <div id="preview" class="preview">
-            <div class="content">
-              <Header />
-              <div v-if="isRobot(toAccount) && isPrompt" class="prompt p-16">
-                <Markdown :marked="robotPrompt()" />
-              </div>
-              <div class="min-h-60 item">
-                <div
-                  class="message flex p-10"
-                  v-for="item in fnForwardData"
-                  :key="item.ID"
-                  :class="isSelf(item) ? 'is-self' : 'is-other'"
-                >
-                  <div class="avatar">
-                    <img decoding="async" :src="item.avatar" />
-                  </div>
-                  <div class="item" :class="msgOne(item.type)">
-                    <p class="nick">
-                      <!-- <span>{{ item.nick }}</span> -->
-                    </p>
-                    <div :class="msgType(item.type)">
-                      <component
-                        :key="item.ID"
-                        :is="loadMsgModule(item)"
-                        :msgType="item.conversationType"
-                        :message="item"
-                        :self="isSelf(item)"
-                      >
-                      </component>
-                    </div>
+        <!-- <el-scrollbar class="scrollbar"> -->
+        <div id="preview" class="preview">
+          <div class="content">
+            <Header />
+            <h2 class="role px-16" v-if="robotRole() && isPrompt">
+              {{ robotRole() }}
+            </h2>
+            <div v-if="isRobot(toAccount) && isPrompt" class="prompt p-16">
+              <Markdown :marked="robotPrompt()" />
+            </div>
+            <div class="min-h-60 item">
+              <div class="message flex p-10" v-for="item in fnForwardData" :key="item.ID"
+                :class="isSelf(item) ? 'is-self' : 'is-other'">
+                <div class="avatar">
+                  <img decoding="async" :src="fnAvatar(toAccount) || item.avatar" />
+                </div>
+                <div class="item" :class="msgOne(item.type)">
+                  <p class="nick">
+                    <!-- <span>{{ item.nick }}</span> -->
+                  </p>
+                  <div :class="msgType(item.type)">
+                    <component :key="item.ID" :is="loadMsgModule(item)" :msgType="item.conversationType" :message="item"
+                      :self="isSelf(item)">
+                    </component>
                   </div>
                 </div>
-              </div>
-              <div v-show="isFooter" class="footer p-16">
-                <div class="flex justify-center items-center">
-                  <img class="size-22" src="@/assets/images/log.png" alt="" />
-                  <div class="title ml-8">{{ $config.Title }}</div>
-                </div>
-                <span class="link"> {{ homepage }}</span>
               </div>
             </div>
+            <div v-show="isFooter" class="footer p-16">
+              <div class="flex justify-center items-center">
+                <img class="size-22" src="@/assets/images/log.png" alt="" />
+                <div class="title ml-8">{{ $config.Title }}</div>
+              </div>
+              <span class="link"> {{ homepage }}</span>
+            </div>
           </div>
-        </el-scrollbar>
+        </div>
+        <!-- </el-scrollbar> -->
       </div>
       <div class="form-item-props px-5">
         <div class="flex-bc my-5 h-32" v-if="robotPrompt()">
@@ -71,12 +57,8 @@
           <div>图片格式</div>
           <div>
             <el-radio-group v-model="fieldType" size="small">
-              <el-radio-button
-                v-for="item in imageTypeOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-radio-button v-for="item in imageTypeOptions" :key="item.value" :label="item.label"
+                :value="item.value" />
             </el-radio-group>
           </div>
         </div>
@@ -101,7 +83,7 @@ import { useScreenshot, ImageType, imageTypeOptions } from "@/utils/hooks/useScr
 import { useState } from "@/utils/hooks/useMapper";
 import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils/utils";
 import { useGetters } from "@/utils/hooks/useMapper";
-import { getModelType, usePromptStore } from "@/ai/utils";
+import { getModelType, usePromptStore, fnAvatar } from "@/ai/utils";
 
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
@@ -115,6 +97,16 @@ const { loading, onDownload, title } = useScreenshot();
 const { forwardData } = useState({
   forwardData: (state) => state.conversation.forwardData,
 });
+
+function robotRole() {
+  const model = getModelType(toAccount.value);
+  try {
+    const { title, avatar } = usePromptStore(model)?.meta || {}
+    return avatar + title
+  } catch (e) {
+    return ""
+  } 
+}
 
 function robotPrompt() {
   const model = getModelType(toAccount.value);
@@ -140,24 +132,37 @@ emitter.on("onShareModal", (val) => {
 .prompt {
   border-bottom: 1px solid var(--color-border-default);
 }
+
+.role {
+  overflow: hidden;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .share-modal {
   display: flex;
   flex-direction: column;
   gap: 16px;
+
   :deep(.message-info-setup) {
     display: none;
   }
 }
+
 .segmented {
   width: 100%;
-  height: 50vh;
+  max-height: 50vh;
   background: #f8f8f8;
   border: 1px solid #dddddd;
   border-radius: 8px;
+  overflow: auto;
+
   .scrollbar {
-    height: 50vh;
+    // height: 50vh;
   }
 }
+
 .form-item-props {
   overflow: hidden;
   padding-inline: 16px;
@@ -165,20 +170,22 @@ emitter.on("onShareModal", (val) => {
   border: 1px solid #e3e3e3;
   border-radius: 8px;
 }
+
 .preview {
   padding: 24px;
   background-image: url("@/assets/images/screenshot_background.webp");
   background-position: center;
   background-color: #f8f8f8;
   background-size: 100% 100%;
+
   .content {
-    
     overflow: hidden;
     border: 2px solid #dddddd;
     border-radius: 8px;
     background: var(--color-body-bg);
     pointer-events: none;
   }
+
   .footer {
     display: flex;
     flex-direction: column;
@@ -186,12 +193,14 @@ emitter.on("onShareModal", (val) => {
     gap: 4px;
     padding: 16px;
     border-block-start: 1px solid #dddddd;
+
     .title {
       font:
         bold 130% Consolas,
         Monaco,
         monospace;
     }
+
     .link {
       font-size: 14px;
       line-height: 1.5;
@@ -199,10 +208,12 @@ emitter.on("onShareModal", (val) => {
     }
   }
 }
+
 .message {
   .message-view__item--text {
     max-width: 500px;
   }
+
   .avatar {
     img {
       width: 32px;
@@ -211,25 +222,31 @@ emitter.on("onShareModal", (val) => {
     }
   }
 }
+
 .is-self {
   flex-direction: row-reverse;
   display: flex;
+
   .nick {
     flex-direction: row-reverse !important;
   }
+
   .avatar {
     padding: 0 0 0 12px;
   }
+
   .item {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
   }
 }
+
 .is-other {
   .avatar {
     padding: 0 12px 0 0;
   }
+
   .item {
     .nick {
       display: flex;

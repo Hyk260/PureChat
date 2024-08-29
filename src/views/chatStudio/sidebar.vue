@@ -2,13 +2,7 @@
   <div class="sidebar">
     <div>
       <div class="touxiang">
-        <UserAvatar
-          type="self"
-          isdot
-          :size="40"
-          shape="square"
-          @click="openUploadAvatarDialog"
-        />
+        <UserAvatar type="self" isdot :size="40" shape="square" @click="openUploadAvatarDialog" />
       </div>
       <div class="aside-item" v-for="item in outsideList" :key="item.only">
         <div
@@ -77,10 +71,6 @@ function operation() {
 </script>
 
 <style lang="scss" scoped>
-:global(body .popover-card) {
-  padding: 0 !important;
-  inset: 14px auto auto 71px !important;
-}
 .sidebar {
   width: 68px;
   min-width: 68px;
@@ -125,10 +115,9 @@ function operation() {
   }
 }
 .touxiang {
-  height: 42px;
-  margin: 16px 0 10px 0;
-  text-align: center;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
   .mask-out {
     display: flex;
     justify-content: center;

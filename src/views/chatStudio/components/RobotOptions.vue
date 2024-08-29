@@ -30,8 +30,12 @@
             <div class="title">{{ item.Title }}</div>
             <div class="subTitle">{{ item.SubTitle }}</div>
           </div>
+          <el-tooltip content="获取模型列表" placement="top">
+            <el-icon class="refresh" v-if="item.options && isOllama()" @click="onRefresh()">
+              <Refresh />
+            </el-icon>
+          </el-tooltip>
           <!-- 模型 -->
-          <el-icon class="refresh" v-if="isRefresh(item)" @click="onRefresh()"><Refresh /></el-icon>
           <el-select v-if="item.options" v-model="item.defaultValue">
             <el-option
               v-for="models in item.options.chatModels"
@@ -54,9 +58,18 @@
             <input v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
           </div>
           <div class="input flex items-center" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
-            <span class="flex mr-5 cursor-pointer" v-if="item.doubt && item.ID === 'token'">
-              <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
-            </span>
+            <el-tooltip content="配置教程" placement="top">
+              <span
+                class="flex mr-5 cursor-pointer"
+                v-if="item.doubt && ['token'].includes(item.ID)"
+              >
+                <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
+              </span>
+              <!-- ollama -->
+              <span class="flex mr-5 cursor-pointer" v-else-if="item.doubt && isOllama()">
+                <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
+              </span>
+            </el-tooltip>
             <el-input
               v-model="item.defaultValue"
               :placeholder="item.Placeholder"
@@ -105,14 +118,14 @@ function isRange(id) {
   ].includes(id);
 }
 
-function isRefresh(item) {
+function isOllama() {
   const model = getModelType(toAccount.value);
-  return item.options && [ModelProvider.Ollama].includes(model);
+  return [ModelProvider.Ollama].includes(model);
 }
 
 async function onRefresh() {
   const list = await new OllamaAI().models();
-  console.log(list)
+  console.log(list);
   modelData.value.Model.options.chatModels = list;
 }
 
