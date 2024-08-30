@@ -134,10 +134,10 @@ onBeforeUnmount(() => {
   --valid-offset-x: 12px;
   --arrow-y: -2.5px;
   left: 70px;
-  top: 14px;
+  top: 0px;
   width: 300px;
   overflow: hidden;
-  position: fixed;
+  position: absolute;
   z-index: 9;
   background-color: var(--color-body-bg);
   background-clip: padding-box;
@@ -161,6 +161,7 @@ onBeforeUnmount(() => {
     gap: 0.75rem;
     align-items: center;
     width: 100%;
+    border-radius: 4px;
   }
   & > div:hover {
     background-color: rgba(0, 0, 0, 0.03);

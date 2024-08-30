@@ -43,7 +43,7 @@ import emitter from "@/utils/mitt-bus";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { ref } from "vue";
 import { getModelType, getModelSvg, useAccessStore } from "@/ai/utils";
-import { StoreKey, modelValue } from "@/ai/constant";
+import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
@@ -72,10 +72,19 @@ function storeRobotModel(model) {
   setFlag(false);
 }
 
-emitter.on("openModeList", () => {
+function initModel() {
+  const mode = getModelType(toAccount.value);
+  const list = localStg.get("olama-local-model-list");
+  model.value = modelValue[mode].Model.options;
   robotIcon.value = getModelSvg(toAccount.value);
-  model.value = modelValue[getModelType(toAccount.value)].Model.options;
+  if (list && [ModelProvider.Ollama].includes(mode)) {
+    model.value.chatModels = list;
+  }
   setFlag(true);
+}
+
+emitter.on("openModeList", () => {
+  initModel();
 });
 </script>
 

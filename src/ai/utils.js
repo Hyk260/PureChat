@@ -166,3 +166,19 @@ export function fnAvatar(convId) {
     return "";
   }
 }
+
+const getStatus = (errorType) => {
+  if (errorType.toString().includes('Invalid')) return 401;
+  else return 400;
+};
+
+export const createErrorResponse = (
+  errorType,
+  body,
+) => {
+  const statusCode = getStatus(errorType);
+
+  const data = { body, errorType };
+
+  return new Response(prettyObject(data), { status: statusCode });
+};
