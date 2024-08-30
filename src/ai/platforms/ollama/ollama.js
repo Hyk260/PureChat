@@ -48,6 +48,15 @@ export const OllamaStream = (
     .pipeThrough(createCallbacksTransformer(cb));
 };
 
+function getIcon(modelName) {
+  if (modelName.startsWith("llama")) {
+    return "meta";
+  }else if (modelName.startsWith("qwen")) {
+    return "tongyi";
+  }
+  return "";
+}
+
 export class OllamaAI {
   client;
   constructor() {
@@ -72,8 +81,14 @@ export class OllamaAI {
       return StreamingResponse(OllamaStream(response, options?.callback), {
         headers: options?.headers,
       });
-    } catch (error) {
-      console.log(error)
+    } catch (e) {
+      const Error = {
+        error: { message: e.message, name: e.name, status_code: e.status_code },
+        errorType: "请求 Ollama 服务出错，请检查后重试",
+        provider: ModelProvider.Ollama,
+      }
+      console.error("Ollama Error", Error);
+      throw Error;
     }
   }
 
@@ -81,9 +96,8 @@ export class OllamaAI {
     const list = await this.client.list();
     return list.models.map((model) => ({
       id: model.name,
-      icon: 'meta',
+      icon: getIcon(model.name),
     }));
   }
 }
-
 export default OllamaAI

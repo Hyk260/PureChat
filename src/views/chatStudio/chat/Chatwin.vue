@@ -286,7 +286,7 @@ const getMoreMsg = async () => {
     let noMore = true;
     let more = messageList.length < HISTORY_MESSAGE_COUNT;
     if (messageList.length > 0) noMore = more;
-    if (isCompleted || messageList.length == 0) {
+    if (isCompleted || messageList.length === 0) {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
       commit("SET_HISTORYMESSAGE", { type: "UPDATE_NOMORE", payload: noMore });
       return;

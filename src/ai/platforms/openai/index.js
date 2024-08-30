@@ -1,6 +1,6 @@
 import { OpenaiPath, REQUEST_TIMEOUT_MS } from "@/ai/constant";
 import { ModelProvider } from "@/ai/constant";
-import { prettyObject, useAccessStore, usePromptStore } from "@/ai/utils";
+import { prettyObject, useAccessStore, usePromptStore, createErrorResponse } from "@/ai/utils";
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
 import OllamaAI from '../ollama/ollama';
 
@@ -14,14 +14,14 @@ export class ChatGPTApi {
   }
   userPromptMessages(messages, modelConfig) {
     let message = [];
-    const prompts = usePromptStore(this.provider).prompt?.filter((t) => t.content) || []
+    const prompts = usePromptStore(this.provider).prompt?.filter((t) => t.content) || [];
     const countMessage = messages.slice(-Number(modelConfig.historyMessageCount));
     if (prompts.at(0)) {
       message = [...prompts, ...countMessage]; // prompt
     } else {
       message = countMessage; // 上下文
     }
-    return message
+    return message;
   }
   accessStore(model = this.provider) {
     return useAccessStore(model);
@@ -30,7 +30,7 @@ export class ChatGPTApi {
     const headers = {
       "Content-Type": "application/json",
       "x-requested-with": "XMLHttpRequest",
-      "Authorization": `Bearer ${this.accessStore().token.trim()}`
+      Authorization: `Bearer ${this.accessStore().token.trim()}`,
     };
     return headers;
   }
@@ -38,22 +38,28 @@ export class ChatGPTApi {
     return res.choices?.at(0)?.message?.content ?? "";
   }
   async fetchOnClient(messages) {
-
     const payload = this.accessStore();
-
-    try {
-      return await new OllamaAI().chat(messages, payload, {
-        callback: {
-
-        },
-        // signal: ""
-      });
-
-    } catch (e) {
-      console.log(e)
-    }
-
-  };
+    return await new OllamaAI().chat(messages, payload, {
+      callback: {},
+      // signal: ""
+    });
+  }
+  async enableFetchOnClient(messages, modelConfig) {
+    let fetcher = null; //  typeof fetch
+    const message = this.userPromptMessages(messages, modelConfig);
+    fetcher = async () => {
+      try {
+        return await this.fetchOnClient(message);
+      } catch (e) {
+        const { errorType = 400, error: errorContent, ...res } = e;
+        const error = errorContent || e;
+        // track the error at server side
+        console.error(`Route: [${this.provider}] ${errorType}:`, error);
+        return createErrorResponse(errorType, { error, ...res, provider: this.provider });
+      }
+    };
+    return fetcher;
+  }
   generateRequestPayload(messages, modelConfig, options) {
     return {
       messages: this.userPromptMessages(messages, modelConfig),
@@ -68,31 +74,25 @@ export class ChatGPTApi {
   }
   /**
    * 处理流式聊天的响应。
-   * 
+   *
    * @param {string} chatPath - 聊天请求的路径。
    * @param {object} chatPayload - 聊天请求的有效负载。
    * @param {object} options - 处理选项，包括错误处理、更新和完成回调。
    * @param {AbortController} controller - 用于控制请求的 AbortController。
    * @param {number} requestTimeoutId - 请求超时的 ID。
-   * 
+   *
    * @returns {Promise<void>} - 无返回值的 Promise。
    */
-  async handleStreamingChat(
-    chatPath,
-    chatPayload,
-    options,
-    controller,
-    requestTimeoutId
-  ) {
+  async handleStreamingChat(chatPath, chatPayload, options, controller, requestTimeoutId) {
     const _this = this;
     let responseText = ""; // 用于存储完整的响应文本
     let remainText = ""; // 用于存储尚未处理的文本
     let finished = false; // 用于标记动画是否已完成
 
     /**
-    * 动画响应文本的显示。
-    * 根据剩余文本的长度逐步更新响应文本。
-    */
+     * 动画响应文本的显示。
+     * 根据剩余文本的长度逐步更新响应文本。
+     */
     function animateResponseText() {
       // 如果动画已完成或请求已被中止，结束动画
       if (finished || controller.signal.aborted) {
@@ -114,7 +114,7 @@ export class ChatGPTApi {
       }
 
       requestAnimationFrame(animateResponseText);
-    };
+    }
 
     // start animaion
     animateResponseText();
@@ -131,7 +131,7 @@ export class ChatGPTApi {
     fetchEventSource(chatPath, {
       ...chatPayload,
       async onopen(res) {
-        console.log('[OpenAI] fetchEventSource', res)
+        console.log("[OpenAI] fetchEventSource", res);
         clearTimeout(requestTimeoutId);
         const contentType = res.headers.get("content-type");
         // text/event-stream; charset=utf-8
@@ -172,7 +172,7 @@ export class ChatGPTApi {
         }
       },
       onmessage(msg) {
-        console.log('[OpenAI] onmessage:', msg)
+        console.log("[OpenAI] onmessage:", msg);
         if (msg.data === "[DONE]" || finished) {
           return finish();
         }
@@ -180,7 +180,7 @@ export class ChatGPTApi {
         try {
           if ([ModelProvider.Ollama].includes(_this.provider)) {
             const json = JSON.parse(text);
-            if (json === '[DONE]') return finish();
+            if (json === "[DONE]") return finish();
             const delta = json.message.content;
             if (delta) {
               remainText += delta;
@@ -222,7 +222,6 @@ export class ChatGPTApi {
     options.onController?.(controller);
 
     try {
-      let fetcher = null //  typeof fetch
       const chatPath = this.path(OpenaiPath.ChatPath);
       const chatPayload = {
         method: "POST",
@@ -234,30 +233,20 @@ export class ChatGPTApi {
 
       // ollama本地模型使用自定义 fetch 请求
       if ([ModelProvider.Ollama].includes(this.provider)) {
-        const message = this.userPromptMessages(messages, modelConfig)
-        fetcher = async () => {
-          try {
-            return await this.fetchOnClient(message);
-          } catch (e) {
-            const {
-              errorType = '400',
-              error: errorContent,
-              ...res
-            } = e;
-
-            const error = errorContent || e;
-            // track the error at server side
-            console.error(`Route: [${this.provider}] ${errorType}:`, error);
-          }
-        }
-        chatPayload.fetch = fetcher
+        chatPayload.fetch = await this.enableFetchOnClient(messages, modelConfig);
       }
 
       const requestTimeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
       // 流式输出
       if (shouldStream) {
-        await this.handleStreamingChat(chatPath, chatPayload, options, controller, requestTimeoutId);
+        await this.handleStreamingChat(
+          chatPath,
+          chatPayload,
+          options,
+          controller,
+          requestTimeoutId
+        );
       } else {
         const res = await fetch(chatPath, chatPayload);
         clearTimeout(requestTimeoutId);

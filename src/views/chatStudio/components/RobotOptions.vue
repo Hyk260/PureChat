@@ -125,8 +125,8 @@ function isOllama() {
 
 async function onRefresh() {
   const list = await new OllamaAI().models();
-  console.log(list);
   modelData.value.Model.options.chatModels = list;
+  localStg.set('olama-local-model-list', list);
 }
 
 function initModel() {
@@ -182,7 +182,8 @@ function resetRobotMask() {
 }
 
 function handleClose(done) {
-  done();
+  done?.();
+  // setState(false);
 }
 // 重置
 function handleCancel() {
