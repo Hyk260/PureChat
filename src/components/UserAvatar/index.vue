@@ -1,28 +1,41 @@
 <template>
-  <div
-    v-if="type === 'group'"
-    :class="['user-avatar', 'default', className, shape]"
-    :style="backgInfo(url)"
-  >
-    {{ url ? null : displayInfo(nickName) }}
-  </div>
-  <img draggable="false"  v-else-if="type === 'single'" class="avatar" :src="url || shapeObj[shape]" alt="头像" />
-  <div v-else-if="type === 'self'" class="badge" :style="{ height: `${size}px` }">
-    <el-avatar :size="size" :src="userProfile?.avatar || shapeObj['circle']" :shape="shape" />
-    <sup v-show="isdot" class="is-dot"></sup>
+  <div>
+    <div
+      v-if="type === 'group'"
+      :class="['user-avatar', 'default', className, shape]"
+      :style="backgInfo(url)"
+    >
+      {{ url ? null : displayInfo(nickName) }}
+    </div>
+    <img
+      draggable="false"
+      v-else-if="type === 'single'"
+      :class="['avatar', className]"
+      :src="url || fnAvatar(convId) || shapeObj[shape]"
+      alt="头像"
+    />
+    <div v-else-if="type === 'self'" class="badge" :style="{ height: `${size}px`, width: `${size}px` }">
+      <el-avatar :size="size" :src="userProfile?.avatar || shapeObj['circle']" :shape="shape" />
+      <sup v-if="isdot" class="is-dot"></sup>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { toRefs } from "vue";
+import { fnAvatar } from "@/ai/utils";
 import { useState } from "@/utils/hooks/useMapper";
 
 defineOptions({
-  name: "UserAvatar"
+  name: "UserAvatar",
 });
 
 const props = defineProps({
   className: {
+    type: String,
+    default: "",
+  },
+  convId: {
     type: String,
     default: "",
   },
@@ -109,7 +122,7 @@ const backgInfo = (url) => {
   background-size: 40px 40px;
   line-height: 40px;
 }
-.mention {
+.mention-avatar {
   width: 18px;
   height: 18px;
   background-size: 18px 18px;
@@ -119,14 +132,14 @@ const backgInfo = (url) => {
   border-radius: 3px;
 }
 .badge {
-  -webkit-user-drag:none;
+  -webkit-user-drag: none;
   user-select: none;
   position: relative;
   .is-dot {
     position: absolute;
     height: 8px;
     width: 8px;
-    right: 10px;
+    right: -4px;
     top: 36px;
     border-radius: 50%;
     display: inline-flex;
@@ -136,6 +149,9 @@ const backgInfo = (url) => {
     border: 1px solid var(--el-bg-color);
     // background-color: var(--el-color-danger);
     background-color: #31da84;
+  }
+  .el-avatar {
+    cursor: pointer;
   }
 }
 </style>

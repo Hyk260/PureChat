@@ -17,6 +17,7 @@ export const ollamaModelValue = () => {
       SubTitle: "除默认地址外，必须包含 http(s)://",
       Placeholder: "http://127.0.0.1:11434/",
       defaultValue: "http://127.0.0.1:11434/",
+      doubt: `${docs}/guides/olama-usage`,
     },
     Temperature: {
       ID: "temperature",

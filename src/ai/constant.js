@@ -76,6 +76,11 @@ export const QwenPath = {
 export const prompt = [
   {
     id: "0",
+    meta: {
+      tags:[],
+      avatar: "",
+      title: "",
+    },
     lang: "cn",
     prompt: [{ role: "system", content: "" }],
   },

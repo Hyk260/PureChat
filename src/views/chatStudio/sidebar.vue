@@ -28,17 +28,20 @@
     <!-- <UploadAvatarDialog /> -->
     <!-- 侧边栏拖拽排序弹框 -->
     <SidebarEditDialog />
+    <CardPopover />
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 // import UploadAvatarDialog from "@/views/chatStudio/components/UploadAvatarDialog.vue";
 import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
+import CardPopover from "./components/CardPopover.vue";
 import { useStore } from "vuex";
 
-const { commit, dispatch } = useStore();
+const { commit } = useStore();
 const { outside, unreadMsg, outsideList } = useState({
   outsideList: (state) => state.sidebar.outsideList,
   unreadMsg: (state) => state.conversation.totalUnreadMsg,
@@ -48,8 +51,10 @@ const { outside, unreadMsg, outsideList } = useState({
 function visibile(item) {
   return item?.show == "hide" ? false : true;
 }
+
 function openUploadAvatarDialog() {
   // emitter.emit("uploadAvatarDialog", true);
+  emitter.emit("setPopover");
 }
 function toggle(item) {
   if (item?.openType) {
@@ -109,12 +114,10 @@ function operation() {
     @include text-ellipsis;
   }
 }
-
 .touxiang {
-  height: 42px;
-  margin: 16px 0 10px 0;
-  text-align: center;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
   .mask-out {
     display: flex;
     justify-content: center;

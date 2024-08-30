@@ -34,10 +34,6 @@ export default {
           title: "AI大模型",
           icon: "Sugar",
         },
-        // {
-        //   title: "公开群聊",
-        //   icon: "CollectionTag",
-        // },
       ],
       active: "ForkSpoon",
     };

@@ -48,6 +48,11 @@ function toTant(item = cardData.value) {
       ...localStg.get(StoreKey.Prompt),
       [value]: {
         id: identifier,
+        meta: {
+          tags: meta.tags,
+          avatar: meta.avatar,
+          title: meta.title
+        },
         lang: "cn",
         prompt: [{ role: "system", content: meta.systemRole }],
       },
@@ -135,7 +140,7 @@ emitter.on("openAgentCard", (data) => {
     }
   }
   .market {
-    max-height: 350px;
+    max-height: 320px;
     overflow: auto;
     padding: 16px;
   }

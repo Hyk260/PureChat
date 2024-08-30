@@ -17,7 +17,6 @@ export function setupNProgress() {
   });
 
   // mount on window
-  // start done
   window.NProgress = NProgress;
 }
 

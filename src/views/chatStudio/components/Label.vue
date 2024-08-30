@@ -21,12 +21,12 @@ const props = defineProps({
   },
   item: {
     type: Object,
-    default: () => {},
+    default: () => { },
   },
   model: {
     type: String,
     default: "",
-  },
+  }
 });
 
 const labelClass = (data) => {
@@ -42,14 +42,17 @@ const labelClass = (data) => {
   font-weight: 400;
   display: flex;
   align-items: center;
+
   svg {
     stroke: unset;
   }
+
   .model {
     margin-left: 5px;
   }
+
   .all,
-  .model {
+  .model,.role-title {
     white-space: nowrap;
     background: #e6f7ff;
     border: 1px solid rgb(145, 213, 255);

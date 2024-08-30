@@ -1,17 +1,17 @@
 {
   // 要在保存时运行的代码操作种类
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
-    // 控制是否应在文件保存时运行"整理 import 语句"操作
-    "source.organizeImports": "never"
-  },
+  // "editor.codeActionsOnSave": {
+  //   "source.fixAll.eslint": "explicit",
+  //   // 控制是否应在文件保存时运行"整理 import 语句"操作
+  //   "source.organizeImports": "never"
+  // },
   // "prettier.enable": false,
   "eslint.experimental.useFlatConfig": true,
   // 在保存时格式化文件。格式化程序必须可用，延迟后文件不能保存，并且编辑器不能关闭。
-  "editor.formatOnSave": false,
-  "eslint.validate": ["html", "css", "scss", "json", "jsonc","markdown"],
+  // "editor.formatOnSave": false,
+  // "eslint.validate": ["html", "css", "scss", "json", "jsonc","markdown"],
   // 控制编辑器在键入一行后是否自动格式化该行。
-  "editor.formatOnType": true,
+  // "editor.formatOnType": true,
   // 针对某种语言，配置替代编辑器设置。
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

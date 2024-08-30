@@ -163,7 +163,7 @@ const components = [
   // ElLink,
   ElMenu,
   ElMenuItem,
-  // ElMenuItemGroup,
+  ElMenuItemGroup,
   ElSubMenu,
   // ElPageHeader,
   ElPagination,

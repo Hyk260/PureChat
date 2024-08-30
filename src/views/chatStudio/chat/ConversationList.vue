@@ -23,9 +23,10 @@
         <UserAvatar
           words="3"
           shape="square"
-          :type="item.type == 'C2C' ? 'single' : 'group'"
+          :convId="item.conversationID"
+          :type="item.type === 'C2C' ? 'single' : 'group'"
           :nickName="chatName(item)"
-          :url="item.type == 'C2C' ? item.userProfile.avatar : item?.groupProfile?.avatar"
+          :url="item.type === 'C2C' ? item.userProfile.avatar : item?.groupProfile?.avatar"
         />
       </el-badge>
       <!-- 消息 -->
@@ -53,7 +54,6 @@
         <svg-icon v-show="isNotify(item)" iconClass="DontDisturb" class="dont" />
       </div>
     </div>
-    <!-- <virtual-list :list="tabList" /> -->
     <!-- 右键菜单 -->
     <contextmenu ref="contextmenu" :disabled="!isRight">
       <contextmenu-item
@@ -70,7 +70,6 @@
 <script setup>
 import { h, ref, watch } from "vue";
 import { RIGHT_CLICK_CHAT_LIST } from "../utils/menu";
-// import VirtualList from "./VirtualList.vue";
 import { pinConversation, setMessageRead } from "@/api/im-sdk-api/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";

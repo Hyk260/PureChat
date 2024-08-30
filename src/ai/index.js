@@ -1,6 +1,6 @@
 import { ClientApi } from "@/ai/api";
-import { RobotAvatar, ModelProvider, modelValue } from "@/ai/constant";
-import { getModelType, useAccessStore, prettyObject } from "@/ai/utils";
+import { ModelProvider, modelValue } from "@/ai/constant";
+import { getModelType, useAccessStore, prettyObject, avatar } from "@/ai/utils";
 import { createCustomMsg } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
 import store from "@/store";
@@ -12,7 +12,7 @@ const restSendMsg = async (params, message) => {
     params: {
       To_Account: params.from,
       From_Account: params.to,
-      Text: message || "loading...",
+      Text: message,
     },
     funName: "restSendMsg",
   });
@@ -25,11 +25,6 @@ const updataMessage = (msg, message = "") => {
     type: "UPDATE_MESSAGES",
     payload: { convId: `C2C${msg.from}`, message: cloneDeep(msg) },
   });
-};
-
-const avatar = (id) => {
-  const suffix = RobotAvatar[getModelType(id)] || "";
-  return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}`;
 };
 
 const fnCreateLodMsg = (params) => {
@@ -48,13 +43,13 @@ const fnCreateLodMsg = (params) => {
 };
 
 function getPrompt(api) {
-  let writing = "API Key 为空，请在配置页填入你的 API Key 后重试"
+  let writing = "API Key 为空，请在配置页填入你的 API Key 后重试";
   try {
-    let doubt = modelValue[api.llm.provider].Token.doubt
-    let text = `[文档](${doubt})`
-    return `${writing}-${text}`
+    let doubt = modelValue[api.llm.provider].Token.doubt;
+    let text = `[文档](${doubt})`;
+    return `${writing}-${text}`;
   } catch (error) {
-    return writing
+    return writing;
   }
 }
 

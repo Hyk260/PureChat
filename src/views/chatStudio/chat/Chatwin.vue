@@ -40,7 +40,7 @@
                 :size="36"
                 shape="square"
                 @click.stop="onClickAvatar($event, item)"
-                :src="item.avatar || circleUrl"
+                :src="item.avatar || fnAvatar(item.from) || circleUrl"
                 @error="() => true"
                 v-contextmenu:contextmenu
                 @contextmenu.prevent="handleContextAvatarMenuEvent($event, item)"
@@ -116,6 +116,7 @@ import Checkbox from "../components/Checkbox.vue";
 import LoadMore from "../components/LoadMore.vue";
 import NameComponent from "../components/NameComponent.vue";
 import Stateful from "../components/Stateful.vue";
+import { fnAvatar } from "@/ai/utils"
 
 const timeout = ref(false);
 const isRight = ref(true);

@@ -12,7 +12,7 @@
           >
             <UserAvatar
               words="3"
-              className="mention"
+              className="mention-avatar"
               shape="square"
               :url="item.avatar"
               :type="item.avatar ? 'single' : 'group'"
@@ -219,12 +219,10 @@ export default {
 }
 .mention-list {
   max-height: 123px;
-  .avatar {
-    width: 18px;
-    height: 18px;
-    border-radius: 4px;
-  }
   .nick {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
     margin-left: 5px;
     max-width: 125px;
     @include text-ellipsis();

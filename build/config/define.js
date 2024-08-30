@@ -6,6 +6,7 @@ import {
   repository,
   name,
   homepage,
+  bugs,
   version,
   docs,
 } from "../../package.json";
@@ -15,6 +16,7 @@ export const __APP_INFO__ = {
   pkg: {
     // docs: 'http://localhost:5173/pure-docs',
     docs,
+    bugs,
     name,
     version,
     engines,

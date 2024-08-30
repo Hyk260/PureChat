@@ -1,6 +1,5 @@
 import { ACCESS_TOKEN } from "@/constants/index";
 import { localStg } from "@/utils/storage";
-import { noService } from '@/config/index';
 
 /**
  * create route guard
@@ -10,7 +9,7 @@ export function createRouteGuard(router) {
   router.beforeEach((to, from, next) => {
     if (from.path === to.path) return;
     const token = localStg.get(ACCESS_TOKEN);
-    if (token || noService) {
+    if (token) {
       next();
     } else {
       if (to.path !== "/login") {
