@@ -87,7 +87,6 @@ export class OllamaAI {
         errorType: "请求 Ollama 服务出错，请检查后重试",
         provider: ModelProvider.Ollama,
       }
-      console.error("Ollama Error", Error);
       throw Error;
     }
   }

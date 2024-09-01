@@ -3,17 +3,17 @@
     <EmptyMessage classNmae="no-msg" v-if="tabList.length == 0" />
     <!-- <Skeleton :loading="true" /> -->
     <div
-      class="message-item"
       v-for="item in tabList"
+      class="message-item"
       :key="item.conversationID"
       :id="`message_${item.conversationID}`"
       :class="fnClass(item)"
+      v-contextmenu:contextmenu
       @click="handleConvListClick(item)"
       @drop="dropHandler($event, item, handleConvListClick)"
       @dragover="dragoverHandler($event)"
       @dragenter="dragenterHandler($event, item)"
       @dragleave="dragleaveHandler($event, item)"
-      v-contextmenu:contextmenu
       @contextmenu.prevent="handleContextMenuEvent($event, item)"
     >
       <!-- 置顶图标 -->
@@ -84,7 +84,7 @@ import {
   dragleaveHandler,
   dragoverHandler,
   dropHandler,
-  html2Escape
+  html2Escape,
 } from "../utils/utils";
 
 const loading = ref(true);
@@ -120,10 +120,11 @@ const isMention = (item) => {
 };
 
 const fnClass = (item) => {
-  let current = chat.value;
-  let select = item?.conversationID == current?.conversationID;
+  let select = item?.conversationID == chat.value?.conversationID;
   if (select) {
     return "is-active";
+  } else {
+    return "";
   }
 };
 
@@ -185,7 +186,7 @@ const CustomMention = (props) => {
   const { messageForShow } = lastMessage;
   const draft = sessionDraftMap.value.get(ID);
   if (draft && isdraft(item)) {
-    const str = html2Escape(parseData(draft))
+    const str = html2Escape(parseData(draft));
     return h("span", { innerHTML: `${createElement(1)}${str}` });
   }
   return h("span", {

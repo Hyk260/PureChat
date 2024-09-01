@@ -134,7 +134,7 @@ onBeforeUnmount(() => {
   --valid-offset-x: 12px;
   --arrow-y: -2.5px;
   left: 70px;
-  top: 0px;
+  top: 1px;
   width: 300px;
   overflow: hidden;
   position: absolute;
@@ -164,7 +164,7 @@ onBeforeUnmount(() => {
     border-radius: 4px;
   }
   & > div:hover {
-    background-color: rgba(0, 0, 0, 0.03);
+    background-color: var(--hover-color);
   }
 }
 .card-item {
@@ -183,7 +183,7 @@ onBeforeUnmount(() => {
     gap: 2px;
     padding-block: 6px;
     padding-inline: 8px;
-    background: rgba(0, 0, 0, 0.03);
+    background: var(--hover-color);
     border-radius: 5px;
   }
 }
