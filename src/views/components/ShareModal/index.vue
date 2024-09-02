@@ -17,7 +17,8 @@
               <div class="message flex p-10" v-for="item in fnForwardData" :key="item.ID"
                 :class="isSelf(item) ? 'is-self' : 'is-other'">
                 <div class="avatar">
-                  <img decoding="async" :src="!isSelf(item) ? fnAvatar(toAccount) : '' || item.avatar" />
+                  <img v-if="!isSelf(item)" :src="fnAvatar(toAccount) || item.avatar" />
+                  <img v-else :src="item.avatar" />
                 </div>
                 <div class="item" :class="msgOne(item.type)">
                   <p class="nick">

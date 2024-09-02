@@ -1,6 +1,6 @@
 {
   "name": "purechat",
-  "version": "0.4.9",
+  "version": "0.5.0",
   "description": "PureChat - A chat application built with Vue and Vite",
   "type": "module",
   "main": "./out/main/index.js",
@@ -99,18 +99,19 @@
     "vite-plugin-vue-devtools": "7.3.6"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "^18.0.0 || >=20.0.0",
+    "pnpm": ">=9"
   },
   "homepage": "https://github.com/Hyk260/PureChat",
   "bugs": {
     "url": "https://github.com/Hyk260/PureChat/issues"
   },
   "keywords": [
-    "Vue",
-    "Vue3",
+    "vue",
+    "vue3",
     "openai",
     "chatgpt",
-    "Vite",
+    "vite",
     "wangeditor",
     "element-plus"
   ],
@@ -118,5 +119,6 @@
     "url": "https://github.com/Hyk260/PureChat.git"
   },
   "license": "MIT",
-  "docs": "https://hyk260.github.io/pure-docs"
+  "docs": "https://hyk260.github.io/pure-docs",
+  "packageManager": "pnpm@9.7.1"
 }
