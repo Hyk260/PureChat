@@ -10,9 +10,16 @@
         <img draggable="false" class="h-full" :src="icon" alt="" />
       </div>
       <div class="file-box__content">
-        <div class="file-name">
-          {{ payload.fileName }}
-        </div>
+        <el-tooltip
+          effect="dark"
+          :content="payload.fileName"
+          :disabled="payload.fileName.length < 20"
+          placement="top"
+        >
+          <div class="file-name">
+            {{ payload.fileName }}
+          </div>
+        </el-tooltip>
         <div class="file-box__size">
           <span class="file-box__size-label">
             {{ bytesToSize(payload.fileSize) }}
@@ -49,17 +56,17 @@ const { payload } = message.value;
 
 const backgroundStyle = ref("");
 const fileType = getFileType(payload?.fileName);
-const icon = renderFileIcon(fileType)
+const icon = renderFileIcon(fileType);
 
 const isStatus = (value) => {
   return status.value == value;
 };
 
-function handleOpen({ fileName }) { 
+function handleOpen({ fileName }) {
   if (isElectron) {
-    console.log('Open electron:')
+    console.log("Open electron:");
   } else {
-    console.log('Open web:')
+    console.log("Open web:");
   }
 }
 
