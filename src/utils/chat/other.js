@@ -9,10 +9,8 @@ export function checkTextNotEmpty(arr) {
 }
 
 export function transformData(data) {
-  const inputData = data.filter(
-    (item) => !item.isTimeDivider && !item.isDeleted && !item.isRevoked
-  );
-  return inputData
+  return data
+    .filter((item) => !item.isTimeDivider && !item.isDeleted && !item.isRevoked)
     .map((data) => {
       return {
         role: data.flow === "in" ? "assistant" : "user",
@@ -37,16 +35,22 @@ export const renderFileIcon = (fileType = "") => {
     type = "ppt";
   } else if (fileType == "rar" || fileType == "zip") {
     type = "zip";
-  } else if (fileType == "txt") {
+  } else if (fileType == "txt" || fileType == "log") {
     type = "txt";
   } else if (fileType == "pdf") {
     type = "pdf";
-  } else if (["png", "jpg", "gif", "jpeg", "webp"].includes(fileType)) {
+  } else if (["png", "jpg", "gif", "jpeg", "webp", "svg"].includes(fileType)) {
     type = "picture";
   } else if (fileType == "mp4") {
     type = "video";
   } else if (fileType == "mp3") {
     type = "audio";
+  } else if (fileType == "exe") {
+    type = "exe";
+  } else if (fileType == "json") {
+    type = "json";
+  } else if (fileType == "js") {
+    type = "js";
   }
   return new URL(`../../assets/message/${type}.png`, import.meta.url).href;
 };
