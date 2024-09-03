@@ -16,7 +16,14 @@ import {
   HISTORY_MESSAGE_COUNT,
 } from "@/constants/index";
 import TIM from "@/utils/IM/chat/index";
-import { addTimeDivider, checkTextNotEmpty, getBaseTime, transformData, getChatListCache, setMessageCaching } from "@/utils/chat/index";
+import {
+  addTimeDivider,
+  checkTextNotEmpty,
+  getBaseTime,
+  transformData,
+  getChatListCache,
+  setMessageCaching,
+} from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
@@ -56,7 +63,6 @@ const conversation = {
           console.log("[chat] 添加消息 ADD_MESSAGE:", payload);
           const { convId, isDone, message } = payload;
           state.historyMessageList.set(convId, message);
-          // setMessageCaching(convId, state.historyMessageList)
           if (state.currentConversation) {
             state.currentMessageList = state.historyMessageList.get(convId);
           } else {
@@ -71,46 +77,35 @@ const conversation = {
         case CONVERSATIONTYPE.ADD_MORE_MESSAGE: {
           console.log("[chat] 加载更多 ADD_MORE_MESSAGE:", payload);
           const { convId, messages } = payload;
-          let history = state.historyMessageList.get(convId);
-          let baseTime = getBaseTime(history);
-          let timeDividerResult = addTimeDivider(messages, baseTime).reverse();
-          state.historyMessageList.set(
-            convId,
-            history ? history.concat(timeDividerResult) : timeDividerResult
-          );
-          // setMessageCaching(convId, state.historyMessageList)
+          const history = state.historyMessageList.get(convId) || [];
+          const baseTime = getBaseTime(history);
+          const timeDividerResult = addTimeDivider(messages, baseTime).reverse();
+          state.historyMessageList.set(convId, history.concat(timeDividerResult));
           state.currentMessageList = state.historyMessageList.get(convId);
           break;
         }
         case CONVERSATIONTYPE.UPDATE_MESSAGES: {
           console.log("[chat] 更新消息 UPDATE_MESSAGES:", payload);
           const { convId, message } = payload;
-          let matched = false;
+
           let oldMessageList = state.historyMessageList.get(convId);
+          // 确保 oldMessageList 存在
           if (!oldMessageList) return;
-          const newMessageList = oldMessageList.reduce((acc, item) => {
-            if (item.ID === payload.message.ID) {
-              matched = true;
-              acc.push(payload.message);
-            } else {
-              acc.push(item);
-            }
-            return acc;
-          }, []);
+
+          const newMessageList = oldMessageList.map((item) => {
+            return item.ID === message.ID ? payload.message : item;
+          });
           // 新消息
-          if (!matched) {
+          if (!newMessageList.some((item) => item.ID === message.ID)) {
             let baseTime = getBaseTime(newMessageList);
             let timeDividerResult = addTimeDivider([message], baseTime).reverse();
             newMessageList.unshift(...timeDividerResult);
           }
           // 更新历史消息
           state.historyMessageList.set(convId, newMessageList);
-          // setMessageCaching(convId, state.historyMessageList)
           // 当前会有列表有值
-          if (state.currentConversation) {
-            if (state.currentConversation.conversationID === convId) {
-              state.currentMessageList = newMessageList;
-            }
+          if (state.currentConversation.conversationID === convId) {
+            state.currentMessageList = newMessageList;
             state.needScrollDown = 0;
           }
           break;
@@ -119,12 +114,9 @@ const conversation = {
           console.log("[chat] 删除消息 DELETE_MESSAGE:", payload);
           const { convId } = payload;
           const history = state.historyMessageList.get(convId);
-          if (!history) return;
-          const newHistory = history.reverse();
-          const newHistoryList = addTimeDivider(newHistory).reverse();
-          state.historyMessageList.set(convId, newHistoryList);
-          // setMessageCaching(convId, state.historyMessageList)
-          state.currentMessageList = newHistoryList;
+          const updatedHistory = addTimeDivider(history.reverse()).reverse();
+          state.currentMessageList = updatedHistory;
+          state.historyMessageList.set(convId, updatedHistory);
           break;
         }
         case CONVERSATIONTYPE.CLEAR_HISTORY: {
@@ -488,7 +480,7 @@ const conversation = {
     },
     // 用于当前会话的图片预览
     imgUrlList(state) {
-      if (!state.currentMessageList) return []
+      if (!state.currentMessageList) return [];
       const filteredMessages = state.currentMessageList.filter(
         (item) => item.type === TIM.TYPES.MSG_IMAGE && !item.isRevoked && !item.isDeleted
       );

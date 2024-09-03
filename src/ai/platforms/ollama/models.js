@@ -1,21 +1,21 @@
 const OllamaAI = {
   chatModels: [
     {
-      displayName: 'Qwen Chat 7B',
+      displayName: "Qwen Chat 7B",
       enabled: true,
-      id: 'qwen2:7b',
-      icon:'tongyi',
+      id: "qwen2:7b",
+      icon: "tongyi",
       tokens: 32_768,
     },
     {
       enabled: true,
-      icon: 'meta',
-      id: 'llama3.1:8b',
-    }
+      icon: "meta",
+      id: "llama3.1:8b",
+    },
   ],
-  checkModel: 'qwen2:7b',
-  id: 'ollama',
-  name: 'Ollama',
+  checkModel: "llama3.1:8b",
+  id: "ollama",
+  name: "Ollama",
 };
 
 export default OllamaAI;

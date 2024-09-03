@@ -550,43 +550,6 @@ export const handleEditorKeyDown = async () => {
   };
 };
 
-function setOverStyle(item, type) {
-  try {
-    const dom = document.getElementById(`message_${item.conversationID}`);
-    dom.classList[type]("over-style");
-  } catch (error) {
-    console.log(error);
-  }
-}
-let lastEnterElem = null;
-// 释放（放置）在目标对象上时触发
-export const dropHandler = (e, item, fn) => {
-  e.preventDefault();
-  setOverStyle(item, "remove");
-  const files = e.dataTransfer.files || [];
-  fn(item);
-  emitter.emit("handleFileDrop", files[0]);
-};
-
-// 拖动对象进入目标对象时触发
-export const dragenterHandler = (e, item) => {
-  e.preventDefault();
-  if (!e.target.classList.contains("message-item")) return;
-  lastEnterElem = e.target;
-  setOverStyle(item, "add");
-};
-// 拖动对象离开目标对象时触发
-export const dragleaveHandler = (e, item) => {
-  e.preventDefault();
-  if (!e.target.classList.contains("message-item")) return;
-  if (lastEnterElem === e.target) return;
-  setOverStyle(item, "remove");
-};
-
-export const dragoverHandler = (e) => {
-  e.preventDefault();
-};
-
 export const getAssetsFile = (url) => {
   return new URL(`../../../assets/emoji/${url}`, import.meta.url).href;
 };
