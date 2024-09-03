@@ -1,6 +1,14 @@
 <template>
-  <el-dialog ref="editRef" :modal="true" v-model="dialogVisible" :append-to-body="true" @close="onClose" align-center
-    title="截图分享" width="60%">
+  <el-dialog
+    ref="editRef"
+    :modal="true"
+    v-model="dialogVisible"
+    :append-to-body="true"
+    @close="onClose"
+    align-center
+    title="截图分享"
+    width="60%"
+  >
     <div class="share-modal">
       <div class="segmented w-full">
         <!-- <el-scrollbar class="scrollbar"> -->
@@ -14,8 +22,12 @@
               <Markdown :marked="robotPrompt()" />
             </div>
             <div class="min-h-60 item">
-              <div class="message flex p-10" v-for="item in fnForwardData" :key="item.ID"
-                :class="isSelf(item) ? 'is-self' : 'is-other'">
+              <div
+                class="message flex p-10"
+                v-for="item in fnForwardData"
+                :key="item.ID"
+                :class="isSelf(item) ? 'is-self' : 'is-other'"
+              >
                 <div class="avatar">
                   <img v-if="!isSelf(item)" :src="fnAvatar(toAccount) || item.avatar" />
                   <img v-else :src="item.avatar" />
@@ -25,8 +37,13 @@
                     <!-- <span>{{ item.nick }}</span> -->
                   </p>
                   <div :class="msgType(item.type)">
-                    <component :key="item.ID" :is="loadMsgModule(item)" :msgType="item.conversationType" :message="item"
-                      :self="isSelf(item)">
+                    <component
+                      :key="item.ID"
+                      :is="loadMsgModule(item)"
+                      :msgType="item.conversationType"
+                      :message="item"
+                      :self="isSelf(item)"
+                    >
                     </component>
                   </div>
                 </div>
@@ -58,14 +75,21 @@
           <div>图片格式</div>
           <div>
             <el-radio-group v-model="fieldType" size="small">
-              <el-radio-button v-for="item in imageTypeOptions" :key="item.value" :label="item.label"
-                :value="item.value" />
+              <el-radio-button
+                v-for="item in imageTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-radio-group>
           </div>
         </div>
       </div>
       <div>
-        <el-button class="w-full" @click="onDownload(fieldType)">
+        <el-button class="w-full" @click="onDownload(fieldType)" :loading="loading">
+          <template #loading>
+            <loadingSvg />
+          </template>
           {{ fieldType === ImageType.Blob ? "复制截图" : "下载截图" }}
         </el-button>
       </div>
@@ -75,6 +99,7 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import { isRobot } from "@/utils/chat/index";
 import { Markdown } from "@/utils/markdown/index";
 import emitter from "@/utils/mitt-bus";
@@ -102,11 +127,11 @@ const { forwardData } = useState({
 function robotRole() {
   const model = getModelType(toAccount.value);
   try {
-    const { title, avatar } = usePromptStore(model)?.meta || {}
-    return avatar + title
+    const { title, avatar } = usePromptStore(model)?.meta || {};
+    return avatar + title;
   } catch (e) {
-    return ""
-  } 
+    return "";
+  }
 }
 
 function robotPrompt() {

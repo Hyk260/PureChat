@@ -10,10 +10,10 @@
       :class="fnClass(item)"
       v-contextmenu:contextmenu
       @click="handleConvListClick(item)"
-      @drop="dropHandler($event, item, handleConvListClick)"
-      @dragover="dragoverHandler($event)"
-      @dragenter="dragenterHandler($event, item)"
-      @dragleave="dragleaveHandler($event, item)"
+      @drop="handleDrop($event, item, handleConvListClick)"
+      @dragover="handleDragOver($event)"
+      @dragenter="handleDragEnter($event, item)"
+      @dragleave="handleDragLeave($event, item)"
       @contextmenu.prevent="handleContextMenuEvent($event, item)"
     >
       <!-- 置顶图标 -->
@@ -78,14 +78,10 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { useStore } from "vuex";
 import EmptyMessage from "../components/EmptyMessage.vue";
 import Label from "../components/Label.vue";
-import {
-  chatName,
-  dragenterHandler,
-  dragleaveHandler,
-  dragoverHandler,
-  dropHandler,
-  html2Escape,
-} from "../utils/utils";
+import { chatName, html2Escape } from "../utils/utils";
+import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
+
+const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop();
 
 const loading = ref(true);
 const isRight = ref(true);
@@ -119,14 +115,7 @@ const isMention = (item) => {
   return item.groupAtInfoList.length > 0;
 };
 
-const fnClass = (item) => {
-  let select = item?.conversationID == chat.value?.conversationID;
-  if (select) {
-    return "is-active";
-  } else {
-    return "";
-  }
-};
+const fnClass = (item) => (item?.conversationID === chat.value?.conversationID ? "is-active" : "");
 
 const formatNewsMessage = (data) => {
   const { type, lastMessage, unreadCount } = data;

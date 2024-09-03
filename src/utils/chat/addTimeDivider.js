@@ -9,7 +9,7 @@ const isInFiveTime = (curTime, baseTime) => {
 };
 
 export const getBaseTime = (list) => {
-  return list?.length > 0 ? list.find((t) => t.isTimeDivider).time : 0;
+  return list.length ? list.find((t) => t.isTimeDivider)?.time || 0 : 0;
 };
 
 /**

@@ -1,10 +1,10 @@
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import store from "@/store/index";
-import { useBoolean } from './other';
-import { domToJpeg, domToPng, domToSvg, domToWebp, domToBlob } from 'modern-screenshot';
+import { useBoolean } from "./other";
+import { domToJpeg, domToPng, domToSvg, domToWebp, domToBlob } from "modern-screenshot";
 
 export const ImageType = {
-  Blob: 'blob',
+  Blob: "blob",
   JPG: "jpg",
   PNG: "png",
   SVG: "svg",
@@ -51,8 +51,7 @@ function copyImageToClipboard(dataUrl) {
     });
 }
 
-export const useScreenshot = (title = '') => {
-
+export const useScreenshot = (title = "") => {
   const [loading, setLoading] = useBoolean();
 
   const handleDownload = async (imageType = ImageType.JPG) => {
@@ -83,7 +82,7 @@ export const useScreenshot = (title = '') => {
         }
       }
 
-      const dataUrl = await screenshotFn(document.querySelector('#preview'), {
+      const dataUrl = await screenshotFn(document.querySelector("#preview"), {
         features: {
           // 不启用移除控制符，否则会导致 safari emoji 报错
           removeControlCharacter: false,
@@ -91,16 +90,18 @@ export const useScreenshot = (title = '') => {
         scale: 2,
       });
       if (imageType === ImageType.Blob) {
-        copyImageToClipboard(dataUrl)
+        copyImageToClipboard(dataUrl);
       } else {
-        const link = document.createElement('a');
-        link.download = `PureChat_${title}_${dayjs().format('YYYY-MM-DD')}.${imageType}`;
+        const link = document.createElement("a");
+        link.download = `PureChat_${title}_${dayjs().format("YYYY-MM-DD")}.${imageType}`;
         link.href = dataUrl;
         link.click();
       }
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     } catch (error) {
-      console.error('Failed to download image', error);
+      console.error("Failed to download image", error);
       setLoading(false);
     }
   };
