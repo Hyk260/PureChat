@@ -114,7 +114,7 @@ const sendEmojiClick = () => {
   emjRef.value.setFlag(true);
 };
 function openRobotBox() {
-  emitter.emit("onRobotBox", true);
+  emitter.emit("onRobotBox");
 }
 function selectModel() {
   emitter.emit("openModeList", true);

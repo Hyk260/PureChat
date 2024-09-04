@@ -12,6 +12,7 @@ const OllamaAI = {
       icon: "meta",
       id: "llama3.1:8b",
     },
+    // https://github.com/ollama/ollama/blob/main/docs/api.md#request-12
   ],
   checkModel: "llama3.1:8b",
   id: "ollama",

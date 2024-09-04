@@ -1,8 +1,9 @@
 <template>
   <el-dialog
-    v-model="state"
+    v-model="dialog"
     title="配置"
     :append-to-body="true"
+    destroy-on-close
     width="60%"
     align-center
     class="robot-options-dialog"
@@ -23,15 +24,15 @@
             type="textarea"
             placeholder="prompt"
           />
-          <el-icon v-show="false" @click="onClose"><CircleCloseFilled /></el-icon>
+          <!-- <el-icon @click="onClose"><CircleCloseFilled /></el-icon> -->
         </div>
         <li class="list-item" v-for="item in modelData" :key="item.ID">
           <div>
             <div class="title">{{ item.Title }}</div>
             <div class="subTitle">{{ item.SubTitle }}</div>
           </div>
-          <el-tooltip content="获取模型列表" placement="top">
-            <el-icon class="refresh" v-if="item.options && isOllama()" @click="onRefresh()">
+          <el-tooltip content="获取模型列表" placement="top" v-if="item.options && isOllama()">
+            <el-icon class="refresh" @click="onRefresh()">
               <Refresh />
             </el-icon>
           </el-tooltip>
@@ -69,6 +70,7 @@
               <span class="flex mr-5 cursor-pointer" v-else-if="item.doubt && isOllama()">
                 <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
               </span>
+              <span v-else> </span>
             </el-tooltip>
             <el-input
               v-model="item.defaultValue"
@@ -105,7 +107,7 @@ const modelData = ref(null);
 const maskData = ref([]);
 
 const { commit } = useStore();
-const [state, setState] = useBoolean();
+const [dialog, setDialog] = useBoolean();
 const { toAccount } = useGetters(["toAccount"]);
 
 function isRange(id) {
@@ -183,17 +185,17 @@ function resetRobotMask() {
 
 function handleClose(done) {
   done?.();
-  // setState(false);
+  // setDialog(false);
 }
 // 重置
 function handleCancel() {
   resetRobotModel();
   resetRobotMask();
-  setState(false);
+  setDialog(false);
 }
 // 保存
 function handleConfirm() {
-  setState(false);
+  setDialog(false);
   const model = {};
   Object.values(modelData.value).map((t) => {
     if (isRange(t.ID)) {
@@ -212,9 +214,9 @@ function toUrl(url) {
   window.open(url, "_blank");
 }
 
-emitter.on("onRobotBox", (state) => {
+emitter.on("onRobotBox", () => {
+  setDialog(true);
   initModel();
-  setState(state);
 });
 </script>
 

@@ -100,7 +100,8 @@ export class ChatGPTApi {
         console.log("[Response Animation] finished");
         // 如果响应文本为空，触发错误回调
         if (responseText?.length === 0) {
-          options.onError?.(new Error("empty response from server"));
+          console.error("empty response from server");
+          // options.onError?.(new Error("empty response from server"));
         }
         return;
       }
