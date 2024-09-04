@@ -35,14 +35,18 @@ import { mapState } from "vuex";
 import { useBoolean } from "@/utils/hooks/index";
 import { chatName } from "../utils/utils";
 import { squareUrl } from "../utils/menu";
+import { isRobot } from "@/utils/chat/index";
 
 const [dialogVisible, setDialogVisible] = useBoolean();
+
 export default {
   name: "MagforwardingPopup",
   components: {},
   computed: {
     ...mapState({
-      conversationList: (state) => state.conversation.conversationList,
+      conversationList: (state) =>{
+        return state.conversation.conversationList.filter((t) => !isRobot(t.conversationID))
+      }
     }),
   },
   props: {},

@@ -87,7 +87,7 @@ export const chatService = async (params) => {
       await restSendMsg(chat, message);
     },
     async onError(error) {
-      console.error("[chat] failed:", error);
+      console.error("[chat] onError:", error);
       // const isAborted = error.message.includes("aborted");
       const content = "\n\n" + prettyObject({ error: true, message: error.message });
       error.message && (await restSendMsg(chat, content));

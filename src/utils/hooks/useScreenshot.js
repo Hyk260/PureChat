@@ -51,10 +51,10 @@ function copyImageToClipboard(dataUrl) {
     });
 }
 
-export const useScreenshot = (title = "") => {
+export const useScreenshot = () => {
   const [loading, setLoading] = useBoolean();
 
-  const handleDownload = async (imageType = ImageType.JPG) => {
+  const handleDownload = async (imageType = ImageType.JPG, title = "") => {
     setLoading(true);
 
     try {
@@ -109,6 +109,5 @@ export const useScreenshot = (title = "") => {
   return {
     loading,
     onDownload: handleDownload,
-    title,
   };
 };

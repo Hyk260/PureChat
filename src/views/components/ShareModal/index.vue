@@ -11,8 +11,7 @@
   >
     <div class="share-modal">
       <div class="segmented w-full">
-        <!-- <el-scrollbar class="scrollbar"> -->
-        <div id="preview" class="preview">
+        <div id="preview" class="preview" :style="back">
           <div class="content">
             <Header />
             <h2 class="role px-16" v-if="robotRole() && isPrompt">
@@ -58,9 +57,21 @@
             </div>
           </div>
         </div>
-        <!-- </el-scrollbar> -->
       </div>
       <div class="form-item-props px-5">
+        <div class="flex-bc my-5 h-32">
+          <div>背景色</div>
+          <div class="grid grid-cols-7 gap-5">
+            <div
+              v-for="(item, i) in backgColor"
+              :key="i"
+              @click="onColor(item)"
+              class="w-28 h-28 relative rounded-[50%] cursor-pointer"
+              :style="fnStyleBack(item)"
+            ></div>
+          </div>
+        </div>
+        <el-divider class="my-10" />
         <div class="flex-bc my-5 h-32" v-if="robotPrompt()">
           <div>包含助手提示词</div>
           <div><el-switch v-model="isPrompt" /></div>
@@ -86,7 +97,7 @@
         </div>
       </div>
       <div>
-        <el-button class="w-full" @click="onDownload(fieldType)" :loading="loading">
+        <el-button class="w-full" @click="onDownload(fieldType, robotRole())" :loading="loading">
           <template #loading>
             <loadingSvg />
           </template>
@@ -117,12 +128,50 @@ const isFooter = ref(false);
 const isPrompt = ref(false);
 const fieldType = ref(ImageType.Blob);
 
-const { toAccount } = useGetters(["toAccount"]);
-const [dialogVisible, setDialogVisible] = useBoolean();
-const { loading, onDownload, title } = useScreenshot();
-const { forwardData } = useState({
-  forwardData: (state) => state.conversation.forwardData,
-});
+const backgColor = ref([
+  {
+    colorA: "#6DD5C4",
+    colorB: "#5697F9",
+    angle: "45deg",
+  },
+  {
+    colorA: "#622FC2",
+    colorB: "#87FFAD",
+    angle: "45deg",
+  },
+  {
+    colorA: "#4A4FFF",
+    colorB: "#87FFAD",
+    angle: "45deg",
+  },
+  {
+    colorA: "#BAA7E4",
+    colorB: "#F59F9C",
+    angle: "45deg",
+  },
+  {
+    colorA: "#45A5D7",
+    colorB: "#F59F9C",
+    angle: "45deg",
+  },
+  {
+    colorA: "#2CB0CE",
+    colorB: "#CDCBFF",
+    angle: "150deg",
+  },
+  {
+    colorA: "#B0BDBF",
+    colorB: "#CDCBFF",
+    angle: "45deg",
+  },
+]);
+
+const back = ref(`
+  background: linear-gradient(var(--houdini-angle), var(--houdini-colorA), var(--houdini-colorB));
+  --houdini-colorA: #B0BDBF;
+  --houdini-colorB: #CDCBFF;
+  --houdini-angle: 120deg;
+`);
 
 function robotRole() {
   const model = getModelType(toAccount.value);
@@ -133,6 +182,15 @@ function robotRole() {
     return "";
   }
 }
+
+const { toAccount } = useGetters(["toAccount"]);
+const [dialogVisible, setDialogVisible] = useBoolean();
+const { loading, onDownload } = useScreenshot();
+const { forwardData } = useState({
+  forwardData: (state) => state.conversation.forwardData,
+});
+
+
 
 function robotPrompt() {
   const model = getModelType(toAccount.value);
@@ -148,6 +206,18 @@ const fnForwardData = computed(() => {
 function onClose() {
   setDialogVisible(false);
 }
+
+function fnStyleBack({ angle, colorA, colorB  }) {
+  return `background-image: linear-gradient(${angle}, ${colorA}, ${colorB});`;
+}
+
+function onColor(item) {
+  const preview = document.querySelector("#preview");
+  preview.style.setProperty("--houdini-colorA", item.colorA);
+  preview.style.setProperty("--houdini-colorB", item.colorB);
+  preview.style.setProperty("--houdini-angle", item.angle);
+}
+
 
 emitter.on("onShareModal", (val) => {
   setDialogVisible(true);
