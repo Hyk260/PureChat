@@ -13,7 +13,7 @@
         <el-tooltip
           effect="dark"
           :content="payload.fileName"
-          :disabled="payload.fileName.length < 20"
+          :disabled="payload.fileName.length < 24"
           placement="top"
         >
           <div class="file-name">

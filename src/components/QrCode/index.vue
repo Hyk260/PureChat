@@ -1,5 +1,5 @@
 <template>
-  <div v-if="qrCodeUrl" class="qrCode flex justify-center">
+  <div v-if="qrCodeUrl" class="flex justify-center">
     <img :src="qrCodeUrl" alt="QR Code" />
   </div>
 </template>
@@ -9,9 +9,14 @@ import QRCode from "qrcode";
 
 export default {
   name: 'QrCode',
+  props: {
+    text: {
+      type: String,
+      default: "https://purechat.cn",
+    },
+  },
   data() {
     return {
-      text: "https://purechat.cn",
       qrCodeUrl: "",
       opts: {
         errorCorrectionLevel: "H",

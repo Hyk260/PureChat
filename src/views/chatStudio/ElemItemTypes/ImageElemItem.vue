@@ -16,6 +16,7 @@
       :max-scale="5"
       :min-scale="0.3"
       :preview-teleported="true"
+      loading="lazy"
       fit="cover"
     />
   </div>

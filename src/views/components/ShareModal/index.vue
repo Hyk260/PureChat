@@ -54,6 +54,7 @@
                 <div class="title ml-8">{{ $config.Title }}</div>
               </div>
               <span class="link"> {{ homepage }}</span>
+              <QrCode v-show="isQrCode" class="qr-code" :text="homepage" />
             </div>
           </div>
         </div>
@@ -82,6 +83,11 @@
           <div><el-switch v-model="isFooter" /></div>
         </div>
         <el-divider class="my-10" />
+        <div v-show="isFooter" class="flex-bc my-5 h-32">
+          <div>包含二维码</div>
+          <div><el-switch v-model="isQrCode" /></div>
+        </div>
+        <el-divider v-show="isFooter" class="my-10" />
         <div class="image-type flex-bc my-5 h-32">
           <div>图片格式</div>
           <div>
@@ -125,6 +131,7 @@ import { getModelType, usePromptStore, fnAvatar } from "@/ai/utils";
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
 const isFooter = ref(false);
+const isQrCode = ref(false);
 const isPrompt = ref(false);
 const fieldType = ref(ImageType.Blob);
 
@@ -190,8 +197,6 @@ const { forwardData } = useState({
   forwardData: (state) => state.conversation.forwardData,
 });
 
-
-
 function robotPrompt() {
   const model = getModelType(toAccount.value);
   return usePromptStore(model).prompt[0].content || "";
@@ -207,7 +212,7 @@ function onClose() {
   setDialogVisible(false);
 }
 
-function fnStyleBack({ angle, colorA, colorB  }) {
+function fnStyleBack({ angle, colorA, colorB }) {
   return `background-image: linear-gradient(${angle}, ${colorA}, ${colorB});`;
 }
 
@@ -218,7 +223,6 @@ function onColor(item) {
   preview.style.setProperty("--houdini-angle", item.angle);
 }
 
-
 emitter.on("onShareModal", (val) => {
   setDialogVisible(true);
 });
@@ -227,6 +231,14 @@ emitter.on("onShareModal", (val) => {
 <style lang="scss" scoped>
 .prompt {
   border-bottom: 1px solid var(--color-border-default);
+}
+
+.qr-code {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  right: 13px;
+  top: 22px;
 }
 
 .role {
@@ -289,6 +301,7 @@ emitter.on("onShareModal", (val) => {
     gap: 4px;
     padding: 16px;
     border-block-start: 1px solid #dddddd;
+    position: relative;
 
     .title {
       font:

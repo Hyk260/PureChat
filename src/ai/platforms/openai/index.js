@@ -1,8 +1,17 @@
 import { OpenaiPath, REQUEST_TIMEOUT_MS } from "@/ai/constant";
 import { ModelProvider } from "@/ai/constant";
-import { prettyObject, useAccessStore, usePromptStore, createErrorResponse } from "@/ai/utils";
+import {
+  prettyObject,
+  useAccessStore,
+  usePromptStore,
+  createErrorResponse,
+  createSmoothMessage,
+  uploadImage,
+  base64Image2Blob,
+  isDalle3 as _isDalle3,
+} from "@/ai/utils";
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
-import OllamaAI from '../ollama/ollama';
+import OllamaAI from "../ollama/ollama";
 
 export class ChatGPTApi {
   constructor(provider) {
@@ -34,7 +43,23 @@ export class ChatGPTApi {
     };
     return headers;
   }
-  extractMessage(res) {
+  async extractMessage(res) {
+    // dalle3 model return url, using url create image message
+    if (res.data) {
+      let url = res.data?.at(0)?.url ?? "";
+      const b64_json = res.data?.at(0)?.b64_json ?? "";
+      if (!url && b64_json) {
+        url = await uploadImage(base64Image2Blob(b64_json, "image/png"));
+      }
+      return [
+        {
+          type: "image_url",
+          image_url: {
+            url,
+          },
+        },
+      ];
+    }
     return res.choices?.at(0)?.message?.content ?? "";
   }
   async fetchOnClient(messages) {
@@ -61,6 +86,7 @@ export class ChatGPTApi {
     return fetcher;
   }
   generateRequestPayload(messages, modelConfig, options) {
+    if (_isDalle3(modelConfig.model)) return generateDalle3RequestPayload(modelConfig);
     return {
       messages: this.userPromptMessages(messages, modelConfig),
       stream: options.stream, // 流式传输
@@ -120,6 +146,12 @@ export class ChatGPTApi {
     // start animaion
     animateResponseText();
 
+    // const textController = createSmoothMessage({
+    //   onTextUpdate: (delta, text) => {
+    //     options.onUpdate?.(text, delta);
+    //   },
+    // });
+
     const finish = () => {
       if (!finished) {
         finished = true;
@@ -129,7 +161,7 @@ export class ChatGPTApi {
 
     controller.signal.onabort = finish; // 设置请求中止时的处理函数
 
-    fetchEventSource(chatPath, {
+    await fetchEventSource(chatPath, {
       ...chatPayload,
       async onopen(res) {
         console.log("[OpenAI] fetchEventSource", res);
@@ -218,7 +250,8 @@ export class ChatGPTApi {
 
     console.log("[Request] openai payload: ", requestPayload);
 
-    const shouldStream = !!options.config.stream;
+    const isDalle3 = _isDalle3(options.config.model);
+    const shouldStream = !isDalle3 && !!options.config.stream;
     const controller = new AbortController();
     options.onController?.(controller);
 
@@ -253,7 +286,7 @@ export class ChatGPTApi {
         clearTimeout(requestTimeoutId);
 
         const resJson = await res.json();
-        const message = this.extractMessage(resJson);
+        const message = await this.extractMessage(resJson);
         options.onFinish(message);
       }
     } catch (e) {
@@ -266,10 +299,12 @@ export class ChatGPTApi {
     const url = this.path(OpenaiPath.ListModelPath);
     const res = await fetch(url, { method: "GET", headers: { ...this.getHeaders() } });
     const resJson = await res.json();
-    const chatModels = resJson.data.filter((m) => m.id.startsWith("gpt-"));
+    const chatModels = resJson.data.filter(
+      (m) => m.id.startsWith("gpt-") || m.id.startsWith("dall-")
+    );
     const formattedModels = chatModels.map((m) => ({
-      name: m.id,
-      available: true,
+      id: m.id,
+      icon: "",
     }));
     return formattedModels;
   }

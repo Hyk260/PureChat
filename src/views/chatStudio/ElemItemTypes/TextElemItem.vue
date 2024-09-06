@@ -42,7 +42,7 @@ const onClick = (data) => {
 };
 
 function showMarked(message) {
-  return isRobot(toAccount.value)
+  return isRobot(toAccount.value) && message?.flow === "in";
     // && message.flow == "in";
 }
 

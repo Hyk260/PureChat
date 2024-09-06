@@ -74,6 +74,7 @@ export class OllamaAI {
           presence_penalty: payload.presence_penalty,
           temperature: payload.temperature, // 随机性
           top_p: payload.top_p,
+          images: [],
         },
         stream: true,
       });
