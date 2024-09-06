@@ -1,5 +1,5 @@
 import { ElNotification, ElButton } from "element-plus";
-import { setCookie, getCookie } from '@/utils/cookie';
+import { setCookie, getCookie } from "@/utils/cookie";
 import { isElectron } from "@/utils/common";
 import { isDev } from "@/config/env";
 import { $t } from "@/locales/index";
@@ -8,13 +8,13 @@ import { h } from "vue";
 let Notification = null;
 
 function setPageNotif() {
-  !getCookie('onUpdate') && setCookie('onUpdate', true, 1)
+  !getCookie("onUpdate") && setCookie("onUpdate", true, 1);
 }
 
 function notify() {
   if (Notification) Notification.close();
   Notification = ElNotification({
-    title: $t('system.updateContent'),
+    title: $t("system.updateContent"),
     dangerouslyUseHTMLString: true,
     message: h("div", [
       h(
@@ -22,7 +22,7 @@ function notify() {
         {
           onClick() {
             Notification.close();
-            setPageNotif()
+            setPageNotif();
           },
         },
         () => $t("system.updateCancel")
@@ -33,7 +33,7 @@ function notify() {
           type: "primary",
           onClick() {
             location.reload();
-            setPageNotif()
+            setPageNotif();
           },
         },
         () => $t("system.updateConfirm")
@@ -58,9 +58,10 @@ async function getHtmlBuildTime() {
 }
 
 export function setupAppVersionNotification() {
-  if (isElectron) return
+  if (isElectron) return;
   document.addEventListener("visibilitychange", async () => {
-    if (getCookie('onUpdate')) return
+    if (isDev) return;
+    if (getCookie("onUpdate")) return;
     const buildTime = await getHtmlBuildTime();
     const BUILD_TIME = __APP_INFO__.lastBuildTime;
     if (

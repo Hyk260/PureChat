@@ -1,6 +1,7 @@
 import ZhiPu from './models';
 
 const docs = __APP_INFO__.pkg.docs;
+const zeroone_proxy_url = import.meta.env.VITE_ZEROONE_BASE_URL;
 
 export const yiModelValue = () => {
   return {
@@ -15,7 +16,7 @@ export const yiModelValue = () => {
       ID: "openaiUrl",
       Title: "接口地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
-      Placeholder: "https://api.lingyiwanwu.com/",
+      Placeholder: zeroone_proxy_url,
       defaultValue: "",
     },
     Token: {
