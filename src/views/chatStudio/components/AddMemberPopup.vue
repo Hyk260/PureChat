@@ -24,6 +24,7 @@
 import { useBoolean } from "@/utils/hooks/index";
 import { useState } from "@/utils/hooks/useMapper";
 import { ref } from "vue";
+import { isRobot } from "@/utils/chat/index";
 import { squareUrl } from "../utils/menu";
 import { chatName } from "../utils/utils";
 
@@ -31,8 +32,9 @@ const memberValue = ref(null);
 const emits = defineEmits(["define"]);
 const [dialog, setDialog] = useBoolean();
 const { conversationList } = useState({
-  conversationList: (state) => state.conversation.conversationList.filter((t) => t.type == "C2C"),
+  conversationList: (state) => state.conversation.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID)),
 });
+
 const onClickItem = (value) => {
   memberValue.value = value;
 };
