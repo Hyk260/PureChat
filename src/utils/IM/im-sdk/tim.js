@@ -1,11 +1,19 @@
 import TencentCloudChat from "@/utils/IM/chat/index";
 import TIMUploadPlugin from "tim-upload-plugin";
 
+import GroupModule from "@tencentcloud/chat/modules/group-module.js";
+import SignalingModule from "@tencentcloud/chat/modules/signaling-module.js";
+
+
 const appid = import.meta.env.VITE_IM_SDK_APPID;
 const level = import.meta.env.VITE_LOG_LEVEL;
 
 const options = {
   SDKAppID: Number(appid),
+  modules: {
+    "group-module": GroupModule, // 群和群成员
+    "signaling-module": SignalingModule, // 信令
+  },
 };
 
 // 创建 SDK

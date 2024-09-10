@@ -13,32 +13,31 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
-import { computed, toRefs } from "vue";
 
-const props = defineProps({
+const { message } = defineProps({
   message: {
     type: Object,
     default: null,
   },
 });
-const { message } = toRefs(props);
 
 const { showCheckbox } = useState({
   showCheckbox: (state) => state.conversation.showCheckbox,
 });
 
 const num = computed(() => {
-  return message.value.payload.messageList?.length || message.value.payload.abstractList?.length;
+  return message.payload.messageList?.length || message.payload.abstractList?.length;
 });
 
 const abstractList = computed(() => {
-  return message.value.payload.abstractList?.slice(0, 3) || [];
+  return message.payload.abstractList?.slice(0, 3) || [];
 });
 function onClick() {
   if (showCheckbox.value) return;
-  emitter.emit("openMergePopup", message.value);
+  emitter.emit("openMergePopup", message);
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialog" title="添加成员" width="600px" align-center draggable>
+  <el-dialog v-model="dialog" title="添加成员" width="600px" align-center>
     <div class="tabulation-style">
       <div
         v-for="item in conversationList"

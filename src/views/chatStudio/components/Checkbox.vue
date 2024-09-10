@@ -9,9 +9,9 @@
 <script setup>
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { useState } from "@/utils/hooks/useMapper";
-import { computed, toRefs } from "vue";
+import { computed } from "vue";
 
-const props = defineProps({
+const { item, isRevoked } = defineProps({
   item: {
     type: Object,
     default: null,
@@ -21,7 +21,7 @@ const props = defineProps({
     default: false,
   },
 });
-const { item, isRevoked } = toRefs(props);
+
 const { showCheckbox, forwardData } = useState({
   forwardData: (state) => state.conversation.forwardData,
   showCheckbox: (state) => state.conversation.showCheckbox,
@@ -33,9 +33,9 @@ const isMask = computed(() => {
 const isShowCheck = computed(() => {
   return (
     showCheckbox.value &&
-    !isRevoked.value &&
-    item.value.type !== "TIMGroupTipElem" &&
-    item.value.payload?.description !== "dithering"
+    !isRevoked &&
+    item.type !== "TIMGroupTipElem" &&
+    item.payload?.description !== "dithering"
   );
 });
 </script>

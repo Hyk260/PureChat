@@ -1,10 +1,9 @@
 <template>
   <el-dialog
-    ref="editRef"
-    :modal="true"
     v-model="dialogVisible"
-    :append-to-body="true"
     @close="onClose"
+    :modal="true"
+    :append-to-body="true"
     align-center
     title="截图分享"
     width="60%"
@@ -135,6 +134,8 @@ const isQrCode = ref(false);
 const isPrompt = ref(false);
 const fieldType = ref(ImageType.Blob);
 
+const emit = defineEmits(["onClose"]);
+
 const backgColor = ref([
   {
     colorA: "#6DD5C4",
@@ -184,7 +185,7 @@ function robotRole() {
   const model = getModelType(toAccount.value);
   try {
     const { title, avatar } = usePromptStore(model)?.meta || {};
-    return avatar + title;
+    return `${avatar}  ${title}`;
   } catch (e) {
     return "";
   }
@@ -210,6 +211,7 @@ const fnForwardData = computed(() => {
 
 function onClose() {
   setDialogVisible(false);
+  emit("onClose");
 }
 
 function fnStyleBack({ angle, colorA, colorB }) {

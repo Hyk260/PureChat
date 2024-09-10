@@ -117,12 +117,12 @@ import { useBoolean } from "@/utils/hooks/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { showConfirmationBox } from "@/utils/message";
 import emitter from "@/utils/mitt-bus";
-import { onBeforeUnmount, onMounted, ref, toRefs, watchEffect } from "vue";
+import { onBeforeUnmount, onMounted, ref, watchEffect } from "vue";
 import { useStore } from "vuex";
 import AddMemberPopup from "../components/AddMemberPopup.vue";
 import AnalysisUrl from "../components/AnalysisUrl.vue";
 
-const props = defineProps({
+const { groupProfile } = defineProps({
   groupProfile: {
     type: Object,
     default: () => {},
@@ -132,7 +132,6 @@ const props = defineProps({
     default: false,
   },
 });
-const { groupProfile } = toRefs(props);
 
 const GROUP_TYPE_MAP = {
   Public: "陌生人社交群(Public)",
@@ -157,7 +156,7 @@ const notify = (val) => {
 };
 
 const openNamePopup = async () => {
-  const { name } = groupProfile.value;
+  const { name } = groupProfile;
   const data = { message: "输入群名", inputValue: name };
   const result = await showConfirmationBox(data, "prompt");
   if (result === "cancel") return;
@@ -165,7 +164,7 @@ const openNamePopup = async () => {
 };
 
 const openNoticePopup = async () => {
-  const { notification } = groupProfile.value;
+  const { notification } = groupProfile;
   const data = { message: "输入群公告", inputValue: notification };
   const result = await showConfirmationBox(data, "prompt");
   if (result === "cancel") return;
@@ -198,7 +197,7 @@ const removeGroupMemberBtn = async (item) => {
 };
 
 const addGroupMemberBtn = async (value) => {
-  const { groupID, type } = groupProfile.value;
+  const { groupID, type } = groupProfile;
   const { toAccount } = value;
   if (type === "Public") {
     const { ErrorCode } = await restApi({
@@ -224,7 +223,7 @@ const updataGroup = () => {
 };
 // 修改群资料
 const modifyGroupInfo = async (value, modify) => {
-  const { groupID } = groupProfile.value;
+  const { groupID } = groupProfile;
   await updateGroupProfile({ convId: groupID, modify, value });
 };
 
