@@ -4,8 +4,14 @@
 
 .el-overlay-dialog {
   // backdrop-filter: blur(2px);
+  top: 32px !important;
 }
-.el-popper__arrow{
+
+.el-overlay {
+  top: 32px !important;
+}
+
+.el-popper__arrow {
   display: none;
 }
 

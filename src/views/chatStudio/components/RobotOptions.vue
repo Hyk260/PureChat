@@ -32,6 +32,7 @@
             <div class="subTitle">{{ item.SubTitle }}</div>
           </div>
           <el-tooltip content="获取模型列表" placement="top" v-if="item.options && isOllama()">
+            <!-- && isOllama() -->
             <el-icon class="refresh" @click="onRefresh()">
               <Refresh />
             </el-icon>
@@ -101,6 +102,7 @@ import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { ref } from "vue";
 import { useStore } from "vuex";
+import { ClientApi } from "@/ai/api";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 
 const modelData = ref(null);
@@ -129,6 +131,11 @@ async function onRefresh() {
   const list = await new OllamaAI().models();
   modelData.value.Model.options.chatModels = list;
   localStg.set('olama-local-model-list', list);
+
+  // const api = new ClientApi();
+  // const list = await api.llm.models()
+  // modelData.value.Model.options.chatModels = list;
+  // console.log(list)
 }
 
 function initModel() {

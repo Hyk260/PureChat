@@ -22,7 +22,6 @@
 </template>
 
 <script setup>
-import { toRefs } from "vue";
 import { fnAvatar } from "@/ai/utils";
 import { useState } from "@/utils/hooks/useMapper";
 
@@ -75,8 +74,6 @@ const props = defineProps({
   },
 });
 
-const { words } = toRefs(props);
-
 const shapeObj = {
   circle: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
   square: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
@@ -87,10 +84,8 @@ const { userProfile } = useState({
 });
 
 const displayInfo = (info) => {
-  if (!info) {
-    return "unknown";
-  }
-  return info.slice(0, words.value).toUpperCase();
+  if (!info) return "unknown";
+  return info.slice(0, props.words).toUpperCase();
 };
 
 const backgInfo = (url) => {
@@ -147,7 +142,6 @@ const backgInfo = (url) => {
     align-items: center;
     white-space: nowrap;
     border: 1px solid var(--el-bg-color);
-    // background-color: var(--el-color-danger);
     background-color: #31da84;
   }
   .el-avatar {

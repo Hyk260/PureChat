@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, useTemplateRef } from "vue";
 import { useStore } from "vuex";
 import { onClickOutside } from "@vueuse/core";
 import { useBoolean } from "@/utils/hooks/index";
@@ -42,7 +42,8 @@ import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 
 const { bugs, docs, homepage } = __APP_INFO__.pkg;
-const cardRef = ref();
+const cardRef = useTemplateRef('cardRef')
+
 const profile = ref({});
 const market = ref([])
 const [card, setCard] = useBoolean();

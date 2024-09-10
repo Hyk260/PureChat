@@ -73,7 +73,7 @@ import { RIGHT_CLICK_CHAT_LIST } from "../utils/menu";
 import { pinConversation, setMessageRead } from "@/api/im-sdk-api/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
-import { timeFormat } from "@pure/utils";
+import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { useStore } from "vuex";
 import EmptyMessage from "../components/EmptyMessage.vue";

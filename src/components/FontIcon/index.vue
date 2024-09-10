@@ -11,7 +11,7 @@ defineOptions({
   name: "FontIcon"
 });
 
-const props = defineProps({
+defineProps({
   iconName: {
     type: String,
     required: true,

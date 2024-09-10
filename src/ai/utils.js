@@ -78,13 +78,12 @@ export function prefixRobotIDs(robotIDs) {
   return robotIDs.map((id) => "C2C" + id);
 }
 
-export const createSmoothMessage = (params) => {
-  let buffer = "";
-
-  let outputQueue = [];
-
-  let animationTimeoutId = null;
-  let isAnimationActive = false;
+// 用于创建一个平滑显示文本的动画效果。它将文本分割成字符，并逐个显示这些字符，模拟打字机的效果
+export const createSmoothMessage = (params = { onTextUpdate: (delta, text) => {} }) => {
+  let buffer = ""; // 用于存储当前显示的文本
+  let outputQueue = []; // 用于存储待显示的文本字符队列
+  let animationTimeoutId = null; // 用于存储动画定时器的 ID
+  let isAnimationActive = false; // 标识动画是否正在进行
 
   // 当需要停止动画时，调用此函数
   const stopAnimation = () => {
@@ -168,17 +167,59 @@ export function fnAvatar(convId) {
 }
 
 const getStatus = (errorType) => {
-  if (errorType.toString().includes('Invalid')) return 401;
+  if (errorType.toString().includes("Invalid")) return 401;
   else return 400;
 };
 
-export const createErrorResponse = (
-  errorType,
-  body,
-) => {
+export const createErrorResponse = (errorType, body) => {
   const statusCode = getStatus(errorType);
 
   const data = { body, errorType };
 
   return new Response(prettyObject(data), { status: statusCode });
 };
+
+export function isDalle3(model) {
+  return "dall-e-3" === model;
+}
+
+export function base64Image2Blob(base64Data, contentType) {
+  const byteCharacters = atob(base64Data);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  return new Blob([byteArray], { type: contentType });
+}
+
+export function uploadImage(file) {
+  const body = new FormData();
+  body.append("file", file);
+  return fetch(UPLOAD_URL, {
+    method: "post",
+    body,
+    mode: "cors",
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      console.log("res", res);
+      if (res?.code == 0 && res?.data) {
+        return res?.data;
+      }
+      throw Error(`upload Error: ${res?.msg}`);
+    });
+}
+
+export function generateDalle3RequestPayload(config) {
+  return {
+    model: config.model,
+    prompt: "画一只猫",
+    response_format: "b64_json",
+    n: 1,
+    size: "1024x1024",
+    quality: "standard",
+    style: "vivid",
+  };
+}

@@ -3,7 +3,7 @@
     class="status-style"
     :class="{
       'isown-style': !isown,
-      'single-style': item.conversationType == 'C2C',
+      'single-style': item.conversationType === 'C2C',
     }"
     v-if="
       !item.isRevoked &&
@@ -20,7 +20,6 @@
 </template>
 
 <script setup>
-import { toRefs } from "vue";
 // <!-- unSend(未发送)success(发送成功)fail(发送失败) -->
 const props = defineProps({
   item: {
@@ -36,10 +35,9 @@ const props = defineProps({
     default: "success",
   },
 });
-const { item, isown, status } = toRefs(props);
 
 const isShow = (value) => {
-  return status.value == value;
+  return props.status === value;
 };
 </script>
 

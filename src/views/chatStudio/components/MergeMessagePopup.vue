@@ -52,7 +52,7 @@ import { localStg } from "@/utils/storage";
 import { downloadMergerMessage } from "@/api/im-sdk-api/index";
 import { useBoolean } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
-import { timeFormat } from "@pure/utils";
+import { timeFormat } from "@/utils/timeFormat";
 import { ref } from "vue";
 import { circleUrl } from "../utils/menu";
 import { loadMsgModule, msgOne, msgType } from "../utils/utils";

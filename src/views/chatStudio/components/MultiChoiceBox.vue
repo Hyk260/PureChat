@@ -10,7 +10,7 @@
       </span>
     </div>
   </div>
-  <ShareModal />
+  <ShareModal @onClose="onClose" />
   <MagforwardingPopup @confirm="confirm" ref="wardingRef" />
 </template>
 

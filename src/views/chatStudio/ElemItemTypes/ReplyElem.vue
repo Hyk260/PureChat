@@ -10,7 +10,6 @@
 
 <script setup>
 import { scrollToDomPostion } from "@/utils/chat/index";
-import { toRefs } from "vue";
 import DynamicContent from "../components/DynamicContent.vue";
 
 const props = defineProps({
@@ -20,10 +19,8 @@ const props = defineProps({
   },
 });
 
-const { originalMsg } = toRefs(props);
-
 const hanldeItemClick = async () => {
-  const { messageReply } = originalMsg.value;
+  const { messageReply } = props.originalMsg;
   if (!originalMsg) return;
   const ref = messageReply.messageID;
   if (ref) {

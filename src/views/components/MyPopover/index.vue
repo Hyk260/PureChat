@@ -54,7 +54,7 @@ const closeModal = () => {
 
 const define = () => {
   closeModal();
-  if (cardData.value?.conversationType == "C2C") return;
+  if (cardData.value?.conversationType === "C2C") return;
   dispatch("CHEC_OUT_CONVERSATION", { convId: `C2C${cardData.value.from}` });
 };
 

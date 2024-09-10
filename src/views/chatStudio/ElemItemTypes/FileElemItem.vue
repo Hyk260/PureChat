@@ -14,7 +14,7 @@
         <el-tooltip
           effect="dark"
           :content="payload.fileName"
-          :disabled="payload.fileName.length < 20"
+          :disabled="payload.fileName.length < 24"
           placement="top"
         >
           <div class="file-name">
@@ -35,7 +35,7 @@
 
 <script setup>
 import { isElectron } from "@/utils/common";
-import { ref, toRefs, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { getFileType, renderFileIcon, bytesToSize } from "@/utils/chat/index";
 import emitter from "@/utils/mitt-bus";
 
@@ -53,15 +53,13 @@ const props = defineProps({
     default: false,
   },
 });
-const { message, status } = toRefs(props);
-const { payload } = message.value;
-
+const { payload } = props.message;
 const backgroundStyle = ref("");
 const fileType = getFileType(payload?.fileName);
 const icon = renderFileIcon(fileType);
 
 const isStatus = (value) => {
-  return status.value == value;
+  return props.status === value;
 };
 
 function handleOpen({ fileName }) {

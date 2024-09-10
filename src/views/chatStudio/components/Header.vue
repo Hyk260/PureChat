@@ -14,17 +14,21 @@
       </p>
     </div>
     <div class="flex">
-      <div class="message-info-add" v-show="chat.type == 'GROUP' && false" title="添加成员">
+      <!-- <div class="message-info-add" v-show="chat.type === 'GROUP' && false" title="添加成员">
         <svg-icon iconClass="tianjia" class="icon-hover" />
-      </div>
-      <div class="message-info-setup" v-show="chat.type == 'GROUP'" title="设置" @click="openSetup">
+      </div> -->
+      <div class="message-info-setup" v-show="chat.type === 'GROUP'" title="设置" @click="openSetup">
         <FontIcon iconName="MoreFilled" class="icon-hover" />
       </div>
+      <!-- <div class="message-info-share" v-if="isRobot(toAccount)" title="截图分享" @click="openShare">
+        <svg-icon class="share" iconClass="share" />
+      </div> -->
     </div>
   </header>
 </template>
 
 <script setup>
+import { isRobot } from "@/utils/chat/index";
 import { getModelType, useAccessStore } from "@/ai/utils";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
@@ -59,6 +63,10 @@ const chatNick = (type, chat) => {
     const count = memberCount ? `(${memberCount})` : "";
     return `${name || groupID} ${count}`;
   }
+};
+
+const openShare = () => {
+  emitter.emit("onShareModal");
 };
 
 const openSetup = () => {

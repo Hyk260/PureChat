@@ -16,13 +16,14 @@
       :max-scale="5"
       :min-scale="0.3"
       :preview-teleported="true"
+      loading="lazy"
       fit="cover"
     />
   </div>
 </template>
 
 <script setup>
-import { ref, toRefs, computed } from "vue";
+import { ref, computed } from "vue";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { showIMPic, getImageSize } from "../utils/utils";
 
@@ -38,7 +39,6 @@ const props = defineProps({
 });
 
 const imgStyle = ref({});
-const { message, self } = toRefs(props);
 const { imgUrlList } = useGetters(["imgUrlList"]);
 const { showCheckbox } = useState({
   showCheckbox: (state) => state.conversation.showCheckbox,
@@ -48,7 +48,7 @@ function getImageProperties(num = 0) {
   try {
     const {
       payload: { imageInfoArray },
-    } = message.value;
+    } = props.message;
     const imageInfo = imageInfoArray[num];
     return imageInfo;
   } catch (error) {
