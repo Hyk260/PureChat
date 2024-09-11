@@ -1,5 +1,5 @@
 export const OllamaConfig = {
-  model: "qwen2:7b",
+  model: "llama3.1:8b",
   temperature: 0.6,
   top_p: 1,
   presence_penalty: 0,

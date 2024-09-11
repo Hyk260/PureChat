@@ -121,13 +121,19 @@ const formatNewsMessage = (data) => {
   const isOther = userID !== fromAccount; // 其他人消息
   const isFound = fromAccount === "@TLS#NOT_FOUND"; // 未知消息
   const isSystem = type === "@TIM#SYSTEM"; //系统消息
+  const isGroop = type === "GROUP"; //群聊
   const isCount = unreadCount && isNotify(data); // 未读消息计数
   // 是否为撤回消息
   if (isRevoked) return `${isOther ? nick : "你"}撤回了一条消息`;
   // 免打扰消息
-  if (isCount) return `[${unreadCount}条] ${messageForShow}`;
+  if (isCount) {
+    if (lastType === "TIMGroupTipElem") {
+      return `[${unreadCount}条] ${messageForShow}`;
+    }
+    return `[${unreadCount}条] ${isGroop && isOther ? nick + ":" : ""}${messageForShow}`;
+  }
   if (isFound || isSystem) return messageForShow;
-  if (type === "GROUP" && isOther) {
+  if (isGroop && isOther) {
     if (lastType === "TIMGroupTipElem") {
       return messageForShow;
     } else if (nick) {
