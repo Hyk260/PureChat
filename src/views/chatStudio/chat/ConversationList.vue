@@ -1,7 +1,6 @@
 <template>
   <el-scrollbar class="scrollbar-list">
     <EmptyMessage classNmae="no-msg" v-if="tabList.length == 0" />
-    <!-- <Skeleton :loading="true" /> -->
     <div
       v-for="item in tabList"
       class="message-item"
@@ -82,8 +81,6 @@ import { chatName, html2Escape } from "../utils/utils";
 import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop();
-
-const loading = ref(true);
 const isRight = ref(true);
 const contextMenuItemInfo = ref([]);
 
@@ -106,10 +103,10 @@ const isdraft = (item) => {
   );
 };
 const isNotify = (item) => {
-  return item.messageRemindType == "AcceptNotNotify";
+  return item.messageRemindType === "AcceptNotNotify";
 };
 const isShowCount = (item) => {
-  return item.unreadCount == 0;
+  return item.unreadCount === 0;
 };
 const isMention = (item) => {
   return item.groupAtInfoList.length > 0;
@@ -119,28 +116,22 @@ const fnClass = (item) => (item?.conversationID === chat.value?.conversationID ?
 
 const formatNewsMessage = (data) => {
   const { type, lastMessage, unreadCount } = data;
-  const { messageForShow, fromAccount, isRevoked } = lastMessage;
+  const { messageForShow, fromAccount, isRevoked, nick, type: lastType } = lastMessage;
   const { userID } = userProfile.value;
   const isOther = userID !== fromAccount; // 其他人消息
-  const isFound = fromAccount == "@TLS#NOT_FOUND"; // 未知消息
-  const isSystem = type == "@TIM#SYSTEM"; //系统消息
-  const isCount = unreadCount > 0 && isNotify(data); // 未读消息计数
+  const isFound = fromAccount === "@TLS#NOT_FOUND"; // 未知消息
+  const isSystem = type === "@TIM#SYSTEM"; //系统消息
+  const isCount = unreadCount && isNotify(data); // 未读消息计数
   // 是否为撤回消息
-  if (isRevoked) {
-    const nick = isOther ? lastMessage.nick : "你";
-    return `${nick}撤回了一条消息`;
-  }
-  if (isCount) {
-    return `[${unreadCount}条] ${messageForShow}`;
-  }
-  if (isFound || isSystem) {
-    return messageForShow;
-  }
-  if (type == "GROUP" && isOther) {
-    if (lastMessage.type == "TIMGroupTipElem") {
+  if (isRevoked) return `${isOther ? nick : "你"}撤回了一条消息`;
+  // 免打扰消息
+  if (isCount) return `[${unreadCount}条] ${messageForShow}`;
+  if (isFound || isSystem) return messageForShow;
+  if (type === "GROUP" && isOther) {
+    if (lastType === "TIMGroupTipElem") {
       return messageForShow;
-    } else if (lastMessage.nick) {
-      return `${lastMessage.nick}: ${messageForShow}`;
+    } else if (nick) {
+      return `${nick}: ${messageForShow}`;
     } else {
       messageForShow;
     }
@@ -148,39 +139,46 @@ const formatNewsMessage = (data) => {
   return messageForShow;
 };
 // 定义消息提示元素
-const createElement = (num = 0) => {
-  const messageTypes = ["有人@我", "草稿"];
-  return `<span style='color:#f44336;'>[${messageTypes[num]}]</span> `;
+const createMessagePrompt = (type = "at") => {
+  const messageTypes = { at: "有人@我", draft: "草稿" };
+  return `<span style='color:#f44336;'>[${messageTypes[type]}]</span> `;
 };
 
 const parseData = (data) => {
+  if (!data || !Array.isArray(data)) return "";
   const result = [];
-  try {
-    data.forEach((item) => {
-      if (item.type === "paragraph" && item.children?.[1]?.type == "image") {
-        result.push(item.children[1].alt);
-      } else if (item.type === "paragraph") {
-        result.push(item.children[0].text);
-      }
-    });
-    return result.join("");
-  } catch (error) {
-    return data?.[0]?.children[0].text;
-  }
+  console.log(data);
+  data.forEach((item) => {
+    const text =
+      item.children
+        ?.map((child) => {
+          if (child.type === "image" && child?.alt && child?.class === "EmoticonPack")
+            return child?.alt;
+          if (child.type === "image") return "[图片]";
+          if (child.type === "attachment") return "[文件]";
+          return child.text || ""; // 处理文本
+        })
+        .join("") || ""; // 确保返回字符串
+
+    if (item.type === "paragraph") result.push(text);
+  });
+  return result.join("");
 };
 // 定义消息提示元素
 const CustomMention = (props) => {
   const { item } = props;
   const { lastMessage, conversationID: ID, unreadCount } = item;
-  const { messageForShow } = lastMessage;
+  const { messageForShow, nick: lastNick } = lastMessage;
   const draft = sessionDraftMap.value.get(ID);
+  // 草稿
   if (draft && isdraft(item)) {
     const str = html2Escape(parseData(draft));
-    return h("span", { innerHTML: `${createElement(1)}${str}` });
+    return h("span", { innerHTML: `${createMessagePrompt("draft")}${str}` });
   }
-  return h("span", {
-    innerHTML: `${unreadCount !== 0 ? createElement() : ""}${lastMessage.nick}: ${messageForShow}`,
-  });
+  // @消息
+  const isUnread = unreadCount !== 0; // 消息是否未读
+  const mention = `${isUnread ? createMessagePrompt("at") : ""}${lastNick}: ${messageForShow}`;
+  return h("span", { innerHTML: mention });
 };
 // 消息列表 右键菜单
 const handleContextMenuEvent = (e, item) => {
