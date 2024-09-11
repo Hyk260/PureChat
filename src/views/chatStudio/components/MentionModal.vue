@@ -27,12 +27,13 @@
 </template>
 
 <script>
-import TIM from "@/utils/IM/chat/index";
 import emitter from "@/utils/mitt-bus";
 import { compareUserID } from "@/views/chatStudio/utils/utils";
 import { onClickOutside, useEventListener } from "@vueuse/core";
 import { cloneDeep } from "lodash-es";
 import { mapState } from "vuex";
+
+const MSG_AT_ALL = "__kImSDK_MesssageAtALL__"
 
 export default {
   name: "MentionModal",
@@ -79,10 +80,10 @@ export default {
       filtering: "", // 搜索模式
       searchValue: 0, // 模糊搜索内容长度
       tabIndex: 0,
-      magAtAll: TIM.TYPES.MSG_AT_ALL,
+      magAtAll: MSG_AT_ALL,
       allMembers: {
         joinTime: 0,
-        userID: TIM.TYPES.MSG_AT_ALL,
+        userID: MSG_AT_ALL,
         nick: "全体成员",
       },
     };

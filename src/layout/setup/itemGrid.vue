@@ -36,7 +36,7 @@
         </li>
       </ul>
     </div>
-    <div v-else>
+    <div v-else-if="item.icon === 'Warning'">
       <div class="ui-row">
         <div class="flex">
           <div>
@@ -56,16 +56,32 @@
         <div>其他信息</div>
       </div> -->
     </div>
+    <div v-else-if="item.icon === 'Postcard'">
+      <ul class="setting w-full">
+        <li>
+          <span> 默认模型 </span>
+          <el-select v-model="assistant" @change="onChange">
+            <el-option
+              v-for="item in optionsModel"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { setTheme } from "@/utils/common";
+import { localStg } from "@/utils/storage";
 import { useState } from "@/utils/hooks/useMapper";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { changeLocale } from "@/locales/index";
 import { useStore } from "vuex";
-import { languages, options } from "./enums";
+import { languages, options, optionsModel } from "./enums";
 import { isDev } from "@/config/env";
 
 const emit = defineEmits(["onClose", "onItem"]);
@@ -75,7 +91,7 @@ const props = defineProps({
     default: () => {},
   },
 });
-
+const assistant = ref(localStg.get("default-assistant") || "GPT")
 const docs = __APP_INFO__.pkg.docs;
 const { commit, dispatch } = useStore();
 const { themeScheme, lang } = useState({
@@ -96,12 +112,17 @@ function logout() {
   dispatch("LOG_OUT");
 }
 
+const onChange = (val) => {
+  assistant.value = val;
+  localStg.set("default-assistant", val);
+}
+
 const themecolor = computed({
   get() {
     return themeScheme.value;
   },
   set(val) {
-    commit("setThemeScheme", val)
+    commit("setThemeScheme", val);
     setTheme(val);
   },
 });

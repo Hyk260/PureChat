@@ -7,7 +7,7 @@
         :originalMsg="message.cloudCustomData && JSON.parse(message.cloudCustomData)"
       />
       <Markdown v-if="showMarked(message)" :marked="message.payload.text" />
-      <DynamicContent v-else islink :text="message.payload.text" />
+      <DynamicContent v-else link :atUserList="message.atUserList" :text="message.payload.text" />
     </template>
   </div>
 </template>
@@ -43,7 +43,7 @@ const onClick = (data) => {
 
 function showMarked(message) {
   return isRobot(toAccount.value) && message?.flow === "in";
-    // && message.flow == "in";
+  // && message.flow == "in";
 }
 
 function fnStyle() {
@@ -54,7 +54,6 @@ function fnStyle() {
 onMounted(() => {
   handleCopyClick();
 });
-
 </script>
 
 <style lang="scss" scoped>

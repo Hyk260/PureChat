@@ -15,7 +15,6 @@ import {
   GET_MESSAGE_LIST,
   HISTORY_MESSAGE_COUNT,
 } from "@/constants/index";
-import TIM from "@/utils/IM/chat/index";
 import {
   addTimeDivider,
   checkTextNotEmpty,
@@ -40,7 +39,7 @@ const conversation = {
     networkStatus: true, // 网络状态
     needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
     forwardData: new Map(), // 多选数据
-    downloadProgress: new Map(), //下载进度
+    // downloadProgress: new Map(), //下载进度
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
@@ -214,17 +213,17 @@ const conversation = {
     },
     // 设置提及弹框显示隐藏
     SET_MENTION_MODAL(state, action) {
-      const { type } = state.currentConversation;
-      if (type !== "GROUP") {
+      if (state.currentConversation.type === "GROUP") {
+        state.isShowModal = action;
+      } else {
         state.isShowModal = false;
-        return;
       }
-      state.isShowModal = action;
     },
     //  切换列表 全部 未读 提及我
     TOGGLE_LIST(state, action) {
       state.activetab = action;
     },
+    // 设置多选数据
     SET_FORWARD_DATA(state, action) {
       const { type, payload } = action;
       const { ID } = payload || {};
@@ -272,27 +271,35 @@ const conversation = {
     // 设置撤回消息重新编辑
     setRevokeMsg(state, action) {
       const { data, type } = action;
-      if (type == "set") {
-        state.revokeMsgMap.set(data.ID, data.payload);
+      const { ID, payload } = data || {};
+      if (type === "set") {
+        state.revokeMsgMap.set(ID, payload);
       } else {
-        state.revokeMsgMap.delete(data.ID);
+        state.revokeMsgMap.delete(ID);
       }
     },
+    // 设置最近使用表情包
     setRecently(state, action) {
       const { data, type } = action;
-      if (type == "add") {
-        state.recently.add(data);
-        if (state.recently.size > 12) {
-          const iterator = state.recently.values();
-          const oldestElement = iterator.next().value;
-          state.recently.delete(oldestElement);
-        }
-        localStg.set(EMOJI_RECENTLY, [...state.recently]);
-      } else if (type == "revert") {
-        const recently = localStg.get(EMOJI_RECENTLY);
-        if (recently) state.recently = new Set([...recently]);
-      } else if (type == "clean") {
-        state.recently.clear();
+      switch (type) {
+        case "add":
+          // 添加数据到 recently 集合
+          state.recently.add(data);
+          if (state.recently.size > 12) {
+            const iterator = state.recently.values();
+            const oldestElement = iterator.next().value;
+            state.recently.delete(oldestElement);
+          }
+          localStg.set(EMOJI_RECENTLY, [...state.recently]);
+          break;
+        case "revert":
+          // 从本地存储恢复最近的数据
+          const recently = localStg.get(EMOJI_RECENTLY);
+          if (recently) state.recently = new Set([...recently]);
+          break;
+        case "clean":
+          state.recently.clear();
+          break;
       }
     },
   },
@@ -482,7 +489,7 @@ const conversation = {
     imgUrlList(state) {
       if (!state.currentMessageList) return [];
       const filteredMessages = state.currentMessageList.filter(
-        (item) => item.type === TIM.TYPES.MSG_IMAGE && !item.isRevoked && !item.isDeleted
+        (item) => item.type === "TIMImageElem" && !item.isRevoked && !item.isDeleted
       );
       // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reduceRight
       const reversedUrls = filteredMessages.reduceRight((urls, message) => {
@@ -495,7 +502,7 @@ const conversation = {
     // 是否群会话
     isGroupChat(state) {
       if (!state.currentConversation || !state.currentConversation.type) return false;
-      return state.currentConversation.type === TIM.TYPES.CONV_GROUP;
+      return state.currentConversation.type === "GROUP";
     },
   },
 };

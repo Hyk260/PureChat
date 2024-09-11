@@ -1,7 +1,7 @@
 <template>
   <template v-for="item in decodeText(text)" :key="item">
     <span v-if="item.name === 'text'">
-      <analysis-url v-if="islink" :text="item.text" />
+      <analysis-url v-if="link" :text="item.text" />
       <template v-else>
         {{ item.text }}
       </template>
@@ -26,7 +26,11 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  islink: {
+  atUserList: {
+    type: Array,
+    default: () => []
+  },
+  link: {
     type: Boolean,
     default: false,
   },

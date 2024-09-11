@@ -68,40 +68,40 @@ export class TIMProxy {
   }
   initListener() {
     // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
-    tim.on(TIM.EVENT.SDK_READY, this.onReadyStateUpdate, this);
+    tim.on("sdkStateReady", this.onReadyStateUpdate, this);
     // 收到 SDK 进入 not ready 状态通知，此时 SDK 无法正常工作
-    tim.on(TIM.EVENT.SDK_NOT_READY, this.onReadyStateUpdate, this);
+    tim.on("sdkStateNotReady", this.onReadyStateUpdate, this);
     // 收到会话列表更新通知
-    tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, this.onUpdateConversationList);
+    tim.on("onConversationListUpdated", this.onUpdateConversationList);
     // 收到推送的单聊、群聊、群提示、群系统通知的新消息
-    tim.on(TIM.EVENT.MESSAGE_RECEIVED, this.onReceiveMessage, this);
+    tim.on("onMessageReceived", this.onReceiveMessage, this);
     // 收到消息被撤回的通知
-    tim.on(TIM.EVENT.MESSAGE_REVOKED, this.onMessageRevoked);
+    tim.on("onMessageRevoked", this.onMessageRevoked);
     // 群组列表更新
-    tim.on(TIM.EVENT.GROUP_LIST_UPDATED, this.onUpdateGroupList);
+    tim.on("onGroupListUpdated", this.onUpdateGroupList);
     // 被踢出
-    tim.on(TIM.EVENT.KICKED_OUT, this.onKickOut);
+    tim.on("kickedOut", this.onKickOut);
     // SDK内部出错
-    tim.on(TIM.EVENT.ERROR, this.onError);
+    tim.on("error", this.onError);
     // 网络监测
-    tim.on(TIM.EVENT.NET_STATE_CHANGE, this.onNetStateChange);
+    tim.on("netStateChange", this.onNetStateChange);
     // 会话未读总数更新
-    tim.on(TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, this.onTotalUnreadMessageCountUpdated);
+    tim.on("onTotalUnreadMessageCountUpdated", this.onTotalUnreadMessageCountUpdated);
     // 收到好友申请列表更新通知
-    // tim.on(TIM.EVENT.FRIEND_APPLICATION_LIST_UPDATED, this.onFriendApplicationListUpdated);
+    // tim.on("onFriendApplicationListUpdated", this.onFriendApplicationListUpdated);
     // 收到好友分组列表更新通知
-    // tim.on(TIM.EVENT.FRIEND_GROUP_LIST_UPDATED, this.onFriendGroupListUpdated);
+    // tim.on("onFriendGroupListUpdated", this.onFriendGroupListUpdated);
     // 已订阅用户或好友的状态变更（在线状态或自定义状态）时触发。
-    // tim.on(TIM.EVENT.USER_STATUS_UPDATED, this.onUserStatusUpdated);
+    // tim.on("onUserStatusUpdated", this.onUserStatusUpdated);
     // 收到消息被修改的通知
-    tim.on(TIM.EVENT.MESSAGE_MODIFIED, this.onMessageModified, this);
+    tim.on("onMessageModified", this.onMessageModified, this);
   }
   onTotalUnreadMessageCountUpdated({ data }) {
     console.log("[chat] onTotalUnreadMessageCountUpdated:", data);
   }
   onReadyStateUpdate({ name }) {
     console.log("[chat] onReadyStateUpdate:", name);
-    this.isSDKReady = name === TIM.EVENT.SDK_READY;
+    this.isSDKReady = name === "sdkStateReady";
     if (!this.isSDKReady) return;
     this.chat.getMyProfile().then(({ code, data }) => {
       this.userProfile = data;
@@ -112,7 +112,7 @@ export class TIMProxy {
   }
   onUpdateConversationList({ data }) {
     console.log("[chat] 会话列表更新 onUpdateConversationList:", data);
-    setChatListCache(data)
+    setChatListCache(data);
     const convId = getConversationID();
     const conv = data.filter((t) => t.conversationID == convId);
     // 更新会话列表
@@ -245,16 +245,15 @@ export class TIMProxy {
     console.log("[chat] handleQuitGroupTip", data);
     const convId = getConversationID();
     if (convId !== data[0]?.conversationID) return;
-    const list = [
-      TIM.TYPES.GRP_TIP_MBR_JOIN, // 1 有成员加群
-      TIM.TYPES.GRP_TIP_MBR_QUIT, // 2 有群成员退群
-      TIM.TYPES.GRP_TIP_MBR_KICKED_OUT, // 3 有群成员被踢出群
-    ];
+    // TIM.TYPES.GRP_TIP_MBR_JOIN, // 1 有成员加群
+    // TIM.TYPES.GRP_TIP_MBR_QUIT, // 2 有群成员退群
+    // TIM.TYPES.GRP_TIP_MBR_KICKED_OUT, // 3 有群成员被踢出群
+    const list = [1, 2, 3];
     const groupTips = data.filter((t) => {
       return list.includes(t.payload.operationType);
     });
     // 更新当前会话的群成员列表
-    if (groupTips.length > 0) {
+    if (groupTips.length) {
       store.dispatch("getGroupMemberList");
     }
   }
@@ -329,11 +328,11 @@ export class TIMProxy {
     const { userID } = this.userProfile || {};
     const { atUserList } = data[0];
     const massage = getConversationList(data);
-    if (atUserList.length === 0) return;
+    if (!atUserList.length) return;
     // 消息免打扰
     if (!massage || massage?.[0]?.messageRemindType === "AcceptNotNotify") return;
     let off = atUserList.includes(userID);
-    let all = atUserList.includes(TIM.TYPES.MSG_AT_ALL);
+    let all = atUserList.includes("__kImSDK_MesssageAtALL__");
     if (off || all) this.notifyUser(data[0]);
   }
 }

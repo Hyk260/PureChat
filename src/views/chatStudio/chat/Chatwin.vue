@@ -104,7 +104,6 @@ import { handleCopyMsg, loadMsgModule, msgOne, msgType, validatelastMessage, isS
 
 import { deleteMsgList, getMsgList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
 import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX } from "@/constants/index";
-import TIM from "@/utils/IM/chat/index";
 import { download, isRobot } from "@/utils/chat/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
@@ -349,7 +348,7 @@ const handleContextMenuEvent = (event, item) => {
     RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter((t) => t.id !== "revoke");
   }
   // 群主 & 群聊 & 撤回时间不限制2分钟
-  if (isOwner.value && currentType.value === TIM.TYPES.CONV_GROUP) {
+  if (isOwner.value && currentType.value === "GROUP") {
     // if (!self)
     RIGHT_CLICK_MENU_LIST.value = MENU_LIST;
   }

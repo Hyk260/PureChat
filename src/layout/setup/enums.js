@@ -1,5 +1,6 @@
 import { $t } from "@/locales/index";
 import { computed } from "vue";
+import { ROBOT_COLLECT, ModelProvider } from "@/ai/constant";
 const title = import.meta.env.VITE_APP_NAME;
 
 export const list = computed(() => {
@@ -7,6 +8,10 @@ export const list = computed(() => {
     {
       title: $t("common.currency"),
       icon: "Operation",
+    },
+    {
+      title: "默认助手",
+      icon: "Postcard",
     },
     {
       title: `${$t("common.about")}`,
@@ -32,6 +37,27 @@ export const options = computed(() => {
     {
       value: "dark",
       label: $t("common.dark"),
+    },
+  ];
+});
+
+export const optionsModel = computed(() => {
+  return [
+    {
+      value: ModelProvider.GPT,
+      label: "GPT",
+    },
+    {
+      value: ModelProvider.ChatGLM,
+      label: "ChatGLM",
+    },
+    {
+      value: ModelProvider.ZeroOne,
+      label: "ZeroOne",
+    },
+    {
+      value: ModelProvider.Ollama,
+      label: "Ollama",
     },
   ];
 });
