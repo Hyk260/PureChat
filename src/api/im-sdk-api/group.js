@@ -1,12 +1,11 @@
-import TIM from "@/utils/IM/chat/index";
 import tim from "@/utils/IM/im-sdk/tim";
 
 // 群类型
 const GroupType = {
-  GRP_WORK: TIM.TYPES.GRP_WORK, // 好友工作群，默认
-  GRP_PUBLIC: TIM.TYPES.GRP_PUBLIC, // 陌生人社交群
-  GRP_MEETING: TIM.TYPES.GRP_MEETING, // 临时会议群
-  GRP_AVCHATROOM: TIM.TYPES.GRP_AVCHATROOM, // 直播群
+  GRP_WORK: "Private", // 好友工作群，默认
+  GRP_PUBLIC: "Public", // 陌生人社交群
+  GRP_MEETING: "ChatRoom", // 临时会议群
+  GRP_AVCHATROOM: "AVChatRoom", // 直播群
 };
 
 const ModifyType = {

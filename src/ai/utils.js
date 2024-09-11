@@ -48,6 +48,18 @@ export function getModelType(modelId) {
   return modelMapping[modelId] || "";
 }
 
+export function getModelId(model) {
+  if (!model) return "";
+  const modelMapping = {
+    [ModelProvider.GPT]: CHATGPT_ROBOT,
+    [ModelProvider.ChatGLM]: CHATGLM_ROBOT,
+    [ModelProvider.ZeroOne]: CHATYI_ROBOT,
+    [ModelProvider.Qwen]: CHATQWEN_ROBOT,
+    [ModelProvider.Ollama]: CHATOLLAMA_ROBOT,
+  };
+  return modelMapping[model] || "";
+}
+
 export function getModelSvg(id) {
   const modelId = getModelType(id);
   const data = {

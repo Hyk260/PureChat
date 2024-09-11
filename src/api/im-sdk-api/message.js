@@ -1,5 +1,4 @@
 import tim from "@/utils/IM/im-sdk/tim";
-import TIM from "@/utils/IM/chat/index";
 import emitter from "@/utils/mitt-bus";
 import { createProgressHandler } from "@/utils/chat/index";
 import { getImageSize } from "@/views/chatStudio/utils/utils";
@@ -135,7 +134,7 @@ export const createForwardMsg = async (params) => {
 };
 // 下载合并消息
 export const downloadMergerMessage = async (message) => {
-  if (message.type === TIM.TYPES.MSG_MERGER && message.payload.downloadKey !== "") {
+  if (message.type === "TIMRelayElem" && message.payload.downloadKey !== "") {
     try {
       await tim.downloadMergerMessage(message);
     } catch (imError) {

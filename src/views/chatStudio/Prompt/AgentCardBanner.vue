@@ -1,5 +1,11 @@
 <template>
-  <el-dialog v-model="dialog" width="40%" align-center class="agent-card-modal" :before-close="handleClose">
+  <el-dialog
+    v-model="dialog"
+    width="40%"
+    align-center
+    class="agent-card-modal"
+    :before-close="handleClose"
+  >
     <div class="agent-card-banner">
       <div class="top">
         <div class="avatar-square">
@@ -35,6 +41,7 @@ import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
 import { StoreKey, CHATGPT_ROBOT, ModelProvider } from "@/ai/constant";
+import { getModelId } from "@/ai/utils";
 import { forIn } from "lodash-es";
 
 const cardData = ref({});
@@ -51,19 +58,19 @@ function toTant(item = cardData.value) {
         meta: {
           tags: meta.tags,
           avatar: meta.avatar,
-          title: meta.title
+          title: meta.title,
         },
         lang: "cn",
         prompt: [{ role: "system", content: meta.systemRole }],
       },
     });
   });
-
+  const id = getModelId(localStg.get("default-assistant")) || CHATGPT_ROBOT;
   commit("TAGGLE_OUE_SIDE", "message");
-  dispatch("CHEC_OUT_CONVERSATION", { convId: `${"C2C"}${CHATGPT_ROBOT}` });
+  dispatch("CHEC_OUT_CONVERSATION", { convId: `${"C2C"}${id}` });
   setTimeout(() => {
     emitter.emit("updataScroll");
-  },50)
+  }, 50);
 }
 
 function handleClose() {

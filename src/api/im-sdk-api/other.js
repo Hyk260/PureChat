@@ -50,11 +50,11 @@ export const setMessageRemindType = async (params) => {
     // 群聊
     parameter = {
       groupID: userID,
-      // TIM.TYPES.MSG_REMIND_ACPT_AND_NOTE  AcceptAndNotify
+      // TIM.TYPES.MSG_REMIND_ACPT_AND_NOTE  "AcceptAndNotify"
       // （SDK 接收消息并通知接入侧，接入侧做提示）
-      // TIM.TYPES.MSG_REMIND_ACPT_NOT_NOTE  AcceptNotNotify
+      // TIM.TYPES.MSG_REMIND_ACPT_NOT_NOTE  "AcceptNotNotify"
       // （SDK 接收消息并通知接入侧，接入侧不做提示，一般用于实现“消息免打扰”）
-      // TIM.TYPES.MSG_REMIND_DISCARD
+      // TIM.TYPES.MSG_REMIND_DISCARD "Discard"
       // （SDK 拒收消息）
       messageRemindType: isDisable ? "AcceptAndNotify" : "AcceptNotNotify",
     };

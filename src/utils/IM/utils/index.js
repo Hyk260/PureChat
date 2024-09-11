@@ -14,6 +14,7 @@ export function kickedOutReason(type) {
       return "";
   }
 }
+
 export function checkoutNetState(state) {
   switch (state) {
     case TIM.TYPES.NET_STATE_CONNECTED:
@@ -26,6 +27,7 @@ export function checkoutNetState(state) {
       return "";
   }
 }
+
 export const fnCheckoutNetState = throttle((state) => {
   checkoutNetState(state);
 }, 3000);
@@ -33,6 +35,7 @@ export const fnCheckoutNetState = throttle((state) => {
 export function getConversationID() {
   return store.state.conversation?.currentConversation?.conversationID;
 }
+
 export function getConversationList(data) {
   const list = store.state.conversation?.conversationList;
   const convId = data?.[0].conversationID;
