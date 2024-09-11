@@ -7,7 +7,7 @@ import {
 const SHADOW_ROOT_CSS = `
 :host {
   position: relative;
-  z-index: 10;
+  z-index: 9999;
   width: 100%;
   height: 32px;
   display: block;
@@ -17,24 +17,26 @@ const SHADOW_ROOT_CSS = `
   --tb-control-width: 34px;
   --tb-control-margin: 3px;
   --tb-control-radius: 5px;
+  --tb-theme-color: #eee;
+  --tb-title-text-color: #333333;
+  --tb-control-symbol-color: #585c65;
+  --tb-control-hover-color: #e1e1e1;
+  --tb-control-close-symbol-color: #090909;
   background-color: var(--tb-theme-color, #eee);
-  // --tb-title-text-color: #333333;
-  // --tb-control-symbol-color: #585c65;
-  // --tb-control-hover-color: #e1e1e1;
-  // --tb-control-close-symbol-color: #090909;
 }
 ::slotted(:not(.window__control)) {
   display: none;
 }
-// @media (prefers-color-scheme: dark) {
-//   :host {
-//     background-color: var(--tb-theme-color, #000);
-//     --tb-title-text-color: #cccccc;
-//     --tb-control-symbol-color: #cccccc;
-//     --tb-control-hover-color: #373737;
-//     --tb-control-close-symbol-color: #fcfcfc;
-//   }
-// }
+@media (prefers-color-scheme: dark) {
+  :host {
+    --tb-theme-color: #000;
+    --tb-title-text-color: #cccccc;
+    --tb-control-symbol-color: #cccccc;
+    --tb-control-hover-color: #373737;
+    --tb-control-close-symbol-color: #fcfcfc;
+    background-color: var(--tb-theme-color, #000);
+  }
+}
 .titlebar__drag-region {
   position: absolute;
   top: 0;
@@ -148,7 +150,7 @@ const SHADOW_ROOT_CSS = `
 .window__control-close .window__control-icon:after {
   transform: rotate(-45deg) translateZ(0);
 }
-`
+`;
 const core = ((globalThis || window).uikit ||
   (globalThis || window).electron)
 
