@@ -3,10 +3,10 @@
     <el-card class="style-header" shadow="never">
       <template #header>
         <div>
-          <span class="name"> {{ $config.Title }} </span>
+          <span class="name"> {{ pkg.name }} </span>
         </div>
       </template>
-      <span class="describe"> {{ $config.Title }} 是一个基于Vue3、Element-Plus的聊天工作室 </span>
+      <span class="describe"> {{ pkg.name }} 是一个基于Vue3、Element-Plus的聊天工作室 </span>
     </el-card>
     <!-- 项目信息 -->
     <el-card class="style-card" shadow="hover">
