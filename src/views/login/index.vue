@@ -8,7 +8,7 @@
       <!-- 标题 -->
       <header class="login-form">
         <div class="tip">
-          <h2>{{ $config.Title }}</h2>
+          <h2>{{ pkg.name }}</h2>
         </div>
       </header>
       <!-- 账号登陆 -->
@@ -27,6 +27,8 @@ import ThemeSwitch from "../components/ThemeSwitch/index.vue";
 import Account from "./components/Account.vue";
 // import QrCode from "./components/qrCode.vue";
 // import Register from "./components/Register.vue";
+
+const { pkg } = __APP_INFO__;
 
 const { currentPage } = useState({
   currentPage: (state) => state.user.currentPage,

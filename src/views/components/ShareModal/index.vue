@@ -50,7 +50,7 @@
             <div v-show="isFooter" class="footer p-16">
               <div class="flex justify-center items-center">
                 <img class="size-22" src="@/assets/images/log.png" alt="" />
-                <div class="title ml-8">{{ $config.Title }}</div>
+                <div class="title ml-8">{{ pkg.name }}</div>
               </div>
               <span class="link"> {{ homepage }}</span>
               <QrCode v-show="isQrCode" class="qr-code" :text="homepage" />
