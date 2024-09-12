@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { notification } from "@m/main/notification/renderer";
 const data = {
   ID: "144115243339126418-1722403025-65445737",
   conversationID: "GROUP@TGS#2P5E55UNV",
@@ -78,13 +79,13 @@ export default {
   },
   methods: {
     open() {
-      window.electron.ipcRenderer.send("uikit:notification", {
+      notification.show({
         title: `${data.nick}提到了你`,
         body: data,
       });
     },
     unopen() {
-      window.electron.ipcRenderer.send("uikit:notification");
+      notification.destroy();
     },
     setShakeWindow() {},
     checkUpdate() {},

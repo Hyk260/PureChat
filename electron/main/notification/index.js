@@ -15,9 +15,8 @@ function notify() {
 
   notification.on('click', (data) => {
     if (!data) return
-    const win = global.mainWin;
     mainTop()
-    win.webContents.send("notif:click", data);
+    global.mainWin.webContents.send("notif:click", data);
   })
 }
 
