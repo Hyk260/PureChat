@@ -11,10 +11,8 @@ export const EMOJI_RECENTLY = "Emoji-Recently";
 // im数据
 export const TIM_PROXY = "timProxy";
 
-export const GET_MESSAGE_LIST = "GET_MESSAGE_LIST"; //获取消息列表
 export const HISTORY_MESSAGE_COUNT = 15; //历史消息计数
 export const MULTIPLE_CHOICE_MAX = 20; //多选消息最大计数
-export const MIN_RESIZE_HEIGHT = 250;
 
 export const CONVERSATIONTYPE = {
   UPDATE_NOMORE: "UPDATE_NOMORE", //更新加载更多

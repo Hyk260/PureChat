@@ -43,8 +43,8 @@
             <img src="@/assets/images/log.png" alt="" />
           </div>
           <div class="ui-col">
-            <div class="col-title">{{ $config.Title }}</div>
-            <div class="version">v{{ $config.Version }}</div>
+            <div class="col-title">{{ title }}</div>
+            <div class="version">v{{ version }}</div>
           </div>
         </div>
         <div>
@@ -84,6 +84,8 @@ import { useStore } from "vuex";
 import { languages, options, optionsModel } from "./enums";
 import { isDev } from "@/config/env";
 
+const {docs ,name: title, version} = __APP_INFO__.pkg;
+
 const emit = defineEmits(["onClose", "onItem"]);
 const props = defineProps({
   item: {
@@ -92,7 +94,7 @@ const props = defineProps({
   },
 });
 const assistant = ref(localStg.get("default-assistant") || "GPT")
-const docs = __APP_INFO__.pkg.docs;
+
 const { commit, dispatch } = useStore();
 const { themeScheme, lang } = useState({
   themeScheme: (state) => state.user.themeScheme,
