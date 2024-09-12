@@ -12,7 +12,6 @@ import {
 import {
   CONVERSATIONTYPE,
   EMOJI_RECENTLY,
-  GET_MESSAGE_LIST,
   HISTORY_MESSAGE_COUNT,
 } from "@/constants/index";
 import {
@@ -39,7 +38,6 @@ const conversation = {
     networkStatus: true, // 网络状态
     needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
     forwardData: new Map(), // 多选数据
-    // downloadProgress: new Map(), //下载进度
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
@@ -305,7 +303,7 @@ const conversation = {
   },
   actions: {
     // 获取消息列表
-    async [GET_MESSAGE_LIST]({ commit, dispatch, state }, action) {
+    async GET_MESSAGE_LIST({ commit, dispatch, state }, action) {
       const isSDKReady = timProxy.isSDKReady;
       const { conversationID, type } = action;
       let status = !state.currentMessageList || state.currentMessageList?.length == 0;

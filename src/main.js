@@ -4,7 +4,6 @@ import store from "./store/index";
 
 import { setupI18n } from './locales/index';
 import { loadAllassembly } from "./components/index";
-import { getServerConfig } from "./config/index";
 import { setupDirectives } from "./directives/index";
 import { setupPlugins } from "./plugins/index";
 import { setupRouter } from "./router/index";
@@ -15,8 +14,6 @@ async function setupApp() {
   setupDirectives(app);
   loadAllassembly(app);
   setupPlugins(app);
-  // 获取全局配置
-  getServerConfig(app);
   // vue router
   await setupRouter(app);
   setupI18n(app);
