@@ -9,7 +9,8 @@
     }"
   >
     <div class="icon">
-      <FontIcon :iconName="item.icon" />
+      <svg-icon v-if="item.type === 'svg'" :iconClass="item.icon" />
+      <FontIcon v-else :iconName="item.icon" />
     </div>
     <div class="title">{{ item.title }}</div>
   </div>
@@ -32,7 +33,8 @@ export default {
         },
         {
           title: "AI大模型",
-          icon: "Sugar",
+          icon: "robot",
+          type: "svg",
         },
       ],
       active: "ForkSpoon",

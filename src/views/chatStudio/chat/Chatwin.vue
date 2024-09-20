@@ -72,7 +72,7 @@
       </div>
     </el-scrollbar>
     <!-- 卡片 -->
-    <!-- <MyPopover /> -->
+    <MyPopover />
     <contextmenu ref="contextmenu" :disabled="!isRight">
       <contextmenu-item
         v-for="item in RIGHT_CLICK_MENU_LIST"

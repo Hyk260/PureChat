@@ -9,7 +9,7 @@
       <div class="list">
         <div>
           <CardGrid v-if="active === 'ForkSpoon'" type="C2C" :item="friend" />
-          <CardGrid v-else-if="active === 'Sugar'" type="C2C" :item="robotList" />
+          <CardGrid v-else-if="active === 'robot'" type="C2C" :item="robotList" />
           <CardGrid v-else-if="active === 'IceCreamRound'" type="GROUP" :item="groupList" />
           <!-- <CardGrid v-else-if="active === 'CollectionTag'" type="GROUP" :item="groupListInfo" /> -->
         </div>
@@ -59,6 +59,7 @@ export default {
     // 获取机器人列表
     async getRobot() {
       const { code, data } = await getUserProfile(ROBOT_COLLECT);
+      console.log(data);
       this.robotList = data;
     },
     // 获取好友列表

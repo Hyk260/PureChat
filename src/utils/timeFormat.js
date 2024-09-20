@@ -41,7 +41,7 @@ function formatDate(date, format) {
  * @param {boolean} mustIncludeTime - 是否强制显示时间，为 true 时将在返回结果中追加“时:分”形式的时间字符串
  * @returns {string} - 格式化后的字符串
  */
-export function timeFormat(timestamp, mustIncludeTime = false) {
+export function timeFormatCopy(timestamp, mustIncludeTime = false) {
   const currentDate = new Date();
   const srcDate = new Date(parseInt(timestamp));
   const currentYear = currentDate.getFullYear();
@@ -96,6 +96,76 @@ export function timeFormat(timestamp, mustIncludeTime = false) {
   }
   return ret;
 }
+
+// 显示规则
+// 今天
+// 时 + 分。
+// 示例：8:30
+// 昨天
+// 昨天 + 时 + 分。
+// 示例：昨天 8:30
+// 一周内（7天，以天为单位计算）
+// 星期 + 时 + 分。
+// 示例：星期一 8:30
+// 超过一周，在本年内
+// 月/日 + 时 + 分。
+// 示例：9/1  8:30
+// 不在本年
+// 年/月/日 + 时 + 分。
+// 示例：2024/9/1  8:30
+
+export function timeFormat(timestamp, includeTime = false) {
+  const now = new Date();
+  const date = new Date(timestamp);
+
+  // 当前时间和传入时间的年、月、日
+  const nowYear = now.getFullYear();
+  const nowMonth = now.getMonth();
+  const nowDate = now.getDate();
+  const dateYear = date.getFullYear();
+  const dateMonth = date.getMonth();
+  const dateDate = date.getDate();
+
+  const timeStr = includeTime
+    ? `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+    : '';
+
+  // 判断是否是今天
+  if (nowYear === dateYear && nowMonth === dateMonth && nowDate === dateDate) {
+    return includeTime ? `${timeStr}` : `${date.getMonth() + 1}月${date.getDate()}日`;
+  }
+
+  // 判断是否是昨天
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (
+    dateYear === yesterday.getFullYear() &&
+    dateMonth === yesterday.getMonth() &&
+    dateDate === yesterday.getDate()
+  ) {
+    return includeTime ? `昨天 ${timeStr}` : `昨天`;
+  }
+
+  // 判断是否是一周内
+  const dayOfWeekNames = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+  const dayDiff = (now - date) / (1000 * 60 * 60 * 24);
+  if (dayDiff < 7) {
+    return includeTime ? `${dayOfWeekNames[date.getDay()]} ${timeStr}` : `${dayOfWeekNames[date.getDay()]}`;
+  }
+
+  // 判断是否是同一年
+  if (nowYear === dateYear) {
+    return includeTime
+      ? `${date.getMonth() + 1}/${date.getDate()} ${timeStr}`
+      : `${date.getMonth() + 1}月${date.getDate()}日`;
+  }
+
+  // 如果是其他年份
+  return includeTime
+    ? `${dateYear}/${date.getMonth() + 1}/${date.getDate()} ${timeStr}`
+    : `${dateYear}年${date.getMonth() + 1}月${date.getDate()}日`;
+}
+
 
 // // 格式化一个时间戳，不包含时间部分
 // const formattedTime = timeFormat(1613687688000);

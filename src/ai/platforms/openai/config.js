@@ -1,3 +1,13 @@
+import { localStg } from "@/utils/storage";
+import { getValueByKey } from "@/utils/common";
+
+const info = localStg.get("timProxy")?.userProfile?.profileCustomField;
+
+function prefix(key) {
+  const prefix = "Tag_Profile_Custom_";
+  return `${prefix}${key}`;
+}
+
 export const OpenaiConfig = {
   model: "gpt-4o-mini",
   /**
@@ -29,6 +39,6 @@ export const OpenaiConfig = {
    * @default 12
    */
   historyMessageCount: 12,
-  token: import.meta.env.VITE_OPENAI_API_KEY,
-  openaiUrl: import.meta.env.VITE_OPENAI_PROXY_URL,
+  token: getValueByKey(info, prefix("ApiKey")) || import.meta.env.VITE_OPENAI_API_KEY,
+  openaiUrl: getValueByKey(info, prefix("ProxyUrl")) || import.meta.env.VITE_OPENAI_PROXY_URL,
 };

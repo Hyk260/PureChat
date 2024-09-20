@@ -3,7 +3,7 @@ const duration = 5 * 60;
 const isArray = (obj) => {
   return Object.prototype.toString.call(obj) === "[object Array]";
 };
-
+// 若当前消息与上一条消息间隔超过5分钟，会进行新的时间戳展示，否则归为上一个聊天单元。
 const isInFiveTime = (curTime, baseTime) => {
   return Math.abs(curTime - baseTime) <= duration;
 };

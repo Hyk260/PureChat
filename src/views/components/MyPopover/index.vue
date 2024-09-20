@@ -92,6 +92,7 @@ const setUserProfile = async () => {
   const { code, data } = await getUserProfile([userID]);
   if (code == 0) {
     userProfile.value = data?.[0];
+    console.log(userProfile.value);
   }
 };
 const setCardData = (data) => {
@@ -157,6 +158,9 @@ onBeforeUnmount(() => {
     padding: 24px 0;
     .characters {
       height: 38px;
+      span {
+        @include ellipsisBasic(3);
+      }
     }
   }
   .footer {
