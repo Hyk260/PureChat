@@ -64,7 +64,7 @@ export default {
   border-radius: 6px;
   padding: 10px;
   cursor: pointer;
-  box-sizing: border-box;
+  width: 100%;
   &:hover {
     background: var(--hover-color);
   }
@@ -80,8 +80,10 @@ export default {
     align-items: flex-start;
     flex-direction: column;
     padding-left: 10px;
+    width: 100%;
     .describe {
-      @include text-ellipsis();
+      @include text-ellipsis;
+      width: calc(100% - 40px);
       font-size: 12px;
       color: var(--color-time-divider);
     }
