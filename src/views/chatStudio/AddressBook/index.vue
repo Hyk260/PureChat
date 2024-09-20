@@ -1,19 +1,21 @@
 <template>
-  <div class="flex w-full">
+  <div class="add-ress-book">
     <div class="aside">
       <div class="head">通讯录</div>
       <ListGrid />
     </div>
-    <div class="main h-full w-full">
+    <div class="list-right">
       <div class="head px-10">{{ title }}</div>
-      <div class="list">
-        <div>
-          <CardGrid v-if="active === 'ForkSpoon'" type="C2C" :item="friend" />
-          <CardGrid v-else-if="active === 'robot'" type="C2C" :item="robotList" />
-          <CardGrid v-else-if="active === 'IceCreamRound'" type="GROUP" :item="groupList" />
-          <!-- <CardGrid v-else-if="active === 'CollectionTag'" type="GROUP" :item="groupListInfo" /> -->
+      <el-scrollbar>
+        <div class="list">
+          <div class="w-full">
+            <CardGrid v-if="active === 'ForkSpoon'" type="C2C" :item="friend" />
+            <CardGrid v-else-if="active === 'robot'" type="C2C" :item="robotList" />
+            <CardGrid v-else-if="active === 'IceCreamRound'" type="GROUP" :item="groupList" />
+            <!-- <CardGrid v-else-if="active === 'CollectionTag'" type="GROUP" :item="groupListInfo" /> -->
+          </div>
         </div>
-      </div>
+      </el-scrollbar>
     </div>
   </div>
 </template>
@@ -73,6 +75,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.add-ress-book {
+  width: calc(100vw - 68px);
+  display: flex;
+}
 .aside {
   width: 180px;
   min-width: 180px;
@@ -86,7 +92,11 @@ export default {
   align-items: center;
 }
 .list {
-  height: calc(100% - 36px);
-  overflow: auto;
+  width: 100%;
+  // height: calc(100% - 36px);
+}
+.list-right {
+  width: calc(100% - 180px);
+  height: 100%;
 }
 </style>
