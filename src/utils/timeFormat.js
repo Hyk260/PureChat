@@ -1,3 +1,68 @@
+
+import dayjs from "dayjs";
+import isToday from "dayjs/plugin/isToday.js";
+import isYesterday from "dayjs/plugin/isYesterday.js";
+import localizedFormat from "dayjs/plugin/localizedFormat.js";
+import weekday from "dayjs/plugin/weekday.js";
+import relativeTime from "dayjs/plugin/relativeTime.js";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
+import localeData from "dayjs/plugin/localeData.js";
+import "dayjs/locale/zh-cn.js"; // 引入中文语言包
+
+// 设置 dayjs 的 locale 为中文
+dayjs.locale("zh-cn");
+dayjs.extend(isToday);
+dayjs.extend(isYesterday);
+dayjs.extend(localizedFormat);
+dayjs.extend(weekday);
+dayjs.extend(relativeTime);
+dayjs.extend(customParseFormat);
+dayjs.extend(localeData);
+
+// 显示规则
+// 今天
+// 时 + 分。
+// 示例：8:30
+// 昨天
+// 昨天 + 时 + 分。
+// 示例：昨天 8:30
+// 一周内（7天，以天为单位计算）
+// 星期 + 时 + 分。
+// 示例：星期一 8:30
+// 超过一周，在本年内
+// 月/日 + 时 + 分。
+// 示例：9/1  8:30
+// 不在本年
+// 年/月/日 + 时 + 分。
+// 示例：2024/9/1  8:30
+export function timeFormat(timestamp, includeTime = false) {
+  const now = dayjs();
+  const date = dayjs(timestamp);
+
+  if (date.isToday()) {
+    return date.format("H:mm");
+  } else if (date.isYesterday()) {
+    if (includeTime) {
+      return `昨天 ${date.format("H:mm")}`;
+    }
+    return "昨天";
+  } else if (date.isAfter(now.subtract(7, "day"))) {
+    if (includeTime) {
+      return `${date.format("dddd")} ${date.format("H:mm")}`;
+    }
+    return date.format("dddd");
+  } else if (date.isSame(now, "year")) {
+    if (includeTime) {
+      return date.format("M月D日 H:mm");
+    }
+    return date.format("M月D日");
+  } else {
+    if (includeTime) {
+      return date.format("YYYY年M月D日 H:mm");
+    }
+    return date.format("YYYY年M月D日");
+  }
+}
 /**
  * 将一个Date对象格式化为指定的日期格式
  * @param {Date} date - 要格式化的Date对象
@@ -41,7 +106,7 @@ function formatDate(date, format) {
  * @param {boolean} mustIncludeTime - 是否强制显示时间，为 true 时将在返回结果中追加“时:分”形式的时间字符串
  * @returns {string} - 格式化后的字符串
  */
-export function timeFormat(timestamp, mustIncludeTime = false) {
+export function timeFormatCopy(timestamp, mustIncludeTime = false) {
   const currentDate = new Date();
   const srcDate = new Date(parseInt(timestamp));
   const currentYear = currentDate.getFullYear();
@@ -97,10 +162,10 @@ export function timeFormat(timestamp, mustIncludeTime = false) {
   return ret;
 }
 
-// // 格式化一个时间戳，不包含时间部分
-// const formattedTime = timeFormat(1613687688000);
-// console.log(formattedTime); // 输出：2月19日
+// 格式化一个时间戳，不包含时间部分 
+const formattedTime = timeFormat(1613687688000); 
+console.log(formattedTime); // 输出：2月19日 
 
-// // 格式化一个时间戳，包含时间部分
-// const formattedTimeWithTime = timeFormat(1613687688000, true);
-// console.log(formattedTimeWithTime); // 输出：2月19日 08:48
+// 格式化一个时间戳，包含时间部分 
+const formattedTimeWithTime = timeFormat(1613687688000, true); 
+console.log(formattedTimeWithTime); // 输出：2月19日 08:48

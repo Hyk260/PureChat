@@ -20,8 +20,8 @@ const props = defineProps({
 });
 
 const hanldeItemClick = async () => {
-  const { messageReply } = props.originalMsg;
-  if (!originalMsg) return;
+  const { messageReply } = props.originalMsg || {};
+  if (!messageReply) return;
   const ref = messageReply.messageID;
   if (ref) {
     scrollToDomPostion(ref);

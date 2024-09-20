@@ -43,3 +43,10 @@ export function formatTime(data) {
 export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
   navigator.userAgent
 );
+
+export function getValueByKey(array, key) {
+  if (!array?.length || !key) return null;
+  const item = array.find((t) => t.key === key);
+  return item && item.value ? item.value : null;
+}
+
