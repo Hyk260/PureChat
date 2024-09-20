@@ -45,6 +45,8 @@ export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Oper
 );
 
 export function getValueByKey(array, key) {
-  let item = array.find((t) => t.key === key);
-  return item ? item.value : null;
+  if (!array?.length || !key) return null;
+  const item = array.find((t) => t.key === key);
+  return item && item.value ? item.value : null;
 }
+
