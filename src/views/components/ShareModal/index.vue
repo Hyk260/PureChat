@@ -102,7 +102,7 @@
         </div>
       </div>
       <div>
-        <el-button class="w-full" @click="onDownload(fieldType, robotRole())" :loading="loading">
+        <el-button class="w-full" @click="onDownload(fieldType, robotRole(), cb)" :loading="loading">
           <template #loading>
             <loadingSvg />
           </template>
@@ -114,7 +114,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import { isRobot } from "@/utils/chat/index";
 import { Markdown } from "@/utils/markdown/index";
@@ -198,6 +198,16 @@ const { forwardData } = useState({
   forwardData: (state) => state.conversation.forwardData,
 });
 
+function onClose() {
+  setDialogVisible(false);
+}
+
+function cb() {
+  nextTick(()=>{
+    onClose()
+    emit("onClose")
+  })
+}
 function robotPrompt() {
   const model = getModelType(toAccount.value);
   return usePromptStore(model).prompt[0].content || "";
@@ -208,11 +218,6 @@ const fnForwardData = computed(() => {
   const obj = Object.values(myObj).map((item) => item);
   return obj.sort((a, b) => a.clientTime - b.clientTime);
 });
-
-function onClose() {
-  setDialogVisible(false);
-  emit("onClose");
-}
 
 function fnStyleBack({ angle, colorA, colorB }) {
   return `background-image: linear-gradient(${angle}, ${colorA}, ${colorB});`;
