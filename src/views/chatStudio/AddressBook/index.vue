@@ -6,16 +6,16 @@
     </div>
     <div class="list-right">
       <div class="head px-10">{{ title }}</div>
-      <el-scrollbar>
-        <div class="list">
+      <div class="list">
+        <el-scrollbar>
           <div class="w-full">
             <CardGrid v-if="active === 'ForkSpoon'" type="C2C" :item="friend" />
             <CardGrid v-else-if="active === 'robot'" type="C2C" :item="robotList" />
             <CardGrid v-else-if="active === 'IceCreamRound'" type="GROUP" :item="groupList" />
             <!-- <CardGrid v-else-if="active === 'CollectionTag'" type="GROUP" :item="groupListInfo" /> -->
           </div>
-        </div>
-      </el-scrollbar>
+        </el-scrollbar>
+      </div>
     </div>
   </div>
 </template>
@@ -93,7 +93,7 @@ export default {
 }
 .list {
   width: 100%;
-  // height: calc(100% - 36px);
+  height: calc(100% - 36px);
 }
 .list-right {
   width: calc(100% - 180px);

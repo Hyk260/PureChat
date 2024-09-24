@@ -11,7 +11,7 @@
             @click="insertMentionHandler(item.userID, item.nick)"
           >
             <UserAvatar
-              words="3"
+              words="2"
               className="mention-avatar"
               shape="square"
               :url="item.avatar"
@@ -97,7 +97,7 @@ export default {
     filterList(data) {
       if (data.length) return data.sort(compareUserID);
       return this.currentMemberList
-        .filter((t) => t.userID !== this.userProfile.userID)
+        .filter((t) => t.userID !== this.userProfile.userID && t.userID !== '@TLS#NOT_FOUND')
         .sort(compareUserID);
     },
     updateMention() {

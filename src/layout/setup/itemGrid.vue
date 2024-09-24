@@ -40,7 +40,7 @@
       <div class="ui-row">
         <div class="flex">
           <div>
-            <img src="@/assets/images/log.png" alt="" />
+            <img src="@/assets/images/log.png" class="min-h-52 min-w-52" alt="log" />
           </div>
           <div class="ui-col">
             <div class="col-title">{{ title }}</div>
@@ -84,7 +84,7 @@ import { useStore } from "vuex";
 import { languages, options, optionsModel } from "./enums";
 import { isDev } from "@/config/env";
 
-const {docs ,name: title, version} = __APP_INFO__.pkg;
+const { docs, name: title, version } = __APP_INFO__.pkg;
 
 const emit = defineEmits(["onClose", "onItem"]);
 const props = defineProps({
@@ -93,7 +93,7 @@ const props = defineProps({
     default: () => {},
   },
 });
-const assistant = ref(localStg.get("default-assistant") || "GPT")
+const assistant = ref(localStg.get("default-assistant") || "GPT");
 
 const { commit, dispatch } = useStore();
 const { themeScheme, lang } = useState({
@@ -117,7 +117,7 @@ function logout() {
 const onChange = (val) => {
   assistant.value = val;
   localStg.set("default-assistant", val);
-}
+};
 
 const themecolor = computed({
   get() {

@@ -102,6 +102,7 @@ export const handleCopyMsg = async (data) => {
 };
 
 export const GroupSystemNotice = (message) => {
+  console.log("GroupSystemNotice", message);
   const groupName = message.payload.groupProfile.name || message.payload.groupProfile.groupID;
   switch (message.payload.operationType) {
     case 1:
@@ -113,11 +114,13 @@ export const GroupSystemNotice = (message) => {
     case 4:
       return `你被管理员${message.payload.operatorID}踢出群组：${groupName}`;
     case 5:
-      return `群：${groupName} 已被${message.payload.operatorID}解散`;
+      // ${message.payload.operatorID}
+      return `群：${groupName} 已被管理员解散`;
     case 6:
       return `${message.payload.operatorID}创建群：${groupName}`;
     case 7:
-      return `${message.payload.operatorID}邀请你加群：${groupName}`;
+      // ${message.payload.operatorID}
+      return `管理员邀请你加群：${groupName}`;
     case 8:
       return `你退出群组：${groupName}`;
     case 9:

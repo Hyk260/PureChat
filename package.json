@@ -1,6 +1,6 @@
 {
   "name": "purechat",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "PureChat - A chat application built with Vue and Vite",
   "type": "module",
   "author": {
@@ -64,7 +64,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^3.0.2",
     "sass": "^1.77.4",
-    "vite": "5.3.0",
+    "vite": "5.4.6",
     "rollup-plugin-visualizer": "^5.12.0",
     "vite-plugin-cdn-import": "^1.0.1",
     "vite-plugin-progress": "^0.0.7",
