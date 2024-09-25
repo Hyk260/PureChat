@@ -1,4 +1,4 @@
-const core = ((globalThis || window).uikit || (globalThis || window).electron)
+const core = (globalThis || window).electron
 
 export const notification = {
   show: (info) => {

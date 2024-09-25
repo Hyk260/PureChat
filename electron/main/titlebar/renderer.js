@@ -1,13 +1,13 @@
 import {
   TITLE_BAR_CHANNEL,
   TITLE_BAR_MAXIMIZE_REPLY_CHANNEL,
-  TITLE_BAR_FULLSCREEN_REPLY_CHANNEL
-} from './constants'
+  TITLE_BAR_FULLSCREEN_REPLY_CHANNEL,
+} from "./constants";
 
 const SHADOW_ROOT_CSS = `
 :host {
   position: relative;
-  z-index: 9999;
+  z-index: 99;
   width: 100%;
   height: 32px;
   display: block;
@@ -151,153 +151,143 @@ const SHADOW_ROOT_CSS = `
   transform: rotate(-45deg) translateZ(0);
 }
 `;
-const core = ((globalThis || window).uikit ||
-  (globalThis || window).electron)
+
+const core = (globalThis || window).electron;
 
 export default class TitleBar extends HTMLElement {
   constructor() {
-    super()
+    super();
   }
 
   connectedCallback() {
-    const shadow = this.attachShadow({ mode: 'open' })
+    const shadow = this.attachShadow({ mode: "open" });
 
-    if (!(window && window?.api?.isTitlebar)) return null
+    if (!(window && window?.api?.isTitlebar)) return null;
 
-    const style = document.createElement('style')
-    style.textContent = SHADOW_ROOT_CSS
-    shadow.appendChild(style)
+    const style = document.createElement("style");
+    style.textContent = SHADOW_ROOT_CSS;
+    shadow.appendChild(style);
 
-    const isMac = core.process.platform === 'darwin'
+    const isMac = core.process.platform === "darwin";
 
-    const overlay = this.hasAttribute('overlay')
+    const overlay = this.hasAttribute("overlay");
 
     if (!overlay) {
-      const el = document.createElement('div')
-      el.classList.add('titlebar__drag-region')
-      shadow.appendChild(el)
+      const el = document.createElement("div");
+      el.classList.add("titlebar__drag-region");
+      shadow.appendChild(el);
 
-      const title = this.getAttribute('windowtitle')
+      const title = this.getAttribute("windowtitle");
 
       if (title) {
-        const el = document.createElement('div')
-        el.classList.add('titlebar__title')
+        const el = document.createElement("div");
+        el.classList.add("titlebar__title");
         if (isMac) {
-          el.classList.add('mac')
+          el.classList.add("mac");
         }
-        el.innerText = title
-        shadow.appendChild(el)
+        el.innerText = title;
+        shadow.appendChild(el);
       }
     }
 
     if (!isMac || this.hasChildNodes()) {
-      const controls = document.createElement('div')
-      controls.classList.add('titlebar__window-controls')
+      const controls = document.createElement("div");
+      controls.classList.add("titlebar__window-controls");
 
       if (isMac) {
-        controls.classList.add('mac')
+        controls.classList.add("mac");
       }
 
-      controls.appendChild(document.createElement('slot'))
+      controls.appendChild(document.createElement("slot"));
 
       if (!isMac) {
-        const minimizable = !this.hasAttribute('nominimize')
+        const minimizable = !this.hasAttribute("nominimize");
 
         if (minimizable) {
-          const el = document.createElement('div')
-          el.classList.add('window__control', 'window__control-min')
+          const el = document.createElement("div");
+          el.classList.add("window__control", "window__control-min");
 
-          const icon = document.createElement('span')
-          icon.classList.add('window__control-icon')
+          const icon = document.createElement("span");
+          icon.classList.add("window__control-icon");
 
-          el.appendChild(icon)
+          el.appendChild(icon);
 
-          el.addEventListener('click', () => {
-            core.ipcRenderer.send(TITLE_BAR_CHANNEL, 'minimize')
-          })
+          el.addEventListener("click", () => {
+            core.ipcRenderer.send(TITLE_BAR_CHANNEL, "minimize");
+          });
 
-          controls.appendChild(el)
+          controls.appendChild(el);
         }
 
-        const maximizable = !this.hasAttribute('nomaximize')
+        const maximizable = !this.hasAttribute("nomaximize");
 
         if (maximizable) {
-          const el = document.createElement('div')
-          el.classList.add('window__control', 'window__control-max')
+          const el = document.createElement("div");
+          el.classList.add("window__control", "window__control-max");
 
-          const icon = document.createElement('span')
-          icon.classList.add('window__control-icon')
+          const icon = document.createElement("span");
+          icon.classList.add("window__control-icon");
 
-          el.appendChild(icon)
+          el.appendChild(icon);
 
-          el.addEventListener('click', () => {
-            core.ipcRenderer.send(TITLE_BAR_CHANNEL, 'maximizeOrUnmaximize')
-          })
+          el.addEventListener("click", () => {
+            core.ipcRenderer.send(TITLE_BAR_CHANNEL, "maximizeOrUnmaximize");
+          });
 
-          core.ipcRenderer.on(
-            TITLE_BAR_MAXIMIZE_REPLY_CHANNEL,
-            (_, maximized) => {
-              if (maximized === 1) {
-                el.classList.add('window__control-max_active')
-              } else {
-                el.classList.remove('window__control-max_active')
-              }
+          core.ipcRenderer.on(TITLE_BAR_MAXIMIZE_REPLY_CHANNEL, (_, maximized) => {
+            if (maximized === 1) {
+              el.classList.add("window__control-max_active");
+            } else {
+              el.classList.remove("window__control-max_active");
             }
-          )
+          });
 
-          controls.appendChild(el)
+          controls.appendChild(el);
         }
 
-        const closable = !this.hasAttribute('noclose')
+        const closable = !this.hasAttribute("noclose");
 
         if (closable) {
-          const el = document.createElement('div')
-          el.classList.add('window__control', 'window__control-close')
+          const el = document.createElement("div");
+          el.classList.add("window__control", "window__control-close");
 
-          const icon = document.createElement('span')
-          icon.classList.add('window__control-icon')
+          const icon = document.createElement("span");
+          icon.classList.add("window__control-icon");
 
-          el.appendChild(icon)
+          el.appendChild(icon);
 
-          el.addEventListener('click', () => {
-            core.ipcRenderer.send(TITLE_BAR_CHANNEL, 'close')
-          })
+          el.addEventListener("click", () => {
+            core.ipcRenderer.send(TITLE_BAR_CHANNEL, "close");
+          });
 
-          controls.appendChild(el)
+          controls.appendChild(el);
         }
       }
 
-      shadow.appendChild(controls)
+      shadow.appendChild(controls);
     }
 
-    const fullscreenable = this.hasAttribute('supportfullscreen')
+    const fullscreenable = this.hasAttribute("supportfullscreen");
 
     if (fullscreenable) {
-      core.ipcRenderer.on(
-        TITLE_BAR_FULLSCREEN_REPLY_CHANNEL,
-        (_, fullscreen) => {
-          const root = this.shadowRoot
+      core.ipcRenderer.on(TITLE_BAR_FULLSCREEN_REPLY_CHANNEL, (_, fullscreen) => {
+        const root = this.shadowRoot;
 
-          if (root) {
-            const region = root.querySelector(
-              '.titlebar__drag-region'
-            )
-            if (region) {
-              region.style['app-region'] = fullscreen === 1 ? 'no-drag' : ''
-            }
+        if (root) {
+          const region = root.querySelector(".titlebar__drag-region");
+          if (region) {
+            region.style["app-region"] = fullscreen === 1 ? "no-drag" : "";
+          }
 
-            const controls = root.querySelector(
-              '.titlebar__window-controls'
-            )
+          const controls = root.querySelector(".titlebar__window-controls");
 
-            if (controls) {
-              controls.style.display = fullscreen === 1 ? 'none' : ''
-            }
+          if (controls) {
+            controls.style.display = fullscreen === 1 ? "none" : "";
           }
         }
-      )
+      });
     }
   }
 }
 
-customElements.define('title-bar', TitleBar)
+customElements.define("title-bar", TitleBar);

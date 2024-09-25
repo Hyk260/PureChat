@@ -1,6 +1,6 @@
 <template>
   <div class="desktop-crad" @click="onClick(station)">
-    <div v-if="station" class="container animate__animated" :class="fnStyle()">
+    <div v-if="station" class="container animate__animated animate__faster" :class="mode">
       <el-icon class="close" @click.stop="onClose"><Close /></el-icon>
       <img class="size-50" :src="icon()" alt="" />
       <div class="flex">
@@ -16,10 +16,9 @@
 import { ref } from "vue";
 import { cloneDeep } from "lodash-es";
 
-const tip = "有人提到了你";
 const station = ref(null);
 const extra = ref(null);
-const mode = "enter"; // enter leave
+const mode = ref("animate__fadeInRight");
 
 window.addEventListener("notification-message", (e) => {
   const { title, body, icon, extraData } = e.detail;
@@ -37,24 +36,31 @@ function onClick(data = {}) {
   console.log(window);
   console.log("click", data);
   const dody = cloneDeep(data);
-  window.notification.doClick(dody || {});
+  mode.value = "animate__zoomOutRight"
+   setTimeout(() => {
+    window.notification.doClick(dody || {});
+  },500)
 }
 
 function onClose() {
   console.log("close");
-  window.notification.close();
+  mode.value = "animate__zoomOutRight"
+  setTimeout(() => {
+    window.notification.close();
+  },500)
 }
 
-function fnStyle(t = mode) {
-  switch (t) {
-    case "enter":
-      return "animate__fadeInRightBig";
-    case "leave":
-      return "animate__bounceOutRight";
-    default:
-      return "";
-  }
-}
+// function fnStyle(t = mode) {
+//   // return ''
+//   switch (t) {
+//     case "enter":
+//       return "animate__fadeInRightBig";
+//     case "leave":
+//       return "animate__zoomOut";
+//     default:
+//       return "";
+//   }
+// }
 </script>
 
 <style lang="scss" scoped>

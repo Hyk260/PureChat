@@ -145,7 +145,7 @@ class Notification extends TypedEventEmitter {
     this.title = title;
     this.icon = icon ? (typeof icon === "object" ? icon.toDataURL() : icon) : this.icon;
     this.offset = offset;
-    this.duration = Math.max(duration, 2000);
+    this.duration = Math.max(duration, 3000);
 
     if (customPage) {
       this.customPage = customPage;

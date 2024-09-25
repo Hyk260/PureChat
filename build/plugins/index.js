@@ -16,7 +16,7 @@ import { cdn } from "./cdn";
  */
 export function setupVitePlugins(viteEnv) {
   const plugins = [
-    VueDevtools(),
+    // VueDevtools(),
     vue(),
     // 打包进度
     progress(),
