@@ -77,7 +77,7 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { useStore } from "vuex";
 import EmptyMessage from "../components/EmptyMessage.vue";
 import Label from "../components/Label.vue";
-import { chatName, html2Escape } from "../utils/utils";
+import { chatName, html2Escape, formatContent } from "../utils/utils";
 import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop();
@@ -150,26 +150,6 @@ const createMessagePrompt = (type = "at") => {
   return `<span style='color:#f44336;'>[${messageTypes[type]}]</span> `;
 };
 
-const parseData = (data) => {
-  if (!data || !Array.isArray(data)) return "";
-  const result = [];
-  console.log(data);
-  data.forEach((item) => {
-    const text =
-      item.children
-        ?.map((child) => {
-          if (child.type === "image" && child?.alt && child?.class === "EmoticonPack")
-            return child?.alt;
-          if (child.type === "image") return "[图片]";
-          if (child.type === "attachment") return "[文件]";
-          return child.text || ""; // 处理文本
-        })
-        .join("") || ""; // 确保返回字符串
-
-    if (item.type === "paragraph") result.push(text);
-  });
-  return result.join("");
-};
 // 定义消息提示元素
 const CustomMention = (props) => {
   const { item } = props;
@@ -178,7 +158,7 @@ const CustomMention = (props) => {
   const draft = sessionDraftMap.value.get(ID);
   // 草稿
   if (draft && isdraft(item)) {
-    const str = html2Escape(parseData(draft));
+    const str = html2Escape(formatContent(draft));
     return h("span", { innerHTML: `${createMessagePrompt("draft")}${str}` });
   }
   // @消息
