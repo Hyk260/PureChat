@@ -101,13 +101,11 @@ export class ChatGPTApi {
   }
   /**
    * 处理流式聊天的响应。
-   *
    * @param {string} chatPath - 聊天请求的路径。
    * @param {object} chatPayload - 聊天请求的有效负载。
    * @param {object} options - 处理选项，包括错误处理、更新和完成回调。
    * @param {AbortController} controller - 用于控制请求的 AbortController。
    * @param {number} requestTimeoutId - 请求超时的 ID。
-   *
    * @returns {Promise<void>} - 无返回值的 Promise。
    */
   async handleStreamingChat(chatPath, chatPayload, options, controller, requestTimeoutId) {
