@@ -1,7 +1,9 @@
 import { localStg } from "@/utils/storage";
 import { getValueByKey } from "@/utils/common";
 
-const info = localStg.get("timProxy")?.userProfile?.profileCustomField;
+function getInfo() {
+  return localStg.get("timProxy")?.userProfile?.profileCustomField;
+}
 
 function prefix(key) {
   const prefix = "Tag_Profile_Custom_";
@@ -39,6 +41,6 @@ export const OpenaiConfig = {
    * @default 12
    */
   historyMessageCount: 12,
-  token: getValueByKey(info, prefix("ApiKey")) || import.meta.env.VITE_OPENAI_API_KEY,
-  openaiUrl: getValueByKey(info, prefix("ProxyUrl")) || import.meta.env.VITE_OPENAI_PROXY_URL,
+  token: getValueByKey(getInfo(), prefix("ApiKey")) || import.meta.env.VITE_OPENAI_API_KEY,
+  openaiUrl: getValueByKey(getInfo(), prefix("ProxyUrl")) || import.meta.env.VITE_OPENAI_PROXY_URL,
 };

@@ -122,6 +122,7 @@ const backgInfo = (url) => {
   height: 18px;
   background-size: 18px 18px;
   line-height: 18px;
+  vertical-align: bottom;
 }
 .square {
   border-radius: 3px;

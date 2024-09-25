@@ -102,6 +102,7 @@ export const handleCopyMsg = async (data) => {
 };
 
 export const GroupSystemNotice = (message) => {
+  console.log("GroupSystemNotice", message);
   const groupName = message.payload.groupProfile.name || message.payload.groupProfile.groupID;
   switch (message.payload.operationType) {
     case 1:
@@ -113,11 +114,13 @@ export const GroupSystemNotice = (message) => {
     case 4:
       return `你被管理员${message.payload.operatorID}踢出群组：${groupName}`;
     case 5:
-      return `群：${groupName} 已被${message.payload.operatorID}解散`;
+      // ${message.payload.operatorID}
+      return `群：${groupName} 已被管理员解散`;
     case 6:
       return `${message.payload.operatorID}创建群：${groupName}`;
     case 7:
-      return `${message.payload.operatorID}邀请你加群：${groupName}`;
+      // ${message.payload.operatorID}
+      return `管理员邀请你加群：${groupName}`;
     case 8:
       return `你退出群组：${groupName}`;
     case 9:
@@ -210,11 +213,23 @@ export const html2Escape = (str) => {
 export async function sendChatMessage(options) {
   console.log("options", options);
   const Message = [];
-  const { convId, convType, textMsg, aitStr, aitlist, files = [], video = [], image = [], reply } = options;
+  const {
+    convId,
+    convType,
+    textMsg,
+    aitStr,
+    aitlist,
+    files = [],
+    video = [],
+    image = [],
+    reply,
+  } = options;
 
   // @消息
   if (aitStr) {
-    Message.push(createTextAtMsg({ convId, convType, textMsg: aitStr, atUserList: aitlist, reply }));
+    Message.push(
+      createTextAtMsg({ convId, convType, textMsg: aitStr, atUserList: aitlist, reply })
+    );
   }
   // 文本消息
   else if (textMsg) {
@@ -241,7 +256,6 @@ export async function sendChatMessage(options) {
 
   return Message;
 }
-
 
 export const customAlert = (s, t) => {
   switch (t) {
@@ -421,13 +435,6 @@ export function searchByPinyin(searchStr) {
   return eventType;
 }
 
-function parseContentFromHTML(html) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
-  const content = doc.body.textContent; // trim()
-  return content;
-}
-
 /**
  * 根据输入的字符串过滤提及列表并触发相关操作。
  * @param {string} inputStr - 输入的字符串。
@@ -532,7 +539,7 @@ export function getOperatingSystem(userAgent = navigator.userAgent) {
 
 export const handleToggleLanguage = () => {
   const placeholder = document.querySelector(".w-e-text-placeholder");
-  if (placeholder) placeholder.innerHTML = placeholderMap.value['input'];
+  if (placeholder) placeholder.innerHTML = placeholderMap.value["input"];
 };
 
 export const handleEditorKeyDown = async () => {
@@ -556,4 +563,24 @@ export const getAssetsFile = (url) => {
 
 export const isSelf = (item) => {
   return item.from === localStg.get(TIM_PROXY)?.userProfile?.userID;
+};
+
+export const formatContent = (data) => {
+// console.log("formatContent:", data);
+ return data
+   .filter((item) => item.type === "paragraph")
+   .map(({ children }) => {
+     return (
+       children
+         ?.map((t) => {
+           if (t.type === "image" && t?.alt && t?.class === "EmoticonPack") return t.alt;
+           if (t.type === "image") return "[图片]";
+           if (t.type === "attachment") return "[文件]";
+           if (t.type === "mention") return `@${t.value}`;
+           return t.text || ""; // 处理文本
+         })
+         .join("") || "" // 确保返回字符串
+     );
+   })
+   .join("");
 };

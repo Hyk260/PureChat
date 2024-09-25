@@ -54,7 +54,7 @@ function copyImageToClipboard(dataUrl) {
 export const useScreenshot = () => {
   const [loading, setLoading] = useBoolean();
 
-  const handleDownload = async (imageType = ImageType.JPG, title = "") => {
+  const handleDownload = async (imageType = ImageType.JPG, title = "", cd) => {
     setLoading(true);
 
     try {
@@ -99,7 +99,8 @@ export const useScreenshot = () => {
       }
       setTimeout(() => {
         setLoading(false);
-      }, 500);
+        cd && cd?.();
+      }, 300);
     } catch (error) {
       console.error("Failed to download image", error);
       setLoading(false);
