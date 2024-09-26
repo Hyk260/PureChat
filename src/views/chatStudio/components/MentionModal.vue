@@ -57,6 +57,8 @@ export default {
     }),
     // 根据 <input> value 筛选 list
     searchedList() {
+      // 群成员小于2人，不显示@列表
+      if (this.currentMemberList.length <= 1) return []
       const searchVal = this.searchVal.trim().toLowerCase();
       return this.list.filter((item) => {
         const name = item.nick.toLowerCase();

@@ -222,11 +222,11 @@ export default {
       const checkBoxElements = Array.from(document.querySelectorAll(".check-btn"));
       const messageElement = document.querySelector(".message-view");
       const childElements = Array.from(messageElement.children);
-      checkBoxElements.forEach((element) => {
-        element.checked = false;
+      checkBoxElements.forEach((t) => {
+        t.checked = false;
       });
-      childElements.forEach((element) => {
-        element.classList.remove("style-select");
+      childElements.forEach((t) => {
+        t.classList.remove("style-select");
       });
     },
     setDialogVisible(type = "") {
@@ -240,6 +240,7 @@ export default {
 </script>
 <style lang="scss">
 .tabulation-style {
+  height: 400px;
   max-height: 400px;
   overflow: auto;
   .tabulationHover {

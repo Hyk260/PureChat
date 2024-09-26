@@ -1,4 +1,5 @@
 // import ScreenShot from "js-web-screen-shot";
+import { convertBlobUrlToDataUrl } from "@/utils/chat/index";
 
 export function checkTextNotEmpty(arr) {
   return arr.some((obj) => {
@@ -8,16 +9,52 @@ export function checkTextNotEmpty(arr) {
   });
 }
 
-export function transformData(data) {
-  return data
-    .filter((item) => !item.isTimeDivider && !item.isDeleted && !item.isRevoked)
-    .map((data) => {
-      return {
-        role: data.flow === "in" ? "assistant" : "user",
-        content: data.payload.text,
-      };
+// 处理文本类型的消息
+function transformTextElement(data) {
+  return {
+    role: data.flow === "in" ? "assistant" : "user",
+    content: data.payload.text,
+  };
+}
+
+// 处理图像类型的消息
+async function transformImageElement(data) {
+  const imageUrl = await convertBlobUrlToDataUrl(data.elements[0]._imageMemoryURL);
+  return {
+    role: data.flow === "in" ? "assistant" : "user",
+    content: [
+      // {
+      //   text: "",
+      //   type: "text",
+      // },
+      {
+        image_url: {
+          detail: "auto",
+          url: imageUrl,
+        },
+        type: "image_url",
+      },
+    ],
+  };
+}
+
+export async function transformData(data) {
+  const relevantData = data.filter(
+    (item) =>
+      !item.isTimeDivider && !item.isDeleted && !item.isRevoked && item.type !== "TIMCustomElem"
+  );
+
+  const transformedData = await Promise.all(
+    relevantData.map(async (item) => {
+      if (item.type === "TIMTextElem") {
+        return transformTextElement(item);
+      } else if (item.type === "TIMImageElem") {
+        return await transformImageElement(item);
+      }
     })
-    .reverse();
+  );
+
+  return transformedData.reverse();
 }
 
 /**
