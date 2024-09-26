@@ -381,7 +381,7 @@ export const extractAitInfo = (editor) => {
 };
 
 /**
- * 比较两个用户的 userID，用于排序
+ * 比较两个用户的 userID，用于排序 机器人排在首位
  * @param {Object} a - 第一个用户对象
  * @param {Object} b - 第二个用户对象
  * @returns {number} - 返回比较结果，-1 表示 a 在 b 前面，1 表示 b 在 a 前面，0 表示相等

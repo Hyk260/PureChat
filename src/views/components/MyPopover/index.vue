@@ -7,7 +7,7 @@
     ref="cardRef"
   >
     <div class="title">
-      <img :src="cardData.avatar || squareUrl" alt="头像" />
+      <img :src="cardData.avatar || fnAvatar(cardData?.from) || squareUrl" alt="头像" />
       <span>{{ cardData.nick }}</span>
       <Label :userID="cardData?.from" />
     </div>
@@ -32,6 +32,7 @@ import Label from "@/views/chatStudio/components/Label.vue";
 import { onClickOutside } from "@vueuse/core";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useStore } from "vuex";
+import { fnAvatar } from "@/ai/utils";
 import { squareUrl } from "../../chatStudio/utils/menu";
 const [card, setCard] = useBoolean();
 

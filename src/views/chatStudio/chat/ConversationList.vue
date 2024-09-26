@@ -179,11 +179,11 @@ const handleContextMenuEvent = (e, item) => {
   contextMenuItemInfo.value = item;
   // 会话
   RIGHT_CLICK_CHAT_LIST.map((t) => {
-    if (t.id == "pinged") {
+    if (t.id === "pinged") {
       t.text = item.isPinned ? "取消置顶" : "会话置顶";
     }
-    if (t.id == "disable") {
-      let off = item.messageRemindType == "AcceptNotNotify";
+    if (t.id === "disable") {
+      let off = item.messageRemindType === "AcceptNotNotify";
       t.text = off ? "关闭消息免打扰" : "消息免打扰";
     }
   });

@@ -341,11 +341,12 @@ const sendMessage = async () => {
   const message = await sendChatMessage(data);
   console.log("sendChatMessage:", message);
   clearInputInfo();
-  message.map((message) => {
+  message.map((t, i) => {
     dispatch("SESSION_MESSAGE_SENDING", {
       payload: {
         convId: currentConversation.value.conversationID,
-        message,
+        message: t,
+        last: message.length - 1 === i,
       },
     });
   });

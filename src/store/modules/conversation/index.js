@@ -9,11 +9,7 @@ import {
   setMessageRead,
   setMessageRemindType,
 } from "@/api/im-sdk-api/index";
-import {
-  CONVERSATIONTYPE,
-  EMOJI_RECENTLY,
-  HISTORY_MESSAGE_COUNT,
-} from "@/constants/index";
+import { CONVERSATIONTYPE, EMOJI_RECENTLY, HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
   addTimeDivider,
   checkTextNotEmpty,
@@ -26,6 +22,7 @@ import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
+import { nextTick } from "vue";
 
 const conversation = {
   state: {
@@ -402,7 +399,7 @@ const conversation = {
     // 会话消息发送
     async SESSION_MESSAGE_SENDING({ state, commit, dispatch }, action) {
       const { payload } = action;
-      const { convId, message } = payload;
+      const { convId, message, last = true } = payload;
       // 消息上屏 预加载
       commit("SET_HISTORYMESSAGE", {
         type: "UPDATE_MESSAGES",
@@ -413,10 +410,17 @@ const conversation = {
       const { code, message: result } = await sendMsg(message);
       if (code === 0) {
         dispatch("SENDMSG_SUCCESS_CALLBACK", { convId, message: result });
-        dispatch("IM_CHAT_CALLBACK", {
-          list: transformData(state.currentMessageList),
-          message: result,
-        });
+        if (last) {
+          let list = [];
+          try {
+            list = await transformData(state.currentMessageList);
+          } catch (error) {
+            console.error(error);
+          }
+          nextTick(() => {
+            dispatch("IM_CHAT_CALLBACK", { list, message: result });
+          });
+        }
       } else {
         console.log("发送失败", code, result);
       }

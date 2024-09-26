@@ -32,12 +32,24 @@ export const fileImgToBase64Url = (file) => {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = () => {
-      const base64Value = reader.result;
-      resolve(base64Value);
+      resolve(reader.result);
     };
     reader.readAsDataURL(file);
   });
 };
+
+// 使用 fetch API 来获取 Blob 对象
+// 'blob:http://localhost:8080/d5d25c...' => 'data:image/...'
+export async function convertBlobUrlToDataUrl(blobUrl) {
+  try {
+    const response = await fetch(blobUrl);
+    const blob = await response.blob();
+    const dataUrl = await fileImgToBase64Url(blob);
+    return dataUrl;
+  } catch (error) {
+    console.error("Error converting blob to data URL:", error);
+  }
+}
 
 /**
  * 将远程图片 URL 转换为 base64 格式
