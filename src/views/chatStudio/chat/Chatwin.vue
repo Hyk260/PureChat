@@ -255,7 +255,7 @@ const scrollbar = ({ scrollLeft, scrollTop }) => {
 };
 
 const updateScrollBarHeight = (type) => {
-  console.log('scrollBar:', type)
+  type && console.log('scrollBar:', type)
   if (type === "instantly") {
     scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight);
   } else {

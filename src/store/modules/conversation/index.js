@@ -411,12 +411,7 @@ const conversation = {
       if (code === 0) {
         dispatch("SENDMSG_SUCCESS_CALLBACK", { convId, message: result });
         if (last) {
-          let list = [];
-          try {
-            list = await transformData(state.currentMessageList);
-          } catch (error) {
-            console.error(error);
-          }
+          const list = await transformData(state.currentMessageList);
           nextTick(() => {
             dispatch("IM_CHAT_CALLBACK", { list, message: result });
           });

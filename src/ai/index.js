@@ -25,6 +25,7 @@ const updataMessage = (msg, message = "") => {
     type: "UPDATE_MESSAGES",
     payload: { convId: `C2C${msg.from}`, message: cloneDeep(msg) },
   });
+  emitter.emit("updataScroll");
 };
 
 const fnCreateLodMsg = (params) => {

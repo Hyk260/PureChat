@@ -39,22 +39,28 @@ async function transformImageElement(data) {
 }
 
 export async function transformData(data) {
-  const relevantData = data.filter(
-    (item) =>
-      !item.isTimeDivider && !item.isDeleted && !item.isRevoked && item.type !== "TIMCustomElem"
-  );
+  try {
+    const relevantData = data.filter((item) => {
+      return (
+        !item.isTimeDivider && !item.isDeleted && !item.isRevoked && item.type !== "TIMCustomElem"
+      );
+    });
 
-  const transformedData = await Promise.all(
-    relevantData.map(async (item) => {
-      if (item.type === "TIMTextElem") {
-        return transformTextElement(item);
-      } else if (item.type === "TIMImageElem") {
-        return await transformImageElement(item);
-      }
-    })
-  );
+    const transformedData = await Promise.all(
+      relevantData.map(async (item) => {
+        if (item.type === "TIMTextElem") {
+          return transformTextElement(item);
+        } else if (item.type === "TIMImageElem") {
+          return await transformImageElement(item);
+        }
+      })
+    );
 
-  return transformedData.reverse();
+    return transformedData.reverse();
+  } catch (error) {
+    console.error("Error transforming data:", error);
+    return [];
+  }
 }
 
 /**
