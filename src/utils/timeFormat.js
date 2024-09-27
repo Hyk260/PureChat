@@ -163,9 +163,9 @@ export function timeFormatCopy(timestamp, mustIncludeTime = false) {
 }
 
 // 格式化一个时间戳，不包含时间部分 
-const formattedTime = timeFormat(1613687688000); 
-console.log(formattedTime); // 输出：2月19日 
+// const formattedTime = timeFormat(1613687688000); 
+// console.log(formattedTime); // 输出：2月19日 
 
 // 格式化一个时间戳，包含时间部分 
-const formattedTimeWithTime = timeFormat(1613687688000, true); 
-console.log(formattedTimeWithTime); // 输出：2月19日 08:48
+// const formattedTimeWithTime = timeFormat(1613687688000, true); 
+// console.log(formattedTimeWithTime); // 输出：2月19日 08:48

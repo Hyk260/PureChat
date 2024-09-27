@@ -9,8 +9,12 @@
     >
       <svg-icon iconClass="iconxiaolian" class="icon-hover" />
     </span>
+    <!-- 选模型 -->
+    <span v-show="isRobot(toAccount)" @click="selectModel">
+      <svg-icon iconClass="model" class="icon-hover robot" />
+    </span>
     <!-- 图片 -->
-    <span v-show="!isRobot(toAccount)" :title="$t('chat.picture')" @click="sendImageClick">
+    <span v-show="isVision" :title="$t('chat.picture')" @click="sendImageClick">
       <svg-icon iconClass="icontupian" class="icon-hover" />
     </span>
     <!-- 文件 -->
@@ -24,10 +28,6 @@
       @click="clickCscreenshot"
     >
       <svg-icon iconClass="iconjietu" class="icon-hover" />
-    </span>
-    <!-- 选模型 -->
-    <span v-show="isRobot(toAccount)" @click="selectModel">
-      <svg-icon iconClass="model" class="icon-hover robot" />
     </span>
     <!-- 机器人配置 -->
     <span v-show="isRobot(toAccount)" :title="$t('chat.configuration')" @click="openRobotBox">
@@ -88,13 +88,14 @@ import { isRobot, screenshot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import EmotionPackBox from "./EmotionPackBox.vue";
 import RobotOptions from "./RobotOptions.vue";
 import RobotModel from "./RobotModel.vue";
 import { getAssetsFile } from "../utils/utils";
 import emojiQq from "@/utils/emoji/emoji-map-qq";
+import { getAllModels } from "@/ai/utils";
 import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
 
 const emjRef = ref();
@@ -105,7 +106,8 @@ const { commit, dispatch } = useStore();
 
 const emit = defineEmits(["setToolbar"]);
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-const { fullScreen, currentConversation } = useState({
+const { model, fullScreen, currentConversation } = useState({
+  model: (state) => state.robot.model,
   fullScreen: (state) => state.conversation.fullScreen,
   currentConversation: (state) => state.conversation.currentConversation,
 });
@@ -160,6 +162,14 @@ function customMessage() {
     },
   });
 }
+
+const isVision = computed(() => {
+  if (isRobot(toAccount.value)) {
+    return getAllModels(model.value)?.vision;
+  } else {
+    return true;
+  }
+});
 
 function sendImage(e) {
   emit("setToolbar", {
