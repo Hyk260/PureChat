@@ -8,6 +8,7 @@ import {
   StoreKey,
   modelConfig,
   prompt,
+  modelValue,
   RobotAvatar,
 } from "@/ai/constant";
 import { isRobot } from "@/utils/chat/index";
@@ -234,4 +235,15 @@ export function generateDalle3RequestPayload(config) {
     quality: "standard",
     style: "vivid",
   };
+}
+
+export function getAllModels(model = '') {
+  const list = [];
+  for (const [key, value] of Object.entries(modelValue)) {
+    list.push(...value.Model.options.chatModels);
+  }
+  if (model) {
+    return list.filter((t) => t.id === model)?.[0] || {};
+  }  
+  return list;
 }
