@@ -94,7 +94,14 @@
 
 <script setup>
 import { ROLES, StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
-import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
+import {
+  getModelType,
+  useAccessStore,
+  usePromptStore,
+  prefix,
+  getInfo,
+  getValueByKey,
+} from "@/ai/utils";
 import { useBoolean } from "@/utils/hooks/index";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
@@ -130,7 +137,7 @@ function isOllama() {
 async function onRefresh() {
   const list = await new OllamaAI().models();
   modelData.value.Model.options.chatModels = list;
-  localStg.set('olama-local-model-list', list);
+  localStg.set("olama-local-model-list", list);
 
   // const api = new ClientApi();
   // const list = await api.llm.models()

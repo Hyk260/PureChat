@@ -96,7 +96,7 @@ export const RobotAvatar = {
 
 // 默认配置
 export const modelConfig = {
-  [ModelProvider.GPT]: { ...OpenaiConfig },
+  [ModelProvider.GPT]: { ...OpenaiConfig() },
   [ModelProvider.ChatGLM]: { ...ZhiPuConfig },
   [ModelProvider.ZeroOne]: { ...YiConfig },
   [ModelProvider.Qwen]: { ...QwenConfig },
