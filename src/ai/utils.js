@@ -11,12 +11,17 @@ import {
   modelValue,
   RobotAvatar,
 } from "@/ai/constant";
+import { OpenaiConfig } from "@/ai/platforms/openai/config";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 
 export const useAccessStore = (model = ModelProvider.GPT) => {
   try {
-    return localStg.get(StoreKey.Access)?.[model] || modelConfig[model];
+    const access = localStg.get(StoreKey.Access)?.[model] || "";
+    if (model === "GPT" && !access) {
+      return OpenaiConfig();
+    }
+    return access || modelConfig[model];
   } catch (error) {
     localStg.remove(StoreKey.Access);
     return {};
@@ -237,13 +242,28 @@ export function generateDalle3RequestPayload(config) {
   };
 }
 
-export function getAllModels(model = '') {
+export function getAllModels(model = "") {
   const list = [];
   for (const [key, value] of Object.entries(modelValue)) {
     list.push(...value.Model.options.chatModels);
   }
   if (model) {
     return list.filter((t) => t.id === model)?.[0] || {};
-  }  
+  }
   return list;
+}
+
+export function getInfo() {
+  return localStg.get("timProxy")?.userProfile?.profileCustomField;
+}
+
+export function prefix(key) {
+  const prefix = "Tag_Profile_Custom_";
+  return `${prefix}${key}`;
+}
+
+export function getValueByKey(array, key) {
+  if (!array?.length || !key) return null;
+  const item = array.find((t) => t.key === key);
+  return item && item.value ? item.value : null;
 }
