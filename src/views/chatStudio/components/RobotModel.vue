@@ -153,6 +153,9 @@ emitter.on("openModeList", () => {
 .meta {
   background: linear-gradient(45deg, rgb(0, 127, 248), rgb(6, 104, 225), rgb(0, 127, 248));
 }
+.llava {
+  background: linear-gradient(-45deg, rgb(203, 45, 48), rgb(237, 130, 58));
+}
 .item-group-title {
   display: flex;
   align-items: center;

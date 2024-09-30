@@ -100,7 +100,14 @@ import {
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
 import { AVATAR_LIST, MENU_LIST, RIGHT_CLICK_MENU_LIST, circleUrl } from "../utils/menu";
-import { handleCopyMsg, loadMsgModule, msgOne, msgType, validatelastMessage, isSelf } from "../utils/utils";
+import {
+  handleCopyMsg,
+  loadMsgModule,
+  msgOne,
+  msgType,
+  validatelastMessage,
+  isSelf,
+} from "../utils/utils";
 
 import { deleteMsgList, getMsgList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
 import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX } from "@/constants/index";
@@ -115,7 +122,7 @@ import Checkbox from "../components/Checkbox.vue";
 import LoadMore from "../components/LoadMore.vue";
 import NameComponent from "../components/NameComponent.vue";
 import Stateful from "../components/Stateful.vue";
-import { fnAvatar } from "@/ai/utils"
+import { fnAvatar } from "@/ai/utils";
 
 const timeout = ref(false);
 const isRight = ref(true);
@@ -255,7 +262,9 @@ const scrollbar = ({ scrollLeft, scrollTop }) => {
 };
 
 const updateScrollBarHeight = (type) => {
-  type && console.log('scrollBar:', type)
+  if (type) {
+    console.log("scrollBar:", type);
+  }
   if (type === "instantly") {
     scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight);
   } else {

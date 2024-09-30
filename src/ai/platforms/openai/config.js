@@ -1,4 +1,3 @@
-
 import { prefix, getInfo, getValueByKey } from "@/ai/utils";
 
 export const OpenaiConfig = () => {
@@ -34,7 +33,6 @@ export const OpenaiConfig = () => {
      */
     historyMessageCount: 12,
     token: getValueByKey(getInfo(), prefix("ApiKey")) || import.meta.env.VITE_OPENAI_API_KEY,
-    openaiUrl:
-      getValueByKey(getInfo(), prefix("ProxyUrl")) || import.meta.env.VITE_OPENAI_PROXY_URL,
+    openaiUrl: getValueByKey(getInfo(), prefix("ProxyUrl")) || import.meta.env.VITE_OPENAI_PROXY_URL,
   };
-}
+};

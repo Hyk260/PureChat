@@ -43,6 +43,8 @@ function getIcon(modelName) {
     return "meta";
   } else if (modelName.startsWith("qwen")) {
     return "tongyi";
+  } else if (modelName.startsWith("llava")) {
+    return "llava";
   }
   return "";
 }
@@ -121,6 +123,7 @@ export class OllamaAI {
         }
       }
     }
+    
     return ollamaMessage;
   }
 }
