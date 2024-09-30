@@ -74,6 +74,7 @@ export function getModelSvg(id) {
     [ModelProvider.ZeroOne]: "zeroone",
     [ModelProvider.Qwen]: "tongyi",
     [ModelProvider.Ollama]: "ollama",
+    llava: "llava",
   };
   return data[modelId] || "";
 }
