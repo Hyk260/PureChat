@@ -2,7 +2,7 @@
   <el-scrollbar class="scrollbar-list">
     <EmptyMessage classNmae="no-msg" v-if="tabList.length == 0" />
     <div
-      v-for="item in tabList"
+      v-for="item in searchForData"
       class="message-item"
       :key="item.conversationID"
       :id="`message_${item.conversationID}`"
@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import { h, ref, watch } from "vue";
+import { h, ref, watch, computed } from "vue";
 import { RIGHT_CLICK_CHAT_LIST } from "../utils/menu";
 import { pinConversation, setMessageRead } from "@/api/im-sdk-api/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
@@ -86,14 +86,31 @@ const contextMenuItemInfo = ref([]);
 
 const { dispatch, commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
-const { activetab, chat, userProfile, sessionDraftMap, postponeUnread, arrowRight } = useState({
+const {
+  activetab,
+  chat,
+  userProfile,
+  sessionDraftMap,
+  postponeUnread,
+  arrowRight,
+  filterConversationList,
+} = useState({
   sessionDraftMap: (state) => state.conversation.sessionDraftMap,
   arrowRight: (state) => state.conversation.arrowRight,
   userProfile: (state) => state.user.userProfile,
   activetab: (state) => state.conversation.activetab,
+  filterConversationList: (state) => state.conversation.filterConversationList,
   conversationList: (state) => state.conversation.conversationList,
   chat: (state) => state.conversation.currentConversation,
   postponeUnread: (state) => state.conversation.postponeUnread,
+});
+
+const searchForData = computed(() => {
+  if (filterConversationList.value.length && activetab.value === "whole") {
+    return filterConversationList.value;
+  } else  {
+    return tabList.value;
+  }
 });
 
 const isdraft = (item) => {
@@ -212,6 +229,7 @@ const handleConvListClick = (data) => {
   });
   emitter.emit("handleInsertDraft", data);
   emitter.emit("updataScroll");
+  emitter.emit("setSearchForData");
 };
 
 const handleClickMenuItem = (item) => {

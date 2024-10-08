@@ -12,7 +12,7 @@
         @blur="onBlur"
       >
       </el-input>
-      <div class="header-search-add">
+      <div class="header-search-add flex-c">
         <FontIcon @click="opendialog" iconName="Plus" />
       </div>
     </div>
@@ -22,28 +22,66 @@
 </template>
 
 <script setup>
+import { nextTick } from "vue";
+import { useGetters } from "@/utils/hooks/useMapper";
 import { showConfirmationBox } from "@/utils/message";
 import { Search } from "@element-plus/icons-vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useStore } from "vuex";
+import { debounce, isEmpty } from "lodash-es";
 import SearchBox from "./SearchBox.vue";
+import emitter from "@/utils/mitt-bus";
 
 const appoint = ref("");
+const filterData = ref([]);
 const searchBoxRef = ref();
-const { dispatch } = useStore();
+const { dispatch, commit } = useStore();
+const { tabList } = useGetters(["tabList"]);
+
+const setAppoint = (value = "") => {
+  appoint.value = value;
+};
 
 const createGroup = async () => {
   const data = { message: "创建群聊" };
   const result = await showConfirmationBox(data, "prompt");
   if (result === "cancel") return;
-  dispatch("CREATE_GROUP", { groupName: result.value });
+  commit("CREATE_GROUP", { groupName: result.value });
 };
 
 const opendialog = () => {
   createGroup();
 };
-const onBlur = () => {};
+
+const onBlur = () => {
+  setAppoint();
+};
 const onFocus = () => {};
+
+const fnAppoint = debounce((key) => {
+  if (isEmpty(key)) {
+    commit("SET_CONVERSATION_VALUE", { key: "filterConversationList", value: [] });
+    return;
+  }
+  filterData.value = tabList.value.filter((item) => {
+    if (item.type === "GROUP") {
+      return item.lastMessage.messageForShow.includes(key) || item.groupProfile.name.includes(key);
+    } else if (item.type === "C2C") {
+      return item.userProfile.nick.includes(key) || item.lastMessage.messageForShow.includes(key);
+    }
+  });
+  console.log(filterData.value);
+  commit("SET_CONVERSATION_VALUE", { key: "filterConversationList", value: filterData.value });
+}, 100);
+
+watch(appoint, (value) => {
+  fnAppoint(value);
+});
+
+emitter.on("setSearchForData", (value = "") => {
+  setAppoint();
+  commit("SET_CONVERSATION_VALUE", { key: "filterConversationList", value: [] });
+});
 </script>
 
 <style lang="scss" scoped>
@@ -61,7 +99,6 @@ const onFocus = () => {};
   }
 }
 .header-search-add {
-  @include flex-center;
   width: 32px;
   height: 32px;
   background: #54b4ef;

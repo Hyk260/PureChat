@@ -39,6 +39,7 @@ const conversation = {
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
     conversationList: getChatListCache() ?? [], // 会话列表数据
+    filterConversationList: [],
     currentReplyMsg: null, // 回复数据
     activetab: "whole", // 全部 未读 提及我
     outside: "message", // 侧边栏初始状态
