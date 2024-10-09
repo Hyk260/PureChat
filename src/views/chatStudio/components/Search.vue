@@ -58,18 +58,29 @@ const onBlur = () => {
 };
 const onFocus = () => {};
 
+const matchesFilter = (item, searchStr) => {
+
+  const lastMessage = item.lastMessage.messageForShow.toUpperCase();
+
+  if (item.type === "GROUP") {
+    return (
+      lastMessage.includes(searchStr) || item.groupProfile.name.toUpperCase().includes(searchStr)
+    );
+  } else if (item.type === "C2C") {
+    return (
+      item.userProfile.nick.toUpperCase().includes(searchStr) || lastMessage.includes(searchStr)
+    );
+  }
+  return false;
+};
+
 const fnAppoint = debounce((key) => {
   if (isEmpty(key)) {
     commit("SET_CONVERSATION_VALUE", { key: "filterConversationList", value: [] });
     return;
   }
-  filterData.value = tabList.value.filter((item) => {
-    if (item.type === "GROUP") {
-      return item.lastMessage.messageForShow.includes(key) || item.groupProfile.name.includes(key);
-    } else if (item.type === "C2C") {
-      return item.userProfile.nick.includes(key) || item.lastMessage.messageForShow.includes(key);
-    }
-  });
+  const str = key.toUpperCase().trim()
+  filterData.value = tabList.value.filter((item) => matchesFilter(item, str));
   console.log(filterData.value);
   commit("SET_CONVERSATION_VALUE", { key: "filterConversationList", value: filterData.value });
 }, 100);
