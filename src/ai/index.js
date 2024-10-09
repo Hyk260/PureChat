@@ -25,7 +25,7 @@ const updataMessage = (msg, message = "") => {
     type: "UPDATE_MESSAGES",
     payload: { convId: `C2C${msg.from}`, message: cloneDeep(msg) },
   });
-  emitter.emit("updataScroll");
+  emitter.emit("updataScroll", "robot");
 };
 
 const fnCreateLodMsg = (params) => {
@@ -78,13 +78,11 @@ export const chatService = async (params) => {
     onUpdate(message) {
       console.log("[chat] onUpdate:", message);
       updataMessage(msg, message);
-      emitter.emit("updataScroll", "robot");
     },
     async onFinish(message) {
       console.log("[chat] onFinish:", message);
       if (!message) return;
       updataMessage(msg, message);
-      emitter.emit("updataScroll", "robot");
       await restSendMsg(chat, message);
     },
     async onError(error) {

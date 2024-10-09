@@ -217,7 +217,7 @@ const handleSelect = (e, item, type = "initial") => {
 };
 
 const isTime = (item) => {
-  return item?.isTimeDivider && item.time !== "undefined";
+  return item?.isTimeDivider && item.time !== undefined;
 };
 
 const onClickAvatar = (e, item) => {
