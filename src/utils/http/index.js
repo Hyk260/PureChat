@@ -1,9 +1,13 @@
 import { ACCESS_TOKEN } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { errorHandler } from "./tools";
-import axios from "axios"; 
+import axios from "axios";
 import { isElectron } from "@/utils/common";
+// import { nanoid } from "@/ai/platforms/ollama/protocol";
 // import { stringify } from "qs";
+
+/** 请求白名单，放置一些不需要`token`的接口（通过设置请求白名单，防止`token`过期后再请求造成的死循环问题） */
+const whiteList = ["/login"];
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig = {
@@ -25,14 +29,13 @@ const defaultConfig = {
 
 function setStart({ url }) {
   if (isElectron) return;
-  const whiteList = ['/login']
   const isBar = whiteList.includes(url);
   // 开启进度条动画
   isBar && window.NProgress?.start?.();
 }
 
 function setxToken(response) {
-  const token = response.headers['x-token'];
+  const token = response.headers["x-token"];
   if (token) {
     localStg.set(ACCESS_TOKEN, token);
   }
@@ -42,7 +45,7 @@ function setAuthorization(config) {
   const token = localStg.get(ACCESS_TOKEN);
   if (token) {
     // 携带自定义请求头token到服务器
-    config.headers['Authorization'] = token;
+    config.headers["Authorization"] = token;
   }
 }
 
@@ -54,29 +57,23 @@ class PureHttp {
   }
   /** 请求拦截 */
   httpInterceptorsRequest() {
-    this.service.interceptors.request.use(
-      (config) => {
-        setStart(config)
-        setAuthorization(config)
-        return config;
-      },
-      errorHandler
-    );
+    this.service.interceptors.request.use((config) => {
+      // setStart(config);
+      setAuthorization(config);
+      return config;
+    }, errorHandler);
   }
   /** 响应拦截 */
   httpInterceptorsResponse() {
-    this.service.interceptors.response.use(
-      (response) => {
-        const { data, status } = response;
-        window.NProgress?.done?.();
-        if (status === 200) { 
-          setxToken(response)
-          return data;
-        }
-        return Promise.reject(data); // 处理非200状态
-      },
-      errorHandler
-    );
+    this.service.interceptors.response.use((response) => {
+      const { data, status } = response;
+      window.NProgress?.done?.();
+      if (status === 200) {
+        setxToken(response);
+        return data;
+      }
+      return Promise.reject(data); // 处理非200状态
+    }, errorHandler);
   }
   /** 通用请求工具函数 */
   request(config) {

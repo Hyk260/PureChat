@@ -108,7 +108,13 @@ export class ChatGPTApi {
    * @param {number} requestTimeoutId - 请求超时的 ID。
    * @returns {Promise<void>} - 无返回值的 Promise。
    */
-  async handleStreamingChat(chatPath, chatPayload, options, controller, requestTimeoutId) {
+  async handleStreamingChat(
+    chatPath,
+    chatPayload,
+    options,
+    controller,
+    requestTimeoutId
+  ) {
     const _this = this;
     let responseText = ""; // 用于存储完整的响应文本
     let remainText = ""; // 用于存储尚未处理的文本
@@ -268,8 +274,11 @@ export class ChatGPTApi {
       if ([ModelProvider.Ollama].includes(this.provider)) {
         chatPayload.fetch = await this.enableFetchOnClient(messages, modelConfig);
       }
-
-      const requestTimeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+      // 取消fetch请求
+      const requestTimeoutId = setTimeout(
+        () => controller.abort(),
+        REQUEST_TIMEOUT_MS
+      );
 
       // 流式输出
       if (shouldStream) {
