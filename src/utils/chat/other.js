@@ -94,7 +94,10 @@ export const renderFileIcon = (fileType = "") => {
     type = "json";
   } else if (fileType == "js") {
     type = "js";
-  }
+  } 
+  // else if (fileType == "env") {
+  //   type = "dotenv";
+  // }
   return new URL(`../../assets/message/${type}.png`, import.meta.url).href;
 };
 

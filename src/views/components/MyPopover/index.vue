@@ -7,7 +7,7 @@
     ref="cardRef"
   >
     <div class="title">
-      <img :src="cardData.avatar || fnAvatar(cardData?.from) || squareUrl" alt="头像" />
+      <img @click="clickCard(cardData.avatar)" :src="cardData.avatar || fnAvatar(cardData?.from) || squareUrl" alt="头像" />
       <span>{{ cardData.nick }}</span>
       <Label :userID="cardData?.from" />
     </div>
@@ -52,6 +52,10 @@ const closeModal = () => {
   userProfile.value = null;
   setCard(false);
 };
+
+const clickCard = (url) => {
+  url && emitter.emit("handleImageViewer", url);
+}
 
 const define = () => {
   closeModal();
@@ -144,6 +148,7 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     img {
+      cursor: pointer;
       border-radius: 5px;
       height: 54px;
     }

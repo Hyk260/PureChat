@@ -15,7 +15,11 @@
     <div class="group-details">
       <!-- info -->
       <div class="group-base-info">
-        <UserAvatar :url="groupProfile.avatar" :nickName="groupProfile.name" />
+        <UserAvatar
+          @click="openAvatarPopup(groupProfile.avatar)"
+          :url="groupProfile.avatar"
+          :nickName="groupProfile.name"
+        />
         <div class="group-base-info--text">
           <div>
             <span class="group-base-info--text__name">
@@ -61,9 +65,7 @@
         </div>
         <el-scrollbar always>
           <div class="group-member--avatar">
-            <span class="group-member--add margin" @click="groupMemberAdd">
-              <svg-icon iconClass="add" />
-            </span>
+            <span class="gala--add margin" @click="groupMemberAdd"></span>
             <div
               class="avatar margin"
               v-for="item in currentMemberList"
@@ -172,6 +174,10 @@ const openNoticePopup = async () => {
 };
 
 const openDetails = () => {};
+
+const openAvatarPopup = (url) => {
+  emitter.emit("handleImageViewer", url);
+};
 
 const handleClose = (done) => {
   done();
@@ -305,8 +311,8 @@ onBeforeUnmount(() => {
 .style-close {
   visibility: hidden;
   position: absolute;
-  right: -7px;
-  top: -7px;
+  right: -5px;
+  top: -5px;
   color: #f44336 !important;
   cursor: pointer;
 }
@@ -397,12 +403,6 @@ onBeforeUnmount(() => {
       }
       .isown {
         display: none;
-      }
-    }
-    .group-member--add {
-      .svg-icon {
-        height: 40px;
-        width: 40px;
       }
     }
     .margin {

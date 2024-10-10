@@ -1,6 +1,6 @@
 {
   "name": "purechat",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "PureChat - A chat application built with Vue and Vite",
   "type": "module",
   "author": {
