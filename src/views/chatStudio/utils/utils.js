@@ -482,6 +482,8 @@ export function filterMentionList(Str, Html) {
 export const showIMPic = (width = 0, height = 0) => {
   // 确保高度不小于40px
   const minHeight = 40;
+  // 限制高度不超过360px
+  const maxHeight = 360;
 
   // 计算宽度和高度的逻辑
   let computedWidth;
@@ -497,6 +499,8 @@ export const showIMPic = (width = 0, height = 0) => {
     computedWidth = width;
     computedHeight = Math.max(height, minHeight);
   }
+
+  computedHeight = Math.min(computedHeight, maxHeight);
 
   const imageStyle = {
     width: `${computedWidth}px`,
