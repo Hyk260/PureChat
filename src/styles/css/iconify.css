@@ -1,0 +1,12 @@
+.gala--add {
+  display: inline-block;
+  cursor: pointer;
+  color: darkgray;
+  width: 2.5em;
+  height: 2.5em;
+  --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cg fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='8'%3E%3Ccircle cx='128' cy='128' r='112'/%3E%3Cpath d='M 79.999992,128 H 176.0001'/%3E%3Cpath d='m 128.00004,79.99995 v 96.0001'/%3E%3C/g%3E%3C/svg%3E");
+  background-color: currentColor;
+  mask-image: var(--svg);
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+}

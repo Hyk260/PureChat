@@ -1,24 +1,21 @@
-import { resolve } from "path";
+import process from "node:process";
+import { URL, fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
 import { setupVitePlugins, viteDefine } from "./build";
 
-/** 路径查找 */
-const pathResolve = (dir) => {
-  return resolve(__dirname, ".", dir);
-};
-
 export default defineConfig(({ mode }) => {
   const viteEnv = loadEnv(mode, process.cwd());
+
   return {
     base: viteEnv.VITE_BASE_URL,
     define: viteDefine,
     resolve: {
       /** 设置别名 */
       alias: {
-        "@": pathResolve("src"),
-        "~": pathResolve("./"),
-        "@m": pathResolve('electron'),
-      }
+        "~": fileURLToPath(new URL("./", import.meta.url)),
+        "@": fileURLToPath(new URL("./src", import.meta.url)),
+        "@m": fileURLToPath(new URL("./electron", import.meta.url)),
+      },
     },
     server: {
       // 端口号
@@ -29,8 +26,8 @@ export default defineConfig(({ mode }) => {
       proxy: {},
       // 预热文件以提前转换和缓存结果，降低启动期间的初始页面加载时长并防止转换瀑布
       warmup: {
-        clientFiles: ["./index.html", "./src/{views,components}/*"]
-      }
+        clientFiles: ["./index.html", "./src/{views,components}/*"],
+      },
     },
     plugins: setupVitePlugins(viteEnv),
     css: {
@@ -54,7 +51,7 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 4000,
       rollupOptions: {
         input: {
-          index: pathResolve("index.html"),
+          index: fileURLToPath(new URL("./index.html", import.meta.url)),
         },
         // 静态资源分类打包
         output: {
@@ -64,7 +61,7 @@ export default defineConfig(({ mode }) => {
           assetFileNames: "static/[ext]/[name]-[hash].[ext]",
           // 手动分包 #https://cn.rollupjs.org/configuration-options/#output-manualchunks
           manualChunks(id) {
-            if (id.includes('node_modules')) return 'vendor';
+            if (id.includes("node_modules")) return "vendor";
           },
         },
       },

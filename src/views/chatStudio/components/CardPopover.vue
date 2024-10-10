@@ -1,7 +1,7 @@
 <template>
   <div class="card-popover animate__fadeIn" ref="cardRef" v-if="card">
     <div class="top">
-      <UserAvatar type="self" :size="40" shape="square" />
+      <UserAvatar type="self" :size="40" shape="square" @click="handlePictureCardPreview" />
       <div>
         <div class="nick">{{ profile.nick || "-" }}</div>
         <div class="userID">{{ profile.userID }}</div>
@@ -42,10 +42,10 @@ import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 
 const { bugs, docs, homepage } = __APP_INFO__.pkg;
-const cardRef = useTemplateRef('cardRef')
+const cardRef = useTemplateRef("cardRef");
 
 const profile = ref({});
-const market = ref([])
+const market = ref([]);
 const [card, setCard] = useBoolean();
 const { dispatch } = useStore();
 
@@ -114,6 +114,11 @@ const openCard = (data) => {
   setCard(true);
   profile.value = localStg.get(TIM_PROXY)?.userProfile || {};
   market.value = localStg.get("marketJson")?.agents || [];
+};
+
+/** 大图预览 */
+const handlePictureCardPreview = (item) => {
+  emitter.emit("handleImageViewer", profile.value.avatar);
 };
 
 onMounted(() => {

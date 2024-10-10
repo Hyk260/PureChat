@@ -1,7 +1,9 @@
 <template>
   <el-image-viewer
     v-if="dialog"
+    ref="imageViewerRef"
     :initialIndex="0"
+    :hide-on-click-modal="true"
     :url-list="[url]"
     :zoom-rate="1.2"
     :max-scale="7"
@@ -11,19 +13,27 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import emitter from "@/utils/mitt-bus";
+import { ref, onMounted, useTemplateRef } from "vue";
+import { onClickOutside } from "@vueuse/core";
 import { useBoolean } from "@/utils/hooks/index";
+import emitter from "@/utils/mitt-bus";
 
-const url = ref('https://ljx-1307934606.cos.ap-beijing.myqcloud.com/xuax.jpg')
-const [dialog,setDialog] = useBoolean()
+const imageViewerRef = useTemplateRef('imageViewerRef')
+const url = ref("https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png");
+const [dialog, setDialog] = useBoolean();
+
+// onClickOutside(imageViewerRef, () => {
+//   setDialog(false)
+// });
 
 onMounted(() => {
-  emitter.on('onImageViewer', (src) => {
-    // url.value = src
-    setDialog(true)
-  })
-})
+  emitter.on("handleImageViewer", (src) => {
+    if (src) {
+      url.value = src;
+      setDialog(true);
+    }
+  });
+});
 </script>
 
 <style lang="scss" scoped></style>

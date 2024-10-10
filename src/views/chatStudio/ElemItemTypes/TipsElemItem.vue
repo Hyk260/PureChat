@@ -37,7 +37,7 @@ export default {
     ...mapGetters(["isOwner"]),
     // 消息的流向 in 为收到的消息 | out 为发出的消息
     isMine() {
-      return this.message.flow == "out" ? true : false;
+      return this.message.flow === "out";
     },
     isReEdit() {
       return this.revokeMsgMap.get(this.message.ID);

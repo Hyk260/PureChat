@@ -7,14 +7,28 @@
     >
       {{ url ? null : displayInfo(nickName) }}
     </div>
-    <img
+    <!-- <img
       draggable="false"
       v-else-if="type === 'single'"
       :class="['avatar', className]"
       :src="url || fnAvatar(convId) || shapeObj[shape]"
       alt="头像"
-    />
-    <div v-else-if="type === 'self'" class="badge" :style="{ height: `${size}px`, width: `${size}px` }">
+    /> -->
+    <el-avatar
+      v-else-if="type === 'single'"
+      @error="errorHandler"
+      :class="['avatar', className]"
+      shape="square"
+      :size="40"
+      :src="url || fnAvatar(convId) || shapeObj[shape]"
+    >
+      <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
+    </el-avatar>
+    <div
+      v-else-if="type === 'self'"
+      class="badge"
+      :style="{ height: `${size}px`, width: `${size}px` }"
+    >
       <el-avatar :size="size" :src="userProfile?.avatar || shapeObj['circle']" :shape="shape" />
       <sup v-if="isdot" class="is-dot"></sup>
     </div>
@@ -83,6 +97,8 @@ const { userProfile } = useState({
   userProfile: (state) => state.user.userProfile,
 });
 
+const errorHandler = () => true;
+
 const displayInfo = (info) => {
   if (!info) return "unknown";
   return info.slice(0, props.words).toUpperCase();
@@ -107,6 +123,7 @@ const backgInfo = (url) => {
   font-weight: 400;
 }
 .avatar {
+  --el-text-color-disabled: #ffffff00;
   width: 40px;
   height: 40px;
   border-radius: 3px;
