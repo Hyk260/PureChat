@@ -329,11 +329,14 @@ export class TIMProxy {
     const { atUserList } = data[0];
     const massage = getConversationList(data);
     if (!atUserList.length) return;
+    // @全体成员
+    let atAll = atUserList.includes("__kImSDK_MesssageAtALL__");
+    if (atAll) this.notifyUser(data[0]);
     // 消息免打扰
     if (!massage || massage?.[0]?.messageRemindType === "AcceptNotNotify") return;
-    let off = atUserList.includes(userID);
-    let all = atUserList.includes("__kImSDK_MesssageAtALL__");
-    if (off || all) this.notifyUser(data[0]);
+    // @自己
+    let atSelf = atUserList.includes(userID);
+    if (atSelf) this.notifyUser(data[0]);
   }
 }
 
