@@ -12,6 +12,7 @@ import {
 import { CONVERSATIONTYPE, EMOJI_RECENTLY, HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
   addTimeDivider,
+  deduplicateAndPreserveOrder,
   checkTextNotEmpty,
   getBaseTime,
   transformData,
@@ -72,10 +73,12 @@ const conversation = {
         case CONVERSATIONTYPE.ADD_MORE_MESSAGE: {
           console.log("[chat] 加载更多 ADD_MORE_MESSAGE:", payload);
           const { convId, messages } = payload;
+          // 历史消息
           const history = state.historyMessageList.get(convId) || [];
           const baseTime = getBaseTime(history);
           const timeDividerResult = addTimeDivider(messages, baseTime).reverse();
-          state.historyMessageList.set(convId, history.concat(timeDividerResult));
+          const newHistory = deduplicateAndPreserveOrder(history.concat(timeDividerResult));
+          state.historyMessageList.set(convId, newHistory);
           state.currentMessageList = state.historyMessageList.get(convId);
           break;
         }
@@ -90,8 +93,9 @@ const conversation = {
           const newMessageList = oldMessageList.map((item) => {
             return item.ID === message.ID ? payload.message : item;
           });
+          const latest = !newMessageList.some((item) => item.ID === message.ID)
           // 新消息
-          if (!newMessageList.some((item) => item.ID === message.ID)) {
+          if (latest) {
             let baseTime = getBaseTime(newMessageList);
             let timeDividerResult = addTimeDivider([message], baseTime).reverse();
             newMessageList.unshift(...timeDividerResult);
