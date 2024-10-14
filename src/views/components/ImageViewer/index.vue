@@ -19,7 +19,7 @@ import { useBoolean } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 
 const imageViewerRef = useTemplateRef('imageViewerRef')
-const url = ref("https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png");
+const url = ref("");
 const [dialog, setDialog] = useBoolean();
 
 // onClickOutside(imageViewerRef, () => {

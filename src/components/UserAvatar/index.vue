@@ -16,13 +16,13 @@
     /> -->
     <el-avatar
       v-else-if="type === 'single'"
-      @error="errorHandler"
+      @error="() => true"
       :class="['avatar', className]"
       shape="square"
       :size="40"
       :src="url || fnAvatar(convId) || shapeObj[shape]"
     >
-      <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
+      <img :src="emptyUrl" />
     </el-avatar>
     <div
       v-else-if="type === 'self'"
@@ -37,6 +37,7 @@
 
 <script setup>
 import { fnAvatar } from "@/ai/utils";
+import { circleUrl, squareUrl, emptyUrl } from "@/views/chatStudio/utils/menu";
 import { useState } from "@/utils/hooks/useMapper";
 
 defineOptions({
@@ -89,15 +90,13 @@ const props = defineProps({
 });
 
 const shapeObj = {
-  circle: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-  square: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
+  circle: circleUrl,
+  square: squareUrl,
 };
 
 const { userProfile } = useState({
   userProfile: (state) => state.user.userProfile,
 });
-
-const errorHandler = () => true;
 
 const displayInfo = (info) => {
   if (!info) return "unknown";

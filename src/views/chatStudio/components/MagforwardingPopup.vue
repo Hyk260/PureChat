@@ -44,9 +44,9 @@ export default {
   components: {},
   computed: {
     ...mapState({
-      conversationList: (state) =>{
-        return state.conversation.conversationList.filter((t) => !isRobot(t.conversationID))
-      }
+      conversationList: (state) => {
+        return state.conversation.conversationList.filter((t) => !isRobot(t.conversationID));
+      },
     }),
   },
   props: {},

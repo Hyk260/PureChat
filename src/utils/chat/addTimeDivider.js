@@ -32,3 +32,19 @@ export const addTimeDivider = (list, baseTime = 0) => {
     }
   }, []);
 };
+
+export function deduplicateAndPreserveOrder(data) {
+  const seenTimes = new Set();
+  const result = [];
+
+  for (const item of data) {
+    if (item.time !== undefined && !seenTimes.has(item.time)) {
+      result.push(item);
+      seenTimes.add(item.time);
+    } else if (item.ID !== undefined) {
+      result.push(item);
+    }
+  }
+
+  return result;
+}

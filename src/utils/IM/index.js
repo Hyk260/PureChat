@@ -195,6 +195,10 @@ export class TIMProxy {
    * @param {Message} message
    */
   async notifyUser(message) {
+    if (window?.electron) {
+      handleNotification(message);
+      return
+    }
     const permission = Notification.permission;
     console.log("[chat] notifyUser:", permission);
     // denied 用户拒绝显示通知
@@ -332,11 +336,14 @@ export class TIMProxy {
     const { atUserList } = data[0];
     const massage = getConversationList(data);
     if (!atUserList.length) return;
+    // @全体成员
+    let atAll = atUserList.includes("__kImSDK_MesssageAtALL__");
+    if (atAll) this.notifyUser(data[0]);
     // 消息免打扰
     if (!massage || massage?.[0]?.messageRemindType === "AcceptNotNotify") return;
-    let off = atUserList.includes(userID);
-    let all = atUserList.includes("__kImSDK_MesssageAtALL__");
-    if (off || all) handleNotification(data[0])
+    // @自己
+    let atSelf = atUserList.includes(userID);
+    if (atSelf) this.notifyUser(data[0]);
   }
 }
 
