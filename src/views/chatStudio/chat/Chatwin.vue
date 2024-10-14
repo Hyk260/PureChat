@@ -40,12 +40,12 @@
                 :size="36"
                 shape="square"
                 @click.stop="onClickAvatar($event, item)"
-                :src="item.avatar || fnAvatar(item.from) || circleUrl"
+                :src="item.avatar || fnAvatar(item.from) || squareUrl"
                 @error="() => true"
                 v-contextmenu:contextmenu
                 @contextmenu.prevent="handleContextAvatarMenuEvent($event, item)"
               >
-                <img :src="circleUrl" />
+                <img :src="emptyUrl" />
               </el-avatar>
             </div>
             <div
@@ -99,7 +99,7 @@ import {
 } from "vue";
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
-import { AVATAR_LIST, MENU_LIST, RIGHT_CLICK_MENU_LIST, circleUrl } from "../utils/menu";
+import { AVATAR_LIST, MENU_LIST, RIGHT_CLICK_MENU_LIST, emptyUrl, squareUrl } from "../utils/menu";
 import {
   handleCopyMsg,
   loadMsgModule,
