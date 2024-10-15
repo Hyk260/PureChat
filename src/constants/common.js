@@ -12,7 +12,7 @@ export const EMOJI_RECENTLY = "Emoji-Recently";
 export const TIM_PROXY = "timProxy";
 
 export const HISTORY_MESSAGE_COUNT = 15; //历史消息计数
-export const MULTIPLE_CHOICE_MAX = 20; //多选消息最大计数
+export const MULTIPLE_CHOICE_MAX = 30; //多选消息最大计数
 
 export const CONVERSATIONTYPE = {
   UPDATE_NOMORE: "UPDATE_NOMORE", //更新加载更多

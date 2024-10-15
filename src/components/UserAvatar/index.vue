@@ -36,6 +36,7 @@
 </template>
 
 <script setup>
+import maleAvatar from '@/assets/color-avatar/male-avatar.png';
 import { fnAvatar } from "@/ai/utils";
 import { circleUrl, squareUrl, emptyUrl } from "@/views/chatStudio/utils/menu";
 import { useState } from "@/utils/hooks/useMapper";
@@ -91,7 +92,7 @@ const props = defineProps({
 
 const shapeObj = {
   circle: circleUrl,
-  square: squareUrl,
+  square: maleAvatar || squareUrl,
 };
 
 const { userProfile } = useState({

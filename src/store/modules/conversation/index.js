@@ -3,7 +3,7 @@ import { chatService } from "@/ai/index";
 import {
   deleteConversation,
   getConversationProfile,
-  getMsgList,
+  getMessageList,
   getUnreadMsg,
   sendMsg,
   setMessageRead,
@@ -75,6 +75,7 @@ const conversation = {
           const { convId, messages } = payload;
           // 历史消息
           const history = state.historyMessageList.get(convId) || [];
+          console.log("历史消息 history:", history);
           const baseTime = getBaseTime(history);
           const timeDividerResult = addTimeDivider(messages, baseTime).reverse();
           const newHistory = deduplicateAndPreserveOrder(history.concat(timeDividerResult));
@@ -111,8 +112,12 @@ const conversation = {
         }
         case CONVERSATIONTYPE.DELETE_MESSAGE: {
           console.log("[chat] 删除消息 DELETE_MESSAGE:", payload);
-          const { convId } = payload;
+          const { convId } = payload || {};
           const history = state.historyMessageList.get(convId);
+          if (!history) {
+            console.error("[chat] 删除消息失败，历史消息不存在")
+            return;
+          }
           const updatedHistory = addTimeDivider(history.reverse()).reverse();
           state.currentMessageList = updatedHistory;
           state.historyMessageList.set(convId, updatedHistory);
@@ -311,7 +316,7 @@ const conversation = {
       let status = !state.currentMessageList || state.currentMessageList?.length == 0;
       // 当前会话有值
       if (state.currentConversation && isSDKReady && status) {
-        const { messageList, isCompleted } = await getMsgList({
+        const { messageList, isCompleted } = await getMessageList({
           conversationID: conversationID,
         });
         commit("SET_HISTORYMESSAGE", {
@@ -346,7 +351,7 @@ const conversation = {
     },
     async GET_ROBOT_MESSAGE_LIST({ state, commit }, action) {
       const { convId } = action;
-      const { messageList } = await getMsgList({
+      const { messageList } = await getMessageList({
         conversationID: convId,
       });
       const message = addTimeDivider(messageList).reverse();

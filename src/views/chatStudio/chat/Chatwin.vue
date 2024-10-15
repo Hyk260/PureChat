@@ -109,7 +109,7 @@ import {
   isSelf,
 } from "../utils/utils";
 
-import { deleteMsgList, getMsgList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
+import { deleteMessage, getMessageList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
 import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { download, isRobot } from "@/utils/chat/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
@@ -283,36 +283,35 @@ const updateScrollbar = () => {
 const getMoreMsg = async () => {
   try {
     // 获取指定会话的消息列表
-    const conv = currentConversation.value;
+    const { conversationID: convId } = currentConversation.value;
     const msglist = currentMessageList.value;
-    const { conversationID } = conv;
-    const result = await getMsgList({
-      conversationID: conversationID,
-      nextReqMessageID: validatelastMessage(msglist).ID,
+    const nextMsgId = validatelastMessage(msglist).ID
+    console.log("nextMsgId:", nextMsgId);
+
+    const result = await getMessageList({
+      conversationID: convId,
+      nextReqMessageID: nextMsgId,
     });
+
+    console.log("getMessageList:", result)
     const { isCompleted, messageList, nextReqMessageID } = result;
-    // let noMore = true;
-    // let more = messageList.length < HISTORY_MESSAGE_COUNT;
-    // if (messageList.length > 0) noMore = more;
-    if (isCompleted || messageList.length === 0) {
+
+    if (isCompleted || !messageList.length) {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
       commit("SET_HISTORYMESSAGE", { type: "UPDATE_NOMORE", payload: true });
-      return;
+    } else {
+      commit("SET_HISTORYMESSAGE", {
+        type: "ADD_MORE_MESSAGE",
+        payload: { convId, messages: messageList },
+      });
+      commit("SET_CONVERSATION", {
+        type: "UPDATE_SCROLL_DOWN",
+        payload: msglist.length,
+      });
     }
-    commit("SET_HISTORYMESSAGE", {
-      type: "ADD_MORE_MESSAGE",
-      payload: { convId: conversationID, messages: messageList },
-    });
-    commit("SET_CONVERSATION", {
-      type: "UPDATE_SCROLL_DOWN",
-      payload: msglist.length,
-    });
   } catch (e) {
     // 解析报错 关闭加载动画
-    commit("SET_HISTORYMESSAGE", {
-      type: "UPDATE_NOMORE",
-      payload: true,
-    });
+    commit("SET_HISTORYMESSAGE", { type: "UPDATE_NOMORE", payload: true });
   }
 };
 
@@ -446,7 +445,7 @@ const handleDeleteMsg = async (data) => {
     const message = { message: "确定删除?", iconType: "warning" };
     const result = await showConfirmationBox(message);
     if (result === "cancel") return;
-    const { code } = await deleteMsgList([data]);
+    const { code } = await deleteMessage([data]);
     if (code !== 0) return;
     commit("SET_HISTORYMESSAGE", {
       type: "DELETE_MESSAGE",

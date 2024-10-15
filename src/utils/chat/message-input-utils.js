@@ -1,5 +1,4 @@
 import store from "@/store";
-import { throttle } from "lodash-es";
 import { USER_MODEL } from "@/constants/index";
 import { msgContent } from "@/api/im-sdk-api/custom";
 import { localStg } from "@/utils/storage";
@@ -282,17 +281,6 @@ export function scrollToMessage(id, delay = 300) {
     dom.scrollIntoView({ behavior: "smooth", block: "center" });
   }, delay);
 }
-
-export const createProgressHandler = () => {
-  let lastNum = 0;
-  const handleProgressUpdate = throttle((progress, cd) => {
-    if (progress.num !== lastNum) {
-      lastNum = progress.num;
-      if (typeof cd === "function") cd();
-    }
-  }, 80);
-  return handleProgressUpdate;
-};
 
 // 匹配机器人账号
 export const isRobot = (text) => {
