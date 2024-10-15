@@ -1,8 +1,20 @@
+import { throttle } from "lodash-es";
 import tim from "@/utils/IM/im-sdk/tim";
 import emitter from "@/utils/mitt-bus";
-import { createProgressHandler } from "@/utils/chat/index";
 import { getImageSize } from "@/views/chatStudio/utils/utils";
 import { getReplyMsgContent, getCustomMsgContent } from "@/utils/chat/index";
+
+const createProgressHandler = () => {
+  let lastNum = 0;
+  const handleProgressUpdate = throttle((progress, cd) => {
+    if (progress.num !== lastNum) {
+      lastNum = progress.num;
+      if (typeof cd === "function") cd();
+    }
+  }, 100);
+  return handleProgressUpdate;
+};
+
 const handleProgressUpdate = createProgressHandler();
 
 const fileUploading = (data, bar = 0) => {
@@ -12,6 +24,16 @@ const fileUploading = (data, bar = 0) => {
     console.log("[file] uploading:", bar?.toFixed(0) + "%");
   });
 };
+
+// 计算图片宽高
+const fnImageSize = async (image) => {
+  let num = 0;
+  const { width, height } = await getImageSize(image.payload.imageInfoArray[num].url);
+  image.payload.imageInfoArray[num].width = width;
+  image.payload.imageInfoArray[num].height = height;
+  return image;
+}
+
 // 发送消息
 export const sendMsg = async (params) => {
   try {
@@ -61,15 +83,8 @@ export const createTextAtMsg = (params) => {
     cloudCustomData: replyMsgContent,
   });
 };
-// 计算图片宽高
-async function fnImageSize(image) {
-  let num = 0
-  const { width, height } = await getImageSize(image.payload.imageInfoArray[num].url)
-  image.payload.imageInfoArray[num].width = width
-  image.payload.imageInfoArray[num].height = height
-  return image
-}
-// 创建图片消息
+
+// 创建图片消息 https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createImageMessage
 export const createImgtMsg = async (params) => {
   const { convId, convType, image } = params;
   const message = tim.createImageMessage({
@@ -79,9 +94,9 @@ export const createImgtMsg = async (params) => {
     onProgress: (event) => {
       console.log("file uploading:", event);
     },
-  }); 
-  const imageMessage = await fnImageSize(message)
-  return imageMessage
+  });
+  const imageMessage = await fnImageSize(message);
+  return imageMessage;
 };
 // 创建文件消息
 export const createFiletMsg = (params) => {

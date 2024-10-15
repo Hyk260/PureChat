@@ -34,6 +34,8 @@ export const addTimeDivider = (list, baseTime = 0) => {
 };
 
 export function deduplicateAndPreserveOrder(data) {
+  return data
+
   const seenTimes = new Set();
   const result = [];
 

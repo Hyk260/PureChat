@@ -16,7 +16,7 @@
 
 <script>
 import emitter from "@/utils/mitt-bus";
-import { createForwardMsg, createMergerMsg, deleteMsgList, sendMsg } from "@/api/im-sdk-api/index";
+import { createForwardMsg, createMergerMsg, deleteMessage, sendMsg } from "@/api/im-sdk-api/index";
 import { showConfirmationBox } from "@/utils/message";
 import { mapMutations, mapState } from "vuex";
 import MagforwardingPopup from "./MagforwardingPopup.vue";
@@ -88,7 +88,7 @@ export default {
           this.setDialogVisible(item.type);
           break;
         case "removalMsg":
-          this.deleteMessage(); // 删除消息
+          this.deleteMsg(); // 删除消息
           break;
       }
     },
@@ -110,16 +110,14 @@ export default {
       this.shutdown();
     },
     // 多选删除
-    async deleteMessage() {
+    async deleteMsg() {
       const result = await showConfirmationBox({ message: "确定删除?", iconType: "warning" });
       if (result == "cancel") return;
-      const forwardData = this.filterate();
-      const { code } = await deleteMsgList([...forwardData]);
+      const { code } = await deleteMessage([...this.filterate()]);
       if (code !== 0) return;
-      const { conversationID } = this.currentConversation;
       this.$store.commit("SET_HISTORYMESSAGE", {
         type: "DELETE_MESSAGE",
-        payload: { convId: conversationID },
+        payload: { convId: this.currentConversation.conversationID },
       });
       this.shutdown();
     },

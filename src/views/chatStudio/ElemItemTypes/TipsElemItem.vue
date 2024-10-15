@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { deleteMsgList } from "@/api/im-sdk-api/index";
+import { deleteMessage } from "@/api/im-sdk-api/index";
 import emitter from "@/utils/mitt-bus";
 import { mapGetters, mapState } from "vuex";
 export default {
@@ -46,7 +46,7 @@ export default {
   methods: {
     async onClose(data = this.message) {
       try {
-        await deleteMsgList([data]);
+        await deleteMessage([data]);
         this.$store.commit("SET_HISTORYMESSAGE", {
           type: "DELETE_MESSAGE",
           payload: { convId: data.conversationID },

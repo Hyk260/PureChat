@@ -4,8 +4,9 @@ import tim from "@/utils/IM/im-sdk/tim";
 export const getFriendList = async (params) => {
   return tim.getFriendList();
 };
-// 删除消息
-export const deleteMsgList = async (params) => {
+
+// 删除消息 https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#deleteMessage
+export const deleteMessage = async (params) => {
   const {
     code,
     data: { messageList },
