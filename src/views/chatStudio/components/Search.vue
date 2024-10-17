@@ -22,7 +22,6 @@
 </template>
 
 <script setup>
-import { nextTick } from "vue";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { showConfirmationBox } from "@/utils/message";
 import { Search } from "@element-plus/icons-vue";
@@ -46,7 +45,7 @@ const createGroup = async () => {
   const data = { message: "创建群聊" };
   const result = await showConfirmationBox(data, "prompt");
   if (result === "cancel") return;
-  commit("CREATE_GROUP", { groupName: result.value });
+  dispatch("CREATE_GROUP", { groupName: result.value });
 };
 
 const opendialog = () => {
@@ -76,13 +75,13 @@ const matchesFilter = (item, searchStr) => {
 
 const fnAppoint = debounce((key) => {
   if (isEmpty(key)) {
-    commit("SET_CONVERSATION_VALUE", { key: "filterConversationList", value: [] });
+    commit("setConverstionValue", { key: "filterConversationList", value: [] });
     return;
   }
   const str = key.toUpperCase().trim()
   filterData.value = tabList.value.filter((item) => matchesFilter(item, str));
   console.log(filterData.value);
-  commit("SET_CONVERSATION_VALUE", { key: "filterConversationList", value: filterData.value });
+  commit("setConverstionValue", { key: "filterConversationList", value: filterData.value });
 }, 100);
 
 watch(appoint, (value) => {
@@ -91,7 +90,7 @@ watch(appoint, (value) => {
 
 emitter.on("setSearchForData", (value = "") => {
   setAppoint();
-  commit("SET_CONVERSATION_VALUE", { key: "filterConversationList", value: [] });
+  commit("setConverstionValue", { key: "filterConversationList", value: [] });
 });
 </script>
 

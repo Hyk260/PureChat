@@ -116,15 +116,12 @@ export class TIMProxy {
     const convId = getConversationID();
     const conv = data.filter((t) => t.conversationID == convId);
     // 更新会话列表
-    store.commit("SET_CONVERSATION", {
-      type: "REPLACE_CONV_LIST",
-      payload: data,
-    });
+    store.commit("setConverstionValue", { key: "conversationList", value: data });
     // 更新窗口数据
     if (conv) {
-      store.commit("SET_CONVERSATION", {
-        type: "UPDATE_CURRENT_SESSION",
-        payload: cloneDeep(conv[0]),
+      store.commit("setConverstionValue", {
+        key: "currentConversation",
+        value: cloneDeep(conv[0]),
       });
     }
     // 未读消息

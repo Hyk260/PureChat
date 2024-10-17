@@ -9,7 +9,7 @@ import {
   setMessageRead,
   setMessageRemindType,
 } from "@/api/im-sdk-api/index";
-import { CONVERSATIONTYPE, EMOJI_RECENTLY, HISTORY_MESSAGE_COUNT } from "@/constants/index";
+import { EMOJI_RECENTLY, HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
   addTimeDivider,
   deduplicateAndPreserveOrder,
@@ -29,7 +29,7 @@ const conversation = {
   state: {
     sessionDraftMap: new Map(), //会话草稿
     totalUnreadMsg: 0, // 未读消息总数
-    showMsgBox: false, //是否显示输入框
+    isChatBoxVisible: false, //是否显示输入框
     showCheckbox: false, //是否显示多选框
     isShowModal: false, // @好友弹框
     noMore: false, // 加载更多  false ? 显示loading : 没有更多
@@ -55,7 +55,7 @@ const conversation = {
     SET_HISTORYMESSAGE(state, action) {
       const { type, payload } = action;
       switch (type) {
-        case CONVERSATIONTYPE.ADD_MESSAGE: {
+        case "ADD_MESSAGE": {
           console.log("[chat] 添加消息 ADD_MESSAGE:", payload);
           const { convId, isDone, message } = payload;
           state.historyMessageList.set(convId, message);
@@ -70,7 +70,7 @@ const conversation = {
           state.noMore = isMore || isDone;
           break;
         }
-        case CONVERSATIONTYPE.ADD_MORE_MESSAGE: {
+        case "ADD_MORE_MESSAGE": {
           console.log("[chat] 加载更多 ADD_MORE_MESSAGE:", payload);
           const { convId, messages } = payload;
           // 历史消息
@@ -83,7 +83,7 @@ const conversation = {
           state.currentMessageList = state.historyMessageList.get(convId);
           break;
         }
-        case CONVERSATIONTYPE.UPDATE_MESSAGES: {
+        case "UPDATE_MESSAGES": {
           console.log("[chat] 更新消息 UPDATE_MESSAGES:", payload);
           const { convId, message } = payload;
 
@@ -94,7 +94,7 @@ const conversation = {
           const newMessageList = oldMessageList.map((item) => {
             return item.ID === message.ID ? payload.message : item;
           });
-          const latest = !newMessageList.some((item) => item.ID === message.ID)
+          const latest = !newMessageList.some((item) => item.ID === message.ID);
           // 新消息
           if (latest) {
             let baseTime = getBaseTime(newMessageList);
@@ -110,12 +110,12 @@ const conversation = {
           }
           break;
         }
-        case CONVERSATIONTYPE.DELETE_MESSAGE: {
+        case "DELETE_MESSAGE": {
           console.log("[chat] 删除消息 DELETE_MESSAGE:", payload);
           const { convId } = payload || {};
           const history = state.historyMessageList.get(convId);
           if (!history) {
-            console.error("[chat] 删除消息失败，历史消息不存在")
+            console.error("[chat] 删除消息失败，历史消息不存在");
             return;
           }
           const updatedHistory = addTimeDivider(history.reverse()).reverse();
@@ -123,7 +123,7 @@ const conversation = {
           state.historyMessageList.set(convId, updatedHistory);
           break;
         }
-        case CONVERSATIONTYPE.CLEAR_HISTORY: {
+        case "CLEAR_HISTORY": {
           Object.assign(state, {
             sessionDraftMap: new Map(),
             historyMessageList: new Map(),
@@ -131,19 +131,19 @@ const conversation = {
             currentMessageList: [],
             conversationList: [],
             activetab: "whole",
-            showMsgBox: false,
+            isChatBoxVisible: false,
             showCheckbox: false,
             currentReplyMsg: null,
           });
           console.log("[chat] 清除历史记录 CLEAR_HISTORY:", state);
           break;
         }
-        case CONVERSATIONTYPE.UPDATE_NOMORE: {
+        case "UPDATE_NOMORE": {
           console.log("[chat] 加载更多消息状态 UPDATE_NOMORE:", payload);
           state.noMore = payload;
           break;
         }
-        case CONVERSATIONTYPE.MARKE_MESSAGE_AS_READED: {
+        case "MARKE_MESSAGE_AS_READED": {
           const {
             convId,
             message: { unreadCount },
@@ -158,7 +158,7 @@ const conversation = {
           setMessageRead(convId);
           break;
         }
-        case CONVERSATIONTYPE.UPDATE_CACHE: {
+        case "UPDATE_CACHE": {
           console.log("[chat] 更新缓存 UPDATE_CACHE:", payload);
           const { convId, message } = payload;
           let history = state.historyMessageList.get(convId);
@@ -170,54 +170,30 @@ const conversation = {
         }
       }
     },
-    // 设置会话
-    SET_CONVERSATION(state, action) {
-      const { type, payload } = action;
-      switch (type) {
-        // 切换会话
-        case CONVERSATIONTYPE.UPDATE_CURRENT_SELECTED_CONVERSATION: {
-          if (payload) {
-            const { conversationID: convId } = payload;
-            const oldConvId = state.currentConversation?.conversationID;
-            if (convId == oldConvId) return;
-            state.currentConversation = payload;
-            // 系统消息关闭聊天框
-            state.showMsgBox = convId !== "@TIM#SYSTEM";
-            state.showCheckbox = false;
-            if (state.currentConversation) {
-              state.currentMessageList = state.historyMessageList.get(convId);
-            } else {
-              state.currentMessageList = [];
-            }
-            // 当前会话少于历史条数关闭loading
-            const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
-            state.noMore = isMore;
-          }
-          break;
-        }
-        // 更新当前会话
-        case CONVERSATIONTYPE.UPDATE_CURRENT_SESSION: {
-          state.currentConversation = payload;
-          break;
-        }
-        // 更新会话列表
-        case CONVERSATIONTYPE.REPLACE_CONV_LIST: {
-          state.conversationList = payload;
-          break;
-        }
-        // 更新滚动条位置
-        case CONVERSATIONTYPE.UPDATE_SCROLL_DOWN: {
-          state.needScrollDown = payload;
-          break;
-        }
+    // 切换 更新会话
+    updateSelectedConversation(state, payload) {
+      const { conversationID: convId } = payload;
+      const oldConvId = state.currentConversation?.conversationID;
+      if (convId == oldConvId) return;
+      state.currentConversation = payload;
+      // 系统消息关闭聊天框
+      state.isChatBoxVisible = convId !== "@TIM#SYSTEM";
+      state.showCheckbox = false;
+      if (state.currentConversation) {
+        state.currentMessageList = state.historyMessageList.get(convId);
+      } else {
+        state.currentMessageList = [];
       }
+      // 当前会话少于历史条数关闭loading
+      const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
+      state.noMore = isMore;
     },
     // 设置网络状态
-    SET_NETWORK_STATUS(state, action) {
+    setNetworkStatus(state, action) {
       state.networkStatus = action;
     },
     // 设置提及弹框显示隐藏
-    SET_MENTION_MODAL(state, action) {
+    toggleMentionModal(state, action) {
       if (state.currentConversation.type === "GROUP") {
         state.isShowModal = action;
       } else {
@@ -225,11 +201,11 @@ const conversation = {
       }
     },
     //  切换列表 全部 未读 提及我
-    TOGGLE_LIST(state, action) {
+    toggleList(state, action) {
       state.activetab = action;
     },
     // 设置多选数据
-    SET_FORWARD_DATA(state, action) {
+    setForwardData(state, action) {
       const { type, payload } = action;
       const { ID } = payload || {};
       switch (type) {
@@ -245,26 +221,26 @@ const conversation = {
       }
     },
     // 设置多选框状态
-    SET_CHEC_BOX(state, flag) {
+    setCheckboxState(state, flag) {
       state.showCheckbox = flag;
     },
     // 设置聊天框状态
-    SET_SHOW_MSG_BOX(state, flag) {
-      state.showMsgBox = flag;
+    toggleChatBox(state, flag) {
+      state.isChatBoxVisible = flag;
     },
     // 切换侧边栏
-    TAGGLE_OUE_SIDE(state, item) {
+    taggleOueSide(state, item) {
       state.outside = item;
     },
     // 回复消息
     setReplyMsg(state, payload) {
       state.currentReplyMsg = payload;
     },
-    SET_CONVERSATION_VALUE(state, { key, value }) {
+    setConverstionValue(state, { key, value }) {
       state[key] = value;
     },
     // 设置会话草稿
-    SET_SESSION_DRAFT(state, action) {
+    setSessionDraft(state, action) {
       if (!action) return;
       const { ID, payload } = action;
       if (!checkTextNotEmpty(payload)) {
@@ -372,10 +348,7 @@ const conversation = {
         conversationID: convId,
       });
       // 切换会话
-      commit("SET_CONVERSATION", {
-        type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
-        payload: conversation,
-      });
+      commit("updateSelectedConversation", conversation);
       // 群详情信息
       dispatch("getGroupProfile", conversation);
       // 获取会话列表
@@ -392,7 +365,7 @@ const conversation = {
     async CLEAR_CURRENT_MSG({ state, commit }) {
       state.currentConversation = null;
       state.currentMessageList = [];
-      commit("SET_SHOW_MSG_BOX", false);
+      commit("toggleChatBox", false);
     },
     // 获取未读消息总数
     async GET_TOTAL_UNREAD_MSG({ state }) {

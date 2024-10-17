@@ -2,7 +2,7 @@
   <section
     class="message-info-view-content"
     v-show="currentConversation"
-    :class="{ 'style-msg-box': !showMsgBox, 'style-reply': currentReplyMsg }"
+    :class="{ 'style-msg-box': !isChatBoxVisible, 'style-reply': currentReplyMsg }"
     id="chat-box"
   >
     <el-scrollbar class="h-full" ref="scrollbarRef" @scroll="scrollbar">
@@ -133,7 +133,7 @@ const { dispatch, commit } = useStore();
 const { isOwner, toAccount, currentType } = useGetters(["isOwner", "toAccount", "currentType"]);
 const {
   noMore,
-  showMsgBox,
+  isChatBoxVisible,
   forwardData,
   showCheckbox,
   needScrollDown,
@@ -142,7 +142,7 @@ const {
   currentConversation,
 } = useState({
   noMore: (state) => state.conversation.noMore,
-  showMsgBox: (state) => state.conversation.showMsgBox,
+  isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
   forwardData: (state) => state.conversation.forwardData,
   showCheckbox: (state) => state.conversation.showCheckbox,
   needScrollDown: (state) => state.conversation.needScrollDown,
@@ -203,13 +203,13 @@ const handleSelect = (e, item, type = "initial") => {
   // 首次右键打开多选 默认选中当前
   if (type == "choice") {
     el.checked = true;
-    commit("SET_FORWARD_DATA", {
+    commit("setForwardData", {
       type: "set",
       payload: item,
     });
   } else {
     el.checked = !el.checked;
-    commit("SET_FORWARD_DATA", {
+    commit("setForwardData", {
       type: el.checked ? "set" : "del",
       payload: item,
     });
@@ -304,10 +304,7 @@ const getMoreMsg = async () => {
         type: "ADD_MORE_MESSAGE",
         payload: { convId, messages: messageList },
       });
-      commit("SET_CONVERSATION", {
-        type: "UPDATE_SCROLL_DOWN",
-        payload: msglist.length,
-      });
+      commit("setConverstionValue", { key: "needScrollDown", value: msglist.length });
     }
   } catch (e) {
     // 解析报错 关闭加载动画
@@ -457,7 +454,7 @@ const handleDeleteMsg = async (data) => {
 };
 // 多选
 const handleMultiSelectMsg = (item) => {
-  commit("SET_CHEC_BOX", true);
+  commit("setCheckboxState", true);
   handleSelect(null, item, "choice");
 };
 const handleRevokeChange = (msg, type) => {

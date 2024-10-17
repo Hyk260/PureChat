@@ -4,7 +4,7 @@
     :class="{ 'wang-h-full': fullScreen }"
     id="editor"
     v-show="!showCheckbox"
-    v-if="showMsgBox"
+    v-if="isChatBoxVisible"
   >
     <!-- 自定义工具栏 -->
     <RichToolbar @setToolbar="setToolbar" />
@@ -81,7 +81,7 @@ const { isOwner, toAccount, currentType } = useGetters(["isOwner", "toAccount", 
 const {
   lang,
   currentConversation,
-  showMsgBox,
+  isChatBoxVisible,
   showCheckbox,
   isShowModal,
   currentReplyMsg,
@@ -92,7 +92,7 @@ const {
   sessionDraftMap: (state) => state.conversation.sessionDraftMap,
   currentConversation: (state) => state.conversation.currentConversation,
   showCheckbox: (state) => state.conversation.showCheckbox,
-  showMsgBox: (state) => state.conversation.showMsgBox,
+  isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
   isShowModal: (state) => state.conversation.isShowModal,
   currentReplyMsg: (state) => state.conversation.currentReplyMsg,
   fullScreen: (state) => state.conversation.fullScreen,
@@ -161,7 +161,7 @@ const insertDraft = (value) => {
 };
 // 更新草稿
 const updateDraft = debounce((data) => {
-  commit("SET_SESSION_DRAFT", {
+  commit("setSessionDraft", {
     ID: currentConversation?.value?.conversationID,
     payload: data,
   });
@@ -307,7 +307,7 @@ const handleEnter = (event) => {
 // 清空输入框
 const clearInputInfo = () => {
   commit("setReplyMsg", null);
-  commit("SET_CONVERSATION_VALUE", { key: "fullScreen", value: false });
+  commit("setConverstionValue", { key: "fullScreen", value: false });
   const editor = editorRef.value;
   editor && editor.clear();
 };
@@ -377,7 +377,7 @@ function offEmitter() {
   emitter.off("setHandleFile");
 }
 
-watch(showMsgBox, () => {
+watch(isChatBoxVisible, () => {
   handleEditorKeyDown();
 });
 watch(lang, () => {

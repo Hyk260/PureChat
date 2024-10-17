@@ -425,7 +425,7 @@ export function searchByPinyin(searchStr) {
   // 触发相应的事件根据匹配结果触发不同的操作
   const eventType = indices.length === 0 ? "empty" : "success";
   if (!isShowModal && eventType === "success") {
-    // store.commit("SET_MENTION_MODAL", true);
+    // store.commit("toggleMentionModal", true);
   }
   emitter.emit("setMentionModal", {
     content: indices,
@@ -446,12 +446,12 @@ export function filterMentionList(Str, Html) {
   const inputStr = Str;
   // 如果输入字符串为空，关闭提及模态框并返回
   if (inputStr === "") {
-    store.commit("SET_MENTION_MODAL", false);
+    store.commit("toggleMentionModal", false);
     return;
   }
   // 如果输入字符串中没有 "@" 符号，直接返回
   if (inputStr.lastIndexOf("@") == -1) {
-    store.commit("SET_MENTION_MODAL", false);
+    store.commit("toggleMentionModal", false);
     return;
   }
   // 如果输入字符串仅包含 "@" 符号，或则字符结尾，触发 setMentionModal 操作并返回
@@ -463,7 +463,7 @@ export function filterMentionList(Str, Html) {
   const lastAtIndex = inputStr.lastIndexOf("@");
   // 如果找不到 "@" 符号，关闭提及模态框并返回
   if (lastAtIndex === -1) {
-    store.commit("SET_MENTION_MODAL", false);
+    store.commit("toggleMentionModal", false);
     return;
   }
   const text = inputStr.substring(lastAtIndex);

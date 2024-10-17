@@ -108,7 +108,7 @@ const {
 const searchForData = computed(() => {
   if (filterConversationList.value.length && activetab.value === "whole") {
     return filterConversationList.value;
-  } else  {
+  } else {
     return tabList.value;
   }
 });
@@ -214,16 +214,13 @@ const handleConvListClick = (data) => {
     if (id == data?.conversationID) return;
   }
   // 切换会话
-  commit("SET_CONVERSATION", {
-    type: "UPDATE_CURRENT_SELECTED_CONVERSATION",
-    payload: data,
-  });
+  commit("updateSelectedConversation", data);
   // 群详情信息
   dispatch("getGroupProfile", data);
   // 获取会话列表 read
   dispatch("GET_MESSAGE_LIST", data);
   commit("setReplyMsg", null);
-  commit("SET_FORWARD_DATA", {
+  commit("setForwardData", {
     type: "clear",
     payload: null,
   });
@@ -265,7 +262,7 @@ const fnPostpone = (data) => {
   [...postponeUnread.value].map((item) => {
     setMessageRead(item);
   });
-  commit("SET_CONVERSATION_VALUE", { key: "postponeUnread", value: new Set() });
+  commit("setConverstionValue", { key: "postponeUnread", value: new Set() });
 };
 // 置顶
 const pingConv = async (data) => {

@@ -62,7 +62,7 @@ function toggle(item) {
   } else if (item?.mode == "other") {
     emitter.emit("SidebarEditDialog", true);
   } else {
-    commit("TAGGLE_OUE_SIDE", item.only);
+    commit("taggleOueSide", item.only);
   }
 }
 function operation() {

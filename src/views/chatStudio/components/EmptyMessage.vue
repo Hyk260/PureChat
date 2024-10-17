@@ -25,7 +25,7 @@ const { activetab } = useState({
 });
 const { commit } = useStore();
 function launch() {
-  commit("TAGGLE_OUE_SIDE", "notebook");
+  commit("taggleOueSide", "notebook");
 }
 </script>
 
