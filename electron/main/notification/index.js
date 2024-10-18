@@ -3,7 +3,7 @@ import { mainTop } from "../utils/util";
 
 function notify() {
   registerNotificationListener()
-
+  
   notification.config({
     title: 'PureChat',
     // duration: 100000,

@@ -134,12 +134,13 @@ export class TIMProxy {
   onReceiveMessage({ data }) {
     console.log("[chat] 收到新消息 onReceiveMessage:", data);
     const current = getConversationID() == data?.[0].conversationID;
-    handlesOnShake(data);
-    handleTrayFlashIng(data);
     this.handleQuitGroupTip(data);
     this.handleNotificationTip(data);
     this.handleGroupSystemNoticeTip(data);
     this.handleUpdateMessage(data, current);
+    // electron
+    handlesOnShake(data);
+    handleTrayFlashIng(data);
   }
   onMessageRevoked({ data }) {
     console.log("[chat] 撤回消息 onMessageRevoked:", data);
