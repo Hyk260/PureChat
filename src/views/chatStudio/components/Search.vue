@@ -45,7 +45,7 @@ const createGroup = async () => {
   const data = { message: "创建群聊" };
   const result = await showConfirmationBox(data, "prompt");
   if (result === "cancel") return;
-  dispatch("CREATE_GROUP", { groupName: result.value });
+  dispatch("handleCreateGroup", { groupName: result.value });
 };
 
 const opendialog = () => {

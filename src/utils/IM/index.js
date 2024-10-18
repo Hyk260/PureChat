@@ -125,7 +125,7 @@ export class TIMProxy {
       });
     }
     // 未读消息
-    store.dispatch("GET_TOTAL_UNREAD_MSG");
+    store.dispatch("updateUnreadMessageCount");
   }
   onReceiveMessage({ data }) {
     console.log("[chat] 收到新消息 onReceiveMessage:", data);
@@ -224,7 +224,7 @@ export class TIMProxy {
     });
     notification.onclick = () => {
       // 切换会话列表
-      store.dispatch("CHEC_OUT_CONVERSATION", { convId: message.conversationID });
+      store.dispatch("addConversation", { convId: message.conversationID });
       // 定位到指定会话
       setTimeout(() => {
         scrollToDomPostion(ID);
@@ -268,14 +268,14 @@ export class TIMProxy {
       return list.includes(t.payload.operationType);
     });
     if (groupSystemTips.length > 0) {
-      convId && store.dispatch("DELETE_SESSION", { convId });
+      convId && store.dispatch("deleteSession", { convId });
     }
   }
   // 消息更新
   handleUpdateMessage(data, read = true) {
     if (!getConversationID()) return;
     if (isRobotId(data)) {
-      store.dispatch("GET_ROBOT_MESSAGE_LIST", {
+      store.dispatch("updateRobotMessageList", {
         convId: data?.[0].conversationID,
       });
     } else {
@@ -312,7 +312,7 @@ export class TIMProxy {
       duration: 6000,
       // type: "info",
       onClick: () => {
-        store.dispatch("CHEC_OUT_CONVERSATION", { convId: conversationID });
+        store.dispatch("addConversation", { convId: conversationID });
         scrollToDomPostion(ID);
         Notification.close();
       },

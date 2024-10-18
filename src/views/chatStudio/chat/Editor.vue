@@ -342,7 +342,7 @@ const sendMessage = async () => {
   console.log("sendChatMessage:", message);
   clearInputInfo();
   message.map((t, i) => {
-    dispatch("SESSION_MESSAGE_SENDING", {
+    dispatch("sendSessionMessage", {
       payload: {
         convId: currentConversation.value.conversationID,
         message: t,

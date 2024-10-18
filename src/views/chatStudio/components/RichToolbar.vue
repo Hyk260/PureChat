@@ -155,7 +155,7 @@ function customMessage() {
     convType: currentType.value,
     customType: "loading",
   });
-  dispatch("SESSION_MESSAGE_SENDING", {
+  dispatch("sendSessionMessage", {
     payload: {
       convId: currentConversation.value.conversationID,
       message,

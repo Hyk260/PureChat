@@ -414,7 +414,7 @@ const handleAt = (data) => {
   emitter.emit("handleAt", { id: from, name: nick });
 };
 const handleSendMessage = (data) => {
-  dispatch("CHEC_OUT_CONVERSATION", { convId: `C2C${data.from}` });
+  dispatch("addConversation", { convId: `C2C${data.from}` });
 };
 // 另存为
 const handleSave = ({ payload }) => {

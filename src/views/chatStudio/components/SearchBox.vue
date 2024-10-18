@@ -51,7 +51,7 @@ const handleClick = (tab, event) => {
 };
 const handleGroupClick = (item) => {
   setModal(false);
-  dispatch("CHEC_OUT_CONVERSATION", { convId: `GROUP${item.groupID}` });
+  dispatch("addConversation", { convId: `GROUP${item.groupID}` });
 };
 const data = [
   { label: "综合", name: "comprehensive" },

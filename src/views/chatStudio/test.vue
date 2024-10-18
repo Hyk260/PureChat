@@ -86,7 +86,7 @@ export default defineComponent({
   },
   methods: {
     // ...mapMutations([]),
-    ...mapActions(["getGroupList", "CHEC_OUT_CONVERSATION"]),
+    ...mapActions(["getGroupList", "addConversation"]),
     confetti() {
       if (!confetti) return;
       confetti({

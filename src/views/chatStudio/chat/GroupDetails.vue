@@ -154,7 +154,7 @@ const { isOwner, isAdmin, toAccount } = useGetters(["isOwner", "isAdmin", "toAcc
 
 const notify = (val) => {
   const { type, toAccount, messageRemindType: remindType } = currentConversation.value;
-  dispatch("SET_MESSAGE_REMIND_TYPE", { type, toAccount, remindType });
+  dispatch("setMessageReminderType", { type, toAccount, remindType });
 };
 
 const openNamePopup = async () => {
@@ -188,7 +188,7 @@ const groupMemberAdd = () => {
 };
 
 const navigate = (item) => {
-  dispatch("CHEC_OUT_CONVERSATION", { convId: `C2C${item.userID}` });
+  dispatch("addConversation", { convId: `C2C${item.userID}` });
   setDrawer(false);
 };
 
@@ -252,11 +252,8 @@ const handleQuitGroup = async () => {
   const data = { message: "确定退出群聊?", iconType: "warning" };
   const result = await showConfirmationBox(data);
   if (result === "cancel") return;
-  const { conversationID } = currentConversation.value;
-  dispatch("QUIT_GROUP", {
-    convId: conversationID,
-    groupId: toAccount.value,
-  });
+  const { conversationID: convId } = currentConversation.value;
+  dispatch("handleQuitGroup", { convId, groupId: toAccount.value });
   setDrawer(false);
 };
 

@@ -277,10 +277,16 @@ const conversation = {
           break;
       }
     },
+    // 清除当前消息记录
+    clearCurrentMessage(state) {
+      state.currentConversation = null;
+      state.currentMessageList = [];
+      state.isChatBoxVisible = false;
+    },
   },
   actions: {
     // 获取消息列表
-    async GET_MESSAGE_LIST({ commit, dispatch, state }, action) {
+    async updateMessageList({ commit, dispatch, state }, action) {
       const isSDKReady = timProxy.isSDKReady;
       const { conversationID, type } = action;
       let status = !state.currentMessageList || state.currentMessageList?.length == 0;
@@ -319,7 +325,7 @@ const conversation = {
         },
       });
     },
-    async GET_ROBOT_MESSAGE_LIST({ state, commit }, action) {
+    async updateRobotMessageList({ state, commit }, action) {
       const { convId } = action;
       const { messageList } = await getMessageList({
         conversationID: convId,
@@ -336,7 +342,7 @@ const conversation = {
       emitter.emit("updataScroll");
     },
     // 新增会话列表
-    async CHEC_OUT_CONVERSATION({ commit, dispatch }, action) {
+    async addConversation({ commit, dispatch }, action) {
       const { convId } = action;
       const { conversation } = await getConversationProfile({
         conversationID: convId,
@@ -346,40 +352,33 @@ const conversation = {
       // 群详情信息
       dispatch("getGroupProfile", conversation);
       // 获取会话列表
-      dispatch("GET_MESSAGE_LIST", conversation);
+      dispatch("updateMessageList", conversation);
     },
-    // 删除会话列表
-    async DELETE_SESSION({ dispatch }, action) {
+    // 删除会话
+    async deleteSession({ commit }, action) {
       const { convId } = action;
       if (!convId) {
-        console.error("convId is required")
+        console.error("convId is required");
         return;
       }
-      console.log(convId, "删除会话");
       const { code } = await deleteConversation({ convId });
       if (code !== 0) return;
-      dispatch("CLEAR_CURRENT_MSG");
+      commit("clearCurrentMessage");
     },
-    // 清除当前消息记录
-    async CLEAR_CURRENT_MSG({ state, commit }) {
-      state.currentConversation = null;
-      state.currentMessageList = [];
-      commit("toggleChatBox", false);
-    },
-    // 获取未读消息总数
-    async GET_TOTAL_UNREAD_MSG({ state }) {
+    // 更新未读消息总数
+    async updateUnreadMessageCount({ state }) {
       const isSDKReady = timProxy.isSDKReady;
       if (!isSDKReady) return;
       state.totalUnreadMsg = await getUnreadMsg();
     },
     // 消息免打扰
-    async SET_MESSAGE_REMIND_TYPE({ state }, action) {
+    async setMessageReminderType({ state }, action) {
       const { type, toAccount, remindType } = action;
       if (type === "@TIM#SYSTEM") return;
       await setMessageRemindType({ userID: toAccount, remindType, type });
     },
     // 会话消息发送
-    async SESSION_MESSAGE_SENDING({ state, commit, dispatch }, action) {
+    async sendSessionMessage({ state, commit, dispatch }, action) {
       const { payload } = action;
       const { convId, message, last = true } = payload;
       // 消息上屏 预加载
@@ -391,11 +390,11 @@ const conversation = {
       // 发送消息
       const { code, message: result } = await sendMsg(message);
       if (code === 0) {
-        dispatch("SENDMSG_SUCCESS_CALLBACK", { convId, message: result });
+        dispatch("sendMsgSuccessCallback", { convId, message: result });
         if (last) {
           const list = await transformData(state.currentMessageList);
           nextTick(() => {
-            dispatch("IM_CHAT_CALLBACK", { list, message: result });
+            dispatch("imChatCallback", { list, message: result });
           });
         }
       } else {
@@ -403,8 +402,8 @@ const conversation = {
       }
     },
     // 消息发送成功回调
-    async SENDMSG_SUCCESS_CALLBACK({ state, commit }, action) {
-      console.log("消息发送成功 SENDMSG_SUCCESS_CALLBACK", action);
+    async sendMsgSuccessCallback({ state, commit }, action) {
+      console.log("消息发送成功 sendMsgSuccessCallback", action);
       const { convId, message } = action;
       commit("SET_HISTORYMESSAGE", {
         type: "UPDATE_MESSAGES",
@@ -412,8 +411,8 @@ const conversation = {
       });
       emitter.emit("updataScroll");
     },
-    IM_CHAT_CALLBACK({ state }, action) {
-      console.log("IM_CHAT_CALLBACK", action);
+    imChatCallback({ state }, action) {
+      console.log("imChatCallback", action);
       const { message, list } = action;
       const { to } = message;
       if (!ROBOT_COLLECT.includes(to)) return;
