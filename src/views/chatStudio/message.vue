@@ -41,7 +41,7 @@
         id="drag"
         :class="{ 'resize-hover': !fullScreen }"
         @mouseover="dragControllerDiv(chatRef)"
-        v-if="showMsgBox"
+        v-if="isChatBoxVisible"
       ></div>
       <!-- 编辑器 -->
       <Editor />
@@ -88,11 +88,11 @@ const activeName = ref("whole");
 const { dispatch, commit } = useStore();
 
 const { isGroupChat } = useGetters(["isGroupChat"]);
-const { networkStatus, conver, showMsgBox, totalUnreadMsg, arrowRight, fullScreen } = useState({
+const { networkStatus, conver, isChatBoxVisible, totalUnreadMsg, arrowRight, fullScreen } = useState({
   networkStatus: (state) => state.conversation.networkStatus,
   totalUnreadMsg: (state) => state.conversation.totalUnreadMsg,
   conver: (state) => state.conversation.currentConversation,
-  showMsgBox: (state) => state.conversation.showMsgBox,
+  isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
   arrowRight: (state) => state.conversation.arrowRight,
   fullScreen: (state) => state.conversation.fullScreen,
 });
@@ -105,16 +105,16 @@ const fnTotalUnreadMsg = () => {
 };
 const handleClick = ({ props }, event) => {
   const { label, name } = props;
-  commit("TOGGLE_LIST", name);
+  commit("toggleList", name);
 };
 const onRight = (value) => {
-  commit("SET_CONVERSATION_VALUE", { key: "arrowRight", value: !value });
+  commit("setConverstionValue", { key: "arrowRight", value: !value });
 };
 useEventListener(window, "online", () => {
-  commit("SET_NETWORK_STATUS", true);
+  commit("setNetworkStatus", true);
 });
 useEventListener(window, "offline", () => {
-  commit("SET_NETWORK_STATUS", false);
+  commit("setNetworkStatus", false);
 });
 useEventListener(window, "focus", () => {
   if (!conver.value) return;
@@ -128,11 +128,11 @@ useEventListener(window, "focus", () => {
 });
 onActivated(() => {
   emitter.emit("updataScroll");
-  commit("TOGGLE_LIST", "whole");
+  commit("toggleList", "whole");
 });
 onDeactivated(() => {});
 onMounted(() => {
-  commit("SET_CONVERSATION_VALUE", { key: "arrowRight", value: false });
+  commit("setConverstionValue", { key: "arrowRight", value: false });
 });
 onUnmounted(() => {});
 watchEffect(() => {

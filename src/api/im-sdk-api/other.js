@@ -90,6 +90,7 @@ export const setMessageRead = async (convId) => {
 };
 // 删除会话
 export const deleteConversation = async (params) => {
+  console.log("deleteConversation:", params);
   const { convId } = params;
   const {
     code,

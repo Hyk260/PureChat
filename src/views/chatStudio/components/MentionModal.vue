@@ -141,7 +141,7 @@ export default {
       });
     },
     setMentionStatus(status = false) {
-      this.$store.commit("SET_MENTION_MODAL", status);
+      this.$store.commit("toggleMentionModal", status);
     },
     inputKeyupHandler(event) {
       if (event.key === "Enter") {

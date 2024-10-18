@@ -49,7 +49,7 @@ export default {
   methods: {
     onFriend({ id }) {
       // "GROUP" : "C2C";
-      this.$store.commit("TAGGLE_OUE_SIDE", "message");
+      this.$store.commit("taggleOueSide", "message");
       this.$store.dispatch("CHEC_OUT_CONVERSATION", { convId: `${this.type}${id}` });
       scrollToMessage(`message_${this.type}${id}`);
     },

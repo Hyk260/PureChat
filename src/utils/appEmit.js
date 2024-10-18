@@ -45,7 +45,7 @@ export const appIpcEmit = () => {
   electron.ipcRenderer.on("notif:click", (event, data) => {
     console.log("notif:click", data);
     const { conversationID: convId, ID } = data
-    store.commit("TAGGLE_OUE_SIDE", "message");
+    store.commit("taggleOueSide", "message");
     store.dispatch("CHEC_OUT_CONVERSATION", { convId });
     setTimeout(() => {
       scrollToDomPostion(ID);

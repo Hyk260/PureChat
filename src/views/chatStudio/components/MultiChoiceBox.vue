@@ -63,7 +63,7 @@ export default {
   },
   computed: {
     ...mapState({
-      showMsgBox: (state) => state.conversation.showMsgBox,
+      isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
       forwardData: (state) => state.conversation.forwardData,
       showCheckbox: (state) => state.conversation.showCheckbox,
       userProfile: (state) => state.user.userProfile,
@@ -75,7 +75,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["SET_CHEC_BOX"]),
+    ...mapMutations(["setCheckboxState"]),
     onClock(item) {
       switch (item.type) {
         case "share": // 截图分享
@@ -207,12 +207,12 @@ export default {
     },
     shutdown() {
       // 清空多选数据
-      this.$store.commit("SET_FORWARD_DATA", {
+      this.$store.commit("setForwardData", {
         type: "clear",
         payload: null,
       });
       // 关闭多选框
-      this.SET_CHEC_BOX(false);
+      this.setCheckboxState(false);
       this.closedState();
       this.setMultipleValue();
     },

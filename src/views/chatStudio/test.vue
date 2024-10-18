@@ -85,7 +85,7 @@ export default defineComponent({
     };
   },
   methods: {
-    ...mapMutations(["TAGGLE_OUE_SIDE"]),
+    // ...mapMutations([]),
     ...mapActions(["getGroupList", "CHEC_OUT_CONVERSATION"]),
     confetti() {
       if (!confetti) return;
@@ -106,8 +106,6 @@ export default defineComponent({
     sendMsg() {},
     async test2() {},
     handleGroupClick(groupID) {
-      this.TAGGLE_OUE_SIDE("message");
-      this.CHEC_OUT_CONVERSATION({ convId: `GROUP${groupID}` });
     },
     fileupload() {},
     async callApi() {},
