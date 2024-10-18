@@ -45,7 +45,7 @@ const createGroup = async () => {
   const data = { message: "创建群聊" };
   const result = await showConfirmationBox(data, "prompt");
   if (result === "cancel") return;
-  dispatch("CREATE_GROUP", { groupName: result.value });
+  dispatch("handleCreateGroup", { groupName: result.value });
 };
 
 const opendialog = () => {
@@ -75,13 +75,13 @@ const matchesFilter = (item, searchStr) => {
 
 const fnAppoint = debounce((key) => {
   if (isEmpty(key)) {
-    commit("setConverstionValue", { key: "filterConversationList", value: [] });
+    commit("setConversationValue", { key: "filterConversationList", value: [] });
     return;
   }
   const str = key.toUpperCase().trim()
   filterData.value = tabList.value.filter((item) => matchesFilter(item, str));
   console.log(filterData.value);
-  commit("setConverstionValue", { key: "filterConversationList", value: filterData.value });
+  commit("setConversationValue", { key: "filterConversationList", value: filterData.value });
 }, 100);
 
 watch(appoint, (value) => {
@@ -90,7 +90,7 @@ watch(appoint, (value) => {
 
 emitter.on("setSearchForData", (value = "") => {
   setAppoint();
-  commit("setConverstionValue", { key: "filterConversationList", value: [] });
+  commit("setConversationValue", { key: "filterConversationList", value: [] });
 });
 </script>
 

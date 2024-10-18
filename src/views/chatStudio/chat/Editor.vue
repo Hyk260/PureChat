@@ -307,7 +307,7 @@ const handleEnter = (event) => {
 // 清空输入框
 const clearInputInfo = () => {
   commit("setReplyMsg", null);
-  commit("setConverstionValue", { key: "fullScreen", value: false });
+  commit("setConversationValue", { key: "fullScreen", value: false });
   const editor = editorRef.value;
   editor && editor.clear();
 };
@@ -342,7 +342,7 @@ const sendMessage = async () => {
   console.log("sendChatMessage:", message);
   clearInputInfo();
   message.map((t, i) => {
-    dispatch("SESSION_MESSAGE_SENDING", {
+    dispatch("sendSessionMessage", {
       payload: {
         convId: currentConversation.value.conversationID,
         message: t,

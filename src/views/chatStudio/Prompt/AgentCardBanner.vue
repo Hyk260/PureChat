@@ -67,7 +67,7 @@ function toTant(item = cardData.value) {
   });
   const id = getModelId(localStg.get("default-assistant")) || CHATGPT_ROBOT;
   commit("taggleOueSide", "message");
-  dispatch("CHEC_OUT_CONVERSATION", { convId: `${"C2C"}${id}` });
+  dispatch("addConversation", { convId: `${"C2C"}${id}` });
   setTimeout(() => {
     emitter.emit("updataScroll");
   }, 50);

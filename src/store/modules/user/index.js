@@ -126,7 +126,7 @@ const user = {
         console.log("[chat] im退出登录 logout", data);
         commit("reset");
         // 清除消息记录
-        commit("SET_HISTORYMESSAGE", { type: "CLEAR_HISTORY" });
+        commit("clearHistory");
       }
     },
     // 重新登陆

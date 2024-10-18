@@ -218,12 +218,9 @@ const handleConvListClick = (data) => {
   // 群详情信息
   dispatch("getGroupProfile", data);
   // 获取会话列表 read
-  dispatch("GET_MESSAGE_LIST", data);
+  dispatch("updateMessageList", data);
   commit("setReplyMsg", null);
-  commit("setForwardData", {
-    type: "clear",
-    payload: null,
-  });
+  commit("setForwardData", { type: "clear", payload: null });
   emitter.emit("handleInsertDraft", data);
   emitter.emit("updataScroll");
   emitter.emit("setSearchForData");
@@ -249,12 +246,12 @@ const handleClickMenuItem = (item) => {
 // 消息免打扰
 const disableRecMsg = async (data) => {
   const { type, toAccount, messageRemindType: remindType } = data;
-  dispatch("SET_MESSAGE_REMIND_TYPE", { type, toAccount, remindType });
+  dispatch("setMessageReminderType", { type, toAccount, remindType });
 };
 // 删除会话
 const removeConv = async (data) => {
   const { conversationID: convId } = data;
-  dispatch("DELETE_SESSION", { convId });
+  dispatch("deleteSession", { convId });
 };
 const fnPostpone = (data) => {
   if (data !== "whole") return;
@@ -262,7 +259,7 @@ const fnPostpone = (data) => {
   [...postponeUnread.value].map((item) => {
     setMessageRead(item);
   });
-  commit("setConverstionValue", { key: "postponeUnread", value: new Set() });
+  commit("setConversationValue", { key: "postponeUnread", value: new Set() });
 };
 // 置顶
 const pingConv = async (data) => {

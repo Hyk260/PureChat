@@ -298,17 +298,17 @@ const getMoreMsg = async () => {
 
     if (isCompleted || !messageList.length) {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
-      commit("SET_HISTORYMESSAGE", { type: "UPDATE_NOMORE", payload: true });
+      commit("setConversationValue", { key: "noMore", value: true });
     } else {
       commit("SET_HISTORYMESSAGE", {
         type: "ADD_MORE_MESSAGE",
         payload: { convId, messages: messageList },
       });
-      commit("setConverstionValue", { key: "needScrollDown", value: msglist.length });
+      commit("setConversationValue", { key: "needScrollDown", value: msglist.length });
     }
   } catch (e) {
     // 解析报错 关闭加载动画
-    commit("SET_HISTORYMESSAGE", { type: "UPDATE_NOMORE", payload: true });
+    commit("setConversationValue", { key: "noMore", value: true });
   }
 };
 
@@ -414,7 +414,7 @@ const handleAt = (data) => {
   emitter.emit("handleAt", { id: from, name: nick });
 };
 const handleSendMessage = (data) => {
-  dispatch("CHEC_OUT_CONVERSATION", { convId: `C2C${data.from}` });
+  dispatch("addConversation", { convId: `C2C${data.from}` });
 };
 // 另存为
 const handleSave = ({ payload }) => {

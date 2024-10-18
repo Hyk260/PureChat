@@ -146,7 +146,7 @@ const clickCscreenshot = () => {
 };
 const onShake = () => {};
 const onEnlarge = (value) => {
-  commit("setConverstionValue", { key: "fullScreen", value: !value });
+  commit("setConversationValue", { key: "fullScreen", value: !value });
 };
 
 function customMessage() {
@@ -155,7 +155,7 @@ function customMessage() {
     convType: currentType.value,
     customType: "loading",
   });
-  dispatch("SESSION_MESSAGE_SENDING", {
+  dispatch("sendSessionMessage", {
     payload: {
       convId: currentConversation.value.conversationID,
       message,

@@ -108,7 +108,7 @@ const handleClick = ({ props }, event) => {
   commit("toggleList", name);
 };
 const onRight = (value) => {
-  commit("setConverstionValue", { key: "arrowRight", value: !value });
+  commit("setConversationValue", { key: "arrowRight", value: !value });
 };
 useEventListener(window, "online", () => {
   commit("setNetworkStatus", true);
@@ -132,7 +132,7 @@ onActivated(() => {
 });
 onDeactivated(() => {});
 onMounted(() => {
-  commit("setConverstionValue", { key: "arrowRight", value: false });
+  commit("setConversationValue", { key: "arrowRight", value: false });
 });
 onUnmounted(() => {});
 watchEffect(() => {

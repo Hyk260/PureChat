@@ -54,29 +54,33 @@ export default {
       state.groupList = groupList;
     },
     // 退出群聊
-    async QUIT_GROUP({ state, dispatch }, payload) {
+    async handleQuitGroup({ state, dispatch }, payload) {
       const { groupId, convId } = payload;
       const { code } = await quitGroup({ groupId });
       if (code !== 0) return;
-      dispatch("DELETE_SESSION", { convId });
+      dispatch("deleteSession", { convId });
     },
     // 创建群聊
-    async CREATE_GROUP({ state }, payload) {
+    async handleCreateGroup({ state }, payload) {
       const { groupName } = payload;
       await createGroup({ groupName });
     },
     // 解散群组
-    async DISMISS_GROUP({ dispatch }, payload) {
+    async dismissGroup({ dispatch }, payload) {
       const { groupId, convId } = payload;
       const { code, groupID } = await dismissGroup(groupId);
-      if (code !== 0) return;
-      // dispatch("DELETE_SESSION", { convId });
+      console.log("解散群组 dismissGroup:", code, groupID);
+      if (code !== 0) {
+        console.error("解散群组 error:", code, groupID);
+        return;
+      }
+      // dispatch("deleteSession", { convId });
       // const { ErrorCode } = await restApi({
       //   params: groupId,
       //   funName: "destroyGroup",
       // });
       // if (ErrorCode !== 0) return;
-      dispatch("DELETE_SESSION", { convId });
+      dispatch("deleteSession", { convId });
     },
     // 获取群详细资料
     async getGroupProfile({ commit }, payload) {
