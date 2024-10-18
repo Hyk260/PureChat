@@ -46,7 +46,7 @@ export const appIpcEmit = () => {
     console.log("notif:click", data);
     const { conversationID: convId, ID } = data
     store.commit("taggleOueSide", "message");
-    store.dispatch("CHEC_OUT_CONVERSATION", { convId });
+    store.dispatch("addConversation", { convId });
     setTimeout(() => {
       scrollToDomPostion(ID);
     }, 500)
