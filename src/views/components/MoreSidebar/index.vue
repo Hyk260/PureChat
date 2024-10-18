@@ -143,8 +143,8 @@ export default defineComponent({
     onUpdate() {},
     callback() {
       this.$nextTick(() => {
-        this.$store.commit("SET_OUT_SIDE_LIST", this.leftEdit);
-        this.$store.commit("SET_MORE_LIST", this.rightEdit);
+        this.$store.commit("setOutsideList", this.leftEdit);
+        this.$store.commit("setMoreList", this.rightEdit);
       });
     },
     onEnd() {

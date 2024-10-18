@@ -288,41 +288,28 @@ const conversation = {
     // 获取消息列表
     async updateMessageList({ commit, dispatch, state }, action) {
       const isSDKReady = timProxy.isSDKReady;
-      const { conversationID, type } = action;
-      let status = !state.currentMessageList || state.currentMessageList?.length == 0;
+      const { conversationID: convId, type } = action;
+      const status = !state.currentMessageList || state.currentMessageList?.length == 0;
       // 当前会话有值
       if (state.currentConversation && isSDKReady && status) {
         const { messageList, isCompleted } = await getMessageList({
-          conversationID: conversationID,
+          conversationID: convId,
         });
         commit("SET_HISTORYMESSAGE", {
           type: "ADD_MESSAGE",
           payload: {
-            convId: conversationID,
+            convId,
             isDone: isCompleted,
             message: addTimeDivider(messageList).reverse(), // 添加时间
           },
         });
         emitter.emit("updataScroll");
-        if (type == "GROUP") {
-          const { groupID } = action.groupProfile;
-          dispatch("getGroupMemberList", { groupID });
-        }
-      } else {
-        const { type } = action;
-        if (type == "GROUP") {
-          const { groupID } = action.groupProfile;
-          dispatch("getGroupMemberList", { groupID });
-        }
-        console.log(state.historyMessageList, "获取缓存");
       }
+      console.log(state.historyMessageList, "获取缓存");
       // 消息已读上报
       commit("SET_HISTORYMESSAGE", {
         type: "MARKE_MESSAGE_AS_READED",
-        payload: {
-          convId: conversationID,
-          message: action,
-        },
+        payload: { convId, message: action },
       });
     },
     async updateRobotMessageList({ state, commit }, action) {
@@ -344,15 +331,18 @@ const conversation = {
     // 新增会话列表
     async addConversation({ commit, dispatch }, action) {
       const { convId } = action;
-      const { conversation } = await getConversationProfile({
-        conversationID: convId,
-      });
+      const { conversation: data } = await getConversationProfile({ convId });
       // 切换会话
-      commit("updateSelectedConversation", conversation);
+      commit("updateSelectedConversation", data);
       // 群详情信息
-      dispatch("getGroupProfile", conversation);
+      dispatch("getGroupProfile", data);
       // 获取会话列表
-      dispatch("updateMessageList", conversation);
+      dispatch("updateMessageList", data);
+      // 群成员列表
+      if (data?.type === "GROUP") {
+        const { groupID } = data.groupProfile;
+        dispatch("getGroupMemberList", { groupID });
+      }
     },
     // 删除会话
     async deleteSession({ commit }, action) {

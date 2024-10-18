@@ -34,7 +34,7 @@ export default defineComponent({
       if (!name) return;
       this.$nextTick(() => {
         if (name === "login") return;
-        this.$store.dispatch("LOG_IN_AGAIN");
+        this.$store.dispatch("reLoginHandler");
       });
     },
   },

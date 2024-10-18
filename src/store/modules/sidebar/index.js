@@ -53,6 +53,7 @@ const outsideList = [
     type: "el-icon",
   },
 ];
+
 const moreList = [
   {
     only: "github",
@@ -77,11 +78,11 @@ export default {
     moreList,
   },
   mutations: {
-    SET_OUT_SIDE_LIST(state, list) {
+    setOutsideList(state, list) {
       const data = state.outsideList.filter((t) => t.only === "more");
       state.outsideList = [...list, ...data];
     },
-    SET_MORE_LIST(state, list) {
+    setMoreList(state, list) {
       state.moreList = list;
     },
   },

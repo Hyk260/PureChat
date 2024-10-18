@@ -154,7 +154,7 @@ export class TIMProxy {
       message: `${kickedOutReason(data.type)}被踢出，请重新登录。`,
       type: "error",
     });
-    store.dispatch("LOG_OUT");
+    store.dispatch("handleUserLogout");
   }
   onError({ data }) {
     console.log("[chat] onError:", data);
@@ -242,10 +242,12 @@ export class TIMProxy {
     console.log("[chat] handleQuitGroupTip", data);
     const convId = getConversationID();
     if (convId !== data[0]?.conversationID) return;
-    // TIM.TYPES.GRP_TIP_MBR_JOIN, // 1 有成员加群
-    // TIM.TYPES.GRP_TIP_MBR_QUIT, // 2 有群成员退群
-    // TIM.TYPES.GRP_TIP_MBR_KICKED_OUT, // 3 有群成员被踢出群
-    const list = [1, 2, 3];
+    // TIM.TYPES.GRP_TIP_MBR_JOIN // 1 有成员加群
+    // TIM.TYPES.GRP_TIP_MBR_QUIT // 2 有群成员退群
+    // TIM.TYPES.GRP_TIP_MBR_KICKED_OUT // 3 有群成员被踢出群
+    // TIM.TYPES.GRP_TIP_MBR_SET_ADMIN	//4	有群成员被设为管理员
+    // TIM.TYPES.GRP_TIP_MBR_CANCELED_ADMIN // 5 有群成员被撤销管理员
+    const list = [1, 2, 3, 4, 5];
     const groupTips = data.filter((t) => {
       return list.includes(t.payload.operationType);
     });
@@ -262,6 +264,8 @@ export class TIMProxy {
   handleGroupSystemNoticeTip(data) {
     if (data[0]?.type !== "TIMGroupSystemNoticeElem") return;
     console.log("[chat] handleGroupSystemNoticeTip", data);
+    // 4	被踢出群组 被踢出的用户接收
+    // 5	群组被解散 全体群成员接收
     const list = [4, 5];
     const convId = getConversationID();
     const groupSystemTips = data.filter((t) => {

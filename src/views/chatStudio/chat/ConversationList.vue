@@ -219,6 +219,11 @@ const handleConvListClick = (data) => {
   dispatch("getGroupProfile", data);
   // 获取会话列表 read
   dispatch("updateMessageList", data);
+  // 群成员列表
+  if (data?.type === "GROUP") {
+    const { groupID } = data.groupProfile;
+    dispatch("getGroupMemberList", { groupID });
+  }
   commit("setReplyMsg", null);
   commit("setForwardData", { type: "clear", payload: null });
   emitter.emit("handleInsertDraft", data);

@@ -62,7 +62,7 @@ const user = {
       console.log({ code, msg, result }, "授权登录信息");
       if (code == 200) {
         window.TIMProxy.init();
-        dispatch("TIM_LOG_IN", {
+        dispatch("handleIMLogin", {
           userID: result.username,
           userSig: result.userSig,
         });
@@ -74,13 +74,13 @@ const user = {
       }
     },
     // 登录
-    async LOG_IN({ state, commit, dispatch }, data) {
+    async handleUserLogin({ state, commit, dispatch }, data) {
       commit("setLoading", true);
       const { code, msg, result } = await login(data);
       console.log({ code, msg, result }, "登录信息");
       if (code == 200) {
         window.TIMProxy.init();
-        dispatch("TIM_LOG_IN", {
+        dispatch("handleIMLogin", {
           userID: result.username,
           userSig: result.userSig,
         });
@@ -97,30 +97,30 @@ const user = {
       }
     },
     // 退出登录
-    async LOG_OUT({ state, commit, dispatch }) {
+    async handleUserLogout({ state, commit, dispatch }) {
       router.push("/login");
       setTimeout(() => {
         logout();
         emitter.all.clear();
-        dispatch("TIM_LOG_OUT");
+        dispatch("handleIMLogout");
       }, 500);
     },
     // 登录im
-    async TIM_LOG_IN({ state, commit, dispatch }, user) {
+    async handleIMLogin({ state, commit, dispatch }, user) {
       try {
         const { code, data } = await chat.login(user);
         if (code == 0) {
           console.log("[chat] im登录成功 login", data);
         } else {
-          dispatch("LOG_OUT");
+          dispatch("handleUserLogout");
         }
       } catch (error) {
-        dispatch("LOG_OUT");
+        dispatch("handleUserLogout");
         console.log("[chat] im登录失败 login", error);
       }
     },
     // 退出im
-    async TIM_LOG_OUT({ commit, dispatch }) {
+    async handleIMLogout({ commit, dispatch }) {
       const { code, data } = await chat.logout();
       if (code == 0) {
         console.log("[chat] im退出登录 logout", data);
@@ -130,16 +130,16 @@ const user = {
       }
     },
     // 重新登陆
-    LOG_IN_AGAIN({ state, dispatch }) {
+    reLoginHandler({ state, dispatch }) {
       try {
         const data = localStg.get(USER_MODEL) || {};
         if (data) {
           const { username: userID, userSig } = data;
-          console.log("LOG_IN_AGAIN", { userID, userSig });
+          console.log("reLoginHandler", { userID, userSig });
           window.TIMProxy.init();
-          dispatch("TIM_LOG_IN", { userID, userSig });
+          dispatch("handleIMLogin", { userID, userSig });
         } else {
-          dispatch("LOG_OUT");
+          dispatch("handleUserLogout");
         }
       } catch (error) {
         console.log(error);
