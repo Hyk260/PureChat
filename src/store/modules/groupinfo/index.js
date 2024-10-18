@@ -66,10 +66,14 @@ export default {
       await createGroup({ groupName });
     },
     // 解散群组
-    async DISMISS_GROUP({ dispatch }, payload) {
+    async dismissGroup({ dispatch }, payload) {
       const { groupId, convId } = payload;
       const { code, groupID } = await dismissGroup(groupId);
-      if (code !== 0) return;
+      console.log("解散群组 dismissGroup:", code, groupID);
+      if (code !== 0) {
+        console.error("解散群组 error:", code, groupID);
+        return;
+      }
       // dispatch("DELETE_SESSION", { convId });
       // const { ErrorCode } = await restApi({
       //   params: groupId,

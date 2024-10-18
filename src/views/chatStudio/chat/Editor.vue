@@ -307,7 +307,7 @@ const handleEnter = (event) => {
 // 清空输入框
 const clearInputInfo = () => {
   commit("setReplyMsg", null);
-  commit("setConverstionValue", { key: "fullScreen", value: false });
+  commit("setConversationValue", { key: "fullScreen", value: false });
   const editor = editorRef.value;
   editor && editor.clear();
 };

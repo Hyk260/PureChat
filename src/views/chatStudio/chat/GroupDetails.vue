@@ -237,11 +237,8 @@ const handleDismissGroup = async () => {
   const data = { message: "确定解散群聊?", iconType: "warning" };
   const result = await showConfirmationBox(data);
   if (result === "cancel") return;
-  const { conversationID } = currentConversation.value;
-  dispatch("DISMISS_GROUP", {
-    convId: conversationID,
-    groupId: toAccount.value,
-  });
+  const { conversationID: convId } = currentConversation.value;
+  dispatch("dismissGroup", { convId, groupId: toAccount.value });
   setDrawer(false);
 };
 

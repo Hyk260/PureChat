@@ -123,26 +123,6 @@ const conversation = {
           state.historyMessageList.set(convId, updatedHistory);
           break;
         }
-        case "CLEAR_HISTORY": {
-          Object.assign(state, {
-            sessionDraftMap: new Map(),
-            historyMessageList: new Map(),
-            currentConversation: null,
-            currentMessageList: [],
-            conversationList: [],
-            activetab: "whole",
-            isChatBoxVisible: false,
-            showCheckbox: false,
-            currentReplyMsg: null,
-          });
-          console.log("[chat] 清除历史记录 CLEAR_HISTORY:", state);
-          break;
-        }
-        case "UPDATE_NOMORE": {
-          console.log("[chat] 加载更多消息状态 UPDATE_NOMORE:", payload);
-          state.noMore = payload;
-          break;
-        }
         case "MARKE_MESSAGE_AS_READED": {
           const {
             convId,
@@ -169,6 +149,20 @@ const conversation = {
           break;
         }
       }
+    },
+    clearHistory(state) {
+      Object.assign(state, {
+        sessionDraftMap: new Map(),
+        historyMessageList: new Map(),
+        currentConversation: null,
+        currentMessageList: [],
+        conversationList: [],
+        activetab: "whole",
+        isChatBoxVisible: false,
+        showCheckbox: false,
+        currentReplyMsg: null,
+      });
+      console.log("[chat] 清除历史记录 clearHistory:", state);
     },
     // 切换 更新会话
     updateSelectedConversation(state, payload) {
@@ -236,7 +230,7 @@ const conversation = {
     setReplyMsg(state, payload) {
       state.currentReplyMsg = payload;
     },
-    setConverstionValue(state, { key, value }) {
+    setConversationValue(state, { key, value }) {
       state[key] = value;
     },
     // 设置会话草稿
@@ -357,6 +351,11 @@ const conversation = {
     // 删除会话列表
     async DELETE_SESSION({ dispatch }, action) {
       const { convId } = action;
+      if (!convId) {
+        console.error("convId is required")
+        return;
+      }
+      console.log(convId, "删除会话");
       const { code } = await deleteConversation({ convId });
       if (code !== 0) return;
       dispatch("CLEAR_CURRENT_MSG");

@@ -116,10 +116,10 @@ export class TIMProxy {
     const convId = getConversationID();
     const conv = data.filter((t) => t.conversationID == convId);
     // 更新会话列表
-    store.commit("setConverstionValue", { key: "conversationList", value: data });
+    store.commit("setConversationValue", { key: "conversationList", value: data });
     // 更新窗口数据
     if (conv) {
-      store.commit("setConverstionValue", {
+      store.commit("setConversationValue", {
         key: "currentConversation",
         value: cloneDeep(conv[0]),
       });
@@ -268,7 +268,7 @@ export class TIMProxy {
       return list.includes(t.payload.operationType);
     });
     if (groupSystemTips.length > 0) {
-      store.dispatch("DELETE_SESSION", { convId });
+      convId && store.dispatch("DELETE_SESSION", { convId });
     }
   }
   // 消息更新

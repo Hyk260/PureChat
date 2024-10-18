@@ -146,7 +146,7 @@ const clickCscreenshot = () => {
 };
 const onShake = () => {};
 const onEnlarge = (value) => {
-  commit("setConverstionValue", { key: "fullScreen", value: !value });
+  commit("setConversationValue", { key: "fullScreen", value: !value });
 };
 
 function customMessage() {
