@@ -123,21 +123,6 @@ const conversation = {
           state.historyMessageList.set(convId, updatedHistory);
           break;
         }
-        case "MARKE_MESSAGE_AS_READED": {
-          const {
-            convId,
-            message: { unreadCount },
-          } = payload;
-          // tab 不为全部不进行消息已读
-          if (state.activetab !== "whole" && state.currentConversation.conversationID === convId) {
-            state.postponeUnread.add(convId);
-            return;
-          }
-          if (unreadCount === 0) return;
-          console.log("[chat] 消息已读 MARKE_MESSAGE_AS_READED:", payload);
-          setMessageRead(convId);
-          break;
-        }
         case "UPDATE_CACHE": {
           console.log("[chat] 更新缓存 UPDATE_CACHE:", payload);
           const { convId, message } = payload;
@@ -286,15 +271,19 @@ const conversation = {
   },
   actions: {
     // 获取消息列表
-    async updateMessageList({ commit, dispatch, state }, action) {
+    async updateMessageList({ state, getters, commit, dispatch }, action) {
       const isSDKReady = timProxy.isSDKReady;
-      const { conversationID: convId, type } = action;
-      const status = !state.currentMessageList || state.currentMessageList?.length == 0;
+      const { conversationID: convId } = action;
+      const status = getters.toAccount && !getters.hasMsgList;
       // 当前会话有值
-      if (state.currentConversation && isSDKReady && status) {
+      if (isSDKReady && status) {
         const { messageList, isCompleted } = await getMessageList({
           conversationID: convId,
         });
+        if (!messageList?.length) {
+          console.warn("消息列表为空:", messageList);
+          return;
+        }
         commit("SET_HISTORYMESSAGE", {
           type: "ADD_MESSAGE",
           payload: {
@@ -307,10 +296,7 @@ const conversation = {
       }
       console.log(state.historyMessageList, "获取缓存");
       // 消息已读上报
-      commit("SET_HISTORYMESSAGE", {
-        type: "MARKE_MESSAGE_AS_READED",
-        payload: { convId, message: action },
-      });
+      dispatch("hasReadMessage", { convId, message: action });
     },
     async updateRobotMessageList({ state, commit }, action) {
       const { convId } = action;
@@ -367,6 +353,21 @@ const conversation = {
       if (type === "@TIM#SYSTEM") return;
       await setMessageRemindType({ userID: toAccount, remindType, type });
     },
+    // 消息已读
+    hasReadMessage({ state }, payload) {
+      const {
+        convId,
+        message: { unreadCount },
+      } = payload;
+      // tab 不为全部不进行消息已读
+      if (state.activetab !== "whole" && state.currentConversation.conversationID === convId) {
+        state.postponeUnread.add(convId);
+        return;
+      }
+      if (unreadCount === 0) return;
+      console.log("[chat] 消息已读 hasReadMessage:", payload);
+      setMessageRead(convId);
+    },
     // 会话消息发送
     async sendSessionMessage({ state, commit, dispatch }, action) {
       const { payload } = action;
@@ -382,7 +383,7 @@ const conversation = {
       if (code === 0) {
         dispatch("sendMsgSuccessCallback", { convId, message: result });
         if (last) {
-          const list = await transformData(state.currentMessageList);
+          const list = await transformData(state.currentMessageList ?? [result]);
           nextTick(() => {
             dispatch("imChatCallback", { list, message: result });
           });
@@ -410,6 +411,9 @@ const conversation = {
     },
   },
   getters: {
+    hasMsgList(state) {
+      return state.currentMessageList?.length > 0;
+    },
     toAccount(state) {
       const { currentConversation: conve } = state;
       if (!conve || !conve.conversationID) return "";

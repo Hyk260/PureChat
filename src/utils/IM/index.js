@@ -300,13 +300,7 @@ export class TIMProxy {
   // 上报消息已读
   reportedMessageRead(data) {
     if (!isFocused.value) return;
-    store.commit("SET_HISTORYMESSAGE", {
-      type: "MARKE_MESSAGE_AS_READED",
-      payload: {
-        convId: data?.[0].conversationID,
-        message: data,
-      },
-    });
+    store.dispatch("hasReadMessage", { convId: data?.[0].conversationID, message: data });
   }
   handleElNotification(message) {
     const { ID, nick, payload, conversationID } = message;
