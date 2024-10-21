@@ -300,10 +300,7 @@ const getMoreMsg = async () => {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
       commit("setConversationValue", { key: "noMore", value: true });
     } else {
-      commit("SET_HISTORYMESSAGE", {
-        type: "ADD_MORE_MESSAGE",
-        payload: { convId, messages: messageList },
-      });
+      commit("loadMoreMessages", {convId, messages: messageList });
       commit("setConversationValue", { key: "needScrollDown", value: msglist.length });
     }
   } catch (e) {
