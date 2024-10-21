@@ -113,11 +113,11 @@ export default {
     async deleteMsg() {
       const result = await showConfirmationBox({ message: "确定删除?", iconType: "warning" });
       if (result == "cancel") return;
-      const { code } = await deleteMessage([...this.filterate()]);
+      const { code, messageList } = await deleteMessage([...this.filterate()]);
       if (code !== 0) return;
-      this.$store.commit("SET_HISTORYMESSAGE", {
-        type: "DELETE_MESSAGE",
-        payload: { convId: this.currentConversation.conversationID },
+      this.$store.commit("removeMessage", {
+        convId: this.currentConversation.conversationID,
+        message: messageList,
       });
       this.shutdown();
     },

@@ -95,20 +95,20 @@ const conversation = {
           }
           break;
         }
-        case "DELETE_MESSAGE": {
-          console.log("[chat] 删除消息 DELETE_MESSAGE:", payload);
-          const { convId } = payload || {};
-          const history = state.historyMessageList.get(convId);
-          if (!history) {
-            console.error("[chat] 删除消息失败，历史消息不存在");
-            return;
-          }
-          const updatedHistory = addTimeDivider(history.reverse()).reverse();
-          state.currentMessageList = updatedHistory;
-          state.historyMessageList.set(convId, updatedHistory);
-          break;
-        }
       }
+    },
+    // 从当前消息列表中删除某条消息
+    removeMessage(state, payload) {
+      console.log("[chat] 删除消息 removeMessage:", payload);
+      const { convId, message } = payload || {};
+      const history = state.historyMessageList.get(convId);
+      if (!history) {
+        console.error("[chat] 删除消息失败，历史消息不存在");
+        return;
+      }
+      const updatedHistory = addTimeDivider(history.reverse()).reverse();
+      state.currentMessageList = updatedHistory;
+      state.historyMessageList.set(convId, updatedHistory);
     },
     updateHistoryMessageCache(state, payload) {
       console.log("[chat] 更新历史消息缓存 updateHistoryMessageCache:", payload);
