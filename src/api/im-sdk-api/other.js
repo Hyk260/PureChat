@@ -68,8 +68,8 @@ export const setMessageRemindType = async (params) => {
 // 获取会话信息
 export const getConversationProfile = async (params) => {
   try {
-    const { conversationID } = params;
-    const { code, data } = await tim.getConversationProfile(conversationID);
+    const { convId } = params;
+    const { code, data } = await tim.getConversationProfile(convId);
     if (code == 0) {
       return data;
     }

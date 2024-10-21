@@ -118,13 +118,7 @@ useEventListener(window, "offline", () => {
 });
 useEventListener(window, "focus", () => {
   if (!conver.value) return;
-  commit("SET_HISTORYMESSAGE", {
-    type: "MARKE_MESSAGE_AS_READED",
-    payload: {
-      convId: conver?.value.conversationID,
-      message: conver.value,
-    },
-  });
+  dispatch("hasReadMessage", { convId: conver?.value.conversationID, message: conver.value });
 });
 onActivated(() => {
   emitter.emit("updataScroll");

@@ -111,7 +111,7 @@ function log() {
 
 function logout() {
   emit("onClose");
-  dispatch("LOG_OUT");
+  dispatch("handleUserLogout");
 }
 
 const onChange = (val) => {

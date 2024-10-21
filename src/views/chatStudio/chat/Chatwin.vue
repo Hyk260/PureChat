@@ -289,7 +289,7 @@ const getMoreMsg = async () => {
     console.log("nextMsgId:", nextMsgId);
 
     const result = await getMessageList({
-      conversationID: convId,
+      convId,
       nextReqMessageID: nextMsgId,
     });
 

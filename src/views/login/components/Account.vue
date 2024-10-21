@@ -124,7 +124,7 @@ const loginBtn = async (formEl) => {
   if (!formEl) return;
   await formEl.validate((valid) => {
     if (!valid) return;
-    dispatch("LOG_IN", user);
+    dispatch("handleUserLogin", user);
   });
 };
 

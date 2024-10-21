@@ -51,13 +51,13 @@ export const quitGroup = async (params) => {
 
 // 获取群成员列表
 export const getGroupMemberList = async (params) => {
-  const { groupID, count } = params; // offset
+  const { groupID, count = 20 } = params; // offset
   const {
     code,
     data: { memberList, offset },
   } = await tim.getGroupMemberList({
     groupID,
-    count: 20,
+    count,
     offset: 0,
   });
   return { code, memberList };

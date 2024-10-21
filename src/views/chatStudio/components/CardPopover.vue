@@ -82,7 +82,7 @@ const menuItems = ref([
     icon: "CollectionTag",
     svg: "log-out",
     action: () => {
-      dispatch("LOG_OUT");
+      dispatch("handleUserLogout");
     },
   },
 ]);

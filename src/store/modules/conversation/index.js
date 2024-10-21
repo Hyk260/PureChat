@@ -55,21 +55,6 @@ const conversation = {
     SET_HISTORYMESSAGE(state, action) {
       const { type, payload } = action;
       switch (type) {
-        case "ADD_MESSAGE": {
-          console.log("[chat] 添加消息 ADD_MESSAGE:", payload);
-          const { convId, isDone, message } = payload;
-          state.historyMessageList.set(convId, message);
-          if (state.currentConversation) {
-            state.currentMessageList = state.historyMessageList.get(convId);
-          } else {
-            state.currentMessageList = [];
-          }
-          const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
-          // 是否已经拉完所有消息 '没有更多' : '显示loading'
-          console.log("isDone:", isMore || isDone ? "没有更多" : "显示loading");
-          state.noMore = isMore || isDone;
-          break;
-        }
         case "ADD_MORE_MESSAGE": {
           console.log("[chat] 加载更多 ADD_MORE_MESSAGE:", payload);
           const { convId, messages } = payload;
@@ -123,32 +108,30 @@ const conversation = {
           state.historyMessageList.set(convId, updatedHistory);
           break;
         }
-        case "MARKE_MESSAGE_AS_READED": {
-          const {
-            convId,
-            message: { unreadCount },
-          } = payload;
-          // tab 不为全部不进行消息已读
-          if (state.activetab !== "whole" && state.currentConversation.conversationID === convId) {
-            state.postponeUnread.add(convId);
-            return;
-          }
-          if (unreadCount === 0) return;
-          console.log("[chat] 消息已读 MARKE_MESSAGE_AS_READED:", payload);
-          setMessageRead(convId);
-          break;
-        }
-        case "UPDATE_CACHE": {
-          console.log("[chat] 更新缓存 UPDATE_CACHE:", payload);
-          const { convId, message } = payload;
-          let history = state.historyMessageList.get(convId);
-          if (!history) return;
-          let baseTime = getBaseTime(history);
-          let timeDivider = addTimeDivider(message, baseTime).reverse();
-          history.unshift(...timeDivider);
-          break;
-        }
       }
+    },
+    updateHistoryMessageCache(state, payload) {
+      console.log("[chat] 更新历史消息缓存 updateHistoryMessageCache:", payload);
+      const { convId, message } = payload;
+      let history = state.historyMessageList.get(convId);
+      if (!history) return;
+      let baseTime = getBaseTime(history);
+      let timeDivider = addTimeDivider(message, baseTime).reverse();
+      history.unshift(...timeDivider);
+    },
+    addMessage(state, payload) {
+      console.log("[chat] 添加消息 addMessage:", payload);
+      const { convId, isDone, message } = payload;
+      if (state.currentConversation) {
+        state.currentMessageList = message;
+      } else {
+        state.currentMessageList = [];
+      }
+      state.historyMessageList.set(convId, message);
+      const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
+      // 是否已经拉完所有消息 '没有更多' : '显示loading'
+      console.log("isDone:", isMore || isDone ? "没有更多" : "显示loading");
+      state.noMore = isMore || isDone;
     },
     clearHistory(state) {
       Object.assign(state, {
@@ -286,50 +269,29 @@ const conversation = {
   },
   actions: {
     // 获取消息列表
-    async updateMessageList({ commit, dispatch, state }, action) {
+    async updateMessageList({ state, getters, commit, dispatch }, action) {
       const isSDKReady = timProxy.isSDKReady;
-      const { conversationID, type } = action;
-      let status = !state.currentMessageList || state.currentMessageList?.length == 0;
+      const { conversationID: convId } = action;
+      const status = getters.toAccount && !getters.hasMsgList;
       // 当前会话有值
-      if (state.currentConversation && isSDKReady && status) {
+      if (isSDKReady && status) {
         const { messageList, isCompleted } = await getMessageList({
-          conversationID: conversationID,
+          convId,
         });
-        commit("SET_HISTORYMESSAGE", {
-          type: "ADD_MESSAGE",
-          payload: {
-            convId: conversationID,
-            isDone: isCompleted,
-            message: addTimeDivider(messageList).reverse(), // 添加时间
-          },
+        commit("addMessage", {
+          convId,
+          isDone: isCompleted,
+          message: addTimeDivider(messageList).reverse(), // 添加时间
         });
         emitter.emit("updataScroll");
-        if (type == "GROUP") {
-          const { groupID } = action.groupProfile;
-          dispatch("getGroupMemberList", { groupID });
-        }
-      } else {
-        const { type } = action;
-        if (type == "GROUP") {
-          const { groupID } = action.groupProfile;
-          dispatch("getGroupMemberList", { groupID });
-        }
-        console.log(state.historyMessageList, "获取缓存");
       }
+      console.log(state.historyMessageList, "获取缓存");
       // 消息已读上报
-      commit("SET_HISTORYMESSAGE", {
-        type: "MARKE_MESSAGE_AS_READED",
-        payload: {
-          convId: conversationID,
-          message: action,
-        },
-      });
+      dispatch("hasReadMessage", { convId, message: action });
     },
     async updateRobotMessageList({ state, commit }, action) {
       const { convId } = action;
-      const { messageList } = await getMessageList({
-        conversationID: convId,
-      });
+      const { messageList } = await getMessageList({ convId });
       const message = addTimeDivider(messageList).reverse();
       state.historyMessageList.set(convId, cloneDeep(message));
       commit("SET_HISTORYMESSAGE", {
@@ -344,15 +306,18 @@ const conversation = {
     // 新增会话列表
     async addConversation({ commit, dispatch }, action) {
       const { convId } = action;
-      const { conversation } = await getConversationProfile({
-        conversationID: convId,
-      });
+      const { conversation: data } = await getConversationProfile({ convId });
       // 切换会话
-      commit("updateSelectedConversation", conversation);
+      commit("updateSelectedConversation", data);
       // 群详情信息
-      dispatch("getGroupProfile", conversation);
+      dispatch("getGroupProfile", data);
       // 获取会话列表
-      dispatch("updateMessageList", conversation);
+      dispatch("updateMessageList", data);
+      // 群成员列表
+      if (data?.type === "GROUP") {
+        const { groupID } = data.groupProfile;
+        dispatch("getGroupMemberList", { groupID });
+      }
     },
     // 删除会话
     async deleteSession({ commit }, action) {
@@ -377,6 +342,21 @@ const conversation = {
       if (type === "@TIM#SYSTEM") return;
       await setMessageRemindType({ userID: toAccount, remindType, type });
     },
+    // 消息已读
+    hasReadMessage({ state }, payload) {
+      const {
+        convId,
+        message: { unreadCount },
+      } = payload;
+      // tab 不为全部不进行消息已读
+      if (state.activetab !== "whole" && state.currentConversation.conversationID === convId) {
+        state.postponeUnread.add(convId);
+        return;
+      }
+      if (unreadCount === 0) return;
+      console.log("[chat] 消息已读 hasReadMessage:", payload);
+      setMessageRead(convId);
+    },
     // 会话消息发送
     async sendSessionMessage({ state, commit, dispatch }, action) {
       const { payload } = action;
@@ -392,7 +372,7 @@ const conversation = {
       if (code === 0) {
         dispatch("sendMsgSuccessCallback", { convId, message: result });
         if (last) {
-          const list = await transformData(state.currentMessageList);
+          const list = await transformData(state.currentMessageList ?? [result]);
           nextTick(() => {
             dispatch("imChatCallback", { list, message: result });
           });
@@ -420,6 +400,9 @@ const conversation = {
     },
   },
   getters: {
+    hasMsgList(state) {
+      return state.currentMessageList?.length > 0;
+    },
     toAccount(state) {
       const { currentConversation: conve } = state;
       if (!conve || !conve.conversationID) return "";

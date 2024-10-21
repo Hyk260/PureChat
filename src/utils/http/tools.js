@@ -10,7 +10,7 @@ export const errorHandler = (error) => {
         break;
       case 401:
         errMessage = "未授权,请重新登录!";
-        store.dispatch("LOG_OUT");
+        store.dispatch("handleUserLogout");
         break;
       case 404:
         errMessage = "请求错误,未找到该资源";

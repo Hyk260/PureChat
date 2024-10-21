@@ -41,14 +41,23 @@ export default {
   actions: {
     // 获取群成员列表
     async getGroupMemberList({ state, getters }, payload) {
-      const groupID = getters.toAccount;
-      const { memberList, code } = await getGroupMemberList({ groupID });
-      let sortlist = memberList;
-      sortlist.sort(compareByRole);
-      state.currentMemberList = sortlist;
+      const { isSort = true, groupID = '' } = payload || {};
+      const groupId = groupID || getters.toAccount;
+
+      if (!groupId) {
+        console.error("群ID不存在");
+        return;
+      }
+      const { memberList, code } = await getGroupMemberList({ groupID: groupId });
+      if (code !== 0) return;
+      if (isSort) {
+        state.currentMemberList = memberList.sort(compareByRole);
+      } else {
+        state.currentMemberList = memberList;
+      }
     },
     // 获取群列表数据
-    async getGroupList({ state }, payload) {
+    async getGroupList({ state }) {
       const { code, groupList } = await getGroupList();
       if (code !== 0) return;
       state.groupList = groupList;
@@ -89,6 +98,7 @@ export default {
       const { groupID } = payload.groupProfile;
       const { code, data } = await getGroupProfile({ groupID });
       if (code !== 0) return;
+      console.log("getGroupProfile:", data);
       commit("setGroupProfile", data);
     },
   },

@@ -158,12 +158,9 @@ export default {
       const { code, message: data } = await sendMsg(forwardMsg);
       if (code == 0) {
         const { conversationID } = data || "";
-        this.$store.commit("SET_HISTORYMESSAGE", {
-          type: "UPDATE_CACHE",
-          payload: {
-            convId: conversationID,
-            message: [data],
-          },
+        this.$store.commit("updateHistoryMessageCache", {
+          convId: conversationID,
+          message: [data],
         });
       }
       this.shutdown();
@@ -191,12 +188,9 @@ export default {
       const { code, message: data } = await sendMsg(forwardMsg);
       if (code == 0) {
         const { conversationID } = data || "";
-        this.$store.commit("SET_HISTORYMESSAGE", {
-          type: "UPDATE_CACHE",
-          payload: {
-            convId: conversationID,
-            message: [data],
-          },
+        this.$store.commit("updateHistoryMessageCache", {
+          convId: conversationID,
+          message: [data],
         });
       }
     },
