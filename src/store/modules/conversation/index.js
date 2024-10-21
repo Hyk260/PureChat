@@ -55,21 +55,6 @@ const conversation = {
     SET_HISTORYMESSAGE(state, action) {
       const { type, payload } = action;
       switch (type) {
-        case "ADD_MESSAGE": {
-          console.log("[chat] 添加消息 ADD_MESSAGE:", payload);
-          const { convId, isDone, message } = payload;
-          state.historyMessageList.set(convId, message);
-          if (state.currentConversation) {
-            state.currentMessageList = state.historyMessageList.get(convId);
-          } else {
-            state.currentMessageList = [];
-          }
-          const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
-          // 是否已经拉完所有消息 '没有更多' : '显示loading'
-          console.log("isDone:", isMore || isDone ? "没有更多" : "显示loading");
-          state.noMore = isMore || isDone;
-          break;
-        }
         case "ADD_MORE_MESSAGE": {
           console.log("[chat] 加载更多 ADD_MORE_MESSAGE:", payload);
           const { convId, messages } = payload;
@@ -123,17 +108,30 @@ const conversation = {
           state.historyMessageList.set(convId, updatedHistory);
           break;
         }
-        case "UPDATE_CACHE": {
-          console.log("[chat] 更新缓存 UPDATE_CACHE:", payload);
-          const { convId, message } = payload;
-          let history = state.historyMessageList.get(convId);
-          if (!history) return;
-          let baseTime = getBaseTime(history);
-          let timeDivider = addTimeDivider(message, baseTime).reverse();
-          history.unshift(...timeDivider);
-          break;
-        }
       }
+    },
+    updateHistoryMessageCache(state, payload) {
+      console.log("[chat] 更新历史消息缓存 updateHistoryMessageCache:", payload);
+      const { convId, message } = payload;
+      let history = state.historyMessageList.get(convId);
+      if (!history) return;
+      let baseTime = getBaseTime(history);
+      let timeDivider = addTimeDivider(message, baseTime).reverse();
+      history.unshift(...timeDivider);
+    },
+    addMessage(state, payload) {
+      console.log("[chat] 添加消息 addMessage:", payload);
+      const { convId, isDone, message } = payload;
+      if (state.currentConversation) {
+        state.currentMessageList = message;
+      } else {
+        state.currentMessageList = [];
+      }
+      state.historyMessageList.set(convId, message);
+      const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
+      // 是否已经拉完所有消息 '没有更多' : '显示loading'
+      console.log("isDone:", isMore || isDone ? "没有更多" : "显示loading");
+      state.noMore = isMore || isDone;
     },
     clearHistory(state) {
       Object.assign(state, {
@@ -278,19 +276,12 @@ const conversation = {
       // 当前会话有值
       if (isSDKReady && status) {
         const { messageList, isCompleted } = await getMessageList({
-          conversationID: convId,
+          convId,
         });
-        if (!messageList?.length) {
-          console.warn("消息列表为空:", messageList);
-          return;
-        }
-        commit("SET_HISTORYMESSAGE", {
-          type: "ADD_MESSAGE",
-          payload: {
-            convId,
-            isDone: isCompleted,
-            message: addTimeDivider(messageList).reverse(), // 添加时间
-          },
+        commit("addMessage", {
+          convId,
+          isDone: isCompleted,
+          message: addTimeDivider(messageList).reverse(), // 添加时间
         });
         emitter.emit("updataScroll");
       }
@@ -300,9 +291,7 @@ const conversation = {
     },
     async updateRobotMessageList({ state, commit }, action) {
       const { convId } = action;
-      const { messageList } = await getMessageList({
-        conversationID: convId,
-      });
+      const { messageList } = await getMessageList({ convId });
       const message = addTimeDivider(messageList).reverse();
       state.historyMessageList.set(convId, cloneDeep(message));
       commit("SET_HISTORYMESSAGE", {

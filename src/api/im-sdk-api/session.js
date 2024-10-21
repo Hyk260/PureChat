@@ -11,20 +11,20 @@ export const getUnreadMsg = async () => {
 /**
  * 获取消息列表
  * @param {Object} params - 参数对象
- * @param {string} params.conversationID - 会话ID
+ * @param {string} params.convId - 会话ID
  * @param {string} [params.nextReqMessageID] - 下一次请求的消息ID
  * @returns {Promise<Object>} 消息列表数据对象，若出错则返回空对象
  * https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#getMessageList
  */
 export const getMessageList = async (params) => {
   try {
-    const { conversationID, nextReqMessageID } = params;
+    const { convId, nextReqMessageID } = params;
     const { code, data } = await tim.getMessageList({
-      conversationID,
+      conversationID: convId,
       nextReqMessageID: nextReqMessageID || "",
     });
     if (code === 0) {
-      // getMessageCaching(conversationID, nextReqMessageID, data)
+      // getMessageCaching(convId, nextReqMessageID, data)
       return data;
     } else {
       throw new Error("Failed to get message list");
