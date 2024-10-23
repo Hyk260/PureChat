@@ -16,7 +16,6 @@ import { cdn } from "./cdn";
  */
 export function setupVitePlugins(viteEnv) {
   const plugins = [
-    VueDevtools(),
     vue(),
     // 打包进度
     progress(),
@@ -31,6 +30,9 @@ export function setupVitePlugins(viteEnv) {
     }),
     setupHtmlPlugin(),
   ];
+  if (viteEnv.VITE_DEV_TOOLS === "Y") {
+    plugins.push(VueDevtools());
+  }
   // 打包视图分析
   if (process.env.npm_lifecycle_event === "report") {
     plugins.push(visualizer({ open: true, brotliSize: true, filename: "report.html" }))
