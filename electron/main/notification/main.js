@@ -12,15 +12,10 @@ import {
 
 import { TypedEventEmitter } from "@tiny-libs/typed-event-emitter";
 
-import {
-  NOTIFICATION_WIDTH,
-  NOTIFICATION_HEIGHT,
-  NOTIFICATION_OFFSET,
-  NOTIFICATION_DURATION,
-  NOTIFICATION_SHOW_CHANNEL,
-  NOTIFICATION_CLOSE_CHANNEL,
-  NOTIFICATION_ON_CLICK_CHANNEL,
-} from "./constants";
+const NOTIFICATION_OFFSET = 6
+const NOTIFICATION_DURATION = 6000
+const NOTIFICATION_WIDTH = 300
+const NOTIFICATION_HEIGHT = 64
 
 class Notification extends TypedEventEmitter {
   title;
@@ -74,7 +69,7 @@ class Notification extends TypedEventEmitter {
 
     win.on("ready-to-show", () => {
       setTimeout(() => {
-        win.webContents.send(NOTIFICATION_SHOW_CHANNEL, info);
+        win.webContents.send('uikit:notification:show', info);
       }, 100);
       win.showInactive();
       if (this.debug && !!this.customPage) win.webContents.openDevTools();
@@ -92,7 +87,7 @@ class Notification extends TypedEventEmitter {
       const win = BrowserWindow.fromWebContents(event.sender);
       if (win) {
         if (!immediately && this.isMouseOver(win)) {
-          event.reply(NOTIFICATION_SHOW_CHANNEL);
+          event.reply('uikit:notification:show');
         } else {
           win.close();
         }
@@ -100,18 +95,17 @@ class Notification extends TypedEventEmitter {
     };
 
     win.on("closed", () => {
-      ipcMain.removeListener(NOTIFICATION_ON_CLICK_CHANNEL, onClick);
-      ipcMain.removeListener(NOTIFICATION_CLOSE_CHANNEL, onClose);
+      ipcMain.removeListener("uikit:notification:on-click", onClick);
+      ipcMain.removeListener("uikit:notification:close", onClose);
 
       this.window = undefined;
     });
 
-    ipcMain.on(NOTIFICATION_ON_CLICK_CHANNEL, onClick);
-    ipcMain.on(NOTIFICATION_CLOSE_CHANNEL, onClose);
+    ipcMain.on('uikit:notification:on-click', onClick);
+    ipcMain.on("uikit:notification:close", onClose);
 
     const winURL = isDevelopment ? electronRendererUrl : join(__dirname, "../renderer/index.html");
     win.loadURL(winURL + `#${"desktop"}`);
-
     this.window = win;
   }
 
@@ -126,10 +120,7 @@ class Notification extends TypedEventEmitter {
     );
   }
 
-  /**
-   * Configure notification defaults or customize notification windows.
-   * @param options NotificationOptions
-   */
+  // 配置通知默认值或自定义通知窗口
   config(options) {
     const {
       title = app.name,
@@ -175,7 +166,7 @@ class Notification extends TypedEventEmitter {
 
     if (isWindows) {
       if (this.window && !this.window.isDestroyed()) {
-        this.window.webContents.send(NOTIFICATION_SHOW_CHANNEL, _info);
+        this.window.webContents.send('uikit:notification:show', _info);
 
         if (!this.window.isVisible()) {
           this.window.showInactive();
@@ -184,13 +175,19 @@ class Notification extends TypedEventEmitter {
         this.createWindow(_info);
       }
     } else {
+      // 当前系统是否支持桌面通知
       if (!ElectronNotification.isSupported()) {
         return;
       }
 
       const { title = this.title, body, icon, extraData } = info;
-
-      const notifier = new ElectronNotification({ title, body, icon });
+      console.log("info", info);
+      // https://electron.nodejs.cn/docs/latest/api/notification/#new-notificationoptions
+      const notifier = new ElectronNotification({
+        title: "PureChat",
+        body: body.payload.text,
+        icon,
+      });
       notifier.on("click", () => {
         this.emit("click", extraData);
       });

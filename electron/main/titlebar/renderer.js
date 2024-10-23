@@ -1,9 +1,3 @@
-import {
-  TITLE_BAR_CHANNEL,
-  TITLE_BAR_MAXIMIZE_REPLY_CHANNEL,
-  TITLE_BAR_FULLSCREEN_REPLY_CHANNEL,
-} from "./constants";
-
 const SHADOW_ROOT_CSS = `
 :host {
   position: relative;
@@ -213,7 +207,7 @@ export default class TitleBar extends HTMLElement {
           el.appendChild(icon);
 
           el.addEventListener("click", () => {
-            core.ipcRenderer.send(TITLE_BAR_CHANNEL, "minimize");
+            core.ipcRenderer.send('uikit:titlebar', "minimize");
           });
 
           controls.appendChild(el);
@@ -231,10 +225,10 @@ export default class TitleBar extends HTMLElement {
           el.appendChild(icon);
 
           el.addEventListener("click", () => {
-            core.ipcRenderer.send(TITLE_BAR_CHANNEL, "maximizeOrUnmaximize");
+            core.ipcRenderer.send('uikit:titlebar', "maximizeOrUnmaximize");
           });
 
-          core.ipcRenderer.on(TITLE_BAR_MAXIMIZE_REPLY_CHANNEL, (_, maximized) => {
+          core.ipcRenderer.on('uikit:titlebar:maximize-reply', (_, maximized) => {
             if (maximized === 1) {
               el.classList.add("window__control-max_active");
             } else {
@@ -257,7 +251,7 @@ export default class TitleBar extends HTMLElement {
           el.appendChild(icon);
 
           el.addEventListener("click", () => {
-            core.ipcRenderer.send(TITLE_BAR_CHANNEL, "close");
+            core.ipcRenderer.send('uikit:titlebar', "close");
           });
 
           controls.appendChild(el);
@@ -270,7 +264,7 @@ export default class TitleBar extends HTMLElement {
     const fullscreenable = this.hasAttribute("supportfullscreen");
 
     if (fullscreenable) {
-      core.ipcRenderer.on(TITLE_BAR_FULLSCREEN_REPLY_CHANNEL, (_, fullscreen) => {
+      core.ipcRenderer.on('uikit:titlebar:fullscreen-reply', (_, fullscreen) => {
         const root = this.shadowRoot;
 
         if (root) {

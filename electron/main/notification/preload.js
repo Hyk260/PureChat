@@ -1,13 +1,8 @@
 import { ipcRenderer, contextBridge } from 'electron'
-import {
-  NOTIFICATION_SHOW_CHANNEL,
-  NOTIFICATION_CLOSE_CHANNEL,
-  NOTIFICATION_ON_CLICK_CHANNEL
-} from './constants'
 
 let timeout = null
 
-ipcRenderer.on(NOTIFICATION_SHOW_CHANNEL, (_, data) => {
+ipcRenderer.on('uikit:notification:show', (_, data) => {
   let duration = 2000;  // 默认持续时间为2000毫秒;
 
   if (data) {
@@ -27,16 +22,16 @@ ipcRenderer.on(NOTIFICATION_SHOW_CHANNEL, (_, data) => {
 
   // 设置定时器，发送关闭通知的消息
   timeout = setTimeout(() => {
-    ipcRenderer.send(NOTIFICATION_CLOSE_CHANNEL, false);
+    ipcRenderer.send("uikit:notification:close", false);
   }, duration);
 });
 
 contextBridge.exposeInMainWorld('notification', {
   close: () => {
-    ipcRenderer.send(NOTIFICATION_CLOSE_CHANNEL, true)
+    ipcRenderer.send("uikit:notification:close", true)
   },
   doClick: (extraData) => {
-    ipcRenderer.send(NOTIFICATION_ON_CLICK_CHANNEL, extraData)
+    ipcRenderer.send('uikit:notification:on-click', extraData)
   }
 })
 

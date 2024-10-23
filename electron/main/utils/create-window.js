@@ -6,7 +6,7 @@ import { join } from 'path'
 import {
   registerTitleBarListener,
   attachTitleBarToWindow
-} from '../titlebar/index'
+} from '../titlebar/main'
 
 
 export const createWindow = (_options) => {
@@ -64,13 +64,14 @@ export const createWindow = (_options) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
-  //  窗口最大化时触发
-  win.on("maximize", () => {
-    win.webContents.send("toggleSize", { type: "maximize", win: "mainWin" });
-  });
-  // 当窗口从最大化状态退出时触发
-  win.on("unmaximize", () => {
-    win.webContents.send("toggleSize", { type: "unmaximize", win: "mainWin" });
-  });
+  
   global.mainWin = win;
+  //  窗口最大化时触发
+  // win.on("maximize", () => {
+  //   win.webContents.send("toggleSize", { type: "maximize", win: "mainWin" });
+  // });
+  // // 当窗口从最大化状态退出时触发
+  // win.on("unmaximize", () => {
+  //   win.webContents.send("toggleSize", { type: "unmaximize", win: "mainWin" });
+  // });
 };
