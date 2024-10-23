@@ -8,7 +8,6 @@ import {
   attachTitleBarToWindow
 } from '../titlebar/main'
 
-
 export const createWindow = (_options) => {
   const options = {
     ...global.mainWinOptions, // mainWinOptions loginWinOptions
@@ -64,7 +63,7 @@ export const createWindow = (_options) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
-  
+
   global.mainWin = win;
   //  窗口最大化时触发
   // win.on("maximize", () => {
