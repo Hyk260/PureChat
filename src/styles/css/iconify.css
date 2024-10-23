@@ -1,3 +1,10 @@
+.iconify {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
 .gala--add {
   display: inline-block;
   cursor: pointer;
@@ -9,4 +16,12 @@
   mask-image: var(--svg);
   mask-repeat: no-repeat;
   mask-size: 100% 100%;
+}
+
+.icon-male {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cg fill='%23409eff'%3E%3Cpath d='M119.175 9.018v41.26h-16.42V9.018z'/%3E%3Cpath d='M119.278 25.432h-41.26V9.012h41.26z'/%3E%3Cpath d='M110.389 29.414L78.873 60.93l-11.61-11.61l31.515-31.516z'/%3E%3Cpath d='M77.49 50.7c-15.96-15.96-41.84-15.96-57.8 0s-15.96 41.84 0 57.8s41.84 15.96 57.8 0s15.96-41.84 0-57.8M31.61 96.58c-9.38-9.38-9.38-24.58 0-33.96s24.58-9.38 33.96 0s9.38 24.58 0 33.96c-9.37 9.38-24.58 9.38-33.96 0'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.icon-female {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='%23d13b9c' stroke-linejoin='round' stroke-width='4'%3E%3Cpath d='M38.379 9.851c-5.468-5.467-14.332-5.467-19.8 0a13.96 13.96 0 0 0-4.1 9.9a13.96 13.96 0 0 0 4.1 9.9c5.468 5.467 14.332 5.467 19.8 0c5.467-5.468 5.467-14.332 0-19.8Z'/%3E%3Cpath stroke-linecap='round' d='M18.464 29.535L5.736 42.263m13.435-.707L6.443 28.828'/%3E%3C/g%3E%3C/svg%3E");
 }

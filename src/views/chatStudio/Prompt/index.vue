@@ -23,28 +23,27 @@
               </button>
             </div>
             <div class="mt-20" v-else>
-              <el-skeleton :rows="5" animated />
+              <el-skeleton :rows="4" animated />
             </div>
-            <div class="agent-list">
-              <el-skeleton class="skeleton" v-if="!market" v-for="item in 9" :key="item">
-                <template #template>
-                  <el-skeleton-item variant="image" class="h-40 w-40 ml-auto" />
-                  <div>
-                    <el-skeleton-item variant="p" />
-                    <el-skeleton-item variant="p" />
-                    <div>
-                      <el-skeleton-item variant="text" style="margin-right: 16px" />
-                      <el-skeleton-item variant="text" style="width: 30%" />
-                    </div>
-                  </div>
-                </template>
-              </el-skeleton>
-              <AgentCard
-                @click="cardClick(item)"
-                v-for="item in filterInput"
-                :key="item.identifier"
-                :agents="item"
-              />
+            <div class="min-h-460">
+              <div class="agent-list">
+                <AgentSkeleton v-if="!market" />
+                <AgentCard
+                  v-for="item in filterInput"
+                  :key="item.identifier"
+                  :agents="item"
+                  @click="cardClick(item)"
+                />
+              </div>
+            </div>
+            <div
+              v-show="filterInput.length"
+              class="w-full py-16 flex-c text-sm/[12px] text-slate-500"
+            >
+              喜欢PureChat？
+              <a class="text-amber-600" :href="homepage" target="_blank">在 GitHub 给添加星标 </a>
+              并
+              <a class="text-amber-600" :href="bugs.url" target="_blank">分享您宝贵的建议 !</a>
             </div>
           </div>
         </div>
@@ -55,6 +54,7 @@
 </template>
 
 <script setup>
+import AgentSkeleton from "./AgentSkeleton.vue";
 import AgentCardBanner from "./AgentCardBanner.vue";
 import { getPrompt } from "@/api/node-admin-api/index";
 import { ref, watch, onMounted, onBeforeMount } from "vue";
@@ -62,6 +62,8 @@ import emitter from "@/utils/mitt-bus";
 import marketJson from "@/assets/db/market.json";
 import { localStg } from "@/utils/storage";
 import AgentCard from "./AgentCard.vue";
+
+const { homepage, bugs } = __APP_INFO__.pkg;
 
 const cur = ref("");
 const input = ref("");
@@ -103,7 +105,7 @@ function initPrompt() {
       localStg.set("marketJson", res);
       console.log("🚀 ~ getPrompt ~ res:", res);
     })
-    .catch((err) => {
+    .catch(() => {
       market.value = marketJson;
       filterInput.value = marketJson.agents;
       localStg.set("marketJson", marketJson);
@@ -174,12 +176,6 @@ onBeforeMount(() => {
   gap: 1em;
   padding: 20px 0;
 }
-.skeleton {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-}
 
 .tags {
   margin-top: 20px;
@@ -187,7 +183,6 @@ onBeforeMount(() => {
   display: flex;
   flex-direction: row;
   gap: 6px;
-
   .item-tags {
     color: var(--color-text);
     height: 27px;

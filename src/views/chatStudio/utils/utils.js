@@ -289,10 +289,6 @@ export const chatName = (item) => {
       return "";
   }
 };
-// 是否全员群
-export const isallStaff = (item, field = "all_staff") => {
-  return item?.groupProfile?.groupCustomField?.[0]?.value == field;
-};
 
 /**
  * 将包含表情图像的 HTML 字符串转换为对应的表情符号文本

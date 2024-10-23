@@ -51,64 +51,56 @@ const conversation = {
     postponeUnread: new Set(),
   },
   mutations: {
-    // 设置历史消息
-    SET_HISTORYMESSAGE(state, action) {
-      const { type, payload } = action;
-      switch (type) {
-        case "ADD_MORE_MESSAGE": {
-          console.log("[chat] 加载更多 ADD_MORE_MESSAGE:", payload);
-          const { convId, messages } = payload;
-          // 历史消息
-          const history = state.historyMessageList.get(convId) || [];
-          console.log("历史消息 history:", history);
-          const baseTime = getBaseTime(history);
-          const timeDividerResult = addTimeDivider(messages, baseTime).reverse();
-          const newHistory = deduplicateAndPreserveOrder(history.concat(timeDividerResult));
-          state.historyMessageList.set(convId, newHistory);
-          state.currentMessageList = state.historyMessageList.get(convId);
-          break;
-        }
-        case "UPDATE_MESSAGES": {
-          console.log("[chat] 更新消息 UPDATE_MESSAGES:", payload);
-          const { convId, message } = payload;
+    updateMessages(state, payload) {
+      console.log("[chat] 更新消息 updateMessages:", payload);
+      const { convId, message } = payload;
 
-          let oldMessageList = state.historyMessageList.get(convId);
-          // 确保 oldMessageList 存在
-          if (!oldMessageList) return;
+      let oldMessageList = state.historyMessageList.get(convId);
+      // 确保 oldMessageList 存在
+      if (!oldMessageList) return;
 
-          const newMessageList = oldMessageList.map((item) => {
-            return item.ID === message.ID ? payload.message : item;
-          });
-          const latest = !newMessageList.some((item) => item.ID === message.ID);
-          // 新消息
-          if (latest) {
-            let baseTime = getBaseTime(newMessageList);
-            let timeDividerResult = addTimeDivider([message], baseTime).reverse();
-            newMessageList.unshift(...timeDividerResult);
-          }
-          // 更新历史消息
-          state.historyMessageList.set(convId, newMessageList);
-          // 当前会有列表有值
-          if (state.currentConversation.conversationID === convId) {
-            state.currentMessageList = newMessageList;
-            state.needScrollDown = 0;
-          }
-          break;
-        }
-        case "DELETE_MESSAGE": {
-          console.log("[chat] 删除消息 DELETE_MESSAGE:", payload);
-          const { convId } = payload || {};
-          const history = state.historyMessageList.get(convId);
-          if (!history) {
-            console.error("[chat] 删除消息失败，历史消息不存在");
-            return;
-          }
-          const updatedHistory = addTimeDivider(history.reverse()).reverse();
-          state.currentMessageList = updatedHistory;
-          state.historyMessageList.set(convId, updatedHistory);
-          break;
-        }
+      const newMessageList = oldMessageList.map((item) => {
+        return item.ID === message.ID ? payload.message : item;
+      });
+      const latest = !newMessageList.some((item) => item.ID === message.ID);
+      // 新消息
+      if (latest) {
+        let baseTime = getBaseTime(newMessageList);
+        let timeDividerResult = addTimeDivider([message], baseTime).reverse();
+        newMessageList.unshift(...timeDividerResult);
       }
+      // 更新历史消息
+      state.historyMessageList.set(convId, newMessageList);
+      // 当前会有列表有值
+      if (state.currentConversation.conversationID === convId) {
+        state.currentMessageList = newMessageList;
+        state.needScrollDown = 0;
+      }
+    },
+    loadMoreMessages(state, payload) {
+      console.log("[chat] 加载更多消息 loadMoreMessages:", payload);
+      const { convId, messages } = payload;
+      // 历史消息
+      const history = state.historyMessageList.get(convId) || [];
+      console.log("历史消息 history:", history);
+      const baseTime = getBaseTime(history);
+      const timeDividerResult = addTimeDivider(messages, baseTime).reverse();
+      const newHistory = deduplicateAndPreserveOrder(history.concat(timeDividerResult));
+      state.historyMessageList.set(convId, newHistory);
+      state.currentMessageList = state.historyMessageList.get(convId);
+    },
+    // 从当前消息列表中删除某条消息
+    removeMessage(state, payload) {
+      console.log("[chat] 删除消息 removeMessage:", payload);
+      const { convId, message } = payload || {};
+      const history = state.historyMessageList.get(convId);
+      if (!history) {
+        console.error("[chat] 删除消息失败，历史消息不存在");
+        return;
+      }
+      const updatedHistory = addTimeDivider(history.reverse()).reverse();
+      state.currentMessageList = updatedHistory;
+      state.historyMessageList.set(convId, updatedHistory);
     },
     updateHistoryMessageCache(state, payload) {
       console.log("[chat] 更新历史消息缓存 updateHistoryMessageCache:", payload);
@@ -294,12 +286,9 @@ const conversation = {
       const { messageList } = await getMessageList({ convId });
       const message = addTimeDivider(messageList).reverse();
       state.historyMessageList.set(convId, cloneDeep(message));
-      commit("SET_HISTORYMESSAGE", {
-        type: "UPDATE_MESSAGES",
-        payload: {
-          convId: message?.[0].conversationID,
-          message: cloneDeep(message[0]),
-        },
+      commit("updateMessages", {
+        convId: message?.[0].conversationID,
+        message: cloneDeep(message[0]),
       });
       emitter.emit("updataScroll");
     },
@@ -362,10 +351,7 @@ const conversation = {
       const { payload } = action;
       const { convId, message, last = true } = payload;
       // 消息上屏 预加载
-      commit("SET_HISTORYMESSAGE", {
-        type: "UPDATE_MESSAGES",
-        payload: { convId, message },
-      });
+      commit("updateMessages", { convId, message });
       emitter.emit("updataScroll");
       // 发送消息
       const { code, message: result } = await sendMsg(message);
@@ -385,10 +371,7 @@ const conversation = {
     async sendMsgSuccessCallback({ state, commit }, action) {
       console.log("消息发送成功 sendMsgSuccessCallback", action);
       const { convId, message } = action;
-      commit("SET_HISTORYMESSAGE", {
-        type: "UPDATE_MESSAGES",
-        payload: { convId, message },
-      });
+      commit("updateMessages", {  convId, message });
       emitter.emit("updataScroll");
     },
     imChatCallback({ state }, action) {

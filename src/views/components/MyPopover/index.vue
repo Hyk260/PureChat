@@ -7,8 +7,16 @@
     ref="cardRef"
   >
     <div class="title">
-      <img @click="clickCard(cardData.avatar)" :src="cardData.avatar || fnAvatar(cardData?.from) || squareUrl" alt="头像" />
-      <span>{{ cardData.nick }}</span>
+      <img
+        @click="clickCard(cardData.avatar)"
+        :src="cardData.avatar || fnAvatar(cardData?.from) || squareUrl"
+        alt="头像"
+      />
+      <div>
+        <span class="nick">{{ cardData.nick }}</span>
+        <span v-if="getGender(userProfile, 'Male')" class="iconify icon-male"></span>
+        <span v-else-if="getGender(userProfile, 'Female')" class="iconify icon-female"></span>
+      </div>
       <Label :userID="cardData?.from" />
     </div>
     <div class="content">
@@ -34,6 +42,7 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { fnAvatar } from "@/ai/utils";
 import { squareUrl } from "../../chatStudio/utils/menu";
+import { getGender } from "@/utils/common";
 const [card, setCard] = useBoolean();
 
 const cardRef = ref();
@@ -55,7 +64,7 @@ const closeModal = () => {
 
 const clickCard = (url) => {
   url && emitter.emit("handleImageViewer", url);
-}
+};
 
 const define = () => {
   closeModal();
@@ -152,12 +161,17 @@ onBeforeUnmount(() => {
       border-radius: 5px;
       height: 54px;
     }
-    span {
+    .nick,
+    .label {
       margin-left: 16px;
       font-family: MicrosoftYaHei;
       font-size: 18px;
       color: rgba(0, 0, 0, 0.85);
       font-weight: 400;
+    }
+    .iconify {
+      vertical-align: text-bottom;
+      margin-left: 5px;
     }
   }
   .content {

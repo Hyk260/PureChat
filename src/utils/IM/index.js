@@ -141,12 +141,9 @@ export class TIMProxy {
   }
   onMessageRevoked({ data }) {
     console.log("[chat] 撤回消息 onMessageRevoked:", data);
-    store.commit("SET_HISTORYMESSAGE", {
-      type: "UPDATE_MESSAGES",
-      payload: {
-        convId: data?.[0].conversationID,
-        message: cloneDeep(data[0]),
-      },
+    store.commit("updateMessages", {
+      convId: data?.[0].conversationID,
+      message: cloneDeep(data[0]),
     });
   }
   onUpdateGroupList({ data }) {
@@ -292,12 +289,9 @@ export class TIMProxy {
       });
     } else {
       // 更新会话消息
-      store.commit("SET_HISTORYMESSAGE", {
-        type: "UPDATE_MESSAGES",
-        payload: {
-          convId: data?.[0].conversationID,
-          message: cloneDeep(data[0]),
-        },
+      store.commit("updateMessages", {
+        convId: data?.[0].conversationID,
+        message: cloneDeep(data[0]),
       });
     }
     // 消息已读

@@ -46,10 +46,11 @@ export default {
   methods: {
     async onClose(data = this.message) {
       try {
-        await deleteMessage([data]);
-        this.$store.commit("SET_HISTORYMESSAGE", {
-          type: "DELETE_MESSAGE",
-          payload: { convId: data.conversationID },
+        const { code, messageList } = await deleteMessage([data]);
+        if (code !== 0) return;
+        this.$store.commit("removeMessage", {
+          convId: data.conversationID,
+          message: messageList 
         });
       } catch (error) {
         console.log(error);

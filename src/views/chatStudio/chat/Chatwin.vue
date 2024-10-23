@@ -285,7 +285,7 @@ const getMoreMsg = async () => {
     // 获取指定会话的消息列表
     const { conversationID: convId } = currentConversation.value;
     const msglist = currentMessageList.value;
-    const nextMsgId = validatelastMessage(msglist).ID
+    const nextMsgId = validatelastMessage(msglist).ID;
     console.log("nextMsgId:", nextMsgId);
 
     const result = await getMessageList({
@@ -293,17 +293,14 @@ const getMoreMsg = async () => {
       nextReqMessageID: nextMsgId,
     });
 
-    console.log("getMessageList:", result)
+    console.log("getMessageList:", result);
     const { isCompleted, messageList, nextReqMessageID } = result;
 
     if (isCompleted || !messageList.length) {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
       commit("setConversationValue", { key: "noMore", value: true });
     } else {
-      commit("SET_HISTORYMESSAGE", {
-        type: "ADD_MORE_MESSAGE",
-        payload: { convId, messages: messageList },
-      });
+      commit("loadMoreMessages", {convId, messages: messageList });
       commit("setConversationValue", { key: "needScrollDown", value: msglist.length });
     }
   } catch (e) {
@@ -442,12 +439,9 @@ const handleDeleteMsg = async (data) => {
     const message = { message: "确定删除?", iconType: "warning" };
     const result = await showConfirmationBox(message);
     if (result === "cancel") return;
-    const { code } = await deleteMessage([data]);
+    const { code, messageList } = await deleteMessage([data]);
     if (code !== 0) return;
-    commit("SET_HISTORYMESSAGE", {
-      type: "DELETE_MESSAGE",
-      payload: { convId: data.conversationID },
-    });
+    commit("removeMessage", { convId: data.conversationID, message: messageList });
   } catch (error) {
     console.log(error);
   }

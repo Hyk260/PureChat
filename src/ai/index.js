@@ -21,10 +21,7 @@ const restSendMsg = async (params, message) => {
 const updataMessage = (msg, message = "") => {
   if (!msg) return;
   msg.payload.text = message;
-  store.commit("SET_HISTORYMESSAGE", {
-    type: "UPDATE_MESSAGES",
-    payload: { convId: `C2C${msg.from}`, message: cloneDeep(msg) },
-  });
+  store.commit("updateMessages", { convId: `C2C${msg.from}`, message: cloneDeep(msg) });
   emitter.emit("updataScroll", "robot");
 };
 
