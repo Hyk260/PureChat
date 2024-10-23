@@ -1,6 +1,7 @@
 <template>
   <span :class="['label', labelClass()]">
     <span class="all" v-if="isallStaff(item)">全员</span>
+    <span class="author" v-else-if="isAuthor(item)">作者</span>
     <svg-icon iconClass="robot" v-else-if="isRobot(userID)" />
     <span class="model" v-if="isRobot(userID) && model">
       <svg-icon :iconClass="getModelSvg(userID.replace('C2C', ''))" />
@@ -11,7 +12,7 @@
 
 <script setup>
 import { isRobot } from "@/utils/chat/index";
-import { isallStaff } from "../utils/utils";
+import { getValueByKey, prefix } from "@/ai/utils";
 import { getModelSvg } from "@/ai/utils";
 
 const props = defineProps({
@@ -28,6 +29,14 @@ const props = defineProps({
     default: "",
   }
 });
+
+const isAuthor = (data) => {
+  return getValueByKey(data?.groupProfile?.groupCustomField, prefix('Role')) === "author"
+}
+
+const isallStaff = (data) => {
+  return getValueByKey(data?.groupProfile?.groupCustomField, "custom_info") === "all_staff"
+}
 
 const labelClass = (data) => {
   return "";
@@ -52,7 +61,9 @@ const labelClass = (data) => {
   }
 
   .all,
-  .model,.role-title {
+  .model,
+  .author,
+  .role-title {
     white-space: nowrap;
     background: #e6f7ff;
     border: 1px solid rgb(145, 213, 255);

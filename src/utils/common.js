@@ -44,3 +44,7 @@ export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Oper
   navigator.userAgent
 );
 
+// Male Female
+export const getGender = (data, type = "") => {
+  return data?.gender === `Gender_Type_${type}`;
+};

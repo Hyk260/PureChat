@@ -98,7 +98,7 @@
       </div>
       <el-divider />
       <!-- 解散 退出 转让 -->
-      <div class="group-operator" v-show="!staff">
+      <div class="group-operator" v-show="!isallStaff(currentConversation)">
         <el-button v-if="isOwner" type="danger" @click="handleDismissGroup"> 解散群组 </el-button>
         <el-button v-else type="danger" @click="handleQuitGroup"> 退出群组 </el-button>
         <div class="group-operator--divider"></div>
@@ -123,16 +123,13 @@ import { onBeforeUnmount, onMounted, ref, watchEffect } from "vue";
 import { useStore } from "vuex";
 import AddMemberPopup from "../components/AddMemberPopup.vue";
 import AnalysisUrl from "../components/AnalysisUrl.vue";
+import { getValueByKey } from "@/ai/utils";
 
 const { groupProfile } = defineProps({
   groupProfile: {
     type: Object,
     default: () => {},
-  },
-  staff: {
-    type: Boolean,
-    default: false,
-  },
+  }
 });
 
 const GROUP_TYPE_MAP = {
@@ -156,6 +153,10 @@ const notify = (val) => {
   const { type, toAccount, messageRemindType: remindType } = currentConversation.value;
   dispatch("setMessageReminderType", { type, toAccount, remindType });
 };
+
+const isallStaff = (data) => {
+  return getValueByKey(data?.groupProfile?.groupCustomField, "custom_info") === "all_staff"
+}
 
 const openNamePopup = async () => {
   const { name } = groupProfile;

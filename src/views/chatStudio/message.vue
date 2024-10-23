@@ -54,7 +54,6 @@
     <GroupDetails
       v-if="isGroupChat"
       :groupProfile="conver.groupProfile"
-      :staff="isallStaff(conver)"
     />
     <ImageViewer />
   </div>
@@ -67,7 +66,7 @@ import emitter from "@/utils/mitt-bus";
 import { useEventListener } from "@vueuse/core";
 import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useStore } from "vuex";
-import { dragControllerDiv, isallStaff } from "./utils/utils";
+import { dragControllerDiv } from "./utils/utils";
 import ImageViewer from '../components/ImageViewer/index.vue';
 
 import Chatwin from "./chat/Chatwin.vue";
