@@ -5,7 +5,7 @@
       <div class="icon" :class="disabled ? 'disabled' : ''" @click="onClock(item)">
         <svg-icon :class="item.class" :iconClass="item.icon" />
       </div>
-      <span class="text select-none">
+      <span class="text">
         {{ item.value }}
       </span>
     </div>
@@ -301,6 +301,7 @@ export default {
   cursor: no-drop;
 }
 .text {
+  user-select: none;
   margin-top: 8px;
 }
 </style>

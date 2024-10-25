@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div class="flex h-full w-full relative">
+    <div class="flex wh-full relative">
       <!-- 主体 -->
       <AppMain />
       <!-- 设置 -->

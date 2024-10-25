@@ -2,11 +2,8 @@
   <div
     v-show="currentConv"
     id="chat-box"
-    :class="{
-      'message-info-view-content': true,
-      'style-msg-box': !isChatBoxVisible,
-      'style-reply': currentReplyMsg,
-    }"
+    class="message-info-view-content"
+    :class="classMessageInfoView()"
   >
     <el-scrollbar class="h-full" ref="scrollbarRef" @scroll="scrollbar">
       <div class="message-view" ref="messageViewRef">
@@ -25,11 +22,8 @@
           <div
             v-else-if="item.ID && !isTime(item) && !item.isDeleted"
             :id="`choice${item.ID}`"
-            :class="[
-              'message-view__item',
-              isSelf(item) ? 'is-self' : 'is-other',
-              showCheckbox && !item.isRevoked ? 'style-choice' : '',
-            ]"
+            :class="classMessageViewItem(item)"
+            class="message-view__item"
             @click="handleSelect($event, item, 'outside')"
           >
             <!-- 多选框 -->
@@ -38,7 +32,7 @@
               :isRevoked="item.isRevoked"
               @click.stop="handleSelect($event, item, 'initial')"
             />
-            <div class="picture select-none" v-if="showAvatar(item)">
+            <div class="picture" v-if="showAvatar(item)">
               <el-avatar
                 :size="36"
                 shape="square"
@@ -176,6 +170,26 @@ const getElementById = (ID) => {
 
 const setSelect = (el) => {
   el.classList.toggle("style-select");
+};
+
+const classMessageViewItem = (item) => {
+  return [
+    isSelf(item) ? "is-self" : "is-other",
+    showCheckbox.value && !item.isRevoked ? "style-choice" : "",
+  ];
+};
+
+const classMessageInfoView = () => {
+  return [
+    isChatBoxVisible.value ? "" : "style-msg-box",
+    currentReplyMsg.value ? "style-reply" : "",
+  ];
+};
+
+const handleScroll = () => {
+  const el = scrollbarRef.value?.wrapRef;
+  if (!el) return;
+  const { scrollTop, clientHeight, scrollHeight } = el;
 };
 
 const handleSelect = (e, item, type = "initial") => {
@@ -557,9 +571,9 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   padding: 0 16px 16px 16px;
   box-sizing: border-box;
   .picture {
+    user-select: none;
     --el-border-radius-base: 6px;
     --el-text-color-disabled: #ffffff00;
-    cursor: pointer;
   }
 }
 .style-select {

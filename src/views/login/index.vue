@@ -1,6 +1,6 @@
 <template>
   <div class="login flex">
-    <div class="login-inner select-none">
+    <div class="login-inner">
       <!-- 背景 -->
       <svg-icon iconClass="loginBg" class="wave" />
       <!-- 主题开关 -->
@@ -63,6 +63,7 @@ const { currentPage } = useState({
   z-index: -1;
 }
 .login-inner {
+  user-select: none;
   width: 400px;
   margin: auto;
   transition: width 0.3s ease;
