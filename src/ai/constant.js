@@ -45,11 +45,20 @@ export const StoreKey = {
   Prompt: "prompt-store", // 提示词 预设
 };
 
+/**
+ * 模型提供者对象，包含不同的模型名称
+ * @type {Object}
+ * @property {string} GPT - chatgpt 模型
+ * @property {string} ChatGLM - 智谱模型
+ * @property {string} ZeroOne - 零一万物模型
+ * @property {string} Qwen - 通义千问模型
+ * @property {string} Ollama - Ollama 模型
+ */
 export const ModelProvider = {
-  GPT: "GPT", // chatgpt
-  ChatGLM: "ChatGLM", // 智谱
-  ZeroOne: "ZeroOne", // 零一万物
-  Qwen: "Qwen", // 通义千问
+  GPT: "GPT",
+  ChatGLM: "ChatGLM",
+  ZeroOne: "ZeroOne",
+  Qwen: "Qwen",
   Ollama: "Ollama",
 };
 

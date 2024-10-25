@@ -50,7 +50,7 @@
             <div v-show="isFooter" class="footer p-16">
               <div class="flex justify-center items-center">
                 <img class="size-22" src="@/assets/images/log.png" alt="" />
-                <div class="title ml-8">{{ pkg.name }}</div>
+                <div class="title ml-8">{{ title_app }}</div>
               </div>
               <span class="link"> {{ homepage }}</span>
               <QrCode v-show="isQrCode" class="qr-code" :text="homepage" />
@@ -127,6 +127,7 @@ import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils
 import { useGetters } from "@/utils/hooks/useMapper";
 import { getModelType, usePromptStore, fnAvatar } from "@/ai/utils";
 
+const title_app = import.meta.env.VITE_APP_NAME;
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
 const isFooter = ref(false);

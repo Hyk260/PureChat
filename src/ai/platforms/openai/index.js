@@ -39,7 +39,7 @@ export class ChatGPTApi {
     const headers = {
       "Content-Type": "application/json",
       "x-requested-with": "XMLHttpRequest",
-      Authorization: `Bearer ${this.accessStore().token.trim()}`,
+      Authorization: `Bearer ${this.accessStore().token?.trim()}`,
     };
     return headers;
   }
@@ -93,7 +93,6 @@ export class ChatGPTApi {
    * @param {object} options - 处理选项，包括错误处理、更新和完成回调。
    * @param {AbortController} controller - 用于控制请求的 AbortController。
    * @param {number} requestTimeoutId - 请求超时的 ID。
-   * @returns {Promise<void>} - 无返回值的 Promise。
    */
   async handleStreamingChat(
     chatPath,
