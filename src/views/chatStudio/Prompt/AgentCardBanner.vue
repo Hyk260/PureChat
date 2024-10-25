@@ -120,6 +120,7 @@ emitter.on("openAgentCard", (data) => {
   }
   .tags {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: center;
     align-items: center;

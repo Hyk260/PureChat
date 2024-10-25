@@ -1,9 +1,12 @@
 <template>
-  <section
-    class="message-info-view-content"
-    v-show="currentConversation"
-    :class="{ 'style-msg-box': !isChatBoxVisible, 'style-reply': currentReplyMsg }"
+  <div
+    v-show="currentConv"
     id="chat-box"
+    :class="{
+      'message-info-view-content': true,
+      'style-msg-box': !isChatBoxVisible,
+      'style-reply': currentReplyMsg,
+    }"
   >
     <el-scrollbar class="h-full" ref="scrollbarRef" @scroll="scrollbar">
       <div class="message-view" ref="messageViewRef">
@@ -15,19 +18,19 @@
           <!-- 加载更多 -->
           <LoadMore :index="index" />
           <!-- 时间 -->
-          <div v-if="isTime(item)" class="message-view__item--time-divider">
+          <div v-if="isTime(item)" class="message-time-divider">
             {{ timeFormat(item.time * 1000, true) }}
           </div>
           <!-- 消息体 -->
           <div
             v-else-if="item.ID && !isTime(item) && !item.isDeleted"
-            class="message-view__item"
+            :id="`choice${item.ID}`"
             :class="[
+              'message-view__item',
               isSelf(item) ? 'is-self' : 'is-other',
               showCheckbox && !item.isRevoked ? 'style-choice' : '',
             ]"
             @click="handleSelect($event, item, 'outside')"
-            :id="`choice${item.ID}`"
           >
             <!-- 多选框 -->
             <Checkbox
@@ -82,7 +85,7 @@
         <p :class="['item']">{{ item.text }}</p>
       </contextmenu-item>
     </contextmenu>
-  </section>
+  </div>
 </template>
 
 <script setup>
@@ -139,7 +142,7 @@ const {
   needScrollDown,
   currentReplyMsg,
   currentMessageList,
-  currentConversation,
+  currentConv,
 } = useState({
   noMore: (state) => state.conversation.noMore,
   isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
@@ -148,7 +151,7 @@ const {
   needScrollDown: (state) => state.conversation.needScrollDown,
   currentReplyMsg: (state) => state.conversation.currentReplyMsg,
   currentMessageList: (state) => state.conversation.currentMessageList,
-  currentConversation: (state) => state.conversation.currentConversation,
+  currentConv: (state) => state.conversation.currentConversation,
 });
 
 const updateLoadMore = (value) => {
@@ -283,7 +286,7 @@ const updateScrollbar = () => {
 const getMoreMsg = async () => {
   try {
     // 获取指定会话的消息列表
-    const { conversationID: convId } = currentConversation.value;
+    const { conversationID: convId } = currentConv.value;
     const msglist = currentMessageList.value;
     const nextMsgId = validatelastMessage(msglist).ID;
     console.log("nextMsgId:", nextMsgId);
@@ -300,7 +303,7 @@ const getMoreMsg = async () => {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
       commit("setConversationValue", { key: "noMore", value: true });
     } else {
-      commit("loadMoreMessages", {convId, messages: messageList });
+      commit("loadMoreMessages", { convId, messages: messageList });
       commit("setConversationValue", { key: "needScrollDown", value: msglist.length });
     }
   } catch (e) {
@@ -535,11 +538,10 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
 .style-reply {
   height: calc(100% - 60px - 200px - 60px) !important;
 }
-.message-view__item--time-divider {
+.message-time-divider {
   user-select: none;
   position: relative;
-  top: 8px;
-  margin: 20px 0;
+  margin: 10px 0;
   max-height: 20px;
   text-align: center;
   font-weight: 400;

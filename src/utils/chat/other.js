@@ -39,7 +39,6 @@ async function transformImageElement(data) {
 }
 
 export async function transformData(data) {
-  console.log("transformData:", data);
   if (!data) {
     console.warn("data is undefined or null")
     return [];

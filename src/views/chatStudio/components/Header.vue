@@ -17,7 +17,7 @@
       <!-- <div class="message-info-add" v-show="chat.type === 'GROUP' && false" title="添加成员">
         <svg-icon iconClass="tianjia" class="icon-hover" />
       </div> -->
-      <div class="message-info-setup" v-show="chat.type === 'GROUP'" title="设置" @click="openSetup">
+      <div class="message-info-setup" v-show="isGroupChat" title="设置" @click="openSetup">
         <FontIcon iconName="MoreFilled" class="icon-hover" />
       </div>
       <!-- <div class="message-info-share" v-if="isRobot(toAccount)" title="截图分享" @click="openShare">
@@ -37,7 +37,7 @@ import { watch } from "vue";
 import { useStore } from "vuex";
 
 const { commit } = useStore();
-const { currentType, toAccount } = useGetters(["currentType", "toAccount"]);
+const { currentType, toAccount, isGroupChat } = useGetters(["currentType", "toAccount","isGroupChat"]);
 const { chat, model } = useState({
   chat: (state) => state.conversation.currentConversation,
   model: (state) => state.robot.model,

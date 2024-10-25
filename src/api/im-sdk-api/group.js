@@ -27,6 +27,7 @@ export const dismissGroup = async (groupId) => {
 };
 
 // 创建群
+// https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createGroup
 export const createGroup = async (params, type = GroupType.GRP_PUBLIC) => {
   const { groupName } = params;
   const {
@@ -35,6 +36,17 @@ export const createGroup = async (params, type = GroupType.GRP_PUBLIC) => {
   } = await tim.createGroup({
     type,
     name: groupName,
+    // inviteOption: "NeedPermission",
+    // memberList: [
+    // {
+    //   userID: "user1",
+    //   // 群成员维度的自定义字段，默认情况是没有的，需要开通，详情请参阅自定义字段
+    //   memberCustomField: [{ key: "group_member_test", value: "test" }],
+    // },
+    // {
+    //   userID: "user2",
+    // },
+    // ], // 如果填写了 memberList，则必须填写 userID
   });
   return { code, group };
 };

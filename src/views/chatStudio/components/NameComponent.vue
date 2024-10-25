@@ -13,6 +13,7 @@
 <script>
 import emitter from "@/utils/mitt-bus";
 import { mapGetters, mapState } from "vuex";
+
 export default {
   name: "NameComponent",
   props: {

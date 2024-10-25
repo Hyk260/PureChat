@@ -357,10 +357,12 @@ const conversation = {
       const { code, message: result } = await sendMsg(message);
       if (code === 0) {
         dispatch("sendMsgSuccessCallback", { convId, message: result });
+
+        if (!ROBOT_COLLECT.includes(result?.to)) return;
         if (last) {
           const list = await transformData(state.currentMessageList ?? [result]);
           nextTick(() => {
-            dispatch("imChatCallback", { list, message: result });
+            chatService({ messages: list, chat: result });
           });
         }
       } else {
@@ -371,15 +373,8 @@ const conversation = {
     async sendMsgSuccessCallback({ state, commit }, action) {
       console.log("消息发送成功 sendMsgSuccessCallback", action);
       const { convId, message } = action;
-      commit("updateMessages", {  convId, message });
+      commit("updateMessages", { convId, message });
       emitter.emit("updataScroll");
-    },
-    imChatCallback({ state }, action) {
-      console.log("imChatCallback", action);
-      const { message, list } = action;
-      const { to } = message;
-      if (!ROBOT_COLLECT.includes(to)) return;
-      chatService({ messages: list, chat: message });
     },
   },
   getters: {

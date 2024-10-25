@@ -45,7 +45,7 @@ const createGroup = async () => {
   const data = { message: "创建群聊" };
   const result = await showConfirmationBox(data, "prompt");
   if (result === "cancel") return;
-  dispatch("handleCreateGroup", { groupName: result.value });
+  dispatch("handleCreateGroup", { groupName: result.value, positioning: true });
 };
 
 const opendialog = () => {
@@ -58,7 +58,6 @@ const onBlur = () => {
 const onFocus = () => {};
 
 const matchesFilter = (item, searchStr) => {
-
   const lastMessage = item.lastMessage.messageForShow.toUpperCase();
 
   if (item.type === "GROUP") {
@@ -78,7 +77,7 @@ const fnAppoint = debounce((key) => {
     commit("setConversationValue", { key: "filterConversationList", value: [] });
     return;
   }
-  const str = key.toUpperCase().trim()
+  const str = key.toUpperCase().trim();
   filterData.value = tabList.value.filter((item) => matchesFilter(item, str));
   console.log(filterData.value);
   commit("setConversationValue", { key: "filterConversationList", value: filterData.value });

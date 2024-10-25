@@ -1,3 +1,4 @@
+import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
 import { OpenaiPath, REQUEST_TIMEOUT_MS } from "@/ai/constant";
 import { ModelProvider } from "@/ai/constant";
 import {
@@ -6,12 +7,10 @@ import {
   usePromptStore,
   createErrorResponse,
   createSmoothMessage,
-  uploadImage,
-  base64Image2Blob,
   isDalle3 as _isDalle3,
+  extractImageMessage,
   generateDalle3RequestPayload,
 } from "@/ai/utils";
-import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
 import OllamaAI from "../ollama/ollama";
 
 export class ChatGPTApi {
@@ -45,21 +44,9 @@ export class ChatGPTApi {
     return headers;
   }
   async extractMessage(res) {
-    // dalle3 model return url, using url create image message
+    // dalle3模型返回url，使用url创建图片消息
     if (res.data) {
-      let url = res.data?.at(0)?.url ?? "";
-      const b64_json = res.data?.at(0)?.b64_json ?? "";
-      if (!url && b64_json) {
-        url = await uploadImage(base64Image2Blob(b64_json, "image/png"));
-      }
-      return [
-        {
-          type: "image_url",
-          image_url: {
-            url,
-          },
-        },
-      ];
+      return await extractImageMessage(res);
     }
     return res.choices?.at(0)?.message?.content ?? "";
   }
