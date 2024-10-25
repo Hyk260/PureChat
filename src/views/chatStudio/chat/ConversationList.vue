@@ -232,19 +232,19 @@ const handleConvListClick = (data) => {
 };
 
 const handleClickMenuItem = (item) => {
-  const Info = contextMenuItemInfo.value;
+  const data = contextMenuItemInfo.value;
   switch (item.id) {
     case "pinged": // 置顶
-      pingConv(Info);
+      pingConv(data);
       break;
     case "remove": // 删除会话
-      removeConv(Info);
+      removeConv(data);
       break;
     case "clean": // 清除消息
       console.log("清除消息");
       break;
     case "disable": // 消息免打扰
-      disableRecMsg(Info);
+      disableRecMsg(data);
       break;
   }
 };

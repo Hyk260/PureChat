@@ -18,7 +18,7 @@ import { localStg } from "@/utils/storage";
 export const useAccessStore = (model = ModelProvider.GPT) => {
   try {
     const access = localStg.get(StoreKey.Access)?.[model] || "";
-    if (model === "GPT" && !access) {
+    if (model === ModelProvider.GPT && !access) {
       return OpenaiConfig();
     }
     return access || modelConfig[model];
@@ -212,23 +212,39 @@ export function base64Image2Blob(base64Data, contentType) {
   return new Blob([byteArray], { type: contentType });
 }
 
-export function uploadImage(file) {
+export async function uploadImage(file) {
   const body = new FormData();
   body.append("file", file);
-  return fetch(UPLOAD_URL, {
+  const res = await fetch(UPLOAD_URL, {
     method: "post",
     body,
     mode: "cors",
     credentials: "include",
-  })
-    .then((res) => res.json())
-    .then((res) => {
-      console.log("res", res);
-      if (res?.code == 0 && res?.data) {
-        return res?.data;
-      }
-      throw Error(`upload Error: ${res?.msg}`);
-    });
+  });
+  const res_1 = await res.json();
+  console.log("res", res_1);
+  if (res_1?.code == 0 && res_1?.data) {
+    return res_1?.data;
+  }
+  throw Error(`upload Error: ${res_1?.msg}`);
+}
+
+export async function extractImageMessage(res) {
+  if (res.data) {
+    let url = res.data?.at(0)?.url ?? "";
+    const b64_json = res.data?.at(0)?.b64_json ?? "";
+    if (!url && b64_json) {
+      url = await uploadImage(base64Image2Blob(b64_json, "image/png"));
+    }
+    return [
+      {
+        type: "image_url",
+        image_url: {
+          url,
+        },
+      },
+    ];
+  }
 }
 
 export function generateDalle3RequestPayload(config) {

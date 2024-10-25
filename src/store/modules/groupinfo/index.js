@@ -1,4 +1,3 @@
-import { restApi } from "@/api/node-admin-api/index";
 import {
   getGroupList,
   getGroupProfile,
@@ -7,7 +6,8 @@ import {
   createGroup,
   dismissGroup,
 } from "@/api/im-sdk-api/index";
-import { compareByRole } from "@/utils/chat/index";
+import { restApi } from "@/api/node-admin-api/index";
+import { sortMembersByRole, findGroupChat } from "@/utils/chat/index";
 
 export default {
   state: {
@@ -41,7 +41,7 @@ export default {
   actions: {
     // 获取群成员列表
     async getGroupMemberList({ state, getters }, payload) {
-      const { isSort = true, groupID = '' } = payload || {};
+      const { isSort = true, groupID = "" } = payload || {};
       const groupId = groupID || getters.toAccount;
 
       if (!groupId) {
@@ -51,7 +51,7 @@ export default {
       const { memberList, code } = await getGroupMemberList({ groupID: groupId });
       if (code !== 0) return;
       if (isSort) {
-        state.currentMemberList = memberList.sort(compareByRole);
+        state.currentMemberList = sortMembersByRole(memberList);
       } else {
         state.currentMemberList = memberList;
       }
@@ -71,8 +71,14 @@ export default {
     },
     // 创建群聊
     async handleCreateGroup({ state }, payload) {
-      const { groupName } = payload;
-      await createGroup({ groupName });
+      const { groupName, positioning = true } = payload;
+      const { code, group } = await createGroup({ groupName });
+      console.log("创建群聊:", code, group);
+      if (code !== 0) return;
+      if (positioning) {
+        // 定位到群聊
+        findGroupChat(group);
+      }
     },
     // 解散群组
     async dismissGroup({ dispatch }, payload) {

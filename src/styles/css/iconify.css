@@ -5,7 +5,8 @@
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
-.gala--add {
+
+.gala-add {
   display: inline-block;
   cursor: pointer;
   color: darkgray;

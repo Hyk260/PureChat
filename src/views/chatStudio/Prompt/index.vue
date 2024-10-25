@@ -25,7 +25,7 @@
             <div class="mt-20" v-else>
               <el-skeleton :rows="4" animated />
             </div>
-            <div class="min-h-460">
+            <div class="agent-box">
               <div class="agent-list">
                 <AgentSkeleton v-if="!market" />
                 <AgentCard
@@ -40,7 +40,7 @@
               v-show="filterInput.length"
               class="w-full py-16 flex-c text-sm/[12px] text-slate-500"
             >
-              喜欢{{title}}？
+              喜欢{{ title }}？
               <a class="text-amber-600" :href="homepage" target="_blank">在 GitHub 给添加星标 </a>
               并
               <a class="text-amber-600" :href="bugs.url" target="_blank">分享您宝贵的建议 !</a>
@@ -206,6 +206,10 @@ onBeforeMount(() => {
       background: var(--color-tags-back);
     }
   }
+}
+
+.agent-box {
+  min-height: calc(100vh - 60px - 32px - 93px - 100px);
 }
 
 .active {
