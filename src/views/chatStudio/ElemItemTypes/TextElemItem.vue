@@ -1,11 +1,8 @@
 <template>
   <div class="message-view__item--text" :class="fnStyle()" @click="onClick(message)">
-    <template v-if="(message?.conversationType || msgType) == 'GROUP' || 'C2C'">
+    <template v-if="isMsgType">
       <!-- 回复消息 -->
-      <ReplyElem
-        v-if="message.cloudCustomData"
-        :originalMsg="message.cloudCustomData && JSON.parse(message.cloudCustomData)"
-      />
+      <ReplyElem v-if="cloudCustomData" :originalMsg="cloudCustomData" />
       <Markdown v-if="showMarked(message)" :marked="message.payload.text" />
       <DynamicContent v-else link :atUserList="message.atUserList" :text="message.payload.text" />
     </template>
@@ -13,7 +10,7 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
 import "@/styles/highlight.scss";
 import ReplyElem from "./ReplyElem.vue";
 import DynamicContent from "../components/DynamicContent.vue";
@@ -35,15 +32,29 @@ const props = defineProps({
     default: false,
   },
 });
+
 const { toAccount } = useGetters(["toAccount"]);
+
+const isMsgType = computed(() => {
+  const { message, msgType } = props;
+  return (message?.conversationType || msgType)
+})
+
+const cloudCustomData = computed(() => {
+  const { message } = props;
+  if (message?.cloudCustomData) {
+    return JSON.parse(message.cloudCustomData);
+  } else {
+    return null;
+  }
+});
 
 const onClick = (data) => {
   console.log(data);
 };
-
+// 发送者是ai 展示markdown
 function showMarked(message) {
   return isRobot(toAccount.value) && message?.flow === "in";
-  // && message.flow == "in";
 }
 
 function fnStyle() {
@@ -69,17 +80,12 @@ onMounted(() => {
 }
 .message-view__item--text {
   width: fit-content;
-  // width: 100%;
-  // max-width: 360px;
   padding: 10px 14px;
   box-sizing: border-box;
   border-radius: 3px;
   word-break: break-all;
   white-space: pre-wrap;
   color: var(--color-text);
-  // ::selection {
-  //   background-color: rgb(193, 203, 244);
-  // }
 }
 .markdown {
   white-space: unset;
