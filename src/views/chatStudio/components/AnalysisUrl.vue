@@ -1,37 +1,45 @@
 <template>
   <AnalysisUrl :text="text" />
 </template>
-<!-- <AnalysisUrlCopy :text="text" /> -->
+
 <script setup>
 import { h } from "vue";
 import { html2Escape } from "../utils/utils";
 import linkifyUrls from "@/utils/linkifyUrls";
+import { useState } from "@/utils/hooks/useMapper";
 
-const props = defineProps({
+const { atUserList } = defineProps({
   text: {
     type: String,
     default: "",
   },
+  atUserList: {
+    type: Array,
+    default: () => [],
+  },
 });
+
+const { currentMemberList } = useState({
+  currentMemberList: (state) => state.groupinfo.currentMemberList,
+});
+
+function filterMember() {
+  return currentMemberList.value.filter((item) => {
+    return atUserList.includes(item.userID);
+  });
+}
 
 function AnalysisUrl(props) {
   const { text } = props;
   const escapedUrl = html2Escape(text);
   const linkStr = linkifyUrls(escapedUrl);
-  return h("span", { innerHTML: linkStr, onClick: () => {} });
-}
-
-function AnalysisUrlCopy(props) {
-  const { text } = props;
-  const reg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-|,|:|;|\+|%|#)+)/g;
-  const urls = text.match(reg);
-  if (!urls) return text;
-  const htmlStr = urls.reduce((acc, url) => {
-    const escapedUrl = html2Escape(url);
-    const link = `<a data-link="${escapedUrl}" href="${escapedUrl}" class="linkUrl" target="_blank">${escapedUrl}</a>`;
-    return acc.replace(url, link);
-  }, text);
-  return h("span", { innerHTML: htmlStr, onClick: () => {} });
+  return h("span", {
+    innerHTML: linkStr,
+    onClick: () => {
+      // console.log("atUserList:", filterMember());
+      console.log("onClick");
+    },
+  });
 }
 </script>
 

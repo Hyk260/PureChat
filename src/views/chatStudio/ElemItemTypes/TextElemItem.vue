@@ -4,7 +4,7 @@
       <!-- 回复消息 -->
       <ReplyElem v-if="cloudCustomData" :originalMsg="cloudCustomData" />
       <Markdown v-if="showMarked(message)" :marked="message.payload.text" />
-      <DynamicContent v-else link :atUserList="message.atUserList" :text="message.payload.text" />
+      <DynamicContent v-else :atUserList="message.atUserList" :text="message.payload.text" />
     </template>
   </div>
 </template>

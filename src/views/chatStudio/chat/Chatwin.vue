@@ -329,7 +329,7 @@ const getMoreMsg = async () => {
 const handleContextAvatarMenuEvent = (event, item) => {
   const { flow } = item;
   const type = currentType.value;
-  if (type == "C2C" || flow == "out") {
+  if (type === "C2C" || flow === "out") {
     isRight.value = false;
     return;
   }
@@ -337,12 +337,13 @@ const handleContextAvatarMenuEvent = (event, item) => {
   MenuItemInfo.value = item;
   RIGHT_CLICK_MENU_LIST.value = AVATAR_LIST;
 };
+
 const handleContextMenuEvent = (event, item) => {
   const { isRevoked, time, type, payload } = item;
   console.log(item, "右键菜单数据");
-  const isTip = type == "TIMGroupTipElem";
-  const isFile = type == "TIMFileElem";
-  const isRelay = type == "TIMRelayElem";
+  const isTip = type === "TIMGroupTipElem";
+  const isFile = type === "TIMFileElem";
+  const isRelay = type === "TIMRelayElem";
   const isDithering = payload?.description === "dithering";
   const isCheckStatus = showCheckbox.value; // 多选状态
   // 撤回消息 提示类型消息
@@ -381,11 +382,14 @@ const handleContextMenuEvent = (event, item) => {
   } else {
     RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.value.filter((t) => t.id !== "copy");
   }
-  // 机器人消息过滤回复
+  // 机器人消息过滤 撤回 回复
   if (isRobot(toAccount.value)) {
-    RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.value.filter((t) => t.id !== "reply");
+    RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.value.filter(
+      (t) => t.id !== "reply" && t.id !== "revoke"
+    );
   }
 };
+
 const handlRightClick = (data) => {
   const info = MenuItemInfo.value;
   const { id, text } = data;
@@ -396,37 +400,39 @@ const handlRightClick = (data) => {
     case "ait": // @对方
       handleAt(info);
       break;
-    case "copy": //复制
+    case "copy": // 复制
       handleCopyMsg(info);
       break;
     case "translate": // 翻译
       handleTranslate(info);
       break;
-    case "revoke": //撤回
+    case "revoke": // 撤回
       handleRevokeMsg(info);
       break;
     case "forward": // 转发
       handleForward(info);
       break;
-    case "saveAs": //另存为
+    case "saveAs": // 另存为
       handleSave(info);
       break;
     case "reply": // 回复
       handleReplyMsg(info);
       break;
-    case "multiSelect": //多选
+    case "multiSelect": // 多选
       handleMultiSelectMsg(info);
       break;
-    case "delete": //删除
+    case "delete": // 删除
       handleDeleteMsg(info);
       break;
   }
 };
+
 const handleAt = (data) => {
   const { from, nick, conversationType: type } = data;
   if (type === "C2C") return;
   emitter.emit("handleAt", { id: from, name: nick });
 };
+
 const handleSendMessage = (data) => {
   dispatch("addConversation", { convId: `C2C${data.from}` });
 };

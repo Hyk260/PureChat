@@ -108,9 +108,9 @@
         <el-button v-if="isOwner" type="danger" @click="handleDismissGroup"> 解散群组 </el-button>
         <el-button v-else type="danger" @click="handleQuitGroup"> 退出群组 </el-button>
         <div class="w-12"></div>
-        <el-button type="primary" plain v-show="isOwner" @click="handleTransferGroup">
+        <!-- <el-button type="primary" plain v-show="isOwner" @click="handleTransferGroup">
           转让群组
-        </el-button>
+        </el-button> -->
       </div>
       <!-- 添加成员弹框 -->
       <AddMemberPopup @define="addGroupMemberBtn" ref="AddMemberRef" />
