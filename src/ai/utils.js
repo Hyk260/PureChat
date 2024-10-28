@@ -284,3 +284,9 @@ export function getValueByKey(array, key) {
   const item = array.find((t) => t.key === key);
   return item && item.value ? item.value : null;
 }
+
+// 全员群
+export function isFullStaffGroup(data) {
+  const { groupProfile } = data || {};
+  return getValueByKey(groupProfile?.groupCustomField, "custom_info") === "all_staff"
+};

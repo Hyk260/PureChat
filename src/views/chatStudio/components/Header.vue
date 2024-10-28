@@ -66,11 +66,11 @@ const chatNick = (type, chat) => {
 };
 
 const openShare = () => {
-  emitter.emit("onShareModal");
+  emitter.emit("handleShareModal");
 };
 
 const openSetup = () => {
-  emitter.emit("onGroupDrawer", true);
+  emitter.emit("handleGroupDrawer", true);
 };
 
 const openUser = () => {};

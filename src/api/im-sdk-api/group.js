@@ -8,6 +8,13 @@ const GroupType = {
   GRP_AVCHATROOM: "AVChatRoom", // 直播群
 };
 
+export const GroupTypeMap  = {
+  Private: "好友工作群(Work)",
+  Public: "陌生人社交群(Public)",
+  ChatRoom: "临时会议群(Meeting)",
+  AVChatRoom: "直播群(AVChatRoom)",
+};
+
 const ModifyType = {
   GROUP_NAME: "name", // 修改群名称
   GROUP_AVATAR: "avatar", // 修改群头像

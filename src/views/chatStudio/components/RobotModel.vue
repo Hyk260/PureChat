@@ -18,7 +18,7 @@
           <svg-icon :iconClass="robotIcon" />
         </span>
       </div>
-      <div class="flex flex-bc w-full">
+      <div class="flex-bc w-full">
         <span>{{ item.id }}</span>
         <span class="box">
           <el-tooltip v-if="item.vision" content="该模型支持视觉识别" placement="right-start">

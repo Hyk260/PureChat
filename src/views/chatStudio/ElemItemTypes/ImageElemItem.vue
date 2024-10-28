@@ -1,6 +1,6 @@
 <template>
   <div
-    class="image_preview select-none"
+    class="image_preview"
     :class="self ? 'is-text-self' : 'is-text-other'"
     @click="geiPic(url)"
   >
@@ -97,6 +97,7 @@ const loadImg = (e) => {};
   background: var(--other-msg-color);
 }
 .image_preview {
+  user-select: none;
   width: fit-content;
   max-width: 142px;
   box-sizing: border-box;

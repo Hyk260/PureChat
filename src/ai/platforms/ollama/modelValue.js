@@ -1,6 +1,7 @@
 import OllamaAI from "./models";
 
 const docs = __APP_INFO__.pkg.docs;
+const ollama_proxy_url = import.meta.env.VITE_OLLAMA_PROXY_URL;
 
 export const ollamaModelValue = () => {
   return {
@@ -15,8 +16,8 @@ export const ollamaModelValue = () => {
       ID: "openaiUrl",
       Title: "接口地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
-      Placeholder: "http://127.0.0.1:11434/",
-      defaultValue: "http://127.0.0.1:11434/",
+      Placeholder: ollama_proxy_url,
+      defaultValue: "",
       doubt: `${docs}/guides/olama-usage`,
     },
     Temperature: {

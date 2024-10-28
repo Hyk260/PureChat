@@ -1,18 +1,35 @@
-import { customAlphabet } from 'nanoid/non-secure';
+import { customAlphabet } from "nanoid/non-secure";
 
-export const createNanoId = (size = 8) =>
-  customAlphabet("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", size);
+export const createNanoId = (size = 8) => customAlphabet("abcdefg", size);
 
 export const nanoid = createNanoId();
 
+export const transformOllamaStream = (chunk, stack) => {
+  // maybe need another structure to add support for multiple choices
+  if (chunk.done) {
+    return { data: "[DONE]", id: stack.id, type: "stop" };
+  }
+  return { data: chunk, id: stack.id, type: "text" };
+};
+
+/**
+ * 一个异步生成器函数，用于从给定的流中逐步获取响应。
+ *
+ * @param {AsyncIterable} stream - 一个异步可迭代对象，代表一个数据流。
+ *   该流可以是从服务器获取的实时数据流，或者是任何符合
+ *   AsyncIterable 接口的对象。
+ *
+ * @yields {any} response - 从流中逐个获取的响应数据。
+ *   每次迭代时，返回流中的下一个响应。
+ */
 export const chatStreamable = async function* (stream) {
   for await (const response of stream) {
     yield response;
   }
 };
 
-export const createSSEProtocolTransformer = (transformer, streamStack) =>
-  new TransformStream({
+export const createSSEProtocolTransformer = (transformer, streamStack) => {
+  return new TransformStream({
     transform: (chunk, controller) => {
       const { type, id, data } = transformer(chunk, streamStack || { id: "" });
       controller.enqueue(`id: ${id}\n`);
@@ -20,8 +37,9 @@ export const createSSEProtocolTransformer = (transformer, streamStack) =>
       controller.enqueue(`data: ${JSON.stringify(data)}\n\n`);
     },
   });
+};
 
-export function createCallbacksTransformer(cb) {
+export const createCallbacksTransformer = (cb) => {
   const textEncoder = new TextEncoder();
   let aggregatedResponse = "";
   let currentType = "";
@@ -63,7 +81,7 @@ export function createCallbacksTransformer(cb) {
       }
     },
   });
-}
+};
 
 export const parseDataUri = (dataUri) => {
   // 正则表达式匹配整个 Data URI 结构
@@ -71,13 +89,13 @@ export const parseDataUri = (dataUri) => {
 
   if (dataUriMatch) {
     // 如果是合法的 Data URI
-    return { base64: dataUriMatch[2], mimeType: dataUriMatch[1], type: 'base64' };
+    return { base64: dataUriMatch[2], mimeType: dataUriMatch[1], type: "base64" };
   }
 
   try {
     new URL(dataUri);
     // 如果是合法的 URL
-    return { base64: null, mimeType: null, type: 'url' };
+    return { base64: null, mimeType: null, type: "url" };
   } catch {
     // 既不是 Data URI 也不是合法 URL
     return { base64: null, mimeType: null, type: null };

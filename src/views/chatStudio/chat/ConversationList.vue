@@ -164,7 +164,7 @@ const formatNewsMessage = (data) => {
 // 定义消息提示元素
 const createMessagePrompt = (type = "at") => {
   const messageTypes = { at: "有人@我", draft: "草稿" };
-  return `<span style='color:#f44336;'>[${messageTypes[type]}]</span> `;
+  return `<span style='color:#f44336;'>[${messageTypes[type]}]</span>`;
 };
 
 // 定义消息提示元素

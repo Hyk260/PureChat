@@ -60,28 +60,9 @@ p {
   width: 100%;
 }
 
-.select-none {
-  user-select: none;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
 .icon-hover {
   &:hover {
     color: var(--color-icon-hover) !important;
-  }
-}
-
-.clearfix {
-  &::after {
-    visibility: hidden;
-    display: block;
-    font-size: 0;
-    content: "";
-    clear: both;
-    height: 0;
   }
 }
 
