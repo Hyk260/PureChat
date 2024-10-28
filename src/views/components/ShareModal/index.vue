@@ -31,9 +31,6 @@
                   <img v-else :src="item.avatar" />
                 </div>
                 <div class="item" :class="msgOne(item.type)">
-                  <p class="nick">
-                    <!-- <span>{{ item.nick }}</span> -->
-                  </p>
                   <div :class="msgType(item.type)">
                     <component
                       :key="item.ID"
@@ -48,9 +45,9 @@
               </div>
             </div>
             <div v-show="isFooter" class="footer p-16">
-              <div class="flex justify-center items-center">
+              <div class="flex-c">
                 <img class="size-22" src="@/assets/images/log.png" alt="" />
-                <div class="title ml-8">{{ title_app }}</div>
+                <div class="title ml-8">{{ titleApp }}</div>
               </div>
               <span class="link"> {{ homepage }}</span>
               <QrCode v-show="isQrCode" class="qr-code" :text="homepage" />
@@ -87,7 +84,7 @@
           <div><el-switch v-model="isQrCode" /></div>
         </div>
         <el-divider v-show="isFooter" class="my-10" />
-        <div class="image-type flex-bc my-5 h-32">
+        <div class="flex-bc my-5 h-32">
           <div>图片格式</div>
           <div>
             <el-radio-group v-model="fieldType" size="small">
@@ -102,7 +99,11 @@
         </div>
       </div>
       <div>
-        <el-button class="w-full" @click="onDownload(fieldType, robotRole(), cb)" :loading="loading">
+        <el-button
+          class="w-full"
+          @click="onDownload(fieldType, robotRole(), cb)"
+          :loading="loading"
+        >
           <template #loading>
             <loadingSvg />
           </template>
@@ -115,19 +116,20 @@
 
 <script setup>
 import { computed, nextTick, ref } from "vue";
-import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import { isRobot } from "@/utils/chat/index";
 import { Markdown } from "@/utils/markdown/index";
-import emitter from "@/utils/mitt-bus";
-import Header from "@/views/chatStudio/components/Header.vue";
 import { useBoolean } from "@/utils/hooks/index";
 import { useScreenshot, ImageType, imageTypeOptions } from "@/utils/hooks/useScreenshot";
 import { useState } from "@/utils/hooks/useMapper";
 import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils/utils";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { getModelType, usePromptStore, fnAvatar } from "@/ai/utils";
+import { fnStyleBack, onColor, back, backgColor } from "./utils";
+import loadingSvg from "@/views/login/components/loadingSvg.vue";
+import Header from "@/views/chatStudio/components/Header.vue";
+import emitter from "@/utils/mitt-bus";
 
-const title_app = import.meta.env.VITE_APP_NAME;
+const titleApp = import.meta.env.VITE_APP_NAME;
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
 const isFooter = ref(false);
@@ -137,50 +139,12 @@ const fieldType = ref(ImageType.Blob);
 
 const emit = defineEmits(["onClose"]);
 
-const backgColor = ref([
-  {
-    colorA: "#6DD5C4",
-    colorB: "#5697F9",
-    angle: "45deg",
-  },
-  {
-    colorA: "#622FC2",
-    colorB: "#87FFAD",
-    angle: "45deg",
-  },
-  {
-    colorA: "#4A4FFF",
-    colorB: "#87FFAD",
-    angle: "45deg",
-  },
-  {
-    colorA: "#BAA7E4",
-    colorB: "#F59F9C",
-    angle: "45deg",
-  },
-  {
-    colorA: "#45A5D7",
-    colorB: "#F59F9C",
-    angle: "45deg",
-  },
-  {
-    colorA: "#2CB0CE",
-    colorB: "#CDCBFF",
-    angle: "150deg",
-  },
-  {
-    colorA: "#B0BDBF",
-    colorB: "#CDCBFF",
-    angle: "45deg",
-  },
-]);
-
-const back = ref(`
-  background: linear-gradient(var(--houdini-angle), var(--houdini-colorA), var(--houdini-colorB));
-  --houdini-colorA: #B0BDBF;
-  --houdini-colorB: #CDCBFF;
-  --houdini-angle: 120deg;
-`);
+const { toAccount } = useGetters(["toAccount"]);
+const [dialogVisible, setDialogVisible] = useBoolean();
+const { loading, onDownload } = useScreenshot();
+const { forwardData } = useState({
+  forwardData: (state) => state.conversation.forwardData,
+});
 
 function robotRole() {
   const model = getModelType(toAccount.value);
@@ -192,23 +156,17 @@ function robotRole() {
   }
 }
 
-const { toAccount } = useGetters(["toAccount"]);
-const [dialogVisible, setDialogVisible] = useBoolean();
-const { loading, onDownload } = useScreenshot();
-const { forwardData } = useState({
-  forwardData: (state) => state.conversation.forwardData,
-});
-
 function onClose() {
   setDialogVisible(false);
 }
 
 function cb() {
-  nextTick(()=>{
-    onClose()
-    emit("onClose")
-  })
+  nextTick(() => {
+    onClose();
+    emit("onClose");
+  });
 }
+
 function robotPrompt() {
   const model = getModelType(toAccount.value);
   return usePromptStore(model).prompt[0].content || "";
@@ -220,18 +178,7 @@ const fnForwardData = computed(() => {
   return obj.sort((a, b) => a.clientTime - b.clientTime);
 });
 
-function fnStyleBack({ angle, colorA, colorB }) {
-  return `background-image: linear-gradient(${angle}, ${colorA}, ${colorB});`;
-}
-
-function onColor(item) {
-  const preview = document.querySelector("#preview");
-  preview.style.setProperty("--houdini-colorA", item.colorA);
-  preview.style.setProperty("--houdini-colorB", item.colorB);
-  preview.style.setProperty("--houdini-angle", item.angle);
-}
-
-emitter.on("onShareModal", (val) => {
+emitter.on("handleShareModal", (val) => {
   setDialogVisible(true);
 });
 </script>

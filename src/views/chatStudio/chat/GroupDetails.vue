@@ -12,7 +12,7 @@
     :show-close="true"
     :with-header="true"
   >
-    <div class="group-details">
+    <div>
       <!-- info -->
       <div class="group-base-info">
         <UserAvatar
@@ -20,9 +20,9 @@
           :url="groupProfile.avatar"
           :nickName="groupProfile.name"
         />
-        <div class="group-base-info--text">
+        <div class="group-base-info-text">
           <div>
-            <span class="group-base-info--text__name">
+            <span class="group-name">
               {{ groupProfile.name }}
             </span>
             <FontIcon
@@ -32,15 +32,15 @@
               @click="openNamePopup"
             />
           </div>
-          <span class="group-base-info--text__type">
-            {{ GROUP_TYPE_MAP[groupProfile.type] }}
+          <span class="group-type">
+            {{ GroupTypeMap[groupProfile.type] }}
           </span>
         </div>
       </div>
       <el-divider />
       <!-- 群公告 -->
-      <div class="group-accountecment">
-        <div class="group-accountecment--title">
+      <div class="group-notice">
+        <div>
           <span>{{ $t("group.GroupNotice") }}</span>
           <FontIcon
             v-show="isOwner"
@@ -49,22 +49,22 @@
             @click="openNoticePopup"
           />
         </div>
-        <div class="group-accountecment--info">
+        <div class="group-notice--info">
           <AnalysisUrl :text="groupProfile.notification" />
         </div>
       </div>
       <el-divider />
       <!-- 群成员 -->
       <div class="group-member">
-        <div class="group-member--title">
+        <div class="group-member-title">
           <span> 群成员 </span>
-          <span class="group-member--title__right">
+          <span class="total">
             <span>{{ currentMemberList.length }}人 </span>
             <!-- <span><a @click="openDetails">查看</a></span> -->
           </span>
         </div>
         <el-scrollbar always>
-          <div class="group-member--avatar">
+          <div class="group-member-avatar">
             <span class="gala-add margin" @click="groupMemberAdd"></span>
             <div
               class="avatar margin"
@@ -80,7 +80,8 @@
                 @click.stop="removeGroupMemberBtn(item)"
               />
               <UserAvatar :url="item.avatar" :nickName="item.nick || item.userID" />
-              <div class="admin" :class="item.role" v-if="item.role !== 'Member'">
+              <!-- Admin Owner -->
+              <div class="wrap-group" :class="`style-${item.role}`" v-if="item.role !== 'Member'">
                 {{ item.role === "Owner" ? "群主" : "管理员" }}
               </div>
               <span class="nick">{{ item.nick || item.userID }}</span>
@@ -90,19 +91,24 @@
       </div>
       <el-divider />
       <!-- 免打扰 -->
-      <div class="group-flag-message">
-        <div class="group-flag-message--title">
-          <span class="group-flag-message--title__text"> 消息免打扰 </span>
-          <el-switch v-model="isNotify" @change="notify" />
+      <div class="py-12">
+        <div class="flex-bc">
+          <span> 消息免打扰 </span>
+          <el-switch
+            v-model="notify"
+            :loading="loading"
+            :before-change="beforeChange"
+            @change="setNotify"
+          />
         </div>
       </div>
       <el-divider />
       <!-- 解散 退出 转让 -->
-      <div class="group-operator" v-show="!isallStaff(currentConversation)">
+      <div class="group-operator flex-c" v-show="!isFullStaffGroup(currentConversation)">
         <el-button v-if="isOwner" type="danger" @click="handleDismissGroup"> 解散群组 </el-button>
         <el-button v-else type="danger" @click="handleQuitGroup"> 退出群组 </el-button>
-        <div class="group-operator--divider"></div>
-        <el-button type="primary" plain v-show="isOwner && false" @click="handleTransferGroup">
+        <div class="w-12"></div>
+        <el-button type="primary" plain v-show="isOwner" @click="handleTransferGroup">
           转让群组
         </el-button>
       </div>
@@ -113,50 +119,59 @@
 </template>
 
 <script setup>
-import { addGroupMember, deleteGroupMember, updateGroupProfile } from "@/api/im-sdk-api/index";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import {
+  addGroupMember,
+  deleteGroupMember,
+  updateGroupProfile,
+  GroupTypeMap,
+} from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/index";
 import { useBoolean } from "@/utils/hooks/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { showConfirmationBox } from "@/utils/message";
-import emitter from "@/utils/mitt-bus";
-import { onBeforeUnmount, onMounted, ref, watchEffect } from "vue";
+import { isFullStaffGroup } from "@/ai/utils";
 import { useStore } from "vuex";
 import AddMemberPopup from "../components/AddMemberPopup.vue";
 import AnalysisUrl from "../components/AnalysisUrl.vue";
-import { getValueByKey } from "@/ai/utils";
+import emitter from "@/utils/mitt-bus";
 
 const { groupProfile } = defineProps({
   groupProfile: {
     type: Object,
     default: () => {},
-  }
+  },
 });
 
-const GROUP_TYPE_MAP = {
-  Public: "陌生人社交群(Public)",
-  Private: "好友工作群(Work)",
-  ChatRoom: "临时会议群(Meeting)",
-  AVChatRoom: "直播群(AVChatRoom)",
-};
-const isNotify = ref(false);
+const notify = ref(false);
 const AddMemberRef = ref();
-const { dispatch } = useStore();
+
 const [drawer, setDrawer] = useBoolean();
+const [loading, setLoading] = useBoolean();
+
+const { dispatch } = useStore();
+const { isOwner, toAccount } = useGetters(["isOwner", "toAccount"]);
+
 const { userProfile, currentMemberList, currentConversation } = useState({
   userProfile: (state) => state.user.userProfile,
   currentMemberList: (state) => state.groupinfo.currentMemberList,
   currentConversation: (state) => state.conversation.currentConversation,
 });
-const { isOwner, isAdmin, toAccount } = useGetters(["isOwner", "isAdmin", "toAccount"]);
 
-const notify = (val) => {
+const beforeChange = () => {
+  setLoading(true);
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      setLoading(false);
+      return resolve(true);
+    }, 1000);
+  });
+};
+
+const setNotify = () => {
   const { type, toAccount, messageRemindType: remindType } = currentConversation.value;
   dispatch("setMessageReminderType", { type, toAccount, remindType });
 };
-
-const isallStaff = (data) => {
-  return getValueByKey(data?.groupProfile?.groupCustomField, "custom_info") === "all_staff"
-}
 
 const openNamePopup = async () => {
   const { name } = groupProfile;
@@ -258,23 +273,28 @@ const handleQuitGroup = async () => {
   setDrawer(false);
 };
 
-watchEffect(() => {
-  isNotify.value = currentConversation.value.messageRemindType === "AcceptNotNotify";
-});
-
 onMounted(() => {
-  emitter.on("onGroupDrawer", (val) => {
+  emitter.on("handleGroupDrawer", (val) => {
     setDrawer(val);
   });
 });
 
 onBeforeUnmount(() => {
-  emitter.off("onGroupDrawer");
+  emitter.off("handleGroupDrawer");
+});
+
+watch(currentConversation, (data) => {
+  const { messageRemindType } = data; // AcceptAndNotify AcceptNotNotify
+  notify.value = messageRemindType === "AcceptNotNotify";
 });
 </script>
 
 <style lang="scss" scoped>
-.admin {
+:deep(.el-divider) {
+  margin: 0;
+}
+
+.wrap-group {
   width: 40px;
   height: 14px;
   text-align: center;
@@ -284,25 +304,28 @@ onBeforeUnmount(() => {
   top: 30px;
   border-radius: 2px;
   background: #fffbe6;
+}
+
+.style-Admin {
   color: #4ab017b3;
   border: 0.64px solid rgb(191, 232, 158);
 }
-.Owner {
+
+.style-Owner {
   color: #faad14;
   border: 0.64px solid rgba(255, 229, 143, 1);
 }
 
-:deep(.el-divider) {
-  margin: 0;
-}
 .style-editPen {
   cursor: pointer;
   vertical-align: bottom;
   margin-left: 5px;
 }
+
 .avatar:hover .style-close {
   visibility: visible;
 }
+
 .style-close {
   visibility: hidden;
   position: absolute;
@@ -311,17 +334,11 @@ onBeforeUnmount(() => {
   color: #f44336 !important;
   cursor: pointer;
 }
-.member-list-drawer--item {
-  display: flex;
-  align-items: center;
-  padding: 5px 0;
-  .member-list-drawer--item__name {
-    margin-left: 8px;
-  }
-}
-.group-accountecment {
+
+.group-notice {
   padding: 12px 0;
-  .group-accountecment--info {
+
+  .group-notice--info {
     font-size: 12px;
     font-weight: 400;
     color: #999999;
@@ -330,15 +347,18 @@ onBeforeUnmount(() => {
     @include ellipsisBasic(5);
   }
 }
+
 .group-base-info {
   padding-bottom: 20px;
   display: flex;
   align-items: center;
-  .group-base-info--text {
+
+  .group-base-info-text {
     display: flex;
     flex-direction: column;
     margin-left: 8px;
-    .group-base-info--text__name {
+
+    .group-name {
       display: inline-block;
       vertical-align: bottom;
       max-width: 150px;
@@ -348,26 +368,31 @@ onBeforeUnmount(() => {
       margin-right: 8px;
       @include text-ellipsis;
     }
-    .group-base-info--text__type {
+
+    .group-type {
       font-size: 12px;
       font-weight: 400;
       color: #999999;
     }
   }
 }
+
 .group-member {
   padding: 12px 0;
-  .group-member--title {
+
+  .group-member-title {
     font-size: 14px;
     font-weight: 400;
     color: var(--color-time-divider);
     margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
-    .group-member--title__right {
+
+    .total {
       font-size: 12px;
       font-weight: 400;
       color: #999999;
+
       span a {
         background-color: transparent;
         text-decoration: none;
@@ -376,14 +401,17 @@ onBeforeUnmount(() => {
       }
     }
   }
-  .group-member--avatar {
+
+  .group-member-avatar {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     max-height: 180px;
     margin-top: 10px;
+
     .avatar {
       position: relative;
+
       .nick {
         font-size: 12px;
         width: 40px;
@@ -396,29 +424,19 @@ onBeforeUnmount(() => {
         text-overflow: ellipsis;
         color: var(--color-time-divider);
       }
+
       .isown {
         display: none;
       }
     }
+
     .margin {
       margin: 0 12px 20px 0;
     }
   }
 }
-.group-flag-message {
-  padding: 12px 0;
-  .group-flag-message--title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
+
 .group-operator {
   padding-top: 20px;
-  display: flex;
-  justify-content: center;
-  .group-operator--divider {
-    width: 12px;
-  }
 }
 </style>
