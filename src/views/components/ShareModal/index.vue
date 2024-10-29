@@ -27,8 +27,8 @@
                 :class="isSelf(item) ? 'is-self' : 'is-other'"
               >
                 <div class="avatar">
-                  <img v-if="!isSelf(item)" :src="fnAvatar(toAccount) || item.avatar" />
-                  <img v-else :src="item.avatar" />
+                  <img class="w-32 h-32 rounded-[6px]" v-if="!isSelf(item)" :src="fnAvatar(toAccount) || item.avatar" />
+                  <img class="w-32 h-32 rounded-[6px]" v-else :src="item.avatar" />
                 </div>
                 <div class="item" :class="msgOne(item.type)">
                   <div :class="msgType(item.type)">
@@ -220,10 +220,6 @@ emitter.on("handleShareModal", (val) => {
   border: 1px solid #dddddd;
   border-radius: 8px;
   overflow: auto;
-
-  .scrollbar {
-    // height: 50vh;
-  }
 }
 
 .form-item-props {
@@ -269,20 +265,6 @@ emitter.on("handleShareModal", (val) => {
       font-size: 14px;
       line-height: 1.5;
       color: #999999;
-    }
-  }
-}
-
-.message {
-  .message-view__item--text {
-    max-width: 500px;
-  }
-
-  .avatar {
-    img {
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
     }
   }
 }

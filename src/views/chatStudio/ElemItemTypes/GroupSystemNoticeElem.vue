@@ -1,5 +1,5 @@
 <template>
-  <div class="message-view__item--text">
+  <div class="message-item-group-notice">
     {{ GroupSystemNotice(message) }}
   </div>
 </template>
@@ -23,7 +23,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.message-view__item--text {
+.message-item-group-notice {
   width: fit-content;
   padding: 10px 14px;
   max-width: 360px;

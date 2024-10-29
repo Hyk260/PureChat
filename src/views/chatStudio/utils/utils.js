@@ -148,7 +148,7 @@ export const msgType = (elem_type) => {
       resp = "message-view__text"; // 文本
       break;
     case "TIMGroupTipElem":
-      resp = "message-view__tips-elem"; // 群消息提示
+      resp = "message-view-tips-elem"; // 群消息提示
       break;
     case "TIMImageElem":
       resp = "message-view__img"; // 图片消息
@@ -172,9 +172,9 @@ export const msgType = (elem_type) => {
 export const msgOne = (item) => {
   const { isRevoked, type, payload } = item;
   if (isRevoked || type === "TIMGroupTipElem" || payload?.description === "dithering") {
-    return "message-view__tips-elem";
+    return "message-view-tips-elem";
   } else {
-    return "message-view__item--index";
+    return "message-view-item-index";
   }
 };
 // 动态组件

@@ -49,7 +49,7 @@
             @click="openNoticePopup"
           />
         </div>
-        <div class="group-notice--info">
+        <div class="group-notice-info">
           <AnalysisUrl :text="groupProfile.notification" />
         </div>
       </div>
@@ -338,7 +338,7 @@ watch(currentConversation, (data) => {
 .group-notice {
   padding: 12px 0;
 
-  .group-notice--info {
+  .group-notice-info {
     font-size: 12px;
     font-weight: 400;
     color: #999999;

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="message-view__item--text"
+    class="message-item-custom"
     :class="self ? 'is-text-self' : 'is-text-other'"
     @click="onClick"
   >
@@ -15,6 +15,7 @@
 
 <script>
 import loading from "../customMsgBody/loading.vue";
+
 export default {
   name: "CustomElemItem",
   props: {
@@ -58,13 +59,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.is-text-self {
-  background: var(--self-msg-color);
-}
-.is-text-other {
-  background: var(--other-msg-color);
-}
-.message-view__item--text {
+.message-item-custom {
   width: fit-content;
   padding: 10px 14px;
   max-width: 360px;

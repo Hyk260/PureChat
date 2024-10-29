@@ -20,6 +20,10 @@ const MENU_LIST = [
     text: "撤回",
   },
   // {
+  //   id: "edit",
+  //   text: "编辑",
+  // },
+  // {
   //   id: "translate",
   //   text: "翻译",
   // },

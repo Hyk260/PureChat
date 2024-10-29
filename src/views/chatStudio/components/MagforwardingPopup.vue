@@ -18,7 +18,7 @@
       </div>
     </div>
     <template #footer>
-      <span class="dialog-footer">
+      <span>
         <el-button @click="handleCancel()">
           {{ $t("common.cancel") }}
         </el-button>
