@@ -23,7 +23,7 @@
             v-else-if="item.ID && !isTime(item) && !item.isDeleted"
             :id="`choice${item.ID}`"
             :class="classMessageViewItem(item)"
-            class="message-view__item"
+            class="message-view-item"
             @click="handleSelect($event, item, 'outside')"
           >
             <!-- 多选框 -->
@@ -92,7 +92,6 @@ import {
   onUpdated,
   ref,
   watch,
-  watchEffect,
 } from "vue";
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
@@ -105,9 +104,8 @@ import {
   validatelastMessage,
   isSelf,
 } from "../utils/utils";
-
 import { deleteMessage, getMessageList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
-import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX } from "@/constants/index";
+import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { download, isRobot } from "@/utils/chat/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
@@ -184,12 +182,6 @@ const classMessageInfoView = () => {
     isChatBoxVisible.value ? "" : "style-msg-box",
     currentReplyMsg.value ? "style-reply" : "",
   ];
-};
-
-const handleScroll = () => {
-  const el = scrollbarRef.value?.wrapRef;
-  if (!el) return;
-  const { scrollTop, clientHeight, scrollHeight } = el;
 };
 
 const handleSelect = (e, item, type = "initial") => {
@@ -492,7 +484,7 @@ const handleRevokeMsg = async (data) => {
     handleRevokeChange(message, "delete");
   }, 60000);
 };
-// watchEffect(() => {});
+
 function onEmitter() {
   emitter.on("updataScroll", (type) => {
     if (type === "bottom") {
@@ -538,19 +530,17 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
 </script>
 
 <style lang="scss" scoped>
-.message-view__tips-elem {
+.message-view-tips-elem {
   margin: auto;
   .message-name {
     display: none;
   }
 }
-.message-view__item--index {
+.message-view-item-index {
   max-width: 70%;
 }
 .message-info-view-content {
   height: calc(100% - 60px - 200px);
-  // border-bottom: 1px solid var(--color-border-default);
-  // transition: all 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .style-msg-box {
   height: calc(100% - 60px) !important;
@@ -592,7 +582,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
 .style-choice {
   padding-left: 35px;
 }
-.message-view__item {
+.message-view-item {
   display: flex;
   flex-direction: row;
   margin: 8px 0;

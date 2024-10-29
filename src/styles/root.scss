@@ -6,6 +6,7 @@
   --color-tags-active: #f8f8f8;
   --color-tags-color: #333333;
   --color-tags-back: rgba(0, 0, 0, 0.12);
+
   /* color */
   --white: white;
   --black: rgb(48, 48, 48);
@@ -15,6 +16,7 @@
   --bar-color: rgba(0, 0, 0, 0.1);
   --theme-color: var(--gray);
   --has-custom-titlebar: #eee;
+  --border-in-light: 1px solid #dedede;
 
   --color-robot-model: #fff;
   --color-button-border: #e3e3e3;
@@ -38,8 +40,8 @@
   --color-group-tip: rgba(0, 0, 0, 0.05);
   --color-draggable-body: #f5f5f5;
   // 消息框颜色
-  --other-msg-color: #f0f2f5;
-  --self-msg-color: #c2e8ff;
+  --other-msg-color: rgba(0, 0, 0, .05);
+  --self-msg-color: #e7f8ff;
   --color-message-active: #f0f2f5;
 
   --color-multiple-choice: hsl(220deg 20% 91%);
@@ -106,6 +108,7 @@
   --primary: rgb(29, 147, 171);
   --second: rgb(27 38 42);
   --has-custom-titlebar: #000;
+  --border-in-light: 1px solid hsla(0, 0%, 100%, .192);
 
   --color-robot-model: #333;
   --color-button-border: #2d2d2d;

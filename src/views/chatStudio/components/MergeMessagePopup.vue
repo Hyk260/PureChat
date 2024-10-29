@@ -3,7 +3,7 @@
     v-model="dialogVisible"
     :title="mergValue?.payload?.title"
     width="55%"
-    class="merge-message-popup"
+    class="min-w-500"
     align-center
     :before-close="handleClose"
   >
@@ -77,9 +77,6 @@ emitter.on("openMergePopup", (data) => {
 </script>
 
 <style lang="scss" scoped>
-:global(body .merge-message-popup) {
-  min-width: 500px;
-}
 .merg-dialog {
   height: 550px;
   padding: 0 10px;
@@ -98,7 +95,7 @@ emitter.on("openMergePopup", (data) => {
       color: var(--color-time-divider);
     }
   }
-  .message-view__item--index {
+  .message-view-item-index {
     width: 80%;
   }
 }

@@ -12,7 +12,7 @@
     <img
       v-else-if="item.name === 'img'"
       draggable="false"
-      class="emoji"
+      class="w-23 align-sub"
       :src="getAssetsFile(item.localSrc)"
       alt="表情包"
     />
@@ -42,10 +42,3 @@ const props = defineProps({
   },
 });
 </script>
-
-<style scoped>
-.emoji {
-  width: 23px;
-  vertical-align: sub;
-}
-</style>

@@ -36,10 +36,7 @@
                   <!-- 添加 -->
                   <FontIcon iconName="CirclePlusFilled" class="add" @click="increase(element)" />
                   <!-- 图标 -->
-                  <FontIcon
-                    v-if="element?.type == 'el-icon'"
-                    :iconName="element.icon"
-                  />
+                  <FontIcon v-if="element?.type == 'el-icon'" :iconName="element.icon" />
                   <svg-icon v-else :iconClass="element.icon" class="svg-icon" />
                   <span>{{ element.title }}</span>
                   <svg-icon iconClass="drag" class="dragIcon" />
@@ -54,9 +51,9 @@
       </div>
     </div>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="handleCancel"> 取消 </el-button>
-        <el-button type="primary" @click="handleConfirm"> 确定 </el-button>
+      <span>
+        <el-button @click="handleCancel"> {{ $t("common.cancel") }} </el-button>
+        <el-button type="primary" @click="handleConfirm"> {{ $t("common.confirm") }} </el-button>
       </span>
     </template>
   </el-dialog>

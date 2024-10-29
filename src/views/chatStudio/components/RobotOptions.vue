@@ -6,19 +6,18 @@
     destroy-on-close
     width="60%"
     align-center
-    class="robot-options-dialog"
+    class="min-w-500 max-w-980"
     :before-close="handleClose"
   >
     <div>
       <ul class="container">
         <!-- prompt -->
-        <div class="prompt" v-for="item in maskData.prompt" :key="item.id">
-          <svg-icon v-show="false" iconClass="drag" class="dragIcon" />
+        <div class="prompt p-20 flex-c" v-for="item in maskData.prompt" :key="item.id">
+          <svg-icon v-show="false" iconClass="drag" class="drag-icon" />
           <el-select class="prompt-select" v-model="item.role">
             <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
           </el-select>
           <el-input
-            class="prompt-input"
             v-model="item.content"
             :autosize="{ minRows: 1, maxRows: 4 }"
             type="textarea"
@@ -26,7 +25,7 @@
           />
           <!-- <el-icon @click="onClose"><CircleCloseFilled /></el-icon> -->
         </div>
-        <li class="list-item" v-for="item in modelData" :key="item.ID">
+        <li class="container-item flex-bc" v-for="item in modelData" :key="item.ID">
           <div>
             <div class="title">{{ item.Title }}</div>
             <div class="subTitle">{{ item.SubTitle }}</div>
@@ -84,7 +83,7 @@
       </ul>
     </div>
     <template #footer>
-      <span class="dialog-footer">
+      <span>
         <el-button @click="handleCancel()"> 重置 </el-button>
         <el-button type="primary" @click="handleConfirm()"> 保存 </el-button>
       </span>
@@ -93,23 +92,16 @@
 </template>
 
 <script setup>
-import { ROLES, StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
-import {
-  getModelType,
-  useAccessStore,
-  usePromptStore,
-  prefix,
-  getInfo,
-  getValueByKey,
-} from "@/ai/utils";
+import { ref } from "vue";
+import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
 import { useBoolean } from "@/utils/hooks/index";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
-import { ref } from "vue";
 import { useStore } from "vuex";
 import { ClientApi } from "@/ai/api";
+import { ROLES, StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 
 const modelData = ref(null);
@@ -235,18 +227,6 @@ emitter.on("onRobotBox", () => {
 </script>
 
 <style lang="scss" scoped>
-:global(body .robot-options-dialog) {
-  min-width: 500px;
-  max-width: 980px;
-}
-.el-input {
-  width: 200px;
-}
-.refresh {
-  cursor: pointer;
-  margin-left: auto;
-  margin-right: 5px;
-}
 @mixin thumb() {
   appearance: none;
   height: 8px;
@@ -280,9 +260,15 @@ input[type="range"]::-moz-range-thumb:hover {
 input[type="range"]::-ms-thumb:hover {
   @include thumbHover();
 }
+.el-input {
+  width: 200px;
+}
+.refresh {
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 5px;
+}
 .prompt {
-  padding: 20px;
-  @include flex-center;
   .el-icon {
     margin: 0 10px;
     color: #4498ef;
@@ -293,26 +279,20 @@ input[type="range"]::-ms-thumb:hover {
     width: 125px;
     margin-right: 10px;
   }
-  .dragIcon {
+  .drag-icon {
     margin-right: 5px;
     cursor: grab;
-  }
-  .prompt-input {
-    // width: 430px;
   }
 }
 
 .container {
-  .list-item {
+  .container-item {
     color-scheme: light;
     user-select: none;
     color: var(--color-text-default);
-    justify-content: space-between;
     min-height: 40px;
     border-bottom: 1px solid #dedede;
     padding: 10px 20px;
-    display: flex;
-    align-items: center;
     .title {
       font-size: 14px;
       font-weight: bolder;

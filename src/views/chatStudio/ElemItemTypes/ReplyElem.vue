@@ -23,9 +23,7 @@ const hanldeItemClick = async () => {
   const { messageReply } = props.originalMsg || {};
   if (!messageReply) return;
   const ref = messageReply.messageID;
-  if (ref) {
-    scrollToDomPostion(ref);
-  }
+  if (ref) scrollToDomPostion(ref);
 };
 </script>
 
@@ -54,11 +52,6 @@ const hanldeItemClick = async () => {
   &__sender {
     font-size: 14px;
     font-weight: 400;
-  }
-  &__content {
-    .emoji {
-      width: 24px;
-    }
   }
   &__mask {
     cursor: pointer;

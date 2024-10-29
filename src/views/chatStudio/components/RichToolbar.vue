@@ -48,7 +48,7 @@
     <!-- 滚动到底部 -->
     <span
       :title="$t('chat.scrollToTheBottom')"
-      class="chat_vot"
+      class="chat-top"
       @click="onTobBottom"
       v-show="tobottom"
     >
@@ -56,7 +56,7 @@
     </span>
     <span
       :title="fullScreen ? $t('chat.recover') : $t('chat.launch')"
-      class="style-enlarge"
+      class="ml-auto"
       @click="onEnlarge(fullScreen)"
     >
       <svg-icon :iconClass="fullScreen ? 'narrow' : 'enlarge'" class="icon-hover" />
@@ -232,7 +232,7 @@ emitter.on("onisbot", (state) => {
     z-index: 9999;
   }
 }
-.chat_vot {
+.chat-top {
   animation: chat_top 0.3s ease;
   .svg-left {
     transform: rotate(-90deg);
@@ -240,9 +240,6 @@ emitter.on("onisbot", (state) => {
   .el-icon {
     cursor: pointer;
   }
-}
-.style-enlarge {
-  margin-left: auto;
 }
 
 @keyframes chat_top {

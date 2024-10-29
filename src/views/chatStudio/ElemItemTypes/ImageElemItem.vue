@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="image_preview"
-    :class="self ? 'is-text-self' : 'is-text-other'"
-    @click="geiPic(url)"
-  >
+  <div class="image-preview" @click="geiPic(url)">
     <el-image
       :src="url"
       @load="loadImg"
@@ -90,13 +86,7 @@ const loadImg = (e) => {};
 </script>
 
 <style lang="scss" scoped>
-.is-text-self {
-  background: var(--self-msg-color);
-}
-.is-text-other {
-  background: var(--other-msg-color);
-}
-.image_preview {
+.image-preview {
   user-select: none;
   width: fit-content;
   max-width: 142px;

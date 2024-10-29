@@ -12,8 +12,8 @@
       </div>
     </div>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="close"> 取消 </el-button>
+      <span>
+        <el-button @click="close"> {{ $t("common.cancel") }} </el-button>
         <el-button type="primary" @click="define"> 确认 </el-button>
       </span>
     </template>
@@ -32,7 +32,10 @@ const memberValue = ref(null);
 const emits = defineEmits(["define"]);
 const [dialog, setDialog] = useBoolean();
 const { conversationList } = useState({
-  conversationList: (state) => state.conversation.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID)),
+  conversationList: (state) =>
+    state.conversation.conversationList.filter(
+      (t) => t.type === "C2C" && !isRobot(t.conversationID)
+    ),
 });
 
 const onClickItem = (value) => {

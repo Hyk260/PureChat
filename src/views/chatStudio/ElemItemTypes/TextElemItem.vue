@@ -1,5 +1,6 @@
 <template>
-  <div class="message-view__item--text" :class="fnStyle()" @click="onClick(message)">
+  <!-- markdown is-text-self is-text-other -->
+  <div class="message-view-item-text" :class="fnStyle()" @click="onClick(message)">
     <template v-if="isMsgType">
       <!-- 回复消息 -->
       <ReplyElem v-if="cloudCustomData" :originalMsg="cloudCustomData" />
@@ -11,12 +12,12 @@
 
 <script setup>
 import { onMounted, computed } from "vue";
-import "@/styles/highlight.scss";
 import ReplyElem from "./ReplyElem.vue";
 import DynamicContent from "../components/DynamicContent.vue";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { isRobot } from "@/utils/chat/index";
 import { Markdown, handleCopyClick } from "@/utils/markdown/index";
+import "@/styles/highlight.scss";
 
 const props = defineProps({
   msgType: {
@@ -37,8 +38,8 @@ const { toAccount } = useGetters(["toAccount"]);
 
 const isMsgType = computed(() => {
   const { message, msgType } = props;
-  return (message?.conversationType || msgType)
-})
+  return message?.conversationType || msgType;
+});
 
 const cloudCustomData = computed(() => {
   const { message } = props;
@@ -68,24 +69,23 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.is-text-self {
+:global(body .is-text-self) {
   background: var(--self-msg-color);
 }
-.is-text-other {
+:global(body .is-text-other) {
   background: var(--other-msg-color);
 }
-.emoji {
-  width: 23px;
-  vertical-align: sub;
-}
-.message-view__item--text {
+.message-view-item-text {
   width: fit-content;
+  max-width: 500px;
   padding: 10px 14px;
   box-sizing: border-box;
   border-radius: 3px;
   word-break: break-all;
   white-space: pre-wrap;
   color: var(--color-text);
+  border: var(--border-in-light);
+  transition: all 0.3s ease;
 }
 .markdown {
   white-space: unset;
