@@ -2,7 +2,7 @@
   <div class="mention-modal" :style="{ top: top, left: left }" v-show="isVisibile">
     <ul class="mention-list" ref="listRef">
       <el-scrollbar>
-        <div class="max-h-123">
+        <div class="mention-list-box">
           <li
             v-for="(item, i) in searchedList"
             :key="item.joinTime"
@@ -59,18 +59,10 @@ export default {
     searchedList() {
       // 群成员小于2人，不显示@列表
       if (this.currentMemberList.length <= 1) return [];
-      const searchVal = this.searchVal.trim().toLowerCase();
-      return this.list.filter((item) => {
-        const name = item.nick.toLowerCase();
-        if (name.indexOf(searchVal) >= 0) {
-          this.tabIndex = 0;
-          return true;
-        }
-        return false;
-      });
+      return this.list;
     },
     isVisibile() {
-      return this.filtering !== "empty";
+      return this.filtering !== "empty" && this.currentMemberList.length > 1;
     },
   },
   data() {
@@ -78,8 +70,7 @@ export default {
       top: "",
       left: "",
       list: [],
-      searchVal: "", // 中文搜索
-      filtering: "", // 搜索模式
+      filtering: "", // 搜索模式 all success empty
       searchValue: 0, // 模糊搜索内容长度
       tabIndex: 0,
       magAtAll: MSG_AT_ALL,
@@ -217,10 +208,11 @@ export default {
   position: fixed;
   z-index: 11;
   width: 168px;
-  background-color: var(--color-body-bg);
   padding: 5px;
   border-radius: 5px;
+  background-color: var(--color-body-bg);
   box-shadow: var(--el-box-shadow-lighter);
+  border: 1px solid var(--color-border-default);
 }
 .mention-input {
   border: 1px solid #60626652;
@@ -229,7 +221,9 @@ export default {
   outline: none;
 }
 .mention-list {
-  max-height: 123px;
+  .mention-list-box {
+    max-height: 123px;
+  }
   .nick {
     font-size: 14px;
     display: flex;

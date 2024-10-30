@@ -174,7 +174,7 @@ const setSelect = (el) => {
 const classMessageViewItem = (item) => {
   return [
     isSelf(item) ? "is-self" : "is-other",
-    showCheckbox.value && !item.isRevoked ? "style-choice" : "",
+    showCheckbox.value && !item.isRevoked && item.type !== "TIMGroupTipElem" ? "style-choice" : "",
   ];
 };
 

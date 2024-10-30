@@ -295,7 +295,7 @@ export function isFullStaffGroup(data) {
 
 export const createAiPromptMsg = (params) => {
   let to = localStg.get("timProxy")?.userProfile?.userID;
-  let from = getModelId(localStg.get("default-assistant"));
+  let from = getModelId(localStg.get("default-assistant") || "GPT");
   const { meta } = localStg.get(StoreKey.Prompt)?.GPT;
   const { to: _to, from: _from } = params || {};
   if (_to) to = _to;
