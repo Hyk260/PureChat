@@ -2,7 +2,7 @@
   <div class="mention-modal" :style="{ top: top, left: left }" v-show="isVisibile">
     <ul class="mention-list" ref="listRef">
       <el-scrollbar>
-        <div class="max-h-123">
+        <div class="mention-list-box">
           <li
             v-for="(item, i) in searchedList"
             :key="item.joinTime"
@@ -28,12 +28,12 @@
 
 <script>
 import emitter from "@/utils/mitt-bus";
-import { compareUserID } from "@/views/chatStudio/utils/utils";
 import { onClickOutside, useEventListener } from "@vueuse/core";
 import { cloneDeep } from "lodash-es";
 import { mapState } from "vuex";
+import { prioritizeRBTUserID } from "@/utils/chat/index";
 
-const MSG_AT_ALL = "__kImSDK_MesssageAtALL__"
+const MSG_AT_ALL = "__kImSDK_MesssageAtALL__";
 
 export default {
   name: "MentionModal",
@@ -58,19 +58,11 @@ export default {
     // 根据 <input> value 筛选 list
     searchedList() {
       // 群成员小于2人，不显示@列表
-      if (this.currentMemberList.length <= 1) return []
-      const searchVal = this.searchVal.trim().toLowerCase();
-      return this.list.filter((item) => {
-        const name = item.nick.toLowerCase();
-        if (name.indexOf(searchVal) >= 0) {
-          this.tabIndex = 0;
-          return true;
-        }
-        return false;
-      });
+      if (this.currentMemberList.length <= 1) return [];
+      return this.list;
     },
     isVisibile() {
-      return this.filtering !== "empty";
+      return this.filtering !== "empty" && this.currentMemberList.length > 1;
     },
   },
   data() {
@@ -78,8 +70,7 @@ export default {
       top: "",
       left: "",
       list: [],
-      searchVal: "", // 中文搜索
-      filtering: "", // 搜索模式
+      filtering: "", // 搜索模式 all success empty
       searchValue: 0, // 模糊搜索内容长度
       tabIndex: 0,
       magAtAll: MSG_AT_ALL,
@@ -97,10 +88,18 @@ export default {
       if (off) this.list.unshift(this.allMembers);
     },
     filterList(data) {
-      if (data.length) return data.sort(compareUserID);
-      return this.currentMemberList
-        .filter((t) => t.userID !== this.userProfile.userID && t.userID !== '@TLS#NOT_FOUND')
-        .sort(compareUserID);
+      if (data.length) {
+        return prioritizeRBTUserID(data);
+      } else {
+        return this.filterData();
+      }
+    },
+    filterData() {
+      const userID = this.userProfile.userID;
+      const data = this.currentMemberList.filter(
+        (t) => t.userID !== userID && t.userID !== "@TLS#NOT_FOUND"
+      );
+      return prioritizeRBTUserID(data);
     },
     updateMention() {
       // 获取光标位置，定位 modal
@@ -209,10 +208,11 @@ export default {
   position: fixed;
   z-index: 11;
   width: 168px;
-  background-color: var(--color-body-bg);
   padding: 5px;
   border-radius: 5px;
+  background-color: var(--color-body-bg);
   box-shadow: var(--el-box-shadow-lighter);
+  border: 1px solid var(--color-border-default);
 }
 .mention-input {
   border: 1px solid #60626652;
@@ -221,7 +221,9 @@ export default {
   outline: none;
 }
 .mention-list {
-  max-height: 123px;
+  .mention-list-box {
+    max-height: 123px;
+  }
   .nick {
     font-size: 14px;
     display: flex;

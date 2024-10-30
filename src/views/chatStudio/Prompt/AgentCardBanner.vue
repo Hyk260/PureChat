@@ -57,6 +57,7 @@ function toTant(item = cardData.value) {
         id: identifier,
         meta: {
           tags: meta.tags,
+          description: meta.description,
           avatar: meta.avatar,
           title: meta.title,
         },
@@ -69,8 +70,8 @@ function toTant(item = cardData.value) {
   commit("taggleOueSide", "message");
   dispatch("addConversation", { convId: `${"C2C"}${id}` });
   setTimeout(() => {
-    emitter.emit("updataScroll");
-  }, 50);
+    commit("addAiPresetPromptWords");
+  }, 150);
 }
 
 function handleClose() {

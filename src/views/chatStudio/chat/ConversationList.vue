@@ -56,7 +56,7 @@
     <!-- 右键菜单 -->
     <contextmenu ref="contextmenu" :disabled="!isRight">
       <contextmenu-item
-        v-for="item in RIGHT_CLICK_CHAT_LIST"
+        v-for="item in chatSessionListData "
         :key="item.id"
         @click="handleClickMenuItem(item)"
       >
@@ -68,7 +68,7 @@
 
 <script setup>
 import { h, ref, watch, computed } from "vue";
-import { RIGHT_CLICK_CHAT_LIST } from "../utils/menu";
+import { chatSessionListData  } from "../utils/menu";
 import { pinConversation, setMessageRead } from "@/api/im-sdk-api/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
@@ -195,7 +195,7 @@ const handleContextMenuEvent = (e, item) => {
   isRight.value = true;
   contextMenuItemInfo.value = item;
   // 会话
-  RIGHT_CLICK_CHAT_LIST.map((t) => {
+  chatSessionListData .map((t) => {
     if (t.id === "pinged") {
       t.text = item.isPinned ? "取消置顶" : "会话置顶";
     }
@@ -213,6 +213,8 @@ const handleConvListClick = (data) => {
     const { conversationID: id } = chat.value;
     if (id == data?.conversationID) return;
   }
+  commit("setReplyMsg", null);
+  commit("setForwardData", { type: "clear", payload: null });
   // 切换会话
   commit("updateSelectedConversation", data);
   // 群详情信息
@@ -224,8 +226,6 @@ const handleConvListClick = (data) => {
     const { groupID } = data.groupProfile;
     dispatch("getGroupMemberList", { groupID });
   }
-  commit("setReplyMsg", null);
-  commit("setForwardData", { type: "clear", payload: null });
   emitter.emit("handleInsertDraft", data);
   emitter.emit("updataScroll");
   emitter.emit("setSearchForData");

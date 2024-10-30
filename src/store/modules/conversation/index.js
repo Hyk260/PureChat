@@ -23,6 +23,7 @@ import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
+import { createAiPromptMsg } from "@/ai/utils";
 import { nextTick } from "vue";
 
 const conversation = {
@@ -57,7 +58,10 @@ const conversation = {
 
       let oldMessageList = state.historyMessageList.get(convId);
       // 确保 oldMessageList 存在
-      if (!oldMessageList) return;
+      if (!oldMessageList) {
+        console.log("oldMessageList 不存在");
+        return;
+      }
 
       const newMessageList = oldMessageList.map((item) => {
         return item.ID === message.ID ? payload.message : item;
@@ -113,7 +117,7 @@ const conversation = {
     },
     addMessage(state, payload) {
       console.log("[chat] 添加消息 addMessage:", payload);
-      const { convId, isDone, message } = payload;
+      const { convId, isDone, message } = payload || {};
       if (state.currentConversation) {
         state.currentMessageList = message;
       } else {
@@ -124,6 +128,15 @@ const conversation = {
       // 是否已经拉完所有消息 '没有更多' : '显示loading'
       console.log("isDone:", isMore || isDone ? "没有更多" : "显示loading");
       state.noMore = isMore || isDone;
+    },
+    addAiPresetPromptWords(state, payload) {
+      const { convId, message } = createAiPromptMsg();
+      const history = state.historyMessageList.get(convId);
+      if (state.currentConversation && state.currentMessageList) {
+        const data = cloneDeep(history); 
+        state.currentMessageList = [message,...data];
+      }
+      emitter.emit("updataScroll");
     },
     clearHistory(state) {
       Object.assign(state, {
@@ -148,8 +161,9 @@ const conversation = {
       // 系统消息关闭聊天框
       state.isChatBoxVisible = convId !== "@TIM#SYSTEM";
       state.showCheckbox = false;
-      if (state.currentConversation) {
-        state.currentMessageList = state.historyMessageList.get(convId);
+      if (payload) {
+        const history = state.historyMessageList.get(convId);
+        state.currentMessageList = cloneDeep(history) ?? [];
       } else {
         state.currentMessageList = [];
       }
@@ -267,17 +281,16 @@ const conversation = {
       const status = getters.toAccount && !getters.hasMsgList;
       // 当前会话有值
       if (isSDKReady && status) {
-        const { messageList, isCompleted } = await getMessageList({
-          convId,
-        });
+        const { messageList, isCompleted } = await getMessageList({ convId });
         commit("addMessage", {
           convId,
           isDone: isCompleted,
           message: addTimeDivider(messageList).reverse(), // 添加时间
         });
         emitter.emit("updataScroll");
+      } else {
+        console.log(state.historyMessageList, "获取缓存");
       }
-      console.log(state.historyMessageList, "获取缓存");
       // 消息已读上报
       dispatch("hasReadMessage", { convId, message: action });
     },
@@ -298,15 +311,17 @@ const conversation = {
       const { conversation: data } = await getConversationProfile({ convId });
       // 切换会话
       commit("updateSelectedConversation", data);
-      // 群详情信息
-      dispatch("getGroupProfile", data);
       // 获取会话列表
       dispatch("updateMessageList", data);
-      // 群成员列表
+      // group
       if (data?.type === "GROUP") {
         const { groupID } = data.groupProfile;
+        // 群详情信息
+        dispatch("getGroupProfile", data);
+        // 群成员列表
         dispatch("getGroupMemberList", { groupID });
       }
+      emitter.emit("updataScroll");
     },
     // 删除会话
     async deleteSession({ commit }, action) {
