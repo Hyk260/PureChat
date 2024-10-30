@@ -28,12 +28,12 @@
 
 <script>
 import emitter from "@/utils/mitt-bus";
-import { compareUserID } from "@/views/chatStudio/utils/utils";
 import { onClickOutside, useEventListener } from "@vueuse/core";
 import { cloneDeep } from "lodash-es";
 import { mapState } from "vuex";
+import { prioritizeRBTUserID } from "@/utils/chat/index";
 
-const MSG_AT_ALL = "__kImSDK_MesssageAtALL__"
+const MSG_AT_ALL = "__kImSDK_MesssageAtALL__";
 
 export default {
   name: "MentionModal",
@@ -58,7 +58,7 @@ export default {
     // 根据 <input> value 筛选 list
     searchedList() {
       // 群成员小于2人，不显示@列表
-      if (this.currentMemberList.length <= 1) return []
+      if (this.currentMemberList.length <= 1) return [];
       const searchVal = this.searchVal.trim().toLowerCase();
       return this.list.filter((item) => {
         const name = item.nick.toLowerCase();
@@ -97,10 +97,18 @@ export default {
       if (off) this.list.unshift(this.allMembers);
     },
     filterList(data) {
-      if (data.length) return data.sort(compareUserID);
-      return this.currentMemberList
-        .filter((t) => t.userID !== this.userProfile.userID && t.userID !== '@TLS#NOT_FOUND')
-        .sort(compareUserID);
+      if (data.length) {
+        return prioritizeRBTUserID(data);
+      } else {
+        return this.filterData();
+      }
+    },
+    filterData() {
+      const userID = this.userProfile.userID;
+      const data = this.currentMemberList.filter(
+        (t) => t.userID !== userID && t.userID !== "@TLS#NOT_FOUND"
+      );
+      return prioritizeRBTUserID(data);
     },
     updateMention() {
       // 获取光标位置，定位 modal

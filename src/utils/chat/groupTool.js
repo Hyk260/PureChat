@@ -16,6 +16,22 @@ export function sortMembersByRole(list) {
     return roles[a.role] - roles[b.role];
   });
 }
+/**
+ * 机器人排在首位
+ * 比较用户ID，确保带有@RBT#的用户排在前面
+ * @param {Object} a - 第一个用户对象，期待有userID属性
+ * @param {Object} b - 第二个用户对象，期待有userID属性
+ * @returns {number} - 返回-1如果a在b前面，1如果b在a前面，0如果相等
+ */
+export const prioritizeRBTUserID = (list) => {
+  return list.sort((a, b) => {
+    const isAHasRBT = a.userID.includes("@RBT#");
+    const isBHasRBT = b.userID.includes("@RBT#");
+    if (isAHasRBT && !isBHasRBT) return -1; // a在前
+    if (isBHasRBT && !isAHasRBT) return 1; // b在前
+    return 0; // 两者相等
+  });
+};
 
 export function findGroupChat(group) {
   const { groupID } = group || {};

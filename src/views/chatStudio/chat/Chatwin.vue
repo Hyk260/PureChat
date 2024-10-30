@@ -72,7 +72,7 @@
     <MyPopover />
     <contextmenu ref="contextmenu" :disabled="!isRight">
       <contextmenu-item
-        v-for="item in RIGHT_CLICK_MENU_LIST"
+        v-for="item in contextMenuItems"
         :key="item.id"
         @click="handlRightClick(item)"
       >
@@ -95,7 +95,7 @@ import {
 } from "vue";
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
-import { AVATAR_LIST, MENU_LIST, RIGHT_CLICK_MENU_LIST, emptyUrl, squareUrl } from "../utils/menu";
+import { avatarMenu, menuOptionsList, emptyUrl, squareUrl } from "../utils/menu";
 import {
   handleCopyMsg,
   loadMsgModule,
@@ -121,6 +121,7 @@ import { fnAvatar } from "@/ai/utils";
 
 const timeout = ref(false);
 const isRight = ref(true);
+const contextMenuItems = ref([]);
 const MenuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
@@ -327,7 +328,7 @@ const handleContextAvatarMenuEvent = (event, item) => {
   }
   isRight.value = true;
   MenuItemInfo.value = item;
-  RIGHT_CLICK_MENU_LIST.value = AVATAR_LIST;
+  contextMenuItems.value = avatarMenu;
 };
 
 const handleContextMenuEvent = (event, item) => {
@@ -349,34 +350,34 @@ const handleContextMenuEvent = (event, item) => {
   MenuItemInfo.value = item;
   const relinquish = nowtime - time < 120 ? true : false;
   const self = isSelf(item);
-  RIGHT_CLICK_MENU_LIST.value = MENU_LIST;
+  contextMenuItems.value = menuOptionsList;
   // 对方消息
   if (!self) {
-    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter((t) => t.id !== "revoke");
+    contextMenuItems.value = menuOptionsList.filter((t) => t.id !== "revoke");
   }
   // 超过撤回时间
   if (!relinquish) {
     timeout.value = true;
-    RIGHT_CLICK_MENU_LIST.value = MENU_LIST.filter((t) => t.id !== "revoke");
+    contextMenuItems.value = menuOptionsList.filter((t) => t.id !== "revoke");
   }
   // 群主 & 群聊 & 撤回时间不限制2分钟
   if (isOwner.value && currentType.value === "GROUP") {
     // if (!self)
-    RIGHT_CLICK_MENU_LIST.value = MENU_LIST;
+    contextMenuItems.value = menuOptionsList;
   }
   // 合并消息
   if (isRelay) {
-    RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.value.filter((t) => t.id !== "copy");
+    contextMenuItems.value = contextMenuItems.value.filter((t) => t.id !== "copy");
   }
   // 非文件消息
   if (!isFile) {
-    RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.value.filter((t) => t.id !== "saveAs");
+    contextMenuItems.value = contextMenuItems.value.filter((t) => t.id !== "saveAs");
   } else {
-    RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.value.filter((t) => t.id !== "copy");
+    contextMenuItems.value = contextMenuItems.value.filter((t) => t.id !== "copy");
   }
   // 机器人消息过滤 撤回 回复
   if (isRobot(toAccount.value)) {
-    RIGHT_CLICK_MENU_LIST.value = RIGHT_CLICK_MENU_LIST.value.filter(
+    contextMenuItems.value = contextMenuItems.value.filter(
       (t) => t.id !== "reply" && t.id !== "revoke"
     );
   }

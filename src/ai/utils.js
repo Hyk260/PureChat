@@ -1,3 +1,4 @@
+import store from "@/store";
 import {
   CHATGLM_ROBOT,
   CHATGPT_ROBOT,
@@ -12,6 +13,7 @@ import {
   RobotAvatar,
 } from "@/ai/constant";
 import { OpenaiConfig } from "@/ai/platforms/openai/config";
+import { createTextMsg } from "@/api/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 
@@ -288,5 +290,25 @@ export function getValueByKey(array, key) {
 // 全员群
 export function isFullStaffGroup(data) {
   const { groupProfile } = data || {};
-  return getValueByKey(groupProfile?.groupCustomField, "custom_info") === "all_staff"
+  return getValueByKey(groupProfile?.groupCustomField, "custom_info") === "all_staff";
+}
+
+export const createAiPromptMsg = (params) => {
+  let to = localStg.get("timProxy")?.userProfile?.userID;
+  let from = getModelId(localStg.get("default-assistant"));
+  const { meta } = localStg.get(StoreKey.Prompt)?.GPT;
+  const { to: _to, from: _from } = params || {};
+  if (_to) to = _to;
+  if (_from) from = _from;
+  const title = '`' + meta.title + '`';
+  const textMsg = `你好，我是 ${title} ${meta.description} 让我们开始对话吧！`;
+  const msg = createTextMsg({ convId: from, textMsg });
+  msg.conversationID = `C2C${from}`;
+  msg.avatar = avatar(from);
+  msg.flow = "in";
+  msg.to = to;
+  msg.from = from;
+  msg.nick = "";
+  msg.status = "success";
+  return { convId: `C2C${msg.from}`, message: msg };
 };

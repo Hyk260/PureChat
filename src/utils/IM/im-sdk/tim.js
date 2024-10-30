@@ -4,7 +4,6 @@ import TIMUploadPlugin from "tim-upload-plugin";
 import GroupModule from "@tencentcloud/chat/modules/group-module.js";
 import SignalingModule from "@tencentcloud/chat/modules/signaling-module.js";
 
-
 const appid = import.meta.env.VITE_IM_SDK_APPID;
 const level = import.meta.env.VITE_LOG_LEVEL;
 
