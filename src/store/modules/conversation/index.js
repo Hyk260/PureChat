@@ -133,8 +133,8 @@ const conversation = {
       const { convId, message } = createAiPromptMsg();
       const history = state.historyMessageList.get(convId);
       if (state.currentConversation && state.currentMessageList) {
-        const data = cloneDeep(history); 
-        state.currentMessageList = [message,...data];
+        const data = cloneDeep(history);
+        if (data) state.currentMessageList = [message, ...data];
       }
       emitter.emit("updataScroll");
     },

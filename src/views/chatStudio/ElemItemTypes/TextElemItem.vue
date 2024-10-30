@@ -84,8 +84,8 @@ onMounted(() => {
   word-break: break-all;
   white-space: pre-wrap;
   color: var(--color-text);
-  border: var(--border-in-light);
-  transition: all 0.3s ease;
+  // border: var(--border-in-light);
+  // transition: all 0.3s ease;
 }
 .markdown {
   white-space: unset;
