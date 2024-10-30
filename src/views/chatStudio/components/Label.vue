@@ -62,12 +62,11 @@ const labelClass = (data) => {
   .role-title {
     white-space: nowrap;
     background: #e6f7ff;
-    border: 1px solid rgb(145, 213, 255);
+    border: 0.64px solid rgb(145, 213, 255);
     color: #1890ff;
     border-radius: 2px;
     font-size: 12px;
     padding: 0 4px;
-    display: inline-block;
     height: 20px;
     display: flex;
     flex-direction: row;

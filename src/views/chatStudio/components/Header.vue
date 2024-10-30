@@ -1,10 +1,14 @@
 <template>
-  <header class="message-info-view-header" v-if="chat">
+  <header class="message-info-view-header flex-bc" v-if="chat">
     <div class="message-info-views">
       <p v-if="currentType">
         <span v-if="chatType('C2C')" @click="openUser" class="single">
           <span class="nick">{{ chatNick("C2C", chat) }}</span>
           <Label :model="model" :userID="chat?.conversationID" />
+          <!-- ai-prompt -->
+          <div v-if="isRobot(toAccount) && promptTitle" class="ml-5 ai-prompt-title">
+            {{ promptTitle }}
+          </div>
         </span>
         <span v-else-if="chatType('GROUP')" @click="openSetup" class="group">
           <span class="nick"> {{ chatNick("GROUP", chat) }}</span>
@@ -38,9 +42,10 @@ import { useStore } from "vuex";
 
 const { commit } = useStore();
 const { currentType, toAccount, isGroupChat } = useGetters(["currentType", "toAccount","isGroupChat"]);
-const { chat, model } = useState({
+const { chat, model, promptTitle } = useState({
   chat: (state) => state.conversation.currentConversation,
   model: (state) => state.robot.model,
+  promptTitle: (state) => state.robot.promptTitle,
 });
 
 const updataModel = () => {
@@ -86,9 +91,6 @@ watch(toAccount, (data) => {
   background: var(--color-body-bg);
   border-bottom: 1px solid var(--color-border-default);
   padding: 0 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   width: 100%;
   position: relative;
   .message-info-views {
@@ -97,10 +99,9 @@ watch(toAccount, (data) => {
     }
     .single,
     .group {
-      max-width: 260px;
+      max-width: 320px;
       display: flex;
       align-items: center;
-      // display: inline-block;
       @include text-ellipsis();
       .nick {
         margin-right: 5px;
