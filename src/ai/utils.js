@@ -301,7 +301,7 @@ export const createAiPromptMsg = (params) => {
   if (_to) to = _to;
   if (_from) from = _from;
   const title = '`' + meta.title + '`';
-  const textMsg = `你好，我是 ${title} ${meta.description} 让我们开始对话吧！`;
+  const textMsg = `你好，我是 ${meta.avatar} ${title} ${meta.description} 让我们开始对话吧！`;
   const msg = createTextMsg({ convId: from, textMsg });
   msg.conversationID = `C2C${from}`;
   msg.avatar = avatar(from);

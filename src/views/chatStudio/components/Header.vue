@@ -1,5 +1,5 @@
 <template>
-  <header class="message-info-view-header flex-bc" v-if="chat">
+  <header v-if="chat" class="message-info-view-header flex-bc">
     <div class="message-info-views">
       <p v-if="currentType">
         <span v-if="chatType('C2C')" @click="openUser" class="single">
@@ -88,18 +88,18 @@ watch(toAccount, (data) => {
 <style lang="scss" scoped>
 .message-info-view-header {
   height: 60px;
-  background: var(--color-body-bg);
-  border-bottom: 1px solid var(--color-border-default);
   padding: 0 16px;
   width: 100%;
   position: relative;
+  background: var(--color-body-bg);
+  border-bottom: 1px solid var(--color-border-default);
   .message-info-views {
     .group {
       cursor: pointer;
     }
     .single,
     .group {
-      max-width: 320px;
+      max-width: 400px;
       display: flex;
       align-items: center;
       @include text-ellipsis();
