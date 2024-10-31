@@ -11,7 +11,7 @@
       draggable="false"
       v-else-if="type === 'single'"
       :class="['avatar', className]"
-      :src="url || fnAvatar(convId) || shapeObj[shape]"
+      :src="url || getAiAvatarUrl(convId) || shapeObj[shape]"
       alt="头像"
     /> -->
     <el-avatar
@@ -20,7 +20,7 @@
       :class="['avatar', className]"
       shape="square"
       :size="40"
-      :src="url || fnAvatar(convId) || shapeObj[shape]"
+      :src="url || getAiAvatarUrl(convId) || shapeObj[shape]"
     >
       <img :src="emptyUrl" />
     </el-avatar>
@@ -36,10 +36,10 @@
 </template>
 
 <script setup>
-import maleAvatar from '@/assets/color-avatar/male-avatar.png';
-import { fnAvatar } from "@/ai/utils";
+import { getAiAvatarUrl } from "@/ai/utils";
 import { circleUrl, squareUrl, emptyUrl } from "@/views/chatStudio/utils/menu";
 import { useState } from "@/utils/hooks/useMapper";
+// import maleAvatar from '@/assets/color-avatar/male-avatar.png';
 
 defineOptions({
   name: "UserAvatar",
@@ -92,7 +92,7 @@ const props = defineProps({
 
 const shapeObj = {
   circle: circleUrl,
-  square: maleAvatar || squareUrl,
+  square: squareUrl,
 };
 
 const { userProfile } = useState({

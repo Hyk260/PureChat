@@ -27,7 +27,7 @@
                 :class="isSelf(item) ? 'is-self' : 'is-other'"
               >
                 <div class="avatar">
-                  <img class="w-32 h-32 rounded-[6px]" v-if="!isSelf(item)" :src="fnAvatar(toAccount) || item.avatar" />
+                  <img class="w-32 h-32 rounded-[6px]" v-if="!isSelf(item)" :src="getAiAvatarUrl(toAccount) || item.avatar" />
                   <img class="w-32 h-32 rounded-[6px]" v-else :src="item.avatar" />
                 </div>
                 <div class="item" :class="msgOne(item.type)">
@@ -123,7 +123,7 @@ import { useScreenshot, ImageType, imageTypeOptions } from "@/utils/hooks/useScr
 import { useState } from "@/utils/hooks/useMapper";
 import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils/utils";
 import { useGetters } from "@/utils/hooks/useMapper";
-import { getModelType, usePromptStore, fnAvatar } from "@/ai/utils";
+import { getModelType, usePromptStore, getAiAvatarUrl } from "@/ai/utils";
 import { fnStyleBack, onColor, back, backgColor } from "./utils";
 import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import Header from "@/views/chatStudio/components/Header.vue";

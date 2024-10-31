@@ -170,7 +170,14 @@ export const createSmoothMessage = (params = { onTextUpdate: (delta, text) => {}
   };
 };
 
-export const avatar = (id, type = "local") => {
+/**
+ * 获取用户头像 URL
+ * @param {string} id - 用户或机器人 ID '@RBT#001'
+ * @param {string} type - 头像类型 ("local" 或 "cloud")，默认为 "local"
+ * @returns {string} 头像 URL
+ */
+export const getAvatarUrl = (id, type = "local") => {
+  // icon.png
   const suffix = RobotAvatar[getModelType(id)] || "";
   if (type === "local") {
     return new URL(`../assets/images/aI-avatar/${suffix}`, import.meta.url).href;
@@ -179,9 +186,14 @@ export const avatar = (id, type = "local") => {
   }
 };
 
-export function fnAvatar(convId) {
-  if (/@RBT#/.test(convId)) {
-    return avatar(convId.replace("C2C", ""));
+/**
+ * 获取 AI 用户头像 URL
+ * @param {string} convId - 会话 ID C2C@RBT#005
+ * @returns {string} 头像 URL 或空字符串
+ */
+export function getAiAvatarUrl(convId) {
+  if (convId.includes("@RBT#")) {
+    return getAvatarUrl(convId.replace("C2C", ""));
   } else {
     return "";
   }
@@ -300,11 +312,11 @@ export const createAiPromptMsg = (params) => {
   const { to: _to, from: _from } = params || {};
   if (_to) to = _to;
   if (_from) from = _from;
-  const title = '`' + meta.title + '`';
+  const title = "`" + meta.title + "`";
   const textMsg = `你好，我是 ${meta.avatar} ${title} ${meta.description} 让我们开始对话吧！`;
   const msg = createTextMsg({ convId: from, textMsg });
   msg.conversationID = `C2C${from}`;
-  msg.avatar = avatar(from);
+  msg.avatar = getAvatarUrl(from);
   msg.flow = "in";
   msg.to = to;
   msg.from = from;

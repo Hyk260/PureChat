@@ -1,16 +1,16 @@
 <template>
   <div
-    class="status-style"
-    :class="{
-      'isown-style': !isown,
-      'single-style': item.conversationType === 'C2C',
-    }"
     v-if="
       !item.isRevoked &&
       item.type !== 'TIMGroupTipElem' &&
       item.payload?.description !== 'dithering' &&
-      isShow('unSend')
+      (isShow('unSend') || isShow('fail'))
     "
+    :class="{
+      'status-style': true,
+      'isown-style': !isown,
+      'single-style': item.conversationType === 'C2C',
+    }"
   >
     <!-- 发送中 -->
     <FontIcon class="is-loading" iconName="Loading" v-show="isShow('unSend')" />
@@ -20,7 +20,10 @@
 </template>
 
 <script setup>
-// <!-- unSend(未发送)success(发送成功)fail(发送失败) -->
+defineOptions({
+  name: "Stateful",
+});
+
 const props = defineProps({
   item: {
     type: Object,
@@ -30,6 +33,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  // unSend(未发送)success(发送成功)fail(发送失败)
   status: {
     type: String,
     default: "success",
@@ -42,19 +46,22 @@ const isShow = (value) => {
 </script>
 
 <style lang="scss" scoped>
+:deep(.is-error) {
+  color: #f44336;
+  cursor: pointer;
+}
+
 .status-style {
   margin: 0 8px 0 0;
   display: flex;
   align-items: center;
-  :deep(.is-error) {
-    color: #f44336;
-    cursor: pointer;
-  }
 }
+
 .isown-style {
   padding-top: 18.79px;
   margin: 0 0 0 8px;
 }
+
 .single-style {
   padding-top: 0px;
 }

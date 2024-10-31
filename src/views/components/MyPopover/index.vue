@@ -9,7 +9,7 @@
     <div class="title">
       <img
         @click="clickCard(cardData.avatar)"
-        :src="cardData.avatar || fnAvatar(cardData?.from) || squareUrl"
+        :src="cardData.avatar || getAiAvatarUrl(cardData?.from) || squareUrl"
         alt="头像"
       />
       <div>
@@ -40,7 +40,7 @@ import Label from "@/views/chatStudio/components/Label.vue";
 import { onClickOutside } from "@vueuse/core";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { fnAvatar } from "@/ai/utils";
+import { getAiAvatarUrl } from "@/ai/utils";
 import { squareUrl } from "../../chatStudio/utils/menu";
 import { getGender } from "@/utils/common";
 const [card, setCard] = useBoolean();
