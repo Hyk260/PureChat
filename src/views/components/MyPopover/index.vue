@@ -1,19 +1,22 @@
 <template>
   <div
-    class="robot-box"
-    :class="{ 'is-robot': isRobot(cardData?.from) }"
-    :style="{ left: left, top: top }"
     v-if="card && cardData"
     ref="cardRef"
+    :style="{ left: left, top: top }"
+    :class="{
+      'robot-box': true,
+      'is-robot': isRobot(cardData?.from),
+    }"
   >
-    <div class="title">
+    <div class="title flex-sc">
       <img
+        draggable="false"
         @click="clickCard(cardData.avatar)"
         :src="cardData.avatar || getAiAvatarUrl(cardData?.from) || squareUrl"
         alt="头像"
       />
       <div>
-        <span class="nick">{{ cardData.nick }}</span>
+        <span class="nick">{{ cardData.nick || cardData.from }}</span>
         <span v-if="getGender(userProfile, 'Male')" class="iconify icon-male"></span>
         <span v-else-if="getGender(userProfile, 'Female')" class="iconify icon-female"></span>
       </div>
@@ -25,7 +28,7 @@
       </div>
     </div>
     <div class="footer">
-      <el-button @click="define" type="primary"> {{ $t("chat.sendMessage") }} </el-button>
+      <el-button class="w-full" @click="define" type="primary"> {{ $t("chat.sendMessage") }} </el-button>
     </div>
   </div>
 </template>
@@ -63,7 +66,10 @@ const closeModal = () => {
 };
 
 const clickCard = (url) => {
-  url && emitter.emit("handleImageViewer", url);
+  if (url) {
+    closeModal();
+    emitter.emit("handleImageViewer", url);
+  }
 };
 
 const define = () => {
@@ -139,23 +145,20 @@ onBeforeUnmount(() => {
 .is-robot {
   background-image: url(../../../assets/images/gptBack.png) !important;
 }
-.my-popover__avatar {
-  cursor: pointer;
-}
+
 .robot-box {
   background: #fff;
   box-shadow: 0px 0px 12px rgb(0 0 0 / 12%);
+  position: fixed;
   z-index: 99;
   border-radius: 4px;
-  position: fixed;
   width: 320px;
   height: 220px;
   padding: 24px;
   background-size: 320px;
+  border: 1px solid var(--color-border-default);
   .title {
     height: 54px;
-    display: flex;
-    align-items: center;
     img {
       cursor: pointer;
       border-radius: 5px;
@@ -181,11 +184,6 @@ onBeforeUnmount(() => {
       span {
         @include ellipsisBasic(3);
       }
-    }
-  }
-  .footer {
-    :deep(.el-button) {
-      width: 100%;
     }
   }
 }

@@ -47,3 +47,21 @@ export function findGroupChat(group) {
     }, 1350);
   });
 }
+
+export const GroupModifyType = {
+  name: 60,
+  avatar: 100,
+  notification: 400,
+};
+
+// 获取字符串的字节长度并检查是否超过指定的限制
+// @param {string} str - 要检查的字符串
+// @param {string} type - GroupModifyType 对象中定义的类型键，确定字节长度的限制
+// @returns {boolean} - 如果字符串的字节长度超过指定的限制则返回 true，否则返回 false
+export function isByteLengthExceedingLimit(str, type) {
+  const encoder = new TextEncoder();
+  const byteArray = encoder.encode(str);
+  const byteLength = byteArray.length;
+  console.log("byteLength:", byteLength, "type:", type, "modify:", GroupModifyType[type]);
+  return byteLength > GroupModifyType[type];
+}
