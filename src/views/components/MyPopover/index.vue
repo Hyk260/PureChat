@@ -16,7 +16,7 @@
         alt="头像"
       />
       <div>
-        <span class="nick">{{ cardData.nick || cardData.from }}</span>
+        <span class="nick">{{ cardData.nick || userProfile.nick || cardData.from || "-" }}</span>
         <span v-if="getGender(userProfile, 'Male')" class="iconify icon-male"></span>
         <span v-else-if="getGender(userProfile, 'Female')" class="iconify icon-female"></span>
       </div>
@@ -24,11 +24,13 @@
     </div>
     <div class="content">
       <div class="characters">
-        <span>{{ userProfile?.selfSignature || "" }} </span>
+        <span>{{ userProfile?.selfSignature || "-" }} </span>
       </div>
     </div>
     <div class="footer">
-      <el-button class="w-full" @click="define" type="primary"> {{ $t("chat.sendMessage") }} </el-button>
+      <el-button class="w-full" @click="define" type="primary">
+        {{ $t("chat.sendMessage") }}
+      </el-button>
     </div>
   </div>
 </template>
@@ -46,7 +48,6 @@ import { useStore } from "vuex";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { squareUrl } from "../../chatStudio/utils/menu";
 import { getGender } from "@/utils/common";
-const [card, setCard] = useBoolean();
 
 const cardRef = ref();
 const left = ref("");
@@ -54,6 +55,7 @@ const top = ref("");
 const cardData = ref(null);
 const userProfile = ref(null);
 
+const [card, setCard] = useBoolean();
 const { dispatch, commit } = useStore();
 
 const { chat } = useState({
@@ -104,18 +106,24 @@ const setPosition = (data) => {
     console.log(error);
   }
 };
+
 const setUserProfile = async () => {
-  if (chat.value?.userProfile) {
-    userProfile.value = chat.value.userProfile;
+  const { userProfile: _userProfile, from: _from } = chat.value || {};
+  if (_userProfile) {
+    userProfile.value = _userProfile;
   }
-  const userID = cardData.value?.from;
-  const { code, data } = await getUserProfile([userID]);
-  if (code == 0) {
-    userProfile.value = data?.[0];
-    console.log(userProfile.value);
+  console.log("userProfile", userProfile.value);
+  const { code, data } = await getUserProfile([_userProfile.userID]);
+  if (code === 0) {
+    console.log("获取用户信息", data);
+    if (data?.[0]) userProfile.value = data?.[0];
+  } else {
+    console.log("获取用户信息失败", data);
   }
 };
+
 const setCardData = (data) => {
+  // console.log("CardData", data);
   if (data?.conversationID === "@TIM#SYSTEM") {
     cardData.value = null;
     return;
@@ -182,7 +190,7 @@ onBeforeUnmount(() => {
     .characters {
       height: 38px;
       span {
-        @include ellipsisBasic(3);
+        @include ellipsisBasic(2);
       }
     }
   }
