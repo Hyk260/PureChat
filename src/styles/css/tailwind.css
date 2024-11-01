@@ -6,6 +6,10 @@
   .wh-full {
     @apply w-full h-full;
   }
+
+  .flex-sc {
+    @apply flex justify-start items-center;
+  }
   
   .flex-c {
     @apply flex justify-center items-center;

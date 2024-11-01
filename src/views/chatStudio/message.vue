@@ -7,7 +7,7 @@
       <!-- tabs切换 -->
       <el-tabs
         v-model="activeName"
-        class="demo-tabs"
+        class="active-tabs"
         :class="{ 'opacity-0': arrowRight }"
         @tab-click="handleClick"
       >
@@ -134,7 +134,7 @@ watchEffect(() => {
 </script>
 
 <style lang="scss" scoped>
-.demo-tabs {
+.active-tabs {
   user-select: none;
   :deep(.el-tabs__header) {
     margin: 0;
@@ -187,39 +187,23 @@ watchEffect(() => {
 .resize-hover:hover {
   cursor: row-resize;
   background: #eeeeee;
-  // --color-drag-hover: #eeeeee;
-}
-.back-to-the-bottom {
-  @include flex-center;
-  position: absolute;
-  width: 70px;
-  height: 20px;
-  background: #17a7f6;
-  top: -30px;
-  right: 15px;
-  z-index: 1;
-  border-radius: 10px;
-  color: #fff;
-  cursor: pointer;
 }
 .layoutkit-center {
   pointer-events: all;
-  position: absolute;
+  position: absolute; 
   z-index: 1;
-  display: flex;
-  align-items: center;
   top: 0;
   right: -17px;
+  display: flex;
+  align-items: center;
   width: 16px;
   height: 100%;
-  display: flex;
   & > div {
-    align-items: center;
     display: flex;
+    align-items: center;
     width: 16px;
     height: 40px;
     border-radius: 0 4px 4px 0;
-    pointer-events: all;
     cursor: pointer;
     color: #999999;
     background: rgba(0, 0, 0, 0.03);

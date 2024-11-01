@@ -1,6 +1,5 @@
 <template>
   <el-drawer
-    ref="groupRef"
     v-model="drawer"
     :title="$t('group.GroupDetails')"
     size="360px"
@@ -14,13 +13,13 @@
   >
     <div>
       <!-- info -->
-      <div class="group-base-info">
+      <div class="group-info">
         <UserAvatar
           @click="openAvatarPopup(groupProfile.avatar)"
           :url="groupProfile.avatar"
           :nickName="groupProfile.name"
         />
-        <div class="group-base-info-text">
+        <div class="group-info-text">
           <div>
             <span class="group-name">
               {{ groupProfile.name }}
@@ -40,7 +39,7 @@
       <el-divider />
       <!-- 群公告 -->
       <div class="group-notice">
-        <div>
+        <div class="pb-10">
           <span>{{ $t("group.GroupNotice") }}</span>
           <FontIcon
             v-show="isOwner"
@@ -50,7 +49,7 @@
           />
         </div>
         <div class="group-notice-info">
-          <AnalysisUrl :text="groupProfile.notification" />
+          <Markdown :marked="groupProfile.notification" />
         </div>
       </div>
       <el-divider />
@@ -83,6 +82,9 @@
               <!-- Admin Owner -->
               <div class="wrap-group" :class="`style-${item.role}`" v-if="item.role !== 'Member'">
                 {{ item.role === "Owner" ? "群主" : "管理员" }}
+              </div>
+              <div class="wrap-group ai-center" v-else-if="item.userID.includes('@RBT#')">
+                机器人
               </div>
               <span class="nick">{{ item.nick || item.userID }}</span>
             </div>
@@ -133,8 +135,9 @@ import { showConfirmationBox } from "@/utils/message";
 import { isFullStaffGroup } from "@/ai/utils";
 import { useStore } from "vuex";
 import AddMemberPopup from "../components/AddMemberPopup.vue";
-import AnalysisUrl from "../components/AnalysisUrl.vue";
 import emitter from "@/utils/mitt-bus";
+import { Markdown } from "@/utils/markdown/index";
+import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index";
 
 const { groupProfile } = defineProps({
   groupProfile: {
@@ -149,7 +152,7 @@ const AddMemberRef = ref();
 const [drawer, setDrawer] = useBoolean();
 const [loading, setLoading] = useBoolean();
 
-const { dispatch } = useStore();
+const { commit, dispatch } = useStore();
 const { isOwner, toAccount } = useGetters(["isOwner", "toAccount"]);
 
 const { userProfile, currentMemberList, currentConversation } = useState({
@@ -178,6 +181,12 @@ const openNamePopup = async () => {
   const data = { message: "输入群名", inputValue: name };
   const result = await showConfirmationBox(data, "prompt");
   if (result === "cancel") return;
+  const isByteLeng = isByteLengthExceedingLimit(result.value, "name");
+  if (isByteLeng) {
+    // const long = GroupModifyType['name']
+    commit("showMessage", { message: "名称太长", type: "warning" });
+    return;
+  }
   modifyGroupInfo(result.value);
 };
 
@@ -186,6 +195,12 @@ const openNoticePopup = async () => {
   const data = { message: "输入群公告", inputValue: notification };
   const result = await showConfirmationBox(data, "prompt");
   if (result === "cancel") return;
+  const isByteLeng = isByteLengthExceedingLimit(result.value, "notification");
+  if (isByteLeng) {
+    // const long = GroupModifyType['notification']
+    commit("showMessage", { message: "公告太长", type: "warning" });
+    return;
+  }
   modifyGroupInfo(result.value, "notification");
 };
 
@@ -246,7 +261,12 @@ const updataGroup = () => {
 // 修改群资料
 const modifyGroupInfo = async (value, modify) => {
   const { groupID } = groupProfile;
-  await updateGroupProfile({ convId: groupID, modify, value });
+  const { code, group } = await updateGroupProfile({ convId: groupID, value, modify });
+  if (code !== 0) {
+    commit("showMessage", { message: "修改失败", type: "error" });
+  } else {
+    console.log("modifyGroupInfo:", group);
+  }
 };
 
 const handleDismissGroup = async () => {
@@ -306,6 +326,11 @@ watch(currentConversation, (data) => {
   background: #fffbe6;
 }
 
+.ai-center {
+  color: #fa1414;
+  border: 0.64px solid rgba(255, 229, 143, 1);
+}
+
 .style-Admin {
   color: #4ab017b3;
   border: 0.64px solid rgb(191, 232, 158);
@@ -348,12 +373,12 @@ watch(currentConversation, (data) => {
   }
 }
 
-.group-base-info {
+.group-info {
   padding-bottom: 20px;
   display: flex;
   align-items: center;
 
-  .group-base-info-text {
+  .group-info-text {
     display: flex;
     flex-direction: column;
     margin-left: 8px;

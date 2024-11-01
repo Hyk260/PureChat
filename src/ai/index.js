@@ -1,6 +1,6 @@
 import { ClientApi } from "@/ai/api";
 import { ModelProvider, modelValue } from "@/ai/constant";
-import { getModelType, useAccessStore, prettyObject, avatar } from "@/ai/utils";
+import { getModelType, useAccessStore, prettyObject, getAvatarUrl } from "@/ai/utils";
 import { createCustomMsg } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
 import store from "@/store";
@@ -29,7 +29,7 @@ const fnCreateLodMsg = (params) => {
   const { to, from } = params;
   const msg = createCustomMsg({ convId: from, customType: "loading" });
   msg.conversationID = `C2C${from}`;
-  msg.avatar = avatar(to);
+  msg.avatar = getAvatarUrl(to);
   msg.flow = "in";
   msg.to = from;
   msg.from = to;

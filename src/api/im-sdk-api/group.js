@@ -8,7 +8,7 @@ const GroupType = {
   GRP_AVCHATROOM: "AVChatRoom", // 直播群
 };
 
-export const GroupTypeMap  = {
+export const GroupTypeMap = {
   Private: "好友工作群(Work)",
   Public: "陌生人社交群(Public)",
   ChatRoom: "临时会议群(Meeting)",
@@ -97,11 +97,15 @@ export const updateGroupProfile = async (params) => {
     [modify]: value,
     // groupCustomField: [{ key: 'custom_info', value: 'all_staff' }] // 自定义字段 app管理员可写
   };
-  const {
-    code,
-    data: { group },
-  } = await tim.updateGroupProfile(parameter);
-  return { code, group };
+  try {
+    const {
+      code,
+      data: { group },
+    } = await tim.updateGroupProfile(parameter);
+    return { code, group };
+  } catch (error) {
+    return { code: -1, group: error };
+  }
 };
 
 // 添加群成员
