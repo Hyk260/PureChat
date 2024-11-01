@@ -13,7 +13,7 @@
       <ul class="container">
         <!-- prompt -->
         <div class="prompt p-20 flex-c" v-for="item in maskData.prompt" :key="item.id">
-          <svg-icon v-show="false" iconClass="drag" class="drag-icon" />
+          <!-- <svg-icon iconClass="drag" class="drag-icon" /> -->
           <el-select class="prompt-select" v-model="item.role">
             <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
           </el-select>
@@ -58,16 +58,16 @@
           <div class="number" v-else-if="['max_tokens'].includes(item.ID)">
             <input v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
           </div>
-          <div class="input flex items-center" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
+          <div class="input flex-ac" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
             <el-tooltip content="配置教程" placement="top">
               <span
-                class="flex mr-5 cursor-pointer"
                 v-if="item.doubt && ['token'].includes(item.ID)"
+                class="flex mr-5 cursor-pointer"
               >
                 <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
               </span>
               <!-- ollama -->
-              <span class="flex mr-5 cursor-pointer" v-else-if="item.doubt && isOllama()">
+              <span v-else-if="item.doubt && isOllama()" class="flex mr-5 cursor-pointer">
                 <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
               </span>
               <span v-else> </span>

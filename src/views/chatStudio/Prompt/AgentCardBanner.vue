@@ -72,7 +72,7 @@ function toTant(item = cardData.value) {
   dispatch("addConversation", { convId: `${"C2C"}${id}` });
   setTimeout(() => {
     commit("addAiPresetPromptWords");
-  }, 150);
+  }, 200);
 }
 
 function handleClose() {

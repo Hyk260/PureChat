@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-group-panel-wrapper">
+  <div class="panel-wrapper flex flex-col">
     <div class="title">{{ $t("common.setup") }}</div>
     <ul class="ui-menu-vertical">
       <li
@@ -34,17 +34,14 @@ defineExpose({ onClick });
 </script>
 
 <style lang="scss" scoped>
-.panel-group-panel-wrapper {
+.panel-wrapper {
+  position: relative;
   width: 256px;
   height: 100%;
   min-width: 256px;
   flex-grow: 0;
   flex-shrink: 0;
-  display: flex;
-  position: relative;
   padding: 20px 0;
-  flex-direction: column;
-  // background-color: #fcfcfd;
   border-right: 1px solid var(--color-border-color-split);
 }
 .title {
@@ -64,12 +61,6 @@ defineExpose({ onClick });
     align-items: center;
     height: 40px;
     padding: 0 16px;
-    // &:hover .title-content {
-    //   color: rgb(147, 115, 238);
-    // }
-    // &:hover .el-icon {
-    //   color: rgb(147, 115, 238);
-    // }
   }
   .title-content {
     margin-left: 10px;

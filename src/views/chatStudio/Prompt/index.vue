@@ -57,7 +57,7 @@
 import AgentSkeleton from "./AgentSkeleton.vue";
 import AgentCardBanner from "./AgentCardBanner.vue";
 import { getPrompt } from "@/api/node-admin-api/index";
-import { ref, watch, onMounted, onBeforeMount } from "vue";
+import { ref, watch, onBeforeMount } from "vue";
 import emitter from "@/utils/mitt-bus";
 import marketJson from "@/assets/db/market.json";
 import { localStg } from "@/utils/storage";

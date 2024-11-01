@@ -1,6 +1,6 @@
 <template>
-  <div class="panel-group-panel-wrapper w-full">
-    <div class="title">
+  <div class="panel-wrapper w-full flex flex-col">
+    <div class="title flex-bc">
       <span>{{ item.title }}</span>
       <FontIcon class="icon-hover" iconName="CloseBold" @click="emit('onClose')" />
     </div>
@@ -37,12 +37,12 @@
       </ul>
     </div>
     <div v-else-if="item.icon === 'Warning'">
-      <div class="ui-row">
+      <div class="ui-row flex-bc">
         <div class="flex">
           <div>
             <img src="@/assets/images/log.png" class="min-h-52 min-w-52" alt="log" />
           </div>
-          <div class="ui-col">
+          <div class="ui-col flex items-start flex-col">
             <div class="col-title">{{ title }}</div>
             <div class="version">v{{ version }}</div>
           </div>
@@ -141,35 +141,25 @@ const language = computed({
 </script>
 
 <style lang="scss" scoped>
-.panel-group-panel-wrapper {
+.panel-wrapper {
   padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
   .title {
     margin-bottom: 20px;
     line-height: 26px;
     font-weight: 500;
     font-size: 16px;
-    display: flex;
-    justify-content: space-between;
     .el-icon {
       cursor: pointer;
     }
   }
 }
 .ui-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   img {
     height: 52px;
     height: 52px;
   }
   .ui-col {
     margin-left: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     .col-title {
       font-size: 1.25rem;
       font-weight: 600;
