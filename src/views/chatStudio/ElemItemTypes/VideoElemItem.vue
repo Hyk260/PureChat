@@ -1,5 +1,5 @@
 <template>
-  <div class="message-view_video">
+  <div class="video-elem-item">
     <div class="artplayer" ref="artRef" :style="style"></div>
   </div>
 </template>
@@ -8,7 +8,7 @@
 import Artplayer from "artplayer";
 import state from "../icons/state";
 import indicator from "../icons/indicator";
-const loading = ''
+const loading = "";
 export default {
   data() {
     return {
@@ -59,13 +59,14 @@ export default {
   },
 };
 </script>
+
 <style lang="scss">
-.message-view_video {
+.video-elem-item {
   position: relative;
   border-radius: 6px;
   overflow: hidden;
 }
-.art-video-player{
+.art-video-player {
   z-index: 1;
 }
 .artplayer {

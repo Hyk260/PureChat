@@ -1,8 +1,8 @@
 <template>
-  <div class="checkbox-style" id="editor" v-if="showCheckbox">
+  <div class="check-box" id="editor" v-if="showCheckbox">
     <FontIcon class="close" iconName="CircleCloseFilled" @click="onClose" />
-    <div v-for="item in buttonList" :key="item.icon">
-      <div class="icon" :class="disabled ? 'disabled' : ''" @click="onClock(item)">
+    <div class="flex-c flex-col" v-for="item in buttonList" :key="item.icon">
+      <div class="icon flex-c" :class="disabled ? 'disabled' : ''" @click="onClock(item)">
         <svg-icon :class="item.class" :iconClass="item.icon" />
       </div>
       <span class="text">
@@ -10,6 +10,7 @@
       </span>
     </div>
   </div>
+  <!-- 截图分享 -->
   <ShareModal @onClose="onClose" />
   <MagforwardingPopup @confirm="confirm" ref="wardingRef" />
 </template>
@@ -33,7 +34,7 @@ const buttonList = [
     type: "MergeForward",
     value: "合并转发",
     icon: "mergeForward",
-    class: "", // noDrop
+    class: "",
   },
   {
     type: "ForwardItemByItem",
@@ -230,33 +231,9 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-.tabulation-style {
-  height: 400px;
-  max-height: 400px;
-  overflow: auto;
-  .tabulationHover {
-    background: hsl(220, 20%, 91%);
-  }
-  img {
-    height: 60%;
-    border-radius: 5px;
-    margin-right: 10px;
-  }
-  & > div {
-    height: 52px;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    border-radius: 5px;
-  }
-  :hover {
-    background: hsl(220, 20%, 91%);
-  }
-}
-</style>
+
 <style lang="scss" scoped>
-.checkbox-style {
+.check-box {
   position: relative;
   z-index: 1;
   height: 206px;
@@ -282,7 +259,6 @@ export default {
   }
 }
 .icon {
-  @include flex-center;
   width: 56px;
   height: 56px;
   background: #e5e6eb;
@@ -297,9 +273,7 @@ export default {
   opacity: 0.25;
   pointer-events: none;
 }
-.noDrop {
-  cursor: no-drop;
-}
+
 .text {
   user-select: none;
   margin-top: 8px;

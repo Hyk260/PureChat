@@ -19,6 +19,7 @@
 import { deleteMessage } from "@/api/im-sdk-api/index";
 import emitter from "@/utils/mitt-bus";
 import { mapGetters, mapState } from "vuex";
+
 export default {
   name: "TipsElemItem",
   props: {
