@@ -1,11 +1,6 @@
 <template>
   <div
-    v-if="
-      !item.isRevoked &&
-      item.type !== 'TIMGroupTipElem' &&
-      item.payload?.description !== 'dithering' &&
-      (isShow('unSend') || isShow('fail'))
-    "
+    v-if="isShowState(item)"
     :class="{
       'status-style': true,
       'isown-style': !isown,
@@ -15,7 +10,7 @@
     <!-- 发送中 -->
     <FontIcon class="is-loading" iconName="Loading" v-show="isShow('unSend')" />
     <!-- 发送失败 -->
-    <FontIcon class="is-error" iconName="WarningFilled" v-show="isShow('fail')" />
+    <FontIcon class="text-[#f44336]" iconName="WarningFilled" v-show="isShow('fail')" />
   </div>
 </template>
 
@@ -43,14 +38,18 @@ const props = defineProps({
 const isShow = (value) => {
   return props.status === value;
 };
+
+const isShowState = (item) => {
+  return (
+    !item.isRevoked &&
+    item.type !== "TIMGroupTipElem" &&
+    item.payload?.description !== "dithering" &&
+    (isShow("unSend") || isShow("fail"))
+  );
+};
 </script>
 
 <style lang="scss" scoped>
-:deep(.is-error) {
-  color: #f44336;
-  cursor: pointer;
-}
-
 .status-style {
   margin: 0 8px 0 0;
   display: flex;
