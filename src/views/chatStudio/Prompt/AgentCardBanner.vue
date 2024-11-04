@@ -3,20 +3,21 @@
     v-model="dialog"
     width="40%"
     align-center
-    class="agent-card-modal"
+    class="p-0 min-w-500"
+    :show-close="false"
     :before-close="handleClose"
   >
     <div class="agent-card-banner">
-      <div class="top">
-        <div class="avatar-square">
+      <div class="flex-c flex-col text-[50px]">
+        <div>
           {{ cardData.meta.avatar }}
         </div>
       </div>
-      <div class="content">
+      <div class="flex-c flex-col relative p-16 pb-24 gap-16">
         <h2>
           {{ cardData.meta.title }}
         </h2>
-        <div class="tags">
+        <div class="tags flex-c flex-wrap gap-6">
           <span v-for="item in cardData.meta.tags" :key="item">
             {{ item }}
           </span>
@@ -26,8 +27,8 @@
         </div>
       </div>
       <Markdown class="market" :marked="cardData.meta.systemRole" />
-      <div class="button flex-c py-20">
-        <el-button @click="toTant()"> 开始会话 </el-button>
+      <div class="flex-c py-20">
+        <el-button class="w-306" @click="toTant()"> 开始会话 </el-button>
       </div>
     </div>
   </el-dialog>
@@ -87,46 +88,8 @@ emitter.on("openAgentCard", (data) => {
 </script>
 
 <style lang="scss" scoped>
-:global(body .agent-card-modal) {
-  padding: 0;
-  min-width: 500px;
-}
-
-:global(body .agent-card-modal .el-dialog__header) {
-  display: none;
-}
-
 .agent-card-banner {
-  .top {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 20px;
-    .avatar-square {
-      font-size: 50px;
-      display: flex;
-      flex: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-  }
-  .content {
-    position: relative;
-    padding: 16px 16px 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-  }
   .tags {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
     span {
       color: #666666;
       background: var(--tags-back);
@@ -154,8 +117,5 @@ emitter.on("openAgentCard", (data) => {
     overflow: auto;
     padding: 16px;
   }
-}
-.el-button {
-  width: 306px;
 }
 </style>
