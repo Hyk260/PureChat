@@ -1,8 +1,8 @@
 <template>
-  <label class="container input-check" v-show="isShowCheck">
+  <label class="input-check" v-show="isShowCheck">
     <input type="checkbox" class="check-btn" />
-    <div class="checkmark"></div>
-    <div class="mask" v-show="isMask"></div>
+    <div class="check-mark"></div>
+    <div class="mask wh-full" v-show="isMask"></div>
   </label>
 </template>
 
@@ -26,6 +26,7 @@ const { showCheckbox, forwardData } = useState({
   forwardData: (state) => state.conversation.forwardData,
   showCheckbox: (state) => state.conversation.showCheckbox,
 });
+
 const isMask = computed(() => {
   return forwardData.value.size >= MULTIPLE_CHOICE_MAX;
 });
@@ -42,33 +43,21 @@ const isShowCheck = computed(() => {
 
 <style lang="scss" scoped>
 .mask {
-  width: 100%;
-  height: 100%;
   position: absolute;
   top: 0;
+  left: 0;
 }
+
 .input-check {
-  pointer-events: none;
+  user-select: none;
   font-size: 12px;
-  margin: 0 10px;
+  padding: 0 10px;
   position: absolute;
   left: 0;
   height: 100%;
 }
 
-.container {
-  cursor: pointer;
-  user-select: none;
-  input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-  }
-}
-
-.checkmark {
+.check-mark {
   position: relative;
   top: 0;
   left: 0;
@@ -77,25 +66,16 @@ const isShowCheck = computed(() => {
   background-color: #ccc;
   border-radius: 25px;
   transition: 0.15s;
+  cursor: pointer;
 }
 
-.container input:checked ~ .checkmark {
-  background-color: limegreen;
-  border-radius: 25px;
-  transition: 0.15s;
-}
-
-.checkmark:after {
+.check-mark:after {
   content: "";
   position: absolute;
   display: none;
 }
 
-.container input:checked ~ .checkmark:after {
-  display: block;
-}
-
-.container .checkmark:after {
+.check-mark:after {
   left: 0.45em;
   top: 0.25em;
   width: 0.25em;
@@ -103,5 +83,23 @@ const isShowCheck = computed(() => {
   border: solid white;
   border-width: 0 0.15em 0.15em 0;
   transform: rotate(45deg);
+}
+
+input {
+  cursor: pointer;
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+input:checked ~ .check-mark {
+  background-color: limegreen;
+  border-radius: 25px;
+  transition: 0.15s;
+}
+
+input:checked ~ .check-mark:after {
+  display: block;
 }
 </style>
