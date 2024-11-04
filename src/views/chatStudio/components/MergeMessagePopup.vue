@@ -17,9 +17,9 @@
         >
           <div class="avatar">
             <el-avatar
-              :size="36"
               shape="square"
-              :src="item.avatar || circleUrl"
+              :size="36"
+              :src="item.avatar || getAiAvatarUrl(item.from) || circleUrl"
               @error="() => true"
             >
               <img :src="circleUrl" />
@@ -57,6 +57,7 @@ import { ref } from "vue";
 import { circleUrl } from "../utils/menu";
 import { loadMsgModule, msgOne, msgType } from "../utils/utils";
 import { TIM_PROXY } from "@/constants/index";
+import { getAiAvatarUrl } from "@/ai/utils";
 
 const [dialogVisible, setDialogVisible] = useBoolean();
 const mergValue = ref({});

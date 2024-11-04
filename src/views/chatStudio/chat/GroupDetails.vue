@@ -25,7 +25,7 @@
               {{ groupProfile.name }}
             </span>
             <FontIcon
-              v-show="isOwner"
+              v-if="isOwner"
               class="style-editPen icon-hover"
               iconName="EditPen"
               @click="openNamePopup"
@@ -42,7 +42,7 @@
         <div class="pb-10">
           <span>{{ $t("group.GroupNotice") }}</span>
           <FontIcon
-            v-show="isOwner"
+            v-if="isOwner"
             class="style-editPen icon-hover"
             iconName="EditPen"
             @click="openNoticePopup"
@@ -72,18 +72,18 @@
               @click="navigate(item)"
             >
               <FontIcon
+                v-if="isOwner"
                 iconName="CircleCloseFilled"
                 class="style-close"
-                v-show="isOwner"
                 :class="{ hidden: userProfile.userID === item.userID }"
                 @click.stop="removeGroupMemberBtn(item)"
               />
               <UserAvatar :url="item.avatar" :nickName="item.nick || item.userID" />
               <!-- Admin Owner -->
-              <div class="wrap-group" :class="`style-${item.role}`" v-if="item.role !== 'Member'">
+              <div v-if="item.role !== 'Member'" class="wrap-group" :class="`style-${item.role}`">
                 {{ item.role === "Owner" ? "群主" : "管理员" }}
               </div>
-              <div class="wrap-group ai-center" v-else-if="item.userID.includes('@RBT#')">
+              <div v-else-if="item.userID.includes('@RBT#')" class="wrap-group ai-center">
                 机器人
               </div>
               <span class="nick">{{ item.nick || item.userID }}</span>
@@ -106,11 +106,11 @@
       </div>
       <el-divider />
       <!-- 解散 退出 转让 -->
-      <div class="group-operator flex-c" v-show="!isFullStaffGroup(currentConversation)">
+      <div class="group-operator flex-c" v-if="!isFullStaffGroup(currentConversation)">
         <el-button v-if="isOwner" type="danger" @click="handleDismissGroup"> 解散群组 </el-button>
         <el-button v-else type="danger" @click="handleQuitGroup"> 退出群组 </el-button>
-        <div class="w-12"></div>
-        <!-- <el-button type="primary" plain v-show="isOwner" @click="handleTransferGroup">
+        <!-- <div class="w-12"></div> -->
+        <!-- <el-button type="primary" plain v-if="isOwner" @click="handleTransferGroup">
           转让群组
         </el-button> -->
       </div>
