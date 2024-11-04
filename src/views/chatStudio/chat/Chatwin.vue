@@ -34,12 +34,12 @@
             />
             <div class="picture" v-if="showAvatar(item)">
               <el-avatar
-                :size="36"
                 shape="square"
-                @click.stop="onClickAvatar($event, item)"
+                :size="36"
                 :src="item.avatar || getAiAvatarUrl(item.from) || squareUrl"
-                @error="() => true"
                 v-contextmenu:contextmenu
+                @error="() => true"
+                @click.stop="onClickAvatar($event, item)"
                 @contextmenu.prevent="handleContextAvatarMenuEvent($event, item)"
               >
                 <img :src="emptyUrl" />
@@ -76,7 +76,7 @@
         :key="item.id"
         @click="handlRightClick(item)"
       >
-        <p :class="['item']">{{ item.text }}</p>
+        <p>{{ item.text }}</p>
       </contextmenu-item>
     </contextmenu>
   </div>
@@ -122,13 +122,12 @@ import { getAiAvatarUrl } from "@/ai/utils";
 const timeout = ref(false);
 const isRight = ref(true);
 const contextMenuItems = ref([]);
-const MenuItemInfo = ref([]);
+const menuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
 const { dispatch, commit } = useStore();
 const { isOwner, toAccount, currentType } = useGetters(["isOwner", "toAccount", "currentType"]);
 const {
-  noMore,
   isChatBoxVisible,
   forwardData,
   showCheckbox,
@@ -137,7 +136,6 @@ const {
   currentMessageList,
   currentConv,
 } = useState({
-  noMore: (state) => state.conversation.noMore,
   isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
   forwardData: (state) => state.conversation.forwardData,
   showCheckbox: (state) => state.conversation.showCheckbox,
@@ -161,14 +159,6 @@ const showAvatar = (item) => {
   return (
     !item.isRevoked && item.type !== "TIMGroupTipElem" && item?.payload?.description !== "dithering"
   );
-};
-
-const getElementById = (ID) => {
-  return document.getElementById(`choice${ID}`);
-};
-
-const setSelect = (el) => {
-  el.classList.toggle("style-select");
 };
 
 const classMessageViewItem = (item) => {
@@ -195,7 +185,7 @@ const handleSelect = (e, item, type = "initial") => {
   ) {
     return;
   }
-  const _el = getElementById(item.ID);
+  const _el = document.getElementById(`choice${item.ID}`);
   const el = _el.getElementsByClassName("check-btn")[0];
   if (!el.checked && forwardData.value.size >= MULTIPLE_CHOICE_MAX) {
     commit("showMessage", {
@@ -204,25 +194,23 @@ const handleSelect = (e, item, type = "initial") => {
     });
     return;
   }
-  setSelect(_el.parentNode);
   // 点击input框
-  if (type == "initial" && e.target.tagName !== "INPUT") {
-    const el = getElementById(item.ID);
-    setSelect(el.parentNode);
+  if (type === "initial" && e.target.tagName !== "INPUT") {
+    const el = document.getElementById(`choice${item.ID}`);
+    el.parentNode.classList.toggle("style-select");
+  }
+  // 点击消息框
+  if (type !== "initial") {
+    _el.parentNode.classList.toggle("style-select");
   }
   // 首次右键打开多选 默认选中当前
-  if (type == "choice") {
+  if (type === "choice") {
     el.checked = true;
-    commit("setForwardData", {
-      type: "set",
-      payload: item,
-    });
+    commit("setForwardData", { type: "set", payload: item });
   } else {
     el.checked = !el.checked;
-    commit("setForwardData", {
-      type: el.checked ? "set" : "del",
-      payload: item,
-    });
+    let key = el.checked ? "set" : "del";
+    commit("setForwardData", { type: key, payload: item });
   }
 };
 
@@ -327,7 +315,7 @@ const handleContextAvatarMenuEvent = (event, item) => {
     return;
   }
   isRight.value = true;
-  MenuItemInfo.value = item;
+  menuItemInfo.value = item;
   contextMenuItems.value = avatarMenu;
 };
 
@@ -344,12 +332,12 @@ const handleContextMenuEvent = (event, item) => {
     isRight.value = false;
     return;
   }
-  timeout.value = false;
-  isRight.value = true;
   const nowtime = parseInt(new Date().getTime() / 1000);
-  MenuItemInfo.value = item;
   const relinquish = nowtime - time < 120 ? true : false;
   const self = isSelf(item);
+  timeout.value = false;
+  isRight.value = true;
+  menuItemInfo.value = item;
   contextMenuItems.value = menuOptionsList;
   // 对方消息
   if (!self) {
@@ -384,7 +372,7 @@ const handleContextMenuEvent = (event, item) => {
 };
 
 const handlRightClick = (data) => {
-  const info = MenuItemInfo.value;
+  const info = menuItemInfo.value;
   const { id, text } = data;
   switch (id) {
     case "send": // 发起会话
@@ -568,6 +556,8 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   padding: 0 16px 16px 16px;
   box-sizing: border-box;
   .picture {
+    width: 36px;
+    height: 36px;
     user-select: none;
     --el-border-radius-base: 6px;
     --el-text-color-disabled: #ffffff00;
@@ -582,6 +572,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
 }
 .style-choice {
   padding-left: 35px;
+  padding-right: 10px;
 }
 .message-view-item {
   display: flex;
@@ -594,44 +585,19 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
     margin-left: 0;
     margin-right: 8px;
   }
-  .message-view__img {
-    margin-bottom: 5px;
-    width: 100%;
-  }
-
-  .message-view__file {
-    margin-bottom: 5px;
-  }
-
-  .message-view__text {
-    width: 100%;
-    margin-bottom: 5px;
-  }
 }
 .is-self {
-  flex-direction: row-reverse;
   display: flex;
+  flex-direction: row-reverse;
   .picture {
     margin-right: 0;
     margin-left: 8px;
-    width: 36px;
-    height: 36px;
   }
   .message-name {
     display: none;
   }
-  .message-view__img {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-
-  .message-view__file {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-
+  .message-view__img,
+  .message-view__file,
   .message-view__text {
     display: flex;
     justify-content: flex-end;

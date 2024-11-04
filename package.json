@@ -33,7 +33,7 @@
     "@tiny-libs/typed-event-emitter": "^1.0.0",
     "@element-plus/icons-vue": "^2.0.10",
     "@microsoft/fetch-event-source": "^2.0.1",
-    "@tencentcloud/chat": "3.4.3",
+    "@tencentcloud/chat": "3.4.6",
     "@vueuse/components": "^10.7.0",
     "@vueuse/core": "^8.4.2",
     "@wangeditor/editor": "5.1.23",

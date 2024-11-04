@@ -111,3 +111,31 @@ p {
     "Noto Color Emoji",
     "Android Emoji";
 }
+
+.forward-ation {
+  height: 400px;
+  max-height: 400px;
+  overflow: auto;
+
+  .forward-hover {
+    background: hsl(220, 20%, 91%);
+  }
+
+  img {
+    height: 60%;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+
+  &>div {
+    height: 52px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-radius: 5px;
+  }
+
+  :hover {
+    background: hsl(220, 20%, 91%);
+  }
+}

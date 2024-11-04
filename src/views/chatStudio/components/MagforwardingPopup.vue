@@ -1,19 +1,22 @@
 <template>
   <el-dialog
-    v-model="dialogVisible"
+    v-model="dialog"
     title="选择要转发的联系人"
     width="600px"
     align-center
     :before-close="handleClose"
   >
-    <div class="tabulation-style">
+    <div class="forward-ation">
       <div
-        v-for="item in conversationList"
+        v-for="item in filterList"
         :key="item.toAccount"
-        :class="{ tabulationHover: multipleValue?.toAccount == item.toAccount }"
+        :class="{ 'forward-hover': multipleValue?.toAccount == item.toAccount }"
         @click="onClickItem(item)"
       >
-        <img :src="item.userProfile?.avatar || squareUrl" alt="" />
+        <img
+          :src="item.userProfile?.avatar || getAiAvatarUrl(item.conversationID) || squareUrl"
+          alt=""
+        />
         <div>{{ chatName(item) }}</div>
       </div>
     </div>
@@ -36,28 +39,31 @@ import { useBoolean } from "@/utils/hooks/index";
 import { chatName } from "../utils/utils";
 import { squareUrl } from "../utils/menu";
 import { isRobot } from "@/utils/chat/index";
+import { getAiAvatarUrl } from "@/ai/utils";
 
-const [dialogVisible, setDialogVisible] = useBoolean();
+const [dialog, setDialog] = useBoolean();
 
 export default {
   name: "MagforwardingPopup",
-  components: {},
   computed: {
     ...mapState({
       conversationList: (state) => {
-        return state.conversation.conversationList.filter((t) => !isRobot(t.conversationID));
+        return state.conversation.conversationList;
       },
     }),
+    filterList() {
+      return this.conversationList.filter((t) => !isRobot(t.conversationID));
+    },
   },
-  props: {},
   data() {
     return {
+      getAiAvatarUrl,
       multipleValue: null,
       dialogType: "",
       squareUrl,
       chatName,
-      dialogVisible,
-      setDialogVisible,
+      dialog,
+      setDialog,
     };
   },
   methods: {
@@ -66,7 +72,7 @@ export default {
     },
     openPopup(type) {
       this.dialogType = type;
-      this.setDialogVisible(true);
+      this.setDialog(true);
     },
     setMultipleValue(value = null) {
       this.multipleValue = value;
@@ -76,7 +82,7 @@ export default {
       done();
     },
     handleCancel() {
-      this.setDialogVisible(false);
+      this.setDialog(false);
       this.setMultipleValue();
     },
     handleConfirm() {
@@ -84,11 +90,9 @@ export default {
         value: this.multipleValue,
         type: this.dialogType,
       });
-      this.setDialogVisible(false);
+      this.setDialog(false);
       this.setMultipleValue();
     },
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

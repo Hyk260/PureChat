@@ -113,7 +113,7 @@ const setUserProfile = async () => {
     userProfile.value = _userProfile;
   }
   console.log("userProfile", userProfile.value);
-  const { code, data } = await getUserProfile([_userProfile.userID]);
+  const { code, data } = await getUserProfile([_userProfile?.userID]);
   if (code === 0) {
     console.log("获取用户信息", data);
     if (data?.[0]) userProfile.value = data?.[0];

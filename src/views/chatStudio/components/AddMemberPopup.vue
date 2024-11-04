@@ -1,41 +1,50 @@
 <template>
   <el-dialog v-model="dialog" title="添加成员" width="600px" align-center>
-    <div class="tabulation-style">
+    <div class="forward-ation">
       <div
-        v-for="item in conversationList"
+        v-for="item in filterList"
         :key="item.toAccount"
-        :class="{ tabulationHover: memberValue?.toAccount == item.toAccount }"
+        :class="{ 'forward-hover': memberValue?.toAccount == item.toAccount }"
         @click="onClickItem(item)"
       >
-        <img :src="item.userProfile?.avatar || squareUrl" alt="" />
+        <img
+          :src="item.userProfile?.avatar || getAiAvatarUrl(item.conversationID) || squareUrl"
+          alt=""
+        />
         <div>{{ chatName(item) }}</div>
       </div>
     </div>
     <template #footer>
       <span>
         <el-button @click="close"> {{ $t("common.cancel") }} </el-button>
-        <el-button type="primary" @click="define"> 确认 </el-button>
+        <el-button type="primary" @click="define"> {{ $t("common.confirm") }} </el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script setup>
+import { ref, computed } from "vue";
 import { useBoolean } from "@/utils/hooks/index";
 import { useState } from "@/utils/hooks/useMapper";
-import { ref } from "vue";
 import { isRobot } from "@/utils/chat/index";
 import { squareUrl } from "../utils/menu";
 import { chatName } from "../utils/utils";
+import { getAiAvatarUrl } from "@/ai/utils";
+
+defineOptions({
+  name: "AddMemberPopup",
+});
 
 const memberValue = ref(null);
 const emits = defineEmits(["define"]);
 const [dialog, setDialog] = useBoolean();
 const { conversationList } = useState({
-  conversationList: (state) =>
-    state.conversation.conversationList.filter(
-      (t) => t.type === "C2C" && !isRobot(t.conversationID)
-    ),
+  conversationList: (state) => state.conversation.conversationList,
+});
+
+const filterList = computed(() => {
+  return conversationList.value.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
 });
 
 const onClickItem = (value) => {
@@ -54,5 +63,3 @@ const define = () => {
 
 defineExpose({ onenDialog });
 </script>
-
-<style lang="scss" scoped></style>

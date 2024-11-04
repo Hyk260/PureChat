@@ -1,28 +1,28 @@
 <template>
   <div
-    class="file-box"
+    class="file-elem-item"
     @click="handleOpen(payload)"
     :id="payload.uuid"
     title="打开文件"
     :style="{ background: backgroundStyle }"
   >
-    <div class="file-data">
+    <div class="flex">
       <div class="min-w-45 h-45">
         <img draggable="false" class="h-full" :src="icon" alt="" />
       </div>
-      <div class="file-box__content">
+      <div class="file-content">
         <el-tooltip
           effect="dark"
+          placement="top"
           :content="payload.fileName"
           :disabled="payload.fileName.length < 24"
-          placement="top"
         >
           <div class="file-name">
             {{ payload.fileName }}
           </div>
         </el-tooltip>
-        <div class="file-box__size">
-          <span class="file-box__size-label">
+        <div class="file-size">
+          <span>
             {{ bytesToSize(payload.fileSize) }}
           </span>
           <span class="upload_progress" v-show="!isStatus('success')"></span>
@@ -39,6 +39,10 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 import { getFileType, renderFileIcon, bytesToSize } from "@/utils/chat/index";
 import emitter from "@/utils/mitt-bus";
 
+defineOptions({
+  name: "FileElemItem"
+});
+
 const props = defineProps({
   message: {
     type: Object,
@@ -53,6 +57,7 @@ const props = defineProps({
     default: false,
   },
 });
+
 const { payload } = props.message;
 const backgroundStyle = ref("");
 const fileType = getFileType(payload?.fileName);
@@ -108,7 +113,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-.file-box {
+.file-elem-item {
   display: flex;
   height: 70px;
   padding: 12px;
@@ -118,10 +123,7 @@ onBeforeUnmount(() => {
   border: 1px solid rgba(0, 0, 0, 0.12);
   user-select: none;
   cursor: pointer;
-}
-.file-data {
-  display: flex;
-  .file-box__content {
+  .file-content {
     position: relative;
     margin-left: 12px;
     display: flex;
@@ -134,7 +136,7 @@ onBeforeUnmount(() => {
       width: 160px;
       @include text-ellipsis;
     }
-    .file-box__size {
+    .file-size {
       font-weight: 400;
       color: #999999;
       line-height: 18px;
@@ -142,6 +144,7 @@ onBeforeUnmount(() => {
     }
   }
 }
+
 .upload_progress {
   display: inline-block;
   width: 30px;

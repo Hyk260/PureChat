@@ -72,9 +72,11 @@ onMounted(() => {
 :global(body .is-text-self) {
   background: var(--self-msg-color);
 }
+
 :global(body .is-text-other) {
   background: var(--other-msg-color);
 }
+
 .message-view-item-text {
   width: fit-content;
   max-width: 500px;
@@ -87,9 +89,11 @@ onMounted(() => {
   // border: var(--border-in-light);
   // transition: all 0.3s ease;
 }
+
 .markdown {
   white-space: unset;
 }
+
 .markdown-body {
   position: relative;
   overflow: hidden;

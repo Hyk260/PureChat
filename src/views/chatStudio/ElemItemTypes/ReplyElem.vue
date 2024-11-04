@@ -1,10 +1,10 @@
 <template>
-  <div v-if="originalMsg.messageReply" class="reply-msg-content">
-    <div class="reply-msg-content__sender">{{ originalMsg.messageReply.messageSender }}:</div>
-    <div class="reply-msg-content__content">
+  <div v-if="originalMsg.messageReply" class="reply-content">
+    <div class="reply-content__sender">{{ originalMsg.messageReply.messageSender }}:</div>
+    <div class="reply-content__content">
       <DynamicContent :text="originalMsg.messageReply.messageAbstract" />
     </div>
-    <div class="reply-msg-content__mask" @click="hanldeItemClick"></div>
+    <div class="reply-content__mask" @click="hanldeItemClick"></div>
   </div>
 </template>
 
@@ -43,7 +43,7 @@ const hanldeItemClick = async () => {
     opacity: 1;
   }
 }
-.reply-msg-content {
+.reply-content {
   border-left: 3px solid #ccc;
   padding-left: 10px;
   color: #666;
