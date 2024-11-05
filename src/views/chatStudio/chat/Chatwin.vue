@@ -219,8 +219,9 @@ const isTime = (item) => {
 };
 
 const onClickAvatar = (e, item) => {
-  const self = isSelf(item);
-  if (self || showCheckbox.value) return;
+  if (isSelf(item) || showCheckbox.value) return;
+  const { conversationID: id } = item || {};
+  if (id === "@TIM#SYSTEM") return;
   emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item });
 };
 
@@ -310,7 +311,8 @@ const getMoreMsg = async () => {
 const handleContextAvatarMenuEvent = (event, item) => {
   const { flow } = item;
   const type = currentType.value;
-  if (type === "C2C" || flow === "out") {
+  // 单人 & 自己发送的消息 & 系统消息
+  if (type === "C2C" || flow === "out" || item.type === "TIMGroupSystemNoticeElem") {
     isRight.value = false;
     return;
   }
@@ -321,26 +323,26 @@ const handleContextAvatarMenuEvent = (event, item) => {
 
 const handleContextMenuEvent = (event, item) => {
   const { isRevoked, time, type, payload } = item;
-  console.log(item, "右键菜单数据");
-  const isTip = type === "TIMGroupTipElem";
-  const isFile = type === "TIMFileElem";
-  const isRelay = type === "TIMRelayElem";
-  const isDithering = payload?.description === "dithering";
-  const isCheckStatus = showCheckbox.value; // 多选状态
-  // 撤回消息 提示类型消息
-  if (isRevoked || isTip || isCheckStatus || isDithering) {
+  let isFile = type === "TIMFileElem";
+  let isRelay = type === "TIMRelayElem";
+  // 撤回消息 系统类型消息 提示类型消息 多选状态 自定义消息
+  if (
+    isRevoked ||
+    showCheckbox.value ||
+    type === "TIMGroupSystemNoticeElem" ||
+    type === "TIMGroupTipElem" ||
+    payload?.description === "dithering"
+  ) {
     isRight.value = false;
     return;
   }
-  const nowtime = parseInt(new Date().getTime() / 1000);
-  const relinquish = nowtime - time < 120 ? true : false;
-  const self = isSelf(item);
+  let relinquish = parseInt(new Date().getTime() / 1000) - time < 120;
   timeout.value = false;
   isRight.value = true;
   menuItemInfo.value = item;
   contextMenuItems.value = menuOptionsList;
   // 对方消息
-  if (!self) {
+  if (!isSelf(item)) {
     contextMenuItems.value = menuOptionsList.filter((t) => t.id !== "revoke");
   }
   // 超过撤回时间
@@ -348,9 +350,8 @@ const handleContextMenuEvent = (event, item) => {
     timeout.value = true;
     contextMenuItems.value = menuOptionsList.filter((t) => t.id !== "revoke");
   }
-  // 群主 & 群聊 & 撤回时间不限制2分钟
+  // 群主 & 群聊 & 不限制2分钟撤回时间
   if (isOwner.value && currentType.value === "GROUP") {
-    // if (!self)
     contextMenuItems.value = menuOptionsList;
   }
   // 合并消息
@@ -430,7 +431,7 @@ const handleForward = (data) => {};
 // 回复消息
 const handleReplyMsg = (data) => {
   commit("setReplyMsg", data);
-  !isSelf(data) && handleAt(data);
+  if (!isSelf(data)) handleAt(data);
   // 重置编辑器高度
   const chatBox = document.getElementById("chat-box"); //聊天框
   const editor = document.getElementById("editor");
@@ -455,15 +456,15 @@ const handleMultiSelectMsg = (item) => {
   commit("setCheckboxState", true);
   handleSelect(null, item, "choice");
 };
-const handleRevokeChange = (msg, type) => {
-  if (msg.type !== "TIMTextElem") return;
-  commit("setRevokeMsg", { data: msg, type: type });
+const handleRevokeChange = (data, type) => {
+  if (data.type !== "TIMTextElem") return;
+  commit("setRevokeMsg", { data, type });
 };
 // 撤回消息
 const handleRevokeMsg = async (data) => {
   if (timeout.value) {
     const result = await showConfirmationBox({ message: "确定撤回这条消息?", iconType: "warning" });
-    if (result == "cancel") return;
+    if (result === "cancel") return;
   }
   const { code, message } = await revokeMsg(data);
   if (code !== 0) return;

@@ -119,7 +119,7 @@ import { computed, nextTick, ref } from "vue";
 import { isRobot } from "@/utils/chat/index";
 import { Markdown } from "@/utils/markdown/index";
 import { useBoolean } from "@/utils/hooks/index";
-import { useScreenshot, ImageType, imageTypeOptions } from "@/utils/hooks/useScreenshot";
+import { useScreenshot, ImageType, imageTypeOptions, titleApp } from "@/utils/hooks/useScreenshot";
 import { useState } from "@/utils/hooks/useMapper";
 import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils/utils";
 import { useGetters } from "@/utils/hooks/useMapper";
@@ -129,7 +129,6 @@ import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import Header from "@/views/chatStudio/components/Header.vue";
 import emitter from "@/utils/mitt-bus";
 
-const titleApp = import.meta.env.VITE_APP_NAME;
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
 const isFooter = ref(false);

@@ -220,9 +220,11 @@ const groupMemberAdd = () => {
 
 const navigate = (item) => {
   dispatch("addConversation", { convId: `C2C${item.userID}` });
-  const dom = document.getElementById(`message_C2C${item.userID}`);
-  dom?.scrollIntoView({ behavior: "smooth", block: "center" });
   setDrawer(false);
+  setTimeout(() => {
+    const dom = document.getElementById(`message_C2C${item.userID}`);
+    dom?.scrollIntoView({ behavior: "smooth", block: "center" });
+  },200);
 };
 
 const removeGroupMemberBtn = async (item) => {
