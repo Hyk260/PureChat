@@ -3,6 +3,8 @@ import store from "@/store/index";
 import { useBoolean } from "./other";
 import { domToJpeg, domToPng, domToSvg, domToWebp, domToBlob } from "modern-screenshot";
 
+export const titleApp = import.meta.env.VITE_APP_NAME;
+
 export const ImageType = {
   Blob: "blob",
   JPG: "jpg",
@@ -92,8 +94,10 @@ export const useScreenshot = () => {
       if (imageType === ImageType.Blob) {
         copyImageToClipboard(dataUrl);
       } else {
-        const link = document.createElement("a");
-        link.download = `PureChat_${title}_${dayjs().format("YYYY-MM-DD")}.${imageType}`;
+        let link = document.createElement("a");
+        let name = `${titleApp}_`;
+        if (title) name = `${titleApp}_${title}_`;
+        link.download = name + `${dayjs().format("YYYY-MM-DD")}.${imageType}`;
         link.href = dataUrl;
         link.click();
       }
