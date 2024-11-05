@@ -1,5 +1,7 @@
 import { ipcRenderer, contextBridge } from 'electron'
 
+console.log("notification:preload.js");
+
 let timeout = null
 
 ipcRenderer.on('uikit:notification:show', (_, data) => {

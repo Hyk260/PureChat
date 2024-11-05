@@ -9,7 +9,6 @@ import {
   screen,
   Notification as ElectronNotification,
 } from "electron";
-
 import { TypedEventEmitter } from "@tiny-libs/typed-event-emitter";
 
 const NOTIFICATION_OFFSET = 6

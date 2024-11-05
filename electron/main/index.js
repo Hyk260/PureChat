@@ -1,6 +1,6 @@
 import "./config";
 import { app, BrowserWindow, protocol } from 'electron'
-import { electronApp, optimizer } from '@electron-toolkit/utils'
+import { electronApp, optimizer } from "./toolkit/utils";
 import { notify } from './notification/index';
 import { isMac } from "./platform";
 import { logger } from './logger/index';

@@ -1,6 +1,7 @@
 import { contextBridge } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
+import { electronAPI } from "../main/toolkit/preload";
 import { isWindows } from '../main/platform';
+
 console.log('main:preload.js')
 
 const api = {
