@@ -28,8 +28,6 @@
     "build:mac": "electron-builder --mac"
   },
   "dependencies": {
-    "@electron-toolkit/preload": "^3.0.1",
-    "@electron-toolkit/utils": "^3.0.0",
     "@tiny-libs/typed-event-emitter": "^1.0.0",
     "@element-plus/icons-vue": "^2.0.10",
     "@microsoft/fetch-event-source": "^2.0.1",
