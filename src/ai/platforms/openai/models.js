@@ -73,9 +73,7 @@ const OpenAI = {
     // },
   ],
   checkModel: 'gpt-4o-mini',
-  enabled: true,
   id: 'openai',
-  modelList: { showModelFetcher: true },
   name: 'OpenAI',
 };
 

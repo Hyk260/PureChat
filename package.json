@@ -70,7 +70,7 @@
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-remove-console": "^2.2.0",
     "vite-plugin-svg-icons": "2.0.1",
-    "vite-plugin-vue-devtools": "7.3.6"
+    "vite-plugin-vue-devtools": "7.6.2"
   },
   "engines": {
     "node": "^18.20.0 || >=20.0.0",
