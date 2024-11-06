@@ -29,9 +29,9 @@ export const OpenaiConfig = () => {
     frequency_penalty: 0,
     /**
      * 附带历史消息数
-     * @default 12
+     * @default 10
      */
-    historyMessageCount: 12,
+    historyMessageCount: 10,
     token: getValueByKey(getInfo(), prefix("ApiKey")) || import.meta.env.VITE_OPENAI_API_KEY,
     openaiUrl: getValueByKey(getInfo(), prefix("ProxyUrl")) || import.meta.env.VITE_OPENAI_PROXY_URL,
   };

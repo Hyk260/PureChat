@@ -7,13 +7,6 @@
     >
       {{ url ? null : displayInfo(nickName) }}
     </div>
-    <!-- <img
-      draggable="false"
-      v-else-if="type === 'single'"
-      :class="['avatar', className]"
-      :src="url || getAiAvatarUrl(convId) || shapeObj[shape]"
-      alt="头像"
-    /> -->
     <el-avatar
       v-else-if="type === 'single'"
       @error="() => true"
@@ -24,12 +17,21 @@
     >
       <img :src="emptyUrl" />
     </el-avatar>
+    <!-- 自己 -->
     <div
       v-else-if="type === 'self'"
       class="badge"
       :style="{ height: `${size}px`, width: `${size}px` }"
     >
-      <el-avatar :size="size" :src="userProfile?.avatar || shapeObj['circle']" :shape="shape" />
+      <el-avatar
+        v-if="userProfile?.avatar"
+        :size="size"
+        :src="userProfile?.avatar"
+        :shape="shape"
+      />
+      <div v-else :class="['user-avatar', 'default', className, shape]" :style="backgInfo(url)">
+        {{ url ? null : displayInfo(userProfile.nick || userProfile.userID) }}
+      </div>
       <sup v-if="isdot" class="is-dot"></sup>
     </div>
   </div>
@@ -39,7 +41,6 @@
 import { getAiAvatarUrl } from "@/ai/utils";
 import { circleUrl, squareUrl, emptyUrl } from "@/views/chatStudio/utils/menu";
 import { useState } from "@/utils/hooks/useMapper";
-// import maleAvatar from '@/assets/color-avatar/male-avatar.png';
 
 defineOptions({
   name: "UserAvatar",
@@ -85,6 +86,7 @@ const props = defineProps({
     type: String,
     default: "circle",
     validator: (value) => {
+      // 圆形 方形
       return ["square", "circle"].includes(value);
     },
   },

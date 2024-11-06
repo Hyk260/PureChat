@@ -2,7 +2,7 @@ import Qwen from './models';
 
 const docs = __APP_INFO__.pkg.docs;
 
-export const qwenModelValue = (models) => {
+export const qwenModelValue = () => {
   return {
     Model: {
       ID: "model",

@@ -17,6 +17,20 @@ import { createTextMsg } from "@/api/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 
+/**
+ * 获取 AI 模型的配置信息
+ * @param {string} model - 模型的名称，默认为 `ModelProvider.GPT`
+ * @returns {Object} 返回模型的配置对象，包括以下字段：
+ * - model: {string} 模型名称，如 "gpt-4o-mini"
+ * - temperature: {number} 生成的文本多样性，范围为 0 到 1，默认为 0.6
+ * - top_p: {number} 控制生成文本的多样性，范围为 0 到 1，默认为 1
+ * - max_tokens: {number} 最大生成的 token 数量，默认为 1024
+ * - presence_penalty: {number} 控制生成的文本是否重复，默认为 0
+ * - frequency_penalty: {number} 控制生成的文本是否过度重复相同的词语，默认为 0
+ * - historyMessageCount: {number} 历史消息的最大数量，默认为 10
+ * - token: {string} API 访问令牌，默认为空字符串
+ * - openaiUrl: {string} OpenAI API 的基础 URL，默认为空字符串
+ */
 export const useAccessStore = (model = ModelProvider.GPT) => {
   try {
     const access = localStg.get(StoreKey.Access)?.[model] || "";
