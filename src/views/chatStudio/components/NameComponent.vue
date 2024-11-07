@@ -62,6 +62,7 @@ export default {
 <style lang="scss" scoped>
 .message-name {
   margin-bottom: 5px;
+  white-space: nowrap;
   color: var(--color-time-divider);
   font-size: 12px;
 }

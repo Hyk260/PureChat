@@ -63,6 +63,16 @@ export function timeFormat(timestamp, includeTime = false) {
     return date.format("YYYY年M月D日");
   }
 }
+
+/**
+ * 将时间戳格式化为 "年/月/日 时:分" 的格式
+ * @param {number} timestamp - 时间戳（毫秒）
+ * @returns {string} 格式化的日期字符串
+ */
+export function formatTimestamp(timestamp) {
+  return dayjs(timestamp).format("YYYY/MM/DD HH:mm");
+}
+
 /**
  * 将一个Date对象格式化为指定的日期格式
  * @param {Date} date - 要格式化的Date对象
