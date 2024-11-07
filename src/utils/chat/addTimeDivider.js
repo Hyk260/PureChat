@@ -1,3 +1,5 @@
+import { timeFormat } from "@/utils/timeFormat";
+
 const duration = 5 * 60;
 
 const isArray = (obj) => {
@@ -9,8 +11,17 @@ const isInFiveTime = (curTime, baseTime) => {
   return Math.abs(curTime - baseTime) <= duration;
 };
 
-export const getBaseTime = (list) => {
-  return list.length ? list.find((t) => t.isTimeDivider)?.time || 0 : 0;
+// start last
+export const getBaseTime = (list, type = "start") => {
+  if (!list.length) return 0;
+  let time = 0;
+  if (type === "start") {
+    time = list.find((t) => t.isTimeDivider)?.time || 0;
+  } else {
+    time = list.findLast((t) => t.isTimeDivider)?.time || 0;
+  }
+  // console.log(timeFormat(time * 1000, true), time, "getBaseTime");
+  return time;
 };
 
 /**
@@ -22,12 +33,16 @@ export const getBaseTime = (list) => {
  */
 export const addTimeDivider = (list, baseTime = 0) => {
   if (!isArray(list)) return;
-  const item = list.filter((t) => !t.isTimeDivider && !t.isDeleted);
-  return item.reduce((acc, cur) => {
+  return list.reduce((acc, cur) => {
     const curTime = cur.clientTime;
+    // console.log(curTime, "消息时间");
+    // console.log(baseTime, "比较时间");
     if (isInFiveTime(curTime, baseTime)) {
+      // console.log("==========不是 isTimeDivider");
       return [...acc, cur];
     } else {
+      // console.log("==========是 isTimeDivider");
+      // console.log(timeFormat(curTime * 1000, true), cur.payload?.text, "_time");
       baseTime = curTime;
       return [...acc, { isTimeDivider: true, time: curTime }, cur];
     }
@@ -35,8 +50,6 @@ export const addTimeDivider = (list, baseTime = 0) => {
 };
 
 export function deduplicateAndPreserveOrder(data) {
-  return data
-
   const seenTimes = new Set();
   const result = [];
 

@@ -145,13 +145,13 @@ const {
   currentConv: (state) => state.conversation.currentConversation,
 });
 
-const updateLoadMore = (value) => {
+const updateLoadMore = (item) => {
   nextTick(() => {
-    const elRef = messageViewRef.value?.children?.[value - 1];
+    const elRef = messageViewRef.value?.children?.[item - 1];
     if (!elRef) return;
     console.log("messageViewRef:", elRef);
-    console.log("updateLoadMore:", value);
-    value > 0 ? elRef.scrollIntoView({ block: "start" }) : elRef.scrollIntoViewIfNeeded();
+    console.log("updateLoadMore:", item);
+    item > 0 ? elRef.scrollIntoView({ block: "start" }) : elRef.scrollIntoViewIfNeeded();
   });
 };
 
@@ -294,13 +294,14 @@ const getMoreMsg = async () => {
 
     console.log("getMessageList:", result);
     const { isCompleted, messageList, nextReqMessageID } = result;
-
-    if (isCompleted || !messageList.length) {
+    if (!messageList.length && isCompleted) {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
       commit("setConversationValue", { key: "noMore", value: true });
-    } else {
+    } else if (messageList.length) {
       commit("loadMoreMessages", { convId, messages: messageList });
       commit("setConversationValue", { key: "needScrollDown", value: msglist.length });
+    } else {
+      commit("setConversationValue", { key: "noMore", value: true });
     }
   } catch (e) {
     // 解析报错 关闭加载动画
@@ -446,7 +447,7 @@ const handleDeleteMsg = async (data) => {
     if (result === "cancel") return;
     const { code, messageList } = await deleteMessage([data]);
     if (code !== 0) return;
-    commit("removeMessage", { convId: data.conversationID, message: messageList });
+    commit("deleteMessage", { convId: data.conversationID, messageIdArray: [data.ID] });
   } catch (error) {
     console.log(error);
   }
@@ -539,7 +540,6 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   height: calc(100% - 60px - 200px - 60px) !important;
 }
 .message-time-divider {
-  user-select: none;
   position: relative;
   margin: 10px 0;
   max-height: 20px;

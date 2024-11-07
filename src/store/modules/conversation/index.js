@@ -73,13 +73,13 @@ const conversation = {
         let timeDividerResult = addTimeDivider([message], baseTime).reverse();
         newMessageList.unshift(...timeDividerResult);
       }
-      // 更新历史消息
-      state.historyMessageList.set(convId, newMessageList);
       // 当前会有列表有值
       if (state.currentConversation.conversationID === convId) {
         state.currentMessageList = newMessageList;
         state.needScrollDown = 0;
       }
+      // 更新历史消息
+      state.historyMessageList.set(convId, newMessageList);
     },
     loadMoreMessages(state, payload) {
       console.log("[chat] 加载更多消息 loadMoreMessages:", payload);
@@ -87,24 +87,28 @@ const conversation = {
       // 历史消息
       const history = state.historyMessageList.get(convId) || [];
       console.log("历史消息 history:", history);
-      const baseTime = getBaseTime(history);
+      const baseTime = getBaseTime(history, "last");
       const timeDividerResult = addTimeDivider(messages, baseTime).reverse();
-      const newHistory = deduplicateAndPreserveOrder(history.concat(timeDividerResult));
+      console.log("timeDividerResult:", timeDividerResult);
+      const newHistory = history.concat(timeDividerResult)
+      state.currentMessageList = newHistory;
       state.historyMessageList.set(convId, newHistory);
-      state.currentMessageList = state.historyMessageList.get(convId);
     },
     // 从当前消息列表中删除某条消息
-    removeMessage(state, payload) {
-      console.log("[chat] 删除消息 removeMessage:", payload);
-      const { convId, message } = payload || {};
+    deleteMessage(state, payload) {
+      console.log("[chat] 删除消息 deleteMessage:", payload);
+      const { convId, messageIdArray = [] } = payload || {};
       const history = state.historyMessageList.get(convId);
       if (!history) {
         console.error("[chat] 删除消息失败，历史消息不存在");
         return;
       }
-      const updatedHistory = addTimeDivider(history.reverse()).reverse();
-      state.currentMessageList = updatedHistory;
-      state.historyMessageList.set(convId, updatedHistory);
+      const newHistory = history.filter(
+        (t) => !t.isTimeDivider && !t.isDeleted && !messageIdArray.includes(t.ID)
+      );
+      const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
+      state.currentMessageList = newHistoryList;
+      state.historyMessageList.set(convId, newHistoryList);
     },
     updateHistoryMessageCache(state, payload) {
       console.log("[chat] 更新历史消息缓存 updateHistoryMessageCache:", payload);

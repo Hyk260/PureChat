@@ -116,9 +116,9 @@ export default {
       if (result == "cancel") return;
       const { code, messageList } = await deleteMessage([...this.filterate()]);
       if (code !== 0) return;
-      this.$store.commit("removeMessage", {
+      this.$store.commit("deleteMessage", {
         convId: this.currentConversation.conversationID,
-        message: messageList,
+        // messageIdArray: [data.ID]
       });
       this.shutdown();
     },
