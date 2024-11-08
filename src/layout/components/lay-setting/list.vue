@@ -21,6 +21,7 @@
 <script setup>
 import { ref } from "vue";
 import { list } from "./enums";
+
 const emit = defineEmits(["active"]);
 const active = ref("");
 
@@ -28,6 +29,7 @@ function onClick(item) {
   active.value = item.icon;
   emit("active", item);
 }
+
 onClick(list.value[0]);
 
 defineExpose({ onClick });

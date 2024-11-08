@@ -43,7 +43,7 @@
             <img src="@/assets/images/log.png" class="min-h-52 min-w-52" alt="log" />
           </div>
           <div class="ui-col flex items-start flex-col">
-            <div class="col-title">{{ title }}</div>
+            <div class="col-title">{{ titleApp }}</div>
             <div class="version">v{{ version }}</div>
           </div>
         </div>
@@ -84,17 +84,18 @@ import { useStore } from "vuex";
 import { languages, options, optionsModel } from "./enums";
 import { isDev } from "@/config/env";
 
-const { docs, name: title, version } = __APP_INFO__.pkg;
+const titleApp = import.meta.env.VITE_APP_NAME;
+const { docs, version } = __APP_INFO__.pkg;
 
-const emit = defineEmits(["onClose", "onItem"]);
 const props = defineProps({
   item: {
     type: Object,
     default: () => {},
   },
 });
-const assistant = ref(localStg.get("default-assistant") || "GPT");
 
+const emit = defineEmits(["onClose", "onItem"]);
+const assistant = ref(localStg.get("default-assistant") || "GPT");
 const { commit, dispatch } = useStore();
 const { themeScheme, lang } = useState({
   themeScheme: (state) => state.user.themeScheme,

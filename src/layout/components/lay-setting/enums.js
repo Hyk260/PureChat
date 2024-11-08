@@ -1,7 +1,6 @@
 import { $t } from "@/locales/index";
 import { computed } from "vue";
-import { ROBOT_COLLECT, ModelProvider } from "@/ai/constant";
-const title = import.meta.env.VITE_APP_NAME;
+import { ModelProvider } from "@/ai/constant";
 
 export const list = computed(() => {
   return [
