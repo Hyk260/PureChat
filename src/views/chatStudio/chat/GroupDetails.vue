@@ -64,7 +64,7 @@
         </div>
         <el-scrollbar always>
           <div class="group-member-avatar">
-            <span class="gala-add margin" @click="groupMemberAdd"></span>
+            <span class="iconify-icon gala-add margin" @click="groupMemberAdd"></span>
             <div
               class="avatar margin"
               v-for="item in currentMemberList"

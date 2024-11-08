@@ -46,11 +46,7 @@
                   <img :src="emptyUrl" />
                 </el-avatar>
               </div>
-              <div
-                :class="msgOne(item)"
-                v-contextmenu:contextmenu
-                @contextmenu.prevent="handleContextMenuEvent($event, item)"
-              >
+              <div :class="msgOne(item)">
                 <div class="message-view-top">
                   <NameComponent :item="item" />
                   <TimeDivider v-if="isGroupChat" :item="item" type="group" />
@@ -62,10 +58,14 @@
                     :message="item"
                     :status="item.status"
                     :self="isSelf(item)"
+                    v-contextmenu:contextmenu
+                    @contextmenu.prevent="handleContextMenuEvent($event, item)"
                   >
                   </component>
                   <!-- 消息发送加载状态 -->
-                  <Stateful :item="item" :status="item.status" :isown="isSelf(item)" />
+                  <Stateful :item="item" :status="item.status" />
+                  <!-- 菜单 -->
+                  <MenuList :item="item" />
                 </div>
               </div>
             </div>
@@ -123,6 +123,7 @@ import LoadMore from "../components/LoadMore.vue";
 import NameComponent from "../components/NameComponent.vue";
 import TimeDivider from "../components/TimeDivider.vue";
 import Stateful from "../components/Stateful.vue";
+import MenuList from "../components/MenuList.vue";
 import { getAiAvatarUrl } from "@/ai/utils";
 
 const timeout = ref(false);
@@ -596,11 +597,17 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   display: flex;
   flex-direction: row;
   margin: 5px 0 8px 0;
+  &:hover .menubar {
+    // opacity: 1;
+  }
   .message-view-top {
     display: flex;
   }
   .message-view-body {
-    display: flex
+    display: flex;
+    align-items: center;
+    // height: 100%;
+    gap: 8px;
   }
 }
 .is-other {
