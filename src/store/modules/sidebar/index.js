@@ -1,5 +1,4 @@
-import { isDev } from "@/config/env";
-
+const { DEV: isDev } = import.meta.env;
 const docs = __APP_INFO__.pkg.docs
 
 const outsideList = [

@@ -1,11 +1,11 @@
 import { ElNotification, ElButton } from "element-plus";
 import { setCookie, getCookie } from "@/utils/cookie";
 import { isElectron } from "@/utils/common";
-import { isDev } from "@/config/env";
 import { $t } from "@/locales/index";
 import { h } from "vue";
 
 let Notification = null;
+const { DEV: isDev } = import.meta.env;
 
 function setPageNotif() {
   !getCookie("onUpdate") && setCookie("onUpdate", true, 1);

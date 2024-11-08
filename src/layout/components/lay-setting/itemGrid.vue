@@ -43,7 +43,7 @@
             <img src="@/assets/images/log.png" class="min-h-52 min-w-52" alt="log" />
           </div>
           <div class="ui-col flex items-start flex-col">
-            <div class="col-title">{{ titleApp }}</div>
+            <div class="col-title">{{ VITE_APP_NAME }}</div>
             <div class="version">v{{ version }}</div>
           </div>
         </div>
@@ -82,9 +82,8 @@ import { computed, ref } from "vue";
 import { changeLocale } from "@/locales/index";
 import { useStore } from "vuex";
 import { languages, options, optionsModel } from "./enums";
-import { isDev } from "@/config/env";
 
-const titleApp = import.meta.env.VITE_APP_NAME;
+const { VITE_APP_NAME, DEV: isDev } = import.meta.env;
 const { docs, version } = __APP_INFO__.pkg;
 
 const props = defineProps({

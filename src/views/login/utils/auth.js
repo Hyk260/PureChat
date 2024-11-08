@@ -1,6 +1,7 @@
 import { githubAuth, openAuthUrl } from "@/api/node-admin-api/index";
-import { isDev } from "@/config/env";
 import store from "@/store";
+
+const { DEV: isDev } = import.meta.env;
 
 // github 授权登录
 export const oauthAuthorize = async () => {
