@@ -51,14 +51,13 @@ const isShowState = (item) => {
 
 <style lang="scss" scoped>
 .status-style {
-  margin: 0 8px 0 0;
+  margin-right: 8px;
   display: flex;
   align-items: center;
 }
 
 .isown-style {
-  padding-top: 18.79px;
-  margin: 0 0 0 8px;
+  margin-left: 8px;
 }
 
 .single-style {

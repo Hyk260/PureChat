@@ -49,9 +49,9 @@ export default {
       try {
         const { code, messageList } = await deleteMessage([data]);
         if (code !== 0) return;
-        this.$store.commit("removeMessage", {
+        this.$store.commit("deleteMessage", {
           convId: data.conversationID,
-          message: messageList 
+          messageIdArray: [data.ID]
         });
       } catch (error) {
         console.log(error);

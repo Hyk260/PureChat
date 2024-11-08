@@ -100,8 +100,7 @@ export default {
   word-wrap: normal;
   word-break: break-all;
   color: var(--color-time-divider);
-  margin-top: 5px;
-  padding: 4px 6px;
+  padding: 6px 6px;
   line-height: 16px;
 }
 </style>

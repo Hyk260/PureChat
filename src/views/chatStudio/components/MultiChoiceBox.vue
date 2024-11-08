@@ -116,9 +116,9 @@ export default {
       if (result == "cancel") return;
       const { code, messageList } = await deleteMessage([...this.filterate()]);
       if (code !== 0) return;
-      this.$store.commit("removeMessage", {
+      this.$store.commit("deleteMessage", {
         convId: this.currentConversation.conversationID,
-        message: messageList,
+        // messageIdArray: [data.ID]
       });
       this.shutdown();
     },
@@ -141,8 +141,8 @@ export default {
     },
     mergeTitle() {
       const { type, userProfile } = this.currentConversation || {};
-      const self = this.userProfile.nick;
-      return type == "GROUP" ? "群聊" : `${userProfile?.nick}和${self}的聊天记录`;
+      const self = this.userProfile.nick || this.userProfile.userID;
+      return type === "GROUP" ? "群聊" : `${userProfile?.nick}和${self}的聊天记录`;
     },
     // 合并转发
     async mergeForward() {

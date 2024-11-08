@@ -22,48 +22,53 @@
           <div
             v-else-if="item.ID && !isTime(item) && !item.isDeleted"
             :id="`choice${item.ID}`"
-            :class="classMessageViewItem(item)"
             class="message-view-item"
             @click="handleSelect($event, item, 'outside')"
           >
-            <!-- 多选框 -->
-            <Checkbox
-              :item="item"
-              :isRevoked="item.isRevoked"
-              @click.stop="handleSelect($event, item, 'initial')"
-            />
-            <div class="picture" v-if="showAvatar(item)">
-              <el-avatar
-                shape="square"
-                :size="36"
-                :src="item.avatar || getAiAvatarUrl(item.from) || squareUrl"
-                v-contextmenu:contextmenu
-                @error="() => true"
-                @click.stop="onClickAvatar($event, item)"
-                @contextmenu.prevent="handleContextAvatarMenuEvent($event, item)"
-              >
-                <img :src="emptyUrl" />
-              </el-avatar>
-            </div>
-            <div
-              :class="msgOne(item)"
-              v-contextmenu:contextmenu
-              @contextmenu.prevent="handleContextMenuEvent($event, item)"
-            >
-              <NameComponent :item="item" />
-              <div :class="msgType(item.type)" :id="item.ID">
-                <component
-                  :key="item.ID"
-                  :is="loadMsgModule(item)"
-                  :message="item"
-                  :status="item.status"
-                  :self="isSelf(item)"
+            <TimeDivider v-if="!isGroupChat" :item="item" />
+            <div class="message-view-item-content" :class="classMessageViewItem(item)">
+              <!-- 多选框 -->
+              <Checkbox
+                :item="item"
+                :isRevoked="item.isRevoked"
+                @click.stop="handleSelect($event, item, 'initial')"
+              />
+              <div class="picture" v-if="showAvatar(item)">
+                <el-avatar
+                  shape="square"
+                  :size="36"
+                  :src="item.avatar || getAiAvatarUrl(item.from) || squareUrl"
+                  v-contextmenu:contextmenu
+                  @error="() => true"
+                  @click.stop="onClickAvatar($event, item)"
+                  @contextmenu.prevent="handleContextAvatarMenuEvent($event, item)"
                 >
-                </component>
+                  <img :src="emptyUrl" />
+                </el-avatar>
+              </div>
+              <div
+                :class="msgOne(item)"
+                v-contextmenu:contextmenu
+                @contextmenu.prevent="handleContextMenuEvent($event, item)"
+              >
+                <div class="message-view-top">
+                  <NameComponent :item="item" />
+                  <TimeDivider v-if="isGroupChat" :item="item" type="group" />
+                </div>
+                <div class="message-view-body" :class="msgType(item.type)" :id="item.ID">
+                  <component
+                    :key="item.ID"
+                    :is="loadMsgModule(item)"
+                    :message="item"
+                    :status="item.status"
+                    :self="isSelf(item)"
+                  >
+                  </component>
+                  <!-- 消息发送加载状态 -->
+                  <Stateful :item="item" :status="item.status" :isown="isSelf(item)" />
+                </div>
               </div>
             </div>
-            <!-- 消息发送加载状态 -->
-            <Stateful :item="item" :status="item.status" :isown="isSelf(item)" />
           </div>
         </div>
       </div>
@@ -111,11 +116,12 @@ import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 import MyPopover from "@/views/components/MyPopover/index.vue";
 import { debounce } from "lodash-es";
-import { timeFormat } from "@/utils/timeFormat";
+import { timeFormat, formatTimestamp } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import Checkbox from "../components/Checkbox.vue";
 import LoadMore from "../components/LoadMore.vue";
 import NameComponent from "../components/NameComponent.vue";
+import TimeDivider from "../components/TimeDivider.vue";
 import Stateful from "../components/Stateful.vue";
 import { getAiAvatarUrl } from "@/ai/utils";
 
@@ -126,7 +132,12 @@ const menuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
 const { dispatch, commit } = useStore();
-const { isOwner, toAccount, currentType } = useGetters(["isOwner", "toAccount", "currentType"]);
+const { isOwner, toAccount, isGroupChat, currentType } = useGetters([
+  "isOwner",
+  "toAccount",
+  "isGroupChat",
+  "currentType",
+]);
 const {
   isChatBoxVisible,
   forwardData,
@@ -145,13 +156,13 @@ const {
   currentConv: (state) => state.conversation.currentConversation,
 });
 
-const updateLoadMore = (value) => {
+const updateLoadMore = (item) => {
   nextTick(() => {
-    const elRef = messageViewRef.value?.children?.[value - 1];
+    const elRef = messageViewRef.value?.children?.[item - 1];
     if (!elRef) return;
     console.log("messageViewRef:", elRef);
-    console.log("updateLoadMore:", value);
-    value > 0 ? elRef.scrollIntoView({ block: "start" }) : elRef.scrollIntoViewIfNeeded();
+    console.log("updateLoadMore:", item);
+    item > 0 ? elRef.scrollIntoView({ block: "start" }) : elRef.scrollIntoViewIfNeeded();
   });
 };
 
@@ -294,13 +305,14 @@ const getMoreMsg = async () => {
 
     console.log("getMessageList:", result);
     const { isCompleted, messageList, nextReqMessageID } = result;
-
-    if (isCompleted || !messageList.length) {
+    if (!messageList.length && isCompleted) {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
       commit("setConversationValue", { key: "noMore", value: true });
-    } else {
-      commit("loadMoreMessages", { convId, messages: messageList });
+    } else if (messageList.length) {
+      commit("loadMoreMessages", { convId, messages: messageList, msgId: messageList[0].ID });
       commit("setConversationValue", { key: "needScrollDown", value: msglist.length });
+    } else {
+      commit("setConversationValue", { key: "noMore", value: true });
     }
   } catch (e) {
     // 解析报错 关闭加载动画
@@ -446,7 +458,7 @@ const handleDeleteMsg = async (data) => {
     if (result === "cancel") return;
     const { code, messageList } = await deleteMessage([data]);
     if (code !== 0) return;
-    commit("removeMessage", { convId: data.conversationID, message: messageList });
+    commit("deleteMessage", { convId: data.conversationID, messageIdArray: [data.ID] });
   } catch (error) {
     console.log(error);
   }
@@ -539,7 +551,6 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   height: calc(100% - 60px - 200px - 60px) !important;
 }
 .message-time-divider {
-  user-select: none;
   position: relative;
   margin: 10px 0;
   max-height: 20px;
@@ -576,10 +587,21 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   padding-right: 10px;
 }
 .message-view-item {
+  &:hover .time-divider {
+    visibility: visible;
+  }
+}
+.message-view-item-content {
+  position: relative;
   display: flex;
   flex-direction: row;
-  margin: 8px 0;
-  position: relative;
+  margin: 5px 0 8px 0;
+  .message-view-top {
+    display: flex;
+  }
+  .message-view-body {
+    display: flex
+  }
 }
 .is-other {
   .picture {
@@ -588,20 +610,20 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   }
 }
 .is-self {
-  display: flex;
   flex-direction: row-reverse;
   .picture {
     margin-right: 0;
     margin-left: 8px;
   }
-  .message-name {
-    display: none;
+  .message-view-top {
+    flex-direction: row-reverse;
+  }
+  .message-view-body {
+    flex-direction: row-reverse;
   }
   .message-view__img,
   .message-view__file,
   .message-view__text {
-    display: flex;
-    justify-content: flex-end;
     align-items: center;
   }
 }

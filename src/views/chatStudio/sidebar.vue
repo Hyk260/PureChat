@@ -2,7 +2,7 @@
   <div class="sidebar">
     <div>
       <div class="touxiang">
-        <UserAvatar type="self" isdot :size="40" shape="square" @click="openUploadAvatarDialog" />
+        <UserAvatar type="self" isdot shape="square" @click="openUploadAvatarDialog" />
       </div>
       <div class="aside-item" v-for="item in outsideList" :key="item.only">
         <div
