@@ -17,6 +17,10 @@ import { computed } from "vue";
 import { useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 
+defineOptions({
+  name: "RelayElemItem"
+});
+
 const { message } = defineProps({
   message: {
     type: Object,
@@ -37,6 +41,7 @@ const abstractList = computed(() => {
 });
 
 function onClick() {
+  console.log("RelayElemItem", message);
   if (showCheckbox.value) return;
   emitter.emit("openMergePopup", message);
 }

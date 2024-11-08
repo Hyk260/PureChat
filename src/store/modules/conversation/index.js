@@ -83,14 +83,18 @@ const conversation = {
     },
     loadMoreMessages(state, payload) {
       console.log("[chat] 加载更多消息 loadMoreMessages:", payload);
-      const { convId, messages } = payload;
+      const { convId, messages, msgId = "" } = payload;
       // 历史消息
       const history = state.historyMessageList.get(convId) || [];
+      if (history.map((t) => t?.ID).includes(msgId)) {
+        console.warn("重复加载");
+        return;
+      }
       console.log("历史消息 history:", history);
       const baseTime = getBaseTime(history, "last");
       const timeDividerResult = addTimeDivider(messages, baseTime).reverse();
       console.log("timeDividerResult:", timeDividerResult);
-      const newHistory = history.concat(timeDividerResult)
+      const newHistory = history.concat(timeDividerResult);
       state.currentMessageList = newHistory;
       state.historyMessageList.set(convId, newHistory);
     },
@@ -118,6 +122,11 @@ const conversation = {
       let baseTime = getBaseTime(history);
       let timeDivider = addTimeDivider(message, baseTime).reverse();
       history.unshift(...timeDivider);
+      state.historyMessageList.set(convId, history);
+      if (state.currentConversation.conversationID === convId) {
+        state.currentMessageList = history;
+        emitter.emit("updataScroll");
+      }
     },
     addMessage(state, payload) {
       console.log("[chat] 添加消息 addMessage:", payload);
