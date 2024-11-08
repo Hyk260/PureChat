@@ -2,9 +2,14 @@
   <div class="message-name" v-show="this.isGroup && !shouldDisplay">
     <span v-if="isSystem" class="isSystem">系统通知</span>
     <span v-else-if="isFound" class="isFound">管理员</span>
-    <span v-else-if="isGroup" class="isGroup" @click="handleAt">
+    <span
+      v-else-if="isGroup"
+      class="isGroup"
+      :class="{ 'mention-self': isSelf(item) }"
+      @click="handleAt"
+    >
       <span :class="styleNick">{{ item.nick }}</span>
-      <span class="mention">@</span>
+      <span class="mention" v-if="!isSelf(item)">@</span>
       <span class="admin" v-if="isLeader">群主</span>
     </span>
   </div>
@@ -12,12 +17,21 @@
 
 <script>
 import emitter from "@/utils/mitt-bus";
+import { isSelf } from "../utils/utils";
 import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "NameComponent",
   props: {
-    item: Object,
+    item: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  data() {
+    return {
+      isSelf,
+    };
   },
   computed: {
     ...mapGetters(["isOwner"]),
@@ -53,6 +67,7 @@ export default {
   methods: {
     handleAt() {
       if (this.showCheckbox) return;
+      if (isSelf(this.item)) return;
       emitter.emit("handleAt", { id: this.from, name: this.item.nick });
     },
   },
@@ -66,6 +81,7 @@ export default {
   color: var(--color-time-divider);
   font-size: 12px;
 }
+
 .admin {
   white-space: nowrap;
   background: #e6f7ff;
@@ -76,17 +92,27 @@ export default {
   padding: 0 4px;
   display: inline-block;
 }
+
 .isGroup {
   cursor: pointer;
+
   .mention {
     visibility: hidden;
   }
+
   &:hover {
     .mention,
     .nick {
       color: rgb(84, 180, 239);
       visibility: visible;
     }
+  }
+}
+.mention-self {
+  display: flex;
+  flex-direction: row-reverse;
+  .admin{
+    margin-right: 6px;
   }
 }
 </style>

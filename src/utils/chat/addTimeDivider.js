@@ -1,5 +1,7 @@
 import { timeFormat } from "@/utils/timeFormat";
+import { cloneDeep } from "lodash-es";
 
+const timeline = true;
 const duration = 5 * 60;
 
 const isArray = (obj) => {
@@ -32,6 +34,7 @@ export const getBaseTime = (list, type = "start") => {
  * @returns {Array} - 添加时间分隔符后的修改后的列表。
  */
 export const addTimeDivider = (list, baseTime = 0) => {
+  if (!timeline) return list;
   if (!isArray(list)) return;
   return list.reduce((acc, cur) => {
     const curTime = cur.clientTime;
