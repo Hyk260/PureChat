@@ -81,7 +81,8 @@
         :key="item.id"
         @click="handlRightClick(item)"
       >
-        <p>{{ item.text }}</p>
+        <FontIcon :iconName="item.icon" />
+        <span>{{ item.text }}</span>
       </contextmenu-item>
     </contextmenu>
   </div>
@@ -96,6 +97,7 @@ import {
   onUnmounted,
   onUpdated,
   ref,
+  useTemplateRef,
   watch,
 } from "vue";
 import { showConfirmationBox } from "@/utils/message";
@@ -126,6 +128,7 @@ import Stateful from "../components/Stateful.vue";
 import MenuList from "../components/MenuList.vue";
 import { getAiAvatarUrl } from "@/ai/utils";
 
+const contextmenuRef = useTemplateRef("contextmenu");
 const timeout = ref(false);
 const isRight = ref(true);
 const contextMenuItems = ref([]);
@@ -598,7 +601,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   flex-direction: row;
   margin: 5px 0 8px 0;
   &:hover .menubar {
-    // opacity: 1;
+    opacity: 1;
   }
   .message-view-top {
     display: flex;
@@ -606,7 +609,6 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   .message-view-body {
     display: flex;
     align-items: center;
-    // height: 100%;
     gap: 8px;
   }
 }

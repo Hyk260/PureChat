@@ -1,16 +1,28 @@
 <template>
-  <div class="menubar">
+  <div class="menubar" v-if="showMenuList(item)">
     <div class="flex">
-      <div class="menubar-item flex-c" v-for="item in list" :key="item.id">
-        <FontIcon :iconName="item.icon" />
+      <div
+        class="menubar-item flex-c"
+        v-for="item in flilterList"
+        :key="item.id"
+        :title="item.title"
+      >
+        <FontIcon @click="handleMenuEvent(item)" :iconName="item.icon" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { isSelf } from "../utils/utils";
+import { ref, computed } from "vue";
+import { useGetters, useState } from "@/utils/hooks/useMapper";
+import { isSelf, handleCopyMsg } from "../utils/utils";
+
+defineOptions({
+  name: "MenuList",
+});
+
+const emit = defineEmits(["finMenu"]);
 
 const props = defineProps({
   item: {
@@ -19,26 +31,73 @@ const props = defineProps({
   },
 });
 
+const { showCheckbox } = useState({
+  showCheckbox: (state) => state.conversation.showCheckbox,
+});
+
 const list = [
   {
-    id: 1,
+    id: "edit",
     title: "编辑",
+    hidden: true,
     icon: "Edit",
     // <el-icon><Edit /></el-icon>
   },
   {
-    id: 2,
+    id: "copy",
     title: "复制",
     icon: "CopyDocument",
     // <el-icon><CopyDocument /></el-icon>
   },
   {
-    id: 3,
+    id: "setup",
     title: "设置",
+    hidden: true,
     icon: "MoreFilled",
     // <el-icon><MoreFilled /></el-icon>
   },
 ];
+
+const flilterList = computed(() => {
+  return list
+    .filter((item) => {
+      if (item.id === "edit") {
+        return props.item.type === "TIMTextElem";
+      } else if (item.id === "copy") {
+        return ["TIMTextElem", "TIMImageElem"].includes(props.item.type);
+      }
+    })
+    .filter((item) => {
+      return !item?.hidden;
+    });
+});
+
+function showMenuList(item) {
+  // 图片 文件 文本 合并
+  const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem"];
+  return (
+    msg.includes(item.type) &&
+    item.type !== "TIMGroupTipElem" &&
+    !item.isRevoked &&
+    !showCheckbox.value
+  );
+}
+
+function handleMenuEvent(data) {
+  const { id } = data;
+  const { item } = props;
+  switch (id) {
+    case "copy": // 复制
+      handleCopyMsg(item);
+      break;
+    case "edit": // 编辑
+      console.log("编辑");
+      break;
+    case "setup": // 设置
+      console.log("设置");
+      break;
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -47,6 +106,7 @@ const list = [
   height: 100%;
   display: flex;
   align-items: flex-end;
+  margin-top: auto;
   // pointer-events: none;
   opacity: 0;
   transition: opacity 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
