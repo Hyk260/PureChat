@@ -47,9 +47,9 @@
                 </el-avatar>
               </div>
               <div :class="msgOne(item)">
-                <div class="message-view-top">
+                <div class="message-view-top" v-if="isGroupChat">
                   <NameComponent :item="item" />
-                  <TimeDivider v-if="isGroupChat" :item="item" type="group" />
+                  <TimeDivider :item="item" type="group" />
                 </div>
                 <div class="message-view-body" :class="msgType(item.type)" :id="item.ID">
                   <component
@@ -66,6 +66,9 @@
                   <Stateful :item="item" :status="item.status" />
                   <!-- 菜单 -->
                   <MenuList :item="item" />
+                </div>
+                <div class="message-view-bottom" v-if="!isSelf(item) && isRobot(toAccount)">
+                  {{ handleCustomData(item.cloudCustomData) }}
                 </div>
               </div>
             </div>
@@ -189,6 +192,24 @@ const classMessageInfoView = () => {
     isChatBoxVisible.value ? "" : "style-msg-box",
     currentReplyMsg.value ? "style-reply" : "",
   ];
+};
+
+const handleCustomData = (data) => {
+  if (!data) return;
+  try {
+    const message = JSON.parse(data);
+    if (message.messagePrompt) {
+      return message.messagePrompt.messageAbstract;
+    } else {
+      return "";
+    }
+  } catch (error) {
+    return "";
+  }
+};
+
+const handleMenuOptions = (item) => {
+  const { type, isRevoked, payload } = item;
 };
 
 const handleSelect = (e, item, type = "initial") => {
@@ -604,6 +625,14 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   }
   .message-view-top {
     display: flex;
+  }
+  .message-view-bottom {
+    margin-top: 5px;
+    font-size: 12px;
+    opacity: 0.3;
+    white-space: nowrap;
+    transition: all 0.6s ease;
+    color: #303030;
   }
   .message-view-body {
     display: flex;

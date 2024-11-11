@@ -329,8 +329,18 @@ export const createAiPromptMsg = (params) => {
   const title = "`" + meta.title + "`";
   const textMsg = `你好，我是 ${meta.avatar} ${title} ${meta.description} 让我们开始对话吧！`;
   const msg = createTextMsg({ convId: from, textMsg });
+  const promptMsgContent = JSON.stringify({
+    messagePrompt: {
+      messageID: "",
+      messageAbstract: "预设提示词",
+      messageSender: '',
+      messageType: 0,
+      version: "1",
+    },
+  });
   msg.conversationID = `C2C${from}`;
   msg.avatar = getAvatarUrl(from);
+  msg.cloudCustomData = promptMsgContent;
   msg.flow = "in";
   msg.to = to;
   msg.from = from;

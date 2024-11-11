@@ -12,6 +12,10 @@
 import { scrollToDomPostion } from "@/utils/chat/index";
 import DynamicContent from "../components/DynamicContent.vue";
 
+defineOptions({
+  name: "ReplyElem"
+});
+
 const props = defineProps({
   originalMsg: {
     type: Object,
