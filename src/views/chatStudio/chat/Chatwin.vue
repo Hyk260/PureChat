@@ -79,6 +79,7 @@
       <contextmenu-item
         v-for="item in contextMenuItems"
         :key="item.id"
+        :class="item.class"
         @click="handlRightClick(item)"
       >
         <FontIcon :iconName="item.icon" />
@@ -567,8 +568,6 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   display: flex;
   flex-direction: column-reverse;
   height: 100%;
-  overflow-y: overlay;
-  overflow-x: hidden;
   padding: 0 16px 16px 16px;
   box-sizing: border-box;
   .picture {

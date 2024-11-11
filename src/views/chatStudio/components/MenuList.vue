@@ -79,7 +79,8 @@ function showMenuList(item) {
     msg.includes(item.type) &&
     item.type !== "TIMGroupTipElem" &&
     !item.isRevoked &&
-    !showCheckbox.value
+    !showCheckbox.value &&
+    flilterList.value.length
   );
 }
 

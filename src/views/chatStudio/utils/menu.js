@@ -2,18 +2,31 @@
 export const chatSessionListData = [
   {
     id: "pinged",
-    // icon: "Bell",
-    text: "会话置顶",
+    icon: "",
+    svgIcon: "pinged",
+    text: "置顶",
   },
   {
-    id: "disable",
-    // icon: "Bell",
+    id: "unpin",
+    icon: "",
+    svgIcon: "unpin",
+    text: "取消置顶",
+  },
+  {
+    id: "AcceptNotNotify",
+    icon: "MuteNotification",
     text: "消息免打扰",
   },
   {
+    id: "AcceptAndNotify",
+    icon: "Bell",
+    text: "允许消息提醒",
+  },
+  {
     id: "remove",
-    // icon: "Bell",
+    icon: "Delete",
     text: "移除会话",
+    class: "!text-[#f44336]",
   },
   // { id: "clean", text: "清除消息" },
 ];
@@ -61,6 +74,7 @@ export const menuOptionsList = [
     id: "delete",
     icon: "Delete",
     text: "删除",
+    class: "!text-[#f44336]",
   },
 ];
 
