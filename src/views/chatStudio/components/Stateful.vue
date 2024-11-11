@@ -1,16 +1,9 @@
 <template>
-  <div
-    v-if="isShowState(item)"
-    :class="{
-      'status-style': true,
-      'isown-style': !isown,
-      'single-style': item.conversationType === 'C2C',
-    }"
-  >
+  <div v-if="isShowState(item)" class="flex-c">
     <!-- 发送中 -->
-    <FontIcon class="is-loading" iconName="Loading" v-show="isShow('unSend')" />
+    <div v-show="isShow('unSend')" class="iconify-icon svg-spinners"></div>
     <!-- 发送失败 -->
-    <FontIcon class="text-[#f44336]" iconName="WarningFilled" v-show="isShow('fail')" />
+    <div v-show="isShow('fail')" class="iconify-icon fluent-error"></div>
   </div>
 </template>
 
@@ -24,11 +17,7 @@ const props = defineProps({
     type: Object,
     default: null,
   },
-  isown: {
-    type: Boolean,
-    default: false,
-  },
-  // unSend(未发送)success(发送成功)fail(发送失败)
+  // unSend(未发送)fail(发送失败)success(发送成功)
   status: {
     type: String,
     default: "success",
@@ -36,6 +25,7 @@ const props = defineProps({
 });
 
 const isShow = (value) => {
+  // return true
   return props.status === value;
 };
 
@@ -48,19 +38,3 @@ const isShowState = (item) => {
   );
 };
 </script>
-
-<style lang="scss" scoped>
-.status-style {
-  margin-right: 8px;
-  display: flex;
-  align-items: center;
-}
-
-.isown-style {
-  margin-left: 8px;
-}
-
-.single-style {
-  padding-top: 0px;
-}
-</style>

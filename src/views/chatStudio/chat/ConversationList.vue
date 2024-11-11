@@ -56,11 +56,14 @@
     <!-- 右键菜单 -->
     <contextmenu ref="contextmenu" :disabled="!isRight">
       <contextmenu-item
-        v-for="item in chatSessionListData "
+        v-for="item in contextMenuItems"
         :key="item.id"
+        :class="item.class"
         @click="handleClickMenuItem(item)"
       >
-        {{ item.text }}
+        <FontIcon v-if="item.icon" :iconName="item.icon" />
+        <svg-icon v-else :iconClass="item.svgIcon" class="menu-svg" />
+        <span> {{ item.text }}</span>
       </contextmenu-item>
     </contextmenu>
   </el-scrollbar>
@@ -68,7 +71,7 @@
 
 <script setup>
 import { h, ref, watch, computed } from "vue";
-import { chatSessionListData  } from "../utils/menu";
+import { chatSessionListData } from "../utils/menu";
 import { pinConversation, setMessageRead } from "@/api/im-sdk-api/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
@@ -81,7 +84,9 @@ import { chatName, html2Escape, formatContent } from "../utils/utils";
 import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop();
+
 const isRight = ref(true);
+const contextMenuItems = ref([]);
 const contextMenuItemInfo = ref([]);
 
 const { dispatch, commit } = useStore();
@@ -194,14 +199,21 @@ const handleContextMenuEvent = (e, item) => {
   }
   isRight.value = true;
   contextMenuItemInfo.value = item;
-  // 会话
-  chatSessionListData .map((t) => {
-    if (t.id === "pinged") {
-      t.text = item.isPinned ? "取消置顶" : "会话置顶";
+  contextMenuItems.value = chatSessionListData;
+
+  contextMenuItems.value = contextMenuItems.value.filter((t) => {
+    if (item.isPinned) {
+      return t.id !== "pinged";
+    } else {
+      return t.id !== "unpin";
     }
-    if (t.id === "disable") {
-      let off = item.messageRemindType === "AcceptNotNotify";
-      t.text = off ? "关闭消息免打扰" : "消息免打扰";
+  });
+
+  contextMenuItems.value = contextMenuItems.value.filter((t) => {
+    if (item.messageRemindType === "AcceptNotNotify") {
+      return t.id !== "AcceptNotNotify";
+    } else {
+      return t.id !== "AcceptAndNotify";
     }
   });
 };
@@ -233,19 +245,14 @@ const handleConvListClick = (data) => {
 
 const handleClickMenuItem = (item) => {
   const data = contextMenuItemInfo.value;
-  switch (item.id) {
-    case "pinged": // 置顶
-      pingConv(data);
-      break;
-    case "remove": // 删除会话
-      removeConv(data);
-      break;
-    case "clean": // 清除消息
-      console.log("清除消息");
-      break;
-    case "disable": // 消息免打扰
-      disableRecMsg(data);
-      break;
+  if (item.id === "pinged" || item.id === "unpin") {
+    pingConv(data); // 置顶 or 取消置顶
+  } else if (item.id === "AcceptNotNotify" || item.id === "AcceptAndNotify") {
+    disableRecMsg(data); // 消息免打扰 or 允许消息提醒
+  } else if (item.id === "remove") {
+    removeConv(data); // 删除会话
+  } else if (item.id === "clean") {
+    console.log("清除消息"); // 清除消息
   }
 };
 // 消息免打扰
@@ -367,5 +374,9 @@ watch(activetab, (data) => {
 }
 .over-style {
   background: var(--color-message-active) !important;
+}
+.menu-svg {
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 12px;
 }
 </style>

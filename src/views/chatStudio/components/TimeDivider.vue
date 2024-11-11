@@ -20,8 +20,8 @@ const props = defineProps({
 });
 
 function showClientTime(item) {
-  // 图片 文件 文本 合并
-  const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem"];
+  // 图片 文件 文本 合并 视频
+  const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem","TIMVideoFileElem"];
   return (
     item.clientTime && msg.includes(item.type) && item.type !== "TIMGroupTipElem" && !item.isRevoked
   );

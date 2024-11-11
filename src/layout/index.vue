@@ -12,12 +12,12 @@
         </transition>
       </router-view>
     </div>
-    <laySetting />
+    <LaySetting />
   </main>
 </template>
 
 <script setup>
-import laySetting from './components/lay-setting/index.vue';
+import LaySetting from './components/lay-setting/index.vue';
 import { isElectron } from "@/utils/common";
 </script>
 

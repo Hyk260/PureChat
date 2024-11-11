@@ -46,11 +46,7 @@
                   <img :src="emptyUrl" />
                 </el-avatar>
               </div>
-              <div
-                :class="msgOne(item)"
-                v-contextmenu:contextmenu
-                @contextmenu.prevent="handleContextMenuEvent($event, item)"
-              >
+              <div :class="msgOne(item)">
                 <div class="message-view-top">
                   <NameComponent :item="item" />
                   <TimeDivider v-if="isGroupChat" :item="item" type="group" />
@@ -62,10 +58,14 @@
                     :message="item"
                     :status="item.status"
                     :self="isSelf(item)"
+                    v-contextmenu:contextmenu
+                    @contextmenu.prevent="handleContextMenuEvent($event, item)"
                   >
                   </component>
                   <!-- 消息发送加载状态 -->
-                  <Stateful :item="item" :status="item.status" :isown="isSelf(item)" />
+                  <Stateful :item="item" :status="item.status" />
+                  <!-- 菜单 -->
+                  <MenuList :item="item" />
                 </div>
               </div>
             </div>
@@ -79,9 +79,11 @@
       <contextmenu-item
         v-for="item in contextMenuItems"
         :key="item.id"
+        :class="item.class"
         @click="handlRightClick(item)"
       >
-        <p>{{ item.text }}</p>
+        <FontIcon :iconName="item.icon" />
+        <span>{{ item.text }}</span>
       </contextmenu-item>
     </contextmenu>
   </div>
@@ -96,6 +98,7 @@ import {
   onUnmounted,
   onUpdated,
   ref,
+  useTemplateRef,
   watch,
 } from "vue";
 import { showConfirmationBox } from "@/utils/message";
@@ -123,8 +126,10 @@ import LoadMore from "../components/LoadMore.vue";
 import NameComponent from "../components/NameComponent.vue";
 import TimeDivider from "../components/TimeDivider.vue";
 import Stateful from "../components/Stateful.vue";
+import MenuList from "../components/MenuList.vue";
 import { getAiAvatarUrl } from "@/ai/utils";
 
+const contextmenuRef = useTemplateRef("contextmenu");
 const timeout = ref(false);
 const isRight = ref(true);
 const contextMenuItems = ref([]);
@@ -563,8 +568,6 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   display: flex;
   flex-direction: column-reverse;
   height: 100%;
-  overflow-y: overlay;
-  overflow-x: hidden;
   padding: 0 16px 16px 16px;
   box-sizing: border-box;
   .picture {
@@ -596,11 +599,16 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   display: flex;
   flex-direction: row;
   margin: 5px 0 8px 0;
+  &:hover .menubar {
+    opacity: 1;
+  }
   .message-view-top {
     display: flex;
   }
   .message-view-body {
-    display: flex
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 }
 .is-other {

@@ -3,7 +3,6 @@ import { localStg } from "@/utils/storage";
 import { errorHandler } from "./tools";
 import axios from "axios";
 import { isElectron } from "@/utils/common";
-// import { nanoid } from "@/ai/platforms/ollama/protocol";
 // import { stringify } from "qs";
 
 /** 请求白名单，放置一些不需要`token`的接口（通过设置请求白名单，防止`token`过期后再请求造成的死循环问题） */

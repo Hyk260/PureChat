@@ -81,7 +81,6 @@
 
 <script setup>
 import { getuser } from "@/api/node-admin-api/index";
-import { isDev } from "@/config/env";
 import ImageVerify from "@/views/components/ImageVerify/index.vue";
 import { Lock, User } from "@element-plus/icons-vue";
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
@@ -93,6 +92,7 @@ import { rules, user } from "../utils/validation";
 import loadingSvg from "./loadingSvg.vue";
 import { useState } from "@/utils/hooks/useMapper";
 
+const { DEV: isDev } = import.meta.env;
 const isVerifyCode = false;
 const router = useRouter();
 const restaurants = ref([]);
