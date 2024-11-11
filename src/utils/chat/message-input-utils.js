@@ -213,6 +213,12 @@ export function getReplyMsgContent(reply) {
       version: "1",
     },
   });
+  // messageReply: {
+  //   messageID: "144115242602378107-1731294756-83317202",
+  //   messageSender: "PureChat",
+  //   messageType: 0,
+  //   version: "1",
+  // },
   return replyMsgContent;
 }
 
@@ -244,7 +250,7 @@ export function bytesToSize(bytes) {
   const kiloBytes = marker;
   const megaBytes = marker * marker;
   const gigaBytes = marker * marker * marker;
-  const lang = localStg.get('lang') || "en";
+  const lang = localStg.get("lang") || "en";
 
   if (bytes < kiloBytes) {
     return bytes + (lang === "en" ? " Bytes" : "字节");
@@ -288,27 +294,27 @@ export const isRobot = (text) => {
 };
 
 export const getChatListCache = () => {
-  let appid = import.meta.env.VITE_IM_SDK_APPID
-  const { username } = localStg.get(USER_MODEL) || {}
-  if (!username) return []
-  let id = `TIM_${appid}_${username}_conversationListMap`
-  return localStg.get(id) || []
+  let appid = import.meta.env.VITE_IM_SDK_APPID;
+  const { username } = localStg.get(USER_MODEL) || {};
+  if (!username) return [];
+  let id = `TIM_${appid}_${username}_conversationListMap`;
+  return localStg.get(id) || [];
 };
 
 export const setChatListCache = (data) => {
-  let appid = import.meta.env.VITE_IM_SDK_APPID
-  const { username } = localStg.get(USER_MODEL) || {}
-  if (!username) return
-  let id = `TIM_${appid}_${username}_conversationListMap`
-  localStg.set(id, data) || []
+  let appid = import.meta.env.VITE_IM_SDK_APPID;
+  const { username } = localStg.get(USER_MODEL) || {};
+  if (!username) return;
+  let id = `TIM_${appid}_${username}_conversationListMap`;
+  localStg.set(id, data) || [];
 };
 
-export function setMessageCaching(key ,data) {
-  let appid = import.meta.env.VITE_IM_SDK_APPID
-  const { username } = localStg.get(USER_MODEL) || {}
-  if (!username) return
-  let bond = `TIM_${appid}_${username}_${key}_historyMessageListMap`
-  localStg.set(bond, data.get(key))
+export function setMessageCaching(key, data) {
+  let appid = import.meta.env.VITE_IM_SDK_APPID;
+  const { username } = localStg.get(USER_MODEL) || {};
+  if (!username) return;
+  let bond = `TIM_${appid}_${username}_${key}_historyMessageListMap`;
+  localStg.set(bond, data.get(key));
 }
 
 export function readFromFile() {

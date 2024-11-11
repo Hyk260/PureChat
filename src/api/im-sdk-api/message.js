@@ -60,27 +60,26 @@ export const createCustomMsg = (params) => {
     },
   });
 };
+
 // 创建文本消息
 export const createTextMsg = (params) => {
   const { convId, convType = "C2C", textMsg, reply } = params;
-  let replyMsgContent = "";
-  if (reply) replyMsgContent = getReplyMsgContent(reply);
   return tim.createTextMessage({
     to: convId,
     conversationType: convType,
     payload: { text: textMsg },
-    cloudCustomData: replyMsgContent,
+    cloudCustomData: getReplyMsgContent(reply),
   });
 };
+
 // 创建 @提醒功能的文本消息
 export const createTextAtMsg = (params) => {
   const { convId, convType, textMsg, atUserList, reply } = params;
-  const replyMsgContent = getReplyMsgContent(reply);
   return tim.createTextAtMessage({
     to: convId,
     conversationType: convType,
     payload: { text: textMsg, atUserList: atUserList },
-    cloudCustomData: replyMsgContent,
+    cloudCustomData: getReplyMsgContent(reply),
   });
 };
 

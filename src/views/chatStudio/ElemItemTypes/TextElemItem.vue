@@ -44,7 +44,12 @@ const isMsgType = computed(() => {
 const cloudCustomData = computed(() => {
   const { message } = props;
   if (message?.cloudCustomData) {
-    return JSON.parse(message.cloudCustomData);
+    try {
+      return JSON.parse(message.cloudCustomData);
+    } catch (error) {
+      console.error("cloudCustomData", error);
+      return null;
+    }
   } else {
     return null;
   }
