@@ -2,16 +2,13 @@
   margin: 0 !important;
 }
 
-.el-overlay-dialog {
-  // backdrop-filter: blur(2px);
-}
-
 .el-popper__arrow {
   display: none;
 }
 
 .el-drawer {
   -webkit-app-region: no-drag;
+  border-radius: 6px 0 0 6px;
 }
 
 .el-message {
@@ -22,12 +19,4 @@
   width: 320px !important;
   padding: 0 !important;
   border: none !important;
-}
-
-.drawer-group {
-  background-color: rgba(255, 255, 255, 0) !important;
-
-  .el-drawer {
-    border-radius: 5px 0 0 5px;
-  }
 }

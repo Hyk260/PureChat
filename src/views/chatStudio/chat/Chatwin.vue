@@ -208,10 +208,6 @@ const handleCustomData = (data) => {
   }
 };
 
-const handleMenuOptions = (item) => {
-  const { type, isRevoked, payload } = item;
-};
-
 const handleSelect = (e, item, type = "initial") => {
   // tip消息 撤回消息 抖动消息
   if (
