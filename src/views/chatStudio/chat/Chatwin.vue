@@ -122,7 +122,7 @@ import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 import MyPopover from "@/views/components/MyPopover/index.vue";
 import { debounce } from "lodash-es";
-import { timeFormat, formatTimestamp } from "@/utils/timeFormat";
+import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import Checkbox from "../components/Checkbox.vue";
 import LoadMore from "../components/LoadMore.vue";
@@ -132,7 +132,6 @@ import Stateful from "../components/Stateful.vue";
 import MenuList from "../components/MenuList.vue";
 import { getAiAvatarUrl } from "@/ai/utils";
 
-const contextmenuRef = useTemplateRef("contextmenu");
 const timeout = ref(false);
 const isRight = ref(true);
 const contextMenuItems = ref([]);
@@ -273,6 +272,7 @@ const isScrolledToBottom = (lower = 1) => {
     return false;
   }
 };
+
 // 加载更多消息的函数
 const loadMoreMessages = () => {
   const current = currentMessageList.value?.length - 1;

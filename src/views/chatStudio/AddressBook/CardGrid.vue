@@ -26,6 +26,7 @@
 
 <script>
 import { scrollToMessage } from "@/utils/chat/index";
+
 export default {
   name: "CardGrid",
   props: {

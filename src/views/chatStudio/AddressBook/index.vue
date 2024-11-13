@@ -9,10 +9,10 @@
       <div class="list">
         <el-scrollbar>
           <div class="w-full">
-            <CardGrid v-if="active === 'ForkSpoon'" type="C2C" :item="friend" />
-            <CardGrid v-else-if="active === 'robot'" type="C2C" :item="robotList" />
-            <CardGrid v-else-if="active === 'IceCreamRound'" type="GROUP" :item="groupList" />
-            <!-- <CardGrid v-else-if="active === 'CollectionTag'" type="GROUP" :item="groupListInfo" /> -->
+            <CardGrid v-if="active === 'contacts'" type="C2C" :item="friend" />
+            <CardGrid v-else-if="active === 'aiModel'" type="C2C" :item="robotList" />
+            <CardGrid v-else-if="active === 'groupChat'" type="GROUP" :item="groupList" />
+            <!-- <CardGrid v-else-if="active === ''" type="GROUP" :item="groupListInfo" /> -->
           </div>
         </el-scrollbar>
       </div>
@@ -23,8 +23,8 @@
 <script>
 import { ROBOT_COLLECT } from "@/ai/constant";
 import { getUserProfile } from "@/api/im-sdk-api/index";
-import emitter from "@/utils/mitt-bus";
 import { mapState } from "vuex";
+import emitter from "@/utils/mitt-bus";
 import CardGrid from "./CardGrid.vue";
 import ListGrid from "./ListGrid.vue";
 
@@ -51,8 +51,8 @@ export default {
   async mounted() {
     this.getFriend();
     this.getRobot();
-    emitter.on("onActive", ({ icon, title }) => {
-      this.active = icon;
+    emitter.on("onActive", ({ id, title }) => {
+      this.active = id;
       this.title = title;
     });
     this.$store.dispatch("getGroupList");

@@ -15,18 +15,26 @@ import { ollamaModelValue } from "@/ai/platforms/ollama/modelValue";
 
 import { prefixRobotIDs } from "./utils";
 
+const {
+  VITE_ROBOT_GPT, // chatgpt
+  VITE_ROBOT_GLM, // 智谱
+  VITE_ROBOT_ZEROONE, // 零一万物
+  VITE_ROBOT_QWEN, // 通义千问
+  VITE_ROBOT_OLLAMA, // ollama
+} = import.meta.env;
+
 export const ROLES = ["system", "user", "assistant"];
 
 // chatgpt机器人id
-export const CHATGPT_ROBOT = import.meta.env.VITE_ROBOT_GPT;
+export const CHATGPT_ROBOT = VITE_ROBOT_GPT;
 // 智谱机器人id
-export const CHATGLM_ROBOT = import.meta.env.VITE_ROBOT_GLM;
+export const CHATGLM_ROBOT = VITE_ROBOT_GLM;
 // 零一万物机器人id
-export const CHATYI_ROBOT = import.meta.env.VITE_ROBOT_ZEROONE;
+export const CHATYI_ROBOT = VITE_ROBOT_ZEROONE;
 // 通义千问机器人id
-export const CHATQWEN_ROBOT = import.meta.env.VITE_ROBOT_QWEN;
+export const CHATQWEN_ROBOT = VITE_ROBOT_QWEN;
 // OLLAMA
-export const CHATOLLAMA_ROBOT = import.meta.env.VITE_ROBOT_OLLAMA;
+export const CHATOLLAMA_ROBOT = VITE_ROBOT_OLLAMA;
 
 export const ROBOT_COLLECT = [
   CHATGPT_ROBOT,
@@ -86,7 +94,7 @@ export const prompt = [
   {
     id: "0",
     meta: {
-      tags:[],
+      tags: [],
       avatar: "",
       title: "",
     },
