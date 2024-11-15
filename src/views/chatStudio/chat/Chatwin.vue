@@ -65,10 +65,19 @@
                   <!-- 消息发送加载状态 -->
                   <Stateful :item="item" :status="item.status" />
                   <!-- 菜单 -->
-                  <MenuList :item="item" />
+                  <MenuList :item="item" @handlSingleClick="handlSingleClick" />
                 </div>
                 <div class="message-view-bottom" v-if="!isSelf(item) && isRobot(toAccount)">
-                  {{ handleCustomData(item.cloudCustomData) }}
+                  {{ handleCustomData(item, "messageAbstract") }}
+                </div>
+                <div class="message-view-question" v-if="!isSelf(item) && isRobot(toAccount)">
+                  <div
+                    v-for="(item, i) in handleCustomData(item, 'recQuestion') || []"
+                    :key="i"
+                    @click="handleQuestion(item)"
+                  >
+                    <span class="question"> {{ item }} </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -132,6 +141,7 @@ import Stateful from "../components/Stateful.vue";
 import MenuList from "../components/MenuList.vue";
 import { getAiAvatarUrl } from "@/ai/utils";
 
+const isConfirm = ref(true);
 const timeout = ref(false);
 const isRight = ref(true);
 const contextMenuItems = ref([]);
@@ -193,12 +203,14 @@ const classMessageInfoView = () => {
   ];
 };
 
-const handleCustomData = (data) => {
+const handleCustomData = (item, type) => {
+  // type messageAbstract
+  const data = item.cloudCustomData;
   if (!data) return;
   try {
     const message = JSON.parse(data);
     if (message.messagePrompt) {
-      return message.messagePrompt.messageAbstract;
+      return message.messagePrompt[type];
     } else {
       return "";
     }
@@ -359,6 +371,7 @@ const handleContextMenuEvent = (event, item) => {
   const { isRevoked, time, type, payload } = item;
   let isFile = type === "TIMFileElem";
   let isRelay = type === "TIMRelayElem";
+  let isCustom = type === "TIMCustomElem";
   // 撤回消息 系统类型消息 提示类型消息 多选状态 自定义消息
   if (
     isRevoked ||
@@ -370,6 +383,7 @@ const handleContextMenuEvent = (event, item) => {
     isRight.value = false;
     return;
   }
+  console.log("handleContextMenuEvent:", item);
   let relinquish = parseInt(new Date().getTime() / 1000) - time < 120;
   timeout.value = false;
   isRight.value = true;
@@ -404,11 +418,14 @@ const handleContextMenuEvent = (event, item) => {
       (t) => t.id !== "reply" && t.id !== "revoke"
     );
   }
+  if (isCustom) {
+    contextMenuItems.value = contextMenuItems.value.filter((t) => t.id === "delete");
+  }
 };
 
 const handlRightClick = (data) => {
   const info = menuItemInfo.value;
-  const { id, text } = data;
+  const { id, text } = data || {};
   switch (id) {
     case "send": // 发起会话
       handleSendMessage(info);
@@ -443,6 +460,12 @@ const handlRightClick = (data) => {
   }
 };
 
+const handlSingleClick = ({ item, id }) => {
+  menuItemInfo.value = item;
+  isConfirm.value = false;
+  handlRightClick({ id });
+};
+
 const handleAt = (data) => {
   const { from, nick, conversationType: type } = data;
   if (type === "C2C") return;
@@ -451,6 +474,10 @@ const handleAt = (data) => {
 
 const handleSendMessage = (data) => {
   dispatch("addConversation", { convId: `C2C${data.from}` });
+};
+
+const handleQuestion = (item) => {
+  console.log(item);
 };
 // 另存为
 const handleSave = ({ payload }) => {
@@ -475,9 +502,12 @@ const handleReplyMsg = (data) => {
 // 删除消息
 const handleDeleteMsg = async (data) => {
   try {
-    const message = { message: "确定删除?", iconType: "warning" };
-    const result = await showConfirmationBox(message);
-    if (result === "cancel") return;
+    if (isConfirm.value) {
+      const message = { message: "确定删除?", iconType: "warning" };
+      const result = await showConfirmationBox(message);
+      if (result === "cancel") return;
+    }
+    isConfirm.value = true;
     const { code, messageList } = await deleteMessage([data]);
     if (code !== 0) return;
     commit("deleteMessage", { convId: data.conversationID, messageIdArray: [data.ID] });
@@ -616,9 +646,6 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   display: flex;
   flex-direction: row;
   margin: 5px 0 8px 0;
-  &:hover .menubar {
-    opacity: 1;
-  }
   .message-view-top {
     display: flex;
   }
@@ -630,10 +657,32 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
     transition: all 0.6s ease;
     color: #303030;
   }
+  .message-view-question {
+    font-size: 14px;
+    margin-top: 5px;
+    & > div {
+      width: fit-content;
+      padding: 6px 10px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      font-weight: 400;
+      border: 1px solid rgba(6, 7, 8, 0.15);
+      color: rgba(6, 7, 9, 0.8);
+      &:hover {
+        background-color: rgba(6, 7, 9, 0.1);
+      }
+    }
+    .question {
+      cursor: pointer;
+    }
+  }
   .message-view-body {
     display: flex;
     align-items: center;
     gap: 8px;
+    &:hover .menubar {
+      opacity: 1;
+    }
   }
 }
 .is-other {

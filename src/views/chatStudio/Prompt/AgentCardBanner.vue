@@ -56,12 +56,14 @@ function toTant(item = cardData.value) {
       ...localStg.get(StoreKey.Prompt),
       [value]: {
         id: identifier,
-        meta: {
-          tags: meta.tags,
-          description: meta.description,
-          avatar: meta.avatar,
-          title: meta.title,
-        },
+        meta,
+        // meta: {
+        //   tags: meta.tags,
+        //   description: meta.description,
+        //   avatar: meta.avatar,
+        //   title: meta.title,
+        //   recQuestion: ''
+        // },
         lang: "cn",
         prompt: [{ role: "system", content: meta.systemRole }],
       },

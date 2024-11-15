@@ -16,6 +16,10 @@ import { fnReplyContent, scrollToDomPostion } from "@/utils/chat/index";
 import { useState } from "@/utils/hooks/useMapper";
 import DynamicContent from "./DynamicContent.vue";
 
+defineOptions({
+  name: "ReplyBox"
+});
+
 const { commit } = useStore();
 const { currentReplyMsg } = useState({
   currentReplyMsg: (state) => state.conversation.currentReplyMsg,

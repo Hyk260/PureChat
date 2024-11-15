@@ -87,7 +87,8 @@ const conversation = {
       // 历史消息
       const history = state.historyMessageList.get(convId) || [];
       if (history.map((t) => t?.ID).includes(msgId)) {
-        console.warn("重复加载");
+        console.warn("重复加载", msgId);
+        state.noMore = true;
         return;
       }
       console.log("历史消息 history:", history);
