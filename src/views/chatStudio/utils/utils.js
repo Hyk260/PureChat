@@ -223,7 +223,7 @@ export async function sendChatMessage(options) {
     video = [],
     image = [],
     reply,
-  } = options;
+  } = options || {};
 
   // @消息
   if (aitStr) {

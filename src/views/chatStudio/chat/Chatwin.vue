@@ -121,6 +121,7 @@ import {
   loadMsgModule,
   msgOne,
   msgType,
+  sendChatMessage,
   validatelastMessage,
   isSelf,
 } from "../utils/utils";
@@ -476,8 +477,19 @@ const handleSendMessage = (data) => {
   dispatch("addConversation", { convId: `C2C${data.from}` });
 };
 
-const handleQuestion = (item) => {
-  console.log(item);
+const handleQuestion = async (item) => {
+  const message = await sendChatMessage({
+    convId: toAccount.value,
+    convType: currentType.value,
+    textMsg: item,
+  });
+  console.log("sendChatMessage:", message);
+  dispatch("sendSessionMessage", {
+    payload: {
+      convId: currentConv.value.conversationID,
+      message: message[0],
+    },
+  });
 };
 // 另存为
 const handleSave = ({ payload }) => {
