@@ -1,13 +1,15 @@
 <template>
   <div class="menubar" v-if="showMenuList(item)">
-    <div class="flex">
+    <div class="flex" :class="isSelf(item) ? 'flex-row-reverse' : ''">
       <div
         class="menubar-item flex-c"
         v-for="item in flilterList"
         :key="item.id"
-        :title="item.title"
+        @click="handleMenuEvent(item)"
       >
-        <FontIcon @click="handleMenuEvent(item)" :iconName="item.icon" />
+        <el-tooltip :content="item.title" placement="top">
+          <FontIcon :class="item?.class" :iconName="item.icon" />
+        </el-tooltip>
       </div>
     </div>
   </div>
@@ -15,14 +17,14 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
+import { useState } from "@/utils/hooks/useMapper";
 import { isSelf, handleCopyMsg } from "../utils/utils";
 
 defineOptions({
   name: "MenuList",
 });
 
-const emit = defineEmits(["finMenu"]);
+const emit = defineEmits(["handlSingleClick"]);
 
 const props = defineProps({
   item: {
@@ -31,11 +33,13 @@ const props = defineProps({
   },
 });
 
-const { showCheckbox } = useState({
-  showCheckbox: (state) => state.conversation.showCheckbox,
-});
-
 const list = [
+  {
+    id: "copy",
+    title: "复制",
+    icon: "CopyDocument",
+    // <el-icon><CopyDocument /></el-icon>
+  },
   {
     id: "edit",
     title: "编辑",
@@ -44,19 +48,24 @@ const list = [
     // <el-icon><Edit /></el-icon>
   },
   {
-    id: "copy",
-    title: "复制",
-    icon: "CopyDocument",
-    // <el-icon><CopyDocument /></el-icon>
-  },
-  {
     id: "setup",
     title: "设置",
     hidden: true,
     icon: "MoreFilled",
     // <el-icon><MoreFilled /></el-icon>
   },
+  {
+    id: "delete",
+    title: "删除",
+    class: "text-[#f44336]",
+    icon: "Delete",
+    // <el-icon><Delete /></el-icon>
+  },
 ];
+
+const { showCheckbox } = useState({
+  showCheckbox: (state) => state.conversation.showCheckbox,
+});
 
 const flilterList = computed(() => {
   return list
@@ -65,11 +74,11 @@ const flilterList = computed(() => {
         return props.item.type === "TIMTextElem";
       } else if (item.id === "copy") {
         return ["TIMTextElem", "TIMImageElem"].includes(props.item.type);
+      } else {
+        return true;
       }
     })
-    .filter((item) => {
-      return !item?.hidden;
-    });
+    .filter((item) => !item?.hidden);
 });
 
 function showMenuList(item) {
@@ -96,6 +105,9 @@ function handleMenuEvent(data) {
       break;
     case "setup": // 设置
       console.log("设置");
+      break;
+    case "delete": // 设置
+      emit("handlSingleClick", { item, id: "delete" });
       break;
   }
 }

@@ -4,7 +4,7 @@
     :title="$t('group.GroupDetails')"
     size="360px"
     :modal="true"
-    modal-class="drawer-group"
+    modal-class="group-drawer-modal"
     :before-close="handleClose"
     :close-on-press-escape="true"
     :append-to-body="false"
@@ -314,6 +314,9 @@ watch(currentConversation, (data) => {
 </script>
 
 <style lang="scss" scoped>
+:global(.group-drawer-modal) {
+  background-color: rgba(255, 255, 255, 0) !important;
+}
 :deep(.el-divider) {
   margin: 0;
 }

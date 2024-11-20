@@ -5,6 +5,8 @@ import "element-plus/theme-chalk/dark/css-vars.css";
 import '@/styles/css/tailwind.css'
 import "@/styles/css/iconify.css";
 import "@/styles/index.scss";
+// electron
+import "@/styles/electron.scss";
 // https://animate.style/
 import "animate.css";
 import "virtual:svg-icons-register";

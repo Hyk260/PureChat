@@ -333,6 +333,7 @@ export const createAiPromptMsg = (params) => {
     messagePrompt: {
       messageID: "",
       messageAbstract: "预设提示词",
+      recQuestion: meta.recQuestion || [],
       messageSender: '',
       messageType: 0,
       version: "1",

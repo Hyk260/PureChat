@@ -67,7 +67,7 @@ const labelClass = (data) => {
     border-radius: 2px;
     font-size: 12px;
     padding: 0 4px;
-    height: 20px;
+    height: 18px;
     display: flex;
     flex-direction: row;
     align-items: center;

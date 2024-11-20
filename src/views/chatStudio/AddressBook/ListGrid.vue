@@ -1,12 +1,12 @@
 <template>
   <div
-    class="list"
     v-for="item in data"
     :key="item.icon"
-    @click="onClick(item)"
     :class="{
-      selectd: active === item.icon,
+      selectd: active === item.id,
     }"
+    class="list"
+    @click="onClick(item)"
   >
     <div class="icon">
       <svg-icon v-if="item.type === 'svg'" :iconClass="item.icon" />
@@ -18,31 +18,35 @@
 
 <script>
 import emitter from "@/utils/mitt-bus";
+
 export default {
   name: "ListGrid",
   data() {
     return {
       data: [
         {
+          id: "contacts",
           title: "常用联系人",
           icon: "ForkSpoon",
         },
         {
+          id: "groupChat",
           title: "我的群聊",
           icon: "IceCreamRound",
         },
         {
+          id: "aiModel",
           title: "AI大模型",
           icon: "robot",
           type: "svg",
         },
       ],
-      active: "ForkSpoon",
+      active: "contacts",
     };
   },
   methods: {
     onClick(data) {
-      this.active = data.icon;
+      this.active = data.id;
       emitter.emit("onActive", data);
     },
   },

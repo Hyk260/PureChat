@@ -8,3 +8,7 @@ console.log(
   "line-height: 30px"
 );
 console.log("欢迎给我发送邮件交流: %c2607881950@qq.com", "line-height: 30px; color: red");
+console.log(
+  "点击链接加入群聊【PureChat交流群】：%chttps://qm.qq.com/q/kNp1soa8W4",
+  "line-height: 30px; color: red"
+);
