@@ -44,7 +44,7 @@
                 </div>
               </div>
             </div>
-            <div v-show="isFooter" class="footer p-16">
+            <div class="footer p-16" :class="{'opacity-0': !isFooter }">
               <div class="flex-c">
                 <img class="size-22" src="@/assets/images/log.png" alt="" />
                 <div class="title ml-8">{{ titleApp }}</div>
@@ -79,11 +79,11 @@
           <div><el-switch v-model="isFooter" /></div>
         </div>
         <el-divider class="my-10" />
-        <div v-show="isFooter" class="flex-bc my-5 h-32">
+        <div class="flex-bc my-5 h-32">
           <div>包含二维码</div>
-          <div><el-switch v-model="isQrCode" /></div>
+          <div><el-switch :disabled="!isFooter" v-model="isQrCode" /></div>
         </div>
-        <el-divider v-show="isFooter" class="my-10" />
+        <el-divider class="my-10" />
         <div class="flex-bc my-5 h-32">
           <div>图片格式</div>
           <div>

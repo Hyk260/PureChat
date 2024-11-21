@@ -49,7 +49,7 @@
               <div :class="msgOne(item)">
                 <div class="message-view-top" v-if="isGroupChat">
                   <NameComponent :item="item" />
-                  <TimeDivider :item="item" type="group" />
+                  <TimeDivider :item="item" :showCheck="showCheckbox" type="group" />
                 </div>
                 <div class="message-view-body" :class="msgType(item.type)" :id="item.ID">
                   <component
@@ -658,6 +658,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   display: flex;
   flex-direction: row;
   margin: 5px 0 8px 0;
+  transition: all 0.15s ease;
   .message-view-top {
     display: flex;
   }
