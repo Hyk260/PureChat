@@ -14,3 +14,36 @@
   opacity: 0;
   transform: translateX(30px);
 }
+
+
+.fade-slide-lower {
+  animation: lower .3s ease;
+}
+
+@keyframes lower {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.fade-slide-upper {
+  animation: upper .3s ease;
+}
+
+@keyframes upper {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -6,6 +6,7 @@
     :class="{
       'robot-box': true,
       'is-robot': isRobot(cardData?.from),
+      'fade-slide-lower': true
     }"
   >
     <div class="title flex-sc">

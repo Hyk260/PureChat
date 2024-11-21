@@ -704,6 +704,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
     margin-right: 8px;
   }
 }
+
 .is-self {
   flex-direction: row-reverse;
   .picture {

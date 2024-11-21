@@ -1,5 +1,5 @@
 <template>
-  <div class="card-popover animate__fadeIn" ref="cardRef" v-if="card">
+  <div class="card-popover fade-slide-lower" ref="cardRef" v-if="card">
     <div class="top">
       <UserAvatar type="self" :size="40" shape="square" @click="handlePictureCardPreview" />
       <div>

@@ -30,7 +30,7 @@
       </el-badge>
       <!-- 消息 -->
       <div class="message-item-right">
-        <div class="message-item-right-top">
+        <div class="message-item-right-top flex-bc">
           <div class="message-chat-name flex">
             <span class="name-title">{{ chatName(item) }}</span>
             <Label :item="item" :userID="item.userProfile?.userID" />
@@ -305,7 +305,8 @@ watch(activetab, (data) => {
     left: 3px;
     top: 3px;
     border-radius: 2px;
-    border: 6px solid rgb(84, 180, 239);
+    opacity: 0.8;
+    border: 6px solid rgb(121.3, 187.1, 255);
     border-right-color: transparent;
     border-bottom-color: transparent;
   }
@@ -326,8 +327,6 @@ watch(activetab, (data) => {
       color: var(--color-time-divider);
     }
     .message-item-right-top {
-      display: flex;
-      justify-content: space-between;
       padding-bottom: 10px;
       width: 100%;
       .message-chat-name {
@@ -350,11 +349,8 @@ watch(activetab, (data) => {
     .message-item-right-bottom {
       font-size: 12px;
       color: var(--color-time-divider);
-      overflow: hidden;
       width: 179px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      position: relative;
+      @include text-ellipsis
     }
     .svg-icon {
       color: rgba(0, 0, 0, 0.45);

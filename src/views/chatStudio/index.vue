@@ -8,10 +8,13 @@
     <frameView v-if="frame.includes(outside)" :type="outside" />
     <!-- component -->
     <component v-else-if="Component[outside]" :is="Component[outside]" />
+    <!-- 图片预览 -->
+    <ImageViewer />
   </div>
 </template>
 
 <script setup>
+import ImageViewer from '../components/ImageViewer/index.vue';
 import { useState } from "@/utils/hooks/useMapper";
 import AddressBook from "./AddressBook/index.vue";
 import Prompt from "./Prompt/index.vue";
