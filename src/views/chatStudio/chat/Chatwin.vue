@@ -65,7 +65,7 @@
                   <!-- 消息发送加载状态 -->
                   <Stateful :item="item" :status="item.status" />
                   <!-- 菜单 -->
-                  <MenuList :item="item" @handlSingleClick="handlSingleClick" />
+                  <MenuList :item="item" :status="item.status" @handlSingleClick="handlSingleClick" />
                 </div>
                 <div class="message-view-bottom" v-if="!isSelf(item) && isRobot(toAccount)">
                   {{ handleCustomData(item, "messageAbstract") }}

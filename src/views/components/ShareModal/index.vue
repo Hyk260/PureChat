@@ -207,7 +207,10 @@ emitter.on("handleShareModal", (val) => {
   flex-direction: column;
   gap: 16px;
 
-  :deep(.message-info-setup) {
+  :deep(.setup) {
+    display: none;
+  }
+  :deep(.share) {
     display: none;
   }
 }

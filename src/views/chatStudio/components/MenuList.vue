@@ -31,6 +31,11 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  // unSend(未发送)fail(发送失败)success(发送成功)
+  status: {
+    type: String,
+    default: "unSend",
+  },
 });
 
 const list = [
@@ -82,6 +87,7 @@ const flilterList = computed(() => {
 });
 
 function showMenuList(item) {
+  if (props.status !== 'success') return false;
   // 图片 文件 文本 合并
   const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem"];
   return (
