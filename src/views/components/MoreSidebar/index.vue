@@ -2,39 +2,50 @@
   <el-dialog
     ref="editRef"
     :modal="true"
-    v-model="showdialog"
+    v-model="dialogVisible"
     :append-to-body="true"
+    :close-on-click-modal="false"
     @close="onClose"
     title="导航栏编辑"
     width="450px"
   >
-    <div class="draggable flex">
-      <div class="container" v-for="item in list" :key="item.title">
+    <div class="draggable flex-bc">
+      <div class="container" :class="cursorStyle" v-for="item in list" :key="item.title">
         <p class="left-text">{{ item.title }}</p>
         <div class="edit-area h-full" :class="item.class">
           <el-scrollbar>
             <draggable
-              class="dragArea list-group w-full"
-              :list="fnSelect(item.list)"
+              class="dragArea list-group wh-full"
               tag="transition-group"
               filter=".fix-ed"
               :move="onMove"
+              :list="fnSelect(item.list)"
+              :group="fnSelect(item.group)"
               @update="onUpdate"
               @remove="onRemove"
               @start="onStart"
               @end="onEnd"
-              :group="fnSelect(item.group)"
               ghostClass="ghost"
               dragClass="chosen"
               animation="300"
             >
               <!-- leftEdit rightEdit -->
               <template v-for="element in fnSelect(item.type)" :key="element.only">
-                <div class="list-group-item" :class="element?.class">
+                <div class="list-group-item flex-ac" :class="element?.class">
                   <!-- 删除 -->
-                  <FontIcon iconName="RemoveFilled" class="reduce" @click="reduce(element)" />
+                  <FontIcon
+                    v-if="item.button === 'reduce'"
+                    iconName="RemoveFilled"
+                    class="reduce text-[#f44336]"
+                    @click="reduce(element)"
+                  />
                   <!-- 添加 -->
-                  <FontIcon iconName="CirclePlusFilled" class="add" @click="increase(element)" />
+                  <FontIcon
+                    v-else-if="item.button === 'add'"
+                    iconName="CirclePlusFilled"
+                    class="add text-[#1890ff]"
+                    @click="increase(element)"
+                  />
                   <!-- 图标 -->
                   <FontIcon v-if="element?.type == 'el-icon'" :iconName="element.icon" />
                   <svg-icon v-else :iconClass="element.icon" class="svg-icon" />
@@ -66,30 +77,36 @@ import { defineComponent } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
 import { mapState } from "vuex";
 
+const listEdit = [
+  {
+    class: "left-edit-area",
+    title: "显示在导航栏上",
+    button: "reduce",
+    type: "leftEdit",
+    list: "leftEdit",
+    group: "outsideGroup", // 用于分组，同一组的不同list可以相互拖动
+  },
+  {
+    class: "right-edit-area",
+    title: "更多",
+    button: "add",
+    type: "rightEdit",
+    list: "rightEdit",
+    group: "insideGroup",
+  },
+];
+
 export default defineComponent({
   components: {
     draggable: VueDraggableNext,
   },
   data() {
     return {
-      list: [
-        {
-          class: "left-edit-area",
-          title: "显示在导航栏上",
-          button: "reduce",
-          type: "leftEdit",
-          list: "leftEdit",
-          group: "outsideGroup", // 用于分组，同一组的不同list可以相互拖动
-        },
-        {
-          class: "right-edit-area",
-          title: "更多",
-          button: "add",
-          type: "rightEdit",
-          list: "rightEdit",
-          group: "insideGroup",
-        },
-      ],
+      list: listEdit,
+      dialogVisible: false,
+      enabled: true,
+      dragging: false,
+      cursorStyle: "",
       outsideGroup: {
         name: "draggable",
         put: true,
@@ -105,9 +122,6 @@ export default defineComponent({
       },
       leftEdit: [],
       rightEdit: [],
-      showdialog: false,
-      enabled: true,
-      dragging: false,
       cache: {
         deepLeft: [],
         deepRight: [],
@@ -135,17 +149,24 @@ export default defineComponent({
       this.cache["deepLeft"] = leftEdit;
       this.cache["deepRight"] = rightEdit;
     },
-    onRemove() {},
-    onStart() {},
+    onRemove(e) {
+      console.log(e);
+    },
+    // 开始拖拽
+    onStart() {
+      this.cursorStyle = "drag-cursor";
+    },
+    // 拖拽结束
+    onEnd() {
+      this.cursorStyle = "";
+      this.callback();
+    },
     onUpdate() {},
     callback() {
       this.$nextTick(() => {
         this.$store.commit("setOutsideList", this.leftEdit);
         this.$store.commit("setMoreList", this.rightEdit);
       });
-    },
-    onEnd() {
-      this.callback();
     },
     fnRepeat() {
       const left = this.outsideList.filter((t) => t.only !== "more" && t?.show !== "hide");
@@ -198,38 +219,21 @@ export default defineComponent({
     },
     // 关闭弹框回调
     onClose() {
-      if (!this.showdialog) return;
+      if (!this.dialogVisible) return;
       this.reduction();
     },
     setDialog(flg) {
-      this.showdialog = flg;
+      this.dialogVisible = flg;
     },
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.left-edit-area {
-  .add {
-    display: none;
-  }
-  .reduce {
-    color: #f44336;
-  }
-}
-.right-edit-area {
-  .reduce {
-    display: none;
-  }
-  .add {
-    color: #1890ff;
-  }
-}
 .svg-icon {
   margin-right: 5px;
 }
 .draggable {
-  justify-content: space-between;
   .container {
     border-radius: 4px;
     width: 195px;
@@ -237,11 +241,16 @@ export default defineComponent({
       padding-bottom: 10px;
     }
   }
+  .drag-cursor {
+    cursor: grab;
+  }
   .edit-area {
-    background-color: var(--color-draggable-body);
     height: 384px;
+    background-color: var(--color-draggable-body);
     .chosen {
       color: black;
+      width: 200px !important;
+      box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.09) !important;
     }
     .ghost {
       opacity: 0 !important;
@@ -256,9 +265,7 @@ export default defineComponent({
   }
   .list-group-item {
     padding: 0 20px;
-    display: flex;
     height: 45px;
-    align-items: center;
     cursor: pointer;
     .el-icon {
       font-size: 17px;

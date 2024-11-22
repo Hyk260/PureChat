@@ -60,6 +60,10 @@ p {
   width: 100%;
 }
 
+div:focus {
+  outline: none;
+}
+
 .icon-hover {
   &:hover {
     color: var(--color-icon-hover) !important;
