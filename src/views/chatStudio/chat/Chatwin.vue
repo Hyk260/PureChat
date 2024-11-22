@@ -52,7 +52,10 @@
                   <TimeDivider :item="item" :showCheck="showCheckbox" type="group" />
                 </div>
                 <div class="message-view-body" :class="msgType(item.type)" :id="item.ID">
+                  <!-- 消息编辑 -->
+                  <MessageEditingBox v-if="messageEdit?.ID === item.ID" :item="item" />
                   <component
+                    v-else
                     :key="item.ID"
                     :is="loadMsgModule(item)"
                     :message="item"
@@ -65,7 +68,11 @@
                   <!-- 消息发送加载状态 -->
                   <Stateful :item="item" :status="item.status" />
                   <!-- 菜单 -->
-                  <MenuList :item="item" :status="item.status" @handlSingleClick="handlSingleClick" />
+                  <MenuList
+                    :item="item"
+                    :status="item.status"
+                    @handlSingleClick="handlSingleClick"
+                  />
                 </div>
                 <div class="message-view-bottom" v-if="!isSelf(item) && isRobot(toAccount)">
                   {{ handleCustomData(item, "messageAbstract") }}
@@ -141,6 +148,7 @@ import TimeDivider from "../components/TimeDivider.vue";
 import Stateful from "../components/Stateful.vue";
 import MenuList from "../components/MenuList.vue";
 import { getAiAvatarUrl } from "@/ai/utils";
+import MessageEditingBox from "../components/MessageEditingBox.vue";
 
 const isConfirm = ref(true);
 const timeout = ref(false);
@@ -157,6 +165,7 @@ const { isOwner, toAccount, isGroupChat, currentType } = useGetters([
   "currentType",
 ]);
 const {
+  messageEdit,
   isChatBoxVisible,
   forwardData,
   showCheckbox,
@@ -165,6 +174,7 @@ const {
   currentMessageList,
   currentConv,
 } = useState({
+  messageEdit: (state) => state.conversation.messageEdit,
   isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
   forwardData: (state) => state.conversation.forwardData,
   showCheckbox: (state) => state.conversation.showCheckbox,
