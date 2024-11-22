@@ -1,62 +1,87 @@
 <template>
   <el-dialog
     ref="editRef"
-    :modal="true"
     v-model="dialogVisible"
+    :modal="true"
+    :draggable="true"
     :append-to-body="true"
-    :close-on-click-modal="false"
+    :close-on-click-modal="true"
     @close="onClose"
     title="导航栏编辑"
     width="450px"
   >
     <div class="draggable flex-bc">
-      <div class="container" :class="cursorStyle" v-for="item in list" :key="item.title">
-        <p class="left-text">{{ item.title }}</p>
-        <div class="edit-area h-full" :class="item.class">
+      <div class="container">
+        <p class="left-text">显示在导航栏上</p>
+        <div class="edit-area h-full">
           <el-scrollbar>
-            <draggable
-              class="dragArea list-group wh-full"
-              tag="transition-group"
+            <VueDraggableNext
+              class="h-full"
               filter=".fix-ed"
               :move="onMove"
-              :list="fnSelect(item.list)"
-              :group="fnSelect(item.group)"
+              :list="leftEdit"
+              :group="outsideGroup"
               @update="onUpdate"
               @remove="onRemove"
               @start="onStart"
               @end="onEnd"
               ghostClass="ghost"
               dragClass="chosen"
-              animation="300"
+              animation="200"
             >
-              <!-- leftEdit rightEdit -->
-              <template v-for="element in fnSelect(item.type)" :key="element.only">
-                <div class="list-group-item flex-ac" :class="element?.class">
-                  <!-- 删除 -->
-                  <FontIcon
-                    v-if="item.button === 'reduce'"
-                    iconName="RemoveFilled"
-                    class="reduce text-[#f44336]"
-                    @click="reduce(element)"
-                  />
-                  <!-- 添加 -->
-                  <FontIcon
-                    v-else-if="item.button === 'add'"
-                    iconName="CirclePlusFilled"
-                    class="add text-[#1890ff]"
-                    @click="increase(element)"
-                  />
-                  <!-- 图标 -->
-                  <FontIcon v-if="element?.type == 'el-icon'" :iconName="element.icon" />
-                  <svg-icon v-else :iconClass="element.icon" class="svg-icon" />
-                  <span>{{ element.title }}</span>
-                  <svg-icon iconClass="drag" class="dragIcon" />
-                </div>
-              </template>
-            </draggable>
-            <div class="empty h-full" v-if="fnSelect(item.type).length == 0">
-              全部都显示在侧边栏了
-            </div>
+                <template v-for="item in leftEdit" :key="item.only">
+                  <div class="list-group-item flex-ac" :class="item?.class">
+                    <!-- 删除 -->
+                    <FontIcon
+                      iconName="RemoveFilled"
+                      class="reduce text-[#f44336]"
+                      @click="reduce(item)"
+                    />
+                    <!-- 图标 -->
+                    <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" />
+                    <svg-icon v-else :iconClass="item.icon" class="svg-icon" />
+                    <span class="title">{{ item.title }}</span>
+                    <svg-icon iconClass="drag" class="dragIcon" />
+                  </div>
+                </template>
+            </VueDraggableNext>
+          </el-scrollbar>
+        </div>
+      </div>
+      <div class="container">
+        <p class="left-text">更多</p>
+        <div class="edit-area h-full">
+          <el-scrollbar>
+            <VueDraggableNext
+              class="h-full"
+              :move="onMove"
+              :list="rightEdit"
+              :group="insideGroup"
+              @update="onUpdate"
+              @remove="onRemove"
+              @start="onStart"
+              @end="onEnd"
+              ghostClass="ghost"
+              dragClass="chosen"
+              animation="200"
+            >
+                <template v-for="item in rightEdit" :key="item.only">
+                  <div class="list-group-item flex-ac" :class="item?.class">
+                    <!-- 添加 -->
+                    <FontIcon
+                      iconName="CirclePlusFilled"
+                      class="add text-[#1890ff]"
+                      @click="increase(item)"
+                    />
+                    <!-- 图标 -->
+                    <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" />
+                    <svg-icon v-else :iconClass="item.icon" class="svg-icon" />
+                    <span class="title">{{ item.title }}</span>
+                    <svg-icon iconClass="drag" class="dragIcon" />
+                  </div>
+                </template>
+            </VueDraggableNext>
+            <div class="empty h-full" v-if="rightEdit.length == 0">全部都显示在侧边栏了</div>
           </el-scrollbar>
         </div>
       </div>
@@ -77,35 +102,13 @@ import { defineComponent } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
 import { mapState } from "vuex";
 
-const listEdit = [
-  {
-    class: "left-edit-area",
-    title: "显示在导航栏上",
-    button: "reduce",
-    type: "leftEdit",
-    list: "leftEdit",
-    group: "outsideGroup", // 用于分组，同一组的不同list可以相互拖动
-  },
-  {
-    class: "right-edit-area",
-    title: "更多",
-    button: "add",
-    type: "rightEdit",
-    list: "rightEdit",
-    group: "insideGroup",
-  },
-];
-
 export default defineComponent({
   components: {
-    draggable: VueDraggableNext,
+    VueDraggableNext,
   },
   data() {
     return {
-      list: listEdit,
       dialogVisible: false,
-      enabled: true,
-      dragging: false,
       cursorStyle: "",
       outsideGroup: {
         name: "draggable",
@@ -181,9 +184,6 @@ export default defineComponent({
       this.leftEdit = cloneDeep(left);
       this.rightEdit = cloneDeep(right);
     },
-    fnSelect(type) {
-      return this[type];
-    },
     // 删除
     reduce(item) {
       if (item.if_fixed == 1) return;
@@ -235,10 +235,10 @@ export default defineComponent({
 }
 .draggable {
   .container {
-    border-radius: 4px;
     width: 195px;
     .left-text {
-      padding-bottom: 10px;
+      user-select: none;
+      padding: 0 10px 10px 10px;
     }
   }
   .drag-cursor {
@@ -246,6 +246,7 @@ export default defineComponent({
   }
   .edit-area {
     height: 384px;
+    border-radius: 6px;
     background-color: var(--color-draggable-body);
     .chosen {
       color: black;
@@ -260,16 +261,20 @@ export default defineComponent({
     opacity: 0.5;
     cursor: not-allowed !important;
     .svg-icon {
-      cursor: not-allowed;
+      cursor: not-allowed !important;
     }
   }
   .list-group-item {
     padding: 0 20px;
     height: 45px;
-    cursor: pointer;
+    cursor: grab;
+    .title {
+      user-select: none;
+    }
     .el-icon {
       font-size: 17px;
       margin-right: 5px;
+      cursor: pointer;
     }
     .dragIcon {
       cursor: grab;
