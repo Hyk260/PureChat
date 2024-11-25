@@ -63,5 +63,6 @@
   // 指定要使用的框架支持。
   "i18n-ally.enabledFrameworks": [
     "vue"
-  ]
+  ],
+  "Codegeex.CommitMessageStyle": "ConventionalCommits"
 }

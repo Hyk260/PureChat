@@ -49,7 +49,7 @@ const list = [
   {
     id: "edit",
     title: "编辑",
-    // hidden: true,
+    hidden: true,
     icon: "Edit",
     // <el-icon><Edit /></el-icon>
   },
