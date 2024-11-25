@@ -61,7 +61,7 @@ function highlight(str, lang) {
     let codeContent = hljs.highlight(str, { language: lang, ignoreIllegals: true }).value;
     return `<pre class="hljs language-${lang ? lang : ""}">${copyButton}<code>${codeContent}</code></pre>`;
   } else {
-    return `<pre class="hljs">${copyButton}<code>${hljsAuto ?? md.utils.escapeHtml(str)}</code></pre>`;
+    return `<pre class="hljs">${copyButton}<code>${md.utils.escapeHtml(str)}</code></pre>`;
   }
 }
 
