@@ -1,10 +1,10 @@
 import "./config";
 import { app, BrowserWindow, protocol } from 'electron'
 import { electronApp, optimizer } from "./toolkit/utils";
-import { notify } from './notification/index';
+import { setNotification } from "./notification/index";
 import { isMac } from "./platform";
 import { logger } from './logger/index';
-// import { trayFn } from './tray/index';
+import { setTray } from "./tray/index";
 import { createWindow, winSingle, ipcEvent, setDefaultProtocol, initFolder } from "./utils/index";
 
 class Background {
@@ -40,15 +40,15 @@ class Background {
     // 此方法将在Electron完成后调用 初始化，并准备创建浏览器窗口。 某些API只能在此事件发生后使用。
     app.whenReady().then(() => {
       logger.info('app whenReady')
-      notify()
+      setNotification();
       setDefaultProtocol()
       ipcEvent();
       this.createWindow();
-      // trayFn()
+      setTray();
       electronApp.setAppUserModelId('com.electron')
       optimizer.registerFramelessWindowIpc()
       app.on('browser-window-created', (_, window) => {
-        optimizer.watchWindowShortcuts(window)
+        optimizer.watchWindowShortcuts(window, { escToCloseWindow : true });
       })
     })
 

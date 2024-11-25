@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 // https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
 export const platform = {
   isWindows: process.platform === "win32",

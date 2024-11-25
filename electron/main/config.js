@@ -1,3 +1,9 @@
+// 托盘
+global.tray = null;
+
+// 主窗口
+global.mainWin = null;
+
 // 主窗口配置
 global.mainWinOptions = {
   width: 1078,
@@ -17,4 +23,3 @@ global.loginWinOptions = {
   frame: false, // 创建无边框窗口
   resizable: false, //禁止改变窗口尺寸
 };
-
