@@ -28,6 +28,7 @@ import { nextTick } from "vue";
 
 const conversation = {
   state: {
+    messageEdit: null, // 消息编辑
     sessionDraftMap: new Map(), //会话草稿
     totalUnreadMsg: 0, // 未读消息总数
     isChatBoxVisible: false, //是否显示输入框
@@ -232,6 +233,9 @@ const conversation = {
     // 回复消息
     setReplyMsg(state, payload) {
       state.currentReplyMsg = payload;
+    },
+    setMessageEdit(state, payload) {
+      state.messageEdit = payload;
     },
     setConversationValue(state, { key, value }) {
       state[key] = value;

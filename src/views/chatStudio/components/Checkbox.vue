@@ -1,5 +1,5 @@
 <template>
-  <label class="input-check" v-show="isShowCheck">
+  <label class="input-check fade-slide-fade-in" v-show="isShowCheck">
     <input type="checkbox" class="check-btn" />
     <div class="check-mark"></div>
     <div class="mask wh-full" v-show="isMask"></div>

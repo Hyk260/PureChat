@@ -17,16 +17,16 @@
         <span v-else-if="chatType('@TIM#SYSTEM')" class="system"> 系统通知 </span>
       </p>
     </div>
-    <div class="flex">
+    <div class="flex gap-10">
       <!-- <div class="message-info-add" v-show="chat.type === 'GROUP' && false" title="添加成员">
         <svg-icon iconClass="tianjia" class="icon-hover" />
       </div> -->
-      <div class="message-info-setup" v-show="isGroupChat" title="设置" @click="openSetup">
-        <FontIcon iconName="MoreFilled" class="icon-hover" />
+      <div class="share" title="分享对话" @click="openShare">
+        <svg-icon class="cursor-pointer icon-hover" iconClass="share" />
       </div>
-      <!-- <div class="message-info-share" v-if="isRobot(toAccount)" title="截图分享" @click="openShare">
-        <svg-icon class="share" iconClass="share" />
-      </div> -->
+      <div class="setup" v-show="isGroupChat" title="群详情" @click="openSetup">
+        <FontIcon iconName="MoreFilled" class="cursor-pointer icon-hover" />
+      </div>
     </div>
   </header>
 </template>
@@ -71,7 +71,7 @@ const chatNick = (type, chat) => {
 };
 
 const openShare = () => {
-  emitter.emit("handleShareModal");
+  commit("setCheckboxState", true);
 };
 
 const openSetup = () => {
@@ -108,10 +108,5 @@ watch(toAccount, (data) => {
       }
     }
   }
-}
-
-.message-info-setup {
-  cursor: pointer;
-  margin-left: 10px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="menubar" v-if="showMenuList(item)">
-    <div class="flex" :class="isSelf(item) ? 'flex-row-reverse' : ''">
+    <div class="flex" :class="!isSelf(item) ? 'flex-row-reverse' : ''">
       <div
         class="menubar-item flex-c"
         v-for="item in flilterList"
@@ -17,6 +17,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
 import { isSelf, handleCopyMsg } from "../utils/utils";
 
@@ -30,6 +31,11 @@ const props = defineProps({
   item: {
     type: Object,
     default: null,
+  },
+  // unSend(未发送)fail(发送失败)success(发送成功)
+  status: {
+    type: String,
+    default: "unSend",
   },
 });
 
@@ -63,17 +69,20 @@ const list = [
   },
 ];
 
-const { showCheckbox } = useState({
+const { commit } = useStore();
+const { messageEdit, showCheckbox } = useState({
+  messageEdit: (state) => state.conversation.messageEdit,
   showCheckbox: (state) => state.conversation.showCheckbox,
 });
 
 const flilterList = computed(() => {
+  const _type = props.item.type;
   return list
     .filter((item) => {
       if (item.id === "edit") {
-        return props.item.type === "TIMTextElem";
+        return _type === "TIMTextElem";
       } else if (item.id === "copy") {
-        return ["TIMTextElem", "TIMImageElem"].includes(props.item.type);
+        return ["TIMTextElem", "TIMImageElem"].includes(_type);
       } else {
         return true;
       }
@@ -82,6 +91,8 @@ const flilterList = computed(() => {
 });
 
 function showMenuList(item) {
+  if (props.status !== 'success') return false;
+  if (messageEdit.value?.ID === item?.ID) return false;
   // 图片 文件 文本 合并
   const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem"];
   return (
@@ -101,7 +112,7 @@ function handleMenuEvent(data) {
       handleCopyMsg(item);
       break;
     case "edit": // 编辑
-      console.log("编辑");
+      commit("setMessageEdit", item) 
       break;
     case "setup": // 设置
       console.log("设置");

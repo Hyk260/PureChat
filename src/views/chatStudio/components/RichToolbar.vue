@@ -48,7 +48,7 @@
     <!-- 滚动到底部 -->
     <span
       :title="$t('chat.scrollToTheBottom')"
-      class="chat-top"
+      class="chat-top animate-chat-slide-in"
       @click="onTobBottom"
       v-show="tobottom"
     >
@@ -233,24 +233,11 @@ emitter.on("onisbot", (state) => {
   }
 }
 .chat-top {
-  animation: chat_top 0.3s ease;
   .svg-left {
     transform: rotate(-90deg);
   }
   .el-icon {
     cursor: pointer;
-  }
-}
-
-@keyframes chat_top {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 </style>
