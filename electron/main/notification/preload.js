@@ -1,22 +1,20 @@
-import { ipcRenderer, contextBridge } from 'electron'
+import { ipcRenderer, contextBridge } from "electron";
 
 console.log("notification:preload.js");
 
-let timeout = null
+let timeout = null;
 
-ipcRenderer.on('uikit:notification:show', (_, data) => {
-  let duration = 2000;  // 默认持续时间为2000毫秒;
+ipcRenderer.on("uikit:notification:show", (_, data) => {
+  let duration = 2000; // 默认持续时间为2000毫秒;
 
   if (data) {
     duration = data.duration || 2000;
-    if (data.custom) {
-      const { title, body, icon, extraData } = data;
-      window.dispatchEvent(
-        new CustomEvent('notification-message', {
-          detail: { title, body, icon, extraData }
-        })
-      );
-    }
+    const { title, body, icon, extraData } = data;
+    window.dispatchEvent(
+      new CustomEvent("notification-message", {
+        detail: { title, body, icon, extraData },
+      })
+    );
   }
 
   // 清除之前的定时器
@@ -28,13 +26,13 @@ ipcRenderer.on('uikit:notification:show', (_, data) => {
   }, duration);
 });
 
-contextBridge.exposeInMainWorld('notification', {
+contextBridge.exposeInMainWorld("notification", {
   close: () => {
-    ipcRenderer.send("uikit:notification:close", true)
+    ipcRenderer.send("uikit:notification:close", true);
   },
   doClick: (extraData) => {
-    ipcRenderer.send('uikit:notification:on-click', extraData)
-  }
-})
+    ipcRenderer.send("uikit:notification:on-click", extraData);
+  },
+});
 
-contextBridge.exposeInMainWorld('electron', {})
+contextBridge.exposeInMainWorld("electron", {});

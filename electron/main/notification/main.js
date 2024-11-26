@@ -21,7 +21,6 @@ class Notification extends TypedEventEmitter {
   icon;
   offset = NOTIFICATION_OFFSET;
   duration = NOTIFICATION_DURATION;
-  customPage;
   width = NOTIFICATION_WIDTH;
   height = NOTIFICATION_HEIGHT;
   debug = false;
@@ -54,13 +53,12 @@ class Notification extends TypedEventEmitter {
       alwaysOnTop: true, // 窗口是否永远在别的窗口的上面
       skipTaskbar: true, // 是否在任务栏中显示窗口
       webPreferences: {
-        // preload: fileURLToPath(new URL('preload.js', import.meta.url)),
         preload: join(__dirname, "../preload/notif.mjs"),
         sandbox: false,
         backgroundThrottling: false,
         enableWebSQL: false,
         spellcheck: false,
-        devTools: this.debug && !!this.customPage,
+        devTools: this.debug,
       },
     });
 
@@ -71,11 +69,11 @@ class Notification extends TypedEventEmitter {
         win.webContents.send('uikit:notification:show', info);
       }, 100);
       win.showInactive();
-      if (this.debug && !!this.customPage) win.webContents.openDevTools();
+      if (this.debug) win.webContents.openDevTools();
     });
 
     const onClick = (event, extraData) => {
-      this.emit("click", extraData);
+      this.emit("handleNotifClick", extraData);
       const win = BrowserWindow.fromWebContents(event.sender);
       if (win && !win.isDestroyed()) {
         win.close();
@@ -126,7 +124,6 @@ class Notification extends TypedEventEmitter {
       icon,
       offset = NOTIFICATION_OFFSET,
       duration = NOTIFICATION_DURATION,
-      customPage,
       width = NOTIFICATION_WIDTH,
       height = NOTIFICATION_HEIGHT,
       debug = false,
@@ -137,12 +134,9 @@ class Notification extends TypedEventEmitter {
     this.offset = offset;
     this.duration = Math.max(duration, 3000);
 
-    if (customPage) {
-      this.customPage = customPage;
       this.width = width;
       this.height = height;
       this.debug = debug;
-    }
   }
 
   destroy() {
@@ -160,7 +154,6 @@ class Notification extends TypedEventEmitter {
       icon: icon ? (typeof icon === "object" ? icon.toDataURL() : icon) : this.icon,
       extraData,
       duration: this.duration,
-      custom: !!this.customPage,
     };
 
     if (isWindows) {
@@ -188,7 +181,7 @@ class Notification extends TypedEventEmitter {
         icon,
       });
       notifier.on("click", () => {
-        this.emit("click", extraData);
+        this.emit("handleNotifClick", extraData);
       });
       notifier.show();
     }

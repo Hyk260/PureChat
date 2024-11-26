@@ -6,14 +6,14 @@ export function setNotification() {
 
   notification.config({
     title: "PureChat",
-    // duration: 100000,
-    customPage: true,
     width: 320,
     height: 80,
-    // debug: true // Open the devTool for debugging
+    // debugging
+    // duration: 100000,
+    // debug: true, // Open the devTool for debugging
   });
 
-  notification.on("click", (data) => {
+  notification.on("handleNotifClick", (data) => {
     if (!data) return;
     mainTop();
     global.mainWin.webContents.send("notif:click", data);

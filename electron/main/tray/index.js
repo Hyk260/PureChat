@@ -4,7 +4,6 @@ import { getIconPath } from "../utils/util";
 
 let tray = null;
 let icon = null;
-const toolTip = import.meta.env.VITE_APP_NAME || "PureChat";
 
 if (isMac) {
   icon = getIconPath("icon-32x32@2x.png");
@@ -17,7 +16,7 @@ export function setTray() {
   // 设置托盘图标
   tray = new Tray(icon);
 
-  tray.setToolTip(toolTip); // 鼠标指针在托盘图标上悬停时显示的文本
+  tray.setToolTip("PureChat"); // 鼠标指针在托盘图标上悬停时显示的文本
   // 设置右键菜单列表
   const trayContextMenu = Menu.buildFromTemplate([
     {

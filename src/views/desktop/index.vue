@@ -36,31 +36,19 @@ function onClick(data = {}) {
   console.log(window);
   console.log("click", data);
   const dody = cloneDeep(data);
-  mode.value = "animate__zoomOutRight"
-   setTimeout(() => {
+  mode.value = "animate__zoomOutRight";
+  setTimeout(() => {
     window.notification.doClick(dody || {});
-  },500)
+  }, 500);
 }
 
 function onClose() {
   console.log("close");
-  mode.value = "animate__zoomOutRight"
+  mode.value = "animate__zoomOutRight";
   setTimeout(() => {
     window.notification.close();
-  },500)
+  }, 500);
 }
-
-// function fnStyle(t = mode) {
-//   // return ''
-//   switch (t) {
-//     case "enter":
-//       return "animate__fadeInRightBig";
-//     case "leave":
-//       return "animate__zoomOut";
-//     default:
-//       return "";
-//   }
-// }
 </script>
 
 <style lang="scss" scoped>
