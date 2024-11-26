@@ -20,7 +20,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
     "@microsoft/fetch-event-source": "^2.0.1",
-    "@tencentcloud/chat": "3.4.6",
+    "@tencentcloud/chat": "3.4.8",
     "@vueuse/components": "^10.7.0",
     "@vueuse/core": "^8.4.2",
     "@wangeditor/editor": "5.1.23",
@@ -31,7 +31,7 @@
     "autoprefixer": "^10.4.19",
     "axios": "^0.26.1",
     "dayjs": "^1.11.11",
-    "element-plus": "^2.8.0",
+    "element-plus": "^2.8.8",
     "fast-glob": "^3.3.2",
     "highlight.js": "11.9.0",
     "js-cookie": "^3.0.5",
