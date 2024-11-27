@@ -5,7 +5,7 @@
   cursor: pointer;
   padding: 0 5px;
   color: var(--white);
-  border: var(--border-in-light);
+  border: var(--color-border-in-light);
   transform: translateX(10px);
   pointer-events: none;
   opacity: 0;
@@ -24,10 +24,6 @@
 
 // Theme: Tokyo-night-Dark
 // origin: https://github.com/enkia/tokyo-night-vscode-theme
-// Description: Original highlight.js style
-// Author: (c) Henri Vandersleyen <hvandersleyen@gmail.com>
-// License: see project LICENSE
-// Touched: 2022
 .markdown-body {
   pre {
     padding: 0;
@@ -52,8 +48,7 @@
   .hljs,
   pre {
     position: relative;
-    background: var(--pure-markdown-color);
-    // color: #cbd2ea;
+    background: var(--color-hljs-color);
     color: currentColor;
   }
 

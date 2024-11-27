@@ -94,7 +94,7 @@ function operation() {
     border-radius: 4px;
     cursor: pointer;
     &:hover {
-      background-color: var(--hover-color);
+      background-color: var(--pure-hover-color);
     }
   }
   .style-svg {
@@ -103,7 +103,6 @@ function operation() {
   }
 
   .current {
-    // --color-aside-list-action
     background: var(--color-message-active) !important;
   }
   .icon-title {

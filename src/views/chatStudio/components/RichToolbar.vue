@@ -196,7 +196,6 @@ emitter.on("onisbot", (state) => {
   padding: 0 5px;
   display: flex;
   position: relative;
-  background: var(--color-toolbar);
   & > span {
     width: 42px;
     align-items: center;

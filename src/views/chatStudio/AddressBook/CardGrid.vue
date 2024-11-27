@@ -67,7 +67,7 @@ export default {
   cursor: pointer;
   width: 100%;
   &:hover {
-    background: var(--hover-color);
+    background: var(--pure-hover-color);
   }
   .left-item {
     img {

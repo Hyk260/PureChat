@@ -190,6 +190,7 @@ onBeforeUnmount(() => {
     padding: 24px 0;
     .characters {
       height: 38px;
+      color: var(--black);
       span {
         @include ellipsisBasic(2);
       }
