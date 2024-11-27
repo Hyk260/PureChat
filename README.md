@@ -24,11 +24,7 @@
 [![Windows][Windows-image]][download-url]
 [![MacOS][MacOS-image]][download-url]
 
-[web-url]: https://purechat.cn
-[download-url]: https://github.com/Hyk260/PureChat/releases
-[Web-image]: https://img.shields.io/badge/Web-orange?logo=microsoftedge
-[Windows-image]: https://img.shields.io/badge/-Windows-blue?logo=windows
-[MacOS-image]: https://img.shields.io/badge/-MacOS-black?logo=apple
+<!-- SHIELD GROUP -->
 
 [![GitHub license](https://img.shields.io/github/license/Hyk260/PureChat)](https://github.com/Hyk260/PureChat/blob/master/LICENSE)
 [![Stars](https://img.shields.io/github/stars/Hyk260/PureChat.svg)](https://github.com/Hyk260/PureChat/stargazers)
@@ -99,3 +95,22 @@ pnpm build
 <img src="./images/config.png">
 
 <img src="./images/screenshot.png">
+
+### 环境变量
+
+本项目提供了一些额外的配置项，使用环境变量进行设置：
+
+| 环境变量                | 类型 | 描述                                                  | 示例                                                                  |
+| -------------------    | ---- | ------------------------------------------------------| ------------------------------------------------                     |
+| `VITE_OPENAI_API_KEY`  | 必选 |  OpenAI API 密钥                                       | `sk-xxxxxx...xxxxxx`                                                 |
+| `VITE_OPENAI_PROXY_URL`| 可选 |  OpenAI 接口代理，此配置可以覆盖默认 OpenAI API 基础 URL | `https://aihubmix.com/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
+| `VITE_IM_SDK_APPID`    | 必选 | 腾讯IM SDKAppID https://cloud.tencent.com/product/im   | `xxxxxx`                                                             |
+| `VITE_SERVICE_BASE_URL`| 必选 | 服务器地址                                             | `https://your.api.com/`                                               |
+
+<!-- LINK GROUP -->
+
+[web-url]: https://purechat.cn
+[download-url]: https://github.com/Hyk260/PureChat/releases
+[Web-image]: https://img.shields.io/badge/Web-orange?logo=microsoftedge
+[Windows-image]: https://img.shields.io/badge/-Windows-blue?logo=windows
+[MacOS-image]: https://img.shields.io/badge/-MacOS-black?logo=apple
