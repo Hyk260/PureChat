@@ -10,77 +10,67 @@
     :before-close="handleClose"
   >
     <div>
-      <ul class="container">
-        <!-- prompt -->
-        <div class="prompt p-20 flex-c" v-for="item in maskData.prompt" :key="item.id">
-          <!-- <svg-icon iconClass="drag" class="drag-icon" /> -->
-          <el-select class="prompt-select" v-model="item.role">
-            <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
-          </el-select>
-          <el-input
-            v-model="item.content"
-            :autosize="{ minRows: 1, maxRows: 4 }"
-            type="textarea"
-            placeholder="prompt"
-          />
-          <!-- <el-icon @click="onClose"><CircleCloseFilled /></el-icon> -->
-        </div>
-        <li class="container-item flex-bc" v-for="item in modelData" :key="item.ID">
-          <div>
-            <div class="title">{{ item.Title }}</div>
-            <div class="subTitle">{{ item.SubTitle }}</div>
-          </div>
-          <el-tooltip content="获取模型列表" placement="top" v-if="item.options && isOllama()">
-            <!-- && isOllama() -->
-            <el-icon class="refresh" @click="onRefresh()">
-              <Refresh />
-            </el-icon>
-          </el-tooltip>
-          <!-- 模型 -->
-          <el-select v-if="item.options" v-model="item.defaultValue">
-            <el-option
-              v-for="models in item.options.chatModels"
-              :key="models.id"
-              :label="models.id + `(${item.options.name})`"
-              :value="models.id"
-            />
-          </el-select>
-          <div class="range" v-else-if="isRange(item.ID)">
-            {{ item.defaultValue }}
-            <input
-              v-model="item.defaultValue"
-              :min="item.min"
-              :max="item.max"
-              :step="item.step"
-              type="range"
-            />
-          </div>
-          <div class="number" v-else-if="['max_tokens'].includes(item.ID)">
-            <input v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
-          </div>
-          <div class="input flex-ac" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
-            <el-tooltip content="配置教程" placement="top">
-              <span
-                v-if="item.doubt && ['token'].includes(item.ID)"
-                class="flex mr-5 cursor-pointer"
-              >
-                <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
-              </span>
-              <!-- ollama -->
-              <span v-else-if="item.doubt && isOllama()" class="flex mr-5 cursor-pointer">
-                <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
-              </span>
-              <span v-else> </span>
+      <el-scrollbar>
+        <ul class="container max-h-600 px-10">
+          <!-- prompt -->
+          <DragPrompt :prompt="maskData.prompt" @handlePrompt="handlePrompt" />
+          <li class="container-item flex-bc" v-for="item in modelData" :key="item.ID">
+            <div>
+              <div class="title">{{ item.Title }}</div>
+              <div class="subTitle">{{ item.SubTitle }}</div>
+            </div>
+            <el-tooltip content="获取模型列表" placement="top" v-if="item.options && isOllama()">
+              <!-- && isOllama() -->
+              <el-icon class="refresh" @click="onRefresh()">
+                <Refresh />
+              </el-icon>
             </el-tooltip>
-            <el-input
-              v-model="item.defaultValue"
-              :placeholder="item.Placeholder"
-              :type="item.ID === 'token' ? 'password' : 'text'"
-              :show-password="item.ID === 'token'"
-            />
-          </div>
-        </li>
-      </ul>
+            <!-- 模型 -->
+            <el-select v-if="item.options" v-model="item.defaultValue">
+              <el-option
+                v-for="models in item.options.chatModels"
+                :key="models.id"
+                :label="models.id + `(${item.options.name})`"
+                :value="models.id"
+              />
+            </el-select>
+            <div class="range" v-else-if="isRange(item.ID)">
+              {{ item.defaultValue }}
+              <input
+                v-model="item.defaultValue"
+                :min="item.min"
+                :max="item.max"
+                :step="item.step"
+                type="range"
+              />
+            </div>
+            <div class="number" v-else-if="['max_tokens'].includes(item.ID)">
+              <input v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
+            </div>
+            <div class="input flex-ac" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
+              <el-tooltip content="配置教程" placement="top">
+                <span
+                  v-if="item.doubt && ['token'].includes(item.ID)"
+                  class="flex mr-5 cursor-pointer"
+                >
+                  <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
+                </span>
+                <!-- ollama -->
+                <span v-else-if="item.doubt && isOllama()" class="flex mr-5 cursor-pointer">
+                  <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
+                </span>
+                <span v-else> </span>
+              </el-tooltip>
+              <el-input
+                v-model="item.defaultValue"
+                :placeholder="item.Placeholder"
+                :type="item.ID === 'token' ? 'password' : 'text'"
+                :show-password="item.ID === 'token'"
+              />
+            </div>
+          </li>
+        </ul>
+      </el-scrollbar>
     </div>
     <template #footer>
       <span>
@@ -101,7 +91,8 @@ import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { useStore } from "vuex";
 import { ClientApi } from "@/ai/api";
-import { ROLES, StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
+import DragPrompt from "./DragPrompt.vue";
+import { StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 
 const modelData = ref(null);
@@ -124,6 +115,11 @@ function isRange(id) {
 function isOllama() {
   const model = getModelType(toAccount.value);
   return [ModelProvider.Ollama].includes(model);
+}
+
+function handlePrompt(prompt) {
+  maskData.value.prompt = prompt;
+  console.log(prompt);
 }
 
 async function onRefresh() {
@@ -190,8 +186,7 @@ function resetRobotMask() {
 }
 
 function handleClose(done) {
-  done?.();
-  // setDialog(false);
+  done && done();
 }
 // 重置
 function handleCancel() {
@@ -213,8 +208,6 @@ function handleConfirm() {
   storeRobotModel(model);
   storeRobotMask(maskData.value);
 }
-
-function onClose() {}
 
 function toUrl(url) {
   window.open(url, "_blank");
@@ -268,23 +261,6 @@ input[type="range"]::-ms-thumb:hover {
   margin-left: auto;
   margin-right: 5px;
 }
-.prompt {
-  .el-icon {
-    margin: 0 10px;
-    color: #4498ef;
-    font-size: 15px;
-    cursor: pointer;
-  }
-  .prompt-select {
-    width: 125px;
-    margin-right: 10px;
-  }
-  .drag-icon {
-    margin-right: 5px;
-    cursor: grab;
-  }
-}
-
 .container {
   .container-item {
     color-scheme: light;
@@ -322,7 +298,6 @@ input[type="range"] {
   color: #303030;
   margin: 2px;
 }
-
 input[type="number"],
 input[type="text"],
 input[type="password"] {
