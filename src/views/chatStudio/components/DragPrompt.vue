@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="prompt p-20 flex-c" v-for="(item, i) in promptData" :key="item.id">
+  <VueDraggableNext class="w-full" :list="promptData">
+    <div class="prompt py-10 flex-c" v-for="(item, i) in promptData" :key="item.id">
       <svg-icon iconClass="drag" class="drag-icon" />
       <el-select class="prompt-select" v-model="item.role">
         <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
@@ -14,18 +14,22 @@
       />
       <el-icon @click="onClose(i)"><CircleCloseFilled /></el-icon>
     </div>
-    <div class="px-20" v-if="promptData.length < MAXNUM">
+    <div v-if="promptData.length < MAXNUM">
       <el-button class="w-full" @click="addPrompt">
         <el-icon><CirclePlusFilled /></el-icon>
       </el-button>
     </div>
-  </div>
+  </VueDraggableNext>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { ROLES } from "@/ai/constant";
-// import { VueDraggableNext } from "vue-draggable-next";
+import { VueDraggableNext } from "vue-draggable-next";
+
+defineOptions({
+  name: "DragPrompt",
+});
 
 const props = defineProps({
   prompt: {
@@ -59,7 +63,7 @@ function addPrompt() {
 <style lang="scss" scoped>
 .prompt {
   .el-icon {
-    margin: 0 10px;
+    margin-left: 5px;
     font-size: 15px;
     cursor: pointer;
   }

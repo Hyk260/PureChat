@@ -14,7 +14,7 @@
         <ul class="container max-h-600 px-10">
           <!-- prompt -->
           <DragPrompt :prompt="maskData.prompt" @handlePrompt="handlePrompt" />
-          <li class="container-item flex-bc" v-for="item in modelData" :key="item.ID">
+          <li class="container-item py-10 flex-bc" v-for="item in modelData" :key="item.ID">
             <div>
               <div class="title">{{ item.Title }}</div>
               <div class="subTitle">{{ item.SubTitle }}</div>
@@ -268,7 +268,6 @@ input[type="range"]::-ms-thumb:hover {
     color: var(--color-text-default);
     min-height: 40px;
     border-bottom: 1px solid #dedede;
-    padding: 10px 20px;
     .title {
       font-size: 14px;
       font-weight: bolder;
