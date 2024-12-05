@@ -10,67 +10,65 @@
     :before-close="handleClose"
   >
     <div>
-      <el-scrollbar>
-        <ul class="container max-h-600 px-10">
-          <!-- prompt -->
-          <DragPrompt :prompt="maskData.prompt" @handlePrompt="handlePrompt" />
-          <li class="container-item py-10 flex-bc" v-for="item in modelData" :key="item.ID">
-            <div class="flex flex-col gap-5">
-              <div class="title">{{ item.Title }}</div>
-              <div class="subTitle">{{ item.SubTitle }}</div>
-            </div>
-            <el-tooltip content="获取模型列表" placement="top" v-if="item.options && isOllama()">
-              <!-- && isOllama() -->
-              <el-icon class="refresh" @click="onRefresh()">
-                <Refresh />
-              </el-icon>
+      <ul class="container max-h-600 px-10">
+        <!-- prompt -->
+        <DragPrompt :prompt="maskData.prompt" @handlePrompt="handlePrompt" />
+        <li class="container-item py-10 flex-bc" v-for="item in modelData" :key="item.ID">
+          <div class="flex flex-col gap-5">
+            <div class="title">{{ item.Title }}</div>
+            <div class="subTitle">{{ item.SubTitle }}</div>
+          </div>
+          <el-tooltip content="获取模型列表" placement="top" v-if="item.options && isOllama()">
+            <!-- && isOllama() -->
+            <el-icon class="refresh" @click="onRefresh()">
+              <Refresh />
+            </el-icon>
+          </el-tooltip>
+          <!-- 模型 -->
+          <el-select v-if="item.options" v-model="item.defaultValue">
+            <el-option
+              v-for="models in item.options.chatModels"
+              :key="models.id"
+              :label="models.id + `(${item.options.name})`"
+              :value="models.id"
+            />
+          </el-select>
+          <div class="range" v-else-if="isRange(item.ID)">
+            {{ item.defaultValue }}
+            <input
+              v-model="item.defaultValue"
+              :min="item.min"
+              :max="item.max"
+              :step="item.step"
+              type="range"
+            />
+          </div>
+          <div class="number" v-else-if="['max_tokens'].includes(item.ID)">
+            <input v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
+          </div>
+          <div class="input flex-ac" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
+            <el-tooltip content="配置教程" placement="top">
+              <span
+                v-if="item.doubt && ['token'].includes(item.ID)"
+                class="flex mr-5 cursor-pointer"
+              >
+                <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
+              </span>
+              <!-- ollama -->
+              <span v-else-if="item.doubt && isOllama()" class="flex mr-5 cursor-pointer">
+                <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
+              </span>
+              <span v-else> </span>
             </el-tooltip>
-            <!-- 模型 -->
-            <el-select v-if="item.options" v-model="item.defaultValue">
-              <el-option
-                v-for="models in item.options.chatModels"
-                :key="models.id"
-                :label="models.id + `(${item.options.name})`"
-                :value="models.id"
-              />
-            </el-select>
-            <div class="range" v-else-if="isRange(item.ID)">
-              {{ item.defaultValue }}
-              <input
-                v-model="item.defaultValue"
-                :min="item.min"
-                :max="item.max"
-                :step="item.step"
-                type="range"
-              />
-            </div>
-            <div class="number" v-else-if="['max_tokens'].includes(item.ID)">
-              <input v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
-            </div>
-            <div class="input flex-ac" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
-              <el-tooltip content="配置教程" placement="top">
-                <span
-                  v-if="item.doubt && ['token'].includes(item.ID)"
-                  class="flex mr-5 cursor-pointer"
-                >
-                  <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
-                </span>
-                <!-- ollama -->
-                <span v-else-if="item.doubt && isOllama()" class="flex mr-5 cursor-pointer">
-                  <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
-                </span>
-                <span v-else> </span>
-              </el-tooltip>
-              <el-input
-                v-model="item.defaultValue"
-                :placeholder="item.Placeholder"
-                :type="item.ID === 'token' ? 'password' : 'text'"
-                :show-password="item.ID === 'token'"
-              />
-            </div>
-          </li>
-        </ul>
-      </el-scrollbar>
+            <el-input
+              v-model="item.defaultValue"
+              :placeholder="item.Placeholder"
+              :type="item.ID === 'token' ? 'password' : 'text'"
+              :show-password="item.ID === 'token'"
+            />
+          </div>
+        </li>
+      </ul>
     </div>
     <template #footer>
       <span>
@@ -262,6 +260,8 @@ input[type="range"]::-ms-thumb:hover {
   margin-right: 5px;
 }
 .container {
+  overflow: hidden;
+  overflow-y: auto;
   .container-item {
     color-scheme: light;
     user-select: none;

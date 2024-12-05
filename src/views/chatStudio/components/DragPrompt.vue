@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="onClick()">
     <VueDraggableNext class="w-full" :list="promptData">
       <div class="prompt py-10 flex-c" v-for="(item, i) in promptData" :key="item.id">
         <svg-icon iconClass="drag" class="drag-icon" />
@@ -10,6 +10,7 @@
           v-model="item.content"
           :autosize="{ minRows: 1, maxRows: 1 }"
           @blur="onBlur"
+          @focus="onFocus"
           type="textarea"
           placeholder="prompt"
         />
@@ -27,6 +28,7 @@
 <script setup>
 import { ref } from "vue";
 import { ROLES } from "@/ai/constant";
+import { nanoid } from "@/ai/platforms/ollama/protocol";
 import { VueDraggableNext } from "vue-draggable-next";
 
 defineOptions({
@@ -41,12 +43,27 @@ const props = defineProps({
 });
 
 const MAXNUM = 4;
-const promptData = ref(props.prompt);
+const promptData = ref(null);
 
 const emit = defineEmits(["handlePrompt"]);
 
+function initPromptData() {
+  promptData.value = props.prompt;
+  promptData.value.map((item) => {
+    item.ID = nanoid();
+  });
+}
+
+function onClick() {
+  console.log("onClick", promptData.value);
+}
+
 function onBlur() {
   emit("handlePrompt", promptData);
+}
+
+function onFocus() {
+  console.log("onFocus", promptData.value);
 }
 
 function onClose(i) {
@@ -56,10 +73,13 @@ function onClose(i) {
 function addPrompt() {
   if (promptData.value.length >= MAXNUM) return;
   promptData.value.push({
+    id: nanoid(),
     role: ROLES[0],
     content: "",
   });
 }
+
+initPromptData()
 </script>
 
 <style lang="scss" scoped>
