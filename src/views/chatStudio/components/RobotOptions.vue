@@ -15,7 +15,7 @@
           <!-- prompt -->
           <DragPrompt :prompt="maskData.prompt" @handlePrompt="handlePrompt" />
           <li class="container-item py-10 flex-bc" v-for="item in modelData" :key="item.ID">
-            <div>
+            <div class="flex flex-col gap-5">
               <div class="title">{{ item.Title }}</div>
               <div class="subTitle">{{ item.SubTitle }}</div>
             </div>

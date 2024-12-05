@@ -1,25 +1,27 @@
 <template>
-  <VueDraggableNext class="w-full" :list="promptData">
-    <div class="prompt py-10 flex-c" v-for="(item, i) in promptData" :key="item.id">
-      <svg-icon iconClass="drag" class="drag-icon" />
-      <el-select class="prompt-select" v-model="item.role">
-        <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
-      </el-select>
-      <el-input
-        v-model="item.content"
-        :autosize="{ minRows: 1, maxRows: 4 }"
-        @blur="onBlur"
-        type="textarea"
-        placeholder="prompt"
-      />
-      <el-icon @click="onClose(i)"><CircleCloseFilled /></el-icon>
-    </div>
+  <div>
+    <VueDraggableNext class="w-full" :list="promptData">
+      <div class="prompt py-10 flex-c" v-for="(item, i) in promptData" :key="item.id">
+        <svg-icon iconClass="drag" class="drag-icon" />
+        <el-select class="prompt-select" v-model="item.role">
+          <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
+        </el-select>
+        <el-input
+          v-model="item.content"
+          :autosize="{ minRows: 1, maxRows: 1 }"
+          @blur="onBlur"
+          type="textarea"
+          placeholder="prompt"
+        />
+        <el-icon @click="onClose(i)"><CircleCloseFilled /></el-icon>
+      </div>
+    </VueDraggableNext>
     <div v-if="promptData.length < MAXNUM">
       <el-button class="w-full" @click="addPrompt">
         <el-icon><CirclePlusFilled /></el-icon>
       </el-button>
     </div>
-  </VueDraggableNext>
+  </div>
 </template>
 
 <script setup>
