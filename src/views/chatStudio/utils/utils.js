@@ -23,7 +23,7 @@ import RelayElemItem from "../ElemItemTypes/RelayElemItem.vue";
 import TextElemItem from "../ElemItemTypes/TextElemItem.vue";
 import TipsElemItem from "../ElemItemTypes/TipsElemItem.vue";
 import VideoElemItem from "../ElemItemTypes/VideoElemItem.vue";
-import groupTipElement from "../ElemItemTypes/GroupTipElement.vue";
+import GroupTipElement from "../ElemItemTypes/GroupTipElement.vue";
 
 export const dragControllerDiv = (node) => {
   let dragElement = document.getElementById("drag"); //滑块
@@ -187,7 +187,7 @@ export const loadMsgModule = (item) => {
     TIMFileElem: FileElemItem, // 文件消息
     TIMVideoFileElem: VideoElemItem, // 视频消息
     TIMCustomElem: CustomElemItem, // 自定义消息
-    TIMGroupTipElem: groupTipElement, // 群消息提示
+    TIMGroupTipElem: GroupTipElement, // 群消息提示
     TIMGroupSystemNoticeElem: GroupSystemNoticeElem, // 系统通知
   };
   if (isRevoked) return TipsElemItem;
