@@ -118,7 +118,7 @@ export default {
         fullscreen: true,
         icons: {
           state,
-          loading: `<img width="50" heigth="50" src="${loading}">`,
+          loading: `<img width="50" heigth="50" src="${this.loading}">`,
           indicator,
         },
       });
