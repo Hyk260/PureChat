@@ -222,10 +222,6 @@ export function getReplyMsgContent(reply) {
   return replyMsgContent;
 }
 
-export function getCustomMsgContent(type) {
-  return JSON.stringify(msgContent(type));
-}
-
 /**
  * 匹配不包含 <img src= 的字符串
  * @param {string[]} arr - 包含字符串和图片链接的数组

@@ -4,7 +4,7 @@
     :class="self ? 'is-text-self' : 'is-text-other'"
     @click="onClick"
   >
-    <div v-if="message.payload.description === 'loading'">
+    <div v-if="messageType('loading')">
       <loading />
     </div>
     <div v-else>
@@ -50,6 +50,9 @@ export default {
       } else {
         return "[自定义消息]";
       }
+    },
+    messageType(type) {
+      return this.message.payload.description === type;
     },
     onClick() {
       console.log(this.message);

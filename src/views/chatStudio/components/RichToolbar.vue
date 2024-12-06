@@ -165,7 +165,8 @@ function customMessage() {
 
 const isVision = computed(() => {
   if (isRobot(toAccount.value)) {
-    return getAllModels(model.value)?.vision;
+    // return getAllModels(model.value)?.vision;
+    return false
   } else {
     return true;
   }

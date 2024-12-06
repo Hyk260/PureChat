@@ -2,7 +2,8 @@ import { throttle } from "lodash-es";
 import tim from "@/utils/IM/im-sdk/tim";
 import emitter from "@/utils/mitt-bus";
 import { getImageSize } from "@/views/chatStudio/utils/utils";
-import { getReplyMsgContent, getCustomMsgContent } from "@/utils/chat/index";
+import { getReplyMsgContent } from "@/utils/chat/index";
+import { getCustomMsgContent } from '@/api/im-sdk-api/custom';
 
 const createProgressHandler = () => {
   let lastNum = 0;
