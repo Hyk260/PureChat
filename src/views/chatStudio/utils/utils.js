@@ -23,7 +23,7 @@ import RelayElemItem from "../ElemItemTypes/RelayElemItem.vue";
 import TextElemItem from "../ElemItemTypes/TextElemItem.vue";
 import TipsElemItem from "../ElemItemTypes/TipsElemItem.vue";
 import VideoElemItem from "../ElemItemTypes/VideoElemItem.vue";
-import groupTipElement from "../ElemItemTypes/groupTipElement.vue";
+import groupTipElement from "../ElemItemTypes/GroupTipElement.vue";
 
 export const dragControllerDiv = (node) => {
   let dragElement = document.getElementById("drag"); //滑块
