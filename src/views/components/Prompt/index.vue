@@ -56,12 +56,12 @@
 <script setup>
 import AgentSkeleton from "./AgentSkeleton.vue";
 import AgentCardBanner from "./AgentCardBanner.vue";
+import AgentCard from "./AgentCard.vue";
 import { getPrompt } from "@/api/node-admin-api/index";
 import { ref, watch, onBeforeMount } from "vue";
 import emitter from "@/utils/mitt-bus";
 import marketJson from "@/assets/db/market.json";
 import { localStg } from "@/utils/storage";
-import AgentCard from "./AgentCard.vue";
 
 const { VITE_APP_NAME } = import.meta.env;
 const { homepage, bugs } = __APP_INFO__.pkg;

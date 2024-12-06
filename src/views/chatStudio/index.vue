@@ -16,8 +16,8 @@
 <script setup>
 import ImageViewer from '../components/ImageViewer/index.vue';
 import { useState } from "@/utils/hooks/useMapper";
-import AddressBook from "./AddressBook/index.vue";
-import Prompt from "./Prompt/index.vue";
+import AddressBook from "../components/AddressBook/index.vue";
+import Prompt from "../components/Prompt/index.vue";
 import frameView from "./frameView.vue";
 import Message from "./message.vue";
 import sidebar from "./sidebar.vue";
