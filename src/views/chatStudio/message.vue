@@ -6,6 +6,7 @@
       <Search :class="{ 'opacity-0': arrowRight }" />
       <!-- tabs切换 -->
       <el-tabs
+        v-if="!isLocalMode"
         v-model="activeName"
         class="active-tabs"
         :class="{ 'opacity-0': arrowRight }"
@@ -16,7 +17,7 @@
         <el-tab-pane :label="$t('chat.mention')" name="mention"></el-tab-pane>
         <!-- <el-tab-pane label="群聊" name="groupChat"></el-tab-pane> -->
       </el-tabs>
-      <div class="scroll-container" :class="{ 'style-net': !networkStatus }">
+      <div class="scroll-container" :class="{ 'style-net': !networkStatus, 'local-mode': isLocalMode }">
         <!-- 连接已断开 -->
         <networklink :show="!networkStatus" />
         <!-- 会话列表 -->
@@ -79,6 +80,7 @@ import ReplyBox from "./components/ReplyBox.vue";
 import Search from "./components/Search.vue";
 import networklink from "./components/networklink.vue";
 
+const isLocalMode = window.__LOCAL_MODE
 const unread = ref("");
 const chatRef = ref(null);
 const activeName = ref("whole");
@@ -170,6 +172,10 @@ watchEffect(() => {
 .scroll-container {
   height: calc(100% - 60px - 40px);
   position: relative;
+}
+.local-mode {
+  height: calc(100% - 60px);
+   position: relative;
 }
 .style-net {
   height: calc(100% - 60px - 34px - 40px);

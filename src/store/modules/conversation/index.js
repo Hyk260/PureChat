@@ -366,6 +366,7 @@ const conversation = {
     },
     // 消息已读
     hasReadMessage({ state }, payload) {
+      if (window?.__LOCAL_MODE) return;
       const {
         convId,
         message: { unreadCount },

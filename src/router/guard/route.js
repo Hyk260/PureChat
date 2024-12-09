@@ -13,6 +13,7 @@ export function createRouteGuard(router) {
       next();
     } else {
       if (to.path !== "/login") {
+        if (window?.__LOCAL_MODE) next()
         next({ path: "/login" });
       } else {
         next();

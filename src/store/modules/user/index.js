@@ -131,6 +131,7 @@ const user = {
     },
     // 重新登陆
     reLoginHandler({ state, dispatch }) {
+      if (window?.__LOCAL_MODE) return
       try {
         const data = localStg.get(USER_MODEL) || {};
         if (data) {
