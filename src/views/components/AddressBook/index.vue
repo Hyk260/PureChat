@@ -32,8 +32,8 @@ export default {
   name: "AddressBook",
   data() {
     return {
-      title: "常用联系人",
-      active: "ForkSpoon",
+      title: "AI大模型",
+      active: "aiModel",
       friend: [],
       robotList: [],
       groupListInfo: [],

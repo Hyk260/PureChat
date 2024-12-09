@@ -29,6 +29,10 @@ export const __APP_INFO__ = {
   lastBuildTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
 };
 
-export const viteDefine = {
-  __APP_INFO__: JSON.stringify(__APP_INFO__),
+export const viteDefine = (env) => {
+  // console.log("viteEnv", viteEnv);
+  return {
+    __APP_INFO__: JSON.stringify(__APP_INFO__),
+    __LOCAL_MODE: env?.VITE_LOCAL_MODE === "Y"
+  }
 };
