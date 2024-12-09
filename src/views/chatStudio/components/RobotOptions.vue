@@ -10,23 +10,11 @@
     :before-close="handleClose"
   >
     <div>
-      <ul class="container">
+      <ul class="container max-h-600 px-10">
         <!-- prompt -->
-        <div class="prompt p-20 flex-c" v-for="item in maskData.prompt" :key="item.id">
-          <!-- <svg-icon iconClass="drag" class="drag-icon" /> -->
-          <el-select class="prompt-select" v-model="item.role">
-            <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
-          </el-select>
-          <el-input
-            v-model="item.content"
-            :autosize="{ minRows: 1, maxRows: 4 }"
-            type="textarea"
-            placeholder="prompt"
-          />
-          <!-- <el-icon @click="onClose"><CircleCloseFilled /></el-icon> -->
-        </div>
-        <li class="container-item flex-bc" v-for="item in modelData" :key="item.ID">
-          <div>
+        <DragPrompt :prompt="maskData.prompt" @handlePrompt="handlePrompt" />
+        <li class="container-item py-10 flex-bc" v-for="item in modelData" :key="item.ID">
+          <div class="flex flex-col gap-5">
             <div class="title">{{ item.Title }}</div>
             <div class="subTitle">{{ item.SubTitle }}</div>
           </div>
@@ -101,7 +89,8 @@ import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { useStore } from "vuex";
 import { ClientApi } from "@/ai/api";
-import { ROLES, StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
+import DragPrompt from "./DragPrompt.vue";
+import { StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 
 const modelData = ref(null);
@@ -124,6 +113,11 @@ function isRange(id) {
 function isOllama() {
   const model = getModelType(toAccount.value);
   return [ModelProvider.Ollama].includes(model);
+}
+
+function handlePrompt(prompt) {
+  maskData.value.prompt = prompt;
+  console.log(prompt);
 }
 
 async function onRefresh() {
@@ -190,8 +184,7 @@ function resetRobotMask() {
 }
 
 function handleClose(done) {
-  done?.();
-  // setDialog(false);
+  done && done();
 }
 // 重置
 function handleCancel() {
@@ -213,8 +206,6 @@ function handleConfirm() {
   storeRobotModel(model);
   storeRobotMask(maskData.value);
 }
-
-function onClose() {}
 
 function toUrl(url) {
   window.open(url, "_blank");
@@ -268,31 +259,15 @@ input[type="range"]::-ms-thumb:hover {
   margin-left: auto;
   margin-right: 5px;
 }
-.prompt {
-  .el-icon {
-    margin: 0 10px;
-    color: #4498ef;
-    font-size: 15px;
-    cursor: pointer;
-  }
-  .prompt-select {
-    width: 125px;
-    margin-right: 10px;
-  }
-  .drag-icon {
-    margin-right: 5px;
-    cursor: grab;
-  }
-}
-
 .container {
+  overflow: hidden;
+  overflow-y: auto;
   .container-item {
     color-scheme: light;
     user-select: none;
     color: var(--color-text-default);
     min-height: 40px;
     border-bottom: 1px solid #dedede;
-    padding: 10px 20px;
     .title {
       font-size: 14px;
       font-weight: bolder;
@@ -322,7 +297,6 @@ input[type="range"] {
   color: #303030;
   margin: 2px;
 }
-
 input[type="number"],
 input[type="text"],
 input[type="password"] {

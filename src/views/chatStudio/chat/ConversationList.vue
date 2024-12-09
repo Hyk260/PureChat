@@ -297,7 +297,7 @@ watch(activetab, (data) => {
   box-sizing: border-box;
   color: var(--color-text);
   &:hover {
-    background: var(--hover-color);
+    background: var(--pure-hover-color);
   }
   .pinned-tag {
     display: block;

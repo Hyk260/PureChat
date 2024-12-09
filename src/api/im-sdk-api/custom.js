@@ -38,3 +38,7 @@ export function msgContent(type) {
     ...constant({ onlyID: type }),
   };
 }
+
+export function getCustomMsgContent(type) {
+  return JSON.stringify(msgContent(type));
+}

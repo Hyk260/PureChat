@@ -1,7 +1,7 @@
 import { timeFormat } from "@/utils/timeFormat";
 import { cloneDeep } from "lodash-es";
 
-const timeline = true;
+const timeline = false;
 const duration = 5 * 60;
 
 const isArray = (obj) => {

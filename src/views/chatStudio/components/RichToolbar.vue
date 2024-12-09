@@ -165,7 +165,8 @@ function customMessage() {
 
 const isVision = computed(() => {
   if (isRobot(toAccount.value)) {
-    return getAllModels(model.value)?.vision;
+    // return getAllModels(model.value)?.vision;
+    return false
   } else {
     return true;
   }
@@ -196,7 +197,6 @@ emitter.on("onisbot", (state) => {
   padding: 0 5px;
   display: flex;
   position: relative;
-  background: var(--color-toolbar);
   & > span {
     width: 42px;
     align-items: center;

@@ -234,7 +234,6 @@ emitter.on("handleShareModal", (val) => {
 
 .preview {
   padding: 24px;
-  background-image: url("@/assets/images/screenshot_background.webp");
   background-position: center;
   background-color: #f8f8f8;
   background-size: 100% 100%;

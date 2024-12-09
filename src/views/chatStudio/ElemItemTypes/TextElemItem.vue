@@ -75,11 +75,11 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 :global(body .is-text-self) {
-  background: var(--self-msg-color);
+  background: var(--pure-self-msg-color);
 }
 
 :global(body .is-text-other) {
-  background: var(--other-msg-color);
+  background: var(--pure-other-msg-color);
 }
 
 .message-view-item-text {
@@ -91,8 +91,6 @@ onMounted(() => {
   word-break: break-all;
   white-space: pre-wrap;
   color: var(--color-text);
-  // border: var(--border-in-light);
-  // transition: all 0.3s ease;
 }
 
 .markdown {

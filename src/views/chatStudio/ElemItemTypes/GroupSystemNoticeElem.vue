@@ -30,6 +30,6 @@ export default {
   padding: 10px 14px;
   box-sizing: border-box;
   border-radius: 3px;
-  background: var(--other-msg-color);
+  background: var(--pure-other-msg-color);
 }
 </style>

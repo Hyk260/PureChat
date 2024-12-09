@@ -1,54 +1,91 @@
 @mixin light {
+  --pure-other-msg-color: rgba(0, 0, 0, .05);
+  --pure-self-msg-color: #e7f8ff;
+  --pure-hover-color: #00000008;
+
   --tags-back-hover: rgb(0, 0, 0, 0.12);
   --tags-back: rgb(0, 0, 0, 0.06);
-  --color-card: rgba(0, 0, 0, 0.12);
-  --color-tags-active-back: #222;
-  --color-tags-active: #f8f8f8;
-  --color-tags-color: #333333;
-  --color-tags-back: rgba(0, 0, 0, 0.12);
 
-  /* color */
   --white: white;
   --black: rgb(48, 48, 48);
   --gray: rgb(250, 250, 250);
   --primary: rgb(29, 147, 171);
   --second: rgb(231, 248, 255);
-  --bar-color: rgba(0, 0, 0, 0.1);
-  --theme-color: var(--gray);
-  --has-custom-titlebar: #eee;
-  --border-in-light: 1px solid #dedede;
 
+  /* color */
+  --color-card: rgba(0, 0, 0, 0.12);
+  --color-tags-active-back: #222;
+  --color-tags-active: #f8f8f8;
+  --color-tags-color: #333333;
+  --color-tags-back: rgba(0, 0, 0, 0.12);
   --color-robot-model: #fff;
   --color-button-border: #e3e3e3;
-  --color-range: #fff;
-  --hover-color: #00000008;
   --color-body-bg: #ffffff;
   --color-text: #000;
   --color-text-tags: rgba(0, 0, 0, 0.03);
   --color-text-default: #442c2c;
   --color-primary-bg: #eaeffd;
-  --color-secondary: #7a7a7b;
-  --color-secondary-bg: #f5f5f7;
   --color-navbar-bg: rgba(255, 255, 255, 0.86);
-  --color-primary-bg-for-transparent: rgba(189, 207, 255, 0.28);
-  --color-secondary-bg-for-transparent: rgba(209, 209, 214, 0.28);
   --color-icon-hover: #409eff;
-  --color-border-default: rgba(0, 0, 0, 0.09);
+  --color-border-default: #d0d7de;
+  --color-message-active: #f0f2f5;
   --color-border-color-split: #f2f4f7;
   --color-time-divider: rgba(0, 0, 0, 0.45);
   --color-message-chat-name: rgba(0, 0, 0, 0.85);
-  --color-group-tip: rgba(0, 0, 0, 0.05);
   --color-draggable-body: #f5f5f5;
-  // 消息框颜色
-  --other-msg-color: rgba(0, 0, 0, .05);
-  --self-msg-color: #e7f8ff;
-  --color-message-active: #f0f2f5;
-
+  --color-range: #fff;
   --color-multiple-choice: hsl(220deg 20% 91%);
   --color-mention-active: #f0f2f5;
+}
 
-  --pure-markdown-color: #f8f8f8;
-  /* markdown */
+/* 整体暗色风格适配 */
+@mixin dark {
+  --pure-other-msg-color: #000;
+  --pure-self-msg-color: #000;
+  --pure-hover-color: #ffffff0f;
+
+  --tags-back-hover: rgba(255, 255, 255, 0.16);
+  --tags-back: rgba(255, 255, 255, 0.10);
+
+  --white: rgb(30, 30, 30);
+  --black: rgb(187, 187, 187);
+  --gray: rgb(21, 21, 21);
+  --primary: rgb(29, 147, 171);
+  --second: rgb(27 38 42);
+
+  /* color */
+  --color-card: rgba(255, 255, 255, 0.10);
+  --color-tags-active: #000000;
+  --color-tags-active-back: #eeeeee;
+  --color-tags-color: #ffffff;
+  --color-tags-back: rgb(34, 34, 34);
+  --color-robot-model: #333;
+  --color-button-border: #2d2d2d;
+  --color-body-bg: #222222;
+  --color-text: #fff;
+  --color-text-tags: #111111;
+  --color-text-default: #fff;
+  --color-border-color-split: #252431;
+  --color-primary-bg: #bbcdff;
+  --color-navbar-bg: rgba(34, 34, 34, 0.86);
+  --color-message-active: rgba(255, 255, 255, 0.10);
+  --color-border-default: #30363d;
+  --color-time-divider: #fff;
+  --color-message-chat-name: #fff;
+  --color-draggable-body: rgba(0, 0, 0, 0.85);
+  --color-range: #141414;
+  --color-multiple-choice: #333;
+  --color-mention-active: #333;
+
+  // wangEditor
+  --w-e-textarea-bg-color: reg(27, 27, 27);
+  --w-e-textarea-color: #fff;
+  --w-e-textarea-slight-bg-color: #333;
+}
+
+@mixin lightMarkdown {
+  --color-border-in-light: 1px solid #dedede;
+  --color-hljs-color: #f8f8f8;
   --color-prettylights-syntax-comment: #6e7781;
   --color-prettylights-syntax-constant: #0550ae;
   --color-prettylights-syntax-entity: #8250df;
@@ -84,7 +121,6 @@
   --color-fg-subtle: #6e7781;
   --color-canvas-default: transparent;
   --color-canvas-subtle: #f6f8fa;
-  --color-border-default: #d0d7de;
   --color-border-muted: hsla(210, 18%, 87%, 1);
   --color-neutral-muted: rgba(175, 184, 193, 0.2);
   --color-accent-fg: #0969da;
@@ -93,59 +129,9 @@
   --color-danger-fg: #cf222e;
 }
 
-@mixin dark {
-  --tags-back-hover: rgba(255, 255, 255, 0.16);
-  --tags-back: rgba(255, 255, 255, 0.10);
-  --color-card: rgba(255, 255, 255, 0.10);
-  --color-tags-active: #000000;
-  --color-tags-active-back: #eeeeee;
-  --color-tags-color: #ffffff;
-  --color-tags-back: rgb(34, 34, 34);
-  /* color */
-  --white: rgb(30, 30, 30);
-  --black: rgb(187, 187, 187);
-  --gray: rgb(21, 21, 21);
-  --primary: rgb(29, 147, 171);
-  --second: rgb(27 38 42);
-  --has-custom-titlebar: #000;
-  --border-in-light: 1px solid hsla(0, 0%, 100%, .192);
-
-  --color-robot-model: #333;
-  --color-button-border: #2d2d2d;
-  --hover-color: #ffffff0f;
-  --color-body-bg: #222222;
-  --color-text: #fff;
-  --color-text-tags: #111111;
-  --color-text-default: #fff;
-  --color-border-color-split: #252431;
-  --color-primary-bg: #bbcdff;
-  --color-secondary: #7a7a7b;
-  --color-secondary-bg: #323232;
-  --color-navbar-bg: rgba(34, 34, 34, 0.86);
-  --color-primary-bg-for-transparent: rgba(255, 255, 255, 0.12);
-  --color-secondary-bg-for-transparent: rgba(255, 255, 255, 0.08);
-  --color-message-active: rgba(255, 255, 255, 0.10);
-  --color-border-default: #90939957;
-  --color-time-divider: #fff;
-  --color-message-chat-name: #fff;
-  --color-draggable-body: rgba(0, 0, 0, 0.85);
-  // 消息框颜色
-  --other-msg-color: #000;
-  --self-msg-color: #000;
-
-  --color-range: #141414;
-  --color-group-tip: rgba(0, 0, 0, 0.05);
-  --color-toolbar: reg(27, 27, 27);
-  // wangEditor
-  --w-e-textarea-bg-color: reg(27, 27, 27);
-  --w-e-textarea-color: #fff;
-  --w-e-textarea-slight-bg-color: #333;
-
-  --color-multiple-choice: #333;
-  --color-mention-active: #333;
-
-  --pure-markdown-color: #1a1b26;
-  /* markdown */
+@mixin darkMarkdown {
+  --color-border-in-light: 1px solid hsla(0, 0%, 100%, .192);
+  --color-hljs-color: #1a1b26;
   --color-prettylights-syntax-comment: #8b949e;
   --color-prettylights-syntax-constant: #79c0ff;
   --color-prettylights-syntax-entity: #d2a8ff;
@@ -181,7 +167,6 @@
   --color-fg-subtle: #6e7681;
   --color-canvas-default: transparent;
   --color-canvas-subtle: #161b22;
-  --color-border-default: #30363d;
   --color-border-muted: #21262d;
   --color-neutral-muted: rgba(110, 118, 129, 0.4);
   --color-accent-fg: #58a6ff;
@@ -192,16 +177,20 @@
 
 .light {
   @include light;
+  @include lightMarkdown;
 }
 
 .dark {
   @include dark;
+  @include darkMarkdown;
 }
 
 :root {
   @include light;
+  @include lightMarkdown;
 }
 
 [data-theme="dark"] {
   @include dark;
+  @include darkMarkdown;
 }
