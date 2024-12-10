@@ -41,7 +41,7 @@ export default {
           type: "svg",
         },
       ],
-      active: "contacts",
+      active: "aiModel",
     };
   },
   computed: {
