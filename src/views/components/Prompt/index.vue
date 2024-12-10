@@ -98,7 +98,9 @@ function initPrompt() {
     market.value = marketLocal;
     filterInput.value = marketLocal.agents;
   }
-
+  if (window?.__LOCAL_MODE) {
+    return
+  }
   getPrompt()
     .then((res) => {
       market.value = res;

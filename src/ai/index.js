@@ -8,6 +8,7 @@ import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 
 const restSendMsg = async (params, message) => {
+  if (window?.__LOCAL_MODE) return;
   return await restApi({
     params: {
       To_Account: params.from,

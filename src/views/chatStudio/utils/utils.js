@@ -71,13 +71,12 @@ export const validatelastMessage = (list) => {
 
 // 复制
 export const handleCopyMsg = async (data) => {
-  const { elements } = data;
-  const { content, type } = elements[0];
+  const { payload, type } = data;
   // 文本
   if (type === "TIMTextElem") {
-    const { text, copy, isSupported } = useClipboard({ source: content.text });
+    const { text, copy, isSupported } = useClipboard({ source: payload.text });
     if (isSupported) {
-      copy(content.text);
+      copy(payload.text);
       store.commit("showMessage", { message: "复制成功" });
     } else {
       store.commit("showMessage", { message: "您的浏览器不支持剪贴板API" });
@@ -85,7 +84,7 @@ export const handleCopyMsg = async (data) => {
   }
   // 图片
   if (type === "TIMImageElem") {
-    const url = content.imageInfoArray[0].imageUrl;
+    const url = payload.imageInfoArray[0].imageUrl;
     const imageBlob = await getBlob(url);
     // 创建一个空的 ClipboardItem 对象，并将图片添加到其中
     const clipboardItem = new ClipboardItem({ "image/png": imageBlob });
