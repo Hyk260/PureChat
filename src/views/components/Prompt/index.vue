@@ -93,13 +93,15 @@ function handleClick(key) {
 }
 
 function initPrompt() {
+  if (window?.__LOCAL_MODE) {
+    market.value = marketJson;
+    filterInput.value = marketJson.agents;
+    return;
+  }
   const marketLocal = localStg.get("marketJson");
   if (marketLocal) {
     market.value = marketLocal;
     filterInput.value = marketLocal.agents;
-  }
-  if (window?.__LOCAL_MODE) {
-    return
   }
   getPrompt()
     .then((res) => {
