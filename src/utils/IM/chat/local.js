@@ -57,18 +57,20 @@ export class LocalChat {
     })
     this.emit('onConversationListUpdated', { data: [...newData] })
 
+    const message = {
+      code: 0,
+      data: {
+        message: {
+          ...data,
+          ID: data.ID || nanoid(16),
+          status: "success",
+        }
+      }
+    }
+
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve({
-          code: 0,
-          data: {
-            message: {
-              ...data,
-              ID: data.ID || nanoid(16),
-              status: "success",
-            }
-          }
-        })
+        resolve(message)
       }, 100)
     })
   }

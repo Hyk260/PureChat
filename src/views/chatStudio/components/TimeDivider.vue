@@ -10,6 +10,10 @@ import { isSelf } from "../utils/utils";
 import { formatTimestamp } from "@/utils/timeFormat";
 import { useState } from "@/utils/hooks/useMapper";
 
+defineOptions({
+  name: "TimeDivider",
+});
+
 const props = defineProps({
   item: {
     type: Object,
@@ -32,8 +36,8 @@ const {
 });
 
 function showClientTime(item) {
-  // 图片 文件 文本 合并 视频
-  const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem", "TIMVideoFileElem"];
+  // 图片 文件 文本 合并 视频 自定义
+  const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem", "TIMVideoFileElem", "TIMCustomElem"];
   return (
     item.clientTime && msg.includes(item.type) && item.type !== "TIMGroupTipElem" && !item.isRevoked
   );
