@@ -1,0 +1,62 @@
+{
+  "ID": "",
+  "conversationID": "",
+  "conversationType": "C2C",
+  "time": 1733798244,
+  "sequence": 1037230001,
+  "clientSequence": 1037230001,
+  "random": 24746911,
+  "priority": "Normal",
+  "nick": "admin",
+  "avatar": "https://ljx-1307934606.cos.ap-beijing.myqcloud.com/admin.jpg",
+  "isPeerRead": false,
+  "nameCard": "",
+  "hasRiskContent": false,
+  "_elements": [
+    {
+      "type": "TIMTextElem",
+      "content": {
+        "text": "123"
+      }
+    }
+  ],
+  "isPlaceMessage": 0,
+  "isRevoked": false,
+  "from": "admin",
+  "to": "",
+  "flow": "out",
+  "isSystemMessage": false,
+  "protocol": "JSON",
+  "isResend": false,
+  "isRead": true,
+  "status": "unSend",
+  "_onlineOnlyFlag": false,
+  "_groupAtInfoList": [],
+  "_relayFlag": false,
+  "atUserList": [],
+  "cloudCustomData": "",
+  "isDeleted": false,
+  "isModified": false,
+  "_isExcludedFromUnreadCount": false,
+  "_isExcludedFromLastMessage": false,
+  "clientTime": 1733798241,
+  "senderTinyID": "144115244192768676",
+  "readReceiptInfo": {
+    "timestamp": 0
+  },
+  "needReadReceipt": false,
+  "version": 0,
+  "isBroadcastMessage": false,
+  "isSupportExtension": false,
+  "revoker": "",
+  "revokerInfo": {
+    "userID": "",
+    "nick": "",
+    "avatar": ""
+  },
+  "revokeReason": "",
+  "payload": {
+    "text": ""
+  },
+  "type": "TIMTextElem"
+}

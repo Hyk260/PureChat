@@ -1,0 +1,68 @@
+{
+  "ID": "",
+  "conversationID": "",
+  "conversationType": "C2C",
+  "time": 1733809726,
+  "sequence": 1348450003,
+  "clientSequence": 1348450003,
+  "random": 6886806,
+  "priority": "Normal",
+  "nick": "",
+  "avatar": "http://localhost:8038/src/assets/images/aI-avatar/ollama.svg",
+  "isPeerRead": false,
+  "nameCard": "",
+  "hasRiskContent": false,
+  "_elements": [
+    {
+      "type": "TIMCustomElem",
+      "content": {
+        "data": "",
+        "description": "",
+        "extension": "",
+        "text": ""
+      }
+    }
+  ],
+  "isPlaceMessage": 0,
+  "isRevoked": false,
+  "from": "@RBT#005",
+  "to": "admin",
+  "flow": "in",
+  "isSystemMessage": false,
+  "protocol": "JSON",
+  "isResend": false,
+  "isRead": true,
+  "status": "success",
+  "_onlineOnlyFlag": false,
+  "_groupAtInfoList": [],
+  "_relayFlag": false,
+  "atUserList": [],
+  "cloudCustomData": "",
+  "isDeleted": false,
+  "isModified": false,
+  "_isExcludedFromUnreadCount": false,
+  "_isExcludedFromLastMessage": false,
+  "clientTime": 1733809722,
+  "senderTinyID": "144115244192768676",
+  "readReceiptInfo": {
+    "timestamp": 0
+  },
+  "needReadReceipt": false,
+  "version": 0,
+  "isBroadcastMessage": false,
+  "isSupportExtension": false,
+  "revoker": "",
+  "revokerInfo": {
+    "userID": "",
+    "nick": "",
+    "avatar": ""
+  },
+  "revokeReason": "",
+  "payload": {
+    "data": "",
+    "description": "",
+    "extension": "",
+    "text": ""
+  },
+  "type": "TIMCustomElem"
+}

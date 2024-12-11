@@ -3,9 +3,17 @@ import robotList from '@/assets/db/robotList.json';
 import myProfile from '@/assets/db/myProfile.json';
 import timTextElem from '@/assets/db/message/timTextElem.json';
 import timCustomElem from '@/assets/db/message/timCustomElem.json';
-
+import { localStg } from "@/utils/storage";
 import { nanoid } from "@/ai/platforms/ollama/protocol";
 import emitter from "@/utils/mitt-bus";
+import { USER_MODEL } from "@/constants/index";
+import store from "@/store";
+import { cloneDeep } from "lodash-es";
+
+export function getConversationList() {
+  const list = store.state.conversation?.conversationList;
+  return cloneDeep(list) || null; // []
+}
 
 export class LocalChat {
   constructor() {
@@ -19,14 +27,18 @@ export class LocalChat {
     });
 
   }
+  init() {
+    localStg.set(USER_MODEL, { username: myProfile.userID })
+    setTimeout(() => {
+      this.emit("sdkStateReady", { name: 'sdkStateReady' })
+    })
+  }
   getTime() {
     return Math.round(new Date().getTime() / 1000)
   }
   create(data) {
     console.log('create local chat', data)
-    setTimeout(() => {
-      this.emit("sdkStateReady", { name: 'sdkStateReady' })
-    })
+    this.init()
     return this
   }
   on(eventName, handler, contextopt = null) {
@@ -37,6 +49,14 @@ export class LocalChat {
     emitter.emit(eventName, handler)
   }
   async sendMessage(data) {
+    const newData = getConversationList()
+    newData.map(t => {
+      if (t.conversationID === data.conversationID) {
+        t.lastMessage.messageForShow = data.payload.text
+      }
+    })
+    this.emit('onConversationListUpdated', { data: [...newData] })
+
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve({
@@ -114,12 +134,33 @@ export class LocalChat {
     }
   }
   async getConversationProfile(convId) {
-    const data = conversationProfile[0]
+    const data = cloneDeep(conversationProfile)
     data.conversationID = convId
     data.lastMessage.lastTime = this.getTime()
     data.userProfile = robotList.find(item => item.userID == convId.replace("C2C", ""))
-    this.emit('onConversationListUpdated', { data: conversationProfile })
-    return { code: 0, data: { conversation: { ...data } } };
+
+    const index = getConversationList().findIndex(t => {
+      return convId == t.conversationID
+    })
+
+    if (getConversationList()?.[0]) {
+      if (index === -1) {
+        this.emit('onConversationListUpdated', { data: [...getConversationList(), data] })
+      } else {
+        this.emit('onConversationListUpdated', { data: [...getConversationList()] })
+      }
+    } else {
+      this.emit('onConversationListUpdated', { data: [data] })
+    }
+
+    return {
+      code: 0,
+      data: {
+        conversation: {
+          ...data
+        }
+      }
+    };
   }
   async getTotalUnreadMessageCount() {
     return 0
