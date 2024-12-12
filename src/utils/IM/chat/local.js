@@ -16,6 +16,11 @@ export function getConversationList() {
   return cloneDeep(list) || null; // []
 }
 
+export function getCurrentMessageList() {
+  const list = store.state.conversation?.currentMessageList;
+  return cloneDeep(list) || null; // []
+}
+
 const nanoid = (size) => {
   return customAlphabet("1234567890", size)()
 }
@@ -75,7 +80,7 @@ export class LocalChat {
         }
       }
     }
-
+    localStg.set(`localChat${data.conversationID}`, getCurrentMessageList())
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(message)
@@ -175,13 +180,15 @@ export class LocalChat {
   async getTotalUnreadMessageCount() {
     return 0
   }
-  async getMessageList() {
+  async getMessageList(data) {
+    const { conversationID } = data
+    const localMessageList = localStg.get(`localChat${conversationID}`) || []
     return {
       code: 0,
       data: {
         nextReqMessageID: '',
         isCompleted: true,
-        messageList: []
+        messageList: localMessageList.reverse()
       }
     }
   }

@@ -195,7 +195,6 @@ function handleCancel() {
 }
 // 保存
 function handleConfirm() {
-  setDialog(false);
   const model = {};
   Object.values(modelData.value).map((t) => {
     if (isRange(t.ID)) {
@@ -206,6 +205,7 @@ function handleConfirm() {
   });
   storeRobotModel(model);
   storeRobotMask(maskData.value);
+  setDialog(false);
 }
 
 function toUrl(url) {

@@ -16,11 +16,13 @@ export const chatSessionListData = [
     id: "AcceptNotNotify",
     icon: "MuteNotification",
     text: "消息免打扰",
+    hide: window?.__LOCAL_MODE
   },
   {
     id: "AcceptAndNotify",
     icon: "Bell",
     text: "允许消息提醒",
+    hide: window?.__LOCAL_MODE
   },
   {
     id: "remove",
@@ -29,7 +31,7 @@ export const chatSessionListData = [
     class: "!text-[#f44336]",
   },
   // { id: "clean", text: "清除消息" },
-];
+].filter(item => !item.hide);
 
 export const menuOptionsList = [
   {
