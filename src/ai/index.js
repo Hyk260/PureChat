@@ -8,7 +8,7 @@ import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 
 const restSendMsg = async (params, message) => {
-  if (window?.__LOCAL_MODE) {
+  if (__LOCAL_MODE__) {
     const data = cloneDeep(params)
     data.payload.text = message;
     await sendMsg(data);

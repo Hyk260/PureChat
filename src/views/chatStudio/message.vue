@@ -80,7 +80,7 @@ import ReplyBox from "./components/ReplyBox.vue";
 import Search from "./components/Search.vue";
 import networklink from "./components/networklink.vue";
 
-const isLocalMode = window.__LOCAL_MODE
+const isLocalMode = __LOCAL_MODE__
 const unread = ref("");
 const chatRef = ref(null);
 const activeName = ref("whole");

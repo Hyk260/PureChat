@@ -9,12 +9,12 @@ export default [
     },
     children: [
       {
-        path: "/chatStudio",
-        name: "chatStudio",
+        path: "/chat",
+        name: "chat",
         component: () => import("@/views/chatStudio/index.vue"),
         meta: {
           title: "chat",
-          locale: "chatStudio",
+          locale: "chat",
           icon: "ForkSpoon",
           keep: true,
         },

@@ -79,7 +79,7 @@ export const getConversationProfile = async (params) => {
 };
 // 消息已读上报
 export const setMessageRead = async (convId) => {
-  if (window?.__LOCAL_MODE) return
+  if (__LOCAL_MODE__) return
   let promise = tim.setMessageRead({ conversationID: convId });
   promise
     .then((res) => {

@@ -331,6 +331,6 @@ export class TIMProxy {
 
 export const timProxy = new TIMProxy();
 
-if (window?.__LOCAL_MODE) {
+if (__LOCAL_MODE__) {
   window.TIMProxy.init();
 }

@@ -35,14 +35,14 @@ const buttonList = [
     value: "合并转发",
     icon: "mergeForward",
     class: "",
-    hide: window?.__LOCAL_MODE
+    hide: __LOCAL_MODE__
   },
   {
     type: "ForwardItemByItem",
     value: "逐条转发",
     icon: "aQuickForward",
     class: "",
-    hide: window?.__LOCAL_MODE
+    hide: __LOCAL_MODE__
   },
   {
     type: "removalMsg",

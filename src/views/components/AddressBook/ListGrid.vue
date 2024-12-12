@@ -47,7 +47,7 @@ export default {
   computed: {
     filterList() {
       return this.list.filter((item) => {
-        if (window?.__LOCAL_MODE) {
+        if (__LOCAL_MODE__) {
           return item.id === "aiModel";
         } else {
           return item;

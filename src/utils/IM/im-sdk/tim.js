@@ -8,7 +8,7 @@ import SignalingModule from "@tencentcloud/chat/modules/signaling-module.js";
 
 let chat = {}
 
-if (window?.__LOCAL_MODE) {
+if (__LOCAL_MODE__) {
   chat = LocalChat.create({})
 } else {
   const appid = import.meta.env.VITE_IM_SDK_APPID;

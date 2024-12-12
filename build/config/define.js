@@ -33,6 +33,6 @@ export const viteDefine = (env) => {
   // console.log("viteEnv", viteEnv);
   return {
     __APP_INFO__: JSON.stringify(__APP_INFO__),
-    __LOCAL_MODE: env?.VITE_LOCAL_MODE === "Y"
+    __LOCAL_MODE__: env?.VITE_LOCAL_MODE === "Y"
   }
 };

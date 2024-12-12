@@ -93,7 +93,7 @@ function handleClick(key) {
 }
 
 function initPrompt() {
-  if (window?.__LOCAL_MODE) {
+  if (__LOCAL_MODE__) {
     market.value = marketJson;
     filterInput.value = marketJson.agents;
     return;

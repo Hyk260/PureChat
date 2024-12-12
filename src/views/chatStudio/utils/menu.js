@@ -16,13 +16,13 @@ export const chatSessionListData = [
     id: "AcceptNotNotify",
     icon: "MuteNotification",
     text: "消息免打扰",
-    hide: window?.__LOCAL_MODE
+    hide: __LOCAL_MODE__
   },
   {
     id: "AcceptAndNotify",
     icon: "Bell",
     text: "允许消息提醒",
-    hide: window?.__LOCAL_MODE
+    hide: __LOCAL_MODE__
   },
   {
     id: "remove",

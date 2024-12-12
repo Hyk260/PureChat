@@ -67,7 +67,7 @@ const user = {
           userSig: result.userSig,
         });
         localStg.set(USER_MODEL, result)
-        router.push("/chatstudio");
+        router.push("/chat");
         verification(code, msg);
       } else {
         verification(code, msg);
@@ -87,7 +87,7 @@ const user = {
         localStg.set(USER_MODEL, result)
         // 保存登录信息 keep
         data?.keep && localStg.set(ACCOUNT, data);
-        router.push("/chatstudio");
+        router.push("/chat");
         verification(code, msg);
       } else {
         verification(code, msg);
@@ -131,7 +131,7 @@ const user = {
     },
     // 重新登陆
     reLoginHandler({ state, dispatch }) {
-      if (window?.__LOCAL_MODE) return
+      if (__LOCAL_MODE__) return
       try {
         const data = localStg.get(USER_MODEL) || {};
         if (data) {
