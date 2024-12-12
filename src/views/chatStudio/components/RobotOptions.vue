@@ -188,6 +188,7 @@ function handleClose(done) {
 }
 // 重置
 function handleCancel() {
+  commit("setPromptTitle", "");
   resetRobotModel();
   resetRobotMask();
   setDialog(false);

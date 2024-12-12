@@ -3,16 +3,21 @@ import robotList from '@/assets/db/robotList.json';
 import myProfile from '@/assets/db/myProfile.json';
 import timTextElem from '@/assets/db/message/timTextElem.json';
 import timCustomElem from '@/assets/db/message/timCustomElem.json';
-import { localStg } from "@/utils/storage";
-import { nanoid } from "@/ai/platforms/ollama/protocol";
 import emitter from "@/utils/mitt-bus";
-import { USER_MODEL } from "@/constants/index";
 import store from "@/store";
+
+import { USER_MODEL } from "@/constants/index";
+import { localStg } from "@/utils/storage";
+import { customAlphabet } from "nanoid/non-secure";
 import { cloneDeep } from "lodash-es";
 
 export function getConversationList() {
   const list = store.state.conversation?.conversationList;
   return cloneDeep(list) || null; // []
+}
+
+const nanoid = (size) => {
+  return customAlphabet("1234567890", size)()
 }
 
 export class LocalChat {
@@ -35,6 +40,9 @@ export class LocalChat {
   }
   getTime() {
     return Math.round(new Date().getTime() / 1000)
+  }
+  nanoId() {
+    return `${nanoid(18)}-${nanoid(10)}-${nanoid(7)}`
   }
   create(data) {
     console.log('create local chat', data)
@@ -62,7 +70,7 @@ export class LocalChat {
       data: {
         message: {
           ...data,
-          ID: data.ID || nanoid(16),
+          ID: data.ID || this.nanoId(),
           status: "success",
         }
       }
@@ -115,7 +123,7 @@ export class LocalChat {
       ...timTextElem,
       time: this.getTime(),
       clientTime: this.getTime(),
-      ID: nanoid(16),
+      ID: this.nanoId(),
       to: to,
       conversationID: `${conversationType}${to}`,
       conversationType,
@@ -126,7 +134,7 @@ export class LocalChat {
     const { to, conversationType, payload } = data
     return {
       ...timCustomElem,
-      ID: nanoid(16),
+      ID: this.nanoId(),
       time: this.getTime(),
       clientTime: this.getTime(),
       conversationType,
