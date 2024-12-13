@@ -2,7 +2,7 @@
   <div @click="onClick()">
     <VueDraggableNext class="w-full" :list="promptData">
       <div class="prompt py-10 flex-c" v-for="(item, i) in promptData" :key="item.id">
-        <svg-icon iconClass="drag" class="drag-icon" />
+        <svg-icon v-if="promptData.length > 1" iconClass="drag" class="drag-icon" />
         <el-select class="prompt-select" v-model="item.role">
           <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
         </el-select>

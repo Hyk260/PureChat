@@ -277,8 +277,8 @@ input[type="range"]::-ms-thumb:hover {
       font-size: 12px;
       font-weight: 400;
     }
-    .el-select {
-      max-width: 197px;
+    .el-input, .el-select {
+      width: 230px;
     }
   }
 }

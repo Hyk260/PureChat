@@ -2,10 +2,10 @@
   "ID": "",
   "conversationID": "",
   "conversationType": "C2C",
-  "time": 1733798244,
-  "sequence": 1037230001,
-  "clientSequence": 1037230001,
-  "random": 24746911,
+  "time": 0,
+  "sequence": 0,
+  "clientSequence": 0,
+  "random": 0,
   "priority": "Normal",
   "nick": "admin",
   "avatar": "https://ljx-1307934606.cos.ap-beijing.myqcloud.com/admin.jpg",
@@ -16,7 +16,7 @@
     {
       "type": "TIMTextElem",
       "content": {
-        "text": "123"
+        "text": ""
       }
     }
   ],
@@ -39,8 +39,8 @@
   "isModified": false,
   "_isExcludedFromUnreadCount": false,
   "_isExcludedFromLastMessage": false,
-  "clientTime": 1733798241,
-  "senderTinyID": "144115244192768676",
+  "clientTime": 0,
+  "senderTinyID": "",
   "readReceiptInfo": {
     "timestamp": 0
   },
