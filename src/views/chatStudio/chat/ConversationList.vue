@@ -240,7 +240,6 @@ const handleConvListClick = (data) => {
   }
   emitter.emit("handleInsertDraft", data);
   emitter.emit("updataScroll");
-  emitter.emit("setSearchForData");
 };
 
 const handleClickMenuItem = (item) => {

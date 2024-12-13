@@ -1,16 +1,19 @@
 <template>
   <div class="header-bar">
     <!-- 搜索 -->
-    <div class="header-search">
+    <div class="flex-bc gap-10">
       <el-input
+        v-model="input"
         :placeholder="$t('chat.searchFor')"
-        v-model="appoint"
         :prefix-icon="Search"
-        class="text-input"
-        clearable
         @focus="onFocus"
         @blur="onBlur"
+        @input="debounceSearch"
+        clearable
       >
+        <!-- <template #suffix>
+          <div class="suffix" v-show="suffix">Ctrl K</div>
+        </template> -->
       </el-input>
       <div class="header-search-add flex-c">
         <FontIcon @click="opendialog" iconName="Plus" />
@@ -22,6 +25,7 @@
 </template>
 
 <script setup>
+import { onKeyStroke, useEventListener } from "@vueuse/core";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { showConfirmationBox } from "@/utils/message";
 import { Search } from "@element-plus/icons-vue";
@@ -31,15 +35,24 @@ import { debounce, isEmpty } from "lodash-es";
 import SearchBox from "./SearchBox.vue";
 import emitter from "@/utils/mitt-bus";
 
-const appoint = ref("");
+defineOptions({
+  name: "Search",
+});
+
+const input = ref("");
+const suffix = ref(true);
 const filterData = ref([]);
 const searchBoxRef = ref();
 const { dispatch, commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
 
-const setAppoint = (value = "") => {
-  appoint.value = value;
-};
+// onKeyStroke(["keydown"], (e) => {
+//   console.log("onKeyStroke", e);
+// });
+
+// useEventListener(document, "keydown", (e) => {
+//   console.log("useEventListener", e);
+// });
 
 const createGroup = async () => {
   const data = { message: "创建群聊" };
@@ -53,9 +66,11 @@ const opendialog = () => {
 };
 
 const onBlur = () => {
-  setAppoint();
+  suffix.value = true;
 };
-const onFocus = () => {};
+const onFocus = () => {
+  suffix.value = false;
+};
 
 const matchesFilter = (item, searchStr) => {
   const lastMessage = item.lastMessage.messageForShow.toUpperCase();
@@ -72,47 +87,37 @@ const matchesFilter = (item, searchStr) => {
   return false;
 };
 
-const fnAppoint = debounce((key) => {
+const debounceSearch = debounce((key) => {
   if (isEmpty(key)) {
     commit("setConversationValue", { key: "filterConversationList", value: [] });
     return;
   }
   const str = key.toUpperCase().trim();
   filterData.value = tabList.value.filter((item) => matchesFilter(item, str));
-  console.log(filterData.value);
   commit("setConversationValue", { key: "filterConversationList", value: filterData.value });
-}, 100);
-
-watch(appoint, (value) => {
-  fnAppoint(value);
-});
-
-emitter.on("setSearchForData", (value = "") => {
-  setAppoint();
-  commit("setConversationValue", { key: "filterConversationList", value: [] });
-});
+}, 200);
 </script>
 
 <style lang="scss" scoped>
 .header-bar {
-  background: var(--color-body-bg);
   height: 60px;
   padding: 14px;
+  background: var(--color-body-bg);
   position: relative;
-  .header-search {
-    display: flex;
-    justify-content: space-between;
-    :deep(.el-input) {
-      width: 210px;
-    }
+  .suffix {
+    font-size: 12px;
+    pointer-events: none;
+    position: absolute;
+    z-index: 5;
+    right: 10px;
   }
 }
 .header-search-add {
-  width: 32px;
+  min-width: 32px;
   height: 32px;
   background: #54b4ef;
   border-radius: 2px;
-  font-size: 24px;
+  font-size: 18px;
   color: #fff;
   cursor: pointer;
 }
