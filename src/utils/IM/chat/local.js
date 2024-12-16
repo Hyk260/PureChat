@@ -21,6 +21,11 @@ export function getCurrentMessageList() {
   return cloneDeep(list) || null; // []
 }
 
+export function getHistoryMessageList(id) {
+  const data = store.state.conversation?.historyMessageList.get(id);
+  return cloneDeep(data) || null; // []
+}
+
 const nanoid = (size) => {
   return customAlphabet("1234567890", size)()
 }
@@ -80,7 +85,7 @@ export class LocalChat {
         }
       }
     }
-    localStg.set(`localChat${data.conversationID}`, getCurrentMessageList())
+    localStg.set(`localChat${data.conversationID}`, getHistoryMessageList(data.conversationID))
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(message)
