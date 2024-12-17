@@ -25,6 +25,10 @@ import TipsElemItem from "../ElemItemTypes/TipsElemItem.vue";
 import VideoElemItem from "../ElemItemTypes/VideoElemItem.vue";
 import GroupTipElement from "../ElemItemTypes/GroupTipElement.vue";
 
+export const isDataTransferItem = (item) => {
+  return Object.prototype.toString.call(item) === "[object DataTransferItem]";
+}
+
 export const dragControllerDiv = (node) => {
   let dragElement = document.getElementById("drag"); //滑块
   let chatBox = document.getElementById("chat-box"); //聊天框
@@ -137,6 +141,36 @@ export const GroupSystemNotice = (message) => {
     default:
       return "待开发";
   }
+};
+
+export const insertMention = (options) => {
+  const {
+    id,
+    name,
+    backward = true,
+    deleteDigit = 0,
+    editor = null,
+  } = options
+
+  const mentionNode = {
+    type: "mention",
+    value: `${name} `,
+    info: { id },
+    children: [{ text: "" }],
+  };
+  // 恢复选区
+  editor?.restoreSelection();
+  if (deleteDigit) {
+    for (let i = 0; i < deleteDigit; i++) {
+      editor.deleteBackward("character");
+    }
+  }
+  // 删除 '@'
+  if (backward) editor.deleteBackward("character");
+  // 插入 mention
+  editor.insertNode(mentionNode);
+  // 移动光标
+  editor.move(1);
 };
 
 // 动态class
