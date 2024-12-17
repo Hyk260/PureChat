@@ -34,7 +34,7 @@ const updataMessage = (msg, message = "") => {
 const fnCreateLodMsg = (params) => {
   const { to, from } = params;
   const msg = createCustomMsg({ convId: from, customType: "loading" });
-  msg.conversationID = `C2C${from}`;
+  msg.conversationID = `C2C${to}`;
   msg.avatar = getAvatarUrl(to);
   msg.flow = "in";
   msg.to = from;

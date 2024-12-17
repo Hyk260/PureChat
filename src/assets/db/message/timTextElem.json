@@ -29,7 +29,7 @@
   "protocol": "JSON",
   "isResend": false,
   "isRead": true,
-  "status": "unSend",
+  "status": "success",
   "_onlineOnlyFlag": false,
   "_groupAtInfoList": [],
   "_relayFlag": false,

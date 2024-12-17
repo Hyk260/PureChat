@@ -116,11 +116,12 @@ export default {
     async deleteMsg() {
       const result = await showConfirmationBox({ message: "确定删除?", iconType: "warning" });
       if (result == "cancel") return;
-      const { code, messageList } = await deleteMessage([...this.filterate()]);
+      const data = this.filterate()
+      const { code } = await deleteMessage([...data]);
       if (code !== 0) return;
       this.$store.commit("deleteMessage", {
         convId: this.currentConversation.conversationID,
-        // messageIdArray: [data.ID]
+        messageIdArray: [...data.map(item => item.ID)],
       });
       this.shutdown();
     },

@@ -21,6 +21,11 @@ export function getCurrentMessageList() {
   return cloneDeep(list) || null; // []
 }
 
+export function getHistoryMessageList(id) {
+  const data = store.state.conversation?.historyMessageList.get(id);
+  return cloneDeep(data) || null; // []
+}
+
 const nanoid = (size) => {
   return customAlphabet("1234567890", size)()
 }
@@ -80,7 +85,8 @@ export class LocalChat {
         }
       }
     }
-    localStg.set(`localChat${data.conversationID}`, getCurrentMessageList())
+    const historyMessageList = getHistoryMessageList(data.conversationID)
+    localStg.set(`localChat${data.conversationID}`, historyMessageList)
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(message)
@@ -190,6 +196,19 @@ export class LocalChat {
         isCompleted: true,
         messageList: localMessageList.reverse()
       }
+    }
+  }
+  async deleteMessage(data) {
+    console.log(data)
+    if (data.length === 1) {
+      const { conversationID, ID } = data[0]
+      const localMessageList = localStg.get(`localChat${conversationID}`) || []
+      const newMessageList = localMessageList.filter(item => item.ID !== ID)
+      localStg.set(`localChat${conversationID}`, newMessageList)
+    }
+    return {
+      code: 0,
+      data: { messageList: [] },
     }
   }
 }

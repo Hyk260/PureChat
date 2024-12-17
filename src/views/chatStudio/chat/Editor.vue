@@ -26,7 +26,7 @@
       v-if="isShowModal"
       :pinyinSearch="true"
       :isOwner="isOwner"
-      @insertMention="insertMention"
+      :editor="editorRef"
     />
     <div class="btn-send">
       <span class="mr-8 text-[12px]">{{ placeholderMap[getOperatingSystem()] }}</span>
@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { bytesToSize, fileImgToBase64Url } from "@/utils/chat/index";
+import { bytesToSize, isRobot, fileImgToBase64Url } from "@/utils/chat/index";
 import { isMobile } from "@/utils/common";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
@@ -69,6 +69,8 @@ import {
   handleEditorKeyDown,
   handleToggleLanguage,
   sendChatMessage,
+  insertMention,
+  isDataTransferItem,
 } from "../utils/utils";
 
 const editorRef = shallowRef(); // 编辑器实例，必须用 shallowRef
@@ -105,30 +107,6 @@ const handleEditor = (editor, created = true) => {
     if (editor === null) return;
     editor?.destroy();
   }
-};
-
-const insertMention = ({ id, name, backward = true, deleteDigit = 0 }) => {
-  const editor = editorRef.value;
-  const mentionNode = {
-    type: "mention",
-    value: `${name} `,
-    info: { id },
-    children: [{ text: "" }],
-  };
-  // 恢复选区
-  editor?.restoreSelection();
-  if (deleteDigit) {
-    for (let i = 0; i < deleteDigit; i++) {
-      editor.deleteBackward("character");
-    }
-  } else if (backward) {
-    // 删除 '@'
-    editor.deleteBackward("character");
-  }
-  // 插入 mention
-  editor.insertNode(mentionNode);
-  // 移动光标
-  editor.move(1);
 };
 
 const setToolbar = (item) => {
@@ -185,11 +163,22 @@ const parsetext = (text, editor) => {
 
 const handleFile = (item) => {
   const type = item.type;
-  let trans = Object.prototype.toString.call(item) === "[object DataTransferItem]";
-  let pasteFile = trans ? item.getAsFile() : item;
+  const _isRobot = isRobot(toAccount.value)
+  const pasteFile = isDataTransferItem(item) ? item.getAsFile() : item;
+  let typeText = "";
   if (type.match("^image/")) {
+    typeText = "图片";
+    if (_isRobot) {
+      commit("showMessage", { message: `暂不支持${typeText}消息`, type: "warning" });
+      return;
+    }
     parsePicture(pasteFile);
   } else {
+    typeText = "文件";
+    if (_isRobot) {
+      commit("showMessage", { message: `暂不支持${typeText}消息`, type: "warning" });
+      return;
+    }
     parseFile(pasteFile);
   }
 };
@@ -358,7 +347,7 @@ const setEditHtml = (text) => {
 };
 const onEmitter = () => {
   emitter.on("handleAt", ({ id, name }) => {
-    insertMention({ id, name, backward: false });
+    insertMention({ id, name, backward: false, editor: editorRef.value });
   });
   emitter.on("handleSetHtml", (text) => {
     text && setEditHtml(text);
@@ -429,8 +418,8 @@ onBeforeUnmount(() => {
   }
 }
 .btn-send {
-  display: flex;
   width: 100%;
+  display: flex;
   align-items: center;
   justify-content: flex-end;
   padding: 0px 10px 10px;
