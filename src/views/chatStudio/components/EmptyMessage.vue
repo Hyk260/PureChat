@@ -3,10 +3,10 @@
     <el-empty :description="$t('common.emptyText')" :image-size="150" />
     <div
       v-if="classNmae == 'no-msg' && activetab == 'whole'"
-      class="flex justify-center launch"
+      class="flex-c launch"
       @click="launch"
     >
-      发起聊天
+      发起会话
     </div>
   </div>
 </template>
@@ -14,16 +14,20 @@
 <script setup>
 import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
+
 const props = defineProps({
   classNmae: {
     type: String,
     default: "",
   },
 });
+
 const { activetab } = useState({
   activetab: (state) => state.conversation.activetab,
 });
+
 const { commit } = useStore();
+
 function launch() {
   commit("taggleOueSide", "notebook");
 }
