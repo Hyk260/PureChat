@@ -15,8 +15,8 @@
           <div class="suffix" v-show="suffix">Ctrl K</div>
         </template> -->
       </el-input>
-      <div class="header-search-add flex-c">
-        <FontIcon @click="opendialog" iconName="Plus" />
+      <div class="header-search-add flex-c" @click="opendialog">
+        <FontIcon iconName="Plus" />
       </div>
     </div>
     <!-- 搜索结果 -->
