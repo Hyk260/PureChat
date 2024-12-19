@@ -125,17 +125,12 @@ const setToolbar = (item) => {
 };
 
 // 插入草稿
-const insertDraft = (value) => {
-  if (!value) return;
-  const editor = editorRef.value;
-  editor && !isMobile && editor.focus(true);
-  const { conversationID: ID } = value;
-  const draftMap = sessionDraftMap.value;
-  const draft = draftMap.get(ID);
+const insertDraft = ({ data, editor = editorRef.value }) => {
+  if (!data) return;
+  if (!isMobile) editor?.focus(true);
   clearInputInfo();
-  draft?.forEach((item) => {
-    editor.insertNode(item.children);
-  });
+  const draft = sessionDraftMap.value.get(data.conversationID);
+  draft?.map((t) => editor.insertNode(t.children));
 };
 // 更新草稿
 const updateDraft = debounce((data) => {
@@ -155,15 +150,9 @@ const onChange = (editor) => {
   handleAt(editor);
 };
 
-const parsetext = (text, editor) => {
-  let str = "";
-  str = text.trimStart();
-  editor.insertText(str);
-};
-
 const handleFile = (item) => {
   const type = item.type;
-  const _isRobot = isRobot(toAccount.value)
+  const _isRobot = isRobot(toAccount.value);
   const pasteFile = isDataTransferItem(item) ? item.getAsFile() : item;
   let typeText = "";
   if (type.match("^image/")) {
@@ -185,20 +174,15 @@ const handleFile = (item) => {
 
 const handleString = (item, editor) => {
   if (item.type === "text/plain") {
-    item.getAsString((text) => {
-      parsetext(text, editor);
-      console.log("plain:", text);
+    item.getAsString((str) => {
+      editor.insertText(str.trimStart());
+      console.log("handleString text/plain:", text);
     });
   } else if (item.type === "text/html") {
     item.getAsString((html) => {
-      console.log("html:", html);
+      console.log("handleString text/html:", html);
     });
   }
-};
-
-const kindHandlers = {
-  file: handleFile,
-  string: handleString,
 };
 
 const customPaste = (editor, event, callback) => {
@@ -208,15 +192,18 @@ const customPaste = (editor, event, callback) => {
   // https://developer.mozilla.org/zh-CN/docs/Web/API/ClipboardEvent ClipboardEvent 粘贴
   const items = event?.clipboardData?.items ?? event?.dataTransfer?.items;
   for (const item of items) {
-    kindHandlers[item.kind]?.(item, editor);
+    if (item.kind === "file") {
+      handleFile(item, editor);
+    } else if (item.kind === "string") {
+      handleString(item, editor);
+    }
   }
   event.preventDefault();
   callback?.(false);
 };
 // 拖拽事件
 const dropHandler = (event) => {
-  let draggedText = event.dataTransfer.getData("text/plain");
-  if (draggedText) return;
+  if (event.dataTransfer.getData("text/plain")) return;
   customPaste(editorRef.value, event);
   event.preventDefault();
 };
@@ -227,14 +214,11 @@ const parseFile = async (file, editor = editorRef.value) => {
     return;
   }
   try {
-    const editor = editorRef.value;
-    const { size, name } = file;
-    const fileSize = bytesToSize(size);
     const base64Url = await fileImgToBase64Url(file);
     const element = {
       type: "attachment",
-      fileName: name,
-      fileSize: fileSize,
+      fileName: file.name,
+      fileSize: bytesToSize(file.size),
       link: base64Url,
       children: [{ text: "" }],
     };
@@ -278,27 +262,24 @@ const parsePicture = async (file, editor = editorRef.value) => {
   editor.move(1); // 移动光标
 };
 // 回车
-const handleEnter = (event) => {
+const handleEnter = (event, editor = editorRef.value) => {
   if (event?.ctrlKey) return;
   if (isShowModal.value) {
     mentionRef.value.inputKeyupHandler(event);
     return;
   }
-  const editor = editorRef.value;
-  const empty = editor.isEmpty(); // 判断当前编辑器内容是否为空
   const { isHave } = sendMsgBefore();
-  if (!empty && isHave) {
+  if (!editor.isEmpty() && isHave) {
     sendMessage(editor);
   } else {
     clearInputInfo();
   }
 };
 // 清空输入框
-const clearInputInfo = () => {
+const clearInputInfo = (editor = editorRef.value) => {
   commit("setReplyMsg", null);
   commit("setConversationValue", { key: "fullScreen", value: false });
-  const editor = editorRef.value;
-  editor && editor.clear();
+  editor?.clear();
 };
 
 const sendMsgBefore = (editor = editorRef.value) => {
@@ -340,25 +321,29 @@ const sendMessage = async () => {
     });
   });
 };
+
 const setEditHtml = (text) => {
+  if (!text) return;
   const editor = editorRef.value;
   editor.setHtml(`<p>${text}</p>`);
   editor.focus(true);
 };
-const onEmitter = () => {
+
+function onEmitter() {
   emitter.on("handleAt", ({ id, name }) => {
     insertMention({ id, name, backward: false, editor: editorRef.value });
   });
-  emitter.on("handleSetHtml", (text) => {
-    text && setEditHtml(text);
+  emitter.on("handleSetHtml", (str) => {
+    setEditHtml(str);
   });
-  emitter.on("handleInsertDraft", (value) => {
-    value && insertDraft(value);
+  emitter.on("handleInsertDraft", (data) => {
+    insertDraft({ data });
   });
   emitter.on("handleFileDrop", (file) => {
     handleFile(file);
   });
-};
+}
+
 function offEmitter() {
   emitter.off("handleAt");
   emitter.off("handleSetHtml");

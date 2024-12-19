@@ -152,6 +152,11 @@ export const insertMention = (options) => {
     editor = null,
   } = options
 
+  if (!editor) {
+    console.warn("editor is null")
+    return
+  }
+  
   const mentionNode = {
     type: "mention",
     value: `${name} `,
