@@ -33,6 +33,10 @@
     <span v-show="isRobot(toAccount)" :title="$t('chat.configuration')" @click="openRobotBox">
       <svg-icon iconClass="robot" class="icon-hover robot" />
     </span>
+    <!-- 插件 -->
+    <span v-show="isRobot(toAccount)" @click="openPluginBox">
+      <svg-icon iconClass="plugin" class="icon-hover robot" />
+    </span>
     <!-- 窗口抖动 -->
     <span
       v-show="currentType === 'C2C' && isElectron"
@@ -77,8 +81,9 @@
       hidden
     /> -->
     <RobotModel v-if="isRobot(toAccount)" />
+    <RobotPlugin v-if="isRobot(toAccount)" />
     <RobotOptions v-if="isRobot(toAccount)" />
-    <EmotionPackBox @setEmoji="setEmoji" ref="emjRef" />
+    <EmotionPackBox ref="emjRef" @setEmoji="setEmoji" />
   </div>
 </template>
 
@@ -93,6 +98,7 @@ import { useStore } from "vuex";
 import EmotionPackBox from "./EmotionPackBox.vue";
 import RobotOptions from "./RobotOptions.vue";
 import RobotModel from "./RobotModel.vue";
+import RobotPlugin from "./RobotPlugin.vue";
 import { getAssetsFile } from "../utils/utils";
 import emojiQq from "@/utils/emoji/emoji-map-qq";
 import { getAllModels } from "@/ai/utils";
@@ -117,6 +123,9 @@ const sendEmojiClick = () => {
 };
 function openRobotBox() {
   emitter.emit("onRobotBox");
+}
+function openPluginBox() {
+  emitter.emit("onPluginBox");
 }
 function selectModel() {
   emitter.emit("openModeList", true);
