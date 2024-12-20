@@ -51,25 +51,18 @@ const [dialog, setDialog] = useBoolean();
 
 function toTant(item = cardData.value) {
   const { identifier, meta } = item;
-  forIn(ModelProvider, (value, key) => {
-    localStg.set(StoreKey.Prompt, {
-      ...localStg.get(StoreKey.Prompt),
-      [value]: {
-        id: identifier,
-        meta,
-        // meta: {
-        //   tags: meta.tags,
-        //   description: meta.description,
-        //   avatar: meta.avatar,
-        //   title: meta.title,
-        //   recQuestion: ''
-        // },
-        lang: "cn",
-        prompt: [{ role: "system", content: meta.systemRole }],
-      },
-    });
+  const defaultAssistant = localStg.get("default-assistant");
+  const value = ModelProvider.GPT;
+  localStg.set(StoreKey.Prompt, {
+    ...localStg.get(StoreKey.Prompt),
+    [value]: {
+      id: identifier,
+      meta,
+      lang: "cn",
+      prompt: [{ role: "system", content: meta.systemRole }],
+    },
   });
-  const id = getModelId(localStg.get("default-assistant")) || CHATGPT_ROBOT;
+  const id = getModelId(defaultAssistant) || CHATGPT_ROBOT;
   commit("setPromptTitle", `${meta.avatar} ${meta.title}`);
   commit("taggleOueSide", "message");
   dispatch("addConversation", { convId: `${"C2C"}${id}` });

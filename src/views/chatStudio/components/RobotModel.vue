@@ -2,10 +2,11 @@
   <div v-show="flag" class="robot-model-box" v-click-outside="onClickOutside">
     <div class="item-group-title">
       <svg-icon :iconClass="robotIcon" />
-      {{ model.name }}
+      <span>{{ model.name }}</span>
     </div>
     <div
       class="model flex"
+      :class="item.id == currentModel ? 'active' : ''"
       v-for="item in model.chatModels"
       :key="item"
       @click="storeRobotModel(item.id)"
@@ -38,18 +39,18 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useBoolean } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 import { ClickOutside as vClickOutside } from "element-plus";
-import { ref } from "vue";
 import { getModelType, getModelSvg, useAccessStore } from "@/ai/utils";
 import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
-import { useGetters } from "@/utils/hooks/useMapper";
+import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
 
 defineOptions({
-  name: "RobotModel"
+  name: "RobotModel",
 });
 
 const robotIcon = ref("");
@@ -57,6 +58,10 @@ const model = ref({});
 const [flag, setFlag] = useBoolean();
 const { commit } = useStore();
 const { toAccount } = useGetters(["toAccount"]);
+
+const { currentModel } = useState({
+  currentModel: (state) => state.robot.model,
+});
 
 function onClickOutside() {
   setFlag(false);
@@ -100,7 +105,6 @@ emitter.on("openModeList", () => {
   z-index: 1;
   border-radius: 5px;
   bottom: 46px;
-  // max-width: 250px;
   max-height: 300px;
   background: var(--color-robot-model);
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
@@ -111,6 +115,7 @@ emitter.on("openModeList", () => {
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  border-radius: 3px;
   &:hover {
     background-color: rgba(0, 0, 0, 0.03);
   }
@@ -135,6 +140,9 @@ emitter.on("openModeList", () => {
     height: 15px;
     width: 15px;
   }
+}
+.active {
+  background-color: rgba(0, 0, 0, 0.03);
 }
 .function-call {
   color: #369eff;
@@ -167,5 +175,8 @@ emitter.on("openModeList", () => {
   padding: 7px 12px;
   color: #999999;
   transition: all 0.2s;
+  .svg-icon {
+    font-size: 20px;
+  }
 }
 </style>

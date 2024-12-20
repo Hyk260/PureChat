@@ -84,7 +84,7 @@ export class ChatGPTApi {
       presence_penalty: modelConfig.presence_penalty, //话题新鲜度
       frequency_penalty: modelConfig.frequency_penalty, // 频率惩罚度
       top_p: modelConfig.top_p, // 核采样
-      tools: []
+      // tools: []
     };
   }
   /**

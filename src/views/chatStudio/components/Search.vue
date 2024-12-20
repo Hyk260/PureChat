@@ -15,7 +15,7 @@
           <div class="suffix" v-show="suffix">Ctrl K</div>
         </template> -->
       </el-input>
-      <div class="header-search-add flex-c" @click="opendialog">
+      <div v-if="!isLocalMode" class="header-search-add flex-c" @click="opendialog">
         <FontIcon iconName="Plus" />
       </div>
     </div>
@@ -39,6 +39,7 @@ defineOptions({
   name: "Search",
 });
 
+const isLocalMode = __LOCAL_MODE__
 const input = ref("");
 const suffix = ref(true);
 const filterData = ref([]);

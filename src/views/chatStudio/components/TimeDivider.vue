@@ -49,7 +49,7 @@ const fnStyle = computed(() => {
     return [_isSelf ? "text-right pr-5" : "text-left pl-5"];
   } else {
     if (showCheckbox.value) return ["!opacity-0"];
-    return [_isSelf ? "text-right pr-44" : "text-left pl-44"];
+    return [_isSelf ? "text-right pr-44 mb-4" : "text-left pl-44 mb-4"];
   }
 });
 </script>
