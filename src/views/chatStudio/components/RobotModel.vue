@@ -48,6 +48,10 @@ import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
 
+defineOptions({
+  name: "RobotModel"
+});
+
 const robotIcon = ref("");
 const model = ref({});
 const [flag, setFlag] = useBoolean();

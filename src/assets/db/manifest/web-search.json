@@ -1,0 +1,22 @@
+{
+  "function": {
+    "description": "Search Google and return top 10 results",
+    "name": "web_search____searchGoogle",
+    "parameters": {
+      "properties": {
+        "_requestBody": {
+          "type": "object",
+          "required": ["query"],
+          "properties": {
+            "query": {
+              "type": "string",
+              "example": "nice places to visit"
+            }
+          }
+        }
+      },
+      "type": "object"
+    }
+  },
+  "type": "function"
+}
