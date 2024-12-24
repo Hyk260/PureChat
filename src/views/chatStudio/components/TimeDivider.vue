@@ -29,15 +29,20 @@ const props = defineProps({
   },
 });
 
-const {
-  showCheckbox,
-} = useState({
+const { showCheckbox } = useState({
   showCheckbox: (state) => state.conversation.showCheckbox,
 });
 
 function showClientTime(item) {
   // 图片 文件 文本 合并 视频 自定义
-  const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem", "TIMVideoFileElem", "TIMCustomElem"];
+  const msg = [
+    "TIMImageElem",
+    "TIMFileElem",
+    "TIMTextElem",
+    "TIMRelayElem",
+    "TIMVideoFileElem",
+    "TIMCustomElem",
+  ];
   return (
     item.clientTime && msg.includes(item.type) && item.type !== "TIMGroupTipElem" && !item.isRevoked
   );
@@ -48,8 +53,9 @@ const fnStyle = computed(() => {
   if (props.type === "group") {
     return [_isSelf ? "text-right pr-5" : "text-left pl-5"];
   } else {
-    if (showCheckbox.value) return ["!opacity-0"];
-    return [_isSelf ? "text-right pr-44 mb-4" : "text-left pl-44 mb-4"];
+    const styleArray = [_isSelf ? "text-right pr-44 mb-4" : "text-left pl-44 mb-4"];
+    if (showCheckbox.value) return [...styleArray,"!opacity-0"];
+    return styleArray;
   }
 });
 </script>

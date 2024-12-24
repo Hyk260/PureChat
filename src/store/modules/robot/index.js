@@ -5,14 +5,13 @@ export default {
   state: {
     model: "",
     botTools: localStg.get(StoreKey.Tool) || null,
-    promptTitle: localStg.get("promptTitle") || "",
+    promptTitle: "",
   },
   mutations: {
     setRobotModel(state, value) {
       state.model = value;
     },
     setPromptTitle(state, value) {
-      localStg.set('promptTitle', value);
       state.promptTitle = value;
     },
     setBotTools(state, value) {

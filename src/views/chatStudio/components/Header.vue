@@ -6,13 +6,13 @@
           <span class="nick">{{ chatNick("C2C", chat) }}</span>
           <Label :model="model" :userID="chat?.conversationID" />
           <!-- ai-prompt -->
-          <div v-if="isRobot(toAccount) && promptTitle" class="ml-5 ai-prompt-title">
-            {{ promptTitle }}
+          <div v-if="isRobot(toAccount) && fnPromptTitle(toAccount)" class="ml-5 ai-prompt-title">
+            {{ fnPromptTitle(toAccount) }}
           </div>
           <!-- ai-tools -->
           <template v-if="isRobot(toAccount) && botTools">
             <div v-for="item in botTools" :key="item.id" class="ml-5 ai-prompt-title">
-              <svg-icon class="function-call" iconClass="functionCall" /> 
+              <svg-icon class="function-call" iconClass="functionCall" />
               <span>{{ item.name }}</span>
             </div>
           </template>
@@ -40,7 +40,7 @@
 
 <script setup>
 import { isRobot } from "@/utils/chat/index";
-import { getModelType, useAccessStore } from "@/ai/utils";
+import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 import Label from "@/views/chatStudio/components/Label.vue";
@@ -91,6 +91,16 @@ const openSetup = () => {
 };
 
 const openUser = () => {};
+
+const fnPromptTitle = (toAccount) => {
+  const model = getModelType(toAccount);
+  const promptMeta = usePromptStore(model);
+  if (!promptMeta) return false;
+  if (!promptMeta?.meta?.title) return false;
+  if (!promptMeta?.prompt?.[0]?.content) return false;
+  const { avatar, title } = promptMeta?.meta || {};
+  return `${avatar} ${title}`
+};
 
 watch(toAccount, (data) => {
   updataModel();
