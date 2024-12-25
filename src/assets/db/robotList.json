@@ -66,5 +66,22 @@
     "role": 0,
     "lastUpdatedTime": 0,
     "profileCustomField": []
+  },
+  {
+    "userID": "@RBT#006",
+    "nick": "GitHub",
+    "gender": "",
+    "birthday": 0,
+    "location": "",
+    "selfSignature": "",
+    "allowType": "AllowType_Type_AllowAny",
+    "language": 0,
+    "avatar": "",
+    "messageSettings": 0,
+    "adminForbidType": "AdminForbid_Type_None",
+    "level": 0,
+    "role": 0,
+    "lastUpdatedTime": 0,
+    "profileCustomField": []
   }
 ]

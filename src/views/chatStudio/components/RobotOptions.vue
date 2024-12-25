@@ -16,7 +16,9 @@
         <li class="container-item py-10 flex-bc" v-for="item in modelData" :key="item.ID">
           <div class="flex flex-col gap-5">
             <div class="title">{{ item.Title }}</div>
-            <div class="subTitle">{{ item.SubTitle }}</div>
+            <div class="subTitle">
+              <Markdown :marked="item.SubTitle"/>
+            </div>
           </div>
           <el-tooltip content="获取模型列表" placement="top" v-if="item.options && isOllama()">
             <!-- && isOllama() -->
@@ -90,6 +92,7 @@ import { cloneDeep } from "lodash-es";
 import { useStore } from "vuex";
 import { ClientApi } from "@/ai/api";
 import DragPrompt from "./DragPrompt.vue";
+import { Markdown } from "@/utils/markdown/index";
 import { StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 

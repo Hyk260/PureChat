@@ -12,17 +12,6 @@
   "isPeerRead": false,
   "nameCard": "",
   "hasRiskContent": false,
-  "_elements": [
-    {
-      "type": "TIMCustomElem",
-      "content": {
-        "data": "",
-        "description": "",
-        "extension": "",
-        "text": ""
-      }
-    }
-  ],
   "isPlaceMessage": 0,
   "isRevoked": false,
   "from": "@RBT#005",
@@ -40,8 +29,6 @@
   "cloudCustomData": "",
   "isDeleted": false,
   "isModified": false,
-  "_isExcludedFromUnreadCount": false,
-  "_isExcludedFromLastMessage": false,
   "clientTime": 0,
   "senderTinyID": "",
   "readReceiptInfo": {
