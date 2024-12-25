@@ -1,5 +1,6 @@
 import { ModelProvider } from "@/ai/constant";
 import { ChatGPTApi } from "@/ai/platforms/openai/index";
+import { GitHubApi } from "@/ai/platforms/github/index";
 import { ChatYiApi } from "@/ai/platforms/zeroone/index";
 import { QwenApi } from "@/ai/platforms/qwen/index";
 import { OllamaApi } from "@/ai/platforms/ollama/index";
@@ -40,6 +41,9 @@ export class ClientApi {
         break;
       case ModelProvider.Ollama:
         ApiClass = OllamaApi;
+        break;
+      case ModelProvider.GitHub:
+        ApiClass = GitHubApi;
         break;
       default:
         ApiClass = ChatGPTApi; // 默认使用 ChatGPTApi

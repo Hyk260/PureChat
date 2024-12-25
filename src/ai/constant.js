@@ -1,6 +1,10 @@
 import { OpenaiConfig } from "@/ai/platforms/openai/config";
 import { openaiModelValue } from "@/ai/platforms/openai/modelValue";
 
+
+import { GitHubConfig } from "@/ai/platforms/github/config";
+import { githubModelValue } from "@/ai/platforms/github/modelValue";
+
 import { YiConfig } from "@/ai/platforms/zeroone/config";
 import { yiModelValue } from "@/ai/platforms/zeroone/modelValue";
 
@@ -96,6 +100,10 @@ export const QwenPath = {
   ChatPath: "services/aigc/text-generation/generation",
 };
 
+export const GitHubPath = {
+  ChatPath: "chat/completions",
+};
+
 export const prompt = [
   {
     id: "0",
@@ -121,6 +129,7 @@ export const RobotAvatar = {
 // 默认配置
 export const modelConfig = {
   [ModelProvider.GPT]: { ...OpenaiConfig() },
+  [ModelProvider.GitHub]: { ...GitHubConfig() },
   [ModelProvider.ChatGLM]: { ...ZhiPuConfig },
   [ModelProvider.ZeroOne]: { ...YiConfig },
   [ModelProvider.Qwen]: { ...QwenConfig },
@@ -129,6 +138,7 @@ export const modelConfig = {
 
 export const modelValue = {
   [ModelProvider.GPT]: openaiModelValue(),
+  [ModelProvider.GitHub]: githubModelValue(),
   [ModelProvider.ChatGLM]: zhipuModelValue(),
   [ModelProvider.ZeroOne]: yiModelValue(),
   [ModelProvider.Qwen]: qwenModelValue(),
