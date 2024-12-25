@@ -1,10 +1,11 @@
 import store from "@/store";
 import {
-  CHATGLM_ROBOT,
-  CHATGPT_ROBOT,
-  CHATYI_ROBOT,
-  CHATQWEN_ROBOT,
-  CHATOLLAMA_ROBOT,
+  glmBotId,
+  gptBotId,
+  yiBotId,
+  qwenBotId,
+  ollamaBotId,
+  githubBotId,
   ModelProvider,
   StoreKey,
   modelConfig,
@@ -61,11 +62,12 @@ export const usePromptStore = (model = ModelProvider.GPT) => {
 export function getModelType(modelId) {
   if (!isRobot(modelId)) return "";
   const modelMapping = {
-    [CHATGPT_ROBOT]: ModelProvider.GPT,
-    [CHATGLM_ROBOT]: ModelProvider.ChatGLM,
-    [CHATYI_ROBOT]: ModelProvider.ZeroOne,
-    [CHATQWEN_ROBOT]: ModelProvider.Qwen,
-    [CHATOLLAMA_ROBOT]: ModelProvider.Ollama,
+    [gptBotId]: ModelProvider.GPT,
+    [glmBotId]: ModelProvider.ChatGLM,
+    [yiBotId]: ModelProvider.ZeroOne,
+    [qwenBotId]: ModelProvider.Qwen,
+    [ollamaBotId]: ModelProvider.Ollama,
+    [githubBotId]: ModelProvider.GitHub,
   };
   return modelMapping[modelId] || "";
 }
@@ -73,11 +75,12 @@ export function getModelType(modelId) {
 export function getModelId(model) {
   if (!model) return "";
   const modelMapping = {
-    [ModelProvider.GPT]: CHATGPT_ROBOT,
-    [ModelProvider.ChatGLM]: CHATGLM_ROBOT,
-    [ModelProvider.ZeroOne]: CHATYI_ROBOT,
-    [ModelProvider.Qwen]: CHATQWEN_ROBOT,
-    [ModelProvider.Ollama]: CHATOLLAMA_ROBOT,
+    [ModelProvider.GPT]: gptBotId,
+    [ModelProvider.ChatGLM]: glmBotId,
+    [ModelProvider.ZeroOne]: yiBotId,
+    [ModelProvider.Qwen]: qwenBotId,
+    [ModelProvider.Ollama]: ollamaBotId,
+    [ModelProvider.GitHub]: githubBotId,
   };
   return modelMapping[model] || "";
 }
@@ -90,6 +93,7 @@ export function getModelSvg(id) {
     [ModelProvider.ZeroOne]: "zeroone",
     [ModelProvider.Qwen]: "tongyi",
     [ModelProvider.Ollama]: "ollama",
+    [ModelProvider.GitHub]: "github",
     llava: "llava",
   };
   return data[modelId] || "";

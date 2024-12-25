@@ -41,7 +41,7 @@ import emitter from "@/utils/mitt-bus";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
-import { StoreKey, CHATGPT_ROBOT, ModelProvider } from "@/ai/constant";
+import { StoreKey, gptBotId, ModelProvider } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
 import { forIn } from "lodash-es";
 
@@ -62,7 +62,7 @@ function toTant(item = cardData.value) {
       prompt: [{ role: "system", content: meta.systemRole }],
     },
   });
-  const id = getModelId(defaultAssistant) || CHATGPT_ROBOT;
+  const id = getModelId(defaultAssistant) || gptBotId;
   commit("setPromptTitle", `${meta.avatar} ${meta.title}`);
   commit("taggleOueSide", "message");
   dispatch("addConversation", { convId: `${"C2C"}${id}` });

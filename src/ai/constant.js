@@ -21,27 +21,31 @@ const {
   VITE_ROBOT_ZEROONE, // 零一万物
   VITE_ROBOT_QWEN, // 通义千问
   VITE_ROBOT_OLLAMA, // ollama
+  VITE_ROBOT_GITHUB, // github
 } = import.meta.env;
 
 export const ROLES = ["system", "user", "assistant"];
 
-// chatgpt机器人id
-export const CHATGPT_ROBOT = VITE_ROBOT_GPT;
-// 智谱机器人id
-export const CHATGLM_ROBOT = VITE_ROBOT_GLM;
-// 零一万物机器人id
-export const CHATYI_ROBOT = VITE_ROBOT_ZEROONE;
-// 通义千问机器人id
-export const CHATQWEN_ROBOT = VITE_ROBOT_QWEN;
+// ChatGpt
+export const gptBotId = VITE_ROBOT_GPT;
+// 智谱ai
+export const glmBotId = VITE_ROBOT_GLM;
+// 零一万物
+export const yiBotId = VITE_ROBOT_ZEROONE;
+// 通义千问
+export const qwenBotId = VITE_ROBOT_QWEN;
 // OLLAMA
-export const CHATOLLAMA_ROBOT = VITE_ROBOT_OLLAMA;
+export const ollamaBotId = VITE_ROBOT_OLLAMA;
+// github
+export const githubBotId = VITE_ROBOT_GITHUB;
 
 export const ROBOT_COLLECT = [
-  CHATGPT_ROBOT,
-  CHATGLM_ROBOT,
-  CHATYI_ROBOT,
-  // CHATQWEN_ROBOT,
-  CHATOLLAMA_ROBOT,
+  gptBotId,
+  glmBotId,
+  yiBotId,
+  // qwenBotId,
+  ollamaBotId,
+  githubBotId,
 ];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
@@ -69,6 +73,7 @@ export const ModelProvider = {
   ZeroOne: "ZeroOne",
   Qwen: "Qwen",
   Ollama: "Ollama",
+  GitHub: "GitHub",
 };
 
 export const OpenaiPath = {
@@ -110,6 +115,7 @@ export const RobotAvatar = {
   [ModelProvider.ZeroOne]: "ZeroOne.svg",
   [ModelProvider.Qwen]: "qwen.svg",
   [ModelProvider.Ollama]: "ollama.svg",
+  [ModelProvider.GitHub]: "github.svg",
 };
 
 // 默认配置
