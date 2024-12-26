@@ -1,7 +1,6 @@
 import { OpenaiConfig } from "@/ai/platforms/openai/config";
 import { openaiModelValue } from "@/ai/platforms/openai/modelValue";
 
-
 import { GitHubConfig } from "@/ai/platforms/github/config";
 import { githubModelValue } from "@/ai/platforms/github/modelValue";
 
