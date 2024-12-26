@@ -93,7 +93,7 @@ export function getModelSvg(id) {
     [ModelProvider.ZeroOne]: "zeroone",
     [ModelProvider.Qwen]: "tongyi",
     [ModelProvider.Ollama]: "ollama",
-    [ModelProvider.GitHub]: "github",
+    [ModelProvider.GitHub]: "openai",
     llava: "llava",
   };
   return data[modelId] || "";
@@ -338,7 +338,7 @@ export const createAiPromptMsg = (params) => {
       messageID: "",
       messageAbstract: "预设提示词",
       recQuestion: meta.recQuestion || [],
-      messageSender: '',
+      messageSender: "",
       messageType: 0,
       version: "1",
     },
@@ -353,3 +353,17 @@ export const createAiPromptMsg = (params) => {
   msg.status = "success";
   return { convId: `C2C${msg.from}`, message: msg };
 };
+
+export function formatSizeStrict(input) {
+  const number = parseInt(input.toString().replace("_", ""), 10);
+
+  if (isNaN(number)) {
+    throw new Error("Invalid input: The input is not a valid number.");
+  }
+
+  if (number % 1000 === 0) {
+    return number / 1000 + "K";
+  }
+
+  return Math.floor(number / 1000) + "k"; // 舍弃小数，向下取整
+}

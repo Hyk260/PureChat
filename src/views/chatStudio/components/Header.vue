@@ -6,7 +6,7 @@
           <span class="nick">{{ chatNick("C2C", chat) }}</span>
           <Label :model="model" :userID="chat?.conversationID" />
           <!-- ai-prompt -->
-          <div v-if="isRobot(toAccount) && fnPromptTitle(toAccount)" class="ml-5 ai-prompt-title">
+          <div v-if="isRobot(toAccount) && false" class="ml-5 ai-prompt-title">
             {{ fnPromptTitle(toAccount) }}
           </div>
           <!-- ai-tools -->

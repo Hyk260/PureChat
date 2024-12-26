@@ -8,9 +8,11 @@ const OllamaAI = {
       tokens: 32_768,
     },
     {
+      displayName: "Llama 3.1 8B",
       enabled: true,
-      icon: "meta",
       id: "llama3.1:8b",
+      icon: "meta",
+      tokens: 128_000,
     },
     // https://github.com/ollama/ollama/blob/main/docs/api.md#request-12
   ],

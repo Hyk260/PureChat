@@ -30,7 +30,6 @@
           <el-select
             v-if="item.options"
             multiple
-            clearable
             collapse-tags
             collapse-tags-tooltip
             :max-collapse-tags="10"
@@ -158,7 +157,7 @@ function initModel() {
   const account = getModelType(toAccount.value);
   const collapse = localStg.get(`${account}-Select-Model`)?.Model?.collapse;
   Object.values(value).map((v) => {
-    if (v.ID === "model" && collapse?.length) (v.collapse = collapse);
+    if (v.ID === "model" && collapse) (v.collapse = collapse);
     v.defaultValue = useAccessStore(model)[v.ID];
     return v;
   });
