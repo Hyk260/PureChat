@@ -71,26 +71,29 @@ export class LocalChat {
     newData.map(t => {
       if (t.conversationID === data.conversationID) {
         t.lastMessage.messageForShow = data.payload.text
+        t.lastMessage.lastTime = this.getTime()
       }
     })
-    this.emit('onConversationListUpdated', { data: [...newData] })
-
-    const message = {
-      code: 0,
-      data: {
-        message: {
-          ...data,
-          ID: data.ID || this.nanoId(),
-          status: "success",
-        }
-      }
-    }
     const historyMessageList = getHistoryMessageList(data.conversationID)
     localStg.set(`localChat${data.conversationID}`, historyMessageList)
     return new Promise((resolve, reject) => {
       setTimeout(() => {
+        const message = {
+          code: 0,
+          data: {
+            message: {
+              ...data,
+              time: this.getTime(),
+              clientTime: this.getTime(),
+              ID: data.ID || this.nanoId(),
+              status: "success",
+            }
+          }
+        }
+        this.emit('onConversationListUpdated', { data: [...newData] })
+        this.emit('onMessageReceived', { data: [message.data.message] })
         resolve(message)
-      }, 100)
+      }, 250)
     })
   }
   async getLoginUser() {
