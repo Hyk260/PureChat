@@ -131,7 +131,7 @@ const isShowCount = (item) => {
   return item.unreadCount === 0;
 };
 const isMention = (item) => {
-  return item.groupAtInfoList.length > 0;
+  return item.groupAtInfoList?.length > 0;
 };
 
 const fnClass = (item) => (item?.conversationID === chat.value?.conversationID ? "is-active" : "");
@@ -240,7 +240,6 @@ const handleConvListClick = (data) => {
   }
   emitter.emit("handleInsertDraft", data);
   emitter.emit("updataScroll");
-  emitter.emit("setSearchForData");
 };
 
 const handleClickMenuItem = (item) => {

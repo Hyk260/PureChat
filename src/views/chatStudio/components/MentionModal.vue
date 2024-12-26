@@ -32,6 +32,7 @@ import { onClickOutside, useEventListener } from "@vueuse/core";
 import { cloneDeep } from "lodash-es";
 import { mapState } from "vuex";
 import { prioritizeRBTUserID } from "@/utils/chat/index";
+import { insertMention } from "./../utils/utils";
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__";
 
@@ -47,6 +48,11 @@ export default {
     pinyinSearch: {
       type: Boolean,
       default: false,
+    },
+    // 编辑器实例
+    editor: {
+      type: Object,
+      default: () => ({}),
     },
   },
   computed: {
@@ -151,7 +157,7 @@ export default {
     },
     insertMentionHandler(id, name) {
       let nick = name ? name : id;
-      this.$emit("insertMention", { id, name: nick, deleteDigit: this.searchValue });
+      insertMention({ id, name: nick, deleteDigit: this.searchValue, editor: this.editor })
       this.setMentionStatus(); // 隐藏 modal
       this.searchValue = 0;
     },

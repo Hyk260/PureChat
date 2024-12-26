@@ -2,16 +2,17 @@
   <div v-show="flag" class="robot-model-box" v-click-outside="onClickOutside">
     <div class="item-group-title">
       <svg-icon :iconClass="robotIcon" />
-      {{ model.name }}
+      <span>{{ model.name }}</span>
     </div>
     <div
       class="model flex"
+      :class="item.id == currentModel ? 'active' : ''"
       v-for="item in model.chatModels"
       :key="item"
       @click="storeRobotModel(item.id)"
     >
       <div :class="['icon', robotIcon]">
-        <div :class="['icon', item.icon]" v-if="model.id === 'ollama'">
+        <div v-if="model.id === 'ollama'" :class="['icon', item.icon]">
           <svg-icon :iconClass="item.icon" />
         </div>
         <span v-else>
@@ -38,21 +39,30 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useBoolean } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 import { ClickOutside as vClickOutside } from "element-plus";
-import { ref } from "vue";
 import { getModelType, getModelSvg, useAccessStore } from "@/ai/utils";
 import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
-import { useGetters } from "@/utils/hooks/useMapper";
+import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
+import { cloneDeep } from "lodash-es";
 import { useStore } from "vuex";
+
+defineOptions({
+  name: "RobotModel",
+});
 
 const robotIcon = ref("");
 const model = ref({});
 const [flag, setFlag] = useBoolean();
 const { commit } = useStore();
 const { toAccount } = useGetters(["toAccount"]);
+
+const { currentModel } = useState({
+  currentModel: (state) => state.robot.model,
+});
 
 function onClickOutside() {
   setFlag(false);
@@ -75,10 +85,20 @@ function storeRobotModel(model) {
 function initModel() {
   const mode = getModelType(toAccount.value);
   const list = localStg.get("olama-local-model-list");
-  model.value = modelValue[mode].Model.options;
   robotIcon.value = getModelSvg(toAccount.value);
+  const account = getModelType(toAccount.value);
+  const selectModel = localStg.get(`${account}-Select-Model`);
+  model.value = cloneDeep(modelValue[mode].Model.options);
   if (list && [ModelProvider.Ollama].includes(mode)) {
     model.value.chatModels = list;
+  }
+  if (selectModel && model.value) {
+    const chatModels = cloneDeep(model.value.chatModels);
+    const collapse = selectModel.Model.collapse || [];
+    if (collapse.length !== 0) {
+      const filteredData = chatModels.filter((item) => collapse.includes(item.id));
+      model.value.chatModels = filteredData;
+    }
   }
   setFlag(true);
 }
@@ -96,7 +116,6 @@ emitter.on("openModeList", () => {
   z-index: 1;
   border-radius: 5px;
   bottom: 46px;
-  // max-width: 250px;
   max-height: 300px;
   background: var(--color-robot-model);
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
@@ -107,6 +126,7 @@ emitter.on("openModeList", () => {
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  border-radius: 3px;
   &:hover {
     background-color: rgba(0, 0, 0, 0.03);
   }
@@ -131,6 +151,9 @@ emitter.on("openModeList", () => {
     height: 15px;
     width: 15px;
   }
+}
+.active {
+  background-color: rgba(0, 0, 0, 0.03);
 }
 .function-call {
   color: #369eff;
@@ -163,5 +186,8 @@ emitter.on("openModeList", () => {
   padding: 7px 12px;
   color: #999999;
   transition: all 0.2s;
+  .svg-icon {
+    font-size: 20px;
+  }
 }
 </style>

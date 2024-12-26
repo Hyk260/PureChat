@@ -35,12 +35,14 @@ const buttonList = [
     value: "合并转发",
     icon: "mergeForward",
     class: "",
+    hide: __LOCAL_MODE__
   },
   {
     type: "ForwardItemByItem",
     value: "逐条转发",
     icon: "aQuickForward",
     class: "",
+    hide: __LOCAL_MODE__
   },
   {
     type: "removalMsg",
@@ -54,7 +56,7 @@ export default {
   name: "MultiChoiceBox",
   data() {
     return {
-      buttonList,
+      buttonList: buttonList.filter(item => !item.hide),
       multipleValue: null,
     };
   },
@@ -114,11 +116,12 @@ export default {
     async deleteMsg() {
       const result = await showConfirmationBox({ message: "确定删除?", iconType: "warning" });
       if (result == "cancel") return;
-      const { code, messageList } = await deleteMessage([...this.filterate()]);
+      const data = this.filterate()
+      const { code } = await deleteMessage([...data]);
       if (code !== 0) return;
       this.$store.commit("deleteMessage", {
         convId: this.currentConversation.conversationID,
-        // messageIdArray: [data.ID]
+        messageIdArray: [...data.map(item => item.ID)],
       });
       this.shutdown();
     },
@@ -198,7 +201,7 @@ export default {
     filterate() {
       let myObj = Object.fromEntries(this.forwardData);
       const obj = Object.values(myObj).map((item) => item);
-      return obj.sort((a, b) => a.clientTime - b.clientTime);
+      return obj.sort((a, b) => a.time - b.time);
     },
     shutdown() {
       // 清空多选数据

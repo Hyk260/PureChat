@@ -65,12 +65,20 @@ export function timeFormat(timestamp, includeTime = false) {
 }
 
 /**
- * 将时间戳格式化为 "年/月/日 时:分" 的格式
+ * 将时间戳格式化为 "年/月/日 时:分:秒" 的格式
+ * 如果年份为当年则不显示年，只显示 "月/日 时:分:秒"
  * @param {number} timestamp - 时间戳（毫秒）
  * @returns {string} 格式化的日期字符串
  */
 export function formatTimestamp(timestamp) {
-  return dayjs(timestamp).format("YYYY/MM/DD HH:mm");
+  const now = dayjs();
+  const date = dayjs(timestamp);
+
+  if (date.isSame(now, 'year')) {
+    return date.format("MM/DD HH:mm:ss");
+  } else {
+    return date.format("YYYY/MM/DD HH:mm:ss");
+  }
 }
 
 /**

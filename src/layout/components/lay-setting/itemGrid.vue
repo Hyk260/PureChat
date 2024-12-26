@@ -29,7 +29,7 @@
             />
           </el-select>
         </li>
-        <li class="logout">
+        <li class="logout" v-if="!islocalMode">
           <el-button @click="logout" type="primary">
             {{ $t("login.logout") }}
           </el-button>
@@ -85,6 +85,7 @@ import { languages, options, optionsModel } from "./enums";
 
 const { VITE_APP_NAME, DEV: isDev } = import.meta.env;
 const { docs, version } = __APP_INFO__.pkg;
+const islocalMode = __LOCAL_MODE__
 
 const props = defineProps({
   item: {

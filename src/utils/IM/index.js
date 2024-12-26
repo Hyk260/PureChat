@@ -338,3 +338,7 @@ export class TIMProxy {
 }
 
 export const timProxy = new TIMProxy();
+
+if (__LOCAL_MODE__) {
+  window.TIMProxy.init();
+}

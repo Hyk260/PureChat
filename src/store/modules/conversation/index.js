@@ -192,7 +192,7 @@ const conversation = {
     },
     // 设置提及弹框显示隐藏
     toggleMentionModal(state, action) {
-      if (state.currentConversation.type === "GROUP") {
+      if (state.currentConversation?.type === "GROUP") {
         state.isShowModal = action;
       } else {
         state.isShowModal = false;
@@ -366,6 +366,7 @@ const conversation = {
     },
     // 消息已读
     hasReadMessage({ state }, payload) {
+      if (__LOCAL_MODE__) return;
       const {
         convId,
         message: { unreadCount },

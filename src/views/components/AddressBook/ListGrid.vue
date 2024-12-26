@@ -1,6 +1,6 @@
 <template>
   <div
-    v-for="item in data"
+    v-for="item in filterList"
     :key="item.icon"
     :class="{
       selectd: active === item.id,
@@ -23,7 +23,7 @@ export default {
   name: "ListGrid",
   data() {
     return {
-      data: [
+      list: [
         {
           id: "contacts",
           title: "常用联系人",
@@ -41,8 +41,19 @@ export default {
           type: "svg",
         },
       ],
-      active: "contacts",
+      active: "aiModel",
     };
+  },
+  computed: {
+    filterList() {
+      return this.list.filter((item) => {
+        if (__LOCAL_MODE__) {
+          return item.id === "aiModel";
+        } else {
+          return item;
+        }
+      });
+    },
   },
   methods: {
     onClick(data) {

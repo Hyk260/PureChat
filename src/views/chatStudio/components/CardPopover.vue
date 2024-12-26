@@ -49,7 +49,7 @@ const market = ref([]);
 const [card, setCard] = useBoolean();
 const { dispatch } = useStore();
 
-const menuItems = ref([
+const menuItems = [
   {
     index: "1",
     label: "应用设置",
@@ -81,11 +81,12 @@ const menuItems = ref([
     label: "退出登录",
     icon: "CollectionTag",
     svg: "log-out",
+    hide: __LOCAL_MODE__,
     action: () => {
       dispatch("handleUserLogout");
     },
   },
-]);
+].filter((item) => !item.hide);
 
 const dataStatistics = ref({
   messages: "消息",

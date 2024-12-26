@@ -58,8 +58,8 @@ async function getHtmlBuildTime() {
 }
 
 export function setupAppVersionNotification() {
-  if (isElectron) return;
   if (isDev) return;
+  if (isElectron) return;
   document.addEventListener("visibilitychange", async () => {
     if (getCookie("onUpdate")) return;
     const buildTime = await getHtmlBuildTime();

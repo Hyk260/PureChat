@@ -1,0 +1,26 @@
+{
+  "userID": "admin",
+  "nick": "admin",
+  "gender": "Gender_Type_Male",
+  "birthday": 0,
+  "location": "",
+  "selfSignature": "",
+  "allowType": "AllowType_Type_AllowAny",
+  "language": 0,
+  "avatar": "https://ljx-1307934606.cos.ap-beijing.myqcloud.com/admin.jpg",
+  "messageSettings": 0,
+  "adminForbidType": "AdminForbid_Type_None",
+  "level": 0,
+  "role": 0,
+  "lastUpdatedTime": 1733713194268,
+  "profileCustomField": [
+    {
+      "key": "Tag_Profile_Custom_ApiKey",
+      "value": ""
+    },
+    {
+      "key": "Tag_Profile_Custom_ProxyUrl",
+      "value": ""
+    }
+  ]
+}

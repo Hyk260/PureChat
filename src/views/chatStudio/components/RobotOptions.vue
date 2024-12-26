@@ -16,20 +16,32 @@
         <li class="container-item py-10 flex-bc" v-for="item in modelData" :key="item.ID">
           <div class="flex flex-col gap-5">
             <div class="title">{{ item.Title }}</div>
-            <div class="subTitle">{{ item.SubTitle }}</div>
+            <div class="subTitle">
+              <Markdown :marked="item.SubTitle" />
+              <!-- <small>{{ item.SubTitle }} </small> -->
+            </div>
           </div>
-          <el-tooltip content="获取模型列表" placement="top" v-if="item.options && isOllama()">
-            <!-- && isOllama() -->
+          <el-tooltip content="获取模型列表" placement="top" v-if="item.options && isOllama() && false">
             <el-icon class="refresh" @click="onRefresh()">
               <Refresh />
             </el-icon>
           </el-tooltip>
           <!-- 模型 -->
-          <el-select v-if="item.options" v-model="item.defaultValue">
+          <el-select
+            v-if="item.options"
+            multiple
+            clearable
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="10"
+            v-model="item.collapse"
+            @clear="handleClear"
+            @remove-tag="handleRemoveTag"
+          >
             <el-option
               v-for="models in item.options.chatModels"
               :key="models.id"
-              :label="models.id + `(${item.options.name})`"
+              :label="models.displayName"
               :value="models.id"
             />
           </el-select>
@@ -90,6 +102,7 @@ import { cloneDeep } from "lodash-es";
 import { useStore } from "vuex";
 import { ClientApi } from "@/ai/api";
 import DragPrompt from "./DragPrompt.vue";
+import { Markdown } from "@/utils/markdown/index";
 import { StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 
@@ -99,6 +112,14 @@ const maskData = ref([]);
 const { commit } = useStore();
 const [dialog, setDialog] = useBoolean();
 const { toAccount } = useGetters(["toAccount"]);
+
+const handleClear = (data) => {
+  console.log("clear", data);
+}
+
+const handleRemoveTag = (data) => {
+  console.log("remove", data);
+}
 
 function isRange(id) {
   return [
@@ -134,8 +155,12 @@ async function onRefresh() {
 function initModel() {
   const model = getModelType(toAccount.value);
   const value = cloneDeep(modelValue[model]);
+  const account = getModelType(toAccount.value);
+  const collapse = localStg.get(`${account}-Select-Model`)?.Model?.collapse;
   Object.values(value).map((v) => {
-    return (v.defaultValue = useAccessStore(model)[v.ID]);
+    if (v.ID === "model" && collapse?.length) (v.collapse = collapse);
+    v.defaultValue = useAccessStore(model)[v.ID];
+    return v;
   });
   maskData.value = cloneDeep(usePromptStore(model));
   modelData.value = value;
@@ -149,7 +174,7 @@ function storeRobotModel(model) {
   } else {
     localStg.set(StoreKey.Access, { [account]: { ...model } });
   }
-  commit("setRobotModel", model.model);
+  localStg.set(`${account}-Select-Model`, modelData.value);
 }
 
 function storeRobotMask(model) {
@@ -188,13 +213,16 @@ function handleClose(done) {
 }
 // 重置
 function handleCancel() {
+  commit("setPromptTitle", "");
   resetRobotModel();
   resetRobotMask();
   setDialog(false);
+  const account = getModelType(toAccount.value);
+  localStg.remove(`${account}-Select-Model`);
 }
 // 保存
 function handleConfirm() {
-  setDialog(false);
+  console.log(modelData.value)
   const model = {};
   Object.values(modelData.value).map((t) => {
     if (isRange(t.ID)) {
@@ -205,6 +233,7 @@ function handleConfirm() {
   });
   storeRobotModel(model);
   storeRobotMask(maskData.value);
+  setDialog(false);
 }
 
 function toUrl(url) {
@@ -276,8 +305,9 @@ input[type="range"]::-ms-thumb:hover {
       font-size: 12px;
       font-weight: 400;
     }
+    .el-input,
     .el-select {
-      max-width: 197px;
+      width: 400px;
     }
   }
 }

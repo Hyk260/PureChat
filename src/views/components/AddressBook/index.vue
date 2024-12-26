@@ -32,8 +32,8 @@ export default {
   name: "AddressBook",
   data() {
     return {
-      title: "常用联系人",
-      active: "ForkSpoon",
+      title: "AI大模型",
+      active: "aiModel",
       friend: [],
       robotList: [],
       groupListInfo: [],
@@ -61,7 +61,6 @@ export default {
     // 获取机器人列表
     async getRobot() {
       const { code, data } = await getUserProfile(ROBOT_COLLECT);
-      console.log(data);
       this.robotList = data;
     },
     // 获取好友列表

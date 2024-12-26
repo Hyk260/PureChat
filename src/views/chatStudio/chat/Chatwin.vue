@@ -530,7 +530,7 @@ const handleDeleteMsg = async (data) => {
       if (result === "cancel") return;
     }
     isConfirm.value = true;
-    const { code, messageList } = await deleteMessage([data]);
+    const { code } = await deleteMessage([data]);
     if (code !== 0) return;
     commit("deleteMessage", { convId: data.conversationID, messageIdArray: [data.ID] });
   } catch (error) {

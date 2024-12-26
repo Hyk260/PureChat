@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     base: viteEnv.VITE_BASE_URL,
-    define: viteDefine,
+    define: viteDefine(viteEnv),
     resolve: {
       /** 设置别名 */
       alias: {

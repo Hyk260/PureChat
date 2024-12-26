@@ -1,6 +1,10 @@
+import { localStg } from "@/utils/storage";
+import { StoreKey } from "@/ai/constant";
+
 export default {
   state: {
     model: "",
+    botTools: localStg.get(StoreKey.Tool) || null,
     promptTitle: "",
   },
   mutations: {
@@ -10,5 +14,8 @@ export default {
     setPromptTitle(state, value) {
       state.promptTitle = value;
     },
+    setBotTools(state, value) {
+      state.botTools = value;
+    }
   },
 };

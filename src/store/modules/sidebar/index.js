@@ -7,8 +7,8 @@ const outsideList = [
     icon: "ChatDotSquare",
     locale: "message",
     title: "消息",
-    class: "fix-ed",
-    if_fixed: 1,
+    // class: "fix-ed",
+    // if_fixed: 1,
     type: "el-icon",
   },
   {
@@ -16,8 +16,8 @@ const outsideList = [
     icon: "Notebook",
     locale: "addressBook",
     title: "通讯录",
-    class: "fix-ed",
-    if_fixed: 1,
+    // class: "fix-ed",
+    // if_fixed: 1,
     type: "el-icon",
   },
   {

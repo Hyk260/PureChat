@@ -1,5 +1,5 @@
 export default [
-  { path: "/", redirect: "/chatstudio" },
+  { path: "/", redirect: "/chat" },
   {
     path: "/login",
     name: "login",

@@ -1,6 +1,9 @@
 import { OpenaiConfig } from "@/ai/platforms/openai/config";
 import { openaiModelValue } from "@/ai/platforms/openai/modelValue";
 
+import { GitHubConfig } from "@/ai/platforms/github/config";
+import { githubModelValue } from "@/ai/platforms/github/modelValue";
+
 import { YiConfig } from "@/ai/platforms/zeroone/config";
 import { yiModelValue } from "@/ai/platforms/zeroone/modelValue";
 
@@ -21,27 +24,31 @@ const {
   VITE_ROBOT_ZEROONE, // 零一万物
   VITE_ROBOT_QWEN, // 通义千问
   VITE_ROBOT_OLLAMA, // ollama
+  VITE_ROBOT_GITHUB, // github
 } = import.meta.env;
 
 export const ROLES = ["system", "user", "assistant"];
 
-// chatgpt机器人id
-export const CHATGPT_ROBOT = VITE_ROBOT_GPT;
-// 智谱机器人id
-export const CHATGLM_ROBOT = VITE_ROBOT_GLM;
-// 零一万物机器人id
-export const CHATYI_ROBOT = VITE_ROBOT_ZEROONE;
-// 通义千问机器人id
-export const CHATQWEN_ROBOT = VITE_ROBOT_QWEN;
+// ChatGpt
+export const gptBotId = VITE_ROBOT_GPT;
+// 智谱ai
+export const glmBotId = VITE_ROBOT_GLM;
+// 零一万物
+export const yiBotId = VITE_ROBOT_ZEROONE;
+// 通义千问
+export const qwenBotId = VITE_ROBOT_QWEN;
 // OLLAMA
-export const CHATOLLAMA_ROBOT = VITE_ROBOT_OLLAMA;
+export const ollamaBotId = VITE_ROBOT_OLLAMA;
+// github
+export const githubBotId = VITE_ROBOT_GITHUB;
 
 export const ROBOT_COLLECT = [
-  CHATGPT_ROBOT,
-  CHATGLM_ROBOT,
-  CHATYI_ROBOT,
-  // CHATQWEN_ROBOT,
-  CHATOLLAMA_ROBOT,
+  gptBotId,
+  glmBotId,
+  yiBotId,
+  // qwenBotId,
+  ollamaBotId,
+  githubBotId,
 ];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
@@ -51,6 +58,7 @@ export const REQUEST_TIMEOUT_MS = 10000;
 export const StoreKey = {
   Access: "access-control",
   Prompt: "prompt-store", // 提示词 预设
+  Tool: "tool-store", // 工具
 };
 
 /**
@@ -68,6 +76,7 @@ export const ModelProvider = {
   ZeroOne: "ZeroOne",
   Qwen: "Qwen",
   Ollama: "Ollama",
+  GitHub: "GitHub",
 };
 
 export const OpenaiPath = {
@@ -90,6 +99,10 @@ export const QwenPath = {
   ChatPath: "services/aigc/text-generation/generation",
 };
 
+export const GitHubPath = {
+  ChatPath: "chat/completions",
+};
+
 export const prompt = [
   {
     id: "0",
@@ -109,11 +122,13 @@ export const RobotAvatar = {
   [ModelProvider.ZeroOne]: "ZeroOne.svg",
   [ModelProvider.Qwen]: "qwen.svg",
   [ModelProvider.Ollama]: "ollama.svg",
+  [ModelProvider.GitHub]: "github.svg",
 };
 
 // 默认配置
 export const modelConfig = {
   [ModelProvider.GPT]: { ...OpenaiConfig() },
+  [ModelProvider.GitHub]: { ...GitHubConfig() },
   [ModelProvider.ChatGLM]: { ...ZhiPuConfig },
   [ModelProvider.ZeroOne]: { ...YiConfig },
   [ModelProvider.Qwen]: { ...QwenConfig },
@@ -122,6 +137,7 @@ export const modelConfig = {
 
 export const modelValue = {
   [ModelProvider.GPT]: openaiModelValue(),
+  [ModelProvider.GitHub]: githubModelValue(),
   [ModelProvider.ChatGLM]: zhipuModelValue(),
   [ModelProvider.ZeroOne]: yiModelValue(),
   [ModelProvider.Qwen]: qwenModelValue(),

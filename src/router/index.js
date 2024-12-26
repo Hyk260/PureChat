@@ -4,6 +4,8 @@ import layout from "./modules/layout";
 import remaining from "./modules/remaining";
 import { createRouterGuard } from './guard/index';
 
+const { VITE_ROUTER_HISTORY } = import.meta.env
+
 const historyMode = {
   history: createWebHistory(),
   hash: createWebHashHistory(),

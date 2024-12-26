@@ -47,7 +47,7 @@ export default {
   methods: {
     async onClose(data = this.message) {
       try {
-        const { code, messageList } = await deleteMessage([data]);
+        const { code } = await deleteMessage([data]);
         if (code !== 0) return;
         this.$store.commit("deleteMessage", {
           convId: data.conversationID,
