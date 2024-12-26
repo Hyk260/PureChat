@@ -8,8 +8,9 @@ export const ollamaModelValue = () => {
     Model: {
       ID: "model",
       Title: "模型 (model)",
-      SubTitle: "ollama 模型",
+      SubTitle: "选择在会话中展示的模型，选择的模型会在模型列表中展示",
       defaultValue: "",
+      collapse: OllamaAI.chatModels.map((t) => t.id),
       options: OllamaAI,
     },
     OpenaiUrl: {

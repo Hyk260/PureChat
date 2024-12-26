@@ -5,8 +5,9 @@ export const githubModelValue = () => {
     Model: {
       ID: "model",
       Title: "模型 (model)",
-      SubTitle: "ChatGPT 模型",
+      SubTitle: "选择在会话中展示的模型，选择的模型会在模型列表中展示",
       defaultValue: "",
+      collapse: GitHubAI.chatModels.map((t) => t.id),
       options: GitHubAI,
     },
     Token: {

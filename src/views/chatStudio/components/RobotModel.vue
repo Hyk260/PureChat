@@ -12,7 +12,7 @@
       @click="storeRobotModel(item.id)"
     >
       <div :class="['icon', robotIcon]">
-        <div :class="['icon', item.icon]" v-if="model.id === 'ollama'">
+        <div v-if="model.id === 'ollama'" :class="['icon', item.icon]">
           <svg-icon :iconClass="item.icon" />
         </div>
         <span v-else>
@@ -47,6 +47,7 @@ import { getModelType, getModelSvg, useAccessStore } from "@/ai/utils";
 import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
+import { cloneDeep } from "lodash-es";
 import { useStore } from "vuex";
 
 defineOptions({
@@ -84,10 +85,20 @@ function storeRobotModel(model) {
 function initModel() {
   const mode = getModelType(toAccount.value);
   const list = localStg.get("olama-local-model-list");
-  model.value = modelValue[mode].Model.options;
   robotIcon.value = getModelSvg(toAccount.value);
+  const account = getModelType(toAccount.value);
+  const selectModel = localStg.get(`${account}-Select-Model`);
+  model.value = cloneDeep(modelValue[mode].Model.options);
   if (list && [ModelProvider.Ollama].includes(mode)) {
     model.value.chatModels = list;
+  }
+  if (selectModel && model.value) {
+    const chatModels = cloneDeep(model.value.chatModels);
+    const collapse = selectModel.Model.collapse || [];
+    if (collapse.length !== 0) {
+      const filteredData = chatModels.filter((item) => collapse.includes(item.id));
+      model.value.chatModels = filteredData;
+    }
   }
   setFlag(true);
 }
