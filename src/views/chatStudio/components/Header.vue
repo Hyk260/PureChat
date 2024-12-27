@@ -6,7 +6,7 @@
           <span class="nick">{{ chatNick("C2C", chat) }}</span>
           <Label :model="model" :userID="chat?.conversationID" />
           <!-- ai-prompt -->
-          <div v-if="isRobot(toAccount) && promptConfig" class="ml-5 ai-prompt-title">
+          <div v-if="isRobot(toAccount) && fnPromptConfig(promptConfig)" class="ml-5 ai-prompt-title">
             {{ fnPromptConfig(promptConfig) }}
           </div>
           <!-- ai-tools -->
@@ -76,7 +76,7 @@ const updataModel = () => {
 const updataPromptTitle = () => {
   const value = getModelType(toAccount.value);
   const prompt = localStg.get(StoreKey.Prompt);
-  commit("setPromptConfig", prompt[value]);
+  commit("setPromptConfig", prompt?.[value] || null);
 };
 
 const chatType = (type) => {
@@ -108,6 +108,7 @@ const openUser = () => {};
 const fnPromptConfig = (prompt) => {
   if (!prompt) return "";
   const { avatar, title } = prompt.meta || {};
+  if(!avatar && !title) return "";
   return `${avatar} ${title}`;
 };
 

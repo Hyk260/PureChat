@@ -88,21 +88,17 @@ function storeRobotModel(data) {
 
 function initModel() {
   const mode = getModelType(toAccount.value);
-  const list = localStg.get("olama-local-model-list");
+  // const list = localStg.get("olama-local-model-list");
   robotIcon.value = getModelSvg(toAccount.value);
   const account = getModelType(toAccount.value);
   const selectModel = localStg.get(`${account}-Select-Model`);
   model.value = cloneDeep(modelValue[mode].Model.options);
-  if (list && [ModelProvider.Ollama].includes(mode)) {
-    model.value.chatModels = list;
-  }
+  // if (list && [ModelProvider.Ollama].includes(mode)) {
+  //   model.value.chatModels = list;
+  // }
   if (selectModel && model.value) {
     const chatModels = cloneDeep(model.value.chatModels);
     const collapse = selectModel.Model.collapse || [];
-    // if (collapse.length !== 0) {
-    //   const filteredData = chatModels.filter((item) => collapse.includes(item.id));
-    //   model.value.chatModels = filteredData;
-    // }
     const filteredData = chatModels.filter((item) => collapse.includes(item.id));
     model.value.chatModels = filteredData;
   }

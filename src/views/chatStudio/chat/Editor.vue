@@ -176,7 +176,7 @@ const handleString = (item, editor) => {
   if (item.type === "text/plain") {
     item.getAsString((str) => {
       editor.insertText(str.trimStart());
-      console.log("handleString text/plain:", text);
+      console.log("handleString text/plain:", str);
     });
   } else if (item.type === "text/html") {
     item.getAsString((html) => {

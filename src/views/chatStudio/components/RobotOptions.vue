@@ -21,7 +21,11 @@
               <!-- <small>{{ item.SubTitle }} </small> -->
             </div>
           </div>
-          <el-tooltip content="获取模型列表" placement="top" v-if="item.options && isOllama()">
+          <el-tooltip
+            content="获取模型列表"
+            placement="top"
+            v-if="item.options && isOllama() && false"
+          >
             <el-icon class="refresh" @click="onRefresh()">
               <Refresh />
             </el-icon>
@@ -34,6 +38,7 @@
             collapse-tags-tooltip
             :max-collapse-tags="10"
             v-model="item.collapse"
+            append-to="body"
             @clear="handleClear"
             @remove-tag="handleRemoveTag"
           >
@@ -42,7 +47,12 @@
               :key="models.id"
               :label="models.displayName"
               :value="models.id"
-            />
+            >
+              <div class="option flex gap-5 items-center">
+                <!-- <svg-icon iconClass="openai" /> -->
+                <span>{{ models.displayName || models.id }}</span>
+              </div>
+            </el-option>
           </el-select>
           <div class="range" v-else-if="isRange(item.ID)">
             {{ item.defaultValue }}
@@ -114,11 +124,11 @@ const { toAccount } = useGetters(["toAccount"]);
 
 const handleClear = (data) => {
   console.log("clear", data);
-}
+};
 
 const handleRemoveTag = (data) => {
   console.log("remove", data);
-}
+};
 
 function isRange(id) {
   return [
@@ -156,8 +166,10 @@ function initModel() {
   const value = cloneDeep(modelValue[model]);
   const account = getModelType(toAccount.value);
   const collapse = localStg.get(`${account}-Select-Model`)?.Model?.collapse;
+  const olamaModelList = localStg.get("olama-local-model-list") || [];
   Object.values(value).map((v) => {
-    if (v.ID === "model" && collapse) (v.collapse = collapse);
+    if (v.ID === "model" && collapse) v.collapse = collapse;
+    if (v.ID === "model" && olamaModelList.at(0)) v.options.chatModels = olamaModelList;
     v.defaultValue = useAccessStore(model)[v.ID];
     return v;
   });
@@ -216,16 +228,14 @@ function handleClose(done) {
 }
 // 重置
 function handleCancel() {
+  localStg.remove(`${getModelType(toAccount.value)}-Select-Model`);
   commit("setPromptConfig", "");
   resetRobotModel();
   resetRobotMask();
   setDialog(false);
-  const account = getModelType(toAccount.value);
-  localStg.remove(`${account}-Select-Model`);
 }
 // 保存
 function handleConfirm() {
-  console.log(modelData.value)
   const model = {};
   Object.values(modelData.value).map((t) => {
     if (isRange(t.ID)) {
@@ -300,6 +310,11 @@ input[type="range"]::-ms-thumb:hover {
     color: var(--color-text-default);
     min-height: 40px;
     border-bottom: 1px solid #dedede;
+    :deep(.option) {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
     .title {
       font-size: 14px;
       font-weight: bolder;
