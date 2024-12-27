@@ -45,7 +45,10 @@ export const useAccessStore = (model = ModelProvider.GPT) => {
   }
 };
 
-export const usePromptStore = (model = ModelProvider.GPT) => {
+export const usePromptStore = (model = ModelProvider.GPT, start = false) => {
+  if (start) {
+    return prompt[0];
+  }
   try {
     return localStg.get(StoreKey.Prompt)?.[model] || prompt[0];
   } catch (error) {
@@ -325,8 +328,9 @@ export function isFullStaffGroup(data) {
 
 export const createAiPromptMsg = (params) => {
   let to = localStg.get("timProxy")?.userProfile?.userID;
-  let from = getModelId(localStg.get("default-assistant") || "GPT");
-  const { meta } = localStg.get(StoreKey.Prompt)?.GPT;
+  let defaultBot = localStg.get("default-assistant") || "GPT";
+  let from = getModelId(defaultBot);
+  const { meta } = localStg.get(StoreKey.Prompt)?.[defaultBot];
   const { to: _to, from: _from } = params || {};
   if (_to) to = _to;
   if (_from) from = _from;

@@ -245,7 +245,13 @@ function handleConfirm() {
     }
   });
   storeRobotModel(model);
-  storeRobotMask(maskData.value);
+  if (!maskData.value.prompt.length || !maskData.value.meta.title) {
+    const _maskData = usePromptStore(getModelType(toAccount.value), true)
+    storeRobotMask(_maskData);
+    commit("setPromptConfig", "");
+  } else {
+    storeRobotMask(maskData.value);
+  }
   setDialog(false);
 }
 
