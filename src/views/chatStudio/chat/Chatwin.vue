@@ -473,7 +473,7 @@ const handlRightClick = (data) => {
 
 const handlSingleClick = ({ item, id }) => {
   menuItemInfo.value = item;
-  isConfirm.value = false;
+  // isConfirm.value = false;
   handlRightClick({ id });
 };
 
@@ -639,6 +639,8 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   height: 100%;
   padding: 0 16px 16px 16px;
   box-sizing: border-box;
+  overflow-y: overlay;
+  overflow-x: hidden;
   .picture {
     width: 36px;
     height: 36px;

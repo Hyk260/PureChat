@@ -1,11 +1,12 @@
-import conversationProfile from '@/assets/db/conversationProfile.json';
-import robotList from '@/assets/db/robotList.json';
-import myProfile from '@/assets/db/myProfile.json';
-import timTextElem from '@/assets/db/message/timTextElem.json';
-import timCustomElem from '@/assets/db/message/timCustomElem.json';
+import conversationProfile from "@/assets/db/conversationProfile.json";
+import robotList from "@/assets/db/robotList.json";
+import myProfile from "@/assets/db/myProfile.json";
+import timTextElem from "@/assets/db/message/timTextElem.json";
+import timCustomElem from "@/assets/db/message/timCustomElem.json";
 import emitter from "@/utils/mitt-bus";
 import store from "@/store";
 
+import { nextTick } from "vue";
 import { USER_MODEL } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { customAlphabet } from "nanoid/non-secure";
@@ -27,8 +28,8 @@ export function getHistoryMessageList(id) {
 }
 
 const nanoid = (size) => {
-  return customAlphabet("1234567890", size)()
-}
+  return customAlphabet("1234567890", size)();
+};
 
 export class LocalChat {
   constructor() {
@@ -40,42 +41,41 @@ export class LocalChat {
         return Reflect.get(target, key);
       },
     });
-
   }
   init() {
-    localStg.set(USER_MODEL, { username: myProfile.userID })
+    localStg.set(USER_MODEL, { username: myProfile.userID });
     setTimeout(() => {
-      this.emit("sdkStateReady", { name: 'sdkStateReady' })
-    })
+      this.emit("sdkStateReady", { name: "sdkStateReady" });
+    });
   }
   getTime() {
-    return Math.round(new Date().getTime() / 1000)
+    return Math.round(new Date().getTime() / 1000);
   }
   nanoId() {
-    return `${nanoid(18)}-${nanoid(10)}-${nanoid(7)}`
+    return `${nanoid(18)}-${nanoid(10)}-${nanoid(7)}`;
   }
   create(data) {
-    console.log('create local chat', data)
-    this.init()
-    return this
+    console.log("create local chat", data);
+    this.init();
+    return this;
   }
   on(eventName, handler, contextopt = null) {
     const boundHandler = contextopt ? handler.bind(contextopt) : handler;
-    emitter.on(eventName, boundHandler)
+    emitter.on(eventName, boundHandler);
   }
   emit(eventName, handler) {
-    emitter.emit(eventName, handler)
+    emitter.emit(eventName, handler);
   }
   async sendMessage(data) {
-    const newData = getConversationList()
-    newData.map(t => {
+    const newData = getConversationList();
+    newData.map((t) => {
       if (t.conversationID === data.conversationID) {
-        t.lastMessage.messageForShow = data.payload.text
-        t.lastMessage.lastTime = this.getTime()
+        t.lastMessage.messageForShow = data.payload.text;
+        t.lastMessage.lastTime = this.getTime();
       }
-    })
-    const historyMessageList = getHistoryMessageList(data.conversationID)
-    localStg.set(`localChat${data.conversationID}`, historyMessageList)
+    });
+    const historyMessageList = getHistoryMessageList(data.conversationID);
+    localStg.set(`localChat${data.conversationID}`, historyMessageList);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         const message = {
@@ -87,52 +87,52 @@ export class LocalChat {
               clientTime: this.getTime(),
               ID: data.ID || this.nanoId(),
               status: "success",
-            }
-          }
-        }
-        this.emit('onConversationListUpdated', { data: [...newData] })
-        this.emit('onMessageReceived', { data: [message.data.message] })
-        resolve(message)
-      }, 10)
-    })
+            },
+          },
+        };
+        this.emit("onConversationListUpdated", { data: [...newData] });
+        this.emit("onMessageReceived", { data: [message.data.message] });
+        resolve(message);
+      }, 10);
+    });
   }
   async getLoginUser() {
-    return myProfile.userID
+    return myProfile.userID;
   }
   async getMyProfile() {
     return {
       code: 0,
-      data: myProfile
-    }
+      data: myProfile,
+    };
   }
   async getUserProfile({ userIDList = [] }) {
-    const data = robotList.filter(item => {
-      return userIDList.find(id => id === item.userID) !== undefined;
+    const data = robotList.filter((item) => {
+      return userIDList.find((id) => id === item.userID) !== undefined;
     });
     return {
       code: 0,
-      data: data || []
-    }
+      data: data || [],
+    };
   }
   async getGroupList() {
     return {
       code: 0,
       data: {
-        groupList: []
-      }
-    }
+        groupList: [],
+      },
+    };
   }
   async getGroupMemberList() {
     return {
       code: 0,
       data: {
         offset: 0,
-        memberList: []
-      }
-    }
+        memberList: [],
+      },
+    };
   }
   createTextMessage(data) {
-    const { to, conversationType, payload } = data
+    const { to, conversationType, payload } = data;
     return {
       ...timTextElem,
       time: this.getTime(),
@@ -141,11 +141,11 @@ export class LocalChat {
       to: to,
       conversationID: `${conversationType}${to}`,
       conversationType,
-      payload
-    }
+      payload,
+    };
   }
   createCustomMessage(data) {
-    const { to, conversationType, payload } = data
+    const { to, conversationType, payload } = data;
     return {
       ...timCustomElem,
       ID: this.nanoId(),
@@ -154,78 +154,78 @@ export class LocalChat {
       conversationType,
       conversationID: `${conversationType}${to}`,
       to: to,
-      payload
-    }
+      payload,
+    };
   }
   async getConversationProfile(convId) {
-    const data = cloneDeep(conversationProfile)
-    data.conversationID = convId
-    data.lastMessage.lastTime = this.getTime()
-    data.userProfile = robotList.find(item => item.userID == convId.replace("C2C", ""))
+    const data = cloneDeep(conversationProfile);
+    data.conversationID = convId;
+    data.lastMessage.lastTime = this.getTime();
+    data.userProfile = robotList.find((item) => item.userID == convId.replace("C2C", ""));
 
-    const index = getConversationList().findIndex(t => {
-      return convId == t.conversationID
-    })
+    const index = getConversationList().findIndex((t) => {
+      return convId == t.conversationID;
+    });
 
     if (getConversationList()?.[0]) {
       if (index === -1) {
-        this.emit('onConversationListUpdated', { data: [...getConversationList(), data] })
+        this.emit("onConversationListUpdated", { data: [...getConversationList(), data] });
       } else {
-        this.emit('onConversationListUpdated', { data: [...getConversationList()] })
+        this.emit("onConversationListUpdated", { data: [...getConversationList()] });
       }
     } else {
-      this.emit('onConversationListUpdated', { data: [data] })
+      this.emit("onConversationListUpdated", { data: [data] });
     }
 
     return {
       code: 0,
       data: {
         conversation: {
-          ...data
-        }
-      }
+          ...data,
+        },
+      },
     };
   }
   async getTotalUnreadMessageCount() {
-    return 0
+    return 0;
   }
   async getMessageList(data) {
-    const { conversationID } = data
-    const localMessageList = localStg.get(`localChat${conversationID}`) || []
+    const { conversationID } = data;
+    const localMessageList = localStg.get(`localChat${conversationID}`) || [];
     return {
       code: 0,
       data: {
-        nextReqMessageID: '',
+        nextReqMessageID: "",
         isCompleted: true,
-        messageList: localMessageList.reverse()
-      }
-    }
+        messageList: localMessageList.reverse(),
+      },
+    };
   }
   async deleteMessage(data) {
-    console.log(data)
+    console.log(data);
     if (data.length === 1) {
-      const { conversationID, ID } = data[0]
-      const localMessageList = localStg.get(`localChat${conversationID}`) || []
-      const newMessageList = localMessageList.filter(item => item.ID !== ID)
-      localStg.set(`localChat${conversationID}`, newMessageList)
+      const { conversationID, ID } = data[0];
+      const localMessageList = localStg.get(`localChat${conversationID}`) || [];
+      const newMessageList = localMessageList.filter((item) => item.ID !== ID);
+      localStg.set(`localChat${conversationID}`, newMessageList);
     }
     return {
       code: 0,
       data: { messageList: [] },
-    }
+    };
   }
   async deleteConversation({ conversationIDList = [], clearHistoryMessage = false }) {
-    const newData = getConversationList()
-    const ID = conversationIDList[0]
-    const messageList = [...newData.filter(item => item.conversationID !== ID)]
-    this.emit('onConversationListUpdated', { data: messageList })
+    const newData = getConversationList();
+    const ID = conversationIDList[0];
+    const messageList = [...newData.filter((item) => item.conversationID !== ID)];
+    this.emit("onConversationListUpdated", { data: messageList });
     return {
       code: 0,
       data: { conversationID: ID },
-    }
+    };
   }
 }
 
 const localChat = new LocalChat();
 
-export default localChat
+export default localChat;

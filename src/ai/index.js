@@ -9,7 +9,7 @@ import { cloneDeep } from "lodash-es";
 
 const restSendMsg = async (params, message) => {
   if (__LOCAL_MODE__) {
-    const data = cloneDeep(params)
+    const data = cloneDeep(params);
     data.payload.text = message;
     await sendMsg(data);
     return;
@@ -24,10 +24,11 @@ const restSendMsg = async (params, message) => {
   });
 };
 
-const updataMessage = (msg, message = "") => {
-  if (!msg) return;
-  msg.payload.text = message;
-  store.commit("updateMessages", { convId: `C2C${msg.from}`, message: cloneDeep(msg) });
+const updataMessage = (chat, message = "") => {
+  if (!chat) return;
+  chat.payload.text = message;
+  if (__LOCAL_MODE__) chat.clientTime = Math.round(new Date().getTime() / 1000);
+  store.commit("updateMessages", { convId: `C2C${chat.from}`, message: cloneDeep(chat) });
   emitter.emit("updataScroll", "robot");
 };
 

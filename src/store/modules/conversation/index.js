@@ -60,7 +60,7 @@ const conversation = {
       let oldMessageList = state.historyMessageList.get(convId);
       // 确保 oldMessageList 存在
       if (!oldMessageList) {
-        console.log("oldMessageList 不存在");
+        console.warn("oldMessageList 不存在");
         return;
       }
 
