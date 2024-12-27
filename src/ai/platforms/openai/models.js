@@ -74,7 +74,9 @@ const OpenAI = {
   ],
   checkModel: 'gpt-4o-mini',
   id: 'openai',
+  modelsUrl: 'https://platform.openai.com/docs/models',
   name: 'OpenAI',
+  url: 'https://openai.com',
 };
 
 export default OpenAI;

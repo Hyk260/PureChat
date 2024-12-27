@@ -6,10 +6,10 @@
     </div>
     <div
       class="model flex"
-      :class="item.id == currentModel ? 'active' : ''"
+      :class="item.id == currentModel?.id ? 'active' : ''"
       v-for="item in model.chatModels"
       :key="item"
-      @click="storeRobotModel(item.id)"
+      @click="storeRobotModel(item)"
     >
       <div :class="['icon', robotIcon]">
         <div v-if="model.id === 'ollama'" :class="['icon', item.icon]">
@@ -20,7 +20,7 @@
         </span>
       </div>
       <div class="list flex-bc w-full">
-        <span>{{ item.displayName }}</span>
+        <span>{{ item.displayName || item.id }}</span>
         <span class="box">
           <el-tooltip v-if="item.vision" content="该模型支持视觉识别" placement="right-start">
             <svg-icon class="vision" iconClass="vision" />
@@ -71,17 +71,18 @@ function onClickOutside() {
   setFlag(false);
 }
 
-function storeRobotModel(model) {
+function storeRobotModel(data) {
+  console.log("storeRobotModel", data);
   const access = localStg.get(StoreKey.Access);
   const account = getModelType(toAccount.value);
   const config = useAccessStore(account);
-  const modelConfig = { ...config, model };
+  const modelConfig = { ...config, model: data.id };
   if (access) {
     localStg.set(StoreKey.Access, { ...access, [account]: { ...modelConfig } });
   } else {
     localStg.set(StoreKey.Access, { [account]: { ...modelConfig } });
   }
-  commit("setRobotModel", model);
+  commit("setRobotModel", data);
   setFlag(false);
 }
 

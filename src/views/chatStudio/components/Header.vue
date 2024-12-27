@@ -6,8 +6,8 @@
           <span class="nick">{{ chatNick("C2C", chat) }}</span>
           <Label :model="model" :userID="chat?.conversationID" />
           <!-- ai-prompt -->
-          <div v-if="isRobot(toAccount) && false" class="ml-5 ai-prompt-title">
-            {{ fnPromptTitle(toAccount) }}
+          <div v-if="isRobot(toAccount) && promptConfig" class="ml-5 ai-prompt-title">
+            {{ fnPromptConfig(promptConfig) }}
           </div>
           <!-- ai-tools -->
           <template v-if="isRobot(toAccount) && botTools">
@@ -45,7 +45,10 @@ import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 import Label from "@/views/chatStudio/components/Label.vue";
 import { watch } from "vue";
+import { cloneDeep } from "lodash-es";
+import { modelValue, StoreKey } from "@/ai/constant";
 import { useStore } from "vuex";
+import { localStg } from "@/utils/storage";
 
 const { commit } = useStore();
 const { currentType, toAccount, isGroupChat } = useGetters([
@@ -53,17 +56,27 @@ const { currentType, toAccount, isGroupChat } = useGetters([
   "toAccount",
   "isGroupChat",
 ]);
-const { chat, model, promptTitle, botTools } = useState({
+
+const { chat, model, promptConfig, botTools } = useState({
   chat: (state) => state.conversation.currentConversation,
   model: (state) => state.robot.model,
-  promptTitle: (state) => state.robot.promptTitle,
+  promptConfig: (state) => state.robot.promptConfig,
   botTools: (state) => state.robot.botTools,
 });
 
 const updataModel = () => {
   const value = getModelType(toAccount.value);
+  if (!value) return;
   const model = useAccessStore(value)?.model;
-  model && commit("setRobotModel", model);
+  const data = cloneDeep(modelValue[value].Model.options.chatModels);
+  const checkModel = data.find((item) => item.id === model);
+  commit("setRobotModel", checkModel);
+};
+
+const updataPromptTitle = () => {
+  const value = getModelType(toAccount.value);
+  const prompt = localStg.get(StoreKey.Prompt);
+  commit("setPromptConfig", prompt[value]);
 };
 
 const chatType = (type) => {
@@ -92,18 +105,15 @@ const openSetup = () => {
 
 const openUser = () => {};
 
-const fnPromptTitle = (toAccount) => {
-  const model = getModelType(toAccount);
-  const promptMeta = usePromptStore(model);
-  if (!promptMeta) return false;
-  if (!promptMeta?.meta?.title) return false;
-  if (!promptMeta?.prompt?.[0]?.content) return false;
-  const { avatar, title } = promptMeta?.meta || {};
-  return `${avatar} ${title}`
+const fnPromptConfig = (prompt) => {
+  if (!prompt) return "";
+  const { avatar, title } = prompt.meta || {};
+  return `${avatar} ${title}`;
 };
 
-watch(toAccount, (data) => {
+watch(toAccount, () => {
   updataModel();
+  updataPromptTitle();
 });
 </script>
 

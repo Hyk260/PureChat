@@ -4,8 +4,9 @@
     <span class="author" v-else-if="isAuthor(item)">作者</span>
     <svg-icon iconClass="robot" v-else-if="isRobot(userID)" />
     <span class="model" v-if="isRobot(userID) && model">
-      <svg-icon :iconClass="getModelSvg(userID.replace('C2C', ''))" />
-      {{ model }}
+      <svg-icon v-if="model.icon" :iconClass="model.icon" />
+      <svg-icon v-else :iconClass="getModelSvg(userID.replace('C2C', ''))" />
+      <span>{{ model.id }}</span>
     </span>
   </span>
 </template>
@@ -22,17 +23,17 @@ const props = defineProps({
   },
   item: {
     type: Object,
-    default: () => { },
+    default: () => {},
   },
   model: {
-    type: String,
-    default: "",
-  }
+    type: Object,
+    default: () => {},
+  },
 });
 
 const isAuthor = (data) => {
-  return getValueByKey(data?.groupProfile?.groupCustomField, prefix('Role')) === "author"
-}
+  return getValueByKey(data?.groupProfile?.groupCustomField, prefix("Role")) === "author";
+};
 
 const labelClass = (data) => {
   return "";

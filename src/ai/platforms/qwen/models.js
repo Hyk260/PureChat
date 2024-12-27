@@ -26,7 +26,6 @@ const Qwen = {
       tokens: '',
     },
   ],
-  checkModel: 'qwen-turbo',
   id: 'qwen',
   name: 'Qwen',
 };

@@ -288,6 +288,7 @@ watch(activetab, (data) => {
 }
 .message-item {
   @include flex-center;
+  gap: 14px;
   padding: 12px 12px 12px 16px;
   user-select: none;
   height: 64px;
@@ -316,7 +317,6 @@ watch(activetab, (data) => {
   }
   .message-item-right {
     width: 200px;
-    margin-left: 14px;
     height: 44px;
     position: relative;
     .dont {

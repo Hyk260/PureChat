@@ -93,7 +93,7 @@ export class LocalChat {
         this.emit('onConversationListUpdated', { data: [...newData] })
         this.emit('onMessageReceived', { data: [message.data.message] })
         resolve(message)
-      }, 250)
+      }, 10)
     })
   }
   async getLoginUser() {
@@ -212,6 +212,16 @@ export class LocalChat {
     return {
       code: 0,
       data: { messageList: [] },
+    }
+  }
+  async deleteConversation({ conversationIDList = [], clearHistoryMessage = false }) {
+    const newData = getConversationList()
+    const ID = conversationIDList[0]
+    const messageList = [...newData.filter(item => item.conversationID !== ID)]
+    this.emit('onConversationListUpdated', { data: messageList })
+    return {
+      code: 0,
+      data: { conversationID: ID },
     }
   }
 }

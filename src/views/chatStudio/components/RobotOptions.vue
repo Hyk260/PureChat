@@ -21,7 +21,7 @@
               <!-- <small>{{ item.SubTitle }} </small> -->
             </div>
           </div>
-          <el-tooltip content="获取模型列表" placement="top" v-if="item.options && isOllama() && false">
+          <el-tooltip content="获取模型列表" placement="top" v-if="item.options && isOllama()">
             <el-icon class="refresh" @click="onRefresh()">
               <Refresh />
             </el-icon>
@@ -194,7 +194,11 @@ function resetRobotModel() {
     Object.entries(access).filter(([key, _]) => !key.includes(account))
   );
   localStg.set(StoreKey.Access, filteredConfig);
-  commit("setRobotModel", modelConfig[account].model);
+  // 重置选中模型
+  const model = useAccessStore(account)?.model;
+  const data = cloneDeep(modelValue[account].Model.options.chatModels);
+  const checkModel = data.find((item) => item.id === model);
+  commit("setRobotModel", checkModel);
 }
 
 function resetRobotMask() {
@@ -212,7 +216,7 @@ function handleClose(done) {
 }
 // 重置
 function handleCancel() {
-  commit("setPromptTitle", "");
+  commit("setPromptConfig", "");
   resetRobotModel();
   resetRobotMask();
   setDialog(false);

@@ -64,9 +64,11 @@ const GitHubAI = {
       tokens: 16_385,
     },
   ],
+  description: '通过GitHub模型，开发人员可以成为AI工程师，并使用行业领先的AI模型进行构建。',
   checkModel: 'gpt-4o-mini',
   id: 'github',
   name: 'GitHub',
+  url: 'https://github.com/marketplace/models',
 };
 
 export default GitHubAI;

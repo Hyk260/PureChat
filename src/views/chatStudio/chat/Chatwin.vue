@@ -659,7 +659,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   padding-right: 10px;
 }
 .message-view-item {
-   margin: 10px 0 10px 0;
+  margin: 10px 0 10px 0;
   &:hover .time-divider {
     visibility: visible;
   }
@@ -669,6 +669,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   display: flex;
   flex-direction: row;
   transition: all 0.15s ease;
+  gap: 8px;
   .message-view-top {
     display: flex;
   }
@@ -708,19 +709,10 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
     }
   }
 }
-.is-other {
-  .picture {
-    margin-left: 0;
-    margin-right: 8px;
-  }
-}
+// .is-other {}
 
 .is-self {
   flex-direction: row-reverse;
-  .picture {
-    margin-right: 0;
-    margin-left: 8px;
-  }
   .message-view-top {
     flex-direction: row-reverse;
   }
