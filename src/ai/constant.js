@@ -48,7 +48,7 @@ export const ROBOT_COLLECT = [
   yiBotId,
   // qwenBotId,
   ollamaBotId,
-  githubBotId,
+  // githubBotId,
 ];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);

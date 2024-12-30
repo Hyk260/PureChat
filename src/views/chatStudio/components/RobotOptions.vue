@@ -326,8 +326,10 @@ input[type="range"]::-ms-thumb:hover {
       font-weight: bolder;
     }
     .subTitle {
-      font-size: 12px;
-      font-weight: 400;
+      :deep(.markdown-body){
+        font-size: 12px;
+        color: #999999;
+      }
     }
     .el-input,
     .el-select {
