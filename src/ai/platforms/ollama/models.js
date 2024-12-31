@@ -1,3 +1,4 @@
+// api https://github.com/ollama/ollama/blob/main/docs/api.md#request-12
 const OllamaAI = {
   chatModels: [
     {
@@ -27,11 +28,11 @@ const OllamaAI = {
       icon: "tongyi",
       tokens: 32_768,
     },
-    // https://github.com/ollama/ollama/blob/main/docs/api.md#request-12
   ],
   checkModel: 'llama3.1',
-  description:
-    'Ollama 提供的模型广泛涵盖代码生成、数学运算、多语种处理和对话互动等领域，支持企业级和本地化部署的多样化需求。',
+  description:'Ollama 提供的模型广泛涵盖代码生成、数学运算、多语种处理和对话互动等领域，支持企业级和本地化部署的多样化需求。',
+  modelsUrl: 'https://ollama.com/library',
+  url: 'https://ollama.com',
   id: "ollama",
   name: "Ollama",
 };

@@ -55,6 +55,9 @@ const ZhiPu = {
     },
   ],
   checkModel: 'glm-4-flash',
+  description: '智谱 AI 提供多模态与语言模型的开放平台，支持广泛的AI应用场景，包括文本处理、图像理解与编程辅助等。',
+  modelsUrl: 'https://open.bigmodel.cn/dev/howuse/model',
+  url: 'https://zhipuai.cn',
   id: 'zhipu',
   name: 'ZhiPu',
 };

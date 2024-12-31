@@ -73,10 +73,11 @@ const OpenAI = {
     // },
   ],
   checkModel: 'gpt-4o-mini',
-  id: 'openai',
+  description: 'OpenAI 是全球领先的人工智能研究机构，其开发的模型如GPT系列推动了自然语言处理的前沿。OpenAI 致力于通过创新和高效的AI解决方案改变多个行业。他们的产品具有显著的性能和经济性，广泛用于研究、商业和创新应用。',
   modelsUrl: 'https://platform.openai.com/docs/models',
-  name: 'OpenAI',
   url: 'https://openai.com',
+  id: 'openai',
+  name: 'OpenAI',
 };
 
 export default OpenAI;
