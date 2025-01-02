@@ -28,7 +28,7 @@
 <script setup>
 import { ref } from "vue";
 import { ROLES } from "@/ai/constant";
-import { nanoid } from "@/ai/platforms/ollama/protocol";
+import { nanoid } from "@/utils/uuid";
 import { VueDraggableNext } from "vue-draggable-next";
 
 defineOptions({
