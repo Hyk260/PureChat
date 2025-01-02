@@ -60,7 +60,7 @@ import AgentCard from "./AgentCard.vue";
 import { getPrompt } from "@/api/node-admin-api/index";
 import { ref, watch, onBeforeMount } from "vue";
 import emitter from "@/utils/mitt-bus";
-import marketJson from "@/assets/db/market.json";
+import marketJson from "@/database/market.json";
 import { localStg } from "@/utils/storage";
 
 const { VITE_APP_NAME } = import.meta.env;

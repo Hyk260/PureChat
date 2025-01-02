@@ -8,7 +8,7 @@
   "random": 0,
   "priority": "Normal",
   "nick": "admin",
-  "avatar": "https://ljx-1307934606.cos.ap-beijing.myqcloud.com/admin.jpg",
+  "avatar": "",
   "isPeerRead": false,
   "nameCard": "",
   "hasRiskContent": false,
@@ -22,28 +22,17 @@
   "isResend": false,
   "isRead": true,
   "status": "success",
-  "_onlineOnlyFlag": false,
-  "_groupAtInfoList": [],
-  "_relayFlag": false,
   "atUserList": [],
   "cloudCustomData": "",
   "isDeleted": false,
   "isModified": false,
   "clientTime": 0,
   "senderTinyID": "",
-  "readReceiptInfo": {
-    "timestamp": 0
-  },
   "needReadReceipt": false,
   "version": 0,
   "isBroadcastMessage": false,
   "isSupportExtension": false,
   "revoker": "",
-  "revokerInfo": {
-    "userID": "",
-    "nick": "",
-    "avatar": ""
-  },
   "revokeReason": "",
   "payload": {
     "text": ""

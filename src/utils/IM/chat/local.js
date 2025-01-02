@@ -1,15 +1,16 @@
-import conversationProfile from "@/assets/db/conversationProfile.json";
-import robotList from "@/assets/db/robotList.json";
-import myProfile from "@/assets/db/myProfile.json";
-import timTextElem from "@/assets/db/message/timTextElem.json";
-import timCustomElem from "@/assets/db/message/timCustomElem.json";
+import sessions from "@/database/sessions.json";
+import robotList from "@/database/bot.json";
+import profile from "@/database/profile.json";
+import timTextElem from "@/database/message/timTextElem.json";
+import timCustomElem from "@/database/message/timCustomElem.json";
+
 import emitter from "@/utils/mitt-bus";
 import store from "@/store";
 
+import { uuid } from "@/utils/uuid";
 import { nextTick } from "vue";
 import { USER_MODEL } from "@/constants/index";
 import { localStg } from "@/utils/storage";
-import { customAlphabet } from "nanoid/non-secure";
 import { cloneDeep } from "lodash-es";
 
 export function getConversationList() {
@@ -27,10 +28,6 @@ export function getHistoryMessageList(id) {
   return cloneDeep(data) || null; // []
 }
 
-const nanoid = (size) => {
-  return customAlphabet("1234567890", size)();
-};
-
 export class LocalChat {
   constructor() {
     window.LocalChat = new Proxy(this, {
@@ -43,16 +40,13 @@ export class LocalChat {
     });
   }
   init() {
-    localStg.set(USER_MODEL, { username: myProfile.userID });
+    localStg.set(USER_MODEL, { username: profile.userID });
     setTimeout(() => {
       this.emit("sdkStateReady", { name: "sdkStateReady" });
     });
   }
   getTime() {
     return Math.round(new Date().getTime() / 1000);
-  }
-  nanoId() {
-    return `${nanoid(18)}-${nanoid(10)}-${nanoid(7)}`;
   }
   create(data) {
     console.log("create local chat", data);
@@ -85,7 +79,7 @@ export class LocalChat {
               ...data,
               time: this.getTime(),
               clientTime: this.getTime(),
-              ID: data.ID || this.nanoId(),
+              ID: data.ID || uuid(),
               status: "success",
             },
           },
@@ -97,12 +91,12 @@ export class LocalChat {
     });
   }
   async getLoginUser() {
-    return myProfile.userID;
+    return profile.userID;
   }
   async getMyProfile() {
     return {
       code: 0,
-      data: myProfile,
+      data: profile,
     };
   }
   async getUserProfile({ userIDList = [] }) {
@@ -137,7 +131,7 @@ export class LocalChat {
       ...timTextElem,
       time: this.getTime(),
       clientTime: this.getTime(),
-      ID: this.nanoId(),
+      ID: uuid(),
       to: to,
       conversationID: `${conversationType}${to}`,
       conversationType,
@@ -148,7 +142,7 @@ export class LocalChat {
     const { to, conversationType, payload } = data;
     return {
       ...timCustomElem,
-      ID: this.nanoId(),
+      ID: uuid(),
       time: this.getTime(),
       clientTime: this.getTime(),
       conversationType,
@@ -158,7 +152,7 @@ export class LocalChat {
     };
   }
   async getConversationProfile(convId) {
-    const data = cloneDeep(conversationProfile);
+    const data = cloneDeep(sessions);
     data.conversationID = convId;
     data.lastMessage.lastTime = this.getTime();
     data.userProfile = robotList.find((item) => item.userID == convId.replace("C2C", ""));
