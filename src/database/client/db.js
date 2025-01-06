@@ -6,7 +6,7 @@ export const dbSchemaV1 = {
 };
 
 export const dbSchemaV2 = {
-  sessions: "&conversationID, isPinned, lastMessage, lastMessage.lastTime, lastMessage.messageForShow",
+  sessions: "&conversationID, type, lastMessage.lastTime, lastMessage.messageForShow",
 };
 
 // Define a local DB
@@ -22,8 +22,6 @@ export class BrowserDB extends Dexie {
 }
 
 export const browserDB = new BrowserDB();
-
-// console.log("browserDB", browserDB.messages);
 
 // 添加
 // browserDB.messages.add();

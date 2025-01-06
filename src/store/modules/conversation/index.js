@@ -17,7 +17,6 @@ import {
   getBaseTime,
   transformData,
   getChatListCache,
-  setMessageCaching,
 } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
@@ -25,7 +24,7 @@ import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
 import { createAiPromptMsg } from "@/ai/utils";
 import { nextTick } from "vue";
-import { browserDB } from '@/database/client/db';
+import { browserDB } from "@/database/client/db";
 
 const conversation = {
   state: {
@@ -42,7 +41,7 @@ const conversation = {
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
-    conversationList: getChatListCache() ?? [], // 会话列表数据
+    conversationList: [], // 会话列表数据
     filterConversationList: [],
     currentReplyMsg: null, // 回复数据
     activetab: "whole", // 全部 未读 提及我
@@ -64,7 +63,7 @@ const conversation = {
         console.warn("oldMessageList 不存在");
         return;
       }
-      
+
       const newMessageList = oldMessageList.map((item) => {
         return item.ID === message.ID ? payload.message : item;
       });
@@ -74,9 +73,9 @@ const conversation = {
         let baseTime = getBaseTime(newMessageList);
         let timeDividerResult = addTimeDivider([message], baseTime).reverse();
         newMessageList.unshift(...timeDividerResult);
-        browserDB.messages.add(message)
+        browserDB.messages.add(message);
       }
-      browserDB.messages.put(message)
+      browserDB.messages.put(message);
       // 当前会有列表有值
       if (state.currentConversation.conversationID === convId) {
         state.currentMessageList = newMessageList;
@@ -481,5 +480,11 @@ const conversation = {
     },
   },
 };
+
+if (__LOCAL_MODE__) {
+  getChatListCache().then((res) => {
+    conversation.state.conversationList = res;
+  });
+}
 
 export default conversation;

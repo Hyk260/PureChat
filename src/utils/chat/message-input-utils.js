@@ -2,6 +2,7 @@ import store from "@/store";
 import { USER_MODEL } from "@/constants/index";
 import { msgContent } from "@/api/im-sdk-api/custom";
 import { localStg } from "@/utils/storage";
+import { browserDB } from "@/database/client/db";
 
 /**
  * 将二进制数据转换为 base64 URL 格式
@@ -289,29 +290,21 @@ export const isRobot = (text) => {
   return /@RBT#/.test(text);
 };
 
-export const getChatListCache = () => {
-  let appid = import.meta.env.VITE_IM_SDK_APPID;
-  const { username } = localStg.get(USER_MODEL) || {};
-  if (!username) return [];
-  let id = `TIM_${appid}_${username}_conversationListMap`;
-  return localStg.get(id) || [];
+export const getChatListCache = async () => {
+  try {
+    const sessions = (await browserDB.sessions.toArray()) || [];
+    return sessions;
+  } catch (error) {
+    return [];
+  }
 };
 
 export const setChatListCache = (data) => {
-  let appid = import.meta.env.VITE_IM_SDK_APPID;
-  const { username } = localStg.get(USER_MODEL) || {};
-  if (!username) return;
-  let id = `TIM_${appid}_${username}_conversationListMap`;
-  localStg.set(id, data) || [];
+  data.map((item) => {
+    // browserDB.sessions.add(data[0]);
+    browserDB.sessions.put(item);
+  });
 };
-
-export function setMessageCaching(key, data) {
-  let appid = import.meta.env.VITE_IM_SDK_APPID;
-  const { username } = localStg.get(USER_MODEL) || {};
-  if (!username) return;
-  let bond = `TIM_${appid}_${username}_${key}_historyMessageListMap`;
-  localStg.set(bond, data.get(key));
-}
 
 export function readFromFile() {
   return new Promise((res, rej) => {

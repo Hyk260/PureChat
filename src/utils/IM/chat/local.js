@@ -7,7 +7,7 @@ import timCustomElem from "@/database/message/timCustomElem.json";
 import emitter from "@/utils/mitt-bus";
 import store from "@/store";
 
-import { browserDB } from '@/database/client/db';
+import { browserDB } from "@/database/client/db";
 import { uuid } from "@/utils/uuid";
 import { nextTick } from "vue";
 import { USER_MODEL } from "@/constants/index";
@@ -29,6 +29,10 @@ export function getHistoryMessageList(id) {
   return cloneDeep(data) || null; // []
 }
 
+function getTime() {
+  return Math.round(new Date().getTime() / 1000);
+}
+
 export class LocalChat {
   constructor() {
     window.LocalChat = new Proxy(this, {
@@ -45,9 +49,6 @@ export class LocalChat {
     setTimeout(() => {
       this.emit("sdkStateReady", { name: "sdkStateReady" });
     });
-  }
-  getTime() {
-    return Math.round(new Date().getTime() / 1000);
   }
   create(data) {
     console.log("create local chat", data);
@@ -66,7 +67,7 @@ export class LocalChat {
     newData.map((t) => {
       if (t.conversationID === data.conversationID) {
         t.lastMessage.messageForShow = data.payload.text;
-        t.lastMessage.lastTime = this.getTime();
+        t.lastMessage.lastTime = getTime();
       }
     });
     return new Promise((resolve, reject) => {
@@ -76,8 +77,8 @@ export class LocalChat {
           data: {
             message: {
               ...data,
-              time: this.getTime(),
-              clientTime: this.getTime(),
+              time: getTime(),
+              clientTime: getTime(),
               ID: data.ID || uuid(),
               status: "success",
             },
@@ -86,7 +87,7 @@ export class LocalChat {
         this.emit("onConversationListUpdated", { data: [...newData] });
         this.emit("onMessageReceived", { data: [message.data.message] });
         resolve(message);
-      }, 10);
+      }, 300);
     });
   }
   async getLoginUser() {
@@ -128,8 +129,8 @@ export class LocalChat {
     const { to, conversationType, payload } = data;
     return {
       ...timTextElem,
-      time: this.getTime(),
-      clientTime: this.getTime(),
+      time: getTime(),
+      clientTime: getTime(),
       ID: uuid(),
       to: to,
       avatar: profile.avatar,
@@ -143,8 +144,8 @@ export class LocalChat {
     return {
       ...timCustomElem,
       ID: uuid(),
-      time: this.getTime(),
-      clientTime: this.getTime(),
+      time: getTime(),
+      clientTime: getTime(),
       conversationType,
       conversationID: `${conversationType}${to}`,
       to: to,
@@ -154,7 +155,7 @@ export class LocalChat {
   async getConversationProfile(convId) {
     const data = cloneDeep(sessions);
     data.conversationID = convId;
-    data.lastMessage.lastTime = this.getTime();
+    data.lastMessage.lastTime = getTime();
     data.userProfile = robotList.find((item) => item.userID == convId.replace("C2C", ""));
 
     const index = getConversationList().findIndex((t) => {
@@ -185,7 +186,18 @@ export class LocalChat {
   }
   async getMessageList(data) {
     const { conversationID } = data;
-    const localMessageList = await browserDB.messages.orderBy("clientTime", "desc").limit(20).toArray();
+    const localMessageList = await browserDB.messages
+      .where("conversationID")
+      .equals(conversationID)
+      .limit(20)
+      .orderBy("clientTime", "desc")
+      .toArray();
+
+      // .where('conversationID')
+      // .equals(conversationID)
+      // .orderBy('clientTime') // 根据 clientTime 排序
+      // .limit(20) // 取前 20 条记录
+      // .toArray();
     return {
       code: 0,
       data: {
