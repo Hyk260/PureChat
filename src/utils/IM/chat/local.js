@@ -7,6 +7,7 @@ import timCustomElem from "@/database/message/timCustomElem.json";
 import emitter from "@/utils/mitt-bus";
 import store from "@/store";
 
+import { browserDB } from '@/database/client/db';
 import { uuid } from "@/utils/uuid";
 import { nextTick } from "vue";
 import { USER_MODEL } from "@/constants/index";
@@ -68,8 +69,6 @@ export class LocalChat {
         t.lastMessage.lastTime = this.getTime();
       }
     });
-    const historyMessageList = getHistoryMessageList(data.conversationID);
-    localStg.set(`localChat${data.conversationID}`, historyMessageList);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         const message = {
@@ -133,6 +132,7 @@ export class LocalChat {
       clientTime: this.getTime(),
       ID: uuid(),
       to: to,
+      avatar: profile.avatar,
       conversationID: `${conversationType}${to}`,
       conversationType,
       payload,
@@ -185,23 +185,20 @@ export class LocalChat {
   }
   async getMessageList(data) {
     const { conversationID } = data;
-    const localMessageList = localStg.get(`localChat${conversationID}`) || [];
+    const localMessageList = await browserDB.messages.orderBy("clientTime", "desc").limit(20).toArray();
     return {
       code: 0,
       data: {
         nextReqMessageID: "",
         isCompleted: true,
-        messageList: localMessageList.reverse(),
+        messageList: cloneDeep(localMessageList),
       },
     };
   }
   async deleteMessage(data) {
-    console.log(data);
     if (data.length === 1) {
-      const { conversationID, ID } = data[0];
-      const localMessageList = localStg.get(`localChat${conversationID}`) || [];
-      const newMessageList = localMessageList.filter((item) => item.ID !== ID);
-      localStg.set(`localChat${conversationID}`, newMessageList);
+      const { ID } = data[0];
+      browserDB.messages.delete(ID);
     }
     return {
       code: 0,

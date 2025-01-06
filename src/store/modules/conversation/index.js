@@ -25,6 +25,7 @@ import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
 import { createAiPromptMsg } from "@/ai/utils";
 import { nextTick } from "vue";
+import { browserDB } from '@/database/client/db';
 
 const conversation = {
   state: {
@@ -63,7 +64,7 @@ const conversation = {
         console.warn("oldMessageList 不存在");
         return;
       }
-
+      
       const newMessageList = oldMessageList.map((item) => {
         return item.ID === message.ID ? payload.message : item;
       });
@@ -73,7 +74,9 @@ const conversation = {
         let baseTime = getBaseTime(newMessageList);
         let timeDividerResult = addTimeDivider([message], baseTime).reverse();
         newMessageList.unshift(...timeDividerResult);
+        browserDB.messages.add(message)
       }
+      browserDB.messages.put(message)
       // 当前会有列表有值
       if (state.currentConversation.conversationID === convId) {
         state.currentMessageList = newMessageList;
@@ -391,7 +394,6 @@ const conversation = {
       const { code, message: result } = await sendMsg(message);
       if (code === 0) {
         dispatch("sendMsgSuccessCallback", { convId, message: result });
-
         if (!ROBOT_COLLECT.includes(result?.to)) return;
         if (last) {
           const list = await transformData(state.currentMessageList ?? [result]);
