@@ -96,7 +96,9 @@ class _SessionModel extends BaseModel {
 
   async create(id, data) {
     const dataDB = data;
-    if (!this.findById(id)) return this._addWithSync(id, dataDB);
+
+    if (!this.findById(id)) return 
+    await this._addWithSync(id, dataDB);
   }
 
   async batchCreate(sessions) { }

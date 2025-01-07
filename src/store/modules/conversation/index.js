@@ -24,6 +24,7 @@ import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
 import { createAiPromptMsg } from "@/ai/utils";
 import { nextTick } from "vue";
+import { MessageModel } from "@/database/models/message";
 
 const conversation = {
   state: {
@@ -62,7 +63,7 @@ const conversation = {
         console.warn("oldMessageList 不存在");
         return;
       }
-
+      MessageModel.update(message.ID, message);
       const newMessageList = oldMessageList.map((item) => {
         return item.ID === message.ID ? payload.message : item;
       });

@@ -10,7 +10,7 @@ class _MessageModel extends BaseModel {
 
   async query({ id, pageSize = 99, current = 0 }) {
     const offset = current * pageSize;
-    // debugger
+
     const query = this.table.where("conversationID").equals(id);
 
     const dbMessages = await query
@@ -44,12 +44,12 @@ class _MessageModel extends BaseModel {
   // **************** Create *************** //
 
   async create(id, data) {
-    debugger
     const messageData = {
       ...data,
       updatedAt: new Date(),
     };
-    if (!this.findById(id)) return this._addWithSync(id, messageData);
+    if (!this.findById(id)) return 
+    this._addWithSync(id, messageData);
   }
 
   async batchCreate(messages) {}

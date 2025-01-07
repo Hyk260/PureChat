@@ -14,9 +14,8 @@ import { USER_MODEL } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 
-import { SessionModel } from '@/database/models/session';
-import { MessageModel } from '@/database/models/message';
-
+import { SessionModel } from "@/database/models/session";
+import { MessageModel } from "@/database/models/message";
 
 export function getConversationList() {
   const list = store.state.conversation?.conversationList;
@@ -88,6 +87,7 @@ export class LocalChat {
             },
           },
         };
+        MessageModel.create(message.data.message.ID, message.data.message);
         this.emit("onConversationListUpdated", { data: [...newData] });
         this.emit("onMessageReceived", { data: [message.data.message] });
         resolve(message);
@@ -189,8 +189,7 @@ export class LocalChat {
   }
   async getMessageList(data) {
     const { conversationID } = data;
-    const localMessageList = await MessageModel.query({ id: conversationID })
-    debugger
+    const localMessageList = await MessageModel.query({ id: conversationID });
     return {
       code: 0,
       data: {
@@ -203,7 +202,7 @@ export class LocalChat {
   async deleteMessage(data) {
     if (data.length === 1) {
       const { ID } = data[0];
-      // browserDB.messages.delete(ID);
+      MessageModel.delete(ID);
     }
     return {
       code: 0,
