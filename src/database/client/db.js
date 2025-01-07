@@ -2,11 +2,11 @@ import Dexie from "dexie";
 import { uuid } from "@/utils/uuid";
 
 export const dbSchemaV1 = {
-  messages: "&ID, conversationID, conversationType, time, clientTime, nick, flow, status, payload, type",
+  messages: "&ID, conversationID, conversationType, time, clientTime, updatedAt, status, type",
 };
 
 export const dbSchemaV2 = {
-  sessions: "&conversationID, type, lastMessage.lastTime, lastMessage.messageForShow",
+  sessions: "&conversationID, updatedAt, type",
 };
 
 // Define a local DB

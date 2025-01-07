@@ -1,5 +1,5 @@
 import { BaseModel } from "../core/model";
-import { nanoid } from "@/utils/uuid";
+import { uuid } from "@/utils/uuid";
 
 class _MessageModel extends BaseModel {
   constructor() {
@@ -8,10 +8,10 @@ class _MessageModel extends BaseModel {
 
   // **************** Query *************** //
 
-  async query({ sessionId, pageSize = 99, current = 0 }) {
+  async query({ id, pageSize = 99, current = 0 }) {
     const offset = current * pageSize;
-
-    const query = this.table.where("sessionId").equals(sessionId);
+    // debugger
+    const query = this.table.where("conversationID").equals(id);
 
     const dbMessages = await query
       .sortBy("createdAt")
@@ -20,12 +20,7 @@ class _MessageModel extends BaseModel {
 
     const messages = dbMessages;
 
-    const finalList = [];
-
-    const messageMap = new Map();
-    for (const item of messages) messageMap.set(item.id, item);
-
-    return finalList;
+    return messages;
   }
 
   async findById(id) {
@@ -48,25 +43,34 @@ class _MessageModel extends BaseModel {
 
   // **************** Create *************** //
 
-  async create(data) {}
+  async create(id, data) {
+    debugger
+    const messageData = {
+      ...data,
+      updatedAt: new Date(),
+    };
+    if (!this.findById(id)) return this._addWithSync(id, messageData);
+  }
 
   async batchCreate(messages) {}
 
   // **************** Delete *************** //
 
   async delete(id) {
-    return super._deleteWithSync(id);
+    return this._deleteWithSync(id);
   }
 
   async clearTable() {
-    return "";
+    return this._clearWithSync();
   }
 
   // **************** Update *************** //
 
   async update(id, data) {
-    // return super._updateWithSync(id, data);
+    return this._updateWithSync(id, data);
   }
 }
 
 export const MessageModel = new _MessageModel();
+
+window.MessageModel = MessageModel;

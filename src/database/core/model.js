@@ -1,4 +1,4 @@
-import { nanoid } from "@/utils/uuid";
+import { uuid } from "@/utils/uuid";
 import { browserDB } from "../client/db";
 
 export class BaseModel {
@@ -13,10 +13,13 @@ export class BaseModel {
 
   // **************** Create *************** //
 
-  async _addWithSync(data, id = nanoid()) {
+  async _addWithSync(id, data) {
     const tableName = this._tableName;
 
-    const record = {};
+    const record = {
+      ...data,
+      updatedAt: new Date().getTime(),
+    };
 
     const newId = await this.db[tableName].add(record);
 
@@ -37,7 +40,7 @@ export class BaseModel {
     return result;
   }
 
-    // **************** Update *************** //
+  // **************** Update *************** //
 
   async _updateWithSync(id, data) {
 

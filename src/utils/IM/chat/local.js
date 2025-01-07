@@ -7,12 +7,16 @@ import timCustomElem from "@/database/message/timCustomElem.json";
 import emitter from "@/utils/mitt-bus";
 import store from "@/store";
 
-import { browserDB } from "@/database/client/db";
+// import { browserDB } from "@/database/client/db";
 import { uuid } from "@/utils/uuid";
 import { nextTick } from "vue";
 import { USER_MODEL } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
+
+import { SessionModel } from '@/database/models/session';
+import { MessageModel } from '@/database/models/message';
+
 
 export function getConversationList() {
   const list = store.state.conversation?.conversationList;
@@ -157,11 +161,10 @@ export class LocalChat {
     data.conversationID = convId;
     data.lastMessage.lastTime = getTime();
     data.userProfile = robotList.find((item) => item.userID == convId.replace("C2C", ""));
-
+    SessionModel.create(convId, data);
     const index = getConversationList().findIndex((t) => {
       return convId == t.conversationID;
     });
-
     if (getConversationList()?.[0]) {
       if (index === -1) {
         this.emit("onConversationListUpdated", { data: [...getConversationList(), data] });
@@ -186,31 +189,21 @@ export class LocalChat {
   }
   async getMessageList(data) {
     const { conversationID } = data;
-    const localMessageList = await browserDB.messages
-      .where("conversationID")
-      .equals(conversationID)
-      .limit(20)
-      .orderBy("clientTime", "desc")
-      .toArray();
-
-      // .where('conversationID')
-      // .equals(conversationID)
-      // .orderBy('clientTime') // 根据 clientTime 排序
-      // .limit(20) // 取前 20 条记录
-      // .toArray();
+    const localMessageList = await MessageModel.query({ id: conversationID })
+    debugger
     return {
       code: 0,
       data: {
         nextReqMessageID: "",
         isCompleted: true,
-        messageList: cloneDeep(localMessageList),
+        messageList: localMessageList,
       },
     };
   }
   async deleteMessage(data) {
     if (data.length === 1) {
       const { ID } = data[0];
-      browserDB.messages.delete(ID);
+      // browserDB.messages.delete(ID);
     }
     return {
       code: 0,

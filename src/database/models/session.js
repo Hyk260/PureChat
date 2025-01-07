@@ -94,23 +94,32 @@ class _SessionModel extends BaseModel {
 
   // **************** Create *************** //
 
-  async create(type, defaultValue, id = uuid()) {}
+  async create(id, data) {
+    const dataDB = data;
+    if (!this.findById(id)) return this._addWithSync(id, dataDB);
+  }
 
-  async batchCreate(sessions) {}
+  async batchCreate(sessions) { }
 
   // **************** Delete *************** //
 
-  async delete(id) {}
+  async delete(id) {
+    return await this._deleteWithSync(id);
+   }
 
-  async clearTable() {}
+  async clearTable() { 
+    return this._clearWithSync();
+  }
 
   // **************** Update *************** //
 
   async update(id, data) {
-    // return
+    return this._updateWithSync(id, data);
   }
 
-  async updateConfig(id, data) {}
+  async updateConfig(id, data) { }
 }
 
 export const SessionModel = new _SessionModel();
+
+window.SessionModel = SessionModel;

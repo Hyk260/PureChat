@@ -24,7 +24,6 @@ import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
 import { createAiPromptMsg } from "@/ai/utils";
 import { nextTick } from "vue";
-import { browserDB } from "@/database/client/db";
 
 const conversation = {
   state: {
@@ -73,9 +72,7 @@ const conversation = {
         let baseTime = getBaseTime(newMessageList);
         let timeDividerResult = addTimeDivider([message], baseTime).reverse();
         newMessageList.unshift(...timeDividerResult);
-        browserDB.messages.add(message);
       }
-      browserDB.messages.put(message);
       // 当前会有列表有值
       if (state.currentConversation.conversationID === convId) {
         state.currentMessageList = newMessageList;
@@ -483,7 +480,7 @@ const conversation = {
 
 if (__LOCAL_MODE__) {
   getChatListCache().then((res) => {
-    conversation.state.conversationList = res;
+    if(res.at(0)) conversation.state.conversationList = res;
   });
 }
 
