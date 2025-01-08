@@ -1,9 +1,3 @@
-import { customAlphabet } from "nanoid/non-secure";
-
-export const createNanoId = (size = 8) => customAlphabet("abcdefg", size);
-
-export const nanoid = createNanoId();
-
 export const transformOllamaStream = (chunk, stack) => {
   // maybe need another structure to add support for multiple choices
   if (chunk.done) {

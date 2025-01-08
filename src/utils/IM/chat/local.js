@@ -1,15 +1,21 @@
-import conversationProfile from '@/assets/db/conversationProfile.json';
-import robotList from '@/assets/db/robotList.json';
-import myProfile from '@/assets/db/myProfile.json';
-import timTextElem from '@/assets/db/message/timTextElem.json';
-import timCustomElem from '@/assets/db/message/timCustomElem.json';
+import sessions from "@/database/sessions.json";
+import robotList from "@/database/bot.json";
+import profile from "@/database/profile.json";
+import timTextElem from "@/database/message/timTextElem.json";
+import timCustomElem from "@/database/message/timCustomElem.json";
+
 import emitter from "@/utils/mitt-bus";
 import store from "@/store";
+import { getTime } from "@/utils/common";
 
+import { uuid } from "@/utils/uuid";
+import { nextTick } from "vue";
 import { USER_MODEL } from "@/constants/index";
 import { localStg } from "@/utils/storage";
-import { customAlphabet } from "nanoid/non-secure";
 import { cloneDeep } from "lodash-es";
+
+import { SessionModel } from "@/database/models/session";
+import { MessageModel } from "@/database/models/message";
 
 export function getConversationList() {
   const list = store.state.conversation?.conversationList;
@@ -26,10 +32,6 @@ export function getHistoryMessageList(id) {
   return cloneDeep(data) || null; // []
 }
 
-const nanoid = (size) => {
-  return customAlphabet("1234567890", size)()
-}
-
 export class LocalChat {
   constructor() {
     window.LocalChat = new Proxy(this, {
@@ -40,182 +42,176 @@ export class LocalChat {
         return Reflect.get(target, key);
       },
     });
-
+    window.MessageModel = MessageModel
+    window.SessionModel = SessionModel
   }
   init() {
-    localStg.set(USER_MODEL, { username: myProfile.userID })
+    localStg.set(USER_MODEL, { username: profile.userID });
     setTimeout(() => {
-      this.emit("sdkStateReady", { name: 'sdkStateReady' })
-    })
-  }
-  getTime() {
-    return Math.round(new Date().getTime() / 1000)
-  }
-  nanoId() {
-    return `${nanoid(18)}-${nanoid(10)}-${nanoid(7)}`
+      this.emit("sdkStateReady", { name: "sdkStateReady" });
+    });
   }
   create(data) {
-    console.log('create local chat', data)
-    this.init()
-    return this
+    console.log("create local chat", data);
+    this.init();
+    return this;
   }
   on(eventName, handler, contextopt = null) {
     const boundHandler = contextopt ? handler.bind(contextopt) : handler;
-    emitter.on(eventName, boundHandler)
+    emitter.on(eventName, boundHandler);
   }
   emit(eventName, handler) {
-    emitter.emit(eventName, handler)
+    emitter.emit(eventName, handler);
   }
   async sendMessage(data) {
-    const newData = getConversationList()
-    newData.map(t => {
-      if (t.conversationID === data.conversationID) {
-        t.lastMessage.messageForShow = data.payload.text
-        t.lastMessage.lastTime = this.getTime()
-      }
-    })
-    const historyMessageList = getHistoryMessageList(data.conversationID)
-    localStg.set(`localChat${data.conversationID}`, historyMessageList)
-    return new Promise((resolve, reject) => {
+    const newData = getConversationList();
+    const conversation = newData.find((t) => t.conversationID === data.conversationID);
+
+    if (conversation) {
+      conversation.lastMessage.messageForShow = data.payload.text;
+      conversation.lastMessage.lastTime = getTime();
+      SessionModel.update(data.conversationID, conversation);
+    }
+
+    const message = {
+      ...data,
+      time: getTime(),
+      clientTime: getTime(),
+      ID: data.ID || uuid(),
+      status: "success",
+    };
+
+    return new Promise((resolve) => {
       setTimeout(() => {
-        const message = {
-          code: 0,
-          data: {
-            message: {
-              ...data,
-              time: this.getTime(),
-              clientTime: this.getTime(),
-              ID: data.ID || this.nanoId(),
-              status: "success",
-            }
-          }
-        }
-        this.emit('onConversationListUpdated', { data: [...newData] })
-        this.emit('onMessageReceived', { data: [message.data.message] })
-        resolve(message)
-      }, 250)
-    })
+        this.emit("onConversationListUpdated", { data: [...newData] });
+        this.emit("onMessageReceived", { data: [message] });
+        resolve({ code: 0, data: { message } });
+      }, 300);
+    });
   }
   async getLoginUser() {
-    return myProfile.userID
+    return profile.userID;
   }
   async getMyProfile() {
     return {
       code: 0,
-      data: myProfile
-    }
+      data: profile,
+    };
   }
   async getUserProfile({ userIDList = [] }) {
-    const data = robotList.filter(item => {
-      return userIDList.find(id => id === item.userID) !== undefined;
+    const data = robotList.filter((item) => {
+      return userIDList.find((id) => id === item.userID) !== undefined;
     });
     return {
       code: 0,
-      data: data || []
-    }
+      data: data || [],
+    };
   }
   async getGroupList() {
     return {
       code: 0,
       data: {
-        groupList: []
-      }
-    }
+        groupList: [],
+      },
+    };
   }
   async getGroupMemberList() {
     return {
       code: 0,
       data: {
         offset: 0,
-        memberList: []
-      }
-    }
+        memberList: [],
+      },
+    };
   }
   createTextMessage(data) {
-    const { to, conversationType, payload } = data
-    return {
+    const { to, conversationType, payload } = data;
+    const _data = {
       ...timTextElem,
-      time: this.getTime(),
-      clientTime: this.getTime(),
-      ID: this.nanoId(),
+      time: getTime(),
+      clientTime: getTime(),
+      ID: uuid(),
       to: to,
+      avatar: profile.avatar,
       conversationID: `${conversationType}${to}`,
       conversationType,
-      payload
-    }
+      payload,
+    };
+    MessageModel.create(_data.ID, _data);
+    return _data
   }
   createCustomMessage(data) {
-    const { to, conversationType, payload } = data
-    return {
+    const { to, conversationType, payload } = data;
+    const _data = {
       ...timCustomElem,
-      ID: this.nanoId(),
-      time: this.getTime(),
-      clientTime: this.getTime(),
+      to: to,
+      payload,
+      ID: uuid(),
+      time: getTime(),
+      clientTime: getTime(),
       conversationType,
       conversationID: `${conversationType}${to}`,
-      to: to,
-      payload
     }
+    MessageModel.create(_data.ID, _data);
+    return _data
   }
   async getConversationProfile(convId) {
-    const data = cloneDeep(conversationProfile)
-    data.conversationID = convId
-    data.lastMessage.lastTime = this.getTime()
-    data.userProfile = robotList.find(item => item.userID == convId.replace("C2C", ""))
+    const data = cloneDeep(sessions);
+    data.conversationID = convId;
+    data.lastMessage.lastTime = getTime();
+    data.userProfile = robotList.find((item) => item.userID === convId.replace("C2C", ""));
+    SessionModel.create(convId, data);
 
-    const index = getConversationList().findIndex(t => {
-      return convId == t.conversationID
-    })
+    const conversationList = getConversationList() || [];
+    const index = conversationList.findIndex((t) => t.conversationID === convId);
 
-    if (getConversationList()?.[0]) {
-      if (index === -1) {
-        this.emit('onConversationListUpdated', { data: [...getConversationList(), data] })
-      } else {
-        this.emit('onConversationListUpdated', { data: [...getConversationList()] })
-      }
-    } else {
-      this.emit('onConversationListUpdated', { data: [data] })
-    }
+    if (index === -1) conversationList.push(data);
+
+    this.emit("onConversationListUpdated", { data: conversationList });
 
     return {
       code: 0,
       data: {
-        conversation: {
-          ...data
-        }
-      }
+        conversation: data,
+      },
     };
   }
   async getTotalUnreadMessageCount() {
-    return 0
+    return 0;
   }
   async getMessageList(data) {
-    const { conversationID } = data
-    const localMessageList = localStg.get(`localChat${conversationID}`) || []
+    const { conversationID } = data;
+    const localMessageList = await MessageModel.query({ id: conversationID });
     return {
       code: 0,
       data: {
-        nextReqMessageID: '',
+        nextReqMessageID: "",
         isCompleted: true,
-        messageList: localMessageList.reverse()
-      }
-    }
+        messageList: localMessageList,
+      },
+    };
   }
   async deleteMessage(data) {
-    console.log(data)
-    if (data.length === 1) {
-      const { conversationID, ID } = data[0]
-      const localMessageList = localStg.get(`localChat${conversationID}`) || []
-      const newMessageList = localMessageList.filter(item => item.ID !== ID)
-      localStg.set(`localChat${conversationID}`, newMessageList)
-    }
+    data.forEach((item) => { MessageModel.delete(item.ID); });
+
     return {
       code: 0,
       data: { messageList: [] },
-    }
+    };
+  }
+  async deleteConversation({ conversationIDList = [], clearHistoryMessage = false }) {
+    const newData = getConversationList();
+    const [ID] = conversationIDList;
+    const messageList = newData.filter((item) => item.conversationID !== ID);
+    this.emit("onConversationListUpdated", { data: messageList });
+    await SessionModel.delete(ID);
+    return {
+      code: 0,
+      data: { conversationID: ID },
+    };
   }
 }
 
 const localChat = new LocalChat();
 
-export default localChat
+export default localChat;

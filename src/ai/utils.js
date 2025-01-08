@@ -45,7 +45,10 @@ export const useAccessStore = (model = ModelProvider.GPT) => {
   }
 };
 
-export const usePromptStore = (model = ModelProvider.GPT) => {
+export const usePromptStore = (model = ModelProvider.GPT, start = false) => {
+  if (start) {
+    return prompt[0];
+  }
   try {
     return localStg.get(StoreKey.Prompt)?.[model] || prompt[0];
   } catch (error) {
@@ -93,7 +96,7 @@ export function getModelSvg(id) {
     [ModelProvider.ZeroOne]: "zeroone",
     [ModelProvider.Qwen]: "tongyi",
     [ModelProvider.Ollama]: "ollama",
-    [ModelProvider.GitHub]: "github",
+    [ModelProvider.GitHub]: "openai",
     llava: "llava",
   };
   return data[modelId] || "";
@@ -325,8 +328,9 @@ export function isFullStaffGroup(data) {
 
 export const createAiPromptMsg = (params) => {
   let to = localStg.get("timProxy")?.userProfile?.userID;
-  let from = getModelId(localStg.get("default-assistant") || "GPT");
-  const { meta } = localStg.get(StoreKey.Prompt)?.GPT;
+  let defaultBot = localStg.get("default-assistant") || "GPT";
+  let from = getModelId(defaultBot);
+  const { meta } = localStg.get(StoreKey.Prompt)?.[defaultBot];
   const { to: _to, from: _from } = params || {};
   if (_to) to = _to;
   if (_from) from = _from;
@@ -338,7 +342,7 @@ export const createAiPromptMsg = (params) => {
       messageID: "",
       messageAbstract: "预设提示词",
       recQuestion: meta.recQuestion || [],
-      messageSender: '',
+      messageSender: "",
       messageType: 0,
       version: "1",
     },
@@ -353,3 +357,17 @@ export const createAiPromptMsg = (params) => {
   msg.status = "success";
   return { convId: `C2C${msg.from}`, message: msg };
 };
+
+export function formatSizeStrict(input) {
+  const number = parseInt(input.toString().replace("_", ""), 10);
+
+  if (isNaN(number)) {
+    throw new Error("Invalid input: The input is not a valid number.");
+  }
+
+  if (number % 1000 === 0) {
+    return number / 1000 + "K";
+  }
+
+  return Math.floor(number / 1000) + "k"; // 舍弃小数，向下取整
+}

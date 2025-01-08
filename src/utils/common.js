@@ -48,3 +48,9 @@ export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Oper
 export const getGender = (data, type = "") => {
   return data?.gender === `Gender_Type_${type}`;
 };
+
+
+export const getTime = () => {
+  return Math.round(new Date().getTime() / 1000);
+}
+

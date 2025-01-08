@@ -64,7 +64,6 @@ const ZeroOne = {
       tokens: 16_384,
     },
   ],
-  checkModel: 'yi-34b-chat-0205',
   id: 'zeroone',
   name: '01.AI',
 };

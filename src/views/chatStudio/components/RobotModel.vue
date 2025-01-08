@@ -6,10 +6,10 @@
     </div>
     <div
       class="model flex"
-      :class="item.id == currentModel ? 'active' : ''"
+      :class="item.id == currentModel?.id ? 'active' : ''"
       v-for="item in model.chatModels"
       :key="item"
-      @click="storeRobotModel(item.id)"
+      @click="storeRobotModel(item)"
     >
       <div :class="['icon', robotIcon]">
         <div v-if="model.id === 'ollama'" :class="['icon', item.icon]">
@@ -19,8 +19,8 @@
           <svg-icon :iconClass="robotIcon" />
         </span>
       </div>
-      <div class="flex-bc w-full">
-        <span>{{ item.id }}</span>
+      <div class="list flex-bc w-full">
+        <span>{{ item.displayName || item.id }}</span>
         <span class="box">
           <el-tooltip v-if="item.vision" content="该模型支持视觉识别" placement="right-start">
             <svg-icon class="vision" iconClass="vision" />
@@ -32,6 +32,9 @@
           >
             <svg-icon class="function-call" iconClass="functionCall" />
           </el-tooltip>
+          <span v-if="item.tokens" class="tokens flex-c">
+            {{ formatSizeStrict(item.tokens) }}
+          </span>
         </span>
       </div>
     </div>
@@ -43,7 +46,7 @@ import { ref } from "vue";
 import { useBoolean } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 import { ClickOutside as vClickOutside } from "element-plus";
-import { getModelType, getModelSvg, useAccessStore } from "@/ai/utils";
+import { getModelType, getModelSvg, useAccessStore, formatSizeStrict } from "@/ai/utils";
 import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
@@ -68,37 +71,36 @@ function onClickOutside() {
   setFlag(false);
 }
 
-function storeRobotModel(model) {
+function storeRobotModel(data) {
+  console.log("storeRobotModel", data);
   const access = localStg.get(StoreKey.Access);
   const account = getModelType(toAccount.value);
   const config = useAccessStore(account);
-  const modelConfig = { ...config, model };
+  const modelConfig = { ...config, model: data.id };
   if (access) {
     localStg.set(StoreKey.Access, { ...access, [account]: { ...modelConfig } });
   } else {
     localStg.set(StoreKey.Access, { [account]: { ...modelConfig } });
   }
-  commit("setRobotModel", model);
+  commit("setRobotModel", data);
   setFlag(false);
 }
 
 function initModel() {
   const mode = getModelType(toAccount.value);
-  const list = localStg.get("olama-local-model-list");
+  // const list = localStg.get("olama-local-model-list");
   robotIcon.value = getModelSvg(toAccount.value);
   const account = getModelType(toAccount.value);
   const selectModel = localStg.get(`${account}-Select-Model`);
   model.value = cloneDeep(modelValue[mode].Model.options);
-  if (list && [ModelProvider.Ollama].includes(mode)) {
-    model.value.chatModels = list;
-  }
+  // if (list && [ModelProvider.Ollama].includes(mode)) {
+  //   model.value.chatModels = list;
+  // }
   if (selectModel && model.value) {
     const chatModels = cloneDeep(model.value.chatModels);
     const collapse = selectModel.Model.collapse || [];
-    if (collapse.length !== 0) {
-      const filteredData = chatModels.filter((item) => collapse.includes(item.id));
-      model.value.chatModels = filteredData;
-    }
+    const filteredData = chatModels.filter((item) => collapse.includes(item.id));
+    model.value.chatModels = filteredData;
   }
   setFlag(true);
 }
@@ -127,6 +129,38 @@ emitter.on("openModeList", () => {
   gap: 8px;
   cursor: pointer;
   border-radius: 3px;
+  .list {
+    .tokens {
+      width: 36px;
+      height: 18px;
+      font-family:
+        Hack,
+        ui-monospace,
+        SFMono-Regular,
+        SF Mono,
+        Menlo,
+        Consolas,
+        Liberation Mono,
+        monospace,
+        "HarmonyOS Sans SC",
+        "PingFang SC",
+        "Hiragino Sans GB",
+        "Microsoft Yahei UI",
+        "Microsoft Yahei",
+        "Source Han Sans CN",
+        sans-serif,
+        "Segoe UI Emoji",
+        "Segoe UI Symbol",
+        "Apple Color Emoji",
+        "Twemoji Mozilla",
+        "Noto Color Emoji",
+        "Android Emoji";
+      font-size: 11px;
+      color: #666666;
+      background: rgba(0, 0, 0, 0.03);
+      border-radius: 4px;
+    }
+  }
   &:hover {
     background-color: rgba(0, 0, 0, 0.03);
   }
@@ -144,6 +178,7 @@ emitter.on("openModeList", () => {
 }
 .box {
   display: flex;
+  align-items: center;
   flex-direction: row;
   gap: 4px;
   margin-left: 15px;

@@ -2,8 +2,8 @@ import { readableFromAsyncIterable } from "ai";
 import { ModelProvider } from "@/ai/constant";
 import { useAccessStore } from "@/ai/utils";
 import { Ollama } from "ollama/browser";
+import { nanoid } from '@/utils/uuid';
 import {
-  nanoid,
   parseDataUri,
   chatStreamable,
   transformOllamaStream,

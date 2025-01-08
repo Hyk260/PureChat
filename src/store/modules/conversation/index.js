@@ -12,12 +12,10 @@ import {
 import { EMOJI_RECENTLY, HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
   addTimeDivider,
-  deduplicateAndPreserveOrder,
   checkTextNotEmpty,
   getBaseTime,
   transformData,
   getChatListCache,
-  setMessageCaching,
 } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
@@ -25,6 +23,8 @@ import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
 import { createAiPromptMsg } from "@/ai/utils";
 import { nextTick } from "vue";
+import { MessageModel } from "@/database/models/message";
+import { SessionModel } from "@/database/models/session";
 
 const conversation = {
   state: {
@@ -41,7 +41,7 @@ const conversation = {
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
-    conversationList: getChatListCache() ?? [], // 会话列表数据
+    conversationList: [], // 会话列表数据
     filterConversationList: [],
     currentReplyMsg: null, // 回复数据
     activetab: "whole", // 全部 未读 提及我
@@ -56,14 +56,17 @@ const conversation = {
     updateMessages(state, payload) {
       console.log("[chat] 更新消息 updateMessages:", payload);
       const { convId, message } = payload;
-
+      if (!convId || !message) {
+        console.warn("convId 或 message 不存在");
+        return;
+      }
       let oldMessageList = state.historyMessageList.get(convId);
       // 确保 oldMessageList 存在
       if (!oldMessageList) {
-        console.log("oldMessageList 不存在");
+        console.warn("oldMessageList 不存在");
         return;
       }
-
+      MessageModel.update(message.ID, message);
       const newMessageList = oldMessageList.map((item) => {
         return item.ID === message.ID ? payload.message : item;
       });
@@ -315,6 +318,10 @@ const conversation = {
     async updateRobotMessageList({ state, commit }, action) {
       const { convId } = action;
       const { messageList } = await getMessageList({ convId });
+      if (!messageList.length) {
+        console.warn("暂无消息");
+        return;
+      }
       const message = addTimeDivider(messageList).reverse();
       state.historyMessageList.set(convId, cloneDeep(message));
       commit("updateMessages", {
@@ -391,7 +398,6 @@ const conversation = {
       const { code, message: result } = await sendMsg(message);
       if (code === 0) {
         dispatch("sendMsgSuccessCallback", { convId, message: result });
-
         if (!ROBOT_COLLECT.includes(result?.to)) return;
         if (last) {
           const list = await transformData(state.currentMessageList ?? [result]);
@@ -479,5 +485,11 @@ const conversation = {
     },
   },
 };
+
+if (__LOCAL_MODE__) {
+  getChatListCache().then((res) => {
+    if (res.at(0)) conversation.state.conversationList = res;
+  });
+}
 
 export default conversation;

@@ -43,7 +43,6 @@ import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
 import { StoreKey, gptBotId, ModelProvider } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
-import { forIn } from "lodash-es";
 
 const cardData = ref({});
 const { commit, dispatch } = useStore();
@@ -51,19 +50,20 @@ const [dialog, setDialog] = useBoolean();
 
 function toTant(item = cardData.value) {
   const { identifier, meta } = item;
-  const defaultAssistant = localStg.get("default-assistant");
-  const value = ModelProvider.GPT;
-  localStg.set(StoreKey.Prompt, {
-    ...localStg.get(StoreKey.Prompt),
+  const defaultBot = localStg.get("default-assistant") || null;
+  const value = defaultBot || ModelProvider.GPT;
+  const prompt = {
     [value]: {
       id: identifier,
       meta,
       lang: "cn",
       prompt: [{ role: "system", content: meta.systemRole }],
     },
-  });
-  const id = getModelId(defaultAssistant) || gptBotId;
-  commit("setPromptTitle", `${meta.avatar} ${meta.title}`);
+  };
+  console.log("prompt", { ...localStg.get(StoreKey.Prompt), ...prompt });
+  localStg.set(StoreKey.Prompt, { ...localStg.get(StoreKey.Prompt), ...prompt });
+  const id = getModelId(defaultBot) || gptBotId;
+  commit("setPromptConfig", prompt[value]);
   commit("taggleOueSide", "message");
   dispatch("addConversation", { convId: `${"C2C"}${id}` });
   setTimeout(() => {

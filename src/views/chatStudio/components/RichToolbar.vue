@@ -83,7 +83,7 @@
     <RobotModel v-if="isRobot(toAccount)" />
     <RobotPlugin v-if="isRobot(toAccount)" />
     <RobotOptions v-if="isRobot(toAccount)" />
-    <EmotionPackBox ref="emjRef" @setEmoji="setEmoji" />
+    <EmotionPackBox v-if="!isRobot(toAccount)" ref="emjRef" @setEmoji="setEmoji" />
   </div>
 </template>
 
@@ -175,7 +175,7 @@ function customMessage() {
 const isVision = computed(() => {
   if (isRobot(toAccount.value)) {
     // return getAllModels(model.value)?.vision;
-    return false
+    return false;
   } else {
     return true;
   }

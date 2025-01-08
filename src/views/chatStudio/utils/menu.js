@@ -5,12 +5,14 @@ export const chatSessionListData = [
     icon: "",
     svgIcon: "pinged",
     text: "置顶",
+    hide: __LOCAL_MODE__
   },
   {
     id: "unpin",
     icon: "",
     svgIcon: "unpin",
     text: "取消置顶",
+    hide: __LOCAL_MODE__
   },
   {
     id: "AcceptNotNotify",

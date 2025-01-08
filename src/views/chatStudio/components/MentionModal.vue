@@ -1,5 +1,5 @@
 <template>
-  <div class="mention-modal" :style="{ top: top, left: left }" v-show="isVisibile">
+  <div class="mention-modal" :style="{ top: top, left: left }" v-show="isVisible">
     <ul class="mention-list" ref="listRef">
       <el-scrollbar>
         <div class="mention-list-box">
@@ -66,7 +66,7 @@ export default {
       if (this.currentMemberList.length <= 1) return [];
       return this.list;
     },
-    isVisibile() {
+    isVisible() {
       return this.filtering !== "empty" && this.currentMemberList.length > 1;
     },
   },
