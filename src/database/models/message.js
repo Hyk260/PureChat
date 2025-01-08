@@ -1,4 +1,5 @@
 import { BaseModel } from "../core/model";
+import { getTime } from "@/utils/common";
 import { uuid } from "@/utils/uuid";
 
 class _MessageModel extends BaseModel {
@@ -14,7 +15,7 @@ class _MessageModel extends BaseModel {
     const query = this.table.where("conversationID").equals(id);
 
     const dbMessages = await query
-      .sortBy("createdAt")
+      .sortBy("clientTime")
       // handle page size
       .then((sortedArray) => sortedArray.slice(offset, offset + pageSize));
 
@@ -33,8 +34,8 @@ class _MessageModel extends BaseModel {
     return data;
   }
 
-  async queryBySessionId(sessionId) {
-    return this.table.where("sessionId").equals(sessionId).toArray();
+  async queryBySessionId(id) {
+    return this.table.where("ID").equals(id).toArray();
   }
 
   async count() {
@@ -44,15 +45,18 @@ class _MessageModel extends BaseModel {
   // **************** Create *************** //
 
   async create(id, data) {
+    const exist = await this.findById(id)
+    if (exist) return
+
     const messageData = {
       ...data,
-      updatedAt: new Date(),
+      updatedAt: getTime(),
     };
-    if (!this.findById(id)) return 
+
     this._addWithSync(id, messageData);
   }
 
-  async batchCreate(messages) {}
+  async batchCreate(messages) { }
 
   // **************** Delete *************** //
 

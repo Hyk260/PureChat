@@ -6,8 +6,8 @@ import timCustomElem from "@/database/message/timCustomElem.json";
 
 import emitter from "@/utils/mitt-bus";
 import store from "@/store";
+import { getTime } from "@/utils/common";
 
-// import { browserDB } from "@/database/client/db";
 import { uuid } from "@/utils/uuid";
 import { nextTick } from "vue";
 import { USER_MODEL } from "@/constants/index";
@@ -30,10 +30,6 @@ export function getCurrentMessageList() {
 export function getHistoryMessageList(id) {
   const data = store.state.conversation?.historyMessageList.get(id);
   return cloneDeep(data) || null; // []
-}
-
-function getTime() {
-  return Math.round(new Date().getTime() / 1000);
 }
 
 export class LocalChat {
@@ -67,30 +63,27 @@ export class LocalChat {
   }
   async sendMessage(data) {
     const newData = getConversationList();
-    newData.map((t) => {
-      if (t.conversationID === data.conversationID) {
-        t.lastMessage.messageForShow = data.payload.text;
-        t.lastMessage.lastTime = getTime();
-      }
-    });
-    return new Promise((resolve, reject) => {
+    const conversation = newData.find((t) => t.conversationID === data.conversationID);
+
+    if (conversation) {
+      conversation.lastMessage.messageForShow = data.payload.text;
+      conversation.lastMessage.lastTime = getTime();
+      SessionModel.update(data.conversationID, conversation);
+    }
+
+    const message = {
+      ...data,
+      time: getTime(),
+      clientTime: getTime(),
+      ID: data.ID || uuid(),
+      status: "success",
+    };
+
+    return new Promise((resolve) => {
       setTimeout(() => {
-        const message = {
-          code: 0,
-          data: {
-            message: {
-              ...data,
-              time: getTime(),
-              clientTime: getTime(),
-              ID: data.ID || uuid(),
-              status: "success",
-            },
-          },
-        };
-        MessageModel.create(message.data.message.ID, message.data.message);
         this.emit("onConversationListUpdated", { data: [...newData] });
-        this.emit("onMessageReceived", { data: [message.data.message] });
-        resolve(message);
+        this.emit("onMessageReceived", { data: [message] });
+        resolve({ code: 0, data: { message } });
       }, 300);
     });
   }
@@ -131,7 +124,7 @@ export class LocalChat {
   }
   createTextMessage(data) {
     const { to, conversationType, payload } = data;
-    return {
+    const _data = {
       ...timTextElem,
       time: getTime(),
       clientTime: getTime(),
@@ -142,45 +135,42 @@ export class LocalChat {
       conversationType,
       payload,
     };
+    MessageModel.create(_data.ID, _data);
+    return _data
   }
   createCustomMessage(data) {
     const { to, conversationType, payload } = data;
-    return {
+    const _data = {
       ...timCustomElem,
+      to: to,
+      payload,
       ID: uuid(),
       time: getTime(),
       clientTime: getTime(),
       conversationType,
       conversationID: `${conversationType}${to}`,
-      to: to,
-      payload,
-    };
+    }
+    MessageModel.create(_data.ID, _data);
+    return _data
   }
   async getConversationProfile(convId) {
     const data = cloneDeep(sessions);
     data.conversationID = convId;
     data.lastMessage.lastTime = getTime();
-    data.userProfile = robotList.find((item) => item.userID == convId.replace("C2C", ""));
+    data.userProfile = robotList.find((item) => item.userID === convId.replace("C2C", ""));
     SessionModel.create(convId, data);
-    const index = getConversationList().findIndex((t) => {
-      return convId == t.conversationID;
-    });
-    if (getConversationList()?.[0]) {
-      if (index === -1) {
-        this.emit("onConversationListUpdated", { data: [...getConversationList(), data] });
-      } else {
-        this.emit("onConversationListUpdated", { data: [...getConversationList()] });
-      }
-    } else {
-      this.emit("onConversationListUpdated", { data: [data] });
-    }
+
+    const conversationList = getConversationList() || [];
+    const index = conversationList.findIndex((t) => t.conversationID === convId);
+
+    if (index === -1) conversationList.push(data);
+
+    this.emit("onConversationListUpdated", { data: conversationList });
 
     return {
       code: 0,
       data: {
-        conversation: {
-          ...data,
-        },
+        conversation: data,
       },
     };
   }
@@ -200,10 +190,8 @@ export class LocalChat {
     };
   }
   async deleteMessage(data) {
-    if (data.length === 1) {
-      const { ID } = data[0];
-      MessageModel.delete(ID);
-    }
+    data.forEach((item) => { MessageModel.delete(item.ID); });
+
     return {
       code: 0,
       data: { messageList: [] },
@@ -211,9 +199,10 @@ export class LocalChat {
   }
   async deleteConversation({ conversationIDList = [], clearHistoryMessage = false }) {
     const newData = getConversationList();
-    const ID = conversationIDList[0];
-    const messageList = [...newData.filter((item) => item.conversationID !== ID)];
+    const [ID] = conversationIDList;
+    const messageList = newData.filter((item) => item.conversationID !== ID);
     this.emit("onConversationListUpdated", { data: messageList });
+    await SessionModel.delete(ID);
     return {
       code: 0,
       data: { conversationID: ID },

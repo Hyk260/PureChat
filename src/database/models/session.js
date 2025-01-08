@@ -96,8 +96,8 @@ class _SessionModel extends BaseModel {
 
   async create(id, data) {
     const dataDB = data;
-
-    if (!this.findById(id)) return 
+    const exist = await this.findById(id)
+    if (exist) return 
     await this._addWithSync(id, dataDB);
   }
 

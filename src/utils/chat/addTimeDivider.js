@@ -18,9 +18,9 @@ export const getBaseTime = (list, type = "start") => {
   if (!list.length) return 0;
   let time = 0;
   if (type === "start") {
-    time = list.find((t) => t.isTimeDivider)?.time || 0;
+    time = list.find((t) => t.isTimeDivider)?.clientTime || 0;
   } else {
-    time = list.findLast((t) => t.isTimeDivider)?.time || 0;
+    time = list.findLast((t) => t.isTimeDivider)?.clientTime || 0;
   }
   // console.log(timeFormat(time * 1000, true), time, "getBaseTime");
   return time;
@@ -51,19 +51,3 @@ export const addTimeDivider = (list, baseTime = 0) => {
     }
   }, []);
 };
-
-export function deduplicateAndPreserveOrder(data) {
-  const seenTimes = new Set();
-  const result = [];
-
-  for (const item of data) {
-    if (item.time !== undefined && !seenTimes.has(item.time)) {
-      result.push(item);
-      seenTimes.add(item.time);
-    } else if (item.ID !== undefined) {
-      result.push(item);
-    }
-  }
-
-  return result;
-}

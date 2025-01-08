@@ -6,14 +6,9 @@ import { restApi } from "@/api/node-admin-api/rest";
 import store from "@/store";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
+import { getTime } from "@/utils/common";
 
 const restSendMsg = async (params, message) => {
-  if (__LOCAL_MODE__) {
-    const data = cloneDeep(params);
-    data.payload.text = message;
-    await sendMsg(data);
-    return;
-  }
   return await restApi({
     params: {
       To_Account: params.from,
@@ -27,7 +22,7 @@ const restSendMsg = async (params, message) => {
 const updataMessage = (chat, message = "") => {
   if (!chat) return;
   chat.payload.text = message;
-  if (__LOCAL_MODE__) chat.clientTime = Math.round(new Date().getTime() / 1000);
+  chat.clientTime = getTime();
   store.commit("updateMessages", { convId: `C2C${chat.from}`, message: cloneDeep(chat) });
   emitter.emit("updataScroll", "robot");
 };
@@ -87,7 +82,7 @@ export const chatService = async (params) => {
       console.log("[chat] onFinish:", message);
       if (!message) return;
       updataMessage(msg, message);
-      await restSendMsg(chat, message);
+      if (!__LOCAL_MODE__) await restSendMsg(chat, message);
     },
     async onError(error) {
       console.error("[chat] onError:", error);

@@ -12,7 +12,6 @@ import {
 import { EMOJI_RECENTLY, HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
   addTimeDivider,
-  deduplicateAndPreserveOrder,
   checkTextNotEmpty,
   getBaseTime,
   transformData,
@@ -25,6 +24,7 @@ import { timProxy } from "@/utils/IM/index";
 import { createAiPromptMsg } from "@/ai/utils";
 import { nextTick } from "vue";
 import { MessageModel } from "@/database/models/message";
+import { SessionModel } from "@/database/models/session";
 
 const conversation = {
   state: {
@@ -56,7 +56,10 @@ const conversation = {
     updateMessages(state, payload) {
       console.log("[chat] 更新消息 updateMessages:", payload);
       const { convId, message } = payload;
-
+      if (!convId || !message) {
+        console.warn("convId 或 message 不存在");
+        return;
+      }
       let oldMessageList = state.historyMessageList.get(convId);
       // 确保 oldMessageList 存在
       if (!oldMessageList) {
@@ -315,6 +318,10 @@ const conversation = {
     async updateRobotMessageList({ state, commit }, action) {
       const { convId } = action;
       const { messageList } = await getMessageList({ convId });
+      if (!messageList.length) {
+        console.warn("暂无消息");
+        return;
+      }
       const message = addTimeDivider(messageList).reverse();
       state.historyMessageList.set(convId, cloneDeep(message));
       commit("updateMessages", {
@@ -481,7 +488,7 @@ const conversation = {
 
 if (__LOCAL_MODE__) {
   getChatListCache().then((res) => {
-    if(res.at(0)) conversation.state.conversationList = res;
+    if (res.at(0)) conversation.state.conversationList = res;
   });
 }
 

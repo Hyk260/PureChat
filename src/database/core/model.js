@@ -1,4 +1,5 @@
 import { uuid } from "@/utils/uuid";
+import { getTime } from "@/utils/common";
 import { browserDB } from "../client/db";
 
 export class BaseModel {
@@ -18,7 +19,7 @@ export class BaseModel {
 
     const record = {
       ...data,
-      updatedAt: new Date().getTime(),
+      updatedAt: getTime(),
     };
 
     const newId = await this.db[tableName].add(record);
