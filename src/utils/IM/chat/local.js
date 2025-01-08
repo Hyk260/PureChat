@@ -42,6 +42,8 @@ export class LocalChat {
         return Reflect.get(target, key);
       },
     });
+    window.MessageModel = MessageModel
+    window.SessionModel = SessionModel
   }
   init() {
     localStg.set(USER_MODEL, { username: profile.userID });

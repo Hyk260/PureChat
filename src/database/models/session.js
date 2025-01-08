@@ -123,5 +123,3 @@ class _SessionModel extends BaseModel {
 }
 
 export const SessionModel = new _SessionModel();
-
-window.SessionModel = SessionModel;

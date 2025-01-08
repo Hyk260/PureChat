@@ -76,5 +76,3 @@ class _MessageModel extends BaseModel {
 }
 
 export const MessageModel = new _MessageModel();
-
-window.MessageModel = MessageModel;
