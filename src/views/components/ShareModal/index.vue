@@ -4,6 +4,7 @@
     @close="onClose"
     :modal="true"
     :append-to-body="true"
+    class="share-modal-dialog"
     align-center
     title="截图分享"
     width="60%"
@@ -27,7 +28,11 @@
                 :class="isSelf(item) ? 'is-self' : 'is-other'"
               >
                 <div class="avatar">
-                  <img class="w-32 h-32 rounded-[6px]" v-if="!isSelf(item)" :src="getAiAvatarUrl(toAccount) || item.avatar" />
+                  <img
+                    class="w-32 h-32 rounded-[6px]"
+                    v-if="!isSelf(item)"
+                    :src="getAiAvatarUrl(toAccount) || item.avatar"
+                  />
                   <img class="w-32 h-32 rounded-[6px]" v-else :src="item.avatar" />
                 </div>
                 <div class="item" :class="msgOne(item.type)">
@@ -44,7 +49,7 @@
                 </div>
               </div>
             </div>
-            <div class="footer p-16" :class="{'opacity-0': !isFooter }">
+            <div class="footer p-16" :class="{ 'opacity-0': !isFooter }">
               <div class="flex-c">
                 <img class="size-22" src="@/assets/images/log.png" alt="" />
                 <div class="title ml-8">{{ titleApp }}</div>
@@ -183,6 +188,10 @@ emitter.on("handleShareModal", (val) => {
 </script>
 
 <style lang="scss" scoped>
+:global(body .share-modal-dialog) {
+  min-width: 460px;
+}
+
 .prompt {
   border-bottom: 1px solid var(--color-border-default);
 }

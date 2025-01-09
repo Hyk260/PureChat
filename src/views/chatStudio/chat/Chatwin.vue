@@ -615,7 +615,8 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   }
 }
 .message-view-item-index {
-  max-width: 70%;
+  // max-width: 70%;
+  width: 100%;
 }
 .message-info-view-content {
   height: calc(100% - 60px - 200px);
@@ -638,6 +639,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
 .message-view {
   display: flex;
   flex-direction: column-reverse;
+  min-width: 375px;
   height: 100%;
   padding: 0 16px 16px 16px;
   box-sizing: border-box;
