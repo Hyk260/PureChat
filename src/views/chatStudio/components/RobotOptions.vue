@@ -317,39 +317,6 @@ emitter.on("onRobotBox", () => {
     color: #999;
   }
 }
-@mixin thumb() {
-  appearance: none;
-  height: 8px;
-  width: 20px;
-  background-color: rgb(29, 147, 171);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all ease 0.3s;
-  margin-left: 5px;
-  border: none;
-}
-@mixin thumbHover() {
-  transform: scaleY(1.2);
-  width: 24px;
-}
-input[type="range"]::-webkit-slider-thumb {
-  @include thumb();
-}
-input[type="range"]::-moz-range-thumb {
-  @include thumb();
-}
-input[type="range"]::-ms-thumb {
-  @include thumb();
-}
-input[type="range"]::-webkit-slider-thumb:hover {
-  @include thumbHover();
-}
-input[type="range"]::-moz-range-thumb:hover {
-  @include thumbHover();
-}
-input[type="range"]::-ms-thumb:hover {
-  @include thumbHover();
-}
 .el-input {
   width: 200px;
 }
@@ -393,6 +360,7 @@ input[type="range"]::-ms-thumb:hover {
   align-items: center;
   justify-content: space-between;
 }
+
 input[type="range"] {
   appearance: none;
   background-color: var(--color-range);
@@ -412,5 +380,59 @@ input[type="password"] {
   padding: 0 10px;
   max-width: 100%;
   font-family: inherit;
+}
+
+@mixin thumb() {
+  appearance: none;
+  height: 8px;
+  width: 20px;
+  background-color: rgb(29, 147, 171);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all ease 0.3s;
+  margin-left: 5px;
+  border: none;
+}
+@mixin thumbHover() {
+  transform: scaleY(1.2);
+  width: 24px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  @include thumb();
+}
+input[type="range"]::-moz-range-thumb {
+  @include thumb();
+}
+input[type="range"]::-ms-thumb {
+  @include thumb();
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  @include thumbHover();
+}
+input[type="range"]::-moz-range-thumb:hover {
+  @include thumbHover();
+}
+input[type="range"]::-ms-thumb:hover {
+  @include thumbHover();
+}
+
+@media (max-width: 991px) {
+  .container-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    .range {
+      input[type="range"] {
+        width: 100% !important;
+      }
+      max-width: 100% !important;
+    }
+    .el-input {
+      width: 100% !important;
+    }
+    .el-select {
+      width: 100% !important;
+    }
+  }
 }
 </style>

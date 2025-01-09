@@ -51,6 +51,6 @@ export const getGender = (data, type = "") => {
 
 
 export const getTime = () => {
-  return Math.round(new Date().getTime() / 1000);
+  return parseInt(new Date().getTime() / 1000);
 }
 

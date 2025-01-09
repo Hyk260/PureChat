@@ -114,8 +114,8 @@ export default {
     },
     // 多选删除
     async deleteMsg() {
-      const result = await showConfirmationBox({ message: "确定删除?", iconType: "warning" });
-      if (result == "cancel") return;
+      // const result = await showConfirmationBox({ message: "确定删除?", iconType: "warning" });
+      // if (result == "cancel") return;
       const data = this.filterate()
       const { code } = await deleteMessage([...data]);
       if (code !== 0) return;

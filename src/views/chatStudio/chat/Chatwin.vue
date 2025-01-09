@@ -149,6 +149,7 @@ import Stateful from "../components/Stateful.vue";
 import MenuList from "../components/MenuList.vue";
 import { getAiAvatarUrl } from "@/ai/utils";
 import MessageEditingBox from "../components/MessageEditingBox.vue";
+import { getTime } from "@/utils/common";
 
 const isConfirm = ref(true);
 const timeout = ref(false);
@@ -380,9 +381,9 @@ const handleContextAvatarMenuEvent = (event, item) => {
 
 const handleContextMenuEvent = (event, item) => {
   const { isRevoked, time, type, payload } = item;
-  let isFile = type === "TIMFileElem";
-  let isRelay = type === "TIMRelayElem";
-  let isCustom = type === "TIMCustomElem";
+  const isFile = type === "TIMFileElem";
+  const isRelay = type === "TIMRelayElem";
+  const isCustom = type === "TIMCustomElem";
   // 撤回消息 系统类型消息 提示类型消息 多选状态 自定义消息
   if (
     isRevoked ||
@@ -395,9 +396,10 @@ const handleContextMenuEvent = (event, item) => {
     return;
   }
   console.log("handleContextMenuEvent:", item);
-  let relinquish = parseInt(new Date().getTime() / 1000) - time < 120;
+  const relinquish = getTime() - time < 120; // 两分钟内可撤回
   timeout.value = false;
   isRight.value = true;
+  isConfirm.value = false;
   menuItemInfo.value = item;
   contextMenuItems.value = menuOptionsList;
   // 对方消息
@@ -473,7 +475,7 @@ const handlRightClick = (data) => {
 
 const handlSingleClick = ({ item, id }) => {
   menuItemInfo.value = item;
-  // isConfirm.value = false;
+  isConfirm.value = true;
   handlRightClick({ id });
 };
 
