@@ -196,24 +196,6 @@ emitter.on("openModeList", () => {
 .vision {
   color: #55b467;
 }
-.openai {
-  background: rgb(25, 195, 125);
-}
-.zhipu {
-  background: linear-gradient(-45deg, rgb(52, 133, 255), rgb(80, 74, 244));
-}
-.tongyi {
-  background: rgb(97, 92, 237);
-}
-.zeroone {
-  background: rgb(0, 52, 37);
-}
-.meta {
-  background: linear-gradient(45deg, rgb(0, 127, 248), rgb(6, 104, 225), rgb(0, 127, 248));
-}
-.llava {
-  background: linear-gradient(-45deg, rgb(203, 45, 48), rgb(237, 130, 58));
-}
 .item-group-title {
   display: flex;
   align-items: center;

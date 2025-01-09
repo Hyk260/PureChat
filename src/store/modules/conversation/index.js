@@ -18,13 +18,14 @@ import {
   getChatListCache,
 } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
-import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
 import { createAiPromptMsg } from "@/ai/utils";
 import { nextTick } from "vue";
 import { MessageModel } from "@/database/models/message";
 import { SessionModel } from "@/database/models/session";
+
+import emitter from "@/utils/mitt-bus";
 
 const conversation = {
   state: {
@@ -297,11 +298,10 @@ const conversation = {
   actions: {
     // 获取消息列表
     async updateMessageList({ state, getters, commit, dispatch }, action) {
-      const isSDKReady = timProxy.isSDKReady;
       const { conversationID: convId } = action;
       const status = getters.toAccount && !getters.hasMsgList;
       // 当前会话有值
-      if (isSDKReady && status) {
+      if (timProxy.isSDKReady && status) {
         const { messageList, isCompleted } = await getMessageList({ convId });
         commit("addMessage", {
           convId,
@@ -361,8 +361,6 @@ const conversation = {
     },
     // 更新未读消息总数
     async updateUnreadMessageCount({ state }) {
-      const isSDKReady = timProxy.isSDKReady;
-      if (!isSDKReady) return;
       state.totalUnreadMsg = await getUnreadMsg();
     },
     // 消息免打扰
@@ -401,9 +399,9 @@ const conversation = {
         if (!ROBOT_COLLECT.includes(result?.to)) return;
         if (last) {
           const list = await transformData(state.currentMessageList ?? [result]);
-          nextTick(() => {
-            chatService({ messages: list, chat: result });
-          });
+          setTimeout(async () => {
+            await chatService({ messages: list, chat: result });
+          }, 50);
         }
       } else {
         console.log("发送失败", code, result);

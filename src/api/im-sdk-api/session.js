@@ -1,10 +1,15 @@
 import tim from "@/utils/IM/im-sdk/tim";
-// import { getMessageCaching } from '@/utils/chat/index';
+import { timProxy } from "@/utils/IM/index";
+
 /**
  * 获取未读消息总数
  * @returns {Promise<number>} 未读消息总数
  */
 export const getUnreadMsg = async () => {
+  if (!timProxy.isSDKReady) {
+    console.error("SDK is not ready");
+    return;
+  }
   return await tim.getTotalUnreadMessageCount();
 };
 
@@ -24,7 +29,6 @@ export const getMessageList = async (params) => {
       nextReqMessageID: nextReqMessageID || "",
     });
     if (code === 0) {
-      // getMessageCaching(convId, nextReqMessageID, data)
       return data;
     } else {
       throw new Error("Failed to get message list");

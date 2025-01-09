@@ -21,39 +21,52 @@
               <!-- <small>{{ item.SubTitle }} </small> -->
             </div>
           </div>
-          <el-tooltip
-            content="获取模型列表"
-            placement="top"
-            v-if="item.options && isOllama() && false"
-          >
-            <el-icon class="refresh" @click="onRefresh()">
-              <Refresh />
-            </el-icon>
-          </el-tooltip>
           <!-- 模型 -->
-          <el-select
-            v-if="item.options"
-            multiple
-            collapse-tags
-            collapse-tags-tooltip
-            :max-collapse-tags="10"
-            v-model="item.collapse"
-            append-to="body"
-            @clear="handleClear"
-            @remove-tag="handleRemoveTag"
-          >
-            <el-option
-              v-for="models in item.options.chatModels"
-              :key="models.id"
-              :label="models.displayName"
-              :value="models.id"
-            >
-              <div class="option flex gap-5 items-center">
-                <!-- <svg-icon iconClass="openai" /> -->
-                <span>{{ models.displayName || models.id }}</span>
+          <div v-if="item.options">
+            <div class="flex gap-8 flex-col">
+              <el-select
+                multiple
+                collapse-tags
+                collapse-tags-tooltip
+                :max-collapse-tags="10"
+                v-model="item.collapse"
+                append-to="body"
+                @clear="handleClear"
+                @remove-tag="handleRemoveTag"
+              >
+                <el-option
+                  v-for="models in item.options.chatModels"
+                  :key="models.id"
+                  :label="models.displayName"
+                  :value="models.id"
+                >
+                  <div class="bot-model-option">
+                    <div
+                      class="bot-avatar flex-c h-full"
+                      :class="item.options?.id === 'ollama' ? models.icon : robotIcon"
+                    >
+                      <svg-icon v-if="item.options?.id === 'ollama'" :iconClass="models.icon" />
+                      <svg-icon v-else :iconClass="robotIcon" />
+                    </div>
+                    <div class="flex flex-col h-full gap-4">
+                      <span>{{ models.displayName || models.id }}</span>
+                      <span class="text-models">{{ models.id }}</span>
+                    </div>
+                  </div>
+                </el-option>
+              </el-select>
+              <div v-if="false" class="flex-bc">
+                <div>共 {{ modelCount(item.collapse.length) }} 个模型可用</div>
+                <div>
+                  <el-tooltip :content="modelTooltipText()" placement="top" v-if="isOllama()">
+                    <el-icon class="refresh" @click="onRefresh()">
+                      <Refresh />
+                    </el-icon>
+                  </el-tooltip>
+                </div>
               </div>
-            </el-option>
-          </el-select>
+            </div>
+          </div>
           <div class="range" v-else-if="isRange(item.ID)">
             {{ item.defaultValue }}
             <input
@@ -102,7 +115,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
+import { getModelType, useAccessStore, usePromptStore, getModelSvg } from "@/ai/utils";
 import { useBoolean } from "@/utils/hooks/index";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
@@ -115,6 +128,7 @@ import { Markdown } from "@/utils/markdown/index";
 import { StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 
+const robotIcon = ref("");
 const modelData = ref(null);
 const maskData = ref([]);
 
@@ -149,6 +163,14 @@ function handlePrompt(prompt) {
   maskData.value.prompt = prompt;
   console.log(prompt);
 }
+function modelCount(count) {
+  const olamaModelList = localStg.get("olama-local-model-list") || [];
+  return olamaModelList.length ?? count;
+}
+function modelTooltipText() {
+  // const olamaModelList = localStg.get("olama-local-model-list") || [];
+  return "获取模型列表";
+}
 
 async function onRefresh() {
   const list = await new OllamaAI().models();
@@ -167,9 +189,10 @@ function initModel() {
   const account = getModelType(toAccount.value);
   const collapse = localStg.get(`${account}-Select-Model`)?.Model?.collapse;
   const olamaModelList = localStg.get("olama-local-model-list") || [];
+  robotIcon.value = getModelSvg(toAccount.value);
   Object.values(value).map((v) => {
     if (v.ID === "model" && collapse) v.collapse = collapse;
-    if (v.ID === "model" && olamaModelList.at(0)) v.options.chatModels = olamaModelList;
+    // if (v.ID === "model" && olamaModelList.at(0)) v.options.chatModels = olamaModelList;
     v.defaultValue = useAccessStore(model)[v.ID];
     return v;
   });
@@ -246,7 +269,7 @@ function handleConfirm() {
   });
   storeRobotModel(model);
   if (!maskData.value.prompt.length || !maskData.value.meta.title) {
-    const _maskData = usePromptStore(getModelType(toAccount.value), true)
+    const _maskData = usePromptStore(getModelType(toAccount.value), true);
     storeRobotMask(_maskData);
     commit("setPromptConfig", "");
   } else {
@@ -266,6 +289,34 @@ emitter.on("onRobotBox", () => {
 </script>
 
 <style lang="scss" scoped>
+:global(body .bot-model-option) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+:global(body .el-select-dropdown__list) {
+  padding: 3px 3px;
+}
+.bot-avatar {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  color: rgb(255, 255, 255);
+  svg {
+    width: 1.5em;
+    height: 1.5em;
+  }
+}
+.el-select-dropdown__item {
+  height: auto;
+  padding: 0 15px 0 15px;
+  line-height: normal;
+  .text-models {
+    font-size: 12px;
+    color: #999;
+  }
+}
 @mixin thumb() {
   appearance: none;
   height: 8px;
@@ -316,17 +367,12 @@ input[type="range"]::-ms-thumb:hover {
     color: var(--color-text-default);
     min-height: 40px;
     border-bottom: 1px solid #dedede;
-    :deep(.option) {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
     .title {
       font-size: 14px;
       font-weight: bolder;
     }
     .subTitle {
-      :deep(.markdown-body){
+      :deep(.markdown-body) {
         font-size: 12px;
         color: #999999;
       }
