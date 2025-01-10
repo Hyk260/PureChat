@@ -4,24 +4,23 @@
       <div class="touxiang">
         <UserAvatar type="self" isdot shape="square" @click="openUploadAvatarDialog" />
       </div>
-      <div class="aside-item" v-for="item in outsideList" :key="item.only">
-        <div
-          v-show="visibile(item)"
-          @click="toggle(item)"
-          class="aside-list"
-          :class="{ current: outside == item.only }"
-        >
-          <el-badge :value="unreadMsg" :hidden="item.only !== 'message' || unreadMsg == 0">
-            <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" class="style-svg" />
-            <svg-icon v-else :iconClass="item.icon" class="style-svg" />
-          </el-badge>
-          <div class="icon-title" :title="item.title">
-            {{ item.locale ? $t(`chat.${item.locale}`) : item.title }}
+      <div class="aside-item flex-c" v-for="item in outsideList" :key="item.only">
+        <el-tooltip :content="item.title" placement="right">
+          <div
+            v-show="visibile(item)"
+            @click="toggle(item)"
+            class="aside-list flex-c flex-col gap-3"
+            :class="{ current: outside == item.only }"
+          >
+            <el-badge :value="unreadMsg" :hidden="item.only !== 'message' || unreadMsg == 0">
+              <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" class="style-svg" />
+              <svg-icon v-else :iconClass="item.icon" class="style-svg" />
+            </el-badge>
           </div>
-        </div>
+        </el-tooltip>
       </div>
     </div>
-    <div class="operation">
+    <div class="operation flex-c">
       <el-icon class="icon-hover" @click="operation"><Operation /></el-icon>
     </div>
     <!-- 上传头像弹框 -->
@@ -85,12 +84,9 @@ function operation() {
   border-inline-end: 1px solid var(--color-border-default);
 }
 .aside-item {
-  @include flex-center;
   .aside-list {
-    width: 54px;
-    height: 54px;
-    text-align: center;
-    padding-top: 0.625rem;
+    width: 44px;
+    height: 44px;
     border-radius: 4px;
     cursor: pointer;
     &:hover {
@@ -106,10 +102,8 @@ function operation() {
     background: var(--color-message-active) !important;
   }
   .icon-title {
-    padding: 0 5px;
     color: var(--color-text);
     font-size: 12px;
-    margin-top: 3px;
     @include text-ellipsis;
   }
 }
@@ -138,7 +132,6 @@ function operation() {
 }
 .operation {
   height: 54px;
-  @include flex-center;
   .el-icon {
     cursor: pointer;
   }

@@ -35,14 +35,14 @@ const buttonList = [
     value: "合并转发",
     icon: "mergeForward",
     class: "",
-    hide: __LOCAL_MODE__
+    hide: __LOCAL_MODE__,
   },
   {
     type: "ForwardItemByItem",
     value: "逐条转发",
     icon: "aQuickForward",
     class: "",
-    hide: __LOCAL_MODE__
+    hide: __LOCAL_MODE__,
   },
   {
     type: "removalMsg",
@@ -56,7 +56,7 @@ export default {
   name: "MultiChoiceBox",
   data() {
     return {
-      buttonList: buttonList.filter(item => !item.hide),
+      buttonList: buttonList.filter((item) => !item.hide),
       multipleValue: null,
     };
   },
@@ -116,12 +116,12 @@ export default {
     async deleteMsg() {
       // const result = await showConfirmationBox({ message: "确定删除?", iconType: "warning" });
       // if (result == "cancel") return;
-      const data = this.filterate()
+      const data = this.filterate();
       const { code } = await deleteMessage([...data]);
       if (code !== 0) return;
       this.$store.commit("deleteMessage", {
         convId: this.currentConversation.conversationID,
-        messageIdArray: [...data.map(item => item.ID)],
+        messageIdArray: [...data.map((item) => item.ID)],
       });
       this.shutdown();
     },
@@ -205,23 +205,17 @@ export default {
     },
     shutdown() {
       // 清空多选数据
-      this.$store.commit("setForwardData", {
-        type: "clear",
-        payload: null,
-      });
+      this.$store.commit("setForwardData", { type: "clear" });
       // 关闭多选框
       this.setCheckboxState(false);
       this.closedState();
       this.setMultipleValue();
     },
     closedState() {
-      const checkBoxElements = Array.from(document.querySelectorAll(".check-btn"));
-      const messageElement = document.querySelector(".message-view");
-      const childElements = Array.from(messageElement.children);
-      checkBoxElements.forEach((t) => {
+      document.querySelectorAll(".check-btn").forEach((t) => {
         t.checked = false;
       });
-      childElements.forEach((t) => {
+      document.querySelectorAll(".message-view > *").forEach((t) => {
         t.classList.remove("style-select");
       });
     },

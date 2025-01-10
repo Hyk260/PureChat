@@ -30,28 +30,30 @@ export const isDataTransferItem = (item) => {
 }
 
 export const dragControllerDiv = (node) => {
-  let dragElement = document.getElementById("drag"); //滑块
-  let chatBox = document.getElementById("chat-box"); //聊天框
-  let editor = document.getElementById("editor"); //编辑器
-  let container = document.getElementById("container"); //整个盒子
+  let dragElement = document.querySelector("#drag"); //滑块
+  let chatBox = document.querySelector("#chat-box"); //聊天框
+  let editor = document.querySelector("#editor"); //编辑器
+  let container = document.querySelector("#container"); //整个盒子
+
+  const MIN_HEIGHT = 200; // 最小拖动高度
+  const OFFSET_HEIGHT = 60; // 滑块顶部偏移量
   // 按下鼠标执行
   dragElement.onmousedown = (e) => {
-    let startY = e.clientY; //鼠标按下 起始Y
-    let startTop = dragElement.offsetTop;
+    const startY = e.clientY; // 起始鼠标 Y 坐标
+    const startTop = dragElement.offsetTop; // 滑块的起始偏移高度
     // 鼠标移到时
     document.onmousemove = (e) => {
-      let endY = e.clientY; //鼠标移动 结束的y
-      // 移动距离 = 原来高度+（结束y-开始y）
-      let moveLen = startTop + (endY - startY);
-      let boxHeight = container.clientHeight;
-      // 最大移动距离 = 整个盒子高度
-      let maxT = boxHeight;
-      // 控制移动最小
-      if (moveLen < 200) moveLen = 200;
-      // 控制移动最大
-      if (moveLen > maxT - 200) moveLen = maxT - 200;
-      chatBox.style.height = `${moveLen - 60}px`;
-      editor.style.height = `${boxHeight - moveLen}px`;
+      const endY = e.clientY; //鼠标移动 结束的y
+      const moveLen = startTop + (endY - startY);// 移动距离 = 原来高度+（结束y-开始y）
+      const containerHeight = container.clientHeight; // 容器高度
+      // 计算并限制高度范围
+      const clampedHeight = Math.max(
+        MIN_HEIGHT,
+        Math.min(moveLen, containerHeight - MIN_HEIGHT)
+      );
+      // 设置聊天框和编辑器的高度
+      chatBox.style.height = `${clampedHeight - OFFSET_HEIGHT}px`;
+      editor.style.height = `${containerHeight - clampedHeight}px`;
     };
     // 鼠标松开时
     document.onmouseup = () => {
@@ -62,6 +64,44 @@ export const dragControllerDiv = (node) => {
     };
     return false;
   };
+};
+
+export const dragControllerDivHorizontal = () => {
+  let dragElement = document.querySelectorAll(".sidebar-drag")[0]; // 滑块
+  let leftBox = document.querySelectorAll(".message-left")[0]; // 左边盒子
+  let rightBox = document.querySelectorAll(".message-right")[0]; // 右边盒子
+  let container = document.querySelectorAll(".conv-chat")[0]; // 整个盒子（父容器）
+  // 按下鼠标启动拖动
+  dragElement.onmousedown = (e) => {
+    let startX = e.clientX; // 鼠标按下时的X坐标
+    let startLeftWidth = leftBox.offsetWidth; // 左侧盒子的初始宽度
+    let containerWidth = container.clientWidth; // 容器的总宽度
+
+    // 鼠标移动时调整宽度
+    document.onmousemove = (e) => {
+      let endX = e.clientX; // 鼠标移动后的X坐标
+      let deltaX = endX - startX; // 鼠标移动的水平差值
+      let newLeftWidth = startLeftWidth + deltaX; // 左侧盒子的计算宽度
+
+      // 限制盒子的最小和最大宽度
+      if (newLeftWidth < 100) newLeftWidth = 100; // 左侧盒子最小宽度
+      if (newLeftWidth > containerWidth - 100) newLeftWidth = containerWidth - 100; // 左侧盒子最大宽度
+
+      // 更新左侧和右侧盒子的宽度
+      leftBox.style.width = `${newLeftWidth}px`;
+      rightBox.style.width = `${containerWidth - newLeftWidth - dragElement.offsetWidth}px`;
+    };
+
+    // 鼠标释放时解除事件
+    document.onmouseup = () => {
+      document.onmousemove = null;
+      document.onmouseup = null;
+    };
+
+    // 阻止拖动时选中文字
+    return false;
+  };
+
 };
 
 export const validatelastMessage = (list) => {
@@ -156,7 +196,7 @@ export const insertMention = (options) => {
     console.warn("editor is null")
     return
   }
-  
+
   const mentionNode = {
     type: "mention",
     value: `${name} `,
@@ -585,23 +625,23 @@ export const isSelf = (item) => {
 };
 
 export const formatContent = (data) => {
-// console.log("formatContent:", data);
- return data
-   .filter((item) => item.type === "paragraph")
-   .map(({ children }) => {
-     return (
-       children
-         ?.map((t) => {
-           if (t.type === "image" && t?.alt && t?.class === "EmoticonPack") return t.alt;
-           if (t.type === "image") return "[图片]";
-           if (t.type === "attachment") return "[文件]";
-           if (t.type === "mention") return `@${t.value}`;
-           return t.text || ""; // 处理文本
-         })
-         .join("") || "" // 确保返回字符串
-     );
-   })
-   .join("");
+  // console.log("formatContent:", data);
+  return data
+    .filter((item) => item.type === "paragraph")
+    .map(({ children }) => {
+      return (
+        children
+          ?.map((t) => {
+            if (t.type === "image" && t?.alt && t?.class === "EmoticonPack") return t.alt;
+            if (t.type === "image") return "[图片]";
+            if (t.type === "attachment") return "[文件]";
+            if (t.type === "mention") return `@${t.value}`;
+            return t.text || ""; // 处理文本
+          })
+          .join("") || "" // 确保返回字符串
+      );
+    })
+    .join("");
 };
 
 

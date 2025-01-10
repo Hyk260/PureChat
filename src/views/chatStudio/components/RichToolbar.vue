@@ -80,9 +80,11 @@
       accept=".mp4"
       hidden
     /> -->
-    <RobotModel v-if="isRobot(toAccount)" />
-    <RobotPlugin v-if="isRobot(toAccount)" />
-    <RobotOptions v-if="isRobot(toAccount)" />
+    <template v-if="isRobot(toAccount)">
+      <RobotModel />
+      <RobotPlugin />
+      <RobotOptions />
+    </template>
     <EmotionPackBox v-if="!isRobot(toAccount)" ref="emjRef" @setEmoji="setEmoji" />
   </div>
 </template>

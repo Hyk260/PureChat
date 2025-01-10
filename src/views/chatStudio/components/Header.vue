@@ -6,7 +6,10 @@
           <span class="nick">{{ chatNick("C2C", chat) }}</span>
           <Label :model="model" :userID="chat?.conversationID" />
           <!-- ai-prompt -->
-          <div v-if="isRobot(toAccount) && fnPromptConfig(promptConfig)" class="ml-5 ai-prompt-title">
+          <div
+            v-if="isRobot(toAccount) && fnPromptConfig(promptConfig)"
+            class="ml-5 ai-prompt-title"
+          >
             {{ fnPromptConfig(promptConfig) }}
           </div>
           <!-- ai-tools -->
@@ -108,7 +111,7 @@ const openUser = () => {};
 const fnPromptConfig = (prompt) => {
   if (!prompt) return "";
   const { avatar, title } = prompt.meta || {};
-  if(!avatar && !title) return "";
+  if (!avatar && !title) return "";
   return `${avatar} ${title}`;
 };
 
@@ -124,6 +127,7 @@ watch(toAccount, () => {
   padding: 0 16px;
   width: 100%;
   position: relative;
+  z-index: 2;
   background: var(--color-body-bg);
   border-bottom: 1px solid var(--color-border-default);
   .message-info-views {
