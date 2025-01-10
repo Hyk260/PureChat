@@ -2,7 +2,7 @@ import {
   createFiletMsg,
   createImgtMsg,
   createTextAtMsg,
-  createTextMsg,
+  createTextMessage,
   createVideoMsg,
 } from "@/api/im-sdk-api/index";
 import store from "@/store/index";
@@ -311,7 +311,7 @@ export async function sendChatMessage(options) {
   }
   // 文本消息
   else if (textMsg) {
-    Message.push(createTextMsg({ convId, convType, textMsg, reply }));
+    Message.push(createTextMessage({ convId, convType, textMsg, reply }));
   }
 
   // 处理图片消息

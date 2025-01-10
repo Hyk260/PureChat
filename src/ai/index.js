@@ -1,7 +1,7 @@
 import { ClientApi } from "@/ai/api";
 import { ModelProvider, modelValue } from "@/ai/constant";
 import { getModelType, useAccessStore, prettyObject, getAvatarUrl } from "@/ai/utils";
-import { createCustomMsg, sendMsg } from "@/api/im-sdk-api/index";
+import { createCustomMsg } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
 import store from "@/store";
 import emitter from "@/utils/mitt-bus";
@@ -9,6 +9,7 @@ import { cloneDeep } from "lodash-es";
 import { getTime } from "@/utils/common";
 
 const restSendMsg = async (params, message) => {
+  if (__LOCAL_MODE__) return
   return await restApi({
     params: {
       To_Account: params.from,
@@ -80,9 +81,8 @@ export const chatService = async (params) => {
     },
     async onFinish(message) {
       console.log("[chat] onFinish:", message);
-      if (!message) return;
-      updataMessage(msg, message);
-      if (!__LOCAL_MODE__) await restSendMsg(chat, message);
+      message && updataMessage(msg, message);
+      await restSendMsg(chat, message);
     },
     async onError(error) {
       console.error("[chat] onError:", error);

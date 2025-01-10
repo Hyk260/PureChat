@@ -34,7 +34,7 @@
       <svg-icon iconClass="robot" class="icon-hover robot" />
     </span>
     <!-- 插件 -->
-    <span v-show="isRobot(toAccount) && false" @click="openPluginBox">
+    <span v-show="isRobot(toAccount)" @click="openPluginBox">
       <svg-icon iconClass="plugin" class="icon-hover robot" />
     </span>
     <!-- 窗口抖动 -->

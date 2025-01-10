@@ -2,11 +2,12 @@
   <el-dialog
     v-model="dialog"
     title="配置"
-    :append-to-body="true"
-    destroy-on-close
     width="60%"
-    align-center
     class="min-w-500 max-w-980"
+    align-center
+    destroy-on-close
+    :append-to-body="true"
+    :close-on-click-modal="false"
     :before-close="handleClose"
   >
     <div>
@@ -161,7 +162,6 @@ function isOllama() {
 
 function handlePrompt(prompt) {
   maskData.value.prompt = prompt;
-  console.log(prompt);
 }
 function modelCount(count) {
   const olamaModelList = localStg.get("olama-local-model-list") || [];

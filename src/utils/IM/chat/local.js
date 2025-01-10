@@ -125,7 +125,7 @@ export class LocalChat {
     };
   }
   createTextMessage(data) {
-    const { to, conversationType, payload } = data;
+    const { to, conversationType, payload, cache } = data;
     const _data = {
       ...timTextElem,
       time: getTime(),
@@ -137,7 +137,7 @@ export class LocalChat {
       conversationType,
       payload,
     };
-    MessageModel.create(_data.ID, _data);
+    if (cache) MessageModel.create(_data.ID, _data);
     return _data
   }
   createCustomMessage(data) {

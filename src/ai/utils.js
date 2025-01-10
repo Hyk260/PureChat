@@ -14,7 +14,7 @@ import {
   RobotAvatar,
 } from "@/ai/constant";
 import { OpenaiConfig } from "@/ai/platforms/openai/config";
-import { createTextMsg } from "@/api/im-sdk-api/index";
+import { createTextMessage } from "@/api/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 
@@ -336,7 +336,7 @@ export const createAiPromptMsg = (params) => {
   if (_from) from = _from;
   const title = "`" + meta.title + "`";
   const textMsg = `你好，我是 ${meta.avatar} ${title} ${meta.description} 让我们开始对话吧！`;
-  const msg = createTextMsg({ convId: from, textMsg });
+  const msg = createTextMessage({ convId: from, textMsg, cache: false });
   const promptMsgContent = JSON.stringify({
     messagePrompt: {
       messageID: "",
@@ -344,7 +344,7 @@ export const createAiPromptMsg = (params) => {
       recQuestion: meta.recQuestion || [],
       messageSender: "",
       messageType: 0,
-      version: "1",
+      version: __APP_INFO__.pkg.version,
     },
   });
   msg.conversationID = `C2C${from}`;

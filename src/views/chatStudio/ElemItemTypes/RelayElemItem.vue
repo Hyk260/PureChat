@@ -41,7 +41,6 @@ const abstractList = computed(() => {
 });
 
 function onClick() {
-  console.log("RelayElemItem", message);
   if (showCheckbox.value) return;
   emitter.emit("openMergePopup", message);
 }
