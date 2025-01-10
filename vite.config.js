@@ -1,7 +1,7 @@
 import process from "node:process";
 import { URL, fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
-import { setupVitePlugins, viteDefine } from "./build";
+import { setupVitePlugins, viteDefine, manualChunks } from "./build/index";
 
 export default defineConfig(({ mode }) => {
   const viteEnv = loadEnv(mode, process.cwd());
@@ -59,9 +59,7 @@ export default defineConfig(({ mode }) => {
           // #https://cn.rollupjs.org/configuration-options/#output-assetfilenames
           assetFileNames: "static/[ext]/[name]-[hash].[ext]",
           // 手动分包 #https://cn.rollupjs.org/configuration-options/#output-manualchunks
-          manualChunks(id) {
-            if (id.includes("node_modules")) return "vendor";
-          },
+          manualChunks,
         },
       },
       // 启用/ 禁用 gzip 压缩大小报告

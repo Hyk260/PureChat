@@ -30,9 +30,23 @@ export const __APP_INFO__ = {
 };
 
 export const viteDefine = (env) => {
-  // console.log("viteEnv", viteEnv);
   return {
     __APP_INFO__: JSON.stringify(__APP_INFO__),
     __LOCAL_MODE__: env?.VITE_LOCAL_MODE === "Y"
+  }
+};
+
+export const manualChunks = (id) => {
+  if (id.includes('node_modules')) {
+    if (id.includes('lodash-es')) {
+      return 'lodash-vendor';
+    }
+    if (id.includes('element-plus')) {
+      return 'el-vendor';
+    }
+    if (id.includes('@vue') || id.includes('vue')) {
+      return 'vue-vendor';
+    }
+    return 'vendor';
   }
 };

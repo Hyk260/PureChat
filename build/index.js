@@ -1,2 +1,2 @@
-export * from "./config";
-export * from "./plugins";
+export * from "./config/index";
+export * from "./plugins/index";
