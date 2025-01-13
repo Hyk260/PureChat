@@ -55,7 +55,7 @@
       <FontIcon class="icon-hover" iconName="Iphone" />
     </span>
     <!-- 自定义消息 -->
-    <span v-if="false" @click="customMessage" >
+    <span v-if="false" @click="customMessage">
       <FontIcon class="icon-hover" iconName="Sunny" />
     </span>
     <!-- 滚动到底部 -->
@@ -131,7 +131,7 @@ const { model, fullScreen, currentConversation } = useState({
 
 const isVision = computed(() => {
   if (isRobot(toAccount.value)) {
-    return getAllModels(model.value.id)?.vision;
+    return model.value?.vision;
   } else {
     return true;
   }
@@ -139,7 +139,7 @@ const isVision = computed(() => {
 
 const isFunctionCall = computed(() => {
   if (isRobot(toAccount.value)) {
-    return getAllModels(model.value.id)?.functionCall;
+    return model.value?.functionCall;
   } else {
     return false;
   }
@@ -213,8 +213,7 @@ function sendFile(e) {
 }
 function isShowImage(val) {
   if (__LOCAL_MODE__) {
-    // return false;
-    return isRobot(val);
+    return true;
   } else {
     return !isRobot(val);
   }

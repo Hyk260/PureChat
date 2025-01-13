@@ -88,6 +88,7 @@ export const chatService = async (params) => {
       console.error("[chat] onError:", error);
       // const isAborted = error.message.includes("aborted");
       const content = "\n\n" + prettyObject({ error: true, message: error.message });
+      __LOCAL_MODE__ && updataMessage(msg, content);
       error.message && (await restSendMsg(chat, content));
     },
     onController(controller) {

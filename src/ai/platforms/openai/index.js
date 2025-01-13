@@ -5,6 +5,7 @@ import {
   prettyObject,
   useAccessStore,
   usePromptStore,
+  useToolStore,
   createErrorResponse,
   createSmoothMessage,
   isDalle3 as _isDalle3,
@@ -12,6 +13,7 @@ import {
   generateDalle3RequestPayload,
 } from "@/ai/utils";
 import OllamaAI from "../ollama/ollama";
+import store from "@/store/index";
 
 export class ChatGPTApi {
   constructor(provider) {
@@ -20,6 +22,14 @@ export class ChatGPTApi {
   path(path) {
     let openaiUrl = this.accessStore().openaiUrl;
     return openaiUrl + path;
+  }
+  buildAnthropicTools() {
+    const pluginList = useToolStore();
+    if (!pluginList.length) return [];
+    if (store.state.robot.model?.functionCall) {
+      return pluginList.map((t) => t.tools[0]);
+    }
+    return [];
   }
   userPromptMessages(messages, modelConfig) {
     let message = [];
@@ -75,7 +85,7 @@ export class ChatGPTApi {
   }
   generateRequestPayload(messages, modelConfig, options) {
     if (_isDalle3(modelConfig.model)) return generateDalle3RequestPayload(modelConfig);
-    return {
+    const payload = {
       messages: this.userPromptMessages(messages, modelConfig),
       stream: options.stream, // 流式传输
       model: modelConfig.model, // 模型
@@ -84,8 +94,14 @@ export class ChatGPTApi {
       presence_penalty: modelConfig.presence_penalty, //话题新鲜度
       frequency_penalty: modelConfig.frequency_penalty, // 频率惩罚度
       top_p: modelConfig.top_p, // 核采样
-      // tools: []
+      // tools: [] // 工具
     };
+    const tools = this.buildAnthropicTools();
+    if (tools.at(0)) {
+      payload.tools = tools;
+      payload.stream = false;
+    }
+    return payload
   }
   /**
    * 处理流式聊天的响应。
@@ -197,7 +213,7 @@ export class ChatGPTApi {
         }
       },
       onmessage(msg) {
-        // console.log("[OpenAI] onmessage:", msg);
+        console.log("[OpenAI] onmessage:", msg);
         if (msg.data === "[DONE]" || finished) {
           return finish();
         }
