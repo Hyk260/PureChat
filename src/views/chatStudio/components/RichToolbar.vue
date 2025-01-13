@@ -14,7 +14,12 @@
       <svg-icon iconClass="model" class="icon-hover robot" />
     </span>
     <!-- 图片 -->
-    <span v-show="isVision" :title="$t('chat.picture')" @click="sendImageClick">
+    <span
+      v-if="isShowImage(toAccount)"
+      :class="isVision ? '' : 'prohibit'"
+      :title="$t('chat.picture')"
+      @click="sendImageClick"
+    >
       <svg-icon iconClass="icontupian" class="icon-hover" />
     </span>
     <!-- 文件 -->
@@ -34,7 +39,11 @@
       <svg-icon iconClass="robot" class="icon-hover robot" />
     </span>
     <!-- 插件 -->
-    <span v-show="isRobot(toAccount)" @click="openPluginBox">
+    <span
+      v-show="isRobot(toAccount)"
+      :class="isFunctionCall ? '' : 'prohibit'"
+      @click="openPluginBox"
+    >
       <svg-icon iconClass="plugin" class="icon-hover robot" />
     </span>
     <!-- 窗口抖动 -->
@@ -46,7 +55,7 @@
       <FontIcon class="icon-hover" iconName="Iphone" />
     </span>
     <!-- 自定义消息 -->
-    <span @click="customMessage" v-if="false">
+    <span v-if="false" @click="customMessage" >
       <FontIcon class="icon-hover" iconName="Sunny" />
     </span>
     <!-- 滚动到底部 -->
@@ -120,6 +129,22 @@ const { model, fullScreen, currentConversation } = useState({
   currentConversation: (state) => state.conversation.currentConversation,
 });
 
+const isVision = computed(() => {
+  if (isRobot(toAccount.value)) {
+    return getAllModels(model.value.id)?.vision;
+  } else {
+    return true;
+  }
+});
+
+const isFunctionCall = computed(() => {
+  if (isRobot(toAccount.value)) {
+    return getAllModels(model.value.id)?.functionCall;
+  } else {
+    return false;
+  }
+});
+
 const sendEmojiClick = () => {
   emjRef.value.setFlag(true);
 };
@@ -174,15 +199,6 @@ function customMessage() {
   });
 }
 
-const isVision = computed(() => {
-  if (isRobot(toAccount.value)) {
-    // return getAllModels(model.value)?.vision;
-    return false;
-  } else {
-    return true;
-  }
-});
-
 function sendImage(e) {
   emit("setToolbar", {
     key: "setPicture",
@@ -194,6 +210,14 @@ function sendFile(e) {
     key: "setParsefile",
     data: { files: e.target.files[0] },
   });
+}
+function isShowImage(val) {
+  if (__LOCAL_MODE__) {
+    // return false;
+    return isRobot(val);
+  } else {
+    return !isRobot(val);
+  }
 }
 const onTobBottom = () => {
   emitter.emit("updataScroll");
@@ -208,6 +232,11 @@ emitter.on("onisbot", (state) => {
   padding: 0 5px;
   display: flex;
   position: relative;
+  .prohibit {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
   & > span {
     width: 42px;
     align-items: center;

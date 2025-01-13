@@ -13,7 +13,7 @@
             {{ fnPromptConfig(promptConfig) }}
           </div>
           <!-- ai-tools -->
-          <template v-if="isRobot(toAccount) && botTools">
+          <template v-if="isRobot(toAccount) && botTools && isBotToolsFlag">
             <div v-for="item in botTools" :key="item.id" class="ml-5 ai-prompt-title">
               <svg-icon class="function-call" iconClass="functionCall" />
               <span>{{ item.name }}</span>
@@ -42,17 +42,19 @@
 </template>
 
 <script setup>
+import { watch } from "vue";
 import { isRobot } from "@/utils/chat/index";
 import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 import Label from "@/views/chatStudio/components/Label.vue";
-import { watch } from "vue";
 import { cloneDeep } from "lodash-es";
 import { modelValue, StoreKey } from "@/ai/constant";
 import { useStore } from "vuex";
+import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 
+const [isBotToolsFlag, setBotToolsFlag] = useBoolean();
 const { commit } = useStore();
 const { currentType, toAccount, isGroupChat } = useGetters([
   "currentType",
@@ -73,6 +75,7 @@ const updataModel = () => {
   const model = useAccessStore(value)?.model;
   const data = cloneDeep(modelValue[value].Model.options.chatModels);
   const checkModel = data.find((item) => item.id === model);
+  setBotToolsFlag(checkModel?.functionCall ? true : false);
   commit("setRobotModel", checkModel);
 };
 
@@ -118,6 +121,10 @@ const fnPromptConfig = (prompt) => {
 watch(toAccount, () => {
   updataModel();
   updataPromptTitle();
+});
+
+emitter.on("updataBotToolsFlag", (val) => {
+  setBotToolsFlag(val)
 });
 </script>
 

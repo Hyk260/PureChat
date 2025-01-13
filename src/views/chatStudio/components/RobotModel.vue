@@ -72,7 +72,6 @@ function onClickOutside() {
 }
 
 function storeRobotModel(data) {
-  console.log("storeRobotModel", data);
   const access = localStg.get(StoreKey.Access);
   const account = getModelType(toAccount.value);
   const config = useAccessStore(account);
@@ -82,6 +81,7 @@ function storeRobotModel(data) {
   } else {
     localStg.set(StoreKey.Access, { [account]: { ...modelConfig } });
   }
+  emitter.emit("updataBotToolsFlag", data?.functionCall || false);
   commit("setRobotModel", data);
   setFlag(false);
 }

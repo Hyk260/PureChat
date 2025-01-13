@@ -108,6 +108,7 @@
     <template #footer>
       <span>
         <el-button @click="handleCancel()"> 重置 </el-button>
+        <el-button @click="handleClose()"> 取消 </el-button>
         <el-button type="primary" @click="handleConfirm()"> 保存 </el-button>
       </span>
     </template>
@@ -248,6 +249,7 @@ function resetRobotMask() {
 
 function handleClose(done) {
   done && done();
+  setDialog(false);
 }
 // 重置
 function handleCancel() {
