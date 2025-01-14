@@ -4,8 +4,7 @@ import { GitHubConfig } from './config';
 
 export class GitHubApi extends ChatGPTApi {
   constructor(provider) {
-    super();
-    this.provider = provider;
+    super(provider);
   }
   path() {
     return GitHubConfig().openaiUrl + GitHubPath.ChatPath;

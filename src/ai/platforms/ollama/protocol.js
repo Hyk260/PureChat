@@ -1,5 +1,4 @@
 export const transformOllamaStream = (chunk, stack) => {
-  // maybe need another structure to add support for multiple choices
   if (chunk.done) {
     return { data: "[DONE]", id: stack.id, type: "stop" };
   }

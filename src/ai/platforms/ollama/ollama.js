@@ -69,41 +69,6 @@ export default class OllamaAI {
     this.payload = useAccessStore(ModelProvider.Ollama);
     this.client = new Ollama({ host: this.payload.openaiUrl || DEFAULT_BASE_URL });
   }
-
-  async chat(messages, payload, options) {
-    try {
-      const response = await this.client.chat({
-        messages: this.buildOllamaMessages(messages),
-        model: payload.model,
-        options: {
-          frequency_penalty: payload.frequency_penalty,
-          presence_penalty: payload.presence_penalty,
-          temperature: payload.temperature, // 随机性
-          top_p: payload.top_p,
-          images: [],
-        },
-        stream: true,
-      });
-      const { callback, headers } = options || {};
-      return StreamingResponse(OllamaStream(response, callback), { headers });
-    } catch (e) {
-      const Error = {
-        error: { message: e.message, name: e.name, status_code: e.status_code },
-        errorType: "请求 Ollama 服务出错，请检查后重试",
-        provider: ModelProvider.Ollama,
-      };
-      throw Error;
-    }
-  }
-
-  async models() {
-    const list = await this.client.list();
-    return list.models.map((model) => ({
-      id: model.name,
-      icon: getIcon(model.name),
-    }));
-  }
-
   buildOllamaMessages(messages) {
     return messages.map((t) => this.convertContentToOllamaMessage(t));
   }
@@ -137,5 +102,38 @@ export default class OllamaAI {
     }
 
     return ollamaMessage;
+  }
+  async chat(messages, payload, options) {
+    try {
+      const response = await this.client.chat({
+        messages: this.buildOllamaMessages(messages),
+        model: payload.model,
+        options: {
+          frequency_penalty: payload.frequency_penalty,
+          presence_penalty: payload.presence_penalty,
+          temperature: payload.temperature, // 随机性
+          top_p: payload.top_p,
+          images: [],
+        },
+        stream: true,
+      });
+      const { callback, headers } = options || {};
+      return StreamingResponse(OllamaStream(response, callback), { headers });
+    } catch (e) {
+      const Error = {
+        error: { message: e.message, name: e.name, status_code: e.status_code },
+        errorType: "请求 Ollama 服务出错，请检查后重试",
+        provider: ModelProvider.Ollama,
+      };
+      throw Error;
+    }
+  }
+
+  async models() {
+    const list = await this.client.list();
+    return list.models.map((model) => ({
+      id: model.name,
+      icon: getIcon(model.name),
+    }));
   }
 }
