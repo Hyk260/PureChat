@@ -1,5 +1,5 @@
 <template>
-  <div class="edit">
+  <div class="edit" :class="fnStyle(self)">
     <el-input
       v-model="input"
       resize="none"
@@ -8,7 +8,9 @@
       type="textarea"
     />
     <div class="flex justify-end">
-      <el-button size="small" @click="handleCancel"> {{ $t("common.cancel") }} </el-button>
+      <el-button size="small" @click="handleCancel">
+        {{ $t("common.cancel") }}
+      </el-button>
       <el-button size="small" type="primary" @click="handleConfirm">
         {{ $t("common.confirm") }}
       </el-button>
@@ -26,6 +28,10 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  self: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const input = ref(props.item.payload.text);
@@ -34,7 +40,9 @@ const { commit } = useStore();
 // const { messageEdit } = useState({
 //   messageEdit: (state) => state.conversation.messageEdit,
 // });
-
+function fnStyle(val) {
+  return [val ? 'ml-44' : 'mr-44']
+}
 function handleCancel() {
   commit("setMessageEdit", null);
 }
@@ -46,7 +54,6 @@ function handleConfirm() {
 
 <style lang="scss" scoped>
 .edit {
-  transition: background-color 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
   position: relative;
   overflow: hidden;
   border-radius: 5px;
@@ -58,6 +65,7 @@ function handleConfirm() {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  transition: background-color 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
   :deep(.el-textarea__inner) {
     border: none;
     box-shadow: none;

@@ -53,7 +53,11 @@
                 </div>
                 <div class="message-view-body" :class="msgType(item.type)" :id="item.ID">
                   <!-- 消息编辑 -->
-                  <MessageEditingBox v-if="messageEdit?.ID === item.ID" :item="item" />
+                  <MessageEditingBox
+                    v-if="messageEdit?.ID === item.ID"
+                    :self="isSelf(item)"
+                    :item="item"
+                  />
                   <component
                     v-else
                     :key="item.ID"
