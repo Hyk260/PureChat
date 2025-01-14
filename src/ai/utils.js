@@ -59,7 +59,7 @@ export const usePromptStore = (model = ModelProvider.GPT, start = false) => {
 
 export const useToolStore = (model = ModelProvider.GPT) => {
   try {
-    return localStg.get(StoreKey.Tool)
+    return localStg.get(StoreKey.Tool) || []
   } catch (error) {
     localStg.remove(StoreKey.Tool);
     return [];

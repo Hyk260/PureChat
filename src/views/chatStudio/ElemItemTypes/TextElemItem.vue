@@ -85,7 +85,7 @@ onMounted(() => {
 .message-view-item-text {
   width: fit-content;
   max-width: 500px;
-  padding: 10px 14px;
+  padding: 10px;
   box-sizing: border-box;
   border-radius: 3px;
   word-break: break-all;
