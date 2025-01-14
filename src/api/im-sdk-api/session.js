@@ -41,9 +41,13 @@ export const getMessageList = async (params) => {
 // 变更消息的接口
 export const modifyMessage = async (params) => {
   try {
-    const { data: message } = await tim.modifyMessage(params);
+    const { code, data: message } = await tim.modifyMessage(params);
     // 修改消息成功，message 是最新的消息
-    return message;
+     if (code === 0) {
+       return message;
+     } else {
+       throw new Error("Failed to modify message");
+     }
   } catch (imError) {
     const { code, data } = imError;
     if (code === 2480) {

@@ -44,7 +44,6 @@ export class BaseModel {
   // **************** Update *************** //
 
   async _updateWithSync(id, data) {
-
     const success = await this.table.update(id, { ...data });
 
     return { success };

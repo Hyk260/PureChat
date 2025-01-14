@@ -42,8 +42,8 @@ export class LocalChat {
         return Reflect.get(target, key);
       },
     });
-    window.MessageModel = MessageModel
-    window.SessionModel = SessionModel
+    window.MessageModel = MessageModel;
+    window.SessionModel = SessionModel;
   }
   init() {
     localStg.set(USER_MODEL, { username: profile.userID });
@@ -138,7 +138,7 @@ export class LocalChat {
       payload,
     };
     if (cache) MessageModel.create(_data.ID, _data);
-    return _data
+    return _data;
   }
   createCustomMessage(data) {
     const { to, conversationType, payload } = data;
@@ -151,9 +151,9 @@ export class LocalChat {
       clientTime: getTime(),
       conversationType,
       conversationID: `${conversationType}${to}`,
-    }
+    };
     MessageModel.create(_data.ID, _data);
-    return _data
+    return _data;
   }
   async getConversationProfile(convId) {
     const data = cloneDeep(sessions);
@@ -192,7 +192,9 @@ export class LocalChat {
     };
   }
   async deleteMessage(data) {
-    data.forEach((item) => { MessageModel.delete(item.ID); });
+    data.forEach((item) => {
+      MessageModel.delete(item.ID);
+    });
 
     return {
       code: 0,
@@ -208,6 +210,18 @@ export class LocalChat {
     return {
       code: 0,
       data: { conversationID: ID },
+    };
+  }
+  async modifyMessage(data) {
+    await MessageModel.update(data.ID, {
+      payload: {
+        text: data.payload.text,
+      },
+    });
+    this.emit("onMessageModified", { data: [data] });
+    return {
+      code: 0,
+      data: { message: data },
     };
   }
 }

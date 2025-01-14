@@ -424,10 +424,10 @@ input[type="range"]::-ms-thumb:hover {
     align-items: stretch;
     gap: 12px;
     .range {
+      max-width: 100% !important;
       input[type="range"] {
         width: 100% !important;
       }
-      max-width: 100% !important;
     }
     .el-input {
       width: 100% !important;
