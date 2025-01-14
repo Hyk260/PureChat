@@ -83,6 +83,10 @@ const backstyle = (status = 0, percentage = 0) => {
 const uploading = ({ uuid, num, type = "up" }) => {
   try {
     const dom = document.getElementById(`${uuid}`);
+    if(!dom) {
+      console.warn("dom not found");
+      return;
+    }
     dom.style.background = backstyle(1, num);
     if (type === "up") {
       const upProgress = dom.querySelector(".upload_progress");

@@ -7,7 +7,7 @@ import { timProxy } from "@/utils/IM/index";
  */
 export const getUnreadMsg = async () => {
   if (!timProxy.isSDKReady) {
-    console.error("SDK is not ready");
+    console.warn("SDK is not ready");
     return;
   }
   return await tim.getTotalUnreadMessageCount();

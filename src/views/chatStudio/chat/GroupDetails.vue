@@ -389,7 +389,7 @@ watch(currentConversation, (data) => {
     display: flex;
     flex-direction: column;
     margin-left: 8px;
-
+    gap: 4px;
     .group-name {
       display: inline-block;
       vertical-align: bottom;

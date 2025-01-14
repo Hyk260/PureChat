@@ -35,12 +35,12 @@
       <svg-icon iconClass="iconjietu" class="icon-hover" />
     </span>
     <!-- 机器人配置 -->
-    <span v-show="isRobot(toAccount)" :title="$t('chat.configuration')" @click="openRobotBox">
+    <span v-if="isRobot(toAccount)" :title="$t('chat.configuration')" @click="openRobotBox">
       <svg-icon iconClass="robot" class="icon-hover robot" />
     </span>
     <!-- 插件 -->
     <span
-      v-show="isRobot(toAccount)"
+      v-if="isShowPlugins(toAccount)"
       :class="isFunctionCall ? '' : 'prohibit'"
       @click="openPluginBox"
     >
@@ -211,9 +211,17 @@ function sendFile(e) {
     data: { files: e.target.files[0] },
   });
 }
+function isShowPlugins(val) {
+  return false
+  // if (__LOCAL_MODE__) {
+  //   return false;
+  // } else {
+  //   return false;
+  // }
+}
 function isShowImage(val) {
   if (__LOCAL_MODE__) {
-    return true;
+    return false;
   } else {
     return !isRobot(val);
   }

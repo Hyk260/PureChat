@@ -1,43 +1,47 @@
 <template>
   <div v-show="flag" class="robot-model-box" v-click-outside="onClickOutside">
-    <div class="item-group-title">
-      <svg-icon :iconClass="robotIcon" />
-      <span>{{ model.name }}</span>
-    </div>
-    <div
-      class="model flex"
-      :class="item.id == currentModel?.id ? 'active' : ''"
-      v-for="item in model.chatModels"
-      :key="item"
-      @click="storeRobotModel(item)"
-    >
-      <div :class="['icon', robotIcon]">
-        <div v-if="model.id === 'ollama'" :class="['icon', item.icon]">
-          <svg-icon :iconClass="item.icon" />
-        </div>
-        <span v-else>
+    <el-scrollbar>
+      <div class="robot-model">
+        <div class="item-group-title">
           <svg-icon :iconClass="robotIcon" />
-        </span>
+          <span>{{ model.name }}</span>
+        </div>
+        <div
+          class="model flex"
+          :class="item.id == currentModel?.id ? 'active' : ''"
+          v-for="item in model.chatModels"
+          :key="item"
+          @click="storeRobotModel(item)"
+        >
+          <div :class="['icon', robotIcon]">
+            <div v-if="model.id === 'ollama'" :class="['icon', item.icon]">
+              <svg-icon :iconClass="item.icon" />
+            </div>
+            <span v-else>
+              <svg-icon :iconClass="robotIcon" />
+            </span>
+          </div>
+          <div class="list flex-bc w-full">
+            <span>{{ item.displayName || item.id }}</span>
+            <span class="box">
+              <el-tooltip v-if="item.vision" content="该模型支持视觉识别" placement="right-start">
+                <svg-icon class="vision" iconClass="vision" />
+              </el-tooltip>
+              <el-tooltip
+                v-if="item.functionCall"
+                content="该模型支持函数调用（Function Call）"
+                placement="right-start"
+              >
+                <svg-icon class="function-call" iconClass="functionCall" />
+              </el-tooltip>
+              <span v-if="item.tokens" class="tokens flex-c">
+                {{ formatSizeStrict(item.tokens) }}
+              </span>
+            </span>
+          </div>
+        </div>
       </div>
-      <div class="list flex-bc w-full">
-        <span>{{ item.displayName || item.id }}</span>
-        <span class="box">
-          <el-tooltip v-if="item.vision" content="该模型支持视觉识别" placement="right-start">
-            <svg-icon class="vision" iconClass="vision" />
-          </el-tooltip>
-          <el-tooltip
-            v-if="item.functionCall"
-            content="该模型支持函数调用（Function Call）"
-            placement="right-start"
-          >
-            <svg-icon class="function-call" iconClass="functionCall" />
-          </el-tooltip>
-          <span v-if="item.tokens" class="tokens flex-c">
-            {{ formatSizeStrict(item.tokens) }}
-          </span>
-        </span>
-      </div>
-    </div>
+    </el-scrollbar>
   </div>
 </template>
 
@@ -112,15 +116,16 @@ emitter.on("openModeList", () => {
 
 <style lang="scss" scoped>
 .robot-model-box {
-  overflow-y: auto;
   position: absolute;
-  padding: 4px;
   z-index: 1;
   border-radius: 5px;
   bottom: 46px;
-  max-height: 300px;
   background: var(--color-robot-model);
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
+  .robot-model {
+    padding: 5px;
+    max-height: 300px;
+  }
 }
 .model {
   padding: 7px 12px;

@@ -28,9 +28,14 @@
       :isOwner="isOwner"
       :editor="editorRef"
     />
-    <div class="btn-send">
-      <span class="mr-8 text-[12px]">{{ placeholderMap[getOperatingSystem()] }}</span>
-      <el-button @click="handleEnter()"> {{ $t("chat.sending") }} </el-button>
+    <div class="send-button">
+      <span class="tip">{{ placeholderMap[getOperatingSystem()] }}</span>
+      <el-button :loading="loading" @click="handleEnter()">
+        <template #loading>
+          <div class="iconify-icon svg-spinners mr-8"></div>
+        </template>
+        <span> {{ $t("chat.sending") }} </span>
+      </el-button>
     </div>
   </div>
 </template>
@@ -57,6 +62,7 @@ import MentionModal from "../components/MentionModal.vue";
 import RichToolbar from "../components/RichToolbar.vue";
 import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
+import { useBoolean } from "@/utils/hooks/index";
 import {
   convertEmoji,
   customAlert,
@@ -78,6 +84,7 @@ const valueHtml = ref(""); // 内容 HTML
 const mode = "simple"; // 'default' 或 'simple'
 const mentionRef = ref();
 
+const [loading, setLoading] = useBoolean();
 const { dispatch, commit } = useStore();
 const { isOwner, toAccount, currentType } = useGetters(["isOwner", "toAccount", "currentType"]);
 const {
@@ -263,6 +270,7 @@ const parsePicture = async (file, editor = editorRef.value) => {
 };
 // 回车
 const handleEnter = (event, editor = editorRef.value) => {
+  if (loading.value) return;
   if (event?.ctrlKey) return;
   if (isShowModal.value) {
     mentionRef.value.inputKeyupHandler(event);
@@ -402,12 +410,16 @@ onBeforeUnmount(() => {
     overflow: visible;
   }
 }
-.btn-send {
+.send-button {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   padding: 0px 10px 10px;
+  gap: 8px;
+  .tip {
+    font-size: 12px;
+  }
   span {
     color: rgb(153, 153, 153);
   }
