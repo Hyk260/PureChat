@@ -583,7 +583,7 @@ export const handleStreamingChat = async (
           }
         } else {
           const json = JSON.parse(text);
-          const delta = json.choices[0].delta.content;
+          const delta = json.choices[0]?.delta?.content;
           if (delta) {
             remainText += delta;
           }

@@ -25,8 +25,8 @@ import { useBoolean } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 import { useStore } from "vuex";
 import { localStg } from "@/utils/storage";
-import webSearch from "@/database/manifest/web-search.json";
-import getWeather from "@/database/manifest/get-weather.json";
+import webSearch from "@/database/tools/web-search.json";
+import getWeather from "@/database/tools/get-weather.json";
 
 const { commit } = useStore();
 const [flag, setFlag] = useBoolean();
