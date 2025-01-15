@@ -1,14 +1,13 @@
 import store from "@/store";
-import TIM from "@/utils/IM/chat/index";
 import { throttle } from "lodash-es";
 
 export function kickedOutReason(type) {
   switch (type) {
-    case TIM.TYPES.KICKED_OUT_MULT_ACCOUNT:
+    case "multipleAccount":
       return "由于多实例登录";
-    case TIM.TYPES.KICKED_OUT_MULT_DEVICE:
+    case "multipleDevice":
       return "由于多设备登录";
-    case TIM.TYPES.KICKED_OUT_USERSIG_EXPIRED:
+    case "userSigExpired":
       return "由于 userSig 过期";
     default:
       return "";
@@ -17,11 +16,11 @@ export function kickedOutReason(type) {
 
 export function checkoutNetState(state) {
   switch (state) {
-    case TIM.TYPES.NET_STATE_CONNECTED:
+    case "connected":
       return { message: "已接入网络", type: "success" };
-    case TIM.TYPES.NET_STATE_CONNECTING:
+    case "connecting":
       return { message: "当前网络不稳定", type: "warning" };
-    case TIM.TYPES.NET_STATE_DISCONNECTED:
+    case "disconnected":
       return { message: "当前网络不可用", type: "error" };
     default:
       return "";

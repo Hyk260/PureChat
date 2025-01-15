@@ -1,10 +1,9 @@
 import TencentCloudChat from "@/utils/IM/chat/index";
-import LocalChat from "@/utils/IM/chat/local";
-
-import TIMUploadPlugin from "tim-upload-plugin";
-
 import GroupModule from "@tencentcloud/chat/modules/group-module.js";
 import SignalingModule from "@tencentcloud/chat/modules/signaling-module.js";
+import TIMUploadPlugin from "tim-upload-plugin";
+
+import LocalChat from "@/utils/IM/chat/local";
 
 let chat = {}
 

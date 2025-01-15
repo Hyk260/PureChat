@@ -58,7 +58,7 @@ export class ChatGPTApi {
     if (res.data) {
       return await extractImageMessage(res);
     }
-    return res.choices?.at(0)?.message?.content ?? "";
+    return res.choices?.at(0)?.message?.content ?? res;
   }
   async fetchOnClient(messages) {
     const payload = this.accessStore();

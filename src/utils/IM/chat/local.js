@@ -89,7 +89,7 @@ export class LocalChat {
       }, 300);
     });
   }
-  async getLoginUser() {
+  getLoginUser() {
     return profile.userID;
   }
   async getMyProfile() {

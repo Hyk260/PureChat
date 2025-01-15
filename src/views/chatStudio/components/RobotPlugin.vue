@@ -25,7 +25,8 @@ import { useBoolean } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 import { useStore } from "vuex";
 import { localStg } from "@/utils/storage";
-import webSearch from '@/database/manifest/web-search.json';
+import webSearch from "@/database/manifest/web-search.json";
+import getWeather from "@/database/manifest/get-weather.json";
 
 const { commit } = useStore();
 const [flag, setFlag] = useBoolean();
@@ -50,56 +51,16 @@ const pluginData = ref([
     checked: false,
     prompt: "",
     url: getAssetsFile("fluent-emoji.webp"),
+    tools: [getWeather],
+  },
+  {
+    id: 2,
+    name: "DALL·E 3",
+    checked: false,
+    prompt: "",
+    url: getAssetsFile("1f389.webp"),
     tools: [],
   },
-  // {
-  //   id: 2,
-  //   name: "DALL·E 3",
-  //   checked: false,
-  //   prompt: "",
-  //   url: getAssetsFile("1f389.webp"),
-  //   tools: [
-  //     {
-  //       type: "function",
-  //       function: {
-  //         name: "Dalle3",
-  //         description: "openai's dall-e image generator.",
-  //         parameters: {
-  //           type: "object",
-  //           required: ["model", "n", "prompt", "size", "quality", "style"],
-  //           properties: {
-  //             model: {
-  //               type: "string",
-  //               description: "model name, required and value is `dall-e-3`.",
-  //             },
-  //             n: {
-  //               type: "number",
-  //               description: "value is `1`",
-  //             },
-  //             prompt: {
-  //               type: "string",
-  //               description:
-  //                 "A text description of the desired image(s). input must be a english prompt.",
-  //             },
-  //             size: {
-  //               type: "string",
-  //               description:
-  //                 "images size, can be `1024x1024`, `1024x1792`, `1792x1024`. default value is `1024x1024`",
-  //             },
-  //             quality: {
-  //               type: "string",
-  //               description: "images quality, can be `standard`, `hd`. default value is `hd`",
-  //             },
-  //             style: {
-  //               type: "string",
-  //               description: "images style, can be `vivid`, `natural`. default value is `vivid`",
-  //             },
-  //           },
-  //         },
-  //       },
-  //     },
-  //   ],
-  // },
 ]);
 
 function pluginfilter() {
@@ -119,7 +80,7 @@ function setChecked(item) {
 function feedBack() {
   const plugin = localStg.get(StoreKey.Tool);
   if (plugin) {
-    const pluginIds = new Set(plugin.map(item => item.id));
+    const pluginIds = new Set(plugin.map((item) => item.id));
     pluginData.value.forEach((item) => {
       if (pluginIds.has(item.id)) {
         item.checked = true;

@@ -1,11 +1,10 @@
+import store from "@/store";
+import emitter from "@/utils/mitt-bus";
+import chat from "@/utils/IM/im-sdk/tim";
 import { C2C_ROBOT_COLLECT } from "@/ai/constant";
 import { TIM_PROXY } from "@/constants/index";
-import store from "@/store";
-import TIM from "@/utils/IM/chat/index";
-import tim from "@/utils/IM/im-sdk/tim";
 import { scrollToDomPostion, setChatListCache } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
-import emitter from "@/utils/mitt-bus";
 import { useWindowFocus } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
@@ -24,11 +23,9 @@ function isRobotId(data) {
 
 export class TIMProxy {
   constructor() {
-    this.userProfile = {}; // IM用户信息
     this.userID = "";
     this.userSig = "";
-    this.chat = null; // im实例
-    this.TIM = null; // 命名空间
+    this.userProfile = {}; // IM用户信息
     this.once = false; // 防止重复初始化
     this.isSDKReady = false;
     // 暴露给全局
@@ -61,40 +58,38 @@ export class TIMProxy {
   init() {
     if (this.once) return;
     this.once = true;
-    this.chat = tim;
-    this.TIM = TIM;
     this.initListener(); // 监听SDK
     console.log("[chat] TIMProxy init");
   }
   initListener() {
     // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
-    tim.on("sdkStateReady", this.onReadyStateUpdate, this);
+    chat.on("sdkStateReady", this.onReadyStateUpdate, this);
     // 收到 SDK 进入 not ready 状态通知，此时 SDK 无法正常工作
-    tim.on("sdkStateNotReady", this.onReadyStateUpdate, this);
+    chat.on("sdkStateNotReady", this.onReadyStateUpdate, this);
     // 收到会话列表更新通知
-    tim.on("onConversationListUpdated", this.onUpdateConversationList);
+    chat.on("onConversationListUpdated", this.onUpdateConversationList);
     // 收到推送的单聊、群聊、群提示、群系统通知的新消息
-    tim.on("onMessageReceived", this.onReceiveMessage, this);
+    chat.on("onMessageReceived", this.onReceiveMessage, this);
     // 收到消息被撤回的通知
-    tim.on("onMessageRevoked", this.onMessageRevoked);
+    chat.on("onMessageRevoked", this.onMessageRevoked);
     // 群组列表更新
-    tim.on("onGroupListUpdated", this.onUpdateGroupList);
+    chat.on("onGroupListUpdated", this.onUpdateGroupList);
     // 被踢出
-    tim.on("kickedOut", this.onKickOut);
+    chat.on("kickedOut", this.onKickOut);
     // SDK内部出错
-    tim.on("error", this.onError);
+    chat.on("error", this.onError);
     // 网络监测
-    tim.on("netStateChange", this.onNetStateChange);
+    chat.on("netStateChange", this.onNetStateChange);
     // 会话未读总数更新
-    tim.on("onTotalUnreadMessageCountUpdated", this.onTotalUnreadMessageCountUpdated);
+    chat.on("onTotalUnreadMessageCountUpdated", this.onTotalUnreadMessageCountUpdated);
     // 收到好友申请列表更新通知
-    // tim.on("onFriendApplicationListUpdated", this.onFriendApplicationListUpdated);
+    // chat.on("onFriendApplicationListUpdated", this.onFriendApplicationListUpdated);
     // 收到好友分组列表更新通知
-    // tim.on("onFriendGroupListUpdated", this.onFriendGroupListUpdated);
+    // chat.on("onFriendGroupListUpdated", this.onFriendGroupListUpdated);
     // 已订阅用户或好友的状态变更（在线状态或自定义状态）时触发。
-    // tim.on("onUserStatusUpdated", this.onUserStatusUpdated);
+    // chat.on("onUserStatusUpdated", this.onUserStatusUpdated);
     // 收到消息被修改的通知
-    tim.on("onMessageModified", this.onMessageModified, this);
+    chat.on("onMessageModified", this.onMessageModified, this);
   }
   onTotalUnreadMessageCountUpdated({ data }) {
     console.log("[chat] onTotalUnreadMessageCountUpdated:", data);
@@ -103,9 +98,9 @@ export class TIMProxy {
     console.log("[chat] onReadyStateUpdate:", name);
     this.isSDKReady = name === "sdkStateReady";
     if (!this.isSDKReady) return;
-    this.chat.getMyProfile().then(({ code, data }) => {
+    chat.getMyProfile().then(({ code, data }) => {
       this.userProfile = data;
-      this.userID = this.chat.getLoginUser();
+      this.userID = chat.getLoginUser();
       this.saveSelfToLocalStorage();
       store.commit("setCurrentProfile", data);
     });
@@ -242,7 +237,7 @@ export class TIMProxy {
     // TIM.TYPES.GRP_TIP_MBR_JOIN // 1 有成员加群
     // TIM.TYPES.GRP_TIP_MBR_QUIT // 2 有群成员退群
     // TIM.TYPES.GRP_TIP_MBR_KICKED_OUT // 3 有群成员被踢出群
-    // TIM.TYPES.GRP_TIP_MBR_SET_ADMIN	//4	有群成员被设为管理员
+    // TIM.TYPES.GRP_TIP_MBR_SET_ADMIN	// 4	有群成员被设为管理员
     // TIM.TYPES.GRP_TIP_MBR_CANCELED_ADMIN // 5 有群成员被撤销管理员
     const list = [1, 2, 3, 4, 5];
     const groupTips = data.filter((t) => {

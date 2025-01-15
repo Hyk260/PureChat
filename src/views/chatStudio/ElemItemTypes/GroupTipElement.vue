@@ -6,7 +6,6 @@
 
 <script>
 import { mapState } from "vuex";
-import TIM from "@/utils/IM/chat/index";
 
 export default {
   name: "GroupTipElement",
@@ -64,25 +63,25 @@ export default {
       const userName = message?.nick || userIDList.join(",");
       switch (operationType) {
         // 1 有成员加群
-        case TIM.TYPES.GRP_TIP_MBR_JOIN:
+        case 1:
           return this.memberJoin(message);
         // 2	有群成员退群
-        case TIM.TYPES.GRP_TIP_MBR_QUIT:
+        case 2:
           return `${userName} 退出群聊`;
         // 3	有群成员被踢出群
-        case TIM.TYPES.GRP_TIP_MBR_KICKED_OUT:
+        case 3:
           return `${this.operator(message)} 将 ${userName} 移出群聊`;
         // 4	有群成员被设为管理员
-        case TIM.TYPES.GRP_TIP_MBR_SET_ADMIN:
+        case 4:
           return `${userName} 被设置为管理员`;
         // 5	有群成员被撤销管理员
-        case TIM.TYPES.GRP_TIP_MBR_CANCELED_ADMIN:
+        case 5:
           return `${userName} 被撤销管理员`;
         // 6	群组资料变更
-        case TIM.TYPES.GRP_TIP_GRP_PROFILE_UPDATED:
+        case 6:
           return "群资料修改";
         // 7	群成员资料变更，例如：群成员被禁言
-        case TIM.TYPES.GRP_TIP_MBR_PROFILE_UPDATED:
+        case 7:
           return this.memberProfileUpdated(message);
         default:
           return "[群提示消息]";
