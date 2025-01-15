@@ -14,7 +14,12 @@
       <svg-icon iconClass="model" class="icon-hover robot" />
     </span>
     <!-- 图片 -->
-    <span v-show="isVision" :title="$t('chat.picture')" @click="sendImageClick">
+    <span
+      v-if="isShowImage(toAccount)"
+      :class="isVision ? '' : 'prohibit'"
+      :title="$t('chat.picture')"
+      @click="sendImageClick"
+    >
       <svg-icon iconClass="icontupian" class="icon-hover" />
     </span>
     <!-- 文件 -->
@@ -30,11 +35,15 @@
       <svg-icon iconClass="iconjietu" class="icon-hover" />
     </span>
     <!-- 机器人配置 -->
-    <span v-show="isRobot(toAccount)" :title="$t('chat.configuration')" @click="openRobotBox">
+    <span v-if="isRobot(toAccount)" :title="$t('chat.configuration')" @click="openRobotBox">
       <svg-icon iconClass="robot" class="icon-hover robot" />
     </span>
     <!-- 插件 -->
-    <span v-show="isRobot(toAccount) && false" @click="openPluginBox">
+    <span
+      v-if="isShowPlugins(toAccount)"
+      :class="isFunctionCall ? '' : 'prohibit'"
+      @click="openPluginBox"
+    >
       <svg-icon iconClass="plugin" class="icon-hover robot" />
     </span>
     <!-- 窗口抖动 -->
@@ -46,7 +55,7 @@
       <FontIcon class="icon-hover" iconName="Iphone" />
     </span> -->
     <!-- 自定义消息 -->
-    <span @click="customMessage" v-if="false">
+    <span v-if="false" @click="customMessage">
       <FontIcon class="icon-hover" iconName="Sunny" />
     </span>
     <!-- 滚动到底部 -->
@@ -80,9 +89,11 @@
       accept=".mp4"
       hidden
     /> -->
-    <RobotModel v-if="isRobot(toAccount)" />
-    <RobotPlugin v-if="isRobot(toAccount)" />
-    <RobotOptions v-if="isRobot(toAccount)" />
+    <template v-if="isRobot(toAccount)">
+      <RobotModel />
+      <RobotPlugin />
+      <RobotOptions />
+    </template>
     <EmotionPackBox v-if="!isRobot(toAccount)" ref="emjRef" @setEmoji="setEmoji" />
   </div>
 </template>
@@ -116,6 +127,22 @@ const { model, fullScreen, currentConversation } = useState({
   model: (state) => state.robot.model,
   fullScreen: (state) => state.conversation.fullScreen,
   currentConversation: (state) => state.conversation.currentConversation,
+});
+
+const isVision = computed(() => {
+  if (isRobot(toAccount.value)) {
+    return model.value?.vision;
+  } else {
+    return true;
+  }
+});
+
+const isFunctionCall = computed(() => {
+  if (isRobot(toAccount.value)) {
+    return model.value?.functionCall;
+  } else {
+    return false;
+  }
 });
 
 const sendEmojiClick = () => {
@@ -172,15 +199,6 @@ function customMessage() {
   });
 }
 
-const isVision = computed(() => {
-  if (isRobot(toAccount.value)) {
-    // return getAllModels(model.value)?.vision;
-    return false;
-  } else {
-    return true;
-  }
-});
-
 function sendImage(e) {
   emit("setToolbar", {
     key: "setPicture",
@@ -192,6 +210,21 @@ function sendFile(e) {
     key: "setParsefile",
     data: { files: e.target.files[0] },
   });
+}
+function isShowPlugins(val) {
+  return false
+  // if (__LOCAL_MODE__) {
+  //   return false;
+  // } else {
+  //   return false;
+  // }
+}
+function isShowImage(val) {
+  if (__LOCAL_MODE__) {
+    return false;
+  } else {
+    return !isRobot(val);
+  }
 }
 const onTobBottom = () => {
   emitter.emit("updataScroll");
@@ -206,6 +239,11 @@ emitter.on("onisbot", (state) => {
   padding: 0 5px;
   display: flex;
   position: relative;
+  .prohibit {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
   & > span {
     width: 42px;
     align-items: center;

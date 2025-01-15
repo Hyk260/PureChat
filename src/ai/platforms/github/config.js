@@ -6,7 +6,7 @@ const {
 export const GitHubConfig = () => {
   return {
     model: "gpt-4o-mini",
-    temperature: 0.6,
+    temperature: 1,
     top_p: 1,
     max_tokens: 1024,
     presence_penalty: 0,

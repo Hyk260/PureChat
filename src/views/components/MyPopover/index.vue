@@ -124,7 +124,6 @@ const setUserProfile = async () => {
 };
 
 const setCardData = (data) => {
-  // console.log("CardData", data);
   if (data?.conversationID === "@TIM#SYSTEM") {
     cardData.value = null;
     return;

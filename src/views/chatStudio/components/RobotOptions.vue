@@ -2,11 +2,12 @@
   <el-dialog
     v-model="dialog"
     title="配置"
-    :append-to-body="true"
-    destroy-on-close
     width="60%"
-    align-center
     class="min-w-500 max-w-980"
+    align-center
+    destroy-on-close
+    :append-to-body="true"
+    :close-on-click-modal="false"
     :before-close="handleClose"
   >
     <div>
@@ -21,39 +22,52 @@
               <!-- <small>{{ item.SubTitle }} </small> -->
             </div>
           </div>
-          <el-tooltip
-            content="获取模型列表"
-            placement="top"
-            v-if="item.options && isOllama() && false"
-          >
-            <el-icon class="refresh" @click="onRefresh()">
-              <Refresh />
-            </el-icon>
-          </el-tooltip>
           <!-- 模型 -->
-          <el-select
-            v-if="item.options"
-            multiple
-            collapse-tags
-            collapse-tags-tooltip
-            :max-collapse-tags="10"
-            v-model="item.collapse"
-            append-to="body"
-            @clear="handleClear"
-            @remove-tag="handleRemoveTag"
-          >
-            <el-option
-              v-for="models in item.options.chatModels"
-              :key="models.id"
-              :label="models.displayName"
-              :value="models.id"
-            >
-              <div class="option flex gap-5 items-center">
-                <!-- <svg-icon iconClass="openai" /> -->
-                <span>{{ models.displayName || models.id }}</span>
+          <div v-if="item.options">
+            <div class="flex gap-8 flex-col">
+              <el-select
+                multiple
+                collapse-tags
+                collapse-tags-tooltip
+                :max-collapse-tags="10"
+                v-model="item.collapse"
+                append-to="body"
+                @clear="handleClear"
+                @remove-tag="handleRemoveTag"
+              >
+                <el-option
+                  v-for="models in item.options.chatModels"
+                  :key="models.id"
+                  :label="models.displayName"
+                  :value="models.id"
+                >
+                  <div class="bot-model-option">
+                    <div
+                      class="bot-avatar flex-c h-full"
+                      :class="item.options?.id === 'ollama' ? models.icon : robotIcon"
+                    >
+                      <svg-icon v-if="item.options?.id === 'ollama'" :iconClass="models.icon" />
+                      <svg-icon v-else :iconClass="robotIcon" />
+                    </div>
+                    <div class="flex flex-col h-full gap-4">
+                      <span>{{ models.displayName || models.id }}</span>
+                      <span class="text-models">{{ models.id }}</span>
+                    </div>
+                  </div>
+                </el-option>
+              </el-select>
+              <div v-if="false" class="flex-bc">
+                <div>共 {{ modelCount(item.collapse.length) }} 个模型可用</div>
+                <div>
+                  <el-tooltip :content="modelTooltipText()" placement="top" v-if="isOllama()">
+                    <el-icon class="refresh" @click="onRefresh()">
+                      <Refresh />
+                    </el-icon>
+                  </el-tooltip>
+                </div>
               </div>
-            </el-option>
-          </el-select>
+            </div>
+          </div>
           <div class="range" v-else-if="isRange(item.ID)">
             {{ item.defaultValue }}
             <input
@@ -94,6 +108,7 @@
     <template #footer>
       <span>
         <el-button @click="handleCancel()"> 重置 </el-button>
+        <el-button @click="handleClose()"> 取消 </el-button>
         <el-button type="primary" @click="handleConfirm()"> 保存 </el-button>
       </span>
     </template>
@@ -102,7 +117,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
+import { getModelType, useAccessStore, usePromptStore, getModelSvg } from "@/ai/utils";
 import { useBoolean } from "@/utils/hooks/index";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
@@ -115,6 +130,7 @@ import { Markdown } from "@/utils/markdown/index";
 import { StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 
+const robotIcon = ref("");
 const modelData = ref(null);
 const maskData = ref([]);
 
@@ -147,7 +163,14 @@ function isOllama() {
 
 function handlePrompt(prompt) {
   maskData.value.prompt = prompt;
-  console.log(prompt);
+}
+function modelCount(count) {
+  const olamaModelList = localStg.get("olama-local-model-list") || [];
+  return olamaModelList.length ?? count;
+}
+function modelTooltipText() {
+  // const olamaModelList = localStg.get("olama-local-model-list") || [];
+  return "获取模型列表";
 }
 
 async function onRefresh() {
@@ -167,9 +190,10 @@ function initModel() {
   const account = getModelType(toAccount.value);
   const collapse = localStg.get(`${account}-Select-Model`)?.Model?.collapse;
   const olamaModelList = localStg.get("olama-local-model-list") || [];
+  robotIcon.value = getModelSvg(toAccount.value);
   Object.values(value).map((v) => {
     if (v.ID === "model" && collapse) v.collapse = collapse;
-    if (v.ID === "model" && olamaModelList.at(0)) v.options.chatModels = olamaModelList;
+    // if (v.ID === "model" && olamaModelList.at(0)) v.options.chatModels = olamaModelList;
     v.defaultValue = useAccessStore(model)[v.ID];
     return v;
   });
@@ -225,6 +249,7 @@ function resetRobotMask() {
 
 function handleClose(done) {
   done && done();
+  setDialog(false);
 }
 // 重置
 function handleCancel() {
@@ -246,7 +271,7 @@ function handleConfirm() {
   });
   storeRobotModel(model);
   if (!maskData.value.prompt.length || !maskData.value.meta.title) {
-    const _maskData = usePromptStore(getModelType(toAccount.value), true)
+    const _maskData = usePromptStore(getModelType(toAccount.value), true);
     storeRobotMask(_maskData);
     commit("setPromptConfig", "");
   } else {
@@ -266,6 +291,99 @@ emitter.on("onRobotBox", () => {
 </script>
 
 <style lang="scss" scoped>
+:global(body .bot-model-option) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+:global(body .el-select-dropdown__list) {
+  padding: 3px 3px;
+}
+.bot-avatar {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  color: rgb(255, 255, 255);
+  svg {
+    width: 1.5em;
+    height: 1.5em;
+  }
+}
+.el-select-dropdown__item {
+  height: auto;
+  padding: 0 15px 0 15px;
+  line-height: normal;
+  .text-models {
+    font-size: 12px;
+    color: #999;
+  }
+}
+.el-input {
+  width: 200px;
+}
+.refresh {
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 5px;
+}
+.container {
+  overflow: hidden;
+  overflow-y: auto;
+  .container-item {
+    color-scheme: light;
+    user-select: none;
+    color: var(--color-text-default);
+    min-height: 40px;
+    border-bottom: 1px solid #dedede;
+    .title {
+      font-size: 14px;
+      font-weight: bolder;
+    }
+    .subTitle {
+      :deep(.markdown-body) {
+        font-size: 12px;
+        color: #999999;
+      }
+    }
+    .el-input,
+    .el-select {
+      width: 400px;
+    }
+  }
+}
+.range {
+  border: 1px solid #dedede;
+  max-width: 40%;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+input[type="range"] {
+  appearance: none;
+  background-color: var(--color-range);
+  color: #303030;
+  margin: 2px;
+}
+input[type="number"],
+input[type="text"],
+input[type="password"] {
+  appearance: none;
+  border-radius: 10px;
+  border: 1px solid #dedede;
+  min-height: 36px;
+  box-sizing: border-box;
+  background: #fff;
+  color: #303030;
+  padding: 0 10px;
+  max-width: 100%;
+  font-family: inherit;
+}
+
 @mixin thumb() {
   appearance: none;
   height: 8px;
@@ -299,72 +417,24 @@ input[type="range"]::-moz-range-thumb:hover {
 input[type="range"]::-ms-thumb:hover {
   @include thumbHover();
 }
-.el-input {
-  width: 200px;
-}
-.refresh {
-  cursor: pointer;
-  margin-left: auto;
-  margin-right: 5px;
-}
-.container {
-  overflow: hidden;
-  overflow-y: auto;
+
+@media (max-width: 991px) {
   .container-item {
-    color-scheme: light;
-    user-select: none;
-    color: var(--color-text-default);
-    min-height: 40px;
-    border-bottom: 1px solid #dedede;
-    :deep(.option) {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .title {
-      font-size: 14px;
-      font-weight: bolder;
-    }
-    .subTitle {
-      :deep(.markdown-body){
-        font-size: 12px;
-        color: #999999;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    .range {
+      max-width: 100% !important;
+      input[type="range"] {
+        width: 100% !important;
       }
     }
-    .el-input,
+    .el-input {
+      width: 100% !important;
+    }
     .el-select {
-      width: 400px;
+      width: 100% !important;
     }
   }
-}
-.range {
-  border: 1px solid #dedede;
-  max-width: 40%;
-  border-radius: 10px;
-  padding: 5px 10px;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-input[type="range"] {
-  appearance: none;
-  background-color: var(--color-range);
-  color: #303030;
-  margin: 2px;
-}
-input[type="number"],
-input[type="text"],
-input[type="password"] {
-  appearance: none;
-  border-radius: 10px;
-  border: 1px solid #dedede;
-  min-height: 36px;
-  box-sizing: border-box;
-  background: #fff;
-  color: #303030;
-  padding: 0 10px;
-  max-width: 100%;
-  font-family: inherit;
 }
 </style>

@@ -54,7 +54,7 @@ const fnStyle = computed(() => {
     return [_isSelf ? "text-right pr-5" : "text-left pl-5"];
   } else {
     const styleArray = [_isSelf ? "text-right pr-44 mb-4" : "text-left pl-44 mb-4"];
-    if (showCheckbox.value) return [...styleArray,"!opacity-0"];
+    if (showCheckbox.value) return [...styleArray, "!opacity-0"];
     return styleArray;
   }
 });
@@ -71,6 +71,5 @@ const fnStyle = computed(() => {
   transition: all 0.6s ease;
   width: 100%;
   pointer-events: none;
-  z-index: 1;
 }
 </style>

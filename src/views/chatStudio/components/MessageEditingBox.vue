@@ -1,5 +1,5 @@
 <template>
-  <div class="edit">
+  <div class="edit" :class="fnStyle(self)">
     <el-input
       v-model="input"
       resize="none"
@@ -8,8 +8,10 @@
       type="textarea"
     />
     <div class="flex justify-end">
-      <el-button size="small" @click="handleCancel"> {{ $t("common.cancel") }} </el-button>
-      <el-button size="small" type="primary" @click="handleConfirm">
+      <el-button size="small" @click="handleCancel">
+        {{ $t("common.cancel") }}
+      </el-button>
+      <el-button size="small" type="primary" @click="handleConfirm(input)">
         {{ $t("common.confirm") }}
       </el-button>
     </div>
@@ -20,11 +22,16 @@
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
+import { modifyMessage } from "@/api/im-sdk-api/session";
 
 const props = defineProps({
   item: {
     type: Object,
     default: () => {},
+  },
+  self: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -34,19 +41,34 @@ const { commit } = useStore();
 // const { messageEdit } = useState({
 //   messageEdit: (state) => state.conversation.messageEdit,
 // });
-
+function fnStyle(val) {
+  return [val ? "ml-44" : "mr-44"];
+}
 function handleCancel() {
   commit("setMessageEdit", null);
 }
 
-function handleConfirm() {
+function handleConfirm(val) {
+  // console.log(props.item, val);
+
+  const { type } = props.item;
+
+  const params = {
+    ...props.item,
+    payload: {
+      text: val,
+    },
+  };
+
+  if (type === "TIMTextElem") {
+    modifyMessage(params);
+  }
   handleCancel();
 }
 </script>
 
 <style lang="scss" scoped>
 .edit {
-  transition: background-color 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
   position: relative;
   overflow: hidden;
   border-radius: 5px;
@@ -58,6 +80,7 @@ function handleConfirm() {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  transition: background-color 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
   :deep(.el-textarea__inner) {
     border: none;
     box-shadow: none;

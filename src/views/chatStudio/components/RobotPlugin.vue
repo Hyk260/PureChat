@@ -25,6 +25,7 @@ import { useBoolean } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 import { useStore } from "vuex";
 import { localStg } from "@/utils/storage";
+import webSearch from '@/database/manifest/web-search.json';
 
 const { commit } = useStore();
 const [flag, setFlag] = useBoolean();
@@ -41,64 +42,64 @@ const pluginData = ref([
     prompt:
       "## Tools\n\nYou can use these tools below:\n\n### Web Search\n\nSearch for information from the internet\n\nThe APIs you can use:\n\n#### web_search____searchGoogle\n\nSearch Google and return top 10 results",
     url: getAssetsFile("web-search.png"),
+    tools: [webSearch],
+  },
+  {
+    id: 1,
+    name: "实时天气",
+    checked: false,
+    prompt: "",
+    url: getAssetsFile("fluent-emoji.webp"),
     tools: [],
   },
   // {
-  //   id: 1,
-  //   name: "实时天气",
+  //   id: 2,
+  //   name: "DALL·E 3",
   //   checked: false,
   //   prompt: "",
-  //   url: getAssetsFile("fluent-emoji.webp"),
-  //   tools: [],
+  //   url: getAssetsFile("1f389.webp"),
+  //   tools: [
+  //     {
+  //       type: "function",
+  //       function: {
+  //         name: "Dalle3",
+  //         description: "openai's dall-e image generator.",
+  //         parameters: {
+  //           type: "object",
+  //           required: ["model", "n", "prompt", "size", "quality", "style"],
+  //           properties: {
+  //             model: {
+  //               type: "string",
+  //               description: "model name, required and value is `dall-e-3`.",
+  //             },
+  //             n: {
+  //               type: "number",
+  //               description: "value is `1`",
+  //             },
+  //             prompt: {
+  //               type: "string",
+  //               description:
+  //                 "A text description of the desired image(s). input must be a english prompt.",
+  //             },
+  //             size: {
+  //               type: "string",
+  //               description:
+  //                 "images size, can be `1024x1024`, `1024x1792`, `1792x1024`. default value is `1024x1024`",
+  //             },
+  //             quality: {
+  //               type: "string",
+  //               description: "images quality, can be `standard`, `hd`. default value is `hd`",
+  //             },
+  //             style: {
+  //               type: "string",
+  //               description: "images style, can be `vivid`, `natural`. default value is `vivid`",
+  //             },
+  //           },
+  //         },
+  //       },
+  //     },
+  //   ],
   // },
-  {
-    id: 2,
-    name: "DALL·E 3",
-    checked: false,
-    prompt: "",
-    url: getAssetsFile("1f389.webp"),
-    tools: [
-      {
-        type: "function",
-        function: {
-          name: "Dalle3",
-          description: "openai's dall-e image generator.",
-          parameters: {
-            type: "object",
-            required: ["model", "n", "prompt", "size", "quality", "style"],
-            properties: {
-              model: {
-                type: "string",
-                description: "model name, required and value is `dall-e-3`.",
-              },
-              n: {
-                type: "number",
-                description: "value is `1`",
-              },
-              prompt: {
-                type: "string",
-                description:
-                  "A text description of the desired image(s). input must be a english prompt.",
-              },
-              size: {
-                type: "string",
-                description:
-                  "images size, can be `1024x1024`, `1024x1792`, `1792x1024`. default value is `1024x1024`",
-              },
-              quality: {
-                type: "string",
-                description: "images quality, can be `standard`, `hd`. default value is `hd`",
-              },
-              style: {
-                type: "string",
-                description: "images style, can be `vivid`, `natural`. default value is `vivid`",
-              },
-            },
-          },
-        },
-      },
-    ],
-  },
 ]);
 
 function pluginfilter() {

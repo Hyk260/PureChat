@@ -8,7 +8,7 @@
         </el-select>
         <el-input
           v-model="item.content"
-          :autosize="{ minRows: 1, maxRows: 1 }"
+          :autosize="{ minRows: 2, maxRows: 6 }"
           @blur="onBlur"
           @focus="onFocus"
           type="textarea"

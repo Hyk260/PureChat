@@ -63,10 +63,11 @@ export const createCustomMsg = (params) => {
 };
 
 // 创建文本消息
-export const createTextMsg = (params) => {
-  const { convId, convType = "C2C", textMsg, reply } = params;
+export const createTextMessage = (params) => {
+  const { convId, convType = "C2C", textMsg, reply, cache = true } = params;
   return tim.createTextMessage({
     to: convId,
+    cache: cache,
     conversationType: convType,
     payload: { text: textMsg },
     cloudCustomData: getReplyMsgContent(reply),

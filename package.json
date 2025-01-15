@@ -1,6 +1,6 @@
 {
   "name": "purechat",
-  "version": "0.7.0",
+  "version": "0.7.2",
   "description": "PureChat - A chat application built with Vue and Vite",
   "type": "module",
   "main": "./out/main/index.js",
@@ -65,7 +65,6 @@
     "qrcode": "^1.5.3",
     "request": "^2.88.2",
     "snabbdom": "^3.5.1",
-    "storejs": "^2.0.1",
     "tailwindcss": "^3.4.4",
     "tim-upload-plugin": "^1.0.5",
     "uuid": "^11.0.3",

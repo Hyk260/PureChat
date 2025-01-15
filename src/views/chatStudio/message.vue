@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full">
+  <div class="conv-chat flex w-full">
     <!-- 聊天列表 -->
     <div class="message-left" :class="{ 'style-layoutkit': arrowRight }">
       <!-- 搜索框 -->
@@ -17,7 +17,10 @@
         <el-tab-pane :label="$t('chat.mention')" name="mention"></el-tab-pane>
         <!-- <el-tab-pane label="群聊" name="groupChat"></el-tab-pane> -->
       </el-tabs>
-      <div class="scroll-container" :class="{ 'style-net': !networkStatus, 'local-mode': isLocalMode }">
+      <div
+        class="scroll-container"
+        :class="{ 'style-net': !networkStatus, 'local-mode': isLocalMode }"
+      >
         <!-- 连接已断开 -->
         <networklink :show="!networkStatus" />
         <!-- 会话列表 -->
@@ -27,6 +30,9 @@
         <div @click="onRight(arrowRight)">
           <FontIcon :iconName="arrowRight ? 'ArrowRight' : 'ArrowLeft'" />
         </div>
+      </div>
+      <div v-if="false" v-show="!arrowRight" class="sidebar-drag" @mouseover="dragControllerDivHorizontal()">
+        <!-- <svg-icon iconClass="drag" class="drag-icon" /> -->
       </div>
     </div>
     <!-- 聊天框 -->
@@ -39,10 +45,10 @@
       <ReplyBox />
       <!-- Resize -->
       <div
+        v-if="isChatBoxVisible"
         id="drag"
         :class="{ 'resize-hover': !fullScreen }"
         @mouseover="dragControllerDiv(chatRef)"
-        v-if="isChatBoxVisible"
       ></div>
       <!-- 编辑器 -->
       <Editor />
@@ -52,10 +58,7 @@
     <!-- 合并消息弹框 -->
     <MergeMessagePopup />
     <!-- 群详情 -->
-    <GroupDetails
-      v-if="isGroupChat"
-      :groupProfile="conver.groupProfile"
-    />
+    <GroupDetails v-if="isGroupChat" :groupProfile="conver.groupProfile" />
   </div>
 </template>
 
@@ -66,7 +69,7 @@ import emitter from "@/utils/mitt-bus";
 import { useEventListener } from "@vueuse/core";
 import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useStore } from "vuex";
-import { dragControllerDiv } from "./utils/utils";
+import { dragControllerDiv, dragControllerDivHorizontal } from "./utils/utils";
 
 import Chatwin from "./chat/Chatwin.vue";
 import ConversationList from "./chat/ConversationList.vue";
@@ -80,21 +83,22 @@ import ReplyBox from "./components/ReplyBox.vue";
 import Search from "./components/Search.vue";
 import networklink from "./components/networklink.vue";
 
-const isLocalMode = __LOCAL_MODE__
+const isLocalMode = __LOCAL_MODE__;
 const unread = ref("");
 const chatRef = ref(null);
 const activeName = ref("whole");
 const { dispatch, commit } = useStore();
 
 const { isGroupChat } = useGetters(["isGroupChat"]);
-const { networkStatus, conver, isChatBoxVisible, totalUnreadMsg, arrowRight, fullScreen } = useState({
-  networkStatus: (state) => state.conversation.networkStatus,
-  totalUnreadMsg: (state) => state.conversation.totalUnreadMsg,
-  conver: (state) => state.conversation.currentConversation,
-  isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
-  arrowRight: (state) => state.conversation.arrowRight,
-  fullScreen: (state) => state.conversation.fullScreen,
-});
+const { networkStatus, conver, isChatBoxVisible, totalUnreadMsg, arrowRight, fullScreen } =
+  useState({
+    networkStatus: (state) => state.conversation.networkStatus,
+    totalUnreadMsg: (state) => state.conversation.totalUnreadMsg,
+    conver: (state) => state.conversation.currentConversation,
+    isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
+    arrowRight: (state) => state.conversation.arrowRight,
+    fullScreen: (state) => state.conversation.fullScreen,
+  });
 
 const fnTotalUnreadMsg = () => {
   const unreadCount = totalUnreadMsg.value;
@@ -146,13 +150,16 @@ watchEffect(() => {
 }
 .message-left {
   width: 280px;
+  min-width: 280px;
+  max-width: 380px;
   position: relative;
   border-right: 1px solid var(--color-border-default);
   transition: width 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .style-layoutkit {
   border-right: 0px;
-  width: 0px;
+  width: 0px !important;
+  min-width: 0px;
 }
 .chat-h-full {
   height: 0px !important;
@@ -167,7 +174,7 @@ watchEffect(() => {
   height: 100%;
   position: relative;
   overflow: hidden;
-  min-width: 274px;
+  min-width: 375px;
 }
 .scroll-container {
   height: calc(100% - 60px - 40px);
@@ -175,7 +182,7 @@ watchEffect(() => {
 }
 .local-mode {
   height: calc(100% - 60px);
-   position: relative;
+  position: relative;
 }
 .style-net {
   height: calc(100% - 60px - 34px - 40px);
@@ -183,21 +190,39 @@ watchEffect(() => {
 
 #drag {
   position: absolute;
-  height: 3px;
+  height: 1px;
   z-index: 10;
   width: 100%;
+  cursor: n-resize;
   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .resize-hover:hover {
-  cursor: row-resize;
-  background: #eeeeee;
+  background: #222222 !important;
+  // background: #eeeeee;
+}
+.sidebar-drag {
+  pointer-events: all;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: -1px;
+  display: flex;
+  align-items: center;
+  width: 1px;
+  height: 100%;
+  cursor: ew-resize;
+  transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+  &:hover {
+    background: #222222 !important;
+    // background: #eeeeee;
+  }
 }
 .layoutkit-center {
   pointer-events: all;
-  position: absolute; 
+  position: absolute;
   z-index: 1;
   top: 0;
-  right: -17px;
+  right: -16px;
   display: flex;
   align-items: center;
   width: 16px;
@@ -211,7 +236,7 @@ watchEffect(() => {
     cursor: pointer;
     color: #999999;
     background: rgba(0, 0, 0, 0.03);
-    border: 1px solid var(--color-button-border);
+    border: 1px solid var(--color-border-default);
     border-left-width: 0;
     display: none;
   }

@@ -4,8 +4,7 @@ import { useAccessStore } from "@/ai/utils";
 
 export class QwenApi extends ChatGPTApi {
   constructor(provider) {
-    super();
-    this.provider = provider;
+    super(provider);
   }
   path() {
     let openaiUrl = useAccessStore(this.provider).openaiUrl;

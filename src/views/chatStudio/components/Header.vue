@@ -6,11 +6,14 @@
           <span class="nick">{{ chatNick("C2C", chat) }}</span>
           <Label :model="model" :userID="chat?.conversationID" />
           <!-- ai-prompt -->
-          <div v-if="isRobot(toAccount) && fnPromptConfig(promptConfig)" class="ml-5 ai-prompt-title">
+          <div
+            v-if="isRobot(toAccount) && fnPromptConfig(promptConfig)"
+            class="ml-5 ai-prompt-title"
+          >
             {{ fnPromptConfig(promptConfig) }}
           </div>
           <!-- ai-tools -->
-          <template v-if="isRobot(toAccount) && botTools">
+          <template v-if="isRobot(toAccount) && botTools && isBotToolsFlag">
             <div v-for="item in botTools" :key="item.id" class="ml-5 ai-prompt-title">
               <svg-icon class="function-call" iconClass="functionCall" />
               <span>{{ item.name }}</span>
@@ -39,17 +42,19 @@
 </template>
 
 <script setup>
+import { watch } from "vue";
 import { isRobot } from "@/utils/chat/index";
 import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 import Label from "@/views/chatStudio/components/Label.vue";
-import { watch } from "vue";
 import { cloneDeep } from "lodash-es";
 import { modelValue, StoreKey } from "@/ai/constant";
 import { useStore } from "vuex";
+import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 
+const [isBotToolsFlag, setBotToolsFlag] = useBoolean();
 const { commit } = useStore();
 const { currentType, toAccount, isGroupChat } = useGetters([
   "currentType",
@@ -70,6 +75,7 @@ const updataModel = () => {
   const model = useAccessStore(value)?.model;
   const data = cloneDeep(modelValue[value].Model.options.chatModels);
   const checkModel = data.find((item) => item.id === model);
+  setBotToolsFlag(checkModel?.functionCall ? true : false);
   commit("setRobotModel", checkModel);
 };
 
@@ -108,13 +114,17 @@ const openUser = () => {};
 const fnPromptConfig = (prompt) => {
   if (!prompt) return "";
   const { avatar, title } = prompt.meta || {};
-  if(!avatar && !title) return "";
+  if (!avatar && !title) return "";
   return `${avatar} ${title}`;
 };
 
 watch(toAccount, () => {
   updataModel();
   updataPromptTitle();
+});
+
+emitter.on("updataBotToolsFlag", (val) => {
+  setBotToolsFlag(val)
 });
 </script>
 
@@ -124,6 +134,7 @@ watch(toAccount, () => {
   padding: 0 16px;
   width: 100%;
   position: relative;
+  z-index: 2;
   background: var(--color-body-bg);
   border-bottom: 1px solid var(--color-border-default);
   .message-info-views {

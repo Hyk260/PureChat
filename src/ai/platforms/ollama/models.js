@@ -6,7 +6,7 @@ const OllamaAI = {
       enabled: true,
       functionCall: true,
       icon: "meta",
-      id: 'llama3.1',
+      id: 'llama3.1:8b',
       tokens: 128_000,
     },
     {
@@ -17,6 +17,7 @@ const OllamaAI = {
     },
     {
       displayName: 'Llama 3.1 405B',
+      enabled: false,
       icon: "meta",
       id: 'llama3.1:405b',
       tokens: 128_000,
@@ -29,7 +30,7 @@ const OllamaAI = {
       tokens: 32_768,
     },
   ],
-  checkModel: 'llama3.1',
+  checkModel: 'llama3.1:8b',
   description:'Ollama 提供的模型广泛涵盖代码生成、数学运算、多语种处理和对话互动等领域，支持企业级和本地化部署的多样化需求。',
   modelsUrl: 'https://ollama.com/library',
   url: 'https://ollama.com',

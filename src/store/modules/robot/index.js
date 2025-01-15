@@ -3,7 +3,7 @@ import { StoreKey } from "@/ai/constant";
 
 export default {
   state: {
-    model: "",
+    model: null,
     botTools: localStg.get(StoreKey.Tool) || null,
     promptConfig: "",
   },

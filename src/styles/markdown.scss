@@ -710,6 +710,7 @@
 
 .markdown-body pre code {
   font-size: 100%;
+  vertical-align: bottom;
 }
 
 .markdown-body pre>code {
@@ -732,7 +733,6 @@
 
 .markdown-body .highlight pre,
 .markdown-body pre {
-  padding: 16px 16px 8px 16px;
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;
@@ -744,7 +744,7 @@
 .markdown-body pre tt {
   display: inline-block;
   max-width: 100%;
-  padding: 0;
+  padding: 1em;
   margin: 0;
   overflow-x: auto;
   line-height: inherit;

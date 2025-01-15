@@ -89,7 +89,6 @@ function handleClick(key) {
       item.meta.description.includes(key)
     );
   });
-  console.log("🚀 ~ filterInput.value:", filterInput.value);
 }
 
 function initPrompt() {
@@ -108,7 +107,6 @@ function initPrompt() {
       market.value = res;
       filterInput.value = res.agents;
       localStg.set("marketJson", res);
-      console.log("🚀 ~ getPrompt ~ res:", res);
     })
     .catch(() => {
       market.value = marketJson;
@@ -118,7 +116,6 @@ function initPrompt() {
 }
 
 watch(input, (newVal) => {
-  console.log("🚀 ~ newVal:", newVal);
   handleClick(newVal);
 });
 

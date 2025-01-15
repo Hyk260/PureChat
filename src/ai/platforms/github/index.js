@@ -1,14 +1,12 @@
 import { GitHubPath } from "@/ai/constant";
 import { ChatGPTApi } from "@/ai/platforms/openai/index";
-import { useAccessStore } from "@/ai/utils";
+import { GitHubConfig } from './config';
 
 export class GitHubApi extends ChatGPTApi {
   constructor(provider) {
-    super();
-    this.provider = provider;
+    super(provider);
   }
   path() {
-    let openaiUrl = useAccessStore(this.provider).openaiUrl;
-    return openaiUrl + GitHubPath.ChatPath;
+    return GitHubConfig().openaiUrl + GitHubPath.ChatPath;
   }
 }

@@ -16,6 +16,10 @@ import { isRobot } from "@/utils/chat/index";
 import { getValueByKey, prefix, isFullStaffGroup } from "@/ai/utils";
 import { getModelSvg } from "@/ai/utils";
 
+defineOptions({
+  name: "Label",
+});
+
 const props = defineProps({
   userID: {
     type: String,

@@ -1,10 +1,15 @@
 import tim from "@/utils/IM/im-sdk/tim";
-// import { getMessageCaching } from '@/utils/chat/index';
+import { timProxy } from "@/utils/IM/index";
+
 /**
  * 获取未读消息总数
  * @returns {Promise<number>} 未读消息总数
  */
 export const getUnreadMsg = async () => {
+  if (!timProxy.isSDKReady) {
+    console.warn("SDK is not ready");
+    return;
+  }
   return await tim.getTotalUnreadMessageCount();
 };
 
@@ -24,7 +29,6 @@ export const getMessageList = async (params) => {
       nextReqMessageID: nextReqMessageID || "",
     });
     if (code === 0) {
-      // getMessageCaching(convId, nextReqMessageID, data)
       return data;
     } else {
       throw new Error("Failed to get message list");
@@ -37,9 +41,13 @@ export const getMessageList = async (params) => {
 // 变更消息的接口
 export const modifyMessage = async (params) => {
   try {
-    const { data: message } = await tim.modifyMessage(params);
+    const { code, data: message } = await tim.modifyMessage(params);
     // 修改消息成功，message 是最新的消息
-    return message;
+     if (code === 0) {
+       return message;
+     } else {
+       throw new Error("Failed to modify message");
+     }
   } catch (imError) {
     const { code, data } = imError;
     if (code === 2480) {
