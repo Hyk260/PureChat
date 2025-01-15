@@ -36,26 +36,32 @@ export const viteDefine = (env) => {
   }
 };
 
+// 定义模块与 chunk 名称的映射关系
+const chunkMap = {
+  '@element-plus/icons-vue': 'element-icons-vendor',
+  '@wangeditor': 'wangeditor-vendor',
+  '@tencentcloud/chat': 'tencent-im-vendor',
+  '@vueuse': 'vueuse-vendor',
+  'lodash-es': 'lodash-vendor',
+  'element-plus': 'el-vendor',
+  'artplayer': 'artplayer-vendor',
+  'tailwindcss': 'tailwindcss-vendor',
+  'highlight': 'highlight-vendor',
+  'pinyin-pro': 'pinyin-pro-vendor',
+  'markdown': 'markdown-vendor',
+  'axios': 'axios-vendor',
+  'dayjs': 'dayjs-vendor',
+  'vue': 'vue-vendor',
+};
+
 export const manualChunks = (id) => {
-  if (id.includes('node_modules')) {
-    if (id.includes('@tencentcloud/chat')){
-      return 'tencent-im-vendor';
+  if (!id.includes('node_modules')) return;
+
+  for (const [key, chunkName] of Object.entries(chunkMap)) {
+    if (id.includes(key)) {
+      return chunkName;
     }
-    if (id.includes('@vueuse')) {
-      return 'vueuse-vendor';
-    }
-    if (id.includes('@wangeditor')) {
-      return 'wangeditor-vendor';
-    }
-    if (id.includes('lodash-es')) {
-      return 'lodash-vendor';
-    }
-    if (id.includes('element-plus')) {
-      return 'el-vendor';
-    }
-    if (id.includes('@vue') || id.includes('vue')) {
-      return 'vue-vendor';
-    }
-    return 'vendor';
   }
+
+  return 'vendor';
 };
