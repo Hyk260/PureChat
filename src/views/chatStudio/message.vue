@@ -31,7 +31,12 @@
           <FontIcon :iconName="arrowRight ? 'ArrowRight' : 'ArrowLeft'" />
         </div>
       </div>
-      <div v-if="false" v-show="!arrowRight" class="sidebar-drag" @mouseover="dragControllerDivHorizontal()">
+      <div
+        v-if="false"
+        v-show="!arrowRight"
+        class="sidebar-drag"
+        @mouseover="dragControllerDivHorizontal()"
+      >
         <!-- <svg-icon iconClass="drag" class="drag-icon" /> -->
       </div>
     </div>
@@ -47,7 +52,7 @@
       <div
         v-if="isChatBoxVisible"
         id="drag"
-        :class="{ 'resize-hover': !fullScreen }"
+        :class="fnDragCss()"
         @mouseover="dragControllerDiv(chatRef)"
       ></div>
       <!-- 编辑器 -->
@@ -109,6 +114,13 @@ const fnTotalUnreadMsg = () => {
 const handleClick = ({ props }, event) => {
   const { label, name } = props;
   commit("toggleList", name);
+};
+const fnDragCss = () => {
+  if (fullScreen.value) return "";
+  const cursor = navigator.userAgent.includes("Macintosh")
+    ? "!cursor-row-resize"
+    : "cursor-n-resize";
+  return [cursor, !fullScreen.value ? "resize-hover" : ""];
 };
 const onRight = (value) => {
   commit("setConversationValue", { key: "arrowRight", value: !value });
@@ -193,7 +205,6 @@ watchEffect(() => {
   height: 1px;
   z-index: 10;
   width: 100%;
-  cursor: n-resize;
   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .resize-hover:hover {
