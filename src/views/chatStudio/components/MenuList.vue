@@ -1,6 +1,7 @@
 <template>
-  <div class="menubar" v-if="showMenuList(item)">
-    <div class="flex" :class="!isSelf(item) ? 'flex-row-reverse' : ''">
+  <div v-if="showMenuList(item)" class="menubar">
+    <!-- :class="!isSelf(item) ? 'flex-row-reverse' : ''" -->
+    <div class="flex">
       <div
         class="menubar-item flex-c"
         v-for="item in flilterList"
@@ -91,7 +92,7 @@ const flilterList = computed(() => {
 });
 
 function showMenuList(item) {
-  if (props.status !== 'success') return false;
+  if (props.status !== "success") return false;
   if (messageEdit.value?.ID === item?.ID) return false;
   // 图片 文件 文本 合并
   const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem"];
@@ -112,12 +113,12 @@ function handleMenuEvent(data) {
       handleCopyMsg(item);
       break;
     case "edit": // 编辑
-      commit("setMessageEdit", item) 
+      commit("setMessageEdit", item);
       break;
     case "setup": // 设置
       console.log("设置");
       break;
-    case "delete": // 设置
+    case "delete": // 删除
       emit("handlSingleClick", { item, id: "delete" });
       break;
   }
@@ -131,7 +132,6 @@ function handleMenuEvent(data) {
   display: flex;
   align-items: flex-end;
   margin-top: auto;
-  // pointer-events: none;
   opacity: 0;
   transition: opacity 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
   & > div {

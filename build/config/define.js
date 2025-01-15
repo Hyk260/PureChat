@@ -38,6 +38,15 @@ export const viteDefine = (env) => {
 
 export const manualChunks = (id) => {
   if (id.includes('node_modules')) {
+    if (id.includes('@tencentcloud/chat')){
+      return 'tencent-im-vendor';
+    }
+    if (id.includes('@vueuse')) {
+      return 'vueuse-vendor';
+    }
+    if (id.includes('@wangeditor')) {
+      return 'wangeditor-vendor';
+    }
     if (id.includes('lodash-es')) {
       return 'lodash-vendor';
     }

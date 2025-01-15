@@ -213,7 +213,7 @@ export class ChatGPTApi {
         }
       },
       onmessage(msg) {
-        console.log("[OpenAI] onmessage:", msg);
+        // console.log("[OpenAI] onmessage:", msg);
         if (msg.data === "[DONE]" || finished) {
           return finish();
         }

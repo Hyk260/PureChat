@@ -328,7 +328,7 @@ const conversation = {
         convId: message?.[0].conversationID,
         message: cloneDeep(message[0]),
       });
-      emitter.emit("updataScroll");
+      emitter.emit("updataScroll", "robot");
     },
     // 新增会话列表
     async addConversation({ commit, dispatch }, action) {

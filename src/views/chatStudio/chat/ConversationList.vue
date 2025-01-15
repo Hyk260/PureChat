@@ -226,6 +226,7 @@ const handleConvListClick = (data) => {
     if (id == data?.conversationID) return;
   }
   commit("setReplyMsg", null);
+  commit("setMessageEdit", null);
   commit("setForwardData", { type: "clear", payload: null });
   // 切换会话
   commit("updateSelectedConversation", data);
