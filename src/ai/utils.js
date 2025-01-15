@@ -1,3 +1,4 @@
+import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
 import store from "@/store";
 import {
   glmBotId,
@@ -12,6 +13,7 @@ import {
   prompt,
   modelValue,
   RobotAvatar,
+  REQUEST_TIMEOUT_MS
 } from "@/ai/constant";
 import { OpenaiConfig } from "@/ai/platforms/openai/config";
 import { createTextMessage } from "@/api/im-sdk-api/index";
@@ -457,3 +459,146 @@ export const transformOpenAIStream = (
     return { data: errorData, id: chunk.id, type: 'error' };
   }
 };
+
+/**
+ * 处理流式聊天的响应。
+ * @param {string} chatPath - 聊天请求的路径。
+ * @param {object} chatPayload - 聊天请求的有效负载。
+ * @param {object} options - 处理选项，包括错误处理、更新和完成回调。
+ * @param {AbortController} controller - 用于控制请求的 AbortController。
+ */
+export const handleStreamingChat = async (
+  chatPath,
+  chatPayload,
+  options,
+  controller,
+  provider
+) => {
+  let responseText = ""; // 用于存储完整的响应文本
+  let remainText = ""; // 用于存储尚未处理的文本
+  let finished = false; // 用于标记动画是否已完成
+
+  /**
+   * 动画响应文本的显示。
+   * 根据剩余文本的长度逐步更新响应文本。
+   */
+  function animateResponseText() {
+    // 如果动画已完成或请求已被中止，结束动画
+    if (finished || controller.signal.aborted) {
+      responseText += remainText;
+      console.log("[Response Animation] finished");
+      // 如果响应文本为空，触发错误回调
+      if (responseText?.length === 0) {
+        console.error("empty response from server");
+        options.onError?.(new Error("empty response from server"));
+      }
+      return;
+    }
+    // 如果有剩余文本，进行文本动画更新
+    if (remainText.length > 0) {
+      const fetchCount = Math.max(1, Math.round(remainText.length / 60));
+      const fetchText = remainText.slice(0, fetchCount);
+      responseText += fetchText;
+      remainText = remainText.slice(fetchCount);
+      options.onUpdate?.(responseText, fetchText);
+    }
+
+    requestAnimationFrame(animateResponseText);
+  }
+
+  // start animaion
+  animateResponseText();
+
+  const finish = () => {
+    if (!finished) {
+      finished = true;
+      options.onFinish(responseText + remainText);
+    }
+  };
+
+  controller.signal.onabort = finish; // 设置请求中止时的处理函数
+
+  // 取消fetch请求
+  const requestTimeoutId = setTimeout(
+    () => controller.abort(),
+    REQUEST_TIMEOUT_MS
+  );
+
+  await fetchEventSource(chatPath, {
+    ...chatPayload,
+    async onopen(res) {
+      console.log("[OpenAI] fetchEventSource", res);
+      clearTimeout(requestTimeoutId);
+      const contentType = res.headers.get("content-type");
+      // text/event-stream; charset=utf-8
+      console.log("[OpenAI] request response content type: ", contentType);
+
+      if (contentType?.startsWith("text/plain")) {
+        responseText = await res.clone().text();
+        return finish();
+      }
+
+      // text/event-stream EventStreamContentType
+      const stream = contentType?.startsWith(EventStreamContentType);
+      const isRequestError = !res.ok || !stream || res.status !== 200;
+
+      if (isRequestError) {
+        const responseTexts = [responseText];
+        let extraInfo = await res.clone().text();
+
+        try {
+          const resJson = await res.clone().json();
+          extraInfo = prettyObject(resJson);
+        } catch (e) {
+          console.log("[resJson]", e);
+        }
+
+        if (res.status === 401) {
+          options.onError?.(extraInfo);
+        }
+
+        if (extraInfo) {
+          responseTexts.push(extraInfo);
+        }
+
+        responseText = responseTexts.join("\n\n");
+        return finish();
+      } else {
+        console.log(res);
+      }
+    },
+    onmessage(msg) {
+      // console.log("[OpenAI] onmessage:", msg);
+      if (msg.data === "[DONE]" || finished) {
+        return finish();
+      }
+      const text = msg.data;
+      try {
+        if ([ModelProvider.Ollama].includes(provider)) {
+          const json = JSON.parse(text);
+          if (json === "[DONE]") return finish();
+          const delta = json.message.content;
+          if (delta) {
+            remainText += delta;
+          }
+        } else {
+          const json = JSON.parse(text);
+          const delta = json.choices[0].delta.content;
+          if (delta) {
+            remainText += delta;
+          }
+        }
+      } catch (e) {
+        console.error("[Request] parse error", text, msg);
+      }
+    },
+    onclose() {
+      finish();
+    },
+    onerror(e) {
+      options.onError?.(e);
+      throw e;
+    },
+    openWhenHidden: true,
+  });
+}
