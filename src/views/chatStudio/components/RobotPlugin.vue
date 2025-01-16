@@ -39,17 +39,16 @@ const getAssetsFile = (url) => {
 const pluginData = ref([
   {
     id: 0,
-    name: "网络搜索",
     checked: false,
-    prompt:
-      "## Tools\n\nYou can use these tools below:\n\n### Web Search\n\nSearch for information from the internet\n\nThe APIs you can use:\n\n#### web_search____searchGoogle\n\nSearch Google and return top 10 results",
+    prompt: "",
+    name: "网络搜索",
     url: getAssetsFile("web-search.png"),
     tools: [webSearch],
   },
   {
     id: 1,
-    name: "实时天气",
     checked: false,
+    name: "实时天气",
     prompt: "",
     url: getAssetsFile("fluent-emoji.webp"),
     tools: [getWeather],

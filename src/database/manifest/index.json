@@ -1,0 +1,42 @@
+{
+  "tags": ["搜索", "加密货币", "股票", "网络"],
+  "plugins": [
+    {
+      "homepage": "https://websearch.plugsugar.com",
+      "identifier": "web_search",
+      "manifest": "",
+      "prompt": "## Tools\n\nYou can use these tools below:\n\n### Web Search\n\nSearch for information from the internet\n\nThe APIs you can use:\n\n#### web_search____searchGoogle\n\nSearch Google and return top 10 results",
+      "meta": {
+        "avatar": "web-search",
+        "description": "从互联网搜索信息。",
+        "tags": ["搜索", "plugsugar"],
+        "title": "网络搜索",
+        "category": "web-search"
+      },
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "web_search____searchGoogle",
+            "description": "Search Google and return top 10 results",
+            "parameters": {
+              "properties": {
+                "_requestBody": {
+                  "type": "object",
+                  "required": ["query"],
+                  "properties": {
+                    "query": {
+                      "type": "string",
+                      "example": "nice places to visit"
+                    }
+                  }
+                }
+              },
+              "type": "object"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
