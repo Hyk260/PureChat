@@ -89,6 +89,10 @@ md.use(newWindowLinksPlugin);
 
 export function Markdown(props) {
   const { marked } = props;
+  if (typeof marked !== 'string') {
+    console.warn('The "marked" prop should be a string');
+    return null;
+  }
   const mark = h("div", {
     innerHTML: md.render(marked),
     class: "markdown-body",

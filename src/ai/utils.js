@@ -520,7 +520,7 @@ export const handleStreamingChat = async (
 
   // 取消fetch请求
   const requestTimeoutId = setTimeout(
-    () => controller.abort(),
+    () => controller?.abort(),
     REQUEST_TIMEOUT_MS
   );
 
@@ -548,7 +548,17 @@ export const handleStreamingChat = async (
 
         try {
           const resJson = await res.clone().json();
-          extraInfo = prettyObject(resJson);
+          const payload = JSON.parse(chatPayload.body)
+          if (payload.tools?.length > 0) {
+            const extraObj = JSON.parse(extraInfo);
+            if (extraObj?.choices[0]?.finish_reason === 'tool_calls') {
+              finished = true;
+              options?.onToolMessage(JSON.stringify(resJson))
+            }
+          } else {
+            extraInfo = prettyObject(resJson);
+          }
+
         } catch (e) {
           console.log("[resJson]", e);
         }
@@ -562,13 +572,14 @@ export const handleStreamingChat = async (
         }
 
         responseText = responseTexts.join("\n\n");
+
         return finish();
       } else {
         console.log(res);
       }
     },
     onmessage(msg) {
-      // console.log("[OpenAI] onmessage:", msg);
+      console.log("[OpenAI] onmessage:", msg);
       if (msg.data === "[DONE]" || finished) {
         return finish();
       }
@@ -583,7 +594,7 @@ export const handleStreamingChat = async (
           }
         } else {
           const json = JSON.parse(text);
-          const delta = json.choices[0].delta.content;
+          const delta = json.choices[0]?.delta?.content;
           if (delta) {
             remainText += delta;
           }

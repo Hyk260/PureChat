@@ -7,6 +7,7 @@ import store from "@/store";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { getTime } from "@/utils/common";
+import { getCustomMsgContent } from '@/api/im-sdk-api/custom';
 
 const restSendMsg = async (params, message) => {
   if (__LOCAL_MODE__) return
@@ -41,6 +42,14 @@ const fnCreateLodMsg = (params) => {
   updataMessage(msg);
   msg.type = "TIMTextElem";
   return msg;
+};
+
+const fnCreateToolCallsMsg = (startmsg, message) => {
+  const _data = cloneDeep(startmsg);
+  _data.clientTime = getTime();
+  _data.type = "TIMCustomElem";
+  _data.payload = getCustomMsgContent({ data: message, type: "tool_call" })
+  store.commit("updateMessages", { convId: `C2C${_data.from}`, message: cloneDeep(_data) });
 };
 
 function getPrompt(api) {
@@ -83,6 +92,10 @@ export const chatService = async (params) => {
       console.log("[chat] onFinish:", message);
       message && updataMessage(msg, message);
       await restSendMsg(chat, message);
+    },
+    onToolMessage(message) {
+      console.log("[chat] onToolMessage:", message);
+      fnCreateToolCallsMsg(msg, message);
     },
     async onError(error) {
       console.error("[chat] onError:", error);

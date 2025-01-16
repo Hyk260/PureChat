@@ -132,6 +132,7 @@ export class LocalChat {
       clientTime: getTime(),
       ID: uuid(),
       to: to,
+      from: profile.userID,
       avatar: profile.avatar,
       conversationID: `${conversationType}${to}`,
       conversationType,
@@ -145,6 +146,7 @@ export class LocalChat {
     const _data = {
       ...timCustomElem,
       to: to,
+      from: profile.userID,
       payload,
       ID: uuid(),
       time: getTime(),

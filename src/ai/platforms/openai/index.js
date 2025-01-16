@@ -103,6 +103,7 @@ export class ChatGPTApi {
   // 生成聊天消息
   async chat(options) {
     const messages = options.messages.map(({ role, content }) => ({ role, content }));
+
     const modelConfig = {
       ...this.accessStore(),
       model: options.config.model,
@@ -142,7 +143,7 @@ export class ChatGPTApi {
         );
       } else {
         const requestTimeoutId = setTimeout(
-          () => controller.abort(),
+          () => controller?.abort(),
           REQUEST_TIMEOUT_MS,
         );
 
