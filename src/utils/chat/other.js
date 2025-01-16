@@ -17,6 +17,24 @@ function transformTextElement(data) {
   };
 }
 
+function transformCustomElement(item) {
+  // console.log("custom element", item);
+  // debugger
+  return {
+    "content": "",
+    "role": "assistant",
+    "tools": [
+      {
+        "id": "call_khRCb8Fb1nO5sexG7Jq1NusE",
+        "type": "default",
+        "apiName": "searchGoogle",
+        "arguments": "{\"_requestBody\":{\"query\":\"今天抖音热榜\"}}",
+        "identifier": "web_search"
+      }
+    ]
+  }
+}
+
 // 处理图像类型的消息
 async function transformImageElement(data) {
   const imageUrl = await convertBlobUrlToDataUrl(data.elements[0]._imageMemoryURL);
@@ -46,7 +64,10 @@ export async function transformData(data) {
   try {
     const relevantData = data.filter((item) => {
       return (
-        !item.isTimeDivider && !item.isDeleted && !item.isRevoked && item.type !== "TIMCustomElem"
+        !item.isTimeDivider
+        && !item.isDeleted
+        && !item.isRevoked
+        // && item.type !== "TIMCustomElem"
       );
     });
 
@@ -54,6 +75,8 @@ export async function transformData(data) {
       relevantData.map(async (item) => {
         if (item.type === "TIMTextElem") {
           return transformTextElement(item);
+        } else if (item.type === "TIMCustomElem") {
+          return transformCustomElement(item);
         } else if (item.type === "TIMImageElem") {
           return await transformImageElement(item);
         }
@@ -98,7 +121,7 @@ export const renderFileIcon = (fileType = "") => {
     type = "json";
   } else if (fileType == "js") {
     type = "js";
-  } 
+  }
   // else if (fileType == "env") {
   //   type = "dotenv";
   // }

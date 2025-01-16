@@ -4,17 +4,15 @@
     :class="self ? 'is-text-self' : 'is-text-other'"
     @click="onClick"
   >
-    <div v-if="messageType('loading')">
-      <loading />
-    </div>
-    <div v-else>
-      {{ customMessage() }}
-    </div>
+    <Loading v-if="messageType('loading')" />
+    <ToolCall v-else-if="messageType('tool_call')" :payload="message.payload" />
+    <div v-else>{{ customMessage() }}</div>
   </div>
 </template>
 
 <script>
-import loading from "../customMsgBody/loading.vue";
+import Loading from "../customMsgBody/loading.vue";
+import ToolCall from "../customMsgBody/toolCall.vue";
 
 export default {
   name: "CustomElemItem",
@@ -29,7 +27,8 @@ export default {
     },
   },
   components: {
-    loading,
+    Loading,
+    ToolCall,
   },
   methods: {
     customMessage(payload = this.message.payload) {
@@ -48,7 +47,7 @@ export default {
       if (payload.text) {
         return payload.text;
       } else {
-        return "[自定义消息]";
+        return "[自定义消息 待开发]";
       }
     },
     messageType(type) {

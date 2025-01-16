@@ -14,9 +14,9 @@
   "hasRiskContent": false,
   "isPlaceMessage": 0,
   "isRevoked": false,
-  "from": "@RBT#005",
-  "to": "admin",
-  "flow": "in",
+  "from": "",
+  "to": "",
+  "flow": "",
   "isSystemMessage": false,
   "protocol": "JSON",
   "isResend": false,
@@ -37,8 +37,7 @@
   "payload": {
     "data": "",
     "description": "",
-    "extension": "",
-    "text": ""
+    "extension": ""
   },
   "type": "TIMCustomElem"
 }

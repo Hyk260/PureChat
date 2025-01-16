@@ -22,9 +22,10 @@ import { ref } from "vue";
 import { StoreKey } from "@/ai/constant";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { useBoolean } from "@/utils/hooks/index";
-import emitter from "@/utils/mitt-bus";
 import { useStore } from "vuex";
 import { localStg } from "@/utils/storage";
+import emitter from "@/utils/mitt-bus";
+
 import webSearch from "@/database/tools/web-search.json";
 import getWeather from "@/database/tools/get-weather.json";
 

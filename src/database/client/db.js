@@ -28,6 +28,6 @@ export const browserDB = new BrowserDB();
 // 删除
 // browserDB.messages.delete();
 // 更新
-// browserDB.messages.put();
+// browserDB.messages.update();
 // 查询
 // const data = await browserDB.messages.toArray();
