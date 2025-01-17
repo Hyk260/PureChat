@@ -11,6 +11,7 @@ import {
 import OllamaAI from "../ollama/ollama";
 import store from "@/store/index";
 import { handleStreamingChat } from '@/ai/utils';
+import { transformData } from "@/utils/chat/index";
 
 export class ChatGPTApi {
   constructor(provider) {
@@ -102,8 +103,7 @@ export class ChatGPTApi {
   }
   // 生成聊天消息
   async chat(options) {
-    const messages = options.messages.map(({ role, content }) => ({ role, content }));
-
+    const messages = await transformData(options.messages);
     const modelConfig = {
       ...this.accessStore(),
       model: options.config.model,

@@ -1,4 +1,5 @@
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
+import { getPlugin } from '@/views/chatStudio/utils/utils';
 import store from "@/store";
 import {
   glmBotId,
@@ -553,7 +554,11 @@ export const handleStreamingChat = async (
             const extraObj = JSON.parse(extraInfo);
             if (extraObj?.choices[0]?.finish_reason === 'tool_calls') {
               finished = true;
-              options?.onToolMessage(JSON.stringify(resJson))
+              options?.onToolMessage({
+                name: payload.tools[0].function.name,
+                manifest: getPlugin({ key: payload.tools[0].function.name, type: 'name' }),
+                message: resJson
+              })
             }
           } else {
             extraInfo = prettyObject(resJson);

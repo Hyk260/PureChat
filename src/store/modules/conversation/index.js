@@ -398,7 +398,9 @@ const conversation = {
         dispatch("sendMsgSuccessCallback", { convId, message: result });
         if (!ROBOT_COLLECT.includes(result?.to)) return;
         if (last) {
-          const list = await transformData(state.currentMessageList ?? [result]);
+          // const list = await transformData(state.currentMessageList ?? [result]);
+          const list = state.currentMessageList ?? [result]
+          // debugger
           setTimeout(async () => {
             await chatService({ messages: list, chat: result });
           }, 50);

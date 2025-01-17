@@ -4,12 +4,12 @@
       <div
         class="list flex-bc w-full"
         v-for="item in pluginData"
-        :key="item.id"
+        :key="item.identifier"
         @click="setChecked(item)"
       >
-        <img class="img" :src="item.url" alt="" />
+        <img class="img" :src="item.imageUrl" alt="" />
         <div class="flex-bc right">
-          <div>{{ item.name }}</div>
+          <div>{{ item.meta.title }}</div>
           <el-checkbox @click.stop class="h-20" v-model="item.checked" />
         </div>
       </div>
@@ -24,43 +24,25 @@ import { ClickOutside as vClickOutside } from "element-plus";
 import { useBoolean } from "@/utils/hooks/index";
 import { useStore } from "vuex";
 import { localStg } from "@/utils/storage";
+import { getPlugin } from "../utils/utils";
 import emitter from "@/utils/mitt-bus";
-
-import webSearch from "@/database/tools/web-search.json";
-import getWeather from "@/database/tools/get-weather.json";
 
 const { commit } = useStore();
 const [flag, setFlag] = useBoolean();
 
-const getAssetsFile = (url) => {
-  return new URL(`../../../assets/images/plugin/${url}`, import.meta.url).href;
-};
-
 const pluginData = ref([
   {
-    id: 0,
     checked: false,
-    prompt: "",
-    name: "网络搜索",
-    url: getAssetsFile("web-search.png"),
-    tools: [webSearch],
+    ...getPlugin({ key: "web_search" }),
   },
-  {
-    id: 1,
-    checked: false,
-    name: "实时天气",
-    prompt: "",
-    url: getAssetsFile("fluent-emoji.webp"),
-    tools: [getWeather],
-  },
-  {
-    id: 2,
-    name: "DALL·E 3",
-    checked: false,
-    prompt: "",
-    url: getAssetsFile("1f389.webp"),
-    tools: [],
-  },
+  // {
+  //   id: "get_weather",
+  //   checked: false,
+  //   name: "实时天气",
+  //   prompt: "",
+  //   url: getAssetsFile("fluent-emoji.webp"),
+  //   tools: [getWeather],
+  // },
 ]);
 
 function pluginfilter() {

@@ -75,6 +75,7 @@ import { useEventListener } from "@vueuse/core";
 import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { dragControllerDiv, dragControllerDivHorizontal } from "./utils/utils";
+import { isMacOS } from "@/utils/common";
 
 import Chatwin from "./chat/Chatwin.vue";
 import ConversationList from "./chat/ConversationList.vue";
@@ -117,9 +118,7 @@ const handleClick = ({ props }, event) => {
 };
 const fnDragCss = () => {
   if (fullScreen.value) return "";
-  const cursor = navigator.userAgent.includes("Macintosh")
-    ? "!cursor-row-resize"
-    : "cursor-n-resize";
+  const cursor = isMacOS() ? "!cursor-row-resize" : "cursor-n-resize";
   return [cursor, !fullScreen.value ? "resize-hover" : ""];
 };
 const onRight = (value) => {

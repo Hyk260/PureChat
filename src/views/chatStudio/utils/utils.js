@@ -5,15 +5,17 @@ import {
   createTextMessage,
   createVideoMsg,
 } from "@/api/im-sdk-api/index";
-import store from "@/store/index";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { dataURLtoFile, getBlob, getFileType } from "@/utils/chat/index";
-import emitter from "@/utils/mitt-bus";
 import { useClipboard } from "@vueuse/core";
 import { match } from "pinyin-pro";
 import { nextTick } from "vue";
 import { placeholderMap } from "./configure";
+
+import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
+import manifest from "@/database/manifest/index.json";
 
 import CustomElemItem from "../ElemItemTypes/CustomElemItem.vue";
 import FileElemItem from "../ElemItemTypes/FileElemItem.vue";
@@ -644,4 +646,29 @@ export const formatContent = (data) => {
     .join("");
 };
 
+/**
+ * 根据指定的 Key 和 Type 获取插件数据
+ * @param params.key 搜索的键值
+ * @param params.type 搜索的键名 (默认值: 'identifier')
+ * @returns 匹配的插件对象，包含 `imageUrl` 属性
+ */
+export function getPlugin({
+  key = "",
+  type = "identifier",
+} = {}) {
+  // 从 plugins 中搜索匹配项
+  const plugin = manifest.plugins.find(
+    (item) => item[type] === key
+  );
+
+  if (!plugin) {
+    console.error(`Plugin with ${type} = "${key}" not found.`);
+    return null;
+  }
+
+  return {
+    ...plugin,
+    imageUrl: new URL(`../../../assets/images/plugin/${plugin.meta?.avatar}`, import.meta.url).href
+  };
+}
 

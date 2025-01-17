@@ -8,6 +8,7 @@ import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { getTime } from "@/utils/common";
 import { getCustomMsgContent } from '@/api/im-sdk-api/custom';
+import webSearchResult from '@/database/tools/web-search-result.json';
 
 const restSendMsg = async (params, message) => {
   if (__LOCAL_MODE__) return
@@ -44,11 +45,45 @@ const fnCreateLodMsg = (params) => {
   return msg;
 };
 
+async function searchGoogle(query) {
+  const url = "https://websearch.plugsugar.com/api/plugins/websearch";
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+  myHeaders.append("Host", "websearch.plugsugar.com");
+  myHeaders.append("Connection", "keep-alive");
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: myHeaders,
+      body: JSON.stringify(query)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Search results:", data.result);
+  } catch (error) {
+    console.error("Error performing the search:", error);
+  }
+}
+
 const fnCreateToolCallsMsg = (startmsg, message) => {
   const _data = cloneDeep(startmsg);
   _data.clientTime = getTime();
   _data.type = "TIMCustomElem";
+
+  // const _arguments = message.message.choices[0].message.tool_calls[0].function.arguments;
+  // const query = JSON.parse(_arguments)._requestBody
+  // searchGoogle(query).then(res => {
+  //   console.log(res)
+  // }).catch(err => {
+  //   console.log(err)
+  // })
   _data.payload = getCustomMsgContent({ data: message, type: "tool_call" })
+  _data.payload.extension = JSON.stringify(webSearchResult)
   store.commit("updateMessages", { convId: `C2C${_data.from}`, message: cloneDeep(_data) });
 };
 

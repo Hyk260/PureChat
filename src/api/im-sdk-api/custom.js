@@ -19,7 +19,7 @@ export function msgContent(data, type) {
     listMessage: ""
   };
   if (type === 'tool_call') {
-    _data.data = JSON.parse(data)
+    _data.data = data
   }
   return JSON.stringify(_data)
 }

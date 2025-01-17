@@ -16,7 +16,7 @@
           <template v-if="isRobot(toAccount) && botTools && isBotToolsFlag">
             <div v-for="item in botTools" :key="item.id" class="ml-5 ai-prompt-title">
               <svg-icon class="function-call" iconClass="functionCall" />
-              <span>{{ item.name }}</span>
+              <span>{{ item.meta.title }}</span>
             </div>
           </template>
         </span>
