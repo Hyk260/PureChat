@@ -14,7 +14,16 @@
     "level": 0,
     "role": 0,
     "lastUpdatedTime": 0,
-    "profileCustomField": []
+    "profileCustomField": [
+      {
+        "key": "Tag_Profile_Custom_Provider",
+        "value": "OpenAI"
+      },
+       {
+         "key": "Tag_Profile_Custom_Homepage",
+         "value": "https://openai.com/"
+       }
+    ]
   },
   {
     "userID": "@RBT#002",
@@ -65,7 +74,16 @@
     "level": 0,
     "role": 0,
     "lastUpdatedTime": 0,
-    "profileCustomField": []
+    "profileCustomField": [
+      {
+        "key": "Tag_Profile_Custom_Provider",
+        "value": "Ollama"
+      },
+      {
+        "key": "Tag_Profile_Custom_Homepage",
+        "value": "https://ollama.com/"
+      }
+    ]
   },
   {
     "userID": "@RBT#006",
@@ -73,7 +91,7 @@
     "gender": "",
     "birthday": 0,
     "location": "",
-    "selfSignature": "",
+    "selfSignature": "通过GitHub模型，开发人员可以成为AI工程师，并使用行业领先的AI模型进行构建。",
     "allowType": "AllowType_Type_AllowAny",
     "language": 0,
     "avatar": "",

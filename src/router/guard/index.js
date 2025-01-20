@@ -16,6 +16,9 @@ function createProgressGuard(router) {
 function createRouteGuard(router) {
   router.beforeEach((to, from, next) => {
     if (from.path === to.path) return;
+    if (__LOCAL_MODE__) {
+      if (to.path === '/login') next({ path: "/" });
+    }
     const token = localStg.get(ACCESS_TOKEN);
     if (token) {
       next();

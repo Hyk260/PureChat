@@ -6,7 +6,7 @@
     :class="{
       'robot-box': true,
       'is-robot': isRobot(cardData?.from),
-      'fade-slide-lower': true
+      'fade-slide-lower': true,
     }"
   >
     <div class="title flex-sc">
@@ -16,12 +16,27 @@
         :src="cardData.avatar || getAiAvatarUrl(cardData?.from) || squareUrl"
         alt="头像"
       />
-      <div>
+      <div v-if="isRobot(cardData?.from)" class="flex flex-col ml-16">
+        <div class="nick flex gap-5">
+          <span> {{ cardData.nick || userProfile.nick || cardData.from || "-" }}</span>
+          <Label :userID="cardData?.from" />
+        </div>
+        <el-link
+          v-if="getProvider()"
+          :href="getHomepage()"
+          target="_blank"
+          :underline="false"
+          type="primary"
+          class="justify-start"
+        >
+          {{ getProvider() }}
+        </el-link>
+      </div>
+      <div v-else class="ml-16">
         <span class="nick">{{ cardData.nick || userProfile.nick || cardData.from || "-" }}</span>
         <span v-if="getGender(userProfile, 'Male')" class="iconify icon-male"></span>
         <span v-else-if="getGender(userProfile, 'Female')" class="iconify icon-female"></span>
       </div>
-      <Label :userID="cardData?.from" />
     </div>
     <div class="content">
       <div class="characters">
@@ -49,6 +64,7 @@ import { useStore } from "vuex";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { squareUrl } from "../../chatStudio/utils/menu";
 import { getGender } from "@/utils/common";
+import { getValueByKey, prefix } from "@/ai/utils";
 
 const cardRef = ref();
 const left = ref("");
@@ -73,6 +89,16 @@ const clickCard = (url) => {
     closeModal();
     emitter.emit("handleImageViewer", url);
   }
+};
+
+const getProvider = (data = userProfile.value.profileCustomField) => {
+  const provider = getValueByKey(data, prefix("Provider"));
+  return provider;
+};
+
+const getHomepage = (data = userProfile.value.profileCustomField) => {
+  const homepage = getValueByKey(data, prefix("Homepage"));
+  return homepage;
 };
 
 const define = () => {
@@ -174,7 +200,6 @@ onBeforeUnmount(() => {
     }
     .nick,
     .label {
-      margin-left: 16px;
       font-family: MicrosoftYaHei;
       font-size: 18px;
       color: rgba(0, 0, 0, 0.85);
