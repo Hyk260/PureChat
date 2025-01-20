@@ -20,7 +20,7 @@ import {
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
-import { createAiPromptMsg } from "@/ai/utils";
+import { createAiPromptMsg, getModelType } from "@/ai/utils";
 import { nextTick } from "vue";
 import { MessageModel } from "@/database/models/message";
 import { SessionModel } from "@/database/models/session";
@@ -395,16 +395,7 @@ const conversation = {
       // 发送消息
       const { code, message: result } = await sendMsg(message);
       if (code === 0) {
-        dispatch("sendMsgSuccessCallback", { convId, message: result });
-        if (!ROBOT_COLLECT.includes(result?.to)) return;
-        if (last) {
-          // const list = await transformData(state.currentMessageList ?? [result]);
-          const list = state.currentMessageList ?? [result]
-          // debugger
-          setTimeout(async () => {
-            await chatService({ messages: list, chat: result });
-          }, 50);
-        }
+        dispatch("sendMsgSuccessCallback", { convId, message: result, last });
       } else {
         console.log("发送失败", code, result);
       }
@@ -412,9 +403,20 @@ const conversation = {
     // 消息发送成功回调
     async sendMsgSuccessCallback({ state, commit }, action) {
       console.log("消息发送成功 sendMsgSuccessCallback", action);
-      const { convId, message } = action;
+      const { convId, message, last } = action;
       commit("updateMessages", { convId, message });
       emitter.emit("updataScroll");
+
+      if (!ROBOT_COLLECT.includes(message?.to)) return;
+      if (last) {
+        setTimeout(async () => {
+          await chatService({
+            chat: message,
+            provider: getModelType(message.to),
+            messages: state.currentMessageList ?? [message]
+          });
+        }, 50);
+      }
     },
   },
   getters: {

@@ -94,11 +94,11 @@ export class ChatGPTApi {
       top_p: modelConfig.top_p, // 核采样
       // tools: [] // 工具
     };
-    const tools = this.buildAnthropicTools();
-    if (tools.at(0)) {
-      payload.tools = tools;
-      payload.stream = false;
-    }
+    // const tools = this.buildAnthropicTools();
+    // if (tools.at(0)) {
+    //   payload.tools = tools;
+    //   payload.stream = false;
+    // }
     return payload
   }
   // 生成聊天消息

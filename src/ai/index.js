@@ -1,6 +1,6 @@
 import { ClientApi } from "@/ai/api";
 import { ModelProvider, modelValue } from "@/ai/constant";
-import { getModelType, useAccessStore, prettyObject, getAvatarUrl } from "@/ai/utils";
+import { useAccessStore, prettyObject, getAvatarUrl } from "@/ai/utils";
 import { createCustomMsg } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
 import store from "@/store";
@@ -30,7 +30,7 @@ const updataMessage = (chat, message = "") => {
   emitter.emit("updataScroll", "robot");
 };
 
-const fnCreateLodMsg = (params) => {
+const fnCreateStartMsg = (params) => {
   const { to, from } = params;
   const msg = createCustomMsg({ convId: from, customType: "loading" });
   msg.conversationID = `C2C${to}`;
@@ -44,6 +44,14 @@ const fnCreateLodMsg = (params) => {
   msg.type = "TIMTextElem";
   return msg;
 };
+
+const fnCreateAlertMsg = (startmsg, provider) => {
+  const _data = cloneDeep(startmsg);
+  _data.clientTime = getTime();
+  _data.type = "TIMCustomElem";
+  _data.payload = getCustomMsgContent({ data: { provider }, type: "warning" })
+  store.commit("updateMessages", { convId: `C2C${_data.from}`, message: _data });
+}
 
 async function searchGoogle(query) {
   const url = "https://websearch.plugsugar.com/api/plugins/websearch";
@@ -87,56 +95,47 @@ const fnCreateToolCallsMsg = (startmsg, message) => {
   store.commit("updateMessages", { convId: `C2C${_data.from}`, message: cloneDeep(_data) });
 };
 
-function getPrompt(api) {
-  let writing = "API Key 为空，请在配置页填入你的 API Key 后重试";
-  try {
-    let doubt = modelValue[api.llm.provider].Token.doubt;
-    let text = `[文档](${doubt})`;
-    return `${writing}-${text}`;
-  } catch (error) {
-    return writing;
-  }
-}
-
 function beforeSend(api, msg) {
   if ([ModelProvider.Ollama].includes(api.llm.provider)) return false;
-  if (!api.config().token) {
+  if (api.config().token) {
+    return false;
+  } else {
     setTimeout(() => {
-      updataMessage(msg, getPrompt(api));
+      fnCreateAlertMsg(msg, api.llm.provider)
     }, 500);
     return true;
   }
-  return false;
 }
 
 export const chatService = async (params) => {
-  const { messages, chat } = params;
-  const provider = getModelType(chat.to);
+  const { messages, chat, provider } = params;
   const api = new ClientApi(provider);
-  const msg = fnCreateLodMsg(chat);
-  if (beforeSend(api, msg)) return;
-  const { model } = useAccessStore(provider);
+  const startMsg = fnCreateStartMsg(chat);
+  if (beforeSend(api, startMsg)) return;
   await api.llm.chat({
     messages,
-    config: { model, stream: true },
+    config: {
+      model: useAccessStore(provider).model,
+      stream: true
+    },
     onUpdate(message) {
       console.log("[chat] onUpdate:", message);
-      updataMessage(msg, message);
+      updataMessage(startMsg, message);
     },
     async onFinish(message) {
       console.log("[chat] onFinish:", message);
-      message && updataMessage(msg, message);
+      message && updataMessage(startMsg, message);
       await restSendMsg(chat, message);
     },
     onToolMessage(message) {
       console.log("[chat] onToolMessage:", message);
-      fnCreateToolCallsMsg(msg, message);
+      fnCreateToolCallsMsg(startMsg, message);
     },
     async onError(error) {
       console.error("[chat] onError:", error);
       // const isAborted = error.message.includes("aborted");
       const content = "\n\n" + prettyObject({ error: true, message: error.message });
-      __LOCAL_MODE__ && updataMessage(msg, content);
+      __LOCAL_MODE__ && updataMessage(startMsg, content);
       error.message && (await restSendMsg(chat, content));
     },
     onController(controller) {

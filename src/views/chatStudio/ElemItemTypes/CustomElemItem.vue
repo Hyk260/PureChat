@@ -1,10 +1,11 @@
 <template>
   <div
     class="message-item-custom"
-    :class="self ? 'is-text-self' : 'is-text-other'"
+    :class="fnClass(message)"
     @click="onClick"
   >
     <Loading v-if="messageType('loading')" />
+    <Warning v-else-if="messageType('warning')" :payload="message.payload" />
     <ToolCall v-else-if="messageType('tool_call')" :payload="message.payload" />
     <div v-else>{{ customMessage() }}</div>
   </div>
@@ -13,6 +14,7 @@
 <script>
 import Loading from "../customMsgBody/loading.vue";
 import ToolCall from "../customMsgBody/toolCall.vue";
+import Warning from "../customMsgBody/warning.vue";
 
 export default {
   name: "CustomElemItem",
@@ -27,27 +29,34 @@ export default {
     },
   },
   components: {
+    Warning,
     Loading,
     ToolCall,
   },
   methods: {
-    customMessage(payload = this.message.payload) {
-      let videoPayload = {};
+    fnClass() {
+      return [
+        this.self ? "is-text-self" : "is-text-other",
+        this.messageType("warning") ? "!p-0" : "",
+      ];
+    },
+    customMessage(data = this.message.payload) {
+      let payload = {};
       try {
-        videoPayload = JSON.parse(payload.data);
+        payload = JSON.parse(data.data);
       } catch (e) {
-        videoPayload = {};
+        payload = {};
       }
-      if (videoPayload.businessID == "group_create") {
-        return videoPayload.opUser + videoPayload.content;
+      if (payload.businessID == "group_create") {
+        return payload.opUser + payload.content;
       }
-      if (payload.data === "group_create") {
-        return `${payload.extension}`;
+      if (data.data === "group_create") {
+        return `${data.extension}`;
       }
-      if (payload.text) {
-        return payload.text;
+      if (data.text) {
+        return data.text;
       } else {
-        return "[自定义消息 待开发]";
+        return "[自定义消息]";
       }
     },
     messageType(type) {
@@ -64,8 +73,8 @@ export default {
 .message-item-custom {
   width: fit-content;
   padding: 10px 14px;
-  max-width: 360px;
-  padding: 10px 14px;
+  max-width: 460px;
+  min-height: 36px;
   box-sizing: border-box;
   border-radius: 3px;
 }

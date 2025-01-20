@@ -212,6 +212,7 @@ function sendFile(e) {
   });
 }
 function isShowPlugins(val) {
+  return false;
   if (__LOCAL_MODE__) {
     return true;
   } else {
