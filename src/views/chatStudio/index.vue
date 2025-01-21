@@ -14,17 +14,17 @@
 </template>
 
 <script setup>
-import ImageViewer from '../components/ImageViewer/index.vue';
+import ImageViewer from "../components/ImageViewer/index.vue";
 import { useState } from "@/utils/hooks/useMapper";
 import AddressBook from "../components/AddressBook/index.vue";
-import Prompt from "../components/Prompt/index.vue";
+import Discover from "../components/Prompt/index.vue";
 import frameView from "./frameView.vue";
 import Message from "./message.vue";
 import sidebar from "./sidebar.vue";
 import test from "./test.vue";
 
 const showChat = (value) => {
-  return outsideList.value[0].only.includes(value);
+  return ["chat"].includes(value);
 };
 
 const frame = [
@@ -33,13 +33,14 @@ const frame = [
   // "github",
   // "gitee"
 ];
+
 const Component = {
   test: test, // 测试;
-  prompt: Prompt,
+  discover: Discover, // 发现
   notebook: AddressBook,
 };
-const { outside, outsideList } = useState({
-  outsideList: (state) => state.sidebar.outsideList,
+
+const { outside } = useState({
   outside: (state) => state.conversation.outside,
 });
 </script>

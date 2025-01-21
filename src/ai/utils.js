@@ -2,12 +2,12 @@ import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event
 import { getPlugin } from '@/views/chatStudio/utils/utils';
 import store from "@/store";
 import {
-  glmBotId,
-  gptBotId,
-  yiBotId,
-  qwenBotId,
-  ollamaBotId,
-  githubBotId,
+  VITE_ROBOT_GLM,
+  VITE_ROBOT_GPT,
+  VITE_ROBOT_ZEROONE,
+  VITE_ROBOT_QWEN,
+  VITE_ROBOT_OLLAMA,
+  VITE_ROBOT_GITHUB,
   ModelProvider,
   StoreKey,
   modelConfig,
@@ -77,12 +77,12 @@ export const useToolStore = (model = ModelProvider.GPT) => {
 export function getModelType(modelId) {
   if (!isRobot(modelId)) return "";
   const modelMapping = {
-    [gptBotId]: ModelProvider.GPT,
-    [glmBotId]: ModelProvider.ChatGLM,
-    [yiBotId]: ModelProvider.ZeroOne,
-    [qwenBotId]: ModelProvider.Qwen,
-    [ollamaBotId]: ModelProvider.Ollama,
-    [githubBotId]: ModelProvider.GitHub,
+    [VITE_ROBOT_GPT]: ModelProvider.GPT,
+    [VITE_ROBOT_GLM]: ModelProvider.ChatGLM,
+    [VITE_ROBOT_ZEROONE]: ModelProvider.ZeroOne,
+    [VITE_ROBOT_QWEN]: ModelProvider.Qwen,
+    [VITE_ROBOT_OLLAMA]: ModelProvider.Ollama,
+    [VITE_ROBOT_GITHUB]: ModelProvider.GitHub,
   };
   return modelMapping[modelId] || "";
 }
@@ -90,12 +90,12 @@ export function getModelType(modelId) {
 export function getModelId(model) {
   if (!model) return "";
   const modelMapping = {
-    [ModelProvider.GPT]: gptBotId,
-    [ModelProvider.ChatGLM]: glmBotId,
-    [ModelProvider.ZeroOne]: yiBotId,
-    [ModelProvider.Qwen]: qwenBotId,
-    [ModelProvider.Ollama]: ollamaBotId,
-    [ModelProvider.GitHub]: githubBotId,
+    [ModelProvider.GPT]: VITE_ROBOT_GPT,
+    [ModelProvider.ChatGLM]: VITE_ROBOT_GLM,
+    [ModelProvider.ZeroOne]: VITE_ROBOT_ZEROONE,
+    [ModelProvider.Qwen]: VITE_ROBOT_QWEN,
+    [ModelProvider.Ollama]: VITE_ROBOT_OLLAMA,
+    [ModelProvider.GitHub]: VITE_ROBOT_GITHUB,
   };
   return modelMapping[model] || "";
 }

@@ -3,50 +3,46 @@ const docs = __APP_INFO__.pkg.docs
 
 const outsideList = [
   {
-    only: "message",
+    id: "chat",
     icon: "ChatDotSquare",
-    locale: "message",
     title: "会话",
-    // class: "fix-ed",
-    // if_fixed: 1,
+    class: "fix-ed",
+    if_fixed: 1,
     type: "el-icon",
   },
   {
-    only: "notebook",
+    id: "notebook",
     icon: "Notebook",
-    locale: "addressBook",
     title: "通讯录",
     // class: "fix-ed",
     // if_fixed: 1,
     type: "el-icon",
   },
   {
-    only: "prompt",
-    icon: "assistant",
-    locale: "",
-    title: "AI助理",
+    id: "discover",
+    icon: "Discover",
+    title: "发现",
+    svgIcon: 'Discover'
     // type: "el-icon",
   },
   {
-    only: "document",
+    id: "document",
     icon: "Document",
-    locale: "document",
     title: "文档",
     type: "el-icon",
     openType: "outside",
     url: docs,
   },
   {
-    only: "test",
+    id: "test",
     icon: "SwitchFilled",
     title: "web",
     show: isDev ? "" : "hide",
     type: "el-icon",
   },
   {
-    only: "more",
+    id: "more",
     icon: "MoreFilled",
-    locale: "more",
     title: "更多",
     mode: "other",
     type: "el-icon",
@@ -55,14 +51,14 @@ const outsideList = [
 
 const moreList = [
   {
-    only: "github",
+    id: "github",
     icon: "github",
     title: "github",
     openType: "outside",
     url: "https://github.com/Hyk260",
   },
   {
-    only: "gitee",
+    id: "gitee",
     icon: "gitee",
     title: "gitee",
     // type: "el-icon",
@@ -78,7 +74,7 @@ export default {
   },
   mutations: {
     setOutsideList(state, list) {
-      const data = state.outsideList.filter((t) => t.only === "more");
+      const data = state.outsideList.filter((t) => t.id === "more");
       state.outsideList = [...list, ...data];
     },
     setMoreList(state, list) {

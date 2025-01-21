@@ -18,7 +18,7 @@ import { ollamaModelValue } from "@/ai/platforms/ollama/modelValue";
 
 import { prefixRobotIDs } from "./utils";
 
-const {
+export const {
   VITE_ROBOT_GPT, // chatgpt
   VITE_ROBOT_GLM, // 智谱
   VITE_ROBOT_ZEROONE, // 零一万物
@@ -29,26 +29,13 @@ const {
 
 export const ROLES = ["system", "user", "assistant"];
 
-// ChatGpt
-export const gptBotId = VITE_ROBOT_GPT;
-// 智谱ai
-export const glmBotId = VITE_ROBOT_GLM;
-// 零一万物
-export const yiBotId = VITE_ROBOT_ZEROONE;
-// 通义千问
-export const qwenBotId = VITE_ROBOT_QWEN;
-// OLLAMA
-export const ollamaBotId = VITE_ROBOT_OLLAMA;
-// github
-export const githubBotId = VITE_ROBOT_GITHUB;
-
 export const ROBOT_COLLECT = [
-  gptBotId,
-  glmBotId,
-  yiBotId,
-  // qwenBotId,
-  ollamaBotId,
-  githubBotId,
+  VITE_ROBOT_GPT,
+  VITE_ROBOT_GLM,
+  VITE_ROBOT_ZEROONE,
+  // VITE_ROBOT_QWEN,
+  VITE_ROBOT_OLLAMA,
+  VITE_ROBOT_GITHUB,
 ];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);

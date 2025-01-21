@@ -3,8 +3,8 @@
     <!-- <Markdown :marked="" /> -->
     <el-icon><Warning /></el-icon>
     <span> API Key 不正确或为空，请检查 API Key 后重试</span>
-    <span class="cursor-pointer ml-4" @click="openRobotBox()"> [配置] </span>
-    <span class="cursor-pointer ml-4" @click="jumpLink()"> [文档] </span>
+    <span class="cursor-pointer ml-4 text-[#0072f5]" @click="openRobotBox()"> [配置] </span>
+    <span class="cursor-pointer ml-4 text-[#0072f5]" @click="jumpLink()"> [文档] </span>
   </div>
 </template>
 
@@ -49,6 +49,7 @@ function getDoubt(payload) {
   background-color: rgb(252.5, 245.7, 235.5);
   min-height: 36px;
   padding: 0 8px;
+  border-radius: 3px;
   .el-icon {
     margin: 0 5px;
   }

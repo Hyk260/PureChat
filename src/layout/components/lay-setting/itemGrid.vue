@@ -94,8 +94,10 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["onClose", "onItem"]);
 const assistant = ref(localStg.get("default-assistant") || "GPT");
+
+const emit = defineEmits(["onClose", "onItem"]);
+
 const { commit, dispatch } = useStore();
 const { themeScheme, lang } = useState({
   themeScheme: (state) => state.user.themeScheme,

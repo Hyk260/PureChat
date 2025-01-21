@@ -40,7 +40,16 @@
     "level": 0,
     "role": 0,
     "lastUpdatedTime": 0,
-    "profileCustomField": []
+    "profileCustomField": [
+      {
+        "key": "Tag_Profile_Custom_Provider",
+        "value": "ZhiPu"
+      },
+      {
+        "key": "Tag_Profile_Custom_Homepage",
+        "value": "https://zhipuai.cn"
+      }
+    ]
   },
   {
     "userID": "@RBT#003",
@@ -57,7 +66,16 @@
     "level": 0,
     "role": 0,
     "lastUpdatedTime": 0,
-    "profileCustomField": []
+    "profileCustomField": [
+      {
+        "key": "Tag_Profile_Custom_Provider",
+        "value": "01.AI"
+      },
+      {
+        "key": "Tag_Profile_Custom_Homepage",
+        "value": "https://www.lingyiwanwu.com/"
+      }
+    ]
   },
   {
     "userID": "@RBT#005",
@@ -100,6 +118,15 @@
     "level": 0,
     "role": 0,
     "lastUpdatedTime": 0,
-    "profileCustomField": []
+    "profileCustomField": [
+      {
+        "key": "Tag_Profile_Custom_Provider",
+        "value": "GitHub"
+      },
+      {
+        "key": "Tag_Profile_Custom_Homepage",
+        "value": "https://github.com/marketplace/models"
+      }
+    ]
   }
 ]

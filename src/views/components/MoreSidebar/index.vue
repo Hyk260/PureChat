@@ -30,7 +30,7 @@
               dragClass="chosen"
               animation="200"
             >
-              <template v-for="item in leftEdit" :key="item.only">
+              <template v-for="item in leftEdit" :key="item.id">
                 <div class="list-group-item flex-ac" :class="item?.class">
                   <!-- 删除 -->
                   <FontIcon
@@ -68,7 +68,7 @@
               dragClass="chosen"
               animation="200"
             >
-              <template v-for="item in rightEdit" :key="item.only">
+              <template v-for="item in rightEdit" :key="item.id">
                 <div class="list-group-item flex-ac" :class="item?.class">
                   <!-- 添加 -->
                   <FontIcon
@@ -175,11 +175,11 @@ export default defineComponent({
       });
     },
     fnRepeat() {
-      const left = this.outsideList.filter((t) => t.only !== "more" && t?.show !== "hide");
+      const left = this.outsideList.filter((t) => t.id !== "more" && t?.show !== "hide");
       const right = this.moreList;
       return {
-        leftEdit: uniqBy(left, "only"),
-        rightEdit: uniqBy(right, "only"),
+        leftEdit: uniqBy(left, "id"),
+        rightEdit: uniqBy(right, "id"),
       };
     },
     init() {

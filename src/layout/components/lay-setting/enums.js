@@ -13,7 +13,7 @@ export const list = computed(() => {
       icon: "Postcard",
     },
     {
-      title: `${$t("common.about")}`,
+      title: $t("common.about"),
       icon: "Warning",
     },
     // {
@@ -41,24 +41,12 @@ export const options = computed(() => {
 });
 
 export const optionsModel = computed(() => {
-  return [
-    {
-      value: ModelProvider.GPT,
-      label: "GPT",
-    },
-    {
-      value: ModelProvider.ChatGLM,
-      label: "ChatGLM",
-    },
-    {
-      value: ModelProvider.ZeroOne,
-      label: "ZeroOne",
-    },
-    {
-      value: ModelProvider.Ollama,
-      label: "Ollama",
-    },
-  ];
+  return Object.entries(ModelProvider).map(([key, value]) => {
+    return {
+      value,
+      label: value,
+    };
+  });
 });
 
 export const languages = [

@@ -46,7 +46,7 @@ const conversation = {
     filterConversationList: [],
     currentReplyMsg: null, // 回复数据
     activetab: "whole", // 全部 未读 提及我
-    outside: "message", // 侧边栏初始状态
+    outside: "chat", // 侧边栏初始状态
     arrowRight: false, // 聊天会话列表折叠 true ？'折叠' : '不折叠'
     fullScreen: false, // 全屏输入框是否启用
     revokeMsgMap: new Map(), // 撤回消息重新编辑
