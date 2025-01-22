@@ -181,7 +181,7 @@ const CustomMention = (props) => {
   // 草稿
   if (draft && isdraft(item)) {
     const str = html2Escape(formatContent(draft));
-    return h("span", { innerHTML: `${createMessagePrompt("draft")}${str}` });
+    return h("span", { innerHTML: `${createMessagePrompt("draft")} ${str}` });
   }
   // @消息
   const isUnread = unreadCount !== 0; // 消息是否未读
