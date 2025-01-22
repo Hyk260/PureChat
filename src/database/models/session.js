@@ -18,7 +18,7 @@ class _SessionModel extends BaseModel {
       .limit(pageSize)
       .toArray();
 
-    return items;
+    return this.mapToAgentSessions(items);
   }
 
   async queryByKeyword(keyword) {
@@ -95,9 +95,9 @@ class _SessionModel extends BaseModel {
   // **************** Create *************** //
 
   async create(id, data) {
-    const dataDB = data;
     const exist = await this.findById(id)
-    if (exist) return 
+    if (exist) return
+    const dataDB = this.mapToDB_Session(data);
     await this._addWithSync(id, dataDB);
   }
 
@@ -107,9 +107,9 @@ class _SessionModel extends BaseModel {
 
   async delete(id) {
     return await this._deleteWithSync(id);
-   }
+  }
 
-  async clearTable() { 
+  async clearTable() {
     return this._clearWithSync();
   }
 
@@ -120,6 +120,27 @@ class _SessionModel extends BaseModel {
   }
 
   async updateConfig(id, data) { }
+
+  // **************** Helper *************** //
+
+  mapToDB_Session(session) {
+    return {
+      ...session,
+      pinned: session.isPinned ? 1 : 0,
+    };
+  }
+
+  DB_SessionToAgentSession(session) {
+    return {
+      ...session,
+      // model: session.config.model,
+      isPinned: session.pinned === 1,
+    };
+  }
+
+  mapToAgentSessions(session) {
+    return session.map((item) => this.DB_SessionToAgentSession(item));
+  }
 }
 
 export const SessionModel = new _SessionModel();
