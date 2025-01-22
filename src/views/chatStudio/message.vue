@@ -31,9 +31,7 @@
           <FontIcon :iconName="arrowRight ? 'ArrowRight' : 'ArrowLeft'" />
         </div>
       </div>
-      <div v-if="false" v-show="!arrowRight" class="sidebar-drag">
-        <!-- <svg-icon iconClass="drag" class="drag-icon" /> -->
-      </div>
+      <div v-if="false" v-show="!arrowRight" class="sidebar-drag"></div>
     </div>
     <!-- 聊天框 -->
     <div class="message-right" :class="{ 'message-h-full': arrowRight }" id="container">
@@ -70,11 +68,10 @@ import {
 } from "vue";
 import { $t } from "@/locales/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
-import emitter from "@/utils/mitt-bus";
-import { useEventListener } from "@vueuse/core";
 import { useStore } from "vuex";
 import { dragControllerDivHorizontal, createDragHandler } from "./utils/utils";
 import { isMacOS } from "@/utils/common";
+import emitter from "@/utils/mitt-bus";
 
 import Chatwin from "./chat/Chatwin.vue";
 import ConversationList from "./chat/ConversationList.vue";
@@ -152,16 +149,6 @@ const onDrag = () => {
   initialize();
   destroyHandler = destroy;
 };
-useEventListener(window, "online", () => {
-  commit("setNetworkStatus", true);
-});
-useEventListener(window, "offline", () => {
-  commit("setNetworkStatus", false);
-});
-useEventListener(window, "focus", () => {
-  if (!conver.value) return;
-  dispatch("hasReadMessage", { convId: conver?.value.conversationID, message: conver.value });
-});
 onActivated(() => {
   emitter.emit("updataScroll");
   commit("toggleList", "whole");
@@ -252,7 +239,7 @@ watch(isChatBoxVisible, (val) => {
   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .resize-hover:hover {
-  background: #409EFF !important;
+  background: #409eff !important;
 }
 .sidebar-drag {
   pointer-events: all;
@@ -267,7 +254,7 @@ watch(isChatBoxVisible, (val) => {
   cursor: ew-resize;
   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
   &:hover {
-    background: #409EFF !important;
+    background: #409eff !important;
   }
 }
 .layoutkit-center {

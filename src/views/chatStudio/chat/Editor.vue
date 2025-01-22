@@ -30,7 +30,11 @@
     />
     <div class="send-button">
       <span class="tip">{{ placeholderMap[getOperatingSystem()] }}</span>
-      <el-button :loading="loading" @click="handleEnter()">
+      <el-button
+        :loading="loading"
+        :class="{ 'pointer-events-none': disabled }"
+        @click="handleEnter()"
+      >
         <template #loading>
           <div class="iconify-icon svg-spinners mr-8"></div>
         </template>
@@ -85,6 +89,8 @@ const mode = "simple"; // 'default' 或 'simple'
 const mentionRef = ref();
 
 const [loading, setLoading] = useBoolean();
+const [disabled, setDisabled] = useBoolean();
+
 const { dispatch, commit } = useStore();
 const { isOwner, toAccount, currentType } = useGetters(["isOwner", "toAccount", "currentType"]);
 const {
@@ -153,6 +159,7 @@ const handleAt = debounce((editor) => {
 
 const onChange = (editor) => {
   const content = editor.children;
+  setDisabled(editor.isEmpty());
   updateDraft(content);
   handleAt(editor);
 };
@@ -417,6 +424,7 @@ onBeforeUnmount(() => {
   justify-content: flex-end;
   padding: 0px 10px 10px;
   gap: 8px;
+  user-select: none;
   .tip {
     font-size: 12px;
   }

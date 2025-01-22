@@ -376,12 +376,12 @@ const conversation = {
         convId,
         message: { unreadCount },
       } = payload;
+      if (unreadCount === 0) return;
       // tab 不为全部不进行消息已读
       if (state.activetab !== "whole" && state.currentConversation.conversationID === convId) {
         state.postponeUnread.add(convId);
         return;
       }
-      if (unreadCount === 0) return;
       console.log("[chat] 消息已读 hasReadMessage:", payload);
       setMessageRead(convId);
     },

@@ -5,7 +5,7 @@ import { C2C_ROBOT_COLLECT } from "@/ai/constant";
 import { TIM_PROXY } from "@/constants/index";
 import { scrollToDomPostion, setChatListCache } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
-import { useWindowFocus } from "@vueuse/core";
+import { useWindowFocus, useEventListener } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
 import {
@@ -59,6 +59,17 @@ export class TIMProxy {
     if (this.once) return;
     this.once = true;
     this.initListener(); // 监听SDK
+    useEventListener(window, "online", () => {
+      store.commit("setNetworkStatus", true);
+    });
+    useEventListener(window, "offline", () => {
+      store.commit("setNetworkStatus", false);
+    });
+    useEventListener(window, "focus", () => {
+      const conver = store.state.conversation?.currentConversation
+      if (!conver) return;
+      dispatch("hasReadMessage", { convId: conver?.conversationID, message: conver });
+    });
     console.log("[chat] TIMProxy init");
   }
   initListener() {
