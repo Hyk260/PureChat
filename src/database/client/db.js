@@ -6,9 +6,10 @@ export const dbSchemaV1 = {
 };
 
 export const dbSchemaV2 = {
-  sessions: "&conversationID, updatedAt, type",
+  sessions: "&conversationID, updatedAt, type, pinned",
 };
 
+// https://dexie.org/
 // Define a local DB
 export class BrowserDB extends Dexie {
   constructor() {
@@ -22,12 +23,3 @@ export class BrowserDB extends Dexie {
 }
 
 export const browserDB = new BrowserDB();
-
-// 添加
-// browserDB.messages.add();
-// 删除
-// browserDB.messages.delete();
-// 更新
-// browserDB.messages.update();
-// 查询
-// const data = await browserDB.messages.toArray();
