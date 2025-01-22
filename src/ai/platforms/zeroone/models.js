@@ -20,7 +20,8 @@ const ZeroOne = {
       displayName: 'Yi Vision',
       enabled: true,
       id: 'yi-vision',
-      tokens: 4096,
+      tokens: 16_384,
+      vision: true,
     },
     {
       description: '200K 超长上下文窗口，提供长文本深度理解和生成能力。',

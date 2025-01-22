@@ -19,23 +19,23 @@ import { ollamaModelValue } from "@/ai/platforms/ollama/modelValue";
 import { prefixRobotIDs } from "./utils";
 
 export const {
-  VITE_ROBOT_GPT, // chatgpt
-  VITE_ROBOT_GLM, // 智谱
-  VITE_ROBOT_ZEROONE, // 零一万物
-  VITE_ROBOT_QWEN, // 通义千问
-  VITE_ROBOT_OLLAMA, // ollama
-  VITE_ROBOT_GITHUB, // github
+  VITE_OPENAI_ID, // chatgpt
+  VITE_ZHIPU_ID, // 智谱
+  VITE_ZEROONE_ID, // 零一万物
+  VITE_QWEN_ID, // 通义千问
+  VITE_OLLAMA_ID, // ollama
+  VITE_GITHUB_ID, // github
 } = import.meta.env;
 
 export const ROLES = ["system", "user", "assistant"];
 
 export const ROBOT_COLLECT = [
-  VITE_ROBOT_GPT,
-  VITE_ROBOT_GLM,
-  VITE_ROBOT_ZEROONE,
-  // VITE_ROBOT_QWEN,
-  VITE_ROBOT_OLLAMA,
-  VITE_ROBOT_GITHUB,
+  VITE_OPENAI_ID,
+  VITE_ZHIPU_ID,
+  VITE_ZEROONE_ID,
+  // VITE_QWEN_ID,
+  VITE_OLLAMA_ID,
+  VITE_GITHUB_ID,
 ];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
@@ -64,30 +64,6 @@ export const ModelProvider = {
   Qwen: "Qwen",
   Ollama: "Ollama",
   GitHub: "GitHub",
-};
-
-export const OpenaiPath = {
-  ChatPath: "v1/chat/completions", // chatgpt 聊天接口
-  // UsagePath: "v1/dashboard/billing/usage", // 用量查询，数据单位为 token
-  // SubsPath: "v1/dashboard/billing/subscription", // 总量查询，数据单位为 token
-  ListModelPath: "v1/models", // 查询可用模型
-  // EmbeddingPath: "v1/embeddings", // 文本向量化
-};
-
-export const ChatGLMPath = {
-  ChatPath: "chat/completions",
-};
-
-export const ZeroOnePath = {
-  ChatPath: "v1/chat/completions",
-};
-
-export const QwenPath = {
-  ChatPath: "services/aigc/text-generation/generation",
-};
-
-export const GitHubPath = {
-  ChatPath: "chat/completions",
 };
 
 export const prompt = [

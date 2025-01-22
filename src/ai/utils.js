@@ -2,12 +2,12 @@ import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event
 import { getPlugin } from '@/views/chatStudio/utils/utils';
 import store from "@/store";
 import {
-  VITE_ROBOT_GLM,
-  VITE_ROBOT_GPT,
-  VITE_ROBOT_ZEROONE,
-  VITE_ROBOT_QWEN,
-  VITE_ROBOT_OLLAMA,
-  VITE_ROBOT_GITHUB,
+  VITE_ZHIPU_ID,
+  VITE_OPENAI_ID,
+  VITE_ZEROONE_ID,
+  VITE_QWEN_ID,
+  VITE_OLLAMA_ID,
+  VITE_GITHUB_ID,
   ModelProvider,
   StoreKey,
   modelConfig,
@@ -77,12 +77,12 @@ export const useToolStore = (model = ModelProvider.GPT) => {
 export function getModelType(modelId) {
   if (!isRobot(modelId)) return "";
   const modelMapping = {
-    [VITE_ROBOT_GPT]: ModelProvider.GPT,
-    [VITE_ROBOT_GLM]: ModelProvider.ChatGLM,
-    [VITE_ROBOT_ZEROONE]: ModelProvider.ZeroOne,
-    [VITE_ROBOT_QWEN]: ModelProvider.Qwen,
-    [VITE_ROBOT_OLLAMA]: ModelProvider.Ollama,
-    [VITE_ROBOT_GITHUB]: ModelProvider.GitHub,
+    [VITE_OPENAI_ID]: ModelProvider.GPT,
+    [VITE_ZHIPU_ID]: ModelProvider.ChatGLM,
+    [VITE_ZEROONE_ID]: ModelProvider.ZeroOne,
+    [VITE_QWEN_ID]: ModelProvider.Qwen,
+    [VITE_OLLAMA_ID]: ModelProvider.Ollama,
+    [VITE_GITHUB_ID]: ModelProvider.GitHub,
   };
   return modelMapping[modelId] || "";
 }
@@ -90,12 +90,12 @@ export function getModelType(modelId) {
 export function getModelId(model) {
   if (!model) return "";
   const modelMapping = {
-    [ModelProvider.GPT]: VITE_ROBOT_GPT,
-    [ModelProvider.ChatGLM]: VITE_ROBOT_GLM,
-    [ModelProvider.ZeroOne]: VITE_ROBOT_ZEROONE,
-    [ModelProvider.Qwen]: VITE_ROBOT_QWEN,
-    [ModelProvider.Ollama]: VITE_ROBOT_OLLAMA,
-    [ModelProvider.GitHub]: VITE_ROBOT_GITHUB,
+    [ModelProvider.GPT]: VITE_OPENAI_ID,
+    [ModelProvider.ChatGLM]: VITE_ZHIPU_ID,
+    [ModelProvider.ZeroOne]: VITE_ZEROONE_ID,
+    [ModelProvider.Qwen]: VITE_QWEN_ID,
+    [ModelProvider.Ollama]: VITE_OLLAMA_ID,
+    [ModelProvider.GitHub]: VITE_GITHUB_ID,
   };
   return modelMapping[model] || "";
 }

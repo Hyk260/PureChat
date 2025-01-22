@@ -1,4 +1,4 @@
-import { OpenaiPath, REQUEST_TIMEOUT_MS, ModelProvider } from "@/ai/constant";
+import { REQUEST_TIMEOUT_MS, ModelProvider } from "@/ai/constant";
 import {
   useAccessStore,
   usePromptStore,
@@ -13,15 +13,23 @@ import store from "@/store/index";
 import { handleStreamingChat } from '@/ai/utils';
 import { transformData } from "@/utils/chat/index";
 
+export const OpenaiPath = {
+  ChatPath: "v1/chat/completions", // chatgpt 聊天接口
+  UsagePath: "v1/dashboard/billing/usage", // 用量查询，数据单位为 token
+  SubsPath: "v1/dashboard/billing/subscription", // 总量查询，数据单位为 token
+  ListModelPath: "v1/models", // 查询可用模型
+  EmbeddingPath: "v1/embeddings", // 文本向量化
+};
+
 export class ChatGPTApi {
   constructor(provider) {
     this.provider = provider;
   }
-  path(path) {
+  getPath(path) {
     let openaiUrl = this.accessStore().openaiUrl;
-    return openaiUrl + path;
+    return `${openaiUrl}${path}`;
   }
-  buildAnthropicTools() {
+  getPluginTools() {
     const pluginList = useToolStore();
     if (!pluginList.length) return [];
     if (store.state.robot.model?.functionCall) {
@@ -94,7 +102,7 @@ export class ChatGPTApi {
       top_p: modelConfig.top_p, // 核采样
       // tools: [] // 工具
     };
-    // const tools = this.buildAnthropicTools();
+    // const tools = this.getPluginTools();
     // if (tools.at(0)) {
     //   payload.tools = tools;
     //   payload.stream = false;
@@ -118,7 +126,7 @@ export class ChatGPTApi {
     options.onController?.(controller);
 
     try {
-      const chatPath = this.path(OpenaiPath.ChatPath);
+      const chatPath = this.getPath(OpenaiPath.ChatPath);
       const chatPayload = {
         method: "POST",
         body: JSON.stringify(requestPayload),
@@ -161,7 +169,7 @@ export class ChatGPTApi {
   }
   // 列出模型
   async models() {
-    const url = this.path(OpenaiPath.ListModelPath);
+    const url = this.getPath(OpenaiPath.ListModelPath);
     const res = await fetch(url, { method: "GET", headers: { ...this.getHeaders() } });
     const resJson = await res.json();
     const chatModels = resJson.data.filter(

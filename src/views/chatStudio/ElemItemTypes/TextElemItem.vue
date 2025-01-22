@@ -88,7 +88,7 @@ onMounted(() => {
   min-height: 36px;
   padding: 10px;
   box-sizing: border-box;
-  border-radius: 3px;
+  border-radius: 5px;
   word-break: break-all;
   white-space: pre-wrap;
   color: var(--color-text);

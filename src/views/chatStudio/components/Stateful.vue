@@ -8,6 +8,8 @@
 </template>
 
 <script setup>
+import { isSelf } from "../utils/utils";
+
 defineOptions({
   name: "Stateful",
 });
@@ -31,6 +33,7 @@ const isShow = (value) => {
 
 const isShowState = (item) => {
   return (
+    isSelf(item) &&
     !item.isRevoked &&
     item.type !== "TIMGroupTipElem" &&
     item.payload?.description !== "dithering" &&

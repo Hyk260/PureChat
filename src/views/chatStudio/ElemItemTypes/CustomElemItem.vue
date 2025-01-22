@@ -76,6 +76,6 @@ export default {
   max-width: 460px;
   min-height: 36px;
   box-sizing: border-box;
-  border-radius: 3px;
+  border-radius: 5px;
 }
 </style>

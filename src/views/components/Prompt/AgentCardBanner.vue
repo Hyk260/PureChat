@@ -41,7 +41,7 @@ import emitter from "@/utils/mitt-bus";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
-import { StoreKey, VITE_ROBOT_GPT, ModelProvider } from "@/ai/constant";
+import { StoreKey, VITE_OPENAI_ID, ModelProvider } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
 
 const cardData = ref({});
@@ -62,7 +62,7 @@ function toTant(item = cardData.value) {
   };
   console.log("prompt", { ...localStg.get(StoreKey.Prompt), ...prompt });
   localStg.set(StoreKey.Prompt, { ...localStg.get(StoreKey.Prompt), ...prompt });
-  const id = getModelId(defaultBot) || VITE_ROBOT_GPT;
+  const id = getModelId(defaultBot) || VITE_OPENAI_ID;
   commit("setPromptConfig", prompt[value]);
   commit("taggleOueSide", "chat");
   dispatch("addConversation", { convId: `${"C2C"}${id}` });
