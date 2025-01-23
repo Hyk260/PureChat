@@ -1,11 +1,10 @@
 import { createStore } from "vuex";
-// import { importModules } from "./importModules";
 
 import conversation from "./modules/conversation/index";
-import groupinfo from "./modules/groupinfo";
-import robot from "./modules/robot";
-import sidebar from "./modules/sidebar";
-import user from "./modules/user";
+import groupinfo from "./modules/groupinfo/index";
+import robot from "./modules/robot/index";
+import sidebar from "./modules/sidebar/index";
+import user from "./modules/user/index";
 
 const store = createStore({
   modules: {
