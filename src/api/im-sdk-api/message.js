@@ -1,39 +1,32 @@
-import { throttle } from "lodash-es";
 import tim from "@/utils/IM/im-sdk/tim";
 import emitter from "@/utils/mitt-bus";
-import { getImageSize } from "@/views/chatStudio/utils/utils";
+import { throttle } from "lodash-es";
+import { updateImageSize } from "@/utils/common";
 import { getReplyMsgContent } from "@/utils/chat/index";
 import { getCustomMsgContent } from '@/api/im-sdk-api/custom';
 
 const createProgressHandler = () => {
-  let lastNum = 0;
-  const handleProgressUpdate = throttle((progress, cd) => {
-    if (progress.num !== lastNum) {
-      lastNum = progress.num;
-      if (typeof cd === "function") cd();
+  let lastProgress = 0;
+  const handleProgressUpdate = throttle((progress, callback) => {
+    if (progress.num !== lastProgress) {
+      lastProgress = progress.num;
+      callback?.();
     }
-  }, 100);
+  }, 50);
   return handleProgressUpdate;
 };
 
 const handleProgressUpdate = createProgressHandler();
 
-const fileUploading = (data, bar = 0) => {
-  handleProgressUpdate({ num: bar?.toFixed(0) }, () => {
-    const uuid = data?.payload?.uuid || "";
-    emitter.emit("fileUploading", { uuid, num: bar?.toFixed(0) });
-    console.log("[file] uploading:", bar?.toFixed(0) + "%");
+const fileUploading = (message, rawProgress = 0) => {
+  const num = Math.round(rawProgress);
+
+  handleProgressUpdate({ num }, () => {
+    const uuid = message?.payload?.uuid || "";
+    emitter.emit("fileUploading", { uuid, num });
+    console.log("[file] uploading:", `${num}%`);
   });
 };
-
-// 计算图片宽高
-const fnImageSize = async (image) => {
-  let num = 0;
-  const { width, height } = await getImageSize(image.payload.imageInfoArray[num].url);
-  image.payload.imageInfoArray[num].width = width;
-  image.payload.imageInfoArray[num].height = height;
-  return image;
-}
 
 // 发送消息
 export const sendMessage = async (params) => {
@@ -96,7 +89,7 @@ export const createImageMessage = async (params) => {
       console.log("file uploading:", event);
     },
   });
-  const imageMessage = await fnImageSize(message);
+  const imageMessage = await updateImageSize(message);
   return imageMessage;
 };
 // 创建文件消息

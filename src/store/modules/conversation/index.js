@@ -375,7 +375,7 @@ const conversation = {
       const {
         convId,
         message: { unreadCount },
-      } = payload;
+      } = payload || {};
       if (unreadCount === 0) return;
       // tab 不为全部不进行消息已读
       if (state.activetab !== "whole" && state.currentConversation.conversationID === convId) {

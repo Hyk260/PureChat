@@ -529,27 +529,6 @@ export const showIMPic = (width = 0, height = 0) => {
   return imageStyle;
 };
 
-/**
- * 获取图片的宽度和高度属性
- * @param {string} imageUrl - 图片地址
- * @returns {Promise<{width: number, height: number}>} - 包含图片宽度和高度的 Promise 对象
- * 'blob:http://localhost:8080/98f11c82-d402-4d7d-b49f-07a05bb75e89';
- */
-export function getImageSize(imageUrl) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = function () {
-      const width = this.width;
-      const height = this.height;
-      resolve({ width, height });
-    };
-    img.onerror = function () {
-      reject(new Error("Failed to load image"));
-    };
-    img.src = imageUrl;
-  });
-}
-
 export function getOperatingSystem(userAgent = navigator.userAgent) {
   if (userAgent.includes("Windows")) {
     return "Windows";

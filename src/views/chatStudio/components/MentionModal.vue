@@ -8,7 +8,7 @@
             :key="item.joinTime"
             :class="{ 'mention-active': isActive(item) }"
             @mouseover="setActive(i)"
-            @click="insertMentionHandler(item.userID, item.nick)"
+            @click="handleAit(item.userID, item.nick)"
           >
             <UserAvatar
               words="2"
@@ -152,10 +152,10 @@ export default {
         const firstOne = this.searchedList[this.tabIndex];
         if (!firstOne) return;
         const { userID, nick } = firstOne;
-        this.insertMentionHandler(userID, nick);
+        this.handleAit(userID, nick);
       }
     },
-    insertMentionHandler(id, name) {
+    handleAit(id, name) {
       let nick = name ? name : id;
       insertMention({ id, name: nick, deleteDigit: this.searchValue, editor: this.editor })
       this.setMentionStatus(); // 隐藏 modal
