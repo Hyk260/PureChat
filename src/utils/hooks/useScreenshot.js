@@ -91,6 +91,7 @@ export const useScreenshot = () => {
         },
         scale: 2,
       });
+
       if (imageType === ImageType.Blob) {
         copyImageToClipboard(dataUrl);
       } else {
@@ -101,10 +102,12 @@ export const useScreenshot = () => {
         link.href = dataUrl;
         link.click();
       }
+
       setTimeout(() => {
         setLoading(false);
         cd && cd?.();
       }, 300);
+      
     } catch (error) {
       console.error("Failed to download image", error);
       setLoading(false);
