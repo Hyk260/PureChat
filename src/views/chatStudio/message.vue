@@ -69,8 +69,8 @@ import {
 import { $t } from "@/locales/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
-import { dragControllerDivHorizontal, createDragHandler } from "./utils/utils";
 import { isMacOS } from "@/utils/common";
+import { useDragHandler } from "@/utils/hooks/useDragHandler";
 import emitter from "@/utils/mitt-bus";
 
 import Chatwin from "./chat/Chatwin.vue";
@@ -85,7 +85,6 @@ import ReplyBox from "./components/ReplyBox.vue";
 import Search from "./components/Search.vue";
 import networklink from "./components/networklink.vue";
 
-let destroyHandler = null;
 const isLocalMode = __LOCAL_MODE__;
 const unread = ref("");
 const chatRef = ref(null);
@@ -121,34 +120,7 @@ const fnDragCss = () => {
 const onRight = (value) => {
   commit("setConversationValue", { key: "arrowRight", value: !value });
 };
-const onDrag = () => {
-  const dragElement = document.getElementById("drag");
-  const chatBox = document.getElementById("chat-box");
-  const editor = document.getElementById("editor");
-  const container = document.getElementById("container");
-  const dragHover = document.querySelector(".resize-hover");
 
-  if (!dragElement || !chatBox || !editor || !container || !dragHover) {
-    console.warn("Required DOM elements are missing!");
-    return;
-  }
-  // 配置拖动
-  const dragConfig = {
-    dragElement,
-    chatBox,
-    editor,
-    container,
-    dragHover,
-    minHeight: 200,
-    offsetHeight: 60,
-    scrollBar: chatRef.value,
-  };
-
-  // 初始化拖拽逻辑
-  const { initialize, destroy } = createDragHandler(dragConfig);
-  initialize();
-  destroyHandler = destroy;
-};
 onActivated(() => {
   emitter.emit("updataScroll");
   commit("toggleList", "whole");
@@ -159,29 +131,20 @@ onMounted(() => {
   commit("setConversationValue", { key: "arrowRight", value: false });
 });
 
-onUnmounted(() => {
-  // 清理拖动逻辑
-  if (destroyHandler) {
-    destroyHandler();
-  }
-});
+onUnmounted(() => {});
 
 watchEffect(() => {
   fnTotalUnreadMsg();
 });
 
 watch(isChatBoxVisible, (val) => {
-  if (val) {
-    nextTick(() => {
-      onDrag();
-    });
-  }
+  val && useDragHandler(chatRef.value);
 });
 </script>
 
 <style lang="scss" scoped>
 .active-tabs {
-  user-select: none;
+  // user-select: none;
   :deep(.el-tabs__header) {
     margin: 0;
     padding: 0 16px;

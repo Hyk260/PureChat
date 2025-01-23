@@ -68,7 +68,7 @@ export class TIMProxy {
     useEventListener(window, "focus", () => {
       const conver = store.state.conversation?.currentConversation
       if (!conver) return;
-      dispatch("hasReadMessage", { convId: conver?.conversationID, message: conver });
+      store.dispatch("hasReadMessage", { convId: conver?.conversationID, message: conver });
     });
     console.log("[chat] TIMProxy init");
   }
