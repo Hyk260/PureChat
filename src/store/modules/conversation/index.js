@@ -20,7 +20,7 @@ import {
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
-import { createAiPromptMsg } from "@/ai/utils";
+import { createAiPromptMsg, getModelType } from "@/ai/utils";
 import { nextTick } from "vue";
 import { MessageModel } from "@/database/models/message";
 import { SessionModel } from "@/database/models/session";
@@ -46,7 +46,7 @@ const conversation = {
     filterConversationList: [],
     currentReplyMsg: null, // 回复数据
     activetab: "whole", // 全部 未读 提及我
-    outside: "message", // 侧边栏初始状态
+    outside: "chat", // 侧边栏初始状态
     arrowRight: false, // 聊天会话列表折叠 true ？'折叠' : '不折叠'
     fullScreen: false, // 全屏输入框是否启用
     revokeMsgMap: new Map(), // 撤回消息重新编辑
@@ -376,12 +376,12 @@ const conversation = {
         convId,
         message: { unreadCount },
       } = payload;
+      if (unreadCount === 0) return;
       // tab 不为全部不进行消息已读
       if (state.activetab !== "whole" && state.currentConversation.conversationID === convId) {
         state.postponeUnread.add(convId);
         return;
       }
-      if (unreadCount === 0) return;
       console.log("[chat] 消息已读 hasReadMessage:", payload);
       setMessageRead(convId);
     },
@@ -395,14 +395,7 @@ const conversation = {
       // 发送消息
       const { code, message: result } = await sendMsg(message);
       if (code === 0) {
-        dispatch("sendMsgSuccessCallback", { convId, message: result });
-        if (!ROBOT_COLLECT.includes(result?.to)) return;
-        if (last) {
-          const list = await transformData(state.currentMessageList ?? [result]);
-          setTimeout(async () => {
-            await chatService({ messages: list, chat: result });
-          }, 50);
-        }
+        dispatch("sendMsgSuccessCallback", { convId, message: result, last });
       } else {
         console.log("发送失败", code, result);
       }
@@ -410,9 +403,20 @@ const conversation = {
     // 消息发送成功回调
     async sendMsgSuccessCallback({ state, commit }, action) {
       console.log("消息发送成功 sendMsgSuccessCallback", action);
-      const { convId, message } = action;
+      const { convId, message, last } = action;
       commit("updateMessages", { convId, message });
       emitter.emit("updataScroll");
+
+      if (!ROBOT_COLLECT.includes(message?.to)) return;
+      if (last) {
+        setTimeout(async () => {
+          await chatService({
+            chat: message,
+            provider: getModelType(message.to),
+            messages: state.currentMessageList ?? [message]
+          });
+        }, 50);
+      }
     },
   },
   getters: {

@@ -160,7 +160,7 @@ const components = [
   ElImageViewer,
   ElInput,
   // ElInputNumber,
-  // ElLink,
+  ElLink,
   ElMenu,
   // ElMenuItem,
   // ElMenuItemGroup,

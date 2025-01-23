@@ -1,44 +1,39 @@
-const loading = {
-  data: {
-    body: {
-      bodyType: "loadingBody",
-      text: {
-        loadingIcon: "",
-        value: "正在输入中...",
-      },
-    },
-  },
-};
-const dithering = {
-  data: {
-    body: {
-      text: {
-        value: "你发送了一个窗口抖动。",
-      },
-    },
-  },
-};
+import loading from '@/database/custom/loading.json';
+import dithering from '@/database/custom/dithering.json';
+import toolCall from '@/database/custom/tool_call.json';
+import warning from '@/database/custom/warning.json';
+
 const collection = {
-  dithering,
-  loading,
+  "dithering": dithering,
+  "loading": loading,
+  'warning': warning,
+  // "tool_call": toolCall,
 };
 
-function constant({ onlyID, listMessage = "" }) {
-  return {
-    versions: "",
+export function msgContent(data, type) {
+  const _data = {
+    data: {
+      ...collection[type],
+    },
+    versions: __APP_INFO__.pkg.version,
     display: 0,
-    onlyID,
-    listMessage,
+    onlyID: type,
+    listMessage: ""
   };
+  if (type === 'tool_call') {
+    _data.data = data
+  }
+  if (type === 'warning') {
+    _data.data.body.text.value = data?.value || ""
+    _data.data.body.text.provider = data?.provider || ""
+  }
+  return JSON.stringify(_data)
 }
 
-export function msgContent(type) {
+export function getCustomMsgContent({ data = null, type }) {
   return {
-    ...collection[type],
-    ...constant({ onlyID: type }),
-  };
-}
-
-export function getCustomMsgContent(type) {
-  return JSON.stringify(msgContent(type));
+    data: msgContent(data, type),
+    description: type,
+    extension: "",
+  }
 }

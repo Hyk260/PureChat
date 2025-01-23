@@ -82,14 +82,15 @@ export class LocalChat {
     };
 
     return new Promise((resolve) => {
-      setTimeout(() => {
-        this.emit("onConversationListUpdated", { data: [...newData] });
+      setTimeout(async () => {
+        const _newData = await SessionModel.query()
+        this.emit("onConversationListUpdated", { data: _newData });
         this.emit("onMessageReceived", { data: [message] });
         resolve({ code: 0, data: { message } });
       }, 300);
     });
   }
-  async getLoginUser() {
+  getLoginUser() {
     return profile.userID;
   }
   async getMyProfile() {
@@ -132,6 +133,7 @@ export class LocalChat {
       clientTime: getTime(),
       ID: uuid(),
       to: to,
+      from: profile.userID,
       avatar: profile.avatar,
       conversationID: `${conversationType}${to}`,
       conversationType,
@@ -145,6 +147,7 @@ export class LocalChat {
     const _data = {
       ...timCustomElem,
       to: to,
+      from: profile.userID,
       payload,
       ID: uuid(),
       time: getTime(),

@@ -1,6 +1,5 @@
 import { BaseModel } from "../core/model";
 import { getTime } from "@/utils/common";
-import { uuid } from "@/utils/uuid";
 
 class _MessageModel extends BaseModel {
   constructor() {

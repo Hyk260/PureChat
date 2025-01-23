@@ -1,7 +1,8 @@
 {
+  "type": "function",
   "function": {
-    "description": "Search Google and return top 10 results",
     "name": "web_search____searchGoogle",
+    "description": "Search Google and return top 10 results",
     "parameters": {
       "properties": {
         "_requestBody": {
@@ -17,6 +18,5 @@
       },
       "type": "object"
     }
-  },
-  "type": "function"
+  }
 }

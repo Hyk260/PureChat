@@ -79,23 +79,26 @@ const { messageEdit, showCheckbox } = useState({
 const flilterList = computed(() => {
   const _type = props.item.type;
   return list
-    .filter((item) => {
-      if (item.id === "edit") {
+    .filter((t) => {
+      if (t.id === "edit") {
         return _type === "TIMTextElem";
-      } else if (item.id === "copy") {
+      } else if (t.id === "copy") {
         return ["TIMTextElem", "TIMImageElem"].includes(_type);
       } else {
         return true;
       }
     })
-    .filter((item) => !item?.hidden);
+    .filter((t) => !t?.hidden);
 });
 
 function showMenuList(item) {
   if (props.status !== "success") return false;
   if (messageEdit.value?.ID === item?.ID) return false;
+  if (["TIMCustomElem"].includes(item.type)) {
+    if (props.item?.payload?.description === "loading") return false;
+  }
   // 图片 文件 文本 合并
-  const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem"];
+  const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem", "TIMCustomElem"];
   return (
     msg.includes(item.type) &&
     item.type !== "TIMGroupTipElem" &&

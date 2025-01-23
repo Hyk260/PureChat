@@ -31,9 +31,7 @@
           <FontIcon :iconName="arrowRight ? 'ArrowRight' : 'ArrowLeft'" />
         </div>
       </div>
-      <div v-if="false" v-show="!arrowRight" class="sidebar-drag" @mouseover="dragControllerDivHorizontal()">
-        <!-- <svg-icon iconClass="drag" class="drag-icon" /> -->
-      </div>
+      <div v-if="false" v-show="!arrowRight" class="sidebar-drag"></div>
     </div>
     <!-- 聊天框 -->
     <div class="message-right" :class="{ 'message-h-full': arrowRight }" id="container">
@@ -44,12 +42,7 @@
       <!-- 消息回复框 -->
       <ReplyBox />
       <!-- Resize -->
-      <div
-        v-if="isChatBoxVisible"
-        id="drag"
-        :class="{ 'resize-hover': !fullScreen }"
-        @mouseover="dragControllerDiv(chatRef)"
-      ></div>
+      <div v-if="isChatBoxVisible" id="drag" :class="fnDragCss()"></div>
       <!-- 编辑器 -->
       <Editor />
       <!-- 多选框 -->
@@ -63,13 +56,22 @@
 </template>
 
 <script setup>
+import {
+  onActivated,
+  onDeactivated,
+  onMounted,
+  onUnmounted,
+  ref,
+  watchEffect,
+  watch,
+  nextTick,
+} from "vue";
 import { $t } from "@/locales/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
-import emitter from "@/utils/mitt-bus";
-import { useEventListener } from "@vueuse/core";
-import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useStore } from "vuex";
-import { dragControllerDiv, dragControllerDivHorizontal } from "./utils/utils";
+import { dragControllerDivHorizontal, createDragHandler } from "./utils/utils";
+import { isMacOS } from "@/utils/common";
+import emitter from "@/utils/mitt-bus";
 
 import Chatwin from "./chat/Chatwin.vue";
 import ConversationList from "./chat/ConversationList.vue";
@@ -83,6 +85,7 @@ import ReplyBox from "./components/ReplyBox.vue";
 import Search from "./components/Search.vue";
 import networklink from "./components/networklink.vue";
 
+let destroyHandler = null;
 const isLocalMode = __LOCAL_MODE__;
 const unread = ref("");
 const chatRef = ref(null);
@@ -110,30 +113,69 @@ const handleClick = ({ props }, event) => {
   const { label, name } = props;
   commit("toggleList", name);
 };
+const fnDragCss = () => {
+  if (fullScreen.value) return "";
+  const cursor = isMacOS() ? "!cursor-row-resize" : "cursor-n-resize";
+  return [cursor, !fullScreen.value ? "resize-hover" : ""];
+};
 const onRight = (value) => {
   commit("setConversationValue", { key: "arrowRight", value: !value });
 };
-useEventListener(window, "online", () => {
-  commit("setNetworkStatus", true);
-});
-useEventListener(window, "offline", () => {
-  commit("setNetworkStatus", false);
-});
-useEventListener(window, "focus", () => {
-  if (!conver.value) return;
-  dispatch("hasReadMessage", { convId: conver?.value.conversationID, message: conver.value });
-});
+const onDrag = () => {
+  const dragElement = document.getElementById("drag");
+  const chatBox = document.getElementById("chat-box");
+  const editor = document.getElementById("editor");
+  const container = document.getElementById("container");
+  const dragHover = document.querySelector(".resize-hover");
+
+  if (!dragElement || !chatBox || !editor || !container || !dragHover) {
+    console.warn("Required DOM elements are missing!");
+    return;
+  }
+  // 配置拖动
+  const dragConfig = {
+    dragElement,
+    chatBox,
+    editor,
+    container,
+    dragHover,
+    minHeight: 200,
+    offsetHeight: 60,
+    scrollBar: chatRef.value,
+  };
+
+  // 初始化拖拽逻辑
+  const { initialize, destroy } = createDragHandler(dragConfig);
+  initialize();
+  destroyHandler = destroy;
+};
 onActivated(() => {
   emitter.emit("updataScroll");
   commit("toggleList", "whole");
 });
 onDeactivated(() => {});
+
 onMounted(() => {
   commit("setConversationValue", { key: "arrowRight", value: false });
 });
-onUnmounted(() => {});
+
+onUnmounted(() => {
+  // 清理拖动逻辑
+  if (destroyHandler) {
+    destroyHandler();
+  }
+});
+
 watchEffect(() => {
   fnTotalUnreadMsg();
+});
+
+watch(isChatBoxVisible, (val) => {
+  if (val) {
+    nextTick(() => {
+      onDrag();
+    });
+  }
 });
 </script>
 
@@ -190,31 +232,29 @@ watchEffect(() => {
 
 #drag {
   position: absolute;
-  height: 1px;
   z-index: 10;
+  height: 2px;
   width: 100%;
-  cursor: n-resize;
+  user-select: none;
   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .resize-hover:hover {
-  background: #222222 !important;
-  // background: #eeeeee;
+  background: #409eff !important;
 }
 .sidebar-drag {
   pointer-events: all;
   position: absolute;
-  z-index: 1;
+  z-index: 9;
   top: 0;
   right: -1px;
   display: flex;
   align-items: center;
-  width: 1px;
+  width: 2px;
   height: 100%;
   cursor: ew-resize;
   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
   &:hover {
-    background: #222222 !important;
-    // background: #eeeeee;
+    background: #409eff !important;
   }
 }
 .layoutkit-center {

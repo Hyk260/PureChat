@@ -4,15 +4,14 @@
       <div class="touxiang">
         <UserAvatar type="self" isdot shape="square" @click="openUploadAvatarDialog" />
       </div>
-      <div class="aside-item flex-c" v-for="item in outsideList" :key="item.only">
+      <div class="aside-item flex-c" v-for="item in outsideList" :key="item.id">
         <el-tooltip :content="item.title" placement="right">
           <div
-            v-show="visibile(item)"
             @click="toggle(item)"
             class="aside-list flex-c flex-col gap-3"
-            :class="{ current: outside == item.only }"
+            :class="{ current: outside === item.id }"
           >
-            <el-badge :value="unreadMsg" :hidden="item.only !== 'message' || unreadMsg == 0">
+            <el-badge :value="unreadMsg" :hidden="item.id !== 'message' || unreadMsg == 0">
               <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" class="style-svg" />
               <svg-icon v-else :iconClass="item.icon" class="style-svg" />
             </el-badge>
@@ -42,30 +41,27 @@ import { useStore } from "vuex";
 
 const { commit } = useStore();
 const { outside, unreadMsg, outsideList } = useState({
-  outsideList: (state) => state.sidebar.outsideList,
+  outsideList: (state) => state.sidebar.outsideList.filter((item) => item?.show !== "hide"),
   unreadMsg: (state) => state.conversation.totalUnreadMsg,
   outside: (state) => state.conversation.outside,
 });
 
-function visibile(item) {
-  return item?.show == "hide" ? false : true;
-}
-
 function openUploadAvatarDialog() {
-  // emitter.emit("uploadAvatarDialog", true);
   emitter.emit("setPopover");
 }
+
+function operation() {
+  emitter.emit("openSetup", true);
+}
+
 function toggle(item) {
   if (item?.openType) {
     window.open(item?.url, "_blank");
-  } else if (item?.mode == "other") {
+  } else if (item?.mode === "other") {
     emitter.emit("SidebarEditDialog", true);
   } else {
-    commit("taggleOueSide", item.only);
+    commit("taggleOueSide", item.id);
   }
-}
-function operation() {
-  emitter.emit("openSetup", true);
 }
 </script>
 

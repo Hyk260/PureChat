@@ -5,15 +5,17 @@ import {
   createTextMessage,
   createVideoMsg,
 } from "@/api/im-sdk-api/index";
-import store from "@/store/index";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { dataURLtoFile, getBlob, getFileType } from "@/utils/chat/index";
-import emitter from "@/utils/mitt-bus";
 import { useClipboard } from "@vueuse/core";
 import { match } from "pinyin-pro";
 import { nextTick } from "vue";
 import { placeholderMap } from "./configure";
+
+import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
+import manifest from "@/database/manifest/index.json";
 
 import CustomElemItem from "../ElemItemTypes/CustomElemItem.vue";
 import FileElemItem from "../ElemItemTypes/FileElemItem.vue";
@@ -29,43 +31,92 @@ export const isDataTransferItem = (item) => {
   return Object.prototype.toString.call(item) === "[object DataTransferItem]";
 }
 
-export const dragControllerDiv = (node) => {
-  let dragElement = document.querySelector("#drag"); //滑块
-  let chatBox = document.querySelector("#chat-box"); //聊天框
-  let editor = document.querySelector("#editor"); //编辑器
-  let container = document.querySelector("#container"); //整个盒子
+export function createDragHandler(config) {
+  // 从配置中解构出需要使用的变量
+  const { dragElement, chatBox, editor, container, dragHover, minHeight = 200, offsetHeight = 60, scrollBar } = config;
 
-  const MIN_HEIGHT = 200; // 最小拖动高度
-  const OFFSET_HEIGHT = 60; // 滑块顶部偏移量
-  // 按下鼠标执行
-  dragElement.onmousedown = (e) => {
-    const startY = e.clientY; // 起始鼠标 Y 坐标
-    const startTop = dragElement.offsetTop; // 滑块的起始偏移高度
-    // 鼠标移到时
-    document.onmousemove = (e) => {
-      const endY = e.clientY; //鼠标移动 结束的y
-      const moveLen = startTop + (endY - startY);// 移动距离 = 原来高度+（结束y-开始y）
-      const containerHeight = container.clientHeight; // 容器高度
-      // 计算并限制高度范围
-      const clampedHeight = Math.max(
-        MIN_HEIGHT,
-        Math.min(moveLen, containerHeight - MIN_HEIGHT)
-      );
-      // 设置聊天框和编辑器的高度
-      chatBox.style.height = `${clampedHeight - OFFSET_HEIGHT}px`;
-      editor.style.height = `${containerHeight - clampedHeight}px`;
-    };
-    // 鼠标松开时
-    document.onmouseup = () => {
-      document.onmousemove = null;
-      document.onmouseup = null;
-      // 手动更新滚动条高度
-      node.updateScrollbar();
-    };
-    return false;
+  let animationFrameId = null; // 用于存储 requestAnimationFrame ID
+  let startY = 0; // 起始鼠标 Y 坐标
+  let startTop = 0; // 滑块的起始偏移高度
+
+  // 鼠标移动事件处理函数
+  const handleMouseMove = (event) => {
+    // 如果没有动画帧 ID，则创建一个新的动画帧
+    if (!animationFrameId) {
+      animationFrameId = requestAnimationFrame(() => {
+        animationFrameId = null;
+        updateSizes(event.clientY);
+      });
+    }
   };
-};
 
+  // 更新聊天框和编辑器的高度
+  const updateSizes = (clientY) => {
+    const moveLen = startTop + (clientY - startY); // 计算移动距离
+    const containerHeight = container.clientHeight; // 获取容器高度
+
+    // 限制高度范围
+    const clampedHeight = Math.max(
+      minHeight,
+      Math.min(moveLen, containerHeight - minHeight)
+    );
+
+    // 更新聊天框和编辑器的高度
+    chatBox.style.height = `${clampedHeight - offsetHeight}px`;
+    if (editor) editor.style.height = `${containerHeight - clampedHeight}px`;
+  };
+
+  const handleMouseUp = () => {
+    // 移除鼠标移动和松开事件
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+    // 恢复鼠标样式
+    document.body.style.cursor = "";
+    if (dragHover) dragHover.style.background = "none";
+    // 更新滚动条
+    scrollBar?.updateScrollbar();
+    // 清除动画帧
+    if (animationFrameId !== null) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+  };
+
+  const handleMouseDown = (event) => {
+    startY = event.clientY; // 起始鼠标 Y 坐标
+    startTop = dragElement.offsetTop; // 滑块的起始偏移高度
+
+    // 设置鼠标样式为 `n-resize`
+    document.body.style.cursor = "n-resize";
+    if (dragHover) dragHover.style.background = "#409EFF";
+    // 绑定鼠标移动和松开事件
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    // 阻止浏览器默认行为
+    event.preventDefault();
+  };
+
+  // 为滑块绑定事件
+  const initialize = () => {
+    dragElement.addEventListener("mousedown", handleMouseDown);
+  };
+
+  // 清除拖动绑定事件
+  const destroy = () => {
+    dragElement.removeEventListener("mousedown", handleMouseDown);
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+    // 恢复鼠标样式
+    document.body.style.cursor = "";
+    if (dragHover) dragHover.style.background = "none";
+  };
+
+  return {
+    initialize,
+    destroy,
+  };
+}
 export const dragControllerDivHorizontal = () => {
   let dragElement = document.querySelectorAll(".sidebar-drag")[0]; // 滑块
   let leftBox = document.querySelectorAll(".message-left")[0]; // 左边盒子
@@ -101,7 +152,6 @@ export const dragControllerDivHorizontal = () => {
     // 阻止拖动时选中文字
     return false;
   };
-
 };
 
 export const validatelastMessage = (list) => {
@@ -644,4 +694,29 @@ export const formatContent = (data) => {
     .join("");
 };
 
+/**
+ * 根据指定的 Key 和 Type 获取插件数据
+ * @param params.key 搜索的键值
+ * @param params.type 搜索的键名 (默认值: 'identifier')
+ * @returns 匹配的插件对象，包含 `imageUrl` 属性
+ */
+export function getPlugin({
+  key = "",
+  type = "identifier",
+} = {}) {
+  // 从 plugins 中搜索匹配项
+  const plugin = manifest.plugins.find(
+    (item) => item[type] === key
+  );
+
+  if (!plugin) {
+    console.error(`Plugin with ${type} = "${key}" not found.`);
+    return null;
+  }
+
+  return {
+    ...plugin,
+    imageUrl: new URL(`../../../assets/images/plugin/${plugin.meta?.avatar}`, import.meta.url).href
+  };
+}
 

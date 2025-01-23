@@ -54,3 +54,14 @@ export const getTime = () => {
   return parseInt(new Date().getTime() / 1000);
 }
 
+/**
+ * Detects Macintosh
+ */
+export function isMacOS() {
+  if (typeof window !== "undefined") {
+    let userAgent = window.navigator.userAgent.toLocaleLowerCase();
+    const macintosh = /iphone|ipad|ipod|macintosh/.test(userAgent);
+    return !!macintosh;
+  }
+  return false;
+}

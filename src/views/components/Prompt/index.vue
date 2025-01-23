@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div class="prompt">
-      <div class="header">助手</div>
+      <div class="header">Discover</div>
       <el-scrollbar class="h-full w-full">
         <div class="layout-body">
           <div class="layout-box">

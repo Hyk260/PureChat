@@ -212,12 +212,12 @@ function sendFile(e) {
   });
 }
 function isShowPlugins(val) {
-  return false
-  // if (__LOCAL_MODE__) {
-  //   return false;
-  // } else {
-  //   return false;
-  // }
+  return false;
+  if (__LOCAL_MODE__) {
+    return true;
+  } else {
+    return false;
+  }
 }
 function isShowImage(val) {
   if (__LOCAL_MODE__) {

@@ -1,0 +1,9 @@
+{
+  "body": {
+    "bodyType": "alertBody",
+    "text": {
+      "provider": "GPT",
+      "value": "Hello World"
+    }
+  }
+}

@@ -4,12 +4,12 @@
       <div
         class="list flex-bc w-full"
         v-for="item in pluginData"
-        :key="item.id"
+        :key="item.identifier"
         @click="setChecked(item)"
       >
-        <img class="img" :src="item.url" alt="" />
+        <img class="img" :src="item.imageUrl" alt="" />
         <div class="flex-bc right">
-          <div>{{ item.name }}</div>
+          <div>{{ item.meta.title }}</div>
           <el-checkbox @click.stop class="h-20" v-model="item.checked" />
         </div>
       </div>
@@ -22,83 +22,26 @@ import { ref } from "vue";
 import { StoreKey } from "@/ai/constant";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { useBoolean } from "@/utils/hooks/index";
-import emitter from "@/utils/mitt-bus";
 import { useStore } from "vuex";
 import { localStg } from "@/utils/storage";
-import webSearch from '@/database/manifest/web-search.json';
+import { getPlugin } from "../utils/utils";
+import emitter from "@/utils/mitt-bus";
 
 const { commit } = useStore();
 const [flag, setFlag] = useBoolean();
 
-const getAssetsFile = (url) => {
-  return new URL(`../../../assets/images/plugin/${url}`, import.meta.url).href;
-};
-
 const pluginData = ref([
   {
-    id: 0,
-    name: "网络搜索",
     checked: false,
-    prompt:
-      "## Tools\n\nYou can use these tools below:\n\n### Web Search\n\nSearch for information from the internet\n\nThe APIs you can use:\n\n#### web_search____searchGoogle\n\nSearch Google and return top 10 results",
-    url: getAssetsFile("web-search.png"),
-    tools: [webSearch],
-  },
-  {
-    id: 1,
-    name: "实时天气",
-    checked: false,
-    prompt: "",
-    url: getAssetsFile("fluent-emoji.webp"),
-    tools: [],
+    ...getPlugin({ key: "web_search" }),
   },
   // {
-  //   id: 2,
-  //   name: "DALL·E 3",
+  //   id: "get_weather",
   //   checked: false,
+  //   name: "实时天气",
   //   prompt: "",
-  //   url: getAssetsFile("1f389.webp"),
-  //   tools: [
-  //     {
-  //       type: "function",
-  //       function: {
-  //         name: "Dalle3",
-  //         description: "openai's dall-e image generator.",
-  //         parameters: {
-  //           type: "object",
-  //           required: ["model", "n", "prompt", "size", "quality", "style"],
-  //           properties: {
-  //             model: {
-  //               type: "string",
-  //               description: "model name, required and value is `dall-e-3`.",
-  //             },
-  //             n: {
-  //               type: "number",
-  //               description: "value is `1`",
-  //             },
-  //             prompt: {
-  //               type: "string",
-  //               description:
-  //                 "A text description of the desired image(s). input must be a english prompt.",
-  //             },
-  //             size: {
-  //               type: "string",
-  //               description:
-  //                 "images size, can be `1024x1024`, `1024x1792`, `1792x1024`. default value is `1024x1024`",
-  //             },
-  //             quality: {
-  //               type: "string",
-  //               description: "images quality, can be `standard`, `hd`. default value is `hd`",
-  //             },
-  //             style: {
-  //               type: "string",
-  //               description: "images style, can be `vivid`, `natural`. default value is `vivid`",
-  //             },
-  //           },
-  //         },
-  //       },
-  //     },
-  //   ],
+  //   url: getAssetsFile("fluent-emoji.webp"),
+  //   tools: [getWeather],
   // },
 ]);
 
@@ -119,7 +62,7 @@ function setChecked(item) {
 function feedBack() {
   const plugin = localStg.get(StoreKey.Tool);
   if (plugin) {
-    const pluginIds = new Set(plugin.map(item => item.id));
+    const pluginIds = new Set(plugin.map((item) => item.id));
     pluginData.value.forEach((item) => {
       if (pluginIds.has(item.id)) {
         item.checked = true;
