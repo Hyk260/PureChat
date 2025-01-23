@@ -15,7 +15,8 @@
     "build:preview": "vite build && vite preview",
     "report": "rimraf dist && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "check": "node scripts/check-all.js"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
@@ -30,6 +31,7 @@
     "artplayer": "^5.1.1",
     "autoprefixer": "^10.4.19",
     "axios": "^0.26.1",
+    "chalk": "^5.4.1",
     "dayjs": "^1.11.11",
     "dexie": "^4.0.10",
     "element-plus": "^2.8.8",
