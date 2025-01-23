@@ -98,8 +98,7 @@ const conversation = {
       }
       console.log("历史消息 history:", history);
       const baseTime = getBaseTime(history, "last");
-      const timeDividerResult = addTimeDivider(messages, baseTime).reverse();
-      console.log("timeDividerResult:", timeDividerResult);
+      const timeDividerResult = addTimeDivider(messages, baseTime, "last");
       const newHistory = history.concat(timeDividerResult);
       state.currentMessageList = newHistory;
       state.historyMessageList.set(convId, newHistory);
