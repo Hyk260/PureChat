@@ -86,7 +86,7 @@ function toggle(item) {
     border-radius: 4px;
     cursor: pointer;
     &:hover {
-      background-color: var(--pure-hover-color);
+      background-color: var(--icon-hover-color);
     }
   }
   .style-svg {
