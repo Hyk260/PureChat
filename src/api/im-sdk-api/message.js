@@ -36,7 +36,7 @@ const fnImageSize = async (image) => {
 }
 
 // 发送消息
-export const sendMsg = async (params) => {
+export const sendMessage = async (params) => {
   try {
     const {
       code,
@@ -48,7 +48,7 @@ export const sendMsg = async (params) => {
   }
 };
 // 创建自定义消息
-export const createCustomMsg = (params) => {
+export const createCustomMessage = (params) => {
   const { convId, convType = "C2C", customType } = params || {};
   return tim.createCustomMessage({
     to: convId,
@@ -75,7 +75,7 @@ export const createTextMessage = (params) => {
 };
 
 // 创建 @提醒功能的文本消息
-export const createTextAtMsg = (params) => {
+export const createTextAtMessage = (params) => {
   const { convId, convType, textMsg, atUserList, reply } = params;
   return tim.createTextAtMessage({
     to: convId,
@@ -86,7 +86,7 @@ export const createTextAtMsg = (params) => {
 };
 
 // 创建图片消息 https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createImageMessage
-export const createImgtMsg = async (params) => {
+export const createImageMessage = async (params) => {
   const { convId, convType, image } = params;
   const message = tim.createImageMessage({
     to: convId,
@@ -100,7 +100,7 @@ export const createImgtMsg = async (params) => {
   return imageMessage;
 };
 // 创建文件消息
-export const createFiletMsg = (params) => {
+export const createFileMessage = (params) => {
   const { convId, convType, files } = params;
   const message = tim.createFileMessage({
     to: convId,
@@ -113,7 +113,7 @@ export const createFiletMsg = (params) => {
   return message;
 };
 // 创建视频消息
-export const createVideoMsg = (params) => {
+export const createVideoMessage = (params) => {
   const { convId, convType, video } = params;
   const message = tim.createVideoMessage({
     to: convId,
@@ -126,7 +126,7 @@ export const createVideoMsg = (params) => {
   return message;
 };
 // 创建合并消息
-export const createMergerMsg = async (params) => {
+export const createMergerMessage = async (params) => {
   const { convId, convType, List, title = "", abstractList } = params;
   return tim.createMergerMessage({
     to: convId,
@@ -140,7 +140,7 @@ export const createMergerMsg = async (params) => {
   });
 };
 // 创建转发消息
-export const createForwardMsg = async (params) => {
+export const createForwardMessage = async (params) => {
   const { convId, convType, message } = params;
   return await tim.createForwardMessage({
     to: convId,

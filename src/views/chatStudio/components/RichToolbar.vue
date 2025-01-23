@@ -99,7 +99,7 @@
 </template>
 
 <script setup>
-import { createCustomMsg } from "@/api/im-sdk-api/index";
+import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { isRobot, screenshot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
@@ -186,7 +186,7 @@ const onEnlarge = (value) => {
 };
 
 function customMessage() {
-  const message = createCustomMsg({
+  const message = createCustomMessage({
     convId: toAccount.value,
     convType: currentType.value,
     customType: "loading",

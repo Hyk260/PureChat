@@ -5,7 +5,7 @@ import {
   getConversationProfile,
   getMessageList,
   getUnreadMsg,
-  sendMsg,
+  sendMessage,
   setMessageRead,
   setMessageRemindType,
 } from "@/api/im-sdk-api/index";
@@ -393,7 +393,7 @@ const conversation = {
       commit("updateMessages", { convId, message });
       emitter.emit("updataScroll");
       // 发送消息
-      const { code, message: result } = await sendMsg(message);
+      const { code, message: result } = await sendMessage(message);
       if (code === 0) {
         dispatch("sendMsgSuccessCallback", { convId, message: result, last });
       } else {

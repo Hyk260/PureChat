@@ -1,7 +1,7 @@
 import { ClientApi } from "@/ai/api";
 import { ModelProvider, modelValue } from "@/ai/constant";
 import { useAccessStore, prettyObject, getAvatarUrl } from "@/ai/utils";
-import { createCustomMsg } from "@/api/im-sdk-api/index";
+import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
 import store from "@/store";
 import emitter from "@/utils/mitt-bus";
@@ -32,7 +32,7 @@ const updataMessage = (chat, message = "") => {
 
 const fnCreateStartMsg = (params) => {
   const { to, from } = params;
-  const msg = createCustomMsg({ convId: from, customType: "loading" });
+  const msg = createCustomMessage({ convId: from, customType: "loading" });
   msg.conversationID = `C2C${to}`;
   msg.avatar = getAvatarUrl(to);
   msg.flow = "in";

@@ -1,9 +1,9 @@
 import {
-  createFiletMsg,
-  createImgtMsg,
-  createTextAtMsg,
+  createFileMessage,
+  createImageMessage,
+  createTextAtMessage,
   createTextMessage,
-  createVideoMsg,
+  createVideoMessage,
 } from "@/api/im-sdk-api/index";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
@@ -270,7 +270,7 @@ export async function sendChatMessage(options) {
   // @消息
   if (aitStr) {
     Message.push(
-      createTextAtMsg({ convId, convType, textMsg: aitStr, atUserList: aitlist, reply })
+      createTextAtMessage({ convId, convType, textMsg: aitStr, atUserList: aitlist, reply })
     );
   }
   // 文本消息
@@ -280,19 +280,19 @@ export async function sendChatMessage(options) {
 
   // 处理图片消息
   for (const t of image) {
-    const img = await createImgtMsg({ convId, convType, image: dataURLtoFile(t.src) });
+    const img = await createImageMessage({ convId, convType, image: dataURLtoFile(t.src) });
     Message.push(img);
   }
 
   // 处理文件消息
   for (const t of files) {
-    const file = createFiletMsg({ convId, convType, files: dataURLtoFile(t.link, t.fileName) });
+    const file = createFileMessage({ convId, convType, files: dataURLtoFile(t.link, t.fileName) });
     Message.push(file);
   }
 
   // 处理视频消息
   for (const t of video) {
-    const vid = createVideoMsg({ convId, convType, video: dataURLtoFile(t.link, t.fileName) });
+    const vid = createVideoMessage({ convId, convType, video: dataURLtoFile(t.link, t.fileName) });
     Message.push(vid);
   }
 
