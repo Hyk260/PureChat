@@ -69,7 +69,7 @@
   <!-- 第三方登录 -->
   <el-form-item>
     <el-divider>
-      <p class="text-gray-500 text-xs">{{ $t("login.thirdLogin") }}</p>
+      <p class="text-gray-500">{{ $t("login.thirdLogin") }}</p>
     </el-divider>
     <div class="w-full flex justify-evenly">
       <span v-for="(item, index) in thirdParty" :key="index" :title="item.title">

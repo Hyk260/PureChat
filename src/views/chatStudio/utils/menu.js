@@ -30,7 +30,7 @@ export const chatSessionListData = [
     id: "remove",
     icon: "Delete",
     text: "移除会话",
-    class: "!text-[#f44336]",
+    style: "color: #f44336;",
   },
   // { id: "clean", text: "清除消息" },
 ].filter(item => !item.hide);
@@ -78,7 +78,7 @@ export const menuOptionsList = [
     id: "delete",
     icon: "Delete",
     text: "删除",
-    class: "!text-[#f44336]",
+    style: "color: #f44336;",
   },
 ];
 

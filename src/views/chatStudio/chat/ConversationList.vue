@@ -59,6 +59,7 @@
         v-for="item in contextMenuItems"
         :key="item.id"
         :class="item.class"
+        :style="item.style"
         @click="handleClickMenuItem(item)"
       >
         <FontIcon v-if="item.icon" :iconName="item.icon" />

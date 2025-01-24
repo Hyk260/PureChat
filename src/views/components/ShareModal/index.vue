@@ -4,23 +4,23 @@
     @close="onClose"
     :modal="true"
     :append-to-body="true"
-    class="share-modal-dialog"
+    class="share-modal-dialog min-w-460"
     align-center
     title="截图分享"
     width="60%"
   >
     <div class="share-modal">
-      <div class="segmented w-full">
+      <div class="segmented">
         <div id="preview" class="preview" :style="back">
           <div class="content">
             <Header />
-            <h2 class="role px-16" v-if="robotRole() && isPrompt">
+            <h2 class="role" v-if="robotRole() && isPrompt">
               {{ robotRole() }}
             </h2>
-            <div v-if="isRobot(toAccount) && isPrompt" class="prompt p-16">
+            <div v-if="isRobot(toAccount) && isPrompt" class="prompt">
               <Markdown :marked="robotPrompt()" />
             </div>
-            <div class="min-h-60 item">
+            <div class="item min-h-60">
               <div
                 class="message flex p-10"
                 v-for="item in fnForwardData"
@@ -29,11 +29,11 @@
               >
                 <div class="avatar">
                   <img
-                    class="w-32 h-32 rounded-[6px]"
+                    class="w-32 h-32 rounded-6"
                     v-if="!isSelf(item)"
                     :src="getAiAvatarUrl(toAccount) || item.avatar"
                   />
-                  <img class="w-32 h-32 rounded-[6px]" v-else :src="item.avatar" />
+                  <img class="w-32 h-32 rounded-6" v-else :src="item.avatar" />
                 </div>
                 <div class="item" :class="msgOne(item.type)">
                   <div :class="msgType(item.type)">
@@ -60,7 +60,7 @@
           </div>
         </div>
       </div>
-      <div class="form-item-props px-5">
+      <div class="form-item-props">
         <div class="flex-bc my-5 h-32">
           <div>背景色</div>
           <div class="grid grid-cols-7 gap-5">
@@ -68,7 +68,7 @@
               v-for="(item, i) in backgColor"
               :key="i"
               @click="onColor(item)"
-              class="w-28 h-28 relative rounded-[50%] cursor-pointer"
+              class="w-28 h-28 relative rounded-50% cursor-pointer"
               :style="fnStyleBack(item)"
             ></div>
           </div>
@@ -188,11 +188,8 @@ emitter.on("handleShareModal", (val) => {
 </script>
 
 <style lang="scss" scoped>
-:global(body .share-modal-dialog) {
-  min-width: 460px;
-}
-
 .prompt {
+  padding: 16px;
   border-bottom: 1px solid var(--color-border-default);
 }
 
@@ -205,6 +202,8 @@ emitter.on("handleShareModal", (val) => {
 }
 
 .role {
+  padding-left: 16px;
+  padding-right: 16px;
   overflow: hidden;
   font-weight: bold;
   text-overflow: ellipsis;
@@ -234,6 +233,8 @@ emitter.on("handleShareModal", (val) => {
 }
 
 .form-item-props {
+  padding-left: 5px;
+  padding-right: 5px;
   overflow: hidden;
   padding-inline: 16px;
   background: rgba(0, 0, 0, 0.015);
