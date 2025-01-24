@@ -139,33 +139,46 @@ const fnClass = (item) => (item?.conversationID === chat.value?.conversationID ?
 
 const formatNewsMessage = (data) => {
   const { type, lastMessage, unreadCount } = data;
-  const { messageForShow, fromAccount, isRevoked, nick, type: lastType } = lastMessage;
+  const { messageForShow: rawTip, fromAccount, isRevoked, nick, type: lastType } = lastMessage;
   const { userID } = userProfile.value;
   const isOther = userID !== fromAccount; // 其他人消息
   const isFound = fromAccount === "@TLS#NOT_FOUND"; // 未知消息
   const isSystem = type === "@TIM#SYSTEM"; //系统消息
-  const isGroop = type === "GROUP"; //群聊
+  const isGroup = type === "GROUP"; //群聊
   const isCount = unreadCount && isNotify(data); // 未读消息计数
-  // 是否为撤回消息
-  if (isRevoked) return `${isOther ? nick : "你"}撤回了一条消息`;
-  // 免打扰消息
+  const MAX_TIP_LENGTH = 32;
+
+  const formatTip = (message) =>
+    message.length > MAX_TIP_LENGTH ? `${message.slice(0, MAX_TIP_LENGTH)}...` : message;
+
+  const tip = formatTip(rawTip);
+  // 处理撤回消息
+  if (isRevoked) {
+    return `${isOther ? nick : "你"}撤回了一条消息`;
+  }
+  // 处理免打扰消息
   if (isCount) {
+    const prefix = `[${unreadCount}条] `;
     if (lastType === "TIMGroupTipElem") {
-      return `[${unreadCount}条] ${messageForShow}`;
+      return `${prefix} ${tip}`;
     }
-    return `[${unreadCount}条] ${isGroop && isOther ? nick + ":" : ""}${messageForShow}`;
+    const sender = isGroup && isOther ? `${nick || "未知用户"}: ` : "";
+    return `${prefix}${sender}${tip}`;
   }
-  if (isFound || isSystem) return messageForShow;
-  if (isGroop && isOther) {
+  // 处理未知或系统消息
+  if (isFound || isSystem) return tip;
+  // 处理群聊消息
+  if (isGroup && isOther) {
     if (lastType === "TIMGroupTipElem") {
-      return messageForShow;
+      return tip;
     } else if (nick) {
-      return `${nick}: ${messageForShow}`;
+      return `${nick}: ${tip}`;
     } else {
-      messageForShow;
+      tip;
     }
   }
-  return messageForShow;
+  // 默认返回消息内容
+  return tip;
 };
 // 定义消息提示元素
 const createMessagePrompt = (type = "at") => {
@@ -351,7 +364,7 @@ watch(activetab, (data) => {
       font-size: 12px;
       color: var(--color-time-divider);
       width: 179px;
-      @include text-ellipsis
+      @include text-ellipsis;
     }
     .svg-icon {
       color: rgba(0, 0, 0, 0.45);
