@@ -13,7 +13,9 @@ if (!existsSync(envPath)) {
   const defaultEnvContent =
 `
 # IM SDKAppID
-VITE_IM_SDK_APPID=
+VITE_IM_SDK_APPID=''
+# github api key
+VITE_GITHUB_API_KEY=''
 `
   try {
     writeFileSync(envPath, defaultEnvContent, 'utf8')
