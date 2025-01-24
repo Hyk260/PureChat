@@ -17,6 +17,7 @@
 import ImageViewer from "../components/ImageViewer/index.vue";
 import { useState } from "@/utils/hooks/useMapper";
 import AddressBook from "../components/AddressBook/index.vue";
+import FriendsList from "../components/FriendsList/index.vue";
 import Discover from "../components/Prompt/index.vue";
 import frameView from "./frameView.vue";
 import Message from "./message.vue";
@@ -38,6 +39,7 @@ const Component = {
   test: test, // 测试;
   discover: Discover, // 发现
   notebook: AddressBook,
+  friends: FriendsList,
 };
 
 const { outside } = useState({

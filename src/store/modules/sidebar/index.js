@@ -14,8 +14,12 @@ const outsideList = [
     id: "notebook",
     icon: "Notebook",
     title: "通讯录",
-    // class: "fix-ed",
-    // if_fixed: 1,
+    type: "el-icon",
+  },
+  {
+    id: "friends",
+    icon: "UserFilled",
+    title: "联系人",
     type: "el-icon",
   },
   {
@@ -23,7 +27,6 @@ const outsideList = [
     icon: "Discover",
     title: "发现",
     svgIcon: 'Discover'
-    // type: "el-icon",
   },
   {
     id: "document",
