@@ -1,6 +1,5 @@
 <template>
   <main class="app-main">
-    <!-- :class="[isElectron ? 'windowStyle' : '']" -->
     <div class="continer-theme">
       <router-view v-slot="{ Component, route }">
         <transition name="fade-slide" :appear="true" mode="out-in">
@@ -19,7 +18,6 @@
 
 <script setup>
 import LaySetting from './components/lay-setting/index.vue';
-import { isElectron } from "@/utils/common";
 </script>
 
 <style lang="scss" scoped>
@@ -28,10 +26,7 @@ import { isElectron } from "@/utils/common";
   background: var(--color-body-bg);
 }
 .app-main {
-  height: 100vh;
+  height: 100%;
   position: relative;
-}
-.windowStyle {
-  height: calc(100vh - 32px);
 }
 </style>
