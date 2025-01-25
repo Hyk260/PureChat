@@ -21,7 +21,8 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useState, useGetters } from "@/utils/hooks/useMapper";
-import { showIMPic, getImageSize } from "../utils/utils";
+import { showIMPic } from "../utils/utils";
+import { getImageSize } from "@/utils/common";
 
 const props = defineProps({
   message: {

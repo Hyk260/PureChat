@@ -103,6 +103,7 @@
         v-for="item in contextMenuItems"
         :key="item.id"
         :class="item.class"
+        :style="item.style"
         @click="handlRightClick(item)"
       >
         <FontIcon :iconName="item.icon" />

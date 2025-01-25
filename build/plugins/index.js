@@ -1,5 +1,6 @@
 import process from "node:process";
 import path from "node:path";
+import UnoCSS from '@unocss/vite'
 import vue from "@vitejs/plugin-vue";
 import progress from "vite-plugin-progress";
 import removeConsole from "vite-plugin-remove-console";
@@ -17,6 +18,7 @@ import { cdn } from "./cdn";
 export function setupVitePlugins(viteEnv) {
   const plugins = [
     vue(),
+    UnoCSS(), // 开启UnoCSS
     // 打包进度
     progress(),
     // 线上环境删除console

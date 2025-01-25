@@ -32,21 +32,6 @@ const hanldeItemClick = async () => {
 </script>
 
 <style lang="scss" scoped>
-:global(body .shrink-style) {
-  border-radius: 3px;
-  animation: fade 500ms infinite;
-}
-@keyframes fade {
-  from {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.3;
-  }
-  to {
-    opacity: 1;
-  }
-}
 .reply-content {
   border-left: 3px solid #ccc;
   padding-left: 10px;

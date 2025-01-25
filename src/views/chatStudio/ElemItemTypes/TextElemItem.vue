@@ -75,11 +75,11 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 :global(body .is-text-self) {
-  background: var(--pure-self-msg-color);
+  background: var(--self-msg-color);
 }
 
 :global(body .is-text-other) {
-  background: var(--pure-other-msg-color);
+  background: var(--other-msg-color);
 }
 
 .message-view-item-text {

@@ -65,7 +65,7 @@ export default defineComponent({
         },
         {
           title: "单发单聊消息",
-          onclick: () => this.sendMsg(),
+          onclick: () => this.sendMessage(),
         },
         {
           title: "环境变量",
@@ -103,7 +103,7 @@ export default defineComponent({
     async test3() {},
     setCookies() {},
     getCookies() {},
-    sendMsg() {},
+    sendMessage() {},
     async test2() {},
     handleGroupClick(groupID) {
     },

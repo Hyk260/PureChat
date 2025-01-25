@@ -38,7 +38,7 @@
             </div>
             <div
               v-show="filterInput.length"
-              class="w-full py-16 flex-c text-sm/[12px] text-slate-500"
+              class="w-full py-16 flex-c text-12"
             >
               喜欢{{ VITE_APP_NAME }}？
               <a class="text-amber-600" :href="homepage" target="_blank">在 GitHub 给添加星标 </a>

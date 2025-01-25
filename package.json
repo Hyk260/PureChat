@@ -25,7 +25,10 @@
     "app:builder:mac": "electron-vite build && electron-builder --mac",
     "build:win": "electron-builder --win",
     "build:win32": "electron-builder --win --ia32",
-    "build:mac": "electron-builder --mac"
+    "build:mac": "electron-builder --mac",
+    "check": "node scripts/check-all.js",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@tiny-libs/typed-event-emitter": "^1.0.0",
@@ -39,8 +42,8 @@
     "ai": "^3.3.0",
     "animate.css": "^4.1.1",
     "artplayer": "^5.1.1",
-    "autoprefixer": "^10.4.19",
     "axios": "^0.26.1",
+    "chalk": "^5.4.1",
     "dayjs": "^1.11.11",
     "electron-log": "^5.1.7",
     "electron-updater": "^6.1.7",
@@ -65,7 +68,6 @@
     "qrcode": "^1.5.3",
     "request": "^2.88.2",
     "snabbdom": "^3.5.1",
-    "tailwindcss": "^3.4.4",
     "tim-upload-plugin": "^1.0.5",
     "uuid": "^11.0.3",
     "v-contextmenu": "3.0.0",
@@ -77,22 +79,28 @@
     "vuex": "4.1.0"
   },
   "devDependencies": {
+    "@unocss/preset-rem-to-px": "^65.4.3",
+    "@unocss/preset-uno": "^65.4.3",
     "@vitejs/plugin-vue": "^5.0.4",
     "electron": "^31.0.2",
     "electron-builder": "^24.13.3",
     "electron-vite": "^2.3.0",
+    "@vitest/ui": "^3.0.4",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "happy-dom": "^16.7.2",
     "prettier": "^3.0.2",
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "^1.77.4",
+    "unocss": "^65.4.3",
     "vite": "5.4.6",
     "vite-plugin-cdn-import": "^1.0.1",
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-remove-console": "^2.2.0",
     "vite-plugin-svg-icons": "2.0.1",
-    "vite-plugin-vue-devtools": "7.6.2"
+    "vite-plugin-vue-devtools": "7.6.2",
+    "vitest": "^3.0.4"
   },
   "engines": {
     "node": "^18.20.0 || >=20.0.0",

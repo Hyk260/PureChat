@@ -8,7 +8,7 @@
     :before-close="handleClose"
   >
     <div class="agent-card-banner">
-      <div class="flex-c flex-col text-[50px]">
+      <div class="flex-c flex-col text-50">
         <div>
           {{ cardData.meta.avatar }}
         </div>

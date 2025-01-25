@@ -1,42 +1,35 @@
-import { throttle } from "lodash-es";
 import tim from "@/utils/IM/im-sdk/tim";
 import emitter from "@/utils/mitt-bus";
-import { getImageSize } from "@/views/chatStudio/utils/utils";
+import { throttle } from "lodash-es";
+import { updateImageSize } from "@/utils/common";
 import { getReplyMsgContent } from "@/utils/chat/index";
 import { getCustomMsgContent } from '@/api/im-sdk-api/custom';
 
 const createProgressHandler = () => {
-  let lastNum = 0;
-  const handleProgressUpdate = throttle((progress, cd) => {
-    if (progress.num !== lastNum) {
-      lastNum = progress.num;
-      if (typeof cd === "function") cd();
+  let lastProgress = 0;
+  const handleProgressUpdate = throttle((progress, callback) => {
+    if (progress.num !== lastProgress) {
+      lastProgress = progress.num;
+      callback?.();
     }
-  }, 100);
+  }, 50);
   return handleProgressUpdate;
 };
 
 const handleProgressUpdate = createProgressHandler();
 
-const fileUploading = (data, bar = 0) => {
-  handleProgressUpdate({ num: bar?.toFixed(0) }, () => {
-    const uuid = data?.payload?.uuid || "";
-    emitter.emit("fileUploading", { uuid, num: bar?.toFixed(0) });
-    console.log("[file] uploading:", bar?.toFixed(0) + "%");
+const fileUploading = (message, rawProgress = 0) => {
+  const num = Math.round(rawProgress);
+
+  handleProgressUpdate({ num }, () => {
+    const uuid = message?.payload?.uuid || "";
+    emitter.emit("fileUploading", { uuid, num });
+    console.log("[file] uploading:", `${num}%`);
   });
 };
 
-// 计算图片宽高
-const fnImageSize = async (image) => {
-  let num = 0;
-  const { width, height } = await getImageSize(image.payload.imageInfoArray[num].url);
-  image.payload.imageInfoArray[num].width = width;
-  image.payload.imageInfoArray[num].height = height;
-  return image;
-}
-
 // 发送消息
-export const sendMsg = async (params) => {
+export const sendMessage = async (params) => {
   try {
     const {
       code,
@@ -48,7 +41,7 @@ export const sendMsg = async (params) => {
   }
 };
 // 创建自定义消息
-export const createCustomMsg = (params) => {
+export const createCustomMessage = (params) => {
   const { convId, convType = "C2C", customType } = params || {};
   return tim.createCustomMessage({
     to: convId,
@@ -75,7 +68,7 @@ export const createTextMessage = (params) => {
 };
 
 // 创建 @提醒功能的文本消息
-export const createTextAtMsg = (params) => {
+export const createTextAtMessage = (params) => {
   const { convId, convType, textMsg, atUserList, reply } = params;
   return tim.createTextAtMessage({
     to: convId,
@@ -86,7 +79,7 @@ export const createTextAtMsg = (params) => {
 };
 
 // 创建图片消息 https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createImageMessage
-export const createImgtMsg = async (params) => {
+export const createImageMessage = async (params) => {
   const { convId, convType, image } = params;
   const message = tim.createImageMessage({
     to: convId,
@@ -96,11 +89,11 @@ export const createImgtMsg = async (params) => {
       console.log("file uploading:", event);
     },
   });
-  const imageMessage = await fnImageSize(message);
+  const imageMessage = await updateImageSize(message);
   return imageMessage;
 };
 // 创建文件消息
-export const createFiletMsg = (params) => {
+export const createFileMessage = (params) => {
   const { convId, convType, files } = params;
   const message = tim.createFileMessage({
     to: convId,
@@ -113,7 +106,7 @@ export const createFiletMsg = (params) => {
   return message;
 };
 // 创建视频消息
-export const createVideoMsg = (params) => {
+export const createVideoMessage = (params) => {
   const { convId, convType, video } = params;
   const message = tim.createVideoMessage({
     to: convId,
@@ -126,7 +119,7 @@ export const createVideoMsg = (params) => {
   return message;
 };
 // 创建合并消息
-export const createMergerMsg = async (params) => {
+export const createMergerMessage = async (params) => {
   const { convId, convType, List, title = "", abstractList } = params;
   return tim.createMergerMessage({
     to: convId,
@@ -140,7 +133,7 @@ export const createMergerMsg = async (params) => {
   });
 };
 // 创建转发消息
-export const createForwardMsg = async (params) => {
+export const createForwardMessage = async (params) => {
   const { convId, convType, message } = params;
   return await tim.createForwardMessage({
     to: convId,

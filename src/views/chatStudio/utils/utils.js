@@ -1,9 +1,9 @@
 import {
-  createFiletMsg,
-  createImgtMsg,
-  createTextAtMsg,
+  createFileMessage,
+  createImageMessage,
+  createTextAtMessage,
   createTextMessage,
-  createVideoMsg,
+  createVideoMessage,
 } from "@/api/im-sdk-api/index";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
@@ -31,92 +31,6 @@ export const isDataTransferItem = (item) => {
   return Object.prototype.toString.call(item) === "[object DataTransferItem]";
 }
 
-export function createDragHandler(config) {
-  // 从配置中解构出需要使用的变量
-  const { dragElement, chatBox, editor, container, dragHover, minHeight = 200, offsetHeight = 60, scrollBar } = config;
-
-  let animationFrameId = null; // 用于存储 requestAnimationFrame ID
-  let startY = 0; // 起始鼠标 Y 坐标
-  let startTop = 0; // 滑块的起始偏移高度
-
-  // 鼠标移动事件处理函数
-  const handleMouseMove = (event) => {
-    // 如果没有动画帧 ID，则创建一个新的动画帧
-    if (!animationFrameId) {
-      animationFrameId = requestAnimationFrame(() => {
-        animationFrameId = null;
-        updateSizes(event.clientY);
-      });
-    }
-  };
-
-  // 更新聊天框和编辑器的高度
-  const updateSizes = (clientY) => {
-    const moveLen = startTop + (clientY - startY); // 计算移动距离
-    const containerHeight = container.clientHeight; // 获取容器高度
-
-    // 限制高度范围
-    const clampedHeight = Math.max(
-      minHeight,
-      Math.min(moveLen, containerHeight - minHeight)
-    );
-
-    // 更新聊天框和编辑器的高度
-    chatBox.style.height = `${clampedHeight - offsetHeight}px`;
-    if (editor) editor.style.height = `${containerHeight - clampedHeight}px`;
-  };
-
-  const handleMouseUp = () => {
-    // 移除鼠标移动和松开事件
-    document.removeEventListener("mousemove", handleMouseMove);
-    document.removeEventListener("mouseup", handleMouseUp);
-    // 恢复鼠标样式
-    document.body.style.cursor = "";
-    if (dragHover) dragHover.style.background = "none";
-    // 更新滚动条
-    scrollBar?.updateScrollbar();
-    // 清除动画帧
-    if (animationFrameId !== null) {
-      cancelAnimationFrame(animationFrameId);
-      animationFrameId = null;
-    }
-  };
-
-  const handleMouseDown = (event) => {
-    startY = event.clientY; // 起始鼠标 Y 坐标
-    startTop = dragElement.offsetTop; // 滑块的起始偏移高度
-
-    // 设置鼠标样式为 `n-resize`
-    document.body.style.cursor = "n-resize";
-    if (dragHover) dragHover.style.background = "#409EFF";
-    // 绑定鼠标移动和松开事件
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-
-    // 阻止浏览器默认行为
-    event.preventDefault();
-  };
-
-  // 为滑块绑定事件
-  const initialize = () => {
-    dragElement.addEventListener("mousedown", handleMouseDown);
-  };
-
-  // 清除拖动绑定事件
-  const destroy = () => {
-    dragElement.removeEventListener("mousedown", handleMouseDown);
-    document.removeEventListener("mousemove", handleMouseMove);
-    document.removeEventListener("mouseup", handleMouseUp);
-    // 恢复鼠标样式
-    document.body.style.cursor = "";
-    if (dragHover) dragHover.style.background = "none";
-  };
-
-  return {
-    initialize,
-    destroy,
-  };
-}
 export const dragControllerDivHorizontal = () => {
   let dragElement = document.querySelectorAll(".sidebar-drag")[0]; // 滑块
   let leftBox = document.querySelectorAll(".message-left")[0]; // 左边盒子
@@ -356,7 +270,7 @@ export async function sendChatMessage(options) {
   // @消息
   if (aitStr) {
     Message.push(
-      createTextAtMsg({ convId, convType, textMsg: aitStr, atUserList: aitlist, reply })
+      createTextAtMessage({ convId, convType, textMsg: aitStr, atUserList: aitlist, reply })
     );
   }
   // 文本消息
@@ -366,19 +280,19 @@ export async function sendChatMessage(options) {
 
   // 处理图片消息
   for (const t of image) {
-    const img = await createImgtMsg({ convId, convType, image: dataURLtoFile(t.src) });
+    const img = await createImageMessage({ convId, convType, image: dataURLtoFile(t.src) });
     Message.push(img);
   }
 
   // 处理文件消息
   for (const t of files) {
-    const file = createFiletMsg({ convId, convType, files: dataURLtoFile(t.link, t.fileName) });
+    const file = createFileMessage({ convId, convType, files: dataURLtoFile(t.link, t.fileName) });
     Message.push(file);
   }
 
   // 处理视频消息
   for (const t of video) {
-    const vid = createVideoMsg({ convId, convType, video: dataURLtoFile(t.link, t.fileName) });
+    const vid = createVideoMessage({ convId, convType, video: dataURLtoFile(t.link, t.fileName) });
     Message.push(vid);
   }
 
@@ -614,27 +528,6 @@ export const showIMPic = (width = 0, height = 0) => {
 
   return imageStyle;
 };
-
-/**
- * 获取图片的宽度和高度属性
- * @param {string} imageUrl - 图片地址
- * @returns {Promise<{width: number, height: number}>} - 包含图片宽度和高度的 Promise 对象
- * 'blob:http://localhost:8080/98f11c82-d402-4d7d-b49f-07a05bb75e89';
- */
-export function getImageSize(imageUrl) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = function () {
-      const width = this.width;
-      const height = this.height;
-      resolve({ width, height });
-    };
-    img.onerror = function () {
-      reject(new Error("Failed to load image"));
-    };
-    img.src = imageUrl;
-  });
-}
 
 export function getOperatingSystem(userAgent = navigator.userAgent) {
   if (userAgent.includes("Windows")) {

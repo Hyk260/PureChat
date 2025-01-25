@@ -17,7 +17,7 @@
 
 <script>
 import emitter from "@/utils/mitt-bus";
-import { createForwardMsg, createMergerMsg, deleteMessage, sendMsg } from "@/api/im-sdk-api/index";
+import { createForwardMessage, createMergerMessage, deleteMessage, sendMessage } from "@/api/im-sdk-api/index";
 import { showConfirmationBox } from "@/utils/message";
 import { mapMutations, mapState } from "vuex";
 import MagforwardingPopup from "./MagforwardingPopup.vue";
@@ -152,14 +152,14 @@ export default {
       if (!this.multipleValue) return;
       const { toAccount, type } = this.multipleValue; // 选中转发 人 群 详细信息
       const forwardData = this.filterate();
-      const forwardMsg = await createMergerMsg({
+      const forwardMsg = await createMergerMessage({
         title: this.mergeTitle(),
         convId: toAccount,
         convType: type,
         abstractList: this.transformData(forwardData),
         List: forwardData,
       });
-      const { code, message: data } = await sendMsg(forwardMsg);
+      const { code, message: data } = await sendMessage(forwardMsg);
       if (code == 0) {
         const { conversationID } = data || "";
         this.$store.commit("updateHistoryMessageCache", {
@@ -184,12 +184,12 @@ export default {
       this.shutdown();
     },
     async sendSingleMessage({ convId, type, message }) {
-      const forwardMsg = await createForwardMsg({
+      const forwardMsg = await createForwardMessage({
         convId: convId,
         convType: type,
         message: message,
       });
-      const { code, message: data } = await sendMsg(forwardMsg);
+      const { code, message: data } = await sendMessage(forwardMsg);
       if (code == 0) {
         const { conversationID } = data || "";
         this.$store.commit("updateHistoryMessageCache", {

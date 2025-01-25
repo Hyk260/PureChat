@@ -44,7 +44,7 @@
 
 - 📦️ 基于 Vite5，构建高效应用
 - 📸 聊天记录支持生成截图并支持一键复制
-- 💡 会话基于 IM 即时通讯 SDK
+- 💡 会话基于 腾讯IM即时通讯SDK
 - 🌙 根据系统主题自动切换光明与黑暗模式
 - 📝 支持 Markdown 渲染，代码高亮，链接识别
 - 🛡️ GitHub 快速登录，享受无缝社交体验
@@ -106,9 +106,7 @@ pnpm build
 | `VITE_OPENAI_PROXY_URL` | 可选 |   OpenAI 接口代理，此配置可以覆盖默认 OpenAI API 基础 URL    | `https://aihubmix.com/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
 | `VITE_IM_SDK_APPID`     | 必选 |     腾讯IM SDKAppID https://cloud.tencent.com/product/im     |                           `xxxxxx`                           |
 | `VITE_SERVICE_BASE_URL` | 必选 |                          服务器地址                          |                   `https://your.api.com/`                    |
-| `VITE_LOCAL_MODE`       | 可选 | 开启本地模式不使用腾讯IM SDK ，为`Y` 时 可不填im sdk，使用本地indexedDB保存数据 |                             `Y`                              |
-
-
+| `VITE_LOCAL_MODE`       | 可选 | 开启本地模式不使用腾讯IM SDK ，为`Y` 时 可不填im sdk，使用本地indexedDB保存数据，开启后不支持多端消息同步，做为本地ai问答工具使用。 |                             `Y`                              |
 
 <!-- LINK GROUP -->
 

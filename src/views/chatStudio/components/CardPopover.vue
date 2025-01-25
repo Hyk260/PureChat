@@ -171,7 +171,7 @@ onBeforeUnmount(() => {
     border-radius: 4px;
   }
   & > div:hover {
-    background-color: var(--pure-hover-color);
+    background-color: var(--icon-hover-color);
   }
 }
 .card-item {
@@ -190,7 +190,7 @@ onBeforeUnmount(() => {
     gap: 2px;
     padding-block: 6px;
     padding-inline: 8px;
-    background: var(--pure-hover-color);
+    background: var(--icon-hover-color);
     border-radius: 5px;
   }
 }

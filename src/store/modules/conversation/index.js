@@ -5,7 +5,7 @@ import {
   getConversationProfile,
   getMessageList,
   getUnreadMsg,
-  sendMsg,
+  sendMessage,
   setMessageRead,
   setMessageRemindType,
 } from "@/api/im-sdk-api/index";
@@ -98,8 +98,7 @@ const conversation = {
       }
       console.log("历史消息 history:", history);
       const baseTime = getBaseTime(history, "last");
-      const timeDividerResult = addTimeDivider(messages, baseTime).reverse();
-      console.log("timeDividerResult:", timeDividerResult);
+      const timeDividerResult = addTimeDivider(messages, baseTime, "last");
       const newHistory = history.concat(timeDividerResult);
       state.currentMessageList = newHistory;
       state.historyMessageList.set(convId, newHistory);
@@ -375,7 +374,7 @@ const conversation = {
       const {
         convId,
         message: { unreadCount },
-      } = payload;
+      } = payload || {};
       if (unreadCount === 0) return;
       // tab 不为全部不进行消息已读
       if (state.activetab !== "whole" && state.currentConversation.conversationID === convId) {
@@ -393,7 +392,7 @@ const conversation = {
       commit("updateMessages", { convId, message });
       emitter.emit("updataScroll");
       // 发送消息
-      const { code, message: result } = await sendMsg(message);
+      const { code, message: result } = await sendMessage(message);
       if (code === 0) {
         dispatch("sendMsgSuccessCallback", { convId, message: result, last });
       } else {
