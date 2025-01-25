@@ -75,7 +75,7 @@ export default {
 
 <style lang="scss" scoped>
 .add-ress-book {
-  width: calc(100vw - 68px);
+  width: calc(100% - 68px);
   display: flex;
 }
 .aside {
