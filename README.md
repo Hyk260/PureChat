@@ -88,9 +88,9 @@ pnpm build
 
 ### 🖼️ 截图
 
-<img src="./images/chatgpt.png">
+<img src="./images/chat.png">
 
-<img src="./images/assistant.png">
+<img src="./images/discover.png">
 
 <img src="./images/config.png">
 
