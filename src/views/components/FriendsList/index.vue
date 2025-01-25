@@ -1,7 +1,7 @@
 <template>
   <div class="friends-list">
     <div class="left-list">
-      <div class="search-box">
+      <div class="search-box" :class="isMacDragStyle()">
         <el-input
           v-model="input"
           :placeholder="$t('chat.searchFor')"
@@ -25,11 +25,11 @@
         <FriendsTabs />
       </div>
       <div class="friends-tree">
-        <FriendsTree  />
+        <FriendsTree />
       </div>
     </div>
     <div v-if="title" class="right-list">
-      <div class="head px-10">{{ title }}</div>
+      <div class="head px-10" :class="isMacDragStyle()">{{ title }}</div>
       <div class="list">
         <el-empty class="h-full" :description="$t('common.emptyText')" :image-size="150" />
       </div>
@@ -42,6 +42,7 @@ import { ref, toRefs, computed, watch, useTemplateRef, nextTick, onMounted } fro
 import { Search } from "@element-plus/icons-vue";
 import FriendsTabs from "./FriendsTabs.vue";
 import FriendsTree from "./FriendsTree.vue";
+import { isMacDragStyle } from "@/utils/appEmit";
 
 const tabsCopy = [
   { id: 1, name: "好友通知" },

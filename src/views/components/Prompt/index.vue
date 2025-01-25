@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div class="prompt">
-      <div class="header">Discover</div>
+      <div class="header" :class="isMacDragStyle()">Discover</div>
       <el-scrollbar class="h-full w-full">
         <div class="layout-body">
           <div class="layout-box">
@@ -62,6 +62,7 @@ import { ref, watch, onBeforeMount } from "vue";
 import emitter from "@/utils/mitt-bus";
 import marketJson from "@/database/market.json";
 import { localStg } from "@/utils/storage";
+import { isMacDragStyle } from "@/utils/appEmit";
 
 const { VITE_APP_NAME } = import.meta.env;
 const { homepage, bugs } = __APP_INFO__.pkg;
