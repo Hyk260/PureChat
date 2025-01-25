@@ -210,7 +210,7 @@ onBeforeMount(() => {
 }
 
 .agent-box {
-  min-height: calc(100vh - 60px - 40px - 100px - 100px);
+  min-height: calc(100% - 60px - 40px - 100px - 100px);
 }
 
 .active {

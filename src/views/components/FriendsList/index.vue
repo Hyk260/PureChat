@@ -57,7 +57,7 @@ function setActiveTab(tab) {
 
 <style lang="scss" scoped>
 .friends-list {
-  width: calc(100vw - 68px);
+  width: calc(100% - 68px);
   display: flex;
   .quick-nav {
     width: 280px;
@@ -79,7 +79,7 @@ function setActiveTab(tab) {
   .left-list {
     border-right: 1px solid #ebeef5;
     width: 280px;
-    height: 100vh;
+    height: 100%;
     .search-box {
       padding: 14px;
       height: 60px;
