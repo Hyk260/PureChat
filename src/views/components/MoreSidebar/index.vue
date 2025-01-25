@@ -3,7 +3,6 @@
     ref="editRef"
     v-model="dialogVisible"
     :modal="true"
-    :draggable="true"
     :append-to-body="true"
     :close-on-click-modal="true"
     @close="onClose"
