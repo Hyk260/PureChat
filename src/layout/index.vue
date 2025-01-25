@@ -1,5 +1,6 @@
 <template>
-  <main class="app-main" :class="[isElectron ? 'windowStyle' : '']">
+  <main class="app-main">
+    <!-- :class="[isElectron ? 'windowStyle' : '']" -->
     <div class="continer-theme">
       <router-view v-slot="{ Component, route }">
         <transition name="fade-slide" :appear="true" mode="out-in">

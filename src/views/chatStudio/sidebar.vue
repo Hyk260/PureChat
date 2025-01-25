@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar titlebar__drag-region" :class="{ 'pt-35': isMac }">
     <div>
       <div class="touxiang">
         <UserAvatar type="self" isdot shape="square" @click="openUploadAvatarDialog" />
@@ -38,6 +38,8 @@ import emitter from "@/utils/mitt-bus";
 import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
 import CardPopover from "./components/CardPopover.vue";
 import { useStore } from "vuex";
+
+const isMac = window.api.isMac;
 
 const { commit } = useStore();
 const { outside, unreadMsg, outsideList } = useState({

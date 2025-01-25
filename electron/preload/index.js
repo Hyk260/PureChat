@@ -1,10 +1,11 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from "../main/toolkit/preload";
-import { isWindows } from '../main/platform';
+import { isWindows, isMac } from "../main/platform";
 
 console.log('main:preload.js')
 
 const api = {
+  isMac,
   isWindows,
   isTitlebar: true,
 }

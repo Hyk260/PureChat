@@ -1,7 +1,15 @@
-.el-overlay-dialog {
-  top: 32px !important;
-}
+// .el-overlay-dialog {
+//   top: 32px !important;
+// }
 
-.el-overlay {
-  top: 32px !important;
+// .el-overlay {
+//   top: 32px !important;
+// }
+
+.titlebar__drag-region {
+  -webkit-app-region: drag;
+
+  >* {
+    -webkit-app-region: no-drag;
+  }
 }

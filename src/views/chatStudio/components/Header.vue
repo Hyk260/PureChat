@@ -1,5 +1,5 @@
 <template>
-  <header v-if="chat" class="message-info-view-header flex-bc">
+  <header v-if="chat" class="message-info-view-header titlebar__drag-region flex-bc">
     <div class="message-info-views">
       <p v-if="currentType">
         <span v-if="chatType('C2C')" @click="openUser" class="single">

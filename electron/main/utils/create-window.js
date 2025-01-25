@@ -13,6 +13,7 @@ export const createWindow = (_options) => {
     show: false,
     frame: false,
     autoHideMenuBar: true,
+    trafficLightPosition: { x: 7, y: 7 },
     titleBarStyle: 'hiddenInset', //? "hiddenInset" : "default",
     // 在上阅读更多信息https://www.electronjs.org/docs/latest/tutorial/context-isolation
     webPreferences: {

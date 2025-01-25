@@ -155,14 +155,15 @@ export default class TitleBar extends HTMLElement {
   // 自定义元素添加至页面
   connectedCallback() {
     const shadow = this.attachShadow({ mode: "open" });
+    const isMac = core.process.platform === "darwin";
+     // mac系统不需要titlebar
+    if (isMac)  return null;
 
     if (!(window && window?.api?.isTitlebar)) return null;
 
     const style = document.createElement("style");
     style.textContent = SHADOW_ROOT_CSS;
     shadow.appendChild(style);
-
-    const isMac = core.process.platform === "darwin";
 
     const overlay = this.hasAttribute("overlay");
 

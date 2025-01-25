@@ -1,5 +1,5 @@
 <template>
-  <div class="header-bar">
+  <div class="header-bar titlebar__drag-region">
     <!-- 搜索 -->
     <div class="flex-bc gap-10">
       <el-input
