@@ -10,12 +10,12 @@ const outsideList = [
     if_fixed: 1,
     type: "el-icon",
   },
-  {
-    id: "notebook",
-    icon: "Notebook",
-    title: "通讯录",
-    type: "el-icon",
-  },
+  // {
+  //   id: "notebook",
+  //   icon: "Notebook",
+  //   title: "通讯录",
+  //   type: "el-icon",
+  // },
   {
     id: "friends",
     icon: "UserFilled",

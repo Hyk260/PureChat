@@ -204,7 +204,7 @@ const components = [
   // ElTimelineItem,
   ElTooltip,
   // ElTransfer,
-  // ElTree,
+  ElTree,
   // ElTreeSelect,
   // ElTreeV2,
   // ElUpload,
