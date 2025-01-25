@@ -35,6 +35,7 @@
     </div>
     <!-- 聊天框 -->
     <div class="message-right" :class="{ 'message-h-full': arrowRight }" id="container">
+      <div v-if="!conver" class="h-60 opacity-0" :class="isMacDragStyle()"></div>
       <EmptyMessage classNmae="empty" v-if="!conver" />
       <Header />
       <!-- 聊天窗口 -->
@@ -72,6 +73,7 @@ import { useStore } from "vuex";
 import { isMacOS } from "@/utils/common";
 import { useDragHandler } from "@/utils/hooks/useDragHandler";
 import emitter from "@/utils/mitt-bus";
+import { isMacDragStyle } from "@/utils/appEmit";
 
 import Chatwin from "./chat/Chatwin.vue";
 import ConversationList from "./chat/ConversationList.vue";

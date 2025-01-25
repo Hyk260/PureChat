@@ -1,5 +1,9 @@
 <template>
-  <header v-if="chat" class="message-info-view-header titlebar__drag-region flex-bc">
+  <header
+    v-if="chat"
+    class="message-info-view-header flex-bc"
+    :class="isMacDragStyle()"
+  >
     <div class="message-info-views">
       <p v-if="currentType">
         <span v-if="chatType('C2C')" @click="openUser" class="single">
@@ -53,6 +57,7 @@ import { modelValue, StoreKey } from "@/ai/constant";
 import { useStore } from "vuex";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
+import { isMacDragStyle } from "@/utils/appEmit";
 
 const [isBotToolsFlag, setBotToolsFlag] = useBoolean();
 const { commit } = useStore();
@@ -124,7 +129,7 @@ watch(toAccount, () => {
 });
 
 emitter.on("updataBotToolsFlag", (val) => {
-  setBotToolsFlag(val)
+  setBotToolsFlag(val);
 });
 </script>
 

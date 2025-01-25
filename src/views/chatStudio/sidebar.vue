@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar titlebar__drag-region" :class="{ 'pt-35': isMac }">
+  <div class="sidebar" :class="macClass()">
     <div>
       <div class="touxiang">
         <UserAvatar type="self" isdot shape="square" @click="openUploadAvatarDialog" />
@@ -39,8 +39,6 @@ import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
 import CardPopover from "./components/CardPopover.vue";
 import { useStore } from "vuex";
 
-const isMac = window.api.isMac;
-
 const { commit } = useStore();
 const { outside, unreadMsg, outsideList } = useState({
   outsideList: (state) => state.sidebar.outsideList.filter((item) => item?.show !== "hide"),
@@ -64,6 +62,14 @@ function toggle(item) {
   } else {
     commit("taggleOueSide", item.id);
   }
+}
+
+function macClass() {
+  const isMac = window.api.isMac;
+  return {
+    "pt-35": isMac,
+    "titlebar__drag-region": isMac,
+  };
 }
 </script>
 

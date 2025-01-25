@@ -1,5 +1,5 @@
 <template>
-  <div class="header-bar titlebar__drag-region">
+  <div class="header-bar" :class="isMacDragStyle()">
     <!-- 搜索 -->
     <div class="flex-bc gap-10">
       <el-input
@@ -34,6 +34,7 @@ import { useStore } from "vuex";
 import { debounce, isEmpty } from "lodash-es";
 import SearchBox from "./SearchBox.vue";
 import emitter from "@/utils/mitt-bus";
+import { isMacDragStyle } from "@/utils/appEmit";
 
 defineOptions({
   name: "Search",

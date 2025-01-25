@@ -9,7 +9,7 @@ import "@/styles/theme/default.scss";
 import "@/styles/global/index.scss";
 import "@/styles/index.scss";
 // electron
-import "@/styles/electron.scss";
+import "@/styles/app/electron.scss";
 // https://animate.style/
 import "animate.css";
 // svg-icon
