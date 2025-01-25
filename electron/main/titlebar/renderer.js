@@ -4,6 +4,7 @@ const SHADOW_ROOT_CSS = `
   z-index: 99;
   width: 100%;
   height: 32px;
+  min-height: 32px;
   display: block;
   -webkit-user-select: none;
   --tb-title-font-family: -apple-system, BlinkMacSystemFont, Ubuntu, 'Segoe UI';
