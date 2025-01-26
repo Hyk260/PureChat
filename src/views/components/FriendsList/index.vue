@@ -61,11 +61,10 @@ function setActiveTab(tab) {
   display: flex;
   .quick-nav {
     width: 280px;
-    padding: 5px 10px;
     border-bottom: 1px solid #ebeef5;
     .quick-nav-item {
       cursor: pointer;
-      padding: 0 5px;
+      padding: 0 10px;
       border-radius: 5px;
       display: flex;
       align-items: center;
