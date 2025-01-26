@@ -35,7 +35,7 @@
     </div>
     <!-- 聊天框 -->
     <div class="message-right" :class="{ 'message-h-full': arrowRight }" id="container">
-      <EmptyMessage classNmae="empty" v-if="!conver" />
+      <EmptyMessage className="empty" v-if="!conver" />
       <Header />
       <!-- 聊天窗口 -->
       <Chatwin ref="chatRef" :class="{ 'chat-h-full': fullScreen }" />

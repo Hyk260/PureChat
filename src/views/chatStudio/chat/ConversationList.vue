@@ -1,6 +1,6 @@
 <template>
   <el-scrollbar class="scrollbar-list">
-    <EmptyMessage classNmae="no-msg" v-if="tabList.length == 0" />
+    <EmptyMessage className="no-msg" v-if="tabList.length == 0" />
     <div
       v-for="item in searchForData"
       class="message-item"
@@ -93,7 +93,7 @@ const contextMenuItemInfo = ref([]);
 const { dispatch, commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
 const {
-  activetab,
+  activeTab,
   chat,
   userProfile,
   sessionDraftMap,
@@ -104,7 +104,7 @@ const {
   sessionDraftMap: (state) => state.conversation.sessionDraftMap,
   arrowRight: (state) => state.conversation.arrowRight,
   userProfile: (state) => state.user.userProfile,
-  activetab: (state) => state.conversation.activetab,
+  activeTab: (state) => state.conversation.activeTab,
   filterConversationList: (state) => state.conversation.filterConversationList,
   conversationList: (state) => state.conversation.conversationList,
   chat: (state) => state.conversation.currentConversation,
@@ -112,7 +112,7 @@ const {
 });
 
 const searchForData = computed(() => {
-  if (filterConversationList.value.length && activetab.value === "whole") {
+  if (filterConversationList.value.length && activeTab.value === "whole") {
     return filterConversationList.value;
   } else {
     return tabList.value;
@@ -291,7 +291,7 @@ const fnPostpone = (data) => {
 const pingConv = async (data) => {
   await pinConversation(data);
 };
-watch(activetab, (data) => {
+watch(activeTab, (data) => {
   fnPostpone(data);
 });
 </script>
