@@ -1,9 +1,5 @@
 <template>
-  <div v-if="isWindows" class="dragBox">
-    <span class="exit" @click="onClick">
-      <svg-icon iconClass="exit" />
-    </span>
-  </div>
+  <div v-if="isMac" class="dragBox"></div>
 </template>
 
 <script>
@@ -11,14 +7,9 @@ export default {
   name: "DragBox",
   data() {
     return {
-      isWindows: window.api.isWindows,
+      isMac: window.api.isMac,
     };
-  },
-  methods: {
-    onClick() {
-      window.electron.ipcRenderer.send("win:invoke", "close");
-    },
-  },
+  }
 };
 </script>
 
@@ -35,17 +26,5 @@ export default {
   height: 42px;
   z-index: 100;
   -webkit-app-region: drag;
-  .exit {
-    :hover {
-      color: var(--color-icon-hover) !important;
-    }
-  }
-  .svg-icon {
-    -webkit-app-region: no-drag;
-    margin-right: 16px;
-    .svg-icon {
-      color: #303133;
-    }
-  }
 }
 </style>
