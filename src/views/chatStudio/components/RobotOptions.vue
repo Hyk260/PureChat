@@ -11,7 +11,7 @@
     :before-close="handleClose"
   >
     <div>
-      <ul class="container max-h-600 px-10">
+      <ul class="container">
         <!-- prompt -->
         <DragPrompt :prompt="maskData.prompt" @handlePrompt="handlePrompt" />
         <li class="container-item py-10 flex-bc" v-for="item in modelData" :key="item.ID">
@@ -330,6 +330,8 @@ emitter.on("onRobotBox", () => {
 .container {
   overflow: hidden;
   overflow-y: auto;
+  max-height: 80vh;
+  padding: 0 10px;
   .container-item {
     color-scheme: light;
     user-select: none;

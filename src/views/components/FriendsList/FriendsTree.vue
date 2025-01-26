@@ -35,7 +35,7 @@ const defaultProps = {
   children: "children",
   label: "label",
 };
-const treeData = ref([
+const INITIAL_TREE_DATA = [
   {
     id: "contacts",
     level: 0,
@@ -54,62 +54,72 @@ const treeData = ref([
     label: "我的群聊",
     children: [],
   },
-]);
+];
+const treeData = ref(INITIAL_TREE_DATA);
 
 const handleNodeClick = (data) => {
   if (data.children) return;
-  console.log(data);
-  onFriend(data);
+  
+  const convInfo = {
+    id: data.GroupId || data.groupID || data.userID,
+    type: data.type
+  };
+  
+  handleConversation(convInfo);
 };
 
-function onFriend(item) {
-  const id = item.GroupId || item.groupID || item.userID;
-  const type = item.type;
-  // "GROUP" : "C2C";
+const handleConversation = ({ id, type }) => {
   commit("taggleOueSide", "chat");
   dispatch("addConversation", { convId: `${type}${id}` });
   scrollToMessage(`message_${type}${id}`);
-}
+};
 
-async function getRobotList() {
+const transformUserData = (data) => {
+  return data.map((item) => ({
+    label: item.nick,
+    type: "C2C",
+    ...item,
+  }));
+};
+
+const getRobotList = async () => {
   const { code, data } = await getUserProfile(ROBOT_COLLECT);
   robotList.value = data;
+  treeData.value[1].children = transformUserData(data);
+};
 
-  treeData.value[1].children = data.map((item) => ({
-    label: item.nick,
-    type: "C2C",
-    ...item,
-  }));
-  console.log(robotList.value);
-}
-
-async function getFriendList() {
-  let list = ["huangyk", "admin", "linjx", "jinwx", "zhangal"];
+const getFriendList = async () => {
+  const list = ["huangyk", "admin", "linjx", "jinwx", "zhangal"];
   const { code, data } = await getUserProfile(list);
   friendList.value = data;
-  treeData.value[0].children = data.map((item) => ({
-    label: item.nick,
-    type: "C2C",
-    ...item,
-  }));
+  
+  treeData.value[0].children = transformUserData(data);
   treeData.value[2].children = groupList.value.map((item) => ({
     ...item,
     label: item.nick,
     type: "GROUP",
   }));
-}
+};
+
+const setupEventListeners = () => {
+  emitter.on("handleActiveTab", (id) => {
+    console.log(id);
+  });
+};
+
+const cleanupEventListeners = () => {
+  emitter.off("handleActiveTab");
+};
 
 onMounted(() => {
   dispatch("getGroupList");
   getRobotList();
   getFriendList();
-
-  emitter.on("handleActiveTab", (id) => {
-    console.log(id);
-  });
+  setupEventListeners();
 });
+
 onUnmounted(() => {
-  emitter.off("handleActiveTab");
+  cleanupEventListeners();
 });
 </script>
 

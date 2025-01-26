@@ -45,7 +45,7 @@ const conversation = {
     conversationList: [], // 会话列表数据
     filterConversationList: [],
     currentReplyMsg: null, // 回复数据
-    activetab: "whole", // 全部 未读 提及我
+    activeTab: "whole", // 全部 未读 提及我
     outside: "chat", // 侧边栏初始状态
     arrowRight: false, // 聊天会话列表折叠 true ？'折叠' : '不折叠'
     fullScreen: false, // 全屏输入框是否启用
@@ -163,7 +163,7 @@ const conversation = {
         currentConversation: null,
         currentMessageList: [],
         conversationList: [],
-        activetab: "whole",
+        activeTab: "whole",
         isChatBoxVisible: false,
         showCheckbox: false,
         currentReplyMsg: null,
@@ -203,7 +203,7 @@ const conversation = {
     },
     //  切换列表 全部 未读 提及我
     toggleList(state, action) {
-      state.activetab = action;
+      state.activeTab = action;
     },
     // 设置多选数据
     setForwardData(state, action) {
@@ -377,7 +377,7 @@ const conversation = {
       } = payload || {};
       if (unreadCount === 0) return;
       // tab 不为全部不进行消息已读
-      if (state.activetab !== "whole" && state.currentConversation.conversationID === convId) {
+      if (state.activeTab !== "whole" && state.currentConversation.conversationID === convId) {
         state.postponeUnread.add(convId);
         return;
       }
@@ -412,7 +412,7 @@ const conversation = {
           await chatService({
             chat: message,
             provider: getModelType(message.to),
-            messages: state.currentMessageList ?? [message]
+            messages: state.currentMessageList ?? [message],
           });
         }, 50);
       }
@@ -436,7 +436,7 @@ const conversation = {
       }
     },
     tabList(state) {
-      switch (state.activetab) {
+      switch (state.activeTab) {
         case "unread":
           return state.conversationList.filter((t) => t.unreadCount > 0);
         case "mention":

@@ -225,7 +225,7 @@ emitter.on("handleShareModal", (val) => {
 
 .segmented {
   width: 100%;
-  max-height: 50vh;
+  max-height: 42vh;
   background: #f8f8f8;
   border: 1px solid #dddddd;
   border-radius: 8px;

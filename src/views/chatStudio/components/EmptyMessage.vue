@@ -1,8 +1,8 @@
 <template>
-  <div :class="[classNmae]">
+  <div :class="[className]">
     <el-empty :description="$t('common.emptyText')" :image-size="150" />
     <div
-      v-if="classNmae == 'no-msg' && activetab == 'whole'"
+      v-if="className == 'no-msg' && activeTab == 'whole'"
       class="flex-c launch"
       @click="launch"
     >
@@ -16,14 +16,14 @@ import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
 
 const props = defineProps({
-  classNmae: {
+  className: {
     type: String,
     default: "",
   },
 });
 
-const { activetab } = useState({
-  activetab: (state) => state.conversation.activetab,
+const { activeTab } = useState({
+  activeTab: (state) => state.conversation.activeTab,
 });
 
 const { commit } = useStore();

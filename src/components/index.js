@@ -8,6 +8,6 @@ const importModules = (app) => {
 };
 
 /** 注册全局组件 */
-export function loadAllassembly(app) {
+export function loadAllAssembly(app) {
   importModules(app);
 }

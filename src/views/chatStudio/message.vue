@@ -36,7 +36,7 @@
     <!-- 聊天框 -->
     <div class="message-right" :class="{ 'message-h-full': arrowRight }" id="container">
       <div v-if="!conver" class="h-60 opacity-0" :class="isMacDragStyle()"></div>
-      <EmptyMessage classNmae="empty" v-if="!conver" />
+      <EmptyMessage className="empty" v-if="!conver" />
       <Header />
       <!-- 聊天窗口 -->
       <Chatwin ref="chatRef" :class="{ 'chat-h-full': fullScreen }" />
