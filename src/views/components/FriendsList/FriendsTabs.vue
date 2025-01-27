@@ -71,7 +71,6 @@ onMounted(async () => {
   --tab-padding: 6px 0;
   --tab-font-size: 14px;
   --tab-color-segment: #fff;
-  
   width: 100%;
   
   &-nav {

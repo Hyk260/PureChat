@@ -3,9 +3,14 @@
     <el-scrollbar>
       <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick">
         <template #default="{ data }">
-          <div v-if="data.children">{{ data.label }}</div>
+          <div v-if="data.children" class="w-full flex-bc pr-12">
+            <span>{{ data.label }}</span>
+            <span>
+              {{ data.children.length }}
+            </span>
+          </div>
           <div v-else>
-            <CardGrid type="C2C" :type="data.type" :item="[data]" />
+            <CardGrid :type="data.type" :item="data" />
           </div>
         </template>
       </el-tree>
@@ -37,15 +42,15 @@ const defaultProps = {
 };
 const INITIAL_TREE_DATA = [
   {
-    id: "contacts",
-    level: 0,
-    label: "常用联系人",
-    children: [],
-  },
-  {
     id: "aiModel",
     level: 0,
     label: "AI大模型",
+    children: [],
+  },
+  {
+    id: "contacts",
+    level: 0,
+    label: "常用联系人",
     children: [],
   },
   {
@@ -59,19 +64,20 @@ const treeData = ref(INITIAL_TREE_DATA);
 
 const handleNodeClick = (data) => {
   if (data.children) return;
-  
+
   const convInfo = {
     id: data.GroupId || data.groupID || data.userID,
-    type: data.type
+    type: data.type,
   };
-  
-  handleConversation(convInfo);
+  emitter.emit("handleActiveTab", "");
+  emitter.emit("handleProfile", data);
+  // handleConversation(convInfo);
 };
 
 const handleConversation = ({ id, type }) => {
-  commit("taggleOueSide", "chat");
-  dispatch("addConversation", { convId: `${type}${id}` });
-  scrollToMessage(`message_${type}${id}`);
+  // commit("taggleOueSide", "chat");
+  // dispatch("addConversation", { convId: `${type}${id}` });
+  // scrollToMessage(`message_${type}${id}`);
 };
 
 const transformUserData = (data) => {
@@ -85,15 +91,15 @@ const transformUserData = (data) => {
 const getRobotList = async () => {
   const { code, data } = await getUserProfile(ROBOT_COLLECT);
   robotList.value = data;
-  treeData.value[1].children = transformUserData(data);
+  treeData.value[0].children = transformUserData(data);
 };
 
 const getFriendList = async () => {
   const list = ["huangyk", "admin", "linjx", "jinwx", "zhangal"];
   const { code, data } = await getUserProfile(list);
   friendList.value = data;
-  
-  treeData.value[0].children = transformUserData(data);
+
+  treeData.value[1].children = transformUserData(data);
   treeData.value[2].children = groupList.value.map((item) => ({
     ...item,
     label: item.nick,

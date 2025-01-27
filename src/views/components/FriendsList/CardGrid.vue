@@ -1,16 +1,11 @@
 <template>
-  <div
-    class="items-box"
-    @click="onFriend({ id: item.GroupId || item.groupID || item.userID })"
-    v-for="item in item"
-    :key="item.GroupId || item.groupID || item.userID"
-  >
+  <div class="items-box">
     <div class="left-item">
       <UserAvatar
         words="3"
         shape="square"
         :convId="item.userID"
-        :nickName="item.Name || item.name || item.nick"
+        :nickName="item.name || item.nick"
         :url="item.avatar || ''"
         :type="isGroup ? 'group' : 'single'"
       />
@@ -25,8 +20,6 @@
 </template>
 
 <script>
-import { scrollToMessage } from "@/utils/chat/index";
-
 export default {
   name: "CardGrid",
   props: {
@@ -47,28 +40,16 @@ export default {
   data() {
     return {};
   },
-  methods: {
-    onFriend({ id }) {
-      // "GROUP" : "C2C";
-      this.$store.commit("taggleOueSide", "chat");
-      this.$store.dispatch("addConversation", { convId: `${this.type}${id}` });
-      scrollToMessage(`message_${this.type}${id}`);
-    },
-  },
 };
 </script>
 
 <style lang="scss" scoped>
 .items-box {
   display: flex;
-  // min-height: 50px;
   border-radius: 6px;
-  // padding: 10px;
+
   cursor: pointer;
   width: 100%;
-  &:hover {
-    // background: var(--icon-hover-color);
-  }
   .left-item {
     img {
       width: 40px;

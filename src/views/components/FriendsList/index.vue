@@ -11,7 +11,7 @@
         </el-input>
       </div>
       <div class="quick-nav">
-        <div
+        <!-- <div
           class="quick-nav-item"
           v-for="(tab, index) in tabsCopy"
           :key="tab.id"
@@ -19,29 +19,46 @@
         >
           <div>{{ tab.name }}</div>
           <el-icon><ArrowRight /></el-icon>
-        </div>
+        </div> -->
       </div>
       <div v-if="false" class="friends-tabs">
         <FriendsTabs />
       </div>
       <div class="friends-tree">
-        <FriendsTree  />
+        <FriendsTree />
       </div>
     </div>
-    <div v-if="title" class="right-list">
-      <div class="head px-10">{{ title }}</div>
-      <div class="list">
-        <el-empty class="h-full" :description="$t('common.emptyText')" :image-size="150" />
+    <div class="right-list">
+      <!-- <div v-show="title">
+        <div class="head px-10">{{ title }}</div>
+        <div class="list">
+          <el-empty class="h-full" :description="$t('common.emptyText')" :image-size="150" />
+        </div>
+      </div> -->
+      <div>
+        <div class="head px-10"></div>
+        <ProfileCard />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, toRefs, computed, watch, useTemplateRef, nextTick, onMounted } from "vue";
+import {
+  ref,
+  toRefs,
+  computed,
+  watch,
+  useTemplateRef,
+  nextTick,
+  onMounted,
+  onUnmounted,
+} from "vue";
 import { Search } from "@element-plus/icons-vue";
 import FriendsTabs from "./FriendsTabs.vue";
 import FriendsTree from "./FriendsTree.vue";
+import ProfileCard from "./ProfileCard.vue";
+import emitter from "@/utils/mitt-bus";
 
 const tabsCopy = [
   { id: 1, name: "好友通知" },
@@ -53,6 +70,13 @@ const title = ref("");
 function setActiveTab(tab) {
   title.value = tab.name;
 }
+
+onMounted(() => {
+  emitter.on("handleActiveTab", setActiveTab);
+});
+onUnmounted(() => {
+  emitter.off("handleActiveTab");
+});
 </script>
 
 <style lang="scss" scoped>
@@ -61,7 +85,6 @@ function setActiveTab(tab) {
   display: flex;
   .quick-nav {
     width: 280px;
-    border-bottom: 1px solid #ebeef5;
     .quick-nav-item {
       cursor: pointer;
       padding: 0 10px;
@@ -84,6 +107,7 @@ function setActiveTab(tab) {
       height: 60px;
       display: flex;
       align-items: center;
+      border-bottom: 1px solid #ebeef5;
     }
   }
   .right-list {
@@ -102,8 +126,8 @@ function setActiveTab(tab) {
   .friends-tabs {
     padding: 15px 10px 15px;
   }
-  .friends-tree{
-    height: calc(100% - 70px - 60px);
+  .friends-tree {
+    height: calc(100% - 60px);
   }
 }
 </style>
