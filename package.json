@@ -1,6 +1,6 @@
 {
   "name": "purechat",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "PureChat - A chat application built with Vue and Vite",
   "type": "module",
   "author": {
@@ -91,6 +91,7 @@
     "url": "https://github.com/Hyk260/PureChat/issues"
   },
   "keywords": [
+    "ai",
     "vue",
     "vue3",
     "openai",

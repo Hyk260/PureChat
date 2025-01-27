@@ -146,7 +146,7 @@ const formatNewsMessage = (data) => {
   const isSystem = type === "@TIM#SYSTEM"; //系统消息
   const isGroup = type === "GROUP"; //群聊
   const isCount = unreadCount && isNotify(data); // 未读消息计数
-  const MAX_TIP_LENGTH = 32;
+  const MAX_TIP_LENGTH = 36;
 
   const formatTip = (message) =>
     message.length > MAX_TIP_LENGTH ? `${message.slice(0, MAX_TIP_LENGTH)}...` : message;
@@ -199,7 +199,7 @@ const CustomMention = (props) => {
   }
   // @消息
   const isUnread = unreadCount !== 0; // 消息是否未读
-  const mention = `${isUnread ? createMessagePrompt("at") : ""}${lastNick}: ${messageForShow}`;
+  const mention = `${isUnread ? `${createMessagePrompt("at")}` : ""} ${lastNick}: ${messageForShow}`;
   return h("span", { innerHTML: mention });
 };
 // 消息列表 右键菜单
