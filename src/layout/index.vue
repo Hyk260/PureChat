@@ -1,6 +1,6 @@
 <template>
   <main class="app-main">
-    <div class="continer-theme">
+    <div class="container-theme">
       <router-view v-slot="{ Component, route }">
         <transition name="fade-slide" :appear="true" mode="out-in">
           <keep-alive v-if="route.meta.keep" max="1">
@@ -17,16 +17,16 @@
 </template>
 
 <script setup>
-import LaySetting from './components/lay-setting/index.vue';
+import LaySetting from "./lay-setting/index.vue";
 </script>
 
 <style lang="scss" scoped>
-.continer-theme {
-  height: 100%;
-  background: var(--color-body-bg);
-}
 .app-main {
   height: 100%;
   position: relative;
+  .container-theme {
+    height: 100%;
+    background: var(--color-body-bg);
+  }
 }
 </style>

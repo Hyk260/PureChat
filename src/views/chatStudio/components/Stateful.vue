@@ -35,6 +35,7 @@ const isShowState = (item) => {
   return (
     isSelf(item) &&
     !item.isRevoked &&
+    item.type !== "TIMTextElem" &&
     item.type !== "TIMGroupTipElem" &&
     item.payload?.description !== "dithering" &&
     (isShow("unSend") || isShow("fail"))

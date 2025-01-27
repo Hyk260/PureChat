@@ -7,7 +7,7 @@ import { h } from "vue";
 let Notification = null;
 const { DEV: isDev } = import.meta.env;
 
-function setPageNotif() {
+function setPageNotification() {
   !getCookie("onUpdate") && setCookie("onUpdate", true, 1);
 }
 
@@ -22,7 +22,7 @@ function notify() {
         {
           onClick() {
             Notification.close();
-            setPageNotif();
+            setPageNotification();
           },
         },
         () => $t("system.updateCancel")
@@ -33,7 +33,7 @@ function notify() {
           type: "primary",
           onClick() {
             location.reload();
-            setPageNotif();
+            setPageNotification();
           },
         },
         () => $t("system.updateConfirm")
