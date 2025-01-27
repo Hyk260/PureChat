@@ -61,3 +61,12 @@ export function isMacDragStyle() {
     return "";
   }
 }
+
+export function isWindowsAppStyle() {
+  // return ''
+  if (window.api.isWindows) {
+    return "height: calc(100% - 32px);";
+  } else {
+    return "";
+  }
+}

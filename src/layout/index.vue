@@ -1,5 +1,5 @@
 <template>
-  <main class="app-main">
+  <main class="app-main" :style="isWindowsAppStyle()">
     <div class="container-theme">
       <router-view v-slot="{ Component, route }">
         <transition name="fade-slide" :appear="true" mode="out-in">
@@ -18,6 +18,7 @@
 
 <script setup>
 import LaySetting from "./lay-setting/index.vue";
+import { isWindowsAppStyle } from "@/utils/appEmit";
 </script>
 
 <style lang="scss" scoped>
