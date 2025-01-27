@@ -45,7 +45,7 @@ export const appIpcEmit = () => {
   electron.ipcRenderer.on("notif:click", (event, data) => {
     console.log("notif:click", data);
     const { conversationID: convId, ID } = data;
-    store.commit("taggleOueSide", "message");
+    store.commit("taggleOueSide", "chat");
     store.dispatch("addConversation", { convId });
     setTimeout(() => {
       scrollToDomPostion(ID);
@@ -54,7 +54,6 @@ export const appIpcEmit = () => {
 };
 
 export function isMacDragStyle() {
-  // return ''
   if (window.api.isMac) {
     return "titlebar__drag-region";
   } else {
@@ -63,7 +62,6 @@ export function isMacDragStyle() {
 }
 
 export function isWindowsAppStyle() {
-  // return ''
   if (window.api.isWindows) {
     return "height: calc(100% - 32px);";
   } else {

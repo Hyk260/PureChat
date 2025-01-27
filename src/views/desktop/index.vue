@@ -4,7 +4,7 @@
       <el-icon class="close" @click.stop="onClose"><Close /></el-icon>
       <img class="size-50" :src="icon()" alt="" />
       <div class="flex">
-        <div class="ml-5 text-sm">
+        <div class="ml-5">
           {{ extra.title }}
         </div>
       </div>
