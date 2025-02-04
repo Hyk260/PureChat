@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import store from "./store/index";
+import { setupStore } from "./stores/index";
 
 import { setupI18n } from './locales/index';
 import { loadAllAssembly } from "./components/index";
@@ -14,6 +15,7 @@ async function setupApp() {
   setupDirectives(app);
   loadAllAssembly(app);
   setupPlugins(app);
+  setupStore(app);
   // vue router
   await setupRouter(app);
   setupI18n(app);

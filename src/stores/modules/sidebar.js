@@ -1,0 +1,85 @@
+import { defineStore } from "pinia";
+
+const { DEV: isDev } = import.meta.env;
+const docs = __APP_INFO__.pkg.docs;
+
+const outsideList = [
+  {
+    id: "chat",
+    icon: "ChatDotSquare",
+    title: "会话",
+    class: "fix-ed",
+    if_fixed: 1,
+    type: "el-icon",
+  },
+  {
+    id: "friends",
+    icon: "UserFilled",
+    title: "联系人",
+    type: "el-icon",
+  },
+  {
+    id: "discover",
+    icon: "Discover",
+    title: "发现",
+    svgIcon: "Discover",
+  },
+  {
+    id: "document",
+    icon: "Document",
+    title: "文档",
+    type: "el-icon",
+    openType: "outside",
+    url: docs,
+  },
+  {
+    id: "test",
+    icon: "SwitchFilled",
+    title: "web",
+    show: isDev ? "" : "hide",
+    type: "el-icon",
+  },
+  {
+    id: "more",
+    icon: "MoreFilled",
+    title: "更多",
+    mode: "other",
+    type: "el-icon",
+  },
+];
+
+const moreList = [
+  {
+    id: "github",
+    icon: "github",
+    title: "github",
+    openType: "outside",
+    url: "https://github.com/Hyk260",
+  },
+  {
+    id: "gitee",
+    icon: "gitee",
+    title: "gitee",
+    openType: "outside",
+    url: "https://gitee.com/H260788/PureChat",
+  },
+];
+
+export const useSidebarStore = defineStore("sidebar", {
+  state: () => ({
+    outsideList,
+    moreList,
+  }),
+  getters: {
+    filteredOutsideList: (state) => state.outsideList.filter((item) => item?.show !== "hide"),
+  },
+  actions: {
+    setOutsideList(list) {
+      const data = this.outsideList.filter((t) => t.id === "more");
+      this.outsideList = [...list, ...data];
+    },
+    setMoreList(list) {
+      this.moreList = list;
+    },
+  },
+});

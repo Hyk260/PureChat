@@ -4,7 +4,7 @@
       <div class="touxiang">
         <UserAvatar type="self" isdot shape="square" @click="openUploadAvatarDialog" />
       </div>
-      <div class="aside-item flex-c" v-for="item in outsideList" :key="item.id">
+      <div class="aside-item flex-c" v-for="item in sidebarStore.filteredOutsideList" :key="item.id">
         <el-tooltip :content="item.title" placement="right">
           <div
             @click="toggle(item)"
@@ -38,10 +38,11 @@ import emitter from "@/utils/mitt-bus";
 import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
 import CardPopover from "./components/CardPopover.vue";
 import { useStore } from "vuex";
+import { useSidebarStore } from "@/stores/modules/sidebar";
 
 const { commit } = useStore();
-const { outside, unreadMsg, outsideList } = useState({
-  outsideList: (state) => state.sidebar.outsideList.filter((item) => item?.show !== "hide"),
+const sidebarStore = useSidebarStore();
+const { outside, unreadMsg } = useState({
   unreadMsg: (state) => state.conversation.totalUnreadMsg,
   outside: (state) => state.conversation.outside,
 });
