@@ -69,7 +69,9 @@
             </div>
           </div>
           <div class="range" v-else-if="isRange(item.ID)">
-            {{ item.defaultValue }}
+            <span class="min-w-18">
+               {{ item.defaultValue }}
+            </span>
             <input
               v-model="item.defaultValue"
               :min="item.min"
@@ -129,6 +131,7 @@ import DragPrompt from "./DragPrompt.vue";
 import { Markdown } from "@/utils/markdown/index";
 import { StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
+import { useRobotStore } from "@/stores/modules/robot";
 
 const robotIcon = ref("");
 const modelData = ref(null);
@@ -234,7 +237,7 @@ function resetRobotModel() {
   const model = useAccessStore(account)?.model;
   const data = cloneDeep(modelValue[account].Model.options.chatModels);
   const checkModel = data.find((item) => item.id === model);
-  commit("setRobotModel", checkModel);
+  useRobotStore().setRobotModel(checkModel);
 }
 
 function resetRobotMask() {
@@ -254,7 +257,7 @@ function handleClose(done) {
 // 重置
 function handleCancel() {
   localStg.remove(`${getModelType(toAccount.value)}-Select-Model`);
-  commit("setPromptConfig", "");
+  useRobotStore().setPromptConfig('');
   resetRobotModel();
   resetRobotMask();
   setDialog(false);
@@ -273,7 +276,7 @@ function handleConfirm() {
   if (!maskData.value.prompt.length || !maskData.value.meta.title) {
     const _maskData = usePromptStore(getModelType(toAccount.value), true);
     storeRobotMask(_maskData);
-    commit("setPromptConfig", "");
+    useRobotStore().setPromptConfig('');
   } else {
     storeRobotMask(maskData.value);
   }

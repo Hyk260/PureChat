@@ -8,7 +8,7 @@
         </div>
         <div
           class="model flex"
-          :class="item.id == currentModel?.id ? 'active' : ''"
+          :class="item.id == useRobotStore()?.model?.id ? 'active' : ''"
           v-for="item in model.chatModels"
           :key="item"
           @click="storeRobotModel(item)"
@@ -52,10 +52,10 @@ import emitter from "@/utils/mitt-bus";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { getModelType, getModelSvg, useAccessStore, formatSizeStrict } from "@/ai/utils";
 import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
+import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
-import { useStore } from "vuex";
+import { useRobotStore } from "@/stores/modules/robot";
 
 defineOptions({
   name: "RobotModel",
@@ -64,12 +64,7 @@ defineOptions({
 const robotIcon = ref("");
 const model = ref({});
 const [flag, setFlag] = useBoolean();
-const { commit } = useStore();
 const { toAccount } = useGetters(["toAccount"]);
-
-const { currentModel } = useState({
-  currentModel: (state) => state.robot.model,
-});
 
 function onClickOutside() {
   setFlag(false);
@@ -86,7 +81,7 @@ function storeRobotModel(data) {
     localStg.set(StoreKey.Access, { [account]: { ...modelConfig } });
   }
   emitter.emit("updataBotToolsFlag", data?.functionCall || false);
-  commit("setRobotModel", data);
+  useRobotStore().setRobotModel(data);
   setFlag(false);
 }
 
@@ -138,28 +133,6 @@ emitter.on("openModeList", () => {
     .tokens {
       width: 36px;
       height: 18px;
-      font-family:
-        Hack,
-        ui-monospace,
-        SFMono-Regular,
-        SF Mono,
-        Menlo,
-        Consolas,
-        Liberation Mono,
-        monospace,
-        "HarmonyOS Sans SC",
-        "PingFang SC",
-        "Hiragino Sans GB",
-        "Microsoft Yahei UI",
-        "Microsoft Yahei",
-        "Source Han Sans CN",
-        sans-serif,
-        "Segoe UI Emoji",
-        "Segoe UI Symbol",
-        "Apple Color Emoji",
-        "Twemoji Mozilla",
-        "Noto Color Emoji",
-        "Android Emoji";
       font-size: 11px;
       color: #666666;
       background: rgba(0, 0, 0, 0.03);

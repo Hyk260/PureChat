@@ -24,8 +24,8 @@ export default {
   name: "CardGrid",
   props: {
     item: {
-      type: Array,
-      default: () => [],
+      type: Object,
+      default: () => ({}),
     },
     type: {
       type: String,

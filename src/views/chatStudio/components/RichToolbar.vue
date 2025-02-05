@@ -114,6 +114,7 @@ import { getAssetsFile } from "../utils/utils";
 import emojiQq from "@/utils/emoji/emoji-map-qq";
 import { getAllModels } from "@/ai/utils";
 import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
+import { useRobotStore } from "@/stores/modules/robot";
 
 const emjRef = ref();
 const tobottom = ref();
@@ -122,16 +123,16 @@ const filePicker = ref();
 const { commit, dispatch } = useStore();
 
 const emit = defineEmits(["setToolbar"]);
+const robotStore = useRobotStore()
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-const { model, fullScreen, currentConversation } = useState({
-  model: (state) => state.robot.model,
+const { fullScreen, currentConversation } = useState({
   fullScreen: (state) => state.conversation.fullScreen,
   currentConversation: (state) => state.conversation.currentConversation,
 });
 
 const isVision = computed(() => {
   if (isRobot(toAccount.value)) {
-    return model.value?.vision;
+    return robotStore.model?.vision;
   } else {
     return true;
   }
@@ -139,7 +140,7 @@ const isVision = computed(() => {
 
 const isFunctionCall = computed(() => {
   if (isRobot(toAccount.value)) {
-    return model.value?.functionCall;
+    return robotStore.model?.functionCall;
   } else {
     return false;
   }

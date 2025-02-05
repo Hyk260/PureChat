@@ -9,9 +9,9 @@ import {
   generateDalle3RequestPayload,
 } from "@/ai/utils";
 import OllamaAI from "../ollama/ollama";
-import store from "@/store/index";
 import { handleStreamingChat } from '@/ai/utils';
 import { transformData } from "@/utils/chat/index";
+import { useRobotStore } from "@/stores/modules/robot";
 
 export const OpenaiPath = {
   ChatPath: "v1/chat/completions", // chatgpt 聊天接口
@@ -32,7 +32,7 @@ export class ChatGPTApi {
   getPluginTools() {
     const pluginList = useToolStore();
     if (!pluginList.length) return [];
-    if (store.state.robot.model?.functionCall) {
+    if (useRobotStore().model?.functionCall) {
       return pluginList.map((t) => t.tools[0]);
     }
     return [];

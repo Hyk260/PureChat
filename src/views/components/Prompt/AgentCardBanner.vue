@@ -43,6 +43,7 @@ import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
 import { StoreKey, VITE_OPENAI_ID, ModelProvider } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
+import { useRobotStore } from "@/stores/modules/robot";
 
 const cardData = ref({});
 const { commit, dispatch } = useStore();
@@ -63,7 +64,7 @@ function toTant(item = cardData.value) {
   console.log("prompt", { ...localStg.get(StoreKey.Prompt), ...prompt });
   localStg.set(StoreKey.Prompt, { ...localStg.get(StoreKey.Prompt), ...prompt });
   const id = getModelId(defaultBot) || VITE_OPENAI_ID;
-  commit("setPromptConfig", prompt[value]);
+  useRobotStore().setPromptConfig(prompt[value]);
   commit("taggleOueSide", "chat");
   dispatch("addConversation", { convId: `${"C2C"}${id}` });
   setTimeout(() => {
