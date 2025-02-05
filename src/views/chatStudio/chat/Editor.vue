@@ -159,7 +159,7 @@ const updateDraft = debounce((data) => {
 const handleAt = debounce((editor) => {
   if (currentType.value !== "GROUP") return;
   const filteredList = currentMemberList.value.filter(
-    (member) => member.userID !== localStg.get("timProxy")?.userProfile?.userID
+    (item) => item.userID !== localStg.get("timProxy")?.userProfile?.userID
   );
   filterMentionList({
     str: editor.getText(),
