@@ -45,7 +45,6 @@ const chunkMap = {
   'lodash-es': 'lodash-vendor',
   'element-plus': 'el-vendor',
   'artplayer': 'artplayer-vendor',
-  'tailwindcss': 'tailwindcss-vendor',
   'highlight': 'highlight-vendor',
   'pinyin-pro': 'pinyin-pro-vendor',
   'markdown': 'markdown-vendor',

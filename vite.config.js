@@ -1,7 +1,8 @@
 import process from "node:process";
 import { URL, fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
-import { setupVitePlugins, viteDefine, manualChunks } from "./build/index";
+import { setupVitePlugins } from "./build/plugins/index";
+import { viteDefine, manualChunks } from "./build/config/define";
 
 export default defineConfig(({ mode }) => {
   const viteEnv = loadEnv(mode, process.cwd());
@@ -15,6 +16,7 @@ export default defineConfig(({ mode }) => {
         "~": fileURLToPath(new URL("./", import.meta.url)),
         "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
+      extensions: [".js", ".json"],
     },
     server: {
       // 端口号

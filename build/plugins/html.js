@@ -1,4 +1,4 @@
-import { __APP_INFO__ } from "../config/index";
+import { __APP_INFO__ } from "../config/define";
 
 const buildTime = __APP_INFO__.lastBuildTime;
 
