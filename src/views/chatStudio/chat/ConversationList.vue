@@ -146,7 +146,7 @@ const formatNewsMessage = (data) => {
   const isSystem = type === "@TIM#SYSTEM"; //系统消息
   const isGroup = type === "GROUP"; //群聊
   const isCount = unreadCount && isNotify(data); // 未读消息计数
-  const MAX_TIP_LENGTH = 36;
+  const MAX_TIP_LENGTH = 46;
 
   const formatTip = (message) =>
     message.length > MAX_TIP_LENGTH ? `${message.slice(0, MAX_TIP_LENGTH)}...` : message;

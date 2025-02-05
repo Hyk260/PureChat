@@ -66,6 +66,7 @@ import MentionModal from "../components/MentionModal.vue";
 import RichToolbar from "../components/RichToolbar.vue";
 import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
+import { localStg } from "@/utils/storage";
 import { useBoolean } from "@/utils/hooks/index";
 import {
   convertEmoji,
@@ -102,6 +103,7 @@ const {
   currentReplyMsg,
   sessionDraftMap,
   fullScreen,
+  currentMemberList,
 } = useState({
   lang: (state) => state.user.lang,
   sessionDraftMap: (state) => state.conversation.sessionDraftMap,
@@ -111,6 +113,7 @@ const {
   isShowModal: (state) => state.conversation.isShowModal,
   currentReplyMsg: (state) => state.conversation.currentReplyMsg,
   fullScreen: (state) => state.conversation.fullScreen,
+  currentMemberList: (state) => state.groupinfo.currentMemberList,
 });
 
 const handleEditor = (editor, created = true) => {
@@ -154,7 +157,14 @@ const updateDraft = debounce((data) => {
 }, 300);
 
 const handleAt = debounce((editor) => {
-  filterMentionList(editor.getText(), editor.getHtml());
+  if (currentType.value !== "GROUP") return;
+  const filteredList = currentMemberList.value.filter(
+    (member) => member.userID !== localStg.get("timProxy")?.userProfile?.userID
+  );
+  filterMentionList({
+    str: editor.getText(),
+    list: filteredList,
+  });
 }, 150);
 
 const onChange = (editor) => {
@@ -367,13 +377,13 @@ function offEmitter() {
 }
 
 watch(isChatBoxVisible, () => {
-  handleEditorKeyDown();
+  handleEditorKeyDown(isShowModal.value);
 });
 watch(lang, () => {
   handleToggleLanguage();
 });
 onActivated(() => {
-  handleEditorKeyDown();
+  handleEditorKeyDown(isShowModal.value);
 });
 onDeactivated(() => {
   offEmitter();

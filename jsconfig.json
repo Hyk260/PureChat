@@ -6,8 +6,10 @@
     "esModuleInterop": true,
     "lib": ["DOM", "ESNext"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "~/*": ["./*"]
     }
   },
+  "include": ["./**/*.js", "./**/*.vue"],
   "exclude": ["node_modules", "dist"]
 }
