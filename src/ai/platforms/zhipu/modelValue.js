@@ -26,7 +26,7 @@ export const zhipuModelValue = () => {
       SubTitle: "请填写你的 ZhiPu API Key",
       Placeholder: "ZhiPu API Key",
       defaultValue: "",
-      doubt: `${docs}/guides/model-provider.html#zhipu-api-key`,
+      doubt: `${docs}/guides/model-provider.html#vite-zhipu-api-key`,
     },
     Temperature: {
       ID: "temperature",

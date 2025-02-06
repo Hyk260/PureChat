@@ -26,7 +26,7 @@ export const yiModelValue = () => {
       SubTitle: "请填写你的 01.AI API Key",
       Placeholder: "ZeroOne API Key",
       defaultValue: "",
-      doubt: `${docs}/guides/model-provider.html#zeroone-api-key`,
+      doubt: `${docs}/guides/model-provider.html#vite-zeroone-api-key`,
     },
     Temperature: {
       ID: "temperature",

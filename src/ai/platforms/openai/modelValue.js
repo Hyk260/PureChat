@@ -26,7 +26,7 @@ export const openaiModelValue = () => {
       SubTitle: "请填写你的 OpenAI API Key",
       Placeholder: "OpenAI API Key",
       defaultValue: "",
-      doubt: `${docs}/guides/model-provider.html#openai-api-key`,
+      doubt: `${docs}/guides/model-provider.html#vite-openai-api-key`,
     },
     Temperature: {
       ID: "temperature",

@@ -25,6 +25,7 @@ export const {
   VITE_QWEN_ID, // 通义千问
   VITE_OLLAMA_ID, // ollama
   VITE_GITHUB_ID, // github
+  VITE_DEEPSEEK_ID, // deepseek
   DEV: isDev,
 } = import.meta.env;
 
@@ -38,8 +39,9 @@ export const ROBOT_COLLECT = [
 ];
 
 if (isDev) {
+  ROBOT_COLLECT.push(VITE_DEEPSEEK_ID);
   ROBOT_COLLECT.push(VITE_GITHUB_ID);
-  ROBOT_COLLECT.push(VITE_QWEN_ID);
+  // ROBOT_COLLECT.push(VITE_QWEN_ID);
 }
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
@@ -66,6 +68,7 @@ export const ModelProvider = {
   ChatGLM: "ChatGLM",
   ZeroOne: "ZeroOne",
   Qwen: "Qwen",
+  DeepSeek: "DeepSeek",
   Ollama: "Ollama",
   GitHub: "GitHub",
 };
