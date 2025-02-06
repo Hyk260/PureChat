@@ -1,7 +1,7 @@
 <template>
   <template v-if="renderLocalIcon">
     <svg class="svg-icon" aria-hidden="true" width="1em" height="1em" v-bind="bindAttrs">
-      <use :xlink:href="symbolId" fill="currentColor" />
+      <use :xlink:href="symbolId" :fill="color" />
     </svg>
   </template>
   <template v-else>
@@ -18,6 +18,10 @@ defineOptions({ name: "SvgIcon", inheritAttrs: false });
 const props = defineProps({
   icon: String,
   localIcon: String,
+  color: {
+    type: String,
+    default: "#808080", // currentColor
+  },
 });
 
 const attrs = useAttrs();
@@ -36,7 +40,6 @@ const symbolId = computed(() => {
 });
 
 const renderLocalIcon = computed(() => props.localIcon || !props.icon);
-
 </script>
 
 <style lang="scss" scoped>

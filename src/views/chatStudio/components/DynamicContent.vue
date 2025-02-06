@@ -12,7 +12,7 @@
     <img
       v-else-if="item.name === 'img'"
       draggable="false"
-      class="w-23 align-sub"
+      class="h-23 w-23 align-sub"
       :src="getAssetsFile(item.localSrc)"
       alt="表情包"
     />
