@@ -1,20 +1,20 @@
 import { defineStore } from 'pinia'
-import { login, logout, register } from "@/api/node-admin-api/index"
+import { login, logout } from "@/api/node-admin-api/index"
 import { ACCOUNT, TIM_PROXY, USER_MODEL } from "@/constants/index"
-import router from "@/router"
-import chat from "@/utils/IM/im-sdk/tim"
-import { timProxy } from "@/utils/IM/index"
+
 import { localStg } from "@/utils/storage"
 import { verification } from "@/utils/message/index"
-import emitter from "@/utils/mitt-bus"
 import { ElMessage } from "element-plus"
 import { initThemeSettings } from "@/theme/settings"
+
+import router from "@/router"
+import chat from "@/utils/IM/im-sdk/tim"
+import emitter from "@/utils/mitt-bus"
 
 const themeScheme = initThemeSettings()
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    timProxy,
     message: null,
     loading: false,
     currentPage: 0,

@@ -1,6 +1,5 @@
 import process from "node:process";
 import path from "node:path";
-import UnoCSS from '@unocss/vite'
 import vue from "@vitejs/plugin-vue";
 import progress from "vite-plugin-progress";
 import removeConsole from "vite-plugin-remove-console";
@@ -8,6 +7,7 @@ import VueDevtools from "vite-plugin-vue-devtools";
 import { visualizer } from "rollup-plugin-visualizer";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import { setupHtmlPlugin } from "./html";
+import { setupUnocss } from './unocss';
 import { cdn } from "./cdn";
 // import pwa from "./pwa";
 
@@ -18,15 +18,15 @@ import { cdn } from "./cdn";
 export function setupVitePlugins(viteEnv) {
   const plugins = [
     vue(),
-    UnoCSS(), // 开启UnoCSS
     // 打包进度
     progress(),
     // 线上环境删除console
     removeConsole(),
+    setupUnocss(viteEnv),
     // svg-icon
     createSvgIconsPlugin({
       iconDirs: [path.join(process.cwd(), "src/assets/icons/svg")],
-      symbolId: `icon-[dir]-[name]`,
+      symbolId: `${viteEnv.VITE_ICON_LOCAL_PREFIX}-[dir]-[name]`,
       inject: "body-last",
       customDomId: "__SVG_ICON_LOCAL__",
     }),

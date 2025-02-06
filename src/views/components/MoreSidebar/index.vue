@@ -39,9 +39,9 @@
                   />
                   <!-- 图标 -->
                   <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" />
-                  <svg-icon v-else :iconClass="item.icon" class="svg-icon" />
+                  <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
-                  <svg-icon iconClass="drag" class="dragIcon" />
+                  <svg-icon local-icon="drag" class="dragIcon" />
                 </div>
               </template>
             </VueDraggableNext>
@@ -77,9 +77,9 @@
                   />
                   <!-- 图标 -->
                   <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" />
-                  <svg-icon v-else :iconClass="item.icon" class="svg-icon" />
+                  <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
-                  <svg-icon iconClass="drag" class="dragIcon" />
+                  <svg-icon local-icon="drag" class="dragIcon" />
                 </div>
               </template>
             </VueDraggableNext>

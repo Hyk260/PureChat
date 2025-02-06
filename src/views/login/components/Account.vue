@@ -73,7 +73,7 @@
     </el-divider>
     <div class="w-full flex justify-evenly">
       <span v-for="(item, index) in thirdParty" :key="index" :title="item.title">
-        <svg-icon @click="onClick(item)" class="icon" :iconClass="item.icon" />
+        <svg-icon @click="onClick(item)" class="icon" :local-icon="item.icon" />
       </span>
     </div>
   </el-form-item>

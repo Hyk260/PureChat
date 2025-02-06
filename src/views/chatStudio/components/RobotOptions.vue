@@ -46,8 +46,8 @@
                       class="bot-avatar flex-c h-full"
                       :class="item.options?.id === 'ollama' ? models.icon : robotIcon"
                     >
-                      <svg-icon v-if="item.options?.id === 'ollama'" :iconClass="models.icon" />
-                      <svg-icon v-else :iconClass="robotIcon" />
+                      <svg-icon v-if="item.options?.id === 'ollama'" :local-icon="models.icon" />
+                      <svg-icon v-else :local-icon="robotIcon" />
                     </div>
                     <div class="flex flex-col h-full gap-4">
                       <span>{{ models.displayName || models.id }}</span>

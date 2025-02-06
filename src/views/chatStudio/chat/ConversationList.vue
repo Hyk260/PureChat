@@ -50,7 +50,7 @@
           :max="99"
         />
         <!-- 消息免打扰 -->
-        <svg-icon v-show="isNotify(item)" iconClass="DontDisturb" class="dont" />
+        <svg-icon v-show="isNotify(item)" local-icon="DontDisturb" class="dont" />
       </div>
     </div>
     <!-- 右键菜单 -->
@@ -63,7 +63,7 @@
         @click="handleClickMenuItem(item)"
       >
         <FontIcon v-if="item.icon" :iconName="item.icon" />
-        <svg-icon v-else :iconClass="item.svgIcon" class="menu-svg" />
+        <svg-icon v-else :local-icon="item.svgIcon" class="menu-svg" />
         <span> {{ item.text }}</span>
       </contextmenu-item>
     </contextmenu>

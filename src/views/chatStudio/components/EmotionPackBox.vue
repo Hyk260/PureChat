@@ -54,7 +54,7 @@
         :key="item.icon"
         @click="table = item.type"
       >
-        <svg-icon :iconClass="item.icon" />
+        <svg-icon :local-icon="item.icon" />
       </div>
     </div>
   </div>

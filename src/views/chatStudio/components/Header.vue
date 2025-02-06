@@ -15,7 +15,7 @@
           <!-- ai-tools -->
           <template v-if="isRobot(toAccount) && robotStore.botTools && isBotToolsFlag">
             <div v-for="item in robotStore.botTools" :key="item.id" class="ml-5 ai-prompt-title">
-              <svg-icon class="function-call" iconClass="functionCall" />
+              <svg-icon class="function-call" local-icon="functionCall" />
               <span>{{ item.meta.title }}</span>
             </div>
           </template>
@@ -29,10 +29,10 @@
     </div>
     <div class="flex gap-10">
       <!-- <div class="message-info-add" v-show="chat.type === 'GROUP' && false" title="添加成员">
-        <svg-icon iconClass="tianjia" class="icon-hover" />
+        <svg-icon local-icon="tianjia" class="icon-hover" />
       </div> -->
       <div class="share" title="分享对话" @click="openShare">
-        <svg-icon class="cursor-pointer icon-hover" iconClass="share" />
+        <svg-icon class="cursor-pointer icon-hover" local-icon="share" />
       </div>
       <div class="setup" v-show="isGroupChat" title="群详情" @click="openSetup">
         <FontIcon iconName="MoreFilled" class="cursor-pointer icon-hover" />

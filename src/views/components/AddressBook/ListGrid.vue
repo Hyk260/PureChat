@@ -9,7 +9,7 @@
     @click="onClick(item)"
   >
     <div class="icon">
-      <svg-icon v-if="item.type === 'svg'" :iconClass="item.icon" />
+      <svg-icon v-if="item.type === 'svg'" :local-icon="item.icon" />
       <FontIcon v-else :iconName="item.icon" />
     </div>
     <div class="title">{{ item.title }}</div>

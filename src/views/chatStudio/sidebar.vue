@@ -13,7 +13,7 @@
           >
             <el-badge :value="unreadMsg" :hidden="item.id !== 'message' || unreadMsg == 0">
               <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" class="style-svg" />
-              <svg-icon v-else :iconClass="item.icon" class="style-svg" />
+              <svg-icon v-else :local-icon="item.icon" class="style-svg" />
             </el-badge>
           </div>
         </el-tooltip>

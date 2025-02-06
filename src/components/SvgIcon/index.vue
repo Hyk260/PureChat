@@ -1,41 +1,46 @@
 <template>
-  <svg class="svg-icon" aria-hidden="true">
-    <use :href="symbolId" :fill="color" />
-  </svg>
+  <template v-if="renderLocalIcon">
+    <svg class="svg-icon" aria-hidden="true" width="1em" height="1em" v-bind="bindAttrs">
+      <use :xlink:href="symbolId" fill="currentColor" />
+    </svg>
+  </template>
+  <template v-else>
+    <Icon v-if="icon" :icon="icon" v-bind="bindAttrs" />
+  </template>
 </template>
 
-<script>
-import { defineComponent, computed } from 'vue'
+<script setup>
+import { computed, useAttrs } from "vue";
+import { Icon } from "@iconify/vue";
 
-export default defineComponent({
-  name: 'SvgIcon',
-  props: {
-    prefix: {
-      type: String,
-      default: 'icon',
-    },
-    iconClass: {
-      type: String,
-      required: true,
-    },
-    color: {
-      type: String,
-      default: '#808080',
-    },
-  },
-  setup(props) {
-    const symbolId = computed(() => `#${props.prefix}-${props.iconClass}`)
-    return { symbolId }
-  },
-})
+defineOptions({ name: "SvgIcon", inheritAttrs: false });
+
+const props = defineProps({
+  icon: String,
+  localIcon: String,
+});
+
+const attrs = useAttrs();
+
+const bindAttrs = computed(() => ({
+  class: attrs.class || "",
+  style: attrs.style || "",
+}));
+
+const symbolId = computed(() => {
+  const { VITE_ICON_LOCAL_PREFIX: prefix } = import.meta.env;
+
+  const icon = props.localIcon;
+
+  return `#${prefix}-${icon}`;
+});
+
+const renderLocalIcon = computed(() => props.localIcon || !props.icon);
+
 </script>
 
 <style lang="scss" scoped>
 .svg-icon {
   font-size: 16px;
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  vertical-align: -0.15em;
 }
 </style>

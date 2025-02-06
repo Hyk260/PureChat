@@ -3,7 +3,7 @@
     <el-scrollbar>
       <div class="robot-model">
         <div class="item-group-title">
-          <svg-icon :iconClass="robotIcon" />
+          <svg-icon :local-icon="robotIcon" />
           <span>{{ model.name }}</span>
         </div>
         <div
@@ -15,24 +15,24 @@
         >
           <div :class="['icon', robotIcon]">
             <div v-if="model.id === 'ollama'" :class="['icon', item.icon]">
-              <svg-icon :iconClass="item.icon" />
+              <svg-icon :local-icon="item.icon" />
             </div>
             <span v-else>
-              <svg-icon :iconClass="robotIcon" />
+              <svg-icon :local-icon="robotIcon" />
             </span>
           </div>
           <div class="list flex-bc w-full">
             <span>{{ item.displayName || item.id }}</span>
             <span class="box">
               <el-tooltip v-if="item.vision" content="该模型支持视觉识别" placement="right-start">
-                <svg-icon class="vision" iconClass="vision" />
+                <svg-icon class="vision" local-icon="vision" />
               </el-tooltip>
               <el-tooltip
                 v-if="item.functionCall"
                 content="该模型支持函数调用（Function Call）"
                 placement="right-start"
               >
-                <svg-icon class="function-call" iconClass="functionCall" />
+                <svg-icon class="function-call" local-icon="functionCall" />
               </el-tooltip>
               <span v-if="item.tokens" class="tokens flex-c">
                 {{ formatSizeStrict(item.tokens) }}

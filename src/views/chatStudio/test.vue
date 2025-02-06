@@ -34,12 +34,7 @@ const [flag, setFlag] = useBoolean();
 
 export default defineComponent({
   name: "Test",
-  computed: {
-    ...mapState({
-      groupList: (state) => state.groupinfo.groupList,
-      timProxy: (state) => state.user.timProxy,
-    }),
-  },
+  computed: {},
   props: {},
   data() {
     return {
@@ -70,8 +65,6 @@ export default defineComponent({
         {
           title: "环境变量",
           onclick: () => {
-            this.timProxy.saveSelfToLocalStorage();
-            console.log(this.timProxy);
             console.log(import.meta.env);
           },
         },
@@ -105,8 +98,7 @@ export default defineComponent({
     getCookies() {},
     sendMessage() {},
     async test2() {},
-    handleGroupClick(groupID) {
-    },
+    handleGroupClick(groupID) {},
     fileupload() {},
     async callApi() {},
   },
