@@ -70,7 +70,7 @@
           </div>
           <div class="range" v-else-if="isRange(item.ID)">
             <span class="min-w-18">
-               {{ item.defaultValue }}
+              {{ item.defaultValue }}
             </span>
             <input
               v-model="item.defaultValue"
@@ -99,6 +99,7 @@
             </el-tooltip>
             <el-input
               v-model="item.defaultValue"
+              :ref="(e) => inputRef(e, item.ID)"
               :placeholder="item.Placeholder"
               :type="item.ID === 'token' ? 'password' : 'text'"
               :show-password="item.ID === 'token'"
@@ -118,14 +119,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { getModelType, useAccessStore, usePromptStore, getModelSvg } from "@/ai/utils";
 import { useBoolean } from "@/utils/hooks/index";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
-import { useStore } from "vuex";
 import { ClientApi } from "@/ai/api";
 import DragPrompt from "./DragPrompt.vue";
 import { Markdown } from "@/utils/markdown/index";
@@ -136,13 +136,17 @@ import { useRobotStore } from "@/stores/modules/robot";
 const robotIcon = ref("");
 const modelData = ref(null);
 const maskData = ref([]);
+const inputRefs = ref({ token: null, openaiUrl: null });
 
-const { commit } = useStore();
 const [dialog, setDialog] = useBoolean();
 const { toAccount } = useGetters(["toAccount"]);
 
 const handleClear = (data) => {
   console.log("clear", data);
+};
+
+const inputRef = (el, id) => {
+  if (el) inputRefs.value[id] = el;
 };
 
 const handleRemoveTag = (data) => {
@@ -257,7 +261,7 @@ function handleClose(done) {
 // 重置
 function handleCancel() {
   localStg.remove(`${getModelType(toAccount.value)}-Select-Model`);
-  useRobotStore().setPromptConfig('');
+  useRobotStore().setPromptConfig("");
   resetRobotModel();
   resetRobotMask();
   setDialog(false);
@@ -276,7 +280,7 @@ function handleConfirm() {
   if (!maskData.value.prompt.length || !maskData.value.meta.title) {
     const _maskData = usePromptStore(getModelType(toAccount.value), true);
     storeRobotMask(_maskData);
-    useRobotStore().setPromptConfig('');
+    useRobotStore().setPromptConfig("");
   } else {
     storeRobotMask(maskData.value);
   }
@@ -287,9 +291,16 @@ function toUrl(url) {
   window.open(url, "_blank");
 }
 
-emitter.on("onRobotBox", () => {
+emitter.on("onRobotBox", (data) => {
+  const { ApikeyFocus = false } = data || {};
   setDialog(true);
   initModel();
+  if (ApikeyFocus) {
+    setTimeout(() => {
+      const tokenRef = inputRefs.value["token"];
+      tokenRef && tokenRef.focus();
+    }, 100);
+  }
 });
 </script>
 

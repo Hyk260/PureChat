@@ -123,7 +123,7 @@ const filePicker = ref();
 const { commit, dispatch } = useStore();
 
 const emit = defineEmits(["setToolbar"]);
-const robotStore = useRobotStore()
+const robotStore = useRobotStore();
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
 const { fullScreen, currentConversation } = useState({
   fullScreen: (state) => state.conversation.fullScreen,

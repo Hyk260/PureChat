@@ -1,6 +1,5 @@
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
 import { getPlugin } from '@/views/chatStudio/utils/utils';
-import store from "@/store";
 import {
   VITE_ZHIPU_ID,
   VITE_OPENAI_ID,
@@ -8,6 +7,7 @@ import {
   VITE_QWEN_ID,
   VITE_OLLAMA_ID,
   VITE_GITHUB_ID,
+  VITE_DEEPSEEK_ID,
   ModelProvider,
   StoreKey,
   modelConfig,
@@ -83,6 +83,7 @@ export function getModelType(modelId) {
     [VITE_QWEN_ID]: ModelProvider.Qwen,
     [VITE_OLLAMA_ID]: ModelProvider.Ollama,
     [VITE_GITHUB_ID]: ModelProvider.GitHub,
+    [VITE_DEEPSEEK_ID]: ModelProvider.DeepSeek
   };
   return modelMapping[modelId] || "";
 }
@@ -96,6 +97,7 @@ export function getModelId(model) {
     [ModelProvider.Qwen]: VITE_QWEN_ID,
     [ModelProvider.Ollama]: VITE_OLLAMA_ID,
     [ModelProvider.GitHub]: VITE_GITHUB_ID,
+    [ModelProvider.DeepSeek]: VITE_DEEPSEEK_ID,
   };
   return modelMapping[model] || "";
 }
@@ -109,6 +111,7 @@ export function getModelSvg(id) {
     [ModelProvider.Qwen]: "tongyi",
     [ModelProvider.Ollama]: "ollama",
     [ModelProvider.GitHub]: "openai",
+    [ModelProvider.DeepSeek]: "deepseek",
     llava: "llava",
   };
   return data[modelId] || "";

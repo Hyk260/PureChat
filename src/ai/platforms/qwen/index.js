@@ -10,8 +10,11 @@ export class QwenApi extends ChatGPTApi {
     super(provider);
   }
   path() {
-    let openaiUrl = useAccessStore(this.provider).openaiUrl;
-    return openaiUrl + QwenPath.ChatPath;
+    let baseUrl = useAccessStore(this.provider).openaiUrl;
+    if (baseUrl.endsWith("/")) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+    return `${baseUrl}/${QwenPath.ChatPath}`;
   }
   generateRequestPayload(messages, modelConfig, options) {
     return {

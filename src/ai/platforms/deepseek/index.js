@@ -1,17 +1,19 @@
 import { ChatGPTApi } from "@/ai/platforms/openai/index";
 import { useAccessStore } from "@/ai/utils";
 
-export const GitHubPath = {
+export const DeepSeekPath = {
   ChatPath: "chat/completions",
 };
 
-export class GitHubApi extends ChatGPTApi {
+export class DeepSeekApi extends ChatGPTApi {
   constructor(provider) {
     super(provider);
   }
   getPath() {
     let baseUrl = useAccessStore(this.provider).openaiUrl;
-    
-    return `${baseUrl}/${GitHubPath.ChatPath}`;
+    if (baseUrl.endsWith("/")) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+    return `${baseUrl}/${DeepSeekPath.ChatPath}`;
   }
 }

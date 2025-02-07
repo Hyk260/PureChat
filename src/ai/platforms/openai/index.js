@@ -26,8 +26,11 @@ export class ChatGPTApi {
     this.provider = provider;
   }
   getPath(path) {
-    let openaiUrl = this.accessStore().openaiUrl;
-    return `${openaiUrl}${path}`;
+    let baseUrl = this.accessStore().openaiUrl
+    if (baseUrl.endsWith("/")) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+    return [baseUrl, path].join("/");
   }
   getPluginTools() {
     const pluginList = useToolStore();

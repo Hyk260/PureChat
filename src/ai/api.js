@@ -5,6 +5,7 @@ import { ChatYiApi } from "@/ai/platforms/zeroone/index";
 import { QwenApi } from "@/ai/platforms/qwen/index";
 import { OllamaApi } from "@/ai/platforms/ollama/index";
 import { ChatZhipuApi } from "@/ai/platforms/zhipu/index";
+import { DeepSeekApi } from "@/ai/platforms/deepseek/index";
 import { useAccessStore, usePromptStore } from "@/ai/utils";
 
 /**
@@ -12,6 +13,7 @@ import { useAccessStore, usePromptStore } from "@/ai/utils";
  * @type {Object.<string, typeof ChatGPTApi>}
  */
 const API_CLASS_MAP = {
+  [ModelProvider.DeepSeek]: DeepSeekApi,
   [ModelProvider.ChatGLM]: ChatZhipuApi,
   [ModelProvider.ZeroOne]: ChatYiApi,
   [ModelProvider.Qwen]: QwenApi,

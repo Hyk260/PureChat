@@ -16,6 +16,9 @@ import { qwenModelValue } from "@/ai/platforms/qwen/modelValue";
 import { OllamaConfig } from "@/ai/platforms/ollama/config";
 import { ollamaModelValue } from "@/ai/platforms/ollama/modelValue";
 
+import { DeepseekConfig } from "@/ai/platforms/deepseek/config";
+import { DeepseekModelValue } from "@/ai/platforms/deepseek/modelValue";
+
 import { prefixRobotIDs } from "./utils";
 
 export const {
@@ -93,6 +96,7 @@ export const RobotAvatar = {
   [ModelProvider.Qwen]: "qwen.svg",
   [ModelProvider.Ollama]: "ollama.svg",
   [ModelProvider.GitHub]: "github.svg",
+  [ModelProvider.DeepSeek]: "deepseek.svg",
 };
 
 // 默认配置
@@ -103,6 +107,7 @@ export const modelConfig = {
   [ModelProvider.ZeroOne]: { ...YiConfig },
   [ModelProvider.Qwen]: { ...QwenConfig },
   [ModelProvider.Ollama]: { ...OllamaConfig },
+  [ModelProvider.DeepSeek]: { ...DeepseekConfig() },
 };
 
 export const modelValue = {
@@ -112,4 +117,5 @@ export const modelValue = {
   [ModelProvider.ZeroOne]: yiModelValue(),
   [ModelProvider.Qwen]: qwenModelValue(),
   [ModelProvider.Ollama]: ollamaModelValue(),
+  [ModelProvider.DeepSeek]: { ...DeepseekModelValue() },
 };

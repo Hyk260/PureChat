@@ -10,7 +10,10 @@ export class ChatZhipuApi extends ChatGPTApi {
     super(provider);
   }
   getPath() {
-    let openaiUrl = useAccessStore(this.provider).openaiUrl;
-    return openaiUrl + ChatGLMPath.ChatPath;
+    let baseUrl = useAccessStore(this.provider).openaiUrl;
+    if (baseUrl.endsWith("/")) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+    return `${baseUrl}/${ChatGLMPath.ChatPath}`;
   }
 }
