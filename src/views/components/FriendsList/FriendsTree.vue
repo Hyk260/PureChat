@@ -52,14 +52,17 @@ const INITIAL_TREE_DATA = [
     level: 0,
     label: "常用联系人",
     children: [],
+    hidden: __LOCAL_MODE__,
   },
   {
     id: "group",
     level: 0,
     label: "我的群聊",
     children: [],
+    hidden: __LOCAL_MODE__,
   },
-];
+].filter((item) => !item.hidden);
+
 const treeData = ref(INITIAL_TREE_DATA);
 
 const handleNodeClick = (data) => {

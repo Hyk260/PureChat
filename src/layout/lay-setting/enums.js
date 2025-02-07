@@ -9,7 +9,7 @@ export const list = computed(() => {
       icon: "Operation",
     },
     {
-      title: "默认助手",
+      title: "AI 服务商",
       icon: "Postcard",
     },
     {

@@ -59,7 +59,7 @@
     <div v-else-if="item.icon === 'Postcard'">
       <ul class="setting w-full">
         <li>
-          <span> 默认模型 </span>
+          <span> 默认服务商 </span>
           <el-select v-model="assistant" @change="onChange">
             <el-option
               v-for="item in optionsModel"
