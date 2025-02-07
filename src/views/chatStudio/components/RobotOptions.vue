@@ -69,7 +69,7 @@
             </div>
           </div>
           <div class="range" v-else-if="isRange(item.ID)">
-            <span class="min-w-18">
+            <span class="break-normal min-w-18">
               {{ item.defaultValue }}
             </span>
             <input

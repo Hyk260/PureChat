@@ -72,8 +72,13 @@
       <p class="text-gray-500">{{ $t("login.thirdLogin") }}</p>
     </el-divider>
     <div class="w-full flex justify-evenly">
-      <span v-for="(item, index) in thirdParty" :key="index" :title="item.title">
-        <svg-icon @click="onClick(item)" class="icon" :local-icon="item.icon" />
+      <span
+        v-for="(item, index) in thirdParty"
+        :key="index"
+        :title="item.title"
+        @click="onClick(item)"
+      >
+        <svg-icon class="icon cursor-pointer" :local-icon="item.icon" />
       </span>
     </div>
   </el-form-item>
