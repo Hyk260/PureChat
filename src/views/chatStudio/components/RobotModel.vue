@@ -3,7 +3,7 @@
     <el-scrollbar>
       <div class="robot-model">
         <div class="item-group-title">
-          <svg-icon :local-icon="robotIcon" />
+          <svg-icon :local-icon="model.icon || robotIcon" />
           <span>{{ model.name }}</span>
         </div>
         <div
@@ -15,10 +15,10 @@
         >
           <div :class="['icon', robotIcon]">
             <div v-if="model.id === 'ollama'" :class="['icon', item.icon]">
-              <svg-icon :local-icon="item.icon" />
+              <svg-icon class="align-text-bottom" :local-icon="item.icon" />
             </div>
             <span v-else>
-              <svg-icon :local-icon="robotIcon" />
+              <svg-icon class="align-text-bottom" :local-icon="robotIcon" />
             </span>
           </div>
           <div class="list flex-bc w-full">

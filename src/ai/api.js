@@ -1,25 +1,25 @@
 import { ModelProvider } from "@/ai/constant";
-import { ChatGPTApi } from "@/ai/platforms/openai/index";
+import { OpenAiApi } from "@/ai/platforms/openai/index";
 import { GitHubApi } from "@/ai/platforms/github/index";
-import { ChatYiApi } from "@/ai/platforms/zeroone/index";
+import { ZeroOneApi } from "@/ai/platforms/zeroone/index";
 import { QwenApi } from "@/ai/platforms/qwen/index";
 import { OllamaApi } from "@/ai/platforms/ollama/index";
-import { ChatZhipuApi } from "@/ai/platforms/zhipu/index";
+import { ZhiPuApi } from "@/ai/platforms/zhipu/index";
 import { DeepSeekApi } from "@/ai/platforms/deepseek/index";
 import { useAccessStore, usePromptStore } from "@/ai/utils";
 
 /**
  * 模型提供者到API类的映射
- * @type {Object.<string, typeof ChatGPTApi>}
+ * @type {Object.<string, typeof OpenAiApi>}
  */
 const API_CLASS_MAP = {
   [ModelProvider.DeepSeek]: DeepSeekApi,
-  [ModelProvider.ChatGLM]: ChatZhipuApi,
-  [ModelProvider.ZeroOne]: ChatYiApi,
+  [ModelProvider.ZhiPu]: ZhiPuApi,
+  [ModelProvider.ZeroOne]: ZeroOneApi,
   [ModelProvider.Qwen]: QwenApi,
   [ModelProvider.Ollama]: OllamaApi,
   [ModelProvider.GitHub]: GitHubApi,
-  [ModelProvider.GPT]: ChatGPTApi,
+  [ModelProvider.OpenAI]: OpenAiApi,
 };
 
 /**
@@ -28,10 +28,10 @@ const API_CLASS_MAP = {
 export class ClientApi {
   /**
    * 创建 ClientApi 的实例。
-   * @param {ModelProvider} [provider=ModelProvider.GPT] - 要使用的模型提供者。
+   * @param {ModelProvider} [provider=ModelProvider.OpenAI] - 要使用的模型提供者。
    * @throws {Error} 如果提供者无效或初始化失败。
    */
-  constructor(provider = ModelProvider.GPT) {
+  constructor(provider = ModelProvider.OpenAI) {
     try {
       this._config = useAccessStore(provider);
       this._prompts = usePromptStore(provider);
@@ -48,7 +48,7 @@ export class ClientApi {
    * @throws {Error} 如果提供者无效或创建实例失败。
    */
   createLLM(provider) {
-    const ApiClass = API_CLASS_MAP[provider] || API_CLASS_MAP[ModelProvider.GPT];
+    const ApiClass = API_CLASS_MAP[provider] || API_CLASS_MAP[ModelProvider.OpenAI];
     
     try {
       return new ApiClass(provider);

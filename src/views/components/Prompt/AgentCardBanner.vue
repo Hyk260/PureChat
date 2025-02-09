@@ -51,8 +51,8 @@ const [dialog, setDialog] = useBoolean();
 
 function toTant(item = cardData.value) {
   const { identifier, meta } = item;
-  const defaultBot = localStg.get("default-assistant") || null;
-  const value = defaultBot || ModelProvider.GPT;
+  const defaultBot = localStg.get("model-provider") || null;
+  const value = defaultBot || ModelProvider.OpenAI;
   const prompt = {
     [value]: {
       id: identifier,

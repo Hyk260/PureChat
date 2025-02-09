@@ -17,7 +17,7 @@ function getIcon(modelName) {
   if (modelName.startsWith("llama")) {
     return "meta";
   } else if (modelName.startsWith("qwen")) {
-    return "tongyi";
+    return "qwen";
   } else if (modelName.startsWith("llava")) {
     return "llava";
   }

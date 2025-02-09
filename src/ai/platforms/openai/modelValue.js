@@ -3,7 +3,7 @@ import OpenAI from "./models";
 const docs = __APP_INFO__.pkg.docs;
 const openai_proxy_url = import.meta.env.VITE_OPENAI_PROXY_URL;
 
-export const openaiModelValue = () => {
+export const OpenAIModelValue = () => {
   return {
     Model: {
       ID: "model",

@@ -23,7 +23,7 @@ import { localStg } from "@/utils/storage";
 
 /**
  * 获取 AI 模型的配置信息
- * @param {string} model - 模型的名称，默认为 `ModelProvider.GPT`
+ * @param {string} model - 模型的名称，默认为 `ModelProvider.OpenAI`
  * @returns {Object} 返回模型的配置对象，包括以下字段：
  * - model: {string} 模型名称，如 "gpt-4o-mini"
  * - temperature: {number} 生成的文本多样性，范围为 0 到 1，默认为 0.6
@@ -35,10 +35,10 @@ import { localStg } from "@/utils/storage";
  * - token: {string} API 访问令牌，默认为空字符串
  * - openaiUrl: {string} OpenAI API 的基础 URL，默认为空字符串
  */
-export const useAccessStore = (model = ModelProvider.GPT) => {
+export const useAccessStore = (model = ModelProvider.OpenAI) => {
   try {
     const access = localStg.get(StoreKey.Access)?.[model] || "";
-    if (model === ModelProvider.GPT && !access) {
+    if (model === ModelProvider.OpenAI && !access) {
       return OpenaiConfig();
     }
     return access || modelConfig[model];
@@ -48,7 +48,7 @@ export const useAccessStore = (model = ModelProvider.GPT) => {
   }
 };
 
-export const usePromptStore = (model = ModelProvider.GPT, start = false) => {
+export const usePromptStore = (model = ModelProvider.OpenAI, start = false) => {
   if (start) {
     return prompt[0];
   }
@@ -60,7 +60,7 @@ export const usePromptStore = (model = ModelProvider.GPT, start = false) => {
   }
 };
 
-export const useToolStore = (model = ModelProvider.GPT) => {
+export const useToolStore = (model = ModelProvider.OpenAI) => {
   try {
     return localStg.get(StoreKey.Tool) || []
   } catch (error) {
@@ -72,13 +72,13 @@ export const useToolStore = (model = ModelProvider.GPT) => {
 /**
  * 根据提供的模型ID获取模型类型。
  * @param {string} modelId - '@RBT#001' 模型ID，用于识别不同的模型类型。
- * @returns {ModelProvider | string} - 'GPT' 返回对应的模型类型，如果模型ID无效则返回''。
+ * @returns {ModelProvider | string} - 'openai' 返回对应的模型类型，如果模型ID无效则返回''。
  */
 export function getModelType(modelId) {
   if (!isRobot(modelId)) return "";
   const modelMapping = {
-    [VITE_OPENAI_ID]: ModelProvider.GPT,
-    [VITE_ZHIPU_ID]: ModelProvider.ChatGLM,
+    [VITE_OPENAI_ID]: ModelProvider.OpenAI,
+    [VITE_ZHIPU_ID]: ModelProvider.ZhiPu,
     [VITE_ZEROONE_ID]: ModelProvider.ZeroOne,
     [VITE_QWEN_ID]: ModelProvider.Qwen,
     [VITE_OLLAMA_ID]: ModelProvider.Ollama,
@@ -91,8 +91,8 @@ export function getModelType(modelId) {
 export function getModelId(model) {
   if (!model) return "";
   const modelMapping = {
-    [ModelProvider.GPT]: VITE_OPENAI_ID,
-    [ModelProvider.ChatGLM]: VITE_ZHIPU_ID,
+    [ModelProvider.OpenAI]: VITE_OPENAI_ID,
+    [ModelProvider.ZhiPu]: VITE_ZHIPU_ID,
     [ModelProvider.ZeroOne]: VITE_ZEROONE_ID,
     [ModelProvider.Qwen]: VITE_QWEN_ID,
     [ModelProvider.Ollama]: VITE_OLLAMA_ID,
@@ -105,10 +105,10 @@ export function getModelId(model) {
 export function getModelSvg(id) {
   const modelId = getModelType(id);
   const data = {
-    [ModelProvider.GPT]: "openai",
-    [ModelProvider.ChatGLM]: "zhipu",
-    [ModelProvider.ZeroOne]: "zeroone",
-    [ModelProvider.Qwen]: "tongyi",
+    [ModelProvider.OpenAI]: "openai",
+    [ModelProvider.ZhiPu]: "chatglm",
+    [ModelProvider.ZeroOne]: "yi",
+    [ModelProvider.Qwen]: "qwen",
     [ModelProvider.Ollama]: "ollama",
     [ModelProvider.GitHub]: "openai",
     [ModelProvider.DeepSeek]: "deepseek",
@@ -216,7 +216,7 @@ export const getAvatarUrl = (id, type = "local") => {
   // icon.png
   const suffix = RobotAvatar[getModelType(id)] || "";
   if (type === "local") {
-    return new URL(`../assets/images/aI-avatar/${suffix}`, import.meta.url).href;
+    return new URL(`../assets/images/model-provider/${suffix}`, import.meta.url).href;
   } else {
     return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}`;
   }
@@ -343,7 +343,7 @@ export function isFullStaffGroup(data) {
 
 export const createAiPromptMsg = (params) => {
   let to = localStg.get("timProxy")?.userProfile?.userID;
-  let defaultBot = localStg.get("default-assistant") || "GPT";
+  let defaultBot = localStg.get("model-provider") || ModelProvider.OpenAI;
   let from = getModelId(defaultBot);
   const { meta } = localStg.get(StoreKey.Prompt)?.[defaultBot];
   const { to: _to, from: _from } = params || {};

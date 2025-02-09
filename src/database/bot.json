@@ -1,7 +1,7 @@
 [
   {
     "userID": "@RBT#001",
-    "nick": "ChatGPT",
+    "nick": "OpenAI",
     "gender": "",
     "birthday": 0,
     "location": "",
@@ -27,7 +27,7 @@
   },
   {
     "userID": "@RBT#002",
-    "nick": "ChatGLM",
+    "nick": "ZhiPu",
     "gender": "",
     "birthday": 0,
     "location": "",

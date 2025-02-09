@@ -59,7 +59,7 @@
     <div v-else-if="item.icon === 'Postcard'">
       <ul class="setting w-full">
         <li>
-          <span> 默认服务商 </span>
+          <span> 首选服务商 </span>
           <el-select v-model="assistant" @change="onChange">
             <el-option
               v-for="item in optionsModel"
@@ -81,6 +81,7 @@ import { useState } from "@/utils/hooks/useMapper";
 import { computed, ref } from "vue";
 import { changeLocale } from "@/locales/index";
 import { useStore } from "vuex";
+import { ModelProvider } from "@/ai/constant";
 import { languages, options, optionsModel } from "./enums";
 
 const { VITE_APP_NAME, DEV: isDev } = import.meta.env;
@@ -94,7 +95,7 @@ const props = defineProps({
   },
 });
 
-const assistant = ref(localStg.get("default-assistant") || "GPT");
+const assistant = ref(localStg.get("model-provider") || ModelProvider.OpenAI);
 
 const emit = defineEmits(["onClose", "onItem"]);
 
@@ -119,7 +120,7 @@ function logout() {
 
 const onChange = (val) => {
   assistant.value = val;
-  localStg.set("default-assistant", val);
+  localStg.set("model-provider", val);
 };
 
 const themecolor = computed({

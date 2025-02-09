@@ -1,6 +1,6 @@
 import GitHubAI from "./models";
 
-export const githubModelValue = () => {
+export const GitHubModelValue = () => {
   return {
     Model: {
       ID: "model",

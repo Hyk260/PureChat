@@ -1,11 +1,11 @@
-import { ChatGPTApi } from "@/ai/platforms/openai/index";
+import { OpenAiApi } from "@/ai/platforms/openai/index";
 import { useAccessStore } from "@/ai/utils";
 
 export const DeepSeekPath = {
   ChatPath: "chat/completions",
 };
 
-export class DeepSeekApi extends ChatGPTApi {
+export class DeepSeekApi extends OpenAiApi {
   constructor(provider) {
     super(provider);
   }

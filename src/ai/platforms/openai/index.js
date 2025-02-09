@@ -21,7 +21,7 @@ export const OpenaiPath = {
   EmbeddingPath: "v1/embeddings", // 文本向量化
 };
 
-export class ChatGPTApi {
+export class OpenAiApi {
   constructor(provider) {
     this.provider = provider;
   }

@@ -39,13 +39,13 @@
 .openai {
   background: rgb(25, 195, 125);
 }
-.zhipu {
+.chatglm {
   background: linear-gradient(-45deg, rgb(52, 133, 255), rgb(80, 74, 244));
 }
-.tongyi {
+.qwen {
   background: rgb(97, 92, 237);
 }
-.zeroone {
+.yi {
   background: rgb(0, 52, 37);
 }
 .meta {

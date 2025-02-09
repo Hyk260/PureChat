@@ -3,7 +3,7 @@ import OllamaAI from "./models";
 const docs = __APP_INFO__.pkg.docs;
 const ollama_proxy_url = import.meta.env.VITE_OLLAMA_PROXY_URL;
 
-export const ollamaModelValue = () => {
+export const OllamaModelValue = () => {
   return {
     Model: {
       ID: "model",

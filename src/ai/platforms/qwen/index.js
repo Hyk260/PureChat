@@ -1,11 +1,11 @@
-import { ChatGPTApi } from "@/ai/platforms/openai/index";
+import { OpenAiApi } from "@/ai/platforms/openai/index";
 import { useAccessStore } from "@/ai/utils";
 
 export const QwenPath = {
   ChatPath: "services/aigc/text-generation/generation",
 };
 
-export class QwenApi extends ChatGPTApi {
+export class QwenApi extends OpenAiApi {
   constructor(provider) {
     super(provider);
   }

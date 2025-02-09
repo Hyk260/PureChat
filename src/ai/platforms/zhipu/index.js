@@ -1,11 +1,11 @@
-import { ChatGPTApi } from "@/ai/platforms/openai/index";
+import { OpenAiApi } from "@/ai/platforms/openai/index";
 import { useAccessStore } from "@/ai/utils";
 
 export const ChatGLMPath = {
   ChatPath: "chat/completions",
 };
 
-export class ChatZhipuApi extends ChatGPTApi {
+export class ZhiPuApi extends OpenAiApi {
   constructor(provider) {
     super(provider);
   }

@@ -1,11 +1,11 @@
-import { ChatGPTApi } from "@/ai/platforms/openai/index";
+import { OpenAiApi } from "@/ai/platforms/openai/index";
 import { useAccessStore } from "@/ai/utils";
 
 export const ZeroOnePath = {
   ChatPath: "v1/chat/completions",
 };
 
-export class ChatYiApi extends ChatGPTApi {
+export class ZeroOneApi extends OpenAiApi {
   constructor(provider) {
     super(provider);
   }

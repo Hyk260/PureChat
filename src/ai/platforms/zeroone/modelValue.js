@@ -3,7 +3,7 @@ import ZhiPu from './models';
 const docs = __APP_INFO__.pkg.docs;
 const zeroone_proxy_url = import.meta.env.VITE_ZEROONE_BASE_URL;
 
-export const yiModelValue = () => {
+export const ZeroOneModelValue = () => {
   return {
     Model: {
       ID: "model",
