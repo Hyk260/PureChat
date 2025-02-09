@@ -85,7 +85,7 @@ export function getModelType(modelId) {
     [VITE_GITHUB_ID]: ModelProvider.GitHub,
     [VITE_DEEPSEEK_ID]: ModelProvider.DeepSeek
   };
-  return modelMapping[modelId] || "";
+  return modelMapping[modelId.replace("C2C", "")] || "";
 }
 
 export function getModelId(model) {
@@ -216,9 +216,9 @@ export const getAvatarUrl = (id, type = "local") => {
   // icon.png
   const suffix = RobotAvatar[getModelType(id)] || "";
   if (type === "local") {
-    return new URL(`../assets/images/model-provider/${suffix}`, import.meta.url).href;
+    return new URL(`../assets/images/model-provider/${suffix}.svg`, import.meta.url).href;
   } else {
-    return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}`;
+    return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}.svg`;
   }
 };
 
@@ -229,7 +229,7 @@ export const getAvatarUrl = (id, type = "local") => {
  */
 export function getAiAvatarUrl(convId) {
   if (convId.includes("@RBT#")) {
-    return getAvatarUrl(convId.replace("C2C", ""));
+    return getAvatarUrl(convId);
   } else {
     return "";
   }
@@ -363,7 +363,7 @@ export const createAiPromptMsg = (params) => {
     },
   });
   msg.conversationID = `C2C${from}`;
-  msg.avatar = getAvatarUrl(from);
+  msg.avatar = getAiAvatarUrl(from);
   msg.cloudCustomData = promptMsgContent;
   msg.flow = "in";
   msg.to = to;
