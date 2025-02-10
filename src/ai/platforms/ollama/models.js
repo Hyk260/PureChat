@@ -3,7 +3,6 @@ const OllamaAI = {
   chatModels: [
     {
       displayName: "Llama 3.1 8B",
-      enabled: true,
       functionCall: true,
       icon: "meta",
       id: "llama3.1:8b",
@@ -17,14 +16,13 @@ const OllamaAI = {
     },
     {
       displayName: "Llama 3.1 405B",
-      enabled: false,
       icon: "meta",
       id: "llama3.1:405b",
       tokens: 128_000,
     },
     {
       displayName: "Qwen Chat 7B",
-      enabled: true,
+
       id: "qwen2:7b",
       icon: "qwen",
       tokens: 32_768,

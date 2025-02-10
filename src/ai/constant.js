@@ -85,13 +85,13 @@ export const prompt = [
 ];
 
 export const RobotAvatar = {
-  [ModelProvider.OpenAI]: "openai",
-  [ModelProvider.ZhiPu]: "zhipu",
-  [ModelProvider.ZeroOne]: "zeroone",
-  [ModelProvider.Qwen]: "qwen",
-  [ModelProvider.Ollama]: "ollama",
-  [ModelProvider.GitHub]: "github",
-  [ModelProvider.DeepSeek]: "deepseek",
+  [ModelProvider.OpenAI]: "open-ai-icon.png",
+  [ModelProvider.ZhiPu]: "zhipu.svg",
+  [ModelProvider.ZeroOne]: "zeroone.svg",
+  [ModelProvider.Qwen]: "qwen.svg",
+  [ModelProvider.Ollama]: "ollama.svg",
+  [ModelProvider.GitHub]: "github.svg",
+  [ModelProvider.DeepSeek]: "deepseek.svg",
 };
 
 // 默认配置

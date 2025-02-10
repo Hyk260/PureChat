@@ -5,7 +5,6 @@ const OpenAI = {
       description:
         'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
       displayName: 'OpenAI o1-mini',
-      enabled: true,
       id: 'o1-mini',
       tokens: 128_000,
     },
@@ -13,14 +12,12 @@ const OpenAI = {
       description:
         'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
       displayName: 'OpenAI o1-preview',
-      enabled: true,
       id: 'o1-preview',
       tokens: 128_000,
     },
     {
       description: 'Currently points to gpt-4o-mini-2024-07-18',
       displayName: 'GPT-4o mini',
-      enabled: true,
       functionCall: true,
       id: 'gpt-4o-mini',
       maxOutput: 16_385,
@@ -30,7 +27,6 @@ const OpenAI = {
     {
       description: 'Currently points to gpt-4o-2024-05-13',
       displayName: 'GPT-4o',
-      enabled: true,
       functionCall: true,
       id: 'gpt-4o',
       tokens: 128_000,
@@ -39,7 +35,6 @@ const OpenAI = {
     {
       description: 'GPT-4 Turbo with Vision',
       displayName: 'GPT-4 Turbo',
-      enabled: true,
       functionCall: true,
       id: 'gpt-4-turbo',
       tokens: 128_000,

@@ -5,7 +5,6 @@ const GitHubAI = {
     {
       description: 'Currently points to gpt-4o-mini-2024-07-18',
       displayName: 'GPT-4o mini',
-      enabled: true,
       functionCall: true,
       id: 'gpt-4o-mini',
       maxOutput: 16_385,
@@ -15,7 +14,6 @@ const GitHubAI = {
     {
       description: 'Currently points to gpt-4o-2024-05-13',
       displayName: 'GPT-4o',
-      enabled: true,
       functionCall: true,
       id: 'gpt-4o',
       tokens: 128_000,
@@ -24,7 +22,6 @@ const GitHubAI = {
     {
       description: 'GPT-4 Turbo with Vision',
       displayName: 'GPT-4 Turbo',
-      enabled: true,
       functionCall: true,
       id: 'gpt-4-turbo',
       tokens: 128_000,
@@ -70,6 +67,7 @@ const GitHubAI = {
   checkModel: 'gpt-4o-mini',
   url: 'https://github.com/marketplace/models',
   id: 'github',
+  icon: "github",
   name: 'GitHub',
 };
 

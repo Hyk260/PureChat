@@ -120,8 +120,20 @@ emitter.on("openModeList", () => {
   .robot-model {
     padding: 5px;
     max-height: 300px;
+    .item-group-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      color: #999999;
+      transition: all 0.2s;
+      .svg-icon {
+        font-size: 20px;
+      }
+    }
   }
 }
+
 .model {
   padding: 7px 12px;
   display: flex;
@@ -138,51 +150,41 @@ emitter.on("openModeList", () => {
       background: rgba(0, 0, 0, 0.03);
       border-radius: 4px;
     }
+    .function-call {
+      color: #369eff;
+    }
+    .vision {
+      color: #55b467;
+    }
+    .box {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      gap: 4px;
+      margin-left: 15px;
+      svg {
+        height: 15px;
+        width: 15px;
+      }
+    }
+  }
+  .icon {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: rgb(255, 255, 255);
+    height: 20px;
+    width: 20px;
   }
   &:hover {
     background-color: rgba(0, 0, 0, 0.03);
   }
 }
-.icon {
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  color: rgb(255, 255, 255);
-  height: 20px;
-  width: 20px;
-}
-.box {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  gap: 4px;
-  margin-left: 15px;
-  svg {
-    height: 15px;
-    width: 15px;
-  }
-}
+
 .active {
   background-color: rgba(0, 0, 0, 0.03);
-}
-.function-call {
-  color: #369eff;
-}
-.vision {
-  color: #55b467;
-}
-.item-group-title {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 7px 12px;
-  color: #999999;
-  transition: all 0.2s;
-  .svg-icon {
-    font-size: 20px;
-  }
 }
 </style>
