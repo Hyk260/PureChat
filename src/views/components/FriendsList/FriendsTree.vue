@@ -98,6 +98,7 @@ const getRobotList = async () => {
 };
 
 const getFriendList = async () => {
+  if (__LOCAL_MODE__) return
   const list = ["huangyk", "admin", "linjx", "jinwx", "zhangal"];
   const { code, data } = await getUserProfile(list);
   friendList.value = data;

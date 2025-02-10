@@ -216,9 +216,9 @@ export const getAvatarUrl = (id, type = "local") => {
   // icon.png
   const suffix = RobotAvatar[getModelType(id)] || "";
   if (type === "local") {
-    return new URL(`../assets/images/model-provider/${suffix}.svg`, import.meta.url).href;
+    return new URL(`../assets/images/model-provider/${suffix}`, import.meta.url).href;
   } else {
-    return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}.svg`;
+    return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}`;
   }
 };
 

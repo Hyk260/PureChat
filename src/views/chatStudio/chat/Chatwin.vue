@@ -37,7 +37,7 @@
                 <el-avatar
                   shape="square"
                   :size="36"
-                  :src="item.avatar || getAiAvatarUrl(item.from) || squareUrl"
+                  :src="getAiAvatarUrl(item.from) || item.avatar || squareUrl"
                   v-contextmenu:contextmenu
                   @error="() => true"
                   @click.stop="onClickAvatar($event, item)"
