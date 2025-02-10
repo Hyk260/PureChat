@@ -84,7 +84,7 @@ pnpm build
 
 ### Star History
 <!-- https://star-history.com/ -->
-[![Star History Chart](https://api.star-history.com/svg?repos=Hyk260/PureChat&type=Date)](https://star-history.com/#Hyk260/PureChat&Date)
+![Star History](./images/star-history.png)
 
 ### 🖼️ 截图
 
