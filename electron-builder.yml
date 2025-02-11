@@ -47,7 +47,7 @@ nsis:
   uninstallDisplayName: ${productName}
 # macOS系统相关打包配置
 mac:
-  icon: "resources/icon-512x512.png"
+  icon: "resources/mac/icon.png"
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
     - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
