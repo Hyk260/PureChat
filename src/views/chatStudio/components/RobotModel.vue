@@ -14,8 +14,8 @@
           @click="storeRobotModel(item)"
         >
           <div :class="['icon', robotIcon]">
-            <div v-if="model.id === 'ollama'" :class="['icon', item.icon]">
-              <svg-icon class="align-text-bottom" :local-icon="item.icon" />
+            <div v-if="['ollama', 'github'].includes(model.id)" :class="['icon', item.icon]">
+              <svg-icon class="align-text-bottom" :local-icon="item.icon || robotIcon" />
             </div>
             <span v-else>
               <svg-icon class="align-text-bottom" :local-icon="robotIcon" />
