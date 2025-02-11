@@ -7,7 +7,7 @@ export const ZeroOneModelValue = () => {
   return {
     Model: {
       ID: "model",
-      Title: "模型 (model)",
+      Title: "模型列表",
       SubTitle: "选择的模型会在模型列表中展示",
       defaultValue: "",
       collapse: ZhiPu.chatModels.map((t) => t.id),

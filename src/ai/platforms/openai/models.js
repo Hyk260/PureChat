@@ -2,15 +2,22 @@
 const OpenAI = {
   chatModels: [
     {
-      description:
-        'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
+      reasoning: true,
+      description: 'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
       displayName: 'OpenAI o1-mini',
       id: 'o1-mini',
       tokens: 128_000,
     },
     {
-      description:
-        'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
+      reasoning: true,
+      description: 'o1是OpenAI新的推理模型，支持图文输入并输出文本，适用于需要广泛通用知识的复杂任务。该模型具有200K上下文和2023年10月的知识截止日期。',
+      displayName: 'OpenAI o1',
+      id: 'o1',
+      tokens: 200_000,
+    },
+    {
+      reasoning: true,
+      description: 'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
       displayName: 'OpenAI o1-preview',
       id: 'o1-preview',
       tokens: 128_000,
@@ -62,7 +69,7 @@ const OpenAI = {
       tokens: 8192,
     },
     {
-      description: 'Currently points to gpt-4-32k-0613',
+      description: 'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
       displayName: 'GPT-4 32K',
       functionCall: true,
       id: 'gpt-4-32k',

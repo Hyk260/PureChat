@@ -4,7 +4,7 @@ export const GitHubModelValue = () => {
   return {
     Model: {
       ID: "model",
-      Title: "模型 (model)",
+      Title: "模型列表",
       SubTitle: "选择的模型会在模型列表中展示",
       defaultValue: "",
       collapse: GitHubAI.chatModels.map((t) => t.id),
@@ -12,7 +12,7 @@ export const GitHubModelValue = () => {
     },
     Token: {
       ID: "token",
-      Title: "API Key",
+      Title: "Github PAT",
       SubTitle: "填入你的 Github PAT，点击 [这里](https://github.com/settings/tokens) 创建",
       Placeholder: "ghp_xxxxxx",
       defaultValue: "",

@@ -24,15 +24,22 @@
           <div class="list flex-bc w-full">
             <span>{{ item.displayName || item.id }}</span>
             <span class="box">
-              <el-tooltip v-if="item.vision" content="该模型支持视觉识别" placement="right-start">
+              <el-tooltip v-if="item.vision" :content="ModelSelect.vision" placement="right-start">
                 <svg-icon class="vision" local-icon="vision" />
               </el-tooltip>
               <el-tooltip
                 v-if="item.functionCall"
-                content="该模型支持函数调用（Function Call）"
+                :content="ModelSelect.functionCall"
                 placement="right-start"
               >
                 <svg-icon class="function-call" local-icon="functionCall" />
+              </el-tooltip>
+              <el-tooltip
+                v-if="item.reasoning"
+                :content="ModelSelect.reasoning"
+                placement="right-start"
+              >
+                <svg-icon class="reasoning" local-icon="reasoning" />
               </el-tooltip>
               <span v-if="item.tokens" class="tokens flex-c">
                 {{ formatSizeStrict(item.tokens) }}
@@ -56,6 +63,7 @@ import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { useRobotStore } from "@/stores/modules/robot";
+import { ModelSelect } from "@/ai/resources";
 
 defineOptions({
   name: "RobotModel",
@@ -155,6 +163,9 @@ emitter.on("openModeList", () => {
     }
     .vision {
       color: #55b467;
+    }
+    .reasoning {
+      color: #bd54c6;
     }
     .box {
       display: flex;

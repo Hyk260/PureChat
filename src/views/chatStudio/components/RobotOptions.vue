@@ -56,15 +56,15 @@
                   </div>
                 </el-option>
               </el-select>
-              <div v-if="false" class="flex-bc">
-                <div>共 {{ modelCount(item.collapse.length) }} 个模型可用</div>
-                <div>
+              <div class="flex-bc">
+                <div class="text-[#999]">共 {{ modelCount(item.collapse.length) }} 个模型可用</div>
+                <!-- <div>
                   <el-tooltip :content="modelTooltipText()" placement="top" v-if="isOllama()">
                     <el-icon class="refresh" @click="onRefresh()">
                       <Refresh />
                     </el-icon>
                   </el-tooltip>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -172,8 +172,9 @@ function handlePrompt(prompt) {
   maskData.value.prompt = prompt;
 }
 function modelCount(count) {
-  const olamaModelList = localStg.get("olama-local-model-list") || [];
-  return olamaModelList.length ?? count;
+  return count
+  // const olamaModelList = localStg.get("olama-local-model-list") || [];
+  // return olamaModelList.length ?? count;
 }
 function modelTooltipText() {
   // const olamaModelList = localStg.get("olama-local-model-list") || [];
