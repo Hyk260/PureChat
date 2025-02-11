@@ -1,8 +1,12 @@
+# 应用程序的唯一标识符
 appId: com.electron.app
+# 应用名称（安装包会使用此名称）
 productName: PureChat
 directories:
-  buildResources: build
+  # 构建资源目录（存放图标等）#resources build
+  buildResources: resources
 files:
+  - "!node_modules/**/*"  
   - '!**/.vscode/*'
   - '!src/*'
   - '!electron.vite.config.{js,ts,mjs,cjs}'
@@ -11,8 +15,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: PureChat
-  # icon: "build/icon.png",
+  icon: "resources/icon.png"
   # 安装包和免安装版
   target:
     - nsis
@@ -21,11 +24,11 @@ nsis:
   # 安装包名称
   artifactName: ${name}-${version}.${ext}
   # 安装图标
-  # installerIcon: "build/icon.png", 
+  installerIcon: "resources/icon.png"
   # 卸载图标
-  # uninstallerIcon: "build/icon.png", 
+  uninstallerIcon: "resources/icon.png"
   # 安装时头部图标
-  # installerHeaderIcon: "build/icon.png",
+  installerHeaderIcon: "resources/icon.png"
   # true: 一键安装 false: 辅助安装
   oneClick: false
   # false: 可选择为所有人或当前用户安装 true: 为所有人安装
@@ -42,20 +45,24 @@ nsis:
   include: './installer.nsh'
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
+# macOS系统相关打包配置
 mac:
-  entitlementsInherit: build/entitlements.mac.plist
-  icon: "build/icon-512x512.png"
+  icon: "resources/icon-512x512.png"
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
     - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
     - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
+# mac安装包的配置项
 dmg:
   artifactName: ${name}-${version}.${ext}
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
+# 是否将应用打包成 asar 格式
+# asar: false
+# 更新服务器地址
 publish:
   provider: generic
   url: https://example.com/auto-updates
