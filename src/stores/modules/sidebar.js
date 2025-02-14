@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
+const { docs, homepage, giteeHomepage } = __APP_INFO__.pkg;
 const { DEV: isDev } = import.meta.env;
-const docs = __APP_INFO__.pkg.docs;
 
 const outsideList = [
   {
@@ -24,21 +24,21 @@ const outsideList = [
     title: "发现",
     svgIcon: "Discover",
   },
-  {
-    id: "document",
-    icon: "Document",
-    title: "文档",
-    type: "el-icon",
-    openType: "outside",
-    url: docs,
-  },
-  {
-    id: "test",
-    icon: "SwitchFilled",
-    title: "web",
-    show: isDev ? "" : "hide",
-    type: "el-icon",
-  },
+  // {
+  //   id: "document",
+  //   icon: "Document",
+  //   title: "文档",
+  //   type: "el-icon",
+  //   openType: "outside",
+  //   url: docs,
+  // },
+  // {
+  //   id: "test",
+  //   icon: "SwitchFilled",
+  //   title: "web",
+  //   show: isDev ? "" : "hide",
+  //   type: "el-icon",
+  // },
   {
     id: "more",
     icon: "MoreFilled",
@@ -54,14 +54,14 @@ const moreList = [
     icon: "github",
     title: "github",
     openType: "outside",
-    url: "https://github.com/Hyk260",
+    url: homepage, 
   },
   {
     id: "gitee",
     icon: "gitee",
     title: "gitee",
     openType: "outside",
-    url: "https://gitee.com/H260788/PureChat",
+    url: giteeHomepage,
   },
 ];
 

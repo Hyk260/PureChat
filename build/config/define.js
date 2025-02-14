@@ -16,6 +16,7 @@ import {
 export const __APP_INFO__ = {
   pkg: {
     // docs: process.env.NODE_ENV === "development" ? "http://localhost:5173/pure-docs" : docs,
+    giteeHomepage: "https://gitee.com/H260788/PureChat",
     docs,
     bugs,
     name,

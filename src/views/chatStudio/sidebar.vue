@@ -91,6 +91,7 @@ function toggle(item) {
     }
   }
   .style-svg {
+    vertical-align: bottom;
     color: rgb(96, 98, 102);
     font-size: 1.25rem;
   }

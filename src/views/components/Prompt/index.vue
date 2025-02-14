@@ -1,55 +1,37 @@
 <template>
-  <div class="w-full">
-    <div class="prompt">
-      <div class="header">Discover</div>
-      <el-scrollbar class="h-full w-full">
-        <div class="layout-body">
-          <div class="layout-box">
-            <el-input v-model="input" placeholder="搜索助手名称介绍或关键词..." clearable>
-              <template #prefix>
-                <el-icon class="el-input__icon">
-                  <search />
-                </el-icon>
-              </template>
-            </el-input>
-            <div class="tags" v-if="market">
-              <button
-                :class="['item-tags', cur === item ? 'active' : '']"
-                v-for="item in market.tags"
-                :key="item"
-                @click="handleClick(item)"
-              >
-                {{ item }}
-              </button>
-            </div>
-            <div class="mt-20" v-else>
-              <el-skeleton :rows="4" animated />
-            </div>
-            <div class="agent-box">
-              <div class="agent-list">
-                <AgentSkeleton v-if="!market" />
-                <AgentCard
-                  v-for="item in filterInput"
-                  :key="item.identifier"
-                  :agents="item"
-                  @click="cardClick(item)"
-                />
-              </div>
-            </div>
-            <div
-              v-show="filterInput.length"
-              class="w-full py-16 flex-c text-12"
+  <div class="discover-prompt">
+    <DiscoverHeader @handleClick="handleClick" />
+    <el-scrollbar class="wh-full">
+      <div class="layout-body">
+        <div class="layout-box">
+          <TabsWrapper />
+          <!-- <div class="tags" v-if="false && market">
+            <button
+              :class="['item-tags', cur === item ? 'active' : '']"
+              v-for="item in market.tags"
+              :key="item"
+              @click="handleClick(item)"
             >
-              喜欢{{ VITE_APP_NAME }}？
-              <a class="text-amber-600" :href="homepage" target="_blank">在 GitHub 给添加星标 </a>
-              并
-              <a class="text-amber-600" :href="bugs.url" target="_blank">分享您宝贵的建议 !</a>
-            </div>
+              {{ item }}
+            </button>
+          </div> -->
+          <!-- <div class="mt-20" v-else>
+              <el-skeleton :rows="4" animated />
+            </div> -->
+          <div class="agent-list">
+            <AgentSkeleton v-if="!market" />
+            <AgentCard
+              v-for="item in filterInput"
+              :key="item.identifier"
+              :agents="item"
+              @click="cardClick(item)"
+            />
           </div>
+          <!-- <StarMessage v-if="filterInput.length" /> -->
         </div>
-      </el-scrollbar>
-      <AgentCardBanner />
-    </div>
+      </div>
+    </el-scrollbar>
+    <AgentCardBanner />
   </div>
 </template>
 
@@ -57,14 +39,14 @@
 import AgentSkeleton from "./AgentSkeleton.vue";
 import AgentCardBanner from "./AgentCardBanner.vue";
 import AgentCard from "./AgentCard.vue";
+import DiscoverHeader from "./DiscoverHeader.vue";
+import TabsWrapper from "./TabsWrapper.vue";
+import StarMessage from './StarMessage.vue';
 import { getPrompt } from "@/api/node-admin-api/index";
 import { ref, watch, onBeforeMount } from "vue";
 import emitter from "@/utils/mitt-bus";
 import marketJson from "@/database/market.json";
 import { localStg } from "@/utils/storage";
-
-const { VITE_APP_NAME } = import.meta.env;
-const { homepage, bugs } = __APP_INFO__.pkg;
 
 const cur = ref("");
 const input = ref("");
@@ -125,32 +107,7 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
-.header {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 0 16px;
-  height: 60px;
-  border-block-end: 1px solid var(--color-border-default);
-}
-
-.layout-body {
-  padding: 0 16px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  height: calc(100% - 60px);
-}
-
-.layout-box {
-  display: flex;
-  justify-items: center;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1024px;
-}
-
-.prompt {
+.discover-prompt {
   width: 100%;
   height: 100%;
   display: flex;
@@ -158,8 +115,19 @@ onBeforeMount(() => {
   align-content: space-between;
   align-items: center;
   background: var(--color-body-bg);
-  .el-input {
-    margin-top: 20px;
+  .layout-body {
+    padding: 0 16px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: calc(100% - 60px);
+    .layout-box {
+      display: flex;
+      justify-items: center;
+      flex-direction: column;
+      width: 100%;
+      max-width: 1024px;
+    }
   }
 }
 
@@ -207,14 +175,9 @@ onBeforeMount(() => {
       background: var(--color-tags-back);
     }
   }
-}
-
-.agent-box {
-  min-height: calc(100% - 60px - 40px - 100px - 100px);
-}
-
-.active {
-  background: var(--color-tags-active-back) !important;
-  color: var(--color-tags-active) !important;
+  .active {
+    background: var(--color-tags-active-back) !important;
+    color: var(--color-tags-active) !important;
+  }
 }
 </style>

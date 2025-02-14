@@ -41,7 +41,7 @@ import { useState } from "@/utils/hooks/useMapper";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 
-const { bugs, docs, homepage } = __APP_INFO__.pkg;
+const { homepage } = __APP_INFO__.pkg;
 const cardRef = useTemplateRef("cardRef");
 
 const profile = ref({});
