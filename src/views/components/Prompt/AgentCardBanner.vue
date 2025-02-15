@@ -35,15 +35,15 @@
 </template>
 
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { Markdown, handleCopyClick } from "@/utils/markdown/index";
-import { ref } from "vue";
-import emitter from "@/utils/mitt-bus";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
 import { StoreKey, VITE_OPENAI_ID, ModelProvider } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
 import { useRobotStore } from "@/stores/modules/robot";
+import emitter from "@/utils/mitt-bus";
 
 const cardData = ref({});
 const { commit, dispatch } = useStore();
@@ -76,10 +76,20 @@ function handleClose() {
   setDialog(false);
 }
 
-emitter.on("openAgentCard", (data) => {
+function setAgentCard(data) {
   cardData.value = data;
   setDialog(true);
   handleCopyClick();
+}
+
+onMounted(() => {
+  emitter.on("openAgentCard", (data) => {
+    setAgentCard(data);
+  });
+});
+
+onBeforeUnmount(() => {
+  emitter.off("openAgentCard");
 });
 </script>
 

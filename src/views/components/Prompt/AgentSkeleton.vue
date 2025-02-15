@@ -1,5 +1,5 @@
 <template>
-  <el-skeleton class="flex gap-12 p-16 flex-col" v-for="item in 9" :key="item">
+  <el-skeleton class="flex gap-12 p-16 flex-col" v-for="item in 9" :key="item" animated>
     <template #template>
       <el-skeleton-item variant="image" class="h-40 w-40 ml-auto" />
       <div>

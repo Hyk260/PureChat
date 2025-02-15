@@ -2,6 +2,7 @@
   <div class="header">
     <div>Discover</div>
     <el-input
+      v-if="false"
       v-model="input"
       @input="emit('handleClick', input)"
       placeholder="搜索名称介绍或关键词..."
