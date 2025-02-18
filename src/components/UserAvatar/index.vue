@@ -32,7 +32,7 @@
       <div v-else :class="['user-avatar', 'default', className, shape]" :style="backgInfo(url)">
         {{ url ? null : displayInfo(userProfile.nick || userProfile.userID) }}
       </div>
-      <sup v-if="isdot" class="is-dot"></sup>
+      <!-- <sup v-if="isdot" class="is-dot"></sup> -->
     </div>
   </div>
 </template>

@@ -4,12 +4,16 @@
       <div class="touxiang">
         <UserAvatar type="self" isdot shape="square" @click="openUploadAvatarDialog" />
       </div>
-      <div class="aside-item flex-c" v-for="item in sidebarStore.filteredOutsideList" :key="item.id">
+      <div
+        class="aside-item flex-c"
+        v-for="item in sidebarStore.filteredOutsideList"
+        :key="item.id"
+      >
         <el-tooltip :content="item.title" placement="right">
           <div
             @click="toggle(item)"
             class="aside-list flex-c flex-col gap-3"
-            :class="{ current: outside === item.id }"
+            :class="{ current: router.currentRoute.value.path === item.path }"
           >
             <el-badge :value="unreadMsg" :hidden="item.id !== 'message' || unreadMsg == 0">
               <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" class="style-svg" />
@@ -31,20 +35,21 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { useSidebarStore } from "@/stores/modules/sidebar";
 import { useState } from "@/utils/hooks/useMapper";
 import emitter from "@/utils/mitt-bus";
 // import UploadAvatarDialog from "@/views/chatStudio/components/UploadAvatarDialog.vue";
 import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
-import CardPopover from "./components/CardPopover.vue";
-import { useStore } from "vuex";
-import { useSidebarStore } from "@/stores/modules/sidebar";
+import CardPopover from "@/views/chatStudio/components/CardPopover.vue";
 
+const router = useRouter();
 const { commit } = useStore();
 const sidebarStore = useSidebarStore();
-const { outside, unreadMsg } = useState({
+const { unreadMsg } = useState({
   unreadMsg: (state) => state.conversation.totalUnreadMsg,
-  outside: (state) => state.conversation.outside,
 });
 
 function openUploadAvatarDialog() {
@@ -61,7 +66,7 @@ function toggle(item) {
   } else if (item?.mode === "other") {
     emitter.emit("SidebarEditDialog", true);
   } else {
-    commit("taggleOueSide", item.id);
+    commit("taggleOueSide", item);
   }
 }
 </script>

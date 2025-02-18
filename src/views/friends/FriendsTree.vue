@@ -78,7 +78,7 @@ const handleNodeClick = (data) => {
 };
 
 const handleConversation = ({ id, type }) => {
-  // commit("taggleOueSide", "chat");
+  // commit("taggleOueSide", { id: "chat", path: "/chat" });
   // dispatch("addConversation", { convId: `${type}${id}` });
   // scrollToMessage(`message_${type}${id}`);
 };

@@ -12,7 +12,7 @@
             :tabsKey="tabsKey"
             @handleClick="handleClick"
           />
-          <!-- <StarMessage v-if="agent.length" /> -->
+          <StarMessage v-if="agent.length" />
         </div>
       </div>
     </el-scrollbar>

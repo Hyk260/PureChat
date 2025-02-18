@@ -1,6 +1,6 @@
 <template>
-  <div class="agent-list">
-    <!-- <div class="tags" v-if="market">
+  <div class="flex">
+    <!-- <div v-if="market && tabsKey === 'assistant'" class="tags">
       <button
         :class="['item-tags', cur === item ? 'active' : '']"
         v-for="item in market.tags"
@@ -13,21 +13,23 @@
     <div class="mt-20" v-else>
       <el-skeleton :rows="4" animated />
     </div> -->
-    <!-- <AgentSkeleton v-if="!market" /> -->
-    <ModelProviderCard
-      v-if="tabsKey === 'model_provider'"
-      v-for="item in modelProvider"
-      :key="item.userID"
-      :agents="item"
-      @click="providerClick(item)"
-    />
-    <AgentCard
-      v-if="tabsKey === 'assistant'"
-      v-for="item in agent"
-      :key="item.identifier"
-      :agents="item"
-      @click="cardClick(item)"
-    />
+    <div class="agent-list">
+      <AgentSkeleton v-if="!market" />
+      <ModelProviderCard
+        v-if="tabsKey === 'model_provider'"
+        v-for="item in modelProvider"
+        :key="item.userID"
+        :agents="item"
+        @click="providerClick(item)"
+      />
+      <AgentCard
+        v-if="tabsKey === 'assistant'"
+        v-for="item in agent"
+        :key="item.identifier"
+        :agents="item"
+        @click="cardClick(item)"
+      />
+    </div>
   </div>
 </template>
 
@@ -66,17 +68,17 @@ function cardClick(item) {
   emitter.emit("openAgentCard", item);
 }
 function providerClick(item) {
-  commit("taggleOueSide", "chat");
+  commit("taggleOueSide", { id: "chat", path: "/chat" });
   dispatch("addConversation", { convId: `${"C2C"}${item.userID}` });
 }
 </script>
 
 <style lang="scss" scoped>
 .tags {
-  margin-top: 20px;
+  // margin-top: 20px;
   flex-wrap: wrap;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 6px;
   .item-tags {
     color: var(--color-text);
@@ -106,6 +108,7 @@ function providerClick(item) {
   }
 }
 .agent-list {
+  height: fit-content;
   --rows: 3;
   --max-item-width: 240px;
   --gap: 1em;

@@ -1,11 +1,7 @@
 <template>
   <div :class="[className]">
     <el-empty :description="$t('common.emptyText')" :image-size="150" />
-    <div
-      v-if="className == 'no-msg' && activeTab == 'whole'"
-      class="flex-c launch"
-      @click="launch"
-    >
+    <div v-if="className == 'no-msg' && activeTab == 'whole'" class="flex-c launch" @click="launch">
       发起会话
     </div>
   </div>
@@ -29,7 +25,7 @@ const { activeTab } = useState({
 const { commit } = useStore();
 
 function launch() {
-  commit("taggleOueSide", "notebook");
+  commit("taggleOueSide", { id: "friends", path: "/friends" });
 }
 </script>
 

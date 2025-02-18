@@ -10,18 +10,21 @@ const outsideList = [
     title: "会话",
     class: "fix-ed",
     if_fixed: 1,
+    path: "/chat",
     type: "el-icon",
   },
   {
     id: "friends",
     icon: "UserFilled",
     title: "联系人",
+    path: "/friends",
     type: "el-icon",
   },
   {
     id: "discover",
     icon: "Discover",
     title: "发现",
+    path: "/discover",
     svgIcon: "Discover",
   },
   // {

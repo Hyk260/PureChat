@@ -1,5 +1,5 @@
 <template>
-  <div class="friends-list">
+  <div class="friends-list wh-full">
     <div class="left-list">
       <div class="search-box">
         <el-input
@@ -81,7 +81,6 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .friends-list {
-  width: calc(100% - 68px);
   display: flex;
   .quick-nav {
     width: 280px;
