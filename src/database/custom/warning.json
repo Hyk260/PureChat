@@ -2,7 +2,7 @@
   "body": {
     "bodyType": "alertBody",
     "text": {
-      "provider": "GPT",
+      "provider": "openai",
       "value": "Hello World"
     }
   }

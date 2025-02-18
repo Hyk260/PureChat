@@ -1,5 +1,4 @@
 import { reactive } from "vue";
-import store from "@/store/index";
 import { localStg } from "@/utils/storage";
 import { $t } from "@/locales/index";
 import { ACCOUNT } from "@/constants/index";
@@ -37,20 +36,20 @@ export const rules = reactive({
       trigger: "blur",
     },
   ],
-  verifyCode: [
-    {
-      validator: (rule, value, callback) => {
-        if (value === "") {
-          callback(new Error("请输入验证码"));
-        } else if (store.state.data.verifyCode !== value) {
-          callback(new Error("请输入正确的验证码"));
-        } else {
-          callback();
-        }
-      },
-      trigger: "blur",
-    },
-  ],
+  // verifyCode: [
+  //   {
+  //     validator: (rule, value, callback) => {
+  //       if (value === "") {
+  //         callback(new Error("请输入验证码"));
+  //       } else if (verifyCode !== value) {
+  //         callback(new Error("请输入正确的验证码"));
+  //       } else {
+  //         callback();
+  //       }
+  //     },
+  //     trigger: "blur",
+  //   },
+  // ],
 });
 
 export const ruleForm = reactive({

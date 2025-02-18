@@ -1,17 +1,20 @@
-import { ChatGPTApi } from "@/ai/platforms/openai/index";
+import { OpenAiApi } from "@/ai/platforms/openai/index";
 import { useAccessStore } from "@/ai/utils";
 
 export const QwenPath = {
   ChatPath: "services/aigc/text-generation/generation",
 };
 
-export class QwenApi extends ChatGPTApi {
+export class QwenApi extends OpenAiApi {
   constructor(provider) {
     super(provider);
   }
   path() {
-    let openaiUrl = useAccessStore(this.provider).openaiUrl;
-    return openaiUrl + QwenPath.ChatPath;
+    let baseUrl = useAccessStore(this.provider).openaiUrl;
+    if (baseUrl.endsWith("/")) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+    return `${baseUrl}/${QwenPath.ChatPath}`;
   }
   generateRequestPayload(messages, modelConfig, options) {
     return {

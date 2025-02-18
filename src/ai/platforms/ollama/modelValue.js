@@ -3,11 +3,11 @@ import OllamaAI from "./models";
 const docs = __APP_INFO__.pkg.docs;
 const ollama_proxy_url = import.meta.env.VITE_OLLAMA_PROXY_URL;
 
-export const ollamaModelValue = () => {
+export const OllamaModelValue = () => {
   return {
     Model: {
       ID: "model",
-      Title: "模型 (model)",
+      Title: "模型列表",
       SubTitle: "选择的模型会在模型列表中展示",
       defaultValue: "",
       collapse: OllamaAI.chatModels.map((t) => t.id),
@@ -15,7 +15,7 @@ export const ollamaModelValue = () => {
     },
     OpenaiUrl: {
       ID: "openaiUrl",
-      Title: "接口地址",
+      Title: "Ollama 服务地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
       Placeholder: ollama_proxy_url,
       defaultValue: "",

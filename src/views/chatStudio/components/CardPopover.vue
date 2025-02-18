@@ -21,7 +21,7 @@
       <div class="menu-root" v-for="item in menuItems" :key="item.index">
         <div class="menu-item">
           <div @click="closeCard(item)">
-            <svg-icon v-if="item.svg" :iconClass="item.svg" />
+            <svg-icon v-if="item.svg" :local-icon="item.svg" />
             <FontIcon v-else :iconName="item.icon" />
             <span>{{ item.label }}</span>
           </div>
@@ -41,7 +41,7 @@ import { useState } from "@/utils/hooks/useMapper";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 
-const { bugs, docs, homepage } = __APP_INFO__.pkg;
+const { homepage } = __APP_INFO__.pkg;
 const cardRef = useTemplateRef("cardRef");
 
 const profile = ref({});

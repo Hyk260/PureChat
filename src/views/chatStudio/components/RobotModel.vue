@@ -3,36 +3,43 @@
     <el-scrollbar>
       <div class="robot-model">
         <div class="item-group-title">
-          <svg-icon :iconClass="robotIcon" />
+          <svg-icon :local-icon="model.icon || robotIcon" />
           <span>{{ model.name }}</span>
         </div>
         <div
           class="model flex"
-          :class="item.id == currentModel?.id ? 'active' : ''"
+          :class="item.id == useRobotStore()?.model?.id ? 'active' : ''"
           v-for="item in model.chatModels"
           :key="item"
           @click="storeRobotModel(item)"
         >
           <div :class="['icon', robotIcon]">
-            <div v-if="model.id === 'ollama'" :class="['icon', item.icon]">
-              <svg-icon :iconClass="item.icon" />
+            <div v-if="['ollama', 'github'].includes(model.id)" :class="['icon', item.icon]">
+              <svg-icon class="align-text-bottom" :local-icon="item.icon || robotIcon" />
             </div>
             <span v-else>
-              <svg-icon :iconClass="robotIcon" />
+              <svg-icon class="align-text-bottom" :local-icon="robotIcon" />
             </span>
           </div>
           <div class="list flex-bc w-full">
             <span>{{ item.displayName || item.id }}</span>
             <span class="box">
-              <el-tooltip v-if="item.vision" content="该模型支持视觉识别" placement="right-start">
-                <svg-icon class="vision" iconClass="vision" />
+              <el-tooltip v-if="item.vision" :content="ModelSelect.vision" placement="right-start">
+                <svg-icon class="vision" local-icon="vision" />
               </el-tooltip>
               <el-tooltip
                 v-if="item.functionCall"
-                content="该模型支持函数调用（Function Call）"
+                :content="ModelSelect.functionCall"
                 placement="right-start"
               >
-                <svg-icon class="function-call" iconClass="functionCall" />
+                <svg-icon class="function-call" local-icon="functionCall" />
+              </el-tooltip>
+              <el-tooltip
+                v-if="item.reasoning"
+                :content="ModelSelect.reasoning"
+                placement="right-start"
+              >
+                <svg-icon class="reasoning" local-icon="reasoning" />
               </el-tooltip>
               <span v-if="item.tokens" class="tokens flex-c">
                 {{ formatSizeStrict(item.tokens) }}
@@ -52,10 +59,11 @@ import emitter from "@/utils/mitt-bus";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { getModelType, getModelSvg, useAccessStore, formatSizeStrict } from "@/ai/utils";
 import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
+import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
-import { useStore } from "vuex";
+import { useRobotStore } from "@/stores/modules/robot";
+import { ModelSelect } from "@/ai/resources";
 
 defineOptions({
   name: "RobotModel",
@@ -64,12 +72,7 @@ defineOptions({
 const robotIcon = ref("");
 const model = ref({});
 const [flag, setFlag] = useBoolean();
-const { commit } = useStore();
 const { toAccount } = useGetters(["toAccount"]);
-
-const { currentModel } = useState({
-  currentModel: (state) => state.robot.model,
-});
 
 function onClickOutside() {
   setFlag(false);
@@ -86,7 +89,7 @@ function storeRobotModel(data) {
     localStg.set(StoreKey.Access, { [account]: { ...modelConfig } });
   }
   emitter.emit("updataBotToolsFlag", data?.functionCall || false);
-  commit("setRobotModel", data);
+  useRobotStore().setRobotModel(data);
   setFlag(false);
 }
 
@@ -125,8 +128,20 @@ emitter.on("openModeList", () => {
   .robot-model {
     padding: 5px;
     max-height: 300px;
+    .item-group-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      color: #999999;
+      transition: all 0.2s;
+      .svg-icon {
+        font-size: 20px;
+      }
+    }
   }
 }
+
 .model {
   padding: 7px 12px;
   display: flex;
@@ -138,78 +153,49 @@ emitter.on("openModeList", () => {
     .tokens {
       width: 36px;
       height: 18px;
-      font-family:
-        Hack,
-        ui-monospace,
-        SFMono-Regular,
-        SF Mono,
-        Menlo,
-        Consolas,
-        Liberation Mono,
-        monospace,
-        "HarmonyOS Sans SC",
-        "PingFang SC",
-        "Hiragino Sans GB",
-        "Microsoft Yahei UI",
-        "Microsoft Yahei",
-        "Source Han Sans CN",
-        sans-serif,
-        "Segoe UI Emoji",
-        "Segoe UI Symbol",
-        "Apple Color Emoji",
-        "Twemoji Mozilla",
-        "Noto Color Emoji",
-        "Android Emoji";
       font-size: 11px;
       color: #666666;
       background: rgba(0, 0, 0, 0.03);
       border-radius: 4px;
     }
+    .function-call {
+      color: #369eff;
+    }
+    .vision {
+      color: #55b467;
+    }
+    .reasoning {
+      color: #bd54c6;
+    }
+    .box {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      gap: 4px;
+      margin-left: 15px;
+      svg {
+        height: 15px;
+        width: 15px;
+      }
+    }
+  }
+  .icon {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: rgb(255, 255, 255);
+    height: 20px;
+    width: 20px;
   }
   &:hover {
     background-color: rgba(0, 0, 0, 0.03);
   }
 }
-.icon {
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  color: rgb(255, 255, 255);
-  height: 20px;
-  width: 20px;
-}
-.box {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  gap: 4px;
-  margin-left: 15px;
-  svg {
-    height: 15px;
-    width: 15px;
-  }
-}
+
 .active {
   background-color: rgba(0, 0, 0, 0.03);
-}
-.function-call {
-  color: #369eff;
-}
-.vision {
-  color: #55b467;
-}
-.item-group-title {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 7px 12px;
-  color: #999999;
-  transition: all 0.2s;
-  .svg-icon {
-    font-size: 20px;
-  }
 }
 </style>

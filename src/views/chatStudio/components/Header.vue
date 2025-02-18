@@ -8,18 +8,18 @@
       <p v-if="currentType">
         <span v-if="chatType('C2C')" @click="openUser" class="single">
           <span class="nick">{{ chatNick("C2C", chat) }}</span>
-          <Label :model="model" :userID="chat?.conversationID" />
+          <Label :model="robotStore.model" :userID="chat?.conversationID" />
           <!-- ai-prompt -->
           <div
-            v-if="isRobot(toAccount) && fnPromptConfig(promptConfig)"
+            v-if="isRobot(toAccount) && fnPromptConfig(robotStore.promptConfig)"
             class="ml-5 ai-prompt-title"
           >
-            {{ fnPromptConfig(promptConfig) }}
+            {{ fnPromptConfig(robotStore.promptConfig) }}
           </div>
           <!-- ai-tools -->
-          <template v-if="isRobot(toAccount) && botTools && isBotToolsFlag">
-            <div v-for="item in botTools" :key="item.id" class="ml-5 ai-prompt-title">
-              <svg-icon class="function-call" iconClass="functionCall" />
+          <template v-if="isRobot(toAccount) && robotStore.botTools && isBotToolsFlag">
+            <div v-for="item in robotStore.botTools" :key="item.id" class="ml-5 ai-prompt-title">
+              <svg-icon class="function-call" local-icon="functionCall" />
               <span>{{ item.meta.title }}</span>
             </div>
           </template>
@@ -33,10 +33,10 @@
     </div>
     <div class="flex gap-10">
       <!-- <div class="message-info-add" v-show="chat.type === 'GROUP' && false" title="添加成员">
-        <svg-icon iconClass="tianjia" class="icon-hover" />
+        <svg-icon local-icon="tianjia" class="icon-hover" />
       </div> -->
       <div class="share" title="分享对话" @click="openShare">
-        <svg-icon class="cursor-pointer icon-hover" iconClass="share" />
+        <svg-icon class="cursor-pointer icon-hover" local-icon="share" />
       </div>
       <div class="setup" v-show="isGroupChat" title="群详情" @click="openSetup">
         <FontIcon iconName="MoreFilled" class="cursor-pointer icon-hover" />
@@ -58,6 +58,7 @@ import { useStore } from "vuex";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { isMacDragStyle } from "@/utils/appEmit";
+import { useRobotStore } from "@/stores/modules/robot";
 
 const [isBotToolsFlag, setBotToolsFlag] = useBoolean();
 const { commit } = useStore();
@@ -67,11 +68,10 @@ const { currentType, toAccount, isGroupChat } = useGetters([
   "isGroupChat",
 ]);
 
-const { chat, model, promptConfig, botTools } = useState({
+const robotStore = useRobotStore();
+
+const { chat } = useState({
   chat: (state) => state.conversation.currentConversation,
-  model: (state) => state.robot.model,
-  promptConfig: (state) => state.robot.promptConfig,
-  botTools: (state) => state.robot.botTools,
 });
 
 const updataModel = () => {
@@ -81,13 +81,13 @@ const updataModel = () => {
   const data = cloneDeep(modelValue[value].Model.options.chatModels);
   const checkModel = data.find((item) => item.id === model);
   setBotToolsFlag(checkModel?.functionCall ? true : false);
-  commit("setRobotModel", checkModel);
+  robotStore.setRobotModel(checkModel);
 };
 
 const updataPromptTitle = () => {
   const value = getModelType(toAccount.value);
   const prompt = localStg.get(StoreKey.Prompt);
-  commit("setPromptConfig", prompt?.[value] || null);
+  robotStore.setPromptConfig(prompt?.[value] || null);
 };
 
 const chatType = (type) => {

@@ -22,12 +22,11 @@ import { ref } from "vue";
 import { StoreKey } from "@/ai/constant";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { useBoolean } from "@/utils/hooks/index";
-import { useStore } from "vuex";
 import { localStg } from "@/utils/storage";
 import { getPlugin } from "../utils/utils";
 import emitter from "@/utils/mitt-bus";
+import { useRobotStore } from "@/stores/modules/robot";
 
-const { commit } = useStore();
 const [flag, setFlag] = useBoolean();
 
 const pluginData = ref([
@@ -56,7 +55,7 @@ function onClickOutside() {
 
 function setChecked(item) {
   item.checked = !item.checked;
-  commit("setBotTools", pluginfilter());
+  useRobotStore().setBotTools(pluginfilter());
 }
 
 function feedBack() {

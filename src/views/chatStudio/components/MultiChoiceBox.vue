@@ -3,7 +3,7 @@
     <FontIcon class="close" iconName="CircleCloseFilled" @click="onClose" />
     <div class="flex-c flex-col" v-for="item in buttonList" :key="item.icon">
       <div class="icon flex-c" :class="disabled ? 'disabled' : ''" @click="onClock(item)">
-        <svg-icon :class="item.class" :iconClass="item.icon" />
+        <svg-icon :class="item.class" :local-icon="item.icon" />
       </div>
       <span class="text">
         {{ item.value }}

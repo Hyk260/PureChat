@@ -121,35 +121,40 @@ export async function transformData(data) {
  * @returns {string} - 图标路径
  */
 export const renderFileIcon = (fileType = "") => {
-  let type = "default";
-  if (fileType == "xlsx" || fileType == "xls") {
-    type = "form";
-  } else if (fileType == "doc" || fileType == "docx") {
-    type = "document";
-  } else if (fileType == "pptx" || fileType == "ppt") {
-    type = "ppt";
-  } else if (fileType == "rar" || fileType == "zip") {
-    type = "zip";
-  } else if (fileType == "txt" || fileType == "log") {
-    type = "txt";
-  } else if (fileType == "pdf") {
-    type = "pdf";
-  } else if (["png", "jpg", "gif", "jpeg", "webp", "svg"].includes(fileType)) {
-    type = "picture";
-  } else if (fileType == "mp4") {
-    type = "video";
-  } else if (fileType == "mp3") {
-    type = "audio";
-  } else if (fileType == "exe") {
-    type = "exe";
-  } else if (fileType == "json") {
-    type = "json";
-  } else if (fileType == "js") {
-    type = "js";
-  }
-  // else if (fileType == "env") {
-  //   type = "dotenv";
-  // }
+  // 统一转换为小写，避免大小写问题
+  const lowerCaseFileType = fileType.toLowerCase();
+
+  // 文件类型与图标类型的映射
+  const fileTypeToIconMap = {
+    xlsx: "form",
+    xls: "form",
+    doc: "document",
+    docx: "document",
+    pptx: "ppt",
+    ppt: "ppt",
+    rar: "zip",
+    zip: "zip",
+    txt: "txt",
+    log: "txt",
+    pdf: "pdf",
+    png: "picture",
+    jpg: "picture",
+    gif: "picture",
+    jpeg: "picture",
+    webp: "picture",
+    svg: "picture",
+    mp4: "video",
+    mp3: "audio",
+    exe: "exe",
+    json: "json",
+    js: "js",
+    // env: "dotenv", // 如果需要启用 dotenv 图标，取消注释
+  };
+
+  // 获取图标类型，默认为 "default"
+  const type = fileTypeToIconMap[lowerCaseFileType] || "default";
+
+  // 返回图标路径
   return new URL(`../../assets/message/${type}.png`, import.meta.url).href;
 };
 

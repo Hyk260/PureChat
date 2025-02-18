@@ -1,3 +1,4 @@
+import router from "@/router";
 import { ROBOT_COLLECT } from "@/ai/constant";
 import { chatService } from "@/ai/index";
 import {
@@ -231,7 +232,8 @@ const conversation = {
     },
     // 切换侧边栏
     taggleOueSide(state, item) {
-      state.outside = item;
+      state.outside = item.id;
+      router.push(item.path);
     },
     // 回复消息
     setReplyMsg(state, payload) {

@@ -39,9 +39,9 @@
                   />
                   <!-- 图标 -->
                   <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" />
-                  <svg-icon v-else :iconClass="item.icon" class="svg-icon" />
+                  <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
-                  <svg-icon iconClass="drag" class="dragIcon" />
+                  <svg-icon local-icon="drag" class="dragIcon" />
                 </div>
               </template>
             </VueDraggableNext>
@@ -77,9 +77,9 @@
                   />
                   <!-- 图标 -->
                   <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" />
-                  <svg-icon v-else :iconClass="item.icon" class="svg-icon" />
+                  <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
-                  <svg-icon iconClass="drag" class="dragIcon" />
+                  <svg-icon local-icon="drag" class="dragIcon" />
                 </div>
               </template>
             </VueDraggableNext>
@@ -103,6 +103,8 @@ import { cloneDeep, uniqBy } from "lodash-es";
 import { defineComponent } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
 import { mapState } from "vuex";
+import { mapStores } from "pinia";
+import { useSidebarStore } from "@/stores/modules/sidebar";
 
 export default defineComponent({
   components: {
@@ -134,10 +136,13 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapState({
-      outsideList: (state) => state.sidebar.outsideList,
-      moreList: (state) => state.sidebar.moreList,
-    }),
+    ...mapStores(useSidebarStore),
+    outsideList() {
+      return this.sidebarStore.outsideList;
+    },
+    moreList() {
+      return this.sidebarStore.moreList;
+    },
   },
   created() {
     this.init();
@@ -169,8 +174,8 @@ export default defineComponent({
     onUpdate() {},
     callback() {
       this.$nextTick(() => {
-        this.$store.commit("setOutsideList", this.leftEdit);
-        this.$store.commit("setMoreList", this.rightEdit);
+        this.sidebarStore.setOutsideList(this.leftEdit);
+        this.sidebarStore.setMoreList(this.rightEdit);
       });
     },
     fnRepeat() {

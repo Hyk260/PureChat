@@ -1,16 +1,19 @@
-import { ChatGPTApi } from "@/ai/platforms/openai/index";
+import { OpenAiApi } from "@/ai/platforms/openai/index";
 import { useAccessStore } from "@/ai/utils";
 
 export const ZeroOnePath = {
   ChatPath: "v1/chat/completions",
 };
 
-export class ChatYiApi extends ChatGPTApi {
+export class ZeroOneApi extends OpenAiApi {
   constructor(provider) {
     super(provider);
   }
   getPath() {
-    let openaiUrl = useAccessStore(this.provider).openaiUrl;
-    return openaiUrl + ZeroOnePath.ChatPath;
+    let baseUrl = useAccessStore(this.provider).openaiUrl;
+    if (baseUrl.endsWith("/")) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+    return `${baseUrl}/${ZeroOnePath.ChatPath}`;
   }
 }

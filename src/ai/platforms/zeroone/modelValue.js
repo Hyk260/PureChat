@@ -3,11 +3,11 @@ import ZhiPu from './models';
 const docs = __APP_INFO__.pkg.docs;
 const zeroone_proxy_url = import.meta.env.VITE_ZEROONE_BASE_URL;
 
-export const yiModelValue = () => {
+export const ZeroOneModelValue = () => {
   return {
     Model: {
       ID: "model",
-      Title: "模型 (model)",
+      Title: "模型列表",
       SubTitle: "选择的模型会在模型列表中展示",
       defaultValue: "",
       collapse: ZhiPu.chatModels.map((t) => t.id),
@@ -26,7 +26,7 @@ export const yiModelValue = () => {
       SubTitle: "请填写你的 01.AI API Key",
       Placeholder: "ZeroOne API Key",
       defaultValue: "",
-      doubt: `${docs}/guides/model-provider.html#zeroone-api-key`,
+      doubt: `${docs}/guides/model-provider.html#vite-zeroone-api-key`,
     },
     Temperature: {
       ID: "temperature",

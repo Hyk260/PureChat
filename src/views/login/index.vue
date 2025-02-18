@@ -3,7 +3,7 @@
     <DragBox />
     <div class="login-inner">
       <!-- 背景 -->
-      <svg-icon iconClass="loginBg" class="wave" />
+      <svg-icon local-icon="loginBg" class="wave" />
       <!-- 主题开关 -->
       <ThemeSwitch />
       <!-- 标题 -->

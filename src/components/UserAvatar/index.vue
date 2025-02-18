@@ -12,7 +12,7 @@
       @error="() => true"
       :class="['avatar', className]"
       shape="square"
-      :size="40"
+      :size="size"
       :src="url || getAiAvatarUrl(convId) || shapeObj[shape]"
     >
       <img :src="emptyUrl" />
@@ -32,7 +32,7 @@
       <div v-else :class="['user-avatar', 'default', className, shape]" :style="backgInfo(url)">
         {{ url ? null : displayInfo(userProfile.nick || userProfile.userID) }}
       </div>
-      <sup v-if="isdot" class="is-dot"></sup>
+      <!-- <sup v-if="isdot" class="is-dot"></sup> -->
     </div>
   </div>
 </template>
@@ -126,8 +126,8 @@ const backgInfo = (url) => {
 }
 .avatar {
   --el-text-color-disabled: #ffffff00;
-  width: 40px;
-  height: 40px;
+  width: var(--el-avatar-size); 
+  height: var(--el-avatar-size);
   border-radius: 3px;
 }
 .default {

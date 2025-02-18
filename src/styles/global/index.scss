@@ -95,32 +95,6 @@ div:focus {
   flex-direction: row;
   align-items: center;
   gap: 4px;
-  font-family:
-    "HarmonyOS Sans",
-    "Segoe UI",
-    "SF Pro Display",
-    -apple-system,
-    BlinkMacSystemFont,
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    "Open Sans",
-    "Helvetica Neue",
-    sans-serif,
-    "HarmonyOS Sans SC",
-    "PingFang SC",
-    "Hiragino Sans GB",
-    "Microsoft Yahei UI",
-    "Microsoft Yahei",
-    "Source Han Sans CN",
-    sans-serif,
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Apple Color Emoji",
-    "Twemoji Mozilla",
-    "Noto Color Emoji",
-    "Android Emoji";
 }
 
 .forward-ation {
@@ -149,4 +123,12 @@ div:focus {
   :hover {
     background: hsl(220, 20%, 91%);
   }
+}
+
+.ai-avatar {
+  border-radius: 10px;
+  display: inline-block;
+  line-height: 1;
+  vertical-align: middle;
+  box-shadow: 0px 0px 0px 1px #1f232826;
 }

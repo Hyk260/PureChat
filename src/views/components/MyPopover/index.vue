@@ -208,6 +208,11 @@ onBeforeUnmount(() => {
     .iconify {
       vertical-align: text-bottom;
       margin-left: 5px;
+      display: inline-block;
+      width: 1.2em;
+      height: 1.2em;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
     }
   }
   .content {

@@ -6,9 +6,11 @@
     "esModuleInterop": true,
     "lib": ["DOM", "ESNext"],
     "paths": {
+      "@m/": ["./electron/*"],
       "@/*": ["./src/*"],
-      "@m/": ["./electron/*"]
+      "~/*": ["./*"]
     }
   },
+  "include": ["./**/*.js", "./**/*.vue"],
   "exclude": ["node_modules", "dist"]
 }

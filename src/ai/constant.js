@@ -1,20 +1,23 @@
 import { OpenaiConfig } from "@/ai/platforms/openai/config";
-import { openaiModelValue } from "@/ai/platforms/openai/modelValue";
+import { OpenAIModelValue } from "@/ai/platforms/openai/modelValue";
 
 import { GitHubConfig } from "@/ai/platforms/github/config";
-import { githubModelValue } from "@/ai/platforms/github/modelValue";
+import { GitHubModelValue } from "@/ai/platforms/github/modelValue";
 
-import { YiConfig } from "@/ai/platforms/zeroone/config";
-import { yiModelValue } from "@/ai/platforms/zeroone/modelValue";
+import { ZeroOneConfig } from "@/ai/platforms/zeroone/config";
+import { ZeroOneModelValue } from "@/ai/platforms/zeroone/modelValue";
 
 import { ZhiPuConfig } from "@/ai/platforms/zhipu/config";
-import { zhipuModelValue } from "@/ai/platforms/zhipu/modelValue";
+import { ZhiPuModelValue } from "@/ai/platforms/zhipu/modelValue";
 
 import { QwenConfig } from "@/ai/platforms/qwen/config";
-import { qwenModelValue } from "@/ai/platforms/qwen/modelValue";
+import { QwenModelValue } from "@/ai/platforms/qwen/modelValue";
 
 import { OllamaConfig } from "@/ai/platforms/ollama/config";
-import { ollamaModelValue } from "@/ai/platforms/ollama/modelValue";
+import { OllamaModelValue } from "@/ai/platforms/ollama/modelValue";
+
+import { DeepseekConfig } from "@/ai/platforms/deepseek/config";
+import { DeepseekModelValue } from "@/ai/platforms/deepseek/modelValue";
 
 import { prefixRobotIDs } from "./utils";
 
@@ -25,18 +28,19 @@ export const {
   VITE_QWEN_ID, // 通义千问
   VITE_OLLAMA_ID, // ollama
   VITE_GITHUB_ID, // github
+  VITE_DEEPSEEK_ID, // deepseek
+  DEV: isDev,
 } = import.meta.env;
 
 export const ROLES = ["system", "user", "assistant"];
 
-export const ROBOT_COLLECT = [
-  VITE_OPENAI_ID,
-  VITE_ZHIPU_ID,
-  VITE_ZEROONE_ID,
-  // VITE_QWEN_ID,
-  VITE_OLLAMA_ID,
-  VITE_GITHUB_ID,
-];
+export const ROBOT_COLLECT = [VITE_OPENAI_ID, VITE_ZHIPU_ID, VITE_ZEROONE_ID, VITE_OLLAMA_ID];
+
+if (isDev) {
+  ROBOT_COLLECT.push(VITE_DEEPSEEK_ID);
+  ROBOT_COLLECT.push(VITE_GITHUB_ID);
+  // ROBOT_COLLECT.push(VITE_QWEN_ID);
+}
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
 
@@ -51,19 +55,20 @@ export const StoreKey = {
 /**
  * 模型提供者对象，包含不同的模型名称
  * @type {Object}
- * @property {string} GPT - chatgpt 模型
- * @property {string} ChatGLM - 智谱模型
+ * @property {string} OpenAi - OpenAi模型
+ * @property {string} ZhiPu - 智谱模型
  * @property {string} ZeroOne - 零一万物模型
  * @property {string} Qwen - 通义千问模型
- * @property {string} Ollama - Ollama 模型
+ * @property {string} Ollama - Ollama模型
  */
 export const ModelProvider = {
-  GPT: "GPT",
-  ChatGLM: "ChatGLM",
-  ZeroOne: "ZeroOne",
-  Qwen: "Qwen",
-  Ollama: "Ollama",
-  GitHub: "GitHub",
+  OpenAI: "openai",
+  ZhiPu: "zhipu",
+  ZeroOne: "zeroone",
+  Qwen: "qwen",
+  DeepSeek: "deepseek",
+  Ollama: "ollama",
+  GitHub: "github",
 };
 
 export const prompt = [
@@ -80,29 +85,32 @@ export const prompt = [
 ];
 
 export const RobotAvatar = {
-  [ModelProvider.GPT]: "open-ai-icon.png",
-  [ModelProvider.ChatGLM]: "chatglm.svg",
-  [ModelProvider.ZeroOne]: "ZeroOne.svg",
-  [ModelProvider.Qwen]: "qwen.svg",
+  [ModelProvider.OpenAI]: "openai.png",
+  [ModelProvider.ZhiPu]: "zhipu.png",
+  [ModelProvider.ZeroOne]: "zeroone.png",
+  [ModelProvider.Qwen]: "qwen.png",
   [ModelProvider.Ollama]: "ollama.svg",
   [ModelProvider.GitHub]: "github.svg",
+  [ModelProvider.DeepSeek]: "deepseek.png",
 };
 
 // 默认配置
 export const modelConfig = {
-  [ModelProvider.GPT]: { ...OpenaiConfig() },
-  [ModelProvider.GitHub]: { ...GitHubConfig() },
-  [ModelProvider.ChatGLM]: { ...ZhiPuConfig },
-  [ModelProvider.ZeroOne]: { ...YiConfig },
-  [ModelProvider.Qwen]: { ...QwenConfig },
-  [ModelProvider.Ollama]: { ...OllamaConfig },
+  [ModelProvider.OpenAI]: OpenaiConfig(),
+  [ModelProvider.GitHub]: GitHubConfig(),
+  [ModelProvider.ZhiPu]: ZhiPuConfig(),
+  [ModelProvider.ZeroOne]: ZeroOneConfig(),
+  [ModelProvider.Qwen]: QwenConfig(),
+  [ModelProvider.Ollama]: OllamaConfig(),
+  [ModelProvider.DeepSeek]: DeepseekConfig(),
 };
 
 export const modelValue = {
-  [ModelProvider.GPT]: openaiModelValue(),
-  [ModelProvider.GitHub]: githubModelValue(),
-  [ModelProvider.ChatGLM]: zhipuModelValue(),
-  [ModelProvider.ZeroOne]: yiModelValue(),
-  [ModelProvider.Qwen]: qwenModelValue(),
-  [ModelProvider.Ollama]: ollamaModelValue(),
+  [ModelProvider.OpenAI]: OpenAIModelValue(),
+  [ModelProvider.GitHub]: GitHubModelValue(),
+  [ModelProvider.ZhiPu]: ZhiPuModelValue(),
+  [ModelProvider.ZeroOne]: ZeroOneModelValue(),
+  [ModelProvider.Qwen]: QwenModelValue(),
+  [ModelProvider.Ollama]: OllamaModelValue(),
+  [ModelProvider.DeepSeek]: DeepseekModelValue(),
 };

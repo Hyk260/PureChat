@@ -6,7 +6,6 @@ import {
   createGroup,
   dismissGroup,
 } from "@/api/im-sdk-api/index";
-import { restApi } from "@/api/node-admin-api/index";
 import { sortMembersByRole, findGroupChat } from "@/utils/chat/index";
 
 export default {
@@ -89,12 +88,6 @@ export default {
         console.error("解散群组 error:", code, groupID);
         return;
       }
-      // dispatch("deleteSession", { convId });
-      // const { ErrorCode } = await restApi({
-      //   params: groupId,
-      //   funName: "destroyGroup",
-      // });
-      // if (ErrorCode !== 0) return;
       dispatch("deleteSession", { convId });
     },
     // 获取群详细资料

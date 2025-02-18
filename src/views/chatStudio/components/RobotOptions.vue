@@ -46,8 +46,8 @@
                       class="bot-avatar flex-c h-full"
                       :class="item.options?.id === 'ollama' ? models.icon : robotIcon"
                     >
-                      <svg-icon v-if="item.options?.id === 'ollama'" :iconClass="models.icon" />
-                      <svg-icon v-else :iconClass="robotIcon" />
+                      <svg-icon v-if="item.options?.id === 'ollama'" :local-icon="models.icon" />
+                      <svg-icon v-else :local-icon="robotIcon" />
                     </div>
                     <div class="flex flex-col h-full gap-4">
                       <span>{{ models.displayName || models.id }}</span>
@@ -56,20 +56,22 @@
                   </div>
                 </el-option>
               </el-select>
-              <div v-if="false" class="flex-bc">
-                <div>共 {{ modelCount(item.collapse.length) }} 个模型可用</div>
-                <div>
+              <div class="flex-bc">
+                <div class="text-[#999]">共 {{ modelCount(item.collapse.length) }} 个模型可用</div>
+                <!-- <div>
                   <el-tooltip :content="modelTooltipText()" placement="top" v-if="isOllama()">
                     <el-icon class="refresh" @click="onRefresh()">
                       <Refresh />
                     </el-icon>
                   </el-tooltip>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
           <div class="range" v-else-if="isRange(item.ID)">
-            {{ item.defaultValue }}
+            <span class="break-normal min-w-18">
+              {{ item.defaultValue }}
+            </span>
             <input
               v-model="item.defaultValue"
               :min="item.min"
@@ -97,6 +99,7 @@
             </el-tooltip>
             <el-input
               v-model="item.defaultValue"
+              :ref="(e) => inputRef(e, item.ID)"
               :placeholder="item.Placeholder"
               :type="item.ID === 'token' ? 'password' : 'text'"
               :show-password="item.ID === 'token'"
@@ -116,30 +119,34 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { getModelType, useAccessStore, usePromptStore, getModelSvg } from "@/ai/utils";
 import { useBoolean } from "@/utils/hooks/index";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
-import { useStore } from "vuex";
 import { ClientApi } from "@/ai/api";
 import DragPrompt from "./DragPrompt.vue";
 import { Markdown } from "@/utils/markdown/index";
 import { StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
+import { useRobotStore } from "@/stores/modules/robot";
 
 const robotIcon = ref("");
 const modelData = ref(null);
 const maskData = ref([]);
+const inputRefs = ref({ token: null, openaiUrl: null });
 
-const { commit } = useStore();
 const [dialog, setDialog] = useBoolean();
 const { toAccount } = useGetters(["toAccount"]);
 
 const handleClear = (data) => {
   console.log("clear", data);
+};
+
+const inputRef = (el, id) => {
+  if (el) inputRefs.value[id] = el;
 };
 
 const handleRemoveTag = (data) => {
@@ -165,8 +172,9 @@ function handlePrompt(prompt) {
   maskData.value.prompt = prompt;
 }
 function modelCount(count) {
-  const olamaModelList = localStg.get("olama-local-model-list") || [];
-  return olamaModelList.length ?? count;
+  return count
+  // const olamaModelList = localStg.get("olama-local-model-list") || [];
+  // return olamaModelList.length ?? count;
 }
 function modelTooltipText() {
   // const olamaModelList = localStg.get("olama-local-model-list") || [];
@@ -234,7 +242,7 @@ function resetRobotModel() {
   const model = useAccessStore(account)?.model;
   const data = cloneDeep(modelValue[account].Model.options.chatModels);
   const checkModel = data.find((item) => item.id === model);
-  commit("setRobotModel", checkModel);
+  useRobotStore().setRobotModel(checkModel);
 }
 
 function resetRobotMask() {
@@ -254,7 +262,7 @@ function handleClose(done) {
 // 重置
 function handleCancel() {
   localStg.remove(`${getModelType(toAccount.value)}-Select-Model`);
-  commit("setPromptConfig", "");
+  useRobotStore().setPromptConfig("");
   resetRobotModel();
   resetRobotMask();
   setDialog(false);
@@ -273,7 +281,7 @@ function handleConfirm() {
   if (!maskData.value.prompt.length || !maskData.value.meta.title) {
     const _maskData = usePromptStore(getModelType(toAccount.value), true);
     storeRobotMask(_maskData);
-    commit("setPromptConfig", "");
+    useRobotStore().setPromptConfig("");
   } else {
     storeRobotMask(maskData.value);
   }
@@ -284,9 +292,16 @@ function toUrl(url) {
   window.open(url, "_blank");
 }
 
-emitter.on("onRobotBox", () => {
+emitter.on("onRobotBox", (data) => {
+  const { ApikeyFocus = false } = data || {};
   setDialog(true);
   initModel();
+  if (ApikeyFocus) {
+    setTimeout(() => {
+      const tokenRef = inputRefs.value["token"];
+      tokenRef && tokenRef.focus();
+    }, 100);
+  }
 });
 </script>
 

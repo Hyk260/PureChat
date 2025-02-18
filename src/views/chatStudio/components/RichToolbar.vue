@@ -7,11 +7,11 @@
       class="emoticon"
       @click="sendEmojiClick"
     >
-      <svg-icon iconClass="iconxiaolian" class="icon-hover" />
+      <svg-icon local-icon="iconxiaolian" class="icon-hover" />
     </span>
     <!-- 选模型 -->
     <span v-show="isRobot(toAccount)" @click="selectModel">
-      <svg-icon iconClass="model" class="icon-hover robot" />
+      <svg-icon local-icon="model" class="icon-hover robot" />
     </span>
     <!-- 图片 -->
     <span
@@ -20,11 +20,11 @@
       :title="$t('chat.picture')"
       @click="sendImageClick"
     >
-      <svg-icon iconClass="icontupian" class="icon-hover" />
+      <svg-icon local-icon="icontupian" class="icon-hover" />
     </span>
     <!-- 文件 -->
     <span v-show="!isRobot(toAccount)" :title="$t('chat.file')" @click="sendFileClick">
-      <svg-icon iconClass="iconwenjianjia" class="icon-hover" />
+      <svg-icon local-icon="iconwenjianjia" class="icon-hover" />
     </span>
     <!-- 截图 -->
     <span
@@ -32,11 +32,11 @@
       :title="$t('chat.screenshot')"
       @click="clickCscreenshot"
     >
-      <svg-icon iconClass="iconjietu" class="icon-hover" />
+      <svg-icon local-icon="iconjietu" class="icon-hover" />
     </span>
     <!-- 机器人配置 -->
     <span v-if="isRobot(toAccount)" :title="$t('chat.configuration')" @click="openRobotBox">
-      <svg-icon iconClass="robot" class="icon-hover robot" />
+      <svg-icon local-icon="robot" class="icon-hover robot" />
     </span>
     <!-- 插件 -->
     <span
@@ -44,7 +44,7 @@
       :class="isFunctionCall ? '' : 'prohibit'"
       @click="openPluginBox"
     >
-      <svg-icon iconClass="plugin" class="icon-hover robot" />
+      <svg-icon local-icon="plugin" class="icon-hover robot" />
     </span>
     <!-- 窗口抖动 -->
     <!-- <span
@@ -72,7 +72,7 @@
       class="ml-auto"
       @click="onEnlarge(fullScreen)"
     >
-      <svg-icon :iconClass="fullScreen ? 'narrow' : 'enlarge'" class="icon-hover" />
+      <svg-icon :local-icon="fullScreen ? 'narrow' : 'enlarge'" class="icon-hover" />
     </span>
     <input
       type="file"
@@ -114,6 +114,7 @@ import { getAssetsFile } from "../utils/utils";
 import emojiQq from "@/utils/emoji/emoji-map-qq";
 import { getAllModels } from "@/ai/utils";
 import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
+import { useRobotStore } from "@/stores/modules/robot";
 
 const emjRef = ref();
 const tobottom = ref();
@@ -122,16 +123,16 @@ const filePicker = ref();
 const { commit, dispatch } = useStore();
 
 const emit = defineEmits(["setToolbar"]);
+const robotStore = useRobotStore();
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-const { model, fullScreen, currentConversation } = useState({
-  model: (state) => state.robot.model,
+const { fullScreen, currentConversation } = useState({
   fullScreen: (state) => state.conversation.fullScreen,
   currentConversation: (state) => state.conversation.currentConversation,
 });
 
 const isVision = computed(() => {
   if (isRobot(toAccount.value)) {
-    return model.value?.vision;
+    return robotStore.model?.vision;
   } else {
     return true;
   }
@@ -139,7 +140,7 @@ const isVision = computed(() => {
 
 const isFunctionCall = computed(() => {
   if (isRobot(toAccount.value)) {
-    return model.value?.functionCall;
+    return robotStore.model?.functionCall;
   } else {
     return false;
   }

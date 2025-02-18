@@ -1,5 +1,6 @@
 <template>
   <main class="app-main" :style="isWindowsAppStyle()">
+    <LayAside />
     <div class="container-theme">
       <router-view v-slot="{ Component, route }">
         <transition name="fade-slide" :appear="true" mode="out-in">
@@ -18,15 +19,18 @@
 
 <script setup>
 import LaySetting from "./lay-setting/index.vue";
+import LayAside from "./lay-aside/index.vue";
 import { isWindowsAppStyle } from "@/utils/appEmit";
 </script>
 
 <style lang="scss" scoped>
 .app-main {
+  display: flex;
   height: 100%;
   position: relative;
   .container-theme {
     height: 100%;
+    width: 100%;
     background: var(--color-body-bg);
   }
 }

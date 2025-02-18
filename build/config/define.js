@@ -16,6 +16,7 @@ import {
 export const __APP_INFO__ = {
   pkg: {
     // docs: process.env.NODE_ENV === "development" ? "http://localhost:5173/pure-docs" : docs,
+    giteeHomepage: "https://gitee.com/H260788/PureChat",
     docs,
     bugs,
     name,
@@ -45,7 +46,6 @@ const chunkMap = {
   'lodash-es': 'lodash-vendor',
   'element-plus': 'el-vendor',
   'artplayer': 'artplayer-vendor',
-  'tailwindcss': 'tailwindcss-vendor',
   'highlight': 'highlight-vendor',
   'pinyin-pro': 'pinyin-pro-vendor',
   'markdown': 'markdown-vendor',

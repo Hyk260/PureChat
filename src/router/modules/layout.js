@@ -14,9 +14,23 @@ export default [
         component: () => import("@/views/chatStudio/index.vue"),
         meta: {
           title: "chat",
-          locale: "chat",
-          icon: "ForkSpoon",
           keep: true,
+        },
+      },
+      {
+        path: "/friends",
+        name: "friends",
+        component: () => import("@/views/friends/index.vue"),
+        meta: {
+          title: "friends",
+        },
+      },
+      {
+        path: "/discover",
+        name: "discover",
+        component: () => import("@/views/discover/index.vue"),
+        meta: {
+          title: "discover",
         },
       },
       {
@@ -25,8 +39,6 @@ export default [
         component: () => import("@/views/about/index.vue"),
         meta: {
           title: "about",
-          locale: "about",
-          icon: "Warning",
         },
       },
     ],

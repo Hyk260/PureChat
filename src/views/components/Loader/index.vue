@@ -3,6 +3,7 @@
     <div v-for="item in 3" :key="item"></div>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .bouncing-loader {
   padding-top: 12px;

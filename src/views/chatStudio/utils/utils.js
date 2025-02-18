@@ -11,6 +11,7 @@ import { dataURLtoFile, getBlob, getFileType } from "@/utils/chat/index";
 import { useClipboard } from "@vueuse/core";
 import { match } from "pinyin-pro";
 import { nextTick } from "vue";
+import { cloneDeep } from "lodash-es";
 import { placeholderMap } from "./configure";
 
 import emitter from "@/utils/mitt-bus";
@@ -423,22 +424,21 @@ export const extractAitInfo = (editor) => {
  * @param {string} searchStr - 要搜索的拼音字符串。
  * @returns {Array} - 匹配项的数组。
  */
-export function searchByPinyin(searchStr) {
-  // 获取当前成员列表
-  const memberList = store.state?.groupinfo?.currentMemberList;
-  // 过滤掉当前用户的信息
-  const filteredList = memberList.filter(
-    (member) => member.userID !== store.state?.user.userProfile.userID
-  );
+export function searchByPinyin({ searchStr, list }) {
+  if (!searchStr) {
+    console.warn("searchStr is null");
+    return 'empty'
+  }
   // 如果过滤后的列表为空，触发空结果的事件并返回
-  if (!filteredList || filteredList.length === 0) {
+  if (!list || list.length === 0) {
     emitter.emit("setMentionModal", { type: "empty" });
     return "empty";
   }
+  const memberList = cloneDeep(list);
   // 存储匹配项的索引
   const indices = [];
   // 遍历过滤后的成员列表
-  filteredList.forEach((item) => {
+  memberList.forEach((item) => {
     // 使用 match 函数进行拼音匹配
     const nickPinyin = match(item.nick, searchStr);
     // 如果拼音匹配结果长度大于 0，将当前项添加到索引数组中
@@ -446,17 +446,15 @@ export function searchByPinyin(searchStr) {
       indices.push(item);
     }
   });
-  const isShowModal = store.state?.conversation.isShowModal;
   // 触发相应的事件根据匹配结果触发不同的操作
   const eventType = indices.length === 0 ? "empty" : "success";
-  if (!isShowModal && eventType === "success") {
-    // store.commit("toggleMentionModal", true);
-  }
+
   emitter.emit("setMentionModal", {
     content: indices,
     type: eventType,
     searchlength: searchStr.length + 1, // +1 包含@长度
   });
+  
   return eventType;
 }
 
@@ -464,10 +462,8 @@ export function searchByPinyin(searchStr) {
  * 根据输入的字符串过滤提及列表并触发相关操作。
  * @param {string} inputStr - 输入的字符串。
  */
-export function filterMentionList(Str, Html) {
-  // 如果当前类型不是群聊
-  if (store.getters.currentType !== "GROUP") return;
-  const inputStr = Str;
+export function filterMentionList({ str, list }) {
+  const inputStr = str;
   // 如果输入字符串为空 且没有 "@" 符号，关闭提及模态框并返回
   if (inputStr === "" || inputStr.lastIndexOf("@") == -1) {
     store.commit("toggleMentionModal", false);
@@ -486,10 +482,10 @@ export function filterMentionList(Str, Html) {
     return;
   }
   const text = inputStr.substring(lastAtIndex);
-  const searchValue = text.substring(1);
-  if (!searchValue) return;
+  const searchStr = text.substring(1);
+  if (!searchStr) return;
   // 执行根据拼音搜索的操作
-  return searchByPinyin(searchValue);
+  return searchByPinyin({ searchStr, list });
 }
 
 /**
@@ -544,17 +540,15 @@ export const handleToggleLanguage = () => {
   if (placeholder) placeholder.innerHTML = placeholderMap.value["input"];
 };
 
-export const handleEditorKeyDown = async () => {
+export const handleEditorKeyDown = async (show) => {
   await nextTick();
   // 解决@好友上键切换光标移动问题
   const container = document.querySelector(".w-e-text-container");
   if (!container) return;
   container.onkeydown = (e) => {
     // 键盘上下键
-    if (store.state?.conversation.isShowModal) {
-      if ([38, 40].includes(e.keyCode)) {
-        return false;
-      }
+    if (show && [38, 40].includes(e.keyCode)) {
+      return false;
     }
   };
 };

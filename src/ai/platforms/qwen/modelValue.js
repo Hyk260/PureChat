@@ -2,11 +2,11 @@ import Qwen from './models';
 
 const docs = __APP_INFO__.pkg.docs;
 
-export const qwenModelValue = () => {
+export const QwenModelValue = () => {
   return {
     Model: {
       ID: "model",
-      Title: "模型 (model)",
+      Title: "模型列表",
       SubTitle: "选择的模型会在模型列表中展示",
       defaultValue: "",
       collapse: Qwen.chatModels.map((t) => t.id),
