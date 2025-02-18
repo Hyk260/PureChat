@@ -63,7 +63,7 @@ export function isMacDragStyle() {
 
 export function isWindowsAppStyle() {
   if (window.api.isWindows) {
-    return "height: calc(100% - 32px);";
+    return "height: calc(100vh - 32px);";
   } else {
     return "";
   }
