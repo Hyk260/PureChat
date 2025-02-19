@@ -13,17 +13,17 @@
     <div class="mt-20" v-else>
       <el-skeleton :rows="4" animated />
     </div> -->
-    <div class="agent-list">
-      <AgentSkeleton v-if="!market" />
+    <div class="agent-list" style="--rows: 2" v-if="tabsKey === 'model_provider'">
       <ModelProviderCard
-        v-if="tabsKey === 'model_provider'"
         v-for="item in modelProvider"
         :key="item.userID"
         :agents="item"
         @click="providerClick(item)"
       />
+    </div>
+    <div class="agent-list" v-if="tabsKey === 'assistant'">
+      <AgentSkeleton v-if="!market" />
       <AgentCard
-        v-if="tabsKey === 'assistant'"
         v-for="item in agent"
         :key="item.identifier"
         :agents="item"
@@ -75,7 +75,7 @@ function providerClick(item) {
 
 <style lang="scss" scoped>
 .tags {
-  // margin-top: 20px;
+  margin-top: 20px;
   flex-wrap: wrap;
   display: flex;
   flex-direction: column;

@@ -8,8 +8,8 @@ const outsideList = [
     id: "chat",
     icon: "ChatDotSquare",
     title: "会话",
-    class: "fix-ed",
-    if_fixed: 1,
+    // class: "fix-ed",
+    // if_fixed: 1,
     path: "/chat",
     type: "el-icon",
   },
@@ -19,6 +19,7 @@ const outsideList = [
     title: "联系人",
     path: "/friends",
     type: "el-icon",
+    show: __LOCAL_MODE__ ? "hide" : "",
   },
   {
     id: "discover",

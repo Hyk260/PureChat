@@ -1,11 +1,11 @@
 <template>
   <div class="card">
     <div class="top">
+      <span class="avatar">
+        <img class="w-40 h-40" :src="getAiAvatarUrl(agents.userID)" alt="" />
+      </span>
       <span class="title">
         {{ agents.nick }}
-      </span>
-      <span class="avatar">
-        <!-- {{ agents.meta.avatar }} -->
       </span>
     </div>
     <div class="desc">
@@ -21,6 +21,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { getAiAvatarUrl } from "@/ai/utils";
 
 defineOptions({
   name: "ModelProviderCard",
@@ -49,20 +50,15 @@ defineProps({
   }
   .top {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
+    gap: 8px;
     .title {
       font-weight: 600;
     }
     .avatar {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      font-size: 28px;
-      text-align: center;
-      line-height: 40px;
-      @include text-ellipsis;
+      img {
+        border-radius: 5px;
+      }
     }
   }
   .desc {
