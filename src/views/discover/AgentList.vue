@@ -22,7 +22,7 @@
       />
     </div>
     <div class="agent-list" v-if="tabsKey === 'assistant'">
-      <AgentSkeleton v-if="!market" />
+      <!-- <AgentSkeleton v-if="!market" /> -->
       <AgentCard
         v-for="item in agent"
         :key="item.identifier"

@@ -38,17 +38,15 @@
 [文档](https://hyk260.github.io/pure-docs) /
 [更新日志](https://hyk260.github.io/pure-docs/other/logs.html)
 
-[PureChat](https://github.com/Hyk260/PureChat) 是一个集成 ChatGPT 的聊天应用。
-
 ### 🎉 特性
 
-- 📦️ 基于 Vite5，构建高效应用
+- 📦️ 基于 Vue3，Vite5构建高效应用
 - 📸 聊天记录支持生成截图并支持一键复制
 - 💡 会话基于 腾讯IM即时通讯SDK
 - 🌙 根据系统主题自动切换光明与黑暗模式
-- 📝 支持 Markdown 渲染，代码高亮，链接识别
+- 📝 支持 Markdown渲染，代码高亮，链接识别
 - 🛡️ GitHub 快速登录，享受无缝社交体验
-- ☁️ 多模型支持 Llama、OpenAI、ChatGLM 等，支持流式输出 自定义预设提示词
+- ☁️ 多模型支持 OpenAI、Ollama、DeepSeek 等，支持流式输出 自定义预设提示词
 - ✨ 提供桌面应用 Electron 版本，支持 macOS (.dmg) 与 Windows (.exe)
 - 🛠 更多特性持续开发中
 
