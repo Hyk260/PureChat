@@ -111,6 +111,6 @@
     "url": "https://github.com/Hyk260/PureChat.git"
   },
   "license": "MIT",
-  "docs": "https://hyk260.github.io/pure-docs",
+  "docs": "https://docs.purechat.cn",
   "packageManager": "pnpm@9.7.1"
 }

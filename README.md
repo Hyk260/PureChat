@@ -35,8 +35,8 @@
 [反馈](https://github.com/Hyk260/PureChat/issues) /
 [QQ 群](https://github.com/Hyk260/PureChat/discussions/2) /
 [打赏开发者](./images/weix.png) /
-[文档](https://hyk260.github.io/pure-docs) /
-[更新日志](https://hyk260.github.io/pure-docs/other/logs.html)
+[文档](https://docs.purechat.cn) /
+[更新日志](https://docs.purechat.cn/other/logs.html)
 
 ### 🎉 特性
 
