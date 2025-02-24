@@ -494,7 +494,7 @@ export const handleStreamingChat = async (
       // 如果响应文本为空，触发错误回调
       if (responseText?.length === 0) {
         console.error("empty response from server");
-        options.onError?.(new Error("empty response from server"));
+        options.onError?.(new Error("服务器繁忙，请稍后再试。"));
       }
       return;
     }

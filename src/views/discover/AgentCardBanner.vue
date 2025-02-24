@@ -65,6 +65,7 @@ function toTant(item = cardData.value) {
   localStg.set(StoreKey.Prompt, { ...localStg.get(StoreKey.Prompt), ...prompt });
   const id = getModelId(defaultBot) || VITE_OPENAI_ID;
   useRobotStore().setPromptConfig(prompt[value]);
+  handleClose()
   commit("taggleOueSide", { id: "chat", path: "/chat" });
   dispatch("addConversation", { convId: `${"C2C"}${id}` });
   setTimeout(() => {

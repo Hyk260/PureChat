@@ -125,6 +125,7 @@ import {
   useTemplateRef,
   watch,
 } from "vue";
+import { useAppStore } from '@/stores/modules/app';
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
 import { avatarMenu, menuOptionsList, emptyUrl, squareUrl } from "../utils/menu";
@@ -249,10 +250,7 @@ const handleSelect = (e, item, type = "initial") => {
   const _el = document.getElementById(`choice${item.ID}`);
   const el = _el.getElementsByClassName("check-btn")[0];
   if (!el.checked && forwardData.value.size >= MULTIPLE_CHOICE_MAX) {
-    commit("showMessage", {
-      message: `最多只能选择${MULTIPLE_CHOICE_MAX}条`,
-      type: "error",
-    });
+    useAppStore().showMessage({ message: `最多只能选择${MULTIPLE_CHOICE_MAX}条`, type: "error"});
     return;
   }
   // 点击input框

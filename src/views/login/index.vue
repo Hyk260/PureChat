@@ -9,7 +9,7 @@
       <!-- 标题 -->
       <header class="login-form">
         <div class="tip">
-          <h2>{{ titleApp }}</h2>
+          <h2>{{ VITE_APP_NAME }}</h2>
         </div>
       </header>
       <!-- 账号登陆 -->
@@ -29,7 +29,7 @@ import Account from "./components/Account.vue";
 // import QrCode from "./components/qrCode.vue";
 // import Register from "./components/Register.vue";
 
-const titleApp = import.meta.env.VITE_APP_NAME;
+const { VITE_APP_NAME } = import.meta.env;
 
 const { currentPage } = useState({
   currentPage: (state) => state.user.currentPage,

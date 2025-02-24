@@ -44,9 +44,9 @@
                   <div class="bot-model-option">
                     <div
                       class="bot-avatar flex-c h-full"
-                      :class="item.options?.id === 'ollama' ? models.icon : robotIcon"
+                      :class="reIcon(item, models) ? models.icon : robotIcon"
                     >
-                      <svg-icon v-if="item.options?.id === 'ollama'" :local-icon="models.icon" />
+                      <svg-icon v-if="reIcon(item, models)" :local-icon="models.icon" />
                       <svg-icon v-else :local-icon="robotIcon" />
                     </div>
                     <div class="flex flex-col h-full gap-4">
@@ -171,8 +171,13 @@ function isOllama() {
 function handlePrompt(prompt) {
   maskData.value.prompt = prompt;
 }
+
+function reIcon(item, models) {
+  return item.options?.id === "ollama" || models.icon;
+}
+
 function modelCount(count) {
-  return count
+  return count;
   // const olamaModelList = localStg.get("olama-local-model-list") || [];
   // return olamaModelList.length ?? count;
 }

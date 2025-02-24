@@ -1,12 +1,7 @@
-# .gitignore
+# Dependency directories
 node_modules
-/server
-/dist
-/out
-/report.html
 
 # local env files
-*.d.ts
 .env.local 
 .env.*.local
 
@@ -28,14 +23,16 @@ pnpm-debug.log*
 #Electron-builder output
 /dist_electron
 
+# output
+/server
+/dist
+/report.html
+
 # Yarn lock file
-yarn.lock
+# yarn.lock
 
 # pnpm lock file
-pnpm-lock.yaml
+# pnpm-lock.yaml
 
-# TypeScript declaration file for components
-components.d.ts
-
-# TypeScript declaration file for auto-imports
-auto-imports.d.ts
+# Electron-builder
+/out

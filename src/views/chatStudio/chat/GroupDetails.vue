@@ -138,6 +138,7 @@ import AddMemberPopup from "../components/AddMemberPopup.vue";
 import emitter from "@/utils/mitt-bus";
 import { Markdown } from "@/utils/markdown/index";
 import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index";
+import { useAppStore } from '@/stores/modules/app';
 
 const { groupProfile } = defineProps({
   groupProfile: {
@@ -149,6 +150,7 @@ const { groupProfile } = defineProps({
 const notify = ref(false);
 const AddMemberRef = ref();
 
+const appStore = useAppStore();
 const [drawer, setDrawer] = useBoolean();
 const [loading, setLoading] = useBoolean();
 
@@ -184,7 +186,7 @@ const openNamePopup = async () => {
   const isByteLeng = isByteLengthExceedingLimit(result.value, "name");
   if (isByteLeng) {
     // const long = GroupModifyType['name']
-    commit("showMessage", { message: "名称太长", type: "warning" });
+    appStore.showMessage({ message: "名称太长", type: "warning" });
     return;
   }
   modifyGroupInfo(result.value);
@@ -198,7 +200,7 @@ const openNoticePopup = async () => {
   const isByteLeng = isByteLengthExceedingLimit(result.value, "notification");
   if (isByteLeng) {
     // const long = GroupModifyType['notification']
-    commit("showMessage", { message: "公告太长", type: "warning" });
+    appStore.showMessage({ message: "公告太长", type: "warning" });
     return;
   }
   modifyGroupInfo(result.value, "notification");
@@ -267,7 +269,7 @@ const modifyGroupInfo = async (value, modify) => {
   const { groupID } = groupProfile;
   const { code, group } = await updateGroupProfile({ convId: groupID, value, modify });
   if (code !== 0) {
-    commit("showMessage", { message: "修改失败", type: "error" });
+    appStore.showMessage({ message: "修改失败", type: "warning" });
   } else {
     console.log("modifyGroupInfo:", group);
   }
