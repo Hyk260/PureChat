@@ -1,11 +1,7 @@
-# .gitignore
+# Dependency directories
 node_modules
-/server
-/dist
-/report.html
 
 # local env files
-*.d.ts
 .env.local 
 .env.*.local
 
@@ -26,6 +22,11 @@ pnpm-debug.log*
 
 #Electron-builder output
 /dist_electron
+
+# output
+/server
+/dist
+/report.html
 
 # Yarn lock file
 # yarn.lock
