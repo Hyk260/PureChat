@@ -5,6 +5,7 @@ import { C2C_ROBOT_COLLECT } from "@/ai/constant";
 import { TIM_PROXY } from "@/constants/index";
 import { scrollToDomPostion, setChatListCache } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
+import { useAppStore } from '@/stores/modules/app';
 import { useWindowFocus, useEventListener } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
@@ -153,19 +154,13 @@ export class TIMProxy {
   }
   onKickOut({ data }) {
     console.log("[chat] onKickOut:", data);
-    store.commit("showMessage", {
-      message: `${kickedOutReason(data.type)}被踢出，请重新登录。`,
-      type: "error",
-    });
+    useAppStore().showMessage({ message: `${kickedOutReason(data.type)}被踢出，请重新登录。`, type: "error" });
     store.dispatch("handleUserLogout");
   }
   onError({ data }) {
     console.log("[chat] onError:", data);
     if (data.message !== "Network Error") {
-      store.commit("showMessage", {
-        message: data.message,
-        type: "error",
-      });
+      useAppStore().showMessage({ message: data.message, type: "error" });
     }
   }
   onMessageModified({ data }) {
@@ -174,7 +169,7 @@ export class TIMProxy {
   }
   onNetStateChange({ data }) {
     console.log("[chat] 网络状态变更 onNetStateChange:", data);
-    store.commit("showMessage", fnCheckoutNetState(data.state));
+    useAppStore().showMessage(fnCheckoutNetState(data.state));
   }
   onFriendApplicationListUpdated({ data }) {
     console.log("[chat] 好友申请列表 onFriendApplicationListUpdated:", data);

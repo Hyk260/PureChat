@@ -5,6 +5,7 @@ import {
   createTextMessage,
   createVideoMessage,
 } from "@/api/im-sdk-api/index";
+import { useAppStore } from '@/stores/modules/app';
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { dataURLtoFile, getBlob, getFileType } from "@/utils/chat/index";
@@ -86,9 +87,9 @@ export const handleCopyMsg = async (data) => {
     const { text, copy, isSupported } = useClipboard({ source: payload.text });
     if (isSupported) {
       copy(payload.text);
-      store.commit("showMessage", { message: "复制成功" });
+      useAppStore().showMessage({ message: "复制成功" });
     } else {
-      store.commit("showMessage", { message: "您的浏览器不支持剪贴板API" });
+      useAppStore().showMessage({ message: "您的浏览器不支持剪贴板API" });
     }
   }
   // 图片
@@ -101,7 +102,7 @@ export const handleCopyMsg = async (data) => {
     navigator.clipboard
       .write([clipboardItem])
       .then(() => {
-        store.commit("showMessage", { message: "图片复制成功" });
+        useAppStore().showMessage({ message: "图片复制成功" });
       })
       .catch((error) => {
         console.error("写入剪贴板时出错:", error);

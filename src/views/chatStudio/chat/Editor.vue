@@ -68,6 +68,7 @@ import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
 import { localStg } from "@/utils/storage";
 import { useBoolean } from "@/utils/hooks/index";
+import { useAppStore } from '@/stores/modules/app';
 import {
   convertEmoji,
   customAlert,
@@ -89,6 +90,7 @@ const valueHtml = ref(""); // 内容 HTML
 const mode = "simple"; // 'default' 或 'simple'
 const mentionRef = ref();
 
+const appStore = useAppStore();
 const [loading, setLoading] = useBoolean();
 const [disabled, setDisabled] = useBoolean();
 
@@ -182,14 +184,14 @@ const handleFile = (item) => {
   if (type.match("^image/")) {
     typeText = "图片";
     if (_isRobot) {
-      commit("showMessage", { message: `暂不支持${typeText}消息`, type: "warning" });
+      appStore.showMessage({ message: `暂不支持${typeText}消息`, type: "warning" });
       return;
     }
     parsePicture(pasteFile);
   } else {
     typeText = "文件";
     if (_isRobot) {
-      commit("showMessage", { message: `暂不支持${typeText}消息`, type: "warning" });
+      appStore.showMessage({ message: `暂不支持${typeText}消息`, type: "warning" });
       return;
     }
     parseFile(pasteFile);
@@ -234,7 +236,7 @@ const dropHandler = (event) => {
 // 插入文件
 const parseFile = async (file, editor = editorRef.value) => {
   if (file.size / (1024 * 1024) > 100) {
-    commit("showMessage", { message: "文件不能大于100MB", type: "warning" });
+    appStore.showMessage({ message: `文件不能大于100MB`, type: "warning" });
     return;
   }
   try {

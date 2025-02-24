@@ -52,7 +52,7 @@
             <div class="footer p-16" :class="{ 'opacity-0': !isFooter }">
               <div class="flex-c">
                 <img class="size-22" src="@/assets/images/log.png" alt="" />
-                <div class="title ml-8">{{ titleApp }}</div>
+                <div class="title ml-8">{{ VITE_APP_NAME }}</div>
               </div>
               <span class="link"> {{ homepage }}</span>
               <QrCode v-show="isQrCode" class="qr-code" :text="homepage" />
@@ -124,7 +124,7 @@ import { computed, nextTick, ref } from "vue";
 import { isRobot } from "@/utils/chat/index";
 import { Markdown } from "@/utils/markdown/index";
 import { useBoolean } from "@/utils/hooks/index";
-import { useScreenshot, ImageType, imageTypeOptions, titleApp } from "@/utils/hooks/useScreenshot";
+import { useScreenshot, ImageType, imageTypeOptions, VITE_APP_NAME } from "@/utils/hooks/useScreenshot";
 import { useState } from "@/utils/hooks/useMapper";
 import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils/utils";
 import { useGetters } from "@/utils/hooks/useMapper";

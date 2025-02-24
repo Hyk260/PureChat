@@ -34,13 +34,13 @@ export const {
 
 export const ROLES = ["system", "user", "assistant"];
 
-export const ROBOT_COLLECT = [VITE_OPENAI_ID, VITE_ZHIPU_ID, VITE_ZEROONE_ID, VITE_OLLAMA_ID];
+export const ROBOT_COLLECT = [VITE_OPENAI_ID, VITE_ZHIPU_ID, VITE_ZEROONE_ID, VITE_OLLAMA_ID, VITE_DEEPSEEK_ID, VITE_GITHUB_ID];
 
-if (isDev) {
-  ROBOT_COLLECT.push(VITE_DEEPSEEK_ID);
-  ROBOT_COLLECT.push(VITE_GITHUB_ID);
-  // ROBOT_COLLECT.push(VITE_QWEN_ID);
-}
+// if (isDev) {
+//   ROBOT_COLLECT.push(VITE_DEEPSEEK_ID);
+//   ROBOT_COLLECT.push(VITE_GITHUB_ID);
+//   // ROBOT_COLLECT.push(VITE_QWEN_ID);
+// }
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
 

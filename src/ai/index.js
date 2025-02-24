@@ -12,6 +12,7 @@ import webSearchResult from '@/database/tools/web-search-result.json';
 
 const restSendMsg = async (params, message) => {
   if (__LOCAL_MODE__) return
+  if (!message) return
   return await restApi({
     params: {
       To_Account: params.from,
@@ -107,39 +108,58 @@ function beforeSend(api, msg) {
   }
 }
 
-export const chatService = async (params) => {
-  const { messages, chat, provider } = params;
+export const chatService = async ({ messages, chat, provider }) => {
   const api = new ClientApi(provider);
   const startMsg = fnCreateStartMsg(chat);
+
   if (beforeSend(api, startMsg)) return;
+
   await api.llm.chat({
     messages,
     config: {
       model: useAccessStore(provider).model,
       stream: true
     },
-    onUpdate(message) {
-      console.log("[chat] onUpdate:", message);
-      updataMessage(startMsg, message);
-    },
-    async onFinish(message) {
-      console.log("[chat] onFinish:", message);
-      message && updataMessage(startMsg, message);
-      await restSendMsg(chat, message);
-    },
-    onToolMessage(message) {
-      console.log("[chat] onToolMessage:", message);
-      fnCreateToolCallsMsg(startMsg, message);
-    },
-    async onError(error) {
-      console.error("[chat] onError:", error);
-      // const isAborted = error.message.includes("aborted");
-      const content = "\n\n" + prettyObject({ error: true, message: error.message });
-      __LOCAL_MODE__ && updataMessage(startMsg, content);
-      error.message && (await restSendMsg(chat, content));
-    },
-    onController(controller) {
-      console.log("[chat] onController:", controller);
-    },
+    onUpdate: handleUpdate(startMsg),
+    onFinish: handleFinish(startMsg, chat),
+    onToolMessage: handleToolMessage(startMsg),
+    onError: handleError(startMsg, chat),
+    onController: handleController
   });
+};
+
+
+const handleUpdate = (startMsg) => (message) => {
+  console.log("[chat] onUpdate:", message);
+  updataMessage(startMsg, message);
+};
+
+const handleFinish = (startMsg, chat) => async (message) => {
+  console.log("[chat] onFinish:", message);
+  if (message) {
+    updataMessage(startMsg, message);
+    await restSendMsg(chat, message);
+  }
+};
+
+const handleToolMessage = (startMsg) => (message) => {
+  console.log("[chat] onToolMessage:", message);
+  fnCreateToolCallsMsg(startMsg, message);
+};
+
+const handleError = (startMsg, chat) => async (error) => {
+  console.error("[chat] onError:", error);
+  const content = `\n\n${prettyObject({ error: true, message: error.message })}`;
+
+  if (__LOCAL_MODE__) {
+    updataMessage(startMsg, content);
+  }
+
+  if (error.message) {
+    await restSendMsg(chat, content);
+  }
+};
+
+const handleController = (controller) => {
+  console.log("[chat] onController:", controller);
 };
