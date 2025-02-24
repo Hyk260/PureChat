@@ -1,28 +1,25 @@
-# Simple workflow for deploying static content to GitHub Pages
+# 将静态内容部署到 GitHub Pages 的简单工作流程
 name: Deploy static content to Pages
 
 on:
-  # Runs on pushes targeting the default branch
+  # 在针对默认分支的推送上运行
   push:
     branches: ["main"]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # 允许您从操作选项卡手动运行此工作流程
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# 设置 GITHUB_TOKEN 的权限以允许部署到 GitHub 页面
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages

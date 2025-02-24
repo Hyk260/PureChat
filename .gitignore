@@ -28,13 +28,7 @@ pnpm-debug.log*
 /dist_electron
 
 # Yarn lock file
-yarn.lock
+# yarn.lock
 
 # pnpm lock file
-pnpm-lock.yaml
-
-# TypeScript declaration file for components
-components.d.ts
-
-# TypeScript declaration file for auto-imports
-auto-imports.d.ts
+# pnpm-lock.yaml
