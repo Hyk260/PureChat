@@ -1,4 +1,5 @@
 import store from "@/store";
+import { useAppStore } from '@/stores/modules/app';
 // 异常拦截处理器
 export const errorHandler = (error) => {
   let errMessage = "未知错误";
@@ -38,6 +39,6 @@ export const errorHandler = (error) => {
   }
   window.NProgress?.done?.(); // 关闭加载条
   store.commit("setLoading", false);
-  store.commit("showMessage", { message: errMessage, type: "error" });
+  useAppStore().showMessage({ message: errMessage, type: "error" });
   return Promise.reject(error);
 };

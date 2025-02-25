@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
-import store from "@/store/index";
-import { useBoolean } from "./other";
 import { domToJpeg, domToPng, domToSvg, domToWebp, domToBlob } from "modern-screenshot";
+import { useAppStore } from "@/stores/modules/app";
+import { useBoolean } from "./other";
 
-export const titleApp = import.meta.env.VITE_APP_NAME;
+export const { VITE_APP_NAME } = import.meta.env;
 
 export const ImageType = {
   Blob: "blob",
@@ -46,7 +46,7 @@ function copyImageToClipboard(dataUrl) {
   navigator.clipboard
     .write([clipboardItem])
     .then(() => {
-      store.commit("showMessage", { message: "图片复制成功" });
+      useAppStore().showMessage({ message: "图片复制成功" });
     })
     .catch((error) => {
       console.error("写入剪贴板时出错:", error);
@@ -96,8 +96,8 @@ export const useScreenshot = () => {
         copyImageToClipboard(dataUrl);
       } else {
         let link = document.createElement("a");
-        let name = `${titleApp}_`;
-        if (title) name = `${titleApp}_${title}_`;
+        let name = `${VITE_APP_NAME}_`;
+        if (title) name = `${VITE_APP_NAME}_${title}_`;
         link.download = name + `${dayjs().format("YYYY-MM-DD")}.${imageType}`;
         link.href = dataUrl;
         link.click();

@@ -3,6 +3,7 @@ import { USER_MODEL } from "@/constants/index";
 import { msgContent } from "@/api/im-sdk-api/custom";
 import { localStg } from "@/utils/storage";
 import { SessionModel } from '@/database/models/session';
+import { useAppStore } from '@/stores/modules/app';
 
 /**
  * 将二进制数据转换为 base64 URL 格式
@@ -267,7 +268,7 @@ export function bytesToSize(bytes) {
 export const scrollToDomPostion = (msgid) => {
   const dom = document.getElementById(`${msgid}`);
   if (!dom) {
-    store.commit("showMessage", { message: "无法查看上下文", type: "warning" });
+    useAppStore().showMessage({ message: "无法查看上下文", type: "warning" });
     return;
   }
   dom.scrollIntoView({ behavior: "smooth", block: "center" });

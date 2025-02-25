@@ -4,6 +4,7 @@ import markdownit from "markdown-it";
 import hljs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";
 // import bash from "highlight.js/lib/languages/bash";
+import { useAppStore } from '@/stores/modules/app';
 
 import "highlight.js/styles/base16/default-light.css";
 
@@ -16,7 +17,7 @@ const svg =
 export async function copyToClipboard(text) {
   try {
     await navigator.clipboard.writeText(text);
-    store.commit("showMessage", { message: "复制成功" });
+    useAppStore().showMessage({ message: "复制成功" });
   } catch (error) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
@@ -25,9 +26,9 @@ export async function copyToClipboard(text) {
     textArea.select();
     try {
       document.execCommand("copy");
-      store.commit("showMessage", { message: "复制成功" });
+      useAppStore().showMessage({ message: "复制成功" });
     } catch (error) {
-      store.commit("showMessage", { message: "您的浏览器不支持剪贴板API" });
+      useAppStore().showMessage({ message: "您的浏览器不支持剪贴板API" });
     }
     document.body.removeChild(textArea);
   }
