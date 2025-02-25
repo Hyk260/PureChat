@@ -40,6 +40,7 @@ import emitter from "@/utils/mitt-bus";
 import { useState } from "@/utils/hooks/useMapper";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
+import { useUserStore } from '@/stores/modules/user';
 
 const { homepage } = __APP_INFO__.pkg;
 const cardRef = useTemplateRef("cardRef");
@@ -83,7 +84,7 @@ const menuItems = [
     svg: "log-out",
     hide: __LOCAL_MODE__,
     action: () => {
-      dispatch("handleUserLogout");
+      useUserStore().handleUserLogout()
     },
   },
 ].filter((item) => !item.hide);

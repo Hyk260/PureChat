@@ -15,7 +15,7 @@
             class="aside-list flex-c flex-col gap-3"
             :class="{ current: router.currentRoute.value.path === item.path }"
           >
-            <el-badge :value="unreadMsg" :hidden="item.id !== 'message' || unreadMsg == 0">
+            <el-badge :value="unreadMsg" :hidden="isUnreadMsgHidden(item.id, unreadMsg)">
               <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" class="style-svg" />
               <svg-icon v-else :local-icon="item.icon" class="style-svg" />
             </el-badge>
@@ -45,6 +45,10 @@ import emitter from "@/utils/mitt-bus";
 import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
 import CardPopover from "@/views/chatStudio/components/CardPopover.vue";
 
+defineOptions({
+  name: "LayAside"
+});
+
 const router = useRouter();
 const { commit } = useStore();
 const sidebarStore = useSidebarStore();
@@ -69,6 +73,11 @@ function toggle(item) {
     commit("taggleOueSide", item);
   }
 }
+
+// 检查未读消息是否隐藏
+const isUnreadMsgHidden = (itemId, unreadCount) => {
+  return itemId !== "message" || unreadCount === 0;
+};
 </script>
 
 <style lang="scss" scoped>

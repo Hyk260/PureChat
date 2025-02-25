@@ -33,6 +33,7 @@ import { cloneDeep } from "lodash-es";
 import { mapState } from "vuex";
 import { prioritizeRBTUserID } from "@/utils/chat/index";
 import { insertMention } from "./../utils/utils";
+import { localStg } from "@/utils/storage";
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__";
 
@@ -58,7 +59,6 @@ export default {
   computed: {
     ...mapState({
       isShowModal: (state) => state.conversation.isShowModal,
-      userProfile: (state) => state.user.userProfile,
       currentMemberList: (state) => state.groupinfo.currentMemberList,
     }),
     searchedList() {
@@ -100,7 +100,7 @@ export default {
       }
     },
     filterData() {
-      const userID = this.userProfile.userID;
+      const userID = localStg.get("timProxy")?.userProfile?.userID;
       const data = this.currentMemberList.filter(
         (t) => t.userID !== userID && t.userID !== "@TLS#NOT_FOUND"
       );

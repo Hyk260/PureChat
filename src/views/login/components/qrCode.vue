@@ -6,7 +6,7 @@
   <el-divider>
     <p class="m-0">{{ $t("login.tip") }}</p>
   </el-divider>
-  <el-button class="w-full mt-4" @click="commit('setCurrentPage', 0)">
+  <el-button class="w-full mt-4">
     {{ $t("login.back") }}
   </el-button>
 </template>

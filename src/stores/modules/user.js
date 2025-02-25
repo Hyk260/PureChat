@@ -1,43 +1,37 @@
 import { defineStore } from 'pinia'
 import { login, logout } from "@/api/node-admin-api/index"
 import { ACCOUNT, TIM_PROXY, USER_MODEL } from "@/constants/index"
-
 import { localStg } from "@/utils/storage"
 import { verification } from "@/utils/message/index"
-import { ElMessage } from "element-plus"
 import { initThemeSettings } from "@/theme/settings"
-
+import { SetupStoreId } from '../plugins/index';
+import { timProxy } from '@/utils/IM/index';
+import { setTheme } from "@/utils/common";
+import { changeLocale } from "@/locales/index";
 import router from "@/router"
 import chat from "@/utils/IM/im-sdk/tim"
 import emitter from "@/utils/mitt-bus"
 
-const themeScheme = initThemeSettings()
-
-export const useUserStore = defineStore('user', {
+export const useUserStore = defineStore(SetupStoreId.User, {
   state: () => ({
-    message: null,
-    loading: false,
-    currentPage: 0,
     userProfile: localStg.get(TIM_PROXY)?.userProfile || {},
     lang: localStg.get('lang') || "zh-CN",
-    themeScheme,
+    themeScheme: initThemeSettings(),
   }),
 
   actions: {
-    setCurrentPage(num) {
-      this.currentPage = num
-    },
-
     setCurrentProfile(user) {
       this.userProfile = user
     },
 
     setLang(lang) {
-      this.lang = lang  
+      this.lang = lang
+      changeLocale(lang)
     },
 
     setThemeScheme(theme) {
       this.themeScheme = theme
+      setTheme(lang)
     },
 
     setLoading(val) {
@@ -45,28 +39,14 @@ export const useUserStore = defineStore('user', {
     },
 
     reset() {
-      this.loading = false
-      this.currentPage = 0 
       this.userProfile = {}
-    },
-
-    showMessage(options) {
-      if (this.message) {
-        this.message.close()
-      }
-      this.message = ElMessage({
-        message: options.message,
-        type: options.type || "success",
-        duration: options.duration || 2000,
-        offset: 30
-      })
     },
 
     async authorized(data) {
       const { code, msg, result } = data
       console.log({ code, msg, result }, "授权登录信息")
       if (code == 200) {
-        window.TIMProxy.init()
+        timProxy.init() 
         await this.handleIMLogin({
           userID: result.username,
           userSig: result.userSig
@@ -84,7 +64,7 @@ export const useUserStore = defineStore('user', {
       const { code, msg, result } = await login(data)
       console.log({ code, msg, result }, "登录信息")
       if (code == 200) {
-        window.TIMProxy.init()
+        timProxy.init()
         await this.handleIMLogin({
           userID: result.username,
           userSig: result.userSig
@@ -141,7 +121,7 @@ export const useUserStore = defineStore('user', {
         if (data) {
           const { username: userID, userSig } = data
           console.log("reLoginHandler", { userID, userSig })
-          window.TIMProxy.init()
+          timProxy.init()
           await this.handleIMLogin({ userID, userSig })
         } else {
           this.handleUserLogout()

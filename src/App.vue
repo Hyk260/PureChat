@@ -4,39 +4,32 @@
   </el-config-provider>
 </template>
 
-<script>
+<script setup>
+import { computed, onMounted, nextTick } from "vue";
 import { ElConfigProvider } from "element-plus";
 import { elementPlusLocales } from "@/locales/element-plus";
-import { initThemeSettings } from "@/theme/settings"
+import { initThemeSettings } from "@/theme/settings";
+import { useUserStore } from "@/stores/modules/user";
+import { useAppStore } from './stores/modules/app';
 import { setTheme } from "@/utils/common";
-import { defineComponent } from "vue";
-import { mapState } from "vuex";
+import router from "@/router";
 
-export default defineComponent({
-  name: "app",
-  components: {
-    [ElConfigProvider.name]: ElConfigProvider,
-  },
-  computed: {
-    ...mapState({
-      lang: (state) => state.user.lang,
-    }),
-    locale() {
-      return elementPlusLocales[this.lang];
-    },
-  },
-  mounted() {
-    setTheme(initThemeSettings()) 
-    this.loginAgain(this.$route);
-  },
-  methods: {
-    loginAgain({ name }) {
-      if (!name) return;
-      this.$nextTick(() => {
-        if (name === "login") return;
-        this.$store.dispatch("reLoginHandler");
-      });
-    },
-  },
+defineOptions({ name: "App" });
+
+const appStore = useAppStore();
+const userStore = useUserStore();
+const locale = computed(() => elementPlusLocales[appStore.locale]);
+
+onMounted(() => {
+  setTheme(initThemeSettings());
+  loginAgain(router.currentRoute.value);
 });
+
+function loginAgain({ name }) {
+  if (!name) return;
+  nextTick(() => {
+    if (name === "login") return;
+    userStore.reLoginHandler();
+  });
+}
 </script>

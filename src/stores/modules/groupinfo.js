@@ -8,8 +8,9 @@ import {
   dismissGroup,
 } from "@/api/im-sdk-api/index";
 import { sortMembersByRole, findGroupChat } from "@/utils/chat/index";
+import { SetupStoreId } from '../plugins/index';
 
-export const useGroupInfoStore = defineStore('groupInfo', {
+export const useGroupInfoStore = defineStore(SetupStoreId.GroupInfo, {
   state: () => ({
     groupList: [], // 群组列表
     groupProfile: null, // 群聊数据

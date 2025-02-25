@@ -48,7 +48,12 @@
       <div class="forget">{{ $t("login.forget") }}</div>
     </div>
     <!-- 登录 -->
-    <el-button type="primary" class="login-btn" @click="loginBtn(ruleFormRef)" :loading="loading">
+    <el-button
+      type="primary"
+      class="login-btn"
+      @click="loginBtn(ruleFormRef)"
+      :loading="userStore.loading"
+    >
       <template #loading>
         <loadingSvg />
       </template>
@@ -86,16 +91,15 @@
 
 <script setup>
 import { getuser } from "@/api/node-admin-api/index";
-import ImageVerify from "@/views/components/ImageVerify/index.vue";
 import { Lock, User } from "@element-plus/icons-vue";
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
 import { authorizedLogin, oauthAuthorize } from "../utils/auth";
 import { operates, thirdParty } from "../utils/enums";
 import { rules, user } from "../utils/validation";
+import { useUserStore } from "@/stores/modules/user";
+import ImageVerify from "@/views/components/ImageVerify/index.vue";
 import loadingSvg from "./loadingSvg.vue";
-import { useState } from "@/utils/hooks/useMapper";
 
 const { DEV: isDev } = import.meta.env;
 const isVerifyCode = false;
@@ -104,10 +108,7 @@ const restaurants = ref([]);
 const ruleFormRef = ref();
 const imgCode = ref("");
 
-const { dispatch, commit } = useStore();
-const { loading } = useState({
-  loading: (state) => state.user.loading,
-});
+const userStore = useUserStore();
 
 const handleSelect = (item) => {
   console.log(item);
@@ -129,7 +130,7 @@ const loginBtn = async (formEl) => {
   if (!formEl) return;
   await formEl.validate((valid) => {
     if (!valid) return;
-    dispatch("handleUserLogin", user);
+    userStore.handleUserLogin(user);
   });
 };
 
@@ -139,9 +140,7 @@ const onClick = async ({ icon }) => {
   }
 };
 
-const onHandle = (index) => {
-  commit("setCurrentPage", index);
-};
+const onHandle = (index) => {};
 
 const onkeypress = ({ code }) => {
   if (code === "Enter") {
@@ -157,7 +156,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   window.document.removeEventListener("keypress", onkeypress);
-  commit("setLoading", false);
+  userStore.setLoading(false);
 });
 
 // watch(imgCode, (value) => {

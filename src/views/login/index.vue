@@ -12,17 +12,16 @@
         </div>
       </header>
       <!-- 账号登陆 -->
-      <Account v-if="currentPage === 0" />
+      <Account />
       <!-- 二维码登录 -->
-      <!-- <QrCode v-else-if="currentPage === 2" /> -->
+      <!-- <QrCode /> -->
       <!-- 注册 -->
-      <!-- <Register v-else-if="currentPage === 3" /> -->
+      <!-- <Register /> -->
     </div>
   </div>
 </template>
 
 <script setup>
-import { useState } from "@/utils/hooks/useMapper";
 import ThemeSwitch from "../components/ThemeSwitch/index.vue";
 import Account from "./components/Account.vue";
 // import QrCode from "./components/qrCode.vue";
@@ -30,10 +29,8 @@ import Account from "./components/Account.vue";
 
 const { VITE_APP_NAME } = import.meta.env;
 
-const { currentPage } = useState({
-  currentPage: (state) => state.user.currentPage,
-});
 </script>
+
 <style lang="scss" scoped>
 .login {
   height: 100%;

@@ -75,7 +75,7 @@
                 v-if="isOwner"
                 iconName="CircleCloseFilled"
                 class="style-close"
-                :class="{ hidden: userProfile.userID === item.userID }"
+                :class="{ hidden: userStore.userProfile.userID === item.userID }"
                 @click.stop="removeGroupMemberBtn(item)"
               />
               <UserAvatar :url="item.avatar" :nickName="item.nick || item.userID" />
@@ -139,6 +139,7 @@ import emitter from "@/utils/mitt-bus";
 import { Markdown } from "@/utils/markdown/index";
 import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index";
 import { useAppStore } from '@/stores/modules/app';
+import { useUserStore } from "@/stores/modules/user";
 
 const { groupProfile } = defineProps({
   groupProfile: {
@@ -150,15 +151,15 @@ const { groupProfile } = defineProps({
 const notify = ref(false);
 const AddMemberRef = ref();
 
+const userStore = useUserStore();
 const appStore = useAppStore();
 const [drawer, setDrawer] = useBoolean();
 const [loading, setLoading] = useBoolean();
 
-const { commit, dispatch } = useStore();
+const { dispatch } = useStore();
 const { isOwner, toAccount } = useGetters(["isOwner", "toAccount"]);
 
-const { userProfile, currentMemberList, currentConversation } = useState({
-  userProfile: (state) => state.user.userProfile,
+const { currentMemberList, currentConversation } = useState({
   currentMemberList: (state) => state.groupinfo.currentMemberList,
   currentConversation: (state) => state.conversation.currentConversation,
 });

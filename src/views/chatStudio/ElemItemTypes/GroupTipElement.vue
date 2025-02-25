@@ -17,11 +17,13 @@ export default {
   },
   computed: {
     ...mapState({
-      userProfile: (state) => state.user.userProfile,
       memberList: (state) => state.groupinfo.currentMemberList,
     }),
     isSme() {
       return this.userProfile?.userID === this.message.payload.operatorID;
+    },
+    userProfile() {
+      return localStg.get("timProxy")?.userProfile;
     },
   },
   methods: {

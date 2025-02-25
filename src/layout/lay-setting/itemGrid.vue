@@ -75,13 +75,10 @@
 </template>
 
 <script setup>
-import { setTheme } from "@/utils/common";
-import { localStg } from "@/utils/storage";
-import { useState } from "@/utils/hooks/useMapper";
 import { computed, ref } from "vue";
-import { changeLocale } from "@/locales/index";
-import { useStore } from "vuex";
+import { localStg } from "@/utils/storage";
 import { ModelProvider } from "@/ai/constant";
+import { useUserStore } from "@/stores/modules/user";
 import { languages, options, optionsModel } from "./enums";
 
 const { VITE_APP_NAME, DEV: isDev } = import.meta.env;
@@ -95,15 +92,10 @@ const props = defineProps({
   },
 });
 
+const userStore = useUserStore()
 const assistant = ref(localStg.get("model-provider") || ModelProvider.OpenAI);
 
 const emit = defineEmits(["onClose", "onItem"]);
-
-const { commit, dispatch } = useStore();
-const { themeScheme, lang } = useState({
-  themeScheme: (state) => state.user.themeScheme,
-  lang: (state) => state.user.lang,
-});
 
 function onBlur() {
   emit("onItem");
@@ -115,7 +107,7 @@ function log() {
 
 function logout() {
   emit("onClose");
-  dispatch("handleUserLogout");
+  userStore.handleUserLogout()
 }
 
 const onChange = (val) => {
@@ -125,21 +117,19 @@ const onChange = (val) => {
 
 const themecolor = computed({
   get() {
-    return themeScheme.value;
+    return userStore.themeScheme;
   },
   set(val) {
-    commit("setThemeScheme", val);
-    setTheme(val);
+    userStore.setThemeScheme(val);
   },
 });
 
 const language = computed({
   get() {
-    return lang.value;
+    return userStore.lang;
   },
   set(val) {
-    commit("setLang", val);
-    changeLocale(val);
+    userStore.setLang(val);
   },
 });
 </script>

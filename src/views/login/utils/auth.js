@@ -1,5 +1,6 @@
 import { githubAuth, openAuthUrl } from "@/api/node-admin-api/index";
 import store from "@/store";
+import { useUserStore } from "@/stores/modules/user";
 
 const { DEV: isDev } = import.meta.env;
 
@@ -24,6 +25,5 @@ export const authorizedLogin = async (_code = "") => {
   }
   if (!code) return;
   const data = await githubAuth({ code });
-  // { code: 200, msg: "登录成功", result: data }
-  store.dispatch("authorized", data);
+  useUserStore().authorized(data);
 };

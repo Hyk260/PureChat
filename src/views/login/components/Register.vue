@@ -92,9 +92,7 @@ const loading = ref(false);
 const ruleFormRef = ref();
 const { commit } = useStore();
 
-const onBack = () => {
-  commit("setCurrentPage", 0);
-};
+const onBack = () => {};
 const onUpdate = async (formEl) => {
   loading.value = true;
   if (!formEl) return;

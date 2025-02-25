@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia';
 import { ElMessage } from "element-plus";
+import { localStg } from "@/utils/storage";
 import { SetupStoreId } from '../plugins/index';
 
 export const useAppStore = defineStore(SetupStoreId.App, {
   state: () => ({
-    message: null
+    message: null,
+    lang: localStg.get('lang') || "zh-CN", // 默认语言
   }),
   actions: {
     showMessage(options) {
