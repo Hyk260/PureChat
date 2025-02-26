@@ -1,4 +1,5 @@
-import { defineStore } from "pinia";
+import { defineStore, acceptHMRUpdate } from "pinia";
+import { SetupStoreId } from '../plugins/index';
 
 const { docs, homepage, giteeHomepage } = __APP_INFO__.pkg;
 const { DEV: isDev } = import.meta.env;
@@ -69,7 +70,7 @@ const moreList = [
   },
 ];
 
-export const useSidebarStore = defineStore("sidebar", {
+export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
   state: () => ({
     outsideList,
     moreList,
@@ -87,3 +88,7 @@ export const useSidebarStore = defineStore("sidebar", {
     },
   },
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useSidebarStore, import.meta.hot))
+}

@@ -1,23 +1,30 @@
 import { OpenaiConfig } from "@/ai/platforms/openai/config";
 import { OpenAIModelValue } from "@/ai/platforms/openai/modelValue";
+import { OpenAiApi } from "@/ai/platforms/openai/index";
 
 import { GitHubConfig } from "@/ai/platforms/github/config";
 import { GitHubModelValue } from "@/ai/platforms/github/modelValue";
+import { GitHubApi } from "@/ai/platforms/github/index";
 
 import { ZeroOneConfig } from "@/ai/platforms/zeroone/config";
 import { ZeroOneModelValue } from "@/ai/platforms/zeroone/modelValue";
+import { ZeroOneApi } from "@/ai/platforms/zeroone/index";
 
 import { ZhiPuConfig } from "@/ai/platforms/zhipu/config";
 import { ZhiPuModelValue } from "@/ai/platforms/zhipu/modelValue";
+import { ZhiPuApi } from "@/ai/platforms/zhipu/index";
 
 import { QwenConfig } from "@/ai/platforms/qwen/config";
 import { QwenModelValue } from "@/ai/platforms/qwen/modelValue";
+import { QwenApi } from "@/ai/platforms/qwen/index";
 
 import { OllamaConfig } from "@/ai/platforms/ollama/config";
 import { OllamaModelValue } from "@/ai/platforms/ollama/modelValue";
+import { OllamaApi } from "@/ai/platforms/ollama/index";
 
 import { DeepseekConfig } from "@/ai/platforms/deepseek/config";
 import { DeepseekModelValue } from "@/ai/platforms/deepseek/modelValue";
+import { DeepSeekApi } from "@/ai/platforms/deepseek/index";
 
 import { prefixRobotIDs } from "./utils";
 
@@ -113,4 +120,18 @@ export const modelValue = {
   [ModelProvider.Qwen]: QwenModelValue(),
   [ModelProvider.Ollama]: OllamaModelValue(),
   [ModelProvider.DeepSeek]: DeepseekModelValue(),
+};
+
+/**
+ * 模型提供者到API类的映射
+ * @type {Object.<string, typeof OpenAiApi>}
+ */
+export const API_CLASS_MAP = {
+  [ModelProvider.DeepSeek]: DeepSeekApi,
+  [ModelProvider.ZhiPu]: ZhiPuApi,
+  [ModelProvider.ZeroOne]: ZeroOneApi,
+  [ModelProvider.Qwen]: QwenApi,
+  [ModelProvider.Ollama]: OllamaApi,
+  [ModelProvider.GitHub]: GitHubApi,
+  [ModelProvider.OpenAI]: OpenAiApi,
 };

@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { localStg } from "@/utils/storage";
 import { mapState } from "vuex";
 
 export default {
@@ -17,11 +18,13 @@ export default {
   },
   computed: {
     ...mapState({
-      userProfile: (state) => state.user.userProfile,
       memberList: (state) => state.groupinfo.currentMemberList,
     }),
     isSme() {
       return this.userProfile?.userID === this.message.payload.operatorID;
+    },
+    userProfile() {
+      return localStg.get("timProxy")?.userProfile;
     },
   },
   methods: {

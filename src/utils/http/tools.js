@@ -1,4 +1,4 @@
-import store from "@/store";
+import { useUserStore } from "@/stores/modules/user";
 import { useAppStore } from '@/stores/modules/app';
 // 异常拦截处理器
 export const errorHandler = (error) => {
@@ -11,7 +11,7 @@ export const errorHandler = (error) => {
         break;
       case 401:
         errMessage = "未授权,请重新登录!";
-        store.dispatch("handleUserLogout");
+        useUserStore().handleUserLogout()
         break;
       case 404:
         errMessage = "请求错误,未找到该资源";
@@ -38,7 +38,7 @@ export const errorHandler = (error) => {
     errMessage = "无法连接到服务器！";
   }
   window.NProgress?.done?.(); // 关闭加载条
-  store.commit("setLoading", false);
+  useUserStore().setLoading(false);
   useAppStore().showMessage({ message: errMessage, type: "error" });
   return Promise.reject(error);
 };

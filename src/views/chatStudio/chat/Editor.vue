@@ -97,7 +97,6 @@ const [disabled, setDisabled] = useBoolean();
 const { dispatch, commit } = useStore();
 const { isOwner, toAccount, currentType } = useGetters(["isOwner", "toAccount", "currentType"]);
 const {
-  lang,
   currentConversation,
   isChatBoxVisible,
   showCheckbox,
@@ -107,7 +106,6 @@ const {
   fullScreen,
   currentMemberList,
 } = useState({
-  lang: (state) => state.user.lang,
   sessionDraftMap: (state) => state.conversation.sessionDraftMap,
   currentConversation: (state) => state.conversation.currentConversation,
   showCheckbox: (state) => state.conversation.showCheckbox,
@@ -381,9 +379,9 @@ function offEmitter() {
 watch(isChatBoxVisible, () => {
   handleEditorKeyDown(isShowModal.value);
 });
-watch(lang, () => {
-  handleToggleLanguage();
-});
+// watch(lang, () => {
+//   handleToggleLanguage();
+// });
 onActivated(() => {
   handleEditorKeyDown(isShowModal.value);
 });

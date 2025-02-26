@@ -1,26 +1,5 @@
-import { ModelProvider } from "@/ai/constant";
-import { OpenAiApi } from "@/ai/platforms/openai/index";
-import { GitHubApi } from "@/ai/platforms/github/index";
-import { ZeroOneApi } from "@/ai/platforms/zeroone/index";
-import { QwenApi } from "@/ai/platforms/qwen/index";
-import { OllamaApi } from "@/ai/platforms/ollama/index";
-import { ZhiPuApi } from "@/ai/platforms/zhipu/index";
-import { DeepSeekApi } from "@/ai/platforms/deepseek/index";
+import { ModelProvider, API_CLASS_MAP } from "@/ai/constant";
 import { useAccessStore, usePromptStore } from "@/ai/utils";
-
-/**
- * 模型提供者到API类的映射
- * @type {Object.<string, typeof OpenAiApi>}
- */
-const API_CLASS_MAP = {
-  [ModelProvider.DeepSeek]: DeepSeekApi,
-  [ModelProvider.ZhiPu]: ZhiPuApi,
-  [ModelProvider.ZeroOne]: ZeroOneApi,
-  [ModelProvider.Qwen]: QwenApi,
-  [ModelProvider.Ollama]: OllamaApi,
-  [ModelProvider.GitHub]: GitHubApi,
-  [ModelProvider.OpenAI]: OpenAiApi,
-};
 
 /**
  * ClientApi 类用于管理聊天模型提供者及其配置。

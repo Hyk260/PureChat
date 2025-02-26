@@ -17,9 +17,16 @@
 
 <script>
 import emitter from "@/utils/mitt-bus";
-import { createForwardMessage, createMergerMessage, deleteMessage, sendMessage } from "@/api/im-sdk-api/index";
+import {
+  createForwardMessage,
+  createMergerMessage,
+  deleteMessage,
+  sendMessage,
+} from "@/api/im-sdk-api/index";
 import { showConfirmationBox } from "@/utils/message";
 import { mapMutations, mapState } from "vuex";
+import { localStg } from "@/utils/storage";
+import { TIM_PROXY } from "@/constants/index";
 import MagforwardingPopup from "./MagforwardingPopup.vue";
 import ShareModal from "@/views/components/ShareModal/index.vue";
 
@@ -69,12 +76,14 @@ export default {
       isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
       forwardData: (state) => state.conversation.forwardData,
       showCheckbox: (state) => state.conversation.showCheckbox,
-      userProfile: (state) => state.user.userProfile,
       conversationList: (state) => state.conversation.conversationList,
       currentConversation: (state) => state.conversation.currentConversation,
     }),
     disabled() {
       return this.forwardData.size == 0;
+    },
+    userProfile() {
+      return localStg.get(TIM_PROXY)?.userProfile;
     },
   },
   methods: {

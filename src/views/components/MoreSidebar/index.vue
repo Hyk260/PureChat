@@ -102,8 +102,7 @@ import emitter from "@/utils/mitt-bus";
 import { cloneDeep, uniqBy } from "lodash-es";
 import { defineComponent } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
-import { mapState } from "vuex";
-import { mapStores } from "pinia";
+import { mapStores, mapState, mapActions } from "pinia";
 import { useSidebarStore } from "@/stores/modules/sidebar";
 
 export default defineComponent({
@@ -136,13 +135,7 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapStores(useSidebarStore),
-    outsideList() {
-      return this.sidebarStore.outsideList;
-    },
-    moreList() {
-      return this.sidebarStore.moreList;
-    },
+    ...mapState(useSidebarStore, ["outsideList", "moreList"]),
   },
   created() {
     this.init();
@@ -154,6 +147,7 @@ export default defineComponent({
     });
   },
   methods: {
+    ...mapActions(useSidebarStore, ["setOutsideList", "setMoreList"]),
     record() {
       const { leftEdit, rightEdit } = this.fnRepeat();
       this.cache["deepLeft"] = leftEdit;
@@ -174,8 +168,8 @@ export default defineComponent({
     onUpdate() {},
     callback() {
       this.$nextTick(() => {
-        this.sidebarStore.setOutsideList(this.leftEdit);
-        this.sidebarStore.setMoreList(this.rightEdit);
+        this.setOutsideList(this.leftEdit);
+        this.setMoreList(this.rightEdit);
       });
     },
     fnRepeat() {

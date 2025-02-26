@@ -83,6 +83,8 @@ import EmptyMessage from "../components/EmptyMessage.vue";
 import Label from "../components/Label.vue";
 import { chatName, html2Escape, formatContent } from "../utils/utils";
 import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
+import { useUserStore } from "@/stores/modules/user";
+import { localStg } from "@/utils/storage";
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop();
 
@@ -90,12 +92,12 @@ const isRight = ref(true);
 const contextMenuItems = ref([]);
 const contextMenuItemInfo = ref([]);
 
+const userStore = useUserStore();
 const { dispatch, commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
 const {
   activeTab,
   chat,
-  userProfile,
   sessionDraftMap,
   postponeUnread,
   arrowRight,
@@ -103,7 +105,6 @@ const {
 } = useState({
   sessionDraftMap: (state) => state.conversation.sessionDraftMap,
   arrowRight: (state) => state.conversation.arrowRight,
-  userProfile: (state) => state.user.userProfile,
   activeTab: (state) => state.conversation.activeTab,
   filterConversationList: (state) => state.conversation.filterConversationList,
   conversationList: (state) => state.conversation.conversationList,
@@ -140,7 +141,7 @@ const fnClass = (item) => (item?.conversationID === chat.value?.conversationID ?
 const formatNewsMessage = (data) => {
   const { type, lastMessage, unreadCount } = data;
   const { messageForShow: rawTip, fromAccount, isRevoked, nick, type: lastType } = lastMessage;
-  const { userID } = userProfile.value;
+  const { userID } = localStg.get("timProxy")?.userProfile || {};
   const isOther = userID !== fromAccount; // 其他人消息
   const isFound = fromAccount === "@TLS#NOT_FOUND"; // 未知消息
   const isSystem = type === "@TIM#SYSTEM"; //系统消息

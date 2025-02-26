@@ -24,13 +24,13 @@
       :style="{ height: `${size}px`, width: `${size}px` }"
     >
       <el-avatar
-        v-if="userProfile?.avatar"
+        v-if="userStore.userProfile?.avatar"
         :size="size"
-        :src="userProfile?.avatar"
+        :src="userStore.userProfile?.avatar"
         :shape="shape"
       />
       <div v-else :class="['user-avatar', 'default', className, shape]" :style="backgInfo(url)">
-        {{ url ? null : displayInfo(userProfile.nick || userProfile.userID) }}
+        {{ url ? null : displayInfo(userStore.userProfile.nick || userStore.userProfile.userID) }}
       </div>
       <!-- <sup v-if="isdot" class="is-dot"></sup> -->
     </div>
@@ -40,7 +40,7 @@
 <script setup>
 import { getAiAvatarUrl } from "@/ai/utils";
 import { circleUrl, squareUrl, emptyUrl } from "@/views/chatStudio/utils/menu";
-import { useState } from "@/utils/hooks/useMapper";
+import { useUserStore } from "@/stores/modules/user";
 
 defineOptions({
   name: "UserAvatar",
@@ -97,9 +97,7 @@ const shapeObj = {
   square: squareUrl,
 };
 
-const { userProfile } = useState({
-  userProfile: (state) => state.user.userProfile,
-});
+const userStore = useUserStore();
 
 const displayInfo = (info) => {
   if (!info) return "unknown";

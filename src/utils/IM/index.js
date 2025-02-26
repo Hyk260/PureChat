@@ -10,6 +10,7 @@ import { useWindowFocus, useEventListener } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
 import { handleTrayFlashIng, handlesOnShake, handleNotification } from "./utils/app";
+import { useUserStore } from '@/stores/modules/user';
 import {
   fnCheckoutNetState,
   getConversationID,
@@ -115,7 +116,7 @@ export class TIMProxy {
       this.userProfile = data;
       this.userID = chat.getLoginUser();
       this.saveSelfToLocalStorage();
-      store.commit("setCurrentProfile", data);
+      useUserStore().setCurrentProfile(data);
     });
   }
   onUpdateConversationList({ data }) {
@@ -159,7 +160,7 @@ export class TIMProxy {
   onKickOut({ data }) {
     console.log("[chat] onKickOut:", data);
     useAppStore().showMessage({ message: `${kickedOutReason(data.type)}被踢出，请重新登录。`, type: "error" });
-    store.dispatch("handleUserLogout");
+    useUserStore().handleUserLogout()
   }
   onError({ data }) {
     console.log("[chat] onError:", data);
@@ -341,5 +342,5 @@ export class TIMProxy {
 export const timProxy = new TIMProxy();
 
 if (__LOCAL_MODE__) {
-  window.TIMProxy.init();
+  timProxy.init();
 }

@@ -17,8 +17,9 @@
 
 <script>
 import { deleteMessage } from "@/api/im-sdk-api/index";
-import emitter from "@/utils/mitt-bus";
+import { localStg } from "@/utils/storage";
 import { mapGetters, mapState } from "vuex";
+import emitter from "@/utils/mitt-bus";
 
 export default {
   name: "TipsElemItem",
@@ -32,7 +33,6 @@ export default {
     ...mapState({
       currentConversation: (state) => state.conversation.currentConversation,
       currentMessageList: (state) => state.conversation.currentMessageList,
-      userProfile: (state) => state.user.userProfile,
       revokeMsgMap: (state) => state.conversation.revokeMsgMap,
     }),
     ...mapGetters(["isOwner"]),
@@ -43,6 +43,9 @@ export default {
     isReEdit() {
       return this.revokeMsgMap.get(this.message.ID);
     },
+    userProfile() {
+      return localStg.get("timProxy")?.userProfile;
+    },
   },
   methods: {
     async onClose(data = this.message) {
@@ -51,7 +54,7 @@ export default {
         if (code !== 0) return;
         this.$store.commit("deleteMessage", {
           convId: data.conversationID,
-          messageIdArray: [data.ID]
+          messageIdArray: [data.ID],
         });
       } catch (error) {
         console.log(error);
@@ -109,20 +112,20 @@ export default {
   line-height: 16px;
   display: flex;
   align-items: center;
-}
-.withdraw {
-  display: flex;
-  align-items: center;
-  color: var(--color-time-divider);
-  padding: 4px 6px;
-  .close {
-    margin-left: 4px;
+  .withdraw {
+    display: flex;
+    align-items: center;
+    color: var(--color-time-divider);
+    padding: 4px 6px;
+    .close {
+      margin-left: 4px;
+      cursor: pointer;
+    }
+  }
+  .edit {
+    user-select: none;
+    color: #337ecc;
     cursor: pointer;
   }
-}
-.edit {
-  user-select: none;
-  color: #337ecc;
-  cursor: pointer;
 }
 </style>
