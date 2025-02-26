@@ -15,7 +15,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  icon: "resources/icon.png"
+  # icon: "resources/icon.png"
   # 安装包和免安装版
   target:
     - nsis
@@ -24,11 +24,11 @@ nsis:
   # 安装包名称
   artifactName: ${name}-${version}.${ext}
   # 安装图标
-  installerIcon: "resources/icon.png"
+  # installerIcon: "resources/icon.png"
   # 卸载图标
-  uninstallerIcon: "resources/icon.png"
+  # uninstallerIcon: "resources/icon.png"
   # 安装时头部图标
-  installerHeaderIcon: "resources/icon.png"
+  # installerHeaderIcon: "resources/icon.png"
   # true: 一键安装 false: 辅助安装
   oneClick: false
   # false: 可选择为所有人或当前用户安装 true: 为所有人安装

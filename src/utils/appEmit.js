@@ -22,7 +22,7 @@ async function githubLogin(action, params) {
   try {
     const data = await githubAuth({ code: params.code });
     // { code: 200, msg: "登录成功", result: data }
-    store.dispatch("authorized", data);
+    useUserStore().handleSuccessfulAuth(data);
   } catch (error) {
     console.log("githubLogin:", error);
   }
