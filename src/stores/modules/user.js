@@ -1,8 +1,9 @@
+import { nextTick } from "vue";
 import { defineStore } from 'pinia'
+import { useAppStore } from '@/stores/modules/app';
 import { login, logout } from "@/api/node-admin-api/index"
 import { ACCOUNT, TIM_PROXY, USER_MODEL } from "@/constants/index"
 import { localStg } from "@/utils/storage"
-import { verification } from "@/utils/message/index"
 import { initThemeSettings } from "@/theme/settings"
 import { SetupStoreId } from '../plugins/index';
 import { timProxy } from '@/utils/IM/index';
@@ -11,10 +12,11 @@ import { changeLocale } from "@/locales/index";
 import router from "@/router"
 import chat from "@/utils/IM/im-sdk/tim"
 import emitter from "@/utils/mitt-bus"
+import store from '@/store/index';
 
 export const useUserStore = defineStore(SetupStoreId.User, {
   state: () => ({
-    userProfile: localStg.get(TIM_PROXY)?.userProfile || {},
+    userProfile: {},
     lang: localStg.get('lang') || "zh-CN",
     themeScheme: initThemeSettings(),
   }),
@@ -31,54 +33,33 @@ export const useUserStore = defineStore(SetupStoreId.User, {
 
     setThemeScheme(theme) {
       this.themeScheme = theme
-      setTheme(lang)
+      setTheme(theme)
     },
 
     setLoading(val) {
       this.loading = val
     },
 
-    reset() {
-      this.userProfile = {}
-    },
-
-    async authorized(data) {
+    async handleSuccessfulAuth(data) {
+      console.log("授权登录信息 handleSuccessfulAuth", data)
       const { code, msg, result } = data
-      console.log({ code, msg, result }, "授权登录信息")
-      if (code == 200) {
-        timProxy.init() 
-        await this.handleIMLogin({
-          userID: result.username,
-          userSig: result.userSig
-        })
+      if (code === 200) {
+        timProxy.init()
+        await this.handleIMLogin({ userID: result.username, userSig: result.userSig })
         localStg.set(USER_MODEL, result)
-        router.push("/chat")
-        verification(code, msg)
+        data?.keep && localStg.set(ACCOUNT, data)
       } else {
-        verification(code, msg)
+        console.log("授权登录失败")
+        useAppStore().showMessage({ message: msg, type: "error" })
+        this.setLoading(false)
       }
     },
 
     async handleUserLogin(data) {
+      console.log(data, "登录信息")
       this.setLoading(true)
-      const { code, msg, result } = await login(data)
-      console.log({ code, msg, result }, "登录信息")
-      if (code == 200) {
-        timProxy.init()
-        await this.handleIMLogin({
-          userID: result.username,
-          userSig: result.userSig
-        })
-        localStg.set(USER_MODEL, result)
-        data?.keep && localStg.set(ACCOUNT, data)
-        router.push("/chat")
-        verification(code, msg)
-      } else {
-        verification(code, msg)
-        setTimeout(() => {
-          this.setLoading(false)
-        }, 1000)
-      }
+      const result = await login(data)
+      this.handleSuccessfulAuth(result)
     },
 
     async handleUserLogout() {
@@ -91,10 +72,13 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     },
 
     async handleIMLogin(user) {
+      console.log("[chat] im登录", user)
       try {
-        const { code, data } = await chat.login(user)
-        if (code == 0) {
+        const data = await chat.login(user)
+        if (data.code === 0) {
           console.log("[chat] im登录成功 login", data)
+          useAppStore().showMessage({ message: "登录成功" })
+          router.push("/chat")
         } else {
           this.handleUserLogout()
         }
@@ -105,24 +89,28 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     },
 
     async handleIMLogout() {
-      const { code, data } = await chat.logout()
-      if (code == 0) {
+      const data = await chat.logout()
+      if (data.code === 0) {
         console.log("[chat] im退出登录 logout", data)
-        this.reset()
+        this.$reset()
         // 清除消息记录
         // TODO: 需要调用conversation store的clearHistory
+        store.commit("clearHistory")
+      } else {
+        console.log("[chat] im退出登录失败 logout", data)
       }
     },
 
-    async reLoginHandler() {
+    async tryReconnect() {
       if (__LOCAL_MODE__) return
+      await nextTick()
+      if (router.currentRoute.value.name === "login") return
       try {
-        const data = localStg.get(USER_MODEL) || {}
+        const data = localStg.get(USER_MODEL) || null
+        console.log("tryReconnect", data)
         if (data) {
-          const { username: userID, userSig } = data
-          console.log("reLoginHandler", { userID, userSig })
           timProxy.init()
-          await this.handleIMLogin({ userID, userSig })
+          await this.handleIMLogin({ userID: data.username, userSig: data.userSig })
         } else {
           this.handleUserLogout()
         }

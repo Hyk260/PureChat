@@ -6,24 +6,19 @@
 </template>
 
 <script setup>
-import { setTheme } from "@/utils/common";
-import { useStore } from "vuex";
-import { useState } from "@/utils/hooks/useMapper";
-import { usePreferredColorScheme } from "@vueuse/core";
 import { computed } from "vue";
+import { useUserStore } from "@/stores/modules/user";
+import { usePreferredColorScheme } from "@vueuse/core";
 
+const userStore = useUserStore()
 const osTheme = usePreferredColorScheme();
-const { commit } = useStore();
-const { themeScheme } = useState({
-  themeScheme: (state) => state.user.themeScheme,
-});
 
 /** Dark mode */
 const darkMode = computed(() => {
-  if (themeScheme.value === "auto") {
+  if (userStore.themeScheme === "auto") {
     return osTheme.value === "dark";
   }
-  return themeScheme.value === "dark";
+  return userStore.themeScheme === "dark";
 });
 
 const themecolor = computed({
@@ -31,8 +26,7 @@ const themecolor = computed({
     return darkMode.value;
   },
   set(val) {
-    commit("setThemeScheme", val ? "dark" : "light")
-    setTheme(val ? "dark" : "light");
+    userStore.setThemeScheme(val ? "dark" : "light");
   },
 });
 </script>

@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { localStg } from "@/utils/storage";
 import { mapState } from "vuex";
 
 export default {

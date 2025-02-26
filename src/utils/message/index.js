@@ -1,46 +1,5 @@
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessageBox } from "element-plus";
 import { $t } from "@/locales/index";
-
-// 成功
-export const successMessage = (message) => {
-  return ElMessage({
-    showClose: true,
-    message,
-    type: "success",
-  });
-};
-
-// 警告
-export const warnMessage = (message) => {
-  return ElMessage({
-    showClose: true,
-    message,
-    type: "warning",
-  });
-};
-
-// 失败
-export const errorMessage = (message) => {
-  return ElMessage({
-    showClose: true,
-    message,
-    type: "error",
-  });
-};
-
-export const verification = (code, msg) => {
-  switch (code) {
-    case 200:
-      successMessage(msg);
-      break;
-    case 401:
-      warnMessage(msg);
-      break;
-    case 400:
-      warnMessage(msg);
-      break;
-  }
-};
 
 /**
  * 弹出确认框

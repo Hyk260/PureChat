@@ -25,5 +25,5 @@ export const authorizedLogin = async (_code = "") => {
   }
   if (!code) return;
   const data = await githubAuth({ code });
-  useUserStore().authorized(data);
+  useUserStore().handleSuccessfulAuth(data);
 };
