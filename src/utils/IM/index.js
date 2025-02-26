@@ -58,6 +58,7 @@ export class TIMProxy {
   }
   // 初始化
   init() {
+    console.log("[chat] TIMProxy init");
     if (this.once) return;
     this.once = true;
     this.initListener(); // 监听SDK
@@ -72,9 +73,10 @@ export class TIMProxy {
       if (!conver) return;
       store.dispatch("hasReadMessage", { convId: conver?.conversationID, message: conver });
     });
-    console.log("[chat] TIMProxy init");
   }
   initListener() {
+    if (__LOCAL_MODE__) chat.create()
+    // console.log("[chat] initListener", chat.create());
     // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
     chat.on("sdkStateReady", this.onReadyStateUpdate, this);
     // 收到 SDK 进入 not ready 状态通知，此时 SDK 无法正常工作
@@ -332,7 +334,3 @@ export class TIMProxy {
 }
 
 export const timProxy = new TIMProxy();
-
-if (__LOCAL_MODE__) {
-  timProxy.init();
-}

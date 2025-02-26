@@ -102,9 +102,12 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     },
 
     async tryReconnect() {
-      if (__LOCAL_MODE__) return
-      await nextTick()
+      if (__LOCAL_MODE__) {
+        timProxy.init()
+        return
+      }
       if (router.currentRoute.value.name === "login") return
+      await nextTick()
       try {
         const data = localStg.get(USER_MODEL) || null
         console.log("tryReconnect", data)
