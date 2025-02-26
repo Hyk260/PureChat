@@ -3,16 +3,16 @@ import GroupModule from "@tencentcloud/chat/modules/group-module.js";
 import SignalingModule from "@tencentcloud/chat/modules/signaling-module.js";
 import TIMUploadPlugin from "tim-upload-plugin";
 
-import LocalChat from "@/utils/IM/chat/local";
+import { localChat } from "@/utils/IM/chat/local";
 
 // 聊天实例
 let chat = {};
 
 // 初始化聊天实例
-function initChat() {
+export function initChat() {
   // 本地模式
   if (__LOCAL_MODE__) {
-    chat = LocalChat.create({});
+    chat = localChat.create({});
   } else {
     // 动态导入腾讯云IM SDK相关模块
     // const [

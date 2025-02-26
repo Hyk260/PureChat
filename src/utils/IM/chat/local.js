@@ -229,6 +229,4 @@ export class LocalChat {
   }
 }
 
-const localChat = new LocalChat();
-
-export default localChat;
+export const localChat = new LocalChat();
