@@ -1,6 +1,9 @@
 import { OpenAiApi } from "@/ai/platforms/openai/index";
 import { useAccessStore } from "@/ai/utils";
 
+export * from "./config";
+export * from "./modelValue";
+
 export const ChatGLMPath = {
   ChatPath: "chat/completions",
 };

@@ -1,6 +1,9 @@
 import { OpenAiApi } from "@/ai/platforms/openai/index";
 import { useAccessStore } from "@/ai/utils";
 
+export * from "./config";
+export * from "./modelValue";
+
 export const ZeroOnePath = {
   ChatPath: "v1/chat/completions",
 };

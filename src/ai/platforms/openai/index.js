@@ -13,6 +13,9 @@ import { handleStreamingChat } from '@/ai/utils';
 import { transformData } from "@/utils/chat/index";
 import { useRobotStore } from "@/stores/modules/robot";
 
+export * from "./config";
+export * from "./modelValue";
+
 export const OpenaiPath = {
   ChatPath: "v1/chat/completions", // chatgpt 聊天接口
   UsagePath: "v1/dashboard/billing/usage", // 用量查询，数据单位为 token
@@ -105,11 +108,11 @@ export class OpenAiApi {
       top_p: modelConfig.top_p, // 核采样
       // tools: [] // 工具
     };
-    // const tools = this.getPluginTools();
-    // if (tools.at(0)) {
-    //   payload.tools = tools;
-    //   payload.stream = false;
-    // }
+    const tools = this.getPluginTools();
+    if (tools.at(0)) {
+      payload.tools = tools;
+      payload.stream = false;
+    }
     return payload
   }
   // 生成聊天消息

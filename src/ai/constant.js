@@ -1,31 +1,10 @@
-import { OpenaiConfig } from "@/ai/platforms/openai/config";
-import { OpenAIModelValue } from "@/ai/platforms/openai/modelValue";
-import { OpenAiApi } from "@/ai/platforms/openai/index";
-
-import { GitHubConfig } from "@/ai/platforms/github/config";
-import { GitHubModelValue } from "@/ai/platforms/github/modelValue";
-import { GitHubApi } from "@/ai/platforms/github/index";
-
-import { ZeroOneConfig } from "@/ai/platforms/zeroone/config";
-import { ZeroOneModelValue } from "@/ai/platforms/zeroone/modelValue";
-import { ZeroOneApi } from "@/ai/platforms/zeroone/index";
-
-import { ZhiPuConfig } from "@/ai/platforms/zhipu/config";
-import { ZhiPuModelValue } from "@/ai/platforms/zhipu/modelValue";
-import { ZhiPuApi } from "@/ai/platforms/zhipu/index";
-
-import { QwenConfig } from "@/ai/platforms/qwen/config";
-import { QwenModelValue } from "@/ai/platforms/qwen/modelValue";
-import { QwenApi } from "@/ai/platforms/qwen/index";
-
-import { OllamaConfig } from "@/ai/platforms/ollama/config";
-import { OllamaModelValue } from "@/ai/platforms/ollama/modelValue";
-import { OllamaApi } from "@/ai/platforms/ollama/index";
-
-import { DeepseekConfig } from "@/ai/platforms/deepseek/config";
-import { DeepseekModelValue } from "@/ai/platforms/deepseek/modelValue";
-import { DeepSeekApi } from "@/ai/platforms/deepseek/index";
-
+import { OpenAiApi, OpenAIModelValue, OpenaiConfig } from "@/ai/platforms/openai/index";
+import { GitHubApi, GitHubModelValue, GitHubConfig } from "@/ai/platforms/github/index";
+import { ZeroOneApi, ZeroOneModelValue, ZeroOneConfig } from "@/ai/platforms/zeroone/index";
+import { ZhiPuApi, ZhiPuModelValue, ZhiPuConfig } from "@/ai/platforms/zhipu/index";
+import { QwenApi, QwenModelValue, QwenConfig } from "@/ai/platforms/qwen/index";
+import { OllamaApi, OllamaModelValue, OllamaConfig } from "@/ai/platforms/ollama/index";
+import { DeepSeekApi, DeepseekModelValue, DeepseekConfig } from "@/ai/platforms/deepseek/index";
 import { prefixRobotIDs } from "./utils";
 
 export const {
@@ -42,12 +21,6 @@ export const {
 export const ROLES = ["system", "user", "assistant"];
 
 export const ROBOT_COLLECT = [VITE_OPENAI_ID, VITE_ZHIPU_ID, VITE_ZEROONE_ID, VITE_OLLAMA_ID, VITE_DEEPSEEK_ID, VITE_GITHUB_ID];
-
-// if (isDev) {
-//   ROBOT_COLLECT.push(VITE_DEEPSEEK_ID);
-//   ROBOT_COLLECT.push(VITE_GITHUB_ID);
-//   // ROBOT_COLLECT.push(VITE_QWEN_ID);
-// }
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
 

@@ -34,7 +34,7 @@ import { localStg } from "@/utils/storage";
 import { options } from './utils.js';
 
 const cur = ref("");
-const agent = ref("");
+const agent = ref([]);
 const tabsKey = ref(options[0].value);
 const market = ref(null);
 
