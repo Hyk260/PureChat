@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, nextTick } from "vue";
+import { computed, onMounted } from "vue";
 import { ElConfigProvider } from "element-plus";
 import { elementPlusLocales } from "@/locales/element-plus";
 import { initThemeSettings } from "@/theme/settings";

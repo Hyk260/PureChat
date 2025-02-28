@@ -3,11 +3,11 @@ import { ModelProvider, modelValue } from "@/ai/constant";
 import { useAccessStore, prettyObject, getAiAvatarUrl } from "@/ai/utils";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
-import store from "@/store";
-import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { getTime } from "@/utils/common";
 import { getCustomMsgContent } from '@/api/im-sdk-api/custom';
+import store from "@/store";
+import emitter from "@/utils/mitt-bus";
 import webSearchResult from '@/database/tools/web-search-result.json';
 
 const restSendMsg = async (params, message) => {
@@ -31,14 +31,14 @@ const updataMessage = (chat, message = "") => {
   emitter.emit("updataScroll", "robot");
 };
 
-const fnCreateStartMsg = (params) => {
-  const { to, from } = params;
-  const msg = createCustomMessage({ convId: from, customType: "loading" });
-  msg.conversationID = `C2C${to}`;
-  msg.avatar = getAiAvatarUrl(to);
+const createStartMsg = (params) => {
+  const { to: from, from: to } = params;
+  const msg = createCustomMessage({ convId: to, customType: "loading" });
+  msg.conversationID = `C2C${from}`;
+  msg.avatar = getAiAvatarUrl(from);
   msg.flow = "in";
-  msg.to = from;
-  msg.from = to;
+  msg.to = to;
+  msg.from = from;
   msg.nick = "";
   msg.status = "success";
   updataMessage(msg);
@@ -46,8 +46,8 @@ const fnCreateStartMsg = (params) => {
   return msg;
 };
 
-const fnCreateAlertMsg = (startmsg, provider) => {
-  const _data = cloneDeep(startmsg);
+const createAlertMsg = (startMsg, provider) => {
+  const _data = cloneDeep(startMsg);
   _data.clientTime = getTime();
   _data.type = "TIMCustomElem";
   _data.payload = getCustomMsgContent({ data: { provider }, type: "warning" })
@@ -79,8 +79,8 @@ async function searchGoogle(query) {
   }
 }
 
-const fnCreateToolCallsMsg = (startmsg, message) => {
-  const _data = cloneDeep(startmsg);
+const createToolCallsMsg = (startMsg, message) => {
+  const _data = cloneDeep(startMsg);
   _data.clientTime = getTime();
   _data.type = "TIMCustomElem";
 
@@ -102,7 +102,7 @@ function beforeSend(api, msg) {
     return false;
   } else {
     setTimeout(() => {
-      fnCreateAlertMsg(msg, api.llm.provider)
+      createAlertMsg(msg, api.llm.provider)
     }, 500);
     return true;
   }
@@ -110,7 +110,7 @@ function beforeSend(api, msg) {
 
 export const chatService = async ({ messages, chat, provider }) => {
   const api = new ClientApi(provider);
-  const startMsg = fnCreateStartMsg(chat);
+  const startMsg = createStartMsg(chat);
 
   if (beforeSend(api, startMsg)) return;
 
@@ -144,7 +144,7 @@ const handleFinish = (startMsg, chat) => async (message) => {
 
 const handleToolMessage = (startMsg) => (message) => {
   console.log("[chat] onToolMessage:", message);
-  fnCreateToolCallsMsg(startMsg, message);
+  createToolCallsMsg(startMsg, message);
 };
 
 const handleError = (startMsg, chat) => async (error) => {

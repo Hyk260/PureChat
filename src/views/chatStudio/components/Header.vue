@@ -46,14 +46,14 @@ import { watch } from "vue";
 import { isRobot } from "@/utils/chat/index";
 import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
-import emitter from "@/utils/mitt-bus";
-import Label from "@/views/chatStudio/components/Label.vue";
 import { cloneDeep } from "lodash-es";
 import { modelValue, StoreKey } from "@/ai/constant";
 import { useStore } from "vuex";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { useRobotStore } from "@/stores/modules/robot";
+import Label from "@/views/chatStudio/components/Label.vue";
+import emitter from "@/utils/mitt-bus";
 
 const [isBotToolsFlag, setBotToolsFlag] = useBoolean();
 const { commit } = useStore();
@@ -143,7 +143,7 @@ emitter.on("updataBotToolsFlag", (val) => {
     }
     .single,
     .group {
-      max-width: 400px;
+      max-width: 500px;
       display: flex;
       align-items: center;
       @include text-ellipsis();
