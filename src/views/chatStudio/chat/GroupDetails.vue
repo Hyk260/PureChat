@@ -25,7 +25,7 @@
               {{ groupProfile.name }}
             </span>
             <FontIcon
-              v-if="isOwner"
+              v-if="groupStore.isOwner"
               class="style-editPen icon-hover"
               iconName="EditPen"
               @click="openNamePopup"
@@ -42,7 +42,7 @@
         <div class="pb-10">
           <span>{{ $t("group.GroupNotice") }}</span>
           <FontIcon
-            v-if="isOwner"
+            v-if="groupStore.isOwner"
             class="style-editPen icon-hover"
             iconName="EditPen"
             @click="openNoticePopup"
@@ -58,7 +58,7 @@
         <div class="group-member-title">
           <span> 群成员 </span>
           <span class="total">
-            <span>{{ currentMemberList.length }}人 </span>
+            <span>{{ groupStore.currentMemberList.length }}人 </span>
             <!-- <span><a @click="openDetails">查看</a></span> -->
           </span>
         </div>
@@ -67,12 +67,12 @@
             <span class="iconify-icon gala-add margin" @click="groupMemberAdd"></span>
             <div
               class="avatar margin"
-              v-for="item in currentMemberList"
+              v-for="item in groupStore.currentMemberList"
               :key="item.userID"
               @click="navigate(item)"
             >
               <FontIcon
-                v-if="isOwner"
+                v-if="groupStore.isOwner"
                 iconName="CircleCloseFilled"
                 class="style-close"
                 :class="{ hidden: userStore.userProfile.userID === item.userID }"
@@ -107,7 +107,7 @@
       <el-divider />
       <!-- 解散 退出 转让 -->
       <div class="group-operator flex-c" v-if="!isFullStaffGroup(currentConversation)">
-        <el-button v-if="isOwner" type="danger" @click="handleDismissGroup"> 解散群组 </el-button>
+        <el-button v-if="groupStore.isOwner" type="danger" @click="handleDismissGroup"> 解散群组 </el-button>
         <el-button v-else type="danger" @click="handleQuitGroup"> 退出群组 </el-button>
         <!-- <div class="w-12"></div> -->
         <!-- <el-button type="primary" plain v-if="isOwner" @click="handleTransferGroup">
@@ -138,8 +138,9 @@ import AddMemberPopup from "../components/AddMemberPopup.vue";
 import emitter from "@/utils/mitt-bus";
 import { Markdown } from "@/utils/markdown/index";
 import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index";
-import { useAppStore } from '@/stores/modules/app';
+import { useAppStore } from "@/stores/modules/app";
 import { useUserStore } from "@/stores/modules/user";
+import { useGroupStore } from "@/stores/modules/group";
 
 const { groupProfile } = defineProps({
   groupProfile: {
@@ -151,16 +152,16 @@ const { groupProfile } = defineProps({
 const notify = ref(false);
 const AddMemberRef = ref();
 
+const groupStore = useGroupStore();
 const userStore = useUserStore();
 const appStore = useAppStore();
 const [drawer, setDrawer] = useBoolean();
 const [loading, setLoading] = useBoolean();
 
 const { dispatch } = useStore();
-const { isOwner, toAccount } = useGetters(["isOwner", "toAccount"]);
+const { toAccount } = useGetters(["toAccount"]);
 
-const { currentMemberList, currentConversation } = useState({
-  currentMemberList: (state) => state.groupinfo.currentMemberList,
+const { currentConversation } = useState({
   currentConversation: (state) => state.conversation.currentConversation,
 });
 
@@ -227,7 +228,7 @@ const navigate = (item) => {
   setTimeout(() => {
     const dom = document.getElementById(`message_C2C${item.userID}`);
     dom?.scrollIntoView({ behavior: "smooth", block: "center" });
-  },200);
+  }, 200);
 };
 
 const removeGroupMemberBtn = async (item) => {
@@ -262,8 +263,8 @@ const addGroupMemberBtn = async (value) => {
 
 const updataGroup = () => {
   setTimeout(() => {
-    dispatch("getGroupMemberList");
-  }, 250);
+    groupStore.handleGroupMemberList({ groupID: groupProfile.groupID });
+  }, 200);
 };
 // 修改群资料
 const modifyGroupInfo = async (value, modify) => {
@@ -281,7 +282,7 @@ const handleDismissGroup = async () => {
   const result = await showConfirmationBox(data);
   if (result === "cancel") return;
   const { conversationID: convId } = currentConversation.value;
-  dispatch("dismissGroup", { convId, groupId: toAccount.value });
+  groupStore.handleDismissGroup({ convId, groupId: toAccount.value });
   setDrawer(false);
 };
 
@@ -296,7 +297,7 @@ const handleQuitGroup = async () => {
   const result = await showConfirmationBox(data);
   if (result === "cancel") return;
   const { conversationID: convId } = currentConversation.value;
-  dispatch("handleQuitGroup", { convId, groupId: toAccount.value });
+  groupStore.handleQuitGroup({ convId, groupId: toAccount.value });
   setDrawer(false);
 };
 

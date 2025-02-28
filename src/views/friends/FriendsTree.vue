@@ -19,19 +19,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, reactive, toRefs, computed, watch, nextTick } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { getUserProfile } from "@/api/im-sdk-api/index";
 import { ROBOT_COLLECT } from "@/ai/constant";
-import { useStore } from "vuex";
-import { useState } from "@/utils/hooks/useMapper";
+import { useGroupStore } from '@/stores/modules/group';
 import CardGrid from "./CardGrid.vue";
 import emitter from "@/utils/mitt-bus";
 
-const { dispatch } = useStore();
-
-const { groupList } = useState({
-  groupList: (state) => state.groupinfo.groupList,
-});
+const groupStore = useGroupStore()
 
 const robotList = ref([]);
 const friendList = ref([]);
@@ -78,6 +73,14 @@ const transformUserData = (data) => {
   }));
 };
 
+const transformGroupData = (data = groupStore.groupList) => {
+  return data.map((item) => ({
+    ...item,
+    label: item.nick,
+    type: "GROUP",
+  }));
+};
+
 const getRobotList = async () => {
   const { code, data } = await getUserProfile(ROBOT_COLLECT);
   robotList.value = data;
@@ -85,16 +88,12 @@ const getRobotList = async () => {
 };
 
 const getFriendList = async () => {
-  if (__LOCAL_MODE__) return
+  if (__LOCAL_MODE__) return;
   const list = ["huangyk", "admin", "linjx", "jinwx", "zhangal"];
   const { code, data } = await getUserProfile(list);
   friendList.value = data;
   treeData.value[1].children = transformUserData(data);
-  treeData.value[2].children = groupList.value.map((item) => ({
-    ...item,
-    label: item.nick,
-    type: "GROUP",
-  }));
+  treeData.value[2].children = transformGroupData();
 };
 
 const setupEventListeners = () => {
@@ -108,7 +107,7 @@ const cleanupEventListeners = () => {
 };
 
 onMounted(() => {
-  dispatch("getGroupList");
+  groupStore.handleGroupList()
   getRobotList();
   getFriendList();
   setupEventListeners();

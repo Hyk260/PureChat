@@ -6,7 +6,6 @@
 import { h } from "vue";
 import { html2Escape } from "../utils/utils";
 import linkifyUrls from "@/utils/linkifyUrls";
-import { useState } from "@/utils/hooks/useMapper";
 
 const { atUserList } = defineProps({
   text: {
@@ -19,16 +18,6 @@ const { atUserList } = defineProps({
   },
 });
 
-const { currentMemberList } = useState({
-  currentMemberList: (state) => state.groupinfo.currentMemberList,
-});
-
-function filterMember() {
-  return currentMemberList.value.filter((item) => {
-    return atUserList.includes(item.userID);
-  });
-}
-
 function AnalysisUrl(props) {
   const { text } = props;
   const escapedUrl = html2Escape(text);
@@ -36,7 +25,6 @@ function AnalysisUrl(props) {
   return h("span", {
     innerHTML: linkStr,
     onClick: () => {
-      // console.log("atUserList:", filterMember());
       console.log("onClick");
     },
   });

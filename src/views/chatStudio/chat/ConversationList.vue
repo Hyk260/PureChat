@@ -85,6 +85,7 @@ import { chatName, html2Escape, formatContent } from "../utils/utils";
 import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
 import { useUserStore } from "@/stores/modules/user";
 import { localStg } from "@/utils/storage";
+import { useGroupStore } from "@/stores/modules/group";
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop();
 
@@ -92,25 +93,20 @@ const isRight = ref(true);
 const contextMenuItems = ref([]);
 const contextMenuItemInfo = ref([]);
 
+const groupStore = useGroupStore();
 const userStore = useUserStore();
 const { dispatch, commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
-const {
-  activeTab,
-  chat,
-  sessionDraftMap,
-  postponeUnread,
-  arrowRight,
-  filterConversationList,
-} = useState({
-  sessionDraftMap: (state) => state.conversation.sessionDraftMap,
-  arrowRight: (state) => state.conversation.arrowRight,
-  activeTab: (state) => state.conversation.activeTab,
-  filterConversationList: (state) => state.conversation.filterConversationList,
-  conversationList: (state) => state.conversation.conversationList,
-  chat: (state) => state.conversation.currentConversation,
-  postponeUnread: (state) => state.conversation.postponeUnread,
-});
+const { activeTab, chat, sessionDraftMap, postponeUnread, arrowRight, filterConversationList } =
+  useState({
+    sessionDraftMap: (state) => state.conversation.sessionDraftMap,
+    arrowRight: (state) => state.conversation.arrowRight,
+    activeTab: (state) => state.conversation.activeTab,
+    filterConversationList: (state) => state.conversation.filterConversationList,
+    conversationList: (state) => state.conversation.conversationList,
+    chat: (state) => state.conversation.currentConversation,
+    postponeUnread: (state) => state.conversation.postponeUnread,
+  });
 
 const searchForData = computed(() => {
   if (filterConversationList.value.length && activeTab.value === "whole") {
@@ -245,14 +241,13 @@ const handleConvListClick = (data) => {
   commit("setForwardData", { type: "clear", payload: null });
   // 切换会话
   commit("updateSelectedConversation", data);
-  // 群详情信息
-  dispatch("getGroupProfile", data);
   // 获取会话列表 read
   dispatch("updateMessageList", data);
-  // 群成员列表
   if (data?.type === "GROUP") {
-    const { groupID } = data.groupProfile;
-    dispatch("getGroupMemberList", { groupID });
+    // 群详情信息
+    groupStore.handleGroupProfile(data);
+    // 群成员列表
+    groupStore.handleGroupMemberList({ groupID: data.groupProfile.groupID });
   }
   emitter.emit("handleInsertDraft", data);
   emitter.emit("updataScroll");

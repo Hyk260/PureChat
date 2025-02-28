@@ -122,9 +122,9 @@ import {
   onUnmounted,
   onUpdated,
   ref,
-  useTemplateRef,
   watch,
 } from "vue";
+import { useGroupStore } from '@/stores/modules/group';
 import { useAppStore } from '@/stores/modules/app';
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
@@ -142,8 +142,8 @@ import { deleteMessage, getMessageList, revokeMsg, translateText } from "@/api/i
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { download, isRobot } from "@/utils/chat/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
-import emitter from "@/utils/mitt-bus";
-import MyPopover from "@/views/components/MyPopover/index.vue";
+import { getAiAvatarUrl } from "@/ai/utils";
+import { getTime } from "@/utils/common";
 import { debounce } from "lodash-es";
 import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
@@ -153,9 +153,9 @@ import NameComponent from "../components/NameComponent.vue";
 import TimeDivider from "../components/TimeDivider.vue";
 import Stateful from "../components/Stateful.vue";
 import MenuList from "../components/MenuList.vue";
-import { getAiAvatarUrl } from "@/ai/utils";
+import emitter from "@/utils/mitt-bus";
+import MyPopover from "@/views/components/MyPopover/index.vue";
 import MessageEditingBox from "../components/MessageEditingBox.vue";
-import { getTime } from "@/utils/common";
 
 const isConfirm = ref(true);
 const timeout = ref(false);
@@ -164,9 +164,9 @@ const contextMenuItems = ref([]);
 const menuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
+const groupStore = useGroupStore();
 const { dispatch, commit } = useStore();
-const { isOwner, toAccount, isGroupChat, currentType } = useGetters([
-  "isOwner",
+const { toAccount, isGroupChat, currentType } = useGetters([
   "toAccount",
   "isGroupChat",
   "currentType",
@@ -415,7 +415,7 @@ const handleContextMenuEvent = (event, item) => {
     contextMenuItems.value = menuOptionsList.filter((t) => t.id !== "revoke");
   }
   // 群主 & 群聊 & 不限制2分钟撤回时间
-  if (isOwner.value && currentType.value === "GROUP") {
+  if (groupStore.isOwner && currentType.value === "GROUP") {
     contextMenuItems.value = menuOptionsList;
   }
   // 合并消息

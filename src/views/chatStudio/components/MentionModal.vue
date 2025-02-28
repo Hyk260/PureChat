@@ -27,13 +27,14 @@
 </template>
 
 <script>
-import emitter from "@/utils/mitt-bus";
+import { mapState } from "pinia";
 import { onClickOutside, useEventListener } from "@vueuse/core";
 import { cloneDeep } from "lodash-es";
-import { mapState } from "vuex";
 import { prioritizeRBTUserID } from "@/utils/chat/index";
 import { insertMention } from "./../utils/utils";
 import { localStg } from "@/utils/storage";
+import { useGroupStore } from "@/stores/modules/group";
+import emitter from "@/utils/mitt-bus";
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__";
 
@@ -57,10 +58,7 @@ export default {
     },
   },
   computed: {
-    ...mapState({
-      isShowModal: (state) => state.conversation.isShowModal,
-      currentMemberList: (state) => state.groupinfo.currentMemberList,
-    }),
+    ...mapState(useGroupStore, ["currentMemberList"]),
     searchedList() {
       // 群成员小于2人，不显示@列表
       if (this.currentMemberList.length <= 1) return [];

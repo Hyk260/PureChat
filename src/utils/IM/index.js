@@ -10,6 +10,7 @@ import { useWindowFocus, useEventListener } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
 import { useUserStore } from '@/stores/modules/user';
+import { useGroupStore } from '@/stores/modules/group';
 import {
   fnCheckoutNetState,
   getConversationID,
@@ -254,7 +255,7 @@ export class TIMProxy {
     });
     // 更新当前会话的群成员列表
     if (groupTips.length) {
-      store.dispatch("getGroupMemberList");
+      useGroupStore().handleGroupMemberList({ groupID: convId });
     }
   }
   /**

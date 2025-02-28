@@ -25,6 +25,7 @@ import { showConfirmationBox } from "@/utils/message";
 import { Search } from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 import { debounce, isEmpty } from "lodash-es";
+import { useGroupStore } from "@/stores/modules/group";
 import emitter from "@/utils/mitt-bus";
 
 defineOptions({
@@ -34,14 +35,15 @@ defineOptions({
 const isLocalMode = __LOCAL_MODE__;
 const input = ref("");
 const filterData = ref([]);
-const { dispatch, commit } = useStore();
+const groupStore = useGroupStore();
+const { commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
 
 const createGroup = async () => {
   const data = { message: "创建群聊" };
   const result = await showConfirmationBox(data, "prompt");
   if (result === "cancel") return;
-  dispatch("handleCreateGroup", { groupName: result.value, positioning: true });
+  groupStore.handleCreateGroup({ groupName: result.value, positioning: true });
 };
 
 const opendialog = () => {

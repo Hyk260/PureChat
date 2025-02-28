@@ -11,7 +11,7 @@ import {
 import { sortMembersByRole, findGroupChat } from "@/utils/chat/index";
 import { SetupStoreId } from '../plugins/index';
 
-export const useGroupInfoStore = defineStore(SetupStoreId.GroupInfo, {
+export const useGroupStore = defineStore(SetupStoreId.Group, {
   state: () => ({
     groupList: [], // 群组列表
     groupProfile: {}, // 群聊数据
@@ -30,7 +30,7 @@ export const useGroupInfoStore = defineStore(SetupStoreId.GroupInfo, {
       this.groupProfile = payload;
     },
     // 获取群成员列表
-    async getGroupMemberList(payload) {
+    async handleGroupMemberList(payload) {
       const { isSort = true, groupID = "" } = payload || {};
       const groupId = groupID // || this.toAccount;
 
@@ -47,7 +47,7 @@ export const useGroupInfoStore = defineStore(SetupStoreId.GroupInfo, {
       }
     },
     // 获取群列表数据
-    async getGroupList() {
+    async handleGroupList() {
       const { code, groupList } = await getGroupList();
       if (code !== 0) return;
       this.groupList = groupList;
@@ -70,7 +70,7 @@ export const useGroupInfoStore = defineStore(SetupStoreId.GroupInfo, {
       }
     },
     // 解散群组
-    async dismissGroup(payload) {
+    async handleDismissGroup(payload) {
       const { groupId, convId } = payload;
       const { code, groupID } = await dismissGroup(groupId);
       console.log("解散群组 dismissGroup:", code, groupID);
@@ -81,7 +81,7 @@ export const useGroupInfoStore = defineStore(SetupStoreId.GroupInfo, {
       store.dispatch("deleteSession", { convId });
     },
     // 获取群详细资料
-    async getGroupProfile(payload) {
+    async handleGroupProfile(payload) {
       const { type } = payload;
       if (type !== "GROUP") return;
       const { groupID } = payload.groupProfile;

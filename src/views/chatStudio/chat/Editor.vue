@@ -25,7 +25,7 @@
       ref="mentionRef"
       v-if="isShowModal"
       :pinyinSearch="true"
-      :isOwner="isOwner"
+      :isOwner="groupStore.isOwner"
       :editor="editorRef"
     />
     <div class="send-button">
@@ -69,6 +69,7 @@ import "../utils/custom-menu";
 import { localStg } from "@/utils/storage";
 import { useBoolean } from "@/utils/hooks/index";
 import { useAppStore } from '@/stores/modules/app';
+import { useGroupStore } from '@/stores/modules/group';
 import {
   convertEmoji,
   customAlert,
@@ -91,11 +92,12 @@ const mode = "simple"; // 'default' 或 'simple'
 const mentionRef = ref();
 
 const appStore = useAppStore();
+const groupStore = useGroupStore();
 const [loading, setLoading] = useBoolean();
 const [disabled, setDisabled] = useBoolean();
 
 const { dispatch, commit } = useStore();
-const { isOwner, toAccount, currentType } = useGetters(["isOwner", "toAccount", "currentType"]);
+const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
 const {
   currentConversation,
   isChatBoxVisible,
