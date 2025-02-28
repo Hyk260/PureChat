@@ -15,9 +15,6 @@ export default {
     currentMemberList: [], // 当前群组成员列表
   },
   getters: {
-    hasGroupList(state) {
-      return state.groupList.length > 0;
-    },
     // 群主
     isOwner(state) {
       if (!state.groupProfile) return "";
@@ -34,6 +31,7 @@ export default {
   mutations: {
     // 更新群详情
     setGroupProfile(state, payload) {
+      console.log("setGroupProfile:", payload);
       state.groupProfile = payload;
     },
   },

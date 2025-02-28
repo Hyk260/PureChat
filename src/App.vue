@@ -10,7 +10,7 @@ import { ElConfigProvider } from "element-plus";
 import { elementPlusLocales } from "@/locales/element-plus";
 import { initThemeSettings } from "@/theme/settings";
 import { useUserStore } from "@/stores/modules/user";
-import { useAppStore } from './stores/modules/app';
+import { useAppStore } from '@/stores/modules/app';
 
 defineOptions({ name: "App" });
 

@@ -1,3 +1,4 @@
+import store from '@/store/index';
 import { defineStore } from 'pinia';
 import {
   getGroupList,
@@ -13,23 +14,15 @@ import { SetupStoreId } from '../plugins/index';
 export const useGroupInfoStore = defineStore(SetupStoreId.GroupInfo, {
   state: () => ({
     groupList: [], // 群组列表
-    groupProfile: null, // 群聊数据
+    groupProfile: {}, // 群聊数据
     currentMemberList: [], // 当前群组成员列表
   }),
   getters: {
     hasGroupList: (state) => state.groupList.length > 0,
     // 群主
-    isOwner: (state) => {
-      if (!state.groupProfile) return "";
-      const { role } = state.groupProfile?.selfInfo;
-      return role === "Owner";
-    },
+    isOwner: (state) => state.groupProfile?.selfInfo.role === "Owner",
     // 管理员
-    isAdmin(state) {
-      if (!state.groupProfile) return "";
-      const { role } = state.groupProfile?.selfInfo;
-      return role === "Admin";
-    },
+    isAdmin: (state) => state.groupProfile?.selfInfo.role === "Admin",
   },
   actions: {
     // 更新群详情
@@ -64,8 +57,7 @@ export const useGroupInfoStore = defineStore(SetupStoreId.GroupInfo, {
       const { groupId, convId } = payload;
       const { code } = await quitGroup({ groupId });
       if (code !== 0) return;
-      // TODO: 需要调用conversation store的 deleteSession
-      // dispatch("deleteSession", { convId });
+      store.dispatch("deleteSession", { convId });
     },
     // 创建群聊
     async handleCreateGroup(payload) {
@@ -86,8 +78,7 @@ export const useGroupInfoStore = defineStore(SetupStoreId.GroupInfo, {
         console.error("解散群组 error:", code, groupID);
         return;
       }
-      // TODO: 需要调用conversation store的 deleteSession
-      // dispatch("deleteSession", { convId });
+      store.dispatch("deleteSession", { convId });
     },
     // 获取群详细资料
     async getGroupProfile(payload) {
@@ -96,7 +87,6 @@ export const useGroupInfoStore = defineStore(SetupStoreId.GroupInfo, {
       const { groupID } = payload.groupProfile;
       const { code, data } = await getGroupProfile({ groupID });
       if (code !== 0) return;
-      console.log("getGroupProfile:", data);
       this.setGroupProfile(data);
     },
   },

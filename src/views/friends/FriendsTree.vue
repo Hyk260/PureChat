@@ -22,13 +22,12 @@
 import { ref, onMounted, onUnmounted, reactive, toRefs, computed, watch, nextTick } from "vue";
 import { getUserProfile } from "@/api/im-sdk-api/index";
 import { ROBOT_COLLECT } from "@/ai/constant";
-import CardGrid from "./CardGrid.vue";
 import { useStore } from "vuex";
-import { scrollToMessage } from "@/utils/chat/index";
-import emitter from "@/utils/mitt-bus";
 import { useState } from "@/utils/hooks/useMapper";
+import CardGrid from "./CardGrid.vue";
+import emitter from "@/utils/mitt-bus";
 
-const { commit, dispatch } = useStore();
+const { dispatch } = useStore();
 
 const { groupList } = useState({
   groupList: (state) => state.groupinfo.groupList,
@@ -67,20 +66,8 @@ const treeData = ref(INITIAL_TREE_DATA);
 
 const handleNodeClick = (data) => {
   if (data.children) return;
-
-  const convInfo = {
-    id: data.GroupId || data.groupID || data.userID,
-    type: data.type,
-  };
   emitter.emit("handleActiveTab", "");
   emitter.emit("handleProfile", data);
-  // handleConversation(convInfo);
-};
-
-const handleConversation = ({ id, type }) => {
-  // commit("taggleOueSide", { id: "chat", path: "/chat" });
-  // dispatch("addConversation", { convId: `${type}${id}` });
-  // scrollToMessage(`message_${type}${id}`);
 };
 
 const transformUserData = (data) => {
@@ -102,7 +89,6 @@ const getFriendList = async () => {
   const list = ["huangyk", "admin", "linjx", "jinwx", "zhangal"];
   const { code, data } = await getUserProfile(list);
   friendList.value = data;
-
   treeData.value[1].children = transformUserData(data);
   treeData.value[2].children = groupList.value.map((item) => ({
     ...item,
