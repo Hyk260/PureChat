@@ -1,9 +1,9 @@
+import * as log from 'electron-log';
+import os from 'node:os';
+import path from 'node:path';
 import { mainDir } from '../utils/folder';
 import { isDevelopment } from '../platform';
 
-const log = require("electron-log");
-const os = require("os");
-const path = require("path");
 const rootDir = path.resolve(os.homedir(), "Documents", mainDir);
 
 log.transports.console.level = false; // 禁用控制台输出;

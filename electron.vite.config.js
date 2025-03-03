@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => {
   return {
     main: {
       // plugins: [bytecodePlugin()],
+      // outDir: 'dist_electron/main',
       build: {
         rollupOptions: {
           input: {
@@ -19,7 +20,8 @@ export default defineConfig(({ mode }) => {
       }
     },
     preload: {
-      // plugins: [bytecodePlugin()],
+      // plugins: [bytecodePlugin()],、
+      // outDir: 'dist_electron/preload',
       build: {
         rollupOptions: {
           input: {
@@ -35,13 +37,14 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 8038,
       },
-      build: {
-        rollupOptions: {
-          input: {
-            index: resolve(__dirname, 'index.html')
-          },
-        }
-      }
+      // build: {
+      //   outDir: 'dist_electron/renderer',
+      //   rollupOptions: {
+      //     input: {
+      //       index: resolve(__dirname, 'index.html')
+      //     },
+      //   }
+      // }
     }
   }
 })

@@ -6,7 +6,11 @@ import {
   handleScreenshot,
 } from "../utils/util";
 
-import { checkFileExist, createFolderChild, downloadFolder } from './folder';
+import { 
+  checkFileExist, 
+  createFolderChild, 
+  // downloadFolder
+ } from './folder';
 
 export const ipcEvent = () => {
   // 置顶主窗口
@@ -35,6 +39,6 @@ export const ipcEvent = () => {
   })
 
   ipcMain.on('downloadFolder', (e, data) => {
-    downloadFolder(data)
+    // downloadFolder(data)
   })
 };

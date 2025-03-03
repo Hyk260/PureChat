@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-const request = require("request");
-const progressStream = require("progress-stream");
+// import * as request from 'request';
+import * as progressStream from "progress-stream";
 
 export const folderDir = "File";
 export const mainDir = "Pure Files";
