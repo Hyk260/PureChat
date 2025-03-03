@@ -18,7 +18,7 @@
 <script>
 import { deleteMessage } from "@/api/im-sdk-api/index";
 import { localStg } from "@/utils/storage";
-import { mapGetters, mapState } from "vuex";
+import store from "@/store/index";
 import emitter from "@/utils/mitt-bus";
 
 export default {
@@ -30,12 +30,9 @@ export default {
     },
   },
   computed: {
-    ...mapState({
-      currentConversation: (state) => state.conversation.currentConversation,
-      currentMessageList: (state) => state.conversation.currentMessageList,
-      revokeMsgMap: (state) => state.conversation.revokeMsgMap,
-    }),
-    ...mapGetters(["isOwner"]),
+    revokeMsgMap() {
+      return store.state.conversation.revokeMsgMap;
+    },
     // 消息的流向 in 为收到的消息 | out 为发出的消息
     isMine() {
       return this.message.flow === "out";

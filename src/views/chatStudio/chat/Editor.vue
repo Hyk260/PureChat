@@ -106,7 +106,6 @@ const {
   currentReplyMsg,
   sessionDraftMap,
   fullScreen,
-  currentMemberList,
 } = useState({
   sessionDraftMap: (state) => state.conversation.sessionDraftMap,
   currentConversation: (state) => state.conversation.currentConversation,
@@ -115,7 +114,6 @@ const {
   isShowModal: (state) => state.conversation.isShowModal,
   currentReplyMsg: (state) => state.conversation.currentReplyMsg,
   fullScreen: (state) => state.conversation.fullScreen,
-  currentMemberList: (state) => state.groupinfo.currentMemberList,
 });
 
 const handleEditor = (editor, created = true) => {
@@ -160,7 +158,7 @@ const updateDraft = debounce((data) => {
 
 const handleAt = debounce((editor) => {
   if (currentType.value !== "GROUP") return;
-  const filteredList = currentMemberList.value.filter(
+  const filteredList = groupStore.currentMemberList.filter(
     (item) => item.userID !== localStg.get("timProxy")?.userProfile?.userID
   );
   filterMentionList({
