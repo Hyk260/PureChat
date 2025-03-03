@@ -1,7 +1,7 @@
+import { join } from 'node:path'
 import { app, shell, BrowserWindow } from "electron";
 import { electronRendererUrl } from "../platform";
 import { is } from '../toolkit/utils'
-import { join } from 'path'
 import {
   registerTitleBarListener,
   attachTitleBarToWindow
@@ -30,7 +30,7 @@ export const createWindow = (_options) => {
       sandbox: false
     },
   };
-  // Register title bar IPC listeners
+  // 注册自定义标题组件 IPC 侦听器
   registerTitleBarListener()
   // 创建浏览器窗口
   const win = new BrowserWindow(options);
@@ -66,12 +66,4 @@ export const createWindow = (_options) => {
   })
 
   global.mainWin = win;
-  //  窗口最大化时触发
-  // win.on("maximize", () => {
-  //   win.webContents.send("toggleSize", { type: "maximize", win: "mainWin" });
-  // });
-  // // 当窗口从最大化状态退出时触发
-  // win.on("unmaximize", () => {
-  //   win.webContents.send("toggleSize", { type: "unmaximize", win: "mainWin" });
-  // });
 };

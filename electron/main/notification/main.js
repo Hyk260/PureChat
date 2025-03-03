@@ -173,16 +173,18 @@ class Notification extends TypedEventEmitter {
       }
 
       const { title = this.title, body, icon, extraData } = info;
-      console.log("info", info);
+
       // https://electron.nodejs.cn/docs/latest/api/notification/#new-notificationoptions
       const notifier = new ElectronNotification({
         title: "PureChat",
         body: body.payload.text,
         icon,
       });
+
       notifier.on("click", () => {
         this.emit("handleNotifClick", extraData);
       });
+
       notifier.show();
     }
   }

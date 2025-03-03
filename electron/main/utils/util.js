@@ -1,8 +1,9 @@
-import { isWindows, isMac, isProduction } from "../platform";
-import { app, clipboard, shell } from "electron";
-import { execFile, exec } from "child_process";
-import path from "node:path";
+
 import fs from "node:fs";
+import path from "node:path";
+import { app, clipboard, shell } from "electron";
+import { execFile, exec } from "node:child_process";
+import { isWindows, isMac, isProduction } from "../platform";
 import { fnFilePath } from './folder';
 import { logger } from '../logger/index';
 
