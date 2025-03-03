@@ -1,16 +1,13 @@
 import { ipcMain } from "electron";
-
 import {
   mainTop,
   handleOpenFolder,
   handleScreenshot,
 } from "../utils/util";
-
-import { 
-  checkFileExist, 
-  createFolderChild, 
-  // downloadFolder
- } from './folder';
+import {
+  checkFileExists,
+  downloadFolder
+} from './folder';
 
 export const ipcEvent = () => {
   // 置顶主窗口
@@ -26,19 +23,15 @@ export const ipcEvent = () => {
     handleOpenFolder(data)
   });
   // 托盘闪烁
-  ipcMain.on("trayFlashIng", (e, option) => {
+  ipcMain.on("trayFlashIng", (e, data) => {
     global.mainWin.flashFrame(true);
   });
 
-  ipcMain.handle('checkFileExist', async (e, fileName) => {
-    return checkFileExist(fileName)
+  ipcMain.handle('checkFileExist', async (e, data) => {
+    return checkFileExists(data)
   })
 
-  ipcMain.handle('createFolderChild', async (e) => {
-    return createFolderChild()
-  })
-
-  ipcMain.on('downloadFolder', (e, data) => {
-    // downloadFolder(data)
+  ipcMain.on('downloadFolder', async (e, data) => {
+    await downloadFolder(data)
   })
 };

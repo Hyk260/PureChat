@@ -1,107 +1,99 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-// import * as request from 'request';
-import * as progressStream from "progress-stream";
+import progressStream from "progress-stream";
+import axios from "axios";
 
-export const folderDir = "File";
-export const mainDir = "Pure Files";
+export const SUB_DIRECTORY = "File";
+export const MAIN_DIRECTORY = "PureChat Files";
 
-const rootDir = path.resolve(os.homedir(), "Documents", mainDir);
-
-export const fnFilePath = (fileName) => {
-  return path.join(rootDir, folderDir, fileName);
-}
-
-export const initFolder = () => {
-  createFolder();
-};
-
-// 检查文件是否存在
-export const checkFileExist = (fileName) => {
-  const filePath = fnFilePath(fileName);
-  return fs.existsSync(filePath);
-};
+const fileStorageDir = path.resolve(os.homedir(), "Documents", MAIN_DIRECTORY);
 
 /**
- * 创建主文件夹
- * @param {string} dirPath - 要创建的文件夹路径
- * @returns {boolean} - 返回是否成功创建文件夹
- * C:\Users\{user}\Documents\Pure Files
+ * 获取文件的完整存储路径
+ * @param {string} fileName - 文件名
+ * @returns {string} 完整文件路径
  */
-export const createFolder = (dirPath = rootDir) => {
-  if (!fs.existsSync(dirPath)) {
-    try {
+export const getFilePath = (fileName) => {
+  return path.join(fileStorageDir, SUB_DIRECTORY, fileName);
+}
+
+/**
+ * 创建指定目录（包含递归创建父目录）
+ * @param {string} dirPath - 要创建的目录路径
+ * @throws {Error} 当目录创建失败时抛出错误
+ */
+export const createDirectory = (dirPath) => {
+  try {
+    if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
-      return true; // 创建成功
-    } catch (err) {
-      console.error("Error creating directory:", err);
-      return false; // 创建失败
+      console.log(`目录创建成功: ${dirPath}`);
     }
-  } else {
-    return true; // 路径已存在
+  } catch (err) {
+    console.error(`目录创建失败 [${dirPath}]:`, err);
+    throw err;
   }
 };
 
 /**
- * 在指定文件夹下创建子文件夹
- * @param {string} folder - 要创建子文件夹的名称
- * @returns {boolean} - 返回是否成功创建文件夹
- * C:\Users\{user}\Documents\Pure Files\{folder}
+ * 初始化文件存储目录
+ * @throws {Error} 当目录创建失败时抛出错误
  */
-export const createFolderChild = (folder = folderDir) => {
-  if (!folder) return;
-  const parentDir = path.join(rootDir, folder);
-  return createFolder(parentDir);
+export const initStorage = () => {
+  createDirectory(fileStorageDir);
 };
 
 /**
- * 下载文件
+ * 检查文件是否存在
+ * @param {string} fileName - 要检查的文件名
+ * @returns {boolean} 文件是否存在
  */
-export const downloadFolder = ({
-  folder = folderDir,
+export const checkFileExists = (fileName) => {
+  const filePath = getFilePath(fileName);
+  return fs.existsSync(filePath);
+};
+
+/**
+ * 下载文件至指定文件夹
+ */
+export const downloadFolder = async ({
+  folder = SUB_DIRECTORY,
   fileName,
   fileSize,
   fileUrl,
   uuid,
 }) => {
-  const isFolder = createFolderChild();
-  if (!isFolder) {
-    console.log("文件路径不存在 downloadFolder:");
-    return;
-  }
-  const file_path = path.join(rootDir, folder, fileName);
-  const file_path_temp = `${file_path}.tmp`;
-  const requestParams = {
-    method: "get",
-    url: fileUrl,
-    responseType: "stream",
-  };
-  //创建写入流
-  const fileStream = fs.createWriteStream(file_path_temp);
-  fileStream
-    .on("error", (e) => {
-      console.error("error==>", e);
-    })
-    .on("ready", () => {
-      console.log("开始下载:", fileUrl);
-    })
-    .on("finish", () => {
-      //下载完成后重命名文件
-      if (fs.existsSync(file_path_temp)) {
-        fs.renameSync(file_path_temp, file_path);
-        global.mainWin.webContents.send("downloadFinish", { file_path, uuid });
-        console.log('file_path:', file_path)
+  createDirectory(path.join(fileStorageDir, folder));
+
+  const filePath = path.join(fileStorageDir, folder, fileName);
+  const filePathTemp = `${filePath}.tmp`;
+
+  try {
+    const { data } = await axios.get(fileUrl, { responseType: "stream" });
+
+    const fileStream = fs.createWriteStream(filePathTemp);
+    const stream = progressStream({ length: fileSize, time: 100 });
+
+    stream.on("progress", ({ percentage }) => {
+      const progress = Math.round(percentage);
+      global.mainWin.webContents.send("downloadProgress", { progress, uuid });
+    });
+
+    data.pipe(stream).pipe(fileStream);
+
+    fileStream.on("finish", () => {
+      if (fs.existsSync(filePathTemp)) {
+        fs.renameSync(filePathTemp, filePath);
+        global.mainWin.webContents.send("downloadFinish", { filePath, uuid });
+        console.log('下载完成:', filePath);
       }
     });
-  const requestItem = request(requestParams);
-  const stream = progressStream({
-    length: fileSize,
-    time: 100, // ms
-  });
-  stream.on("progress", ({ percentage }) => {
-    let progress = Math.round(percentage);
-    global.mainWin.webContents.send("downloadProgress", { progress, uuid });
-  });
-  requestItem.pipe(stream).pipe(fileStream);
+
+    fileStream.on("error", (error) => {
+      console.error("文件流错误:", error);
+    });
+    
+  } catch (error) {
+    console.error("下载失败:", error);
+  }
 };

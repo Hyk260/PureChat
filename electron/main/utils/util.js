@@ -4,7 +4,7 @@ import path from "node:path";
 import { app, clipboard, shell } from "electron";
 import { execFile, exec } from "node:child_process";
 import { isWindows, isMac, isProduction } from "../platform";
-import { fnFilePath } from './folder';
+import { getFilePath } from './folder';
 import { logger } from '../logger/index';
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -79,7 +79,7 @@ export const handleScreenshot = () => {
 
 export const handleOpenFolder = ({ type, fileName }) => {
   console.log('handleOpenFolder:', { type, fileName })
-  const filePath = fnFilePath(fileName)
+  const filePath = getFilePath(fileName)
   console.log('filePath:', filePath)
   // showItemInFolder openPath
   shell[type](filePath);

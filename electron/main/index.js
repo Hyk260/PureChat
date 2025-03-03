@@ -5,13 +5,13 @@ import { setNotification } from "./notification/index";
 import { isMac } from "./platform";
 import { logger } from './logger/index';
 import { setTray } from "./tray/index";
-import { createWindow, winSingle, ipcEvent, setDefaultProtocol, initFolder } from "./utils/index";
+import { createWindow, winSingle, ipcEvent, setDefaultProtocol, initStorage } from "./utils/index";
 
 class Background {
   constructor() {
     logger.info('init')
     winSingle();
-    initFolder();
+    initStorage();
     this.init();
   }
   init() {

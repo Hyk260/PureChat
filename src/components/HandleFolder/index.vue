@@ -45,7 +45,6 @@ const props = defineProps({
 });
 
 const { folder } = toRefs(props);
-const isFolder = ref(false); // 文件夹是否存在
 const isExist = ref(false); //文件是否存在
 const ipcRenderer = window.electron.ipcRenderer;
 
@@ -72,7 +71,6 @@ async function handleOpenFolder() {
 
 async function updateFileState() {
   const { fileName } = folder.value;
-  isFolder.value = await ipcRenderer.invoke("createFolderChild");
   isExist.value = await ipcRenderer.invoke("checkFileExist", fileName);
 }
 
