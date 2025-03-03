@@ -33,14 +33,13 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, useTemplateRef } from "vue";
-import { useStore } from "vuex";
 import { onClickOutside } from "@vueuse/core";
 import { useBoolean } from "@/utils/hooks/index";
-import emitter from "@/utils/mitt-bus";
 import { useState } from "@/utils/hooks/useMapper";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { useUserStore } from '@/stores/modules/user';
+import emitter from "@/utils/mitt-bus";
 
 const { homepage } = __APP_INFO__.pkg;
 const cardRef = useTemplateRef("cardRef");
@@ -48,7 +47,6 @@ const cardRef = useTemplateRef("cardRef");
 const profile = ref({});
 const market = ref([]);
 const [card, setCard] = useBoolean();
-const { dispatch } = useStore();
 
 const menuItems = [
   {

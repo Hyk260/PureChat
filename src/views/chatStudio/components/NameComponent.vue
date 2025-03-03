@@ -16,9 +16,11 @@
 </template>
 
 <script>
-import emitter from "@/utils/mitt-bus";
+import { mapState } from "pinia";
 import { isSelf } from "../utils/utils";
-import { mapGetters, mapState } from "vuex";
+import { useGroupStore } from "@/stores/modules/group";
+import store from "@/store/index";
+import emitter from "@/utils/mitt-bus";
 
 export default {
   name: "NameComponent",
@@ -34,11 +36,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["isOwner"]),
-    ...mapState({
-      showCheckbox: (state) => state.conversation.showCheckbox,
-      groupProfile: (state) => state.groupinfo.groupProfile,
-    }),
+    ...mapState(useGroupStore, ["groupProfile"]),
+    showCheckbox() {
+      return store.state.conversation.showCheckbox;
+    },
     isLeader() {
       return this.groupProfile?.ownerID === this.item.from;
     },
@@ -111,7 +112,7 @@ export default {
 .mention-self {
   display: flex;
   flex-direction: row-reverse;
-  .admin{
+  .admin {
     margin-right: 6px;
   }
 }

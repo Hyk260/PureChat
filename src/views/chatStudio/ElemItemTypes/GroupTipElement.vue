@@ -6,7 +6,6 @@
 
 <script>
 import { localStg } from "@/utils/storage";
-import { mapState } from "vuex";
 
 export default {
   name: "GroupTipElement",
@@ -17,9 +16,6 @@ export default {
     },
   },
   computed: {
-    ...mapState({
-      memberList: (state) => state.groupinfo.currentMemberList,
-    }),
     isSme() {
       return this.userProfile?.userID === this.message.payload.operatorID;
     },

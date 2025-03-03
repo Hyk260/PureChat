@@ -1,6 +1,6 @@
 <template>
   <div v-if="flag" class="robot-plugin-box" v-click-outside="onClickOutside">
-    <div class="flex-bc flex-col w-220">
+    <div class="flex-bc flex-col">
       <div
         class="list flex-bc w-full"
         v-for="item in pluginData"
@@ -24,16 +24,21 @@ import { ClickOutside as vClickOutside } from "element-plus";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { getPlugin } from "../utils/utils";
-import emitter from "@/utils/mitt-bus";
 import { useRobotStore } from "@/stores/modules/robot";
+import emitter from "@/utils/mitt-bus";
 
 const [flag, setFlag] = useBoolean();
 
 const pluginData = ref([
+  // {
+  //   checked: false,
+  //   ...getPlugin({ key: "web_search" }),
+  // },
   {
     checked: false,
-    ...getPlugin({ key: "web_search" }),
+    ...getPlugin({ key: "search-engine-serper" }),
   },
+
   // {
   //   id: "get_weather",
   //   checked: false,

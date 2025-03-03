@@ -18,6 +18,7 @@ import {
   transformData,
   getChatListCache,
 } from "@/utils/chat/index";
+import { useGroupStore } from "@/stores/modules/group";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
@@ -341,11 +342,8 @@ const conversation = {
       dispatch("updateMessageList", data);
       // group
       if (data?.type === "GROUP") {
-        const { groupID } = data.groupProfile;
-        // 群详情信息
-        dispatch("getGroupProfile", data);
-        // 群成员列表
-        dispatch("getGroupMemberList", { groupID });
+        useGroupStore().handleGroupProfile(data);
+        useGroupStore().handleGroupMemberList({ groupID: data.groupProfile.groupID });
       }
       emitter.emit("updataScroll");
     },

@@ -6,33 +6,26 @@
         v-model="input"
         :placeholder="$t('chat.searchFor')"
         :prefix-icon="Search"
-        @focus="onFocus"
-        @blur="onBlur"
         @input="debounceSearch"
         clearable
       >
-        <!-- <template #suffix>
-          <div class="suffix" v-show="suffix">Ctrl K</div>
-        </template> -->
       </el-input>
       <div v-if="!isLocalMode" class="header-search-add flex-c" @click="opendialog">
         <FontIcon iconName="Plus" />
       </div>
     </div>
-    <!-- 搜索结果 -->
-    <SearchBox ref="searchBoxRef" />
   </div>
 </template>
 
 <script setup>
+import { ref, watch } from "vue";
 import { onKeyStroke, useEventListener } from "@vueuse/core";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { showConfirmationBox } from "@/utils/message";
 import { Search } from "@element-plus/icons-vue";
-import { ref, watch } from "vue";
 import { useStore } from "vuex";
 import { debounce, isEmpty } from "lodash-es";
-import SearchBox from "./SearchBox.vue";
+import { useGroupStore } from "@/stores/modules/group";
 import emitter from "@/utils/mitt-bus";
 import { isMacDragStyle } from "@/utils/appEmit";
 
@@ -40,43 +33,26 @@ defineOptions({
   name: "Search",
 });
 
-const isLocalMode = __LOCAL_MODE__
+const isLocalMode = __LOCAL_MODE__;
 const input = ref("");
-const suffix = ref(true);
 const filterData = ref([]);
-const searchBoxRef = ref();
-const { dispatch, commit } = useStore();
+const groupStore = useGroupStore();
+const { commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
-
-// onKeyStroke(["keydown"], (e) => {
-//   console.log("onKeyStroke", e);
-// });
-
-// useEventListener(document, "keydown", (e) => {
-//   console.log("useEventListener", e);
-// });
 
 const createGroup = async () => {
   const data = { message: "创建群聊" };
   const result = await showConfirmationBox(data, "prompt");
   if (result === "cancel") return;
-  dispatch("handleCreateGroup", { groupName: result.value, positioning: true });
+  groupStore.handleCreateGroup({ groupName: result.value, positioning: true });
 };
 
 const opendialog = () => {
   createGroup();
 };
 
-const onBlur = () => {
-  suffix.value = true;
-};
-const onFocus = () => {
-  suffix.value = false;
-};
-
 const matchesFilter = (item, searchStr) => {
   const lastMessage = item.lastMessage.messageForShow.toUpperCase();
-
   if (item.type === "GROUP") {
     return (
       lastMessage.includes(searchStr) || item.groupProfile.name.toUpperCase().includes(searchStr)

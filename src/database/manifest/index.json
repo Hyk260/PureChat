@@ -38,6 +38,43 @@
           }
         }
       ]
+    },
+    {
+      "identifier": "search-engine-serper",
+      "name": "searchBing",
+      "homepage": "https://serper.dev",
+      "manifest": "",
+      "prompt": "",
+      "apiName": "searchGoogle",
+      "meta": {
+        "avatar": "serper.ico",
+        "description": "Google search engine via Serper.dev free API (2500x🆓/month)",
+        "title": "通过 Serper 搜索 Google"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Search Google and return top 10 results",
+            "name": "search-engine-serper",
+            "parameters": {
+              "properties": {
+                "q": {
+                  "type": "string"
+                },
+                "gl": {
+                  "type": "string"
+                },
+                "hl": {
+                  "type": "string"
+                }
+              },
+              "required": ["q"],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
     }
   ]
 }

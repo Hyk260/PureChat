@@ -29,12 +29,6 @@
       </div>
     </div>
     <div class="right-list">
-      <!-- <div v-show="title">
-        <div class="head px-10">{{ title }}</div>
-        <div class="list">
-          <el-empty class="h-full" :description="$t('common.emptyText')" :image-size="150" />
-        </div>
-      </div> -->
       <div>
         <div class="head px-10"></div>
         <ProfileCard />
@@ -44,16 +38,7 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  toRefs,
-  computed,
-  watch,
-  useTemplateRef,
-  nextTick,
-  onMounted,
-  onUnmounted,
-} from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import FriendsTabs from "./FriendsTabs.vue";
 import FriendsTree from "./FriendsTree.vue";

@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash-es';
 
 export const SetupStoreId = {
   App: 'app',
-  GroupInfo: 'groupinfo',
+  Group: 'group',
   Robot: 'robot',
   Theme: 'theme',
   User: 'user',

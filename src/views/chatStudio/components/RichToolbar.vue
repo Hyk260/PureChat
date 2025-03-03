@@ -40,7 +40,7 @@
     </span>
     <!-- 插件 -->
     <span
-      v-if="isShowPlugins(toAccount)"
+      v-if="isFunctionCall && isShowPlugins(toAccount)"
       :class="isFunctionCall ? '' : 'prohibit'"
       @click="openPluginBox"
     >

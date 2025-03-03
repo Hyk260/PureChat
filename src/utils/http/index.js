@@ -10,11 +10,11 @@ const whiteList = ["/login"];
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig = {
-  // baseURL: "https://apichat.fun/", // 生产
+  // baseURL: "https://api.purechat.cn/", // 生产
   // baseURL: "http://localhost:8081/", // 开发
   baseURL: import.meta.env.VITE_SERVICE_BASE_URL,
   // 请求超时时间
-  timeout: 10000,
+  timeout: 15000,
   // headers: {
   //   Accept: "application/json, text/plain, */*",
   //   "Content-Type": "application/json",

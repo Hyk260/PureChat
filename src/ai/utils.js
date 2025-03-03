@@ -16,7 +16,7 @@ import {
   RobotAvatar,
   REQUEST_TIMEOUT_MS
 } from "@/ai/constant";
-import { OpenaiConfig } from "@/ai/platforms/openai/config";
+import { OpenaiConfig } from "@/ai/platforms/openai/index";
 import { createTextMessage } from "@/api/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
@@ -528,6 +528,28 @@ export const handleStreamingChat = async (
     REQUEST_TIMEOUT_MS
   );
 
+  const isTools = () => {
+    const payload = JSON.parse(chatPayload.body)
+    return payload.tools?.length > 0
+  }
+
+  const isOllama = () => {
+    return [ModelProvider.Ollama].includes(provider)
+  }
+
+  const processExtraInfo = (resJson, extraInfo) => {
+    const extraObj = JSON.parse(extraInfo);
+    const payload = JSON.parse(chatPayload.body)
+    if (extraObj?.choices[0]?.finish_reason === 'tool_calls') {
+      finished = true;
+      options?.onToolMessage({
+        name: payload.tools[0].function.name,
+        manifest: getPlugin({ key: payload.tools[0].function.name }),
+        message: resJson
+      })
+    }
+  }
+
   await fetchEventSource(chatPath, {
     ...chatPayload,
     async onopen(res) {
@@ -552,21 +574,11 @@ export const handleStreamingChat = async (
 
         try {
           const resJson = await res.clone().json();
-          const payload = JSON.parse(chatPayload.body)
-          if (payload.tools?.length > 0) {
-            const extraObj = JSON.parse(extraInfo);
-            if (extraObj?.choices[0]?.finish_reason === 'tool_calls') {
-              finished = true;
-              options?.onToolMessage({
-                name: payload.tools[0].function.name,
-                manifest: getPlugin({ key: payload.tools[0].function.name, type: 'name' }),
-                message: resJson
-              })
-            }
+          if (isTools()) {
+            processExtraInfo(resJson, extraInfo);
           } else {
             extraInfo = prettyObject(resJson);
           }
-
         } catch (e) {
           console.log("[resJson]", e);
         }
@@ -593,7 +605,7 @@ export const handleStreamingChat = async (
       }
       const text = msg.data;
       try {
-        if ([ModelProvider.Ollama].includes(provider)) {
+        if (isOllama()) {
           const json = JSON.parse(text);
           if (json === "[DONE]") return finish();
           const delta = json.message.content;
