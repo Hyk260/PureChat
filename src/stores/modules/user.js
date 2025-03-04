@@ -67,6 +67,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       setTimeout(() => {
         logout()
         emitter.all.clear()
+        this.setLoading(false)
         this.handleIMLogout()
       }, 500)
     },
