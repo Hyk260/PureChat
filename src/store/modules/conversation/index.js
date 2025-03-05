@@ -5,7 +5,6 @@ import {
   deleteConversation,
   getConversationProfile,
   getMessageList,
-  getUnreadMsg,
   sendMessage,
   setMessageRead,
   setMessageRemindType,
@@ -33,7 +32,6 @@ const conversation = {
   state: {
     messageEdit: null, // 消息编辑
     sessionDraftMap: new Map(), //会话草稿
-    totalUnreadMsg: 0, // 未读消息总数
     isChatBoxVisible: false, //是否显示输入框
     showCheckbox: false, //是否显示多选框
     isShowModal: false, // @好友弹框
@@ -357,10 +355,6 @@ const conversation = {
       const { code } = await deleteConversation({ convId });
       if (code !== 0) return;
       commit("clearCurrentMessage");
-    },
-    // 更新未读消息总数
-    async updateUnreadMessageCount({ state }) {
-      state.totalUnreadMsg = await getUnreadMsg();
     },
     // 消息免打扰
     async setMessageReminderType({ state }, action) {

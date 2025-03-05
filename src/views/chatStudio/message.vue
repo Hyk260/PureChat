@@ -70,6 +70,7 @@ import { $t } from "@/locales/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
 import { isMacOS } from "@/utils/common";
+import { useChatStore } from "@/stores/modules/chat";
 import { useDragHandler } from "@/utils/hooks/useDragHandler";
 import emitter from "@/utils/mitt-bus";
 
@@ -89,25 +90,24 @@ const isLocalMode = __LOCAL_MODE__;
 const unread = ref("");
 const chatRef = ref(null);
 const activeName = ref("whole");
-const { dispatch, commit } = useStore();
+const { commit } = useStore();
+const chatStore = useChatStore();
 
 const { isGroupChat } = useGetters(["isGroupChat"]);
-const { networkStatus, conver, isChatBoxVisible, totalUnreadMsg, arrowRight, fullScreen } =
-  useState({
-    networkStatus: (state) => state.conversation.networkStatus,
-    totalUnreadMsg: (state) => state.conversation.totalUnreadMsg,
-    conver: (state) => state.conversation.currentConversation,
-    isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
-    arrowRight: (state) => state.conversation.arrowRight,
-    fullScreen: (state) => state.conversation.fullScreen,
-  });
+const {
+  networkStatus,
+  conver,
+  isChatBoxVisible,
+  arrowRight,
+  fullScreen,
+} = useState({
+  networkStatus: (state) => state.conversation.networkStatus,
+  conver: (state) => state.conversation.currentConversation,
+  isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
+  arrowRight: (state) => state.conversation.arrowRight,
+  fullScreen: (state) => state.conversation.fullScreen,
+});
 
-const fnTotalUnreadMsg = () => {
-  const unreadCount = totalUnreadMsg.value;
-  const isUnread = unreadCount > 0;
-  const num = unreadCount > 99 ? "99+" : unreadCount;
-  unread.value = isUnread ? `${$t("chat.unread")}(${num})` : $t("chat.unread");
-};
 const handleClick = ({ props }, event) => {
   const { label, name } = props;
   commit("toggleList", name);
@@ -121,8 +121,15 @@ const onRight = (value) => {
   commit("setConversationValue", { key: "arrowRight", value: !value });
 };
 
+const updateUnread = (count) => {
+  const isUnread = count > 0;
+  const num = count > 99 ? "99+" : count;
+  unread.value = isUnread ? `${$t("chat.unread")}(${num})` : $t("chat.unread");
+};
+
 onActivated(() => {
   emitter.emit("updataScroll");
+  updateUnread(chatStore.totalUnreadMsg);
   commit("toggleList", "whole");
 });
 onDeactivated(() => {});
@@ -133,9 +140,7 @@ onMounted(() => {
 
 onUnmounted(() => {});
 
-watchEffect(() => {
-  fnTotalUnreadMsg();
-});
+watch(() => chatStore.totalUnreadMsg, updateUnread);
 
 watch(isChatBoxVisible, (val) => {
   val && useDragHandler(chatRef.value);

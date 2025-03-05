@@ -25,7 +25,11 @@ const { activeTab } = useState({
 const { commit } = useStore();
 
 function launch() {
-  commit("taggleOueSide", { id: "discover", path: "/discover" });
+  if (__LOCAL_MODE__) {
+    commit("taggleOueSide", { id: "discover", path: "/discover" });
+  } else {
+    commit("taggleOueSide", { id: "friends", path: "/friends" });
+  }
 }
 </script>
 

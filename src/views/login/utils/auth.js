@@ -1,29 +1,30 @@
-import { githubAuth, openAuthUrl } from "@/api/node-admin-api/index";
-import store from "@/store";
 import { useUserStore } from "@/stores/modules/user";
+import { githubAuth, openAuthUrl } from "@/api/node-admin-api/index";
 
 const { DEV: isDev } = import.meta.env;
 
-// github 授权登录
-export const oauthAuthorize = async () => {
-  const { url } = await openAuthUrl();
-  if (window?.electron) {
-    window.open(url);
-  } else {
-    window.open(url, "_self");
-  }
-};
-
-// github 授权成功回调 username userSig
-export const authorizedLogin = async (_code = "") => {
-  let code = _code;
-  // 生产环境 hash
+const extractCodeFromUrl = () => {
   if (!isDev) {
     const queryParams = window.location.search;
     const params = new URLSearchParams(queryParams);
-    code = params.get("code");
+    return params.get("code");
   }
-  if (!code) return;
-  const data = await githubAuth({ code });
-  useUserStore().handleSuccessfulAuth(data);
+  return "";
+};
+
+// GitHub OAuth授权
+export const oauthAuthorize = async () => {
+  const { url } = await openAuthUrl();
+  window.open(url, window?.electron ? undefined : "_self");
+};
+
+// GitHub授权回调
+export const authorizedLogin = async (_code = "") => {
+  const code = _code || extractCodeFromUrl();;
+  if (code) {
+    const data = await githubAuth({ code });
+    useUserStore().handleSuccessfulAuth(data);
+  } else {
+    console.error("未获取到code");
+  }
 };

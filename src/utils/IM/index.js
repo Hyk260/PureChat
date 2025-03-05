@@ -11,6 +11,7 @@ import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
 import { useUserStore } from '@/stores/modules/user';
 import { useGroupStore } from '@/stores/modules/group';
+import { useChatStore } from '@/stores/modules/chat';
 import {
   fnCheckoutNetState,
   getConversationID,
@@ -136,7 +137,7 @@ export class TIMProxy {
       });
     }
     // 未读消息
-    store.dispatch("updateUnreadMessageCount");
+    useChatStore().updateTotalUnreadMsg();
   }
   onReceiveMessage({ data }) {
     console.log("[chat] 收到新消息 onReceiveMessage:", data);

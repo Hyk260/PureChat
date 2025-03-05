@@ -7,6 +7,7 @@ export const SetupStoreId = {
   Theme: 'theme',
   User: 'user',
   Sidebar: 'sidebar',
+  Chat: 'chat',
 };
 
 /**
