@@ -7,7 +7,7 @@
     v-if="isChatBoxVisible"
   >
     <!-- 自定义工具栏 -->
-    <RichToolbar @setToolbar="setToolbar" />
+    <RichToolbar />
     <Editor
       class="editor-content"
       v-model="valueHtml"
@@ -68,8 +68,8 @@ import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
 import { localStg } from "@/utils/storage";
 import { useBoolean } from "@/utils/hooks/index";
-import { useAppStore } from '@/stores/modules/app';
-import { useGroupStore } from '@/stores/modules/group';
+import { useAppStore } from "@/stores/modules/app";
+import { useGroupStore } from "@/stores/modules/group";
 import {
   convertEmoji,
   customAlert,
@@ -367,6 +367,9 @@ function onEmitter() {
   emitter.on("handleFileDrop", (file) => {
     handleFile(file);
   });
+  emitter.on("handleToolbar", (data) => {
+    setToolbar(data);
+  });
 }
 
 function offEmitter() {
@@ -374,6 +377,7 @@ function offEmitter() {
   emitter.off("handleSetHtml");
   emitter.off("handleInsertDraft");
   emitter.off("setHandleFile");
+  emitter.off("handleToolbar");
 }
 
 watch(isChatBoxVisible, () => {

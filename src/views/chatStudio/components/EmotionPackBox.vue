@@ -1,5 +1,5 @@
 <template>
-  <div v-show="flag" class="emjio-tion" v-click-outside="onClickOutside">
+  <div class="emjio-tion" v-click-outside="onClickOutside">
     <div class="emojis">
       <el-scrollbar wrap-class="custom-scrollbar-wrap" always>
         <!-- QQ表情包 -->
@@ -61,15 +61,16 @@
 </template>
 
 <script setup>
-import { useBoolean } from "@/utils/hooks/index";
-import { ClickOutside as vClickOutside } from "element-plus";
-import { chunk } from "lodash-es";
 import { onMounted, ref } from "vue";
+import { chunk } from "lodash-es";
+import { ClickOutside as vClickOutside } from "element-plus";
 import { useChatStore } from "@/stores/modules/chat";
 import { getOperatingSystem, getAssetsFile } from "../utils/utils";
-
+import emitter from "@/utils/mitt-bus";
 import emojiQq from "@/utils/emoji/emoji-map-qq";
 import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
+
+const emit = defineEmits(["onClose"]);
 
 const rolling = false;
 const toolDate = [
@@ -96,12 +97,9 @@ const table = ref("QQ");
 const EmotionPackGroup = ref([]);
 
 const chatStore = useChatStore();
-const [flag, setFlag] = useBoolean();
-
-const emit = defineEmits(["setEmoji"]);
 
 const setClose = () => {
-  setFlag(false);
+  emit("onClose");
   recentlyUsed.value = [...chatStore.recently].reverse();
 };
 
@@ -114,8 +112,14 @@ const getParser = () => {
 };
 
 const setEmoji = (item, type = "") => {
-  emit("setEmoji", item, table.value);
-  if (type == "QQ") chatStore.setRecently({ data: item, type: "add" });
+  let url = "";
+  if (type === "QQ") {
+    url = getAssetsFile(emojiQq.emojiMap[item])
+  } else {
+    url = getAssetsFile(emojiDouyin.emojiMap[item])
+  }
+  emitter.emit("handleToolbar", { data: { url, item }, key: "setEmoj" });
+  if (type === "QQ") chatStore.setRecently({ data: item, type: "add" });
   setClose();
 };
 
@@ -128,8 +132,6 @@ onMounted(() => {
   initEmotion();
   chatStore.setRecently({ type: "revert" });
 });
-
-defineExpose({ setFlag });
 </script>
 
 <style lang="scss" scoped>

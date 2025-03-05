@@ -94,7 +94,7 @@
       <RobotPlugin />
       <RobotOptions />
     </template>
-    <EmotionPackBox v-if="!isRobot(toAccount)" ref="emjRef" @setEmoji="setEmoji" />
+    <EmotionPackBox v-if="!isRobot(toAccount) && flag" @onClose="setFlag(false)"  />
   </div>
 </template>
 
@@ -105,24 +105,21 @@ import { isRobot, screenshot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
+import { useBoolean } from "@/utils/hooks/index";
 import { useRobotStore } from "@/stores/modules/robot";
-import { getAssetsFile } from "../utils/utils";
 import EmotionPackBox from "./EmotionPackBox.vue";
 import RobotOptions from "./RobotOptions.vue";
 import RobotModel from "./RobotModel.vue";
 import RobotPlugin from "./RobotPlugin.vue";
-import emojiQq from "@/utils/emoji/emoji-map-qq";
-import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
 import emitter from "@/utils/mitt-bus";
 
-const emjRef = ref();
 const tobottom = ref();
 const imagePicker = ref();
 const filePicker = ref();
-const { commit, dispatch } = useStore();
 
-const emit = defineEmits(["setToolbar"]);
+const [flag, setFlag] = useBoolean();
 const robotStore = useRobotStore();
+const { commit, dispatch } = useStore();
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
 const { fullScreen, currentConversation } = useState({
   fullScreen: (state) => state.conversation.fullScreen,
@@ -146,7 +143,7 @@ const isFunctionCall = computed(() => {
 });
 
 const sendEmojiClick = () => {
-  emjRef.value.setFlag(true);
+  setFlag(true)
 };
 function openRobotBox() {
   emitter.emit("onRobotBox");
@@ -157,15 +154,6 @@ function openPluginBox() {
 function selectModel() {
   emitter.emit("openModeList", true);
 }
-const setEmoji = (item, table) => {
-  let url = "";
-  if (table == "QQ") {
-    url = getAssetsFile(emojiQq.emojiMap[item]);
-  } else {
-    url = getAssetsFile(emojiDouyin.emojiMap[item]);
-  }
-  emit("setToolbar", { data: { url, item }, key: "setEmoj" });
-};
 const sendImageClick = () => {
   let $el = imagePicker.value;
   $el.value = null;
@@ -200,17 +188,19 @@ function customMessage() {
 }
 
 function sendImage(e) {
-  emit("setToolbar", {
+  emitter.emit("handleToolbar", {
     key: "setPicture",
     data: { files: e.target.files[0] },
   });
 }
+
 function sendFile(e) {
-  emit("setToolbar", {
+  emitter.emit("handleToolbar", {
     key: "setParsefile",
     data: { files: e.target.files[0] },
   });
 }
+
 function isShowPlugins(val) {
   return false;
   if (__LOCAL_MODE__) {
@@ -219,6 +209,7 @@ function isShowPlugins(val) {
     return false;
   }
 }
+
 function isShowImage(val) {
   if (__LOCAL_MODE__) {
     return false;
@@ -226,13 +217,16 @@ function isShowImage(val) {
     return !isRobot(val);
   }
 }
+
 const onTobBottom = () => {
   emitter.emit("updataScroll");
 };
+
 emitter.on("onisbot", (state) => {
   tobottom.value = !state;
 });
 </script>
+
 <style lang="scss" scoped>
 .toolbar {
   height: 40px;
