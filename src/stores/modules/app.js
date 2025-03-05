@@ -6,6 +6,7 @@ import { SetupStoreId } from '../plugins/index';
 export const useAppStore = defineStore(SetupStoreId.App, {
   state: () => ({
     message: null,
+    networkStatus: true, // 网络状态
     lang: localStg.get('lang') || "zh-CN", // 默认语言
   }),
   actions: {
@@ -19,6 +20,10 @@ export const useAppStore = defineStore(SetupStoreId.App, {
         duration: options.duration || 2000,
         offset: 30
       })
+    },
+    // 设置网络状态
+    setNetworkStatus(flag) {
+      this.networkStatus = flag;
     },
   }
 });

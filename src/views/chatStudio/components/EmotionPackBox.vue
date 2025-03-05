@@ -62,11 +62,10 @@
 
 <script setup>
 import { useBoolean } from "@/utils/hooks/index";
-import { useState } from "@/utils/hooks/useMapper";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { chunk } from "lodash-es";
 import { onMounted, ref } from "vue";
-import { useStore } from "vuex";
+import { useChatStore } from "@/stores/modules/chat";
 import { getOperatingSystem, getAssetsFile } from "../utils/utils";
 
 import emojiQq from "@/utils/emoji/emoji-map-qq";
@@ -96,16 +95,14 @@ const systemOs = ref("");
 const table = ref("QQ");
 const EmotionPackGroup = ref([]);
 
+const chatStore = useChatStore();
 const [flag, setFlag] = useBoolean();
-const { commit } = useStore();
+
 const emit = defineEmits(["setEmoji"]);
-const { recently } = useState({
-  recently: (state) => state.conversation.recently,
-});
 
 const setClose = () => {
   setFlag(false);
-  recentlyUsed.value = [...recently.value].reverse();
+  recentlyUsed.value = [...chatStore.recently].reverse();
 };
 
 const initEmotion = () => {
@@ -118,9 +115,7 @@ const getParser = () => {
 
 const setEmoji = (item, type = "") => {
   emit("setEmoji", item, table.value);
-  if (type == "QQ") {
-    commit("setRecently", { data: item, type: "add" });
-  }
+  if (type == "QQ") chatStore.setRecently({ data: item, type: "add" });
   setClose();
 };
 
@@ -131,7 +126,7 @@ const onClickOutside = () => {
 onMounted(() => {
   getParser();
   initEmotion();
-  commit("setRecently", { type: "revert" });
+  chatStore.setRecently({ type: "revert" });
 });
 
 defineExpose({ setFlag });

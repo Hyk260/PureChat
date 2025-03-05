@@ -19,10 +19,10 @@
       </el-tabs>
       <div
         class="scroll-container"
-        :class="{ 'style-net': !networkStatus, 'local-mode': isLocalMode }"
+        :class="{ 'style-net': !appStore.networkStatus, 'local-mode': isLocalMode }"
       >
         <!-- 连接已断开 -->
-        <networklink :show="!networkStatus" />
+        <networklink :show="!appStore.networkStatus" />
         <!-- 会话列表 -->
         <ConversationList />
       </div>
@@ -70,6 +70,7 @@ import { $t } from "@/locales/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
 import { isMacOS } from "@/utils/common";
+import { useAppStore } from "@/stores/modules/app";
 import { useChatStore } from "@/stores/modules/chat";
 import { useDragHandler } from "@/utils/hooks/useDragHandler";
 import emitter from "@/utils/mitt-bus";
@@ -91,17 +92,16 @@ const unread = ref("");
 const chatRef = ref(null);
 const activeName = ref("whole");
 const { commit } = useStore();
+const appStore = useAppStore();
 const chatStore = useChatStore();
 
 const { isGroupChat } = useGetters(["isGroupChat"]);
 const {
-  networkStatus,
   conver,
   isChatBoxVisible,
   arrowRight,
   fullScreen,
 } = useState({
-  networkStatus: (state) => state.conversation.networkStatus,
   conver: (state) => state.conversation.currentConversation,
   isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
   arrowRight: (state) => state.conversation.arrowRight,

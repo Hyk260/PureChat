@@ -99,22 +99,21 @@
 </template>
 
 <script setup>
+import { ref, computed } from "vue";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { isRobot, screenshot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
-import emitter from "@/utils/mitt-bus";
-import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useRobotStore } from "@/stores/modules/robot";
+import { getAssetsFile } from "../utils/utils";
 import EmotionPackBox from "./EmotionPackBox.vue";
 import RobotOptions from "./RobotOptions.vue";
 import RobotModel from "./RobotModel.vue";
 import RobotPlugin from "./RobotPlugin.vue";
-import { getAssetsFile } from "../utils/utils";
 import emojiQq from "@/utils/emoji/emoji-map-qq";
-import { getAllModels } from "@/ai/utils";
 import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
-import { useRobotStore } from "@/stores/modules/robot";
+import emitter from "@/utils/mitt-bus";
 
 const emjRef = ref();
 const tobottom = ref();
