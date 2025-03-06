@@ -1,40 +1,63 @@
-# 将静态内容部署到 GitHub Pages 的简单工作流程
+# 将静态内容部署到 GitHub Pages 的简易工作流程
 name: Deploy static content to Pages
 
 on:
-  # 在针对默认分支的推送上运行
+  # 仅在推送到默认分支时运行。
   push:
-    branches: ["main"]
+    branches: ['main']
 
-  # 允许您从操作选项卡手动运行此工作流程
+  # 这个选项可以使你手动在 Action tab 页面触发工作流
   workflow_dispatch:
 
-# 设置 GITHUB_TOKEN 的权限以允许部署到 GitHub 页面
+# 设置 GITHUB_TOKEN 的权限，以允许部署到 GitHub Pages。
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# 允许一个并发的部署
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: 'pages'
+  cancel-in-progress: true
 
 jobs:
+  # 单次部署的工作描述
   deploy:
+    # 指定部署的环境信息 这里使用名为 'github-pages' 的环境，并且会将部署后的页面 URL 赋值给环境的 url 属性。
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    # 指定运行此作业的虚拟机环境 使用最新版本的 Ubuntu 虚拟机来运行作业。
     runs-on: ubuntu-latest
     steps:
+      # 从 GitHub 仓库中检出最新的代码到运行环境中。
       - name: Checkout
         uses: actions/checkout@v4
+      # 安装指定版本（9）的 pnpm 包管理器。
+      - name: Setup pnpm version 9
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      #  安装指定版本（20）的 Node.js，并使用 pnpm 作为缓存管理器。
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      # 运行项目的构建脚本，生成静态内容。  
+      - name: Build
+        run: pnpm run build
+      # 配置 GitHub Pages 的相关设置。
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v4
+      # 将构建生成的静态内容（位于 './dist' 目录）作为工件上传。
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
           path: './dist'
+      # 将上传的工件部署到 GitHub Pages 上，并将部署后的页面 URL 输出到 'deployment' 步骤的 'page_url' 属性中。
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
