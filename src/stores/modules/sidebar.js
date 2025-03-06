@@ -1,5 +1,6 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { SetupStoreId } from '../plugins/index';
+import router from "@/router";
 
 const { docs, homepage, giteeHomepage } = __APP_INFO__.pkg;
 const { DEV: isDev } = import.meta.env;
@@ -29,21 +30,6 @@ const outsideList = [
     path: "/discover",
     svgIcon: "Discover",
   },
-  // {
-  //   id: "document",
-  //   icon: "Document",
-  //   title: "文档",
-  //   type: "el-icon",
-  //   openType: "outside",
-  //   url: docs,
-  // },
-  // {
-  //   id: "test",
-  //   icon: "SwitchFilled",
-  //   title: "web",
-  //   show: isDev ? "" : "hide",
-  //   type: "el-icon",
-  // },
   {
     id: "more",
     icon: "MoreFilled",
@@ -59,7 +45,7 @@ const moreList = [
     icon: "github",
     title: "github",
     openType: "outside",
-    url: homepage, 
+    url: homepage,
   },
   {
     id: "gitee",
@@ -82,6 +68,9 @@ export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
     setOutsideList(list) {
       const data = this.outsideList.filter((t) => t.id === "more");
       this.outsideList = [...list, ...data];
+    },
+    taggleOueSide(item) {
+      router.push(item.path);
     },
     setMoreList(list) {
       this.moreList = list;

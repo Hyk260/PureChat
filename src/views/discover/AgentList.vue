@@ -35,15 +35,18 @@
 
 <script setup>
 import { ref } from "vue";
+import { useSidebarStore } from "@/stores/modules/sidebar";
+import { useStore } from "vuex";
 import modelProvider from "@/database/bot.json";
 import AgentCard from "./AgentCard.vue";
 import ModelProviderCard from "./ModelProviderCard.vue";
 import AgentSkeleton from "./AgentSkeleton.vue";
 import emitter from "@/utils/mitt-bus";
-import { useStore } from "vuex";
 
 const emit = defineEmits(["handleClick"]);
-const { commit, dispatch } = useStore();
+const { dispatch } = useStore();
+
+const sidebarStore = useSidebarStore();
 
 const props = defineProps({
   cur: {
@@ -67,8 +70,9 @@ const props = defineProps({
 function cardClick(item) {
   emitter.emit("openAgentCard", item);
 }
+
 function providerClick(item) {
-  commit("taggleOueSide", { id: "chat", path: "/chat" });
+  sidebarStore.taggleOueSide({ path: "/chat" });
   dispatch("addConversation", { convId: `${"C2C"}${item.userID}` });
 }
 </script>

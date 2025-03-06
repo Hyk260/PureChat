@@ -40,12 +40,15 @@ import { Markdown, handleCopyClick } from "@/utils/markdown/index";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
+import { useSidebarStore } from "@/stores/modules/sidebar";
 import { StoreKey, VITE_OPENAI_ID, ModelProvider } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
 import { useRobotStore } from "@/stores/modules/robot";
 import emitter from "@/utils/mitt-bus";
 
 const cardData = ref({});
+const sidebarStore = useSidebarStore();
+const robotStore = useRobotStore()
 const { commit, dispatch } = useStore();
 const [dialog, setDialog] = useBoolean();
 
@@ -64,9 +67,9 @@ function toTant(item = cardData.value) {
   console.log("prompt", { ...localStg.get(StoreKey.Prompt), ...prompt });
   localStg.set(StoreKey.Prompt, { ...localStg.get(StoreKey.Prompt), ...prompt });
   const id = getModelId(defaultBot) || VITE_OPENAI_ID;
-  useRobotStore().setPromptConfig(prompt[value]);
   handleClose()
-  commit("taggleOueSide", { id: "chat", path: "/chat" });
+  robotStore.setPromptConfig(prompt[value]);
+  sidebarStore.taggleOueSide({ path: "/chat" });
   dispatch("addConversation", { convId: `${"C2C"}${id}` });
   setTimeout(() => {
     commit("addAiPresetPromptWords");

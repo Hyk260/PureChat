@@ -10,11 +10,15 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
   state: () => ({
     recently: new Set(), // 最近使用表情包
     totalUnreadMsg: 0, // 未读消息总数
+    isFullscreenInputActive: false, // 是否全屏输入框
   }),
   getters: {
 
   },
   actions: {
+    toggleFullScreenInput(flag) {
+      this.isFullscreenInputActive = flag;
+    },
     // 更新未读消息总数
     async updateTotalUnreadMsg() {
       this.totalUnreadMsg = await getUnreadMsg();

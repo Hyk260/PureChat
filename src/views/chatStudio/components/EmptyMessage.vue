@@ -8,8 +8,8 @@
 </template>
 
 <script setup>
-import { useStore } from "vuex";
 import { useState } from "@/utils/hooks/useMapper";
+import { useSidebarStore } from "@/stores/modules/sidebar";
 
 const props = defineProps({
   className: {
@@ -18,17 +18,16 @@ const props = defineProps({
   },
 });
 
+const sidebarStore = useSidebarStore();
 const { activeTab } = useState({
   activeTab: (state) => state.conversation.activeTab,
 });
 
-const { commit } = useStore();
-
 function launch() {
   if (__LOCAL_MODE__) {
-    commit("taggleOueSide", { id: "discover", path: "/discover" });
+    sidebarStore.taggleOueSide({ path: "/discover" });
   } else {
-    commit("taggleOueSide", { id: "friends", path: "/friends" });
+    sidebarStore.taggleOueSide({ path: "/friends" });
   }
 }
 </script>

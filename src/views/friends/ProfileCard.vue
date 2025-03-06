@@ -45,14 +45,14 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import emitter from "@/utils/mitt-bus";
 import { getGender } from "@/utils/common";
 import { useStore } from "vuex";
+import { useSidebarStore } from "@/stores/modules/sidebar";
 import { scrollToMessage } from "@/utils/chat/index";
-import { useState } from "@/utils/hooks/useMapper";
+import emitter from "@/utils/mitt-bus";
 
-const { commit, dispatch } = useStore();
-
+const { dispatch } = useStore();
+const sidebarStore = useSidebarStore()
 // 用户信息
 const userInfo = ref({
   groupID: "",
@@ -60,12 +60,13 @@ const userInfo = ref({
   nick: "_",
   avatar: "",
 });
+
 const handleConversation = ({ id, type }) => {
-  commit("taggleOueSide", { id: "chat", path: "/chat" });
+  sidebarStore.taggleOueSide({ path: "/chat" });
   dispatch("addConversation", { convId: `${type}${id}` });
   scrollToMessage(`message_${type}${id}`);
 };
-// 方法
+
 const sendMessage = (data) => {
   // 发送消息逻辑
   const convInfo = {

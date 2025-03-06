@@ -2,7 +2,7 @@
   <div class="toolbar">
     <!-- 表情包 -->
     <span
-      v-show="!fullScreen && !isRobot(toAccount)"
+      v-show="!isFullscreenInputActive && !isRobot(toAccount)"
       :title="$t('chat.emoji')"
       class="emoticon"
       @click="sendEmojiClick"
@@ -68,11 +68,11 @@
       <FontIcon class="svg-left icon-hover" iconName="DArrowLeft" />
     </span>
     <span
-      :title="fullScreen ? $t('chat.recover') : $t('chat.launch')"
+      :title="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
       class="ml-auto"
-      @click="onEnlarge(fullScreen)"
+      @click="onEnlarge(isFullscreenInputActive)"
     >
-      <svg-icon :local-icon="fullScreen ? 'narrow' : 'enlarge'" class="icon-hover" />
+      <svg-icon :local-icon="isFullscreenInputActive ? 'narrow' : 'enlarge'" class="icon-hover" />
     </span>
     <input
       type="file"
@@ -105,7 +105,9 @@ import { isRobot, screenshot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
+import { storeToRefs } from 'pinia';
 import { useBoolean } from "@/utils/hooks/index";
+import { useChatStore } from "@/stores/modules/chat";
 import { useRobotStore } from "@/stores/modules/robot";
 import EmotionPackBox from "./EmotionPackBox.vue";
 import RobotOptions from "./RobotOptions.vue";
@@ -119,10 +121,11 @@ const filePicker = ref();
 
 const [flag, setFlag] = useBoolean();
 const robotStore = useRobotStore();
-const { commit, dispatch } = useStore();
+const chatStore = useChatStore();
+const { isFullscreenInputActive } = storeToRefs(chatStore);
+const { dispatch } = useStore();
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-const { fullScreen, currentConversation } = useState({
-  fullScreen: (state) => state.conversation.fullScreen,
+const { currentConversation } = useState({
   currentConversation: (state) => state.conversation.currentConversation,
 });
 
@@ -168,9 +171,11 @@ const sendFileClick = () => {
 const clickCscreenshot = () => {
   screenshot(() => {});
 };
+
 const onShake = () => {};
+
 const onEnlarge = (value) => {
-  commit("setConversationValue", { key: "fullScreen", value: !value });
+  chatStore.toggleFullScreenInput(!value);
 };
 
 function customMessage() {

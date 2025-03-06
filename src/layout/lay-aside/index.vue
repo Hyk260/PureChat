@@ -37,7 +37,6 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
 import { useChatStore } from "@/stores/modules/chat";
 import { useSidebarStore } from "@/stores/modules/sidebar";
 import emitter from "@/utils/mitt-bus";
@@ -50,7 +49,6 @@ defineOptions({
 });
 
 const router = useRouter();
-const { commit } = useStore();
 const chatStore = useChatStore();
 const sidebarStore = useSidebarStore();
 
@@ -68,7 +66,7 @@ function toggle(item) {
   } else if (item?.mode === "other") {
     emitter.emit("SidebarEditDialog", true);
   } else {
-    commit("taggleOueSide", item);
+    sidebarStore.taggleOueSide(item);
   }
 }
 

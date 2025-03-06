@@ -38,7 +38,7 @@
       <EmptyMessage className="empty" v-if="!conver" />
       <Header />
       <!-- 聊天窗口 -->
-      <Chatwin ref="chatRef" :class="{ 'chat-h-full': fullScreen }" />
+      <Chatwin ref="chatRef" :class="{ 'chat-h-full': isFullscreenInputActive }" />
       <!-- 消息回复框 -->
       <ReplyBox />
       <!-- Resize -->
@@ -69,6 +69,7 @@ import {
 import { $t } from "@/locales/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
+import { storeToRefs } from 'pinia';
 import { isMacOS } from "@/utils/common";
 import { useAppStore } from "@/stores/modules/app";
 import { useChatStore } from "@/stores/modules/chat";
@@ -88,24 +89,26 @@ import Search from "./components/Search.vue";
 import networklink from "./components/networklink.vue";
 
 const isLocalMode = __LOCAL_MODE__;
+
 const unread = ref("");
 const chatRef = ref(null);
 const activeName = ref("whole");
-const { commit } = useStore();
+
 const appStore = useAppStore();
 const chatStore = useChatStore();
+
+const { commit } = useStore();
+const { isFullscreenInputActive } = storeToRefs(chatStore);
 
 const { isGroupChat } = useGetters(["isGroupChat"]);
 const {
   conver,
   isChatBoxVisible,
   arrowRight,
-  fullScreen,
 } = useState({
   conver: (state) => state.conversation.currentConversation,
   isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
   arrowRight: (state) => state.conversation.arrowRight,
-  fullScreen: (state) => state.conversation.fullScreen,
 });
 
 const handleClick = ({ props }, event) => {
@@ -113,9 +116,9 @@ const handleClick = ({ props }, event) => {
   commit("toggleList", name);
 };
 const fnDragCss = () => {
-  if (fullScreen.value) return "";
+  if (isFullscreenInputActive) return "";
   const cursor = isMacOS() ? "!cursor-row-resize" : "cursor-n-resize";
-  return [cursor, !fullScreen.value ? "resize-hover" : ""];
+  return [cursor, !isFullscreenInputActive ? "resize-hover" : ""];
 };
 const onRight = (value) => {
   commit("setConversationValue", { key: "arrowRight", value: !value });

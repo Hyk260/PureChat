@@ -1,7 +1,7 @@
 <template>
   <div
     class="wangeditor"
-    :class="{ 'wang-h-full': fullScreen }"
+    :class="{ 'wang-h-full': isFullscreenInputActive }"
     id="editor"
     v-show="!showCheckbox"
     v-if="isChatBoxVisible"
@@ -48,7 +48,7 @@
 import { bytesToSize, isRobot, fileImgToBase64Url } from "@/utils/chat/index";
 import { isMobile } from "@/utils/common";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
-import emitter from "@/utils/mitt-bus";
+
 import { Editor } from "@wangeditor/editor-for-vue";
 import "@wangeditor/editor/dist/css/style.css";
 import { debounce } from "lodash-es";
@@ -61,14 +61,14 @@ import {
   shallowRef,
   watch,
 } from "vue";
+import { storeToRefs } from 'pinia';
 import { useStore } from "vuex";
-import MentionModal from "../components/MentionModal.vue";
-import RichToolbar from "../components/RichToolbar.vue";
 import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
 import { localStg } from "@/utils/storage";
 import { useBoolean } from "@/utils/hooks/index";
 import { useAppStore } from "@/stores/modules/app";
+import { useChatStore } from "@/stores/modules/chat";
 import { useGroupStore } from "@/stores/modules/group";
 import {
   convertEmoji,
@@ -85,6 +85,9 @@ import {
   insertMention,
   isDataTransferItem,
 } from "../utils/utils";
+import MentionModal from "../components/MentionModal.vue";
+import RichToolbar from "../components/RichToolbar.vue";
+import emitter from "@/utils/mitt-bus";
 
 const editorRef = shallowRef(); // 编辑器实例，必须用 shallowRef
 const valueHtml = ref(""); // 内容 HTML
@@ -92,10 +95,12 @@ const mode = "simple"; // 'default' 或 'simple'
 const mentionRef = ref();
 
 const appStore = useAppStore();
+const chatStore = useChatStore();
 const groupStore = useGroupStore();
 const [loading, setLoading] = useBoolean();
 const [disabled, setDisabled] = useBoolean();
 
+const { isFullscreenInputActive } = storeToRefs(chatStore);
 const { dispatch, commit } = useStore();
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
 const {
@@ -105,7 +110,6 @@ const {
   isShowModal,
   currentReplyMsg,
   sessionDraftMap,
-  fullScreen,
 } = useState({
   sessionDraftMap: (state) => state.conversation.sessionDraftMap,
   currentConversation: (state) => state.conversation.currentConversation,
@@ -113,7 +117,6 @@ const {
   isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
   isShowModal: (state) => state.conversation.isShowModal,
   currentReplyMsg: (state) => state.conversation.currentReplyMsg,
-  fullScreen: (state) => state.conversation.fullScreen,
 });
 
 const handleEditor = (editor, created = true) => {
@@ -303,7 +306,7 @@ const handleEnter = (event, editor = editorRef.value) => {
 // 清空输入框
 const clearInputInfo = (editor = editorRef.value) => {
   commit("setReplyMsg", null);
-  commit("setConversationValue", { key: "fullScreen", value: false });
+  chatStore.toggleFullScreenInput(false);
   editor?.clear();
 };
 

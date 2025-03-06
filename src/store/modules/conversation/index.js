@@ -22,7 +22,6 @@ import { timProxy } from "@/utils/IM/index";
 import { createAiPromptMsg, getModelType } from "@/ai/utils";
 import { MessageModel } from "@/database/models/message";
 import emitter from "@/utils/mitt-bus";
-import router from "@/router";
 
 const conversation = {
   state: {
@@ -41,9 +40,7 @@ const conversation = {
     filterConversationList: [],
     currentReplyMsg: null, // 回复数据
     activeTab: "whole", // 全部 未读 提及我
-    outside: "chat", // 侧边栏初始状态
     arrowRight: false, // 聊天会话列表折叠 true ？'折叠' : '不折叠'
-    fullScreen: false, // 全屏输入框是否启用
     revokeMsgMap: new Map(), // 撤回消息重新编辑
     postponeUnread: new Set(),
   },
@@ -218,11 +215,6 @@ const conversation = {
     // 设置聊天框状态
     toggleChatBox(state, flag) {
       state.isChatBoxVisible = flag;
-    },
-    // 切换侧边栏
-    taggleOueSide(state, item) {
-      state.outside = item.id;
-      router.push(item.path);
     },
     // 回复消息
     setReplyMsg(state, payload) {
