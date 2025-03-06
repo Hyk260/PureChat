@@ -101,9 +101,9 @@ const handleClick = ({ props }, event) => {
 };
 
 const fnDragCss = () => {
-  if (isFullscreenInputActive) return "";
+  if (isFullscreenInputActive.value) return "";
   const cursor = isMacOS() ? "!cursor-row-resize" : "cursor-n-resize";
-  return [cursor, !isFullscreenInputActive ? "resize-hover" : ""];
+  return [cursor, !isFullscreenInputActive.value ? "resize-hover" : ""];
 };
 
 const toggleCollapsed = () => {

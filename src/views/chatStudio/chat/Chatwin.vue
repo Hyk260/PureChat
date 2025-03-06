@@ -124,7 +124,7 @@ import {
   ref,
   watch,
 } from "vue";
-import { useGroupStore, useAppStore } from '@/stores/index';
+import { useGroupStore, useAppStore, useChatStore } from "@/stores/index";
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
 import { avatarMenu, menuOptionsList, emptyUrl, squareUrl } from "../utils/menu";
@@ -164,6 +164,8 @@ const menuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
 const groupStore = useGroupStore();
+const chatStore = useChatStore();
+const appStore = useAppStore();
 const { dispatch, commit } = useStore();
 const { toAccount, isGroupChat, currentType } = useGetters([
   "toAccount",
@@ -176,7 +178,6 @@ const {
   forwardData,
   showCheckbox,
   needScrollDown,
-  currentReplyMsg,
   currentMessageList,
   currentConv,
 } = useState({
@@ -185,7 +186,6 @@ const {
   forwardData: (state) => state.conversation.forwardData,
   showCheckbox: (state) => state.conversation.showCheckbox,
   needScrollDown: (state) => state.conversation.needScrollDown,
-  currentReplyMsg: (state) => state.conversation.currentReplyMsg,
   currentMessageList: (state) => state.conversation.currentMessageList,
   currentConv: (state) => state.conversation.currentConversation,
 });
@@ -216,7 +216,7 @@ const classMessageViewItem = (item) => {
 const classMessageInfoView = () => {
   return [
     isChatBoxVisible.value ? "" : "style-msg-box",
-    currentReplyMsg.value ? "style-reply" : "",
+    chatStore.replyMsgData ? "style-reply" : "",
   ];
 };
 
@@ -249,7 +249,7 @@ const handleSelect = (e, item, type = "initial") => {
   const _el = document.getElementById(`choice${item.ID}`);
   const el = _el.getElementsByClassName("check-btn")[0];
   if (!el.checked && forwardData.value.size >= MULTIPLE_CHOICE_MAX) {
-    useAppStore().showMessage({ message: `最多只能选择${MULTIPLE_CHOICE_MAX}条`, type: "error"});
+    appStore.showMessage({ message: `最多只能选择${MULTIPLE_CHOICE_MAX}条`, type: "error" });
     return;
   }
   // 点击input框
@@ -517,7 +517,7 @@ const handleTranslate = (data) => {
 const handleForward = (data) => {};
 // 回复消息
 const handleReplyMsg = (data) => {
-  commit("setReplyMsg", data);
+  chatStore.$patch({ replyMsgData: data });
   if (!isSelf(data)) handleAt(data);
   // 重置编辑器高度
   const chatBox = document.getElementById("chat-box"); //聊天框
@@ -592,9 +592,12 @@ watch(
   }
 );
 
-watch(currentReplyMsg, () => {
-  updateScrollbar();
-});
+watch(
+  () => chatStore.replyMsgData,
+  () => {
+    updateScrollbar();
+  }
+);
 
 onMounted(() => {
   onEmitter();

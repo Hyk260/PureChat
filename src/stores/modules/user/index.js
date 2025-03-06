@@ -12,6 +12,7 @@ import { changeLocale } from "@/locales/index";
 import router from "@/router"
 import chat from "@/utils/IM/im-sdk/tim"
 import emitter from "@/utils/mitt-bus"
+import { useChatStore } from '@/stores/modules/chat/index';
 import store from '@/store/index';
 
 export const useUserStore = defineStore(SetupStoreId.User, {
@@ -97,6 +98,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         // 清除消息记录
         // TODO: 需要调用conversation store的clearHistory
         store.commit("clearHistory")
+        useChatStore().clearHistory()
       } else {
         console.log("[chat] im退出登录失败 logout", data)
       }

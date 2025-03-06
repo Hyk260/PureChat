@@ -70,7 +70,7 @@
     <span
       :title="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
       class="ml-auto"
-      @click="onEnlarge(isFullscreenInputActive)"
+      @click="toggleFullScreenInput"
     >
       <svg-icon :local-icon="isFullscreenInputActive ? 'narrow' : 'enlarge'" class="icon-hover" />
     </span>
@@ -173,8 +173,10 @@ const clickCscreenshot = () => {
 
 const onShake = () => {};
 
-const onEnlarge = (value) => {
-  chatStore.toggleFullScreenInput(!value);
+const toggleFullScreenInput = () => {
+  chatStore.$patch((state) => {
+    state.isFullscreenInputActive = !state.isFullscreenInputActive;
+  })
 };
 
 function customMessage() {

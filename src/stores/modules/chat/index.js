@@ -10,13 +10,14 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     totalUnreadMsg: 0, // 未读消息总数
     isFullscreenInputActive: false, // 是否全屏输入框
     isChatSessionListCollapsed: false, // 聊天会话列表是否折叠
+    replyMsgData: null, // 回复消息数据
   }),
   getters: {
 
   },
   actions: {
-    toggleFullScreenInput(flag) {
-      this.isFullscreenInputActive = flag;
+    clearHistory() {
+      this.replyMsgData = null;
     },
     // 更新未读消息总数
     async updateTotalUnreadMsg() {

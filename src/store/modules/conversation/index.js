@@ -38,7 +38,6 @@ const conversation = {
     currentConversation: null, //跳转窗口的属性
     conversationList: [], // 会话列表数据
     filterConversationList: [],
-    currentReplyMsg: null, // 回复数据
     activeTab: "whole", // 全部 未读 提及我
     revokeMsgMap: new Map(), // 撤回消息重新编辑
     postponeUnread: new Set(),
@@ -156,7 +155,6 @@ const conversation = {
         activeTab: "whole",
         isChatBoxVisible: false,
         showCheckbox: false,
-        currentReplyMsg: null,
       });
       console.log("[chat] 清除历史记录 clearHistory:", state);
     },
@@ -214,10 +212,6 @@ const conversation = {
     // 设置聊天框状态
     toggleChatBox(state, flag) {
       state.isChatBoxVisible = flag;
-    },
-    // 回复消息
-    setReplyMsg(state, payload) {
-      state.currentReplyMsg = payload;
     },
     setMessageEdit(state, payload) {
       state.messageEdit = payload;

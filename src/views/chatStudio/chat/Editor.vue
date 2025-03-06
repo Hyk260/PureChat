@@ -61,7 +61,7 @@ import {
   shallowRef,
   watch,
 } from "vue";
-import { storeToRefs } from 'pinia';
+import { storeToRefs } from "pinia";
 import { useStore } from "vuex";
 import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
@@ -98,7 +98,7 @@ const groupStore = useGroupStore();
 const [loading, setLoading] = useBoolean();
 const [disabled, setDisabled] = useBoolean();
 
-const { isFullscreenInputActive } = storeToRefs(chatStore);
+const { isFullscreenInputActive, replyMsgData } = storeToRefs(chatStore);
 const { dispatch, commit } = useStore();
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
 const {
@@ -106,7 +106,6 @@ const {
   isChatBoxVisible,
   showCheckbox,
   isShowModal,
-  currentReplyMsg,
   sessionDraftMap,
 } = useState({
   sessionDraftMap: (state) => state.conversation.sessionDraftMap,
@@ -114,7 +113,6 @@ const {
   showCheckbox: (state) => state.conversation.showCheckbox,
   isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
   isShowModal: (state) => state.conversation.isShowModal,
-  currentReplyMsg: (state) => state.conversation.currentReplyMsg,
 });
 
 const handleEditor = (editor, created = true) => {
@@ -303,8 +301,10 @@ const handleEnter = (event, editor = editorRef.value) => {
 };
 // 清空输入框
 const clearInputInfo = (editor = editorRef.value) => {
-  commit("setReplyMsg", null);
-  chatStore.toggleFullScreenInput(false);
+  chatStore.$patch({
+    isFullscreenInputActive: false,
+    replyMsgData: null,
+  });
   editor?.clear();
 };
 
@@ -326,7 +326,7 @@ const sendMsgBefore = (editor = editorRef.value) => {
     aitlist,
     files: files,
     video,
-    reply: currentReplyMsg.value,
+    reply: replyMsgData.value,
     isHave: Boolean(have),
   };
 };

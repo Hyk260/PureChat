@@ -78,7 +78,6 @@ import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { useStore } from "vuex";
-import { storeToRefs } from "pinia";
 import { chatName, html2Escape, formatContent } from "../utils/utils";
 import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
 import { localStg } from "@/utils/storage";
@@ -235,7 +234,7 @@ const handleConvListClick = (data) => {
     const { conversationID: id } = chat.value;
     if (id == data?.conversationID) return;
   }
-  commit("setReplyMsg", null);
+  chatStore.$patch({ replyMsgData: null });
   commit("setMessageEdit", null);
   commit("setForwardData", { type: "clear", payload: null });
   // 切换会话
