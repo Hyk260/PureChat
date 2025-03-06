@@ -1,5 +1,4 @@
-import { useUserStore } from "@/stores/modules/user";
-import { useAppStore } from '@/stores/modules/app';
+import { useUserStore, useAppStore } from "@/stores/index";
 // 异常拦截处理器
 export const errorHandler = (error) => {
   let errMessage = "未知错误";

@@ -8,10 +8,7 @@ import { localStg } from "@/utils/storage";
 import { useWindowFocus, useEventListener } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
-import { useAppStore } from '@/stores/modules/app';
-import { useUserStore } from '@/stores/modules/user';
-import { useGroupStore } from '@/stores/modules/group';
-import { useChatStore } from '@/stores/modules/chat';
+import { useAppStore, useUserStore, useGroupStore, useChatStore } from '@/stores/index';
 import {
   fnCheckoutNetState,
   getConversationID,

@@ -67,9 +67,7 @@ import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
 import { localStg } from "@/utils/storage";
 import { useBoolean } from "@/utils/hooks/index";
-import { useAppStore } from "@/stores/modules/app";
-import { useChatStore } from "@/stores/modules/chat";
-import { useGroupStore } from "@/stores/modules/group";
+import { useAppStore, useGroupStore, useChatStore } from "@/stores/index";
 import {
   convertEmoji,
   customAlert,

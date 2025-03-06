@@ -3,7 +3,7 @@ import { USER_MODEL } from "@/constants/index";
 import { msgContent } from "@/api/im-sdk-api/custom";
 import { localStg } from "@/utils/storage";
 import { SessionModel } from '@/database/models/session';
-import { useAppStore } from '@/stores/modules/app';
+import { useAppStore } from '@/stores/index';
 
 /**
  * 将二进制数据转换为 base64 URL 格式

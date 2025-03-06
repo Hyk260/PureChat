@@ -16,7 +16,7 @@
       @contextmenu.prevent="handleContextMenuEvent($event, item)"
     >
       <!-- 置顶图标 -->
-      <div class="pinned-tag" v-show="item.isPinned && !arrowRight"></div>
+      <div class="pinned-tag" v-show="item.isPinned"></div>
       <!-- 头像 -->
       <el-badge is-dot :hidden="isShowCount(item) || !isNotify(item)">
         <UserAvatar
@@ -75,17 +75,17 @@ import { h, ref, watch, computed } from "vue";
 import { chatSessionListData } from "../utils/menu";
 import { pinConversation, setMessageRead } from "@/api/im-sdk-api/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
-import emitter from "@/utils/mitt-bus";
 import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { useStore } from "vuex";
-import EmptyMessage from "../components/EmptyMessage.vue";
-import Label from "../components/Label.vue";
+import { storeToRefs } from "pinia";
 import { chatName, html2Escape, formatContent } from "../utils/utils";
 import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
-import { useUserStore } from "@/stores/modules/user";
 import { localStg } from "@/utils/storage";
-import { useGroupStore } from "@/stores/modules/group";
+import { useGroupStore, useUserStore, useChatStore } from "@/stores/index";
+import EmptyMessage from "../components/EmptyMessage.vue";
+import Label from "../components/Label.vue";
+import emitter from "@/utils/mitt-bus";
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop();
 
@@ -95,18 +95,17 @@ const contextMenuItemInfo = ref([]);
 
 const groupStore = useGroupStore();
 const userStore = useUserStore();
+const chatStore = useChatStore();
 const { dispatch, commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
-const { activeTab, chat, sessionDraftMap, postponeUnread, arrowRight, filterConversationList } =
-  useState({
-    sessionDraftMap: (state) => state.conversation.sessionDraftMap,
-    arrowRight: (state) => state.conversation.arrowRight,
-    activeTab: (state) => state.conversation.activeTab,
-    filterConversationList: (state) => state.conversation.filterConversationList,
-    conversationList: (state) => state.conversation.conversationList,
-    chat: (state) => state.conversation.currentConversation,
-    postponeUnread: (state) => state.conversation.postponeUnread,
-  });
+const { activeTab, chat, sessionDraftMap, postponeUnread, filterConversationList } = useState({
+  sessionDraftMap: (state) => state.conversation.sessionDraftMap,
+  activeTab: (state) => state.conversation.activeTab,
+  filterConversationList: (state) => state.conversation.filterConversationList,
+  conversationList: (state) => state.conversation.conversationList,
+  chat: (state) => state.conversation.currentConversation,
+  postponeUnread: (state) => state.conversation.postponeUnread,
+});
 
 const searchForData = computed(() => {
   if (filterConversationList.value.length && activeTab.value === "whole") {
@@ -296,6 +295,7 @@ watch(activeTab, (data) => {
 .scrollbar-list {
   background: var(--color-body-bg);
   height: 100%;
+  overflow: hidden;
 }
 .message-item {
   @include flex-center;

@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia';
-import {
-  getUnreadMsg,
-} from "@/api/im-sdk-api/index";
-import { SetupStoreId } from '../plugins/index';
+import {  getUnreadMsg } from "@/api/im-sdk-api/index";
+import { SetupStoreId } from '../../plugins/index';
 import { EMOJI_RECENTLY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 
@@ -11,6 +9,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     recently: new Set(), // 最近使用表情包
     totalUnreadMsg: 0, // 未读消息总数
     isFullscreenInputActive: false, // 是否全屏输入框
+    isChatSessionListCollapsed: false, // 聊天会话列表是否折叠
   }),
   getters: {
 

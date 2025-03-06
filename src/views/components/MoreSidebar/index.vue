@@ -103,7 +103,7 @@ import { cloneDeep, uniqBy } from "lodash-es";
 import { defineComponent } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
 import { mapStores, mapState, mapActions } from "pinia";
-import { useSidebarStore } from "@/stores/modules/sidebar";
+import { useSidebarStore } from "@/stores/modules/sidebar/index";
 
 export default defineComponent({
   components: {

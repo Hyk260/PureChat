@@ -18,7 +18,7 @@
 <script>
 import { mapState } from "pinia";
 import { isSelf } from "../utils/utils";
-import { useGroupStore } from "@/stores/modules/group";
+import { useGroupStore } from "@/stores/modules/group/index";
 import store from "@/store/index";
 import emitter from "@/utils/mitt-bus";
 

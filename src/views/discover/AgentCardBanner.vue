@@ -40,10 +40,9 @@ import { Markdown, handleCopyClick } from "@/utils/markdown/index";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
-import { useSidebarStore } from "@/stores/modules/sidebar";
 import { StoreKey, VITE_OPENAI_ID, ModelProvider } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
-import { useRobotStore } from "@/stores/modules/robot";
+import { useRobotStore, useSidebarStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
 const cardData = ref({});

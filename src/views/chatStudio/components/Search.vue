@@ -25,8 +25,7 @@ import { showConfirmationBox } from "@/utils/message";
 import { Search } from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 import { debounce, isEmpty } from "lodash-es";
-import { useGroupStore } from "@/stores/modules/group";
-import emitter from "@/utils/mitt-bus";
+import { useGroupStore } from "@/stores/modules/group/index";
 
 defineOptions({
   name: "Search",

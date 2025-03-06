@@ -97,7 +97,7 @@ import { useRouter } from "vue-router";
 import { authorizedLogin, oauthAuthorize } from "../utils/auth";
 import { operates, thirdParty } from "../utils/enums";
 import { rules, user } from "../utils/validation";
-import { useUserStore } from "@/stores/modules/user";
+import { useUserStore } from "@/stores/modules/user/index";
 import ImageVerify from "@/views/components/ImageVerify/index.vue";
 import loadingSvg from "./loadingSvg.vue";
 

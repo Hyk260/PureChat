@@ -5,7 +5,7 @@ import {
   createTextMessage,
   createVideoMessage,
 } from "@/api/im-sdk-api/index";
-import { useAppStore } from '@/stores/modules/app';
+import { useAppStore } from '@/stores/modules/app/index';
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { dataURLtoFile, getBlob, getFileType } from "@/utils/chat/index";

@@ -37,8 +37,7 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useChatStore } from "@/stores/modules/chat";
-import { useSidebarStore } from "@/stores/modules/sidebar";
+import { useChatStore, useSidebarStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 // import UploadAvatarDialog from "@/views/chatStudio/components/UploadAvatarDialog.vue";
 import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";

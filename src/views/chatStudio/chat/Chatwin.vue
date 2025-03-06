@@ -124,8 +124,7 @@ import {
   ref,
   watch,
 } from "vue";
-import { useGroupStore } from '@/stores/modules/group';
-import { useAppStore } from '@/stores/modules/app';
+import { useGroupStore, useAppStore } from '@/stores/index';
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
 import { avatarMenu, menuOptionsList, emptyUrl, squareUrl } from "../utils/menu";

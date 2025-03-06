@@ -47,7 +47,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { getGender } from "@/utils/common";
 import { useStore } from "vuex";
-import { useSidebarStore } from "@/stores/modules/sidebar";
+import { useSidebarStore } from "@/stores/modules/sidebar/index";
 import { scrollToMessage } from "@/utils/chat/index";
 import emitter from "@/utils/mitt-bus";
 

@@ -38,8 +38,7 @@ import { useBoolean } from "@/utils/hooks/index";
 import { useState } from "@/utils/hooks/useMapper";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
-import { useChatStore } from "@/stores/modules/chat";
-import { useUserStore } from '@/stores/modules/user';
+import { useUserStore, useChatStore } from '@/stores/index';
 import emitter from "@/utils/mitt-bus";
 
 const { homepage } = __APP_INFO__.pkg;
@@ -47,6 +46,7 @@ const cardRef = useTemplateRef("cardRef");
 
 const profile = ref({});
 const market = ref([]);
+const userStore = useUserStore()
 const chatStore = useChatStore();
 const [card, setCard] = useBoolean();
 
@@ -84,7 +84,7 @@ const menuItems = [
     svg: "log-out",
     hide: __LOCAL_MODE__,
     action: () => {
-      useUserStore().handleUserLogout()
+      userStore.handleUserLogout()
     },
   },
 ].filter((item) => !item.hide);

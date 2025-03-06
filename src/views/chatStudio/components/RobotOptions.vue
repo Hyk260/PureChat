@@ -124,14 +124,14 @@ import { getModelType, useAccessStore, usePromptStore, getModelSvg } from "@/ai/
 import { useBoolean } from "@/utils/hooks/index";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
-import emitter from "@/utils/mitt-bus";
 import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
-import DragPrompt from "./DragPrompt.vue";
 import { Markdown } from "@/utils/markdown/index";
 import { StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
+import { useRobotStore } from "@/stores/modules/robot/index";
+import DragPrompt from "./DragPrompt.vue";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
-import { useRobotStore } from "@/stores/modules/robot";
+import emitter from "@/utils/mitt-bus";
 
 const robotIcon = ref("");
 const modelData = ref(null);

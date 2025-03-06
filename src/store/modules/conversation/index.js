@@ -16,7 +16,7 @@ import {
   transformData,
   getChatListCache,
 } from "@/utils/chat/index";
-import { useGroupStore } from "@/stores/modules/group";
+import { useGroupStore } from "@/stores/index";
 import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
 import { createAiPromptMsg, getModelType } from "@/ai/utils";
@@ -40,7 +40,6 @@ const conversation = {
     filterConversationList: [],
     currentReplyMsg: null, // 回复数据
     activeTab: "whole", // 全部 未读 提及我
-    arrowRight: false, // 聊天会话列表折叠 true ？'折叠' : '不折叠'
     revokeMsgMap: new Map(), // 撤回消息重新编辑
     postponeUnread: new Set(),
   },

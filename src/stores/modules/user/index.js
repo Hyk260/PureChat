@@ -1,11 +1,11 @@
 import { nextTick } from "vue";
 import { defineStore } from 'pinia'
-import { useAppStore } from '@/stores/modules/app';
+import { useAppStore } from '@/stores/index';
 import { login, logout } from "@/api/node-admin-api/index"
-import { ACCOUNT, TIM_PROXY, USER_MODEL } from "@/constants/index"
+import { ACCOUNT, USER_MODEL } from "@/constants/index"
 import { localStg } from "@/utils/storage"
 import { initThemeSettings } from "@/theme/settings"
-import { SetupStoreId } from '../plugins/index';
+import { SetupStoreId } from '../../plugins/index';
 import { timProxy } from '@/utils/IM/index';
 import { setTheme } from "@/utils/common";
 import { changeLocale } from "@/locales/index";

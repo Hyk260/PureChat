@@ -9,7 +9,7 @@
 
 <script setup>
 import { useState } from "@/utils/hooks/useMapper";
-import { useSidebarStore } from "@/stores/modules/sidebar";
+import { useSidebarStore } from "@/stores/modules/sidebar/index";
 
 const props = defineProps({
   className: {

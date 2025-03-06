@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { domToJpeg, domToPng, domToSvg, domToWebp, domToBlob } from "modern-screenshot";
-import { useAppStore } from "@/stores/modules/app";
+import { useAppStore } from "@/stores/index";
 import { useBoolean } from "./other";
 
 export const { VITE_APP_NAME } = import.meta.env;

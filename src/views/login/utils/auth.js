@@ -1,4 +1,4 @@
-import { useUserStore } from "@/stores/modules/user";
+import { useUserStore } from "@/stores/modules/user/index";
 import { githubAuth, openAuthUrl } from "@/api/node-admin-api/index";
 
 const { DEV: isDev } = import.meta.env;

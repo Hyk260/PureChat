@@ -11,7 +11,7 @@ import {
 import OllamaAI from "../ollama/ollama";
 import { handleStreamingChat } from '@/ai/utils';
 import { transformData } from "@/utils/chat/index";
-import { useRobotStore } from "@/stores/modules/robot";
+import { useRobotStore } from "@/stores/index";
 
 export * from "./config";
 export * from "./modelValue";

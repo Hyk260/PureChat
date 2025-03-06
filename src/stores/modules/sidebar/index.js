@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
-import { SetupStoreId } from '../plugins/index';
+import { SetupStoreId } from '../../plugins/index';
 import router from "@/router";
 
 const { docs, homepage, giteeHomepage } = __APP_INFO__.pkg;

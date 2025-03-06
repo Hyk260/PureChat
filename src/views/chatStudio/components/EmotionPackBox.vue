@@ -64,7 +64,7 @@
 import { onMounted, ref } from "vue";
 import { chunk } from "lodash-es";
 import { ClickOutside as vClickOutside } from "element-plus";
-import { useChatStore } from "@/stores/modules/chat";
+import { useChatStore } from "@/stores/modules/chat/index";
 import { getOperatingSystem, getAssetsFile } from "../utils/utils";
 import emitter from "@/utils/mitt-bus";
 import emojiQq from "@/utils/emoji/emoji-map-qq";

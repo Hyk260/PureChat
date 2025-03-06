@@ -35,7 +35,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { useSidebarStore } from "@/stores/modules/sidebar";
+import { useSidebarStore } from "@/stores/modules/sidebar/index";
 import { useStore } from "vuex";
 import modelProvider from "@/database/bot.json";
 import AgentCard from "./AgentCard.vue";

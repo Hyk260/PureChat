@@ -33,7 +33,7 @@ import { cloneDeep } from "lodash-es";
 import { prioritizeRBTUserID } from "@/utils/chat/index";
 import { insertMention } from "./../utils/utils";
 import { localStg } from "@/utils/storage";
-import { useGroupStore } from "@/stores/modules/group";
+import { useGroupStore } from "@/stores/modules/group/index";
 import emitter from "@/utils/mitt-bus";
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__";

@@ -4,7 +4,7 @@ import markdownit from "markdown-it";
 import hljs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";
 // import bash from "highlight.js/lib/languages/bash";
-import { useAppStore } from '@/stores/modules/app';
+import { useAppStore } from '@/stores/index';
 
 import "highlight.js/styles/base16/default-light.css";
 

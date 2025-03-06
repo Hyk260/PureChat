@@ -9,8 +9,7 @@ import { computed, onMounted } from "vue";
 import { ElConfigProvider } from "element-plus";
 import { elementPlusLocales } from "@/locales/element-plus";
 import { initThemeSettings } from "@/theme/settings";
-import { useUserStore } from "@/stores/modules/user";
-import { useAppStore } from '@/stores/modules/app';
+import { useUserStore, useAppStore } from "@/stores/index";
 
 defineOptions({ name: "App" });
 

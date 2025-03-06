@@ -78,7 +78,7 @@
 import { computed, ref } from "vue";
 import { localStg } from "@/utils/storage";
 import { ModelProvider } from "@/ai/constant";
-import { useUserStore } from "@/stores/modules/user";
+import { useUserStore } from "@/stores/index";
 import { languages, options, optionsModel } from "./enums";
 
 const { VITE_APP_NAME, DEV: isDev } = import.meta.env;
