@@ -48,7 +48,7 @@ jobs:
         run: pnpm install
       # 运行项目的构建脚本，生成静态内容。  
       - name: Build
-        run: pnpm run build
+        run: pnpm run build:github
       # 配置 GitHub Pages 的相关设置。
       - name: Setup Pages
         uses: actions/configure-pages@v4
