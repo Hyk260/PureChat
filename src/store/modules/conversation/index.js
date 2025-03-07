@@ -24,7 +24,6 @@ import emitter from "@/utils/mitt-bus";
 const conversation = {
   state: {
     showCheckbox: false, //是否显示多选框
-    noMore: false, // 加载更多  false ? 显示loading : 没有更多
     needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
@@ -74,7 +73,7 @@ const conversation = {
       const history = state.historyMessageList.get(convId) || [];
       if (history.map((t) => t?.ID).includes(msgId)) {
         console.warn("重复加载", msgId);
-        state.noMore = true;
+        useChatStore().$patch({ noMore: true })
         return;
       }
       console.log("历史消息 history:", history);
@@ -126,7 +125,7 @@ const conversation = {
       const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
       // 是否已经拉完所有消息 '没有更多' : '显示loading'
       console.log("isDone:", isMore || isDone ? "没有更多" : "显示loading");
-      state.noMore = isMore || isDone;
+      useChatStore().$patch({ noMore: isMore || isDone })
     },
     addAiPresetPromptWords(state, payload) {
       const { convId, message } = createAiPromptMsg();
@@ -154,8 +153,6 @@ const conversation = {
       const oldConvId = state.currentConversation?.conversationID;
       if (convId == oldConvId) return;
       state.currentConversation = payload;
-      // 系统消息关闭聊天框
-      useChatStore().$patch({ isChatBoxVisible: convId !== "@TIM#SYSTEM" })
       state.showCheckbox = false;
       if (payload) {
         const history = state.historyMessageList.get(convId);
@@ -165,7 +162,11 @@ const conversation = {
       }
       // 当前会话少于历史条数关闭loading
       const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
-      state.noMore = isMore;
+      // 系统消息关闭聊天框
+      useChatStore().$patch({
+        noMore: isMore,
+        isChatBoxVisible: convId !== "@TIM#SYSTEM"
+      })
     },
     //  切换列表 全部 未读 提及我
     toggleList(state, action) {

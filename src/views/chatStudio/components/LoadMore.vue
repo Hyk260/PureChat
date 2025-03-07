@@ -1,15 +1,17 @@
 <template>
-  <div class="viewref" v-if="index == currentMessageList.length - 1">
+  <div class="viewref" v-if="isShowMore">
     <!-- <div class="showMore">
       {{ noMore ? $t("chat.noMore") : "" }}
     </div> -->
-    <Loader v-show="!noMore" />
+    <Loader v-show="!chatStore.noMore" />
   </div>
 </template>
 
 <script setup>
-import { useState } from "@/utils/hooks/useMapper";
+import { computed } from "vue";
+import { useChatStore } from "@/stores/modules/chat/index";
 import Loader from "@/views/components/Loader/index.vue";
+import store from "@/store/index";
 
 const props = defineProps({
   index: {
@@ -17,9 +19,10 @@ const props = defineProps({
   },
 });
 
-const { noMore, currentMessageList } = useState({
-  noMore: (state) => state.conversation.noMore,
-  currentMessageList: (state) => state.conversation.currentMessageList,
+const chatStore = useChatStore();
+
+const isShowMore = computed(() => {
+  return store.state.conversation.currentMessageList?.length - 1 === props.index;
 });
 </script>
 

@@ -176,12 +176,7 @@ const { toAccount, isGroupChat, currentType } = useGetters([
   "isGroupChat",
   "currentType",
 ]);
-const {
-  showCheckbox,
-  needScrollDown,
-  currentMessageList,
-  currentConv,
-} = useState({
+const { showCheckbox, needScrollDown, currentMessageList, currentConv } = useState({
   showCheckbox: (state) => state.conversation.showCheckbox,
   needScrollDown: (state) => state.conversation.needScrollDown,
   currentMessageList: (state) => state.conversation.currentMessageList,
@@ -262,7 +257,7 @@ const handleSelect = (e, item, type = "initial") => {
   // 首次右键打开多选 默认选中当前
   if (type === "choice") {
     el.checked = true;
-    chatStore.setForwardData({ type: "set", payload: item });;
+    chatStore.setForwardData({ type: "set", payload: item });
   } else {
     el.checked = !el.checked;
     let key = el.checked ? "set" : "del";
@@ -353,16 +348,16 @@ const getMoreMsg = async () => {
     const { isCompleted, messageList, nextReqMessageID } = result;
     if (!messageList.length && isCompleted) {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
-      commit("setConversationValue", { key: "noMore", value: true });
+      chatStore.$patch({ noMore: true });
     } else if (messageList.length) {
       commit("loadMoreMessages", { convId, messages: messageList, msgId: messageList[0].ID });
       commit("setConversationValue", { key: "needScrollDown", value: msglist.length });
     } else {
-      commit("setConversationValue", { key: "noMore", value: true });
+      chatStore.$patch({ noMore: true });
     }
   } catch (e) {
     // 解析报错 关闭加载动画
-    commit("setConversationValue", { key: "noMore", value: true });
+    chatStore.$patch({ noMore: true });
   }
 };
 
@@ -546,7 +541,7 @@ const handleMultiSelectMsg = (item) => {
 };
 const handleRevokeChange = (data, type) => {
   if (data.type !== "TIMTextElem") return;
-  chatStore.updateRevokeMsg({ data, type })
+  chatStore.updateRevokeMsg({ data, type });
 };
 // 撤回消息
 const handleRevokeMsg = async (data) => {
