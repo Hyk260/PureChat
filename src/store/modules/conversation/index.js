@@ -14,7 +14,7 @@ import {
   getBaseTime,
   getChatListCache,
 } from "@/utils/chat/index";
-import { useGroupStore } from "@/stores/index";
+import { useGroupStore, useChatStore } from "@/stores/index";
 import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
 import { createAiPromptMsg, getModelType } from "@/ai/utils";
@@ -23,9 +23,7 @@ import emitter from "@/utils/mitt-bus";
 
 const conversation = {
   state: {
-    isChatBoxVisible: false, //是否显示输入框
     showCheckbox: false, //是否显示多选框
-    isShowModal: false, // @好友弹框
     noMore: false, // 加载更多  false ? 显示loading : 没有更多
     needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
     historyMessageList: new Map(), //历史消息
@@ -34,7 +32,7 @@ const conversation = {
     conversationList: [], // 会话列表数据
     filterConversationList: [],
     activeTab: "whole", // 全部 未读 提及我
-    postponeUnread: new Set(),
+    // postponeUnread: new Set(),
   },
   mutations: {
     updateMessages(state, payload) {
@@ -146,7 +144,6 @@ const conversation = {
         currentMessageList: [],
         conversationList: [],
         activeTab: "whole",
-        isChatBoxVisible: false,
         showCheckbox: false,
       });
       console.log("[chat] 清除历史记录 clearHistory:", state);
@@ -158,7 +155,7 @@ const conversation = {
       if (convId == oldConvId) return;
       state.currentConversation = payload;
       // 系统消息关闭聊天框
-      state.isChatBoxVisible = convId !== "@TIM#SYSTEM";
+      useChatStore().$patch({ isChatBoxVisible: convId !== "@TIM#SYSTEM" })
       state.showCheckbox = false;
       if (payload) {
         const history = state.historyMessageList.get(convId);
@@ -170,14 +167,6 @@ const conversation = {
       const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
       state.noMore = isMore;
     },
-    // 设置提及弹框显示隐藏
-    toggleMentionModal(state, action) {
-      if (state.currentConversation?.type === "GROUP") {
-        state.isShowModal = action;
-      } else {
-        state.isShowModal = false;
-      }
-    },
     //  切换列表 全部 未读 提及我
     toggleList(state, action) {
       state.activeTab = action;
@@ -186,10 +175,6 @@ const conversation = {
     setCheckboxState(state, flag) {
       state.showCheckbox = flag;
     },
-    // 设置聊天框状态
-    toggleChatBox(state, flag) {
-      state.isChatBoxVisible = flag;
-    },
     setConversationValue(state, { key, value }) {
       state[key] = value;
     },
@@ -197,7 +182,6 @@ const conversation = {
     clearCurrentMessage(state) {
       state.currentConversation = null;
       state.currentMessageList = [];
-      state.isChatBoxVisible = false;
     },
   },
   actions: {
@@ -276,10 +260,10 @@ const conversation = {
       } = payload || {};
       if (unreadCount === 0) return;
       // tab 不为全部不进行消息已读
-      if (state.activeTab !== "whole" && state.currentConversation.conversationID === convId) {
-        state.postponeUnread.add(convId);
-        return;
-      }
+      // if (state.activeTab !== "whole" && state.currentConversation.conversationID === convId) {
+      //   state.postponeUnread.add(convId);
+      //   return;
+      // }
       console.log("[chat] 消息已读 hasReadMessage:", payload);
       setMessageRead(convId);
     },

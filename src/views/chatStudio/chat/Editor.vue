@@ -22,8 +22,8 @@
     />
     <!-- @提及弹框 -->
     <MentionModal
+      v-if="isMentionModalVisible"
       ref="mentionRef"
-      v-if="isShowModal"
       :pinyinSearch="true"
       :isOwner="groupStore.isOwner"
       :editor="editorRef"
@@ -45,13 +45,6 @@
 </template>
 
 <script setup>
-import { bytesToSize, isRobot, fileImgToBase64Url } from "@/utils/chat/index";
-import { isMobile } from "@/utils/common";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
-
-import { Editor } from "@wangeditor/editor-for-vue";
-import "@wangeditor/editor/dist/css/style.css";
-import { debounce } from "lodash-es";
 import {
   onActivated,
   onBeforeUnmount,
@@ -61,6 +54,12 @@ import {
   shallowRef,
   watch,
 } from "vue";
+import { bytesToSize, isRobot, fileImgToBase64Url } from "@/utils/chat/index";
+import { isMobile } from "@/utils/common";
+import { useGetters, useState } from "@/utils/hooks/useMapper";
+import { Editor } from "@wangeditor/editor-for-vue";
+import "@wangeditor/editor/dist/css/style.css";
+import { debounce } from "lodash-es";
 import { storeToRefs } from "pinia";
 import { useStore } from "vuex";
 import { editorConfig, placeholderMap } from "../utils/configure";
@@ -97,15 +96,12 @@ const chatStore = useChatStore();
 const groupStore = useGroupStore();
 const [loading, setLoading] = useBoolean();
 const [disabled, setDisabled] = useBoolean();
-
-const { isFullscreenInputActive, replyMsgData } = storeToRefs(chatStore);
-const { dispatch, commit } = useStore();
+const { dispatch } = useStore();
+const { isChatBoxVisible, isMentionModalVisible, isFullscreenInputActive, replyMsgData } = storeToRefs(chatStore);
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-const { currentConversation, isChatBoxVisible, showCheckbox, isShowModal } = useState({
+const { currentConversation, showCheckbox } = useState({
   currentConversation: (state) => state.conversation.currentConversation,
   showCheckbox: (state) => state.conversation.showCheckbox,
-  isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
-  isShowModal: (state) => state.conversation.isShowModal,
 });
 
 const handleEditor = (editor, created = true) => {
@@ -281,7 +277,7 @@ const parsePicture = async (file, editor = editorRef.value) => {
 const handleEnter = (event, editor = editorRef.value) => {
   if (loading.value) return;
   if (event?.ctrlKey) return;
-  if (isShowModal.value) {
+  if (isMentionModalVisible.value) {
     mentionRef.value.inputKeyupHandler(event);
     return;
   }
@@ -375,13 +371,13 @@ function offEmitter() {
 }
 
 watch(isChatBoxVisible, () => {
-  handleEditorKeyDown(isShowModal.value);
+  handleEditorKeyDown(isMentionModalVisible.value);
 });
 // watch(lang, () => {
 //   handleToggleLanguage();
 // });
 onActivated(() => {
-  handleEditorKeyDown(isShowModal.value);
+  handleEditorKeyDown(isMentionModalVisible.value);
 });
 onDeactivated(() => {
   offEmitter();

@@ -74,7 +74,6 @@ export default {
   },
   computed: {
     ...mapState({
-      isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
       showCheckbox: (state) => state.conversation.showCheckbox,
       conversationList: (state) => state.conversation.conversationList,
       currentConversation: (state) => state.conversation.currentConversation,

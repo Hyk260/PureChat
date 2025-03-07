@@ -97,12 +97,12 @@ const userStore = useUserStore();
 const chatStore = useChatStore();
 const { dispatch, commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
-const { activeTab, chat, postponeUnread, filterConversationList } = useState({
+const { activeTab, chat, filterConversationList } = useState({
   activeTab: (state) => state.conversation.activeTab,
   filterConversationList: (state) => state.conversation.filterConversationList,
   conversationList: (state) => state.conversation.conversationList,
   chat: (state) => state.conversation.currentConversation,
-  postponeUnread: (state) => state.conversation.postponeUnread,
+  // postponeUnread: (state) => state.conversation.postponeUnread,
 });
 
 const searchForData = computed(() => {
@@ -271,21 +271,21 @@ const removeConv = async (data) => {
   const { conversationID: convId } = data;
   dispatch("deleteSession", { convId });
 };
-const fnPostpone = (data) => {
-  if (data !== "whole") return;
-  if (postponeUnread.value.size === 0) return;
-  [...postponeUnread.value].map((item) => {
-    setMessageRead(item);
-  });
-  commit("setConversationValue", { key: "postponeUnread", value: new Set() });
-};
+// const fnPostpone = (data) => {
+//   if (data !== "whole") return;
+//   if (postponeUnread.value.size === 0) return;
+//   [...postponeUnread.value].map((item) => {
+//     setMessageRead(item);
+//   });
+//   commit("setConversationValue", { key: "postponeUnread", value: new Set() });
+// };
 // 置顶
 const pingConv = async (data) => {
   await pinConversation(data);
 };
-watch(activeTab, (data) => {
-  fnPostpone(data);
-});
+// watch(activeTab, (data) => {
+//   fnPostpone(data);
+// });
 </script>
 
 <style lang="scss" scoped>

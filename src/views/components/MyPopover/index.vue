@@ -44,7 +44,7 @@
       </div>
     </div>
     <div class="footer">
-      <el-button v-if="cardData?.conversationType !== 'C2C'" class="w-full" @click="define" type="primary">
+      <el-button class="w-full" type="primary" @click="define">
         {{ $t("chat.sendMessage") }}
       </el-button>
     </div>

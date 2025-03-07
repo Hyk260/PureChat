@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import store from "@/store/index";
+import { useChatStore } from '@/stores/modules/chat/index';
 import { $t } from "@/locales/index";
 
 export const placeholderMap = computed(() => {
@@ -42,10 +42,10 @@ editorConfig.MENU_CONF["codeSelectLang"] = {};
 // 显示 modal
 function showModal(e) {
   // console.log("[@] 显示 showModal:", e.getText());
-  store.commit("toggleMentionModal", true);
+  useChatStore().toggleMentionModal(true)
 }
 // 隐藏 modal
 function hideModal(e) {
   // console.log("[@] 隐藏 hideModal:", e.getText());
-  store.commit("toggleMentionModal", false);
+  useChatStore().toggleMentionModal(false)
 }

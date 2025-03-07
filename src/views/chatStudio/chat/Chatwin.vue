@@ -124,6 +124,7 @@ import {
   ref,
   watch,
 } from "vue";
+import { storeToRefs } from "pinia";
 import { useGroupStore, useAppStore, useChatStore } from "@/stores/index";
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
@@ -168,6 +169,7 @@ const groupStore = useGroupStore();
 const chatStore = useChatStore();
 const appStore = useAppStore();
 const { dispatch, commit } = useStore();
+const { isChatBoxVisible } = storeToRefs(chatStore);
 
 const { toAccount, isGroupChat, currentType } = useGetters([
   "toAccount",
@@ -175,13 +177,11 @@ const { toAccount, isGroupChat, currentType } = useGetters([
   "currentType",
 ]);
 const {
-  isChatBoxVisible,
   showCheckbox,
   needScrollDown,
   currentMessageList,
   currentConv,
 } = useState({
-  isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
   showCheckbox: (state) => state.conversation.showCheckbox,
   needScrollDown: (state) => state.conversation.needScrollDown,
   currentMessageList: (state) => state.conversation.currentMessageList,

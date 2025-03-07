@@ -87,12 +87,11 @@ const appStore = useAppStore();
 const chatStore = useChatStore();
 
 const { commit } = useStore();
-const { isFullscreenInputActive, isChatSessionListCollapsed } = storeToRefs(chatStore);
+const { isChatBoxVisible, isFullscreenInputActive, isChatSessionListCollapsed } = storeToRefs(chatStore);
 
 const { isGroupChat } = useGetters(["isGroupChat"]);
-const { conver, isChatBoxVisible } = useState({
-  conver: (state) => state.conversation.currentConversation,
-  isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
+const { conver } = useState({
+  conver: (state) => state.conversation.currentConversation
 });
 
 const handleClick = ({ props }, event) => {

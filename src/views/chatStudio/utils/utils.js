@@ -5,7 +5,7 @@ import {
   createTextMessage,
   createVideoMessage,
 } from "@/api/im-sdk-api/index";
-import { useAppStore } from '@/stores/modules/app/index';
+import { useAppStore, useChatStore } from '@/stores/index';
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { dataURLtoFile, getBlob, getFileType } from "@/utils/chat/index";
@@ -14,9 +14,7 @@ import { match } from "pinyin-pro";
 import { nextTick } from "vue";
 import { cloneDeep } from "lodash-es";
 import { placeholderMap } from "./configure";
-
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 import manifest from "@/database/manifest/index.json";
 
 import CustomElemItem from "../ElemItemTypes/CustomElemItem.vue";
@@ -467,7 +465,7 @@ export function filterMentionList({ str, list }) {
   const inputStr = str;
   // 如果输入字符串为空 且没有 "@" 符号，关闭提及模态框并返回
   if (inputStr === "" || inputStr.lastIndexOf("@") == -1) {
-    store.commit("toggleMentionModal", false);
+    useChatStore().$patch({ isMentionModalVisible: false })
     return;
   }
   // 如果输入字符串仅包含 "@" 符号，或则字符结尾，触发 setMentionModal 操作并返回
@@ -479,7 +477,7 @@ export function filterMentionList({ str, list }) {
   const lastAtIndex = inputStr.lastIndexOf("@");
   // 如果找不到 "@" 符号，关闭提及模态框并返回
   if (lastAtIndex === -1) {
-    store.commit("toggleMentionModal", false);
+    useChatStore().$patch({ isMentionModalVisible: false })
     return;
   }
   const text = inputStr.substring(lastAtIndex);
