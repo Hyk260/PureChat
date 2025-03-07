@@ -97,8 +97,7 @@ const userStore = useUserStore();
 const chatStore = useChatStore();
 const { dispatch, commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
-const { activeTab, chat, sessionDraftMap, postponeUnread, filterConversationList } = useState({
-  sessionDraftMap: (state) => state.conversation.sessionDraftMap,
+const { activeTab, chat, postponeUnread, filterConversationList } = useState({
   activeTab: (state) => state.conversation.activeTab,
   filterConversationList: (state) => state.conversation.filterConversationList,
   conversationList: (state) => state.conversation.conversationList,
@@ -117,7 +116,7 @@ const searchForData = computed(() => {
 const isdraft = (item) => {
   return (
     item.conversationID !== chat?.value?.conversationID &&
-    sessionDraftMap.value.has(item.conversationID)
+    chatStore.chatDraftMap.has(item.conversationID)
   );
 };
 const isNotify = (item) => {
@@ -186,7 +185,7 @@ const CustomMention = (props) => {
   const { item } = props;
   const { lastMessage, conversationID: ID, unreadCount } = item;
   const { messageForShow, nick: lastNick } = lastMessage;
-  const draft = sessionDraftMap.value.get(ID);
+  const draft = chatStore.chatDraftMap.get(ID);
   // 草稿
   if (draft && isdraft(item)) {
     const str = html2Escape(formatContent(draft));
@@ -234,9 +233,8 @@ const handleConvListClick = (data) => {
     const { conversationID: id } = chat.value;
     if (id == data?.conversationID) return;
   }
-  chatStore.$patch({ replyMsgData: null });
-  commit("setMessageEdit", null);
-  commit("setForwardData", { type: "clear", payload: null });
+  chatStore.$patch({ replyMsgData: null, msgEdit: null });
+  chatStore.setForwardData({ type: "clear" }); 
   // 切换会话
   commit("updateSelectedConversation", data);
   // 获取会话列表 read

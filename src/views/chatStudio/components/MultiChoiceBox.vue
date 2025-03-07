@@ -23,6 +23,7 @@ import {
   deleteMessage,
   sendMessage,
 } from "@/api/im-sdk-api/index";
+import { useChatStore } from "@/stores/index";
 import { showConfirmationBox } from "@/utils/message";
 import { mapMutations, mapState } from "vuex";
 import { localStg } from "@/utils/storage";
@@ -74,13 +75,12 @@ export default {
   computed: {
     ...mapState({
       isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
-      forwardData: (state) => state.conversation.forwardData,
       showCheckbox: (state) => state.conversation.showCheckbox,
       conversationList: (state) => state.conversation.conversationList,
       currentConversation: (state) => state.conversation.currentConversation,
     }),
     disabled() {
-      return this.forwardData.size == 0;
+      return useChatStore().forwardData.size === 0;
     },
     userProfile() {
       return localStg.get(TIM_PROXY)?.userProfile;
@@ -91,7 +91,7 @@ export default {
     onClock(item) {
       switch (item.type) {
         case "share": // 截图分享
-          emitter.emit("handleShareModal");
+          emitter.emit("handleShareModal", true);
           break;
         case "MergeForward": // 合并转发
           this.setDialogVisible(item.type);
@@ -208,13 +208,12 @@ export default {
       }
     },
     filterate() {
-      let myObj = Object.fromEntries(this.forwardData);
-      const obj = Object.values(myObj).map((item) => item);
-      return obj.sort((a, b) => a.clientTime - b.clientTime);
+      const chatData = Object.values(Object.fromEntries(useChatStore().forwardData));
+      return chatData.sort((a, b) => a.clientTime - b.clientTime);
     },
     shutdown() {
       // 清空多选数据
-      this.$store.commit("setForwardData", { type: "clear" });
+      useChatStore().setForwardData({ type: "clear" });
       // 关闭多选框
       this.setCheckboxState(false);
       this.closedState();

@@ -11,9 +11,7 @@ import {
 import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
   addTimeDivider,
-  checkTextNotEmpty,
   getBaseTime,
-  transformData,
   getChatListCache,
 } from "@/utils/chat/index";
 import { useGroupStore } from "@/stores/index";
@@ -25,21 +23,17 @@ import emitter from "@/utils/mitt-bus";
 
 const conversation = {
   state: {
-    messageEdit: null, // 消息编辑
-    sessionDraftMap: new Map(), //会话草稿
     isChatBoxVisible: false, //是否显示输入框
     showCheckbox: false, //是否显示多选框
     isShowModal: false, // @好友弹框
     noMore: false, // 加载更多  false ? 显示loading : 没有更多
     needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
-    forwardData: new Map(), // 多选数据
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
     conversationList: [], // 会话列表数据
     filterConversationList: [],
     activeTab: "whole", // 全部 未读 提及我
-    revokeMsgMap: new Map(), // 撤回消息重新编辑
     postponeUnread: new Set(),
   },
   mutations: {
@@ -147,7 +141,6 @@ const conversation = {
     },
     clearHistory(state) {
       Object.assign(state, {
-        sessionDraftMap: new Map(),
         historyMessageList: new Map(),
         currentConversation: null,
         currentMessageList: [],
@@ -189,22 +182,6 @@ const conversation = {
     toggleList(state, action) {
       state.activeTab = action;
     },
-    // 设置多选数据
-    setForwardData(state, action) {
-      const { type, payload } = action;
-      const { ID } = payload || {};
-      switch (type) {
-        case "set":
-          state.forwardData.set(ID, payload);
-          break;
-        case "del":
-          state.forwardData.delete(ID);
-          break;
-        case "clear":
-          state.forwardData.clear();
-          break;
-      }
-    },
     // 设置多选框状态
     setCheckboxState(state, flag) {
       state.showCheckbox = flag;
@@ -213,31 +190,8 @@ const conversation = {
     toggleChatBox(state, flag) {
       state.isChatBoxVisible = flag;
     },
-    setMessageEdit(state, payload) {
-      state.messageEdit = payload;
-    },
     setConversationValue(state, { key, value }) {
       state[key] = value;
-    },
-    // 设置会话草稿
-    setSessionDraft(state, action) {
-      if (!action) return;
-      const { ID, payload } = action;
-      if (!checkTextNotEmpty(payload)) {
-        state.sessionDraftMap.delete(ID);
-      } else {
-        state.sessionDraftMap.set(ID, payload);
-      }
-    },
-    // 设置撤回消息重新编辑
-    setRevokeMsg(state, action) {
-      const { data, type } = action;
-      const { ID, payload } = data || {};
-      if (type === "set") {
-        state.revokeMsgMap.set(ID, payload);
-      } else {
-        state.revokeMsgMap.delete(ID);
-      }
     },
     // 清除当前消息记录
     clearCurrentMessage(state) {

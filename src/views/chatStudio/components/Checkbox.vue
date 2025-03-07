@@ -2,13 +2,13 @@
   <label class="input-check fade-slide-fade-in" v-show="isShowCheck">
     <input type="checkbox" class="check-btn" />
     <div class="check-mark"></div>
-    <div class="mask wh-full" v-show="isMask"></div>
+    <div class="mask wh-full" v-show="chatStore.isFwdDataMaxed"></div>
   </label>
 </template>
 
 <script setup>
-import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { useState } from "@/utils/hooks/useMapper";
+import { useChatStore } from "@/stores/index";
 import { computed } from "vue";
 
 const { item, isRevoked } = defineProps({
@@ -22,13 +22,10 @@ const { item, isRevoked } = defineProps({
   },
 });
 
-const { showCheckbox, forwardData } = useState({
-  forwardData: (state) => state.conversation.forwardData,
-  showCheckbox: (state) => state.conversation.showCheckbox,
-});
+const chatStore = useChatStore();
 
-const isMask = computed(() => {
-  return forwardData.value.size >= MULTIPLE_CHOICE_MAX;
+const { showCheckbox } = useState({
+  showCheckbox: (state) => state.conversation.showCheckbox,
 });
 
 const isShowCheck = computed(() => {

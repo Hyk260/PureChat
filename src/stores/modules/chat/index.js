@@ -1,23 +1,61 @@
 import { defineStore } from 'pinia';
-import {  getUnreadMsg } from "@/api/im-sdk-api/index";
+import { getUnreadMsg } from "@/api/im-sdk-api/index";
 import { SetupStoreId } from '../../plugins/index';
 import { EMOJI_RECENTLY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
+import { checkTextNotEmpty } from "@/utils/chat/index";
+import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
   state: () => ({
+    chatDraftMap: new Map(), // 会话草稿
     recently: new Set(), // 最近使用表情包
     totalUnreadMsg: 0, // 未读消息总数
     isFullscreenInputActive: false, // 是否全屏输入框
     isChatSessionListCollapsed: false, // 聊天会话列表是否折叠
     replyMsgData: null, // 回复消息数据
+    msgEdit: null, // 消息编辑
+    forwardData: new Map(), // 多选数据
+    revokeMsgMap: new Map(), // 撤回消息重新编辑
   }),
   getters: {
-
+    isFwdDataMaxed () {
+      return this.forwardData.size >= MULTIPLE_CHOICE_MAX;
+    }
   },
   actions: {
     clearHistory() {
       this.replyMsgData = null;
+      this.chatDraftMap = new Map()
+    },
+    setForwardData({ type, payload }) {
+      switch (type) {
+        case "set":
+          this.forwardData.set(payload.ID, payload);
+          break;
+        case "del":
+          this.forwardData.delete(payload.ID);
+          break;
+        case "clear":
+          this.forwardData.clear();
+          break;
+      }
+    },
+    updateRevokeMsg({ data, type }) {
+      if (type === "set") {
+        this.revokeMsgMap.set(data.ID, data.payload);
+      } else {
+        this.revokeMsgMap.delete(data.ID);
+      }
+    },
+    updateChatDraft(data) {
+      if (!data) return;
+      const { ID, payload } = data;
+      if (checkTextNotEmpty(payload)) {
+        this.chatDraftMap.set(ID, payload);
+      } else {
+        this.chatDraftMap.delete(ID);
+      }
     },
     // 更新未读消息总数
     async updateTotalUnreadMsg() {

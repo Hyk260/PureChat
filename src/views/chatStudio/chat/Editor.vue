@@ -101,14 +101,7 @@ const [disabled, setDisabled] = useBoolean();
 const { isFullscreenInputActive, replyMsgData } = storeToRefs(chatStore);
 const { dispatch, commit } = useStore();
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-const {
-  currentConversation,
-  isChatBoxVisible,
-  showCheckbox,
-  isShowModal,
-  sessionDraftMap,
-} = useState({
-  sessionDraftMap: (state) => state.conversation.sessionDraftMap,
+const { currentConversation, isChatBoxVisible, showCheckbox, isShowModal } = useState({
   currentConversation: (state) => state.conversation.currentConversation,
   showCheckbox: (state) => state.conversation.showCheckbox,
   isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
@@ -144,12 +137,12 @@ const insertDraft = ({ data, editor = editorRef.value }) => {
   if (!data) return;
   if (!isMobile) editor?.focus(true);
   clearInputInfo();
-  const draft = sessionDraftMap.value.get(data.conversationID);
+  const draft = chatStore.chatDraftMap.get(data.conversationID);
   draft?.map((t) => editor.insertNode(t.children));
 };
 // 更新草稿
 const updateDraft = debounce((data) => {
-  commit("setSessionDraft", {
+  chatStore.updateChatDraft({
     ID: currentConversation?.value?.conversationID,
     payload: data,
   });

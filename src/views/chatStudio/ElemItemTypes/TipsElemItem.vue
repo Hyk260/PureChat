@@ -18,7 +18,7 @@
 <script>
 import { deleteMessage } from "@/api/im-sdk-api/index";
 import { localStg } from "@/utils/storage";
-import store from "@/store/index";
+import { useChatStore } from "@/stores/modules/chat/index";
 import emitter from "@/utils/mitt-bus";
 
 export default {
@@ -30,15 +30,12 @@ export default {
     },
   },
   computed: {
-    revokeMsgMap() {
-      return store.state.conversation.revokeMsgMap;
-    },
     // 消息的流向 in 为收到的消息 | out 为发出的消息
     isMine() {
       return this.message.flow === "out";
     },
     isReEdit() {
-      return this.revokeMsgMap.get(this.message.ID);
+      return useChatStore().revokeMsgMap.get(this.message.ID);
     },
     userProfile() {
       return localStg.get("timProxy")?.userProfile;
@@ -63,7 +60,7 @@ export default {
     onEdit(data = this.message) {
       console.log("[edit]:", data);
       emitter.emit("handleSetHtml", data?.payload?.text);
-      this.$store.commit("setRevokeMsg", { data, type: "delete" });
+      useChatStore().updateRevokeMsg( { data, type: "delete" })
     },
     getChangeType(message = this.message) {
       const { conversationType: type, nick, from, revokerInfo, payload } = message;
