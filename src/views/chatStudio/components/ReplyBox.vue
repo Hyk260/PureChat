@@ -1,36 +1,34 @@
 <template>
-  <div class="reply-box flex-bc" v-if="currentReplyMsg" @click="onClick">
+  <div class="reply-box flex-bc" v-if="replyMsgData" @click="onClick">
     <FontIcon class="close" iconName="CircleCloseFilled" @click="onClose" />
     <div class="reply-box-content">
-      <div class="nick">{{ currentReplyMsg?.nick }} :</div>
-      <div class="text" v-if="currentReplyMsg">
-        <DynamicContent :text="fnReplyContent(currentReplyMsg)" />
+      <div class="nick">{{ replyMsgData?.nick }} :</div>
+      <div class="text" v-if="replyMsgData">
+        <DynamicContent :text="fnReplyContent(replyMsgData)" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { useStore } from "vuex";
+import { storeToRefs } from "pinia";
+import { useChatStore } from "@/stores/modules/chat/index";
 import { fnReplyContent, scrollToDomPostion } from "@/utils/chat/index";
-import { useState } from "@/utils/hooks/useMapper";
 import DynamicContent from "./DynamicContent.vue";
 
 defineOptions({
-  name: "ReplyBox"
+  name: "ReplyBox",
 });
 
-const { commit } = useStore();
-const { currentReplyMsg } = useState({
-  currentReplyMsg: (state) => state.conversation.currentReplyMsg,
-});
+const chatStore = useChatStore();
+const { replyMsgData } = storeToRefs(chatStore);
 
 const onClose = () => {
-  commit("setReplyMsg", null);
+  chatStore.$patch({ replyMsgData: null });
 };
 
 const onClick = () => {
-  const { ID } = currentReplyMsg.value || {};
+  const { ID } = replyMsgData.value || {};
   ID && scrollToDomPostion(ID);
 };
 </script>

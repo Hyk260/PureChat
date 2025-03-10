@@ -1,5 +1,5 @@
 <template>
-  <div v-show="flag" class="emjio-tion" v-click-outside="onClickOutside">
+  <div class="emjio-tion" v-click-outside="onClickOutside">
     <div class="emojis">
       <el-scrollbar wrap-class="custom-scrollbar-wrap" always>
         <!-- QQ表情包 -->
@@ -61,16 +61,16 @@
 </template>
 
 <script setup>
-import { useBoolean } from "@/utils/hooks/index";
-import { useState } from "@/utils/hooks/useMapper";
-import { ClickOutside as vClickOutside } from "element-plus";
-import { chunk } from "lodash-es";
 import { onMounted, ref } from "vue";
-import { useStore } from "vuex";
+import { chunk } from "lodash-es";
+import { ClickOutside as vClickOutside } from "element-plus";
+import { useChatStore } from "@/stores/modules/chat/index";
 import { getOperatingSystem, getAssetsFile } from "../utils/utils";
-
+import emitter from "@/utils/mitt-bus";
 import emojiQq from "@/utils/emoji/emoji-map-qq";
 import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
+
+const emit = defineEmits(["onClose"]);
 
 const rolling = false;
 const toolDate = [
@@ -96,16 +96,11 @@ const systemOs = ref("");
 const table = ref("QQ");
 const EmotionPackGroup = ref([]);
 
-const [flag, setFlag] = useBoolean();
-const { commit } = useStore();
-const emit = defineEmits(["setEmoji"]);
-const { recently } = useState({
-  recently: (state) => state.conversation.recently,
-});
+const chatStore = useChatStore();
 
 const setClose = () => {
-  setFlag(false);
-  recentlyUsed.value = [...recently.value].reverse();
+  emit("onClose");
+  recentlyUsed.value = [...chatStore.recently].reverse();
 };
 
 const initEmotion = () => {
@@ -117,10 +112,14 @@ const getParser = () => {
 };
 
 const setEmoji = (item, type = "") => {
-  emit("setEmoji", item, table.value);
-  if (type == "QQ") {
-    commit("setRecently", { data: item, type: "add" });
+  let url = "";
+  if (type === "QQ") {
+    url = getAssetsFile(emojiQq.emojiMap[item])
+  } else {
+    url = getAssetsFile(emojiDouyin.emojiMap[item])
   }
+  emitter.emit("handleToolbar", { data: { url, item }, key: "setEmoj" });
+  if (type === "QQ") chatStore.setRecently({ data: item, type: "add" });
   setClose();
 };
 
@@ -131,10 +130,8 @@ const onClickOutside = () => {
 onMounted(() => {
   getParser();
   initEmotion();
-  commit("setRecently", { type: "revert" });
+  chatStore.setRecently({ type: "revert" });
 });
-
-defineExpose({ setFlag });
 </script>
 
 <style lang="scss" scoped>

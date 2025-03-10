@@ -8,4 +8,6 @@ export function setupStore(app) {
   app.use(store);
 }
 
+export * from './modules/index';
+
 export { store };

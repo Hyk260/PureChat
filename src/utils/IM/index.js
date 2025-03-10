@@ -5,13 +5,11 @@ import { C2C_ROBOT_COLLECT } from "@/ai/constant";
 import { TIM_PROXY } from "@/constants/index";
 import { scrollToDomPostion, setChatListCache } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
-import { useAppStore } from '@/stores/modules/app';
 import { useWindowFocus, useEventListener } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
 import { handleTrayFlashIng, handlesOnShake, handleNotification } from "./utils/app";
-import { useUserStore } from '@/stores/modules/user';
-import { useGroupStore } from '@/stores/modules/group';
+import { useAppStore, useUserStore, useGroupStore, useChatStore } from '@/stores/index';
 import {
   fnCheckoutNetState,
   getConversationID,
@@ -65,10 +63,10 @@ export class TIMProxy {
     this.once = true;
     this.initListener(); // 监听SDK
     useEventListener(window, "online", () => {
-      store.commit("setNetworkStatus", true);
+      useAppStore().setNetworkStatus(true);
     });
     useEventListener(window, "offline", () => {
-      store.commit("setNetworkStatus", false);
+      useAppStore().setNetworkStatus(false);
     });
     useEventListener(window, "focus", () => {
       const conver = store.state.conversation?.currentConversation
@@ -137,7 +135,7 @@ export class TIMProxy {
       });
     }
     // 未读消息
-    store.dispatch("updateUnreadMessageCount");
+    useChatStore().updateTotalUnreadMsg();
   }
   onReceiveMessage({ data }) {
     console.log("[chat] 收到新消息 onReceiveMessage:", data);

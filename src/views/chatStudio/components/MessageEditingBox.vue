@@ -20,8 +20,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { useStore } from "vuex";
-import { useState } from "@/utils/hooks/useMapper";
+import { useChatStore } from "@/stores/index";
 import { modifyMessage } from "@/api/im-sdk-api/session";
 
 const props = defineProps({
@@ -35,22 +34,19 @@ const props = defineProps({
   },
 });
 
+const chatStore = useChatStore()
+
 const input = ref(props.item.payload.text);
 
-const { commit } = useStore();
-// const { messageEdit } = useState({
-//   messageEdit: (state) => state.conversation.messageEdit,
-// });
 function fnStyle(val) {
   return [val ? "ml-44" : "mr-44"];
 }
+
 function handleCancel() {
-  commit("setMessageEdit", null);
+  chatStore.$patch({ msgEdit: null });
 }
 
 function handleConfirm(val) {
-  // console.log(props.item, val);
-
   const { type } = props.item;
 
   const params = {
@@ -60,9 +56,7 @@ function handleConfirm(val) {
     },
   };
 
-  if (type === "TIMTextElem") {
-    modifyMessage(params);
-  }
+  if (type === "TIMTextElem") modifyMessage(params);
   handleCancel();
 }
 </script>

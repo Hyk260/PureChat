@@ -15,7 +15,7 @@
             class="aside-list flex-c flex-col gap-3"
             :class="{ current: router.currentRoute.value.path === item.path }"
           >
-            <el-badge :value="unreadMsg" :hidden="isUnreadMsgHidden(item.id, unreadMsg)">
+            <el-badge :value="chatStore.totalUnreadMsg" :hidden="isUnreadMsgHidden(item.id)">
               <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" class="style-svg" />
               <svg-icon v-else :local-icon="item.icon" class="style-svg" />
             </el-badge>
@@ -37,24 +37,19 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
-import { useSidebarStore } from "@/stores/modules/sidebar";
-import { useState } from "@/utils/hooks/useMapper";
+import { useChatStore, useSidebarStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 // import UploadAvatarDialog from "@/views/chatStudio/components/UploadAvatarDialog.vue";
 import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
 import CardPopover from "@/views/chatStudio/components/CardPopover.vue";
 
 defineOptions({
-  name: "LayAside"
+  name: "LayAside",
 });
 
 const router = useRouter();
-const { commit } = useStore();
+const chatStore = useChatStore();
 const sidebarStore = useSidebarStore();
-const { unreadMsg } = useState({
-  unreadMsg: (state) => state.conversation.totalUnreadMsg,
-});
 
 function openUploadAvatarDialog() {
   emitter.emit("setPopover");
@@ -70,7 +65,7 @@ function toggle(item) {
   } else if (item?.mode === "other") {
     emitter.emit("SidebarEditDialog", true);
   } else {
-    commit("taggleOueSide", item);
+    sidebarStore.taggleOueSide(item);
   }
 }
 
@@ -82,8 +77,8 @@ function macClass() {
   };
 }
 // 检查未读消息是否隐藏
-const isUnreadMsgHidden = (itemId, unreadCount) => {
-  return itemId !== "message" || unreadCount === 0;
+const isUnreadMsgHidden = (id) => {
+  return id !== "chat" || chatStore.totalUnreadMsg === 0;
 };
 </script>
 

@@ -23,7 +23,7 @@
             <div class="item min-h-60">
               <div
                 class="message flex p-10"
-                v-for="item in fnForwardData"
+                v-for="item in filterate"
                 :key="item.ID"
                 :class="isSelf(item) ? 'is-self' : 'is-other'"
               >
@@ -124,12 +124,17 @@ import { computed, nextTick, ref } from "vue";
 import { isRobot } from "@/utils/chat/index";
 import { Markdown } from "@/utils/markdown/index";
 import { useBoolean } from "@/utils/hooks/index";
-import { useScreenshot, ImageType, imageTypeOptions, VITE_APP_NAME } from "@/utils/hooks/useScreenshot";
-import { useState } from "@/utils/hooks/useMapper";
+import {
+  useScreenshot,
+  ImageType,
+  imageTypeOptions,
+  VITE_APP_NAME,
+} from "@/utils/hooks/useScreenshot";
 import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils/utils";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { getModelType, usePromptStore, getAiAvatarUrl } from "@/ai/utils";
 import { fnStyleBack, onColor, back, backgColor } from "./utils";
+import { useChatStore } from "@/stores/index";
 import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import Header from "@/views/chatStudio/components/Header.vue";
 import emitter from "@/utils/mitt-bus";
@@ -146,9 +151,6 @@ const emit = defineEmits(["onClose"]);
 const { toAccount } = useGetters(["toAccount"]);
 const [dialogVisible, setDialogVisible] = useBoolean();
 const { loading, onDownload } = useScreenshot();
-const { forwardData } = useState({
-  forwardData: (state) => state.conversation.forwardData,
-});
 
 function robotRole() {
   const model = getModelType(toAccount.value);
@@ -176,14 +178,13 @@ function robotPrompt() {
   return usePromptStore(model).prompt[0].content || "";
 }
 
-const fnForwardData = computed(() => {
-  let myObj = Object.fromEntries(forwardData.value);
-  const obj = Object.values(myObj).map((item) => item);
-  return obj.sort((a, b) => a.clientTime - b.clientTime);
+const filterate = computed(() => {
+  const chatData = Object.values(Object.fromEntries(useChatStore().forwardData));
+  return chatData.sort((a, b) => a.clientTime - b.clientTime);
 });
 
 emitter.on("handleShareModal", (val) => {
-  setDialogVisible(true);
+  setDialogVisible(val);
 });
 </script>
 

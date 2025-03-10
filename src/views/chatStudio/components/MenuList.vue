@@ -17,8 +17,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { useStore } from "vuex";
+import { computed } from "vue";
+import { useChatStore } from "@/stores/index";
 import { useState } from "@/utils/hooks/useMapper";
 import { isSelf, handleCopyMsg } from "../utils/utils";
 
@@ -70,9 +70,8 @@ const list = [
   },
 ];
 
-const { commit } = useStore();
-const { messageEdit, showCheckbox } = useState({
-  messageEdit: (state) => state.conversation.messageEdit,
+const chatStore = useChatStore();
+const { showCheckbox } = useState({
   showCheckbox: (state) => state.conversation.showCheckbox,
 });
 
@@ -93,7 +92,7 @@ const flilterList = computed(() => {
 
 function showMenuList(item) {
   if (props.status !== "success") return false;
-  if (messageEdit.value?.ID === item?.ID) return false;
+  if (chatStore.msgEdit?.ID === item?.ID) return false;
   if (["TIMCustomElem"].includes(item.type)) {
     if (props.item?.payload?.description === "loading") return false;
   }
@@ -116,7 +115,7 @@ function handleMenuEvent(data) {
       handleCopyMsg(item);
       break;
     case "edit": // 编辑
-      commit("setMessageEdit", item);
+      chatStore.$patch({ msgEdit: item })
       break;
     case "setup": // 设置
       console.log("设置");

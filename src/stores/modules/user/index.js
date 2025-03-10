@@ -1,17 +1,18 @@
 import { nextTick } from "vue";
 import { defineStore } from 'pinia'
-import { useAppStore } from '@/stores/modules/app';
+import { useAppStore } from '@/stores/index';
 import { login, logout } from "@/api/node-admin-api/index"
-import { ACCOUNT, TIM_PROXY, USER_MODEL } from "@/constants/index"
+import { ACCOUNT, USER_MODEL } from "@/constants/index"
 import { localStg } from "@/utils/storage"
 import { initThemeSettings } from "@/theme/settings"
-import { SetupStoreId } from '../plugins/index';
+import { SetupStoreId } from '../../plugins/index';
 import { timProxy } from '@/utils/IM/index';
 import { setTheme } from "@/utils/common";
 import { changeLocale } from "@/locales/index";
 import router from "@/router"
 import chat from "@/utils/IM/im-sdk/tim"
 import emitter from "@/utils/mitt-bus"
+import { useChatStore } from '@/stores/modules/chat/index';
 import store from '@/store/index';
 
 export const useUserStore = defineStore(SetupStoreId.User, {
@@ -67,6 +68,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       setTimeout(() => {
         logout()
         emitter.all.clear()
+        this.setLoading(false)
         this.handleIMLogout()
       }, 500)
     },
@@ -96,6 +98,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         // 清除消息记录
         // TODO: 需要调用conversation store的clearHistory
         store.commit("clearHistory")
+        useChatStore().clearHistory()
       } else {
         console.log("[chat] im退出登录失败 logout", data)
       }

@@ -24,7 +24,7 @@ import { ClickOutside as vClickOutside } from "element-plus";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { getPlugin } from "../utils/utils";
-import { useRobotStore } from "@/stores/modules/robot";
+import { useRobotStore } from "@/stores/modules/robot/index";
 import emitter from "@/utils/mitt-bus";
 
 const [flag, setFlag] = useBoolean();

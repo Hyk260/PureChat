@@ -1,59 +1,36 @@
-import router from "@/router";
 import { ROBOT_COLLECT } from "@/ai/constant";
 import { chatService } from "@/ai/index";
 import {
   deleteConversation,
   getConversationProfile,
   getMessageList,
-  getUnreadMsg,
   sendMessage,
   setMessageRead,
   setMessageRemindType,
 } from "@/api/im-sdk-api/index";
-import { EMOJI_RECENTLY, HISTORY_MESSAGE_COUNT } from "@/constants/index";
+import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
   addTimeDivider,
-  checkTextNotEmpty,
   getBaseTime,
-  transformData,
   getChatListCache,
 } from "@/utils/chat/index";
-import { useGroupStore } from "@/stores/modules/group";
-import { localStg } from "@/utils/storage";
+import { useGroupStore, useChatStore } from "@/stores/index";
 import { cloneDeep } from "lodash-es";
 import { timProxy } from "@/utils/IM/index";
 import { createAiPromptMsg, getModelType } from "@/ai/utils";
-import { nextTick } from "vue";
 import { MessageModel } from "@/database/models/message";
-import { SessionModel } from "@/database/models/session";
-
 import emitter from "@/utils/mitt-bus";
 
 const conversation = {
   state: {
-    messageEdit: null, // 消息编辑
-    sessionDraftMap: new Map(), //会话草稿
-    totalUnreadMsg: 0, // 未读消息总数
-    isChatBoxVisible: false, //是否显示输入框
     showCheckbox: false, //是否显示多选框
-    isShowModal: false, // @好友弹框
-    noMore: false, // 加载更多  false ? 显示loading : 没有更多
-    networkStatus: true, // 网络状态
-    needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
-    forwardData: new Map(), // 多选数据
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
     conversationList: [], // 会话列表数据
     filterConversationList: [],
-    currentReplyMsg: null, // 回复数据
     activeTab: "whole", // 全部 未读 提及我
-    outside: "chat", // 侧边栏初始状态
-    arrowRight: false, // 聊天会话列表折叠 true ？'折叠' : '不折叠'
-    fullScreen: false, // 全屏输入框是否启用
-    revokeMsgMap: new Map(), // 撤回消息重新编辑
-    recently: new Set(),
-    postponeUnread: new Set(),
+    // postponeUnread: new Set(),
   },
   mutations: {
     updateMessages(state, payload) {
@@ -69,7 +46,7 @@ const conversation = {
         console.warn("oldMessageList 不存在");
         return;
       }
-      MessageModel.update(message.ID, message);
+      __LOCAL_MODE__ && MessageModel.update(message.ID, message);
       const newMessageList = oldMessageList.map((item) => {
         return item.ID === message.ID ? payload.message : item;
       });
@@ -83,7 +60,7 @@ const conversation = {
       // 当前会有列表有值
       if (state.currentConversation.conversationID === convId) {
         state.currentMessageList = newMessageList;
-        state.needScrollDown = 0;
+        // state.needScrollDown = 0;
       }
       // 更新历史消息
       state.historyMessageList.set(convId, newMessageList);
@@ -95,7 +72,7 @@ const conversation = {
       const history = state.historyMessageList.get(convId) || [];
       if (history.map((t) => t?.ID).includes(msgId)) {
         console.warn("重复加载", msgId);
-        state.noMore = true;
+        useChatStore().$patch({ noMore: true })
         return;
       }
       console.log("历史消息 history:", history);
@@ -147,7 +124,7 @@ const conversation = {
       const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
       // 是否已经拉完所有消息 '没有更多' : '显示loading'
       console.log("isDone:", isMore || isDone ? "没有更多" : "显示loading");
-      state.noMore = isMore || isDone;
+      useChatStore().$patch({ noMore: isMore || isDone })
     },
     addAiPresetPromptWords(state, payload) {
       const { convId, message } = createAiPromptMsg();
@@ -160,15 +137,12 @@ const conversation = {
     },
     clearHistory(state) {
       Object.assign(state, {
-        sessionDraftMap: new Map(),
         historyMessageList: new Map(),
         currentConversation: null,
         currentMessageList: [],
         conversationList: [],
         activeTab: "whole",
-        isChatBoxVisible: false,
         showCheckbox: false,
-        currentReplyMsg: null,
       });
       console.log("[chat] 清除历史记录 clearHistory:", state);
     },
@@ -178,8 +152,6 @@ const conversation = {
       const oldConvId = state.currentConversation?.conversationID;
       if (convId == oldConvId) return;
       state.currentConversation = payload;
-      // 系统消息关闭聊天框
-      state.isChatBoxVisible = convId !== "@TIM#SYSTEM";
       state.showCheckbox = false;
       if (payload) {
         const history = state.historyMessageList.get(convId);
@@ -189,112 +161,27 @@ const conversation = {
       }
       // 当前会话少于历史条数关闭loading
       const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
-      state.noMore = isMore;
-    },
-    // 设置网络状态
-    setNetworkStatus(state, action) {
-      state.networkStatus = action;
-    },
-    // 设置提及弹框显示隐藏
-    toggleMentionModal(state, action) {
-      if (state.currentConversation?.type === "GROUP") {
-        state.isShowModal = action;
-      } else {
-        state.isShowModal = false;
-      }
+      // 系统消息关闭聊天框
+      useChatStore().$patch({
+        noMore: isMore,
+        isChatBoxVisible: convId !== "@TIM#SYSTEM"
+      })
     },
     //  切换列表 全部 未读 提及我
     toggleList(state, action) {
       state.activeTab = action;
     },
-    // 设置多选数据
-    setForwardData(state, action) {
-      const { type, payload } = action;
-      const { ID } = payload || {};
-      switch (type) {
-        case "set":
-          state.forwardData.set(ID, payload);
-          break;
-        case "del":
-          state.forwardData.delete(ID);
-          break;
-        case "clear":
-          state.forwardData.clear();
-          break;
-      }
-    },
     // 设置多选框状态
     setCheckboxState(state, flag) {
       state.showCheckbox = flag;
     },
-    // 设置聊天框状态
-    toggleChatBox(state, flag) {
-      state.isChatBoxVisible = flag;
-    },
-    // 切换侧边栏
-    taggleOueSide(state, item) {
-      state.outside = item.id;
-      router.push(item.path);
-    },
-    // 回复消息
-    setReplyMsg(state, payload) {
-      state.currentReplyMsg = payload;
-    },
-    setMessageEdit(state, payload) {
-      state.messageEdit = payload;
-    },
     setConversationValue(state, { key, value }) {
       state[key] = value;
-    },
-    // 设置会话草稿
-    setSessionDraft(state, action) {
-      if (!action) return;
-      const { ID, payload } = action;
-      if (!checkTextNotEmpty(payload)) {
-        state.sessionDraftMap.delete(ID);
-      } else {
-        state.sessionDraftMap.set(ID, payload);
-      }
-    },
-    // 设置撤回消息重新编辑
-    setRevokeMsg(state, action) {
-      const { data, type } = action;
-      const { ID, payload } = data || {};
-      if (type === "set") {
-        state.revokeMsgMap.set(ID, payload);
-      } else {
-        state.revokeMsgMap.delete(ID);
-      }
-    },
-    // 设置最近使用表情包
-    setRecently(state, action) {
-      const { data, type } = action;
-      switch (type) {
-        case "add":
-          // 添加数据到 recently 集合
-          state.recently.add(data);
-          if (state.recently.size > 12) {
-            const iterator = state.recently.values();
-            const oldestElement = iterator.next().value;
-            state.recently.delete(oldestElement);
-          }
-          localStg.set(EMOJI_RECENTLY, [...state.recently]);
-          break;
-        case "revert":
-          // 从本地存储恢复最近的数据
-          const recently = localStg.get(EMOJI_RECENTLY);
-          if (recently) state.recently = new Set([...recently]);
-          break;
-        case "clean":
-          state.recently.clear();
-          break;
-      }
     },
     // 清除当前消息记录
     clearCurrentMessage(state) {
       state.currentConversation = null;
       state.currentMessageList = [];
-      state.isChatBoxVisible = false;
     },
   },
   actions: {
@@ -358,10 +245,6 @@ const conversation = {
       if (code !== 0) return;
       commit("clearCurrentMessage");
     },
-    // 更新未读消息总数
-    async updateUnreadMessageCount({ state }) {
-      state.totalUnreadMsg = await getUnreadMsg();
-    },
     // 消息免打扰
     async setMessageReminderType({ state }, action) {
       const { type, toAccount, remindType } = action;
@@ -377,10 +260,10 @@ const conversation = {
       } = payload || {};
       if (unreadCount === 0) return;
       // tab 不为全部不进行消息已读
-      if (state.activeTab !== "whole" && state.currentConversation.conversationID === convId) {
-        state.postponeUnread.add(convId);
-        return;
-      }
+      // if (state.activeTab !== "whole" && state.currentConversation.conversationID === convId) {
+      //   state.postponeUnread.add(convId);
+      //   return;
+      // }
       console.log("[chat] 消息已读 hasReadMessage:", payload);
       setMessageRead(convId);
     },

@@ -56,7 +56,7 @@ import { useStore } from "vuex";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { isMacDragStyle } from "@/utils/appEmit";
-import { useRobotStore } from "@/stores/modules/robot";
+import { useRobotStore } from "@/stores/modules/robot/index";
 import Label from "@/views/chatStudio/components/Label.vue";
 import emitter from "@/utils/mitt-bus";
 

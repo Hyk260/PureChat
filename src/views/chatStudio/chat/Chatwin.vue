@@ -54,7 +54,7 @@
                 <div class="message-view-body" :class="msgType(item.type)" :id="item.ID">
                   <!-- 消息编辑 -->
                   <MessageEditingBox
-                    v-if="messageEdit?.ID === item.ID"
+                    v-if="chatStore.msgEdit?.ID === item.ID"
                     :self="isSelf(item)"
                     :item="item"
                   />
@@ -124,8 +124,8 @@ import {
   ref,
   watch,
 } from "vue";
-import { useGroupStore } from '@/stores/modules/group';
-import { useAppStore } from '@/stores/modules/app';
+import { storeToRefs } from "pinia";
+import { useGroupStore, useAppStore, useChatStore } from "@/stores/index";
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
 import { avatarMenu, menuOptionsList, emptyUrl, squareUrl } from "../utils/menu";
@@ -164,29 +164,20 @@ const contextMenuItems = ref([]);
 const menuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);
+
 const groupStore = useGroupStore();
+const chatStore = useChatStore();
+const appStore = useAppStore();
 const { dispatch, commit } = useStore();
+const { isChatBoxVisible, needScrollDown } = storeToRefs(chatStore);
+
 const { toAccount, isGroupChat, currentType } = useGetters([
   "toAccount",
   "isGroupChat",
   "currentType",
 ]);
-const {
-  messageEdit,
-  isChatBoxVisible,
-  forwardData,
-  showCheckbox,
-  needScrollDown,
-  currentReplyMsg,
-  currentMessageList,
-  currentConv,
-} = useState({
-  messageEdit: (state) => state.conversation.messageEdit,
-  isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
-  forwardData: (state) => state.conversation.forwardData,
+const { showCheckbox, currentMessageList, currentConv } = useState({
   showCheckbox: (state) => state.conversation.showCheckbox,
-  needScrollDown: (state) => state.conversation.needScrollDown,
-  currentReplyMsg: (state) => state.conversation.currentReplyMsg,
   currentMessageList: (state) => state.conversation.currentMessageList,
   currentConv: (state) => state.conversation.currentConversation,
 });
@@ -217,7 +208,7 @@ const classMessageViewItem = (item) => {
 const classMessageInfoView = () => {
   return [
     isChatBoxVisible.value ? "" : "style-msg-box",
-    currentReplyMsg.value ? "style-reply" : "",
+    chatStore.replyMsgData ? "style-reply" : "",
   ];
 };
 
@@ -249,8 +240,8 @@ const handleSelect = (e, item, type = "initial") => {
   }
   const _el = document.getElementById(`choice${item.ID}`);
   const el = _el.getElementsByClassName("check-btn")[0];
-  if (!el.checked && forwardData.value.size >= MULTIPLE_CHOICE_MAX) {
-    useAppStore().showMessage({ message: `最多只能选择${MULTIPLE_CHOICE_MAX}条`, type: "error"});
+  if (!el.checked && chatStore.isFwdDataMaxed) {
+    appStore.showMessage({ message: `最多只能选择${MULTIPLE_CHOICE_MAX}条`, type: "error" });
     return;
   }
   // 点击input框
@@ -265,11 +256,11 @@ const handleSelect = (e, item, type = "initial") => {
   // 首次右键打开多选 默认选中当前
   if (type === "choice") {
     el.checked = true;
-    commit("setForwardData", { type: "set", payload: item });
+    chatStore.setForwardData({ type: "set", payload: item });
   } else {
     el.checked = !el.checked;
     let key = el.checked ? "set" : "del";
-    commit("setForwardData", { type: key, payload: item });
+    chatStore.setForwardData({ type: key, payload: item });
   }
 };
 
@@ -356,16 +347,16 @@ const getMoreMsg = async () => {
     const { isCompleted, messageList, nextReqMessageID } = result;
     if (!messageList.length && isCompleted) {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
-      commit("setConversationValue", { key: "noMore", value: true });
+      chatStore.$patch({ noMore: true });
     } else if (messageList.length) {
       commit("loadMoreMessages", { convId, messages: messageList, msgId: messageList[0].ID });
-      commit("setConversationValue", { key: "needScrollDown", value: msglist.length });
+      chatStore.$patch({ needScrollDown: msglist.length });
     } else {
-      commit("setConversationValue", { key: "noMore", value: true });
+      chatStore.$patch({ noMore: true });
     }
   } catch (e) {
     // 解析报错 关闭加载动画
-    commit("setConversationValue", { key: "noMore", value: true });
+    chatStore.$patch({ noMore: true });
   }
 };
 
@@ -518,7 +509,7 @@ const handleTranslate = (data) => {
 const handleForward = (data) => {};
 // 回复消息
 const handleReplyMsg = (data) => {
-  commit("setReplyMsg", data);
+  chatStore.$patch({ replyMsgData: data });
   if (!isSelf(data)) handleAt(data);
   // 重置编辑器高度
   const chatBox = document.getElementById("chat-box"); //聊天框
@@ -549,7 +540,7 @@ const handleMultiSelectMsg = (item) => {
 };
 const handleRevokeChange = (data, type) => {
   if (data.type !== "TIMTextElem") return;
-  commit("setRevokeMsg", { data, type });
+  chatStore.updateRevokeMsg({ data, type });
 };
 // 撤回消息
 const handleRevokeMsg = async (data) => {
@@ -583,7 +574,7 @@ function offEmitter() {
 }
 
 watch(
-  needScrollDown,
+  () => needScrollDown.value,
   (data) => {
     updateLoadMore(data);
   },
@@ -593,9 +584,12 @@ watch(
   }
 );
 
-watch(currentReplyMsg, () => {
-  updateScrollbar();
-});
+watch(
+  () => chatStore.replyMsgData,
+  () => {
+    updateScrollbar();
+  }
+);
 
 onMounted(() => {
   onEmitter();
