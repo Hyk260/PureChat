@@ -4,7 +4,7 @@ import os from 'os'
 
 const customPath = path.join(os.homedir(), '.HikEMAS', 'HikEMAS_AppSettings.json')
 
-class StoreUtil {
+export class StoreUtil {
   constructor(configName = 'appSettings', defaults = {}, encryptionKey = null) {
     this.store = new Store({
       name: configName,
@@ -66,6 +66,4 @@ class StoreUtil {
     return this.store.has(key)
   }
 }
-
-export { StoreUtil }
 

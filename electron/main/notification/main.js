@@ -134,9 +134,9 @@ class Notification extends TypedEventEmitter {
     this.offset = offset;
     this.duration = Math.max(duration, 3000);
 
-      this.width = width;
-      this.height = height;
-      this.debug = debug;
+    this.width = width;
+    this.height = height;
+    this.debug = debug;
   }
 
   destroy() {
