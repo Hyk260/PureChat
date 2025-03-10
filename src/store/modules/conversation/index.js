@@ -24,7 +24,6 @@ import emitter from "@/utils/mitt-bus";
 const conversation = {
   state: {
     showCheckbox: false, //是否显示多选框
-    needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
@@ -61,7 +60,7 @@ const conversation = {
       // 当前会有列表有值
       if (state.currentConversation.conversationID === convId) {
         state.currentMessageList = newMessageList;
-        state.needScrollDown = 0;
+        // state.needScrollDown = 0;
       }
       // 更新历史消息
       state.historyMessageList.set(convId, newMessageList);

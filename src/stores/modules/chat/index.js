@@ -10,6 +10,7 @@ import store from '@/store/index';
 export const useChatStore = defineStore(SetupStoreId.Chat, {
   state: () => ({
     totalUnreadMsg: 0, // 未读消息总数
+    needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
     showCheckbox: false, //是否显示多选框
     noMore: false, // 加载更多  false ? 显示loading : 没有更多
     isChatBoxVisible: false, // 聊天框是否显示

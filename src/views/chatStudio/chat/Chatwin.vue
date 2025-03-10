@@ -169,16 +169,15 @@ const groupStore = useGroupStore();
 const chatStore = useChatStore();
 const appStore = useAppStore();
 const { dispatch, commit } = useStore();
-const { isChatBoxVisible } = storeToRefs(chatStore);
+const { isChatBoxVisible, needScrollDown } = storeToRefs(chatStore);
 
 const { toAccount, isGroupChat, currentType } = useGetters([
   "toAccount",
   "isGroupChat",
   "currentType",
 ]);
-const { showCheckbox, needScrollDown, currentMessageList, currentConv } = useState({
+const { showCheckbox, currentMessageList, currentConv } = useState({
   showCheckbox: (state) => state.conversation.showCheckbox,
-  needScrollDown: (state) => state.conversation.needScrollDown,
   currentMessageList: (state) => state.conversation.currentMessageList,
   currentConv: (state) => state.conversation.currentConversation,
 });
@@ -351,7 +350,7 @@ const getMoreMsg = async () => {
       chatStore.$patch({ noMore: true });
     } else if (messageList.length) {
       commit("loadMoreMessages", { convId, messages: messageList, msgId: messageList[0].ID });
-      commit("setConversationValue", { key: "needScrollDown", value: msglist.length });
+      chatStore.$patch({ needScrollDown: msglist.length });
     } else {
       chatStore.$patch({ noMore: true });
     }
@@ -575,7 +574,7 @@ function offEmitter() {
 }
 
 watch(
-  needScrollDown,
+  () => needScrollDown.value,
   (data) => {
     updateLoadMore(data);
   },

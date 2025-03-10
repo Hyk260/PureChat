@@ -23,7 +23,6 @@
     <!-- @提及弹框 -->
     <MentionModal
       v-if="isMentionModalVisible"
-      ref="mentionRef"
       :pinyinSearch="true"
       :isOwner="groupStore.isOwner"
       :editor="editorRef"
@@ -89,7 +88,6 @@ import emitter from "@/utils/mitt-bus";
 const editorRef = shallowRef(); // 编辑器实例，必须用 shallowRef
 const valueHtml = ref(""); // 内容 HTML
 const mode = "simple"; // 'default' 或 'simple'
-const mentionRef = ref();
 
 const appStore = useAppStore();
 const chatStore = useChatStore();
@@ -278,7 +276,7 @@ const handleEnter = (event, editor = editorRef.value) => {
   if (loading.value) return;
   if (event?.ctrlKey) return;
   if (isMentionModalVisible.value) {
-    mentionRef.value.inputKeyupHandler(event);
+    emitter.emit("handleInputKeyupHandler", event);
     return;
   }
   const { isHave } = sendMsgBefore();
