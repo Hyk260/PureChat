@@ -11,7 +11,7 @@
             @click="handleAit(item.userID, item.nick)"
           >
             <UserAvatar
-              words="2"
+              words="1"
               shape="square"
               className="mention-avatar"
               :url="item.avatar"

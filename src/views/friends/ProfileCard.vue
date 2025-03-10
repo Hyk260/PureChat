@@ -22,7 +22,10 @@
     </div>
     <!-- 用户基本信息 -->
     <div class="info">
-      <h2 class="nickname">{{ userInfo.nick || userInfo.name || "-" }}</h2>
+      <h2 class="nickname">
+        <span> {{ userInfo.nick || userInfo.name || "-" }} </span>
+        <span v-if="userInfo?.memberCount"> ({{ userInfo?.memberCount }}) </span>
+      </h2>
       <div class="qq-number">ID {{ userInfo.userID || userInfo.groupID.replace("@TGS", "") }}</div>
 
       <div class="basic-info">
@@ -52,7 +55,7 @@ import { scrollToMessage } from "@/utils/chat/index";
 import emitter from "@/utils/mitt-bus";
 
 const { dispatch } = useStore();
-const sidebarStore = useSidebarStore()
+const sidebarStore = useSidebarStore();
 // 用户信息
 const userInfo = ref({
   groupID: "",

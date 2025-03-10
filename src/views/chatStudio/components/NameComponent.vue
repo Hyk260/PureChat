@@ -8,7 +8,7 @@
       :class="{ 'mention-self': isSelf(item) }"
       @click="handleAt"
     >
-      <span :class="styleNick">{{ item.nick }}</span>
+      <span :class="styleNick">{{ item.nick || item.from }}</span>
       <span class="mention" v-if="!isSelf(item)">@</span>
       <span class="admin" v-if="isLeader">群主</span>
     </span>

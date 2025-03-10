@@ -37,13 +37,15 @@
                 <el-avatar
                   shape="square"
                   :size="36"
-                  :src="item.avatar || getAiAvatarUrl(item.from) || squareUrl"
+                  :src="item.avatar || getAiAvatarUrl(item.from)"
                   v-contextmenu:contextmenu
                   @error="() => true"
                   @click.stop="onClickAvatar($event, item)"
                   @contextmenu.prevent="handleContextAvatarMenuEvent($event, item)"
                 >
-                  <img :src="emptyUrl" />
+                  <div class="h-36 w-36 flex-c bg-[#5cadff]">
+                    {{ displayInfo(item.from) }}
+                  </div>
                 </el-avatar>
               </div>
               <div :class="msgOne(item)">
@@ -115,20 +117,20 @@
 
 <script setup>
 import {
+  ref,
+  watch,
   nextTick,
   onBeforeUnmount,
   onBeforeUpdate,
   onMounted,
   onUnmounted,
   onUpdated,
-  ref,
-  watch,
 } from "vue";
 import { storeToRefs } from "pinia";
 import { useGroupStore, useAppStore, useChatStore } from "@/stores/index";
 import { showConfirmationBox } from "@/utils/message";
 import { useStore } from "vuex";
-import { avatarMenu, menuOptionsList, emptyUrl, squareUrl } from "../utils/menu";
+import { avatarMenu, menuOptionsList } from "../utils/menu";
 import {
   handleCopyMsg,
   loadMsgModule,
@@ -190,6 +192,11 @@ const updateLoadMore = (item) => {
     console.log("updateLoadMore:", item);
     item > 0 ? elRef.scrollIntoView({ block: "start" }) : elRef.scrollIntoViewIfNeeded();
   });
+};
+
+const displayInfo = (info) => {
+  if (!info) return "unknown";
+  return info.slice(0, 2).toUpperCase();
 };
 
 const showAvatar = (item) => {
