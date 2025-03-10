@@ -166,9 +166,6 @@ watch(isChatBoxVisible, (val) => {
   height: 0px !important;
   border-bottom: none;
 }
-.message-h-full {
-  width: 100% !important;
-}
 .message-right {
   background: var(--color-body-bg);
   flex: 1;
