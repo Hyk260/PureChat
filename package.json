@@ -36,6 +36,7 @@
   "dependencies": {
     "@tiny-libs/typed-event-emitter": "^1.0.0",
     "@element-plus/icons-vue": "^2.0.10",
+    "@iconify-json/mdi": "^1.2.3",
     "@iconify/vue": "^4.3.0",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@tencentcloud/chat": "3.4.8",

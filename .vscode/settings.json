@@ -6,7 +6,7 @@
   //   "source.organizeImports": "never"
   // },
   // "prettier.enable": false,
-  "eslint.experimental.useFlatConfig": true,
+  "eslint.useFlatConfig": true,
   // 在保存时格式化文件。格式化程序必须可用，延迟后文件不能保存，并且编辑器不能关闭。
   // "editor.formatOnSave": false,
   // "eslint.validate": ["html", "css", "scss", "json", "jsonc","markdown"],
