@@ -1,13 +1,12 @@
 import { app } from 'electron'
 import { logger } from '../logger/index'
 import { isDevelopment } from '../platform'
-// 请求单实例锁
-const gotTheLock = app.requestSingleInstanceLock();
 
+// 点击图标启动时检测窗口是否存在，存在则打开
 export function winSingle() {
   if (isDevelopment) return;
-  // 点击图标启动时检测窗口是否存在，存在则打开
-  if (!gotTheLock) {
+  // 请求单实例锁
+  if (!app.requestSingleInstanceLock()) {
     app.quit();
   } else {
     // 外部协议被点击的事件;

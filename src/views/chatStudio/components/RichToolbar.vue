@@ -168,7 +168,7 @@ const sendFileClick = () => {
 };
 // 截图
 const clickCscreenshot = () => {
-  electron.ipcRenderer.send("screenshot");
+  window.api.handleScreenshot()
 };
 
 const onShake = () => {};

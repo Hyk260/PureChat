@@ -1,6 +1,6 @@
-export * from "./create-window";
-export * from "./win-single";
-export * from "./ipcEvent";
+export * from "./createWindow";
+export * from "./winSingle";
+export * from "./ipc";
 export * from "./util";
 export * from "./folder";
 

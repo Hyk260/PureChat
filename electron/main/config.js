@@ -1,6 +1,3 @@
-// 托盘
-global.tray = null;
-
 // 主窗口
 global.mainWin = null;
 
