@@ -1,6 +1,7 @@
 import { isWindows } from "../platform";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
+import { is } from '../toolkit/utils'
 import { electronRendererUrl, isDevelopment } from "../platform";
 import {
   app,
@@ -101,8 +102,15 @@ class Notification extends TypedEventEmitter {
     ipcMain.on('uikit:notification:on-click', onClick);
     ipcMain.on("uikit:notification:close", onClose);
 
-    const winURL = isDevelopment ? electronRendererUrl : join(__dirname, "../renderer/index.html");
-    win.loadURL(winURL + `#${"desktop"}`);
+    if (is.dev && electronRendererUrl) {
+      console.log("dev:loadURL", electronRendererUrl + '#/desktop');
+      win.loadURL(electronRendererUrl + '#/desktop');
+    } else {
+      win.loadFile(join(__dirname, '../renderer/index.html'), {
+        hash: '#/desktop'
+      })
+    }
+
     this.window = win;
   }
 

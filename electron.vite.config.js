@@ -37,14 +37,15 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 8038,
       },
-      // build: {
-      //   outDir: 'dist_electron/renderer',
-      //   rollupOptions: {
-      //     input: {
-      //       index: resolve(__dirname, 'index.html')
-      //     },
-      //   }
-      // }
+      build: {
+        // outDir: 'dist_electron/renderer',
+        rollupOptions: {
+          input: {
+            index: resolve(__dirname, 'index.html'),
+            // notif: resolve(__dirname, 'notif.html')
+          },
+        }
+      }
     }
   }
 })

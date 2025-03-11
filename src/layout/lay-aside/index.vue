@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar" :class="macClass()">
+  <div class="sidebar" :class="isMacStyle()">
     <div>
       <div class="touxiang">
         <UserAvatar type="self" isdot shape="square" @click="openUploadAvatarDialog" />
@@ -37,6 +37,7 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import { isMacStyle } from '@/utils/appEmit';
 import { useChatStore, useSidebarStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 // import UploadAvatarDialog from "@/views/chatStudio/components/UploadAvatarDialog.vue";
@@ -69,13 +70,6 @@ function toggle(item) {
   }
 }
 
-function macClass() {
-  const isMac = window.api.isMac;
-  return {
-    "pt-35": isMac,
-    "titlebar__drag-region": isMac,
-  };
-}
 // 检查未读消息是否隐藏
 const isUnreadMsgHidden = (id) => {
   return id !== "chat" || chatStore.totalUnreadMsg === 0;
