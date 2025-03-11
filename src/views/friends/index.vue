@@ -30,7 +30,7 @@
     </div>
     <div class="right-list">
       <div>
-        <div class="head px-10"></div>
+        <div class="head px-10" :class="isMacDragStyle()"></div>
         <ProfileCard />
       </div>
     </div>

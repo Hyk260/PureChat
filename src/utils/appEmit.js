@@ -61,12 +61,12 @@ export function isMacDragStyle() {
   }
 }
 
-export function isMacStyle() {
-  const isMac = window.api?.isMac;
-  return {
-    "pt-35": isMac,
-    "titlebar__drag-region": isMac,
-  };
+export function isMacSidebarStyle() {
+  if (window.api?.isMac) {
+    return "mac-sidebar-top titlebar__drag-region";
+  } else {
+    return "";
+  }
 }
 
 export function isWindowsAppStyle() {

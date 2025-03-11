@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar" :class="isMacStyle()">
+  <div class="sidebar" :class="isMacSidebarStyle()">
     <div>
       <div class="touxiang">
         <UserAvatar type="self" isdot shape="square" @click="openUploadAvatarDialog" />
@@ -37,7 +37,7 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { isMacStyle } from '@/utils/appEmit';
+import { isMacSidebarStyle } from '@/utils/appEmit';
 import { useChatStore, useSidebarStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 // import UploadAvatarDialog from "@/views/chatStudio/components/UploadAvatarDialog.vue";
