@@ -32,10 +32,13 @@
           {{ getProvider() }}
         </el-link>
       </div>
-      <div v-else class="ml-16">
+      <div v-else class="flex ml-16">
         <span class="nick">{{ cardData.nick || userProfile.nick || cardData.from || "-" }}</span>
-        <span v-if="getGender(userProfile, 'Male')" class="iconify icon-male"></span>
-        <span v-else-if="getGender(userProfile, 'Female')" class="iconify icon-female"></span>
+        <div v-if="getGender(userProfile, 'Male')" class="i-mdi:gender-male text-[#5A9CF8]"></div>
+        <div
+          v-else-if="getGender(userProfile, 'Female')"
+          class="i-mdi:gender-female text-[#5A9CF8]"
+        ></div>
       </div>
     </div>
     <div class="content">
