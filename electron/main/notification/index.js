@@ -8,8 +8,7 @@ export function setNotification() {
     title: "PureChat",
     width: 320,
     height: 80,
-    // debugging
-    // duration: 100000,
+    // duration: 100000,// debugging
     // debug: true, // Open the devTool for debugging
   });
 

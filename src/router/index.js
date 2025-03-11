@@ -12,7 +12,7 @@ const historyMode = {
 };
 
 const router = createRouter({
-  history: historyMode['hash'],
+  history: createWebHashHistory(),
   routes: [...remaining, ...layout],
   scrollBehavior,
 });

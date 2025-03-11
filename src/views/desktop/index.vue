@@ -2,9 +2,9 @@
   <div class="desktop-crad" @click="onClick(station)">
     <div v-if="station" class="container animate__animated animate__faster" :class="mode">
       <el-icon class="close" @click.stop="onClose"><Close /></el-icon>
-      <img class="size-50" :src="icon()" alt="" />
-      <div class="flex">
-        <div class="ml-5">
+      <img class="avatar" :src="icon()" alt="" />
+      <div class="right">
+        <div>
           {{ extra.title }}
         </div>
       </div>
@@ -14,7 +14,11 @@
 
 <script setup>
 import { ref } from "vue";
+import { ElIcon } from "element-plus";
+import { Close } from "@element-plus/icons-vue";
 import { cloneDeep } from "lodash-es";
+import "element-plus/dist/index.css";
+import "animate.css";
 
 const station = ref(null);
 const extra = ref(null);
@@ -52,32 +56,42 @@ function onClose() {
 </script>
 
 <style lang="scss" scoped>
-.close {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  cursor: pointer;
-}
 .desktop-crad {
   position: relative;
   width: 100vw;
   height: 100vh;
   display: flex;
   border-radius: 4px;
-}
-.container {
-  border-radius: 4px;
-  background: #fff;
-  height: 100%;
-  width: 100%;
-  padding: 0 10px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  box-shadow: var(--el-box-shadow-lighter);
-  border: 1px solid var(--color-border-default);
-  img {
+  .avatar {
+    width: 50px;
+    height: 50px;
+  }
+  .right {
+    display: flex;
+    div {
+      margin-left: 5px;
+    }
+  }
+  .container {
     border-radius: 4px;
+    background: #fff;
+    height: 100%;
+    width: 100%;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-shadow: #fff;
+    border: 1px solid #d0d7de;
+    .close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      cursor: pointer;
+    }
+    img {
+      border-radius: 4px;
+    }
   }
 }
 </style>
