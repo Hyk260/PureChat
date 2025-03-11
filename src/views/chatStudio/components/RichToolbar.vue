@@ -2,7 +2,7 @@
   <div class="toolbar">
     <!-- 表情包 -->
     <span
-      v-show="!fullScreen && !isRobot(toAccount)"
+      v-show="!isFullscreenInputActive && !isRobot(toAccount)"
       :title="$t('chat.emoji')"
       class="emoticon"
       @click="sendEmojiClick"
@@ -68,11 +68,11 @@
       <FontIcon class="svg-left icon-hover" iconName="DArrowLeft" />
     </span>
     <span
-      :title="fullScreen ? $t('chat.recover') : $t('chat.launch')"
+      :title="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
       class="ml-auto"
-      @click="onEnlarge(fullScreen)"
+      @click="toggleFullScreenInput"
     >
-      <svg-icon :local-icon="fullScreen ? 'narrow' : 'enlarge'" class="icon-hover" />
+      <svg-icon :local-icon="isFullscreenInputActive ? 'narrow' : 'enlarge'" class="icon-hover" />
     </span>
     <input
       type="file"
@@ -94,39 +94,37 @@
       <RobotPlugin />
       <RobotOptions />
     </template>
-    <EmotionPackBox v-if="!isRobot(toAccount)" ref="emjRef" @setEmoji="setEmoji" />
+    <EmotionPackBox v-if="!isRobot(toAccount) && flag" @onClose="setFlag(false)"  />
   </div>
 </template>
 
 <script setup>
+import { ref, computed } from "vue";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { isRobot, screenshot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
-import emitter from "@/utils/mitt-bus";
-import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { storeToRefs } from 'pinia';
+import { useBoolean } from "@/utils/hooks/index";
+import { useChatStore, useRobotStore } from "@/stores/index";
 import EmotionPackBox from "./EmotionPackBox.vue";
 import RobotOptions from "./RobotOptions.vue";
 import RobotModel from "./RobotModel.vue";
 import RobotPlugin from "./RobotPlugin.vue";
-import { getAssetsFile } from "../utils/utils";
-import emojiQq from "@/utils/emoji/emoji-map-qq";
-import { getAllModels } from "@/ai/utils";
-import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
-import { useRobotStore } from "@/stores/modules/robot";
+import emitter from "@/utils/mitt-bus";
 
-const emjRef = ref();
 const tobottom = ref();
 const imagePicker = ref();
 const filePicker = ref();
-const { commit, dispatch } = useStore();
 
-const emit = defineEmits(["setToolbar"]);
+const [flag, setFlag] = useBoolean();
 const robotStore = useRobotStore();
+const chatStore = useChatStore();
+const { isFullscreenInputActive } = storeToRefs(chatStore);
+const { dispatch } = useStore();
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-const { fullScreen, currentConversation } = useState({
-  fullScreen: (state) => state.conversation.fullScreen,
+const { currentConversation } = useState({
   currentConversation: (state) => state.conversation.currentConversation,
 });
 
@@ -147,7 +145,7 @@ const isFunctionCall = computed(() => {
 });
 
 const sendEmojiClick = () => {
-  emjRef.value.setFlag(true);
+  setFlag(true)
 };
 function openRobotBox() {
   emitter.emit("onRobotBox");
@@ -158,15 +156,6 @@ function openPluginBox() {
 function selectModel() {
   emitter.emit("openModeList", true);
 }
-const setEmoji = (item, table) => {
-  let url = "";
-  if (table == "QQ") {
-    url = getAssetsFile(emojiQq.emojiMap[item]);
-  } else {
-    url = getAssetsFile(emojiDouyin.emojiMap[item]);
-  }
-  emit("setToolbar", { data: { url, item }, key: "setEmoj" });
-};
 const sendImageClick = () => {
   let $el = imagePicker.value;
   $el.value = null;
@@ -179,11 +168,15 @@ const sendFileClick = () => {
 };
 // 截图
 const clickCscreenshot = () => {
-  electron.ipcRenderer.send("screenshot");
+  window.api.handleScreenshot()
 };
+
 const onShake = () => {};
-const onEnlarge = (value) => {
-  commit("setConversationValue", { key: "fullScreen", value: !value });
+
+const toggleFullScreenInput = () => {
+  chatStore.$patch((state) => {
+    state.isFullscreenInputActive = !state.isFullscreenInputActive;
+  })
 };
 
 function customMessage() {
@@ -201,17 +194,19 @@ function customMessage() {
 }
 
 function sendImage(e) {
-  emit("setToolbar", {
+  emitter.emit("handleToolbar", {
     key: "setPicture",
     data: { files: e.target.files[0] },
   });
 }
+
 function sendFile(e) {
-  emit("setToolbar", {
+  emitter.emit("handleToolbar", {
     key: "setParsefile",
     data: { files: e.target.files[0] },
   });
 }
+
 function isShowPlugins(val) {
   return false;
   if (__LOCAL_MODE__) {
@@ -220,6 +215,7 @@ function isShowPlugins(val) {
     return false;
   }
 }
+
 function isShowImage(val) {
   if (__LOCAL_MODE__) {
     return false;
@@ -227,13 +223,16 @@ function isShowImage(val) {
     return !isRobot(val);
   }
 }
+
 const onTobBottom = () => {
   emitter.emit("updataScroll");
 };
+
 emitter.on("onisbot", (state) => {
   tobottom.value = !state;
 });
 </script>
+
 <style lang="scss" scoped>
 .toolbar {
   height: 40px;

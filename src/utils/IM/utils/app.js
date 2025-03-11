@@ -9,7 +9,7 @@ export const handleTrayFlashIng = (data) => {
   const massage = getConversationList(data);
   // 消息免打扰
   if (!massage || massage?.[0].messageRemindType === "AcceptNotNotify") return;
-  window.electron.ipcRenderer.send("trayFlashIng");
+  window.api.trayFlashIng();
 };
 
 // 窗口抖动
@@ -21,6 +21,6 @@ export const handlesOnShake = (data) => {
   // 消息免打扰
   if (!massage || massage?.[0].messageRemindType === "AcceptNotNotify") return;
   if (payload?.data === "dithering") {
-    window.electron.ipcRenderer.send("shakeWindow");
+    // window.api.shakeWindow();
   }
 };

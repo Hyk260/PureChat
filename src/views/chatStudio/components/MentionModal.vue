@@ -11,12 +11,12 @@
             @click="handleAit(item.userID, item.nick)"
           >
             <UserAvatar
-              words="2"
-              className="mention-avatar"
+              words="1"
               shape="square"
+              className="mention-avatar"
               :url="item.avatar"
               :type="item.avatar ? 'single' : 'group'"
-              :nickName="item.userID === magAtAll ? '@' : item.nick"
+              :nickName="item.userID === magAtAll ? '@' : item.nick || item.userID"
             />
             <span class="nick">{{ item.nick || item.userID }}</span>
           </li>
@@ -33,7 +33,7 @@ import { cloneDeep } from "lodash-es";
 import { prioritizeRBTUserID } from "@/utils/chat/index";
 import { insertMention } from "./../utils/utils";
 import { localStg } from "@/utils/storage";
-import { useGroupStore } from "@/stores/modules/group";
+import { useGroupStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__";
@@ -125,6 +125,9 @@ export default {
       useEventListener(document, "keydown", (e) => {
         this.onKeydown(e);
       });
+      emitter.on("handleInputKeyupHandler", (data) => {
+        this.inputKeyupHandler(data);
+      });
       emitter.on("setMentionModal", (data) => {
         const { content = [], type, searchlength = 0 } = cloneDeep(data);
         console.log(content, type, searchlength);
@@ -143,7 +146,7 @@ export default {
       });
     },
     setMentionStatus(status = false) {
-      this.$store.commit("toggleMentionModal", status);
+      useChatStore().toggleMentionModal(status);
     },
     inputKeyupHandler(event) {
       if (event.key === "Enter") {
@@ -155,7 +158,7 @@ export default {
     },
     handleAit(id, name) {
       let nick = name ? name : id;
-      insertMention({ id, name: nick, deleteDigit: this.searchValue, editor: this.editor })
+      insertMention({ id, name: nick, deleteDigit: this.searchValue, editor: this.editor });
       this.setMentionStatus(); // 隐藏 modal
       this.searchValue = 0;
     },
@@ -200,6 +203,7 @@ export default {
     this.initMention();
   },
   beforeUnmount() {
+    emitter.off("handleInputKeyupHandler");
     emitter.off("setMentionModal");
     this.setMentionStatus(); // 隐藏 modal
   },

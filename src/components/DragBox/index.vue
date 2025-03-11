@@ -7,7 +7,7 @@ export default {
   name: "DragBox",
   data() {
     return {
-      isMac: window.api.isMac,
+      isMac: window.api?.isMac,
     };
   }
 };

@@ -4,60 +4,115 @@ import { electronApp, optimizer } from "./toolkit/utils";
 import { setNotification } from "./notification/index";
 import { isMac } from "./platform";
 import { logger } from './logger/index';
-import { setTray } from "./tray/index";
-import { createWindow, winSingle, ipcEvent, setDefaultProtocol, initStorage } from "./utils/index";
+import { TrayService } from "./tray/index";
+import { createWindow, winSingle, registerIpc, setDefaultProtocol, initStorage } from "./utils/index";
 
-class Background {
+class WindowService {
+  static instance = null;
+  static mainWindow = null;
+
   constructor() {
-    logger.info('init')
+    logger.info('Initializing WindowService');
+    this.setupSingletonUtilities();
+    this.registerAppEvents();
+  }
+  static getInstance() {
+    if (!WindowService.instance) {
+      WindowService.instance = new WindowService();
+    }
+    return WindowService.instance;
+  }
+  // 初始化单例工具
+  setupSingletonUtilities() {
     winSingle();
     initStorage();
-    this.init();
   }
-  init() {
-    this.handleAppEvents();
+
+  createMainWindow(_options) {
+    if (this.mainWindow && !this.mainWindow.isDestroyed()) {
+      return this.mainWindow
+    }
+
+    this.mainWindow = createWindow();
+
+    return this.mainWindow;
   }
-  createWindow(_options) {
-    createWindow()
+
+  registerAppEvents() {
+    this.registerProtocol();
+    this.registerAppLifeCycleEvents();
+    this.registerAppReadinessEvents();
   }
-  handleAppEvents() {
-    // 注册协议
+
+  handleMacSpecificBehaviors() {
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) this.createMainWindow();
+    });
+
+    app.on('open-url', (event, url) => {
+      event.preventDefault();
+      const win = this.mainWindow;
+      if (win) {
+        win.webContents.send('awaken', url);
+      } else {
+        logger.warn('Main window is not available to receive URL');
+      }
+    });
+  }
+
+  registerProtocol() {
+    //  注册协议
     protocol.registerSchemesAsPrivileged([
-      { scheme: "app", privileges: { secure: true, standard: true } },
+      { scheme: 'app', privileges: { secure: true, standard: true } },
     ]);
+  }
+
+  registerAppLifeCycleEvents() {
     // 关闭所有窗口后退出
-    app.on("window-all-closed", () => {
-      // 在macOS上，应用程序及其菜单栏通常保持活动状态，直到用户使用Cmd+Q明确退出
+    app.on('window-all-closed', () => {
       if (!isMac) {
         app.quit();
       }
     });
+  }
 
-    app.on("activate", () => {
-      // 在macOS上，当 dock图标被单击，并且没有其他窗口打开。
-      if (BrowserWindow.getAllWindows().length === 0) this.createWindow();
-    });
-    // 此方法将在Electron完成后调用 初始化，并准备创建浏览器窗口。 某些API只能在此事件发生后使用。
+  registerAppReadinessEvents() {
     app.whenReady().then(() => {
-      logger.info('app whenReady')
-      setNotification();
-      setDefaultProtocol()
-      ipcEvent();
-      this.createWindow();
-      setTray();
-      electronApp.setAppUserModelId('com.electron')
-      optimizer.registerFramelessWindowIpc()
-      app.on('browser-window-created', (_, window) => {
-        optimizer.watchWindowShortcuts(window, { escToCloseWindow : true });
-      })
-    })
-
-    // macOS 下通过协议URL启动
-    app.on("open-url", (event, url) => {
-      const win = global.mainWin;
-      win.webContents.send("awaken", url);
+      this.handleAppReadinessCallbacks();
     });
+  }
+
+  handleAppReadinessCallbacks() {
+    logger.info('App ready');
+    // Set app user model id for windows
+    electronApp.setAppUserModelId('com.purechat.app');
+    const mainWindow = this.createMainWindow();
+    setNotification();
+    setDefaultProtocol();
+    registerIpc(mainWindow);
+    new TrayService();
+    this.setupOptimizerUtilities();
+  }
+
+  setupOptimizerUtilities() {
+    optimizer.registerFramelessWindowIpc();
+    app.on('browser-window-created', (_, window) => {
+      optimizer.watchWindowShortcuts(window, { escToCloseWindow: true });
+    });
+  }
+  showMainWindow() {
+    if (this.mainWindow && !this.mainWindow.isDestroyed()) {
+      if (this.mainWindow.isMinimized()) {
+        this.mainWindow.restore()
+      }
+      this.mainWindow.show()
+      this.mainWindow.focus()
+    } else {
+      this.mainWindow = this.createMainWindow()
+      this.mainWindow.focus()
+    }
   }
 }
 
-new Background();
+// 使用单例模式
+export const windowService = WindowService.getInstance();

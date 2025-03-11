@@ -1,13 +1,13 @@
 <template>
   <div
     class="wangeditor"
-    :class="{ 'wang-h-full': fullScreen }"
+    :class="{ 'wang-h-full': isFullscreenInputActive }"
     id="editor"
     v-show="!showCheckbox"
     v-if="isChatBoxVisible"
   >
     <!-- 自定义工具栏 -->
-    <RichToolbar @setToolbar="setToolbar" />
+    <RichToolbar />
     <Editor
       class="editor-content"
       v-model="valueHtml"
@@ -22,8 +22,7 @@
     />
     <!-- @提及弹框 -->
     <MentionModal
-      ref="mentionRef"
-      v-if="isShowModal"
+      v-if="isMentionModalVisible"
       :pinyinSearch="true"
       :isOwner="groupStore.isOwner"
       :editor="editorRef"
@@ -45,13 +44,6 @@
 </template>
 
 <script setup>
-import { bytesToSize, isRobot, fileImgToBase64Url } from "@/utils/chat/index";
-import { isMobile } from "@/utils/common";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
-import emitter from "@/utils/mitt-bus";
-import { Editor } from "@wangeditor/editor-for-vue";
-import "@wangeditor/editor/dist/css/style.css";
-import { debounce } from "lodash-es";
 import {
   onActivated,
   onBeforeUnmount,
@@ -61,15 +53,19 @@ import {
   shallowRef,
   watch,
 } from "vue";
+import { bytesToSize, isRobot, fileImgToBase64Url } from "@/utils/chat/index";
+import { isMobile } from "@/utils/common";
+import { useGetters, useState } from "@/utils/hooks/useMapper";
+import { Editor } from "@wangeditor/editor-for-vue";
+import "@wangeditor/editor/dist/css/style.css";
+import { debounce } from "lodash-es";
+import { storeToRefs } from "pinia";
 import { useStore } from "vuex";
-import MentionModal from "../components/MentionModal.vue";
-import RichToolbar from "../components/RichToolbar.vue";
 import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
 import { localStg } from "@/utils/storage";
 import { useBoolean } from "@/utils/hooks/index";
-import { useAppStore } from '@/stores/modules/app';
-import { useGroupStore } from '@/stores/modules/group';
+import { useAppStore, useGroupStore, useChatStore } from "@/stores/index";
 import {
   convertEmoji,
   customAlert,
@@ -85,35 +81,25 @@ import {
   insertMention,
   isDataTransferItem,
 } from "../utils/utils";
+import MentionModal from "../components/MentionModal.vue";
+import RichToolbar from "../components/RichToolbar.vue";
+import emitter from "@/utils/mitt-bus";
 
 const editorRef = shallowRef(); // 编辑器实例，必须用 shallowRef
 const valueHtml = ref(""); // 内容 HTML
 const mode = "simple"; // 'default' 或 'simple'
-const mentionRef = ref();
 
 const appStore = useAppStore();
+const chatStore = useChatStore();
 const groupStore = useGroupStore();
 const [loading, setLoading] = useBoolean();
 const [disabled, setDisabled] = useBoolean();
-
-const { dispatch, commit } = useStore();
+const { dispatch } = useStore();
+const { isChatBoxVisible, isMentionModalVisible, isFullscreenInputActive, replyMsgData } = storeToRefs(chatStore);
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-const {
-  currentConversation,
-  isChatBoxVisible,
-  showCheckbox,
-  isShowModal,
-  currentReplyMsg,
-  sessionDraftMap,
-  fullScreen,
-} = useState({
-  sessionDraftMap: (state) => state.conversation.sessionDraftMap,
+const { currentConversation, showCheckbox } = useState({
   currentConversation: (state) => state.conversation.currentConversation,
   showCheckbox: (state) => state.conversation.showCheckbox,
-  isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
-  isShowModal: (state) => state.conversation.isShowModal,
-  currentReplyMsg: (state) => state.conversation.currentReplyMsg,
-  fullScreen: (state) => state.conversation.fullScreen,
 });
 
 const handleEditor = (editor, created = true) => {
@@ -145,12 +131,12 @@ const insertDraft = ({ data, editor = editorRef.value }) => {
   if (!data) return;
   if (!isMobile) editor?.focus(true);
   clearInputInfo();
-  const draft = sessionDraftMap.value.get(data.conversationID);
+  const draft = chatStore.chatDraftMap.get(data.conversationID);
   draft?.map((t) => editor.insertNode(t.children));
 };
 // 更新草稿
 const updateDraft = debounce((data) => {
-  commit("setSessionDraft", {
+  chatStore.updateChatDraft({
     ID: currentConversation?.value?.conversationID,
     payload: data,
   });
@@ -289,8 +275,8 @@ const parsePicture = async (file, editor = editorRef.value) => {
 const handleEnter = (event, editor = editorRef.value) => {
   if (loading.value) return;
   if (event?.ctrlKey) return;
-  if (isShowModal.value) {
-    mentionRef.value.inputKeyupHandler(event);
+  if (isMentionModalVisible.value) {
+    emitter.emit("handleInputKeyupHandler", event);
     return;
   }
   const { isHave } = sendMsgBefore();
@@ -302,8 +288,10 @@ const handleEnter = (event, editor = editorRef.value) => {
 };
 // 清空输入框
 const clearInputInfo = (editor = editorRef.value) => {
-  commit("setReplyMsg", null);
-  commit("setConversationValue", { key: "fullScreen", value: false });
+  chatStore.$patch({
+    isFullscreenInputActive: false,
+    replyMsgData: null,
+  });
   editor?.clear();
 };
 
@@ -325,7 +313,7 @@ const sendMsgBefore = (editor = editorRef.value) => {
     aitlist,
     files: files,
     video,
-    reply: currentReplyMsg.value,
+    reply: replyMsgData.value,
     isHave: Boolean(have),
   };
 };
@@ -367,6 +355,9 @@ function onEmitter() {
   emitter.on("handleFileDrop", (file) => {
     handleFile(file);
   });
+  emitter.on("handleToolbar", (data) => {
+    setToolbar(data);
+  });
 }
 
 function offEmitter() {
@@ -374,16 +365,17 @@ function offEmitter() {
   emitter.off("handleSetHtml");
   emitter.off("handleInsertDraft");
   emitter.off("setHandleFile");
+  emitter.off("handleToolbar");
 }
 
 watch(isChatBoxVisible, () => {
-  handleEditorKeyDown(isShowModal.value);
+  handleEditorKeyDown(isMentionModalVisible.value);
 });
 // watch(lang, () => {
 //   handleToggleLanguage();
 // });
 onActivated(() => {
-  handleEditorKeyDown(isShowModal.value);
+  handleEditorKeyDown(isMentionModalVisible.value);
 });
 onDeactivated(() => {
   offEmitter();

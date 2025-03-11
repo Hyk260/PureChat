@@ -62,7 +62,7 @@ import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
-import { useRobotStore } from "@/stores/modules/robot";
+import { useRobotStore } from "@/stores/modules/robot/index";
 import { ModelSelect } from "@/ai/resources";
 
 defineOptions({

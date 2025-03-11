@@ -5,6 +5,7 @@ import {
 } from 'electron-vite'
 import { resolve } from 'path'
 import renderer from './vite.config';
+import { manualChunks } from "./build/config/define";
 
 export default defineConfig(({ mode }) => {
   return {
@@ -37,14 +38,24 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 8038,
       },
-      // build: {
-      //   outDir: 'dist_electron/renderer',
-      //   rollupOptions: {
-      //     input: {
-      //       index: resolve(__dirname, 'index.html')
-      //     },
-      //   }
-      // }
+      build: {
+        // outDir: 'dist_electron/renderer',
+        rollupOptions: {
+          input: {
+            index: resolve(__dirname, 'index.html'),
+            notif: resolve(__dirname, 'notif.html')
+          },
+          // 静态资源分类打包
+          output: {
+            chunkFileNames: "static/js/[name]-[hash].js",
+            entryFileNames: "static/js/[name]-[hash].js",
+            // #https://cn.rollupjs.org/configuration-options/#output-assetfilenames
+            assetFileNames: "static/[ext]/[name]-[hash].[ext]",
+            // 手动分包 #https://cn.rollupjs.org/configuration-options/#output-manualchunks
+            manualChunks,
+          },
+        }
+      }
     }
   }
 })

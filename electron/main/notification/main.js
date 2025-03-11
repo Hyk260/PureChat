@@ -1,7 +1,8 @@
 import { isWindows } from "../platform";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { electronRendererUrl, isDevelopment } from "../platform";
+import { is } from '../toolkit/utils'
+import { electronRendererUrl } from "../platform";
 import {
   app,
   ipcMain,
@@ -101,8 +102,14 @@ class Notification extends TypedEventEmitter {
     ipcMain.on('uikit:notification:on-click', onClick);
     ipcMain.on("uikit:notification:close", onClose);
 
-    const winURL = isDevelopment ? electronRendererUrl : join(__dirname, "../renderer/index.html");
-    win.loadURL(winURL + `#${"desktop"}`);
+    if (is.dev && electronRendererUrl) {
+      // console.log("dev:loadURL", electronRendererUrl + '/notif.html');
+      win.loadURL(electronRendererUrl + '/notif.html');
+      
+    } else {
+      win.loadFile(join(__dirname, '../renderer/notif.html'))
+    }
+
     this.window = win;
   }
 
@@ -134,9 +141,9 @@ class Notification extends TypedEventEmitter {
     this.offset = offset;
     this.duration = Math.max(duration, 3000);
 
-      this.width = width;
-      this.height = height;
-      this.debug = debug;
+    this.width = width;
+    this.height = height;
+    this.debug = debug;
   }
 
   destroy() {

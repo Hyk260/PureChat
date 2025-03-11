@@ -22,7 +22,10 @@
     </div>
     <!-- 用户基本信息 -->
     <div class="info">
-      <h2 class="nickname">{{ userInfo.nick || userInfo.name || "-" }}</h2>
+      <h2 class="nickname">
+        <span> {{ userInfo.nick || userInfo.name || "-" }} </span>
+        <span v-if="userInfo?.memberCount"> ({{ userInfo?.memberCount }}) </span>
+      </h2>
       <div class="qq-number">ID {{ userInfo.userID || userInfo.groupID.replace("@TGS", "") }}</div>
 
       <div class="basic-info">
@@ -45,14 +48,14 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import emitter from "@/utils/mitt-bus";
 import { getGender } from "@/utils/common";
 import { useStore } from "vuex";
+import { useSidebarStore } from "@/stores/modules/sidebar/index";
 import { scrollToMessage } from "@/utils/chat/index";
-import { useState } from "@/utils/hooks/useMapper";
+import emitter from "@/utils/mitt-bus";
 
-const { commit, dispatch } = useStore();
-
+const { dispatch } = useStore();
+const sidebarStore = useSidebarStore();
 // 用户信息
 const userInfo = ref({
   groupID: "",
@@ -60,12 +63,13 @@ const userInfo = ref({
   nick: "_",
   avatar: "",
 });
+
 const handleConversation = ({ id, type }) => {
-  commit("taggleOueSide", { id: "chat", path: "/chat" });
+  sidebarStore.taggleOueSide({ path: "/chat" });
   dispatch("addConversation", { convId: `${type}${id}` });
   scrollToMessage(`message_${type}${id}`);
 };
-// 方法
+
 const sendMessage = (data) => {
   // 发送消息逻辑
   const convInfo = {

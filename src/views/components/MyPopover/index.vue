@@ -32,10 +32,13 @@
           {{ getProvider() }}
         </el-link>
       </div>
-      <div v-else class="ml-16">
+      <div v-else class="flex ml-16">
         <span class="nick">{{ cardData.nick || userProfile.nick || cardData.from || "-" }}</span>
-        <span v-if="getGender(userProfile, 'Male')" class="iconify icon-male"></span>
-        <span v-else-if="getGender(userProfile, 'Female')" class="iconify icon-female"></span>
+        <div v-if="getGender(userProfile, 'Male')" class="i-mdi:gender-male text-[#5A9CF8]"></div>
+        <div
+          v-else-if="getGender(userProfile, 'Female')"
+          class="i-mdi:gender-female text-[#5A9CF8]"
+        ></div>
       </div>
     </div>
     <div class="content">
@@ -44,7 +47,7 @@
       </div>
     </div>
     <div class="footer">
-      <el-button class="w-full" @click="define" type="primary">
+      <el-button class="w-full" type="primary" @click="define">
         {{ $t("chat.sendMessage") }}
       </el-button>
     </div>
@@ -55,9 +58,6 @@
 import { getUserProfile } from "@/api/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
 import { useBoolean } from "@/utils/hooks/index";
-import { useState } from "@/utils/hooks/useMapper";
-import emitter from "@/utils/mitt-bus";
-import Label from "@/views/chatStudio/components/Label.vue";
 import { onClickOutside } from "@vueuse/core";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useStore } from "vuex";
@@ -65,6 +65,8 @@ import { getAiAvatarUrl } from "@/ai/utils";
 import { squareUrl } from "../../chatStudio/utils/menu";
 import { getGender } from "@/utils/common";
 import { getValueByKey, prefix } from "@/ai/utils";
+import Label from "@/views/chatStudio/components/Label.vue";
+import emitter from "@/utils/mitt-bus";
 
 const cardRef = ref();
 const left = ref("");
@@ -73,11 +75,6 @@ const cardData = ref(null);
 const userProfile = ref(null);
 
 const [card, setCard] = useBoolean();
-const { dispatch, commit } = useStore();
-
-const { chat } = useState({
-  chat: (state) => state.conversation.currentConversation,
-});
 
 const closeModal = () => {
   userProfile.value = null;
@@ -104,7 +101,7 @@ const getHomepage = (data = userProfile.value.profileCustomField) => {
 const define = () => {
   closeModal();
   if (cardData.value?.conversationType === "C2C") return;
-  dispatch("addConversation", { convId: `C2C${cardData.value.from}` });
+  useStore().dispatch("addConversation", { convId: `C2C${cardData.value.from}` });
 };
 
 onClickOutside(cardRef, () => {
@@ -135,12 +132,8 @@ const setPosition = (data) => {
 };
 
 const setUserProfile = async () => {
-  const { userProfile: _userProfile, from: _from } = chat.value || {};
-  if (_userProfile) {
-    userProfile.value = _userProfile;
-  }
-  console.log("userProfile", userProfile.value);
-  const { code, data } = await getUserProfile([_userProfile?.userID]);
+  const { from: _from } = cardData.value || {};
+  const { code, data } = await getUserProfile([_from]);
   if (code === 0) {
     console.log("获取用户信息", data);
     if (data?.[0]) userProfile.value = data?.[0];
@@ -152,10 +145,11 @@ const setUserProfile = async () => {
 const setCardData = (data) => {
   if (data?.conversationID === "@TIM#SYSTEM") {
     cardData.value = null;
-    return;
+  } else {
+    cardData.value = data;
   }
-  cardData.value = data;
 };
+
 const openCard = (data) => {
   setPosition(data.seat);
   setCardData(data.cardData);
@@ -170,6 +164,7 @@ onMounted(() => {
     openCard(data);
   });
 });
+
 onBeforeUnmount(() => {
   emitter.off("setPopoverStatus");
 });

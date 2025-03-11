@@ -138,9 +138,7 @@ import AddMemberPopup from "../components/AddMemberPopup.vue";
 import emitter from "@/utils/mitt-bus";
 import { Markdown } from "@/utils/markdown/index";
 import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index";
-import { useAppStore } from "@/stores/modules/app";
-import { useUserStore } from "@/stores/modules/user";
-import { useGroupStore } from "@/stores/modules/group";
+import { useGroupStore, useAppStore, useUserStore } from "@/stores/index";
 
 const { groupProfile } = defineProps({
   groupProfile: {

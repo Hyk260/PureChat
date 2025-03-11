@@ -15,7 +15,6 @@ export default [
     component: () => import("@/views/desktop/index.vue"),
     meta: {
       title: "desktop",
-      locale: "",
       icon: "",
     },
   },

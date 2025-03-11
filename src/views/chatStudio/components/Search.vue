@@ -26,8 +26,8 @@ import { Search } from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 import { debounce, isEmpty } from "lodash-es";
 import { useGroupStore } from "@/stores/modules/group";
-import emitter from "@/utils/mitt-bus";
 import { isMacDragStyle } from "@/utils/appEmit";
+import emitter from "@/utils/mitt-bus";
 
 defineOptions({
   name: "Search",

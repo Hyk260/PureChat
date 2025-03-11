@@ -1,45 +1,44 @@
 <template>
   <div class="conv-chat flex w-full">
     <!-- 聊天列表 -->
-    <div class="message-left" :class="{ 'style-layoutkit': arrowRight }">
+    <div class="message-left" :class="{ 'style-layoutkit': isChatSessionListCollapsed }">
       <!-- 搜索框 -->
-      <Search :class="{ 'opacity-0': arrowRight }" />
+      <Search v-show="!isChatSessionListCollapsed" />
       <!-- tabs切换 -->
       <el-tabs
+        v-show="!isChatSessionListCollapsed"
         v-if="!isLocalMode"
         v-model="activeName"
         class="active-tabs"
-        :class="{ 'opacity-0': arrowRight }"
         @tab-click="handleClick"
       >
         <el-tab-pane :label="$t('chat.whole')" name="whole"></el-tab-pane>
         <el-tab-pane :label="unread" name="unread"></el-tab-pane>
         <el-tab-pane :label="$t('chat.mention')" name="mention"></el-tab-pane>
-        <!-- <el-tab-pane label="群聊" name="groupChat"></el-tab-pane> -->
       </el-tabs>
       <div
         class="scroll-container"
-        :class="{ 'style-net': !networkStatus, 'local-mode': isLocalMode }"
+        :class="{ 'style-net': !appStore.networkStatus, 'local-mode': isLocalMode }"
       >
         <!-- 连接已断开 -->
-        <networklink :show="!networkStatus" />
+        <networklink :show="!appStore.networkStatus" />
         <!-- 会话列表 -->
         <ConversationList />
       </div>
       <div class="layoutkit-center">
-        <div @click="onRight(arrowRight)">
-          <FontIcon :iconName="arrowRight ? 'ArrowRight' : 'ArrowLeft'" />
+        <div @click="toggleCollapsed">
+          <FontIcon :iconName="isChatSessionListCollapsed ? 'ArrowRight' : 'ArrowLeft'" />
         </div>
       </div>
-      <div v-if="false" v-show="!arrowRight" class="sidebar-drag"></div>
+      <!-- <div class="sidebar-drag"></div> -->
     </div>
     <!-- 聊天框 -->
-    <div class="message-right" :class="{ 'message-h-full': arrowRight }" id="container">
+    <div id="container" class="message-right">
       <div v-if="!conver" class="h-60 opacity-0" :class="isMacDragStyle()"></div>
       <EmptyMessage className="empty" v-if="!conver" />
       <Header />
       <!-- 聊天窗口 -->
-      <Chatwin ref="chatRef" :class="{ 'chat-h-full': fullScreen }" />
+      <Chatwin ref="chatRef" :class="{ 'chat-h-full': isFullscreenInputActive }" />
       <!-- 消息回复框 -->
       <ReplyBox />
       <!-- Resize -->
@@ -57,20 +56,13 @@
 </template>
 
 <script setup>
-import {
-  onActivated,
-  onDeactivated,
-  onMounted,
-  onUnmounted,
-  ref,
-  watchEffect,
-  watch,
-  nextTick,
-} from "vue";
+import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watch } from "vue";
 import { $t } from "@/locales/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
+import { storeToRefs } from "pinia";
 import { isMacOS } from "@/utils/common";
+import { useAppStore, useChatStore } from "@/stores/index";
 import { useDragHandler } from "@/utils/hooks/useDragHandler";
 import emitter from "@/utils/mitt-bus";
 import { isMacDragStyle } from "@/utils/appEmit";
@@ -88,56 +80,61 @@ import Search from "./components/Search.vue";
 import networklink from "./components/networklink.vue";
 
 const isLocalMode = __LOCAL_MODE__;
+
 const unread = ref("");
 const chatRef = ref(null);
 const activeName = ref("whole");
-const { dispatch, commit } = useStore();
+
+const appStore = useAppStore();
+const chatStore = useChatStore();
+
+const { commit } = useStore();
+const { isChatBoxVisible, isFullscreenInputActive, isChatSessionListCollapsed } =
+  storeToRefs(chatStore);
 
 const { isGroupChat } = useGetters(["isGroupChat"]);
-const { networkStatus, conver, isChatBoxVisible, totalUnreadMsg, arrowRight, fullScreen } =
-  useState({
-    networkStatus: (state) => state.conversation.networkStatus,
-    totalUnreadMsg: (state) => state.conversation.totalUnreadMsg,
-    conver: (state) => state.conversation.currentConversation,
-    isChatBoxVisible: (state) => state.conversation.isChatBoxVisible,
-    arrowRight: (state) => state.conversation.arrowRight,
-    fullScreen: (state) => state.conversation.fullScreen,
-  });
+const { conver } = useState({
+  conver: (state) => state.conversation.currentConversation,
+});
 
-const fnTotalUnreadMsg = () => {
-  const unreadCount = totalUnreadMsg.value;
-  const isUnread = unreadCount > 0;
-  const num = unreadCount > 99 ? "99+" : unreadCount;
-  unread.value = isUnread ? `${$t("chat.unread")}(${num})` : $t("chat.unread");
-};
 const handleClick = ({ props }, event) => {
   const { label, name } = props;
   commit("toggleList", name);
 };
+
 const fnDragCss = () => {
-  if (fullScreen.value) return "";
+  if (isFullscreenInputActive.value) return "";
   const cursor = isMacOS() ? "!cursor-row-resize" : "cursor-n-resize";
-  return [cursor, !fullScreen.value ? "resize-hover" : ""];
+  return [cursor, !isFullscreenInputActive.value ? "resize-hover" : ""];
 };
-const onRight = (value) => {
-  commit("setConversationValue", { key: "arrowRight", value: !value });
+
+const toggleCollapsed = () => {
+  chatStore.$patch((state) => {
+    state.isChatSessionListCollapsed = !state.isChatSessionListCollapsed;
+  });
+};
+
+const updateUnread = (count) => {
+  const isUnread = count > 0;
+  const num = count > 99 ? "99+" : count;
+  unread.value = isUnread ? `${$t("chat.unread")}(${num})` : $t("chat.unread");
 };
 
 onActivated(() => {
   emitter.emit("updataScroll");
+  updateUnread(chatStore.totalUnreadMsg);
   commit("toggleList", "whole");
 });
+
 onDeactivated(() => {});
 
 onMounted(() => {
-  commit("setConversationValue", { key: "arrowRight", value: false });
+  chatStore.$patch({ isChatSessionListCollapsed: false });
 });
 
 onUnmounted(() => {});
 
-watchEffect(() => {
-  fnTotalUnreadMsg();
-});
+watch(() => chatStore.totalUnreadMsg, updateUnread);
 
 watch(isChatBoxVisible, (val) => {
   val && useDragHandler(chatRef.value);
@@ -161,19 +158,16 @@ watch(isChatBoxVisible, (val) => {
   max-width: 380px;
   position: relative;
   border-right: 1px solid var(--color-border-default);
-  transition: width 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  // transition: width 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .style-layoutkit {
   border-right: 0px;
   width: 0px !important;
-  min-width: 0px;
+  min-width: 0px !important;
 }
 .chat-h-full {
   height: 0px !important;
   border-bottom: none;
-}
-.message-h-full {
-  width: 100% !important;
 }
 .message-right {
   background: var(--color-body-bg);

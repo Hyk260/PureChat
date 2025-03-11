@@ -10,7 +10,7 @@
     <div class="card-item">
       <div v-for="(item, i) in dataStatistics" :key="item">
         <div>
-          <div v-if="i === 'messages'">{{ unreadMsg }}</div>
+          <div v-if="i === 'messages'">{{ chatStore.totalUnreadMsg }}</div>
           <div v-else-if="i === 'sessions'">{{ market.length || 0 }}</div>
           <div v-else>{{ conversationList?.length || 0 }}</div>
         </div>
@@ -38,7 +38,7 @@ import { useBoolean } from "@/utils/hooks/index";
 import { useState } from "@/utils/hooks/useMapper";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
-import { useUserStore } from '@/stores/modules/user';
+import { useUserStore, useChatStore } from '@/stores/index';
 import emitter from "@/utils/mitt-bus";
 
 const { homepage } = __APP_INFO__.pkg;
@@ -46,6 +46,8 @@ const cardRef = useTemplateRef("cardRef");
 
 const profile = ref({});
 const market = ref([]);
+const userStore = useUserStore()
+const chatStore = useChatStore();
 const [card, setCard] = useBoolean();
 
 const menuItems = [
@@ -82,7 +84,7 @@ const menuItems = [
     svg: "log-out",
     hide: __LOCAL_MODE__,
     action: () => {
-      useUserStore().handleUserLogout()
+      userStore.handleUserLogout()
     },
   },
 ].filter((item) => !item.hide);
@@ -93,9 +95,8 @@ const dataStatistics = ref({
   topics: "话题",
 });
 
-const { unreadMsg, conversationList } = useState({
+const { conversationList } = useState({
   conversationList: (state) => state.conversation.conversationList,
-  unreadMsg: (state) => state.conversation.totalUnreadMsg,
 });
 
 function closeCard(item) {

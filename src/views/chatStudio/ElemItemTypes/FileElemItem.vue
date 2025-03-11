@@ -70,7 +70,7 @@ const isStatus = (value) => {
 function handleOpen({ fileName }) {
   if (isElectron) {
     console.log("Open electron:");
-    electron.ipcRenderer.send("openFolder", { type: "openPath", fileName });
+    window.api.fileOpenFolder({ type: "openPath", fileName });
   } else {
     console.log("Open web:");
   }

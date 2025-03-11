@@ -50,28 +50,28 @@ const ipcRenderer = window.electron.ipcRenderer;
 
 function handleOpenPath(type, fileName) {
   // showItemInFolder openPath
-  ipcRenderer.send("openFolder", { type, fileName });
+  window.api.fileOpenFolder({ type, fileName });
 }
 
 // 下载文件
 function handleDownload() {
   console.log("download");
   const { fileName, fileUrl, fileSize, uuid } = folder.value;
-  ipcRenderer.send("downloadFolder", { fileName, fileUrl, fileSize, uuid });
+  window.api.fileDownloadFolder({ fileName, fileUrl, fileSize, uuid });
 }
 
 // 打开文件夹
 async function handleOpenFolder() {
   console.log("打开文件夹:", folder.value);
   const { fileName } = folder.value;
-  const result = await ipcRenderer.invoke("checkFileExist", fileName);
+  const result = await window.api.fileCheckExist(fileName) 
   if (!result) return;
   handleOpenPath("showItemInFolder", fileName);
 }
 
 async function updateFileState() {
   const { fileName } = folder.value;
-  isExist.value = await ipcRenderer.invoke("checkFileExist", fileName);
+  isExist.value = await window.api.fileCheckExist(fileName) 
 }
 
 onMounted(() => {

@@ -1,0 +1,6 @@
+# provider: generic
+# url: http://127.0.0.1:8080
+# updaterCacheDirName: pure-chat-updater
+# provider: github
+# repo: pure-chat
+# owner: kangfenmao

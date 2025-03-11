@@ -54,15 +54,23 @@ export const appIpcEmit = () => {
 };
 
 export function isMacDragStyle() {
-  if (window.api.isMac) {
+  if (window.api?.isMac) {
     return "titlebar__drag-region";
   } else {
     return "";
   }
 }
 
+export function isMacStyle() {
+  const isMac = window.api?.isMac;
+  return {
+    "pt-35": isMac,
+    "titlebar__drag-region": isMac,
+  };
+}
+
 export function isWindowsAppStyle() {
-  if (window.api.isWindows) {
+  if (window.api?.isWindows) {
     return "height: calc(100vh - 32px);";
   } else {
     return "";

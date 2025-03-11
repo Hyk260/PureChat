@@ -1,4 +1,4 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from "../main/toolkit/preload";
 import { isWindows, isMac } from "../main/platform";
 
@@ -8,6 +8,11 @@ const api = {
   isMac,
   isWindows,
   isTitlebar: true,
+  handleScreenshot: () => ipcRenderer.invoke('handleScreenshot'),
+  trayFlashIng: () => ipcRenderer.invoke('trayFlashIng'),
+  fileDownloadFolder: (data) => ipcRenderer.invoke('file:downloadFolder', data),
+  fileOpenFolder: (data) => ipcRenderer.invoke('file:openFolder', data),
+  fileCheckExist: (data) => ipcRenderer.invoke('file:checkExist', data),
 }
 
 if (process.contextIsolated) {

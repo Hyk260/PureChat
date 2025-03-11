@@ -7,7 +7,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { useUserStore } from "@/stores/modules/user";
+import { useUserStore } from "@/stores/modules/user/index";
 import { usePreferredColorScheme } from "@vueuse/core";
 
 const userStore = useUserStore()

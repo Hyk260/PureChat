@@ -34,8 +34,7 @@ export function getIconPath(iconName) {
 }
 
 /* 置顶主窗口 */
-export const mainTop = () => {
-  const win = global.mainWin;
+export const showMainWindow = (win = global.mainWin) => {
   win.show();
   win.focus();
   win.moveTop();
@@ -52,8 +51,7 @@ const sendCapturedImageData = (win) => {
   win.webContents.send("captureScreenBack", imageData);
 };
 /* 截屏 */
-export const handleScreenshot = () => {
-  const mainWin = global.mainWin;
+export const handleScreenshot = (mainWin = global.mainWin) => {
   if (isWindows) {
     let filePath = getIconPath('ScreenCapture.exe')
     console.log(`windows:filePath:${filePath}`)

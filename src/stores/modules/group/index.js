@@ -9,7 +9,7 @@ import {
   dismissGroup,
 } from "@/api/im-sdk-api/index";
 import { sortMembersByRole, findGroupChat } from "@/utils/chat/index";
-import { SetupStoreId } from '../plugins/index';
+import { SetupStoreId } from '../../plugins/index';
 
 export const useGroupStore = defineStore(SetupStoreId.Group, {
   state: () => ({
@@ -20,9 +20,9 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
   getters: {
     hasGroupList: (state) => state.groupList.length > 0,
     // 群主
-    isOwner: (state) => state.groupProfile?.selfInfo.role === "Owner",
+    isOwner: (state) => state.groupProfile?.selfInfo?.role === "Owner",
     // 管理员
-    isAdmin: (state) => state.groupProfile?.selfInfo.role === "Admin",
+    isAdmin: (state) => state.groupProfile?.selfInfo?.role === "Admin",
   },
   actions: {
     // 更新群详情
