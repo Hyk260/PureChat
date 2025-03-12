@@ -1,9 +1,7 @@
 import { ipcRenderer, contextBridge } from "electron";
-import { electronAPI } from "../toolkit/preload";
 
 console.log("notification:preload.js");
 
-const api = {}
 let timeout = null;
 
 ipcRenderer.on("uikit:notification:show", (_, data) => {
@@ -28,22 +26,11 @@ ipcRenderer.on("uikit:notification:show", (_, data) => {
   }, duration);
 });
 
-if (process.contextIsolated) {
-  try {
-    contextBridge.exposeInMainWorld("notification", {
-      close: () => {
-        ipcRenderer.send("uikit:notification:close", true);
-      },
-      doClick: (extraData) => {
-        ipcRenderer.send("uikit:notification:on-click", extraData);
-      },
-    });
-    contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
-  } catch (error) {
-    console.error(error)
-  }
-} else {
-  window.electron = electronAPI
-  window.api = api
-}
+contextBridge.exposeInMainWorld("notification", {
+  close: () => {
+    ipcRenderer.send("uikit:notification:close", true);
+  },
+  doClick: (extraData) => {
+    ipcRenderer.send("uikit:notification:on-click", extraData);
+  },
+});

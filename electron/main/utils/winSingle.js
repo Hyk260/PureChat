@@ -3,8 +3,8 @@ import { logger } from '../logger/index'
 import { isDevelopment } from '../platform'
 
 // 点击图标启动时检测窗口是否存在，存在则打开
-export function winSingle() {
-  if (isDevelopment) return;
+export function winSingle(enableSingleInstance = true) {
+  if (!enableSingleInstance || isDevelopment) return;
   // 请求单实例锁
   if (!app.requestSingleInstanceLock()) {
     app.quit();

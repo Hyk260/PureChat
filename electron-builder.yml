@@ -3,33 +3,36 @@ appId: com.electron.app
 # 应用名称（安装包会使用此名称）
 productName: PureChat
 directories:
-  # 构建资源目录（存放图标等）#resources build
-  buildResources: resources
+  # 构建资源目录（存放图标等）# resources build
+  buildResources: build
 files:
-  - "!node_modules/**/*"  
-  - '!**/.vscode/*'
-  - '!src/*'
-  - '!scripts'
-  - '!electron.vite.config.{js,ts,mjs,cjs}'
-  - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
-  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - "!node_modules/**/*"
+  - "!**/.vscode/*"
+  - "!src/*"
+  - "!scripts"
+  - "!electron.vite.config.{js,ts,mjs,cjs}"
+  - "!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}"
+  - "!{.env,.env.*,.npmrc,pnpm-lock.yaml}"
 asarUnpack:
   - resources/**
 win:
-  # icon: "resources/icon.png"
-  # 安装包和免安装版
+  executableName: PureChat
+  artifactName: ${productName}-${version}-portable.${ext}
+  # icon: "build/image/icon.png"
+  # 安装包 免安装版 压缩包
   target:
-    - nsis
-    # - zip
+    - target: nsis
+    - target: portable
+    # - target: zip
 nsis:
   # 安装包名称
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${productName}-${version}-setup.${ext}
   # 安装图标
-  # installerIcon: "resources/icon.png"
+  # installerIcon: "build/image/icon.png"
   # 卸载图标
-  # uninstallerIcon: "resources/icon.png"
+  # uninstallerIcon: "build/image/icon.png"
   # 安装时头部图标
-  # installerHeaderIcon: "resources/icon.png"
+  # installerHeaderIcon: "build/image/icon.png"
   # true: 一键安装 false: 辅助安装
   oneClick: false
   # false: 可选择为所有人或当前用户安装 true: 为所有人安装
@@ -37,18 +40,19 @@ nsis:
   # 是否允许请求提升（仅辅助安装程序）
   allowElevation: true
   # 是否允许用户修改安装目录
-  allowToChangeInstallationDirectory: true 
+  allowToChangeInstallationDirectory: true
   # 是否创建桌面快捷方式
   createDesktopShortcut: always
   # 是否创建开始菜单快捷方式
   createStartMenuShortcut: true
   # 定制安装程序脚本的路径
-  include: './installer.nsh'
+  include: "./installer.nsh"
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
 # macOS系统相关打包配置
 mac:
-  icon: "resources/mac/icon.png"
+  # icon: "build/image/mac/icon.png"
+  artifactName: ${productName}-${version}-${arch}.${ext}
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
     - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
@@ -57,9 +61,9 @@ mac:
   notarize: false
 # mac安装包的配置项
 dmg:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${productName}-${version}.${ext}
 appImage:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${productName}-${version}.${ext}
 npmRebuild: false
 # 是否将应用打包成 asar 格式
 # asar: false
@@ -69,3 +73,4 @@ publish:
   url: https://example.com/auto-updates
 electronDownload:
   mirror: https://npmmirror.com/mirrors/electron/
+# afterPack: scripts/after-pack.js

@@ -1,6 +1,14 @@
 import { isMac, isLinux } from "../platform";
-import { app, Menu, nativeImage, nativeTheme, Tray, ipcMain } from 'electron'
-import { getIconPath } from "../utils/util";
+import {
+  app,
+  Menu,
+  Tray,
+  nativeImage, 
+  // nativeTheme,
+  // ipcMain
+} from 'electron'
+
+import icon from '../../../build/image/tray_icon.png?asset'
 
 export class TrayService {
   static instance = null;
@@ -22,19 +30,23 @@ export class TrayService {
   createTray() {
     this.destroyTray();
 
-    const iconPath = isMac ? getIconPath("icon-32x32@2x.png") : getIconPath("icon.png");
-
+    const iconPath = icon;
+    
     this.tray = new Tray(iconPath);
 
     if (['win32', 'darwin', 'linux'].includes(process.platform)) {
-      // const image = nativeImage.createFromPath(iconPath);
-      // const resizedImage = image.resize({ width: 16, height: 16 });
-      // process.platform === 'darwin' && resizedImage.setTemplateImage(true);
-      // this.tray.setImage(resizedImage);
+      const image = nativeImage.createFromPath(iconPath);
+      const resizedImage = image.resize({ width: 16, height: 16 });
+      isMac && resizedImage.setTemplateImage(true);
+      this.tray.setImage(resizedImage);
     }
 
     const template = [
-      // { type: 'separator' },
+      {
+        label: "显示窗口",
+        click: () => global.mainWin.show()
+      },
+      { type: 'separator' },
       {
         label: "退出",
         click: () => this.quit()
