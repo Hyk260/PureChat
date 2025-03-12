@@ -50,34 +50,43 @@
 - ✨ 提供桌面应用 Electron 版本，支持 macOS (.dmg) 与 Windows (.exe)
 - 🛠 更多特性持续开发中
 
-环境配置
+### 环境配置
 
-```
 本地环境需要安装 Node.js 18.20+
-```
 
-克隆代码
+### 克隆代码
 
 ```bash
 git clone https://github.com/Hyk260/PureChat.git
 ```
 
-安装依赖
+### 安装依赖
 
-```
-pnpm install
+```bash
+$ pnpm install
 ```
 
-启动项目
+### 启动项目
 
-```
+```bash
+# For web
 pnpm dev
+
+# For windows or macOS
+pnpm app:dev
 ```
 
-打包
+### 打包
 
-```
+```bash
+# For web
 pnpm build
+
+# For windows
+pnpm app:builder:win
+
+# For macOS
+pnpm app:builder:mac
 ```
 
 ### Star History
