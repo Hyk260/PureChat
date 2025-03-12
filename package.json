@@ -27,7 +27,6 @@
     "app:builder:win": "electron-vite build && electron-builder --win",
     "app:builder:mac": "electron-vite build && electron-builder --mac",
     "build:win": "electron-builder --win",
-    "build:win32": "electron-builder --win --ia32",
     "build:mac": "electron-builder --mac",
     "check": "node scripts/check-all.js",
     "test": "vitest",

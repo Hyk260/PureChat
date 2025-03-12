@@ -18,7 +18,7 @@ asarUnpack:
 win:
   executableName: PureChat
   artifactName: ${productName}-${version}-portable.${ext}
-  # icon: "build/image/icon.png"
+  icon: "build/image/icon.png"
   # 安装包 免安装版 压缩包
   target:
     - target: nsis
@@ -73,4 +73,4 @@ publish:
   url: https://example.com/auto-updates
 electronDownload:
   mirror: https://npmmirror.com/mirrors/electron/
-# afterPack: scripts/after-pack.js
+afterPack: scripts/after-pack.cjs

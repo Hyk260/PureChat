@@ -1,7 +1,8 @@
 import {
   defineConfig,
-  loadEnv,
+  // loadEnv,
   // bytecodePlugin
+  // externalizeDepsPlugin
 } from 'electron-vite'
 import { resolve } from 'path'
 import renderer from './vite.config';
@@ -10,8 +11,11 @@ import { manualChunks } from "./build/config/define";
 export default defineConfig(({ mode }) => {
   return {
     main: {
-      // plugins: [bytecodePlugin()],
-      // outDir: 'dist_electron/main',
+      plugins: [
+        // bytecodePlugin(),
+        // https://cn.electron-vite.org/guide/dev#dependencies-vs-devdependencies
+        // externalizeDepsPlugin()
+      ],
       build: {
         rollupOptions: {
           input: {
@@ -21,8 +25,10 @@ export default defineConfig(({ mode }) => {
       }
     },
     preload: {
-      // plugins: [bytecodePlugin()],、
-      // outDir: 'dist_electron/preload',
+      plugins: [
+        // bytecodePlugin(),
+        // externalizeDepsPlugin()
+      ],
       build: {
         rollupOptions: {
           input: {
@@ -39,7 +45,6 @@ export default defineConfig(({ mode }) => {
         port: 8038,
       },
       build: {
-        // outDir: 'dist_electron/renderer',
         rollupOptions: {
           input: {
             index: resolve(__dirname, 'index.html'),
