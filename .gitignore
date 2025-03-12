@@ -36,3 +36,4 @@ pnpm-debug.log*
 
 # Electron-builder
 /out
+/build/icons

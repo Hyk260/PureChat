@@ -51,7 +51,7 @@ nsis:
   uninstallDisplayName: ${productName}
 # macOS系统相关打包配置
 mac:
-  # icon: "build/image/mac/icon.png"
+  icon: "build/image/mac/icon.png"
   artifactName: ${productName}-${version}-${arch}.${ext}
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.

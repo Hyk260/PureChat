@@ -9,6 +9,7 @@ import {
 } from 'electron'
 
 import icon from '../../../build/image/tray_icon.png?asset'
+import iconMac from "../../../build/image/mac/icon-32x32.png?asset";
 
 export class TrayService {
   static instance = null;
@@ -30,14 +31,14 @@ export class TrayService {
   createTray() {
     this.destroyTray();
 
-    const iconPath = icon;
+    const iconPath = isMac ? iconMac : icon;
     
     this.tray = new Tray(iconPath);
 
-    if (['win32', 'darwin', 'linux'].includes(process.platform)) {
+    if (["win32", "darwin", "linux"].includes(process.platform)) {
       const image = nativeImage.createFromPath(iconPath);
       const resizedImage = image.resize({ width: 16, height: 16 });
-      isMac && resizedImage.setTemplateImage(true);
+      // isMac && resizedImage.setTemplateImage(true);
       this.tray.setImage(resizedImage);
     }
 

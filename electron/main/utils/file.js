@@ -1,8 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { audioExts, documentExts, imageExts, textExts, videoExts } from '../config/constant'
 import { app } from 'electron'
 import { v4 as uuidv4 } from 'uuid'
+import { audioExts, documentExts, imageExts, textExts, videoExts } from "../config/constant";
 
 const fileTypeMap = new Map()
 

@@ -9,6 +9,8 @@ import {
   downloadFolder
 } from './folder';
 import { TrayService } from '../tray/index';
+// import { fileManager } from "./fileStorage";
+
 /**
  * 为主窗口和应用程序注册 IPC 事件。
  *
