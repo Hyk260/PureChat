@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" :class="isMacDragStyle()">
     <div>Discover</div>
     <el-input
       v-if="false"
@@ -20,6 +20,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { isMacDragStyle } from "@/utils/appEmit";
 
 const emit = defineEmits(["handleClick"]);
 
