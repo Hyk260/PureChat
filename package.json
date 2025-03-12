@@ -130,7 +130,8 @@
     "markdown",
     "unocss",
     "wangeditor",
-    "element-plus"
+    "element-plus",
+    "electron"
   ],
   "repository": {
     "url": "https://github.com/Hyk260/PureChat.git"
