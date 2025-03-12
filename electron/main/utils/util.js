@@ -33,12 +33,11 @@ export function getIconPath(iconName) {
   return iconPath;
 }
 
-/* 置顶主窗口 */
+// 置顶主窗口 
 export const showMainWindow = (win = global.mainWin) => {
   win.show();
   win.focus();
   win.moveTop();
-  // win.center();
 };
 
 /**
@@ -50,7 +49,8 @@ const sendCapturedImageData = (win) => {
   const imageData = "data:image/png;base64," + pngData.toString("base64");
   win.webContents.send("captureScreenBack", imageData);
 };
-/* 截屏 */
+
+// 截屏 
 export const handleScreenshot = (mainWin = global.mainWin) => {
   if (isWindows) {
     let filePath = getIconPath('ScreenCapture.exe')
@@ -100,3 +100,23 @@ export const setDefaultProtocol = () => {
     console.log("注册协议", isSet ? "成功" : "失败");
   }
 };
+
+export function getResourcePath() {
+  return path.join(app.getAppPath(), 'resources')
+}
+
+export function getDataPath() {
+  const dataPath = path.join(app.getPath('userData'), 'Data')
+  if (!fs.existsSync(dataPath)) {
+    fs.mkdirSync(dataPath, { recursive: true })
+  }
+  return dataPath
+}
+
+export function getInstanceName(baseURL) {
+  try {
+    return new URL(baseURL).host.split('.')[0]
+  } catch (error) {
+    return ''
+  }
+}

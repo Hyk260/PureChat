@@ -28,6 +28,7 @@
     "app:builder:mac": "electron-vite build && electron-builder --mac",
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
+    "generate:icons": "electron-icon-builder --input=./build/image/icon.png --output=build",
     "check": "node scripts/check-all.js",
     "test": "vitest",
     "test:ui": "vitest --ui"
@@ -91,6 +92,7 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "electron": "^31.0.2",
     "electron-builder": "^24.13.3",
+    "electron-icon-builder": "^2.0.1",
     "electron-vite": "^3.0.0",
     "@vitest/ui": "^3.0.4",
     "eslint": "^8.49.0",

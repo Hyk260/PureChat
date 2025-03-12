@@ -9,6 +9,10 @@ export const MAIN_DIRECTORY = "PureChat Files";
 
 const fileStorageDir = path.resolve(os.homedir(), "Documents", MAIN_DIRECTORY);
 
+export function getFilesDir() {
+  return path.join(fileStorageDir, SUB_DIRECTORY)
+}
+
 /**
  * 获取文件的完整存储路径
  * @param {string} fileName - 文件名
