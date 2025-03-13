@@ -1,6 +1,3 @@
-import store from "@/store";
-import { USER_MODEL } from "@/constants/index";
-import { msgContent } from "@/api/im-sdk-api/custom";
 import { localStg } from "@/utils/storage";
 import { SessionModel } from '@/database/models/session';
 import { useAppStore } from '@/stores/index';
@@ -194,7 +191,7 @@ const TypeMap = {
   TIMRelayElem: "[合并消息]",
 };
 
-export const fnReplyContent = (msg) => {
+export const getReplyContent = (msg) => {
   const type = msg?.type;
   const reply = TypeMap[type] || "";
   if (reply) {
@@ -208,20 +205,30 @@ export function getReplyMsgContent(reply) {
   if (!reply) return "";
   const replyMsgContent = JSON.stringify({
     messageReply: {
-      messageID: reply.ID,
-      messageAbstract: fnReplyContent(reply),
-      messageSender: reply.nick,
+      messageID: reply?.ID || "",
+      messageAbstract: getReplyContent(reply),
+      messageSender: reply?.nick || "",
       messageType: 0,
       version: "1",
     },
   });
-  // messageReply: {
-  //   messageID: "144115242602378107-1731294756-83317202",
-  //   messageSender: "PureChat",
-  //   messageType: 0,
-  //   version: "1",
-  // },
   return replyMsgContent;
+}
+
+export function getThinkMsgContent(think) {
+  if (!think) return "";
+  const thinkMsgContent = JSON.stringify({
+    messageReply: {
+      messageID: "",
+      messageAbstract: think,
+      messageSender: "",
+      thinking: "思考中...",
+      deeplyThought: "已深度思考", // （用时 {{secounds}} 秒）
+      messageType: 0,
+      version: "1",
+    },
+  });
+  return thinkMsgContent;
 }
 
 /**

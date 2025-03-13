@@ -6,11 +6,13 @@ import { restApi } from "@/api/node-admin-api/rest";
 import { cloneDeep } from "lodash-es";
 import { getTime } from "@/utils/common";
 import { getCustomMsgContent } from '@/api/im-sdk-api/custom';
+import { getThinkMsgContent } from "@/utils/chat/index";
 import store from "@/store";
 import emitter from "@/utils/mitt-bus";
 import webSearchResult from '@/database/tools/web-search-result.json';
 
-const restSendMsg = async (params, message) => {
+const restSendMsg = async (params, data) => {
+  const { message, think } = data
   if (__LOCAL_MODE__) return
   if (!message) return
   return await restApi({
@@ -18,15 +20,19 @@ const restSendMsg = async (params, message) => {
       To_Account: params.from,
       From_Account: params.to,
       Text: message,
+      CloudCustomData: getThinkMsgContent(think),
     },
     funName: "restSendMsg",
   });
 };
 
-const updataMessage = (chat, message = "") => {
+const updataMessage = (chat, data) => {
+  const { message = '', think = '' } = data || {};
   if (!chat) return;
   chat.payload.text = message;
+  chat.cloudCustomData = getThinkMsgContent(think)
   chat.clientTime = getTime();
+  chat.status = data?.done ? "success" : "sending";
   store.commit("updateMessages", { convId: `C2C${chat.from}`, message: cloneDeep(chat) });
   emitter.emit("updataScroll", "robot");
 };
@@ -54,43 +60,10 @@ const createAlertMsg = (startMsg, provider) => {
   store.commit("updateMessages", { convId: `C2C${_data.from}`, message: _data });
 }
 
-async function searchGoogle(query) {
-  const url = "https://websearch.plugsugar.com/api/plugins/websearch";
-  var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Accept", "*/*");
-  myHeaders.append("Host", "websearch.plugsugar.com");
-  myHeaders.append("Connection", "keep-alive");
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify(query)
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log("Search results:", data.result);
-  } catch (error) {
-    console.error("Error performing the search:", error);
-  }
-}
-
 const createToolCallsMsg = (startMsg, message) => {
   const _data = cloneDeep(startMsg);
   _data.clientTime = getTime();
   _data.type = "TIMCustomElem";
-
-  // const _arguments = message.message.choices[0].message.tool_calls[0].function.arguments;
-  // const query = JSON.parse(_arguments)._requestBody
-  // searchGoogle(query).then(res => {
-  //   console.log(res)
-  // }).catch(err => {
-  //   console.log(err)
-  // })
   _data.payload = getCustomMsgContent({ data: message, type: "tool_call" })
   _data.payload.extension = JSON.stringify(webSearchResult)
   store.commit("updateMessages", { convId: `C2C${_data.from}`, message: cloneDeep(_data) });
@@ -123,40 +96,49 @@ export const chatService = async ({ messages, chat, provider }) => {
     onUpdate: handleUpdate(startMsg),
     onFinish: handleFinish(startMsg, chat),
     onToolMessage: handleToolMessage(startMsg),
+    onReasoningMessage: handleReasoningMessage(startMsg),
     onError: handleError(startMsg, chat),
     onController: handleController
   });
 };
 
 
-const handleUpdate = (startMsg) => (message) => {
+const handleUpdate = (startMsg) => (data) => {
+  const { message = "", think = "" } = data || {}
   console.log("[chat] onUpdate:", message);
-  updataMessage(startMsg, message);
+  updataMessage(startMsg, data);
 };
 
-const handleFinish = (startMsg, chat) => async (message) => {
+const handleFinish = (startMsg, chat) => async (data) => {
+  const { message = "", think = "" } = data || {}
   console.log("[chat] onFinish:", message);
   if (message) {
-    updataMessage(startMsg, message);
-    await restSendMsg(chat, message);
+    data.done = true;
+    updataMessage(startMsg, data);
+    await restSendMsg(chat, data);
   }
 };
 
-const handleToolMessage = (startMsg) => (message) => {
-  console.log("[chat] onToolMessage:", message);
-  createToolCallsMsg(startMsg, message);
+const handleToolMessage = (startMsg) => (data) => {
+  console.log("[chat] onToolMessage:", data);
+  createToolCallsMsg(startMsg, data);
 };
+
+const handleReasoningMessage = (startMsg) => (think) => {
+  console.log("[chat] onReasoningMessage:", think);
+  updataMessage(startMsg, { message: '', think });
+}
 
 const handleError = (startMsg, chat) => async (error) => {
   console.error("[chat] onError:", error);
   const content = `\n\n${prettyObject({ error: true, message: error.message })}`;
 
   if (__LOCAL_MODE__) {
-    updataMessage(startMsg, content);
+    updataMessage(startMsg, { message: content });
   }
 
   if (error.message) {
-    await restSendMsg(chat, content);
+    await restSendMsg(chat, { message: content });
   }
 };
 

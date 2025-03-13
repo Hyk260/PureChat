@@ -480,6 +480,7 @@ export const handleStreamingChat = async (
 ) => {
   let responseText = ""; // 用于存储完整的响应文本
   let remainText = ""; // 用于存储尚未处理的文本
+  let reasoningText = ""; // 用于存储完整的推理内容
   let finished = false; // 用于标记动画是否已完成
 
   /**
@@ -504,7 +505,11 @@ export const handleStreamingChat = async (
       const fetchText = remainText.slice(0, fetchCount);
       responseText += fetchText;
       remainText = remainText.slice(fetchCount);
-      options.onUpdate?.(responseText, fetchText);
+      options.onUpdate?.({
+        message: responseText,
+        fetchCount: fetchText,
+        think: reasoningText,
+      });
     }
 
     requestAnimationFrame(animateResponseText);
@@ -516,7 +521,10 @@ export const handleStreamingChat = async (
   const finish = () => {
     if (!finished) {
       finished = true;
-      options.onFinish(responseText + remainText);
+      options?.onFinish({
+        message: responseText,
+        think: reasoningText,
+      });
     }
   };
 
@@ -617,6 +625,12 @@ export const handleStreamingChat = async (
           const delta = json.choices[0]?.delta?.content;
           if (delta) {
             remainText += delta;
+          } else {
+            const delta = json.choices[0]?.delta?.reasoning_content;
+            if (delta) {
+              reasoningText += delta;
+              options?.onReasoningMessage(reasoningText)
+            }
           }
         }
       } catch (e) {

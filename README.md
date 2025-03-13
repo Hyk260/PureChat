@@ -63,7 +63,7 @@ git clone https://github.com/Hyk260/PureChat.git
 ### 安装依赖
 
 ```bash
-$ pnpm install
+pnpm install
 ```
 
 ### 启动项目

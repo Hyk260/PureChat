@@ -166,7 +166,7 @@ export class OpenAiApi {
 
         const resJson = await res.json();
         const message = await this.extractMessage(resJson);
-        options.onFinish(message);
+        options.onFinish({ message });
       }
     } catch (e) {
       console.log("[Request] failed to make a chat reqeust", e);
