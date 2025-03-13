@@ -2,7 +2,7 @@
   "name": "purechat",
   "version": "0.7.8",
   "description": "PureChat - A chat application built with Vue and Vite",
-  "type": "module",
+  "type": "commonjs",
   "main": "./out/main/index.js",
   "author": {
     "name": "Hyk260",

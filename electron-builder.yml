@@ -73,4 +73,4 @@ publish:
   url: https://example.com/auto-updates
 electronDownload:
   mirror: https://npmmirror.com/mirrors/electron/
-afterPack: scripts/after-pack.cjs
+afterPack: scripts/after-pack.js

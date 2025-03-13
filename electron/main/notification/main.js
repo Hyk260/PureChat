@@ -54,7 +54,7 @@ class Notification extends TypedEventEmitter {
       alwaysOnTop: true, // 窗口是否永远在别的窗口的上面
       skipTaskbar: true, // 是否在任务栏中显示窗口
       webPreferences: {
-        preload: join(__dirname, "../preload/notif.mjs"),
+        preload: join(__dirname, "../preload/notif.js"),
         sandbox: false,
         backgroundThrottling: false,
         enableWebSQL: false,
