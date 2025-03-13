@@ -14,15 +14,15 @@ export const createWindow = (_options) => {
   const theme = configManager.getTheme()
   const options = {
     ...global.mainWinOptions, // mainWinOptions loginWinOptions
-    show: false,// 初始不显示
+    show: false, // 初始不显示
     frame: false, // 隐藏默认的标题栏
     autoHideMenuBar: true,
-    transparent: isMac,
-    vibrancy: 'sidebar',
-    visualEffectState: 'active',
-    backgroundColor: isMac ? undefined : theme === 'dark' ? '#181818' : '#FFFFFF',
+    // transparent: isMac,
+    // vibrancy: "sidebar",
+    // visualEffectState: "active",
+    // backgroundColor: isMac ? undefined : theme === "dark" ? "#181818" : "#FFFFFF",
     // titleBarOverlay: theme === 'dark' ? titleBarOverlayDark : titleBarOverlayLight,
-    titleBarStyle: 'hidden', // hiddenInset default hidden
+    titleBarStyle: "hiddenInset", // hiddenInset default hidden
     trafficLightPosition: { x: 7, y: 7 },
     // 在上阅读更多信息https://www.electronjs.org/docs/latest/tutorial/context-isolation
     webPreferences: {
