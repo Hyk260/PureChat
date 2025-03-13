@@ -9,7 +9,7 @@ const SHADOW_ROOT_CSS = `
   -webkit-user-select: none;
   --tb-title-font-family: -apple-system, BlinkMacSystemFont, Ubuntu, 'Segoe UI';
   --tb-control-height: 32px;
-  --tb-control-width: 34px;
+  --tb-control-width: 32px;
   --tb-control-margin: 3px;
   --tb-control-radius: 5px;
   --tb-theme-color: #eee;
@@ -73,7 +73,7 @@ const SHADOW_ROOT_CSS = `
   align-items: center;
   justify-content: center;
   width: var(--tb-control-width);
-  min-width: 34px;
+  min-width: 32px;
   height: var(--tb-control-height);
   min-height: 26px;
 }
@@ -158,7 +158,7 @@ export default class TitleBar extends HTMLElement {
     const shadow = this.attachShadow({ mode: "open" });
     const isMac = core.process.platform === "darwin";
      // mac系统不需要titlebar
-    if (isMac)  return null;
+    if (isMac) return null;
 
     if (!(window && window?.api?.isTitlebar)) return null;
 

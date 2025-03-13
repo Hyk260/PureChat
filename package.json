@@ -55,6 +55,7 @@
     "dayjs": "^1.11.11",
     "dexie": "^4.0.10",
     "electron-log": "^5.1.7",
+    "electron-store": "^10.0.1",
     "electron-updater": "^6.1.7",
     "element-plus": "^2.8.8",
     "fast-glob": "^3.3.2",

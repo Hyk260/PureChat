@@ -1,20 +1,29 @@
 import { join } from 'node:path'
 import { app, shell, BrowserWindow } from "electron";
-import { electronRendererUrl } from "../platform";
+import { electronRendererUrl, isMac } from "../platform";
 import { is } from '../toolkit/utils'
+import { logger } from '../logger/index';
 import {
   registerTitleBarListener,
   attachTitleBarToWindow
 } from '../titlebar/main'
+import { titleBarOverlayDark, titleBarOverlayLight } from '../config'
+import { configManager } from './configManager'
 
 export const createWindow = (_options) => {
+  const theme = configManager.getTheme()
   const options = {
     ...global.mainWinOptions, // mainWinOptions loginWinOptions
-    show: false,
-    frame: false,
+    show: false,// 初始不显示
+    frame: false, // 隐藏默认的标题栏
     autoHideMenuBar: true,
+    transparent: isMac,
+    vibrancy: 'sidebar',
+    visualEffectState: 'active',
+    backgroundColor: isMac ? undefined : theme === 'dark' ? '#181818' : '#FFFFFF',
+    // titleBarOverlay: theme === 'dark' ? titleBarOverlayDark : titleBarOverlayLight,
+    titleBarStyle: 'hidden', // hiddenInset default hidden
     trafficLightPosition: { x: 7, y: 7 },
-    titleBarStyle: 'hiddenInset', //? "hiddenInset" : "default",
     // 在上阅读更多信息https://www.electronjs.org/docs/latest/tutorial/context-isolation
     webPreferences: {
       // 在外部浏览器中打开链接
@@ -27,11 +36,15 @@ export const createWindow = (_options) => {
       // enableRemoteModule: true,
       // 预加载文件preload
       preload: join(__dirname, "../preload/index.js"),
-      sandbox: false
+      sandbox: false,
+      webSecurity: false,
+      webviewTag: true,
+      allowRunningInsecureContent: true
     },
   };
   // 注册自定义标题组件 IPC 侦听器
   registerTitleBarListener()
+  logger.info("createWindow:[options]", options)
   // 创建浏览器窗口
   const win = new BrowserWindow(options);
 
