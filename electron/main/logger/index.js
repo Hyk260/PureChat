@@ -1,12 +1,12 @@
 import os from 'node:os';
 import path from 'node:path';
-import * as log from 'electron-log';
-import { MAIN_DIRECTORY } from '../utils/folder';
+import log from 'electron-log';
+import { MAIN_DIRECTORY } from '../utils/file';
 import { isDevelopment } from '../platform';
 
 const rootDir = path.resolve(os.homedir(), "Documents", MAIN_DIRECTORY);
 
-log.transports.console.level = false; // 禁用控制台输出;
+// log.transports.console.level = false; // 禁用控制台输出;
 log.transports.file.maxSize = 10024300; // 文件最大不超过 10M
 // 输出格式
 log.transports.file.format = "[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} {text}";

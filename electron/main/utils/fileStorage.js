@@ -1,14 +1,16 @@
 import * as crypto from "crypto";
 import * as path from "path";
 import * as fs from "fs";
+import axios from "axios";
 import officeParser from "officeparser";
+import progressStream from "progress-stream";
 import { dialog, shell } from "electron";
 import { writeFileSync } from "fs";
 import { readFile } from "fs/promises";
 import { chdir } from "process";
 import { v4 as uuidv4 } from "uuid";
 import { logger } from "../logger/index";
-import { getFilesDir, getFileType, getTempDir } from "../utils/util";
+import { getFilesDir, getFileType, getTempDir } from "../utils/file";
 import { documentExts, imageExts } from "../config/constant";
 
 class FileStorage {
@@ -17,6 +19,10 @@ class FileStorage {
 
   constructor() {
     this.initStorageDir();
+  }
+  checkFileExists(fileName) {
+    const filePath = path.join(this.storageDir, fileName);
+    return fs.existsSync(filePath);
   }
 
   initStorageDir() {
@@ -285,12 +291,17 @@ class FileStorage {
       return null;
     }
   }
+  openFolder({ type, fileName }) {
+    const filePath = path.join(this.storageDir, fileName);
+    this[type](null, filePath);
+  }
 
   async showItemInFolder(_, path) {
     shell
       .showItemInFolder(path)
       .catch((err) => logger.error("[IPC - Error] Failed to showItemInFolder:", err));
   }
+
   async openPath(_, path) {
     shell.openPath(path).catch((err) => logger.error("[IPC - Error] Failed to open file:", err));
   }
@@ -447,6 +458,41 @@ class FileStorage {
       throw error;
     }
   }
+  async download({ fileName, fileSize, fileUrl, uuid }) {
+
+    const filePath = path.join(this.storageDir, fileName);
+    const filePathTemp = `${filePath}.tmp`;
+
+    try {
+      const { data } = await axios.get(fileUrl, { responseType: "stream" });
+
+      const fileStream = fs.createWriteStream(filePathTemp);
+      const stream = progressStream({ length: fileSize, time: 100 });
+
+      stream.on("progress", ({ percentage }) => {
+        const progress = Math.round(percentage);
+        global.mainWin.webContents.send("downloadProgress", { progress, uuid });
+      });
+
+      data.pipe(stream).pipe(fileStream);
+
+      fileStream.on("finish", () => {
+        if (fs.existsSync(filePathTemp)) {
+          fs.renameSync(filePathTemp, filePath);
+          global.mainWin.webContents.send("downloadFinish", { filePath, uuid });
+          console.log('下载完成:', filePath);
+        }
+      });
+
+      fileStream.on("error", (error) => {
+        console.error("文件流错误:", error);
+      });
+
+    } catch (error) {
+      console.error("下载失败:", error);
+    }
+  };
 }
 
-export const fileManager = new FileStorage();
+export default FileStorage
+

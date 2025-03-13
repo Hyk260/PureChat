@@ -1,15 +1,9 @@
 import { ipcMain, session, shell } from "electron";
-import {
-  showMainWindow,
-  handleOpenFolder,
-  handleScreenshot,
-} from "./util";
-import {
-  checkFileExists,
-  downloadFolder
-} from './folder';
+import { handleScreenshot } from "./util";
 import { TrayService } from '../tray/index';
-// import { fileManager } from "./fileStorage";
+import FileStorage from "./fileStorage";
+
+const fileManager = new FileStorage()
 
 /**
  * 为主窗口和应用程序注册 IPC 事件。
@@ -66,17 +60,20 @@ export const registerIpc = (mainWindow, app) => {
     global.mainWin.flashFrame(true);
   });
 
-  ipcMain.handle('file:checkExist', async (_, data) => {
-    return checkFileExists(data)
+  // file
+  ipcMain.handle('file:open', fileManager.open)
+
+  ipcMain.handle('file:checkExist', (_, fileName) => {
+    return fileManager.checkFileExists(fileName)
   })
 
   // 打开文件 & 文件夹
   ipcMain.handle("file:openFolder", (_, data) => {
-    handleOpenFolder(data)
+    fileManager.openFolder(data)
   });
 
   // 下载文件
-  ipcMain.handle('file:downloadFolder', async (_, data) => {
-    await downloadFolder(data)
+  ipcMain.handle('file:download', (_, data) => {
+    fileManager.download(data)
   })
 };

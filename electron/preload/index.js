@@ -10,7 +10,7 @@ const api = {
   isTitlebar: true,
   handleScreenshot: () => ipcRenderer.invoke('handleScreenshot'),
   trayFlashIng: () => ipcRenderer.invoke('trayFlashIng'),
-  fileDownloadFolder: (data) => ipcRenderer.invoke('file:downloadFolder', data),
+  fileDownload: (data) => ipcRenderer.invoke('file:download', data),
   fileOpenFolder: (data) => ipcRenderer.invoke('file:openFolder', data),
   fileCheckExist: (data) => ipcRenderer.invoke('file:checkExist', data),
 }

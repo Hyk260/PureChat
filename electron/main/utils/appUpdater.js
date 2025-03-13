@@ -1,17 +1,16 @@
 import { app, dialog } from 'electron'
 import { autoUpdater } from 'electron-updater'
-import logger from 'electron-log'
-
+import { logger } from '../logger/index'
+import { is } from '../toolkit/utils'
 import icon from '../../../resources/icon.png?asset';
 
 export default class AppUpdater {
-  constructor(mainWindow) {
+  constructor(mainWindow = global.mainWin) {
     this.mainWindow = mainWindow;
     this.releaseInfo = null;
 
-    logger.transports.file.level = 'info';
     autoUpdater.logger = logger;
-    autoUpdater.forceDevUpdateConfig = !app.isPackaged;
+    autoUpdater.forceDevUpdateConfig = is.dev;
     autoUpdater.autoDownload = true;
 
     this.registerEventHandlers();

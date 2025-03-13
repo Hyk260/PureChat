@@ -5,7 +5,7 @@ import { setNotification } from "./notification/index";
 import { isMac } from "./platform";
 import { logger } from './logger/index';
 import { TrayService } from "./tray/index";
-import { createWindow, winSingle, registerIpc, setDefaultProtocol, initStorage } from "./utils/index";
+import { createWindow, winSingle, registerIpc, setDefaultProtocol } from "./utils/index";
 
 class WindowService {
   static instance = null;
@@ -25,7 +25,6 @@ class WindowService {
   // 初始化单例工具
   setupSingletonUtilities() {
     winSingle();
-    initStorage();
   }
 
   createMainWindow(_options) {

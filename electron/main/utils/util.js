@@ -1,37 +1,11 @@
 
-import fs from "node:fs";
-import path from "node:path";
-import { app, clipboard, shell } from "electron";
+import { app, clipboard } from "electron";
 import { execFile, exec } from "node:child_process";
 import { isWindows, isMac, isProduction } from "../platform";
-import { getFilePath } from './folder';
 import { logger } from '../logger/index';
+import { getIconPath } from './file';
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-/**
- * 获取图标文件的完整路径
- * @param {string} iconName - 图标文件的名称，例如 'icon.png'
- * @returns {string} - 图标文件的完整路径
- */
-export function getIconPath(iconName) {
-  let iconPath;
-
-  if (app.isPackaged) {
-    // 打包后的路径
-    iconPath = path.join(process.cwd(), 'resources/app.asar.unpacked/resources', iconName);
-  } else {
-    // 开发模式下的路径
-    iconPath = path.join(__dirname, '../../resources', iconName);
-  }
-
-  // 检查图标路径是否存在
-  if (!fs.existsSync(iconPath)) {
-    console.error(`Icon file does not exist: ${iconPath}`);
-  }
-
-  return iconPath;
-}
 
 // 置顶主窗口 
 export const showMainWindow = (win = global.mainWin) => {
@@ -54,12 +28,10 @@ const sendCapturedImageData = (win) => {
 export const handleScreenshot = (mainWin = global.mainWin) => {
   if (isWindows) {
     let filePath = getIconPath('ScreenCapture.exe')
-    console.log(`windows:filePath:${filePath}`)
     logger.info(`windows:filePath:${filePath}`)
     const screenWindow = execFile(filePath);
     screenWindow.on("exit", (code, stdout, stderr) => {
       logger.info(`退出码 code:${code}, 输出流 stdout:${stdout},错误流 stderr:${stderr}`)
-      console.log("退出码 code:", code, "输出流 stdout:", stdout, "错误流 stderr:", stderr);
       // 粘贴
       if (code == 7) {
         sendCapturedImageData(mainWin);
@@ -74,14 +46,6 @@ export const handleScreenshot = (mainWin = global.mainWin) => {
     });
   }
 };
-
-export const handleOpenFolder = ({ type, fileName }) => {
-  console.log('handleOpenFolder:', { type, fileName })
-  const filePath = getFilePath(fileName)
-  console.log('filePath:', filePath)
-  // showItemInFolder openPath
-  shell[type](filePath);
-}
 
 /**
  * 注册协议
@@ -100,18 +64,6 @@ export const setDefaultProtocol = () => {
     console.log("注册协议", isSet ? "成功" : "失败");
   }
 };
-
-export function getResourcePath() {
-  return path.join(app.getAppPath(), 'resources')
-}
-
-export function getDataPath() {
-  const dataPath = path.join(app.getPath('userData'), 'Data')
-  if (!fs.existsSync(dataPath)) {
-    fs.mkdirSync(dataPath, { recursive: true })
-  }
-  return dataPath
-}
 
 export function getInstanceName(baseURL) {
   try {

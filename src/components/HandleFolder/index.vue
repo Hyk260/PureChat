@@ -57,7 +57,7 @@ function handleOpenPath(type, fileName) {
 function handleDownload() {
   console.log("download");
   const { fileName, fileUrl, fileSize, uuid } = folder.value;
-  window.api.fileDownloadFolder({ fileName, fileUrl, fileSize, uuid });
+  window.api.fileDownload({ fileName, fileUrl, fileSize, uuid });
 }
 
 // 打开文件夹
