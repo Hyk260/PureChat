@@ -3,7 +3,7 @@
   <div class="message-view-item-text" :class="fnStyle()" @click="onClick(message)">
     <template v-if="isMsgType">
       <!-- 回复消息 -->
-      <ReplyElem v-if="cloudCustomData" :originalMsg="cloudCustomData" />
+      <ReplyElem v-if="cloudCustomData" :status="message.status" :originalMsg="cloudCustomData" />
       <Markdown v-if="showMarked(message)" :marked="message.payload.text" />
       <DynamicContent v-else :atUserList="message.atUserList" :text="message.payload.text" />
     </template>

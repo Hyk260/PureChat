@@ -2,9 +2,9 @@
   <div class="reply-box flex-bc" v-if="replyMsgData" @click="onClick">
     <FontIcon class="close" iconName="CircleCloseFilled" @click="onClose" />
     <div class="reply-box-content">
-      <div class="nick">{{ replyMsgData?.nick }} :</div>
+      <div v-if="replyMsgData?.nick" class="nick">{{ replyMsgData?.nick }} :</div>
       <div class="text" v-if="replyMsgData">
-        <DynamicContent :text="fnReplyContent(replyMsgData)" />
+        <DynamicContent :text="getReplyContent(replyMsgData)" />
       </div>
     </div>
   </div>
@@ -13,7 +13,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useChatStore } from "@/stores/modules/chat/index";
-import { fnReplyContent, scrollToDomPostion } from "@/utils/chat/index";
+import { getReplyContent, scrollToDomPostion } from "@/utils/chat/index";
 import DynamicContent from "./DynamicContent.vue";
 
 defineOptions({

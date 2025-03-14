@@ -31,6 +31,7 @@ import { isWindowsAppStyle } from "@/utils/appEmit";
   .container-theme {
     height: 100%;
     width: 100%;
+    overflow: hidden;
     background: var(--color-body-bg);
   }
 }

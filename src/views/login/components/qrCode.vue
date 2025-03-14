@@ -12,11 +12,9 @@
 </template>
 
 <script setup>
-import { useStore } from "vuex";
 import Character from "./Character.vue";
 import { useBoolean } from "@/utils/hooks/index";
 
-const { dispatch, commit } = useStore();
 const [loading, setLoading] = useBoolean();
 setTimeout(() => {
   setLoading(true);

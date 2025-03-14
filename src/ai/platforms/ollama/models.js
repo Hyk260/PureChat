@@ -14,19 +14,53 @@ const OllamaAI = {
       id: "llama3.1:70b",
       tokens: 128_000,
     },
+    // {
+    //   displayName: "Llama 3.1 405B",
+    //   icon: "meta",
+    //   id: "llama3.1:405b",
+    //   tokens: 128_000,
+    // },
     {
-      displayName: "Llama 3.1 405B",
-      icon: "meta",
-      id: "llama3.1:405b",
-      tokens: 128_000,
-    },
-    {
+       tokens: 32_768,
       displayName: "Qwen Chat 7B",
-
       id: "qwen2:7b",
       icon: "qwen",
-      tokens: 32_768,
     },
+    {
+      tokens: 128_000,
+      description: 'Qwen2.5 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。',
+      displayName: 'Qwen2.5 72B',
+      id: 'qwen2.5:72b',
+      icon: "qwen",
+    },
+    {
+      tokens: 32_768,
+      description: 'DeepSeek V2 是高效的 Mixture-of-Experts 语言模型，适用于经济高效的处理需求。',
+      displayName: 'DeepSeek V2 16B',
+      id: 'deepseek-v2',
+      icon: "deepseek",
+    },
+    // {
+    //   tokens: 128_000,
+    //   description: 'DeepSeek V2 236B 是 DeepSeek 的设计代码模型，提供强大的代码生成能力。',
+    //   displayName: 'DeepSeek V2 236B',
+    //   id: 'deepseek-v2:236b',
+    // },
+    {
+      tokens: 128_000,
+      description:
+        'DeepSeek Coder V2 是开源的混合专家代码模型，在代码任务方面表现优异，与 GPT4-Turbo 相媲美。',
+      displayName: 'DeepSeek Coder V2 16B',
+      id: 'deepseek-coder-v2',
+      icon: "deepseek",
+    },
+    // {
+    //   tokens: 128_000,
+    //   description:
+    //     'DeepSeek Coder V2 是开源的混合专家代码模型，在代码任务方面表现优异，与 GPT4-Turbo 相媲美。',
+    //   displayName: 'DeepSeek Coder V2 236B',
+    //   id: 'deepseek-coder-v2:236b',
+    // },
   ],
   checkModel: "llama3.1:8b",
   description:

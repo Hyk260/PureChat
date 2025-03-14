@@ -19,7 +19,7 @@ const props = defineProps({
     type: Object,
     default: null,
   },
-  // unSend(未发送)fail(发送失败)success(发送成功)
+  // unSend(未发送)fail(发送失败)success(发送成功)sending(发送中)
   status: {
     type: String,
     default: "unSend",
