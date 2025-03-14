@@ -4,7 +4,7 @@
 /* fade-slide */
 .fade-slide-leave-active,
 .fade-slide-enter-active {
-  transition: all 0.3s;
+  transition: all 0.2s;
 }
 
 .fade-slide-enter-from {
@@ -18,15 +18,15 @@
 }
 
 .fade-slide-lower {
-  animation: lower .3s ease;
+  animation: lower .2s ease;
 }
 
 .fade-slide-upper {
-  animation: upper .3s ease;
+  animation: upper .2s ease;
 }
 
 .fade-slide-fade-in {
-  animation: fade-in .4s ease;
+  animation: fade-in .2s ease;
 }
 
 .shrink-style {
