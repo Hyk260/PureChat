@@ -522,7 +522,7 @@ export const handleStreamingChat = async (
     if (!finished) {
       finished = true;
       options?.onFinish({
-        message: responseText,
+        message: responseText + remainText,
         think: reasoningText,
       });
     }
