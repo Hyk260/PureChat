@@ -60,12 +60,12 @@ import { isRobot } from "@/utils/chat/index";
 import { useBoolean } from "@/utils/hooks/index";
 import { onClickOutside } from "@vueuse/core";
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { useStore } from "vuex";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { squareUrl } from "../../chatStudio/utils/menu";
 import { getGender } from "@/utils/common";
 import { getValueByKey, prefix } from "@/ai/utils";
 import Label from "@/views/chatStudio/components/Label.vue";
+import store from "@/store/index";
 import emitter from "@/utils/mitt-bus";
 
 const cardRef = ref();
@@ -101,7 +101,7 @@ const getHomepage = (data = userProfile.value.profileCustomField) => {
 const define = () => {
   closeModal();
   if (cardData.value?.conversationType === "C2C") return;
-  useStore().dispatch("addConversation", { convId: `C2C${cardData.value.from}` });
+  store.dispatch("addConversation", { convId: `C2C${cardData.value.from}` });
 };
 
 onClickOutside(cardRef, () => {
