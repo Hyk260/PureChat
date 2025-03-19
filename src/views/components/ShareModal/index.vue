@@ -61,47 +61,51 @@
         </div>
       </div>
       <div class="form-item-props">
-        <div class="flex-bc my-5 h-32">
-          <div>背景色</div>
-          <div class="grid grid-cols-7 gap-5">
-            <div
-              v-for="(item, i) in backgColor"
-              :key="i"
-              @click="onColor(item)"
-              class="w-28 h-28 relative rounded-50% cursor-pointer"
-              :style="fnStyleBack(item)"
-            ></div>
+        <el-scrollbar>
+          <div class="h-160 px-10">
+            <div class="flex-bc my-5 h-32">
+              <div>背景色</div>
+              <div class="grid grid-cols-7 gap-5">
+                <div
+                  v-for="(item, i) in backgColor"
+                  :key="i"
+                  @click="onColor(item)"
+                  class="w-28 h-28 relative rounded-50% cursor-pointer"
+                  :style="fnStyleBack(item)"
+                ></div>
+              </div>
+            </div>
+            <el-divider />
+            <div class="flex-bc my-5 h-32" v-if="robotPrompt()">
+              <div>包含助手提示词</div>
+              <div><el-switch v-model="isPrompt" /></div>
+            </div>
+            <el-divider v-if="robotPrompt()" />
+            <div class="flex-bc my-5 h-32">
+              <div>包含页脚</div>
+              <div><el-switch v-model="isFooter" /></div>
+            </div>
+            <el-divider />
+            <div class="flex-bc my-5 h-32">
+              <div>包含二维码</div>
+              <div><el-switch :disabled="!isFooter" v-model="isQrCode" /></div>
+            </div>
+            <el-divider />
+            <div class="flex-bc my-5 h-32">
+              <div>图片格式</div>
+              <div>
+                <el-radio-group v-model="fieldType" size="small">
+                  <el-radio-button
+                    v-for="item in imageTypeOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-radio-group>
+              </div>
+            </div>
           </div>
-        </div>
-        <el-divider class="my-10" />
-        <div class="flex-bc my-5 h-32" v-if="robotPrompt()">
-          <div>包含助手提示词</div>
-          <div><el-switch v-model="isPrompt" /></div>
-        </div>
-        <el-divider v-if="robotPrompt()" class="my-10" />
-        <div class="flex-bc my-5 h-32">
-          <div>包含页脚</div>
-          <div><el-switch v-model="isFooter" /></div>
-        </div>
-        <el-divider class="my-10" />
-        <div class="flex-bc my-5 h-32">
-          <div>包含二维码</div>
-          <div><el-switch :disabled="!isFooter" v-model="isQrCode" /></div>
-        </div>
-        <el-divider class="my-10" />
-        <div class="flex-bc my-5 h-32">
-          <div>图片格式</div>
-          <div>
-            <el-radio-group v-model="fieldType" size="small">
-              <el-radio-button
-                v-for="item in imageTypeOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-radio-group>
-          </div>
-        </div>
+        </el-scrollbar>
       </div>
       <div>
         <el-button
@@ -215,6 +219,7 @@ emitter.on("handleShareModal", (val) => {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  height: 100%;
 
   :deep(.setup) {
     display: none;
@@ -234,17 +239,17 @@ emitter.on("handleShareModal", (val) => {
 }
 
 .form-item-props {
-  padding-left: 5px;
-  padding-right: 5px;
   overflow: hidden;
-  padding-inline: 16px;
   background: rgba(0, 0, 0, 0.015);
   border: 1px solid #e3e3e3;
   border-radius: 8px;
+  :deep(.el-divider) {
+    margin: 10px 0;
+  }
 }
 
 .preview {
-  padding: 14px;
+  padding: 10px;
   background-position: center;
   background-color: #f8f8f8;
   background-size: 100% 100%;
