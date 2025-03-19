@@ -10,5 +10,5 @@ import "@/styles/global/index.scss";
 import "@/styles/index.scss";
 // https://animate.style/
 import "animate.css";
-// svg-icon
+// SvgIcon
 import "virtual:svg-icons-register";

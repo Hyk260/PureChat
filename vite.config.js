@@ -13,7 +13,9 @@ export default defineConfig(({ mode }) => {
     resolve: {
       /** 设置别名 */
       alias: {
+        // 配置路径别名~(根路径)
         "~": fileURLToPath(new URL("./", import.meta.url)),
+        // 配置主路径别名@
         "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
       extensions: [".js", ".json"],
