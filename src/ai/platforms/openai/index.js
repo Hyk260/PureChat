@@ -3,6 +3,7 @@ import {
   useAccessStore,
   usePromptStore,
   useToolStore,
+  adjustForDeepseek,
   createErrorResponse,
   isDalle3 as _isDalle3,
   extractImageMessage,
@@ -44,15 +45,18 @@ export class OpenAiApi {
     return [];
   }
   userPromptMessages(messages, modelConfig) {
-    let message = [];
-    const prompts = usePromptStore(this.provider).prompt?.filter((t) => t.content) || [];
-    const countMessage = messages.slice(-Number(modelConfig.historyMessageCount));
-    if (prompts.at(0)) {
-      message = [...prompts, ...countMessage]; // prompt
+    let combinedMessages = [];
+    const validPrompts = usePromptStore(this.provider).prompt?.filter((t) => t.content) || [];
+    const historyCount = Math.max(Number(modelConfig.historyMessageCount) || 0, 0);
+    if (validPrompts.length > 0) {
+      combinedMessages = [...validPrompts, ...messages.slice(-historyCount)]; // prompt
     } else {
-      message = countMessage; // 上下文
+      combinedMessages = messages.slice(-historyCount); // 上下文
     }
-    return message;
+    if (modelConfig.model === "deepseek-reasoner") {
+      return adjustForDeepseek(combinedMessages);
+    }
+    return combinedMessages;
   }
   accessStore(model = this.provider) {
     return useAccessStore(model);

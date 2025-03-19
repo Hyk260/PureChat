@@ -12,5 +12,5 @@ import "@/styles/index.scss";
 import "@/styles/app/electron.scss";
 // https://animate.style/
 import "animate.css";
-// svg-icon
+// SvgIcon
 import "virtual:svg-icons-register";

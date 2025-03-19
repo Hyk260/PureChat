@@ -1,12 +1,12 @@
 import process from "node:process";
-import path from "node:path";
 import vue from "@vitejs/plugin-vue";
 import progress from "vite-plugin-progress";
 import removeConsole from "vite-plugin-remove-console";
 import VueDevtools from "vite-plugin-vue-devtools";
 import { visualizer } from "rollup-plugin-visualizer";
-import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+import { setupUnplugin } from './unplugin';
 import { setupHtmlPlugin } from "./html";
+import { viteBuildInfo } from "./info";
 import { setupUnocss } from './unocss';
 import { cdn } from "./cdn";
 // import pwa from "./pwa";
@@ -23,14 +23,9 @@ export function setupVitePlugins(viteEnv) {
     // 线上环境删除console
     removeConsole(),
     setupUnocss(viteEnv),
-    // svg-icon
-    createSvgIconsPlugin({
-      iconDirs: [path.join(process.cwd(), "src/assets/icons/svg")],
-      symbolId: `${viteEnv.VITE_ICON_LOCAL_PREFIX}-[dir]-[name]`,
-      inject: "body-last",
-      customDomId: "__SVG_ICON_LOCAL__",
-    }),
     setupHtmlPlugin(),
+    viteBuildInfo(),
+    ...setupUnplugin(viteEnv),
   ];
   if (viteEnv.VITE_DEV_TOOLS === "Y") {
     plugins.push(VueDevtools());
