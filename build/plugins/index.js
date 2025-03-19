@@ -1,5 +1,4 @@
 import process from "node:process";
-import path from "node:path";
 import vue from "@vitejs/plugin-vue";
 import progress from "vite-plugin-progress";
 import removeConsole from "vite-plugin-remove-console";
@@ -7,6 +6,7 @@ import VueDevtools from "vite-plugin-vue-devtools";
 import { visualizer } from "rollup-plugin-visualizer";
 import { setupUnplugin } from './unplugin';
 import { setupHtmlPlugin } from "./html";
+import { viteBuildInfo } from "./info";
 import { setupUnocss } from './unocss';
 import { cdn } from "./cdn";
 // import pwa from "./pwa";
@@ -24,6 +24,7 @@ export function setupVitePlugins(viteEnv) {
     removeConsole(),
     setupUnocss(viteEnv),
     setupHtmlPlugin(),
+    viteBuildInfo(),
     ...setupUnplugin(viteEnv),
   ];
   if (viteEnv.VITE_DEV_TOOLS === "Y") {
