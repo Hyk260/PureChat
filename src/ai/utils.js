@@ -647,3 +647,48 @@ export const handleStreamingChat = async (
     openWhenHidden: true,
   });
 }
+
+/**
+ * 确保消息交替排列的强化处理方法
+ * 1. 保留所有系统消息
+ * 2. 系统消息后第一条必须是用户消息
+ * 3. 后续消息必须严格交替排列
+ * 4. 自动过滤无效的连续消息
+ */
+export const adjustForDeepseek = (messages) => {
+  const processed = [];
+  let lastRole = 'system';
+  let hasSystem = false;
+  for (const msg of messages) {
+    // 处理系统消息
+    if (msg.role === 'system') {
+      processed.push(msg);
+      hasSystem = true;
+      lastRole = 'system';
+      continue;
+    }
+    // 系统消息后首条必须为用户消息
+    if (hasSystem && processed.length === 1) {
+      if (msg.role !== 'user') continue;
+      processed.push(msg);
+      lastRole = 'user';
+      continue;
+    }
+    // 常规消息交替检查
+    if (msg.role !== lastRole) {
+      processed.push(msg);
+      lastRole = msg.role;
+    } else {
+      console.warn(`Skipping consecutive ${msg.role} message:`, msg.content);
+    }
+  }
+  // 兜底处理：当存在系统消息但无用户消息时
+  if (hasSystem && !processed.some(m => m.role === 'user')) {
+    processed.push({
+      role: 'user',
+      content: '请继续',
+    });
+  }
+
+  return processed.slice(0, 8);
+}
