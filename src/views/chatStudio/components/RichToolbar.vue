@@ -7,11 +7,11 @@
       class="emoticon"
       @click="sendEmojiClick"
     >
-      <svg-icon local-icon="iconxiaolian" class="icon-hover" />
+      <SvgIcon local-icon="iconxiaolian" />
     </span>
     <!-- 选模型 -->
-    <span v-show="isRobot(toAccount)" @click="selectModel">
-      <svg-icon local-icon="model" class="icon-hover robot" />
+    <span title="模型" v-show="isRobot(toAccount)" @click="selectModel">
+      <SvgIcon local-icon="model" />
     </span>
     <!-- 图片 -->
     <span
@@ -20,11 +20,15 @@
       :title="$t('chat.picture')"
       @click="sendImageClick"
     >
-      <svg-icon local-icon="icontupian" class="icon-hover" />
+      <SvgIcon local-icon="icontupian" />
+    </span>
+    <!-- 附件 -->
+    <span title="上传文档" @click="sendAnnexClick">
+      <SvgIcon local-icon="paperClip" />
     </span>
     <!-- 文件 -->
     <span v-show="!isRobot(toAccount)" :title="$t('chat.file')" @click="sendFileClick">
-      <svg-icon local-icon="iconwenjianjia" class="icon-hover" />
+      <SvgIcon local-icon="iconwenjianjia" />
     </span>
     <!-- 截图 -->
     <span
@@ -32,11 +36,11 @@
       :title="$t('chat.screenshot')"
       @click="clickCscreenshot"
     >
-      <svg-icon local-icon="iconjietu" class="icon-hover" />
+      <SvgIcon local-icon="iconjietu" />
     </span>
     <!-- 机器人配置 -->
     <span v-if="isRobot(toAccount)" :title="$t('chat.configuration')" @click="openRobotBox">
-      <svg-icon local-icon="robot" class="icon-hover robot" />
+      <SvgIcon local-icon="robot" />
     </span>
     <!-- 插件 -->
     <span
@@ -44,7 +48,7 @@
       :class="isFunctionCall ? '' : 'prohibit'"
       @click="openPluginBox"
     >
-      <svg-icon local-icon="plugin" class="icon-hover robot" />
+      <SvgIcon local-icon="plugin" />
     </span>
     <!-- 窗口抖动 -->
     <span
@@ -52,11 +56,11 @@
       :title="$t('chat.windowJitter')"
       @click="onShake"
     >
-      <FontIcon class="icon-hover" iconName="Iphone" />
+      <FontIcon iconName="Iphone" />
     </span>
     <!-- 自定义消息 -->
     <span v-if="false" @click="customMessage">
-      <FontIcon class="icon-hover" iconName="Sunny" />
+      <FontIcon iconName="Sunny" />
     </span>
     <!-- 滚动到底部 -->
     <span
@@ -72,29 +76,17 @@
       class="ml-auto"
       @click="toggleFullScreenInput"
     >
-      <svg-icon :local-icon="isFullscreenInputActive ? 'narrow' : 'enlarge'" class="icon-hover" />
+      <SvgIcon :local-icon="isFullscreenInputActive ? 'narrow' : 'enlarge'" />
     </span>
-    <input
-      type="file"
-      ref="imagePicker"
-      accept=".jpg, .jpeg, .png, .gif, .bmp"
-      @change="sendImage"
-      hidden
-    />
-    <input type="file" ref="filePicker" @change="sendFile" hidden />
-    <!-- <input
-      type="file"
-      ref="videoPicker"
-      @change="sendVideo"
-      accept=".mp4"
-      hidden
-    /> -->
+    <input type="file" ref="imagePicker" :accept="imageExts" @change="sendImage" hidden />
+    <input type="file" ref="annexPicker" :accept="supportExts" @change="sendFile" hidden />
+    <input type="file" ref="filePicker" :accept="imageExts" @change="sendFile" hidden />
     <template v-if="isRobot(toAccount)">
       <RobotModel />
       <RobotPlugin />
       <RobotOptions />
     </template>
-    <EmotionPackBox v-if="!isRobot(toAccount) && flag" @onClose="setFlag(false)"  />
+    <EmotionPackBox v-if="!isRobot(toAccount) && flag" @onClose="setFlag(false)" />
   </div>
 </template>
 
@@ -105,9 +97,10 @@ import { isRobot, screenshot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { useStore } from "vuex";
-import { storeToRefs } from 'pinia';
+import { storeToRefs } from "pinia";
 import { useBoolean } from "@/utils/hooks/index";
 import { useChatStore, useRobotStore } from "@/stores/index";
+import { imageExts, textExts, documentExts } from "@/constants/index";
 import EmotionPackBox from "./EmotionPackBox.vue";
 import RobotOptions from "./RobotOptions.vue";
 import RobotModel from "./RobotModel.vue";
@@ -117,6 +110,8 @@ import emitter from "@/utils/mitt-bus";
 const tobottom = ref();
 const imagePicker = ref();
 const filePicker = ref();
+
+const supportExts = [...textExts, ...documentExts];
 
 const [flag, setFlag] = useBoolean();
 const robotStore = useRobotStore();
@@ -144,8 +139,10 @@ const isFunctionCall = computed(() => {
   }
 });
 
+const sendAnnexClick = () => {};
+
 const sendEmojiClick = () => {
-  setFlag(true)
+  setFlag(true);
 };
 function openRobotBox() {
   emitter.emit("onRobotBox");
@@ -176,7 +173,7 @@ const onShake = () => {};
 const toggleFullScreenInput = () => {
   chatStore.$patch((state) => {
     state.isFullscreenInputActive = !state.isFullscreenInputActive;
-  })
+  });
 };
 
 function customMessage() {
@@ -239,11 +236,13 @@ emitter.on("onisbot", (state) => {
   padding: 0 5px;
   display: flex;
   position: relative;
+
   .prohibit {
     pointer-events: none;
     cursor: not-allowed;
     opacity: 0.5;
   }
+
   & > span {
     width: 42px;
     align-items: center;
@@ -255,13 +254,11 @@ emitter.on("onisbot", (state) => {
     text-align: center;
     color: #808080;
   }
+
   .svg-icon {
     cursor: pointer;
   }
-  .robot {
-    stroke: unset;
-    cursor: pointer;
-  }
+
   & > .icon:hover:after {
     font-size: 13px;
     display: inline-block;
@@ -279,10 +276,12 @@ emitter.on("onisbot", (state) => {
     z-index: 9999;
   }
 }
+
 .chat-top {
   .svg-left {
     transform: rotate(-90deg);
   }
+
   .el-icon {
     cursor: pointer;
   }
