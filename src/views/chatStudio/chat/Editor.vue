@@ -7,7 +7,7 @@
     v-if="isChatBoxVisible"
   >
     <!-- 自定义工具栏 -->
-    <RichToolbar />
+    <Inputbar />
     <Editor
       class="editor-content"
       v-model="valueHtml"
@@ -74,15 +74,15 @@ import {
   extractImageInfo,
   extractVideoInfo,
   filterMentionList,
-  getOperatingSystem,
   handleEditorKeyDown,
   handleToggleLanguage,
   sendChatMessage,
   insertMention,
   isDataTransferItem,
 } from "../utils/utils";
+import { getOperatingSystem } from "@/utils/common";
 import MentionModal from "../components/MentionModal.vue";
-import RichToolbar from "../components/RichToolbar.vue";
+import Inputbar from "../Inputbar/index.vue";
 import emitter from "@/utils/mitt-bus";
 
 const editorRef = shallowRef(); // 编辑器实例，必须用 shallowRef

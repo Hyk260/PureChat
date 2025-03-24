@@ -4,7 +4,6 @@
     <span
       v-show="!isFullscreenInputActive && !isRobot(toAccount)"
       :title="$t('chat.emoji')"
-      class="emoticon"
       @click="sendEmojiClick"
     >
       <SvgIcon local-icon="iconxiaolian" />
@@ -56,11 +55,11 @@
       :title="$t('chat.windowJitter')"
       @click="onShake"
     >
-      <FontIcon iconName="Iphone" />
+      <el-icon><Iphone /></el-icon>
     </span>
     <!-- 自定义消息 -->
     <span v-if="false" @click="customMessage">
-      <FontIcon iconName="Sunny" />
+      <el-icon><Sunny /></el-icon>
     </span>
     <!-- 滚动到底部 -->
     <span
@@ -69,7 +68,7 @@
       @click="onTobBottom"
       v-show="tobottom"
     >
-      <FontIcon class="svg-left icon-hover" iconName="DArrowLeft" />
+      <el-icon class="svg-left"><DArrowLeft /></el-icon>
     </span>
     <span
       :title="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
@@ -107,7 +106,12 @@ import RobotModel from "./RobotModel.vue";
 import RobotPlugin from "./RobotPlugin.vue";
 import emitter from "@/utils/mitt-bus";
 
+defineOptions({
+  name: "Inputbar",
+});
+
 const tobottom = ref();
+const annexPicker = ref();
 const imagePicker = ref();
 const filePicker = ref();
 
@@ -139,8 +143,6 @@ const isFunctionCall = computed(() => {
   }
 });
 
-const sendAnnexClick = () => {};
-
 const sendEmojiClick = () => {
   setFlag(true);
 };
@@ -153,6 +155,11 @@ function openPluginBox() {
 function selectModel() {
   emitter.emit("openModeList", true);
 }
+const sendAnnexClick = () => {
+  let $el = annexPicker.value;
+  $el.value = null;
+  $el.click();
+};
 const sendImageClick = () => {
   let $el = imagePicker.value;
   $el.value = null;
@@ -254,36 +261,20 @@ emitter.on("onisbot", (state) => {
     text-align: center;
     color: #808080;
   }
-
   .svg-icon {
     cursor: pointer;
+    // &:hover {
+    //   color: var(--color-icon-hover) !important;
+    // }
   }
+  .chat-top {
+    .svg-left {
+      transform: rotate(-90deg);
+    }
 
-  & > .icon:hover:after {
-    font-size: 13px;
-    display: inline-block;
-    content: attr(data-title);
-    text-align: center;
-    color: rgba(0, 0, 0, 0.75);
-    position: absolute;
-    left: 17px;
-    top: 38px;
-    border-radius: 3px;
-    // border: 1px solid #e9e9e9;
-    background-color: #eaeaea;
-    white-space: nowrap;
-    padding: 2px 5px;
-    z-index: 9999;
-  }
-}
-
-.chat-top {
-  .svg-left {
-    transform: rotate(-90deg);
-  }
-
-  .el-icon {
-    cursor: pointer;
+    .el-icon {
+      cursor: pointer;
+    }
   }
 }
 </style>

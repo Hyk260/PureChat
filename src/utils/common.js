@@ -1,6 +1,8 @@
 import dayjs from "dayjs";
 import { localStg } from "@/utils/storage";
 import { localStgThemeScheme } from "@/theme/settings";
+import manifest from "@/database/manifest/index.json";
+
 const title = import.meta.env.VITE_APP_NAME;
 
 function toggleHtmlClass(theme) {
@@ -110,3 +112,44 @@ export const updateImageSize = async (imageInput, index = 0) => {
   // 返回更新后的对象
   return imageInput;
 };
+
+export const getAssetsFile = (url) => {
+  return new URL(`../assets/emoji/${url}`, import.meta.url).href;
+};
+
+export function getOperatingSystem(userAgent = navigator.userAgent) {
+  if (userAgent.includes("Windows")) {
+    return "Windows";
+  } else if (userAgent.includes("Macintosh")) {
+    return "macOS";
+  } else {
+    return "";
+  }
+}
+
+
+/**
+ * 根据指定的 Key 和 Type 获取插件数据
+ * @param params.key 搜索的键值
+ * @param params.type 搜索的键名 (默认值: 'identifier')
+ * @returns 匹配的插件对象，包含 `imageUrl` 属性
+ */
+export function getPlugin({
+  key = "",
+  type = "identifier",
+} = {}) {
+  // 从 plugins 中搜索匹配项
+  const plugin = manifest.plugins.find(
+    (item) => item[type] === key
+  );
+
+  if (!plugin) {
+    console.error(`Plugin with ${type} = "${key}" not found.`);
+    return null;
+  }
+
+  return {
+    ...plugin,
+    imageUrl: new URL(`../../../assets/images/plugin/${plugin.meta?.avatar}`, import.meta.url).href
+  };
+}

@@ -65,10 +65,14 @@ import { onMounted, ref } from "vue";
 import { chunk } from "lodash-es";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { useChatStore } from "@/stores/modules/chat/index";
-import { getOperatingSystem, getAssetsFile } from "../utils/utils";
+import { getAssetsFile, getOperatingSystem } from "@/utils/common";
 import emitter from "@/utils/mitt-bus";
 import emojiQq from "@/utils/emoji/emoji-map-qq";
 import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
+
+defineOptions({
+  name: "EmotionPackBox",
+});
 
 const emit = defineEmits(["onClose"]);
 

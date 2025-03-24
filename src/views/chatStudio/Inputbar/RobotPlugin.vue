@@ -23,17 +23,17 @@ import { StoreKey } from "@/ai/constant";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
-import { getPlugin } from "../utils/utils";
+import { getPlugin } from "@/utils/common";
 import { useRobotStore } from "@/stores/modules/robot/index";
 import emitter from "@/utils/mitt-bus";
+
+defineOptions({
+  name: "RobotPlugin",
+});
 
 const [flag, setFlag] = useBoolean();
 
 const pluginData = ref([
-  // {
-  //   checked: false,
-  //   ...getPlugin({ key: "web_search" }),
-  // },
   {
     checked: false,
     ...getPlugin({ key: "search-engine-serper" }),
@@ -44,7 +44,6 @@ const pluginData = ref([
   //   checked: false,
   //   name: "实时天气",
   //   prompt: "",
-  //   url: getAssetsFile("fluent-emoji.webp"),
   //   tools: [getWeather],
   // },
 ]);
