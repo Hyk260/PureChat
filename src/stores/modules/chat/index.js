@@ -9,6 +9,8 @@ import store from '@/store/index';
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
   state: () => ({
+    currentMessageList: [], // 当前会话消息列表
+    searchConversationList: [], // 过滤后的会话列表
     totalUnreadMsg: 0, // 未读消息总数
     needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
     showCheckbox: false, //是否显示多选框
@@ -25,6 +27,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     revokeMsgMap: new Map(), // 撤回消息重新编辑
   }),
   getters: {
+    hasMsgList() {
+      return this.currentMessageList?.length > 0;
+    },
     isFwdDataMaxed () {
       return this.forwardData.size >= MULTIPLE_CHOICE_MAX;
     }

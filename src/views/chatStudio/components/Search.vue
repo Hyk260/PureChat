@@ -23,9 +23,8 @@ import { onKeyStroke, useEventListener } from "@vueuse/core";
 import { useGetters } from "@/utils/hooks/useMapper";
 import { showConfirmationBox } from "@/utils/message";
 import { Search } from "@element-plus/icons-vue";
-import { useStore } from "vuex";
 import { debounce, isEmpty } from "lodash-es";
-import { useGroupStore } from "@/stores/modules/group/index";
+import { useGroupStore, useChatStore } from "@/stores/index";
 
 defineOptions({
   name: "Search",
@@ -34,8 +33,8 @@ defineOptions({
 const isLocalMode = __LOCAL_MODE__;
 const input = ref("");
 const filterData = ref([]);
+const chatStore = useChatStore();
 const groupStore = useGroupStore();
-const { commit } = useStore();
 const { tabList } = useGetters(["tabList"]);
 
 const createGroup = async () => {
@@ -65,12 +64,12 @@ const matchesFilter = (item, searchStr) => {
 
 const debounceSearch = debounce((key) => {
   if (isEmpty(key)) {
-    commit("setConversationValue", { key: "filterConversationList", value: [] });
+    chatStore.$patch({ searchConversationList: [] });
     return;
   }
   const str = key.toUpperCase().trim();
   filterData.value = tabList.value.filter((item) => matchesFilter(item, str));
-  commit("setConversationValue", { key: "filterConversationList", value: filterData.value });
+  chatStore.$patch({ searchConversationList: filterData.value });
 }, 200);
 </script>
 

@@ -28,9 +28,7 @@ const conversation = {
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
     conversationList: [], // 会话列表数据
-    filterConversationList: [],
     activeTab: "whole", // 全部 未读 提及我
-    // postponeUnread: new Set(),
   },
   mutations: {
     updateMessages(state, payload) {
@@ -259,11 +257,6 @@ const conversation = {
         message: { unreadCount },
       } = payload || {};
       if (unreadCount === 0) return;
-      // tab 不为全部不进行消息已读
-      // if (state.activeTab !== "whole" && state.currentConversation.conversationID === convId) {
-      //   state.postponeUnread.add(convId);
-      //   return;
-      // }
       console.log("[chat] 消息已读 hasReadMessage:", payload);
       setMessageRead(convId);
     },

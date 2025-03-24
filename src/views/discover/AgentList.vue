@@ -36,15 +36,14 @@
 <script setup>
 import { ref } from "vue";
 import { useSidebarStore } from "@/stores/modules/sidebar/index";
-import { useStore } from "vuex";
 import modelProvider from "@/database/bot.json";
 import AgentCard from "./AgentCard.vue";
 import ModelProviderCard from "./ModelProviderCard.vue";
 import AgentSkeleton from "./AgentSkeleton.vue";
 import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
 const emit = defineEmits(["handleClick"]);
-const { dispatch } = useStore();
 
 const sidebarStore = useSidebarStore();
 
@@ -73,7 +72,7 @@ function cardClick(item) {
 
 function providerClick(item) {
   sidebarStore.taggleOueSide({ path: "/chat" });
-  dispatch("addConversation", { convId: `${"C2C"}${item.userID}` });
+  store.dispatch("addConversation", { convId: `${"C2C"}${item.userID}` });
 }
 </script>
 

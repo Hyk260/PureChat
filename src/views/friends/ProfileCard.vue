@@ -49,12 +49,11 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { getGender } from "@/utils/common";
-import { useStore } from "vuex";
 import { useSidebarStore } from "@/stores/modules/sidebar/index";
 import { scrollToMessage } from "@/utils/chat/index";
 import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
-const { dispatch } = useStore();
 const sidebarStore = useSidebarStore();
 // 用户信息
 const userInfo = ref({
@@ -66,7 +65,7 @@ const userInfo = ref({
 
 const handleConversation = ({ id, type }) => {
   sidebarStore.taggleOueSide({ path: "/chat" });
-  dispatch("addConversation", { convId: `${type}${id}` });
+  store.dispatch("addConversation", { convId: `${type}${id}` });
   scrollToMessage(`message_${type}${id}`);
 };
 

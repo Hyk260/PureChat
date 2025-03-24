@@ -48,15 +48,14 @@ import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { cloneDeep } from "lodash-es";
 import { modelValue, StoreKey } from "@/ai/constant";
-import { useStore } from "vuex";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { useRobotStore } from "@/stores/modules/robot/index";
 import Label from "@/views/chatStudio/components/Label.vue";
 import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
 const [isBotToolsFlag, setBotToolsFlag] = useBoolean();
-const { commit } = useStore();
 const { currentType, toAccount, isGroupChat } = useGetters([
   "currentType",
   "toAccount",
@@ -102,7 +101,7 @@ const chatNick = (type, chat) => {
 };
 
 const openShare = () => {
-  commit("setCheckboxState", true);
+  store.commit("setCheckboxState", true);
 };
 
 const openSetup = () => {

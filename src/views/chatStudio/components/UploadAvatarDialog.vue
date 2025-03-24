@@ -40,14 +40,13 @@
     </template>
   </el-dialog>
 </template>
+
 <script setup>
+import { reactive, ref } from "vue";
 import { updateMyProfile } from "@/api/im-sdk-api/index";
 import { uploadFiles } from "@/api/node-admin-api/index";
 import emitter from "@/utils/mitt-bus";
-import { reactive, ref } from "vue";
-import { useStore } from "vuex";
 
-const { commit } = useStore();
 const imagePicker = ref();
 const dialogVisible = ref(false);
 const option = reactive({
@@ -81,7 +80,6 @@ async function uploadAvatar() {
 async function modifyMyProfile(file_url) {
   const { code, data } = await updateMyProfile({ avatar: file_url });
   if (code === 0) {
-    // commit("updateCurrentUserProfile", cloneDeep(data));
   } else {
     console.log("修改失败");
   }

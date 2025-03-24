@@ -58,11 +58,11 @@
 import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watch } from "vue";
 import { $t } from "@/locales/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
-import { useStore } from "vuex";
 import { storeToRefs } from "pinia";
 import { isMacOS } from "@/utils/common";
 import { useAppStore, useChatStore } from "@/stores/index";
 import { useDragHandler } from "@/utils/hooks/useDragHandler";
+import store from "@/store/index";
 import emitter from "@/utils/mitt-bus";
 
 import Chatwin from "./chat/Chatwin.vue";
@@ -82,11 +82,9 @@ const isLocalMode = __LOCAL_MODE__;
 const unread = ref("");
 const chatRef = ref(null);
 const activeName = ref("whole");
-
 const appStore = useAppStore();
 const chatStore = useChatStore();
 
-const { commit } = useStore();
 const { isChatBoxVisible, isFullscreenInputActive, isChatSessionListCollapsed } = storeToRefs(chatStore);
 
 const { isGroupChat } = useGetters(["isGroupChat"]);
@@ -96,7 +94,7 @@ const { conver } = useState({
 
 const handleClick = ({ props }, event) => {
   const { label, name } = props;
-  commit("toggleList", name);
+  store.commit("toggleList", name);
 };
 
 const fnDragCss = () => {
@@ -120,7 +118,7 @@ const updateUnread = (count) => {
 onActivated(() => {
   emitter.emit("updataScroll");
   updateUnread(chatStore.totalUnreadMsg);
-  commit("toggleList", "whole");
+  store.commit("toggleList", "whole");
 });
 
 onDeactivated(() => {});

@@ -95,7 +95,6 @@ import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { isRobot, screenshot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
-import { useStore } from "vuex";
 import { storeToRefs } from "pinia";
 import { useBoolean } from "@/utils/hooks/index";
 import { useChatStore, useRobotStore } from "@/stores/index";
@@ -105,6 +104,7 @@ import RobotOptions from "./RobotOptions.vue";
 import RobotModel from "./RobotModel.vue";
 import RobotPlugin from "./RobotPlugin.vue";
 import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
 defineOptions({
   name: "Inputbar",
@@ -121,7 +121,6 @@ const [flag, setFlag] = useBoolean();
 const robotStore = useRobotStore();
 const chatStore = useChatStore();
 const { isFullscreenInputActive } = storeToRefs(chatStore);
-const { dispatch } = useStore();
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
 const { currentConversation } = useState({
   currentConversation: (state) => state.conversation.currentConversation,
@@ -189,7 +188,7 @@ function customMessage() {
     convType: currentType.value,
     customType: "loading",
   });
-  dispatch("sendSessionMessage", {
+  store.dispatch("sendSessionMessage", {
     payload: {
       convId: currentConversation.value.conversationID,
       message,

@@ -83,14 +83,12 @@
 
 <script setup>
 import { ref } from "vue";
-import { useStore } from "vuex";
 import { ruleForm, updateRules } from "../utils/validation";
 import { Lock, User, Key, Iphone } from "@element-plus/icons-vue";
 
 const checked = ref(false);
 const loading = ref(false);
 const ruleFormRef = ref();
-const { commit } = useStore();
 
 const onBack = () => {};
 const onUpdate = async (formEl) => {

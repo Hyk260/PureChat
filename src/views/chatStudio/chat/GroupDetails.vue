@@ -133,12 +133,12 @@ import { useBoolean } from "@/utils/hooks/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { showConfirmationBox } from "@/utils/message";
 import { isFullStaffGroup } from "@/ai/utils";
-import { useStore } from "vuex";
-import AddMemberPopup from "../components/AddMemberPopup.vue";
-import emitter from "@/utils/mitt-bus";
 import { Markdown } from "@/utils/markdown/index";
 import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index";
 import { useGroupStore, useAppStore, useUserStore } from "@/stores/index";
+import AddMemberPopup from "../components/AddMemberPopup.vue";
+import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
 const { groupProfile } = defineProps({
   groupProfile: {
@@ -156,7 +156,6 @@ const appStore = useAppStore();
 const [drawer, setDrawer] = useBoolean();
 const [loading, setLoading] = useBoolean();
 
-const { dispatch } = useStore();
 const { toAccount } = useGetters(["toAccount"]);
 
 const { currentConversation } = useState({
@@ -175,7 +174,7 @@ const beforeChange = () => {
 
 const setNotify = () => {
   const { type, toAccount, messageRemindType: remindType } = currentConversation.value;
-  dispatch("setMessageReminderType", { type, toAccount, remindType });
+  store.dispatch("setMessageReminderType", { type, toAccount, remindType });
 };
 
 const openNamePopup = async () => {
@@ -221,7 +220,7 @@ const groupMemberAdd = () => {
 };
 
 const navigate = (item) => {
-  dispatch("addConversation", { convId: `C2C${item.userID}` });
+  store.dispatch("addConversation", { convId: `C2C${item.userID}` });
   setDrawer(false);
   setTimeout(() => {
     const dom = document.getElementById(`message_C2C${item.userID}`);

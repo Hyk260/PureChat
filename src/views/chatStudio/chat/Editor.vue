@@ -60,7 +60,6 @@ import { Editor } from "@wangeditor/editor-for-vue";
 import "@wangeditor/editor/dist/css/style.css";
 import { debounce } from "lodash-es";
 import { storeToRefs } from "pinia";
-import { useStore } from "vuex";
 import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
 import { localStg } from "@/utils/storage";
@@ -84,6 +83,7 @@ import { getOperatingSystem } from "@/utils/common";
 import MentionModal from "../components/MentionModal.vue";
 import Inputbar from "../Inputbar/index.vue";
 import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
 const editorRef = shallowRef(); // 编辑器实例，必须用 shallowRef
 const valueHtml = ref(""); // 内容 HTML
@@ -94,7 +94,6 @@ const chatStore = useChatStore();
 const groupStore = useGroupStore();
 const [loading, setLoading] = useBoolean();
 const [disabled, setDisabled] = useBoolean();
-const { dispatch } = useStore();
 const { isChatBoxVisible, isMentionModalVisible, isFullscreenInputActive, replyMsgData } = storeToRefs(chatStore);
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
 const { currentConversation, showCheckbox } = useState({
@@ -325,7 +324,7 @@ const sendMessage = async () => {
   console.log("sendChatMessage:", message);
   clearInputInfo();
   message.map((t, i) => {
-    dispatch("sendSessionMessage", {
+    store.dispatch("sendSessionMessage", {
       payload: {
         convId: currentConversation.value.conversationID,
         message: t,
