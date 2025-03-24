@@ -22,7 +22,7 @@
       <SvgIcon local-icon="icontupian" />
     </span>
     <!-- 附件 -->
-    <span title="上传文档" @click="sendAnnexClick">
+    <span v-if="false" title="上传文档" @click="sendAnnexClick">
       <SvgIcon local-icon="paperClip" />
     </span>
     <!-- 文件 -->
