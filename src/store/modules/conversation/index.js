@@ -23,7 +23,6 @@ import emitter from "@/utils/mitt-bus";
 
 const conversation = {
   state: {
-    showCheckbox: false, //是否显示多选框
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
@@ -140,7 +139,6 @@ const conversation = {
         currentMessageList: [],
         conversationList: [],
         activeTab: "whole",
-        showCheckbox: false,
       });
       console.log("[chat] 清除历史记录 clearHistory:", state);
     },
@@ -150,7 +148,7 @@ const conversation = {
       const oldConvId = state.currentConversation?.conversationID;
       if (convId == oldConvId) return;
       state.currentConversation = payload;
-      state.showCheckbox = false;
+      useChatStore().$patch({ showCheckbox: false })
       if (payload) {
         const history = state.historyMessageList.get(convId);
         state.currentMessageList = cloneDeep(history) ?? [];
@@ -168,10 +166,6 @@ const conversation = {
     //  切换列表 全部 未读 提及我
     toggleList(state, action) {
       state.activeTab = action;
-    },
-    // 设置多选框状态
-    setCheckboxState(state, flag) {
-      state.showCheckbox = flag;
     },
     setConversationValue(state, { key, value }) {
       state[key] = value;

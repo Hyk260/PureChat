@@ -4,7 +4,7 @@
       :src="url"
       @load="loadImg"
       :style="imgStyle"
-      :preview-src-list="showCheckbox ? null : imgUrlList"
+      :preview-src-list="chatStore.showCheckbox ? null : imgUrlList"
       :hide-on-click-modal="true"
       :initial-index="initialIndex"
       :infinite="false"
@@ -20,8 +20,9 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useState, useGetters } from "@/utils/hooks/useMapper";
+import { useGetters } from "@/utils/hooks/useMapper";
 import { showIMPic } from "../utils/utils";
+import { useChatStore } from "@/stores/index";
 import { getImageSize } from "@/utils/common";
 
 const props = defineProps({
@@ -37,9 +38,7 @@ const props = defineProps({
 
 const imgStyle = ref({});
 const { imgUrlList } = useGetters(["imgUrlList"]);
-const { showCheckbox } = useState({
-  showCheckbox: (state) => state.conversation.showCheckbox,
-});
+const chatStore = useChatStore();
 
 function getImageProperties(num = 0) {
   try {

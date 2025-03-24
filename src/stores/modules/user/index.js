@@ -1,6 +1,6 @@
 import { nextTick } from "vue";
 import { defineStore } from 'pinia'
-import { useAppStore } from '@/stores/index';
+import { useAppStore, useChatStore } from '@/stores/index';
 import { login, logout } from "@/api/node-admin-api/index"
 import { ACCOUNT, USER_MODEL } from "@/constants/index"
 import { localStg } from "@/utils/storage"
@@ -12,7 +12,6 @@ import { changeLocale } from "@/locales/index";
 import router from "@/router"
 import chat from "@/utils/IM/im-sdk/tim"
 import emitter from "@/utils/mitt-bus"
-import { useChatStore } from '@/stores/modules/chat/index';
 import store from '@/store/index';
 
 export const useUserStore = defineStore(SetupStoreId.User, {

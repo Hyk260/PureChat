@@ -94,11 +94,16 @@ const chatStore = useChatStore();
 const groupStore = useGroupStore();
 const [loading, setLoading] = useBoolean();
 const [disabled, setDisabled] = useBoolean();
-const { isChatBoxVisible, isMentionModalVisible, isFullscreenInputActive, replyMsgData } = storeToRefs(chatStore);
+const {
+  showCheckbox,
+  isChatBoxVisible,
+  isMentionModalVisible,
+  isFullscreenInputActive,
+  replyMsgData,
+} = storeToRefs(chatStore);
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-const { currentConversation, showCheckbox } = useState({
+const { currentConversation } = useState({
   currentConversation: (state) => state.conversation.currentConversation,
-  showCheckbox: (state) => state.conversation.showCheckbox,
 });
 
 const handleEditor = (editor, created = true) => {

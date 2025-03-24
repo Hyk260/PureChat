@@ -50,7 +50,7 @@ import { cloneDeep } from "lodash-es";
 import { modelValue, StoreKey } from "@/ai/constant";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
-import { useRobotStore } from "@/stores/modules/robot/index";
+import { useRobotStore, useChatStore } from "@/stores/index";
 import Label from "@/views/chatStudio/components/Label.vue";
 import emitter from "@/utils/mitt-bus";
 import store from "@/store/index";
@@ -62,6 +62,7 @@ const { currentType, toAccount, isGroupChat } = useGetters([
   "isGroupChat",
 ]);
 
+const chatStore = useChatStore();
 const robotStore = useRobotStore();
 
 const { chat } = useState({
@@ -101,7 +102,7 @@ const chatNick = (type, chat) => {
 };
 
 const openShare = () => {
-  store.commit("setCheckboxState", true);
+  chatStore.$patch({ showCheckbox: true });
 };
 
 const openSetup = () => {

@@ -39,6 +39,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.isChatBoxVisible = false;
     },
     clearHistory() {
+      this.showCheckbox = false;
       this.isChatBoxVisible = false;
       this.replyMsgData = null;
       this.chatDraftMap = new Map()

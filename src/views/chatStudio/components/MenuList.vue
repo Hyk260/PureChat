@@ -19,7 +19,6 @@
 <script setup>
 import { computed } from "vue";
 import { useChatStore } from "@/stores/index";
-import { useState } from "@/utils/hooks/useMapper";
 import { isSelf, handleCopyMsg } from "../utils/utils";
 
 defineOptions({
@@ -71,9 +70,6 @@ const list = [
 ];
 
 const chatStore = useChatStore();
-const { showCheckbox } = useState({
-  showCheckbox: (state) => state.conversation.showCheckbox,
-});
 
 const flilterList = computed(() => {
   const _type = props.item.type;
@@ -102,7 +98,7 @@ function showMenuList(item) {
     msg.includes(item.type) &&
     item.type !== "TIMGroupTipElem" &&
     !item.isRevoked &&
-    !showCheckbox.value &&
+    !chatStore.showCheckbox &&
     flilterList.value.length
   );
 }

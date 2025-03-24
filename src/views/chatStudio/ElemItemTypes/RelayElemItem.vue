@@ -14,7 +14,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { useState } from "@/utils/hooks/useMapper";
+import { useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
 defineOptions({
@@ -27,10 +27,7 @@ const { message } = defineProps({
     default: null,
   },
 });
-
-const { showCheckbox } = useState({
-  showCheckbox: (state) => state.conversation.showCheckbox,
-});
+const chatStore = useChatStore();
 
 const num = computed(() => {
   return message.payload.messageList?.length || message.payload.abstractList?.length;
@@ -41,7 +38,7 @@ const abstractList = computed(() => {
 });
 
 function onClick() {
-  if (showCheckbox.value) return;
+  if (chatStore.showCheckbox) return;
   emitter.emit("openMergePopup", message);
 }
 </script>

@@ -8,11 +8,13 @@
 import { computed } from "vue";
 import { isSelf } from "../utils/utils";
 import { formatTimestamp } from "@/utils/timeFormat";
-import { useState } from "@/utils/hooks/useMapper";
+import { useChatStore } from "@/stores/index";
 
 defineOptions({
   name: "TimeDivider",
 });
+
+const chatStore = useChatStore();
 
 const props = defineProps({
   item: {
@@ -27,10 +29,6 @@ const props = defineProps({
     type: Boolean,
     default: false, // group or single
   },
-});
-
-const { showCheckbox } = useState({
-  showCheckbox: (state) => state.conversation.showCheckbox,
 });
 
 function showClientTime(item) {
@@ -54,7 +52,7 @@ const fnStyle = computed(() => {
     return [_isSelf ? "text-right pr-5" : "text-left pl-5"];
   } else {
     const styleArray = [_isSelf ? "text-right pr-44 mb-4" : "text-left pl-44 mb-4"];
-    if (showCheckbox.value) return [...styleArray, "!opacity-0"];
+    if (chatStore.showCheckbox) return [...styleArray, "!opacity-0"];
     return styleArray;
   }
 });

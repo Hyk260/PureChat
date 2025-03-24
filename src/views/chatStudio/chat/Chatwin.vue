@@ -171,15 +171,14 @@ const groupStore = useGroupStore();
 const chatStore = useChatStore();
 const appStore = useAppStore();
 const { dispatch, commit } = useStore();
-const { isChatBoxVisible, needScrollDown } = storeToRefs(chatStore);
+const { showCheckbox, isChatBoxVisible, needScrollDown } = storeToRefs(chatStore);
 
 const { toAccount, isGroupChat, currentType } = useGetters([
   "toAccount",
   "isGroupChat",
   "currentType",
 ]);
-const { showCheckbox, currentMessageList, currentConv } = useState({
-  showCheckbox: (state) => state.conversation.showCheckbox,
+const { currentMessageList, currentConv } = useState({
   currentMessageList: (state) => state.conversation.currentMessageList,
   currentConv: (state) => state.conversation.currentConversation,
 });
@@ -542,7 +541,7 @@ const handleDeleteMsg = async (data) => {
 };
 // 多选
 const handleMultiSelectMsg = (item) => {
-  commit("setCheckboxState", true);
+  chatStore.$patch({ showCheckbox: true });
   handleSelect(null, item, "choice");
 };
 const handleRevokeChange = (data, type) => {

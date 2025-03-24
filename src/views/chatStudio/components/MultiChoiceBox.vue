@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import emitter from "@/utils/mitt-bus";
 import {
   createForwardMessage,
   createMergerMessage,
@@ -25,11 +24,12 @@ import {
 } from "@/api/im-sdk-api/index";
 import { useChatStore } from "@/stores/index";
 import { showConfirmationBox } from "@/utils/message";
-import { mapMutations, mapState } from "vuex";
+import { mapState } from "vuex";
 import { localStg } from "@/utils/storage";
 import { TIM_PROXY } from "@/constants/index";
 import MagforwardingPopup from "./MagforwardingPopup.vue";
 import ShareModal from "@/views/components/ShareModal/index.vue";
+import emitter from "@/utils/mitt-bus";
 
 const buttonList = [
   {
@@ -74,10 +74,12 @@ export default {
   },
   computed: {
     ...mapState({
-      showCheckbox: (state) => state.conversation.showCheckbox,
       conversationList: (state) => state.conversation.conversationList,
       currentConversation: (state) => state.conversation.currentConversation,
     }),
+    showCheckbox() {
+      return useChatStore().showCheckbox;
+    },
     disabled() {
       return useChatStore().forwardData.size === 0;
     },
@@ -86,7 +88,6 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["setCheckboxState"]),
     onClock(item) {
       switch (item.type) {
         case "share": // 截图分享
@@ -214,7 +215,7 @@ export default {
       // 清空多选数据
       useChatStore().setForwardData({ type: "clear" });
       // 关闭多选框
-      this.setCheckboxState(false);
+      useChatStore().$patch({ showCheckbox: false });
       this.closedState();
       this.setMultipleValue();
     },
