@@ -524,16 +524,6 @@ export const showIMPic = (width = 0, height = 0) => {
   return imageStyle;
 };
 
-export function getOperatingSystem(userAgent = navigator.userAgent) {
-  if (userAgent.includes("Windows")) {
-    return "Windows";
-  } else if (userAgent.includes("Macintosh")) {
-    return "macOS";
-  } else {
-    return "";
-  }
-}
-
 export const handleToggleLanguage = () => {
   const placeholder = document.querySelector(".w-e-text-placeholder");
   if (placeholder) placeholder.innerHTML = placeholderMap.value["input"];
@@ -550,10 +540,6 @@ export const handleEditorKeyDown = async (show) => {
       return false;
     }
   };
-};
-
-export const getAssetsFile = (url) => {
-  return new URL(`../../../assets/emoji/${url}`, import.meta.url).href;
 };
 
 export const isSelf = (item) => {

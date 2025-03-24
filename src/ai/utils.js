@@ -1,5 +1,5 @@
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
-import { getPlugin } from '@/views/chatStudio/utils/utils';
+import { getPlugin } from "@/utils/common";
 import {
   VITE_ZHIPU_ID,
   VITE_OPENAI_ID,

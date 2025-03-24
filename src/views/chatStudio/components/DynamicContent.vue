@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { getAssetsFile } from "../utils/utils";
+import { getAssetsFile } from "@/utils/common";
 import { decodeText } from "@/utils/chat/index";
 import AnalysisUrl from "../components/AnalysisUrl.vue";
 

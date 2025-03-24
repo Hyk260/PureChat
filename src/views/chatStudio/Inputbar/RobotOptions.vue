@@ -137,6 +137,10 @@ import DragPrompt from "./DragPrompt.vue";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 import emitter from "@/utils/mitt-bus";
 
+defineOptions({
+  name: "RobotOptions",
+});
+
 const robotIcon = ref("");
 const modelData = ref(null);
 const maskData = ref([]);
