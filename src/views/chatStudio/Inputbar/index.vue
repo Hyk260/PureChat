@@ -25,13 +25,15 @@
     <!-- 联网 -->
     <el-tooltip v-if="false" :content="$t('chat.web_search')" placement="top">
       <el-button v-show="isRobot(toAccount)" @click="onEnableWebSearch">
-        <el-icon><Cherry /></el-icon>
+        <SvgIcon local-icon="internet" />
       </el-button>
     </el-tooltip>
     <!-- 附件 -->
-    <span v-if="false" :title="$t('chat.upload_document')" @click="sendAnnexClick">
-      <SvgIcon local-icon="paperClip" />
-    </span>
+    <el-tooltip v-if="false" :content="$t('chat.upload_document')" placement="top">
+      <el-button @click="sendAnnexClick">
+        <SvgIcon local-icon="paperClip" />
+      </el-button>
+    </el-tooltip>
     <!-- 文件 -->
     <el-tooltip :content="$t('chat.file')" placement="top">
       <el-button v-show="!isRobot(toAccount)" @click="sendFileClick">
@@ -51,7 +53,7 @@
       </el-button>
     </el-tooltip>
     <!-- 插件 -->
-    <el-tooltip content="选着插件" placement="top">
+    <el-tooltip v-if="false" content="选择插件" placement="top">
       <el-button v-show="isFunctionCall && isShowPlugins(toAccount)" @click="openPluginBox">
         <SvgIcon local-icon="plugin" />
       </el-button>
@@ -63,9 +65,9 @@
       </el-button>
     </el-tooltip>
     <!-- 自定义消息 -->
-    <span v-if="false" @click="customMessage">
+    <el-button v-if="false" @click="customMessage">
       <el-icon><Sunny /></el-icon>
-    </span>
+    </el-button>
     <!-- 全屏 -->
     <el-tooltip
       :content="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
@@ -92,7 +94,7 @@ import { ref, computed } from "vue";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
+import { useGetters } from "@/utils/hooks/useMapper";
 import { storeToRefs } from "pinia";
 import { useBoolean } from "@/utils/hooks/index";
 import { useChatStore, useRobotStore } from "@/stores/index";
@@ -120,8 +122,9 @@ const robotStore = useRobotStore();
 const chatStore = useChatStore();
 const { isFullscreenInputActive } = storeToRefs(chatStore);
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-const { currentConversation } = useState({
-  currentConversation: (state) => state.conversation.currentConversation,
+
+const currentConversation = computed(() => {
+  return store.state.conversation.currentConversation;
 });
 
 const isVision = computed(() => {

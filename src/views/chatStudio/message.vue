@@ -13,7 +13,7 @@
         @tab-click="handleClick"
       >
         <el-tab-pane :label="$t('chat.whole')" name="whole"></el-tab-pane>
-        <el-tab-pane :label="unread" name="unread"></el-tab-pane>
+        <el-tab-pane :label="unreadLabel" name="unread"></el-tab-pane>
         <el-tab-pane :label="$t('chat.mention')" name="mention"></el-tab-pane>
       </el-tabs>
       <div
@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watch } from "vue";
+import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watch, computed } from "vue";
 import { $t } from "@/locales/index";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { storeToRefs } from "pinia";
@@ -79,17 +79,17 @@ import networklink from "./components/networklink.vue";
 
 const isLocalMode = __LOCAL_MODE__;
 
-const unread = ref("");
 const chatRef = ref(null);
 const activeName = ref("whole");
 const appStore = useAppStore();
 const chatStore = useChatStore();
 
-const { isChatBoxVisible, isFullscreenInputActive, isChatSessionListCollapsed } = storeToRefs(chatStore);
+const { isChatBoxVisible, isFullscreenInputActive, isChatSessionListCollapsed, totalUnreadMsg } =
+  storeToRefs(chatStore);
 
 const { isGroupChat } = useGetters(["isGroupChat"]);
 const { conver } = useState({
-  conver: (state) => state.conversation.currentConversation
+  conver: (state) => state.conversation.currentConversation,
 });
 
 const handleClick = ({ props }, event) => {
@@ -109,15 +109,15 @@ const toggleCollapsed = () => {
   });
 };
 
-const updateUnread = (count) => {
+const unreadLabel = computed(() => {
+  const count = totalUnreadMsg.value;
   const isUnread = count > 0;
   const num = count > 99 ? "99+" : count;
-  unread.value = isUnread ? `${$t("chat.unread")}(${num})` : $t("chat.unread");
-};
+  return isUnread ? `${$t("chat.unread")}(${num})` : $t("chat.unread");
+});
 
 onActivated(() => {
   emitter.emit("updataScroll");
-  updateUnread(chatStore.totalUnreadMsg);
   store.commit("toggleList", "whole");
 });
 
@@ -128,8 +128,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {});
-
-watch(() => chatStore.totalUnreadMsg, updateUnread);
 
 watch(isChatBoxVisible, (val) => {
   val && useDragHandler(chatRef.value);
