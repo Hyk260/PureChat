@@ -1,45 +1,50 @@
 <template>
-  <div class="sidebar">
-    <div>
-      <div class="touxiang">
-        <UserAvatar type="self" isdot shape="square" @click="openUploadAvatarDialog" />
+  <div class="sidebar-container">
+    <div class="sidebar-content">
+      <div class="avatar-container">
+        <UserAvatar type="self" isdot shape="square" @click="handleAvatarClick" />
       </div>
-      <div
-        class="aside-item flex-c"
-        v-for="item in sidebarStore.filteredOutsideList"
-        :key="item.id"
-      >
+
+      <div class="sidebar-item" v-for="item in sidebarStore.filteredOutsideList" :key="item.id">
         <el-tooltip :content="item.title" placement="right">
           <div
-            @click="toggle(item)"
-            class="aside-list flex-c flex-col gap-3"
-            :class="{ current: router.currentRoute.value.path === item.path }"
+            @click="handleItemClick(item)"
+            class="sidebar-item-content"
+            :class="{ active: isActiveItem(item.path) }"
           >
-            <el-badge :value="chatStore.totalUnreadMsg" :hidden="isUnreadMsgHidden(item.id)">
-              <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" class="style-svg" />
-              <svg-icon v-else :local-icon="item.icon" class="style-svg" />
+            <el-badge :value="chatStore.totalUnreadMsg" :hidden="shouldHideUnreadBadge(item.id)">
+              <FontIcon
+                v-if="item?.type === 'el-icon'"
+                :iconName="item.icon"
+                class="sidebar-icon"
+              />
+              <SvgIcon v-else :local-icon="item.icon" class="sidebar-icon" />
             </el-badge>
           </div>
         </el-tooltip>
       </div>
     </div>
-    <div class="operation flex-c">
-      <el-icon class="icon-hover" @click="operation"><Operation /></el-icon>
+
+    <div class="sidebar-footer">
+      <el-tooltip content="帮助文档" placement="right">
+        <el-icon class="icon" @click="onOpenDocs"><QuestionFilled /></el-icon>
+      </el-tooltip>
+      <el-tooltip content="设置" placement="right">
+        <el-icon class="icon" @click="openSettings">
+          <Operation />
+        </el-icon>
+      </el-tooltip>
     </div>
-    <!-- 上传头像弹框 -->
-    <!-- <UploadAvatarDialog /> -->
-    <!-- 侧边栏拖拽排序弹框 -->
+
     <SidebarEditDialog />
     <CardPopover />
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useChatStore, useSidebarStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
-// import UploadAvatarDialog from "@/views/chatStudio/components/UploadAvatarDialog.vue";
 import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
 import CardPopover from "@/views/chatStudio/components/CardPopover.vue";
 
@@ -47,19 +52,25 @@ defineOptions({
   name: "LayAside",
 });
 
+const docs = __APP_INFO__.pkg.docs;
+
 const router = useRouter();
 const chatStore = useChatStore();
 const sidebarStore = useSidebarStore();
 
-function openUploadAvatarDialog() {
+const handleAvatarClick = () => {
   emitter.emit("setPopover");
-}
+};
 
-function operation() {
+const openSettings = () => {
   emitter.emit("openSetup", true);
-}
+};
 
-function toggle(item) {
+const onOpenDocs = () => {
+  window.open(docs, "_blank");
+};
+
+const handleItemClick = (item) => {
   if (item?.openType) {
     window.open(item?.url, "_blank");
   } else if (item?.mode === "other") {
@@ -67,16 +78,19 @@ function toggle(item) {
   } else {
     sidebarStore.taggleOueSide(item);
   }
-}
+};
 
-// 检查未读消息是否隐藏
-const isUnreadMsgHidden = (id) => {
+const isActiveItem = (path) => {
+  return router.currentRoute.value.path === path;
+};
+
+const shouldHideUnreadBadge = (id) => {
   return id !== "chat" || chatStore.totalUnreadMsg === 0;
 };
 </script>
 
 <style lang="scss" scoped>
-.sidebar {
+.sidebar-container {
   width: 68px;
   min-width: 68px;
   user-select: none;
@@ -88,59 +102,67 @@ const isUnreadMsgHidden = (id) => {
   border-radius: 0 7px 7px 0;
   box-shadow: 1px 0px 5px 0px rgb(0 0 0 / 10%);
   border-inline-end: 1px solid var(--color-border-default);
+  padding: 8px 0px 12px;
 }
-.aside-item {
-  .aside-list {
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar-container {
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-item {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+  &-content {
     width: 44px;
     height: 44px;
     border-radius: 4px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     &:hover {
       background-color: var(--icon-hover-color);
     }
-  }
-  .style-svg {
-    vertical-align: bottom;
-    color: rgb(96, 98, 102);
-    font-size: 1.25rem;
-  }
 
-  .current {
-    background: var(--color-message-active) !important;
-  }
-  .icon-title {
-    color: var(--color-text);
-    font-size: 12px;
-    @include text-ellipsis;
-  }
-}
-.touxiang {
-  display: flex;
-  justify-content: center;
-  padding: 10px 0;
-  .mask-out {
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    left: 14px;
-    bottom: 3px;
-    border-radius: 4px;
-    height: 14px;
-    width: 40px;
-    color: #fff;
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.4);
-    span {
-      display: inline-block;
-      transform: scale(0.5);
-      white-space: nowrap;
+    &.active {
+      background: var(--color-message-active) !important;
     }
   }
 }
-.operation {
-  height: 54px;
-  .el-icon {
+
+.sidebar-icon {
+  vertical-align: bottom;
+  color: rgb(96, 98, 102);
+  font-size: 1.25rem;
+}
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  .icon {
     cursor: pointer;
+    font-size: 16px;
+    color: rgb(96, 98, 102);
+
+    &:hover {
+      color: var(--color-primary);
+    }
   }
 }
 </style>

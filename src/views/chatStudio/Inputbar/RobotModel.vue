@@ -24,20 +24,20 @@
           <div class="list flex-bc w-full">
             <span>{{ item.displayName || item.id }}</span>
             <span class="box">
-              <el-tooltip v-if="item.vision" :content="ModelSelect.vision" placement="right-start">
+              <el-tooltip v-if="item.vision" :content="ModelSelect.vision" placement="right">
                 <svg-icon class="vision" local-icon="vision" />
               </el-tooltip>
               <el-tooltip
                 v-if="item.functionCall"
                 :content="ModelSelect.functionCall"
-                placement="right-start"
+                placement="right"
               >
                 <svg-icon class="function-call" local-icon="functionCall" />
               </el-tooltip>
               <el-tooltip
                 v-if="item.reasoning"
                 :content="ModelSelect.reasoning"
-                placement="right-start"
+                placement="right"
               >
                 <svg-icon class="reasoning" local-icon="reasoning" />
               </el-tooltip>

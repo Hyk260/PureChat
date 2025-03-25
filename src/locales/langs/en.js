@@ -1,4 +1,13 @@
 const local = {
+  button: {
+    add: "Add",
+    added: "Added",
+    collapse: "Collapse",
+    manage: "Manage",
+    select_model: "Select Model",
+    show_all: "Show All",
+    update_available: "Update Available",
+  },
   system: {
     updateTitle: "System Version Update Notification",
     updateContent:
@@ -30,10 +39,12 @@ const local = {
     addressBook: "Address Book",
     launch: "Launch",
     recover: "Recover",
+    web_search: "Enable web search",
+    upload_document: "Upload document file",
   },
   group: {
-    GroupDetails: "Group Details",
-    GroupNotice: "Group Notice",
+    groupDetails: "Group Details",
+    groupNotice: "Group Notice",
   },
   common: {
     emptyText: "No Data",

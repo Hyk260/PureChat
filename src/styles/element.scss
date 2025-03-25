@@ -2,10 +2,6 @@
   margin: 0 !important;
 }
 
-.el-popper__arrow {
-  display: none;
-}
-
 .el-drawer {
   -webkit-app-region: no-drag;
   border-radius: 6px 0 0 6px;
@@ -13,10 +9,4 @@
 
 .el-message {
   --el-message-padding: 8px 15px;
-}
-
-.popover-style {
-  width: 320px !important;
-  padding: 0 !important;
-  border: none !important;
 }

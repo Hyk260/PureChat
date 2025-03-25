@@ -62,7 +62,7 @@
       </div>
       <div class="form-item-props">
         <el-scrollbar>
-          <div class="h-160 px-10">
+          <div class="px-10">
             <div class="flex-bc my-5 h-32">
               <div>背景色</div>
               <div class="grid grid-cols-7 gap-5">

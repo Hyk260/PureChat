@@ -1,82 +1,80 @@
 <template>
   <div class="toolbar">
     <!-- 表情包 -->
-    <span
-      v-show="!isFullscreenInputActive && !isRobot(toAccount)"
-      :title="$t('chat.emoji')"
-      @click="sendEmojiClick"
-    >
-      <SvgIcon local-icon="iconxiaolian" />
-    </span>
+    <el-tooltip :content="$t('chat.emoji')" placement="top">
+      <el-button v-show="!isFullscreenInputActive && !isRobot(toAccount)" @click="sendEmojiClick">
+        <SvgIcon local-icon="iconxiaolian" />
+      </el-button>
+    </el-tooltip>
     <!-- 选模型 -->
-    <span title="模型" v-show="isRobot(toAccount)" @click="selectModel">
-      <SvgIcon local-icon="model" />
-    </span>
+    <el-tooltip :content="$t('button.select_model')" placement="top">
+      <el-button v-show="isRobot(toAccount)" @click="selectModel">
+        <SvgIcon local-icon="model" />
+      </el-button>
+    </el-tooltip>
     <!-- 图片 -->
-    <span
-      v-if="isShowImage(toAccount)"
-      :class="isVision ? '' : 'prohibit'"
-      :title="$t('chat.picture')"
-      @click="sendImageClick"
-    >
-      <SvgIcon local-icon="icontupian" />
-    </span>
+    <el-tooltip :content="$t('chat.picture')" placement="top">
+      <el-button
+        v-show="isShowImage(toAccount)"
+        :class="isVision ? '' : 'prohibit'"
+        @click="sendImageClick"
+      >
+        <SvgIcon local-icon="icontupian" />
+      </el-button>
+    </el-tooltip>
+    <!-- 联网 -->
+    <el-tooltip v-if="false" :content="$t('chat.web_search')" placement="top">
+      <el-button v-show="isRobot(toAccount)" @click="onEnableWebSearch">
+        <el-icon><Cherry /></el-icon>
+      </el-button>
+    </el-tooltip>
     <!-- 附件 -->
-    <span v-if="false" title="上传文档" @click="sendAnnexClick">
+    <span v-if="false" :title="$t('chat.upload_document')" @click="sendAnnexClick">
       <SvgIcon local-icon="paperClip" />
     </span>
     <!-- 文件 -->
-    <span v-show="!isRobot(toAccount)" :title="$t('chat.file')" @click="sendFileClick">
-      <SvgIcon local-icon="iconwenjianjia" />
-    </span>
+    <el-tooltip :content="$t('chat.file')" placement="top">
+      <el-button v-show="!isRobot(toAccount)" @click="sendFileClick">
+        <SvgIcon local-icon="iconwenjianjia" />
+      </el-button>
+    </el-tooltip>
     <!-- 截图 -->
-    <span
-      v-show="!isRobot(toAccount) && isElectron"
-      :title="$t('chat.screenshot')"
-      @click="clickCscreenshot"
-    >
-      <SvgIcon local-icon="iconjietu" />
-    </span>
+    <el-tooltip :content="$t('chat.screenshot')" placement="top">
+      <el-button v-show="!isRobot(toAccount) && isElectron" @click="clickCscreenshot">
+        <SvgIcon local-icon="iconjietu" />
+      </el-button>
+    </el-tooltip>
     <!-- 机器人配置 -->
-    <span v-if="isRobot(toAccount)" :title="$t('chat.configuration')" @click="openRobotBox">
-      <SvgIcon local-icon="robot" />
-    </span>
+    <el-tooltip :content="$t('chat.configuration')" placement="top">
+      <el-button v-show="isRobot(toAccount)" @click="openRobotBox">
+        <SvgIcon local-icon="robot" />
+      </el-button>
+    </el-tooltip>
     <!-- 插件 -->
-    <span
-      v-if="isFunctionCall && isShowPlugins(toAccount)"
-      :class="isFunctionCall ? '' : 'prohibit'"
-      @click="openPluginBox"
-    >
-      <SvgIcon local-icon="plugin" />
-    </span>
-    <!-- 窗口抖动 -->
-    <span
-      v-show="currentType === 'C2C' && isElectron"
-      :title="$t('chat.windowJitter')"
-      @click="onShake"
-    >
-      <el-icon><Iphone /></el-icon>
-    </span>
+    <el-tooltip content="选着插件" placement="top">
+      <el-button v-show="isFunctionCall && isShowPlugins(toAccount)" @click="openPluginBox">
+        <SvgIcon local-icon="plugin" />
+      </el-button>
+    </el-tooltip>
+    <!-- 滚动到底部 -->
+    <el-tooltip :content="$t('chat.scrollToTheBottom')" placement="top">
+      <el-button v-show="tobottom" class="chat-top animate-chat-slide-in" @click="onTobBottom">
+        <el-icon class="svg-left"><DArrowLeft /></el-icon>
+      </el-button>
+    </el-tooltip>
     <!-- 自定义消息 -->
     <span v-if="false" @click="customMessage">
       <el-icon><Sunny /></el-icon>
     </span>
-    <!-- 滚动到底部 -->
-    <span
-      :title="$t('chat.scrollToTheBottom')"
-      class="chat-top animate-chat-slide-in"
-      @click="onTobBottom"
-      v-show="tobottom"
+    <!-- 全屏 -->
+    <el-tooltip
+      :content="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
+      placement="top"
     >
-      <el-icon class="svg-left"><DArrowLeft /></el-icon>
-    </span>
-    <span
-      :title="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
-      class="ml-auto"
-      @click="toggleFullScreenInput"
-    >
-      <SvgIcon :local-icon="isFullscreenInputActive ? 'narrow' : 'enlarge'" />
-    </span>
+      <el-button v-show="tobottom" class="!ml-auto" @click="toggleFullScreenInput">
+        <SvgIcon :local-icon="isFullscreenInputActive ? 'narrow' : 'enlarge'" />
+      </el-button>
+    </el-tooltip>
     <input type="file" ref="imagePicker" :accept="imageExts" @change="sendImage" hidden />
     <input type="file" ref="annexPicker" :accept="supportExts" @change="sendFile" hidden />
     <input type="file" ref="filePicker" :accept="imageExts" @change="sendFile" hidden />
@@ -92,7 +90,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
-import { isRobot, screenshot } from "@/utils/chat/index";
+import { isRobot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
 import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { storeToRefs } from "pinia";
@@ -142,6 +140,8 @@ const isFunctionCall = computed(() => {
   }
 });
 
+const onEnableWebSearch = () => {};
+
 const sendEmojiClick = () => {
   setFlag(true);
 };
@@ -170,11 +170,7 @@ const sendFileClick = () => {
   $el.click();
 };
 // 截图
-const clickCscreenshot = () => {
-  screenshot(() => {});
-};
-
-const onShake = () => {};
+const clickCscreenshot = () => {};
 
 const toggleFullScreenInput = () => {
   chatStore.$patch((state) => {
@@ -248,9 +244,19 @@ emitter.on("onisbot", (state) => {
     cursor: not-allowed;
     opacity: 0.5;
   }
+  :deep(.el-button) {
+    font-size: 16px;
+    width: 40px;
+    height: 40px;
+    padding: 4px;
+    border-radius: 50%;
+    border: none;
+    background-color: unset;
+    margin-left: 0;
+  }
 
   & > span {
-    width: 42px;
+    width: 40px;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -262,9 +268,6 @@ emitter.on("onisbot", (state) => {
   }
   .svg-icon {
     cursor: pointer;
-    // &:hover {
-    //   color: var(--color-icon-hover) !important;
-    // }
   }
   .chat-top {
     .svg-left {

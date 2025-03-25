@@ -1,7 +1,7 @@
 <template>
   <el-drawer
     v-model="drawer"
-    :title="$t('group.GroupDetails')"
+    :title="$t('group.groupDetails')"
     size="360px"
     :modal="true"
     modal-class="group-drawer-modal"
@@ -40,7 +40,7 @@
       <!-- 群公告 -->
       <div class="group-notice">
         <div class="pb-10">
-          <span>{{ $t("group.GroupNotice") }}</span>
+          <span>{{ $t("group.groupNotice") }}</span>
           <FontIcon
             v-if="groupStore.isOwner"
             class="style-editPen icon-hover"

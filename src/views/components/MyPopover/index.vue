@@ -27,7 +27,7 @@
           target="_blank"
           :underline="false"
           type="primary"
-          class="justify-start"
+          class="!justify-start"
         >
           {{ getProvider() }}
         </el-link>
