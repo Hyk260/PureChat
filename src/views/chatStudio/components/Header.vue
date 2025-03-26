@@ -45,7 +45,6 @@
 import { computed, watch } from "vue";
 import { isRobot } from "@/utils/chat/index";
 import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
-import { useGetters } from "@/utils/hooks/useMapper";
 import { cloneDeep } from "lodash-es";
 import { modelValue, StoreKey } from "@/ai/constant";
 import { useBoolean } from "@/utils/hooks/index";
@@ -56,15 +55,12 @@ import emitter from "@/utils/mitt-bus";
 import store from "@/store/index";
 
 const [isBotToolsFlag, setBotToolsFlag] = useBoolean();
-const { currentType, toAccount, isGroupChat } = useGetters([
-  "currentType",
-  "toAccount",
-  "isGroupChat",
-]);
-
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
 
+const toAccount = computed(() => store.getters.toAccount);
+const currentType = computed(() => store.getters.currentType);
+const isGroupChat = computed(() => store.getters.isGroupChat);
 const chat = computed(() => {
   return store.state.conversation.currentConversation;
 });

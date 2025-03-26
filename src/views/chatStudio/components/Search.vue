@@ -18,13 +18,13 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, computed } from "vue";
 import { onKeyStroke, useEventListener } from "@vueuse/core";
-import { useGetters } from "@/utils/hooks/useMapper";
 import { showConfirmationBox } from "@/utils/message";
 import { Search } from "@element-plus/icons-vue";
 import { debounce, isEmpty } from "lodash-es";
 import { useGroupStore, useChatStore } from "@/stores/index";
+import store from "@/store/index";
 
 defineOptions({
   name: "Search",
@@ -35,7 +35,7 @@ const input = ref("");
 const filterData = ref([]);
 const chatStore = useChatStore();
 const groupStore = useGroupStore();
-const { tabList } = useGetters(["tabList"]);
+const tabList = computed(() => store.getters.tabList);
 
 const createGroup = async () => {
   const data = { message: "创建群聊" };

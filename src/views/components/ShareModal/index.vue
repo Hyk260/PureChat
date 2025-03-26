@@ -135,13 +135,13 @@ import {
   VITE_APP_NAME,
 } from "@/utils/hooks/useScreenshot";
 import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils/utils";
-import { useGetters } from "@/utils/hooks/useMapper";
 import { getModelType, usePromptStore, getAiAvatarUrl } from "@/ai/utils";
 import { fnStyleBack, onColor, back, backgColor } from "./utils";
 import { useChatStore } from "@/stores/index";
 import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import Header from "@/views/chatStudio/components/Header.vue";
 import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
@@ -152,7 +152,7 @@ const fieldType = ref(ImageType.Blob);
 
 const emit = defineEmits(["onClose"]);
 
-const { toAccount } = useGetters(["toAccount"]);
+const toAccount = computed(() => store.getters.toAccount);
 const [dialogVisible, setDialogVisible] = useBoolean();
 const { loading, onDownload } = useScreenshot();
 

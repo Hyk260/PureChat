@@ -130,7 +130,6 @@ import {
 } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/index";
 import { useBoolean } from "@/utils/hooks/index";
-import { useGetters } from "@/utils/hooks/useMapper";
 import { showConfirmationBox } from "@/utils/message";
 import { isFullStaffGroup } from "@/ai/utils";
 import { Markdown } from "@/utils/markdown/index";
@@ -156,8 +155,7 @@ const appStore = useAppStore();
 const [drawer, setDrawer] = useBoolean();
 const [loading, setLoading] = useBoolean();
 
-const { toAccount } = useGetters(["toAccount"]);
-
+const toAccount = computed(() => store.getters.toAccount);
 const currentConversation = computed(() => {
   return store.state.conversation.currentConversation;
 });

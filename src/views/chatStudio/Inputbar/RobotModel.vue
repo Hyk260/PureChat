@@ -53,17 +53,17 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useBoolean } from "@/utils/hooks/index";
-import emitter from "@/utils/mitt-bus";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { getModelType, getModelSvg, useAccessStore, formatSizeStrict } from "@/ai/utils";
 import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
-import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { useRobotStore } from "@/stores/modules/robot/index";
 import { ModelSelect } from "@/ai/resources";
+import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
 defineOptions({
   name: "RobotModel",
@@ -72,7 +72,7 @@ defineOptions({
 const robotIcon = ref("");
 const model = ref({});
 const [flag, setFlag] = useBoolean();
-const { toAccount } = useGetters(["toAccount"]);
+const toAccount = computed(() => store.getters.toAccount);
 
 function onClickOutside() {
   setFlag(false);

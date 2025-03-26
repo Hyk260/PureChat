@@ -56,7 +56,6 @@ import {
 } from "vue";
 import { bytesToSize, isRobot, fileImgToBase64Url } from "@/utils/chat/index";
 import { isMobile } from "@/utils/common";
-import { useGetters } from "@/utils/hooks/useMapper";
 import { Editor } from "@wangeditor/editor-for-vue";
 import "@wangeditor/editor/dist/css/style.css";
 import { debounce } from "lodash-es";
@@ -102,8 +101,9 @@ const {
   isFullscreenInputActive,
   replyMsgData,
 } = storeToRefs(chatStore);
-const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
 
+const toAccount = computed(() => store.getters.toAccount);
+const currentType = computed(() => store.getters.currentType);
 const currentConversation = computed(() => {
   return store.state.conversation.currentConversation;
 });

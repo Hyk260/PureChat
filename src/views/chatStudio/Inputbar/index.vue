@@ -94,7 +94,6 @@ import { ref, computed } from "vue";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
-import { useGetters } from "@/utils/hooks/useMapper";
 import { storeToRefs } from "pinia";
 import { useBoolean } from "@/utils/hooks/index";
 import { useChatStore, useRobotStore } from "@/stores/index";
@@ -122,8 +121,8 @@ const [flag, setFlag] = useBoolean();
 const robotStore = useRobotStore();
 const chatStore = useChatStore();
 const { isFullscreenInputActive } = storeToRefs(chatStore);
-const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-
+const toAccount = computed(() => store.getters.toAccount);
+const currentType = computed(() => store.getters.currentType);
 const currentConversation = computed(() => {
   return store.state.conversation.currentConversation;
 });
