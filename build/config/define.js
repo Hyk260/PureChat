@@ -15,8 +15,8 @@ import {
 /** 平台的名称、版本、运行所需的`node`版本、依赖、最后构建时间的类型提示 */
 export const __APP_INFO__ = {
   pkg: {
-    docs: process.env.NODE_ENV === "development" ? "http://localhost:5173" : docs,
-    // docs,
+    // docs: process.env.NODE_ENV === "development" ? "http://localhost:5173" : docs,
+    docs,
     giteeHomepage: "https://gitee.com/H260788/PureChat",
     bugs,
     name,
@@ -53,7 +53,9 @@ const chunkMap = {
   'dayjs': 'dayjs-vendor',
   'vue': 'vue-vendor',
   'vue-router': 'vue-router-vendor',
+  'vue-i18n': 'vue-i18n-vendor',
   'pinia': 'pinia-vendor',
+  'iconify': 'iconify-vendor',
 };
 
 export const manualChunks = (id) => {
