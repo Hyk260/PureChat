@@ -7,9 +7,8 @@
 </template>
 
 <script setup>
-import { useState } from "@/utils/hooks/useMapper";
-import { useChatStore } from "@/stores/index";
 import { computed } from "vue";
+import { useChatStore } from "@/stores/index";
 
 const { item, isRevoked } = defineProps({
   item: {
@@ -24,13 +23,9 @@ const { item, isRevoked } = defineProps({
 
 const chatStore = useChatStore();
 
-const { showCheckbox } = useState({
-  showCheckbox: (state) => state.conversation.showCheckbox,
-});
-
 const isShowCheck = computed(() => {
   return (
-    showCheckbox.value &&
+    chatStore.showCheckbox &&
     !isRevoked &&
     item.type !== "TIMGroupTipElem" &&
     item.payload?.description !== "dithering"

@@ -12,11 +12,12 @@
 
 <script setup>
 import { onMounted, computed } from "vue";
-import ReplyElem from "./ReplyElem.vue";
-import DynamicContent from "../components/DynamicContent.vue";
-import { useGetters } from "@/utils/hooks/useMapper";
 import { isRobot } from "@/utils/chat/index";
 import { Markdown, handleCopyClick } from "@/utils/markdown/index";
+import ReplyElem from "./ReplyElem.vue";
+import DynamicContent from "../components/DynamicContent.vue";
+import store from "@/store/index";
+
 import "@/styles/highlight.scss";
 
 const props = defineProps({
@@ -34,7 +35,7 @@ const props = defineProps({
   },
 });
 
-const { toAccount } = useGetters(["toAccount"]);
+const toAccount = computed(() => store.getters.toAccount);
 
 const isMsgType = computed(() => {
   const { message, msgType } = props;

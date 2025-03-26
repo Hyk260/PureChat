@@ -84,7 +84,7 @@ onUnmounted(() => {
     }
   }
   .left-list {
-    border-right: 1px solid #ebeef5;
+    border-right: 1px solid var(--color-border-default);
     width: 280px;
     height: 100%;
     .search-box {
@@ -92,7 +92,7 @@ onUnmounted(() => {
       height: 60px;
       display: flex;
       align-items: center;
-      border-bottom: 1px solid #ebeef5;
+      border-bottom: 1px solid var(--color-border-default);
     }
   }
   .right-list {
@@ -100,7 +100,7 @@ onUnmounted(() => {
     height: 100%;
     .head {
       height: 60px;
-      border-bottom: 1px solid #ebeef5;
+      border-bottom: 1px solid var(--color-border-default);
       display: flex;
       align-items: center;
     }

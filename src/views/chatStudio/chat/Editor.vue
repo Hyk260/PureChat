@@ -49,18 +49,17 @@ import {
   onBeforeUnmount,
   onDeactivated,
   onMounted,
+  computed,
   ref,
   shallowRef,
   watch,
 } from "vue";
 import { bytesToSize, isRobot, fileImgToBase64Url } from "@/utils/chat/index";
 import { isMobile } from "@/utils/common";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { Editor } from "@wangeditor/editor-for-vue";
 import "@wangeditor/editor/dist/css/style.css";
 import { debounce } from "lodash-es";
 import { storeToRefs } from "pinia";
-import { useStore } from "vuex";
 import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
 import { localStg } from "@/utils/storage";
@@ -84,6 +83,7 @@ import { getOperatingSystem } from "@/utils/common";
 import MentionModal from "../components/MentionModal.vue";
 import Inputbar from "../Inputbar/index.vue";
 import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
 const editorRef = shallowRef(); // 编辑器实例，必须用 shallowRef
 const valueHtml = ref(""); // 内容 HTML
@@ -94,12 +94,18 @@ const chatStore = useChatStore();
 const groupStore = useGroupStore();
 const [loading, setLoading] = useBoolean();
 const [disabled, setDisabled] = useBoolean();
-const { dispatch } = useStore();
-const { isChatBoxVisible, isMentionModalVisible, isFullscreenInputActive, replyMsgData } = storeToRefs(chatStore);
-const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-const { currentConversation, showCheckbox } = useState({
-  currentConversation: (state) => state.conversation.currentConversation,
-  showCheckbox: (state) => state.conversation.showCheckbox,
+const {
+  showCheckbox,
+  isChatBoxVisible,
+  isMentionModalVisible,
+  isFullscreenInputActive,
+  replyMsgData,
+} = storeToRefs(chatStore);
+
+const toAccount = computed(() => store.getters.toAccount);
+const currentType = computed(() => store.getters.currentType);
+const currentConversation = computed(() => {
+  return store.state.conversation.currentConversation;
 });
 
 const handleEditor = (editor, created = true) => {
@@ -325,7 +331,7 @@ const sendMessage = async () => {
   console.log("sendChatMessage:", message);
   clearInputInfo();
   message.map((t, i) => {
-    dispatch("sendSessionMessage", {
+    store.dispatch("sendSessionMessage", {
       payload: {
         convId: currentConversation.value.conversationID,
         message: t,
@@ -377,11 +383,11 @@ watch(isChatBoxVisible, () => {
 onActivated(() => {
   handleEditorKeyDown(isMentionModalVisible.value);
 });
-onDeactivated(() => {
-  offEmitter();
-});
 onMounted(() => {
   onEmitter();
+});
+onDeactivated(() => {
+  offEmitter();
 });
 onBeforeUnmount(() => {
   handleEditor(editorRef.value, false);

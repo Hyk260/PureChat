@@ -13,7 +13,7 @@
         @tab-click="handleClick"
       >
         <el-tab-pane :label="$t('chat.whole')" name="whole"></el-tab-pane>
-        <el-tab-pane :label="unread" name="unread"></el-tab-pane>
+        <el-tab-pane :label="unreadLabel" name="unread"></el-tab-pane>
         <el-tab-pane :label="$t('chat.mention')" name="mention"></el-tab-pane>
       </el-tabs>
       <div
@@ -56,16 +56,15 @@
 </template>
 
 <script setup>
-import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watch } from "vue";
+import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watch, computed } from "vue";
 import { $t } from "@/locales/index";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
-import { useStore } from "vuex";
 import { storeToRefs } from "pinia";
 import { isMacOS } from "@/utils/common";
 import { useAppStore, useChatStore } from "@/stores/index";
 import { useDragHandler } from "@/utils/hooks/useDragHandler";
-import emitter from "@/utils/mitt-bus";
 import { isMacDragStyle } from "@/utils/appEmit";
+import store from "@/store/index";
+import emitter from "@/utils/mitt-bus";
 
 import Chatwin from "./chat/Chatwin.vue";
 import ConversationList from "./chat/ConversationList.vue";
@@ -81,25 +80,20 @@ import networklink from "./components/networklink.vue";
 
 const isLocalMode = __LOCAL_MODE__;
 
-const unread = ref("");
 const chatRef = ref(null);
 const activeName = ref("whole");
-
 const appStore = useAppStore();
 const chatStore = useChatStore();
 
-const { commit } = useStore();
-const { isChatBoxVisible, isFullscreenInputActive, isChatSessionListCollapsed } =
+const { isChatBoxVisible, isFullscreenInputActive, isChatSessionListCollapsed, totalUnreadMsg } =
   storeToRefs(chatStore);
 
-const { isGroupChat } = useGetters(["isGroupChat"]);
-const { conver } = useState({
-  conver: (state) => state.conversation.currentConversation,
-});
+const isGroupChat = computed(() => store.getters.isGroupChat);
+const conver = computed(() => store.state.conversation.currentConversation);
 
 const handleClick = ({ props }, event) => {
   const { label, name } = props;
-  commit("toggleList", name);
+  store.commit("toggleList", name);
 };
 
 const fnDragCss = () => {
@@ -114,16 +108,16 @@ const toggleCollapsed = () => {
   });
 };
 
-const updateUnread = (count) => {
+const unreadLabel = computed(() => {
+  const count = totalUnreadMsg.value;
   const isUnread = count > 0;
   const num = count > 99 ? "99+" : count;
-  unread.value = isUnread ? `${$t("chat.unread")}(${num})` : $t("chat.unread");
-};
+  return isUnread ? `${$t("chat.unread")}(${num})` : $t("chat.unread");
+});
 
 onActivated(() => {
   emitter.emit("updataScroll");
-  updateUnread(chatStore.totalUnreadMsg);
-  commit("toggleList", "whole");
+  store.commit("toggleList", "whole");
 });
 
 onDeactivated(() => {});
@@ -133,8 +127,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {});
-
-watch(() => chatStore.totalUnreadMsg, updateUnread);
 
 watch(isChatBoxVisible, (val) => {
   val && useDragHandler(chatRef.value);

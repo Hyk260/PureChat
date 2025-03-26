@@ -46,32 +46,28 @@
 </template>
 
 <script setup>
-import { watch } from "vue";
+import { computed, watch } from "vue";
 import { isRobot } from "@/utils/chat/index";
 import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { cloneDeep } from "lodash-es";
 import { modelValue, StoreKey } from "@/ai/constant";
-import { useStore } from "vuex";
 import { useBoolean } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { isMacDragStyle } from "@/utils/appEmit";
-import { useRobotStore } from "@/stores/modules/robot/index";
+import { useRobotStore, useChatStore } from "@/stores/index";
 import Label from "@/views/chatStudio/components/Label.vue";
 import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
 const [isBotToolsFlag, setBotToolsFlag] = useBoolean();
-const { commit } = useStore();
-const { currentType, toAccount, isGroupChat } = useGetters([
-  "currentType",
-  "toAccount",
-  "isGroupChat",
-]);
-
+const chatStore = useChatStore();
 const robotStore = useRobotStore();
 
-const { chat } = useState({
-  chat: (state) => state.conversation.currentConversation,
+const toAccount = computed(() => store.getters.toAccount);
+const currentType = computed(() => store.getters.currentType);
+const isGroupChat = computed(() => store.getters.isGroupChat);
+const chat = computed(() => {
+  return store.state.conversation.currentConversation;
 });
 
 const updataModel = () => {
@@ -107,7 +103,7 @@ const chatNick = (type, chat) => {
 };
 
 const openShare = () => {
-  commit("setCheckboxState", true);
+  chatStore.$patch({ showCheckbox: true });
 };
 
 const openSetup = () => {

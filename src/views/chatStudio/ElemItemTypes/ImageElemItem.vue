@@ -4,7 +4,7 @@
       :src="url"
       @load="loadImg"
       :style="imgStyle"
-      :preview-src-list="showCheckbox ? null : imgUrlList"
+      :preview-src-list="chatStore.showCheckbox ? null : imgUrlList"
       :hide-on-click-modal="true"
       :initial-index="initialIndex"
       :infinite="false"
@@ -20,9 +20,10 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useState, useGetters } from "@/utils/hooks/useMapper";
 import { showIMPic } from "../utils/utils";
+import { useChatStore } from "@/stores/index";
 import { getImageSize } from "@/utils/common";
+import store from "@/store/index";
 
 const props = defineProps({
   message: {
@@ -36,9 +37,14 @@ const props = defineProps({
 });
 
 const imgStyle = ref({});
-const { imgUrlList } = useGetters(["imgUrlList"]);
-const { showCheckbox } = useState({
-  showCheckbox: (state) => state.conversation.showCheckbox,
+const chatStore = useChatStore();
+
+const imgUrlList = computed(() => store.getters.imgUrlList);
+
+const initialIndex = computed(() => {
+  return imgUrlList.value.findIndex((item) => {
+    return item == getImageProperties(0)?.url;
+  });
 });
 
 function getImageProperties(num = 0) {
@@ -54,12 +60,6 @@ function getImageProperties(num = 0) {
 }
 
 const url = getImageProperties()?.url;
-
-const initialIndex = computed(() => {
-  return imgUrlList.value.findIndex((item) => {
-    return item == getImageProperties(0)?.url;
-  });
-});
 
 async function initImageSize() {
   try {

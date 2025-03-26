@@ -18,8 +18,7 @@
 <script>
 import { mapState } from "pinia";
 import { isSelf } from "../utils/utils";
-import { useGroupStore } from "@/stores/modules/group/index";
-import store from "@/store/index";
+import { useGroupStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
 export default {
@@ -38,7 +37,7 @@ export default {
   computed: {
     ...mapState(useGroupStore, ["groupProfile"]),
     showCheckbox() {
-      return store.state.conversation.showCheckbox;
+      return useChatStore().showCheckbox;
     },
     isLeader() {
       return this.groupProfile?.ownerID === this.item.from;

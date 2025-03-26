@@ -123,10 +123,9 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from "vue";
+import { ref } from "vue";
 import { getModelType, useAccessStore, usePromptStore, getModelSvg } from "@/ai/utils";
 import { useBoolean } from "@/utils/hooks/index";
-import { useGetters } from "@/utils/hooks/useMapper";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
@@ -136,6 +135,7 @@ import { useRobotStore } from "@/stores/modules/robot/index";
 import DragPrompt from "./DragPrompt.vue";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
 defineOptions({
   name: "RobotOptions",
@@ -147,7 +147,7 @@ const maskData = ref([]);
 const inputRefs = ref({ token: null, openaiUrl: null });
 
 const [dialog, setDialog] = useBoolean();
-const { toAccount } = useGetters(["toAccount"]);
+const toAccount = computed(() => store.getters.toAccount);
 
 const handleClear = (data) => {
   console.log("clear", data);

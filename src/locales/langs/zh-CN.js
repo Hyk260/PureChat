@@ -1,4 +1,13 @@
 const local = {
+  button: {
+    add: "添加",
+    added: "已添加",
+    collapse: "收起",
+    manage: "管理",
+    select_model: "选择模型",
+    show_all: "显示全部",
+    update_available: "有可用更新",
+  },
   system: {
     updateTitle: "系统版本更新通知",
     updateContent: "检测到系统有新版本发布，是否立即刷新页面？",
@@ -29,10 +38,12 @@ const local = {
     addressBook: "通讯录",
     launch: "展开",
     recover: "收起",
+    web_search: "开启网络搜索",
+    upload_document: "上传文档",
   },
   group: {
-    GroupDetails: "群详情",
-    GroupNotice: "群公告",
+    groupDetails: "群详情",
+    groupNotice: "群公告",
   },
   common: {
     emptyText: "暂无数据",

@@ -26,11 +26,11 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useBoolean } from "@/utils/hooks/index";
-import { useState } from "@/utils/hooks/useMapper";
 import { isRobot } from "@/utils/chat/index";
 import { squareUrl } from "../utils/menu";
 import { chatName } from "../utils/utils";
 import { getAiAvatarUrl } from "@/ai/utils";
+import store from "@/store/index";
 
 defineOptions({
   name: "AddMemberPopup",
@@ -39,12 +39,9 @@ defineOptions({
 const memberValue = ref(null);
 const emits = defineEmits(["define"]);
 const [dialog, setDialog] = useBoolean();
-const { conversationList } = useState({
-  conversationList: (state) => state.conversation.conversationList,
-});
 
 const filterList = computed(() => {
-  return conversationList.value.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
+  return store.state.conversation.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
 });
 
 const onClickItem = (value) => {

@@ -8,8 +8,9 @@
 </template>
 
 <script setup>
-import { useState } from "@/utils/hooks/useMapper";
+import { computed } from "vue";
 import { useSidebarStore } from "@/stores/modules/sidebar/index";
+import store from "@/store/index";
 
 const props = defineProps({
   className: {
@@ -19,8 +20,9 @@ const props = defineProps({
 });
 
 const sidebarStore = useSidebarStore();
-const { activeTab } = useState({
-  activeTab: (state) => state.conversation.activeTab,
+
+const activeTab = computed(() => {
+  return store.state.conversation.activeTab;
 });
 
 function launch() {

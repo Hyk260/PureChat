@@ -3,11 +3,12 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import boxen from "boxen";
 import { getPackageSize } from "./utils";
+import { __APP_INFO__ } from '../config/define';
 
 dayjs.extend(duration);
 
 const welcomeMessage = gradient(["cyan", "magenta"]).multiline(
-  `您好! 欢迎使用 pure-chat 开源项目\n为您精心准备了文档\nhttps://docs.purechat.cn`
+  `您好! 欢迎使用 pure-chat 开源项目\n为您精心准备了文档\n${__APP_INFO__.pkg.docs}`
 );
 
 const boxenOptions = {

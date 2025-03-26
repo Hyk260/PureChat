@@ -1,4 +1,3 @@
-// import ScreenShot from "js-web-screen-shot";
 import { isEmpty } from "lodash-es";
 import { convertBlobUrlToDataUrl } from "@/utils/chat/index";
 
@@ -157,12 +156,3 @@ export const renderFileIcon = (fileType = "") => {
   // 返回图标路径
   return new URL(`../../assets/message/${type}.png`, import.meta.url).href;
 };
-
-export function screenshot(fn) {
-  // new ScreenShot({
-  //   enableWebRtc: true,
-  //   level: 999,
-  //   completeCallback: fn,
-  //   closeCallback: fn,
-  // });
-}
