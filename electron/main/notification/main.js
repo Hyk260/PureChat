@@ -1,8 +1,3 @@
-import { isWindows } from "../platform";
-import { fileURLToPath } from "node:url";
-import { join } from "node:path";
-import { is } from '../toolkit/utils'
-import { electronRendererUrl } from "../platform";
 import {
   app,
   ipcMain,
@@ -11,6 +6,10 @@ import {
   Notification as ElectronNotification,
 } from "electron";
 import { TypedEventEmitter } from "@tiny-libs/typed-event-emitter";
+import { fileURLToPath } from "node:url";
+import { join } from "node:path";
+import { is } from '../toolkit/utils'
+import { isWindows, electronRendererUrl } from "../platform";
 
 const NOTIFICATION_OFFSET = 6
 const NOTIFICATION_DURATION = 6000
