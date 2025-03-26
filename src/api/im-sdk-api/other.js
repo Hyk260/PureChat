@@ -38,10 +38,10 @@ export const revokeMsg = async (params) => {
 };
 // 消息免打扰
 export const setMessageRemindType = async (params) => {
-  const { userID, remindType, type } = params;
-  let parameter = null;
-  let isDisable = remindType == "AcceptNotNotify";
-  if (type == "C2C") {
+  const { toAccount: userID, messageRemindType: remindType, type } = params;
+  let parameter = {};
+  let isDisable = remindType === "AcceptNotNotify";
+  if (type === "C2C") {
     // 单人会话
     parameter = {
       userIDList: [userID],
@@ -78,8 +78,12 @@ export const getConversationProfile = async (params) => {
   }
 };
 // 消息已读上报
-export const setMessageRead = async (convId) => {
+export const setMessageRead = (params) => {
   if (__LOCAL_MODE__) return
+  const {
+    unreadCount = 0, conversationID: convId
+  } = params || {};
+  if (unreadCount === 0) return;
   let promise = tim.setMessageRead({ conversationID: convId });
   promise
     .then((res) => {

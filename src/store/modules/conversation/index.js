@@ -6,7 +6,6 @@ import {
   getMessageList,
   sendMessage,
   setMessageRead,
-  setMessageRemindType,
 } from "@/api/im-sdk-api/index";
 import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
@@ -194,7 +193,7 @@ const conversation = {
         console.log(state.historyMessageList, "获取缓存");
       }
       // 消息已读上报
-      dispatch("hasReadMessage", { convId, message: action });
+      setMessageRead(action);
     },
     async updateRobotMessageList({ state, commit }, action) {
       const { convId } = action;
@@ -237,23 +236,6 @@ const conversation = {
       if (code !== 0) return;
       commit("clearCurrentMessage");
     },
-    // 消息免打扰
-    async setMessageReminderType({ state }, action) {
-      const { type, toAccount, remindType } = action;
-      if (type === "@TIM#SYSTEM") return;
-      await setMessageRemindType({ userID: toAccount, remindType, type });
-    },
-    // 消息已读
-    hasReadMessage({ state }, payload) {
-      if (__LOCAL_MODE__) return;
-      const {
-        convId,
-        message: { unreadCount },
-      } = payload || {};
-      if (unreadCount === 0) return;
-      console.log("[chat] 消息已读 hasReadMessage:", payload);
-      setMessageRead(convId);
-    },
     // 会话消息发送
     async sendSessionMessage({ state, commit, dispatch }, action) {
       const { payload } = action;
@@ -289,9 +271,6 @@ const conversation = {
     },
   },
   getters: {
-    hasMsgList(state) {
-      return state.currentMessageList?.length > 0;
-    },
     toAccount(state) {
       const { currentConversation: conve } = state;
       if (!conve || !conve.conversationID) return "";
@@ -303,20 +282,6 @@ const conversation = {
           return ID.replace("GROUP", "");
         default:
           return ID;
-      }
-    },
-    tabList(state) {
-      switch (state.activeTab) {
-        case "unread":
-          return state.conversationList.filter((t) => t.unreadCount > 0);
-        case "mention":
-          return state.conversationList.filter(
-            (t) => t.groupAtInfoList.length > 0 && t.unreadCount > 0
-          );
-        case "groupChat":
-          return state.conversationList.filter((t) => t.type === "GROUP");
-        default:
-          return state.conversationList;
       }
     },
     currentType(state) {

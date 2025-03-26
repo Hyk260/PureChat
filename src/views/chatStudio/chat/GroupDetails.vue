@@ -127,6 +127,7 @@ import {
   deleteGroupMember,
   updateGroupProfile,
   GroupTypeMap,
+  setMessageRemindType
 } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/index";
 import { useBoolean } from "@/utils/hooks/index";
@@ -171,8 +172,7 @@ const beforeChange = () => {
 };
 
 const setNotify = () => {
-  const { type, toAccount, messageRemindType: remindType } = currentConversation.value;
-  store.dispatch("setMessageReminderType", { type, toAccount, remindType });
+  setMessageRemindType(currentConversation.value)
 };
 
 const openNamePopup = async () => {

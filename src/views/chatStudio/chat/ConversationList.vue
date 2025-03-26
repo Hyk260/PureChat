@@ -1,6 +1,6 @@
 <template>
   <el-scrollbar class="scrollbar-list">
-    <EmptyMessage className="no-msg" v-if="tabList.length == 0" />
+    <EmptyMessage className="no-msg" v-if="conversationList.length === 0" />
     <div
       v-for="item in searchForData"
       class="message-item"
@@ -54,8 +54,8 @@
       </div>
     </div>
     <!-- 右键菜单 -->
-    <contextmenu ref="contextmenu" :disabled="!isRight">
-      <contextmenu-item
+    <Contextmenu ref="contextmenu" :disabled="!isRight">
+      <ContextmenuItem
         v-for="item in contextMenuItems"
         :key="item.id"
         :class="item.class"
@@ -65,13 +65,13 @@
         <FontIcon v-if="item.icon" :iconName="item.icon" />
         <svg-icon v-else :local-icon="item.svgIcon" class="menu-svg" />
         <span> {{ item.text }}</span>
-      </contextmenu-item>
-    </contextmenu>
+      </ContextmenuItem>
+    </Contextmenu>
   </el-scrollbar>
 </template>
 
 <script setup>
-import { h, ref, computed } from "vue";
+import { h, watch, ref, computed } from "vue";
 import { chatSessionListData } from "../utils/menu";
 import { pinConversation } from "@/api/im-sdk-api/index";
 import { timeFormat } from "@/utils/timeFormat";
@@ -79,6 +79,7 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { chatName, html2Escape, formatContent } from "../utils/utils";
 import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
 import { localStg } from "@/utils/storage";
+import { setMessageRemindType } from "@/api/im-sdk-api/index";
 import { useGroupStore, useUserStore, useChatStore } from "@/stores/index";
 import EmptyMessage from "../components/EmptyMessage.vue";
 import Label from "../components/Label.vue";
@@ -95,14 +96,14 @@ const groupStore = useGroupStore();
 const userStore = useUserStore();
 const chatStore = useChatStore();
 
-const tabList = computed(() => store.getters.tabList);
-const activeTab = computed(() => store.state.conversation.activeTab);
 const chat = computed(() => store.state.conversation.currentConversation);
+const conversationList = computed(() => store.state.conversation.conversationList);
+
 const searchForData = computed(() => {
-  if (chatStore.searchConversationList.length && activeTab.value === "whole") {
+  if (chatStore.searchConversationList.length) {
     return chatStore.searchConversationList;
   } else {
-    return tabList.value;
+    return conversationList.value;
   }
 });
 
@@ -227,7 +228,7 @@ const handleConvListClick = (data) => {
     if (id == data?.conversationID) return;
   }
   chatStore.$patch({ replyMsgData: null, msgEdit: null });
-  chatStore.setForwardData({ type: "clear" }); 
+  chatStore.setForwardData({ type: "clear" });
   // 切换会话
   store.commit("updateSelectedConversation", data);
   // 获取会话列表 read
@@ -256,8 +257,7 @@ const handleClickMenuItem = (item) => {
 };
 // 消息免打扰
 const disableRecMsg = async (data) => {
-  const { type, toAccount, messageRemindType: remindType } = data;
-  store.dispatch("setMessageReminderType", { type, toAccount, remindType });
+  await setMessageRemindType(data);
 };
 // 删除会话
 const removeConv = async (data) => {

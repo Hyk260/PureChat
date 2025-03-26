@@ -1,7 +1,7 @@
 <template>
   <div :class="[className]">
     <el-empty :description="$t('common.emptyText')" :image-size="150" />
-    <div v-if="className == 'no-msg' && activeTab == 'whole'" class="flex-c launch" @click="launch">
+    <div v-if="className === 'no-msg' && chatStore.isWhole" class="flex-c launch" @click="launch">
       发起会话
     </div>
   </div>
@@ -9,7 +9,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { useSidebarStore } from "@/stores/modules/sidebar/index";
+import { useSidebarStore, useChatStore } from "@/stores/index";
 import store from "@/store/index";
 
 const props = defineProps({
@@ -19,17 +19,14 @@ const props = defineProps({
   },
 });
 
+const chatStore = useChatStore();
 const sidebarStore = useSidebarStore();
-
-const activeTab = computed(() => {
-  return store.state.conversation.activeTab;
-});
 
 function launch() {
   if (__LOCAL_MODE__) {
-    sidebarStore.taggleOueSide({ path: "/discover" });
+    sidebarStore.toggleOutside({ path: "/discover" });
   } else {
-    sidebarStore.taggleOueSide({ path: "/friends" });
+    sidebarStore.toggleOutside({ path: "/friends" });
   }
 }
 </script>

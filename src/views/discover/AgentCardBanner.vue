@@ -68,7 +68,7 @@ function toTant(item = cardData.value) {
   const id = getModelId(defaultBot) || VITE_OPENAI_ID;
   handleClose()
   robotStore.setPromptConfig(prompt[value]);
-  sidebarStore.taggleOueSide({ path: "/chat" });
+  sidebarStore.toggleOutside({ path: "/chat" });
   dispatch("addConversation", { convId: `${"C2C"}${id}` });
   setTimeout(() => {
     commit("addAiPresetPromptWords");

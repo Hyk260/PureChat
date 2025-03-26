@@ -64,7 +64,7 @@ const userInfo = ref({
 });
 
 const handleConversation = ({ id, type }) => {
-  sidebarStore.taggleOueSide({ path: "/chat" });
+  sidebarStore.toggleOutside({ path: "/chat" });
   store.dispatch("addConversation", { convId: `${type}${id}` });
   scrollToMessage(`message_${type}${id}`);
 };

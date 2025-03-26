@@ -4,6 +4,7 @@ import chat from "@/utils/IM/im-sdk/tim";
 import { C2C_ROBOT_COLLECT } from "@/ai/constant";
 import { TIM_PROXY } from "@/constants/index";
 import { scrollToDomPostion, setChatListCache } from "@/utils/chat/index";
+import { setMessageRead } from "@/api/im-sdk-api/index";
 import { localStg } from "@/utils/storage";
 import { useWindowFocus, useEventListener } from "@vueuse/core";
 import { ElNotification } from "element-plus";
@@ -21,6 +22,18 @@ const isFocused = useWindowFocus(); // 判断浏览器窗口是否在前台可�
 function isRobotId(data) {
   return C2C_ROBOT_COLLECT.includes(data?.[0].conversationID);
 }
+
+useEventListener(window, "online", () => {
+  useAppStore().setNetworkStatus(true);
+});
+
+useEventListener(window, "offline", () => {
+  useAppStore().setNetworkStatus(false);
+});
+
+useEventListener(window, "focus", () => {
+  setMessageRead(store.state.conversation?.currentConversation);
+});
 
 export class TIMProxy {
   constructor() {
@@ -61,17 +74,6 @@ export class TIMProxy {
     if (this.once) return;
     this.once = true;
     this.initListener(); // 监听SDK
-    useEventListener(window, "online", () => {
-      useAppStore().setNetworkStatus(true);
-    });
-    useEventListener(window, "offline", () => {
-      useAppStore().setNetworkStatus(false);
-    });
-    useEventListener(window, "focus", () => {
-      const conver = store.state.conversation?.currentConversation
-      if (!conver) return;
-      store.dispatch("hasReadMessage", { convId: conver?.conversationID, message: conver });
-    });
   }
   initListener() {
     if (__LOCAL_MODE__) chat.create()
@@ -297,7 +299,7 @@ export class TIMProxy {
   // 上报消息已读
   reportedMessageRead(data) {
     if (!isFocused.value) return;
-    store.dispatch("hasReadMessage", { convId: data?.[0].conversationID, message: data });
+    setMessageRead(data);
   }
   handleElNotification(message) {
     const { ID, nick, payload, conversationID } = message;

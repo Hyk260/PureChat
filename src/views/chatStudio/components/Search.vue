@@ -10,7 +10,7 @@
         clearable
       >
       </el-input>
-      <div v-if="!isLocalMode" class="header-search-add flex-c" @click="opendialog">
+      <div v-if="!isLocalMode" class="header-search-add flex-c" @click="openDialog">
         <FontIcon iconName="Plus" />
       </div>
     </div>
@@ -32,10 +32,9 @@ defineOptions({
 
 const isLocalMode = __LOCAL_MODE__;
 const input = ref("");
-const filterData = ref([]);
 const chatStore = useChatStore();
 const groupStore = useGroupStore();
-const tabList = computed(() => store.getters.tabList);
+const conversationList = computed(() => store.state.conversation.conversationList);
 
 const createGroup = async () => {
   const data = { message: "创建群聊" };
@@ -44,7 +43,7 @@ const createGroup = async () => {
   groupStore.handleCreateGroup({ groupName: result.value, positioning: true });
 };
 
-const opendialog = () => {
+const openDialog = () => {
   createGroup();
 };
 
@@ -68,8 +67,8 @@ const debounceSearch = debounce((key) => {
     return;
   }
   const str = key.toUpperCase().trim();
-  filterData.value = tabList.value.filter((item) => matchesFilter(item, str));
-  chatStore.$patch({ searchConversationList: filterData.value });
+  const filterData = conversationList.value.filter((item) => matchesFilter(item, str));
+  chatStore.$patch({ searchConversationList: filterData });
 }, 200);
 </script>
 
