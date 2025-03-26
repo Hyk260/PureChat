@@ -26,7 +26,6 @@ const conversation = {
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
     conversationList: [], // 会话列表数据
-    activeTab: "whole", // 全部 未读 提及我
   },
   mutations: {
     updateMessages(state, payload) {
@@ -137,7 +136,6 @@ const conversation = {
         currentConversation: null,
         currentMessageList: [],
         conversationList: [],
-        activeTab: "whole",
       });
       console.log("[chat] 清除历史记录 clearHistory:", state);
     },
@@ -162,10 +160,6 @@ const conversation = {
         isChatBoxVisible: convId !== "@TIM#SYSTEM"
       })
     },
-    //  切换列表 全部 未读 提及我
-    toggleList(state, action) {
-      state.activeTab = action;
-    },
     setConversationValue(state, { key, value }) {
       state[key] = value;
     },
@@ -177,9 +171,9 @@ const conversation = {
   },
   actions: {
     // 获取消息列表
-    async updateMessageList({ state, getters, commit, dispatch }, action) {
+    async updateMessageList({ state, getters, commit }, action) {
       const { conversationID: convId } = action;
-      const status = getters.toAccount && !getters.hasMsgList;
+      const status = getters.toAccount;
       // 当前会话有值
       if (timProxy.isSDKReady && status) {
         const { messageList, isCompleted } = await getMessageList({ convId });

@@ -51,7 +51,6 @@ const handleTabClick = (index, id) => {
   emitter.emit('handleActiveTab', id);
 };
 
-// 生命周期
 onMounted(async () => {
   await nextTick();
   const firstTab = tabRefs.value[0];

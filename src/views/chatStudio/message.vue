@@ -92,7 +92,6 @@ const conver = computed(() => store.state.conversation.currentConversation);
 
 const handleClick = ({ props }, event) => {
   const { label, name } = props;
-  store.commit("toggleList", name);
   // chatStore.$patch({ currentTab: name });
 };
 
@@ -117,7 +116,6 @@ const unreadLabel = computed(() => {
 
 onActivated(() => {
   emitter.emit("updataScroll");
-  store.commit("toggleList", "whole");
   chatStore.$patch({ currentTab: "whole" });
   isChatBoxVisible.value && useDragHandler(chatRef.value);
 });
