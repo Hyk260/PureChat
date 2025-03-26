@@ -32,14 +32,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, useTemplateRef } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, useTemplateRef } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import { useBoolean } from "@/utils/hooks/index";
-import { useState } from "@/utils/hooks/useMapper";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { useUserStore, useChatStore } from '@/stores/index';
 import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
 const { homepage } = __APP_INFO__.pkg;
 const cardRef = useTemplateRef("cardRef");
@@ -95,8 +95,8 @@ const dataStatistics = ref({
   topics: "话题",
 });
 
-const { conversationList } = useState({
-  conversationList: (state) => state.conversation.conversationList,
+const conversationList = computed(() => {
+  return store.state.conversation.conversationList;
 });
 
 function closeCard(item) {

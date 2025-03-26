@@ -57,7 +57,6 @@
 <script setup>
 import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watch, computed } from "vue";
 import { $t } from "@/locales/index";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { storeToRefs } from "pinia";
 import { isMacOS } from "@/utils/common";
 import { useAppStore, useChatStore } from "@/stores/index";
@@ -87,10 +86,8 @@ const chatStore = useChatStore();
 const { isChatBoxVisible, isFullscreenInputActive, isChatSessionListCollapsed, totalUnreadMsg } =
   storeToRefs(chatStore);
 
-const { isGroupChat } = useGetters(["isGroupChat"]);
-const { conver } = useState({
-  conver: (state) => state.conversation.currentConversation,
-});
+const isGroupChat = computed(() => store.getters.isGroupChat);
+const conver = computed(() => store.state.conversation.currentConversation);
 
 const handleClick = ({ props }, event) => {
   const { label, name } = props;

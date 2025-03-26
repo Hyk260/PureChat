@@ -71,13 +71,11 @@
 </template>
 
 <script setup>
-import { h, ref, watch, computed } from "vue";
+import { h, ref, computed } from "vue";
 import { chatSessionListData } from "../utils/menu";
-import { pinConversation, setMessageRead } from "@/api/im-sdk-api/index";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
+import { pinConversation } from "@/api/im-sdk-api/index";
 import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
-import { useStore } from "vuex";
 import { chatName, html2Escape, formatContent } from "../utils/utils";
 import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
 import { localStg } from "@/utils/storage";
@@ -85,6 +83,7 @@ import { useGroupStore, useUserStore, useChatStore } from "@/stores/index";
 import EmptyMessage from "../components/EmptyMessage.vue";
 import Label from "../components/Label.vue";
 import emitter from "@/utils/mitt-bus";
+import store from "@/store/index";
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop();
 
@@ -95,14 +94,10 @@ const contextMenuItemInfo = ref([]);
 const groupStore = useGroupStore();
 const userStore = useUserStore();
 const chatStore = useChatStore();
-const { dispatch, commit } = useStore();
-const { tabList } = useGetters(["tabList"]);
-const { activeTab, chat } = useState({
-  activeTab: (state) => state.conversation.activeTab,
-  conversationList: (state) => state.conversation.conversationList,
-  chat: (state) => state.conversation.currentConversation,
-});
 
+const tabList = computed(() => store.getters.tabList);
+const activeTab = computed(() => store.state.conversation.activeTab);
+const chat = computed(() => store.state.conversation.currentConversation);
 const searchForData = computed(() => {
   if (chatStore.searchConversationList.length && activeTab.value === "whole") {
     return chatStore.searchConversationList;
@@ -234,9 +229,9 @@ const handleConvListClick = (data) => {
   chatStore.$patch({ replyMsgData: null, msgEdit: null });
   chatStore.setForwardData({ type: "clear" }); 
   // 切换会话
-  commit("updateSelectedConversation", data);
+  store.commit("updateSelectedConversation", data);
   // 获取会话列表 read
-  dispatch("updateMessageList", data);
+  store.dispatch("updateMessageList", data);
   if (data?.type === "GROUP") {
     // 群详情信息
     groupStore.handleGroupProfile(data);
@@ -262,12 +257,12 @@ const handleClickMenuItem = (item) => {
 // 消息免打扰
 const disableRecMsg = async (data) => {
   const { type, toAccount, messageRemindType: remindType } = data;
-  dispatch("setMessageReminderType", { type, toAccount, remindType });
+  store.dispatch("setMessageReminderType", { type, toAccount, remindType });
 };
 // 删除会话
 const removeConv = async (data) => {
   const { conversationID: convId } = data;
-  dispatch("deleteSession", { convId });
+  store.dispatch("deleteSession", { convId });
 };
 // 置顶
 const pingConv = async (data) => {

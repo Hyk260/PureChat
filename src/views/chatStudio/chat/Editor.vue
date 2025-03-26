@@ -49,13 +49,14 @@ import {
   onBeforeUnmount,
   onDeactivated,
   onMounted,
+  computed,
   ref,
   shallowRef,
   watch,
 } from "vue";
 import { bytesToSize, isRobot, fileImgToBase64Url } from "@/utils/chat/index";
 import { isMobile } from "@/utils/common";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
+import { useGetters } from "@/utils/hooks/useMapper";
 import { Editor } from "@wangeditor/editor-for-vue";
 import "@wangeditor/editor/dist/css/style.css";
 import { debounce } from "lodash-es";
@@ -102,8 +103,9 @@ const {
   replyMsgData,
 } = storeToRefs(chatStore);
 const { toAccount, currentType } = useGetters(["toAccount", "currentType"]);
-const { currentConversation } = useState({
-  currentConversation: (state) => state.conversation.currentConversation,
+
+const currentConversation = computed(() => {
+  return store.state.conversation.currentConversation;
 });
 
 const handleEditor = (editor, created = true) => {
@@ -381,11 +383,11 @@ watch(isChatBoxVisible, () => {
 onActivated(() => {
   handleEditorKeyDown(isMentionModalVisible.value);
 });
-onDeactivated(() => {
-  offEmitter();
-});
 onMounted(() => {
   onEmitter();
+});
+onDeactivated(() => {
+  offEmitter();
 });
 onBeforeUnmount(() => {
   handleEditor(editorRef.value, false);

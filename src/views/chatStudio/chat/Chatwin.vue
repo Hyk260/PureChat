@@ -125,11 +125,11 @@ import {
   onMounted,
   onUnmounted,
   onUpdated,
+  computed,
 } from "vue";
 import { storeToRefs } from "pinia";
 import { useGroupStore, useAppStore, useChatStore } from "@/stores/index";
 import { showConfirmationBox } from "@/utils/message";
-import { useStore } from "vuex";
 import { avatarMenu, menuOptionsList } from "../utils/menu";
 import {
   handleCopyMsg,
@@ -143,19 +143,19 @@ import {
 import { deleteMessage, getMessageList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { download, isRobot } from "@/utils/chat/index";
-import { useGetters, useState } from "@/utils/hooks/useMapper";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { getTime } from "@/utils/common";
 import { debounce } from "lodash-es";
 import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
+import store from "@/store/index";
+import emitter from "@/utils/mitt-bus";
 import Checkbox from "../components/Checkbox.vue";
 import LoadMore from "../components/LoadMore.vue";
 import NameComponent from "../components/NameComponent.vue";
 import TimeDivider from "../components/TimeDivider.vue";
 import Stateful from "../components/Stateful.vue";
 import MenuList from "../components/MenuList.vue";
-import emitter from "@/utils/mitt-bus";
 import MyPopover from "@/views/components/MyPopover/index.vue";
 import MessageEditingBox from "../components/MessageEditingBox.vue";
 
@@ -170,18 +170,13 @@ const messageViewRef = ref(null);
 const groupStore = useGroupStore();
 const chatStore = useChatStore();
 const appStore = useAppStore();
-const { dispatch, commit } = useStore();
-const { showCheckbox, isChatBoxVisible, needScrollDown } = storeToRefs(chatStore);
 
-const { toAccount, isGroupChat, currentType } = useGetters([
-  "toAccount",
-  "isGroupChat",
-  "currentType",
-]);
-const { currentMessageList, currentConv } = useState({
-  currentMessageList: (state) => state.conversation.currentMessageList,
-  currentConv: (state) => state.conversation.currentConversation,
-});
+const { showCheckbox, isChatBoxVisible, needScrollDown } = storeToRefs(chatStore);
+const toAccount = computed(() => store.getters.toAccount);
+const isGroupChat = computed(() => store.getters.isGroupChat);
+const currentType = computed(() => store.getters.currentType);
+const currentMessageList = computed(() => store.state.conversation.currentMessageList);
+const currentConv = computed(() => store.state.conversation.currentConversation);
 
 const updateLoadMore = (item) => {
   nextTick(() => {
@@ -355,7 +350,7 @@ const getMoreMsg = async () => {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
       chatStore.$patch({ noMore: true });
     } else if (messageList.length) {
-      commit("loadMoreMessages", { convId, messages: messageList, msgId: messageList[0].ID });
+      store.commit("loadMoreMessages", { convId, messages: messageList, msgId: messageList[0].ID });
       chatStore.$patch({ needScrollDown: msglist.length });
     } else {
       chatStore.$patch({ noMore: true });
@@ -486,7 +481,7 @@ const handleAt = (data) => {
 };
 
 const handleSendMessage = (data) => {
-  dispatch("addConversation", { convId: `C2C${data.from}` });
+  store.dispatch("addConversation", { convId: `C2C${data.from}` });
 };
 
 const handleQuestion = async (item) => {
@@ -496,7 +491,7 @@ const handleQuestion = async (item) => {
     textMsg: item,
   });
   console.log("sendChatMessage:", message);
-  dispatch("sendSessionMessage", {
+  store.dispatch("sendSessionMessage", {
     payload: {
       convId: currentConv.value.conversationID,
       message: message[0],
@@ -534,7 +529,7 @@ const handleDeleteMsg = async (data) => {
     isConfirm.value = true;
     const { code } = await deleteMessage([data]);
     if (code !== 0) return;
-    commit("deleteMessage", { convId: data.conversationID, messageIdArray: [data.ID] });
+    store.commit("deleteMessage", { convId: data.conversationID, messageIdArray: [data.ID] });
   } catch (error) {
     console.log(error);
   }

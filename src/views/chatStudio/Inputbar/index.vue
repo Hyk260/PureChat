@@ -79,7 +79,7 @@
     </el-tooltip>
     <input type="file" ref="imagePicker" :accept="imageExts" @change="sendImage" hidden />
     <input type="file" ref="annexPicker" :accept="supportExts" @change="sendFile" hidden />
-    <input type="file" ref="filePicker" :accept="imageExts" @change="sendFile" hidden />
+    <input type="file" ref="filePicker" :accept="fileExts" @change="sendFile" hidden />
     <template v-if="isRobot(toAccount)">
       <RobotModel />
       <RobotPlugin />
@@ -98,7 +98,7 @@ import { useGetters } from "@/utils/hooks/useMapper";
 import { storeToRefs } from "pinia";
 import { useBoolean } from "@/utils/hooks/index";
 import { useChatStore, useRobotStore } from "@/stores/index";
-import { imageExts, textExts, documentExts } from "@/constants/index";
+import { imageExts, textExts, documentExts, audioExts, videoExts } from "@/constants/index";
 import EmotionPackBox from "./EmotionPackBox.vue";
 import RobotOptions from "./RobotOptions.vue";
 import RobotModel from "./RobotModel.vue";
@@ -116,6 +116,7 @@ const imagePicker = ref();
 const filePicker = ref();
 
 const supportExts = [...textExts, ...documentExts];
+const fileExts = [...textExts, ...documentExts, ...imageExts, ...audioExts, ...videoExts];
 
 const [flag, setFlag] = useBoolean();
 const robotStore = useRobotStore();
