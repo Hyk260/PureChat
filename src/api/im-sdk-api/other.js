@@ -95,7 +95,7 @@ export const setMessageRead = (params) => {
 };
 // 删除会话
 export const deleteConversation = async (params) => {
-  const { convId } = params;
+  const { convId = '' } = params;
   const {
     code,
     data: { conversationID: ID },

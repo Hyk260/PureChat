@@ -225,7 +225,7 @@ const handleConvListClick = (data) => {
   console.log("会话点击 handleConvListClick:", data);
   if (chat.value) {
     const { conversationID: id } = chat.value;
-    if (id == data?.conversationID) return;
+    if (id === data?.conversationID) return;
   }
   chatStore.$patch({ replyMsgData: null, msgEdit: null });
   chatStore.setForwardData({ type: "clear" });
@@ -261,8 +261,7 @@ const disableRecMsg = async (data) => {
 };
 // 删除会话
 const removeConv = async (data) => {
-  const { conversationID: convId } = data;
-  store.dispatch("deleteSession", { convId });
+  chatStore.deleteSession({ convId: data.conversationID });
 };
 // 置顶
 const pingConv = async (data) => {

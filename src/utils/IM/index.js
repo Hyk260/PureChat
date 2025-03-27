@@ -274,7 +274,7 @@ export class TIMProxy {
       return list.includes(t.payload.operationType);
     });
     if (groupSystemTips.length > 0) {
-      convId && store.dispatch("deleteSession", { convId });
+      useChatStore().deleteSession({ convId });
     }
   }
   // 消息更新

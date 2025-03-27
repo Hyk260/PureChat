@@ -5,7 +5,7 @@
       <!-- 搜索框 -->
       <Search v-show="!isChatSessionListCollapsed" />
       <!-- tabs切换 -->
-      <el-tabs
+      <!-- <el-tabs
         v-show="!isChatSessionListCollapsed"
         v-if="!isLocalMode && false"
         v-model="currentTab"
@@ -15,7 +15,7 @@
         <el-tab-pane :label="$t('chat.whole')" name="whole"></el-tab-pane>
         <el-tab-pane :label="unreadLabel" name="unread"></el-tab-pane>
         <el-tab-pane :label="$t('chat.mention')" name="mention"></el-tab-pane>
-      </el-tabs>
+      </el-tabs> -->
       <div class="scroll-container">
         <!-- 连接已断开 -->
         <!-- <networklink :show="!appStore.networkStatus" /> -->

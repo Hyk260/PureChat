@@ -1,7 +1,6 @@
 import { ROBOT_COLLECT } from "@/ai/constant";
 import { chatService } from "@/ai/index";
 import {
-  deleteConversation,
   getConversationProfile,
   getMessageList,
   sendMessage,
@@ -219,17 +218,6 @@ const conversation = {
       }
       emitter.emit("updataScroll");
     },
-    // 删除会话
-    async deleteSession({ commit }, action) {
-      const { convId } = action;
-      if (!convId) {
-        console.error("convId is required");
-        return;
-      }
-      const { code } = await deleteConversation({ convId });
-      if (code !== 0) return;
-      commit("clearCurrentMessage");
-    },
     // 会话消息发送
     async sendSessionMessage({ state, commit, dispatch }, action) {
       const { payload } = action;
@@ -283,16 +271,6 @@ const conversation = {
         return "";
       }
       return state.currentConversation.type;
-    },
-    totalUnreadCount(state) {
-      const result = state.conversationList.reduce((count, conversation) => {
-        // 当前会话不计算总未读
-        if (state.currentConversation.conversationID === conversation.conversationID) {
-          return count;
-        }
-        return count + conversation.unreadCount;
-      }, 0);
-      return result;
     },
     // 用于当前会话的图片预览
     imgUrlList(state) {

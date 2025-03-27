@@ -10,6 +10,7 @@ import {
 } from "@/api/im-sdk-api/index";
 import { sortMembersByRole, findGroupChat } from "@/utils/chat/index";
 import { SetupStoreId } from '../../plugins/index';
+import { useChatStore } from "@/stores/index";
 
 export const useGroupStore = defineStore(SetupStoreId.Group, {
   state: () => ({
@@ -57,7 +58,7 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
       const { groupId, convId } = payload;
       const { code } = await quitGroup({ groupId });
       if (code !== 0) return;
-      store.dispatch("deleteSession", { convId });
+      useChatStore().deleteSession({ convId });
     },
     // 创建群聊
     async handleCreateGroup(payload) {
@@ -78,7 +79,7 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
         console.error("解散群组 error:", code, groupID);
         return;
       }
-      store.dispatch("deleteSession", { convId });
+      useChatStore().deleteSession({ convId });
     },
     // 获取群详细资料
     async handleGroupProfile(payload) {
