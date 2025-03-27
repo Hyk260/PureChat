@@ -12,7 +12,7 @@
     <div class="reply-content__content">
       <DynamicContent :text="originalMsg.messageReply.messageAbstract" />
     </div>
-    <div class="reply-content__mask" @click="hanldeItemClick"></div>
+    <div class="reply-content__mask" @click="handleItemClick"></div>
   </div>
 </template>
 
@@ -36,7 +36,7 @@ const props = defineProps({
   },
 });
 
-const hanldeItemClick = async () => {
+const handleItemClick = async () => {
   const { messageReply } = props.originalMsg || {};
   if (!messageReply) return;
   const ref = messageReply.messageID;

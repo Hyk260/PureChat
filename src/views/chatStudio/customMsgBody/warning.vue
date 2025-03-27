@@ -24,7 +24,7 @@ const props = defineProps({
   },
 });
 function openRobotBox() {
-  emitter.emit("onRobotBox", { ApikeyFocus: true });
+  emitter.emit("onRobotBox", { ApiKeyFocus: true });
 }
 function jumpLink() {
   const url = getDoubt(props.payload);

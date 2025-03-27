@@ -68,7 +68,7 @@ export const dragControllerDivHorizontal = () => {
   };
 };
 
-export const validatelastMessage = (list) => {
+export const validateLastMessage = (list) => {
   return (
     list
       .slice()

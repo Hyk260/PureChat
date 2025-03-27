@@ -306,10 +306,10 @@ function toUrl(url) {
 }
 
 emitter.on("onRobotBox", (data) => {
-  const { ApikeyFocus = false } = data || {};
+  const { ApiKeyFocus = false } = data || {};
   setDialog(true);
   initModel();
-  if (ApikeyFocus) {
+  if (ApiKeyFocus) {
     setTimeout(() => {
       const tokenRef = inputRefs.value["token"];
       tokenRef && tokenRef.focus();

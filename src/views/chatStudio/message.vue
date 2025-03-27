@@ -1,7 +1,7 @@
 <template>
   <div class="conv-chat flex w-full">
     <!-- 聊天列表 -->
-    <div class="message-left" :class="{ 'style-layoutkit': isChatSessionListCollapsed }">
+    <div class="message-left" :class="{ 'style-layout': isChatSessionListCollapsed }">
       <!-- 搜索框 -->
       <Search v-show="!isChatSessionListCollapsed" />
       <!-- tabs切换 -->
@@ -151,7 +151,7 @@ watch(isChatBoxVisible, (val) => {
   border-right: 1px solid var(--color-border-default);
   // transition: width 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
-.style-layoutkit {
+.style-layout {
   border-right: 0px;
   width: 0px !important;
   min-width: 0px !important;
