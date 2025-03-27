@@ -227,12 +227,12 @@ const handleConvListClick = (data) => {
     const { conversationID: id } = chat.value;
     if (id === data?.conversationID) return;
   }
-  chatStore.$patch({ replyMsgData: null, msgEdit: null });
-  chatStore.setForwardData({ type: "clear" });
   // 切换会话
   store.commit("updateSelectedConversation", data);
   // 获取会话列表 read
-  store.dispatch("updateMessageList", data);
+  chatStore.updateMessageList(data);
+  chatStore.$patch({ replyMsgData: null, msgEdit: null });
+  chatStore.setForwardData({ type: "clear" });
   if (data?.type === "GROUP") {
     // 群详情信息
     groupStore.handleGroupProfile(data);

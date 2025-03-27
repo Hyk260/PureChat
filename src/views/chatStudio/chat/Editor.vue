@@ -331,12 +331,9 @@ const sendMessage = async () => {
   console.log("sendChatMessage:", message);
   clearInputInfo();
   message.map((t, i) => {
-    store.dispatch("sendSessionMessage", {
-      payload: {
-        convId: currentConversation.value.conversationID,
-        message: t,
-        last: message.length - 1 === i,
-      },
+    chatStore.sendSessionMessage({
+      message: t,
+      last: message.length - 1 === i,
     });
   });
 };

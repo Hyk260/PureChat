@@ -187,12 +187,7 @@ function customMessage() {
     convType: currentType.value,
     customType: "loading",
   });
-  store.dispatch("sendSessionMessage", {
-    payload: {
-      convId: currentConversation.value.conversationID,
-      message,
-    },
-  });
+  chatStore.sendSessionMessage({ message });
 }
 
 function sendImage(e) {

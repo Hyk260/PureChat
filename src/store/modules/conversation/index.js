@@ -1,10 +1,5 @@
-import { ROBOT_COLLECT } from "@/ai/constant";
-import { chatService } from "@/ai/index";
 import {
-  getConversationProfile,
   getMessageList,
-  sendMessage,
-  setMessageRead,
 } from "@/api/im-sdk-api/index";
 import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
@@ -14,8 +9,7 @@ import {
 } from "@/utils/chat/index";
 import { useGroupStore, useChatStore } from "@/stores/index";
 import { cloneDeep } from "lodash-es";
-import { timProxy } from "@/utils/IM/index";
-import { createAiPromptMsg, getModelType } from "@/ai/utils";
+import { createAiPromptMsg } from "@/ai/utils";
 import { MessageModel } from "@/database/models/message";
 import emitter from "@/utils/mitt-bus";
 
@@ -169,25 +163,6 @@ const conversation = {
     },
   },
   actions: {
-    // 获取消息列表
-    async updateMessageList({ state, getters, commit }, action) {
-      const { conversationID: convId } = action;
-      const status = getters.toAccount;
-      // 当前会话有值
-      if (timProxy.isSDKReady && status) {
-        const { messageList, isCompleted } = await getMessageList({ convId });
-        commit("addMessage", {
-          convId,
-          isDone: isCompleted,
-          message: addTimeDivider(messageList).reverse(), // 添加时间
-        });
-        emitter.emit("updataScroll");
-      } else {
-        console.log(state.historyMessageList, "获取缓存");
-      }
-      // 消息已读上报
-      setMessageRead(action);
-    },
     async updateRobotMessageList({ state, commit }, action) {
       const { convId } = action;
       const { messageList } = await getMessageList({ convId });
@@ -202,54 +177,6 @@ const conversation = {
         message: cloneDeep(message[0]),
       });
       emitter.emit("updataScroll", "robot");
-    },
-    // 新增会话列表
-    async addConversation({ commit, dispatch }, action) {
-      const { convId } = action;
-      const { conversation: data } = await getConversationProfile({ convId });
-      // 切换会话
-      commit("updateSelectedConversation", data);
-      // 获取会话列表
-      dispatch("updateMessageList", data);
-      // group
-      if (data?.type === "GROUP") {
-        useGroupStore().handleGroupProfile(data);
-        useGroupStore().handleGroupMemberList({ groupID: data.groupProfile.groupID });
-      }
-      emitter.emit("updataScroll");
-    },
-    // 会话消息发送
-    async sendSessionMessage({ state, commit, dispatch }, action) {
-      const { payload } = action;
-      const { convId, message, last = true } = payload;
-      // 消息上屏 预加载
-      commit("updateMessages", { convId, message });
-      emitter.emit("updataScroll");
-      // 发送消息
-      const { code, message: result } = await sendMessage(message);
-      if (code === 0) {
-        dispatch("sendMsgSuccessCallback", { convId, message: result, last });
-      } else {
-        console.log("发送失败", code, result);
-      }
-    },
-    // 消息发送成功回调
-    async sendMsgSuccessCallback({ state, commit }, action) {
-      console.log("消息发送成功 sendMsgSuccessCallback", action);
-      const { convId, message, last } = action;
-      commit("updateMessages", { convId, message });
-      emitter.emit("updataScroll");
-
-      if (!ROBOT_COLLECT.includes(message?.to)) return;
-      if (last) {
-        setTimeout(async () => {
-          await chatService({
-            chat: message,
-            provider: getModelType(message.to),
-            messages: state.currentMessageList ?? [message],
-          });
-        }, 50);
-      }
     },
   },
   getters: {

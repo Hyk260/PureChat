@@ -72,7 +72,7 @@ function cardClick(item) {
 
 function providerClick(item) {
   sidebarStore.toggleOutside({ path: "/chat" });
-  store.dispatch("addConversation", { convId: `${"C2C"}${item.userID}` });
+  chatStore.addConversation({ convId: `${"C2C"}${item.userID}` })
 }
 </script>
 

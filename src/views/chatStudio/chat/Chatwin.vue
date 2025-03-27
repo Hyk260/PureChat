@@ -481,7 +481,7 @@ const handleAt = (data) => {
 };
 
 const handleSendMessage = (data) => {
-  store.dispatch("addConversation", { convId: `C2C${data.from}` });
+  chatStore.addConversation({ convId: `C2C${data.from}` })
 };
 
 const handleQuestion = async (item) => {
@@ -491,12 +491,7 @@ const handleQuestion = async (item) => {
     textMsg: item,
   });
   console.log("sendChatMessage:", message);
-  store.dispatch("sendSessionMessage", {
-    payload: {
-      convId: currentConv.value.conversationID,
-      message: message[0],
-    },
-  });
+  chatStore.sendSessionMessage({ message: message[0] });
 };
 // 另存为
 const handleSave = ({ payload }) => {

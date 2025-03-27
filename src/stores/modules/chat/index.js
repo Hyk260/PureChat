@@ -1,10 +1,21 @@
 import { defineStore } from 'pinia';
-import { getUnreadMsg, deleteConversation } from "@/api/im-sdk-api/index";
+import { getUnreadMsg, deleteConversation, sendMessage, getMessageList, setMessageRead, getConversationProfile } from "@/api/im-sdk-api/index";
 import { SetupStoreId } from '../../plugins/index';
 import { EMOJI_RECENTLY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
-import { checkTextNotEmpty } from "@/utils/chat/index";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
+import { ROBOT_COLLECT } from "@/ai/constant";
+import { chatService } from "@/ai/index";
+import { timProxy } from "@/utils/IM/index";
+import { createAiPromptMsg, getModelType } from "@/ai/utils";
+import {
+  addTimeDivider,
+  checkTextNotEmpty,
+  getBaseTime,
+  getChatListCache,
+} from "@/utils/chat/index";
+import { useGroupStore } from "../group/index";
+import emitter from "@/utils/mitt-bus";
 import store from '@/store/index';
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
@@ -32,12 +43,12 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
   }),
   getters: {
     isWhole() {
-      return this.currentTab === 'whole'; 
+      return this.currentTab === 'whole';
     },
     hasMsgList() {
       return this.currentMessageList?.length > 0;
     },
-    isFwdDataMaxed () {
+    isFwdDataMaxed() {
       return this.forwardData.size >= MULTIPLE_CHOICE_MAX;
     },
     currentType() {
@@ -56,7 +67,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       return reversedUrls;
     },
     toAccount() {
-     const ID = this.currentConversation?.conversationID;
+      const ID = this.currentConversation?.conversationID;
       if (!ID) return "";
       return ID.replace(/^(C2C|GROUP)/, "");
     },
@@ -75,6 +86,65 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
   },
   actions: {
+    async sendSessionMessage(data) {
+      const { message, last = true } = data;
+      const convId = message.conversationID || "";
+      if (!convId) {
+        console.error("convId is required");
+        return;
+      }
+      // 消息上屏 预加载
+      store.commit("updateMessages", { convId, message });
+      emitter.emit("updataScroll");
+      // 发送消息
+      const { code, message: result } = await sendMessage(message);
+      if (code === 0) {
+        this.sendMsgSuccessCallback({ convId, message: result, last });
+      } else {
+        console.log("发送失败", code, result);
+      }
+    },
+    async sendMsgSuccessCallback(data) {
+      console.log("消息发送成功 sendMsgSuccessCallback", data);
+      const { convId, message, last } = data;
+      store.commit("updateMessages", { convId, message });
+      emitter.emit("updataScroll");
+      if (!ROBOT_COLLECT.includes(message?.to)) return;
+      if (last) {
+        setTimeout(async () => {
+          await chatService({
+            chat: message,
+            provider: getModelType(message.to),
+            messages: store.state.conversation?.currentMessageList ?? [message],
+          });
+        }, 50);
+      }
+    },
+    async updateMessageList(data) {
+      const { conversationID: convId } = data;
+      // 当前会话有值
+      if (!timProxy.isSDKReady) return
+      const { messageList, isCompleted } = await getMessageList({ convId });
+      store.commit("addMessage", {
+        convId,
+        isDone: isCompleted,
+        message: addTimeDivider(messageList).reverse(), // 添加时间
+      });
+      emitter.emit("updataScroll");
+      // 消息已读上报
+      setMessageRead(data);
+    },
+    async addConversation(action) {
+      const { convId } = action;
+      const { conversation: data } = await getConversationProfile({ convId });
+      store.commit("updateSelectedConversation", data);
+      this.updateMessageList(data)
+      if (data?.type === "GROUP") {
+        useGroupStore().handleGroupProfile(data);
+        useGroupStore().handleGroupMemberList({ groupID: data.groupProfile.groupID });
+      }
+      emitter.emit("updataScroll");
+    },
     clearCurrentMessage() {
       this.isChatBoxVisible = false;
       this.currentConversation = null;

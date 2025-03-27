@@ -64,6 +64,7 @@ import { getAiAvatarUrl } from "@/ai/utils";
 import { squareUrl } from "../../chatStudio/utils/menu";
 import { getGender } from "@/utils/common";
 import { getValueByKey, prefix } from "@/ai/utils";
+import { useChatStore } from "@/stores/index";
 import Label from "@/views/chatStudio/components/Label.vue";
 import store from "@/store/index";
 import emitter from "@/utils/mitt-bus";
@@ -75,6 +76,7 @@ const cardData = ref(null);
 const userProfile = ref(null);
 
 const [card, setCard] = useState();
+const chatStore = useChatStore()
 
 const closeModal = () => {
   userProfile.value = null;
@@ -101,7 +103,7 @@ const getHomepage = (data = userProfile.value.profileCustomField) => {
 const define = () => {
   closeModal();
   if (cardData.value?.conversationType === "C2C") return;
-  store.dispatch("addConversation", { convId: `C2C${cardData.value.from}` });
+  chatStore.addConversation({ convId: `C2C${cardData.value.from}` })
 };
 
 onClickOutside(cardRef, () => {
