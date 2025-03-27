@@ -8,7 +8,7 @@
  *    - Ref<any>: 包含当前状态的响应式引用，状态值通过 `value` 属性访问。
  *    - function: 更新当前状态的函数，可以接受新的状态值或基于当前状态的更新函数。
  */
-export function useState(initial) {
+export function useState(initial = false) {
   const state = ref(typeof initial === 'function' ? initial() : initial)
 
   const setState = (newValue) => {

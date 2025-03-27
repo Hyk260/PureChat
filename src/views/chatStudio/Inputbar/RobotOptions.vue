@@ -125,7 +125,7 @@
 <script setup>
 import { ref } from "vue";
 import { getModelType, useAccessStore, usePromptStore, getModelSvg } from "@/ai/utils";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
@@ -146,7 +146,7 @@ const modelData = ref(null);
 const maskData = ref([]);
 const inputRefs = ref({ token: null, openaiUrl: null });
 
-const [dialog, setDialog] = useBoolean();
+const [dialog, setDialog] = useState();
 const toAccount = computed(() => store.getters.toAccount);
 
 const handleClear = (data) => {

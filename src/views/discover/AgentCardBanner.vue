@@ -37,7 +37,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { Markdown, handleCopyClick } from "@/utils/markdown/index";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { useStore } from "vuex";
 import { StoreKey, VITE_OPENAI_ID, ModelProvider } from "@/ai/constant";
@@ -49,7 +49,7 @@ const cardData = ref({});
 const sidebarStore = useSidebarStore();
 const robotStore = useRobotStore()
 const { commit, dispatch } = useStore();
-const [dialog, setDialog] = useBoolean();
+const [dialog, setDialog] = useState();
 
 function toTant(item = cardData.value) {
   const { identifier, meta } = item;

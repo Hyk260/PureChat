@@ -34,7 +34,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, useTemplateRef } from "vue";
 import { onClickOutside } from "@vueuse/core";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { useUserStore, useChatStore } from '@/stores/index';
@@ -48,7 +48,7 @@ const profile = ref({});
 const market = ref([]);
 const userStore = useUserStore()
 const chatStore = useChatStore();
-const [card, setCard] = useBoolean();
+const [card, setCard] = useState();
 
 const menuItems = [
   {

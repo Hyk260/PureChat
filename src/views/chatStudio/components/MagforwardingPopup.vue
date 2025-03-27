@@ -35,13 +35,13 @@
 
 <script>
 import { mapState } from "vuex";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { chatName } from "../utils/utils";
 import { squareUrl } from "../utils/menu";
 import { isRobot } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
 
-const [dialog, setDialog] = useBoolean();
+const [dialog, setDialog] = useState();
 
 export default {
   name: "MagforwardingPopup",

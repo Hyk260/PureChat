@@ -95,7 +95,7 @@ import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
 import { storeToRefs } from "pinia";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { useChatStore, useRobotStore } from "@/stores/index";
 import { imageExts, textExts, documentExts, audioExts, videoExts } from "@/constants/index";
 import EmotionPackBox from "./EmotionPackBox.vue";
@@ -117,7 +117,7 @@ const filePicker = ref();
 const supportExts = [...textExts, ...documentExts];
 const fileExts = [...textExts, ...documentExts, ...imageExts, ...audioExts, ...videoExts];
 
-const [flag, setFlag] = useBoolean();
+const [flag, setFlag] = useState();
 const robotStore = useRobotStore();
 const chatStore = useChatStore();
 const { isFullscreenInputActive } = storeToRefs(chatStore);

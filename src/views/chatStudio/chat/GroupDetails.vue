@@ -130,7 +130,7 @@ import {
   setMessageRemindType
 } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/index";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { showConfirmationBox } from "@/utils/message";
 import { isFullStaffGroup } from "@/ai/utils";
 import { Markdown } from "@/utils/markdown/index";
@@ -153,8 +153,8 @@ const AddMemberRef = ref();
 const groupStore = useGroupStore();
 const userStore = useUserStore();
 const appStore = useAppStore();
-const [drawer, setDrawer] = useBoolean();
-const [loading, setLoading] = useBoolean();
+const [drawer, setDrawer] = useState();
+const [loading, setLoading] = useState();
 
 const toAccount = computed(() => store.getters.toAccount);
 const currentConversation = computed(() => {

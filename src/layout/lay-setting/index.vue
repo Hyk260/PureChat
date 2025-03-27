@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 import { ref } from "vue";
 import { list } from "./enums";
@@ -17,7 +17,7 @@ import List from "./list.vue";
 
 const listRef = ref();
 const item = ref({});
-const [drawer, setDrawer] = useBoolean();
+const [drawer, setDrawer] = useState();
 
 function setItem() {
   listRef.value.onClick(list.value[0])

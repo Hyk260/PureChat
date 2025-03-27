@@ -50,7 +50,7 @@
 <script setup>
 import { localStg } from "@/utils/storage";
 import { downloadMergerMessage } from "@/api/im-sdk-api/index";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 import { timeFormat } from "@/utils/timeFormat";
 import { ref } from "vue";
@@ -59,7 +59,7 @@ import { loadMsgModule, msgOne, msgType } from "../utils/utils";
 import { TIM_PROXY } from "@/constants/index";
 import { getAiAvatarUrl } from "@/ai/utils";
 
-const [dialogVisible, setDialogVisible] = useBoolean();
+const [dialogVisible, setDialogVisible] = useState();
 const mergValue = ref({});
 
 const isOwn = (item) => {

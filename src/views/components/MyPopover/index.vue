@@ -57,7 +57,7 @@
 <script setup>
 import { getUserProfile } from "@/api/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { onClickOutside } from "@vueuse/core";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { getAiAvatarUrl } from "@/ai/utils";
@@ -74,7 +74,7 @@ const top = ref("");
 const cardData = ref(null);
 const userProfile = ref(null);
 
-const [card, setCard] = useBoolean();
+const [card, setCard] = useState();
 
 const closeModal = () => {
   userProfile.value = null;

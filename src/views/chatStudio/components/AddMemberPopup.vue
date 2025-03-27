@@ -25,7 +25,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { isRobot } from "@/utils/chat/index";
 import { squareUrl } from "../utils/menu";
 import { chatName } from "../utils/utils";
@@ -38,7 +38,7 @@ defineOptions({
 
 const memberValue = ref(null);
 const emits = defineEmits(["define"]);
-const [dialog, setDialog] = useBoolean();
+const [dialog, setDialog] = useState();
 
 const filterList = computed(() => {
   return store.state.conversation.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
