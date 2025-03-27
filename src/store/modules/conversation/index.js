@@ -1,13 +1,10 @@
-import {
-  getMessageList,
-} from "@/api/im-sdk-api/index";
 import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
   addTimeDivider,
   getBaseTime,
   getChatListCache,
 } from "@/utils/chat/index";
-import { useGroupStore, useChatStore } from "@/stores/index";
+import { useChatStore } from "@/stores/index";
 import { cloneDeep } from "lodash-es";
 import { createAiPromptMsg } from "@/ai/utils";
 import { MessageModel } from "@/database/models/message";
@@ -48,7 +45,6 @@ const conversation = {
       // 当前会有列表有值
       if (state.currentConversation.conversationID === convId) {
         state.currentMessageList = newMessageList;
-        // state.needScrollDown = 0;
       }
       // 更新历史消息
       state.historyMessageList.set(convId, newMessageList);
@@ -114,7 +110,7 @@ const conversation = {
       console.log("isDone:", isMore || isDone ? "没有更多" : "显示loading");
       useChatStore().$patch({ noMore: isMore || isDone })
     },
-    addAiPresetPromptWords(state, payload) {
+    addAiPresetPromptWords(state) {
       const { convId, message } = createAiPromptMsg();
       const history = state.historyMessageList.get(convId);
       if (state.currentConversation && state.currentMessageList) {
@@ -162,23 +158,6 @@ const conversation = {
       state.currentMessageList = [];
     },
   },
-  actions: {
-    // async updateRobotMessageList({ state, commit }, action) {
-    //   const { convId } = action;
-    //   const { messageList } = await getMessageList({ convId });
-    //   if (!messageList.length) {
-    //     console.warn("暂无消息");
-    //     return;
-    //   }
-    //   const message = addTimeDivider(messageList).reverse();
-    //   state.historyMessageList.set(convId, cloneDeep(message));
-    //   commit("updateMessages", {
-    //     convId: message?.[0].conversationID,
-    //     message: cloneDeep(message[0]),
-    //   });
-    //   emitter.emit("updataScroll", "robot");
-    // },
-  },
   getters: {
     toAccount(state) {
       const { currentConversation: conve } = state;
@@ -223,7 +202,7 @@ const conversation = {
 
 if (__LOCAL_MODE__) {
   getChatListCache().then((res) => {
-    if (res.at(0)) conversation.state.conversationList = res;
+    if (res.length) conversation.state.conversationList = res;
   });
 }
 

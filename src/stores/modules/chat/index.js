@@ -12,6 +12,7 @@ import {
   addTimeDivider,
   checkTextNotEmpty,
   getBaseTime,
+  isRobot,
   getChatListCache,
 } from "@/utils/chat/index";
 import { useGroupStore } from "../group/index";
@@ -40,11 +41,11 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     chatDraftMap: new Map(), // 会话草稿
     forwardData: new Map(), // 多选数据
     revokeMsgMap: new Map(), // 撤回消息重新编辑
-    currentTab: 'whole', // 选中的标签（全部、未读、提及我）
+    currentTab: "whole", // 选中的标签（全部、未读、提及我）
   }),
   getters: {
     isWhole() {
-      return this.currentTab === 'whole';
+      return this.currentTab === "whole";
     },
     hasMsgList() {
       return this.currentMessageList?.length > 0;
@@ -54,6 +55,12 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
     currentType() {
       return this.currentConversation?.type || "";
+    },
+    getNonBotList() {
+      return this.conversationList.filter((t) => !isRobot(t.conversationID));
+    },
+    getNonBotC2CList() {
+      return this.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
     },
     imgUrlList() {
       if (!this.currentMessageList) return [];
@@ -68,9 +75,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       return reversedUrls;
     },
     toAccount() {
-      const ID = this.currentConversation?.conversationID;
-      if (!ID) return "";
-      return ID.replace(/^(C2C|GROUP)/, "");
+      const ID = this.currentConversation?.conversationID || "";
+      return ID?.replace(/^(C2C|GROUP)/, "");
     },
     isGroupChat() {
       if (!this.currentConversation) return false;
@@ -124,7 +130,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     async updateMessageList(data) {
       const { conversationID: convId } = data;
       // 当前会话有值
-      if (!timProxy.isSDKReady) return
+      if (!timProxy.isSDKReady) return;
       const { messageList, isCompleted } = await getMessageList({ convId });
       store.commit("addMessage", {
         convId,
@@ -139,7 +145,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const { convId } = action;
       const { conversation: data } = await getConversationProfile({ convId });
       store.commit("updateSelectedConversation", data);
-      this.updateMessageList(data)
+      this.updateMessageList(data);
       if (data?.type === "GROUP") {
         useGroupStore().handleGroupProfile(data);
         useGroupStore().handleGroupMemberList({ groupID: data.groupProfile.groupID });
@@ -155,10 +161,10 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.clearCurrentMessage();
       this.showCheckbox = false;
       this.replyMsgData = null;
-      this.chatDraftMap = new Map()
-      this.currentTab = "whole"
-      this.historyMessageList = new Map()
-      this.conversationList = []
+      this.chatDraftMap = new Map();
+      this.currentTab = "whole";
+      this.historyMessageList = new Map();
+      this.conversationList = [];
     },
     toggleMentionModal(flag) {
       if (store.state.conversation.currentConversation?.type === "GROUP") {
@@ -208,7 +214,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const { code } = await deleteConversation({ convId });
       if (code === 0) {
         store.commit("clearCurrentMessage");
-        this.clearCurrentMessage()
+        this.clearCurrentMessage();
       }
     },
     setRecently({ data = {}, type }) {

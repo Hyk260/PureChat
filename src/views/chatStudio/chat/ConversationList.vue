@@ -72,6 +72,7 @@
 
 <script setup>
 import { h, watch, ref, computed } from "vue";
+import { storeToRefs } from "pinia";
 import { chatSessionListData } from "../utils/menu";
 import { pinConversation } from "@/api/im-sdk-api/index";
 import { timeFormat } from "@/utils/timeFormat";
@@ -96,8 +97,9 @@ const groupStore = useGroupStore();
 const userStore = useUserStore();
 const chatStore = useChatStore();
 
+const { conversationList } = storeToRefs(chatStore);
+
 const chat = computed(() => store.state.conversation.currentConversation);
-const conversationList = computed(() => store.state.conversation.conversationList);
 
 const searchForData = computed(() => {
   if (chatStore.searchConversationList.length) {

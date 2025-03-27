@@ -3,7 +3,7 @@
     <FontIcon class="close" iconName="CircleCloseFilled" @click="onClose" />
     <div class="flex-c flex-col" v-for="item in buttonList" :key="item.icon">
       <div class="icon flex-c" :class="disabled ? 'disabled' : ''" @click="onClock(item)">
-        <svg-icon :class="item.class" :local-icon="item.icon" />
+        <SvgIcon :class="item.class" :local-icon="item.icon" />
       </div>
       <span class="text">
         {{ item.value }}
@@ -12,7 +12,7 @@
   </div>
   <!-- 截图分享 -->
   <ShareModal @onClose="onClose" />
-  <MagforwardingPopup @confirm="confirm" ref="wardingRef" />
+  <MessageForwardingPopup @confirm="confirm" ref="wardingRef" />
 </template>
 
 <script>
@@ -27,7 +27,7 @@ import { showConfirmationBox } from "@/utils/message";
 import { mapState } from "vuex";
 import { localStg } from "@/utils/storage";
 import { TIM_PROXY } from "@/constants/index";
-import MagforwardingPopup from "./MagforwardingPopup.vue";
+import MessageForwardingPopup from "./MessageForwardingPopup.vue";
 import ShareModal from "@/views/components/ShareModal/index.vue";
 import emitter from "@/utils/mitt-bus";
 
@@ -70,11 +70,10 @@ export default {
   },
   components: {
     ShareModal,
-    MagforwardingPopup,
+    MessageForwardingPopup,
   },
   computed: {
     ...mapState({
-      conversationList: (state) => state.conversation.conversationList,
       currentConversation: (state) => state.conversation.currentConversation,
     }),
     showCheckbox() {

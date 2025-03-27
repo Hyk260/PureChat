@@ -1,33 +1,34 @@
+import { nextTick } from "vue";
+import { getTime } from "@/utils/common";
+import { uuid } from "@/utils/uuid";
+import { useChatStore } from "@/stores/index";
+import { USER_MODEL } from "@/constants/index";
+import { localStg } from "@/utils/storage";
+import { cloneDeep } from "lodash-es";
+import { SessionModel } from "@/database/models/session";
+import { MessageModel } from "@/database/models/message";
 import sessions from "@/database/sessions.json";
 import robotList from "@/database/bot.json";
 import profile from "@/database/profile.json";
 import timTextElem from "@/database/message/timTextElem.json";
 import timCustomElem from "@/database/message/timCustomElem.json";
-
 import emitter from "@/utils/mitt-bus";
 import store from "@/store";
-import { getTime } from "@/utils/common";
-
-import { uuid } from "@/utils/uuid";
-import { nextTick } from "vue";
-import { USER_MODEL } from "@/constants/index";
-import { localStg } from "@/utils/storage";
-import { cloneDeep } from "lodash-es";
-
-import { SessionModel } from "@/database/models/session";
-import { MessageModel } from "@/database/models/message";
 
 export function getConversationList() {
-  const list = store.state.conversation?.conversationList;
+  const list = useChatStore().conversationList;
+  // const list = store.state.conversation?.conversationList;
   return cloneDeep(list) || null; // []
 }
 
 export function getCurrentMessageList() {
+  // const list = useChatStore().currentMessageList;
   const list = store.state.conversation?.currentMessageList;
   return cloneDeep(list) || null; // []
 }
 
 export function getHistoryMessageList(id) {
+  // const data = useChatStore().historyMessageList.get(id);
   const data = store.state.conversation?.historyMessageList.get(id);
   return cloneDeep(data) || null; // []
 }
@@ -83,7 +84,7 @@ export class LocalChat {
 
     return new Promise((resolve) => {
       setTimeout(async () => {
-        const _newData = await SessionModel.query()
+        const _newData = await SessionModel.query();
         this.emit("onConversationListUpdated", { data: _newData });
         this.emit("onMessageReceived", { data: [message] });
         resolve({ code: 0, data: { message } });
@@ -165,12 +166,12 @@ export class LocalChat {
     data.userProfile = robotList.find((item) => item.userID === convId.replace("C2C", ""));
     SessionModel.create(convId, data);
 
-    const conversationList = getConversationList() || [];
-    const index = conversationList.findIndex((t) => t.conversationID === convId);
+    const list = getConversationList() || [];
+    const index = list.findIndex((t) => t.conversationID === convId);
 
-    if (index === -1) conversationList.push(data);
+    if (index === -1) list.push(data);
 
-    this.emit("onConversationListUpdated", { data: conversationList });
+    this.emit("onConversationListUpdated", { data: list });
 
     return {
       code: 0,

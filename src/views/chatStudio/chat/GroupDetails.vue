@@ -215,7 +215,7 @@ const handleClose = (done) => {
 };
 
 const groupMemberAdd = () => {
-  AddMemberRef.value.onenDialog();
+  AddMemberRef.value.openDialog();
 };
 
 const navigate = (item) => {

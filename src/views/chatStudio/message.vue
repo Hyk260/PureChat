@@ -22,16 +22,17 @@
         <!-- 会话列表 -->
         <ConversationList />
       </div>
-      <div class="layoutkit-center">
+      <div class="layout-center">
         <div @click="toggleCollapsed">
-          <FontIcon :iconName="isChatSessionListCollapsed ? 'ArrowRight' : 'ArrowLeft'" />
+          <el-icon v-if="isChatSessionListCollapsed"><ArrowRight /></el-icon>
+          <el-icon v-else><ArrowLeft /></el-icon>
         </div>
       </div>
       <!-- <div class="sidebar-drag"></div> -->
     </div>
     <!-- 聊天框 -->
     <div id="container" class="message-right">
-      <EmptyMessage className="empty" v-if="!conver" />
+      <EmptyMessage className="empty" v-if="!currentConversation" />
       <Header />
       <!-- 聊天窗口 -->
       <Chatwin ref="chatRef" :class="{ 'chat-h-full': isFullscreenInputActive }" />
@@ -47,7 +48,7 @@
     <!-- 合并消息弹框 -->
     <MergeMessagePopup />
     <!-- 群详情 -->
-    <GroupDetails v-if="isGroupChat" :groupProfile="conver.groupProfile" />
+    <GroupDetails v-if="isGroupChat" :groupProfile="currentConversation.groupProfile" />
   </div>
 </template>
 
@@ -88,7 +89,7 @@ const {
 } = storeToRefs(chatStore);
 
 const isGroupChat = computed(() => store.getters.isGroupChat);
-const conver = computed(() => store.state.conversation.currentConversation);
+const currentConversation = computed(() => store.state.conversation.currentConversation);
 
 const handleClick = ({ props }, event) => {
   const { label, name } = props;
@@ -199,7 +200,7 @@ watch(isChatBoxVisible, (val) => {
     background: #409eff !important;
   }
 }
-.layoutkit-center {
+.layout-center {
   pointer-events: all;
   position: absolute;
   z-index: 1;

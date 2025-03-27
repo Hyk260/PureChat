@@ -123,22 +123,22 @@ export class TIMProxy {
   onUpdateConversationList({ data }) {
     console.log("[chat] 会话列表更新 onUpdateConversationList:", data);
     setChatListCache(data);
-    const convId = getConversationID();
-    const conv = data.filter((t) => t.conversationID == convId);
+    const chatId = getConversationID();
+    const _data = data.filter((t) => t.conversationID === chatId);
     useChatStore().$patch({ conversationList: data });
     store.commit("setConversationValue", { key: "conversationList", value: data });
-    if (conv) {
+    if (_data) {
+      useChatStore().$patch({ currentConversation: cloneDeep(_data[0]) });
       store.commit("setConversationValue", {
         key: "currentConversation",
-        value: cloneDeep(conv[0]),
+        value: cloneDeep(_data[0]),
       });
     }
-    // 未读消息
     useChatStore().updateTotalUnreadMsg();
   }
   onReceiveMessage({ data }) {
     console.log("[chat] 收到新消息 onReceiveMessage:", data);
-    const current = getConversationID() == data?.[0].conversationID;
+    const current = getConversationID() === data?.[0].conversationID;
     this.handleQuitGroupTip(data);
     this.handleNotificationTip(data);
     this.handleGroupSystemNoticeTip(data);
@@ -240,8 +240,8 @@ export class TIMProxy {
   handleQuitGroupTip(data) {
     if (data[0]?.type !== "TIMGroupTipElem") return;
     console.log("[chat] handleQuitGroupTip", data);
-    const convId = getConversationID();
-    if (convId !== data[0]?.conversationID) return;
+    const chatId = getConversationID();
+    if (chatId !== data[0]?.conversationID) return;
     // TIM.TYPES.GRP_TIP_MBR_JOIN // 1 有成员加群
     // TIM.TYPES.GRP_TIP_MBR_QUIT // 2 有群成员退群
     // TIM.TYPES.GRP_TIP_MBR_KICKED_OUT // 3 有群成员被踢出群
@@ -253,7 +253,7 @@ export class TIMProxy {
     });
     // 更新当前会话的群成员列表
     if (groupTips.length) {
-      useGroupStore().handleGroupMemberList({ groupID: convId });
+      useGroupStore().handleGroupMemberList({ groupID: chatId });
     }
   }
   /**
@@ -267,12 +267,12 @@ export class TIMProxy {
     // 4	被踢出群组 被踢出的用户接收
     // 5	群组被解散 全体群成员接收
     const list = [4, 5];
-    const convId = getConversationID();
+    const chatId = getConversationID();
     const groupSystemTips = data.filter((t) => {
       return list.includes(t.payload.operationType);
     });
     if (groupSystemTips.length > 0) {
-      useChatStore().deleteSession({ convId });
+      useChatStore().deleteSession({ convId: chatId });
     }
   }
   // 消息更新

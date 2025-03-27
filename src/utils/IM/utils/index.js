@@ -1,4 +1,5 @@
 import store from "@/store";
+import { useChatStore } from "@/stores/index";
 import { throttle } from "lodash-es";
 
 export function kickedOutReason(type) {
@@ -36,8 +37,9 @@ export function getConversationID() {
 }
 
 export function getConversationList(data) {
-  const list = store.state.conversation?.conversationList;
-  const convId = data?.[0].conversationID;
-  const massage = list.filter((t) => t.conversationID == convId);
+  const list = useChatStore().conversationList;
+  // const list = store.state.conversation?.conversationList;
+  const chatId = data?.[0].conversationID;
+  const massage = list.filter((t) => t.conversationID === chatId);
   return massage;
 }

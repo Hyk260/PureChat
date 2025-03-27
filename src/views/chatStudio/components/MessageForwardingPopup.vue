@@ -6,11 +6,11 @@
     align-center
     :before-close="handleClose"
   >
-    <div class="forward-ation">
+    <div class="forward-action">
       <div
-        v-for="item in filterList"
+        v-for="item in getNonBotList"
         :key="item.toAccount"
-        :class="{ 'forward-hover': multipleValue?.toAccount == item.toAccount }"
+        :class="{ 'forward-hover': multipleValue?.toAccount === item.toAccount }"
         @click="onClickItem(item)"
       >
         <img
@@ -34,26 +34,19 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { useState } from "@/utils/hooks/index";
 import { chatName } from "../utils/utils";
 import { squareUrl } from "../utils/menu";
-import { isRobot } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
+import { useChatStore } from "@/stores/index";
 
 const [dialog, setDialog] = useState();
 
 export default {
-  name: "MagforwardingPopup",
+  name: "MessageForwardingPopup",
   computed: {
-    ...mapState({
-      conversationList: (state) => {
-        return state.conversation.conversationList;
-      },
-    }),
-    filterList() {
-      return this.conversationList.filter((t) => !isRobot(t.conversationID));
-    },
+    ...mapState(useChatStore, ["getNonBotList"]),
   },
   data() {
     return {

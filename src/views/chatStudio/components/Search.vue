@@ -18,13 +18,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { onKeyStroke, useEventListener } from "@vueuse/core";
 import { showConfirmationBox } from "@/utils/message";
 import { Search } from "@element-plus/icons-vue";
 import { debounce, isEmpty } from "lodash-es";
 import { useGroupStore, useChatStore } from "@/stores/index";
-import store from "@/store/index";
 
 defineOptions({
   name: "Search",
@@ -34,7 +33,6 @@ const isLocalMode = __LOCAL_MODE__;
 const input = ref("");
 const chatStore = useChatStore();
 const groupStore = useGroupStore();
-const conversationList = computed(() => store.state.conversation.conversationList);
 
 const createGroup = async () => {
   const data = { message: "创建群聊" };
@@ -67,7 +65,7 @@ const debounceSearch = debounce((key) => {
     return;
   }
   const str = key.toUpperCase().trim();
-  const filterData = conversationList.value.filter((item) => matchesFilter(item, str));
+  const filterData = chatStore.conversationList.filter((item) => matchesFilter(item, str));
   chatStore.$patch({ searchConversationList: filterData });
 }, 200);
 </script>
