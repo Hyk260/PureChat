@@ -24,7 +24,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
     conversationList: [], // 会话列表数据
-    searchConversationList: [], // 过滤后的会话列表
+    searchConversationList: [], // 搜索后的会话列表
+    filterConversationList: [], // 过滤后的会话列表
     totalUnreadMsg: 0, // 未读消息总数
     needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
     showCheckbox: false, //是否显示多选框
@@ -151,11 +152,13 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.currentMessageList = [];
     },
     clearHistory() {
+      this.clearCurrentMessage();
       this.showCheckbox = false;
-      this.isChatBoxVisible = false;
       this.replyMsgData = null;
       this.chatDraftMap = new Map()
       this.currentTab = "whole"
+      this.historyMessageList = new Map()
+      this.conversationList = []
     },
     toggleMentionModal(flag) {
       if (store.state.conversation.currentConversation?.type === "GROUP") {

@@ -163,21 +163,21 @@ const conversation = {
     },
   },
   actions: {
-    async updateRobotMessageList({ state, commit }, action) {
-      const { convId } = action;
-      const { messageList } = await getMessageList({ convId });
-      if (!messageList.length) {
-        console.warn("暂无消息");
-        return;
-      }
-      const message = addTimeDivider(messageList).reverse();
-      state.historyMessageList.set(convId, cloneDeep(message));
-      commit("updateMessages", {
-        convId: message?.[0].conversationID,
-        message: cloneDeep(message[0]),
-      });
-      emitter.emit("updataScroll", "robot");
-    },
+    // async updateRobotMessageList({ state, commit }, action) {
+    //   const { convId } = action;
+    //   const { messageList } = await getMessageList({ convId });
+    //   if (!messageList.length) {
+    //     console.warn("暂无消息");
+    //     return;
+    //   }
+    //   const message = addTimeDivider(messageList).reverse();
+    //   state.historyMessageList.set(convId, cloneDeep(message));
+    //   commit("updateMessages", {
+    //     convId: message?.[0].conversationID,
+    //     message: cloneDeep(message[0]),
+    //   });
+    //   emitter.emit("updataScroll", "robot");
+    // },
   },
   getters: {
     toAccount(state) {
