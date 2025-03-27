@@ -272,7 +272,7 @@ export function bytesToSize(bytes) {
  * 滚动到指定消息ID对应的DOM位置，并添加动画效果
  * @param {string} msgid - 消息的唯一标识符，用于查找对应的DOM元素
  */
-export const scrollToDomPostion = (msgid) => {
+export const scrollToDomPosition = (msgid) => {
   const dom = document.getElementById(`${msgid}`);
   if (!dom) {
     useAppStore().showMessage({ message: "无法查看上下文", type: "warning" });

@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { scrollToDomPostion } from "@/utils/chat/index";
+import { scrollToDomPosition } from "@/utils/chat/index";
 import DynamicContent from "../components/DynamicContent.vue";
 
 defineOptions({
@@ -40,7 +40,7 @@ const hanldeItemClick = async () => {
   const { messageReply } = props.originalMsg || {};
   if (!messageReply) return;
   const ref = messageReply.messageID;
-  if (ref) scrollToDomPostion(ref);
+  if (ref) scrollToDomPosition(ref);
 };
 </script>
 

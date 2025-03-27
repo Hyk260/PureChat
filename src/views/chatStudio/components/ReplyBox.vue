@@ -13,7 +13,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useChatStore } from "@/stores/modules/chat/index";
-import { getReplyContent, scrollToDomPostion } from "@/utils/chat/index";
+import { getReplyContent, scrollToDomPosition } from "@/utils/chat/index";
 import DynamicContent from "./DynamicContent.vue";
 
 defineOptions({
@@ -29,7 +29,7 @@ const onClose = () => {
 
 const onClick = () => {
   const { ID } = replyMsgData.value || {};
-  ID && scrollToDomPostion(ID);
+  ID && scrollToDomPosition(ID);
 };
 </script>
 

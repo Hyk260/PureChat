@@ -3,7 +3,7 @@ import emitter from "@/utils/mitt-bus";
 import chat from "@/utils/IM/im-sdk/tim";
 import { C2C_ROBOT_COLLECT } from "@/ai/constant";
 import { TIM_PROXY } from "@/constants/index";
-import { scrollToDomPostion, setChatListCache } from "@/utils/chat/index";
+import { scrollToDomPosition, setChatListCache } from "@/utils/chat/index";
 import { setMessageRead } from "@/api/im-sdk-api/index";
 import { localStg } from "@/utils/storage";
 import { useWindowFocus, useEventListener } from "@vueuse/core";
@@ -310,7 +310,7 @@ export class TIMProxy {
       // type: "info",
       onClick: () => {
         useChatStore().addConversation({ convId: conversationID })
-        scrollToDomPostion(ID);
+        scrollToDomPosition(ID);
         Notification.close();
       },
     });
