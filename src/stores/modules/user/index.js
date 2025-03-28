@@ -12,7 +12,6 @@ import { changeLocale } from "@/locales/index";
 import router from "@/router"
 import chat from "@/utils/IM/im-sdk/tim"
 import emitter from "@/utils/mitt-bus"
-import store from '@/store/index';
 
 export const useUserStore = defineStore(SetupStoreId.User, {
   state: () => ({

@@ -66,7 +66,6 @@ import { getGender } from "@/utils/common";
 import { getValueByKey, prefix } from "@/ai/utils";
 import { useChatStore } from "@/stores/index";
 import Label from "@/views/chatStudio/components/Label.vue";
-import store from "@/store/index";
 import emitter from "@/utils/mitt-bus";
 
 const cardRef = ref();
