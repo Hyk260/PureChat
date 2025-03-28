@@ -37,19 +37,19 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { Markdown, handleCopyClick } from "@/utils/markdown/index";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
-import { useStore } from "vuex";
 import { StoreKey, VITE_OPENAI_ID, ModelProvider } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
-import { useRobotStore, useSidebarStore } from "@/stores/index";
+import { useRobotStore, useSidebarStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
+import store from '@/store/index';
 
 const cardData = ref({});
 const sidebarStore = useSidebarStore();
 const robotStore = useRobotStore()
-const { commit, dispatch } = useStore();
-const [dialog, setDialog] = useBoolean();
+const chatStore = useChatStore()
+const [dialog, setDialog] = useState();
 
 function toTant(item = cardData.value) {
   const { identifier, meta } = item;
@@ -68,10 +68,10 @@ function toTant(item = cardData.value) {
   const id = getModelId(defaultBot) || VITE_OPENAI_ID;
   handleClose()
   robotStore.setPromptConfig(prompt[value]);
-  sidebarStore.taggleOueSide({ path: "/chat" });
-  dispatch("addConversation", { convId: `${"C2C"}${id}` });
+  sidebarStore.toggleOutside({ path: "/chat" });
+  chatStore.addConversation({ convId: `${"C2C"}${id}` })
   setTimeout(() => {
-    commit("addAiPresetPromptWords");
+    store.commit("addAiPresetPromptWords");
   }, 200);
 }
 

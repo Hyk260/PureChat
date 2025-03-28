@@ -69,7 +69,7 @@ export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
       const data = this.outsideList.filter((t) => t.id === "more");
       this.outsideList = [...list, ...data];
     },
-    taggleOueSide(item) {
+    toggleOutside(item) {
       router.push(item.path);
     },
     setMoreList(list) {

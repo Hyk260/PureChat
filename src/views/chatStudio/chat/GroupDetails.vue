@@ -127,14 +127,15 @@ import {
   deleteGroupMember,
   updateGroupProfile,
   GroupTypeMap,
+  setMessageRemindType
 } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/index";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { showConfirmationBox } from "@/utils/message";
 import { isFullStaffGroup } from "@/ai/utils";
 import { Markdown } from "@/utils/markdown/index";
 import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index";
-import { useGroupStore, useAppStore, useUserStore } from "@/stores/index";
+import { useGroupStore, useAppStore, useUserStore, useChatStore } from "@/stores/index";
 import AddMemberPopup from "../components/AddMemberPopup.vue";
 import emitter from "@/utils/mitt-bus";
 import store from "@/store/index";
@@ -151,9 +152,10 @@ const AddMemberRef = ref();
 
 const groupStore = useGroupStore();
 const userStore = useUserStore();
+const chatStore = useChatStore();
 const appStore = useAppStore();
-const [drawer, setDrawer] = useBoolean();
-const [loading, setLoading] = useBoolean();
+const [drawer, setDrawer] = useState();
+const [loading, setLoading] = useState();
 
 const toAccount = computed(() => store.getters.toAccount);
 const currentConversation = computed(() => {
@@ -171,8 +173,7 @@ const beforeChange = () => {
 };
 
 const setNotify = () => {
-  const { type, toAccount, messageRemindType: remindType } = currentConversation.value;
-  store.dispatch("setMessageReminderType", { type, toAccount, remindType });
+  setMessageRemindType(currentConversation.value)
 };
 
 const openNamePopup = async () => {
@@ -214,11 +215,11 @@ const handleClose = (done) => {
 };
 
 const groupMemberAdd = () => {
-  AddMemberRef.value.onenDialog();
+  AddMemberRef.value.openDialog();
 };
 
 const navigate = (item) => {
-  store.dispatch("addConversation", { convId: `C2C${item.userID}` });
+  chatStore.addConversation({ convId: `C2C${item.userID}` })
   setDrawer(false);
   setTimeout(() => {
     const dom = document.getElementById(`message_C2C${item.userID}`);

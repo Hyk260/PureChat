@@ -54,7 +54,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { getModelType, getModelSvg, useAccessStore, formatSizeStrict } from "@/ai/utils";
 import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
@@ -71,7 +71,7 @@ defineOptions({
 
 const robotIcon = ref("");
 const model = ref({});
-const [flag, setFlag] = useBoolean();
+const [flag, setFlag] = useState();
 const toAccount = computed(() => store.getters.toAccount);
 
 function onClickOutside() {

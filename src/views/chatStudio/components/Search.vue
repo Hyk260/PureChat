@@ -10,7 +10,7 @@
         clearable
       >
       </el-input>
-      <div v-if="!isLocalMode" class="header-search-add flex-c" @click="opendialog">
+      <div v-if="!isLocalMode" class="header-search-add flex-c" @click="openDialog">
         <FontIcon iconName="Plus" />
       </div>
     </div>
@@ -18,14 +18,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { onKeyStroke, useEventListener } from "@vueuse/core";
 import { showConfirmationBox } from "@/utils/message";
 import { Search } from "@element-plus/icons-vue";
 import { debounce, isEmpty } from "lodash-es";
 import { isMacDragStyle } from "@/utils/appEmit";
 import { useGroupStore, useChatStore } from "@/stores/index";
-import store from "@/store/index";
 
 defineOptions({
   name: "Search",
@@ -33,10 +32,8 @@ defineOptions({
 
 const isLocalMode = __LOCAL_MODE__;
 const input = ref("");
-const filterData = ref([]);
 const chatStore = useChatStore();
 const groupStore = useGroupStore();
-const tabList = computed(() => store.getters.tabList);
 
 const createGroup = async () => {
   const data = { message: "创建群聊" };
@@ -45,7 +42,7 @@ const createGroup = async () => {
   groupStore.handleCreateGroup({ groupName: result.value, positioning: true });
 };
 
-const opendialog = () => {
+const openDialog = () => {
   createGroup();
 };
 
@@ -69,8 +66,8 @@ const debounceSearch = debounce((key) => {
     return;
   }
   const str = key.toUpperCase().trim();
-  filterData.value = tabList.value.filter((item) => matchesFilter(item, str));
-  chatStore.$patch({ searchConversationList: filterData.value });
+  const filterData = chatStore.conversationList.filter((item) => matchesFilter(item, str));
+  chatStore.$patch({ searchConversationList: filterData });
 }, 200);
 </script>
 

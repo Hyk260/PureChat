@@ -51,7 +51,7 @@ import { isRobot } from "@/utils/chat/index";
 import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
 import { cloneDeep } from "lodash-es";
 import { modelValue, StoreKey } from "@/ai/constant";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { isMacDragStyle } from "@/utils/appEmit";
 import { useRobotStore, useChatStore } from "@/stores/index";
@@ -59,7 +59,7 @@ import Label from "@/views/chatStudio/components/Label.vue";
 import emitter from "@/utils/mitt-bus";
 import store from "@/store/index";
 
-const [isBotToolsFlag, setBotToolsFlag] = useBoolean();
+const [isBotToolsFlag, setBotToolsFlag] = useState();
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
 

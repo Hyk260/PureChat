@@ -1,5 +1,4 @@
 import { h, nextTick } from "vue";
-import store from "@/store/index";
 import markdownit from "markdown-it";
 import hljs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";

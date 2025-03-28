@@ -71,8 +71,8 @@ function cardClick(item) {
 }
 
 function providerClick(item) {
-  sidebarStore.taggleOueSide({ path: "/chat" });
-  store.dispatch("addConversation", { convId: `${"C2C"}${item.userID}` });
+  sidebarStore.toggleOutside({ path: "/chat" });
+  chatStore.addConversation({ convId: `${"C2C"}${item.userID}` })
 }
 </script>
 

@@ -1,16 +1,32 @@
 import { defineStore } from 'pinia';
-import { getUnreadMsg } from "@/api/im-sdk-api/index";
+import { getUnreadMsg, deleteConversation, sendMessage, getMessageList, setMessageRead, getConversationProfile } from "@/api/im-sdk-api/index";
 import { SetupStoreId } from '../../plugins/index';
 import { EMOJI_RECENTLY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
-import { checkTextNotEmpty } from "@/utils/chat/index";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
+import { ROBOT_COLLECT } from "@/ai/constant";
+import { chatService } from "@/ai/index";
+import { timProxy } from "@/utils/IM/index";
+import { createAiPromptMsg, getModelType } from "@/ai/utils";
+import {
+  addTimeDivider,
+  checkTextNotEmpty,
+  getBaseTime,
+  isRobot,
+  getChatListCache,
+} from "@/utils/chat/index";
+import { useGroupStore } from "../group/index";
+import emitter from "@/utils/mitt-bus";
 import store from '@/store/index';
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
   state: () => ({
-    currentMessageList: [], // 当前会话消息列表
-    searchConversationList: [], // 过滤后的会话列表
+    historyMessageList: new Map(), //历史消息
+    currentMessageList: [], //当前消息列表(窗口聊天消息)
+    currentConversation: null, //跳转窗口的属性
+    conversationList: [], // 会话列表数据
+    searchConversationList: [], // 搜索后的会话列表
+    filterConversationList: [], // 过滤后的会话列表
     totalUnreadMsg: 0, // 未读消息总数
     needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
     showCheckbox: false, //是否显示多选框
@@ -25,24 +41,130 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     chatDraftMap: new Map(), // 会话草稿
     forwardData: new Map(), // 多选数据
     revokeMsgMap: new Map(), // 撤回消息重新编辑
+    currentTab: "whole", // 选中的标签（全部、未读、提及我）
   }),
   getters: {
+    isWhole() {
+      return this.currentTab === "whole";
+    },
     hasMsgList() {
       return this.currentMessageList?.length > 0;
     },
-    isFwdDataMaxed () {
+    isFwdDataMaxed() {
       return this.forwardData.size >= MULTIPLE_CHOICE_MAX;
-    }
+    },
+    currentType() {
+      return this.currentConversation?.type || "";
+    },
+    getNonBotList() {
+      return this.conversationList.filter((t) => !isRobot(t.conversationID));
+    },
+    getNonBotC2CList() {
+      return this.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
+    },
+    imgUrlList() {
+      if (!this.currentMessageList) return [];
+      const filteredMessages = this.currentMessageList.filter(
+        (item) => item.type === "TIMImageElem" && !item.isRevoked && !item.isDeleted
+      );
+      const reversedUrls = filteredMessages.reduceRight((urls, data) => {
+        const url = data.payload.imageInfoArray[0].url;
+        urls.push(url);
+        return urls;
+      }, []);
+      return reversedUrls;
+    },
+    toAccount() {
+      const ID = this.currentConversation?.conversationID || "";
+      return ID?.replace(/^(C2C|GROUP)/, "");
+    },
+    isGroupChat() {
+      if (!this.currentConversation) return false;
+      return this.currentConversation.type === "GROUP";
+    },
+    totalUnreadCount() {
+      const result = this.conversationList.reduce((count, data) => {
+        if (this.currentConversation.conversationID === data.conversationID) {
+          return count;
+        }
+        return count + data.unreadCount;
+      }, 0);
+      return result;
+    },
   },
   actions: {
+    async sendSessionMessage(data) {
+      const { message, last = true } = data;
+      const convId = message.conversationID || "";
+      if (!convId) {
+        console.error("convId is required");
+        return;
+      }
+      // 消息上屏 预加载
+      store.commit("updateMessages", { convId, message });
+      emitter.emit("updataScroll");
+      // 发送消息
+      const { code, message: result } = await sendMessage(message);
+      if (code === 0) {
+        this.sendMsgSuccessCallback({ convId, message: result, last });
+      } else {
+        console.log("发送失败", code, result);
+      }
+    },
+    async sendMsgSuccessCallback(data) {
+      console.log("消息发送成功 sendMsgSuccessCallback", data);
+      const { convId, message, last } = data;
+      store.commit("updateMessages", { convId, message });
+      emitter.emit("updataScroll");
+      if (!ROBOT_COLLECT.includes(message?.to)) return;
+      if (last) {
+        setTimeout(async () => {
+          await chatService({
+            chat: message,
+            provider: getModelType(message.to),
+            messages: store.state.conversation?.currentMessageList ?? [message],
+          });
+        }, 50);
+      }
+    },
+    async updateMessageList(data) {
+      const { conversationID: convId } = data;
+      // 当前会话有值
+      if (!timProxy.isSDKReady) return;
+      const { messageList, isCompleted } = await getMessageList({ convId });
+      store.commit("addMessage", {
+        convId,
+        isDone: isCompleted,
+        message: addTimeDivider(messageList).reverse(), // 添加时间
+      });
+      emitter.emit("updataScroll");
+      // 消息已读上报
+      setMessageRead(data);
+    },
+    async addConversation(action) {
+      const { convId } = action;
+      const { conversation: data } = await getConversationProfile({ convId });
+      store.commit("updateSelectedConversation", data);
+      this.updateMessageList(data);
+      if (data?.type === "GROUP") {
+        useGroupStore().handleGroupProfile(data);
+        useGroupStore().handleGroupMemberList({ groupID: data.groupProfile.groupID });
+      }
+      emitter.emit("updataScroll");
+    },
     clearCurrentMessage() {
       this.isChatBoxVisible = false;
+      this.currentConversation = null;
+      this.currentMessageList = [];
     },
     clearHistory() {
+      this.clearCurrentMessage();
       this.showCheckbox = false;
-      this.isChatBoxVisible = false;
       this.replyMsgData = null;
-      this.chatDraftMap = new Map()
+      this.chatDraftMap = new Map();
+      this.currentTab = "whole";
+      this.historyMessageList = new Map();
+      this.conversationList = [];
     },
     toggleMentionModal(flag) {
       if (store.state.conversation.currentConversation?.type === "GROUP") {
@@ -80,11 +202,21 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.chatDraftMap.delete(ID);
       }
     },
-    // 更新未读消息总数
     async updateTotalUnreadMsg() {
       this.totalUnreadMsg = await getUnreadMsg();
     },
-    // 设置最近使用表情包
+    async deleteSession(data) {
+      const { convId } = data;
+      if (!convId) {
+        console.error("convId is required");
+        return;
+      }
+      const { code } = await deleteConversation({ convId });
+      if (code === 0) {
+        store.commit("clearCurrentMessage");
+        this.clearCurrentMessage();
+      }
+    },
     setRecently({ data = {}, type }) {
       switch (type) {
         case "add":

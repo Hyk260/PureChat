@@ -39,7 +39,7 @@ export function findGroupChat(group) {
     setTimeout(() => {
       const dom = document.getElementById(`message_GROUP${groupID}`);
       if (dom) {
-        store.dispatch("addConversation", { convId: `GROUP${groupID}` });
+        useChatStore().addConversation({ convId: `GROUP${groupID}` })
         dom.scrollIntoView({ behavior: "smooth", block: "center" });
       } else {
         console.warn("定位到群聊失败");

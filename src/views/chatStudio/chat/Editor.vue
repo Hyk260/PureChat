@@ -63,7 +63,7 @@ import { storeToRefs } from "pinia";
 import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
 import { localStg } from "@/utils/storage";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { useAppStore, useGroupStore, useChatStore } from "@/stores/index";
 import {
   convertEmoji,
@@ -92,8 +92,8 @@ const mode = "simple"; // 'default' 或 'simple'
 const appStore = useAppStore();
 const chatStore = useChatStore();
 const groupStore = useGroupStore();
-const [loading, setLoading] = useBoolean();
-const [disabled, setDisabled] = useBoolean();
+const [loading, setLoading] = useState();
+const [disabled, setDisabled] = useState();
 const {
   showCheckbox,
   isChatBoxVisible,
@@ -331,12 +331,9 @@ const sendMessage = async () => {
   console.log("sendChatMessage:", message);
   clearInputInfo();
   message.map((t, i) => {
-    store.dispatch("sendSessionMessage", {
-      payload: {
-        convId: currentConversation.value.conversationID,
-        message: t,
-        last: message.length - 1 === i,
-      },
+    chatStore.sendSessionMessage({
+      message: t,
+      last: message.length - 1 === i,
     });
   });
 };

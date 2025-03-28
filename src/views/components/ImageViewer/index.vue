@@ -15,12 +15,12 @@
 <script setup>
 import { ref, onMounted, useTemplateRef } from "vue";
 import { onClickOutside } from "@vueuse/core";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 
 const imageViewerRef = useTemplateRef('imageViewerRef')
 const url = ref("");
-const [dialog, setDialog] = useBoolean();
+const [dialog, setDialog] = useState();
 
 // onClickOutside(imageViewerRef, () => {
 //   setDialog(false)

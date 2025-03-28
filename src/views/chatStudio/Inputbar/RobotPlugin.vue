@@ -21,7 +21,7 @@
 import { ref } from "vue";
 import { StoreKey } from "@/ai/constant";
 import { ClickOutside as vClickOutside } from "element-plus";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { getPlugin } from "@/utils/common";
 import { useRobotStore } from "@/stores/modules/robot/index";
@@ -31,7 +31,7 @@ defineOptions({
   name: "RobotPlugin",
 });
 
-const [flag, setFlag] = useBoolean();
+const [flag, setFlag] = useState();
 
 const pluginData = ref([
   {

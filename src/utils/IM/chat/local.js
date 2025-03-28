@@ -1,64 +1,74 @@
+import { nextTick } from "vue";
+import { getTime } from "@/utils/common";
+import { uuid } from "@/utils/uuid";
+import { useChatStore } from "@/stores/index";
+import { USER_MODEL } from "@/constants/index";
+import { localStg } from "@/utils/storage";
+import { cloneDeep } from "lodash-es";
+import { SessionModel } from "@/database/models/session";
+import { MessageModel } from "@/database/models/message";
 import sessions from "@/database/sessions.json";
 import robotList from "@/database/bot.json";
 import profile from "@/database/profile.json";
 import timTextElem from "@/database/message/timTextElem.json";
 import timCustomElem from "@/database/message/timCustomElem.json";
-
 import emitter from "@/utils/mitt-bus";
 import store from "@/store";
-import { getTime } from "@/utils/common";
-
-import { uuid } from "@/utils/uuid";
-import { nextTick } from "vue";
-import { USER_MODEL } from "@/constants/index";
-import { localStg } from "@/utils/storage";
-import { cloneDeep } from "lodash-es";
-
-import { SessionModel } from "@/database/models/session";
-import { MessageModel } from "@/database/models/message";
 
 export function getConversationList() {
-  const list = store.state.conversation?.conversationList;
-  return cloneDeep(list) || null; // []
+  const list = useChatStore().conversationList;
+  return cloneDeep(list) || [];
 }
 
 export function getCurrentMessageList() {
+  // const list = useChatStore().currentMessageList;
   const list = store.state.conversation?.currentMessageList;
   return cloneDeep(list) || null; // []
 }
 
 export function getHistoryMessageList(id) {
+  // const data = useChatStore().historyMessageList.get(id);
   const data = store.state.conversation?.historyMessageList.get(id);
   return cloneDeep(data) || null; // []
 }
 
 export class LocalChat {
   constructor() {
-    window.LocalChat = new Proxy(this, {
-      set(target, key, val) {
-        return Reflect.set(target, key, val);
-      },
-      get(target, key) {
-        return Reflect.get(target, key);
-      },
-    });
-    window.MessageModel = MessageModel;
-    window.SessionModel = SessionModel;
+    this.initializeProxy()
   }
-  init() {
+  initializeSDK() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.emit('sdkStateReady', { name: 'sdkStateReady' });
+        resolve();
+      }, 0);
+    });
+  }
+  initializeProxy() {
+    return new Proxy(this, {
+      set: (target, key, value) => Reflect.set(target, key, value),
+      get: (target, key) => Reflect.get(target, key)
+    });
+  }
+  initialize() {
     localStg.set(USER_MODEL, { username: profile.userID });
-    setTimeout(() => {
+    setTimeout(async () => {
       this.emit("sdkStateReady", { name: "sdkStateReady" });
+      const _newData = await SessionModel.query();
+      this.emit("onConversationListUpdated", { data: _newData });
     });
   }
   create(data) {
     console.log("create local chat", data);
-    this.init();
-    return this;
+    this.initialize();
+    return new LocalChat();
   }
-  on(eventName, handler, contextopt = null) {
-    const boundHandler = contextopt ? handler.bind(contextopt) : handler;
+  on(eventName, handler, context = null) {
+    const boundHandler = context ? handler.bind(context) : handler;
     emitter.on(eventName, boundHandler);
+  }
+  off(event, handler) {
+    emitter.off(event, handler);
   }
   emit(eventName, handler) {
     emitter.emit(eventName, handler);
@@ -83,11 +93,11 @@ export class LocalChat {
 
     return new Promise((resolve) => {
       setTimeout(async () => {
-        const _newData = await SessionModel.query()
+        const _newData = await SessionModel.query();
         this.emit("onConversationListUpdated", { data: _newData });
         this.emit("onMessageReceived", { data: [message] });
         resolve({ code: 0, data: { message } });
-      }, 300);
+      }, 100);
     });
   }
   getLoginUser() {
@@ -158,19 +168,19 @@ export class LocalChat {
     MessageModel.create(_data.ID, _data);
     return _data;
   }
-  async getConversationProfile(convId) {
+  async getConversationProfile(chatId) {
     const data = cloneDeep(sessions);
-    data.conversationID = convId;
+    data.conversationID = chatId;
     data.lastMessage.lastTime = getTime();
-    data.userProfile = robotList.find((item) => item.userID === convId.replace("C2C", ""));
-    SessionModel.create(convId, data);
+    data.userProfile = robotList.find((item) => item.userID === chatId.replace("C2C", ""));
+    SessionModel.create(chatId, data);
 
-    const conversationList = getConversationList() || [];
-    const index = conversationList.findIndex((t) => t.conversationID === convId);
+    const list = getConversationList();
+    const index = list.findIndex((t) => t.conversationID === chatId);
 
-    if (index === -1) conversationList.push(data);
+    if (index === -1) list.push(data);
 
-    this.emit("onConversationListUpdated", { data: conversationList });
+    this.emit("onConversationListUpdated", { data: list });
 
     return {
       code: 0,

@@ -1,23 +1,11 @@
-import { ROBOT_COLLECT } from "@/ai/constant";
-import { chatService } from "@/ai/index";
-import {
-  deleteConversation,
-  getConversationProfile,
-  getMessageList,
-  sendMessage,
-  setMessageRead,
-  setMessageRemindType,
-} from "@/api/im-sdk-api/index";
 import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
   addTimeDivider,
   getBaseTime,
-  getChatListCache,
 } from "@/utils/chat/index";
-import { useGroupStore, useChatStore } from "@/stores/index";
+import { useChatStore } from "@/stores/index";
 import { cloneDeep } from "lodash-es";
-import { timProxy } from "@/utils/IM/index";
-import { createAiPromptMsg, getModelType } from "@/ai/utils";
+import { createAiPromptMsg } from "@/ai/utils";
 import { MessageModel } from "@/database/models/message";
 import emitter from "@/utils/mitt-bus";
 
@@ -26,8 +14,6 @@ const conversation = {
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
-    conversationList: [], // 会话列表数据
-    activeTab: "whole", // 全部 未读 提及我
   },
   mutations: {
     updateMessages(state, payload) {
@@ -57,7 +43,6 @@ const conversation = {
       // 当前会有列表有值
       if (state.currentConversation.conversationID === convId) {
         state.currentMessageList = newMessageList;
-        // state.needScrollDown = 0;
       }
       // 更新历史消息
       state.historyMessageList.set(convId, newMessageList);
@@ -123,7 +108,7 @@ const conversation = {
       console.log("isDone:", isMore || isDone ? "没有更多" : "显示loading");
       useChatStore().$patch({ noMore: isMore || isDone })
     },
-    addAiPresetPromptWords(state, payload) {
+    addAiPresetPromptWords(state) {
       const { convId, message } = createAiPromptMsg();
       const history = state.historyMessageList.get(convId);
       if (state.currentConversation && state.currentMessageList) {
@@ -137,8 +122,6 @@ const conversation = {
         historyMessageList: new Map(),
         currentConversation: null,
         currentMessageList: [],
-        conversationList: [],
-        activeTab: "whole",
       });
       console.log("[chat] 清除历史记录 clearHistory:", state);
     },
@@ -163,10 +146,6 @@ const conversation = {
         isChatBoxVisible: convId !== "@TIM#SYSTEM"
       })
     },
-    //  切换列表 全部 未读 提及我
-    toggleList(state, action) {
-      state.activeTab = action;
-    },
     setConversationValue(state, { key, value }) {
       state[key] = value;
     },
@@ -176,122 +155,7 @@ const conversation = {
       state.currentMessageList = [];
     },
   },
-  actions: {
-    // 获取消息列表
-    async updateMessageList({ state, getters, commit, dispatch }, action) {
-      const { conversationID: convId } = action;
-      const status = getters.toAccount && !getters.hasMsgList;
-      // 当前会话有值
-      if (timProxy.isSDKReady && status) {
-        const { messageList, isCompleted } = await getMessageList({ convId });
-        commit("addMessage", {
-          convId,
-          isDone: isCompleted,
-          message: addTimeDivider(messageList).reverse(), // 添加时间
-        });
-        emitter.emit("updataScroll");
-      } else {
-        console.log(state.historyMessageList, "获取缓存");
-      }
-      // 消息已读上报
-      dispatch("hasReadMessage", { convId, message: action });
-    },
-    async updateRobotMessageList({ state, commit }, action) {
-      const { convId } = action;
-      const { messageList } = await getMessageList({ convId });
-      if (!messageList.length) {
-        console.warn("暂无消息");
-        return;
-      }
-      const message = addTimeDivider(messageList).reverse();
-      state.historyMessageList.set(convId, cloneDeep(message));
-      commit("updateMessages", {
-        convId: message?.[0].conversationID,
-        message: cloneDeep(message[0]),
-      });
-      emitter.emit("updataScroll", "robot");
-    },
-    // 新增会话列表
-    async addConversation({ commit, dispatch }, action) {
-      const { convId } = action;
-      const { conversation: data } = await getConversationProfile({ convId });
-      // 切换会话
-      commit("updateSelectedConversation", data);
-      // 获取会话列表
-      dispatch("updateMessageList", data);
-      // group
-      if (data?.type === "GROUP") {
-        useGroupStore().handleGroupProfile(data);
-        useGroupStore().handleGroupMemberList({ groupID: data.groupProfile.groupID });
-      }
-      emitter.emit("updataScroll");
-    },
-    // 删除会话
-    async deleteSession({ commit }, action) {
-      const { convId } = action;
-      if (!convId) {
-        console.error("convId is required");
-        return;
-      }
-      const { code } = await deleteConversation({ convId });
-      if (code !== 0) return;
-      commit("clearCurrentMessage");
-    },
-    // 消息免打扰
-    async setMessageReminderType({ state }, action) {
-      const { type, toAccount, remindType } = action;
-      if (type === "@TIM#SYSTEM") return;
-      await setMessageRemindType({ userID: toAccount, remindType, type });
-    },
-    // 消息已读
-    hasReadMessage({ state }, payload) {
-      if (__LOCAL_MODE__) return;
-      const {
-        convId,
-        message: { unreadCount },
-      } = payload || {};
-      if (unreadCount === 0) return;
-      console.log("[chat] 消息已读 hasReadMessage:", payload);
-      setMessageRead(convId);
-    },
-    // 会话消息发送
-    async sendSessionMessage({ state, commit, dispatch }, action) {
-      const { payload } = action;
-      const { convId, message, last = true } = payload;
-      // 消息上屏 预加载
-      commit("updateMessages", { convId, message });
-      emitter.emit("updataScroll");
-      // 发送消息
-      const { code, message: result } = await sendMessage(message);
-      if (code === 0) {
-        dispatch("sendMsgSuccessCallback", { convId, message: result, last });
-      } else {
-        console.log("发送失败", code, result);
-      }
-    },
-    // 消息发送成功回调
-    async sendMsgSuccessCallback({ state, commit }, action) {
-      console.log("消息发送成功 sendMsgSuccessCallback", action);
-      const { convId, message, last } = action;
-      commit("updateMessages", { convId, message });
-      emitter.emit("updataScroll");
-
-      if (!ROBOT_COLLECT.includes(message?.to)) return;
-      if (last) {
-        setTimeout(async () => {
-          await chatService({
-            chat: message,
-            provider: getModelType(message.to),
-            messages: state.currentMessageList ?? [message],
-          });
-        }, 50);
-      }
-    },
-  },
   getters: {
-    hasMsgList(state) {
-      return state.currentMessageList?.length > 0;
-    },
     toAccount(state) {
       const { currentConversation: conve } = state;
       if (!conve || !conve.conversationID) return "";
@@ -305,35 +169,11 @@ const conversation = {
           return ID;
       }
     },
-    tabList(state) {
-      switch (state.activeTab) {
-        case "unread":
-          return state.conversationList.filter((t) => t.unreadCount > 0);
-        case "mention":
-          return state.conversationList.filter(
-            (t) => t.groupAtInfoList.length > 0 && t.unreadCount > 0
-          );
-        case "groupChat":
-          return state.conversationList.filter((t) => t.type === "GROUP");
-        default:
-          return state.conversationList;
-      }
-    },
     currentType(state) {
       if (!state.currentConversation || !state.currentConversation.type) {
         return "";
       }
       return state.currentConversation.type;
-    },
-    totalUnreadCount(state) {
-      const result = state.conversationList.reduce((count, conversation) => {
-        // 当前会话不计算总未读
-        if (state.currentConversation.conversationID === conversation.conversationID) {
-          return count;
-        }
-        return count + conversation.unreadCount;
-      }, 0);
-      return result;
     },
     // 用于当前会话的图片预览
     imgUrlList(state) {
@@ -356,11 +196,5 @@ const conversation = {
     },
   },
 };
-
-if (__LOCAL_MODE__) {
-  getChatListCache().then((res) => {
-    if (res.at(0)) conversation.state.conversationList = res;
-  });
-}
 
 export default conversation;

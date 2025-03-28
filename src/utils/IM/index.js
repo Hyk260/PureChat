@@ -3,7 +3,8 @@ import emitter from "@/utils/mitt-bus";
 import chat from "@/utils/IM/im-sdk/tim";
 import { C2C_ROBOT_COLLECT } from "@/ai/constant";
 import { TIM_PROXY } from "@/constants/index";
-import { scrollToDomPostion, setChatListCache } from "@/utils/chat/index";
+import { scrollToDomPosition, setChatListCache } from "@/utils/chat/index";
+import { setMessageRead } from "@/api/im-sdk-api/index";
 import { localStg } from "@/utils/storage";
 import { useWindowFocus, useEventListener } from "@vueuse/core";
 import { ElNotification } from "element-plus";
@@ -22,6 +23,18 @@ const isFocused = useWindowFocus(); // 判断浏览器窗口是否在前台可�
 function isRobotId(data) {
   return C2C_ROBOT_COLLECT.includes(data?.[0].conversationID);
 }
+
+useEventListener(window, "online", () => {
+  useAppStore().setNetworkStatus(true);
+});
+
+useEventListener(window, "offline", () => {
+  useAppStore().setNetworkStatus(false);
+});
+
+useEventListener(window, "focus", () => {
+  setMessageRead(store.state.conversation?.currentConversation);
+});
 
 export class TIMProxy {
   constructor() {
@@ -62,21 +75,9 @@ export class TIMProxy {
     if (this.once) return;
     this.once = true;
     this.initListener(); // 监听SDK
-    useEventListener(window, "online", () => {
-      useAppStore().setNetworkStatus(true);
-    });
-    useEventListener(window, "offline", () => {
-      useAppStore().setNetworkStatus(false);
-    });
-    useEventListener(window, "focus", () => {
-      const conver = store.state.conversation?.currentConversation
-      if (!conver) return;
-      store.dispatch("hasReadMessage", { convId: conver?.conversationID, message: conver });
-    });
   }
   initListener() {
     if (__LOCAL_MODE__) chat.create()
-    // console.log("[chat] initListener", chat.create());
     // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
     chat.on("sdkStateReady", this.onReadyStateUpdate, this);
     // 收到 SDK 进入 not ready 状态通知，此时 SDK 无法正常工作
@@ -123,23 +124,21 @@ export class TIMProxy {
   onUpdateConversationList({ data }) {
     console.log("[chat] 会话列表更新 onUpdateConversationList:", data);
     setChatListCache(data);
-    const convId = getConversationID();
-    const conv = data.filter((t) => t.conversationID == convId);
-    // 更新会话列表
-    store.commit("setConversationValue", { key: "conversationList", value: data });
-    // 更新窗口数据
-    if (conv) {
+    const chatId = getConversationID();
+    const _data = data.filter((t) => t.conversationID === chatId);
+    useChatStore().$patch({ conversationList: data });
+    if (_data) {
+      useChatStore().$patch({ currentConversation: cloneDeep(_data[0]) });
       store.commit("setConversationValue", {
         key: "currentConversation",
-        value: cloneDeep(conv[0]),
+        value: cloneDeep(_data[0]),
       });
     }
-    // 未读消息
     useChatStore().updateTotalUnreadMsg();
   }
   onReceiveMessage({ data }) {
     console.log("[chat] 收到新消息 onReceiveMessage:", data);
-    const current = getConversationID() == data?.[0].conversationID;
+    const current = getConversationID() === data?.[0].conversationID;
     this.handleQuitGroupTip(data);
     this.handleNotificationTip(data);
     this.handleGroupSystemNoticeTip(data);
@@ -232,10 +231,10 @@ export class TIMProxy {
     });
     notification.onclick = () => {
       // 切换会话列表
-      store.dispatch("addConversation", { convId: message.conversationID });
+      useChatStore().addConversation({ convId: message.conversationID })
       // 定位到指定会话
       setTimeout(() => {
-        scrollToDomPostion(ID);
+        scrollToDomPosition(ID);
       }, 1000);
       window.focus();
       notification.close();
@@ -248,8 +247,8 @@ export class TIMProxy {
   handleQuitGroupTip(data) {
     if (data[0]?.type !== "TIMGroupTipElem") return;
     console.log("[chat] handleQuitGroupTip", data);
-    const convId = getConversationID();
-    if (convId !== data[0]?.conversationID) return;
+    const chatId = getConversationID();
+    if (chatId !== data[0]?.conversationID) return;
     // TIM.TYPES.GRP_TIP_MBR_JOIN // 1 有成员加群
     // TIM.TYPES.GRP_TIP_MBR_QUIT // 2 有群成员退群
     // TIM.TYPES.GRP_TIP_MBR_KICKED_OUT // 3 有群成员被踢出群
@@ -261,7 +260,7 @@ export class TIMProxy {
     });
     // 更新当前会话的群成员列表
     if (groupTips.length) {
-      useGroupStore().handleGroupMemberList({ groupID: convId });
+      useGroupStore().handleGroupMemberList({ groupID: chatId });
     }
   }
   /**
@@ -275,37 +274,28 @@ export class TIMProxy {
     // 4	被踢出群组 被踢出的用户接收
     // 5	群组被解散 全体群成员接收
     const list = [4, 5];
-    const convId = getConversationID();
+    const chatId = getConversationID();
     const groupSystemTips = data.filter((t) => {
       return list.includes(t.payload.operationType);
     });
     if (groupSystemTips.length > 0) {
-      convId && store.dispatch("deleteSession", { convId });
+      useChatStore().deleteSession({ convId: chatId });
     }
   }
   // 消息更新
   handleUpdateMessage(data, read = true) {
     if (!getConversationID()) return;
-    if (isRobotId(data)) {
-      store.dispatch("updateRobotMessageList", {
-        convId: data?.[0].conversationID,
-      });
-    } else {
-      // 更新会话消息
-      store.commit("updateMessages", {
-        convId: data?.[0].conversationID,
-        message: cloneDeep(data[0]),
-      });
-    }
-    // 消息已读
+    if (isRobotId(data)) return;
+    store.commit("updateMessages", {
+      convId: data?.[0].conversationID,
+      message: cloneDeep(data[0]),
+    });
     read && this.reportedMessageRead(data);
-    // 更新滚动条位置到底部
     emitter.emit("updataScroll", "bottom");
   }
   // 上报消息已读
   reportedMessageRead(data) {
-    if (!isFocused.value) return;
-    store.dispatch("hasReadMessage", { convId: data?.[0].conversationID, message: data });
+    if (isFocused.value) setMessageRead(data);
   }
   handleElNotification(message) {
     const { ID, nick, payload, conversationID } = message;
@@ -315,8 +305,8 @@ export class TIMProxy {
       duration: 6000,
       // type: "info",
       onClick: () => {
-        store.dispatch("addConversation", { convId: conversationID });
-        scrollToDomPostion(ID);
+        useChatStore().addConversation({ convId: conversationID })
+        scrollToDomPosition(ID);
         Notification.close();
       },
     });

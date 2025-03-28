@@ -1,10 +1,10 @@
 <template>
   <el-dialog v-model="dialog" title="添加成员" width="600px" align-center>
-    <div class="forward-ation">
+    <div class="forward-action">
       <div
-        v-for="item in filterList"
+        v-for="item in chatStore.getNonBotC2CList"
         :key="item.toAccount"
-        :class="{ 'forward-hover': memberValue?.toAccount == item.toAccount }"
+        :class="{ 'forward-hover': memberValue?.toAccount === item.toAccount }"
         @click="onClickItem(item)"
       >
         <img
@@ -25,12 +25,11 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useBoolean } from "@/utils/hooks/index";
-import { isRobot } from "@/utils/chat/index";
+import { useState } from "@/utils/hooks/index";
 import { squareUrl } from "../utils/menu";
 import { chatName } from "../utils/utils";
 import { getAiAvatarUrl } from "@/ai/utils";
-import store from "@/store/index";
+import { useChatStore } from "@/stores/index";
 
 defineOptions({
   name: "AddMemberPopup",
@@ -38,16 +37,13 @@ defineOptions({
 
 const memberValue = ref(null);
 const emits = defineEmits(["define"]);
-const [dialog, setDialog] = useBoolean();
-
-const filterList = computed(() => {
-  return store.state.conversation.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
-});
+const [dialog, setDialog] = useState();
+const chatStore = useChatStore();
 
 const onClickItem = (value) => {
   memberValue.value = value;
 };
-const onenDialog = () => {
+const openDialog = () => {
   setDialog(true);
 };
 const close = () => {
@@ -58,5 +54,5 @@ const define = () => {
   setDialog(false);
 };
 
-defineExpose({ onenDialog });
+defineExpose({ openDialog });
 </script>

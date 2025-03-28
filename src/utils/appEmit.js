@@ -1,5 +1,5 @@
 import store from "@/store";
-import { scrollToDomPostion } from "@/utils/chat/index";
+import { scrollToDomPosition } from "@/utils/chat/index";
 import { githubAuth } from "@/api/node-admin-api/index";
 
 function extractRouteInfoFromURL(url) {
@@ -48,7 +48,7 @@ export const appIpcEmit = () => {
     store.commit("taggleOueSide", "chat");
     store.dispatch("addConversation", { convId });
     setTimeout(() => {
-      scrollToDomPostion(ID);
+      scrollToDomPosition(ID);
     }, 500);
   });
 };

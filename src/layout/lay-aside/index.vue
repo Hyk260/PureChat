@@ -77,7 +77,7 @@ const handleItemClick = (item) => {
   } else if (item?.mode === "other") {
     emitter.emit("SidebarEditDialog", true);
   } else {
-    sidebarStore.taggleOueSide(item);
+    sidebarStore.toggleOutside(item);
   }
 };
 

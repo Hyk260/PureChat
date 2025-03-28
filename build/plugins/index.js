@@ -42,3 +42,23 @@ export function setupVitePlugins(viteEnv) {
   }
   return plugins;
 }
+
+/**
+ * 配置 Vite 外部依赖
+ * @param {Object} viteEnv - 环境变量配置对象
+ * @returns {(RegExp[]|string[])[]} 外部依赖配置数组
+ */
+export function setupViteExternal(viteEnv) {
+  // 本地开发模式需要排除的依赖
+  const localExternals = [
+    /^@tencentcloud\/chat/,
+    /^tim-upload-plugin/,
+    // /^pinyin-pro/
+  ];
+
+  if (viteEnv.VITE_LOCAL_MODE === "Y") {
+    return localExternals;
+  }
+
+  return [];
+}

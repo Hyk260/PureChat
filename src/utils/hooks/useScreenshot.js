@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { domToJpeg, domToPng, domToSvg, domToWebp, domToBlob } from "modern-screenshot";
 import { useAppStore } from "@/stores/index";
-import { useBoolean } from "./other";
+import { useState } from "./useState";
 
 export const { VITE_APP_NAME } = import.meta.env;
 
@@ -54,7 +54,7 @@ function copyImageToClipboard(dataUrl) {
 }
 
 export const useScreenshot = () => {
-  const [loading, setLoading] = useBoolean();
+  const [loading, setLoading] = useState();
 
   const handleDownload = async (imageType = ImageType.JPG, title = "", cd) => {
     setLoading(true);

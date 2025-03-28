@@ -12,7 +12,7 @@
         <div>
           <div v-if="i === 'messages'">{{ chatStore.totalUnreadMsg }}</div>
           <div v-else-if="i === 'sessions'">{{ market.length || 0 }}</div>
-          <div v-else>{{ conversationList?.length || 0 }}</div>
+          <div v-else>{{ chatStore.conversationList?.length || 0 }}</div>
         </div>
         <div>{{ item }}</div>
       </div>
@@ -34,12 +34,11 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, useTemplateRef } from "vue";
 import { onClickOutside } from "@vueuse/core";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { useUserStore, useChatStore } from '@/stores/index';
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 const { homepage } = __APP_INFO__.pkg;
 const cardRef = useTemplateRef("cardRef");
@@ -48,7 +47,7 @@ const profile = ref({});
 const market = ref([]);
 const userStore = useUserStore()
 const chatStore = useChatStore();
-const [card, setCard] = useBoolean();
+const [card, setCard] = useState();
 
 const menuItems = [
   {
@@ -95,10 +94,6 @@ const dataStatistics = ref({
   topics: "话题",
 });
 
-const conversationList = computed(() => {
-  return store.state.conversation.conversationList;
-});
-
 function closeCard(item) {
   if (item) item.action?.();
   setCard(false);
@@ -111,6 +106,7 @@ onClickOutside(cardRef, () => {
 function operation() {
   emitter.emit("openSetup", true);
 }
+
 const openCard = (data) => {
   setCard(true);
   profile.value = localStg.get(TIM_PROXY)?.userProfile || {};

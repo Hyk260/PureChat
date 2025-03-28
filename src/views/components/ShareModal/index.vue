@@ -127,7 +127,7 @@
 import { computed, nextTick, ref } from "vue";
 import { isRobot } from "@/utils/chat/index";
 import { Markdown } from "@/utils/markdown/index";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 import {
   useScreenshot,
   ImageType,
@@ -153,7 +153,7 @@ const fieldType = ref(ImageType.Blob);
 const emit = defineEmits(["onClose"]);
 
 const toAccount = computed(() => store.getters.toAccount);
-const [dialogVisible, setDialogVisible] = useBoolean();
+const [dialogVisible, setDialogVisible] = useState();
 const { loading, onDownload } = useScreenshot();
 
 function robotRole() {

@@ -13,9 +13,9 @@
 
 <script setup>
 import Character from "./Character.vue";
-import { useBoolean } from "@/utils/hooks/index";
+import { useState } from "@/utils/hooks/index";
 
-const [loading, setLoading] = useBoolean();
+const [loading, setLoading] = useState();
 setTimeout(() => {
   setLoading(true);
 }, 2000);

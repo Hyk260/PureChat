@@ -1,41 +1,39 @@
 <template>
   <div class="conv-chat flex w-full">
     <!-- 聊天列表 -->
-    <div class="message-left" :class="{ 'style-layoutkit': isChatSessionListCollapsed }">
+    <div class="message-left" :class="{ 'style-layout': isChatSessionListCollapsed }">
       <!-- 搜索框 -->
       <Search v-show="!isChatSessionListCollapsed" />
       <!-- tabs切换 -->
-      <el-tabs
+      <!-- <el-tabs
         v-show="!isChatSessionListCollapsed"
-        v-if="!isLocalMode"
-        v-model="activeName"
+        v-if="!isLocalMode && false"
+        v-model="currentTab"
         class="active-tabs"
         @tab-click="handleClick"
       >
         <el-tab-pane :label="$t('chat.whole')" name="whole"></el-tab-pane>
         <el-tab-pane :label="unreadLabel" name="unread"></el-tab-pane>
         <el-tab-pane :label="$t('chat.mention')" name="mention"></el-tab-pane>
-      </el-tabs>
-      <div
-        class="scroll-container"
-        :class="{ 'style-net': !appStore.networkStatus, 'local-mode': isLocalMode }"
-      >
+      </el-tabs> -->
+      <div class="scroll-container">
         <!-- 连接已断开 -->
-        <networklink :show="!appStore.networkStatus" />
+        <!-- <networklink :show="!appStore.networkStatus" /> -->
         <!-- 会话列表 -->
         <ConversationList />
       </div>
-      <div class="layoutkit-center">
+      <div class="layout-center">
         <div @click="toggleCollapsed">
-          <FontIcon :iconName="isChatSessionListCollapsed ? 'ArrowRight' : 'ArrowLeft'" />
+          <el-icon v-if="isChatSessionListCollapsed"><ArrowRight /></el-icon>
+          <el-icon v-else><ArrowLeft /></el-icon>
         </div>
       </div>
       <!-- <div class="sidebar-drag"></div> -->
     </div>
     <!-- 聊天框 -->
     <div id="container" class="message-right">
-      <div v-if="!conver" class="h-60 opacity-0" :class="isMacDragStyle()"></div>
-      <EmptyMessage className="empty" v-if="!conver" />
+      <div v-if="!currentConversation" class="h-60 opacity-0" :class="isMacDragStyle()"></div>
+      <EmptyMessage className="empty" v-if="!currentConversation" />
       <Header />
       <!-- 聊天窗口 -->
       <Chatwin ref="chatRef" :class="{ 'chat-h-full': isFullscreenInputActive }" />
@@ -51,7 +49,7 @@
     <!-- 合并消息弹框 -->
     <MergeMessagePopup />
     <!-- 群详情 -->
-    <GroupDetails v-if="isGroupChat" :groupProfile="conver.groupProfile" />
+    <GroupDetails v-if="isGroupChat" :groupProfile="currentConversation.groupProfile" />
   </div>
 </template>
 
@@ -76,24 +74,28 @@ import MergeMessagePopup from "./components/MergeMessagePopup.vue";
 import MultiChoiceBox from "./components/MultiChoiceBox.vue";
 import ReplyBox from "./components/ReplyBox.vue";
 import Search from "./components/Search.vue";
-import networklink from "./components/networklink.vue";
+// import networklink from "./components/networklink.vue";
 
 const isLocalMode = __LOCAL_MODE__;
 
 const chatRef = ref(null);
-const activeName = ref("whole");
 const appStore = useAppStore();
 const chatStore = useChatStore();
 
-const { isChatBoxVisible, isFullscreenInputActive, isChatSessionListCollapsed, totalUnreadMsg } =
-  storeToRefs(chatStore);
+const {
+  currentTab,
+  isChatBoxVisible,
+  isFullscreenInputActive,
+  isChatSessionListCollapsed,
+  totalUnreadMsg,
+} = storeToRefs(chatStore);
 
 const isGroupChat = computed(() => store.getters.isGroupChat);
-const conver = computed(() => store.state.conversation.currentConversation);
+const currentConversation = computed(() => store.state.conversation.currentConversation);
 
 const handleClick = ({ props }, event) => {
   const { label, name } = props;
-  store.commit("toggleList", name);
+  // chatStore.$patch({ currentTab: name });
 };
 
 const fnDragCss = () => {
@@ -117,7 +119,8 @@ const unreadLabel = computed(() => {
 
 onActivated(() => {
   emitter.emit("updataScroll");
-  store.commit("toggleList", "whole");
+  chatStore.$patch({ currentTab: "whole" });
+  isChatBoxVisible.value && useDragHandler(chatRef.value);
 });
 
 onDeactivated(() => {});
@@ -135,7 +138,6 @@ watch(isChatBoxVisible, (val) => {
 
 <style lang="scss" scoped>
 .active-tabs {
-  // user-select: none;
   :deep(.el-tabs__header) {
     margin: 0;
     padding: 0 16px;
@@ -152,7 +154,7 @@ watch(isChatBoxVisible, (val) => {
   border-right: 1px solid var(--color-border-default);
   // transition: width 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
-.style-layoutkit {
+.style-layout {
   border-right: 0px;
   width: 0px !important;
   min-width: 0px !important;
@@ -170,17 +172,9 @@ watch(isChatBoxVisible, (val) => {
   min-width: 375px;
 }
 .scroll-container {
-  height: calc(100% - 60px - 40px);
-  position: relative;
-}
-.local-mode {
   height: calc(100% - 60px);
   position: relative;
 }
-.style-net {
-  height: calc(100% - 60px - 34px - 40px);
-}
-
 #drag {
   position: absolute;
   z-index: 10;
@@ -208,7 +202,7 @@ watch(isChatBoxVisible, (val) => {
     background: #409eff !important;
   }
 }
-.layoutkit-center {
+.layout-center {
   pointer-events: all;
   position: absolute;
   z-index: 1;
