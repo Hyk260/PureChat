@@ -34,18 +34,23 @@ export function getHistoryMessageList(id) {
 
 export class LocalChat {
   constructor() {
-    window.LocalChat = new Proxy(this, {
-      set(target, key, val) {
-        return Reflect.set(target, key, val);
-      },
-      get(target, key) {
-        return Reflect.get(target, key);
-      },
-    });
-    window.MessageModel = MessageModel;
-    window.SessionModel = SessionModel;
+    this.initializeProxy()
   }
-  init() {
+  initializeSDK() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.emit('sdkStateReady', { name: 'sdkStateReady' });
+        resolve();
+      }, 0);
+    });
+  }
+  initializeProxy() {
+    return new Proxy(this, {
+      set: (target, key, value) => Reflect.set(target, key, value),
+      get: (target, key) => Reflect.get(target, key)
+    });
+  }
+  initialize() {
     localStg.set(USER_MODEL, { username: profile.userID });
     setTimeout(async () => {
       this.emit("sdkStateReady", { name: "sdkStateReady" });
@@ -55,12 +60,15 @@ export class LocalChat {
   }
   create(data) {
     console.log("create local chat", data);
-    this.init();
-    return this;
+    this.initialize();
+    return new LocalChat();
   }
-  on(eventName, handler, contextopt = null) {
-    const boundHandler = contextopt ? handler.bind(contextopt) : handler;
+  on(eventName, handler, context = null) {
+    const boundHandler = context ? handler.bind(context) : handler;
     emitter.on(eventName, boundHandler);
+  }
+  off(event, handler) {
+    emitter.off(event, handler);
   }
   emit(eventName, handler) {
     emitter.emit(eventName, handler);

@@ -1,60 +1,73 @@
-import TencentCloudChat from "@/utils/IM/chat/index";
-import GroupModule from "@tencentcloud/chat/modules/group-module.js";
-import SignalingModule from "@tencentcloud/chat/modules/signaling-module.js";
-import TIMUploadPlugin from "tim-upload-plugin";
-
 import { localChat } from "@/utils/IM/chat/local";
 
-// 聊天实例
-let chat = {};
+let instance = null;
+let isInitializing = false;
+let initPromise;
 
-// 初始化聊天实例
-export function initChat() {
-  // 本地模式
-  if (__LOCAL_MODE__) {
-    chat = localChat.create({});
-  } else {
-    // 动态导入腾讯云IM SDK相关模块
-    // const [
-    //   { default: TencentCloudChat },
-    //   { default: GroupModule },
-    //   { default: SignalingModule },
-    //   { default: TIMUploadPlugin },
-    // ] = await Promise.all([
-    //   import("@/utils/IM/chat/index"),
-    //   import("@tencentcloud/chat/modules/group-module.js"),
-    //   import("@tencentcloud/chat/modules/signaling-module.js"),
-    //   import("tim-upload-plugin"),
-    // ]);
+async function initChat() {
+  try {
+    if (__LOCAL_MODE__) {
+      return localChat.create({});
+    }
 
-    // 获取环境变量配置
-    const appid = import.meta.env.VITE_IM_SDK_APPID;
-    const level = import.meta.env.VITE_LOG_LEVEL;
+    const [
+      { default: TencentCloudChat },
+      { default: GroupModule },
+      { default: SignalingModule },
+      { default: TIMUploadPlugin },
+    ] = await Promise.all([
+      import("@tencentcloud/chat/index.es.js"),
+      import("@tencentcloud/chat/modules/group-module.js"),
+      import("@tencentcloud/chat/modules/signaling-module.js"),
+      import("tim-upload-plugin"),
+    ]);
 
-    // SDK初始化配置
-    const options = {
+    const {
+      VITE_IM_SDK_APPID: appid,
+      VITE_LOG_LEVEL: level
+    } = import.meta.env;
+
+    const chat = TencentCloudChat.create({
       SDKAppID: Number(appid),
       modules: {
-        "group-module": GroupModule, // 群组模块
-        "signaling-module": SignalingModule, // 信令模块
+        "group-module": GroupModule,
+        "signaling-module": SignalingModule,
       },
-    };
+    });
 
-    // 创建腾讯云IM SDK实例
-    chat = TencentCloudChat.create(options);
-    // 设置SDK日志级别
-    chat.setLogLevel(level);
-    // 0: 普通级别，日志量较多，接入时建议使用
-    // 1: release级别，SDK输出关键信息，生产环境建议使用
-    // 2: 告警级别，SDK只输出告警和错误级别的日志
-    // 3: 错误级别，SDK只输出错误级别的日志
-    // 4: 无日志级别，SDK将不打印任何日志
+    chat.setLogLevel(Number(level));
+    chat.registerPlugin({"tim-upload-plugin": TIMUploadPlugin });
 
-    // 注册文件上传插件
-    chat.registerPlugin({ "tim-upload-plugin": TIMUploadPlugin });
+    return chat;
+  } catch (error) {
+    console.error("IM SDK初始化失败:", error);
+    throw new Error("IM SDK初始化失败");
   }
-  return chat;
 }
 
-// 导出初始化后的聊天实例
-export default initChat();
+const handler = {
+  get(target, propKey) {
+    if (instance && propKey in instance) {
+      const value = instance[propKey];
+      return typeof value === 'function' ? value.bind(instance) : value;
+    }
+
+    return async (...args) => {
+      if (!instance) {
+        if (!isInitializing) {
+          isInitializing = true;
+          initPromise = initChat();
+          instance = await initPromise;
+          isInitializing = false;
+        } else {
+          await initPromise;
+        }
+      }
+      return instance[propKey](...args);
+    };
+  }
+};
+
+const tim = new Proxy({}, handler);
+
+export default tim;

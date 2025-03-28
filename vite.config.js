@@ -1,7 +1,7 @@
 import process from "node:process";
 import { URL, fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
-import { setupVitePlugins } from "./build/plugins/index";
+import { setupVitePlugins, setupViteExternal } from "./build/plugins/index";
 import { viteDefine, manualChunks } from "./build/config/define";
 
 export default defineConfig(({ mode }) => {
@@ -53,6 +53,7 @@ export default defineConfig(({ mode }) => {
       // 消除打包大小超过500kb警告
       chunkSizeWarningLimit: 4000,
       rollupOptions: {
+        external: setupViteExternal(viteEnv),
         input: {
           index: fileURLToPath(new URL("./index.html", import.meta.url)),
         },
