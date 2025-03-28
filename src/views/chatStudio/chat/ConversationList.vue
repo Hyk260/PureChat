@@ -8,8 +8,8 @@
       :id="`message_${item.conversationID}`"
       :class="fnClass(item)"
       v-contextmenu:contextmenu
-      @click="handleConvListClick(item)"
-      @drop="handleDrop($event, item, handleConvListClick)"
+      @click="handleConversationListClick(item)"
+      @drop="handleDrop($event, item, handleConversationListClick)"
       @dragover="handleDragOver($event)"
       @dragenter="handleDragEnter($event, item)"
       @dragleave="handleDragLeave($event, item)"
@@ -40,7 +40,7 @@
           </div>
         </div>
         <div class="message-item-right-bottom">
-          <CustomMention v-if="isMention(item) || isdraft(item)" :item="item" />
+          <CustomMention v-if="isMention(item) || isDraft(item)" :item="item" />
           <span v-else>{{ formatNewsMessage(item) }}</span>
         </div>
         <!-- 未读消息红点 -->
@@ -63,7 +63,7 @@
         @click="handleClickMenuItem(item)"
       >
         <FontIcon v-if="item.icon" :iconName="item.icon" />
-        <svg-icon v-else :local-icon="item.svgIcon" class="menu-svg" />
+        <SvgIcon v-else :local-icon="item.svgIcon" class="menu-svg" />
         <span> {{ item.text }}</span>
       </ContextmenuItem>
     </Contextmenu>
@@ -97,19 +97,19 @@ const groupStore = useGroupStore();
 const userStore = useUserStore();
 const chatStore = useChatStore();
 
-const { conversationList } = storeToRefs(chatStore);
+const { conversationList, searchConversationList } = storeToRefs(chatStore);
 
 const chat = computed(() => store.state.conversation.currentConversation);
 
 const searchForData = computed(() => {
-  if (chatStore.searchConversationList.length) {
-    return chatStore.searchConversationList;
+  if (searchConversationList.value.length) {
+    return searchConversationList.value;
   } else {
     return conversationList.value;
   }
 });
 
-const isdraft = (item) => {
+const isDraft = (item) => {
   return (
     item.conversationID !== chat?.value?.conversationID &&
     chatStore.chatDraftMap.has(item.conversationID)
@@ -183,7 +183,7 @@ const CustomMention = (props) => {
   const { messageForShow, nick: lastNick } = lastMessage;
   const draft = chatStore.chatDraftMap.get(ID);
   // 草稿
-  if (draft && isdraft(item)) {
+  if (draft && isDraft(item)) {
     const str = html2Escape(formatContent(draft));
     return h("span", { innerHTML: `${createMessagePrompt("draft")} ${str}` });
   }
@@ -195,9 +195,9 @@ const CustomMention = (props) => {
 // 消息列表 右键菜单
 const handleContextMenuEvent = (e, item) => {
   const { type } = item;
-  const isStystem = type === "@TIM#SYSTEM";
+  const isSystem = type === "@TIM#SYSTEM";
   // 系统通知屏蔽右键菜单
-  if (isStystem) {
+  if (isSystem) {
     isRight.value = false;
     return;
   }
@@ -223,8 +223,8 @@ const handleContextMenuEvent = (e, item) => {
 };
 
 // 会话点击
-const handleConvListClick = (data) => {
-  console.log("会话点击 handleConvListClick:", data);
+const handleConversationListClick = (data) => {
+  console.log("会话点击 handleConversationListClick:", data);
   if (chat.value) {
     const { conversationID: id } = chat.value;
     if (id === data?.conversationID) return;
@@ -248,11 +248,11 @@ const handleConvListClick = (data) => {
 const handleClickMenuItem = (item) => {
   const data = contextMenuItemInfo.value;
   if (item.id === "pinged" || item.id === "unpin") {
-    pingConv(data); // 置顶 or 取消置顶
+    pingConversation(data); // 置顶 or 取消置顶
   } else if (item.id === "AcceptNotNotify" || item.id === "AcceptAndNotify") {
     disableRecMsg(data); // 消息免打扰 or 允许消息提醒
   } else if (item.id === "remove") {
-    removeConv(data); // 删除会话
+    removeConversation(data); // 删除会话
   } else if (item.id === "clean") {
     console.log("清除消息"); // 清除消息
   }
@@ -261,12 +261,12 @@ const handleClickMenuItem = (item) => {
 const disableRecMsg = async (data) => {
   await setMessageRemindType(data);
 };
-// 删除会话
-const removeConv = async (data) => {
+
+const removeConversation = async (data) => {
   chatStore.deleteSession({ convId: data.conversationID });
 };
-// 置顶
-const pingConv = async (data) => {
+
+const pingConversation = async (data) => {
   await pinConversation(data);
 };
 </script>

@@ -17,8 +17,7 @@ import store from "@/store";
 
 export function getConversationList() {
   const list = useChatStore().conversationList;
-  // const list = store.state.conversation?.conversationList;
-  return cloneDeep(list) || null; // []
+  return cloneDeep(list) || [];
 }
 
 export function getCurrentMessageList() {
@@ -48,8 +47,10 @@ export class LocalChat {
   }
   init() {
     localStg.set(USER_MODEL, { username: profile.userID });
-    setTimeout(() => {
+    setTimeout(async () => {
       this.emit("sdkStateReady", { name: "sdkStateReady" });
+      const _newData = await SessionModel.query();
+      this.emit("onConversationListUpdated", { data: _newData });
     });
   }
   create(data) {
@@ -88,7 +89,7 @@ export class LocalChat {
         this.emit("onConversationListUpdated", { data: _newData });
         this.emit("onMessageReceived", { data: [message] });
         resolve({ code: 0, data: { message } });
-      }, 300);
+      }, 100);
     });
   }
   getLoginUser() {
@@ -159,15 +160,15 @@ export class LocalChat {
     MessageModel.create(_data.ID, _data);
     return _data;
   }
-  async getConversationProfile(convId) {
+  async getConversationProfile(chatId) {
     const data = cloneDeep(sessions);
-    data.conversationID = convId;
+    data.conversationID = chatId;
     data.lastMessage.lastTime = getTime();
-    data.userProfile = robotList.find((item) => item.userID === convId.replace("C2C", ""));
-    SessionModel.create(convId, data);
+    data.userProfile = robotList.find((item) => item.userID === chatId.replace("C2C", ""));
+    SessionModel.create(chatId, data);
 
-    const list = getConversationList() || [];
-    const index = list.findIndex((t) => t.conversationID === convId);
+    const list = getConversationList();
+    const index = list.findIndex((t) => t.conversationID === chatId);
 
     if (index === -1) list.push(data);
 

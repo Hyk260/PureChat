@@ -2,7 +2,6 @@ import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
   addTimeDivider,
   getBaseTime,
-  getChatListCache,
 } from "@/utils/chat/index";
 import { useChatStore } from "@/stores/index";
 import { cloneDeep } from "lodash-es";
@@ -199,11 +198,5 @@ const conversation = {
     },
   },
 };
-
-if (__LOCAL_MODE__) {
-  getChatListCache().then((res) => {
-    if (res.length) conversation.state.conversationList = res;
-  });
-}
 
 export default conversation;
