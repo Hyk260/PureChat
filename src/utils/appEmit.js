@@ -1,6 +1,6 @@
-import store from "@/store";
 import { scrollToDomPosition } from "@/utils/chat/index";
 import { githubAuth } from "@/api/node-admin-api/index";
+import { useChatStore, useSidebarStore } from "@/stores/index";
 
 function extractRouteInfoFromURL(url) {
   const parsedUrl = new URL(url);
@@ -45,8 +45,8 @@ export const appIpcEmit = () => {
   electron.ipcRenderer.on("notif:click", (event, data) => {
     console.log("notif:click", data);
     const { conversationID: convId, ID } = data;
-    store.commit("taggleOueSide", "chat");
-    store.dispatch("addConversation", { convId });
+    useSidebarStore().toggleOutside({ path: "/chat" });
+    useChatStore().addConversation({ convId })
     setTimeout(() => {
       scrollToDomPosition(ID);
     }, 500);
