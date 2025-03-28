@@ -121,14 +121,11 @@ export default {
     },
     // 多选删除
     async deleteMsg() {
-      // const result = await showConfirmationBox({ message: "确定删除?", iconType: "warning" });
-      // if (result == "cancel") return;
-      const data = this.filterate();
-      const { code } = await deleteMessage([...data]);
-      if (code !== 0) return;
-      this.$store.commit("deleteMessage", {
-        convId: this.currentConversation.conversationID,
+      const data = this.filtrate();
+      useChatStore().deleteMessage({
+        sessionId: this.currentConversation.conversationID,
         messageIdArray: [...data.map((item) => item.ID)],
+        message: data,
       });
       this.shutdown();
     },
@@ -158,7 +155,7 @@ export default {
     async mergeForward() {
       if (!this.multipleValue) return;
       const { toAccount, type } = this.multipleValue; // 选中转发 人 群 详细信息
-      const forwardData = this.filterate();
+      const forwardData = this.filtrate();
       const forwardMsg = await createMergerMessage({
         title: this.mergeTitle(),
         convId: toAccount,
@@ -167,18 +164,11 @@ export default {
         List: forwardData,
       });
       const { code, message: data } = await sendMessage(forwardMsg);
-      if (code == 0) {
-        const { conversationID } = data || "";
-        this.$store.commit("updateHistoryMessageCache", {
-          convId: conversationID,
-          message: [data],
-        });
-      }
       this.shutdown();
     },
     // 逐条转发
     async aQuickForward() {
-      const forwardData = this.filterate();
+      const forwardData = this.filtrate();
       if (!this.multipleValue) return;
       const { toAccount, type } = this.multipleValue;
       forwardData.map(async (t) => {
@@ -197,22 +187,13 @@ export default {
         message: message,
       });
       const { code, message: data } = await sendMessage(forwardMsg);
-      if (code == 0) {
-        const { conversationID } = data || "";
-        this.$store.commit("updateHistoryMessageCache", {
-          convId: conversationID,
-          message: [data],
-        });
-      }
     },
-    filterate() {
+    filtrate() {
       const chatData = Object.values(Object.fromEntries(useChatStore().forwardData));
       return chatData.sort((a, b) => a.clientTime - b.clientTime);
     },
     shutdown() {
-      // 清空多选数据
       useChatStore().setForwardData({ type: "clear" });
-      // 关闭多选框
       useChatStore().$patch({ showCheckbox: false });
       this.closedState();
       this.setMultipleValue();

@@ -1,4 +1,3 @@
-import store from "@/store";
 import emitter from "@/utils/mitt-bus";
 import chat from "@/utils/IM/im-sdk/tim";
 import { C2C_ROBOT_COLLECT } from "@/ai/constant";
@@ -9,7 +8,7 @@ import { localStg } from "@/utils/storage";
 import { useWindowFocus, useEventListener } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
-import { useAppStore, useUserStore, useGroupStore, useChatStore } from '@/stores/index';
+import { useAppStore, useUserStore, useGroupStore, useChatStore } from "@/stores/index";
 import {
   fnCheckoutNetState,
   getConversationID,
@@ -76,7 +75,7 @@ export class TIMProxy {
     this.initListener(); // 监听SDK
   }
   initListener() {
-    if (__LOCAL_MODE__) chat.create()
+    if (__LOCAL_MODE__) chat.create();
     // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
     chat.on("sdkStateReady", this.onReadyStateUpdate, this);
     // 收到 SDK 进入 not ready 状态通知，此时 SDK 无法正常工作
@@ -114,7 +113,7 @@ export class TIMProxy {
     this.isSDKReady = name === "sdkStateReady";
     if (!this.isSDKReady) return;
     chat.getMyProfile().then(({ code, data }) => {
-      if (code !== 0) return useAppStore().showMessage({ message: data, type: "error" })
+      if (code !== 0) return useAppStore().showMessage({ message: data, type: "error" });
       this.userProfile = data;
       this.userID = chat.getLoginUser();
       this.saveSelfToLocalStorage();
@@ -142,8 +141,8 @@ export class TIMProxy {
   }
   onMessageRevoked({ data }) {
     console.log("[chat] 撤回消息 onMessageRevoked:", data);
-    store.commit("updateMessages", {
-      convId: data?.[0].conversationID,
+    useChatStore().updateMessages({
+      sessionId: data?.[0].conversationID,
       message: cloneDeep(data[0]),
     });
   }
@@ -152,8 +151,11 @@ export class TIMProxy {
   }
   onKickOut({ data }) {
     console.log("[chat] onKickOut:", data);
-    useAppStore().showMessage({ message: `${kickedOutReason(data.type)}被踢出，请重新登录。`, type: "error" });
-    useUserStore().handleUserLogout()
+    useAppStore().showMessage({
+      message: `${kickedOutReason(data.type)}被踢出，请重新登录。`,
+      type: "error",
+    });
+    useUserStore().handleUserLogout();
   }
   onError({ data }) {
     console.log("[chat] onError:", data);
@@ -220,7 +222,7 @@ export class TIMProxy {
     });
     notification.onclick = () => {
       // 切换会话列表
-      useChatStore().addConversation({ convId: message.conversationID })
+      useChatStore().addConversation({ convId: message.conversationID });
       // 定位到指定会话
       setTimeout(() => {
         scrollToDomPosition(ID);
@@ -275,8 +277,8 @@ export class TIMProxy {
   handleUpdateMessage(data, read = true) {
     if (!getConversationID()) return;
     if (isRobotId(data)) return;
-    store.commit("updateMessages", {
-      convId: data?.[0].conversationID,
+    useChatStore().updateMessages({
+      sessionId: data?.[0].conversationID,
       message: cloneDeep(data[0]),
     });
     read && this.reportedMessageRead(data);
@@ -294,7 +296,7 @@ export class TIMProxy {
       duration: 6000,
       // type: "info",
       onClick: () => {
-        useChatStore().addConversation({ convId: conversationID })
+        useChatStore().addConversation({ convId: conversationID });
         scrollToDomPosition(ID);
         Notification.close();
       },

@@ -13,7 +13,6 @@ import profile from "@/database/profile.json";
 import timTextElem from "@/database/message/timTextElem.json";
 import timCustomElem from "@/database/message/timCustomElem.json";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store";
 
 export function getConversationList() {
   const list = useChatStore().conversationList;

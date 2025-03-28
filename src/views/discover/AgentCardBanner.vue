@@ -43,7 +43,6 @@ import { StoreKey, VITE_OPENAI_ID, ModelProvider } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
 import { useRobotStore, useSidebarStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
-import store from '@/store/index';
 
 const cardData = ref({});
 const sidebarStore = useSidebarStore();
@@ -71,7 +70,7 @@ function toTant(item = cardData.value) {
   sidebarStore.toggleOutside({ path: "/chat" });
   chatStore.addConversation({ convId: `${"C2C"}${id}` })
   setTimeout(() => {
-    store.commit("addAiPresetPromptWords");
+    chatStore.addAiPresetPromptWords()
   }, 200);
 }
 

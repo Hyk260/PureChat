@@ -370,7 +370,7 @@ export const createAiPromptMsg = (params) => {
   msg.from = from;
   msg.nick = "";
   msg.status = "success";
-  return { convId: `C2C${msg.from}`, message: msg };
+  return { sessionId: `C2C${msg.from}`, message: msg };
 };
 
 export function formatSizeStrict(input) {

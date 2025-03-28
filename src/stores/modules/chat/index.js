@@ -1,24 +1,32 @@
-import { defineStore } from 'pinia';
-import { getUnreadMsg, deleteConversation, sendMessage, getMessageList, setMessageRead, getConversationProfile } from "@/api/im-sdk-api/index";
-import { SetupStoreId } from '../../plugins/index';
+import { defineStore } from "pinia";
+import {
+  getUnreadMsg,
+  deleteConversation,
+  sendMessage,
+  getMessageList,
+  setMessageRead,
+  deleteMessage,
+  getConversationProfile,
+} from "@/api/im-sdk-api/index";
+import { SetupStoreId } from "../../plugins/index";
 import { EMOJI_RECENTLY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { ROBOT_COLLECT } from "@/ai/constant";
 import { chatService } from "@/ai/index";
 import { timProxy } from "@/utils/IM/index";
+import { MessageModel } from "@/database/models/message";
 import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
+import { cloneDeep } from "lodash-es";
 import { createAiPromptMsg, getModelType } from "@/ai/utils";
 import {
   addTimeDivider,
   checkTextNotEmpty,
   getBaseTime,
   isRobot,
-  getChatListCache,
 } from "@/utils/chat/index";
 import { useGroupStore } from "../group/index";
 import emitter from "@/utils/mitt-bus";
-import store from '@/store/index';
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
   state: () => ({
@@ -100,28 +108,129 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
   },
   actions: {
+    addAiPresetPromptWords() {
+      const { sessionId, message } = createAiPromptMsg();
+      const history = this.historyMessageList.get(sessionId);
+      if (this.currentConversation && this.currentMessageList) {
+        const data = cloneDeep(history);
+        if (data) this.currentMessageList = [message, ...data];
+      }
+      emitter.emit("updataScroll");
+    },
+    updateSelectedConversation(payload) {
+      const { conversationID: sessionId } = payload;
+      const oldSessionId = this.currentConversation?.conversationID;
+      if (sessionId === oldSessionId) return;
+      this.currentConversation = payload;
+      this.showCheckbox = false;
+      if (payload) {
+        const history = this.historyMessageList.get(sessionId);
+        this.currentMessageList = cloneDeep(history) ?? [];
+      } else {
+        this.currentMessageList = [];
+      }
+      this.noMore = this.isMore;
+      this.isChatBoxVisible = sessionId !== "@TIM#SYSTEM";
+    },
+    addMessage(payload) {
+      console.log("[chat] 添加消息 addMessage:", payload);
+      const { sessionId, message, isDone } = payload || {};
+      if (this.currentConversation) {
+        this.currentMessageList = message;
+      } else {
+        this.currentMessageList = [];
+      }
+      this.historyMessageList.set(sessionId, message);
+      const isMore = this.isMore || isDone;
+      console.log("isDone:", isMore ? "没有更多" : "显示loading");
+      this.noMore = isMore;
+    },
+    async deleteMessage(payload) {
+      console.log("[chat] 删除消息 deleteMessage:", payload);
+      const { sessionId, messageIdArray = [], message = [] } = payload || {};
+      const { code } = await deleteMessage(message);
+      if (code !== 0) {
+        console.error("[chat] 删除消息失败");
+        return;
+      }
+      const history = this.historyMessageList.get(sessionId);
+      if (!history) {
+        console.error("[chat] 删除消息失败，历史消息不存在");
+        return;
+      }
+      const newHistory = history.filter(
+        (t) => !t.isTimeDivider && !t.isDeleted && !messageIdArray.includes(t.ID)
+      );
+      const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
+      this.currentMessageList = newHistoryList;
+      this.historyMessageList.set(sessionId, newHistoryList);
+    },
+    loadMoreMessages(payload) {
+      console.log("[chat] 加载更多消息 loadMoreMessages:", payload);
+      const { sessionId, messages, msgId = "" } = payload;
+      // 历史消息
+      const history = this.historyMessageList.get(sessionId) || [];
+      if (history.map((t) => t?.ID).includes(msgId)) {
+        console.warn("重复加载", msgId);
+        this.noMore = true;
+        return;
+      }
+      console.log("历史消息 history:", history);
+      const baseTime = getBaseTime(history, "last");
+      const timeDividerResult = addTimeDivider(messages, baseTime, "last");
+      const newHistory = history.concat(timeDividerResult);
+      this.currentMessageList = newHistory;
+      this.historyMessageList.set(sessionId, newHistory);
+    },
+    updateMessages(payload) {
+      console.log("[chat] 更新消息 updateMessages:", payload);
+      const { sessionId, message } = payload;
+      if (!sessionId || !message) {
+        console.warn("sessionId 或 message 不存在");
+        return;
+      }
+      const oldMessageList = this.historyMessageList.get(sessionId);
+      if (!oldMessageList) {
+        console.warn("oldMessageList 不存在");
+        return;
+      }
+      MessageModel.update(message.ID, message);
+      const newMessageList = oldMessageList.map((item) => {
+        return item.ID === message.ID ? payload.message : item;
+      });
+      const latest = !newMessageList.some((item) => item.ID === message.ID);
+      if (latest) {
+        let baseTime = getBaseTime(newMessageList);
+        let timeDividerResult = addTimeDivider([message], baseTime).reverse();
+        newMessageList.unshift(...timeDividerResult);
+      }
+      if (this.currentConversation?.conversationID === sessionId) {
+        this.currentMessageList = newMessageList;
+      }
+      this.historyMessageList.set(sessionId, newMessageList);
+    },
     async sendSessionMessage(data) {
       const { message, last = true } = data;
-      const convId = message.conversationID || "";
-      if (!convId) {
-        console.error("convId is required");
+      const sessionId = message.conversationID || "";
+      if (!sessionId) {
+        console.error("sessionId is required");
         return;
       }
       // 消息上屏 预加载
-      store.commit("updateMessages", { convId, message });
+      this.updateMessages({ sessionId, message });
       emitter.emit("updataScroll");
       // 发送消息
       const { code, message: result } = await sendMessage(message);
       if (code === 0) {
-        this.sendMsgSuccessCallback({ convId, message: result, last });
+        this.sendMsgSuccessCallback({ sessionId, message: result, last });
       } else {
         console.log("发送失败", code, result);
       }
     },
     async sendMsgSuccessCallback(data) {
       console.log("消息发送成功 sendMsgSuccessCallback", data);
-      const { convId, message, last } = data;
-      store.commit("updateMessages", { convId, message });
+      const { sessionId, message, last } = data;
+      this.updateMessages({ sessionId, message });
       emitter.emit("updataScroll");
       if (!ROBOT_COLLECT.includes(message?.to)) return;
       if (last) {
@@ -129,20 +238,20 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
           await chatService({
             chat: message,
             provider: getModelType(message.to),
-            messages: store.state.conversation?.currentMessageList ?? [message],
+            messages: this.currentMessageList ?? [message],
           });
         }, 50);
       }
     },
     async updateMessageList(data) {
-      const { conversationID: convId } = data;
+      const { conversationID: sessionId } = data;
       // 当前会话有值
       if (!timProxy.isSDKReady) return;
-      const { messageList, isCompleted } = await getMessageList({ convId });
-      store.commit("addMessage", {
-        convId,
+      const { messageList, isCompleted } = await getMessageList({ convId: sessionId });
+      this.addMessage({
+        sessionId,
         isDone: isCompleted,
-        message: addTimeDivider(messageList).reverse(), // 添加时间
+        message: addTimeDivider(messageList).reverse(),
       });
       emitter.emit("updataScroll");
       // 消息已读上报
@@ -151,7 +260,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     async addConversation(action) {
       const { convId } = action;
       const { conversation: data } = await getConversationProfile({ convId });
-      store.commit("updateSelectedConversation", data);
+      this.updateSelectedConversation(data);
       this.updateMessageList(data);
       if (data?.type === "GROUP") {
         useGroupStore().handleGroupProfile(data);

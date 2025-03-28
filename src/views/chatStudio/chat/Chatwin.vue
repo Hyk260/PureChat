@@ -148,7 +148,6 @@ import { getTime } from "@/utils/common";
 import { debounce } from "lodash-es";
 import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
-import store from "@/store/index";
 import emitter from "@/utils/mitt-bus";
 import Checkbox from "../components/Checkbox.vue";
 import LoadMore from "../components/LoadMore.vue";
@@ -337,14 +336,13 @@ const updateScrollbar = () => {
 
 const getMoreMsg = async () => {
   try {
-    // 获取指定会话的消息列表
-    const { conversationID: convId } = currentConversation.value;
+    const { conversationID: sessionId } = currentConversation.value;
     const msglist = currentMessageList.value;
     const nextMsg = validateLastMessage(msglist);
     console.log("nextMsg:", nextMsg);
 
     const result = await getMessageList({
-      convId,
+      convId: sessionId,
       nextReqMessageID: nextMsg.ID,
     });
 
@@ -354,13 +352,12 @@ const getMoreMsg = async () => {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
       chatStore.$patch({ noMore: true });
     } else if (messageList.length) {
-      store.commit("loadMoreMessages", { convId, messages: messageList, msgId: messageList[0].ID });
+      chatStore.loadMoreMessages({ sessionId, messages: messageList, msgId: messageList[0].ID });
       chatStore.$patch({ needScrollDown: msglist.length });
     } else {
       chatStore.$patch({ noMore: true });
     }
   } catch (e) {
-    // 解析报错 关闭加载动画
     chatStore.$patch({ noMore: true });
   }
 };
@@ -526,9 +523,11 @@ const handleDeleteMsg = async (data) => {
       if (result === "cancel") return;
     }
     isConfirm.value = true;
-    const { code } = await deleteMessage([data]);
-    if (code !== 0) return;
-    store.commit("deleteMessage", { convId: data.conversationID, messageIdArray: [data.ID] });
+    chatStore.deleteMessage({
+      sessionId: data.conversationID,
+      messageIdArray: [data.ID],
+      message: [data],
+    });
   } catch (error) {
     console.log(error);
   }
