@@ -1,4 +1,4 @@
-import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
+// import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
   addTimeDivider,
   getBaseTime,
@@ -11,8 +11,6 @@ import emitter from "@/utils/mitt-bus";
 
 const conversation = {
   state: {
-    historyMessageList: new Map(), //历史消息
-    currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
   },
   mutations: {
@@ -23,13 +21,13 @@ const conversation = {
         console.warn("convId 或 message 不存在");
         return;
       }
-      let oldMessageList = state.historyMessageList.get(convId);
+      const oldMessageList = useChatStore().historyMessageList.get(convId);
       // 确保 oldMessageList 存在
       if (!oldMessageList) {
         console.warn("oldMessageList 不存在");
         return;
       }
-      __LOCAL_MODE__ && MessageModel.update(message.ID, message);
+      MessageModel.update(message.ID, message);
       const newMessageList = oldMessageList.map((item) => {
         return item.ID === message.ID ? payload.message : item;
       });
@@ -42,16 +40,16 @@ const conversation = {
       }
       // 当前会有列表有值
       if (state.currentConversation.conversationID === convId) {
-        state.currentMessageList = newMessageList;
+        useChatStore().$patch({ currentMessageList: newMessageList })
       }
       // 更新历史消息
-      state.historyMessageList.set(convId, newMessageList);
+      useChatStore().historyMessageList.set(convId, newMessageList);
     },
     loadMoreMessages(state, payload) {
       console.log("[chat] 加载更多消息 loadMoreMessages:", payload);
       const { convId, messages, msgId = "" } = payload;
       // 历史消息
-      const history = state.historyMessageList.get(convId) || [];
+      const history = useChatStore().historyMessageList.get(convId) || [];
       if (history.map((t) => t?.ID).includes(msgId)) {
         console.warn("重复加载", msgId);
         useChatStore().$patch({ noMore: true })
@@ -61,14 +59,14 @@ const conversation = {
       const baseTime = getBaseTime(history, "last");
       const timeDividerResult = addTimeDivider(messages, baseTime, "last");
       const newHistory = history.concat(timeDividerResult);
-      state.currentMessageList = newHistory;
-      state.historyMessageList.set(convId, newHistory);
+      useChatStore().$patch({ currentMessageList: newHistory })
+      useChatStore().historyMessageList.set(convId, newHistory);
     },
     // 从当前消息列表中删除某条消息
     deleteMessage(state, payload) {
       console.log("[chat] 删除消息 deleteMessage:", payload);
       const { convId, messageIdArray = [] } = payload || {};
-      const history = state.historyMessageList.get(convId);
+      const history = useChatStore().historyMessageList.get(convId);
       if (!history) {
         console.error("[chat] 删除消息失败，历史消息不存在");
         return;
@@ -77,20 +75,21 @@ const conversation = {
         (t) => !t.isTimeDivider && !t.isDeleted && !messageIdArray.includes(t.ID)
       );
       const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
-      state.currentMessageList = newHistoryList;
-      state.historyMessageList.set(convId, newHistoryList);
+      // state.currentMessageList = newHistoryList;
+      useChatStore().$patch({ currentMessageList: newHistoryList })
+      useChatStore().historyMessageList.set(convId, newHistoryList);
     },
     updateHistoryMessageCache(state, payload) {
       console.log("[chat] 更新历史消息缓存 updateHistoryMessageCache:", payload);
       const { convId, message } = payload;
-      let history = state.historyMessageList.get(convId);
+      const history = useChatStore().historyMessageList.get(convId);
       if (!history) return;
       let baseTime = getBaseTime(history);
       let timeDivider = addTimeDivider(message, baseTime).reverse();
       history.unshift(...timeDivider);
-      state.historyMessageList.set(convId, history);
+      useChatStore().historyMessageList.set(convId, history);
       if (state.currentConversation.conversationID === convId) {
-        state.currentMessageList = history;
+        useChatStore().$patch({ currentMessageList: history })
         emitter.emit("updataScroll");
       }
     },
@@ -98,28 +97,27 @@ const conversation = {
       console.log("[chat] 添加消息 addMessage:", payload);
       const { convId, isDone, message } = payload || {};
       if (state.currentConversation) {
-        state.currentMessageList = message;
+        useChatStore().$patch({ currentMessageList: message })
       } else {
-        state.currentMessageList = [];
+        useChatStore().$patch({ currentMessageList: [] })
       }
-      state.historyMessageList.set(convId, message);
-      const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
+      useChatStore().historyMessageList.set(convId, message);
+      const isMore = useChatStore().isMore
       // 是否已经拉完所有消息 '没有更多' : '显示loading'
       console.log("isDone:", isMore || isDone ? "没有更多" : "显示loading");
       useChatStore().$patch({ noMore: isMore || isDone })
     },
     addAiPresetPromptWords(state) {
       const { convId, message } = createAiPromptMsg();
-      const history = state.historyMessageList.get(convId);
-      if (state.currentConversation && state.currentMessageList) {
+      const history = useChatStore().historyMessageList.get(convId);
+      if (state.currentConversation && useChatStore().currentMessageList) {
         const data = cloneDeep(history);
-        if (data) state.currentMessageList = [message, ...data];
+        if (data) useChatStore().$patch({ currentMessageList: [message, ...data] })
       }
       emitter.emit("updataScroll");
     },
     clearHistory(state) {
       Object.assign(state, {
-        historyMessageList: new Map(),
         currentConversation: null,
         currentMessageList: [],
       });
@@ -129,20 +127,17 @@ const conversation = {
     updateSelectedConversation(state, payload) {
       const { conversationID: convId } = payload;
       const oldConvId = state.currentConversation?.conversationID;
-      if (convId == oldConvId) return;
+      if (convId === oldConvId) return;
       state.currentConversation = payload;
       useChatStore().$patch({ showCheckbox: false })
       if (payload) {
-        const history = state.historyMessageList.get(convId);
-        state.currentMessageList = cloneDeep(history) ?? [];
+        const history = useChatStore().historyMessageList.get(convId);
+        useChatStore().$patch({ currentMessageList: cloneDeep(history) ?? [] })
       } else {
-        state.currentMessageList = [];
+        useChatStore().$patch({ currentMessageList: [] })
       }
-      // 当前会话少于历史条数关闭loading
-      const isMore = state.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
-      // 系统消息关闭聊天框
       useChatStore().$patch({
-        noMore: isMore,
+        noMore: useChatStore().isMore,
         isChatBoxVisible: convId !== "@TIM#SYSTEM"
       })
     },
@@ -174,20 +169,6 @@ const conversation = {
         return "";
       }
       return state.currentConversation.type;
-    },
-    // 用于当前会话的图片预览
-    imgUrlList(state) {
-      if (!state.currentMessageList) return [];
-      const filteredMessages = state.currentMessageList.filter(
-        (item) => item.type === "TIMImageElem" && !item.isRevoked && !item.isDeleted
-      );
-      // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reduceRight
-      const reversedUrls = filteredMessages.reduceRight((urls, message) => {
-        const url = message.payload.imageInfoArray[0].url;
-        urls.push(url);
-        return urls;
-      }, []);
-      return reversedUrls;
     },
     // 是否群会话
     isGroupChat(state) {

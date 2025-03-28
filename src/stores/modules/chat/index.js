@@ -7,6 +7,7 @@ import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { ROBOT_COLLECT } from "@/ai/constant";
 import { chatService } from "@/ai/index";
 import { timProxy } from "@/utils/IM/index";
+import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import { createAiPromptMsg, getModelType } from "@/ai/utils";
 import {
   addTimeDivider,
@@ -62,8 +63,11 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     getNonBotC2CList() {
       return this.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
     },
+    isMore() {
+      return this.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
+    },
     imgUrlList() {
-      if (!this.currentMessageList) return [];
+      if (!this.currentMessageList.length) return [];
       const filteredMessages = this.currentMessageList.filter(
         (item) => item.type === "TIMImageElem" && !item.isRevoked && !item.isDeleted
       );
@@ -162,8 +166,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.showCheckbox = false;
       this.replyMsgData = null;
       this.chatDraftMap = new Map();
-      this.currentTab = "whole";
       this.historyMessageList = new Map();
+      this.currentTab = "whole";
       this.conversationList = [];
     },
     toggleMentionModal(flag) {

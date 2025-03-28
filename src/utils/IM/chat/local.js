@@ -21,14 +21,12 @@ export function getConversationList() {
 }
 
 export function getCurrentMessageList() {
-  // const list = useChatStore().currentMessageList;
-  const list = store.state.conversation?.currentMessageList;
+  const list = useChatStore().currentMessageList;
   return cloneDeep(list) || null; // []
 }
 
 export function getHistoryMessageList(id) {
-  // const data = useChatStore().historyMessageList.get(id);
-  const data = store.state.conversation?.historyMessageList.get(id);
+  const data = useChatStore().historyMessageList.get(id);
   return cloneDeep(data) || null; // []
 }
 

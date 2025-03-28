@@ -114,6 +114,7 @@ export class TIMProxy {
     this.isSDKReady = name === "sdkStateReady";
     if (!this.isSDKReady) return;
     chat.getMyProfile().then(({ code, data }) => {
+      if (code !== 0) return useAppStore().showMessage({ message: data, type: "error" })
       this.userProfile = data;
       this.userID = chat.getLoginUser();
       this.saveSelfToLocalStorage();

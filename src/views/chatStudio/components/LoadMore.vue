@@ -1,5 +1,5 @@
 <template>
-  <div class="viewref" v-if="isShowMore">
+  <div class="view-ref" v-if="isShowMore">
     <!-- <div class="showMore">
       {{ noMore ? $t("chat.noMore") : "" }}
     </div> -->
@@ -22,12 +22,12 @@ const props = defineProps({
 const chatStore = useChatStore();
 
 const isShowMore = computed(() => {
-  return store.state.conversation.currentMessageList?.length - 1 === props.index;
+  return chatStore.currentMessageList?.length - 1 === props.index;
 });
 </script>
 
 <style lang="scss" scoped>
-.viewref {
+.view-ref {
   @include flex-center;
   width: 100%;
   overflow: hidden;

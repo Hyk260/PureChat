@@ -171,11 +171,10 @@ const groupStore = useGroupStore();
 const chatStore = useChatStore();
 const appStore = useAppStore();
 
-const { showCheckbox, isChatBoxVisible, needScrollDown } = storeToRefs(chatStore);
+const { showCheckbox, isChatBoxVisible, needScrollDown, currentMessageList } = storeToRefs(chatStore);
 const toAccount = computed(() => store.getters.toAccount);
 const isGroupChat = computed(() => store.getters.isGroupChat);
 const currentType = computed(() => store.getters.currentType);
-const currentMessageList = computed(() => store.state.conversation.currentMessageList);
 const currentConversation = computed(() => store.state.conversation.currentConversation);
 
 const updateLoadMore = (item) => {
@@ -336,12 +335,12 @@ const getMoreMsg = async () => {
     // 获取指定会话的消息列表
     const { conversationID: convId } = currentConversation.value;
     const msglist = currentMessageList.value;
-    const nextMsgId = validateLastMessage(msglist).ID;
-    console.log("nextMsgId:", nextMsgId);
+    const nextMsg = validateLastMessage(msglist);
+    console.log("nextMsg:", nextMsg);
 
     const result = await getMessageList({
       convId,
-      nextReqMessageID: nextMsgId,
+      nextReqMessageID: nextMsg.ID,
     });
 
     console.log("getMessageList:", result);
