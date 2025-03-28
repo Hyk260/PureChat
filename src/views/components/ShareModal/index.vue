@@ -141,7 +141,6 @@ import { useChatStore } from "@/stores/index";
 import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import Header from "@/views/chatStudio/components/Header.vue";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
@@ -149,10 +148,13 @@ const isFooter = ref(false);
 const isQrCode = ref(false);
 const isPrompt = ref(false);
 const fieldType = ref(ImageType.Blob);
-
+const chatStore = useChatStore();
 const emit = defineEmits(["onClose"]);
 
-const toAccount = computed(() => store.getters.toAccount);
+const {
+  toAccount,
+} = storeToRefs(chatStore);
+
 const [dialogVisible, setDialogVisible] = useState();
 const { loading, onDownload } = useScreenshot();
 

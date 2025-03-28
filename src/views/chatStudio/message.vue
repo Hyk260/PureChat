@@ -59,7 +59,6 @@ import { storeToRefs } from "pinia";
 import { isMacOS } from "@/utils/common";
 import { useAppStore, useChatStore } from "@/stores/index";
 import { useDragHandler } from "@/utils/hooks/useDragHandler";
-import store from "@/store/index";
 import emitter from "@/utils/mitt-bus";
 
 import Chatwin from "./chat/Chatwin.vue";
@@ -86,10 +85,9 @@ const {
   isFullscreenInputActive,
   isChatSessionListCollapsed,
   totalUnreadMsg,
+  currentConversation,
+  isGroupChat
 } = storeToRefs(chatStore);
-
-const isGroupChat = computed(() => store.getters.isGroupChat);
-const currentConversation = computed(() => store.state.conversation.currentConversation);
 
 const handleClick = ({ props }, event) => {
   const { label, name } = props;

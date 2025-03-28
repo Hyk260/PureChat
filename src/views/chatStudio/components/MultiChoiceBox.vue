@@ -24,7 +24,6 @@ import {
 } from "@/api/im-sdk-api/index";
 import { useChatStore } from "@/stores/index";
 import { showConfirmationBox } from "@/utils/message";
-import { mapState } from "vuex";
 import { localStg } from "@/utils/storage";
 import { TIM_PROXY } from "@/constants/index";
 import MessageForwardingPopup from "./MessageForwardingPopup.vue";
@@ -73,9 +72,9 @@ export default {
     MessageForwardingPopup,
   },
   computed: {
-    ...mapState({
-      currentConversation: (state) => state.conversation.currentConversation,
-    }),
+    currentConversation() {
+      return useChatStore().currentConversation;
+    },
     showCheckbox() {
       return useChatStore().showCheckbox;
     },

@@ -60,10 +60,10 @@ import { getModelType, getModelSvg, useAccessStore, formatSizeStrict } from "@/a
 import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
-import { useRobotStore } from "@/stores/modules/robot/index";
+import { useRobotStore, useChatStore } from "@/stores/index";
 import { ModelSelect } from "@/ai/resources";
+import { storeToRefs } from "pinia";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 defineOptions({
   name: "RobotModel",
@@ -72,7 +72,11 @@ defineOptions({
 const robotIcon = ref("");
 const model = ref({});
 const [flag, setFlag] = useState();
-const toAccount = computed(() => store.getters.toAccount);
+const chatStore = useChatStore();
+
+const {
+  toAccount,
+} = storeToRefs(chatStore);
 
 function onClickOutside() {
   setFlag(false);

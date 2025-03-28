@@ -1,4 +1,3 @@
-// import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import {
   addTimeDivider,
   getBaseTime,
@@ -10,9 +9,6 @@ import { MessageModel } from "@/database/models/message";
 import emitter from "@/utils/mitt-bus";
 
 const conversation = {
-  state: {
-    currentConversation: null, //跳转窗口的属性
-  },
   mutations: {
     updateMessages(state, payload) {
       console.log("[chat] 更新消息 updateMessages:", payload);
@@ -39,7 +35,7 @@ const conversation = {
         newMessageList.unshift(...timeDividerResult);
       }
       // 当前会有列表有值
-      if (state.currentConversation.conversationID === convId) {
+      if (useChatStore().currentConversation.conversationID === convId) {
         useChatStore().$patch({ currentMessageList: newMessageList })
       }
       // 更新历史消息
@@ -88,7 +84,7 @@ const conversation = {
       let timeDivider = addTimeDivider(message, baseTime).reverse();
       history.unshift(...timeDivider);
       useChatStore().historyMessageList.set(convId, history);
-      if (state.currentConversation.conversationID === convId) {
+      if (useChatStore().currentConversation.conversationID === convId) {
         useChatStore().$patch({ currentMessageList: history })
         emitter.emit("updataScroll");
       }
@@ -96,7 +92,7 @@ const conversation = {
     addMessage(state, payload) {
       console.log("[chat] 添加消息 addMessage:", payload);
       const { convId, isDone, message } = payload || {};
-      if (state.currentConversation) {
+      if (useChatStore().currentConversation) {
         useChatStore().$patch({ currentMessageList: message })
       } else {
         useChatStore().$patch({ currentMessageList: [] })
@@ -110,25 +106,18 @@ const conversation = {
     addAiPresetPromptWords(state) {
       const { convId, message } = createAiPromptMsg();
       const history = useChatStore().historyMessageList.get(convId);
-      if (state.currentConversation && useChatStore().currentMessageList) {
+      if (useChatStore().currentConversation && useChatStore().currentMessageList) {
         const data = cloneDeep(history);
         if (data) useChatStore().$patch({ currentMessageList: [message, ...data] })
       }
       emitter.emit("updataScroll");
     },
-    clearHistory(state) {
-      Object.assign(state, {
-        currentConversation: null,
-        currentMessageList: [],
-      });
-      console.log("[chat] 清除历史记录 clearHistory:", state);
-    },
     // 切换 更新会话
     updateSelectedConversation(state, payload) {
       const { conversationID: convId } = payload;
-      const oldConvId = state.currentConversation?.conversationID;
+      const oldConvId = useChatStore().currentConversation?.conversationID;
       if (convId === oldConvId) return;
-      state.currentConversation = payload;
+      useChatStore().currentConversation = payload;
       useChatStore().$patch({ showCheckbox: false })
       if (payload) {
         const history = useChatStore().historyMessageList.get(convId);
@@ -141,41 +130,7 @@ const conversation = {
         isChatBoxVisible: convId !== "@TIM#SYSTEM"
       })
     },
-    setConversationValue(state, { key, value }) {
-      state[key] = value;
-    },
-    // 清除当前消息记录
-    clearCurrentMessage(state) {
-      state.currentConversation = null;
-      state.currentMessageList = [];
-    },
-  },
-  getters: {
-    toAccount(state) {
-      const { currentConversation: conve } = state;
-      if (!conve || !conve.conversationID) return "";
-      const { type, conversationID: ID } = conve;
-      switch (type) {
-        case "C2C":
-          return ID.replace("C2C", "");
-        case "GROUP":
-          return ID.replace("GROUP", "");
-        default:
-          return ID;
-      }
-    },
-    currentType(state) {
-      if (!state.currentConversation || !state.currentConversation.type) {
-        return "";
-      }
-      return state.currentConversation.type;
-    },
-    // 是否群会话
-    isGroupChat(state) {
-      if (!state.currentConversation || !state.currentConversation.type) return false;
-      return state.currentConversation.type === "GROUP";
-    },
-  },
+  }
 };
 
 export default conversation;

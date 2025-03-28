@@ -83,7 +83,6 @@ import { getOperatingSystem } from "@/utils/common";
 import MentionModal from "../components/MentionModal.vue";
 import Inputbar from "../Inputbar/index.vue";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 const editorRef = shallowRef(); // 编辑器实例，必须用 shallowRef
 const valueHtml = ref(""); // 内容 HTML
@@ -95,18 +94,16 @@ const groupStore = useGroupStore();
 const [loading, setLoading] = useState();
 const [disabled, setDisabled] = useState();
 const {
+  isGroupChat,
+  toAccount,
+  currentType,
   showCheckbox,
   isChatBoxVisible,
   isMentionModalVisible,
   isFullscreenInputActive,
+  currentConversation,
   replyMsgData,
 } = storeToRefs(chatStore);
-
-const toAccount = computed(() => store.getters.toAccount);
-const currentType = computed(() => store.getters.currentType);
-const currentConversation = computed(() => {
-  return store.state.conversation.currentConversation;
-});
 
 const handleEditor = (editor, created = true) => {
   if (created) {
@@ -149,15 +146,13 @@ const updateDraft = debounce((data) => {
 }, 300);
 
 const handleAt = debounce((editor) => {
-  if (currentType.value !== "GROUP") return;
-  const filteredList = groupStore.currentMemberList.filter(
-    (item) => item.userID !== localStg.get("timProxy")?.userProfile?.userID
-  );
-  filterMentionList({
-    str: editor.getText(),
-    list: filteredList,
-  });
-}, 150);
+  if (isGroupChat) {
+    filterMentionList({
+      str: editor.getText(),
+      list: groupStore.currentMembersWithoutSelf,
+    });
+  }
+}, 100);
 
 const onChange = (editor) => {
   const content = editor.children;

@@ -100,8 +100,8 @@
     </el-scrollbar>
     <!-- 卡片 -->
     <MyPopover />
-    <contextmenu ref="contextmenu" :disabled="!isRight">
-      <contextmenu-item
+    <Contextmenu ref="contextmenu" :disabled="!isRight">
+      <Contextmenu-item
         v-for="item in contextMenuItems"
         :key="item.id"
         :class="item.class"
@@ -110,8 +110,8 @@
       >
         <FontIcon :iconName="item.icon" />
         <span>{{ item.text }}</span>
-      </contextmenu-item>
-    </contextmenu>
+      </Contextmenu-item>
+    </Contextmenu>
   </div>
 </template>
 
@@ -171,11 +171,16 @@ const groupStore = useGroupStore();
 const chatStore = useChatStore();
 const appStore = useAppStore();
 
-const { showCheckbox, isChatBoxVisible, needScrollDown, currentMessageList } = storeToRefs(chatStore);
-const toAccount = computed(() => store.getters.toAccount);
-const isGroupChat = computed(() => store.getters.isGroupChat);
-const currentType = computed(() => store.getters.currentType);
-const currentConversation = computed(() => store.state.conversation.currentConversation);
+const {
+  toAccount,
+  isGroupChat,
+  currentType,
+  showCheckbox,
+  isChatBoxVisible,
+  needScrollDown,
+  currentMessageList,
+  currentConversation,
+} = storeToRefs(chatStore);
 
 const updateLoadMore = (item) => {
   nextTick(() => {
@@ -480,7 +485,7 @@ const handleAt = (data) => {
 };
 
 const handleSendMessage = (data) => {
-  chatStore.addConversation({ convId: `C2C${data.from}` })
+  chatStore.addConversation({ convId: `C2C${data.from}` });
 };
 
 const handleQuestion = async (item) => {

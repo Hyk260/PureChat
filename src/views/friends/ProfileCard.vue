@@ -52,7 +52,6 @@ import { getGender } from "@/utils/common";
 import { useSidebarStore, useChatStore } from "@/stores/index";
 import { scrollToMessage } from "@/utils/chat/index";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 const sidebarStore = useSidebarStore();
 const chatStore = useChatStore();

@@ -103,7 +103,6 @@ import RobotOptions from "./RobotOptions.vue";
 import RobotModel from "./RobotModel.vue";
 import RobotPlugin from "./RobotPlugin.vue";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 defineOptions({
   name: "Inputbar",
@@ -120,12 +119,8 @@ const fileExts = [...textExts, ...documentExts, ...imageExts, ...audioExts, ...v
 const [flag, setFlag] = useState();
 const robotStore = useRobotStore();
 const chatStore = useChatStore();
-const { isFullscreenInputActive } = storeToRefs(chatStore);
-const toAccount = computed(() => store.getters.toAccount);
-const currentType = computed(() => store.getters.currentType);
-const currentConversation = computed(() => {
-  return store.state.conversation.currentConversation;
-});
+const { toAccount, currentType, isFullscreenInputActive } =
+  storeToRefs(chatStore);
 
 const isVision = computed(() => {
   if (isRobot(toAccount.value)) {

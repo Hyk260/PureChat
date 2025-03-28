@@ -1,10 +1,10 @@
 <template>
-  <header v-if="chat" class="message-info-view-header flex-bc">
+  <header v-if="currentConversation" class="message-info-view-header flex-bc">
     <div class="message-info-views">
       <p v-if="currentType">
         <span v-if="chatType('C2C')" @click="openUser" class="single">
-          <span class="nick">{{ chatNick("C2C", chat) }}</span>
-          <Label :model="robotStore.model" :userID="chat?.conversationID" />
+          <span class="nick">{{ chatNick("C2C", currentConversation) }}</span>
+          <Label :model="robotStore.model" :userID="currentConversation?.conversationID" />
           <!-- ai-prompt -->
           <div
             v-if="isRobot(toAccount) && fnPromptConfig(robotStore.promptConfig)"
@@ -21,14 +21,14 @@
           </template>
         </span>
         <span v-else-if="chatType('GROUP')" @click="openSetup" class="group">
-          <span class="nick"> {{ chatNick("GROUP", chat) }}</span>
-          <Label :item="chat" />
+          <span class="nick"> {{ chatNick("GROUP", currentConversation) }}</span>
+          <Label :item="currentConversation" />
         </span>
         <span v-else-if="chatType('@TIM#SYSTEM')" class="system"> 系统通知 </span>
       </p>
     </div>
     <div class="flex gap-10">
-      <!-- <div class="message-info-add" v-show="chat.type === 'GROUP' && false" title="添加成员">
+      <!-- <div class="message-info-add" v-show="currentConversation.type === 'GROUP' && false" title="添加成员">
         <svg-icon local-icon="tianjia" class="icon-hover" />
       </div> -->
       <div class="share" title="分享对话" @click="openShare">
@@ -43,6 +43,7 @@
 
 <script setup>
 import { computed, watch } from "vue";
+import { storeToRefs } from "pinia";
 import { isRobot } from "@/utils/chat/index";
 import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
 import { cloneDeep } from "lodash-es";
@@ -52,18 +53,17 @@ import { localStg } from "@/utils/storage";
 import { useRobotStore, useChatStore } from "@/stores/index";
 import Label from "@/views/chatStudio/components/Label.vue";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 const [isBotToolsFlag, setBotToolsFlag] = useState();
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
 
-const toAccount = computed(() => store.getters.toAccount);
-const currentType = computed(() => store.getters.currentType);
-const isGroupChat = computed(() => store.getters.isGroupChat);
-const chat = computed(() => {
-  return store.state.conversation.currentConversation;
-});
+const {
+  toAccount,
+  isGroupChat,
+  currentType,
+  currentConversation
+} = storeToRefs(chatStore);
 
 const updataModel = () => {
   const value = getModelType(toAccount.value);

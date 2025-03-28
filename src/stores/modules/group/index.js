@@ -1,4 +1,3 @@
-import store from '@/store/index';
 import { defineStore } from 'pinia';
 import {
   getGroupList,
@@ -10,7 +9,7 @@ import {
 } from "@/api/im-sdk-api/index";
 import { sortMembersByRole, findGroupChat } from "@/utils/chat/index";
 import { SetupStoreId } from '../../plugins/index';
-import { useChatStore } from "@/stores/index";
+import { useChatStore, useUserStore } from "@/stores/index";
 
 export const useGroupStore = defineStore(SetupStoreId.Group, {
   state: () => ({
@@ -19,11 +18,18 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
     currentMemberList: [], // 当前群组成员列表
   }),
   getters: {
-    hasGroupList: (state) => state.groupList.length > 0,
-    // 群主
-    isOwner: (state) => state.groupProfile?.selfInfo?.role === "Owner",
-    // 管理员
-    isAdmin: (state) => state.groupProfile?.selfInfo?.role === "Admin",
+    hasGroupList() {
+      return this.groupList.length > 0
+    },
+    isOwner() {
+      return this.groupProfile?.selfInfo?.role === "Owner"
+    },
+    isAdmin() {
+      return this.groupProfile?.selfInfo?.role === "Admin"
+    },
+    currentMembersWithoutSelf() {
+      return this.currentMemberList.filter((t) => t.userID !== useUserStore().userProfile?.userID)
+    }
   },
   actions: {
     // 更新群详情

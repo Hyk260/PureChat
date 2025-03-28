@@ -11,7 +11,6 @@
 import { computed } from "vue";
 import { useChatStore } from "@/stores/modules/chat/index";
 import Loader from "@/views/components/Loader/index.vue";
-import store from "@/store/index";
 
 const props = defineProps({
   index: {

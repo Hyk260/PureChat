@@ -131,11 +131,11 @@ import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
 import { Markdown } from "@/utils/markdown/index";
 import { StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
-import { useRobotStore } from "@/stores/modules/robot/index";
+import { useRobotStore, useChatStore } from "@/stores/index";
+import { storeToRefs } from "pinia";
 import DragPrompt from "./DragPrompt.vue";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 defineOptions({
   name: "RobotOptions",
@@ -146,8 +146,11 @@ const modelData = ref(null);
 const maskData = ref([]);
 const inputRefs = ref({ token: null, openaiUrl: null });
 
+const chatStore = useChatStore();
 const [dialog, setDialog] = useState();
-const toAccount = computed(() => store.getters.toAccount);
+const {
+  toAccount,
+} = storeToRefs(chatStore);
 
 const handleClear = (data) => {
   console.log("clear", data);

@@ -32,7 +32,7 @@ useEventListener(window, "offline", () => {
 });
 
 useEventListener(window, "focus", () => {
-  setMessageRead(store.state.conversation?.currentConversation);
+  setMessageRead(useChatStore().currentConversation);
 });
 
 export class TIMProxy {
@@ -129,10 +129,6 @@ export class TIMProxy {
     useChatStore().$patch({ conversationList: data });
     if (_data) {
       useChatStore().$patch({ currentConversation: cloneDeep(_data[0]) });
-      store.commit("setConversationValue", {
-        key: "currentConversation",
-        value: cloneDeep(_data[0]),
-      });
     }
     useChatStore().updateTotalUnreadMsg();
   }

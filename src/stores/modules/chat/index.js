@@ -63,6 +63,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     getNonBotC2CList() {
       return this.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
     },
+    isAssistant() {
+      return /@RBT#/.test(this.toAccount);
+    },
     isMore() {
       return this.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
     },
@@ -84,7 +87,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
     isGroupChat() {
       if (!this.currentConversation) return false;
-      return this.currentConversation.type === "GROUP";
+      return this.currentType === "GROUP";
     },
     totalUnreadCount() {
       const result = this.conversationList.reduce((count, data) => {
@@ -162,6 +165,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.currentMessageList = [];
     },
     clearHistory() {
+      console.log("[chat] 清除历史记录 clearHistory:", state);
       this.clearCurrentMessage();
       this.showCheckbox = false;
       this.replyMsgData = null;
@@ -171,7 +175,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.conversationList = [];
     },
     toggleMentionModal(flag) {
-      if (store.state.conversation.currentConversation?.type === "GROUP") {
+      if (this.isGroupChat) {
         this.isMentionModalVisible = flag;
       } else {
         this.isMentionModalVisible = false;
@@ -216,10 +220,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         return;
       }
       const { code } = await deleteConversation({ convId });
-      if (code === 0) {
-        store.commit("clearCurrentMessage");
-        this.clearCurrentMessage();
-      }
+      if (code === 0) this.clearCurrentMessage();
     },
     setRecently({ data = {}, type }) {
       switch (type) {

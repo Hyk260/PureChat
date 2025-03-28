@@ -94,9 +94,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       if (data.code === 0) {
         console.log("[chat] im退出登录 logout", data)
         this.$reset()
-        // 清除消息记录
-        // TODO: 需要调用conversation store的clearHistory
-        store.commit("clearHistory")
         useChatStore().clearHistory()
       } else {
         console.log("[chat] im退出登录失败 logout", data)

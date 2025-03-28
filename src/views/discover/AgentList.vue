@@ -34,14 +34,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { useSidebarStore } from "@/stores/modules/sidebar/index";
 import modelProvider from "@/database/bot.json";
 import AgentCard from "./AgentCard.vue";
 import ModelProviderCard from "./ModelProviderCard.vue";
 import AgentSkeleton from "./AgentSkeleton.vue";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 const emit = defineEmits(["handleClick"]);
 
