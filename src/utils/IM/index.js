@@ -126,7 +126,6 @@ export class TIMProxy {
     const chatId = getConversationID();
     const _data = data.filter((t) => t.conversationID === chatId);
     useChatStore().$patch({ conversationList: data });
-    store.commit("setConversationValue", { key: "conversationList", value: data });
     if (_data) {
       useChatStore().$patch({ currentConversation: cloneDeep(_data[0]) });
       store.commit("setConversationValue", {

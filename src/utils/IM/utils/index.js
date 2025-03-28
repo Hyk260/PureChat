@@ -38,7 +38,6 @@ export function getConversationID() {
 
 export function getConversationList(data) {
   const list = useChatStore().conversationList;
-  // const list = store.state.conversation?.conversationList;
   const chatId = data?.[0].conversationID;
   const massage = list.filter((t) => t.conversationID === chatId);
   return massage;

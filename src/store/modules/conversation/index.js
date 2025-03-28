@@ -14,7 +14,6 @@ const conversation = {
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
-    conversationList: [], // 会话列表数据
   },
   mutations: {
     updateMessages(state, payload) {
@@ -123,7 +122,6 @@ const conversation = {
         historyMessageList: new Map(),
         currentConversation: null,
         currentMessageList: [],
-        conversationList: [],
       });
       console.log("[chat] 清除历史记录 clearHistory:", state);
     },
