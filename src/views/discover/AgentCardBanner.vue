@@ -68,7 +68,6 @@ function startConversation(item = cardData.value) {
   sidebarStore.toggleOutside({ path: "/chat" });
   chatStore.addConversation({ convId: `${"C2C"}${id}` })
   setTimeout(() => {
-    robotStore.updateModelConfig();
     chatStore.addAiPresetPromptWords()
   }, 200);
 }

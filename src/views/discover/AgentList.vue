@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { useSidebarStore } from "@/stores/modules/sidebar/index";
+import { useSidebarStore, useChatStore } from "@/stores/index";
 import modelProvider from "@/database/bot.json";
 import AgentCard from "./AgentCard.vue";
 import ModelProviderCard from "./ModelProviderCard.vue";
@@ -44,6 +44,7 @@ import emitter from "@/utils/mitt-bus";
 const emit = defineEmits(["handleClick"]);
 
 const sidebarStore = useSidebarStore();
+const chatStore = useChatStore();
 
 const props = defineProps({
   cur: {

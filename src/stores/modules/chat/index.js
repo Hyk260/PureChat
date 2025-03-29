@@ -24,8 +24,10 @@ import {
   checkTextNotEmpty,
   getBaseTime,
   isRobot,
+  scrollToMessage,
 } from "@/utils/chat/index";
 import { useGroupStore } from "../group/index";
+import { useRobotStore } from "../robot/index";
 import emitter from "@/utils/mitt-bus";
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
@@ -136,6 +138,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       this.noMore = this.isMore;
       this.isChatBoxVisible = sessionId !== "@TIM#SYSTEM";
+      this.isAssistant && useRobotStore().updateModelConfig();
     },
     addMessage(payload) {
       console.log("[chat] 添加消息 addMessage:", payload);
@@ -267,6 +270,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const { conversation: data } = await getConversationProfile({ convId });
       this.updateSelectedConversation(data);
       this.updateMessageList(data);
+      scrollToMessage(`message_${convId}`);
       if (data?.type === "GROUP") {
         useGroupStore().handleGroupProfile(data);
         useGroupStore().handleGroupMemberList({ groupID: data.groupProfile.groupID });

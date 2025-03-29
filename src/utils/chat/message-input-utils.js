@@ -1,6 +1,7 @@
+import { nextTick } from "vue";
 import { localStg } from "@/utils/storage";
-import { SessionModel } from '@/database/models/session';
-import { useAppStore } from '@/stores/index';
+import { SessionModel } from "@/database/models/session";
+import { useAppStore } from "@/stores/index";
 
 /**
  * 将二进制数据转换为 base64 URL 格式
@@ -286,11 +287,13 @@ export const scrollToDomPosition = (msgid) => {
 };
 
 export function scrollToMessage(id, delay = 300) {
-  setTimeout(() => {
-    const dom = document.getElementById(id);
-    if (!dom) return;
-    dom.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, delay);
+  nextTick(() => {
+    setTimeout(() => {
+      const dom = document.getElementById(id);
+      if (!dom) return;
+      dom.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, delay);
+  });
 }
 
 // 匹配机器人账号
@@ -306,7 +309,7 @@ export const getChatListCache = async () => {
   }
 };
 
-export const setChatListCache = (data) => { };
+export const setChatListCache = (data) => {};
 
 export function readFromFile() {
   return new Promise((res, rej) => {

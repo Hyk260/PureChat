@@ -48,8 +48,7 @@ import emitter from "@/utils/mitt-bus";
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
 
-const { toAccount, isAssistant, isGroupChat, currentType, currentConversation } =
-  storeToRefs(chatStore);
+const { isAssistant, isGroupChat, currentType, currentConversation } = storeToRefs(chatStore);
 
 const { getPromptTitle, isShowBotTools, isShowPromptTitle } = storeToRefs(robotStore);
 
@@ -78,10 +77,6 @@ const openSetup = () => {
 };
 
 const openUser = () => {};
-
-watch(toAccount, () => {
-  robotStore.updateModelConfig();
-});
 </script>
 
 <style lang="scss" scoped>
