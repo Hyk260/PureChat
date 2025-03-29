@@ -95,7 +95,7 @@
                   <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
                 </span>
                 <!-- ollama -->
-                <span v-else-if="item.doubt && isOllama()" class="flex mr-5 cursor-pointer">
+                <span v-else-if="item.doubt && isOllama" class="flex mr-5 cursor-pointer">
                   <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
                 </span>
                 <span v-else> </span>
@@ -147,10 +147,10 @@ const maskData = ref([]);
 const inputRefs = ref({ token: null, openaiUrl: null });
 
 const chatStore = useChatStore();
+const robotStore = useRobotStore();
 const [dialog, setDialog] = useState();
-const {
-  toAccount,
-} = storeToRefs(chatStore);
+const { toAccount } = storeToRefs(chatStore);
+const { isOllama, modelProvider } = storeToRefs(robotStore);
 
 const handleClear = (data) => {
   console.log("clear", data);
@@ -172,11 +172,6 @@ function isRange(id) {
     "frequency_penalty",
     "historyMessageCount",
   ].includes(id);
-}
-
-function isOllama() {
-  const model = getModelType(toAccount.value);
-  return [ModelProvider.Ollama].includes(model);
 }
 
 function handlePrompt(prompt) {
@@ -209,64 +204,61 @@ async function onRefresh() {
 }
 
 function initModel() {
-  const model = getModelType(toAccount.value);
-  const value = cloneDeep(modelValue[model]);
-  const account = getModelType(toAccount.value);
-  const collapse = localStg.get(`${account}-Select-Model`)?.Model?.collapse;
-  const olamaModelList = localStg.get("olama-local-model-list") || [];
+  const provider = modelProvider.value;
+  const value = cloneDeep(modelValue[provider]);
+  const collapse = localStg.get(`${provider}-Select-Model`)?.Model?.collapse;
   robotIcon.value = getModelSvg(toAccount.value);
   Object.values(value).map((v) => {
     if (v.ID === "model" && collapse) v.collapse = collapse;
-    // if (v.ID === "model" && olamaModelList.at(0)) v.options.chatModels = olamaModelList;
-    v.defaultValue = useAccessStore(model)[v.ID];
+    v.defaultValue = useAccessStore(provider)[v.ID];
     return v;
   });
-  maskData.value = cloneDeep(usePromptStore(model));
+  maskData.value = cloneDeep(usePromptStore(provider));
   modelData.value = value;
 }
 
 function storeRobotModel(model) {
   const access = localStg.get(StoreKey.Access);
-  const account = getModelType(toAccount.value);
+  const provider = modelProvider.value;
   if (access) {
-    localStg.set(StoreKey.Access, { ...access, [account]: { ...model } });
+    localStg.set(StoreKey.Access, { ...access, [provider]: { ...model } });
   } else {
-    localStg.set(StoreKey.Access, { [account]: { ...model } });
+    localStg.set(StoreKey.Access, { [provider]: { ...model } });
   }
-  localStg.set(`${account}-Select-Model`, modelData.value);
+  localStg.set(`${provider}-Select-Model`, modelData.value);
 }
 
 function storeRobotMask(model) {
-  const access = localStg.get(StoreKey.Prompt);
-  const account = getModelType(toAccount.value);
-  if (access) {
-    localStg.set(StoreKey.Prompt, { ...access, [account]: { ...model } });
+  const prompt = localStg.get(StoreKey.Prompt);
+  const provider = modelProvider.value;
+  if (prompt) {
+    localStg.set(StoreKey.Prompt, { ...prompt, [provider]: { ...model } });
   } else {
-    localStg.set(StoreKey.Prompt, { [account]: { ...model } });
+    localStg.set(StoreKey.Prompt, { [provider]: { ...model } });
   }
 }
 
 function resetRobotModel() {
   const access = localStg.get(StoreKey.Access);
   if (!access) return;
-  const account = getModelType(toAccount.value);
+  const provider = modelProvider.value;
   const filteredConfig = Object.fromEntries(
-    Object.entries(access).filter(([key, _]) => !key.includes(account))
+    Object.entries(access).filter(([key, _]) => !key.includes(provider))
   );
   localStg.set(StoreKey.Access, filteredConfig);
   // 重置选中模型
-  const model = useAccessStore(account)?.model;
-  const data = cloneDeep(modelValue[account].Model.options.chatModels);
+  const model = useAccessStore(provider)?.model;
+  const data = cloneDeep(modelValue[provider].Model.options.chatModels);
   const checkModel = data.find((item) => item.id === model);
-  useRobotStore().setRobotModel(checkModel);
+  robotStore.setRobotModel(checkModel);
 }
 
 function resetRobotMask() {
   const prompt = localStg.get(StoreKey.Prompt);
   if (!prompt) return;
-  const account = getModelType(toAccount.value);
+  const provider = modelProvider.value;
   const filteredConfig = Object.fromEntries(
-    Object.entries(prompt).filter(([key, _]) => !key.includes(account))
+    Object.entries(prompt).filter(([key, _]) => !key.includes(provider))
   );
   localStg.set(StoreKey.Prompt, filteredConfig);
 }
@@ -277,8 +269,8 @@ function handleClose(done) {
 }
 // 重置
 function handleCancel() {
-  localStg.remove(`${getModelType(toAccount.value)}-Select-Model`);
-  useRobotStore().setPromptConfig("");
+  localStg.remove(`${modelProvider.value}-Select-Model`);
+  robotStore.setPromptConfig("");
   resetRobotModel();
   resetRobotMask();
   setDialog(false);
@@ -295,9 +287,9 @@ function handleConfirm() {
   });
   storeRobotModel(model);
   if (!maskData.value.prompt.length || !maskData.value.meta.title) {
-    const _maskData = usePromptStore(getModelType(toAccount.value), true);
+    const _maskData = usePromptStore(modelProvider.value, true);
     storeRobotMask(_maskData);
-    useRobotStore().setPromptConfig("");
+    robotStore.setPromptConfig("");
   } else {
     storeRobotMask(maskData.value);
   }

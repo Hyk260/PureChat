@@ -6,14 +6,11 @@
           <span class="nick">{{ chatNick("C2C", currentConversation) }}</span>
           <Label :model="robotStore.model" :userID="currentConversation?.conversationID" />
           <!-- ai-prompt -->
-          <div
-            v-if="isAssistant && fnPromptConfig(robotStore.promptConfig)"
-            class="ml-5 ai-prompt-title"
-          >
-            {{ fnPromptConfig(robotStore.promptConfig) }}
+          <div v-if="isShowPromptTitle" class="ml-5 ai-prompt-title">
+            {{ getPromptTitle }}
           </div>
           <!-- ai-tools -->
-          <template v-if="isAssistant && robotStore.botTools && isBotToolsFlag">
+          <template v-if="isAssistant && robotStore.botTools && isShowBotTools">
             <div v-for="item in robotStore.botTools" :key="item.id" class="ml-5 ai-prompt-title">
               <svg-icon class="function-call" local-icon="functionCall" />
               <span>{{ item.meta.title }}</span>
@@ -44,42 +41,17 @@
 <script setup>
 import { computed, watch } from "vue";
 import { storeToRefs } from "pinia";
-import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
-import { cloneDeep } from "lodash-es";
-import { modelValue, StoreKey } from "@/ai/constant";
-import { useState } from "@/utils/hooks/index";
-import { localStg } from "@/utils/storage";
 import { useRobotStore, useChatStore } from "@/stores/index";
 import Label from "@/views/chatStudio/components/Label.vue";
 import emitter from "@/utils/mitt-bus";
 
-const [isBotToolsFlag, setBotToolsFlag] = useState();
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
 
-const {
-  toAccount,
-  isAssistant,
-  isGroupChat,
-  currentType,
-  currentConversation
-} = storeToRefs(chatStore);
+const { toAccount, isAssistant, isGroupChat, currentType, currentConversation } =
+  storeToRefs(chatStore);
 
-const updataModel = () => {
-  const value = getModelType(toAccount.value);
-  if (!value) return;
-  const model = useAccessStore(value)?.model;
-  const data = cloneDeep(modelValue[value].Model.options.chatModels);
-  const checkModel = data.find((item) => item.id === model);
-  setBotToolsFlag(checkModel?.functionCall ? true : false);
-  robotStore.setRobotModel(checkModel);
-};
-
-const updataPromptTitle = () => {
-  const value = getModelType(toAccount.value);
-  const prompt = localStg.get(StoreKey.Prompt);
-  robotStore.setPromptConfig(prompt?.[value] || null);
-};
+const { getPromptTitle, isShowBotTools, isShowPromptTitle } = storeToRefs(robotStore);
 
 const chatType = (type) => {
   return currentType.value === type;
@@ -107,20 +79,8 @@ const openSetup = () => {
 
 const openUser = () => {};
 
-const fnPromptConfig = (prompt) => {
-  if (!prompt) return "";
-  const { avatar, title } = prompt.meta || {};
-  if (!avatar && !title) return "";
-  return `${avatar} ${title}`;
-};
-
 watch(toAccount, () => {
-  updataModel();
-  updataPromptTitle();
-});
-
-emitter.on("updataBotToolsFlag", (val) => {
-  setBotToolsFlag(val);
+  robotStore.updateModelConfig();
 });
 </script>
 
