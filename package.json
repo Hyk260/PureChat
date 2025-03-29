@@ -92,7 +92,7 @@
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-remove-console": "^2.2.0",
     "vite-plugin-svg-icons": "2.0.1",
-    "vite-plugin-vue-devtools": "7.6.2",
+    "vite-plugin-vue-devtools": "7.7.2",
     "vitest": "^3.0.4"
   },
   "engines": {

@@ -7,13 +7,13 @@
           <Label :model="robotStore.model" :userID="currentConversation?.conversationID" />
           <!-- ai-prompt -->
           <div
-            v-if="isRobot(toAccount) && fnPromptConfig(robotStore.promptConfig)"
+            v-if="isAssistant && fnPromptConfig(robotStore.promptConfig)"
             class="ml-5 ai-prompt-title"
           >
             {{ fnPromptConfig(robotStore.promptConfig) }}
           </div>
           <!-- ai-tools -->
-          <template v-if="isRobot(toAccount) && robotStore.botTools && isBotToolsFlag">
+          <template v-if="isAssistant && robotStore.botTools && isBotToolsFlag">
             <div v-for="item in robotStore.botTools" :key="item.id" class="ml-5 ai-prompt-title">
               <svg-icon class="function-call" local-icon="functionCall" />
               <span>{{ item.meta.title }}</span>
@@ -44,7 +44,6 @@
 <script setup>
 import { computed, watch } from "vue";
 import { storeToRefs } from "pinia";
-import { isRobot } from "@/utils/chat/index";
 import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
 import { cloneDeep } from "lodash-es";
 import { modelValue, StoreKey } from "@/ai/constant";
@@ -60,6 +59,7 @@ const robotStore = useRobotStore();
 
 const {
   toAccount,
+  isAssistant,
   isGroupChat,
   currentType,
   currentConversation

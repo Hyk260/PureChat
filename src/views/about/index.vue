@@ -131,7 +131,6 @@ const words = [
   "@babel/eslint-parser",
   "@vue/cli-plugin-babel",
   "@vue/cli-plugin-router",
-  "@vue/cli-plugin-vuex",
   "@vue/compiler-sfc",
   "@vue/eslint-config-prettier",
   "@vueuse/core",
@@ -140,7 +139,6 @@ const words = [
   "eslint-plugin-vue",
   "mitt",
   "axios",
-  "vuex",
   "dayjs",
   "vue",
   "lodash-es",
@@ -150,7 +148,6 @@ const words = [
   "eslint",
   "prettier",
   "sass",
-  "sass-loader",
 ];
 
 const getMainLabel = computed(() => (label) => {

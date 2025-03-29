@@ -2,20 +2,20 @@
   <div class="toolbar">
     <!-- 表情包 -->
     <el-tooltip :content="$t('chat.emoji')" placement="top">
-      <el-button v-show="!isFullscreenInputActive && !isRobot(toAccount)" @click="sendEmojiClick">
+      <el-button v-show="!isFullscreenInputActive && !isAssistant" @click="sendEmojiClick">
         <SvgIcon local-icon="iconxiaolian" />
       </el-button>
     </el-tooltip>
     <!-- 选模型 -->
     <el-tooltip :content="$t('button.select_model')" placement="top">
-      <el-button v-show="isRobot(toAccount)" @click="selectModel">
+      <el-button v-show="isAssistant" @click="selectModel">
         <SvgIcon local-icon="model" />
       </el-button>
     </el-tooltip>
     <!-- 图片 -->
     <el-tooltip :content="$t('chat.picture')" placement="top">
       <el-button
-        v-show="isShowImage(toAccount)"
+        v-show="isShowImage()"
         :class="isVision ? '' : 'prohibit'"
         @click="sendImageClick"
       >
@@ -24,7 +24,7 @@
     </el-tooltip>
     <!-- 联网 -->
     <el-tooltip v-if="false" :content="$t('chat.web_search')" placement="top">
-      <el-button v-show="isRobot(toAccount)" @click="onEnableWebSearch">
+      <el-button v-show="isAssistant" @click="onEnableWebSearch">
         <SvgIcon local-icon="internet" />
       </el-button>
     </el-tooltip>
@@ -36,31 +36,31 @@
     </el-tooltip>
     <!-- 文件 -->
     <el-tooltip :content="$t('chat.file')" placement="top">
-      <el-button v-show="!isRobot(toAccount)" @click="sendFileClick">
+      <el-button v-show="!isAssistant" @click="sendFileClick">
         <SvgIcon local-icon="iconwenjianjia" />
       </el-button>
     </el-tooltip>
     <!-- 截图 -->
     <el-tooltip :content="$t('chat.screenshot')" placement="top">
-      <el-button v-show="!isRobot(toAccount) && isElectron" @click="clickCscreenshot">
+      <el-button v-show="!isAssistant && isElectron" @click="clickCscreenshot">
         <SvgIcon local-icon="iconjietu" />
       </el-button>
     </el-tooltip>
     <!-- 机器人配置 -->
     <el-tooltip :content="$t('chat.configuration')" placement="top">
-      <el-button v-show="isRobot(toAccount)" @click="openRobotBox">
+      <el-button v-show="isAssistant" @click="openRobotBox">
         <SvgIcon local-icon="robot" />
       </el-button>
     </el-tooltip>
     <!-- 插件 -->
     <el-tooltip v-if="false" content="选择插件" placement="top">
-      <el-button v-show="isFunctionCall && isShowPlugins(toAccount)" @click="openPluginBox">
+      <el-button v-show="isFunctionCall && isShowPlugins()" @click="openPluginBox">
         <SvgIcon local-icon="plugin" />
       </el-button>
     </el-tooltip>
     <!-- 滚动到底部 -->
     <el-tooltip :content="$t('chat.scrollToTheBottom')" placement="top">
-      <el-button v-show="tobottom" class="chat-top animate-chat-slide-in" @click="onTobBottom">
+      <el-button v-show="showBottomBtn" class="chat-top animate-chat-slide-in" @click="scrollToBottomBtn">
         <el-icon class="svg-left"><DArrowLeft /></el-icon>
       </el-button>
     </el-tooltip>
@@ -73,26 +73,25 @@
       :content="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
       placement="top"
     >
-      <el-button v-show="tobottom" class="!ml-auto" @click="toggleFullScreenInput">
+      <el-button class="!ml-auto" @click="toggleFullScreenInput">
         <SvgIcon :local-icon="isFullscreenInputActive ? 'narrow' : 'enlarge'" />
       </el-button>
     </el-tooltip>
     <input type="file" ref="imagePicker" :accept="imageExts" @change="sendImage" hidden />
     <input type="file" ref="annexPicker" :accept="supportExts" @change="sendFile" hidden />
     <input type="file" ref="filePicker" :accept="fileExts" @change="sendFile" hidden />
-    <template v-if="isRobot(toAccount)">
+    <template v-if="isAssistant">
       <RobotModel />
       <RobotPlugin />
       <RobotOptions />
     </template>
-    <EmotionPackBox v-if="!isRobot(toAccount) && flag" @onClose="setFlag(false)" />
+    <EmotionPackBox v-if="!isAssistant && flag" @onClose="setFlag(false)" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
-import { isRobot } from "@/utils/chat/index";
 import { isElectron } from "@/utils/common";
 import { storeToRefs } from "pinia";
 import { useState } from "@/utils/hooks/index";
@@ -108,7 +107,6 @@ defineOptions({
   name: "Inputbar",
 });
 
-const tobottom = ref();
 const annexPicker = ref();
 const imagePicker = ref();
 const filePicker = ref();
@@ -117,13 +115,13 @@ const supportExts = [...textExts, ...documentExts];
 const fileExts = [...textExts, ...documentExts, ...imageExts, ...audioExts, ...videoExts];
 
 const [flag, setFlag] = useState();
+const [showBottomBtn, setShowBottomBtn] = useState(false);
 const robotStore = useRobotStore();
 const chatStore = useChatStore();
-const { toAccount, currentType, isFullscreenInputActive } =
-  storeToRefs(chatStore);
+const { toAccount, isAssistant, currentType, isFullscreenInputActive } = storeToRefs(chatStore);
 
 const isVision = computed(() => {
-  if (isRobot(toAccount.value)) {
+  if (isAssistant.value) {
     return robotStore.model?.vision;
   } else {
     return true;
@@ -131,14 +129,16 @@ const isVision = computed(() => {
 });
 
 const isFunctionCall = computed(() => {
-  if (isRobot(toAccount.value)) {
+  if (isAssistant.value) {
     return robotStore.model?.functionCall;
   } else {
     return false;
   }
 });
 
-const onEnableWebSearch = () => {};
+const onEnableWebSearch = () => {
+  // enableWebSearch
+};
 
 const sendEmojiClick = () => {
   setFlag(true);
@@ -199,7 +199,7 @@ function sendFile(e) {
   });
 }
 
-function isShowPlugins(val) {
+function isShowPlugins() {
   return false;
   if (__LOCAL_MODE__) {
     return true;
@@ -208,20 +208,20 @@ function isShowPlugins(val) {
   }
 }
 
-function isShowImage(val) {
+function isShowImage() {
   if (__LOCAL_MODE__) {
     return false;
   } else {
-    return !isRobot(val);
+    return !isAssistant.value;
   }
 }
 
-const onTobBottom = () => {
+const scrollToBottomBtn = () => {
   emitter.emit("updataScroll");
 };
 
 emitter.on("onisbot", (state) => {
-  tobottom.value = !state;
+  setShowBottomBtn(!state);
 });
 </script>
 

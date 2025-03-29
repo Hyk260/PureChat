@@ -23,7 +23,7 @@
             <div class="item min-h-60">
               <div
                 class="message flex p-10"
-                v-for="item in filterate"
+                v-for="item in getSortedForwardData"
                 :key="item.ID"
                 :class="isSelf(item) ? 'is-self' : 'is-other'"
               >
@@ -153,6 +153,7 @@ const emit = defineEmits(["onClose"]);
 
 const {
   toAccount,
+  getSortedForwardData,
 } = storeToRefs(chatStore);
 
 const [dialogVisible, setDialogVisible] = useState();
@@ -183,11 +184,6 @@ function robotPrompt() {
   const model = getModelType(toAccount.value);
   return usePromptStore(model).prompt[0].content || "";
 }
-
-const filterate = computed(() => {
-  const chatData = Object.values(Object.fromEntries(useChatStore().forwardData));
-  return chatData.sort((a, b) => a.clientTime - b.clientTime);
-});
 
 emitter.on("handleShareModal", (val) => {
   setDialogVisible(val);

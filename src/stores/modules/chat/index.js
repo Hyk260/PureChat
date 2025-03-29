@@ -97,7 +97,12 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       if (!this.currentConversation) return false;
       return this.currentType === "GROUP";
     },
+    getSortedForwardData() {
+      const chatData = Object.values(Object.fromEntries(this.forwardData));
+      return chatData.sort((a, b) => a.clientTime - b.clientTime);
+    },
     totalUnreadCount() {
+      if (!this.currentConversation) return 0;
       const result = this.conversationList.reduce((count, data) => {
         if (this.currentConversation.conversationID === data.conversationID) {
           return count;

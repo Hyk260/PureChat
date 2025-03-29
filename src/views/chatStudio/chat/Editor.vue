@@ -96,6 +96,7 @@ const [disabled, setDisabled] = useState();
 const {
   isGroupChat,
   toAccount,
+  isAssistant,
   currentType,
   showCheckbox,
   isChatBoxVisible,
@@ -163,19 +164,18 @@ const onChange = (editor) => {
 
 const handleFile = (item) => {
   const type = item.type;
-  const _isRobot = isRobot(toAccount.value);
   const pasteFile = isDataTransferItem(item) ? item.getAsFile() : item;
   let typeText = "";
   if (type.match("^image/")) {
     typeText = "图片";
-    if (_isRobot) {
+    if (isAssistant.value) {
       appStore.showMessage({ message: `暂不支持${typeText}消息`, type: "warning" });
       return;
     }
     parsePicture(pasteFile);
   } else {
     typeText = "文件";
-    if (_isRobot) {
+    if (isAssistant.value) {
       appStore.showMessage({ message: `暂不支持${typeText}消息`, type: "warning" });
       return;
     }

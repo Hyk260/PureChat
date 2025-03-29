@@ -1,8 +1,8 @@
 <template>
-  <div class="check-box" id="editor" v-if="showCheckbox">
-    <FontIcon class="close" iconName="CircleCloseFilled" @click="onClose" />
+  <div class="check-box" id="editor" v-if="chatStore.showCheckbox">
+    <el-icon class="close" @click="onClose"><CircleCloseFilled /></el-icon>
     <div class="flex-c flex-col" v-for="item in buttonList" :key="item.icon">
-      <div class="icon flex-c" :class="disabled ? 'disabled' : ''" @click="onClock(item)">
+      <div class="icon flex-c" :class="isForwardDataEmpty ? 'disabled' : ''" @click="onClock(item)">
         <SvgIcon :class="item.class" :local-icon="item.icon" />
       </div>
       <span class="text">
@@ -16,14 +16,13 @@
 </template>
 
 <script>
+import { mapStores } from "pinia";
 import {
   createForwardMessage,
   createMergerMessage,
-  deleteMessage,
   sendMessage,
 } from "@/api/im-sdk-api/index";
-import { useChatStore } from "@/stores/index";
-import { showConfirmationBox } from "@/utils/message";
+import { useChatStore, useGroupStore } from "@/stores/index";
 import { localStg } from "@/utils/storage";
 import { TIM_PROXY } from "@/constants/index";
 import MessageForwardingPopup from "./MessageForwardingPopup.vue";
@@ -72,14 +71,9 @@ export default {
     MessageForwardingPopup,
   },
   computed: {
-    currentConversation() {
-      return useChatStore().currentConversation;
-    },
-    showCheckbox() {
-      return useChatStore().showCheckbox;
-    },
-    disabled() {
-      return useChatStore().forwardData.size === 0;
+    ...mapStores(useChatStore, useGroupStore),
+    isForwardDataEmpty() {
+      return this.chatStore.forwardData.size === 0;
     },
     userProfile() {
       return localStg.get(TIM_PROXY)?.userProfile;
@@ -121,9 +115,9 @@ export default {
     },
     // 多选删除
     async deleteMsg() {
-      const data = this.filtrate();
-      useChatStore().deleteMessage({
-        sessionId: this.currentConversation.conversationID,
+      const data = this.chatStore.getSortedForwardData;
+      this.chatStore.deleteMessage({
+        sessionId: this.chatStore.currentConversation.conversationID,
         messageIdArray: [...data.map((item) => item.ID)],
         message: data,
       });
@@ -147,7 +141,7 @@ export default {
       });
     },
     mergeTitle() {
-      const { type, userProfile } = this.currentConversation || {};
+      const { type, userProfile } = this.chatStore.currentConversation || {};
       const self = this.userProfile.nick || this.userProfile.userID;
       return type === "GROUP" ? "群聊" : `${userProfile?.nick}和${self}的聊天记录`;
     },
@@ -155,7 +149,7 @@ export default {
     async mergeForward() {
       if (!this.multipleValue) return;
       const { toAccount, type } = this.multipleValue; // 选中转发 人 群 详细信息
-      const forwardData = this.filtrate();
+      const forwardData = this.chatStore.getSortedForwardData;
       const forwardMsg = await createMergerMessage({
         title: this.mergeTitle(),
         convId: toAccount,
@@ -164,11 +158,14 @@ export default {
         List: forwardData,
       });
       const { code, message: data } = await sendMessage(forwardMsg);
+      if (code === 0) {
+        this.chatStore.sendSessionMessage({ message: data });
+      }
       this.shutdown();
     },
     // 逐条转发
     async aQuickForward() {
-      const forwardData = this.filtrate();
+      const forwardData = this.chatStore.getSortedForwardData;
       if (!this.multipleValue) return;
       const { toAccount, type } = this.multipleValue;
       forwardData.map(async (t) => {
@@ -187,14 +184,13 @@ export default {
         message: message,
       });
       const { code, message: data } = await sendMessage(forwardMsg);
-    },
-    filtrate() {
-      const chatData = Object.values(Object.fromEntries(useChatStore().forwardData));
-      return chatData.sort((a, b) => a.clientTime - b.clientTime);
+      if (code === 0) {
+        this.chatStore.sendSessionMessage({ message: data });
+      }
     },
     shutdown() {
-      useChatStore().setForwardData({ type: "clear" });
-      useChatStore().$patch({ showCheckbox: false });
+      this.chatStore.setForwardData({ type: "clear" });
+      this.chatStore.$patch({ showCheckbox: false });
       this.closedState();
       this.setMultipleValue();
     },

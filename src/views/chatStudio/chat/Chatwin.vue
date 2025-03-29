@@ -80,10 +80,10 @@
                     @handlSingleClick="handlSingleClick"
                   />
                 </div>
-                <div class="message-view-bottom" v-if="!isSelf(item) && isRobot(toAccount)">
+                <div class="message-view-bottom" v-if="!isSelf(item) && isAssistant">
                   {{ handleCustomData(item, "messageAbstract") }}
                 </div>
-                <div class="message-view-question" v-if="!isSelf(item) && isRobot(toAccount)">
+                <div class="message-view-question" v-if="!isSelf(item) && isAssistant">
                   <div
                     v-for="(item, i) in handleCustomData(item, 'recQuestion') || []"
                     :key="i"
@@ -172,6 +172,7 @@ const appStore = useAppStore();
 
 const {
   toAccount,
+  isAssistant,
   isGroupChat,
   currentType,
   showCheckbox,
@@ -422,7 +423,7 @@ const handleContextMenuEvent = (event, item) => {
     contextMenuItems.value = contextMenuItems.value.filter((t) => t.id !== "copy");
   }
   // 机器人消息过滤 撤回 回复
-  if (isRobot(toAccount.value)) {
+  if (isAssistant.value) {
     contextMenuItems.value = contextMenuItems.value.filter(
       (t) => t.id !== "reply" && t.id !== "revoke"
     );
