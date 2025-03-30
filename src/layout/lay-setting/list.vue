@@ -4,14 +4,15 @@
     <ul class="ui-menu-vertical">
       <li
         v-for="item in list"
-        :key="item.icon"
+        :key="item.id"
         @click="onClick(item)"
         class="menu-list"
         :class="{
-          selectd: active === item.icon,
+          select: active === item.id,
         }"
       >
-        <FontIcon class="icon" :iconName="item.icon" />
+        <FontIcon v-if="item.icon" class="icon" :iconName="item.icon" />
+        <SvgIcon v-else class="icon" :local-icon="item.svg_icon" />
         <div class="title-content">{{ item.title }}</div>
       </li>
     </ul>
@@ -20,13 +21,15 @@
 
 <script setup>
 import { ref } from "vue";
+import { useState } from "@/utils/hooks/index";
 import { list } from "./enums";
 
+const [active,setActive] = useState(list.value[0]);
+
 const emit = defineEmits(["active"]);
-const active = ref("");
 
 function onClick(item) {
-  active.value = item.icon;
+  setActive(item.id);
   emit("active", item);
 }
 
@@ -50,7 +53,7 @@ defineExpose({ onClick });
   padding: 0 20px 20px 20px;
   font-size: 1.125rem;
 }
-.selectd {
+.select {
   color: rgb(114, 184, 249);
   background-color: var(--color-message-active);
 }

@@ -1,4 +1,21 @@
 const local = {
+  settings: {
+    defaultProvider: "默认服务商",
+    model: "默认模型",
+    provider: {
+      api_host: "API 地址",
+      api_key: "API 密钥",
+      title: "模型服务",
+    },
+    about: {
+      releases: {
+        title: "更新日志",
+      },
+    },
+    webSearch: {
+      title: "网络搜索",
+    },
+  },
   button: {
     add: "添加",
     added: "已添加",
@@ -111,7 +128,7 @@ const local = {
     passwordDifferentReg: "两次密码不一致!",
     passwordUpdateReg: "修改密码成功",
   },
-  messagebox: {
+  messageBox: {
     title: "提示",
     confirm: "确定",
     cancel: "取消",

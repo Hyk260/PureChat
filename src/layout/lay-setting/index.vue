@@ -8,10 +8,10 @@
 </template>
 
 <script setup>
-import { useState } from "@/utils/hooks/index";
-import emitter from "@/utils/mitt-bus";
 import { ref } from "vue";
 import { list } from "./enums";
+import { useState } from "@/utils/hooks/index";
+import emitter from "@/utils/mitt-bus";
 import ItemGrid from "./itemGrid.vue";
 import List from "./list.vue";
 

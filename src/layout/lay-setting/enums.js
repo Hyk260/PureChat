@@ -5,21 +5,25 @@ import { ModelProvider } from "@/ai/constant";
 export const list = computed(() => {
   return [
     {
+      id: "currency",
       title: $t("common.currency"),
       icon: "Operation",
     },
     {
-      title: "AI 服务商",
+      id: "webSearch",
+      title: $t("settings.webSearch.title"),
+      svg_icon: "internet",
+    },
+    {
+      id: "provider",
+      title: $t("settings.provider.title"),
       icon: "Postcard",
     },
     {
+      id: "about",
       title: $t("common.about"),
       icon: "Warning",
     },
-    // {
-    //   title: "外观",
-    //   icon: "IceCreamRound",
-    // },
   ];
 });
 

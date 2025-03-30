@@ -2,13 +2,13 @@
   <div class="panel-wrapper w-full flex flex-col">
     <div class="title flex-bc">
       <span>{{ item.title }}</span>
-      <FontIcon class="icon-hover" iconName="CloseBold" @click="emit('onClose')" />
+      <el-icon @click="emit('onClose')"><CloseBold /></el-icon>
     </div>
     <div v-if="item.icon === 'Operation'">
       <ul class="setting w-full">
         <li>
           <span>{{ $t("common.theme") }}</span>
-          <el-select v-model="themecolor" placeholder="主题颜色">
+          <el-select v-model="themeColor" placeholder="主题颜色">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -29,12 +29,26 @@
             />
           </el-select>
         </li>
-        <li class="logout" v-if="!islocalMode">
+        <li class="logout" v-if="!isLocalMode">
           <el-button @click="logout" type="primary">
             {{ $t("login.logout") }}
           </el-button>
         </li>
       </ul>
+    </div>
+    <div v-else-if="item.id === 'webSearch'">
+      <div>
+        <div>
+          <span> Tavily</span>
+          <el-icon><Promotion /></el-icon>
+        </div>
+        <el-divider class="!my-20" />
+        <p class="my-20">API密钥</p>
+        <div class="flex gap-10">
+          <el-input v-model="searchInput" type="password" placeholder="API Key" show-password />
+          <el-button>检查</el-button>
+        </div>
+      </div>
     </div>
     <div v-else-if="item.icon === 'Warning'">
       <div class="ui-row flex-bc">
@@ -44,11 +58,13 @@
           </div>
           <div class="ui-col flex items-start flex-col">
             <div class="col-title">{{ VITE_APP_NAME }}</div>
-            <div class="version">v{{ version }}</div>
+            <div class="version">
+              <el-tag type="primary">v{{ version }}</el-tag>
+            </div>
           </div>
         </div>
         <div>
-          <el-button @click="log"> 更新日志 </el-button>
+          <el-button @click="log"> {{ $t("settings.about.releases.title") }} </el-button>
         </div>
       </div>
       <div class="divider"></div>
@@ -59,7 +75,7 @@
     <div v-else-if="item.icon === 'Postcard'">
       <ul class="setting w-full">
         <li>
-          <span> 首选服务商 </span>
+          <span>{{ $t("settings.defaultProvider") }} </span>
           <el-select v-model="assistant" @change="onChange">
             <el-option
               v-for="item in optionsModel"
@@ -76,6 +92,7 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { ModelProvider } from "@/ai/constant";
 import { useUserStore } from "@/stores/index";
@@ -83,7 +100,9 @@ import { languages, options, optionsModel } from "./enums";
 
 const { VITE_APP_NAME, DEV: isDev } = import.meta.env;
 const { docs, version } = __APP_INFO__.pkg;
-const islocalMode = __LOCAL_MODE__
+const isLocalMode = __LOCAL_MODE__;
+
+const [searchInput, setSearchInput] = useState("");
 
 const props = defineProps({
   item: {
@@ -92,7 +111,7 @@ const props = defineProps({
   },
 });
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 const assistant = ref(localStg.get("model-provider") || ModelProvider.OpenAI);
 
 const emit = defineEmits(["onClose", "onItem"]);
@@ -107,7 +126,7 @@ function log() {
 
 function logout() {
   emit("onClose");
-  userStore.handleUserLogout()
+  userStore.handleUserLogout();
 }
 
 const onChange = (val) => {
@@ -115,7 +134,7 @@ const onChange = (val) => {
   localStg.set("model-provider", val);
 };
 
-const themecolor = computed({
+const themeColor = computed({
   get() {
     return userStore.themeScheme;
   },

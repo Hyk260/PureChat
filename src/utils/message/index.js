@@ -15,7 +15,7 @@ export const showConfirmationBox = async (data, Type = "confirm") => {
     message,
     confirmText = `${$t('common.confirm') }`, //"确认",
     cancelText = `${$t('common.cancel') }`, //"取消",
-    tip = `${$t("messagebox.title")}`,
+    tip = `${$t("messageBox.title")}`,
     iconType = "", // warning
     inputValue = "", // input
     draggable = false,
