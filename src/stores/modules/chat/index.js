@@ -193,8 +193,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     updateMessages(payload) {
       console.log("[chat] 更新消息 updateMessages:", payload);
       const { sessionId, message } = payload;
-      if (!sessionId || !message) {
-        console.warn("sessionId 或 message 不存在");
+      if (!sessionId || !message?.ID) {
+        console.warn("sessionId 或 ID 不存在");
         return;
       }
       const oldMessageList = this.historyMessageList.get(sessionId);

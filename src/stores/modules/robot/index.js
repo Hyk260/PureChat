@@ -26,7 +26,7 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       return [ModelProvider.Ollama].includes(this.modelProvider);
     },
     isShowPromptTitle() {
-      return this.promptConfig?.id && useChatStore().isAssistant;
+      return this.promptConfig?.meta?.title && useChatStore().isAssistant;
     },
     getPromptTitle() {
       if (!this.isShowPromptTitle) return "";

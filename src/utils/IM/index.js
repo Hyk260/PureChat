@@ -29,17 +29,7 @@ export class TIMProxy {
     this.userProfile = {}; // IM用户信息
     this.once = false; // 防止重复初始化
     this.isSDKReady = false;
-    // 暴露给全局
-    window.TIMProxy = new Proxy(this, {
-      set(target, key, val) {
-        return Reflect.set(target, key, val);
-      },
-      get(target, key) {
-        return Reflect.get(target, key);
-      },
-    });
   }
-  // 缓存IM信息
   saveSelfToLocalStorage() {
     const player = {};
     for (const [key, value] of Object.entries(this)) {
@@ -47,7 +37,6 @@ export class TIMProxy {
     }
     localStg.set(TIM_PROXY, player);
   }
-  // 更新IM信息
   loadSelfFromLocalStorage() {
     const player = localStg.get(TIM_PROXY);
     if (!player) return;
@@ -69,7 +58,7 @@ export class TIMProxy {
     // 收到 SDK 进入 not ready 状态通知，此时 SDK 无法正常工作
     chat.on("sdkStateNotReady", this.onReadyStateUpdate, this);
     // 收到会话列表更新通知
-    chat.on("onConversationListUpdated", this.onUpdateConversationList);
+    chat.on("onConversationListUpdated", this.onUpdateConversationList, this);
     // 收到推送的单聊、群聊、群提示、群系统通知的新消息
     chat.on("onMessageReceived", this.onReceiveMessage, this);
     // 收到消息被撤回的通知
@@ -114,8 +103,9 @@ export class TIMProxy {
     const chatId = getConversationID();
     const _data = data.filter((t) => t.conversationID === chatId);
     useChatStore().$patch({ conversationList: data });
-    if (_data) {
+    if (_data.length) {
       useChatStore().$patch({ currentConversation: cloneDeep(_data[0]) });
+      this.reportedMessageRead(_data[0]);
     }
     useChatStore().updateTotalUnreadMsg();
   }
