@@ -1,6 +1,6 @@
 {
   "name": "pure-chat",
-  "version": "0.7.9",
+  "version": "0.8.0",
   "description": "PureChat - A chat application built with Vue and Vite",
   "type": "module",
   "author": {
@@ -58,7 +58,7 @@
     "nanoid": "^5.0.7",
     "nprogress": "^0.2.0",
     "ollama": "^0.5.6",
-    "pinia": "^2.3.1",
+    "pinia": "^3.0.1",
     "pinyin-pro": "^3.18.5",
     "qrcode": "^1.5.3",
     "rimraf": "^6.0.1",
@@ -66,7 +66,7 @@
     "tim-upload-plugin": "^1.0.5",
     "uuid": "^11.0.3",
     "v-contextmenu": "3.0.0",
-    "vue": "^3.5.3",
+    "vue": "^3.5.13",
     "vue-draggable-next": "^2.2.1",
     "vue-i18n": "^9.1.9",
     "vue-router": "^4.1.6",
