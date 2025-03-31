@@ -191,13 +191,13 @@ export class LocalChat {
   }
   async getMessageList(data) {
     const { conversationID } = data;
-    const localMessageList = await MessageModel.query({ id: conversationID });
+    const messageList = await MessageModel.query({ id: conversationID });
     return {
       code: 0,
       data: {
         nextReqMessageID: "",
         isCompleted: false,
-        messageList: localMessageList,
+        messageList: messageList,
       },
     };
   }
@@ -220,6 +220,23 @@ export class LocalChat {
     return {
       code: 0,
       data: { conversationID: ID },
+    };
+  }
+  async clearHistoryMessage(sessionId) {
+    const data = await MessageModel.query({ id: sessionId });
+    data.forEach((item) => MessageModel.delete(item.ID));
+
+    const newData = getConversationList();
+    const conversation = newData.find((t) => t.conversationID === sessionId);
+    if (conversation) {
+      conversation.lastMessage.messageForShow = '';
+      SessionModel.update(sessionId, conversation);
+      const messageList = await SessionModel.query();
+      this.emit("onConversationListUpdated", { data: messageList });
+    }
+    return {
+      data: { conversationID: sessionId },
+      code: 0,
     };
   }
   async modifyMessage(data) {

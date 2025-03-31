@@ -61,7 +61,9 @@
             <el-button size="small" type="primary" @click="cleanTopicShortcut">确认</el-button>
           </div>
           <template #reference>
-            <el-icon class="cursor-pointer" @click="setVisible(true)"><Delete /></el-icon>
+            <el-button @click="setVisible(true)">
+              <el-icon class="cursor-pointer"><Delete /></el-icon>
+            </el-button>
           </template>
         </el-popover>
       </span>
@@ -109,6 +111,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ClickOutside as vClickOutside } from "element-plus";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { isElectron } from "@/utils/common";
 import { storeToRefs } from "pinia";
@@ -157,7 +160,7 @@ const isFunctionCall = computed(() => {
 
 const cleanTopicShortcut = () => {
   setVisible(false);
-  chatStore.deleteHistoryMessage()
+  chatStore.deleteHistoryMessage();
 };
 
 const onEnableWebSearch = () => {

@@ -11,7 +11,6 @@ import { cloneDeep } from "lodash-es";
 import { useAppStore, useUserStore, useGroupStore, useChatStore } from "@/stores/index";
 import {
   fnCheckoutNetState,
-  getConversationID,
   getConversationList,
   kickedOutReason,
 } from "./utils/index";
@@ -21,7 +20,6 @@ const isFocused = useWindowFocus(); // 判断浏览器窗口是否在前台可�
 function isRobotId(data) {
   return C2C_ROBOT_COLLECT.includes(data?.[0].conversationID);
 }
-
 export class TIMProxy {
   constructor() {
     this.userID = "";
@@ -100,7 +98,7 @@ export class TIMProxy {
   onUpdateConversationList({ data }) {
     console.log("[chat] 会话列表更新 onUpdateConversationList:", data);
     setChatListCache(data);
-    const chatId = getConversationID();
+    const chatId = useChatStore().currentSessionId;
     const _data = data.filter((t) => t.conversationID === chatId);
     useChatStore().$patch({ conversationList: data });
     if (_data.length) {
@@ -111,7 +109,7 @@ export class TIMProxy {
   }
   onReceiveMessage({ data }) {
     console.log("[chat] 收到新消息 onReceiveMessage:", data);
-    const current = getConversationID() === data?.[0].conversationID;
+    const current = useChatStore().currentSessionId === data?.[0].conversationID;
     this.handleQuitGroupTip(data);
     this.handleNotificationTip(data);
     this.handleGroupSystemNoticeTip(data);
@@ -216,7 +214,7 @@ export class TIMProxy {
   handleQuitGroupTip(data) {
     if (data[0]?.type !== "TIMGroupTipElem") return;
     console.log("[chat] handleQuitGroupTip", data);
-    const chatId = getConversationID();
+    const chatId = useChatStore().currentSessionId;
     if (chatId !== data[0]?.conversationID) return;
     // TIM.TYPES.GRP_TIP_MBR_JOIN // 1 有成员加群
     // TIM.TYPES.GRP_TIP_MBR_QUIT // 2 有群成员退群
@@ -243,7 +241,7 @@ export class TIMProxy {
     // 4	被踢出群组 被踢出的用户接收
     // 5	群组被解散 全体群成员接收
     const list = [4, 5];
-    const chatId = getConversationID();
+    const chatId = useChatStore().currentSessionId;
     const groupSystemTips = data.filter((t) => {
       return list.includes(t.payload.operationType);
     });
@@ -253,7 +251,7 @@ export class TIMProxy {
   }
   // 消息更新
   handleUpdateMessage(data, read = true) {
-    if (!getConversationID()) return;
+    if (!useChatStore().currentSessionId) return;
     if (isRobotId(data)) return;
     useChatStore().updateMessages({
       sessionId: data?.[0].conversationID,

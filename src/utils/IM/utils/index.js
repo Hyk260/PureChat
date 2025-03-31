@@ -31,10 +31,6 @@ export const fnCheckoutNetState = throttle((state) => {
   checkoutNetState(state);
 }, 3000);
 
-export function getConversationID() {
-  return useChatStore().currentConversation?.conversationID;
-}
-
 export function getConversationList(data) {
   const list = useChatStore().conversationList;
   const chatId = data?.[0].conversationID;
