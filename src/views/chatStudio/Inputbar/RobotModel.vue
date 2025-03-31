@@ -34,11 +34,7 @@
               >
                 <svg-icon class="function-call" local-icon="functionCall" />
               </el-tooltip>
-              <el-tooltip
-                v-if="item.reasoning"
-                :content="ModelSelect.reasoning"
-                placement="right"
-              >
+              <el-tooltip v-if="item.reasoning" :content="ModelSelect.reasoning" placement="right">
                 <svg-icon class="reasoning" local-icon="reasoning" />
               </el-tooltip>
               <span v-if="item.tokens" class="tokens flex-c">
@@ -60,10 +56,10 @@ import { getModelType, getModelSvg, useAccessStore, formatSizeStrict } from "@/a
 import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
-import { useRobotStore } from "@/stores/modules/robot/index";
+import { useRobotStore, useChatStore } from "@/stores/index";
 import { ModelSelect } from "@/ai/resources";
+import { storeToRefs } from "pinia";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 defineOptions({
   name: "RobotModel",
@@ -72,7 +68,10 @@ defineOptions({
 const robotIcon = ref("");
 const model = ref({});
 const [flag, setFlag] = useState();
-const toAccount = computed(() => store.getters.toAccount);
+const chatStore = useChatStore();
+const robotStore = useRobotStore();
+const { toAccount } = storeToRefs(chatStore);
+const { modelProvider } = storeToRefs(robotStore);
 
 function onClickOutside() {
   setFlag(false);
@@ -80,29 +79,24 @@ function onClickOutside() {
 
 function storeRobotModel(data) {
   const access = localStg.get(StoreKey.Access);
-  const account = getModelType(toAccount.value);
-  const config = useAccessStore(account);
+  const provider = modelProvider.value;
+  const config = useAccessStore(provider);
   const modelConfig = { ...config, model: data.id };
   if (access) {
-    localStg.set(StoreKey.Access, { ...access, [account]: { ...modelConfig } });
+    localStg.set(StoreKey.Access, { ...access, [provider]: { ...modelConfig } });
   } else {
-    localStg.set(StoreKey.Access, { [account]: { ...modelConfig } });
+    localStg.set(StoreKey.Access, { [provider]: { ...modelConfig } });
   }
-  emitter.emit("updataBotToolsFlag", data?.functionCall || false);
-  useRobotStore().setRobotModel(data);
+  robotStore.setRobotModel(data);
+  robotStore.updataBotToolsFlag(data);
   setFlag(false);
 }
 
 function initModel() {
-  const mode = getModelType(toAccount.value);
-  // const list = localStg.get("olama-local-model-list");
+  const provider = modelProvider.value;
   robotIcon.value = getModelSvg(toAccount.value);
-  const account = getModelType(toAccount.value);
-  const selectModel = localStg.get(`${account}-Select-Model`);
-  model.value = cloneDeep(modelValue[mode].Model.options);
-  // if (list && [ModelProvider.Ollama].includes(mode)) {
-  //   model.value.chatModels = list;
-  // }
+  const selectModel = localStg.get(`${provider}-Select-Model`);
+  model.value = cloneDeep(modelValue[provider].Model.options);
   if (selectModel && model.value) {
     const chatModels = cloneDeep(model.value.chatModels);
     const collapse = selectModel.Model.collapse || [];

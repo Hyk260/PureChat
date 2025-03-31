@@ -1,4 +1,3 @@
-import store from "@/store";
 import { useChatStore } from "@/stores/index";
 import { throttle } from "lodash-es";
 
@@ -33,7 +32,7 @@ export const fnCheckoutNetState = throttle((state) => {
 }, 3000);
 
 export function getConversationID() {
-  return store.state.conversation?.currentConversation?.conversationID;
+  return useChatStore().currentConversation?.conversationID;
 }
 
 export function getConversationList(data) {

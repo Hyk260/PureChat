@@ -50,9 +50,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { getGender } from "@/utils/common";
 import { useSidebarStore, useChatStore } from "@/stores/index";
-import { scrollToMessage } from "@/utils/chat/index";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 const sidebarStore = useSidebarStore();
 const chatStore = useChatStore();
@@ -68,7 +66,6 @@ const userInfo = ref({
 const handleConversation = ({ id, type }) => {
   sidebarStore.toggleOutside({ path: "/chat" });
   chatStore.addConversation({ convId: `${type}${id}` })
-  scrollToMessage(`message_${type}${id}`);
 };
 
 const sendMessage = (data) => {

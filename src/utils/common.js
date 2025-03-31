@@ -31,7 +31,7 @@ export function setTheme(themeScheme = "light") {
   }
 }
 
-export const isElectron = window && window?.electron;
+export const isElectron = !!window?.electron; // 是否是electron环境
 
 export function setPageTitle(routerTitle) {
   if (isElectron) return;

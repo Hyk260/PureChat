@@ -5,16 +5,16 @@ import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/rest";
 import { cloneDeep } from "lodash-es";
 import { getTime } from "@/utils/common";
-import { getCustomMsgContent } from '@/api/im-sdk-api/custom';
+import { getCustomMsgContent } from "@/api/im-sdk-api/custom";
 import { getThinkMsgContent } from "@/utils/chat/index";
-import store from "@/store";
+import { useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
-import webSearchResult from '@/database/tools/web-search-result.json';
+import webSearchResult from "@/database/tools/web-search-result.json";
 
 const restSendMsg = async (params, data) => {
-  const { message, think } = data
-  if (__LOCAL_MODE__) return
-  if (!message) return
+  const { message, think } = data;
+  if (__LOCAL_MODE__) return;
+  if (!message) return;
   return await restApi({
     params: {
       To_Account: params.from,
@@ -27,13 +27,16 @@ const restSendMsg = async (params, data) => {
 };
 
 const updataMessage = (chat, data) => {
-  const { message = '', think = '' } = data || {};
+  const { message = "", think = "" } = data || {};
   if (!chat) return;
   chat.payload.text = message;
-  chat.cloudCustomData = getThinkMsgContent(think)
+  chat.cloudCustomData = getThinkMsgContent(think);
   chat.clientTime = getTime();
   chat.status = data?.done ? "success" : "sending";
-  store.commit("updateMessages", { convId: `C2C${chat.from}`, message: cloneDeep(chat) });
+  useChatStore().updateMessages({
+    sessionId: `C2C${chat.from}`,
+    message: cloneDeep(chat),
+  });
   emitter.emit("updataScroll", "robot");
 };
 
@@ -56,17 +59,23 @@ const createAlertMsg = (startMsg, provider) => {
   const _data = cloneDeep(startMsg);
   _data.clientTime = getTime();
   _data.type = "TIMCustomElem";
-  _data.payload = getCustomMsgContent({ data: { provider }, type: "warning" })
-  store.commit("updateMessages", { convId: `C2C${_data.from}`, message: _data });
-}
+  _data.payload = getCustomMsgContent({ data: { provider }, type: "warning" });
+  useChatStore().updateMessages({
+    sessionId: `C2C${_data.from}`,
+    message: _data,
+  });
+};
 
 const createToolCallsMsg = (startMsg, message) => {
   const _data = cloneDeep(startMsg);
   _data.clientTime = getTime();
   _data.type = "TIMCustomElem";
-  _data.payload = getCustomMsgContent({ data: message, type: "tool_call" })
-  _data.payload.extension = JSON.stringify(webSearchResult)
-  store.commit("updateMessages", { convId: `C2C${_data.from}`, message: cloneDeep(_data) });
+  _data.payload = getCustomMsgContent({ data: message, type: "tool_call" });
+  _data.payload.extension = JSON.stringify(webSearchResult);
+  useChatStore().updateMessages({
+    sessionId: `C2C${_data.from}`,
+    message: cloneDeep(_data),
+  });
 };
 
 function beforeSend(api, msg) {
@@ -75,7 +84,7 @@ function beforeSend(api, msg) {
     return false;
   } else {
     setTimeout(() => {
-      createAlertMsg(msg, api.llm.provider)
+      createAlertMsg(msg, api.llm.provider);
     }, 500);
     return true;
   }
@@ -91,26 +100,25 @@ export const chatService = async ({ messages, chat, provider }) => {
     messages,
     config: {
       model: useAccessStore(provider).model,
-      stream: true
+      stream: true,
     },
     onUpdate: handleUpdate(startMsg),
     onFinish: handleFinish(startMsg, chat),
     onToolMessage: handleToolMessage(startMsg),
     onReasoningMessage: handleReasoningMessage(startMsg),
     onError: handleError(startMsg, chat),
-    onController: handleController
+    onController: handleController,
   });
 };
 
-
 const handleUpdate = (startMsg) => (data) => {
-  const { message = "", think = "" } = data || {}
+  const { message = "", think = "" } = data || {};
   console.log("[chat] onUpdate:", message);
   updataMessage(startMsg, data);
 };
 
 const handleFinish = (startMsg, chat) => async (data) => {
-  const { message = "", think = "" } = data || {}
+  const { message = "", think = "" } = data || {};
   console.log("[chat] onFinish:", message);
   if (message) {
     data.done = true;
@@ -126,8 +134,8 @@ const handleToolMessage = (startMsg) => (data) => {
 
 const handleReasoningMessage = (startMsg) => (think) => {
   console.log("[chat] onReasoningMessage:", think);
-  updataMessage(startMsg, { message: '', think });
-}
+  updataMessage(startMsg, { message: "", think });
+};
 
 const handleError = (startMsg, chat) => async (error) => {
   console.error("[chat] onError:", error);

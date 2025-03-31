@@ -33,7 +33,7 @@ import { cloneDeep } from "lodash-es";
 import { prioritizeRBTUserID } from "@/utils/chat/index";
 import { insertMention } from "./../utils/utils";
 import { localStg } from "@/utils/storage";
-import { useGroupStore, useChatStore } from "@/stores/index";
+import { useGroupStore, useChatStore, useUserStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__";
@@ -58,7 +58,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(useGroupStore, ["currentMemberList"]),
+    ...mapState(useGroupStore, ["currentMemberList", "currentMembersWithoutSelf"]),
     searchedList() {
       // 群成员小于2人，不显示@列表
       if (this.currentMemberList.length <= 1) return [];
@@ -66,6 +66,9 @@ export default {
     },
     isVisible() {
       return this.filtering !== "empty" && this.currentMemberList.length > 1;
+    },
+    currentMembersWithoutSelfList() {
+      return this.currentMembersWithoutSelf.filter((t) => t.userID !== "@TLS#NOT_FOUND");
     },
   },
   data() {
@@ -98,10 +101,7 @@ export default {
       }
     },
     filterData() {
-      const userID = localStg.get("timProxy")?.userProfile?.userID;
-      const data = this.currentMemberList.filter(
-        (t) => t.userID !== userID && t.userID !== "@TLS#NOT_FOUND"
-      );
+      const data = this.currentMembersWithoutSelfList
       return prioritizeRBTUserID(data);
     },
     updateMention() {

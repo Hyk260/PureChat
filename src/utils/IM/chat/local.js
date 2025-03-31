@@ -13,7 +13,6 @@ import profile from "@/database/profile.json";
 import timTextElem from "@/database/message/timTextElem.json";
 import timCustomElem from "@/database/message/timCustomElem.json";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store";
 
 export function getConversationList() {
   const list = useChatStore().conversationList;
@@ -21,14 +20,12 @@ export function getConversationList() {
 }
 
 export function getCurrentMessageList() {
-  // const list = useChatStore().currentMessageList;
-  const list = store.state.conversation?.currentMessageList;
+  const list = useChatStore().currentMessageList;
   return cloneDeep(list) || null; // []
 }
 
 export function getHistoryMessageList(id) {
-  // const data = useChatStore().historyMessageList.get(id);
-  const data = store.state.conversation?.historyMessageList.get(id);
+  const data = useChatStore().historyMessageList.get(id);
   return cloneDeep(data) || null; // []
 }
 

@@ -13,11 +13,10 @@
 <script setup>
 import { onMounted, computed } from "vue";
 import { isRobot } from "@/utils/chat/index";
+import { useChatStore } from "@/stores/index";
 import { Markdown, handleCopyClick } from "@/utils/markdown/index";
 import ReplyElem from "./ReplyElem.vue";
 import DynamicContent from "../components/DynamicContent.vue";
-import store from "@/store/index";
-
 import "@/styles/highlight.scss";
 
 const props = defineProps({
@@ -34,8 +33,6 @@ const props = defineProps({
     default: false,
   },
 });
-
-const toAccount = computed(() => store.getters.toAccount);
 
 const isMsgType = computed(() => {
   const { message, msgType } = props;
@@ -61,7 +58,7 @@ const onClick = (data) => {
 };
 // 发送者是ai 展示markdown
 function showMarked(message) {
-  return isRobot(toAccount.value) && message?.flow === "in";
+  return isRobot(useChatStore().toAccount) && message?.flow === "in";
 }
 
 function fnStyle() {

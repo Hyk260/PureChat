@@ -10,7 +10,6 @@
 <script setup>
 import { computed } from "vue";
 import { useSidebarStore, useChatStore } from "@/stores/index";
-import store from "@/store/index";
 
 const props = defineProps({
   className: {

@@ -1,4 +1,19 @@
 const local = {
+  settings: {
+    defaultProvider: "Default Provider",
+    model: "Default Model",
+    provider: {
+      title: "Model Provider",
+    },
+    about: {
+      releases: {
+        title: "Release Notes",
+      },
+    },
+    webSearch: {
+      title: "Web Search",
+    },
+  },
   button: {
     add: "Add",
     added: "Added",
@@ -112,7 +127,7 @@ const local = {
     passwordDifferentReg: "The two passwords do not match!",
     passwordUpdateReg: "Password has been updated",
   },
-  messagebox: {
+  messageBox: {
     title: "Message",
     confirm: "OK",
     cancel: "Cancel",

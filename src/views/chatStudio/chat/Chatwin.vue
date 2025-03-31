@@ -80,10 +80,10 @@
                     @handlSingleClick="handlSingleClick"
                   />
                 </div>
-                <div class="message-view-bottom" v-if="!isSelf(item) && isRobot(toAccount)">
+                <div class="message-view-bottom" v-if="!isSelf(item) && isAssistant">
                   {{ handleCustomData(item, "messageAbstract") }}
                 </div>
-                <div class="message-view-question" v-if="!isSelf(item) && isRobot(toAccount)">
+                <div class="message-view-question" v-if="!isSelf(item) && isAssistant">
                   <div
                     v-for="(item, i) in handleCustomData(item, 'recQuestion') || []"
                     :key="i"
@@ -100,8 +100,8 @@
     </el-scrollbar>
     <!-- 卡片 -->
     <MyPopover />
-    <contextmenu ref="contextmenu" :disabled="!isRight">
-      <contextmenu-item
+    <Contextmenu ref="contextmenu" :disabled="!isRight">
+      <Contextmenu-item
         v-for="item in contextMenuItems"
         :key="item.id"
         :class="item.class"
@@ -110,8 +110,8 @@
       >
         <FontIcon :iconName="item.icon" />
         <span>{{ item.text }}</span>
-      </contextmenu-item>
-    </contextmenu>
+      </Contextmenu-item>
+    </Contextmenu>
   </div>
 </template>
 
@@ -140,7 +140,8 @@ import {
   validateLastMessage,
   isSelf,
 } from "../utils/utils";
-import { deleteMessage, getMessageList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
+import { useEventListener } from "@vueuse/core";
+import { deleteMessage, setMessageRead, getMessageList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { download, isRobot } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
@@ -148,7 +149,6 @@ import { getTime } from "@/utils/common";
 import { debounce } from "lodash-es";
 import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
-import store from "@/store/index";
 import emitter from "@/utils/mitt-bus";
 import Checkbox from "../components/Checkbox.vue";
 import LoadMore from "../components/LoadMore.vue";
@@ -171,12 +171,21 @@ const groupStore = useGroupStore();
 const chatStore = useChatStore();
 const appStore = useAppStore();
 
-const { showCheckbox, isChatBoxVisible, needScrollDown } = storeToRefs(chatStore);
-const toAccount = computed(() => store.getters.toAccount);
-const isGroupChat = computed(() => store.getters.isGroupChat);
-const currentType = computed(() => store.getters.currentType);
-const currentMessageList = computed(() => store.state.conversation.currentMessageList);
-const currentConversation = computed(() => store.state.conversation.currentConversation);
+const {
+  toAccount,
+  isAssistant,
+  isGroupChat,
+  currentType,
+  showCheckbox,
+  isChatBoxVisible,
+  needScrollDown,
+  currentMessageList,
+  currentConversation,
+} = storeToRefs(chatStore);
+
+useEventListener(window, "focus", () => {
+  setMessageRead(currentConversation.value);
+});
 
 const updateLoadMore = (item) => {
   nextTick(() => {
@@ -333,15 +342,14 @@ const updateScrollbar = () => {
 
 const getMoreMsg = async () => {
   try {
-    // 获取指定会话的消息列表
-    const { conversationID: convId } = currentConversation.value;
+    const { conversationID: sessionId } = currentConversation.value;
     const msglist = currentMessageList.value;
-    const nextMsgId = validateLastMessage(msglist).ID;
-    console.log("nextMsgId:", nextMsgId);
+    const nextMsg = validateLastMessage(msglist);
+    console.log("nextMsg:", nextMsg);
 
     const result = await getMessageList({
-      convId,
-      nextReqMessageID: nextMsgId,
+      convId: sessionId,
+      nextReqMessageID: nextMsg.ID,
     });
 
     console.log("getMessageList:", result);
@@ -350,13 +358,12 @@ const getMoreMsg = async () => {
       console.log("[chat] 没有更多消息了 getMoreMsg:");
       chatStore.$patch({ noMore: true });
     } else if (messageList.length) {
-      store.commit("loadMoreMessages", { convId, messages: messageList, msgId: messageList[0].ID });
+      chatStore.loadMoreMessages({ sessionId, messages: messageList, msgId: messageList[0].ID });
       chatStore.$patch({ needScrollDown: msglist.length });
     } else {
       chatStore.$patch({ noMore: true });
     }
   } catch (e) {
-    // 解析报错 关闭加载动画
     chatStore.$patch({ noMore: true });
   }
 };
@@ -421,7 +428,7 @@ const handleContextMenuEvent = (event, item) => {
     contextMenuItems.value = contextMenuItems.value.filter((t) => t.id !== "copy");
   }
   // 机器人消息过滤 撤回 回复
-  if (isRobot(toAccount.value)) {
+  if (isAssistant.value) {
     contextMenuItems.value = contextMenuItems.value.filter(
       (t) => t.id !== "reply" && t.id !== "revoke"
     );
@@ -481,7 +488,7 @@ const handleAt = (data) => {
 };
 
 const handleSendMessage = (data) => {
-  chatStore.addConversation({ convId: `C2C${data.from}` })
+  chatStore.addConversation({ convId: `C2C${data.from}` });
 };
 
 const handleQuestion = async (item) => {
@@ -522,9 +529,11 @@ const handleDeleteMsg = async (data) => {
       if (result === "cancel") return;
     }
     isConfirm.value = true;
-    const { code } = await deleteMessage([data]);
-    if (code !== 0) return;
-    store.commit("deleteMessage", { convId: data.conversationID, messageIdArray: [data.ID] });
+    chatStore.deleteMessage({
+      sessionId: data.conversationID,
+      messageIdArray: [data.ID],
+      message: [data],
+    });
   } catch (error) {
     console.log(error);
   }

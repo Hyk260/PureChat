@@ -107,7 +107,9 @@
       <el-divider />
       <!-- 解散 退出 转让 -->
       <div class="group-operator flex-c" v-if="!isFullStaffGroup(currentConversation)">
-        <el-button v-if="groupStore.isOwner" type="danger" @click="handleDismissGroup"> 解散群组 </el-button>
+        <el-button v-if="groupStore.isOwner" type="danger" @click="handleDismissGroup">
+          解散群组
+        </el-button>
         <el-button v-else type="danger" @click="handleQuitGroup"> 退出群组 </el-button>
         <!-- <div class="w-12"></div> -->
         <!-- <el-button type="primary" plain v-if="isOwner" @click="handleTransferGroup">
@@ -122,12 +124,13 @@
 
 <script setup>
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { storeToRefs } from "pinia";
 import {
   addGroupMember,
   deleteGroupMember,
   updateGroupProfile,
   GroupTypeMap,
-  setMessageRemindType
+  setMessageRemindType,
 } from "@/api/im-sdk-api/index";
 import { restApi } from "@/api/node-admin-api/index";
 import { useState } from "@/utils/hooks/index";
@@ -138,7 +141,6 @@ import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index"
 import { useGroupStore, useAppStore, useUserStore, useChatStore } from "@/stores/index";
 import AddMemberPopup from "../components/AddMemberPopup.vue";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 const { groupProfile } = defineProps({
   groupProfile: {
@@ -157,10 +159,7 @@ const appStore = useAppStore();
 const [drawer, setDrawer] = useState();
 const [loading, setLoading] = useState();
 
-const toAccount = computed(() => store.getters.toAccount);
-const currentConversation = computed(() => {
-  return store.state.conversation.currentConversation;
-});
+const { toAccount, currentConversation } = storeToRefs(chatStore);
 
 const beforeChange = () => {
   setLoading(true);
@@ -173,7 +172,7 @@ const beforeChange = () => {
 };
 
 const setNotify = () => {
-  setMessageRemindType(currentConversation.value)
+  setMessageRemindType(currentConversation.value);
 };
 
 const openNamePopup = async () => {
@@ -219,7 +218,7 @@ const groupMemberAdd = () => {
 };
 
 const navigate = (item) => {
-  chatStore.addConversation({ convId: `C2C${item.userID}` })
+  chatStore.addConversation({ convId: `C2C${item.userID}` });
   setDrawer(false);
   setTimeout(() => {
     const dom = document.getElementById(`message_C2C${item.userID}`);

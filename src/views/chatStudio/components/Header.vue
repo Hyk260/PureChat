@@ -1,23 +1,16 @@
 <template>
-  <header
-    v-if="chat"
-    class="message-info-view-header flex-bc"
-    :class="isMacDragStyle()"
-  >
+  <header v-if="currentConversation" :class="isMacDragStyle()" class="message-info-view-header flex-bc">
     <div class="message-info-views">
       <p v-if="currentType">
         <span v-if="chatType('C2C')" @click="openUser" class="single">
-          <span class="nick">{{ chatNick("C2C", chat) }}</span>
-          <Label :model="robotStore.model" :userID="chat?.conversationID" />
+          <span class="nick">{{ chatNick("C2C", currentConversation) }}</span>
+          <Label :model="robotStore.model" :userID="currentConversation?.conversationID" />
           <!-- ai-prompt -->
-          <div
-            v-if="isRobot(toAccount) && fnPromptConfig(robotStore.promptConfig)"
-            class="ml-5 ai-prompt-title"
-          >
-            {{ fnPromptConfig(robotStore.promptConfig) }}
+          <div v-if="isShowPromptTitle" class="ml-5 ai-prompt-title">
+            {{ getPromptTitle }}
           </div>
           <!-- ai-tools -->
-          <template v-if="isRobot(toAccount) && robotStore.botTools && isBotToolsFlag">
+          <template v-if="isAssistant && robotStore.botTools && isShowBotTools">
             <div v-for="item in robotStore.botTools" :key="item.id" class="ml-5 ai-prompt-title">
               <svg-icon class="function-call" local-icon="functionCall" />
               <span>{{ item.meta.title }}</span>
@@ -25,14 +18,14 @@
           </template>
         </span>
         <span v-else-if="chatType('GROUP')" @click="openSetup" class="group">
-          <span class="nick"> {{ chatNick("GROUP", chat) }}</span>
-          <Label :item="chat" />
+          <span class="nick"> {{ chatNick("GROUP", currentConversation) }}</span>
+          <Label :item="currentConversation" />
         </span>
         <span v-else-if="chatType('@TIM#SYSTEM')" class="system"> 系统通知 </span>
       </p>
     </div>
     <div class="flex gap-10">
-      <!-- <div class="message-info-add" v-show="chat.type === 'GROUP' && false" title="添加成员">
+      <!-- <div class="message-info-add" v-show="currentConversation.type === 'GROUP' && false" title="添加成员">
         <svg-icon local-icon="tianjia" class="icon-hover" />
       </div> -->
       <div class="share" title="分享对话" @click="openShare">
@@ -47,44 +40,18 @@
 
 <script setup>
 import { computed, watch } from "vue";
-import { isRobot } from "@/utils/chat/index";
-import { getModelType, useAccessStore, usePromptStore } from "@/ai/utils";
-import { cloneDeep } from "lodash-es";
-import { modelValue, StoreKey } from "@/ai/constant";
-import { useState } from "@/utils/hooks/index";
-import { localStg } from "@/utils/storage";
-import { isMacDragStyle } from "@/utils/appEmit";
+import { storeToRefs } from "pinia";
 import { useRobotStore, useChatStore } from "@/stores/index";
+import { isMacDragStyle } from "@/utils/appEmit";
 import Label from "@/views/chatStudio/components/Label.vue";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
-const [isBotToolsFlag, setBotToolsFlag] = useState();
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
 
-const toAccount = computed(() => store.getters.toAccount);
-const currentType = computed(() => store.getters.currentType);
-const isGroupChat = computed(() => store.getters.isGroupChat);
-const chat = computed(() => {
-  return store.state.conversation.currentConversation;
-});
+const { isAssistant, isGroupChat, currentType, currentConversation } = storeToRefs(chatStore);
 
-const updataModel = () => {
-  const value = getModelType(toAccount.value);
-  if (!value) return;
-  const model = useAccessStore(value)?.model;
-  const data = cloneDeep(modelValue[value].Model.options.chatModels);
-  const checkModel = data.find((item) => item.id === model);
-  setBotToolsFlag(checkModel?.functionCall ? true : false);
-  robotStore.setRobotModel(checkModel);
-};
-
-const updataPromptTitle = () => {
-  const value = getModelType(toAccount.value);
-  const prompt = localStg.get(StoreKey.Prompt);
-  robotStore.setPromptConfig(prompt?.[value] || null);
-};
+const { getPromptTitle, isShowBotTools, isShowPromptTitle } = storeToRefs(robotStore);
 
 const chatType = (type) => {
   return currentType.value === type;
@@ -111,22 +78,6 @@ const openSetup = () => {
 };
 
 const openUser = () => {};
-
-const fnPromptConfig = (prompt) => {
-  if (!prompt) return "";
-  const { avatar, title } = prompt.meta || {};
-  if (!avatar && !title) return "";
-  return `${avatar} ${title}`;
-};
-
-watch(toAccount, () => {
-  updataModel();
-  updataPromptTitle();
-});
-
-emitter.on("updataBotToolsFlag", (val) => {
-  setBotToolsFlag(val);
-});
 </script>
 
 <style lang="scss" scoped>

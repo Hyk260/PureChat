@@ -1,3 +1,4 @@
+import { ref } from "vue";
 /**
  * 自定义 Hook，用于在 Vue 3 中管理组件状态，类似于 React 的 useState。
  *

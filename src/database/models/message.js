@@ -70,6 +70,7 @@ class _MessageModel extends BaseModel {
   // **************** Update *************** //
 
   async update(id, data) {
+    if (!__LOCAL_MODE__) return
     return this._updateWithSync(id, data);
   }
 }

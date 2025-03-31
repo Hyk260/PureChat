@@ -23,7 +23,7 @@
             <div class="item min-h-60">
               <div
                 class="message flex p-10"
-                v-for="item in filterate"
+                v-for="item in getSortedForwardData"
                 :key="item.ID"
                 :class="isSelf(item) ? 'is-self' : 'is-other'"
               >
@@ -125,6 +125,7 @@
 
 <script setup>
 import { computed, nextTick, ref } from "vue";
+import { storeToRefs } from "pinia";
 import { isRobot } from "@/utils/chat/index";
 import { Markdown } from "@/utils/markdown/index";
 import { useState } from "@/utils/hooks/index";
@@ -141,7 +142,6 @@ import { useChatStore } from "@/stores/index";
 import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import Header from "@/views/chatStudio/components/Header.vue";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
@@ -149,10 +149,14 @@ const isFooter = ref(false);
 const isQrCode = ref(false);
 const isPrompt = ref(false);
 const fieldType = ref(ImageType.Blob);
-
+const chatStore = useChatStore();
 const emit = defineEmits(["onClose"]);
 
-const toAccount = computed(() => store.getters.toAccount);
+const {
+  toAccount,
+  getSortedForwardData,
+} = storeToRefs(chatStore);
+
 const [dialogVisible, setDialogVisible] = useState();
 const { loading, onDownload } = useScreenshot();
 
@@ -181,11 +185,6 @@ function robotPrompt() {
   const model = getModelType(toAccount.value);
   return usePromptStore(model).prompt[0].content || "";
 }
-
-const filterate = computed(() => {
-  const chatData = Object.values(Object.fromEntries(useChatStore().forwardData));
-  return chatData.sort((a, b) => a.clientTime - b.clientTime);
-});
 
 emitter.on("handleShareModal", (val) => {
   setDialogVisible(val);

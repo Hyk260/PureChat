@@ -85,7 +85,6 @@ import { useGroupStore, useUserStore, useChatStore } from "@/stores/index";
 import EmptyMessage from "../components/EmptyMessage.vue";
 import Label from "../components/Label.vue";
 import emitter from "@/utils/mitt-bus";
-import store from "@/store/index";
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop();
 
@@ -97,9 +96,7 @@ const groupStore = useGroupStore();
 const userStore = useUserStore();
 const chatStore = useChatStore();
 
-const { conversationList, searchConversationList } = storeToRefs(chatStore);
-
-const chat = computed(() => store.state.conversation.currentConversation);
+const { conversationList, searchConversationList, currentConversation } = storeToRefs(chatStore);
 
 const searchForData = computed(() => {
   if (searchConversationList.value.length) {
@@ -111,7 +108,7 @@ const searchForData = computed(() => {
 
 const isDraft = (item) => {
   return (
-    item.conversationID !== chat?.value?.conversationID &&
+    item.conversationID !== currentConversation?.value?.conversationID &&
     chatStore.chatDraftMap.has(item.conversationID)
   );
 };
@@ -125,7 +122,7 @@ const isMention = (item) => {
   return item.groupAtInfoList?.length > 0;
 };
 
-const fnClass = (item) => (item?.conversationID === chat.value?.conversationID ? "is-active" : "");
+const fnClass = (item) => (item?.conversationID === currentConversation.value?.conversationID ? "is-active" : "");
 
 const formatNewsMessage = (data) => {
   const { type, lastMessage, unreadCount } = data;
@@ -222,23 +219,18 @@ const handleContextMenuEvent = (e, item) => {
   });
 };
 
-// 会话点击
 const handleConversationListClick = (data) => {
   console.log("会话点击 handleConversationListClick:", data);
-  if (chat.value) {
-    const { conversationID: id } = chat.value;
+  if (currentConversation.value) {
+    const { conversationID: id } = currentConversation.value;
     if (id === data?.conversationID) return;
   }
-  // 切换会话
-  store.commit("updateSelectedConversation", data);
-  // 获取会话列表 read
-  chatStore.updateMessageList(data);
   chatStore.$patch({ replyMsgData: null, msgEdit: null });
   chatStore.setForwardData({ type: "clear" });
+  chatStore.updateSelectedConversation(data);
+  chatStore.updateMessageList(data);
   if (data?.type === "GROUP") {
-    // 群详情信息
     groupStore.handleGroupProfile(data);
-    // 群成员列表
     groupStore.handleGroupMemberList({ groupID: data.groupProfile.groupID });
   }
   emitter.emit("handleInsertDraft", data);

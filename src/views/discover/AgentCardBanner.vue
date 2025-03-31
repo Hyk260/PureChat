@@ -28,7 +28,7 @@
       </div>
       <Markdown class="market" :marked="cardData.meta.systemRole" />
       <div class="flex-c py-20">
-        <el-button class="w-306" @click="toTant()"> 开始会话 </el-button>
+        <el-button class="w-306" @click="startConversation()"> 开始会话 </el-button>
       </div>
     </div>
   </el-dialog>
@@ -43,7 +43,6 @@ import { StoreKey, VITE_OPENAI_ID, ModelProvider } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
 import { useRobotStore, useSidebarStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
-import store from '@/store/index';
 
 const cardData = ref({});
 const sidebarStore = useSidebarStore();
@@ -51,7 +50,7 @@ const robotStore = useRobotStore()
 const chatStore = useChatStore()
 const [dialog, setDialog] = useState();
 
-function toTant(item = cardData.value) {
+function startConversation(item = cardData.value) {
   const { identifier, meta } = item;
   const defaultBot = localStg.get("model-provider") || null;
   const value = defaultBot || ModelProvider.OpenAI;
@@ -63,15 +62,13 @@ function toTant(item = cardData.value) {
       prompt: [{ role: "system", content: meta.systemRole }],
     },
   };
-  console.log("prompt", { ...localStg.get(StoreKey.Prompt), ...prompt });
   localStg.set(StoreKey.Prompt, { ...localStg.get(StoreKey.Prompt), ...prompt });
   const id = getModelId(defaultBot) || VITE_OPENAI_ID;
   handleClose()
-  robotStore.setPromptConfig(prompt[value]);
   sidebarStore.toggleOutside({ path: "/chat" });
   chatStore.addConversation({ convId: `${"C2C"}${id}` })
   setTimeout(() => {
-    store.commit("addAiPresetPromptWords");
+    chatStore.addAiPresetPromptWords()
   }, 200);
 }
 
