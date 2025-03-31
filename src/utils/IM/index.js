@@ -5,7 +5,7 @@ import { TIM_PROXY } from "@/constants/index";
 import { scrollToDomPosition, setChatListCache } from "@/utils/chat/index";
 import { setMessageRead } from "@/api/im-sdk-api/index";
 import { localStg } from "@/utils/storage";
-import { useWindowFocus, useEventListener } from "@vueuse/core";
+import { useWindowFocus } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
 import { useAppStore, useUserStore, useGroupStore, useChatStore } from "@/stores/index";
@@ -21,18 +21,6 @@ const isFocused = useWindowFocus(); // 判断浏览器窗口是否在前台可�
 function isRobotId(data) {
   return C2C_ROBOT_COLLECT.includes(data?.[0].conversationID);
 }
-
-useEventListener(window, "online", () => {
-  useAppStore().setNetworkStatus(true);
-});
-
-useEventListener(window, "offline", () => {
-  useAppStore().setNetworkStatus(false);
-});
-
-useEventListener(window, "focus", () => {
-  setMessageRead(useChatStore().currentConversation);
-});
 
 export class TIMProxy {
   constructor() {

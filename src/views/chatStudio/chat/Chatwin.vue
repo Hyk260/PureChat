@@ -140,7 +140,8 @@ import {
   validateLastMessage,
   isSelf,
 } from "../utils/utils";
-import { deleteMessage, getMessageList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
+import { useEventListener } from "@vueuse/core";
+import { deleteMessage, setMessageRead, getMessageList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { download, isRobot } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
@@ -181,6 +182,10 @@ const {
   currentMessageList,
   currentConversation,
 } = storeToRefs(chatStore);
+
+useEventListener(window, "focus", () => {
+  setMessageRead(currentConversation.value);
+});
 
 const updateLoadMore = (item) => {
   nextTick(() => {

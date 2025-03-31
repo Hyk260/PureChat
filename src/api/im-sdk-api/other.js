@@ -81,10 +81,10 @@ export const getConversationProfile = async (params) => {
 export const setMessageRead = (params) => {
   if (__LOCAL_MODE__) return
   const {
-    unreadCount = 0, conversationID: convId
+    unreadCount = 0, conversationID
   } = params || {};
   if (unreadCount === 0) return;
-  let promise = tim.setMessageRead({ conversationID: convId });
+  let promise = tim.setMessageRead({ conversationID });
   promise
     .then((res) => {
       console.log("已读上报成功", res);
