@@ -1,7 +1,7 @@
 import { timeFormat } from "@/utils/timeFormat";
 import { cloneDeep } from "lodash-es";
 
-const timeline = true;
+const timeline = false;
 const duration = 5 * 60;
 
 const isArray = (obj) => {
@@ -30,6 +30,7 @@ export const getBaseTime = (list, type = "start") => {
  * 当列表中连续项目之间的时间间隔超过指定的持续时间时，将添加时间分隔符。
  * @param {Array} list - 要添加时间分隔符的项目列表。
  * @param {number} [baseTime=0] - 用于计算时间间隔的基准时间。如果未提供，则默认为0。
+ * @param {string} [type="start"] - 时间分隔符的位置。可以是"start"或"last"。默认为"start"。
  * @returns {Array} - 添加时间分隔符后的修改后的列表。
  */
 export const addTimeDivider = (list, baseTime = 0, type = "start") => {
@@ -47,5 +48,5 @@ export const addTimeDivider = (list, baseTime = 0, type = "start") => {
     }
   };
 
-  return type === "last" ? list.reduceRight(reducer, []) : list.reduce(reducer, []);
+  return type === "start" ? list.reduce(reducer, []) : list.reduceRight(reducer, [])  ;
 };

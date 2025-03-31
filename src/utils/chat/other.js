@@ -107,7 +107,7 @@ export async function transformData(data) {
     );
 
     // 过滤非空元素并返回一维展平数组
-    return transformedData.reverse().filter((t) => !isEmpty(t)).flat();
+    return transformedData.filter((t) => !isEmpty(t)).flat();
   } catch (error) {
     console.error("Error transforming data:", error);
     return [];

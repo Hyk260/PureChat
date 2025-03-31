@@ -196,7 +196,7 @@ export class LocalChat {
       code: 0,
       data: {
         nextReqMessageID: "",
-        isCompleted: true,
+        isCompleted: false,
         messageList: localMessageList,
       },
     };

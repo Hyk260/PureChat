@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import {
   getUnreadMsg,
+  clearHistoryMessage,
   deleteConversation,
   sendMessage,
   getMessageList,
@@ -39,7 +40,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     searchConversationList: [], // 搜索后的会话列表
     filterConversationList: [], // 过滤后的会话列表
     totalUnreadMsg: 0, // 未读消息总数
-    needScrollDown: -1, // 是否向下滚动 true ? 0 : -1
+    scrollTopID: "", // 滚动到的消息ID
     showCheckbox: false, //是否显示多选框
     noMore: false, // 加载更多  false ? 显示loading : 没有更多
     isChatBoxVisible: false, // 聊天框是否显示
@@ -90,6 +91,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         return urls;
       }, []);
       return reversedUrls;
+    },
+    currentSessionId() {
+      return this.currentConversation?.conversationID || "";
     },
     toAccount() {
       const ID = this.currentConversation?.conversationID || "";
@@ -142,13 +146,13 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
     addMessage(payload) {
       console.log("[chat] 添加消息 addMessage:", payload);
-      const { sessionId, message, isDone } = payload || {};
+      const { conversationID, message, isDone } = payload || {};
       if (this.currentConversation) {
         this.currentMessageList = message;
       } else {
         this.currentMessageList = [];
       }
-      this.historyMessageList.set(sessionId, message);
+      this.historyMessageList.set(conversationID, message);
       const isMore = this.isMore || isDone;
       console.log("isDone:", isMore ? "没有更多" : "显示loading");
       this.noMore = isMore;
@@ -169,8 +173,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const newHistory = history.filter(
         (t) => !t.isTimeDivider && !t.isDeleted && !messageIdArray.includes(t.ID)
       );
-      const newHistoryList = addTimeDivider(newHistory.reverse()).reverse();
-      this.currentMessageList = newHistoryList;
+      const newHistoryList = addTimeDivider(newHistory);
+      this.currentMessageList = cloneDeep(newHistoryList);
       this.historyMessageList.set(sessionId, newHistoryList);
     },
     loadMoreMessages(payload) {
@@ -185,12 +189,13 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       console.log("历史消息 history:", history);
       const baseTime = getBaseTime(history, "last");
-      const timeDividerResult = addTimeDivider(messages, baseTime, "last");
-      const newHistory = history.concat(timeDividerResult);
+      const timeDividerResult = addTimeDivider(messages.reverse(), baseTime, "last");
+      const newHistory = [...timeDividerResult, ...history]
       this.currentMessageList = newHistory;
       this.historyMessageList.set(sessionId, newHistory);
     },
     updateMessages(payload) {
+      // debugger
       console.log("[chat] 更新消息 updateMessages:", payload);
       const { sessionId, message } = payload;
       if (!sessionId || !message?.ID) {
@@ -208,9 +213,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       });
       const latest = !newMessageList.some((item) => item.ID === message.ID);
       if (latest) {
-        let baseTime = getBaseTime(newMessageList);
-        let timeDividerResult = addTimeDivider([message], baseTime).reverse();
-        newMessageList.unshift(...timeDividerResult);
+        let baseTime = getBaseTime(newMessageList, "last");
+        let timeDividerResult = addTimeDivider([message], baseTime);
+        newMessageList.push(...timeDividerResult);
       }
       if (this.currentConversation?.conversationID === sessionId) {
         this.currentMessageList = newMessageList;
@@ -253,16 +258,14 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
     async updateMessageList(data) {
       const { conversationID: sessionId } = data;
-      // 当前会话有值
       if (!timProxy.isSDKReady) return;
-      const { messageList, isCompleted } = await getMessageList({ convId: sessionId });
+      const { messageList, isCompleted } = await getMessageList({ conversationID: sessionId });
       this.addMessage({
-        sessionId,
+        conversationID: sessionId,
         isDone: isCompleted,
-        message: addTimeDivider(messageList).reverse(),
+        message: addTimeDivider(messageList),
       });
       emitter.emit("updataScroll");
-      // 消息已读上报
       setMessageRead(data);
     },
     async addConversation(action) {
@@ -281,16 +284,6 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.isChatBoxVisible = false;
       this.currentConversation = null;
       this.currentMessageList = [];
-    },
-    clearHistory() {
-      console.log("[chat] 清除历史记录 clearHistory:", state);
-      this.clearCurrentMessage();
-      this.showCheckbox = false;
-      this.replyMsgData = null;
-      this.chatDraftMap = new Map();
-      this.historyMessageList = new Map();
-      this.currentTab = "whole";
-      this.conversationList = [];
     },
     toggleMentionModal(flag) {
       if (this.isGroupChat) {
@@ -339,6 +332,18 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       const { code } = await deleteConversation({ convId });
       if (code === 0) this.clearCurrentMessage();
+    },
+    async deleteHistoryMessage(id) {
+      let sessionId = id || this.currentSessionId;
+      if (!sessionId) {
+        console.error("sessionId is required");
+        return;
+      }
+      const { code } = await clearHistoryMessage(sessionId);
+      if (code === 0) {
+        this.historyMessageList.set(sessionId, []);
+        this.clearCurrentMessage();
+      }
     },
     setRecently({ data = {}, type }) {
       switch (type) {

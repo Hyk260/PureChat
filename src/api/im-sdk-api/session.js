@@ -23,10 +23,10 @@ export const getUnreadMsg = async () => {
  */
 export const getMessageList = async (params) => {
   try {
-    const { convId, nextReqMessageID } = params;
+    const { conversationID, nextReqMessageID = "" } = params;
     const { code, data } = await tim.getMessageList({
-      conversationID: convId,
-      nextReqMessageID: nextReqMessageID || "",
+      conversationID,
+      nextReqMessageID,
     });
     if (code === 0) {
       return data;

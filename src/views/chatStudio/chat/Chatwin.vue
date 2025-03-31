@@ -5,7 +5,7 @@
     class="message-info-view-content"
     :class="classMessageInfoView()"
   >
-    <el-scrollbar class="h-full" ref="scrollbarRef" @scroll="scrollbar">
+    <el-scrollbar class="h-full" ref="scrollbarRef" @scroll="handleScrollbar">
       <div class="message-view" ref="messageViewRef">
         <div
           v-for="(item, index) in currentMessageList"
@@ -21,7 +21,7 @@
           <!-- 消息体 -->
           <div
             v-else-if="item.ID && !isTime(item) && !item.isDeleted"
-            :id="`choice${item.ID}`"
+            :id="`choice-${item.ID}`"
             class="message-view-item"
             @click="handleSelect($event, item, 'outside')"
           >
@@ -141,7 +141,13 @@ import {
   isSelf,
 } from "../utils/utils";
 import { useEventListener } from "@vueuse/core";
-import { deleteMessage, setMessageRead, getMessageList, revokeMsg, translateText } from "@/api/im-sdk-api/index";
+import {
+  deleteMessage,
+  setMessageRead,
+  getMessageList,
+  revokeMsg,
+  translateText,
+} from "@/api/im-sdk-api/index";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { download, isRobot } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
@@ -178,7 +184,7 @@ const {
   currentType,
   showCheckbox,
   isChatBoxVisible,
-  needScrollDown,
+  scrollTopID,
   currentMessageList,
   currentConversation,
 } = storeToRefs(chatStore);
@@ -187,13 +193,15 @@ useEventListener(window, "focus", () => {
   setMessageRead(currentConversation.value);
 });
 
-const updateLoadMore = (item) => {
+const updateLoadMore = (id) => {
   nextTick(() => {
-    const elRef = messageViewRef.value?.children?.[item - 1];
-    if (!elRef) return;
-    console.log("messageViewRef:", elRef);
-    console.log("updateLoadMore:", item);
-    item > 0 ? elRef.scrollIntoView({ block: "start" }) : elRef.scrollIntoViewIfNeeded();
+    const el = document.getElementById(`choice-${id}`);
+    if (!el) {
+      console.warn("未找到对应的元素");
+      return;
+    }
+    // chatStore.$patch({ scrollTopID: '' });
+    el.scrollIntoView({ block: "start" });
   });
 };
 
@@ -248,7 +256,7 @@ const handleSelect = (e, item, type = "initial") => {
   ) {
     return;
   }
-  const _el = document.getElementById(`choice${item.ID}`);
+  const _el = document.getElementById(`choice-${item.ID}`);
   const el = _el.getElementsByClassName("check-btn")[0];
   if (!el.checked && chatStore.isFwdDataMaxed) {
     appStore.showMessage({ message: `最多只能选择${MULTIPLE_CHOICE_MAX}条`, type: "error" });
@@ -256,7 +264,7 @@ const handleSelect = (e, item, type = "initial") => {
   }
   // 点击input框
   if (type === "initial" && e.target.tagName !== "INPUT") {
-    const el = document.getElementById(`choice${item.ID}`);
+    const el = document.getElementById(`choice-${item.ID}`);
     el.parentNode.classList.toggle("style-select");
   }
   // 点击消息框
@@ -289,36 +297,29 @@ const onClickAvatar = (e, item) => {
 const isScrolledToBottom = (lower = 1) => {
   try {
     const { scrollTop, clientHeight, scrollHeight } = scrollbarRef.value?.wrapRef;
-    // 计算当前可视区域的高度加上滚动条顶部的位置（即实际已加载的内容高度）
     const height = scrollTop + clientHeight;
-    // 判断页面是否完全加载，即底部距离小于或等于1个像素
-    const isbot = scrollHeight - height < lower;
-    // console.log(scrollHeight - height);
-    if (isbot) console.log("isScrolledToBottom: 到底部");
-    return isbot;
+    const isBot = scrollHeight - height < lower;
+    if (isBot) console.log("isScrolledToBottom: 到底部");
+    return isBot;
   } catch (e) {
     return false;
   }
 };
 
-// 加载更多消息的函数
-const loadMoreMessages = () => {
-  const current = currentMessageList.value?.length - 1;
-  // 第一条消息 加载更多 节点
-  const offsetTopScreen = messageViewRef.value?.children?.[current];
+const loadMoreMessages = (scrollTop) => {
+  // console.log("loadMoreMessages: ", scrollTop);
+  const offsetTopScreen = messageViewRef.value?.children?.[0];
   const top = offsetTopScreen?.getBoundingClientRect().top;
-  // 滚动到顶部
   const canLoadData = top >= 36;
   if (canLoadData) getMoreMsg();
-  emitter.emit("onisbot", isScrolledToBottom());
+  emitter.emit("handleToBottom", isScrolledToBottom());
 };
 
-const debouncedFunc = debounce(loadMoreMessages, 300); //防抖处理
+const debouncedFunc = debounce(loadMoreMessages, 300);
 
-const scrollbar = ({ scrollLeft, scrollTop }) => {
-  // console.log("scrollLeft:", scrollLeft);
-  // console.log("scrollTop:", scrollTop);
-  debouncedFunc();
+const handleScrollbar = (data) => {
+  // console.log("scrollTop:", data);
+  debouncedFunc(data?.scrollTop);
 };
 
 const updateScrollBarHeight = (type) => {
@@ -347,8 +348,17 @@ const getMoreMsg = async () => {
     const nextMsg = validateLastMessage(msglist);
     console.log("nextMsg:", nextMsg);
 
+    if (nextMsg?.type === "TIMCustomElem") {
+      console.log("nextMsg:text", nextMsg?.payload?.data);
+    } else if (nextMsg?.type === "TIMTextElem") {
+      console.log("nextMsg:text", nextMsg?.payload?.text);
+      console.log("nextMsg:ID", nextMsg?.ID);
+      const el = document.getElementById(`choice-${nextMsg?.ID}`);
+      console.log("nextMsg:el", el);
+    }
+
     const result = await getMessageList({
-      convId: sessionId,
+      conversationID: sessionId,
       nextReqMessageID: nextMsg.ID,
     });
 
@@ -359,7 +369,7 @@ const getMoreMsg = async () => {
       chatStore.$patch({ noMore: true });
     } else if (messageList.length) {
       chatStore.loadMoreMessages({ sessionId, messages: messageList, msgId: messageList[0].ID });
-      chatStore.$patch({ needScrollDown: msglist.length });
+      chatStore.$patch({ scrollTopID: nextMsg?.ID });
     } else {
       chatStore.$patch({ noMore: true });
     }
@@ -579,13 +589,9 @@ function offEmitter() {
 }
 
 watch(
-  () => needScrollDown.value,
+  () => scrollTopID.value,
   (data) => {
     updateLoadMore(data);
-  },
-  {
-    deep: true, //深度监听
-    immediate: true,
   }
 );
 
@@ -602,7 +608,9 @@ onMounted(() => {
 onUnmounted(() => {
   offEmitter();
 });
-onUpdated(() => {});
+onUpdated(() => {
+  updateScrollBarHeight();
+});
 onBeforeUpdate(() => {});
 onBeforeUnmount(() => {});
 
@@ -640,7 +648,8 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
 }
 .message-view {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
+  // flex-direction: column-reverse;
   min-width: 375px;
   height: 100%;
   padding: 0 16px 16px 16px;

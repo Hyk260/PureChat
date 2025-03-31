@@ -14,11 +14,7 @@
     </el-tooltip>
     <!-- 图片 -->
     <el-tooltip :content="$t('chat.picture')" placement="top">
-      <el-button
-        v-show="isShowImage()"
-        :class="isVision ? '' : 'prohibit'"
-        @click="sendImageClick"
-      >
+      <el-button v-show="isShowImage()" :class="isVision ? '' : 'prohibit'" @click="sendImageClick">
         <SvgIcon local-icon="icontupian" />
       </el-button>
     </el-tooltip>
@@ -52,6 +48,24 @@
         <SvgIcon local-icon="robot" />
       </el-button>
     </el-tooltip>
+    <!-- 清空消息 -->
+    <el-tooltip content="清空消息" placement="top">
+      <span>
+        <el-popover placement="top" trigger="click" width="250" :visible="visible">
+          <div class="flex-c gap-5 mb-10">
+            <el-icon class="text-[#F56C6C]"><Warning /></el-icon>
+            <p>确定要清除当前会话所有消息吗?</p>
+          </div>
+          <div class="flex">
+            <el-button class="ml-auto" size="small" @click="setVisible(false)">取消</el-button>
+            <el-button size="small" type="primary" @click="cleanTopicShortcut">确认</el-button>
+          </div>
+          <template #reference>
+            <el-icon class="cursor-pointer" @click="setVisible(true)"><Delete /></el-icon>
+          </template>
+        </el-popover>
+      </span>
+    </el-tooltip>
     <!-- 插件 -->
     <el-tooltip v-if="false" content="选择插件" placement="top">
       <el-button v-show="isFunctionCall && isShowPlugins()" @click="openPluginBox">
@@ -60,7 +74,11 @@
     </el-tooltip>
     <!-- 滚动到底部 -->
     <el-tooltip :content="$t('chat.scrollToTheBottom')" placement="top">
-      <el-button v-show="showBottomBtn" class="chat-top animate-chat-slide-in" @click="scrollToBottomBtn">
+      <el-button
+        v-show="showBottomBtn"
+        class="chat-top animate-chat-slide-in"
+        @click="scrollToBottomBtn"
+      >
         <el-icon class="svg-left"><DArrowLeft /></el-icon>
       </el-button>
     </el-tooltip>
@@ -90,7 +108,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { isElectron } from "@/utils/common";
 import { storeToRefs } from "pinia";
@@ -114,6 +132,7 @@ const filePicker = ref();
 const supportExts = [...textExts, ...documentExts];
 const fileExts = [...textExts, ...documentExts, ...imageExts, ...audioExts, ...videoExts];
 
+const [visible, setVisible] = useState(false);
 const [flag, setFlag] = useState();
 const [showBottomBtn, setShowBottomBtn] = useState(false);
 const robotStore = useRobotStore();
@@ -135,6 +154,11 @@ const isFunctionCall = computed(() => {
     return false;
   }
 });
+
+const cleanTopicShortcut = () => {
+  setVisible(false);
+  chatStore.deleteHistoryMessage()
+};
 
 const onEnableWebSearch = () => {
   // enableWebSearch
@@ -220,8 +244,14 @@ const scrollToBottomBtn = () => {
   emitter.emit("updataScroll");
 };
 
-emitter.on("onisbot", (state) => {
-  setShowBottomBtn(!state);
+onMounted(() => {
+  emitter.on("handleToBottom", (state) => {
+    setShowBottomBtn(!state);
+  });
+});
+
+onUnmounted(() => {
+  emitter.off("handleToBottom");
 });
 </script>
 

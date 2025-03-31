@@ -105,6 +105,17 @@ export const deleteConversation = async (params) => {
     ID,
   };
 };
+// 清空消息
+export const clearHistoryMessage = async (sessionId) => {
+  const {
+    code,
+    data: { conversationID: ID },
+  } = await tim.clearHistoryMessage(sessionId);
+  return {
+    code,
+    ID,
+  };
+};
 // 设置自己的自定义状态
 export const setSelfStatus = (status) => {
   const { code, data } = tim.setSelfStatus({ customStatus: status });

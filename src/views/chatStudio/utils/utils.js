@@ -69,12 +69,7 @@ export const dragControllerDivHorizontal = () => {
 };
 
 export const validateLastMessage = (list) => {
-  return (
-    list
-      .slice()
-      .reverse()
-      .find((msg) => msg.ID) || null
-  );
+  return list.slice().find((t) => t.ID) || '';
 };
 
 // 复制
@@ -453,7 +448,7 @@ export function searchByPinyin({ searchStr, list }) {
     type: eventType,
     searchlength: searchStr.length + 1, // +1 包含@长度
   });
-  
+
   return eventType;
 }
 

@@ -1,8 +1,8 @@
 <template>
   <div class="view-ref" v-if="isShowMore">
-    <!-- <div class="showMore">
-      {{ noMore ? $t("chat.noMore") : "" }}
-    </div> -->
+    <div class="showMore">
+      {{ chatStore.noMore ? $t("chat.noMore") : "" }}
+    </div>
     <Loader v-show="!chatStore.noMore" />
   </div>
 </template>
@@ -21,7 +21,9 @@ const props = defineProps({
 const chatStore = useChatStore();
 
 const isShowMore = computed(() => {
-  return chatStore.currentMessageList?.length - 1 === props.index;
+  // return chatStore.currentMessageList?.length - 1 === props.index;
+  return props.index === 0;
+
 });
 </script>
 

@@ -93,7 +93,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       if (data.code === 0) {
         console.log("[chat] im退出登录 logout", data)
         this.$reset()
-        useChatStore().clearHistory()
+        useChatStore().$reset()
       } else {
         console.log("[chat] im退出登录失败 logout", data)
       }
