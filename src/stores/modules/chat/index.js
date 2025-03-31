@@ -190,12 +190,11 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       console.log("历史消息 history:", history);
       const baseTime = getBaseTime(history, "last");
       const timeDividerResult = addTimeDivider(messages.reverse(), baseTime, "last");
-      const newHistory = [...timeDividerResult, ...history]
+      const newHistory = [...timeDividerResult, ...history];
       this.currentMessageList = newHistory;
       this.historyMessageList.set(sessionId, newHistory);
     },
     updateMessages(payload) {
-      // debugger
       console.log("[chat] 更新消息 updateMessages:", payload);
       const { sessionId, message } = payload;
       if (!sessionId || !message?.ID) {
@@ -217,6 +216,26 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         let timeDividerResult = addTimeDivider([message], baseTime);
         newMessageList.push(...timeDividerResult);
       }
+      if (this.currentConversation?.conversationID === sessionId) {
+        this.currentMessageList = newMessageList;
+      }
+      this.historyMessageList.set(sessionId, newMessageList);
+    },
+    modifiedMessages(message) {
+      console.log("[chat] 历史消息更新 modifiedMessages:", payload);
+      if (!message?.ID) {
+        console.warn("ID 不存在");
+        return;
+      }
+      let sessionId = message.conversationID;
+      const oldMessageList = this.historyMessageList.get(sessionId);
+      if (!oldMessageList) {
+        console.warn("oldMessageList 不存在");
+        return;
+      }
+      const newMessageList = oldMessageList.map((t) => {
+        return t.ID === message.ID ? message : item;
+      });
       if (this.currentConversation?.conversationID === sessionId) {
         this.currentMessageList = newMessageList;
       }
