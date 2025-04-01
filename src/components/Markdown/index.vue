@@ -1,16 +1,14 @@
 <template>
-  <div class="markdown-body">
-    <MarkdownRender />
-  </div>
+  <MarkdownRender />
 </template>
 
 <script setup>
 import { h, onMounted, nextTick, ref, watch } from "vue";
+import { useAppStore } from "@/stores/index";
 import markdownit from "markdown-it";
 import hljs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";
 // import bash from "highlight.js/lib/languages/bash";
-import { useAppStore } from "@/stores/index";
 import "highlight.js/styles/base16/default-light.css";
 
 defineOptions({ name: "Markdown" });
@@ -81,6 +79,7 @@ md.use(newWindowLinksPlugin);
 function MarkdownRender() {
   const mark = h("div", {
     innerHTML: md.render(props.marked),
+    class: "markdown-body",
   });
 
   return mark;

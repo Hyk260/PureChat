@@ -100,14 +100,14 @@
     <RobotModel />
     <RobotPlugin />
     <RobotOptions />
-    <EmotionPackBox v-if="!isAssistant && flag" @onClose="setFlag(false)" />
+    <EmotionPackBox v-show="!isAssistant && flag" @onClose="setFlag(false)" />
   </div>
 </template>
 
 <script setup>
 import { computed, onMounted, onUnmounted } from "vue";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
-import { isElectron } from "@/utils/common";
+import { isElectron, createFileInput } from "@/utils/common";
 import { storeToRefs } from "pinia";
 import { useState } from "@/utils/hooks/index";
 import { useChatStore, useRobotStore } from "@/stores/index";
@@ -147,36 +147,6 @@ const isFunctionCall = computed(() => {
     return false;
   }
 });
-
-const createFileInput = (options) => {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = options.accept;
-  input.style.display = 'none';
-  const handleChange = (event) => {
-    const files = event.target.files;
-    cleanup();
-    options.onChange(files);
-  };
-  const handleWindowFocus = () => {
-    setTimeout(() => {
-      if (document.body.contains(input)) {
-        cleanup();
-        options.onChange(null);
-      }
-    }, 300);
-  };
-  const cleanup = () => {
-    document.body.removeChild(input);
-    input.removeEventListener('change', handleChange);
-    window.removeEventListener('focus', handleWindowFocus);
-  };
-  input.addEventListener('change', handleChange);
-  window.addEventListener('focus', handleWindowFocus);
-  document.body.appendChild(input);
-  
-  input.click();
-};
 
 const cleanTopicShortcut = () => {
   setVisible(false);

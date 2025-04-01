@@ -39,6 +39,7 @@ declare module 'vue' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElTree: typeof import('element-plus/es')['ElTree']
     FontIcon: typeof import('./../components/FontIcon/index.vue')['default']
+    Markdown: typeof import('./../components/Markdown/index.vue')['default']
     QrCode: typeof import('./../components/QrCode/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

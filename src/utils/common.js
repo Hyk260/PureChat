@@ -153,3 +153,33 @@ export function getPlugin({
     imageUrl: new URL(`../../../assets/images/plugin/${plugin.meta?.avatar}`, import.meta.url).href
   };
 }
+
+export const createFileInput = (options) => {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = options.accept;
+  input.style.display = "none";
+  const handleChange = (event) => {
+    const files = event.target.files;
+    cleanup();
+    options.onChange(files);
+  };
+  const handleWindowFocus = () => {
+    setTimeout(() => {
+      if (document.body.contains(input)) {
+        cleanup();
+        options.onChange(null);
+      }
+    }, 300);
+  };
+  const cleanup = () => {
+    document.body.removeChild(input);
+    input.removeEventListener("change", handleChange);
+    window.removeEventListener("focus", handleWindowFocus);
+  };
+  input.addEventListener("change", handleChange);
+  window.addEventListener("focus", handleWindowFocus);
+  document.body.appendChild(input);
+
+  input.click();
+};
