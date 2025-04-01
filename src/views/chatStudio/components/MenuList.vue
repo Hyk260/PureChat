@@ -1,10 +1,9 @@
 <template>
   <div v-if="showMenuList(item)" class="menubar">
-    <!-- :class="!isSelf(item) ? 'flex-row-reverse' : ''" -->
     <div class="flex">
       <div
         class="menubar-item flex-c"
-        v-for="item in flilterList"
+        v-for="item in filterList"
         :key="item.id"
         @click="handleMenuEvent(item)"
       >
@@ -19,13 +18,13 @@
 <script setup>
 import { computed } from "vue";
 import { useChatStore } from "@/stores/index";
-import { isSelf, handleCopyMsg } from "../utils/utils";
+import { handleCopyMsg } from "../utils/utils";
 
 defineOptions({
   name: "MenuList",
 });
 
-const emit = defineEmits(["handlSingleClick"]);
+const emit = defineEmits(["handleSingleClick"]);
 
 const props = defineProps({
   item: {
@@ -71,7 +70,7 @@ const list = [
 
 const chatStore = useChatStore();
 
-const flilterList = computed(() => {
+const filterList = computed(() => {
   const _type = props.item.type;
   return list
     .filter((t) => {
@@ -99,7 +98,7 @@ function showMenuList(item) {
     item.type !== "TIMGroupTipElem" &&
     !item.isRevoked &&
     !chatStore.showCheckbox &&
-    flilterList.value.length
+    filterList.value.length
   );
 }
 
@@ -117,7 +116,7 @@ function handleMenuEvent(data) {
       console.log("设置");
       break;
     case "delete": // 删除
-      emit("handlSingleClick", { item, id: "delete" });
+      emit("handleSingleClick", { item, id: "delete" });
       break;
   }
 }

@@ -112,8 +112,7 @@ pnpm app:builder:mac
 | `VITE_OPENAI_API_KEY`   | 必选 |                       OpenAI API 密钥                        |                     `sk-xxxxxx...xxxxxx`                     |
 | `VITE_OPENAI_PROXY_URL` | 可选 |   OpenAI 接口代理，此配置可以覆盖默认 OpenAI API 基础 URL    | `https://aihubmix.com/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
 | `VITE_IM_SDK_APPID`     | 必选 |     腾讯IM SDKAppID https://cloud.tencent.com/product/im     |                           `xxxxxx`                           |
-| `VITE_SERVICE_BASE_URL` | 必选 |                          服务器地址                          |                   `https://your.api.com/`                    |
-| `VITE_LOCAL_MODE`       | 可选 | 开启本地模式不使用腾讯IM SDK ，为`Y` 时 可不填im sdk，使用本地indexedDB保存数据，开启后不支持多端消息同步，做为本地ai问答工具使用。 |                             `Y`                              |
+| `VITE_SERVICE_BASE_URL` | 必选 |                          服务器地址                          |                   `https://your.api.com/`                    |                          `Y`                              |
 
 <!-- LINK GROUP -->
 

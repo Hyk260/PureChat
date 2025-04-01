@@ -77,7 +77,7 @@
                   <MenuList
                     :item="item"
                     :status="item.status"
-                    @handlSingleClick="handlSingleClick"
+                    @handleSingleClick="handleSingleClick"
                   />
                 </div>
                 <div class="message-view-bottom" v-if="!isSelf(item) && isAssistant">
@@ -106,7 +106,7 @@
         :key="item.id"
         :class="item.class"
         :style="item.style"
-        @click="handlRightClick(item)"
+        @click="handleRightClick(item)"
       >
         <FontIcon :iconName="item.icon" />
         <span>{{ item.text }}</span>
@@ -448,7 +448,7 @@ const handleContextMenuEvent = (event, item) => {
   }
 };
 
-const handlRightClick = (data) => {
+const handleRightClick = (data) => {
   const info = menuItemInfo.value;
   const { id, text } = data || {};
   switch (id) {
@@ -485,10 +485,10 @@ const handlRightClick = (data) => {
   }
 };
 
-const handlSingleClick = ({ item, id }) => {
+const handleSingleClick = ({ item, id }) => {
   menuItemInfo.value = item;
   isConfirm.value = true;
-  handlRightClick({ id });
+  handleRightClick({ id });
 };
 
 const handleAt = (data) => {
