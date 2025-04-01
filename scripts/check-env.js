@@ -24,9 +24,6 @@ VITE_OPENAI_PROXY_URL = 'https://api.you.com'
 VITE_OPENAI_API_KEY = 'sk-XXX'
 `,
   [LOCAL_ENV_FILE]: `
-# 开启本地模式不使用腾讯IM SDK
-# VITE_LOCAL_MODE = 'Y'
-
 # IM sdk日志级别
 VITE_LOG_LEVEL = '4'
 
