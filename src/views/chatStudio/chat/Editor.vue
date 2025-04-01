@@ -124,7 +124,7 @@ const setToolbar = (item) => {
     case "setPicture":
       parsePicture(data.files);
       break;
-    case "setParsefile":
+    case "setParseFile":
       parseFile(data.files);
       break;
   }

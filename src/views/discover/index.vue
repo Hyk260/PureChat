@@ -22,16 +22,16 @@
 
 <script setup>
 import { ref, watch, onBeforeMount } from "vue";
+import { getPrompt } from "@/api/node-admin-api/index";
+import { localStg } from "@/utils/storage";
+import { options } from './utils';
 import AgentList from "./AgentList.vue";
 import AgentCardBanner from "./AgentCardBanner.vue";
 import DiscoverHeader from "./DiscoverHeader.vue";
 import TabsWrapper from "./TabsWrapper.vue";
 import StarMessage from "./StarMessage.vue";
 import emitter from "@/utils/mitt-bus";
-import marketJson from "@/database/market.json";
-import { getPrompt } from "@/api/node-admin-api/index";
-import { localStg } from "@/utils/storage";
-import { options } from './utils.js';
+import marketJson from "@/database/market";
 
 const cur = ref("");
 const agent = ref([]);

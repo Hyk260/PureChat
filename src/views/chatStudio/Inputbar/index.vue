@@ -97,21 +97,15 @@
         <SvgIcon :local-icon="isFullscreenInputActive ? 'narrow' : 'enlarge'" />
       </el-button>
     </el-tooltip>
-    <input type="file" ref="imagePicker" :accept="imageExts" @change="sendImage" hidden />
-    <input type="file" ref="annexPicker" :accept="supportExts" @change="sendFile" hidden />
-    <input type="file" ref="filePicker" :accept="fileExts" @change="sendFile" hidden />
-    <template v-if="isAssistant">
-      <RobotModel />
-      <RobotPlugin />
-      <RobotOptions />
-    </template>
+    <RobotModel />
+    <RobotPlugin />
+    <RobotOptions />
     <EmotionPackBox v-if="!isAssistant && flag" @onClose="setFlag(false)" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
-import { ClickOutside as vClickOutside } from "element-plus";
+import { computed, onMounted, onUnmounted } from "vue";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { isElectron } from "@/utils/common";
 import { storeToRefs } from "pinia";
@@ -127,10 +121,6 @@ import emitter from "@/utils/mitt-bus";
 defineOptions({
   name: "Inputbar",
 });
-
-const annexPicker = ref();
-const imagePicker = ref();
-const filePicker = ref();
 
 const supportExts = [...textExts, ...documentExts];
 const fileExts = [...textExts, ...documentExts, ...imageExts, ...audioExts, ...videoExts];
@@ -158,6 +148,36 @@ const isFunctionCall = computed(() => {
   }
 });
 
+const createFileInput = (options) => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = options.accept;
+  input.style.display = 'none';
+  const handleChange = (event) => {
+    const files = event.target.files;
+    cleanup();
+    options.onChange(files);
+  };
+  const handleWindowFocus = () => {
+    setTimeout(() => {
+      if (document.body.contains(input)) {
+        cleanup();
+        options.onChange(null);
+      }
+    }, 300);
+  };
+  const cleanup = () => {
+    document.body.removeChild(input);
+    input.removeEventListener('change', handleChange);
+    window.removeEventListener('focus', handleWindowFocus);
+  };
+  input.addEventListener('change', handleChange);
+  window.addEventListener('focus', handleWindowFocus);
+  document.body.appendChild(input);
+  
+  input.click();
+};
+
 const cleanTopicShortcut = () => {
   setVisible(false);
   chatStore.deleteHistoryMessage();
@@ -179,22 +199,28 @@ function openPluginBox() {
 function selectModel() {
   emitter.emit("openModeList", true);
 }
-const sendAnnexClick = () => {
-  let $el = annexPicker.value;
-  $el.value = null;
-  $el.click();
-};
+
 const sendImageClick = () => {
-  let $el = imagePicker.value;
-  $el.value = null;
-  $el.click();
+  createFileInput({
+    accept: imageExts,
+    onChange: sendImage,
+  });
 };
+
+const sendAnnexClick = () => {
+  createFileInput({
+    accept: supportExts,
+    onChange: sendFile,
+  });
+};
+
 const sendFileClick = () => {
-  let $el = filePicker.value;
-  $el.value = null;
-  $el.click();
+  createFileInput({
+    accept: fileExts,
+    onChange: sendFile,
+  });
 };
-// 截图
+
 const clickCscreenshot = () => {};
 
 const toggleFullScreenInput = () => {
@@ -212,17 +238,19 @@ function customMessage() {
   chatStore.sendSessionMessage({ message });
 }
 
-function sendImage(e) {
+function sendImage(files) {
+  if (!files) return;
   emitter.emit("handleToolbar", {
     key: "setPicture",
-    data: { files: e.target.files[0] },
+    data: { files: files[0] },
   });
 }
 
-function sendFile(e) {
+function sendFile(files) {
+  if (!files) return;
   emitter.emit("handleToolbar", {
-    key: "setParsefile",
-    data: { files: e.target.files[0] },
+    key: "setParseFile",
+    data: { files: files[0] },
   });
 }
 

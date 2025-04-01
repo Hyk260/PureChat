@@ -13,7 +13,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { prettyObject } from "@/ai/utils.js";
+import { prettyObject } from "@/ai/utils";
 import { transformCustomElement } from "@/utils/chat/index";
 
 defineOptions({

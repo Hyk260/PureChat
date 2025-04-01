@@ -10,7 +10,7 @@ import markdownit from "markdown-it";
 import hljs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";
 // import bash from "highlight.js/lib/languages/bash";
-import { useAppStore } from '@/stores/index';
+import { useAppStore } from "@/stores/index";
 import "highlight.js/styles/base16/default-light.css";
 
 defineOptions({ name: "Markdown" });
@@ -19,10 +19,12 @@ const props = defineProps({
   marked: {
     type: String,
     default: "",
-  }, 
-})
+  },
+});
 
-const clipboard = "nextElementSibling && (window.copyToClipboard(nextElementSibling.innerText))"
+const appStore = useAppStore();
+
+const clipboard = "nextElementSibling && (window.copyToClipboard(nextElementSibling.innerText))";
 const copyButton = `<button class="copy-code-button" onclick="${clipboard}" title="copy"><span class="cuida--copy-outline"></span></button>`;
 
 hljs.registerLanguage("javascript", javascript);
@@ -31,7 +33,7 @@ hljs.registerLanguage("vue", javascript);
 async function copyToClipboard(text) {
   try {
     await navigator.clipboard.writeText(text);
-    useAppStore().showMessage({ message: "复制成功" });
+    appStore.showMessage({ message: "复制成功" });
   } catch (error) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
@@ -40,9 +42,9 @@ async function copyToClipboard(text) {
     textArea.select();
     try {
       document.execCommand("copy");
-      useAppStore().showMessage({ message: "复制成功" });
+      appStore.showMessage({ message: "复制成功" });
     } catch (error) {
-      useAppStore().showMessage({ message: "您的浏览器不支持剪贴板API" });
+      appStore.showMessage({ message: "您的浏览器不支持剪贴板API" });
     }
     document.body.removeChild(textArea);
   }
@@ -78,17 +80,15 @@ md.use(newWindowLinksPlugin);
 
 function MarkdownRender() {
   const mark = h("div", {
-    innerHTML: md.render(props.marked)
+    innerHTML: md.render(props.marked),
   });
 
   return mark;
 }
 
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   window.copyToClipboard = copyToClipboard;
 }
 </script>
 
-<style lang='scss' scoped>
-
-</style>
+<style lang="scss" scoped></style>

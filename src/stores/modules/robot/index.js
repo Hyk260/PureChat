@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { localStg } from "@/utils/storage";
 import { StoreKey, ModelProvider, modelValue } from "@/ai/constant";
 import { SetupStoreId } from "../../plugins/index";
-import { useChatStore } from "../chat/index.js";
+import { useChatStore } from "../chat/index";
 import { cloneDeep } from "lodash-es";
 import { getModelType, useAccessStore } from "@/ai/utils";
 

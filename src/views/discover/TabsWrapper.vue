@@ -10,7 +10,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { options } from './utils.js';
+import { options } from './utils';
 
 defineOptions({
   name: "TabsWrapper",
