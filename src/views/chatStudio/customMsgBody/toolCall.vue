@@ -13,7 +13,6 @@
 
 <script setup>
 import { ref } from "vue";
-import { Markdown } from "@/utils/markdown/index";
 import { prettyObject } from "@/ai/utils.js";
 import { transformCustomElement } from "@/utils/chat/index";
 

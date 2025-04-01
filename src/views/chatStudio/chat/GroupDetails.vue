@@ -136,7 +136,6 @@ import { restApi } from "@/api/node-admin-api/index";
 import { useState } from "@/utils/hooks/index";
 import { showConfirmationBox } from "@/utils/message";
 import { isFullStaffGroup } from "@/ai/utils";
-import { Markdown } from "@/utils/markdown/index";
 import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index";
 import { useGroupStore, useAppStore, useUserStore, useChatStore } from "@/stores/index";
 import AddMemberPopup from "../components/AddMemberPopup.vue";

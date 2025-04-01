@@ -1,6 +1,5 @@
 <template>
   <div class="warning flex items-center">
-    <!-- <Markdown :marked="" /> -->
     <el-icon><Warning /></el-icon>
     <span> API Key 不正确或为空，请检查 API Key 后重试</span>
     <span class="cursor-pointer ml-4 text-[#0072f5]" @click="openRobotBox()"> [配置] </span>
@@ -10,7 +9,6 @@
 
 <script setup>
 import { modelValue } from "@/ai/constant";
-import { Markdown } from "@/utils/markdown/index";
 import emitter from "@/utils/mitt-bus";
 
 defineOptions({

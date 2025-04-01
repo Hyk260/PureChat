@@ -1,4 +1,6 @@
 .markdown-body pre .copy-code-button {
+  display: flex;
+  align-items: center;
   position: absolute;
   right: 10px;
   top: 1em;

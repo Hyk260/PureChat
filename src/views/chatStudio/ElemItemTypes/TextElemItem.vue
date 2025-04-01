@@ -14,7 +14,6 @@
 import { onMounted, computed } from "vue";
 import { isRobot } from "@/utils/chat/index";
 import { useChatStore } from "@/stores/index";
-import { Markdown, handleCopyClick } from "@/utils/markdown/index";
 import ReplyElem from "./ReplyElem.vue";
 import DynamicContent from "../components/DynamicContent.vue";
 import "@/styles/highlight.scss";
@@ -65,10 +64,6 @@ function fnStyle() {
   let marked = showMarked(props.message) ? "markdown" : "";
   return props.self ? ["is-text-self", marked] : ["is-text-other", marked];
 }
-
-onMounted(() => {
-  handleCopyClick();
-});
 </script>
 
 <style lang="scss" scoped>

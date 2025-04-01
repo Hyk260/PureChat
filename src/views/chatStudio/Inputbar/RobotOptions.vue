@@ -129,7 +129,6 @@ import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
-import { Markdown } from "@/utils/markdown/index";
 import { StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
 import { useRobotStore, useChatStore } from "@/stores/index";
 import { storeToRefs } from "pinia";

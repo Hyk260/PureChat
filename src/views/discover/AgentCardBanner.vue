@@ -36,7 +36,6 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { Markdown, handleCopyClick } from "@/utils/markdown/index";
 import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { StoreKey, VITE_OPENAI_ID, ModelProvider } from "@/ai/constant";
@@ -79,7 +78,6 @@ function handleClose() {
 function setAgentCard(data) {
   cardData.value = data;
   setDialog(true);
-  handleCopyClick();
 }
 
 onMounted(() => {

@@ -127,7 +127,6 @@
 import { computed, nextTick, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { isRobot } from "@/utils/chat/index";
-import { Markdown } from "@/utils/markdown/index";
 import { useState } from "@/utils/hooks/index";
 import {
   useScreenshot,
