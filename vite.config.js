@@ -3,6 +3,7 @@ import { URL, fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
 import { setupVitePlugins, setupViteExternal } from "./build/plugins/index";
 import { viteDefine, manualChunks } from "./build/config/define";
+import { include, exclude } from "./build/config/optimize";
 
 export default defineConfig(({ mode }) => {
   const viteEnv = loadEnv(mode, process.cwd());
@@ -40,10 +41,10 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    // https://cn.vitejs.dev/config/dep-optimization-options.html#dep-optimization-options
+    // https://cn.vitejs.dev/config/dep-optimization-options#optimizedeps-exclude
     optimizeDeps: {
-      // include,
-      // exclude,
+      include,
+      exclude,
     },
     build: {
       // https://cn.vitejs.dev/guide/build.html#browser-compatibility
