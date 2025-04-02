@@ -74,6 +74,8 @@
     "vue-virtual-scroller": "2.0.0-beta.8"
   },
   "devDependencies": {
+    "@agentic/exa": "^7.3.3",
+    "@agentic/tavily": "^7.3.3",
     "@unocss/preset-rem-to-px": "^65.4.3",
     "@unocss/preset-uno": "^65.4.3",
     "@vitejs/plugin-vue": "^5.0.4",

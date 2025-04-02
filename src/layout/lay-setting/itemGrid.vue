@@ -4,7 +4,7 @@
       <span>{{ item.title }}</span>
       <el-icon @click="emit('onClose')"><CloseBold /></el-icon>
     </div>
-    <div v-if="item.icon === 'Operation'">
+    <div v-if="item.id === 'currency'">
       <ul class="setting w-full">
         <li>
           <span>{{ $t("common.theme") }}</span>
@@ -22,7 +22,7 @@
           <el-select v-model="language" placeholder="选择语言">
             <el-option
               v-for="item in languages"
-              @click="onBlur"
+              @click="languageChange"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -38,19 +38,28 @@
     </div>
     <div v-else-if="item.id === 'webSearch'">
       <div>
-        <div>
-          <span> Tavily</span>
-          <el-icon><Promotion /></el-icon>
+        <div class="flex gap-5">
+          <span>Tavily</span>
+          <el-icon @click="toLink()" class="cursor-pointer"><Promotion /></el-icon>
         </div>
-        <el-divider class="!my-20" />
-        <p class="my-20">API密钥</p>
+        <el-divider class="my-20" />
+        <!-- <p class="my-20">API密钥</p> -->
         <div class="flex gap-10">
-          <el-input v-model="searchInput" type="password" placeholder="API Key" show-password />
-          <el-button>检查</el-button>
+          <el-input
+            v-model="searchInput"
+            @blur="onBlur"
+            type="password"
+            placeholder="API密钥"
+            show-password
+          />
+          <el-button @click="checkApiKey">检查</el-button>
+        </div>
+        <div class="mt-10">
+          <el-link :href="websites.apiKey" target="_blank" type="primary">点击这里获取密钥</el-link>
         </div>
       </div>
     </div>
-    <div v-else-if="item.icon === 'Warning'">
+    <div v-else-if="item.id === 'about'">
       <div class="ui-row flex-bc">
         <div class="flex">
           <div>
@@ -72,7 +81,7 @@
         <div>其他信息</div>
       </div> -->
     </div>
-    <div v-else-if="item.icon === 'Postcard'">
+    <div v-else-if="item.id === 'provider'">
       <ul class="setting w-full">
         <li>
           <span>{{ $t("settings.defaultProvider") }} </span>
@@ -91,11 +100,13 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
 import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { ModelProvider } from "@/ai/constant";
-import { useUserStore } from "@/stores/index";
+import { useUserStore, useAppStore } from "@/stores/index";
+
+import WebSearchService from "@/ai/webSearchService";
+import { WEB_SEARCH_PROVIDER_CONFIG, PROVIDER_IDS } from "@/config/webSearchProviders";
 import { languages, options, optionsModel } from "./enums";
 
 const { VITE_APP_NAME, DEV: isDev } = import.meta.env;
@@ -103,6 +114,8 @@ const { docs, version } = __APP_INFO__.pkg;
 const isLocalMode = __LOCAL_MODE__;
 
 const [searchInput, setSearchInput] = useState("");
+const { providers } = WEB_SEARCH_PROVIDER_CONFIG;
+const { websites } = providers[0];
 
 const props = defineProps({
   item: {
@@ -111,13 +124,40 @@ const props = defineProps({
   },
 });
 
+const appStore = useAppStore();
 const userStore = useUserStore();
 const assistant = ref(localStg.get("model-provider") || ModelProvider.OpenAI);
 
 const emit = defineEmits(["onClose", "onItem"]);
 
-function onBlur() {
+function languageChange() {
   emit("onItem");
+}
+
+function onBlur() {
+  localStg.set("webSearch", {
+    ...WEB_SEARCH_PROVIDER_CONFIG,
+    providers: [
+      {
+        ...providers[0],
+        apiKey: searchInput.value,
+      },
+    ],
+  });
+}
+
+async function checkApiKey() {
+  if (!searchInput.value) {
+    appStore.showMessage({ message: "请输入API密钥", type: "warning" });
+    return;
+  }
+  const { valid, error } = await WebSearchService.checkSearch(providers[0]);
+
+  if(valid) appStore.showMessage({ message: "API密钥验证通过" });
+}
+
+function toLink() {
+  open(websites.official);
 }
 
 function log() {
@@ -150,6 +190,10 @@ const language = computed({
   set(val) {
     userStore.setLang(val);
   },
+});
+
+onMounted(() => {
+  setSearchInput(localStg.get("webSearch")?.providers[0]?.apiKey || "");
 });
 </script>
 

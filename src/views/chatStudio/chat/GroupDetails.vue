@@ -25,7 +25,7 @@
               {{ groupProfile.name }}
             </span>
             <FontIcon
-              v-if="groupStore.isOwner"
+              v-if="isOwner"
               class="style-editPen icon-hover"
               iconName="EditPen"
               @click="openNamePopup"
@@ -42,7 +42,7 @@
         <div class="pb-10">
           <span>{{ $t("group.groupNotice") }}</span>
           <FontIcon
-            v-if="groupStore.isOwner"
+            v-if="isOwner"
             class="style-editPen icon-hover"
             iconName="EditPen"
             @click="openNoticePopup"
@@ -58,7 +58,7 @@
         <div class="group-member-title">
           <span> 群成员 </span>
           <span class="total">
-            <span>{{ groupStore.currentMemberList.length }}人 </span>
+            <span>{{ currentMemberList.length }}人 </span>
             <!-- <span><a @click="openDetails">查看</a></span> -->
           </span>
         </div>
@@ -67,12 +67,12 @@
             <span class="iconify-icon gala-add margin" @click="groupMemberAdd"></span>
             <div
               class="avatar margin"
-              v-for="item in groupStore.currentMemberList"
+              v-for="item in currentMemberList"
               :key="item.userID"
               @click="navigate(item)"
             >
               <FontIcon
-                v-if="groupStore.isOwner"
+                v-if="isOwner"
                 iconName="CircleCloseFilled"
                 class="style-close"
                 :class="{ hidden: userStore.userProfile.userID === item.userID }"
@@ -107,7 +107,7 @@
       <el-divider />
       <!-- 解散 退出 转让 -->
       <div class="group-operator flex-c" v-if="!isFullStaffGroup(currentConversation)">
-        <el-button v-if="groupStore.isOwner" type="danger" @click="handleDismissGroup">
+        <el-button v-if="isOwner" type="danger" @click="handleDismissGroup">
           解散群组
         </el-button>
         <el-button v-else type="danger" @click="handleQuitGroup"> 退出群组 </el-button>
@@ -123,7 +123,6 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import {
   addGroupMember,
@@ -158,6 +157,7 @@ const appStore = useAppStore();
 const [drawer, setDrawer] = useState();
 const [loading, setLoading] = useState();
 
+const { currentMemberList, isOwner } = storeToRefs(groupStore);
 const { toAccount, currentConversation } = storeToRefs(chatStore);
 
 const beforeChange = () => {
@@ -226,7 +226,7 @@ const navigate = (item) => {
 };
 
 const removeGroupMemberBtn = async (item) => {
-  const data = { message: `确定将 ${item.nick} 移出群聊?`, iconType: "warning" };
+  const data = { message: `确定将 ${item.nick || item.userID} 移出群聊?`, iconType: "warning" };
   const result = await showConfirmationBox(data);
   if (result === "cancel") return;
   const params = { groupID: toAccount.value, user: item.userID };

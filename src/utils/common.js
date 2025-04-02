@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { localStg } from "@/utils/storage";
 import { localStgThemeScheme } from "@/theme/settings";
-import manifest from "@/database/manifest/index.json";
+import manifest from "@/database/manifest/index";
 
 const title = import.meta.env.VITE_APP_NAME;
 
@@ -183,3 +183,11 @@ export const createFileInput = (options) => {
 
   input.click();
 };
+
+export function hasObjectKey(obj, key) {
+  if (typeof obj !== 'object' || obj === null) {
+    return false
+  }
+
+  return Object.keys(obj).includes(key)
+}

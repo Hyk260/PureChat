@@ -1,7 +1,7 @@
-import loading from '@/database/custom/loading.json';
-import dithering from '@/database/custom/dithering.json';
-import toolCall from '@/database/custom/tool_call.json';
-import warning from '@/database/custom/warning.json';
+import loading from '@/database/custom/loading';
+import dithering from '@/database/custom/dithering';
+import toolCall from '@/database/custom/tool_call';
+import warning from '@/database/custom/warning';
 
 const collection = {
   "dithering": dithering,

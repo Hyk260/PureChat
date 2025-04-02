@@ -7,11 +7,11 @@ import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { SessionModel } from "@/database/models/session";
 import { MessageModel } from "@/database/models/message";
-import sessions from "@/database/sessions.json";
-import robotList from "@/database/bot.json";
-import profile from "@/database/profile.json";
-import timTextElem from "@/database/message/timTextElem.json";
-import timCustomElem from "@/database/message/timCustomElem.json";
+import sessions from "@/database/sessions";
+import robotList from "@/database/bot";
+import profile from "@/database/profile";
+import timTextElem from "@/database/message/timTextElem";
+import timCustomElem from "@/database/message/timCustomElem";
 import emitter from "@/utils/mitt-bus";
 
 export function getConversationList() {

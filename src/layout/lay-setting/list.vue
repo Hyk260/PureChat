@@ -20,7 +20,6 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { useState } from "@/utils/hooks/index";
 import { list } from "./enums";
 

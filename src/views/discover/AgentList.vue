@@ -35,7 +35,7 @@
 
 <script setup>
 import { useSidebarStore, useChatStore } from "@/stores/index";
-import modelProvider from "@/database/bot.json";
+import modelProvider from "@/database/bot";
 import AgentCard from "./AgentCard.vue";
 import ModelProviderCard from "./ModelProviderCard.vue";
 import AgentSkeleton from "./AgentSkeleton.vue";

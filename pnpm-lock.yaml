@@ -150,6 +150,12 @@ importers:
         specifier: 2.0.0-beta.8
         version: 2.0.0-beta.8(vue@3.5.13)
     devDependencies:
+      '@agentic/exa':
+        specifier: ^7.3.3
+        version: 7.6.3(zod@3.23.8)
+      '@agentic/tavily':
+        specifier: ^7.3.3
+        version: 7.6.3(zod@3.23.8)
       '@unocss/preset-rem-to-px':
         specifier: ^65.4.3
         version: 65.4.3
@@ -215,6 +221,21 @@ importers:
         version: 3.0.4(@types/node@20.14.4)(@vitest/ui@3.0.4)(happy-dom@16.7.2)(sass@1.77.6)(terser@5.37.0)
 
 packages:
+
+  '@agentic/core@7.6.3':
+    resolution: {integrity: sha512-Bin1p7+XJFq01wAQOLKaUVusNg4vt+gjZc3AMSipTd0sU26CnVHr45p917igt1JmMX3c1giBxb4nfbK5LJDLOA==}
+    peerDependencies:
+      zod: ^3.24.2
+
+  '@agentic/exa@7.6.3':
+    resolution: {integrity: sha512-HBdyaqlhsVJBLEMenO1DDfCjzHwkf+64+6f4vGd6wtlMEe8zCUpcuNR0SJtjp+tr2SGsfWw9JPA2ohDpoFhZpg==}
+    peerDependencies:
+      zod: ^3.24.2
+
+  '@agentic/tavily@7.6.3':
+    resolution: {integrity: sha512-8pw4IOLkzo0q/GV8ybJYCdEJ3xd06S7STuw9pSxpIwXleJoaaQioJfK2MOV/oEMsFuj0h6gLpFIlGk+CdcpezA==}
+    peerDependencies:
+      zod: ^3.24.2
 
   '@ai-sdk/provider-utils@1.0.5':
     resolution: {integrity: sha512-XfOawxk95X3S43arn2iQIFyWGMi0DTxsf9ETc6t7bh91RPWOOPYN1tsmS5MTKD33OGJeaDQ/gnVRzXUCRBrckQ==}
@@ -1797,6 +1818,14 @@ packages:
     resolution: {integrity: sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==}
     engines: {node: '>=0.10'}
 
+  dedent@1.5.3:
+    resolution: {integrity: sha512-NHQtfOOW68WD8lgypbLA5oT+Bt0xXJhiYvoR6SmmNXZfpzOGXwdKWmcwG8N7PwVVWV3eF/68nmD9BaJSsTBhyQ==}
+    peerDependencies:
+      babel-plugin-macros: ^3.1.0
+    peerDependenciesMeta:
+      babel-plugin-macros:
+        optional: true
+
   deep-eql@5.0.2:
     resolution: {integrity: sha512-h5k/5U50IJJFpzfL6nO9jaaumfjO/f2NjK/oYB2Djzm4p9L+3T9qWpZqZ2hAbLPuuYq9wrU08WQyBTL5GbPk5Q==}
     engines: {node: '>=6'}
@@ -1845,6 +1874,10 @@ packages:
 
   defu@6.1.4:
     resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
+
+  delay@6.0.0:
+    resolution: {integrity: sha512-2NJozoOHQ4NuZuVIr5CWd0iiLVIRSDepakaovIN+9eIDHEhdCAEvSy2cuf1DCrPPQLvHmbqTHODlhHg8UCy4zw==}
+    engines: {node: '>=16'}
 
   dequal@2.0.3:
     resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
@@ -2701,6 +2734,10 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
+  jsonrepair@3.12.0:
+    resolution: {integrity: sha512-SWfjz8SuQ0wZjwsxtSJ3Zy8vvLg6aO/kxcp9TWNPGwJKgTZVfhNEQBMk/vPOpYCDFWRxD6QWuI6IHR1t615f0w==}
+    hasBin: true
+
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
@@ -2729,6 +2766,10 @@ packages:
 
   kolorist@1.8.0:
     resolution: {integrity: sha512-Y+60/zizpJ3HRH8DCss+q95yr6145JXZo46OTpFvDZWLfRCE4qChOyk1b26nMaNpfHHgxagk9dXT5OP0Tfe+dQ==}
+
+  ky@1.8.0:
+    resolution: {integrity: sha512-DoKGmG27nT8t/1F9gV8vNzggJ3mLAyD49J8tTMWHeZvS8qLc7GlyTieicYtFzvDznMe/q2u38peOjkWc5/pjvw==}
+    engines: {node: '>=18'}
 
   ldrs@1.0.2:
     resolution: {integrity: sha512-sYJmivdkIiHrUEqTrEWccBoLdaENpzbzkABI5rk8rRxTXrg9i2xVuDvUUuhOhJY3RmQyaoxs046pM1DCRdcIpg==}
@@ -3039,6 +3080,12 @@ packages:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
 
+  openai-zod-to-json-schema@1.0.3:
+    resolution: {integrity: sha512-CFU+KtOmX1dk2nPCZcGYgbrI3YLJJgMSehx1mLbH1A2fsRmZevHzMau6vFIhtkCpHWkGQ3ossA4a0OzVHlGrkw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.23.8
+
   option-validator@2.0.6:
     resolution: {integrity: sha512-tmZDan2LRIRQyhUGvkff68/O0R8UmF+Btmiiz0SmSw2ng3CfPZB9wJlIjHpe/MKUZqyIZkVIXCrwr1tIN+0Dzg==}
 
@@ -3061,6 +3108,10 @@ packages:
   p-locate@5.0.0:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
     engines: {node: '>=10'}
+
+  p-throttle@6.2.0:
+    resolution: {integrity: sha512-NCKkOVj6PZa6NiTmfvGilDdf6vO1rFCD3KDnkHko8dTOtkpk4cSR/VTAhhLMG9aiQ7/A9HYgEDNmxzf6hxzR3g==}
+    engines: {node: '>=18'}
 
   p-try@2.2.0:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
@@ -3735,6 +3786,10 @@ packages:
     resolution: {integrity: sha512-S/5/0kFftkq27FPNye0XM1e2NsnoD/3FS+pBmbjmmtLT6I+i344KoOf7pvXreaFsDamWeaJX55nczA1m5PsBDg==}
     engines: {node: '>=16'}
 
+  type-fest@4.39.0:
+    resolution: {integrity: sha512-w2IGJU1tIgcrepg9ZJ82d8UmItNQtOFJG0HCUE3SzMokKkTsruVDALl2fAdiEzJlfduoU+VyXJWIIUZ+6jV+nw==}
+    engines: {node: '>=16'}
+
   type@2.7.3:
     resolution: {integrity: sha512-8j+1QmAbPvLZow5Qpi6NCaN8FB60p/6x8/vfNqOk/hC+HuvFZhL4+WfekuhQLiqFZXOgQdrs3B+XxEmCc6b3FQ==}
 
@@ -4164,10 +4219,47 @@ packages:
     peerDependencies:
       zod: ^3.22.4
 
+  zod-validation-error@3.4.0:
+    resolution: {integrity: sha512-ZOPR9SVY6Pb2qqO5XHt+MkkTRxGXb4EVtnjc9JpXUOtUB1T9Ru7mZOT361AN3MsetVe7R0a1KZshJDZdgp9miQ==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      zod: ^3.18.0
+
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
 snapshots:
+
+  '@agentic/core@7.6.3(zod@3.23.8)':
+    dependencies:
+      dedent: 1.5.3
+      delay: 6.0.0
+      jsonrepair: 3.12.0
+      ky: 1.8.0
+      openai-zod-to-json-schema: 1.0.3(zod@3.23.8)
+      p-throttle: 6.2.0
+      type-fest: 4.39.0
+      zod: 3.23.8
+      zod-validation-error: 3.4.0(zod@3.23.8)
+    transitivePeerDependencies:
+      - babel-plugin-macros
+
+  '@agentic/exa@7.6.3(zod@3.23.8)':
+    dependencies:
+      '@agentic/core': 7.6.3(zod@3.23.8)
+      ky: 1.8.0
+      zod: 3.23.8
+    transitivePeerDependencies:
+      - babel-plugin-macros
+
+  '@agentic/tavily@7.6.3(zod@3.23.8)':
+    dependencies:
+      '@agentic/core': 7.6.3(zod@3.23.8)
+      ky: 1.8.0
+      p-throttle: 6.2.0
+      zod: 3.23.8
+    transitivePeerDependencies:
+      - babel-plugin-macros
 
   '@ai-sdk/provider-utils@1.0.5(zod@3.23.8)':
     dependencies:
@@ -5705,7 +5797,7 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
       '@types/estree': 1.0.5
-      acorn: 8.14.0
+      acorn: 8.14.1
       estree-walker: 3.0.3
       periscopic: 3.1.0
 
@@ -5844,6 +5936,8 @@ snapshots:
 
   decode-uri-component@0.2.2: {}
 
+  dedent@1.5.3: {}
+
   deep-eql@5.0.2: {}
 
   deep-is@0.1.4: {}
@@ -5887,6 +5981,8 @@ snapshots:
       isobject: 3.0.1
 
   defu@6.1.4: {}
+
+  delay@6.0.0: {}
 
   dequal@2.0.3: {}
 
@@ -6848,6 +6944,8 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
+  jsonrepair@3.12.0: {}
+
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
@@ -6869,6 +6967,8 @@ snapshots:
   knitwork@1.2.0: {}
 
   kolorist@1.8.0: {}
+
+  ky@1.8.0: {}
 
   ldrs@1.0.2: {}
 
@@ -7184,6 +7284,10 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
+  openai-zod-to-json-schema@1.0.3(zod@3.23.8):
+    dependencies:
+      zod: 3.23.8
+
   option-validator@2.0.6:
     dependencies:
       kind-of: 6.0.3
@@ -7212,6 +7316,8 @@ snapshots:
   p-locate@5.0.0:
     dependencies:
       p-limit: 3.1.0
+
+  p-throttle@6.2.0: {}
 
   p-try@2.2.0: {}
 
@@ -7763,7 +7869,7 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
       '@jridgewell/trace-mapping': 0.3.25
       '@types/estree': 1.0.5
-      acorn: 8.14.0
+      acorn: 8.14.1
       aria-query: 5.3.0
       axobject-query: 4.1.0
       code-red: 1.0.4
@@ -7819,7 +7925,7 @@ snapshots:
   terser@5.37.0:
     dependencies:
       '@jridgewell/source-map': 0.3.6
-      acorn: 8.14.0
+      acorn: 8.14.1
       commander: 2.20.3
       source-map-support: 0.5.21
     optional: true
@@ -7899,6 +8005,8 @@ snapshots:
   type-fest@0.20.2: {}
 
   type-fest@4.37.0: {}
+
+  type-fest@4.39.0: {}
 
   type@2.7.3: {}
 
@@ -8445,6 +8553,10 @@ snapshots:
   yoctocolors@2.1.1: {}
 
   zod-to-json-schema@3.22.5(zod@3.23.8):
+    dependencies:
+      zod: 3.23.8
+
+  zod-validation-error@3.4.0(zod@3.23.8):
     dependencies:
       zod: 3.23.8
 

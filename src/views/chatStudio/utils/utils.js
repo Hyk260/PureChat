@@ -15,7 +15,7 @@ import { nextTick } from "vue";
 import { cloneDeep } from "lodash-es";
 import { placeholderMap } from "./configure";
 import emitter from "@/utils/mitt-bus";
-import manifest from "@/database/manifest/index.json";
+import manifest from "@/database/manifest/index";
 
 import CustomElemItem from "../ElemItemTypes/CustomElemItem.vue";
 import FileElemItem from "../ElemItemTypes/FileElemItem.vue";

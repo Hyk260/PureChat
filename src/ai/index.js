@@ -9,7 +9,7 @@ import { getCustomMsgContent } from "@/api/im-sdk-api/custom";
 import { getThinkMsgContent } from "@/utils/chat/index";
 import { useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
-import webSearchResult from "@/database/tools/web-search-result.json";
+import webSearchResult from "@/database/tools/web-search-result";
 
 const restSendMsg = async (params, data) => {
   const { message, think } = data;
