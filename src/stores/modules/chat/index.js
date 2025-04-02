@@ -124,7 +124,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const history = this.historyMessageList.get(sessionId);
       if (this.currentConversation && this.currentMessageList) {
         const data = cloneDeep(history);
-        if (data) this.currentMessageList = [message, ...data];
+        if (data) this.currentMessageList = [...data, message];
       }
       emitter.emit("updataScroll");
     },
@@ -297,6 +297,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         useGroupStore().handleGroupProfile(data);
         useGroupStore().handleGroupMemberList({ groupID: data.groupProfile.groupID });
       }
+      this.isAssistant && useRobotStore().updateModelConfig();
       emitter.emit("updataScroll");
     },
     clearCurrentMessage() {

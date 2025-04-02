@@ -17,10 +17,26 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
   }),
   getters: {
     isFunctionCall() {
-      return this.modelConfig?.function_call && useChatStore().isAssistant;
+      return false
+      if (useChatStore().isAssistant) {
+        return this.model?.functionCall;
+      } else {
+        return false;
+      }
     },
     isVision() {
-      return this.modelConfig?.vision && useChatStore().isAssistant;
+      if (useChatStore().isAssistant) {
+        return this.model?.vision;
+      } else {
+        return false;
+      }
+    },
+    isWebSearchModel() {
+      if (useChatStore().isAssistant) {
+        return this.model?.webSearch;
+      } else {
+        return false;
+      }
     },
     isOllama() {
       return [ModelProvider.Ollama].includes(this.modelProvider);
@@ -38,13 +54,13 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     },
   },
   actions: {
-    updateModelConfig(value) {
+    updateModelConfig() {
       const provider = getModelType(useChatStore().toAccount);
-      this.modelProvider = provider;
       if (!provider) {
         console.log("provider is null");
         return;
       }
+      this.modelProvider = provider;
       const prompt = localStg.get(StoreKey.Prompt);
       const model = useAccessStore(provider)?.model;
       const data = cloneDeep(modelValue[provider].Model.options.chatModels);

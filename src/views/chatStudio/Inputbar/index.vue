@@ -14,26 +14,20 @@
     </el-tooltip>
     <!-- 图片 -->
     <el-tooltip :content="$t('chat.picture')" placement="top">
-      <el-button v-show="isShowImage()" :class="isVision ? '' : 'prohibit'" @click="sendImageClick">
+      <el-button v-show="!isAssistant" @click="sendImageClick">
         <SvgIcon local-icon="icontupian" />
-      </el-button>
-    </el-tooltip>
-    <!-- 联网 -->
-    <el-tooltip v-if="false" :content="$t('chat.web_search')" placement="top">
-      <el-button v-show="isAssistant" @click="onEnableWebSearch">
-        <SvgIcon local-icon="internet" />
-      </el-button>
-    </el-tooltip>
-    <!-- 附件 -->
-    <el-tooltip v-if="false" :content="$t('chat.upload_document')" placement="top">
-      <el-button @click="sendAnnexClick">
-        <SvgIcon local-icon="paperClip" />
       </el-button>
     </el-tooltip>
     <!-- 文件 -->
     <el-tooltip :content="$t('chat.file')" placement="top">
       <el-button v-show="!isAssistant" @click="sendFileClick">
         <SvgIcon local-icon="iconwenjianjia" />
+      </el-button>
+    </el-tooltip>
+    <!-- 附件 -->
+    <el-tooltip v-if="false" :content="$t('chat.upload_document')" placement="top">
+      <el-button @click="sendAnnexClick">
+        <SvgIcon local-icon="paperClip" />
       </el-button>
     </el-tooltip>
     <!-- 截图 -->
@@ -46,6 +40,12 @@
     <el-tooltip :content="$t('chat.configuration')" placement="top">
       <el-button v-show="isAssistant" @click="openRobotBox">
         <SvgIcon local-icon="robot" />
+      </el-button>
+    </el-tooltip>
+    <!-- 联网 -->
+    <el-tooltip :content="$t('chat.web_search')" placement="top">
+      <el-button v-show="isWebSearchModel" @click="onEnableWebSearch">
+        <SvgIcon local-icon="internet" />
       </el-button>
     </el-tooltip>
     <!-- 清空消息 -->
@@ -69,7 +69,7 @@
       </span>
     </el-tooltip>
     <!-- 插件 -->
-    <el-tooltip v-if="false" content="选择插件" placement="top">
+    <el-tooltip content="选择插件" placement="top">
       <el-button v-show="isFunctionCall" @click="openPluginBox">
         <SvgIcon local-icon="plugin" />
       </el-button>
@@ -126,27 +126,12 @@ const supportExts = [...textExts, ...documentExts];
 const fileExts = [...textExts, ...documentExts, ...imageExts, ...audioExts, ...videoExts];
 
 const [visible, setVisible] = useState(false);
-const [flag, setFlag] = useState();
+const [flag, setFlag] = useState(false);
 const [showBottomBtn, setShowBottomBtn] = useState(false);
 const robotStore = useRobotStore();
 const chatStore = useChatStore();
 const { toAccount, isAssistant, currentType, isFullscreenInputActive } = storeToRefs(chatStore);
-
-const isVision = computed(() => {
-  if (isAssistant.value) {
-    return robotStore.model?.vision;
-  } else {
-    return true;
-  }
-});
-
-const isFunctionCall = computed(() => {
-  if (isAssistant.value) {
-    return robotStore.model?.functionCall;
-  } else {
-    return false;
-  }
-});
+const { isWebSearchModel, isFunctionCall } = storeToRefs(robotStore);
 
 const cleanTopicShortcut = () => {
   setVisible(false);
@@ -224,14 +209,6 @@ function sendFile(files) {
   });
 }
 
-function isShowImage() {
-  if (__LOCAL_MODE__) {
-    return false;
-  } else {
-    return !isAssistant.value;
-  }
-}
-
 const scrollToBottomBtn = () => {
   emitter.emit("updataScroll");
 };
@@ -254,11 +231,6 @@ onUnmounted(() => {
   display: flex;
   position: relative;
 
-  .prohibit {
-    pointer-events: none;
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
   :deep(.el-button) {
     font-size: 16px;
     width: 40px;
