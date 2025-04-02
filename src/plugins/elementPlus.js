@@ -109,6 +109,9 @@ import {
   ElMessageBox, // $msgbox、$alert、$confirm、$prompt 全局属性对象globalProperties
   ElNotification, // $notify 全局属性对象globalProperties
 } from "element-plus";
+// 导入 Element Plus 样式
+import "element-plus/dist/index.css";
+import "element-plus/theme-chalk/dark/css-vars.css";
 
 const components = [
   // ElAffix,
@@ -220,12 +223,16 @@ const plugins = [
   ElNotification,
 ];
 
+const { VITE_AUTO_COMPONENT } = import.meta.env;
+
 /** 按需引入`element-plus` */
 export function useElementPlus(app) {
   // 全局注册组件
-  components.forEach((component) => {
-    app.component(component.name, component);
-  });
+  if (VITE_AUTO_COMPONENT === 'N') {
+    components.forEach((component) => {
+      app.component(component.name, component);
+    });
+  }
   // 全局注册插件
   plugins.forEach((plugin) => {
     app.use(plugin);

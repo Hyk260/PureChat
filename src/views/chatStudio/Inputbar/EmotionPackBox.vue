@@ -1,11 +1,11 @@
 <template>
-  <div class="emjio-tion" v-click-outside="onClickOutside">
+  <div class="emoji-section" v-click-outside="onClickOutside">
     <div class="emojis">
       <el-scrollbar wrap-class="custom-scrollbar-wrap" always>
         <!-- QQ表情包 -->
-        <div :class="['emoji_QQ', systemOs]" v-show="table == 'QQ'">
+        <div :class="['emoji_QQ', systemOs]" v-show="table === 'QQ'">
           <p class="title" v-show="recentlyUsed.length">最近使用</p>
-          <span v-for="item in recentlyUsed" class="emoji" :key="item" @click="setEmoji(item)">
+          <span v-for="item in recentlyUsed" class="emoji" :key="item" @click="setEmoji(item, 'QQ')">
             <img :src="getAssetsFile(emojiQq.emojiMap[item])" :title="item" />
           </span>
           <p class="title">小黄脸表情</p>
@@ -26,7 +26,7 @@
                 v-for="item in emoji"
                 class="emoji scroll-content"
                 :key="item"
-                @click="setEmoji(item)"
+                @click="setEmoji(item, 'QQ')"
               >
                 <img :src="getAssetsFile(emojiQq.emojiMap[item])" :title="item" />
               </span>
@@ -34,7 +34,7 @@
           </template>
         </div>
         <!-- 抖音表情包 -->
-        <div class="emoji_Tiktok" v-show="table == 'Tiktok'">
+        <div class="emoji_douyin" v-show="table === 'Douyin'">
           <p class="title">抖音表情</p>
           <span
             v-for="item in emojiDouyin.emojiName"
@@ -49,7 +49,7 @@
     </div>
     <div class="tool">
       <div
-        :class="item.type == table ? 'isHover' : ''"
+        :class="item.type === table ? 'is-hover' : ''"
         v-for="item in toolDate"
         :key="item.icon"
         @click="table = item.type"
@@ -76,7 +76,7 @@ defineOptions({
 
 const emit = defineEmits(["onClose"]);
 
-const rolling = false;
+const rolling = true;
 const toolDate = [
   {
     title: "默认表情",
@@ -86,29 +86,20 @@ const toolDate = [
   {
     title: "抖音",
     icon: "tiktok",
-    type: "Tiktok",
+    type: "Douyin",
   },
-  // {
-  //   title: "我的收藏",
-  //   icon: "collect",
-  //   type: "Like",
-  // },
 ];
 
 const recentlyUsed = ref([]);
 const systemOs = ref("");
 const table = ref("QQ");
-const EmotionPackGroup = ref([]);
-
 const chatStore = useChatStore();
+
+const EmotionPackGroup = computed(() => chunk(emojiQq.emojiName, 12 * 6));
 
 const setClose = () => {
   emit("onClose");
   recentlyUsed.value = [...chatStore.recently].reverse();
-};
-
-const initEmotion = () => {
-  EmotionPackGroup.value = chunk(emojiQq.emojiName, 12 * 6);
 };
 
 const getParser = () => {
@@ -118,12 +109,12 @@ const getParser = () => {
 const setEmoji = (item, type = "") => {
   let url = "";
   if (type === "QQ") {
+    chatStore.setRecently({ data: item, type: "add" });
     url = getAssetsFile(emojiQq.emojiMap[item])
   } else {
     url = getAssetsFile(emojiDouyin.emojiMap[item])
   }
-  emitter.emit("handleToolbar", { data: { url, item }, key: "setEmoj" });
-  if (type === "QQ") chatStore.setRecently({ data: item, type: "add" });
+  emitter.emit("handleToolbar", { data: { url, item }, key: "setEmoji" });
   setClose();
 };
 
@@ -133,13 +124,12 @@ const onClickOutside = () => {
 
 onMounted(() => {
   getParser();
-  initEmotion();
   chatStore.setRecently({ type: "revert" });
 });
 </script>
 
 <style lang="scss" scoped>
-.emjio-tion {
+.emoji-section {
   position: absolute;
   z-index: 1;
   border-radius: 5px;
@@ -163,7 +153,7 @@ onMounted(() => {
     padding: 12px 0 6px;
   }
   .emoji_QQ,
-  .emoji_Tiktok {
+  .emoji_douyin {
     padding: 0 10px 0 15px;
   }
 
@@ -200,7 +190,7 @@ onMounted(() => {
     }
   }
 }
-.isHover {
+.is-hover {
   background: var(--color-message-active) !important;
 }
 .scroll-snap {

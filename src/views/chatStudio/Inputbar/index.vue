@@ -70,7 +70,7 @@
     </el-tooltip>
     <!-- 插件 -->
     <el-tooltip v-if="false" content="选择插件" placement="top">
-      <el-button v-show="isFunctionCall && isShowPlugins()" @click="openPluginBox">
+      <el-button v-show="isFunctionCall" @click="openPluginBox">
         <SvgIcon local-icon="plugin" />
       </el-button>
     </el-tooltip>
@@ -224,15 +224,6 @@ function sendFile(files) {
   });
 }
 
-function isShowPlugins() {
-  return false;
-  if (__LOCAL_MODE__) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 function isShowImage() {
   if (__LOCAL_MODE__) {
     return false;
@@ -277,18 +268,6 @@ onUnmounted(() => {
     border: none;
     background-color: unset;
     margin-left: 0;
-  }
-
-  & > span {
-    width: 40px;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    height: 40px;
-    padding: 4px;
-    position: relative;
-    text-align: center;
-    color: #808080;
   }
   .svg-icon {
     cursor: pointer;

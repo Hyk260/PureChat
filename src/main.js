@@ -1,5 +1,5 @@
-import { createApp } from "vue";
 import App from "./App.vue";
+import { createApp } from "vue";
 import { setupStore } from "./stores/index";
 import { setupI18n } from './locales/index';
 import { loadAllAssembly } from "./components/index";
@@ -19,4 +19,5 @@ async function setupApp() {
   setupI18n(app);
   app.mount("#app");
 }
+
 setupApp();

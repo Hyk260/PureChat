@@ -2,7 +2,6 @@ import { isElectron } from "@/utils/common";
 import { ACCESS_TOKEN } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 
-
 function createProgressGuard(router) {
   router.beforeEach((to, from, next) => {
     window.NProgress?.start?.();

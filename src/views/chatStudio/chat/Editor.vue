@@ -62,7 +62,6 @@ import { debounce } from "lodash-es";
 import { storeToRefs } from "pinia";
 import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
-import { localStg } from "@/utils/storage";
 import { useState } from "@/utils/hooks/index";
 import { useAppStore, useGroupStore, useChatStore } from "@/stores/index";
 import {
@@ -118,8 +117,8 @@ const handleEditor = (editor, created = true) => {
 const setToolbar = (item) => {
   const { data, key } = item;
   switch (key) {
-    case "setEmoj":
-      setEmoj(data.url, data.item);
+    case "setEmoji":
+      setEmoji(data.url, data.item);
       break;
     case "setPicture":
       parsePicture(data.files);
@@ -241,7 +240,7 @@ const parseFile = async (file, editor = editorRef.value) => {
   }
 };
 // 插入表情包
-const setEmoj = (url, item) => {
+const setEmoji = (url, item) => {
   const editor = editorRef.value;
   const element = {
     type: "image",
