@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { list } from "./enums";
 import { useState } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
@@ -19,17 +19,30 @@ const listRef = ref();
 const item = ref({});
 const [drawer, setDrawer] = useState();
 
-function setItem() {
-  listRef.value.onClick(list.value[0])
+function setItem(data = list.value[0]) {
+  listRef.value?.onClick(data);
 }
 
 function active(t) {
   item.value = t;
 }
 
-emitter.on("openSetup", (v) => {
-  setDrawer(v);
+onMounted(() => {
+  emitter.on("openSetup", ({ flag, id }) => {
+    if (flag) {
+      setDrawer(true);
+      if (id) {
+        setItem(list.value.find((v) => v.id === id));
+      } else {
+        setItem();
+      }
+    }
+  });
 });
+
+onUnmounted(() => {
+  emitter.off("openSetup")
+})
 </script>
 
 <style lang="scss" scoped>

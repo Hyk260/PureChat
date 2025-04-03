@@ -3,8 +3,10 @@ import { localStg } from "@/utils/storage";
 import { StoreKey, ModelProvider, modelValue } from "@/ai/constant";
 import { SetupStoreId } from "../../plugins/index";
 import { useChatStore } from "../chat/index";
+import { useWebSearchStore } from "../websearch/index";
 import { cloneDeep } from "lodash-es";
 import { getModelType, useAccessStore } from "@/ai/utils";
+import WebSearchService from "@/ai/webSearchService";
 
 export const useRobotStore = defineStore(SetupStoreId.Robot, {
   state: () => ({
@@ -13,6 +15,7 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     promptConfig: null,
     modelConfig: null,
     modelProvider: "",
+    defaultProvider: ModelProvider.OpenAI,
     isShowBotTools: false,
   }),
   getters: {
@@ -37,6 +40,11 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       } else {
         return false;
       }
+    },
+    enableWebSearch() {
+      const isWebSearchEnabled = WebSearchService.isWebSearchEnabled();
+      const list = useWebSearchStore().checkProviders;
+      return this.isWebSearchModel && isWebSearchEnabled && list.includes(this.modelProvider);
     },
     isOllama() {
       return [ModelProvider.Ollama].includes(this.modelProvider);
@@ -69,6 +77,9 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       this.setPromptConfig(prompt?.[provider] || null);
       this.setRobotModel(checkModel);
     },
+    setDefaultProvider(data) {
+      this.defaultProvider = data
+    },
     updataBotToolsFlag(data) {
       this.isShowBotTools = data?.functionCall || false;
     },
@@ -82,4 +93,5 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       this.botTools = value;
     },
   },
+  persist: true,
 });

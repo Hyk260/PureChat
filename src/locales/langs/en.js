@@ -56,6 +56,7 @@ const local = {
     recover: "Recover",
     web_search: "Enable web search",
     upload_document: "Upload document file",
+    save: "Save",
   },
   group: {
     groupDetails: "Group Details",
@@ -64,6 +65,7 @@ const local = {
   common: {
     emptyText: "No Data",
     confirm: "Confirm",
+    save: "Save",
     cancel: "Cancel",
     currency: "Currency",
     about: "About",

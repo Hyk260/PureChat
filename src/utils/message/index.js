@@ -18,6 +18,7 @@ export const showConfirmationBox = async (data, Type = "confirm") => {
     tip = `${$t("messageBox.title")}`,
     iconType = "", // warning
     inputValue = "", // input
+    center = false,
     draggable = false,
   } = data;
   try {
@@ -26,6 +27,7 @@ export const showConfirmationBox = async (data, Type = "confirm") => {
       cancelButtonText: cancelText,
       type: iconType,
       inputValue,
+      center,
       draggable,
     });
     return formEl;

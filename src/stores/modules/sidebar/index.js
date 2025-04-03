@@ -1,5 +1,6 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { SetupStoreId } from '../../plugins/index';
+import { useChatStore } from "../chat/index";
 import router from "@/router";
 
 const { docs, homepage, giteeHomepage } = __APP_INFO__.pkg;
@@ -71,6 +72,7 @@ export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
     },
     toggleOutside(item) {
       router.push(item.path);
+      useChatStore().$patch({showCheckbox: false });
     },
     setMoreList(list) {
       this.moreList = list;

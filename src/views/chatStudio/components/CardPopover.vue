@@ -104,7 +104,7 @@ onClickOutside(cardRef, () => {
 });
 
 function operation() {
-  emitter.emit("openSetup", true);
+  emitter.emit("openSetup", { flag: true });
 }
 
 const openCard = (data) => {

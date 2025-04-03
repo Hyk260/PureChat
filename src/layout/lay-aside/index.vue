@@ -63,7 +63,7 @@ const handleAvatarClick = () => {
 };
 
 const openSettings = () => {
-  emitter.emit("openSetup", true);
+  emitter.emit("openSetup", { flag: true });
 };
 
 const onOpenDocs = () => {

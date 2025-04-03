@@ -49,7 +49,7 @@
                 </div>
               </div>
             </div>
-            <div class="footer p-16" :class="{ 'opacity-0': !isFooter }">
+            <div v-if="isFooter" class="footer p-16" :class="{ 'opacity-0': !isFooter }">
               <div class="flex-c">
                 <img class="size-22" src="@/assets/images/log.png" alt="" />
                 <div class="title ml-8">{{ VITE_APP_NAME }}</div>
@@ -86,7 +86,7 @@
               <div><el-switch v-model="isFooter" /></div>
             </div>
             <el-divider />
-            <div class="flex-bc my-5 h-32">
+            <div v-if="false" class="flex-bc my-5 h-32">
               <div>包含二维码</div>
               <div><el-switch :disabled="!isFooter" v-model="isQrCode" /></div>
             </div>
@@ -141,20 +141,19 @@ import { useChatStore } from "@/stores/index";
 import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import Header from "@/views/chatStudio/components/Header.vue";
 import emitter from "@/utils/mitt-bus";
+import { onMounted } from "vue";
+import { onUnmounted } from "vue";
 
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
 const isFooter = ref(false);
-const isQrCode = ref(false);
+const isQrCode = ref(true);
 const isPrompt = ref(false);
 const fieldType = ref(ImageType.Blob);
 const chatStore = useChatStore();
 const emit = defineEmits(["onClose"]);
 
-const {
-  toAccount,
-  getSortedForwardData,
-} = storeToRefs(chatStore);
+const { toAccount, getSortedForwardData } = storeToRefs(chatStore);
 
 const [dialogVisible, setDialogVisible] = useState();
 const { loading, onDownload } = useScreenshot();
@@ -185,8 +184,14 @@ function robotPrompt() {
   return usePromptStore(model).prompt[0].content || "";
 }
 
-emitter.on("handleShareModal", (val) => {
-  setDialogVisible(val);
+onMounted(() => {
+  emitter.on("handleShareModal", (val) => {
+    setDialogVisible(val);
+  });
+});
+
+onUnmounted(() => {
+  emitter.off("handleShareModal");
 });
 </script>
 

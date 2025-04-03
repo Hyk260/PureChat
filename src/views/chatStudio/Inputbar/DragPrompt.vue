@@ -1,20 +1,22 @@
 <template>
   <div @click="onClick()">
     <VueDraggableNext class="w-full" :list="promptData">
-      <div class="prompt py-10 flex-c" v-for="(item, i) in promptData" :key="item.id">
-        <svg-icon v-if="promptData.length > 1" local-icon="drag" class="drag-icon" />
+      <div class="prompt py-10 flex-c gap-5" v-for="(item, i) in promptData" :key="item.id">
+        <SvgIcon v-if="promptData.length > 1" local-icon="drag" class="drag-icon" />
         <el-select class="prompt-select" v-model="item.role">
           <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
         </el-select>
         <el-input
           v-model="item.content"
-          :autosize="{ minRows: 2, maxRows: 6 }"
+          :autosize="{ minRows: 1, maxRows: 4 }"
           @blur="onBlur"
           @focus="onFocus"
           type="textarea"
           placeholder="prompt"
         />
-        <el-icon @click="onClose(i)"><CircleCloseFilled /></el-icon>
+        <el-button class="flex-c w-31 h-31" @click="onClose(i)">
+          <el-icon><CircleCloseFilled /></el-icon>
+        </el-button>
       </div>
     </VueDraggableNext>
     <div v-if="promptData.length < MAXNUM">
@@ -42,7 +44,7 @@ const props = defineProps({
   },
 });
 
-const MAXNUM = 4;
+const MAXNUM = 1;
 const promptData = ref(null);
 
 const emit = defineEmits(["handlePrompt"]);
@@ -79,22 +81,15 @@ function addPrompt() {
   });
 }
 
-initPromptData()
+initPromptData();
 </script>
 
 <style lang="scss" scoped>
 .prompt {
-  .el-icon {
-    margin-left: 5px;
-    font-size: 15px;
-    cursor: pointer;
-  }
   .prompt-select {
     width: 125px;
-    margin-right: 10px;
   }
   .drag-icon {
-    margin-right: 5px;
     cursor: grab;
   }
 }

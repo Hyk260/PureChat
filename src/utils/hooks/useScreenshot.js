@@ -102,11 +102,8 @@ export const useScreenshot = () => {
         link.href = dataUrl;
         link.click();
       }
-
-      setTimeout(() => {
-        setLoading(false);
-        cd && cd?.();
-      }, 300);
+      setLoading(false);
+      cd && cd?.();
       
     } catch (error) {
       console.error("Failed to download image", error);

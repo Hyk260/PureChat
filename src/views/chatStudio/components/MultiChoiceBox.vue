@@ -17,11 +17,8 @@
 
 <script>
 import { mapStores } from "pinia";
-import {
-  createForwardMessage,
-  createMergerMessage,
-  sendMessage,
-} from "@/api/im-sdk-api/index";
+import { createForwardMessage, createMergerMessage, sendMessage } from "@/api/im-sdk-api/index";
+import { cloneDeep } from "lodash-es";
 import { useChatStore, useGroupStore } from "@/stores/index";
 import { localStg } from "@/utils/storage";
 import { TIM_PROXY } from "@/constants/index";
@@ -165,28 +162,21 @@ export default {
     },
     // 逐条转发
     async aQuickForward() {
-      const forwardData = this.chatStore.getSortedForwardData;
       if (!this.multipleValue) return;
+      const forwardData = this.chatStore.getSortedForwardData;
       const { toAccount, type } = this.multipleValue;
       forwardData.map(async (t) => {
-        await this.sendSingleMessage({
+        const forwardMsg = await createForwardMessage({
           convId: toAccount,
+          convType: type,
           message: t,
-          type,
         });
+        const { code, message: data } = await sendMessage(forwardMsg);
+        if (code === 0) {
+          this.chatStore.sendSessionMessage({ message: data });
+        }
       });
       this.shutdown();
-    },
-    async sendSingleMessage({ convId, type, message }) {
-      const forwardMsg = await createForwardMessage({
-        convId: convId,
-        convType: type,
-        message: message,
-      });
-      const { code, message: data } = await sendMessage(forwardMsg);
-      if (code === 0) {
-        this.chatStore.sendSessionMessage({ message: data });
-      }
     },
     shutdown() {
       this.chatStore.setForwardData({ type: "clear" });

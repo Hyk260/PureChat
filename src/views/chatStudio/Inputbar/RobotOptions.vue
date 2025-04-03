@@ -115,8 +115,8 @@
     <template #footer>
       <span>
         <el-button @click="handleCancel()"> 重置 </el-button>
-        <el-button @click="handleClose()"> 取消 </el-button>
-        <el-button type="primary" @click="handleConfirm()"> 保存 </el-button>
+        <el-button @click="handleClose()">{{ $t("common.cancel") }}</el-button>
+        <el-button type="primary" @click="handleConfirm()"> {{ $t("common.save") }} </el-button>
       </span>
     </template>
   </el-dialog>
@@ -124,12 +124,12 @@
 
 <script setup>
 import { ref } from "vue";
-import { getModelType, useAccessStore, usePromptStore, getModelSvg } from "@/ai/utils";
+import { useAccessStore, usePromptStore, getModelSvg } from "@/ai/utils";
 import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
-import { StoreKey, modelConfig, modelValue, ModelProvider } from "@/ai/constant";
+import { StoreKey, modelValue } from "@/ai/constant";
 import { useRobotStore, useChatStore } from "@/stores/index";
 import { storeToRefs } from "pinia";
 import DragPrompt from "./DragPrompt.vue";
@@ -266,7 +266,7 @@ function handleClose(done) {
   done && done();
   setDialog(false);
 }
-// 重置
+
 function handleCancel() {
   localStg.remove(`${modelProvider.value}-Select-Model`);
   robotStore.setPromptConfig("");

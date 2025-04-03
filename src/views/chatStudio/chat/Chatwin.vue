@@ -165,7 +165,6 @@ import MenuList from "../components/MenuList.vue";
 import MyPopover from "@/views/components/MyPopover/index.vue";
 import MessageEditingBox from "../components/MessageEditingBox.vue";
 
-const isConfirm = ref(true);
 const timeout = ref(false);
 const isRight = ref(true);
 const contextMenuItems = ref([]);
@@ -411,7 +410,6 @@ const handleContextMenuEvent = (event, item) => {
   const relinquish = getTime() - time < 120; // 两分钟内可撤回
   timeout.value = false;
   isRight.value = true;
-  isConfirm.value = false;
   menuItemInfo.value = item;
   contextMenuItems.value = menuOptionsList;
   // 对方消息
@@ -487,7 +485,6 @@ const handleRightClick = (data) => {
 
 const handleSingleClick = ({ item, id }) => {
   menuItemInfo.value = item;
-  isConfirm.value = true;
   handleRightClick({ id });
 };
 
@@ -531,22 +528,12 @@ const handleReplyMsg = (data) => {
   editor.style.height = `${200}px`;
 };
 // 删除消息
-const handleDeleteMsg = async (data) => {
-  try {
-    if (isConfirm.value) {
-      const message = { message: "确定删除?", iconType: "warning" };
-      const result = await showConfirmationBox(message);
-      if (result === "cancel") return;
-    }
-    isConfirm.value = true;
-    chatStore.deleteMessage({
-      sessionId: data.conversationID,
-      messageIdArray: [data.ID],
-      message: [data],
-    });
-  } catch (error) {
-    console.log(error);
-  }
+const handleDeleteMsg = (data) => {
+  chatStore.deleteMessage({
+    sessionId: data.conversationID,
+    messageIdArray: [data.ID],
+    message: [data],
+  });
 };
 // 多选
 const handleMultiSelectMsg = (item) => {

@@ -49,11 +49,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
 import { useState } from "@/utils/hooks/index";
 import { ClickOutside as vClickOutside } from "element-plus";
-import { getModelType, getModelSvg, useAccessStore, formatSizeStrict } from "@/ai/utils";
-import { StoreKey, modelValue, ModelProvider } from "@/ai/constant";
+import { getModelSvg, useAccessStore, formatSizeStrict } from "@/ai/utils";
+import { StoreKey, modelValue } from "@/ai/constant";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { useRobotStore, useChatStore } from "@/stores/index";

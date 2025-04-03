@@ -20,6 +20,7 @@ import { OpenaiConfig } from "@/ai/platforms/openai/index";
 import { createTextMessage } from "@/api/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
+import { useRobotStore } from '@/stores/index';
 
 /**
  * 获取 AI 模型的配置信息
@@ -343,7 +344,7 @@ export function isFullStaffGroup(data) {
 
 export const createAiPromptMsg = (params) => {
   let to = localStg.get("timProxy")?.userProfile?.userID;
-  let defaultBot = localStg.get("model-provider") || ModelProvider.OpenAI;
+  let defaultBot = useRobotStore().defaultProvider;
   let from = getModelId(defaultBot);
   const { meta } = localStg.get(StoreKey.Prompt)?.[defaultBot];
   const { to: _to, from: _from } = params || {};

@@ -38,7 +38,7 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
-import { StoreKey, VITE_OPENAI_ID, ModelProvider } from "@/ai/constant";
+import { StoreKey, VITE_OPENAI_ID } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
 import { useRobotStore, useSidebarStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
@@ -51,10 +51,9 @@ const [dialog, setDialog] = useState();
 
 function startConversation(item = cardData.value) {
   const { identifier, meta } = item;
-  const defaultBot = localStg.get("model-provider") || null;
-  const value = defaultBot || ModelProvider.OpenAI;
+  const defaultBot = robotStore.defaultProvider;
   const prompt = {
-    [value]: {
+    [defaultBot]: {
       id: identifier,
       meta,
       lang: "cn",

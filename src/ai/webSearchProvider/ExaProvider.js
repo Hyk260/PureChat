@@ -1,5 +1,4 @@
 import { ExaClient } from '@agentic/exa'
-
 import BaseWebSearchProvider from './BaseWebSearchProvider'
 
 export default class ExaProvider extends BaseWebSearchProvider {

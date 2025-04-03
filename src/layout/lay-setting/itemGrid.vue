@@ -43,7 +43,6 @@
           <el-icon @click="toLink()" class="cursor-pointer"><Promotion /></el-icon>
         </div>
         <el-divider class="my-20" />
-        <!-- <p class="my-20">API密钥</p> -->
         <div class="flex gap-10">
           <el-input
             v-model="searchInput"
@@ -55,7 +54,7 @@
           <el-button @click="checkApiKey">检查</el-button>
         </div>
         <div class="mt-10">
-          <el-link :href="websites.apiKey" target="_blank" type="primary">点击这里获取密钥</el-link>
+          <el-link :href="apiKeyWebsite" target="_blank" type="primary">点击这里获取密钥</el-link>
         </div>
       </div>
     </div>
@@ -85,7 +84,7 @@
       <ul class="setting w-full">
         <li>
           <span>{{ $t("settings.defaultProvider") }} </span>
-          <el-select v-model="assistant" @change="onChange">
+          <el-select v-model="defaultProvider">
             <el-option
               v-for="item in optionsModel"
               :key="item.value"
@@ -102,20 +101,14 @@
 <script setup>
 import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
-import { ModelProvider } from "@/ai/constant";
-import { useUserStore, useAppStore } from "@/stores/index";
-
-import WebSearchService from "@/ai/webSearchService";
-import { WEB_SEARCH_PROVIDER_CONFIG, PROVIDER_IDS } from "@/config/webSearchProviders";
+import { useUserStore, useAppStore, useRobotStore, useWebSearchStore } from "@/stores/index";
+import { WEB_SEARCH_PROVIDER_CONFIG } from "@/config/webSearchProviders";
 import { languages, options, optionsModel } from "./enums";
+import WebSearchService from "@/ai/webSearchService";
 
 const { VITE_APP_NAME, DEV: isDev } = import.meta.env;
 const { docs, version } = __APP_INFO__.pkg;
 const isLocalMode = __LOCAL_MODE__;
-
-const [searchInput, setSearchInput] = useState("");
-const { providers } = WEB_SEARCH_PROVIDER_CONFIG;
-const { websites } = providers[0];
 
 const props = defineProps({
   item: {
@@ -124,25 +117,27 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["onClose", "onItem"]);
+
+const [searchInput, setSearchInput] = useState("");
+
 const appStore = useAppStore();
 const userStore = useUserStore();
-const assistant = ref(localStg.get("model-provider") || ModelProvider.OpenAI);
+const robotStore = useRobotStore()
+const webSearchStore = useWebSearchStore();
 
-const emit = defineEmits(["onClose", "onItem"]);
+const webSearchProviderConfig = WEB_SEARCH_PROVIDER_CONFIG[webSearchStore.defaultProvider];
+const apiKeyWebsite = webSearchProviderConfig?.websites?.apiKey;
+const officialWebsite = webSearchProviderConfig?.websites?.official;
 
 function languageChange() {
   emit("onItem");
 }
 
 function onBlur() {
-  localStg.set("webSearch", {
-    ...WEB_SEARCH_PROVIDER_CONFIG,
-    providers: [
-      {
-        ...providers[0],
-        apiKey: searchInput.value,
-      },
-    ],
+  webSearchStore.updateWebSearchProvider({
+    id: webSearchStore.defaultProvider,
+    apiKey: searchInput.value,
   });
 }
 
@@ -151,13 +146,18 @@ async function checkApiKey() {
     appStore.showMessage({ message: "请输入API密钥", type: "warning" });
     return;
   }
-  const { valid, error } = await WebSearchService.checkSearch(providers[0]);
 
-  if(valid) appStore.showMessage({ message: "API密钥验证通过" });
+  const { valid, error } = await WebSearchService.checkSearch(webSearchStore.getProviderConfig);
+
+  if (valid) {
+    appStore.showMessage({ message: "API密钥验证通过" });
+  } else {
+    appStore.showMessage({ message: error || "验证失败", type: "error" });
+  }
 }
 
 function toLink() {
-  open(websites.official);
+  open(officialWebsite);
 }
 
 function log() {
@@ -169,10 +169,14 @@ function logout() {
   userStore.handleUserLogout();
 }
 
-const onChange = (val) => {
-  assistant.value = val;
-  localStg.set("model-provider", val);
-};
+const defaultProvider = computed({
+  get() {
+    return robotStore.defaultProvider;
+  },
+  set(val) {
+    robotStore.setDefaultProvider(val);
+  },
+});
 
 const themeColor = computed({
   get() {

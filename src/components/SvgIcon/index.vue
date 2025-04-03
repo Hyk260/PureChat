@@ -20,7 +20,7 @@ const props = defineProps({
   localIcon: String,
   color: {
     type: String,
-    default: "#808080", // currentColor
+    default: "currentColor", // currentColor #808080
   },
 });
 

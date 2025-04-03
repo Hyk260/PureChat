@@ -1,6 +1,6 @@
 import WebSearchEngineProvider from './webSearchProvider/index'
 import { hasObjectKey } from '@/utils/common'
-import { localStg } from "@/utils/storage";
+import { useWebSearchStore } from '@/stores/index';
 import dayjs from 'dayjs'
 
 /**
@@ -13,7 +13,7 @@ class WebSearchService {
    * @returns 网络搜索状态
    */
  getWebSearchState() {
-   return localStg.get("webSearch")
+   return useWebSearchStore()
   }
 
   /**
@@ -84,7 +84,7 @@ class WebSearchService {
   async checkSearch(provider) {
     try {
       const response = await this.search(provider, 'test query')
-
+      console.log('Search response:', response)
       // 优化的判断条件：检查结果是否有效且没有错误
       return { valid: response.results.length > 0, error: undefined }
     } catch (error) {

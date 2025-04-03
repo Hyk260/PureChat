@@ -43,8 +43,14 @@
       </el-button>
     </el-tooltip>
     <!-- 联网 -->
-    <el-tooltip :content="$t('chat.web_search')" placement="top">
-      <el-button v-show="isWebSearchModel" @click="onEnableWebSearch">
+    <el-tooltip v-if="false" :content="$t('chat.web_search')" placement="top">
+      <el-button
+        :style="{
+          color: enableWebSearch ? 'var(--el-button-hover-text-color)' : '',
+        }"
+        v-show="isWebSearchModel"
+        @click="onEnableWebSearch"
+      >
         <SvgIcon local-icon="internet" />
       </el-button>
     </el-tooltip>
@@ -57,8 +63,12 @@
             <p>确定要清除当前会话所有消息吗?</p>
           </div>
           <div class="flex">
-            <el-button class="ml-auto" size="small" @click="setVisible(false)">取消</el-button>
-            <el-button size="small" type="primary" @click="cleanTopicShortcut">确认</el-button>
+            <el-button class="ml-auto" size="small" @click="setVisible(false)">
+              {{ $t("common.cancel") }}
+            </el-button>
+            <el-button size="small" type="primary" @click="cleanTopicShortcut">
+              {{ $t("common.confirm") }}
+            </el-button>
           </div>
           <template #reference>
             <el-button @click="setVisible(true)">
@@ -105,13 +115,14 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted } from "vue";
+import { showConfirmationBox } from "@/utils/message";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
 import { isElectron, createFileInput } from "@/utils/common";
 import { storeToRefs } from "pinia";
 import { useState } from "@/utils/hooks/index";
-import { useChatStore, useRobotStore } from "@/stores/index";
+import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores/index";
 import { imageExts, textExts, documentExts, audioExts, videoExts } from "@/constants/index";
+import WebSearchService from "@/ai/webSearchService";
 import EmotionPackBox from "./EmotionPackBox.vue";
 import RobotOptions from "./RobotOptions.vue";
 import RobotModel from "./RobotModel.vue";
@@ -125,21 +136,42 @@ defineOptions({
 const supportExts = [...textExts, ...documentExts];
 const fileExts = [...textExts, ...documentExts, ...imageExts, ...audioExts, ...videoExts];
 
-const [visible, setVisible] = useState(false);
 const [flag, setFlag] = useState(false);
+const [visible, setVisible] = useState(false);
 const [showBottomBtn, setShowBottomBtn] = useState(false);
+
 const robotStore = useRobotStore();
 const chatStore = useChatStore();
+const webSearchStore = useWebSearchStore();
+
 const { toAccount, isAssistant, currentType, isFullscreenInputActive } = storeToRefs(chatStore);
-const { isWebSearchModel, isFunctionCall } = storeToRefs(robotStore);
+const {
+  modelProvider,
+  enableWebSearch,
+  isWebSearchModel,
+  isFunctionCall,
+} = storeToRefs(robotStore);
 
 const cleanTopicShortcut = () => {
   setVisible(false);
   chatStore.deleteHistoryMessage();
 };
 
-const onEnableWebSearch = () => {
-  // enableWebSearch
+const onEnableWebSearch = async () => {
+  const isWebSearchEnabled = WebSearchService.isWebSearchEnabled();
+  if (!isWebSearchEnabled) {
+    const result = await showConfirmationBox({
+      tip: "开启网络搜索",
+      message: "需要先在设置中检查网络搜索连通性",
+      iconType: "warning",
+      confirmText: "去设置",
+      // center: true,
+    });
+    if (result === "cancel") return;
+    emitter.emit("openSetup", { flag: true, id: "webSearch" });
+  } else {
+    webSearchStore.updateCheckProviders(modelProvider.value);
+  }
 };
 
 const sendEmojiClick = () => {
@@ -240,6 +272,9 @@ onUnmounted(() => {
     border: none;
     background-color: unset;
     margin-left: 0;
+    &:hover {
+      color: var(--el-color-info-dark-3);
+    }
   }
   .svg-icon {
     cursor: pointer;

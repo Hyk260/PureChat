@@ -8,6 +8,7 @@ export const SetupStoreId = {
   User: 'user',
   Sidebar: 'sidebar',
   Chat: 'chat',
+  WebSearch: 'webSearch',
 };
 
 /**
