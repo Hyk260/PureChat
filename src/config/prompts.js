@@ -15,3 +15,11 @@ export const REFERENCE_PROMPT = `Please answer the question based on the referen
 
 Please respond in the same language as the user's question.
 `
+
+export function generateReferencePrompt(message, webSearchReferences) {
+  if (!isEmpty(webSearchReferences)) {
+    const referenceContent = `\`\`\`json\n${JSON.stringify(webSearchReferences, null, 2)}\n\`\`\``;
+    return REFERENCE_PROMPT.replace('{question}', message.content).replace('{references}', referenceContent);
+  }
+  return null;
+}
