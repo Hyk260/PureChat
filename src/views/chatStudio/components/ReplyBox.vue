@@ -4,7 +4,7 @@
     <div class="reply-box-content">
       <div v-if="replyMsgData?.nick" class="nick">{{ replyMsgData?.nick }} :</div>
       <div class="text" v-if="replyMsgData">
-        <DynamicContent :text="getReplyContent(replyMsgData)" />
+        <DynamicContent :text="getAbstractContent(replyMsgData)" />
       </div>
     </div>
   </div>
@@ -13,7 +13,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useChatStore } from "@/stores/modules/chat/index";
-import { getReplyContent, scrollToDomPosition } from "@/utils/chat/index";
+import { getAbstractContent, scrollToDomPosition } from "@/utils/chat/index";
 import DynamicContent from "./DynamicContent.vue";
 
 defineOptions({

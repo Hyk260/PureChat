@@ -9,10 +9,12 @@
     <div v-else class="reply-content__sender">
       {{ originalMsg.messageReply?.deeplyThought || "" }}
     </div>
-    <div class="reply-content__content">
-      <DynamicContent :text="originalMsg.messageReply.messageAbstract" />
-    </div>
-    <div class="reply-content__mask" @click="handleItemClick"></div>
+    <template v-if="originalMsg.messageReply.messageAbstract">
+      <div class="reply-content__content">
+        <DynamicContent :text="originalMsg.messageReply.messageAbstract" />
+      </div>
+      <div class="reply-content__mask" @click="handleItemClick"></div>
+    </template>
   </div>
 </template>
 

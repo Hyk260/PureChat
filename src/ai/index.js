@@ -42,7 +42,7 @@ const updataMessage = (chat, data) => {
 
 const createStartMsg = (params) => {
   const { to: from, from: to } = params;
-  const msg = createCustomMessage({ convId: to, customType: "loading" });
+  const msg = createCustomMessage({ to, customType: "loading" });
   msg.conversationID = `C2C${from}`;
   msg.avatar = getAiAvatarUrl(from);
   msg.flow = "in";

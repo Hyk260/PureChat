@@ -80,18 +80,7 @@
                     @handleSingleClick="handleSingleClick"
                   />
                 </div>
-                <div class="message-view-bottom" v-if="!isSelf(item) && isAssistant">
-                  {{ handleCustomData(item, "messageAbstract") }}
-                </div>
-                <div class="message-view-question" v-if="!isSelf(item) && isAssistant">
-                  <div
-                    v-for="(item, i) in handleCustomData(item, 'recQuestion') || []"
-                    :key="i"
-                    @click="handleQuestion(item)"
-                  >
-                    <span class="question"> {{ item }} </span>
-                  </div>
-                </div>
+                <AssistantMessage v-if="isAssistant && !isSelf(item)" :item="item" />
               </div>
             </div>
           </div>
@@ -136,20 +125,18 @@ import {
   loadMsgModule,
   msgOne,
   msgType,
-  sendChatMessage,
   validateLastMessage,
   isSelf,
 } from "../utils/utils";
 import { useEventListener } from "@vueuse/core";
 import {
-  deleteMessage,
   setMessageRead,
   getMessageList,
   revokeMsg,
   translateText,
 } from "@/api/im-sdk-api/index";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
-import { download, isRobot } from "@/utils/chat/index";
+import { download } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { getTime } from "@/utils/common";
 import { debounce } from "lodash-es";
@@ -164,6 +151,7 @@ import Stateful from "../components/Stateful.vue";
 import MenuList from "../components/MenuList.vue";
 import MyPopover from "@/views/components/MyPopover/index.vue";
 import MessageEditingBox from "../components/MessageEditingBox.vue";
+import AssistantMessage from "../components/AssistantMessage.vue";
 
 const timeout = ref(false);
 const isRight = ref(true);
@@ -227,22 +215,6 @@ const classMessageInfoView = () => {
     isChatBoxVisible.value ? "" : "style-msg-box",
     chatStore.replyMsgData ? "style-reply" : "",
   ];
-};
-
-const handleCustomData = (item, type) => {
-  // type messageAbstract
-  const data = item.cloudCustomData;
-  if (!data) return;
-  try {
-    const message = JSON.parse(data);
-    if (message.messagePrompt) {
-      return message.messagePrompt[type];
-    } else {
-      return "";
-    }
-  } catch (error) {
-    return "";
-  }
 };
 
 const handleSelect = (e, item, type = "initial") => {
@@ -498,15 +470,6 @@ const handleSendMessage = (data) => {
   chatStore.addConversation({ convId: `C2C${data.from}` });
 };
 
-const handleQuestion = async (item) => {
-  const message = await sendChatMessage({
-    convId: toAccount.value,
-    convType: currentType.value,
-    textMsg: item,
-  });
-  console.log("sendChatMessage:", message);
-  chatStore.sendSessionMessage({ message: message[0] });
-};
 // 另存为
 const handleSave = ({ payload }) => {
   download(payload.fileUrl, payload.fileName);
@@ -676,33 +639,6 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   gap: 8px;
   .message-view-top {
     display: flex;
-  }
-  .message-view-bottom {
-    margin-top: 5px;
-    font-size: 12px;
-    opacity: 0.3;
-    white-space: nowrap;
-    transition: all 0.6s ease;
-    color: #303030;
-  }
-  .message-view-question {
-    font-size: 14px;
-    margin-top: 5px;
-    & > div {
-      width: fit-content;
-      padding: 6px 10px;
-      margin-bottom: 8px;
-      border-radius: 8px;
-      font-weight: 400;
-      border: 1px solid rgba(6, 7, 8, 0.15);
-      color: rgba(6, 7, 9, 0.8);
-      &:hover {
-        background-color: rgba(6, 7, 9, 0.1);
-      }
-    }
-    .question {
-      cursor: pointer;
-    }
   }
   .message-view-body {
     display: flex;

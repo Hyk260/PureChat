@@ -5,7 +5,8 @@ import {
   createTextMessage,
   createVideoMessage,
 } from "@/api/im-sdk-api/index";
-import { useAppStore, useChatStore } from '@/stores/index';
+import { generateReferencePrompt } from "@/config/prompts";
+import { useAppStore, useChatStore, useRobotStore } from '@/stores/index';
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { dataURLtoFile, getBlob, getFileType } from "@/utils/chat/index";
@@ -249,49 +250,51 @@ export const html2Escape = (str) => {
  */
 export async function sendChatMessage(options) {
   console.log("options", options);
-  const Message = [];
+  let reply = options.reply || '';
+  const messages = [];
   const {
     convId,
     convType,
     textMsg,
     aitStr,
-    aitlist,
+    atUserList,
     files = [],
     video = [],
     image = [],
-    reply,
   } = options || {};
 
-  // @消息
   if (aitStr) {
-    Message.push(
-      createTextAtMessage({ convId, convType, textMsg: aitStr, atUserList: aitlist, reply })
-    );
-  }
-  // 文本消息
-  else if (textMsg) {
-    Message.push(createTextMessage({ convId, convType, textMsg, reply }));
+    // @消息
+    const aitStrItem = createTextAtMessage({ to: convId, type: convType, text: aitStr, atUserList, custom: reply })
+    messages.push(aitStrItem);
+  } else if (textMsg) {
+    // 文本消息
+    // if (useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel) {
+    //   reply = await generateReferencePrompt({ content: textMsg });
+    // }
+    const textMsgItem = createTextMessage({ to: convId, type: convType, text: textMsg, custom: reply })
+    messages.push(textMsgItem);
   }
 
   // 处理图片消息
   for (const t of image) {
-    const img = await createImageMessage({ convId, convType, image: dataURLtoFile(t.src) });
-    Message.push(img);
+    const img = await createImageMessage({ to: convId, type: convType, file: dataURLtoFile(t.src) });
+    messages.push(img);
   }
 
   // 处理文件消息
   for (const t of files) {
-    const file = createFileMessage({ convId, convType, files: dataURLtoFile(t.link, t.fileName) });
-    Message.push(file);
+    const file = createFileMessage({ to: convId, type: convType, file: dataURLtoFile(t.link, t.fileName) });
+    messages.push(file);
   }
 
   // 处理视频消息
   for (const t of video) {
-    const vid = createVideoMessage({ convId, convType, video: dataURLtoFile(t.link, t.fileName) });
-    Message.push(vid);
+    const vid = createVideoMessage({ to: convId, type: convType, file: dataURLtoFile(t.link, t.fileName) });
+    messages.push(vid);
   }
 
-  return Message;
+  return messages;
 }
 
 export const customAlert = (s, t) => {
@@ -366,6 +369,7 @@ export const extractImageInfo = (editor) => {
   images = image.filter((item) => item.class !== "EmoticonPack");
   return { images };
 };
+
 function isVideoFile(fileName) {
   const video = ["mp4", "wmv", "webm"];
   const name = fileName.toLowerCase();
@@ -398,7 +402,7 @@ export const extractVideoInfo = (editor) => {
  */
 export const extractAitInfo = (editor) => {
   let aitStr = "";
-  let aitlist = [];
+  let atUserList = [];
   const html = editor.getHtml();
   const mention = editor.getElemsByType("mention");
   if (mention.length) {
@@ -407,10 +411,10 @@ export const extractAitInfo = (editor) => {
     let str = html.replace(fileRegex, "");
     // 清除 HTML 标签和 &nbsp
     aitStr = str.replace(/<[^>]+>/g, "").replace(/&nbsp;/gi, "");
-    mention.forEach((t) => aitlist.push(t.info.id));
-    aitlist = Array.from(new Set(aitlist));
+    mention.forEach((t) => atUserList.push(t.info.id));
+    atUserList = Array.from(new Set(atUserList));
   }
-  return { aitStr, aitlist };
+  return { aitStr, atUserList };
 };
 
 /**

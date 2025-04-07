@@ -1,3 +1,6 @@
+import { isEmpty } from 'lodash-es';
+import references from '@/ai/webSearchProvider/test.json';
+
 export const REFERENCE_PROMPT = `Please answer the question based on the reference materials
 
 ## Citation Rules:
@@ -16,10 +19,35 @@ export const REFERENCE_PROMPT = `Please answer the question based on the referen
 Please respond in the same language as the user's question.
 `
 
-export function generateReferencePrompt(message, webSearchReferences) {
+export async function getWebSearchReferences(message) {
+  if (isEmpty(message.content)) {
+    return []
+  }
+
+  const webSearch = references
+
+  if (webSearch) {
+    return webSearch.results.map((t, i) => ({
+      id: i + 1,
+      content: t.content,
+      sourceUrl: t.url,
+      type: 'url'
+    })
+    )
+  }
+
+  return []
+}
+
+export async function generateReferencePrompt(message) {
+
+  const webSearchReferences = await getWebSearchReferences(message)
+
   if (!isEmpty(webSearchReferences)) {
     const referenceContent = `\`\`\`json\n${JSON.stringify(webSearchReferences, null, 2)}\n\`\`\``;
+    console.log('webSearchReferences', webSearchReferences)
     return REFERENCE_PROMPT.replace('{question}', message.content).replace('{references}', referenceContent);
   }
+
   return null;
 }

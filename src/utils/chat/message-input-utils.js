@@ -2,6 +2,7 @@ import { nextTick } from "vue";
 import { localStg } from "@/utils/storage";
 import { SessionModel } from "@/database/models/session";
 import { useAppStore } from "@/stores/index";
+import { isEmpty } from 'lodash-es';
 
 /**
  * 将二进制数据转换为 base64 URL 格式
@@ -192,44 +193,38 @@ const TypeMap = {
   TIMRelayElem: "[合并消息]",
 };
 
-export const getReplyContent = (msg) => {
-  const type = msg?.type;
+export const getAbstractContent = (data) => {
+  const type = data?.type;
   const reply = TypeMap[type] || "";
   if (reply) {
     return reply;
   } else {
-    return msg?.payload?.text;
+    return data?.payload?.text;
   }
 };
 
-export function getReplyMsgContent(reply) {
-  if (!reply) return "";
-  const replyMsgContent = JSON.stringify({
-    messageReply: {
-      messageID: reply?.ID || "",
-      messageAbstract: getReplyContent(reply),
-      messageSender: reply?.nick || "",
+export function getCloudCustomData(data, params) {
+  if (isEmpty(data)) return "";
+  const key = data?.key || "messageReply";
+  const cloudCustomContent = JSON.stringify({
+    [key]: {
+      messageID: data?.ID || "",
+      messageAbstract: getAbstractContent(data),
+      messageSender: data?.nick || "",
       messageType: 0,
-      version: "1",
+      version: __APP_INFO__.pkg.version || "",
+      ...params
     },
   });
-  return replyMsgContent;
+  return cloudCustomContent;
 }
 
 export function getThinkMsgContent(think) {
-  if (!think) return "";
-  const thinkMsgContent = JSON.stringify({
-    messageReply: {
-      messageID: "",
-      messageAbstract: think,
-      messageSender: "",
-      thinking: "思考中...",
-      deeplyThought: "已深度思考", // （用时 {{secounds}} 秒）
-      messageType: 0,
-      version: "1",
-    },
+  return getCloudCustomData(think, {
+    messageAbstract: think,
+    thinking: "思考中...",
+    deeplyThought: "已深度思考", // （用时 {{secounds}} 秒）
   });
-  return thinkMsgContent;
 }
 
 /**
@@ -309,7 +304,7 @@ export const getChatListCache = async () => {
   }
 };
 
-export const setChatListCache = (data) => {};
+export const setChatListCache = (data) => { };
 
 export function readFromFile() {
   return new Promise((res, rej) => {

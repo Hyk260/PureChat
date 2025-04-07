@@ -20,6 +20,7 @@ import { OpenaiConfig } from "@/ai/platforms/openai/index";
 import { createTextMessage } from "@/api/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
+import { getCloudCustomData } from "@/utils/chat/index";
 import { useRobotStore } from '@/stores/index';
 
 /**
@@ -350,22 +351,15 @@ export const createAiPromptMsg = (params) => {
   const { to: _to, from: _from } = params || {};
   if (_to) to = _to;
   if (_from) from = _from;
-  const title = "`" + meta.title + "`";
-  const textMsg = `你好，我是 ${meta.avatar} ${title} ${meta.description} 让我们开始对话吧！`;
-  const msg = createTextMessage({ convId: from, textMsg, cache: false });
-  const promptMsgContent = JSON.stringify({
-    messagePrompt: {
-      messageID: "",
-      messageAbstract: "预设提示词",
-      recQuestion: meta.recQuestion || [],
-      messageSender: "",
-      messageType: 0,
-      version: __APP_INFO__.pkg.version,
-    },
-  });
+  const text = `你好，我是 ${meta.avatar} ${meta.title} ${meta.description} 让我们开始对话吧！`;
+  const msg = createTextMessage({ to: from, text, cache: false });
+  const promptContent = getCloudCustomData(
+    { key: "messagePrompt", payload: { text: "预设提示词" } },
+    { recQuestion: meta.recQuestion || [], }
+  )
   msg.conversationID = `C2C${from}`;
   msg.avatar = getAiAvatarUrl(from);
-  msg.cloudCustomData = promptMsgContent;
+  msg.cloudCustomData = promptContent;
   msg.flow = "in";
   msg.to = to;
   msg.from = from;

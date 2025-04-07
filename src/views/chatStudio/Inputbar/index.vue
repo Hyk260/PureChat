@@ -218,7 +218,7 @@ const toggleFullScreenInput = () => {
 
 function customMessage() {
   const message = createCustomMessage({
-    convId: toAccount.value,
+    to: toAccount.value,
     convType: currentType.value,
     customType: "loading",
   });

@@ -2,7 +2,7 @@ import tim from "@/utils/IM/im-sdk/tim";
 import emitter from "@/utils/mitt-bus";
 import { throttle } from "lodash-es";
 import { updateImageSize } from "@/utils/common";
-import { getReplyMsgContent } from "@/utils/chat/index";
+import { getCloudCustomData } from "@/utils/chat/index";
 import { getCustomMsgContent } from '@/api/im-sdk-api/custom';
 
 const createProgressHandler = () => {
@@ -42,49 +42,44 @@ export const sendMessage = async (params) => {
 };
 // 创建自定义消息
 export const createCustomMessage = (params) => {
-  const { convId, convType = "C2C", customType } = params || {};
+  const { to, convType = "C2C", customType } = params || {};
   return tim.createCustomMessage({
-    to: convId,
+    to,
     conversationType: convType,
     payload: getCustomMsgContent({ data: null, type: customType })
-    // payload: {
-    //   data: '',
-    //   description: '',
-    //   extension: "",
-    // },
   });
 };
 
 // 创建文本消息
 export const createTextMessage = (params) => {
-  const { convId, convType = "C2C", textMsg, reply, cache = true } = params;
+  const { to, type = "C2C", text, custom = {}, cache = true } = params;
   return tim.createTextMessage({
-    to: convId,
+    to,
     cache: cache,
-    conversationType: convType,
-    payload: { text: textMsg },
-    cloudCustomData: getReplyMsgContent(reply),
+    conversationType: type,
+    payload: { text },
+    cloudCustomData: getCloudCustomData(custom)
   });
 };
 
 // 创建 @提醒功能的文本消息
 export const createTextAtMessage = (params) => {
-  const { convId, convType, textMsg, atUserList, reply } = params;
+  const { to, type = "C2C", text, atUserList, custom } = params;
   return tim.createTextAtMessage({
-    to: convId,
-    conversationType: convType,
-    payload: { text: textMsg, atUserList: atUserList },
-    cloudCustomData: getReplyMsgContent(reply),
+    to,
+    conversationType: type,
+    payload: { text, atUserList },
+    cloudCustomData: getCloudCustomData(custom),
   });
 };
 
 // 创建图片消息 https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createImageMessage
 export const createImageMessage = async (params) => {
-  const { convId, convType, image } = params;
+  const { to, type, file } = params;
   const message = tim.createImageMessage({
-    to: convId,
-    conversationType: convType,
-    payload: { file: image },
+    to,
+    conversationType: type,
+    payload: { file },
     onProgress: (event) => {
       console.log("file uploading:", event);
     },
@@ -94,11 +89,11 @@ export const createImageMessage = async (params) => {
 };
 // 创建文件消息
 export const createFileMessage = (params) => {
-  const { convId, convType, files } = params;
+  const { to, type, file } = params;
   const message = tim.createFileMessage({
-    to: convId,
-    conversationType: convType,
-    payload: { file: files },
+    to,
+    conversationType: type,
+    payload: { file },
     onProgress: (event) => {
       fileUploading(message, event * 100);
     },
@@ -107,11 +102,11 @@ export const createFileMessage = (params) => {
 };
 // 创建视频消息
 export const createVideoMessage = (params) => {
-  const { convId, convType, video } = params;
+  const { to, type, file } = params;
   const message = tim.createVideoMessage({
-    to: convId,
-    conversationType: convType,
-    payload: { file: video },
+    to,
+    conversationType: type,
+    payload: { file },
     onProgress: (event) => {
       console.log("file uploading:", event);
     },

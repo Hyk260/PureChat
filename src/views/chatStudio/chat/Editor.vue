@@ -297,20 +297,20 @@ const clearInputInfo = (editor = editorRef.value) => {
 
 const sendMsgBefore = (editor = editorRef.value) => {
   const text = editor.getText(); // 纯文本内容
-  const { aitStr, aitlist } = extractAitInfo(editor);
+  const { aitStr, atUserList } = extractAitInfo(editor);
   const { files } = extractFilesInfo(editor);
   const { video } = extractVideoInfo(editor);
   const { images } = extractImageInfo(editor);
   const emoticons = convertEmoji(editor);
   const have =
-    video.length || images.length || files.length || aitlist.length || aitStr || emoticons || text;
+    video.length || images.length || files.length || atUserList.length || aitStr || emoticons || text;
   return {
     convId: toAccount.value,
     convType: currentType.value,
     textMsg: emoticons || text,
     image: images,
-    aitStr: aitlist.length ? emoticons || aitStr : "",
-    aitlist,
+    aitStr: atUserList.length ? emoticons || aitStr : "",
+    atUserList,
     files: files,
     video,
     reply: replyMsgData.value,
