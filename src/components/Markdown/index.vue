@@ -10,6 +10,7 @@ import markdownItFootnote from "markdown-it-footnote";
 import hljs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";
 // import bash from "highlight.js/lib/languages/bash";
+import "@/styles/highlight.scss";
 import "highlight.js/styles/base16/default-light.css";
 
 defineOptions({ name: "Markdown" });
@@ -33,10 +34,11 @@ const copyButton = `<button class="copy-code-button" onclick="${clipboard}" titl
 hljs.registerLanguage("javascript", javascript);
 hljs.registerLanguage("vue", javascript);
 
+const { copy, isSupported } = useClipboard();
+
 async function copyToClipboard(str) {
-  const { text, copy, isSupported } = useClipboard({ source: str });
   if (isSupported) {
-    copy(text);
+    copy(str);
     appStore.showMessage({ message: "复制成功" });
   } else {
     appStore.showMessage({ message: "您的浏览器不支持剪贴板API" });
@@ -54,36 +56,38 @@ function highlight(str, lang) {
   }
 }
 
-function newWindowLinksPlugin(md) {
-  md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+const createMarkdownParser = () => {
+  const md = markdownit({
+    breaks: true, // 转换段落里的 '\n' 到 <br>。
+    langPrefix: "language-", // 给围栏代码块的 CSS 语言前缀。对于额外的高亮代码非常有用。
+    typographer: true, // 启用一些语言中立的替换 + 引号美化
+    highlight: highlight,
+  });
+
+  md.use(markdownItFootnote);
+
+  md.renderer.rules.link_open = (tokens, idx) => {
     tokens[idx].attrSet("target", "_blank");
     tokens[idx].attrSet("rel", "noopener noreferrer");
-    return self.renderToken(tokens, idx, options);
+    return md.renderer.renderToken(tokens, idx);
   };
+
+  return md;
+};
+
+if (typeof window !== "undefined") {
+  window.copyToClipboard = copyToClipboard;
 }
 
-const md = markdownit({
-  breaks: true, // 转换段落里的 '\n' 到 <br>。
-  langPrefix: "language-", // 给围栏代码块的 CSS 语言前缀。对于额外的高亮代码非常有用。
-  typographer: true, // 启用一些语言中立的替换 + 引号美化
-  highlight: highlight,
-});
-
-md.use(newWindowLinksPlugin);
-
-md.use(markdownItFootnote);
-
 function MarkdownRender() {
+  const md = createMarkdownParser();
+
   const mark = h("div", {
     innerHTML: md.render(props.marked),
     class: "markdown-body",
   });
 
   return mark;
-}
-
-if (typeof window !== "undefined") {
-  window.copyToClipboard = copyToClipboard;
 }
 </script>
 

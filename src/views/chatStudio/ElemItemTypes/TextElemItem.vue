@@ -16,7 +16,6 @@ import { isRobot } from "@/utils/chat/index";
 import { useChatStore } from "@/stores/index";
 import ReplyElem from "./ReplyElem.vue";
 import DynamicContent from "../components/DynamicContent.vue";
-import "@/styles/highlight.scss";
 
 const props = defineProps({
   msgType: {
