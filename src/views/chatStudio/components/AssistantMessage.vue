@@ -30,11 +30,11 @@ const chatStore = useChatStore();
 
 const { toAccount, currentType } = storeToRefs(chatStore);
 
-const handleQuestion = async (item) => {
+const handleQuestion = async (text) => {
   const message = await sendChatMessage({
-    convId: toAccount.value,
-    convType: currentType.value,
-    textMsg: item,
+    to: toAccount.value,
+    type: currentType.value,
+    text,
   });
   console.log("sendChatMessage:", message);
   chatStore.sendSessionMessage({ message: message[0] });

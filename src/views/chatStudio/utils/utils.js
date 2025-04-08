@@ -250,48 +250,48 @@ export const html2Escape = (str) => {
  */
 export async function sendChatMessage(options) {
   console.log("options", options);
-  let reply = options.reply || '';
+  let custom = options.custom || '';
   const messages = [];
   const {
-    convId,
-    convType,
-    textMsg,
+    to,
+    type,
+    text,
     aitStr,
     atUserList,
     files = [],
     video = [],
-    image = [],
+    images = [],
   } = options || {};
 
   if (aitStr) {
     // @消息
-    const aitStrItem = createTextAtMessage({ to: convId, type: convType, text: aitStr, atUserList, custom: reply })
+    const aitStrItem = createTextAtMessage({ to, type, text: aitStr, atUserList, custom })
     messages.push(aitStrItem);
-  } else if (textMsg) {
+  } else if (text) {
     // 文本消息
     // if (useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel) {
-    //   reply = await generateReferencePrompt({ content: textMsg });
+    //   custom = await generateReferencePrompt({ content: text });
     // }
-    const textMsgItem = createTextMessage({ to: convId, type: convType, text: textMsg, custom: reply })
+    const textMsgItem = createTextMessage({ to, type, text, custom })
     messages.push(textMsgItem);
   }
 
   // 处理图片消息
-  for (const t of image) {
-    const img = await createImageMessage({ to: convId, type: convType, file: dataURLtoFile(t.src) });
+  for (const t of images) {
+    const img = await createImageMessage({ to, type, file: dataURLtoFile(t.src) });
     messages.push(img);
   }
 
   // 处理文件消息
   for (const t of files) {
-    const file = createFileMessage({ to: convId, type: convType, file: dataURLtoFile(t.link, t.fileName) });
+    const file = createFileMessage({ to, type, file: dataURLtoFile(t.link, t.fileName) });
     messages.push(file);
   }
 
   // 处理视频消息
   for (const t of video) {
-    const vid = createVideoMessage({ to: convId, type: convType, file: dataURLtoFile(t.link, t.fileName) });
-    messages.push(vid);
+    const videoItem = createVideoMessage({ to, type, file: dataURLtoFile(t.link, t.fileName) });
+    messages.push(videoItem);
   }
 
   return messages;
@@ -338,12 +338,12 @@ export const chatName = (item) => {
  * <p>12<img src="*" alt="[我最美]" />333</p>
  * 12[我最美]333
  */
-export function convertEmoji(editor) {
+export function extractEmojiInfo(editor) {
   const html = editor.getHtml(); // 非格式化的 html
   const emojiMap = editor.getElemsByType("image"); // 所有图片
   if (!html || !emojiMap || !Array.isArray(emojiMap)) return "";
   const filtered = emojiMap.filter((item) => item.class === "EmoticonPack");
-  if (filtered.length == 0) return "";
+  if (filtered.length === 0) return "";
   const convertedData = filtered.map((item) => ({ [item.src]: item.alt }));
   const extended = { ...Object.assign(...convertedData) };
   // 清除文件消息包含的字符串

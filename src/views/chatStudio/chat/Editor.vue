@@ -44,30 +44,19 @@
 </template>
 
 <script setup>
-import {
-  onActivated,
-  onBeforeUnmount,
-  onDeactivated,
-  onMounted,
-  computed,
-  ref,
-  shallowRef,
-  watch,
-} from "vue";
-import { bytesToSize, isRobot, fileImgToBase64Url } from "@/utils/chat/index";
+import { bytesToSize, fileImgToBase64Url } from "@/utils/chat/index";
 import { isMobile } from "@/utils/common";
 import { Editor } from "@wangeditor/editor-for-vue";
 import "@wangeditor/editor/dist/css/style.css";
 import { debounce } from "lodash-es";
-import { storeToRefs } from "pinia";
 import { editorConfig, placeholderMap } from "../utils/configure";
 import "../utils/custom-menu";
 import { useState } from "@/utils/hooks/index";
 import { useAppStore, useGroupStore, useChatStore } from "@/stores/index";
 import {
-  convertEmoji,
   customAlert,
   extractAitInfo,
+  extractEmojiInfo,
   extractFilesInfo,
   extractImageInfo,
   extractVideoInfo,
@@ -83,9 +72,9 @@ import MentionModal from "../components/MentionModal.vue";
 import Inputbar from "../Inputbar/index.vue";
 import emitter from "@/utils/mitt-bus";
 
-const editorRef = shallowRef(); // 编辑器实例，必须用 shallowRef
-const valueHtml = ref(""); // 内容 HTML
-const mode = "simple"; // 'default' 或 'simple'
+const editorRef = shallowRef();
+const valueHtml = ref("");
+const mode = "simple";
 
 const appStore = useAppStore();
 const chatStore = useChatStore();
@@ -101,7 +90,7 @@ const {
   isChatBoxVisible,
   isMentionModalVisible,
   isFullscreenInputActive,
-  currentConversation,
+  currentSessionId,
   replyMsgData,
 } = storeToRefs(chatStore);
 
@@ -140,13 +129,13 @@ const insertDraft = ({ data, editor = editorRef.value }) => {
 // 更新草稿
 const updateDraft = debounce((data) => {
   chatStore.updateChatDraft({
-    ID: currentConversation?.value?.conversationID,
+    ID: currentSessionId.value,
     payload: data,
   });
 }, 300);
 
 const handleAt = debounce((editor) => {
-  if (isGroupChat) {
+  if (isGroupChat.value) {
     filterMentionList({
       str: editor.getText(),
       list: groupStore.currentMembersWithoutSelf,
@@ -155,9 +144,8 @@ const handleAt = debounce((editor) => {
 }, 100);
 
 const onChange = (editor) => {
-  const content = editor.children;
   setDisabled(editor.isEmpty());
-  updateDraft(content);
+  updateDraft(editor.children);
   handleAt(editor);
 };
 
@@ -296,25 +284,35 @@ const clearInputInfo = (editor = editorRef.value) => {
 };
 
 const sendMsgBefore = (editor = editorRef.value) => {
-  const text = editor.getText(); // 纯文本内容
+  const text = editor.getText();
+
   const { aitStr, atUserList } = extractAitInfo(editor);
   const { files } = extractFilesInfo(editor);
   const { video } = extractVideoInfo(editor);
   const { images } = extractImageInfo(editor);
-  const emoticons = convertEmoji(editor);
-  const have =
-    video.length || images.length || files.length || atUserList.length || aitStr || emoticons || text;
+  const emoticons = extractEmojiInfo(editor);
+
+  const haveContent = [
+    video.length,
+    images.length,
+    files.length,
+    atUserList.length,
+    aitStr,
+    emoticons,
+    text,
+  ].some(Boolean);
+
   return {
-    convId: toAccount.value,
-    convType: currentType.value,
-    textMsg: emoticons || text,
-    image: images,
+    to: toAccount.value,
+    type: currentType.value,
+    text: emoticons || text,
     aitStr: atUserList.length ? emoticons || aitStr : "",
     atUserList,
-    files: files,
+    images,
+    files,
     video,
-    reply: replyMsgData.value,
-    isHave: Boolean(have),
+    custom: replyMsgData.value,
+    isHave: haveContent, // 是否有有效内容
   };
 };
 // 发送消息

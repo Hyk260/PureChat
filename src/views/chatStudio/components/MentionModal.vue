@@ -32,7 +32,6 @@ import { onClickOutside, useEventListener } from "@vueuse/core";
 import { cloneDeep } from "lodash-es";
 import { prioritizeRBTUserID } from "@/utils/chat/index";
 import { insertMention } from "./../utils/utils";
-import { localStg } from "@/utils/storage";
 import { useGroupStore, useChatStore, useUserStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
@@ -88,10 +87,10 @@ export default {
     };
   },
   methods: {
-    initList(off = this.isOwner, data = []) {
+    initList(owner = this.isOwner, data = []) {
       this.list = this.filterList(data);
       // 仅群主支持@全员
-      if (off) this.list.unshift(this.allMembers);
+      if (owner) this.list.unshift(this.allMembers);
     },
     filterList(data) {
       if (data.length) {
