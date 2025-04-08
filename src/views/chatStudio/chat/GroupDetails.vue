@@ -216,7 +216,7 @@ const groupMemberAdd = () => {
 };
 
 const navigate = (item) => {
-  chatStore.addConversation({ convId: `C2C${item.userID}` });
+  chatStore.addConversation({ sessionId: `C2C${item.userID}` });
   setDrawer(false);
   setTimeout(() => {
     const dom = document.getElementById(`message_C2C${item.userID}`);

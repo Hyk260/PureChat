@@ -4,7 +4,7 @@
       <UserAvatar
         words="3"
         shape="square"
-        :convId="item.userID"
+        :sessionId="item.userID"
         :nickName="item.name || item.nick"
         :url="item.avatar || ''"
         :type="isGroup ? 'group' : 'single'"

@@ -198,7 +198,7 @@ export class TIMProxy {
     });
     notification.onclick = () => {
       // 切换会话列表
-      useChatStore().addConversation({ convId: message.conversationID });
+      useChatStore().addConversation({ sessionId: message.conversationID });
       // 定位到指定会话
       setTimeout(() => {
         scrollToDomPosition(ID);
@@ -272,7 +272,7 @@ export class TIMProxy {
       duration: 6000,
       // type: "info",
       onClick: () => {
-        useChatStore().addConversation({ convId: conversationID });
+        useChatStore().addConversation({ sessionId: conversationID });
         scrollToDomPosition(ID);
         Notification.close();
       },

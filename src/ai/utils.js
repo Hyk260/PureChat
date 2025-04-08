@@ -226,12 +226,12 @@ export const getAvatarUrl = (id, type = "local") => {
 
 /**
  * 获取 AI 用户头像 URL
- * @param {string} convId - 会话 ID C2C@RBT#005
+ * @param {string} id - 会话 ID C2C@RBT#005
  * @returns {string} 头像 URL 或空字符串
  */
-export function getAiAvatarUrl(convId) {
-  if (convId.includes("@RBT#")) {
-    return getAvatarUrl(convId);
+export function getAiAvatarUrl(id) {
+  if (id.includes("@RBT#")) {
+    return getAvatarUrl(id);
   } else {
     return "";
   }

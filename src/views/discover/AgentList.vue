@@ -71,7 +71,7 @@ function cardClick(item) {
 
 function providerClick(item) {
   sidebarStore.toggleOutside({ path: "/chat" });
-  chatStore.addConversation({ convId: `${"C2C"}${item.userID}` })
+  chatStore.addConversation({ sessionId: `${"C2C"}${item.userID}` })
 }
 </script>
 

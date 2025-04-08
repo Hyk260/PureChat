@@ -64,7 +64,7 @@ function startConversation(item = cardData.value) {
   const id = getModelId(defaultBot) || VITE_OPENAI_ID;
   handleClose()
   sidebarStore.toggleOutside({ path: "/chat" });
-  chatStore.addConversation({ convId: `${"C2C"}${id}` })
+  chatStore.addConversation({ sessionId: `${"C2C"}${id}` })
   setTimeout(() => {
     chatStore.addAiPresetPromptWords()
   }, 200);

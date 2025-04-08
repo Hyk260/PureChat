@@ -8,7 +8,7 @@
           words="3"
           shape="circle"
           :size="80"
-          :convId="userInfo.userID"
+          :sessionId="userInfo.userID"
           :nickName="userInfo.avatar || userInfo.name || userInfo.nick"
           :url="userInfo.avatar || ''"
           :type="userInfo.groupID ? 'group' : 'single'"
@@ -65,7 +65,7 @@ const userInfo = ref({
 
 const handleConversation = ({ id, type }) => {
   sidebarStore.toggleOutside({ path: "/chat" });
-  chatStore.addConversation({ convId: `${type}${id}` })
+  chatStore.addConversation({ sessionId: `${type}${id}` })
 };
 
 const sendMessage = (data) => {

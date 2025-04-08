@@ -13,7 +13,7 @@
       :class="['avatar', className]"
       shape="square"
       :size="size"
-      :src="url || getAiAvatarUrl(convId) || shapeObj[shape]"
+      :src="url || getAiAvatarUrl(sessionId) || shapeObj[shape]"
     >
       <img :src="emptyUrl" />
     </el-avatar>
@@ -51,7 +51,7 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  convId: {
+  sessionId: {
     type: String,
     default: "",
   },

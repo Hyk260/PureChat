@@ -288,11 +288,11 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       setMessageRead(data);
     },
     async addConversation(action) {
-      const { convId } = action;
-      const { conversation: data } = await getConversationProfile({ sessionId: convId });
+      const { sessionId } = action;
+      const { conversation: data } = await getConversationProfile({ sessionId });
       this.updateSelectedConversation(data);
       this.updateMessageList(data);
-      scrollToMessage(`message_${convId}`);
+      scrollToMessage(`message_${sessionId}`);
       if (data?.type === "GROUP") {
         useGroupStore().handleGroupProfile(data);
         useGroupStore().handleGroupMemberList({ groupID: data.groupProfile.groupID });

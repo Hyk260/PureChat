@@ -467,7 +467,7 @@ const handleAt = (data) => {
 };
 
 const handleSendMessage = (data) => {
-  chatStore.addConversation({ convId: `C2C${data.from}` });
+  chatStore.addConversation({ sessionId: `C2C${data.from}` });
 };
 
 // 另存为

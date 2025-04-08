@@ -22,7 +22,7 @@
         <UserAvatar
           words="3"
           shape="square"
-          :convId="item.conversationID"
+          :sessionId="item.conversationID"
           :type="item.type === 'C2C' ? 'single' : 'group'"
           :nickName="chatName(item)"
           :url="item.type === 'C2C' ? item.userProfile.avatar : item?.groupProfile?.avatar"

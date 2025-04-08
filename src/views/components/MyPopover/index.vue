@@ -102,7 +102,7 @@ const getHomepage = (data = userProfile.value.profileCustomField) => {
 const define = () => {
   closeModal();
   if (cardData.value?.conversationType === "C2C") return;
-  chatStore.addConversation({ convId: `C2C${cardData.value.from}` })
+  chatStore.addConversation({ sessionId: `C2C${cardData.value.from}` })
 };
 
 onClickOutside(cardRef, () => {
