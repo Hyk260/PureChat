@@ -1,5 +1,4 @@
 import TavilyLogo from "@/assets/images/search/tavily.png";
-import { generateReferencePrompt } from './prompts';
 
 export const PROVIDER_IDS = {
   TAVILY: "tavily",

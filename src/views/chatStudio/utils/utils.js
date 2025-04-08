@@ -250,7 +250,7 @@ export const html2Escape = (str) => {
  */
 export async function sendChatMessage(options) {
   console.log("options", options);
-  let custom = options.custom || '';
+  let custom = options.custom || {};
   const messages = [];
   const {
     to,
@@ -269,9 +269,10 @@ export async function sendChatMessage(options) {
     messages.push(aitStrItem);
   } else if (text) {
     // 文本消息
-    // if (useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel) {
-    //   custom = await generateReferencePrompt({ content: text });
-    // }
+    if (useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel) {
+      custom = { key: "webSearch", payload: { text: "" } }
+      custom.payload.text = await generateReferencePrompt({ content: text });
+    }
     const textMsgItem = createTextMessage({ to, type, text, custom })
     messages.push(textMsgItem);
   }

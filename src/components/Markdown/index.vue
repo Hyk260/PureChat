@@ -18,6 +18,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  cloudCustomData: {
+    type: String,
+    default: "",
+  },
 });
 
 const appStore = useAppStore();

@@ -1,4 +1,4 @@
-import { localStg } from "@/utils/storage";
+import { useWebSearchStore } from '@/stores/index';
 
 export default class BaseWebSearchProvider {
   provider
@@ -8,6 +8,7 @@ export default class BaseWebSearchProvider {
     this.apiKey = this.getApiKey()
   }
   getApiKey() {
-    return localStg.get("webSearch")?.providers[0]?.apiKey
+    const config = useWebSearchStore().getProviderConfig
+    return config?.apiKey || ''
   }
 }

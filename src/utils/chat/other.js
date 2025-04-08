@@ -11,9 +11,22 @@ export function checkTextNotEmpty(arr) {
 
 // 处理文本类型的消息
 function transformTextElement(data) {
+  let content = data.payload.text
+
+  if (!isEmpty(data.cloudCustomData)) {
+    try {
+      const customData = JSON.parse(data.cloudCustomData);
+      if (customData?.webSearch) {
+        content = customData.webSearch?.messageAbstract;
+      }
+    } catch (error) {
+      console.warn("transformTextElement error", error);
+    }
+  }
+
   return {
     role: data.flow === "in" ? "assistant" : "user",
-    content: data.payload.text,
+    content,
   };
 }
 

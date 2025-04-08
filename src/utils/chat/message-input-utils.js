@@ -208,9 +208,9 @@ export function getCloudCustomData(data, params) {
   const key = data?.key || "messageReply";
   const cloudCustomContent = JSON.stringify({
     [key]: {
-      messageID: data?.ID || "",
+      messageID: data?.ID || undefined,
       messageAbstract: getAbstractContent(data),
-      messageSender: data?.nick || "",
+      messageSender: data?.nick || undefined,
       messageType: 0,
       version: __APP_INFO__.pkg.version || "",
       ...params

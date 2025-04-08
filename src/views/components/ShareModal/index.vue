@@ -54,8 +54,8 @@
                 <img class="size-22" src="@/assets/images/log.png" alt="" />
                 <div class="title ml-8">{{ VITE_APP_NAME }}</div>
               </div>
-              <span class="link"> {{ homepage }}</span>
-              <QrCode v-show="isQrCode" class="qr-code" :text="homepage" />
+              <span class="link"> {{ docsUrl }}</span>
+              <QrCode v-show="isQrCode" class="qr-code" :text="docsUrl" />
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@
               <div>包含二维码</div>
               <div><el-switch :disabled="!isFooter" v-model="isQrCode" /></div>
             </div>
-            <el-divider />
+            <!-- <el-divider /> -->
             <div class="flex-bc my-5 h-32">
               <div>图片格式</div>
               <div>
@@ -146,6 +146,7 @@ import { onUnmounted } from "vue";
 
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
+const docsUrl = pkg.docs;
 const isFooter = ref(false);
 const isQrCode = ref(true);
 const isPrompt = ref(false);

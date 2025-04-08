@@ -1,5 +1,7 @@
 import { isEmpty } from 'lodash-es';
-import references from '@/ai/webSearchProvider/test.json';
+// import references from '@/ai/webSearchProvider/test.json';
+import WebSearchService from "@/ai/webSearchService";
+import { useWebSearchStore } from "@/stores/index";
 
 export const REFERENCE_PROMPT = `Please answer the question based on the reference materials
 
@@ -24,7 +26,10 @@ export async function getWebSearchReferences(message) {
     return []
   }
 
-  const webSearch = references
+  const provider = useWebSearchStore().defaultProvider
+  const references = await WebSearchService.search(provider, message.content);
+
+  const webSearch = references 
 
   if (webSearch) {
     return webSearch.results.map((t, i) => ({
@@ -45,7 +50,7 @@ export async function generateReferencePrompt(message) {
 
   if (!isEmpty(webSearchReferences)) {
     const referenceContent = `\`\`\`json\n${JSON.stringify(webSearchReferences, null, 2)}\n\`\`\``;
-    console.log('webSearchReferences', webSearchReferences)
+    // console.log('webSearchReferences', webSearchReferences)
     return REFERENCE_PROMPT.replace('{question}', message.content).replace('{references}', referenceContent);
   }
 
