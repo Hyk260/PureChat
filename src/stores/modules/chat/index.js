@@ -289,7 +289,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
     async addConversation(action) {
       const { convId } = action;
-      const { conversation: data } = await getConversationProfile({ convId });
+      const { conversation: data } = await getConversationProfile({ sessionId: convId });
       this.updateSelectedConversation(data);
       this.updateMessageList(data);
       scrollToMessage(`message_${convId}`);
@@ -345,12 +345,12 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.totalUnreadMsg = await getUnreadMsg();
     },
     async deleteSession(data) {
-      const { convId } = data;
-      if (!convId) {
-        console.error("convId is required");
+      const { sessionId } = data;
+      if (!sessionId) {
+        console.error("sessionId is required");
         return;
       }
-      const { code } = await deleteConversation({ convId });
+      const { code } = await deleteConversation({ sessionId });
       if (code === 0) this.clearCurrentMessage();
     },
     async deleteHistoryMessage(id) {

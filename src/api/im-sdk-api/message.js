@@ -42,10 +42,10 @@ export const sendMessage = async (params) => {
 };
 // 创建自定义消息
 export const createCustomMessage = (params) => {
-  const { to, convType = "C2C", customType } = params || {};
+  const { to, type = "C2C", customType } = params || {};
   return tim.createCustomMessage({
     to,
-    conversationType: convType,
+    conversationType: type,
     payload: getCustomMsgContent({ data: null, type: customType })
   });
 };
@@ -115,13 +115,13 @@ export const createVideoMessage = (params) => {
 };
 // 创建合并消息
 export const createMergerMessage = async (params) => {
-  const { convId, convType, List, title = "", abstractList } = params;
+  const { to, type, messageList = [], title = "聊天记录", abstractList } = params;
   return tim.createMergerMessage({
-    to: convId,
-    conversationType: convType,
+    to,
+    conversationType: type,
     payload: {
-      messageList: List,
-      title: title || "聊天记录",
+      title,
+      messageList,
       abstractList: abstractList || ["allen: 666", "iris: [图片]"],
       compatibleText: "当前版本不支持",
     },
@@ -129,10 +129,10 @@ export const createMergerMessage = async (params) => {
 };
 // 创建转发消息
 export const createForwardMessage = async (params) => {
-  const { convId, convType, message } = params;
+  const { to, type, message } = params;
   return await tim.createForwardMessage({
-    to: convId,
-    conversationType: convType,
+    to,
+    conversationType: type,
     payload: message,
   });
 };

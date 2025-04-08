@@ -219,7 +219,7 @@ const toggleFullScreenInput = () => {
 function customMessage() {
   const message = createCustomMessage({
     to: toAccount.value,
-    convType: currentType.value,
+    type: currentType.value,
     customType: "loading",
   });
   chatStore.sendSessionMessage({ message });

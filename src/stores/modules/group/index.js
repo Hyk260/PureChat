@@ -61,10 +61,10 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
     },
     // 退出群聊
     async handleQuitGroup(payload) {
-      const { groupId, convId } = payload;
+      const { sessionId, groupId  } = payload;
       const { code } = await quitGroup({ groupId });
       if (code !== 0) return;
-      useChatStore().deleteSession({ convId });
+      useChatStore().deleteSession({ sessionId });
     },
     // 创建群聊
     async handleCreateGroup(payload) {
@@ -78,14 +78,14 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
     },
     // 解散群组
     async handleDismissGroup(payload) {
-      const { groupId, convId } = payload;
+      const { sessionId, groupId } = payload;
       const { code, groupID } = await dismissGroup(groupId);
       console.log("解散群组 dismissGroup:", code, groupID);
       if (code !== 0) {
         console.error("解散群组 error:", code, groupID);
         return;
       }
-      useChatStore().deleteSession({ convId });
+      useChatStore().deleteSession({ sessionId });
     },
     // 获取群详细资料
     async handleGroupProfile(payload) {

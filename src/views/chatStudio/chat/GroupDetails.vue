@@ -123,7 +123,6 @@
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
 import {
   addGroupMember,
   deleteGroupMember,
@@ -158,7 +157,7 @@ const [drawer, setDrawer] = useState();
 const [loading, setLoading] = useState();
 
 const { currentMemberList, isOwner } = storeToRefs(groupStore);
-const { toAccount, currentConversation } = storeToRefs(chatStore);
+const { toAccount, currentSessionId, currentConversation } = storeToRefs(chatStore);
 
 const beforeChange = () => {
   setLoading(true);
@@ -263,7 +262,7 @@ const updataGroup = () => {
 // 修改群资料
 const modifyGroupInfo = async (value, modify) => {
   const { groupID } = groupProfile;
-  const { code, group } = await updateGroupProfile({ convId: groupID, value, modify });
+  const { code, group } = await updateGroupProfile({ groupID, value, modify });
   if (code !== 0) {
     appStore.showMessage({ message: "修改失败", type: "warning" });
   } else {
@@ -275,8 +274,7 @@ const handleDismissGroup = async () => {
   const data = { message: "确定解散群聊?", iconType: "warning" };
   const result = await showConfirmationBox(data);
   if (result === "cancel") return;
-  const { conversationID: convId } = currentConversation.value;
-  groupStore.handleDismissGroup({ convId, groupId: toAccount.value });
+  groupStore.handleDismissGroup({ sessionId: currentSessionId.value, groupId: toAccount.value });
   setDrawer(false);
 };
 
@@ -290,8 +288,7 @@ const handleQuitGroup = async () => {
   const data = { message: "确定退出群聊?", iconType: "warning" };
   const result = await showConfirmationBox(data);
   if (result === "cancel") return;
-  const { conversationID: convId } = currentConversation.value;
-  groupStore.handleQuitGroup({ convId, groupId: toAccount.value });
+  groupStore.handleQuitGroup({ sessionId: currentSessionId.value, groupId: toAccount.value });
   setDrawer(false);
 };
 
@@ -306,8 +303,8 @@ onBeforeUnmount(() => {
 });
 
 watch(currentConversation, (data) => {
-  const { messageRemindType } = data; // AcceptAndNotify AcceptNotNotify
-  notify.value = messageRemindType === "AcceptNotNotify";
+  // AcceptAndNotify AcceptNotNotify
+  notify.value = data.messageRemindType === "AcceptNotNotify";
 });
 </script>
 

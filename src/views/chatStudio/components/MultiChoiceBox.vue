@@ -18,7 +18,6 @@
 <script>
 import { mapStores } from "pinia";
 import { createForwardMessage, createMergerMessage, sendMessage } from "@/api/im-sdk-api/index";
-import { cloneDeep } from "lodash-es";
 import { useChatStore, useGroupStore } from "@/stores/index";
 import { localStg } from "@/utils/storage";
 import { TIM_PROXY } from "@/constants/index";
@@ -148,11 +147,11 @@ export default {
       const { toAccount, type } = this.multipleValue; // 选中转发 人 群 详细信息
       const forwardData = this.chatStore.getSortedForwardData;
       const forwardMsg = await createMergerMessage({
+        to: toAccount,
+        type,
         title: this.mergeTitle(),
-        convId: toAccount,
-        convType: type,
         abstractList: this.transformData(forwardData),
-        List: forwardData,
+        messageList: forwardData,
       });
       const { code, message: data } = await sendMessage(forwardMsg);
       if (code === 0) {
@@ -167,8 +166,8 @@ export default {
       const { toAccount, type } = this.multipleValue;
       forwardData.map(async (t) => {
         const forwardMsg = await createForwardMessage({
-          convId: toAccount,
-          convType: type,
+          to: toAccount,
+          type,
           message: t,
         });
         const { code, message: data } = await sendMessage(forwardMsg);

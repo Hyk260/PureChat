@@ -85,15 +85,15 @@ export const getGroupMemberList = async (params) => {
 /**
  * 更新群组资料
  * @param {Object} params - 参数对象
- * @param {string} params.convId - 群组 ID
+ * @param {string} params.groupID - 群组 ID
  * @param {string} params.modify - 待修改的属性名称，可选值为：name、introduction、notification、groupCustomField
  * @param {string} params.value - 待修改的属性值，当 modify 为 groupCustomField 时，需传入数组类型的值 [{key: "xxx", value: "xxx"}]
  * @returns {Object} - 包含状态码和群组资料的对象
  */
 export const updateGroupProfile = async (params) => {
-  const { convId, modify = ModifyType.GROUP_NAME, value = "" } = params;
+  const { groupID, modify = ModifyType.GROUP_NAME, value = "" } = params;
   const parameter = {
-    groupID: convId,
+    groupID,
     [modify]: value,
     // groupCustomField: [{ key: 'custom_info', value: 'all_staff' }] // 自定义字段 app管理员可写
   };

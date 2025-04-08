@@ -68,8 +68,8 @@ export const setMessageRemindType = async (params) => {
 // 获取会话信息
 export const getConversationProfile = async (params) => {
   try {
-    const { convId } = params;
-    const { code, data } = await tim.getConversationProfile(convId);
+    const { sessionId } = params;
+    const { code, data } = await tim.getConversationProfile(sessionId);
     if (code == 0) {
       return data;
     }
@@ -95,11 +95,11 @@ export const setMessageRead = (params) => {
 };
 // 删除会话
 export const deleteConversation = async (params) => {
-  const { convId = '' } = params;
+  const { sessionId = '' } = params;
   const {
     code,
     data: { conversationID: ID },
-  } = await tim.deleteConversation({ conversationIDList: [convId], clearHistoryMessage: false });
+  } = await tim.deleteConversation({ conversationIDList: [sessionId], clearHistoryMessage: false });
   return {
     code,
     ID,

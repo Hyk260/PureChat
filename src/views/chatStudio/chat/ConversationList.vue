@@ -255,7 +255,7 @@ const disableRecMsg = async (data) => {
 };
 
 const removeConversation = async (data) => {
-  chatStore.deleteSession({ convId: data.conversationID });
+  chatStore.deleteSession({ sessionId: data.conversationID });
 };
 
 const pingConversation = async (data) => {
