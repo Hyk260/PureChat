@@ -114,7 +114,7 @@ const unreadLabel = computed(() => {
 });
 
 onActivated(() => {
-  emitter.emit("updataScroll");
+  emitter.emit("updateScroll");
   chatStore.$patch({ currentTab: "whole" });
   isChatBoxVisible.value && useDragHandler(chatRef.value);
 });

@@ -258,7 +258,7 @@ export class TIMProxy {
       message: cloneDeep(data[0]),
     });
     read && this.reportedMessageRead(data);
-    emitter.emit("updataScroll", "bottom");
+    emitter.emit("updateScroll", "bottom");
   }
   // 上报消息已读
   reportedMessageRead(data) {

@@ -523,7 +523,7 @@ const handleRevokeMsg = async (data) => {
 };
 
 function onEmitter() {
-  emitter.on("updataScroll", (type) => {
+  emitter.on("updateScroll", (type) => {
     if (type === "bottom") {
       isScrolledToBottom() && updateScrollBarHeight();
     } else if (type === "robot") {
@@ -535,7 +535,7 @@ function onEmitter() {
 }
 
 function offEmitter() {
-  emitter.off("updataScroll");
+  emitter.off("updateScroll");
 }
 
 watch(

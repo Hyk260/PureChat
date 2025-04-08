@@ -37,7 +37,7 @@ const updataMessage = (chat, data) => {
     sessionId: `C2C${chat.from}`,
     message: cloneDeep(chat),
   });
-  emitter.emit("updataScroll", "robot");
+  emitter.emit("updateScroll", "robot");
 };
 
 const createStartMsg = (params) => {

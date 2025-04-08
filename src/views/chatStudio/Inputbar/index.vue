@@ -242,7 +242,7 @@ function sendFile(files) {
 }
 
 const scrollToBottomBtn = () => {
-  emitter.emit("updataScroll");
+  emitter.emit("updateScroll");
 };
 
 onMounted(() => {

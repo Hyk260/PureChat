@@ -126,7 +126,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         const data = cloneDeep(history);
         if (data) this.currentMessageList = [...data, message];
       }
-      emitter.emit("updataScroll");
+      emitter.emit("updateScroll");
     },
     updateSelectedConversation(payload) {
       const { conversationID: sessionId } = payload;
@@ -250,7 +250,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       // 消息上屏 预加载
       this.updateMessages({ sessionId, message });
-      emitter.emit("updataScroll");
+      emitter.emit("updateScroll");
       // 发送消息
       const { code, message: result } = await sendMessage(message);
       if (code === 0) {
@@ -263,7 +263,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       console.log("消息发送成功 sendMsgSuccessCallback", data);
       const { sessionId, message, last } = data;
       this.updateMessages({ sessionId, message });
-      emitter.emit("updataScroll");
+      emitter.emit("updateScroll");
       if (!ROBOT_COLLECT.includes(message?.to)) return;
       if (last) {
         setTimeout(async () => {
@@ -284,7 +284,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         isDone: isCompleted,
         message: addTimeDivider(messageList),
       });
-      emitter.emit("updataScroll");
+      emitter.emit("updateScroll");
       setMessageRead(data);
     },
     async addConversation(action) {
@@ -298,7 +298,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         useGroupStore().handleGroupMemberList({ groupID: data.groupProfile.groupID });
       }
       this.isAssistant && useRobotStore().updateModelConfig();
-      emitter.emit("updataScroll");
+      emitter.emit("updateScroll");
     },
     clearCurrentMessage() {
       this.isChatBoxVisible = false;

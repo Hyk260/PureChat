@@ -234,7 +234,7 @@ const handleConversationListClick = (data) => {
     groupStore.handleGroupMemberList({ groupID: data.groupProfile.groupID });
   }
   emitter.emit("handleInsertDraft", data);
-  emitter.emit("updataScroll");
+  emitter.emit("updateScroll");
 };
 
 const handleClickMenuItem = (item) => {
