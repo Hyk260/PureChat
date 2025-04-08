@@ -3,9 +3,10 @@
 </template>
 
 <script setup>
-import { h, onMounted, nextTick, ref, watch } from "vue";
+import { useClipboard } from "@vueuse/core";
 import { useAppStore } from "@/stores/index";
 import markdownit from "markdown-it";
+import markdownItFootnote from "markdown-it-footnote";
 import hljs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";
 // import bash from "highlight.js/lib/languages/bash";
@@ -32,23 +33,13 @@ const copyButton = `<button class="copy-code-button" onclick="${clipboard}" titl
 hljs.registerLanguage("javascript", javascript);
 hljs.registerLanguage("vue", javascript);
 
-async function copyToClipboard(text) {
-  try {
-    await navigator.clipboard.writeText(text);
+async function copyToClipboard(str) {
+  const { text, copy, isSupported } = useClipboard({ source: str });
+  if (isSupported) {
+    copy(text);
     appStore.showMessage({ message: "复制成功" });
-  } catch (error) {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-      document.execCommand("copy");
-      appStore.showMessage({ message: "复制成功" });
-    } catch (error) {
-      appStore.showMessage({ message: "您的浏览器不支持剪贴板API" });
-    }
-    document.body.removeChild(textArea);
+  } else {
+    appStore.showMessage({ message: "您的浏览器不支持剪贴板API" });
   }
 }
 
@@ -79,6 +70,8 @@ const md = markdownit({
 });
 
 md.use(newWindowLinksPlugin);
+
+md.use(markdownItFootnote);
 
 function MarkdownRender() {
   const mark = h("div", {

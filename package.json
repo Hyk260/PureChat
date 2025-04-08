@@ -53,6 +53,7 @@
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",
+    "markdown-it-footnote": "^4.0.0",
     "mitt": "^3.0.0",
     "modern-screenshot": "^4.4.39",
     "nanoid": "^5.0.7",
