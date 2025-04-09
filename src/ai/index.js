@@ -33,10 +33,7 @@ const updataMessage = (chat, data) => {
   chat.cloudCustomData = getThinkMsgContent(think);
   chat.clientTime = getTime();
   chat.status = data?.done ? "success" : "sending";
-  useChatStore().updateMessages({
-    sessionId: `C2C${chat.from}`,
-    message: cloneDeep(chat),
-  });
+  useChatStore().updateMessages({ sessionId: `C2C${chat.from}`, message: cloneDeep(chat), });
   emitter.emit("updateScroll", "robot");
 };
 
@@ -60,10 +57,7 @@ const createAlertMsg = (startMsg, provider) => {
   _data.clientTime = getTime();
   _data.type = "TIMCustomElem";
   _data.payload = getCustomMsgContent({ data: { provider }, type: "warning" });
-  useChatStore().updateMessages({
-    sessionId: `C2C${_data.from}`,
-    message: _data,
-  });
+  useChatStore().updateMessages({ sessionId: `C2C${_data.from}`, message: _data });
 };
 
 const createToolCallsMsg = (startMsg, message) => {
@@ -72,10 +66,7 @@ const createToolCallsMsg = (startMsg, message) => {
   _data.type = "TIMCustomElem";
   _data.payload = getCustomMsgContent({ data: message, type: "tool_call" });
   _data.payload.extension = JSON.stringify(webSearchResult);
-  useChatStore().updateMessages({
-    sessionId: `C2C${_data.from}`,
-    message: cloneDeep(_data),
-  });
+  useChatStore().updateMessages({ sessionId: `C2C${_data.from}`, message: cloneDeep(_data) });
 };
 
 function beforeSend(api, msg) {

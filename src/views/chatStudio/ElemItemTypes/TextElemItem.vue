@@ -11,8 +11,6 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from "vue";
-import { isRobot } from "@/utils/chat/index";
 import { useChatStore } from "@/stores/index";
 import ReplyElem from "./ReplyElem.vue";
 import DynamicContent from "../components/DynamicContent.vue";
@@ -31,6 +29,8 @@ const props = defineProps({
     default: false,
   },
 });
+
+const chatStore = useChatStore()
 
 const isMsgType = computed(() => {
   const { message, msgType } = props;
@@ -56,7 +56,7 @@ const onClick = (data) => {
 };
 // 发送者是ai 展示markdown
 function showMarked(message) {
-  return isRobot(useChatStore().toAccount) && message?.flow === "in";
+  return chatStore.isAssistant && message?.flow === "in";
 }
 
 function fnStyle() {

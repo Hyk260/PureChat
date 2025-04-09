@@ -1,7 +1,8 @@
 import { isEmpty } from 'lodash-es';
+import { useWebSearchStore } from "@/stores/index";
+import { localStg } from '@/utils/storage';
 // import references from '@/ai/webSearchProvider/test.json';
 import WebSearchService from "@/ai/webSearchService";
-import { useWebSearchStore } from "@/stores/index";
 
 export const REFERENCE_PROMPT = `Please answer the question based on the reference materials
 
@@ -21,6 +22,15 @@ export const REFERENCE_PROMPT = `Please answer the question based on the referen
 Please respond in the same language as the user's question.
 `
 
+export function mapWebSearchResults(results) {
+  return results.map((t, i) => ({
+    id: i + 1,
+    content: t.content,
+    sourceUrl: t.url,
+    type: 'url'
+  }));
+}
+
 export async function getWebSearchReferences(message) {
   if (isEmpty(message.content)) {
     return []
@@ -32,13 +42,7 @@ export async function getWebSearchReferences(message) {
   const webSearch = references 
 
   if (webSearch) {
-    return webSearch.results.map((t, i) => ({
-      id: i + 1,
-      content: t.content,
-      sourceUrl: t.url,
-      type: 'url'
-    })
-    )
+    return mapWebSearchResults(webSearch.results);
   }
 
   return []
@@ -47,6 +51,8 @@ export async function getWebSearchReferences(message) {
 export async function generateReferencePrompt(message) {
 
   const webSearchReferences = await getWebSearchReferences(message)
+
+  localStg.set('webSearchReferences', webSearchReferences)
 
   if (!isEmpty(webSearchReferences)) {
     const referenceContent = `\`\`\`json\n${JSON.stringify(webSearchReferences, null, 2)}\n\`\`\``;
