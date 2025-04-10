@@ -222,7 +222,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.historyMessageList.set(sessionId, newMessageList);
     },
     modifiedMessages(message) {
-      console.log("[chat] 历史消息更新 modifiedMessages:", payload);
+      console.log("[chat] 历史消息更新 modifiedMessages:", message);
       if (!message?.ID) {
         console.warn("ID 不存在");
         return;
@@ -233,8 +233,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         console.warn("oldMessageList 不存在");
         return;
       }
-      const newMessageList = oldMessageList.map((t) => {
-        return t.ID === message.ID ? message : item;
+      const newMessageList = oldMessageList.map((item) => {
+        return item.ID === message.ID ? message : item;
       });
       if (this.currentConversation?.conversationID === sessionId) {
         this.currentMessageList = newMessageList;

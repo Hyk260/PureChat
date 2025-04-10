@@ -141,7 +141,7 @@ export class TIMProxy {
   }
   onMessageModified({ data }) {
     console.log("[chat] 历史消息更新 onMessageModified:", data);
-    useChatStore().modifiedMessages(data[0]);
+    useChatStore().modifiedMessages(cloneDeep(data[0]));
   }
   onNetStateChange({ data }) {
     console.log("[chat] 网络状态变更 onNetStateChange:", data);

@@ -6,8 +6,9 @@ import { restApi } from "@/api/node-admin-api/rest";
 import { cloneDeep } from "lodash-es";
 import { getTime } from "@/utils/common";
 import { getCustomMsgContent } from "@/api/im-sdk-api/custom";
-import { getThinkMsgContent } from "@/utils/chat/index";
+import { getThinkMsgContent, getCloudCustomData } from "@/utils/chat/index";
 import { useChatStore } from "@/stores/index";
+import { localStg } from '@/utils/storage';
 import emitter from "@/utils/mitt-bus";
 import webSearchResult from "@/database/tools/web-search-result";
 
@@ -29,12 +30,20 @@ const restSendMsg = async (params, data) => {
 const updataMessage = (chat, data) => {
   const { message = "", think = "" } = data || {};
   if (!chat) return;
+  let isFinish = data?.done || false
   chat.payload.text = message;
-  chat.cloudCustomData = getThinkMsgContent(think);
+  // chat.cloudCustomData = getThinkMsgContent(think);
+  chat.cloudCustomData = getCloudCustomData(think, {
+    messageAbstract: think,
+    thinking: "思考中...",
+    deeplyThought: "已深度思考",
+    webSearchResult: isFinish ? localStg.get('webSearchReferences') : [],
+  })
   chat.clientTime = getTime();
-  chat.status = data?.done ? "success" : "sending";
+  chat.status = isFinish ? "success" : "sending";
   useChatStore().updateMessages({ sessionId: `C2C${chat.from}`, message: cloneDeep(chat), });
   emitter.emit("updateScroll", "robot");
+  if (isFinish) localStg.remove('webSearchReferences')
 };
 
 const createStartMsg = (params) => {

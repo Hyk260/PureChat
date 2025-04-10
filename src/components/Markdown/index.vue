@@ -1,7 +1,7 @@
 <template>
   <MarkdownRender />
 </template>
-<!-- {{ cloudCustomData?.webSearch?.messageAbstract }} -->
+
 <script setup>
 import { useClipboard } from "@vueuse/core";
 import { useAppStore } from "@/stores/index";
@@ -23,12 +23,15 @@ const props = defineProps({
     default: "",
   },
   cloudCustomData: {
-    type: String,
-    default: () => [],
+    type: Object,
+    default: () => {},
   },
 });
 
 const appStore = useAppStore();
+const webSearchResult = computed(() => {
+  return props.cloudCustomData?.messageReply?.webSearchResult || []
+})
 
 const clipboard = "nextElementSibling && (window.copyToClipboard(nextElementSibling.innerText))";
 const copyButton = `<button class="copy-code-button" onclick="${clipboard}" title="copy"><span class="cuida--copy-outline"></span></button>`;
@@ -77,9 +80,12 @@ const createMarkdownParser = () => {
   // 脚注引用样式 (正文中的 [^1] 样式)
   md.renderer.rules.footnote_ref = (tokens, idx) => {
     const n = Number(tokens[idx].meta.id + 1).toString();
-    // const data = webSearch.find(t=> t.id == n)
-    // ${data.sourceUrl}
-    return `<sup class="footnote-ref"><a href="">[${n}]</a></sup>`;
+    const data = webSearchResult.value?.find(t => t.id == n)
+    if (data?.sourceUrl) {
+      return `<sup class="footnote-ref"><a href="${data.sourceUrl}">[${n}]</a></sup>`;
+    } else {
+      return `<sup class="footnote-ref">[${n}]</sup>`;
+    }
   };
 
   // 脚注容器 (底部脚注列表)
@@ -102,9 +108,12 @@ const createMarkdownParser = () => {
   };
   md.renderer.rules.footnote_anchor = (tokens, idx) => {
     const n = Number(tokens[idx].meta.id + 1).toString();
-    // const data = webSearch.find(t=> t.id == n)
-    // ${data.sourceUrl}
-    return `<a href="" target="_blank" rel="noopener noreferrer" class="footnote-backref">↩</a></li>`;
+    const data = webSearchResult.value?.find(t => t.id == n)
+    if (data?.sourceUrl){
+      return `<a href="${data.sourceUrl}" target="_blank" rel="noopener noreferrer" class="footnote-backref">↩</a></li>`;
+    } else {
+      return `</li>`;
+    }
   };
 
   md.renderer.rules.link_open = (tokens, idx) => {
