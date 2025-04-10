@@ -33,12 +33,19 @@ const updataMessage = (chat, data) => {
   let isFinish = data?.done || false
   chat.payload.text = message;
   // chat.cloudCustomData = getThinkMsgContent(think);
-  chat.cloudCustomData = getCloudCustomData(think, {
-    messageAbstract: think,
-    thinking: "思考中...",
-    deeplyThought: "已深度思考",
-    webSearchResult: isFinish ? localStg.get('webSearchReferences') : [],
-  })
+  if (think) {
+    chat.cloudCustomData = getCloudCustomData(think, {
+      messageAbstract: think,
+      thinking: "思考中...",
+      deeplyThought: "已深度思考",
+    })
+  } else if (isFinish) {
+    const webSearchResult = localStg.get('webSearchReferences');
+    if (!webSearchResult) return
+    chat.cloudCustomData = getCloudCustomData({ payload: { text: "web-search" } }, {
+      webSearchResult,
+    })
+  }
   chat.clientTime = getTime();
   chat.status = isFinish ? "success" : "sending";
   useChatStore().updateMessages({ sessionId: `C2C${chat.from}`, message: cloneDeep(chat), });

@@ -53,13 +53,14 @@ export const createCustomMessage = (params) => {
 // 创建文本消息
 export const createTextMessage = (params) => {
   const { to, type = "C2C", text, custom = {}, cache = true } = params;
-  return tim.createTextMessage({
+  const data = tim.createTextMessage({
     to,
     cache: cache,
     conversationType: type,
     payload: { text },
-    cloudCustomData: getCloudCustomData(custom)
+    cloudCustomData: getCloudCustomData(custom),
   });
+  return data
 };
 
 // 创建 @提醒功能的文本消息

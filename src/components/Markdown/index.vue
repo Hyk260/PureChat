@@ -5,6 +5,7 @@
 <script setup>
 import { useClipboard } from "@vueuse/core";
 import { useAppStore } from "@/stores/index";
+import { convertToMarkdownFootnotes } from "./utils";
 // import { mapWebSearchResults } from '@/config/prompts';
 import markdownit from "markdown-it";
 import markdownItFootnote from "markdown-it-footnote";
@@ -30,8 +31,8 @@ const props = defineProps({
 
 const appStore = useAppStore();
 const webSearchResult = computed(() => {
-  return props.cloudCustomData?.messageReply?.webSearchResult || []
-})
+  return props.cloudCustomData?.messageReply?.webSearchResult || [];
+});
 
 const clipboard = "nextElementSibling && (window.copyToClipboard(nextElementSibling.innerText))";
 const copyButton = `<button class="copy-code-button" onclick="${clipboard}" title="copy"><span class="cuida--copy-outline"></span></button>`;
@@ -80,7 +81,7 @@ const createMarkdownParser = () => {
   // 脚注引用样式 (正文中的 [^1] 样式)
   md.renderer.rules.footnote_ref = (tokens, idx) => {
     const n = Number(tokens[idx].meta.id + 1).toString();
-    const data = webSearchResult.value?.find(t => t.id == n)
+    const data = webSearchResult.value?.find((t) => t.id == n);
     if (data?.sourceUrl) {
       return `<sup class="footnote-ref"><a href="${data.sourceUrl}">[${n}]</a></sup>`;
     } else {
@@ -104,15 +105,21 @@ const createMarkdownParser = () => {
   // 单个脚注项
   md.renderer.rules.footnote_open = (tokens, idx) => {
     const n = Number(tokens[idx].meta.id + 1).toString();
-    return `<li id="fn${n}" class="footnote-item">`;
+    return `<li class="footnote-item">`;
   };
+  md.renderer.rules.footnote_close = () => {
+    return "</li>\n";
+  };
+
   md.renderer.rules.footnote_anchor = (tokens, idx) => {
+    return ''
     const n = Number(tokens[idx].meta.id + 1).toString();
-    const data = webSearchResult.value?.find(t => t.id == n)
-    if (data?.sourceUrl){
-      return `<a href="${data.sourceUrl}" target="_blank" rel="noopener noreferrer" class="footnote-backref">↩</a></li>`;
+    const data = webSearchResult.value?.find((t) => t.id == n);
+    if (data?.sourceUrl) {
+      // \u21a9\ufe0e
+      return `<a href="${data.sourceUrl}" target="_blank" rel="noopener noreferrer" class="footnote-backref"></a>`;
     } else {
-      return `</li>`;
+      return "";
     }
   };
 
@@ -147,9 +154,16 @@ if (typeof window !== "undefined") {
 function MarkdownRender() {
   const md = createMarkdownParser();
 
+  let marked = props.marked;
+  if (marked && webSearchResult.value?.length) {
+    marked += convertToMarkdownFootnotes(webSearchResult.value);
+  }
   const mark = h("div", {
-    innerHTML: md.render(props.marked),
+    innerHTML: md.render(marked),
     class: "markdown-body",
+    onclick: () => {
+      console.log("webSearchResult:", webSearchResult.value);
+    },
   });
 
   return mark;

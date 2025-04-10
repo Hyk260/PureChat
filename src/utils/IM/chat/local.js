@@ -133,13 +133,14 @@ export class LocalChat {
     };
   }
   createTextMessage(data) {
-    const { to, conversationType, payload, cache } = data;
+    const { to, conversationType, payload, cloudCustomData = "", cache } = data;
     const _data = {
       ...timTextElem,
       time: getTime(),
       clientTime: getTime(),
       ID: uuid(),
       to: to,
+      cloudCustomData,
       from: profile.userID,
       avatar: profile.avatar,
       conversationID: `${conversationType}${to}`,
