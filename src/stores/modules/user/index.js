@@ -4,11 +4,9 @@ import { useAppStore, useChatStore } from '@/stores/index';
 import { login, logout } from "@/api/node-admin-api/index"
 import { ACCOUNT, USER_MODEL } from "@/constants/index"
 import { localStg } from "@/utils/storage"
-import { initThemeSettings } from "@/theme/settings"
 import { SetupStoreId } from '../../plugins/index';
 import { timProxy } from '@/utils/IM/index';
-import { setTheme } from "@/utils/common";
-import { changeLocale } from "@/locales/index";
+import { setLocale } from "@/locales/index";
 import router from "@/router"
 import chat from "@/utils/IM/im-sdk/tim"
 import emitter from "@/utils/mitt-bus"
@@ -16,29 +14,24 @@ import emitter from "@/utils/mitt-bus"
 export const useUserStore = defineStore(SetupStoreId.User, {
   state: () => ({
     userProfile: {},
-    lang: localStg.get('lang') || "zh-CN",
-    themeScheme: initThemeSettings(),
+    lang: "zh-CN",
+    themeScheme: "auto",
   }),
-
   actions: {
     setCurrentProfile(user) {
       this.userProfile = user
     },
-
-    setLang(lang) {
+    setLang(lang = this.lang) {
       this.lang = lang
-      changeLocale(lang)
+      setLocale(lang)
     },
-
-    setThemeScheme(theme) {
+    setThemeScheme(theme = this.themeScheme) {
       this.themeScheme = theme
-      setTheme(theme)
+      this.setTheme(theme)
     },
-
     setLoading(val) {
       this.loading = val
     },
-
     async handleSuccessfulAuth(data) {
       console.log("授权登录信息 handleSuccessfulAuth", data)
       const { code, msg, result } = data
@@ -53,14 +46,12 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         this.setLoading(false)
       }
     },
-
     async handleUserLogin(data) {
       console.log(data, "登录信息")
       this.setLoading(true)
       const result = await login(data)
       this.handleSuccessfulAuth(result)
     },
-
     async handleUserLogout() {
       router.push("/login")
       setTimeout(() => {
@@ -70,7 +61,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         this.handleIMLogout()
       }, 500)
     },
-
     async handleIMLogin(user) {
       console.log("[chat] im登录", user)
       try {
@@ -87,7 +77,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         console.log("[chat] im登录失败 login", error)
       }
     },
-
     async handleIMLogout() {
       const data = await chat.logout()
       if (data.code === 0) {
@@ -98,7 +87,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         console.log("[chat] im退出登录失败 logout", data)
       }
     },
-
     async tryReconnect() {
       if (__LOCAL_MODE__) {
         timProxy.init()
@@ -118,6 +106,31 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       } catch (error) {
         console.log(error)
       }
+    },
+    toggleHtmlClass(theme) {
+      document.body.setAttribute("data-theme", theme);
+      document.documentElement.classList[theme === "dark" ? "add" : "remove"]("dark");
+    },
+    /**
+     * 切换主题风格
+     * @param {string}  themeScheme light || dark || auto
+     */
+    setTheme(themeScheme = "light") {
+      const isAuto = themeScheme === "auto";
+      const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
+
+      const theme = isAuto ? (systemThemeQuery.matches ? "light" : "dark") : themeScheme;
+      this.toggleHtmlClass(theme);
+
+      // 监听系统主题变化，仅在自动模式下生效
+      if (isAuto) {
+        systemThemeQuery.addEventListener("change", (e) => {
+          if (this.themeScheme === "auto") {
+            this.toggleHtmlClass(e.matches ? "light" : "dark");
+          }
+        });
+      }
     }
-  }
+  },
+  persist: true,
 }) 

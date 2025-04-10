@@ -36,28 +36,7 @@
         </li>
       </ul>
     </div>
-    <div v-else-if="item.id === 'webSearch'">
-      <div>
-        <div class="flex gap-5">
-          <span>Tavily</span>
-          <el-icon @click="toLink()" class="cursor-pointer"><Promotion /></el-icon>
-        </div>
-        <el-divider class="my-20" />
-        <div class="flex gap-10">
-          <el-input
-            v-model="searchInput"
-            @blur="onBlur"
-            type="password"
-            placeholder="API密钥"
-            show-password
-          />
-          <el-button @click="checkApiKey">检查</el-button>
-        </div>
-        <div class="mt-10">
-          <el-link :href="apiKeyWebsite" target="_blank" type="primary">点击这里获取密钥</el-link>
-        </div>
-      </div>
-    </div>
+    <WebSearch v-else-if="item.id === 'webSearch'" />
     <div v-else-if="item.id === 'about'">
       <div class="ui-row flex-bc">
         <div class="flex">
@@ -99,12 +78,9 @@
 </template>
 
 <script setup>
-import { useState } from "@/utils/hooks/index";
-import { localStg } from "@/utils/storage";
-import { useUserStore, useAppStore, useRobotStore, useWebSearchStore } from "@/stores/index";
-import { WEB_SEARCH_PROVIDER_CONFIG } from "@/config/webSearchProviders";
+import { useUserStore, useRobotStore } from "@/stores/index";
 import { languages, options, optionsModel } from "./enums";
-import WebSearchService from "@/ai/webSearchService";
+import WebSearch from "./webSearch.vue";
 
 const { VITE_APP_NAME, DEV: isDev } = import.meta.env;
 const { docs, version } = __APP_INFO__.pkg;
@@ -119,45 +95,11 @@ const props = defineProps({
 
 const emit = defineEmits(["onClose", "onItem"]);
 
-const [searchInput, setSearchInput] = useState("");
-
-const appStore = useAppStore();
 const userStore = useUserStore();
-const robotStore = useRobotStore()
-const webSearchStore = useWebSearchStore();
-
-const webSearchProviderConfig = WEB_SEARCH_PROVIDER_CONFIG[webSearchStore.defaultProvider];
-const apiKeyWebsite = webSearchProviderConfig?.websites?.apiKey;
-const officialWebsite = webSearchProviderConfig?.websites?.official;
+const robotStore = useRobotStore();
 
 function languageChange() {
   emit("onItem");
-}
-
-function onBlur() {
-  webSearchStore.updateWebSearchProvider({
-    id: webSearchStore.defaultProvider,
-    apiKey: searchInput.value,
-  });
-}
-
-async function checkApiKey() {
-  if (!searchInput.value) {
-    appStore.showMessage({ message: "请输入API密钥", type: "warning" });
-    return;
-  }
-
-  const { valid, error } = await WebSearchService.checkSearch(webSearchStore.getProviderConfig);
-
-  if (valid) {
-    appStore.showMessage({ message: "API密钥验证通过" });
-  } else {
-    appStore.showMessage({ message: error || "验证失败", type: "error" });
-  }
-}
-
-function toLink() {
-  open(officialWebsite);
 }
 
 function log() {
@@ -194,10 +136,6 @@ const language = computed({
   set(val) {
     userStore.setLang(val);
   },
-});
-
-onMounted(() => {
-  setSearchInput(localStg.get("webSearch")?.providers[0]?.apiKey || "");
 });
 </script>
 

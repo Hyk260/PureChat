@@ -43,7 +43,7 @@
       </el-button>
     </el-tooltip>
     <!-- 联网 -->
-    <el-tooltip v-if="false" :content="$t('chat.web_search')" placement="top">
+    <el-tooltip v-if="true" :content="$t('chat.web_search')" placement="top">
       <el-button
         :style="{
           color: enableWebSearch ? 'var(--el-button-hover-text-color)' : '',

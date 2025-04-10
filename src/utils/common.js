@@ -1,35 +1,7 @@
 import dayjs from "dayjs";
-import { localStg } from "@/utils/storage";
-import { localStgThemeScheme } from "@/theme/settings";
 import manifest from "@/database/manifest/index";
 
 const title = import.meta.env.VITE_APP_NAME;
-
-function toggleHtmlClass(theme) {
-  document.body.setAttribute("data-theme", theme);
-  document.documentElement.classList[theme === "dark" ? "add" : "remove"]("dark");
-}
-/**
- * 切换主题风格
- * @param {string}  themeScheme light || dark || auto
- */
-export function setTheme(themeScheme = "light") {
-  localStgThemeScheme(themeScheme);
-  const isAuto = themeScheme === "auto";
-  const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
-
-  const theme = isAuto ? (systemThemeQuery.matches ? "light" : "dark") : themeScheme;
-  toggleHtmlClass(theme);
-
-  // 监听系统主题变化，仅在自动模式下生效
-  if (isAuto) {
-    systemThemeQuery.addEventListener("change", (e) => {
-      if (localStg.get("themeSettings") === "auto") {
-        toggleHtmlClass(e.matches ? "light" : "dark");
-      }
-    });
-  }
-}
 
 export const isElectron = !!window?.electron; // 是否是electron环境
 

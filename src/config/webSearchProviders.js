@@ -1,6 +1,7 @@
 import TavilyLogo from "@/assets/images/search/tavily.png";
 
 export const PROVIDER_IDS = {
+  TEST: "test",
   TAVILY: "tavily",
   EXA: "exa"
 };
@@ -15,6 +16,12 @@ export function getWebSearchProviderLogo(id) {
 }
 
 export const WEB_SEARCH_PROVIDER_CONFIG = {
+  test: {
+    websites: {
+      official: '',
+      apiKey: ''
+    }
+  },
   tavily: {
     websites: {
       official: 'https://tavily.com',

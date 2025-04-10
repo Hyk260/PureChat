@@ -1,9 +1,9 @@
+import { defineStore } from 'pinia'
 import { SetupStoreId } from '../../plugins/index';
 import { PROVIDER_IDS } from "@/config/webSearchProviders";
 
 const initialState = {
   defaultProvider: PROVIDER_IDS.TAVILY,
-  // defaultProvider: "test",
   providers: [
     {
       id: 'test',

@@ -8,7 +8,6 @@
 import { computed, onMounted } from "vue";
 import { ElConfigProvider } from "element-plus";
 import { elementPlusLocales } from "@/locales/element-plus";
-import { initThemeSettings } from "@/theme/settings";
 import { useUserStore, useAppStore } from "@/stores/index";
 
 defineOptions({ name: "App" });
@@ -18,7 +17,8 @@ const userStore = useUserStore();
 const locale = computed(() => elementPlusLocales[appStore.locale]);
 
 onMounted(() => {
-  userStore.setThemeScheme(initThemeSettings());
+  userStore.setLang();
+  userStore.setThemeScheme();
   userStore.tryReconnect();
 });
 </script>

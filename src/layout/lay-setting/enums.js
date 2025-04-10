@@ -9,11 +9,11 @@ export const list = computed(() => {
       title: $t("common.currency"),
       icon: "Operation",
     },
-    // {
-    //   id: "webSearch",
-    //   title: $t("settings.webSearch.title"),
-    //   svg_icon: "internet",
-    // },
+    {
+      id: "webSearch",
+      title: $t("settings.webSearch.title"),
+      svg_icon: "internet",
+    },
     {
       id: "provider",
       title: $t("settings.provider.title"),
