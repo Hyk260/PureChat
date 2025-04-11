@@ -26,11 +26,10 @@ import LayAside from "./lay-aside/index.vue";
 .app-main {
   display: flex;
   height: 100%;
-  position: relative;
+  width: 100%;
   .container-theme {
     height: 100%;
     width: 100%;
-    overflow: hidden;
     background: var(--color-body-bg);
   }
 }

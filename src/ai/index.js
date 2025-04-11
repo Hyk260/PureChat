@@ -101,14 +101,15 @@ const createToolCallsMsg = (startMsg, message) => {
   useChatStore().updateMessages({ sessionId: `C2C${_data.from}`, message: cloneDeep(_data) });
 };
 
-function beforeSend(api, msg) {
+function beforeSend(api, data) {
   if ([ModelProvider.Ollama].includes(api.llm.provider)) return false;
   if (api.config().token) {
     return false;
   } else {
     setTimeout(() => {
-      createAlertMsg(msg, api.llm.provider);
-    }, 500);
+      createAlertMsg(data, api.llm.provider);
+      useChatStore().updateSendingState(data.from, "delete");
+    }, 600);
     return true;
   }
 }
@@ -146,6 +147,7 @@ const handleFinish = (startMsg, chat) => async (data) => {
   if (message) {
     data.done = true;
     updataMessage(startMsg, data);
+    useChatStore().updateSendingState(chat.to, "delete");
     await restSendMsg(chat, data);
   }
 };

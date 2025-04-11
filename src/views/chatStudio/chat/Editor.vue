@@ -24,13 +24,13 @@
     <MentionModal
       v-if="isMentionModalVisible"
       :pinyinSearch="true"
-      :isOwner="groupStore.isOwner"
+      :isOwner="isOwner"
       :editor="editorRef"
     />
     <div class="send-button">
       <span class="tip">{{ placeholderMap[getOperatingSystem()] }}</span>
       <el-button
-        :loading="loading"
+        :loading="isSending"
         :class="{ 'pointer-events-none': disabled }"
         @click="handleEnter()"
       >
@@ -72,16 +72,19 @@ import MentionModal from "../components/MentionModal.vue";
 import Inputbar from "../Inputbar/index.vue";
 import emitter from "@/utils/mitt-bus";
 
+const mode = "simple";
 const editorRef = shallowRef();
 const valueHtml = ref("");
-const mode = "simple";
+
+const [disabled, setDisabled] = useState();
 
 const appStore = useAppStore();
 const chatStore = useChatStore();
 const groupStore = useGroupStore();
-const [loading, setLoading] = useState();
-const [disabled, setDisabled] = useState();
+
+const { isOwner } = storeToRefs(groupStore);
 const {
+  isSending,
   isGroupChat,
   toAccount,
   isAssistant,
@@ -261,7 +264,7 @@ const parsePicture = async (file, editor = editorRef.value) => {
 };
 // 回车
 const handleEnter = (event, editor = editorRef.value) => {
-  if (loading.value) return;
+  if (isSending.value) return;
   if (event?.ctrlKey) return;
   if (isMentionModalVisible.value) {
     emitter.emit("handleInputKeyupHandler", event);
@@ -322,6 +325,7 @@ const sendMessage = async () => {
   const message = await sendChatMessage(data);
   console.log("sendChatMessage:", message);
   clearInputInfo();
+  chatStore.updateSendingState(data.to, 'add');
   message.map((t, i) => {
     chatStore.sendSessionMessage({
       message: t,

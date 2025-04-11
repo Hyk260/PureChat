@@ -56,8 +56,16 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     forwardData: new Map(), // 多选数据
     revokeMsgMap: new Map(), // 撤回消息重新编辑
     currentTab: "whole", // 选中的标签（全部、未读、提及我）
+    sendingMap: new Map(),
   }),
   getters: {
+    isSending() {
+      if (this.isAssistant) {
+        return this.sendingMap.has(this.toAccount);
+      } else{
+        return false
+      }
+    },
     isWhole() {
       return this.currentTab === "whole";
     },
@@ -121,6 +129,14 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
   },
   actions: {
+    updateSendingState(sessionId, type) {
+      // set delete
+      if (type === "delete") {
+        this.sendingMap.delete(sessionId);
+      } else {
+        this.sendingMap.set(sessionId, true);
+      }
+    },
     addAiPresetPromptWords() {
       const { sessionId, message } = createAiPromptMsg();
       const history = this.historyMessageList.get(sessionId);
@@ -255,9 +271,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       emitter.emit("updateScroll");
 
       if (useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel) {
-        const custom = { key: "webSearch", payload: { text: "" } }
+        const custom = { key: "webSearch", payload: { text: "" } };
         custom.payload.text = await generateReferencePrompt({ content: message?.payload?.text });
-        message.cloudCustomData = getCloudCustomData(custom)
+        message.cloudCustomData = getCloudCustomData(custom);
       }
       // 发送消息
       const { code, message: result } = await sendMessage(message);

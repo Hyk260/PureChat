@@ -19,7 +19,7 @@ export class BaseModel {
 
     const record = {
       ...data,
-      updatedAt: getTime(),
+      updatedAt: Date.now(),
     };
 
     const newId = await this.db[tableName].add(record);
@@ -46,7 +46,7 @@ export class BaseModel {
   async _updateWithSync(id, data) {
     const success = await this.table.update(id, {
       ...data,
-      updatedAt: getTime(),
+      updatedAt: Date.now(),
     });
 
     return { success };

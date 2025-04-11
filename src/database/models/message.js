@@ -14,7 +14,7 @@ class _MessageModel extends BaseModel {
     const query = this.table.where("conversationID").equals(id);
 
     const dbMessages = await query
-      .sortBy("clientTime")
+      .sortBy("createdAt")
       // handle page size
       .then((sortedArray) => sortedArray.slice(offset, offset + pageSize));
 
@@ -28,7 +28,7 @@ class _MessageModel extends BaseModel {
   }
 
   async queryAll() {
-    const data = await this.table.orderBy("updatedAt").toArray();
+    const data = await this.table.orderBy("createdAt").toArray();
 
     return data;
   }
@@ -49,7 +49,7 @@ class _MessageModel extends BaseModel {
 
     const messageData = {
       ...data,
-      updatedAt: getTime(),
+      createdAt: Date.now(),
     };
 
     this._addWithSync(id, messageData);

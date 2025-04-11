@@ -95,13 +95,13 @@ class _SessionModel extends BaseModel {
   // **************** Create *************** //
 
   async create(id, data) {
-    const exist = await this.findById(id)
-    if (exist) return
+    const exist = await this.findById(id);
+    if (exist) return;
     const dataDB = this.mapToDB_Session(data);
-    await this._addWithSync(id, dataDB);
+    await this._addWithSync(id, { ...dataDB, createdAt: Date.now() });
   }
 
-  async batchCreate(sessions) { }
+  async batchCreate(sessions) {}
 
   // **************** Delete *************** //
 
@@ -119,7 +119,7 @@ class _SessionModel extends BaseModel {
     return this._updateWithSync(id, data);
   }
 
-  async updateConfig(id, data) { }
+  async updateConfig(id, data) {}
 
   // **************** Helper *************** //
 

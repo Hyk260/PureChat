@@ -2,11 +2,12 @@ import Dexie from "dexie";
 import { uuid } from "@/utils/uuid";
 
 export const dbSchemaV1 = {
-  messages: "&ID, conversationID, conversationType, time, clientTime, updatedAt, status, type",
+  messages:
+    "&ID, conversationID, conversationType, time, clientTime, createdAt, updatedAt, status, type",
 };
 
 export const dbSchemaV2 = {
-  sessions: "&conversationID, updatedAt, type, pinned",
+  sessions: "&conversationID, createdAt, updatedAt, type, pinned",
 };
 
 // https://dexie.org/
