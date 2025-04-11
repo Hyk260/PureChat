@@ -1,11 +1,20 @@
+const TRUNCATE_LENGTH = 38;
+const ELLIPSIS = '...';
+
+/**
+ * 将数据转换为 Markdown 脚注格式
+ * @param data 脚注数据数组
+ * @returns 格式化后的 Markdown 脚注字符串
+ */
 export function convertToMarkdownFootnotes(data) {
-  let result = '\n';
-  data.forEach(item => {
-    const shortContent = item.content.length > 100
-      ? item.content.substring(0, 100) + '...'
-      : item.content;
-    result += ` [^${item.id}]: [${shortContent}](${item.sourceUrl})\n\n`;
+  if (!data?.length) return '';
+  const truncateContent = (text) =>
+    text.length > TRUNCATE_LENGTH
+      ? `${text.substring(0, TRUNCATE_LENGTH)}${ELLIPSIS}`
+      : text;
+  const footnotes = data.map(({ id, content, sourceUrl }) => {
+    const truncatedContent = truncateContent(content?.trim() || '');
+    return `[^${id}]: [${truncatedContent}](${sourceUrl || '#'})`;
   });
-  result += '\n';
-  return result;
+  return `\n${footnotes.join('\n\n')}\n\n`;
 }

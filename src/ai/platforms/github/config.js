@@ -11,7 +11,7 @@ export const GitHubConfig = () => {
     max_tokens: 1024,
     presence_penalty: 0,
     frequency_penalty: 0,
-    historyMessageCount: 10,
+    historyMessageCount: 8,
     token: VITE_GITHUB_API_KEY,
     openaiUrl: VITE_GITHUB_PROXY_URL,
   };

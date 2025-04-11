@@ -9,6 +9,8 @@ import {
   deleteMessage,
   getConversationProfile,
 } from "@/api/im-sdk-api/index";
+import { getCloudCustomData } from "@/utils/chat/index";
+import { generateReferencePrompt } from "@/config/prompts";
 import { SetupStoreId } from "../../plugins/index";
 import { EMOJI_RECENTLY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
@@ -251,6 +253,12 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       // 消息上屏 预加载
       this.updateMessages({ sessionId, message });
       emitter.emit("updateScroll");
+
+      if (useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel) {
+        const custom = { key: "webSearch", payload: { text: "" } }
+        custom.payload.text = await generateReferencePrompt({ content: message?.payload?.text });
+        message.cloudCustomData = getCloudCustomData(custom)
+      }
       // 发送消息
       const { code, message: result } = await sendMessage(message);
       if (code === 0) {
@@ -264,8 +272,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const { sessionId, message, last } = data;
       this.updateMessages({ sessionId, message });
       emitter.emit("updateScroll");
-      if (!ROBOT_COLLECT.includes(message?.to)) return;
-      if (last) {
+      if (last && ROBOT_COLLECT.includes(message?.to)) {
         setTimeout(async () => {
           await chatService({
             chat: message,

@@ -1,8 +1,11 @@
 import BaseWebSearchProvider from './BaseWebSearchProvider'
 import result from './test.json';
 
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 export default class DefaultProvider extends BaseWebSearchProvider {
-  search() {
+  async search() {
+    await delay(1000);
     return {
       query: result.query,
       results: result.results.map((t) => ({

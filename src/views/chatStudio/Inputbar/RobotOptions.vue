@@ -123,7 +123,6 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { useAccessStore, usePromptStore, getModelSvg } from "@/ai/utils";
 import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
@@ -183,11 +182,9 @@ function reIcon(item, models) {
 
 function modelCount(count) {
   return count;
-  // const olamaModelList = localStg.get("olama-local-model-list") || [];
-  // return olamaModelList.length ?? count;
 }
+
 function modelTooltipText() {
-  // const olamaModelList = localStg.get("olama-local-model-list") || [];
   return "获取模型列表";
 }
 
@@ -351,8 +348,8 @@ emitter.on("onRobotBox", (data) => {
 }
 .container {
   overflow: hidden;
-  // height: 480px;
-  height: 68vh;
+  max-height: 70vh;
+  height: 70vh;
   .container-item {
     color-scheme: light;
     user-select: none;

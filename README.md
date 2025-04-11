@@ -46,7 +46,7 @@
 - 🌙 根据系统主题自动切换光明与黑暗模式
 - 📝 支持 Markdown渲染，代码高亮，链接识别
 - 🛡️ GitHub 快速登录，享受无缝社交体验
-- ☁️ 多模型支持 OpenAI、Ollama、DeepSeek 等，支持联网搜搜，流式输出，深度思考，自定义预设提示词
+- ☁️ 多模型支持 OpenAI、Ollama、DeepSeek 等，支持联网搜索，流式输出，深度思考，自定义预设提示词
 - ✨ 提供桌面应用 Electron 版本，支持 macOS (.dmg) 与 Windows (.exe)
 - 🛠 更多特性持续开发中
 

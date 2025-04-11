@@ -97,30 +97,23 @@ const createMarkdownParser = () => {
       </h2>
       <ol class="footnotes-list">
   `;
-  md.renderer.rules.footnote_block_close = () => `
-      </ol>
-    </section>
-  `;
+  md.renderer.rules.footnote_block_close = () => `</ol></section> `;
 
   // 单个脚注项
-  md.renderer.rules.footnote_open = (tokens, idx) => {
-    const n = Number(tokens[idx].meta.id + 1).toString();
-    return `<li class="footnote-item">`;
-  };
-  md.renderer.rules.footnote_close = () => {
-    return "</li>\n";
-  };
+  md.renderer.rules.footnote_open = () => `<li class="footnote-item">`;
+
+  md.renderer.rules.footnote_close = () => "</li>\n";
 
   md.renderer.rules.footnote_anchor = (tokens, idx) => {
     return ''
-    const n = Number(tokens[idx].meta.id + 1).toString();
-    const data = webSearchResult.value?.find((t) => t.id == n);
-    if (data?.sourceUrl) {
-      // \u21a9\ufe0e
-      return `<a href="${data.sourceUrl}" target="_blank" rel="noopener noreferrer" class="footnote-backref"></a>`;
-    } else {
-      return "";
-    }
+    // const n = Number(tokens[idx].meta.id + 1).toString();
+    // const data = webSearchResult.value?.find((t) => t.id == n);
+    // if (data?.sourceUrl) {
+    //   // \u21a9\ufe0e
+    //   return `<a href="${data.sourceUrl}" target="_blank" rel="noopener noreferrer" class="footnote-backref"></a>`;
+    // } else {
+    //   return "";
+    // }
   };
 
   md.renderer.rules.link_open = (tokens, idx) => {

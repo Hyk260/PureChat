@@ -7,6 +7,7 @@ const OllamaAI = {
       icon: "meta",
       id: "llama3.1:8b",
       tokens: 128_000,
+      webSearch: true,
     },
     {
       displayName: "Llama 3.1 70B",

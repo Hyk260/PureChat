@@ -30,6 +30,7 @@ const OpenAI = {
       maxOutput: 16_385,
       tokens: 128_000,
       vision: true,
+      webSearch: true,
     },
     {
       description: 'Currently points to gpt-4o-2024-05-13',

@@ -1,8 +1,8 @@
 <template>
   <div class="view-ref" v-if="isShowMore">
-    <div class="showMore">
+    <!-- <div class="showMore">
       {{ chatStore.noMore ? $t("chat.noMore") : "" }}
-    </div>
+    </div> -->
     <Loader v-show="!chatStore.noMore" />
   </div>
 </template>

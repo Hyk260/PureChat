@@ -269,10 +269,6 @@ export async function sendChatMessage(options) {
     messages.push(aitStrItem);
   } else if (text) {
     // 文本消息
-    if (useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel) {
-      custom = { key: "webSearch", payload: { text: "" } }
-      custom.payload.text = await generateReferencePrompt({ content: text });
-    }
     const textMsgItem = createTextMessage({ to, type, text, custom })
     messages.push(textMsgItem);
   }
