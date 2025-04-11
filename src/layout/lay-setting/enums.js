@@ -1,6 +1,7 @@
 import { $t } from "@/locales/index";
 import { computed } from "vue";
 import { ModelProvider } from "@/ai/constant";
+import { PROVIDER_IDS } from "@/config/webSearchProviders";
 
 export const list = computed(() => {
   return [
@@ -51,6 +52,15 @@ export const optionsModel = computed(() => {
       label: value,
     };
   });
+});
+
+export const optionsProviders = computed(() => {
+  return Object.entries(PROVIDER_IDS).map(([key, value]) => {
+    return {
+      value,
+      label: value,
+    };
+  }).filter((item) => item.value !== "test");
 });
 
 export const languages = [

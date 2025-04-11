@@ -1,21 +1,26 @@
 <template>
   <div>
-    <div class="flex-bc gap-5">
-      <span>搜索服务商</span>
-      <el-select v-model="defaultProvider" placeholder="Select" class="w-200">
-        <el-option v-for="item in providers" :key="item.id" :label="item.name" :value="item.id" />
-      </el-select>
-    </div>
-    <el-divider class="my-20" />
     <div class="flex gap-5">
       <span>{{ defaultProvider }}</span>
       <el-icon @click="toLink(officialWebsite)" class="cursor-pointer"><Promotion /></el-icon>
     </div>
     <el-divider class="my-20" />
+    <div class="flex-bc gap-5">
+      <span>搜索服务商</span>
+      <el-select v-model="defaultProvider" placeholder="Select" class="w-200">
+        <el-option
+          v-for="item in optionsProviders"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </div>
+    <el-divider class="my-20" />
     <div class="flex gap-10">
       <el-input
         v-model="searchInput"
-        @blur="onBlur"
+        @input="onBlur"
         type="password"
         placeholder="API密钥"
         show-password
@@ -32,8 +37,8 @@
 import { useState } from "@/utils/hooks/index";
 import { useAppStore, useWebSearchStore } from "@/stores/index";
 import { WEB_SEARCH_PROVIDER_CONFIG } from "@/config/webSearchProviders";
+import { optionsProviders } from "./enums";
 import WebSearchService from "@/ai/webSearchService";
-import { computed, watch } from "vue";
 
 const [searchInput, setSearchInput] = useState("");
 

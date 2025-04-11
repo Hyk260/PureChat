@@ -16,12 +16,28 @@ const restSendMsg = async (params, data) => {
   const { message, think } = data;
   if (__LOCAL_MODE__) return;
   if (!message) return;
+  let CloudCustomData = ""
+  if (think) {
+    CloudCustomData = getCloudCustomData(think, {
+      messageAbstract: think,
+      thinking: "思考中...",
+      deeplyThought: "已深度思考",
+    })
+  } else {
+    const webSearchResult = localStg.get('webSearchReferences');
+    if (webSearchResult) {
+      CloudCustomData = getCloudCustomData({ payload: { text: "web-search" } }, {
+        webSearchResult,
+      })
+    }
+    localStg.remove('webSearchReferences')
+  }
   return await restApi({
     params: {
       To_Account: params.from,
       From_Account: params.to,
       Text: message,
-      CloudCustomData: getThinkMsgContent(think),
+      CloudCustomData,
     },
     funName: "restSendMsg",
   });
@@ -32,7 +48,6 @@ const updataMessage = (chat, data) => {
   if (!chat) return;
   let isFinish = data?.done || false
   chat.payload.text = message;
-  // chat.cloudCustomData = getThinkMsgContent(think);
   if (think) {
     chat.cloudCustomData = getCloudCustomData(think, {
       messageAbstract: think,
@@ -41,16 +56,17 @@ const updataMessage = (chat, data) => {
     })
   } else if (isFinish) {
     const webSearchResult = localStg.get('webSearchReferences');
-    if (!webSearchResult) return
-    chat.cloudCustomData = getCloudCustomData({ payload: { text: "web-search" } }, {
-      webSearchResult,
-    })
+    if (webSearchResult) {
+      chat.cloudCustomData = getCloudCustomData({ payload: { text: "web-search" } }, {
+        webSearchResult,
+      })
+    }
   }
   chat.clientTime = getTime();
   chat.status = isFinish ? "success" : "sending";
   useChatStore().updateMessages({ sessionId: `C2C${chat.from}`, message: cloneDeep(chat), });
   emitter.emit("updateScroll", "robot");
-  if (isFinish) localStg.remove('webSearchReferences')
+  if (isFinish && __LOCAL_MODE__) localStg.remove('webSearchReferences')
 };
 
 const createStartMsg = (params) => {
