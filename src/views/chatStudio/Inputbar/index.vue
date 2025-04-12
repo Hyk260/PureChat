@@ -57,13 +57,13 @@
     <!-- 清空消息 -->
     <el-tooltip content="清空消息" placement="top">
       <span>
-        <el-popover placement="top" trigger="click" width="250" :visible="visible">
+        <el-popover ref="popoverRef" placement="top" trigger="click" width="250">
           <div class="flex-c gap-5 mb-10">
             <el-icon class="text-[#F56C6C]"><Warning /></el-icon>
             <p>确定要清除当前会话所有消息吗?</p>
           </div>
           <div class="flex">
-            <el-button class="ml-auto" size="small" @click="setVisible(false)">
+            <el-button class="ml-auto" size="small" @click="handleCancel">
               {{ $t("common.cancel") }}
             </el-button>
             <el-button size="small" type="primary" @click="cleanTopicShortcut">
@@ -71,7 +71,7 @@
             </el-button>
           </div>
           <template #reference>
-            <el-button @click="setVisible(true)">
+            <el-button>
               <el-icon class="cursor-pointer"><Delete /></el-icon>
             </el-button>
           </template>
@@ -133,11 +133,12 @@ defineOptions({
   name: "Inputbar",
 });
 
+const popoverRef = ref(null);
+
 const supportExts = [...textExts, ...documentExts];
 const fileExts = [...textExts, ...documentExts, ...imageExts, ...audioExts, ...videoExts];
 
 const [flag, setFlag] = useState(false);
-const [visible, setVisible] = useState(false);
 const [showBottomBtn, setShowBottomBtn] = useState(false);
 
 const robotStore = useRobotStore();
@@ -152,8 +153,12 @@ const {
   isFunctionCall,
 } = storeToRefs(robotStore);
 
+function handleCancel() {
+  popoverRef.value?.hide()
+}
+
 const cleanTopicShortcut = () => {
-  setVisible(false);
+  handleCancel()
   chatStore.deleteHistoryMessage();
 };
 

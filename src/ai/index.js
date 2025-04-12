@@ -8,7 +8,7 @@ import { getTime } from "@/utils/common";
 import { getCustomMsgContent } from "@/api/im-sdk-api/custom";
 import { getThinkMsgContent, getCloudCustomData } from "@/utils/chat/index";
 import { useChatStore } from "@/stores/index";
-import { localStg } from '@/utils/storage';
+import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 import webSearchResult from "@/database/tools/web-search-result";
 
@@ -16,21 +16,24 @@ const restSendMsg = async (params, data) => {
   const { message, think } = data;
   if (__LOCAL_MODE__) return;
   if (!message) return;
-  let CloudCustomData = ""
+  let CloudCustomData = "";
   if (think) {
     CloudCustomData = getCloudCustomData(think, {
       messageAbstract: think,
       thinking: "思考中...",
       deeplyThought: "已深度思考",
-    })
+    });
   } else {
-    const webSearchResult = localStg.get('webSearchReferences');
+    const webSearchResult = localStg.get("webSearchReferences");
     if (webSearchResult) {
-      CloudCustomData = getCloudCustomData({ payload: { text: "web-search" } }, {
-        webSearchResult,
-      })
+      CloudCustomData = getCloudCustomData(
+        { payload: { text: "web-search" } },
+        {
+          webSearchResult,
+        }
+      );
     }
-    localStg.remove('webSearchReferences')
+    localStg.remove("webSearchReferences");
   }
   return await restApi({
     params: {
@@ -46,27 +49,30 @@ const restSendMsg = async (params, data) => {
 const updataMessage = (chat, data) => {
   const { message = "", think = "" } = data || {};
   if (!chat) return;
-  let isFinish = data?.done || false
+  let isFinish = data?.done || false;
   chat.payload.text = message;
   if (think) {
     chat.cloudCustomData = getCloudCustomData(think, {
       messageAbstract: think,
       thinking: "思考中...",
       deeplyThought: "已深度思考",
-    })
+    });
   } else if (isFinish) {
-    const webSearchResult = localStg.get('webSearchReferences');
+    const webSearchResult = localStg.get("webSearchReferences");
     if (webSearchResult) {
-      chat.cloudCustomData = getCloudCustomData({ payload: { text: "web-search" } }, {
-        webSearchResult,
-      })
+      chat.cloudCustomData = getCloudCustomData(
+        { payload: { text: "web-search" } },
+        {
+          webSearchResult,
+        }
+      );
     }
   }
   chat.clientTime = getTime();
   chat.status = isFinish ? "success" : "sending";
-  useChatStore().updateMessages({ sessionId: `C2C${chat.from}`, message: cloneDeep(chat), });
+  useChatStore().updateMessages({ sessionId: `C2C${chat.from}`, message: cloneDeep(chat) });
   emitter.emit("updateScroll", "robot");
-  if (isFinish && __LOCAL_MODE__) localStg.remove('webSearchReferences')
+  if (isFinish && __LOCAL_MODE__) localStg.remove("webSearchReferences");
 };
 
 const createStartMsg = (params) => {
@@ -147,9 +153,9 @@ const handleFinish = (startMsg, chat) => async (data) => {
   if (message) {
     data.done = true;
     updataMessage(startMsg, data);
-    useChatStore().updateSendingState(chat.to, "delete");
     await restSendMsg(chat, data);
   }
+  useChatStore().updateSendingState(chat.to, "delete");
 };
 
 const handleToolMessage = (startMsg) => (data) => {
@@ -173,6 +179,8 @@ const handleError = (startMsg, chat) => async (error) => {
   if (error.message) {
     await restSendMsg(chat, { message: content });
   }
+
+  useChatStore().updateSendingState(chat.to, "delete");
 };
 
 const handleController = (controller) => {
