@@ -18,27 +18,21 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { StoreKey } from "@/ai/constant";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { useState } from "@/utils/hooks/index";
-import { localStg } from "@/utils/storage";
 import { getPlugin } from "@/utils/common";
-import { useRobotStore } from "@/stores/modules/robot/index";
+import { useToolsStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
 defineOptions({
   name: "RobotPlugin",
 });
 
-const [flag, setFlag] = useState();
-
 const pluginData = ref([
   {
     checked: false,
     ...getPlugin({ key: "search-engine-serper" }),
   },
-
   // {
   //   id: "get_weather",
   //   checked: false,
@@ -48,22 +42,26 @@ const pluginData = ref([
   // },
 ]);
 
+const [flag, setFlag] = useState();
+
+const toolsStore = useToolsStore();
+
 function pluginfilter() {
   return pluginData.value.filter((item) => item.checked);
 }
 
 function onClickOutside() {
   setFlag(false);
-  localStg.set(StoreKey.Tool, pluginfilter());
+  toolsStore.setTools(pluginfilter());
 }
 
 function setChecked(item) {
   item.checked = !item.checked;
-  useRobotStore().setBotTools(pluginfilter());
+  toolsStore.setTools(pluginfilter());
 }
 
 function feedBack() {
-  const plugin = localStg.get(StoreKey.Tool);
+  const plugin = toolsStore.tools;
   if (plugin) {
     const pluginIds = new Set(plugin.map((item) => item.id));
     pluginData.value.forEach((item) => {

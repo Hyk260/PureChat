@@ -79,7 +79,6 @@ import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { chatName, html2Escape, formatContent } from "../utils/utils";
 import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
-import { localStg } from "@/utils/storage";
 import { setMessageRemindType } from "@/api/im-sdk-api/index";
 import { useGroupStore, useUserStore, useChatStore } from "@/stores/index";
 import EmptyMessage from "../components/EmptyMessage.vue";
@@ -127,8 +126,7 @@ const fnClass = (item) => (item?.conversationID === currentConversation.value?.c
 const formatNewsMessage = (data) => {
   const { type, lastMessage, unreadCount } = data;
   const { messageForShow: rawTip, fromAccount, isRevoked, nick, type: lastType } = lastMessage;
-  const { userID } = localStg.get("timProxy")?.userProfile || {};
-  const isOther = userID !== fromAccount; // 其他人消息
+  const isOther = userStore.userProfile?.userID !== fromAccount; // 其他人消息
   const isFound = fromAccount === "@TLS#NOT_FOUND"; // 未知消息
   const isSystem = type === "@TIM#SYSTEM"; //系统消息
   const isGroup = type === "GROUP"; //群聊

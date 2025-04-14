@@ -50,27 +50,6 @@ export const useAccessStore = (model = ModelProvider.OpenAI) => {
   }
 };
 
-export const usePromptStore = (model = ModelProvider.OpenAI, start = false) => {
-  if (start) {
-    return prompt[0];
-  }
-  try {
-    return localStg.get(StoreKey.Prompt)?.[model] || prompt[0];
-  } catch (error) {
-    localStg.remove(StoreKey.Prompt);
-    return {};
-  }
-};
-
-export const useToolStore = (model = ModelProvider.OpenAI) => {
-  try {
-    return localStg.get(StoreKey.Tool) || []
-  } catch (error) {
-    localStg.remove(StoreKey.Tool);
-    return [];
-  }
-}
-
 /**
  * 根据提供的模型ID获取模型类型。
  * @param {string} modelId - '@RBT#001' 模型ID，用于识别不同的模型类型。
@@ -342,31 +321,6 @@ export function isFullStaffGroup(data) {
   const { groupProfile } = data || {};
   return getValueByKey(groupProfile?.groupCustomField, "custom_info") === "all_staff";
 }
-
-export const createAiPromptMsg = (params) => {
-  let to = localStg.get("timProxy")?.userProfile?.userID;
-  let defaultBot = useRobotStore().defaultProvider;
-  let from = getModelId(defaultBot);
-  const { meta } = localStg.get(StoreKey.Prompt)?.[defaultBot];
-  const { to: _to, from: _from } = params || {};
-  if (_to) to = _to;
-  if (_from) from = _from;
-  const text = `你好，我是 ${meta.avatar} ${meta.title} ${meta.description} 让我们开始对话吧！`;
-  const msg = createTextMessage({ to: from, text, cache: false });
-  const promptContent = getCloudCustomData(
-    { key: "messagePrompt", payload: { text: "预设提示词" } },
-    { recQuestion: meta.recQuestion || [], }
-  )
-  msg.conversationID = `C2C${from}`;
-  msg.avatar = getAiAvatarUrl(from);
-  msg.cloudCustomData = promptContent;
-  msg.flow = "in";
-  msg.to = to;
-  msg.from = from;
-  msg.nick = "";
-  msg.status = "success";
-  return { sessionId: `C2C${msg.from}`, message: msg };
-};
 
 export function formatSizeStrict(input) {
   const number = parseInt(input.toString().replace("_", ""), 10);

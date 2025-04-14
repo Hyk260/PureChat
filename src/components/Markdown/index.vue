@@ -156,6 +156,7 @@ function MarkdownRender() {
     class: "markdown-body",
     onclick: () => {
       console.log("webSearchResult:", webSearchResult.value);
+      console.log("marked:", marked);
     },
   });
 

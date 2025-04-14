@@ -7,14 +7,14 @@
     align-center
     destroy-on-close
     :append-to-body="true"
-    :close-on-click-modal="false"
-    :before-close="handleClose"
+    :close-on-click-modal="true"
+    :before-close="(done) => handleCancel(done)"
   >
     <div class="container">
       <el-scrollbar>
         <div class="px-10">
           <!-- prompt -->
-          <DragPrompt :prompt="maskData.prompt" @handlePrompt="handlePrompt" />
+          <DragPrompt />
           <div class="container-item py-10 flex-bc" v-for="item in modelData" :key="item.ID">
             <div class="flex flex-col gap-5">
               <div class="title">{{ item.Title }}</div>
@@ -33,6 +33,7 @@
                   :max-collapse-tags="10"
                   v-model="item.collapse"
                   append-to="body"
+                  @change="handleModelData"
                   @clear="handleClear"
                   @remove-tag="handleRemoveTag"
                 >
@@ -47,8 +48,8 @@
                         class="bot-avatar flex-c h-full"
                         :class="reIcon(item, models) ? models.icon : robotIcon"
                       >
-                        <svg-icon v-if="reIcon(item, models)" :local-icon="models.icon" />
-                        <svg-icon v-else :local-icon="robotIcon" />
+                        <SvgIcon v-if="reIcon(item, models)" :local-icon="models.icon" />
+                        <SvgIcon v-else :local-icon="robotIcon" />
                       </div>
                       <div class="flex flex-col h-full gap-4">
                         <span>{{ models.displayName || models.id }}</span>
@@ -76,6 +77,7 @@
                 {{ item.defaultValue }}
               </span>
               <input
+                @change="handleModelData"
                 v-model="item.defaultValue"
                 :min="item.min"
                 :max="item.max"
@@ -84,7 +86,7 @@
               />
             </div>
             <div class="number" v-else-if="['max_tokens'].includes(item.ID)">
-              <input v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
+              <input @change="handleModelData" v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
             </div>
             <div class="input flex-ac" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
               <el-tooltip content="配置教程" placement="top">
@@ -102,6 +104,7 @@
               </el-tooltip>
               <el-input
                 v-model="item.defaultValue"
+                @change="handleModelData"
                 :ref="(e) => inputRef(e, item.ID)"
                 :placeholder="item.Placeholder"
                 :type="item.ID === 'token' ? 'password' : 'text'"
@@ -114,16 +117,18 @@
     </div>
     <template #footer>
       <span>
-        <el-button @click="handleCancel()"> 重置 </el-button>
-        <el-button @click="handleClose()">{{ $t("common.cancel") }}</el-button>
-        <el-button type="primary" @click="handleConfirm()"> {{ $t("common.save") }} </el-button>
+        <el-button @click="handleReset()"> 重置 </el-button>
+        <el-button @click="handleCancel()">{{ $t("common.cancel") }}</el-button>
+        <el-button type="primary" @click="handleConfirm()">
+          {{ $t("common.confirm") }}
+        </el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script setup>
-import { useAccessStore, usePromptStore, getModelSvg } from "@/ai/utils";
+import { useAccessStore, getModelSvg } from "@/ai/utils";
 import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
@@ -131,6 +136,7 @@ import { ClientApi } from "@/ai/api";
 import { StoreKey, modelValue } from "@/ai/constant";
 import { useRobotStore, useChatStore } from "@/stores/index";
 import { storeToRefs } from "pinia";
+import { isRange } from "./utils";
 import DragPrompt from "./DragPrompt.vue";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 import emitter from "@/utils/mitt-bus";
@@ -141,12 +147,12 @@ defineOptions({
 
 const robotIcon = ref("");
 const modelData = ref(null);
-const maskData = ref([]);
 const inputRefs = ref({ token: null, openaiUrl: null });
+
+const [dialog, setDialog] = useState();
 
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
-const [dialog, setDialog] = useState();
 const { toAccount } = storeToRefs(chatStore);
 const { isOllama, modelProvider } = storeToRefs(robotStore);
 
@@ -159,25 +165,11 @@ const inputRef = (el, id) => {
 };
 
 const handleRemoveTag = (data) => {
-  console.log("remove", data);
+  console.log("handleRemoveTag:", data);
 };
 
-function isRange(id) {
-  return [
-    "temperature",
-    "top_p",
-    "presence_penalty",
-    "frequency_penalty",
-    "historyMessageCount",
-  ].includes(id);
-}
-
-function handlePrompt(prompt) {
-  maskData.value.prompt = prompt;
-}
-
-function reIcon(item, models) {
-  return item.options?.id === "ollama" || models.icon;
+function reIcon(t, models) {
+  return t.options?.id === "ollama" || models.icon;
 }
 
 function modelCount(count) {
@@ -189,10 +181,9 @@ function modelTooltipText() {
 }
 
 async function onRefresh() {
-  const list = await new OllamaAI().models();
-  modelData.value.Model.options.chatModels = list;
-  localStg.set("olama-local-model-list", list);
-
+  // const list = await new OllamaAI().models();
+  // modelData.value.Model.options.chatModels = list;
+  // localStg.set("olama-local-model-list", list);
   // const api = new ClientApi();
   // const list = await api.llm.models()
   // modelData.value.Model.options.chatModels = list;
@@ -209,7 +200,6 @@ function initModel() {
     v.defaultValue = useAccessStore(provider)[v.ID];
     return v;
   });
-  maskData.value = cloneDeep(usePromptStore(provider));
   modelData.value = value;
 }
 
@@ -222,16 +212,6 @@ function storeRobotModel(model) {
     localStg.set(StoreKey.Access, { [provider]: { ...model } });
   }
   localStg.set(`${provider}-Select-Model`, modelData.value);
-}
-
-function storeRobotMask(model) {
-  const prompt = localStg.get(StoreKey.Prompt);
-  const provider = modelProvider.value;
-  if (prompt) {
-    localStg.set(StoreKey.Prompt, { ...prompt, [provider]: { ...model } });
-  } else {
-    localStg.set(StoreKey.Prompt, { [provider]: { ...model } });
-  }
 }
 
 function resetRobotModel() {
@@ -249,32 +229,20 @@ function resetRobotModel() {
   robotStore.setRobotModel(checkModel);
 }
 
-function resetRobotMask() {
-  const prompt = localStg.get(StoreKey.Prompt);
-  if (!prompt) return;
-  const provider = modelProvider.value;
-  const filteredConfig = Object.fromEntries(
-    Object.entries(prompt).filter(([key, _]) => !key.includes(provider))
-  );
-  localStg.set(StoreKey.Prompt, filteredConfig);
-}
-
-function handleClose(done) {
+function handleCancel(done) {
   done && done();
   setDialog(false);
 }
 
-function handleCancel() {
+function handleReset() {
   localStg.remove(`${modelProvider.value}-Select-Model`);
-  robotStore.setPromptConfig("");
   resetRobotModel();
-  resetRobotMask();
   setDialog(false);
 }
-// 保存
-function handleConfirm() {
+
+function handleModelData() {
   const model = {};
-  Object.values(modelData.value).map((t) => {
+  Object.values(modelData.value).forEach((t) => {
     if (isRange(t.ID)) {
       model[t.ID] = Number(t.defaultValue);
     } else {
@@ -282,13 +250,10 @@ function handleConfirm() {
     }
   });
   storeRobotModel(model);
-  if (!maskData.value.prompt.length || !maskData.value.meta.title) {
-    const _maskData = usePromptStore(modelProvider.value, true);
-    storeRobotMask(_maskData);
-    robotStore.setPromptConfig("");
-  } else {
-    storeRobotMask(maskData.value);
-  }
+}
+
+function handleConfirm() {
+  // handleModelData();
   setDialog(false);
 }
 
@@ -296,16 +261,31 @@ function toUrl(url) {
   window.open(url, "_blank");
 }
 
-emitter.on("onRobotBox", (data) => {
-  const { ApiKeyFocus = false } = data || {};
+const handleRobotBoxEvent = (data = {}) => {
+  const { ApiKeyFocus = false } = data;
+
   setDialog(true);
   initModel();
+
   if (ApiKeyFocus) {
-    setTimeout(() => {
-      const tokenRef = inputRefs.value["token"];
-      tokenRef && tokenRef.focus();
-    }, 100);
+    const tokenRef = inputRefs.value?.["token"] ?? null;
+
+    if (tokenRef) {
+      try {
+        setTimeout(() => tokenRef.focus(), 100);
+      } catch (error) {
+        console.error("Failed to focus token input:", error);
+      }
+    }
   }
+};
+
+onMounted(() => {
+  emitter.on("onRobotBox", handleRobotBoxEvent);
+});
+
+onUnmounted(() => {
+  emitter.off("onRobotBox");
 });
 </script>
 

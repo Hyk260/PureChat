@@ -8,7 +8,9 @@ import {
   setMessageRead,
   deleteMessage,
   getConversationProfile,
+  createTextMessage
 } from "@/api/im-sdk-api/index";
+import { getModelId } from "@/ai/utils";
 import { getCloudCustomData } from "@/utils/chat/index";
 import { generateReferencePrompt } from "@/config/prompts";
 import { SetupStoreId } from "../../plugins/index";
@@ -21,7 +23,7 @@ import { timProxy } from "@/utils/IM/index";
 import { MessageModel } from "@/database/models/message";
 import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import { cloneDeep } from "lodash-es";
-import { createAiPromptMsg, getModelType } from "@/ai/utils";
+import { getModelType, getAiAvatarUrl } from "@/ai/utils";
 import {
   addTimeDivider,
   checkTextNotEmpty,
@@ -31,6 +33,8 @@ import {
 } from "@/utils/chat/index";
 import { useGroupStore } from "../group/index";
 import { useRobotStore } from "../robot/index";
+import { useUserStore } from "../user/index";
+
 import emitter from "@/utils/mitt-bus";
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
@@ -83,6 +87,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
     getNonBotC2CList() {
       return this.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
+    },
+    currentSessionProvider() {
+      return getModelType(this.toAccount);
     },
     isAssistant() {
       return /@RBT#/.test(this.toAccount);
@@ -138,8 +145,29 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.sendingMap.set(sessionId, true);
       }
     },
+    createAiPromptMsg() {
+      let to = useUserStore()?.userProfile?.userID;
+      let defaultBot = useRobotStore().defaultProvider;
+      let from = getModelId(defaultBot);
+      const meta = useRobotStore().promptStore[defaultBot]?.[0]?.meta
+      const text = `你好，我是 ${meta.avatar} ${meta.title} ${meta.description} 让我们开始对话吧！`;
+      const msg = createTextMessage({ to: from, text, cache: false });
+      const promptContent = getCloudCustomData(
+        { key: "messagePrompt", payload: { text: "预设提示词" } },
+        { recQuestion: meta.recQuestion || [], }
+      )
+      msg.conversationID = `C2C${from}`;
+      msg.avatar = getAiAvatarUrl(from);
+      msg.cloudCustomData = promptContent;
+      msg.flow = "in";
+      msg.to = to;
+      msg.from = from;
+      msg.nick = "";
+      msg.status = "success";
+      return { sessionId: `C2C${msg.from}`, message: msg };
+    },
     addAiPresetPromptWords() {
-      const { sessionId, message } = createAiPromptMsg();
+      const { sessionId, message } = this.createAiPromptMsg();
       const history = this.historyMessageList.get(sessionId);
       if (this.currentConversation && this.currentMessageList) {
         const data = cloneDeep(history);

@@ -251,7 +251,7 @@ export function bytesToSize(bytes) {
   const kiloBytes = marker;
   const megaBytes = marker * marker;
   const gigaBytes = marker * marker * marker;
-  const lang = localStg.get("lang") || "en";
+  const lang = "en";
 
   if (bytes < kiloBytes) {
     return bytes + (lang === "en" ? " Bytes" : "字节");

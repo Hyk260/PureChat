@@ -124,8 +124,6 @@
 </template>
 
 <script setup>
-import { computed, nextTick, ref } from "vue";
-import { storeToRefs } from "pinia";
 import { isRobot } from "@/utils/chat/index";
 import { useState } from "@/utils/hooks/index";
 import {
@@ -135,9 +133,9 @@ import {
   VITE_APP_NAME,
 } from "@/utils/hooks/useScreenshot";
 import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils/utils";
-import { getModelType, usePromptStore, getAiAvatarUrl } from "@/ai/utils";
+import { getAiAvatarUrl } from "@/ai/utils";
 import { fnStyleBack, onColor, back, backgColor } from "./utils";
-import { useChatStore } from "@/stores/index";
+import { useChatStore, useRobotStore } from "@/stores/index";
 import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import Header from "@/views/chatStudio/components/Header.vue";
 import emitter from "@/utils/mitt-bus";
@@ -152,6 +150,8 @@ const isQrCode = ref(true);
 const isPrompt = ref(false);
 const fieldType = ref(ImageType.Blob);
 const chatStore = useChatStore();
+const robotStore = useRobotStore();
+
 const emit = defineEmits(["onClose"]);
 
 const { toAccount, getSortedForwardData } = storeToRefs(chatStore);
@@ -160,10 +160,9 @@ const [dialogVisible, setDialogVisible] = useState();
 const { loading, onDownload } = useScreenshot();
 
 function robotRole() {
-  const model = getModelType(toAccount.value);
   try {
-    const { title, avatar } = usePromptStore(model)?.meta || {};
-    return `${avatar}  ${title}`;
+    const data = robotStore.currentProviderPrompt?.meta || {};
+    return `${data.avatar} ${data.title}`;
   } catch (e) {
     return "";
   }
@@ -181,8 +180,7 @@ function cb() {
 }
 
 function robotPrompt() {
-  const model = getModelType(toAccount.value);
-  return usePromptStore(model).prompt[0].content || "";
+  return robotStore.currentProviderPrompt?.prompt[0].content || "";
 }
 
 onMounted(() => {

@@ -32,7 +32,6 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, useTemplateRef } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import { useState } from "@/utils/hooks/index";
 import { TIM_PROXY } from "@/constants/index";
@@ -109,7 +108,7 @@ function operation() {
 
 const openCard = (data) => {
   setCard(true);
-  profile.value = localStg.get(TIM_PROXY)?.userProfile || {};
+  profile.value = userStore?.userProfile || {};
   market.value = localStg.get("marketJson")?.agents || [];
 };
 

@@ -10,8 +10,8 @@
             {{ getPromptTitle }}
           </div>
           <!-- ai-tools -->
-          <template v-if="isAssistant && robotStore.botTools && isShowBotTools">
-            <div v-for="item in robotStore.botTools" :key="item.id" class="ml-5 ai-prompt-title">
+          <template v-if="isAssistant && toolsStore.botTools && isShowBotTools">
+            <div v-for="item in toolsStore.botTools" :key="item.id" class="ml-5 ai-prompt-title">
               <svg-icon class="function-call" local-icon="functionCall" />
               <span>{{ item.meta.title }}</span>
             </div>
@@ -39,14 +39,14 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
 import { storeToRefs } from "pinia";
-import { useRobotStore, useChatStore } from "@/stores/index";
+import { useRobotStore, useChatStore, useToolsStore } from "@/stores/index";
 import Label from "@/views/chatStudio/components/Label.vue";
 import emitter from "@/utils/mitt-bus";
 
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
+const toolsStore = useToolsStore()
 
 const { isAssistant, isGroupChat, currentType, currentConversation } = storeToRefs(chatStore);
 

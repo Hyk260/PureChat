@@ -1,8 +1,6 @@
 import { REQUEST_TIMEOUT_MS, ModelProvider } from "@/ai/constant";
 import {
   useAccessStore,
-  usePromptStore,
-  useToolStore,
   adjustForDeepseek,
   createErrorResponse,
   isDalle3 as _isDalle3,
@@ -12,7 +10,7 @@ import {
 import OllamaAI from "../ollama/ollama";
 import { handleStreamingChat } from '@/ai/utils';
 import { transformData } from "@/utils/chat/index";
-import { useRobotStore } from "@/stores/index";
+import { useRobotStore, useToolsStore } from "@/stores/index";
 
 export * from "./config";
 export * from "./modelValue";
@@ -37,16 +35,25 @@ export class OpenAiApi {
     return [baseUrl, path].join("/");
   }
   getPluginTools() {
-    const pluginList = useToolStore();
+    const pluginList = useToolsStore().tools;
     if (!pluginList.length) return [];
     if (useRobotStore().model?.functionCall) {
       return pluginList.map((t) => t.tools[0]);
     }
     return [];
   }
+  usePromptStore() {
+    try {
+      const _prompt = useRobotStore().currentProviderPrompt?.prompt
+      const validPrompts = _prompt?.filter((t) => t.content) || [];
+      return validPrompts
+    } catch (error) {
+      return []
+    }
+  }
   userPromptMessages(messages, modelConfig) {
     let combinedMessages = [];
-    const validPrompts = usePromptStore(this.provider).prompt?.filter((t) => t.content) || [];
+    const validPrompts = this.usePromptStore();
     const historyCount = Math.max(Number(modelConfig.historyMessageCount) || 0, 0);
     if (validPrompts.length > 0) {
       combinedMessages = [...validPrompts, ...messages.slice(-historyCount)]; // prompt

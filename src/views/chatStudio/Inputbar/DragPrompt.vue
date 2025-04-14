@@ -1,14 +1,18 @@
 <template>
   <div @click="onClick()">
-    <VueDraggableNext class="w-full" :list="promptData">
-      <div class="prompt py-10 flex-c gap-5" v-for="(item, i) in promptData" :key="item.id">
-        <SvgIcon v-if="promptData.length > 1" local-icon="drag" class="drag-icon" />
+    <div class="prompt" v-for="(item, i) in promptData" :key="item.id">
+      <!-- <SvgIcon v-if="promptData.length > 1" local-icon="drag" class="drag-icon" />
         <el-select class="prompt-select" v-model="item.role">
           <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
-        </el-select>
+        </el-select> -->
+      <!-- {{item}} -->
+      <div>
+        <el-input v-if="false" v-model="item.meta.title" placeholder="name" />
+      </div>
+      <div class="prompt-content">
         <el-input
-          v-model="item.content"
-          :autosize="{ minRows: 1, maxRows: 4 }"
+          v-model="item.prompt[0].content"
+          :autosize="{ minRows: 2, maxRows: 6 }"
           @blur="onBlur"
           @focus="onFocus"
           type="textarea"
@@ -18,7 +22,7 @@
           <el-icon><CircleCloseFilled /></el-icon>
         </el-button>
       </div>
-    </VueDraggableNext>
+    </div>
     <div v-if="promptData.length < MAXNUM">
       <el-button class="w-full" @click="addPrompt">
         <el-icon><CirclePlusFilled /></el-icon>
@@ -31,29 +35,29 @@
 import { ref } from "vue";
 import { ROLES } from "@/ai/constant";
 import { nanoid } from "@/utils/uuid";
-import { VueDraggableNext } from "vue-draggable-next";
+import { useRobotStore } from "@/stores/index";
+import { cloneDeep, isEmpty } from "lodash-es";
+import { prompt } from "@/ai/constant";
 
 defineOptions({
   name: "DragPrompt",
 });
 
-const props = defineProps({
-  prompt: {
-    type: Object,
-    default: () => {},
-  },
-});
-
 const MAXNUM = 1;
-const promptData = ref(null);
+const promptData = ref([]);
+const robotStore = useRobotStore();
+const { promptStore, modelProvider } = storeToRefs(robotStore);
 
 const emit = defineEmits(["handlePrompt"]);
 
 function initPromptData() {
-  promptData.value = props.prompt;
-  promptData.value.map((item) => {
-    item.ID = nanoid();
-  });
+  const _promptStore = promptStore.value?.[modelProvider.value] || [];
+  if (isEmpty(_promptStore)) {
+    promptData.value = cloneDeep(prompt);
+    promptData.value.map((item) => (item.ID = nanoid()));
+  } else {
+    promptData.value = cloneDeep(_promptStore);
+  }
 }
 
 function onClick() {
@@ -61,7 +65,7 @@ function onClick() {
 }
 
 function onBlur() {
-  emit("handlePrompt", promptData);
+  robotStore.setPromptStore(promptData.value, modelProvider.value);
 }
 
 function onFocus() {
@@ -70,15 +74,16 @@ function onFocus() {
 
 function onClose(i) {
   promptData.value.splice(i, 1);
+  robotStore.setPromptConfig("");
+  robotStore.setPromptStore([], modelProvider.value);
 }
 
 function addPrompt() {
   if (promptData.value.length >= MAXNUM) return;
-  promptData.value.push({
-    id: nanoid(),
-    role: ROLES[0],
-    content: "",
-  });
+  const newPrompt = cloneDeep(prompt);
+  console.log("newPrompt", newPrompt);
+  newPrompt.map((t) => (t.id = nanoid()));
+  promptData.value = newPrompt;
 }
 
 initPromptData();
@@ -86,6 +91,14 @@ initPromptData();
 
 <style lang="scss" scoped>
 .prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  .prompt-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
   .prompt-select {
     width: 125px;
   }

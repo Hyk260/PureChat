@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
-import { localStg } from "@/utils/storage";
-import { StoreKey, ModelProvider, modelValue } from "@/ai/constant";
+import { ModelProvider, modelValue } from "@/ai/constant";
 import { SetupStoreId } from "../../plugins/index";
 import { useChatStore } from "../chat/index";
 import { useWebSearchStore } from "../websearch/index";
@@ -11,10 +10,12 @@ import WebSearchService from "@/ai/webSearchService";
 export const useRobotStore = defineStore(SetupStoreId.Robot, {
   state: () => ({
     model: null,
-    botTools: localStg.get(StoreKey.Tool) || null,
     promptConfig: null,
     modelConfig: null,
     modelProvider: "",
+    promptStore: {
+      // [ModelProvider.OpenAI]: [],
+    },
     defaultProvider: ModelProvider.OpenAI,
     isShowBotTools: false,
   }),
@@ -46,6 +47,9 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       const list = useWebSearchStore().checkProviders;
       return this.isWebSearchModel && isWebSearchEnabled && list.includes(this.modelProvider);
     },
+    currentProviderPrompt() {
+      return this.promptStore[this.modelProvider]?.[0] || null;
+    },
     isOllama() {
       return [ModelProvider.Ollama].includes(this.modelProvider);
     },
@@ -62,6 +66,9 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     },
   },
   actions: {
+    setPromptStore(data, provider) {
+      this.promptStore[provider] = data;
+    },
     updateModelConfig() {
       const provider = getModelType(useChatStore().toAccount);
       if (!provider) {
@@ -69,12 +76,11 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
         return;
       }
       this.modelProvider = provider;
-      const prompt = localStg.get(StoreKey.Prompt);
       const model = useAccessStore(provider)?.model;
       const data = cloneDeep(modelValue[provider].Model.options.chatModels);
       const checkModel = data.find((item) => item.id === model);
       this.modelConfig = useAccessStore(provider);
-      this.setPromptConfig(prompt?.[provider] || null);
+      this.setPromptConfig(this.promptStore[provider]?.[0] || null)
       this.setRobotModel(checkModel);
     },
     setDefaultProvider(data) {
@@ -88,9 +94,6 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     },
     setPromptConfig(value) {
       this.promptConfig = value;
-    },
-    setBotTools(value) {
-      this.botTools = value;
     },
   },
   persist: true,

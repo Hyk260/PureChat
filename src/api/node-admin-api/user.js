@@ -38,5 +38,4 @@ export const logout = () => {
   // localStg.remove(USER_SETUP);
   // localStg.remove(USER_MODEL);
   // localStg.remove(ACCESS_TOKEN);
-  // localStg.remove(StoreKey.Access);
 };

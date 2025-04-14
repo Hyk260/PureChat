@@ -51,13 +51,13 @@
 import { localStg } from "@/utils/storage";
 import { downloadMergerMessage } from "@/api/im-sdk-api/index";
 import { useState } from "@/utils/hooks/index";
-import emitter from "@/utils/mitt-bus";
 import { timeFormat } from "@/utils/timeFormat";
 import { ref } from "vue";
 import { circleUrl } from "../utils/menu";
 import { loadMsgModule, msgOne, msgType } from "../utils/utils";
 import { TIM_PROXY } from "@/constants/index";
 import { getAiAvatarUrl } from "@/ai/utils";
+import emitter from "@/utils/mitt-bus";
 
 const [dialogVisible, setDialogVisible] = useState();
 const mergValue = ref({});

@@ -1,5 +1,8 @@
 import { ModelProvider, API_CLASS_MAP } from "@/ai/constant";
-import { useAccessStore, usePromptStore } from "@/ai/utils";
+import { 
+  useAccessStore, 
+ } from "@/ai/utils";
+ import { useRobotStore } from '@/stores/index';
 
 /**
  * ClientApi 类用于管理聊天模型提供者及其配置。
@@ -13,7 +16,7 @@ export class ClientApi {
   constructor(provider = ModelProvider.OpenAI) {
     try {
       this._config = useAccessStore(provider);
-      this._prompts = usePromptStore(provider);
+      this._prompts = useRobotStore().currentProviderPrompt
       this.llm = this.createLLM(provider);
     } catch (error) {
       throw new Error(`初始化 ClientApi 失败: ${error.message}`);
@@ -49,7 +52,7 @@ export class ClientApi {
    * @returns {Array} 提示词数组。
    */
   prompts() {
-    return this._prompts.prompt?.filter(t => t.content) || [];
+    return this._prompts?.prompt?.filter(t => t.content) || [];
   }
 
   /**

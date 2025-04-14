@@ -28,8 +28,6 @@ export const REQUEST_TIMEOUT_MS = 15000;
 
 export const StoreKey = {
   Access: "access-control",
-  Prompt: "prompt-store", // 提示词 预设
-  Tool: "tool-store", // 工具
 };
 
 /**

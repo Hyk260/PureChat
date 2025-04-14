@@ -9,6 +9,7 @@ export const SetupStoreId = {
   Sidebar: 'sidebar',
   Chat: 'chat',
   WebSearch: 'webSearch',
+  Tools: 'tools',
 };
 
 /**

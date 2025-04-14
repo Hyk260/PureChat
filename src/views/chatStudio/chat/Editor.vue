@@ -67,6 +67,7 @@ import {
   insertMention,
   isDataTransferItem,
 } from "../utils/utils";
+import { isEmpty } from "lodash-es";
 import { getOperatingSystem } from "@/utils/common";
 import MentionModal from "../components/MentionModal.vue";
 import Inputbar from "../Inputbar/index.vue";
@@ -302,7 +303,7 @@ const sendMsgBefore = (editor = editorRef.value) => {
     atUserList.length,
     aitStr,
     emoticons,
-    text,
+    text, 
   ].some(Boolean);
 
   return {

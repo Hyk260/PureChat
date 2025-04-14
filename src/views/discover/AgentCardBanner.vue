@@ -37,36 +37,33 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useState } from "@/utils/hooks/index";
-import { localStg } from "@/utils/storage";
-import { StoreKey, VITE_OPENAI_ID } from "@/ai/constant";
+import { VITE_OPENAI_ID } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
 import { useRobotStore, useSidebarStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
 const cardData = ref({});
 const sidebarStore = useSidebarStore();
-const robotStore = useRobotStore()
-const chatStore = useChatStore()
+const robotStore = useRobotStore();
+const chatStore = useChatStore();
 const [dialog, setDialog] = useState();
 
 function startConversation(item = cardData.value) {
   const { identifier, meta } = item;
   const defaultBot = robotStore.defaultProvider;
   const prompt = {
-    [defaultBot]: {
-      id: identifier,
-      meta,
-      lang: "cn",
-      prompt: [{ role: "system", content: meta.systemRole }],
-    },
+    id: identifier,
+    meta,
+    lang: "cn",
+    prompt: [{ role: "system", content: meta.systemRole }],
   };
-  localStg.set(StoreKey.Prompt, { ...localStg.get(StoreKey.Prompt), ...prompt });
+  robotStore.setPromptStore([prompt], defaultBot);
   const id = getModelId(defaultBot) || VITE_OPENAI_ID;
-  handleClose()
+  handleClose();
   sidebarStore.toggleOutside({ path: "/chat" });
-  chatStore.addConversation({ sessionId: `${"C2C"}${id}` })
+  chatStore.addConversation({ sessionId: `${"C2C"}${id}` });
   setTimeout(() => {
-    chatStore.addAiPresetPromptWords()
+    chatStore.addAiPresetPromptWords();
   }, 200);
 }
 
