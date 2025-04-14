@@ -62,7 +62,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     isSending() {
       if (this.isAssistant) {
         return this.sendingMap.has(this.toAccount);
-      } else{
+      } else {
         return false
       }
     },
@@ -131,6 +131,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
   actions: {
     updateSendingState(sessionId, type) {
       // set delete
+      if (!this.isAssistant) return
       if (type === "delete") {
         this.sendingMap.delete(sessionId);
       } else {
