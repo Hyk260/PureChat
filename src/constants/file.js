@@ -10,20 +10,20 @@ export const textExts = [
   '.htm', // HTML 文件的另一种扩展名
   '.xml', // XML 文件
   '.json', // JSON 文件
-  '.yaml', // YAML 文件
-  '.yml', // YAML 文件的另一种扩展名
+  // '.yaml', // YAML 文件
+  // '.yml', // YAML 文件的另一种扩展名
   '.log', // 日志文件
   '.xhtml', // XHTML 文件
   '.conf', // 配置文件
   '.config', // 配置文件
   '.env', // 环境变量文件
-  '.php', // PHP 脚本文件，包含嵌入的 HTML
+  // '.php', // PHP 脚本文件，包含嵌入的 HTML
   '.js', // JavaScript 文件（部分是文本，部分可能包含代码）
   '.ts', // TypeScript 文件
   '.jsp', // JavaServer Pages 文件
-  '.sh', // Unix/Linux Shell 脚本文件
-  '.py', // Python 脚本文件
-  '.sql', // SQL 脚本文件
+  // '.sh', // Unix/Linux Shell 脚本文件
+  // '.py', // Python 脚本文件
+  // '.sql', // SQL 脚本文件
   '.css', // Cascading Style Sheets 文件
   '.less', // Less CSS 预处理器文件
   '.scss', // Sass CSS 预处理器文件

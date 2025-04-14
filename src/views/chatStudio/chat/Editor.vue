@@ -99,11 +99,11 @@ const {
 } = storeToRefs(chatStore);
 
 const handleEditor = (editor, created = true) => {
+  if (!editor) return;
   if (created) {
     editorRef.value = editor;
   } else {
-    if (editor === null) return;
-    editor?.destroy();
+    editor.destroy();
   }
 };
 
@@ -203,13 +203,21 @@ const customPaste = (editor, event, callback) => {
   event.preventDefault();
   callback?.(false);
 };
-// 拖拽事件
+
 const dropHandler = (event) => {
   if (event.dataTransfer.getData("text/plain")) return;
   customPaste(editorRef.value, event);
   event.preventDefault();
 };
-// 插入文件
+
+const createFileElement = (file, base64Url) => ({
+  type: "attachment",
+  fileName: file.name,
+  fileSize: bytesToSize(file.size),
+  link: base64Url,
+  children: [{ text: "" }]
+});
+
 const parseFile = async (file, editor = editorRef.value) => {
   if (file.size / (1024 * 1024) > 100) {
     appStore.showMessage({ message: `文件不能大于100MB`, type: "warning" });
@@ -217,21 +225,14 @@ const parseFile = async (file, editor = editorRef.value) => {
   }
   try {
     const base64Url = await fileImgToBase64Url(file);
-    const element = {
-      type: "attachment",
-      fileName: file.name,
-      fileSize: bytesToSize(file.size),
-      link: base64Url,
-      children: [{ text: "" }],
-    };
-    editor.restoreSelection(); // 恢复选区
-    editor.insertNode(element);
-    editor.move(1); // 移动光标
+    editor.restoreSelection();
+    editor.insertNode(createFileElement(file, base64Url));
+    editor.move(1);
   } catch (error) {
-    console.log("parseFile:", error);
+    console.error("parseFile:", error);
   }
 };
-// 插入表情包
+
 const setEmoji = (url, item) => {
   const editor = editorRef.value;
   const element = {
@@ -247,7 +248,7 @@ const setEmoji = (url, item) => {
   editor.insertNode(element);
   editor.focus(true);
 };
-// 插入图片
+
 const parsePicture = async (file, editor = editorRef.value) => {
   const base64Url = await fileImgToBase64Url(file);
   const element = {
@@ -263,7 +264,7 @@ const parsePicture = async (file, editor = editorRef.value) => {
   editor.insertNode(element);
   editor.move(1); // 移动光标
 };
-// 回车
+
 const handleEnter = (event, editor = editorRef.value) => {
   if (isSending.value) return;
   if (event?.ctrlKey) return;
@@ -272,7 +273,8 @@ const handleEnter = (event, editor = editorRef.value) => {
     return;
   }
   const { isHave } = sendMsgBefore();
-  if (!editor.isEmpty() && isHave) {
+
+  if (isHave) {
     sendMessage(editor);
   } else {
     clearInputInfo();
@@ -288,38 +290,49 @@ const clearInputInfo = (editor = editorRef.value) => {
 };
 
 const sendMsgBefore = (editor = editorRef.value) => {
-  const text = editor.getText();
+  const text = editor.getText().trim();
+  if (!editor) throw new Error('Editor reference is required');
 
-  const { aitStr, atUserList } = extractAitInfo(editor);
-  const { files } = extractFilesInfo(editor);
-  const { video } = extractVideoInfo(editor);
-  const { images } = extractImageInfo(editor);
+  const {
+    aitStr = '',
+    atUserList = [],
+    files = [],
+    video = [],
+    images = []
+  } = {
+    ...extractAitInfo(editor),
+    ...extractFilesInfo(editor),
+    ...extractVideoInfo(editor),
+    ...extractImageInfo(editor)
+  };
   const emoticons = extractEmojiInfo(editor);
 
-  const haveContent = [
+  const hasContent = [
     video.length,
     images.length,
     files.length,
     atUserList.length,
     aitStr,
     emoticons,
-    text, 
+    text
   ].some(Boolean);
+
+  const finalText = emoticons || text;
 
   return {
     to: toAccount.value,
     type: currentType.value,
-    text: emoticons || text,
-    aitStr: atUserList.length ? emoticons || aitStr : "",
+    text: finalText,
+    aitStr: atUserList.length ? finalText || aitStr : "",
     atUserList,
     images,
     files,
     video,
     custom: replyMsgData.value,
-    isHave: haveContent, // 是否有有效内容
+    isHave: hasContent
   };
 };
-// 发送消息
+
 const sendMessage = async () => {
   const data = sendMsgBefore();
   console.log("sendMsgBefore:", data);
