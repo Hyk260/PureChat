@@ -21,7 +21,7 @@ export const cdn = importToCDN({
     {
       name: "vue-i18n",
       var: "VueI18n",
-      path: "vue-i18n.runtime.global.prod.min.js"
+      path: "vue-i18n.runtime.global.prod.min.js",
     },
     // {
     //   name: "pinia",
@@ -38,6 +38,11 @@ export const cdn = importToCDN({
       name: "axios",
       var: "axios",
       path: "axios.min.js",
+    },
+    {
+      name: "emoji-picker-element@^1",
+      var: "EmojiPickerElement",
+      path: "index.js",
     },
     {
       name: "dayjs",

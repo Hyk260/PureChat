@@ -15,8 +15,6 @@ function formatBytes(byte, digits = 2) {
   return `${parseFloat((byte / Math.pow(base, index)).toFixed(digits))} ${units[index]}`;
 }
 
-const fileListTotal = [];
-
 /**
  * 获取指定文件夹中所有文件的总大小
  * @param options - 配置项

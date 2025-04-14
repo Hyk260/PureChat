@@ -34,8 +34,8 @@ export function setupVitePlugins(viteEnv) {
   if (process.env.npm_lifecycle_event === "report") {
     plugins.push(visualizer({ open: true, brotliSize: true, filename: "report.html" }))
   }
-  if (viteEnv.VITE_PWA === "Y" || viteEnv.VITE_VERCEL === "Y") {
-    // plugins.push(pwa(viteEnv));
+  if (viteEnv.VITE_PWA === "Y" && viteEnv.VITE_VERCEL === "Y") {
+    plugins.push(pwa(viteEnv));
   }
   if (viteEnv.VITE_CDN === "Y") {
     plugins.push(cdn);

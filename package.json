@@ -45,6 +45,7 @@
     "dayjs": "^1.11.11",
     "dexie": "^4.0.10",
     "element-plus": "^2.8.8",
+    "emoji-picker-element": "^1.26.3",
     "fast-glob": "^3.3.2",
     "gradient-string": "^3.0.0",
     "highlight.js": "11.9.0",
