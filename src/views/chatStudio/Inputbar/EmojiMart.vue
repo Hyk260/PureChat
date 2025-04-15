@@ -6,19 +6,20 @@
 import { ref } from "vue";
 import { ClickOutside as vClickOutside } from "element-plus";
 import data from "@emoji-mart/data";
+import "emoji-mart/dist/browser.js";
 
 defineOptions({
   name: "EmojiMart",
 });
 
-const emit = defineEmits(["onClose", "onEmoji"]);
+const emit = defineEmits(["onClose", "emoji-selected"]);
 
 const emojiMartRef = ref("");
 
 const handleEmojiSelect = (emoji) => {
   console.log("选择的表情:", emoji);
   console.log("data:", data);
-  emit("onEmoji", emoji);
+  emit("emoji-selected", emoji);
 };
 
 function onClickOutside() {
@@ -26,7 +27,7 @@ function onClickOutside() {
 }
 
 function initEmojiMart() {
-  if (emojiMartRef.value && !!EmojiMart) {
+  if (emojiMartRef.value && EmojiMart) {
     const pickerOptions = {
       onEmojiSelect: handleEmojiSelect,
     };

@@ -193,6 +193,7 @@ onBeforeUnmount(() => {
       cursor: pointer;
       border-radius: 5px;
       height: 54px;
+      min-width: 54px;
     }
     .nick,
     .label {

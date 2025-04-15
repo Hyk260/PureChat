@@ -12,7 +12,7 @@
   >
     <div class="container">
       <el-scrollbar>
-        <div class="px-10">
+        <div class="px-10 py-10">
           <!-- prompt -->
           <DragPrompt />
           <div class="container-item py-10 flex-bc" v-for="item in modelData" :key="item.ID">

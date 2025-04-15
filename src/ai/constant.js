@@ -54,7 +54,7 @@ export const prompt = [
     id: "0",
     meta: {
       tags: [],
-      avatar: "",
+      avatar: "🌟",
       title: "",
     },
     lang: "cn",

@@ -1,33 +1,37 @@
 <template>
-  <div @click="onClick()">
-    <div class="prompt" v-for="(item, i) in promptData" :key="item.id">
-      <!-- <SvgIcon v-if="promptData.length > 1" local-icon="drag" class="drag-icon" />
+  <div @click="handleContainerClick()">
+    <div class="prompt-item" v-for="(item, i) in promptItems" :key="item.id">
+      <!-- <SvgIcon v-if="promptItems.length > 1" local-icon="drag" class="drag-icon" />
         <el-select class="prompt-select" v-model="item.role">
           <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
         </el-select> -->
       <!-- {{item}} -->
       <div class="flex gap-5">
-        <el-button class="relative" @click="setFlag(true)">
+        <el-button class="relative size-32 group" @click="setShowEmojiPickerFlag(true)">
           <span> {{ item.meta.avatar }} </span>
+          <el-icon @click.stop="handleClearAvatar(i)" class="avatar-close-icon">
+            <CircleCloseFilled />
+          </el-icon>
           <EmojiMart
-            v-show="flag"
-            class="absolute z-10 top-35 left-0"
-            @onClose="setFlag(false)"
-            @onEmoji="
-              (e) => {
-                emojiSelect(e, i);
-              }
-            "
+            v-if="showEmojiPickerFlag"
+            class="emoji-picker"
+            @onClose="setShowEmojiPickerFlag(false)"
+            @emoji-selected="(emoji) => handleEmojiSelect(emoji, i)"
           />
         </el-button>
-        <el-input v-model="item.meta.title" maxlength="30" @input="onBlur" placeholder="name" />
+        <el-input
+          v-model="item.meta.title"
+          maxlength="30"
+          @input="savePromptData"
+          placeholder="title"
+          clearable
+        />
       </div>
       <div class="prompt-content">
         <el-input
           v-model="item.prompt[0].content"
           :autosize="{ minRows: 2, maxRows: 6 }"
-          @blur="onBlur"
-          @focus="onFocus"
+          @blur="savePromptData"
           type="textarea"
           placeholder="prompt"
         />
@@ -36,7 +40,7 @@
         </el-button>
       </div>
     </div>
-    <div v-if="promptData.length < MAXNUM">
+    <div v-if="promptItems.length < MAX_PROMPTS">
       <el-button class="w-full" @click="addPrompt">
         <el-icon><CirclePlusFilled /></el-icon>
       </el-button>
@@ -58,10 +62,10 @@ defineOptions({
   name: "DragPrompt",
 });
 
-const MAXNUM = 1;
-const promptData = ref([]);
+const MAX_PROMPTS = 1;
+const promptItems = ref([]);
 const robotStore = useRobotStore();
-const [flag, setFlag] = useState(false);
+const [showEmojiPickerFlag, setShowEmojiPickerFlag] = useState(false);
 const { promptStore, modelProvider } = storeToRefs(robotStore);
 
 const emit = defineEmits(["handlePrompt"]);
@@ -69,51 +73,52 @@ const emit = defineEmits(["handlePrompt"]);
 function initPromptData() {
   const _promptStore = promptStore.value?.[modelProvider.value] || [];
   if (isEmpty(_promptStore)) {
-    promptData.value = cloneDeep(prompt);
-    promptData.value.map((item) => (item.ID = nanoid()));
+    promptItems.value = cloneDeep(prompt);
+    promptItems.value.map((item) => (item.ID = nanoid()));
   } else {
-    promptData.value = cloneDeep(_promptStore);
+    promptItems.value = cloneDeep(_promptStore);
   }
 }
 
-function onClick() {
-  console.log("onClick", promptData.value);
+function handleContainerClick() {
+  console.log("handleContainerClick", promptItems.value);
 }
 
-function onBlur() {
-  robotStore.setPromptStore(promptData.value, modelProvider.value);
-  robotStore.setPromptConfig(promptData.value[0]);
+function handleClearAvatar(i) {
+  promptItems.value[i].meta.avatar = "";
+  savePromptData();
 }
 
-function emojiSelect(emoji, i) {
-  console.log("emojiSelect", emoji);
-  promptData.value[i].meta.avatar = emoji.native;
-  onBlur()
+function savePromptData() {
+  robotStore.setPromptStore(promptItems.value, modelProvider.value);
+  robotStore.setPromptConfig(promptItems.value[0]);
 }
 
-function onFocus() {
-  console.log("onFocus", promptData.value);
+function handleEmojiSelect(emoji, i) {
+  console.log("handleEmojiSelect", emoji);
+  promptItems.value[i].meta.avatar = emoji.native;
+  savePromptData();
 }
 
 function onClose(i) {
-  promptData.value.splice(i, 1);
+  promptItems.value.splice(i, 1);
   robotStore.setPromptConfig("");
   robotStore.setPromptStore([], modelProvider.value);
 }
 
 function addPrompt() {
-  if (promptData.value.length >= MAXNUM) return;
+  if (promptItems.value.length >= MAX_PROMPTS) return;
   const newPrompt = cloneDeep(prompt);
   console.log("newPrompt", newPrompt);
   newPrompt.map((t) => (t.id = nanoid()));
-  promptData.value = newPrompt;
+  promptItems.value = newPrompt;
 }
 
 initPromptData();
 </script>
 
 <style lang="scss" scoped>
-.prompt {
+.prompt-item {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -127,6 +132,25 @@ initPromptData();
   }
   .drag-icon {
     cursor: grab;
+  }
+  .avatar-close-icon {
+    position: absolute;
+    z-index: 10;
+    top: -0.5rem;
+    right: -0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .emoji-picker {
+    position: absolute;
+    z-index: 20;
+    top: 2.3rem;
+    left: 0;
   }
 }
 </style>
