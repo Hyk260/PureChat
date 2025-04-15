@@ -133,6 +133,11 @@ initPromptData();
   .drag-icon {
     cursor: grab;
   }
+  .group {
+    &:hover .avatar-close-icon {
+      opacity: 1;
+    }
+  }
   .avatar-close-icon {
     position: absolute;
     z-index: 10;
@@ -140,10 +145,6 @@ initPromptData();
     right: -0.5rem;
     opacity: 0;
     transition: opacity 0.2s;
-
-    &:hover {
-      opacity: 1;
-    }
   }
 
   .emoji-picker {

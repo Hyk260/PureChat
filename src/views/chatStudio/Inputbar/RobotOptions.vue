@@ -336,7 +336,7 @@ onUnmounted(() => {
     user-select: none;
     color: var(--color-text-default);
     min-height: 40px;
-    border-bottom: 1px solid #dedede;
+    border-bottom: 1px solid #dedede60;
     .title {
       font-size: 14px;
       font-weight: bolder;
@@ -419,7 +419,7 @@ input[type="range"]::-ms-thumb:hover {
   @include thumbHover();
 }
 
-@media (max-width: 991px) {
+@media (max-width: 990px) {
   .container-item {
     flex-direction: column;
     align-items: stretch;
