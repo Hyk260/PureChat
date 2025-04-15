@@ -25,7 +25,7 @@ import ImageElemItem from "../ElemItemTypes/ImageElemItem.vue";
 import RelayElemItem from "../ElemItemTypes/RelayElemItem.vue";
 import TextElemItem from "../ElemItemTypes/TextElemItem.vue";
 import TipsElemItem from "../ElemItemTypes/TipsElemItem.vue";
-import VideoElemItem from "../ElemItemTypes/VideoElemItem.vue";
+// import VideoElemItem from "../ElemItemTypes/VideoElemItem.vue";
 import GroupTipElement from "../ElemItemTypes/GroupTipElement.vue";
 
 export const isDataTransferItem = (item) => {
@@ -223,7 +223,7 @@ export const loadMsgModule = (item) => {
     TIMRelayElem: RelayElemItem, // 合并转发消息
     TIMImageElem: ImageElemItem, // 图片消息
     TIMFileElem: FileElemItem, // 文件消息
-    TIMVideoFileElem: VideoElemItem, // 视频消息
+    // TIMVideoFileElem: VideoElemItem, // 视频消息
     TIMCustomElem: CustomElemItem, // 自定义消息
     TIMGroupTipElem: GroupTipElement, // 群消息提示
     TIMGroupSystemNoticeElem: GroupSystemNoticeElem, // 系统通知

@@ -107,6 +107,7 @@
         <SvgIcon :local-icon="isFullscreenInputActive ? 'narrow' : 'enlarge'" />
       </el-button>
     </el-tooltip>
+    <!-- <EmojiPicker /> -->
     <RobotModel />
     <RobotPlugin />
     <RobotOptions />
@@ -124,6 +125,7 @@ import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores/index";
 import { imageExts, textExts, documentExts, audioExts, videoExts } from "@/constants/index";
 import WebSearchService from "@/ai/webSearchService";
 import EmotionPackBox from "./EmotionPackBox.vue";
+// import EmojiPicker from "./EmojiPicker.vue";
 import RobotOptions from "./RobotOptions.vue";
 import RobotModel from "./RobotModel.vue";
 import RobotPlugin from "./RobotPlugin.vue";

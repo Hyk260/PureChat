@@ -39,11 +39,11 @@ export const cdn = importToCDN({
       var: "axios",
       path: "axios.min.js",
     },
-    {
-      name: "emoji-picker-element@^1",
-      var: "EmojiPickerElement",
-      path: "index.js",
-    },
+    // {
+    //   name: "emoji-picker-element",
+    //   var: "EmojiPickerElement",
+    //   path: "index.js",
+    // },
     {
       name: "dayjs",
       var: "dayjs",

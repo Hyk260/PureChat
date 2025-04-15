@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import { SetupStoreId } from '../../plugins/index';
 import { PROVIDER_IDS } from "@/config/webSearchProviders";
 
+const { VITE_TAVILY_API_KEY } = import.meta.env
+
 const initialState = {
   defaultProvider: PROVIDER_IDS.TAVILY,
   providers: [
@@ -13,7 +15,7 @@ const initialState = {
     {
       id: 'tavily',
       name: 'Tavily',
-      apiKey: ''
+      apiKey: VITE_TAVILY_API_KEY || ''
     },
     {
       id: 'exa',
