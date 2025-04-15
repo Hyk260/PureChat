@@ -2,7 +2,7 @@
   <div class="sidebar-container">
     <div class="sidebar-content">
       <div class="avatar-container">
-        <UserAvatar type="self" isdot shape="square" @click="handleAvatarClick" />
+        <UserAvatar type="self" isDot shape="square" @click="handleAvatarClick" />
       </div>
 
       <div class="sidebar-item" v-for="item in sidebarStore.filteredOutsideList" :key="item.id">
@@ -59,7 +59,11 @@ const chatStore = useChatStore();
 const sidebarStore = useSidebarStore();
 
 const handleAvatarClick = () => {
-  emitter.emit("setPopover");
+  if (__LOCAL_MODE__) {
+
+  } else {
+    emitter.emit("setPopover");
+  }
 };
 
 const openSettings = () => {

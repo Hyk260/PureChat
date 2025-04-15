@@ -1,7 +1,7 @@
 import ZhiPu from './models';
 
 const docs = __APP_INFO__.pkg.docs;
-const zeroone_proxy_url = import.meta.env.VITE_ZEROONE_BASE_URL;
+const { VITE_ZEROONE_BASE_URL } = import.meta.env;
 
 export const ZeroOneModelValue = () => {
   return {
@@ -17,7 +17,7 @@ export const ZeroOneModelValue = () => {
       ID: "openaiUrl",
       Title: "接口地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
-      Placeholder: zeroone_proxy_url,
+      Placeholder: VITE_ZEROONE_BASE_URL || '',
       defaultValue: "",
     },
     Token: {

@@ -237,7 +237,8 @@ function handleCancel(done) {
 function handleReset() {
   localStg.remove(`${modelProvider.value}-Select-Model`);
   resetRobotModel();
-  setDialog(false);
+  initModel();
+  // handleCancel(false);
 }
 
 function handleModelData() {

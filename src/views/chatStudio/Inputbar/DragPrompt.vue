@@ -6,8 +6,21 @@
           <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
         </el-select> -->
       <!-- {{item}} -->
-      <div>
-        <el-input v-if="false" v-model="item.meta.title" placeholder="name" />
+      <div class="flex gap-5">
+        <el-button class="relative" @click="setFlag(true)">
+          <span> {{ item.meta.avatar }} </span>
+          <EmojiMart
+            v-show="flag"
+            class="absolute z-10 top-35 left-0"
+            @onClose="setFlag(false)"
+            @onEmoji="
+              (e) => {
+                emojiSelect(e, i);
+              }
+            "
+          />
+        </el-button>
+        <el-input v-model="item.meta.title" maxlength="30" @input="onBlur" placeholder="name" />
       </div>
       <div class="prompt-content">
         <el-input
@@ -18,7 +31,7 @@
           type="textarea"
           placeholder="prompt"
         />
-        <el-button class="flex-c w-31 h-31" @click="onClose(i)">
+        <el-button v-if="false" class="flex-c w-31 h-31" @click="onClose(i)">
           <el-icon><CircleCloseFilled /></el-icon>
         </el-button>
       </div>
@@ -34,10 +47,12 @@
 <script setup>
 import { ref } from "vue";
 import { ROLES } from "@/ai/constant";
+import { useState } from "@/utils/hooks/index";
 import { nanoid } from "@/utils/uuid";
 import { useRobotStore } from "@/stores/index";
 import { cloneDeep, isEmpty } from "lodash-es";
 import { prompt } from "@/ai/constant";
+import EmojiMart from "./EmojiMart.vue";
 
 defineOptions({
   name: "DragPrompt",
@@ -46,6 +61,7 @@ defineOptions({
 const MAXNUM = 1;
 const promptData = ref([]);
 const robotStore = useRobotStore();
+const [flag, setFlag] = useState(false);
 const { promptStore, modelProvider } = storeToRefs(robotStore);
 
 const emit = defineEmits(["handlePrompt"]);
@@ -66,6 +82,13 @@ function onClick() {
 
 function onBlur() {
   robotStore.setPromptStore(promptData.value, modelProvider.value);
+  robotStore.setPromptConfig(promptData.value[0]);
+}
+
+function emojiSelect(emoji, i) {
+  console.log("emojiSelect", emoji);
+  promptData.value[i].meta.avatar = emoji.native;
+  onBlur()
 }
 
 function onFocus() {

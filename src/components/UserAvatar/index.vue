@@ -3,7 +3,7 @@
     <div
       v-if="type === 'group'"
       :class="['user-avatar', 'default', className, shape]"
-      :style="backgInfo(url)"
+      :style="backInfo(url)"
     >
       {{ url ? null : displayInfo(nickName) }}
     </div>
@@ -24,15 +24,15 @@
       :style="{ height: `${size}px`, width: `${size}px` }"
     >
       <el-avatar
-        v-if="userStore.userProfile?.avatar"
+        v-if="userProfile?.avatar"
         :size="size"
-        :src="userStore.userProfile?.avatar"
+        :src="fnAvatar(userProfile.avatar)"
         :shape="shape"
       />
-      <div v-else :class="['user-avatar', 'default', className, shape]" :style="backgInfo(url)">
-        {{ url ? null : displayInfo(userStore.userProfile.nick || userStore.userProfile.userID) }}
+      <div v-else :class="['user-avatar', 'default', className, shape]" :style="backInfo(url)">
+        {{ url ? null : displayInfo(userProfile.nick || userProfile.userID) }}
       </div>
-      <!-- <sup v-if="isdot" class="is-dot"></sup> -->
+      <!-- <sup v-if="isDot" class="is-dot"></sup> -->
     </div>
   </div>
 </template>
@@ -71,7 +71,7 @@ const props = defineProps({
     type: Number,
     default: 40,
   },
-  isdot: {
+  isDot: {
     type: Boolean,
     default: false,
   },
@@ -99,12 +99,22 @@ const shapeObj = {
 
 const userStore = useUserStore();
 
+const { userProfile } = storeToRefs(userStore);
+
 const displayInfo = (info) => {
   if (!info) return "unknown";
   return info.slice(0, props.words).toUpperCase();
 };
 
-const backgInfo = (url) => {
+const fnAvatar = (url) => {
+  if (__LOCAL_MODE__) {
+    return new URL(`../../assets/images/avatar.png`, import.meta.url).href;
+  } else {
+    return url;
+  }
+};
+
+const backInfo = (url) => {
   return { backgroundImage: url ? `url(${url})` : "" };
 };
 </script>
@@ -124,7 +134,7 @@ const backgInfo = (url) => {
 }
 .avatar {
   --el-text-color-disabled: #ffffff00;
-  width: var(--el-avatar-size); 
+  width: var(--el-avatar-size);
   height: var(--el-avatar-size);
   border-radius: 3px;
 }
@@ -163,6 +173,7 @@ const backgInfo = (url) => {
     background-color: #31da84;
   }
   .el-avatar {
+    background: rgb(255 255 255 / 0%);
     cursor: pointer;
   }
 }

@@ -1,5 +1,9 @@
 import GitHubAI from "./models";
 
+const {
+  VITE_GITHUB_PROXY_URL
+} = import.meta.env
+
 export const GitHubModelValue = () => {
   return {
     Model: {
@@ -9,6 +13,13 @@ export const GitHubModelValue = () => {
       defaultValue: "",
       collapse: GitHubAI.chatModels.map((t) => t.id),
       options: GitHubAI,
+    },
+    OpenaiUrl: {
+      ID: "openaiUrl",
+      Title: "github 服务地址",
+      SubTitle: "除默认地址外，必须包含 http(s)://",
+      Placeholder: "",
+      defaultValue: VITE_GITHUB_PROXY_URL || '',
     },
     Token: {
       ID: "token",

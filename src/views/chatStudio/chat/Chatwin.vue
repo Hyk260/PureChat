@@ -33,11 +33,11 @@
                 :isRevoked="item.isRevoked"
                 @click.stop="handleSelect($event, item, 'initial')"
               />
-              <div class="picture" v-if="showAvatar(item)">
+              <div v-if="showAvatar(item)" class="picture">
                 <el-avatar
-                  shape="square"
                   :size="36"
-                  :src="item.avatar || getAiAvatarUrl(item.from)"
+                  :src="fnAvatar(item)"
+                  shape="square"
                   v-contextmenu:contextmenu
                   @error="() => true"
                   @click.stop="onClickAvatar($event, item)"
@@ -49,7 +49,7 @@
                 </el-avatar>
               </div>
               <div :class="msgOne(item)">
-                <div class="message-view-top" v-if="isGroupChat">
+                <div v-if="isGroupChat" class="message-view-top">
                   <NameComponent :item="item" />
                   <TimeDivider :item="item" :showCheck="showCheckbox" type="group" />
                 </div>
@@ -90,7 +90,7 @@
     <!-- 卡片 -->
     <MyPopover />
     <Contextmenu ref="contextmenu" :disabled="!isRight">
-      <Contextmenu-item
+      <ContextmenuItem
         v-for="item in contextMenuItems"
         :key="item.id"
         :class="item.class"
@@ -99,7 +99,7 @@
       >
         <FontIcon :iconName="item.icon" />
         <span>{{ item.text }}</span>
-      </Contextmenu-item>
+      </ContextmenuItem>
     </Contextmenu>
   </div>
 </template>
@@ -191,6 +191,14 @@ const updateLoadMore = (id) => {
     el.scrollIntoView({ block: "start" });
   });
 };
+
+const fnAvatar = (item) => {
+  if (isSelf(item) && __LOCAL_MODE__) {
+    return new URL(`../../../assets/images/avatar.png`, import.meta.url).href;
+  } else {
+    return item.avatar || getAiAvatarUrl(item.from)
+  }
+}
 
 const displayInfo = (info) => {
   if (!info) return "unknown";

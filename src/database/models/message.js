@@ -15,7 +15,6 @@ class _MessageModel extends BaseModel {
 
     const dbMessages = await query
       .sortBy("createdAt")
-      // handle page size
       .then((sortedArray) => sortedArray.slice(offset, offset + pageSize));
 
     const messages = dbMessages;
