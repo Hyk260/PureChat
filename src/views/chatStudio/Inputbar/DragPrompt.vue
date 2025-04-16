@@ -1,5 +1,5 @@
 <template>
-  <div @click="handleContainerClick()">
+  <div>
     <div class="prompt-item" v-for="(item, i) in promptItems" :key="item.id">
       <!-- <SvgIcon v-if="promptItems.length > 1" local-icon="drag" class="drag-icon" />
         <el-select class="prompt-select" v-model="item.role">
@@ -78,10 +78,6 @@ function initPromptData() {
   } else {
     promptItems.value = cloneDeep(_promptStore);
   }
-}
-
-function handleContainerClick() {
-  console.log("handleContainerClick", promptItems.value);
 }
 
 function handleClearAvatar(i) {

@@ -5,8 +5,9 @@
 <script setup>
 import { ref } from "vue";
 import { ClickOutside as vClickOutside } from "element-plus";
+import { Picker } from "emoji-mart";
 import data from "@emoji-mart/data";
-import "emoji-mart/dist/browser.js";
+import zh from '@emoji-mart/data/i18n/zh.json';
 
 defineOptions({
   name: "EmojiMart",
@@ -27,11 +28,15 @@ function onClickOutside() {
 }
 
 function initEmojiMart() {
-  if (emojiMartRef.value && EmojiMart) {
+  if (emojiMartRef.value) {
     const pickerOptions = {
+      data: data,
+      noCountryFlags: true,
       onEmojiSelect: handleEmojiSelect,
+      locale: 'zh',
+      i18n: { ...zh }
     };
-    const picker = new EmojiMart.Picker(pickerOptions);
+    const picker = new Picker(pickerOptions);
     emojiMartRef.value.appendChild(picker);
   }
 }
