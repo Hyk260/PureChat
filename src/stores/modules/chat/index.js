@@ -59,7 +59,6 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     chatDraftMap: new Map(), // 会话草稿
     forwardData: new Map(), // 多选数据
     revokeMsgMap: new Map(), // 撤回消息重新编辑
-    currentTab: "whole", // 选中的标签（全部、未读、提及我）
     sendingMap: new Map(),
   }),
   getters: {
@@ -69,9 +68,6 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       } else {
         return false
       }
-    },
-    isWhole() {
-      return this.currentTab === "whole";
     },
     hasMsgList() {
       return this.currentMessageList?.length > 0;

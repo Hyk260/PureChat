@@ -4,21 +4,7 @@
     <div class="message-left" :class="{ 'style-layout': isChatSessionListCollapsed }">
       <!-- 搜索框 -->
       <Search v-show="!isChatSessionListCollapsed" />
-      <!-- tabs切换 -->
-      <!-- <el-tabs
-        v-show="!isChatSessionListCollapsed"
-        v-if="!isLocalMode && false"
-        v-model="currentTab"
-        class="active-tabs"
-        @tab-click="handleClick"
-      >
-        <el-tab-pane :label="$t('chat.whole')" name="whole"></el-tab-pane>
-        <el-tab-pane :label="unreadLabel" name="unread"></el-tab-pane>
-        <el-tab-pane :label="$t('chat.mention')" name="mention"></el-tab-pane>
-      </el-tabs> -->
       <div class="scroll-container">
-        <!-- 连接已断开 -->
-        <!-- <networklink :show="!appStore.networkStatus" /> -->
         <!-- 会话列表 -->
         <ConversationList />
       </div>
@@ -45,16 +31,11 @@
       <!-- 多选框 -->
       <MultiChoiceBox />
     </div>
-    <!-- 合并消息弹框 -->
-    <MergeMessagePopup />
-    <!-- 群详情 -->
-    <GroupDetails v-if="isGroupChat" :groupProfile="currentConversation.groupProfile" />
   </div>
 </template>
 
 <script setup>
 import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watch, computed } from "vue";
-import { $t } from "@/locales/index";
 import { storeToRefs } from "pinia";
 import { isMacOS } from "@/utils/common";
 import { useAppStore, useChatStore } from "@/stores/index";
@@ -62,16 +43,13 @@ import { useDragHandler } from "@/utils/hooks/useDragHandler";
 import emitter from "@/utils/mitt-bus";
 
 import Chatwin from "./chat/Chatwin.vue";
+import MultiChoiceBox from "./components/MultiChoiceBox.vue";
 import ConversationList from "./chat/ConversationList.vue";
 import Editor from "./chat/Editor.vue";
-import GroupDetails from "./chat/GroupDetails.vue";
 import EmptyMessage from "./components/EmptyMessage.vue";
 import Header from "./components/Header.vue";
-import MergeMessagePopup from "./components/MergeMessagePopup.vue";
-import MultiChoiceBox from "./components/MultiChoiceBox.vue";
 import ReplyBox from "./components/ReplyBox.vue";
 import Search from "./components/Search.vue";
-// import networklink from "./components/networklink.vue";
 
 const isLocalMode = __LOCAL_MODE__;
 
@@ -80,19 +58,12 @@ const appStore = useAppStore();
 const chatStore = useChatStore();
 
 const {
-  currentTab,
   isChatBoxVisible,
   isFullscreenInputActive,
   isChatSessionListCollapsed,
   totalUnreadMsg,
   currentConversation,
-  isGroupChat
 } = storeToRefs(chatStore);
-
-const handleClick = ({ props }, event) => {
-  const { label, name } = props;
-  // chatStore.$patch({ currentTab: name });
-};
 
 const fnDragCss = () => {
   if (isFullscreenInputActive.value) return "";
@@ -106,16 +77,8 @@ const toggleCollapsed = () => {
   });
 };
 
-const unreadLabel = computed(() => {
-  const count = totalUnreadMsg.value;
-  const isUnread = count > 0;
-  const num = count > 99 ? "99+" : count;
-  return isUnread ? `${$t("chat.unread")}(${num})` : $t("chat.unread");
-});
-
 onActivated(() => {
   emitter.emit("updateScroll");
-  chatStore.$patch({ currentTab: "whole" });
   isChatBoxVisible.value && useDragHandler(chatRef.value);
 });
 
@@ -133,15 +96,6 @@ watch(isChatBoxVisible, (val) => {
 </script>
 
 <style lang="scss" scoped>
-.active-tabs {
-  :deep(.el-tabs__header) {
-    margin: 0;
-    padding: 0 16px;
-  }
-  :deep(.el-tabs__nav-wrap) {
-    margin: 0;
-  }
-}
 .message-left {
   width: 280px;
   min-width: 280px;

@@ -5,7 +5,12 @@
         <!-- QQ表情包 -->
         <div :class="['emoji_QQ', systemOs]" v-show="table === 'QQ'">
           <p class="title" v-show="recentlyUsed.length">最近使用</p>
-          <span v-for="item in recentlyUsed" class="emoji" :key="item" @click="setEmoji(item, 'QQ')">
+          <span
+            v-for="item in recentlyUsed"
+            class="emoji"
+            :key="item"
+            @click="setEmoji(item, 'QQ')"
+          >
             <img :src="getAssetsFile(emojiQq.emojiMap[item])" :title="item" />
           </span>
           <p class="title">小黄脸表情</p>
@@ -45,6 +50,17 @@
             <img :src="getAssetsFile(emojiDouyin.emojiMap[item])" :title="item" />
           </span>
         </div>
+        <div class="emoji_mart" v-show="table === 'Mart'">
+          <p class="title">emoji</p>
+          <span
+            v-for="key in filteredEmojiKeys"
+            class="emoji emoji_mart_item"
+            :key="key"
+            @click="setEmoji(key)"
+          >
+            {{ key }}
+          </span>
+        </div>
       </el-scrollbar>
     </div>
     <div class="tool">
@@ -54,7 +70,8 @@
         :key="item.icon"
         @click="table = item.type"
       >
-        <svg-icon :local-icon="item.icon" />
+        <SvgIcon v-if="item.icon" :local-icon="item.icon" />
+        <span v-else>{{ item.content }}</span>
       </div>
     </div>
   </div>
@@ -66,6 +83,7 @@ import { chunk } from "lodash-es";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { useChatStore } from "@/stores/modules/chat/index";
 import { getAssetsFile, getOperatingSystem } from "@/utils/common";
+import emojiMartData from "@emoji-mart/data";
 import emitter from "@/utils/mitt-bus";
 import emojiQq from "@/utils/emoji/emoji-map-qq";
 import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
@@ -88,6 +106,11 @@ const toolDate = [
     icon: "tiktok",
     type: "Douyin",
   },
+  {
+    title: "mart",
+    type: "Mart",
+    content: "😀",
+  },
 ];
 
 const recentlyUsed = ref([]);
@@ -96,6 +119,12 @@ const table = ref("QQ");
 const chatStore = useChatStore();
 
 const EmotionPackGroup = computed(() => chunk(emojiQq.emojiName, 12 * 6));
+
+const filteredEmojiKeys = computed(() => {
+  const natives = emojiMartData.natives;
+  const keys = Object.keys(natives).slice(-96);
+  return keys.reverse();
+});
 
 const setClose = () => {
   emit("onClose");
@@ -110,9 +139,9 @@ const setEmoji = (item, type = "") => {
   let url = "";
   if (type === "QQ") {
     chatStore.setRecently({ data: item, type: "add" });
-    url = getAssetsFile(emojiQq.emojiMap[item])
+    url = getAssetsFile(emojiQq.emojiMap[item]);
   } else {
-    url = getAssetsFile(emojiDouyin.emojiMap[item])
+    url = getAssetsFile(emojiDouyin.emojiMap[item]);
   }
   emitter.emit("handleToolbar", { data: { url, item }, key: "setEmoji" });
   setClose();
@@ -153,10 +182,18 @@ onMounted(() => {
     padding: 12px 0 6px;
   }
   .emoji_QQ,
-  .emoji_douyin {
+  .emoji_douyin,
+  .emoji_mart {
+    width: 100%;
     padding: 0 10px 0 15px;
   }
-
+  .emoji_mart_item {
+    text-align: center;
+    // line-height: 30px;
+    width: 30px;
+    height: 30px;
+    font-size: 25px;
+  }
   .emoji {
     cursor: pointer;
     display: inline-block;
@@ -171,12 +208,10 @@ onMounted(() => {
   display: flex;
   align-items: center;
   padding: 0 10px;
+  gap: 10px;
   background: var(--color-body-bg);
   border-radius: 0 0 5px 5px;
   border-top: 1px solid #cccccc4a;
-  div:not(:nth-child(1)) {
-    margin-left: 10px;
-  }
   div {
     border-radius: 5px;
     width: 35px;

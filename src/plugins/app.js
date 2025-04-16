@@ -28,6 +28,7 @@ function notify() {
           type: "primary",
           onClick() {
             location.reload();
+            Notification.close();
           },
         },
         () => $t("system.updateConfirm")

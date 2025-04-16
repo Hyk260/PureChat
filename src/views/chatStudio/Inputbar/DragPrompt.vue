@@ -5,13 +5,14 @@
         <el-select class="prompt-select" v-model="item.role">
           <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
         </el-select> -->
-      <!-- {{item}} -->
       <div class="flex gap-5">
-        <el-button class="relative size-32 group" @click="setShowEmojiPickerFlag(true)">
-          <span> {{ item.meta.avatar }} </span>
-          <el-icon @click.stop="handleClearAvatar(i)" class="avatar-close-icon">
-            <CircleCloseFilled />
-          </el-icon>
+        <el-button class="relative size-32 p-0" @click="setShowEmojiPickerFlag(true)">
+          <div class="group">
+            <span> {{ item.meta.avatar }} </span>
+            <el-icon @click.stop="handleClearAvatar(i)" class="avatar-close-icon">
+              <CircleCloseFilled />
+            </el-icon>
+          </div>
           <EmojiMart
             v-if="showEmojiPickerFlag"
             class="emoji-picker"
@@ -130,6 +131,8 @@ initPromptData();
     cursor: grab;
   }
   .group {
+    width: 100%;
+    height: 100%;
     &:hover .avatar-close-icon {
       opacity: 1;
     }
