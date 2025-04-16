@@ -9,7 +9,7 @@
             v-for="item in recentlyUsed"
             class="emoji"
             :key="item"
-            @click="setEmoji(item, 'QQ')"
+            @click="handleEmojiSelect(item, table)"
           >
             <img :src="getAssetsFile(emojiQq.emojiMap[item])" :title="item" />
           </span>
@@ -19,19 +19,19 @@
               v-for="item in emojiQq.emojiName"
               class="emoji"
               :key="item"
-              @click="setEmoji(item, 'QQ')"
+              @click="handleEmojiSelect(item, table)"
             >
               <img :src="getAssetsFile(emojiQq.emojiMap[item])" :title="item" />
             </span>
           </template>
           <!-- 二维数组 css 滚动贴合 -->
           <template v-else>
-            <div class="scroll-snap" v-for="emoji in EmotionPackGroup" :key="emoji">
+            <div class="scroll-snap" v-for="emoji in emojiPackGroup" :key="emoji">
               <span
                 v-for="item in emoji"
                 class="emoji scroll-content"
                 :key="item"
-                @click="setEmoji(item, 'QQ')"
+                @click="handleEmojiSelect(item, table)"
               >
                 <img :src="getAssetsFile(emojiQq.emojiMap[item])" :title="item" />
               </span>
@@ -45,29 +45,29 @@
             v-for="item in emojiDouyin.emojiName"
             class="emoji scroll-content"
             :key="item"
-            @click="setEmoji(item)"
+            @click="handleEmojiSelect(item, table)"
           >
             <img :src="getAssetsFile(emojiDouyin.emojiMap[item])" :title="item" />
           </span>
         </div>
-        <div class="emoji_mart" v-show="table === 'Mart'">
+        <div class="emoji_mart" v-if="table === 'Mart'">
           <p class="title">emoji</p>
           <span
-            v-for="key in filteredEmojiKeys"
+            v-for="key in emojiArray"
             class="emoji emoji_mart_item"
             :key="key"
-            @click="setEmoji(key)"
+            @click="handleEmojiSelect(key, table)"
           >
             {{ key }}
           </span>
         </div>
       </el-scrollbar>
     </div>
-    <div class="tool">
+    <div class="toolbar-section">
       <div
-        :class="item.type === table ? 'is-hover' : ''"
-        v-for="item in toolDate"
+        v-for="item in toolbarItems"
         :key="item.icon"
+        :class="{ 'is-active': item.type === table }"
         @click="table = item.type"
       >
         <SvgIcon v-if="item.icon" :local-icon="item.icon" />
@@ -83,7 +83,8 @@ import { chunk } from "lodash-es";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { useChatStore } from "@/stores/modules/chat/index";
 import { getAssetsFile, getOperatingSystem } from "@/utils/common";
-import emojiMartData from "@emoji-mart/data";
+// import emojiMartData from "@emoji-mart/data";
+import { emojiArray } from '@/utils/emoji/emoji-map';
 import emitter from "@/utils/mitt-bus";
 import emojiQq from "@/utils/emoji/emoji-map-qq";
 import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
@@ -95,7 +96,7 @@ defineOptions({
 const emit = defineEmits(["onClose"]);
 
 const rolling = true;
-const toolDate = [
+const toolbarItems = [
   {
     title: "默认表情",
     icon: "iconxiaolian",
@@ -113,18 +114,13 @@ const toolDate = [
   },
 ];
 
+const EMOJI_GROUP_SIZE = 12 * 6; // 每组表情数量
 const recentlyUsed = ref([]);
 const systemOs = ref("");
 const table = ref("QQ");
 const chatStore = useChatStore();
 
-const EmotionPackGroup = computed(() => chunk(emojiQq.emojiName, 12 * 6));
-
-const filteredEmojiKeys = computed(() => {
-  const natives = emojiMartData.natives;
-  const keys = Object.keys(natives).slice(-96);
-  return keys.reverse();
-});
+const emojiPackGroup = computed(() => chunk(emojiQq.emojiName, EMOJI_GROUP_SIZE));
 
 const setClose = () => {
   emit("onClose");
@@ -135,13 +131,17 @@ const getParser = () => {
   systemOs.value = getOperatingSystem();
 };
 
-const setEmoji = (item, type = "") => {
+const handleEmojiSelect = (item, type = "") => {
   let url = "";
   if (type === "QQ") {
     chatStore.setRecently({ data: item, type: "add" });
     url = getAssetsFile(emojiQq.emojiMap[item]);
-  } else {
+  } else if (type === "Douyin") {
     url = getAssetsFile(emojiDouyin.emojiMap[item]);
+  } else {
+    emitter.emit("handleToolbar", { data: item, key: "setEditHtml" });
+    setClose();
+    return;
   }
   emitter.emit("handleToolbar", { data: { url, item }, key: "setEmoji" });
   setClose();
@@ -189,7 +189,6 @@ onMounted(() => {
   }
   .emoji_mart_item {
     text-align: center;
-    // line-height: 30px;
     width: 30px;
     height: 30px;
     font-size: 25px;
@@ -203,7 +202,8 @@ onMounted(() => {
     }
   }
 }
-.tool {
+
+.toolbar-section {
   height: 40px;
   display: flex;
   align-items: center;
@@ -212,7 +212,7 @@ onMounted(() => {
   background: var(--color-body-bg);
   border-radius: 0 0 5px 5px;
   border-top: 1px solid #cccccc4a;
-  div {
+  & > div {
     border-radius: 5px;
     width: 35px;
     height: 35px;
@@ -220,14 +220,13 @@ onMounted(() => {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    &:hover {
+    &:hover,
+    &.is-active {
       background: var(--color-message-active);
     }
   }
 }
-.is-hover {
-  background: var(--color-message-active) !important;
-}
+
 .scroll-snap {
   // scroll-snap-align: start;
   height: 180px;

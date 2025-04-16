@@ -119,6 +119,12 @@ const setToolbar = (item) => {
     case "setParseFile":
       parseFile(data.files);
       break;
+    case "setEditHtml":
+      const editor = editorRef.value;
+      const node = { text: data };
+      editor?.insertNode(node);
+      editor?.focus(true);
+      break;
   }
 };
 
@@ -215,7 +221,7 @@ const createFileElement = (file, base64Url) => ({
   fileName: file.name,
   fileSize: bytesToSize(file.size),
   link: base64Url,
-  children: [{ text: "" }]
+  children: [{ text: "" }],
 });
 
 const parseFile = async (file, editor = editorRef.value) => {
@@ -291,19 +297,19 @@ const clearInputInfo = (editor = editorRef.value) => {
 
 const sendMsgBefore = (editor = editorRef.value) => {
   const text = editor.getText().trim();
-  if (!editor) throw new Error('Editor reference is required');
+  if (!editor) throw new Error("Editor reference is required");
 
   const {
-    aitStr = '',
+    aitStr = "",
     atUserList = [],
     files = [],
     video = [],
-    images = []
+    images = [],
   } = {
     ...extractAitInfo(editor),
     ...extractFilesInfo(editor),
     ...extractVideoInfo(editor),
-    ...extractImageInfo(editor)
+    ...extractImageInfo(editor),
   };
   const emoticons = extractEmojiInfo(editor);
 
@@ -314,7 +320,7 @@ const sendMsgBefore = (editor = editorRef.value) => {
     atUserList.length,
     aitStr,
     emoticons,
-    text
+    text,
   ].some(Boolean);
 
   const finalText = emoticons || text;
@@ -329,7 +335,7 @@ const sendMsgBefore = (editor = editorRef.value) => {
     files,
     video,
     custom: replyMsgData.value,
-    isHave: hasContent
+    isHave: hasContent,
   };
 };
 
@@ -339,7 +345,7 @@ const sendMessage = async () => {
   const message = await sendChatMessage(data);
   console.log("sendChatMessage:", message);
   clearInputInfo();
-  chatStore.updateSendingState(data.to, 'add');
+  chatStore.updateSendingState(data.to, "add");
   message.map((t, i) => {
     chatStore.sendSessionMessage({
       message: t,
