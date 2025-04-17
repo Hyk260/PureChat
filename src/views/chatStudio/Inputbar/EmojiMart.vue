@@ -32,6 +32,9 @@ function initEmojiMart() {
     const pickerOptions = {
       data: data,
       noCountryFlags: true,
+      theme: "light", // auto, light, dark
+      skinTonePosition: "none",
+      previewPosition: "none",
       onEmojiSelect: handleEmojiSelect,
       locale: 'zh',
       i18n: { ...zh }

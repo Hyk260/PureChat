@@ -47,7 +47,6 @@
     "dexie": "^4.0.10",
     "element-plus": "^2.8.8",
     "emoji-mart": "^5.6.0",
-    "emoji-picker-element": "^1.26.3",
     "fast-glob": "^3.3.2",
     "file-type": "^20.0.0",
     "gradient-string": "^3.0.0",

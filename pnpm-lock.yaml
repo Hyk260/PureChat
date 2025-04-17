@@ -74,9 +74,6 @@ importers:
       emoji-mart:
         specifier: ^5.6.0
         version: 5.6.0
-      emoji-picker-element:
-        specifier: ^1.26.3
-        version: 1.26.3
       fast-glob:
         specifier: ^3.3.2
         version: 3.3.2
@@ -2020,9 +2017,6 @@ packages:
 
   emoji-mart@5.6.0:
     resolution: {integrity: sha512-eJp3QRe79pjwa+duv+n7+5YsNhRcMl812EcFVwrnRvYKoNPoQb5qxU8DG6Bgwji0akHdp6D4Ln6tYLG58MFSow==}
-
-  emoji-picker-element@1.26.3:
-    resolution: {integrity: sha512-fOMG44d/3OqTe1pPqlu5H4ZtWg7gK4Le6Bt24JTKtDyce5+EO3Mo8WA95cKHbPSsSsg7ehM12M1x3Y6U6fgvTQ==}
 
   emoji-regex@10.4.0:
     resolution: {integrity: sha512-EC+0oUMY1Rqm4O6LLrgjtYDvcVYTy7chDnM4Q7030tP4Kwj3u/pR6gP9ygnp2CJMK5Gq+9Q2oqmrFJAz01DXjw==}
@@ -6417,8 +6411,6 @@ snapshots:
       - '@vue/composition-api'
 
   emoji-mart@5.6.0: {}
-
-  emoji-picker-element@1.26.3: {}
 
   emoji-regex@10.4.0: {}
 
