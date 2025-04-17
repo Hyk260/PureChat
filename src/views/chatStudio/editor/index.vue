@@ -47,10 +47,8 @@
 import { bytesToSize, fileImgToBase64Url } from "@/utils/chat/index";
 import { isMobile } from "@/utils/common";
 import { Editor } from "@wangeditor/editor-for-vue";
-import "@wangeditor/editor/dist/css/style.css";
-import { debounce } from "lodash-es";
+import { debounce, isEmpty } from "lodash-es";
 import { editorConfig, placeholderMap } from "../utils/configure";
-import "../utils/custom-menu";
 import { useState } from "@/utils/hooks/index";
 import { useAppStore, useGroupStore, useChatStore } from "@/stores/index";
 import {
@@ -67,11 +65,12 @@ import {
   insertMention,
   isDataTransferItem,
 } from "../utils/utils";
-import { isEmpty } from "lodash-es";
 import { getOperatingSystem } from "@/utils/common";
 import MentionModal from "../components/MentionModal.vue";
 import Inputbar from "../Inputbar/index.vue";
 import emitter from "@/utils/mitt-bus";
+import "../utils/custom-menu";
+import "./style.css";
 
 const mode = "simple";
 const editorRef = shallowRef();

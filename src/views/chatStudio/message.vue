@@ -41,11 +41,10 @@ import { isMacOS } from "@/utils/common";
 import { useAppStore, useChatStore } from "@/stores/index";
 import { useDragHandler } from "@/utils/hooks/useDragHandler";
 import emitter from "@/utils/mitt-bus";
-
 import Chatwin from "./chat/Chatwin.vue";
 import MultiChoiceBox from "./components/MultiChoiceBox.vue";
 import ConversationList from "./chat/ConversationList.vue";
-import Editor from "./chat/Editor.vue";
+import Editor from "./editor/index.vue";
 import EmptyMessage from "./components/EmptyMessage.vue";
 import Header from "./components/Header.vue";
 import ReplyBox from "./components/ReplyBox.vue";
