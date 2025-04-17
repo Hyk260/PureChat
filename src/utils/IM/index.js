@@ -2,7 +2,7 @@ import emitter from "@/utils/mitt-bus";
 import chat from "@/utils/IM/im-sdk/tim";
 import { C2C_ROBOT_COLLECT } from "@/ai/constant";
 import { TIM_PROXY } from "@/constants/index";
-import { scrollToDomPosition, setChatListCache } from "@/utils/chat/index";
+import { scrollToDomPosition } from "@/utils/chat/index";
 import { setMessageRead } from "@/api/im-sdk-api/index";
 import { localStg } from "@/utils/storage";
 import { useWindowFocus } from "@vueuse/core";
@@ -97,7 +97,6 @@ export class TIMProxy {
   }
   onUpdateConversationList({ data }) {
     console.log("[chat] 会话列表更新 onUpdateConversationList:", data);
-    setChatListCache(data);
     const chatId = useChatStore().currentSessionId;
     const _data = data.filter((t) => t.conversationID === chatId);
     useChatStore().$patch({ conversationList: data });

@@ -1,6 +1,4 @@
 import { nextTick } from "vue";
-import { localStg } from "@/utils/storage";
-import { SessionModel } from "@/database/models/session";
 import { useAppStore } from "@/stores/index";
 import { isEmpty } from 'lodash-es';
 
@@ -295,16 +293,6 @@ export function scrollToMessage(id, delay = 300) {
 export const isRobot = (text) => {
   return /@RBT#/.test(text);
 };
-
-export const getChatListCache = async () => {
-  try {
-    return await SessionModel.query();
-  } catch (error) {
-    return [];
-  }
-};
-
-export const setChatListCache = (data) => { };
 
 export function readFromFile() {
   return new Promise((res, rej) => {

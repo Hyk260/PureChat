@@ -25,8 +25,8 @@
       </el-button>
     </el-tooltip>
     <!-- 附件 -->
-    <el-tooltip v-if="false" :content="$t('chat.upload_document')" placement="top">
-      <el-button @click="sendAnnexClick">
+    <el-tooltip :content="$t('chat.upload_document')" placement="top">
+      <el-button v-show="isAssistant" @click="sendAnnexClick">
         <SvgIcon local-icon="paperClip" />
       </el-button>
     </el-tooltip>
@@ -43,7 +43,7 @@
       </el-button>
     </el-tooltip>
     <!-- 联网 -->
-    <el-tooltip v-if="true" :content="$t('chat.web_search')" placement="top">
+    <el-tooltip :content="$t('chat.web_search')" placement="top">
       <el-button
         :style="{
           color: enableWebSearch ? 'var(--el-button-hover-text-color)' : '',
@@ -135,7 +135,10 @@ defineOptions({
 
 const popoverRef = ref(null);
 
-const supportExts = [...textExts, ...documentExts];
+const supportExts = [
+  ...textExts,
+  // ...documentExts
+];
 const fileExts = [...textExts, ...documentExts, ...imageExts, ...audioExts, ...videoExts];
 
 const [flag, setFlag] = useState(false);
@@ -146,19 +149,15 @@ const chatStore = useChatStore();
 const webSearchStore = useWebSearchStore();
 
 const { toAccount, isAssistant, currentType, isFullscreenInputActive } = storeToRefs(chatStore);
-const {
-  modelProvider,
-  enableWebSearch,
-  isWebSearchModel,
-  isFunctionCall,
-} = storeToRefs(robotStore);
+const { modelProvider, enableWebSearch, isWebSearchModel, isFunctionCall } =
+  storeToRefs(robotStore);
 
 function handleCancel() {
-  popoverRef.value?.hide()
+  popoverRef.value?.hide();
 }
 
 const cleanTopicShortcut = () => {
-  handleCancel()
+  handleCancel();
   chatStore.deleteHistoryMessage();
 };
 

@@ -89,6 +89,10 @@ async function transformImageElement(data) {
   };
 }
 
+async function transformFileElement(data) {
+  
+}
+
 export async function transformData(data) {
   if (!data || !Array.isArray(data)) {
     console.warn("data is undefined, null, or not an array");
@@ -104,14 +108,13 @@ export async function transformData(data) {
       );
     });
 
-    // 定义处理逻辑的 map，把 type 与对应的处理方法映射起来
     const transformMap = {
       TIMTextElem: transformTextElement,
       TIMCustomElem: transformCustomElement,
       TIMImageElem: transformImageElement,
+      // TIMFileElem: transformFileElement,
     };
 
-    // 处理批量异步任务
     const transformedData = await Promise.all(
       relevantData.map(async (item) => {
         const transformFn = transformMap[item.type];
@@ -119,7 +122,6 @@ export async function transformData(data) {
       })
     );
 
-    // 过滤非空元素并返回一维展平数组
     return transformedData.filter((t) => !isEmpty(t)).flat();
   } catch (error) {
     console.error("Error transforming data:", error);

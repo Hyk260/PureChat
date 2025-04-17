@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { bytesToSize, fileImgToBase64Url } from "@/utils/chat/index";
+import { getFileType, bytesToSize, fileImgToBase64Url } from "@/utils/chat/index";
 import { isMobile } from "@/utils/common";
 import { Editor } from "@wangeditor/editor-for-vue";
 import { debounce, isEmpty } from "lodash-es";
@@ -65,6 +65,7 @@ import {
   insertMention,
   isDataTransferItem,
 } from "../utils/utils";
+import { isTextFile, createMediaElement } from "./utils";
 import { getOperatingSystem } from "@/utils/common";
 import MentionModal from "../components/MentionModal.vue";
 import Inputbar from "../Inputbar/index.vue";
@@ -72,6 +73,8 @@ import emitter from "@/utils/mitt-bus";
 import "../utils/custom-menu";
 import "./style.css";
 
+const MAX_FILE_SIZE_MB = 100;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const mode = "simple";
 const editorRef = shallowRef();
 const valueHtml = ref("");
@@ -106,11 +109,6 @@ const destroyEditor = (editor) => {
   editor?.destroy();
 };
 
-const createMediaElement = (type, props) => ({
-  type,
-  ...props,
-  children: [{ text: "" }],
-});
 
 const insertEmoji = (url, item) => {
   const editor = editorRef.value;
@@ -180,36 +178,65 @@ const handleEditorChange = (editor) => {
   handleAtMention(editor);
 };
 
-const handleFiles = async (file, type) => {
-  if (isAssistant.value) {
-    const typeText = type === "image" ? "图片" : "文件";
+const handleAssistantFile = async (file, editor) => {
+  const fileType = getFileType(file?.name);
+
+  if (!isTextFile(fileType)) {
     return appStore.showMessage({
-      message: `AI暂不支持${typeText}消息`,
+      message: `AI暂不支持${fileType}文件`,
       type: "warning",
     });
   }
 
+  const base64Url = await fileImgToBase64Url(file);
+
+  editor.insertNode(
+    createMediaElement("attachment", {
+      fileName: file.name,
+      fileSize: bytesToSize(file.size),
+      link: base64Url,
+    })
+  );
+};
+
+const handleFiles = async (file, type) => {
+  const editor = editorRef.value;
+  if (!editor) return;
+
+  if (isAssistant.value) {
+    return handleAssistantFile(file, editor);
+  }
+
   try {
     const base64Url = await fileImgToBase64Url(file);
-    const editor = editorRef.value;
+
+    editor.restoreSelection();
 
     if (type === "image") {
-      editor.restoreSelection();
       editor.insertNode(createMediaElement("image", { src: base64Url, style: { width: "125px" } }));
     } else {
-      if (file.size / (1024 * 1024) > 100) {
+      if (file.size > MAX_FILE_SIZE_BYTES) {
         return appStore.showMessage({
-          message: "文件不能大于100MB",
+          message: `文件不能大于${MAX_FILE_SIZE_MB}MB`,
           type: "warning",
         });
       }
-      editor.restoreSelection();
-      editor.insertNode(createFileElement(file, base64Url));
+      editor.insertNode(
+        createMediaElement("attachment", {
+          fileName: file.name,
+          fileSize: bytesToSize(file.size),
+          link: base64Url,
+        })
+      );
     }
 
     editor.move(1);
   } catch (error) {
     console.error(`${type}处理错误:`, error);
+    appStore.showMessage({
+      message: `${type}处理失败`,
+      type: "error",
+    });
   }
 };
 
@@ -237,14 +264,6 @@ const handleDrop = (event) => {
     event.preventDefault();
   }
 };
-
-const createFileElement = (file, base64Url) => ({
-  type: "attachment",
-  fileName: file.name,
-  fileSize: bytesToSize(file.size),
-  link: base64Url,
-  children: [{ text: "" }],
-});
 
 const handleEnter = async (event) => {
   if (isSending.value || event?.ctrlKey) return;
