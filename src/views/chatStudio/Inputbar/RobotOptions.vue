@@ -14,7 +14,7 @@
       <el-scrollbar>
         <div class="px-10 py-10">
           <!-- prompt -->
-          <DragPrompt />
+          <DragPrompt ref="promptRef" />
           <div class="container-item py-10 flex-bc" v-for="item in modelData" :key="item.ID">
             <div class="flex flex-col gap-5">
               <div class="title">{{ item.Title }}</div>
@@ -86,7 +86,13 @@
               />
             </div>
             <div class="number" v-else-if="['max_tokens'].includes(item.ID)">
-              <input @change="handleModelData" v-model="item.defaultValue" :min="item.min" :max="item.max" type="number" />
+              <input
+                @change="handleModelData"
+                v-model="item.defaultValue"
+                :min="item.min"
+                :max="item.max"
+                type="number"
+              />
             </div>
             <div class="input flex-ac" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
               <el-tooltip content="配置教程" placement="top">
@@ -145,6 +151,7 @@ defineOptions({
   name: "RobotOptions",
 });
 
+const promptRef = ref();
 const robotIcon = ref("");
 const modelData = ref(null);
 const inputRefs = ref({ token: null, openaiUrl: null });
@@ -263,7 +270,7 @@ function toUrl(url) {
 }
 
 const handleRobotBoxEvent = (data = {}) => {
-  const { ApiKeyFocus = false } = data;
+  const { ApiKeyFocus = false, promptFocus = false } = data;
 
   setDialog(true);
   initModel();
@@ -278,6 +285,11 @@ const handleRobotBoxEvent = (data = {}) => {
         console.error("Failed to focus token input:", error);
       }
     }
+  }
+  if (promptFocus) {
+    nextTick(() => {
+      promptRef.value?.promptTitleFocus();
+    });
   }
 };
 

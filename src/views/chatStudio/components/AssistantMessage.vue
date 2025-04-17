@@ -58,6 +58,7 @@ const handleQuestion = async (questionText) => {
     });
 
     if (message?.[0]) {
+      chatStore.updateSendingState(toAccount.value, "add");
       chatStore.sendSessionMessage({ message: message[0] });
     }
   } catch (error) {

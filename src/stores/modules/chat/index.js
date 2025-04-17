@@ -34,7 +34,6 @@ import {
 import { useGroupStore } from "../group/index";
 import { useRobotStore } from "../robot/index";
 import { useUserStore } from "../user/index";
-
 import emitter from "@/utils/mitt-bus";
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {

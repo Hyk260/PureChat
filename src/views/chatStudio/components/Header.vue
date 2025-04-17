@@ -6,7 +6,11 @@
           <span class="nick">{{ chatNick("C2C", currentConversation) }}</span>
           <Label :model="robotStore.model" :userID="currentConversation?.conversationID" />
           <!-- ai-prompt -->
-          <div v-if="isShowPromptTitle" class="ml-5 ai-prompt-title">
+          <div
+            v-if="isShowPromptTitle"
+            @click="openPrompt"
+            class="cursor-pointer ml-5 ai-prompt-title"
+          >
             {{ getPromptTitle }}
           </div>
           <!-- ai-tools -->
@@ -46,7 +50,7 @@ import emitter from "@/utils/mitt-bus";
 
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
-const toolsStore = useToolsStore()
+const toolsStore = useToolsStore();
 
 const { isAssistant, isGroupChat, currentType, currentConversation } = storeToRefs(chatStore);
 
@@ -66,6 +70,10 @@ const chatNick = (type, chat) => {
     const count = memberCount ? `(${memberCount})` : "";
     return `${name || groupID} ${count}`;
   }
+};
+
+const openPrompt = () => {
+  emitter.emit("onRobotBox", { promptFocus: true });
 };
 
 const openShare = () => {

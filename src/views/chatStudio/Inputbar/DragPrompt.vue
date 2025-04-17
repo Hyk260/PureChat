@@ -22,6 +22,7 @@
         </el-button>
         <el-input
           v-model="item.meta.title"
+          ref="inputTitleRef"
           maxlength="30"
           @input="savePromptData"
           placeholder="title"
@@ -64,6 +65,7 @@ defineOptions({
 });
 
 const MAX_PROMPTS = 1;
+const inputTitleRef = ref();
 const promptItems = ref([]);
 const robotStore = useRobotStore();
 const [showEmojiPickerFlag, setShowEmojiPickerFlag] = useState(false);
@@ -111,7 +113,17 @@ function addPrompt() {
   promptItems.value = newPrompt;
 }
 
+function promptTitleFocus() {
+  nextTick(() => {
+    if (inputTitleRef.value) {
+      inputTitleRef.value?.[0]?.focus();
+    }
+  });
+}
+
 initPromptData();
+
+defineExpose({ promptTitleFocus });
 </script>
 
 <style lang="scss" scoped>

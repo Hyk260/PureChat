@@ -126,12 +126,12 @@ const insertEmoji = (url, item) => {
 };
 
 const insertContent = {
-  draft: ({ data }) => {
+  draft: ({ sessionId }) => {
     const editor = editorRef.value;
-    if (!data || !editor) return;
+    if (!sessionId || !editor) return;
     if (!isMobile) editor.focus(true);
     clearInput();
-    const draft = chatStore.chatDraftMap.get(data.conversationID);
+    const draft = chatStore.chatDraftMap.get(sessionId);
     draft?.forEach((t) => editor.insertNode(t.children));
   },
   html: (text) => {
@@ -162,10 +162,7 @@ const handleToolbarAction = ({ data, key }) => {
 };
 
 const updateDraft = debounce((data) => {
-  chatStore.updateChatDraft({
-    ID: currentSessionId.value,
-    payload: data,
-  });
+  chatStore.updateChatDraft({ ID: currentSessionId.value, payload: data });
 }, 300);
 
 const handleAtMention = debounce((editor) => {

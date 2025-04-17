@@ -50,7 +50,7 @@
           :max="99"
         />
         <!-- 消息免打扰 -->
-        <svg-icon v-show="isNotify(item)" local-icon="DontDisturb" class="dont" />
+        <SvgIcon v-show="isNotify(item)" local-icon="DontDisturb" class="dont" />
       </div>
     </div>
     <!-- 右键菜单 -->
@@ -95,7 +95,7 @@ const groupStore = useGroupStore();
 const userStore = useUserStore();
 const chatStore = useChatStore();
 
-const { conversationList, searchConversationList, currentConversation } = storeToRefs(chatStore);
+const { conversationList, searchConversationList, currentSessionId } = storeToRefs(chatStore);
 
 const searchForData = computed(() => {
   if (searchConversationList.value.length) {
@@ -106,22 +106,23 @@ const searchForData = computed(() => {
 });
 
 const isDraft = (item) => {
-  return (
-    item.conversationID !== currentConversation?.value?.conversationID &&
-    chatStore.chatDraftMap.has(item.conversationID)
-  );
+  const id = item.conversationID;
+  return id !== currentSessionId.value && chatStore.chatDraftMap.has(id);
 };
+
 const isNotify = (item) => {
   return item.messageRemindType === "AcceptNotNotify";
 };
+
 const isShowCount = (item) => {
   return item.unreadCount === 0;
 };
+
 const isMention = (item) => {
   return item.groupAtInfoList?.length > 0;
 };
 
-const fnClass = (item) => (item?.conversationID === currentConversation.value?.conversationID ? "is-active" : "");
+const fnClass = (item) => (item?.conversationID === currentSessionId.value ? "is-active" : "");
 
 const formatNewsMessage = (data) => {
   const { type, lastMessage, unreadCount } = data;
@@ -133,8 +134,7 @@ const formatNewsMessage = (data) => {
   const isCount = unreadCount && isNotify(data); // 未读消息计数
   const MAX_TIP_LENGTH = 46;
 
-  const formatTip = (message) =>
-    message.length > MAX_TIP_LENGTH ? `${message.slice(0, MAX_TIP_LENGTH)}...` : message;
+  const formatTip = (t) => (t.length > MAX_TIP_LENGTH ? `${t.slice(0, MAX_TIP_LENGTH)}...` : t);
 
   const tip = formatTip(rawTip);
   // 处理撤回消息
@@ -219,10 +219,7 @@ const handleContextMenuEvent = (e, item) => {
 
 const handleConversationListClick = (data) => {
   console.log("会话点击 handleConversationListClick:", data);
-  if (currentConversation.value) {
-    const { conversationID: id } = currentConversation.value;
-    if (id === data?.conversationID) return;
-  }
+  if (currentSessionId.value === data?.conversationID) return;
   chatStore.$patch({ replyMsgData: null, msgEdit: null });
   chatStore.setForwardData({ type: "clear" });
   chatStore.updateSelectedConversation(data);
@@ -231,7 +228,9 @@ const handleConversationListClick = (data) => {
     groupStore.handleGroupProfile(data);
     groupStore.handleGroupMemberList({ groupID: data.groupProfile.groupID });
   }
-  emitter.emit("handleInsertDraft", data);
+  emitter.emit("handleInsertDraft", {
+    sessionId: data?.conversationID,
+  });
   emitter.emit("updateScroll");
 };
 
