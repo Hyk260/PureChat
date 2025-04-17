@@ -13,10 +13,10 @@
       v-model="valueHtml"
       :mode="mode"
       :defaultConfig="editorConfig"
-      @drop="dropHandler"
-      @onChange="onChange"
-      @onCreated="handleEditor"
-      @customPaste="customPaste"
+      @drop="handleDrop"
+      @onChange="handleEditorChange"
+      @onCreated="handleEditorCreated"
+      @customPaste="handlePaste"
       @customAlert="customAlert"
       @keyup.enter="handleEnter"
     />
@@ -32,7 +32,7 @@
       <el-button
         :loading="isSending"
         :class="{ 'pointer-events-none': disabled }"
-        @click="handleEnter()"
+        @click="handleEnter"
       >
         <template #loading>
           <div class="iconify-icon svg-spinners mr-8"></div>
@@ -97,45 +97,70 @@ const {
   replyMsgData,
 } = storeToRefs(chatStore);
 
-const handleEditor = (editor, created = true) => {
+const handleEditorCreated = (editor) => {
   if (!editor) return;
-  if (created) {
-    editorRef.value = editor;
-  } else {
-    editor.destroy();
-  }
+  editorRef.value = editor;
 };
 
-const setToolbar = (item) => {
-  const { data, key } = item;
-  switch (key) {
-    case "setEmoji":
-      setEmoji(data.url, data.item);
-      break;
-    case "setPicture":
-      parsePicture(data.files);
-      break;
-    case "setParseFile":
-      parseFile(data.files);
-      break;
-    case "setEditHtml":
-      const editor = editorRef.value;
-      const node = { text: data };
-      editor?.insertNode(node);
-      editor?.focus(true);
-      break;
-  }
+const destroyEditor = (editor) => {
+  editor?.destroy();
 };
 
-// 插入草稿
-const insertDraft = ({ data, editor = editorRef.value }) => {
-  if (!data) return;
-  if (!isMobile) editor?.focus(true);
-  clearInputInfo();
-  const draft = chatStore.chatDraftMap.get(data.conversationID);
-  draft?.map((t) => editor.insertNode(t.children));
+const createMediaElement = (type, props) => ({
+  type,
+  ...props,
+  children: [{ text: "" }],
+});
+
+const insertEmoji = (url, item) => {
+  const editor = editorRef.value;
+  const data = createMediaElement("image", {
+    class: "EmoticonPack",
+    src: url,
+    alt: item,
+    style: { width: "26px" },
+  });
+  editor.restoreSelection();
+  editor.insertNode(data);
+  editor.focus(true);
 };
-// 更新草稿
+
+const insertContent = {
+  draft: ({ data }) => {
+    const editor = editorRef.value;
+    if (!data || !editor) return;
+    if (!isMobile) editor.focus(true);
+    clearInput();
+    const draft = chatStore.chatDraftMap.get(data.conversationID);
+    draft?.forEach((t) => editor.insertNode(t.children));
+  },
+  html: (text) => {
+    if (!text) {
+      console.warn("text is empty");
+      return;
+    }
+    editorRef.value?.insertNode({ text });
+    editorRef.value?.focus(true);
+  },
+  mention: ({ id, name }) => {
+    insertMention({ id, name, backward: false, editor: editorRef.value });
+  },
+};
+
+const handleToolbarAction = ({ data, key }) => {
+  const editor = editorRef.value;
+  if (!editor) return;
+
+  const actions = {
+    setEmoji: () => insertEmoji(data.url, data.item),
+    setPicture: () => handleFiles(data.files, "image"),
+    setParseFile: () => handleFiles(data.files, "file"),
+    setEditHtml: () => insertContent.html(data),
+  };
+
+  actions[key]?.();
+};
+
 const updateDraft = debounce((data) => {
   chatStore.updateChatDraft({
     ID: currentSessionId.value,
@@ -143,7 +168,7 @@ const updateDraft = debounce((data) => {
   });
 }, 300);
 
-const handleAt = debounce((editor) => {
+const handleAtMention = debounce((editor) => {
   if (isGroupChat.value) {
     filterMentionList({
       str: editor.getText(),
@@ -152,67 +177,68 @@ const handleAt = debounce((editor) => {
   }
 }, 100);
 
-const onChange = (editor) => {
+const handleEditorChange = (editor) => {
   setDisabled(editor.isEmpty());
   updateDraft(editor.children);
-  handleAt(editor);
+  handleAtMention(editor);
 };
 
-const handleFile = (item) => {
-  const type = item.type;
-  const pasteFile = isDataTransferItem(item) ? item.getAsFile() : item;
-  let typeText = "";
-  if (type.match("^image/")) {
-    typeText = "图片";
-    if (isAssistant.value) {
-      appStore.showMessage({ message: `暂不支持${typeText}消息`, type: "warning" });
-      return;
+const handleFiles = async (file, type) => {
+  if (isAssistant.value) {
+    const typeText = type === "image" ? "图片" : "文件";
+    return appStore.showMessage({
+      message: `AI暂不支持${typeText}消息`,
+      type: "warning",
+    });
+  }
+
+  try {
+    const base64Url = await fileImgToBase64Url(file);
+    const editor = editorRef.value;
+
+    if (type === "image") {
+      editor.restoreSelection();
+      editor.insertNode(createMediaElement("image", { src: base64Url, style: { width: "125px" } }));
+    } else {
+      if (file.size / (1024 * 1024) > 100) {
+        return appStore.showMessage({
+          message: "文件不能大于100MB",
+          type: "warning",
+        });
+      }
+      editor.restoreSelection();
+      editor.insertNode(createFileElement(file, base64Url));
     }
-    parsePicture(pasteFile);
-  } else {
-    typeText = "文件";
-    if (isAssistant.value) {
-      appStore.showMessage({ message: `暂不支持${typeText}消息`, type: "warning" });
-      return;
-    }
-    parseFile(pasteFile);
+
+    editor.move(1);
+  } catch (error) {
+    console.error(`${type}处理错误:`, error);
   }
 };
 
-const handleString = (item, editor) => {
-  if (item.type === "text/plain") {
-    item.getAsString((str) => {
-      editor.insertText(str.trimStart());
-      console.log("handleString text/plain:", str);
-    });
-  } else if (item.type === "text/html") {
-    item.getAsString((html) => {
-      console.log("handleString text/html:", html);
-    });
-  }
-};
-
-const customPaste = (editor, event, callback) => {
-  console.log("ClipboardEvent 粘贴事件对象", event);
-  // const text = event.clipboardData?.getData("text/plain"); // 获取粘贴的纯文本
-  // https://developer.mozilla.org/zh-CN/docs/Web/API/DragEvent DragEvent 拖拽
-  // https://developer.mozilla.org/zh-CN/docs/Web/API/ClipboardEvent ClipboardEvent 粘贴
+const handlePaste = (editor, event, callback) => {
   const items = event?.clipboardData?.items ?? event?.dataTransfer?.items;
-  for (const item of items) {
+
+  Array.from(items).forEach((item) => {
     if (item.kind === "file") {
-      handleFile(item, editor);
+      const type = item.type.match("^image/") ? "image" : "file";
+      handleFiles(item.getAsFile(), type);
     } else if (item.kind === "string") {
-      handleString(item, editor);
+      item.getAsString((str) => {
+        editor.insertText(str.trimStart());
+      });
     }
-  }
+  });
+
   event.preventDefault();
   callback?.(false);
 };
 
-const dropHandler = (event) => {
-  if (event.dataTransfer.getData("text/plain")) return;
-  customPaste(editorRef.value, event);
-  event.preventDefault();
+const handleDrop = (event) => {
+  if (!event.dataTransfer.getData("text/plain")) {
+    handlePaste(editorRef.value, event);
+    event.preventDefault();
+  }
 };
 
 const createFileElement = (file, base64Url) => ({
@@ -223,93 +249,38 @@ const createFileElement = (file, base64Url) => ({
   children: [{ text: "" }],
 });
 
-const parseFile = async (file, editor = editorRef.value) => {
-  if (file.size / (1024 * 1024) > 100) {
-    appStore.showMessage({ message: `文件不能大于100MB`, type: "warning" });
-    return;
-  }
-  try {
-    const base64Url = await fileImgToBase64Url(file);
-    editor.restoreSelection();
-    editor.insertNode(createFileElement(file, base64Url));
-    editor.move(1);
-  } catch (error) {
-    console.error("parseFile:", error);
-  }
-};
+const handleEnter = async (event) => {
+  if (isSending.value || event?.ctrlKey) return;
 
-const setEmoji = (url, item) => {
-  const editor = editorRef.value;
-  const element = {
-    type: "image",
-    class: "EmoticonPack",
-    src: url,
-    alt: item,
-    href: "",
-    style: { width: "26px" },
-    children: [{ text: "" }],
-  };
-  editor.restoreSelection();
-  editor.insertNode(element);
-  editor.focus(true);
-};
-
-const parsePicture = async (file, editor = editorRef.value) => {
-  const base64Url = await fileImgToBase64Url(file);
-  const element = {
-    type: "image",
-    class: "img",
-    src: base64Url,
-    alt: "",
-    href: "",
-    style: { width: "125px" },
-    children: [{ text: "" }],
-  };
-  editor.restoreSelection(); // 恢复选区
-  editor.insertNode(element);
-  editor.move(1); // 移动光标
-};
-
-const handleEnter = (event, editor = editorRef.value) => {
-  if (isSending.value) return;
-  if (event?.ctrlKey) return;
   if (isMentionModalVisible.value) {
     emitter.emit("handleInputKeyupHandler", event);
     return;
   }
-  const { isHave } = sendMsgBefore();
 
-  if (isHave) {
-    sendMessage(editor);
-  } else {
-    clearInputInfo();
-  }
+  const messageData = prepareMessageData();
+  messageData.isHave ? await sendMessage(messageData) : clearInput();
 };
-// 清空输入框
-const clearInputInfo = (editor = editorRef.value) => {
+
+const clearInput = () => {
   chatStore.$patch({
     isFullscreenInputActive: false,
     replyMsgData: null,
   });
-  editor?.clear();
+  editorRef.value?.clear();
 };
 
-const sendMsgBefore = (editor = editorRef.value) => {
-  const text = editor.getText().trim();
+const prepareMessageData = () => {
+  const editor = editorRef.value;
   if (!editor) throw new Error("Editor reference is required");
 
-  const {
-    aitStr = "",
-    atUserList = [],
-    files = [],
-    video = [],
-    images = [],
-  } = {
+  const text = editor.getText().trim();
+  const extractions = {
     ...extractAitInfo(editor),
     ...extractFilesInfo(editor),
     ...extractVideoInfo(editor),
     ...extractImageInfo(editor),
   };
+  const { aitStr = "", atUserList = [], files = [], video = [], images = [] } = extractions;
   const emoticons = extractEmojiInfo(editor);
 
   const hasContent = [
@@ -328,7 +299,7 @@ const sendMsgBefore = (editor = editorRef.value) => {
     to: toAccount.value,
     type: currentType.value,
     text: finalText,
-    aitStr: atUserList.length ? finalText || aitStr : "",
+    aitStr: atUserList.length ? emoticons || aitStr : "",
     atUserList,
     images,
     files,
@@ -338,14 +309,13 @@ const sendMsgBefore = (editor = editorRef.value) => {
   };
 };
 
-const sendMessage = async () => {
-  const data = sendMsgBefore();
-  console.log("sendMsgBefore:", data);
+const sendMessage = async (data) => {
+  console.log("prepareMessageData:", data);
   const message = await sendChatMessage(data);
   console.log("sendChatMessage:", message);
-  clearInputInfo();
+  clearInput();
   chatStore.updateSendingState(data.to, "add");
-  message.map((t, i) => {
+  message.forEach((t, i) => {
     chatStore.sendSessionMessage({
       message: t,
       last: message.length - 1 === i,
@@ -353,38 +323,29 @@ const sendMessage = async () => {
   });
 };
 
-const setEditHtml = (text) => {
-  if (!text) return;
-  const editor = editorRef.value;
-  editor.setHtml(`<p>${text}</p>`);
-  editor.focus(true);
+const setupEventListeners = () => {
+  const events = {
+    handleAt: insertContent.mention,
+    handleSetHtml: insertContent.html,
+    handleInsertDraft: insertContent.draft,
+    handleFileDrop: (file) => handleFiles(file, "file"),
+    handleToolbar: handleToolbarAction,
+  };
+
+  Object.entries(events).forEach(([event, handler]) => {
+    emitter.on(event, handler);
+  });
 };
 
-function onEmitter() {
-  emitter.on("handleAt", ({ id, name }) => {
-    insertMention({ id, name, backward: false, editor: editorRef.value });
-  });
-  emitter.on("handleSetHtml", (str) => {
-    setEditHtml(str);
-  });
-  emitter.on("handleInsertDraft", (data) => {
-    insertDraft({ data });
-  });
-  emitter.on("handleFileDrop", (file) => {
-    handleFile(file);
-  });
-  emitter.on("handleToolbar", (data) => {
-    setToolbar(data);
-  });
-}
-
-function offEmitter() {
-  emitter.off("handleAt");
-  emitter.off("handleSetHtml");
-  emitter.off("handleInsertDraft");
-  emitter.off("setHandleFile");
-  emitter.off("handleToolbar");
-}
+const removeEventListeners = () => {
+  Object.keys({
+    handleAt: null,
+    handleSetHtml: null,
+    handleInsertDraft: null,
+    handleFileDrop: null,
+    handleToolbar: null,
+  }).forEach((event) => emitter.off(event));
+};
 
 watch(isChatBoxVisible, () => {
   handleEditorKeyDown(isMentionModalVisible.value);
@@ -396,13 +357,13 @@ onActivated(() => {
   handleEditorKeyDown(isMentionModalVisible.value);
 });
 onMounted(() => {
-  onEmitter();
+  setupEventListeners();
 });
 onDeactivated(() => {
-  offEmitter();
+  removeEventListeners();
 });
 onBeforeUnmount(() => {
-  handleEditor(editorRef.value, false);
+  destroyEditor(editorRef.value);
 });
 </script>
 
@@ -418,38 +379,24 @@ onBeforeUnmount(() => {
   height: 200px;
   display: flex;
   flex-direction: column;
-}
-.editor-content {
-  flex: 1;
-  overflow-y: hidden;
-  :deep(.w-e-text-container p) {
-    margin: 0;
+  .editor-content {
+    flex: 1;
+    overflow-y: hidden;
   }
-  :deep(.w-e-image-dragger) {
-    display: none;
-  }
-  :deep(.w-e-text-placeholder) {
-    font-style: normal;
-    font-size: 15px;
-    top: 5px;
-  }
-  :deep(.w-e-selected-image-container) {
-    overflow: visible;
-  }
-}
-.send-button {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 0px 10px 10px;
-  gap: 8px;
-  user-select: none;
-  .tip {
-    font-size: 12px;
-  }
-  span {
-    color: rgb(153, 153, 153);
+  .send-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0px 10px 10px;
+    gap: 8px;
+    user-select: none;
+    .tip {
+      font-size: 12px;
+    }
+    span {
+      color: rgb(153, 153, 153);
+    }
   }
 }
 </style>

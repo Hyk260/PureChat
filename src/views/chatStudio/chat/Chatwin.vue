@@ -634,7 +634,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   padding-right: 10px;
 }
 .message-view-item {
-  margin: 10px 0 10px 0;
+  padding: 10px 0 10px 0;
   &:hover .time-divider {
     visibility: visible;
   }

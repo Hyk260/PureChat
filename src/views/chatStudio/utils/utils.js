@@ -5,8 +5,7 @@ import {
   createTextMessage,
   createVideoMessage,
 } from "@/api/im-sdk-api/index";
-import { generateReferencePrompt } from "@/config/prompts";
-import { useAppStore, useChatStore, useRobotStore } from '@/stores/index';
+import { useAppStore, useChatStore } from '@/stores/index';
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { dataURLtoFile, getBlob, getFileType } from "@/utils/chat/index";
@@ -263,14 +262,13 @@ export async function sendChatMessage(options) {
     images = [],
   } = options || {};
 
+  // 处理文本消息（@消息或普通文本）
   if (aitStr) {
-    // @消息
-    const aitStrItem = createTextAtMessage({ to, type, text: aitStr, atUserList, custom })
-    messages.push(aitStrItem);
+    const atTextItem = await createTextAtMessage({ to, type, text: aitStr, atUserList, custom })
+    messages.push(atTextItem);
   } else if (text) {
-    // 文本消息
-    const textMsgItem = createTextMessage({ to, type, text, custom })
-    messages.push(textMsgItem);
+    const textItem = await createTextMessage({ to, type, text, custom })
+    messages.push(textItem);
   }
 
   // 处理图片消息
@@ -281,13 +279,13 @@ export async function sendChatMessage(options) {
 
   // 处理文件消息
   for (const t of files) {
-    const file = createFileMessage({ to, type, file: dataURLtoFile(t.link, t.fileName) });
+    const file = await createFileMessage({ to, type, file: dataURLtoFile(t.link, t.fileName) });
     messages.push(file);
   }
 
   // 处理视频消息
   for (const t of video) {
-    const videoItem = createVideoMessage({ to, type, file: dataURLtoFile(t.link, t.fileName) });
+    const videoItem = await createVideoMessage({ to, type, file: dataURLtoFile(t.link, t.fileName) });
     messages.push(videoItem);
   }
 

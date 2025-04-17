@@ -51,22 +51,21 @@ export const createCustomMessage = (params) => {
 };
 
 // 创建文本消息
-export const createTextMessage = (params) => {
+export const createTextMessage = async (params) => {
   const { to, type = "C2C", text, custom = {}, cache = true } = params;
-  const data = tim.createTextMessage({
+  return await tim.createTextMessage({
     to,
     cache: cache,
     conversationType: type,
     payload: { text },
     cloudCustomData: getCloudCustomData(custom),
   });
-  return data
 };
 
 // 创建 @提醒功能的文本消息
-export const createTextAtMessage = (params) => {
+export const createTextAtMessage = async (params) => {
   const { to, type = "C2C", text, atUserList, custom } = params;
-  return tim.createTextAtMessage({
+  return await tim.createTextAtMessage({
     to,
     conversationType: type,
     payload: { text, atUserList },
@@ -77,7 +76,7 @@ export const createTextAtMessage = (params) => {
 // 创建图片消息 https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createImageMessage
 export const createImageMessage = async (params) => {
   const { to, type, file } = params;
-  const message = tim.createImageMessage({
+  const message = await tim.createImageMessage({
     to,
     conversationType: type,
     payload: { file },
@@ -89,9 +88,9 @@ export const createImageMessage = async (params) => {
   return imageMessage;
 };
 // 创建文件消息
-export const createFileMessage = (params) => {
+export const createFileMessage = async (params) => {
   const { to, type, file } = params;
-  const message = tim.createFileMessage({
+  const message = await tim.createFileMessage({
     to,
     conversationType: type,
     payload: { file },
@@ -102,9 +101,9 @@ export const createFileMessage = (params) => {
   return message;
 };
 // 创建视频消息
-export const createVideoMessage = (params) => {
+export const createVideoMessage = async (params) => {
   const { to, type, file } = params;
-  const message = tim.createVideoMessage({
+  const message = await tim.createVideoMessage({
     to,
     conversationType: type,
     payload: { file },

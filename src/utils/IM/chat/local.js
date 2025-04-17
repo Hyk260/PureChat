@@ -132,7 +132,7 @@ export class LocalChat {
       },
     };
   }
-  createTextMessage(data) {
+  async createTextMessage(data) {
     const { to, conversationType, payload, cloudCustomData = "", cache } = data;
     const _data = {
       ...timTextElem,

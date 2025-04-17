@@ -57,7 +57,7 @@
 }
 
 .w-e-text-container [data-slate-editor] p {
-  margin: 15px 0
+  margin: 0;
 }
 
 .w-e-text-container [data-slate-editor] h1,
@@ -85,9 +85,9 @@
 }
 
 .w-e-text-placeholder {
-  font-style: italic;
+  font-style: normal;
   left: 10px;
-  top: 17px;
+  top: 5px;
   width: 90%
 }
 
@@ -562,11 +562,12 @@ body .w-e-modal * {
 }
 
 .w-e-text-container [data-slate-editor] .w-e-selected-image-container {
-  overflow: hidden;
+  overflow: visible;
   position: relative
 }
 
 .w-e-text-container [data-slate-editor] .w-e-selected-image-container .w-e-image-dragger {
+  display: none;
   background-color: var(--w-e-textarea-handler-bg-color);
   height: 7px;
   position: absolute;

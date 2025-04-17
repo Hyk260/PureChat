@@ -17,11 +17,8 @@ import {
   REQUEST_TIMEOUT_MS
 } from "@/ai/constant";
 import { OpenaiConfig } from "@/ai/platforms/openai/index";
-import { createTextMessage } from "@/api/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
-import { getCloudCustomData } from "@/utils/chat/index";
-import { useRobotStore } from '@/stores/index';
 
 /**
  * 获取 AI 模型的配置信息

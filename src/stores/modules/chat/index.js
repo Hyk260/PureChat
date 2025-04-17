@@ -141,13 +141,13 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.sendingMap.set(sessionId, true);
       }
     },
-    createAiPromptMsg() {
+    async createAiPromptMsg() {
       let to = useUserStore()?.userProfile?.userID;
       let defaultBot = useRobotStore().defaultProvider;
       let from = getModelId(defaultBot);
       const meta = useRobotStore().promptStore[defaultBot]?.[0]?.meta
       const text = `你好，我是 ${meta.avatar} ${meta.title} ${meta.description} 让我们开始对话吧！`;
-      const msg = createTextMessage({ to: from, text, cache: false });
+      const msg = await createTextMessage({ to: from, text, cache: false });
       const promptContent = getCloudCustomData(
         { key: "messagePrompt", payload: { text: "预设提示词" } },
         { recQuestion: meta.recQuestion || [], }
@@ -162,8 +162,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       msg.status = "success";
       return { sessionId: `C2C${msg.from}`, message: msg };
     },
-    addAiPresetPromptWords() {
-      const { sessionId, message } = this.createAiPromptMsg();
+    async addAiPresetPromptWords() {
+      const { sessionId, message } = await this.createAiPromptMsg();
       const history = this.historyMessageList.get(sessionId);
       if (this.currentConversation && this.currentMessageList) {
         const data = cloneDeep(history);
