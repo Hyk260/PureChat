@@ -115,6 +115,7 @@
                 :placeholder="item.Placeholder"
                 :type="item.ID === 'token' ? 'password' : 'text'"
                 :show-password="item.ID === 'token'"
+                clearable
               />
             </div>
           </div>

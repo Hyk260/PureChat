@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    @close="onClose"
+    @close="handleClose"
     :modal="true"
     :append-to-body="true"
     class="share-modal-dialog min-w-460"
@@ -14,11 +14,9 @@
         <div id="preview" class="preview" :style="back">
           <div class="content">
             <Header />
-            <h2 class="role" v-if="robotRole() && isPrompt">
-              {{ robotRole() }}
-            </h2>
-            <div v-if="isRobot(toAccount) && isPrompt" class="prompt">
-              <Markdown :marked="robotPrompt()" />
+            <h2 class="role" v-if="showRole">{{ roleText }}</h2>
+            <div v-if="showPrompt" class="prompt">
+              <Markdown :marked="promptContent" />
             </div>
             <div class="item min-h-60">
               <div
@@ -71,16 +69,16 @@
                   :key="i"
                   @click="onColor(item)"
                   class="w-28 h-28 relative rounded-50% cursor-pointer"
-                  :style="fnStyleBack(item)"
+                  :style="getBackgroundStyle(item)"
                 ></div>
               </div>
             </div>
             <el-divider />
-            <div class="flex-bc my-5 h-32" v-if="robotPrompt()">
+            <div class="flex-bc my-5 h-32" v-if="promptContent">
               <div>包含助手提示词</div>
               <div><el-switch v-model="isPrompt" /></div>
             </div>
-            <el-divider v-if="robotPrompt()" />
+            <el-divider v-if="promptContent" />
             <div class="flex-bc my-5 h-32">
               <div>包含页脚</div>
               <div><el-switch v-model="isFooter" /></div>
@@ -94,7 +92,7 @@
             <div class="flex-bc my-5 h-32">
               <div>图片格式</div>
               <div>
-                <el-radio-group v-model="fieldType" size="small">
+                <el-radio-group v-model="imageType" size="small">
                   <el-radio-button
                     v-for="item in imageTypeOptions"
                     :key="item.value"
@@ -108,15 +106,11 @@
         </el-scrollbar>
       </div>
       <div>
-        <el-button
-          class="w-full"
-          @click="onDownload(fieldType, robotRole(), cb)"
-          :loading="loading"
-        >
+        <el-button class="w-full" @click="handleDownload" :loading="loading">
           <template #loading>
             <loadingSvg />
           </template>
-          {{ fieldType === ImageType.Blob ? "复制截图" : "下载截图" }}
+          {{ downloadButtonText }}
         </el-button>
       </div>
     </div>
@@ -124,7 +118,6 @@
 </template>
 
 <script setup>
-import { isRobot } from "@/utils/chat/index";
 import { useState } from "@/utils/hooks/index";
 import {
   useScreenshot,
@@ -134,13 +127,11 @@ import {
 } from "@/utils/hooks/useScreenshot";
 import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils/utils";
 import { getAiAvatarUrl } from "@/ai/utils";
-import { fnStyleBack, onColor, back, backgColor } from "./utils";
+import { getBackgroundStyle, onColor, back, backgColor } from "./utils";
 import { useChatStore, useRobotStore } from "@/stores/index";
 import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import Header from "@/views/chatStudio/components/Header.vue";
 import emitter from "@/utils/mitt-bus";
-import { onMounted } from "vue";
-import { onUnmounted } from "vue";
 
 const { pkg } = __APP_INFO__;
 const homepage = pkg.homepage;
@@ -148,40 +139,44 @@ const docsUrl = pkg.docs;
 const isFooter = ref(false);
 const isQrCode = ref(true);
 const isPrompt = ref(false);
-const fieldType = ref(ImageType.Blob);
+const imageType = ref(ImageType.Blob);
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
 
 const emit = defineEmits(["onClose"]);
 
-const { toAccount, getSortedForwardData } = storeToRefs(chatStore);
-
 const [dialogVisible, setDialogVisible] = useState();
+const { isAssistant, toAccount, getSortedForwardData } = storeToRefs(chatStore);
 const { loading, onDownload } = useScreenshot();
 
-function robotRole() {
+const promptContent = computed(() => {
+  if (!isAssistant.value) return ''
+  return robotStore.currentProviderPrompt?.prompt[0]?.content || ''
+})
+const showPrompt = computed(() => isAssistant.value && isPrompt.value && promptContent.value)
+const roleText = computed(() => {
   try {
     const data = robotStore.currentProviderPrompt?.meta || {};
-    return `${data.avatar} ${data.title}`;
-  } catch (e) {
+    return data ? `${data.avatar} ${data.title}` : "";
+  } catch {
     return "";
   }
-}
+});
+const showRole = computed(() => roleText.value && isPrompt.value);
+const downloadButtonText = computed(() =>
+  imageType.value === ImageType.Blob ? "复制截图" : "下载截图"
+);
 
-function onClose() {
-  setDialogVisible(false);
-}
+const handleDownload = () => {
+  onDownload(imageType.value, roleText.value, handleClose);
+};
 
-function cb() {
+const handleClose = () => {
   nextTick(() => {
-    onClose();
+    setDialogVisible(false);
     emit("onClose");
   });
-}
-
-function robotPrompt() {
-  return robotStore.currentProviderPrompt?.prompt[0].content || "";
-}
+};
 
 onMounted(() => {
   emitter.on("handleShareModal", (val) => {

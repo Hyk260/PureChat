@@ -109,7 +109,6 @@ const destroyEditor = (editor) => {
   editor?.destroy();
 };
 
-
 const insertEmoji = (url, item) => {
   const editor = editorRef.value;
   const data = createMediaElement("image", {
@@ -240,6 +239,19 @@ const handleFiles = async (file, type) => {
   }
 };
 
+const handleString = (item, editor) => {
+  if (item.type === "text/plain") {
+    item.getAsString((str) => {
+      editor.insertText(str.trimStart());
+      console.log("handleString text/plain:", str);
+    });
+  } else if (item.type === "text/html") {
+    item.getAsString((html) => {
+      console.log("handleString text/html:", html);
+    });
+  }
+};
+
 const handlePaste = (editor, event, callback) => {
   const items = event?.clipboardData?.items ?? event?.dataTransfer?.items;
 
@@ -248,9 +260,7 @@ const handlePaste = (editor, event, callback) => {
       const type = item.type.match("^image/") ? "image" : "file";
       handleFiles(item.getAsFile(), type);
     } else if (item.kind === "string") {
-      item.getAsString((str) => {
-        editor.insertText(str.trimStart());
-      });
+      handleString(item, editor);
     }
   });
 

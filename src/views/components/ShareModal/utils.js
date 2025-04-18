@@ -45,7 +45,7 @@ export const back = ref(`
   --houdini-angle: 120deg;
 `);
 
-export function fnStyleBack({ angle, colorA, colorB }) {
+export function getBackgroundStyle({ angle, colorA, colorB }) {
   return `background-image: linear-gradient(${angle}, ${colorA}, ${colorB});`;
 }
 

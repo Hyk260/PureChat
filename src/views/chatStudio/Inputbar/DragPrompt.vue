@@ -8,7 +8,7 @@
       <div class="flex gap-5">
         <el-button class="avatar relative size-32 p-0" @click="setShowEmojiPickerFlag(true)">
           <div class="group">
-            <span class="text-25"> {{ item.meta.avatar }} </span>
+            <span class="text-22"> {{ item.meta.avatar }} </span>
             <el-icon @click.stop="handleClearAvatar(i)" class="avatar-close-icon">
               <CircleCloseFilled />
             </el-icon>
