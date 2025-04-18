@@ -1,8 +1,6 @@
 import GitHubAI from "./models";
 
-const {
-  VITE_GITHUB_PROXY_URL
-} = import.meta.env
+const { VITE_GITHUB_PROXY_URL } = import.meta.env
 
 export const GitHubModelValue = () => {
   return {
@@ -18,8 +16,8 @@ export const GitHubModelValue = () => {
       ID: "openaiUrl",
       Title: "github 服务地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
-      Placeholder: "",
-      defaultValue: VITE_GITHUB_PROXY_URL || '',
+      Placeholder: VITE_GITHUB_PROXY_URL,
+      defaultValue: "",
     },
     Token: {
       ID: "token",
@@ -30,8 +28,8 @@ export const GitHubModelValue = () => {
     },
     Temperature: {
       ID: "temperature",
-      Title: "随机性 (temperature)",
-      SubTitle: "值越大，回复越随机",
+      Title: "创意活跃度 (temperature)",
+      SubTitle: "数值越大，回答越有创意和想象力；数值越小，回答越严谨",
       defaultValue: "",
       step: 0.1,
       min: 0,
@@ -39,8 +37,9 @@ export const GitHubModelValue = () => {
     },
     TopP: {
       ID: "top_p",
-      Title: "核采样 (top_p)",
-      SubTitle: "与随机性类似，但不要和随机性一起更改",
+      Title: "思维开放度 (top_p)",
+      SubTitle:
+        "考虑多少种可能性，值越大，接受更多可能的回答；值越小，倾向选择最可能的回答。不推荐和创意活跃度一起更改",
       defaultValue: "",
       step: 0.1,
       min: 0,
@@ -56,8 +55,9 @@ export const GitHubModelValue = () => {
     // },
     PresencePenalty: {
       ID: "presence_penalty",
-      Title: "话题新鲜度 (presence_penalty)",
-      SubTitle: "值越大，越有可能扩展到新话题",
+      Title: "表述发散度 (presence_penalty)",
+      SubTitle:
+        "值越大，越倾向不同的表达方式，避免概念重复；值越小，越倾向使用重复的概念或叙述，表达更具一致性",
       defaultValue: "",
       step: 0.1,
       min: 0,

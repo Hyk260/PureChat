@@ -1,7 +1,7 @@
 import ZeroOne from './models';
 
 const docs = __APP_INFO__.pkg.docs;
-const zhipu_proxy_url = import.meta.env.VITE_ZHIPU_BASE_URL;
+const { VITE_ZHIPU_BASE_URL } = import.meta.env;
 
 export const ZhiPuModelValue = () => {
   return {
@@ -17,7 +17,7 @@ export const ZhiPuModelValue = () => {
       ID: "openaiUrl",
       Title: "接口地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
-      Placeholder: zhipu_proxy_url,
+      Placeholder: VITE_ZHIPU_BASE_URL,
       defaultValue: "",
     },
     Token: {
@@ -30,8 +30,8 @@ export const ZhiPuModelValue = () => {
     },
     Temperature: {
       ID: "temperature",
-      Title: "随机性 (temperature)",
-      SubTitle: "值越大，回复越随机",
+      Title: "创意活跃度 (temperature)",
+      SubTitle: "数值越大，回答越有创意和想象力；数值越小，回答越严谨",
       defaultValue: "",
       step: 0.01,
       min: 0,
@@ -39,21 +39,14 @@ export const ZhiPuModelValue = () => {
     },
     TopP: {
       ID: "top_p",
-      Title: "核采样 (top_p)",
-      SubTitle: "与随机性类似，但不要和随机性一起更改",
+      Title: "思维开放度 (top_p)",
+      SubTitle:
+        "考虑多少种可能性，值越大，接受更多可能的回答；值越小，倾向选择最可能的回答。不推荐和创意活跃度一起更改",
       defaultValue: "",
       step: 0.1,
       min: 0,
       max: 1,
     },
-    // MaxTokens: {
-    //   ID: "max_tokens",
-    //   Title: "单次回复限制 (max_tokens)",
-    //   SubTitle: "单次交互所用的最大 Token 数",
-    //   defaultValue: "",
-    //   min: 1024,
-    //   max: 512000,
-    // },
     historyMessageCount: {
       ID: "historyMessageCount",
       Title: "附带历史消息数",

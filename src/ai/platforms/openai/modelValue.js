@@ -1,7 +1,7 @@
 import OpenAI from "./models";
 
 const docs = __APP_INFO__.pkg.docs;
-const openai_proxy_url = import.meta.env.VITE_OPENAI_PROXY_URL;
+const { VITE_OPENAI_PROXY_URL } = import.meta.env;
 
 export const OpenAIModelValue = () => {
   return {
@@ -17,7 +17,7 @@ export const OpenAIModelValue = () => {
       ID: "openaiUrl",
       Title: "接口地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
-      Placeholder: openai_proxy_url,
+      Placeholder: VITE_OPENAI_PROXY_URL,
       defaultValue: "",
     },
     Token: {
