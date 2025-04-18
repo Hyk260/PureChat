@@ -356,6 +356,10 @@ const setupEventListeners = () => {
     handleInsertDraft: insertContent.draft,
     handleFileDrop: (file) => handleFiles(file, "file"),
     handleToolbar: handleToolbarAction,
+    handleScreenCapture: (url) => {
+      const imageElement = createMediaElement("image", { src: url, style: { width: "125px" } });
+      editorRef.value.insertNode(imageElement);
+    },
   };
 
   Object.entries(events).forEach(([event, handler]) => {
@@ -370,6 +374,7 @@ const removeEventListeners = () => {
     handleInsertDraft: null,
     handleFileDrop: null,
     handleToolbar: null,
+    handleScreenCapture: null,
   }).forEach((event) => emitter.off(event));
 };
 

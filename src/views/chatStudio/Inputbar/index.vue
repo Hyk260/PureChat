@@ -25,7 +25,7 @@
       </el-button>
     </el-tooltip>
     <!-- 附件 -->
-    <el-tooltip :content="$t('chat.upload_document')" placement="top">
+    <el-tooltip v-if="false" :content="$t('chat.upload_document')" placement="top">
       <el-button v-show="isAssistant" @click="sendAnnexClick">
         <SvgIcon local-icon="paperClip" />
       </el-button>
