@@ -62,7 +62,7 @@ export const prompt = [
   },
 ];
 
-export const RobotAvatar = {
+export const AssistantAvatar = {
   [ModelProvider.OpenAI]: "openai.png",
   [ModelProvider.ZhiPu]: "zhipu.png",
   [ModelProvider.ZeroOne]: "zeroone.png",

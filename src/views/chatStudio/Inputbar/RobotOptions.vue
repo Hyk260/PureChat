@@ -20,7 +20,6 @@
               <div class="title">{{ item.Title }}</div>
               <div class="subTitle">
                 <Markdown :marked="item.SubTitle" />
-                <!-- <small>{{ item.SubTitle }} </small> -->
               </div>
             </div>
             <!-- 模型 -->
@@ -116,7 +115,11 @@
                 :type="item.ID === 'token' ? 'password' : 'text'"
                 :show-password="item.ID === 'token'"
                 clearable
-              />
+              >
+                <!-- <template v-if="['token'].includes(item.ID)" #append>
+                  <el-button @click="handleCheckToken(item)"> 检查 </el-button>
+                </template> -->
+              </el-input>
             </div>
           </div>
         </div>
@@ -235,6 +238,10 @@ function resetRobotModel() {
   const data = cloneDeep(modelValue[provider].Model.options.chatModels);
   const checkModel = data.find((item) => item.id === model);
   robotStore.setRobotModel(checkModel);
+}
+
+function handleCheckToken(item) {
+  console.log("handleCheckToken", item)
 }
 
 function handleCancel(done) {

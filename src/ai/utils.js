@@ -13,8 +13,8 @@ import {
   modelConfig,
   prompt,
   modelValue,
-  RobotAvatar,
-  REQUEST_TIMEOUT_MS
+  AssistantAvatar,
+  REQUEST_TIMEOUT_MS,
 } from "@/ai/constant";
 import { OpenaiConfig } from "@/ai/platforms/openai/index";
 import { isRobot } from "@/utils/chat/index";
@@ -192,7 +192,7 @@ export const createSmoothMessage = (params = { onTextUpdate: (delta, text) => { 
  */
 export const getAvatarUrl = (id, type = "local") => {
   // icon.png
-  const suffix = RobotAvatar[getModelType(id)] || "";
+  const suffix = AssistantAvatar[getModelType(id)] || "";
   if (type === "local") {
     return new URL(`../assets/images/model-provider/${suffix}`, import.meta.url).href;
   } else {

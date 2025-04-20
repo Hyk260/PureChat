@@ -23,7 +23,7 @@ export class QwenApi extends OpenAiApi {
     return {
       model: modelConfig.model,
       input: {
-        messages: this.userPromptMessages(messages, modelConfig),
+        messages: this.getPromptMessages(messages, modelConfig),
       },
       parameters: {
         result_format: "message",

@@ -28,7 +28,7 @@ export class OpenAiApi {
     this.provider = provider;
   }
   getPath(path) {
-    let baseUrl = this.accessStore().openaiUrl
+    let baseUrl = this.accessStore().openaiUrl;
     if (baseUrl.endsWith("/")) {
       baseUrl = baseUrl.slice(0, -1);
     }
@@ -42,18 +42,18 @@ export class OpenAiApi {
     }
     return [];
   }
-  usePromptStore() {
+  getPromptStore() {
     try {
-      const _prompt = useRobotStore().currentProviderPrompt?.prompt
+      const _prompt = useRobotStore().currentProviderPrompt?.prompt;
       const validPrompts = _prompt?.filter((t) => t.content) || [];
-      return validPrompts
+      return validPrompts;
     } catch (error) {
-      return []
+      return [];
     }
   }
-  userPromptMessages(messages, modelConfig) {
+  getPromptMessages(messages, modelConfig) {
     let combinedMessages = [];
-    const validPrompts = this.usePromptStore();
+    const validPrompts = this.getPromptStore();
     const historyCount = Math.max(Number(modelConfig.historyMessageCount) || 0, 0);
     if (validPrompts.length > 0) {
       combinedMessages = [...validPrompts, ...messages.slice(-historyCount)]; // prompt
@@ -92,7 +92,7 @@ export class OpenAiApi {
   }
   async enableFetchOnClient(messages, modelConfig) {
     let fetcher = null; //  typeof fetch
-    const message = this.userPromptMessages(messages, modelConfig);
+    const message = this.getPromptMessages(messages, modelConfig);
     fetcher = async () => {
       try {
         return await this.fetchOnClient(message);
@@ -109,7 +109,7 @@ export class OpenAiApi {
   generateRequestPayload(messages, modelConfig, options) {
     if (_isDalle3(modelConfig.model)) return generateDalle3RequestPayload(modelConfig);
     const payload = {
-      messages: this.userPromptMessages(messages, modelConfig),
+      messages: this.getPromptMessages(messages, modelConfig),
       stream: options.stream, // 流式传输
       model: modelConfig.model, // 模型
       // max_tokens: modelConfig.max_tokens, // 单次回复限制
@@ -124,7 +124,7 @@ export class OpenAiApi {
       payload.tools = tools;
       payload.stream = false;
     }
-    return payload
+    return payload;
   }
   // 生成聊天消息
   async chat(options) {
@@ -159,18 +159,9 @@ export class OpenAiApi {
 
       // 流式输出
       if (shouldStream) {
-        await handleStreamingChat(
-          chatPath,
-          chatPayload,
-          options,
-          controller,
-          this.provider
-        );
+        await handleStreamingChat(chatPath, chatPayload, options, controller, this.provider);
       } else {
-        const requestTimeoutId = setTimeout(
-          () => controller?.abort(),
-          REQUEST_TIMEOUT_MS,
-        );
+        const requestTimeoutId = setTimeout(() => controller?.abort(), REQUEST_TIMEOUT_MS);
 
         const res = await fetch(chatPath, chatPayload);
         clearTimeout(requestTimeoutId);
@@ -197,5 +188,9 @@ export class OpenAiApi {
       icon: "",
     }));
     return formattedModels;
+  }
+  // 检查连通性
+  async check(provider) {
+    
   }
 }
