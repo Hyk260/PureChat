@@ -116,9 +116,16 @@
                 :show-password="item.ID === 'token'"
                 clearable
               >
-                <!-- <template v-if="['token'].includes(item.ID)" #append>
-                  <el-button @click="handleCheckToken(item)"> 检查 </el-button>
-                </template> -->
+                <template #append v-if="['token'].includes(item.ID)">
+                  <el-button :loading="loading" @click="handleCheckToken(item)">
+                    <template #loading>
+                      <div class="iconify-icon svg-spinners mr-8"></div>
+                    </template>
+                    <el-tooltip content="测试 Api Key 与代理地址是否正确填写" placement="top">
+                      <span>检查</span>
+                    </el-tooltip>
+                  </el-button>
+                </template>
               </el-input>
             </div>
           </div>
@@ -144,7 +151,7 @@ import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
 import { StoreKey, modelValue } from "@/ai/constant";
-import { useRobotStore, useChatStore } from "@/stores/index";
+import { useRobotStore, useChatStore, useAppStore } from "@/stores/index";
 import { storeToRefs } from "pinia";
 import { isRange } from "./utils";
 import DragPrompt from "./DragPrompt.vue";
@@ -161,7 +168,9 @@ const modelData = ref(null);
 const inputRefs = ref({ token: null, openaiUrl: null });
 
 const [dialog, setDialog] = useState();
+const [loading, setLoading] = useState();
 
+const appStore = useAppStore();
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
 const { toAccount } = storeToRefs(chatStore);
@@ -240,8 +249,23 @@ function resetRobotModel() {
   robotStore.setRobotModel(checkModel);
 }
 
-function handleCheckToken(item) {
-  console.log("handleCheckToken", item)
+async function handleCheckToken(item) {
+  console.log("handleCheckToken", item);
+  if (item.defaultValue) {
+    setLoading(true);
+    const provider = modelProvider.value;
+    const api = new ClientApi(provider);
+    const { valid, error } = await api.llm.check();
+    if (valid) {
+      setLoading(false);
+      appStore.showMessage({ message: "连接成功", type: "success" });
+    } else {
+      setLoading(false);
+      appStore.showMessage({ message: error, type: "error" });
+    }
+  } else {
+    appStore.showMessage({ message: "请输入API密钥", type: "warning" });
+  }
 }
 
 function handleCancel(done) {

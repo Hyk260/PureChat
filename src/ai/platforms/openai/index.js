@@ -190,7 +190,33 @@ export class OpenAiApi {
     return formattedModels;
   }
   // 检查连通性
-  async check(provider) {
-    
+  async check() {
+    const url = this.getPath(OpenaiPath.ChatPath);
+    const payload = this.accessStore();
+
+    const chatPayload = {
+      method: "POST",
+      body: JSON.stringify({
+        messages: [{ role: "user", content: "你好" }],
+        model: payload?.model,
+        stream: false,
+      }),
+      headers: this.getHeaders(),
+    };
+
+    try {
+      const res = await fetch(url, chatPayload);
+      if (!res.ok) {
+        const resJson = await res.json();
+        console.log("[Check] Response received:", resJson);
+        return { valid: false, error: resJson?.error?.message || "Unknown error occurred" };
+      }
+      return {
+        valid: true,
+        error: undefined,
+      };
+    } catch (error) {
+      return { valid: false, error: error?.message || "Unknown error occurred" };
+    }
   }
 }
