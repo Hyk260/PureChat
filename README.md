@@ -40,15 +40,15 @@
 
 ### 🎉 特性
 
-- 📦️ 基于 Vue3，Vite5构建高效应用
+- 📦️ 基于Vue3，Vite5构建高效应用
 - 📸 聊天记录支持生成截图并支持一键复制
-- 💡 会话基于 腾讯IM即时通讯SDK
+- 💡 会话基于腾讯IM即时通讯SDK
 - 🌙 根据系统主题自动切换光明与黑暗模式
-- 📝 支持 Markdown渲染，代码高亮，链接识别
-- 🛡️ GitHub 快速登录，享受无缝社交体验
-- ☁️ 多模型支持 OpenAI、Ollama、DeepSeek 等，支持联网搜索，流式输出，深度思考，自定义预设提示词
-- ✨ 提供桌面应用 Electron 版本，支持 macOS (.dmg) 与 Windows (.exe)
-- 🛠 更多特性持续开发中
+- 📝 支持Markdown渲染，代码高亮，链接识别
+- 🛡️ GitHub快速登录，享受无缝社交体验
+- ☁️ 多模型支持OpenAI、Ollama、DeepSeek 等，支持联网搜索，流式输出，深度思考，自定义预设提示词
+- ✨ 提供桌面应用Electron版本，支持macOS(.dmg)与Windows(.exe)
+- 🛠  更多特性持续开发中
 
 ### 环境配置
 
@@ -69,24 +69,13 @@ pnpm install
 ### 启动项目
 
 ```bash
-# For web
 pnpm dev
-
-# For windows or macOS
-pnpm app:dev
 ```
 
 ### 打包
 
 ```bash
-# For web
 pnpm build
-
-# For windows
-pnpm app:builder:win
-
-# For macOS
-pnpm app:builder:mac
 ```
 
 ### Star History

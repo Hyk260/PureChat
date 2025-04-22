@@ -1,14 +1,13 @@
 <template>
   <div :class="[className]">
     <el-empty :description="$t('common.emptyText')" :image-size="150" />
-    <div v-if="className === 'no-msg' && chatStore.isWhole" class="flex-c launch" @click="launch">
+    <div v-if="className === 'no-msg'" class="flex-c launch" @click="launch">
       发起会话
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
 import { useSidebarStore, useChatStore } from "@/stores/index";
 
 const props = defineProps({

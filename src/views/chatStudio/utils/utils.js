@@ -313,6 +313,7 @@ export const customAlert = (s, t) => {
 };
 
 export const chatName = (item) => {
+  if (!item) return ""
   switch (item.type) {
     case "C2C":
       return item.userProfile.nick || item.userProfile.userID;
