@@ -25,7 +25,7 @@
       <!-- 消息回复框 -->
       <ReplyBox />
       <!-- Resize -->
-      <div v-if="isChatBoxVisible" id="drag" :class="fnDragCss()"></div>
+      <!-- <div v-if="isChatBoxVisible" id="drag" :class="fnDragCss()"></div> -->
       <!-- 编辑器 -->
       <Editor />
       <!-- 多选框 -->
@@ -114,6 +114,8 @@ watch(isChatBoxVisible, (val) => {
 }
 .message-right {
   background: var(--color-body-bg);
+  display: flex;
+  flex-direction: column;
   flex: 1;
   height: 100%;
   position: relative;
