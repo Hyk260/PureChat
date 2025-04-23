@@ -32,7 +32,6 @@
 </template>
 
 <script setup>
-import { isElectron } from "@/utils/common";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { getFileType, renderFileIcon, bytesToSize } from "@/utils/chat/index";
 import emitter from "@/utils/mitt-bus";
@@ -66,7 +65,7 @@ const isStatus = (value) => {
 };
 
 function handleOpen({ fileName }) {
-  if (isElectron) {
+  if (__IS_ELECTRON__) {
     console.log("Open electron:");
   } else {
     console.log("Open web:");

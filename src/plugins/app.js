@@ -1,5 +1,4 @@
 import { ElNotification, ElButton } from "element-plus";
-import { isElectron } from "@/utils/common";
 import { $t } from "@/locales/index";
 import { h } from "vue";
 
@@ -73,7 +72,7 @@ const checkForUpdates = async () => {
 };
 
 export function setupAppVersionNotification() {
-  if (isDev || isElectron) return;
+  if (isDev || __IS_ELECTRON__) return;
   const canAutoUpdateApp = VITE_AUTOMATICALLY_DETECT_UPDATE === 'Y' && isProd;
   if (!canAutoUpdateApp) return;
 

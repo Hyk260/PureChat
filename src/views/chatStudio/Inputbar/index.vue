@@ -117,7 +117,7 @@
 <script setup>
 import { showConfirmationBox } from "@/utils/message";
 import { createCustomMessage } from "@/api/im-sdk-api/index";
-import { isElectron, createFileInput } from "@/utils/common";
+import { createFileInput } from "@/utils/common";
 import { storeToRefs } from "pinia";
 import { useState } from "@/utils/hooks/index";
 import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores/index";
@@ -133,6 +133,7 @@ defineOptions({
   name: "Inputbar",
 });
 
+const isElectron = __IS_ELECTRON__
 const popoverRef = ref(null);
 
 const supportExts = [

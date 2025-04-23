@@ -1,4 +1,3 @@
-import { isElectron } from "@/utils/common";
 import { ACCESS_TOKEN } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 
@@ -37,6 +36,6 @@ function createRouteGuard(router) {
  * @param router - Router instance
  */
 export function createRouterGuard(router) {
-  if (!isElectron) createProgressGuard(router)
+  // if (!__IS_ELECTRON__) createProgressGuard(router)
   createRouteGuard(router)
 }

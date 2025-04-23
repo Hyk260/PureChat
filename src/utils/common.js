@@ -1,15 +1,6 @@
 import dayjs from "dayjs";
 import manifest from "@/database/manifest/index";
 
-const title = import.meta.env.VITE_APP_NAME;
-
-export const isElectron = !!window?.electron; // 是否是electron环境
-
-export function setPageTitle(routerTitle) {
-  if (isElectron) return;
-  document.title = routerTitle ? `${routerTitle} | ${title}` || title : title;
-}
-
 export function formatTime(data) {
   return dayjs(data).format("YYYY-MM-DD HH:mm:ss"); // 2022-5-7 9:17:56
 }

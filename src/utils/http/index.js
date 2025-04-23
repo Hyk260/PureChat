@@ -2,7 +2,6 @@ import { ACCESS_TOKEN } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { errorHandler } from "./tools";
 import axios from "axios";
-import { isElectron } from "@/utils/common";
 // import { stringify } from "qs";
 
 /** 请求白名单，放置一些不需要`token`的接口（通过设置请求白名单，防止`token`过期后再请求造成的死循环问题） */
@@ -27,7 +26,7 @@ const defaultConfig = {
 };
 
 function setStart({ url }) {
-  if (isElectron) return;
+  if (__IS_ELECTRON__) return;
   const isBar = whiteList.includes(url);
   // 开启进度条动画
   isBar && window.NProgress?.start?.();

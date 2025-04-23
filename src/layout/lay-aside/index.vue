@@ -103,10 +103,10 @@ const shouldHideUnreadBadge = (id) => {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  border-radius: 0 7px 7px 0;
-  box-shadow: 1px 0px 5px 0px rgb(0 0 0 / 10%);
-  background: var(--color-body-bg);
-  border-inline-end: 1px solid var(--color-border-default);
+  // border-radius: 0 7px 7px 0;
+  // box-shadow: 1px 0px 5px 0px rgb(0 0 0 / 10%);
+  background: var(--navbar-background);
+  // border-inline-end: 1px solid var(--color-border-default);
   padding: 8px 0px 12px;
 }
 
