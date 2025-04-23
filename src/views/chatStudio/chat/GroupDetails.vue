@@ -8,7 +8,7 @@
     :before-close="handleClose"
     :close-on-press-escape="true"
     :append-to-body="false"
-    :show-close="true"
+    :show-close="false"
     :with-header="true"
   >
     <div>

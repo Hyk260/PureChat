@@ -27,8 +27,8 @@ import LayAside from "./lay-aside/index.vue";
   display: flex;
   height: 100%;
   width: 100%;
-  flex: 1 1 0%;
-   background: var(--navbar-background);
+  flex: 1;
+  background: var(--navbar-background);
   .container-theme {
     height: 100%;
     width: 100%;
