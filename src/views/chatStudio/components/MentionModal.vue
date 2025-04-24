@@ -18,7 +18,7 @@
               :type="item.avatar ? 'single' : 'group'"
               :nickName="item.userID === magAtAll ? '@' : item.nick || item.userID"
             />
-            <span class="nick">{{ item.nick || item.userID }}</span>
+            <span class="nick truncate">{{ item.nick || item.userID }}</span>
           </li>
         </div>
       </el-scrollbar>
@@ -236,7 +236,6 @@ export default {
     align-items: center;
     margin-left: 5px;
     max-width: 125px;
-    @include text-ellipsis();
   }
   li {
     cursor: pointer;

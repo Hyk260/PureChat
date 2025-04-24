@@ -20,6 +20,12 @@
               <span>{{ item.meta.title }}</span>
             </div>
           </template>
+          <div v-if="false" class="lucide-history ai-prompt-title">
+            <SvgIcon local-icon="lucide-history" />
+            <span>
+              {{ robotStore.getBotMessageCount }}
+            </span>
+          </div>
         </span>
         <span v-else-if="chatType('GROUP')" @click="openSetup" class="group">
           <span class="nick"> {{ chatNick("GROUP", currentConversation) }}</span>
@@ -105,11 +111,32 @@ const openUser = () => {};
       max-width: 500px;
       display: flex;
       align-items: center;
-      @include text-ellipsis();
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       .nick {
         margin-right: 5px;
       }
     }
+  }
+  .ai-prompt-title {
+    white-space: nowrap;
+    background: #fffbe6;
+    border: 0.64px solid rgb(255 209 60);
+    color: #faad14;
+    border-radius: 2px;
+    font-size: 12px;
+    padding: 0 5px;
+    display: inline-block;
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+  }
+  .lucide-history {
+    margin-left: 5px;
+    // border: 0.64px solid rgb(145, 213, 255);
   }
 }
 </style>

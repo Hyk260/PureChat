@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="content">
-      <div class="characters">
+      <div class="characters multi-truncate-2">
         <span>{{ userProfile?.selfSignature || "-" }} </span>
       </div>
     </div>
@@ -217,9 +217,6 @@ onBeforeUnmount(() => {
     .characters {
       height: 38px;
       color: var(--black);
-      span {
-        @include ellipsisBasic(2);
-      }
     }
   }
 }

@@ -56,7 +56,7 @@
     </el-tooltip>
     <!-- 清空消息 -->
     <el-tooltip content="清空消息" placement="top">
-      <span>
+      <div>
         <el-popover ref="popoverRef" placement="top" trigger="click" width="250">
           <div class="flex-c gap-5 mb-10">
             <el-icon class="text-[#F56C6C]"><Warning /></el-icon>
@@ -76,7 +76,7 @@
             </el-button>
           </template>
         </el-popover>
-      </span>
+      </div>
     </el-tooltip>
     <!-- 插件 -->
     <el-tooltip content="选择插件" placement="top">

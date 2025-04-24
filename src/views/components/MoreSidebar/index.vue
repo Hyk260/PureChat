@@ -290,7 +290,9 @@ $draggable-height: 384px;
   }
 }
 .empty {
-  @include flex-center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 0;
   opacity: 0.5;

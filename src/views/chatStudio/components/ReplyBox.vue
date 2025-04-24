@@ -1,7 +1,7 @@
 <template>
   <div class="reply-box flex-bc" v-if="replyMsgData" @click="onClick">
     <FontIcon class="close" iconName="CircleCloseFilled" @click="onClose" />
-    <div class="reply-box-content">
+    <div class="reply-box-content multi-truncate-2">
       <div v-if="replyMsgData?.nick" class="nick">{{ replyMsgData?.nick }} :</div>
       <div class="text" v-if="replyMsgData">
         <DynamicContent :text="getAbstractContent(replyMsgData)" />
@@ -44,9 +44,6 @@ const onClick = () => {
     padding: 0 25px 0 10px;
     color: #666;
     margin-bottom: 10px;
-    .text {
-      @include ellipsisBasic(1);
-    }
   }
   .close {
     color: rgb(140, 140, 140);

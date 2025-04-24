@@ -32,5 +32,16 @@ export default defineConfig({
     'flex-bc': 'flex justify-between items-center',
     'flex-ae': 'flex justify-around items-end',
     'flex-ss': 'flex justify-start items-start',
-  }
+    'truncate': 'overflow-hidden text-ellipsis whitespace-nowrap',
+  },
+  rules: [
+    [/^multi-truncate-(\d+)$/, ([, n]) => ({
+      '--line-clamp': n,
+      'display': '-webkit-box',
+      '-webkit-box-orient': 'vertical',
+      '-webkit-line-clamp': 'var(--line-clamp)',
+      'overflow': 'hidden',
+      'text-overflow': 'ellipsis'
+    })]
+  ]
 })

@@ -2,10 +2,10 @@
   <div class="merge" @click="onClick">
     <div class="preview">
       <div class="preview-title">
-        <span :title="message.payload.title"> {{ message.payload.title }}</span>
+        <span class="truncate" :title="message.payload.title"> {{ message.payload.title }}</span>
       </div>
       <div class="preview-item" v-for="item in abstractList" :key="item">
-        <div class="preview-text">{{ item }}</div>
+        <div class="truncate">{{ item }}</div>
       </div>
     </div>
     <div class="footer" v-show="num">{{ `查看${num}条转发消息` }}</div>
@@ -62,7 +62,6 @@ function onClick() {
     span {
       width: 100%;
       display: inline-block;
-      @include text-ellipsis;
     }
   }
   .preview-item {
@@ -71,9 +70,6 @@ function onClick() {
     font-size: 14px;
     height: 20px;
     padding: 0 12px;
-    .preview-text {
-      @include text-ellipsis;
-    }
   }
 }
 .footer {

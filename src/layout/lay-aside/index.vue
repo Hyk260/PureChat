@@ -43,6 +43,7 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import { openWindow } from "@/utils/common";
 import { useChatStore, useSidebarStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
@@ -60,7 +61,6 @@ const sidebarStore = useSidebarStore();
 
 const handleAvatarClick = () => {
   if (__LOCAL_MODE__) {
-
   } else {
     emitter.emit("setPopover");
   }
@@ -71,12 +71,12 @@ const openSettings = () => {
 };
 
 const onOpenDocs = () => {
-  window.open(docs, "_blank");
+  openWindow(docs);
 };
 
 const handleItemClick = (item) => {
   if (item?.openType) {
-    window.open(item?.url, "_blank");
+    openWindow(item?.url);
   } else if (item?.mode === "other") {
     emitter.emit("SidebarEditDialog", true);
   } else {

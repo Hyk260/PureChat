@@ -51,7 +51,7 @@
           </span>
         </div>
         <div class="emoji_mart" v-if="table === 'Mart'">
-          <p class="title">emoji</p>
+          <p class="title">emoji表情</p>
           <span
             v-for="key in emojiArray"
             class="emoji emoji_mart_item"

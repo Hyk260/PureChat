@@ -41,7 +41,9 @@ export default {
 
 <style lang="scss" scoped>
 .message-skeleton {
-  @include flex-center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 12px 12px 12px 16px;
   height: 64px;
   box-sizing: border-box;

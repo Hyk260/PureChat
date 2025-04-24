@@ -86,7 +86,7 @@ function storeRobotModel(data) {
   } else {
     localStg.set(StoreKey.Access, { [provider]: { ...modelConfig } });
   }
-  robotStore.setRobotModel(data);
+  robotStore.setModel(data);
   robotStore.updataBotToolsFlag(data);
   setFlag(false);
 }

@@ -8,6 +8,7 @@
 </template>
 
 <script setup>
+import { openWindow } from "@/utils/common";
 import { modelValue } from "@/ai/constant";
 import emitter from "@/utils/mitt-bus";
 
@@ -26,7 +27,7 @@ function openRobotBox() {
 }
 function jumpLink() {
   const url = getDoubt(props.payload);
-  window.open(url, "_blank");
+  openWindow(url);
 }
 function getDoubt(payload) {
   try {

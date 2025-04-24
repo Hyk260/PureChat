@@ -3,7 +3,7 @@
     <EmptyMessage className="no-msg" v-if="conversationList.length === 0" />
     <div
       v-for="item in searchForData"
-      class="message-item"
+      class="message-item flex-c"
       :key="item.conversationID"
       :id="`message_${item.conversationID}`"
       :class="fnClass(item)"
@@ -32,14 +32,14 @@
       <div class="message-item-right">
         <div class="message-item-right-top flex-bc">
           <div class="message-chat-name flex">
-            <span class="name-title">{{ chatName(item) }}</span>
+            <span class="name-title truncate">{{ chatName(item) }}</span>
             <Label :item="item" :userID="item.userProfile?.userID" />
           </div>
           <div class="message-time" v-if="item.lastMessage?.lastTime">
             {{ timeFormat(item.lastMessage.lastTime * 1000) }}
           </div>
         </div>
-        <div class="message-item-right-bottom">
+        <div class="message-item-right-bottom truncate">
           <CustomMention v-if="isMention(item) || isDraft(item)" :item="item" />
           <span v-else>{{ formatNewsMessage(item) }}</span>
         </div>
@@ -267,7 +267,6 @@ const pingConversation = async (data) => {
   overflow: hidden;
 }
 .message-item {
-  @include flex-center;
   gap: 14px;
   padding: 12px 12px 12px 16px;
   user-select: none;
@@ -316,7 +315,6 @@ const pingConversation = async (data) => {
         max-width: 140px;
         .name-title {
           padding-right: 5px;
-          @include text-ellipsis();
         }
       }
       .message-time {
@@ -329,7 +327,6 @@ const pingConversation = async (data) => {
       font-size: 12px;
       color: var(--color-time-divider);
       width: 179px;
-      @include text-ellipsis;
     }
     .svg-icon {
       color: rgba(0, 0, 0, 0.45);

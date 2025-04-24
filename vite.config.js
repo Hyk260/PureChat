@@ -37,7 +37,7 @@ export default defineConfig(({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: `@use "./src/styles/global/mixin.scss" as *;`,
+          // additionalData: `@import "./src/styles/global/mixin.scss" as *;`,
         },
       },
     },

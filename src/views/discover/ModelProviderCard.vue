@@ -8,7 +8,7 @@
         {{ agents.nick }}
       </span>
     </div>
-    <div class="desc">
+    <div class="desc multi-truncate-2">
       {{ agents.selfSignature }}
     </div>
     <div class="tags">
@@ -62,7 +62,7 @@ defineProps({
     }
   }
   .desc {
-    @include ellipsisBasic;
+    // @include ellipsisBasic;
     min-height: 44px;
     line-height: 1.5;
   }

@@ -107,26 +107,27 @@
                 </span>
                 <span v-else> </span>
               </el-tooltip>
-              <el-input
-                v-model="item.defaultValue"
-                @change="handleModelData"
-                :ref="(e) => inputRef(e, item.ID)"
-                :placeholder="item.Placeholder"
-                :type="item.ID === 'token' ? 'password' : 'text'"
-                :show-password="item.ID === 'token'"
-                clearable
-              >
-                <template #append v-if="['token'].includes(item.ID)">
-                  <el-button :loading="loading" @click="handleCheckToken(item)">
-                    <template #loading>
-                      <div class="iconify-icon svg-spinners mr-8"></div>
-                    </template>
-                    <el-tooltip content="测试 Api Key 与代理地址是否正确填写" placement="top">
-                      <span>检查</span>
-                    </el-tooltip>
-                  </el-button>
-                </template>
-              </el-input>
+              <div class="flex gap-4">
+                <el-input
+                  v-model="item.defaultValue"
+                  @change="handleModelData"
+                  :class="['token'].includes(item.ID) ? '!w-337' : ''"
+                  :ref="(e) => inputRef(e, item.ID)"
+                  :placeholder="item.Placeholder"
+                  :type="item.ID === 'token' ? 'password' : 'text'"
+                  :show-password="item.ID === 'token'"
+                  clearable
+                >
+                </el-input>
+                <el-button v-if="['token'].includes(item.ID)" :loading="loading" @click="handleCheckToken(item)">
+                  <template #loading>
+                    <div class="iconify-icon svg-spinners mr-8"></div>
+                  </template>
+                  <el-tooltip content="测试 Api Key 与代理地址是否正确填写" placement="top">
+                    <span>检查</span>
+                  </el-tooltip>
+                </el-button>
+              </div>
             </div>
           </div>
         </div>
@@ -154,6 +155,7 @@ import { StoreKey, modelValue } from "@/ai/constant";
 import { useRobotStore, useChatStore, useAppStore } from "@/stores/index";
 import { storeToRefs } from "pinia";
 import { isRange } from "./utils";
+import { openWindow } from "@/utils/common";
 import DragPrompt from "./DragPrompt.vue";
 import OllamaAI from "@/ai/platforms/ollama/ollama";
 import emitter from "@/utils/mitt-bus";
@@ -246,7 +248,7 @@ function resetRobotModel() {
   const model = useAccessStore(provider)?.model;
   const data = cloneDeep(modelValue[provider].Model.options.chatModels);
   const checkModel = data.find((item) => item.id === model);
-  robotStore.setRobotModel(checkModel);
+  robotStore.setModel(checkModel);
 }
 
 async function handleCheckToken(item) {
@@ -298,7 +300,7 @@ function handleConfirm() {
 }
 
 function toUrl(url) {
-  window.open(url, "_blank");
+  openWindow(url);
 }
 
 const handleRobotBoxEvent = (data = {}) => {

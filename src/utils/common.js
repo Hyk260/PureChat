@@ -154,3 +154,18 @@ export function hasObjectKey(obj, key) {
 
   return Object.keys(obj).includes(key)
 }
+
+export const openWindow = (
+  url,
+  {
+    target = '_blank',
+    noopener = true,
+    noreferrer = true
+  } = {}
+) => {
+  const features = [
+    noopener && 'noopener=yes',
+    noreferrer && 'noreferrer=yes'
+  ].filter(Boolean).join(',');
+  return window.open(url, target, features);
+};

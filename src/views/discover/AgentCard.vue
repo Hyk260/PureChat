@@ -8,7 +8,7 @@
         {{ agents.meta.avatar }}
       </span>
     </div>
-    <div class="desc">
+    <div class="desc multi-truncate-3">
       {{ agents.meta.description }}
     </div>
     <div class="tags">
@@ -56,11 +56,9 @@ defineProps({
       font-size: 28px;
       text-align: center;
       line-height: 40px;
-      @include text-ellipsis;
     }
   }
   .desc {
-    @include ellipsisBasic;
     min-height: 44px;
     line-height: 1.5;
   }

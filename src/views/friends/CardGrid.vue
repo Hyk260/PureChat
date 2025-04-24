@@ -12,9 +12,6 @@
     </div>
     <div class="right-item">
       <p>{{ item.Name || item.name || item.nick }}</p>
-      <!-- <p v-if="false" class="describe">
-        {{ item.selfSignature }}
-      </p> -->
     </div>
   </div>
 </template>
@@ -63,12 +60,6 @@ export default {
     flex-direction: column;
     padding-left: 10px;
     width: 100%;
-    .describe {
-      @include text-ellipsis;
-      width: calc(100% - 40px);
-      font-size: 12px;
-      color: var(--color-time-divider);
-    }
     .el-icon {
       cursor: pointer;
     }

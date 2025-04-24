@@ -38,6 +38,7 @@ import { useState } from "@/utils/hooks/index";
 import { useAppStore, useWebSearchStore } from "@/stores/index";
 import { WEB_SEARCH_PROVIDER_CONFIG } from "@/config/webSearchProviders";
 import { optionsProviders } from "./enums";
+import { openWindow } from "@/utils/common";
 import WebSearchService from "@/ai/webSearchService";
 
 const [searchInput, setSearchInput] = useState("");
@@ -65,7 +66,7 @@ function onBlur() {
 }
 
 function toLink(url) {
-  if (url) open(url);
+  if (url) openWindow(url);
 }
 
 async function checkApiKey() {

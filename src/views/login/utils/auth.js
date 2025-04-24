@@ -1,5 +1,6 @@
 import { useUserStore } from "@/stores/modules/user/index";
 import { githubAuth, openAuthUrl } from "@/api/node-admin-api/index";
+import { openWindow } from "@/utils/common";
 
 const { DEV: isDev } = import.meta.env;
 
@@ -15,7 +16,7 @@ const extractCodeFromUrl = () => {
 // GitHub OAuth授权
 export const oauthAuthorize = async () => {
   const { url } = await openAuthUrl();
-  window.open(url, window?.electron ? undefined : "_self");
+  openWindow(url, { target: __IS_ELECTRON__ ? "_blank" : "_self", });
 };
 
 // GitHub授权回调

@@ -36,6 +36,7 @@ import { onClickOutside } from "@vueuse/core";
 import { useState } from "@/utils/hooks/index";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
+import { openWindow } from "@/utils/common";
 import { useUserStore, useChatStore } from '@/stores/index';
 import emitter from "@/utils/mitt-bus";
 
@@ -66,7 +67,7 @@ const menuItems = [
     label: "社区支持",
     icon: "PieChart",
     action: () => {
-      open(`${homepage}`);
+      openWindow(homepage);
     },
   },
   // {

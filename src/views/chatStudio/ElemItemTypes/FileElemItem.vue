@@ -16,7 +16,7 @@
           :content="payload.fileName"
           :disabled="payload.fileName.length < 24"
         >
-          <div class="file-name">
+          <div class="file-name truncate">
             {{ payload.fileName }}
           </div>
         </el-tooltip>
@@ -134,7 +134,6 @@ onBeforeUnmount(() => {
       font-size: 14px;
       height: 18px;
       width: 160px;
-      @include text-ellipsis;
     }
     .file-size {
       font-weight: 400;

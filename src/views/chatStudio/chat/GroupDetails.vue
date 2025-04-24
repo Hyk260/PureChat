@@ -21,7 +21,7 @@
         />
         <div class="group-info-text">
           <div>
-            <span class="group-name">
+            <span class="group-name truncate">
               {{ groupProfile.name }}
             </span>
             <FontIcon
@@ -48,7 +48,7 @@
             @click="openNoticePopup"
           />
         </div>
-        <div class="group-notice-info">
+        <div class="group-notice-info multi-truncate-5">
           <Markdown :marked="groupProfile.notification" />
         </div>
       </div>
@@ -371,7 +371,6 @@ watch(currentConversation, (data) => {
     color: #999999;
     line-height: 16px;
     min-height: 12px;
-    @include ellipsisBasic(5);
   }
 }
 
@@ -393,7 +392,6 @@ watch(currentConversation, (data) => {
       font-weight: 400;
       color: var(--color-message-chat-name);
       margin-right: 8px;
-      @include text-ellipsis;
     }
 
     .group-type {
