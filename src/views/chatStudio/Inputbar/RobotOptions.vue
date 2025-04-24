@@ -93,7 +93,7 @@
                 type="number"
               />
             </div>
-            <div class="input flex-ac" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
+            <div class="input flex-bc" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
               <el-tooltip content="配置教程" placement="top">
                 <span
                   v-if="item.doubt && ['token'].includes(item.ID)"
@@ -107,11 +107,11 @@
                 </span>
                 <span v-else> </span>
               </el-tooltip>
-              <div class="flex gap-4">
+              <div class="w-full flex gap-4">
                 <el-input
                   v-model="item.defaultValue"
                   @change="handleModelData"
-                  :class="['token'].includes(item.ID) ? '!w-337' : ''"
+                  :class="['token'].includes(item.ID) ? '!w-337' : 'w-full'"
                   :ref="(e) => inputRef(e, item.ID)"
                   :placeholder="item.Placeholder"
                   :type="item.ID === 'token' ? 'password' : 'text'"
