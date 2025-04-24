@@ -1,17 +1,19 @@
 <template>
   <main class="app-main">
     <LayAside />
-    <div class="container-theme">
-      <router-view v-slot="{ Component, route }">
-        <transition name="fade-slide" :appear="true" mode="out-in">
-          <keep-alive v-if="route.meta.keep" max="1">
-            <component v-if="Component" :is="Component" :key="route.path" />
-          </keep-alive>
-          <template v-else>
-            <component v-if="Component" :is="Component" :key="route.path" />
-          </template>
-        </transition>
-      </router-view>
+    <div class="home-page">
+      <div class="container-theme">
+        <router-view v-slot="{ Component, route }">
+          <transition name="fade-slide" :appear="true" mode="out-in">
+            <keep-alive v-if="route.meta.keep" max="1">
+              <component v-if="Component" :is="Component" :key="route.path" />
+            </keep-alive>
+            <template v-else>
+              <component v-if="Component" :is="Component" :key="route.path" />
+            </template>
+          </transition>
+        </router-view>
+      </div>
     </div>
     <LaySetting />
   </main>
@@ -29,6 +31,9 @@ import LayAside from "./lay-aside/index.vue";
   width: 100%;
   flex: 1;
   background: var(--navbar-background);
+  .home-page {
+    width: 100%;
+  }
   .container-theme {
     height: 100%;
     width: 100%;
