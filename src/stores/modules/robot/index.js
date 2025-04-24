@@ -64,6 +64,9 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       if (!avatar && !title) return "";
       return `${avatar} ${title}`;
     },
+    getBotMessageCount() {
+      return this.modelConfig?.historyMessageCount || 1;
+    }
   },
   actions: {
     setPromptStore(data, provider) {
@@ -79,9 +82,9 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       const model = useAccessStore(provider)?.model;
       const data = cloneDeep(modelValue[provider].Model.options.chatModels);
       const checkModel = data.find((item) => item.id === model);
-      this.modelConfig = useAccessStore(provider);
+      this.setModelConfig(provider);
       this.setPromptConfig(this.promptStore[provider]?.[0] || null)
-      this.setRobotModel(checkModel);
+      this.setModel(checkModel);
     },
     setDefaultProvider(data) {
       this.defaultProvider = data
@@ -89,7 +92,10 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     updataBotToolsFlag(data) {
       this.isShowBotTools = data?.functionCall || false;
     },
-    setRobotModel(value) {
+    setModelConfig(provider) {
+      this.modelConfig = useAccessStore(provider);
+    },
+    setModel(value) {
       this.model = value;
     },
     setPromptConfig(value) {

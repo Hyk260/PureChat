@@ -81,22 +81,6 @@ div:focus {
   display: none !important;
 }
 
-.ai-prompt-title {
-  white-space: nowrap;
-  background: #fffbe6;
-  border: 0.64px solid rgb(255 209 60);
-  color: #faad14;
-  border-radius: 2px;
-  font-size: 12px;
-  padding: 0 4px;
-  display: inline-block;
-  height: 20px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
-}
-
 .forward-action {
   height: 400px;
   max-height: 400px;

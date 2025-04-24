@@ -1,6 +1,6 @@
 import { http } from "@/utils/http/index";
 
-const client = window?.electron ? 'app' : 'web'
+const client = __IS_ELECTRON__ ? 'app' : 'web'
 
 export const openAuthUrl = (params) => {
   return http.request({
