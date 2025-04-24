@@ -2,7 +2,7 @@
   <el-dialog class="setup-modal" v-model="drawer" :show-close="false" width="700">
     <div class="ui-modal-body">
       <List @active="active" ref="listRef" />
-      <ItemGrid :item="item" @onClose="setDrawer(false)" @onItem="setItem" />
+      <ItemGrid :item="item" @onClose="setDrawer(false)" />
     </div>
   </el-dialog>
 </template>
@@ -16,11 +16,11 @@ import ItemGrid from "./itemGrid.vue";
 import List from "./list.vue";
 
 const listRef = ref();
-const item = ref({});
+const item = ref(list.value[0]);
 const [drawer, setDrawer] = useState();
 
 function setItem(data = list.value[0]) {
-  listRef.value?.onClick(data);
+  listRef.value?.handleItemClick(data);
 }
 
 function active(t) {
