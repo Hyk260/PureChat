@@ -12,21 +12,19 @@
           </div>
         </div>
       </div>
-      <div>
+      <div class="flex">
         <el-button @click="openDocs"> {{ $t("settings.about.releases.title") }} </el-button>
+        <!-- <el-button> 检查更新 </el-button> -->
       </div>
     </div>
     <div class="divider"></div>
-    <!-- <div class="info">
-        <div>其他信息</div>
-      </div> -->
   </div>
 </template>
 
 <script setup>
 import { openWindow } from "@/utils/common";
 const { VITE_APP_NAME } = import.meta.env;
-const { version } = __APP_INFO__.pkg;
+const { version, docs } = __APP_INFO__.pkg;
 
 function openDocs() {
   openWindow(`${docs}/other/logs.html`);
@@ -52,12 +50,5 @@ function openDocs() {
       font-weight: 400;
     }
   }
-}
-
-.info {
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 22px;
-  margin-bottom: 16px;
 }
 </style>

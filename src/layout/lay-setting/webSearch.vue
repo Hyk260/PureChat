@@ -24,6 +24,7 @@
         type="password"
         placeholder="API密钥"
         show-password
+        clearable
       />
       <el-button @click="checkApiKey">检查</el-button>
     </div>

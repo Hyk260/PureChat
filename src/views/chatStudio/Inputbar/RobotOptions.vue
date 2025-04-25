@@ -93,25 +93,25 @@
                 type="number"
               />
             </div>
-            <div class="input flex-bc" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
+            <div class="input gap-5 flex-bc" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
               <el-tooltip content="配置教程" placement="top">
                 <span
                   v-if="item.doubt && ['token'].includes(item.ID)"
-                  class="flex mr-5 cursor-pointer"
+                  class="flex cursor-pointer"
                 >
                   <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
                 </span>
                 <!-- ollama -->
-                <span v-else-if="item.doubt && isOllama" class="flex mr-5 cursor-pointer">
+                <span v-else-if="item.doubt && isOllama" class="flex cursor-pointer">
                   <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
                 </span>
-                <span v-else> </span>
+                <span v-else class="w-14"> </span>
               </el-tooltip>
               <div class="w-full flex gap-4">
                 <el-input
                   v-model="item.defaultValue"
                   @change="handleModelData"
-                  :class="['token'].includes(item.ID) ? '!w-337' : 'w-full'"
+                  :class="['token'].includes(item.ID) ? '!w-310' : 'w-full'"
                   :ref="(e) => inputRef(e, item.ID)"
                   :placeholder="item.Placeholder"
                   :type="item.ID === 'token' ? 'password' : 'text'"
@@ -119,7 +119,12 @@
                   clearable
                 >
                 </el-input>
-                <el-button v-if="['token'].includes(item.ID)" :loading="loading" @click="handleCheckToken(item)">
+                <el-button
+                  class="check-token-btn"
+                  v-if="['token'].includes(item.ID)"
+                  :loading="loading"
+                  @click="onCheckToken(item)"
+                >
                   <template #loading>
                     <div class="iconify-icon svg-spinners mr-8"></div>
                   </template>
@@ -146,6 +151,7 @@
 </template>
 
 <script setup>
+import { storeToRefs } from "pinia";
 import { useAccessStore, getModelSvg } from "@/ai/utils";
 import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
@@ -153,7 +159,7 @@ import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
 import { StoreKey, modelValue } from "@/ai/constant";
 import { useRobotStore, useChatStore, useAppStore } from "@/stores/index";
-import { storeToRefs } from "pinia";
+import { debounce } from "lodash-es";
 import { isRange } from "./utils";
 import { openWindow } from "@/utils/common";
 import DragPrompt from "./DragPrompt.vue";
@@ -250,6 +256,8 @@ function resetRobotModel() {
   const checkModel = data.find((item) => item.id === model);
   robotStore.setModel(checkModel);
 }
+
+const onCheckToken = debounce(handleCheckToken, 2000, { leading: true, trailing: false });
 
 async function handleCheckToken(item) {
   console.log("handleCheckToken", item);
@@ -397,6 +405,9 @@ onUnmounted(() => {
     .el-select {
       width: 400px;
     }
+  }
+  .check-token-btn {
+    min-width: 86px;
   }
 }
 .range {

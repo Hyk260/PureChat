@@ -23,7 +23,7 @@
         />
       </el-select>
     </li>
-    <li class="logout" v-if="!isLocalMode">
+    <li v-if="!isLocalMode">
       <el-button @click="logout" type="primary">
         {{ $t("login.logout") }}
       </el-button>
@@ -67,13 +67,17 @@ const language = computed({
 </script>
 
 <style lang="scss" scoped>
-.setting li {
+.setting {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 20px 0;
-  .el-select {
-    max-width: 180px;
+  flex-direction: column;
+  gap: 20px;
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .el-select {
+      max-width: 180px;
+    }
   }
 }
 </style>

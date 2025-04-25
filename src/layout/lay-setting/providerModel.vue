@@ -35,7 +35,6 @@ const defaultProvider = computed({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 20px 0;
   .el-select {
     max-width: 180px;
   }
