@@ -6,6 +6,7 @@
     "esModuleInterop": true,
     "lib": ["DOM", "ESNext"],
     "paths": {
+      "@shared/*": ["./packages/shared*"],
       "@/*": ["./src/*"],
       "~/*": ["./*"]
     }

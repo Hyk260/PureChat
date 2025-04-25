@@ -1,4 +1,4 @@
-import { textExts } from "@/constants/index";
+// import { textExts } from '@shared/config/constant';
 
 export const createMediaElement = (type, props) => ({
   type,

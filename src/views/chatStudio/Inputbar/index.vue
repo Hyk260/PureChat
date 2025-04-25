@@ -121,7 +121,7 @@ import { createFileInput } from "@/utils/common";
 import { storeToRefs } from "pinia";
 import { useState } from "@/utils/hooks/index";
 import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores/index";
-import { imageExts, textExts, documentExts, audioExts, videoExts } from "@/constants/index";
+import { imageExts, textExts, documentExts, audioExts, videoExts } from '@shared/config/constant'
 import WebSearchService from "@/ai/webSearchService";
 import EmojiPicker from "./EmojiPicker.vue";
 import RobotOptions from "./RobotOptions.vue";

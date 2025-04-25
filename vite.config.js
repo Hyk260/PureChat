@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
         "~": fileURLToPath(new URL("./", import.meta.url)),
         // 配置主路径别名@
         "@": fileURLToPath(new URL("./src", import.meta.url)),
+        '@shared': fileURLToPath(new URL("./packages/shared", import.meta.url)),
       },
       extensions: [".js", ".json"],
     },
