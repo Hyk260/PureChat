@@ -20,7 +20,15 @@ export const {
 
 export const ROLES = ["system", "user", "assistant"];
 
-export const ROBOT_COLLECT = [VITE_OPENAI_ID, VITE_ZHIPU_ID, VITE_ZEROONE_ID, VITE_OLLAMA_ID, VITE_DEEPSEEK_ID, VITE_GITHUB_ID];
+export const ROBOT_COLLECT = [
+  VITE_OPENAI_ID,
+  VITE_ZHIPU_ID,
+  VITE_ZEROONE_ID,
+  VITE_OLLAMA_ID,
+  VITE_DEEPSEEK_ID,
+  VITE_GITHUB_ID,
+  VITE_QWEN_ID,
+];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
 
@@ -33,11 +41,6 @@ export const StoreKey = {
 /**
  * 模型提供者对象，包含不同的模型名称
  * @type {Object}
- * @property {string} OpenAi - OpenAi模型
- * @property {string} ZhiPu - 智谱模型
- * @property {string} ZeroOne - 零一万物模型
- * @property {string} Qwen - 通义千问模型
- * @property {string} Ollama - Ollama模型
  */
 export const ModelProvider = {
   OpenAI: "openai",
