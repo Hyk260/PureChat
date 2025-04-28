@@ -1,16 +1,6 @@
 import { ACCESS_TOKEN } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 
-function createProgressGuard(router) {
-  router.beforeEach((to, from, next) => {
-    window.NProgress?.start?.();
-    next();
-  });
-  router.afterEach((to) => {
-    window.NProgress?.done?.();
-  });
-}
-
 function createRouteGuard(router) {
   router.beforeEach((to, from, next) => {
     if (from.path === to.path) return;

@@ -48,18 +48,9 @@
 .chatglm {
   background: linear-gradient(-45deg, rgb(52, 133, 255), rgb(80, 74, 244));
 }
-.qwen {
-  background: rgb(97, 92, 237);
-}
 .yi {
   background: rgb(0, 52, 37);
 }
-.meta {
-  background: linear-gradient(45deg, rgb(0, 127, 248), rgb(6, 104, 225), rgb(0, 127, 248));
-}
 .llava {
   background: linear-gradient(-45deg, rgb(203, 45, 48), rgb(237, 130, 58));
-}
-.deepseek {
-  background: #4d6bfe;
 }

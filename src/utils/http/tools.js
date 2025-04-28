@@ -36,7 +36,6 @@ export const errorHandler = (error) => {
   } else {
     errMessage = "无法连接到服务器！";
   }
-  window.NProgress?.done?.(); // 关闭加载条
   useUserStore().setLoading(false);
   useAppStore().showMessage({ message: errMessage, type: "error" });
   return Promise.reject(error);

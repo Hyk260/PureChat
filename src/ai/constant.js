@@ -5,6 +5,7 @@ import { ZhiPuApi, ZhiPuModelValue, ZhiPuConfig } from "@/ai/platforms/zhipu/ind
 import { QwenApi, QwenModelValue, QwenConfig } from "@/ai/platforms/qwen/index";
 import { OllamaApi, OllamaModelValue, OllamaConfig } from "@/ai/platforms/ollama/index";
 import { DeepSeekApi, DeepseekModelValue, DeepseekConfig } from "@/ai/platforms/deepseek/index";
+import { MistralApi, MistralModelValue, MistralConfig } from "@/ai/platforms/mistral/index";
 import { prefixRobotIDs } from "./utils";
 
 export const {
@@ -15,6 +16,7 @@ export const {
   VITE_OLLAMA_ID, // ollama
   VITE_GITHUB_ID, // github
   VITE_DEEPSEEK_ID, // deepseek
+  VITE_MISTRAL_ID, // mistral
   DEV: isDev,
 } = import.meta.env;
 
@@ -28,6 +30,7 @@ export const ROBOT_COLLECT = [
   VITE_DEEPSEEK_ID,
   VITE_GITHUB_ID,
   VITE_QWEN_ID,
+  VITE_MISTRAL_ID,
 ];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
@@ -38,10 +41,6 @@ export const StoreKey = {
   Access: "access-control",
 };
 
-/**
- * 模型提供者对象，包含不同的模型名称
- * @type {Object}
- */
 export const ModelProvider = {
   OpenAI: "openai",
   ZhiPu: "zhipu",
@@ -50,6 +49,8 @@ export const ModelProvider = {
   DeepSeek: "deepseek",
   Ollama: "ollama",
   GitHub: "github",
+  GitHub: "github",
+  Mistral: "mistral",
 };
 
 export const prompt = [
@@ -73,9 +74,9 @@ export const AssistantAvatar = {
   [ModelProvider.Ollama]: "ollama.svg",
   [ModelProvider.GitHub]: "github.svg",
   [ModelProvider.DeepSeek]: "deepseek.png",
+  [ModelProvider.Mistral]: "mistral.png",
 };
 
-// 默认配置
 export const modelConfig = {
   [ModelProvider.OpenAI]: OpenaiConfig(),
   [ModelProvider.GitHub]: GitHubConfig(),
@@ -84,6 +85,7 @@ export const modelConfig = {
   [ModelProvider.Qwen]: QwenConfig(),
   [ModelProvider.Ollama]: OllamaConfig(),
   [ModelProvider.DeepSeek]: DeepseekConfig(),
+  [ModelProvider.Mistral]: MistralConfig(),
 };
 
 export const modelValue = {
@@ -94,12 +96,9 @@ export const modelValue = {
   [ModelProvider.Qwen]: QwenModelValue(),
   [ModelProvider.Ollama]: OllamaModelValue(),
   [ModelProvider.DeepSeek]: DeepseekModelValue(),
+  [ModelProvider.Mistral]: MistralModelValue(),
 };
 
-/**
- * 模型提供者到API类的映射
- * @type {Object.<string, typeof OpenAiApi>}
- */
 export const API_CLASS_MAP = {
   [ModelProvider.DeepSeek]: DeepSeekApi,
   [ModelProvider.ZhiPu]: ZhiPuApi,
@@ -108,4 +107,5 @@ export const API_CLASS_MAP = {
   [ModelProvider.Ollama]: OllamaApi,
   [ModelProvider.GitHub]: GitHubApi,
   [ModelProvider.OpenAI]: OpenAiApi,
+  [ModelProvider.Mistral]: MistralApi,
 };

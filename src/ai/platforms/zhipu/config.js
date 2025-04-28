@@ -1,3 +1,5 @@
+const { VITE_ZHIPU_API_KEY, VITE_ZHIPU_BASE_URL } = import.meta.env
+
 export const ZhiPuConfig = () => {
   return {
     model: "glm-3-turbo",
@@ -5,7 +7,7 @@ export const ZhiPuConfig = () => {
     top_p: 0.7,
     max_tokens: 1024,
     historyMessageCount: 8,
-    token: import.meta.env.VITE_ZHIPU_API_KEY,
-    openaiUrl: import.meta.env.VITE_ZHIPU_BASE_URL,
+    token: VITE_ZHIPU_API_KEY,
+    openaiUrl: VITE_ZHIPU_BASE_URL,
   };
 };

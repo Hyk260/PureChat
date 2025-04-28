@@ -83,7 +83,7 @@
     "gender": "",
     "birthday": 0,
     "location": "",
-    "selfSignature": "",
+    "selfSignature": "通义千问是阿里云自主研发的超大规模语言模型，具有强大的自然语言理解和生成能力。它可以回答各种问题、创作文字内容、表达观点看法、撰写代码等，在多个领域发挥作用。",
     "allowType": "AllowType_Type_AllowAny",
     "language": 0,
     "avatar": "",
@@ -178,6 +178,32 @@
       {
         "key": "Tag_Profile_Custom_Homepage",
         "value": "https://deepseek.com"
+      }
+    ]
+  },
+  {
+    "userID": "@RBT#008",
+    "nick": "Mistral",
+    "gender": "",
+    "birthday": 0,
+    "location": "",
+    "selfSignature": "Mistral 提供先进的通用、专业和研究型模型，广泛应用于复杂推理、多语言任务、代码生成等领域，通过功能调用接口，用户可以集成自定义功能，实现特定应用。",
+    "allowType": "",
+    "language": 0,
+    "avatar": "",
+    "messageSettings": 0,
+    "adminForbidType": "",
+    "level": 0,
+    "role": 0,
+    "lastUpdatedTime": 0,
+    "profileCustomField": [
+      {
+        "key": "Tag_Profile_Custom_Provider",
+        "value": "Mistral"
+      },
+      {
+        "key": "Tag_Profile_Custom_Homepage",
+        "value": "https://docs.mistral.ai/getting-started/models"
       }
     ]
   }

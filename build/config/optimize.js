@@ -12,7 +12,6 @@ const include = [
   'vue-router',
   'vue-i18n',
   'lodash-es',
-  'nprogress',
   '@iconify/iconify',
   '@vueuse/core',
   '@wangeditor/editor',

@@ -17,7 +17,6 @@ const userStore = useUserStore();
 const locale = computed(() => elementPlusLocales[appStore.locale]);
 
 onMounted(() => {
-  userStore.setLang();
   userStore.setThemeScheme();
   userStore.tryReconnect();
 });

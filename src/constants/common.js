@@ -11,8 +11,8 @@ export const EMOJI_RECENTLY = "Emoji-Recently";
 // im数据
 export const TIM_PROXY = "timProxy";
 //历史消息计数
-export const HISTORY_MESSAGE_COUNT = 15; 
- //多选消息最大计数
+export const HISTORY_MESSAGE_COUNT = 15;
+//多选消息最大计数
 export const MULTIPLE_CHOICE_MAX = 30;
 // 请求头-内容类型
 export const ContentType = {
@@ -21,3 +21,9 @@ export const ContentType = {
   UPLOAD: "multipart/form-data",
   STREAM: "application/octet-stream;charset=UTF-8",
 };
+
+export const ThemeMode = {
+  light: 'light',
+  dark: 'dark',
+  auto: 'auto'
+}

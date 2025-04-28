@@ -15,17 +15,17 @@ export const useUserStore = defineStore(SetupStoreId.User, {
   state: () => ({
     userProfile: {},
     lang: "zh-CN",
-    themeScheme: "auto",
+    themeScheme: "light",
   }),
   actions: {
     setCurrentProfile(user) {
       this.userProfile = user
     },
-    setLang(lang = this.lang) {
+    setLang(lang) {
       this.lang = lang
       setLocale(lang)
     },
-    setThemeScheme(theme = this.themeScheme) {
+    setThemeScheme(theme = localStg.get('themeScheme')) {
       this.themeScheme = theme
       this.setTheme(theme)
     },
@@ -116,6 +116,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
      * @param {string}  themeScheme light || dark || auto
      */
     setTheme(themeScheme = "light") {
+      localStg.set('themeScheme', themeScheme);
       const isAuto = themeScheme === "auto";
       const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
 

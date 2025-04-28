@@ -1,17 +1,9 @@
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
 import { getPlugin } from "@/utils/common";
 import {
-  VITE_ZHIPU_ID,
-  VITE_OPENAI_ID,
-  VITE_ZEROONE_ID,
-  VITE_QWEN_ID,
-  VITE_OLLAMA_ID,
-  VITE_GITHUB_ID,
-  VITE_DEEPSEEK_ID,
   ModelProvider,
   StoreKey,
   modelConfig,
-  prompt,
   modelValue,
   AssistantAvatar,
   REQUEST_TIMEOUT_MS,
@@ -19,6 +11,17 @@ import {
 import { OpenaiConfig } from "@/ai/platforms/openai/index";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
+
+const {
+  VITE_OPENAI_ID, // chatgpt
+  VITE_ZHIPU_ID, // 智谱
+  VITE_ZEROONE_ID, // 零一万物
+  VITE_QWEN_ID, // 通义千问
+  VITE_OLLAMA_ID, // ollama
+  VITE_GITHUB_ID, // github
+  VITE_DEEPSEEK_ID, // deepseek
+  VITE_MISTRAL_ID, // mistral
+} = import.meta.env;
 
 /**
  * 获取 AI 模型的配置信息
@@ -61,7 +64,8 @@ export function getModelType(modelId) {
     [VITE_QWEN_ID]: ModelProvider.Qwen,
     [VITE_OLLAMA_ID]: ModelProvider.Ollama,
     [VITE_GITHUB_ID]: ModelProvider.GitHub,
-    [VITE_DEEPSEEK_ID]: ModelProvider.DeepSeek
+    [VITE_DEEPSEEK_ID]: ModelProvider.DeepSeek,
+    [VITE_MISTRAL_ID]: ModelProvider.Mistral,
   };
   return modelMapping[modelId.replace("C2C", "")] || "";
 }
@@ -76,6 +80,7 @@ export function getModelId(model) {
     [ModelProvider.Ollama]: VITE_OLLAMA_ID,
     [ModelProvider.GitHub]: VITE_GITHUB_ID,
     [ModelProvider.DeepSeek]: VITE_DEEPSEEK_ID,
+    [ModelProvider.Mistral]: VITE_MISTRAL_ID,
   };
   return modelMapping[model] || "";
 }
@@ -90,6 +95,7 @@ export function getModelSvg(id) {
     [ModelProvider.Ollama]: "ollama",
     [ModelProvider.GitHub]: "openai",
     [ModelProvider.DeepSeek]: "deepseek",
+    [ModelProvider.Mistral]: "mistral",
     llava: "llava",
   };
   return data[modelId] || "";

@@ -25,14 +25,7 @@ const defaultConfig = {
   // }
 };
 
-function setStart({ url }) {
-  if (__IS_ELECTRON__) return;
-  const isBar = whiteList.includes(url);
-  // 开启进度条动画
-  isBar && window.NProgress?.start?.();
-}
-
-function setxToken(response) {
+function setXToken(response) {
   const token = response.headers["x-token"];
   if (token) {
     localStg.set(ACCESS_TOKEN, token);
@@ -48,30 +41,35 @@ function setAuthorization(config) {
 }
 
 class PureHttp {
+  /** @type {import('axios').AxiosInstance} */
+  service;
   constructor() {
     this.service = axios.create({ ...defaultConfig });
-    this.httpInterceptorsRequest();
-    this.httpInterceptorsResponse();
+    this.initInterceptors();
+  }
+  initInterceptors() {
+    this.service.interceptors.request.use(this.handleRequest, errorHandler);
+    this.service.interceptors.response.use(this.handleResponse, errorHandler);
   }
   /** 请求拦截 */
-  httpInterceptorsRequest() {
+  handleRequest() {
     this.service.interceptors.request.use((config) => {
-      // setStart(config);
-      setAuthorization(config);
+      if (!whiteList.includes(config.url)) {
+        setAuthorization(config);
+      }
       return config;
-    }, errorHandler);
+    });
   }
   /** 响应拦截 */
-  httpInterceptorsResponse() {
+  handleResponse() {
     this.service.interceptors.response.use((response) => {
       const { data, status } = response;
-      window.NProgress?.done?.();
       if (status === 200) {
-        setxToken(response);
+        setXToken(response);
         return data;
       }
       return Promise.reject(data); // 处理非200状态
-    }, errorHandler);
+    });
   }
   /** 通用请求工具函数 */
   request(config) {
