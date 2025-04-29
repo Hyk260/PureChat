@@ -19,16 +19,6 @@ export function getConversationList() {
   return cloneDeep(list) || [];
 }
 
-export function getCurrentMessageList() {
-  const list = useChatStore().currentMessageList;
-  return cloneDeep(list) || null; // []
-}
-
-export function getHistoryMessageList(id) {
-  const data = useChatStore().historyMessageList.get(id);
-  return cloneDeep(data) || null; // []
-}
-
 export class LocalChat {
   constructor() {
     this.initializeProxy()
@@ -250,6 +240,12 @@ export class LocalChat {
     return {
       code: 0,
       data: { message: data },
+    };
+  }
+  async logout() {
+    return {
+      code: 0,
+      data: { message: {} },
     };
   }
 }

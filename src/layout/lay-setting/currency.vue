@@ -43,7 +43,6 @@ const userStore = useUserStore();
 function languageChange() {}
 
 function logout() {
-  emit("onClose");
   userStore.handleUserLogout();
 }
 

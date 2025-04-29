@@ -48,8 +48,8 @@ class PureHttp {
     this.initInterceptors();
   }
   initInterceptors() {
-    this.service.interceptors.request.use(this.handleRequest, errorHandler);
-    this.service.interceptors.response.use(this.handleResponse, errorHandler);
+    this.handleRequest()
+    this.handleResponse()
   }
   /** 请求拦截 */
   handleRequest() {
@@ -58,7 +58,7 @@ class PureHttp {
         setAuthorization(config);
       }
       return config;
-    });
+    }, errorHandler);
   }
   /** 响应拦截 */
   handleResponse() {
@@ -69,7 +69,7 @@ class PureHttp {
         return data;
       }
       return Promise.reject(data); // 处理非200状态
-    });
+    }, errorHandler);
   }
   /** 通用请求工具函数 */
   request(config) {
