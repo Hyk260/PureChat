@@ -33,12 +33,13 @@
 
 <script setup>
 import { languages, options } from "./enums";
-import { useUserStore } from "@/stores/index";
+import { useUserStore, useThemeStore } from "@/stores/index";
 
 const isLocalMode = __LOCAL_MODE__;
 const { DEV: isDev } = import.meta.env;
 
 const userStore = useUserStore();
+const themeStore = useThemeStore();
 
 function languageChange() {}
 
@@ -51,7 +52,7 @@ const themeColor = computed({
     return userStore.themeScheme;
   },
   set(val) {
-    userStore.setThemeScheme(val);
+    themeStore.setThemeScheme(val);
   },
 });
 

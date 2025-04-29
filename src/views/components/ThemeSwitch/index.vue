@@ -7,18 +7,18 @@
 
 <script setup>
 import { computed } from "vue";
-import { useUserStore } from "@/stores/modules/user/index";
+import { useThemeStore } from "@/stores/index";
 import { usePreferredColorScheme } from "@vueuse/core";
 
-const userStore = useUserStore()
+const themeStore = useThemeStore()
 const osTheme = usePreferredColorScheme();
 
 /** Dark mode */
 const darkMode = computed(() => {
-  if (userStore.themeScheme === "auto") {
+  if (themeStore.themeScheme === "auto") {
     return osTheme.value === "dark";
   }
-  return userStore.themeScheme === "dark";
+  return themeStore.themeScheme === "dark";
 });
 
 const themecolor = computed({
@@ -26,7 +26,7 @@ const themecolor = computed({
     return darkMode.value;
   },
   set(val) {
-    userStore.setThemeScheme(val ? "dark" : "light");
+    themeStore.setThemeScheme(val ? "dark" : "light");
   },
 });
 </script>

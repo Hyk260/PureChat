@@ -15,7 +15,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
   state: () => ({
     userProfile: {},
     lang: "zh-CN",
-    themeScheme: "light",
   }),
   actions: {
     setCurrentProfile(user) {
@@ -24,10 +23,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     setLang(lang) {
       this.lang = lang
       setLocale(lang)
-    },
-    setThemeScheme(theme = localStg.get('themeScheme')) {
-      this.themeScheme = theme
-      this.setTheme(theme)
     },
     setLoading(val) {
       this.loading = val
@@ -105,31 +100,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         }
       } catch (error) {
         console.log(error)
-      }
-    },
-    toggleHtmlClass(theme) {
-      document.body.setAttribute("data-theme", theme);
-      document.documentElement.classList[theme === "dark" ? "add" : "remove"]("dark");
-    },
-    /**
-     * 切换主题风格
-     * @param {string}  themeScheme light || dark || auto
-     */
-    setTheme(themeScheme = "light") {
-      localStg.set('themeScheme', themeScheme);
-      const isAuto = themeScheme === "auto";
-      const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
-
-      const theme = isAuto ? (systemThemeQuery.matches ? "light" : "dark") : themeScheme;
-      this.toggleHtmlClass(theme);
-
-      // 监听系统主题变化，仅在自动模式下生效
-      if (isAuto) {
-        systemThemeQuery.addEventListener("change", (e) => {
-          if (this.themeScheme === "auto") {
-            this.toggleHtmlClass(e.matches ? "light" : "dark");
-          }
-        });
       }
     }
   },
