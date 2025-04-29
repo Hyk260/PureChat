@@ -88,6 +88,9 @@ export class OpenAiApi {
     return await new OllamaAI().chat(messages, payload, {
       callback: {},
       // signal: ""
+      headers: {
+        Authorization: `Bearer ${this.accessStore().token?.trim()}`,
+      },
     });
   }
   async enableFetchOnClient(messages, modelConfig) {

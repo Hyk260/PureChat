@@ -6,6 +6,7 @@ export const OllamaConfig = () => {
     presence_penalty: 0,
     frequency_penalty: 0,
     historyMessageCount: 12,
+    token: "",
     openaiUrl: import.meta.env.VITE_OLLAMA_PROXY_URL,
   };
 };

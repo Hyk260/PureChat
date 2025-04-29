@@ -62,6 +62,13 @@ const OllamaAI = {
     //   displayName: 'DeepSeek Coder V2 236B',
     //   id: 'deepseek-coder-v2:236b',
     // },
+    // {
+    //   tokens: "",
+    //   description: '',
+    //   displayName: 'Mistral',
+    //   id: 'mistral-small3.1:24b-instruct-2503-q4_K_M',
+    //   icon: "mistral",
+    // },
   ],
   checkModel: "llama3.1:8b",
   description:

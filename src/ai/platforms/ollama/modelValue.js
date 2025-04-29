@@ -21,6 +21,13 @@ export const OllamaModelValue = () => {
       defaultValue: "",
       doubt: `${docs}/guides/olama-usage`,
     },
+    // Token: {
+    //   ID: "token",
+    //   Title: "API Key",
+    //   SubTitle: "API Key",
+    //   Placeholder: "API Key",
+    //   defaultValue: "",
+    // },
     Temperature: {
       ID: "temperature",
       Title: "创意活跃度 (temperature)",
