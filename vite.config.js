@@ -20,6 +20,8 @@ export default defineConfig(({ mode }) => {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
         // 配置共享路径别名@shared
         '@shared': fileURLToPath(new URL("./packages/shared", import.meta.url)),
+        // 配置数据库路径别名@database
+        '@database': fileURLToPath(new URL("./packages/database", import.meta.url)),
       },
       extensions: [".js", ".json"],
     },
