@@ -1,5 +1,5 @@
-import { $t } from "@/locales/index";
 import { computed } from "vue";
+import { $t } from "@/locales/index";
 import { ModelProvider } from "@/ai/constant";
 import { PROVIDER_IDS } from "@/config/webSearchProviders";
 

@@ -22,14 +22,7 @@ export function getConversationList() {
 export class LocalChat {
   constructor() {
     this.initializeProxy()
-  }
-  initializeSDK() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        this.emit('sdkStateReady', { name: 'sdkStateReady' });
-        resolve();
-      }, 0);
-    });
+    this.initialize();
   }
   initializeProxy() {
     return new Proxy(this, {
@@ -47,7 +40,6 @@ export class LocalChat {
   }
   create(data) {
     console.log("create local chat", data);
-    this.initialize();
     return new LocalChat();
   }
   on(eventName, handler, context = null) {

@@ -49,7 +49,7 @@ function logout() {
 
 const themeColor = computed({
   get() {
-    return userStore.themeScheme;
+    return themeStore.themeScheme;
   },
   set(val) {
     themeStore.setThemeScheme(val);

@@ -21,9 +21,3 @@ export const ContentType = {
   UPLOAD: "multipart/form-data",
   STREAM: "application/octet-stream;charset=UTF-8",
 };
-
-export const ThemeMode = {
-  light: 'light',
-  dark: 'dark',
-  auto: 'auto'
-}

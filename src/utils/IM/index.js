@@ -20,6 +20,7 @@ const isFocused = useWindowFocus(); // 判断浏览器窗口是否在前台可�
 function isRobotId(data) {
   return C2C_ROBOT_COLLECT.includes(data?.[0].conversationID);
 }
+
 export class TIMProxy {
   constructor() {
     this.userID = "";
@@ -50,15 +51,17 @@ export class TIMProxy {
     this.initListener(); // 监听SDK
   }
   initListener() {
-    if (__LOCAL_MODE__) chat.create();
     // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
     chat.on("sdkStateReady", this.onReadyStateUpdate, this);
     // 收到 SDK 进入 not ready 状态通知，此时 SDK 无法正常工作
     chat.on("sdkStateNotReady", this.onReadyStateUpdate, this);
     // 收到会话列表更新通知
     chat.on("onConversationListUpdated", this.onUpdateConversationList, this);
+    // 收到消息被修改的通知
+    chat.on("onMessageModified", this.onMessageModified, this);
     // 收到推送的单聊、群聊、群提示、群系统通知的新消息
     chat.on("onMessageReceived", this.onReceiveMessage, this);
+    if (__LOCAL_MODE__) return
     // 收到消息被撤回的通知
     chat.on("onMessageRevoked", this.onMessageRevoked);
     // 群组列表更新
@@ -77,8 +80,6 @@ export class TIMProxy {
     // chat.on("onFriendGroupListUpdated", this.onFriendGroupListUpdated);
     // 已订阅用户或好友的状态变更（在线状态或自定义状态）时触发。
     // chat.on("onUserStatusUpdated", this.onUserStatusUpdated);
-    // 收到消息被修改的通知
-    chat.on("onMessageModified", this.onMessageModified, this);
   }
   onTotalUnreadMessageCountUpdated({ data }) {
     console.log("[chat] onTotalUnreadMessageCountUpdated:", data);
