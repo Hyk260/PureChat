@@ -23,12 +23,12 @@ export default defineConfig(({ mode }) => {
       },
       extensions: [".js", ".json"],
     },
+    // https://cn.vitejs.dev/config/server-options.html#server-options
     server: {
       // 端口号
       port: viteEnv.VITE_PORT,
       open: true,
       host: "0.0.0.0",
-      // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
       proxy: {},
       // 预热文件以提前转换和缓存结果，降低启动期间的初始页面加载时长并防止转换瀑布
       warmup: {
@@ -43,14 +43,16 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    // https://cn.vitejs.dev/config/dep-optimization-options#optimizedeps-exclude
+    // https://cn.vitejs.dev/config/dep-optimization-options#optimizedeps-entries
     optimizeDeps: {
       include,
       exclude,
     },
     build: {
-      // https://cn.vitejs.dev/guide/build.html#browser-compatibility
+      // https://cn.vitejs.dev/config/build-options.html#build-target
       // target: "es2015",
+      // 打包时清除dist目录
+      // emptyOutDir: true,
       // 生成生产源映射
       sourcemap: viteEnv.VITE_SOURCE_MAP === "Y",
       // 消除打包大小超过500kb警告

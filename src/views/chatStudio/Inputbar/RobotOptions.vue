@@ -51,8 +51,33 @@
                         <SvgIcon v-else :local-icon="robotIcon" />
                       </div>
                       <div class="flex flex-col h-full gap-4">
-                        <span>{{ models.displayName || models.id }}</span>
-                        <span class="text-models">{{ models.id }}</span>
+                        <div class="models-name">
+                          <span>
+                            {{ models.displayName || models.id }}
+                          </span>
+                          <el-tooltip
+                            v-if="models?.vision"
+                            :content="ModelSelect.vision"
+                            placement="top"
+                          >
+                            <SvgIcon class="vision" local-icon="vision" />
+                          </el-tooltip>
+                          <el-tooltip
+                            v-if="models?.functionCall"
+                            :content="ModelSelect.functionCall"
+                            placement="top"
+                          >
+                            <SvgIcon class="function-call" local-icon="functionCall" />
+                          </el-tooltip>
+                          <el-tooltip
+                            v-if="models?.reasoning"
+                            :content="ModelSelect.reasoning"
+                            placement="top"
+                          >
+                            <SvgIcon class="reasoning" local-icon="reasoning" />
+                          </el-tooltip>
+                        </div>
+                        <div class="models-id">{{ models.id }}</div>
                       </div>
                     </div>
                   </el-option>
@@ -95,10 +120,7 @@
             </div>
             <div class="input gap-5 flex-bc" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
               <el-tooltip content="配置教程" placement="top">
-                <span
-                  v-if="item.doubt && ['token'].includes(item.ID)"
-                  class="flex cursor-pointer"
-                >
+                <span v-if="item.doubt && ['token'].includes(item.ID)" class="flex cursor-pointer">
                   <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
                 </span>
                 <!-- ollama -->
@@ -152,6 +174,7 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
+import { ModelSelect } from "@/ai/resources";
 import { useAccessStore, getModelSvg } from "@/ai/utils";
 import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
@@ -368,9 +391,31 @@ onUnmounted(() => {
   height: auto;
   padding: 0 15px 0 15px;
   line-height: normal;
-  .text-models {
+  .models-id {
     font-size: 12px;
     color: #999;
+  }
+  .models-name {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .tokens {
+    width: 36px;
+    height: 18px;
+    font-size: 11px;
+    color: #666666;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 4px;
+  }
+  .function-call {
+    color: #369eff;
+  }
+  .vision {
+    color: #55b467;
+  }
+  .reasoning {
+    color: #bd54c6;
   }
 }
 .el-input {
