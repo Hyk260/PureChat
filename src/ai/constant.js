@@ -30,7 +30,7 @@ export const ROBOT_COLLECT = [
   VITE_DEEPSEEK_ID,
   VITE_GITHUB_ID,
   VITE_QWEN_ID,
-  VITE_MISTRAL_ID,
+  // VITE_MISTRAL_ID,
 ];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);

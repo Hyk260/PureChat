@@ -27,7 +27,6 @@ export class LocalChat {
     });
   }
   initialize() {
-    localStg.set(USER_MODEL, { username: UserProfile.userID });
     setTimeout(async () => {
       this.emit("sdkStateReady", { name: "sdkStateReady" });
       const _newData = await SessionModel.query();
@@ -35,6 +34,7 @@ export class LocalChat {
     });
   }
   create(data) {
+    localStg.set(USER_MODEL, { username: UserProfile.userID });
     console.log("create local chat", data);
     return new LocalChat();
   }
