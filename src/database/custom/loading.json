@@ -1,9 +1,0 @@
-{
-  "body": {
-    "bodyType": "loadingBody",
-    "text": {
-      "loadingIcon": "",
-      "value": "正在输入中..."
-    }
-  }
-}

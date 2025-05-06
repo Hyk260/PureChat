@@ -15,7 +15,6 @@ import { nextTick } from "vue";
 import { cloneDeep } from "lodash-es";
 import { placeholderMap } from "./configure";
 import emitter from "@/utils/mitt-bus";
-import manifest from "@/database/manifest/index";
 
 import CustomElemItem from "../ElemItemTypes/CustomElemItem.vue";
 import FileElemItem from "../ElemItemTypes/FileElemItem.vue";
@@ -560,30 +559,3 @@ export const formatContent = (data) => {
     })
     .join("");
 };
-
-/**
- * 根据指定的 Key 和 Type 获取插件数据
- * @param params.key 搜索的键值
- * @param params.type 搜索的键名 (默认值: 'identifier')
- * @returns 匹配的插件对象，包含 `imageUrl` 属性
- */
-export function getPlugin({
-  key = "",
-  type = "identifier",
-} = {}) {
-  // 从 plugins 中搜索匹配项
-  const plugin = manifest.plugins.find(
-    (item) => item[type] === key
-  );
-
-  if (!plugin) {
-    console.error(`Plugin with ${type} = "${key}" not found.`);
-    return null;
-  }
-
-  return {
-    ...plugin,
-    imageUrl: new URL(`../../../assets/images/plugin/${plugin.meta?.avatar}`, import.meta.url).href
-  };
-}
-

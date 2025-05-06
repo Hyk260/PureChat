@@ -1,5 +1,4 @@
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
-import { getPlugin } from "@/utils/common";
 import {
   ModelProvider,
   StoreKey,
@@ -488,26 +487,8 @@ export const handleStreamingChat = async (
     REQUEST_TIMEOUT_MS
   );
 
-  const isTools = () => {
-    const payload = JSON.parse(chatPayload.body)
-    return payload.tools?.length > 0
-  }
-
   const isOllama = () => {
     return [ModelProvider.Ollama].includes(provider)
-  }
-
-  const processExtraInfo = (resJson, extraInfo) => {
-    const extraObj = JSON.parse(extraInfo);
-    const payload = JSON.parse(chatPayload.body)
-    if (extraObj?.choices[0]?.finish_reason === 'tool_calls') {
-      finished = true;
-      options?.onToolMessage({
-        name: payload.tools[0].function.name,
-        manifest: getPlugin({ key: payload.tools[0].function.name }),
-        message: resJson
-      })
-    }
   }
 
   await fetchEventSource(chatPath, {
@@ -534,11 +515,7 @@ export const handleStreamingChat = async (
 
         try {
           const resJson = await res.clone().json();
-          if (isTools()) {
-            processExtraInfo(resJson, extraInfo);
-          } else {
-            extraInfo = prettyObject(resJson);
-          }
+          extraInfo = prettyObject(resJson);
         } catch (e) {
           console.log("[resJson]", e);
         }

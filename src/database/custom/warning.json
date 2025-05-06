@@ -1,9 +1,0 @@
-{
-  "body": {
-    "bodyType": "alertBody",
-    "text": {
-      "provider": "openai",
-      "value": "Hello World"
-    }
-  }
-}

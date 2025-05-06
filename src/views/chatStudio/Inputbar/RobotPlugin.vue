@@ -20,7 +20,6 @@
 <script setup>
 import { ClickOutside as vClickOutside } from "element-plus";
 import { useState } from "@/utils/hooks/index";
-import { getPlugin } from "@/utils/common";
 import { useToolsStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
@@ -31,7 +30,7 @@ defineOptions({
 const pluginData = ref([
   {
     checked: false,
-    ...getPlugin({ key: "search-engine-serper" }),
+    // ...getPlugin({ key: "search-engine-serper" }),
   },
   // {
   //   id: "get_weather",

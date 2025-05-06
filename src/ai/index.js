@@ -10,7 +10,6 @@ import { getThinkMsgContent, getCloudCustomData } from "@/utils/chat/index";
 import { useChatStore } from "@/stores/index";
 import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
-import webSearchResult from "@/database/tools/web-search-result";
 
 const restSendMsg = async (params, data) => {
   const { message, think } = data;
@@ -98,14 +97,14 @@ const createAlertMsg = (startMsg, provider) => {
   useChatStore().updateMessages({ sessionId: `C2C${_data.from}`, message: _data });
 };
 
-const createToolCallsMsg = (startMsg, message) => {
-  const _data = cloneDeep(startMsg);
-  _data.clientTime = getTime();
-  _data.type = "TIMCustomElem";
-  _data.payload = getCustomMsgContent({ data: message, type: "tool_call" });
-  _data.payload.extension = JSON.stringify(webSearchResult);
-  useChatStore().updateMessages({ sessionId: `C2C${_data.from}`, message: cloneDeep(_data) });
-};
+// const createToolCallsMsg = (startMsg, message) => {
+//   const _data = cloneDeep(startMsg);
+//   _data.clientTime = getTime();
+//   _data.type = "TIMCustomElem";
+//   _data.payload = getCustomMsgContent({ data: message, type: "tool_call" });
+//   _data.payload.extension = JSON.stringify();
+//   useChatStore().updateMessages({ sessionId: `C2C${_data.from}`, message: cloneDeep(_data) });
+// };
 
 function beforeSend(api, data) {
   if ([ModelProvider.Ollama].includes(api.llm.provider)) return false;
@@ -134,7 +133,7 @@ export const chatService = async ({ messages, chat, provider }) => {
     },
     onUpdate: handleUpdate(startMsg),
     onFinish: handleFinish(startMsg, chat),
-    onToolMessage: handleToolMessage(startMsg),
+    // onToolMessage: handleToolMessage(startMsg),
     onReasoningMessage: handleReasoningMessage(startMsg),
     onError: handleError(startMsg, chat),
     onController: handleController,
@@ -158,10 +157,10 @@ const handleFinish = (startMsg, chat) => async (data) => {
   useChatStore().updateSendingState(chat.to, "delete");
 };
 
-const handleToolMessage = (startMsg) => (data) => {
-  console.log("[chat] onToolMessage:", data);
-  createToolCallsMsg(startMsg, data);
-};
+// const handleToolMessage = (startMsg) => (data) => {
+//   console.log("[chat] onToolMessage:", data);
+//   createToolCallsMsg(startMsg, data);
+// };
 
 const handleReasoningMessage = (startMsg) => (think) => {
   console.log("[chat] onReasoningMessage:", think);

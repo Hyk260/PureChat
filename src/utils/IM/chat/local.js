@@ -7,11 +7,7 @@ import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { SessionModel } from "@/database/models/session";
 import { MessageModel } from "@/database/models/message";
-import sessions from "@/database/sessions";
-import robotList from "@/database/bot";
-import profile from "@/database/profile";
-import timTextElem from "@/database/message/timTextElem";
-import timCustomElem from "@/database/message/timCustomElem";
+import { ConversationList, UserProfile, BaseElemMessage, ProvidersList } from '@database/config';
 import emitter from "@/utils/mitt-bus";
 
 export function getConversationList() {
@@ -31,7 +27,7 @@ export class LocalChat {
     });
   }
   initialize() {
-    localStg.set(USER_MODEL, { username: profile.userID });
+    localStg.set(USER_MODEL, { username: UserProfile.userID });
     setTimeout(async () => {
       this.emit("sdkStateReady", { name: "sdkStateReady" });
       const _newData = await SessionModel.query();
@@ -80,16 +76,16 @@ export class LocalChat {
     });
   }
   getLoginUser() {
-    return profile.userID;
+    return UserProfile.userID;
   }
   async getMyProfile() {
     return {
       code: 0,
-      data: profile,
+      data: UserProfile,
     };
   }
   async getUserProfile({ userIDList = [] }) {
-    const data = robotList.filter((item) => {
+    const data = ProvidersList.filter((item) => {
       return userIDList.find((id) => id === item.userID) !== undefined;
     });
     return {
@@ -117,17 +113,18 @@ export class LocalChat {
   async createTextMessage(data) {
     const { to, conversationType, payload, cloudCustomData = "", cache } = data;
     const _data = {
-      ...timTextElem,
+      ...BaseElemMessage,
       time: getTime(),
       clientTime: getTime(),
       ID: uuid(),
       to: to,
       cloudCustomData,
-      from: profile.userID,
-      avatar: profile.avatar,
+      from: UserProfile.userID,
+      avatar: UserProfile.avatar,
       conversationID: `${conversationType}${to}`,
       conversationType,
       payload,
+      type: "TIMTextElem"
     };
     if (cache) MessageModel.create(_data.ID, _data);
     return _data;
@@ -135,24 +132,25 @@ export class LocalChat {
   createCustomMessage(data) {
     const { to, conversationType, payload } = data;
     const _data = {
-      ...timCustomElem,
+      ...BaseElemMessage,
       to: to,
-      from: profile.userID,
+      from: UserProfile.userID,
       payload,
       ID: uuid(),
       time: getTime(),
       clientTime: getTime(),
       conversationType,
       conversationID: `${conversationType}${to}`,
+      type: "TIMCustomElem"
     };
     MessageModel.create(_data.ID, _data);
     return _data;
   }
   async getConversationProfile(chatId) {
-    const data = cloneDeep(sessions);
+    const data = cloneDeep(ConversationList);
     data.conversationID = chatId;
     data.lastMessage.lastTime = getTime();
-    data.userProfile = robotList.find((item) => item.userID === chatId.replace("C2C", ""));
+    data.userProfile = ProvidersList.find((item) => item.userID === chatId.replace("C2C", ""));
     SessionModel.create(chatId, data);
 
     const list = getConversationList();

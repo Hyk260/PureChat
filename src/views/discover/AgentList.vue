@@ -15,7 +15,7 @@
     </div> -->
     <div class="agent-list" style="--rows: 2" v-if="tabsKey === 'model_provider'">
       <ModelProviderCard
-        v-for="item in modelProvider"
+        v-for="item in ProvidersList"
         :key="item.userID"
         :agents="item"
         @click="providerClick(item)"
@@ -35,7 +35,7 @@
 
 <script setup>
 import { useSidebarStore, useChatStore } from "@/stores/index";
-import modelProvider from "@/database/bot";
+import { ProvidersList } from '@database/config';
 import AgentCard from "./AgentCard.vue";
 import ModelProviderCard from "./ModelProviderCard.vue";
 import AgentSkeleton from "./AgentSkeleton.vue";

@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import manifest from "@/database/manifest/index";
 
 export function formatTime(data) {
   return dayjs(data).format("YYYY-MM-DD HH:mm:ss"); // 2022-5-7 9:17:56
@@ -88,33 +87,6 @@ export function getOperatingSystem(userAgent = navigator.userAgent) {
   } else {
     return "";
   }
-}
-
-
-/**
- * 根据指定的 Key 和 Type 获取插件数据
- * @param params.key 搜索的键值
- * @param params.type 搜索的键名 (默认值: 'identifier')
- * @returns 匹配的插件对象，包含 `imageUrl` 属性
- */
-export function getPlugin({
-  key = "",
-  type = "identifier",
-} = {}) {
-  // 从 plugins 中搜索匹配项
-  const plugin = manifest.plugins.find(
-    (item) => item[type] === key
-  );
-
-  if (!plugin) {
-    console.error(`Plugin with ${type} = "${key}" not found.`);
-    return null;
-  }
-
-  return {
-    ...plugin,
-    imageUrl: new URL(`../../../assets/images/plugin/${plugin.meta?.avatar}`, import.meta.url).href
-  };
 }
 
 export const createFileInput = (options) => {

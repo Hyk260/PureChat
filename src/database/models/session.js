@@ -1,5 +1,4 @@
 import { BaseModel } from "../core/model";
-import { uuid } from "@/utils/uuid";
 
 class _SessionModel extends BaseModel {
   constructor() {
