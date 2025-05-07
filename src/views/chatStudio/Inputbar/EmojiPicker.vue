@@ -11,7 +11,7 @@
             :key="item"
             @click="handleEmojiSelect(item, table)"
           >
-            <img :src="getAssetsFile(emojiQq.emojiMap[item])" :title="item" />
+            <img :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
           </span>
           <p class="title">小黄脸表情</p>
           <template v-if="!rolling">
@@ -21,7 +21,7 @@
               :key="item"
               @click="handleEmojiSelect(item, table)"
             >
-              <img :src="getAssetsFile(emojiQq.emojiMap[item])" :title="item" />
+              <img :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
             </span>
           </template>
           <!-- 二维数组 css 滚动贴合 -->
@@ -33,7 +33,7 @@
                 :key="item"
                 @click="handleEmojiSelect(item, table)"
               >
-                <img :src="getAssetsFile(emojiQq.emojiMap[item])" :title="item" />
+                <img :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
               </span>
             </div>
           </template>
@@ -47,7 +47,7 @@
             :key="item"
             @click="handleEmojiSelect(item, table)"
           >
-            <img :src="getAssetsFile(emojiDouyin.emojiMap[item])" :title="item" />
+            <img :src="getEmojiAssetUrl(emojiDouyin.emojiMap[item])" :title="item" />
           </span>
         </div>
         <div class="emoji_mart" v-if="table === 'Mart'">
@@ -82,7 +82,7 @@ import { onMounted, ref } from "vue";
 import { chunk } from "lodash-es";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { useChatStore } from "@/stores/modules/chat/index";
-import { getAssetsFile, getOperatingSystem } from "@/utils/common";
+import { getEmojiAssetUrl, getOperatingSystem } from "@/utils/common";
 // import emojiMartData from "@emoji-mart/data";
 import { emojiArray } from '@/utils/emoji/emoji-map';
 import emitter from "@/utils/mitt-bus";
@@ -135,9 +135,9 @@ const handleEmojiSelect = (item, type = "") => {
   let url = "";
   if (type === "QQ") {
     chatStore.setRecently({ data: item, type: "add" });
-    url = getAssetsFile(emojiQq.emojiMap[item]);
+    url = getEmojiAssetUrl(emojiQq.emojiMap[item]);
   } else if (type === "Douyin") {
-    url = getAssetsFile(emojiDouyin.emojiMap[item]);
+    url = getEmojiAssetUrl(emojiDouyin.emojiMap[item]);
   } else {
     emitter.emit("handleToolbar", { data: item, key: "setEditHtml" });
     setClose();

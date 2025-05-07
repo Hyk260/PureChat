@@ -75,7 +75,7 @@ export const updateImageSize = async (imageInput, index = 0) => {
   return imageInput;
 };
 
-export const getAssetsFile = (url) => {
+export const getEmojiAssetUrl = (url) => {
   return new URL(`../assets/emoji/${url}`, import.meta.url).href;
 };
 
