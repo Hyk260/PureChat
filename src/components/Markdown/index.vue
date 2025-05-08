@@ -5,6 +5,7 @@
 <script setup>
 import { useClipboard } from "@vueuse/core";
 import { useAppStore } from "@/stores/index";
+import { prettyObject } from "@/ai/utils";
 import { convertToMarkdownFootnotes } from "./utils";
 // import { mapWebSearchResults } from '@/config/prompts';
 import markdownit from "markdown-it";
@@ -148,9 +149,15 @@ function MarkdownRender() {
   const md = createMarkdownParser();
 
   let marked = props.marked;
+
   if (marked && webSearchResult.value?.length) {
     marked += convertToMarkdownFootnotes(webSearchResult.value);
   }
+
+  if (typeof marked !== 'string') {
+    marked = prettyObject(marked);
+  }
+
   const mark = h("div", {
     innerHTML: md.render(marked),
     class: "markdown-body",

@@ -169,6 +169,12 @@ export class OpenAiApi {
         const res = await fetch(chatPath, chatPayload);
         clearTimeout(requestTimeoutId);
 
+        if (res.status === 401) {
+          const resJson = await res.json();
+          options.onError?.(resJson);
+          return;
+        }
+
         const resJson = await res.json();
         const message = await this.extractMessage(resJson);
         options.onFinish({ message });
