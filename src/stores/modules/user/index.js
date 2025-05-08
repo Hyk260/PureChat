@@ -1,7 +1,7 @@
 import { nextTick } from "vue";
 import { defineStore } from 'pinia'
 import { useAppStore, useChatStore } from '@/stores/index';
-import { login, logout } from "@/api/node-admin-api/index"
+import { login, logout } from "@/service/api/index"
 import { ACCOUNT, USER_MODEL } from "@/constants/index"
 import { localStg } from "@/utils/storage"
 import { SetupStoreId } from '../../plugins/index';

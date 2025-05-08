@@ -1,5 +1,5 @@
 import { useUserStore } from "@/stores/modules/user/index";
-import { githubAuth, openAuthUrl } from "@/api/node-admin-api/index";
+import { githubAuth, openAuthUrl } from "@/service/api/index";
 import { openWindow } from "@/utils/common";
 
 const { DEV: isDev } = import.meta.env;

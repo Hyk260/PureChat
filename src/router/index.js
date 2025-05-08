@@ -1,8 +1,8 @@
 import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 import { scrollBehavior } from "./utils";
+import { createRouterGuard } from './guard/index';
 import layout from "./modules/layout";
 import remaining from "./modules/remaining";
-import { createRouterGuard } from './guard/index';
 
 const { VITE_ROUTER_HISTORY } = import.meta.env
 
@@ -12,7 +12,7 @@ const historyMode = {
 };
 
 const router = createRouter({
-  history: historyMode[VITE_ROUTER_HISTORY],
+  history: __IS_ELECTRON__ ? createWebHashHistory() : historyMode[VITE_ROUTER_HISTORY],
   routes: [...remaining, ...layout],
   scrollBehavior,
 });

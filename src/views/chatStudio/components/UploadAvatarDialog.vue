@@ -43,8 +43,8 @@
 
 <script setup>
 import { reactive, ref } from "vue";
-import { updateMyProfile } from "@/api/im-sdk-api/index";
-import { uploadFiles } from "@/api/node-admin-api/index";
+import { updateMyProfile } from "@/service/im-sdk-api/index";
+// import { uploadFiles } from "@/service/api/index";
 import emitter from "@/utils/mitt-bus";
 
 const imagePicker = ref();
@@ -68,13 +68,14 @@ async function sendImage(e) {
   option.url = URL.createObjectURL(e.target.files[0]);
   option.files = e.target.files[0];
 }
+
 async function uploadAvatar() {
-  const { code, data } = await uploadFiles({ files: option.files });
-  if (code === 0) {
-    await modifyMyProfile(data.file_url);
-  } else {
-    console.log("上传失败");
-  }
+  // const { code, data } = await uploadFiles({ files: option.files });
+  // if (code === 0) {
+  //   await modifyMyProfile(data.file_url);
+  // } else {
+  //   console.log("上传失败");
+  // }
 }
 // 修改头像
 async function modifyMyProfile(file_url) {

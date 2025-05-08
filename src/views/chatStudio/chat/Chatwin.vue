@@ -134,7 +134,7 @@ import {
   getMessageList,
   revokeMsg,
   translateText,
-} from "@/api/im-sdk-api/index";
+} from "@/service/im-sdk-api/index";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { download } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";

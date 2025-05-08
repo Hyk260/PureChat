@@ -9,7 +9,7 @@ import {
   deleteMessage,
   getConversationProfile,
   createTextMessage
-} from "@/api/im-sdk-api/index";
+} from "@/service/im-sdk-api/index";
 import { getModelId } from "@/ai/utils";
 import { getCloudCustomData } from "@/utils/chat/index";
 import { generateReferencePrompt } from "@/config/prompts";

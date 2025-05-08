@@ -1,9 +1,8 @@
 import tim from "@/utils/IM/im-sdk/tim";
 import emitter from "@/utils/mitt-bus";
 import { throttle } from "lodash-es";
-import { updateImageSize } from "@/utils/common";
+import { updateImageSize, getCustomMsgContent } from "@/utils/common";
 import { getCloudCustomData } from "@/utils/chat/index";
-import { getCustomMsgContent } from '@/api/im-sdk-api/custom';
 
 const createProgressHandler = () => {
   let lastProgress = 0;

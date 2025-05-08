@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { getUserProfile } from "@/api/im-sdk-api/index";
+import { getUserProfile } from "@/service/im-sdk-api/index";
 import { isRobot } from "@/utils/chat/index";
 import { useState } from "@/utils/hooks/index";
 import { onClickOutside } from "@vueuse/core";

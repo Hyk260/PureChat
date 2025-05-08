@@ -6,7 +6,7 @@ import {
   quitGroup,
   createGroup,
   dismissGroup,
-} from "@/api/im-sdk-api/index";
+} from "@/service/im-sdk-api/index";
 import { sortMembersByRole, findGroupChat } from "@/utils/chat/index";
 import { SetupStoreId } from '../../plugins/index';
 import { useChatStore, useUserStore } from "@/stores/index";

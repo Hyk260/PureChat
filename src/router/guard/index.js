@@ -26,6 +26,5 @@ function createRouteGuard(router) {
  * @param router - Router instance
  */
 export function createRouterGuard(router) {
-  // if (!__IS_ELECTRON__) createProgressGuard(router)
   createRouteGuard(router)
 }

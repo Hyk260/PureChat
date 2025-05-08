@@ -3,7 +3,7 @@ import chat from "@/utils/IM/im-sdk/tim";
 import { C2C_ROBOT_COLLECT } from "@/ai/constant";
 import { TIM_PROXY } from "@/constants/index";
 import { scrollToDomPosition } from "@/utils/chat/index";
-import { setMessageRead } from "@/api/im-sdk-api/index";
+import { setMessageRead } from "@/service/im-sdk-api/index";
 import { localStg } from "@/utils/storage";
 import { useWindowFocus } from "@vueuse/core";
 import { ElNotification } from "element-plus";

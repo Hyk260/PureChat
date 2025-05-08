@@ -1,4 +1,4 @@
-import { http } from "@/utils/http/index";
+import { http } from "../request/index";
 
 export const restApi = (data) => {
   return http.request({

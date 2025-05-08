@@ -17,7 +17,7 @@
 
 <script>
 import { mapStores } from "pinia";
-import { createForwardMessage, createMergerMessage, sendMessage } from "@/api/im-sdk-api/index";
+import { createForwardMessage, createMergerMessage, sendMessage } from "@/service/im-sdk-api/index";
 import { useChatStore, useGroupStore } from "@/stores/index";
 import { localStg } from "@/utils/storage";
 import { TIM_PROXY } from "@/constants/index";

@@ -21,7 +21,7 @@
 <script setup>
 import { ref } from "vue";
 import { useChatStore } from "@/stores/index";
-import { modifyMessage } from "@/api/im-sdk-api/session";
+import { modifyMessage } from "@/service/im-sdk-api/index";
 
 const props = defineProps({
   item: {

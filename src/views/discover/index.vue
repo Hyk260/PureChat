@@ -22,7 +22,7 @@
 
 <script setup>
 import { ref, onBeforeMount } from "vue";
-import { getPrompt } from "@/api/node-admin-api/index";
+import { getPrompt } from "@/service/api/index";
 import { localStg } from "@/utils/storage";
 import { options } from "./utils";
 import AgentList from "./AgentList.vue";

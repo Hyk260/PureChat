@@ -4,7 +4,7 @@ import {
   createTextAtMessage,
   createTextMessage,
   createVideoMessage,
-} from "@/api/im-sdk-api/index";
+} from "@/service/im-sdk-api/index";
 import { useAppStore, useChatStore } from '@/stores/index';
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";

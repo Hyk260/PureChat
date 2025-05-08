@@ -49,7 +49,7 @@
 
 <script setup>
 import { localStg } from "@/utils/storage";
-import { downloadMergerMessage } from "@/api/im-sdk-api/index";
+import { downloadMergerMessage } from "@/service/im-sdk-api/index";
 import { useState } from "@/utils/hooks/index";
 import { timeFormat } from "@/utils/timeFormat";
 import { ref } from "vue";

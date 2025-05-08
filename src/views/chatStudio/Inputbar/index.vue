@@ -116,7 +116,7 @@
 
 <script setup>
 import { showConfirmationBox } from "@/utils/message";
-import { createCustomMessage } from "@/api/im-sdk-api/index";
+import { createCustomMessage } from "@/service/im-sdk-api/index";
 import { createFileInput } from "@/utils/common";
 import { storeToRefs } from "pinia";
 import { useState } from "@/utils/hooks/index";

@@ -90,7 +90,7 @@
 </template>
 
 <script setup>
-import { getuser } from "@/api/node-admin-api/index";
+import { getUserList } from "@/service/api/index";
 import { Lock, User } from "@element-plus/icons-vue";
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -149,8 +149,7 @@ const onkeypress = ({ code }) => {
 };
 
 onMounted(async () => {
-  const { loadAll } = await getuser();
-  restaurants.value = loadAll;
+  restaurants.value = await getUserList();
   window.document.addEventListener("keypress", onkeypress);
 });
 

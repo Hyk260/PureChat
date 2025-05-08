@@ -1,4 +1,4 @@
-import { http } from "@/utils/http/index";
+import { http } from "../request/index";
 
 const client = __IS_ELECTRON__ ? 'app' : 'web'
 

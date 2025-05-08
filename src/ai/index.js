@@ -1,11 +1,10 @@
 import { ClientApi } from "@/ai/api";
 import { ModelProvider, modelValue } from "@/ai/constant";
 import { useAccessStore, prettyObject, getAiAvatarUrl } from "@/ai/utils";
-import { createCustomMessage } from "@/api/im-sdk-api/index";
-import { restApi } from "@/api/node-admin-api/rest";
+import { createCustomMessage } from "@/service/im-sdk-api/index";
+import { restApi } from "@/service/api/index";
 import { cloneDeep } from "lodash-es";
-import { getTime } from "@/utils/common";
-import { getCustomMsgContent } from "@/api/im-sdk-api/custom";
+import { getTime, getCustomMsgContent } from "@/utils/common";
 import { getThinkMsgContent, getCloudCustomData } from "@/utils/chat/index";
 import { useChatStore } from "@/stores/index";
 import { localStg } from "@/utils/storage";

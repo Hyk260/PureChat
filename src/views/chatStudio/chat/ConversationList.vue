@@ -74,12 +74,12 @@
 import { h, watch, ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { chatSessionListData } from "../utils/menu";
-import { pinConversation } from "@/api/im-sdk-api/index";
+import { pinConversation } from "@/service/im-sdk-api/index";
 import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { chatName, html2Escape, formatContent } from "../utils/utils";
 import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
-import { setMessageRemindType } from "@/api/im-sdk-api/index";
+import { setMessageRemindType } from "@/service/im-sdk-api/index";
 import { useGroupStore, useUserStore, useChatStore } from "@/stores/index";
 import EmptyMessage from "../components/EmptyMessage.vue";
 import Label from "../components/Label.vue";

@@ -7,9 +7,10 @@
       <div
         v-for="(question, index) in recommendedQuestions"
         :key="index"
+        class="cursor-pointer"
         @click="handleQuestion(question)"
       >
-        <span class="cursor-pointer">{{ question }}</span>
+        <span>{{ question }}</span>
       </div>
     </div>
   </div>

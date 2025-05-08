@@ -129,8 +129,8 @@ import {
   updateGroupProfile,
   GroupTypeMap,
   setMessageRemindType,
-} from "@/api/im-sdk-api/index";
-import { restApi } from "@/api/node-admin-api/index";
+} from "@/service/im-sdk-api/index";
+import { restApi } from "@/service/api/index";
 import { useState } from "@/utils/hooks/index";
 import { showConfirmationBox } from "@/utils/message";
 import { isFullStaffGroup } from "@/ai/utils";
