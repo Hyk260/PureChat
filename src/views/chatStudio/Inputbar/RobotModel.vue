@@ -13,13 +13,16 @@
           :key="item"
           @click="storeRobotModel(item)"
         >
-          <div :class="['icon', robotIcon]">
-            <div v-if="['ollama', 'github'].includes(model.id)" :class="['icon', item.icon]">
-              <svg-icon class="align-text-bottom" :local-icon="item.icon || robotIcon" />
-            </div>
-            <span v-else>
-              <svg-icon class="align-text-bottom" :local-icon="robotIcon" />
+          <div v-if="['ollama', 'github'].includes(model.id)" :class="['icon align-icon', item.icon]">
+            <span v-if="item.icon">
+              <SvgIcon class="align-text-bottom" :local-icon="item.icon" />
             </span>
+            <span v-else :class="['icon', robotIcon]">
+              <SvgIcon class="align-text-bottom" :local-icon="robotIcon" />
+            </span>
+          </div>
+          <div v-else :class="['icon', robotIcon]">
+            <SvgIcon class="align-text-bottom" :local-icon="robotIcon" />
           </div>
           <div class="list flex-bc w-full">
             <span>{{ item.displayName || item.id }}</span>
@@ -142,6 +145,9 @@ emitter.on("openModeList", () => {
   gap: 8px;
   cursor: pointer;
   border-radius: 3px;
+  .align-icon {
+
+  }
   .list {
     .tokens {
       width: 36px;
