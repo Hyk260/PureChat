@@ -36,7 +36,6 @@
     "@vueuse/core": "^8.4.2",
     "@wangeditor/editor": "5.1.23",
     "@wangeditor/editor-for-vue": "5.1.12",
-    "ai": "^3.3.0",
     "animate.css": "^4.1.1",
     "artplayer": "^5.1.1",
     "axios": "^0.26.1",
