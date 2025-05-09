@@ -1,12 +1,13 @@
 import { nextTick } from "vue";
 import { defineStore } from 'pinia'
-import { useAppStore, useChatStore } from '@/stores/index';
+import { useAppStore, useChatStore, useAuthStore } from '@/stores/index';
 import { login, logout } from "@/service/api/index"
 import { ACCOUNT, USER_MODEL } from "@/constants/index"
 import { localStg } from "@/utils/storage"
 import { SetupStoreId } from '../../plugins/index';
 import { timProxy } from '@/utils/IM/index';
 import { setLocale } from "@/locales/index";
+
 import router from "@/router"
 import chat from "@/utils/IM/im-sdk/tim"
 import emitter from "@/utils/mitt-bus"
@@ -34,7 +35,8 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         timProxy.init()
         await this.handleIMLogin({ userID: result.username, userSig: result.userSig })
         localStg.set(USER_MODEL, result)
-        data?.keep && localStg.set(ACCOUNT, data)
+        useAuthStore().setTokens(result?.accessToken, result?.refreshToken)
+        // data?.keep && localStg.set(ACCOUNT, data)
       } else {
         console.log("授权登录失败")
         useAppStore().showMessage({ message: msg, type: "error" })

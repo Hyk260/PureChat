@@ -1,5 +1,7 @@
-// token
+// access_token
 export const ACCESS_TOKEN = "Access-Token";
+// refresh_token
+export const REFRESH_TOKEN = "Refresh-Token";
 // 用户设置
 export const USER_SETUP = "User-Setup";
 // 用户信息
