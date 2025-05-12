@@ -1,12 +1,14 @@
 import { defineStore } from "pinia";
 import { SetupStoreId } from '../../plugins/index';
 import { useChatStore } from "../chat/index";
+import { openWindow } from "@/utils/common";
+import emitter from "@/utils/mitt-bus";
 import router from "@/router";
 
 const { docs, homepage, giteeHomepage } = __APP_INFO__.pkg;
 const { DEV: isDev } = import.meta.env;
 
-const outsideList = [
+const defaultOutsideList = [
   {
     id: "chat",
     icon: "ChatDotSquare",
@@ -32,6 +34,14 @@ const outsideList = [
     svgIcon: "Discover",
   },
   {
+    id: "apps",
+    icon: "Menu",
+    title: "小程序",
+    path: "/apps",
+    type: "el-icon",
+    show: __IS_ELECTRON__ ? "" : "hide",
+  },
+  {
     id: "more",
     icon: "MoreFilled",
     title: "更多",
@@ -40,7 +50,7 @@ const outsideList = [
   },
 ];
 
-const moreList = [
+const defaultMoreList = [
   {
     id: "github",
     icon: "github",
@@ -59,8 +69,8 @@ const moreList = [
 
 export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
   state: () => ({
-    outsideList,
-    moreList,
+    outsideList: [...defaultOutsideList],
+    moreList: [...defaultMoreList],
   }),
   getters: {
     filteredOutsideList: (state) => state.outsideList.filter((item) => item?.show !== "hide"),
@@ -71,8 +81,14 @@ export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
       this.outsideList = [...list, ...data];
     },
     toggleOutside(item) {
-      router.push(item.path);
-      useChatStore().$patch({ showCheckbox: false });
+      if (item?.path) {
+        router.push(item.path);
+        useChatStore().$patch({ showCheckbox: false });
+      } else if (item?.openType === 'outside' && item?.url) {
+        openWindow(item.url);
+      } else if (item?.mode === "other") {
+        emitter.emit("SidebarEditDialog", true);
+      }
     },
     setMoreList(list) {
       this.moreList = list;

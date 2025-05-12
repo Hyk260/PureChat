@@ -75,13 +75,7 @@ const onOpenDocs = () => {
 };
 
 const handleItemClick = (item) => {
-  if (item?.openType) {
-    openWindow(item?.url);
-  } else if (item?.mode === "other") {
-    emitter.emit("SidebarEditDialog", true);
-  } else {
-    sidebarStore.toggleOutside(item);
-  }
+  sidebarStore.toggleOutside(item);
 };
 
 const isActiveItem = (path) => {
@@ -101,7 +95,8 @@ const shouldHideUnreadBadge = (id) => {
   position: relative;
   z-index: 9;
   display: flex;
-  justify-content: space-between;
+  height: 100%;
+  // justify-content: space-between;
   flex-direction: column;
   // border-radius: 0 7px 7px 0;
   // box-shadow: 1px 0px 5px 0px rgb(0 0 0 / 10%);
@@ -114,6 +109,7 @@ const shouldHideUnreadBadge = (id) => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
   gap: 8px;
 }
 
