@@ -53,9 +53,9 @@ function onEdit(data = props.message) {
 
 function getChangeType(message = props.message) {
   const { conversationType: type, nick, from, revokerInfo, payload } = message;
-  if (payload?.description === "dithering") {
-    return "[窗口抖动]";
-  }
+  // if (payload?.description === "dithering") {
+  //   return "[窗口抖动]";
+  // }
   const isGroup = type === "GROUP";
   const isC2C = type === "C2C";
   if (isMine.value) {

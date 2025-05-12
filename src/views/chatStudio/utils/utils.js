@@ -207,7 +207,8 @@ export const msgType = (elem_type) => {
 
 export const msgOne = (item) => {
   const { isRevoked, type, payload } = item;
-  if (isRevoked || type === "TIMGroupTipElem" || payload?.description === "dithering") {
+  // || payload?.description === "dithering"
+  if (isRevoked || type === "TIMGroupTipElem") {
     return "message-view-tips-elem";
   } else {
     return "message-view-item-index";
@@ -227,9 +228,9 @@ export const loadMsgModule = (item) => {
     TIMGroupSystemNoticeElem: GroupSystemNoticeElem, // 系统通知
   };
   if (isRevoked) return TipsElemItem;
-  if (type === "TIMCustomElem" && payload?.description === "dithering") {
-    return TipsElemItem;
-  }
+  // if (type === "TIMCustomElem" && payload?.description === "dithering") {
+  //   return TipsElemItem;
+  // }
   return messageComponentMap[type] || null;
 };
 

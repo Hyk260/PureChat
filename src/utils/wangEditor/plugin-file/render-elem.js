@@ -1,7 +1,7 @@
-import { DomEditor } from "@wangeditor/editor";
-import emitter from "@/utils/mitt-bus";
-import { getFileType, renderFileIcon } from "@/utils/chat/index";
 import { h } from "snabbdom";
+import { DomEditor } from "@wangeditor/editor";
+import { getFileType, renderFileIcon } from "@/utils/chat/index";
+import emitter from "@/utils/mitt-bus";
 
 function rendering(fileName, fileType, fileSize, selected) {
   // 附件 icon 图标 vnode

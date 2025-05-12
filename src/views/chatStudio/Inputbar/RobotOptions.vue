@@ -12,10 +12,10 @@
   >
     <div class="container">
       <el-scrollbar>
-        <div class="px-10 py-10">
+        <div class="container-box">
           <!-- prompt -->
           <DragPrompt ref="promptRef" />
-          <div class="container-item py-10 flex-bc" v-for="item in modelData" :key="item.ID">
+          <div class="container-item flex-bc" v-for="item in modelData" :key="item.ID">
             <div class="flex flex-col gap-5">
               <div class="title">{{ item.Title }}</div>
               <div class="subTitle">
@@ -430,11 +430,15 @@ onUnmounted(() => {
   overflow: hidden;
   max-height: 70vh;
   height: 70vh;
+  .container-box {
+    padding-right: 10px;
+  }
   .container-item {
     color-scheme: light;
     user-select: none;
     color: var(--color-text-default);
     min-height: 40px;
+    padding: 10px 0;
     border-bottom: 1px solid #dedede60;
     .title {
       font-size: 14px;

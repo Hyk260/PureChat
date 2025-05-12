@@ -196,9 +196,9 @@ const fnAvatar = (item) => {
   if (isSelf(item) && __LOCAL_MODE__) {
     return new URL(`../../../assets/images/avatar.png`, import.meta.url).href;
   } else {
-    return item.avatar || getAiAvatarUrl(item.from)
+    return item.avatar || getAiAvatarUrl(item.from);
   }
-}
+};
 
 const displayInfo = (info) => {
   if (!info) return "unknown";
@@ -206,9 +206,8 @@ const displayInfo = (info) => {
 };
 
 const showAvatar = (item) => {
-  return (
-    !item.isRevoked && item.type !== "TIMGroupTipElem" && item?.payload?.description !== "dithering"
-  );
+  return !item.isRevoked && item.type !== "TIMGroupTipElem";
+  // && item?.payload?.description !== "dithering"
 };
 
 const classMessageViewItem = (item) => {
@@ -227,12 +226,8 @@ const classMessageInfoView = () => {
 
 const handleSelect = (e, item, type = "initial") => {
   // tip消息 撤回消息 抖动消息
-  if (
-    !showCheckbox.value ||
-    item.type == "TIMGroupTipElem" ||
-    item.isRevoked ||
-    item.payload?.description === "dithering"
-  ) {
+  //  item.payload?.description === "dithering"
+  if (!showCheckbox.value || item.type == "TIMGroupTipElem" || item.isRevoked) {
     return;
   }
   const _el = document.getElementById(`choice-${item.ID}`);
@@ -376,12 +371,12 @@ const handleContextMenuEvent = (event, item) => {
   const isRelay = type === "TIMRelayElem";
   const isCustom = type === "TIMCustomElem";
   // 撤回消息 系统类型消息 提示类型消息 多选状态 自定义消息
+  //  payload?.description === "dithering"
   if (
     isRevoked ||
     showCheckbox.value ||
     type === "TIMGroupSystemNoticeElem" ||
-    type === "TIMGroupTipElem" ||
-    payload?.description === "dithering"
+    type === "TIMGroupTipElem"
   ) {
     isRight.value = false;
     return;

@@ -8,6 +8,7 @@ import axios from "axios";
 // 状态码错误消息映射
 const statusMessageMap = {
   400: "错误的请求",
+  401: "未授权，请重新登录",
   404: "请求错误,未找到该资源",
   408: "请求超时",
   415: "不支持的媒体类型",
@@ -84,9 +85,14 @@ class PureChatHttp {
   handleResponse() {
     this.service.interceptors.response.use(
       (response) => {
-        const token = response.headers["authorization"];
-        if (token) localStg.set(ACCESS_TOKEN, token);
-        return response.status === 200 ? response.data : Promise.reject(response.data);
+        if (response.status >= 200 && response.status < 300) {
+          const token = response.headers?.authorization;
+          if (token) {
+            localStg.set(ACCESS_TOKEN, token);
+          }
+          return response.data;
+        }
+        return Promise.reject(response.data);
       },
       async (error) => {
         const { config, response } = error;
