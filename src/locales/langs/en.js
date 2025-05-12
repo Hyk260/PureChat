@@ -66,6 +66,7 @@ const local = {
     emptyText: "No Data",
     confirm: "Confirm",
     save: "Save",
+    reset: "Reset",
     cancel: "Cancel",
     currency: "Currency",
     about: "About",

@@ -79,7 +79,3 @@ export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
     },
   },
 });
-
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useSidebarStore, import.meta.hot))
-}

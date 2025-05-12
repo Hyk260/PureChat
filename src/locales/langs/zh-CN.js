@@ -65,6 +65,7 @@ const local = {
   common: {
     emptyText: "暂无数据",
     save: "保存",
+    reset: "重置",
     confirm: "确认",
     cancel: "取消",
     currency: "通用",

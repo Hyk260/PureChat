@@ -90,8 +90,9 @@
     </div>
     <template #footer>
       <span>
-        <el-button @click="handleCancel"> {{ $t("common.cancel") }} </el-button>
-        <el-button type="primary" @click="handleConfirm"> {{ $t("common.save") }} </el-button>
+        <el-button @click="reset"> {{ $t("common.reset") }} </el-button>
+        <!-- <el-button @click="handleCancel"> {{ $t("common.cancel") }} </el-button> -->
+        <el-button type="primary" @click="handleConfirm"> {{ $t("common.confirm") }} </el-button>
       </span>
     </template>
   </el-dialog>
@@ -156,16 +157,18 @@ export default defineComponent({
     onRemove(e) {
       console.log(e);
     },
-    // 开始拖拽
     onStart() {
       this.cursorStyle = "drag-cursor";
     },
-    // 拖拽结束
     onEnd() {
       this.cursorStyle = "";
       this.callback();
     },
     onUpdate() {},
+    reset() {
+      useSidebarStore().$reset();
+      this.init();
+    },
     callback() {
       this.$nextTick(() => {
         this.setOutsideList(this.leftEdit);
@@ -185,7 +188,6 @@ export default defineComponent({
       this.leftEdit = cloneDeep(left);
       this.rightEdit = cloneDeep(right);
     },
-    // 删除
     reduce(item) {
       if (item.if_fixed == 1) return;
       const index = this.leftEdit.indexOf(item);
@@ -193,7 +195,6 @@ export default defineComponent({
       this.rightEdit.push(item);
       this.callback();
     },
-    // 添加
     increase(item) {
       const index = this.rightEdit.indexOf(item);
       this.rightEdit.splice(index, 1);
@@ -204,25 +205,13 @@ export default defineComponent({
       if (e.relatedContext.element?.if_fixed == 1) return false;
       return true;
     },
-    reduction() {
-      this.leftEdit = cloneDeep(this.cache["deepLeft"]);
-      this.rightEdit = cloneDeep(this.cache["deepRight"]);
-      this.callback();
-    },
-    // 确定
     handleConfirm() {
       this.setDialog(false);
     },
-    // 取消
     handleCancel() {
       this.setDialog(false);
-      this.reduction();
     },
-    // 关闭弹框回调
-    onClose() {
-      if (!this.dialogVisible) return;
-      this.reduction();
-    },
+    onClose() {},
     setDialog(flg) {
       this.dialogVisible = flg;
     },
@@ -241,7 +230,7 @@ $draggable-height: 384px;
     width: 195px;
     .left-text {
       user-select: none;
-      padding: 0 10px 10px 10px;
+      padding: 0 0 10px 0;
     }
   }
   .drag-cursor {
