@@ -58,7 +58,22 @@ const OllamaStream = (res, cb) => {
 export default class OllamaAI {
   constructor() {
     this.payload = useAccessStore(ModelProvider.Ollama);
-    this.client = new Ollama({ host: this.payload.openaiUrl || DEFAULT_BASE_URL });
+    this.client = new Ollama({
+      host: this.payload.openaiUrl || DEFAULT_BASE_URL,
+      fetch: (input, init = {}) => {
+        const authToken = this.payload.apiKey || "TestToken";
+
+        const headers = new Headers(init.headers || {});
+        if (authToken) {
+          headers.set('Authorization', `Bearer ${authToken}`);
+        }
+
+        return fetch(input, {
+          ...init,
+          headers
+        });
+      }
+    });
   }
   buildOllamaMessages(messages) {
     return messages.map((t) => this.convertContentToOllamaMessage(t));
