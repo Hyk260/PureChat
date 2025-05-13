@@ -4,14 +4,11 @@ import { Ollama } from "ollama/browser";
 import { nanoid } from '@/utils/uuid';
 import {
   parseDataUri,
-  chatStreamable,
   transformOllamaStream,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
   convertIterableToStream,
 } from "./protocol";
-
-const DEFAULT_BASE_URL = "http://127.0.0.1:11434";
 
 function getIcon(modelName) {
   if (modelName.startsWith("llama")) {
@@ -59,7 +56,7 @@ export default class OllamaAI {
   constructor() {
     this.payload = useAccessStore(ModelProvider.Ollama);
     this.client = new Ollama({
-      host: this.payload.openaiUrl || DEFAULT_BASE_URL,
+      host: this.payload.openaiUrl || import.meta.env.VITE_OLLAMA_PROXY_URL,
       fetch: (input, init = {}) => {
         const authToken = this.payload.apiKey || "TestToken";
 

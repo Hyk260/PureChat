@@ -93,7 +93,7 @@ const shouldHideUnreadBadge = (id) => {
   min-width: 68px;
   user-select: none;
   position: relative;
-  z-index: 9;
+  z-index: 10;
   display: flex;
   height: 100%;
   // justify-content: space-between;
