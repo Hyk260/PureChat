@@ -4,6 +4,7 @@
     title="选择要转发的联系人"
     width="600px"
     align-center
+    :lock-scroll="false"
     :before-close="handleClose"
   >
     <div class="forward-action">

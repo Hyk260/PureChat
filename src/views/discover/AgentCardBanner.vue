@@ -5,6 +5,7 @@
     align-center
     class="p-0 min-w-500"
     :show-close="false"
+    :lock-scroll="false"
     :before-close="handleClose"
   >
     <div class="agent-card-banner">

@@ -59,7 +59,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       }, 500)
     },
     async handleIMLogin(user) {
-      console.log("[chat] im登录", user)
       try {
         const data = await chat.login(user)
         if (data.code === 0) {
@@ -71,6 +70,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         }
       } catch (error) {
         this.handleUserLogout()
+        useAppStore().showMessage({ message: error, type: "error" })
         console.log("[chat] im登录失败 login", error)
       }
     },

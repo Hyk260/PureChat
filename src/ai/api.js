@@ -1,7 +1,5 @@
 import { ModelProvider, API_CLASS_MAP } from "@/ai/constant";
-import {
-  useAccessStore,
-} from "@/ai/utils";
+import { useAccessStore } from "@/ai/utils";
 import { useRobotStore } from '@/stores/index';
 
 /**

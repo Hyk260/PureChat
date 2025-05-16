@@ -1,108 +1,109 @@
 <template>
-  <el-dialog
-    ref="editRef"
-    v-model="dialogVisible"
-    :modal="true"
-    :append-to-body="true"
-    :close-on-click-modal="true"
-    @close="onClose"
-    title="导航栏编辑"
-    width="450px"
-  >
-    <div class="draggable flex-bc">
-      <div class="draggable-container">
-        <p class="left-text">显示在导航栏上</p>
-        <div class="edit-area h-full">
-          <el-scrollbar>
-            <VueDraggableNext
-              class="drag-area"
-              filter=".fix-ed"
-              :move="onMove"
-              :list="leftEdit"
-              :group="outsideGroup"
-              @update="onUpdate"
-              @remove="onRemove"
-              @start="onStart"
-              @end="onEnd"
-              :forceFallback="true"
-              ghostClass="ghost"
-              dragClass="chosen"
-              animation="200"
-            >
-              <template v-for="item in leftEdit" :key="item.id">
-                <div class="list-group-item flex-ac" :class="item?.class">
-                  <!-- 删除 -->
-                  <FontIcon
-                    iconName="RemoveFilled"
-                    class="reduce text-[#f44336]"
-                    @click="reduce(item)"
-                  />
-                  <!-- 图标 -->
-                  <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" />
-                  <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
-                  <span class="title">{{ item.title }}</span>
-                  <svg-icon local-icon="drag" class="dragIcon" />
-                </div>
-              </template>
-            </VueDraggableNext>
-          </el-scrollbar>
+    <el-dialog
+      ref="editRef"
+      v-model="dialogVisible"
+      :modal="true"
+      :append-to-body="true"
+      :lock-scroll="false"
+      :close-on-click-modal="true"
+      @close="onClose"
+      title="导航栏编辑"
+      width="450px"
+    >
+      <div class="draggable flex-bc">
+        <div class="draggable-container">
+          <p class="left-text">显示在导航栏上</p>
+          <div class="edit-area h-full">
+            <el-scrollbar>
+              <VueDraggableNext
+                class="drag-area"
+                filter=".fix-ed"
+                :move="onMove"
+                :list="leftEdit"
+                :group="outsideGroup"
+                @update="onUpdate"
+                @remove="onRemove"
+                @start="onStart"
+                @end="onEnd"
+                :forceFallback="true"
+                ghostClass="ghost"
+                dragClass="chosen"
+                animation="200"
+              >
+                <template v-for="item in leftEdit" :key="item.id">
+                  <div class="list-group-item flex-ac" :class="item?.class">
+                    <!-- 删除 -->
+                    <FontIcon
+                      iconName="RemoveFilled"
+                      class="reduce text-[#f44336]"
+                      @click="reduce(item)"
+                    />
+                    <!-- 图标 -->
+                    <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" />
+                    <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
+                    <span class="title">{{ item.title }}</span>
+                    <svg-icon local-icon="drag" class="dragIcon" />
+                  </div>
+                </template>
+              </VueDraggableNext>
+            </el-scrollbar>
+          </div>
+        </div>
+        <div class="draggable-container">
+          <p class="left-text">更多</p>
+          <div class="edit-area h-full">
+            <el-scrollbar>
+              <VueDraggableNext
+                class="drag-area"
+                filter=".fix-ed"
+                :move="onMove"
+                :list="rightEdit"
+                :group="insideGroup"
+                @update="onUpdate"
+                @remove="onRemove"
+                @start="onStart"
+                @end="onEnd"
+                :forceFallback="true"
+                ghostClass="ghost"
+                dragClass="chosen"
+                animation="200"
+              >
+                <template v-for="item in rightEdit" :key="item.id">
+                  <div class="list-group-item flex-ac" :class="item?.class">
+                    <!-- 添加 -->
+                    <FontIcon
+                      iconName="CirclePlusFilled"
+                      class="add text-[#1890ff]"
+                      @click="increase(item)"
+                    />
+                    <!-- 图标 -->
+                    <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" />
+                    <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
+                    <span class="title">{{ item.title }}</span>
+                    <svg-icon local-icon="drag" class="dragIcon" />
+                  </div>
+                </template>
+              </VueDraggableNext>
+              <div class="empty h-full" v-if="rightEdit.length == 0">全部都显示在侧边栏了</div>
+            </el-scrollbar>
+          </div>
         </div>
       </div>
-      <div class="draggable-container">
-        <p class="left-text">更多</p>
-        <div class="edit-area h-full">
-          <el-scrollbar>
-            <VueDraggableNext
-              class="drag-area"
-              filter=".fix-ed"
-              :move="onMove"
-              :list="rightEdit"
-              :group="insideGroup"
-              @update="onUpdate"
-              @remove="onRemove"
-              @start="onStart"
-              @end="onEnd"
-              :forceFallback="true"
-              ghostClass="ghost"
-              dragClass="chosen"
-              animation="200"
-            >
-              <template v-for="item in rightEdit" :key="item.id">
-                <div class="list-group-item flex-ac" :class="item?.class">
-                  <!-- 添加 -->
-                  <FontIcon
-                    iconName="CirclePlusFilled"
-                    class="add text-[#1890ff]"
-                    @click="increase(item)"
-                  />
-                  <!-- 图标 -->
-                  <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" />
-                  <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
-                  <span class="title">{{ item.title }}</span>
-                  <svg-icon local-icon="drag" class="dragIcon" />
-                </div>
-              </template>
-            </VueDraggableNext>
-            <div class="empty h-full" v-if="rightEdit.length == 0">全部都显示在侧边栏了</div>
-          </el-scrollbar>
-        </div>
-      </div>
-    </div>
-    <template #footer>
-      <span>
-        <el-button @click="reset"> {{ $t("common.reset") }} </el-button>
-        <!-- <el-button @click="handleCancel"> {{ $t("common.cancel") }} </el-button> -->
-        <el-button type="primary" @click="handleConfirm"> {{ $t("common.confirm") }} </el-button>
-      </span>
-    </template>
-  </el-dialog>
+      <template #footer>
+        <span>
+          <el-button @click="reset"> {{ $t("common.reset") }} </el-button>
+          <!-- <el-button @click="handleCancel"> {{ $t("common.cancel") }} </el-button> -->
+          <el-button type="primary" @click="handleConfirm"> {{ $t("common.confirm") }} </el-button>
+        </span>
+      </template>
+    </el-dialog>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 import { cloneDeep, uniqBy } from "lodash-es";
 import { VueDraggableNext } from "vue-draggable-next";
-import { mapStores, mapState, mapActions } from "pinia";
+import { mapState, mapActions } from "pinia";
 import { useSidebarStore } from "@/stores/modules/sidebar/index";
 import emitter from "@/utils/mitt-bus";
 

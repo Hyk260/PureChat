@@ -4,6 +4,7 @@
     @close="handleClose"
     :modal="true"
     :append-to-body="true"
+    :lock-scroll="false"
     class="share-modal-dialog min-w-460"
     align-center
     title="截图分享"
@@ -171,11 +172,8 @@ const handleDownload = () => {
   onDownload(imageType.value, roleText.value, handleClose);
 };
 
-const handleClose = () => {
-  nextTick(() => {
-    setDialogVisible(false);
-    emit("onClose");
-  });
+const handleClose = (done) => {
+  done && done?.()
 };
 
 onMounted(() => {

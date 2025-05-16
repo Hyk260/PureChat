@@ -7,6 +7,7 @@
     align-center
     destroy-on-close
     :append-to-body="true"
+    :lock-scroll="false"
     :close-on-click-modal="true"
     :before-close="(done) => handleCancel(done)"
   >

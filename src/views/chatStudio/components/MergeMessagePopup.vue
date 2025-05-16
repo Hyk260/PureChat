@@ -5,6 +5,7 @@
     width="55%"
     class="min-w-500"
     align-center
+    :lock-scroll="false"
     :before-close="handleClose"
   >
     <el-scrollbar>
