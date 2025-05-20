@@ -25,7 +25,7 @@
           :sessionId="item.conversationID"
           :type="item.type === 'C2C' ? 'single' : 'group'"
           :nickName="chatName(item)"
-          :url="item.type === 'C2C' ? item.userProfile.avatar : item?.groupProfile?.avatar"
+          :url="item.type === 'C2C' ? item.userProfile?.avatar : item?.groupProfile?.avatar"
         />
       </el-badge>
       <!-- 消息 -->

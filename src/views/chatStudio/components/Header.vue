@@ -68,7 +68,7 @@ const chatType = (type) => {
 
 const chatNick = (type, chat) => {
   if (type === "C2C") {
-    return chat.userProfile.nick || chat.userProfile.userID || chat.remark;
+    return chat.userProfile?.nick || chat.userProfile?.userID || chat?.remark || "";
   } else if (type === "GROUP") {
     const {
       groupProfile: { name, groupID, memberCount },

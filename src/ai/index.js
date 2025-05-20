@@ -33,15 +33,19 @@ const restSendMsg = async (params, data) => {
     }
     localStg.remove("webSearchReferences");
   }
-  return await restApi({
-    params: {
-      To_Account: params.from,
-      From_Account: params.to,
-      Text: message,
-      CloudCustomData,
-    },
-    funName: "restSendMsg",
-  });
+  try {
+    await restApi({
+      params: {
+        To_Account: params.from,
+        From_Account: params.to,
+        Text: message,
+        CloudCustomData,
+      },
+      funName: "restSendMsg",
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const updataMessage = (chat, data) => {

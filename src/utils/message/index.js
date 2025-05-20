@@ -28,6 +28,7 @@ export const showConfirmationBox = async (data, Type = "confirm") => {
       type: iconType,
       inputValue,
       center,
+      lockScroll: false,
       draggable,
     });
     return formEl;
