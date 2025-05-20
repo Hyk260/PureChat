@@ -6,3 +6,6 @@ export const getPrompt = async () => {
     method: "get",
   });
 };
+
+
+window.getPrompt = getPrompt;
