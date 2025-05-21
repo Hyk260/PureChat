@@ -25,14 +25,14 @@
       </el-button>
     </el-tooltip>
     <!-- 附件 -->
-    <el-tooltip v-if="false" :content="$t('chat.upload_document')" placement="top">
+    <el-tooltip v-if="isElectron" :content="$t('chat.upload_document')" placement="top">
       <el-button v-show="isAssistant" @click="sendAnnexClick">
         <SvgIcon local-icon="paperClip" />
       </el-button>
     </el-tooltip>
     <!-- 截图 -->
-    <el-tooltip :content="$t('chat.screenshot')" placement="top">
-      <el-button v-show="!isAssistant && isElectron" @click="clickCscreenshot">
+    <el-tooltip v-if="isElectron" :content="$t('chat.screenshot')" placement="top">
+      <el-button v-show="!isAssistant" @click="clickCscreenshot">
         <SvgIcon local-icon="iconjietu" />
       </el-button>
     </el-tooltip>
@@ -79,7 +79,7 @@
       </div>
     </el-tooltip>
     <!-- 插件 -->
-    <el-tooltip content="选择插件" placement="top">
+    <el-tooltip v-if="false" content="选择插件" placement="top">
       <el-button v-show="isFunctionCall" @click="openPluginBox">
         <SvgIcon local-icon="plugin" />
       </el-button>

@@ -12,7 +12,7 @@
     :before-close="(done) => handleCancel(done)"
   >
     <div class="container">
-      <el-scrollbar>
+      <!-- <el-scrollbar> -->
         <div class="container-box">
           <!-- prompt -->
           <DragPrompt ref="promptRef" />
@@ -159,7 +159,7 @@
             </div>
           </div>
         </div>
-      </el-scrollbar>
+      <!-- </el-scrollbar> -->
     </div>
     <template #footer>
       <span>
@@ -428,11 +428,11 @@ onUnmounted(() => {
   margin-right: 5px;
 }
 .container {
-  overflow: hidden;
+  overflow: auto;
   max-height: 70vh;
   height: 70vh;
   .container-box {
-    padding-right: 10px;
+    padding: 10px 0 10px 0;
   }
   .container-item {
     color-scheme: light;
