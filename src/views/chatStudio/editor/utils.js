@@ -24,10 +24,9 @@ export const insertEmoji = ({ url, item }, editor) => {
 
 export const TEXT_FILE_EXTENSIONS = new Set(
   textExts
-  // ['txt']
 );
 
 export const isTextFile = (fileName) => {
   const extension = fileName.toLowerCase();
-  return TEXT_FILE_EXTENSIONS.has(extension);
+  return TEXT_FILE_EXTENSIONS.has(`.${extension}`);
 };

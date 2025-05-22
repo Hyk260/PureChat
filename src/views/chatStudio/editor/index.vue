@@ -180,7 +180,7 @@ const handleEditorChange = (editor) => {
 const handleAssistantFile = async (file, editor) => {
   const fileType = getFileType(file?.name);
 
-  if (!isTextFile(fileType)) {
+  if (!isTextFile(fileType) || !__IS_ELECTRON__) {
     return appStore.showMessage({
       message: `AI暂不支持${fileType}文件`,
       type: "warning",
