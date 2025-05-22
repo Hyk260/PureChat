@@ -8,7 +8,7 @@ import {
 import { useAppStore, useChatStore } from '@/stores/index';
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
-import { dataURLtoFile, getBlob, getFileType } from "@/utils/chat/index";
+import { base64ToFile, getBlob, getFileType } from "@/utils/chat/index";
 import { useClipboard } from "@vueuse/core";
 import { match } from "pinyin-pro";
 import { nextTick } from "vue";
@@ -262,6 +262,24 @@ export async function sendChatMessage(options) {
     images = [],
   } = options || {};
 
+  // 处理图片消息
+  for (const t of images) {
+    const img = await createImageMessage({ to, type, file: base64ToFile(t.src) });
+    messages.push(img);
+  }
+
+  // 处理文件消息
+  for (const t of files) {
+    const file = await createFileMessage({ to, type, file: base64ToFile(t.link, t.fileName), path: t?.path });
+    messages.push(file);
+  }
+
+  // 处理视频消息
+  for (const t of video) {
+    const videoItem = await createVideoMessage({ to, type, file: base64ToFile(t.link, t.fileName) });
+    messages.push(videoItem);
+  }
+
   // 处理文本消息（@消息或普通文本）
   if (aitStr) {
     const atTextItem = await createTextAtMessage({ to, type, text: aitStr, atUserList, custom })
@@ -269,24 +287,6 @@ export async function sendChatMessage(options) {
   } else if (text) {
     const textItem = await createTextMessage({ to, type, text, custom })
     messages.push(textItem);
-  }
-
-  // 处理图片消息
-  for (const t of images) {
-    const img = await createImageMessage({ to, type, file: dataURLtoFile(t.src) });
-    messages.push(img);
-  }
-
-  // 处理文件消息
-  for (const t of files) {
-    const file = await createFileMessage({ to, type, file: dataURLtoFile(t.link, t.fileName) });
-    messages.push(file);
-  }
-
-  // 处理视频消息
-  for (const t of video) {
-    const videoItem = await createVideoMessage({ to, type, file: dataURLtoFile(t.link, t.fileName) });
-    messages.push(videoItem);
   }
 
   return messages;

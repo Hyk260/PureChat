@@ -63,11 +63,11 @@ export const createImageMessage = async (params) => {
 };
 // 创建文件消息
 export const createFileMessage = async (params) => {
-  const { to, type, file } = params;
+  const { to, type, file, path = "" } = params;
   const message = await tim.createFileMessage({
     to,
     conversationType: type,
-    payload: { file },
+    payload: { file, path },
     onProgress: (event) => {
       fileUploading(message, event * 100);
     },

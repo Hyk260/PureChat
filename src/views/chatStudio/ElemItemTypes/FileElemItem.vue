@@ -57,7 +57,7 @@ const formattedFileSize = computed(() => bytesToSize(payload.fileSize));
 const shouldShowTooltip = computed(() => payload.fileName.length <= 24);
 const isSuccess = computed(() => props.status === "success");
 
-const handleOpen = (data) => {
+const handleOpen = async (data) => {
   if (__IS_ELECTRON__) {
     console.log("Open electron:");
   } else {

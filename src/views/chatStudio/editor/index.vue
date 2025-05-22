@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { getFileType, bytesToSize, fileImgToBase64Url } from "@/utils/chat/index";
+import { getFileType, bytesToSize, fileToBase64 } from "@/utils/chat/index";
 import { isMobile } from "@/utils/common";
 import { Editor } from "@wangeditor/editor-for-vue";
 import { debounce, isEmpty } from "lodash-es";
@@ -187,13 +187,14 @@ const handleAssistantFile = async (file, editor) => {
     });
   }
 
-  const base64Url = await fileImgToBase64Url(file);
+  const base64Url = await fileToBase64(file);
 
   editor.insertNode(
     createMediaElement("attachment", {
       fileName: file.name,
       fileSize: bytesToSize(file.size),
       link: base64Url,
+      path: file?.path || "",
     })
   );
 };
@@ -207,8 +208,8 @@ const handleFiles = async (file, type) => {
   }
 
   try {
-    const base64Url = await fileImgToBase64Url(file);
-
+    const base64Url = await fileToBase64(file);
+    
     editor.restoreSelection();
 
     if (type === "image") {
@@ -225,6 +226,7 @@ const handleFiles = async (file, type) => {
           fileName: file.name,
           fileSize: bytesToSize(file.size),
           link: base64Url,
+          path: file?.path || "",
         })
       );
     }

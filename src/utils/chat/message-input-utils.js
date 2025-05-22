@@ -23,11 +23,11 @@ export const bufferToBase64Url = (data, type = "jpeg") => {
 };
 
 /**
- * 将给定的图片文件转换为 base64 编码的 URL
- * @param {File} file - 要转换的图片文件
- * @returns {Promise<string>} - 返回一个 Promise，解析为图片的 base64 编码的 URL
+ * 将 File 对象转换为 Base64 字符串
+ * @param file - 要转换的 File 对象
+ * @returns Promise 解析为 Base64 字符串
  */
-export const fileImgToBase64Url = (file) => {
+export const fileToBase64 = (file) => {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -43,7 +43,7 @@ export async function convertBlobUrlToDataUrl(blobUrl) {
   try {
     const response = await fetch(blobUrl);
     const blob = await response.blob();
-    const dataUrl = await fileImgToBase64Url(blob);
+    const dataUrl = await fileToBase64(blob);
     return dataUrl;
   } catch (error) {
     console.error("Error converting blob to data URL:", error);
@@ -137,6 +137,50 @@ export const dataURLtoFile = (dataUrl, fileName = "image.png") => {
   }
   return new File([u8arr], fileName, { type: mime });
 };
+
+/**
+ * 从 base64 字符串中提取 MIME 类型
+ * @param base64 - 完整的 base64 字符串（包含 data: 前缀）
+ * @returns 提取的 MIME 类型，如果无法提取则返回 undefined
+ */
+function extractMimeTypeFromBase64(base64) {
+  const mimeTypeMatch = base64.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
+  return mimeTypeMatch?.[1];
+}
+
+/**
+ * 将 Base64 字符串转换为 File 对象
+ * @param base64 - Base64 字符串
+ * @param filename - 生成的 File 对象的文件名
+ * @param mimeType - 文件的 MIME 类型
+ * @returns 转换后的 File 对象
+ */
+export function base64ToFile(base64, filename, mimeType) {
+  // 检查 base64 字符串格式
+  if (!base64.startsWith('data:')) {
+    throw new Error('Invalid base64 string format');
+  }
+  // 提取 MIME 类型（如果未显式提供）
+  const detectedMimeType = mimeType || extractMimeTypeFromBase64(base64);
+  if (!detectedMimeType) {
+    throw new Error('Could not determine MIME type from base64 string');
+  }
+  // 从 base64 字符串中提取实际数据部分
+  const base64Data = base64.split(',')[1];
+  if (!base64Data) {
+    throw new Error('Invalid base64 data');
+  }
+  // 将 base64 转换为二进制数据
+  const binaryString = atob(base64Data);
+  const bytes = new Uint8Array(binaryString.length);
+
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  // 创建 Blob 并转换为 File
+  const blob = new Blob([bytes], { type: mimeType });
+  return new File([blob], filename, { type: mimeType });
+}
 
 /**
  * 获取文件 URL 的 Blob 对象

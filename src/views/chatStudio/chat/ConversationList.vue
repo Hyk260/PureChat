@@ -136,7 +136,7 @@ const formatNewsMessage = (data) => {
 
   const formatTip = (t) => (t.length > MAX_TIP_LENGTH ? `${t.slice(0, MAX_TIP_LENGTH)}...` : t);
 
-  const tip = formatTip(rawTip);
+  const tip = formatTip(rawTip || "");
   // 处理撤回消息
   if (isRevoked) {
     return `${isOther ? nick : "你"}撤回了一条消息`;

@@ -7,6 +7,8 @@ import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { SessionModel } from "@/database/models/session";
 import { MessageModel } from "@/database/models/message";
+import { FilesModel } from "@/database/models/files";
+
 import { ConversationList, UserProfile, BaseElemMessage, ProvidersList } from '@database/config';
 import emitter from "@/utils/mitt-bus";
 
@@ -127,6 +129,30 @@ export class LocalChat {
       type: "TIMTextElem"
     };
     if (cache) MessageModel.create(_data.ID, _data);
+    return _data;
+  }
+  async createFileMessage(data) {
+    const { to, conversationType, payload } = data;
+    const _data = {
+      ...BaseElemMessage,
+      time: getTime(),
+      clientTime: getTime(),
+      ID: uuid(),
+      to: to,
+      from: UserProfile.userID,
+      avatar: UserProfile.avatar,
+      conversationID: `${conversationType}${to}`,
+      conversationType,
+      payload: {
+        fileName: payload.file.name || 'test.txt',
+        fileSize: payload.file.size || 0,
+        filePath: payload.path || '',
+        fileUrl: '',
+        uuid: `${UserProfile.userID}-${uuid()}`,
+      },
+      type: "TIMFileElem"
+    };
+    MessageModel.create(_data.ID, _data);
     return _data;
   }
   createCustomMessage(data) {
