@@ -1,31 +1,6 @@
-import tim from "@/utils/IM/im-sdk/tim";
-import emitter from "@/utils/mitt-bus";
-import { throttle } from "lodash-es";
 import { updateImageSize, getCustomMsgContent } from "@/utils/common";
-import { getCloudCustomData } from "@/utils/chat/index";
-
-const createProgressHandler = () => {
-  let lastProgress = 0;
-  const handleProgressUpdate = throttle((progress, callback) => {
-    if (progress.num !== lastProgress) {
-      lastProgress = progress.num;
-      callback?.();
-    }
-  }, 50);
-  return handleProgressUpdate;
-};
-
-const handleProgressUpdate = createProgressHandler();
-
-const fileUploading = (message, rawProgress = 0) => {
-  const num = Math.round(rawProgress);
-
-  handleProgressUpdate({ num }, () => {
-    const uuid = message?.payload?.uuid || "";
-    emitter.emit("fileUploading", { uuid, num });
-    console.log("[file] uploading:", `${num}%`);
-  });
-};
+import { getCloudCustomData, fileUploading } from "@/utils/chat/index";
+import tim from "@/utils/IM/im-sdk/tim";
 
 // 发送消息
 export const sendMessage = async (params) => {

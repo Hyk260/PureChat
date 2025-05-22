@@ -1,6 +1,7 @@
 import { nextTick } from "vue";
+import { isEmpty, throttle } from 'lodash-es';
 import { useAppStore } from "@/stores/index";
-import { isEmpty } from 'lodash-es';
+import emitter from "@/utils/mitt-bus";
 
 /**
  * 将二进制数据转换为 base64 URL 格式
@@ -329,3 +330,26 @@ export function readFromFile() {
     fileInput.click();
   });
 }
+
+const createProgressHandler = () => {
+  let lastProgress = 0;
+  const handleProgressUpdate = throttle((progress, callback) => {
+    if (progress.num !== lastProgress) {
+      lastProgress = progress.num;
+      callback?.();
+    }
+  }, 50);
+  return handleProgressUpdate;
+};
+
+const handleProgressUpdate = createProgressHandler();
+
+export const fileUploading = (message, rawProgress = 0) => {
+  const num = Math.round(rawProgress);
+
+  handleProgressUpdate({ num }, () => {
+    const uuid = message?.payload?.uuid || "";
+    emitter.emit("fileUploading", { uuid, num });
+    console.log("[file] uploading:", `${num}%`);
+  });
+};

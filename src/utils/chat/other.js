@@ -89,10 +89,6 @@ async function transformImageElement(data) {
   };
 }
 
-async function transformFileElement(data) {
-  
-}
-
 export async function transformData(data) {
   if (!data || !Array.isArray(data)) {
     console.warn("data is undefined, null, or not an array");

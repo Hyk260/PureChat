@@ -7,24 +7,17 @@
   >
     <div class="flex">
       <div class="min-w-45 h-45">
-        <img draggable="false" class="h-full" :src="icon" alt="" />
+        <img draggable="false" class="h-full" :src="icon" :alt="payload.fileName" />
       </div>
       <div class="file-content">
-        <el-tooltip
-          effect="dark"
-          placement="top"
-          :content="payload.fileName"
-          :disabled="payload.fileName.length < 24"
-        >
+        <el-tooltip placement="top" :content="payload.fileName" :disabled="shouldShowTooltip">
           <div class="file-name truncate">
             {{ payload.fileName }}
           </div>
         </el-tooltip>
         <div class="file-size">
-          <span>
-            {{ bytesToSize(payload.fileSize) }}
-          </span>
-          <span class="upload_progress" v-show="!isStatus('success')"></span>
+          <span>{{ formattedFileSize }} </span>
+          <span class="upload-progress" v-show="!isSuccess"></span>
         </div>
       </div>
     </div>
@@ -32,12 +25,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { getFileType, renderFileIcon, bytesToSize } from "@/utils/chat/index";
 import emitter from "@/utils/mitt-bus";
 
 defineOptions({
-  name: "FileElemItem"
+  name: "FileElemItem",
 });
 
 const props = defineProps({
@@ -56,15 +49,15 @@ const props = defineProps({
 });
 
 const { payload } = props.message;
+
 const backgroundStyle = ref("");
-const fileType = getFileType(payload?.fileName);
-const icon = renderFileIcon(fileType);
+const fileType = computed(() => getFileType(payload?.fileName));
+const icon = computed(() => renderFileIcon(fileType.value));
+const formattedFileSize = computed(() => bytesToSize(payload.fileSize));
+const shouldShowTooltip = computed(() => payload.fileName.length <= 24);
+const isSuccess = computed(() => props.status === "success");
 
-const isStatus = (value) => {
-  return props.status === value;
-};
-
-function handleOpen({ fileName }) {
+const handleOpen = (data) => {
   if (__IS_ELECTRON__) {
     console.log("Open electron:");
   } else {
@@ -72,27 +65,26 @@ function handleOpen({ fileName }) {
   }
 }
 
-const backstyle = (status = 0, percentage = 0) => {
+const getBackgroundStyle = (status = 0, percentage = 0) => {
   if (percentage === 100) return "";
   return status === 1
     ? `linear-gradient(to right, rgba(24, 144, 255, 0.09) ${percentage}%, white 0%, white 100%)`
     : "";
 };
 
-const uploading = ({ uuid, num, type = "up" }) => {
+const handleProgressUpdate  = ({ uuid, num, type = "up" }) => {
   try {
     const dom = document.getElementById(`${uuid}`);
-    if(!dom) {
-      console.warn("dom not found");
+    if (!dom) {
+      console.warn("DOM element not found");
       return;
     }
-    dom.style.background = backstyle(1, num);
+    dom.style.background = getBackgroundStyle(1, num);
     if (type === "up") {
-      const upProgress = dom.querySelector(".upload_progress");
+      const upProgress = dom.querySelector(".upload-progress");
       upProgress.innerText = num + "%";
-    }
-    if (type === "dow") {
-      const downProgress = dom.querySelector(".download_progress");
+    } else if (type === "dow") {
+      const downProgress = dom.querySelector(".download-progress");
       downProgress.innerText = num + "%";
     }
   } catch (error) {
@@ -101,10 +93,8 @@ const uploading = ({ uuid, num, type = "up" }) => {
 };
 
 onMounted(() => {
-  emitter.on("fileUploading", (data) => {
-    uploading(data);
-  });
-  backgroundStyle.value = backstyle();
+  emitter.on("fileUploading", handleProgressUpdate);
+  backgroundStyle.value = getBackgroundStyle();
 });
 
 onBeforeUnmount(() => {
@@ -123,18 +113,21 @@ onBeforeUnmount(() => {
   border: 1px solid rgba(0, 0, 0, 0.12);
   user-select: none;
   cursor: pointer;
+
   .file-content {
     position: relative;
     margin-left: 12px;
     display: flex;
     flex-wrap: wrap;
     align-content: space-around;
+
     .file-name {
       color: #000000ad;
       font-size: 14px;
       height: 18px;
       width: 160px;
     }
+
     .file-size {
       font-weight: 400;
       color: #999999;
@@ -144,7 +137,7 @@ onBeforeUnmount(() => {
   }
 }
 
-.upload_progress {
+.upload-progress {
   display: inline-block;
   width: 30px;
   padding: 0 5px;

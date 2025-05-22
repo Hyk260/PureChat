@@ -1,4 +1,4 @@
-// import { textExts } from '@shared/config/constant';
+import { textExts } from '@shared/config/constant';
 
 export const createMediaElement = (type, props) => ({
   type,
@@ -23,8 +23,8 @@ export const insertEmoji = ({ url, item }, editor) => {
 };
 
 export const TEXT_FILE_EXTENSIONS = new Set(
-  // textExts
-  ['txt']
+  textExts
+  // ['txt']
 );
 
 export const isTextFile = (fileName) => {
