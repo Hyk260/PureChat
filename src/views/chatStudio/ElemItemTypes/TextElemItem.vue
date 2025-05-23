@@ -76,7 +76,7 @@ function fnStyle() {
 
 .message-view-item-text {
   width: fit-content;
-  max-width: 500px;
+  // max-width: 500px;
   min-height: 36px;
   padding: 10px;
   box-sizing: border-box;

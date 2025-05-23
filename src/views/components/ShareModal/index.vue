@@ -27,12 +27,7 @@
                 :class="isSelf(item) ? 'is-self' : 'is-other'"
               >
                 <div class="avatar">
-                  <img
-                    class="w-32 h-32 rounded-6"
-                    v-if="!isSelf(item)"
-                    :src="getAiAvatarUrl(toAccount) || item.avatar"
-                  />
-                  <img class="w-32 h-32 rounded-6" v-else :src="item.avatar" />
+                  <img class="w-32 h-32 rounded-6" :src="fnAvatar(item)" />
                 </div>
                 <div class="item" :class="msgOne(item.type)">
                   <div :class="msgType(item.type)">
@@ -167,6 +162,14 @@ const showRole = computed(() => roleText.value && isPrompt.value);
 const downloadButtonText = computed(() =>
   imageType.value === ImageType.Blob ? "复制截图" : "下载截图"
 );
+
+const fnAvatar = (item) => {
+  if (isSelf(item) && __LOCAL_MODE__) {
+    return new URL(`../../../assets/images/avatar.png`, import.meta.url).href;
+  } else {
+    return item.avatar || getAiAvatarUrl(item.from);
+  }
+};
 
 const handleDownload = () => {
   onDownload(imageType.value, roleText.value, handleClose);
