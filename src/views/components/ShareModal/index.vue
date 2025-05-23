@@ -102,9 +102,9 @@
         </el-scrollbar>
       </div>
       <div>
-        <el-button class="w-full" @click="handleDownload" :loading="loading">
+        <el-button class="w-full" @click="handleDownload" :loading="loading" :disabled="loading">
           <template #loading>
-            <loadingSvg />
+            <div class="iconify-icon svg-spinners mr-8"></div>
           </template>
           {{ downloadButtonText }}
         </el-button>
@@ -125,7 +125,6 @@ import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils
 import { getAiAvatarUrl } from "@/ai/utils";
 import { getBackgroundStyle, onColor, back, backgColor } from "./utils";
 import { useChatStore, useRobotStore } from "@/stores/index";
-import loadingSvg from "@/views/login/components/loadingSvg.vue";
 import Header from "@/views/chatStudio/components/Header.vue";
 import emitter from "@/utils/mitt-bus";
 
@@ -146,10 +145,10 @@ const { isAssistant, toAccount, getSortedForwardData } = storeToRefs(chatStore);
 const { loading, onDownload } = useScreenshot();
 
 const promptContent = computed(() => {
-  if (!isAssistant.value) return ''
-  return robotStore.currentProviderPrompt?.prompt[0]?.content || ''
-})
-const showPrompt = computed(() => isAssistant.value && isPrompt.value && promptContent.value)
+  if (!isAssistant.value) return "";
+  return robotStore.currentProviderPrompt?.prompt[0]?.content || "";
+});
+const showPrompt = computed(() => isAssistant.value && isPrompt.value && promptContent.value);
 const roleText = computed(() => {
   try {
     const data = robotStore.currentProviderPrompt?.meta || {};
@@ -171,12 +170,17 @@ const fnAvatar = (item) => {
   }
 };
 
-const handleDownload = () => {
+const handleDownload = async () => {
+  // 先显示加载状态
+  loading.value = true;
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   onDownload(imageType.value, roleText.value, handleClose);
 };
 
 const handleClose = (done) => {
-  done && done?.()
+  done?.();
 };
 
 onMounted(() => {

@@ -629,6 +629,8 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
 .style-choice {
   padding-left: 35px;
   padding-right: 10px;
+  user-select: none;
+  pointer-events: none;
 }
 .message-view-item {
   padding: 10px 0 10px 0;

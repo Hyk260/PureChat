@@ -13,78 +13,75 @@ export const ImageType = {
   WEBP: "webp",
 };
 
-export const imageTypeOptions = [
-  {
-    label: "Blob",
-    value: ImageType.Blob,
-  },
-  {
-    label: "JPG",
-    value: ImageType.JPG,
-  },
-  {
-    label: "PNG",
-    value: ImageType.PNG,
-  },
-  {
-    label: "SVG",
-    value: ImageType.SVG,
-  },
-  {
-    label: "WEBP",
-    value: ImageType.WEBP,
-  },
-];
+export const imageTypeOptions = Object.values(ImageType).map(value => ({
+  label: value.toUpperCase(),
+  value,
+}));
+
+// 预定义截图函数映射
+const SCREENSHOT_FUNCTIONS = {
+  [ImageType.JPG]: domToJpeg,
+  [ImageType.PNG]: domToPng,
+  [ImageType.SVG]: domToSvg,
+  [ImageType.WEBP]: domToWebp,
+  [ImageType.Blob]: domToBlob,
+};
 
 /**
- * 将图像数据URL写入系统的剪贴板。
- *
- * @param {string} dataUrl - 图像数据URL。
+ * 将图像数据URL写入系统的剪贴板
+ * @param {Blob} blob - 图像Blob对象
  */
-function copyImageToClipboard(dataUrl) {
-  const clipboardItem = new ClipboardItem({ "image/png": dataUrl });
-  navigator.clipboard
-    .write([clipboardItem])
-    .then(() => {
-      useAppStore().showMessage({ message: "图片复制成功" });
-    })
-    .catch((error) => {
-      console.error("写入剪贴板时出错:", error);
-    });
+async function copyImageToClipboard(blob) {
+  try {
+    const clipboardItem = new ClipboardItem({ "image/png": blob });
+    await navigator.clipboard.write([clipboardItem]);
+    useAppStore().showMessage({ message: "图片复制成功" });
+  } catch (error) {
+    console.error("写入剪贴板时出错:", error);
+    throw error;
+  }
+}
+
+/**
+ * 下载图像文件
+ * @param {string} dataUrl - 图像数据URL
+ * @param {ImageType} imageType - 图像类型
+ * @param {string} [title] - 可选标题
+ */
+function downloadImage(dataUrl, imageType, title) {
+  const link = document.createElement("a");
+  const name = `${VITE_APP_NAME}_${title ? `${title}_` : ""}${dayjs().format("YYYY-MM-DD")}.${imageType}`;
+  link.download = name;
+  link.href = dataUrl;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 export const useScreenshot = () => {
   const [loading, setLoading] = useState();
 
-  const handleDownload = async (imageType = ImageType.JPG, title = "", cd) => {
+  const handleDownload = async (
+    imageType = ImageType.JPG,
+    title = "",
+    callback
+  ) => {
     setLoading(true);
 
     try {
-      let screenshotFn = null;
-      switch (imageType) {
-        case ImageType.JPG: {
-          screenshotFn = domToJpeg;
-          break;
-        }
-        case ImageType.PNG: {
-          screenshotFn = domToPng;
-          break;
-        }
-        case ImageType.SVG: {
-          screenshotFn = domToSvg;
-          break;
-        }
-        case ImageType.WEBP: {
-          screenshotFn = domToWebp;
-          break;
-        }
-        case ImageType.Blob: {
-          screenshotFn = domToBlob;
-          break;
-        }
+      // 使用requestIdleCallback减少主线程压力
+      await new Promise(resolve => requestIdleCallback(resolve));
+
+      const screenshotFn = SCREENSHOT_FUNCTIONS[imageType];
+      if (!screenshotFn) {
+        throw new Error(`Unsupported image type: ${imageType}`);
       }
 
-      const dataUrl = await screenshotFn(document.querySelector("#preview"), {
+      // 使用双缓冲技术减少卡顿
+      const element = document.querySelector("#preview");
+      if (!element) throw new Error("Preview element not found");
+
+      const dataUrl = await screenshotFn(element, {
         features: {
           // 不启用移除控制符，否则会导致 safari emoji 报错
           removeControlCharacter: false,
@@ -93,20 +90,16 @@ export const useScreenshot = () => {
       });
 
       if (imageType === ImageType.Blob) {
-        copyImageToClipboard(dataUrl);
+        await copyImageToClipboard(dataUrl);
       } else {
-        let link = document.createElement("a");
-        let name = `${VITE_APP_NAME}_`;
-        if (title) name = `${VITE_APP_NAME}_${title}_`;
-        link.download = name + `${dayjs().format("YYYY-MM-DD")}.${imageType}`;
-        link.href = dataUrl;
-        link.click();
+        downloadImage(dataUrl, imageType, title);
       }
-      setLoading(false);
-      cd && cd?.();
-      
+
+      callback?.();
     } catch (error) {
-      console.error("Failed to download image", error);
+      onsole.error("Failed to capture image", error);
+      useAppStore().showMessage({ message: "截图失败", type: "error" });
+    } finally {
       setLoading(false);
     }
   };
