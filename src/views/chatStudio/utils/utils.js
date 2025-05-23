@@ -257,10 +257,9 @@ export async function sendChatMessage(options) {
     video = [],
     images = [],
   } = options || {};
-
   // 处理图片消息
   for (const t of images) {
-    const img = await createImageMessage({ to, type, file: base64ToFile(t.src) });
+    const img = await createImageMessage({ to, type, file: base64ToFile(t.src, t.fileName) });
     messages.push(img);
   }
 

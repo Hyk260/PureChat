@@ -214,6 +214,7 @@ const handleFiles = async (file, type) => {
     if (type === "image") {
       const imageElement = createMediaElement("image", {
         src: base64Url,
+        fileName: file.name,
         style: { width: "125px" },
       });
       editor.insertNode(imageElement);

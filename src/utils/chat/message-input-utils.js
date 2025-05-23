@@ -155,7 +155,7 @@ function extractMimeTypeFromBase64(base64) {
  * @param mimeType - 文件的 MIME 类型
  * @returns 转换后的 File 对象
  */
-export function base64ToFile(base64, filename, mimeType) {
+export function base64ToFile(base64, filename = "image.png", mimeType) {
   // 检查 base64 字符串格式
   if (!base64.startsWith('data:')) {
     throw new Error('Invalid base64 string format');
