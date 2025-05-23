@@ -72,7 +72,7 @@ const getBackgroundStyle = (status = 0, percentage = 0) => {
     : "";
 };
 
-const handleProgressUpdate  = ({ uuid, num, type = "up" }) => {
+const handleProgressUpdate = ({ uuid, num, type = "up" }) => {
   try {
     const dom = document.getElementById(`${uuid}`);
     if (!dom) {

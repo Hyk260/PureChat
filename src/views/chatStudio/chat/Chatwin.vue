@@ -366,59 +366,59 @@ const handleContextAvatarMenuEvent = (event, item) => {
 };
 
 const handleContextMenuEvent = (event, item) => {
-  const { isRevoked, time, type, payload } = item;
-  const isFile = type === "TIMFileElem";
-  const isRelay = type === "TIMRelayElem";
-  const isCustom = type === "TIMCustomElem";
-  // 撤回消息 系统类型消息 提示类型消息 多选状态 自定义消息
-  //  payload?.description === "dithering"
-  if (
-    isRevoked ||
-    showCheckbox.value ||
-    type === "TIMGroupSystemNoticeElem" ||
-    type === "TIMGroupTipElem"
-  ) {
+  const { isRevoked, time, type } = item;
+  const messageTypes = {
+    isFile: type === "TIMFileElem",
+    isRelay: type === "TIMRelayElem",
+    isCustom: type === "TIMCustomElem",
+    isSystemNotice: type === "TIMGroupSystemNoticeElem",
+    isGroupTip: type === "TIMGroupTipElem",
+  };
+  // 撤回消息 多选状态 系统类型消息 提示类型消息
+  if (isRevoked || showCheckbox.value || messageTypes.isSystemNotice || messageTypes.isGroupTip) {
     isRight.value = false;
     return;
   }
+
   console.log("handleContextMenuEvent:", item);
-  const relinquish = getTime() - time < 120; // 两分钟内可撤回
-  timeout.value = false;
-  isRight.value = true;
-  menuItemInfo.value = item;
-  contextMenuItems.value = menuOptionsList;
-  // 对方消息
-  if (!isSelf(item)) {
-    contextMenuItems.value = menuOptionsList.filter((t) => t.id !== "revoke");
-  }
-  // 超过撤回时间
-  if (!relinquish) {
-    timeout.value = true;
-    contextMenuItems.value = menuOptionsList.filter((t) => t.id !== "revoke");
+
+  let menuItems = [...menuOptionsList];
+  const canRevoke = getTime() - time < 120; // 两分钟内可撤回
+  const isGroupOwner = groupStore.isOwner && currentType.value === "GROUP";
+  const isFromSelf = isSelf(item);
+  // 对方消息 超过撤回时间
+  if (!isFromSelf || !canRevoke) {
+    menuItems = menuItems.filter((t) => t.id !== "revoke");
   }
   // 群主 & 群聊 & 不限制2分钟撤回时间
-  if (groupStore.isOwner && currentType.value === "GROUP") {
-    contextMenuItems.value = menuOptionsList;
+  if (isGroupOwner) {
+    menuItems = [...menuOptionsList];
   }
   // 合并消息
-  if (isRelay) {
-    contextMenuItems.value = contextMenuItems.value.filter((t) => t.id !== "copy");
+  if (messageTypes.isRelay) {
+    menuItems = menuItems.filter((t) => t.id !== "copy");
   }
-  // 非文件消息
-  if (!isFile) {
-    contextMenuItems.value = contextMenuItems.value.filter((t) => t.id !== "saveAs");
-  } else {
-    contextMenuItems.value = contextMenuItems.value.filter((t) => t.id !== "copy");
+  // 非文件消息过滤另存为
+  if (!messageTypes.isFile) {
+    menuItems = menuItems.filter((t) => t.id !== "saveAs");
   }
-  // 机器人消息过滤 撤回 回复
+  // 文件消息 非electron环境下过滤复制
+  if (messageTypes.isFile && !__IS_ELECTRON__) {
+    menuItems = menuItems.filter((t) => t.id !== "copy");
+  }
+  // ai消息过滤 撤回 回复
   if (isAssistant.value) {
-    contextMenuItems.value = contextMenuItems.value.filter(
-      (t) => t.id !== "reply" && t.id !== "revoke"
-    );
+    menuItems = menuItems.filter((t) => t.id !== "reply" && t.id !== "revoke");
   }
-  if (isCustom) {
-    contextMenuItems.value = contextMenuItems.value.filter((t) => t.id === "delete");
+
+  if (messageTypes.isCustom) {
+    menuItems = menuItems.filter((t) => t.id === "delete");
   }
+
+  timeout.value = !canRevoke;
+  isRight.value = true;
+  menuItemInfo.value = item;
+  contextMenuItems.value = menuItems;
 };
 
 const handleRightClick = (data) => {
@@ -475,6 +475,10 @@ const handleSendMessage = (data) => {
 
 // 另存为
 const handleSave = ({ payload }) => {
+  if (!payload.fileUrl || !payload.fileName) {
+    appStore.showMessage({ message: "文件不存在", type: "error" });
+    return;
+  }
   download(payload.fileUrl, payload.fileName);
 };
 

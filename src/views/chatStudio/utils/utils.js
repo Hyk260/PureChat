@@ -26,10 +26,6 @@ import TipsElemItem from "../ElemItemTypes/TipsElemItem.vue";
 // import VideoElemItem from "../ElemItemTypes/VideoElemItem.vue";
 import GroupTipElement from "../ElemItemTypes/GroupTipElement.vue";
 
-export const isDataTransferItem = (item) => {
-  return Object.prototype.toString.call(item) === "[object DataTransferItem]";
-}
-
 export const dragControllerDivHorizontal = () => {
   let dragElement = document.querySelectorAll(".sidebar-drag")[0]; // 滑块
   let leftBox = document.querySelectorAll(".message-left")[0]; // 左边盒子

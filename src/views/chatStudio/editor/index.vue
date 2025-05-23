@@ -63,7 +63,6 @@ import {
   handleToggleLanguage,
   sendChatMessage,
   insertMention,
-  isDataTransferItem,
 } from "../utils/utils";
 import { isTextFile, createMediaElement } from "./utils";
 import { getOperatingSystem } from "@/utils/common";
@@ -209,11 +208,15 @@ const handleFiles = async (file, type) => {
 
   try {
     const base64Url = await fileToBase64(file);
-    
+
     editor.restoreSelection();
 
     if (type === "image") {
-      editor.insertNode(createMediaElement("image", { src: base64Url, style: { width: "125px" } }));
+      const imageElement = createMediaElement("image", {
+        src: base64Url,
+        style: { width: "125px" },
+      });
+      editor.insertNode(imageElement);
     } else {
       if (file.size > MAX_FILE_SIZE_BYTES) {
         return appStore.showMessage({
@@ -221,14 +224,13 @@ const handleFiles = async (file, type) => {
           type: "warning",
         });
       }
-      editor.insertNode(
-        createMediaElement("attachment", {
-          fileName: file.name,
-          fileSize: bytesToSize(file.size),
-          link: base64Url,
-          path: file?.path || "",
-        })
-      );
+      const fileElement = createMediaElement("attachment", {
+        fileName: file.name,
+        fileSize: bytesToSize(file.size),
+        link: base64Url,
+        path: file?.path || "",
+      });
+      editor.insertNode(fileElement);
     }
 
     editor.move(1);
