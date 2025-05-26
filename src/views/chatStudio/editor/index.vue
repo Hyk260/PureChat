@@ -157,6 +157,10 @@ const handleToolbarAction = ({ data, key }) => {
   actions[key]?.();
 };
 
+const handleFileViewer = (data) => {
+  console.log("handleFileViewer", data);
+};
+
 const updateDraft = debounce((data) => {
   chatStore.updateChatDraft({ ID: currentSessionId.value, payload: data });
 }, 300);
@@ -361,6 +365,7 @@ const setupEventListeners = () => {
     handleInsertDraft: insertContent.draft,
     handleFileDrop: (file) => handleFiles(file, "file"),
     handleToolbar: handleToolbarAction,
+    handleFileViewer: handleFileViewer,
     handleScreenCapture: (url) => {
       const imageElement = createMediaElement("image", { src: url, style: { width: "125px" } });
       editorRef.value.insertNode(imageElement);
@@ -379,6 +384,7 @@ const removeEventListeners = () => {
     handleInsertDraft: null,
     handleFileDrop: null,
     handleToolbar: null,
+    handleFileViewer: null,
     handleScreenCapture: null,
   }).forEach((event) => emitter.off(event));
 };

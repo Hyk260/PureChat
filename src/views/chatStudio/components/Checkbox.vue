@@ -24,7 +24,6 @@ const { item, isRevoked } = defineProps({
 const chatStore = useChatStore();
 
 const isShowCheck = computed(() => {
-  //  item.payload?.description !== "dithering"
   return chatStore.showCheckbox && !isRevoked && item.type !== "TIMGroupTipElem";
 });
 </script>

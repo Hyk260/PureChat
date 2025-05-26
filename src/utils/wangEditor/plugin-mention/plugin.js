@@ -2,65 +2,63 @@ import { DomEditor } from "@wangeditor/editor";
 
 function getMentionConfig(editor) {
   const { EXTEND_CONF } = editor.getConfig();
-  const { mentionConfig } = EXTEND_CONF;
-  return mentionConfig;
+  return EXTEND_CONF?.mentionConfig || {};
 }
 
 function withMention(editor) {
   const { insertText, isInline, isVoid } = editor;
-  const newEditor = editor;
-  // mention 相关配置
-  const { showModal, hideModal, pinyinSearch } = getMentionConfig(newEditor);
+  const { showModal, hideModal, pinyinSearch } = getMentionConfig(editor);
 
-  function hide() {
-    if (hideModal && !pinyinSearch) hideModal(newEditor);
-  }
-
-  function hideOnChange() {
-    if (newEditor.selection != null) {
-      hide();
-      newEditor.off("change", hideOnChange);
+  const hide = () => {
+    if (hideModal && !pinyinSearch) {
+      hideModal(editor);
     }
   }
-  // 重写 insertText
-  newEditor.insertText = (t) => {
-    // 选过选中了 void 元素
-    const elems = DomEditor.getSelectedElems(newEditor);
-    const isSelectedVoidElem = elems.some((elem) => newEditor.isVoid(elem));
+
+  const hideOnChange = () => {
+    if (editor.selection !== null) {
+      hide();
+      editor.off("change", hideOnChange);
+    }
+  }
+
+  const setupHideListeners = () => {
+    const events = [
+      "fullScreen",
+      "unFullScreen",
+      "scroll",
+      "modalOrPanelShow",
+      "modalOrPanelHide"
+    ];
+
+    events.forEach(event => editor.once(event, hide));
+    editor.on("change", hideOnChange);
+  };
+
+  editor.insertText = (text) => {
+    const elems = DomEditor.getSelectedElems(editor);
+    const isSelectedVoidElem = elems.some((elem) => editor.isVoid(elem));
+
     if (isSelectedVoidElem) {
-      insertText(t);
+      insertText(text);
       return;
     }
-    if (t === "@") {
+
+    if (text === "@") {
       setTimeout(() => {
-        if (showModal) {
-          showModal(newEditor);
-        }
-        setTimeout(() => {
-          newEditor.once("fullScreen", hide);
-          newEditor.once("unFullScreen", hide);
-          newEditor.once("scroll", hide);
-          newEditor.once("modalOrPanelShow", hide);
-          newEditor.once("modalOrPanelHide", hide);
-          newEditor.on("change", hideOnChange);
-        });
+        if (showModal) showModal(editor);
+        setTimeout(setupHideListeners);
       });
     }
-    insertText(t);
+
+    insertText(text);
   };
 
-  newEditor.isInline = (elem) => {
-    const type = DomEditor.getNodeType(elem);
-    if (type === "mention") return true;
-    return isInline(elem);
-  };
+  editor.isInline = (elem) => DomEditor.getNodeType(elem) === "mention" || isInline(elem);
 
-  newEditor.isVoid = (elem) => {
-    const type = DomEditor.getNodeType(elem);
-    if (type === "mention") return true;
-    return isVoid(elem);
-  };
-  return newEditor;
+  editor.isVoid = (elem) => DomEditor.getNodeType(elem) === "mention" || isVoid(elem);
+
+  return editor;
 }
 
 export default withMention;

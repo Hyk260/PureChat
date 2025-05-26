@@ -207,7 +207,6 @@ const displayInfo = (info) => {
 
 const showAvatar = (item) => {
   return !item.isRevoked && item.type !== "TIMGroupTipElem";
-  // && item?.payload?.description !== "dithering"
 };
 
 const classMessageViewItem = (item) => {
@@ -225,8 +224,7 @@ const classMessageInfoView = () => {
 };
 
 const handleSelect = (e, item, type = "initial") => {
-  // tip消息 撤回消息 抖动消息
-  //  item.payload?.description === "dithering"
+  // tip消息 撤回消息
   if (!showCheckbox.value || item.type == "TIMGroupTipElem" || item.isRevoked) {
     return;
   }

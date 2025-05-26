@@ -1,7 +1,7 @@
-import dayjs from "dayjs";
 import { domToJpeg, domToPng, domToSvg, domToWebp, domToBlob } from "modern-screenshot";
 import { useAppStore } from "@/stores/index";
 import { useState } from "./useState";
+import dayjs from "dayjs";
 
 export const { VITE_APP_NAME } = import.meta.env;
 
@@ -18,7 +18,6 @@ export const imageTypeOptions = Object.values(ImageType).map(value => ({
   value,
 }));
 
-// 预定义截图函数映射
 const SCREENSHOT_FUNCTIONS = {
   [ImageType.JPG]: domToJpeg,
   [ImageType.PNG]: domToPng,
@@ -69,7 +68,6 @@ export const useScreenshot = () => {
     setLoading(true);
 
     try {
-      // 使用requestIdleCallback减少主线程压力
       await new Promise(resolve => requestIdleCallback(resolve));
 
       const screenshotFn = SCREENSHOT_FUNCTIONS[imageType];
@@ -77,13 +75,11 @@ export const useScreenshot = () => {
         throw new Error(`Unsupported image type: ${imageType}`);
       }
 
-      // 使用双缓冲技术减少卡顿
       const element = document.querySelector("#preview");
       if (!element) throw new Error("Preview element not found");
 
       const dataUrl = await screenshotFn(element, {
         features: {
-          // 不启用移除控制符，否则会导致 safari emoji 报错
           removeControlCharacter: false,
         },
         scale: 2,

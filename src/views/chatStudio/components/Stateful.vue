@@ -32,7 +32,6 @@ const isShow = (value) => {
 };
 
 const isShowState = (item) => {
-  // item.payload?.description !== "dithering" &&
   return (
     isSelf(item) &&
     !item.isRevoked &&

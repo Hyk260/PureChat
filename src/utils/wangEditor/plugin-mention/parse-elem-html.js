@@ -1,17 +1,39 @@
-function parseHtml(elem, children, editor) {
+// function parseHtml(elem) {
+//   const value = elem.getAttribute("data-value") || "";
+//   const rawInfo = decodeURIComponent(elem.getAttribute("data-info") || "");
+//   let info;
+//   try {
+//     info = JSON.parse(rawInfo);
+//   } catch (ex) {
+//     info = rawInfo;
+//   }
+//   return {
+//     type: "mention",
+//     value,
+//     info,
+//     children: [{ text: "" }],
+//   };
+// }
+
+function safeJsonParse(str) {
+  try {
+    return JSON.parse(str);
+  } catch {
+    return str;
+  }
+}
+
+function parseHtml(elem) {
   const value = elem.getAttribute("data-value") || "";
   const rawInfo = decodeURIComponent(elem.getAttribute("data-info") || "");
-  let info;
-  try {
-    info = JSON.parse(rawInfo);
-  } catch (ex) {
-    info = rawInfo;
-  }
+
+  const info = safeJsonParse(rawInfo);
+
   return {
-    type: "mention",
+    type: 'mention',
     value,
     info,
-    children: [{ text: "" }],
+    children: [{ text: '' }],
   };
 }
 

@@ -23,7 +23,7 @@ import ImageElemItem from "../ElemItemTypes/ImageElemItem.vue";
 import RelayElemItem from "../ElemItemTypes/RelayElemItem.vue";
 import TextElemItem from "../ElemItemTypes/TextElemItem.vue";
 import TipsElemItem from "../ElemItemTypes/TipsElemItem.vue";
-// import VideoElemItem from "../ElemItemTypes/VideoElemItem.vue";
+import VideoElemItem from "../ElemItemTypes/VideoElemItem.vue";
 import GroupTipElement from "../ElemItemTypes/GroupTipElement.vue";
 
 export const dragControllerDivHorizontal = () => {
@@ -203,7 +203,6 @@ export const msgType = (elem_type) => {
 
 export const msgOne = (item) => {
   const { isRevoked, type, payload } = item;
-  // || payload?.description === "dithering"
   if (isRevoked || type === "TIMGroupTipElem") {
     return "message-view-tips-elem";
   } else {
@@ -218,15 +217,12 @@ export const loadMsgModule = (item) => {
     TIMRelayElem: RelayElemItem, // 合并转发消息
     TIMImageElem: ImageElemItem, // 图片消息
     TIMFileElem: FileElemItem, // 文件消息
-    // TIMVideoFileElem: VideoElemItem, // 视频消息
+    TIMVideoFileElem: VideoElemItem, // 视频消息
     TIMCustomElem: CustomElemItem, // 自定义消息
     TIMGroupTipElem: GroupTipElement, // 群消息提示
     TIMGroupSystemNoticeElem: GroupSystemNoticeElem, // 系统通知
   };
   if (isRevoked) return TipsElemItem;
-  // if (type === "TIMCustomElem" && payload?.description === "dithering") {
-  //   return TipsElemItem;
-  // }
   return messageComponentMap[type] || null;
 };
 
@@ -387,26 +383,43 @@ export const extractVideoInfo = (editor) => {
 };
 
 /**
- * 从编辑器中提取 Ait 信息
- * @param {Object} editor - 编辑器对象，包含编辑器的内容和方法
- * @returns {Object} - 包含提及字符串和提及的 id 列表的对象
+ * 从编辑器中提取@提及信息和纯文本内容
+ * @param editor 编辑器实例
+ * @returns 包含纯文本内容和@用户ID列表的对象
  */
 export const extractAitInfo = (editor) => {
   let aitStr = "";
-  let atUserList = [];
+  const atUserList = [];
+
   const html = editor.getHtml();
-  const mention = editor.getElemsByType("mention");
-  if (mention.length) {
-    // 清除文件消息包含的字符串
-    const fileRegex = /<span\s+data-w-e-type="attachment"[^>]*>(.*?)<\/span>/g;
-    let str = html.replace(fileRegex, "");
-    // 清除 HTML 标签和 &nbsp
-    aitStr = str.replace(/<[^>]+>/g, "").replace(/&nbsp;/gi, "");
-    mention.forEach((t) => atUserList.push(t.info.id));
-    atUserList = Array.from(new Set(atUserList));
+  const mentions = editor.getElemsByType("mention");
+
+  if (!mentions.length) {
+    return { aitStr, atUserList };
   }
-  return { aitStr, atUserList };
+
+  const fileTagRegex = /<span\s+data-w-e-type="attachment"[^>]*>.*?<\/span>/g;
+  const htmlTagRegex = /<[^>]+>/g;
+  const nbspRegex = /&nbsp;/gi;
+
+  aitStr = html
+    .replace(fileTagRegex, "")  // 移除附件标签
+    .replace(htmlTagRegex, "")  // 移除所有HTML标签
+    .replace(nbspRegex, "");    // 移除&nbsp;
+
+  const uniqueUserIds = new Set();
+  mentions.forEach(mention => {
+    if (mention.info?.id) {
+      uniqueUserIds.add(mention.info.id);
+    }
+  });
+
+  return {
+    aitStr,
+    atUserList: Array.from(uniqueUserIds)
+  };
 };
+
 
 /**
  * 根据拼音搜索当前成员列表中的匹配项。

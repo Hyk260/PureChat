@@ -2,34 +2,32 @@ import { DomEditor } from "@wangeditor/editor";
 
 function withCtrlEnter(editor) {
   const { insertBreak } = editor;
-  const newEditor = editor;
 
   setTimeout(() => {
-    const { $textArea } = DomEditor.getTextarea(newEditor);
+    const { $textArea } = DomEditor.getTextarea(editor);
     if ($textArea === null) return;
+    
     $textArea.on("keydown", (event) => {
       const isCtrl = event.ctrlKey || event.metaKey;
       if (event.key === "Enter" && isCtrl) {
-        newEditor.insertBreak();
+        editor.insertBreak();
       }
     });
   });
 
-  newEditor.insertBreak = () => {
+  editor.insertBreak = () => {
     const event = window.event;
     const isCtrl = event.ctrlKey || event.metaKey;
     if (isCtrl) {
       insertBreak();
     }
   };
-  
-  return newEditor;
+
+  return editor;
 }
 
-const module = {
+export default {
   editorPlugin: withCtrlEnter,
 };
-
-export default module;
 
 

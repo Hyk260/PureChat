@@ -1,9 +1,22 @@
-// 生成 html 的函数
-function mentionToHtml(elem, childrenHtml) {
+const mentionToHtml = (elem) => {
   const { value = "", info = {} } = elem;
+
   const infoStr = encodeURIComponent(JSON.stringify(info));
-  return `<span data-w-e-type="mention" data-w-e-is-void data-w-e-is-inline data-value="${value}" data-info="${infoStr}">@${value}</span>`;
-}
+
+  const html = `
+    <span
+      data-w-e-type="mention"
+      data-w-e-is-void
+      data-w-e-is-inline
+      data-value="${encodeURIComponent(value)}"
+      data-info="${infoStr}"
+    >
+      @${value.trim()}
+    </span>
+  `.replace(/\n\s*/g, ' ').trim();
+
+  return html;
+};
 
 const config = {
   type: "mention",
