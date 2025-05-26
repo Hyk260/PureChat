@@ -152,6 +152,7 @@ const showPrompt = computed(() => isAssistant.value && isPrompt.value && promptC
 const roleText = computed(() => {
   try {
     const data = robotStore.currentProviderPrompt?.meta || {};
+    if (!data.avatar || !data.title) return "";
     return data ? `${data.avatar} ${data.title}` : "";
   } catch {
     return "";
