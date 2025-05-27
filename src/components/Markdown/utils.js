@@ -1,4 +1,4 @@
-const TRUNCATE_LENGTH = 38;
+const TRUNCATE_LENGTH = 78;
 const ELLIPSIS = '...';
 
 /**
