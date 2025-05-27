@@ -5,34 +5,34 @@ import { createCustomMessage } from "@/service/im-sdk-api/index";
 import { restApi } from "@/service/api/index";
 import { cloneDeep } from "lodash-es";
 import { getTime, getCustomMsgContent } from "@/utils/common";
-import { getThinkMsgContent, getCloudCustomData } from "@/utils/chat/index";
+import { getCloudCustomData } from "@/utils/chat/index";
 import { useChatStore } from "@/stores/index";
 import { localStg } from "@/utils/storage";
 import emitter from "@/utils/mitt-bus";
 
+const handleWebSearchData = (flag = false) => {
+  const webSearchResult = localStg.get("webSearchReferences");
+  if (!webSearchResult) return "";
+  const result = getCloudCustomData(
+    { payload: { text: "web-search" } },
+    { webSearchResult }
+  );
+  if (flag) localStg.remove("webSearchReferences");
+  return result;
+};
+
 const restSendMsg = async (params, data) => {
   const { message, think } = data;
-  if (__LOCAL_MODE__) return;
-  if (!message) return;
-  let CloudCustomData = "";
-  if (think) {
-    CloudCustomData = getCloudCustomData(think, {
+  if (__LOCAL_MODE__ || !message) return;
+
+  const CloudCustomData = think
+    ? getCloudCustomData(think, {
       messageAbstract: think,
       thinking: "思考中...",
       deeplyThought: "已深度思考",
-    });
-  } else {
-    const webSearchResult = localStg.get("webSearchReferences");
-    if (webSearchResult) {
-      CloudCustomData = getCloudCustomData(
-        { payload: { text: "web-search" } },
-        {
-          webSearchResult,
-        }
-      );
-    }
-    localStg.remove("webSearchReferences");
-  }
+    })
+    : handleWebSearchData(true);
+
   try {
     await restApi({
       params: {
@@ -49,10 +49,13 @@ const restSendMsg = async (params, data) => {
 };
 
 const updataMessage = (chat, data) => {
-  const { message = "", think = "" } = data || {};
   if (!chat) return;
-  let isFinish = data?.done || false;
+
+  const { message = "", think = "", done: isFinish = false } = data || {};
   chat.payload.text = message;
+  chat.clientTime = getTime();
+  chat.status = isFinish ? "success" : "sending";
+
   if (think) {
     chat.cloudCustomData = getCloudCustomData(think, {
       messageAbstract: think,
@@ -60,21 +63,19 @@ const updataMessage = (chat, data) => {
       deeplyThought: "已深度思考",
     });
   } else if (isFinish) {
-    const webSearchResult = localStg.get("webSearchReferences");
-    if (webSearchResult) {
-      chat.cloudCustomData = getCloudCustomData(
-        { payload: { text: "web-search" } },
-        {
-          webSearchResult,
-        }
-      );
-    }
+    chat.cloudCustomData = handleWebSearchData();
   }
-  chat.clientTime = getTime();
-  chat.status = isFinish ? "success" : "sending";
-  useChatStore().updateMessages({ sessionId: `C2C${chat.from}`, message: cloneDeep(chat) });
+
+  useChatStore().updateMessages({
+    sessionId: `C2C${chat.from}`,
+    message: cloneDeep(chat)
+  });
+
   emitter.emit("updateScroll", "robot");
-  if (isFinish && __LOCAL_MODE__) localStg.remove("webSearchReferences");
+
+  if (isFinish && __LOCAL_MODE__) {
+    localStg.remove("webSearchReferences");
+  }
 };
 
 const createStartMsg = (params) => {
@@ -109,7 +110,7 @@ const createAlertMsg = (startMsg, provider) => {
 //   useChatStore().updateMessages({ sessionId: `C2C${_data.from}`, message: cloneDeep(_data) });
 // };
 
-function beforeSend(api, data) {
+const beforeSend = (api, data) => {
   if ([ModelProvider.Ollama].includes(api.llm.provider)) return false;
   if (api.config().token) {
     return false;

@@ -27,7 +27,6 @@ const errorHandler = (error) => {
   return Promise.reject(error);
 };
 
-
 /** 请求白名单，放置一些不需要`token`的接口（通过设置请求白名单，防止`token`过期后再请求造成的死循环问题） */
 const whiteList = ["/refresh-token", "/login"];
 
@@ -38,11 +37,11 @@ const defaultConfig = {
   baseURL: import.meta.env.VITE_SERVICE_BASE_URL,
   // 请求超时时间
   timeout: 15000,
-  // headers: {
-  //   Accept: "application/json, text/plain, */*",
-  //   "Content-Type": "application/json",
-  //   "X-Requested-With": "XMLHttpRequest"
-  // },
+  headers: {
+    // Accept: "application/json, text/plain, */*",
+    "Content-Type": "application/json",
+    // "X-Requested-With": "XMLHttpRequest"
+  },
   // 数组格式参数序列化（https://github.com/axios/axios/issues/5142）
   // paramsSerializer: {
   //   serialize: stringify

@@ -654,7 +654,6 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
     }
   }
 }
-// .is-other {}
 
 .is-self {
   flex-direction: row-reverse;

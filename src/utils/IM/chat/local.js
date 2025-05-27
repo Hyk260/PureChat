@@ -8,7 +8,6 @@ import { cloneDeep } from "lodash-es";
 import { SessionModel } from "@/database/models/session";
 import { MessageModel } from "@/database/models/message";
 import { FilesModel } from "@/database/models/files";
-
 import { ConversationList, UserProfile, BaseElemMessage, ProvidersList } from '@database/config';
 import emitter from "@/utils/mitt-bus";
 
@@ -30,8 +29,8 @@ export class LocalChat {
   }
   initialize() {
     setTimeout(async () => {
-      this.emit("sdkStateReady", { name: "sdkStateReady" });
       const _newData = await SessionModel.query();
+      this.emit("sdkStateReady", { name: "sdkStateReady" });
       this.emit("onConversationListUpdated", { data: _newData });
     });
   }
@@ -126,7 +125,8 @@ export class LocalChat {
       conversationID: `${conversationType}${to}`,
       conversationType,
       payload,
-      type: "TIMTextElem"
+      type: "TIMTextElem",
+      version: __APP_INFO__.pkg.version || "0",
     };
     if (cache) MessageModel.create(_data.ID, _data);
     return _data;
@@ -144,13 +144,14 @@ export class LocalChat {
       conversationID: `${conversationType}${to}`,
       conversationType,
       payload: {
-        fileName: payload.file.name || 'test.txt',
+        fileName: payload.file.name || 'text.txt',
         fileSize: payload.file.size || 0,
         filePath: payload.path || '',
         fileUrl: '',
         uuid: `${UserProfile.userID}-${uuid()}`,
       },
-      type: "TIMFileElem"
+      type: "TIMFileElem",
+      version: __APP_INFO__.pkg.version || "0",
     };
     MessageModel.create(_data.ID, _data);
     return _data;
@@ -167,7 +168,8 @@ export class LocalChat {
       clientTime: getTime(),
       conversationType,
       conversationID: `${conversationType}${to}`,
-      type: "TIMCustomElem"
+      type: "TIMCustomElem",
+      version: __APP_INFO__.pkg.version || "0",
     };
     MessageModel.create(_data.ID, _data);
     return _data;

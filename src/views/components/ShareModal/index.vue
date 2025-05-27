@@ -177,7 +177,11 @@ const handleDownload = async () => {
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  onDownload(imageType.value, roleText.value, handleClose);
+  onDownload(imageType.value, roleText.value, () => {
+    setDialogVisible(false);
+    // chatStore.$patch({ showCheckbox: false });
+    // chatStore.setForwardData({ type: "clear" });
+  });
 };
 
 const handleClose = (done) => {

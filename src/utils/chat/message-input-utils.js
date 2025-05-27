@@ -272,18 +272,11 @@ export function getCloudCustomData(data, params) {
       messageSender: data?.nick || undefined,
       messageType: 0,
       version: __APP_INFO__.pkg.version || "",
+      model: data?.model || "",
       ...params
     },
   });
   return cloudCustomContent;
-}
-
-export function getThinkMsgContent(think) {
-  return getCloudCustomData(think, {
-    messageAbstract: think,
-    thinking: "思考中...",
-    deeplyThought: "已深度思考", // （用时 {{secounds}} 秒）
-  });
 }
 
 /**

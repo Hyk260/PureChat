@@ -10,8 +10,8 @@
         <img draggable="false" class="h-full" :src="icon" :alt="payload.fileName" />
       </div>
       <div class="file-content">
-        <el-tooltip placement="top" :content="payload.fileName" :disabled="shouldShowTooltip">
-          <div class="file-name truncate">
+        <el-tooltip placement="top" :content="payload.fileName" :disabled="!shouldShowTooltip">
+          <div ref="fileNameRef" class="file-name truncate">
             {{ payload.fileName }}
           </div>
         </el-tooltip>
@@ -50,12 +50,21 @@ const props = defineProps({
 
 const { payload } = props.message;
 
+const fileNameRef = ref(null);
 const backgroundStyle = ref("");
+const shouldShowTooltip = ref(false);
+
 const fileType = computed(() => getFileType(payload?.fileName));
 const icon = computed(() => renderFileIcon(fileType.value));
 const formattedFileSize = computed(() => bytesToSize(payload.fileSize));
-const shouldShowTooltip = computed(() => payload.fileName.length <= 24);
+// const shouldShowTooltip = computed(() => payload.fileName.length <= 24);
 const isSuccess = computed(() => props.status === "success");
+
+const checkTextOverflow = () => {
+  if (!fileNameRef.value) return;
+  const element = fileNameRef.value;
+  shouldShowTooltip.value = element.scrollWidth > element.offsetWidth;
+}
 
 const handleOpen = async (data) => {
   if (__IS_ELECTRON__) {
@@ -92,7 +101,12 @@ const handleProgressUpdate = ({ uuid, num, type = "up" }) => {
   }
 };
 
+onUpdated(() => {
+  checkTextOverflow();
+});
+
 onMounted(() => {
+  checkTextOverflow();
   emitter.on("fileUploading", handleProgressUpdate);
   backgroundStyle.value = getBackgroundStyle();
 });
@@ -107,7 +121,7 @@ onBeforeUnmount(() => {
   display: flex;
   height: 70px;
   padding: 12px;
-  width: 248px;
+  width: 250px;
   background: #ffffff;
   border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.12);

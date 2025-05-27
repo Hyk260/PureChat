@@ -1,11 +1,26 @@
 <template>
   <!-- markdown is-text-self is-text-other -->
-  <div class="message-view-item-text" :class="fnStyle()" @click="onClick(message)">
-    <template v-if="isMsgType">
+  <div
+    class="message-view-item-text"
+    :class="messageStyleClasses"
+    @click="handleMessageClick(message)"
+  >
+    <template v-if="hasValidMessageType">
       <!-- 回复消息 -->
-      <ReplyElem v-if="cloudCustomData" :status="message.status" :originalMsg="cloudCustomData" />
-      <Markdown v-if="showMarked(message)" :cloudCustomData="cloudCustomData" :marked="message.payload.text" />
+      <ReplyElem
+        v-if="parsedCloudCustomData"
+        :status="message.status"
+        :originalMsg="parsedCloudCustomData"
+      />
+      <Markdown
+        v-if="shouldShowMarkdown"
+        :cloudCustomData="parsedCloudCustomData"
+        :marked="message.payload.text"
+      />
       <DynamicContent v-else :atUserList="message.atUserList" :text="message.payload.text" />
+      <!-- <div>
+        "首字时延 {{time_first_token_millsec}}ms | 每秒 {{token_speed}} tokens"
+      </div> -->
     </template>
   </div>
 </template>
@@ -22,7 +37,7 @@ const props = defineProps({
   },
   message: {
     type: Object,
-    default: null,
+    default: () => ({}),
   },
   self: {
     type: Boolean,
@@ -30,39 +45,40 @@ const props = defineProps({
   },
 });
 
-const chatStore = useChatStore()
+// const time_first_token_millsec = 123
+// const token_speed = 10;
 
-const isMsgType = computed(() => {
-  const { message, msgType } = props;
-  return message?.conversationType || msgType;
+const chatStore = useChatStore();
+
+const hasValidMessageType = computed(() => {
+  return props.message?.conversationType || props.msgType;
 });
 
-const cloudCustomData = computed(() => {
-  const { message } = props;
-  if (message?.cloudCustomData) {
-    try {
-      return JSON.parse(message.cloudCustomData);
-    } catch (error) {
-      console.error("cloudCustomData", error);
-      return null;
-    }
-  } else {
+const parsedCloudCustomData = computed(() => {
+  try {
+    return props.message?.cloudCustomData ? JSON.parse(props.message.cloudCustomData) : null;
+  } catch (error) {
+    console.error("Failed to parse cloudCustomData:", error);
     return null;
   }
 });
 
-const onClick = (data) => {
-  console.log(data);
-};
-// 发送者是ai 展示markdown
-function showMarked(message) {
-  return chatStore.isAssistant && message?.flow === "in";
-}
+const shouldShowMarkdown = computed(() => {
+  return chatStore.isAssistant && props.message?.flow === "in";
+});
 
-function fnStyle() {
-  let marked = showMarked(props.message) ? "markdown" : "";
-  return props.self ? ["is-text-self", marked] : ["is-text-other", marked];
-}
+const messageStyleClasses = computed(() => {
+  const classes = [];
+  classes.push(props.self ? "is-text-self" : "is-text-other");
+  if (shouldShowMarkdown.value) {
+    classes.push("markdown");
+  }
+  return classes;
+});
+
+const handleMessageClick = () => {
+  console.log("Message clicked:", props.message);
+};
 </script>
 
 <style lang="scss" scoped>

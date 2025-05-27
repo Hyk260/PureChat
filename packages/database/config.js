@@ -95,7 +95,7 @@ export const BaseElemMessage = {
   clientTime: 0,
   senderTinyID: "",
   needReadReceipt: false,
-  version: 0,
+  version: "0",
   isBroadcastMessage: false,
   isSupportExtension: false,
   revoker: "",

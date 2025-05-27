@@ -53,7 +53,6 @@ export function setupViteExternal(viteEnv) {
   const localExternals = [
     /^@tencentcloud\/chat/,
     /^tim-upload-plugin/,
-    // /^pinyin-pro/
   ];
 
   if (viteEnv.VITE_LOCAL_MODE === "Y") {
