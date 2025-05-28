@@ -190,9 +190,9 @@ defineOptions({
   name: "RobotOptions",
 });
 
-const promptRef = ref();
 const robotIcon = ref("");
-const modelData = ref(null);
+const modelData = ref({});
+const promptRef = useTemplateRef("promptRef");
 const inputRefs = ref({ token: null, openaiUrl: null });
 
 const [dialog, setDialog] = useState();
@@ -331,27 +331,20 @@ function toUrl(url) {
   openWindow(url);
 }
 
-const handleRobotBoxEvent = (data = {}) => {
+const handleRobotBoxEvent = async (data = {}) => {
   const { ApiKeyFocus = false, promptFocus = false } = data;
 
   setDialog(true);
   initModel();
 
+  await nextTick();
+
   if (ApiKeyFocus) {
     const tokenRef = inputRefs.value?.["token"] ?? null;
-
-    if (tokenRef) {
-      try {
-        setTimeout(() => tokenRef.focus(), 100);
-      } catch (error) {
-        console.error("Failed to focus token input:", error);
-      }
-    }
+    tokenRef?.focus();
   }
   if (promptFocus) {
-    nextTick(() => {
-      promptRef.value?.promptTitleFocus();
-    });
+    promptRef.value?.promptTitleFocus();
   }
 };
 
