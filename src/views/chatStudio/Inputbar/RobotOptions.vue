@@ -9,7 +9,7 @@
     :append-to-body="true"
     :lock-scroll="false"
     :close-on-click-modal="true"
-    :before-close="(done) => handleCancel(done)"
+    :before-close="handleCancel"
   >
     <div class="container">
       <div class="container-box">
@@ -159,8 +159,8 @@
     </div>
     <template #footer>
       <span>
-        <el-button @click="handleReset()"> 重置 </el-button>
-        <el-button @click="handleCancel()">{{ $t("common.cancel") }}</el-button>
+        <el-button @click="handleReset"> 重置 </el-button>
+        <el-button @click="handleCancel">{{ $t("common.cancel") }}</el-button>
         <el-button type="primary" @click="handleConfirm()">
           {{ $t("common.confirm") }}
         </el-button>
@@ -177,7 +177,7 @@ import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
-import { StoreKey, modelValue } from "@/ai/constant";
+import { modelValue } from "@/ai/constant";
 import { useRobotStore, useChatStore, useAppStore } from "@/stores/index";
 import { debounce } from "lodash-es";
 import { isRange } from "./utils";
@@ -202,7 +202,7 @@ const appStore = useAppStore();
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
 const { toAccount } = storeToRefs(chatStore);
-const { isOllama, modelProvider } = storeToRefs(robotStore);
+const { isOllama, modelProvider, modelStore } = storeToRefs(robotStore);
 
 const handleClear = (data) => {
   console.log("clear", data);
@@ -241,7 +241,7 @@ async function onRefresh() {
 function initModel() {
   const provider = modelProvider.value;
   const value = cloneDeep(modelValue[provider]);
-  const collapse = localStg.get(`${provider}-Select-Model`)?.Model?.collapse;
+  const collapse = modelStore.value[provider]?.Model?.collapse;
   robotIcon.value = getModelSvg(toAccount.value);
   Object.values(value).map((v) => {
     if (v.ID === "model" && collapse) v.collapse = collapse;
@@ -252,28 +252,17 @@ function initModel() {
 }
 
 function storeRobotModel(model) {
-  const access = localStg.get(StoreKey.Access);
   const provider = modelProvider.value;
-  if (access) {
-    localStg.set(StoreKey.Access, { ...access, [provider]: { ...model } });
-  } else {
-    localStg.set(StoreKey.Access, { [provider]: { ...model } });
-  }
-  localStg.set(`${provider}-Select-Model`, modelData.value);
+  robotStore.setAccessStore(model, provider);
+  robotStore.setModelStore(modelData.value, provider);
 }
 
 function resetRobotModel() {
-  const access = localStg.get(StoreKey.Access);
-  if (!access) return;
   const provider = modelProvider.value;
-  const filteredConfig = Object.fromEntries(
-    Object.entries(access).filter(([key, _]) => !key.includes(provider))
-  );
-  localStg.set(StoreKey.Access, filteredConfig);
-  // 重置选中模型
   const model = useAccessStore(provider)?.model;
   const data = cloneDeep(modelValue[provider].Model.options.chatModels);
   const checkModel = data.find((item) => item.id === model);
+  robotStore.setAccessStore({}, provider);
   robotStore.setModel(checkModel);
 }
 
@@ -298,13 +287,12 @@ async function handleCheckToken(item) {
   }
 }
 
-function handleCancel(done) {
-  done && done();
+function handleCancel() {
   setDialog(false);
 }
 
 function handleReset() {
-  localStg.remove(`${modelProvider.value}-Select-Model`);
+  robotStore.setModelStore({}, modelProvider.value);
   resetRobotModel();
   initModel();
   // handleCancel(false);

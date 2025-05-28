@@ -1,15 +1,15 @@
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
 import {
   ModelProvider,
-  StoreKey,
   modelConfig,
   modelValue,
   AssistantAvatar,
   REQUEST_TIMEOUT_MS,
 } from "@/ai/constant";
-import { OpenaiConfig } from "@/ai/platforms/openai/index";
+import { useRobotStore } from "@/stores/index";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
+import { isEmpty } from "lodash-es";
 
 const {
   VITE_OPENAI_ID, // chatgpt
@@ -37,16 +37,9 @@ const {
  * - openaiUrl: {string} OpenAI API 的基础 URL，默认为空字符串
  */
 export const useAccessStore = (model = ModelProvider.OpenAI) => {
-  try {
-    const access = localStg.get(StoreKey.Access)?.[model] || "";
-    if (model === ModelProvider.OpenAI && !access) {
-      return OpenaiConfig();
-    }
-    return access || modelConfig[model];
-  } catch (error) {
-    localStg.remove(StoreKey.Access);
-    return {};
-  }
+  const access = useRobotStore().accessStore?.[model] || "";
+
+  return isEmpty(access) ? modelConfig[model] : access
 };
 
 /**

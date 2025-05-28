@@ -55,9 +55,9 @@
 import { useState } from "@/utils/hooks/index";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { getModelSvg, useAccessStore, formatSizeStrict } from "@/ai/utils";
-import { StoreKey, modelValue } from "@/ai/constant";
+import { modelValue } from "@/ai/constant";
 import { localStg } from "@/utils/storage";
-import { cloneDeep } from "lodash-es";
+import { cloneDeep, isEmpty } from "lodash-es";
 import { useRobotStore, useChatStore } from "@/stores/index";
 import { ModelSelect } from "@/ai/resources";
 import { storeToRefs } from "pinia";
@@ -73,35 +73,29 @@ const [flag, setFlag] = useState();
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
 const { toAccount } = storeToRefs(chatStore);
-const { modelProvider } = storeToRefs(robotStore);
+const { modelStore, modelProvider } = storeToRefs(robotStore);
 
 function onClickOutside() {
   setFlag(false);
 }
 
 function storeRobotModel(data) {
-  const access = localStg.get(StoreKey.Access);
   const provider = modelProvider.value;
   const config = useAccessStore(provider);
-  const modelConfig = { ...config, model: data.id };
-  if (access) {
-    localStg.set(StoreKey.Access, { ...access, [provider]: { ...modelConfig } });
-  } else {
-    localStg.set(StoreKey.Access, { [provider]: { ...modelConfig } });
-  }
   robotStore.setModel(data);
+  robotStore.setAccessStore({ ...config, model: data.id }, provider);
   robotStore.updataBotToolsFlag(data);
   setFlag(false);
 }
 
 function initModel() {
   const provider = modelProvider.value;
+  const selectModel = modelStore.value[provider] || {};
   robotIcon.value = getModelSvg(toAccount.value);
-  const selectModel = localStg.get(`${provider}-Select-Model`);
   model.value = cloneDeep(modelValue[provider].Model.options);
-  if (selectModel && model.value) {
+  if (!isEmpty(selectModel) && model.value) {
     const chatModels = cloneDeep(model.value.chatModels);
-    const collapse = selectModel.Model.collapse || [];
+    const collapse = selectModel?.Model?.collapse || [];
     const filteredData = chatModels.filter((item) => collapse.includes(item.id));
     model.value.chatModels = filteredData;
   }

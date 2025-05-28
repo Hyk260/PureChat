@@ -16,6 +16,12 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     promptStore: {
       // [ModelProvider.OpenAI]: [],
     },
+    modelStore: {
+      // [ModelProvider.OpenAI]: {},
+    },
+    accessStore: {
+      // [ModelProvider.OpenAI]: {},
+    },
     defaultProvider: ModelProvider.OpenAI,
     isShowBotTools: false,
   }),
@@ -69,6 +75,12 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     }
   },
   actions: {
+    setAccessStore(data, provider) {
+      this.accessStore[provider] = data;
+    },
+    setModelStore(data, provider) {
+      this.modelStore[provider] = data;
+    },
     setPromptStore(data, provider) {
       this.promptStore[provider] = data;
     },

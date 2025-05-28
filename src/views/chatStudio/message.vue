@@ -89,9 +89,9 @@ onMounted(() => {
 
 onUnmounted(() => {});
 
-watch(isChatBoxVisible, (val) => {
-  val && useDragHandler(chatRef.value);
-});
+// watch(isChatBoxVisible, (val) => {
+//   val && useDragHandler(chatRef.value);
+// });
 </script>
 
 <style lang="scss" scoped>
