@@ -6,10 +6,10 @@
         <div class="layout-box">
           <TabsWrapper @handleTabs="handleTabs" />
           <AgentList
-            :cur="cur"
             :agent="agent"
             :market="market"
-            :tabsKey="tabsKey"
+            :current="current"
+            :tabs-key="tabsKey"
             @handleClick="handleClick"
           />
           <StarMessage v-if="agent.length" />
@@ -25,28 +25,26 @@ import { ref, onBeforeMount } from "vue";
 import { getPrompt } from "@/service/api/index";
 import { localStg } from "@/utils/storage";
 import { options } from "./utils";
+import { marketJson } from "@database/market";
 import AgentList from "./AgentList.vue";
 import AgentCardBanner from "./AgentCardBanner.vue";
 import DiscoverHeader from "./DiscoverHeader.vue";
 import TabsWrapper from "./TabsWrapper.vue";
 import StarMessage from "./StarMessage.vue";
-import { marketJson } from "@database/market";
 
-const cur = ref("");
 const agent = ref([]);
+const market = ref({});
+const current = ref("");
 const tabsKey = ref(options[0].value);
-const market = ref(null);
+const marketLocal = localStg.get("marketJson");
 
 function handleTabs(key) {
   tabsKey.value = key;
 }
 
 function handleClick(key) {
-  if (cur.value === key) {
-    cur.value = "";
-    agent.value = market.value.agents;
-  } else {
-    cur.value = key;
+  current.value = current.value === key ? "" : key;
+  if (current.value === key) {
     agent.value = market.value.agents.filter((item) => {
       return (
         item.meta.title.includes(key) ||
@@ -54,36 +52,38 @@ function handleClick(key) {
         item.meta.description.includes(key)
       );
     });
+  } else {
+    agent.value = market.value.agents;
   }
 }
 
-function initPrompt() {
+function setMarketData(data) {
+  market.value = data;
+  agent.value = data.agents;
+}
+
+async function initPrompt() {
   if (__LOCAL_MODE__) {
-    market.value = marketJson;
-    agent.value = marketJson.agents;
+    setMarketData(marketJson);
     return;
   }
-  const marketLocal = localStg.get("marketJson");
+
   if (marketLocal) {
-    market.value = marketLocal;
-    agent.value = marketLocal.agents;
+    setMarketData(marketLocal);
   }
-  getPrompt()
-    .then((res) => {
-      market.value = res;
-      agent.value = res.agents;
-      localStg.set("marketJson", res);
-    })
-    .catch(() => {
-      market.value = marketJson;
-      agent.value = marketJson.agents;
-      localStg.set("marketJson", marketJson);
-    });
+
+  try {
+    const res = await getPrompt();
+    setMarketData(res);
+    localStg.set("marketJson", res);
+  } catch (error) {
+    console.error("Failed to fetch prompt:", error);
+    setMarketData(marketJson);
+    localStg.set("marketJson", marketJson);
+  }
 }
 
-onBeforeMount(() => {
-  initPrompt();
-});
+onBeforeMount(initPrompt);
 </script>
 
 <style lang="scss" scoped>
@@ -97,6 +97,7 @@ onBeforeMount(() => {
   background: var(--color-body-bg);
   .layout-body {
     width: 100%;
+    height: calc(100% - 60px);
     display: flex;
     justify-content: center;
     .layout-box {

@@ -6,7 +6,7 @@
 import { useClipboard } from "@vueuse/core";
 import { useAppStore } from "@/stores/index";
 import { prettyObject } from "@/ai/utils";
-import { convertToMarkdownFootnotes } from "./utils";
+import { convertToMarkdownFootnotes, copySvg } from "./utils";
 import { configureFootnoteRules, applyLinkOpenRules, applyEpubRules } from "./markdown";
 import markdownit from "markdown-it";
 import markdownItFootnote from "markdown-it-footnote";
@@ -35,7 +35,8 @@ const webSearchResult = computed(() => {
 });
 
 const clipboard = "nextElementSibling && (window.copyToClipboard(nextElementSibling.innerText))";
-const copyButton = `<button class="copy-code-button" onclick="${clipboard}" title="copy"><span class="cuida--copy-outline"></span></button>`;
+// <span class="cuida--copy-outline"></span>
+const copyButton = `<button class="copy-code-button" onclick="${clipboard}" title="copy">${copySvg}</button>`;
 
 hljs.registerLanguage("javascript", javascript);
 hljs.registerLanguage("vue", javascript);

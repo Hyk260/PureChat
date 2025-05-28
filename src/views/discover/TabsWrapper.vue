@@ -28,7 +28,7 @@ function onCilck(item) {
 
 <style lang="scss" scoped>
 .tabs-wrapper {
-  padding: 15px 16px 5px 16px;
+  padding: 15px 15px 0px 15px;
   display: flex;
   gap: 5px;
   position: sticky;

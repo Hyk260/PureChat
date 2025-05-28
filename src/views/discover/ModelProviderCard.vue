@@ -11,16 +11,10 @@
     <div class="desc multi-truncate-2">
       {{ agents.selfSignature }}
     </div>
-    <div class="tags">
-      <!-- <span v-for="(tag, index) in agents.meta.tags" :key="index">
-        {{ tag }}
-      </span> -->
-    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { getAiAvatarUrl } from "@/ai/utils";
 
 defineOptions({
@@ -62,7 +56,6 @@ defineProps({
     }
   }
   .desc {
-    // @include ellipsisBasic;
     min-height: 44px;
     line-height: 1.5;
   }

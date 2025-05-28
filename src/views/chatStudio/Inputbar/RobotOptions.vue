@@ -12,154 +12,150 @@
     :before-close="(done) => handleCancel(done)"
   >
     <div class="container">
-      <!-- <el-scrollbar> -->
-        <div class="container-box">
-          <!-- prompt -->
-          <DragPrompt ref="promptRef" />
-          <div class="container-item flex-bc" v-for="item in modelData" :key="item.ID">
-            <div class="flex flex-col gap-5">
-              <div class="title">{{ item.Title }}</div>
-              <div class="subTitle">
-                <Markdown :marked="item.SubTitle" />
-              </div>
+      <div class="container-box">
+        <!-- prompt -->
+        <DragPrompt ref="promptRef" />
+        <div class="container-item flex-bc" v-for="item in modelData" :key="item.ID">
+          <div class="flex flex-col gap-5">
+            <div class="title">{{ item.Title }}</div>
+            <div class="subTitle">
+              <Markdown :marked="item.SubTitle" />
             </div>
-            <!-- 模型 -->
-            <div v-if="item.options">
-              <div class="flex gap-8 flex-col">
-                <el-select
-                  multiple
-                  collapse-tags
-                  collapse-tags-tooltip
-                  :max-collapse-tags="10"
-                  v-model="item.collapse"
-                  append-to="body"
-                  @change="handleModelData"
-                  @clear="handleClear"
-                  @remove-tag="handleRemoveTag"
+          </div>
+          <!-- 模型 -->
+          <div v-if="item.options">
+            <div class="flex gap-8 flex-col">
+              <el-select
+                multiple
+                collapse-tags
+                collapse-tags-tooltip
+                :max-collapse-tags="10"
+                v-model="item.collapse"
+                append-to="body"
+                @change="handleModelData"
+                @clear="handleClear"
+                @remove-tag="handleRemoveTag"
+              >
+                <el-option
+                  v-for="models in item.options.chatModels"
+                  :key="models.id"
+                  :label="models.displayName"
+                  :value="models.id"
                 >
-                  <el-option
-                    v-for="models in item.options.chatModels"
-                    :key="models.id"
-                    :label="models.displayName"
-                    :value="models.id"
-                  >
-                    <div class="bot-model-option">
-                      <div
-                        class="bot-avatar flex-c h-full"
-                        :class="reIcon(item, models) ? models.icon : robotIcon"
-                      >
-                        <SvgIcon v-if="reIcon(item, models)" :local-icon="models.icon" />
-                        <SvgIcon v-else :local-icon="robotIcon" />
-                      </div>
-                      <div class="flex flex-col h-full gap-4">
-                        <div class="models-name">
-                          <span>
-                            {{ models.displayName || models.id }}
-                          </span>
-                          <el-tooltip
-                            v-if="models?.vision"
-                            :content="ModelSelect.vision"
-                            placement="top"
-                          >
-                            <SvgIcon class="vision" local-icon="vision" />
-                          </el-tooltip>
-                          <el-tooltip
-                            v-if="models?.functionCall"
-                            :content="ModelSelect.functionCall"
-                            placement="top"
-                          >
-                            <SvgIcon class="function-call" local-icon="functionCall" />
-                          </el-tooltip>
-                          <el-tooltip
-                            v-if="models?.reasoning"
-                            :content="ModelSelect.reasoning"
-                            placement="top"
-                          >
-                            <SvgIcon class="reasoning" local-icon="reasoning" />
-                          </el-tooltip>
-                        </div>
-                        <div class="models-id">{{ models.id }}</div>
-                      </div>
+                  <div class="bot-model-option">
+                    <div
+                      class="bot-avatar flex-c h-full"
+                      :class="reIcon(item, models) ? models.icon : robotIcon"
+                    >
+                      <SvgIcon v-if="reIcon(item, models)" :local-icon="models.icon" />
+                      <SvgIcon v-else :local-icon="robotIcon" />
                     </div>
-                  </el-option>
-                </el-select>
-                <div class="flex-bc">
-                  <div class="text-[#999]">
-                    共 {{ modelCount(item.collapse.length) }} 个模型可用
+                    <div class="flex flex-col h-full gap-4">
+                      <div class="models-name">
+                        <span>
+                          {{ models.displayName || models.id }}
+                        </span>
+                        <el-tooltip
+                          v-if="models?.vision"
+                          :content="ModelSelect.vision"
+                          placement="top"
+                        >
+                          <SvgIcon class="vision" local-icon="vision" />
+                        </el-tooltip>
+                        <el-tooltip
+                          v-if="models?.functionCall"
+                          :content="ModelSelect.functionCall"
+                          placement="top"
+                        >
+                          <SvgIcon class="function-call" local-icon="functionCall" />
+                        </el-tooltip>
+                        <el-tooltip
+                          v-if="models?.reasoning"
+                          :content="ModelSelect.reasoning"
+                          placement="top"
+                        >
+                          <SvgIcon class="reasoning" local-icon="reasoning" />
+                        </el-tooltip>
+                      </div>
+                      <div class="models-id">{{ models.id }}</div>
+                    </div>
                   </div>
-                  <!-- <div>
+                </el-option>
+              </el-select>
+              <div class="flex-bc">
+                <div class="text-[#999]">共 {{ modelCount(item.collapse.length) }} 个模型可用</div>
+                <!-- <div>
                   <el-tooltip :content="modelTooltipText()" placement="top" v-if="isOllama()">
                     <el-icon class="refresh" @click="onRefresh()">
                       <Refresh />
                     </el-icon>
                   </el-tooltip>
                 </div> -->
-                </div>
-              </div>
-            </div>
-            <div class="range" v-else-if="isRange(item.ID)">
-              <span class="break-normal min-w-18">
-                {{ item.defaultValue }}
-              </span>
-              <input
-                @change="handleModelData"
-                v-model="item.defaultValue"
-                :min="item.min"
-                :max="item.max"
-                :step="item.step"
-                type="range"
-              />
-            </div>
-            <div class="number" v-else-if="['max_tokens'].includes(item.ID)">
-              <input
-                @change="handleModelData"
-                v-model="item.defaultValue"
-                :min="item.min"
-                :max="item.max"
-                type="number"
-              />
-            </div>
-            <div class="input gap-5 flex-bc" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
-              <el-tooltip content="配置教程" placement="top">
-                <span v-if="item.doubt && ['token'].includes(item.ID)" class="flex cursor-pointer">
-                  <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
-                </span>
-                <!-- ollama -->
-                <span v-else-if="item.doubt && isOllama" class="flex cursor-pointer">
-                  <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
-                </span>
-                <span v-else class="w-14"> </span>
-              </el-tooltip>
-              <div class="w-full flex gap-4">
-                <el-input
-                  v-model="item.defaultValue"
-                  @change="handleModelData"
-                  :class="['token'].includes(item.ID) ? '!w-310' : 'w-full'"
-                  :ref="(e) => inputRef(e, item.ID)"
-                  :placeholder="item.Placeholder"
-                  :type="item.ID === 'token' ? 'password' : 'text'"
-                  :show-password="item.ID === 'token'"
-                  clearable
-                >
-                </el-input>
-                <el-button
-                  class="check-token-btn"
-                  v-if="['token'].includes(item.ID)"
-                  :loading="loading"
-                  @click="onCheckToken(item)"
-                >
-                  <template #loading>
-                    <div class="iconify-icon svg-spinners mr-8"></div>
-                  </template>
-                  <el-tooltip content="测试 Api Key 与代理地址是否正确填写" placement="top">
-                    <span>检查</span>
-                  </el-tooltip>
-                </el-button>
               </div>
             </div>
           </div>
+          <div class="range" v-else-if="isRange(item.ID)">
+            <span class="break-normal min-w-18">
+              {{ item.defaultValue }}
+            </span>
+            <input
+              @change="handleModelData"
+              v-model="item.defaultValue"
+              :min="item.min"
+              :max="item.max"
+              :step="item.step"
+              type="range"
+            />
+          </div>
+          <div class="number" v-else-if="['max_tokens'].includes(item.ID)">
+            <input
+              @change="handleModelData"
+              v-model="item.defaultValue"
+              :min="item.min"
+              :max="item.max"
+              type="number"
+            />
+          </div>
+          <div class="input gap-5 flex-bc" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
+            <el-tooltip content="配置教程" placement="top">
+              <span v-if="item.doubt && ['token'].includes(item.ID)" class="flex cursor-pointer">
+                <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
+              </span>
+              <!-- ollama -->
+              <span v-else-if="item.doubt && isOllama" class="flex cursor-pointer">
+                <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
+              </span>
+              <span v-else class="w-14"> </span>
+            </el-tooltip>
+            <div class="w-full flex gap-4">
+              <el-input
+                v-model="item.defaultValue"
+                @change="handleModelData"
+                :class="['token'].includes(item.ID) ? '!w-310' : 'w-full'"
+                :ref="(e) => inputRef(e, item.ID)"
+                :placeholder="item.Placeholder"
+                :type="item.ID === 'token' ? 'password' : 'text'"
+                :show-password="item.ID === 'token'"
+                clearable
+              >
+              </el-input>
+              <el-button
+                class="check-token-btn"
+                v-if="['token'].includes(item.ID)"
+                :loading="loading"
+                @click="onCheckToken(item)"
+              >
+                <template #loading>
+                  <div class="iconify-icon svg-spinners mr-8"></div>
+                </template>
+                <el-tooltip content="测试 Api Key 与代理地址是否正确填写" placement="top">
+                  <span>检查</span>
+                </el-tooltip>
+              </el-button>
+            </div>
+          </div>
         </div>
-      <!-- </el-scrollbar> -->
+      </div>
     </div>
     <template #footer>
       <span>
@@ -430,7 +426,6 @@ onUnmounted(() => {
 .container {
   overflow: auto;
   max-height: 70vh;
-  height: 70vh;
   .container-box {
     padding: 10px 0 10px 0;
   }

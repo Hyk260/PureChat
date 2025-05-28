@@ -2,25 +2,17 @@
   <div class="flex">
     <!-- <div v-if="market && tabsKey === 'assistant'" class="tags">
       <button
-        :class="['item-tags', cur === item ? 'active' : '']"
+        :class="['item-tags', current === item ? 'active' : '']"
         v-for="item in market.tags"
         :key="item"
         @click="emit('handleClick', item)"
       >
         {{ item }}
       </button>
-    </div>
-    <div class="mt-20" v-else>
+    </div> -->
+    <!-- <div class="mt-20" v-else>
       <el-skeleton :rows="4" animated />
     </div> -->
-    <div class="agent-list" style="--rows: 2" v-if="tabsKey === 'model_provider'">
-      <ModelProviderCard
-        v-for="item in ProvidersList"
-        :key="item.userID"
-        :agents="item"
-        @click="providerClick(item)"
-      />
-    </div>
     <div class="agent-list" v-if="tabsKey === 'assistant'">
       <!-- <AgentSkeleton v-if="!market" /> -->
       <AgentCard
@@ -30,12 +22,20 @@
         @click="cardClick(item)"
       />
     </div>
+    <div class="agent-list" style="--rows: 2" v-if="tabsKey === 'model_provider'">
+      <ModelProviderCard
+        v-for="item in ProvidersList"
+        :key="item.userID"
+        :agents="item"
+        @click="providerClick(item)"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
 import { useSidebarStore, useChatStore } from "@/stores/index";
-import { ProvidersList } from '@database/config';
+import { ProvidersList } from "@database/config";
 import AgentCard from "./AgentCard.vue";
 import ModelProviderCard from "./ModelProviderCard.vue";
 import AgentSkeleton from "./AgentSkeleton.vue";
@@ -47,7 +47,7 @@ const sidebarStore = useSidebarStore();
 const chatStore = useChatStore();
 
 const props = defineProps({
-  cur: {
+  current: {
     type: null || String,
     default: null,
   },
@@ -71,17 +71,18 @@ function cardClick(item) {
 
 function providerClick(item) {
   sidebarStore.toggleOutside({ path: "/chat" });
-  chatStore.addConversation({ sessionId: `${"C2C"}${item.userID}` })
+  chatStore.addConversation({ sessionId: `${"C2C"}${item.userID}` });
 }
 </script>
 
 <style lang="scss" scoped>
 .tags {
-  margin-top: 20px;
+  margin: 15px 15px 0 15px;
   flex-wrap: wrap;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  height: 100%;
   .item-tags {
     color: var(--color-text);
     height: 27px;
@@ -94,6 +95,7 @@ function providerClick(item) {
     outline: none;
     display: flex;
     align-items: center;
+    justify-content: center;
     cursor: pointer;
     font-weight: 400;
     white-space: nowrap;
@@ -123,6 +125,6 @@ function providerClick(item) {
     )
   );
   gap: 1em;
-  padding: 20px 16px;
+  padding: 15px;
 }
 </style>
