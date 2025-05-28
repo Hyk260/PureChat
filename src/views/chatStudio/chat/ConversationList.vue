@@ -2,6 +2,7 @@
   <el-scrollbar class="scrollbar-list">
     <EmptyMessage className="no-msg" v-if="conversationList.length === 0" />
     <div
+      v-if="!isEnableVirtualList"
       v-for="item in searchForData"
       class="message-item flex-c"
       :key="item.conversationID"
@@ -53,6 +54,7 @@
         <SvgIcon v-show="isNotify(item)" local-icon="DontDisturb" class="dont" />
       </div>
     </div>
+    <VirtualList v-else />
     <!-- 右键菜单 -->
     <Contextmenu ref="contextmenu" :disabled="!isRight">
       <ContextmenuItem
@@ -82,11 +84,13 @@ import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
 import { setMessageRemindType } from "@/service/im-sdk-api/index";
 import { useGroupStore, useUserStore, useChatStore } from "@/stores/index";
 import EmptyMessage from "../components/EmptyMessage.vue";
+import VirtualList from './VirtualList.vue';
 import Label from "../components/Label.vue";
 import emitter from "@/utils/mitt-bus";
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop();
 
+const isEnableVirtualList = ref(false);
 const isRight = ref(true);
 const contextMenuItems = ref([]);
 const contextMenuItemInfo = ref([]);

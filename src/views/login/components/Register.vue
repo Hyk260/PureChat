@@ -96,15 +96,6 @@ const onUpdate = async (formEl) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
-      // if (checked.value) {
-      // } else {
-      //   loading.value = false;
-      // }
-      // setTimeout(() => {
-      //   loading.value = false;
-      //   console.log(ruleForm);
-      // }, 2000);
-      // dispatch("REGISTER", ruleForm);
     } else {
       loading.value = false;
       return fields;

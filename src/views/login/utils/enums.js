@@ -1,6 +1,7 @@
 import { computed } from "vue";
 import { $t } from "@/locales/index";
-const operates = computed(() => {
+
+export const operates = computed(() => {
   return [
     // {
     //   title:  $t('login.phoneLogin'),
@@ -17,7 +18,7 @@ const operates = computed(() => {
   ];
 });
 
-const thirdParty = [
+export const thirdParty = [
   // {
   //   title: "微信",
   //   icon: "wechat",
@@ -35,5 +36,3 @@ const thirdParty = [
   //   icon: "qq",
   // },
 ];
-
-export { operates, thirdParty };

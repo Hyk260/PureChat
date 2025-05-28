@@ -1,43 +1,49 @@
 <template>
   <RecycleScroller
     class="scroller"
-    :items="allItems"
+    :items="items"
     :item-size="32"
     key-field="conversationID"
     v-slot="{ item }"
   >
-    <div>
+    <div class="item">
       {{ item.name }}
     </div>
   </RecycleScroller>
 </template>
 
-<script>
+<script setup>
+import { computed } from "vue";
 import { RecycleScroller } from "vue-virtual-scroller";
-const allItems = Array.from(Array(999).keys()).map((i) => ({
-  conversationID: i,
-  height: "10",
-  name: `Item ${i}`,
-}));
-export default {
-  name: "VirtualList",
-  components: {
-    RecycleScroller,
+
+const props = defineProps({
+  list: {
+    type: Array,
+    default: () => [],
   },
-  computed: {},
-  props: {
-    list: {
-      type: Array,
-      default: () => [],
-    },
-  },
-  data() {
-    return {
-      allItems,
-    };
-  },
-  methods: {},
-};
+});
+
+const items = computed(() =>
+  props.list.length > 0
+    ? props.list
+    : Array.from({ length: 999 }, (_, i) => ({
+        conversationID: i,
+        name: `Item ${i+1}`,
+        height: 32,
+      }))
+);
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.scroller {
+  height: 100%;
+  // overflow-y: auto;
+}
+
+.item {
+  height: 32px;
+  line-height: 32px;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+</style>

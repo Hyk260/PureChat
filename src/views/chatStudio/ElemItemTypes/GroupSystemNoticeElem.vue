@@ -1,25 +1,18 @@
 <template>
   <div class="message-item-group-notice">
-    {{ GroupSystemNotice(message) }}
+    {{ groupSystemNotice(message) }}
   </div>
 </template>
 
-<script>
-import { GroupSystemNotice } from "../utils/utils";
-export default {
-  name: "GroupSystemNoticeElem",
-  props: {
-    message: {
-      type: Object,
-      default: null,
-    },
+<script setup>
+import { groupSystemNotice } from "../utils/utils";
+
+const props = defineProps({
+  message: {
+    type: Object,
+    default: () => ({}),
   },
-  data() {
-    return {
-      GroupSystemNotice,
-    };
-  },
-};
+});
 </script>
 
 <style lang="scss" scoped>

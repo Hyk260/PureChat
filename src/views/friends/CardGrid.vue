@@ -16,35 +16,27 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "CardGrid",
-  props: {
-    item: {
-      type: Object,
-      default: () => ({}),
-    },
-    type: {
-      type: String,
-      default: "GROUP", // C2C  GROUP
-    },
+<script setup>
+import { computed } from 'vue'
+
+const props = defineProps({
+  item: {
+    type: Object,
+    default: () => ({})
   },
-  computed: {
-    isGroup() {
-      return this.type === "GROUP";
-    },
-  },
-  data() {
-    return {};
-  },
-};
+  type: {
+    type: String,
+    default: "GROUP" // C2C  GROUP
+  }
+})
+
+const isGroup = computed(() => props.type === "GROUP")
 </script>
 
 <style lang="scss" scoped>
 .items-box {
   display: flex;
   border-radius: 6px;
-
   cursor: pointer;
   width: 100%;
   .left-item {
@@ -64,8 +56,5 @@ export default {
       cursor: pointer;
     }
   }
-}
-.between {
-  justify-content: space-between !important;
 }
 </style>

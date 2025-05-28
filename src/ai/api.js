@@ -52,27 +52,4 @@ export class ClientApi {
   prompts() {
     return this._prompts?.prompt?.filter(t => t.content) || [];
   }
-
-  /**
-   * 获取模型的掩码配置。
-   * @returns {Array} 掩码配置数组。
-   * @todo 实现 masks 功能
-   */
-  masks() {
-    return [];
-  }
-
-  /**
-   * 分享当前会话或配置。
-   * @returns {Promise<Object>} 分享结果。
-   * @todo 实现分享功能
-   */
-  async share() {
-    try {
-      // TODO: 实现分享功能
-      return {};
-    } catch (error) {
-      throw new Error(`分享失败: ${error.message}`);
-    }
-  }
 }

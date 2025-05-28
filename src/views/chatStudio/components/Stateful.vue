@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isShowState(item)" class="flex-c mt-auto">
+  <div v-if="isShowState(item)" class="stateful flex-c mt-auto">
     <!-- 发送中 -->
     <div v-show="isShow('unSend')" class="iconify-icon svg-spinners"></div>
     <!-- 发送失败 -->
@@ -41,3 +41,11 @@ const isShowState = (item) => {
   );
 };
 </script>
+
+<style lang="scss" scoped>
+.stateful {
+  .fluent-error {
+    cursor: pointer;
+  }
+}
+</style>

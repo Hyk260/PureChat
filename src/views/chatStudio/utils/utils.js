@@ -98,8 +98,7 @@ export const handleCopyMsg = async (data) => {
   }
 };
 
-export const GroupSystemNotice = (message) => {
-  console.log("GroupSystemNotice", message);
+export const groupSystemNotice = (message) => {
   const groupName = message.payload.groupProfile.name || message.payload.groupProfile.groupID;
   switch (message.payload.operationType) {
     case 1:

@@ -1,7 +1,6 @@
 <template>
   <div class="flex justify-center">
     <QrCode class="QrCode" v-show="loading" />
-    <Character :loading="loading" />
   </div>
   <el-divider>
     <p class="m-0">{{ $t("login.tip") }}</p>
@@ -12,7 +11,6 @@
 </template>
 
 <script setup>
-import Character from "./Character.vue";
 import { useState } from "@/utils/hooks/index";
 
 const [loading, setLoading] = useState();
