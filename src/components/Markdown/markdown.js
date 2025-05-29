@@ -37,7 +37,8 @@ export const configureFootnoteRules = (md, results = []) => {
     const n = Number(tokens[idx].meta.id + 1).toString();
     const data = results?.find((t) => t.id == n);
     if (data?.sourceUrl) {
-      return `<a href="${data.sourceUrl}" target="_blank" rel="noopener noreferrer" class="footnote-backref">\u21a9\ufe0e</a>`;
+      return ""
+      // return `<a href="${data.sourceUrl}" target="_blank" rel="noopener noreferrer" class="footnote-backref">\u21a9\ufe0e</a>`;
     } else {
       return "";
     }

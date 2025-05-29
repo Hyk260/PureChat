@@ -57,7 +57,6 @@ const shouldShowTooltip = ref(false);
 const fileType = computed(() => getFileType(payload?.fileName));
 const icon = computed(() => renderFileIcon(fileType.value));
 const formattedFileSize = computed(() => bytesToSize(payload.fileSize));
-// const shouldShowTooltip = computed(() => payload.fileName.length <= 24);
 const isSuccess = computed(() => props.status === "success");
 
 const checkTextOverflow = () => {
