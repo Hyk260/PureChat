@@ -1,13 +1,8 @@
 import { ref } from "vue";
 /**
  * 自定义 Hook，用于在 Vue 3 中管理组件状态，类似于 React 的 useState。
- *
- * @param {any|function} initial - 初始状态值，可以是任何类型 
- *                                  - 如果是一个函数，调用该函数以获取初始状态值。
- * 
- * @returns {[Ref<any>, function]} 返回一个数组，包括：
- *    - Ref<any>: 包含当前状态的响应式引用，状态值通过 `value` 属性访问。
- *    - function: 更新当前状态的函数，可以接受新的状态值或基于当前状态的更新函数。
+ * @param {any|function} initial - 初始状态值，可以是任何类型 或返回初始状态的函数。
+ * @returns {[ref<any>, function]} 返回一个数组，包含状态值和更新状态的函数。
  */
 export function useState(initial = false) {
   const state = ref(typeof initial === 'function' ? initial() : initial)

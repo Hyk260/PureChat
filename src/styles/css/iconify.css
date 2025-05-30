@@ -45,11 +45,9 @@
 .openai {
   background: rgb(25, 195, 125);
 }
-.chatglm {
-  background: linear-gradient(-45deg, rgb(52, 133, 255), rgb(80, 74, 244));
-}
+
 .yi {
-  background: rgb(0, 52, 37);
+  color: rgb(0, 52, 37) !important;
 }
 .llava {
   background: linear-gradient(-45deg, rgb(203, 45, 48), rgb(237, 130, 58));
