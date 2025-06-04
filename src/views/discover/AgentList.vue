@@ -1,27 +1,32 @@
 <template>
-  <div class="flex">
-    <!-- <div v-if="market && tabsKey === 'assistant'" class="tags">
-      <button
-        :class="['item-tags', current === item ? 'active' : '']"
-        v-for="item in market.tags"
-        :key="item"
-        @click="emit('handleClick', item)"
-      >
-        {{ item }}
-      </button>
-    </div> -->
-    <!-- <div class="mt-20" v-else>
-      <el-skeleton :rows="4" animated />
-    </div> -->
+  <div class="agent-list-box">
+    <div v-if="tabsKey === 'assistant'">
+      <div v-if="isSkeleton" class="tags">
+        <button
+          :class="['item-tags', current === item ? 'active' : '']"
+          v-for="item in market.tags"
+          :key="item"
+          @click="emit('handleClick', item)"
+        >
+          {{ item }}
+        </button>
+      </div>
+      <div class="mt-20 px-15" v-else>
+        <el-skeleton :rows="3" animated />
+      </div>
+    </div>
+
     <div class="agent-list" v-if="tabsKey === 'assistant'">
-      <!-- <AgentSkeleton v-if="!market" /> -->
+      <AgentSkeleton v-if="!isSkeleton" />
       <AgentCard
+        v-else
         v-for="item in agent"
         :key="item.identifier"
         :agents="item"
         @click="cardClick(item)"
       />
     </div>
+
     <div class="agent-list" style="--rows: 2" v-if="tabsKey === 'model_provider'">
       <ModelProviderCard
         v-for="item in ProvidersList"
@@ -36,6 +41,7 @@
 <script setup>
 import { useSidebarStore, useChatStore } from "@/stores/index";
 import { ProvidersList } from "@database/config";
+import { isEmpty } from "lodash-es";
 import AgentCard from "./AgentCard.vue";
 import ModelProviderCard from "./ModelProviderCard.vue";
 import AgentSkeleton from "./AgentSkeleton.vue";
@@ -48,12 +54,12 @@ const chatStore = useChatStore();
 
 const props = defineProps({
   current: {
-    type: null || String,
-    default: null,
+    type: String,
+    default: "",
   },
   market: {
-    type: null || Object,
-    default: null,
+    type: Object,
+    default: () => {},
   },
   tabsKey: {
     type: String,
@@ -63,6 +69,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+});
+
+const isSkeleton = computed(() => {
+  return !isEmpty(props.market);
 });
 
 function cardClick(item) {
@@ -76,13 +86,19 @@ function providerClick(item) {
 </script>
 
 <style lang="scss" scoped>
+.agent-list-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .tags {
   margin: 15px 15px 0 15px;
   flex-wrap: wrap;
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   gap: 6px;
-  height: 100%;
+  // height: 100%;
   .item-tags {
     color: var(--color-text);
     height: 27px;
