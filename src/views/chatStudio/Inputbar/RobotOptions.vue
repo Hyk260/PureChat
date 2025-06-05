@@ -255,6 +255,7 @@ function storeRobotModel(model) {
   const provider = modelProvider.value;
   robotStore.setAccessStore(model, provider);
   robotStore.setModelStore(modelData.value, provider);
+  robotStore.updateModelConfig();
 }
 
 function resetRobotModel() {

@@ -20,12 +20,19 @@
               <span>{{ item.meta.title }}</span>
             </div>
           </template>
-          <div v-if="false" class="lucide-history ai-prompt-title">
-            <SvgIcon local-icon="lucide-history" />
-            <span>
-              {{ robotStore.getBotMessageCount }}
-            </span>
-          </div>
+          <el-tooltip
+            v-if="isAssistant"
+            :show-arrow="false"
+            :content="`助手将只记住最后${robotStore.getBotMessageCount}条消息`"
+            placement="bottom"
+          >
+            <div v-if="isAssistant" class="lucide-history ai-prompt-title">
+              <SvgIcon local-icon="lucide-history" />
+              <span>
+                {{ robotStore.getBotMessageCount }}
+              </span>
+            </div>
+          </el-tooltip>
         </span>
         <span v-else-if="chatType('GROUP')" @click="openSetup" class="group">
           <span class="nick"> {{ chatNick("GROUP", currentConversation) }}</span>

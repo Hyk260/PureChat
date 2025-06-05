@@ -14,7 +14,6 @@ export const getGender = (data, type = "") => {
   return data?.gender === `Gender_Type_${type}`;
 };
 
-
 export const getTime = () => {
   return parseInt(new Date().getTime() / 1000);
 }
