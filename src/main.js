@@ -2,7 +2,7 @@ import App from "./App.vue";
 import { createApp } from "vue";
 import { setupStore } from "./stores/index";
 import { setupI18n } from './locales/index';
-import { loadAllAssembly } from "./components/index";
+import { loadAllAssembly } from "./components/Automatic/index";
 import { setupDirectives } from "./directives/index";
 import { setupPlugins } from "./plugins/index";
 import { setupRouter } from "./router/index";

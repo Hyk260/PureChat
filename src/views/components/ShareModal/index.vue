@@ -165,7 +165,7 @@ const downloadButtonText = computed(() =>
 
 const fnAvatar = (item) => {
   if (isSelf(item) && __LOCAL_MODE__) {
-    return new URL(`../../../assets/images/avatar.png`, import.meta.url).href;
+    return new URL(`@/assets/images/avatar.png`, import.meta.url).href;
   } else {
     return item.avatar || getAiAvatarUrl(item.from);
   }

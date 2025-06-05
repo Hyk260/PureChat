@@ -34,7 +34,11 @@
                 @click.stop="handleSelect($event, item, 'initial')"
               />
               <div v-if="showAvatar(item)" class="picture">
+                <div v-if="isSelf(item) && userStore.userLocalStore.native" class="native">
+                  {{ userStore.userLocalStore.native }}
+                </div>
                 <el-avatar
+                  v-else
                   :size="36"
                   :src="fnAvatar(item)"
                   shape="square"
@@ -117,7 +121,7 @@ import {
   computed,
 } from "vue";
 import { storeToRefs } from "pinia";
-import { useGroupStore, useAppStore, useChatStore } from "@/stores/index";
+import { useUserStore, useGroupStore, useAppStore, useChatStore } from "@/stores/index";
 import { showConfirmationBox } from "@/utils/message";
 import { avatarMenu, menuOptionsList } from "../utils/menu";
 import {
@@ -163,6 +167,7 @@ const messageViewRef = ref(null);
 const groupStore = useGroupStore();
 const chatStore = useChatStore();
 const appStore = useAppStore();
+const userStore = useUserStore();
 
 const {
   toAccount,
@@ -194,7 +199,7 @@ const updateLoadMore = (id) => {
 
 const fnAvatar = (item) => {
   if (isSelf(item) && __LOCAL_MODE__) {
-    return new URL(`../../../assets/images/avatar.png`, import.meta.url).href;
+    return userStore.getUserAvatar
   } else {
     return item.avatar || getAiAvatarUrl(item.from);
   }
@@ -612,9 +617,18 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   .picture {
     width: 36px;
     height: 36px;
+    min-width: 36px;
+    min-height: 36px;
     user-select: none;
     --el-border-radius-base: 6px;
     --el-text-color-disabled: #ffffff00;
+    .native {
+      font-size: 28px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
 .style-select {

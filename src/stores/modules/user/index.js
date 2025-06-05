@@ -11,15 +11,25 @@ import { setLocale } from "@/locales/index";
 import router from "@/router"
 import chat from "@/utils/IM/im-sdk/tim"
 import emitter from "@/utils/mitt-bus"
+import localAvatar from '@/assets/images/avatar.png';
 
 export const useUserStore = defineStore(SetupStoreId.User, {
   state: () => ({
     userProfile: {},
+    userLocalStore: {
+      native: "",
+      avatar: "",
+      userName: "",
+      localAvatar,
+    },
     lang: "zh-CN",
   }),
   actions: {
     setCurrentProfile(user) {
       this.userProfile = user
+    },
+    setUserLocalStore(data) {
+      this.userLocalStore = { ...this.userLocalStore, ...data }
     },
     setLang(lang) {
       this.lang = lang
@@ -103,6 +113,11 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       } catch (error) {
         console.log(error)
       }
+    }
+  },
+  getters: {
+    getUserAvatar() {
+      return this.userLocalStore.avatar || this.userLocalStore.native || this.userLocalStore.localAvatar
     }
   },
   persist: true,

@@ -25,8 +25,8 @@
 
 <script setup>
 import { list } from "./enums";
-import FontIcon from "@/components/FontIcon/index.vue";
-import SvgIcon from "@/components/SvgIcon/index.vue";
+import FontIcon from "@/components/Automatic/FontIcon/index.vue";
+import SvgIcon from "@/components/Automatic/SvgIcon/index.vue";
 
 const activeId = ref(list.value[0].id);
 

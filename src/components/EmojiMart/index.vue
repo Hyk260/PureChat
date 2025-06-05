@@ -18,8 +18,6 @@ const emit = defineEmits(["onClose", "emoji-selected"]);
 const emojiMartRef = ref("");
 
 const handleEmojiSelect = (emoji) => {
-  console.log("选择的表情:", emoji);
-  console.log("data:", data);
   emit("emoji-selected", emoji);
 };
 

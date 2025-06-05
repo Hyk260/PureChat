@@ -38,6 +38,7 @@
 
     <SidebarEditDialog />
     <CardPopover />
+    <UserPopup ref="UserPopupRef" />
   </div>
 </template>
 
@@ -48,6 +49,7 @@ import { useChatStore, useSidebarStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
 import CardPopover from "@/views/chatStudio/components/CardPopover.vue";
+import UserPopup from "@/components/Popups/UserPopup.vue";
 
 defineOptions({
   name: "LayAside",
@@ -55,12 +57,14 @@ defineOptions({
 
 const docs = __APP_INFO__.pkg.docs;
 
+const UserPopupRef = ref();
 const router = useRouter();
 const chatStore = useChatStore();
 const sidebarStore = useSidebarStore();
 
 const handleAvatarClick = () => {
   if (__LOCAL_MODE__) {
+    UserPopupRef.value.show();
   } else {
     emitter.emit("setPopover");
   }
