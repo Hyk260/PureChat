@@ -27,7 +27,7 @@
                 :class="isSelf(item) ? 'is-self' : 'is-other'"
               >
                 <div class="avatar">
-                  <img class="w-32 h-32 rounded-6" :src="fnAvatar(item)" />
+                  <UserAvatar :size="32" :url="fnAvatar(item)" shape="square" :type="isSelf(item) ? 'self' : 'single'" />
                 </div>
                 <div class="item" :class="msgOne(item.type)">
                   <div :class="msgType(item.type)">
@@ -164,11 +164,7 @@ const downloadButtonText = computed(() =>
 );
 
 const fnAvatar = (item) => {
-  if (isSelf(item) && __LOCAL_MODE__) {
-    return new URL(`@/assets/images/avatar.png`, import.meta.url).href;
-  } else {
-    return item.avatar || getAiAvatarUrl(item.from);
-  }
+  return item.avatar || getAiAvatarUrl(item.from);
 };
 
 const handleDownload = async () => {

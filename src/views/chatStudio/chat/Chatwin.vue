@@ -34,7 +34,7 @@
                 @click.stop="handleSelect($event, item, 'initial')"
               />
               <div v-if="showAvatar(item)" class="picture">
-                <div v-if="isSelf(item) && userStore.userLocalStore.native" class="native">
+                <div v-if="isSelf(item) && isLocal && userStore.userLocalStore.native" class="native">
                   {{ userStore.userLocalStore.native }}
                 </div>
                 <el-avatar
@@ -157,6 +157,7 @@ import MyPopover from "@/views/components/MyPopover/index.vue";
 import MessageEditingBox from "../components/MessageEditingBox.vue";
 import AssistantMessage from "../components/AssistantMessage.vue";
 
+const isLocal = __LOCAL_MODE__
 const timeout = ref(false);
 const isRight = ref(true);
 const contextMenuItems = ref([]);

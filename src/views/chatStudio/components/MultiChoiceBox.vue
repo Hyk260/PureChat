@@ -15,12 +15,10 @@
   <MessageForwardingPopup @confirm="confirm" ref="wardingRef" />
 </template>
 
-<script>
-import { mapStores } from "pinia";
+<script setup>
+import { ref, computed } from 'vue';
+import { useChatStore } from "@/stores/index";
 import { createForwardMessage, createMergerMessage, sendMessage } from "@/service/im-sdk-api/index";
-import { useChatStore, useGroupStore } from "@/stores/index";
-import { localStg } from "@/utils/storage";
-import { TIM_PROXY } from "@/constants/index";
 import MessageForwardingPopup from "./MessageForwardingPopup.vue";
 import ShareModal from "@/views/components/ShareModal/index.vue";
 import emitter from "@/utils/mitt-bus";
@@ -52,152 +50,146 @@ const buttonList = [
     icon: "delete",
     class: "",
   },
-];
+].filter((item) => !item.hide);
 
-export default {
-  name: "MultiChoiceBox",
-  data() {
-    return {
-      buttonList: buttonList.filter((item) => !item.hide),
-      multipleValue: null,
-    };
-  },
-  components: {
-    ShareModal,
-    MessageForwardingPopup,
-  },
-  computed: {
-    ...mapStores(useChatStore, useGroupStore),
-    isForwardDataEmpty() {
-      return this.chatStore.forwardData.size === 0;
-    },
-    userProfile() {
-      return localStg.get(TIM_PROXY)?.userProfile;
-    },
-  },
-  methods: {
-    onClock(item) {
-      switch (item.type) {
-        case "share": // 截图分享
-          emitter.emit("handleShareModal", true);
-          break;
-        case "MergeForward": // 合并转发
-          this.setDialogVisible(item.type);
-          break;
-        case "ForwardItemByItem": // 逐条转发
-          this.setDialogVisible(item.type);
-          break;
-        case "removalMsg":
-          this.deleteMsg(); // 删除消息
-          break;
-      }
-    },
-    handleConfirm(type) {
-      switch (type) {
-        case "MergeForward": // 合并转发
-          this.mergeForward();
-          break;
-        case "ForwardItemByItem": // 逐条转发
-          this.aQuickForward();
-          break;
-      }
-    },
-    confirm({ value, type }) {
-      this.setMultipleValue(value);
-      this.handleConfirm(type);
-    },
-    onClose() {
-      this.shutdown();
-    },
-    // 多选删除
-    async deleteMsg() {
-      const data = this.chatStore.getSortedForwardData;
-      this.chatStore.deleteMessage({
-        sessionId: this.chatStore.currentConversation.conversationID,
-        messageIdArray: [...data.map((item) => item.ID)],
-        message: data,
-      });
-      this.shutdown();
-    },
-    transformData(data) {
-      return data.map((item) => {
-        if (item.type === "TIMTextElem") {
-          return `${item.nick}: ${item.payload.text}`;
-        } else if (item.type === "TIMImageElem") {
-          return `${item.nick}: [图片]`;
-        } else if (item.type === "TIMFileElem") {
-          return `${item.nick}: [文件]`;
-        } else if (item.type === "TIMRelayElem") {
-          return `${item.nick}: [合并消息]`;
-        } else if (item.type === "TIMCustomElem") {
-          return `${item.nick}: [自定义消息]`;
-        } else {
-          return `${item.nick}: [待开发]`;
-        }
-      });
-    },
-    mergeTitle() {
-      const { type, userProfile } = this.chatStore.currentConversation || {};
-      const self = this.userProfile.nick || this.userProfile.userID;
-      return type === "GROUP" ? "群聊" : `${userProfile?.nick}和${self}的聊天记录`;
-    },
-    // 合并转发
-    async mergeForward() {
-      if (!this.multipleValue) return;
-      const { toAccount, type } = this.multipleValue; // 选中转发 人 群 详细信息
-      const forwardData = this.chatStore.getSortedForwardData;
-      const forwardMsg = await createMergerMessage({
-        to: toAccount,
-        type,
-        title: this.mergeTitle(),
-        abstractList: this.transformData(forwardData),
-        messageList: forwardData,
-      });
-      const { code, message: data } = await sendMessage(forwardMsg);
-      if (code === 0) {
-        this.chatStore.sendSessionMessage({ message: data });
-      }
-      this.shutdown();
-    },
-    // 逐条转发
-    async aQuickForward() {
-      if (!this.multipleValue) return;
-      const forwardData = this.chatStore.getSortedForwardData;
-      const { toAccount, type } = this.multipleValue;
-      forwardData.map(async (t) => {
-        const forwardMsg = await createForwardMessage({
-          to: toAccount,
-          type,
-          message: t,
-        });
-        const { code, message: data } = await sendMessage(forwardMsg);
-        if (code === 0) {
-          this.chatStore.sendSessionMessage({ message: data });
-        }
-      });
-      this.shutdown();
-    },
-    shutdown() {
-      this.chatStore.setForwardData({ type: "clear" });
-      this.chatStore.$patch({ showCheckbox: false });
-      this.closedState();
-      this.setMultipleValue();
-    },
-    closedState() {
-      document.querySelectorAll(".check-btn").forEach((t) => {
-        t.checked = false;
-      });
-      document.querySelectorAll(".message-view > *").forEach((t) => {
-        t.classList.remove("style-select");
-      });
-    },
-    setDialogVisible(type = "") {
-      this.$refs.wardingRef.openPopup(type);
-    },
-    setMultipleValue(value = null) {
-      this.multipleValue = value;
-    },
-  },
+const chatStore = useChatStore();
+const wardingRef = ref(null);
+const multipleValue = ref(null);
+
+const isForwardDataEmpty = computed(() => chatStore.forwardData.size === 0);
+
+const onClock = (item) => {
+  switch (item.type) {
+    case "share": // 截图分享
+      emitter.emit("handleShareModal", true);
+      break;
+    case "MergeForward": // 合并转发
+      setDialogVisible(item.type);
+      break;
+    case "ForwardItemByItem": // 逐条转发
+      setDialogVisible(item.type);
+      break;
+    case "removalMsg":
+      deleteMsg(); // 删除消息
+      break;
+  }
+};
+
+const handleConfirm = (type) => {
+  switch (type) {
+    case "MergeForward": // 合并转发
+      mergeForward();
+      break;
+    case "ForwardItemByItem": // 逐条转发
+      aQuickForward();
+      break;
+  }
+};
+
+const confirm = ({ value, type }) => {
+  setMultipleValue(value);
+  handleConfirm(type);
+};
+
+const onClose = () => {
+  shutdown();
+};
+
+// 多选删除
+const deleteMsg = async () => {
+  const data = chatStore.getSortedForwardData;
+  chatStore.deleteMessage({
+    sessionId: chatStore.currentConversation.conversationID,
+    messageIdArray: [...data.map((item) => item.ID)],
+    message: data,
+  });
+  shutdown();
+};
+
+const transformData = (data) => {
+  return data.map((item) => {
+    if (item.type === "TIMTextElem") {
+      return `${item.nick}: ${item.payload.text}`;
+    } else if (item.type === "TIMImageElem") {
+      return `${item.nick}: [图片]`;
+    } else if (item.type === "TIMFileElem") {
+      return `${item.nick}: [文件]`;
+    } else if (item.type === "TIMRelayElem") {
+      return `${item.nick}: [合并消息]`;
+    } else if (item.type === "TIMCustomElem") {
+      return `${item.nick}: [自定义消息]`;
+    } else {
+      return `${item.nick}: [待开发]`;
+    }
+  });
+};
+
+const mergeTitle = () => {
+  const { type, userProfile } = chatStore.currentConversation || {};
+  const self = userProfile.value.nick || userProfile.value.userID;
+  return type === "GROUP" ? "群聊" : `${userProfile?.nick}和${self}的聊天记录`;
+};
+
+// 合并转发
+const mergeForward = async () => {
+  if (!multipleValue.value) return;
+  const { toAccount, type } = multipleValue.value;
+  const forwardData = chatStore.getSortedForwardData;
+  const forwardMsg = await createMergerMessage({
+    to: toAccount,
+    type,
+    title: mergeTitle(),
+    abstractList: transformData(forwardData),
+    messageList: forwardData,
+  });
+  const { code, message: data } = await sendMessage(forwardMsg);
+  if (code === 0) {
+    chatStore.sendSessionMessage({ message: data });
+  }
+  shutdown();
+};
+
+// 逐条转发
+const aQuickForward = async () => {
+  if (!multipleValue.value) return;
+  const forwardData = chatStore.getSortedForwardData;
+  const { toAccount, type } = multipleValue.value;
+  forwardData.map(async (t) => {
+    const forwardMsg = await createForwardMessage({
+      to: toAccount,
+      type,
+      message: t,
+    });
+    const { code, message: data } = await sendMessage(forwardMsg);
+    if (code === 0) {
+      chatStore.sendSessionMessage({ message: data });
+    }
+  });
+  shutdown();
+};
+
+const shutdown = () => {
+  chatStore.setForwardData({ type: "clear" });
+  chatStore.$patch({ showCheckbox: false });
+  closedState();
+  setMultipleValue();
+};
+
+const closedState = () => {
+  document.querySelectorAll(".check-btn").forEach((t) => {
+    t.checked = false;
+  });
+  document.querySelectorAll(".message-view > *").forEach((t) => {
+    t.classList.remove("style-select");
+  });
+};
+
+const setDialogVisible = (type = "") => {
+  wardingRef.value.openPopup(type);
+};
+
+const setMultipleValue = (value = null) => {
+  multipleValue.value = value;
 };
 </script>
 

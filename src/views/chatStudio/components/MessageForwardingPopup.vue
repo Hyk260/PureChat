@@ -14,10 +14,7 @@
         :class="{ 'forward-hover': multipleValue?.toAccount === item.toAccount }"
         @click="onClickItem(item)"
       >
-        <img
-          :src="item.userProfile?.avatar || getAiAvatarUrl(item.conversationID) || squareUrl"
-          alt=""
-        />
+        <img :src="fnSvatar(item)" alt="" />
         <div>{{ chatName(item) }}</div>
       </div>
     </div>
@@ -34,59 +31,57 @@
   </el-dialog>
 </template>
 
-<script>
-import { mapState } from "pinia";
-import { useState } from "@/utils/hooks/index";
+<script setup>
+import { ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useChatStore } from "@/stores/index";
 import { chatName } from "../utils/utils";
 import { squareUrl } from "../utils/menu";
 import { getAiAvatarUrl } from "@/ai/utils";
-import { useChatStore } from "@/stores/index";
 
-const [dialog, setDialog] = useState();
+const emit = defineEmits(["confirm"]);
 
-export default {
-  name: "MessageForwardingPopup",
-  computed: {
-    ...mapState(useChatStore, ["getNonBotList"]),
-  },
-  data() {
-    return {
-      getAiAvatarUrl,
-      multipleValue: null,
-      dialogType: "",
-      squareUrl,
-      chatName,
-      dialog,
-      setDialog,
-    };
-  },
-  methods: {
-    onClickItem(value) {
-      this.setMultipleValue(value);
-    },
-    openPopup(type) {
-      this.dialogType = type;
-      this.setDialog(true);
-    },
-    setMultipleValue(value = null) {
-      this.multipleValue = value;
-    },
-    handleClose(done) {
-      this.setMultipleValue();
-      done();
-    },
-    handleCancel() {
-      this.setDialog(false);
-      this.setMultipleValue();
-    },
-    handleConfirm() {
-      this.$emit("confirm", {
-        value: this.multipleValue,
-        type: this.dialogType,
-      });
-      this.setDialog(false);
-      this.setMultipleValue();
-    },
-  },
+const chatStore = useChatStore();
+const { getNonBotList } = storeToRefs(chatStore);
+
+const dialog = ref(false);
+const multipleValue = ref(null);
+const dialogType = ref("");
+
+const onClickItem = (value) => {
+  multipleValue.value = value;
 };
+
+const fnSvatar = (item) => {
+  return item.userProfile?.avatar || getAiAvatarUrl(item.conversationID) || squareUrl;
+};
+
+const openPopup = (type) => {
+  dialogType.value = type;
+  dialog.value = true;
+};
+
+const setMultipleValue = (value = null) => {
+  multipleValue.value = value;
+};
+
+const handleClose = (done) => {
+  setMultipleValue();
+  done();
+};
+
+const handleCancel = () => {
+  dialog.value = false;
+  setMultipleValue();
+};
+
+const handleConfirm = () => {
+  emit("confirm", { value: multipleValue.value, type: dialogType.value });
+  dialog.value = false;
+  setMultipleValue();
+};
+
+defineExpose({
+  openPopup,
+});
 </script>

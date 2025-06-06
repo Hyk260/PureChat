@@ -4,40 +4,37 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
 import QRCode from "qrcode";
 
-export default {
-  name: 'QrCode',
-  props: {
-    text: {
-      type: String,
-      default: "https://purechat.cn",
-    },
+defineOptions({ name: "QrCode" });
+
+const props = defineProps({
+  text: {
+    type: String,
+    default: "https://purechat.cn",
   },
-  data() {
-    return {
-      qrCodeUrl: "",
-      opts: {
-        errorCorrectionLevel: "H",
-        width: 185,
-        height: 185,
-        margin: 0,
-      },
-    };
-  },
-  mounted() {
-    this.generateQRCode();
-  },
-  methods: {
-    async generateQRCode() {
-      try {
-        const canvas = await QRCode.toCanvas(this.text, this.opts);
-        this.qrCodeUrl = canvas.toDataURL();
-      } catch (error) {
-        console.error("生成二维码失败：", error);
-      }
-    },
-  },
+});
+
+const qrCodeUrl = ref("");
+const opts = {
+  errorCorrectionLevel: "H",
+  width: 185,
+  height: 185,
+  margin: 0,
 };
+
+const generateQRCode = async () => {
+  try {
+    const canvas = await QRCode.toCanvas(props.text, opts);
+    qrCodeUrl.value = canvas.toDataURL();
+  } catch (error) {
+    console.error("生成二维码失败：", error);
+  }
+};
+
+onMounted(() => {
+  generateQRCode();
+});
 </script>

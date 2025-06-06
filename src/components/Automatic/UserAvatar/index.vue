@@ -23,7 +23,11 @@
       class="badge"
       :style="{ height: `${size}px`, width: `${size}px` }"
     >
-      <span v-if="userLocalStore?.native" class="flex-c font-size-32">
+      <span
+        v-if="isLocal && userLocalStore?.native"
+        :style="{ fontSize: `${size-8}px` }"
+        class="cursor-pointer flex-c font-size-32"
+      >
         {{ userLocalStore?.native }}
       </span>
       <el-avatar
@@ -100,6 +104,7 @@ const shapeObj = {
   square: squareUrl,
 };
 
+const isLocal = __LOCAL_MODE__;
 const userStore = useUserStore();
 
 const { userProfile, userLocalStore } = storeToRefs(userStore);
@@ -110,7 +115,7 @@ const displayInfo = (info) => {
 };
 
 const fnAvatar = (url) => {
-  if (__LOCAL_MODE__) {
+  if (isLocal) {
     return userStore.getUserAvatar;
   } else {
     return url;
