@@ -17,7 +17,18 @@
         <DragPrompt ref="promptRef" />
         <div class="container-item flex-bc" v-for="item in modelData" :key="item.ID">
           <div class="flex flex-col gap-5">
-            <div class="title">{{ item.Title }}</div>
+            <div class="flex gap-5 title">
+              <span> {{ item.Title }}</span>
+              <el-tooltip
+                v-if="item.apiKey && ['token'].includes(item.ID)"
+                content="获取密钥"
+                placement="top"
+              >
+                <span class="flex cursor-pointer">
+                  <el-icon @click="toUrl(item.apiKey)"><QuestionFilled /></el-icon>
+                </span>
+              </el-tooltip>
+            </div>
             <div class="subTitle">
               <Markdown :marked="item.SubTitle" />
             </div>
@@ -116,42 +127,46 @@
               type="number"
             />
           </div>
-          <div class="input gap-5 flex-bc" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
-            <el-tooltip content="配置教程" placement="top">
-              <span v-if="item.doubt && ['token'].includes(item.ID)" class="flex cursor-pointer">
-                <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
-              </span>
-              <!-- ollama -->
-              <span v-else-if="item.doubt && isOllama" class="flex cursor-pointer">
-                <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
-              </span>
-              <span v-else class="w-14"> </span>
-            </el-tooltip>
-            <div class="w-full flex gap-4">
-              <el-input
-                v-model="item.defaultValue"
-                @change="handleModelData"
-                :class="['token'].includes(item.ID) ? '!w-310' : 'w-full'"
-                :ref="(e) => inputRef(e, item.ID)"
-                :placeholder="item.Placeholder"
-                :type="item.ID === 'token' ? 'password' : 'text'"
-                :show-password="item.ID === 'token'"
-                clearable
-              >
-              </el-input>
-              <el-button
-                class="check-token-btn"
-                v-if="['token'].includes(item.ID)"
-                :loading="loading"
-                @click="onCheckToken(item)"
-              >
-                <template #loading>
-                  <div class="iconify-icon svg-spinners mr-8"></div>
-                </template>
-                <el-tooltip content="测试 Api Key 与代理地址是否正确填写" placement="top">
-                  <span>检查</span>
+          <div class="input" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
+            <div class="gap-5 flex-bc">
+              <el-tooltip content="配置教程" placement="top">
+                <!-- ollama -->
+                <span v-if="item.doubt && isOllama" class="flex cursor-pointer">
+                  <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
+                </span>
+                <span v-else-if="item.doubt" class="flex cursor-pointer">
+                  <el-icon @click="toUrl(item.doubt)"><QuestionFilled /></el-icon>
+                </span>
+                <span v-else class="w-14"></span>
+              </el-tooltip>
+              <div class="w-full flex gap-4">
+                <el-input
+                  v-model="item.defaultValue"
+                  @change="handleModelData"
+                  :class="['token'].includes(item.ID) ? '!w-310' : 'w-full'"
+                  :ref="(e) => inputRef(e, item.ID)"
+                  :placeholder="item.Placeholder"
+                  :type="item.ID === 'token' ? 'password' : 'text'"
+                  :show-password="item.ID === 'token'"
+                  clearable
+                >
+                </el-input>
+                <el-tooltip
+                  v-if="['token'].includes(item.ID)"
+                  content="测试 Api Key 与代理地址是否正确填写"
+                  placement="top"
+                >
+                  <el-button class="check-token-btn" :loading="loading" @click="onCheckToken(item)">
+                    <template #loading>
+                      <div class="iconify-icon svg-spinners mr-8"></div>
+                    </template>
+                    <span>检查</span>
+                  </el-button>
                 </el-tooltip>
-              </el-button>
+              </div>
+            </div>
+            <div v-if="item?.apiHost" class="text-[#999] pt-8 ml-20">
+              {{ item?.apiHost }}
             </div>
           </div>
         </div>
@@ -263,6 +278,7 @@ function resetRobotModel() {
   const model = useAccessStore(provider)?.model;
   const data = cloneDeep(modelValue[provider].Model.options.chatModels);
   const checkModel = data.find((item) => item.id === model);
+  robotStore.setModelStore({}, provider);
   robotStore.setAccessStore({}, provider);
   robotStore.setModel(checkModel);
 }
@@ -292,8 +308,7 @@ function handleCancel() {
   setDialog(false);
 }
 
-function handleReset() {
-  robotStore.setModelStore({}, modelProvider.value);
+function handleReset() { 
   resetRobotModel();
   initModel();
   // handleCancel(false);
@@ -413,7 +428,7 @@ onUnmounted(() => {
   }
   .container-item {
     color-scheme: light;
-    user-select: none;
+    // user-select: none;
     color: var(--color-text-default);
     min-height: 40px;
     padding: 10px 0;

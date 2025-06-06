@@ -18,6 +18,7 @@ export const OllamaModelValue = () => {
       Title: "Ollama 服务地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
       Placeholder: VITE_OLLAMA_PROXY_URL,
+      apiHost: `${VITE_OLLAMA_PROXY_URL}/v1/chat/completions`,
       defaultValue: "",
       doubt: `${docs}/guides/olama-usage`,
     },

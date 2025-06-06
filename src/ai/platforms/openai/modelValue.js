@@ -18,6 +18,7 @@ export const OpenAIModelValue = () => {
       Title: "接口地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
       Placeholder: VITE_OPENAI_PROXY_URL,
+      apiHost: "https://api.openai.com/v1/chat/completions",
       defaultValue: "",
     },
     Token: {
@@ -26,6 +27,7 @@ export const OpenAIModelValue = () => {
       SubTitle: "请填写你的 OpenAI API Key",
       Placeholder: "OpenAI API Key",
       defaultValue: "",
+      apiKey: 'https://platform.openai.com/api-keys',
       doubt: `${docs}/guides/model-provider.html#vite-openai-api-key`,
     },
     Temperature: {

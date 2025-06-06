@@ -20,6 +20,7 @@ export const DeepseekModelValue = () => {
       Title: "接口地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
       Placeholder: VITE_DEEPSEEK_BASE_URL,
+      apiHost: `${VITE_DEEPSEEK_BASE_URL}/chat/completions`,
       defaultValue: "",
     },
     Token: {
@@ -28,6 +29,7 @@ export const DeepseekModelValue = () => {
       SubTitle: "请填写你的 DeepSeek API Key",
       Placeholder: "DeepSeek API Key",
       defaultValue: "",
+      apiKey: 'https://platform.deepseek.com/api_keys',
       doubt: `${docs}/guides/model-provider.html#vite-deepseek-api-key`,
     },
     Temperature: {

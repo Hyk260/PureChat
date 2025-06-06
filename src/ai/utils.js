@@ -6,10 +6,11 @@ import {
   AssistantAvatar,
   REQUEST_TIMEOUT_MS,
 } from "@/ai/constant";
-import { useRobotStore } from "@/stores/index";
+import { useRobotStore, useChatStore } from "@/stores/index";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 import { isEmpty } from "lodash-es";
+
 
 const {
   VITE_OPENAI_ID, // chatgpt
@@ -438,6 +439,7 @@ export const handleStreamingChat = async (
       console.log("[Response Animation] finished");
       // 如果响应文本为空，触发错误回调
       if (responseText?.length === 0) {
+        useChatStore().updateSendingState(getModelId(provider), "delete");
         console.error("empty response from server");
         options.onError?.("服务器繁忙，请稍后再试。");
       }
@@ -510,7 +512,7 @@ export const handleStreamingChat = async (
           const resJson = await res.clone().json();
           extraInfo = prettyObject(resJson);
         } catch (e) {
-          console.log("[resJson]", e);
+          console.error("[resJson]", e);
         }
 
         if (res.status === 401) {

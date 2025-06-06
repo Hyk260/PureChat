@@ -48,7 +48,7 @@ const restSendMsg = async (params, data) => {
   }
 };
 
-const updataMessage = (chat, data) => {
+const updateMessage = (chat, data) => {
   if (!chat) return;
 
   const { message = "", think = "", done: isFinish = false } = data || {};
@@ -88,7 +88,7 @@ const createStartMsg = (params) => {
   msg.from = from;
   msg.nick = "";
   msg.status = "success";
-  updataMessage(msg);
+  updateMessage(msg);
   msg.type = "TIMTextElem";
   return msg;
 };
@@ -147,7 +147,7 @@ export const chatService = async ({ messages, chat, provider }) => {
 const handleUpdate = (startMsg) => (data) => {
   const { message = "", think = "" } = data || {};
   console.log("[chat] onUpdate:", message);
-  updataMessage(startMsg, data);
+  updateMessage(startMsg, data);
 };
 
 const handleFinish = (startMsg, chat) => async (data) => {
@@ -155,7 +155,7 @@ const handleFinish = (startMsg, chat) => async (data) => {
   console.log("[chat] onFinish:", message);
   if (message) {
     data.done = true;
-    updataMessage(startMsg, data);
+    updateMessage(startMsg, data);
     await restSendMsg(chat, data);
   }
   useChatStore().updateSendingState(chat.to, "delete");
@@ -168,7 +168,7 @@ const handleFinish = (startMsg, chat) => async (data) => {
 
 const handleReasoningMessage = (startMsg) => (think) => {
   console.log("[chat] onReasoningMessage:", think);
-  updataMessage(startMsg, { message: "", think });
+  updateMessage(startMsg, { message: "", think });
 };
 
 const handleError = (startMsg, chat) => async (error) => {
@@ -176,7 +176,7 @@ const handleError = (startMsg, chat) => async (error) => {
   const content = `\n\n${prettyObject({ error: true, message: error.message })}`;
 
   if (__LOCAL_MODE__) {
-    updataMessage(startMsg, { message: content });
+    updateMessage(startMsg, { message: content });
   }
 
   if (error.message) {

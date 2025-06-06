@@ -115,7 +115,7 @@ const openCard = (data) => {
 
 /** 大图预览 */
 const handlePictureCardPreview = (item) => {
-  emitter.emit("handleImageViewer", profile.value.avatar);
+  // emitter.emit("handleImageViewer", profile.value.avatar);
 };
 
 onMounted(() => {

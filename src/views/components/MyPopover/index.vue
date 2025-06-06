@@ -84,8 +84,8 @@ const closeModal = () => {
 
 const clickCard = (url) => {
   if (url) {
-    closeModal();
-    emitter.emit("handleImageViewer", url);
+    // closeModal();
+    // emitter.emit("handleImageViewer", url);
   }
 };
 
