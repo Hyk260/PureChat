@@ -81,7 +81,7 @@ export class OpenAiApi {
     if (res.data) {
       return await extractImageMessage(res);
     }
-    return res.choices?.at(0)?.message?.content ?? res;
+    return res.choices?.[0]?.message?.content ?? res;
   }
   async fetchOnClient(messages) {
     const payload = this.accessStore();
@@ -123,7 +123,7 @@ export class OpenAiApi {
       // tools: [] // 工具
     };
     const tools = this.getPluginTools();
-    if (tools.at(0)) {
+    if (tools[0]) {
       payload.tools = tools;
       payload.stream = false;
     }
@@ -180,7 +180,7 @@ export class OpenAiApi {
         options.onFinish({ message });
       }
     } catch (e) {
-      console.log("[Request] failed to make a chat reqeust", e);
+      console.error("[Request] failed to make a chat reqeust", e);
       options.onError?.(e);
     }
   }
