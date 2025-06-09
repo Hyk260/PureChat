@@ -47,6 +47,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     totalUnreadMsg: 0, // 未读消息总数
     scrollTopID: "", // 滚动到的消息ID
     showCheckbox: false, //是否显示多选框
+    timeline: false, // 时间线
     noMore: false, // 加载更多  false ? 显示loading : 没有更多
     isChatBoxVisible: false, // 聊天框是否显示
     isMentionModalVisible: false, // @成员弹窗
@@ -131,6 +132,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
   },
   actions: {
+    setTimeline(val) {
+      this.timeline = val;
+    },
     updateSendingState(sessionId, type) {
       // set delete
       if (!this.isAssistant) return
@@ -432,5 +436,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
           break;
       }
     },
+  },
+  persist: {
+    pick: ['timeline']
   },
 });

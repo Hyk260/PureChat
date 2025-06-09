@@ -23,6 +23,17 @@
         />
       </el-select>
     </li>
+    <li>
+      <div class="flex items-center gap-5">
+        <span>显示消息时间线</span>
+        <el-tooltip content="切换会话后生效" placement="top">
+          <span class="flex cursor-pointer">
+            <el-icon><QuestionFilled /></el-icon>
+          </span>
+        </el-tooltip>
+      </div>
+      <el-switch v-model="timeline" />
+    </li>
     <li v-if="!isLocalMode">
       <el-button @click="logout" type="primary">
         {{ $t("login.logout") }}
@@ -33,19 +44,29 @@
 
 <script setup>
 import { languages, options } from "./enums";
-import { useUserStore, useThemeStore } from "@/stores/index";
+import { useUserStore, useThemeStore, useChatStore } from "@/stores/index";
 
 const isLocalMode = __LOCAL_MODE__;
 const { DEV: isDev } = import.meta.env;
 
 const userStore = useUserStore();
 const themeStore = useThemeStore();
+const chatStore = useChatStore();
 
 function languageChange() {}
 
 function logout() {
   userStore.handleUserLogout();
 }
+
+const timeline = computed({
+  get() {
+    return chatStore.timeline;
+  },
+  set(val) {
+    chatStore.setTimeline(val);
+  },
+});
 
 const themeColor = computed({
   get() {

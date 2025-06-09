@@ -4,7 +4,7 @@
 
 <script setup>
 import { h } from "vue";
-import { html2Escape } from "../utils/utils";
+import { encodeHTML } from "@/utils/common";
 import linkifyUrls from "@/utils/linkifyUrls";
 
 const { atUserList } = defineProps({
@@ -20,7 +20,7 @@ const { atUserList } = defineProps({
 
 function AnalysisUrl(props) {
   const { text } = props;
-  const escapedUrl = html2Escape(text);
+  const escapedUrl = encodeHTML(text);
   const linkStr = linkifyUrls(escapedUrl);
   return h("span", {
     innerHTML: linkStr,

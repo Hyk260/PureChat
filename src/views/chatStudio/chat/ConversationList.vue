@@ -79,7 +79,8 @@ import { chatSessionListData } from "../utils/menu";
 import { pinConversation } from "@/service/im-sdk-api/index";
 import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
-import { chatName, html2Escape, formatContent } from "../utils/utils";
+import { chatName, formatContent } from "../utils/utils";
+import { encodeHTML } from "@/utils/common";
 import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
 import { setMessageRemindType } from "@/service/im-sdk-api/index";
 import { useGroupStore, useUserStore, useChatStore } from "@/stores/index";
@@ -183,7 +184,7 @@ const CustomMention = (props) => {
   const draft = chatStore.chatDraftMap.get(ID);
   // 草稿
   if (draft && isDraft(item)) {
-    const str = html2Escape(formatContent(draft));
+    const str = encodeHTML(formatContent(draft));
     return h("span", { innerHTML: `${createMessagePrompt("draft")} ${str}` });
   }
   // @消息

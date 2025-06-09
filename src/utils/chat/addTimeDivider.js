@@ -1,12 +1,9 @@
 import { timeFormat } from "@/utils/timeFormat";
 import { cloneDeep } from "lodash-es";
+import { useChatStore } from "@/stores/index";
 
 const timeline = false;
 const duration = 5 * 60;
-
-const isArray = (obj) => {
-  return Object.prototype.toString.call(obj) === "[object Array]";
-};
 
 // 若当前消息与上一条消息间隔超过5分钟，会进行新的时间戳展示，否则归为上一个聊天单元。
 const isInFiveTime = (curTime, baseTime) => {
@@ -34,9 +31,18 @@ export const getBaseTime = (list, type = "start") => {
  * @returns {Array} - 添加时间分隔符后的修改后的列表。
  */
 export const addTimeDivider = (list, baseTime = 0, type = "start") => {
-  if (!timeline) return list;
-  if (!isArray(list)) return;
+  if (!useChatStore().timeline) return list;
+  if (!Array.isArray(list)) {
+    throw new Error("list must be an array");
+  }
+
   let _baseTime = baseTime;
+
+  const validMessages = list.filter(
+    (t) => !t.isTimeDivider && !t.isDeleted
+  );
+
+  if (!validMessages.length) return [];
 
   const reducer = (acc, cur) => {
     const curTime = cur.clientTime;
@@ -48,5 +54,5 @@ export const addTimeDivider = (list, baseTime = 0, type = "start") => {
     }
   };
 
-  return type === "start" ? list.reduce(reducer, []) : list.reduceRight(reducer, [])  ;
+  return type === "start" ? validMessages.reduce(reducer, []) : validMessages.reduceRight(reducer, []);
 };

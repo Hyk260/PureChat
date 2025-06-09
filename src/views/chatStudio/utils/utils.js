@@ -226,16 +226,6 @@ export const loadMsgModule = (item) => {
 };
 
 /**
- * 将字符串中的特殊字符进行 HTML 转义
- * @param {string} str - 待转义的字符串
- * @returns {string} - 转义后的字符串
- */
-export const html2Escape = (str) => {
-  const map = { "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" };
-  return str.replace(/[<>&"]/g, (c) => map[c]);
-};
-
-/**
  * 发送聊天消息
  */
 export async function sendChatMessage(options) {

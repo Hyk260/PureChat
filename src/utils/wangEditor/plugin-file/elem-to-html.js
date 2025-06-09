@@ -1,11 +1,4 @@
-const escapeHtml = (str) => {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-};
+import { encodeHTML } from "@/utils/common";
 
 const convertAttachmentToHtml = (elem) => {
   const { link = "", fileName = "" } = elem;
@@ -18,7 +11,7 @@ const convertAttachmentToHtml = (elem) => {
       data-link="${encodeURIComponent(link)}" 
       data-fileName="${encodeURIComponent(fileName)}"
     >
-      ${escapeHtml(fileName)}
+      ${encodeHTML(fileName)}
     </span>
   `.replace(/\s+/g, ' ').trim();
   
