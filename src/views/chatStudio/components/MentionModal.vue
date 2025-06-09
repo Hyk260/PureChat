@@ -30,9 +30,8 @@
 import { mapState } from "pinia";
 import { onClickOutside, useEventListener } from "@vueuse/core";
 import { cloneDeep } from "lodash-es";
-import { prioritizeRBTUserID } from "@/utils/chat/index";
-import { insertMention } from "./../utils/utils";
-import { useGroupStore, useChatStore, useUserStore } from "@/stores/index";
+import { prioritizeRBTUserID, insertMention } from "@/utils/chat/index";
+import { useGroupStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__";

@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { getFileType, bytesToSize, fileToBase64 } from "@/utils/chat/index";
+import { getFileType, bytesToSize, fileToBase64, insertMention } from "@/utils/chat/index";
 import { isMobile } from "@/utils/common";
 import { Editor } from "@wangeditor/editor-for-vue";
 import { debounce, isEmpty } from "lodash-es";
@@ -62,7 +62,6 @@ import {
   handleEditorKeyDown,
   handleToggleLanguage,
   sendChatMessage,
-  insertMention,
 } from "../utils/utils";
 import { isTextFile, createMediaElement } from "./utils";
 import { getOperatingSystem } from "@/utils/common";

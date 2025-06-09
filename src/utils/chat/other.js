@@ -167,3 +167,17 @@ export const renderFileIcon = (fileType = "") => {
   // 返回图标路径
   return new URL(`../../assets/message/${type}.png`, import.meta.url).href;
 };
+
+export const chatName = (item) => {
+  if (!item) return ""
+  switch (item.type) {
+    case "C2C":
+      return item?.userProfile?.nick || item?.userProfile?.userID || 'C2C';
+    case "GROUP":
+      return item?.groupProfile?.name || "GROUP";
+    case "@TIM#SYSTEM":
+      return "系统通知";
+    default:
+      return "";
+  }
+};

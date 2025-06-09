@@ -54,7 +54,7 @@ import { downloadMergerMessage } from "@/service/im-sdk-api/index";
 import { useState } from "@/utils/hooks/index";
 import { timeFormat } from "@/utils/timeFormat";
 import { ref } from "vue";
-import { circleUrl } from "../utils/menu";
+import { circleUrl } from "@/utils/chat/index";
 import { loadMsgModule, msgOne, msgType } from "../utils/utils";
 import { TIM_PROXY } from "@/constants/index";
 import { getAiAvatarUrl } from "@/ai/utils";

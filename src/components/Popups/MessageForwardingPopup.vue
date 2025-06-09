@@ -35,8 +35,7 @@
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useChatStore } from "@/stores/index";
-import { chatName } from "../utils/utils";
-import { squareUrl } from "../utils/menu";
+import { squareUrl, chatName } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
 
 const emit = defineEmits(["confirm"]);

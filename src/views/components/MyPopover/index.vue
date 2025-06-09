@@ -56,12 +56,11 @@
 
 <script setup>
 import { getUserProfile } from "@/service/im-sdk-api/index";
-import { isRobot } from "@/utils/chat/index";
+import { isRobot, squareUrl } from "@/utils/chat/index";
 import { useState } from "@/utils/hooks/index";
 import { onClickOutside } from "@vueuse/core";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { getAiAvatarUrl } from "@/ai/utils";
-import { squareUrl } from "../../chatStudio/utils/menu";
 import { getGender } from "@/utils/common";
 import { getValueByKey, prefix } from "@/ai/utils";
 import { useChatStore } from "@/stores/index";

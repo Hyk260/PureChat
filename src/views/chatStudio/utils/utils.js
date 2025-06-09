@@ -136,41 +136,6 @@ export const groupSystemNotice = (message) => {
   }
 };
 
-export const insertMention = (options) => {
-  const {
-    id,
-    name,
-    backward = true,
-    deleteDigit = 0,
-    editor = null,
-  } = options
-
-  if (!editor) {
-    console.warn("editor is null")
-    return
-  }
-
-  const mentionNode = {
-    type: "mention",
-    value: `${name} `,
-    info: { id },
-    children: [{ text: "" }],
-  };
-  // 恢复选区
-  editor?.restoreSelection();
-  if (deleteDigit) {
-    for (let i = 0; i < deleteDigit; i++) {
-      editor.deleteBackward("character");
-    }
-  }
-  // 删除 '@'
-  if (backward) editor.deleteBackward("character");
-  // 插入 mention
-  editor.insertNode(mentionNode);
-  // 移动光标
-  editor.move(1);
-};
-
 // 动态class
 export const msgType = (elem_type) => {
   let resp = "";
@@ -289,20 +254,6 @@ export const customAlert = (s, t) => {
     default:
       console.log("default");
       break;
-  }
-};
-
-export const chatName = (item) => {
-  if (!item) return ""
-  switch (item.type) {
-    case "C2C":
-      return item?.userProfile?.nick || item?.userProfile?.userID || 'C2C';
-    case "GROUP":
-      return item?.groupProfile?.name || "GROUP";
-    case "@TIM#SYSTEM":
-      return "系统通知";
-    default:
-      return "";
   }
 };
 
@@ -522,13 +473,14 @@ export const handleToggleLanguage = () => {
 };
 
 export const handleEditorKeyDown = async (show) => {
+  if (!show) return
   await nextTick();
   // 解决@好友上键切换光标移动问题
   const container = document.querySelector(".w-e-text-container");
   if (!container) return;
   container.onkeydown = (e) => {
     // 键盘上下键
-    if (show && [38, 40].includes(e.keyCode)) {
+    if ([38, 40].includes(e.keyCode)) {
       return false;
     }
   };

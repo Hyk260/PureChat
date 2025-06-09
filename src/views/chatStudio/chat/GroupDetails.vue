@@ -136,7 +136,7 @@ import { showConfirmationBox } from "@/utils/message";
 import { isFullStaffGroup } from "@/ai/utils";
 import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index";
 import { useGroupStore, useAppStore, useUserStore, useChatStore } from "@/stores/index";
-import AddMemberPopup from "../components/AddMemberPopup.vue";
+import AddMemberPopup from "@/components/Popups/AddMemberPopup.vue";
 import emitter from "@/utils/mitt-bus";
 
 const { groupProfile } = defineProps({

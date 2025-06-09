@@ -26,8 +26,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useState } from "@/utils/hooks/index";
-import { squareUrl } from "../utils/menu";
-import { chatName } from "../utils/utils";
+import { chatName, squareUrl } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { useChatStore } from "@/stores/index";
 

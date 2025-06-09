@@ -16,10 +16,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useChatStore } from "@/stores/index";
+import { ref, computed } from "vue";
+import { useChatStore, useUserStore } from "@/stores/index";
 import { createForwardMessage, createMergerMessage, sendMessage } from "@/service/im-sdk-api/index";
-import MessageForwardingPopup from "./MessageForwardingPopup.vue";
+import MessageForwardingPopup from "@/components/Popups/MessageForwardingPopup.vue";
 import ShareModal from "@/views/components/ShareModal/index.vue";
 import emitter from "@/utils/mitt-bus";
 
@@ -53,9 +53,11 @@ const buttonList = [
 ].filter((item) => !item.hide);
 
 const chatStore = useChatStore();
+const userStore = useUserStore();
 const wardingRef = ref(null);
 const multipleValue = ref(null);
 
+const { currentSessionId, isGroupChat, currentConversation } = storeToRefs(chatStore);
 const isForwardDataEmpty = computed(() => chatStore.forwardData.size === 0);
 
 const onClock = (item) => {
@@ -99,7 +101,7 @@ const onClose = () => {
 const deleteMsg = async () => {
   const data = chatStore.getSortedForwardData;
   chatStore.deleteMessage({
-    sessionId: chatStore.currentConversation.conversationID,
+    sessionId: currentSessionId.value,
     messageIdArray: [...data.map((item) => item.ID)],
     message: data,
   });
@@ -125,9 +127,9 @@ const transformData = (data) => {
 };
 
 const mergeTitle = () => {
-  const { type, userProfile } = chatStore.currentConversation || {};
-  const self = userProfile.value.nick || userProfile.value.userID;
-  return type === "GROUP" ? "群聊" : `${userProfile?.nick}和${self}的聊天记录`;
+  const otherProfile = currentConversation.value.userProfile || {};
+  const self = userStore.userProfile.nick || userStore.userProfile.userID;
+  return isGroupChat.value ? "群聊" : `${otherProfile?.nick}和${self}的聊天记录`;
 };
 
 // 合并转发
