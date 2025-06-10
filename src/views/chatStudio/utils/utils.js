@@ -366,43 +366,6 @@ export function filterMentionList({ str, list }) {
   return searchByPinyin({ searchStr, list });
 }
 
-/**
- * 根据图片的宽度和高度计算展示图片的样式
- * @param {number} width - 图片宽度
- * @param {number} height - 图片高度
- * @returns {Object} - 包含展示图片的宽度和高度的样式对象
- */
-export const showIMPic = (width = 0, height = 0) => {
-  // 确保高度不小于40px
-  const minHeight = 40;
-  // 限制高度不超过360px
-  const maxHeight = 360;
-
-  // 计算宽度和高度的逻辑
-  let computedWidth;
-  let computedHeight;
-
-  if (width >= 140) {
-    computedWidth = 140;
-    computedHeight = Math.max(Math.round((140 / width) * height), minHeight);
-  } else if (width <= 35) {
-    computedWidth = 45;
-    computedHeight = Math.max(Math.round((45 / width) * height), minHeight);
-  } else {
-    computedWidth = width;
-    computedHeight = Math.max(height, minHeight);
-  }
-
-  computedHeight = Math.min(computedHeight, maxHeight);
-
-  const imageStyle = {
-    width: `${computedWidth}px`,
-    height: `${computedHeight}px`,
-  };
-
-  return imageStyle;
-};
-
 export const handleToggleLanguage = () => {
   const placeholder = document.querySelector(".w-e-text-placeholder");
   if (placeholder) placeholder.innerHTML = placeholderMap.value["input"];

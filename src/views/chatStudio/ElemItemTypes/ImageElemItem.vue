@@ -19,7 +19,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { showIMPic } from "../utils/utils";
+import { showIMPic } from "@/utils/chat/index";
 import { useChatStore } from "@/stores/index";
 import { getImageSize } from "@/utils/common";
 
