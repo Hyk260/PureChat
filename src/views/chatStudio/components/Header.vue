@@ -103,6 +103,7 @@ const openUser = () => {};
 <style lang="scss" scoped>
 .message-info-view-header {
   height: 60px;
+  min-height: 60px;
   padding: 0 16px;
   width: 100%;
   position: relative;

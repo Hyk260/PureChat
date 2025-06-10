@@ -1,10 +1,9 @@
 <template>
-  <div class="image-preview" @click="geiPic(url)">
+  <div class="image-preview" @click="handleImageClick(url)">
     <el-image
       :src="url"
-      @load="loadImg"
       :style="imgStyle"
-      :preview-src-list="chatStore.showCheckbox ? null : chatStore.imgUrlList"
+      :preview-src-list="chatStore.imgUrlList"
       :hide-on-click-modal="true"
       :initial-index="initialIndex"
       :infinite="false"
@@ -19,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { showIMPic } from "../utils/utils";
 import { useChatStore } from "@/stores/index";
 import { getImageSize } from "@/utils/common";
@@ -27,7 +26,7 @@ import { getImageSize } from "@/utils/common";
 const props = defineProps({
   message: {
     type: Object,
-    default: null,
+    required: true,
   },
   self: {
     type: Boolean,
@@ -39,50 +38,50 @@ const imgStyle = ref({});
 const chatStore = useChatStore();
 
 const initialIndex = computed(() => {
-  return chatStore.imgUrlList.findIndex((item) => {
-    return item == getImageProperties(0)?.url;
-  });
+  const currentUrl = getImageProperties(0)?.url;
+  return chatStore.imgUrlList.findIndex(item => item === currentUrl);
 });
 
 function getImageProperties(num = 0) {
   try {
-    const {
-      payload: { imageInfoArray },
-    } = props.message;
-    const imageInfo = imageInfoArray[num];
-    return imageInfo;
+    const { payload: { imageInfoArray } } = props.message;
+    return imageInfoArray[num] || null;
   } catch (error) {
+    console.error('Failed to get image properties:', error);
     return null;
   }
 }
 
-const url = getImageProperties()?.url;
+const url = computed(() => getImageProperties(0)?.url);
 
 async function initImageSize() {
   try {
-    let width = getImageProperties()?.width || 0;
-    let height = getImageProperties()?.height || 0;
+    const imageInfo = getImageProperties(0);
+    let width = imageInfo?.width || 0;
+    let height = imageInfo?.height || 0;
+
     if (width <= 0 || height <= 0) {
-      const { width: newWidth, height: newHeight } = await getImageSize(url);
+      const { width: newWidth, height: newHeight } = await getImageSize(url.value);
       width = newWidth;
       height = newHeight;
     }
+
     const { width: finalWidth, height: finalHeight } = showIMPic(width, height);
     imgStyle.value = { width: finalWidth, height: finalHeight };
   } catch (error) {
-    const { width, height } = await getImageSize(url);
-    imgStyle.value = { width: width + "px", height: height + "px" };
+    console.error('Failed to initialize image size:', error);
+    // Set default size if calculation fails
+    imgStyle.value = { width: '142px', height: '82px' };
   }
 }
 
-initImageSize();
-
-const geiPic = (url) => {
-  console.log("pic:", url);
-  // console.log("initialIndex:", initialIndex.value);
-  // console.log("imgUrlList:", chatStore.imgUrlList);
+const handleImageClick = (url) => {
+  console.log('Image clicked:', url);
 };
-const loadImg = (e) => {};
+
+onMounted(() => {
+  initImageSize();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -93,10 +92,13 @@ const loadImg = (e) => {};
   box-sizing: border-box;
   border-radius: 5px;
   border: 1px solid var(--color-border-default);
+  overflow: hidden;
+
   :deep(.el-image) {
     border-radius: 5px;
-    vertical-align: bottom;
+    // vertical-align: bottom;
     min-height: 82px;
+    display: block;
   }
 }
 </style>

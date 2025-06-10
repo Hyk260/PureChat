@@ -98,7 +98,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const filteredMessages = this.currentMessageList.filter(
         (item) => item.type === "TIMImageElem" && !item.isRevoked && !item.isDeleted
       );
-      const reversedUrls = filteredMessages.reduceRight((urls, data) => {
+      const reversedUrls = filteredMessages.reduce((urls, data) => {
         const url = data.payload.imageInfoArray[0].url;
         urls.push(url);
         return urls;

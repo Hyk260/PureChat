@@ -24,22 +24,22 @@
         <SvgIcon local-icon="iconwenjianjia" />
       </el-button>
     </el-tooltip>
-    <!-- 附件 -->
-    <el-tooltip v-if="isElectron" :content="$t('chat.upload_document')" placement="top">
-      <el-button v-show="isAssistant" @click="sendAnnexClick">
-        <SvgIcon local-icon="paperClip" />
-      </el-button>
-    </el-tooltip>
     <!-- 截图 -->
     <el-tooltip v-if="isElectron" :content="$t('chat.screenshot')" placement="top">
       <el-button v-show="!isAssistant" @click="clickCscreenshot">
         <SvgIcon local-icon="iconjietu" />
       </el-button>
     </el-tooltip>
-    <!-- 机器人配置 -->
+    <!-- 模型配置 -->
     <el-tooltip :content="$t('chat.configuration')" placement="top">
       <el-button v-show="isAssistant" @click="openRobotBox">
         <SvgIcon local-icon="robot" />
+      </el-button>
+    </el-tooltip>
+    <!-- 附件 -->
+    <el-tooltip v-if="isElectron" :content="$t('chat.upload_document')" placement="top">
+      <el-button v-show="isAssistant" @click="sendAnnexClick">
+        <SvgIcon local-icon="paperClip" />
       </el-button>
     </el-tooltip>
     <!-- 联网 -->
@@ -121,7 +121,7 @@ import { createFileInput } from "@/utils/common";
 import { storeToRefs } from "pinia";
 import { useState } from "@/utils/hooks/index";
 import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores/index";
-import { imageExts, textExts, documentExts, audioExts, videoExts } from '@shared/config/constant'
+import { imageExts, textExts, documentExts, audioExts, videoExts } from "@shared/config/constant";
 import WebSearchService from "@/ai/webSearchService";
 import EmojiPicker from "./EmojiPicker.vue";
 import RobotOptions from "./RobotOptions.vue";
@@ -133,7 +133,7 @@ defineOptions({
   name: "Inputbar",
 });
 
-const isElectron = __IS_ELECTRON__
+const isElectron = __IS_ELECTRON__;
 const popoverRef = ref(null);
 
 const supportExts = [
