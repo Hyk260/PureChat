@@ -35,7 +35,7 @@
               />
               <div v-if="showAvatar(item)" class="picture">
                 <div
-                  v-if="isSelf(item) && isLocal && userStore.userLocalStore.native"
+                  v-if="isSelf(item) && IS_LOCAL_MODE && userStore.userLocalStore.native"
                   class="native"
                 >
                   {{ userStore.userLocalStore.native }}
@@ -153,7 +153,6 @@ import MyPopover from "@/views/components/MyPopover/index.vue";
 import MessageEditingBox from "../components/MessageEditingBox.vue";
 import AssistantMessage from "../components/AssistantMessage.vue";
 
-const isLocal = __LOCAL_MODE__;
 const timeout = ref(false);
 const isRight = ref(true);
 const contextMenuItems = ref([]);

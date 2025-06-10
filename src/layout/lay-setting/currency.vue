@@ -34,7 +34,7 @@
       </div>
       <el-switch v-model="timeline" />
     </li>
-    <li v-if="!isLocalMode">
+    <li v-if="!IS_LOCAL_MODE">
       <el-button @click="logout" type="primary">
         {{ $t("login.logout") }}
       </el-button>
@@ -46,7 +46,6 @@
 import { languages, options } from "./enums";
 import { useUserStore, useThemeStore, useChatStore } from "@/stores/index";
 
-const isLocalMode = __LOCAL_MODE__;
 const { DEV: isDev } = import.meta.env;
 
 const userStore = useUserStore();

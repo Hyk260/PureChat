@@ -66,7 +66,6 @@ const robotStore = useRobotStore();
 const toolsStore = useToolsStore();
 
 const { isAssistant, isGroupChat, currentType, currentConversation } = storeToRefs(chatStore);
-
 const { getPromptTitle, isShowBotTools, isShowPromptTitle } = storeToRefs(robotStore);
 
 const chatType = (type) => {

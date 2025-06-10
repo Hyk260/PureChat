@@ -6,9 +6,15 @@ import { setupIconifyOffline } from "./iconify";
 
 import "./assets";
 
+function useGlobalProperties(app) {
+  app.config.globalProperties.IS_ELECTRON = __IS_ELECTRON__
+  app.config.globalProperties.IS_LOCAL_MODE = __LOCAL_MODE__
+}
+
 export function setupPlugins(app) {
   app.use(useElIcons);
   app.use(useElementPlus);
+  app.use(useGlobalProperties)
   setupIconifyOffline();
   // setupNProgress()
   setupAppVersionNotification();

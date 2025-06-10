@@ -50,8 +50,6 @@ import Header from "./components/Header.vue";
 import ReplyBox from "./components/ReplyBox.vue";
 import Search from "./components/Search.vue";
 
-const isLocalMode = __LOCAL_MODE__;
-
 const chatRef = ref(null);
 const appStore = useAppStore();
 const chatStore = useChatStore();

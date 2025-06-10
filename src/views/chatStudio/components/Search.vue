@@ -10,7 +10,7 @@
         clearable
       >
       </el-input>
-      <div v-if="!isLocalMode" class="header-search-add flex-c" @click="openDialog">
+      <div v-if="!IS_LOCAL_MODE" class="header-search-add flex-c" @click="openDialog">
         <FontIcon iconName="Plus" />
       </div>
     </div>
@@ -29,7 +29,6 @@ defineOptions({
   name: "Search",
 });
 
-const isLocalMode = __LOCAL_MODE__;
 const input = ref("");
 const chatStore = useChatStore();
 const groupStore = useGroupStore();

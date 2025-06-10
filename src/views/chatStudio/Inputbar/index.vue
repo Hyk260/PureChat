@@ -25,7 +25,7 @@
       </el-button>
     </el-tooltip>
     <!-- 截图 -->
-    <el-tooltip v-if="isElectron" :content="$t('chat.screenshot')" placement="top">
+    <el-tooltip v-if="IS_ELECTRON" :content="$t('chat.screenshot')" placement="top">
       <el-button v-show="!isAssistant" @click="clickCscreenshot">
         <SvgIcon local-icon="iconjietu" />
       </el-button>
@@ -37,7 +37,7 @@
       </el-button>
     </el-tooltip>
     <!-- 附件 -->
-    <el-tooltip v-if="isElectron" :content="$t('chat.upload_document')" placement="top">
+    <el-tooltip v-if="IS_ELECTRON" :content="$t('chat.upload_document')" placement="top">
       <el-button v-show="isAssistant" @click="sendAnnexClick">
         <SvgIcon local-icon="paperClip" />
       </el-button>
@@ -133,7 +133,6 @@ defineOptions({
   name: "Inputbar",
 });
 
-const isElectron = __IS_ELECTRON__;
 const popoverRef = ref(null);
 
 const supportExts = [
