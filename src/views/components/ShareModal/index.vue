@@ -121,7 +121,7 @@ import {
   imageTypeOptions,
   VITE_APP_NAME,
 } from "@/utils/hooks/useScreenshot";
-import { loadMsgModule, msgOne, msgType, isSelf } from "@/views/chatStudio/utils/utils";
+import { loadMsgModule, msgOne, msgType, isSelf } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { getBackgroundStyle, onColor, back, backgColor } from "./utils";
 import { useChatStore, useRobotStore } from "@/stores/index";

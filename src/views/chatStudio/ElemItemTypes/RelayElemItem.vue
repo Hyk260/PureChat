@@ -1,78 +1,94 @@
 <template>
-  <div class="merge" @click="onClick">
-    <div class="preview">
-      <div class="preview-title">
-        <span class="truncate" :title="message.payload.title"> {{ message.payload.title }}</span>
+  <div class="relay-message" @click="handleClick">
+    <div class="relay-preview">
+      <div class="relay-title">
+        <span class="title-text truncate" :title="message.payload.title">
+          {{ message.payload.title }}
+        </span>
       </div>
-      <div class="preview-item" v-for="item in abstractList" :key="item">
-        <div class="truncate">{{ item }}</div>
+      <div class="relay-abstract-list">
+        <div v-for="item in abstractList" :key="item" class="abstract-item truncate">
+          {{ item }}
+        </div>
       </div>
     </div>
-    <div class="footer" v-show="num">{{ `查看${num}条转发消息` }}</div>
+    <div class="relay-footer" v-show="messageCount">
+      {{ `查看${messageCount}条转发消息` }}
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from "vue";
-import { useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
 defineOptions({
-  name: "RelayElemItem"
+  name: "RelayElemItem",
 });
 
 const { message } = defineProps({
   message: {
     type: Object,
-    default: null,
+    required: true,
+    default: () => ({}),
   },
 });
-const chatStore = useChatStore();
 
-const num = computed(() => {
+const messageCount = computed(() => {
   return message.payload.messageList?.length || message.payload.abstractList?.length;
 });
 
 const abstractList = computed(() => {
-  return message.payload.abstractList?.slice(0, 3) || [];
+  return message.payload.abstractList?.slice(0, 2) || [];
 });
 
-function onClick() {
-  if (chatStore.showCheckbox) return;
+function handleClick() {
   emitter.emit("openMergePopup", message);
 }
 </script>
 
 <style lang="scss" scoped>
-.merge {
-  font-size: 12px;
+.relay-message {
   width: 232px;
+  font-size: 12px;
   border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.12);
   background-color: #ffffff;
   cursor: pointer;
-}
-.preview {
-  max-height: 105px;
-  .preview-title {
-    font-size: 16px;
-    height: 40px;
-    padding: 12px 12px 0 12px;
-    color: rgba(0, 0, 0, 0.85);
-    span {
-      width: 100%;
-      display: inline-block;
-    }
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
   }
-  .preview-item {
-    box-sizing: border-box;
-    color: rgba(0, 0, 0, 0.65);
-    font-size: 14px;
+}
+
+.relay-preview {
+  max-height: 105px;
+}
+
+.relay-title {
+  height: 35px;
+  padding: 12px 12px 0;
+
+  .title-text {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.85);
+    width: 100%;
+    display: inline-block;
+  }
+}
+
+.relay-abstract-list {
+  .abstract-item {
     height: 20px;
     padding: 0 12px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.65);
+    box-sizing: border-box;
   }
 }
-.footer {
+
+.relay-footer {
   height: 30px;
   line-height: 30px;
   padding-left: 12px;

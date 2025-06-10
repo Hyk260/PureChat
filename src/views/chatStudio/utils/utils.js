@@ -16,16 +16,6 @@ import { cloneDeep } from "lodash-es";
 import { placeholderMap } from "./configure";
 import emitter from "@/utils/mitt-bus";
 
-import CustomElemItem from "../ElemItemTypes/CustomElemItem.vue";
-import FileElemItem from "../ElemItemTypes/FileElemItem.vue";
-import GroupSystemNoticeElem from "../ElemItemTypes/GroupSystemNoticeElem.vue";
-import ImageElemItem from "../ElemItemTypes/ImageElemItem.vue";
-import RelayElemItem from "../ElemItemTypes/RelayElemItem.vue";
-import TextElemItem from "../ElemItemTypes/TextElemItem.vue";
-import TipsElemItem from "../ElemItemTypes/TipsElemItem.vue";
-import VideoElemItem from "../ElemItemTypes/VideoElemItem.vue";
-import GroupTipElement from "../ElemItemTypes/GroupTipElement.vue";
-
 export const dragControllerDivHorizontal = () => {
   let dragElement = document.querySelectorAll(".sidebar-drag")[0]; // 滑块
   let leftBox = document.querySelectorAll(".message-left")[0]; // 左边盒子
@@ -134,60 +124,6 @@ export const groupSystemNotice = (message) => {
     default:
       return "待开发";
   }
-};
-
-// 动态class
-export const msgType = (elem_type) => {
-  let resp = "";
-  switch (elem_type) {
-    case "TIMTextElem":
-      resp = "message-view__text"; // 文本
-      break;
-    case "TIMGroupTipElem":
-      resp = "message-view-tips-elem"; // 群消息提示
-      break;
-    case "TIMImageElem":
-      resp = "message-view__img"; // 图片消息
-      break;
-    case "TIMFileElem":
-      resp = "message-view__file"; // 文件消息
-      break;
-    case "TIMGroupSystemNoticeElem":
-      resp = "message-view__system"; // 系统通知
-      break;
-    case "TIMCustomElem":
-      resp = "message-view__text message-view__custom"; // 自定义消息
-      break;
-    default:
-      resp = "";
-      break;
-  }
-  return resp;
-};
-
-export const msgOne = (item) => {
-  const { isRevoked, type, payload } = item;
-  if (isRevoked || type === "TIMGroupTipElem") {
-    return "message-view-tips-elem";
-  } else {
-    return "message-view-item-index";
-  }
-};
-// 动态组件
-export const loadMsgModule = (item) => {
-  const { type, isRevoked, payload } = item;
-  const messageComponentMap = {
-    TIMTextElem: TextElemItem, //文本消息
-    TIMRelayElem: RelayElemItem, // 合并转发消息
-    TIMImageElem: ImageElemItem, // 图片消息
-    TIMFileElem: FileElemItem, // 文件消息
-    TIMVideoFileElem: VideoElemItem, // 视频消息
-    TIMCustomElem: CustomElemItem, // 自定义消息
-    TIMGroupTipElem: GroupTipElement, // 群消息提示
-    TIMGroupSystemNoticeElem: GroupSystemNoticeElem, // 系统通知
-  };
-  if (isRevoked) return TipsElemItem;
-  return messageComponentMap[type] || null;
 };
 
 /**
@@ -486,12 +422,7 @@ export const handleEditorKeyDown = async (show) => {
   };
 };
 
-export const isSelf = (item) => {
-  return item.from === localStg.get(TIM_PROXY)?.userProfile?.userID;
-};
-
 export const formatContent = (data) => {
-  // console.log("formatContent:", data);
   return data
     .filter((item) => item.type === "paragraph")
     .map(({ children }) => {

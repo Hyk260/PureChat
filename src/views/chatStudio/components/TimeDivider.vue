@@ -6,7 +6,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { isSelf } from "../utils/utils";
+import { isSelf } from "@/utils/chat/index";
 import { formatTimestamp } from "@/utils/timeFormat";
 import { useChatStore } from "@/stores/index";
 

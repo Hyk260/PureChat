@@ -34,7 +34,10 @@
                 @click.stop="handleSelect($event, item, 'initial')"
               />
               <div v-if="showAvatar(item)" class="picture">
-                <div v-if="isSelf(item) && isLocal && userStore.userLocalStore.native" class="native">
+                <div
+                  v-if="isSelf(item) && isLocal && userStore.userLocalStore.native"
+                  class="native"
+                >
                   {{ userStore.userLocalStore.native }}
                 </div>
                 <el-avatar
@@ -124,14 +127,7 @@ import { storeToRefs } from "pinia";
 import { useUserStore, useGroupStore, useAppStore, useChatStore } from "@/stores/index";
 import { showConfirmationBox } from "@/utils/message";
 import { avatarMenu, menuOptionsList } from "../utils/menu";
-import {
-  handleCopyMsg,
-  loadMsgModule,
-  msgOne,
-  msgType,
-  validateLastMessage,
-  isSelf,
-} from "../utils/utils";
+import { handleCopyMsg, validateLastMessage } from "../utils/utils";
 import { useEventListener } from "@vueuse/core";
 import {
   setMessageRead,
@@ -140,7 +136,7 @@ import {
   translateText,
 } from "@/service/im-sdk-api/index";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
-import { download } from "@/utils/chat/index";
+import { download, loadMsgModule, msgType, msgOne, isSelf, isTime } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { getTime } from "@/utils/common";
 import { debounce } from "lodash-es";
@@ -157,7 +153,7 @@ import MyPopover from "@/views/components/MyPopover/index.vue";
 import MessageEditingBox from "../components/MessageEditingBox.vue";
 import AssistantMessage from "../components/AssistantMessage.vue";
 
-const isLocal = __LOCAL_MODE__
+const isLocal = __LOCAL_MODE__;
 const timeout = ref(false);
 const isRight = ref(true);
 const contextMenuItems = ref([]);
@@ -200,7 +196,7 @@ const updateLoadMore = (id) => {
 
 const fnAvatar = (item) => {
   if (isSelf(item) && __LOCAL_MODE__) {
-    return userStore.getUserAvatar
+    return userStore.getUserAvatar;
   } else {
     return item.avatar || getAiAvatarUrl(item.from);
   }
@@ -258,10 +254,6 @@ const handleSelect = (e, item, type = "initial") => {
     let key = el.checked ? "set" : "del";
     chatStore.setForwardData({ type: key, payload: item });
   }
-};
-
-const isTime = (item) => {
-  return item?.isTimeDivider && item.time !== undefined;
 };
 
 const onClickAvatar = (e, item) => {

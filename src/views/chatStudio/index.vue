@@ -12,7 +12,7 @@
 
 <script setup>
 import { useChatStore } from "@/stores/index";
-import MergeMessagePopup from "./components/MergeMessagePopup.vue";
+import MergeMessagePopup from "@/components/Popups/MergeMessagePopup.vue";
 import ImageViewer from "../components/ImageViewer/index.vue";
 import GroupDetails from "./chat/GroupDetails.vue";
 import Message from "./message.vue";

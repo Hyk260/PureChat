@@ -129,10 +129,9 @@ const transformData = (data) => {
 const mergeTitle = () => {
   const otherProfile = currentConversation.value.userProfile || {};
   const self = userStore.userProfile.nick || userStore.userProfile.userID;
-  return isGroupChat.value ? "群聊" : `${otherProfile?.nick}和${self}的聊天记录`;
+  return isGroupChat.value ? "群聊的聊天记录" : `${otherProfile?.nick}和${self}的聊天记录`;
 };
 
-// 合并转发
 const mergeForward = async () => {
   if (!multipleValue.value) return;
   const { toAccount, type } = multipleValue.value;
@@ -236,7 +235,6 @@ const setMultipleValue = (value = null) => {
   opacity: 0.25;
   pointer-events: none;
 }
-
 .text {
   user-select: none;
   margin-top: 8px;
