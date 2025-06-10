@@ -149,7 +149,7 @@ import NameComponent from "../components/NameComponent.vue";
 import TimeDivider from "../components/TimeDivider.vue";
 import Stateful from "../components/Stateful.vue";
 import MenuList from "../components/MenuList.vue";
-import MyPopover from "@/views/components/MyPopover/index.vue";
+import MyPopover from "@/components/MyPopover/index.vue";
 import MessageEditingBox from "../components/MessageEditingBox.vue";
 import AssistantMessage from "../components/AssistantMessage.vue";
 

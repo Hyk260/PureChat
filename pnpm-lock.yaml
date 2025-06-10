@@ -105,8 +105,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.1
       modern-screenshot:
-        specifier: ^4.4.39
-        version: 4.4.39
+        specifier: ^4.6.0
+        version: 4.6.2
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
@@ -114,8 +114,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
       ollama:
-        specifier: ^0.5.6
-        version: 0.5.6
+        specifier: ^0.5.15
+        version: 0.5.16
       pinia:
         specifier: ^3.0.1
         version: 3.0.1(vue@3.5.13)
@@ -3034,8 +3034,8 @@ packages:
   mlly@1.7.4:
     resolution: {integrity: sha512-qmdSIPC4bDJXgZTCR7XosJiNKySV7O215tsPtDN9iEO/7q/76b/ijtgRu/+epFXSJhijtTCCGp3DWS549P3xKw==}
 
-  modern-screenshot@4.4.39:
-    resolution: {integrity: sha512-p+I4yLZUDnoJMa5zoi+71nLQmoLQ6WRU4W8vZu1BZk2PlIYOz5mGnj9/7t2lGWKYeOr4zo6pajhY0/9TS5Zcdw==}
+  modern-screenshot@4.6.2:
+    resolution: {integrity: sha512-2SFElfjC5lvEdibUcZda9CvykCmp4ja0yrkjGq3LUZ+c3NZeA7d7Tq2LOWjBz3ipVGMICsFB/tI3LQrT7oUZMA==}
 
   mrmime@2.0.0:
     resolution: {integrity: sha512-eu38+hdgojoyq63s+yTpN4XMBdt5l8HhMhc4VKLO9KM5caLIBvUm4thi7fFaxyTmCKeNnXZ5pAlBwCUnhA09uw==}
@@ -3144,8 +3144,8 @@ packages:
   ohash@2.0.11:
     resolution: {integrity: sha512-RdR9FQrFwNBNXAr4GixM8YaRZRJ5PUWbKYbE5eOsrwAjJW0q2REGcf79oYPsLyskQCZG1PLN+S/K1V00joZAoQ==}
 
-  ollama@0.5.6:
-    resolution: {integrity: sha512-4BySAMt96+OCt4emL6DE78UBCGqC7GvteM9LRCd6WwJyefn0x9w2BrcUcLm9nJ9bYpRsmkhf0Au18Q5MhsA14w==}
+  ollama@0.5.16:
+    resolution: {integrity: sha512-OEbxxOIUZtdZgOaTPAULo051F5y+Z1vosxEYOoABPnQKeW7i4O8tJNlxCB+xioyoorVqgjkdj+TA1f1Hy2ug/w==}
 
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
@@ -7239,7 +7239,7 @@ snapshots:
       pkg-types: 1.3.1
       ufo: 1.5.4
 
-  modern-screenshot@4.4.39: {}
+  modern-screenshot@4.6.2: {}
 
   mrmime@2.0.0: {}
 
@@ -7341,7 +7341,7 @@ snapshots:
 
   ohash@2.0.11: {}
 
-  ollama@0.5.6:
+  ollama@0.5.16:
     dependencies:
       whatwg-fetch: 3.6.20
 

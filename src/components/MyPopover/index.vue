@@ -55,11 +55,11 @@
 </template>
 
 <script setup>
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { getUserProfile } from "@/service/im-sdk-api/index";
 import { isRobot, squareUrl } from "@/utils/chat/index";
 import { useState } from "@/utils/hooks/index";
 import { onClickOutside } from "@vueuse/core";
-import { onBeforeUnmount, onMounted, ref } from "vue";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { getGender } from "@/utils/common";
 import { getValueByKey, prefix } from "@/ai/utils";

@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "vscode.theme-defaults",
     "bradlc.vscode-tailwindcss",
     "DavidAnson.vscode-markdownlint",
     "aminer.codegeex",
