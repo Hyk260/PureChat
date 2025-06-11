@@ -109,3 +109,22 @@ export const showIMPic = (width = 0, height = 0) => {
 
   return imageStyle;
 };
+
+export const formatContent = (data) => {
+  return data
+    .filter((item) => item.type === "paragraph")
+    .map(({ children }) => {
+      return (
+        children
+          ?.map((t) => {
+            if (t.type === "image" && t?.alt && t?.class === "EmoticonPack") return t.alt;
+            if (t.type === "image") return "[图片]";
+            if (t.type === "attachment") return "[文件]";
+            if (t.type === "mention") return `@${t.value}`;
+            return t.text || ""; // 处理文本
+          })
+          .join("") || "" // 确保返回字符串
+      );
+    })
+    .join("");
+};

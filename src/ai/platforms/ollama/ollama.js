@@ -39,36 +39,39 @@ const StreamingResponse = (stream, options) => {
 };
 
 /**
- * OllamaStream 函数用于处理流式响应并进行转换。
- * @param {Response} res - 一个响应对象，通常是从服务器获取的流式响应。
- * @param {Function} cb - 一个回调函数，用于处理在流中产生的每个事件或数据块。
- * @returns {ReadableStream} 返回一个可读流，表示处理后的数据流。
+ * 转换Ollama流数据
+ * @param {Response} response - 响应对象
+ * @param {Function} callback - 回调函数
+ * @returns {ReadableStream} 处理后的可读流
  */
-const OllamaStream = (res, cb) => {
-  const streamStack = { id: "chat_" + nanoid() };
+const OllamaStream = (response, callback) => {
+  const streamStack = { id: `chat_${nanoid()}` };
 
-  return res
+  return response
     .pipeThrough(createSSEProtocolTransformer(transformOllamaStream, streamStack))
-    .pipeThrough(createCallbacksTransformer(cb));
+    .pipeThrough(createCallbacksTransformer(callback));
 };
 
 export default class OllamaAI {
   constructor() {
     this.payload = useAccessStore(ModelProvider.Ollama);
-    this.client = new Ollama({
+    this.client = this.createOllamaClient();
+  }
+
+  /**
+  * 创建Ollama客户端实例
+  * @returns {Ollama} Ollama客户端实例
+  */
+  createOllamaClient() {
+    return new Ollama({
       host: this.payload.openaiUrl || import.meta.env.VITE_OLLAMA_PROXY_URL,
       fetch: (input, init = {}) => {
+        const headers = new Headers(init.headers);
         const authToken = this.payload.apiKey || "TestToken";
 
-        const headers = new Headers(init.headers || {});
-        if (authToken) {
-          headers.set('Authorization', `Bearer ${authToken}`);
-        }
+        if (authToken) headers.set('Authorization', `Bearer ${authToken}`);
 
-        return fetch(input, {
-          ...init,
-          headers
-        });
+        return fetch(input, { ...init, headers });
       }
     });
   }
@@ -119,19 +122,24 @@ export default class OllamaAI {
         stream: true,
         // tools: payload.tools,
       });
-      const stream = convertIterableToStream(response);
-      const [prod, debug] = stream.tee();
 
-      // if (process.env.DEBUG_OLLAMA_CHAT_COMPLETION === '1') {
+      const [prodStream, debugStream] = convertIterableToStream(response).tee();
+
+      // if (DEBUG_OLLAMA_CHAT_COMPLETION === '1') {
       //   debugStream(debug).catch(console.error);
       // }
 
-      return StreamingResponse(OllamaStream(prod, options?.callback), {
-        headers: options?.headers
-      });
+      return StreamingResponse(
+        OllamaStream(prodStream, options?.callback),
+        { headers: options?.headers }
+      );
     } catch (e) {
       const Error = {
-        error: { message: e.message, name: e.name, status_code: e.status_code },
+        error: {
+          message: e.message,
+          name: e.name,
+          status_code: e.status_code
+        },
         errorType: "请求 Ollama 服务出错，请检查后重试",
         provider: ModelProvider.Ollama,
       };
@@ -140,8 +148,8 @@ export default class OllamaAI {
   }
 
   async models() {
-    const list = await this.client.list();
-    return list.models.map((model) => ({
+    const { models } = await this.client.list();
+    return models.map((model) => ({
       id: model.name,
       icon: getIcon(model.name),
     }));

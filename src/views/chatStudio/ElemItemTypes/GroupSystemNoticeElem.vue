@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { groupSystemNotice } from "../utils/utils";
+import { groupSystemNotice } from "@/utils/chat/index";
 
 const props = defineProps({
   message: {

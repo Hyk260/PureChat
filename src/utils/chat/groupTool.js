@@ -65,3 +65,41 @@ export function isByteLengthExceedingLimit(str, type) {
   console.log("byteLength:", byteLength, "type:", type, "modify:", GroupModifyType[type]);
   return byteLength > GroupModifyType[type];
 }
+
+export const groupSystemNotice = (message) => {
+  const groupName = message.payload.groupProfile.name || message.payload.groupProfile.groupID;
+  switch (message.payload.operationType) {
+    case 1:
+      return `${message.payload.operatorID} 申请加入群组：${groupName}`;
+    case 2:
+      return `成功加入群组：${groupName}`;
+    case 3:
+      return `申请加入群组：${groupName}被拒绝`;
+    case 4:
+      return `你被管理员${message.payload.operatorID}踢出群组：${groupName}`;
+    case 5:
+      // ${message.payload.operatorID}
+      return `群：${groupName} 已被管理员解散`;
+    case 6:
+      return `${message.payload.operatorID}创建群：${groupName}`;
+    case 7:
+      // ${message.payload.operatorID}
+      return `管理员邀请你加群：${groupName}`;
+    case 8:
+      return `你退出群组：${groupName}`;
+    case 9:
+      return `你被${message.payload.operatorID}设置为群：${groupName}的管理员`;
+    case 10:
+      return `你被${message.payload.operatorID}撤销群：${groupName}的管理员身份`;
+    case 12:
+      return `${message.payload.operatorID}邀请你加群：${groupName}`;
+    case 13:
+      return `${message.payload.operatorID}同意加群：${groupName}`;
+    case 14:
+      return `${message.payload.operatorID}拒接加群：${groupName}`;
+    case 255:
+      return "自定义群系统通知: " + message.payload.userDefinedField;
+    default:
+      return "待开发";
+  }
+};

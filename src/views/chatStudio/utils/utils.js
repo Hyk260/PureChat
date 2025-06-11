@@ -6,14 +6,10 @@ import {
   createVideoMessage,
 } from "@/service/im-sdk-api/index";
 import { useAppStore, useChatStore } from '@/stores/index';
-import { TIM_PROXY } from "@/constants/index";
-import { localStg } from "@/utils/storage";
 import { base64ToFile, getBlob, getFileType } from "@/utils/chat/index";
 import { useClipboard } from "@vueuse/core";
 import { match } from "pinyin-pro";
-import { nextTick } from "vue";
 import { cloneDeep } from "lodash-es";
-import { placeholderMap } from "./configure";
 import emitter from "@/utils/mitt-bus";
 
 export const dragControllerDivHorizontal = () => {
@@ -88,44 +84,6 @@ export const handleCopyMsg = async (data) => {
   }
 };
 
-export const groupSystemNotice = (message) => {
-  const groupName = message.payload.groupProfile.name || message.payload.groupProfile.groupID;
-  switch (message.payload.operationType) {
-    case 1:
-      return `${message.payload.operatorID} 申请加入群组：${groupName}`;
-    case 2:
-      return `成功加入群组：${groupName}`;
-    case 3:
-      return `申请加入群组：${groupName}被拒绝`;
-    case 4:
-      return `你被管理员${message.payload.operatorID}踢出群组：${groupName}`;
-    case 5:
-      // ${message.payload.operatorID}
-      return `群：${groupName} 已被管理员解散`;
-    case 6:
-      return `${message.payload.operatorID}创建群：${groupName}`;
-    case 7:
-      // ${message.payload.operatorID}
-      return `管理员邀请你加群：${groupName}`;
-    case 8:
-      return `你退出群组：${groupName}`;
-    case 9:
-      return `你被${message.payload.operatorID}设置为群：${groupName}的管理员`;
-    case 10:
-      return `你被${message.payload.operatorID}撤销群：${groupName}的管理员身份`;
-    case 12:
-      return `${message.payload.operatorID}邀请你加群：${groupName}`;
-    case 13:
-      return `${message.payload.operatorID}同意加群：${groupName}`;
-    case 14:
-      return `${message.payload.operatorID}拒接加群：${groupName}`;
-    case 255:
-      return "自定义群系统通知: " + message.payload.userDefinedField;
-    default:
-      return "待开发";
-  }
-};
-
 /**
  * 发送聊天消息
  */
@@ -172,26 +130,6 @@ export async function sendChatMessage(options) {
 
   return messages;
 }
-
-export const customAlert = (s, t) => {
-  switch (t) {
-    case "success":
-      console.log("success");
-      break;
-    case "info":
-      console.log("info");
-      break;
-    case "warning":
-      console.log("warning");
-      break;
-    case "error":
-      console.log("error");
-      break;
-    default:
-      console.log("default");
-      break;
-  }
-};
 
 /**
  * 将包含表情图像的 HTML 字符串转换为对应的表情符号文本
@@ -365,41 +303,3 @@ export function filterMentionList({ str, list }) {
   // 执行根据拼音搜索的操作
   return searchByPinyin({ searchStr, list });
 }
-
-export const handleToggleLanguage = () => {
-  const placeholder = document.querySelector(".w-e-text-placeholder");
-  if (placeholder) placeholder.innerHTML = placeholderMap.value["input"];
-};
-
-export const handleEditorKeyDown = async (show) => {
-  if (!show) return
-  await nextTick();
-  // 解决@好友上键切换光标移动问题
-  const container = document.querySelector(".w-e-text-container");
-  if (!container) return;
-  container.onkeydown = (e) => {
-    // 键盘上下键
-    if ([38, 40].includes(e.keyCode)) {
-      return false;
-    }
-  };
-};
-
-export const formatContent = (data) => {
-  return data
-    .filter((item) => item.type === "paragraph")
-    .map(({ children }) => {
-      return (
-        children
-          ?.map((t) => {
-            if (t.type === "image" && t?.alt && t?.class === "EmoticonPack") return t.alt;
-            if (t.type === "image") return "[图片]";
-            if (t.type === "attachment") return "[文件]";
-            if (t.type === "mention") return `@${t.value}`;
-            return t.text || ""; // 处理文本
-          })
-          .join("") || "" // 确保返回字符串
-      );
-    })
-    .join("");
-};

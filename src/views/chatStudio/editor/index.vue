@@ -52,18 +52,21 @@ import { editorConfig, placeholderMap } from "../utils/configure";
 import { useState } from "@/utils/hooks/index";
 import { useAppStore, useGroupStore, useChatStore } from "@/stores/index";
 import {
-  customAlert,
   extractAitInfo,
   extractEmojiInfo,
   extractFilesInfo,
   extractImageInfo,
   extractVideoInfo,
   filterMentionList,
-  handleEditorKeyDown,
-  handleToggleLanguage,
   sendChatMessage,
 } from "../utils/utils";
-import { isTextFile, createMediaElement } from "./utils";
+import {
+  isTextFile,
+  customAlert,
+  createMediaElement,
+  handleEditorKeyDown,
+  handleToggleLanguage,
+} from "./utils";
 import { getOperatingSystem } from "@/utils/common";
 import MentionModal from "../components/MentionModal.vue";
 import Inputbar from "../Inputbar/index.vue";
