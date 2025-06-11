@@ -36,7 +36,8 @@
               <div v-if="showAvatar(item)" class="picture">
                 <div
                   v-if="isSelf(item) && IS_LOCAL_MODE && userStore.userLocalStore.native"
-                  class="native"
+                  @click="onClickAvatar(null, item)"
+                  class="native cursor-pointer"
                 >
                   {{ userStore.userLocalStore.native }}
                 </div>
@@ -96,6 +97,7 @@
     </el-scrollbar>
     <!-- 卡片 -->
     <MyPopover />
+    <UserPopup ref="UserPopupRef" />
     <Contextmenu ref="contextmenu" :disabled="!isRight">
       <ContextmenuItem
         v-for="item in contextMenuItems"
@@ -149,10 +151,12 @@ import NameComponent from "../components/NameComponent.vue";
 import TimeDivider from "../components/TimeDivider.vue";
 import Stateful from "../components/Stateful.vue";
 import MenuList from "../components/MenuList.vue";
+import UserPopup from "@/components/Popups/UserPopup.vue";
 import MyPopover from "@/components/MyPopover/index.vue";
 import MessageEditingBox from "../components/MessageEditingBox.vue";
 import AssistantMessage from "../components/AssistantMessage.vue";
 
+const UserPopupRef = ref();
 const timeout = ref(false);
 const isRight = ref(true);
 const contextMenuItems = ref([]);
@@ -256,6 +260,10 @@ const handleSelect = (e, item, type = "initial") => {
 };
 
 const onClickAvatar = (e, item) => {
+  if (__LOCAL_MODE__ && isSelf(item)) {
+    UserPopupRef.value.show();
+    return;
+  }
   if (isSelf(item) || showCheckbox.value) return;
   const { conversationID: id } = item || {};
   if (id === "@TIM#SYSTEM") return;
