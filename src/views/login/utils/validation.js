@@ -109,11 +109,9 @@ export const updateRules = reactive({
       validator: (rule, value, callback) => {
         if (value === "") {
           callback(new Error($t("login.passwordReg")));
-        }
-        // else if (!REGEXP_PWD.test(value)) {
-        //   callback(new Error(t("login.passwordRuleReg")));
-        // }
-        else {
+        } else if (!REGEXP_PWD.test(value)) {
+          callback(new Error(t("login.passwordRuleReg")));
+        } else {
           callback();
         }
       },

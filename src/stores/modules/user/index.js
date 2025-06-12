@@ -17,6 +17,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
   state: () => ({
     lang: "zh-CN",
     verifyCode: "",
+    currentPage: 0,
     userProfile: {},
     userLocalStore: {
       native: "",
@@ -26,6 +27,9 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     },
   }),
   actions: {
+    setCurrentPage(page) {
+      this.currentPage = page
+    },
     setVerifyCode(val) {
       this.verifyCode = val
     },

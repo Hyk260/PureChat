@@ -7,14 +7,14 @@ export const operates = computed(() => {
     //   title:  $t('login.phoneLogin'),
     //   currentPage: 1,
     // },
-    {
-      title: $t("login.qRCodeLogin"),
-      currentPage: 2,
-    },
-    {
-      title: $t("login.register"),
-      currentPage: 3,
-    },
+    // {
+    //   title: $t("login.qRCodeLogin"),
+    //   currentPage: 2,
+    // },
+    // {
+    //   title: $t("login.register"),
+    //   currentPage: 3,
+    // },
   ];
 });
 

@@ -1,23 +1,28 @@
 <template>
-  <div class="flex justify-center">
-    <QrCode class="QrCode" />
+  <div>
+    <QrCode class="qr-code" />
   </div>
   <el-divider>
-    <p class="m-0">{{ $t("login.tip") }}</p>
+    <p>{{ $t("login.tip") }}</p>
   </el-divider>
-  <el-button class="w-full mt-4">
+  <el-button class="w-full" @click="onBack">
     {{ $t("login.back") }}
   </el-button>
 </template>
 
 <script setup>
+import { useUserStore } from "@/stores/index";
 
+const userStore = useUserStore();
+
+const onBack = () => {
+  userStore.setCurrentPage(0);
+};
 </script>
 
 <style lang="scss" scoped>
-.QrCode {
-  position: absolute;
-  // animation: anima_tada 1s linear;
+.qr-code {
+  animation: anima_tada 1s linear;
 }
 @keyframes anima_tada {
   0% {

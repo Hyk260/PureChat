@@ -64,8 +64,8 @@
     </el-button>
   </el-form>
   <!-- other hidden -->
-  <div class="mt-20 flex justify-between" hidden>
-    <el-button v-for="item in operates" :key="item.title" size="default" @click="onHandle(item)">
+  <div class="mt-20 flex justify-evenly">
+    <el-button v-for="item in operates" :key="item.title" size="default" @click="setCurrentPage(item)">
       {{ item.title }}
     </el-button>
   </div>
@@ -79,6 +79,7 @@
         v-for="(item, index) in thirdParty"
         :key="index"
         :title="item.title"
+        :class="loading ? 'pointer-events-none' : ''"
         @click="handleSocialLogin(item)"
       >
         <SvgIcon class="social-icon" :local-icon="item.icon" />
@@ -92,9 +93,10 @@ import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { getUserList } from "@/service/api/index";
 import { Lock, User } from "@element-plus/icons-vue";
 import { useOAuth } from "@/hooks/useOAuth";
+import { useState } from "@/utils/hooks/index";
 import { operates, thirdParty } from "../utils/enums";
 import { rules, defaultForm } from "../utils/validation";
-import { useUserStore } from "@/stores/modules/user/index";
+import { useUserStore } from "@/stores/index";
 import ImageVerify from "@/views/components/ImageVerify/index.vue";
 
 const { DEV: isDev } = import.meta.env;
@@ -102,20 +104,22 @@ const { DEV: isDev } = import.meta.env;
 const showVerifyCode = false;
 const verifyCode = ref("");
 const formRef = ref();
-const loading = ref(false);
 const form = ref({ ...defaultForm });
 const userSuggestions = ref([]);
 
 const userStore = useUserStore();
+const [loading, setLoading] = useState();
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const { oauthAuthorize } = useOAuth({
   onSuccess: (data) => {
     console.log("授权成功", data);
     userStore.handleSuccessfulAuth(data);
+    setLoading(true);
   },
   onError: (error) => {
     console.error("授权失败", error);
+    setLoading(false);
   },
 });
 
@@ -132,21 +136,24 @@ const handleSearch = (query, callback) => {
 
 const handleLogin = async () => {
   if (!formRef.value) return;
-  loading.value = true;
+  setLoading(true);
   try {
     if (isDev) await delay(1000);
     await formRef.value.validate();
     await userStore.handleUserLogin(form.value);
   } finally {
-    loading.value = false;
+    setLoading(false);
   }
 };
 
 const handleSocialLogin = async ({ icon }) => {
+  setLoading(true);
   if (icon === "github") oauthAuthorize();
 };
 
-const onHandle = (index) => {};
+const setCurrentPage = (item) => {
+  userStore.setCurrentPage(item.currentPage)
+};
 
 const handleKeyPress = ({ code }) => {
   if (code === "Enter") handleLogin(formRef.value);

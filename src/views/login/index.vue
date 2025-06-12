@@ -12,20 +12,25 @@
         </div>
       </header>
       <!-- 账号登陆 -->
-      <Account />
+      <Account v-if="currentPage === 0" />
       <!-- 二维码登录 -->
-      <!-- <QrCode /> -->
+      <LoginQrCode v-if="currentPage === 2" />
       <!-- 注册 -->
-      <!-- <Register /> -->
+      <LoginRegist v-if="currentPage === 3" />
     </div>
   </div>
 </template>
 
 <script setup>
-import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
+import { useUserStore } from "@/stores/index";
 import Account from "./components/Account.vue";
-// import QrCode from "./components/QrCode.vue";
-// import Register from "./components/Register.vue";
+import LoginQrCode from "./components/LoginQrCode.vue";
+import LoginRegist from "./components/LoginRegist.vue";
+import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
+
+const currentPage = computed(() => {
+  return useUserStore().currentPage;
+});
 
 const { VITE_APP_NAME } = import.meta.env;
 

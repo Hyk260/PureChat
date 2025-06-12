@@ -24,18 +24,22 @@
         :prefix-icon="Iphone"
       />
     </el-form-item>
-    <!-- <el-form-item prop="verifyCode">
-      <div class="w-full flex justify-between">
+    <el-form-item prop="verifyCode">
+      <div class="w-full flex">
         <el-input
           clearable
           v-model="ruleForm.verifyCode"
           :placeholder="$t('login.smsVerifyCode')"
         />
-        <el-button :disabled="isDisabled" class="ml-2">
-          {{ true ? $t("login.info") : $t("login.getVerifyCode") }}
+        <el-button
+          class="ml-5"
+          :disabled="isDisabled"
+          @click="useVerifyCode().start(ruleFormRef, 'phone')"
+        >
+          {{ text.length > 0 ? text + $t("login.info") : $t("login.getVerifyCode") }}
         </el-button>
       </div>
-    </el-form-item> -->
+    </el-form-item>
     <el-form-item prop="password">
       <el-input
         clearable
@@ -70,6 +74,9 @@
         :loading="loading"
         @click="onUpdate(ruleFormRef)"
       >
+        <template #loading>
+          <div class="iconify-icon svg-spinners mr-8"></div>
+        </template>
         {{ $t("login.definite") }}
       </el-button>
     </el-form-item>
@@ -83,22 +90,40 @@
 
 <script setup>
 import { ref } from "vue";
-import { ruleForm, updateRules } from "../utils/validation";
 import { Lock, User, Key, Iphone } from "@element-plus/icons-vue";
+import { useAppStore, useUserStore } from "@/stores/index";
+import { ruleForm, updateRules } from "../utils/validation";
+import { useVerifyCode } from "../utils/verifyCode";
 
 const checked = ref(false);
 const loading = ref(false);
 const ruleFormRef = ref();
 
-const onBack = () => {};
+const { isDisabled, text } = useVerifyCode();
+const userStore = useUserStore();
+const appStore = useAppStore();
+
+const onBack = () => {
+  useVerifyCode().end();
+  userStore.setCurrentPage(0);
+};
+
 const onUpdate = async (formEl) => {
   loading.value = true;
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
+      if (checked.value) {
+        setTimeout(() => {
+          loading.value = false;
+          appStore.showMessage({ message: "注册成功" });
+        }, 2000);
+      } else {
+        loading.value = false;
+        appStore.showMessage({ message: "请勾选隐私政策", type: "warning" });
+      }
     } else {
       loading.value = false;
-      return fields;
     }
   });
 };
