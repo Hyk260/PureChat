@@ -17,7 +17,6 @@ export const {
   VITE_GITHUB_ID, // github
   VITE_DEEPSEEK_ID, // deepseek
   VITE_MISTRAL_ID, // mistral
-  DEV: isDev,
 } = import.meta.env;
 
 export const ROLES = ["system", "user", "assistant"];

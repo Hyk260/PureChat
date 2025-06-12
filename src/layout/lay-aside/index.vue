@@ -46,10 +46,10 @@
 import { useRouter } from "vue-router";
 import { openWindow } from "@/utils/common";
 import { useChatStore, useSidebarStore } from "@/stores/index";
-import emitter from "@/utils/mitt-bus";
-import SidebarEditDialog from "@/views/components/MoreSidebar/index.vue";
+import SidebarEditDialog from "@/components/MoreSidebar/index.vue";
 import CardPopover from "@/views/chatStudio/components/CardPopover.vue";
 import UserPopup from "@/components/Popups/UserPopup.vue";
+import emitter from "@/utils/mitt-bus";
 
 defineOptions({
   name: "LayAside",

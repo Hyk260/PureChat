@@ -3,8 +3,6 @@ import { useAppStore } from "@/stores/index";
 import { useState } from "./useState";
 import dayjs from "dayjs";
 
-export const { VITE_APP_NAME } = import.meta.env;
-
 export const ImageType = {
   Blob: "blob",
   JPG: "jpg",
@@ -49,7 +47,7 @@ async function copyImageToClipboard(blob) {
  */
 function downloadImage(dataUrl, imageType, title) {
   const link = document.createElement("a");
-  const name = `${VITE_APP_NAME}_${title ? `${title}_` : ""}${dayjs().format("YYYY-MM-DD")}.${imageType}`;
+  const name = `${__APP_NAME__}_${title ? `${title}_` : ""}${dayjs().format("YYYY-MM-DD")}.${imageType}`;
   link.download = name;
   link.href = dataUrl;
   document.body.appendChild(link);

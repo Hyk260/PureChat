@@ -8,7 +8,7 @@
       <!-- 标题 -->
       <header class="login-form">
         <div class="tip">
-          <h2>{{ VITE_APP_NAME }}</h2>
+          <h2>{{ APP_NAME }}</h2>
         </div>
       </header>
       <!-- 账号登陆 -->
@@ -31,8 +31,6 @@ import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
 const currentPage = computed(() => {
   return useUserStore().currentPage;
 });
-
-const { VITE_APP_NAME } = import.meta.env;
 
 </script>
 

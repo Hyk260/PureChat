@@ -46,7 +46,7 @@
             <div v-if="isFooter" class="footer p-16" :class="{ 'opacity-0': !isFooter }">
               <div class="flex-c">
                 <img class="size-22" src="@/assets/images/log.png" alt="" />
-                <div class="title ml-8">{{ VITE_APP_NAME }}</div>
+                <div class="title ml-8">{{ APP_NAME }}</div>
               </div>
               <span class="link"> {{ docsUrl }}</span>
               <QrCode v-show="isQrCode" class="qr-code" :text="docsUrl" />
@@ -119,7 +119,6 @@ import {
   useScreenshot,
   ImageType,
   imageTypeOptions,
-  VITE_APP_NAME,
 } from "@/utils/hooks/useScreenshot";
 import { loadMsgModule, msgOne, msgType, isSelf } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
@@ -265,7 +264,7 @@ onUnmounted(() => {
     border: 2px solid #dddddd;
     border-radius: 8px;
     background: var(--color-body-bg);
-    pointer-events: none;
+    // pointer-events: none;
   }
 
   .footer {

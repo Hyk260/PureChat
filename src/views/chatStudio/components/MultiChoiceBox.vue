@@ -20,7 +20,7 @@ import { ref, computed } from "vue";
 import { useChatStore, useUserStore } from "@/stores/index";
 import { createForwardMessage, createMergerMessage, sendMessage } from "@/service/im-sdk-api/index";
 import MessageForwardingPopup from "@/components/Popups/MessageForwardingPopup.vue";
-import ShareModal from "@/views/components/ShareModal/index.vue";
+import ShareModal from "@/components/ShareModal/index.vue";
 import emitter from "@/utils/mitt-bus";
 
 const buttonList = [

@@ -38,6 +38,8 @@ export const viteDefine = (env) => {
     __LOCAL_MODE__: env?.VITE_LOCAL_MODE === "Y",
     // 判断是否为 Electron 环境
     __IS_ELECTRON__: env?.VITE_APP_ENV === "electron",
+    // 应用名称
+    __APP_NAME__: JSON.stringify(env?.VITE_APP_NAME),
   }
 };
 
