@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center">
-    <QrCode class="QrCode" v-show="loading" />
+    <QrCode class="QrCode" />
   </div>
   <el-divider>
     <p class="m-0">{{ $t("login.tip") }}</p>
@@ -11,12 +11,7 @@
 </template>
 
 <script setup>
-import { useState } from "@/utils/hooks/index";
 
-const [loading, setLoading] = useState();
-setTimeout(() => {
-  setLoading(true);
-}, 2000);
 </script>
 
 <style lang="scss" scoped>

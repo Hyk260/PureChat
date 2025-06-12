@@ -1,7 +1,7 @@
 import { reactive } from "vue";
-import { localStg } from "@/utils/storage";
 import { $t } from "@/locales/index";
-import { ACCOUNT } from "@/constants/index";
+import { localStg } from "@/utils/storage";
+import { useUserStore } from '@/stores/index';
 
 /** 6位数字验证码正则 */
 const REGEXP_SIX = /^\d{6}$/;
@@ -12,12 +12,12 @@ const REGEXP_PWD =
 
 const pattern = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/;
 
-const { username, password, keep } = localStg.get(ACCOUNT) || {};
+const { username, password, remember } = localStg.get("ACCOUNT") || {};
 
-export const user = reactive({
+export const defaultForm = reactive({
   username: username || "",
   password: password || "123456",
-  keep: keep || false,
+  remember: remember || false,
   verifyCode: "",
 });
 
@@ -36,20 +36,20 @@ export const rules = reactive({
       trigger: "blur",
     },
   ],
-  // verifyCode: [
-  //   {
-  //     validator: (rule, value, callback) => {
-  //       if (value === "") {
-  //         callback(new Error("请输入验证码"));
-  //       } else if (verifyCode !== value) {
-  //         callback(new Error("请输入正确的验证码"));
-  //       } else {
-  //         callback();
-  //       }
-  //     },
-  //     trigger: "blur",
-  //   },
-  // ],
+  verifyCode: [
+    {
+      validator: (rule, value, callback) => {
+        if (value === "") {
+          callback(new Error("请输入验证码"));
+        } else if (useUserStore().verifyCode !== value) {
+          callback(new Error("请输入正确的验证码"));
+        } else {
+          callback();
+        }
+      },
+      trigger: "blur",
+    },
+  ],
 });
 
 export const ruleForm = reactive({

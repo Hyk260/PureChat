@@ -6,8 +6,6 @@ export const REFRESH_TOKEN = "Refresh-Token";
 export const USER_SETUP = "User-Setup";
 // 用户信息
 export const USER_MODEL = "User-Model";
-// 免登录信息
-export const ACCOUNT = "ACCOUNT";
 // 表情包最近使用
 export const EMOJI_RECENTLY = "Emoji-Recently";
 // im数据

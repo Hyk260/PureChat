@@ -22,7 +22,6 @@ const errorHandler = (error) => {
   const status = error.response?.status;
   const errMessage = status ? statusMessageMap[status] || `连接错误 ${status}` : "无法连接到服务器！";
 
-  useUserStore().setLoading(false);
   useAppStore().showMessage({ message: errMessage, type: "error" });
   return Promise.reject(error);
 };

@@ -2,7 +2,7 @@ import { nextTick } from "vue";
 import { defineStore } from 'pinia'
 import { useAppStore, useChatStore, useAuthStore } from '@/stores/index';
 import { login, logout } from "@/service/api/index"
-import { ACCOUNT, USER_MODEL } from "@/constants/index"
+import { USER_MODEL } from "@/constants/index"
 import { localStg } from "@/utils/storage"
 import { SetupStoreId } from '../../plugins/index';
 import { timProxy } from '@/utils/IM/index';
@@ -15,6 +15,8 @@ import localAvatar from '@/assets/images/avatar.png';
 
 export const useUserStore = defineStore(SetupStoreId.User, {
   state: () => ({
+    lang: "zh-CN",
+    verifyCode: "",
     userProfile: {},
     userLocalStore: {
       native: "",
@@ -22,9 +24,11 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       userName: "",
       localAvatar,
     },
-    lang: "zh-CN",
   }),
   actions: {
+    setVerifyCode(val) {
+      this.verifyCode = val
+    },
     setCurrentProfile(user) {
       this.userProfile = user
     },
@@ -35,9 +39,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       this.lang = lang
       setLocale(lang)
     },
-    setLoading(val) {
-      this.loading = val
-    },
     async handleSuccessfulAuth(data) {
       console.log("授权登录信息 handleSuccessfulAuth", data)
       const { code, msg, result } = data
@@ -46,16 +47,14 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         await this.handleIMLogin({ userID: result.username, userSig: result.userSig })
         localStg.set(USER_MODEL, result)
         useAuthStore().setTokens(result?.accessToken, result?.refreshToken)
-        // data?.keep && localStg.set(ACCOUNT, data)
+        // data?.remember && localStg.set(ACCOUNT, data)
       } else {
         console.log("授权登录失败")
         useAppStore().showMessage({ message: msg, type: "error" })
-        this.setLoading(false)
       }
     },
     async handleUserLogin(data) {
       console.log(data, "登录信息")
-      this.setLoading(true)
       const result = await login(data)
       this.handleSuccessfulAuth(result)
     },
@@ -64,7 +63,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       setTimeout(() => {
         logout()
         emitter.all.clear()
-        this.setLoading(false)
         this.handleIMLogout()
       }, 500)
     },

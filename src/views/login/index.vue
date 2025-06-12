@@ -2,7 +2,7 @@
   <div class="login flex">
     <div class="login-inner">
       <!-- 背景 -->
-      <svg-icon local-icon="loginBg" class="wave" />
+      <SvgIcon local-icon="loginBg" class="wave" />
       <!-- 主题开关 -->
       <ThemeSwitch />
       <!-- 标题 -->
@@ -24,7 +24,7 @@
 <script setup>
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
 import Account from "./components/Account.vue";
-// import QrCode from "./components/qrCode.vue";
+// import QrCode from "./components/QrCode.vue";
 // import Register from "./components/Register.vue";
 
 const { VITE_APP_NAME } = import.meta.env;

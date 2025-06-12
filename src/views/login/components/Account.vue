@@ -1,73 +1,71 @@
 <template>
-  <el-form ref="ruleFormRef" :model="user" :rules="rules">
+  <el-form ref="formRef" :model="form" :rules="rules">
     <!-- 账号 -->
     <el-form-item prop="username">
       <el-autocomplete
         clearable
-        :debounce="200"
         size="large"
+        :debounce="200"
         :prefix-icon="User"
-        v-model="user.username"
+        v-model="form.username"
         :placeholder="$t('login.username')"
         @select="handleSelect"
-        class="inline-input w-50"
-        :fetch-suggestions="querySearch"
+        :fetch-suggestions="handleSearch"
       />
+      <!-- <el-input
+        v-model="form.username"
+        :placeholder="$t('login.username')"
+        :prefix-icon="User"
+        size="large"
+        clearable
+      >
+      </el-input> -->
     </el-form-item>
     <!-- 密码 -->
     <el-form-item prop="password">
       <el-input
-        v-model="user.password"
+        v-model="form.password"
         type="password"
         :placeholder="$t('login.password')"
         :prefix-icon="Lock"
         size="large"
+        clearable
         show-password
       >
       </el-input>
     </el-form-item>
     <!-- 验证码 -->
-    <el-form-item prop="verifyCode" v-if="isVerifyCode">
+    <el-form-item v-if="showVerifyCode" prop="verifyCode">
       <el-input
-        v-model="user.verifyCode"
+        v-model="form.verifyCode"
         size="large"
         :placeholder="$t('login.verifyCode')"
         clearable
       >
         <template #prefix>
-          <FontIcon class="el-input__icon" iconName="Key" />
+          <el-icon><Key /></el-icon>
         </template>
         <template #append>
-          <ImageVerify v-model:code="imgCode" />
+          <ImageVerify v-model:code="verifyCode" />
         </template>
       </el-input>
     </el-form-item>
-    <!-- keep -->
+    <!-- 记住密码 -->
     <div class="login-options">
-      <el-checkbox v-model="user.keep">{{ $t("login.remember") }}</el-checkbox>
-      <div class="forget">{{ $t("login.forget") }}</div>
+      <el-checkbox v-model="form.remember">{{ $t("login.remember") }}</el-checkbox>
+      <div class="forget-password">{{ $t("login.forget") }}</div>
     </div>
     <!-- 登录 -->
-    <el-button
-      type="primary"
-      class="login-btn"
-      @click="loginBtn(ruleFormRef)"
-      :loading="userStore.loading"
-    >
+    <el-button type="primary" class="login-btn" :loading="loading" @click="handleLogin">
       <template #loading>
-        <loadingSvg />
+        <div class="iconify-icon svg-spinners mr-8"></div>
       </template>
       <span> {{ $t("login.login") }}</span>
     </el-button>
   </el-form>
   <!-- other hidden -->
   <div class="mt-20 flex justify-between" hidden>
-    <el-button
-      v-for="item in operates"
-      :key="item.title"
-      size="default"
-      @click="onHandle(item.currentPage)"
-    >
+    <el-button v-for="item in operates" :key="item.title" size="default" @click="onHandle(item)">
       {{ item.title }}
     </el-button>
   </div>
@@ -76,127 +74,128 @@
     <el-divider>
       <p class="text-gray-500">{{ $t("login.thirdLogin") }}</p>
     </el-divider>
-    <div class="w-full flex justify-evenly">
+    <div class="social-login">
       <span
         v-for="(item, index) in thirdParty"
         :key="index"
         :title="item.title"
-        @click="onClick(item)"
+        @click="handleSocialLogin(item)"
       >
-        <svg-icon class="icon cursor-pointer" :local-icon="item.icon" />
+        <SvgIcon class="social-icon" :local-icon="item.icon" />
       </span>
     </div>
   </el-form-item>
 </template>
 
 <script setup>
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { getUserList } from "@/service/api/index";
 import { Lock, User } from "@element-plus/icons-vue";
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { useRouter } from "vue-router";
-import { authorizedLogin, oauthAuthorize } from "../utils/auth";
+import { useOAuth } from "@/hooks/useOAuth";
 import { operates, thirdParty } from "../utils/enums";
-import { rules, user } from "../utils/validation";
+import { rules, defaultForm } from "../utils/validation";
 import { useUserStore } from "@/stores/modules/user/index";
 import ImageVerify from "@/views/components/ImageVerify/index.vue";
-import loadingSvg from "./loadingSvg.vue";
 
 const { DEV: isDev } = import.meta.env;
-const isVerifyCode = false;
-const router = useRouter();
-const restaurants = ref([]);
-const ruleFormRef = ref();
-const imgCode = ref("");
+
+const showVerifyCode = false;
+const verifyCode = ref("");
+const formRef = ref();
+const loading = ref(false);
+const form = ref({ ...defaultForm });
+const userSuggestions = ref([]);
 
 const userStore = useUserStore();
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const { oauthAuthorize } = useOAuth({
+  onSuccess: (data) => {
+    console.log("授权成功", data);
+    userStore.handleSuccessfulAuth(data);
+  },
+  onError: (error) => {
+    console.error("授权失败", error);
+  },
+});
 
 const handleSelect = (item) => {
   console.log(item);
 };
 
-const createFilter = (queryString) => {
-  return (restaurant) => {
-    return restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0;
-  };
-};
-const querySearch = (queryString, cb) => {
-  const results = queryString
-    ? restaurants.value.filter(createFilter(queryString))
-    : restaurants.value;
-  cb(results);
+const handleSearch = (query, callback) => {
+  const results = query
+    ? userSuggestions.value.filter((user) => user.value.toLowerCase().includes(query.toLowerCase()))
+    : userSuggestions.value;
+  callback(results);
 };
 
-const loginBtn = async (formEl) => {
-  if (!formEl) return;
-  await formEl.validate((valid) => {
-    if (!valid) return;
-    userStore.handleUserLogin(user);
-  });
-};
-
-const onClick = async ({ icon }) => {
-  if (icon === "github") {
-    oauthAuthorize();
+const handleLogin = async () => {
+  if (!formRef.value) return;
+  loading.value = true;
+  try {
+    if (isDev) await delay(1000);
+    await formRef.value.validate();
+    await userStore.handleUserLogin(form.value);
+  } finally {
+    loading.value = false;
   }
+};
+
+const handleSocialLogin = async ({ icon }) => {
+  if (icon === "github") oauthAuthorize();
 };
 
 const onHandle = (index) => {};
 
-const onkeypress = ({ code }) => {
-  if (code === "Enter") {
-    loginBtn(ruleFormRef.value);
-  }
+const handleKeyPress = ({ code }) => {
+  if (code === "Enter") handleLogin(formRef.value);
 };
 
 onMounted(async () => {
-  restaurants.value = await getUserList();
-  window.document.addEventListener("keypress", onkeypress);
+  userSuggestions.value = await getUserList();
+  window.document.addEventListener("keypress", handleKeyPress);
 });
 
 onBeforeUnmount(() => {
-  window.document.removeEventListener("keypress", onkeypress);
-  userStore.setLoading(false);
+  window.document.removeEventListener("keypress", handleKeyPress);
 });
 
-// watch(imgCode, (value) => {
-//   // 测试环境自动填充图形验证码
-//   if (isDev) user.verifyCode = value;
-// });
-
-watch(
-  () => router.currentRoute.value.query,
-  (data) => {
-    authorizedLogin(data?.code);
-  },
-  {
-    immediate: true,
-    deep: true,
-  }
-);
+watch(verifyCode, (value) => {
+  // 测试环境自动填充图形验证码
+  if (isDev) form.value.verifyCode = value;
+  userStore.setVerifyCode(value);
+});
 </script>
 
 <style lang="scss" scoped>
-.icon {
-  color: rgb(107, 114, 128);
-}
 .login-btn {
   width: 100%;
   margin-top: 20px;
 }
+
 .login-options {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 22px;
   font-size: 14px;
-  div {
+  .forget-password {
     cursor: pointer;
     color: var(--el-color-primary);
   }
 }
-:deep(.el-autocomplete) {
+
+.social-login {
   width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  .social-icon {
+    cursor: pointer;
+    color: rgb(107, 114, 128);
+  }
 }
+
 :deep(.el-input-group__append, .el-input-group__prepend) {
   padding: 0;
   box-shadow: none;
