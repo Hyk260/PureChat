@@ -310,8 +310,8 @@ const pingConversation = async (data) => {
     .dont {
       position: absolute;
       right: 0;
-      top: 28px;
-      font-size: 12px;
+      top: 26px;
+      font-size: 14px;
       color: var(--color-time-divider);
     }
     .message-item-right-top {
