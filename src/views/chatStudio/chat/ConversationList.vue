@@ -4,7 +4,7 @@
     <div
       v-if="!isEnableVirtualList"
       v-for="item in searchForData"
-      class="message-item flex-c"
+      class="message-item flex-bc"
       :key="item.conversationID"
       :id="`message_${item.conversationID}`"
       :class="fnClass(item)"
@@ -19,7 +19,7 @@
       <!-- 置顶图标 -->
       <div class="pinned-tag" v-show="item.isPinned"></div>
       <!-- 头像 -->
-      <el-badge is-dot :hidden="isShowCount(item) || !isNotify(item)">
+      <el-badge class="avatar" is-dot :hidden="isShowCount(item) || !isNotify(item)">
         <UserAvatar
           words="3"
           shape="square"
@@ -272,7 +272,6 @@ const pingConversation = async (data) => {
   overflow: hidden;
 }
 .message-item {
-  gap: 14px;
   padding: 12px 12px 12px 16px;
   user-select: none;
   height: 64px;
@@ -282,6 +281,10 @@ const pingConversation = async (data) => {
   color: var(--color-text);
   &:hover {
     background: var(--icon-hover-color);
+  }
+  .avatar {
+    height: 40px;
+    min-width: 40px;
   }
   .pinned-tag {
     display: block;
@@ -301,12 +304,14 @@ const pingConversation = async (data) => {
   }
   .message-item-right {
     width: 200px;
-    height: 44px;
+    min-width: 200px;
+    height: 100%;
     position: relative;
     .dont {
       position: absolute;
       right: 0;
-      top: 26px;
+      top: 28px;
+      font-size: 12px;
       color: var(--color-time-divider);
     }
     .message-item-right-top {
