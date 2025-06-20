@@ -38,9 +38,10 @@
 import { useState } from "@/utils/hooks/index";
 import { useAppStore, useWebSearchStore } from "@/stores/index";
 import { WEB_SEARCH_PROVIDER_CONFIG } from "@/config/webSearchProviders";
-import { optionsProviders } from "./enums";
 import { openWindow } from "@/utils/common";
 import WebSearchService from "@/ai/webSearchService";
+
+const { DEV: isDev } = import.meta.env;
 
 const [searchInput, setSearchInput] = useState("");
 
@@ -57,6 +58,17 @@ const apiKeyWebsite = computed(() => {
 });
 const officialWebsite = computed(() => {
   return webSearchProviderConfig.value?.websites?.official;
+});
+
+const optionsProviders = computed(() => {
+  const providers = webSearchStore.providers;
+
+  const filteredProviders = isDev ? providers : providers.filter((t) => t.id !== "test");
+
+  return filteredProviders.map((value) => ({
+    value: value.id,
+    label: value.name,
+  }));
 });
 
 function onBlur() {

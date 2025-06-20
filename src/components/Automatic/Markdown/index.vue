@@ -30,6 +30,7 @@ const props = defineProps({
 });
 
 const appStore = useAppStore();
+
 const webSearchResult = computed(() => {
   return props.cloudCustomData?.messageReply?.webSearchResult || [];
 });
@@ -85,17 +86,17 @@ if (typeof window !== "undefined") {
 
 function MarkdownRender() {
   const md = createMarkdownParser({
-    webSearchResults: webSearchResult.value 
+    webSearchResults: webSearchResult.value,
   });
 
   let content = props.marked;
 
-  if (content && webSearchResult.value?.length) {
-    content += convertToMarkdownFootnotes(webSearchResult.value);
+  if (typeof content !== "string") {
+    content = prettyObject(content);
   }
 
-  if (typeof content !== 'string') {
-    content = prettyObject(content);
+  if (content && webSearchResult.value?.length) {
+    content += convertToMarkdownFootnotes(webSearchResult.value);
   }
 
   const mark = h("div", {

@@ -1,5 +1,4 @@
 <template>
-  <!-- markdown is-text-self is-text-other -->
   <div
     class="message-view-item-text"
     :class="messageStyleClasses"
@@ -18,14 +17,12 @@
         :marked="message.payload.text"
       />
       <DynamicContent v-else :atUserList="message.atUserList" :text="message.payload.text" />
-      <!-- <div>
-        "首字时延 {{time_first_token_millsec}}ms | 每秒 {{token_speed}} tokens"
-      </div> -->
     </template>
   </div>
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { useChatStore } from "@/stores/index";
 import ReplyElem from "./ReplyElem.vue";
 import DynamicContent from "../components/DynamicContent.vue";
@@ -45,13 +42,10 @@ const props = defineProps({
   },
 });
 
-// const time_first_token_millsec = 123
-// const token_speed = 10;
-
 const chatStore = useChatStore();
 
 const hasValidMessageType = computed(() => {
-  return props.message?.conversationType || props.msgType;
+  return !!props.message?.conversationType || !!props.msgType;
 });
 
 const parsedCloudCustomData = computed(() => {
@@ -68,16 +62,16 @@ const shouldShowMarkdown = computed(() => {
 });
 
 const messageStyleClasses = computed(() => {
-  const classes = [];
-  classes.push(props.self ? "is-text-self" : "is-text-other");
-  if (shouldShowMarkdown.value) {
-    classes.push("markdown");
-  }
-  return classes;
+  return [
+      props.self ? "is-text-self" : "is-text-other",
+      shouldShowMarkdown.value ? "markdown" : ""
+    ]
+    .join(" ")
+    .trim();
 });
 
-const handleMessageClick = () => {
-  console.log("Message clicked:", props.message);
+const handleMessageClick = (message) => {
+  console.log("Message clicked:", message);
 };
 </script>
 

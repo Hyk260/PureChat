@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia'
 import { SetupStoreId } from '../../plugins/index';
-import { PROVIDER_IDS } from "@/config/webSearchProviders";
 
 const { VITE_TAVILY_API_KEY } = import.meta.env
 
 const initialState = {
-  defaultProvider: PROVIDER_IDS.TAVILY,
+  defaultProvider: "tavily",
   providers: [
     {
       id: 'test',
@@ -21,7 +20,22 @@ const initialState = {
       id: 'exa',
       name: 'Exa',
       apiKey: ''
-    }
+    },
+    // {
+    //   id: 'local-google',
+    //   name: 'Google',
+    //   url: 'https://www.google.com/search?q=%s'
+    // },
+    // {
+    //   id: 'local-bing',
+    //   name: 'Bing',
+    //   url: 'https://cn.bing.com/search?q=%s&ensearch=1'
+    // },
+    // {
+    //   id: 'local-baidu',
+    //   name: 'Baidu',
+    //   url: 'https://www.baidu.com/s?wd=%s'
+    // }
   ],
   searchWithTime: true,
   maxResults: 5,
