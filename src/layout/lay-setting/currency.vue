@@ -16,7 +16,17 @@
       <el-select v-model="language" placeholder="选择语言">
         <el-option
           v-for="item in languages"
-          @click="languageChange"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </li>
+    <li>
+      <span>字体设置</span>
+      <el-select v-model="font" placeholder="选择字体">
+        <el-option
+          v-for="item in themeStore.fontThemeList"
           :key="item.value"
           :label="item.label"
           :value="item.value"
@@ -43,6 +53,7 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
 import { languages, options } from "./enums";
 import { useUserStore, useThemeStore, useChatStore } from "@/stores/index";
 
@@ -51,8 +62,6 @@ const { DEV: isDev } = import.meta.env;
 const userStore = useUserStore();
 const themeStore = useThemeStore();
 const chatStore = useChatStore();
-
-function languageChange() {}
 
 function logout() {
   userStore.handleUserLogout();
@@ -64,6 +73,16 @@ const timeline = computed({
   },
   set(val) {
     chatStore.setTimeline(val);
+  },
+});
+
+
+const font = computed({
+  get() {
+    return themeStore.fontTheme;
+  },
+  set(val) {
+    themeStore.setFontTheme(val);
   },
 });
 
@@ -84,6 +103,10 @@ const language = computed({
     userStore.setLang(val);
   },
 });
+
+onMounted(() => {
+  themeStore.loadSystemFonts()
+})
 </script>
 
 <style lang="scss" scoped>

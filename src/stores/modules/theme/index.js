@@ -6,11 +6,50 @@ import { useEventListener, usePreferredColorScheme } from "@vueuse/core";
 export const useThemeStore = defineStore(SetupStoreId.Theme, {
   state: () => ({
     themeScheme: "light",
+    fontTheme: "AliFangYuan",
+    fontThemeList: [
+      { label: "阿里·方元", value: "AliFangYuan" },
+    ],
   }),
   getters: {
-    isDarkMode() {},
+    isDarkMode() { },
   },
   actions: {
+    setFontTheme(theme = localStg.get("font-family") || "AliFangYuan") {
+      this.fontTheme = theme;
+      localStg.set("font-family", theme);
+      document.documentElement.style.setProperty("--font-family", theme);
+    },
+    setFontThemeList(list) {
+      const existingValues = new Set(this.fontThemeList.map(f => f.value));
+      const uniqueNewFonts = list.filter(font => !existingValues.has(font.value));
+
+      if (uniqueNewFonts.length > 0 && this.fontThemeList.length < 20) {
+        this.fontThemeList = [...this.fontThemeList, ...uniqueNewFonts];
+      }
+    },
+    async loadSystemFonts() {
+      if (!window.queryLocalFonts) {
+        console.warn('Local Font Access API is not supported in this browser');
+        return;
+      }
+
+      try {
+        const availableFonts = await window.queryLocalFonts();
+        const newFonts = {}
+        availableFonts.slice(0, 40).map(font => {
+          if (newFonts[font.family]) return;
+          newFonts[font.family] = {
+            label: font.fullName,
+            value: font.family,
+          };
+        });
+        this.setFontThemeList(Object.values(newFonts));
+        return newFonts;
+      } catch (err) {
+        return [];
+      }
+    },
     setThemeScheme(theme = localStg.get("themeScheme") || "light") {
       this.themeScheme = theme;
       this.setTheme(theme);

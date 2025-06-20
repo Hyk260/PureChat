@@ -18,6 +18,7 @@ const themeStore = useThemeStore();
 const locale = computed(() => elementPlusLocales[appStore.locale]);
 
 onMounted(() => {
+  themeStore.setFontTheme();
   themeStore.setThemeScheme();
   userStore.tryReconnect();
 });
