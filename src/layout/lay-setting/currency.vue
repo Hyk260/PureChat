@@ -55,13 +55,12 @@
 <script setup>
 import { onMounted } from "vue";
 import { languages, options } from "./enums";
-import { useUserStore, useThemeStore, useChatStore } from "@/stores/index";
+import { useUserStore, useThemeStore } from "@/stores/index";
 
 const { DEV: isDev } = import.meta.env;
 
 const userStore = useUserStore();
 const themeStore = useThemeStore();
-const chatStore = useChatStore();
 
 function logout() {
   userStore.handleUserLogout();
@@ -69,10 +68,10 @@ function logout() {
 
 const timeline = computed({
   get() {
-    return chatStore.timeline;
+    return userStore.timeline;
   },
   set(val) {
-    chatStore.setTimeline(val);
+    userStore.setTimeline(val);
   },
 });
 

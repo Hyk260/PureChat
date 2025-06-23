@@ -16,6 +16,7 @@ import localAvatar from '@/assets/images/avatar.png';
 export const useUserStore = defineStore(SetupStoreId.User, {
   state: () => ({
     lang: "zh-CN",
+    timeline: false, // 时间线
     verifyCode: "",
     currentPage: 0,
     userProfile: {},
@@ -26,7 +27,15 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       localAvatar,
     },
   }),
+  getters: {
+    getUserAvatar() {
+      return this.userLocalStore.avatar || this.userLocalStore.native || this.userLocalStore.localAvatar
+    }
+  },
   actions: {
+    setTimeline(val) {
+      this.timeline = val;
+    },
     setCurrentPage(page) {
       this.currentPage = page
     },
@@ -115,11 +124,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       } catch (error) {
         console.log(error)
       }
-    }
-  },
-  getters: {
-    getUserAvatar() {
-      return this.userLocalStore.avatar || this.userLocalStore.native || this.userLocalStore.localAvatar
     }
   },
   persist: true,

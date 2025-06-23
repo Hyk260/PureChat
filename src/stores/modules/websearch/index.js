@@ -3,49 +3,47 @@ import { SetupStoreId } from '@/stores/plugins/index';
 
 const { VITE_TAVILY_API_KEY } = import.meta.env
 
-const providers = {
-  providers: [
-    {
-      id: 'test',
-      name: 'Test',
-      apiKey: 'test-xxx'
-    },
-    {
-      id: 'tavily',
-      name: 'Tavily',
-      apiKey: VITE_TAVILY_API_KEY || ''
-    },
-    {
-      id: 'exa',
-      name: 'Exa',
-      apiKey: ''
-    },
-    // {
-    //   id: 'local-google',
-    //   name: 'Google',
-    //   url: 'https://www.google.com/search?q=%s'
-    // },
-    // {
-    //   id: 'local-bing',
-    //   name: 'Bing',
-    //   url: 'https://cn.bing.com/search?q=%s&ensearch=1'
-    // },
-    // {
-    //   id: 'local-baidu',
-    //   name: 'Baidu',
-    //   url: 'https://www.baidu.com/s?wd=%s'
-    // }
-  ],
-}
+const providers = [
+  {
+    id: 'test',
+    name: 'Test',
+    apiKey: 'test-xxx'
+  },
+  {
+    id: 'tavily',
+    name: 'Tavily',
+    apiKey: VITE_TAVILY_API_KEY || ''
+  },
+  {
+    id: 'exa',
+    name: 'Exa',
+    apiKey: ''
+  },
+  // {
+  //   id: 'local-google',
+  //   name: 'Google',
+  //   url: 'https://www.google.com/search?q=%s'
+  // },
+  // {
+  //   id: 'local-bing',
+  //   name: 'Bing',
+  //   url: 'https://cn.bing.com/search?q=%s&ensearch=1'
+  // },
+  // {
+  //   id: 'local-baidu',
+  //   name: 'Baidu',
+  //   url: 'https://www.baidu.com/s?wd=%s'
+  // }
+]
 
 export const useWebSearchStore = defineStore(SetupStoreId.WebSearch, {
   state: () => ({
     defaultProvider: "tavily",
     providers,
     searchWithTime: true,
+    enhanceMode: false,
     maxResults: 5,
     excludeDomains: [],
-    enhanceMode: false,
     checkProviders: [],
   }),
   getters: {
@@ -90,5 +88,7 @@ export const useWebSearchStore = defineStore(SetupStoreId.WebSearch, {
       this.enhanceMode = action
     }
   },
-  persist: true,
+  persist: {
+    pick: ['defaultProvider']
+  },
 });

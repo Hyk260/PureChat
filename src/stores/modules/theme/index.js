@@ -77,5 +77,8 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
       }
     },
   },
-  persist: true,
+  persist: {
+    pick: ['themeScheme', "fontTheme"]
+  },
+  // persist: true,
 });

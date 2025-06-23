@@ -1,6 +1,6 @@
 import { timeFormat } from "@/utils/timeFormat";
 import { cloneDeep } from "lodash-es";
-import { useChatStore } from "@/stores/index";
+import { useUserStore } from "@/stores/index";
 
 const timeline = false;
 const duration = 5 * 60;
@@ -31,7 +31,7 @@ export const getBaseTime = (list, type = "start") => {
  * @returns {Array} - 添加时间分隔符后的修改后的列表。
  */
 export const addTimeDivider = (list, baseTime = 0, type = "start") => {
-  if (!useChatStore().timeline) return list;
+  if (!useUserStore().timeline) return list;
   if (!Array.isArray(list)) {
     throw new Error("list must be an array");
   }

@@ -13,6 +13,8 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     promptConfig: null,
     modelConfig: null,
     modelProvider: "",
+    defaultProvider: ModelProvider.OpenAI,
+    isShowBotTools: false,
     promptStore: {
       // [ModelProvider.OpenAI]: [],
     },
@@ -22,8 +24,6 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     accessStore: {
       // [ModelProvider.OpenAI]: {},
     },
-    defaultProvider: ModelProvider.OpenAI,
-    isShowBotTools: false,
   }),
   getters: {
     isFunctionCall() {
