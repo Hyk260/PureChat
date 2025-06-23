@@ -1,10 +1,5 @@
 <template>
   <div>
-    <div class="flex gap-5">
-      <span>{{ defaultProvider }}</span>
-      <el-icon @click="toLink(officialWebsite)" class="cursor-pointer"><Promotion /></el-icon>
-    </div>
-    <el-divider class="my-20" />
     <div class="flex-bc gap-5">
       <span>搜索服务商</span>
       <el-select v-model="defaultProvider" placeholder="Select" class="w-200">
@@ -17,6 +12,10 @@
       </el-select>
     </div>
     <el-divider class="my-20" />
+    <div class="flex gap-5 mb-20">
+      <span>{{ defaultProvider }}</span>
+      <el-icon @click="toLink(officialWebsite)" class="cursor-pointer"><Promotion /></el-icon>
+    </div>
     <div class="flex gap-10">
       <el-input
         v-model="searchInput"

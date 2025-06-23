@@ -29,6 +29,10 @@ class WebSearchService {
       return false
     }
 
+    if (provider.id.startsWith('local-')) {
+      return true
+    }
+
     if (hasObjectKey(provider, 'apiKey')) {
       return provider.apiKey !== ''
     }

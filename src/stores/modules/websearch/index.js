@@ -89,6 +89,6 @@ export const useWebSearchStore = defineStore(SetupStoreId.WebSearch, {
     }
   },
   persist: {
-    pick: ['defaultProvider']
+    pick: ['defaultProvider','checkProviders']
   },
 });

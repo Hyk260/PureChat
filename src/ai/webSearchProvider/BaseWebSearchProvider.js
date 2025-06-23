@@ -11,4 +11,8 @@ export default class BaseWebSearchProvider {
     const config = useWebSearchStore().getProviderConfig
     return config?.apiKey || ''
   }
+  getApiHost() {
+    const config = useWebSearchStore().getProviderConfig
+    return config?.url || ''
+  }
 }
