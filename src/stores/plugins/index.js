@@ -2,14 +2,15 @@ import { cloneDeep } from 'lodash-es';
 
 export const SetupStoreId = {
   App: 'app',
+  Auth: 'auth',
+  Chat: 'chat',
   Group: 'group',
   Robot: 'robot',
-  Theme: 'theme',
-  User: 'user',
   Sidebar: 'sidebar',
-  Chat: 'chat',
-  WebSearch: 'webSearch',
+  Theme: 'theme',
   Tools: 'tools',
+  User: 'user',
+  WebSearch: 'webSearch',
 };
 
 /**

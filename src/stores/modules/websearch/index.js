@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia'
-import { SetupStoreId } from '../../plugins/index';
+import { SetupStoreId } from '@/stores/plugins/index';
 
 const { VITE_TAVILY_API_KEY } = import.meta.env
 
-const initialState = {
-  defaultProvider: "tavily",
+const providers = {
   providers: [
     {
       id: 'test',
@@ -37,16 +36,17 @@ const initialState = {
     //   url: 'https://www.baidu.com/s?wd=%s'
     // }
   ],
-  searchWithTime: true,
-  maxResults: 5,
-  excludeDomains: [],
-  enhanceMode: false,
-  checkProviders: [],
 }
 
 export const useWebSearchStore = defineStore(SetupStoreId.WebSearch, {
   state: () => ({
-    ...initialState
+    defaultProvider: "tavily",
+    providers,
+    searchWithTime: true,
+    maxResults: 5,
+    excludeDomains: [],
+    enhanceMode: false,
+    checkProviders: [],
   }),
   getters: {
     getProviderConfig() {

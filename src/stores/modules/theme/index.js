@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { SetupStoreId } from "../../plugins/index";
+import { SetupStoreId } from '@/stores/plugins/index';
 import { localStg } from "@/utils/storage";
 import { useEventListener, usePreferredColorScheme } from "@vueuse/core";
 
@@ -8,7 +8,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
     themeScheme: "light",
     fontTheme: "AliFangYuan",
     fontThemeList: [
-      { label: "阿里·方元", value: "AliFangYuan" },
+      { label: "阿里方元", value: "AliFangYuan" },
     ],
   }),
   getters: {
@@ -39,10 +39,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
         const newFonts = {}
         availableFonts.slice(0, 40).map(font => {
           if (newFonts[font.family]) return;
-          newFonts[font.family] = {
-            label: font.fullName,
-            value: font.family,
-          };
+          newFonts[font.family] = { label: font.fullName, value: font.family, };
         });
         this.setFontThemeList(Object.values(newFonts));
         return newFonts;

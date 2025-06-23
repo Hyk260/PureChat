@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { SetupStoreId } from '../../plugins/index';
+import { SetupStoreId } from '@/stores/plugins/index';
 import { useChatStore } from "../chat/index";
 import { openWindow } from "@/utils/common";
 import emitter from "@/utils/mitt-bus";

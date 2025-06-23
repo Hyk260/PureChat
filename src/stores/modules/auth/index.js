@@ -2,9 +2,10 @@ import { defineStore } from "pinia";
 import { localStg } from "@/utils/storage";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from '@/constants/index';
 import { useUserStore } from "../user/index";
+import { SetupStoreId } from '@/stores/plugins/index';
 import router from "@/router"
 
-export const useAuthStore = defineStore("auth", {
+export const useAuthStore = defineStore(SetupStoreId.Auth, {
   state: () => ({
     accessToken: localStg.get(ACCESS_TOKEN) || "",
     refreshToken: localStg.get(REFRESH_TOKEN) || "",

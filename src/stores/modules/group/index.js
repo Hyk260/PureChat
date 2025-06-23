@@ -8,7 +8,7 @@ import {
   dismissGroup,
 } from "@/service/im-sdk-api/index";
 import { sortMembersByRole, findGroupChat } from "@/utils/chat/index";
-import { SetupStoreId } from '../../plugins/index';
+import { SetupStoreId } from '@/stores/plugins/index';
 import { useChatStore, useUserStore } from "@/stores/index";
 
 export const useGroupStore = defineStore(SetupStoreId.Group, {

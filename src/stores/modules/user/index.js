@@ -4,7 +4,7 @@ import { useAppStore, useChatStore, useAuthStore } from '@/stores/index';
 import { login, logout } from "@/service/api/index"
 import { USER_MODEL } from "@/constants/index"
 import { localStg } from "@/utils/storage"
-import { SetupStoreId } from '../../plugins/index';
+import { SetupStoreId } from '@/stores/plugins/index';
 import { timProxy } from '@/utils/IM/index';
 import { setLocale } from "@/locales/index";
 

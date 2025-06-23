@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ElMessage } from "element-plus";
-import { SetupStoreId } from '../../plugins/index';
+import { SetupStoreId } from '@/stores/plugins/index';
 
 export const useAppStore = defineStore(SetupStoreId.App, {
   state: () => ({
