@@ -173,13 +173,14 @@
       </div>
     </div>
     <template #footer>
-      <span>
+      <div>
+        <el-button v-if="isDev" @click="handleCache"> 清除缓存 </el-button>
         <el-button @click="handleReset"> 重置 </el-button>
         <el-button @click="handleCancel">{{ $t("common.cancel") }}</el-button>
         <el-button type="primary" @click="handleConfirm()">
           {{ $t("common.confirm") }}
         </el-button>
-      </span>
+      </div>
     </template>
   </el-dialog>
 </template>
@@ -192,7 +193,7 @@ import { useState } from "@/utils/hooks/index";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
-import { modelValue } from "@/ai/constant";
+import { modelValue, modelConfig } from "@/ai/constant";
 import { useRobotStore, useChatStore, useAppStore } from "@/stores/index";
 import { debounce } from "lodash-es";
 import { isRange } from "./utils";
@@ -204,6 +205,8 @@ import emitter from "@/utils/mitt-bus";
 defineOptions({
   name: "RobotOptions",
 });
+
+const { DEV: isDev } = import.meta.env;
 
 const robotIcon = ref("");
 const modelData = ref({});
@@ -255,15 +258,15 @@ async function onRefresh() {
 
 function initModel() {
   const provider = modelProvider.value;
-  const value = cloneDeep(modelValue[provider]);
+  const modelDataValue = cloneDeep(modelValue[provider]);
   const collapse = modelStore.value[provider]?.Model?.collapse;
   robotIcon.value = getModelSvg(toAccount.value);
-  Object.values(value).map((v) => {
+  Object.values(modelDataValue).map((v) => {
     if (v.ID === "model" && collapse) v.collapse = collapse;
     v.defaultValue = useAccessStore(provider)[v.ID];
     return v;
   });
-  modelData.value = value;
+  modelData.value = modelDataValue;
 }
 
 function storeRobotModel(model) {
@@ -273,14 +276,40 @@ function storeRobotModel(model) {
   robotStore.updateModelConfig();
 }
 
-function resetRobotModel() {
+function handleCache() {
   const provider = modelProvider.value;
-  const model = useAccessStore(provider)?.model;
-  const data = cloneDeep(modelValue[provider].Model.options.chatModels);
-  const checkModel = data.find((item) => item.id === model);
   robotStore.setModelStore({}, provider);
   robotStore.setAccessStore({}, provider);
-  robotStore.setModel(checkModel);
+  robotStore.updateModelConfig();
+  initModel();
+}
+
+function resetRobotModel() {
+  const model = {};
+  const provider = modelProvider.value;
+  const modelDataValue = cloneDeep(modelValue[provider]);
+
+  Object.values(modelDataValue).map((v) => {
+    if (v.ID === "openaiUrl" || v.ID === "token" || v.ID === "model") {
+      v.defaultValue = useAccessStore(provider)[v.ID];
+    } else {
+      v.defaultValue = modelConfig[provider][v.ID];
+    }
+    return v;
+  });
+
+  Object.values(modelDataValue).map((t) => {
+    if (isRange(t.ID)) {
+      model[t.ID] = Number(t.defaultValue);
+    } else {
+      model[t.ID] = t.defaultValue;
+    }
+  });
+  
+  modelData.value = modelDataValue;
+  robotStore.setModelStore(modelDataValue, provider);
+  robotStore.setAccessStore(model, provider);
+  robotStore.updateModelConfig();
 }
 
 const onCheckToken = debounce(handleCheckToken, 2000, { leading: true, trailing: false });
@@ -308,10 +337,9 @@ function handleCancel() {
   setDialog(false);
 }
 
-function handleReset() { 
+function handleReset() {
   resetRobotModel();
   initModel();
-  // handleCancel(false);
 }
 
 function handleModelData() {
@@ -327,7 +355,6 @@ function handleModelData() {
 }
 
 function handleConfirm() {
-  // handleModelData();
   setDialog(false);
 }
 
@@ -347,6 +374,7 @@ const handleRobotBoxEvent = async (data = {}) => {
     const tokenRef = inputRefs.value?.["token"] ?? null;
     tokenRef?.focus();
   }
+
   if (promptFocus) {
     promptRef.value?.promptTitleFocus();
   }
