@@ -17,6 +17,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
   state: () => ({
     lang: "zh-CN",
     timeline: false, // 时间线
+    markdownRender: false, // Markdown 渲染输入消息
     verifyCode: "",
     currentPage: 0,
     userProfile: {},
@@ -35,6 +36,9 @@ export const useUserStore = defineStore(SetupStoreId.User, {
   actions: {
     setTimeline(val) {
       this.timeline = val;
+    },
+    setMarkdownRender(val) {
+      this.markdownRender = val;
     },
     setCurrentPage(page) {
       this.currentPage = page

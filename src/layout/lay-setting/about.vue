@@ -14,7 +14,6 @@
       </div>
       <div class="flex">
         <el-button @click="openDocs"> {{ $t("settings.about.releases.title") }} </el-button>
-        <!-- <el-button> 检查更新 </el-button> -->
       </div>
     </div>
     <div class="divider"></div>

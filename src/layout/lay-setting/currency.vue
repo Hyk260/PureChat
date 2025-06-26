@@ -35,14 +35,15 @@
     </li>
     <li>
       <div class="flex items-center gap-5">
-        <span>显示消息时间线</span>
-        <el-tooltip content="切换会话后生效" placement="top">
-          <span class="flex cursor-pointer">
-            <el-icon><QuestionFilled /></el-icon>
-          </span>
-        </el-tooltip>
+        <span>消息时间线</span>
       </div>
       <el-switch v-model="timeline" />
+    </li>
+    <li>
+      <div class="flex items-center gap-5">
+        <span>Markdown渲染输入消息</span>
+      </div>
+      <el-switch v-model="markdownRender" />
     </li>
     <li v-if="!IS_LOCAL_MODE">
       <el-button @click="logout" type="primary">
@@ -75,7 +76,6 @@ const timeline = computed({
   },
 });
 
-
 const font = computed({
   get() {
     return themeStore.fontTheme;
@@ -103,9 +103,18 @@ const language = computed({
   },
 });
 
+const markdownRender = computed({
+  get() {
+    return userStore.markdownRender;
+  },
+  set(val) {
+    userStore.setMarkdownRender(val);
+  },
+});
+
 onMounted(() => {
-  themeStore.loadSystemFonts()
-})
+  themeStore.loadSystemFonts();
+});
 </script>
 
 <style lang="scss" scoped>

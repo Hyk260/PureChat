@@ -15,7 +15,7 @@
       <div class="container-box">
         <!-- prompt -->
         <DragPrompt ref="promptRef" />
-        <div class="container-item flex-bc" v-for="item in modelData" :key="item.ID">
+        <div class="container-item" v-for="item in modelData" :key="item.ID">
           <div class="flex flex-col gap-5">
             <div class="flex gap-5 title">
               <span> {{ item.Title }}</span>
@@ -455,6 +455,9 @@ onUnmounted(() => {
     padding: 10px 0 10px 0;
   }
   .container-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     color-scheme: light;
     // user-select: none;
     color: var(--color-text-default);
@@ -549,7 +552,7 @@ input[type="range"]::-ms-thumb:hover {
 @media (max-width: 990px) {
   .container-item {
     flex-direction: column;
-    align-items: stretch;
+    align-items: stretch !important;
     gap: 12px;
     .range {
       max-width: 100% !important;

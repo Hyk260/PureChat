@@ -23,7 +23,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { useChatStore } from "@/stores/index";
+import { useChatStore, useUserStore } from "@/stores/index";
 import ReplyElem from "./ReplyElem.vue";
 import DynamicContent from "../components/DynamicContent.vue";
 
@@ -43,6 +43,7 @@ const props = defineProps({
 });
 
 const chatStore = useChatStore();
+const userStore = useUserStore();
 
 const hasValidMessageType = computed(() => {
   return !!props.message?.conversationType || !!props.msgType;
@@ -58,7 +59,8 @@ const parsedCloudCustomData = computed(() => {
 });
 
 const shouldShowMarkdown = computed(() => {
-  return chatStore.isAssistant && props.message?.flow === "in";
+  if (userStore.markdownRender) return true
+  return chatStore.isAssistant && props.message?.flow === "in"
 });
 
 const messageStyleClasses = computed(() => {

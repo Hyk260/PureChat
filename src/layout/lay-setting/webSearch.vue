@@ -2,7 +2,7 @@
   <div>
     <div class="flex-bc gap-5">
       <span>搜索服务商</span>
-      <el-select v-model="defaultProvider" placeholder="Select" class="w-200">
+      <el-select v-model="defaultProvider" placeholder="Select" class="!w-200">
         <el-option
           v-for="item in optionsProviders"
           :key="item.value"
