@@ -3,10 +3,10 @@
     <el-card class="style-header" shadow="never">
       <template #header>
         <div>
-          <span class="name"> {{ pkg.name }} </span>
+          <span class="name"> {{ APP_NAME }} </span>
         </div>
       </template>
-      <span class="describe"> {{ pkg.name }} 是一个基于Vue3、Element-Plus的聊天工作室 </span>
+      <span class="describe"> 聊天应用与AI开发框架 </span>
     </el-card>
     <!-- 项目信息 -->
     <el-card class="style-card" shadow="hover">
@@ -124,19 +124,12 @@ const data = [
     title: "更新日志",
   },
 ];
+
 const words = [
-  "@babel/core",
-  "@vue/cli-service",
-  "@vue/cli-plugin-eslint",
-  "@babel/eslint-parser",
-  "@vue/cli-plugin-babel",
-  "@vue/cli-plugin-router",
-  "@vue/compiler-sfc",
-  "@vue/eslint-config-prettier",
-  "@vueuse/core",
-  "eslint-config-prettier",
-  "eslint-plugin-prettier",
-  "eslint-plugin-vue",
+  "markdown-it",
+  "unocss",
+  "pinia",
+  "vite",
   "mitt",
   "axios",
   "dayjs",
@@ -145,8 +138,6 @@ const words = [
   "element-plus",
   "vue-i18n",
   "vue-router",
-  "eslint",
-  "prettier",
   "sass",
 ];
 

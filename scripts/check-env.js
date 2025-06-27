@@ -8,8 +8,8 @@ const LOCAL_ENV_FILE = '.env.local';
 const envFiles = [
   DEVELOPMENT_ENV_FILE,
   LOCAL_ENV_FILE,
-  // '.env.development.local',
-  // '.env.local'
+  // '.env.development.Test.local',
+  // '.env.Test.local'
 ];
 
 // 定义不同环境的默认配置内容

@@ -2,7 +2,7 @@ import process from "node:process";
 import vue from "@vitejs/plugin-vue";
 import progress from "vite-plugin-progress";
 import removeConsole from "vite-plugin-remove-console";
-import VueDevtools from "vite-plugin-vue-devtools";
+import vueDevtools from "vite-plugin-vue-devtools";
 import { visualizer } from "rollup-plugin-visualizer";
 import { setupUnplugin } from './unplugin';
 import { setupHtmlPlugin } from "./html";
@@ -28,7 +28,7 @@ export function setupVitePlugins(viteEnv) {
     ...setupUnplugin(viteEnv),
   ];
   if (viteEnv.VITE_DEV_TOOLS === "Y") {
-    plugins.push(VueDevtools());
+    plugins.push(vueDevtools());
   }
   // 打包视图分析
   if (process.env.npm_lifecycle_event === "report") {

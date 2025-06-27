@@ -10,7 +10,7 @@
 <script setup>
 import { computed } from "vue";
 import { useChatStore } from "@/stores/modules/chat/index";
-import Loader from "@/views/components/Loader/index.vue";
+import Loader from "@/components/Loader/index.vue";
 
 const props = defineProps({
   index: {
@@ -21,7 +21,6 @@ const props = defineProps({
 const chatStore = useChatStore();
 
 const isShowMore = computed(() => {
-  // return chatStore.currentMessageList?.length - 1 === props.index;
   return props.index === 0;
 });
 </script>

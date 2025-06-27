@@ -18,6 +18,8 @@ import { onClickOutside } from "@vueuse/core";
 import { useState } from "@/utils/hooks/index";
 import emitter from "@/utils/mitt-bus";
 
+defineOptions({ name: "ImageViewer" });
+
 const imageViewerRef = useTemplateRef('imageViewerRef')
 const url = ref("");
 const [dialog, setDialog] = useState();

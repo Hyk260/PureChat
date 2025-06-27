@@ -97,7 +97,7 @@ import { useState } from "@/utils/hooks/index";
 import { operates, thirdParty } from "../utils/enums";
 import { rules, defaultForm } from "../utils/validation";
 import { useUserStore } from "@/stores/index";
-import ImageVerify from "@/views/components/ImageVerify/index.vue";
+import ImageVerify from "@/components/ImageVerify/index.vue";
 
 const { DEV: isDev } = import.meta.env;
 
@@ -138,8 +138,8 @@ const handleLogin = async () => {
   if (!formRef.value) return;
   setLoading(true);
   try {
-    if (isDev) await delay(1000);
     await formRef.value.validate();
+    if (isDev) await delay(1000);
     await userStore.handleUserLogin(form.value);
   } finally {
     setLoading(false);
