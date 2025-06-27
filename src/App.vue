@@ -8,6 +8,7 @@
 import { computed, onMounted } from "vue";
 import { ElConfigProvider } from "element-plus";
 import { elementPlusLocales } from "@/locales/element-plus";
+import { useSettings } from "@/hooks/useSettings";
 import { useUserStore, useAppStore, useThemeStore } from "@/stores/index";
 
 defineOptions({ name: "App" });
@@ -21,5 +22,6 @@ onMounted(() => {
   themeStore.setFontTheme();
   themeStore.setThemeScheme();
   userStore.tryReconnect();
+  useSettings()
 });
 </script>
