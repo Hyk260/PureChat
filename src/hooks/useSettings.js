@@ -1,5 +1,4 @@
 import { watch } from 'vue';
-import { ElMessageBox } from 'element-plus'
 import { useRoute } from 'vue-router';
 import { useRobotStore, useSidebarStore, useChatStore } from '@/stores/index';
 import { ModelProvider } from '@/ai/constant';
