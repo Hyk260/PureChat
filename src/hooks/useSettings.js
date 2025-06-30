@@ -74,7 +74,7 @@ async function autofillProvider(settings) {
   // 目前只处理 openai，可扩展其他 provider
   const openai = settings.keyVaults?.openai;
   if (openai) {
-    if (!openai.apiKey || openai?.baseURL) return
+    if (!openai?.apiKey || !openai?.baseURL) return
     const data = {
       message: h('div', { style: 'line-height: 20px;' }, [
         h('div', null, '检测到链接中包含了预制设置，是否自动填入？'),
