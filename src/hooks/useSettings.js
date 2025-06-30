@@ -8,14 +8,6 @@ import { useAccessStore, getModelId } from "@/ai/utils";
 
 const { VITE_OPENAI_API_KEY, VITE_OPENAI_PROXY_URL } = import.meta.env;
 
-// https://purechat.cn/chat?settings={"keyVaults":{"openai":{"apiKey":"","baseURL":""}}}
-
-// 检测到链接中包含了预制设置，是否自动填入？
-// {
-//   "apiKey": "sk-XXX",
-//   "baseURL": "https://api.moleapi.com"
-// }
-
 // 生成测试链接
 const keyVaults = () => {
   return JSON.stringify({
@@ -28,8 +20,8 @@ const keyVaults = () => {
   })
 }
 
-const TestLink = `https://purechat.cn/chat?settings={"keyVaults":${keyVaults()}}`;
-console.log('testlink', TestLink);
+// https://purechat.cn/chat?settings={"keyVaults":{"openai":{"apiKey":"","baseURL":""}}}
+console.log('testlink', `https://purechat.cn/chat?settings={"keyVaults":${keyVaults()}}`);
 
 /**
  * 从 URL 中提取 settings 参数并解析为对象
@@ -83,24 +75,25 @@ async function autofillProvider(settings) {
   // 目前只处理 openai，可扩展其他 provider
   const openai = settings.keyVaults?.openai;
   if (openai) {
+    if (!openai.apiKey || openai?.baseURL) return
     const data = {
-      message: `检测到链接中包含了预制设置，是否自动填入？
-        {
-          "apiKey": ${openai?.apiKey || "sk-xxx"},
-          "baseURL": ${openai?.baseURL || "https://api.xxx.com"}
-        }`, 
-      iconType: "warning" 
+      message: h('div', { style: 'line-height: 20px;' }, [
+        h('div', null, '检测到链接中包含了预制设置，是否自动填入？'),
+        h('div', { style: "width:360px;", class: 'truncate' }, `"apiKey": ${openai.apiKey}`),
+        h('div', null, `"baseURL": ${openai.baseURL}`),
+      ]),
+      iconType: "warning"
     };
     const result = await showConfirmationBox(data);
     if (result === "cancel") {
       console.warn("取消");
       return;
     }
-    const apiKey = openai?.apiKey || '';
-    const baseURL = openai?.baseURL || '';
+    const apiKey = openai.apiKey || '';
+    const baseURL = openai.baseURL || '';
     const config = {
       ...useAccessStore('openai'),
-      model: "gpt-4o-mini",
+      // model: "gpt-4o-mini",
       token: apiKey,
       openaiUrl: baseURL,
     };
