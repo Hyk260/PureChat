@@ -27,7 +27,7 @@ console.log('testlink', `https://purechat.cn/chat?settings={"keyVaults":${keyVau
  * @param {string} [url] - 可选，要解析的 URL 字符串。如果不提供，则使用当前页面的 URL
  * @returns {object|null} 解析成功的对象，或解析失败时返回 null
  */
-function extractSettingsFromUrl(url) {
+export function extractSettingsFromUrl(url) {
   try {
     // 获取 URL 的查询参数
     const searchParams = url
@@ -66,7 +66,7 @@ function tryParseJson(str) {
  * 自动填充机器人 provider 的 apiKey 和 baseURL
  * @param {Object} settings - 解析后的 settings 对象
  */
-async function autofillProvider(settings) {
+export async function autofillProvider(settings) {
   if (!settings?.keyVaults) return;
   const robotStore = useRobotStore();
   const sidebarStore = useSidebarStore();
