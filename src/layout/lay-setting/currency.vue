@@ -39,7 +39,7 @@
       </div>
       <el-switch v-model="timeline" />
     </li>
-    <li>
+    <li v-if="isDev">
       <div class="flex items-center gap-5">
         <span>Markdown渲染输入消息</span>
       </div>

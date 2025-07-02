@@ -24,21 +24,21 @@ const providers = [
   //   name: 'Google',
   //   url: 'https://www.google.com/search?q=%s'
   // },
-  // {
-  //   id: 'local-bing',
-  //   name: 'Bing',
-  //   url: 'https://cn.bing.com/search?q=%s&ensearch=1'
-  // },
-  // {
-  //   id: 'local-baidu',
-  //   name: 'Baidu',
-  //   url: 'https://www.baidu.com/s?wd=%s'
-  // }
-]
+  {
+    id: 'local-bing',
+    name: 'Bing',
+    url: 'https://cn.bing.com/search?q=%s&ensearch=1'
+  },
+  {
+    id: 'local-baidu',
+    name: 'Baidu',
+    url: 'https://www.baidu.com/s?wd=%s'
+  }
+].filter(item => __IS_ELECTRON__ ? true : !item.id.startsWith('local-'))
 
 export const useWebSearchStore = defineStore(SetupStoreId.WebSearch, {
   state: () => ({
-    defaultProvider: "tavily",
+    defaultProvider: __IS_ELECTRON__ ? "local-bing" : "tavily",
     providers,
     searchWithTime: true,
     enhanceMode: false,
@@ -89,6 +89,6 @@ export const useWebSearchStore = defineStore(SetupStoreId.WebSearch, {
     }
   },
   persist: {
-    pick: ['defaultProvider','checkProviders']
+    pick: ['defaultProvider', 'checkProviders']
   },
 });

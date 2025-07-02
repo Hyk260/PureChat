@@ -11,24 +11,26 @@
         />
       </el-select>
     </div>
-    <el-divider class="my-20" />
-    <div class="flex gap-5 mb-20">
-      <span>{{ defaultProvider }}</span>
-      <el-icon @click="toLink(officialWebsite)" class="cursor-pointer"><Promotion /></el-icon>
-    </div>
-    <div class="flex gap-10">
-      <el-input
-        v-model="searchInput"
-        @input="onBlur"
-        type="password"
-        placeholder="API密钥"
-        show-password
-        clearable
-      />
-      <el-button @click="checkApiKey">检查</el-button>
-    </div>
-    <div class="mt-10">
-      <el-link :href="apiKeyWebsite" target="_blank" type="primary">点击这里获取密钥</el-link>
+    <div v-if="localSearch">
+      <el-divider class="my-20" />
+      <div class="flex gap-5 mb-20">
+        <span>{{ defaultProvider }}</span>
+        <el-icon @click="toLink(officialWebsite)" class="cursor-pointer"><Promotion /></el-icon>
+      </div>
+      <div class="flex gap-10">
+        <el-input
+          v-model="searchInput"
+          @input="onBlur"
+          type="password"
+          placeholder="API密钥"
+          show-password
+          clearable
+        />
+        <el-button @click="checkApiKey">检查</el-button>
+      </div>
+      <div class="mt-10">
+        <el-link :href="apiKeyWebsite" target="_blank" type="primary">点击这里获取密钥</el-link>
+      </div>
     </div>
   </div>
 </template>
@@ -52,6 +54,11 @@ const { providers, defaultProvider, getProviderConfig } = storeToRefs(webSearchS
 const webSearchProviderConfig = computed(() => {
   return WEB_SEARCH_PROVIDER_CONFIG[defaultProvider.value];
 });
+
+const localSearch = computed(() => {
+  return !defaultProvider.value?.startsWith("local-");
+});
+
 const apiKeyWebsite = computed(() => {
   return webSearchProviderConfig.value?.websites?.apiKey;
 });
