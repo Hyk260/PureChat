@@ -30,25 +30,19 @@
 
       <div class="basic-info">
         <span>
-          <!-- {{ getGender(userInfo, "Male") }} -->
         </span>
-
-        <!-- <span>{{ userInfo.age || "-" }} 岁</span>
-        <span>{{ userInfo.constellation }}</span>
-        <span>现居 {{ userInfo.location || "-" }}</span> -->
       </div>
     </div>
     <!-- 操作按钮 -->
     <div class="actions">
       <el-button type="primary" @click="sendMessage(userInfo)">发消息</el-button>
-      <!-- <el-button @click="editProfile">编辑资料</el-button> -->
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import { getGender } from "@/utils/common";
+// import { getGender } from "@/utils/common";
 import { useSidebarStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 

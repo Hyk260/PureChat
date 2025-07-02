@@ -34,11 +34,6 @@
       </div>
       <div v-else class="flex ml-16">
         <span class="nick">{{ cardData.nick || userProfile.nick || cardData.from || "-" }}</span>
-        <!-- <div v-if="getGender(userProfile, 'Male')" class="i-mdi:gender-male text-[#5A9CF8]"></div>
-        <div
-          v-else-if="getGender(userProfile, 'Female')"
-          class="i-mdi:gender-female text-[#5A9CF8]"
-        ></div> -->
       </div>
     </div>
     <div class="content">
@@ -61,7 +56,7 @@ import { isRobot, squareUrl } from "@/utils/chat/index";
 import { useState } from "@/utils/hooks/index";
 import { onClickOutside } from "@vueuse/core";
 import { getAiAvatarUrl } from "@/ai/utils";
-import { getGender } from "@/utils/common";
+// import { getGender } from "@/utils/common";
 import { getValueByKey, prefix } from "@/ai/utils";
 import { useChatStore } from "@/stores/index";
 import Label from "@/views/chatStudio/components/Label.vue";
