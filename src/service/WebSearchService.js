@@ -1,4 +1,4 @@
-import WebSearchEngineProvider from './webSearchProvider/index'
+import WebSearchEngineProvider from './WebSearchProvider/index'
 import { hasObjectKey } from '@/utils/common'
 import { useWebSearchStore } from '@/stores/index';
 import dayjs from 'dayjs'

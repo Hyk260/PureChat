@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash-es';
 import { useWebSearchStore } from "@/stores/index";
 import { localStg } from '@/utils/storage';
-import WebSearchService from "@/ai/webSearchService";
+import WebSearchService from "@/service/webSearchService";
 
 export const REFERENCE_PROMPT = `Please answer the question based on the reference materials
 

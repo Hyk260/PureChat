@@ -5,7 +5,7 @@ import { useChatStore } from "../chat/index";
 import { useWebSearchStore } from "../websearch/index";
 import { cloneDeep } from "lodash-es";
 import { getModelType, useAccessStore } from "@/ai/utils";
-import WebSearchService from "@/ai/webSearchService";
+import WebSearchService from "@/service/webSearchService";
 
 export const useRobotStore = defineStore(SetupStoreId.Robot, {
   state: () => ({
