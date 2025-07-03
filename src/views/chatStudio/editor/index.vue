@@ -56,7 +56,7 @@ import {
   extractEmojiInfo,
   extractFilesInfo,
   extractImageInfo,
-  extractVideoInfo,
+  // extractVideoInfo,
   filterMentionList,
   sendChatMessage,
 } from "../utils/utils";
@@ -314,14 +314,14 @@ const prepareMessageData = () => {
   const extractions = {
     ...extractAitInfo(editor),
     ...extractFilesInfo(editor),
-    ...extractVideoInfo(editor),
+    // ...extractVideoInfo(editor),
     ...extractImageInfo(editor),
   };
   const { aitStr = "", atUserList = [], files = [], video = [], images = [] } = extractions;
   const emoticons = extractEmojiInfo(editor);
 
   const hasContent = [
-    video.length,
+    // video.length,
     images.length,
     files.length,
     atUserList.length,
@@ -340,7 +340,7 @@ const prepareMessageData = () => {
     atUserList,
     images,
     files,
-    video,
+    // video,
     custom: replyMsgData.value,
     isHave: hasContent,
   };

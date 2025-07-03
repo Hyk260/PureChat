@@ -5,7 +5,12 @@
     class="message-info-view-content"
     :class="classMessageInfoView()"
   >
-    <el-scrollbar class="h-full" ref="scrollbarRef" @scroll="handleScrollbar">
+    <el-scrollbar
+      class="h-full"
+      ref="scrollbarRef"
+      @end-reached="loadMore"
+      @scroll="handleScrollbar"
+    >
       <div class="message-view" ref="messageViewRef">
         <div
           v-for="(item, index) in currentMessageList"
@@ -271,11 +276,11 @@ const onClickAvatar = (e, item) => {
 };
 
 // 检查滚动条是否到达页面底部
-const isScrolledToBottom = (lower = 1) => {
+const isScrolledToBottom = (lower = 2) => {
   try {
+    let threshold = lower;
     const { scrollTop, clientHeight, scrollHeight } = scrollbarRef.value?.wrapRef;
-    const height = scrollTop + clientHeight;
-    const isBot = scrollHeight - height < lower;
+    const isBot = scrollHeight - (scrollTop + clientHeight) < threshold;
     if (isBot) console.log("isScrolledToBottom: 到底部");
     return isBot;
   } catch (e) {
@@ -283,55 +288,54 @@ const isScrolledToBottom = (lower = 1) => {
   }
 };
 
-const loadMoreMessages = (scrollTop) => {
-  // console.log("loadMoreMessages: ", scrollTop);
-  const offsetTopScreen = messageViewRef.value?.children?.[0];
-  const top = offsetTopScreen?.getBoundingClientRect().top;
-  const canLoadData = top >= 36;
-  if (canLoadData) getMoreMsg();
+const loadMoreMessages = (data) => {
   emitter.emit("handleToBottom", isScrolledToBottom());
 };
 
 const debouncedFunc = debounce(loadMoreMessages, 300);
 
+const loadMore = (direction) => {
+  if (direction === "top") {
+    loadMoreMsg();
+  } else if (direction === "bottom") {
+    emitter.emit("handleToBottom", true);
+  }
+};
+
 const handleScrollbar = (data) => {
-  // console.log("scrollTop:", data);
-  debouncedFunc(data?.scrollTop);
+  debouncedFunc(data);
 };
 
 const updateScrollBarHeight = (type) => {
   if (type) {
     console.log("scrollBar:", type);
   }
-  if (type === "instantly") {
+  nextTick(() => {
+    // scrollbarRef.value?.setScrollTop(0);
     scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight);
-  } else {
-    nextTick(() => {
-      scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight);
-    });
-  }
+  });
 };
 
 const updateScrollbar = () => {
   nextTick(() => {
-    scrollbarRef.value.update();
+    scrollbarRef.value?.update();
   });
 };
 
-const getMoreMsg = async () => {
+const loadMoreMsg = async () => {
   try {
     const { conversationID: sessionId } = currentConversation.value;
     const msglist = currentMessageList.value;
     const nextMsg = validateLastMessage(msglist);
-    console.log("nextMsg:", nextMsg);
+    // console.log("nextMsg:", nextMsg);
 
     if (nextMsg?.type === "TIMCustomElem") {
-      console.log("nextMsg:text", nextMsg?.payload?.data);
+      // console.log("nextMsg:text", nextMsg?.payload?.data);
     } else if (nextMsg?.type === "TIMTextElem") {
-      console.log("nextMsg:text", nextMsg?.payload?.text);
-      console.log("nextMsg:ID", nextMsg?.ID);
+      // console.log("nextMsg:text", nextMsg?.payload?.text);
+      // console.log("nextMsg:ID", nextMsg?.ID);
       const el = document.getElementById(`choice-${nextMsg?.ID}`);
-      console.log("nextMsg:el", el);
+      // console.log("nextMsg:el", el);
     }
 
     const result = await getMessageList({
@@ -339,19 +343,19 @@ const getMoreMsg = async () => {
       nextReqMessageID: nextMsg.ID,
     });
 
-    console.log("getMessageList:", result);
+    // console.log("getMessageList:", result);
     const { isCompleted, messageList, nextReqMessageID } = result;
     if (!messageList.length && isCompleted) {
-      console.log("[chat] 没有更多消息了 getMoreMsg:");
-      chatStore.$patch({ noMore: true });
+      // console.log("[chat] 没有更多消息了 loadMoreMsg:");
+      chatStore.setNoMore(true);
     } else if (messageList.length) {
       chatStore.loadMoreMessages({ sessionId, messages: messageList, msgId: messageList[0].ID });
       chatStore.$patch({ scrollTopID: nextMsg?.ID });
     } else {
-      chatStore.$patch({ noMore: true });
+      chatStore.setNoMore(true);
     }
   } catch (e) {
-    chatStore.$patch({ noMore: true });
+    chatStore.setNoMore(true);
   }
 };
 

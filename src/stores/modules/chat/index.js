@@ -131,6 +131,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
   },
   actions: {
+    setNoMore(bool) {
+      this.noMore = bool
+    },
     updateSendingState(sessionId, type) {
       // set delete
       if (!this.isAssistant) return
@@ -182,7 +185,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       } else {
         this.currentMessageList = [];
       }
-      this.noMore = this.isMore;
+      this.setNoMore(this.isMore)
       this.isChatBoxVisible = sessionId !== "@TIM#SYSTEM";
       this.isAssistant && useRobotStore().updateModelConfig();
     },
@@ -197,7 +200,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.historyMessageList.set(conversationID, message);
       const isMore = this.isMore || isDone;
       console.log("isDone:", isMore ? "没有更多" : "显示loading");
-      this.noMore = isMore;
+      this.setNoMore(isMore)
     },
     async deleteMessage(payload) {
       console.log("[chat] 删除消息 deleteMessage:", payload);
@@ -226,7 +229,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const history = this.historyMessageList.get(sessionId) || [];
       if (history.map((t) => t?.ID).includes(msgId)) {
         console.warn("重复加载", msgId);
-        this.noMore = true;
+        this.setNoMore(true)
         return;
       }
       console.log("历史消息 history:", history);
