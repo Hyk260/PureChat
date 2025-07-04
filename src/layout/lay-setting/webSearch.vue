@@ -40,7 +40,7 @@ import { useState } from "@/utils/hooks/index";
 import { useAppStore, useWebSearchStore } from "@/stores/index";
 import { WEB_SEARCH_PROVIDER_CONFIG } from "@/config/webSearchProviders";
 import { openWindow } from "@/utils/common";
-import WebSearchService from "@/service/webSearchService";
+import WebSearchService from "@/service/WebSearchService";
 
 const { DEV: isDev } = import.meta.env;
 
