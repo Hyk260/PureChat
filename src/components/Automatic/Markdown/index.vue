@@ -96,7 +96,8 @@ function MarkdownRender() {
   }
 
   if (content && webSearchResult.value?.length) {
-    content += convertToMarkdownFootnotes(webSearchResult.value);
+    const footnotesq = convertToMarkdownFootnotes(webSearchResult.value);
+    content = `${content}${footnotesq}`;
   }
 
   const mark = h("div", {

@@ -7,14 +7,16 @@ class _MessageModel extends BaseModel {
 
   // **************** Query *************** //
 
-  async query({ id, pageSize = 99, current = 0 }) {
+  async query({ id, pageSize = 9999, current = 0 }) {
     const offset = current * pageSize;
 
     const query = this.table.where("conversationID").equals(id);
 
     const dbMessages = await query
       .sortBy("createdAt")
-      .then((sortedArray) => sortedArray.slice(offset, offset + pageSize));
+      .then((sortedArray) => {
+        return sortedArray.slice(offset, offset + pageSize)
+      });
 
     const messages = dbMessages;
 

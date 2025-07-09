@@ -11,11 +11,6 @@ import { FilesModel } from "@/database/models/files";
 import { ConversationList, UserProfile, BaseElemMessage, ProvidersList } from '@database/config';
 import emitter from "@/utils/mitt-bus";
 
-export function getConversationList() {
-  const list = useChatStore().conversationList;
-  return cloneDeep(list) || [];
-}
-
 export class LocalChat {
   constructor() {
     this.initializeProxy()
@@ -29,9 +24,9 @@ export class LocalChat {
   }
   initialize() {
     setTimeout(async () => {
-      const _newData = await SessionModel.query();
+      const list = await SessionModel.query();
       this.emit("sdkStateReady", { name: "sdkStateReady" });
-      this.emit("onConversationListUpdated", { data: _newData });
+      this.emit("onConversationListUpdated", { data: list });
     });
   }
   create(data) {
@@ -50,10 +45,10 @@ export class LocalChat {
     emitter.emit(eventName, handler);
   }
   async sendMessage(data) {
-    const newData = getConversationList();
-    const conversation = newData.find((t) => t.conversationID === data.conversationID);
+    const session = await SessionModel.findById(data.conversationID);
 
-    if (conversation) {
+    if (session) {
+      const conversation = cloneDeep(session);
       conversation.lastMessage.messageForShow = data.payload.text;
       conversation.lastMessage.lastTime = getTime();
       SessionModel.update(data.conversationID, conversation);
@@ -69,8 +64,8 @@ export class LocalChat {
 
     return new Promise((resolve) => {
       setTimeout(async () => {
-        const _newData = await SessionModel.query();
-        this.emit("onConversationListUpdated", { data: _newData });
+        const sessionList = await SessionModel.query();
+        this.emit("onConversationListUpdated", { data: sessionList });
         this.emit("onMessageReceived", { data: [message] });
         resolve({ code: 0, data: { message } });
       }, 100);
@@ -181,7 +176,7 @@ export class LocalChat {
     data.userProfile = ProvidersList.find((item) => item.userID === chatId.replace("C2C", ""));
     SessionModel.create(chatId, data);
 
-    const list = getConversationList();
+    const list = await SessionModel.query(); // 获取会话列表
     const index = list.findIndex((t) => t.conversationID === chatId);
 
     if (index === -1) list.push(data);
@@ -199,8 +194,8 @@ export class LocalChat {
     return 0;
   }
   async getMessageList(data) {
-    const { conversationID } = data;
-    const messageList = await MessageModel.query({ id: conversationID });
+    const { conversationID: id, nextReqMessageID = "" } = data;
+    const messageList = await MessageModel.query({ id });
     return {
       code: 0,
       data: {
@@ -211,19 +206,16 @@ export class LocalChat {
     };
   }
   async deleteMessage(data) {
-    data.forEach((item) => {
-      MessageModel.delete(item.ID);
-    });
-
+    data.forEach((item) => MessageModel.delete(item.ID));
     return {
       code: 0,
       data: { messageList: [] },
     };
   }
   async deleteConversation({ conversationIDList = [], clearHistoryMessage = false }) {
-    const newData = getConversationList();
+    const list = await SessionModel.query();
     const [ID] = conversationIDList;
-    const messageList = newData.filter((item) => item.conversationID !== ID);
+    const messageList = list.filter((item) => item.conversationID !== ID);
     this.emit("onConversationListUpdated", { data: messageList });
     await SessionModel.delete(ID);
     return {
@@ -234,12 +226,12 @@ export class LocalChat {
   async clearHistoryMessage(sessionId) {
     const data = await MessageModel.query({ id: sessionId });
     data.forEach((item) => MessageModel.delete(item.ID));
-
-    const newData = getConversationList();
-    const conversation = newData.find((t) => t.conversationID === sessionId);
-    if (conversation) {
-      conversation.lastMessage.messageForShow = '';
-      SessionModel.update(sessionId, conversation);
+    const sessionList = await SessionModel.query();
+    const session = sessionList.find((t) => t.conversationID === sessionId);
+    if (session) {
+      const newSession = cloneDeep(session)
+      newSession.lastMessage.messageForShow = '';
+      SessionModel.update(sessionId, newSession);
       const messageList = await SessionModel.query();
       this.emit("onConversationListUpdated", { data: messageList });
     }
@@ -249,11 +241,12 @@ export class LocalChat {
     };
   }
   async modifyMessage(data) {
-    await MessageModel.update(data.ID, {
+    const payload = {
       payload: {
         text: data.payload.text,
       },
-    });
+    }
+    await MessageModel.update(data.ID, payload);
     this.emit("onMessageModified", { data: [data] });
     return {
       code: 0,

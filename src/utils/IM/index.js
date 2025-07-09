@@ -288,7 +288,10 @@ export class TIMProxy {
     if (!atUserList.length) return;
     // @全体成员
     let atAll = atUserList.includes("__kImSDK_MesssageAtALL__");
-    if (atAll) this.notifyUser(data[0]);
+    if (atAll) {
+      this.notifyUser(data[0]);
+      return
+    }
     // 消息免打扰
     if (!massage || massage?.[0]?.messageRemindType === "AcceptNotNotify") return;
     // @自己
