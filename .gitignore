@@ -20,16 +20,7 @@ pnpm-debug.log*
 *.sw?
 .vercel
 
-#Electron-builder output
-/dist_electron
-
 # output
 /server
 /dist
 /report.html
-
-# Yarn lock file
-# yarn.lock
-
-# pnpm lock file
-# pnpm-lock.yaml

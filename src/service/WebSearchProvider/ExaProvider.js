@@ -8,10 +8,13 @@ export default class ExaProvider extends BaseWebSearchProvider {
     if (!this.apiKey) {
       throw new Error('API key is required for Exa provider')
     }
-    this.exa = new ExaClient({ apiKey: this.apiKey })
+    if (!this.apiHost) {
+      throw new Error('API host is required for Exa provider')
+    }
+    this.exa = new ExaClient({ apiKey: this.apiKey, apiBaseUrl: this.apiHost })
   }
 
-   async search(query, maxResults){
+  async search(query, websearch) {
     try {
       if (!query.trim()) {
         throw new Error('Search query cannot be empty')
@@ -19,7 +22,7 @@ export default class ExaProvider extends BaseWebSearchProvider {
 
       const response = await this.exa.search({
         query,
-        numResults: Math.max(1, maxResults),
+        numResults: Math.max(1, websearch.maxResults),
         contents: {
           text: true
         }
@@ -27,7 +30,7 @@ export default class ExaProvider extends BaseWebSearchProvider {
 
       return {
         query: response.autopromptString,
-        results: response.results.map((result) => ({
+        results: response.results.slice(0, websearch.maxResults).map((result) => ({
           title: result.title || 'No title',
           content: result.text || '',
           url: result.url || ''

@@ -5,7 +5,7 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default class DefaultProvider extends BaseWebSearchProvider {
   async search() {
-    await delay(1000);
+    await delay(500);
     return {
       query: result.query,
       results: result.results.map((t) => ({

@@ -3,6 +3,9 @@ import { SetupStoreId } from '@/stores/plugins/index';
 
 const { VITE_TAVILY_API_KEY } = import.meta.env
 
+const localSearch = __IS_ELECTRON__
+// const localSearch = true
+
 const providers = [
   {
     id: 'test',
@@ -12,12 +15,14 @@ const providers = [
   {
     id: 'tavily',
     name: 'Tavily',
-    apiKey: VITE_TAVILY_API_KEY || ''
+    apiKey: VITE_TAVILY_API_KEY || '',
+    apiHost: 'https://api.tavily.com',
   },
   {
     id: 'exa',
     name: 'Exa',
-    apiKey: ''
+    apiKey: '',
+    apiHost: 'https://api.exa.ai',
   },
   // {
   //   id: 'local-google',
@@ -34,13 +39,13 @@ const providers = [
     name: 'Baidu',
     url: 'https://www.baidu.com/s?wd=%s'
   }
-].filter(item => __IS_ELECTRON__ ? true : !item.id.startsWith('local-'))
+].filter(item => localSearch ? true : !item.id.startsWith('local-'))
 
 export const useWebSearchStore = defineStore(SetupStoreId.WebSearch, {
   state: () => ({
-    defaultProvider: __IS_ELECTRON__ ? "local-bing" : "tavily",
+    defaultProvider: localSearch ? "local-bing" : "tavily",
     providers,
-    searchWithTime: true,
+    searchWithTime: true, // 是否在搜索时显示时间
     enhanceMode: false,
     maxResults: 5,
     excludeDomains: [],

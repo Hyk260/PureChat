@@ -11,9 +11,13 @@ export default class LocalSearchProvider extends BaseWebSearchProvider {
     httpOptions
   ) {
     try {
-      return {
-        query: query,
-        results: []
+      if (__IS_ELECTRON__) {
+
+      } else {
+        return {
+          query: query,
+          results: []
+        }
       }
     } catch (error) {
       console.error('Local search failed:', error)

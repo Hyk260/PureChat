@@ -37,6 +37,10 @@ class WebSearchService {
       return provider.apiKey !== ''
     }
 
+    if (hasObjectKey(provider, 'apiHost')) {
+      return provider.apiHost !== ''
+    }
+
     return false
   }
 
@@ -60,17 +64,18 @@ class WebSearchService {
    * @param query 搜索查询
    * @returns 搜索响应
    */
-  async search(provider, query) {
-    const { searchWithTime, maxResults, excludeDomains } = this.getWebSearchState()
+  async search(provider, query, httpOptions = {}) {
+    const websearch = this.getWebSearchState()
+    // searchWithTime maxResults excludeDomains
     const webSearchEngine = new WebSearchEngineProvider(provider)
 
     let formattedQuery = query
-    if (searchWithTime) {
+    if (websearch.searchWithTime) {
       formattedQuery = `today is ${dayjs().format('YYYY-MM-DD')} \r\n ${query}`
     }
 
     try {
-      return await webSearchEngine.search(formattedQuery, maxResults, excludeDomains)
+      return await webSearchEngine.search(formattedQuery, websearch, httpOptions)
     } catch (error) {
       console.error('Search failed:', error)
       return {

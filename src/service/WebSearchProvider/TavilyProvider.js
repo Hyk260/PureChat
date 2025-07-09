@@ -4,14 +4,17 @@ import BaseWebSearchProvider from './BaseWebSearchProvider'
 export default class TavilyProvider extends BaseWebSearchProvider {
   tvly
   constructor(provider) {
-    super(provider)
+    super(provider) 
     if (!this.apiKey) {
       throw new Error('API key is required for Tavily provider')
     }
-    this.tvly = new TavilyClient({ apiKey: this.apiKey })
+    if (!this.apiHost) {
+      throw new Error('API host is required for Tavily provider')
+    }
+    this.tvly = new TavilyClient({ apiKey: this.apiKey, apiBaseUrl: this.apiHost })
   }
 
-  async search(query, maxResults, excludeDomains) {
+  async search(query, websearch) {
     try {
       if (!query.trim()) {
         throw new Error('Search query cannot be empty')
@@ -19,13 +22,12 @@ export default class TavilyProvider extends BaseWebSearchProvider {
 
       const result = await this.tvly.search({
         query,
-        max_results: Math.max(1, maxResults),
-        exclude_domains: excludeDomains || []
+        max_results: Math.max(1, websearch.maxResults),
       })
 
       return {
         query: result.query,
-        results: result.results.map((result) => ({
+        results: result.results.slice(0, websearch.maxResults).map((result) => ({
           title: result.title || 'No title',
           content: result.content || '',
           url: result.url || ''
