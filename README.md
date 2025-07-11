@@ -78,6 +78,9 @@ pnpm dev
 pnpm build
 ```
 
+### 📊 GitHub Stats
+![Alt](https://repobeats.axiom.co/api/embed/5f9a9bb83bee403abed7ee7ffa36c4470d8e2544.svg "Repobeats analytics image")
+
 ### Star History
 <!-- https://star-history.com/ -->
 <!-- ![Star History](./images/star-history.png) -->

@@ -193,12 +193,11 @@ useEventListener(window, "focus", () => {
 const updateLoadMore = (id) => {
   nextTick(() => {
     const el = document.getElementById(`choice-${id}`);
-    if (!el) {
+    if (el) {
+      el.scrollIntoView({ block: "start" });
+    } else {
       console.warn("未找到对应的元素");
-      return;
     }
-    // chatStore.$patch({ scrollTopID: '' });
-    el.scrollIntoView({ block: "start" });
   });
 };
 
