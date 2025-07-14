@@ -102,7 +102,7 @@ export class TIMProxy {
     const _data = data.filter((t) => t.conversationID === chatId);
     useChatStore().setConversationList(data)
     if (_data.length) {
-      useChatStore().setConversationList(cloneDeep(_data[0]))
+      useChatStore().setCurrentConversation(cloneDeep(_data[0]))
       this.reportedMessageRead(_data[0]);
     }
     useChatStore().updateTotalUnreadMsg();

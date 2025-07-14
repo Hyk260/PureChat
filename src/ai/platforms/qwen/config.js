@@ -1,6 +1,6 @@
 export const QwenConfig = () => {
   return {
-    model: "qwen-turbo",
+    model: "qwen-plus",
     temperature: 0.6,
     top_p: 1,
     presence_penalty: 0,

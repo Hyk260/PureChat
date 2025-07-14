@@ -131,10 +131,13 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
   },
   actions: {
-    setConversationList(list) {
+    setCurrentConversation(data = {}) {
+      this.currentConversation = data
+    },
+    setConversationList(list = []) {
       this.conversationList = list
     },
-    setScrollTopID(id) {
+    setScrollTopID(id = "") {
       this.scrollTopID = id
     },
     setNoMore(bool) {

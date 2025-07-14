@@ -17,6 +17,7 @@ const Qwen = {
       tokens: 0,
     },
   ],
+  checkModel: 'qwen-plus',
   id: 'qwen',
   name: 'Qwen',
 };

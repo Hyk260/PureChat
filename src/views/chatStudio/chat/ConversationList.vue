@@ -75,6 +75,7 @@
 <script setup>
 import { h, watch, ref, computed } from "vue";
 import { storeToRefs } from "pinia";
+import { isObject } from "lodash-es";
 import { chatSessionListData } from "../utils/menu";
 import { pinConversation } from "@/service/im-sdk-api/index";
 import { timeFormat } from "@/utils/timeFormat";
@@ -130,6 +131,7 @@ const isMention = (item) => {
 const fnClass = (item) => (item?.conversationID === currentSessionId.value ? "is-active" : "");
 
 const formatNewsMessage = (data) => {
+  if (!isObject(data)) return '';
   const { type, lastMessage, unreadCount } = data;
   const { messageForShow: rawTip, fromAccount, isRevoked, nick, type: lastType } = lastMessage;
   const isOther = userStore.userProfile?.userID !== fromAccount; // 其他人消息
