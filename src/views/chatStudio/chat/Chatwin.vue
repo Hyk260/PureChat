@@ -348,8 +348,8 @@ const loadMoreMsg = async () => {
       // console.log("[chat] 没有更多消息了 loadMoreMsg:");
       chatStore.setNoMore(true);
     } else if (messageList.length) {
+      chatStore.setScrollTopID(nextMsg?.ID)
       chatStore.loadMoreMessages({ sessionId, messages: messageList, msgId: messageList[0].ID });
-      chatStore.$patch({ scrollTopID: nextMsg?.ID });
     } else {
       chatStore.setNoMore(true);
     }

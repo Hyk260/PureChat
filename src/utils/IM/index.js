@@ -100,9 +100,9 @@ export class TIMProxy {
     console.log("[chat] 会话列表更新 onUpdateConversationList:", data);
     const chatId = useChatStore().currentSessionId;
     const _data = data.filter((t) => t.conversationID === chatId);
-    useChatStore().$patch({ conversationList: data });
+    useChatStore().setConversationList(data)
     if (_data.length) {
-      useChatStore().$patch({ currentConversation: cloneDeep(_data[0]) });
+      useChatStore().setConversationList(cloneDeep(_data[0]))
       this.reportedMessageRead(_data[0]);
     }
     useChatStore().updateTotalUnreadMsg();

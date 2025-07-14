@@ -2,24 +2,19 @@
 const Qwen = {
   chatModels: [
     {
-      displayName: '',
-      id: 'qwen-turbo',
+      displayName: 'Qwen Turbo',
+      id: 'qwen-turbo-latest',
       tokens: 0,
     },
     {
-      displayName: '',
+      displayName: 'Qwen Plus',
       id: 'qwen-plus',
       tokens: 0,
     },
     {
-      displayName: '',
+      displayName: 'Qwen Max',
       id: 'qwen-max',
       tokens: 0,
-    },
-    {
-      displayName: 0,
-      id: 'qwen-max-longcontext',
-      tokens: '',
     },
   ],
   id: 'qwen',
