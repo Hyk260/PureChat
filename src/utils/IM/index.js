@@ -15,141 +15,405 @@ import {
   kickedOutReason,
 } from "./utils/index";
 
-const isFocused = useWindowFocus(); // 判断浏览器窗口是否在前台可见状态
+/**
+ * 浏览器窗口焦点状态监听
+ * 用于判断用户是否在当前页面，决定是否发送通知
+ */
+const isFocused = useWindowFocus();
 
+/**
+ * 检查是否为机器人会话
+ * @param {Array} data - 消息数据数组
+ * @returns {boolean} 是否为机器人会话
+ */
 function isRobotId(data) {
   return C2C_ROBOT_COLLECT.includes(data?.[0].conversationID);
 }
 
 export class TIMProxy {
   constructor() {
+    /**
+     * 当前登录用户ID
+     * @type {string}
+     */
     this.userID = "";
+
+    /**
+     * 用户签名，用于 IM SDK 登录验证
+     * @type {string}
+     */
     this.userSig = "";
-    this.userProfile = {}; // IM用户信息
-    this.once = false; // 防止重复初始化
+
+    /**
+     * IM 用户详细信息
+     * @type {Object}
+     */
+    this.userProfile = {};
+
+    /**
+     * 防止重复初始化标识
+     * @type {boolean}
+     * @private
+     */
+    this.once = false;
+
+    /**
+     * SDK 就绪状态
+     * @type {boolean}
+     */
     this.isSDKReady = false;
+
+    /**
+     * 群组操作类型映射
+     * @type {Object}
+     * @private
+     */
+    this.GROUP_TIP_TYPES = {
+      MEMBER_JOIN: 1,        // 有成员加群
+      MEMBER_QUIT: 2,        // 有群成员退群
+      MEMBER_KICKED_OUT: 3,  // 有群成员被踢出群
+      MEMBER_SET_ADMIN: 4,   // 有群成员被设为管理员
+      MEMBER_CANCELED_ADMIN: 5 // 有群成员被撤销管理员
+    };
+
+    /**
+     * 群系统通知类型映射
+     * @type {Object}
+     * @private
+     */
+    this.GROUP_SYSTEM_NOTICE_TYPES = {
+      KICKED_OUT: 4,    // 被踢出群组
+      GROUP_DISMISSED: 5 // 群组被解散
+    };
   }
+
+  /**
+   * 保存当前实例状态到本地存储
+   * 用于页面刷新后恢复状态
+   * @private
+   */
   saveSelfToLocalStorage() {
-    const player = {};
-    for (const [key, value] of Object.entries(this)) {
-      player[key] = value;
-    }
-    localStg.set(TIM_PROXY, player);
+    const stateData = {
+      userID: this.userID,
+      userSig: this.userSig,
+      userProfile: this.userProfile,
+    };
+
+    localStg.set(TIM_PROXY, stateData);
   }
+
+  /**
+   * 从本地存储加载实例状态
+   * 用于页面刷新后恢复状态
+   * @private
+   */
   loadSelfFromLocalStorage() {
-    const player = localStg.get(TIM_PROXY);
-    if (!player) return;
-    for (const [key, value] of Object.entries(player)) {
-      this[key] = value;
-    }
+    const stateData = localStg.get(TIM_PROXY);
+    if (!stateData) return;
+
+    Object.assign(this, stateData);
   }
-  // 初始化
+
+  /**
+   * 初始化 TIM 代理
+   * 设置事件监听器，开始监听 IM SDK 事件
+   * 
+   * @public
+   * @example
+   */
   init() {
-    console.log("[chat] TIMProxy init");
-    if (this.once) return;
+    console.log("[chat] TIMProxy 开始初始化");
+
+    if (this.once) {
+      console.log("[chat] TIMProxy 已初始化，跳过重复初始化");
+      return;
+    }
+
     this.once = true;
-    this.initListener(); // 监听SDK
+    this.loadSelfFromLocalStorage();
+    this.initListener();
+
+    console.log("[chat] TIMProxy 初始化完成");
   }
+
+  /**
+   * 初始化事件监听器
+   * 根据运行模式（本地/云端）注册不同的事件监听器
+   * @private
+   */
   initListener() {
-    if (__LOCAL_MODE__) chat.initialize()
-    // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
-    chat.on("sdkStateReady", this.onReadyStateUpdate, this);
-    // 收到 SDK 进入 not ready 状态通知，此时 SDK 无法正常工作
-    chat.on("sdkStateNotReady", this.onReadyStateUpdate, this);
-    // 收到会话列表更新通知
-    chat.on("onConversationListUpdated", this.onUpdateConversationList, this);
-    // 收到消息被修改的通知
-    chat.on("onMessageModified", this.onMessageModified, this);
-    // 收到推送的单聊、群聊、群提示、群系统通知的新消息
-    chat.on("onMessageReceived", this.onReceiveMessage, this);
-    if (__LOCAL_MODE__) return
-    // 收到消息被撤回的通知
-    chat.on("onMessageRevoked", this.onMessageRevoked);
-    // 群组列表更新
-    chat.on("onGroupListUpdated", this.onUpdateGroupList);
-    // 被踢出
-    chat.on("kickedOut", this.onKickOut);
-    // SDK内部出错
-    chat.on("error", this.onError);
-    // 网络监测
-    chat.on("netStateChange", this.onNetStateChange);
-    // 会话未读总数更新
-    chat.on("onTotalUnreadMessageCountUpdated", this.onTotalUnreadMessageCountUpdated);
-    // 收到好友申请列表更新通知
-    // chat.on("onFriendApplicationListUpdated", this.onFriendApplicationListUpdated);
-    // 收到好友分组列表更新通知
-    // chat.on("onFriendGroupListUpdated", this.onFriendGroupListUpdated);
-    // 已订阅用户或好友的状态变更（在线状态或自定义状态）时触发。
-    // chat.on("onUserStatusUpdated", this.onUserStatusUpdated);
+    // 本地模式需要手动初始化
+    if (__LOCAL_MODE__) {
+      chat.initialize();
+    }
+
+    // 核心事件监听（本地模式和云端模式都需要）
+    this.registerCoreEvents();
+
+    // 云端模式特有事件监听
+    if (!__LOCAL_MODE__) {
+      this.registerCloudEvents();
+    }
+
+    console.log(`[chat] 事件监听器注册完成 (模式: ${__LOCAL_MODE__ ? '本地' : '云端'})`);
   }
-  onTotalUnreadMessageCountUpdated({ data }) {
-    console.log("[chat] onTotalUnreadMessageCountUpdated:", data);
-  }
-  onReadyStateUpdate({ name }) {
-    console.log("[chat] onReadyStateUpdate:", name);
-    this.isSDKReady = name === "sdkStateReady";
-    if (!this.isSDKReady) return;
-    chat.getMyProfile().then(({ code, data }) => {
-      if (code !== 0) return useAppStore().showMessage({ message: data, type: "error" });
-      this.userProfile = data;
-      this.userID = chat.getLoginUser();
-      this.saveSelfToLocalStorage();
-      useUserStore().setCurrentProfile(data);
+
+  /**
+   * 注册核心事件监听器
+   * @private
+   */
+  registerCoreEvents() {
+    const coreEvents = [
+      { event: "sdkStateReady", handler: this.onReadyStateUpdate },
+      { event: "sdkStateNotReady", handler: this.onReadyStateUpdate },
+      { event: "onConversationListUpdated", handler: this.onUpdateConversationList },
+      { event: "onMessageModified", handler: this.onMessageModified },
+      { event: "onMessageReceived", handler: this.onReceiveMessage }
+    ];
+
+    coreEvents.forEach(({ event, handler }) => {
+      chat.on(event, handler, this);
     });
   }
-  onUpdateConversationList({ data }) {
-    console.log("[chat] 会话列表更新 onUpdateConversationList:", data);
-    const chatId = useChatStore().currentSessionId;
-    const _data = data.filter((t) => t.conversationID === chatId);
-    useChatStore().setConversationList(data)
-    if (_data.length) {
-      useChatStore().setCurrentConversation(cloneDeep(_data[0]))
-      this.reportedMessageRead(_data[0]);
+
+  /**
+   * 注册云端模式特有事件监听器
+   * @private
+   */
+  registerCloudEvents() {
+    const cloudEvents = [
+      { event: "onMessageRevoked", handler: this.onMessageRevoked },
+      { event: "onGroupListUpdated", handler: this.onUpdateGroupList },
+      { event: "kickedOut", handler: this.onKickOut },
+      { event: "error", handler: this.onError },
+      { event: "netStateChange", handler: this.onNetStateChange },
+      { event: "onTotalUnreadMessageCountUpdated", handler: this.onTotalUnreadMessageCountUpdated },
+      // { event: "onFriendApplicationListUpdated", handler: this.onFriendApplicationListUpdated }
+      // { event: "onFriendGroupListUpdated", handler: this.onFriendGroupListUpdated }
+      // { event: "onUserStatusUpdated", handler: this.onUserStatusUpdated }
+    ];
+
+    cloudEvents.forEach(({ event, handler }) => {
+      chat.on(event, handler, this);
+    });
+  }
+
+  /**
+   * 处理 SDK 就绪状态更新
+   * SDK 就绪后获取用户信息并更新状态
+   * 
+   * @param {Object} params - 事件参数
+   * @param {string} params.name - 状态名称
+   */
+  onReadyStateUpdate({ name }) {
+    console.log("[chat] SDK 状态更新:", name);
+    this.isSDKReady = name === "sdkStateReady";
+    if (!this.isSDKReady) {
+      console.log("[chat] SDK 未就绪，等待就绪状态");
+      return;
     }
-    useChatStore().updateTotalUnreadMsg();
+    // SDK 就绪后获取用户信息
+    this.fetchUserProfile();
   }
+
+
+  /**
+   * 获取并更新用户信息
+   * @private
+   */
+  async fetchUserProfile() {
+    try {
+      const { code, data } = await chat.getMyProfile();
+
+      if (code !== 0) {
+        useAppStore().showMessage({
+          message: `获取用户信息失败: ${data}`,
+          type: "error"
+        });
+        return;
+      }
+
+      this.userProfile = data;
+      this.userID = chat.getLoginUser();
+
+      // 同步到本地存储和全局状态
+      this.saveSelfToLocalStorage();
+      useUserStore().setCurrentProfile(data);
+
+      console.log("[chat] 用户信息获取成功:", this.userProfile);
+
+    } catch (error) {
+      console.error("[chat] 获取用户信息失败:", error);
+      useAppStore().showMessage({
+        message: "获取用户信息失败",
+        type: "error"
+      });
+    }
+  }
+
+  /**
+   * 处理未读消息总数更新
+   * @param {Object} params - 事件参数
+   * @param {*} params.data - 未读消息数据
+   */
+  onTotalUnreadMessageCountUpdated({ data }) {
+    console.log("[chat] 未读消息总数更新:", data);
+  }
+
+  /**
+   * 处理会话列表更新
+   * 更新当前会话信息并标记消息为已读
+   * 
+   * @param {Object} params - 事件参数
+   * @param {Array} params.data - 会话列表数据
+   */
+  onUpdateConversationList({ data }) {
+    console.log("[chat] 会话列表更新:", data);
+
+    const chatStore = useChatStore();
+    const currentSessionId = chatStore.currentSessionId;
+
+    // 更新会话列表
+    chatStore.setConversationList(data);
+
+    // 更新当前会话信息
+    const currentConversation = data.find(conv => conv.conversationID === currentSessionId);
+    if (currentConversation) {
+      chatStore.setCurrentConversation(cloneDeep(currentConversation));
+      this.reportedMessageRead(currentConversation);
+    }
+
+    // 更新未读消息总数
+    chatStore.updateTotalUnreadMsg();
+  }
+
+  /**
+   * 处理接收到的新消息
+   * 根据消息类型进行不同的处理逻辑
+   * 
+   * @param {Object} params - 事件参数
+   * @param {Array} params.data - 消息数据数组
+   */
   onReceiveMessage({ data }) {
-    console.log("[chat] 收到新消息 onReceiveMessage:", data);
-    const current = useChatStore().currentSessionId === data?.[0].conversationID;
-    this.handleQuitGroupTip(data);
-    this.handleNotificationTip(data);
-    this.handleGroupSystemNoticeTip(data);
-    this.handleUpdateMessage(data, current);
+    console.log("[chat] 收到新消息:", data);
+    if (!data || !data.length) return;
+    const message = data[0];
+    const isCurrentConversation = useChatStore().currentSessionId === message.conversationID;
+    // this.handleQuitGroupTip(data);
+    // this.handleNotificationTip(data);
+    // this.handleGroupSystemNoticeTip(data);
+    // 处理不同类型的消息
+    this.processMessageByType(data);
+    // 更新消息列表
+    this.handleUpdateMessage(data, isCurrentConversation);
   }
+
+  /**
+   * 根据消息类型进行处理
+   * @param {Array} data - 消息数据数组
+   * @private
+   */
+  processMessageByType(data) {
+    const message = data[0];
+
+    switch (message.type) {
+      case "TIMGroupTipElem":
+        this.handleQuitGroupTip(data);
+        break;
+      case "TIMGroupSystemNoticeElem":
+        this.handleGroupSystemNoticeTip(data);
+        break;
+      default:
+        // 处理普通消息的通知
+        this.handleNotificationTip(data);
+        break;
+    }
+  }
+
+  /**
+   * 处理消息撤回事件
+   * @param {Object} params - 事件参数
+   * @param {Array} params.data - 撤回消息数据
+   */
   onMessageRevoked({ data }) {
-    console.log("[chat] 撤回消息 onMessageRevoked:", data);
+    console.log("[chat] 撤回消息:", data);
+
+    if (!data || !data.length) return;
+
     useChatStore().updateMessages({
-      sessionId: data?.[0].conversationID,
+      sessionId: data[0].conversationID,
       message: cloneDeep(data[0]),
     });
   }
+
+  /**
+   * 处理群组列表更新
+   * @param {Object} params - 事件参数
+   * @param {Array} params.data - 群组列表数据
+   */
   onUpdateGroupList({ data }) {
-    console.log("[chat] 群组列表更新 onUpdateGroupList:", data);
+    console.log("[chat] 群组列表更新:", data);
   }
+
+  /**
+   * 处理被踢出事件
+   * @param {Object} params - 事件参数
+   * @param {Object} params.data - 被踢出数据
+   */
   onKickOut({ data }) {
-    console.log("[chat] onKickOut:", data);
+    console.log("[chat] 用户被踢出:", data);
+
+    const reason = kickedOutReason(data.type);
     useAppStore().showMessage({
-      message: `${kickedOutReason(data.type)}被踢出，请重新登录。`,
+      message: `${reason}被踢出，请重新登录。`,
       type: "error",
     });
+
     useUserStore().handleUserLogout();
   }
+
+  /**
+   * 处理 SDK 错误事件
+   * @param {Object} params - 事件参数
+   * @param {Object} params.data - 错误数据
+   */
   onError({ data }) {
-    console.log("[chat] onError:", data);
+    console.log("[chat] SDK 错误:", data);
     if (data.message !== "Network Error") {
       useAppStore().showMessage({ message: data.message, type: "error" });
     }
   }
+
+  /**
+   * 处理消息修改事件
+   * @param {Object} params - 事件参数
+   * @param {Array} params.data - 修改的消息数据
+   */
   onMessageModified({ data }) {
-    console.log("[chat] 历史消息更新 onMessageModified:", data);
+    console.log("[chat] 消息修改:", data);
+
+    if (!data || !data.length) return;
+
     useChatStore().modifiedMessages(cloneDeep(data[0]));
   }
+
+  /**
+   * 处理网络状态变化
+   * @param {Object} params - 事件参数
+   * @param {Object} params.data - 网络状态数据
+   */
   onNetStateChange({ data }) {
-    console.log("[chat] 网络状态变更 onNetStateChange:", data);
+    console.log("[chat] 网络状态变化:", data);
     useAppStore().showMessage(fnCheckoutNetState(data.state));
   }
+
+  /**
+   * 处理好友申请列表更新
+   * @param {Object} params - 事件参数
+   * @param {Array} params.data - 好友申请数据
+   */
   onFriendApplicationListUpdated({ data }) {
-    console.log("[chat] 好友申请列表 onFriendApplicationListUpdated:", data);
+    console.log("[chat] 好友申请列表更新:", data);
   }
   onFriendGroupListUpdated({ data }) {
     console.log(data);
@@ -157,147 +421,249 @@ export class TIMProxy {
   onUserStatusUpdated({ data }) {
     console.log(data);
   }
+
   /**
-   * 使用 window.Notification 进行全局的系统通知
-   * 本地调试仅支持 http://localhost:8080/
+   * 发送系统通知给用户
+   * 支持浏览器原生通知和 Element Plus 通知两种方式
    * https://developer.mozilla.org/zh-CN/docs/Web/API/notification
-   * @param {Message} message
+   * 
+   * @param {Object} message - 消息对象
+   * @param {string} message.ID - 消息ID
+   * @param {string} message.nick - 发送者昵称
+   * @param {Object} message.payload - 消息内容
+   * @param {string} message.conversationID - 会话ID
+   * @param {string} message.avatar - 发送者头像
    */
   async notifyUser(message) {
     const permission = Notification.permission;
-    console.log("[chat] notifyUser:", permission);
-    // denied 用户拒绝显示通知
-    // granted 用户接受显示通知
-    // default 用户选择是未知的 因此浏览器的行为类似于值是 denied
-    // 需检测浏览器支持和用户授权
+    console.log("[chat] 通知权限状态:", permission);
+
+    // 检查浏览器支持
     if (!("Notification" in window)) {
-      console.log("浏览器不支持通知");
+      console.log("[chat] 浏览器不支持原生通知，使用 Element 通知");
       this.handleElNotification(message);
-    } else if (permission === "granted") {
-      this.handleNotify(message);
-    } else if (permission === "denied") {
-      this.handleElNotification(message);
-    } else if (permission !== "denied") {
-      // 如果用户同意，就可以向他们发送通知
-      Notification.requestPermission()
-        .then(() => {
-          this.handleNotify(message);
-        })
-        .catch(() => {
+      return;
+    }
+
+    // 根据权限状态处理
+    switch (permission) {
+      // 接受显示通知
+      case "granted":
+        this.handleNotify(message);
+        break;
+        // 拒绝显示通知
+      case "denied":
+        this.handleElNotification(message);
+        break;
+      default:
+        // 请求通知权限
+        try {
+          const newPermission = await Notification.requestPermission();
+          if (newPermission === "granted") {
+            this.handleNotify(message);
+          } else {
+            this.handleElNotification(message);
+          }
+        } catch (error) {
+          console.error("[chat] 请求通知权限失败:", error);
           this.handleElNotification(message);
-        });
+        }
+        break;
     }
   }
+
+  /**
+   * 处理浏览器原生通知
+   * @param {Object} message - 消息对象
+   * @private
+   */
   handleNotify(message) {
-    console.log("[chat] handleNotify", message);
-    const { ID, payload, avatar } = message;
-    const tip = "有人提到了你";
+    console.log("[chat] 发送原生通知", message);
+    const { ID, payload, avatar, conversationID } = message;
+    const title = "有人提到了你";
     const icon = avatar || `${import.meta.env.VITE_CLOUD_BASE_URL}log.png`;
-    const notification = new window.Notification(tip, {
+    const notification = new window.Notification(title, {
       icon: icon,
       body: payload.text,
+      tag: conversationID, // 防止重复通知
     });
     notification.onclick = () => {
-      // 切换会话列表
-      useChatStore().addConversation({ sessionId: message.conversationID });
-      // 定位到指定会话
-      setTimeout(() => {
-        scrollToDomPosition(ID);
-      }, 1000);
-      window.focus();
+      this.handleNotificationClick(conversationID, ID);
       notification.close();
     };
+    // 自动关闭通知
+    setTimeout(() => {
+      notification.close();
+    }, 5000);
   }
+
   /**
-   * 收到有群成员/退群/被踢出/入群/的groupTip时,更新群成员列表
-   * MSG_GRP_TIP: "TIMGroupTipElem" 群提示消息
+   * 处理群组提示消息
+   * 当有群成员变动时更新群成员列表
+   * 收到有群成员/退群/被踢出/入群/的tip时,更新群成员列表
+   * 
+   * @param {Array} data - 消息数据数组
+   * @private
    */
   handleQuitGroupTip(data) {
-    if (data[0]?.type !== "TIMGroupTipElem") return;
-    console.log("[chat] handleQuitGroupTip", data);
-    const chatId = useChatStore().currentSessionId;
-    if (chatId !== data[0]?.conversationID) return;
-    // TIM.TYPES.GRP_TIP_MBR_JOIN // 1 有成员加群
-    // TIM.TYPES.GRP_TIP_MBR_QUIT // 2 有群成员退群
-    // TIM.TYPES.GRP_TIP_MBR_KICKED_OUT // 3 有群成员被踢出群
-    // TIM.TYPES.GRP_TIP_MBR_SET_ADMIN	// 4	有群成员被设为管理员
-    // TIM.TYPES.GRP_TIP_MBR_CANCELED_ADMIN // 5 有群成员被撤销管理员
-    const list = [1, 2, 3, 4, 5];
-    const groupTips = data.filter((t) => {
-      return list.includes(t.payload.operationType);
-    });
-    // 更新当前会话的群成员列表
-    if (groupTips.length) {
-      useGroupStore().handleGroupMemberList({ groupID: chatId });
+    const message = data[0];
+    if (message.type !== "TIMGroupTipElem") return;
+    console.log("[chat] 处理群组提示", data);
+
+    const currentSessionId = useChatStore().currentSessionId;
+    if (currentSessionId !== data[0]?.conversationID) return;
+
+    const { operationType } = message.payload;
+    const memberOperationTypes = Object.values(this.GROUP_TIP_TYPES);
+
+    // 检查是否为群成员相关操作
+    if (memberOperationTypes.includes(operationType)) {
+      console.log("[chat] 群成员变动，更新成员列表");
+      useGroupStore().handleGroupMemberList({ groupID: currentSessionId });
     }
   }
+
   /**
-   * 群系统通知的 系统会在恰当的时机，向特定用户发出群系统通知。例如：user1 被踢出群组，系统会给 user1 发送对应的群系统消息。
+   * 处理群系统通知
+   * 处理被踢出群组或群组解散的通知
    * https://web.sdk.qcloud.com/im/doc/v3/zh-cn/Message.html#.GroupSystemNoticePayload
-   * MSG_GRP_SYS_NOTICE "TIMGroupSystemNoticeElem"	群系统通知消息
+
+   * @param {Array} data - 消息数据数组
+   * @private
    */
   handleGroupSystemNoticeTip(data) {
-    if (data[0]?.type !== "TIMGroupSystemNoticeElem") return;
-    console.log("[chat] handleGroupSystemNoticeTip", data);
-    // 4	被踢出群组 被踢出的用户接收
-    // 5	群组被解散 全体群成员接收
-    const list = [4, 5];
-    const chatId = useChatStore().currentSessionId;
-    const groupSystemTips = data.filter((t) => {
-      return list.includes(t.payload.operationType);
-    });
-    if (groupSystemTips.length > 0) {
-      useChatStore().deleteSession({ sessionId: chatId });
+    const message = data[0];
+    if (message?.type !== "TIMGroupSystemNoticeElem") return;
+
+    console.log("[chat] 处理群系统通知:", data);
+
+    const { operationType } = message.payload;
+    const { KICKED_OUT, GROUP_DISMISSED } = this.GROUP_SYSTEM_NOTICE_TYPES;
+
+    // 处理被踢出或群解散的情况
+    if ([KICKED_OUT, GROUP_DISMISSED].includes(operationType)) {
+      const currentSessionId = useChatStore().currentSessionId;
+      console.log("[chat] 群组被解散或被踢出，删除会话");
+      useChatStore().deleteSession({ sessionId: currentSessionId });
     }
   }
-  // 消息更新
-  handleUpdateMessage(data, read = true) {
-    if (!useChatStore().currentSessionId) return;
+
+  /**
+   * 更新消息列表
+   * @param {Array} data - 消息数据数组
+   * @param {boolean} shouldMarkRead - 是否标记为已读
+   * @private
+   */
+  handleUpdateMessage(data, shouldMarkRead = true) {
+    const chatStore = useChatStore();
+
+    if (!chatStore.currentSessionId) return;
     if (isRobotId(data)) return;
-    useChatStore().updateMessages({
-      sessionId: data?.[0].conversationID,
-      message: cloneDeep(data[0]),
+
+    const message = data[0];
+
+    chatStore.updateMessages({
+      sessionId: message.conversationID,
+      message: cloneDeep(message),
     });
-    read && this.reportedMessageRead(data);
+
+    if (shouldMarkRead) {
+      this.reportedMessageRead(data);
+    }
+
     emitter.emit("updateScroll", "bottom");
   }
-  // 上报消息已读
+
+  /**
+   * 上报消息已读状态
+   * 只在窗口获得焦点时上报已读
+   * 
+   * @param {Array|Object} data - 消息数据
+   * @private
+   */
   reportedMessageRead(data) {
-    if (isFocused.value) setMessageRead(data);
+    if (isFocused.value) {
+      setMessageRead(data);
+    }
   }
+
+
+  /**
+   * 处理通知点击事件
+   * @param {string} conversationID - 会话ID
+   * @param {string} messageID - 消息ID
+   * @private
+   */
+  handleNotificationClick(conversationID, messageID) {
+    // 切换到对应会话
+    useChatStore().addConversation({ sessionId: conversationID });
+
+    // 聚焦窗口
+    window.focus();
+
+    // 滚动到指定消息位置
+    setTimeout(() => {
+      scrollToDomPosition(messageID);
+    }, 1000);
+  }
+
+  /**
+   * 处理 Element Plus 通知
+   * @param {Object} message - 消息对象
+   * @private
+   */
   handleElNotification(message) {
     const { ID, nick, payload, conversationID } = message;
+
     const Notification = ElNotification({
       title: `${nick}提到了你`,
       message: payload.text,
       duration: 6000,
       // type: "info",
       onClick: () => {
-        useChatStore().addConversation({ sessionId: conversationID });
-        scrollToDomPosition(ID);
+        this.handleNotificationClick(conversationID, ID);
         Notification.close();
       },
     });
   }
+
   /**
-   * 群详情 @好友 @全体成员 系统通知tips
+   * 处理 @ 提及通知
+   * 检查消息中是否包含对当前用户的 @ 提及
+   * 
+   * @param {Array} data - 消息数据数组
+   * @private
    */
   handleNotificationTip(data) {
-    const { userID } = this.userProfile || {};
-    const { atUserList } = data[0];
-    const massage = getConversationList(data);
+    const message = data[0];
+    const { atUserList = [] } = message;
+
     if (!atUserList.length) return;
-    // @全体成员
-    let atAll = atUserList.includes("__kImSDK_MesssageAtALL__");
-    if (atAll) {
-      this.notifyUser(data[0]);
+
+    const { userID } = this.userProfile || {};
+    if (!userID) return;
+
+    // 检查消息免打扰设置
+    const conversation = getConversationList(data);
+    if (conversation?.[0]?.messageRemindType === "AcceptNotNotify") {
+      console.log("[chat] 消息免打扰，跳过通知");
+      return;
+    }
+
+    // 检查是否 @ 全体成员
+    let isAtAll = atUserList.includes("__kImSDK_MesssageAtALL__");
+    if (isAtAll) {
+      console.log("[chat] @ 全体成员，发送通知");
+      this.notifyUser(message);
       return
     }
-    // 消息免打扰
-    if (!massage || massage?.[0]?.messageRemindType === "AcceptNotNotify") return;
-    // @自己
-    let atSelf = atUserList.includes(userID);
-    if (atSelf) this.notifyUser(data[0]);
+
+    // 检查是否 @ 当前用户
+    let isAtSelf = atUserList.includes(userID);
+    if (isAtSelf) {
+      console.log("[chat] @ 当前用户，发送通知");
+      this.notifyUser(message);
+    }
   }
 }
 
