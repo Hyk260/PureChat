@@ -51,6 +51,7 @@ export class TIMProxy {
     this.initListener(); // 监听SDK
   }
   initListener() {
+    if (__LOCAL_MODE__) chat.initialize()
     // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
     chat.on("sdkStateReady", this.onReadyStateUpdate, this);
     // 收到 SDK 进入 not ready 状态通知，此时 SDK 无法正常工作
