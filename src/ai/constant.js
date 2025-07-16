@@ -6,31 +6,10 @@ import { QwenApi, QwenModelValue, QwenConfig } from "@/ai/platforms/qwen/index";
 import { OllamaApi, OllamaModelValue, OllamaConfig } from "@/ai/platforms/ollama/index";
 import { DeepSeekApi, DeepseekModelValue, DeepseekConfig } from "@/ai/platforms/deepseek/index";
 import { MistralApi, MistralModelValue, MistralConfig } from "@/ai/platforms/mistral/index";
+import { ROBOT_COLLECT } from '@shared/provider/config';
 import { prefixRobotIDs } from "./utils";
 
-export const {
-  VITE_OPENAI_ID, // chatgpt
-  VITE_ZHIPU_ID, // 智谱
-  VITE_ZEROONE_ID, // 零一万物
-  VITE_QWEN_ID, // 通义千问
-  VITE_OLLAMA_ID, // ollama
-  VITE_GITHUB_ID, // github
-  VITE_DEEPSEEK_ID, // deepseek
-  VITE_MISTRAL_ID, // mistral
-} = import.meta.env;
-
 export const ROLES = ["system", "user", "assistant"];
-
-export const ROBOT_COLLECT = [
-  VITE_OPENAI_ID,
-  VITE_ZHIPU_ID,
-  VITE_ZEROONE_ID,
-  VITE_OLLAMA_ID,
-  VITE_DEEPSEEK_ID,
-  VITE_GITHUB_ID,
-  VITE_QWEN_ID,
-  // VITE_MISTRAL_ID,
-];
 
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
 

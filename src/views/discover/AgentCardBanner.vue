@@ -37,8 +37,8 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
+import { OPENAI_ID } from '@shared/provider/config';
 import { useState } from "@/utils/hooks/index";
-import { VITE_OPENAI_ID } from "@/ai/constant";
 import { getModelId } from "@/ai/utils";
 import { useRobotStore, useSidebarStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
@@ -59,7 +59,7 @@ function startConversation(item = cardData.value) {
     prompt: [{ role: "system", content: meta.systemRole }],
   };
   robotStore.setPromptStore([prompt], defaultBot);
-  const id = getModelId(defaultBot) || VITE_OPENAI_ID;
+  const id = getModelId(defaultBot) || OPENAI_ID;
   handleClose();
   sidebarStore.toggleOutside({ path: "/chat" });
   chatStore.addConversation({ sessionId: `${"C2C"}${id}` });

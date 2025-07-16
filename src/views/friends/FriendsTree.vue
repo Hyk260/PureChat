@@ -20,7 +20,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import { ROBOT_COLLECT } from "@/ai/constant";
+import { ROBOT_COLLECT } from '@shared/provider/config';
 import { getUserProfile } from "@/service/im-sdk-api/index";
 import { useGroupStore } from '@/stores/modules/group/index';
 import CardGrid from "./CardGrid.vue";

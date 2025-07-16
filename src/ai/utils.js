@@ -1,4 +1,14 @@
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
+import { 
+  OPENAI_ID, 
+  ZHIPU_ID, 
+  ZEROONE_ID, 
+  QWEN_ID, 
+  OLLAMA_ID, 
+  GITHUB_ID, 
+  DEEPSEEK_ID,
+  MISTRAL_ID
+} from '@shared/provider/config';
 import {
   ModelProvider,
   modelConfig,
@@ -10,18 +20,6 @@ import { useRobotStore, useChatStore } from "@/stores/index";
 import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 import { isEmpty } from "lodash-es";
-
-
-const {
-  VITE_OPENAI_ID, // chatgpt
-  VITE_ZHIPU_ID, // 智谱
-  VITE_ZEROONE_ID, // 零一万物
-  VITE_QWEN_ID, // 通义千问
-  VITE_OLLAMA_ID, // ollama
-  VITE_GITHUB_ID, // github
-  VITE_DEEPSEEK_ID, // deepseek
-  VITE_MISTRAL_ID, // mistral
-} = import.meta.env;
 
 /**
  * 获取 AI 模型的配置信息
@@ -51,14 +49,14 @@ export const useAccessStore = (model = ModelProvider.OpenAI) => {
 export function getModelType(modelId) {
   if (!isRobot(modelId)) return "";
   const modelMapping = {
-    [VITE_OPENAI_ID]: ModelProvider.OpenAI,
-    [VITE_ZHIPU_ID]: ModelProvider.ZhiPu,
-    [VITE_ZEROONE_ID]: ModelProvider.ZeroOne,
-    [VITE_QWEN_ID]: ModelProvider.Qwen,
-    [VITE_OLLAMA_ID]: ModelProvider.Ollama,
-    [VITE_GITHUB_ID]: ModelProvider.GitHub,
-    [VITE_DEEPSEEK_ID]: ModelProvider.DeepSeek,
-    [VITE_MISTRAL_ID]: ModelProvider.Mistral,
+    [OPENAI_ID]: ModelProvider.OpenAI,
+    [ZHIPU_ID]: ModelProvider.ZhiPu,
+    [ZEROONE_ID]: ModelProvider.ZeroOne,
+    [QWEN_ID]: ModelProvider.Qwen,
+    [OLLAMA_ID]: ModelProvider.Ollama,
+    [GITHUB_ID]: ModelProvider.GitHub,
+    [DEEPSEEK_ID]: ModelProvider.DeepSeek,
+    [MISTRAL_ID]: ModelProvider.Mistral,
   };
   return modelMapping[modelId.replace("C2C", "")] || "";
 }
@@ -66,14 +64,14 @@ export function getModelType(modelId) {
 export function getModelId(model) {
   if (!model) return "";
   const modelMapping = {
-    [ModelProvider.OpenAI]: VITE_OPENAI_ID,
-    [ModelProvider.ZhiPu]: VITE_ZHIPU_ID,
-    [ModelProvider.ZeroOne]: VITE_ZEROONE_ID,
-    [ModelProvider.Qwen]: VITE_QWEN_ID,
-    [ModelProvider.Ollama]: VITE_OLLAMA_ID,
-    [ModelProvider.GitHub]: VITE_GITHUB_ID,
-    [ModelProvider.DeepSeek]: VITE_DEEPSEEK_ID,
-    [ModelProvider.Mistral]: VITE_MISTRAL_ID,
+    [ModelProvider.OpenAI]: OPENAI_ID,
+    [ModelProvider.ZhiPu]: ZHIPU_ID,
+    [ModelProvider.ZeroOne]: ZEROONE_ID,
+    [ModelProvider.Qwen]: QWEN_ID,
+    [ModelProvider.Ollama]: OLLAMA_ID,
+    [ModelProvider.GitHub]: GITHUB_ID,
+    [ModelProvider.DeepSeek]: DEEPSEEK_ID,
+    [ModelProvider.Mistral]: MISTRAL_ID,
   };
   return modelMapping[model] || "";
 }

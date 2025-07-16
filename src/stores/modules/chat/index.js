@@ -17,7 +17,7 @@ import { SetupStoreId } from '@/stores/plugins/index';
 import { EMOJI_RECENTLY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
-import { ROBOT_COLLECT } from "@/ai/constant";
+import { ROBOT_COLLECT } from '@shared/provider/config';
 import { chatService } from "@/ai/index";
 import { timProxy } from "@/utils/IM/index";
 import { MessageModel } from "@/database/models/message";
