@@ -73,7 +73,7 @@ export const modelValue = {
   [ModelProvider.Mistral]: MistralModelValue(),
 };
 
-export const API_CLASS_MAP = {
+export const API_PROVIDER_MAP = {
   [ModelProvider.DeepSeek]: DeepSeekApi,
   [ModelProvider.ZhiPu]: ZhiPuApi,
   [ModelProvider.ZeroOne]: ZeroOneApi,

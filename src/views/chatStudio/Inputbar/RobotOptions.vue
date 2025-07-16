@@ -251,7 +251,7 @@ async function onRefresh() {
   // modelData.value.Model.options.chatModels = list;
   // localStg.set("olama-local-model-list", list);
   // const api = new ClientApi();
-  // const list = await api.llm.models()
+  // const list = await api.llm.getModels()
   // modelData.value.Model.options.chatModels = list;
   // console.log(list)
 }
@@ -320,7 +320,7 @@ async function handleCheckToken(item) {
     setLoading(true);
     const provider = modelProvider.value;
     const api = new ClientApi(provider);
-    const { valid, error } = await api.llm.check();
+    const { valid, error } = await api.llm.checkConnectivity();
     if (valid) {
       setLoading(false);
       appStore.showMessage({ message: "连接成功", type: "success" });

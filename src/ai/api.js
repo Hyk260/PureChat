@@ -1,39 +1,42 @@
-import { ModelProvider, API_CLASS_MAP } from "@/ai/constant";
+import { ModelProvider, API_PROVIDER_MAP } from "@/ai/constant";
 import { useAccessStore } from "@/ai/utils";
 import { useRobotStore } from '@/stores/index';
+import { OpenAiApi } from "@/ai/platforms/openai/index";
 
 /**
- * ClientApi 类用于管理聊天模型提供者及其配置。
+ * 客户端API类
+ * 统一的API入口点，负责创建和管理不同的AI提供者实例
  */
 export class ClientApi {
-  /**
-   * 创建 ClientApi 的实例。
-   * @param {ModelProvider} [provider=ModelProvider.OpenAI] - 要使用的模型提供者。
-   * @throws {Error} 如果提供者无效或初始化失败。
-   */
   constructor(provider = ModelProvider.OpenAI) {
     try {
+      this._provider = provider;
       this._config = useAccessStore(provider);
       this._prompts = useRobotStore().currentProviderPrompt
-      this.llm = this.createLLM(provider);
+      this.llm = this.createProvider(provider)
     } catch (error) {
       throw new Error(`初始化 ClientApi 失败: ${error.message}`);
     }
   }
 
   /**
-   * 根据提供者创建相应的语言模型实例。
-   * @param {ModelProvider} provider - 要使用的模型提供者。
-   * @returns {Object} 相应 API 类的实例。
-   * @throws {Error} 如果提供者无效或创建实例失败。
+   * 根据提供者创建相应的AI提供者实例
+   * @param {string} provider - 要使用的模型提供者
+   * @returns {BaseAiProvider} 相应提供者类的实例
+   * @throws {Error} 如果提供者无效或创建实例失败
    */
-  createLLM(provider) {
-    const ApiClass = API_CLASS_MAP[provider] || API_CLASS_MAP[ModelProvider.OpenAI];
-    
+  createProvider(provider) {
+    const ProviderClass = API_PROVIDER_MAP[provider]
+
+    if (!ProviderClass) {
+      console.warn(`未找到提供者 ${provider}，使用默认的OpenAI提供者`)
+      return new OpenAiApi(provider)
+    }
+
     try {
-      return new ApiClass(provider);
+      return new ProviderClass(provider)
     } catch (error) {
-      throw new Error(`创建语言模型实例失败: ${error.message}`);
+      throw new Error(`创建AI提供者实例失败: ${error.message}`)
     }
   }
 
@@ -43,6 +46,14 @@ export class ClientApi {
    */
   config() {
     return this._config;
+  }
+  
+  /**
+   * 获取当前提供者标识符
+   * @returns {string} 提供者标识符
+   */
+  getProvider() {
+    return this._provider
   }
 
   /**
