@@ -9,10 +9,10 @@ import {
   extractImageMessage,
   generateDalle3RequestPayload,
 } from "@/ai/utils";
-import OllamaAI from "../ollama/ollama";
 import { useChatStore } from "@/stores/index";
 import { transformData } from "@/utils/chat/index";
 import { useRobotStore, useToolsStore } from "@/stores/index";
+import OllamaAI from "../ollama/ollama";
 
 export * from "./config";
 export * from "./modelValue";
@@ -80,17 +80,27 @@ export class OpenAiApi {
     let combinedMessages = [];
     const validPrompts = this.getPromptStore();
     const historyCount = Math.max(Number(modelConfig.historyMessageCount) || 0, 0);
+    const recentMessages = messages.slice(-historyCount)
 
     if (validPrompts.length > 0) {
-      combinedMessages = [...validPrompts, ...messages.slice(-historyCount)]; // prompt
+      combinedMessages = [...validPrompts, ...recentMessages]; // prompt
     } else {
-      combinedMessages = messages.slice(-historyCount); // 上下文
+      combinedMessages = recentMessages; // 上下文
     }
+
+    // DeepSeek 推理模型特殊处理
     if (modelConfig.model === "deepseek-reasoner") {
       return adjustForDeepseek(combinedMessages);
     }
+
     return combinedMessages;
   }
+
+  /**
+   * 获取访问存储配置
+   * @param {string} model - 模型标识，默认使用当前提供商
+   * @returns {Object} 访问配置对象
+   */
   accessStore(model = this.provider) {
     return useAccessStore(model);
   }
@@ -454,11 +464,17 @@ export class OpenAiApi {
       onmessage(msg) {
         console.log("[OpenAI] 收到消息:", msg)
 
+        if (!msg.data) {
+          console.log("[OpenAI] msg.data 消息为空")
+          return
+        }
+
         if (msg.data === "[DONE]" || finished) {
           return finish()
         }
 
         try {
+          
           const data = JSON.parse(msg.data)
 
           if (_this.isOllamaProvider()) {

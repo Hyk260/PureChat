@@ -1,7 +1,4 @@
-const {
-  VITE_GITHUB_API_KEY,
-  VITE_GITHUB_PROXY_URL
-} = import.meta.env
+const { VITE_GITHUB_API_KEY, VITE_GITHUB_PROXY_URL } = import.meta.env
 
 export const GitHubConfig = () => {
   return {

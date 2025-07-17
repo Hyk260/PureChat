@@ -1,4 +1,3 @@
-import { prefix, getInfo, getValueByKey } from "@/ai/utils";
 const { VITE_OPENAI_API_KEY, VITE_OPENAI_PROXY_URL } = import.meta.env
 
 export const OpenaiConfig = () => {
@@ -33,7 +32,7 @@ export const OpenaiConfig = () => {
      * @default 8
      */
     historyMessageCount: 8,
-    token: getValueByKey(getInfo(), prefix("ApiKey")) || VITE_OPENAI_API_KEY,
-    openaiUrl: getValueByKey(getInfo(), prefix("ProxyUrl")) || VITE_OPENAI_PROXY_URL,
+    token: VITE_OPENAI_API_KEY,
+    openaiUrl: VITE_OPENAI_PROXY_URL,
   };
 };
