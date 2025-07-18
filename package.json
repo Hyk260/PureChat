@@ -78,12 +78,10 @@
     "@agentic/tavily": "^7.3.3",
     "@unocss/preset-rem-to-px": "^65.4.3",
     "@unocss/preset-uno": "^65.4.3",
-    "@vitejs/plugin-vue": "^5.0.4",
-    "@vitest/ui": "^3.0.4",
+    "@vitejs/plugin-vue": "^5.2.4",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "happy-dom": "^16.7.2",
     "prettier": "^3.0.2",
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "^1.77.4",
@@ -95,8 +93,7 @@
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-remove-console": "^2.2.0",
     "vite-plugin-svg-icons": "2.0.1",
-    "vite-plugin-vue-devtools": "7.7.2",
-    "vitest": "^3.0.4"
+    "vite-plugin-vue-devtools": "7.7.2"
   },
   "engines": {
     "node": "^18.0.0 || ^20.0.0 || >=22.0.0"
