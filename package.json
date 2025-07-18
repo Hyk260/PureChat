@@ -45,8 +45,6 @@
     "dexie": "^4.0.10",
     "element-plus": "^2.10.2",
     "emoji-mart": "^5.6.0",
-    "fast-glob": "^3.3.2",
-    "file-type": "^20.0.0",
     "gradient-string": "^3.0.0",
     "highlight.js": "11.9.0",
     "js-cookie": "^3.0.5",

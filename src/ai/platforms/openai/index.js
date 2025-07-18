@@ -474,7 +474,6 @@ export class OpenAiApi {
         }
 
         try {
-          
           const data = JSON.parse(msg.data)
 
           if (_this.isOllamaProvider()) {
