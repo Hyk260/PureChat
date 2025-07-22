@@ -23,10 +23,11 @@
 [![Web][Web-image]][web-url]
 [![Windows][Windows-image]][download-url]
 [![MacOS][MacOS-image]][download-url]
+[![deepwiki][deepwiki-shield]][deepwiki-link]
+[![GitHub license](https://img.shields.io/github/license/Hyk260/PureChat)](https://github.com/Hyk260/PureChat/blob/master/LICENSE)
 
 <!-- SHIELD GROUP -->
 
-[![GitHub license](https://img.shields.io/github/license/Hyk260/PureChat)](https://github.com/Hyk260/PureChat/blob/master/LICENSE)
 [![Stars](https://img.shields.io/github/stars/Hyk260/PureChat.svg)](https://github.com/Hyk260/PureChat/stargazers)
 [![Forks](https://img.shields.io/github/forks/Hyk260/PureChat.svg)](https://github.com/Hyk260/PureChat/network/members)
 
@@ -79,6 +80,7 @@ pnpm build
 ```
 
 ### 📊 GitHub Stats
+
 ![Alt](https://repobeats.axiom.co/api/embed/5f9a9bb83bee403abed7ee7ffa36c4470d8e2544.svg "Repobeats analytics image")
 
 ### Star History
@@ -115,3 +117,8 @@ pnpm build
 [Web-image]: https://img.shields.io/badge/Web-orange?logo=microsoftedge
 [Windows-image]: https://img.shields.io/badge/-Windows-blue?logo=windows
 [MacOS-image]: https://img.shields.io/badge/-MacOS-black?logo=apple
+
+<!-- Links & Images -->
+
+[deepwiki-shield]: https://img.shields.io/badge/Deepwiki-PureChat-0088CC?
+[deepwiki-link]: https://deepwiki.com/Hyk260/PureChat
