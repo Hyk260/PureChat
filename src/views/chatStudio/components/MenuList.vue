@@ -97,7 +97,7 @@ function showMenuList(item) {
     msg.includes(item.type) &&
     item.type !== "TIMGroupTipElem" &&
     !item.isRevoked &&
-    !chatStore.showCheckbox &&
+    !chatStore.isMultiSelectMode &&
     filterList.value.length
   );
 }

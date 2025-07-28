@@ -1,5 +1,5 @@
 <template>
-  <div class="check-box" id="editor" v-if="chatStore.isMultiSelectMode">
+  <div class="check-box" v-if="chatStore.isMultiSelectMode">
     <el-icon class="close" @click="onClose"><CircleCloseFilled /></el-icon>
     <div class="flex-c flex-col" v-for="item in buttonList" :key="item.icon">
       <div class="icon flex-c" :class="isForwardDataEmpty ? 'disabled' : ''" @click="onClock(item)">
@@ -22,6 +22,10 @@ import { createForwardMessage, createMergerMessage, sendMessage } from "@/servic
 import MessageForwardingPopup from "@/components/Popups/MessageForwardingPopup.vue";
 import ShareModal from "@/components/ShareModal/index.vue";
 import emitter from "@/utils/mitt-bus";
+
+defineOptions({
+  name: "MultiSelectionPopup",
+});
 
 const buttonList = [
   {
@@ -196,13 +200,13 @@ const setMultipleValue = (value = null) => {
 
 <style lang="scss" scoped>
 .check-box {
-  position: relative;
-  z-index: 1;
-  height: 206px;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  border-top: 1px solid var(--color-border-default);
+  // position: relative;
+  // z-index: 1;
+  // height: 206px;
+  // display: flex;
+  // justify-content: space-evenly;
+  // align-items: center;
+  // border-top: 1px solid var(--color-border-default);
   .close {
     cursor: pointer;
     position: absolute;

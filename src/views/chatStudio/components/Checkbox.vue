@@ -24,7 +24,7 @@ const { item, isRevoked } = defineProps({
 const chatStore = useChatStore();
 
 const isShowCheck = computed(() => {
-  return chatStore.showCheckbox && !isRevoked && item.type !== "TIMGroupTipElem";
+  return chatStore.isMultiSelectMode && !isRevoked && item.type !== "TIMGroupTipElem";
 });
 </script>
 

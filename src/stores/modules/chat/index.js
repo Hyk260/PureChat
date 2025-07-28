@@ -46,7 +46,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     filterConversationList: [], // 过滤后的会话列表
     totalUnreadMsg: 0, // 未读消息总数
     scrollTopID: "", // 滚动到的消息ID
-    showCheckbox: false, //是否显示多选框
+    isMultiSelectMode: false, // 是否多选模式
     noMore: false, // 加载更多  false ? 显示loading : 没有更多
     isChatBoxVisible: false, // 聊天框是否显示
     isMentionModalVisible: false, // @成员弹窗
@@ -59,6 +59,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     forwardData: new Map(), // 多选数据
     revokeMsgMap: new Map(), // 撤回消息重新编辑
     sendingMap: new Map(),
+    selectedMessageMap: new Map(), // 多选消息
   }),
   getters: {
     isSending() {
@@ -131,6 +132,12 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
   },
   actions: {
+    toggleMultiSelectMode(bool) {
+      this.isMultiSelectMode = bool
+      if (!bool) {
+        this.selectedMessageMap = new Map()
+      }
+    },
     setCurrentConversation(data = {}) {
       this.currentConversation = data
     },
@@ -187,7 +194,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const oldSessionId = this.currentConversation?.conversationID;
       if (sessionId === oldSessionId) return;
       this.currentConversation = payload;
-      this.showCheckbox = false;
+      this.toggleMultiSelectMode(false);
       if (payload) {
         const history = this.historyMessageList.get(sessionId);
         this.currentMessageList = cloneDeep(history) ?? [];

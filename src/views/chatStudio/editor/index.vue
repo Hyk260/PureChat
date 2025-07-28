@@ -3,7 +3,7 @@
     class="wangeditor"
     :class="{ 'wang-h-full': isFullscreenInputActive }"
     id="editor"
-    v-show="!showCheckbox"
+    v-show="!isMultiSelectMode"
     v-if="isChatBoxVisible"
   >
     <!-- 自定义工具栏 -->
@@ -93,7 +93,7 @@ const {
   toAccount,
   isAssistant,
   currentType,
-  showCheckbox,
+  isMultiSelectMode,
   isChatBoxVisible,
   isMentionModalVisible,
   isFullscreenInputActive,

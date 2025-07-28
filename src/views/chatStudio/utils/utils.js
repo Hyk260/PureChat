@@ -12,43 +12,6 @@ import { match } from "pinyin-pro";
 import { cloneDeep } from "lodash-es";
 import emitter from "@/utils/mitt-bus";
 
-export const dragControllerDivHorizontal = () => {
-  let dragElement = document.querySelectorAll(".sidebar-drag")[0]; // 滑块
-  let leftBox = document.querySelectorAll(".message-left")[0]; // 左边盒子
-  let rightBox = document.querySelectorAll(".message-right")[0]; // 右边盒子
-  let container = document.querySelectorAll(".conv-chat")[0]; // 整个盒子（父容器）
-  // 按下鼠标启动拖动
-  dragElement.onmousedown = (e) => {
-    let startX = e.clientX; // 鼠标按下时的X坐标
-    let startLeftWidth = leftBox.offsetWidth; // 左侧盒子的初始宽度
-    let containerWidth = container.clientWidth; // 容器的总宽度
-
-    // 鼠标移动时调整宽度
-    document.onmousemove = (e) => {
-      let endX = e.clientX; // 鼠标移动后的X坐标
-      let deltaX = endX - startX; // 鼠标移动的水平差值
-      let newLeftWidth = startLeftWidth + deltaX; // 左侧盒子的计算宽度
-
-      // 限制盒子的最小和最大宽度
-      if (newLeftWidth < 100) newLeftWidth = 100; // 左侧盒子最小宽度
-      if (newLeftWidth > containerWidth - 100) newLeftWidth = containerWidth - 100; // 左侧盒子最大宽度
-
-      // 更新左侧和右侧盒子的宽度
-      leftBox.style.width = `${newLeftWidth}px`;
-      rightBox.style.width = `${containerWidth - newLeftWidth - dragElement.offsetWidth}px`;
-    };
-
-    // 鼠标释放时解除事件
-    document.onmouseup = () => {
-      document.onmousemove = null;
-      document.onmouseup = null;
-    };
-
-    // 阻止拖动时选中文字
-    return false;
-  };
-};
-
 export const validateLastMessage = (list) => {
   return list.slice().find((t) => t.ID) || '';
 };

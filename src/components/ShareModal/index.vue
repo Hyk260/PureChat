@@ -174,8 +174,6 @@ const handleDownload = async () => {
 
   onDownload(imageType.value, roleText.value, () => {
     setDialogVisible(false);
-    // chatStore.$patch({ showCheckbox: false });
-    // chatStore.setForwardData({ type: "clear" });
   });
 };
 

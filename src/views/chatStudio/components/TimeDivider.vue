@@ -52,7 +52,7 @@ const fnStyle = computed(() => {
     return [_isSelf ? "text-right pr-5" : "text-left pl-5"];
   } else {
     const styleArray = [_isSelf ? "text-right pr-44 mb-4" : "text-left pl-44 mb-4"];
-    if (chatStore.showCheckbox) return [...styleArray, "!opacity-0"];
+    if (chatStore.isMultiSelectMode) return [...styleArray, "!opacity-0"];
     return styleArray;
   }
 });

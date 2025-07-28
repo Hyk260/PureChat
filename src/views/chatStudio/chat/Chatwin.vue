@@ -64,7 +64,7 @@
               <div :class="msgOne(item)">
                 <div v-if="isGroupChat" class="message-view-top">
                   <NameComponent :item="item" />
-                  <TimeDivider :item="item" :showCheck="showCheckbox" type="group" />
+                  <TimeDivider :item="item" :showCheck="isMultiSelectMode" type="group" />
                 </div>
                 <div class="message-view-body" :class="msgType(item.type)" :id="item.ID">
                   <!-- 消息编辑 -->
@@ -179,7 +179,7 @@ const {
   isAssistant,
   isGroupChat,
   currentType,
-  showCheckbox,
+  isMultiSelectMode,
   isChatBoxVisible,
   scrollTopID,
   currentMessageList,
@@ -221,7 +221,7 @@ const showAvatar = (item) => {
 const classMessageViewItem = (item) => {
   return [
     isSelf(item) ? "is-self" : "is-other",
-    showCheckbox.value && !item.isRevoked && item.type !== "TIMGroupTipElem" ? "style-choice" : "",
+    isMultiSelectMode.value && !item.isRevoked && item.type !== "TIMGroupTipElem" ? "style-choice" : "",
   ];
 };
 
@@ -234,7 +234,7 @@ const classMessageInfoView = () => {
 
 const handleSelect = (e, item, type = "initial") => {
   // tip消息 撤回消息
-  if (!showCheckbox.value || item.type == "TIMGroupTipElem" || item.isRevoked) {
+  if (!isMultiSelectMode.value || item.type == "TIMGroupTipElem" || item.isRevoked) {
     return;
   }
   const _el = document.getElementById(`choice-${item.ID}`);
@@ -268,7 +268,7 @@ const onClickAvatar = (e, item) => {
     UserPopupRef.value.show();
     return;
   }
-  if (isSelf(item) || showCheckbox.value) return;
+  if (isSelf(item) || isMultiSelectMode.value) return;
   const { conversationID: id } = item || {};
   if (id === "@TIM#SYSTEM") return;
   emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item });
@@ -381,7 +381,7 @@ const handleContextMenuEvent = (event, item) => {
     isGroupTip: type === "TIMGroupTipElem",
   };
   // 撤回消息 多选状态 系统类型消息 提示类型消息
-  if (isRevoked || showCheckbox.value || messageTypes.isSystemNotice || messageTypes.isGroupTip) {
+  if (isRevoked || isMultiSelectMode.value || messageTypes.isSystemNotice || messageTypes.isGroupTip) {
     isRight.value = false;
     return;
   }
@@ -513,7 +513,7 @@ const handleDeleteMsg = (data) => {
 };
 // 多选
 const handleMultiSelectMsg = (item) => {
-  chatStore.$patch({ showCheckbox: true });
+  chatStore.toggleMultiSelectMode(true)
   handleSelect(null, item, "choice");
 };
 const handleRevokeChange = (data, type) => {

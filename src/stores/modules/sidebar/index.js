@@ -83,7 +83,7 @@ export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
     toggleOutside(item) {
       if (item?.path) {
         router.push(item.path);
-        useChatStore().$patch({ showCheckbox: false });
+        useChatStore().toggleMultiSelectMode(false)
       } else if (item?.openType === 'outside' && item?.url) {
         openWindow(item.url);
       } else if (item?.mode === "other") {

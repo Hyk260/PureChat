@@ -1,5 +1,5 @@
 <template>
-  <div class="conv-chat flex w-full">
+  <div class="flex w-full">
     <!-- 聊天列表 -->
     <div class="message-left" :class="{ 'style-layout': isChatSessionListCollapsed }">
       <!-- 搜索框 -->
@@ -24,25 +24,23 @@
       <Chatwin ref="chatRef" :class="{ 'chat-h-full': isFullscreenInputActive }" />
       <!-- 消息回复框 -->
       <ReplyBox />
-      <!-- Resize -->
-      <!-- <div v-if="isChatBoxVisible" id="drag" :class="fnDragCss()"></div> -->
       <!-- 编辑器 -->
       <Editor />
       <!-- 多选框 -->
-      <MultiChoiceBox />
+      <MultiSelectionPopup />
     </div>
   </div>
 </template>
 
 <script setup>
-import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watch, computed } from "vue";
+import { onActivated, onMounted, ref} from "vue";
 import { storeToRefs } from "pinia";
-import { isMacOS } from "@/utils/common";
 import { useAppStore, useChatStore } from "@/stores/index";
-import { useDragHandler } from "@/utils/hooks/useDragHandler";
 import emitter from "@/utils/mitt-bus";
 import Chatwin from "./chat/Chatwin.vue";
-import MultiChoiceBox from "./components/MultiChoiceBox.vue";
+// import MultiChoiceBox from "./components/MultiChoiceBox.vue";
+import MultiSelectionPopup from "@/components/Popups/MultiSelectionPopup.vue";
+
 import ConversationList from "./chat/ConversationList.vue";
 import Editor from "./editor/index.vue";
 import EmptyMessage from "./components/EmptyMessage.vue";
@@ -55,18 +53,10 @@ const appStore = useAppStore();
 const chatStore = useChatStore();
 
 const {
-  isChatBoxVisible,
   isFullscreenInputActive,
   isChatSessionListCollapsed,
-  totalUnreadMsg,
   currentConversation,
 } = storeToRefs(chatStore);
-
-const fnDragCss = () => {
-  if (isFullscreenInputActive.value) return "";
-  const cursor = isMacOS() ? "!cursor-row-resize" : "cursor-n-resize";
-  return [cursor, !isFullscreenInputActive.value ? "resize-hover" : ""];
-};
 
 const toggleCollapsed = () => {
   chatStore.$patch((state) => {
@@ -76,20 +66,11 @@ const toggleCollapsed = () => {
 
 onActivated(() => {
   emitter.emit("updateScroll");
-  isChatBoxVisible.value && useDragHandler(chatRef.value);
 });
-
-onDeactivated(() => {});
 
 onMounted(() => {
   chatStore.$patch({ isChatSessionListCollapsed: false });
 });
-
-onUnmounted(() => {});
-
-// watch(isChatBoxVisible, (val) => {
-//   val && useDragHandler(chatRef.value);
-// });
 </script>
 
 <style lang="scss" scoped>

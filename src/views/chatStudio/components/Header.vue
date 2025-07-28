@@ -89,7 +89,7 @@ const openPrompt = () => {
 };
 
 const openShare = () => {
-  chatStore.$patch({ showCheckbox: true });
+  chatStore.toggleMultiSelectMode(false)
 };
 
 const openSetup = () => {

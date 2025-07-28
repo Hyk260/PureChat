@@ -37,7 +37,7 @@ export default {
   computed: {
     ...mapState(useGroupStore, ["groupProfile"]),
     showCheckbox() {
-      return useChatStore().showCheckbox;
+      return useChatStore().isMultiSelectMode;
     },
     isLeader() {
       return this.groupProfile?.ownerID === this.item.from;
@@ -61,12 +61,12 @@ export default {
       return this.item.isRevoked || this.item.type === "TIMGroupTipElem";
     },
     styleNick() {
-      return this.showCheckbox ? "" : "nick";
+      return this.isMultiSelectMode ? "" : "nick";
     },
   },
   methods: {
     handleAt() {
-      if (this.showCheckbox) return;
+      if (this.isMultiSelectMode) return;
       if (isSelf(this.item)) return;
       emitter.emit("handleAt", { id: this.from, name: this.item.nick });
     },
