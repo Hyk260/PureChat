@@ -1,5 +1,5 @@
 <template>
-  <div v-click-outside="onClickOutside" ref="emojiMartRef"></div>
+  <div ref="emojiMartRef" v-click-outside="onClickOutside"></div>
 </template>
 
 <script setup>

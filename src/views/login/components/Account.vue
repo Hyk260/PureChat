@@ -3,14 +3,14 @@
     <!-- 账号 -->
     <el-form-item prop="username">
       <el-autocomplete
+        v-model="form.username"
         clearable
         size="large"
         :debounce="200"
         :prefix-icon="User"
-        v-model="form.username"
         :placeholder="$t('login.username')"
-        @select="handleSelect"
         :fetch-suggestions="handleSearch"
+        @select="handleSelect"
       />
       <!-- <el-input
         v-model="form.username"

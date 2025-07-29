@@ -2,7 +2,7 @@
   <el-image-viewer
     v-if="dialog"
     ref="imageViewerRef"
-    :initialIndex="0"
+    :initial-index="0"
     :hide-on-click-modal="true"
     :url-list="[url]"
     :zoom-rate="1.2"

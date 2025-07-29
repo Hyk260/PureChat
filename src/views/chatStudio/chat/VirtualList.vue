@@ -1,10 +1,10 @@
 <template>
   <RecycleScroller
+    v-slot="{ item }"
     class="scroller"
     :items="items"
     :item-size="32"
     key-field="conversationID"
-    v-slot="{ item }"
   >
     <div class="item">
       {{ item.name }}

@@ -6,9 +6,9 @@
       :append-to-body="true"
       :lock-scroll="false"
       :close-on-click-modal="true"
-      @close="onClose"
       title="导航栏编辑"
       width="450px"
+      @close="onClose"
     >
       <div class="draggable flex-bc">
         <div class="draggable-container">
@@ -21,25 +21,25 @@
                 :move="onMove"
                 :list="leftEdit"
                 :group="outsideGroup"
+                :force-fallback="true"
+                ghost-class="ghost"
+                drag-class="chosen"
+                animation="200"
                 @update="onUpdate"
                 @remove="onRemove"
                 @start="onStart"
                 @end="onEnd"
-                :forceFallback="true"
-                ghostClass="ghost"
-                dragClass="chosen"
-                animation="200"
               >
                 <template v-for="item in leftEdit" :key="item.id">
                   <div class="list-group-item flex-ac" :class="item?.class">
                     <!-- 删除 -->
                     <FontIcon
-                      iconName="RemoveFilled"
+                      icon-name="RemoveFilled"
                       class="reduce text-[#f44336]"
                       @click="reduce(item)"
                     />
                     <!-- 图标 -->
-                    <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" />
+                    <FontIcon v-if="item?.type == 'el-icon'" :icon-name="item.icon" />
                     <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
                     <span class="title">{{ item.title }}</span>
                     <svg-icon local-icon="drag" class="dragIcon" />
@@ -59,32 +59,32 @@
                 :move="onMove"
                 :list="rightEdit"
                 :group="insideGroup"
+                :force-fallback="true"
+                ghost-class="ghost"
+                drag-class="chosen"
+                animation="200"
                 @update="onUpdate"
                 @remove="onRemove"
                 @start="onStart"
                 @end="onEnd"
-                :forceFallback="true"
-                ghostClass="ghost"
-                dragClass="chosen"
-                animation="200"
               >
                 <template v-for="item in rightEdit" :key="item.id">
                   <div class="list-group-item flex-ac" :class="item?.class">
                     <!-- 添加 -->
                     <FontIcon
-                      iconName="CirclePlusFilled"
+                      icon-name="CirclePlusFilled"
                       class="add text-[#1890ff]"
                       @click="increase(item)"
                     />
                     <!-- 图标 -->
-                    <FontIcon v-if="item?.type == 'el-icon'" :iconName="item.icon" />
+                    <FontIcon v-if="item?.type == 'el-icon'" :icon-name="item.icon" />
                     <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
                     <span class="title">{{ item.title }}</span>
                     <svg-icon local-icon="drag" class="dragIcon" />
                   </div>
                 </template>
               </VueDraggableNext>
-              <div class="empty h-full" v-if="rightEdit.length == 0">全部都显示在侧边栏了</div>
+              <div v-if="rightEdit.length == 0" class="empty h-full">全部都显示在侧边栏了</div>
             </el-scrollbar>
           </div>
         </div>

@@ -1,5 +1,5 @@
 <template>
-  <div v-html="renderedMarkdown" class="markdown-body" @click="handleMarkdownClick"></div>
+  <div class="markdown-body" @click="handleMarkdownClick" v-html="renderedMarkdown"></div>
 </template>
 
 <script setup>

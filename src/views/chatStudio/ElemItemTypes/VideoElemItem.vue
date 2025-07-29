@@ -1,6 +1,6 @@
 <template>
   <div class="video-elem-item">
-    <div class="artplayer" ref="artRef" :style="style"></div>
+    <div ref="artRef" class="artplayer" :style="style"></div>
   </div>
 </template>
 

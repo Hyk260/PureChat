@@ -2,14 +2,14 @@
   <header v-if="currentConversation" class="message-info-view-header flex-bc">
     <div class="message-info-views">
       <p v-if="currentType">
-        <span v-if="chatType('C2C')" @click="openUser" class="single">
+        <span v-if="chatType('C2C')" class="single" @click="openUser">
           <span class="nick">{{ chatNick("C2C", currentConversation) }}</span>
-          <Label :model="robotStore.model" :userID="currentConversation?.conversationID" />
+          <Label :model="robotStore.model" :user-i-d="currentConversation?.conversationID" />
           <!-- ai-prompt -->
           <div
             v-if="isShowPromptTitle"
-            @click="openPrompt"
             class="cursor-pointer ml-5 ai-prompt-title"
+            @click="openPrompt"
           >
             {{ getPromptTitle }}
           </div>
@@ -34,7 +34,7 @@
             </div>
           </el-tooltip>
         </span>
-        <span v-else-if="chatType('GROUP')" @click="openSetup" class="group">
+        <span v-else-if="chatType('GROUP')" class="group" @click="openSetup">
           <span class="nick"> {{ chatNick("GROUP", currentConversation) }}</span>
           <Label :item="currentConversation" />
         </span>
@@ -48,8 +48,8 @@
       <div class="share" title="分享对话" @click="openShare">
         <svg-icon class="cursor-pointer icon-hover" local-icon="share" />
       </div>
-      <div class="setup" v-show="isGroupChat" title="群详情" @click="openSetup">
-        <FontIcon iconName="MoreFilled" class="cursor-pointer icon-hover" />
+      <div v-show="isGroupChat" class="setup" title="群详情" @click="openSetup">
+        <FontIcon icon-name="MoreFilled" class="cursor-pointer icon-hover" />
       </div>
     </div>
   </header>
@@ -89,7 +89,7 @@ const openPrompt = () => {
 };
 
 const openShare = () => {
-  chatStore.toggleMultiSelectMode(false)
+  chatStore.toggleMultiSelectMode(true)
 };
 
 const openSetup = () => {

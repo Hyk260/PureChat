@@ -9,11 +9,11 @@
     </div>
     <el-avatar
       v-else-if="type === 'single'"
-      @error="() => true"
       :class="['avatar', className]"
       shape="square"
       :size="size"
       :src="url || getAiAvatarUrl(sessionId) || shapeObj[shape]"
+      @error="() => true"
     >
       <img :src="emptyUrl" />
     </el-avatar>

@@ -3,9 +3,9 @@
     <div>Discover</div>
     <el-input
       v-model="input"
-      @input="emit('handleClick', input)"
       placeholder="搜索名称介绍或关键词..."
       clearable
+      @input="emit('handleClick', input)"
     >
       <template #prefix>
         <el-icon class="el-input__icon">

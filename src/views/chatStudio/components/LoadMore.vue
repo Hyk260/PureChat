@@ -1,5 +1,5 @@
 <template>
-  <div class="view-ref flex-c" v-if="isShowMore">
+  <div v-if="isShowMore" class="view-ref flex-c">
     <!-- <div class="showMore">
       {{ chatStore.noMore ? $t("chat.noMore") : "" }}
     </div> -->

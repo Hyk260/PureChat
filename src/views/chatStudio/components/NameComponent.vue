@@ -1,5 +1,5 @@
 <template>
-  <div class="message-name" v-show="this.isGroup && !shouldDisplay">
+  <div v-show="isGroup && !shouldDisplay" class="message-name">
     <span v-if="isSystem" class="isSystem">系统通知</span>
     <span v-else-if="isFound" class="isFound">管理员</span>
     <span
@@ -9,8 +9,8 @@
       @click="handleAt"
     >
       <span :class="styleNick">{{ item.nick || item.from }}</span>
-      <span class="mention" v-if="!isSelf(item)">@</span>
-      <span class="admin" v-if="isLeader">群主</span>
+      <span v-if="!isSelf(item)" class="mention">@</span>
+      <span v-if="isLeader" class="admin">群主</span>
     </span>
   </div>
 </template>
@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     ...mapState(useGroupStore, ["groupProfile"]),
-    showCheckbox() {
+    isMultiSelectMode() {
       return useChatStore().isMultiSelectMode;
     },
     isLeader() {

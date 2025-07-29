@@ -2,13 +2,13 @@
   <div v-if="showMenuList(item)" class="menubar">
     <div class="flex">
       <div
-        class="menubar-item flex-c"
         v-for="item in filterList"
         :key="item.id"
+        class="menubar-item flex-c"
         @click="handleMenuEvent(item)"
       >
         <el-tooltip :content="item.title" placement="top">
-          <FontIcon :class="item?.class" :iconName="item.icon" />
+          <FontIcon :class="item?.class" :icon-name="item.icon" />
         </el-tooltip>
       </div>
     </div>
@@ -110,7 +110,7 @@ function handleMenuEvent(data) {
       handleCopyMsg(item);
       break;
     case "edit": // 编辑
-      chatStore.$patch({ msgEdit: item })
+      chatStore.setMsgEdit(item);
       break;
     case "setup": // 设置
       console.log("设置");

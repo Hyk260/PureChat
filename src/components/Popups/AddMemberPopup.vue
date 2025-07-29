@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useState } from "@/utils/hooks/index";
 import { chatName, squareUrl } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";

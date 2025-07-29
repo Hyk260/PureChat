@@ -2,7 +2,7 @@
   <template v-for="item in decodeText(text)" :key="item">
     <span v-if="item.name === 'text'">
       <!-- 链接 -->
-      <AnalysisUrl v-if="link" :text="item.text" :atUserList="atUserList" />
+      <AnalysisUrl v-if="link" :text="item.text" :at-user-list="atUserList" />
       <!-- 文本 -->
       <template v-else>
         {{ item.text }}

@@ -22,12 +22,12 @@
         <EmojiMart
           v-if="showEmojiPickerFlag"
           class="emoji-picker"
-          @onClose="setShowEmojiPickerFlag(false)"
+          @on-close="setShowEmojiPickerFlag(false)"
           @emoji-selected="handleEmojiSelect"
         />
       </div>
       <div class="py-20 flex-c">
-        <el-input v-model="userName" @Change="setUserName" class="input" placeholder="Please input" />
+        <el-input v-model="userName" class="input" placeholder="Please input" @change="setUserName" />
       </div>
     </div>
   </el-dialog>

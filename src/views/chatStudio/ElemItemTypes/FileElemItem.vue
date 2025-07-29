@@ -1,9 +1,9 @@
 <template>
   <div
-    class="file-elem-item"
-    @click="handleOpen(payload)"
     :id="payload.uuid"
+    class="file-elem-item"
     :style="{ background: backgroundStyle }"
+    @click="handleOpen(payload)"
   >
     <div class="flex">
       <div class="min-w-45 h-45">
@@ -17,7 +17,7 @@
         </el-tooltip>
         <div class="file-size">
           <span>{{ formattedFileSize }} </span>
-          <span class="upload-progress" v-show="!isSuccess"></span>
+          <span v-show="!isSuccess" class="upload-progress"></span>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@
     <Loading v-if="isMessageType('loading')" />
     <Warning v-else-if="isMessageType('warning')" :payload="message.payload" />
     <ToolCall v-else-if="isMessageType('tool_call')" :payload="message.payload" />
-    <div class="text" v-else>{{ customMessageContent  }}</div>
+    <div v-else class="text">{{ customMessageContent  }}</div>
   </div>
 </template>
 

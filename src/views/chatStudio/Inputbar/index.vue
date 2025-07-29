@@ -45,10 +45,10 @@
     <!-- 联网 -->
     <el-tooltip :content="$t('chat.web_search')" placement="top">
       <el-button
+        v-show="isWebSearchModel"
         :style="{
           color: enableWebSearch ? 'var(--el-button-hover-text-color)' : '',
         }"
-        v-show="isWebSearchModel"
         @click="onEnableWebSearch"
       >
         <SvgIcon local-icon="internet" />
@@ -110,7 +110,7 @@
     <RobotModel />
     <RobotPlugin />
     <RobotOptions />
-    <EmojiPicker v-show="!isAssistant && flag" @onClose="setFlag(false)" />
+    <EmojiPicker v-show="!isAssistant && flag" @on-close="setFlag(false)" />
   </div>
 </template>
 

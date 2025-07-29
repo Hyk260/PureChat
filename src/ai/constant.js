@@ -23,7 +23,6 @@ export const ModelProvider = {
   DeepSeek: "deepseek",
   Ollama: "ollama",
   GitHub: "github",
-  GitHub: "github",
   Mistral: "mistral",
 };
 

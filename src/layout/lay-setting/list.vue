@@ -5,11 +5,11 @@
       <li
         v-for="item in list"
         :key="item.id"
-        @click="handleItemClick(item)"
         class="menu-item"
         :class="{
           'menu-item--active': activeId === item.id,
         }"
+        @click="handleItemClick(item)"
       >
         <component
           :is="item.icon ? FontIcon : SvgIcon"

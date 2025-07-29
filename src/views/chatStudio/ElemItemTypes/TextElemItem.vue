@@ -9,14 +9,14 @@
       <ReplyElem
         v-if="parsedCloudCustomData"
         :status="message.status"
-        :originalMsg="parsedCloudCustomData"
+        :original-msg="parsedCloudCustomData"
       />
       <Markdown
         v-if="shouldShowMarkdown"
-        :cloudCustomData="parsedCloudCustomData"
+        :cloud-custom-data="parsedCloudCustomData"
         :marked="message.payload.text"
       />
-      <DynamicContent v-else :atUserList="message.atUserList" :text="message.payload.text" />
+      <DynamicContent v-else :at-user-list="message.atUserList" :text="message.payload.text" />
     </template>
   </div>
 </template>

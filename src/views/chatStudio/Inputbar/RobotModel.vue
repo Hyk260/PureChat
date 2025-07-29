@@ -1,5 +1,5 @@
 <template>
-  <div v-show="flag" class="robot-model-box" v-click-outside="onClickOutside">
+  <div v-show="flag" v-click-outside="onClickOutside" class="robot-model-box">
     <el-scrollbar>
       <div class="robot-model">
         <div class="item-group-title">
@@ -7,10 +7,10 @@
           <span>{{ model.name }}</span>
         </div>
         <div
-          class="model flex"
-          :class="item.id == useRobotStore()?.model?.id ? 'active' : ''"
           v-for="item in model.chatModels"
           :key="item"
+          class="model flex"
+          :class="item.id == useRobotStore()?.model?.id ? 'active' : ''"
           @click="storeRobotModel(item)"
         >
           <div v-if="['ollama', 'github'].includes(model.id)" :class="['icon align-icon', item.icon]">

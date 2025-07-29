@@ -10,7 +10,7 @@
   >
     <el-scrollbar>
       <div class="merge-message-container">
-        <div class="message-item" v-for="item in messageList" :key="item.ID">
+        <div v-for="item in messageList" :key="item.ID" class="message-item">
           <div v-if="isTime(item)" class="message-time-divider flex-c">
             {{ timeFormat(item.time * 1000, true) }}
           </div>
@@ -33,9 +33,9 @@
               </p>
               <div :class="msgType(item.messageBody[0].type)">
                 <component
-                  :key="mergValue.ID"
                   :is="loadMsgModule(item.messageBody[0])"
-                  :msgType="mergValue.conversationType"
+                  :key="mergValue.ID"
+                  :msg-type="mergValue.conversationType"
                   :message="item.messageBody[0]"
                   :self="isSelf(item)"
                 />

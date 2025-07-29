@@ -1,30 +1,30 @@
 <template>
   <div
-    class="wangeditor"
-    :class="{ 'wang-h-full': isFullscreenInputActive }"
-    id="editor"
     v-show="!isMultiSelectMode"
     v-if="isChatBoxVisible"
+    id="editor"
+    class="wangeditor"
+    :class="{ 'wang-h-full': isFullscreenInputActive }"
   >
     <!-- 自定义工具栏 -->
     <Inputbar />
     <Editor
-      class="editor-content"
       v-model="valueHtml"
+      class="editor-content"
       :mode="mode"
-      :defaultConfig="editorConfig"
+      :default-config="editorConfig"
       @drop="handleDrop"
-      @onChange="handleEditorChange"
-      @onCreated="handleEditorCreated"
-      @customPaste="handlePaste"
-      @customAlert="customAlert"
+      @on-change="handleEditorChange"
+      @on-created="handleEditorCreated"
+      @custom-paste="handlePaste"
+      @custom-alert="customAlert"
       @keyup.enter="handleEnter"
     />
     <!-- @提及弹框 -->
     <MentionModal
       v-if="isMentionModalVisible"
-      :pinyinSearch="true"
-      :isOwner="isOwner"
+      :pinyin-search="true"
+      :is-owner="isOwner"
       :editor="editorRef"
     />
     <div class="send-button">
@@ -299,10 +299,8 @@ const handleEnter = async (event) => {
 };
 
 const clearInput = () => {
-  chatStore.$patch({
-    isFullscreenInputActive: false,
-    replyMsgData: null,
-  });
+  chatStore.setReplyMsgData(null);
+  chatStore.$patch({ isFullscreenInputActive: false });
   editorRef.value?.clear();
 };
 

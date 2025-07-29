@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <div class="relay-footer" v-show="messageCount">
+    <div v-show="messageCount" class="relay-footer">
       {{ `查看${messageCount}条转发消息` }}
     </div>
   </div>

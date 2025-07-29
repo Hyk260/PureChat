@@ -6,10 +6,10 @@
         <router-view v-slot="{ Component, route }">
           <transition name="fade-slide" :appear="true" mode="out-in">
             <keep-alive v-if="route.meta.keep" max="1">
-              <component v-if="Component" :is="Component" :key="route.path" />
+              <component :is="Component" v-if="Component" :key="route.path" />
             </keep-alive>
             <template v-else>
-              <component v-if="Component" :is="Component" :key="route.path" />
+              <component :is="Component" v-if="Component" :key="route.path" />
             </template>
           </transition>
         </router-view>

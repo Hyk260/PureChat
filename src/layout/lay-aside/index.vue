@@ -2,20 +2,20 @@
   <div class="sidebar-container">
     <div class="sidebar-content">
       <div class="avatar-container">
-        <UserAvatar type="self" isDot shape="square" @click="handleAvatarClick" />
+        <UserAvatar type="self" is-dot shape="square" @click="handleAvatarClick" />
       </div>
 
-      <div class="sidebar-item" v-for="item in sidebarStore.filteredOutsideList" :key="item.id">
+      <div v-for="item in sidebarStore.filteredOutsideList" :key="item.id" class="sidebar-item">
         <el-tooltip :content="item.title" placement="right">
           <div
-            @click="handleItemClick(item)"
             class="sidebar-item-content"
             :class="{ active: isActiveItem(item.path) }"
+            @click="handleItemClick(item)"
           >
             <el-badge :value="chatStore.totalUnreadMsg" :hidden="shouldHideUnreadBadge(item.id)">
               <FontIcon
                 v-if="item?.type === 'el-icon'"
-                :iconName="item.icon"
+                :icon-name="item.icon"
                 class="sidebar-icon"
               />
               <SvgIcon v-else :local-icon="item.icon" class="sidebar-icon" />

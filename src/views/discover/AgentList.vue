@@ -3,31 +3,31 @@
     <div v-if="tabsKey === 'assistant'">
       <div v-if="isSkeleton" class="tags">
         <button
-          :class="['item-tags', current === item ? 'active' : '']"
           v-for="item in market.tags"
           :key="item"
+          :class="['item-tags', current === item ? 'active' : '']"
           @click="emit('handleClick', item)"
         >
           {{ item }}
         </button>
       </div>
-      <div class="mt-20 px-15" v-else>
+      <div v-else class="mt-20 px-15">
         <el-skeleton :rows="3" animated />
       </div>
     </div>
 
-    <div class="agent-list" v-if="tabsKey === 'assistant'">
+    <div v-if="tabsKey === 'assistant'" class="agent-list">
       <AgentSkeleton v-if="!isSkeleton" />
       <AgentCard
-        v-else
         v-for="item in agent"
+        v-else
         :key="item.identifier"
         :agents="item"
         @click="cardClick(item)"
       />
     </div>
 
-    <div class="agent-list" style="--rows: 2" v-if="tabsKey === 'model_provider'">
+    <div v-if="tabsKey === 'model_provider'" class="agent-list" style="--rows: 2">
       <ModelProviderCard
         v-for="item in ProvidersList"
         :key="item.userID"

@@ -6,12 +6,12 @@
     :class="classMessageInfoView()"
   >
     <el-scrollbar
-      class="h-full"
       ref="scrollbarRef"
+      class="h-full"
       @end-reached="loadMore"
       @scroll="handleScrollbar"
     >
-      <div class="message-view" ref="messageViewRef">
+      <div ref="messageViewRef" class="message-view">
         <div
           v-for="(item, index) in currentMessageList"
           :key="item.ID"
@@ -35,23 +35,23 @@
               <!-- 多选框 -->
               <Checkbox
                 :item="item"
-                :isRevoked="item.isRevoked"
+                :is-revoked="item.isRevoked"
                 @click.stop="handleSelect($event, item, 'initial')"
               />
               <div v-if="showAvatar(item)" class="picture">
                 <div
                   v-if="isSelf(item) && IS_LOCAL_MODE && userStore.userLocalStore.native"
-                  @click="onClickAvatar(null, item)"
                   class="native cursor-pointer"
+                  @click="onClickAvatar(null, item)"
                 >
                   {{ userStore.userLocalStore.native }}
                 </div>
                 <el-avatar
                   v-else
+                  v-contextmenu:contextmenu
                   :size="36"
                   :src="fnAvatar(item)"
                   shape="square"
-                  v-contextmenu:contextmenu
                   @error="() => true"
                   @click.stop="onClickAvatar($event, item)"
                   @contextmenu.prevent="handleContextAvatarMenuEvent($event, item)"
@@ -64,9 +64,9 @@
               <div :class="msgOne(item)">
                 <div v-if="isGroupChat" class="message-view-top">
                   <NameComponent :item="item" />
-                  <TimeDivider :item="item" :showCheck="isMultiSelectMode" type="group" />
+                  <TimeDivider :item="item" :show-check="isMultiSelectMode" type="group" />
                 </div>
-                <div class="message-view-body" :class="msgType(item.type)" :id="item.ID">
+                <div :id="item.ID" class="message-view-body" :class="msgType(item.type)">
                   <!-- 消息编辑 -->
                   <MessageEditingBox
                     v-if="chatStore.msgEdit?.ID === item.ID"
@@ -74,13 +74,13 @@
                     :item="item"
                   />
                   <component
+                    :is="loadMsgModule(item)"
                     v-else
                     :key="item.ID"
-                    :is="loadMsgModule(item)"
+                    v-contextmenu:contextmenu
                     :message="item"
                     :status="item.status"
                     :self="isSelf(item)"
-                    v-contextmenu:contextmenu
                     @contextmenu.prevent="handleContextMenuEvent($event, item)"
                   >
                   </component>
@@ -90,7 +90,7 @@
                   <MenuList
                     :item="item"
                     :status="item.status"
-                    @handleSingleClick="handleSingleClick"
+                    @handle-single-click="handleSingleClick"
                   />
                 </div>
                 <AssistantMessage v-if="isAssistant && !isSelf(item)" :item="item" />
@@ -111,7 +111,7 @@
         :style="item.style"
         @click="handleRightClick(item)"
       >
-        <FontIcon :iconName="item.icon" />
+        <FontIcon :icon-name="item.icon" />
         <span>{{ item.text }}</span>
       </ContextmenuItem>
     </Contextmenu>
@@ -495,7 +495,7 @@ const handleTranslate = (data) => {
 const handleForward = (data) => {};
 // 回复消息
 const handleReplyMsg = (data) => {
-  chatStore.$patch({ replyMsgData: data });
+  chatStore.setReplyMsgData(data);
   if (!isSelf(data)) handleAt(data);
   // 重置编辑器高度
   const chatBox = document.getElementById("chat-box"); //聊天框

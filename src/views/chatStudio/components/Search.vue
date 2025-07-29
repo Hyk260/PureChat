@@ -6,12 +6,12 @@
         v-model="input"
         :placeholder="$t('chat.searchFor')"
         :prefix-icon="Search"
-        @input="debounceSearch"
         clearable
+        @input="debounceSearch"
       >
       </el-input>
       <div v-if="!IS_LOCAL_MODE" class="header-search-add flex-c" @click="openDialog">
-        <FontIcon iconName="Plus" />
+        <FontIcon icon-name="Plus" />
       </div>
     </div>
   </div>

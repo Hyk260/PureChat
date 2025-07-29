@@ -18,7 +18,7 @@
     </div>
     <!-- 聊天框 -->
     <div id="container" class="message-right">
-      <EmptyMessage className="empty" v-if="!currentConversation" />
+      <EmptyMessage v-if="!currentConversation" class-name="empty" />
       <Header />
       <!-- 聊天窗口 -->
       <Chatwin ref="chatRef" :class="{ 'chat-h-full': isFullscreenInputActive }" />
@@ -38,7 +38,6 @@ import { storeToRefs } from "pinia";
 import { useAppStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 import Chatwin from "./chat/Chatwin.vue";
-// import MultiChoiceBox from "./components/MultiChoiceBox.vue";
 import MultiSelectionPopup from "@/components/Popups/MultiSelectionPopup.vue";
 
 import ConversationList from "./chat/ConversationList.vue";

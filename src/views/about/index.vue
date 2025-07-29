@@ -39,12 +39,12 @@
       </template>
       <el-descriptions border>
         <el-descriptions-item
+          v-for="(item, index) in schema"
+          :key="index"
           :label="item.label"
           :label-class-name="getMainLabel(item.label)"
           label-align="left"
           align="left"
-          v-for="(item, index) in schema"
-          :key="index"
         >
           <a :href="'https://www.npmjs.com/package/' + item.label" target="_blank">
             <span class="style-color">
@@ -63,12 +63,12 @@
       </template>
       <el-descriptions border>
         <el-descriptions-item
+          v-for="(item, index) in devSchema"
+          :key="index"
           :label="item.label"
           :label-class-name="getMainLabel(item.label)"
           label-align="left"
           align="left"
-          v-for="(item, index) in devSchema"
-          :key="index"
         >
           <a :href="'https://www.npmjs.com/package/' + item.label" target="_blank">
             <span class="style-color">

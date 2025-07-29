@@ -1,8 +1,8 @@
 <template>
-  <el-dialog class="setup-modal" v-model="drawer" :lock-scroll="false" :show-close="false" width="700">
+  <el-dialog v-model="drawer" class="setup-modal" :lock-scroll="false" :show-close="false" width="700">
     <div class="ui-modal-body">
-      <List @active="active" ref="listRef" />
-      <ItemGrid :item="item" @onClose="setDrawer(false)" />
+      <List ref="listRef" @active="active" />
+      <ItemGrid :item="item" @on-close="setDrawer(false)" />
     </div>
   </el-dialog>
 </template>

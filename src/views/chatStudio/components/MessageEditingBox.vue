@@ -43,7 +43,7 @@ function fnStyle(val) {
 }
 
 function handleCancel() {
-  chatStore.$patch({ msgEdit: null });
+  chatStore.setMsgEdit(null);
 }
 
 function handleConfirm(val) {

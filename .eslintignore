@@ -1,8 +1,0 @@
-public
-build
-dist
-node_modules
-*.d.ts
-/src/assets
-.eslintrc.js
-.prettierrc.js

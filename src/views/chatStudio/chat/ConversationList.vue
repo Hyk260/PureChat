@@ -1,14 +1,14 @@
 <template>
   <el-scrollbar class="scrollbar-list">
-    <EmptyMessage className="no-msg" v-if="conversationList.length === 0" />
+    <EmptyMessage v-if="conversationList.length === 0" class-name="no-msg" />
     <div
-      v-if="!isEnableVirtualList"
       v-for="item in searchForData"
-      class="message-item flex-bc"
-      :key="item.conversationID"
+      v-if="!isEnableVirtualList"
       :id="`message_${item.conversationID}`"
-      :class="fnClass(item)"
+      :key="item.conversationID"
       v-contextmenu:contextmenu
+      class="message-item flex-bc"
+      :class="fnClass(item)"
       @click="handleConversationListClick(item)"
       @drop="handleDrop($event, item, handleConversationListClick)"
       @dragover="handleDragOver($event)"
@@ -17,15 +17,15 @@
       @contextmenu.prevent="handleContextMenuEvent($event, item)"
     >
       <!-- 置顶图标 -->
-      <div class="pinned-tag" v-show="item.isPinned"></div>
+      <div v-show="item.isPinned" class="pinned-tag"></div>
       <!-- 头像 -->
       <el-badge class="avatar" is-dot :hidden="isShowCount(item) || !isNotify(item)">
         <UserAvatar
           words="3"
           shape="square"
-          :sessionId="item.conversationID"
+          :session-id="item.conversationID"
           :type="item.type === 'C2C' ? 'single' : 'group'"
-          :nickName="chatName(item)"
+          :nick-name="chatName(item)"
           :url="item.type === 'C2C' ? item.userProfile?.avatar : item?.groupProfile?.avatar"
         />
       </el-badge>
@@ -34,9 +34,9 @@
         <div class="message-item-right-top flex-bc">
           <div class="message-chat-name flex">
             <span class="name-title truncate">{{ chatName(item) }}</span>
-            <Label :item="item" :userID="item.userProfile?.userID" />
+            <Label :item="item" :user-i-d="item.userProfile?.userID" />
           </div>
-          <div class="message-time" v-if="item.lastMessage?.lastTime">
+          <div v-if="item.lastMessage?.lastTime" class="message-time">
             {{ timeFormat(item.lastMessage.lastTime * 1000) }}
           </div>
         </div>
@@ -64,7 +64,7 @@
         :style="item.style"
         @click="handleClickMenuItem(item)"
       >
-        <FontIcon v-if="item.icon" :iconName="item.icon" />
+        <FontIcon v-if="item.icon" :icon-name="item.icon" />
         <SvgIcon v-else :local-icon="item.svgIcon" class="menu-svg" />
         <span> {{ item.text }}</span>
       </ContextmenuItem>
@@ -227,7 +227,8 @@ const handleContextMenuEvent = (e, item) => {
 const handleConversationListClick = (data) => {
   console.log("会话点击 handleConversationListClick:", data);
   if (currentSessionId.value === data?.conversationID) return;
-  chatStore.$patch({ replyMsgData: null, msgEdit: null });
+  chatStore.setMsgEdit(null)
+  chatStore.setReplyMsgData(null);
   chatStore.setForwardData({ type: "clear" });
   chatStore.updateSelectedConversation(data);
   chatStore.updateMessageList(data);

@@ -1,9 +1,9 @@
 <template>
-  <div class="reply-box flex-bc" v-if="replyMsgData" @click="onClick">
-    <FontIcon class="close" iconName="CircleCloseFilled" @click="onClose" />
+  <div v-if="replyMsgData" class="reply-box flex-bc" @click="onClick">
+    <FontIcon class="close" icon-name="CircleCloseFilled" @click="onClose" />
     <div class="reply-box-content multi-truncate-2">
       <div v-if="replyMsgData?.nick" class="nick">{{ replyMsgData?.nick }} :</div>
-      <div class="text" v-if="replyMsgData">
+      <div v-if="replyMsgData" class="text">
         <DynamicContent :text="getAbstractContent(replyMsgData)" />
       </div>
     </div>
@@ -24,7 +24,7 @@ const chatStore = useChatStore();
 const { replyMsgData } = storeToRefs(chatStore);
 
 const onClose = () => {
-  chatStore.$patch({ replyMsgData: null });
+  chatStore.setReplyMsgData(null)
 };
 
 const onClick = () => {

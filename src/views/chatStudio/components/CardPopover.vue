@@ -1,5 +1,5 @@
 <template>
-  <div class="card-popover fade-slide-lower" ref="cardRef" v-if="card">
+  <div v-if="card" ref="cardRef" class="card-popover fade-slide-lower">
     <div class="top">
       <UserAvatar type="self" :size="40" shape="square" @click="handlePictureCardPreview" />
       <div>
@@ -18,11 +18,11 @@
       </div>
     </div>
     <div>
-      <div class="menu-root" v-for="item in menuItems" :key="item.index">
+      <div v-for="item in menuItems" :key="item.index" class="menu-root">
         <div class="menu-item">
           <div @click="closeCard(item)">
             <svg-icon v-if="item.svg" :local-icon="item.svg" />
-            <FontIcon v-else :iconName="item.icon" />
+            <FontIcon v-else :icon-name="item.icon" />
             <span>{{ item.label }}</span>
           </div>
         </div>

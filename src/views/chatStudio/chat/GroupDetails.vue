@@ -15,9 +15,9 @@
       <!-- info -->
       <div class="group-info">
         <UserAvatar
-          @click="openAvatarPopup(groupProfile.avatar)"
           :url="groupProfile.avatar"
-          :nickName="groupProfile.name"
+          :nick-name="groupProfile.name"
+          @click="openAvatarPopup(groupProfile.avatar)"
         />
         <div class="group-info-text">
           <div>
@@ -27,7 +27,7 @@
             <FontIcon
               v-if="isOwner"
               class="style-editPen icon-hover"
-              iconName="EditPen"
+              icon-name="EditPen"
               @click="openNamePopup"
             />
           </div>
@@ -44,7 +44,7 @@
           <FontIcon
             v-if="isOwner"
             class="style-editPen icon-hover"
-            iconName="EditPen"
+            icon-name="EditPen"
             @click="openNoticePopup"
           />
         </div>
@@ -66,19 +66,19 @@
           <div class="group-member-avatar">
             <span class="iconify-icon gala-add margin" @click="groupMemberAdd"></span>
             <div
-              class="avatar margin"
               v-for="item in currentMemberList"
               :key="item.userID"
+              class="avatar margin"
               @click="navigate(item)"
             >
               <FontIcon
                 v-if="isOwner"
-                iconName="CircleCloseFilled"
+                icon-name="CircleCloseFilled"
                 class="style-close"
                 :class="{ hidden: userStore.userProfile.userID === item.userID }"
                 @click.stop="removeGroupMemberBtn(item)"
               />
-              <UserAvatar :url="item.avatar" :nickName="item.nick || item.userID" />
+              <UserAvatar :url="item.avatar" :nick-name="item.nick || item.userID" />
               <!-- Admin Owner -->
               <div v-if="item.role !== 'Member'" class="wrap-group" :class="`style-${item.role}`">
                 {{ item.role === "Owner" ? "群主" : "管理员" }}
@@ -106,7 +106,7 @@
       </div>
       <el-divider />
       <!-- 解散 退出 转让 -->
-      <div class="group-operator flex-c" v-if="!isFullStaffGroup(currentConversation)">
+      <div v-if="!isFullStaffGroup(currentConversation)" class="group-operator flex-c">
         <el-button v-if="isOwner" type="danger" @click="handleDismissGroup">
           解散群组
         </el-button>
@@ -117,7 +117,7 @@
         </el-button> -->
       </div>
       <!-- 添加成员弹框 -->
-      <AddMemberPopup @define="addGroupMemberBtn" ref="AddMemberRef" />
+      <AddMemberPopup ref="AddMemberRef" @define="addGroupMemberBtn" />
     </div>
   </el-drawer>
 </template>

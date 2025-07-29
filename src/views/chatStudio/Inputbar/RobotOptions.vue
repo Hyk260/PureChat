@@ -15,7 +15,7 @@
       <div class="container-box">
         <!-- prompt -->
         <DragPrompt ref="promptRef" />
-        <div class="container-item" v-for="item in modelData" :key="item.ID">
+        <div v-for="item in modelData" :key="item.ID" class="container-item">
           <div class="flex flex-col gap-5">
             <div class="flex gap-5 title">
               <span> {{ item.Title }}</span>
@@ -37,11 +37,11 @@
           <div v-if="item.options">
             <div class="flex gap-8 flex-col">
               <el-select
+                v-model="item.collapse"
                 multiple
                 collapse-tags
                 collapse-tags-tooltip
                 :max-collapse-tags="10"
-                v-model="item.collapse"
                 append-to="body"
                 @change="handleModelData"
                 @clear="handleClear"
@@ -105,29 +105,29 @@
               </div>
             </div>
           </div>
-          <div class="range" v-else-if="isRange(item.ID)">
+          <div v-else-if="isRange(item.ID)" class="range">
             <span class="break-normal min-w-18">
               {{ item.defaultValue }}
             </span>
             <input
-              @change="handleModelData"
               v-model="item.defaultValue"
               :min="item.min"
               :max="item.max"
               :step="item.step"
               type="range"
+              @change="handleModelData"
             />
           </div>
-          <div class="number" v-else-if="['max_tokens'].includes(item.ID)">
+          <div v-else-if="['max_tokens'].includes(item.ID)" class="number">
             <input
-              @change="handleModelData"
               v-model="item.defaultValue"
               :min="item.min"
               :max="item.max"
               type="number"
+              @change="handleModelData"
             />
           </div>
-          <div class="input" v-else-if="['token', 'openaiUrl'].includes(item.ID)">
+          <div v-else-if="['token', 'openaiUrl'].includes(item.ID)" class="input">
             <div class="gap-5 flex-bc">
               <el-tooltip content="配置教程" placement="top">
                 <!-- ollama -->
@@ -141,14 +141,14 @@
               </el-tooltip>
               <div class="w-full flex gap-4">
                 <el-input
-                  v-model="item.defaultValue"
-                  @change="handleModelData"
-                  :class="['token'].includes(item.ID) ? '!w-310' : 'w-full'"
                   :ref="(e) => inputRef(e, item.ID)"
+                  v-model="item.defaultValue"
+                  :class="['token'].includes(item.ID) ? '!w-310' : 'w-full'"
                   :placeholder="item.Placeholder"
                   :type="item.ID === 'token' ? 'password' : 'text'"
                   :show-password="item.ID === 'token'"
                   clearable
+                  @change="handleModelData"
                 >
                 </el-input>
                 <el-tooltip

@@ -46,7 +46,7 @@
       <el-switch v-model="markdownRender" />
     </li>
     <li v-if="!IS_LOCAL_MODE">
-      <el-button @click="logout" type="primary">
+      <el-button type="primary" @click="logout">
         {{ $t("login.logout") }}
       </el-button>
     </li>

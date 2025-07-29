@@ -13,7 +13,7 @@ import { modelValue } from "@/ai/constant";
 import emitter from "@/utils/mitt-bus";
 
 defineOptions({
-  name: "warning",
+  name: "Warning",
 });
 
 const props = defineProps({

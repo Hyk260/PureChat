@@ -1,9 +1,9 @@
 <template>
   <span :class="['label', labelClass()]">
-    <span class="all" v-if="isFullStaffGroup(item)">全员</span>
-    <span class="author" v-else-if="isAuthor(item)">作者</span>
+    <span v-if="isFullStaffGroup(item)" class="all">全员</span>
+    <span v-else-if="isAuthor(item)" class="author">作者</span>
     <!-- <SvgIcon local-icon="robot" v-else-if="isRobot(userID)" /> -->
-    <span class="model" v-if="isRobot(userID) && model">
+    <span v-if="isRobot(userID) && model" class="model">
       <svg-icon v-if="model.icon" :local-icon="model.icon" />
       <svg-icon v-else :local-icon="getModelSvg(userID.replace('C2C', ''))" />
       <span>{{ model.id }}</span>

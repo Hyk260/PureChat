@@ -1,8 +1,8 @@
 <template>
-  <label class="input-check fade-slide-fade-in" v-show="isShowCheck">
+  <label v-show="isShowCheck" class="input-check fade-slide-fade-in">
     <input type="checkbox" class="check-btn" />
     <div class="check-mark"></div>
-    <div class="mask wh-full" v-show="chatStore.isFwdDataMaxed"></div>
+    <div v-show="chatStore.isFwdDataMaxed" class="mask wh-full"></div>
   </label>
 </template>
 

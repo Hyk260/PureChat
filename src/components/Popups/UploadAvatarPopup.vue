@@ -16,21 +16,21 @@
           <!-- <div class="status-label">
           </div> -->
           <img v-if="option.url" :src="option.url" alt="头像" />
-          <FontIcon class="plus" iconName="Plus" @click="imageClick" />
+          <FontIcon class="plus" icon-name="Plus" @click="imageClick" />
         </div>
         <!-- <div class="preview"></div> -->
       </div>
       <div class="upload-footer">
-        <el-button @click="imageClick" type="primary">头像上传</el-button>
+        <el-button type="primary" @click="imageClick">头像上传</el-button>
       </div>
     </div>
     <input
-      type="file"
       id="imagePicker"
       ref="imagePicker"
+      type="file"
       accept=".jpg, .jpeg, .png, .gif, .bmp"
-      @change="sendImage"
       hidden
+      @change="sendImage"
     />
     <template #footer>
       <span>

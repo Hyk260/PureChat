@@ -15,16 +15,16 @@
       <el-divider class="my-20" />
       <div class="flex gap-5 mb-20">
         <span>{{ defaultProvider }}</span>
-        <el-icon @click="toLink(officialWebsite)" class="cursor-pointer"><Promotion /></el-icon>
+        <el-icon class="cursor-pointer" @click="toLink(officialWebsite)"><Promotion /></el-icon>
       </div>
       <div class="flex gap-10">
         <el-input
           v-model="searchInput"
-          @input="onBlur"
           type="password"
           placeholder="API密钥"
           show-password
           clearable
+          @input="onBlur"
         />
         <el-button @click="checkApiKey">检查</el-button>
       </div>

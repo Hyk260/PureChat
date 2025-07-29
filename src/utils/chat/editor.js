@@ -22,7 +22,7 @@ export const insertMention = (options) => {
   // 恢复选区
   editor?.restoreSelection();
   // 删除 '@'
-  if (!!deleteDigit) {
+  if (deleteDigit) {
     for (let i = 0; i < deleteDigit; i++) {
       editor.deleteBackward("character");
     }

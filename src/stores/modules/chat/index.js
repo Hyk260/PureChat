@@ -138,6 +138,12 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.selectedMessageMap = new Map()
       }
     },
+    setReplyMsgData(data) {
+      this.replyMsgData = data
+    },
+    setMsgEdit(data) {
+      this.msgEdit = data
+    },
     setCurrentConversation(data = {}) {
       this.currentConversation = data
     },

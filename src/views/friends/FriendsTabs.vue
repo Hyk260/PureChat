@@ -6,8 +6,8 @@
         <div
           v-for="(tab, index) in TABS"
           :key="tab.id"
-          class="tabs-tab-wrapper"
           :ref="(el) => setTabRef(el, index)"
+          class="tabs-tab-wrapper"
           :class="{ active: activeTab === index }"
           @click="handleTabClick(index, tab.id)"
         >

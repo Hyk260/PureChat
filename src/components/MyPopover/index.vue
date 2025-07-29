@@ -12,14 +12,14 @@
     <div class="title flex-sc">
       <img
         draggable="false"
-        @click="clickCard(cardData.avatar)"
         :src="cardData.avatar || getAiAvatarUrl(cardData?.from) || squareUrl"
         alt="头像"
+        @click="clickCard(cardData.avatar)"
       />
       <div v-if="isRobot(cardData?.from)" class="flex flex-col ml-16">
         <div class="nick flex gap-5">
           <span> {{ cardData.nick || userProfile.nick || cardData.from || "-" }}</span>
-          <Label :userID="cardData?.from" />
+          <Label :user-i-d="cardData?.from" />
         </div>
         <el-link
           v-if="getProvider()"

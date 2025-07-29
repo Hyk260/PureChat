@@ -1,7 +1,7 @@
 <template>
-  <div class="check-box" v-if="chatStore.isMultiSelectMode">
+  <div v-if="chatStore.isMultiSelectMode" class="check-box">
     <el-icon class="close" @click="onClose"><CircleCloseFilled /></el-icon>
-    <div class="flex-c flex-col" v-for="item in buttonList" :key="item.icon">
+    <div v-for="item in buttonList" :key="item.icon" class="flex-c flex-col">
       <div class="icon flex-c" :class="isForwardDataEmpty ? 'disabled' : ''" @click="onClock(item)">
         <SvgIcon :class="item.class" :local-icon="item.icon" />
       </div>
@@ -11,8 +11,8 @@
     </div>
   </div>
   <!-- 截图分享 -->
-  <ShareModal @onClose="onClose" />
-  <MessageForwardingPopup @confirm="confirm" ref="wardingRef" />
+  <ShareModal @on-close="onClose" />
+  <MessageForwardingPopup ref="wardingRef" @confirm="confirm" />
 </template>
 
 <script setup>
@@ -200,13 +200,13 @@ const setMultipleValue = (value = null) => {
 
 <style lang="scss" scoped>
 .check-box {
-  // position: relative;
-  // z-index: 1;
-  // height: 206px;
-  // display: flex;
-  // justify-content: space-evenly;
-  // align-items: center;
-  // border-top: 1px solid var(--color-border-default);
+  position: relative;
+  z-index: 1;
+  height: 206px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border-top: 1px solid var(--color-border-default);
   .close {
     cursor: pointer;
     position: absolute;

@@ -1,6 +1,6 @@
 <template>
   <div class="tabs-wrapper">
-    <div class="tabs-item" v-for="item in options" :key="item.value" @click="onCilck(item)">
+    <div v-for="item in options" :key="item.value" class="tabs-item" @click="onCilck(item)">
       <el-button :class="{ active: active === item.value }">
         {{ item.label }}
       </el-button>

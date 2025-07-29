@@ -1,14 +1,14 @@
 <template>
-  <div class="emoji-section" v-click-outside="onClickOutside">
+  <div v-click-outside="onClickOutside" class="emoji-section">
     <div class="emojis">
       <el-scrollbar wrap-class="custom-scrollbar-wrap" always>
         <!-- QQ表情包 -->
-        <div :class="['emoji_QQ', systemOs]" v-show="table === 'QQ'">
-          <p class="title" v-show="recentlyUsed.length">最近使用</p>
+        <div v-show="table === 'QQ'" :class="['emoji_QQ', systemOs]">
+          <p v-show="recentlyUsed.length" class="title">最近使用</p>
           <span
             v-for="item in recentlyUsed"
-            class="emoji"
             :key="item"
+            class="emoji"
             @click="handleEmojiSelect(item, table)"
           >
             <img :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
@@ -17,8 +17,8 @@
           <template v-if="!rolling">
             <span
               v-for="item in emojiQq.emojiName"
-              class="emoji"
               :key="item"
+              class="emoji"
               @click="handleEmojiSelect(item, table)"
             >
               <img :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
@@ -26,11 +26,11 @@
           </template>
           <!-- 二维数组 css 滚动贴合 -->
           <template v-else>
-            <div class="scroll-snap" v-for="emoji in emojiPackGroup" :key="emoji">
+            <div v-for="emoji in emojiPackGroup" :key="emoji" class="scroll-snap">
               <span
                 v-for="item in emoji"
-                class="emoji scroll-content"
                 :key="item"
+                class="emoji scroll-content"
                 @click="handleEmojiSelect(item, table)"
               >
                 <img :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
@@ -39,23 +39,23 @@
           </template>
         </div>
         <!-- 抖音表情包 -->
-        <div class="emoji_douyin" v-show="table === 'Douyin'">
+        <div v-show="table === 'Douyin'" class="emoji_douyin">
           <p class="title">抖音表情</p>
           <span
             v-for="item in emojiDouyin.emojiName"
-            class="emoji scroll-content"
             :key="item"
+            class="emoji scroll-content"
             @click="handleEmojiSelect(item, table)"
           >
             <img :src="getEmojiAssetUrl(emojiDouyin.emojiMap[item])" :title="item" />
           </span>
         </div>
-        <div class="emoji_mart" v-if="table === 'Mart'">
+        <div v-if="table === 'Mart'" class="emoji_mart">
           <p class="title">emoji表情</p>
           <span
             v-for="key in emojiArray"
-            class="emoji emoji_mart_item"
             :key="key"
+            class="emoji emoji_mart_item"
             @click="handleEmojiSelect(key, table)"
           >
             {{ key }}

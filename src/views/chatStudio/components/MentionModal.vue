@@ -1,6 +1,6 @@
 <template>
-  <div class="mention-modal" :style="{ top: top, left: left }" v-show="isVisible">
-    <ul class="mention-list" ref="listRef">
+  <div v-show="isVisible" class="mention-modal" :style="{ top: top, left: left }">
+    <ul ref="listRef" class="mention-list">
       <el-scrollbar>
         <div class="mention-list-box">
           <li
@@ -13,10 +13,10 @@
             <UserAvatar
               words="1"
               shape="square"
-              className="mention-avatar"
+              class-name="mention-avatar"
               :url="item.avatar"
               :type="item.avatar ? 'single' : 'group'"
-              :nickName="item.userID === magAtAll ? '@' : item.nick || item.userID"
+              :nick-name="item.userID === magAtAll ? '@' : item.nick || item.userID"
             />
             <span class="nick truncate">{{ item.nick || item.userID }}</span>
           </li>
@@ -84,6 +84,18 @@ export default {
         nick: "全体成员",
       },
     };
+  },
+  created() {
+    this.initList();
+  },
+  mounted() {
+    document.body.appendChild(this.$el);
+    this.initMention();
+  },
+  beforeUnmount() {
+    emitter.off("handleInputKeyupHandler");
+    emitter.off("setMentionModal");
+    this.setMentionStatus(); // 隐藏 modal
   },
   methods: {
     initList(owner = this.isOwner, data = []) {
@@ -192,18 +204,6 @@ export default {
       if (!element) return;
       element.scrollIntoView({ behavior: "smooth", block: "center" });
     },
-  },
-  created() {
-    this.initList();
-  },
-  mounted() {
-    document.body.appendChild(this.$el);
-    this.initMention();
-  },
-  beforeUnmount() {
-    emitter.off("handleInputKeyupHandler");
-    emitter.off("setMentionModal");
-    this.setMentionStatus(); // 隐藏 modal
   },
 };
 </script>

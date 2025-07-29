@@ -1,16 +1,16 @@
 <template>
   <div class="discover-prompt">
-    <DiscoverHeader @handleClick="handleClick" />
+    <DiscoverHeader @handle-click="handleClick" />
     <el-scrollbar class="wh-full">
       <div class="layout-body">
         <div class="layout-box">
-          <TabsWrapper @handleTabs="handleTabs" />
+          <TabsWrapper @handle-tabs="handleTabs" />
           <AgentList
             :agent="agent"
             :market="market"
             :current="current"
             :tabs-key="tabsKey"
-            @handleClick="handleClick"
+            @handle-click="handleClick"
           />
           <StarMessage v-if="agent.length" />
         </div>

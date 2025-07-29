@@ -1,7 +1,6 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    @close="handleClose"
     :modal="true"
     :append-to-body="true"
     :lock-scroll="false"
@@ -9,21 +8,22 @@
     align-center
     title="截图分享"
     width="60%"
+    @close="handleClose"
   >
     <div class="share-modal">
       <div class="segmented">
         <div id="preview" class="preview" :style="back">
           <div class="content">
             <Header />
-            <h2 class="role" v-if="showRole">{{ roleText }}</h2>
+            <h2 v-if="showRole" class="role">{{ roleText }}</h2>
             <div v-if="showPrompt" class="prompt">
               <Markdown :marked="promptContent" />
             </div>
             <div class="item min-h-60">
               <div
-                class="message flex p-10"
                 v-for="item in getSortedForwardData"
                 :key="item.ID"
+                class="message flex p-10"
                 :class="isSelf(item) ? 'is-self' : 'is-other'"
               >
                 <div class="avatar">
@@ -32,9 +32,9 @@
                 <div class="item" :class="msgOne(item.type)">
                   <div :class="msgType(item.type)">
                     <component
-                      :key="item.ID"
                       :is="loadMsgModule(item)"
-                      :msgType="item.conversationType"
+                      :key="item.ID"
+                      :msg-type="item.conversationType"
                       :message="item"
                       :self="isSelf(item)"
                     >
@@ -63,14 +63,14 @@
                 <div
                   v-for="(item, i) in backgColor"
                   :key="i"
-                  @click="onColor(item)"
                   class="w-28 h-28 relative rounded-50% cursor-pointer"
                   :style="getBackgroundStyle(item)"
+                  @click="onColor(item)"
                 ></div>
               </div>
             </div>
             <el-divider />
-            <div class="flex-bc my-5 h-32" v-if="promptContent">
+            <div v-if="promptContent" class="flex-bc my-5 h-32">
               <div>包含助手提示词</div>
               <div><el-switch v-model="isPrompt" /></div>
             </div>
@@ -82,7 +82,7 @@
             <el-divider />
             <div v-if="false" class="flex-bc my-5 h-32">
               <div>包含二维码</div>
-              <div><el-switch :disabled="!isFooter" v-model="isQrCode" /></div>
+              <div><el-switch v-model="isQrCode" :disabled="!isFooter" /></div>
             </div>
             <!-- <el-divider /> -->
             <div class="flex-bc my-5 h-32">
@@ -102,7 +102,7 @@
         </el-scrollbar>
       </div>
       <div>
-        <el-button class="w-full" @click="handleDownload" :loading="loading" :disabled="loading">
+        <el-button class="w-full" :loading="loading" :disabled="loading" @click="handleDownload">
           <template #loading>
             <div class="iconify-icon svg-spinners mr-8"></div>
           </template>

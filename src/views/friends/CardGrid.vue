@@ -4,8 +4,8 @@
       <UserAvatar
         words="3"
         shape="square"
-        :sessionId="item.userID"
-        :nickName="item.name || item.nick"
+        :session-id="item.userID"
+        :nick-name="item.name || item.nick"
         :url="item.avatar || ''"
         :type="isGroup ? 'group' : 'single'"
       />

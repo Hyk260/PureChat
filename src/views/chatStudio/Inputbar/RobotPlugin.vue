@@ -1,16 +1,16 @@
 <template>
-  <div v-if="flag" class="robot-plugin-box" v-click-outside="onClickOutside">
+  <div v-if="flag" v-click-outside="onClickOutside" class="robot-plugin-box">
     <div class="flex-bc flex-col">
       <div
-        class="list flex-bc w-full"
         v-for="item in pluginData"
         :key="item.identifier"
+        class="list flex-bc w-full"
         @click="setChecked(item)"
       >
         <img class="img" :src="item.imageUrl" alt="" />
         <div class="flex-bc right">
           <div>{{ item.meta.title }}</div>
-          <el-checkbox @click.stop class="h-20" v-model="item.checked" />
+          <el-checkbox v-model="item.checked" class="h-20" @click.stop />
         </div>
       </div>
     </div>

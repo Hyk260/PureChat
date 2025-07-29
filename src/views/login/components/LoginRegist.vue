@@ -2,24 +2,24 @@
   <el-form ref="ruleFormRef" :model="ruleForm" :rules="updateRules" size="large">
     <el-form-item prop="username">
       <el-input
-        clearable
         v-model="ruleForm.username"
+        clearable
         :placeholder="$t('login.username')"
         :prefix-icon="User"
       />
     </el-form-item>
     <el-form-item prop="nickname">
       <el-input
-        clearable
         v-model="ruleForm.nickname"
+        clearable
         :placeholder="$t('login.nickname')"
         :prefix-icon="User"
       />
     </el-form-item>
     <el-form-item prop="phone">
       <el-input
-        clearable
         v-model="ruleForm.phone"
+        clearable
         :placeholder="$t('login.phone')"
         :prefix-icon="Iphone"
       />
@@ -27,8 +27,8 @@
     <el-form-item prop="verifyCode">
       <div class="w-full flex">
         <el-input
-          clearable
           v-model="ruleForm.verifyCode"
+          clearable
           :placeholder="$t('login.smsVerifyCode')"
         />
         <el-button
@@ -42,18 +42,18 @@
     </el-form-item>
     <el-form-item prop="password">
       <el-input
+        v-model="ruleForm.password"
         clearable
         show-password
-        v-model="ruleForm.password"
         :placeholder="$t('login.password')"
         :prefix-icon="Lock"
       />
     </el-form-item>
     <el-form-item prop="repeatPassword">
       <el-input
+        v-model="ruleForm.repeatPassword"
         clearable
         show-password
-        v-model="ruleForm.repeatPassword"
         :placeholder="$t('login.sure')"
         :prefix-icon="Lock"
       />
