@@ -116,6 +116,12 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       if (!this.currentConversation) return false;
       return this.currentType === "GROUP";
     },
+    isForwardDataEmpty() {
+      return this.forwardData.size === 0
+    },
+    getForwardCount() {
+      return this.forwardData.size
+    },
     getSortedForwardData() {
       const chatData = Object.values(Object.fromEntries(this.forwardData));
       return chatData.sort((a, b) => a.clientTime - b.clientTime);
@@ -132,6 +138,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
   },
   actions: {
+    setChatSessionListCollapsed(bol) {
+      this.isChatSessionListCollapsed = bol
+    },
     toggleMultiSelectMode(bool) {
       this.isMultiSelectMode = bool
       if (!bool) {

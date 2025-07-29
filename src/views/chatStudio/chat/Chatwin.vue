@@ -1,7 +1,6 @@
 <template>
   <div
     v-show="currentConversation"
-    id="chat-box"
     class="message-info-view-content"
     :class="classMessageInfoView()"
   >
@@ -221,7 +220,9 @@ const showAvatar = (item) => {
 const classMessageViewItem = (item) => {
   return [
     isSelf(item) ? "is-self" : "is-other",
-    isMultiSelectMode.value && !item.isRevoked && item.type !== "TIMGroupTipElem" ? "style-choice" : "",
+    isMultiSelectMode.value && !item.isRevoked && item.type !== "TIMGroupTipElem"
+      ? "style-choice"
+      : "",
   ];
 };
 
@@ -229,6 +230,7 @@ const classMessageInfoView = () => {
   return [
     isChatBoxVisible.value ? "" : "style-msg-box",
     chatStore.replyMsgData ? "style-reply" : "",
+    chatStore.isFullscreenInputActive ? "chat-h-full" : "",
   ];
 };
 
@@ -348,7 +350,7 @@ const loadMoreMsg = async () => {
       // console.log("[chat] 没有更多消息了 loadMoreMsg:");
       chatStore.setNoMore(true);
     } else if (messageList.length) {
-      chatStore.setScrollTopID(nextMsg?.ID)
+      chatStore.setScrollTopID(nextMsg?.ID);
       chatStore.loadMoreMessages({ sessionId, messages: messageList, msgId: messageList[0].ID });
     } else {
       chatStore.setNoMore(true);
@@ -381,7 +383,12 @@ const handleContextMenuEvent = (event, item) => {
     isGroupTip: type === "TIMGroupTipElem",
   };
   // 撤回消息 多选状态 系统类型消息 提示类型消息
-  if (isRevoked || isMultiSelectMode.value || messageTypes.isSystemNotice || messageTypes.isGroupTip) {
+  if (
+    isRevoked ||
+    isMultiSelectMode.value ||
+    messageTypes.isSystemNotice ||
+    messageTypes.isGroupTip
+  ) {
     isRight.value = false;
     return;
   }
@@ -513,7 +520,7 @@ const handleDeleteMsg = (data) => {
 };
 // 多选
 const handleMultiSelectMsg = (item) => {
-  chatStore.toggleMultiSelectMode(true)
+  chatStore.toggleMultiSelectMode(true);
   handleSelect(null, item, "choice");
 };
 const handleRevokeChange = (data, type) => {
@@ -586,6 +593,10 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   .message-name {
     display: none;
   }
+}
+.chat-h-full {
+  height: 0px !important;
+  border-bottom: none;
 }
 .message-view-item-index {
   width: 100%;

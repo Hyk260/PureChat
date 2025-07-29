@@ -3,7 +3,7 @@
     <!-- 聊天列表 -->
     <div class="message-left" :class="{ 'style-layout': isChatSessionListCollapsed }">
       <!-- 搜索框 -->
-      <Search v-show="!isChatSessionListCollapsed" />
+      <Search />
       <div class="scroll-container">
         <!-- 会话列表 -->
         <ConversationList />
@@ -17,28 +17,33 @@
       <!-- <div class="sidebar-drag"></div> -->
     </div>
     <!-- 聊天框 -->
-    <div id="container" class="message-right">
-      <EmptyMessage v-if="!currentConversation" class-name="empty" />
+    <div class="message-right">
+      <EmptyMessage class-name="empty" />
       <Header />
       <!-- 聊天窗口 -->
-      <Chatwin ref="chatRef" :class="{ 'chat-h-full': isFullscreenInputActive }" />
+      <Chatwin />
       <!-- 消息回复框 -->
       <ReplyBox />
       <!-- 编辑器 -->
       <Editor />
       <!-- 多选框 -->
       <MultiSelectionPopup />
+      <!-- 截图分享 -->
+      <!-- <ShareModal @on-close="onClose" />
+      <MessageForwardingPopup ref="wardingRef" @confirm="confirm" /> -->
+      <!-- <MessageToolbar /> -->
     </div>
   </div>
 </template>
 
 <script setup>
-import { onActivated, onMounted, ref} from "vue";
+import { onActivated, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAppStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 import Chatwin from "./chat/Chatwin.vue";
 import MultiSelectionPopup from "@/components/Popups/MultiSelectionPopup.vue";
+import MessageToolbar from "@/components/Popups/MessageToolbar.vue";
 
 import ConversationList from "./chat/ConversationList.vue";
 import Editor from "./editor/index.vue";
@@ -47,15 +52,10 @@ import Header from "./components/Header.vue";
 import ReplyBox from "./components/ReplyBox.vue";
 import Search from "./components/Search.vue";
 
-const chatRef = ref(null);
 const appStore = useAppStore();
 const chatStore = useChatStore();
 
-const {
-  isFullscreenInputActive,
-  isChatSessionListCollapsed,
-  currentConversation,
-} = storeToRefs(chatStore);
+const { isChatSessionListCollapsed } = storeToRefs(chatStore);
 
 const toggleCollapsed = () => {
   chatStore.$patch((state) => {
@@ -68,7 +68,7 @@ onActivated(() => {
 });
 
 onMounted(() => {
-  chatStore.$patch({ isChatSessionListCollapsed: false });
+  chatStore.setChatSessionListCollapsed(false);
 });
 </script>
 
@@ -85,10 +85,6 @@ onMounted(() => {
   border-right: 0px;
   width: 0px !important;
   min-width: 0px !important;
-}
-.chat-h-full {
-  height: 0px !important;
-  border-bottom: none;
 }
 .message-right {
   background: var(--color-body-bg);

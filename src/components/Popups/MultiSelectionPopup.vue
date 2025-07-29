@@ -61,8 +61,8 @@ const userStore = useUserStore();
 const wardingRef = ref(null);
 const multipleValue = ref(null);
 
-const { currentSessionId, isGroupChat, currentConversation } = storeToRefs(chatStore);
-const isForwardDataEmpty = computed(() => chatStore.forwardData.size === 0);
+const { currentSessionId, isGroupChat, currentConversation, isForwardDataEmpty } =
+  storeToRefs(chatStore);
 
 const onClock = (item) => {
   switch (item.type) {
@@ -136,6 +136,13 @@ const mergeTitle = () => {
   return isGroupChat.value ? "群聊的聊天记录" : `${otherProfile?.nick}和${self}的聊天记录`;
 };
 
+const sendAndHandleMessage = async (message) => {
+  const { code, message: data } = await sendMessage(message);
+  if (code === 0) {
+    chatStore.sendSessionMessage({ message: data });
+  }
+};
+
 const mergeForward = async () => {
   if (!multipleValue.value) return;
   const { toAccount, type } = multipleValue.value;
@@ -147,10 +154,7 @@ const mergeForward = async () => {
     abstractList: transformData(forwardData),
     messageList: forwardData,
   });
-  const { code, message: data } = await sendMessage(forwardMsg);
-  if (code === 0) {
-    chatStore.sendSessionMessage({ message: data });
-  }
+  await sendAndHandleMessage(forwardMsg);
   shutdown();
 };
 
@@ -159,23 +163,23 @@ const aQuickForward = async () => {
   if (!multipleValue.value) return;
   const forwardData = chatStore.getSortedForwardData;
   const { toAccount, type } = multipleValue.value;
-  forwardData.map(async (t) => {
-    const forwardMsg = await createForwardMessage({
-      to: toAccount,
-      type,
-      message: t,
-    });
-    const { code, message: data } = await sendMessage(forwardMsg);
-    if (code === 0) {
-      chatStore.sendSessionMessage({ message: data });
-    }
-  });
+
+  await Promise.all(
+    forwardData.map(async (t) => {
+      const forwardMsg = await createForwardMessage({
+        to: toAccount,
+        type,
+        message: t,
+      });
+      await sendAndHandleMessage(forwardMsg);
+    })
+  );
   shutdown();
 };
 
 const shutdown = () => {
   chatStore.setForwardData({ type: "clear" });
-  chatStore.toggleMultiSelectMode(false)
+  chatStore.toggleMultiSelectMode(false);
   closedState();
   setMultipleValue();
 };
@@ -196,6 +200,8 @@ const setDialogVisible = (type = "") => {
 const setMultipleValue = (value = null) => {
   multipleValue.value = value;
 };
+
+defineExpose({ onClose, confirm });
 </script>
 
 <style lang="scss" scoped>

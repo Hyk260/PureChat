@@ -2,6 +2,9 @@ import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
 import prettier from 'eslint-config-prettier'
 
+const isDev = process.env.NODE_ENV === "development";
+const isProd = process.env.NODE_ENV === "production";
+
 export default [
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
@@ -28,8 +31,8 @@ export default [
     rules: {
       'vue/multi-word-component-names': 'off',
       'vue/no-v-html': 'off',
-      'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-      'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+      'no-console': isProd ? 'warn' : 'off',
+      'no-debugger': isProd ? 'warn' : 'off',
       'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
