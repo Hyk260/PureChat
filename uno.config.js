@@ -15,10 +15,7 @@ export default defineConfig({
     presetIcons({
       scale: 1.2, // 图标缩放比例
       warn: true, // 开启警告信息
-      collections: {
-        // 配置 Material Design Icons 图标集
-        // mdi: () => import('@iconify-json/mdi/icons.json').then(i => i.default),
-      },
+      collections: {},
     }),
   ],
   /**

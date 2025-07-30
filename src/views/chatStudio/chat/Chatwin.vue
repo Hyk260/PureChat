@@ -97,6 +97,7 @@
             </div>
           </div>
         </div>
+        <div v-show="isMultiSelectMode" class="h-45"></div>
       </div>
     </el-scrollbar>
     <!-- 卡片 -->
@@ -127,7 +128,6 @@ import {
   onMounted,
   onUnmounted,
   onUpdated,
-  computed,
 } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStore, useGroupStore, useAppStore, useChatStore } from "@/stores/index";
@@ -174,7 +174,6 @@ const appStore = useAppStore();
 const userStore = useUserStore();
 
 const {
-  toAccount,
   isAssistant,
   isGroupChat,
   currentType,
@@ -231,6 +230,7 @@ const classMessageInfoView = () => {
     isChatBoxVisible.value ? "" : "style-msg-box",
     chatStore.replyMsgData ? "style-reply" : "",
     chatStore.isFullscreenInputActive ? "chat-h-full" : "",
+    chatStore.isMultiSelectMode ? "multi-select-mode" : "",
   ];
 };
 
@@ -284,12 +284,12 @@ const isScrolledToBottom = (lower = 2) => {
     const isBot = scrollHeight - (scrollTop + clientHeight) < threshold;
     if (isBot) console.log("isScrolledToBottom: 到底部");
     return isBot;
-  } catch (e) {
+  } catch {
     return false;
   }
 };
 
-const loadMoreMessages = (data) => {
+const loadMoreMessages = () => {
   emitter.emit("handleToBottom", isScrolledToBottom());
 };
 
@@ -335,7 +335,7 @@ const loadMoreMsg = async () => {
     } else if (nextMsg?.type === "TIMTextElem") {
       // console.log("nextMsg:text", nextMsg?.payload?.text);
       // console.log("nextMsg:ID", nextMsg?.ID);
-      const el = document.getElementById(`choice-${nextMsg?.ID}`);
+      // const el = document.getElementById(`choice-${nextMsg?.ID}`);
       // console.log("nextMsg:el", el);
     }
 
@@ -356,6 +356,7 @@ const loadMoreMsg = async () => {
       chatStore.setNoMore(true);
     }
   } catch (e) {
+    console.error("loadMoreMsg:", e);
     chatStore.setNoMore(true);
   }
 };
@@ -486,7 +487,6 @@ const handleSendMessage = (data) => {
   chatStore.addConversation({ sessionId: `C2C${data.from}` });
 };
 
-// 另存为
 const handleSave = ({ payload }) => {
   if (!payload.fileUrl || !payload.fileName) {
     appStore.showMessage({ message: "文件不存在", type: "error" });
@@ -498,36 +498,35 @@ const handleSave = ({ payload }) => {
 const handleTranslate = (data) => {
   translateText({ textList: data.payload.text });
 };
-// 转发
-const handleForward = (data) => {};
-// 回复消息
+
+const handleForward = () => {};
+
 const handleReplyMsg = (data) => {
   chatStore.setReplyMsgData(data);
   if (!isSelf(data)) handleAt(data);
-  // 重置编辑器高度
-  const chatBox = document.getElementById("chat-box"); //聊天框
-  const editor = document.getElementById("editor");
-  chatBox.style.height = `calc(100% - 60px - 200px)`;
-  editor.style.height = `${200}px`;
 };
-// 删除消息
-const handleDeleteMsg = (data) => {
+
+const handleDeleteMsg = async (data) => {
+  const result = await showConfirmationBox({ message: "确定删除消息?", iconType: "warning" });
+  if (result === "cancel") return;
   chatStore.deleteMessage({
     sessionId: data.conversationID,
     messageIdArray: [data.ID],
     message: [data],
   });
 };
-// 多选
+
 const handleMultiSelectMsg = (item) => {
   chatStore.toggleMultiSelectMode(true);
+  chatStore.setReplyMsgData(null);
   handleSelect(null, item, "choice");
 };
+
 const handleRevokeChange = (data, type) => {
   if (data.type !== "TIMTextElem") return;
   chatStore.updateRevokeMsg({ data, type });
 };
-// 撤回消息
+
 const handleRevokeMsg = async (data) => {
   if (timeout.value) {
     const result = await showConfirmationBox({ message: "确定撤回这条消息?", iconType: "warning" });
@@ -593,6 +592,9 @@ defineExpose({ updateScrollbar, updateScrollBarHeight });
   .message-name {
     display: none;
   }
+}
+.multi-select-mode {
+  height: calc(100% - 60px) !important;
 }
 .chat-h-full {
   height: 0px !important;

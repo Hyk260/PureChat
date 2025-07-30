@@ -1,8 +1,9 @@
 import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
 import prettier from 'eslint-config-prettier'
+import globals from 'globals'
 
-const isDev = process.env.NODE_ENV === "development";
+// const isDev = process.env.NODE_ENV === "development";
 const isProd = process.env.NODE_ENV === "production";
 
 export default [
@@ -17,15 +18,13 @@ export default [
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
-        // 浏览器全局变量
-        window: 'readonly',
-        document: 'readonly',
-        console: 'readonly',
-        // Node.js 全局变量
-        process: 'readonly',
-        Buffer: 'readonly',
-        __dirname: 'readonly',
-        __filename: 'readonly',
+        // 浏览器环境全局变量
+        ...globals.browser,
+        // Node.js 环境全局变量
+        ...globals.node,
+        // 自定义全局变量
+        __LOCAL_MODE__: 'readonly',
+        __IS_ELECTRON__: 'readonly',
       },
     },
     rules: {
@@ -33,7 +32,10 @@ export default [
       'vue/no-v-html': 'off',
       'no-console': isProd ? 'warn' : 'off',
       'no-debugger': isProd ? 'warn' : 'off',
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      // 禁止未使用的变量
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      // 禁止未定义的变量
+      'no-undef': ['warn', { typeof: true }],
     },
   },
   {

@@ -26,12 +26,8 @@
       <ReplyBox />
       <!-- 编辑器 -->
       <Editor />
-      <!-- 多选框 -->
-      <MultiSelectionPopup />
-      <!-- 截图分享 -->
-      <!-- <ShareModal @on-close="onClose" />
-      <MessageForwardingPopup ref="wardingRef" @confirm="confirm" /> -->
-      <!-- <MessageToolbar /> -->
+      <!-- 多选工具栏 -->
+      <MessageToolbar />
     </div>
   </div>
 </template>
@@ -42,7 +38,6 @@ import { storeToRefs } from "pinia";
 import { useAppStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 import Chatwin from "./chat/Chatwin.vue";
-import MultiSelectionPopup from "@/components/Popups/MultiSelectionPopup.vue";
 import MessageToolbar from "@/components/Popups/MessageToolbar.vue";
 
 import ConversationList from "./chat/ConversationList.vue";
