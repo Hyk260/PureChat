@@ -1,102 +1,99 @@
 <template>
-    <el-dialog
-      ref="editRef"
-      v-model="dialogVisible"
-      :modal="true"
-      :append-to-body="true"
-      :lock-scroll="false"
-      :close-on-click-modal="true"
-      title="导航栏编辑"
-      width="450px"
-      @close="onClose"
-    >
-      <div class="draggable flex-bc">
-        <div class="draggable-container">
-          <p class="left-text">显示在导航栏上</p>
-          <div class="edit-area h-full">
-            <el-scrollbar>
-              <VueDraggableNext
-                class="drag-area"
-                filter=".fix-ed"
-                :move="onMove"
-                :list="leftEdit"
-                :group="outsideGroup"
-                :force-fallback="true"
-                ghost-class="ghost"
-                drag-class="chosen"
-                animation="200"
-                @update="onUpdate"
-                @remove="onRemove"
-                @start="onStart"
-                @end="onEnd"
-              >
-                <template v-for="item in leftEdit" :key="item.id">
-                  <div class="list-group-item flex-ac" :class="item?.class">
-                    <!-- 删除 -->
-                    <FontIcon
-                      icon-name="RemoveFilled"
-                      class="reduce text-[#f44336]"
-                      @click="reduce(item)"
-                    />
-                    <!-- 图标 -->
-                    <FontIcon v-if="item?.type == 'el-icon'" :icon-name="item.icon" />
-                    <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
-                    <span class="title">{{ item.title }}</span>
-                    <svg-icon local-icon="drag" class="dragIcon" />
-                  </div>
-                </template>
-              </VueDraggableNext>
-            </el-scrollbar>
-          </div>
-        </div>
-        <div class="draggable-container">
-          <p class="left-text">更多</p>
-          <div class="edit-area h-full">
-            <el-scrollbar>
-              <VueDraggableNext
-                class="drag-area"
-                filter=".fix-ed"
-                :move="onMove"
-                :list="rightEdit"
-                :group="insideGroup"
-                :force-fallback="true"
-                ghost-class="ghost"
-                drag-class="chosen"
-                animation="200"
-                @update="onUpdate"
-                @remove="onRemove"
-                @start="onStart"
-                @end="onEnd"
-              >
-                <template v-for="item in rightEdit" :key="item.id">
-                  <div class="list-group-item flex-ac" :class="item?.class">
-                    <!-- 添加 -->
-                    <FontIcon
-                      icon-name="CirclePlusFilled"
-                      class="add text-[#1890ff]"
-                      @click="increase(item)"
-                    />
-                    <!-- 图标 -->
-                    <FontIcon v-if="item?.type == 'el-icon'" :icon-name="item.icon" />
-                    <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
-                    <span class="title">{{ item.title }}</span>
-                    <svg-icon local-icon="drag" class="dragIcon" />
-                  </div>
-                </template>
-              </VueDraggableNext>
-              <div v-if="rightEdit.length == 0" class="empty h-full">全部都显示在侧边栏了</div>
-            </el-scrollbar>
-          </div>
+  <el-dialog
+    ref="editRef"
+    v-model="dialogVisible"
+    :modal="true"
+    :append-to-body="true"
+    :lock-scroll="false"
+    :close-on-click-modal="true"
+    title="导航栏编辑"
+    width="450px"
+    @close="onClose"
+  >
+    <div class="draggable flex-bc">
+      <div class="draggable-container">
+        <p class="left-text">显示在导航栏上</p>
+        <div class="edit-area h-full">
+          <el-scrollbar>
+            <VueDraggableNext
+              class="drag-area"
+              filter=".fix-ed"
+              :move="onMove"
+              :list="leftEdit"
+              :group="outsideGroup"
+              :force-fallback="true"
+              ghost-class="ghost"
+              drag-class="chosen"
+              animation="200"
+              @update="onUpdate"
+              @remove="onRemove"
+              @start="onStart"
+              @end="onEnd"
+            >
+              <template v-for="item in leftEdit" :key="item.id">
+                <div class="list-group-item flex-ac" :class="item?.class">
+                  <!-- 删除 -->
+                  <CircleMinus size="15" class="text-[#f44336]" @click="reduce(item)" />
+                  <!-- 图标 -->
+                  <el-icon v-if="item?.type == 'el-icon'">
+                    <component :is="item.icon" />
+                  </el-icon>
+                  <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
+                  <span class="title">{{ item.title }}</span>
+                  <svg-icon local-icon="drag" class="dragIcon" />
+                </div>
+              </template>
+            </VueDraggableNext>
+          </el-scrollbar>
         </div>
       </div>
-      <template #footer>
-        <span>
-          <el-button @click="reset"> {{ $t("common.reset") }} </el-button>
-          <!-- <el-button @click="handleCancel"> {{ $t("common.cancel") }} </el-button> -->
-          <el-button type="primary" @click="handleConfirm"> {{ $t("common.confirm") }} </el-button>
-        </span>
-      </template>
-    </el-dialog>
+      <div class="draggable-container">
+        <p class="left-text">更多</p>
+        <div class="edit-area h-full">
+          <el-scrollbar>
+            <VueDraggableNext
+              class="drag-area"
+              filter=".fix-ed"
+              :move="onMove"
+              :list="rightEdit"
+              :group="insideGroup"
+              :force-fallback="true"
+              ghost-class="ghost"
+              drag-class="chosen"
+              animation="200"
+              @update="onUpdate"
+              @remove="onRemove"
+              @start="onStart"
+              @end="onEnd"
+            >
+              <template v-for="item in rightEdit" :key="item.id">
+                <div class="list-group-item flex-ac" :class="item?.class">
+                  <!-- 添加 -->
+                  <CirclePlus size="15" class="text-[#1890ff]" @click="increase(item)" />
+                  <!-- 图标 -->
+                  <el-icon v-if="item?.type == 'el-icon'">
+                    <component :is="item.icon" />
+                  </el-icon>
+                  <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
+                  <span class="title">{{ item.title }}</span>
+                  <!-- <svg-icon local-icon="drag" class="dragIcon" /> -->
+                  <GripVertical size="18" class="dragIcon" />
+                </div>
+              </template>
+            </VueDraggableNext>
+            <div v-if="rightEdit.length == 0" class="empty h-full">全部都显示在侧边栏了</div>
+          </el-scrollbar>
+        </div>
+      </div>
+    </div>
+    <template #footer>
+      <span>
+        <el-button @click="reset"> {{ $t("common.reset") }} </el-button>
+        <!-- <el-button @click="handleCancel"> {{ $t("common.cancel") }} </el-button> -->
+        <el-button type="primary" @click="handleConfirm"> {{ $t("common.confirm") }} </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -105,11 +102,15 @@ import { cloneDeep, uniqBy } from "lodash-es";
 import { VueDraggableNext } from "vue-draggable-next";
 import { mapState, mapActions } from "pinia";
 import { useSidebarStore } from "@/stores/modules/sidebar/index";
+import { CircleMinus, CirclePlus, GripVertical  } from "lucide-vue-next";
 import emitter from "@/utils/mitt-bus";
 
 export default defineComponent({
   components: {
     VueDraggableNext,
+    CircleMinus,
+    CirclePlus,
+    GripVertical 
   },
   data() {
     return {
@@ -270,6 +271,10 @@ $draggable-height: 384px;
     cursor: grab;
     .title {
       user-select: none;
+    }
+    .lucide {
+      margin-right: 5px;
+      cursor: pointer;
     }
     .el-icon {
       font-size: 17px;

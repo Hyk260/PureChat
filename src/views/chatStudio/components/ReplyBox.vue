@@ -1,6 +1,6 @@
 <template>
   <div v-if="replyMsgData" class="reply-box flex-bc" @click="onClick">
-    <FontIcon class="close" icon-name="CircleCloseFilled" @click="onClose" />
+    <el-icon class="close" @click="onClose"><CircleCloseFilled /></el-icon>
     <div class="reply-box-content multi-truncate-2">
       <div v-if="replyMsgData?.nick" class="nick">{{ replyMsgData?.nick }} :</div>
       <div v-if="replyMsgData" class="text">
@@ -24,7 +24,7 @@ const chatStore = useChatStore();
 const { replyMsgData } = storeToRefs(chatStore);
 
 const onClose = () => {
-  chatStore.setReplyMsgData(null)
+  chatStore.setReplyMsgData(null);
 };
 
 const onClick = () => {

@@ -13,11 +13,9 @@
             @click="handleItemClick(item)"
           >
             <el-badge :value="chatStore.totalUnreadMsg" :hidden="shouldHideUnreadBadge(item.id)">
-              <FontIcon
-                v-if="item?.type === 'el-icon'"
-                :icon-name="item.icon"
-                class="sidebar-icon"
-              />
+              <el-icon v-if="item?.type === 'el-icon'" class="sidebar-icon">
+                <component :is="item.icon" />
+              </el-icon>
               <SvgIcon v-else :local-icon="item.icon" class="sidebar-icon" />
             </el-badge>
           </div>

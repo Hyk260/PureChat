@@ -21,8 +21,10 @@
       <div v-for="item in menuItems" :key="item.index" class="menu-root">
         <div class="menu-item">
           <div @click="closeCard(item)">
-            <svg-icon v-if="item.svg" :local-icon="item.svg" />
-            <FontIcon v-else :icon-name="item.icon" />
+            <SvgIcon v-if="item.svg" :local-icon="item.svg" />
+            <el-icon v-else>
+              <component :is="item.icon" />
+            </el-icon>
             <span>{{ item.label }}</span>
           </div>
         </div>
@@ -37,7 +39,7 @@ import { useState } from "@/utils/hooks/index";
 import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { openWindow } from "@/utils/common";
-import { useUserStore, useChatStore } from '@/stores/index';
+import { useUserStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
 const { homepage } = __APP_INFO__.pkg;
@@ -45,7 +47,7 @@ const cardRef = useTemplateRef("cardRef");
 
 const profile = ref({});
 const market = ref([]);
-const userStore = useUserStore()
+const userStore = useUserStore();
 const chatStore = useChatStore();
 const [card, setCard] = useState();
 
@@ -83,7 +85,7 @@ const menuItems = [
     svg: "log-out",
     hide: __LOCAL_MODE__,
     action: () => {
-      userStore.handleUserLogout()
+      userStore.handleUserLogout();
     },
   },
 ].filter((item) => !item.hide);

@@ -357,14 +357,14 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
     },
     async updateMessageList(data) {
+      if (!timProxy.isSDKReady) {
+        console.warn("TIM SDK 未初始化");
+        return
+      }
       const { conversationID: sessionId } = data;
-      if (!timProxy.isSDKReady) return;
-      const { messageList, isCompleted } = await getMessageList({ conversationID: sessionId });
-      this.addMessage({
-        conversationID: sessionId,
-        isDone: isCompleted,
-        message: addTimeDivider(messageList),
-      });
+      const { messageList, isCompleted: isDone } = await getMessageList({ conversationID: sessionId });
+      const message = addTimeDivider(messageList);
+      this.addMessage({ conversationID: sessionId, isDone, message });
       emitter.emit("updateScroll");
       setMessageRead(data);
     },

@@ -51,7 +51,7 @@
           :max="99"
         />
         <!-- 消息免打扰 -->
-        <SvgIcon v-show="isNotify(item)" local-icon="DontDisturb" class="dont" />
+        <BellOff v-show="isNotify(item)" :size="15" class="dont" />
       </div>
     </div>
     <VirtualList v-else />
@@ -64,7 +64,9 @@
         :style="item.style"
         @click="handleClickMenuItem(item)"
       >
-        <FontIcon v-if="item.icon" :icon-name="item.icon" />
+        <el-icon v-if="item.icon" :class="menuItem?.class">
+          <component :is="item.icon" />
+        </el-icon>
         <SvgIcon v-else :local-icon="item.svgIcon" class="menu-svg" />
         <span> {{ item.text }}</span>
       </ContextmenuItem>
@@ -73,7 +75,8 @@
 </template>
 
 <script setup>
-import { h, watch, ref, computed } from "vue";
+import { h, ref, computed } from "vue";
+import { BellOff } from 'lucide-vue-next';
 import { storeToRefs } from "pinia";
 import { isObject } from "lodash-es";
 import { chatSessionListData } from "../utils/menu";
@@ -86,7 +89,7 @@ import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
 import { setMessageRemindType } from "@/service/im-sdk-api/index";
 import { useGroupStore, useUserStore, useChatStore } from "@/stores/index";
 import EmptyMessage from "../components/EmptyMessage.vue";
-import VirtualList from './VirtualList.vue';
+import VirtualList from "./VirtualList.vue";
 import Label from "../components/Label.vue";
 import emitter from "@/utils/mitt-bus";
 
@@ -131,7 +134,7 @@ const isMention = (item) => {
 const fnClass = (item) => (item?.conversationID === currentSessionId.value ? "is-active" : "");
 
 const formatNewsMessage = (data) => {
-  if (!isObject(data)) return '';
+  if (!isObject(data)) return "";
   const { type, lastMessage, unreadCount } = data;
   const { messageForShow: rawTip, fromAccount, isRevoked, nick, type: lastType } = lastMessage;
   const isOther = userStore.userProfile?.userID !== fromAccount; // 其他人消息
@@ -227,7 +230,7 @@ const handleContextMenuEvent = (e, item) => {
 const handleConversationListClick = (data) => {
   console.log("会话点击 handleConversationListClick:", data);
   if (currentSessionId.value === data?.conversationID) return;
-  chatStore.setMsgEdit(null)
+  chatStore.setMsgEdit(null);
   chatStore.setReplyMsgData(null);
   chatStore.setForwardData({ type: "clear" });
   chatStore.updateSelectedConversation(data);

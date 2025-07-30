@@ -6,7 +6,7 @@ import javascript from "highlight.js/lib/languages/javascript"
 import { useClipboard } from "@vueuse/core";
 import { useAppStore } from "@/stores/index";
 import { prettyObject } from "@/ai/utils";
-import { convertToMarkdownFootnotes, copySvg } from "./utils"
+import { convertToMarkdownFootnotes, CopyIcon } from "./utils"
 import { configureFootnoteRules, applyLinkOpenRules, applyEpubRules } from "./markdown"
 
 import "@/styles/highlight.scss";
@@ -59,7 +59,7 @@ class MarkdownRenderer {
     const highlightFn = (str, lang) => {
       // 复制按钮的 HTML。实际的复制逻辑应由消费者处理
       // （例如，Vue 组件）通过在渲染的 HTML 上进行事件委托。
-      const copyButtonHtml = `<button class="copy-code-button" onclick="${clipboard}" title="copy">${copySvg}</button>`
+      const copyButtonHtml = `<button class="copy-code-button" onclick="${clipboard}" title="copy">${CopyIcon}</button>`
 
       if (str && hljs.getLanguage(lang)) {
         // 如果指定了语言且 highlight.js 支持，则高亮代码

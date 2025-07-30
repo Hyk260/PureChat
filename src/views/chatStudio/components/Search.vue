@@ -11,7 +11,7 @@
       >
       </el-input>
       <div v-if="!IS_LOCAL_MODE" class="header-search-add flex-c" @click="openDialog">
-        <FontIcon icon-name="Plus" />
+        <el-icon><Plus /></el-icon>
       </div>
     </div>
   </div>
@@ -19,15 +19,11 @@
 
 <script setup>
 import { ref } from "vue";
-import { onKeyStroke, useEventListener } from "@vueuse/core";
+// import { onKeyStroke, useEventListener } from "@vueuse/core";
 import { showConfirmationBox } from "@/utils/message";
 import { Search } from "@element-plus/icons-vue";
 import { debounce, isEmpty } from "lodash-es";
 import { useGroupStore, useChatStore } from "@/stores/index";
-
-defineOptions({
-  name: "Search",
-});
 
 const input = ref("");
 const chatStore = useChatStore();

@@ -1,10 +1,10 @@
 <template>
   <el-drawer
     v-model="drawer"
-    :title="$t('group.groupDetails')"
     size="360px"
-    :modal="true"
     modal-class="group-drawer-modal"
+    :title="$t('group.groupDetails')"
+    :modal="true"
     :before-close="handleClose"
     :close-on-press-escape="true"
     :append-to-body="false"
@@ -12,7 +12,6 @@
     :with-header="true"
   >
     <div>
-      <!-- info -->
       <div class="group-info">
         <UserAvatar
           :url="groupProfile.avatar"
@@ -24,12 +23,14 @@
             <span class="group-name truncate">
               {{ groupProfile.name }}
             </span>
-            <FontIcon
+            <el-icon
               v-if="isOwner"
               class="style-editPen icon-hover"
               icon-name="EditPen"
               @click="openNamePopup"
-            />
+            >
+              <EditPen />
+            </el-icon>
           </div>
           <span class="group-type">
             {{ GroupTypeMap[groupProfile.type] }}
@@ -41,12 +42,14 @@
       <div class="group-notice">
         <div class="pb-10">
           <span>{{ $t("group.groupNotice") }}</span>
-          <FontIcon
+          <el-icon
             v-if="isOwner"
             class="style-editPen icon-hover"
             icon-name="EditPen"
             @click="openNoticePopup"
-          />
+          >
+            <EditPen />
+          </el-icon>
         </div>
         <div class="group-notice-info multi-truncate-5">
           <Markdown :marked="groupProfile.notification" />
@@ -71,13 +74,15 @@
               class="avatar margin"
               @click="navigate(item)"
             >
-              <FontIcon
+              <el-icon
                 v-if="isOwner"
                 icon-name="CircleCloseFilled"
                 class="style-close"
                 :class="{ hidden: userStore.userProfile.userID === item.userID }"
                 @click.stop="removeGroupMemberBtn(item)"
-              />
+              >
+                <CircleCloseFilled />
+              </el-icon>
               <UserAvatar :url="item.avatar" :nick-name="item.nick || item.userID" />
               <!-- Admin Owner -->
               <div v-if="item.role !== 'Member'" class="wrap-group" :class="`style-${item.role}`">
@@ -107,9 +112,7 @@
       <el-divider />
       <!-- 解散 退出 转让 -->
       <div v-if="!isFullStaffGroup(currentConversation)" class="group-operator flex-c">
-        <el-button v-if="isOwner" type="danger" @click="handleDismissGroup">
-          解散群组
-        </el-button>
+        <el-button v-if="isOwner" type="danger" @click="handleDismissGroup"> 解散群组 </el-button>
         <el-button v-else type="danger" @click="handleQuitGroup"> 退出群组 </el-button>
         <!-- <div class="w-12"></div> -->
         <!-- <el-button type="primary" plain v-if="isOwner" @click="handleTransferGroup">

@@ -1,15 +1,15 @@
 <template>
   <div class="message-view_withdraw" @click="onClick()">
     <span class="withdraw">
-      <span>
-        {{ getChangeType() }}
-      </span>
-      <FontIcon
+      <span> {{ getChangeType() }} </span>
+      <el-icon
         v-show="!isReEdit && message.type !== 'TIMCustomElem'"
         class="close"
         icon-name="CircleCloseFilled"
         @click.stop="onClose(message)"
-      />
+      >
+        <CircleCloseFilled />
+      </el-icon>
     </span>
     <span v-if="isReEdit" class="edit" @click.stop="onEdit()">重新编辑</span>
   </div>

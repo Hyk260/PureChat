@@ -46,10 +46,10 @@
         <svg-icon local-icon="tianjia" class="icon-hover" />
       </div> -->
       <div class="share" title="分享对话" @click="openShare">
-        <svg-icon class="cursor-pointer icon-hover" local-icon="share" />
+        <Share2 class="cursor-pointer icon-hover" :size="17" />
       </div>
       <div v-show="isGroupChat" class="setup" title="群详情" @click="openSetup">
-        <FontIcon icon-name="MoreFilled" class="cursor-pointer icon-hover" />
+        <Ellipsis class="cursor-pointer icon-hover" :size="17" />
       </div>
     </div>
   </header>
@@ -57,6 +57,7 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
+import { Share2, Ellipsis } from "lucide-vue-next";
 import { useRobotStore, useChatStore, useToolsStore } from "@/stores/index";
 import Label from "@/views/chatStudio/components/Label.vue";
 import emitter from "@/utils/mitt-bus";
@@ -89,7 +90,7 @@ const openPrompt = () => {
 };
 
 const openShare = () => {
-  chatStore.toggleMultiSelectMode(true)
+  chatStore.toggleMultiSelectMode(true);
 };
 
 const openSetup = () => {

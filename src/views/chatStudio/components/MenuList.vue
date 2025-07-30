@@ -1,14 +1,16 @@
 <template>
-  <div v-if="showMenuList(item)" class="menubar">
+  <div v-if="shouldShowMenu" class="menubar">
     <div class="flex">
       <div
-        v-for="item in filterList"
-        :key="item.id"
+        v-for="menuItem in availableMenuItems"
+        :key="menuItem.id"
         class="menubar-item flex-c"
-        @click="handleMenuEvent(item)"
+        @click="handleMenuItemClick(menuItem)"
       >
-        <el-tooltip :content="item.title" placement="top">
-          <FontIcon :class="item?.class" :icon-name="item.icon" />
+        <el-tooltip :content="menuItem.title" placement="top">
+          <el-icon :class="menuItem?.class">
+            <component :is="menuItem.icon" />
+          </el-icon>
         </el-tooltip>
       </div>
     </div>
@@ -31,78 +33,98 @@ const props = defineProps({
     type: Object,
     default: null,
   },
-  // unSend(未发送)fail(发送失败)success(发送成功)
   status: {
     type: String,
     default: "unSend",
+    // unSend(未发送)fail(发送失败)success(发送成功)
+    validator: (value) => ["unSend", "fail", "success"].includes(value),
   },
 });
 
-const list = [
+const supportedMessageTypes = [
+  "TIMImageElem",
+  "TIMFileElem",
+  "TIMTextElem",
+  "TIMRelayElem",
+  "TIMCustomElem",
+];
+
+const menuItemsConfig = [
   {
     id: "copy",
     title: "复制",
     icon: "CopyDocument",
-    // <el-icon><CopyDocument /></el-icon>
   },
   {
     id: "edit",
     title: "编辑",
     hidden: !__LOCAL_MODE__,
     icon: "Edit",
-    // <el-icon><Edit /></el-icon>
   },
   {
     id: "setup",
     title: "设置",
     hidden: true,
     icon: "MoreFilled",
-    // <el-icon><MoreFilled /></el-icon>
   },
   {
     id: "delete",
     title: "删除",
     class: "text-[#f44336]",
     icon: "Delete",
-    // <el-icon><Delete /></el-icon>
   },
 ];
 
 const chatStore = useChatStore();
 
-const filterList = computed(() => {
-  const _type = props.item.type;
-  return list
-    .filter((t) => {
-      if (t.id === "edit") {
-        return _type === "TIMTextElem";
-      } else if (t.id === "copy") {
-        return ["TIMTextElem", "TIMImageElem"].includes(_type);
+/**
+ * 判断是否应该显示菜单
+ */
+const shouldShowMenu = computed(() => {
+  const { item, status } = props;
+
+  // 消息状态检查
+  if (status !== "success") {
+    return false;
+  }
+
+  // 编辑状态检查
+  if (chatStore.msgEdit?.ID === item?.ID) {
+    return false;
+  }
+
+  // 自定义消息加载状态检查
+  if (item.type === "TIMCustomElem") {
+    if (item?.payload?.description === "loading") {
+      return false;
+    }
+  }
+
+  return (
+    supportedMessageTypes.includes(item.type) &&
+    item.type !== "TIMGroupTipElem" &&
+    !item.isRevoked &&
+    !chatStore.isMultiSelectMode &&
+    availableMenuItems.value.length > 0
+  );
+});
+
+const availableMenuItems = computed(() => {
+  const messageType = props.item.type;
+  return menuItemsConfig
+    .filter((menuItem) => {
+      if (menuItem.id === "edit") {
+        return messageType === "TIMTextElem";
+      } else if (menuItem.id === "copy") {
+        return ["TIMTextElem", "TIMImageElem"].includes(messageType);
       } else {
         return true;
       }
     })
-    .filter((t) => !t?.hidden);
+    .filter((menuItem) => !menuItem?.hidden);
 });
 
-function showMenuList(item) {
-  if (props.status !== "success") return false;
-  if (chatStore.msgEdit?.ID === item?.ID) return false;
-  if (["TIMCustomElem"].includes(item.type)) {
-    if (props.item?.payload?.description === "loading") return false;
-  }
-  // 图片 文件 文本 合并
-  const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem", "TIMCustomElem"];
-  return (
-    msg.includes(item.type) &&
-    item.type !== "TIMGroupTipElem" &&
-    !item.isRevoked &&
-    !chatStore.isMultiSelectMode &&
-    filterList.value.length
-  );
-}
-
-function handleMenuEvent(data) {
+function handleMenuItemClick(data) {
   const { id } = data;
   const { item } = props;
   switch (id) {

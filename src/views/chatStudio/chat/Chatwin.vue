@@ -111,7 +111,7 @@
         :style="item.style"
         @click="handleRightClick(item)"
       >
-        <FontIcon :icon-name="item.icon" />
+        <el-icon><component :is="item.icon" /> </el-icon>
         <span>{{ item.text }}</span>
       </ContextmenuItem>
     </Contextmenu>
@@ -123,11 +123,8 @@ import {
   ref,
   watch,
   nextTick,
-  onBeforeUnmount,
-  onBeforeUpdate,
   onMounted,
   onUnmounted,
-  onUpdated,
 } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStore, useGroupStore, useAppStore, useChatStore } from "@/stores/index";
@@ -519,6 +516,7 @@ const handleDeleteMsg = async (data) => {
 const handleMultiSelectMsg = (item) => {
   chatStore.toggleMultiSelectMode(true);
   chatStore.setReplyMsgData(null);
+  updateLoadMore(item?.ID);
   handleSelect(null, item, "choice");
 };
 
@@ -574,14 +572,10 @@ watch(
 onMounted(() => {
   onEmitter();
 });
+
 onUnmounted(() => {
   offEmitter();
 });
-onUpdated(() => {
-  updateScrollBarHeight();
-});
-onBeforeUpdate(() => {});
-onBeforeUnmount(() => {});
 
 defineExpose({ updateScrollbar, updateScrollBarHeight });
 </script>

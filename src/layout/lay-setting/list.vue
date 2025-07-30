@@ -11,12 +11,10 @@
         }"
         @click="handleItemClick(item)"
       >
-        <component
-          :is="item.icon ? FontIcon : SvgIcon"
-          class="icon"
-          :icon-name="item.icon"
-          :local-icon="item.svg_icon"
-        />
+        <el-icon v-if="item.icon">
+          <component :is="item.icon" />
+        </el-icon>
+        <SvgIcon v-else :local-icon="item.svg_icon" />
         <div class="menu-item__title">{{ item.title }}</div>
       </li>
     </ul>
@@ -24,9 +22,8 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { list } from "./enums";
-import FontIcon from "@/components/Automatic/FontIcon/index.vue";
-import SvgIcon from "@/components/Automatic/SvgIcon/index.vue";
 
 const activeId = ref(list.value[0].id);
 
