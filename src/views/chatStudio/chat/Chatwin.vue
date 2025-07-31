@@ -119,13 +119,7 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  watch,
-  nextTick,
-  onMounted,
-  onUnmounted,
-} from "vue";
+import { ref, shallowRef, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStore, useGroupStore, useAppStore, useChatStore } from "@/stores/index";
 import { showConfirmationBox } from "@/utils/message";
@@ -160,7 +154,7 @@ import AssistantMessage from "../components/AssistantMessage.vue";
 const UserPopupRef = ref();
 const timeout = ref(false);
 const isRight = ref(true);
-const contextMenuItems = ref([]);
+const contextMenuItems = shallowRef([]);
 const menuItemInfo = ref([]);
 const scrollbarRef = ref(null);
 const messageViewRef = ref(null);

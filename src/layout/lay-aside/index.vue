@@ -41,6 +41,8 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+import { Operation, QuestionFilled } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { openWindow } from "@/utils/common";
 import { useChatStore, useSidebarStore } from "@/stores/index";

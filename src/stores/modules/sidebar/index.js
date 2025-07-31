@@ -1,7 +1,10 @@
+import { markRaw } from "vue";
 import { defineStore } from "pinia";
 import { SetupStoreId } from '@/stores/plugins/index';
 import { useChatStore } from "../chat/index";
 import { openWindow } from "@/utils/common";
+import { LayoutGrid } from "lucide-vue-next";
+import { ChatDotSquare, UserFilled, MoreFilled } from "@element-plus/icons-vue";
 import emitter from "@/utils/mitt-bus";
 import router from "@/router";
 
@@ -11,7 +14,7 @@ const { DEV: isDev } = import.meta.env;
 const defaultOutsideList = [
   {
     id: "chat",
-    icon: "ChatDotSquare",
+    icon: markRaw(ChatDotSquare),
     title: "会话",
     // class: "fix-ed",
     // if_fixed: 1,
@@ -20,7 +23,7 @@ const defaultOutsideList = [
   },
   {
     id: "friends",
-    icon: "UserFilled",
+    icon: markRaw(UserFilled),
     title: "联系人",
     path: "/friends",
     type: "el-icon",
@@ -35,7 +38,7 @@ const defaultOutsideList = [
   },
   {
     id: "apps",
-    icon: "Menu",
+    icon: markRaw(LayoutGrid),
     title: "小程序",
     path: "/apps",
     type: "el-icon",
@@ -43,7 +46,7 @@ const defaultOutsideList = [
   },
   {
     id: "more",
-    icon: "MoreFilled",
+    icon: markRaw(MoreFilled),
     title: "更多",
     mode: "other",
     type: "el-icon",

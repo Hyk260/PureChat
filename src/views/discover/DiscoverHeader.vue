@@ -9,7 +9,7 @@
     >
       <template #prefix>
         <el-icon class="el-input__icon">
-          <search />
+          <Search />
         </el-icon>
       </template>
     </el-input>
@@ -19,6 +19,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { Search } from "@element-plus/icons-vue";
 
 const input = ref("");
 

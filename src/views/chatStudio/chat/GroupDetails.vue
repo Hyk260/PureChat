@@ -26,7 +26,6 @@
             <el-icon
               v-if="isOwner"
               class="style-editPen icon-hover"
-              icon-name="EditPen"
               @click="openNamePopup"
             >
               <EditPen />
@@ -45,7 +44,6 @@
           <el-icon
             v-if="isOwner"
             class="style-editPen icon-hover"
-            icon-name="EditPen"
             @click="openNoticePopup"
           >
             <EditPen />
@@ -76,7 +74,6 @@
             >
               <el-icon
                 v-if="isOwner"
-                icon-name="CircleCloseFilled"
                 class="style-close"
                 :class="{ hidden: userStore.userProfile.userID === item.userID }"
                 @click.stop="removeGroupMemberBtn(item)"
@@ -126,6 +123,7 @@
 </template>
 
 <script setup>
+import { EditPen, CircleCloseFilled } from "@element-plus/icons-vue";
 import {
   addGroupMember,
   deleteGroupMember,

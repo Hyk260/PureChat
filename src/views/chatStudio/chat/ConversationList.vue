@@ -64,7 +64,7 @@
         :style="item.style"
         @click="handleClickMenuItem(item)"
       >
-        <el-icon v-if="item.icon" :class="menuItem?.class">
+        <el-icon v-if="item.icon" :class="item?.class">
           <component :is="item.icon" />
         </el-icon>
         <SvgIcon v-else :local-icon="item.svgIcon" class="menu-svg" />

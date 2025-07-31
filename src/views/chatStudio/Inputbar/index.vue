@@ -115,6 +115,7 @@
 </template>
 
 <script setup>
+import { Warning, Sunny, DArrowLeft, Delete } from "@element-plus/icons-vue";
 import { showConfirmationBox } from "@/utils/message";
 import { createCustomMessage } from "@/service/im-sdk-api/index";
 import { createFileInput } from "@/utils/common";

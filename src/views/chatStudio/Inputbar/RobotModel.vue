@@ -56,7 +56,6 @@ import { useState } from "@/utils/hooks/index";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { getModelSvg, useAccessStore, formatSizeStrict } from "@/ai/utils";
 import { modelValue } from "@/ai/constant";
-import { localStg } from "@/utils/storage";
 import { cloneDeep, isEmpty } from "lodash-es";
 import { useRobotStore, useChatStore } from "@/stores/index";
 import { ModelSelect } from "@/ai/resources";

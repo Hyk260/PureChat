@@ -12,6 +12,7 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
+import { CircleCloseFilled } from "@element-plus/icons-vue";
 import { useChatStore } from "@/stores/modules/chat/index";
 import { getAbstractContent, scrollToDomPosition } from "@/utils/chat/index";
 import DynamicContent from "./DynamicContent.vue";

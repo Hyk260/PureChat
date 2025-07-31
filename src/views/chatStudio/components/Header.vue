@@ -27,10 +27,8 @@
             placement="bottom"
           >
             <div v-if="isAssistant" class="lucide-history ai-prompt-title">
-              <SvgIcon local-icon="lucide-history" />
-              <span>
-                {{ robotStore.getBotMessageCount }}
-              </span>
+              <History size="16" />
+              <span>{{ robotStore.getBotMessageCount }}</span>
             </div>
           </el-tooltip>
         </span>
@@ -57,7 +55,7 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { Share2, Ellipsis } from "lucide-vue-next";
+import { Share2, Ellipsis, History } from "lucide-vue-next";
 import { useRobotStore, useChatStore, useToolsStore } from "@/stores/index";
 import Label from "@/views/chatStudio/components/Label.vue";
 import emitter from "@/utils/mitt-bus";

@@ -25,6 +25,7 @@ export default [
         // 自定义全局变量
         __LOCAL_MODE__: 'readonly',
         __IS_ELECTRON__: 'readonly',
+        __APP_INFO__: 'readonly',
       },
     },
     rules: {

@@ -5,7 +5,6 @@
       <el-icon
         v-show="!isReEdit && message.type !== 'TIMCustomElem'"
         class="close"
-        icon-name="CircleCloseFilled"
         @click.stop="onClose(message)"
       >
         <CircleCloseFilled />
@@ -16,6 +15,7 @@
 </template>
 
 <script setup>
+import { CircleCloseFilled } from "@element-plus/icons-vue";
 import { computed } from "vue";
 import { useChatStore, useUserStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";

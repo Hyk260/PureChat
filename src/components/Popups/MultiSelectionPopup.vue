@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useChatStore, useUserStore } from "@/stores/index";
 import { createForwardMessage, createMergerMessage, sendMessage } from "@/service/im-sdk-api/index";
 import MessageForwardingPopup from "@/components/Popups/MessageForwardingPopup.vue";

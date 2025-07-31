@@ -2,15 +2,13 @@
   <div v-if="shouldShowMenu" class="menubar">
     <div class="flex">
       <div
-        v-for="menuItem in availableMenuItems"
-        :key="menuItem.id"
+        v-for="t in availableMenuItems"
+        :key="t.id"
         class="menubar-item flex-c"
-        @click="handleMenuItemClick(menuItem)"
+        @click="handleMenuItemClick(t)"
       >
-        <el-tooltip :content="menuItem.title" placement="top">
-          <el-icon :class="menuItem?.class">
-            <component :is="menuItem.icon" />
-          </el-icon>
+        <el-tooltip :content="t.title" placement="top">
+          <component :is="t.icon" :class="t?.class" size="13" />
         </el-tooltip>
       </div>
     </div>
@@ -18,7 +16,8 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, markRaw } from "vue";
+import { Trash, SquarePen, Copy, SlidersHorizontal } from "lucide-vue-next";
 import { useChatStore } from "@/stores/index";
 import { handleCopyMsg } from "../utils/utils";
 
@@ -53,25 +52,25 @@ const menuItemsConfig = [
   {
     id: "copy",
     title: "复制",
-    icon: "CopyDocument",
+    icon: markRaw(Copy),
   },
   {
     id: "edit",
     title: "编辑",
     hidden: !__LOCAL_MODE__,
-    icon: "Edit",
+    icon: markRaw(SquarePen),
   },
   {
     id: "setup",
     title: "设置",
     hidden: true,
-    icon: "MoreFilled",
+    icon: markRaw(SlidersHorizontal),
   },
   {
     id: "delete",
     title: "删除",
     class: "text-[#f44336]",
-    icon: "Delete",
+    icon: markRaw(Trash),
   },
 ];
 
@@ -165,6 +164,9 @@ function handleMenuItemClick(data) {
     border-radius: 5px;
     height: 22px;
     width: 22px;
+    svg {
+      outline: none;
+    }
     &:hover {
       color: #080808;
       background-color: rgba(0, 0, 0, 0.06);

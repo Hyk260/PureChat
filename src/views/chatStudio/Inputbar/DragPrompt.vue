@@ -52,6 +52,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { CircleCloseFilled } from "@element-plus/icons-vue";
 import { ROLES } from "@/ai/constant";
 import { useState } from "@/utils/hooks/index";
 import { nanoid } from "@/utils/uuid";

@@ -1,3 +1,6 @@
+import { markRaw } from "vue";
+import { CopyDocument, SortDown, Download, ChatDotSquare, Finished, Delete } from "@element-plus/icons-vue";
+import { BellOff, BellRing } from 'lucide-vue-next';
 // 会话列表数据
 export const chatSessionListData = [
   {
@@ -16,20 +19,20 @@ export const chatSessionListData = [
   },
   {
     id: "AcceptNotNotify",
-    icon: "MuteNotification",
+    icon: markRaw(BellOff),
     text: "消息免打扰",
     hide: __LOCAL_MODE__
   },
   {
     id: "AcceptAndNotify",
-    icon: "Bell",
+    icon: markRaw(BellRing),
     text: "允许消息提醒",
     hide: __LOCAL_MODE__
   },
   {
     id: "remove",
-    icon: "Delete",
-    text: "移除会话",
+    icon: markRaw(Delete),
+    text: "删除会话",
     style: "color: #f44336;",
   },
   // { id: "clean", text: "清除消息" },
@@ -38,12 +41,12 @@ export const chatSessionListData = [
 export const menuOptionsList = [
   {
     id: "copy",
-    icon: "CopyDocument",
+    icon: markRaw(CopyDocument),
     text: "复制",
   },
   {
     id: "revoke",
-    icon: "SortDown",
+    icon: markRaw(SortDown),
     text: "撤回",
   },
   // {
@@ -57,12 +60,12 @@ export const menuOptionsList = [
   // },
   {
     id: "saveAs",
-    icon: "Download",
+    icon: markRaw(Download),
     text: "另存为",
   },
   {
     id: "reply",
-    icon: "ChatDotSquare",
+    icon: markRaw(ChatDotSquare),
     text: "回复",
   },
   // {
@@ -71,12 +74,12 @@ export const menuOptionsList = [
   // },
   {
     id: "multiSelect",
-    icon: "Finished",
+    icon: markRaw(Finished),
     text: "多选",
   },
   {
     id: "delete",
-    icon: "Delete",
+    icon: markRaw(Delete),
     text: "删除",
     style: "color: #f44336;",
   },

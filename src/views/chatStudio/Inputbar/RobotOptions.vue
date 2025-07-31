@@ -186,6 +186,7 @@
 </template>
 
 <script setup>
+import { QuestionFilled } from "@element-plus/icons-vue";
 import { storeToRefs } from "pinia";
 import { ModelSelect } from "@/ai/resources";
 import { useAccessStore, getModelSvg } from "@/ai/utils";

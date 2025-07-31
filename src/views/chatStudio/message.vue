@@ -33,7 +33,8 @@
 </template>
 
 <script setup>
-import { onActivated, onMounted, ref } from "vue";
+import { onActivated, onMounted } from "vue";
+import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
 import { storeToRefs } from "pinia";
 import { useAppStore, useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";

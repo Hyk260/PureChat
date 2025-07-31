@@ -21,7 +21,7 @@
 import { ref } from "vue";
 // import { onKeyStroke, useEventListener } from "@vueuse/core";
 import { showConfirmationBox } from "@/utils/message";
-import { Search } from "@element-plus/icons-vue";
+import { Search, Plus } from "@element-plus/icons-vue";
 import { debounce, isEmpty } from "lodash-es";
 import { useGroupStore, useChatStore } from "@/stores/index";
 

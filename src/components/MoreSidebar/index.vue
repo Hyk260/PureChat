@@ -76,7 +76,6 @@
                   </el-icon>
                   <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
-                  <!-- <svg-icon local-icon="drag" class="dragIcon" /> -->
                   <GripVertical size="18" class="dragIcon" />
                 </div>
               </template>
@@ -102,7 +101,7 @@ import { cloneDeep, uniqBy } from "lodash-es";
 import { VueDraggableNext } from "vue-draggable-next";
 import { mapState, mapActions } from "pinia";
 import { useSidebarStore } from "@/stores/modules/sidebar/index";
-import { CircleMinus, CirclePlus, GripVertical  } from "lucide-vue-next";
+import { CircleMinus, CirclePlus, GripVertical } from "lucide-vue-next";
 import emitter from "@/utils/mitt-bus";
 
 export default defineComponent({
