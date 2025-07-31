@@ -12,6 +12,7 @@
 </template>
 
 <script setup>
+import { CloseBold } from "@element-plus/icons-vue";
 import WebSearch from "./webSearch.vue";
 import Currency from "./currency.vue";
 import About from "./about.vue";

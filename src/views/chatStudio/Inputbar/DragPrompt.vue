@@ -51,9 +51,10 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { CircleCloseFilled } from "@element-plus/icons-vue";
-import { ROLES } from "@/ai/constant";
+import { ref, nextTick, useTemplateRef } from "vue";
+import { storeToRefs } from "pinia";
+import { CircleCloseFilled, CirclePlusFilled } from "@element-plus/icons-vue";
+// import { ROLES } from "@/ai/constant";
 import { useState } from "@/utils/hooks/index";
 import { nanoid } from "@/utils/uuid";
 import { useRobotStore } from "@/stores/index";
@@ -71,8 +72,6 @@ const promptItems = ref([]);
 const robotStore = useRobotStore();
 const [showEmojiPickerFlag, setShowEmojiPickerFlag] = useState(false);
 const { promptStore, modelProvider } = storeToRefs(robotStore);
-
-const emit = defineEmits(["handlePrompt"]);
 
 function initPromptData() {
   const _promptStore = promptStore.value?.[modelProvider.value] || [];

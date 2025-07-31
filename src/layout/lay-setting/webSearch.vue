@@ -36,6 +36,7 @@
 </template>
 
 <script setup>
+import { Promotion } from "@element-plus/icons-vue";
 import { useState } from "@/utils/hooks/index";
 import { useAppStore, useWebSearchStore } from "@/stores/index";
 import { WEB_SEARCH_PROVIDER_CONFIG } from "@/config/webSearchProviders";

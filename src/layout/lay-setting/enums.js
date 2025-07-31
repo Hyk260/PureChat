@@ -1,4 +1,6 @@
 import { computed } from "vue";
+import { Operation, Warning } from "@element-plus/icons-vue";
+import { Cloud } from 'lucide-vue-next';
 import { $t } from "@/locales/index";
 import { ModelProvider } from "@/ai/constant";
 
@@ -6,8 +8,8 @@ export const list = computed(() => {
   return [
     {
       id: "currency",
-      title: $t("common.currency"),
-      icon: "Operation",
+      title: "常规设置",
+      icon: Operation,
     },
     {
       id: "webSearch",
@@ -17,12 +19,12 @@ export const list = computed(() => {
     {
       id: "provider",
       title: $t("settings.provider.title"),
-      icon: "Postcard",
+      icon: Cloud,
     },
     {
       id: "about",
       title: $t("common.about"),
-      icon: "Warning",
+      icon: Warning,
     },
   ];
 });

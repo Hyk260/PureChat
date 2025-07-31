@@ -1,6 +1,13 @@
 import { markRaw } from "vue";
-import { CopyDocument, SortDown, Download, ChatDotSquare, Finished, Delete } from "@element-plus/icons-vue";
-import { BellOff, BellRing } from 'lucide-vue-next';
+import {
+  CopyDocument,
+  SortDown,
+  // Download,
+  // ChatDotSquare,
+  // Finished, 
+  // DeleteFilled
+} from "@element-plus/icons-vue";
+import { BellOff, BellRing, ListChecks, MessageSquareQuote, Trash2, Download } from 'lucide-vue-next';
 // 会话列表数据
 export const chatSessionListData = [
   {
@@ -31,7 +38,7 @@ export const chatSessionListData = [
   },
   {
     id: "remove",
-    icon: markRaw(Delete),
+    icon: markRaw(Trash2),
     text: "删除会话",
     style: "color: #f44336;",
   },
@@ -65,8 +72,8 @@ export const menuOptionsList = [
   },
   {
     id: "reply",
-    icon: markRaw(ChatDotSquare),
-    text: "回复",
+    icon: markRaw(MessageSquareQuote),
+    text: "引用",
   },
   // {
   //   id: "forward",
@@ -74,12 +81,12 @@ export const menuOptionsList = [
   // },
   {
     id: "multiSelect",
-    icon: markRaw(Finished),
+    icon: markRaw(ListChecks),
     text: "多选",
   },
   {
     id: "delete",
-    icon: markRaw(Delete),
+    icon: markRaw(Trash2),
     text: "删除",
     style: "color: #f44336;",
   },

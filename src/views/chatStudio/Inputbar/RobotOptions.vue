@@ -191,7 +191,7 @@ import { storeToRefs } from "pinia";
 import { ModelSelect } from "@/ai/resources";
 import { useAccessStore, getModelSvg } from "@/ai/utils";
 import { useState } from "@/utils/hooks/index";
-import { localStg } from "@/utils/storage";
+// import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
 import { modelValue, modelConfig } from "@/ai/constant";
@@ -200,7 +200,7 @@ import { debounce } from "lodash-es";
 import { isRange } from "./utils";
 import { openWindow } from "@/utils/common";
 import DragPrompt from "./DragPrompt.vue";
-import OllamaAI from "@/ai/platforms/ollama/ollama";
+// import OllamaAI from "@/ai/platforms/ollama/ollama";
 import emitter from "@/utils/mitt-bus";
 
 defineOptions({

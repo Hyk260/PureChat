@@ -34,9 +34,10 @@
 </template>
 
 <script setup>
+import { Operation, PieChart } from "@element-plus/icons-vue";
 import { onClickOutside } from "@vueuse/core";
 import { useState } from "@/utils/hooks/index";
-import { TIM_PROXY } from "@/constants/index";
+// import { TIM_PROXY } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { openWindow } from "@/utils/common";
 import { useUserStore, useChatStore } from "@/stores/index";
@@ -55,7 +56,7 @@ const menuItems = [
   {
     index: "1",
     label: "应用设置",
-    icon: "Operation",
+    icon: Operation,
     action: operation,
   },
   // {
@@ -67,7 +68,7 @@ const menuItems = [
   {
     index: "3",
     label: "社区支持",
-    icon: "PieChart",
+    icon: PieChart,
     action: () => {
       openWindow(homepage);
     },
