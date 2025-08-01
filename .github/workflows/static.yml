@@ -1,63 +1,144 @@
-# 将静态内容部署到 GitHub Pages 的简易工作流程
-name: Deploy static content to Pages
+# 将静态内容部署到 GitHub Pages 的优化工作流程
+name: Deploy to GitHub Pages
 
 on:
-  # 仅在推送到默认分支时运行。
+  # 仅在推送到默认分支时运行
   push:
     branches: ['main']
-
-  # 这个选项可以使你手动在 Action tab 页面触发工作流
+  # 手动触发工作流
   workflow_dispatch:
+  # 在PR时运行检查但不部署
+  pull_request:
+    branches: ['main']
 
-# 设置 GITHUB_TOKEN 的权限，以允许部署到 GitHub Pages。
+# 设置 GITHUB_TOKEN 的权限
 permissions:
   contents: read
   pages: write
   id-token: write
+  pull-requests: read
 
-# 允许一个并发的部署
+# 允许一个并发的部署，取消进行中的部署
 concurrency:
   group: 'pages'
   cancel-in-progress: true
 
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9'
+
 jobs:
-  # 单次部署的工作描述
+  # 代码质量检查
+  quality-check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run linting
+        run: pnpm run lint:check
+
+      - name: Run tests
+        run: pnpm run test
+
+  # 构建和部署
   deploy:
-    # 指定部署的环境信息 这里使用名为 'github-pages' 的环境，并且会将部署后的页面 URL 赋值给环境的 url 属性。
+    # 仅在推送到main分支或手动触发时运行
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    # 指定运行此作业的虚拟机环境 使用最新版本的 Ubuntu 虚拟机来运行作业。
-    runs-on: ubuntu-latest
+    
     steps:
-      # 从 GitHub 仓库中检出最新的代码到运行环境中。
       - name: Checkout
         uses: actions/checkout@v4
-      # 安装指定版本（9）的 pnpm 包管理器。
-      - name: Setup pnpm version 9
+        with:
+          # 获取完整历史用于更好的缓存
+          fetch-depth: 0
+
+      - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 9
-      #  安装指定版本（20）的 Node.js，并使用 pnpm 作为缓存管理器。
-      - name: Setup Node
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       - name: Install dependencies
-        run: pnpm install
-      # 运行项目的构建脚本，生成静态内容。  
-      - name: Build
+        run: pnpm install --frozen-lockfile
+
+      - name: Run linting
+        run: pnpm run lint:check
+
+      - name: Build application
         run: pnpm run build:github
-      # 配置 GitHub Pages 的相关设置。
+        env:
+          VITE_BASE_URL: /PureChat/
+
+      - name: Verify build output
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "❌ Build failed: dist directory not found"
+            exit 1
+          fi
+          if [ ! -f "dist/index.html" ]; then
+            echo "❌ Build failed: index.html not found in dist"
+            exit 1
+          fi
+          echo "✅ Build verification passed"
+          ls -la dist/
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
-      # 将构建生成的静态内容（位于 './dist' 目录）作为工件上传。
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
-      # 将上传的工件部署到 GitHub Pages 上，并将部署后的页面 URL 输出到 'deployment' 步骤的 'page_url' 属性中。
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Deployment status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment successful!"
+            echo "🌐 Site URL: ${{ steps.deployment.outputs.page_url }}"
+          else
+            echo "❌ Deployment failed!"
+            exit 1
+          fi
