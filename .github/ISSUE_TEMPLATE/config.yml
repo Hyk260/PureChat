@@ -1,0 +1,23 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 PureChat Documentation
+    url: https://docs.purechat.cn
+    about: 创建问题前请先查看文档。
+  - name: 💬 GitHub Discussions
+    url: https://github.com/Hyk260/PureChat/discussions
+    about: 请在此提问和回答问题。
+  - name: 🐛 Bug Reports
+    url: https://github.com/Hyk260/PureChat/issues/new?template=bug_report.md
+    about: 报告 PureChat 中的 bug。
+  - name: ✨ Feature Requests
+    url: https://github.com/Hyk260/PureChat/issues/new?template=feature_request.md
+    about: 为 PureChat 建议新功能。
+  - name: ❓ Questions
+    url: https://github.com/Hyk260/PureChat/issues/new?template=question.md
+    about: 询问关于 PureChat 的问题。
+  - name: 📚 Documentation
+    url: https://github.com/Hyk260/PureChat/issues/new?template=documentation.md
+    about: 建议文档改进。
+  - name: ⚡ Performance Issues
+    url: https://github.com/Hyk260/PureChat/issues/new?template=performance.md
+    about: 报告性能问题。 

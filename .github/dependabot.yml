@@ -1,0 +1,67 @@
+# Dependabot 自动更新配置
+version: 2
+updates:
+  # 启用 npm 依赖更新
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    # 自动合并策略
+    open-pull-requests-limit: 10
+    reviewers:
+      - "Hyk260"
+    assignees:
+      - "Hyk260"
+    # 版本更新策略
+    versioning-strategy: "auto"
+    # 忽略特定包
+    ignore:
+      - dependency-name: "@types/*"
+      - dependency-name: "eslint*"
+      - dependency-name: "prettier*"
+      - dependency-name: "vitest*"
+      - dependency-name: "@vitejs/*"
+      - dependency-name: "vite*"
+      - dependency-name: "unplugin*"
+      - dependency-name: "unocss*"
+      - dependency-name: "sass"
+      - dependency-name: "rimraf"
+      - dependency-name: "chalk"
+      - dependency-name: "boxen"
+      - dependency-name: "gradient-string"
+    # 提交信息格式
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    # 标签
+    labels:
+      - "dependencies"
+      - "automated"
+    # 自动合并条件
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    # 分组更新
+    groups:
+      development-dependencies:
+        patterns:
+          - "@types/*"
+          - "eslint*"
+          - "prettier*"
+          - "vitest*"
+        update-types:
+          - "minor"
+          - "patch"
+      build-tools:
+        patterns:
+          - "@vitejs/*"
+          - "vite*"
+          - "unplugin*"
+          - "unocss*"
+        update-types:
+          - "minor"
+          - "patch" 

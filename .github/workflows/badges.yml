@@ -1,0 +1,25 @@
+# 工作流状态徽章配置
+# 在 README.md 中使用以下徽章：
+
+# 主部署工作流状态
+# ![Deploy to GitHub Pages](https://github.com/{owner}/{repo}/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)
+
+# CI 工作流状态  
+# ![CI](https://github.com/{owner}/{repo}/workflows/CI/badge.svg)
+
+# 依赖审查状态
+# ![Dependency Review](https://github.com/{owner}/{repo}/workflows/Dependency%20Review/badge.svg)
+
+# 代码覆盖率
+# ![Coverage](https://img.shields.io/badge/coverage-{percentage}%25-{color})
+
+# 构建状态
+# ![Build Status](https://img.shields.io/badge/build-{status}-{color})
+
+# 部署状态
+# ![Deployment Status](https://img.shields.io/badge/deployment-{status}-{color})
+
+# 示例使用：
+# [![Deploy to GitHub Pages](https://github.com/{owner}/{repo}/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)](https://github.com/{owner}/{repo}/actions/workflows/static.yml)
+# [![CI](https://github.com/{owner}/{repo}/workflows/CI/badge.svg)](https://github.com/{owner}/{repo}/actions/workflows/ci.yml)
+# [![Dependency Review](https://github.com/{owner}/{repo}/workflows/Dependency%20Review/badge.svg)](https://github.com/{owner}/{repo}/actions/workflows/dependency-review.yml) 

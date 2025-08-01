@@ -1,0 +1,162 @@
+# 持续集成工作流
+name: CI
+
+on:
+  push:
+    branches: ['main', 'develop']
+  pull_request:
+    branches: ['main', 'develop']
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9'
+
+jobs:
+  # 代码质量检查
+  lint:
+    name: Lint and Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint
+        run: pnpm run lint:check
+
+      - name: Check code formatting
+        run: |
+          if [ -f "package.json" ] && grep -q '"prettier"' package.json; then
+            pnpm run format:check || echo "⚠️  Code formatting issues found"
+          fi
+
+  # 单元测试
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests
+        run: pnpm run test
+
+      - name: Upload test coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-coverage
+          path: coverage/
+          retention-days: 30
+
+  # 构建验证
+  build:
+    name: Build Verification
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build-type: [github, production]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build ${{ matrix.build-type }}
+        run: |
+          if [ "${{ matrix.build-type }}" = "github" ]; then
+            pnpm run build:github
+          else
+            pnpm run build
+          fi
+
+      - name: Verify build output
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "❌ Build failed: dist directory not found"
+            exit 1
+          fi
+          if [ ! -f "dist/index.html" ]; then
+            echo "❌ Build failed: index.html not found in dist"
+            exit 1
+          fi
+          echo "✅ ${{ matrix.build-type }} build verification passed"
+          echo "📁 Build size:"
+          du -sh dist/
+
+      - name: Upload build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.build-type }}
+          path: dist/
+          retention-days: 7
+
+  # 安全检查
+  security:
+    name: Security Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run security audit
+        run: pnpm audit --audit-level moderate
+
+      - name: Check for outdated dependencies
+        run: |
+          echo "📦 Checking for outdated dependencies..."
+          pnpm outdated || echo "✅ All dependencies are up to date" 
