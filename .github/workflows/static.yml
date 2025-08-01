@@ -1,8 +1,8 @@
-# 将静态内容部署到 GitHub Pages 的工作流程
+# 将静态内容部署到 GitHub Pages 的工作流程 适用于web
 name: GitHub Pages Deploy
 
 on:
-  push:
+  # push:
     # branches: ['main']
   # 手动触发工作流
   workflow_dispatch:
