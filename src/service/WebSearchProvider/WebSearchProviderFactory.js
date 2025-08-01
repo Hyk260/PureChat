@@ -8,7 +8,7 @@ import LocalBingProvider from './LocalBingProvider'
 export default class WebSearchProviderFactory {
   static create(provider) {
     switch (provider) {
-      case 'local-google':
+      // case 'local-google':
         // return new LocalGoogleProvider(provider)
       case 'local-baidu':
         return new LocalBaiduProvider(provider)

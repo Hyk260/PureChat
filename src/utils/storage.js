@@ -21,7 +21,9 @@ export function createStorage(type, storagePrefix) {
 
         try {
           storageData = JSON.parse(json);
-        } catch { }
+        } catch {
+          console.error(`storage.get error: ${key}`);
+        }
 
         if (storageData) {
           return storageData;

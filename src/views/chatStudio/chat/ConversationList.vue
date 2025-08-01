@@ -1,59 +1,60 @@
 <template>
   <el-scrollbar class="scrollbar-list">
     <EmptyMessage v-if="conversationList.length === 0" class-name="no-msg" />
-    <div
-      v-for="item in searchForData"
-      v-if="!isEnableVirtualList"
-      :id="`message_${item.conversationID}`"
-      :key="item.conversationID"
-      v-contextmenu:contextmenu
-      class="message-item flex-bc"
-      :class="fnClass(item)"
-      @click="handleConversationListClick(item)"
-      @drop="handleDrop($event, item, handleConversationListClick)"
-      @dragover="handleDragOver($event)"
-      @dragenter="handleDragEnter($event, item)"
-      @dragleave="handleDragLeave($event, item)"
-      @contextmenu.prevent="handleContextMenuEvent($event, item)"
-    >
-      <!-- 置顶图标 -->
-      <div v-show="item.isPinned" class="pinned-tag"></div>
-      <!-- 头像 -->
-      <el-badge class="avatar" is-dot :hidden="isShowCount(item) || !isNotify(item)">
-        <UserAvatar
-          words="3"
-          shape="square"
-          :session-id="item.conversationID"
-          :type="item.type === 'C2C' ? 'single' : 'group'"
-          :nick-name="chatName(item)"
-          :url="item.type === 'C2C' ? item.userProfile?.avatar : item?.groupProfile?.avatar"
-        />
-      </el-badge>
-      <!-- 消息 -->
-      <div class="message-item-right">
-        <div class="message-item-right-top flex-bc">
-          <div class="message-chat-name flex">
-            <span class="name-title truncate">{{ chatName(item) }}</span>
-            <Label :item="item" :user-i-d="item.userProfile?.userID" />
+    <template v-if="!isEnableVirtualList">
+      <div
+        v-for="item in searchForData"
+        :id="`message_${item.conversationID}`"
+        :key="item.conversationID"
+        v-contextmenu:contextmenu
+        class="message-item flex-bc"
+        :class="fnClass(item)"
+        @click="handleConversationListClick(item)"
+        @drop="handleDrop($event, item, handleConversationListClick)"
+        @dragover="handleDragOver($event)"
+        @dragenter="handleDragEnter($event, item)"
+        @dragleave="handleDragLeave($event, item)"
+        @contextmenu.prevent="handleContextMenuEvent($event, item)"
+      >
+        <!-- 置顶图标 -->
+        <div v-show="item.isPinned" class="pinned-tag"></div>
+        <!-- 头像 -->
+        <el-badge class="avatar" is-dot :hidden="isShowCount(item) || !isNotify(item)">
+          <UserAvatar
+            words="3"
+            shape="square"
+            :session-id="item.conversationID"
+            :type="item.type === 'C2C' ? 'single' : 'group'"
+            :nick-name="chatName(item)"
+            :url="item.type === 'C2C' ? item.userProfile?.avatar : item?.groupProfile?.avatar"
+          />
+        </el-badge>
+        <!-- 消息 -->
+        <div class="message-item-right">
+          <div class="message-item-right-top flex-bc">
+            <div class="message-chat-name flex">
+              <span class="name-title truncate">{{ chatName(item) }}</span>
+              <Label :item="item" :user-i-d="item.userProfile?.userID" />
+            </div>
+            <div v-if="item.lastMessage?.lastTime" class="message-time">
+              {{ timeFormat(item.lastMessage.lastTime * 1000) }}
+            </div>
           </div>
-          <div v-if="item.lastMessage?.lastTime" class="message-time">
-            {{ timeFormat(item.lastMessage.lastTime * 1000) }}
+          <div class="message-item-right-bottom truncate">
+            <CustomMention v-if="isMention(item) || isDraft(item)" :item="item" />
+            <span v-else>{{ formatNewsMessage(item) }}</span>
           </div>
+          <!-- 未读消息红点 -->
+          <el-badge
+            v-show="!isShowCount(item) && !isNotify(item) && item.type !== '@TIM#SYSTEM'"
+            :value="item.unreadCount"
+            :max="99"
+          />
+          <!-- 消息免打扰 -->
+          <BellOff v-show="isNotify(item)" :size="15" class="dont" />
         </div>
-        <div class="message-item-right-bottom truncate">
-          <CustomMention v-if="isMention(item) || isDraft(item)" :item="item" />
-          <span v-else>{{ formatNewsMessage(item) }}</span>
-        </div>
-        <!-- 未读消息红点 -->
-        <el-badge
-          v-show="!isShowCount(item) && !isNotify(item) && item.type !== '@TIM#SYSTEM'"
-          :value="item.unreadCount"
-          :max="99"
-        />
-        <!-- 消息免打扰 -->
-        <BellOff v-show="isNotify(item)" :size="15" class="dont" />
       </div>
-    </div>
+    </template>
     <VirtualList v-else />
     <!-- 右键菜单 -->
     <Contextmenu ref="contextmenu" :disabled="!isRight">
@@ -76,7 +77,7 @@
 
 <script setup>
 import { h, ref, computed } from "vue";
-import { BellOff } from 'lucide-vue-next';
+import { BellOff } from "lucide-vue-next";
 import { storeToRefs } from "pinia";
 import { isObject } from "lodash-es";
 import { chatSessionListData } from "../utils/menu";

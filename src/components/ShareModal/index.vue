@@ -221,7 +221,7 @@ onUnmounted(() => {
   gap: 16px;
   height: 100%;
 
-  :deep(.lucide-history) {
+  :deep(.history) {
     display: none;
   }
   :deep(.setup) {

@@ -19,8 +19,8 @@
     "preview": "vite preview",
     "preview:github": "cross-env VITE_BASE_URL=/PureChat/ vite preview",
     "clean": "rimraf dist",
-    "lint": "eslint . --ext .vue,.js,.mjs,.cjs --fix",
-    "lint:check": "eslint . --ext .vue,.js,.mjs,.cjs",
+    "lint": "eslint . --ext .vue,.js --fix",
+    "lint:check": "eslint . --ext .vue,.js",
     "check": "node scripts/check-all.js"
   },
   "dependencies": {

@@ -26,7 +26,7 @@
             :content="`助手将只记住最后${robotStore.getBotMessageCount}条消息`"
             placement="bottom"
           >
-            <div v-if="isAssistant" class="lucide-history ai-prompt-title">
+            <div v-if="isAssistant" class="history ai-prompt-title">
               <History size="16" />
               <span>{{ robotStore.getBotMessageCount }}</span>
             </div>
@@ -140,7 +140,7 @@ const openUser = () => {};
     align-items: center;
     gap: 4px;
   }
-  .lucide-history {
+  .history {
     margin-left: 5px;
     // border: 0.64px solid rgb(145, 213, 255);
   }
