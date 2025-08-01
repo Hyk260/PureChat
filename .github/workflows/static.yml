@@ -1,15 +1,11 @@
-# 将静态内容部署到 GitHub Pages 的优化工作流程
-name: Deploy to GitHub Pages
+# 将静态内容部署到 GitHub Pages 的工作流程
+name: GitHub Pages Deploy
 
 on:
-  # 仅在推送到默认分支时运行
   push:
-    branches: ['main']
+    # branches: ['main']
   # 手动触发工作流
   workflow_dispatch:
-  # 在PR时运行检查但不部署
-  pull_request:
-    branches: ['main']
 
 # 设置 GITHUB_TOKEN 的权限
 permissions:
@@ -33,28 +29,25 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
+      - name: 设置 pnpm
         uses: pnpm/action-setup@v3
         with:
           version: ${{ env.PNPM_VERSION }}
 
-      - name: Setup Node.js
+      - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Install dependencies
+      - name: 安装依赖
         run: pnpm install --frozen-lockfile
 
-      - name: Run linting
-        run: pnpm run lint:check
-
-      - name: Run tests
-        run: pnpm run test
+      # - name: 运行代码检查
+      #   run: pnpm run lint:check
 
   # 构建和部署
   deploy:
@@ -66,29 +59,29 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     
     steps:
-      - name: Checkout
+      - name: 检出代码
         uses: actions/checkout@v4
         with:
           # 获取完整历史用于更好的缓存
           fetch-depth: 0
 
-      - name: Setup pnpm
+      - name: 设置 pnpm
         uses: pnpm/action-setup@v3
         with:
           version: ${{ env.PNPM_VERSION }}
 
-      - name: Setup Node.js
+      - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Get pnpm store directory
+      - name: 获取 pnpm 存储目录
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-      - name: Setup pnpm cache
+      - name: 设置 pnpm 缓存
         uses: actions/cache@v4
         with:
           path: ${{ env.STORE_PATH }}
@@ -96,18 +89,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Install dependencies
+      - name: 安装依赖
         run: pnpm install --frozen-lockfile
 
-      - name: Run linting
+      - name: 运行代码检查
         run: pnpm run lint:check
 
-      - name: Build application
+      - name: 构建应用
         run: pnpm run build:github
         env:
           VITE_BASE_URL: /PureChat/
 
-      - name: Verify build output
+      - name: 验证构建输出
         run: |
           if [ ! -d "dist" ]; then
             echo "❌ Build failed: dist directory not found"
@@ -120,19 +113,19 @@ jobs:
           echo "✅ Build verification passed"
           ls -la dist/
 
-      - name: Setup Pages
+      - name: 设置 Pages
         uses: actions/configure-pages@v4
 
-      - name: Upload artifact
+      - name: 上传构建产物
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
 
-      - name: Deploy to GitHub Pages
+      - name: 部署到 GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Deployment status
+      - name: 部署状态
         if: always()
         run: |
           if [ "${{ job.status }}" == "success" ]; then

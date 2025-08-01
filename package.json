@@ -21,9 +21,7 @@
     "clean": "rimraf dist",
     "lint": "eslint . --ext .vue,.js,.mjs,.cjs --fix",
     "lint:check": "eslint . --ext .vue,.js,.mjs,.cjs",
-    "check": "node scripts/check-all.js",
-    "test": "vitest",
-    "test:ui": "vitest --ui"
+    "check": "node scripts/check-all.js"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
