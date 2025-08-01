@@ -60,6 +60,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     revokeMsgMap: new Map(), // 撤回消息重新编辑
     sendingMap: new Map(),
     selectedMessageMap: new Map(), // 多选消息
+    selectedMessageIds: new Set(), // 选中的消息ID集合
   }),
   getters: {
     isSending() {
@@ -126,6 +127,10 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const chatData = Object.values(Object.fromEntries(this.forwardData));
       return chatData.sort((a, b) => a.clientTime - b.clientTime);
     },
+    // 检查消息是否被选中
+    isMessageSelected() {
+      return (messageId) => this.selectedMessageIds.has(messageId);
+    },
     totalUnreadCount() {
       if (!this.currentConversation) return 0;
       const result = this.conversationList.reduce((count, data) => {
@@ -145,6 +150,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.isMultiSelectMode = bool
       if (!bool) {
         this.selectedMessageMap = new Map()
+        this.setForwardData({ type: "clear" })
+        this.clearSelectedMessageIds()
       }
     },
     setReplyMsgData(data) {
@@ -406,6 +413,28 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
           break;
       }
     },
+    setSelectedMessageId(messageId, selected = true) {
+      if (selected) {
+        this.selectedMessageIds.add(messageId);
+      } else {
+        this.selectedMessageIds.delete(messageId);
+      }
+    },
+    clearSelectedMessageIds() {
+      this.selectedMessageIds.clear();
+    },
+    toggleMessageSelection(item, forceChecked = null) {
+      const isCurrentlySelected = this.selectedMessageIds.has(item.ID);
+      const willBeSelected = forceChecked !== null ? forceChecked : !isCurrentlySelected;
+      
+      this.setSelectedMessageId(item.ID, willBeSelected);
+      
+      if (willBeSelected) {
+        this.setForwardData({ type: "set", payload: item });
+      } else {
+        this.setForwardData({ type: "del", payload: item });
+      }
+    },
     updateRevokeMsg({ data, type }) {
       if (type === "set") {
         this.revokeMsgMap.set(data.ID, data.payload);
@@ -448,7 +477,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
     setRecently({ data = {}, type }) {
       switch (type) {
-        case "add":
+        case "add": {
           this.recently.add(data);
           if (this.recently.size > 12) {
             const oldestElement = this.recently.values().next().value;
@@ -456,10 +485,12 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
           }
           localStg.set(EMOJI_RECENTLY, Array.from(this.recently));
           break;
-        case "revert":
+        }
+        case "revert": {
           const recently = localStg.get(EMOJI_RECENTLY);
           if (recently) this.recently = new Set([...recently]);
           break;
+        }
         case "clean":
           this.recently.clear();
           localStg.remove(EMOJI_RECENTLY);

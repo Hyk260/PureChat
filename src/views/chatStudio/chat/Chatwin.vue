@@ -27,16 +27,13 @@
             v-else-if="item.ID && !isTime(item) && !item.isDeleted"
             :id="`choice-${item.ID}`"
             class="message-view-item"
+            :class="getSelectedMessageClass(item)"
             @click="handleSelect($event, item, 'outside')"
           >
             <TimeDivider v-if="!isGroupChat" :item="item" />
             <div class="message-view-item-content" :class="classMessageViewItem(item)">
               <!-- 多选框 -->
-              <Checkbox
-                :item="item"
-                :is-revoked="item.isRevoked"
-                @click.stop="handleSelect($event, item, 'initial')"
-              />
+              <Checkbox :item="item" :is-revoked="item.isRevoked" />
               <div v-if="showAvatar(item)" class="picture">
                 <div
                   v-if="isSelf(item) && IS_LOCAL_MODE && userStore.userLocalStore.native"
@@ -175,6 +172,14 @@ const {
   currentConversation,
 } = storeToRefs(chatStore);
 
+const isMessageSelected = (messageId) => {
+  return chatStore.isMessageSelected(messageId);
+};
+
+const getSelectedMessageClass = (item) => {
+  return isMessageSelected(item.ID) ? "style-select" : "";
+};
+
 useEventListener(window, "focus", () => {
   setMessageRead(currentConversation.value);
 });
@@ -225,35 +230,29 @@ const classMessageInfoView = () => {
   ];
 };
 
-const handleSelect = (e, item, type = "initial") => {
+const toggleMessageSelection = (item, forceChecked = null) => {
   // tip消息 撤回消息
   if (!isMultiSelectMode.value || item.type == "TIMGroupTipElem" || item.isRevoked) {
     return;
   }
-  const _el = document.getElementById(`choice-${item.ID}`);
-  const el = _el.getElementsByClassName("check-btn")[0];
-  if (!el.checked && chatStore.isFwdDataMaxed) {
+
+  const isCurrentlySelected = chatStore.isMessageSelected(item.ID);
+
+  if (forceChecked !== null && forceChecked && !isCurrentlySelected && chatStore.isFwdDataMaxed) {
     appStore.showMessage({ message: `最多只能选择${MULTIPLE_CHOICE_MAX}条`, type: "error" });
     return;
   }
-  // 点击input框
-  if (type === "initial" && e.target.tagName !== "INPUT") {
-    const el = document.getElementById(`choice-${item.ID}`);
-    el.parentNode.classList.toggle("style-select");
-  }
-  // 点击消息框
-  if (type !== "initial") {
-    _el.parentNode.classList.toggle("style-select");
-  }
-  // 首次右键打开多选 默认选中当前
+
+  chatStore.toggleMessageSelection(item, forceChecked);
+};
+
+const handleSelect = (e, item, type = "initial") => {
   if (type === "choice") {
-    el.checked = true;
-    chatStore.setForwardData({ type: "set", payload: item });
-  } else {
-    el.checked = !el.checked;
-    let key = el.checked ? "set" : "del";
-    chatStore.setForwardData({ type: key, payload: item });
+    toggleMessageSelection(item, true);
+    return;
   }
+
+  toggleMessageSelection(item);
 };
 
 const onClickAvatar = (e, item) => {
@@ -271,7 +270,10 @@ const onClickAvatar = (e, item) => {
 const isScrolledToBottom = (lower = 2) => {
   try {
     let threshold = lower;
-    const { scrollTop, clientHeight, scrollHeight } = scrollbarRef.value?.wrapRef;
+    const wrapRef = scrollbarRef.value?.wrapRef;
+    if (!wrapRef) return false;
+    
+    const { scrollTop, clientHeight, scrollHeight } = wrapRef;
     const isBot = scrollHeight - (scrollTop + clientHeight) < threshold;
     if (isBot) console.log("isScrolledToBottom: 到底部");
     return isBot;
@@ -510,7 +512,7 @@ const handleDeleteMsg = async (data) => {
 const handleMultiSelectMsg = (item) => {
   chatStore.toggleMultiSelectMode(true);
   chatStore.setReplyMsgData(null);
-  updateLoadMore(item?.ID);
+  // updateLoadMore(item?.ID);
   handleSelect(null, item, "choice");
 };
 

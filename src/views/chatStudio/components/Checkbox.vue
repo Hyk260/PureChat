@@ -1,6 +1,10 @@
 <template>
   <label v-show="isShowCheck" class="input-check fade-slide-fade-in">
-    <input type="checkbox" class="check-btn" />
+    <input 
+      type="checkbox" 
+      class="check-btn" 
+      :checked="isChecked"
+    />
     <div class="check-mark"></div>
     <div v-show="chatStore.isFwdDataMaxed" class="mask wh-full"></div>
   </label>
@@ -25,6 +29,10 @@ const chatStore = useChatStore();
 
 const isShowCheck = computed(() => {
   return chatStore.isMultiSelectMode && !isRevoked && item.type !== "TIMGroupTipElem";
+});
+
+const isChecked = computed(() => {
+  return chatStore.isMessageSelected(item.ID);
 });
 </script>
 

@@ -180,17 +180,7 @@ const aQuickForward = async () => {
 const shutdown = () => {
   chatStore.setForwardData({ type: "clear" });
   chatStore.toggleMultiSelectMode(false);
-  closedState();
   setMultipleValue();
-};
-
-const closedState = () => {
-  document.querySelectorAll(".check-btn").forEach((t) => {
-    t.checked = false;
-  });
-  document.querySelectorAll(".message-view > *").forEach((t) => {
-    t.classList.remove("style-select");
-  });
 };
 
 const setDialogVisible = (type = "") => {
