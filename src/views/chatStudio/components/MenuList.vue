@@ -105,7 +105,6 @@ function handleCancel() {
 }
 
 const handleDelete = () => {
-  debugger
   emit("handleSingleClick", { item: props.item, id: "delete" });
 };
 

@@ -95,131 +95,137 @@
   </el-dialog>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref, shallowRef, computed, onMounted, onUnmounted, nextTick } from "vue";
 import { cloneDeep, uniqBy } from "lodash-es";
 import { VueDraggableNext } from "vue-draggable-next";
-import { mapState, mapActions } from "pinia";
 import { useSidebarStore } from "@/stores/modules/sidebar/index";
 import { CircleMinus, CirclePlus, GripVertical } from "lucide-vue-next";
 import emitter from "@/utils/mitt-bus";
 
-export default defineComponent({
-  components: {
-    VueDraggableNext,
-    CircleMinus,
-    CirclePlus,
-    GripVertical 
+const dialogVisible = ref(false);
+const cursorStyle = ref("");
+const leftEdit = shallowRef([]);
+const rightEdit = shallowRef([]);
+const editRef = ref(null);
+
+const sidebarStore = useSidebarStore();
+
+const outsideList = computed(() => sidebarStore.outsideList);
+const moreList = computed(() => sidebarStore.moreList);
+
+const outsideGroup = ref({
+  name: "draggable",
+  put: true,
+  pull: true,
+});
+
+const insideGroup = ref({
+  name: "draggable",
+  put: true,
+  pull: (e) => {
+    if (e.el.id == "right") return;
+    return true;
   },
-  data() {
-    return {
-      dialogVisible: false,
-      cursorStyle: "",
-      outsideGroup: {
-        name: "draggable",
-        put: true,
-        pull: true,
-      },
-      insideGroup: {
-        name: "draggable",
-        put: true,
-        pull: (e) => {
-          if (e.el.id == "right") return;
-          return true;
-        },
-      },
-      leftEdit: [],
-      rightEdit: [],
-      cache: {
-        deepLeft: [],
-        deepRight: [],
-      },
-    };
-  },
-  computed: {
-    ...mapState(useSidebarStore, ["outsideList", "moreList"]),
-  },
-  created() {
-    this.init();
-  },
-  mounted() {
-    emitter.on("SidebarEditDialog", (val) => {
-      this.setDialog(val);
-      this.record();
-    });
-  },
-  unmounted() {
-    emitter.off("SidebarEditDialog");
-  },
-  methods: {
-    ...mapActions(useSidebarStore, ["setOutsideList", "setMoreList"]),
-    record() {
-      const { leftEdit, rightEdit } = this.fnRepeat();
-      this.cache["deepLeft"] = leftEdit;
-      this.cache["deepRight"] = rightEdit;
-    },
-    onRemove(e) {
-      console.log(e);
-    },
-    onStart() {
-      this.cursorStyle = "drag-cursor";
-    },
-    onEnd() {
-      this.cursorStyle = "";
-      this.callback();
-    },
-    onUpdate() {},
-    reset() {
-      useSidebarStore().$reset();
-      this.init();
-    },
-    callback() {
-      this.$nextTick(() => {
-        this.setOutsideList(this.leftEdit);
-        this.setMoreList(this.rightEdit);
-      });
-    },
-    fnRepeat() {
-      const left = this.outsideList.filter((t) => t.id !== "more" && t?.show !== "hide");
-      const right = this.moreList;
-      return {
-        leftEdit: uniqBy(left, "id"),
-        rightEdit: uniqBy(right, "id"),
-      };
-    },
-    init() {
-      const { leftEdit: left, rightEdit: right } = this.fnRepeat();
-      this.leftEdit = cloneDeep(left);
-      this.rightEdit = cloneDeep(right);
-    },
-    reduce(item) {
-      if (item.if_fixed == 1) return;
-      const index = this.leftEdit.indexOf(item);
-      this.leftEdit.splice(index, 1);
-      this.rightEdit.push(item);
-      this.callback();
-    },
-    increase(item) {
-      const index = this.rightEdit.indexOf(item);
-      this.rightEdit.splice(index, 1);
-      this.leftEdit.push(item);
-      this.callback();
-    },
-    onMove(e) {
-      if (e.relatedContext.element?.if_fixed == 1) return false;
-      return true;
-    },
-    handleConfirm() {
-      this.setDialog(false);
-    },
-    handleCancel() {
-      this.setDialog(false);
-    },
-    onClose() {},
-    setDialog(flg) {
-      this.dialogVisible = flg;
-    },
-  },
+});
+
+const cache = ref({
+  deepLeft: [],
+  deepRight: [],
+});
+
+function record() {
+  const { leftEdit: left, rightEdit: right } = fnRepeat();
+  cache.value.deepLeft = left;
+  cache.value.deepRight = right;
+}
+
+function onRemove(e) {
+  console.log(e);
+}
+
+function onStart() {
+  cursorStyle.value = "drag-cursor";
+}
+
+function onEnd() {
+  cursorStyle.value = "";
+  callback();
+}
+
+function onUpdate() {}
+
+function reset() {
+  sidebarStore.$reset();
+  init();
+}
+
+function callback() {
+  nextTick(() => {
+    sidebarStore.setOutsideList(leftEdit.value);
+    sidebarStore.setMoreList(rightEdit.value);
+  });
+}
+
+function fnRepeat() {
+  const left = outsideList.value.filter((t) => t.id !== "more" && t?.show !== "hide");
+  const right = moreList.value;
+  return {
+    leftEdit: uniqBy(left, "id"),
+    rightEdit: uniqBy(right, "id"),
+  };
+}
+
+function init() {
+  const { leftEdit: left, rightEdit: right } = fnRepeat();
+  leftEdit.value = left
+  rightEdit.value = right
+}
+
+function reduce(item) {
+  if (item.if_fixed == 1) return;
+  const index = leftEdit.value.indexOf(item);
+  leftEdit.value.splice(index, 1);
+  rightEdit.value.push(item);
+  callback();
+}
+
+function increase(item) {
+  const index = rightEdit.value.indexOf(item);
+  rightEdit.value.splice(index, 1);
+  leftEdit.value.push(item);
+  callback();
+}
+
+function onMove(e) {
+  if (e.relatedContext.element?.if_fixed == 1) return false;
+  return true;
+}
+
+function handleConfirm() {
+  setDialog(false);
+}
+
+function handleCancel() {
+  setDialog(false);
+}
+
+function onClose() {}
+
+function setDialog(flg) {
+  dialogVisible.value = flg;
+}
+
+onMounted(() => {
+  init();
+  emitter.on("SidebarEditDialog", (val) => {
+    setDialog(val);
+    record();
+  });
+});
+
+onUnmounted(() => {
+  emitter.off("SidebarEditDialog");
 });
 </script>
 

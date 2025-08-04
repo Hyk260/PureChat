@@ -55,20 +55,6 @@ export default {
       default: () => ({}),
     },
   },
-  computed: {
-    ...mapState(useGroupStore, ["currentMemberList", "currentMembersWithoutSelf"]),
-    searchedList() {
-      // 群成员小于2人，不显示@列表
-      if (this.currentMemberList.length <= 1) return [];
-      return this.list;
-    },
-    isVisible() {
-      return this.filtering !== "empty" && this.currentMemberList.length > 1;
-    },
-    currentMembersWithoutSelfList() {
-      return this.currentMembersWithoutSelf.filter((t) => t.userID !== "@TLS#NOT_FOUND");
-    },
-  },
   data() {
     return {
       top: "",
@@ -84,6 +70,20 @@ export default {
         nick: "全体成员",
       },
     };
+  },
+  computed: {
+    ...mapState(useGroupStore, ["currentMemberList", "currentMembersWithoutSelf"]),
+    searchedList() {
+      // 群成员小于2人，不显示@列表
+      if (this.currentMemberList.length <= 1) return [];
+      return this.list;
+    },
+    isVisible() {
+      return this.filtering !== "empty" && this.currentMemberList.length > 1;
+    },
+    currentMembersWithoutSelfList() {
+      return this.currentMembersWithoutSelf.filter((t) => t.userID !== "@TLS#NOT_FOUND");
+    },
   },
   created() {
     this.initList();

@@ -15,63 +15,38 @@
   </div>
 </template>
 
-<script>
-import { mapState } from "pinia";
-import { isSelf } from "@/utils/chat/index";
-import { useGroupStore, useChatStore } from "@/stores/index";
-import emitter from "@/utils/mitt-bus";
+<script setup>
+import { computed } from 'vue';
+import { isSelf } from '@/utils/chat/index';
+import { useGroupStore, useChatStore } from '@/stores/index';
+import emitter from '@/utils/mitt-bus';
 
-export default {
-  name: "NameComponent",
-  props: {
-    item: {
-      type: Object,
-      default: () => {},
-    },
+const props = defineProps({
+  item: {
+    type: Object,
+    default: () => {},
   },
-  data() {
-    return {
-      isSelf,
-    };
-  },
-  computed: {
-    ...mapState(useGroupStore, ["groupProfile"]),
-    isMultiSelectMode() {
-      return useChatStore().isMultiSelectMode;
-    },
-    isLeader() {
-      return this.groupProfile?.ownerID === this.item.from;
-    },
-    from() {
-      return this.item.from;
-    },
-    chatType() {
-      return this.item.conversationType;
-    },
-    isGroup() {
-      return this.chatType !== "C2C";
-    },
-    isSystem() {
-      return this.from === "@TIM#SYSTEM";
-    },
-    isFound() {
-      return this.from === "@TLS#NOT_FOUND";
-    },
-    shouldDisplay() {
-      return this.item.isRevoked || this.item.type === "TIMGroupTipElem";
-    },
-    styleNick() {
-      return this.isMultiSelectMode ? "" : "nick";
-    },
-  },
-  methods: {
-    handleAt() {
-      if (this.isMultiSelectMode) return;
-      if (isSelf(this.item)) return;
-      emitter.emit("handleAt", { id: this.from, name: this.item.nick });
-    },
-  },
-};
+});
+
+const groupStore = useGroupStore();
+const chatStore = useChatStore();
+
+const groupProfile = computed(() => groupStore.groupProfile);
+const isMultiSelectMode = computed(() => chatStore.isMultiSelectMode);
+const isLeader = computed(() => groupProfile.value?.ownerID === props.item.from);
+const from = computed(() => props.item.from);
+const chatType = computed(() => props.item.conversationType);
+const isGroup = computed(() => chatType.value !== 'C2C');
+const isSystem = computed(() => from.value === '@TIM#SYSTEM');
+const isFound = computed(() => from.value === '@TLS#NOT_FOUND');
+const shouldDisplay = computed(() => props.item.isRevoked || props.item.type === 'TIMGroupTipElem');
+const styleNick = computed(() => isMultiSelectMode.value ? '' : 'nick');
+
+function handleAt() {
+  if (isMultiSelectMode.value) return;
+  if (isSelf(props.item)) return;
+  emitter.emit('handleAt', { id: from.value, name: props.item.nick });
+}
 </script>
 
 <style lang="scss" scoped>
