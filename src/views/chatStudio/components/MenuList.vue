@@ -1,14 +1,34 @@
 <template>
-  <div v-if="shouldShowMenu" class="menubar">
+  <div v-show="shouldShowMenu" class="menubar">
     <div class="flex">
-      <div
-        v-for="t in availableMenuItems"
-        :key="t.id"
-        class="menubar-item flex-c"
-        @click="handleMenuItemClick(t)"
-      >
+      <div v-for="t in availableMenuItems" :key="t.id" class="menubar-item flex-c">
         <el-tooltip :content="t.title" placement="top">
-          <component :is="t.icon" :class="t?.class" size="13" />
+          <component
+            :is="t.icon"
+            v-if="t.id !== 'delete'"
+            :class="t?.class"
+            size="13"
+            @click="handleMenuItemClick(t)"
+          />
+          <div v-else>
+            <el-popover ref="popoverTrashRef" placement="top" trigger="click" width="190">
+              <div class="flex-sc gap-5 mb-10">
+                <el-icon class="text-[#F56C6C]"><Warning /></el-icon>
+                <p>确定要删除此消息吗？</p>
+              </div>
+              <div class="flex">
+                <el-button class="ml-auto" size="small" @click="handleCancel">
+                  {{ $t("common.cancel") }}
+                </el-button>
+                <el-button size="small" type="primary" @click="handleDelete">
+                  {{ $t("common.confirm") }}
+                </el-button>
+              </div>
+              <template #reference>
+                <Trash :class="t?.class" size="13" />
+              </template>
+            </el-popover>
+          </div>
         </el-tooltip>
       </div>
     </div>
@@ -16,7 +36,8 @@
 </template>
 
 <script setup>
-import { computed, markRaw } from "vue";
+import { ref, computed, markRaw } from "vue";
+import { Warning } from "@element-plus/icons-vue";
 import { Trash, SquarePen, Copy, SlidersHorizontal } from "lucide-vue-next";
 import { useChatStore } from "@/stores/index";
 import { handleCopyMsg } from "../utils/utils";
@@ -35,8 +56,8 @@ const props = defineProps({
   status: {
     type: String,
     default: "unSend",
-    // unSend(未发送)fail(发送失败)success(发送成功)
-    validator: (value) => ["unSend", "fail", "success"].includes(value),
+    // unSend(未发送)fail(发送失败)success(发送成功)sending(发送中)
+    validator: (value) => ["unSend", "fail", "success", "sending"].includes(value),
   },
 });
 
@@ -74,7 +95,19 @@ const menuItemsConfig = [
   },
 ];
 
+const popoverTrashRef = ref(null);
+
 const chatStore = useChatStore();
+
+function handleCancel() {
+  popoverTrashRef?.value?.hide?.(); 
+  popoverTrashRef?.value?.[0]?.hide?.();
+}
+
+const handleDelete = () => {
+  debugger
+  emit("handleSingleClick", { item: props.item, id: "delete" });
+};
 
 /**
  * 判断是否应该显示菜单
@@ -137,7 +170,7 @@ function handleMenuItemClick(data) {
       console.log("设置");
       break;
     case "delete": // 删除
-      emit("handleSingleClick", { item, id: "delete" });
+      handleDelete(item);
       break;
   }
 }

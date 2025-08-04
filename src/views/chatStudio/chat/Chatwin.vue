@@ -500,8 +500,8 @@ const handleReplyMsg = (data) => {
 };
 
 const handleDeleteMsg = async (data) => {
-  const result = await showConfirmationBox({ message: "确定删除消息?", iconType: "warning" });
-  if (result === "cancel") return;
+  // const result = await showConfirmationBox({ message: "确定删除消息?", iconType: "warning" });
+  // if (result === "cancel") return;
   chatStore.deleteMessage({
     sessionId: data.conversationID,
     messageIdArray: [data.ID],
