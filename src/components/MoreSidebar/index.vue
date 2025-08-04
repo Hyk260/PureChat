@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { ref, shallowRef, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import { cloneDeep, uniqBy } from "lodash-es";
 import { VueDraggableNext } from "vue-draggable-next";
 import { useSidebarStore } from "@/stores/modules/sidebar/index";
@@ -105,8 +105,8 @@ import emitter from "@/utils/mitt-bus";
 
 const dialogVisible = ref(false);
 const cursorStyle = ref("");
-const leftEdit = shallowRef([]);
-const rightEdit = shallowRef([]);
+const leftEdit = ref([]);
+const rightEdit = ref([]);
 const editRef = ref(null);
 
 const sidebarStore = useSidebarStore();
@@ -136,8 +136,8 @@ const cache = ref({
 
 function record() {
   const { leftEdit: left, rightEdit: right } = fnRepeat();
-  cache.value.deepLeft = left;
-  cache.value.deepRight = right;
+  cache.value.deepLeft = cloneDeep(left);
+  cache.value.deepRight = cloneDeep(right);
 }
 
 function onRemove(e) {
