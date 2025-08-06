@@ -17,6 +17,16 @@ declare namespace Env {
     readonly VITE_ROUTER_HISTORY?: RouterHistoryMode;
     /** iconify图标的前缀 */
     readonly VITE_ICON_PREFIX: 'icon';
+    /** 是否生成sourcemap */
+    readonly VITE_SOURCE_MAP: 'Y' | 'N';
+    /** 端口号 */
+    readonly VITE_PORT: number;
+    /** 是否为本地模式 */
+    readonly VITE_LOCAL_MODE: 'Y' | 'N';
+    /** 是否开启devtools */
+    readonly VITE_DEV_TOOLS: 'Y' | 'N';
+    /** 应用环境 */
+    readonly VITE_APP_ENV: 'electron' | 'web';
     /**
      * 本地图标的前缀
      *

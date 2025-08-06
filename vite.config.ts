@@ -23,12 +23,12 @@ export default defineConfig((configEnv) => {
         // 配置数据库路径别名@database
         '@database': fileURLToPath(new URL("./packages/database", import.meta.url)),
       },
-      extensions: [".js",".ts", ".json"],
+      extensions: [".js", ".ts", ".json"],
     },
     // https://cn.vitejs.dev/config/server-options.html#server-options
     server: {
       // 端口号
-      port: Number(viteEnv.VITE_PORT),
+      port: viteEnv.VITE_PORT,
       open: true,
       host: "0.0.0.0",
       proxy: {},
@@ -37,7 +37,7 @@ export default defineConfig((configEnv) => {
         clientFiles: ["./index.html", "./src/{views,components}/*"],
       },
     },
-    plugins: setupVitePlugins(viteEnv) as any,
+    plugins: setupVitePlugins(viteEnv),
     css: {
       preprocessorOptions: {
         scss: {
@@ -60,7 +60,7 @@ export default defineConfig((configEnv) => {
       // 消除打包大小超过500kb警告
       chunkSizeWarningLimit: 4000,
       rollupOptions: {
-        external: setupViteExternal(viteEnv) as any,
+        external: setupViteExternal(viteEnv),
         input: {
           index: fileURLToPath(new URL("./index.html", import.meta.url)),
         },
