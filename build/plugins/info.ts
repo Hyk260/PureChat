@@ -1,7 +1,8 @@
 import gradient from "gradient-string";
-import dayjs from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 import duration from "dayjs/plugin/duration";
-import boxen from "boxen";
+import boxen, { type Options as BoxenOptions } from "boxen";
+import type { Plugin } from "vite";
 import { getPackageSize } from "./utils";
 import { __APP_INFO__ } from '../config/define';
 
@@ -11,15 +12,20 @@ const welcomeMessage = gradient(["cyan", "magenta"]).multiline(
   `您好! 欢迎使用 pure-chat 开源项目\n为您精心准备了文档\n${__APP_INFO__.pkg.docs}`
 );
 
-const boxenOptions = {
+const boxenOptions: BoxenOptions = {
   padding: 0.5,
   borderColor: "cyan",
   borderStyle: "round"
 };
 
-export function viteBuildInfo() {
-  let config = { command: '' }
-  let startTime = ""
+export function viteBuildInfo(): Plugin {
+  let config: {
+    command: string;
+    build: {
+      outDir: string;
+    };
+  };
+  let startTime: Dayjs;
   return {
     name: "vite:buildInfo",
     configResolved(resolvedConfig) {
@@ -37,7 +43,7 @@ export function viteBuildInfo() {
         const outDir = config.build?.outDir ?? "dist";
         getPackageSize({
           folder: outDir,
-          callback: (size) => {
+          callback: (size: string) => {
             const duration = dayjs.duration(endTime.diff(startTime)).format("mm分ss秒");
             const info = `🎉 恭喜打包完成（总用时${duration}，打包后的大小为${size}）`
             console.log(boxen(gradient(["cyan", "magenta"]).multiline(info), boxenOptions));

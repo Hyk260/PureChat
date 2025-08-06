@@ -1,12 +1,13 @@
 import process from 'node:process';
 import path from 'node:path';
 import AutoImport from 'unplugin-auto-import/vite';
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import Components from 'unplugin-vue-components/vite';
+import type { PluginOption } from 'vite';
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
-export function setupUnplugin(viteEnv) {
-  const plugins = [
+export function setupUnplugin(viteEnv: Env.ImportMeta) {
+  const plugins: PluginOption = [
     // SvgIcon
     createSvgIconsPlugin({
       iconDirs: [path.join(process.cwd(), "src/assets/icons/svg")],
@@ -21,7 +22,8 @@ export function setupUnplugin(viteEnv) {
       Components({
         dts: 'src/typings/components.d.ts',
         types: [{ from: 'vue-router', names: ['RouterLink', 'RouterView'] }],
-        resolvers: [ElementPlusResolver()]
+        resolvers: [ElementPlusResolver()],
+        include: [/\.vue$/, /\.vue\?vue/, /\.tsx$/, /\.ts$/]
       })
     )
   }
@@ -38,6 +40,7 @@ export function setupUnplugin(viteEnv) {
           // { from: 'vue-router', imports: ['RouterLink', 'RouterView'] },
         ],
         dts: 'src/typings/auto-imports.d.ts',
+        include: [/\.vue$/, /\.vue\?vue/, /\.ts$/]
       })
     );
   }

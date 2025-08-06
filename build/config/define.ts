@@ -30,7 +30,7 @@ export const __APP_INFO__ = {
   lastBuildTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
 };
 
-export const viteDefine = (env) => {
+export const viteDefine = (env: Env.ImportMeta) => {
   return {
     // 应用信息
     __APP_INFO__: JSON.stringify(__APP_INFO__),
@@ -64,7 +64,7 @@ const chunkMap = {
   'iconify': 'iconify-vendor',
 };
 
-export const manualChunks = (id) => {
+export const manualChunks = (id: string) => {
   if (!id.includes('node_modules')) return;
 
   for (const [key, chunkName] of Object.entries(chunkMap)) {

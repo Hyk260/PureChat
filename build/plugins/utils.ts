@@ -7,7 +7,7 @@ import { sum } from "lodash-es";
  * @param digits - 保留的小数位数
  * @returns 格式化后的字符串
  */
-function formatBytes(byte, digits = 2) {
+function formatBytes(byte: number, digits = 2) {
   if (byte === 0) return '0 Bytes';
   const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   const base = 1024;

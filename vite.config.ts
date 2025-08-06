@@ -5,8 +5,8 @@ import { setupVitePlugins, setupViteExternal } from "./build/plugins/index";
 import { viteDefine, manualChunks } from "./build/config/define";
 import { include, exclude } from "./build/config/optimize";
 
-export default defineConfig(({ mode }) => {
-  const viteEnv = loadEnv(mode, process.cwd());
+export default defineConfig((configEnv) => {
+  const viteEnv = loadEnv(configEnv.mode, process.cwd()) as unknown as Env.ImportMeta;
 
   return {
     base: viteEnv.VITE_BASE_URL,
@@ -23,12 +23,12 @@ export default defineConfig(({ mode }) => {
         // 配置数据库路径别名@database
         '@database': fileURLToPath(new URL("./packages/database", import.meta.url)),
       },
-      extensions: [".js", ".json"],
+      extensions: [".js",".ts", ".json"],
     },
     // https://cn.vitejs.dev/config/server-options.html#server-options
     server: {
       // 端口号
-      port: viteEnv.VITE_PORT,
+      port: Number(viteEnv.VITE_PORT),
       open: true,
       host: "0.0.0.0",
       proxy: {},
@@ -37,7 +37,7 @@ export default defineConfig(({ mode }) => {
         clientFiles: ["./index.html", "./src/{views,components}/*"],
       },
     },
-    plugins: setupVitePlugins(viteEnv),
+    plugins: setupVitePlugins(viteEnv) as any,
     css: {
       preprocessorOptions: {
         scss: {
@@ -60,7 +60,7 @@ export default defineConfig(({ mode }) => {
       // 消除打包大小超过500kb警告
       chunkSizeWarningLimit: 4000,
       rollupOptions: {
-        external: setupViteExternal(viteEnv),
+        external: setupViteExternal(viteEnv) as any,
         input: {
           index: fileURLToPath(new URL("./index.html", import.meta.url)),
         },

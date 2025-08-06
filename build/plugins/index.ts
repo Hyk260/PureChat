@@ -3,6 +3,7 @@ import vue from "@vitejs/plugin-vue";
 import progress from "vite-plugin-progress";
 import removeConsole from "vite-plugin-remove-console";
 import vueDevtools from "vite-plugin-vue-devtools";
+import type { PluginOption } from 'vite';
 import { visualizer } from "rollup-plugin-visualizer";
 import { setupUnplugin } from './unplugin';
 import { setupHtmlPlugin } from "./html";
@@ -15,8 +16,8 @@ import { cdn } from "./cdn";
  * vite插件
  * @param viteEnv - 环境变量配置
  */
-export function setupVitePlugins(viteEnv) {
-  const plugins = [
+export function setupVitePlugins(viteEnv: Env.ImportMeta) {
+  const plugins: PluginOption = [
     vue(),
     // 打包进度
     progress(),
@@ -34,9 +35,9 @@ export function setupVitePlugins(viteEnv) {
   if (process.env.npm_lifecycle_event === "report") {
     plugins.push(visualizer({ open: true, brotliSize: true, filename: "report.html" }))
   }
-  if (viteEnv.VITE_PWA === "Y" && viteEnv.VITE_VERCEL === "Y") {
-    plugins.push(pwa(viteEnv));
-  }
+  // if (viteEnv.VITE_PWA === "Y" && viteEnv.VITE_VERCEL === "Y") {
+  //   plugins.push(pwa(viteEnv));
+  // }
   if (viteEnv.VITE_CDN === "Y") {
     plugins.push(cdn);
   }
@@ -48,7 +49,7 @@ export function setupVitePlugins(viteEnv) {
  * @param {Object} viteEnv - 环境变量配置对象
  * @returns {(RegExp[]|string[])[]} 外部依赖配置数组
  */
-export function setupViteExternal(viteEnv) {
+export function setupViteExternal(viteEnv: Env.ImportMeta): (RegExp | string)[] {
   // 本地模式需要排除的依赖
   const localExternals = [
     /^@tencentcloud\/chat/,

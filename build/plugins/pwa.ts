@@ -1,7 +1,7 @@
 import { VitePWA } from "vite-plugin-pwa";
 
 // https://vite-pwa-org.netlify.app
-export default function setupVitePwa(viteEnv) {
+export default function setupVitePwa(viteEnv: Env.ImportMeta) {
   return VitePWA({
     registerType: "autoUpdate",
     includeAssets: ["favicon.ico"],

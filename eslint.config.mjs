@@ -2,11 +2,14 @@ import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
 import prettier from 'eslint-config-prettier'
 import globals from 'globals'
+import tseslint from '@typescript-eslint/eslint-plugin'
+import tsparser from '@typescript-eslint/parser'
+import { defineConfig } from 'eslint/config'
 
 // const isDev = process.env.NODE_ENV === "development";
 const isProd = process.env.NODE_ENV === "production";
 
-export default [
+export default defineConfig([
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
   ...pluginVue.configs['flat/strongly-recommended'],
@@ -40,6 +43,33 @@ export default [
     },
   },
   {
+    files: ['**/*.{ts}'],
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        project: './tsconfig.json',
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        __LOCAL_MODE__: 'readonly',
+        __IS_ELECTRON__: 'readonly',
+        __APP_INFO__: 'readonly',
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
+    rules: {
+      ...tseslint.configs.recommended.rules,
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-non-null-assertion': 'warn',
+    },
+  },
+  {
     ignores: [
       'dist/**',
       'node_modules/**',
@@ -52,4 +82,4 @@ export default [
       'scripts/**'
     ],
   },
-]
+])

@@ -1,9 +1,10 @@
 import { defineConfig } from 'unocss'
 import presetRemToPx from '@unocss/preset-rem-to-px'
 import presetUno from '@unocss/preset-uno'
+import type { Theme } from '@unocss/preset-uno';
 import presetIcons from '@unocss/preset-icons'
 
-export default defineConfig({
+export default defineConfig<Theme>({
   content: {
     pipeline: {
       exclude: ['node_modules', 'dist', '.git', '.vscode', 'public', 'build', 'config']
@@ -41,4 +42,4 @@ export default defineConfig({
       'text-overflow': 'ellipsis'
     })]
   ]
-})
+}) 
