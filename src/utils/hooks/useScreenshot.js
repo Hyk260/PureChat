@@ -91,7 +91,7 @@ export const useScreenshot = () => {
 
       callback?.();
     } catch (error) {
-      onsole.error("Failed to capture image", error);
+      console.error("Failed to capture image", error);
       useAppStore().showMessage({ message: "截图失败", type: "error" });
     } finally {
       setLoading(false);

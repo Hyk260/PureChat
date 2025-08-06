@@ -27,13 +27,19 @@
         />
       </div>
       <div class="py-20 flex-c">
-        <el-input v-model="userName" class="input" placeholder="Please input" @change="setUserName" />
+        <el-input
+          v-model="userName"
+          class="input"
+          placeholder="Please input"
+          @change="setUserName"
+        />
       </div>
     </div>
   </el-dialog>
 </template>
 
 <script setup>
+import { ref, computed } from "vue";
 import { useState } from "@/utils/hooks/index";
 import { createFileInput } from "@/utils/common";
 import { useUserStore } from "@/stores/index";
@@ -84,7 +90,7 @@ const handleClose = () => {
 
 const setUserName = (value = "") => {
   userStore.setUserLocalStore({ userName: value.trim() });
-}
+};
 
 const handleEmojiSelect = (emoji) => {
   console.log("handleEmojiSelect", emoji);
@@ -92,30 +98,24 @@ const handleEmojiSelect = (emoji) => {
 };
 
 const handleUploadProfile = async () => {
-  try {
-    createFileInput({
-      accept: ["image/png", "image/jpeg", "image/gif"],
-      onChange: async (file) => {
-        const base64 = await fileToBase64(file[0])
+  createFileInput({
+    accept: ["image/png", "image/jpeg", "image/gif"],
+    onChange: async (file) => {
+      if (file && file.length > 0) {
+        const base64 = await fileToBase64(file[0]);
         userStore.setUserLocalStore({ avatar: base64, native: "" });
         // handleClose();
-      },
-    });
-  } catch (error) {
-    console.error("Error uploading profile image:", error);
-  }
+      }
+    },
+  });
 };
 
 const handleEmojiClick = async () => {
-  try {
-    setShowEmojiPickerFlag(true);
-  } catch (error) {}
+  setShowEmojiPickerFlag(true);
 };
 
 const handleReset = async () => {
-  try {
-    userStore.setUserLocalStore({ native: "", avatar: "" });
-  } catch (error) {}
+  userStore.setUserLocalStore({ native: "", avatar: "" });
 };
 
 defineExpose({ show });
