@@ -1,6 +1,6 @@
 import gradient from "gradient-string";
 import dayjs, { type Dayjs } from "dayjs";
-import duration from "dayjs/plugin/duration";
+import duration from "dayjs/plugin/duration.js";
 import boxen, { type Options as BoxenOptions } from "boxen";
 import type { Plugin } from "vite";
 import { getPackageSize } from "./utils";

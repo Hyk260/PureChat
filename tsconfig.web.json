@@ -28,6 +28,13 @@
     },
     "types": ["vite/client"]
   },
-  "include": ["build/**/*.ts", "src/**/*.ts", "src/**/*.vue", "packages/**/*.ts", "vite.config.ts", "package.json"],
-  "exclude": ["node_modules", "**/*.js", "dist", "*.d.ts", "packages/**/*.js"]
+  "include": [
+    "build/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "packages/**/*.ts",
+    "vite.config.ts",
+    "package.json"
+  ],
+  "exclude": ["node_modules", "dist"]
 }
