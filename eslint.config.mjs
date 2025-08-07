@@ -1,10 +1,11 @@
 import js from '@eslint/js'
-import pluginVue from 'eslint-plugin-vue'
-import prettier from 'eslint-config-prettier'
-import globals from 'globals'
 import tseslint from '@typescript-eslint/eslint-plugin'
 import tsparser from '@typescript-eslint/parser'
+import prettier from 'eslint-config-prettier'
+import prettierPlugin from 'eslint-plugin-prettier'
+import pluginVue from 'eslint-plugin-vue'
 import { defineConfig } from 'eslint/config'
+import globals from 'globals'
 
 // const isDev = process.env.NODE_ENV === "development";
 const isProd = process.env.NODE_ENV === "production";
@@ -31,25 +32,58 @@ export default defineConfig([
         __APP_INFO__: 'readonly',
       },
     },
+    plugins: {
+      prettier: prettierPlugin,
+    },
     rules: {
+      // Vue 相关规则
       'vue/multi-word-component-names': 'off',
       'vue/no-v-html': 'off',
+      'vue/component-name-in-template-casing': ['error', 'PascalCase'],
+      'vue/component-definition-name-casing': ['error', 'PascalCase'],
+      'vue/require-default-prop': 'warn',
+      'vue/require-prop-types': 'warn',
+      'vue/no-unused-components': 'warn',
+      'vue/no-unused-vars': 'warn',
+
+      // 代码质量规则
       'no-console': isProd ? 'warn' : 'off',
       'no-debugger': isProd ? 'warn' : 'off',
-      // 禁止未使用的变量
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      // 禁止未定义的变量
-      'no-undef': ['warn', { typeof: true }],
+      'no-unused-vars': ['warn', {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_'
+      }],
+      'no-undef': 'error',
+      'no-unreachable': 'error',
+      'no-constant-condition': 'error',
+      'no-dupe-keys': 'error',
+      'no-dupe-args': 'error',
+      'no-dupe-class-members': 'error',
+      'no-dupe-else-if': 'error',
+      'no-duplicate-imports': 'error',
+      'no-empty': 'warn',
+      'no-extra-semi': 'error',
+      'no-irregular-whitespace': 'error',
+      'no-multiple-empty-lines': ['warn', { max: 2 }],
+      'no-trailing-spaces': 'error',
+      'no-unneeded-ternary': 'warn',
+      'prefer-const': 'error',
+      'no-var': 'error',
+
+      // Prettier 规则
+      'prettier/prettier': 'error',
     },
   },
   {
-    files: ['**/*.{ts}'],
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        project: './tsconfig.json',
+        project: './tsconfig.web.json',
+        tsconfigRootDir: import.meta.dirname,
       },
       globals: {
         ...globals.browser,
@@ -61,12 +95,97 @@ export default defineConfig([
     },
     plugins: {
       '@typescript-eslint': tseslint,
+      prettier: prettierPlugin,
     },
     rules: {
       ...tseslint.configs.recommended.rules,
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      ...tseslint.configs['recommended-type-checked'].rules,
+
+      // TypeScript 特定规则
+      '@typescript-eslint/no-unused-vars': ['warn', {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_'
+      }],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-non-null-assertion': 'warn',
+      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+      '@typescript-eslint/prefer-optional-chain': 'warn',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/await-thenable': 'warn',
+      '@typescript-eslint/no-misused-promises': 'warn',
+      '@typescript-eslint/require-await': 'warn',
+      '@typescript-eslint/no-unsafe-assignment': 'warn',
+      '@typescript-eslint/no-unsafe-call': 'warn',
+      '@typescript-eslint/no-unsafe-member-access': 'warn',
+      '@typescript-eslint/no-unsafe-return': 'warn',
+
+      // 代码质量规则
+      'no-console': isProd ? 'warn' : 'off',
+      'no-debugger': isProd ? 'warn' : 'off',
+      'no-unreachable': 'error',
+      'no-constant-condition': 'error',
+      'no-dupe-keys': 'error',
+      'no-dupe-args': 'error',
+      'no-dupe-class-members': 'error',
+      'no-dupe-else-if': 'error',
+      'no-duplicate-imports': 'error',
+      'no-empty': 'warn',
+      'no-extra-semi': 'error',
+      'no-irregular-whitespace': 'error',
+      'no-multiple-empty-lines': ['warn', { max: 2 }],
+      'no-trailing-spaces': 'error',
+      'no-unneeded-ternary': 'warn',
+      'prefer-const': 'error',
+      'no-var': 'error',
+
+      // Prettier 规则
+      'prettier/prettier': 'error',
+    },
+  },
+  {
+    files: ['**/*.vue'],
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        project: './tsconfig.web.json',
+        tsconfigRootDir: import.meta.dirname,
+        extraFileExtensions: ['.vue'],
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
+      prettier: prettierPlugin,
+    },
+    rules: {
+      ...tseslint.configs.recommended.rules,
+      ...tseslint.configs['recommended-type-checked'].rules,
+
+      // TypeScript 特定规则
+      '@typescript-eslint/no-unused-vars': ['warn', {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_'
+      }],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-non-null-assertion': 'warn',
+      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+      '@typescript-eslint/prefer-optional-chain': 'warn',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/await-thenable': 'warn',
+      '@typescript-eslint/no-misused-promises': 'warn',
+      '@typescript-eslint/require-await': 'warn',
+      '@typescript-eslint/no-unsafe-assignment': 'warn',
+      '@typescript-eslint/no-unsafe-call': 'warn',
+      '@typescript-eslint/no-unsafe-member-access': 'warn',
+      '@typescript-eslint/no-unsafe-return': 'warn',
+
+      // Prettier 规则
+      'prettier/prettier': 'error',
     },
   },
   {
@@ -74,12 +193,18 @@ export default defineConfig([
       'dist/**',
       'node_modules/**',
       '.output/**',
-      'public',
-      'build',
+      'public/**',
+      'build/**',
       '*.d.ts',
       'local/**',
-      '/src/assets',
-      'scripts/**'
+      'scripts/**',
+      'coverage/**',
+      '.nyc_output/**',
+      '*.min.js',
+      '*.min.css',
+      'pnpm-lock.yaml',
+      'package-lock.json',
+      'yarn.lock'
     ],
   },
 ])
