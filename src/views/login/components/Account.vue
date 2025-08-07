@@ -91,7 +91,7 @@
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { getUserList } from "@/service/api/index";
-import { Lock, User } from "@element-plus/icons-vue";
+import { Lock, User, Key } from "@element-plus/icons-vue";
 import { useOAuth } from "@/hooks/useOAuth";
 import { useState } from "@/utils/hooks/index";
 import { operates, thirdParty } from "../utils/enums";
