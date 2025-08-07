@@ -25,6 +25,8 @@ declare namespace Env {
     readonly VITE_LOCAL_MODE: 'Y' | 'N';
     /** 是否开启devtools */
     readonly VITE_DEV_TOOLS: 'Y' | 'N';
+    /** 是否启用removeConsole插件 */
+    readonly VITE_REMOVE_CONSOLE: 'Y' | 'N';
     /** 应用环境 */
     readonly VITE_APP_ENV: 'electron' | 'web';
     /**

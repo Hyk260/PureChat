@@ -21,13 +21,16 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta) {
     vue(),
     // 打包进度
     progress(),
-    // 线上环境删除console
-    removeConsole(),
     setupUnocss(viteEnv),
     setupHtmlPlugin(),
     viteBuildInfo(),
     ...setupUnplugin(viteEnv),
   ];
+  
+  if (viteEnv.VITE_REMOVE_CONSOLE === "Y") {
+    plugins.push(removeConsole());
+  }
+  
   if (viteEnv.VITE_DEV_TOOLS === "Y") {
     plugins.push(vueDevtools());
   }
@@ -41,6 +44,7 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta) {
   if (viteEnv.VITE_CDN === "Y") {
     plugins.push(cdn);
   }
+  
   return plugins;
 }
 
