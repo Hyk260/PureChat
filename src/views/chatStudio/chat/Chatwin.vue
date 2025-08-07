@@ -70,8 +70,8 @@
                     :item="item"
                   />
                   <component
-                    :is="loadMsgModule(item)"
                     v-else
+                    :is="getMessageComponent(item)"
                     :key="item.ID"
                     v-contextmenu:contextmenu
                     :message="item"
@@ -130,7 +130,8 @@ import {
   translateText,
 } from "@/service/im-sdk-api/index";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
-import { download, loadMsgModule, msgType, msgOne, isSelf, isTime } from "@/utils/chat/index";
+import { download, msgType, msgOne, isSelf, isTime } from "@/utils/chat/index";
+import { getMessageComponent } from "@/utils/chat/getMessageComponent";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { getTime } from "@/utils/common";
 import { debounce } from "lodash-es";

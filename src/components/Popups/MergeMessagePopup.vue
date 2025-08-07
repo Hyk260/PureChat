@@ -33,7 +33,7 @@
               </p>
               <div :class="msgType(item.messageBody[0].type)">
                 <component
-                  :is="loadMsgModule(item.messageBody[0])"
+                  :is="getMessageComponent(item.messageBody[0])"
                   :key="mergValue.ID"
                   :msg-type="mergValue.conversationType"
                   :message="item.messageBody[0]"
@@ -54,12 +54,12 @@ import { downloadMergerMessage } from "@/service/im-sdk-api/index";
 import {
   addTimeDivider,
   circleUrl,
-  loadMsgModule,
   msgOne,
   msgType,
   isSelf,
   isTime,
 } from "@/utils/chat/index";
+import { getMessageComponent } from "@/utils/chat/getMessageComponent";
 import { useState } from "@/utils/hooks/index";
 import { timeFormat } from "@/utils/timeFormat";
 import { getAiAvatarUrl } from "@/ai/utils";

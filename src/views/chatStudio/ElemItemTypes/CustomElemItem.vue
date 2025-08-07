@@ -1,17 +1,15 @@
 <template>
   <div class="message-item-custom" :class="messageClass" @click="handleClick">
     <Loading v-if="isMessageType('loading')" />
-    <Warning v-else-if="isMessageType('warning')" :payload="message.payload" />
-    <ToolCall v-else-if="isMessageType('tool_call')" :payload="message.payload" />
-    <div v-else class="text">{{ customMessageContent  }}</div>
+    <div v-else class="text">{{ customMessageContent() }}</div>
   </div>
 </template>
 
 <script setup>
 import { computed } from "vue";
 import Loading from "../customMsgBody/loading.vue";
-import ToolCall from "../customMsgBody/toolCall.vue";
-import Warning from "../customMsgBody/warning.vue";
+// import ToolCall from "../customMsgBody/toolCall.vue";
+// import Warning from "../customMsgBody/warning.vue";
 
 const props = defineProps({
   message: {
@@ -29,13 +27,13 @@ const messageClass = computed(() => [
   isMessageType("warning") ? "!p-0" : "",
 ]);
 
-const isMessageType = (type) => props.message.payload.description === type;
+const isMessageType = (type) => props?.message?.payload?.description === type;
 
 const handleClick = () => {
   console.log(props.message);
 };
 
-const customMessageContent = computed(() => {
+const customMessageContent = () => {
   try {
     const { data, extension, text } = props.message.payload;
 
@@ -54,7 +52,7 @@ const customMessageContent = computed(() => {
     console.error("解析消息内容失败:", error);
     return "[自定义消息]";
   }
-});
+};
 </script>
 
 <style lang="scss" scoped>

@@ -32,7 +32,7 @@
                 <div class="item" :class="msgOne(item.type)">
                   <div :class="msgType(item.type)">
                     <component
-                      :is="loadMsgModule(item)"
+                      :is="getMessageComponent(item)"
                       :key="item.ID"
                       :msg-type="item.conversationType"
                       :message="item"
@@ -120,7 +120,8 @@ import {
   ImageType,
   imageTypeOptions,
 } from "@/utils/hooks/useScreenshot";
-import { loadMsgModule, msgOne, msgType, isSelf } from "@/utils/chat/index";
+import { getMessageComponent } from "@/utils/chat/getMessageComponent";
+import { msgOne, msgType, isSelf } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { getBackgroundStyle, onColor, back, backgColor } from "./utils";
 import { useChatStore, useRobotStore } from "@/stores/index";

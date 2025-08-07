@@ -2,32 +2,6 @@
 import { localStg } from "@/utils/storage";
 import { TIM_PROXY } from "@/constants/index";
 
-import FileElemItem from "@/views/chatStudio/ElemItemTypes/FileElemItem.vue";
-import ImageElemItem from "@/views/chatStudio/ElemItemTypes/ImageElemItem.vue";
-import RelayElemItem from "@/views/chatStudio/ElemItemTypes/RelayElemItem.vue";
-import TextElemItem from "@/views/chatStudio/ElemItemTypes/TextElemItem.vue";
-import TipsElemItem from "@/views/chatStudio/ElemItemTypes/TipsElemItem.vue";
-// import VideoElemItem from "@/views/chatStudio/ElemItemTypes/VideoElemItem.vue";
-import CustomElemItem from "@/views/chatStudio/ElemItemTypes/CustomElemItem.vue";
-import GroupTipElement from "@/views/chatStudio/ElemItemTypes/GroupTipElement.vue";
-import GroupSystemNoticeElem from "@/views/chatStudio/ElemItemTypes/GroupSystemNoticeElem.vue";
-
-export const loadMsgModule = (item) => {
-  const { type, isRevoked, payload } = item;
-  const messageComponentMap = {
-    TIMTextElem: TextElemItem, //文本消息
-    TIMRelayElem: RelayElemItem, // 合并转发消息
-    TIMImageElem: ImageElemItem, // 图片消息
-    TIMFileElem: FileElemItem, // 文件消息
-    // TIMVideoFileElem: VideoElemItem, // 视频消息
-    TIMCustomElem: CustomElemItem, // 自定义消息
-    TIMGroupTipElem: GroupTipElement, // 群消息提示
-    TIMGroupSystemNoticeElem: GroupSystemNoticeElem, // 系统通知
-  };
-  if (isRevoked) return TipsElemItem;
-  return messageComponentMap[type] || null;
-};
-
 export const isTime = (item) => {
   return item?.isTimeDivider && item.time !== undefined;
 };
