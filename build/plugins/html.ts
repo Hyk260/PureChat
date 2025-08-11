@@ -1,9 +1,8 @@
 import type { Plugin } from 'vite';
-import { __APP_INFO__ } from "../config/define";
-
-const buildTime = __APP_INFO__.lastBuildTime;
+import { getBuildTime } from "../config/time";
 
 export function setupHtmlPlugin() {
+  const buildTime = getBuildTime();
   const plugin: Plugin = {
     name: "html-plugin",
     apply: "build",

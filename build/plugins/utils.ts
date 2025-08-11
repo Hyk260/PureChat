@@ -19,7 +19,13 @@ function formatBytes(byte: number, digits = 2) {
  * 获取指定文件夹中所有文件的总大小
  * @param options - 配置项
  */
-export const getPackageSize = async (options) => {
+export const getPackageSize = async (
+  options: {
+    folder?: string,
+    callback: (size: number | string) => void,
+    format?: boolean
+  }
+) => {
   const { folder = "dist", callback, format = true } = options;
 
   try {
@@ -38,7 +44,7 @@ export const getPackageSize = async (options) => {
           const subFolderSize = await new Promise((resolve) => {
             getPackageSize({
               folder: path,
-              callback: (result) => resolve(typeof result === "number" ? result : 0),
+              callback: (result: number) => resolve(typeof result === "number" ? result : 0),
               format: false,
             });
           });

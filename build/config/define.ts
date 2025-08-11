@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { getBuildTime } from "./time";
 
 import {
   engines,
@@ -27,7 +27,7 @@ export const __APP_INFO__ = {
     dependencies,
     devDependencies,
   },
-  lastBuildTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+  lastBuildTime: getBuildTime(),
 };
 
 export const viteDefine = (env: Env.ImportMeta) => {

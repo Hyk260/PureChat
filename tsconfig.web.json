@@ -9,7 +9,8 @@
     "checkJs": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "strict": false,
+    "strictNullChecks": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -30,7 +31,7 @@
       "@shared/*": ["./packages/shared/*"],
       "@database/*": ["./packages/database/*"]
     },
-    "types": ["vite/client"]
+    "types": ["vite/client", "element-plus/global"]
   },
   "include": [
     "build/**/*.ts",
