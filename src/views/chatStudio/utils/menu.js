@@ -2,12 +2,13 @@ import { markRaw } from "vue";
 import {
   CopyDocument,
   SortDown,
+  ChatDotSquare,
   // Download,
   // ChatDotSquare,
   // Finished, 
   // DeleteFilled
 } from "@element-plus/icons-vue";
-import { BellOff, BellRing, ListChecks, MessageSquareQuote, Trash2, Download } from 'lucide-vue-next';
+import { BellOff, AtSign, BellRing, ListChecks, MessageSquareQuote, Trash2, Download } from 'lucide-vue-next';
 // 会话列表数据
 export const chatSessionListData = [
   {
@@ -95,10 +96,12 @@ export const menuOptionsList = [
 export const avatarMenu = [
   {
     id: "send",
+    icon: markRaw(ChatDotSquare),
     text: "发送消息",
   },
   {
     id: "ait",
-    text: "@TA",
+    icon: markRaw(AtSign),
+    text: "TA",
   },
 ];

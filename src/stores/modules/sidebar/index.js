@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import { SetupStoreId } from '@/stores/plugins/index';
 import { useChatStore } from "../chat/index";
 import { openWindow } from "@/utils/common";
-import { LayoutGrid } from "lucide-vue-next";
+import { LayoutGrid, Compass } from "lucide-vue-next";
 import { ChatDotSquare, UserFilled, MoreFilled } from "@element-plus/icons-vue";
 import emitter from "@/utils/mitt-bus";
 import router from "@/router";
@@ -31,10 +31,10 @@ const defaultOutsideList = [
   },
   {
     id: "discover",
-    icon: "Discover",
+    icon: markRaw(Compass),
     title: "发现",
+    type: "el-icon",
     path: "/discover",
-    svgIcon: "Discover",
   },
   {
     id: "apps",
