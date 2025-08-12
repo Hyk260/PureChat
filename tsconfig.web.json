@@ -31,15 +31,11 @@
       "@shared/*": ["./packages/shared/*"],
       "@database/*": ["./packages/database/*"]
     },
-    "types": ["vite/client", "element-plus/global"]
+    "types": ["vite/client", "node", "element-plus/global"]
   },
   "include": [
-    "build/**/*.ts",
-    "src/**/*.ts",
+    "./**/*.ts",
     "src/**/*.vue",
-    "packages/**/*.ts",
-    "vite.config.ts",
-    "package.json"
   ],
   "exclude": ["node_modules", "dist"]
 }

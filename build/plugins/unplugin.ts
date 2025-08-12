@@ -7,17 +7,19 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
 export function setupUnplugin(viteEnv: Env.ImportMeta) {
+  const { VITE_AUTO_COMPONENT, VITE_ICON_LOCAL_PREFIX, VITE_AUTO_IMPORT } = viteEnv;
+
   const plugins: PluginOption = [
     // SvgIcon
     createSvgIconsPlugin({
       iconDirs: [path.join(process.cwd(), "src/assets/icons/svg")],
-      symbolId: `${viteEnv.VITE_ICON_LOCAL_PREFIX}-[dir]-[name]`,
+      symbolId: `${VITE_ICON_LOCAL_PREFIX}-[dir]-[name]`,
       inject: "body-last",
       customDomId: "__SVG_ICON_LOCAL__",
     }),
   ];
 
-  if (viteEnv.VITE_AUTO_COMPONENT === "Y") {
+  if (VITE_AUTO_COMPONENT === "Y") {
     plugins.push(
       Components({
         dts: 'src/typings/components.d.ts',
@@ -28,7 +30,7 @@ export function setupUnplugin(viteEnv: Env.ImportMeta) {
     )
   }
 
-  if (viteEnv.VITE_AUTO_IMPORT === "Y") {
+  if (VITE_AUTO_IMPORT === "Y") {
     plugins.push(
       AutoImport({
         // resolvers: [ElementPlusResolver()],

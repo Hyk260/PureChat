@@ -1,7 +1,7 @@
 import process from "node:process";
 import { URL, fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
-import { setupVitePlugins, setupViteExternal } from "./build/plugins/index";
+import { setupVitePlugins, setupViteExternal } from "./build/plugins";
 import { viteDefine, manualChunks } from "./build/config/define";
 import { include, exclude } from "./build/config/optimize";
 

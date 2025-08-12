@@ -29,6 +29,10 @@ declare namespace Env {
     readonly VITE_REMOVE_CONSOLE: 'Y' | 'N';
     /** 应用环境 */
     readonly VITE_APP_ENV: 'electron' | 'web';
+    /** 是否启用自动导入 */
+    readonly VITE_AUTO_IMPORT: 'Y' | 'N';
+    /** 是否启用自动组件 */
+    readonly VITE_AUTO_COMPONENT: 'Y' | 'N';
     /**
      * 本地图标的前缀
      *
@@ -37,6 +41,9 @@ declare namespace Env {
     readonly VITE_ICON_LOCAL_PREFIX: 'local-icon';
     /** 后端服务基础URL */
     readonly VITE_SERVICE_BASE_URL: string;
+
+    /** The launch editor */
+    readonly VITE_DEVTOOLS_LAUNCH_EDITOR?: import('vite-plugin-vue-devtools').VitePluginVueDevToolsOptions['launchEditor'];
   }
 }
 
