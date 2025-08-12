@@ -1,7 +1,10 @@
+import { ClientOptions } from 'openai';
 import { ModelProvider } from "@/ai/constant";
 import { useAccessStore } from "@/ai/utils";
-import { Ollama } from "ollama/browser";
+import { ChatResponse, Ollama, Tool } from "ollama/browser";
 import { nanoid } from '@/utils/uuid';
+import { ChatStreamCallbacks, OpenAIChatMessage, ChatStreamPayload, ChatMethodOptions } from "../types/chat";
+import { OllamaMessage } from './type';
 import {
   parseDataUri,
   transformOllamaStream,
@@ -10,7 +13,7 @@ import {
   convertIterableToStream,
 } from "./protocol";
 
-function getIcon(modelName) {
+function getIcon(modelName: string) {
   if (modelName.startsWith("llama")) {
     return "meta";
   } else if (modelName.startsWith("qwen")) {
@@ -23,16 +26,16 @@ function getIcon(modelName) {
 
 /**
  * 创建一个用于服务器推送事件的响应对象。
- * @param {ReadableStream} stream - 可读流，包含要发送到客户端的数据。
- * @param {Object} [options] - 可选的配置对象。
- * @param {Object} [options.headers] - 自定义的HTTP头部，合并到响应中。
- * @returns {Response} - 返回一个包含指定流和头部的Response对象。
  */
-const StreamingResponse = (stream, options) => {
+const StreamingResponse = (
+  stream: ReadableStream,
+  options?: { headers?: Record<string, string> },
+) => {
   return new Response(stream, {
     headers: {
       "Cache-Control": "no-cache",
       "Content-Type": "text/event-stream",
+      // 'X-Accel-Buffering': 'no',
       ...options?.headers,
     },
   });
@@ -40,11 +43,11 @@ const StreamingResponse = (stream, options) => {
 
 /**
  * 转换Ollama流数据
- * @param {Response} response - 响应对象
- * @param {Function} callback - 回调函数
- * @returns {ReadableStream} 处理后的可读流
  */
-const OllamaStream = (response, callback) => {
+export const OllamaStream = (
+  response: ReadableStream<ChatResponse>,
+  callback?: ChatStreamCallbacks,
+): ReadableStream<string> => {
   const streamStack = { id: `chat_${nanoid()}` };
 
   return response
@@ -53,15 +56,17 @@ const OllamaStream = (response, callback) => {
 };
 
 export default class OllamaAI {
+  private client: Ollama;
+  private payload: any;
+
   constructor() {
     this.payload = useAccessStore(ModelProvider.Ollama);
     this.client = this.createOllamaClient();
   }
 
   /**
-  * 创建Ollama客户端实例
-  * @returns {Ollama} Ollama客户端实例
-  */
+   * 创建Ollama客户端实例
+   */
   createOllamaClient() {
     return new Ollama({
       host: this.payload.openaiUrl || import.meta.env.VITE_OLLAMA_PROXY_URL,
@@ -75,15 +80,17 @@ export default class OllamaAI {
       }
     });
   }
-  buildOllamaMessages(messages) {
+
+  private buildOllamaMessages(messages: OpenAIChatMessage[]) {
     return messages.map((t) => this.convertContentToOllamaMessage(t));
   }
-  convertContentToOllamaMessage(message) {
+
+  private convertContentToOllamaMessage = (message: OpenAIChatMessage): OllamaMessage => {
     if (typeof message.content === "string") {
       return { content: message.content, role: message.role };
     }
 
-    const ollamaMessage = {
+    const ollamaMessage: OllamaMessage = {
       content: "",
       role: message.role,
     };
@@ -107,10 +114,11 @@ export default class OllamaAI {
 
     return ollamaMessage;
   }
-  async chat(messages, payload, options) {
+
+  async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
     try {
       const response = await this.client.chat({
-        messages: this.buildOllamaMessages(messages),
+        messages: this.buildOllamaMessages(payload.messages),
         model: payload.model,
         options: {
           frequency_penalty: payload.frequency_penalty,
@@ -120,7 +128,7 @@ export default class OllamaAI {
           // images: [],
         },
         stream: true,
-        // tools: payload.tools,
+        tools: payload?.tools as Tool[],
       });
 
       const [prodStream, debugStream] = convertIterableToStream(response).tee();
@@ -129,10 +137,9 @@ export default class OllamaAI {
       //   debugStream(debug).catch(console.error);
       // }
 
-      return StreamingResponse(
-        OllamaStream(prodStream, options?.callback),
-        { headers: options?.headers }
-      );
+      return StreamingResponse(OllamaStream(prodStream, options?.callback), {
+        headers: options?.headers as Record<string, string>
+      });
     } catch (e) {
       const Error = {
         error: {

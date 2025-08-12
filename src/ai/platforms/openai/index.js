@@ -138,7 +138,8 @@ export class OpenAiApi {
    */
   async fetchOnClient(messages) {
     const payload = this.accessStore();
-    return await new OllamaAI().chat(messages, payload, {
+    const options = { messages, ...payload }
+    return await new OllamaAI().chat(options, {
       callback: {},
       // signal: ""
       headers: {

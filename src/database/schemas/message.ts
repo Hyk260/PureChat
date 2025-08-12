@@ -80,8 +80,8 @@ export const DB_MessageSchema = z.object({
   revokeReason: z.string(),
   payload: z.record(z.any()),
   type: z.string(),
-  createdAt: z.number(),
-  updatedAt: z.number()
+  createdAt: z.number().optional(),
+  updatedAt: z.number().optional(),
 });
 
 export type DB_Message = z.infer<typeof DB_MessageSchema>;
