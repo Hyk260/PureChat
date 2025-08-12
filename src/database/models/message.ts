@@ -1,13 +1,20 @@
 import { BaseModel } from "../core/model";
+import { DB_Message, DB_MessageSchema } from "../schemas/message";
+
+export interface QueryMessageParams {
+  current?: number;
+  pageSize?: number;
+  id: string;
+}
 
 class _MessageModel extends BaseModel {
   constructor() {
-    super("messages");
+    super("messages", DB_MessageSchema);
   }
 
   // **************** Query *************** //
 
-  async query({ id, pageSize = 9999, current = 0 }) {
+  async query({ id, pageSize = 99, current = 0 }: QueryMessageParams) {
     const offset = current * pageSize;
 
     const query = this.table.where("conversationID").equals(id);
@@ -23,17 +30,17 @@ class _MessageModel extends BaseModel {
     return messages;
   }
 
-  async findById(id) {
+  async findById(id: string): Promise<DB_Message> {
     return this.table.get(id);
   }
 
   async queryAll() {
-    const data = await this.table.orderBy("createdAt").toArray();
+    const data: DB_Message[] = await this.table.orderBy("createdAt").toArray();
 
     return data;
   }
 
-  async queryBySessionId(id) {
+  async queryBySessionId(id: string) {
     return this.table.where("ID").equals(id).toArray();
   }
 
@@ -43,35 +50,31 @@ class _MessageModel extends BaseModel {
 
   // **************** Create *************** //
 
-  async create(id, data) {
+  async create(id: string, data: DB_Message) {
     const exist = await this.findById(id)
     if (exist) return
 
-    const messageData = {
-      ...data,
-      createdAt: Date.now(),
-    };
+    const messageData = data
 
-    this._addWithSync(id, messageData);
+    return super._addWithSync(id, messageData);
   }
 
-  async batchCreate(messages) { }
+  async batchCreate(messages: DB_Message[]) { }
 
   // **************** Delete *************** //
 
-  async delete(id) {
-    return this._deleteWithSync(id);
+  async delete(id: string) {
+    return super._deleteWithSync(id);
   }
 
   async clearTable() {
-    return this._clearWithSync();
+    return super._clearWithSync();
   }
 
   // **************** Update *************** //
 
-  async update(id, data) {
-    if (!__LOCAL_MODE__) return
-    return this._updateWithSync(id, data);
+  async update(id: string, data: DB_Message) {
+    return super._updateWithSync(id, data);
   }
 }
 

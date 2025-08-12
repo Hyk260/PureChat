@@ -1,0 +1,1 @@
+export { browserDB } from './db';

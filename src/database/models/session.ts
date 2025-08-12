@@ -1,13 +1,19 @@
 import { BaseModel } from "../core/model";
+import { DB_Session, DB_SessionSchema } from "../schemas/session";
+
+export interface QuerySessionParams {
+  current?: number;
+  pageSize?: number;
+}
 
 class _SessionModel extends BaseModel {
   constructor() {
-    super("sessions");
+    super("sessions", DB_SessionSchema);
   }
 
   // **************** Query *************** //
 
-  async query({ pageSize = 99, current = 0 } = {}) {
+  async query({ pageSize = 99, current = 0 }: QuerySessionParams = {}) {
     const offset = current * pageSize;
 
     const items = await this.table
@@ -20,7 +26,7 @@ class _SessionModel extends BaseModel {
     return this.mapToAgentSessions(items);
   }
 
-  async queryByKeyword(keyword) {
+  async queryByKeyword(keyword: string) {
     if (!keyword) return [];
 
     const startTime = Date.now();
@@ -73,13 +79,13 @@ class _SessionModel extends BaseModel {
     return items;
   }
 
-  async getPinnedSessions() {
+  async getPinnedSessions(): Promise<DB_Session[]> {
     const items = await this.table.where("pinned").equals(1).reverse().sortBy("updatedAt");
 
     return items;
   }
 
-  async findById(id) {
+  async findById(id: string): Promise<DB_Session> {
     return this.table.get(id);
   }
 
@@ -93,51 +99,55 @@ class _SessionModel extends BaseModel {
 
   // **************** Create *************** //
 
-  async create(id, data) {
+  async create(id: string, data: DB_Session) {
     const exist = await this.findById(id);
     if (exist) return;
+
     const dataDB = this.mapToDB_Session(data);
-    await this._addWithSync(id, { ...dataDB, createdAt: Date.now() });
+
+    return super._addWithSync(id, dataDB);
   }
 
-  async batchCreate(sessions) {}
+  async batchCreate(sessions) { }
 
   // **************** Delete *************** //
 
-  async delete(id) {
-    return await this._deleteWithSync(id);
+  /**
+   * 删除会话
+   */
+  async delete(id: string) {
+    return await super._deleteWithSync(id);
   }
 
   async clearTable() {
-    return this._clearWithSync();
+    return super._clearWithSync();
   }
 
   // **************** Update *************** //
 
-  async update(id, data) {
-    return this._updateWithSync(id, data);
+  async update(id: string, data: DB_Session) {
+    return super._updateWithSync(id, data);
   }
 
-  async updateConfig(id, data) {}
+  async updateConfig(id: string, data: DB_Session) { }
 
   // **************** Helper *************** //
 
-  mapToDB_Session(session) {
+  mapToDB_Session(session: DB_Session) {
     return {
       ...session,
       pinned: session.isPinned ? 1 : 0,
     };
   }
 
-  DB_SessionToAgentSession(session) {
+  DB_SessionToAgentSession(session: DB_Session) {
     return {
       ...session,
-      // model: session.config.model,
       isPinned: session.pinned === 1,
     };
   }
 
-  mapToAgentSessions(session) {
+  mapToAgentSessions(session: DB_Session[]) {
     return session.map((item) => this.DB_SessionToAgentSession(item));
   }
 }

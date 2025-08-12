@@ -289,7 +289,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         console.warn("oldMessageList 不存在");
         return;
       }
-      MessageModel.update(message.ID, message);
+      __LOCAL_MODE__ && MessageModel.update(message.ID, message);
       const newMessageList = oldMessageList.map((item) => {
         return item.ID === message.ID ? payload.message : item;
       });

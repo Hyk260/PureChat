@@ -56,7 +56,7 @@ const props = defineProps({
   status: {
     type: String,
     default: "unSend",
-    // unSend(未发送)fail(发送失败)success(发送成功)sending(发送中)
+    // unSend(未发送)fail(发送失败)success(发送成功)sending(发送中)timeout(超时)
     validator: (value) => ["unSend", "fail", "success", "sending"].includes(value),
   },
 });
