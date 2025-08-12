@@ -1,7 +1,7 @@
 const TRUNCATE_LENGTH = 80;
 const ELLIPSIS = '...';
 
-const truncateContent = (t) => {
+const truncateContent = (t: string) => {
   return t.length > TRUNCATE_LENGTH ? `${t.substring(0, TRUNCATE_LENGTH)}${ELLIPSIS}` : t;
 }
 
@@ -10,7 +10,7 @@ const truncateContent = (t) => {
  * @param data 脚注数据数组
  * @returns 格式化后的 Markdown 脚注字符串
  */
-export function convertToMarkdownFootnotes(data) {
+export function convertToMarkdownFootnotes(data: any[]) {
   if (!data?.length) return '';
   const footnotes = data.map(({ id, content, sourceUrl }) => {
     const truncatedContent = truncateContent(content?.trim() || '');

@@ -18,7 +18,7 @@ hljs.registerLanguage("vue", javascript)
 
 const { copy, isSupported } = useClipboard();
 
-function copyToClipboard(str) {
+function copyToClipboard(str: string) {
   if (isSupported) {
     copy(str);
     useAppStore().showMessage({ message: "复制成功" });
@@ -28,37 +28,43 @@ function copyToClipboard(str) {
 }
 
 if (typeof window !== "undefined") {
-  window.copyToClipboard = copyToClipboard;
+  // @ts-ignore
+  (window as any).copyToClipboard = copyToClipboard;
+}
+
+// 定义构造函数选项接口
+interface MarkdownRendererOptions {
+  webSearchResults?: any[];
+}
+
+// 定义网页搜索结果接口
+interface WebSearchResult {
+  title?: string;
+  url?: string;
+  snippet?: string;
+  [key: string]: any;
 }
 
 class MarkdownRenderer {
-  /**
-   * @private
-   * @type {markdownit}
-   */
-  #md
+  private md: markdownit;
 
   /**
    * 创建 MarkdownRenderer 的实例。
-   * @param {object} [options={}] - 渲染器的配置选项。
-   * @param {Array<object>} [options.webSearchResults=[]] - 可选的网页搜索结果，用于脚注自定义。
-   *   这些结果用于配置脚注渲染规则（例如，将脚注链接到源 URL）。
+   * @param {MarkdownRendererOptions} [options={}] - 渲染器的配置选项。
+   * @param {Array<WebSearchResult>} [options.webSearchResults=[]] - 可选的网页搜索结果，用于脚注自定义。
    */
-  constructor(options = {}) {
+  constructor(options: MarkdownRendererOptions = {}) {
     const { webSearchResults = [] } = options
 
     const clipboard = "nextElementSibling && (window.copyToClipboard(nextElementSibling.innerText))";
 
     /**
      * markdown-it 使用的高亮函数。
-     * 它集成了 `highlight.js` 进行语法高亮，并为代码块包含一个复制按钮。
      * @param {string} str - 要高亮的代码字符串。
      * @param {string} lang - 代码的语言。
      * @returns {string} 高亮后的 HTML 字符串。
      */
-    const highlightFn = (str, lang) => {
-      // 复制按钮的 HTML。实际的复制逻辑应由消费者处理
-      // （例如，Vue 组件）通过在渲染的 HTML 上进行事件委托。
+    const highlightFn = (str: string, lang: string): string => {
       const copyButtonHtml = `<button class="copy-code-button" onclick="${clipboard}" title="copy">${CopyIcon}</button>`
 
       if (str && hljs.getLanguage(lang)) {
@@ -68,23 +74,23 @@ class MarkdownRenderer {
       } else {
         // 对于未知语言或无高亮的情况：转义 HTML 并用 pre/code 包装
         // 使用 markdown-it 的工具函数来安全地转义 HTML
-        return `<pre class="hljs">${copyButtonHtml}<code>${this.#md.utils.escapeHtml(str)}</code></pre>`
+        return `<pre class="hljs">${copyButtonHtml}<code>${this.md.utils.escapeHtml(str)}</code></pre>`
       }
     }
 
-    this.#md = markdownit({
+    this.md = markdownit({
       html: true, // 在 Markdown 源中启用 HTML 标签
       breaks: true, // 将段落中的 '\n'（换行符）转换为 <br> 标签
-      langPrefix: "language-", // 围栏代码块的 CSS 语言前缀（例如，“language-js”）
+      langPrefix: "language-", // 围栏代码块的 CSS 语言前缀（例如，"language-js"）
       typographer: true, // 启用智能引号、破折号和其他排版替换
       highlight: highlightFn, // 为代码块分配自定义高亮函数
     })
 
-    this.#md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
+    this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
 
-    configureFootnoteRules(this.#md, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）
-    applyLinkOpenRules(this.#md) // 修改链接以在新标签页中打开并添加 noopener/noreferrer
-    applyEpubRules(this.#md) // 将 EPUB 特定属性应用于某些 HTML 元素
+    configureFootnoteRules(this.md, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）
+    applyLinkOpenRules(this.md) // 修改链接以在新标签页中打开并添加 noopener/noreferrer
+    applyEpubRules(this.md) // 将 EPUB 特定属性应用于某些 HTML 元素
   }
 
   /**
@@ -92,12 +98,12 @@ class MarkdownRenderer {
    * 此方法处理输入内容，可选地附加脚注，然后进行渲染。
    * @param {string | object} content - 要渲染的 Markdown 字符串。如果是一个对象，它将在渲染前
    *   被转换为美化打印的 JSON 字符串。
-   * @param {Array<object>} [additionalWebSearchResults=[]] - 可选的网页搜索结果，将作为 Markdown 脚注
+   * @param {Array<WebSearchResult>} [additionalWebSearchResults=[]] - 可选的网页搜索结果，将作为 Markdown 脚注
    *   附加到渲染内容的末尾。这些结果与构造函数中用于配置脚注 *渲染规则* 的 `webSearchResults` 是分开的。
    * @returns {string} 渲染后的 HTML 字符串。
    */
-  render(content, additionalWebSearchResults = []) {
-    let contentToRender = content
+  render(content: string | object, additionalWebSearchResults: WebSearchResult[] = []): string {
+    let contentToRender: string = content as string
 
     if (typeof contentToRender !== "string") {
       contentToRender = prettyObject(contentToRender)
@@ -108,7 +114,7 @@ class MarkdownRenderer {
       contentToRender = `${contentToRender}${footnotes}`
     }
 
-    return this.#md.render(contentToRender)
+    return this.md.render(contentToRender)
   }
 }
 

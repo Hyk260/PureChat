@@ -2,7 +2,7 @@
   <div class="markdown-body" @click="handleMarkdownClick" v-html="renderedMarkdown"></div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import MarkdownRenderer from "./markdown-renderer";
 
