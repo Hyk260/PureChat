@@ -67,6 +67,18 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
   // **************** Update *************** //
 
   async _updateWithSync(id: string, data: Partial<T>) {
+    const keys = Object.keys(data);
+    const partialSchema = this.schema.pick(Object.fromEntries(keys.map((key) => [key, true])));
+
+    const result = partialSchema.safeParse(data);
+    if (!result.success) {
+      const errorMsg = `[${this.db.name}][${this._tableName}] Failed to update the record:${id}. Error: ${result.error}`;
+
+      const newError = new TypeError(errorMsg);
+      console.error(newError);
+      throw newError;
+    }
+
     const success = await this.table.update(id, {
       ...data,
       updatedAt: Date.now(),

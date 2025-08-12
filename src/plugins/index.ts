@@ -1,7 +1,7 @@
 import type { App } from "vue";
+import { setupAppVersionNotification } from "./app";
 import { useElementPlus } from "./elementPlus";
 import { useElIcons } from "./icons";
-import { setupAppVersionNotification } from "./app";
 // import { setupNProgress } from "./nprogress"
 import { setupIconifyOffline } from "./iconify";
 

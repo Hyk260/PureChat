@@ -1,7 +1,8 @@
+import type { Router } from 'vue-router';
 import { ACCESS_TOKEN } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 
-function createRouteGuard(router) {
+function createRouteGuard(router: Router) {
   router.beforeEach((to, from, next) => {
     // 相同路径不处理
     if (from.path === to.path) return next();
@@ -35,6 +36,6 @@ function createRouteGuard(router) {
  * Router guard
  * @param router - Router instance
  */
-export function createRouterGuard(router) {
+export function createRouterGuard(router: Router) {
   createRouteGuard(router);
 }

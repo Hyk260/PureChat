@@ -1,5 +1,19 @@
 import { z } from 'zod';
 
+export const FileSchema = {
+  id: "",
+  origin_name: "",
+  name: "",
+  path: "",
+  created_at: "",
+  size: 0,
+  ext: "",
+  type: "",
+  count: 0,
+  createdAt: 0,
+  updatedAt: 0,
+}
+
 export const DB_FileSchema = z.object({
   id: z.string().uuid(),
   origin_name: z.string(),
@@ -9,7 +23,7 @@ export const DB_FileSchema = z.object({
   size: z.number(),
   ext: z.string(), // .png
   type: z.string(),
-  count: z.number().int().min(0),
+  count: z.number(),
   createdAt: z.number().optional(),
   updatedAt: z.number().optional(),
 });

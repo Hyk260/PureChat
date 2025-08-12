@@ -1,5 +1,5 @@
 <template>
-  <div class="message-view_withdraw" @click="onClick()">
+  <div class="message-view_withdraw" @click="onClick">
     <span class="withdraw">
       <span> {{ getChangeType() }} </span>
       <el-icon
@@ -10,13 +10,13 @@
         <CircleCloseFilled />
       </el-icon>
     </span>
-    <span v-if="isReEdit" class="edit" @click.stop="onEdit()">重新编辑</span>
+    <span v-if="isReEdit" class="edit" @click.stop="onEdit">重新编辑</span>
   </div>
 </template>
 
 <script setup>
-import { CircleCloseFilled } from "@element-plus/icons-vue";
 import { computed } from "vue";
+import { CircleCloseFilled } from "@element-plus/icons-vue";
 import { useChatStore, useUserStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 

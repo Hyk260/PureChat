@@ -1,11 +1,11 @@
 import App from "./App.vue";
 import { createApp } from "vue";
-import { setupStore } from "./stores/index";
-import { setupI18n } from './locales/index';
+import { setupStore } from "./stores";
+import { setupI18n } from './locales';
 import { loadAllAssembly } from "./components/Automatic/index";
-import { setupDirectives } from "./directives/index";
-import { setupPlugins } from "./plugins/index";
-import { setupRouter } from "./router/index";
+import { setupDirectives } from "./directives";
+import { setupPlugins } from "./plugins";
+import { setupRouter } from "./router";
 
 async function setupApp() {
   const app = createApp(App);

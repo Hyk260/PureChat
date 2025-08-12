@@ -1,3 +1,4 @@
+import type { App } from 'vue';
 import { createI18n } from 'vue-i18n';
 import { localStg } from "@/utils/storage";
 import messages from './locale';
@@ -10,13 +11,13 @@ const i18n = createI18n({
   globalInjection: true,
 });
 
-export function setupI18n(app) {
+export const $t = i18n.global.t
+
+export function setupI18n(app: App) {
   app.use(i18n);
 }
 
-export const $t = i18n.global.t;
-
-export function setLocale(locale) {
+export function setLocale(locale: string) {
   localStg.set('lang', locale);
   i18n.global.locale.value = locale;
 }

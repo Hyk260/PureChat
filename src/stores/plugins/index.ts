@@ -1,3 +1,4 @@
+import type { PiniaPluginContext } from 'pinia';
 import { cloneDeep } from 'lodash-es';
 
 export const SetupStoreId = {
@@ -18,7 +19,7 @@ export const SetupStoreId = {
  *
  * @param context
  */
-export function resetSetupStore(context) {
+export function resetSetupStore(context: PiniaPluginContext) {
   const setupSyntaxIds = Object.values(SetupStoreId);
 
   if (setupSyntaxIds.includes(context.store.$id)) {

@@ -1,5 +1,29 @@
 import { z } from 'zod';
 
+export const SessionSchema = {
+  id: "",
+  conversationID: "",
+  toAccount: "",
+  type: "",
+  subType: "",
+  lastMessage: {},
+  unreadCount: 0,
+  peerReadTime: 0,
+  groupAtInfoList: [],
+  groupProfile: {},
+  userProfile: {},
+  remark: "",
+  isPinned: false,
+  pinned: 0,
+  messageRemindType: "",
+  markList: [],
+  customData: "",
+  conversationGroupList: [],
+  draftText: "",
+  createdAt: 0,
+  updatedAt: 0,
+}
+
 export const DB_SessionSchema = z.object({
   // 基础字段
   id: z.string().optional(),

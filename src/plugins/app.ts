@@ -1,11 +1,12 @@
 import { h } from "vue";
 import type { App } from 'vue';
+import type { NotificationHandle } from 'element-plus';
 import { $t } from "@/locales/index";
 import { ElNotification, ElButton } from "element-plus";
 
 let isShow = false;
-let Notification: null = null;
-const { DEV: isDev, PROD: isProd, VITE_AUTOMATICALLY_DETECT_UPDATE } = import.meta.env;
+let Notification: NotificationHandle | null = null;
+const { DEV: isDev, PROD: isProd, VITE_BASE_URL, VITE_AUTOMATICALLY_DETECT_UPDATE } = import.meta.env;
 
 export function setupAppErrorHandle(app: App) {
   app.config.errorHandler = (err, vm, info) => {
@@ -24,7 +25,7 @@ function notify() {
         ElButton,
         {
           onClick() {
-            Notification.close();
+            Notification?.close();
           },
         },
         () => $t("system.updateCancel")
@@ -35,7 +36,7 @@ function notify() {
           type: "primary",
           onClick() {
             location.reload();
-            Notification.close();
+            Notification?.close();
           },
         },
         () => $t("system.updateConfirm")
@@ -45,11 +46,11 @@ function notify() {
       isShow = false;
     },
     duration: 6000,
-  });
+  } as any);
 }
 
 async function getHtmlBuildTime() {
-  const baseURL = import.meta.env.VITE_BASE_URL;
+  const baseURL = VITE_BASE_URL;
 
   const res = await fetch(`${baseURL}index.html?time=${Date.now()}`);
 

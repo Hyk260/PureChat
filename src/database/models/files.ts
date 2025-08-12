@@ -1,7 +1,7 @@
 import { BaseModel } from "../core/model";
 import { DB_File, DB_FileSchema } from "../schemas/files";
 
-class _FilesModel extends BaseModel<'files'> {
+class _FilesModel extends BaseModel {
   constructor() {
     super("files", DB_FileSchema);
   }
