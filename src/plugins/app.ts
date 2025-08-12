@@ -1,10 +1,18 @@
-import { ElNotification, ElButton } from "element-plus";
-import { $t } from "@/locales/index";
 import { h } from "vue";
+import type { App } from 'vue';
+import { $t } from "@/locales/index";
+import { ElNotification, ElButton } from "element-plus";
 
 let isShow = false;
-let Notification = null;
+let Notification: null = null;
 const { DEV: isDev, PROD: isProd, VITE_AUTOMATICALLY_DETECT_UPDATE } = import.meta.env;
+
+export function setupAppErrorHandle(app: App) {
+  app.config.errorHandler = (err, vm, info) => {
+    // eslint-disable-next-line no-console
+    console.error(err, vm, info);
+  };
+}
 
 function notify() {
   if (Notification) Notification.close();

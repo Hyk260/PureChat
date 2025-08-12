@@ -23,6 +23,9 @@ declare global {
    */
   interface Window {
     // Global vue app instance
+    
+    /** NProgress instance */
+    NProgress?: import('nprogress').NProgress;
   }
 
   /**
