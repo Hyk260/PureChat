@@ -1,7 +1,7 @@
 import { loading, warning } from '@database/custom/index';
 import dayjs from "dayjs";
 
-export function formatTime(data) {
+export function formatTime(data: any) {
   return dayjs(data).format("YYYY-MM-DD HH:mm:ss"); // 2022-5-7 9:17:56
 }
 
@@ -10,7 +10,7 @@ export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Oper
 );
 
 // Male Female
-export const getGender = (data, type = "") => {
+export const getGender = (data: any, type: string = "") => {
   return data?.gender === `Gender_Type_${type}`;
 };
 
@@ -36,7 +36,7 @@ export function isMacOS() {
  * @returns {Promise<{width: number, height: number}>} - 包含图片宽度和高度的 Promise 对象
  * 'blob:http://localhost:8080/98f11c82-d402-4d7d-b49f-07a05bb75e89';
  */
-export function getImageSize(imageUrl) {
+export function getImageSize(imageUrl: string): Promise<{ width: number, height: number }> {
   return new Promise((resolve, reject) => {
     const img = new Image();
 
@@ -56,7 +56,7 @@ export function getImageSize(imageUrl) {
 }
 
 // 计算并更新图片宽高
-export const updateImageSize = async (imageInput, index = 0) => {
+export const updateImageSize = async (imageInput: any, index = 0) => {
   const { imageInfoArray } = imageInput.payload;
 
   // 提前进行边界检查，避免数组索引越界
@@ -75,7 +75,7 @@ export const updateImageSize = async (imageInput, index = 0) => {
   return imageInput;
 };
 
-export const getEmojiAssetUrl = (url) => {
+export const getEmojiAssetUrl = (url: string) => {
   return new URL(`../assets/emoji/${url}`, import.meta.url).href;
 };
 
@@ -89,12 +89,17 @@ export function getOperatingSystem(userAgent = navigator.userAgent) {
   }
 }
 
-export const createFileInput = (options) => {
+interface CreateFileInputOptions {
+  accept: string[];
+  onChange: (files: FileList | null) => void;
+}
+
+export const createFileInput = (options: CreateFileInputOptions) => {
   const input = document.createElement("input");
   input.type = "file";
-  input.accept = options.accept;
+  input.accept = options.accept.join(",");
   input.style.display = "none";
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent) => {
     const files = event.target.files;
     cleanup();
     options.onChange(files);
@@ -119,7 +124,7 @@ export const createFileInput = (options) => {
   input.click();
 };
 
-export function hasObjectKey(obj, key) {
+export function hasObjectKey(obj: any, key: string) {
   if (typeof obj !== 'object' || obj === null) {
     return false
   }
@@ -128,7 +133,7 @@ export function hasObjectKey(obj, key) {
 }
 
 export const openWindow = (
-  url,
+  url: string,
   {
     target = '_blank',
     noopener = true,
@@ -147,10 +152,10 @@ const collection = {
   'warning': warning,
 };
 
-export function msgContent(data, type) {
+export function msgContent(data: any, type: string) {
   const _data = {
     data: {
-      ...collection[type],
+      ...collection[type as keyof typeof collection],
     },
     versions: __APP_INFO__.pkg.version,
     display: 0,
@@ -174,10 +179,8 @@ export function getCustomMsgContent({ data = null, type }) {
 
 /**
  * 将字符串中的特殊字符进行 HTML 转义
- * @param {string} str - 待转义的字符串
- * @returns {string} - 转义后的字符串
  */
-export const encodeHTML = (str) => {
+export const encodeHTML = (str: string) => {
   return str.replace(/[&<>"']/g, (match) => {
     const entities = {
       '&': '&amp;',
@@ -186,7 +189,7 @@ export const encodeHTML = (str) => {
       '"': '&quot;',
       "'": '&apos;'
     }
-    return entities[match]
+    return entities[match as keyof typeof entities]
   })
 };
 

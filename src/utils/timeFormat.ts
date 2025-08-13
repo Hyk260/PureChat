@@ -9,13 +9,12 @@ dayjs.locale("zh-cn");
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
 
-
-export function timeFormat(timestamp, includeTime = false) {
+export function timeFormat(timestamp: number, includeTime = false) {
   const now = dayjs(); // 当前时间
   const date = dayjs(timestamp); // 输入时间
 
   // 辅助函数：根据是否需要时间格式，返回包含时间或不包含时间的字符串
-  const formatWithTime = (format) => includeTime ? `${format} ${date.format("H:mm")}` : format;
+  const formatWithTime = (format: string) => includeTime ? `${format} ${date.format("H:mm")}` : format;
 
   if (date.isToday()) {
     // 如果是今天，返回具体时间（小时:分钟）
@@ -47,10 +46,8 @@ export function timeFormat(timestamp, includeTime = false) {
  * - 当天：只显示 "时:分:秒"
  * - 当年：显示 "月/日 时:分:秒"
  * - 跨年：显示 "年/月/日 时:分:秒"
- * @param {number} timestamp - 时间戳（毫秒）
- * @returns {string} 格式化的日期字符串
  */
-export function formatTimestamp(timestamp) {
+export function formatTimestamp(timestamp: number) {
   const now = dayjs();
   const targetDate = dayjs(timestamp);
 

@@ -3,12 +3,18 @@ import { useRoute } from 'vue-router';
 import { githubAuth, openAuthUrl } from '@/service/api/index';
 import { openWindow } from '@/utils/common';
 
+interface OAuthOptions {
+  onSuccess?: (data: any) => void;
+  onError?: (error: any) => void;
+  autoWatch?: boolean;
+}
+
 /**
  * 从URL中提取路由信息和查询参数
  * @param url - 要解析的URL字符串
  * @returns 包含action和params的对象
  */
-function extractRouteInfoFromURL(url) {
+export function extractRouteInfoFromURL(url: string) {
   const parsedUrl = new URL(url);
   const pathSegments = parsedUrl.pathname.split("/").filter(Boolean);
   const action = pathSegments[pathSegments.length - 1] || null;
@@ -17,7 +23,7 @@ function extractRouteInfoFromURL(url) {
   return { action, params };
 }
 
-export function useOAuth(options = {}) {
+export function useOAuth(options: OAuthOptions) {
   const { onSuccess, onError, autoWatch = true } = options;
   const route = useRoute();
 
@@ -27,7 +33,7 @@ export function useOAuth(options = {}) {
   /**
    * 从 URL 中提取授权码
    */
-  const extractCodeFromUrl = (url) => {
+  const extractCodeFromUrl = (url?: string) => {
     const searchParams = url
       ? new URL(url, window.location.origin).searchParams
       : new URLSearchParams(window.location.search);
@@ -38,7 +44,7 @@ export function useOAuth(options = {}) {
   /**
    * 检查 URL 是否包含 code 参数
    */
-  const hasCodeInUrl = (url) => {
+  const hasCodeInUrl = (url: string) => {
     try {
       const urlObj = new URL(url, window.location.origin);
       return urlObj.searchParams.has('code');

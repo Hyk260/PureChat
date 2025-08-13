@@ -39,6 +39,10 @@ declare namespace Env {
     readonly VITE_ICON_LOCAL_PREFIX: 'local-icon';
     /** 后端服务基础URL */
     readonly VITE_SERVICE_BASE_URL: string;
+    /** OpenAI API Key */
+    readonly VITE_OPENAI_API_KEY: string;
+    /** OpenAI 代理 URL */
+    readonly VITE_OPENAI_PROXY_URL: string;
     /** 启动编辑器 */
     readonly VITE_DEVTOOLS_LAUNCH_EDITOR?: import('vite-plugin-vue-devtools').VitePluginVueDevToolsOptions['launchEditor'];
   }

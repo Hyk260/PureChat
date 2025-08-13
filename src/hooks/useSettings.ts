@@ -5,7 +5,7 @@ import { ModelProvider } from '@/ai/constant';
 import { showConfirmationBox } from "@/utils/message";
 import { useAccessStore, getModelId } from "@/ai/utils";
 
-const { VITE_OPENAI_API_KEY, VITE_OPENAI_PROXY_URL } = import.meta.env;
+const { VITE_OPENAI_API_KEY, VITE_OPENAI_PROXY_URL, DEV: isDev } = import.meta.env;
 
 // 生成测试链接
 const keyVaults = () => {
@@ -19,15 +19,15 @@ const keyVaults = () => {
   })
 }
 
-// https://purechat.cn/chat?settings={"keyVaults":{"openai":{"apiKey":"","baseURL":""}}}
-console.log('testlink', `https://purechat.cn/chat?settings={"keyVaults":${keyVaults()}}`);
+if (isDev) {
+  // https://purechat.cn/chat?settings={"keyVaults":{"openai":{"apiKey":"","baseURL":""}}}
+  console.log('useSettings test link', `https://purechat.cn/chat?settings={"keyVaults":${keyVaults()}}`);
+}
 
 /**
  * 从 URL 中提取 settings 参数并解析为对象
- * @param {string} [url] - 可选，要解析的 URL 字符串。如果不提供，则使用当前页面的 URL
- * @returns {object|null} 解析成功的对象，或解析失败时返回 null
  */
-export function extractSettingsFromUrl(url) {
+export function extractSettingsFromUrl(url?: string) {
   try {
     // 获取 URL 的查询参数
     const searchParams = url
@@ -43,18 +43,16 @@ export function extractSettingsFromUrl(url) {
     return null;
   }
 }
+
 /**
  * 尝试解析 JSON 字符串，支持已编码和未编码的情况
- * @param {string} str - 要解析的 JSON 字符串
- * @returns {object|null} 解析成功的对象，或解析失败时返回 null
  */
-function tryParseJson(str) {
+function tryParseJson(str: string) {
   try {
     // 先尝试解码 URI 组件后再解析
     return JSON.parse(decodeURIComponent(str));
   } catch (e1) {
     try {
-      // 如果解码失败，尝试直接解析
       return JSON.parse(str);
     } catch (e2) {
       return null;
@@ -66,7 +64,7 @@ function tryParseJson(str) {
  * 自动填充机器人 provider 的 apiKey 和 baseURL
  * @param {Object} settings - 解析后的 settings 对象
  */
-export async function autofillProvider(settings) {
+export async function autofillProvider(settings: any) {
   if (!settings?.keyVaults) return;
   const robotStore = useRobotStore();
   const sidebarStore = useSidebarStore();
@@ -102,7 +100,11 @@ export async function autofillProvider(settings) {
   }
 }
 
-export function useSettings(options = {}) {
+interface UseSettingsOptions {
+  autoWatch?: boolean;
+}
+
+export function useSettings(options: UseSettingsOptions = { autoWatch: true }) {
   const { autoWatch = true } = options;
   const route = useRoute();
 

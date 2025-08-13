@@ -2,8 +2,6 @@ import { ref } from "vue";
 
 /**
  * 弹窗状态管理组合式函数
- * @param {boolean} initialVisible - 初始显示状态
- * @returns {Object} 弹窗状态和方法
  */
 export function usePopup(initialVisible = false) {
   const visible = ref(initialVisible);
@@ -30,11 +28,8 @@ export function usePopup(initialVisible = false) {
 
 /**
  * 带回调的弹窗状态管理
- * @param {Function} onShow - 显示时的回调
- * @param {Function} onHide - 隐藏时的回调
- * @returns {Object} 弹窗状态和方法
  */
-export function usePopupWithCallbacks(onShow, onHide) {
+export function usePopupWithCallbacks(onShow: () => void, onHide: () => void) {
   const { visible, show, hide, toggle } = usePopup();
   
   const showWithCallback = () => {

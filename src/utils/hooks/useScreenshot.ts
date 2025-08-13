@@ -1,5 +1,5 @@
 import { domToJpeg, domToPng, domToSvg, domToWebp, domToBlob } from "modern-screenshot";
-import { useAppStore } from "@/stores/index";
+import { useAppStore } from "@/stores/modules/app";
 import { useState } from "./useState";
 import dayjs from "dayjs";
 
@@ -28,7 +28,7 @@ const SCREENSHOT_FUNCTIONS = {
  * 将图像数据URL写入系统的剪贴板
  * @param {Blob} blob - 图像Blob对象
  */
-async function copyImageToClipboard(blob) {
+async function copyImageToClipboard(blob: Blob) {
   try {
     const clipboardItem = new ClipboardItem({ "image/png": blob });
     await navigator.clipboard.write([clipboardItem]);
@@ -45,7 +45,7 @@ async function copyImageToClipboard(blob) {
  * @param {ImageType} imageType - 图像类型
  * @param {string} [title] - 可选标题
  */
-function downloadImage(dataUrl, imageType, title) {
+function downloadImage(dataUrl: string, imageType: string, title: string) {
   const link = document.createElement("a");
   const name = `${__APP_NAME__}_${title ? `${title}_` : ""}${dayjs().format("YYYY-MM-DD")}.${imageType}`;
   link.download = name;
@@ -56,12 +56,12 @@ function downloadImage(dataUrl, imageType, title) {
 }
 
 export const useScreenshot = () => {
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleDownload = async (
     imageType = ImageType.JPG,
     title = "",
-    callback
+    callback: () => void
   ) => {
     setLoading(true);
 

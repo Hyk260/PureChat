@@ -6,10 +6,10 @@ import { ref, onMounted } from "vue";
  * @param height - 图形高度
  */
 export const useImageVerify = (width = 120, height = 40) => {
-  const domRef = ref();
+  const domRef = ref<HTMLCanvasElement | null>(null);
   const imgCode = ref("");
 
-  function setImgCode(code) {
+  function setImgCode(code: string) {
     imgCode.value = code;
   }
 
@@ -30,18 +30,18 @@ export const useImageVerify = (width = 120, height = 40) => {
   };
 };
 
-function randomNum(min, max) {
+function randomNum(min: number, max: number) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-function randomColor(min, max) {
+function randomColor(min: number, max: number) {
   const r = randomNum(min, max);
   const g = randomNum(min, max);
   const b = randomNum(min, max);
   return `rgb(${r},${g},${b})`;
 }
 
-function draw(dom, width, height) {
+function draw(dom: HTMLCanvasElement, width: number, height: number) {
   let imgCode = "";
 
   const NUMBER_STRING = "0123456789";
@@ -62,7 +62,7 @@ function draw(dom, width, height) {
     ctx.save();
     ctx.translate(30 * i + 15, 15);
     ctx.rotate((deg * Math.PI) / 180);
-    ctx.fillText(text, -15 + 5, -15);
+    ctx.fillText(text ?? '', -15 + 5, -15);
     ctx.restore();
   }
   for (let i = 0; i < 5; i += 1) {
