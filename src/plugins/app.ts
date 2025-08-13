@@ -1,7 +1,7 @@
-import { h } from "vue";
 import type { App } from 'vue';
 import type { NotificationHandle } from 'element-plus';
-import { $t } from "@/locales/index";
+import { h } from "vue";
+import { $t } from "@/locales";
 import { ElNotification, ElButton } from "element-plus";
 
 let isShow = false;
@@ -49,18 +49,24 @@ function notify() {
   } as any);
 }
 
-async function getHtmlBuildTime() {
-  const baseURL = VITE_BASE_URL;
+async function getHtmlBuildTime(): Promise<string | null> {
+  const baseUrl = VITE_BASE_URL || "/";
+  
+  try {
+    const res = await fetch(`${baseUrl}index.html?time=${Date.now()}`);
 
-  const res = await fetch(`${baseURL}index.html?time=${Date.now()}`);
+    if (!res.ok) {
+      console.error('getHtmlBuildTime error:', res.status, res.statusText);
+      return null;
+    }
 
-  const html = await res.text();
-
-  const match = html.match(/<meta name="buildTime" content="(.*)">/);
-
-  const buildTime = match?.[1] || "";
-
-  return buildTime;
+    const html = await res.text();
+    const match = html.match(/<meta name="buildTime" content="(.*)">/);
+    return match?.[1] || null;
+  } catch (error) {
+    console.error('getHtmlBuildTime error:', error);
+    return null;
+  }
 }
 
 const checkForUpdates = async () => {

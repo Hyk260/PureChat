@@ -1,8 +1,10 @@
 import type { App } from "vue";
 import { directive } from "v-contextmenu";
+// import { optimize } from "./optimize";
 import "v-contextmenu/dist/themes/default.css";
 
 /** setup custom vue directives. - [安装自定义的vue指令] */
 export function setupDirectives(app: App) {
-  app.directive("contextmenu", directive);
+  app.directive("contextmenu", directive as any);
+  // app.directive("optimize", optimize);
 }

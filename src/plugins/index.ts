@@ -1,5 +1,5 @@
 import type { App } from "vue";
-import { setupAppVersionNotification } from "./app";
+import { setupAppVersionNotification, setupAppErrorHandle } from "./app";
 import { useElementPlus } from "./elementPlus";
 import { useElIcons } from "./icons";
 // import { setupNProgress } from "./nprogress"
@@ -20,4 +20,5 @@ export function setupPlugins(app: App) {
   setupIconifyOffline();
   // setupNProgress()
   setupAppVersionNotification();
+  setupAppErrorHandle(app);
 }
