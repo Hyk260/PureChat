@@ -1,12 +1,19 @@
 import { ACCESS_TOKEN } from "@/constants/index";
 import { localStg } from "@/utils/storage";
-import { useAuthStore } from '@/stores/index';
-import { useUserStore, useAppStore } from "@/stores/index";
-import axios from "axios";
-// import { stringify } from "qs";
+import { useAppStore, useAuthStore } from "@/stores/index";
+import Axios, {
+  type AxiosError,
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  // type CustomParamsSerializer
+} from "axios";
+
+interface ExtendedAxiosRequestConfig extends AxiosRequestConfig {
+  _retry?: boolean;
+}
 
 // 状态码错误消息映射
-const statusMessageMap = {
+const statusMessageMap: Record<number, string> = {
   400: "错误的请求",
   401: "未授权，请重新登录",
   404: "请求错误,未找到该资源",
@@ -18,7 +25,7 @@ const statusMessageMap = {
 };
 
 // 异常拦截处理器 
-const errorHandler = (error) => {
+const errorHandler = (error: AxiosError) => {
   const status = error.response?.status;
   const errMessage = status ? statusMessageMap[status] || `连接错误 ${status}` : "无法连接到服务器！";
 
@@ -30,7 +37,7 @@ const errorHandler = (error) => {
 const whiteList = ["/refresh-token", "/login"];
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
-const defaultConfig = {
+const defaultConfig: AxiosRequestConfig = {
   // baseURL: "https://api.purechat.cn", // 生产
   // baseURL: "http://localhost:8081", // 开发
   baseURL: import.meta.env.VITE_SERVICE_BASE_URL,
@@ -43,21 +50,26 @@ const defaultConfig = {
   },
   // 数组格式参数序列化（https://github.com/axios/axios/issues/5142）
   // paramsSerializer: {
-  //   serialize: stringify
+  //   serialize: stringify as unknown as CustomParamsSerializer
   // }
 };
 
 // 格式化token（jwt格式） 
-function formatToken(token) {
+function formatToken(token: string) {
   return "Bearer " + token;
 };
 
 class PureChatHttp {
+  private service: AxiosInstance;
+  private refreshService: AxiosInstance;
+  private isRefreshing: boolean;
+  private refreshSubscribers: Array<(token: string) => void>;
+
   constructor() {
     // 主服务实例
-    this.service = axios.create(defaultConfig);
+    this.service = Axios.create(defaultConfig);
     // 专门用于刷新 Token 的实例（不走拦截器）
-    this.refreshService = axios.create(defaultConfig);
+    this.refreshService = Axios.create(defaultConfig);
     // 防止重复刷新`token`
     this.isRefreshing = false;
     // 刷新订阅队列
@@ -65,22 +77,25 @@ class PureChatHttp {
 
     this.initInterceptors();
   }
-  initInterceptors() {
+  
+  initInterceptors(): void {
     this.handleRequest()
     this.handleResponse()
   }
+  
   /** 请求拦截 */
-  handleRequest() {
+  handleRequest(): void {
     this.service.interceptors.request.use((config) => {
-      if (!whiteList.includes(config.url)) {
+      if (config.url && !whiteList.includes(config.url)) {
         const token = localStg.get(ACCESS_TOKEN);
-        if (token) config.headers.Authorization = formatToken(token);
+        if (token && config.headers) config.headers.Authorization = formatToken(token);
       }
       return config;
     }, errorHandler);
   }
+  
   /** 响应拦截 */
-  handleResponse() {
+  handleResponse(): void {
     this.service.interceptors.response.use(
       (response) => {
         if (response.status >= 200 && response.status < 300) {
@@ -94,21 +109,22 @@ class PureChatHttp {
       },
       async (error) => {
         const { config, response } = error;
+        const extendedConfig = config as ExtendedAxiosRequestConfig;
 
         // 非 401 错误直接抛出
-        if (response?.status !== 401 || config._retry) {
+        if (response?.status !== 401 || extendedConfig._retry) {
           return errorHandler(error);
         }
 
         // 第一个触发刷新的请求
-        config._retry = true;
+        extendedConfig._retry = true;
 
         // 如果正在刷新 Token，则将当前请求加入队列等待
         if (this.isRefreshing) {
           return new Promise((resolve) => {
             this.refreshSubscribers.push((token) => {
-              config.headers.Authorization = formatToken(token);
-              resolve(this.service(config));
+              if (extendedConfig.headers) extendedConfig.headers.Authorization = formatToken(token);
+              resolve(this.service(extendedConfig));
             });
           });
         }
@@ -127,8 +143,8 @@ class PureChatHttp {
           this.refreshSubscribers.forEach((cb) => cb(newToken));
           this.refreshSubscribers = [];
 
-          config.headers.Authorization = newToken;
-          return this.service(config);
+          if (extendedConfig.headers) extendedConfig.headers.Authorization = newToken;
+          return this.service(extendedConfig);
         } catch (e) {
           this.refreshSubscribers = [];
           useAuthStore().logout();
@@ -138,8 +154,9 @@ class PureChatHttp {
         }
       });
   }
+  
   /** 通用请求工具函数 */
-  request(config) {
+  request(config: AxiosRequestConfig) {
     return this.service.request(config);
   }
 }
