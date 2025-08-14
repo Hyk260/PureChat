@@ -1,3 +1,14 @@
+import type {
+  GroupState,
+  GroupMember,
+  SetGroupProfilePayload,
+  HandleGroupMemberListPayload,
+  HandleQuitGroupPayload,
+  HandleCreateGroupPayload,
+  HandleDismissGroupPayload,
+  HandleGroupProfilePayload,
+} from './type';
+
 import { defineStore } from 'pinia';
 import {
   getGroupList,
@@ -12,32 +23,32 @@ import { SetupStoreId } from '@/stores/enum';
 import { useChatStore, useUserStore } from "@/stores/index";
 
 export const useGroupStore = defineStore(SetupStoreId.Group, {
-  state: () => ({
+  state: (): GroupState => ({
     groupList: [], // 群组列表
     groupProfile: {}, // 群聊数据
     currentMemberList: [], // 当前群组成员列表
   }),
   getters: {
-    hasGroupList() {
+    hasGroupList(): boolean {
       return this.groupList.length > 0
     },
-    isOwner() {
+    isOwner(): boolean {
       return this.groupProfile?.selfInfo?.role === "Owner"
     },
-    isAdmin() {
+    isAdmin(): boolean {
       return this.groupProfile?.selfInfo?.role === "Admin"
     },
-    currentMembersWithoutSelf() {
+    currentMembersWithoutSelf(): GroupMember[] {
       return this.currentMemberList.filter((t) => t.userID !== useUserStore().userProfile?.userID)
     }
   },
   actions: {
     // 更新群详情
-    setGroupProfile(payload) {
-      this.groupProfile = payload;
+    setGroupProfile(payload: SetGroupProfilePayload): void {
+      this.groupProfile = payload.groupProfile;
     },
     // 获取群成员列表
-    async handleGroupMemberList(payload) {
+    async handleGroupMemberList(payload: HandleGroupMemberListPayload): Promise<void> {
       const { isSort = true, groupID = "" } = payload || {};
       const groupId = groupID.replace("GROUP", "") || useChatStore().toAccount;
 
@@ -54,20 +65,20 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
       }
     },
     // 获取群列表数据
-    async handleGroupList() {
+    async handleGroupList(): Promise<void> {
       const { code, groupList } = await getGroupList();
       if (code !== 0) return;
       this.groupList = groupList;
     },
     // 退出群聊
-    async handleQuitGroup(payload) {
+    async handleQuitGroup(payload: HandleQuitGroupPayload): Promise<void> {
       const { sessionId, groupId  } = payload;
       const { code } = await quitGroup({ groupId });
       if (code !== 0) return;
       useChatStore().deleteSession({ sessionId });
     },
     // 创建群聊
-    async handleCreateGroup(payload) {
+    async handleCreateGroup(payload: HandleCreateGroupPayload): Promise<void> {
       const { groupName, positioning = true } = payload;
       const { code, group } = await createGroup({ groupName });
       if (code !== 0) return;
@@ -77,7 +88,7 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
       }
     },
     // 解散群组
-    async handleDismissGroup(payload) {
+    async handleDismissGroup(payload: HandleDismissGroupPayload): Promise<void> {
       const { sessionId, groupId } = payload;
       const { code, groupID } = await dismissGroup(groupId);
       console.log("解散群组 dismissGroup:", code, groupID);
@@ -88,13 +99,13 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
       useChatStore().deleteSession({ sessionId });
     },
     // 获取群详细资料
-    async handleGroupProfile(payload) {
+    async handleGroupProfile(payload: HandleGroupProfilePayload): Promise<void> {
       const { type } = payload;
       if (type !== "GROUP") return;
       const { groupID } = payload.groupProfile;
       const { code, data } = await getGroupProfile({ groupID });
       if (code !== 0) return;
-      this.setGroupProfile(data);
+      this.setGroupProfile({ groupProfile: data });
     },
   },
 });

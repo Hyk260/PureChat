@@ -1,6 +1,8 @@
-import { DB_Session } from "@/database/schemas/session";
-import { DB_Message } from "@/database/schemas/message";
-
+import type { DB_Session } from "@/database/schemas/session";
+import type { DB_Message } from "@/database/schemas/message";
+import type {
+  ChatState
+} from './type';
 import { defineStore } from "pinia";
 import {
   getUnreadMsg,
@@ -39,11 +41,11 @@ import { useUserStore } from "../user/index";
 import emitter from "@/utils/mitt-bus";
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
-  state: () => ({
+  state: (): ChatState => ({
     historyMessageList: new Map(), //历史消息
-    currentMessageList: [] as DB_Session[], //当前消息列表(窗口聊天消息)
-    currentConversation: null as DB_Session | null, //跳转窗口的属性
-    conversationList: [] as DB_Message[], // 会话列表数据
+    currentMessageList: [], //当前消息列表(窗口聊天消息)
+    currentConversation: null, //跳转窗口的属性
+    conversationList: [], // 会话列表数据
     searchConversationList: [], // 搜索后的会话列表
     filterConversationList: [], // 过滤后的会话列表
     totalUnreadMsg: 0, // 未读消息总数
@@ -65,38 +67,35 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     selectedMessageIds: new Set(), // 选中的消息ID集合
   }),
   getters: {
-    isSending() {
+    isSending(): boolean {
       if (this.isAssistant) {
         return this.sendingMap.has(this.toAccount);
       } else {
         return false
       }
     },
-    hasMsgList() {
-      return this.currentMessageList?.length > 0;
-    },
-    isFwdDataMaxed() {
+    isFwdDataMaxed(): boolean {
       return this.forwardData.size >= MULTIPLE_CHOICE_MAX;
     },
     currentType(): string {
       return this.currentConversation?.type || "";
     },
-    getNonBotList() {
-      return this.conversationList.filter((t) => !isRobot(t.conversationID));
+    getNonBotList(): DB_Session[] {
+      return this.conversationList.filter((t) => !/@RBT#/.test(t.conversationID));
     },
-    getNonBotC2CList() {
-      return this.conversationList.filter((t: DB_Message) => t.type === "C2C" && !isRobot(t.conversationID));
+    getNonBotC2CList(): DB_Session[] {
+      return this.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
     },
     currentSessionProvider() {
       return getModelType(this.toAccount);
     },
-    isAssistant() {
+    isAssistant(): boolean {
       return /@RBT#/.test(this.toAccount);
     },
-    isMore() {
+    isMore(): boolean {
       return this.currentMessageList?.length < HISTORY_MESSAGE_COUNT;
     },
-    imgUrlList() {
+    imgUrlList(): string[] {
       if (!this.currentMessageList.length) return [];
       const filteredMessages = this.currentMessageList.filter(
         (item) => item.type === "TIMImageElem" && !item.isRevoked && !item.isDeleted
@@ -115,14 +114,14 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const ID = this.currentConversation?.conversationID || "";
       return ID?.replace(/^(C2C|GROUP)/, "");
     },
-    isGroupChat() {
+    isGroupChat(): boolean {
       if (!this.currentConversation) return false;
       return this.currentType === "GROUP";
     },
-    isForwardDataEmpty() {
+    isForwardDataEmpty(): boolean {
       return this.forwardData.size === 0
     },
-    getForwardCount() {
+    getForwardCount(): number {
       return this.forwardData.size
     },
     getSortedForwardData() {
@@ -131,15 +130,15 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
     // 检查消息是否被选中
     isMessageSelected() {
-      return (messageId) => this.selectedMessageIds.has(messageId);
+      return (messageId: string) => this.selectedMessageIds.has(messageId);
     },
-    totalUnreadCount() {
+    totalUnreadCount(): number {
       if (!this.currentConversation) return 0;
-      const result = this.conversationList.reduce((count, data) => {
-        if (this.currentConversation.conversationID === data.conversationID) {
+      const result = this.conversationList.reduce((count: number, data: DB_Session) => {
+        if (this.currentConversation?.conversationID === data.conversationID) {
           return count;
         }
-        return count + data.unreadCount;
+        return count + (data.unreadCount || 0);
       }, 0);
       return result;
     },
@@ -156,19 +155,19 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.clearSelectedMessageIds()
       }
     },
-    setReplyMsgData(data) {
+    setReplyMsgData(data: DB_Message) {
       this.replyMsgData = data
     },
-    setMsgEdit(data) {
+    setMsgEdit(data: DB_Message) {
       this.msgEdit = data
     },
-    setCurrentConversation(data = {}) {
+    setCurrentConversation(data: DB_Session) {
       this.currentConversation = data
     },
-    setConversationList(list = []) {
+    setConversationList(list: DB_Session[] = []) {
       this.conversationList = list
     },
-    setScrollTopID(id = "") {
+    setScrollTopID(id: string = "") {
       this.scrollTopID = id
     },
     setNoMore(bool: boolean) {
@@ -213,7 +212,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       emitter.emit("updateScroll");
     },
-    updateSelectedConversation(payload) {
+    updateSelectedConversation(payload: DB_Session) {
       const { conversationID: sessionId } = payload;
       const oldSessionId = this.currentConversation?.conversationID;
       if (sessionId === oldSessionId) return;
@@ -229,7 +228,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.isChatBoxVisible = sessionId !== "@TIM#SYSTEM";
       this.isAssistant && useRobotStore().updateModelConfig();
     },
-    addMessage(payload) {
+    addMessage(payload: { conversationID: string, message: DB_Message[], isDone: boolean }) {
       console.log("[chat] 添加消息 addMessage:", payload);
       const { conversationID, message, isDone } = payload || {};
       if (this.currentConversation) {
@@ -242,7 +241,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       console.log("isDone:", isMore ? "没有更多" : "显示loading");
       this.setNoMore(isMore)
     },
-    async deleteMessage(payload) {
+    async deleteMessage(payload: { sessionId: string, messageIdArray: string[], message: DB_Message[] }) {
       console.log("[chat] 删除消息 deleteMessage:", payload);
       const { sessionId, messageIdArray = [], message = [] } = payload || {};
       const { code } = await deleteMessage(message);
@@ -262,7 +261,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.currentMessageList = cloneDeep(newHistoryList);
       this.historyMessageList.set(sessionId, newHistoryList);
     },
-    loadMoreMessages(payload) {
+    loadMoreMessages(payload: { sessionId: string, messages: DB_Message[], msgId: string }) {
       console.log("[chat] 加载更多消息 loadMoreMessages:", payload);
       const { sessionId, messages, msgId = "" } = payload;
       // 历史消息
@@ -279,7 +278,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.currentMessageList = newHistory;
       this.historyMessageList.set(sessionId, newHistory);
     },
-    updateMessages(payload) {
+    updateMessages(payload: { sessionId: string, message: DB_Message }) {
       console.log("[chat] 更新消息 updateMessages:", payload);
       const { sessionId, message } = payload;
       if (!sessionId || !message?.ID) {
@@ -306,7 +305,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       this.historyMessageList.set(sessionId, newMessageList);
     },
-    modifiedMessages(message) {
+    modifiedMessages(message: DB_Message) {
       console.log("[chat] 历史消息更新 modifiedMessages:", message);
       if (!message?.ID) {
         console.warn("ID 不存在");
@@ -326,7 +325,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       this.historyMessageList.set(sessionId, newMessageList);
     },
-    async sendSessionMessage(data) {
+    async sendSessionMessage(data: { message: DB_Message, last: boolean }) {
       const { message, last = true } = data;
       const sessionId = message.conversationID || "";
       if (!sessionId) {
@@ -350,7 +349,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         console.log("发送失败", code, result);
       }
     },
-    async sendMsgSuccessCallback(data) {
+    async sendMsgSuccessCallback(data: { sessionId: string, message: DB_Message, last: boolean }) {
       console.log("消息发送成功 sendMsgSuccessCallback", data);
       const { sessionId, message, last } = data;
       this.updateMessages({ sessionId, message });
@@ -395,7 +394,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.currentConversation = null;
       this.currentMessageList = [];
     },
-    toggleMentionModal(flag) {
+    toggleMentionModal(flag: boolean) {
       if (this.isGroupChat) {
         this.isMentionModalVisible = flag;
       } else {
@@ -415,7 +414,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
           break;
       }
     },
-    setSelectedMessageId(messageId, selected = true) {
+    setSelectedMessageId(messageId: string, selected = true) {
       if (selected) {
         this.selectedMessageIds.add(messageId);
       } else {
@@ -437,14 +436,14 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.setForwardData({ type: "del", payload: item });
       }
     },
-    updateRevokeMsg({ data, type }) {
+    updateRevokeMsg({ data, type }: { data: any, type: string }) {
       if (type === "set") {
         this.revokeMsgMap.set(data.ID, data.payload);
       } else {
         this.revokeMsgMap.delete(data.ID);
       }
     },
-    updateChatDraft(data) {
+    updateChatDraft(data: any) {
       if (!data) return;
       const { ID, payload } = data;
       if (checkTextNotEmpty(payload)) {
@@ -456,7 +455,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     async updateTotalUnreadMsg() {
       this.totalUnreadMsg = await getUnreadMsg();
     },
-    async deleteSession(data) {
+    async deleteSession(data: { sessionId: string }) {
       const { sessionId } = data;
       if (!sessionId) {
         console.error("sessionId is required");
@@ -465,7 +464,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const { code } = await deleteConversation({ sessionId });
       if (code === 0) this.clearCurrentMessage();
     },
-    async deleteHistoryMessage(id) {
+    async deleteHistoryMessage(id: string) {
       let sessionId = id || this.currentSessionId;
       if (!sessionId) {
         console.error("sessionId is required");

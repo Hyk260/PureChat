@@ -26,15 +26,7 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     },
   }),
   getters: {
-    isFunctionCall() {
-      return false
-      // if (useChatStore().isAssistant) {
-      //   return this.model?.functionCall;
-      // } else {
-      //   return false;
-      // }
-    },
-    isVision() {
+    isVision(): boolean {
       if (useChatStore().isAssistant) {
         return this.model?.vision;
       } else {

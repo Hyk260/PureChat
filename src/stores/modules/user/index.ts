@@ -1,3 +1,13 @@
+import type {
+  LoginResult,
+  UserState,
+  UserProfile,
+  UserLocalStore,
+  HandleSuccessfulAuthPayload,
+  HandleUserLoginPayload,
+  HandleIMLoginPayload,
+} from './type';
+
 import { nextTick } from "vue";
 import { defineStore } from 'pinia'
 import { useAppStore, useChatStore, useAuthStore } from '@/stores/index';
@@ -13,7 +23,7 @@ import emitter from "@/utils/mitt-bus"
 import localAvatar from '@/assets/images/avatar.png';
 
 export const useUserStore = defineStore(SetupStoreId.User, {
-  state: () => ({
+  state: (): UserState => ({
     lang: "zh-CN",
     timeline: false, // 时间线
     markdownRender: false, // Markdown 渲染输入消息
@@ -28,34 +38,34 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     },
   }),
   getters: {
-    getUserAvatar() {
+    getUserAvatar(): string {
       return this.userLocalStore.avatar || this.userLocalStore.native || this.userLocalStore.localAvatar
     }
   },
   actions: {
-    setTimeline(val: boolean) {
+    setTimeline(val: boolean): void {
       this.timeline = val;
     },
-    setMarkdownRender(val: boolean) {
+    setMarkdownRender(val: boolean): void {
       this.markdownRender = val;
     },
-    setCurrentPage(page: number) {
+    setCurrentPage(page: number): void {
       this.currentPage = page
     },
-    setVerifyCode(val: string) {
+    setVerifyCode(val: string): void {
       this.verifyCode = val
     },
-    setCurrentProfile(user: any) {
+    setCurrentProfile(user: UserProfile): void {
       this.userProfile = user
     },
-    setUserLocalStore(data: any) {
+    setUserLocalStore(data: Partial<UserLocalStore>): void {
       this.userLocalStore = { ...this.userLocalStore, ...data }
     },
-    setLang(lang: string) {
+    setLang(lang: string): void {
       this.lang = lang
       setLocale(lang)
     },
-    async handleSuccessfulAuth(data) {
+    async handleSuccessfulAuth(data: HandleSuccessfulAuthPayload): Promise<void> {
       console.log("授权登录信息 handleSuccessfulAuth", data)
       const { code, msg, result } = data
       if (code === 200) {
@@ -69,12 +79,12 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         useAppStore().showMessage({ message: msg, type: "error" })
       }
     },
-    async handleUserLogin(data) {
+    async handleUserLogin(data: HandleUserLoginPayload): Promise<void> {
       console.log(data, "登录信息")
       const result = await login(data)
       this.handleSuccessfulAuth(result)
     },
-    async handleUserLogout() {
+    async handleUserLogout(): Promise<void> {
       router.push("/login")
       setTimeout(() => {
         logout()
@@ -82,7 +92,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         this.handleIMLogout()
       }, 500)
     },
-    async handleIMLogin(user) {
+    async handleIMLogin(user: HandleIMLoginPayload): Promise<void> {
       try {
         const data = await chat.login(user)
         if (data.code === 0) {
@@ -116,7 +126,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       if (router.currentRoute.value.name === "login") return
       await nextTick()
       try {
-        const data = localStg.get("User-Model") || null
+        const data = localStg.get("User-Model") as LoginResult || null
         console.log("tryReconnect", data)
         if (data) {
           timProxy.init()

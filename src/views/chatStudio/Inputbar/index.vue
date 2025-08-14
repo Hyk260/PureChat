@@ -80,7 +80,7 @@
     </el-tooltip>
     <!-- 插件 -->
     <el-tooltip v-if="false" content="选择插件" placement="top">
-      <el-button v-show="isFunctionCall" @click="openPluginBox">
+      <el-button @click="openPluginBox">
         <SvgIcon local-icon="plugin" />
       </el-button>
     </el-tooltip>
@@ -150,7 +150,7 @@ const chatStore = useChatStore();
 const webSearchStore = useWebSearchStore();
 
 const { toAccount, isAssistant, currentType, isFullscreenInputActive } = storeToRefs(chatStore);
-const { modelProvider, enableWebSearch, isWebSearchModel, isFunctionCall } =
+const { modelProvider, enableWebSearch, isWebSearchModel } =
   storeToRefs(robotStore);
 
 function handleCancel() {

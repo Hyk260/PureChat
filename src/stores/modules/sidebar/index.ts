@@ -1,3 +1,5 @@
+import type { SidebarItem, MoreListItem, SidebarState } from './type';
+
 import { markRaw } from "vue";
 import { defineStore } from "pinia";
 import { SetupStoreId } from '@/stores/enum';
@@ -17,7 +19,7 @@ const {
   // DEV: isDev 
 } = import.meta.env;
 
-const defaultOutsideList = [
+const defaultOutsideList: SidebarItem[] = [
   {
     id: "chat",
     icon: markRaw(ChatDotSquare),
@@ -59,7 +61,7 @@ const defaultOutsideList = [
   },
 ];
 
-const defaultMoreList = [
+const defaultMoreList: MoreListItem[] = [
   {
     id: "github",
     icon: "github",
@@ -77,29 +79,29 @@ const defaultMoreList = [
 ];
 
 export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
-  state: () => ({
+  state: (): SidebarState => ({
     outsideList: [...defaultOutsideList],
     moreList: [...defaultMoreList],
   }),
   getters: {
-    filteredOutsideList: (state) => state.outsideList.filter((item) => item?.show !== "hide"),
+    filteredOutsideList: (state): SidebarItem[] => state.outsideList.filter((item) => item?.show !== "hide"),
   },
   actions: {
-    setOutsideList(list) {
+    setOutsideList(list: SidebarItem[]): void {
       const data = this.outsideList.filter((t) => t.id === "more");
       this.outsideList = [...list, ...data];
     },
-    toggleOutside(item) {
-      if (item?.path) {
+    toggleOutside(item: SidebarItem | MoreListItem): void {
+      if ('path' in item && item.path) {
         router.push(item.path);
         useChatStore().toggleMultiSelectMode(false)
-      } else if (item?.openType === 'outside' && item?.url) {
+      } else if ('openType' in item && item.openType === 'outside' && item.url) {
         openWindow(item.url);
-      } else if (item?.mode === "other") {
+      } else if ('mode' in item && item.mode === "other") {
         emitter.emit("SidebarEditDialog", true);
       }
     },
-    setMoreList(list) {
+    setMoreList(list: MoreListItem[]): void {
       this.moreList = list;
     },
   },

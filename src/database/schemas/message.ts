@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+// https://web.sdk.qcloud.com/im/doc/zh-cn/Message.html
 export const MessageSchema = {
   "ID": "2356550d-e59f-4a7c-9e5b-f55b6d312f05",
   "conversationID": "C2C@RBT#006",
@@ -36,7 +37,9 @@ export const MessageSchema = {
   "isSupportExtension": false,
   "revoker": "",
   "revokeReason": "",
-  "payload": {},
+  "payload": {
+    "text": ""
+  },
   "type": "TIMTextElem",
   "createdAt": 1754536602679,
   "updatedAt": 1754536602686
@@ -50,7 +53,7 @@ export const DB_MessageSchema = z.object({
   sequence: z.number().int().min(0),
   clientSequence: z.number().int().min(0),
   random: z.number().int(),
-  priority: z.enum(["Low", "Normal", "High", "Urgent"]),
+  priority: z.string(),
   nick: z.string(),
   avatar: z.string(),
   isPeerRead: z.boolean(),
@@ -79,6 +82,7 @@ export const DB_MessageSchema = z.object({
   revoker: z.string(),
   revokeReason: z.string(),
   payload: z.record(z.any()),
+  isTimeDivider: z.boolean().optional(),
   type: z.string(),
   createdAt: z.number().optional(),
   updatedAt: z.number().optional(),
