@@ -2,7 +2,6 @@ import { nextTick } from "vue";
 import { getTime } from "@/utils/common";
 import { uuid } from "@/utils/uuid";
 import { useChatStore } from "@/stores/index";
-import { USER_MODEL } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { SessionModel } from "@/database/models/session";
@@ -109,7 +108,7 @@ export class LocalChat {
    * @returns {LocalChat} LocalChat 实例
    */
   create(data) {
-    localStg.set(USER_MODEL, { username: UserProfile.userID });
+    localStg.set("User-Model", { username: UserProfile.userID });
     console.log("create local chat", data);
     return LocalChat.getInstance();
   }

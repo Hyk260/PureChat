@@ -29,7 +29,7 @@ export class OpenAiApi {
   constructor(provider) {
     this.provider = provider;
   }
-  getPath(path) {
+  getPath(path: string): string {
     let baseUrl = this.accessStore().openaiUrl;
     if (baseUrl.endsWith("/")) {
       baseUrl = baseUrl.slice(0, -1);
@@ -123,7 +123,7 @@ export class OpenAiApi {
    * @param {Object} response - API响应
    * @returns {Promise<string|Array>} 提取的消息内容
    */
-  async extractMessage(response) {
+  async extractMessage(response: any) {
     // DALL-E 3模型返回图片URL
     if (response.data) {
       return await extractImageMessage(response);
@@ -161,14 +161,15 @@ export class OpenAiApi {
       try {
         return await this.fetchOnClient(processedMessages);
       } catch (error) {
-        const { errorType = 400, error: errorContent, ...rest } = error;
+        // debugger
+        const { errorType, error: errorContent } = error;
         const errorMessage = errorContent || error
         // 跟踪服务器端的错误
         console.error(`Route: [${this.provider}] ${errorType}:`, errorMessage);
         return createErrorResponse(errorType, {
           error,
-          ...rest,
-          provider: this.provider
+          // ...rest,
+          // provider: this.provider
         });
       }
     };
@@ -289,24 +290,29 @@ export class OpenAiApi {
    * @param {Function} finish - 完成回调
    */
   handleStreamMessage(msg, remainText, reasoningText, options, finish) {
+    // debugger
     console.log("[OpenAI] 收到消息:", msg)
 
     if (msg.data === "[DONE]") {
-      return finish()
+      finish()
+      return null
     }
 
     try {
       const data = JSON.parse(msg.data)
 
       if (this.isOllamaProvider()) {
-        if (data === "[DONE]") return finish();
+        if (data === "[DONE]") {
+          finish()
+          return null
+        }
         const delta = data.message?.content
         if (delta) {
           remainText += delta
         }
       } else {
         const choice = data.choices?.[0]
-        if (!choice) return
+        if (!choice) return null
 
         // 处理普通内容
         const delta = choice.delta?.content
@@ -321,8 +327,12 @@ export class OpenAiApi {
           }
         }
       }
+
+      // 返回更新后的值
+      return { remainText, reasoningText }
     } catch (error) {
       console.error("[OpenAI] 解析消息失败:", error, msg.data)
+      return null
     }
   }
 
@@ -408,8 +418,6 @@ export class OpenAiApi {
       REQUEST_TIMEOUT_MS
     );
 
-    const _this = this;
-
     await fetchEventSource(chatPath, {
       ...chatPayload,
       async onopen(res) {
@@ -461,47 +469,11 @@ export class OpenAiApi {
         //   console.log(res);
         // }
       },
-      // onmessage: (msg) => this.handleStreamMessage(msg, remainText, reasoningText, options, finish),
-      onmessage(msg) {
-        console.log("[OpenAI] 收到消息:", msg)
-
-        if (!msg.data) {
-          console.log("[OpenAI] msg.data 消息为空")
-          return
-        }
-
-        if (msg.data === "[DONE]" || finished) {
-          return finish()
-        }
-
-        try {
-          const data = JSON.parse(msg.data)
-
-          if (_this.isOllamaProvider()) {
-            if (data === "[DONE]") return finish();
-            const delta = data.message?.content
-            if (delta) {
-              remainText += delta
-            }
-          } else {
-            const choice = data.choices?.[0]
-            if (!choice) return
-
-            // 处理普通内容
-            const delta = choice.delta?.content
-            if (delta) {
-              remainText += delta
-            } else {
-              // 处理推理内容（如 DeepSeek）
-              const reasoning = choice.delta?.reasoning_content
-              if (reasoning) {
-                reasoningText += reasoning
-                options.onReasoningMessage?.(reasoningText)
-              }
-            }
-          }
-        } catch (error) {
-          console.error("[OpenAI] 解析消息失败:", error, msg.data)
+      onmessage: (msg) => {
+        const result = this.handleStreamMessage(msg, remainText, reasoningText, options, finish);
+        if (result) {
+          remainText = result.remainText;
+          reasoningText = result.reasoningText;
         }
       },
       onclose() {

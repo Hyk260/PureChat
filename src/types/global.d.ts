@@ -12,6 +12,9 @@ declare global {
       name: string;
       version: string;
       engines: {};
+      docs: string;
+      homepage: string;
+      giteeHomepage: string;
       dependencies: Recordable<string>;
       devDependencies: Recordable<string>;
     };

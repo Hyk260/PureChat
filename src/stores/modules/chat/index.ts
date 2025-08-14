@@ -1,3 +1,6 @@
+import { DB_Session } from "@/database/schemas/session";
+import { DB_Message } from "@/database/schemas/message";
+
 import { defineStore } from "pinia";
 import {
   getUnreadMsg,
@@ -13,8 +16,7 @@ import {
 import { getModelId } from "@/ai/utils";
 import { getCloudCustomData } from "@/utils/chat/index";
 import { generateReferencePrompt } from "@/config/prompts";
-import { SetupStoreId } from '@/stores/plugins/index';
-import { EMOJI_RECENTLY } from "@/constants/index";
+import { SetupStoreId } from '@/stores/enum';
 import { localStg } from "@/utils/storage";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { ROBOT_COLLECT } from '@shared/provider/config';
@@ -39,9 +41,9 @@ import emitter from "@/utils/mitt-bus";
 export const useChatStore = defineStore(SetupStoreId.Chat, {
   state: () => ({
     historyMessageList: new Map(), //历史消息
-    currentMessageList: [], //当前消息列表(窗口聊天消息)
-    currentConversation: null, //跳转窗口的属性
-    conversationList: [], // 会话列表数据
+    currentMessageList: [] as DB_Session[], //当前消息列表(窗口聊天消息)
+    currentConversation: null as DB_Session | null, //跳转窗口的属性
+    conversationList: [] as DB_Message[], // 会话列表数据
     searchConversationList: [], // 搜索后的会话列表
     filterConversationList: [], // 过滤后的会话列表
     totalUnreadMsg: 0, // 未读消息总数
@@ -76,14 +78,14 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     isFwdDataMaxed() {
       return this.forwardData.size >= MULTIPLE_CHOICE_MAX;
     },
-    currentType() {
+    currentType(): string {
       return this.currentConversation?.type || "";
     },
     getNonBotList() {
       return this.conversationList.filter((t) => !isRobot(t.conversationID));
     },
     getNonBotC2CList() {
-      return this.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
+      return this.conversationList.filter((t: DB_Message) => t.type === "C2C" && !isRobot(t.conversationID));
     },
     currentSessionProvider() {
       return getModelType(this.toAccount);
@@ -106,10 +108,10 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }, []);
       return reversedUrls;
     },
-    currentSessionId() {
+    currentSessionId(): string {
       return this.currentConversation?.conversationID || "";
     },
-    toAccount() {
+    toAccount(): string {
       const ID = this.currentConversation?.conversationID || "";
       return ID?.replace(/^(C2C|GROUP)/, "");
     },
@@ -143,10 +145,10 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
   },
   actions: {
-    setChatSessionListCollapsed(bol) {
+    setChatSessionListCollapsed(bol: boolean) {
       this.isChatSessionListCollapsed = bol
     },
-    toggleMultiSelectMode(bool) {
+    toggleMultiSelectMode(bool: boolean) {
       this.isMultiSelectMode = bool
       if (!bool) {
         this.selectedMessageMap = new Map()
@@ -169,10 +171,10 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     setScrollTopID(id = "") {
       this.scrollTopID = id
     },
-    setNoMore(bool) {
+    setNoMore(bool: boolean) {
       this.noMore = bool
     },
-    updateSendingState(sessionId, type) {
+    updateSendingState(sessionId: string, type: string) {
       // set delete
       if (!this.isAssistant) return
       if (type === "delete") {
@@ -400,7 +402,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.isMentionModalVisible = false;
       }
     },
-    setForwardData({ type, payload }) {
+    setForwardData({ type, payload }: { type: string, payload: any }) {
       switch (type) {
         case "set":
           this.forwardData.set(payload.ID, payload);
@@ -483,17 +485,17 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
             const oldestElement = this.recently.values().next().value;
             this.recently.delete(oldestElement);
           }
-          localStg.set(EMOJI_RECENTLY, Array.from(this.recently));
+          localStg.set('Emoji-Recently', Array.from(this.recently));
           break;
         }
         case "revert": {
-          const recently = localStg.get(EMOJI_RECENTLY);
+          const recently = localStg.get('Emoji-Recently');
           if (recently) this.recently = new Set([...recently]);
           break;
         }
         case "clean":
           this.recently.clear();
-          localStg.remove(EMOJI_RECENTLY);
+          localStg.remove('Emoji-Recently');
           break;
       }
     },

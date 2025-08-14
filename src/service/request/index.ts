@@ -1,4 +1,3 @@
-import { ACCESS_TOKEN } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 import { useAppStore, useAuthStore } from "@/stores/index";
 import Axios, {
@@ -87,7 +86,7 @@ class PureChatHttp {
   handleRequest(): void {
     this.service.interceptors.request.use((config) => {
       if (config.url && !whiteList.includes(config.url)) {
-        const token = localStg.get(ACCESS_TOKEN);
+        const token = localStg.get("Access-Token");
         if (token && config.headers) config.headers.Authorization = formatToken(token);
       }
       return config;
@@ -101,7 +100,7 @@ class PureChatHttp {
         if (response.status >= 200 && response.status < 300) {
           const token = response.headers?.authorization;
           if (token) {
-            localStg.set(ACCESS_TOKEN, token);
+            localStg.set("Access-Token", token);
           }
           return response.data;
         }

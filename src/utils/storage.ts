@@ -74,4 +74,4 @@ export function createLocalforage(driver: LocalforageDriver = 'indexedDB') {
   return localforage;
 }
 
-export const localStg = createStorage('local', storagePrefix);
+export const localStg = createStorage<StorageType.Local>('local', storagePrefix);

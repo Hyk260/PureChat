@@ -150,7 +150,7 @@ export const createErrorResponse = (errorType, body) => {
   return new Response(prettyObject(data), { status: statusCode });
 };
 
-export function isDalle3(model) {
+export function isDalle3(model: string) {
   return "dall-e-3" === model;
 }
 
@@ -181,7 +181,7 @@ export async function uploadImage(file) {
   throw Error(`upload Error: ${res_1?.msg}`);
 }
 
-export async function extractImageMessage(res) {
+export async function extractImageMessage(res: any) {
   if (res.data) {
     let url = res.data?.at(0)?.url ?? "";
     const b64_json = res.data?.at(0)?.b64_json ?? "";
@@ -199,7 +199,7 @@ export async function extractImageMessage(res) {
   }
 }
 
-export function generateDalle3RequestPayload(config) {
+export function generateDalle3RequestPayload(config: any) {
   return {
     model: config.model,
     prompt: "画一只猫",
@@ -226,7 +226,7 @@ export function getInfo() {
   return localStg.get("timProxy")?.userProfile?.profileCustomField;
 }
 
-export function prefix(key) {
+export function prefix(key: string) {
   const prefix = "Tag_Profile_Custom_";
   return `${prefix}${key}`;
 }
@@ -243,7 +243,7 @@ export function isFullStaffGroup(data) {
   return getValueByKey(groupProfile?.groupCustomField, "custom_info") === "all_staff";
 }
 
-export function formatSizeStrict(input) {
+export function formatSizeStrict(input: string) {
   const number = parseInt(input.toString().replace("_", ""), 10);
 
   if (isNaN(number)) {

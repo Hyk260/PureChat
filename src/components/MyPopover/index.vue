@@ -25,7 +25,7 @@
           v-if="getProvider()"
           :href="getHomepage()"
           target="_blank"
-          :underline="false"
+          underline="never"
           type="primary"
           class="!justify-start"
         >

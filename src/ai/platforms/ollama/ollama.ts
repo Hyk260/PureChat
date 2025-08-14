@@ -140,13 +140,24 @@ export default class OllamaAI {
       return StreamingResponse(OllamaStream(prodStream, options?.callback), {
         headers: options?.headers as Record<string, string>
       });
-    } catch (e) {
+    } catch (error) {
+      const e = error as {
+        error: any;
+        message: string;
+        name: string;
+        status_code: number;
+      };
+
+      if (e.message === 'Failed to fetch') {
+        const Error = {
+          message: '请检查您的olama服务是否可用',
+          errorType: "请求 Ollama 服务出错，请检查后重试",
+          provider: ModelProvider.Ollama,
+        };
+        throw Error;
+      }
       const Error = {
-        error: {
-          message: e.message,
-          name: e.name,
-          status_code: e.status_code
-        },
+        message: e,
         errorType: "请求 Ollama 服务出错，请检查后重试",
         provider: ModelProvider.Ollama,
       };

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ModelProvider, modelValue } from "@/ai/constant";
-import { SetupStoreId } from '@/stores/plugins/index';
+import { SetupStoreId } from '@/stores/enum';
 import { useChatStore } from "../chat/index";
 import { useWebSearchStore } from "../websearch/index";
 import { cloneDeep } from "lodash-es";

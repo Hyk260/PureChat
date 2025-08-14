@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import { SetupStoreId } from '@/stores/plugins/index';
+import { SetupStoreId } from '@/stores/enum';
 import { localStg } from "@/utils/storage";
-import { useEventListener, usePreferredColorScheme } from "@vueuse/core";
+// import { useEventListener, usePreferredColorScheme } from "@vueuse/core";
 
 export const useThemeStore = defineStore(SetupStoreId.Theme, {
   state: () => ({
@@ -20,24 +20,24 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
       localStg.set("font-family", theme);
       document.documentElement.style.setProperty("--font-family", theme);
     },
-    setFontThemeList(list) {
-      const existingValues = new Set(this.fontThemeList.map(f => f.value));
-      const uniqueNewFonts = list.filter(font => !existingValues.has(font.value));
+    setFontThemeList(list: any) {
+      const existingValues = new Set(this.fontThemeList.map((f: any) => f.value));
+      const uniqueNewFonts = list.filter((font: any) => !existingValues.has(font.value));
 
       if (uniqueNewFonts.length > 0 && this.fontThemeList.length < 20) {
         this.fontThemeList = [...this.fontThemeList, ...uniqueNewFonts];
       }
     },
     async loadSystemFonts() {
-      if (!window.queryLocalFonts) {
+      if (!(window as any).queryLocalFonts) {
         console.warn('Local Font Access API is not supported in this browser');
         return;
       }
 
       try {
-        const availableFonts = await window.queryLocalFonts();
-        const newFonts = {}
-        availableFonts.slice(0, 40).map(font => {
+        const availableFonts = await (window as any).queryLocalFonts();
+        const newFonts: any = {}
+        availableFonts.slice(0, 40).map((font: { family: string | number; fullName: any; }) => {
           if (newFonts[font.family]) return;
           newFonts[font.family] = { label: font.fullName, value: font.family, };
         });
@@ -51,15 +51,14 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
       this.themeScheme = theme;
       this.setTheme(theme);
     },
-    toggleHtmlClass(theme) {
+    toggleHtmlClass(theme: string) {
       document.body.setAttribute("data-theme", theme);
       document.documentElement.classList[theme === "dark" ? "add" : "remove"]("dark");
     },
     /**
      * 切换主题风格
-     * @param {string} themeScheme light || dark || auto
      */
-    setTheme(themeScheme = "light") {
+    setTheme(themeScheme = "light" as string | 'light' | 'dark' | 'auto') {
       localStg.set("themeScheme", themeScheme);
       const isAuto = themeScheme === "auto";
       const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");

@@ -1,5 +1,4 @@
 import type { Router } from 'vue-router';
-import { ACCESS_TOKEN } from "@/constants/index";
 import { localStg } from "@/utils/storage";
 
 function createRouteGuard(router: Router) {
@@ -12,7 +11,7 @@ function createRouteGuard(router: Router) {
       return next({ path: "/" });
     }
 
-    const token = localStg.get(ACCESS_TOKEN);
+    const token = localStg.get("Access-Token");
 
     // 有token直接放行
     if (token) {

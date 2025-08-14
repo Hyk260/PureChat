@@ -1,6 +1,6 @@
 import { markRaw } from "vue";
 import { defineStore } from "pinia";
-import { SetupStoreId } from '@/stores/plugins/index';
+import { SetupStoreId } from '@/stores/enum';
 import { useChatStore } from "../chat/index";
 import { openWindow } from "@/utils/common";
 import { LayoutGrid, Compass } from "lucide-vue-next";
@@ -8,8 +8,14 @@ import { ChatDotSquare, UserFilled, MoreFilled } from "@element-plus/icons-vue";
 import emitter from "@/utils/mitt-bus";
 import router from "@/router";
 
-const { docs, homepage, giteeHomepage } = __APP_INFO__.pkg;
-const { DEV: isDev } = import.meta.env;
+const {
+  // docs, 
+  homepage,
+  giteeHomepage
+} = __APP_INFO__.pkg;
+const {
+  // DEV: isDev 
+} = import.meta.env;
 
 const defaultOutsideList = [
   {

@@ -8,6 +8,8 @@ import { OpenAiApi } from "@/ai/platforms/openai/index";
  * 统一的API入口点，负责创建和管理不同的AI提供者实例
  */
 export class ClientApi {
+  public llm: OpenAiApi;
+
   constructor(provider = ModelProvider.OpenAI) {
     try {
       this._provider = provider;

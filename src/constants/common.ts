@@ -1,18 +1,6 @@
-// access_token
-export const ACCESS_TOKEN = "Access-Token";
-// refresh_token
-export const REFRESH_TOKEN = "Refresh-Token";
-// 用户设置
-export const USER_SETUP = "User-Setup";
-// 用户信息
-export const USER_MODEL = "User-Model";
-// 表情包最近使用
-export const EMOJI_RECENTLY = "Emoji-Recently";
-// im数据
-export const TIM_PROXY = "timProxy";
-//历史消息计数
+// 历史消息计数
 export const HISTORY_MESSAGE_COUNT = 15;
-//多选消息最大计数
+// 多选消息最大计数
 export const MULTIPLE_CHOICE_MAX = 30;
 // 请求头-内容类型
 export const ContentType = {

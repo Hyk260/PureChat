@@ -1,7 +1,6 @@
 import emitter from "@/utils/mitt-bus";
 import chat from "@/utils/IM/im-sdk/tim";
 import { C2C_ROBOT_COLLECT } from "@/ai/constant";
-import { TIM_PROXY } from "@/constants/index";
 import { scrollToDomPosition } from "@/utils/chat/index";
 import { setMessageRead } from "@/service/im-sdk-api/index";
 import { localStg } from "@/utils/storage";
@@ -99,7 +98,7 @@ export class TIMProxy {
       userProfile: this.userProfile,
     };
 
-    localStg.set(TIM_PROXY, stateData);
+    localStg.set("timProxy", stateData);
   }
 
   /**
@@ -108,7 +107,7 @@ export class TIMProxy {
    * @private
    */
   loadSelfFromLocalStorage() {
-    const stateData = localStg.get(TIM_PROXY);
+    const stateData = localStg.get("timProxy");
     if (!stateData) return;
 
     Object.assign(this, stateData);

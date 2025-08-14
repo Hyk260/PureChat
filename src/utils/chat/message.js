@@ -1,13 +1,12 @@
 
 import { localStg } from "@/utils/storage";
-import { TIM_PROXY } from "@/constants/index";
 
 export const isTime = (item) => {
   return item?.isTimeDivider && item.time !== undefined;
 };
 
 export const isSelf = (item) => {
-  return item.from === localStg.get(TIM_PROXY)?.userProfile?.userID;
+  return item.from === localStg.get("timProxy")?.userProfile?.userID;
 };
 
 export const msgOne = (item) => {

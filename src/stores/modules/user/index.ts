@@ -2,9 +2,8 @@ import { nextTick } from "vue";
 import { defineStore } from 'pinia'
 import { useAppStore, useChatStore, useAuthStore } from '@/stores/index';
 import { login, logout } from "@/service/api/index"
-import { USER_MODEL } from "@/constants/index"
 import { localStg } from "@/utils/storage"
-import { SetupStoreId } from '@/stores/plugins/index';
+import { SetupStoreId } from '@/stores/enum';
 import { timProxy } from '@/utils/IM/index';
 import { setLocale } from "@/locales/index";
 
@@ -34,25 +33,25 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     }
   },
   actions: {
-    setTimeline(val) {
+    setTimeline(val: boolean) {
       this.timeline = val;
     },
-    setMarkdownRender(val) {
+    setMarkdownRender(val: boolean) {
       this.markdownRender = val;
     },
-    setCurrentPage(page) {
+    setCurrentPage(page: number) {
       this.currentPage = page
     },
-    setVerifyCode(val) {
+    setVerifyCode(val: string) {
       this.verifyCode = val
     },
-    setCurrentProfile(user) {
+    setCurrentProfile(user: any) {
       this.userProfile = user
     },
-    setUserLocalStore(data) {
+    setUserLocalStore(data: any) {
       this.userLocalStore = { ...this.userLocalStore, ...data }
     },
-    setLang(lang) {
+    setLang(lang: string) {
       this.lang = lang
       setLocale(lang)
     },
@@ -62,7 +61,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       if (code === 200) {
         timProxy.init()
         await this.handleIMLogin({ userID: result.username, userSig: result.userSig })
-        localStg.set(USER_MODEL, result)
+        localStg.set('User-Model', result)
         useAuthStore().setTokens(result?.accessToken, result?.refreshToken)
         // data?.remember && localStg.set(ACCOUNT, data)
       } else {
@@ -117,7 +116,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       if (router.currentRoute.value.name === "login") return
       await nextTick()
       try {
-        const data = localStg.get(USER_MODEL) || null
+        const data = localStg.get("User-Model") || null
         console.log("tryReconnect", data)
         if (data) {
           timProxy.init()
