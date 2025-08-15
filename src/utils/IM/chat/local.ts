@@ -1,12 +1,9 @@
-import { nextTick } from "vue";
+import { cloneDeep } from "lodash-es";
 import { getTime } from "@/utils/common";
 import { uuid } from "@/utils/uuid";
-import { useChatStore } from "@/stores/index";
 import { localStg } from "@/utils/storage";
-import { cloneDeep } from "lodash-es";
 import { SessionModel } from "@/database/models/session";
 import { MessageModel } from "@/database/models/message";
-import { FilesModel } from "@/database/models/files";
 import { ConversationList, UserProfile, BaseElemMessage, ProvidersList } from '@database/config';
 import emitter from "@/utils/mitt-bus";
 

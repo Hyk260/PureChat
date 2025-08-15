@@ -4,9 +4,9 @@ import type {
   Prompt,
   BotToolsFlag
 } from "./types";
-
+import { ModelProvider, ModelProviderKey } from "@/ai/types/type";
 import { defineStore } from "pinia";
-import { ModelProvider, modelValue } from "@/ai/constant";
+import { modelValue } from "@/ai/constant";
 import { SetupStoreId } from '@/stores/enum';
 import { useChatStore } from "../chat/index";
 import { useWebSearchStore } from "../websearch/index";
@@ -56,7 +56,7 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       return this.promptStore[this.modelProvider]?.[0] || null;
     },
     isOllama(): boolean {
-      return [ModelProvider.Ollama].includes(this.modelProvider);
+      return [ModelProvider.Ollama].includes(this.modelProvider as ModelProvider);
     },
     isShowPromptTitle(): boolean {
       return Boolean(this.promptConfig?.meta?.title && useChatStore().isAssistant);
@@ -92,7 +92,7 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       }
       this.modelProvider = provider;
       const model = useAccessStore(provider)?.model;
-      const providerData = modelValue[provider];
+      const providerData = modelValue[provider as ModelProvider];
       if (!providerData?.Model?.options?.chatModels) {
         console.log("provider data not found");
         return;
@@ -105,14 +105,14 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
         this.setModel(checkModel as Model);
       }
     },
-    setDefaultProvider(data: string): void {
+    setDefaultProvider(data: ModelProviderKey): void {
       this.defaultProvider = data
     },
     updataBotToolsFlag(data: BotToolsFlag): void {
       this.isShowBotTools = Boolean(data?.functionCall);
     },
-    setModelConfig(provider: string): void {
-      this.modelConfig = useAccessStore(provider);
+    setModelConfig(provider: ModelProviderKey): void {
+      this.modelConfig = useAccessStore(provider as ModelProvider);
     },
     setModel(value: Model | null): void {
       this.model = value;

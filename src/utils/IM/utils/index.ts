@@ -1,7 +1,7 @@
-import { useChatStore } from "@/stores/index";
+import { useChatStore } from "@/stores/modules/chat";
 import { throttle } from "lodash-es";
 
-export function kickedOutReason(type) {
+export function kickedOutReason(type: string) {
   switch (type) {
     case "multipleAccount":
       return "由于多实例登录";
@@ -14,7 +14,7 @@ export function kickedOutReason(type) {
   }
 }
 
-export function checkoutNetState(state) {
+export function checkoutNetState(state: string) {
   switch (state) {
     case "connected":
       return { message: "已接入网络", type: "success" };

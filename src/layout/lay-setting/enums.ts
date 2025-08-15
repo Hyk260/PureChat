@@ -1,8 +1,8 @@
 import { computed } from "vue";
 import { Operation, Warning } from "@element-plus/icons-vue";
 import { Cloud } from 'lucide-vue-next';
-import { $t } from "@/locales/index";
-import { ModelProvider } from "@/ai/constant";
+import { $t } from "@/locales";
+import { ModelProvider } from "@/ai/types/type";
 
 export const list = computed(() => {
   return [
@@ -47,7 +47,7 @@ export const options = computed(() => {
 });
 
 export const optionsModel = computed(() => {
-  return Object.entries(ModelProvider).map(([key, value]) => {
+  return Object.entries(ModelProvider).map(([_, value]) => {
     return {
       value,
       label: value,

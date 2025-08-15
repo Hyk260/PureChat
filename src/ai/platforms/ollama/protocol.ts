@@ -1,5 +1,5 @@
 import { ChatResponse } from 'ollama/browser';
-import { ChatStreamCallbacks } from "../types/chat";
+import { ChatStreamCallbacks } from "@/ai/types/chat";
 
 export interface StreamContext {
   id: string;

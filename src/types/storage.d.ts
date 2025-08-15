@@ -12,6 +12,7 @@ declare namespace StorageType {
     token: string;
     /** The theme scheme */
     themeScheme: string | 'light' | 'dark' | 'auto';
+    webSearchReferences: string;
     "Emoji-Recently": string[];
     /** The user model */
     "User-Model": object;

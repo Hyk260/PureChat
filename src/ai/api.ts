@@ -1,4 +1,5 @@
-import { ModelProvider, API_PROVIDER_MAP } from "@/ai/constant";
+import { ModelProvider } from "@/ai/types/type";
+import { API_PROVIDER_MAP } from "@/ai/constant";
 import { useAccessStore } from "@/ai/utils";
 import { useRobotStore } from '@/stores/index';
 import { OpenAiApi } from "@/ai/platforms/openai/index";

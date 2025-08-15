@@ -1,3 +1,5 @@
+import { ModelProviderKey } from "@/ai/types/type";
+
 // 模型配置类型
 export interface ModelConfig {
   model: string;
@@ -66,8 +68,8 @@ export interface RobotState {
   model: Model | null;
   promptConfig: Prompt | null;
   modelConfig: ModelConfig | null;
-  modelProvider: string;
-  defaultProvider: string;
+  modelProvider: ModelProviderKey | "";
+  defaultProvider: ModelProviderKey;
   isShowBotTools: boolean;
   promptStore: PromptStore;
   modelStore: ModelStore;

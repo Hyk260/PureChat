@@ -1,5 +1,5 @@
 import { nextTick } from "vue";
-import { useChatStore } from '@/stores/index';
+import { useChatStore } from '@/stores/modules/chat';
 /**
  * 按角色对成员列表进行排序。
  *

@@ -1,8 +1,7 @@
 import type { DB_Session } from "@/database/schemas/session";
 import type { DB_Message } from "@/database/schemas/message";
-import type {
-  ChatState
-} from './type';
+import type { ChatState } from './type';
+
 import { defineStore } from "pinia";
 import {
   getUnreadMsg,

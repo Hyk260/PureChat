@@ -1,6 +1,6 @@
 import { ClientApi } from "@/ai/api";
-import { ModelProvider, modelValue } from "@/ai/constant";
-import { useAccessStore, prettyObject, getAiAvatarUrl } from "@/ai/utils";
+import { ModelProvider } from "@/ai/types/type";
+import { prettyObject, getAiAvatarUrl } from "@/ai/utils";
 import { createCustomMessage } from "@/service/im-sdk-api/index";
 import { restApi } from "@/service/api/index";
 import { cloneDeep } from "lodash-es";
@@ -125,6 +125,7 @@ const createAlertMsg = (startMsg, provider) => {
   const alertData = cloneDeep(startMsg);
   alertData.clientTime = getTime();
   alertData.type = "TIMCustomElem";
+  alertData.status = "success";
   alertData.payload = getCustomMsgContent({ data: { provider }, type: "warning" });
 
   useChatStore().updateMessages({ sessionId: `C2C${alertData.from}`, message: alertData });

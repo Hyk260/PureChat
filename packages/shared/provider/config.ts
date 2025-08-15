@@ -53,14 +53,3 @@ export const ROBOT_COLLECT = [
   // MISTRAL_ID,
 ]
 
-export const ModelProvider = {
-  OpenAI: "openai",
-  ZhiPu: "zhipu",
-  ZeroOne: "zeroone",
-  Qwen: "qwen",
-  Ollama: "ollama",
-  GitHub: "github",
-  DeepSeek: "deepseek",
-  Mistral: "mistral",
-};
-

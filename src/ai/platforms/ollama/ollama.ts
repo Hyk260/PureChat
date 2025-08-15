@@ -1,9 +1,9 @@
 import { ClientOptions } from 'openai';
-import { ModelProvider } from "@/ai/constant";
+import { ModelProvider } from "@/ai/types/type";
 import { useAccessStore } from "@/ai/utils";
 import { ChatResponse, Ollama, Tool } from "ollama/browser";
 import { nanoid } from '@/utils/uuid';
-import { ChatStreamCallbacks, OpenAIChatMessage, ChatStreamPayload, ChatMethodOptions } from "../types/chat";
+import { ChatStreamCallbacks, OpenAIChatMessage, ChatStreamPayload, ChatMethodOptions } from "@/ai/types/chat";
 import { OllamaMessage } from './type';
 import {
   parseDataUri,

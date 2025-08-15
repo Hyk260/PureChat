@@ -39,6 +39,7 @@ declare global {
   export interface Window {
     /** NProgress instance */
     NProgress?: import('nprogress').NProgress;
+    __TIM_DEBUG__: DebugInterface;
   }
 
   /** Build time of the project */

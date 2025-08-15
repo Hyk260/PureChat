@@ -9,6 +9,10 @@ declare namespace Env {
 
   /** import.meta 接口定义 */
   interface ImportMeta extends ImportMetaEnv {
+    /** IM SDK AppID */
+    readonly VITE_IM_SDK_APPID: string;
+    /** IM SDK LogLevel */
+    readonly VITE_LOG_LEVEL: string;
     /** 应用程序的基础URL */
     readonly VITE_BASE_URL: string;
     /** 应用程序的标题 */

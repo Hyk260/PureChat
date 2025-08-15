@@ -1,17 +1,11 @@
+import type { AppState, MessageOptions } from './type';
 import { defineStore } from 'pinia';
-import { ElMessage, MessageHandler } from "element-plus";
+import { ElMessage } from "element-plus";
 import { SetupStoreId } from '@/stores/enum';
 
-// 消息选项接口
-interface MessageOptions {
-  message: string;
-  type?: 'success' | 'warning' | 'info' | 'error';
-  duration?: number;
-}
-
 export const useAppStore = defineStore(SetupStoreId.App, {
-  state: () => ({
-    message: null as MessageHandler | null,
+  state: (): AppState => ({
+    message: null,
   }),
   actions: {
     showMessage(options: MessageOptions) {

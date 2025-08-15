@@ -1,5 +1,6 @@
+import { ModelProvider } from "@/ai/types/type";
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
-import { REQUEST_TIMEOUT_MS, ModelProvider } from "@/ai/constant";
+import { REQUEST_TIMEOUT_MS } from "@/ai/constant";
 import {
   getModelId,
   useAccessStore,

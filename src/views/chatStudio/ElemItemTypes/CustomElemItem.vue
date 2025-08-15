@@ -24,7 +24,7 @@ const props = defineProps({
 
 const messageClass = computed(() => [
   props.self ? "is-text-self" : "is-text-other",
-  isMessageType("warning") ? "!p-0" : "",
+  // isMessageType("warning") ? "!p-0" : "",
 ]);
 
 const isMessageType = (type) => props?.message?.payload?.description === type;
@@ -45,6 +45,10 @@ const customMessageContent = () => {
 
     if (data === "group_create") {
       return extension || "";
+    }
+
+    if (payload?.onlyID === "warning") {
+      return 'API Key 不正确或为空，请检查 API Key 后重试' || "[自定义消息]";
     }
 
     return text || "[自定义消息]";

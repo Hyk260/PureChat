@@ -1,6 +1,6 @@
-import { timeFormat } from "@/utils/timeFormat";
 import { cloneDeep } from "lodash-es";
-import { useUserStore } from "@/stores/index";
+import { timeFormat } from "@/utils/timeFormat";
+import { useUserStore } from "@/stores/modules/user";
 
 const timeline = false;
 const duration = 5 * 60;

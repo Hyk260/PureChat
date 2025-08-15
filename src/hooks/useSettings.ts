@@ -1,7 +1,7 @@
+import { ModelProvider } from "@/ai/types/type";
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useRobotStore, useSidebarStore, useChatStore } from '@/stores/index';
-import { ModelProvider } from '@/ai/constant';
 import { showConfirmationBox } from "@/utils/message";
 import { useAccessStore, getModelId } from "@/ai/utils";
 

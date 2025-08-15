@@ -1,6 +1,6 @@
-import WebSearchEngineProvider from './WebSearchProvider/index'
+import { useWebSearchStore } from '@/stores/modules/websearch';
 import { hasObjectKey } from '@/utils/common'
-import { useWebSearchStore } from '@/stores/index';
+import WebSearchEngineProvider from './WebSearchProvider/index'
 import dayjs from 'dayjs'
 
 /**

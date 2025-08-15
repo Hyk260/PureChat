@@ -1,3 +1,4 @@
+import { ModelProvider, ModelProviderKey } from "@/ai/types/type";
 import { 
   OPENAI_ID, 
   ZHIPU_ID, 
@@ -9,7 +10,6 @@ import {
   MISTRAL_ID
 } from '@shared/provider/config';
 import {
-  ModelProvider,
   modelConfig,
   modelValue,
   AssistantAvatar,
@@ -21,19 +21,8 @@ import { isEmpty } from "lodash-es";
 
 /**
  * 获取 AI 模型的配置信息
- * @param {string} model - 模型的名称，默认为 `ModelProvider.OpenAI`
- * @returns {Object} 返回模型的配置对象，包括以下字段：
- * - model: {string} 模型名称，如 "gpt-4o-mini"
- * - temperature: {number} 生成的文本多样性，范围为 0 到 1，默认为 0.6
- * - top_p: {number} 控制生成文本的多样性，范围为 0 到 1，默认为 1
- * - max_tokens: {number} 最大生成的 token 数量，默认为 1024
- * - presence_penalty: {number} 控制生成的文本是否重复，默认为 0
- * - frequency_penalty: {number} 控制生成的文本是否过度重复相同的词语，默认为 0
- * - historyMessageCount: {number} 历史消息的最大数量，默认为 10
- * - token: {string} API 访问令牌，默认为空字符串
- * - openaiUrl: {string} OpenAI API 的基础 URL，默认为空字符串
  */
-export const useAccessStore = (model = ModelProvider.OpenAI) => {
+export const useAccessStore = (model: ModelProviderKey = ModelProvider.OpenAI) => {
   const access = useRobotStore().accessStore?.[model] || "";
 
   return isEmpty(access) ? modelConfig[model] : access
@@ -44,7 +33,7 @@ export const useAccessStore = (model = ModelProvider.OpenAI) => {
  * @param {string} modelId - '@RBT#001' 模型ID，用于识别不同的模型类型。
  * @returns {ModelProvider | string} - 'openai' 返回对应的模型类型，如果模型ID无效则返回''。
  */
-export function getModelType(modelId) {
+export function getModelType(modelId: string) {
   if (!isRobot(modelId)) return "";
   const modelMapping = {
     [OPENAI_ID]: ModelProvider.OpenAI,
@@ -59,7 +48,7 @@ export function getModelType(modelId) {
   return modelMapping[modelId.replace("C2C", "")] || "";
 }
 
-export function getModelId(model) {
+export function getModelId(model: ModelProvider) {
   if (!model) return "";
   const modelMapping = {
     [ModelProvider.OpenAI]: OPENAI_ID,
@@ -74,7 +63,7 @@ export function getModelId(model) {
   return modelMapping[model] || "";
 }
 
-export function getModelSvg(id) {
+export function getModelSvg(id: string) {
   const modelId = getModelType(id);
   const data = {
     [ModelProvider.OpenAI]: "openai",
@@ -90,7 +79,7 @@ export function getModelSvg(id) {
   return data[modelId] || "";
 }
 
-export function prettyObject(msg) {
+export function prettyObject(msg: any) {
   const obj = msg;
   if (typeof msg !== "string") {
     msg = JSON.stringify(msg, null, "  ");
@@ -104,7 +93,7 @@ export function prettyObject(msg) {
   return ["```json", msg, "```"].join("\n");
 }
 
-export function prefixRobotIDs(robotIDs) {
+export function prefixRobotIDs(robotIDs: string[]) {
   return robotIDs.map((id) => "C2C" + id);
 }
 
@@ -114,9 +103,9 @@ export function prefixRobotIDs(robotIDs) {
  * @param {string} type - 头像类型 ("local" 或 "cloud")，默认为 "local"
  * @returns {string} 头像 URL
  */
-export const getAvatarUrl = (id, type = "local") => {
+export const getAvatarUrl = (id: string, type = "local") => {
   // icon.png
-  const suffix = AssistantAvatar[getModelType(id)] || "";
+  const suffix = AssistantAvatar[getModelType(id) as ModelProvider] || "";
   if (type === "local") {
     return new URL(`../assets/images/model-provider/${suffix}`, import.meta.url).href;
   } else {
@@ -129,7 +118,7 @@ export const getAvatarUrl = (id, type = "local") => {
  * @param {string} id - 会话 ID C2C@RBT#005
  * @returns {string} 头像 URL 或空字符串
  */
-export function getAiAvatarUrl(id) {
+export function getAiAvatarUrl(id: string) {
   if (id.includes("@RBT#")) {
     return getAvatarUrl(id);
   } else {

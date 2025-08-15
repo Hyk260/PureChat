@@ -1,3 +1,4 @@
+import { ModelProvider } from "@/ai/types/type";
 import { OpenAiApi, OpenAIModelValue, OpenaiConfig } from "@/ai/platforms/openai/index";
 import { GitHubApi, GitHubModelValue, GitHubConfig } from "@/ai/platforms/github/index";
 import { ZeroOneApi, ZeroOneModelValue, ZeroOneConfig } from "@/ai/platforms/zeroone/index";
@@ -14,17 +15,6 @@ export const ROLES = ["system", "user", "assistant"];
 export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
 
 export const REQUEST_TIMEOUT_MS = 15000;
-
-export const ModelProvider = {
-  OpenAI: "openai",
-  ZhiPu: "zhipu",
-  ZeroOne: "zeroone",
-  Qwen: "qwen",
-  DeepSeek: "deepseek",
-  Ollama: "ollama",
-  GitHub: "github",
-  Mistral: "mistral",
-};
 
 export const prompt = [
   {
