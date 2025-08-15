@@ -1,3 +1,10 @@
+import type {
+  RobotState,
+  Model,
+  Prompt,
+  BotToolsFlag
+} from "./types";
+
 import { defineStore } from "pinia";
 import { ModelProvider, modelValue } from "@/ai/constant";
 import { SetupStoreId } from '@/stores/enum';
@@ -8,7 +15,7 @@ import { getModelType, useAccessStore } from "@/ai/utils";
 import WebSearchService from "@/service/WebSearchService";
 
 export const useRobotStore = defineStore(SetupStoreId.Robot, {
-  state: () => ({
+  state: (): RobotState => ({
     model: null,
     promptConfig: null,
     modelConfig: null,
@@ -28,55 +35,56 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
   getters: {
     isVision(): boolean {
       if (useChatStore().isAssistant) {
-        return this.model?.vision;
+        return Boolean(this.model?.vision);
       } else {
         return false;
       }
     },
-    isWebSearchModel() {
+    isWebSearchModel(): boolean {
       if (useChatStore().isAssistant) {
-        return this.model?.webSearch;
+        return Boolean(this.model?.webSearch);
       } else {
         return false;
       }
     },
-    enableWebSearch() {
+    enableWebSearch(): boolean {
       const isWebSearchEnabled = WebSearchService.isWebSearchEnabled();
       const list = useWebSearchStore().checkProviders;
       return this.isWebSearchModel && isWebSearchEnabled && list.includes(this.modelProvider);
     },
-    currentProviderPrompt() {
+    currentProviderPrompt(): Prompt | null {
       return this.promptStore[this.modelProvider]?.[0] || null;
     },
-    isOllama() {
+    isOllama(): boolean {
       return [ModelProvider.Ollama].includes(this.modelProvider);
     },
-    isShowPromptTitle() {
-      return this.promptConfig?.meta?.title && useChatStore().isAssistant;
+    isShowPromptTitle(): boolean {
+      return Boolean(this.promptConfig?.meta?.title && useChatStore().isAssistant);
     },
-    getPromptTitle() {
+    getPromptTitle(): string {
       if (!this.isShowPromptTitle) return "";
-      const prompt = this.promptConfig.meta || {};
+      const prompt = this.promptConfig?.meta;
+      if (!prompt) return "";
       const avatar = prompt.avatar || "";
       const title = prompt.title || "";
       if (!avatar && !title) return "";
       return `${avatar} ${title}`;
     },
-    getBotMessageCount() {
+    getBotMessageCount(): number {
       return this.modelConfig?.historyMessageCount || 1;
     }
   },
   actions: {
-    setAccessStore(data, provider) {
+    setAccessStore(data: any, provider: string): void {
       this.accessStore[provider] = data;
     },
-    setModelStore(data, provider) {
+    setModelStore(data: any, provider: string): void {
       this.modelStore[provider] = data;
     },
-    setPromptStore(data, provider) {
+    setPromptStore(data: Prompt[], provider: string): void {
       this.promptStore[provider] = data;
     },
-    updateModelConfig() {
+    updateModelConfig(): void {
       const provider = getModelType(useChatStore().toAccount);
       if (!provider) {
         console.log("provider is null");
@@ -84,25 +92,32 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       }
       this.modelProvider = provider;
       const model = useAccessStore(provider)?.model;
-      const data = cloneDeep(modelValue[provider].Model.options.chatModels);
+      const providerData = modelValue[provider];
+      if (!providerData?.Model?.options?.chatModels) {
+        console.log("provider data not found");
+        return;
+      }
+      const data = cloneDeep(providerData.Model.options.chatModels);
       const checkModel = data.find((item) => item.id === model);
       this.setModelConfig(provider);
       this.setPromptConfig(this.promptStore[provider]?.[0] || null)
-      this.setModel(checkModel);
+      if (checkModel) {
+        this.setModel(checkModel as Model);
+      }
     },
-    setDefaultProvider(data) {
+    setDefaultProvider(data: string): void {
       this.defaultProvider = data
     },
-    updataBotToolsFlag(data) {
-      this.isShowBotTools = data?.functionCall || false;
+    updataBotToolsFlag(data: BotToolsFlag): void {
+      this.isShowBotTools = Boolean(data?.functionCall);
     },
-    setModelConfig(provider) {
+    setModelConfig(provider: string): void {
       this.modelConfig = useAccessStore(provider);
     },
-    setModel(value) {
+    setModel(value: Model | null): void {
       this.model = value;
     },
-    setPromptConfig(value) {
+    setPromptConfig(value: Prompt | null): void {
       this.promptConfig = value;
     },
   },

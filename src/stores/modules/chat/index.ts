@@ -338,7 +338,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
 
       if (useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel) {
         const custom = { key: "webSearch", payload: { text: "" } };
-        custom.payload.text = await generateReferencePrompt({ content: message?.payload?.text });
+        custom.payload.text = await generateReferencePrompt({ content: message?.payload?.text }) || "";
         message.cloudCustomData = getCloudCustomData(custom);
       }
       // 发送消息
@@ -364,7 +364,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         }, 50);
       }
     },
-    async updateMessageList(data) {
+    async updateMessageList(data: DB_Message) {
       if (!timProxy.isSDKReady) {
         console.warn("TIM SDK 未初始化");
         return
@@ -376,7 +376,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       emitter.emit("updateScroll");
       setMessageRead(data);
     },
-    async addConversation(action) {
+    async addConversation(action: { sessionId: string }) {
       const { sessionId } = action;
       const { conversation: data } = await getConversationProfile({ sessionId });
       this.updateSelectedConversation(data);
@@ -401,13 +401,17 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.isMentionModalVisible = false;
       }
     },
-    setForwardData({ type, payload }: { type: string, payload: any }) {
+    setForwardData({ type, payload }: { type: string, payload?: DB_Message | null }) {
       switch (type) {
         case "set":
-          this.forwardData.set(payload.ID, payload);
+          if (payload) {
+            this.forwardData.set(payload?.ID, payload);
+          }
           break;
         case "del":
-          this.forwardData.delete(payload.ID);
+          if (payload) {
+            this.forwardData.delete(payload?.ID);
+          }
           break;
         case "clear":
           this.forwardData.clear();
@@ -424,7 +428,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     clearSelectedMessageIds() {
       this.selectedMessageIds.clear();
     },
-    toggleMessageSelection(item, forceChecked = null) {
+    toggleMessageSelection(item: DB_Message, forceChecked = null) {
       const isCurrentlySelected = this.selectedMessageIds.has(item.ID);
       const willBeSelected = forceChecked !== null ? forceChecked : !isCurrentlySelected;
       
@@ -476,7 +480,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.clearCurrentMessage();
       }
     },
-    setRecently({ data = {}, type }) {
+    setRecently({ data = '', type }: { data: string, type: string }) {
       switch (type) {
         case "add": {
           this.recently.add(data);
