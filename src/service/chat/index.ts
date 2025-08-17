@@ -1,5 +1,6 @@
+import type { ChatSDK } from './types/tencent-cloud-chat';
 import emitter from "@/utils/mitt-bus";
-import chat from "@/utils/IM/im-sdk/tim";
+import { pureChatService as chat } from "./PureChatService";
 import { C2C_ROBOT_COLLECT } from "@/ai/constant";
 import { scrollToDomPosition } from "@/utils/chat/index";
 import { setMessageRead } from "@/service/im-sdk-api/index";
@@ -13,7 +14,6 @@ import {
   getConversationList,
   kickedOutReason,
 } from "./utils/index";
-// export * from "@/service/chat";
 
 /**
  * 浏览器窗口焦点状态监听
@@ -31,43 +31,21 @@ function isRobotId(data) {
 }
 
 export class TIMProxy {
+  private chatSDK: ChatSDK | null = null
+  private userID: string = ""
+  private userSig: string = ""
+  private userProfile: any = {}
+  private once: boolean = false
+  private isSDKReady: boolean = false
+  private GROUP_TIP_TYPES: any = {}
+  private GROUP_SYSTEM_NOTICE_TYPES: any = {}
+
   constructor() {
-    /**
-     * 当前登录用户ID
-     * @type {string}
-     */
-    this.userID = "";
-
-    /**
-     * 用户签名，用于 IM SDK 登录验证
-     * @type {string}
-     */
-    this.userSig = "";
-
-    /**
-     * IM 用户详细信息
-     * @type {Object}
-     */
-    this.userProfile = {};
-
-    /**
-     * 防止重复初始化标识
-     * @type {boolean}
-     * @private
-     */
-    this.once = false;
-
-    /**
-     * SDK 就绪状态
-     * @type {boolean}
-     */
-    this.isSDKReady = false;
-
-    /**
-     * 群组操作类型映射
-     * @type {Object}
-     * @private
-     */
+    // this.userID = "";
+    // this.userSig = "";
+    // this.userProfile = {};
+    // this.once = false;
+    // this.isSDKReady = false;
     this.GROUP_TIP_TYPES = {
       MEMBER_JOIN: 1,        // 有成员加群
       MEMBER_QUIT: 2,        // 有群成员退群
@@ -75,23 +53,12 @@ export class TIMProxy {
       MEMBER_SET_ADMIN: 4,   // 有群成员被设为管理员
       MEMBER_CANCELED_ADMIN: 5 // 有群成员被撤销管理员
     };
-
-    /**
-     * 群系统通知类型映射
-     * @type {Object}
-     * @private
-     */
     this.GROUP_SYSTEM_NOTICE_TYPES = {
       KICKED_OUT: 4,    // 被踢出群组
       GROUP_DISMISSED: 5 // 群组被解散
     };
   }
 
-  /**
-   * 保存当前实例状态到本地存储
-   * 用于页面刷新后恢复状态
-   * @private
-   */
   saveSelfToLocalStorage() {
     const stateData = {
       userID: this.userID,
@@ -102,11 +69,6 @@ export class TIMProxy {
     localStg.set("timProxy", stateData);
   }
 
-  /**
-   * 从本地存储加载实例状态
-   * 用于页面刷新后恢复状态
-   * @private
-   */
   loadSelfFromLocalStorage() {
     const stateData = localStg.get("timProxy");
     if (!stateData) return;
@@ -114,13 +76,6 @@ export class TIMProxy {
     Object.assign(this, stateData);
   }
 
-  /**
-   * 初始化 TIM 代理
-   * 设置事件监听器，开始监听 IM SDK 事件
-   * 
-   * @public
-   * @example
-   */
   init() {
     console.log("[chat] TIMProxy 开始初始化");
 
@@ -141,10 +96,14 @@ export class TIMProxy {
    * 根据运行模式（本地/云端）注册不同的事件监听器
    * @private
    */
-  initListener() {
+  async initListener() {
+    debugger
+    this.chatSDK = await chat.initialize();
+    
     // 本地模式需要手动初始化
     if (__LOCAL_MODE__) {
-      chat.initialize();
+      await this.chatSDK.stateReady()
+      console.log(this.chatSDK)
     }
 
     // 核心事件监听（本地模式和云端模式都需要）
@@ -163,6 +122,8 @@ export class TIMProxy {
    * @private
    */
   registerCoreEvents() {
+    if (!this.chatSDK) return;
+
     const coreEvents = [
       { event: "sdkStateReady", handler: this.onReadyStateUpdate },
       { event: "sdkStateNotReady", handler: this.onReadyStateUpdate },
@@ -172,7 +133,7 @@ export class TIMProxy {
     ];
 
     coreEvents.forEach(({ event, handler }) => {
-      chat.on(event, handler, this);
+      this.chatSDK!.on(event, handler, this);
     });
   }
 
@@ -181,6 +142,8 @@ export class TIMProxy {
    * @private
    */
   registerCloudEvents() {
+    if (!this.chatSDK) return;
+
     const cloudEvents = [
       { event: "onMessageRevoked", handler: this.onMessageRevoked },
       { event: "onGroupListUpdated", handler: this.onUpdateGroupList },
@@ -194,7 +157,7 @@ export class TIMProxy {
     ];
 
     cloudEvents.forEach(({ event, handler }) => {
-      chat.on(event, handler, this);
+      this.chatSDK!.on(event, handler, this);
     });
   }
 
@@ -205,7 +168,7 @@ export class TIMProxy {
    * @param {Object} params - 事件参数
    * @param {string} params.name - 状态名称
    */
-  onReadyStateUpdate({ name }) {
+  onReadyStateUpdate({ name })  {
     console.log("[chat] SDK 状态更新:", name);
     this.isSDKReady = name === "sdkStateReady";
     if (!this.isSDKReady) {
@@ -223,7 +186,7 @@ export class TIMProxy {
    */
   async fetchUserProfile() {
     try {
-      const { code, data } = await chat.getMyProfile();
+      const { code, data } = await this.chatSDK!.getMyProfile();
 
       if (code !== 0) {
         useAppStore().showMessage({
@@ -234,7 +197,7 @@ export class TIMProxy {
       }
 
       this.userProfile = data;
-      this.userID = chat.getLoginUser();
+      this.userID = this.chatSDK!.getLoginUser();
 
       // 同步到本地存储和全局状态
       this.saveSelfToLocalStorage();
@@ -451,7 +414,7 @@ export class TIMProxy {
       case "granted":
         this.handleNotify(message);
         break;
-        // 拒绝显示通知
+      // 拒绝显示通知
       case "denied":
         this.handleElNotification(message);
         break;

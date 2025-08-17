@@ -2358,7 +2358,7 @@ export declare class ChatSDK {
    */
   modifyInvitation(options: MODIFY_INVITATION_OPTIONS): Promise<any>;
 
-  callExperimentalAPI(key: string, options: any)
+  callExperimentalAPI(key: string, options: any) : Promise<any>;
 }
 
 export interface CREATE_OPTIONS {
@@ -2391,7 +2391,7 @@ export interface CREATE_OPTIONS {
 /**
  * TencentCloudChat is the namespace of the Chat Web SDK and provides the static method create() for creating SDK instances.
  */
-declare module TencentCloudChat {
+declare namespace TencentCloudChat {
   /**
    * Factory function of the Chat Web SDK, which is used to create SDK instances.
    * Before connecting, you need to create an Chat application in the Chat console and obtain the SDKAppID.

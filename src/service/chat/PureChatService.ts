@@ -4,26 +4,36 @@ import { TencentChatService } from "./TencentChatService"
 
 export class PureChatService {
   private static instance: PureChatService | null = null
-  private chatService: ChatSDK
-  private readonly isLocalMode: boolean
+  private chatService: LocalChatService | TencentChatService
+  private chatSDK: ChatSDK | null = null
+  private isLocalMode: boolean
 
-  /**
-   * 私有构造函数，确保单例模式
-   */
   private constructor() {
     this.isLocalMode = typeof __LOCAL_MODE__ !== "undefined" ? __LOCAL_MODE__ : false
 
     if (this.isLocalMode) {
       console.log("🏠 PureChatService: 使用本地聊天模式")
-      this.chatService = await new LocalChatService().initialize()
+      this.chatService = new LocalChatService()
     } else {
       console.log("☁️ PureChatService: 使用腾讯云聊天模式")
-      this.chatService = await new TencentChatService().initialize()
+      this.chatService = new TencentChatService()
     }
+
+    this.initialize()
 
     if (import.meta.env.DEV) {
       this.setupDebugTools()
     }
+  }
+
+  async initialize(): Promise<ChatSDK> {
+    if (this.chatService instanceof TencentChatService) {
+      this.chatSDK = await this.chatService.initialize();
+    } else {
+      this.chatSDK = await this.chatService.initialize()
+    }
+
+    return this.chatSDK
   }
 
   /**
@@ -69,7 +79,11 @@ export class PureChatService {
   }
 
   public getChatService(): LocalChatService | TencentChatService {
-    return this.chatService.
+    return this.chatService
+  }
+
+  public getChatSDK(): ChatSDK | null {
+    return this.chatSDK
   }
 
   destroy(): void {

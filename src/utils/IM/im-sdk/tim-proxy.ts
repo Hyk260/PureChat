@@ -1,37 +1,15 @@
+import TencentCloudChatModule from "@/service/chat/types/tencent-cloud-chat";
+import { ChatSDK } from "@/service/chat/types/tencent-cloud-chat";
 import { localChat } from "@/utils/IM/chat/local";
 
-// 类型定义
 // 基础类型定义
 type LogLevel = 0 | 1 | 2 | 3 | 4; // DEBUG | INFO | WARN | ERROR | NONE
-type EventCallback = (...args: any[]) => void;
-
-interface ChatInstance {
+interface ChatInstance extends ChatSDK {
   [key: string]: any;
-  setLogLevel?: (level: LogLevel) => void;
-  registerPlugin?: (plugin: Record<string, any>) => void;
-  getLoginUser?: () => Promise<any>;
-  login?: (credentials: any) => Promise<any>;
-  logout?: () => Promise<any>;
-  on?: (event: string, callback: EventCallback) => void;
-  off?: (event: string, callback: EventCallback) => void;
-  sendMessage?: (message: any) => Promise<any>;
-  getMessageList?: (options: any) => Promise<any>;
-  getConversationList?: () => Promise<any>;
 }
 
 interface LocalChatInstance {
   [key: string]: any;
-}
-
-interface TencentCloudChatModule {
-  default: any;
-}
-
-interface TencentCloudChat {
-  create: (config: {
-    SDKAppID: number;
-    modules?: Record<string, any>;
-  }) => ChatInstance;
 }
 
 interface TIMUploadPlugin {
@@ -46,17 +24,6 @@ interface SignalingModule {
   default: any;
 }
 
-interface DebugInterface {
-  getInstance: () => ChatInstance | null;
-  getInitStatus: () => { instance: boolean; isInitializing: boolean };
-  forceReinit: () => Promise<any>;
-  getPerformanceInfo: () => {
-    initStartTime: number | null;
-    currentTime: number;
-    timeSinceInit: number | null;
-  };
-}
-
 interface ProxyHandler<T> {
   get(target: T, propKey: string | symbol): any;
   has(target: T, propKey: string | symbol): boolean;
@@ -64,13 +31,6 @@ interface ProxyHandler<T> {
   getOwnPropertyDescriptor?(target: T, propKey: string | symbol): PropertyDescriptor | undefined;
   defineProperty?(target: T, propKey: string | symbol, descriptor: PropertyDescriptor): boolean;
   deleteProperty?(target: T, propKey: string | symbol): boolean;
-}
-
-// 全局类型声明
-declare global {
-  interface Window {
-    __TIM_DEBUG__: DebugInterface;
-  }
 }
 
 /**
@@ -83,18 +43,8 @@ let initStartTime: number | null = null;      // 初始化开始时间（性能�
 
 const LOCAL_MODE: boolean = __LOCAL_MODE__;
 
-/**
- * 初始化聊天 SDK
- * 
- * 支持两种模式：
- * 1. 本地模式 (LOCAL_MODE=true) - 使用本地聊天实现
- * 2. 腾讯云模式 (默认) - 使用腾讯云 IM SDK
- * 
- * @returns {Promise<ChatInstance>} 初始化后的聊天 SDK 实例
- * @throws {Error} 初始化失败时抛出错误
- * 
- */
 async function initChat(): Promise<ChatInstance> {
+
   initStartTime = performance.now();
 
   try {
@@ -114,16 +64,7 @@ async function initChat(): Promise<ChatInstance> {
     // 腾讯云模式：动态加载腾讯云 IM SDK
     console.log('☁️ 加载腾讯云 IM SDK 模块...');
 
-    /**
-     * 并行加载所有必需的模块
-     * 使用 Promise.all 提高加载效率
-     * 
-     * 模块说明：
-     * - TencentCloudChat: 核心 IM SDK
-     * - GroupModule: 群组功能模块
-     * - SignalingModule: 信令功能模块  
-     * - TIMUploadPlugin: 文件上传插件
-     */
+    
     const moduleLoadStart: number = performance.now();
 
     const [
@@ -273,60 +214,6 @@ const handler: ProxyHandler<Record<string, never>> = {
   }
 };
 
-/**
- * IM SDK 代理对象
- */
 const tim: ChatInstance = new Proxy({}, handler);
-
-if (import.meta.env.DEV) {
-  /**
-   * 开发环境下暴露调试接口
-   * 可以通过浏览器控制台访问这些调试功能
-   */
-  const debugInterface: DebugInterface = {
-    getInstance: (): ChatInstance | null => instance,
-    getInitStatus: (): { instance: boolean; isInitializing: boolean } => ({ 
-      instance: !!instance, 
-      isInitializing 
-    }),
-
-    forceReinit: async (): Promise<any> => {
-      console.log('🔄 强制重新初始化 IM SDK...');
-      instance = null;
-      isInitializing = false;
-      initPromise = null;
-
-      return await tim.getLoginUser?.();
-    },
-
-    getPerformanceInfo: (): {
-      initStartTime: number | null;
-      currentTime: number;
-      timeSinceInit: number | null;
-    } => ({
-      initStartTime,
-      currentTime: performance.now(),
-      timeSinceInit: initStartTime ? performance.now() - initStartTime : null
-    })
-  };
-
-  window.__TIM_DEBUG__ = debugInterface;
-
-  console.log('🔧 开发模式：IM SDK 调试工具已启用');
-  console.log('使用 window.__TIM_DEBUG__ 访问调试功能');
-}
-
-// 导出类型定义供其他模块使用
-export type {
-  ChatInstance,
-  LocalChatInstance,
-  TencentCloudChat,
-  TIMUploadPlugin,
-  GroupModule,
-  SignalingModule,
-  DebugInterface,
-  LogLevel,
-  EventCallback
-};
 
 export default tim;

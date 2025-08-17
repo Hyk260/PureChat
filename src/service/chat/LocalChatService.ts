@@ -1,4 +1,4 @@
-import type { ChatSDK } from './types/tencent-cloud-chat';
+import type { ChatSDK, CREATE_OPTIONS } from './types/tencent-cloud-chat';
 import { cloneDeep } from "lodash-es";
 import { getTime } from "@/utils/common";
 import { uuid } from "@/utils/uuid";
@@ -8,33 +8,49 @@ import { MessageModel } from "@/database/models/message";
 import { ConversationList, UserProfile, BaseElemMessage, ProvidersList } from '@database/config';
 import emitter from "@/utils/mitt-bus";
 
-export class LocalChatService implements ChatSDK {
-  isInitialized = false;
+export class LocalChatService {
+  private static instance: LocalChatService | null = null
 
   constructor() {
 
   }
 
-  /**
-   * 初始化聊天系统
-   * 加载会话列表并触发就绪事件
-   * @private
-   * @returns {Promise<void>}
-   */
+  public static getInstance(): LocalChatService {
+    if (!LocalChatService.instance) {
+      LocalChatService.instance = new LocalChatService();
+    }
+    return LocalChatService.instance;
+  }
+
   async initialize() {
-    if (this.isInitialized) return;
-
-    try {
+    try {      
       const conversationList = await this.loadConversationList();
-
-      this.isInitialized = true;
 
       this.emit("sdkStateReady", { name: "sdkStateReady" });
       this.emit("onConversationListUpdated", { data: conversationList });
+
+      return this.create({});
     } catch (error) {
       console.error("LocalChatService 初始化失败:", error);
       throw error;
     }
+  }
+
+  /**
+   * 创建聊天实例
+   */
+  create(data): ChatSDK {
+    localStg.set("User-Model", { username: UserProfile.userID });
+    console.log("create local chat", data);
+    return LocalChatService.getInstance();
+  }
+
+  async stateReady() {
+    debugger
+    const conversationList = await this.loadConversationList();
+
+    this.emit("sdkStateReady", { name: "sdkStateReady" });
+    this.emit("onConversationListUpdated", { data: conversationList });
   }
 
   /**
@@ -50,17 +66,6 @@ export class LocalChatService implements ChatSDK {
       console.error("加载会话列表失败:", error);
       return [];
     }
-  }
-
-  /**
-   * 创建聊天实例
-   * @param {Object} [data] 创建数据
-   * @returns {LocalChatService} LocalChatService 实例
-   */
-  create(data) {
-    localStg.set("User-Model", { username: UserProfile.userID });
-    console.log("create local chat", data);
-    return LocalChatService.getInstance();
   }
 
   /**
@@ -83,11 +88,6 @@ export class LocalChatService implements ChatSDK {
     emitter.off(event, handler);
   }
 
-  /**
-   * 触发事件
-   * @param {string} eventName 事件名称
-   * @param {*} data 事件数据
-   */
   emit(eventName, handler) {
     emitter.emit(eventName, handler);
   }
@@ -492,8 +492,6 @@ export class LocalChatService implements ChatSDK {
    */
   async logout() {
     try {
-      this.isInitialized = false;
-
       return {
         code: 0,
         data: { message: {} },

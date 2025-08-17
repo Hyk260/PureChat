@@ -7,27 +7,6 @@ import { MessageModel } from "@/database/models/message";
 import { ConversationList, UserProfile, BaseElemMessage, ProvidersList } from '@database/config';
 import emitter from "@/utils/mitt-bus";
 
-/**
- * 消息类型常量
- * @readonly
- * @enum {string}
- */
-export const MessageType = {
-  TEXT: "TIMTextElem",
-  FILE: "TIMFileElem",
-  CUSTOM: "TIMCustomElem"
-};
-
-/**
- * 会话类型常量
- * @readonly
- * @enum {string}
- */
-export const ConversationType = {
-  C2C: "C2C", // 单聊
-  GROUP: "GROUP" // 群聊
-};
-
 export class LocalChat {
   /**
    * 单例实例
@@ -68,7 +47,7 @@ export class LocalChat {
    * @private
    * @returns {Promise<void>}
    */
-  async initialize() {
+  async initialize()  {
     if (this.isInitialized) return;
 
     try {

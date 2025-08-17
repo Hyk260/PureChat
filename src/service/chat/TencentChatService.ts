@@ -1,4 +1,5 @@
 import type TencentCloudChatModule from './types/tencent-cloud-chat';
+import type { ChatSDK } from './types/tencent-cloud-chat';
 
 /**
  * 腾讯云聊天服务实现
@@ -11,7 +12,7 @@ export class TencentChatService {
   /**
    * 初始化腾讯云聊天服务
    */
-  async initialize() {
+  async initialize(): Promise<ChatSDK> {
     const initStartTime = performance.now()
 
     try {
@@ -87,5 +88,3 @@ export class TencentChatService {
 }
 
 export const tencentChatService = new TencentChatService()
-
-export default tencentChatService
