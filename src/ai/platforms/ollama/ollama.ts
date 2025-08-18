@@ -121,10 +121,10 @@ export default class OllamaAI {
         messages: this.buildOllamaMessages(payload.messages),
         model: payload.model,
         options: {
-          frequency_penalty: payload.frequency_penalty,
-          presence_penalty: payload.presence_penalty,
-          temperature: payload.temperature,
-          top_p: payload.top_p,
+          frequency_penalty: payload.frequency_penalty || 0,
+          presence_penalty: payload.presence_penalty || 0,
+          temperature: payload.temperature || 1,
+          top_p: payload.top_p || 1,
           // images: [],
         },
         stream: true,
@@ -134,11 +134,11 @@ export default class OllamaAI {
       const [prodStream, debugStream] = convertIterableToStream(response).tee();
 
       // if (DEBUG_OLLAMA_CHAT_COMPLETION === '1') {
-      //   debugStream(debug).catch(console.error);
+      //   debugStream(debugStream).catch(console.error);
       // }
 
       return StreamingResponse(OllamaStream(prodStream, options?.callback), {
-        headers: options?.headers as Record<string, string>
+        headers: options?.headers || {}
       });
     } catch (error) {
       const e = error as {

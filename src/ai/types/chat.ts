@@ -1,3 +1,5 @@
+import { FewShots } from '@/types/llm';
+
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 
 interface OnFinishData {
@@ -99,7 +101,6 @@ export interface ChatStreamPayload {
     effort?: string;
     summary?: string;
   };
-  reasoning_effort?: 'low' | 'medium' | 'high';
   responseMode?: 'stream' | 'json';
   /**
    * @title 是否开启流式请求
@@ -142,4 +143,25 @@ export interface ChatMethodOptions {
    * userId for the chat completion
    */
   user?: string;
+}
+
+export interface LLMConfig {
+  model: string;
+  temperature?: number;
+  top_p?: number;
+  stream?: boolean;
+  presence_penalty?: number;
+  frequency_penalty?: number;
+}
+
+
+export interface ChatOptions {
+  messages: FewShots;
+  config: LLMConfig;
+
+  onUpdate?: ({ message, fetchCount, think }: { message: string, fetchCount?: string, think?: string }) => void;
+  onFinish: ({ message, think }: { message: string, think?: string }) => void;
+  onReasoningMessage?: (message: string) => void;
+  onError?: (err: Error | string) => void;
+  onController?: (controller: AbortController) => void;
 }

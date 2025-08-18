@@ -1,4 +1,5 @@
 import { ModelProvider, ModelProviderKey } from "@/ai/types/type";
+import { LLMParams } from '@/types/llm';
 import { 
   OPENAI_ID, 
   ZHIPU_ID, 
@@ -22,7 +23,7 @@ import { isEmpty } from "lodash-es";
 /**
  * 获取 AI 模型的配置信息
  */
-export const useAccessStore = (model: ModelProviderKey = ModelProvider.OpenAI) => {
+export const useAccessStore = (model: ModelProviderKey = ModelProvider.OpenAI): LLMParams => {
   const access = useRobotStore().accessStore?.[model] || "";
 
   return isEmpty(access) ? modelConfig[model] : access
@@ -48,7 +49,7 @@ export function getModelType(modelId: string) {
   return modelMapping[modelId.replace("C2C", "")] || "";
 }
 
-export function getModelId(model: ModelProvider) {
+export function getModelId(model: ModelProviderKey) {
   if (!model) return "";
   const modelMapping = {
     [ModelProvider.OpenAI]: OPENAI_ID,

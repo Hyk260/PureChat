@@ -1,4 +1,6 @@
 import { ModelProvider, ModelProviderKey } from "@/ai/types/type";
+import { FewShots, LLMParams } from '@/types/llm';
+import { ChatOptions } from "../../types/chat";
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
 import { REQUEST_TIMEOUT_MS } from "@/ai/constant";
 import {
@@ -57,29 +59,22 @@ export class OpenAiApi {
 
   /**
    * 获取提示词存储
-   * @returns {Object}
    */
   getPromptStore() {
     try {
-      const _prompt = useRobotStore().currentProviderPrompt?.prompt;
-      const validPrompts = _prompt?.filter((t) => t.content) || [];
+      const prompts = useRobotStore().currentProviderPrompt?.prompt;
+      const validPrompts = prompts?.filter((t) => t.content) || [];
       return validPrompts;
     } catch (error) {
       console.error("获取提示词失败:", error)
-      return {
-        content: "提示词",
-        role: "system",
-      };
+      return []
     }
   }
 
   /**
    * 处理提示词消息
-   * @param {Array} messages - 消息列表
-   * @param {Object} modelConfig - 模型配置
-   * @returns {Array} 处理后的消息列表
    */
-  processPromptMessages(messages, modelConfig) {
+  processPromptMessages(messages: FewShots, modelConfig: LLMParams) {
     let combinedMessages = [];
     const validPrompts = this.getPromptStore();
     const historyCount = Math.max(Number(modelConfig.historyMessageCount) || 0, 0);
@@ -99,19 +94,10 @@ export class OpenAiApi {
     return combinedMessages;
   }
 
-  /**
-   * 获取访问存储配置
-   * @param {string} model - 模型标识，默认使用当前提供商
-   * @returns {Object} 访问配置对象
-   */
   accessStore(model = this.provider) {
     return useAccessStore(model);
   }
 
-  /**
-   * 获取请求头
-   * @returns {Object} HTTP请求头对象
-   */
   getHeaders(): Record<string, string> {
     const headers = {
       "Content-Type": "application/json",
@@ -121,25 +107,18 @@ export class OpenAiApi {
     return headers;
   }
 
-  /**
-   * 提取响应消息
-   * @param {Object} response - API响应
-   * @returns {Promise<string|Array>} 提取的消息内容
-   */
-  async extractMessage(response: any) {
-    // DALL-E 3模型返回图片URL
-    if (response.data) {
-      return await extractImageMessage(response);
+  async extractMessage(res: any) {
+    if (res?.error) {
+      return "```\n" + JSON.stringify(res, null, 4) + "\n```";
     }
-    return response.choices?.[0]?.message?.content ?? response;
+    // DALL-E 3模型返回图片URL
+    if (res.data) {
+      return await extractImageMessage(res);
+    }
+    return res.choices?.[0]?.message?.content ?? res;
   }
 
-  /**
-   * 客户端获取方法（用于Ollama等本地模型）
-   * @param {Array} messages - 消息列表
-   * @returns {Promise<Object>} 响应结果
-   */
-  async fetchOnClient(messages) {
+  async fetchOnClient(messages: FewShots) {
     const payload = this.accessStore();
     const options = { messages, ...payload }
     return await new OllamaAI().chat(options, {
@@ -151,20 +130,13 @@ export class OpenAiApi {
     });
   }
 
-  /**
-   * 启用客户端获取
-   * @param {Array} messages - 消息列表
-   * @param {Object} modelConfig - 模型配置
-   * @returns {Promise<Function>} 获取函数
-   */
-  async enableFetchOnClient(messages, modelConfig) {
+  async enableFetchOnClient(messages: FewShots, modelConfig: LLMParams) {
     let fetcher = null; //  typeof fetch
     const processedMessages = this.processPromptMessages(messages, modelConfig);
     fetcher = async () => {
       try {
         return await this.fetchOnClient(processedMessages);
       } catch (error) {
-        // debugger
         const { errorType, error: errorContent } = error;
         const errorMessage = errorContent || error
         // 跟踪服务器端的错误
@@ -186,7 +158,7 @@ export class OpenAiApi {
    * @param {Object} options - 选项
    * @returns {Object} 请求负载
    */
-  generateRequestPayload(messages, modelConfig, options) {
+  generateRequestPayload(messages: FewShots, modelConfig: LLMParams, options: any) {
     // DALL-E 3特殊处理
     if (_isDalle3(modelConfig.model)) {
       return generateDalle3RequestPayload(modelConfig)
@@ -211,12 +183,7 @@ export class OpenAiApi {
     return payload;
   }
 
-  /**
-   * 聊天接口
-   * @param {Object} options - 聊天选项
-   * @returns {Promise<void>}
-   */
-  async chat(options) {
+  async chat(options: ChatOptions) {
     const messages = await transformData(options.messages);
     const modelConfig = {
       ...this.accessStore(),
@@ -261,11 +228,8 @@ export class OpenAiApi {
 
   /**
    * 处理流式响应错误
-   * @param {Response} response - 响应对象
-   * @param {Object} options - 选项
-   * @param {Function} finish - 完成回调
    */
-  async handleStreamError(response, options, finish) {
+  async handleStreamError(response: Response, options: ChatOptions, finish: () => void) {
     let errorInfo = ""
 
     try {
@@ -292,7 +256,7 @@ export class OpenAiApi {
    * @param {Object} options - 选项
    * @param {Function} finish - 完成回调
    */
-  handleStreamMessage(msg, remainText, reasoningText, options, finish) {
+  handleStreamMessage(msg: any, remainText: string, reasoningText: string, options: ChatOptions, finish: () => void) {
     // debugger
     console.log("[OpenAI] 收到消息:", msg)
 
@@ -326,7 +290,7 @@ export class OpenAiApi {
           const reasoning = choice.delta?.reasoning_content
           if (reasoning) {
             reasoningText += reasoning
-            options.onReasoningMessage?.(reasoningText)
+            options?.onReasoningMessage?.(reasoningText)
           }
         }
       }
@@ -348,16 +312,12 @@ export class OpenAiApi {
 
   /**
    * 处理流式聊天的响应。
-   * @param {string} chatPath - 聊天请求的路径。
-   * @param {object} chatPayload - 聊天请求的有效负载。
-   * @param {object} options - 处理选项，包括错误处理、更新和完成回调。
-   * @param {AbortController} controller - 用于控制请求的 AbortController。
    */
   async handleStreamingChat(
-    chatPath,
-    chatPayload,
-    options,
-    controller,
+    chatPath: string,
+    chatPayload: any,
+    options: ChatOptions,
+    controller: AbortController,
   ) {
     let responseText = ""; // 用于存储完整的响应文本
     let remainText = ""; // 用于存储尚未处理的文本
@@ -438,7 +398,6 @@ export class OpenAiApi {
 
         // text/event-stream EventStreamContentType
         const stream = contentType?.startsWith(EventStreamContentType);
-        // const isRequestError = !res.ok || !stream || res.status !== 200;
 
         // 检查流式响应格式
         const isValidStream = stream && res.ok && res.status === 200
@@ -446,32 +405,6 @@ export class OpenAiApi {
         if (!isValidStream) {
           await handleStreamError(res, options, finish)
         }
-
-        // if (isRequestError) {
-        //   const responseTexts = [responseText];
-        //   let extraInfo = await res.clone().text();
-
-        //   try {
-        //     const resJson = await res.clone().json();
-        //     extraInfo = prettyObject(resJson);
-        //   } catch (e) {
-        //     console.error("[resJson]", e);
-        //   }
-
-        //   if (res.status === 401) {
-        //     options.onError?.(extraInfo);
-        //   }
-
-        //   if (extraInfo) {
-        //     responseTexts.push(extraInfo);
-        //   }
-
-        //   responseText = responseTexts.join("\n\n");
-
-        //   return finish();
-        // } else {
-        //   console.log(res);
-        // }
       },
       onmessage: (msg) => {
         const result = this.handleStreamMessage(msg, remainText, reasoningText, options, finish);
@@ -494,13 +427,8 @@ export class OpenAiApi {
 
   /**
    * 处理非流式聊天
-   * @param {string} chatPath - 聊天路径
-   * @param {Object} chatPayload - 请求负载
-   * @param {Object} options - 选项
-   * @param {AbortController} controller - 控制器
-   * @returns {Promise<void>}
    */
-  async handleNonStreamingChat(chatPath, chatPayload, options, controller) {
+  async handleNonStreamingChat(chatPath: string, chatPayload: any, options: ChatOptions, controller: AbortController) {
     const requestTimeoutId = setTimeout(() => controller?.abort(), REQUEST_TIMEOUT_MS)
 
     try {
@@ -537,7 +465,6 @@ export class OpenAiApi {
 
   /**
    * 更新发送状态
-   * @param {string} action - 操作类型
    */
   updateSendingState(action = "delete") {
     try {
@@ -570,9 +497,8 @@ export class OpenAiApi {
 
   /**
    * 检查连通性
-   * @returns {Promise<Object>} 检查结果
    */
-  async checkConnectivity() {
+  async checkConnectivity(): Promise<{ valid: boolean, error: string }> {
     const url = this.getPath(OpenaiPath.ChatPath);
     const payload = this.accessStore();
 

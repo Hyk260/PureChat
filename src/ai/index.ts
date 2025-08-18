@@ -1,5 +1,6 @@
+import { FewShots, LLMParams } from '@/types/llm';
+import { ModelProvider, ModelProviderKey } from "@/ai/types/type";
 import { ClientApi } from "@/ai/api";
-import { ModelProvider } from "@/ai/types/type";
 import { prettyObject, getAiAvatarUrl } from "@/ai/utils";
 import { createCustomMessage } from "@/service/im-sdk-api/index";
 import { restApi } from "@/service/api/index";
@@ -133,11 +134,8 @@ const createAlertMsg = (startMsg, provider) => {
 
 /**
  * 在发送消息前进行预检查
- * @param {ClientApi} api - ClientApi 实例
- * @param {Object} startMsg - 初始消息对象
- * @returns {boolean} 如果需要阻止发送返回 true，否则返回 false
  */
-const beforeSend = (api, startMsg) => {
+const beforeSend = (api: ClientApi, startMsg: any) => {
   // Ollama 模型不需要 token 检查
   if (api.llm.provider === ModelProvider.Ollama) {
     return false
@@ -154,14 +152,15 @@ const beforeSend = (api, startMsg) => {
   }
 }
 
-/**
- * 聊天服务主入口
- * @param {Object} options - 聊天服务选项
- * @param {Array} options.messages - 消息列表
- * @param {Object} options.chat - 聊天会话参数 (from, to)
- * @param {string} options.provider - 模型提供商
- */
-export const chatService = async ({ messages, chat, provider }) => {
+export const chatService = async ({ 
+  messages, 
+  chat, 
+  provider
+}: {
+  messages: FewShots;
+  chat: { from: string, to: string };
+  provider: ModelProviderKey;
+ }) => {
   const api = new ClientApi(provider);
   const startMsg = createStartMsg(chat);
 
@@ -171,7 +170,7 @@ export const chatService = async ({ messages, chat, provider }) => {
     messages,
     config: {
       stream: true,
-      model: api._config.model,
+      model: api.config().model,
     },
     onUpdate: handleUpdate(startMsg),
     onFinish: handleFinish(startMsg, chat),
@@ -242,10 +241,6 @@ const handleError = (startMsg, chatParams) => async (error) => {
   useChatStore().updateSendingState(chatParams.to, "delete");
 };
 
-/**
- * 处理 API 控制器事件
- * @param {AbortController} controller - AbortController 实例
- */
-const handleController = (controller) => {
+const handleController = (controller: AbortController) => {
   console.log("[chat] onController:", controller);
 };
