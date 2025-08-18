@@ -1,6 +1,6 @@
 import TencentCloudChatModule from "@/service/chat/types/tencent-cloud-chat";
 import { ChatSDK } from "@/service/chat/types/tencent-cloud-chat";
-import { localChat } from "@/utils/IM/chat/local";
+import { localChat } from "@/service/IM/chat/local";
 
 // 基础类型定义
 type LogLevel = 0 | 1 | 2 | 3 | 4; // DEBUG | INFO | WARN | ERROR | NONE

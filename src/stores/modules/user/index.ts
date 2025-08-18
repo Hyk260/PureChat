@@ -14,11 +14,11 @@ import { useAppStore, useChatStore, useAuthStore } from '@/stores/index';
 import { login, logout } from "@/service/api/index"
 import { localStg } from "@/utils/storage"
 import { SetupStoreId } from '@/stores/enum';
-import { timProxy } from '@/utils/IM/index';
+import { timProxy } from '@/service/IM/index';
 import { setLocale } from "@/locales/index";
 
 import router from "@/router"
-import chat from "@/utils/IM/im-sdk/tim"
+import chat from "@/service/IM/im-sdk/tim"
 import emitter from "@/utils/mitt-bus"
 import localAvatar from '@/assets/images/avatar.png';
 

@@ -1,5 +1,5 @@
 import emitter from "@/utils/mitt-bus";
-import chat from "@/utils/IM/im-sdk/tim";
+import chat from "@/service/IM/im-sdk/tim";
 import { C2C_ROBOT_COLLECT } from "@/ai/constant";
 import { scrollToDomPosition } from "@/utils/chat/index";
 import { setMessageRead } from "@/service/im-sdk-api/index";

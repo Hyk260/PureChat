@@ -1,6 +1,6 @@
 import { updateImageSize, getCustomMsgContent } from "@/utils/common";
 import { getCloudCustomData, fileUploading } from "@/utils/chat/index";
-import tim from "@/utils/IM/im-sdk/tim";
+import tim from "@/service/IM/im-sdk/tim";
 
 // 发送消息
 export const sendMessage = async (params) => {

@@ -1,4 +1,4 @@
-import tim from "@/utils/IM/im-sdk/tim";
+import tim from "@/service/IM/im-sdk/tim";
 
 // 群类型
 const GroupType = {

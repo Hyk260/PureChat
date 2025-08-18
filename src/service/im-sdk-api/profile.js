@@ -1,4 +1,4 @@
-import tim from "@/utils/IM/im-sdk/tim";
+import tim from "@/service/IM/im-sdk/tim";
 
 export const getUserProfile = async (userID) => {
   const { code, data } = await tim.getUserProfile({

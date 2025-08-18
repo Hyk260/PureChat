@@ -1,4 +1,4 @@
-import tim from "@/utils/IM/im-sdk/tim";
+import tim from "@/service/IM/im-sdk/tim";
 
 // 获取 SDK 缓存的好友列表
 export const getFriendList = async (params) => {

@@ -1,5 +1,5 @@
-import tim from "@/utils/IM/im-sdk/tim";
-import { timProxy } from "@/utils/IM/index";
+import tim from "@/service/IM/im-sdk/tim";
+import { timProxy } from "@/service/IM/index";
 
 /**
  * 获取未读消息总数

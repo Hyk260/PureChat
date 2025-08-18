@@ -22,7 +22,7 @@ import { localStg } from "@/utils/storage";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { ROBOT_COLLECT } from '@shared/provider/config';
 import { chatService } from "@/ai/index";
-import { timProxy } from "@/utils/IM/index";
+import { timProxy } from "@/service/IM/index";
 import { MessageModel } from "@/database/models/message";
 import { HISTORY_MESSAGE_COUNT } from "@/constants/index";
 import { cloneDeep } from "lodash-es";
