@@ -232,7 +232,7 @@ declare interface GET_USER_PROFILE_OPTIONS {
   userIDList: Array<string>;
 }
 
-declare interface UPDATE_YOUR_PROFILE_OPTIONS {
+export declare interface UPDATE_YOUR_PROFILE_OPTIONS {
   /**
    * Nickname
    */
@@ -520,7 +520,7 @@ declare interface CREATE_GROUP_OPTIONS {
    * - TencentCloudChat.TYPES.GRP_MEETING: meeting group
    * - TencentCloudChat.TYPES.GRP_AVCHATROOM: audio-video group
    */
-  type: TencentCloudChat.TYPES;
+  type: TencentCloudChat.TYPES.GRP_WORK | TencentCloudChat.TYPES.GRP_PUBLIC | TencentCloudChat.TYPES.GRP_MEETING | TencentCloudChat.TYPES.GRP_AVCHATROOM;
   /**
    * Group ID. If no value is specified, the SDK automatically creates a unique group ID.
    */

@@ -13,7 +13,6 @@ import {
   getConversationList,
   kickedOutReason,
 } from "./utils/index";
-// export * from "@/service/chat";
 
 /**
  * 浏览器窗口焦点状态监听

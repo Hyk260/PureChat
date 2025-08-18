@@ -3,14 +3,13 @@ import { timProxy } from "@/service/IM/index";
 
 /**
  * 获取未读消息总数
- * @returns {Promise<number>} 未读消息总数
  */
-export const getUnreadMsg = async () => {
+export const getUnreadMsg = (): number => {
   if (!timProxy.isSDKReady) {
     console.warn("SDK is not ready");
-    return;
+    return 0;
   }
-  return await tim.getTotalUnreadMessageCount();
+  return tim.getTotalUnreadMessageCount();
 };
 
 /**
