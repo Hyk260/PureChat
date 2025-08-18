@@ -1,9 +1,7 @@
 import DeepSeek from "./models";
 
 const docs = __APP_INFO__.pkg.docs;
-const {
-  VITE_DEEPSEEK_BASE_URL
-} = import.meta.env
+const { VITE_DEEPSEEK_BASE_URL} = import.meta.env
 
 export const DeepseekModelValue = () => {
   return {

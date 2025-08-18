@@ -1,3 +1,5 @@
+const { VITE_QWEN_API_KEY, VITE_QWEN_BASE_URL } = import.meta.env
+
 export const QwenConfig = () => {
   return {
     model: "qwen-plus",
@@ -6,7 +8,7 @@ export const QwenConfig = () => {
     presence_penalty: 0,
     frequency_penalty: 0,
     historyMessageCount: 8,
-    token: import.meta.env.VITE_QWEN_API_KEY,
-    openaiUrl: import.meta.env.VITE_QWEN_BASE_URL,
+    token: VITE_QWEN_API_KEY,
+    openaiUrl: VITE_QWEN_BASE_URL,
   };
 };

@@ -1,4 +1,4 @@
-import { ModelProvider } from "@/ai/types/type";
+import { ModelProvider, ModelProviderKey } from "@/ai/types/type";
 import { API_PROVIDER_MAP } from "@/ai/constant";
 import { useAccessStore } from "@/ai/utils";
 import { useRobotStore } from '@/stores/index';
@@ -10,6 +10,9 @@ import { OpenAiApi } from "@/ai/platforms/openai/index";
  */
 export class ClientApi {
   public llm: OpenAiApi;
+  _provider: ModelProviderKey;
+  _config: any;
+  _prompts: any;
 
   constructor(provider = ModelProvider.OpenAI) {
     try {
@@ -24,11 +27,8 @@ export class ClientApi {
 
   /**
    * 根据提供者创建相应的AI提供者实例
-   * @param {string} provider - 要使用的模型提供者
-   * @returns {BaseAiProvider} 相应提供者类的实例
-   * @throws {Error} 如果提供者无效或创建实例失败
    */
-  createProvider(provider) {
+  createProvider(provider: ModelProviderKey) {
     const ProviderClass = API_PROVIDER_MAP[provider]
 
     if (!ProviderClass) {

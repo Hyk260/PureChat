@@ -43,12 +43,36 @@ declare namespace Env {
     readonly VITE_ICON_LOCAL_PREFIX: 'local-icon';
     /** 后端服务基础URL */
     readonly VITE_SERVICE_BASE_URL: string;
+    /** 启动编辑器 */
+    readonly VITE_DEVTOOLS_LAUNCH_EDITOR?: import('vite-plugin-vue-devtools').VitePluginVueDevToolsOptions['launchEditor'];
+
+    /** AI 平台 */
     /** OpenAI API Key */
     readonly VITE_OPENAI_API_KEY: string;
     /** OpenAI 代理 URL */
     readonly VITE_OPENAI_PROXY_URL: string;
-    /** 启动编辑器 */
-    readonly VITE_DEVTOOLS_LAUNCH_EDITOR?: import('vite-plugin-vue-devtools').VitePluginVueDevToolsOptions['launchEditor'];
+    /** DeepSeek API Key */
+    readonly VITE_DEEPSEEK_API_KEY: string;
+    /** DeepSeek API URL */
+    readonly VITE_DEEPSEEK_BASE_URL: string;
+    /** Qwen API Key */
+    readonly VITE_QWEN_API_KEY: string;
+    /** Qwen API URL */
+    readonly VITE_QWEN_BASE_URL: string;
+    /** ZeroOne API Key */
+    readonly VITE_ZEROONE_API_KEY: string;
+    /** ZeroOne API URL */
+    readonly VITE_ZEROONE_BASE_URL: string;
+    /** Ollama API URL */
+    readonly VITE_OLLAMA_PROXY_URL: string;
+    /** Mistral API URL */
+    readonly VITE_MISTRAL_BASE_URL: string;
+    /** Mistral API Key */
+    readonly VITE_MISTRAL_API_KEY: string;
+    /** GitHub API Key */
+    readonly VITE_GITHUB_API_KEY: string;
+    /** GitHub API URL */
+    readonly VITE_GITHUB_PROXY_URL: string;
   }
 }
 

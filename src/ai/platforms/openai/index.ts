@@ -1,4 +1,4 @@
-import { ModelProvider } from "@/ai/types/type";
+import { ModelProvider, ModelProviderKey } from "@/ai/types/type";
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
 import { REQUEST_TIMEOUT_MS } from "@/ai/constant";
 import {
@@ -27,7 +27,9 @@ export const OpenaiPath = {
 };
 
 export class OpenAiApi {
-  constructor(provider) {
+  provider: ModelProviderKey = ModelProvider.OpenAI;
+
+  constructor(provider: ModelProviderKey) {
     this.provider = provider;
   }
   getPath(path: string): string {
@@ -110,7 +112,7 @@ export class OpenAiApi {
    * 获取请求头
    * @returns {Object} HTTP请求头对象
    */
-  getHeaders() {
+  getHeaders(): Record<string, string> {
     const headers = {
       "Content-Type": "application/json",
       "x-requested-with": "XMLHttpRequest",
@@ -338,10 +340,9 @@ export class OpenAiApi {
   }
 
   /**
-   * 检查是否为 Ollama 提供商
-   * @returns {boolean}
+   * 检查是否为 Ollama
    */
-  isOllamaProvider() {
+  isOllamaProvider(): boolean {
     return this.provider === ModelProvider.Ollama
   }
 
@@ -419,6 +420,8 @@ export class OpenAiApi {
       REQUEST_TIMEOUT_MS
     );
 
+    const handleStreamError = this.handleStreamError;
+
     await fetchEventSource(chatPath, {
       ...chatPayload,
       async onopen(res) {
@@ -441,7 +444,7 @@ export class OpenAiApi {
         const isValidStream = stream && res.ok && res.status === 200
 
         if (!isValidStream) {
-          await this.handleStreamError(response, options, finish)
+          await handleStreamError(res, options, finish)
         }
 
         // if (isRequestError) {
