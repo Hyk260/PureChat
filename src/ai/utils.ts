@@ -143,7 +143,7 @@ export function isDalle3(model: string) {
   return "dall-e-3" === model;
 }
 
-export function base64Image2Blob(base64Data, contentType) {
+export function base64Image2Blob(base64Data: string, contentType: string) {
   const byteCharacters = atob(base64Data);
   const byteNumbers = new Array(byteCharacters.length);
   for (let i = 0; i < byteCharacters.length; i++) {
@@ -153,10 +153,10 @@ export function base64Image2Blob(base64Data, contentType) {
   return new Blob([byteArray], { type: contentType });
 }
 
-export async function uploadImage(file) {
+export async function uploadImage(file: File) {
   const body = new FormData();
   body.append("file", file);
-  const res = await fetch(UPLOAD_URL, {
+  const res = await fetch('https://api.openai.com', {
     method: "post",
     body,
     mode: "cors",

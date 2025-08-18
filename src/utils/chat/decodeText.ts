@@ -1,6 +1,6 @@
 import { emojiMap, emojiUrl } from "@/utils/emoji/emoji-map";
 
-export function decodeText(text) {
+export function decodeText(text: string) {
   const renderDom = []; // 存储渲染后的 DOM 元素
   let remainingText = text; // 剩余未处理的文本
   let leftBracketIndex = -1; // 左括号的索引
@@ -23,7 +23,7 @@ export function decodeText(text) {
       } else {
         // 获取表情文本
         const emojiText = remainingText.slice(0, rightBracketIndex + 1);
-        const emoji = emojiMap[emojiText];
+        const emoji = emojiMap[emojiText as keyof typeof emojiMap];
         // 如果是已知表情
         if (emoji) {
           // 将表情推入渲染数组中

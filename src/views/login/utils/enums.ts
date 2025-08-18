@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { $t } from "@/locales/index";
+// import { $t } from "@/locales/index";
 
 export const operates = computed(() => {
   return [

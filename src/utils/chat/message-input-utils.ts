@@ -5,12 +5,8 @@ import emitter from "@/utils/mitt-bus";
 
 /**
  * 将二进制数据转换为 base64 URL 格式
- * @param {string | Buffer} data 要转换的数据，可以是一个字符串或一个 Buffer 对象
- * @param {string} type 数据类型，默认为 "jpeg"
- * @returns {string} 转换后的 base64 URL
- * @throws {Error} 如果缺少数据或数据不是字符串或缓冲区，则会抛出错误
  */
-export const bufferToBase64Url = (data, type = "jpeg") => {
+export const bufferToBase64Url = (data: string | Buffer, type = "jpeg") => {
   if (!data) {
     throw new Error("缺少数据");
   }
@@ -24,10 +20,8 @@ export const bufferToBase64Url = (data, type = "jpeg") => {
 
 /**
  * 将 File 对象转换为 Base64 字符串
- * @param file - 要转换的 File 对象
- * @returns Promise 解析为 Base64 字符串
  */
-export const fileToBase64 = (file) => {
+export const fileToBase64 = (file: File) => {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -39,21 +33,22 @@ export const fileToBase64 = (file) => {
 
 // 使用 fetch API 来获取 Blob 对象
 // 'blob:http://localhost:8080/d5d25c...' => 'data:image/...'
-export async function convertBlobUrlToDataUrl(blobUrl) {
+export async function convertBlobUrlToDataUrl(blobUrl: string) {
   try {
     const response = await fetch(blobUrl);
     const blob = await response.blob();
-    const dataUrl = await fileToBase64(blob);
+    const dataUrl = await fileToBase64(blob as File);
     return dataUrl;
   } catch (error) {
     console.error("Error converting blob to data URL:", error);
+    return "";
   }
 }
 
 /**
  * @description: base64 to blob
  */
-export const dataURLtoBlob = (base64Buf) => {
+export const dataURLtoBlob = (base64Buf: string) => {
   const arr = base64Buf.split(',')
   const typeItem = arr[0]
   const mime = typeItem.match(/:(.*?);/)?.[1]
@@ -72,7 +67,7 @@ export const dataURLtoBlob = (base64Buf) => {
  * @returns {Promise<string>} Promise 对象，resolve 后会返回转换后的 base64 数据
  * @throws {Error} 如果转换失败，则会抛出错误
  */
-export const urlToBase64 = (url) => {
+export const urlToBase64 = (url: string) => {
   return new Promise((resolve, reject) => {
     const image = new Image();
     image.onload = function () {
@@ -97,7 +92,7 @@ export const urlToBase64 = (url) => {
  * @returns {string} 图片的类型（不包括前缀点号），例如 "png"、"jpg"、"gif" 等
  * @throws {Error} 如果无法从输入字符串中提取图像类型，则会抛出错误
  */
-export const getImageType = (str) => {
+export const getImageType = (str: string) => {
   const reg = /\.(png|jpg|gif|jpeg|webp)$/;
   const match = str.match(reg);
   if (!match) {
@@ -344,7 +339,7 @@ export function scrollToMessage(id, delay = 300) {
 }
 
 // 匹配机器人账号
-export const isRobot = (text) => {
+export const isRobot = (text: string) => {
   return /@RBT#/.test(text);
 };
 

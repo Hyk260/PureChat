@@ -6,12 +6,15 @@ const timeline = false;
 const duration = 5 * 60;
 
 // 若当前消息与上一条消息间隔超过5分钟，会进行新的时间戳展示，否则归为上一个聊天单元。
-const isInFiveTime = (curTime, baseTime) => {
+const isInFiveTime = (curTime: number, baseTime: number) => {
   return Math.abs(curTime - baseTime) <= duration;
 };
 
 // start last
-export const getBaseTime = (list, type = "start") => {
+export const getBaseTime = (
+  list: { isTimeDivider: boolean; time: number }[],
+  type = "start"
+) => {
   if (!list.length) return 0;
   let time = 0;
   if (type === "start") {
@@ -30,7 +33,11 @@ export const getBaseTime = (list, type = "start") => {
  * @param {string} [type="start"] - 时间分隔符的位置。可以是"start"或"last"。默认为"start"。
  * @returns {Array} - 添加时间分隔符后的修改后的列表。
  */
-export const addTimeDivider = (list, baseTime = 0, type = "start") => {
+export const addTimeDivider = (
+  list: { isTimeDivider: boolean; time: number; isDeleted: boolean }[],
+  baseTime = 0,
+  type = "start"
+) => {
   if (!useUserStore().timeline) return list;
   if (!Array.isArray(list)) {
     throw new Error("list must be an array");

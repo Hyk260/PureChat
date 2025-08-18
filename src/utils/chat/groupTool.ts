@@ -9,7 +9,7 @@ import { useChatStore } from '@/stores/modules/chat';
  *
  * @returns {Array} 排序后的成员对象数组，按照角色排序。
  */
-export function sortMembersByRole(list) {
+export function sortMembersByRole(list: { role: "Owner" | "Admin" | "Member" }[]) {
   const roles = { Owner: 1, Admin: 2, Member: 3 };
 
   return list.sort((a, b) => {
@@ -23,7 +23,7 @@ export function sortMembersByRole(list) {
  * @param {Object} b - 第二个用户对象，期待有userID属性
  * @returns {number} - 返回-1如果a在b前面，1如果b在a前面，0如果相等
  */
-export const prioritizeRBTUserID = (list) => {
+export const prioritizeRBTUserID = (list: { userID: string }[]) => {
   return list.sort((a, b) => {
     const isAHasRBT = a.userID.includes("@RBT#");
     const isBHasRBT = b.userID.includes("@RBT#");
@@ -33,7 +33,7 @@ export const prioritizeRBTUserID = (list) => {
   });
 };
 
-export function findGroupChat(group) {
+export function findGroupChat(group: { groupID: string }) {
   const { groupID } = group || {};
   nextTick(() => {
     setTimeout(() => {

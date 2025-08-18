@@ -1,4 +1,10 @@
-export const insertMention = (options) => {
+export const insertMention = (options: {
+  id: string;
+  name: string;
+  backward?: boolean;
+  deleteDigit?: number;
+  editor?: any;
+}) => {
   const {
     id,
     name,
