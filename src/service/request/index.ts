@@ -6,10 +6,11 @@ import Axios, {
   type AxiosRequestConfig,
   // type CustomParamsSerializer
 } from "axios";
-
-interface ExtendedAxiosRequestConfig extends AxiosRequestConfig {
-  _retry?: boolean;
-}
+import type {
+  RequestMethods,
+  PureHttpResponse,
+  PureHttpError
+} from "./types.d";
 
 // 状态码错误消息映射
 const statusMessageMap: Record<number, string> = {
@@ -76,14 +77,14 @@ class PureChatHttp {
 
     this.initInterceptors();
   }
-  
+
   initInterceptors(): void {
     this.handleRequest()
     this.handleResponse()
   }
-  
+
   /** 请求拦截 */
-  handleRequest(): void {
+  private handleRequest(): void {
     this.service.interceptors.request.use((config) => {
       if (config.url && !whiteList.includes(config.url)) {
         const token = localStg.get("Access-Token");
@@ -92,11 +93,11 @@ class PureChatHttp {
       return config;
     }, errorHandler);
   }
-  
+
   /** 响应拦截 */
-  handleResponse(): void {
+  private handleResponse(): void {
     this.service.interceptors.response.use(
-      (response) => {
+      (response: PureHttpResponse) => {
         if (response.status >= 200 && response.status < 300) {
           const token = response.headers?.authorization;
           if (token) {
@@ -106,9 +107,9 @@ class PureChatHttp {
         }
         return Promise.reject(response.data);
       },
-      async (error) => {
+      async (error: PureHttpError) => {
         const { config, response } = error;
-        const extendedConfig = config as ExtendedAxiosRequestConfig;
+        const extendedConfig = config as PureHttpResponse;
 
         // 非 401 错误直接抛出
         if (response?.status !== 401 || extendedConfig._retry) {
@@ -153,10 +154,50 @@ class PureChatHttp {
         }
       });
   }
-  
+
   /** 通用请求工具函数 */
-  request(config: AxiosRequestConfig) {
+  public request(config: AxiosRequestConfig) {
     return this.service.request(config);
+  }
+
+  public _request<T>(
+    method: RequestMethods,
+    url: string,
+    param?: AxiosRequestConfig,
+  ): Promise<T> {
+    const config = {
+      method,
+      url,
+      ...param,
+    };
+
+    // 单独处理自定义请求/响应回调
+    return new Promise((resolve, reject) => {
+      this.service
+        .request(config)
+        .then((response) => {
+          resolve(response as T);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  }
+
+  /** 单独抽离的`post`工具函数 */
+  public post<T, P>(
+    url: string,
+    params?: AxiosRequestConfig<P>,
+  ): Promise<T> {
+    return this._request<T>("post", url, params);
+  }
+
+  /** 单独抽离的`get`工具函数 */
+  public get<T, P>(
+    url: string,
+    params?: AxiosRequestConfig<P>,
+  ): Promise<T> {
+    return this._request<T>("get", url, params);
   }
 }
 

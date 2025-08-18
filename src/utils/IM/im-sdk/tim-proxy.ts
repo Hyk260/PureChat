@@ -12,18 +12,6 @@ interface LocalChatInstance {
   [key: string]: any;
 }
 
-interface TIMUploadPlugin {
-  default: any;
-}
-
-interface GroupModule {
-  default: any;
-}
-
-interface SignalingModule {
-  default: any;
-}
-
 interface ProxyHandler<T> {
   get(target: T, propKey: string | symbol): any;
   has(target: T, propKey: string | symbol): boolean;
@@ -72,16 +60,14 @@ async function initChat(): Promise<ChatInstance> {
       { default: GroupModule },
       { default: SignalingModule },
       { default: TIMUploadPlugin },
-    ]: [
-      TencentCloudChatModule,
-      GroupModule,
-      SignalingModule,
-      TIMUploadPlugin
     ] = await Promise.all([
-      // 动态导入
-      import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js"),
+      // @ts-ignore
+      import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js") as Promise<{ default: typeof TencentCloudChatModule }>,
+      // @ts-ignore
       import(/* @vite-ignore */ "@tencentcloud/chat/modules/group-module.js"),
+      // @ts-ignore
       import(/* @vite-ignore */ "@tencentcloud/chat/modules/signaling-module.js"),
+      // @ts-ignore
       import(/* @vite-ignore */ "tim-upload-plugin"),
     ]);
 
