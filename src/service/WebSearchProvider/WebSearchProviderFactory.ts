@@ -6,7 +6,7 @@ import LocalBingProvider from './LocalBingProvider'
 // import LocalGoogleProvider from './LocalGoogleProvider'
 
 export default class WebSearchProviderFactory {
-  static create(provider) {
+  static create(provider: string) {
     switch (provider) {
       // case 'local-google':
         // return new LocalGoogleProvider(provider)

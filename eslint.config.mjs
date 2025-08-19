@@ -73,8 +73,7 @@ export default defineConfig([
       'no-var': 'error',
 
       // Prettier 规则
-      // 'prettier/prettier': 'error',
-      "@typescript-eslint/no-require-imports": "off"
+      'prettier/prettier': 'error',
     },
   },
   // TypeScript 文件
@@ -145,7 +144,7 @@ export default defineConfig([
       'no-var': 'error',
 
       // Prettier 规则
-      // 'prettier/prettier': 'error',
+      'prettier/prettier': 'error',
     },
   },
   // Vue 文件
@@ -163,7 +162,7 @@ export default defineConfig([
     },
     rules: {
       // Prettier 规则
-      // 'prettier/prettier': 'error',
+      'prettier/prettier': 'error',
     },
   },
   // 声明文件

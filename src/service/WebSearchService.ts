@@ -64,7 +64,7 @@ class WebSearchService {
    * @param query 搜索查询
    * @returns 搜索响应
    */
-  async search(provider, query, httpOptions = {}) {
+  async search(provider: string, query: string, httpOptions = {}) {
     const websearch = this.getWebSearchState()
     // searchWithTime maxResults excludeDomains
     const webSearchEngine = new WebSearchEngineProvider(provider)
@@ -90,7 +90,7 @@ class WebSearchService {
    * @param provider 要检查的搜索提供商
    * @returns 如果提供商可用返回true，否则返回false
    */
-  async checkSearch(provider) {
+  async checkSearch(provider: string) {
     try {
       const response = await this.search(provider, 'test query')
       console.log('Search response:', response)

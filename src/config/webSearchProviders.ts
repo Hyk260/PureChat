@@ -1,21 +1,3 @@
-// import TavilyLogo from "@/assets/images/search/tavily.png";
-
-// export const PROVIDER_IDS = {
-//   TEST: "test",
-//   TAVILY: "tavily",
-//   EXA: "exa",
-//   google: "google"
-// };
-
-// const PROVIDER_LOGOS = {
-//   "tavily": TavilyLogo,
-//   // "exa": ExaLogo
-// };
-
-// export function getWebSearchProviderLogo(id) {
-//   return PROVIDER_LOGOS[id] ?? "";
-// }
-
 export const WEB_SEARCH_PROVIDER_CONFIG = {
   test: {
     websites: {

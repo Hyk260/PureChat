@@ -1,3 +1,4 @@
+import type { DB_Message } from "@/database/schemas/message";
 import { useChatStore } from "@/stores/modules/chat";
 import { throttle } from "lodash-es";
 
@@ -27,13 +28,13 @@ export function checkoutNetState(state: string) {
   }
 }
 
-export const fnCheckoutNetState = throttle((state) => {
+export const fnCheckoutNetState = throttle((state: string) => {
   checkoutNetState(state);
 }, 3000);
 
-export function getConversationList(data) {
+export function getConversationList(data: DB_Message[]) {
   const list = useChatStore().conversationList;
-  const chatId = data?.[0].conversationID;
+  const chatId = data?.[0]?.conversationID ?? "";
   const massage = list.filter((t) => t.conversationID === chatId);
   return massage;
 }

@@ -1,6 +1,6 @@
 import { ModelProvider, ModelProviderKey } from "@/ai/types/type";
 import { FewShots, LLMParams } from '@/types/llm';
-import { ChatOptions } from "../../types/chat";
+import { ChatOptions, LLMConfig } from "../../types/chat";
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
 import { REQUEST_TIMEOUT_MS } from "@/ai/constant";
 import {
@@ -12,9 +12,8 @@ import {
   extractImageMessage,
   generateDalle3RequestPayload,
 } from "@/ai/utils";
-import { useChatStore } from "@/stores/index";
 import { transformData } from "@/utils/chat/index";
-import { useRobotStore, useToolsStore } from "@/stores/index";
+import { useRobotStore, useToolsStore, useChatStore } from "@/stores/index";
 import OllamaAI from "../ollama/ollama";
 
 export * from "./config";
@@ -158,7 +157,7 @@ export class OpenAiApi {
    * @param {Object} options - 选项
    * @returns {Object} 请求负载
    */
-  generateRequestPayload(messages: FewShots, modelConfig: LLMParams, options: any) {
+  generateRequestPayload(messages: FewShots, modelConfig: LLMParams, options: LLMConfig) {
     // DALL-E 3特殊处理
     if (_isDalle3(modelConfig.model)) {
       return generateDalle3RequestPayload(modelConfig)

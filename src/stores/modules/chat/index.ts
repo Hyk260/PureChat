@@ -457,8 +457,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.chatDraftMap.delete(ID);
       }
     },
-    async updateTotalUnreadMsg() {
-      this.totalUnreadMsg = await getUnreadMsg();
+    updateTotalUnreadMsg() {
+      this.totalUnreadMsg = getUnreadMsg();
     },
     async deleteSession(data: { sessionId: string }) {
       const { sessionId } = data;

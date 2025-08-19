@@ -27,7 +27,7 @@ const statusMessageMap: Record<number, string> = {
 // 异常拦截处理器
 const errorHandler = (error: AxiosError) => {
   const status = error.response?.status;
-  const errMessage = status ? statusMessageMap[status] || `连接错误 ${status}` : "无法连接到服务器！";
+  const errMessage = status ? statusMessageMap[status] ?? `连接错误 ${status}` : "无法连接到服务器！";
 
   useAppStore().showMessage({ message: errMessage, type: "error" });
   return Promise.reject(error);
@@ -179,7 +179,7 @@ class PureChatHttp {
           resolve(response as T);
         })
         .catch(error => {
-          reject(error);
+          reject(error as Error);
         });
     });
   }

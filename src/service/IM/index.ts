@@ -1,3 +1,7 @@
+import { Profile } from "@/service/chat/types/tencent-cloud-chat";
+import type { DB_Session } from "@/database/schemas/session";
+import type { DB_Message } from "@/database/schemas/message";
+
 import emitter from "@/utils/mitt-bus";
 import chat from "@/service/IM/im-sdk/tim";
 import { C2CModelIDList } from '@shared/provider/config';
@@ -22,68 +26,37 @@ const isFocused = useWindowFocus();
 
 /**
  * 检查是否为机器人会话
- * @param {Array} data - 消息数据数组
- * @returns {boolean} 是否为机器人会话
  */
-function isRobotId(data) {
-  return C2CModelIDList.includes(data?.[0].conversationID);
+const isRobotId = (data: DB_Message[]): boolean => {
+  return C2CModelIDList.includes(data?.[0]?.conversationID ?? "");
 }
 
 export class TIMProxy {
+  private userID: string = ""
+  private userSig: string = ""
+  private userProfile: Profile | null = null
+  private once: boolean = false
+  private isSDKReady: boolean = false
+  private GROUP_TIP_TYPES = {
+    MEMBER_JOIN: 1,        // 有成员加群
+    MEMBER_QUIT: 2,        // 有群成员退群
+    MEMBER_KICKED_OUT: 3,  // 有群成员被踢出群
+    MEMBER_SET_ADMIN: 4,   // 有群成员被设为管理员
+    MEMBER_CANCELED_ADMIN: 5 // 有群成员被撤销管理员
+  };
+  private GROUP_SYSTEM_NOTICE_TYPES = {
+    /**
+     * 被踢出群组
+     */
+    KICKED_OUT: 4,
+    /**
+     * 群组被解散
+     */
+    GROUP_DISMISSED: 5
+  }
+
   constructor() {
-    /**
-     * 当前登录用户ID
-     * @type {string}
-     */
-    this.userID = "";
 
-    /**
-     * 用户签名，用于 IM SDK 登录验证
-     * @type {string}
-     */
-    this.userSig = "";
-
-    /**
-     * IM 用户详细信息
-     * @type {Object}
-     */
-    this.userProfile = {};
-
-    /**
-     * 防止重复初始化标识
-     * @type {boolean}
-     * @private
-     */
-    this.once = false;
-
-    /**
-     * SDK 就绪状态
-     * @type {boolean}
-     */
-    this.isSDKReady = false;
-
-    /**
-     * 群组操作类型映射
-     * @type {Object}
-     * @private
-     */
-    this.GROUP_TIP_TYPES = {
-      MEMBER_JOIN: 1,        // 有成员加群
-      MEMBER_QUIT: 2,        // 有群成员退群
-      MEMBER_KICKED_OUT: 3,  // 有群成员被踢出群
-      MEMBER_SET_ADMIN: 4,   // 有群成员被设为管理员
-      MEMBER_CANCELED_ADMIN: 5 // 有群成员被撤销管理员
-    };
-
-    /**
-     * 群系统通知类型映射
-     * @type {Object}
-     * @private
-     */
-    this.GROUP_SYSTEM_NOTICE_TYPES = {
-      KICKED_OUT: 4,    // 被踢出群组
-      GROUP_DISMISSED: 5 // 群组被解散
-    };
   }
 
   /**
@@ -101,11 +74,6 @@ export class TIMProxy {
     localStg.set("timProxy", stateData);
   }
 
-  /**
-   * 从本地存储加载实例状态
-   * 用于页面刷新后恢复状态
-   * @private
-   */
   loadSelfFromLocalStorage() {
     const stateData = localStg.get("timProxy");
     if (!stateData) return;
@@ -113,13 +81,6 @@ export class TIMProxy {
     Object.assign(this, stateData);
   }
 
-  /**
-   * 初始化 TIM 代理
-   * 设置事件监听器，开始监听 IM SDK 事件
-   *
-   * @public
-   * @example
-   */
   init() {
     console.log("[chat] TIMProxy 开始初始化");
 
@@ -135,21 +96,13 @@ export class TIMProxy {
     console.log("[chat] TIMProxy 初始化完成");
   }
 
-  /**
-   * 初始化事件监听器
-   * 根据运行模式（本地/云端）注册不同的事件监听器
-   * @private
-   */
   initListener() {
-    // 本地模式需要手动初始化
     if (__LOCAL_MODE__) {
       chat.initialize();
     }
 
-    // 核心事件监听（本地模式和云端模式都需要）
     this.registerCoreEvents();
 
-    // 云端模式特有事件监听
     if (!__LOCAL_MODE__) {
       this.registerCloudEvents();
     }
@@ -157,10 +110,6 @@ export class TIMProxy {
     console.log(`[chat] 事件监听器注册完成 (模式: ${__LOCAL_MODE__ ? '本地' : '云端'})`);
   }
 
-  /**
-   * 注册核心事件监听器
-   * @private
-   */
   registerCoreEvents() {
     const coreEvents = [
       { event: "sdkStateReady", handler: this.onReadyStateUpdate },
@@ -175,10 +124,6 @@ export class TIMProxy {
     });
   }
 
-  /**
-   * 注册云端模式特有事件监听器
-   * @private
-   */
   registerCloudEvents() {
     const cloudEvents = [
       { event: "onMessageRevoked", handler: this.onMessageRevoked },
@@ -199,12 +144,8 @@ export class TIMProxy {
 
   /**
    * 处理 SDK 就绪状态更新
-   * SDK 就绪后获取用户信息并更新状态
-   *
-   * @param {Object} params - 事件参数
-   * @param {string} params.name - 状态名称
    */
-  onReadyStateUpdate({ name }) {
+  onReadyStateUpdate({ name }: { name: string }) {
     console.log("[chat] SDK 状态更新:", name);
     this.isSDKReady = name === "sdkStateReady";
     if (!this.isSDKReady) {
@@ -218,7 +159,6 @@ export class TIMProxy {
 
   /**
    * 获取并更新用户信息
-   * @private
    */
   async fetchUserProfile() {
     try {
@@ -252,8 +192,6 @@ export class TIMProxy {
 
   /**
    * 处理未读消息总数更新
-   * @param {Object} params - 事件参数
-   * @param {*} params.data - 未读消息数据
    */
   onTotalUnreadMessageCountUpdated({ data }) {
     console.log("[chat] 未读消息总数更新:", data);
@@ -261,12 +199,8 @@ export class TIMProxy {
 
   /**
    * 处理会话列表更新
-   * 更新当前会话信息并标记消息为已读
-   *
-   * @param {Object} params - 事件参数
-   * @param {Array} params.data - 会话列表数据
    */
-  onUpdateConversationList({ data }) {
+  onUpdateConversationList({ data }: { data: DB_Session[] }) {
     console.log("[chat] 会话列表更新:", data);
 
     const chatStore = useChatStore();
@@ -288,19 +222,12 @@ export class TIMProxy {
 
   /**
    * 处理接收到的新消息
-   * 根据消息类型进行不同的处理逻辑
-   *
-   * @param {Object} params - 事件参数
-   * @param {Array} params.data - 消息数据数组
    */
-  onReceiveMessage({ data }) {
+  onReceiveMessage({ data }: { data: DB_Message[] }) {
     console.log("[chat] 收到新消息:", data);
     if (!data?.length) return;
     const message = data[0];
-    const isCurrentConversation = useChatStore().currentSessionId === message.conversationID;
-    // this.handleQuitGroupTip(data);
-    // this.handleNotificationTip(data);
-    // this.handleGroupSystemNoticeTip(data);
+    const isCurrentConversation = useChatStore().currentSessionId === message?.conversationID;
     // 处理不同类型的消息
     this.processMessageByType(data);
     // 更新消息列表
@@ -309,13 +236,11 @@ export class TIMProxy {
 
   /**
    * 根据消息类型进行处理
-   * @param {Array} data - 消息数据数组
-   * @private
    */
-  processMessageByType(data) {
+  processMessageByType(data: DB_Message[]) {
     const message = data[0];
 
-    switch (message.type) {
+    switch (message?.type) {
       case "TIMGroupTipElem":
         this.handleQuitGroupTip(data);
         break;
@@ -331,24 +256,20 @@ export class TIMProxy {
 
   /**
    * 处理消息撤回事件
-   * @param {Object} params - 事件参数
-   * @param {Array} params.data - 撤回消息数据
    */
-  onMessageRevoked({ data }) {
+  onMessageRevoked({ data }: { data: DB_Message[] }) {
     console.log("[chat] 撤回消息:", data);
 
     if (!data?.length) return;
 
     useChatStore().updateMessages({
-      sessionId: data[0].conversationID,
-      message: cloneDeep(data[0]),
+      sessionId: data[0]?.conversationID ?? "",
+      message: cloneDeep(data[0]) as DB_Message,
     });
   }
 
   /**
    * 处理群组列表更新
-   * @param {Object} params - 事件参数
-   * @param {Array} params.data - 群组列表数据
    */
   onUpdateGroupList({ data }) {
     console.log("[chat] 群组列表更新:", data);
@@ -356,8 +277,6 @@ export class TIMProxy {
 
   /**
    * 处理被踢出事件
-   * @param {Object} params - 事件参数
-   * @param {Object} params.data - 被踢出数据
    */
   onKickOut({ data }) {
     console.log("[chat] 用户被踢出:", data);
@@ -373,8 +292,6 @@ export class TIMProxy {
 
   /**
    * 处理 SDK 错误事件
-   * @param {Object} params - 事件参数
-   * @param {Object} params.data - 错误数据
    */
   onError({ data }) {
     console.log("[chat] SDK 错误:", data);
@@ -385,31 +302,25 @@ export class TIMProxy {
 
   /**
    * 处理消息修改事件
-   * @param {Object} params - 事件参数
-   * @param {Array} params.data - 修改的消息数据
    */
-  onMessageModified({ data }) {
+  onMessageModified({ data }: { data: DB_Message[] }) {
     console.log("[chat] 消息修改:", data);
 
     if (!data?.length) return;
 
-    useChatStore().modifiedMessages(cloneDeep(data[0]));
+    useChatStore().modifiedMessages(cloneDeep(data[0]) as DB_Message);
   }
 
   /**
    * 处理网络状态变化
-   * @param {Object} params - 事件参数
-   * @param {Object} params.data - 网络状态数据
    */
-  onNetStateChange({ data }) {
+  onNetStateChange({ data }: { data: { state: string } }) {
     console.log("[chat] 网络状态变化:", data);
     useAppStore().showMessage(fnCheckoutNetState(data.state));
   }
 
   /**
    * 处理好友申请列表更新
-   * @param {Object} params - 事件参数
-   * @param {Array} params.data - 好友申请数据
    */
   onFriendApplicationListUpdated({ data }) {
     console.log("[chat] 好友申请列表更新:", data);
@@ -425,15 +336,8 @@ export class TIMProxy {
    * 发送系统通知给用户
    * 支持浏览器原生通知和 Element Plus 通知两种方式
    * https://developer.mozilla.org/zh-CN/docs/Web/API/notification
-   *
-   * @param {Object} message - 消息对象
-   * @param {string} message.ID - 消息ID
-   * @param {string} message.nick - 发送者昵称
-   * @param {Object} message.payload - 消息内容
-   * @param {string} message.conversationID - 会话ID
-   * @param {string} message.avatar - 发送者头像
    */
-  async notifyUser(message) {
+  async notifyUser(message: DB_Message) {
     const permission = Notification.permission;
     console.log("[chat] 通知权限状态:", permission);
 
@@ -450,7 +354,7 @@ export class TIMProxy {
       case "granted":
         this.handleNotify(message);
         break;
-        // 拒绝显示通知
+      // 拒绝显示通知
       case "denied":
         this.handleElNotification(message);
         break;
@@ -473,17 +377,15 @@ export class TIMProxy {
 
   /**
    * 处理浏览器原生通知
-   * @param {Object} message - 消息对象
-   * @private
    */
-  handleNotify(message) {
+  handleNotify(message: DB_Message) {
     console.log("[chat] 发送原生通知", message);
     const { ID, payload, avatar, conversationID } = message;
     const title = "有人提到了你";
     const icon = avatar || `${import.meta.env.VITE_CLOUD_BASE_URL}log.png`;
     const notification = new window.Notification(title, {
       icon: icon,
-      body: payload.text,
+      body: payload.text as string,
       tag: conversationID, // 防止重复通知
     });
     notification.onclick = () => {
@@ -500,13 +402,10 @@ export class TIMProxy {
    * 处理群组提示消息
    * 当有群成员变动时更新群成员列表
    * 收到有群成员/退群/被踢出/入群/的tip时,更新群成员列表
-   *
-   * @param {Array} data - 消息数据数组
-   * @private
    */
-  handleQuitGroupTip(data) {
+  handleQuitGroupTip(data: DB_Message[]) {
     const message = data[0];
-    if (message.type !== "TIMGroupTipElem") return;
+    if (message?.type !== "TIMGroupTipElem") return;
     console.log("[chat] 处理群组提示", data);
 
     const currentSessionId = useChatStore().currentSessionId;
@@ -516,7 +415,7 @@ export class TIMProxy {
     const memberOperationTypes = Object.values(this.GROUP_TIP_TYPES);
 
     // 检查是否为群成员相关操作
-    if (memberOperationTypes.includes(operationType)) {
+    if (memberOperationTypes.includes(operationType as number)) {
       console.log("[chat] 群成员变动，更新成员列表");
       useGroupStore().handleGroupMemberList({ groupID: currentSessionId });
     }
@@ -526,11 +425,8 @@ export class TIMProxy {
    * 处理群系统通知
    * 处理被踢出群组或群组解散的通知
    * https://web.sdk.qcloud.com/im/doc/v3/zh-cn/Message.html#.GroupSystemNoticePayload
-
-   * @param {Array} data - 消息数据数组
-   * @private
    */
-  handleGroupSystemNoticeTip(data) {
+  handleGroupSystemNoticeTip(data: DB_Message[]) {
     const message = data[0];
     if (message?.type !== "TIMGroupSystemNoticeElem") return;
 
@@ -540,7 +436,7 @@ export class TIMProxy {
     const { KICKED_OUT, GROUP_DISMISSED } = this.GROUP_SYSTEM_NOTICE_TYPES;
 
     // 处理被踢出或群解散的情况
-    if ([KICKED_OUT, GROUP_DISMISSED].includes(operationType)) {
+    if ([KICKED_OUT, GROUP_DISMISSED].includes(operationType as number)) {
       const currentSessionId = useChatStore().currentSessionId;
       console.log("[chat] 群组被解散或被踢出，删除会话");
       useChatStore().deleteSession({ sessionId: currentSessionId });
@@ -549,11 +445,8 @@ export class TIMProxy {
 
   /**
    * 更新消息列表
-   * @param {Array} data - 消息数据数组
-   * @param {boolean} shouldMarkRead - 是否标记为已读
-   * @private
    */
-  handleUpdateMessage(data, shouldMarkRead = true) {
+  handleUpdateMessage(data: DB_Message[], shouldMarkRead = true) {
     const chatStore = useChatStore();
 
     if (!chatStore.currentSessionId) return;
@@ -562,8 +455,8 @@ export class TIMProxy {
     const message = data[0];
 
     chatStore.updateMessages({
-      sessionId: message.conversationID,
-      message: cloneDeep(message),
+      sessionId: message?.conversationID ?? "",
+      message: cloneDeep(message) as DB_Message,
     });
 
     if (shouldMarkRead) {
@@ -576,24 +469,17 @@ export class TIMProxy {
   /**
    * 上报消息已读状态
    * 只在窗口获得焦点时上报已读
-   *
-   * @param {Array|Object} data - 消息数据
-   * @private
    */
-  reportedMessageRead(data) {
+  reportedMessageRead(data: DB_Message[]) {
     if (isFocused.value) {
       setMessageRead(data);
     }
   }
 
-
   /**
    * 处理通知点击事件
-   * @param {string} conversationID - 会话ID
-   * @param {string} messageID - 消息ID
-   * @private
    */
-  handleNotificationClick(conversationID, messageID) {
+  handleNotificationClick(conversationID: string, messageID: string) {
     // 切换到对应会话
     useChatStore().addConversation({ sessionId: conversationID });
 
@@ -608,10 +494,8 @@ export class TIMProxy {
 
   /**
    * 处理 Element Plus 通知
-   * @param {Object} message - 消息对象
-   * @private
    */
-  handleElNotification(message) {
+  handleElNotification(message: DB_Message) {
     const { ID, nick, payload, conversationID } = message;
 
     const Notification = ElNotification({
@@ -629,13 +513,10 @@ export class TIMProxy {
   /**
    * 处理 @ 提及通知
    * 检查消息中是否包含对当前用户的 @ 提及
-   *
-   * @param {Array} data - 消息数据数组
-   * @private
    */
-  handleNotificationTip(data) {
+  handleNotificationTip(data: DB_Message[]) {
     const message = data[0];
-    const { atUserList = [] } = message;
+    const { atUserList = [] } = message; 
 
     if (!atUserList.length) return;
 
@@ -653,7 +534,7 @@ export class TIMProxy {
     const isAtAll = atUserList.includes("__kImSDK_MesssageAtALL__");
     if (isAtAll) {
       console.log("[chat] @ 全体成员，发送通知");
-      this.notifyUser(message);
+      this.notifyUser(message as DB_Message);
       return
     }
 
@@ -661,7 +542,7 @@ export class TIMProxy {
     const isAtSelf = atUserList.includes(userID);
     if (isAtSelf) {
       console.log("[chat] @ 当前用户，发送通知");
-      this.notifyUser(message);
+      this.notifyUser(message as DB_Message);
     }
   }
 }
