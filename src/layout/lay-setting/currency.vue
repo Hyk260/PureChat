@@ -53,13 +53,14 @@
   </ul>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted } from "vue";
 import { languages, options } from "./enums";
-import { useUserStore, useThemeStore } from "@/stores/index";
+import { useAppStore, useUserStore, useThemeStore } from "@/stores/index";
 
 const { DEV: isDev } = import.meta.env;
 
+const appStore = useAppStore();
 const userStore = useUserStore();
 const themeStore = useThemeStore();
 
@@ -69,10 +70,10 @@ function logout() {
 
 const timeline = computed({
   get() {
-    return userStore.timeline;
+    return appStore.timeline;
   },
   set(val) {
-    userStore.setTimeline(val);
+    appStore.setTimeline(val);
   },
 });
 
@@ -96,19 +97,19 @@ const themeColor = computed({
 
 const language = computed({
   get() {
-    return userStore.lang;
+    return appStore.lang;
   },
   set(val) {
-    userStore.setLang(val);
+    appStore.setLang(val);
   },
 });
 
 const markdownRender = computed({
   get() {
-    return userStore.markdownRender;
+    return appStore.markdownRender;
   },
   set(val) {
-    userStore.setMarkdownRender(val);
+    appStore.setMarkdownRender(val);
   },
 });
 

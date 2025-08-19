@@ -15,7 +15,6 @@ import { login, logout } from "@/service/api/index"
 import { localStg } from "@/utils/storage"
 import { SetupStoreId } from '@/stores/enum';
 import { timProxy } from '@/service/IM/index';
-import { setLocale } from "@/locales/index";
 
 import router from "@/router"
 import chat from "@/service/IM/im-sdk/tim"
@@ -24,9 +23,6 @@ import localAvatar from '@/assets/images/avatar.png';
 
 export const useUserStore = defineStore(SetupStoreId.User, {
   state: (): UserState => ({
-    lang: "zh-CN",
-    timeline: false, // 时间线
-    markdownRender: false, // Markdown 渲染输入消息
     verifyCode: "",
     currentPage: 0,
     userProfile: {},
@@ -43,12 +39,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     }
   },
   actions: {
-    setTimeline(val: boolean): void {
-      this.timeline = val;
-    },
-    setMarkdownRender(val: boolean): void {
-      this.markdownRender = val;
-    },
     setCurrentPage(page: number): void {
       this.currentPage = page
     },
@@ -60,10 +50,6 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     },
     setUserLocalStore(data: Partial<UserLocalStore>): void {
       this.userLocalStore = { ...this.userLocalStore, ...data }
-    },
-    setLang(lang: string): void {
-      this.lang = lang
-      setLocale(lang)
     },
     async handleSuccessfulAuth(data: HandleSuccessfulAuthPayload): Promise<void> {
       console.log("授权登录信息 handleSuccessfulAuth", data)

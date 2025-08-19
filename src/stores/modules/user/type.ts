@@ -43,9 +43,6 @@ export interface LoginResult {
 
 // 用户Store状态类型
 export interface UserState {
-  lang: string;
-  timeline: boolean;
-  markdownRender: boolean;
   verifyCode: string;
   currentPage: number;
   userProfile: UserProfile | Record<string, any>;

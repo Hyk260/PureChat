@@ -1,6 +1,6 @@
 import { cloneDeep } from "lodash-es";
 import { timeFormat } from "@/utils/timeFormat";
-import { useUserStore } from "@/stores/modules/user";
+import { useAppStore } from "@/stores/modules/app";
 
 const timeline = false;
 const duration = 5 * 60;
@@ -38,7 +38,7 @@ export const addTimeDivider = (
   baseTime = 0,
   type = "start"
 ) => {
-  if (!useUserStore().timeline) return list;
+  if (!useAppStore().timeline) return list;
   if (!Array.isArray(list)) {
     throw new Error("list must be an array");
   }

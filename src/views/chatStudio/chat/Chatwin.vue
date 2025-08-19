@@ -19,7 +19,7 @@
           <!-- 加载更多 -->
           <LoadMore :index="index" />
           <!-- 时间 -->
-          <div v-if="isTime(item) && userStore.timeline" class="message-time-divider">
+          <div v-if="isTime(item) && appStore.timeline" class="message-time-divider">
             {{ timeFormat(item.time * 1000, true) }}
           </div>
           <!-- 消息体 -->

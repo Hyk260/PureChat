@@ -112,7 +112,7 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       this.isShowBotTools = Boolean(data?.functionCall);
     },
     setModelConfig(provider: ModelProviderKey): void {
-      this.modelConfig = useAccessStore(provider as ModelProvider);
+      this.modelConfig = useAccessStore(provider as ModelProviderKey);
     },
     setModel(value: Model | null): void {
       this.model = value;
