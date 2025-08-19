@@ -1,6 +1,6 @@
-import { FewShots } from '@/types/llm';
+import { FewShots } from "@/types/llm";
 
-export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
+export type LLMRoleType = "user" | "system" | "assistant" | "function" | "tool";
 
 interface OnFinishData {
   grounding?: any;
@@ -17,15 +17,15 @@ export interface ChatStreamCallbacks {
 
 interface UserMessageContentPartText {
   text: string;
-  type: 'text';
+  type: "text";
 }
 
 interface UserMessageContentPartImage {
   image_url: {
-    detail?: 'auto' | 'low' | 'high';
+    detail?: "auto" | "low" | "high";
     url: string;
   };
-  type: 'image_url';
+  type: "image_url";
 }
 
 export interface ChatCompletionFunctions {
@@ -38,12 +38,10 @@ export interface ChatCompletionFunctions {
 
 export interface ChatCompletionTool {
   function: ChatCompletionFunctions;
-  type: 'function';
+  type: "function";
 }
 
-export type UserMessageContentPart =
-  | UserMessageContentPartText
-  | UserMessageContentPartImage
+export type UserMessageContentPart = UserMessageContentPartText | UserMessageContentPartImage;
 
 export interface OpenAIChatMessage {
   /**
@@ -101,7 +99,7 @@ export interface ChatStreamPayload {
     effort?: string;
     summary?: string;
   };
-  responseMode?: 'stream' | 'json';
+  responseMode?: "stream" | "json";
   /**
    * @title 是否开启流式请求
    * @default true
@@ -117,7 +115,7 @@ export interface ChatStreamPayload {
    */
   thinking?: {
     budget_tokens: number;
-    type: 'enabled' | 'disabled';
+    type: "enabled" | "disabled";
   };
   /**
    * @title 控制生成文本中最高概率的单个令牌
@@ -125,7 +123,7 @@ export interface ChatStreamPayload {
    */
   top_p?: number;
   tools?: ChatCompletionTool[];
-  truncation?: 'auto' | 'disabled';
+  truncation?: "auto" | "disabled";
 }
 
 export interface ChatMethodOptions {
@@ -154,13 +152,20 @@ export interface LLMConfig {
   frequency_penalty?: number;
 }
 
-
 export interface ChatOptions {
   messages: FewShots;
   config: LLMConfig;
 
-  onUpdate?: ({ message, fetchCount, think }: { message: string, fetchCount?: string, think?: string }) => void;
-  onFinish: ({ message, think }: { message: string, think?: string }) => void;
+  onUpdate?: ({
+    message,
+    fetchCount,
+    think,
+  }: {
+    message: string;
+    fetchCount?: string;
+    think?: string;
+  }) => void;
+  onFinish: ({ message, think }: { message: string; think?: string }) => void;
   onReasoningMessage?: (message: string) => void;
   onError?: (err: Error | string) => void;
   onController?: (controller: AbortController) => void;

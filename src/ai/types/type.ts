@@ -1,6 +1,6 @@
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
-import { ChatStreamPayload } from './chat';
+import { ChatStreamPayload } from "./chat";
 
 export interface CreateChatCompletionOptions {
   chatModel: OpenAI;

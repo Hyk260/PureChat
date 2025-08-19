@@ -5,11 +5,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
 import { ElConfigProvider } from "element-plus";
-import { elementPlusLocales } from "@/locales/element-plus";
+import { computed, onMounted } from "vue";
+
 import { useSettings } from "@/hooks/useSettings";
-import { useUserStore, useAppStore, useThemeStore } from "@/stores/index";
+import { elementPlusLocales } from "@/locales/element-plus";
+import { useAppStore, useThemeStore, useUserStore } from "@/stores/index";
 
 defineOptions({ name: "App" });
 
@@ -22,6 +23,6 @@ onMounted(() => {
   themeStore.setFontTheme();
   themeStore.setThemeScheme();
   userStore.tryReconnect();
-  useSettings()
+  useSettings();
 });
 </script>
