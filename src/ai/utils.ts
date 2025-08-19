@@ -1,22 +1,12 @@
 import { ModelProvider, ModelProviderKey } from "@/ai/types/type";
 import { LLMParams } from '@/types/llm';
-import { 
-  OPENAI_ID, 
-  ZHIPU_ID, 
-  ZEROONE_ID, 
-  QWEN_ID, 
-  OLLAMA_ID, 
-  GITHUB_ID, 
-  DEEPSEEK_ID,
-  MISTRAL_ID
-} from '@shared/provider/config';
+import { ModelID, ModelIDValue } from '@shared/provider/config';
 import {
   modelConfig,
   modelValue,
   AssistantAvatar,
 } from "@/ai/constant";
 import { useRobotStore } from "@/stores/index";
-import { isRobot } from "@/utils/chat/index";
 import { localStg } from "@/utils/storage";
 import { isEmpty } from "lodash-es";
 
@@ -32,39 +22,39 @@ export const useAccessStore = (model: ModelProviderKey = ModelProvider.OpenAI): 
 /**
  * 根据提供的模型ID获取模型类型。
  * @param {string} modelId - '@RBT#001' 模型ID，用于识别不同的模型类型。
- * @returns {ModelProvider | string} - 'openai' 返回对应的模型类型，如果模型ID无效则返回''。
+ * @returns {ModelProviderKey | string} - 'openai' 返回对应的模型类型，如果模型ID无效则返回''。
  */
-export function getModelType(modelId: string) {
-  if (!isRobot(modelId)) return "";
+export function getModelType(modelId: string): ModelProviderKey | "" {
+  if (!/@RBT#/.test(modelId)) return "";
   const modelMapping = {
-    [OPENAI_ID]: ModelProvider.OpenAI,
-    [ZHIPU_ID]: ModelProvider.ZhiPu,
-    [ZEROONE_ID]: ModelProvider.ZeroOne,
-    [QWEN_ID]: ModelProvider.Qwen,
-    [OLLAMA_ID]: ModelProvider.Ollama,
-    [GITHUB_ID]: ModelProvider.GitHub,
-    [DEEPSEEK_ID]: ModelProvider.DeepSeek,
-    [MISTRAL_ID]: ModelProvider.Mistral,
+    [ModelID.OpenAI]: ModelProvider.OpenAI,
+    [ModelID.ZhiPu]: ModelProvider.ZhiPu,
+    [ModelID.ZeroOne]: ModelProvider.ZeroOne,
+    [ModelID.Qwen]: ModelProvider.Qwen,
+    [ModelID.Ollama]: ModelProvider.Ollama,
+    [ModelID.GitHub]: ModelProvider.GitHub,
+    [ModelID.DeepSeek]: ModelProvider.DeepSeek,
+    [ModelID.Mistral]: ModelProvider.Mistral,
   };
-  return modelMapping[modelId.replace("C2C", "")] || "";
+  return modelMapping[modelId.replace("C2C", "") as ModelIDValue] || "";
 }
 
 export function getModelId(model: ModelProviderKey) {
   if (!model) return "";
   const modelMapping = {
-    [ModelProvider.OpenAI]: OPENAI_ID,
-    [ModelProvider.ZhiPu]: ZHIPU_ID,
-    [ModelProvider.ZeroOne]: ZEROONE_ID,
-    [ModelProvider.Qwen]: QWEN_ID,
-    [ModelProvider.Ollama]: OLLAMA_ID,
-    [ModelProvider.GitHub]: GITHUB_ID,
-    [ModelProvider.DeepSeek]: DEEPSEEK_ID,
-    [ModelProvider.Mistral]: MISTRAL_ID,
+    [ModelProvider.OpenAI]: ModelID.OpenAI,
+    [ModelProvider.ZhiPu]: ModelID.ZhiPu,
+    [ModelProvider.ZeroOne]: ModelID.ZeroOne,
+    [ModelProvider.Qwen]: ModelID.Qwen,
+    [ModelProvider.Ollama]: ModelID.Ollama,
+    [ModelProvider.GitHub]: ModelID.GitHub,
+    [ModelProvider.DeepSeek]: ModelID.DeepSeek,
+    [ModelProvider.Mistral]: ModelID.Mistral,
   };
   return modelMapping[model] || "";
 }
 
-export function getModelSvg(id: string) {
+export function getModelSvg(id: string): string {
   const modelId = getModelType(id);
   const data = {
     [ModelProvider.OpenAI]: "openai",
@@ -77,7 +67,7 @@ export function getModelSvg(id: string) {
     [ModelProvider.Mistral]: "mistral",
     llava: "llava",
   };
-  return data[modelId] || "";
+  return data[modelId as ModelProviderKey] || "";
 }
 
 export function prettyObject(msg: any) {
@@ -94,17 +84,10 @@ export function prettyObject(msg: any) {
   return ["```json", msg, "```"].join("\n");
 }
 
-export function prefixRobotIDs(robotIDs: string[]) {
-  return robotIDs.map((id) => "C2C" + id);
-}
-
 /**
  * 获取用户头像 URL
- * @param {string} id - 用户或机器人 ID '@RBT#001'
- * @param {string} type - 头像类型 ("local" 或 "cloud")，默认为 "local"
- * @returns {string} 头像 URL
  */
-export const getAvatarUrl = (id: string, type = "local") => {
+export const getAvatarUrl = (id: string, type: "local" | "cloud" = "local"): string => {
   // icon.png
   const suffix = AssistantAvatar[getModelType(id) as ModelProvider] || "";
   if (type === "local") {
@@ -116,10 +99,10 @@ export const getAvatarUrl = (id: string, type = "local") => {
 
 /**
  * 获取 AI 用户头像 URL
- * @param {string} id - 会话 ID C2C@RBT#005
+ * @param {string} id - 会话 ID C2C@RBT#001
  * @returns {string} 头像 URL 或空字符串
  */
-export function getAiAvatarUrl(id: string) {
+export function getAiAvatarUrl(id: string): string {
   if (id.includes("@RBT#")) {
     return getAvatarUrl(id);
   } else {
@@ -127,12 +110,12 @@ export function getAiAvatarUrl(id: string) {
   }
 }
 
-const getStatus = (errorType) => {
+const getStatus = (errorType: string) => {
   if (errorType.toString().includes("Invalid")) return 401;
   else return 400;
 };
 
-export const createErrorResponse = (errorType, body) => {
+export const createErrorResponse = (errorType: string, body: any) => {
   const statusCode = getStatus(errorType);
 
   const data = { body, errorType };
@@ -144,7 +127,7 @@ export function isDalle3(model: string) {
   return "dall-e-3" === model;
 }
 
-export function base64Image2Blob(base64Data: string, contentType: string) {
+export function base64Image2Blob(base64Data: string, contentType: string): Blob {
   const byteCharacters = atob(base64Data);
   const byteNumbers = new Array(byteCharacters.length);
   for (let i = 0; i < byteCharacters.length; i++) {
@@ -154,7 +137,7 @@ export function base64Image2Blob(base64Data: string, contentType: string) {
   return new Blob([byteArray], { type: contentType });
 }
 
-export async function uploadImage(file: File) {
+export async function uploadImage(file: File | Blob) {
   const body = new FormData();
   body.append("file", file);
   const res = await fetch('https://api.openai.com', {
@@ -171,7 +154,7 @@ export async function uploadImage(file: File) {
   throw Error(`upload Error: ${res_1?.msg}`);
 }
 
-export async function extractImageMessage(res: any) {
+export async function extractImageMessage(res: any): Promise<any> {
   if (res.data) {
     let url = res.data?.at(0)?.url ?? "";
     const b64_json = res.data?.at(0)?.b64_json ?? "";
@@ -221,14 +204,14 @@ export function prefix(key: string) {
   return `${prefix}${key}`;
 }
 
-export function getValueByKey(array, key) {
+export function getValueByKey(array: any[], key: string) {
   if (!array?.length || !key) return null;
   const item = array.find((t) => t.key === key);
   return item && item.value ? item.value : null;
 }
 
 // 全员群
-export function isFullStaffGroup(data) {
+export function isFullStaffGroup(data: any) {
   const { groupProfile } = data || {};
   return getValueByKey(groupProfile?.groupCustomField, "custom_info") === "all_staff";
 }

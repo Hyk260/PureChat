@@ -1,6 +1,6 @@
 import emitter from "@/utils/mitt-bus";
 import chat from "@/service/IM/im-sdk/tim";
-import { C2C_ROBOT_COLLECT } from "@/ai/constant";
+import { C2CModelIDList } from '@shared/provider/config';
 import { scrollToDomPosition } from "@/utils/chat/index";
 import { setMessageRead } from "@/service/im-sdk-api/index";
 import { localStg } from "@/utils/storage";
@@ -26,7 +26,7 @@ const isFocused = useWindowFocus();
  * @returns {boolean} 是否为机器人会话
  */
 function isRobotId(data) {
-  return C2C_ROBOT_COLLECT.includes(data?.[0].conversationID);
+  return C2CModelIDList.includes(data?.[0].conversationID);
 }
 
 export class TIMProxy {

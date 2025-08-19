@@ -18,9 +18,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
-import { ROBOT_COLLECT } from '@shared/provider/config';
+import { ModelIDList } from '@shared/provider/config';
 import { getUserProfile } from "@/service/im-sdk-api/index";
 import { useGroupStore } from '@/stores/modules/group/index';
 import CardGrid from "./CardGrid.vue";
@@ -82,7 +82,7 @@ const transformGroupData = (data = groupStore.groupList) => {
 };
 
 const getRobotList = async () => {
-  const { code, data } = await getUserProfile(ROBOT_COLLECT);
+  const { code, data } = await getUserProfile(ModelIDList);
   robotList.value = data;
   treeData.value[0].children = transformUserData(data);
 };

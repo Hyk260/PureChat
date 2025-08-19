@@ -46,7 +46,6 @@ export class LocalChatService {
   }
 
   async stateReady() {
-    debugger
     const conversationList = await this.loadConversationList();
 
     this.emit("sdkStateReady", { name: "sdkStateReady" });

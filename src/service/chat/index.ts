@@ -1,7 +1,7 @@
 import type { ChatSDK } from './types/tencent-cloud-chat';
 import emitter from "@/utils/mitt-bus";
 import { pureChatService as chat } from "./PureChatService";
-import { C2C_ROBOT_COLLECT } from "@/ai/constant";
+import { C2CModelIDList } from '@shared/provider/config';
 import { scrollToDomPosition } from "@/utils/chat/index";
 import { setMessageRead } from "@/service/im-sdk-api/index";
 import { localStg } from "@/utils/storage";
@@ -27,7 +27,7 @@ const isFocused = useWindowFocus();
  * @returns {boolean} 是否为机器人会话
  */
 function isRobotId(data) {
-  return C2C_ROBOT_COLLECT.includes(data?.[0].conversationID);
+  return C2CModelIDList.includes(data?.[0].conversationID);
 }
 
 export class TIMProxy {
@@ -97,7 +97,6 @@ export class TIMProxy {
    * @private
    */
   async initListener() {
-    debugger
     this.chatSDK = await chat.initialize();
     
     // 本地模式需要手动初始化

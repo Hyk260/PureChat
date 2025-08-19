@@ -1,6 +1,7 @@
 import type { DB_Session } from "@/database/schemas/session";
 import type { DB_Message } from "@/database/schemas/message";
 import type { ChatState } from './type';
+import { ModelProviderKey } from "@/ai/types/type";
 
 import { defineStore } from "pinia";
 import {
@@ -20,7 +21,7 @@ import { generateReferencePrompt } from "@/config/prompts";
 import { SetupStoreId } from '@/stores/enum';
 import { localStg } from "@/utils/storage";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
-import { ROBOT_COLLECT } from '@shared/provider/config';
+import { ModelIDList, ModelIDValue } from '@shared/provider/config';
 import { chatService } from "@/ai/index";
 import { timProxy } from "@/service/IM/index";
 import { MessageModel } from "@/database/models/message";
@@ -85,8 +86,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     getNonBotC2CList(): DB_Session[] {
       return this.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID));
     },
-    currentSessionProvider() {
-      return getModelType(this.toAccount);
+    currentSessionProvider(): ModelProviderKey | "" {
+      const provider = getModelType(this.toAccount);
+      return provider
     },
     isAssistant(): boolean {
       return /@RBT#/.test(this.toAccount);
@@ -353,7 +355,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const { sessionId, message, last } = data;
       this.updateMessages({ sessionId, message });
       emitter.emit("updateScroll");
-      if (last && ROBOT_COLLECT.includes(message?.to)) {
+      if (last && ModelIDList.includes(message?.to as ModelIDValue)) {
         setTimeout(async () => {
           await chatService({
             chat: message,

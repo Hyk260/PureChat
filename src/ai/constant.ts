@@ -7,12 +7,8 @@ import { QwenApi, QwenModelValue, QwenConfig } from "@/ai/platforms/qwen/index";
 import { OllamaApi, OllamaModelValue, OllamaConfig } from "@/ai/platforms/ollama/index";
 import { DeepSeekApi, DeepseekModelValue, DeepseekConfig } from "@/ai/platforms/deepseek/index";
 import { MistralApi, MistralModelValue, MistralConfig } from "@/ai/platforms/mistral/index";
-import { ROBOT_COLLECT } from '@shared/provider/config';
-import { prefixRobotIDs } from "./utils";
 
 export const ROLES = ["system", "user", "assistant"];
-
-export const C2C_ROBOT_COLLECT = prefixRobotIDs(ROBOT_COLLECT);
 
 export const REQUEST_TIMEOUT_MS = 15000;
 

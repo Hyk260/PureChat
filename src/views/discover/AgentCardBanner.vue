@@ -35,9 +35,9 @@
   </el-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { OPENAI_ID } from '@shared/provider/config';
+import { ModelID } from '@shared/provider/config';
 import { useState } from "@/utils/hooks/index";
 import { getModelId } from "@/ai/utils";
 import { useRobotStore, useSidebarStore, useChatStore } from "@/stores/index";
@@ -47,7 +47,7 @@ const cardData = ref({});
 const sidebarStore = useSidebarStore();
 const robotStore = useRobotStore();
 const chatStore = useChatStore();
-const [dialog, setDialog] = useState();
+const [dialog, setDialog] = useState(false);
 
 function startConversation(item = cardData.value) {
   const { identifier, meta } = item;
@@ -59,8 +59,8 @@ function startConversation(item = cardData.value) {
     prompt: [{ role: "system", content: meta.systemRole }],
   };
   robotStore.setPromptStore([prompt], defaultBot);
-  const id = getModelId(defaultBot) || OPENAI_ID;
-  handleClose();
+  const id = getModelId(defaultBot) || ModelID.OpenAI;
+  setDialog(false);
   sidebarStore.toggleOutside({ path: "/chat" });
   chatStore.addConversation({ sessionId: `${"C2C"}${id}` });
   setTimeout(() => {
@@ -68,8 +68,8 @@ function startConversation(item = cardData.value) {
   }, 200);
 }
 
-function handleClose() {
-  setDialog(false);
+function handleClose(done: () => void) {
+  done();
 }
 
 function setAgentCard(data) {
