@@ -132,7 +132,7 @@ import {
   setMessageRemindType,
 } from "@/service/im-sdk-api/index";
 import { restApi } from "@/service/api/index";
-import { useState } from "@/utils/hooks/index";
+import { useState } from "@/hooks/useState";
 import { showConfirmationBox } from "@/utils/message";
 import { isFullStaffGroup } from "@/ai/utils";
 import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index";

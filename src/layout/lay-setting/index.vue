@@ -10,7 +10,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { list } from "./enums";
-import { useState } from "@/utils/hooks/index";
+import { useState } from "@/hooks/useState";
 import emitter from "@/utils/mitt-bus";
 import ItemGrid from "./itemGrid.vue";
 import List from "./list.vue";

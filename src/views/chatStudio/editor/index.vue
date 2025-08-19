@@ -49,7 +49,7 @@ import { isMobile } from "@/utils/common";
 import { Editor } from "@wangeditor/editor-for-vue";
 import { debounce, isEmpty } from "lodash-es";
 import { editorConfig, placeholderMap } from "../utils/configure";
-import { useState } from "@/utils/hooks/index";
+import { useState } from "@/hooks/useState";
 import { useAppStore, useGroupStore, useChatStore } from "@/stores/index";
 import {
   extractAitInfo,

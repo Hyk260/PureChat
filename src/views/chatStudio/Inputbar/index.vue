@@ -120,7 +120,7 @@ import { showConfirmationBox } from "@/utils/message";
 import { createCustomMessage } from "@/service/im-sdk-api/index";
 import { createFileInput } from "@/utils/common";
 import { storeToRefs } from "pinia";
-import { useState } from "@/utils/hooks/index";
+import { useState } from "@/hooks/useState";
 import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores/index";
 import { imageExts, textExts, documentExts, audioExts, videoExts } from "@shared/config/constant";
 import WebSearchService from "@/service/WebSearchService";

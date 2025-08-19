@@ -1,6 +1,6 @@
 import { domToJpeg, domToPng, domToSvg, domToWebp, domToBlob } from "modern-screenshot";
 import { useAppStore } from "@/stores/modules/app";
-import { useState } from "./useState";
+import { useState } from "@/hooks/useState";
 import dayjs from "dayjs";
 
 export const ImageType = {

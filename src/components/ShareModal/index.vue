@@ -114,12 +114,12 @@
 </template>
 
 <script setup>
-import { useState } from "@/utils/hooks/index";
+import { useState } from "@/hooks/useState";
 import {
   useScreenshot,
   ImageType,
   imageTypeOptions,
-} from "@/utils/hooks/useScreenshot";
+} from "@/hooks/useScreenshot";
 import { getMessageComponent } from "@/utils/chat/getMessageComponent";
 import { msgOne, msgType, isSelf } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";

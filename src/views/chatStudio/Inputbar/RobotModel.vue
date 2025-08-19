@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { useState } from "@/utils/hooks/index";
+import { useState } from "@/hooks/useState";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { getModelSvg, useAccessStore, formatSizeStrict } from "@/ai/utils";
 import { modelValue } from "@/ai/constant";

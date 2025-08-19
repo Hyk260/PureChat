@@ -86,7 +86,7 @@ import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
 import { chatName, formatContent } from "@/utils/chat/index";
 import { encodeHTML } from "@/utils/common";
-import { useHandlerDrop } from "@/utils/hooks/useHandlerDrop";
+import { useHandlerDrop } from "@/hooks/useHandlerDrop";
 import { setMessageRemindType } from "@/service/im-sdk-api/index";
 import { useGroupStore, useUserStore, useChatStore } from "@/stores/index";
 import EmptyMessage from "../components/EmptyMessage.vue";

@@ -37,7 +37,7 @@
 
 <script setup>
 import { Promotion } from "@element-plus/icons-vue";
-import { useState } from "@/utils/hooks/index";
+import { useState } from "@/hooks/useState";
 import { useAppStore, useWebSearchStore } from "@/stores/index";
 import { WEB_SEARCH_PROVIDER_CONFIG } from "@/config/webSearchProviders";
 import { openWindow } from "@/utils/common";

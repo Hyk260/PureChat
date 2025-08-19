@@ -357,9 +357,8 @@ export class LocalChat {
 
   /**
    * 获取未读消息总数
-   * @returns {Promise<number>} 未读消息数
    */
-  async getTotalUnreadMessageCount() {
+  getTotalUnreadMessageCount(): number {
     return 0;
   }
 

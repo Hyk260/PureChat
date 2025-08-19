@@ -15,7 +15,7 @@
 <script setup>
 import { ref, onMounted, useTemplateRef } from "vue";
 import { onClickOutside } from "@vueuse/core";
-import { useState } from "@/utils/hooks/index";
+import { useState } from "@/hooks/useState";
 import emitter from "@/utils/mitt-bus";
 
 defineOptions({ name: "ImageViewer" });

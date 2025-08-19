@@ -36,7 +36,7 @@
 <script setup>
 import { Operation, PieChart } from "@element-plus/icons-vue";
 import { onClickOutside } from "@vueuse/core";
-import { useState } from "@/utils/hooks/index";
+import { useState } from "@/hooks/useState";
 import { localStg } from "@/utils/storage";
 import { openWindow } from "@/utils/common";
 import { useUserStore, useChatStore } from "@/stores/index";

@@ -190,7 +190,7 @@ import { QuestionFilled } from "@element-plus/icons-vue";
 import { storeToRefs } from "pinia";
 import { ModelSelect } from "@/ai/resources";
 import { useAccessStore, getModelSvg } from "@/ai/utils";
-import { useState } from "@/utils/hooks/index";
+import { useState } from "@/hooks/useState";
 // import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";

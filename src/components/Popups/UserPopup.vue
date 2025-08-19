@@ -40,7 +40,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useState } from "@/utils/hooks/index";
+import { useState } from "@/hooks/useState";
 import { createFileInput } from "@/utils/common";
 import { useUserStore } from "@/stores/index";
 import { fileToBase64 } from "@/utils/chat/index";
