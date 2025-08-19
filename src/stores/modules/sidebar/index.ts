@@ -11,12 +11,12 @@ import emitter from "@/utils/mitt-bus";
 import router from "@/router";
 
 const {
-  // docs, 
+  // docs,
   homepage,
   giteeHomepage
 } = __APP_INFO__.pkg;
 const {
-  // DEV: isDev 
+  // DEV: isDev
 } = import.meta.env;
 
 const defaultOutsideList: SidebarItem[] = [

@@ -35,7 +35,7 @@ function getDoubt(payload) {
     let doubt = modelValue[provider].Token.doubt;
     return doubt;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return "";
   }
 }

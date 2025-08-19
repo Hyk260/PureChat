@@ -16,13 +16,13 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
   }
 
   get table() {
-    return this.db[this._tableName] as Dexie.Table;;
+    return this.db[this._tableName] as Dexie.Table;
   }
 
   // **************** Create *************** //
 
   async _addWithSync<T = BrowserDBSchema[N]['model']>(
-    id: string | number = nanoid(), 
+    id: string | number = nanoid(),
     data: T,
     primaryKey: string = 'id',
   ) {

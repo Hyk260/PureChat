@@ -24,7 +24,7 @@ const statusMessageMap: Record<number, string> = {
   504: "网络超时"
 };
 
-// 异常拦截处理器 
+// 异常拦截处理器
 const errorHandler = (error: AxiosError) => {
   const status = error.response?.status;
   const errMessage = status ? statusMessageMap[status] || `连接错误 ${status}` : "无法连接到服务器！";
@@ -54,10 +54,10 @@ const defaultConfig: AxiosRequestConfig = {
   // }
 };
 
-// 格式化token（jwt格式） 
+// 格式化token（jwt格式）
 function formatToken(token: string) {
   return "Bearer " + token;
-};
+}
 
 class PureChatHttp {
   private service: AxiosInstance;

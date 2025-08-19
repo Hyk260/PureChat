@@ -13,8 +13,8 @@ export class GitHubApi extends OpenAiApi {
     super(provider);
   }
   getPath() {
-    let baseUrl = useAccessStore(this.provider).openaiUrl;
-    
+    const baseUrl = useAccessStore(this.provider).openaiUrl;
+
     return `${baseUrl}/${GitHubPath.ChatPath}`;
   }
 }

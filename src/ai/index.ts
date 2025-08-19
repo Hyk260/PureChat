@@ -152,9 +152,9 @@ const beforeSend = (api: ClientApi, startMsg: any) => {
   }
 }
 
-export const chatService = async ({ 
-  messages, 
-  chat, 
+export const chatService = async ({
+  messages,
+  chat,
   provider
 }: {
   messages: FewShots;

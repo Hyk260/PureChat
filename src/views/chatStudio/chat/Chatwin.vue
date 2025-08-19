@@ -70,8 +70,8 @@
                     :item="item"
                   />
                   <component
-                    v-else
                     :is="getMessageComponent(item)"
+                    v-else
                     :key="item.ID"
                     v-contextmenu:contextmenu
                     :message="item"

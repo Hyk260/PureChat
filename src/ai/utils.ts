@@ -207,7 +207,7 @@ export function prefix(key: string) {
 export function getValueByKey(array: any[], key: string) {
   if (!array?.length || !key) return null;
   const item = array.find((t) => t.key === key);
-  return item && item.value ? item.value : null;
+  return item?.value ? item.value : null;
 }
 
 // 全员群

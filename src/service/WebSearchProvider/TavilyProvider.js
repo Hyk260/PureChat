@@ -4,7 +4,7 @@ import BaseWebSearchProvider from './BaseWebSearchProvider'
 export default class TavilyProvider extends BaseWebSearchProvider {
   tvly
   constructor(provider) {
-    super(provider) 
+    super(provider)
     if (!this.apiKey) {
       throw new Error('API key is required for Tavily provider')
     }

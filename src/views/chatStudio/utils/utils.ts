@@ -52,7 +52,7 @@ export const handleCopyMsg = async (data) => {
  */
 export async function sendChatMessage(options) {
   console.log("options", options);
-  let custom = options.custom || {};
+  const custom = options.custom || {};
   const messages = [];
   const {
     to,
@@ -112,7 +112,7 @@ export function extractEmojiInfo(editor) {
   const extended = { ...Object.assign(...convertedData) };
   // 清除文件消息包含的字符串
   const fileRegex = /<span\s+data-w-e-type="attachment"[^>]*>(.*?)<\/span>/g;
-  let str = html.replace(fileRegex, "");
+  const str = html.replace(fileRegex, "");
   // 替换表情包图片为字符串 -> '[**]'
   const regex = /<img src="([^"]+)"[^>]+>/g;
   const result = str.replace(regex, (match, src) => {

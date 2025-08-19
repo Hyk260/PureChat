@@ -98,7 +98,7 @@ export class TIMProxy {
    */
   async initListener() {
     this.chatSDK = await chat.initialize();
-    
+
     // 本地模式需要手动初始化
     if (__LOCAL_MODE__) {
       await this.chatSDK.stateReady()
@@ -163,7 +163,7 @@ export class TIMProxy {
   /**
    * 处理 SDK 就绪状态更新
    * SDK 就绪后获取用户信息并更新状态
-   * 
+   *
    * @param {Object} params - 事件参数
    * @param {string} params.name - 状态名称
    */
@@ -225,7 +225,7 @@ export class TIMProxy {
   /**
    * 处理会话列表更新
    * 更新当前会话信息并标记消息为已读
-   * 
+   *
    * @param {Object} params - 事件参数
    * @param {Array} params.data - 会话列表数据
    */
@@ -252,13 +252,13 @@ export class TIMProxy {
   /**
    * 处理接收到的新消息
    * 根据消息类型进行不同的处理逻辑
-   * 
+   *
    * @param {Object} params - 事件参数
    * @param {Array} params.data - 消息数据数组
    */
   onReceiveMessage({ data }) {
     console.log("[chat] 收到新消息:", data);
-    if (!data || !data.length) return;
+    if (!data?.length) return;
     const message = data[0];
     const isCurrentConversation = useChatStore().currentSessionId === message.conversationID;
     // this.handleQuitGroupTip(data);
@@ -300,7 +300,7 @@ export class TIMProxy {
   onMessageRevoked({ data }) {
     console.log("[chat] 撤回消息:", data);
 
-    if (!data || !data.length) return;
+    if (!data?.length) return;
 
     useChatStore().updateMessages({
       sessionId: data[0].conversationID,
@@ -354,7 +354,7 @@ export class TIMProxy {
   onMessageModified({ data }) {
     console.log("[chat] 消息修改:", data);
 
-    if (!data || !data.length) return;
+    if (!data?.length) return;
 
     useChatStore().modifiedMessages(cloneDeep(data[0]));
   }
@@ -388,7 +388,7 @@ export class TIMProxy {
    * 发送系统通知给用户
    * 支持浏览器原生通知和 Element Plus 通知两种方式
    * https://developer.mozilla.org/zh-CN/docs/Web/API/notification
-   * 
+   *
    * @param {Object} message - 消息对象
    * @param {string} message.ID - 消息ID
    * @param {string} message.nick - 发送者昵称
@@ -463,7 +463,7 @@ export class TIMProxy {
    * 处理群组提示消息
    * 当有群成员变动时更新群成员列表
    * 收到有群成员/退群/被踢出/入群/的tip时,更新群成员列表
-   * 
+   *
    * @param {Array} data - 消息数据数组
    * @private
    */
@@ -539,7 +539,7 @@ export class TIMProxy {
   /**
    * 上报消息已读状态
    * 只在窗口获得焦点时上报已读
-   * 
+   *
    * @param {Array|Object} data - 消息数据
    * @private
    */
@@ -592,7 +592,7 @@ export class TIMProxy {
   /**
    * 处理 @ 提及通知
    * 检查消息中是否包含对当前用户的 @ 提及
-   * 
+   *
    * @param {Array} data - 消息数据数组
    * @private
    */
@@ -613,7 +613,7 @@ export class TIMProxy {
     }
 
     // 检查是否 @ 全体成员
-    let isAtAll = atUserList.includes("__kImSDK_MesssageAtALL__");
+    const isAtAll = atUserList.includes("__kImSDK_MesssageAtALL__");
     if (isAtAll) {
       console.log("[chat] @ 全体成员，发送通知");
       this.notifyUser(message);
@@ -621,7 +621,7 @@ export class TIMProxy {
     }
 
     // 检查是否 @ 当前用户
-    let isAtSelf = atUserList.includes(userID);
+    const isAtSelf = atUserList.includes(userID);
     if (isAtSelf) {
       console.log("[chat] @ 当前用户，发送通知");
       this.notifyUser(message);

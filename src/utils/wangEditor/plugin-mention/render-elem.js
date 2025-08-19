@@ -34,7 +34,7 @@ function renderMention(elem, children, editor) {
     },
     `@${value}`
   );
-  
+
   return vnode;
 }
 

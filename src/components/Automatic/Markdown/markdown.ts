@@ -57,7 +57,7 @@ export const applyLinkOpenRules = (md: markdownit) => {
 
 export const applyEpubRules = (md: markdownit) => {
   Object.keys(EPUB_RULES).map((rule) => {
-    let defaultRender = md.renderer.rules[rule] as any;
+    const defaultRender = md.renderer.rules[rule] as any;
     md.renderer.rules[rule] = (tokens: any, id: number, options: any, env: any, self: any) => {
       return defaultRender(tokens, id, options, env, self).replace(...EPUB_RULES[rule as keyof typeof EPUB_RULES]);
     };

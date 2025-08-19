@@ -40,7 +40,7 @@ export const revokeMsg = async (params) => {
 export const setMessageRemindType = async (params) => {
   const { toAccount: userID, messageRemindType: remindType, type } = params;
   let parameter = {};
-  let isDisable = remindType === "AcceptNotNotify";
+  const isDisable = remindType === "AcceptNotNotify";
   if (type === "C2C") {
     // 单人会话
     parameter = {
@@ -60,7 +60,7 @@ export const setMessageRemindType = async (params) => {
       messageRemindType: isDisable ? "AcceptAndNotify" : "AcceptNotNotify",
     };
   }
-  let { code, data } = await tim.setMessageRemindType(parameter);
+  const { code, data } = await tim.setMessageRemindType(parameter);
   if (code === 0) {
     return data;
   }
@@ -84,7 +84,7 @@ export const setMessageRead = (params) => {
     unreadCount = 0, conversationID
   } = params || {};
   if (unreadCount === 0) return;
-  let promise = tim.setMessageRead({ conversationID });
+  const promise = tim.setMessageRead({ conversationID });
   promise
     .then((res) => {
       console.log("已读上报成功", res);

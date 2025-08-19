@@ -11,4 +11,4 @@ export const useToolsStore = defineStore(SetupStoreId.Tools, {
     }
   },
   persist: true,
-}) 
+})

@@ -32,7 +32,7 @@ export interface SidebarState {
 export interface SidebarStore extends SidebarState {
   // Getters
   filteredOutsideList: SidebarItem[];
-  
+
   // Actions
   setOutsideList: (list: SidebarItem[]) => void;
   toggleOutside: (item: SidebarItem | MoreListItem) => void;

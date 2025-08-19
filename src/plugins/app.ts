@@ -10,7 +10,7 @@ const { DEV: isDev, PROD: isProd, VITE_BASE_URL, VITE_AUTOMATICALLY_DETECT_UPDAT
 
 export function setupAppErrorHandle(app: App) {
   app.config.errorHandler = (err, vm, info) => {
-    // eslint-disable-next-line no-console
+
     console.error(err, vm, info);
   };
 }
@@ -51,7 +51,7 @@ function notify() {
 
 async function getHtmlBuildTime(): Promise<string | null> {
   const baseUrl = VITE_BASE_URL || "/";
-  
+
   try {
     const res = await fetch(`${baseUrl}index.html?time=${Date.now()}`);
 

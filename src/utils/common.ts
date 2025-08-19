@@ -1,9 +1,4 @@
 import { loading, warning } from '@database/custom/index';
-import dayjs from "dayjs";
-
-export function formatTime(data: any) {
-  return dayjs(data).format("YYYY-MM-DD HH:mm:ss"); // 2022-5-7 9:17:56
-}
 
 export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
   navigator.userAgent
@@ -23,7 +18,7 @@ export const getTime = () => {
  */
 export function isMacOS() {
   if (typeof window !== "undefined") {
-    let userAgent = window.navigator.userAgent.toLocaleLowerCase();
+    const userAgent = window.navigator.userAgent.toLocaleLowerCase();
     const macintosh = /iphone|ipad|ipod|macintosh/.test(userAgent);
     return !!macintosh;
   }

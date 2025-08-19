@@ -29,7 +29,7 @@ export interface LLMParams {
    * @default 1
    */
   top_p?: number;
-  
+
   model: string;
   historyMessageCount?: number;
   token: string;

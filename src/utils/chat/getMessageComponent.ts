@@ -26,17 +26,17 @@ const componentCache = new Map();
  */
 export const getMessageComponent = (item) => {
   if (!item) return null;
-  
+
   const { type, isRevoked, ID } = item;
-  
+
   const cacheKey = `${type}_${isRevoked ? 'revoked' : 'normal'}_${ID}`;
-  
+
   if (componentCache.has(cacheKey)) {
     return componentCache.get(cacheKey);
   }
-  
+
   let component = null;
-  
+
   // 如果消息被撤回，返回提示组件
   if (isRevoked) {
     component = TipsElemItem;
@@ -44,9 +44,9 @@ export const getMessageComponent = (item) => {
     // 根据消息类型返回对应组件
     component = MESSAGE_COMPONENT_MAP[type] || null;
   }
-  
+
   componentCache.set(cacheKey, component);
-  
+
   return component;
 };
 
@@ -82,17 +82,17 @@ export const getAvailableMessageTypes = () => {
 export const testComponentPerformance = (messages) => {
   const startTime = performance.now();
   const results = [];
-  
+
   for (let i = 0; i < 1000; i++) {
     messages.forEach(item => {
       const component = getMessageComponent(item);
       results.push(component);
     });
   }
-  
+
   const endTime = performance.now();
   const duration = endTime - startTime;
-  
+
   return {
     duration,
     iterations: 1000,

@@ -43,7 +43,7 @@ export class ClientApi {
   config() {
     return this._config;
   }
-  
+
   getProvider() {
     return this._provider
   }

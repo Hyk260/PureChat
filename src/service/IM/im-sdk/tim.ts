@@ -139,11 +139,11 @@ async function initChat(): Promise<ChatInstance> {
 const handler: ProxyHandler<Record<string, never>> = {
   /**
    * 拦截属性访问
-   * 
+   *
    * @param {Record<string, never>} target - 代理目标对象（空对象）
    * @param {string|symbol} propKey - 被访问的属性名
    * @returns {*} 属性值或代理函数
-   * 
+   *
    */
   get(target: Record<string, never>, propKey: string | symbol): any {
     if (instance && typeof propKey === 'string' && propKey in instance) {
@@ -176,7 +176,7 @@ const handler: ProxyHandler<Record<string, never>> = {
         throw new Error(`方法 '${String(propKey)}' 在 IM SDK 中不存在`);
       }
 
-      const method: any = instance![propKey as string];
+      const method: any = instance![propKey];
 
       if (typeof method !== 'function') {
         return method;

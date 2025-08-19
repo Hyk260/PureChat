@@ -1,7 +1,6 @@
 import { defineConfig } from 'unocss'
 import presetRemToPx from '@unocss/preset-rem-to-px'
-import presetUno from '@unocss/preset-uno'
-import type { Theme } from '@unocss/preset-uno';
+import presetUno, { type Theme } from '@unocss/preset-uno'
 import presetIcons from '@unocss/preset-icons'
 
 export default defineConfig<Theme>({
@@ -42,4 +41,4 @@ export default defineConfig<Theme>({
       'text-overflow': 'ellipsis'
     })]
   ]
-}) 
+})

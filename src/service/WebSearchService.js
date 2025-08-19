@@ -52,7 +52,7 @@ class WebSearchService {
    */
   getWebSearchProvider() {
     const { defaultProvider, providers } = this.getWebSearchState()
-    let provider = providers.find((provider) => provider.id === defaultProvider)
+    const provider = providers.find((provider) => provider.id === defaultProvider)
 
     return provider
   }

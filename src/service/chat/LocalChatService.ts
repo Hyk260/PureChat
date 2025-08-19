@@ -23,7 +23,7 @@ export class LocalChatService {
   }
 
   async initialize() {
-    try {      
+    try {
       const conversationList = await this.loadConversationList();
 
       this.emit("sdkStateReady", { name: "sdkStateReady" });

@@ -140,4 +140,4 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     }
   },
   persist: true,
-}) 
+})

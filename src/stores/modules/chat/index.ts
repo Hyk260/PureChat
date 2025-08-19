@@ -184,9 +184,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
     },
     async createAiPromptMsg() {
-      let to = useUserStore()?.userProfile?.userID;
-      let defaultBot = useRobotStore().defaultProvider;
-      let from = getModelId(defaultBot);
+      const to = useUserStore()?.userProfile?.userID;
+      const defaultBot = useRobotStore().defaultProvider;
+      const from = getModelId(defaultBot);
       const meta = useRobotStore().promptStore[defaultBot]?.[0]?.meta
       const text = `你好，我是 ${meta.avatar} ${meta.title} ${meta.description} 让我们开始对话吧！`;
       const msg = await createTextMessage({ to: from, text, cache: false });
@@ -297,8 +297,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       });
       const latest = !newMessageList.some((item) => item.ID === message.ID);
       if (latest) {
-        let baseTime = getBaseTime(newMessageList, "last");
-        let timeDividerResult = addTimeDivider([message], baseTime);
+        const baseTime = getBaseTime(newMessageList, "last");
+        const timeDividerResult = addTimeDivider([message], baseTime);
         newMessageList.push(...timeDividerResult);
       }
       if (this.currentConversation?.conversationID === sessionId) {
@@ -312,7 +312,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         console.warn("ID 不存在");
         return;
       }
-      let sessionId = message.conversationID;
+      const sessionId = message.conversationID;
       const oldMessageList = this.historyMessageList.get(sessionId);
       if (!oldMessageList) {
         console.warn("oldMessageList 不存在");
@@ -432,9 +432,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     toggleMessageSelection(item: DB_Message, forceChecked = null) {
       const isCurrentlySelected = this.selectedMessageIds.has(item.ID);
       const willBeSelected = forceChecked !== null ? forceChecked : !isCurrentlySelected;
-      
+
       this.setSelectedMessageId(item.ID, willBeSelected);
-      
+
       if (willBeSelected) {
         this.setForwardData({ type: "set", payload: item });
       } else {
@@ -470,7 +470,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       if (code === 0) this.clearCurrentMessage();
     },
     async deleteHistoryMessage(id: string) {
-      let sessionId = id || this.currentSessionId;
+      const sessionId = id || this.currentSessionId;
       if (!sessionId) {
         console.error("sessionId is required");
         return;

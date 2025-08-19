@@ -14,7 +14,7 @@ const convertAttachmentToHtml = (elem) => {
       ${encodeHTML(fileName)}
     </span>
   `.replace(/\s+/g, ' ').trim();
-  
+
   return html;
 };
 

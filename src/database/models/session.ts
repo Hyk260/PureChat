@@ -47,7 +47,7 @@ class _SessionModel extends BaseModel {
         if (message.content.toLowerCase().includes(keywordLowerCase)) return true;
 
         // check translate content
-        if (message.translate && message.translate.content) {
+        if (message.translate?.content) {
           return message.translate.content.toLowerCase().includes(keywordLowerCase);
         }
 

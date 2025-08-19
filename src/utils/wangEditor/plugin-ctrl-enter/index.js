@@ -6,7 +6,7 @@ function withCtrlEnter(editor) {
   setTimeout(() => {
     const { $textArea } = DomEditor.getTextarea(editor);
     if ($textArea === null) return;
-    
+
     $textArea.on("keydown", (event) => {
       const isCtrl = event.ctrlKey || event.metaKey;
       if (event.key === "Enter" && isCtrl) {

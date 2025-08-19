@@ -122,7 +122,7 @@ export const getFileType = (filename) => {
  * @returns {File} 文件对象
  */
 export const dataURLtoFile = (dataUrl, fileName = "image.png") => {
-  var arr = dataUrl.split(","),
+  let arr = dataUrl.split(","),
     mime = arr[0].match(/:(.*?);/)?.[1],
     bstr = atob(arr[1]),
     n = bstr.length,

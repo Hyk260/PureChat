@@ -73,7 +73,7 @@ export const convertIterableToStream = <T>(stream: AsyncIterable<T>) => {
   const iterable = chatStreamable(stream);
 
   // copy from https://github.com/vercel/ai/blob/d3aa5486529e3d1a38b30e3972b4f4c63ea4ae9a/packages/ai/streams/ai-stream.ts#L284
-  let it = iterable[Symbol.asyncIterator]();
+  const it = iterable[Symbol.asyncIterator]();
 
   return new ReadableStream({
     async cancel(reason) {
@@ -124,7 +124,7 @@ export const createSSEProtocolTransformer = (
 
 export const createCallbacksTransformer = (cb: ChatStreamCallbacks | undefined) => {
   const textEncoder = new TextEncoder();
-  let aggregatedText = '';
+  const aggregatedText = '';
 
   let currentType = '' as unknown as StreamProtocolChunk['type'];
   const callbacks = cb || {};

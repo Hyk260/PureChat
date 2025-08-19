@@ -1560,12 +1560,12 @@ export declare class ChatSDK {
   /**
    * Get the userID of the logged-in user. If the user is not logged in, it returns an empty string ('').
    */
-  getLoginUser(): String;
+  getLoginUser(): string;
 
   /**
    * Get server time.
    */
-  getServerTime(): Number;
+  getServerTime(): number;
 
   /**
    * Get ready status of the SDK. When the SDK is ready, developers can call APIs that require authentication, such as sendMessage
@@ -1598,7 +1598,7 @@ export declare class ChatSDK {
    * Register a plugin.
    * Before sending messages, such as image, audio, video, and file messages, the Chat SDK needs to use the upload plugin to upload files to Tencent COS.
    */
-  registerPlugin(options: Object): void;
+  registerPlugin(options: object): void;
 
   /**
    * Set the log level. Logs below this level will not be printed.
@@ -1721,12 +1721,12 @@ export declare class ChatSDK {
   /**
    * Get message extensions.
    */
-  getMessageExtensions(message: Message, keyList?: Array<String>): Promise<any>;
+  getMessageExtensions(message: Message, keyList?: Array<string>): Promise<any>;
 
   /**
    * Delete message extensions.
    */
-  deleteMessageExtensions(message: Message, keyList?: Array<String>): Promise<any>;
+  deleteMessageExtensions(message: Message, keyList?: Array<string>): Promise<any>;
 
   /**
    * Modify a message.
@@ -2369,19 +2369,19 @@ export interface CREATE_OPTIONS {
   /**
    * WebSocket server proxy address
    */
-  proxyServer?: String | undefined;
+  proxyServer?: string | undefined;
   /**
    * Image, video, file upload proxy address
    */
-  fileUploadProxy?: String | undefined;
+  fileUploadProxy?: string | undefined;
   /**
    * Image, video, file download proxy address
    */
-  fileDownloadProxy?: String | undefined;
+  fileDownloadProxy?: string | undefined;
   /**
    * Scenes of chat-uikit
    */
-  scene?: String | undefined;
+  scene?: string | undefined;
   /**
    * Modules of the Chat Web SDK
    */
@@ -3046,7 +3046,7 @@ declare namespace TencentCloudChat {
     USER_STATUS_UNLOGINED = 3,
 
     /**
-     * On the iOS platform, no sound is played when receiving offline push notifications 
+     * On the iOS platform, no sound is played when receiving offline push notifications
      */
     IOS_OFFLINE_PUSH_NO_SOUND = 'push.no_sound',
 

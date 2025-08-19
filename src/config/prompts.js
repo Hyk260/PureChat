@@ -38,7 +38,7 @@ export async function getWebSearchReferences(message) {
   const provider = useWebSearchStore().defaultProvider
   const references = await WebSearchService.search(provider, message.content);
 
-  const webSearch = references 
+  const webSearch = references
 
   if (webSearch) {
     return mapWebSearchResults(webSearch.results);

@@ -58,6 +58,6 @@ export function decodeText(text: string) {
       remainingText = remainingText.substring(leftBracketIndex);
     }
   }
-  
+
   return renderDom;
 }
