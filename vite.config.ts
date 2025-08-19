@@ -19,9 +19,9 @@ export default defineConfig((configEnv) => {
         // 配置主路径别名@
         "@": fileURLToPath(new URL("./src", import.meta.url)),
         // 配置共享路径别名@shared
-        '@shared': fileURLToPath(new URL("./packages/shared", import.meta.url)),
+        "@shared": fileURLToPath(new URL("./packages/shared", import.meta.url)),
         // 配置数据库路径别名@database
-        '@database': fileURLToPath(new URL("./packages/database", import.meta.url)),
+        "@database": fileURLToPath(new URL("./packages/database", import.meta.url)),
       },
       extensions: [".js", ".ts", ".json"],
     },

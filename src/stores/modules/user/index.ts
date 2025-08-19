@@ -39,19 +39,19 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     }
   },
   actions: {
-    setCurrentPage(page: number): void {
+    setCurrentPage(page: number) {
       this.currentPage = page
     },
-    setVerifyCode(val: string): void {
+    setVerifyCode(val: string) {
       this.verifyCode = val
     },
-    setCurrentProfile(user: UserProfile): void {
+    setCurrentProfile(user: UserProfile) {
       this.userProfile = user
     },
-    setUserLocalStore(data: Partial<UserLocalStore>): void {
+    setUserLocalStore(data: Partial<UserLocalStore>) {
       this.userLocalStore = { ...this.userLocalStore, ...data }
     },
-    async handleSuccessfulAuth(data: HandleSuccessfulAuthPayload): Promise<void> {
+    async handleSuccessfulAuth(data: HandleSuccessfulAuthPayload) {
       console.log("授权登录信息 handleSuccessfulAuth", data)
       const { code, msg, result } = data
       if (code === 200) {
@@ -65,12 +65,12 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         useAppStore().showMessage({ message: msg, type: "error" })
       }
     },
-    async handleUserLogin(data: HandleUserLoginPayload): Promise<void> {
+    async handleUserLogin(data: HandleUserLoginPayload) {
       console.log(data, "登录信息")
       const result = await login(data)
       this.handleSuccessfulAuth(result)
     },
-    async handleUserLogout(): Promise<void> {
+    async handleUserLogout() {
       router.push("/login")
       setTimeout(() => {
         logout()
@@ -78,7 +78,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         this.handleIMLogout()
       }, 500)
     },
-    async handleIMLogin(user: HandleIMLoginPayload): Promise<void> {
+    async handleIMLogin(user: HandleIMLoginPayload) {
       try {
         const data = await chat.login(user)
         if (data.code === 0) {

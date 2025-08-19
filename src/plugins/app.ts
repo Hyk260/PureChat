@@ -10,7 +10,6 @@ const { DEV: isDev, PROD: isProd, VITE_BASE_URL, VITE_AUTOMATICALLY_DETECT_UPDAT
 
 export function setupAppErrorHandle(app: App) {
   app.config.errorHandler = (err, vm, info) => {
-
     console.error(err, vm, info);
   };
 }

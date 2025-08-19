@@ -1,5 +1,10 @@
-/** 配置项文档：https://prettier.io/docs/en/configuration.html */
-export default {
+// https://prettier.io/playground
+
+/**
+ * @see https://prettier.io/docs/configuration
+ * @type {import("prettier").Config}
+ */
+const config = {
   trailingComma: "es5",
   useTabs: false,
   /** Tab 键的空格数 */
@@ -17,3 +22,5 @@ export default {
   /** 换行符的使用 */
   endOfLine: "auto",
 };
+
+export default config;
