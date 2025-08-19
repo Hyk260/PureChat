@@ -1,7 +1,7 @@
-import { defineConfig } from "unocss";
+import presetIcons from "@unocss/preset-icons";
 import presetRemToPx from "@unocss/preset-rem-to-px";
 import presetUno, { type Theme } from "@unocss/preset-uno";
-import presetIcons from "@unocss/preset-icons";
+import { defineConfig } from "unocss";
 
 export default defineConfig<Theme>({
   content: {
