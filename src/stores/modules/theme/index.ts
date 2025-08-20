@@ -10,6 +10,10 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
     fontThemeList: [
       { label: "阿里方元", value: "AliFangYuan" },
     ],
+    page: {
+      animate: true,
+      animateMode: "fade-slide",
+    }
   }),
   getters: {
     isDarkMode() { },

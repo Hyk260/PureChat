@@ -7,6 +7,7 @@ import { useElementPlus } from "./elementPlus";
 // import { setupNProgress } from "./nprogress"
 import { setupIconifyOffline } from "./iconify";
 import { useElIcons } from "./icons";
+import { setupDayjs } from "./dayjs";
 
 function useGlobalProperties(app: App) {
   app.config.globalProperties.IS_ELECTRON = __IS_ELECTRON__;
@@ -22,4 +23,5 @@ export function setupPlugins(app: App) {
   // setupNProgress()
   setupAppVersionNotification();
   setupAppErrorHandle(app);
+  setupDayjs();
 }

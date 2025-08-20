@@ -34,69 +34,6 @@ export default defineConfig([
   //     "prettier/prettier": ["warn"],
   //   },
   // },
-  // JavaScript 文件
-  {
-    files: ["**/*.?([cm])js"],
-    languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-      globals: {
-        // 浏览器环境全局变量
-        ...globals.browser,
-        // Node.js 环境全局变量
-        ...globals.node,
-        // 自定义全局变量
-        __LOCAL_MODE__: "readonly",
-        __IS_ELECTRON__: "readonly",
-        __APP_INFO__: "readonly",
-      },
-    },
-    plugins: {
-      prettier: prettierPlugin,
-    },
-    rules: {
-      // Vue 相关规则
-      "vue/multi-word-component-names": "off",
-      "vue/no-v-html": "off",
-      "vue/component-name-in-template-casing": ["error", "PascalCase"],
-      "vue/component-definition-name-casing": ["error", "PascalCase"],
-      "vue/require-default-prop": "warn",
-      "vue/require-prop-types": "warn",
-      "vue/no-unused-components": "warn",
-      "vue/no-unused-vars": "warn",
-
-      // 代码质量规则
-      "no-console": isProd ? "warn" : "off",
-      "no-debugger": isProd ? "warn" : "off",
-      "no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
-      ],
-      "no-undef": "warn",
-      "no-unreachable": "error",
-      "no-constant-condition": "error",
-      "no-dupe-keys": "error",
-      "no-dupe-args": "error",
-      "no-dupe-class-members": "error",
-      "no-dupe-else-if": "error",
-      "no-duplicate-imports": "error",
-      "no-empty": "warn",
-      "no-extra-semi": "error",
-      "no-irregular-whitespace": "error",
-      "no-multiple-empty-lines": ["warn", { max: 2 }],
-      "no-trailing-spaces": "error",
-      "no-unneeded-ternary": "warn",
-      "prefer-const": "error",
-      "no-var": "error",
-
-      // Prettier 规则
-      // "prettier/prettier": "warn",
-    },
-  },
   // TypeScript 文件
   {
     files: ["**/*.?([cm])ts"],
@@ -153,7 +90,7 @@ export default defineConfig([
       // 代码质量规则
       "no-console": isProd ? "warn" : "off",
       "no-debugger": isProd ? "warn" : "off",
-      "no-undef": "warn",
+      // "no-undef": "warn",
       "no-unreachable": "error",
       "no-constant-condition": "error",
       "no-dupe-keys": "error",

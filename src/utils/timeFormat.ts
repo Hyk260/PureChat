@@ -2,10 +2,7 @@
 import dayjs from "dayjs";
 import isToday from "dayjs/plugin/isToday.js";
 import isYesterday from "dayjs/plugin/isYesterday.js";
-import "dayjs/locale/zh-cn.js"; // 引入中文语言包
 
-// 设置 dayjs 的 locale 为中文
-dayjs.locale("zh-cn");
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
 

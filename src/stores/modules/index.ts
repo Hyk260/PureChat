@@ -3,6 +3,7 @@ export * from './auth/index';
 export * from './chat/index';
 export * from './group/index';
 export * from './robot/index';
+export * from './route/index';
 export * from './sidebar/index';
 export * from './theme/index';
 export * from './tools/index';
