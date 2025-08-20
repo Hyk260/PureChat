@@ -1,4 +1,4 @@
-import 'uno.css'
+import "uno.css";
 // import 'virtual:unocss-devtools'
 import "@/styles/css/iconify.css";
 import "@/styles/theme/default.scss";

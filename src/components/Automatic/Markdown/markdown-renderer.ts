@@ -1,36 +1,19 @@
-import markdownit from "markdown-it"
-import markdownItFootnote from "markdown-it-footnote"
-import hljs from "highlight.js"
-import javascript from "highlight.js/lib/languages/javascript"
-
-import { useClipboard } from "@vueuse/core";
-import { useAppStore } from "@/stores/index";
-import { prettyObject } from "@/ai/utils";
-import { convertToMarkdownFootnotes, CopyIcon } from "./utils"
-import { configureFootnoteRules, applyLinkOpenRules, applyEpubRules } from "./markdown"
-
 import "@/styles/highlight.scss";
 import "highlight.js/styles/base16/default-light.css";
 
+import hljs from "highlight.js";
+import javascript from "highlight.js/lib/languages/javascript";
+import markdownit from "markdown-it";
+import markdownItFootnote from "markdown-it-footnote";
+
+import { prettyObject } from "@/ai/utils";
+
+import { applyEpubRules, applyLinkOpenRules, configureFootnoteRules } from "./markdown";
+import { convertToMarkdownFootnotes, CopyIcon } from "./utils";
+
 // 注册 highlight.js 语言
-hljs.registerLanguage("javascript", javascript)
-hljs.registerLanguage("vue", javascript)
-
-const { copy, isSupported } = useClipboard();
-
-function copyToClipboard(str: string) {
-  if (isSupported) {
-    copy(str);
-    useAppStore().showMessage({ message: "复制成功" });
-  } else {
-    useAppStore().showMessage({ message: "您的浏览器不支持剪贴板API" });
-  }
-}
-
-if (typeof window !== "undefined") {
-  // @ts-ignore
-  (window as any).copyToClipboard = copyToClipboard;
-}
+hljs.registerLanguage("javascript", javascript);
+hljs.registerLanguage("vue", javascript);
 
 // 定义构造函数选项接口
 interface MarkdownRendererOptions {
@@ -54,7 +37,7 @@ class MarkdownRenderer {
    * @param {Array<WebSearchResult>} [options.webSearchResults=[]] - 可选的网页搜索结果，用于脚注自定义。
    */
   constructor(options: MarkdownRendererOptions = {}) {
-    const { webSearchResults = [] } = options
+    const { webSearchResults = [] } = options;
 
     const clipboard = "nextElementSibling && (window.copyToClipboard(nextElementSibling.innerText))";
 
@@ -65,16 +48,16 @@ class MarkdownRenderer {
      * @returns {string} 高亮后的 HTML 字符串。
      */
     const highlightFn = (str: string, lang: string): string => {
-      const copyButtonHtml = `<button class="copy-code-button" onclick="${clipboard}" title="copy">${CopyIcon}</button>`
+      const copyButtonHtml = `<button class="copy-code-button" onclick="${clipboard}" title="copy">${CopyIcon}</button>`;
 
       if (str && hljs.getLanguage(lang)) {
         // 如果指定了语言且 highlight.js 支持，则高亮代码
-        const codeContent = hljs.highlight(str, { language: lang, ignoreIllegals: true }).value
-        return `<pre class="hljs language-${lang ? lang : ""}">${copyButtonHtml}<code>${codeContent}</code></pre>`
+        const codeContent = hljs.highlight(str, { language: lang, ignoreIllegals: true }).value;
+        return `<pre class="hljs language-${lang ? lang : ""}">${copyButtonHtml}<code>${codeContent}</code></pre>`;
       } else {
         // 对于未知语言或无高亮的情况：转义 HTML 并用 pre/code 包装
         // 使用 markdown-it 的工具函数来安全地转义 HTML
-        return `<pre class="hljs">${copyButtonHtml}<code>${this.md.utils.escapeHtml(str)}</code></pre>`
+        return `<pre class="hljs">${copyButtonHtml}<code>${this.md.utils.escapeHtml(str)}</code></pre>`;
       }
     }
 

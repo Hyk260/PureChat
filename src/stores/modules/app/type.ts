@@ -2,7 +2,7 @@ import { MessageHandler } from "element-plus";
 
 export interface AppState {
   message: MessageHandler | null;
-  lang: string;
+  lang: App.I18n.LangType;
   timeline: boolean;
   markdownRender: boolean;
 }

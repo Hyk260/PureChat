@@ -1,12 +1,16 @@
-import type { App } from 'vue';
-import type { NotificationHandle } from 'element-plus';
-import { h } from "vue";
+import { ElButton, type NotificationHandle } from "element-plus";
+import { type App, h } from "vue";
+
 import { $t } from "@/locales";
-import { ElNotification, ElButton } from "element-plus";
 
 let isShow = false;
 let Notification: NotificationHandle | null = null;
-const { DEV: isDev, PROD: isProd, VITE_BASE_URL, VITE_AUTOMATICALLY_DETECT_UPDATE } = import.meta.env;
+const {
+  DEV: isDev,
+  PROD: isProd,
+  VITE_BASE_URL,
+  VITE_AUTOMATICALLY_DETECT_UPDATE,
+} = import.meta.env;
 
 export function setupAppErrorHandle(app: App) {
   app.config.errorHandler = (err, vm, info) => {
@@ -16,7 +20,7 @@ export function setupAppErrorHandle(app: App) {
 
 function notify() {
   if (Notification) Notification.close();
-  Notification = ElNotification({
+  Notification = window.$notification!({
     title: $t("system.updateContent"),
     dangerouslyUseHTMLString: true,
     message: h("div", [
@@ -44,8 +48,8 @@ function notify() {
     onClose: () => {
       isShow = false;
     },
-    duration: 6000,
-  } as any);
+    duration: 0,
+  });
 }
 
 async function getHtmlBuildTime(): Promise<string | null> {
@@ -55,7 +59,7 @@ async function getHtmlBuildTime(): Promise<string | null> {
     const res = await fetch(`${baseUrl}index.html?time=${Date.now()}`);
 
     if (!res.ok) {
-      console.error('getHtmlBuildTime error:', res.status, res.statusText);
+      console.error("getHtmlBuildTime error:", res.status, res.statusText);
       return null;
     }
 
@@ -63,7 +67,7 @@ async function getHtmlBuildTime(): Promise<string | null> {
     const match = html.match(/<meta name="buildTime" content="(.*)">/);
     return match?.[1] || null;
   } catch (error) {
-    console.error('getHtmlBuildTime error:', error);
+    console.error("getHtmlBuildTime error:", error);
     return null;
   }
 }
@@ -87,7 +91,7 @@ const checkForUpdates = async () => {
 
 export function setupAppVersionNotification() {
   if (isDev || __IS_ELECTRON__) return;
-  const canAutoUpdateApp = VITE_AUTOMATICALLY_DETECT_UPDATE === 'Y' && isProd;
+  const canAutoUpdateApp = VITE_AUTOMATICALLY_DETECT_UPDATE === "Y" && isProd;
   if (!canAutoUpdateApp) return;
 
   document.addEventListener("visibilitychange", () => {

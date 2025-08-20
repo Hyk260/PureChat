@@ -1,14 +1,12 @@
-import localforage from 'localforage';
+import localforage from "localforage";
 
-const {
-  VITE_STORAGE_PREFIX: storagePrefix
-} = import.meta.env;
+const { VITE_STORAGE_PREFIX: storagePrefix } = import.meta.env;
 
 /** The storage type */
-export type StorageType = 'local' | 'session';
+export type StorageType = "local" | "session";
 
 export function createStorage<T extends object>(type: StorageType, storagePrefix: string) {
-  const stg = type === 'session' ? window.sessionStorage : window.localStorage;
+  const stg = type === "session" ? window.sessionStorage : window.localStorage;
 
   const storage = {
     /**
@@ -50,28 +48,28 @@ export function createStorage<T extends object>(type: StorageType, storagePrefix
     },
     clear() {
       stg.clear();
-    }
+    },
   };
 
   return storage;
 }
 
-export type LocalforageDriver = 'local' | 'indexedDB' | 'webSQL';
+export type LocalforageDriver = "local" | "indexedDB" | "webSQL";
 
-export function createLocalforage(driver: LocalforageDriver = 'indexedDB') {
+export function createLocalforage(driver: LocalforageDriver = "indexedDB") {
   const driverMap: Record<LocalforageDriver, string> = {
     local: localforage.LOCALSTORAGE,
     indexedDB: localforage.INDEXEDDB,
-    webSQL: localforage.WEBSQL
+    webSQL: localforage.WEBSQL,
   };
 
   localforage.config({
     driver: driverMap[driver],
     name: "PURE_CHAT_DB",
-    storeName: 'userDataStore',
+    storeName: "userDataStore",
   });
 
   return localforage;
 }
 
-export const localStg = createStorage<StorageType.Local>('local', storagePrefix);
+export const localStg = createStorage<StorageType.Local>("local", storagePrefix);

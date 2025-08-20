@@ -43,6 +43,14 @@ declare namespace Env {
     readonly VITE_ICON_LOCAL_PREFIX: 'local-icon';
     /** 后端服务基础URL */
     readonly VITE_SERVICE_BASE_URL: string;
+    /**
+     * Iconify api provider url
+     *
+     * If the project is deployed in intranet, you can set the api provider url to the local iconify server
+     *
+     * @link https://docs.iconify.design/api/providers.html
+     */
+    readonly VITE_ICONIFY_URL?: string;
     /** 启动编辑器 */
     readonly VITE_DEVTOOLS_LAUNCH_EDITOR?: import('vite-plugin-vue-devtools').VitePluginVueDevToolsOptions['launchEditor'];
 

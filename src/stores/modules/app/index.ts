@@ -1,8 +1,10 @@
-import type { AppState, MessageOptions } from './type';
-import { defineStore } from 'pinia';
 import { ElMessage } from "element-plus";
+import { defineStore } from "pinia";
+
 import { setLocale } from "@/locales";
-import { SetupStoreId } from '@/stores/enum';
+import { SetupStoreId } from "@/stores/enum";
+
+import type { AppState, MessageOptions } from "./type";
 
 export const useAppStore = defineStore(SetupStoreId.App, {
   state: (): AppState => ({
@@ -12,9 +14,9 @@ export const useAppStore = defineStore(SetupStoreId.App, {
     markdownRender: false, // Markdown 渲染输入消息
   }),
   actions: {
-    setLang(lang: string) {
-      this.lang = lang
-      setLocale(lang)
+    setLang(lang: App.I18n.LangType) {
+      this.lang = lang;
+      setLocale(lang);
     },
     setTimeline(val: boolean) {
       this.timeline = val;

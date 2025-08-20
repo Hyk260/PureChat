@@ -5,20 +5,33 @@
   //   // 控制是否应在文件保存时运行"整理 import 语句"操作
   //   "source.organizeImports": "never"
   // },
-  // "prettier.enable": false,
+  "prettier.enable": false,
   "eslint.useFlatConfig": true,
   // 在保存时格式化文件。格式化程序必须可用，延迟后文件不能保存，并且编辑器不能关闭。
-  // "editor.formatOnSave": false,
-  // "eslint.validate": ["html", "css", "scss", "json", "jsonc","markdown"],
+  "editor.formatOnSave": false,
+  "eslint.validate": [
+    // "javascript", // support builtin
+    // "javascriptreact", // support builtin
+    "typescript",  // support builtin
+    // "typescriptreact", // support builtin
+    // "vue", // support builtin
+    // add the languages you want to lint
+    "html", 
+    "css", 
+    "scss", 
+    "json", 
+    "jsonc",
+    "markdown"
+  ],
   // 控制编辑器在键入一行后是否自动格式化该行。
   // "editor.formatOnType": true,
   // 针对某种语言，配置替代编辑器设置。
-  "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
+  // "[vue]": {
+  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // },
+  // "[css]": {
+  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // },
   //指定vscode的eslint所处理的文件的后缀
   // "eslint.options": {
   //   "extensions": [

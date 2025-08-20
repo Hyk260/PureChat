@@ -33,10 +33,10 @@ export interface LLMParams {
   model: string;
   historyMessageCount?: number;
   token: string;
-  openaiUrl: string,
+  openaiUrl: string;
 }
 
-export type LLMRoleType = 'user' | 'system' | 'assistant' | 'tool';
+export type LLMRoleType = "user" | "system" | "assistant" | "tool";
 
 export interface LLMMessage {
   content: string;

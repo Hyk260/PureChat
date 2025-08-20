@@ -229,9 +229,9 @@ const { VITE_AUTO_COMPONENT } = import.meta.env;
 /** 按需引入`element-plus` */
 export function useElementPlus(app: App) {
   // 全局注册组件
-  if (VITE_AUTO_COMPONENT === 'N') {
+  if (VITE_AUTO_COMPONENT === "N") {
     components.forEach((component: Component) => {
-      app.component(component.name!, component);
+      app.component(component.name, component);
     });
   }
   // 全局注册插件

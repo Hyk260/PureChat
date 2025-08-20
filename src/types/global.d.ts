@@ -11,7 +11,7 @@ declare global {
     pkg: {
       name: string;
       version: string;
-      engines: {};
+      engines: object;
       docs: string;
       homepage: string;
       giteeHomepage: string;
@@ -39,7 +39,19 @@ declare global {
   export interface Window {
     /** NProgress instance */
     NProgress?: import('nprogress').NProgress;
-    __TIM_DEBUG__: DebugInterface;
+    copyToClipboard: (str: string) => void;
+    /** MessageBox instance */
+    $messageBox?: import('element-plus').IElMessageBox;
+    /** Message instance */
+    $message?: import('element-plus').Message & {
+      success: (message: string) => void;
+      warning: (message: string) => void;
+      info: (message: string) => void;
+      error: (message: string) => void;
+    };
+    /** Notification instance */
+    $notification?: import('element-plus').Notify;
+    // __TIM_DEBUG__: DebugInterface;
   }
 
   /** Build time of the project */
