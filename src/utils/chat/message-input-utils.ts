@@ -1,6 +1,5 @@
 import { nextTick } from "vue";
 import { isEmpty, throttle } from 'lodash-es';
-import { useAppStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 
 /**
@@ -318,7 +317,7 @@ export function bytesToSize(bytes) {
 export const scrollToDomPosition = (msgid) => {
   const dom = document.getElementById(`${msgid}`);
   if (!dom) {
-    useAppStore().showMessage({ message: "无法查看上下文", type: "warning" });
+    window.$message?.warning("无法查看上下文");
     return;
   }
   dom.scrollIntoView({ behavior: "smooth", block: "center" });

@@ -240,7 +240,7 @@ const toggleMessageSelection = (item, forceChecked = null) => {
   const isCurrentlySelected = chatStore.isMessageSelected(item.ID);
 
   if (forceChecked !== null && forceChecked && !isCurrentlySelected && chatStore.isFwdDataMaxed) {
-    appStore.showMessage({ message: `最多只能选择${MULTIPLE_CHOICE_MAX}条`, type: "error" });
+    window.$message?.error(`最多只能选择${MULTIPLE_CHOICE_MAX}条`);
     return;
   }
 
@@ -483,7 +483,7 @@ const handleSendMessage = (data) => {
 
 const handleSave = ({ payload }) => {
   if (!payload.fileUrl || !payload.fileName) {
-    appStore.showMessage({ message: "文件不存在", type: "error" });
+    window.$message?.error("文件不存在");
     return;
   }
   download(payload.fileUrl, payload.fileName);

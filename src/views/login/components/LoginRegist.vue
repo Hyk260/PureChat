@@ -116,11 +116,11 @@ const onUpdate = async (formEl) => {
       if (checked.value) {
         setTimeout(() => {
           loading.value = false;
-          appStore.showMessage({ message: "注册成功" });
+          window.$message?.success("注册成功");
         }, 2000);
       } else {
         loading.value = false;
-        appStore.showMessage({ message: "请勾选隐私政策", type: "warning" });
+        window.$message?.warning("请勾选隐私政策");
       }
     } else {
       loading.value = false;

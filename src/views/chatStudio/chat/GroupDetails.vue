@@ -136,7 +136,7 @@ import { useState } from "@/hooks/useState";
 import { showConfirmationBox } from "@/utils/message";
 import { isFullStaffGroup } from "@/ai/utils";
 import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index";
-import { useGroupStore, useAppStore, useUserStore, useChatStore } from "@/stores/index";
+import { useGroupStore, useUserStore, useChatStore } from "@/stores/index";
 import AddMemberPopup from "@/components/Popups/AddMemberPopup.vue";
 import emitter from "@/utils/mitt-bus";
 
@@ -153,7 +153,6 @@ const AddMemberRef = ref();
 const groupStore = useGroupStore();
 const userStore = useUserStore();
 const chatStore = useChatStore();
-const appStore = useAppStore();
 const [drawer, setDrawer] = useState();
 const [loading, setLoading] = useState();
 
@@ -182,7 +181,7 @@ const openNamePopup = async () => {
   const isByteLeng = isByteLengthExceedingLimit(result.value, "name");
   if (isByteLeng) {
     // const long = GroupModifyType['name']
-    appStore.showMessage({ message: "名称太长", type: "warning" });
+    window.$message?.warning("名称太长");
     return;
   }
   modifyGroupInfo(result.value);
@@ -196,7 +195,7 @@ const openNoticePopup = async () => {
   const isByteLeng = isByteLengthExceedingLimit(result.value, "notification");
   if (isByteLeng) {
     // const long = GroupModifyType['notification']
-    appStore.showMessage({ message: "公告太长", type: "warning" });
+    window.$message?.warning("公告太长");
     return;
   }
   modifyGroupInfo(result.value, "notification");
@@ -265,7 +264,7 @@ const modifyGroupInfo = async (value, modify) => {
   const { groupID } = groupProfile;
   const { code, group } = await updateGroupProfile({ groupID, value, modify });
   if (code !== 0) {
-    appStore.showMessage({ message: "修改失败", type: "warning" });
+    window.$message?.warning("修改失败");
   } else {
     console.log("modifyGroupInfo:", group);
   }

@@ -1,5 +1,5 @@
 import { localStg } from "@/utils/storage";
-import { useAppStore, useAuthStore } from "@/stores/index";
+import { useAuthStore } from "@/stores/index";
 import Axios, {
   type AxiosError,
   type AxiosInstance,
@@ -29,7 +29,8 @@ const errorHandler = (error: AxiosError) => {
   const status = error.response?.status;
   const errMessage = status ? statusMessageMap[status] ?? `连接错误 ${status}` : "无法连接到服务器！";
 
-  useAppStore().showMessage({ message: errMessage, type: "error" });
+  window.$message?.error(errMessage);
+
   return Promise.reject(error);
 };
 

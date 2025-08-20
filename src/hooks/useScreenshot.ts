@@ -1,7 +1,7 @@
-import { domToJpeg, domToPng, domToSvg, domToWebp, domToBlob } from "modern-screenshot";
-import { useAppStore } from "@/stores/modules/app";
-import { useState } from "@/hooks/useState";
 import dayjs from "dayjs";
+import { domToBlob, domToJpeg, domToPng, domToSvg, domToWebp } from "modern-screenshot";
+
+import { useState } from "@/hooks/useState";
 
 export const ImageType = {
   Blob: "blob",
@@ -11,7 +11,7 @@ export const ImageType = {
   WEBP: "webp",
 };
 
-export const imageTypeOptions = Object.values(ImageType).map(value => ({
+export const imageTypeOptions = Object.values(ImageType).map((value) => ({
   label: value.toUpperCase(),
   value,
 }));
@@ -32,7 +32,7 @@ async function copyImageToClipboard(blob: Blob) {
   try {
     const clipboardItem = new ClipboardItem({ "image/png": blob });
     await navigator.clipboard.write([clipboardItem]);
-    useAppStore().showMessage({ message: "图片复制成功" });
+    window.$message?.success("图片复制成功");
   } catch (error) {
     console.error("写入剪贴板时出错:", error);
     throw error;
@@ -58,15 +58,11 @@ function downloadImage(dataUrl: string, imageType: string, title: string) {
 export const useScreenshot = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleDownload = async (
-    imageType = ImageType.JPG,
-    title = "",
-    callback: () => void
-  ) => {
+  const handleDownload = async (imageType = ImageType.JPG, title = "", callback: () => void) => {
     setLoading(true);
 
     try {
-      await new Promise(resolve => requestIdleCallback(resolve));
+      await new Promise((resolve) => requestIdleCallback(resolve));
 
       const screenshotFn = SCREENSHOT_FUNCTIONS[imageType];
       if (!screenshotFn) {
@@ -92,7 +88,7 @@ export const useScreenshot = () => {
       callback?.();
     } catch (error) {
       console.error("Failed to capture image", error);
-      useAppStore().showMessage({ message: "截图失败", type: "error" });
+      window.$message?.error("截图失败");
     } finally {
       setLoading(false);
     }

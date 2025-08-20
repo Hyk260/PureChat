@@ -5,9 +5,8 @@ import {
   createTextMessage,
   createVideoMessage,
 } from "@/service/im-sdk-api/index";
-import { useAppStore, useChatStore } from '@/stores/index';
+import { useChatStore } from '@/stores/index';
 import { base64ToFile, getBlob, getFileType } from "@/utils/chat/index";
-import { useClipboard } from "@vueuse/core";
 import { match } from "pinyin-pro";
 import { cloneDeep } from "lodash-es";
 import emitter from "@/utils/mitt-bus";
@@ -21,13 +20,7 @@ export const handleCopyMsg = async (data) => {
   const { payload, type } = data;
   // 文本
   if (type === "TIMTextElem") {
-    const { text, copy, isSupported } = useClipboard({ source: payload.text });
-    if (isSupported) {
-      copy(payload.text);
-      useAppStore().showMessage({ message: "复制成功" });
-    } else {
-      useAppStore().showMessage({ message: "您的浏览器不支持剪贴板API" });
-    }
+    window.copyToClipboard(payload.text);
   }
   // 图片
   if (type === "TIMImageElem") {
@@ -39,7 +32,7 @@ export const handleCopyMsg = async (data) => {
     navigator.clipboard
       .write([clipboardItem])
       .then(() => {
-        useAppStore().showMessage({ message: "图片复制成功" });
+        window.$message?.success("图片复制成功");
       })
       .catch((error) => {
         console.error("写入剪贴板时出错:", error);

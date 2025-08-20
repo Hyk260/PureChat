@@ -195,7 +195,7 @@ import { useState } from "@/hooks/useState";
 import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
 import { modelValue, modelConfig } from "@/ai/constant";
-import { useRobotStore, useChatStore, useAppStore } from "@/stores/index";
+import { useRobotStore, useChatStore } from "@/stores/index";
 import { debounce } from "lodash-es";
 import { isRange } from "./utils";
 import { openWindow } from "@/utils/common";
@@ -217,7 +217,6 @@ const inputRefs = ref({ token: null, openaiUrl: null });
 const [dialog, setDialog] = useState();
 const [loading, setLoading] = useState();
 
-const appStore = useAppStore();
 const chatStore = useChatStore();
 const robotStore = useRobotStore();
 const { toAccount } = storeToRefs(chatStore);
@@ -324,13 +323,13 @@ async function handleCheckToken(item) {
     const { valid, error } = await api.llm.checkConnectivity();
     if (valid) {
       setLoading(false);
-      appStore.showMessage({ message: "连接成功", type: "success" });
+      window.$message?.success("连接成功");
     } else {
       setLoading(false);
-      appStore.showMessage({ message: error, type: "error" });
+      window.$message?.error(error);
     }
   } else {
-    appStore.showMessage({ message: "请输入API密钥", type: "warning" });
+    window.$message?.warning("请输入API密钥");
   }
 }
 

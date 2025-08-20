@@ -38,7 +38,7 @@
 <script setup>
 import { Promotion } from "@element-plus/icons-vue";
 import { useState } from "@/hooks/useState";
-import { useAppStore, useWebSearchStore } from "@/stores/index";
+import { useWebSearchStore } from "@/stores/index";
 import { WEB_SEARCH_PROVIDER_CONFIG } from "@/config/webSearchProviders";
 import { openWindow } from "@/utils/common";
 import WebSearchService from "@/service/WebSearchService";
@@ -47,7 +47,6 @@ const { DEV: isDev } = import.meta.env;
 
 const [searchInput, setSearchInput] = useState("");
 
-const appStore = useAppStore();
 const webSearchStore = useWebSearchStore();
 
 const { providers, defaultProvider, getProviderConfig } = storeToRefs(webSearchStore);
@@ -91,16 +90,16 @@ function toLink(url) {
 
 async function checkApiKey() {
   if (!searchInput.value) {
-    appStore.showMessage({ message: "请输入API密钥", type: "warning" });
+    window.$message?.warning("请输入API密钥");
     return;
   }
 
   const { valid, error } = await WebSearchService.checkSearch(defaultProvider.value);
 
   if (valid) {
-    appStore.showMessage({ message: "API密钥验证通过" });
+    window.$message?.success("API密钥验证通过");
   } else {
-    appStore.showMessage({ message: error || "验证失败", type: "error" });
+    window.$message?.error(error || "验证失败");
   }
 }
 

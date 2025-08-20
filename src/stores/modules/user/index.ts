@@ -10,7 +10,7 @@ import type {
 
 import { nextTick } from "vue";
 import { defineStore } from 'pinia'
-import { useAppStore, useChatStore, useAuthStore } from '@/stores/index';
+import { useChatStore, useAuthStore } from '@/stores/index';
 import { login, logout } from "@/service/api/index"
 import { localStg } from "@/utils/storage"
 import { SetupStoreId } from '@/stores/enum';
@@ -62,7 +62,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         // data?.remember && localStg.set(ACCOUNT, data)
       } else {
         console.log("授权登录失败")
-        useAppStore().showMessage({ message: msg, type: "error" })
+        window.$message?.error(msg)
       }
     },
     async handleUserLogin(data: HandleUserLoginPayload) {
@@ -83,14 +83,14 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         const data = await chat.login(user)
         if (data.code === 0) {
           console.log("[chat] im登录成功 login", data)
-          useAppStore().showMessage({ message: "登录成功" })
+          window.$message?.success("登录成功")
           router.push("/chat")
         } else {
           this.handleUserLogout()
         }
       } catch (error) {
         this.handleUserLogout()
-        useAppStore().showMessage({ message: error, type: "error" })
+        window.$message?.error(error)
         console.log("[chat] im登录失败 login", error)
       }
     },

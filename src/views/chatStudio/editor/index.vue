@@ -50,7 +50,7 @@ import { Editor } from "@wangeditor/editor-for-vue";
 import { debounce, isEmpty } from "lodash-es";
 import { editorConfig, placeholderMap } from "../utils/configure";
 import { useState } from "@/hooks/useState";
-import { useAppStore, useGroupStore, useChatStore } from "@/stores/index";
+import { useGroupStore, useChatStore } from "@/stores/index";
 import {
   extractAitInfo,
   extractEmojiInfo,
@@ -82,7 +82,6 @@ const valueHtml = ref("");
 
 const [disabled, setDisabled] = useState();
 
-const appStore = useAppStore();
 const chatStore = useChatStore();
 const groupStore = useGroupStore();
 
@@ -186,10 +185,8 @@ const handleAssistantFile = async (file, editor) => {
   const fileType = getFileType(file?.name);
 
   if (!isTextFile(fileType) || !__IS_ELECTRON__) {
-    return appStore.showMessage({
-      message: `AI暂不支持${fileType}文件`,
-      type: "warning",
-    });
+    window.$message?.warning(`AI暂不支持${fileType}文件`);
+    return;
   }
 
   const base64Url = await fileToBase64(file);
@@ -226,10 +223,8 @@ const handleFiles = async (file, type) => {
       editor.insertNode(imageElement);
     } else {
       if (file.size > MAX_FILE_SIZE_BYTES) {
-        return appStore.showMessage({
-          message: `文件不能大于${MAX_FILE_SIZE_MB}MB`,
-          type: "warning",
-        });
+        window.$message?.warning(`文件不能大于${MAX_FILE_SIZE_MB}MB`);
+        return;
       }
       const fileElement = createMediaElement("attachment", {
         fileName: file.name,
@@ -243,10 +238,7 @@ const handleFiles = async (file, type) => {
     editor.move(1);
   } catch (error) {
     console.error(`${type}处理错误:`, error);
-    appStore.showMessage({
-      message: `${type}处理失败`,
-      type: "error",
-    });
+    window.$message?.error(`${type}处理失败`);
   }
 };
 

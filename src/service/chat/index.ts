@@ -8,7 +8,7 @@ import { localStg } from "@/utils/storage";
 import { useWindowFocus } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
-import { useAppStore, useUserStore, useGroupStore, useChatStore } from "@/stores/index";
+import { useUserStore, useGroupStore, useChatStore } from "@/stores/index";
 import {
   fnCheckoutNetState,
   getConversationList,
@@ -188,10 +188,7 @@ export class TIMProxy {
       const { code, data } = await this.chatSDK!.getMyProfile();
 
       if (code !== 0) {
-        useAppStore().showMessage({
-          message: `获取用户信息失败: ${data}`,
-          type: "error"
-        });
+        window.$message?.error(`获取用户信息失败: ${data}`);
         return;
       }
 
@@ -206,10 +203,7 @@ export class TIMProxy {
 
     } catch (error) {
       console.error("[chat] 获取用户信息失败:", error);
-      useAppStore().showMessage({
-        message: "获取用户信息失败",
-        type: "error"
-      });
+      window.$message?.error("获取用户信息失败");
     }
   }
 
@@ -326,10 +320,7 @@ export class TIMProxy {
     console.log("[chat] 用户被踢出:", data);
 
     const reason = kickedOutReason(data.type);
-    useAppStore().showMessage({
-      message: `${reason}被踢出，请重新登录。`,
-      type: "error",
-    });
+    window.$message?.error(`${reason}被踢出，请重新登录。`);
 
     useUserStore().handleUserLogout();
   }
@@ -342,7 +333,7 @@ export class TIMProxy {
   onError({ data }) {
     console.log("[chat] SDK 错误:", data);
     if (data.message !== "Network Error") {
-      useAppStore().showMessage({ message: data.message, type: "error" });
+      window.$message?.error(data.message);
     }
   }
 
@@ -366,7 +357,7 @@ export class TIMProxy {
    */
   onNetStateChange({ data }) {
     console.log("[chat] 网络状态变化:", data);
-    useAppStore().showMessage(fnCheckoutNetState(data.state));
+    window.$message?.(fnCheckoutNetState(data.state));
   }
 
   /**

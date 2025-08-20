@@ -19,21 +19,21 @@ export default defineConfig([
   ...pluginVue.configs["flat/strongly-recommended"],
   ...pluginVue.configs["flat/recommended"],
   prettier,
-  {
-    plugins: {
-      "simple-import-sort": simpleImportSort,
-      "unused-imports": unusedImports,
-    },
-    rules: {
-      "@typescript-eslint/explicit-function-return-type": "off",
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
-      "simple-import-sort/imports": "warn",
-      "simple-import-sort/exports": "warn",
-      "unused-imports/no-unused-imports": "warn",
-      "prettier/prettier": ["warn"],
-    },
-  },
+  // {
+  //   plugins: {
+  //     "simple-import-sort": simpleImportSort,
+  //     "unused-imports": unusedImports,
+  //   },
+  //   rules: {
+  //     "@typescript-eslint/explicit-function-return-type": "off",
+  //     "@typescript-eslint/no-explicit-any": "off",
+  //     "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+  //     "simple-import-sort/imports": "warn",
+  //     "simple-import-sort/exports": "warn",
+  //     "unused-imports/no-unused-imports": "warn",
+  //     "prettier/prettier": ["warn"],
+  //   },
+  // },
   // JavaScript 文件
   {
     files: ["**/*.?([cm])js"],
@@ -94,7 +94,7 @@ export default defineConfig([
       "no-var": "error",
 
       // Prettier 规则
-      "prettier/prettier": "warn",
+      // "prettier/prettier": "warn",
     },
   },
   // TypeScript 文件
@@ -171,7 +171,7 @@ export default defineConfig([
       "no-var": "error",
 
       // Prettier 规则
-      "prettier/prettier": "warn",
+      // "prettier/prettier": "warn",
     },
   },
   // Vue 文件
