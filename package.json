@@ -67,6 +67,7 @@
     "v-contextmenu": "3.0.0",
     "vue": "^3.5.13",
     "vue-draggable-next": "^2.2.1",
+    "vue-eslint-parser": "^10.2.0",
     "vue-i18n": "^9.1.9",
     "vue-router": "^4.1.6",
     "vue-virtual-scroller": "2.0.0-beta.8"
@@ -86,9 +87,9 @@
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
-    "eslint-plugin-vue": "^10.3.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "eslint-plugin-vue": "^10.3.0",
     "globals": "^16.3.0",
     "gradient-string": "^3.0.0",
     "prettier": "^3.5.3",

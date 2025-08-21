@@ -7,36 +7,28 @@ import prettierPlugin from "eslint-plugin-prettier";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import unusedImports from "eslint-plugin-unused-imports";
 import pluginVue from "eslint-plugin-vue";
+// import * as parserVue from "vue-eslint-parser";
 import globals from "globals";
 
-// const isDev = process.env.NODE_ENV === "development";
 const isProd = process.env.NODE_ENV === "production";
 
+/**
+ * ESLint 配置
+ * @see https://eslint.vuejs.org/user-guide/#configuration
+ * @see https://eslint.org/docs/user-guide/configuring/configuration-files
+*/
 export default defineConfig([
+  // 基础 JavaScript 规则
   js.configs.recommended,
   // Vue 相关规则
   ...pluginVue.configs["flat/essential"],
   ...pluginVue.configs["flat/strongly-recommended"],
   ...pluginVue.configs["flat/recommended"],
+  // Prettier 配置（禁用与 Prettier 冲突的规则）
   prettier,
-  // {
-  //   plugins: {
-  //     "simple-import-sort": simpleImportSort,
-  //     "unused-imports": unusedImports,
-  //   },
-  //   rules: {
-  //     "@typescript-eslint/explicit-function-return-type": "off",
-  //     "@typescript-eslint/no-explicit-any": "off",
-  //     "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
-  //     "simple-import-sort/imports": "warn",
-  //     "simple-import-sort/exports": "warn",
-  //     "unused-imports/no-unused-imports": "warn",
-  //     "prettier/prettier": ["warn"],
-  //   },
-  // },
-  // TypeScript 文件
+  // TypeScript 源码文件（启用完整类型检查）
   {
-    files: ["**/*.?([cm])ts"],
+    files: ["src/**/*.?([cm])ts", "src/**/*.vue"],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
@@ -48,22 +40,19 @@ export default defineConfig([
       globals: {
         ...globals.browser,
         ...globals.node,
-        __APP_NAME__: "readonly",
-        __LOCAL_MODE__: "readonly",
-        __IS_ELECTRON__: "readonly",
-        __APP_INFO__: "readonly",
-        Env: "readonly",
       },
     },
     plugins: {
       "@typescript-eslint": tseslint,
       prettier: prettierPlugin,
+      "simple-import-sort": simpleImportSort,
+      "unused-imports": unusedImports,
     },
     rules: {
+      // 继承推荐规则
       ...tseslint.configs.recommended.rules,
       ...tseslint.configs["recommended-type-checked"].rules,
-
-      // TypeScript 特定规则
+      // === TypeScript 特定规则 ===
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
@@ -74,10 +63,10 @@ export default defineConfig([
       ],
       "@typescript-eslint/no-unsafe-argument": "off",
       "@typescript-eslint/no-explicit-any": "off",
-      // "@typescript-eslint/no-non-null-assertion": "warn",
-      // "@typescript-eslint/prefer-nullish-coalescing": "warn",
+      "@typescript-eslint/no-non-null-assertion": "warn",
+      "@typescript-eslint/prefer-nullish-coalescing": "warn",
       "@typescript-eslint/prefer-optional-chain": "warn",
-      // "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+      "@typescript-eslint/no-unnecessary-type-assertion": "warn",
       "@typescript-eslint/no-floating-promises": "off",
       "@typescript-eslint/await-thenable": "warn",
       "@typescript-eslint/no-misused-promises": "warn",
@@ -86,10 +75,16 @@ export default defineConfig([
       "@typescript-eslint/no-unsafe-call": "warn",
       "@typescript-eslint/no-unsafe-member-access": "warn",
       "@typescript-eslint/no-unsafe-return": "warn",
+      "@typescript-eslint/no-var-requires": "error",
+      "@typescript-eslint/prefer-ts-expect-error": "warn",
+      "@typescript-eslint/consistent-type-definitions": ["warn", "interface"],
+      "@typescript-eslint/consistent-type-imports": ["warn", { prefer: "type-imports" }],
+      "@typescript-eslint/no-import-type-side-effects": "warn",
+      "@typescript-eslint/prefer-readonly": "warn",
 
-      // 代码质量规则
+      // === 代码质量规则 ===
       "no-console": isProd ? "warn" : "off",
-      "no-debugger": isProd ? "warn" : "off",
+      "no-debugger": isProd ? "error" : "off",
       // "no-undef": "warn",
       "no-unreachable": "error",
       "no-constant-condition": "error",
@@ -97,27 +92,113 @@ export default defineConfig([
       "no-dupe-args": "error",
       "no-dupe-class-members": "error",
       "no-dupe-else-if": "error",
-      "no-duplicate-imports": "warn",
-      "no-empty": "warn",
+      "no-duplicate-imports": "off",
+      "no-empty": ["warn", { allowEmptyCatch: true }],
       "no-extra-semi": "error",
       "no-irregular-whitespace": "error",
-      "no-multiple-empty-lines": ["warn", { max: 2 }],
+      "no-multiple-empty-lines": ["warn", { max: 2, maxEOF: 1, maxBOF: 0 }],
       "no-trailing-spaces": "error",
       "no-unneeded-ternary": "warn",
       "prefer-const": "error",
       "no-var": "error",
+      "eqeqeq": ["error", "always", { null: "ignore" }],
+      "no-eval": "error",
+      "no-implied-eval": "error",
+      "no-new-func": "error",
+      "no-return-assign": "error",
+      "no-sequences": "error",
+      "no-throw-literal": "error",
+      "prefer-promise-reject-errors": "error",
 
-      // Prettier 规则
-      // "prettier/prettier": "warn",
+      // === Import/Export 规则 ===
+      "simple-import-sort/imports": [
+        "warn",
+        {
+          groups: [
+            // Node.js 内置模块
+            ["^node:"],
+            // 第三方包
+            ["^@?\\w"],
+            // 内部模块
+            ["^@/"],
+            // 相对导入
+            ["^\\."],
+            // 类型导入
+            ["^.*\\u0000$"],
+          ],
+        },
+      ],
+      "simple-import-sort/exports": "warn",
+      "unused-imports/no-unused-imports": "warn",
+      "unused-imports/no-unused-vars": [
+        "warn",
+        {
+          vars: "all",
+          varsIgnorePattern: "^_",
+          args: "after-used",
+          argsIgnorePattern: "^_",
+        },
+      ],
+
+      // === Prettier 规则 ===
+      "prettier/prettier": "warn",
     },
   },
-  // Vue 文件
+  // TypeScript 配置文件和测试文件（轻量级规则，不启用类型检查）
+  {
+    files: ["**/*.config.?([cm])ts", "**/*.test.?([cm])ts", "**/*.spec.?([cm])ts"],
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tseslint,
+      prettier: prettierPlugin,
+      "simple-import-sort": simpleImportSort,
+      "unused-imports": unusedImports,
+    },
+    rules: {
+      // 仅基础规则，不包含类型检查
+      ...tseslint.configs.recommended.rules,
+      "@typescript-eslint/no-explicit-any": "off", // 配置文件中允许 any
+      "@typescript-eslint/no-var-requires": "off", // 配置文件中可能需要 require
+      "prettier/prettier": "warn",
+    },
+  },
+  // Vue 单文件组件
   {
     files: ["**/*.vue"],
     plugins: {
       prettier: prettierPlugin,
+      "simple-import-sort": simpleImportSort,
+      "unused-imports": unusedImports,
     },
     rules: {
+      // Vue 特定规则
+      "vue/multi-word-component-names": "warn",
+      "vue/no-unused-vars": "warn",
+      "vue/no-unused-components": "warn",
+      "vue/prefer-import-from-vue": "warn",
+      "vue/prefer-separate-static-class": "warn",
+      "vue/prefer-true-attribute-shorthand": "warn",
+      // "vue/component-tags-order": [
+      //   "warn",
+      //   {
+      //     order: ["template", "script", "style"],
+      //   },
+      // ],
+
+      // Import 规则
+      "simple-import-sort/imports": "warn",
+      "simple-import-sort/exports": "warn",
+      "unused-imports/no-unused-imports": "warn",
       // Prettier 规则
       "prettier/prettier": "warn",
     },
@@ -126,30 +207,27 @@ export default defineConfig([
   {
     files: ["**/*.d.ts"],
     rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
       "eslint-comments/no-unlimited-disable": "off",
       "import/no-duplicates": "off",
       "no-restricted-syntax": "off",
       "unused-imports/no-unused-vars": "off",
+      "unused-imports/no-unused-imports": "off",
     },
   },
   // 忽略文件
   {
     ignores: [
-      "dist/**",
-      "node_modules/**",
-      ".output/**",
-      "public/**",
-      "build/**",
-      "*.d.ts",
-      "local/**",
-      "scripts/**",
-      "coverage/**",
-      ".nyc_output/**",
-      "*.min.js",
-      "*.min.css",
-      "pnpm-lock.yaml",
-      "package-lock.json",
-      "yarn.lock",
+      "**/dist/**",
+      "**/node_modules/**",
+      "**/.output/**",
+      "**/public/**",
+      "**/build/**",
+      "**/local/**",
+      "**/scripts/**",
+      "**/coverage/**",
+      "**/*.min.js",
     ],
   },
 ]);
