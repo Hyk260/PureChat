@@ -273,7 +273,7 @@ const isScrolledToBottom = (lower = 2) => {
     let threshold = lower;
     const wrapRef = scrollbarRef.value?.wrapRef;
     if (!wrapRef) return false;
-    
+
     const { scrollTop, clientHeight, scrollHeight } = wrapRef;
     const isBot = scrollHeight - (scrollTop + clientHeight) < threshold;
     if (isBot) console.log("isScrolledToBottom: 到底部");

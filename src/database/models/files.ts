@@ -1,5 +1,7 @@
 import { BaseModel } from "../core/model";
-import { DB_File, DB_FileSchema } from "../schemas/files";
+import { DB_FileSchema } from "../schemas/files";
+
+import type { DB_File } from "../schemas/files";
 
 class _FilesModel extends BaseModel {
   constructor() {
@@ -9,8 +11,8 @@ class _FilesModel extends BaseModel {
   // **************** Create *************** //
 
   async create(id: string, file: DB_File) {
-    const exist = await this.findById(id)
-    if (exist) return
+    const exist = await this.findById(id);
+    if (exist) return;
 
     return super._addWithSync(id, file);
   }

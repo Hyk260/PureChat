@@ -84,7 +84,7 @@ import { ClickOutside as vClickOutside } from "element-plus";
 import { useChatStore } from "@/stores/modules/chat/index";
 import { getEmojiAssetUrl, getOperatingSystem } from "@/utils/common";
 // import emojiMartData from "@emoji-mart/data";
-import { emojiArray } from '@/utils/emoji/emoji-map';
+import { emojiArray } from "@/utils/emoji/emoji-map";
 import emitter from "@/utils/mitt-bus";
 import emojiQq from "@/utils/emoji/emoji-map-qq";
 import emojiDouyin from "@/utils/emoji/emoji-map-douyin";

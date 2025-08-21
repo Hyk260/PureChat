@@ -1,10 +1,6 @@
 <template>
   <label v-show="isShowCheck" class="input-check fade-slide-fade-in">
-    <input 
-      type="checkbox" 
-      class="check-btn" 
-      :checked="isChecked"
-    />
+    <input type="checkbox" class="check-btn" :checked="isChecked" />
     <div class="check-mark"></div>
     <div v-show="chatStore.isFwdDataMaxed" class="mask wh-full"></div>
   </label>

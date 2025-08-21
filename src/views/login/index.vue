@@ -31,7 +31,6 @@ import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
 const currentPage = computed(() => {
   return useUserStore().currentPage;
 });
-
 </script>
 
 <style lang="scss" scoped>

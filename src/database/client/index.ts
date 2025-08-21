@@ -1,1 +1,1 @@
-export { browserDB } from './db';
+export { browserDB } from "./db";

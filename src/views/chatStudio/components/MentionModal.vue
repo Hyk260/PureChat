@@ -111,7 +111,7 @@ export default {
       }
     },
     filterData() {
-      const data = this.currentMembersWithoutSelfList
+      const data = this.currentMembersWithoutSelfList;
       return prioritizeRBTUserID(data);
     },
     updateMention() {

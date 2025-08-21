@@ -60,7 +60,7 @@ import { nanoid } from "@/utils/uuid";
 import { useRobotStore } from "@/stores/index";
 import { cloneDeep, isEmpty } from "lodash-es";
 import { prompt } from "@/ai/constant";
-import EmojiMart from '@/components/EmojiMart/index.vue'
+import EmojiMart from "@/components/EmojiMart/index.vue";
 
 defineOptions({
   name: "DragPrompt",

@@ -1,8 +1,9 @@
-import Dexie from 'dexie';
-import { z } from 'zod';
-import { DB_File } from '../schemas/files';
-import { DB_Message } from '../schemas/message';
-import { DB_Session } from '../schemas/session';
+import { z } from "zod";
+
+import type { DB_File } from "../schemas/files";
+import type { DB_Message } from "../schemas/message";
+import type { DB_Session } from "../schemas/session";
+import type Dexie from "dexie";
 
 export type DBModel<T> = T & {
   id: string;
@@ -29,5 +30,4 @@ export type BrowserDBSchema = {
   };
 };
 
-export type BrowserDBTable<T extends keyof DBSchemaMap> = BrowserDBSchema[T]['table'];
-
+export type BrowserDBTable<T extends keyof DBSchemaMap> = BrowserDBSchema[T]["table"];

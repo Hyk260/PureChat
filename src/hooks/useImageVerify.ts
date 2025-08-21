@@ -1,4 +1,4 @@
-import { ref, onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
 /**
  * @description: 绘制图形验证码
@@ -62,7 +62,7 @@ function draw(dom: HTMLCanvasElement, width: number, height: number) {
     ctx.save();
     ctx.translate(30 * i + 15, 15);
     ctx.rotate((deg * Math.PI) / 180);
-    ctx.fillText(text ?? '', -15 + 5, -15);
+    ctx.fillText(text ?? "", -15 + 5, -15);
     ctx.restore();
   }
   for (let i = 0; i < 5; i += 1) {

@@ -37,7 +37,7 @@ const market = ref({});
 const current = ref("");
 const tabsKey = ref(options[0].value);
 const marketLocal = localStg.get("marketJson");
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function handleTabs(key) {
   tabsKey.value = key;

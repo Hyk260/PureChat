@@ -1,4 +1,4 @@
-const { VITE_DEEPSEEK_API_KEY, VITE_DEEPSEEK_BASE_URL } = import.meta.env
+const { VITE_DEEPSEEK_API_KEY, VITE_DEEPSEEK_BASE_URL } = import.meta.env;
 
 export const DeepseekConfig = () => {
   return {
@@ -11,5 +11,5 @@ export const DeepseekConfig = () => {
     frequency_penalty: 0,
     token: VITE_DEEPSEEK_API_KEY,
     openaiUrl: VITE_DEEPSEEK_BASE_URL,
-  }
+  };
 };

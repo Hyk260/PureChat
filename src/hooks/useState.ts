@@ -1,4 +1,6 @@
-import { ref, Ref } from "vue";
+import { ref } from "vue";
+
+import type { Ref } from "vue";
 
 export type SetStateAction<S> = S | ((prevState: S) => S);
 export type Dispatch<A> = (value: A) => void;
@@ -26,15 +28,11 @@ export type UseStateReturn<T> = [Ref<T>, Dispatch<SetStateAction<T>>];
  * setCount(prev => prev + 1);
  * ```
  */
-export function useState<T>(
-  initial: T | (() => T)
-): UseStateReturn<T> {
-  const state = ref<T>(
-    typeof initial === 'function' ? (initial as () => T)() : initial
-  ) as Ref<T>;
+export function useState<T>(initial: T | (() => T)): UseStateReturn<T> {
+  const state = ref<T>(typeof initial === "function" ? (initial as () => T)() : initial) as Ref<T>;
 
   const setState: Dispatch<SetStateAction<T>> = (newValue: SetStateAction<T>): void => {
-    if (typeof newValue === 'function') {
+    if (typeof newValue === "function") {
       state.value = (newValue as (prev: T) => T)(state.value);
     } else {
       state.value = newValue;

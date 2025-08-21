@@ -1,10 +1,13 @@
-import Dexie from 'dexie';
-import { ZodObject } from 'zod';
-import { browserDB, BrowserDB } from "../client/db";
-import { BrowserDBSchema } from "../types/db";
-import { nanoid } from '@/utils/uuid';
+import { nanoid } from "@/utils/uuid";
 
-export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchema[N]['table']> {
+import { browserDB } from "../client/db";
+
+import type { BrowserDB } from "../client/db";
+import type { BrowserDBSchema } from "../types/db";
+import type Dexie from "dexie";
+import type { ZodObject } from "zod";
+
+export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchema[N]["table"]> {
   protected readonly db: BrowserDB;
   private readonly schema: ZodObject<any>;
   private readonly _tableName: keyof BrowserDBSchema;
@@ -21,10 +24,10 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
 
   // **************** Create *************** //
 
-  async _addWithSync<T = BrowserDBSchema[N]['model']>(
+  async _addWithSync<T = BrowserDBSchema[N]["model"]>(
     id: string | number = nanoid(),
     data: T,
-    primaryKey: string = 'id',
+    primaryKey: string = "id"
   ) {
     const result = this.schema.safeParse(data);
 

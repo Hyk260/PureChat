@@ -1,9 +1,9 @@
-import "dayjs/locale/zh-cn";
-import "dayjs/locale/en";
-
 import { locale } from "dayjs";
 
 import { localStg } from "@/utils/storage";
+
+import "dayjs/locale/zh-cn";
+import "dayjs/locale/en";
 
 /**
  * Set dayjs locale

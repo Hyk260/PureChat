@@ -1,5 +1,7 @@
 import { BaseModel } from "../core/model";
-import { DB_Session, DB_SessionSchema } from "../schemas/session";
+import { DB_SessionSchema } from "../schemas/session";
+
+import type { DB_Session } from "../schemas/session";
 
 export interface QuerySessionParams {
   current?: number;
@@ -108,7 +110,7 @@ class _SessionModel extends BaseModel {
     return super._addWithSync(id, dataDB);
   }
 
-  async batchCreate(sessions) { }
+  async batchCreate(sessions) {}
 
   // **************** Delete *************** //
 
@@ -129,7 +131,7 @@ class _SessionModel extends BaseModel {
     return super._updateWithSync(id, data);
   }
 
-  async updateConfig(id: string, data: DB_Session) { }
+  async updateConfig(id: string, data: DB_Session) {}
 
   // **************** Helper *************** //
 

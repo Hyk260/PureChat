@@ -1,4 +1,3 @@
-
 import dayjs from "dayjs";
 import isToday from "dayjs/plugin/isToday.js";
 import isYesterday from "dayjs/plugin/isYesterday.js";
@@ -11,7 +10,8 @@ export function timeFormat(timestamp: number, includeTime = false) {
   const date = dayjs(timestamp); // 输入时间
 
   // 辅助函数：根据是否需要时间格式，返回包含时间或不包含时间的字符串
-  const formatWithTime = (format: string) => includeTime ? `${format} ${date.format("H:mm")}` : format;
+  const formatWithTime = (format: string) =>
+    includeTime ? `${format} ${date.format("H:mm")}` : format;
 
   if (date.isToday()) {
     // 如果是今天，返回具体时间（小时:分钟）
@@ -49,11 +49,11 @@ export function formatTimestamp(timestamp: number) {
   const targetDate = dayjs(timestamp);
 
   // 根据时间差异决定输出格式
-  if (targetDate.isSame(now, 'day')) {
-    return targetDate.format('HH:mm:ss'); // 当天
+  if (targetDate.isSame(now, "day")) {
+    return targetDate.format("HH:mm:ss"); // 当天
   }
-  if (targetDate.isSame(now, 'year')) {
-    return targetDate.format('MM/DD HH:mm:ss'); // 当年
+  if (targetDate.isSame(now, "year")) {
+    return targetDate.format("MM/DD HH:mm:ss"); // 当年
   }
-  return targetDate.format('YYYY/MM/DD HH:mm:ss'); // 跨年
+  return targetDate.format("YYYY/MM/DD HH:mm:ss"); // 跨年
 }

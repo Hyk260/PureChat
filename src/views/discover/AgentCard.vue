@@ -82,7 +82,7 @@ defineProps({
       background: var(--tags-back);
       &:hover {
         background: var(--tags-back-hover);
-      } 
+      }
     }
   }
 }

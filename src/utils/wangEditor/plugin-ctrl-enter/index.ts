@@ -29,5 +29,3 @@ function withCtrlEnter(editor) {
 export default {
   editorPlugin: withCtrlEnter,
 };
-
-

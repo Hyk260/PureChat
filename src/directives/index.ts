@@ -1,5 +1,7 @@
-import type { App } from "vue";
 import { directive } from "v-contextmenu";
+
+import type { App } from "vue";
+
 // import { optimize } from "./optimize";
 import "v-contextmenu/dist/themes/default.css";
 

@@ -65,7 +65,12 @@
   </el-form>
   <!-- other hidden -->
   <div class="mt-20 flex justify-evenly">
-    <el-button v-for="item in operates" :key="item.title" size="default" @click="setCurrentPage(item)">
+    <el-button
+      v-for="item in operates"
+      :key="item.title"
+      size="default"
+      @click="setCurrentPage(item)"
+    >
       {{ item.title }}
     </el-button>
   </div>
@@ -152,7 +157,7 @@ const handleSocialLogin = async ({ icon }) => {
 };
 
 const setCurrentPage = (item) => {
-  userStore.setCurrentPage(item.currentPage)
+  userStore.setCurrentPage(item.currentPage);
 };
 
 const handleKeyPress = ({ code }) => {

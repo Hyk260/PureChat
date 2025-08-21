@@ -22,7 +22,7 @@ export function usePopup(initialVisible = false) {
     visible,
     show,
     hide,
-    toggle
+    toggle,
   };
 }
 
@@ -46,6 +46,6 @@ export function usePopupWithCallbacks(onShow: () => void, onHide: () => void) {
     visible,
     show: showWithCallback,
     hide: hideWithCallback,
-    toggle
+    toggle,
   };
 }

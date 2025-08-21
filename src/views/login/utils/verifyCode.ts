@@ -1,19 +1,15 @@
-import { ref } from "vue";
 import { cloneDeep } from "lodash-es";
+import { ref } from "vue";
 
 const isDisabled = ref(false);
 const timer = ref(null);
 const text = ref("");
 
 export const useVerifyCode = () => {
-  const start = async (
-    formEl,
-    props,
-    time = 60
-  ) => {
+  const start = async (formEl, props, time = 60) => {
     if (!formEl) return;
     const initTime = cloneDeep(time);
-    await formEl.validateField(props, isValid => {
+    await formEl.validateField(props, (isValid) => {
       if (isValid) {
         clearInterval(timer.value);
         isDisabled.value = true;
@@ -44,6 +40,6 @@ export const useVerifyCode = () => {
     timer,
     text,
     start,
-    end
+    end,
   };
 };

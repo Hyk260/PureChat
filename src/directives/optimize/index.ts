@@ -1,11 +1,6 @@
-import {
-  isArray,
-  throttle,
-  debounce,
-  isObject,
-  isFunction
-} from "lodash-es";
 import { useEventListener } from "@vueuse/core";
+import { debounce, isArray, isFunction, isObject, throttle } from "lodash-es";
+
 import type { Directive, DirectiveBinding } from "vue";
 
 export interface OptimizeOptions {
@@ -26,7 +21,7 @@ export const optimize: Directive = {
   mounted(el: HTMLElement, binding: DirectiveBinding<OptimizeOptions>) {
     const { value } = binding;
     const optimizeType = binding.arg ?? "debounce";
-    const type = ["debounce", "throttle"].find(t => t === optimizeType);
+    const type = ["debounce", "throttle"].find((t) => t === optimizeType);
     if (type) {
       if (value && value.event && isFunction(value.fn)) {
         let params = value?.params;
@@ -34,9 +29,7 @@ export const optimize: Directive = {
           if (isArray(params) || isObject(params)) {
             params = isObject(params) ? Array.of(params) : params;
           } else {
-            throw new Error(
-              "[Directive: optimize]: `params` must be an array or object"
-            );
+            throw new Error("[Directive: optimize]: `params` must be an array or object");
           }
         }
         // Register using addEventListener on mounted, and removeEventListener automatically on unmounted
@@ -44,15 +37,10 @@ export const optimize: Directive = {
           el,
           value.event,
           type === "debounce"
-            ? debounce(
-                params ? () => value.fn(...params) : value.fn,
-                value?.timeout ?? 200,
-                { leading: value?.immediate ?? false }
-              )
-            : throttle(
-                params ? () => value.fn(...params) : value.fn,
-                value?.timeout ?? 1000
-              )
+            ? debounce(params ? () => value.fn(...params) : value.fn, value?.timeout ?? 200, {
+                leading: value?.immediate ?? false,
+              })
+            : throttle(params ? () => value.fn(...params) : value.fn, value?.timeout ?? 1000)
         );
       } else {
         throw new Error(
@@ -60,9 +48,7 @@ export const optimize: Directive = {
         );
       }
     } else {
-      throw new Error(
-        "[Directive: optimize]: only `debounce` and `throttle` are supported"
-      );
+      throw new Error("[Directive: optimize]: only `debounce` and `throttle` are supported");
     }
-  }
+  },
 };

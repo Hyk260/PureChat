@@ -1,5 +1,7 @@
 import { BaseModel } from "../core/model";
-import { DB_Message, DB_MessageSchema } from "../schemas/message";
+import { DB_MessageSchema } from "../schemas/message";
+
+import type { DB_Message } from "../schemas/message";
 
 export interface QueryMessageParams {
   current?: number;
@@ -19,11 +21,9 @@ class _MessageModel extends BaseModel {
 
     const query = this.table.where("conversationID").equals(id);
 
-    const dbMessages = await query
-      .sortBy("createdAt")
-      .then((sortedArray) => {
-        return sortedArray.slice(offset, offset + pageSize)
-      });
+    const dbMessages = await query.sortBy("createdAt").then((sortedArray) => {
+      return sortedArray.slice(offset, offset + pageSize);
+    });
 
     const messages = dbMessages;
 
@@ -51,15 +51,15 @@ class _MessageModel extends BaseModel {
   // **************** Create *************** //
 
   async create(id: string, data: DB_Message) {
-    const exist = await this.findById(id)
-    if (exist) return
+    const exist = await this.findById(id);
+    if (exist) return;
 
-    const messageData = data
+    const messageData = data;
 
     return super._addWithSync(id, messageData);
   }
 
-  async batchCreate(messages: DB_Message[]) { }
+  async batchCreate(messages: DB_Message[]) {}
 
   // **************** Delete *************** //
 

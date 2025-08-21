@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const FileSchema = {
   id: "",
@@ -12,7 +12,7 @@ export const FileSchema = {
   count: 0,
   createdAt: 0,
   updatedAt: 0,
-}
+};
 
 export const DB_FileSchema = z.object({
   id: z.string().uuid(),

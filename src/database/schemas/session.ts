@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const SessionSchema = {
   id: "",
@@ -22,7 +22,7 @@ export const SessionSchema = {
   draftText: "",
   createdAt: 0,
   updatedAt: 0,
-}
+};
 
 export const DB_SessionSchema = z.object({
   // 基础字段

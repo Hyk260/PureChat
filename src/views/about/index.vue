@@ -100,7 +100,7 @@ const data = [
   },
   {
     label: "文档地址",
-    url: docs, 
+    url: docs,
     title: "文档地址",
   },
   {
@@ -167,7 +167,10 @@ Object.keys(devDependencies).forEach((key) => {
 }
 .style-header {
   .name {
-    font: bold 100% Consolas, Monaco, monospace;
+    font:
+      bold 100% Consolas,
+      Monaco,
+      monospace;
   }
   .describe {
     font-size: 15px;

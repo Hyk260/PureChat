@@ -1,12 +1,12 @@
+import { DeepSeekApi, DeepseekConfig, DeepseekModelValue } from "@/ai/platforms/deepseek/index";
+import { GitHubApi, GitHubConfig, GitHubModelValue } from "@/ai/platforms/github/index";
+import { MistralApi, MistralConfig, MistralModelValue } from "@/ai/platforms/mistral/index";
+import { OllamaApi, OllamaConfig, OllamaModelValue } from "@/ai/platforms/ollama/index";
+import { OpenAiApi, OpenaiConfig, OpenAIModelValue } from "@/ai/platforms/openai/index";
+import { QwenApi, QwenConfig, QwenModelValue } from "@/ai/platforms/qwen/index";
+import { ZeroOneApi, ZeroOneConfig, ZeroOneModelValue } from "@/ai/platforms/zeroone/index";
+import { ZhiPuApi, ZhiPuConfig, ZhiPuModelValue } from "@/ai/platforms/zhipu/index";
 import { ModelProvider } from "@/ai/types/type";
-import { OpenAiApi, OpenAIModelValue, OpenaiConfig } from "@/ai/platforms/openai/index";
-import { GitHubApi, GitHubModelValue, GitHubConfig } from "@/ai/platforms/github/index";
-import { ZeroOneApi, ZeroOneModelValue, ZeroOneConfig } from "@/ai/platforms/zeroone/index";
-import { ZhiPuApi, ZhiPuModelValue, ZhiPuConfig } from "@/ai/platforms/zhipu/index";
-import { QwenApi, QwenModelValue, QwenConfig } from "@/ai/platforms/qwen/index";
-import { OllamaApi, OllamaModelValue, OllamaConfig } from "@/ai/platforms/ollama/index";
-import { DeepSeekApi, DeepseekModelValue, DeepseekConfig } from "@/ai/platforms/deepseek/index";
-import { MistralApi, MistralModelValue, MistralConfig } from "@/ai/platforms/mistral/index";
 
 export const ROLES = ["system", "user", "assistant"];
 
