@@ -34,8 +34,11 @@
     "types": ["vite/client", "node", "element-plus/global"]
   },
   "include": [
-    "./**/*.ts",
+    "src/**/*.ts",
+    "src/types/*.d.ts",
     "src/**/*.vue",
+    "build/**/*.ts",
+    "vite.config.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }
