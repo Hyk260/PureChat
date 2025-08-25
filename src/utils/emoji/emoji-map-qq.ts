@@ -1,5 +1,5 @@
 //  https://www.emojiall.com/img/platform/qq/042@2x.gif
-export const emojiUrl = "https://www.emojiall.com/img/platform/qq/";
+export const emojiUrl = "https://www.emojiall.com/img/platform/qq/"
 
 export const emojiMap = {
   "[撇嘴]": "001@2x.gif",
@@ -213,7 +213,7 @@ export const emojiMap = {
   "[让我康康]": "222@2x.gif",
   "[哇哦]": "223@2x.gif",
   "[打脸]": "224@2x.gif",
-};
+}
 
 export const emojiName = [
   "[撇嘴]",
@@ -427,9 +427,9 @@ export const emojiName = [
   "[撒娇]",
   "[墨镜]",
   "[棒]",
-];
+]
 
 export default {
   emojiMap,
   emojiName,
-};
+}

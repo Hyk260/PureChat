@@ -1,5 +1,5 @@
 // https://www.emojiall.com/images/60/douyin/1f437.png
-export const emojiUrl = "https://www.emojiall.com/images/60/douyin/";
+export const emojiUrl = "https://www.emojiall.com/images/60/douyin/"
 
 export const emojiMap = {
   "[九转大肠]": "fc20.png",
@@ -50,7 +50,7 @@ export const emojiMap = {
   "[OK]": "1f44c.png",
   "[做鬼脸]": "1f61c.png",
   "[胡瓜]": "1f952.png",
-};
+}
 
 export const emojiName = [
   "[九转大肠]",
@@ -101,9 +101,9 @@ export const emojiName = [
   "[OK]",
   "[做鬼脸]",
   "[胡瓜]",
-];
+]
 
 export default {
   emojiMap,
   emojiName,
-};
+}

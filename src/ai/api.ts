@@ -1,24 +1,26 @@
-import { LLMParams } from '@/types/llm';
-import { ModelProvider, ModelProviderKey } from "@/ai/types/type";
-import { API_PROVIDER_MAP } from "@/ai/constant";
-import { useAccessStore } from "@/ai/utils";
-import { useRobotStore } from '@/stores/index';
-import { OpenAiApi } from "@/ai/platforms/openai/index";
+import { API_PROVIDER_MAP } from "@/ai/constant"
+import { OpenAiApi } from "@/ai/platforms/openai/index"
+import { ModelProvider } from "@/ai/types/type"
+import { useAccessStore } from "@/ai/utils"
+import { useRobotStore } from "@/stores/index"
+
+import type { ModelProviderKey } from "@/ai/types/type"
+import type { LLMParams } from "@/types/llm"
 
 export class ClientApi {
-  public llm: OpenAiApi;
-  _provider: ModelProviderKey;
-  _config: LLMParams;
-  _prompts: any;
+  public llm: OpenAiApi
+  _provider: ModelProviderKey
+  _config: LLMParams
+  _prompts: any
 
   constructor(provider: ModelProviderKey = ModelProvider.OpenAI) {
     try {
-      this._provider = provider;
-      this._config = useAccessStore(provider);
+      this._provider = provider
+      this._config = useAccessStore(provider)
       this._prompts = useRobotStore().currentProviderPrompt?.prompt
       this.llm = this.createProvider(provider)
     } catch (error) {
-      throw new Error(`初始化 ClientApi 失败: ${error.message}`);
+      throw new Error(`初始化 ClientApi 失败: ${error.message}`)
     }
   }
 
@@ -41,7 +43,7 @@ export class ClientApi {
   }
 
   config() {
-    return this._config;
+    return this._config
   }
 
   getProvider() {
@@ -49,6 +51,6 @@ export class ClientApi {
   }
 
   prompts() {
-    return this._prompts?.filter(t => t.content) || [];
+    return this._prompts?.filter((t) => t.content) || []
   }
 }

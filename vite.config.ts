@@ -1,14 +1,14 @@
-import process from "node:process";
-import { fileURLToPath, URL } from "node:url";
+import process from "node:process"
+import { fileURLToPath, URL } from "node:url"
 
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig, loadEnv } from "vite"
 
-import { manualChunks, viteDefine } from "./build/config/define";
-import { exclude, include } from "./build/config/optimize";
-import { setupViteExternal, setupVitePlugins } from "./build/plugins";
+import { manualChunks, viteDefine } from "./build/config/define"
+import { exclude, include } from "./build/config/optimize"
+import { setupViteExternal, setupVitePlugins } from "./build/plugins"
 
 export default defineConfig((configEnv) => {
-  const viteEnv = loadEnv(configEnv.mode, process.cwd()) as unknown as Env.ImportMeta;
+  const viteEnv = loadEnv(configEnv.mode, process.cwd()) as unknown as Env.ImportMeta
 
   return {
     base: viteEnv.VITE_BASE_URL,
@@ -79,5 +79,5 @@ export default defineConfig((configEnv) => {
       // 启用/ 禁用 gzip 压缩大小报告
       reportCompressedSize: false,
     },
-  };
-});
+  }
+})

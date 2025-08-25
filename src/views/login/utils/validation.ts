@@ -1,25 +1,26 @@
-import { reactive } from "vue";
-import { $t } from "@/locales/index";
-import { localStg } from "@/utils/storage";
-import { useUserStore } from '@/stores/index';
+import { reactive } from "vue"
+
+import { $t } from "@/locales"
+import { useUserStore } from "@/stores"
+import { localStg } from "@/utils/storage"
 
 /** 6位数字验证码正则 */
-const REGEXP_SIX = /^\d{6}$/;
+const REGEXP_SIX = /^\d{6}$/
 
 /** 密码正则（密码格式应为8-18位数字、字母、符号的任意两种组合） */
 const REGEXP_PWD =
-  /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)]|[()])+$)(?!^.*[\u4E00-\u9FA5].*$)([^(0-9a-zA-Z)]|[()]|[a-z]|[A-Z]|[0-9]){8,18}$/;
+  /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)]|[()])+$)(?!^.*[\u4E00-\u9FA5].*$)([^(0-9a-zA-Z)]|[()]|[a-z]|[A-Z]|[0-9]){8,18}$/
 
-const pattern = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/;
+const pattern = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 
-const { username, password, remember } = localStg.get("ACCOUNT") || {};
+const { username, password, remember } = localStg.get("ACCOUNT") || {}
 
 export const defaultForm = reactive({
   username: username || "",
   password: password || "123456",
   remember: remember || false,
   verifyCode: "",
-});
+})
 
 export const rules = reactive({
   username: [
@@ -40,17 +41,17 @@ export const rules = reactive({
     {
       validator: (rule, value, callback) => {
         if (value === "") {
-          callback(new Error("请输入验证码"));
+          callback(new Error("请输入验证码"))
         } else if (useUserStore().verifyCode !== value) {
-          callback(new Error("请输入正确的验证码"));
+          callback(new Error("请输入正确的验证码"))
         } else {
-          callback();
+          callback()
         }
       },
       trigger: "blur",
     },
   ],
-});
+})
 
 export const ruleForm = reactive({
   username: "",
@@ -59,7 +60,7 @@ export const ruleForm = reactive({
   verifyCode: "",
   password: "",
   repeatPassword: "",
-});
+})
 
 export const updateRules = reactive({
   username: [
@@ -80,11 +81,11 @@ export const updateRules = reactive({
     {
       validator: (rule, value, callback) => {
         if (value === "") {
-          callback(new Error($t("login.phoneReg")));
+          callback(new Error($t("login.phoneReg")))
         } else if (!pattern.test(value)) {
-          callback(new Error($t("login.phoneCorrectReg")));
+          callback(new Error($t("login.phoneCorrectReg")))
         } else {
-          callback();
+          callback()
         }
       },
       trigger: "blur",
@@ -94,11 +95,11 @@ export const updateRules = reactive({
     {
       validator: (rule, value, callback) => {
         if (value === "") {
-          callback(new Error($t("login.verifyCodeReg")));
+          callback(new Error($t("login.verifyCodeReg")))
         } else if (!REGEXP_SIX.test(value)) {
-          callback(new Error($t("login.verifyCodeSixReg")));
+          callback(new Error($t("login.verifyCodeSixReg")))
         } else {
-          callback();
+          callback()
         }
       },
       trigger: "blur",
@@ -108,11 +109,11 @@ export const updateRules = reactive({
     {
       validator: (rule, value, callback) => {
         if (value === "") {
-          callback(new Error($t("login.passwordReg")));
+          callback(new Error($t("login.passwordReg")))
         } else if (!REGEXP_PWD.test(value)) {
-          callback(new Error(t("login.passwordRuleReg")));
+          callback(new Error($t("login.passwordRuleReg")))
         } else {
-          callback();
+          callback()
         }
       },
       trigger: "blur",
@@ -122,14 +123,14 @@ export const updateRules = reactive({
     {
       validator: (rule, value, callback) => {
         if (value === "") {
-          callback(new Error($t("login.passwordSureReg")));
+          callback(new Error($t("login.passwordSureReg")))
         } else if (ruleForm.password !== value) {
-          callback(new Error($t("login.passwordDifferentReg")));
+          callback(new Error($t("login.passwordDifferentReg")))
         } else {
-          callback();
+          callback()
         }
       },
       trigger: "blur",
     },
   ],
-});
+})

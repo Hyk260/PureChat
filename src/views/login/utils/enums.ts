@@ -1,4 +1,4 @@
-import { computed } from "vue";
+import { computed } from "vue"
 // import { $t } from "@/locales/index";
 
 export const operates = computed(() => {
@@ -15,8 +15,8 @@ export const operates = computed(() => {
     //   title: $t("login.register"),
     //   currentPage: 3,
     // },
-  ];
-});
+  ]
+})
 
 export const thirdParty = [
   // {
@@ -35,4 +35,4 @@ export const thirdParty = [
   //   title: "QQ",
   //   icon: "qq",
   // },
-];
+]

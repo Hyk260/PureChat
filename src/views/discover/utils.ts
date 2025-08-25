@@ -24,4 +24,4 @@ export const options = [
     value: "model_provider",
     icon: "model_provider_icon",
   },
-];
+]
