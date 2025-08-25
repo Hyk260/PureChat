@@ -3,7 +3,7 @@
     <el-card class="style-header" shadow="never">
       <template #header>
         <div>
-          <span class="name"> {{ APP_NAME }} </span>
+          <span class="name"> PureChat </span>
         </div>
       </template>
       <span class="describe"> 聊天应用与AI开发框架 </span>

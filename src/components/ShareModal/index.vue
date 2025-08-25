@@ -46,7 +46,7 @@
             <div v-if="isFooter" class="footer p-16" :class="{ 'opacity-0': !isFooter }">
               <div class="flex-c">
                 <img class="size-22" src="@/assets/images/log.png" alt="" />
-                <div class="title ml-8">{{ APP_NAME }}</div>
+                <div class="title ml-8">PureChat</div>
               </div>
               <span class="link"> {{ docsUrl }}</span>
               <QrCode v-show="isQrCode" class="qr-code" :text="docsUrl" />

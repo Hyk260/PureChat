@@ -28,7 +28,7 @@ export default defineConfig([
   prettier,
   // TypeScript 源码文件（启用完整类型检查）
   {
-    files: ["src/**/*.?([cm])ts", "src/**/*.vue"],
+    files: ["src/**/*.?([cm])ts"],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
@@ -176,25 +176,36 @@ export default defineConfig([
   // Vue 单文件组件
   {
     files: ["**/*.vue"],
+    languageOptions: {
+      parser: pluginVue.parser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        extraFileExtensions: [".vue"],
+        parser: tsparser,
+        parserOptions: {
+          project: "./tsconfig.web.json",
+          tsconfigRootDir: import.meta.dirname,
+        },
+      },
+    },
     plugins: {
+      vue: pluginVue,
       prettier: prettierPlugin,
       "simple-import-sort": simpleImportSort,
       "unused-imports": unusedImports,
     },
     rules: {
       // Vue 特定规则
+      ...pluginVue.configs["flat/essential"].rules,
+      ...pluginVue.configs["flat/strongly-recommended"].rules,
+      ...pluginVue.configs["flat/recommended"].rules,
       "vue/multi-word-component-names": "warn",
       "vue/no-unused-vars": "warn",
       "vue/no-unused-components": "warn",
       "vue/prefer-import-from-vue": "warn",
       "vue/prefer-separate-static-class": "warn",
       "vue/prefer-true-attribute-shorthand": "warn",
-      // "vue/component-tags-order": [
-      //   "warn",
-      //   {
-      //     order: ["template", "script", "style"],
-      //   },
-      // ],
 
       // Import 规则
       "simple-import-sort/imports": "warn",

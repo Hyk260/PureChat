@@ -6,7 +6,7 @@
           <img src="@/assets/images/log.png" class="min-h-52 min-w-52" alt="log" />
         </div>
         <div class="ui-col flex items-start flex-col">
-          <div class="col-title">{{ APP_NAME }}</div>
+          <div class="col-title">PureChat</div>
           <div class="version">
             <el-tag type="primary">v{{ version }}</el-tag>
           </div>

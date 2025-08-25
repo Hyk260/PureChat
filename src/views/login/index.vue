@@ -8,7 +8,7 @@
       <!-- 标题 -->
       <header class="login-form">
         <div class="tip">
-          <h2>{{ APP_NAME }}</h2>
+          <h2>PureChat</h2>
         </div>
       </header>
       <!-- 账号登陆 -->
