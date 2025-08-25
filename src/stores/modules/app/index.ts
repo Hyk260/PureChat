@@ -1,9 +1,9 @@
-import { defineStore } from "pinia";
+import { defineStore } from "pinia"
 
-import { setLocale } from "@/locales";
-import { SetupStoreId } from "@/stores/enum";
+import { setLocale } from "@/locales"
+import { SetupStoreId } from "@/stores/enum"
 
-import type { AppState } from "./type";
+import type { AppState } from "./type"
 
 export const useAppStore = defineStore(SetupStoreId.App, {
   state: (): AppState => ({
@@ -13,17 +13,17 @@ export const useAppStore = defineStore(SetupStoreId.App, {
   }),
   actions: {
     setLang(lang: App.I18n.LangType) {
-      this.lang = lang;
-      setLocale(lang);
+      this.lang = lang
+      setLocale(lang)
     },
     setTimeline(val: boolean) {
-      this.timeline = val;
+      this.timeline = val
     },
     setMarkdownRender(val: boolean) {
-      this.markdownRender = val;
+      this.markdownRender = val
     },
   },
   persist: {
-    pick: ['lang', "timeline", 'markdownRender']
+    pick: ["lang", "timeline", "markdownRender"],
   },
-});
+})

@@ -1,7 +1,11 @@
-import type { App, Component } from 'vue';
 // 按需引入element-plus该方法稳定且明确。
-// 自动导入: https://element-plus.org/zh-CN/guide/quickstart.html#%E6%8C%89%E9%9C%80%E5%AF%BC%E5%85%A5
+/**
+ * 自动导入: https://element-plus.org/zh-CN/guide/quickstart.html#%E6%8C%89%E9%9C%80%E5%AF%BC%E5%85%A5
+ * plugin: https://github.com/element-plus/element-plus/blob/dev/packages/element-plus/plugin.ts#L11-L16
+ * */
 import {
+  // ElContainer,
+  ElAside,
   // ElAffix,
   // ElAlert,
   ElAutocomplete,
@@ -29,11 +33,6 @@ import {
   // ElCollapseTransition,
   // ElColorPicker,
   ElConfigProvider,
-  // ElContainer,
-  ElAside,
-  // ElFooter,
-  ElHeader,
-  ElMain,
   // ElDatePicker,
   ElDescriptions,
   ElDescriptionsItem,
@@ -46,13 +45,27 @@ import {
   ElEmpty,
   ElForm,
   ElFormItem,
+  // ElFooter,
+  ElHeader,
   ElIcon,
   ElImage,
   ElImageViewer,
   ElInput,
   // ElInputNumber,
   ElLink,
+  // ElTreeSelect,
+  // ElTreeV2,
+  // ElUpload,
+  // ElWatermark,
+  ElLoading, // v-loading 指令
+  ElMain,
   ElMenu,
+  // ElInfiniteScroll, // v-infinite-scroll 指令
+  // ElPopoverDirective, // v-popover 指令
+  ElMessage, // $message 全局属性对象globalProperties
+  ElMessageBox, // $msgbox、$alert、$confirm、$prompt 全局属性对象globalProperties
+  ElNotification, // $notify 全局属性对象globalProperties
+  ElOption,
   // ElMenuItem,
   // ElMenuItemGroup,
   // ElSubMenu,
@@ -70,7 +83,6 @@ import {
   ElRow,
   ElScrollbar,
   ElSelect,
-  ElOption,
   // ElOptionGroup,
   // ElSelectV2,
   ElSkeleton,
@@ -83,10 +95,10 @@ import {
   // ElStep,
   ElSwitch,
   ElTable,
+  ElTabPane,
   // ElTableColumn,
   // ElTableV2,
   ElTabs,
-  ElTabPane,
   ElTag,
   // ElText,
   // ElTimePicker,
@@ -96,23 +108,13 @@ import {
   ElTooltip,
   // ElTransfer,
   ElTree,
-  // ElTreeSelect,
-  // ElTreeV2,
-  // ElUpload,
-  // ElWatermark,
-  /**
-   * 导出来源：https://github.com/element-plus/element-plus/blob/dev/packages/element-plus/plugin.ts#L11-L16
-   * */
-  ElLoading, // v-loading 指令
-  // ElInfiniteScroll, // v-infinite-scroll 指令
-  // ElPopoverDirective, // v-popover 指令
-  ElMessage, // $message 全局属性对象globalProperties
-  ElMessageBox, // $msgbox、$alert、$confirm、$prompt 全局属性对象globalProperties
-  ElNotification, // $notify 全局属性对象globalProperties
-} from "element-plus";
+} from "element-plus"
+
+import type { App, Component } from "vue"
+
 // 导入 Element Plus 样式
-import "element-plus/dist/index.css";
-import "element-plus/theme-chalk/dark/css-vars.css";
+import "element-plus/dist/index.css"
+import "element-plus/theme-chalk/dark/css-vars.css"
 
 const components = [
   // ElAffix,
@@ -213,7 +215,7 @@ const components = [
   // ElTreeV2,
   // ElUpload,
   // ElWatermark,
-];
+]
 
 const plugins = [
   ElLoading,
@@ -222,20 +224,20 @@ const plugins = [
   ElMessage,
   ElMessageBox,
   ElNotification,
-];
+]
 
-const { VITE_AUTO_COMPONENT } = import.meta.env;
+const { VITE_AUTO_COMPONENT } = import.meta.env
 
 /** 按需引入`element-plus` */
 export function useElementPlus(app: App) {
   // 全局注册组件
   if (VITE_AUTO_COMPONENT === "N") {
     components.forEach((component: Component) => {
-      app.component(component.name, component);
-    });
+      app.component(component?.name || "", component)
+    })
   }
   // 全局注册插件
   plugins.forEach((plugin) => {
-    app.use(plugin);
-  });
+    app.use(plugin)
+  })
 }

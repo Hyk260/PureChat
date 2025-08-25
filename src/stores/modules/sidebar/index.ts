@@ -1,23 +1,25 @@
-import type { SidebarItem, MoreListItem, SidebarState } from './type';
+import { ChatDotSquare, MoreFilled, UserFilled } from "@element-plus/icons-vue"
+import { Compass, LayoutGrid } from "lucide-vue-next"
+import { defineStore } from "pinia"
+import { markRaw } from "vue"
 
-import { markRaw } from "vue";
-import { defineStore } from "pinia";
-import { SetupStoreId } from '@/stores/enum';
-import { useChatStore } from "../chat/index";
-import { openWindow } from "@/utils/common";
-import { LayoutGrid, Compass } from "lucide-vue-next";
-import { ChatDotSquare, UserFilled, MoreFilled } from "@element-plus/icons-vue";
-import emitter from "@/utils/mitt-bus";
-import router from "@/router";
+import router from "@/router"
+import { SetupStoreId } from "@/stores/enum"
+import { openWindow } from "@/utils/common"
+import emitter from "@/utils/mitt-bus"
+
+import { useChatStore } from "../chat/index"
+
+import type { MoreListItem, SidebarItem, SidebarState } from "./type"
 
 const {
   // docs,
   homepage,
-  giteeHomepage
-} = __APP_INFO__.pkg;
+  giteeHomepage,
+} = __APP_INFO__.pkg
 const {
   // DEV: isDev
-} = import.meta.env;
+} = import.meta.env
 
 const defaultOutsideList: SidebarItem[] = [
   {
@@ -59,7 +61,7 @@ const defaultOutsideList: SidebarItem[] = [
     mode: "other",
     type: "el-icon",
   },
-];
+]
 
 const defaultMoreList: MoreListItem[] = [
   {
@@ -76,7 +78,7 @@ const defaultMoreList: MoreListItem[] = [
     openType: "outside",
     url: giteeHomepage,
   },
-];
+]
 
 export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
   state: (): SidebarState => ({
@@ -88,21 +90,21 @@ export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
   },
   actions: {
     setOutsideList(list: SidebarItem[]): void {
-      const data = this.outsideList.filter((t) => t.id === "more");
-      this.outsideList = [...list, ...data];
+      const data = this.outsideList.filter((t) => t.id === "more")
+      this.outsideList = [...list, ...data]
     },
     toggleOutside(item: SidebarItem | MoreListItem): void {
-      if ('path' in item && item.path) {
-        router.push(item.path);
+      if ("path" in item && item.path) {
+        router.push(item.path)
         useChatStore().toggleMultiSelectMode(false)
-      } else if ('openType' in item && item.openType === 'outside' && item.url) {
-        openWindow(item.url);
-      } else if ('mode' in item && item.mode === "other") {
-        emitter.emit("SidebarEditDialog", true);
+      } else if ("openType" in item && item.openType === "outside" && item.url) {
+        openWindow(item.url)
+      } else if ("mode" in item && item.mode === "other") {
+        emitter.emit("SidebarEditDialog", true)
       }
     },
     setMoreList(list: MoreListItem[]): void {
-      this.moreList = list;
+      this.moreList = list
     },
   },
-});
+})

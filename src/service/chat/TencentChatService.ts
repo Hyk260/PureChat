@@ -1,5 +1,5 @@
-import type TencentCloudChatModule from './types/tencent-cloud-chat';
-import type { ChatSDK } from './types/tencent-cloud-chat';
+import type TencentCloudChatModule from "./types/tencent-cloud-chat"
+import type { ChatSDK } from "./types/tencent-cloud-chat"
 
 /**
  * 腾讯云聊天服务实现
@@ -26,13 +26,15 @@ export class TencentChatService {
         { default: SignalingModule },
         { default: TIMUploadPlugin },
       ] = await Promise.all([
-        // @ts-ignore
-        import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js") as Promise<{ default: typeof TencentCloudChatModule }>,
-        // @ts-ignore
+        // @ts-expect-error
+        import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js") as Promise<{
+          default: typeof TencentCloudChatModule
+        }>,
+        // @ts-expect-error
         import(/* @vite-ignore */ "@tencentcloud/chat/modules/group-module.js"),
-        // @ts-ignore
+        // @ts-expect-error
         import(/* @vite-ignore */ "@tencentcloud/chat/modules/signaling-module.js"),
-        // @ts-ignore
+        // @ts-expect-error
         import(/* @vite-ignore */ "tim-upload-plugin"),
       ])
 

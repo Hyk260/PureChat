@@ -57,6 +57,6 @@ const ZhiPu = {
   id: "zhipu",
   icon: "zhipu",
   name: "ZhiPu",
-};
+}
 
-export default ZhiPu;
+export default ZhiPu

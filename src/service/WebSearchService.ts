@@ -1,7 +1,9 @@
-import { useWebSearchStore } from '@/stores/modules/websearch';
-import { hasObjectKey } from '@/utils/common'
-import WebSearchEngineProvider from './WebSearchProvider/index'
-import dayjs from 'dayjs'
+import dayjs from "dayjs"
+
+import { useWebSearchStore } from "@/stores/modules/websearch"
+import { hasObjectKey } from "@/utils/common"
+
+import WebSearchEngineProvider from "./WebSearchProvider/index"
 
 /**
  * 提供网络搜索相关功能的服务类
@@ -12,8 +14,8 @@ class WebSearchService {
    * @private
    * @returns 网络搜索状态
    */
- getWebSearchState() {
-   return useWebSearchStore()
+  getWebSearchState() {
+    return useWebSearchStore()
   }
 
   /**
@@ -29,16 +31,16 @@ class WebSearchService {
       return false
     }
 
-    if (provider.id.startsWith('local-')) {
+    if (provider.id.startsWith("local-")) {
       return true
     }
 
-    if (hasObjectKey(provider, 'apiKey')) {
-      return provider.apiKey !== ''
+    if (hasObjectKey(provider, "apiKey")) {
+      return provider.apiKey !== ""
     }
 
-    if (hasObjectKey(provider, 'apiHost')) {
-      return provider.apiHost !== ''
+    if (hasObjectKey(provider, "apiHost")) {
+      return provider.apiHost !== ""
     }
 
     return false
@@ -71,15 +73,15 @@ class WebSearchService {
 
     let formattedQuery = query
     if (websearch.searchWithTime) {
-      formattedQuery = `today is ${dayjs().format('YYYY-MM-DD')} \r\n ${query}`
+      formattedQuery = `today is ${dayjs().format("YYYY-MM-DD")} \r\n ${query}`
     }
 
     try {
       return await webSearchEngine.search(formattedQuery, websearch, httpOptions)
     } catch (error) {
-      console.error('Search failed:', error)
+      console.error("Search failed:", error)
       return {
-        results: []
+        results: [],
       }
     }
   }
@@ -92,8 +94,8 @@ class WebSearchService {
    */
   async checkSearch(provider: string) {
     try {
-      const response = await this.search(provider, 'test query')
-      console.log('Search response:', response)
+      const response = await this.search(provider, "test query")
+      console.log("Search response:", response)
       // 优化的判断条件：检查结果是否有效且没有错误
       return { valid: response.results.length > 0, error: undefined }
     } catch (error) {

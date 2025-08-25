@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref } from "vue"
 
 export const backgColor = ref([
   {
@@ -36,22 +36,22 @@ export const backgColor = ref([
     colorB: "#CDCBFF",
     angle: "45deg",
   },
-]);
+])
 
 export const back = ref(`
   background: linear-gradient(var(--houdini-angle), var(--houdini-colorA), var(--houdini-colorB));
   --houdini-colorA: #B0BDBF;
   --houdini-colorB: #CDCBFF;
   --houdini-angle: 120deg;
-`);
+`)
 
 export function getBackgroundStyle({ angle, colorA, colorB }) {
-  return `background-image: linear-gradient(${angle}, ${colorA}, ${colorB});`;
+  return `background-image: linear-gradient(${angle}, ${colorA}, ${colorB});`
 }
 
 export function onColor(item) {
-  const preview = document.querySelector("#preview");
-  preview.style.setProperty("--houdini-colorA", item.colorA);
-  preview.style.setProperty("--houdini-colorB", item.colorB);
-  preview.style.setProperty("--houdini-angle", item.angle);
+  const preview = document.querySelector("#preview")
+  preview.style.setProperty("--houdini-colorA", item.colorA)
+  preview.style.setProperty("--houdini-colorB", item.colorB)
+  preview.style.setProperty("--houdini-angle", item.angle)
 }

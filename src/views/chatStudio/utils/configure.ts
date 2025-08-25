@@ -1,18 +1,19 @@
-import { computed } from "vue";
-import { useChatStore } from '@/stores/modules/chat/index';
-import { $t } from "@/locales/index";
+import { computed } from "vue"
+
+import { $t } from "@/locales/index"
+import { useChatStore } from "@/stores/modules/chat/index"
 
 export const placeholderMap = computed(() => {
   return {
     Windows: $t("chat.buttonPrompt"),
     macOS: $t("chat.buttonPromptMac"),
-    input: $t("chat.PromptInputContent")
-  };
-});
+    input: $t("chat.PromptInputContent"),
+  }
+})
 
 // 编辑器配置
 export const editorConfig = {
-  placeholder: placeholderMap.value['input'],
+  placeholder: placeholderMap.value["input"],
   // 配置编辑器是否只读，默认为 false
   // readOnly: true,
   /* 菜单配置 */
@@ -34,10 +35,10 @@ export const editorConfig = {
       // menuKeys: [],
     },
   },
-};
+}
 
 // 代码语言
-editorConfig.MENU_CONF["codeSelectLang"] = {};
+editorConfig.MENU_CONF["codeSelectLang"] = {}
 
 // 显示 modal
 function showModal(e) {

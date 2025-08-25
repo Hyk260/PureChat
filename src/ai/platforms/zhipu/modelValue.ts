@@ -1,7 +1,7 @@
-import ZeroOne from './models';
+import ZeroOne from "./models"
 
-const docs = __APP_INFO__.pkg.docs;
-const { VITE_ZHIPU_BASE_URL } = import.meta.env;
+const docs = __APP_INFO__.pkg.docs
+const { VITE_ZHIPU_BASE_URL } = import.meta.env
 
 export const ZhiPuModelValue = () => {
   return {
@@ -56,5 +56,5 @@ export const ZhiPuModelValue = () => {
       min: 1,
       max: 64,
     },
-  };
-};
+  }
+}

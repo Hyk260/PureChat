@@ -54,7 +54,7 @@ export const state = `<svg
       <use fill='#FFF' xlink:href='#pid-64-svgo-d'></use>
     </g>
   </g>
-</svg>`;
+</svg>`
 
 export const indicator = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'>
     <path
@@ -69,4 +69,4 @@ export const indicator = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2
       d='M6.967 8.556a1.1 1.1 0 011.1 1.1v2.689a1.1 1.1 0 11-2.2 0V9.656a1.1 1.1 0 011.1-1.1zM15.033 8.556a1.1 1.1 0 011.1 1.1v2.689a1.1 1.1 0 11-2.2 0V9.656a1.1 1.1 0 011.1-1.1z'
       fill='#333'
     ></path>
-  </svg>`;
+  </svg>`

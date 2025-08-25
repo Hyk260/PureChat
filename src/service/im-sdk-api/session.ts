@@ -1,16 +1,16 @@
-import tim from "@/service/IM/im-sdk/tim";
-import { timProxy } from "@/service/IM/index";
+import tim from "@/service/IM/im-sdk/tim"
+import { timProxy } from "@/service/IM/index"
 
 /**
  * 获取未读消息总数
  */
 export const getUnreadMsg = (): number => {
   if (!timProxy.isSDKReady) {
-    console.warn("SDK is not ready");
-    return 0;
+    console.warn("SDK is not ready")
+    return 0
   }
-  return tim.getTotalUnreadMessageCount();
-};
+  return tim.getTotalUnreadMessageCount()
+}
 
 /**
  * 获取消息列表
@@ -22,33 +22,33 @@ export const getUnreadMsg = (): number => {
  */
 export const getMessageList = async (params) => {
   try {
-    const { conversationID, nextReqMessageID = "" } = params;
+    const { conversationID, nextReqMessageID = "" } = params
     const { code, data } = await tim.getMessageList({
       conversationID,
       nextReqMessageID,
-    });
+    })
     if (code === 0) {
-      return data;
+      return data
     } else {
-      throw new Error("Failed to get message list");
+      throw new Error("Failed to get message list")
     }
   } catch (error) {
-    console.error("Error in getMessageList:", error);
-    return {};
+    console.error("Error in getMessageList:", error)
+    return {}
   }
-};
+}
 // 变更消息的接口
 export const modifyMessage = async (params) => {
   try {
-    const { code, data: message } = await tim.modifyMessage(params);
+    const { code, data: message } = await tim.modifyMessage(params)
     // 修改消息成功，message 是最新的消息
-     if (code === 0) {
-       return message;
-     } else {
-       throw new Error("Failed to modify message");
-     }
+    if (code === 0) {
+      return message
+    } else {
+      throw new Error("Failed to modify message")
+    }
   } catch (imError) {
-    const { code, data } = imError;
+    const { code, data } = imError
     if (code === 2480) {
       // 修改消息发生冲突，data.message 是最新的消息
     } else if (code === 2481) {
@@ -58,4 +58,4 @@ export const modifyMessage = async (params) => {
     }
     // 修改消息失败
   }
-};
+}

@@ -1,17 +1,11 @@
 export const insertMention = (options: {
-  id: string;
-  name: string;
-  backward?: boolean;
-  deleteDigit?: number;
-  editor?: any;
+  id: string
+  name: string
+  backward?: boolean
+  deleteDigit?: number
+  editor?: any
 }) => {
-  const {
-    id,
-    name,
-    backward = true,
-    deleteDigit = 0,
-    editor = null,
-  } = options
+  const { id, name, backward = true, deleteDigit = 0, editor = null } = options
 
   if (!editor) {
     console.warn("editor is null")
@@ -23,20 +17,20 @@ export const insertMention = (options: {
     value: `${name} `,
     info: { id },
     children: [{ text: "" }],
-  };
+  }
 
   // 恢复选区
-  editor?.restoreSelection();
+  editor?.restoreSelection()
   // 删除 '@'
   if (deleteDigit) {
     for (let i = 0; i < deleteDigit; i++) {
-      editor.deleteBackward("character");
+      editor.deleteBackward("character")
     }
   } else if (backward) {
-    editor.deleteBackward("character");
+    editor.deleteBackward("character")
   }
   // 插入 mention
-  editor.insertNode(mentionNode);
+  editor.insertNode(mentionNode)
   // 移动光标
-  editor.move(1);
-};
+  editor.move(1)
+}

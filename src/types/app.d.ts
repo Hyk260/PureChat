@@ -8,10 +8,10 @@ declare namespace App {
   namespace I18n {
     type LangType = 'en' | 'zh-CN';
 
-    type LangOption = {
+    interface LangOption {
       label: string;
       key: LangType;
-    };
+    }
 
     type $T = (key: string) => string;
   }

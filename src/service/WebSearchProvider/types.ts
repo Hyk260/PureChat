@@ -1,10 +1,10 @@
-export type WebSearchProviderResult = {
+export interface WebSearchProviderResult {
   title: string
   content: string
   url: string
 }
 
-export type WebSearchProviderResponse = {
+export interface WebSearchProviderResponse {
   query?: string
   results: WebSearchProviderResult[]
 }

@@ -1,14 +1,14 @@
-import { http } from "@/service/request/index";
+import { http } from "@/service/request/index"
 
 export const openAuthUrl = () => {
   return http.request({
-    url: '/auth/github',
+    url: "/auth/github",
     method: "get",
     params: {
-      client: __IS_ELECTRON__ ? 'app' : 'web',
+      client: __IS_ELECTRON__ ? "app" : "web",
     },
-  });
-};
+  })
+}
 
 export const githubAuth = ({ code }: { code: string }) => {
   return http.request({
@@ -16,7 +16,7 @@ export const githubAuth = ({ code }: { code: string }) => {
     method: "get",
     params: {
       code,
-      client: __IS_ELECTRON__ ? 'app' : 'web',
+      client: __IS_ELECTRON__ ? "app" : "web",
     },
-  });
-};
+  })
+}

@@ -1,12 +1,13 @@
-import type { ChatSDK } from './types/tencent-cloud-chat';
 import { LocalChatService } from "./LocalChatService"
 import { TencentChatService } from "./TencentChatService"
 
+import type { ChatSDK } from "./types/tencent-cloud-chat"
+
 export class PureChatService {
   private static instance: PureChatService | null = null
-  private chatService: LocalChatService | TencentChatService
+  private readonly chatService: LocalChatService | TencentChatService
   private chatSDK: ChatSDK | null = null
-  private isLocalMode: boolean
+  private readonly isLocalMode: boolean
 
   private constructor() {
     this.isLocalMode = typeof __LOCAL_MODE__ !== "undefined" ? __LOCAL_MODE__ : false
@@ -28,7 +29,7 @@ export class PureChatService {
 
   async initialize(): Promise<ChatSDK> {
     if (this.chatService instanceof TencentChatService) {
-      this.chatSDK = await this.chatService.initialize();
+      this.chatSDK = await this.chatService.initialize()
     } else {
       this.chatSDK = await this.chatService.initialize()
     }
@@ -41,14 +42,14 @@ export class PureChatService {
    */
   private setupDebugTools(): void {
     // window.__TIM_DEBUG__ = {
-      // getInstance: () => this.chatService,
-      // getMode: () => this.getMode(),
-      // resetService: () => PureChatService.resetInstance(),
-      // getPerformanceInfo: () => ({
-      //   initStartTime: performance.now(),
-      //   currentTime: performance.now(),
-      //   timeSinceInit: null,
-      // }),
+    // getInstance: () => this.chatService,
+    // getMode: () => this.getMode(),
+    // resetService: () => PureChatService.resetInstance(),
+    // getPerformanceInfo: () => ({
+    //   initStartTime: performance.now(),
+    //   currentTime: performance.now(),
+    //   timeSinceInit: null,
+    // }),
     // }
     console.log("🔧 开发模式：聊天服务调试工具已启用")
     console.log("使用 window.__CHAT_DEBUG__ 访问调试功能")

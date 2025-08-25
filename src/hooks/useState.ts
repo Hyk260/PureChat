@@ -1,10 +1,10 @@
-import { ref } from "vue";
+import { ref } from "vue"
 
-import type { Ref } from "vue";
+import type { Ref } from "vue"
 
-export type SetStateAction<S> = S | ((prevState: S) => S);
-export type Dispatch<A> = (value: A) => void;
-export type UseStateReturn<T> = [Ref<T>, Dispatch<SetStateAction<T>>];
+export type SetStateAction<S> = S | ((prevState: S) => S)
+export type Dispatch<A> = (value: A) => void
+export type UseStateReturn<T> = [Ref<T>, Dispatch<SetStateAction<T>>]
 
 /**
  * 自定义 Hook，用于在 Vue 3 中管理组件状态，类似于 React 的 useState。
@@ -29,15 +29,15 @@ export type UseStateReturn<T> = [Ref<T>, Dispatch<SetStateAction<T>>];
  * ```
  */
 export function useState<T>(initial: T | (() => T)): UseStateReturn<T> {
-  const state = ref<T>(typeof initial === "function" ? (initial as () => T)() : initial) as Ref<T>;
+  const state = ref<T>(typeof initial === "function" ? (initial as () => T)() : initial) as Ref<T>
 
   const setState: Dispatch<SetStateAction<T>> = (newValue: SetStateAction<T>): void => {
     if (typeof newValue === "function") {
-      state.value = (newValue as (prev: T) => T)(state.value);
+      state.value = (newValue as (prev: T) => T)(state.value)
     } else {
-      state.value = newValue;
+      state.value = newValue
     }
-  };
+  }
 
-  return [state, setState];
+  return [state, setState]
 }

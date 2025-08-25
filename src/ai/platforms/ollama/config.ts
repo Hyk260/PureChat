@@ -8,5 +8,5 @@ export const OllamaConfig = () => {
     historyMessageCount: 12,
     token: "",
     openaiUrl: import.meta.env.VITE_OLLAMA_PROXY_URL,
-  };
-};
+  }
+}

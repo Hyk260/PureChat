@@ -1,62 +1,62 @@
-import { BaseModel } from "../core/model";
-import { DB_MessageSchema } from "../schemas/message";
+import { BaseModel } from "../core/model"
+import { DB_MessageSchema } from "../schemas/message"
 
-import type { DB_Message } from "../schemas/message";
+import type { DB_Message } from "../schemas/message"
 
 export interface QueryMessageParams {
-  current?: number;
-  pageSize?: number;
-  id: string;
+  current?: number
+  pageSize?: number
+  id: string
 }
 
 class _MessageModel extends BaseModel {
   constructor() {
-    super("messages", DB_MessageSchema);
+    super("messages", DB_MessageSchema)
   }
 
   // **************** Query *************** //
 
   async query({ id, pageSize = 99, current = 0 }: QueryMessageParams) {
-    const offset = current * pageSize;
+    const offset = current * pageSize
 
-    const query = this.table.where("conversationID").equals(id);
+    const query = this.table.where("conversationID").equals(id)
 
     const dbMessages = await query.sortBy("createdAt").then((sortedArray) => {
-      return sortedArray.slice(offset, offset + pageSize);
-    });
+      return sortedArray.slice(offset, offset + pageSize)
+    })
 
-    const messages = dbMessages;
+    const messages = dbMessages
 
-    return messages;
+    return messages
   }
 
   async findById(id: string): Promise<DB_Message> {
-    return this.table.get(id);
+    return this.table.get(id)
   }
 
   async queryAll() {
-    const data: DB_Message[] = await this.table.orderBy("createdAt").toArray();
+    const data: DB_Message[] = await this.table.orderBy("createdAt").toArray()
 
-    return data;
+    return data
   }
 
   async queryBySessionId(id: string) {
-    return this.table.where("ID").equals(id).toArray();
+    return this.table.where("ID").equals(id).toArray()
   }
 
   async count() {
-    return this.table.count();
+    return this.table.count()
   }
 
   // **************** Create *************** //
 
   async create(id: string, data: DB_Message) {
-    const exist = await this.findById(id);
-    if (exist) return;
+    const exist = await this.findById(id)
+    if (exist) return
 
-    const messageData = data;
+    const messageData = data
 
-    return super._addWithSync(id, messageData);
+    return super._addWithSync(id, messageData)
   }
 
   async batchCreate(messages: DB_Message[]) {}
@@ -64,18 +64,18 @@ class _MessageModel extends BaseModel {
   // **************** Delete *************** //
 
   async delete(id: string) {
-    return super._deleteWithSync(id);
+    return super._deleteWithSync(id)
   }
 
   async clearTable() {
-    return super._clearWithSync();
+    return super._clearWithSync()
   }
 
   // **************** Update *************** //
 
   async update(id: string, data: DB_Message) {
-    return super._updateWithSync(id, data);
+    return super._updateWithSync(id, data)
   }
 }
 
-export const MessageModel = new _MessageModel();
+export const MessageModel = new _MessageModel()

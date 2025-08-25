@@ -10,5 +10,5 @@ export const QwenConfig = () => {
     historyMessageCount: 8,
     token: VITE_QWEN_API_KEY,
     openaiUrl: VITE_QWEN_BASE_URL,
-  };
-};
+  }
+}

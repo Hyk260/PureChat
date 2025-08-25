@@ -34,5 +34,5 @@ export const OpenaiConfig = () => {
     historyMessageCount: 8,
     token: VITE_OPENAI_API_KEY,
     openaiUrl: VITE_OPENAI_PROXY_URL,
-  };
-};
+  }
+}

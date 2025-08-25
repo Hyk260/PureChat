@@ -1,23 +1,23 @@
-import { ModelID } from "@shared/provider";
-import { isEmpty } from "lodash-es";
+import { ModelID } from "@shared/provider"
+import { isEmpty } from "lodash-es"
 
-import { AssistantAvatar, modelConfig, modelValue } from "@/ai/constant";
-import { ModelProvider } from "@/ai/types/type";
-import { useRobotStore } from "@/stores";
-import { localStg } from "@/utils/storage";
+import { AssistantAvatar, modelConfig, modelValue } from "@/ai/constant"
+import { ModelProvider } from "@/ai/types/type"
+import { useRobotStore } from "@/stores"
+import { localStg } from "@/utils/storage"
 
-import type { ModelProviderKey } from "@/ai/types/type";
-import type { LLMParams } from "@/types/llm";
-import type { ModelIDValue } from "@shared/provider";
+import type { ModelProviderKey } from "@/ai/types/type"
+import type { LLMParams } from "@/types/llm"
+import type { ModelIDValue } from "@shared/provider"
 
 /**
  * 获取 AI 模型的配置信息
  */
 export const useAccessStore = (model: ModelProviderKey = ModelProvider.OpenAI): LLMParams => {
-  const access = useRobotStore().accessStore?.[model] || "";
+  const access = useRobotStore().accessStore?.[model] || ""
 
   return isEmpty(access) ? modelConfig[model] : access
-};
+}
 
 /**
  * 根据提供的模型ID获取模型类型。
@@ -25,7 +25,7 @@ export const useAccessStore = (model: ModelProviderKey = ModelProvider.OpenAI): 
  * @returns {ModelProviderKey | string} - 'openai' 返回对应的模型类型，如果模型ID无效则返回''。
  */
 export function getModelType(modelId: string): ModelProviderKey | "" {
-  if (!/@RBT#/.test(modelId)) return "";
+  if (!/@RBT#/.test(modelId)) return ""
   const modelMapping = {
     [ModelID.OpenAI]: ModelProvider.OpenAI,
     [ModelID.ZhiPu]: ModelProvider.ZhiPu,
@@ -35,12 +35,12 @@ export function getModelType(modelId: string): ModelProviderKey | "" {
     [ModelID.GitHub]: ModelProvider.GitHub,
     [ModelID.DeepSeek]: ModelProvider.DeepSeek,
     [ModelID.Mistral]: ModelProvider.Mistral,
-  };
-  return modelMapping[modelId.replace("C2C", "") as ModelIDValue] || "";
+  }
+  return modelMapping[modelId.replace("C2C", "") as ModelIDValue] || ""
 }
 
 export function getModelId(model: ModelProviderKey) {
-  if (!model) return "";
+  if (!model) return ""
   const modelMapping = {
     [ModelProvider.OpenAI]: ModelID.OpenAI,
     [ModelProvider.ZhiPu]: ModelID.ZhiPu,
@@ -50,12 +50,12 @@ export function getModelId(model: ModelProviderKey) {
     [ModelProvider.GitHub]: ModelID.GitHub,
     [ModelProvider.DeepSeek]: ModelID.DeepSeek,
     [ModelProvider.Mistral]: ModelID.Mistral,
-  };
-  return modelMapping[model] || "";
+  }
+  return modelMapping[model] || ""
 }
 
 export function getModelSvg(id: string): string {
-  const modelId = getModelType(id);
+  const modelId = getModelType(id)
   const data = {
     [ModelProvider.OpenAI]: "openai",
     [ModelProvider.ZhiPu]: "chatglm",
@@ -66,22 +66,22 @@ export function getModelSvg(id: string): string {
     [ModelProvider.DeepSeek]: "deepseek",
     [ModelProvider.Mistral]: "mistral",
     llava: "llava",
-  };
-  return data[modelId as ModelProviderKey] || "";
+  }
+  return data[modelId as ModelProviderKey] || ""
 }
 
 export function prettyObject(msg: any) {
-  const obj = msg;
+  const obj = msg
   if (typeof msg !== "string") {
-    msg = JSON.stringify(msg, null, "  ");
+    msg = JSON.stringify(msg, null, "  ")
   }
   if (msg === "{}") {
-    return obj.toString();
+    return obj.toString()
   }
   if (msg.startsWith("```json")) {
-    return msg;
+    return msg
   }
-  return ["```json", msg, "```"].join("\n");
+  return ["```json", msg, "```"].join("\n")
 }
 
 /**
@@ -89,13 +89,13 @@ export function prettyObject(msg: any) {
  */
 export const getAvatarUrl = (id: string, type: "local" | "cloud" = "local"): string => {
   // icon.png
-  const suffix = AssistantAvatar[getModelType(id) as ModelProvider] || "";
+  const suffix = AssistantAvatar[getModelType(id) as ModelProvider] || ""
   if (type === "local") {
-    return new URL(`../assets/images/model-provider/${suffix}`, import.meta.url).href;
+    return new URL(`../assets/images/model-provider/${suffix}`, import.meta.url).href
   } else {
-    return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}`;
+    return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}`
   }
-};
+}
 
 /**
  * 获取 AI 用户头像 URL
@@ -104,62 +104,62 @@ export const getAvatarUrl = (id: string, type: "local" | "cloud" = "local"): str
  */
 export function getAiAvatarUrl(id: string): string {
   if (id.includes("@RBT#")) {
-    return getAvatarUrl(id);
+    return getAvatarUrl(id)
   } else {
-    return "";
+    return ""
   }
 }
 
 const getStatus = (errorType: string) => {
-  if (errorType.toString().includes("Invalid")) return 401;
-  else return 400;
-};
+  if (errorType.toString().includes("Invalid")) return 401
+  else return 400
+}
 
 export const createErrorResponse = (errorType: string, body: any) => {
-  const statusCode = getStatus(errorType);
+  const statusCode = getStatus(errorType)
 
-  const data = { body, errorType };
+  const data = { body, errorType }
 
-  return new Response(prettyObject(data), { status: statusCode });
-};
+  return new Response(prettyObject(data), { status: statusCode })
+}
 
 export function isDalle3(model: string) {
-  return "dall-e-3" === model;
+  return "dall-e-3" === model
 }
 
 export function base64Image2Blob(base64Data: string, contentType: string): Blob {
-  const byteCharacters = atob(base64Data);
-  const byteNumbers = new Array(byteCharacters.length);
+  const byteCharacters = atob(base64Data)
+  const byteNumbers = new Array(byteCharacters.length)
   for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
+    byteNumbers[i] = byteCharacters.charCodeAt(i)
   }
-  const byteArray = new Uint8Array(byteNumbers);
-  return new Blob([byteArray], { type: contentType });
+  const byteArray = new Uint8Array(byteNumbers)
+  return new Blob([byteArray], { type: contentType })
 }
 
 export async function uploadImage(file: File | Blob) {
-  const body = new FormData();
-  body.append("file", file);
-  const res = await fetch('https://api.openai.com', {
+  const body = new FormData()
+  body.append("file", file)
+  const res = await fetch("https://api.openai.com", {
     method: "post",
     body,
     mode: "cors",
     credentials: "include",
-  });
-  const res_1 = await res.json();
-  console.log("res", res_1);
+  })
+  const res_1 = await res.json()
+  console.log("res", res_1)
   if (res_1?.code == 0 && res_1?.data) {
-    return res_1?.data;
+    return res_1?.data
   }
-  throw Error(`upload Error: ${res_1?.msg}`);
+  throw Error(`upload Error: ${res_1?.msg}`)
 }
 
 export async function extractImageMessage(res: any): Promise<any> {
   if (res.data) {
-    let url = res.data?.at(0)?.url ?? "";
-    const b64_json = res.data?.at(0)?.b64_json ?? "";
+    let url = res.data?.at(0)?.url ?? ""
+    const b64_json = res.data?.at(0)?.b64_json ?? ""
     if (!url && b64_json) {
-      url = await uploadImage(base64Image2Blob(b64_json, "image/png"));
+      url = await uploadImage(base64Image2Blob(b64_json, "image/png"))
     }
     return [
       {
@@ -168,7 +168,7 @@ export async function extractImageMessage(res: any): Promise<any> {
           url,
         },
       },
-    ];
+    ]
   }
 }
 
@@ -181,131 +181,126 @@ export function generateDalle3RequestPayload(config: any) {
     size: "1024x1024",
     quality: "standard",
     style: "vivid",
-  };
+  }
 }
 
 export function getAllModels(model = "") {
-  const list = [];
+  const list = []
   for (const [key, value] of Object.entries(modelValue)) {
-    list.push(...value.Model.options.chatModels);
+    list.push(...value.Model.options.chatModels)
   }
   if (model) {
-    return list.filter((t) => t.id === model)?.[0] || {};
+    return list.filter((t) => t.id === model)?.[0] || {}
   }
-  return list;
+  return list
 }
 
 export function getInfo() {
-  return localStg.get("timProxy")?.userProfile?.profileCustomField;
+  return localStg.get("timProxy")?.userProfile?.profileCustomField
 }
 
 export function prefix(key: string) {
-  const prefix = "Tag_Profile_Custom_";
-  return `${prefix}${key}`;
+  const prefix = "Tag_Profile_Custom_"
+  return `${prefix}${key}`
 }
 
 export function getValueByKey(array: any[], key: string) {
-  if (!array?.length || !key) return null;
-  const item = array.find((t) => t.key === key);
-  return item?.value ? item.value : null;
+  if (!array?.length || !key) return null
+  const item = array.find((t) => t.key === key)
+  return item?.value ? item.value : null
 }
 
 // 全员群
 export function isFullStaffGroup(data: any) {
-  const { groupProfile } = data || {};
-  return getValueByKey(groupProfile?.groupCustomField, "custom_info") === "all_staff";
+  const { groupProfile } = data || {}
+  return getValueByKey(groupProfile?.groupCustomField, "custom_info") === "all_staff"
 }
 
 export function formatSizeStrict(input: string) {
-  const number = parseInt(input.toString().replace("_", ""), 10);
+  const number = parseInt(input.toString().replace("_", ""), 10)
 
   if (isNaN(number)) {
-    throw new Error("Invalid input: The input is not a valid number.");
+    throw new Error("Invalid input: The input is not a valid number.")
   }
 
   if (number % 1000 === 0) {
-    return number / 1000 + "K";
+    return number / 1000 + "K"
   }
 
-  return Math.floor(number / 1000) + "k"; // 舍弃小数，向下取整
+  return Math.floor(number / 1000) + "k" // 舍弃小数，向下取整
 }
 
-export const transformOpenAIStream = (
-  chunk,
-  stack,
-) => {
+export const transformOpenAIStream = (chunk, stack) => {
   // return { data: errorData, id: 'first_chunk_error', type: 'error' };
   try {
-    const item = chunk.choices[0];
+    const item = chunk.choices[0]
     if (!item) {
-      return { data: chunk, id: chunk.id, type: 'data' };
+      return { data: chunk, id: chunk.id, type: "data" }
     }
 
-    if (typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
+    if (typeof item.delta?.tool_calls === "object" && item.delta.tool_calls?.length > 0) {
       return {
         data: item.delta.tool_calls.map((value, index) => {
           if (stack && !stack.tool) {
-            stack.tool = { id: value.id, index: value.index, name: value.function.name };
+            stack.tool = { id: value.id, index: value.index, name: value.function.name }
           }
 
           return {
             function: {
-              arguments: value.function?.arguments ?? '{}',
+              arguments: value.function?.arguments ?? "{}",
               name: value.function?.name ?? null,
             },
             id: value.id || stack?.tool?.id,
-            index: typeof value.index !== 'undefined' ? value.index : index,
-            type: value.type || 'function',
-          };
+            index: typeof value.index !== "undefined" ? value.index : index,
+            type: value.type || "function",
+          }
         }),
         id: chunk.id,
-        type: 'tool_calls',
-      };
+        type: "tool_calls",
+      }
     }
 
     // 给定结束原因
     if (item.finish_reason) {
-
-      if (typeof item.delta?.content === 'string' && item.delta.content) {
-        return { data: item.delta.content, id: chunk.id, type: 'text' };
+      if (typeof item.delta?.content === "string" && item.delta.content) {
+        return { data: item.delta.content, id: chunk.id, type: "text" }
       }
 
-      return { data: item.finish_reason, id: chunk.id, type: 'stop' };
+      return { data: item.finish_reason, id: chunk.id, type: "stop" }
     }
 
-    if (typeof item.delta?.content === 'string') {
-      return { data: item.delta.content, id: chunk.id, type: 'text' };
+    if (typeof item.delta?.content === "string") {
+      return { data: item.delta.content, id: chunk.id, type: "text" }
     }
 
     if (item.delta?.content === null) {
-      return { data: item.delta, id: chunk.id, type: 'data' };
+      return { data: item.delta, id: chunk.id, type: "data" }
     }
 
     // 其余情况下，返回 delta 和 index
     return {
       data: { delta: item.delta, id: chunk.id, index: item.index },
       id: chunk.id,
-      type: 'data',
-    };
+      type: "data",
+    }
   } catch (e) {
-    const errorName = 'StreamChunkError';
-    console.error(`[${errorName}]`, e);
-    console.error(`[${errorName}] raw chunk:`, chunk);
+    const errorName = "StreamChunkError"
+    console.error(`[${errorName}]`, e)
+    console.error(`[${errorName}] raw chunk:`, chunk)
 
-    const err = e;
+    const err = e
 
     const errorData = {
       body: {
-        message:
-          'chat response streaming chunk parse error, please contact your API Provider to fix it.',
+        message: "chat response streaming chunk parse error, please contact your API Provider to fix it.",
         context: { error: { message: err.message, name: err.name }, chunk },
       },
       type: errorName,
-    };
+    }
 
-    return { data: errorData, id: chunk.id, type: 'error' };
+    return { data: errorData, id: chunk.id, type: "error" }
   }
-};
+}
 
 /**
  * 确保消息交替排列的强化处理方法
@@ -315,39 +310,39 @@ export const transformOpenAIStream = (
  * 4. 自动过滤无效的连续消息
  */
 export const adjustForDeepseek = (messages) => {
-  const processed = [];
-  let lastRole = 'system';
-  let hasSystem = false;
+  const processed = []
+  let lastRole = "system"
+  let hasSystem = false
   for (const msg of messages) {
     // 处理系统消息
-    if (msg.role === 'system') {
-      processed.push(msg);
-      hasSystem = true;
-      lastRole = 'system';
-      continue;
+    if (msg.role === "system") {
+      processed.push(msg)
+      hasSystem = true
+      lastRole = "system"
+      continue
     }
     // 系统消息后首条必须为用户消息
     if (hasSystem && processed.length === 1) {
-      if (msg.role !== 'user') continue;
-      processed.push(msg);
-      lastRole = 'user';
-      continue;
+      if (msg.role !== "user") continue
+      processed.push(msg)
+      lastRole = "user"
+      continue
     }
     // 常规消息交替检查
     if (msg.role !== lastRole) {
-      processed.push(msg);
-      lastRole = msg.role;
+      processed.push(msg)
+      lastRole = msg.role
     } else {
-      console.warn(`Skipping consecutive ${msg.role} message:`, msg.content);
+      console.warn(`Skipping consecutive ${msg.role} message:`, msg.content)
     }
   }
   // 兜底处理：当存在系统消息但无用户消息时
-  if (hasSystem && !processed.some(m => m.role === 'user')) {
+  if (hasSystem && !processed.some((m) => m.role === "user")) {
     processed.push({
-      role: 'user',
-      content: '请继续',
-    });
+      role: "user",
+      content: "请继续",
+    })
   }
 
-  return processed.slice(0, 8);
+  return processed.slice(0, 8)
 }

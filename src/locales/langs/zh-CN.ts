@@ -136,6 +136,6 @@ const local = {
     cancel: "取消",
     error: "输入的数据不合法!",
   },
-};
+}
 
-export default local;
+export default local

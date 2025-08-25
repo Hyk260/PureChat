@@ -1,25 +1,24 @@
-
 const Qwen = {
   chatModels: [
     {
-      displayName: 'Qwen Turbo',
-      id: 'qwen-turbo-latest',
+      displayName: "Qwen Turbo",
+      id: "qwen-turbo-latest",
       tokens: 0,
     },
     {
-      displayName: 'Qwen Plus',
-      id: 'qwen-plus',
+      displayName: "Qwen Plus",
+      id: "qwen-plus",
       tokens: 0,
     },
     {
-      displayName: 'Qwen Max',
-      id: 'qwen-max',
+      displayName: "Qwen Max",
+      id: "qwen-max",
       tokens: 0,
     },
   ],
-  checkModel: 'qwen-plus',
-  id: 'qwen',
-  name: 'Qwen',
-};
+  checkModel: "qwen-plus",
+  id: "qwen",
+  name: "Qwen",
+}
 
-export default Qwen;
+export default Qwen

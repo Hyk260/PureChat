@@ -1,36 +1,35 @@
 export const WEB_SEARCH_PROVIDER_CONFIG = {
   test: {
     websites: {
-      official: '',
-      apiKey: ''
-    }
+      official: "",
+      apiKey: "",
+    },
   },
   tavily: {
     websites: {
-      official: 'https://tavily.com',
-      apiKey: 'https://app.tavily.com/home'
-    }
+      official: "https://tavily.com",
+      apiKey: "https://app.tavily.com/home",
+    },
   },
   exa: {
     websites: {
-      official: 'https://exa.ai',
-      apiKey: 'https://dashboard.exa.ai/api-keys'
-    }
+      official: "https://exa.ai",
+      apiKey: "https://dashboard.exa.ai/api-keys",
+    },
   },
-  'local-google': {
+  "local-google": {
     websites: {
-      official: 'https://www.google.com'
-    }
+      official: "https://www.google.com",
+    },
   },
-  'local-bing': {
+  "local-bing": {
     websites: {
-      official: 'https://www.bing.com'
-    }
+      official: "https://www.bing.com",
+    },
   },
-  'local-baidu': {
+  "local-baidu": {
     websites: {
-      official: 'https://www.baidu.com'
-    }
-  }
+      official: "https://www.baidu.com",
+    },
+  },
 }
-

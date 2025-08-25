@@ -1,5 +1,4 @@
-import { http } from "../request/index";
-import { localStg } from "@/utils/storage";
+import { http } from "../request/index"
 
 // 登录接口
 export const login = (data) => {
@@ -7,8 +6,8 @@ export const login = (data) => {
     url: "/login",
     method: "post",
     data,
-  });
-};
+  })
+}
 
 // 注册接口
 export const register = (data) => {
@@ -16,20 +15,16 @@ export const register = (data) => {
     url: "/register",
     method: "post",
     data,
-  });
-};
+  })
+}
 
 // 账号列表
 export const getUserList = async () => {
-  return [
-    { value: "admin" },
-    { value: "zhangal" },
-    { value: "jinwx" },
-  ]
-};
+  return [{ value: "admin" }, { value: "zhangal" }, { value: "jinwx" }]
+}
 
 // 退出登录
 export const logout = () => {
   // localStg.clear();
   // localStg.remove('Access-Token');
-};
+}

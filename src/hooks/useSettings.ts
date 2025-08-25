@@ -1,11 +1,11 @@
-import { ModelProvider } from "@/ai/types/type";
-import { watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { useRobotStore, useSidebarStore, useChatStore } from '@/stores/index';
-import { showConfirmationBox } from "@/utils/message";
-import { useAccessStore, getModelId } from "@/ai/utils";
+import { watch } from "vue"
+import { useRoute } from "vue-router"
 
-const { VITE_OPENAI_API_KEY, VITE_OPENAI_PROXY_URL, DEV: isDev } = import.meta.env;
+import { getModelId, useAccessStore } from "@/ai/utils"
+import { useChatStore, useRobotStore, useSidebarStore } from "@/stores/index"
+import { showConfirmationBox } from "@/utils/message"
+
+const { VITE_OPENAI_API_KEY, VITE_OPENAI_PROXY_URL, DEV: isDev } = import.meta.env
 
 // 生成测试链接
 const keyVaults = () => {
@@ -15,13 +15,13 @@ const keyVaults = () => {
       baseURL: VITE_OPENAI_PROXY_URL,
       // apiKey: "sk-XXX",
       // baseURL: "https://api.XXX.com"
-    }
+    },
   })
 }
 
 if (isDev) {
   // https://purechat.cn/chat?settings={"keyVaults":{"openai":{"apiKey":"","baseURL":""}}}
-  console.log('useSettings test link', `https://purechat.cn/chat?settings={"keyVaults":${keyVaults()}}`);
+  console.log("useSettings test link", `https://purechat.cn/chat?settings={"keyVaults":${keyVaults()}}`)
 }
 
 /**
@@ -32,15 +32,15 @@ export function extractSettingsFromUrl(url?: string) {
     // 获取 URL 的查询参数
     const searchParams = url
       ? new URL(url, window.location.origin).searchParams
-      : new URLSearchParams(window.location.search);
+      : new URLSearchParams(window.location.search)
 
-    const settingsString = searchParams.get('settings');
-    if (!settingsString) return null;
+    const settingsString = searchParams.get("settings")
+    if (!settingsString) return null
     // 尝试解码并解析 JSON
-    return tryParseJson(settingsString);
+    return tryParseJson(settingsString)
   } catch (error) {
-    console.error('解析 URL settings 参数失败:', error);
-    return null;
+    console.error("解析 URL settings 参数失败:", error)
+    return null
   }
 }
 
@@ -50,12 +50,12 @@ export function extractSettingsFromUrl(url?: string) {
 function tryParseJson(str: string) {
   try {
     // 先尝试解码 URI 组件后再解析
-    return JSON.parse(decodeURIComponent(str));
+    return JSON.parse(decodeURIComponent(str))
   } catch (e1) {
     try {
-      return JSON.parse(str);
+      return JSON.parse(str)
     } catch (e2) {
-      return null;
+      return null
     }
   }
 }
@@ -65,64 +65,64 @@ function tryParseJson(str: string) {
  * @param {Object} settings - 解析后的 settings 对象
  */
 export async function autofillProvider(settings: any) {
-  if (!settings?.keyVaults) return;
-  const robotStore = useRobotStore();
-  const sidebarStore = useSidebarStore();
-  const chatStore = useChatStore();
+  if (!settings?.keyVaults) return
+  const robotStore = useRobotStore()
+  const sidebarStore = useSidebarStore()
+  const chatStore = useChatStore()
   // 目前只处理 openai，可扩展其他 provider
-  const openai = settings.keyVaults?.openai;
+  const openai = settings.keyVaults?.openai
   if (openai) {
     if (!openai?.apiKey || !openai?.baseURL) return
     const data = {
-      message: h('div', { style: 'line-height: 20px;' }, [
-        h('div', null, '检测到链接中包含了预制设置，是否自动填入？'),
-        h('div', { style: "width:360px;", class: 'truncate' }, `"apiKey": ${openai.apiKey}`),
-        h('div', null, `"baseURL": ${openai.baseURL}`),
+      message: h("div", { style: "line-height: 20px;" }, [
+        h("div", null, "检测到链接中包含了预制设置，是否自动填入？"),
+        h("div", { style: "width:360px;", class: "truncate" }, `"apiKey": ${openai.apiKey}`),
+        h("div", null, `"baseURL": ${openai.baseURL}`),
       ]),
-      iconType: "warning"
-    };
-    const result = await showConfirmationBox(data);
-    if (result === "cancel") {
-      console.warn("取消");
-      return;
+      iconType: "warning",
     }
-    const apiKey = openai.apiKey || '';
-    const baseURL = openai.baseURL || '';
+    const result = await showConfirmationBox(data)
+    if (result === "cancel") {
+      console.warn("取消")
+      return
+    }
+    const apiKey = openai.apiKey || ""
+    const baseURL = openai.baseURL || ""
     const config = {
-      ...useAccessStore('openai'),
+      ...useAccessStore("openai"),
       // model: "gpt-4o-mini",
       token: apiKey,
       openaiUrl: baseURL,
-    };
-    robotStore.setAccessStore(config, 'openai');
-    sidebarStore.toggleOutside({ path: "/chat" });
-    chatStore.addConversation({ sessionId: `C2C${getModelId('openai')}` })
+    }
+    robotStore.setAccessStore(config, "openai")
+    sidebarStore.toggleOutside({ path: "/chat" })
+    chatStore.addConversation({ sessionId: `C2C${getModelId("openai")}` })
   }
 }
 
 interface UseSettingsOptions {
-  autoWatch?: boolean;
+  autoWatch?: boolean
 }
 
 export function useSettings(options: UseSettingsOptions = { autoWatch: true }) {
-  const { autoWatch = true } = options;
-  const route = useRoute();
+  const { autoWatch = true } = options
+  const route = useRoute()
 
   if (autoWatch) {
     watch(
       () => route.fullPath,
       (fullPath) => {
-        const settings = extractSettingsFromUrl(fullPath);
+        const settings = extractSettingsFromUrl(fullPath)
         if (settings) {
-          autofillProvider(settings);
+          autofillProvider(settings)
         }
       },
       { immediate: true }
-    );
+    )
   }
 
   return {
     extractSettingsFromUrl,
     autofillProvider,
-  };
+  }
 }

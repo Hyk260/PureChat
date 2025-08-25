@@ -1,25 +1,25 @@
+import { defineStore } from "pinia"
+import { nextTick } from "vue"
+
+import localAvatar from "@/assets/images/avatar.png"
+import router from "@/router"
+import { login, logout } from "@/service/api/index"
+import chat from "@/service/IM/im-sdk/tim"
+import { timProxy } from "@/service/IM/index"
+import { SetupStoreId } from "@/stores/enum"
+import { useAuthStore, useChatStore } from "@/stores/index"
+import emitter from "@/utils/mitt-bus"
+import { localStg } from "@/utils/storage"
+
 import type {
-  LoginResult,
-  UserState,
-  UserProfile,
-  UserLocalStore,
+  HandleIMLoginPayload,
   HandleSuccessfulAuthPayload,
   HandleUserLoginPayload,
-  HandleIMLoginPayload,
-} from './type';
-
-import { nextTick } from "vue";
-import { defineStore } from 'pinia'
-import { useChatStore, useAuthStore } from '@/stores/index';
-import { login, logout } from "@/service/api/index"
-import { localStg } from "@/utils/storage"
-import { SetupStoreId } from '@/stores/enum';
-import { timProxy } from '@/service/IM/index';
-
-import router from "@/router"
-import chat from "@/service/IM/im-sdk/tim"
-import emitter from "@/utils/mitt-bus"
-import localAvatar from '@/assets/images/avatar.png';
+  LoginResult,
+  UserLocalStore,
+  UserProfile,
+  UserState,
+} from "./type"
 
 export const useUserStore = defineStore(SetupStoreId.User, {
   state: (): UserState => ({
@@ -36,7 +36,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
   getters: {
     getUserAvatar(): string {
       return this.userLocalStore.avatar || this.userLocalStore.native || this.userLocalStore.localAvatar
-    }
+    },
   },
   actions: {
     setCurrentPage(page: number) {
@@ -57,7 +57,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       if (code === 200) {
         timProxy.init()
         await this.handleIMLogin({ userID: result.username, userSig: result.userSig })
-        localStg.set('User-Model', result)
+        localStg.set("User-Model", result)
         useAuthStore().setTokens(result?.accessToken, result?.refreshToken)
         // data?.remember && localStg.set(ACCOUNT, data)
       } else {
@@ -112,7 +112,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       if (router.currentRoute.value.name === "login") return
       await nextTick()
       try {
-        const data = localStg.get("User-Model") as LoginResult || null
+        const data = (localStg.get("User-Model") as LoginResult) || null
         console.log("tryReconnect", data)
         if (data) {
           timProxy.init()
@@ -123,7 +123,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       } catch (error) {
         console.log(error)
       }
-    }
+    },
   },
   persist: true,
 })

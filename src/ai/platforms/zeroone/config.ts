@@ -1,4 +1,4 @@
-const { VITE_ZEROONE_API_KEY, VITE_ZEROONE_BASE_URL } = import.meta.env;
+const { VITE_ZEROONE_API_KEY, VITE_ZEROONE_BASE_URL } = import.meta.env
 
 export const ZeroOneConfig = () => {
   return {
@@ -9,5 +9,5 @@ export const ZeroOneConfig = () => {
     historyMessageCount: 8,
     token: VITE_ZEROONE_API_KEY,
     openaiUrl: VITE_ZEROONE_BASE_URL,
-  };
-};
+  }
+}

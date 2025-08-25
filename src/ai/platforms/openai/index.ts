@@ -1,23 +1,27 @@
-import { ModelProvider, ModelProviderKey } from "@/ai/types/type";
-import { FewShots, LLMParams } from '@/types/llm';
-import { ChatOptions, LLMConfig } from "../../types/chat";
-import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source";
-import { REQUEST_TIMEOUT_MS } from "@/ai/constant";
+import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source"
+
+import { REQUEST_TIMEOUT_MS } from "@/ai/constant"
+import { ModelProvider } from "@/ai/types/type"
 import {
-  getModelId,
-  useAccessStore,
   adjustForDeepseek,
   createErrorResponse,
-  isDalle3 as _isDalle3,
   extractImageMessage,
   generateDalle3RequestPayload,
-} from "@/ai/utils";
-import { transformData } from "@/utils/chat/index";
-import { useRobotStore, useToolsStore, useChatStore } from "@/stores/index";
-import OllamaAI from "../ollama/ollama";
+  getModelId,
+  isDalle3 as _isDalle3,
+  useAccessStore,
+} from "@/ai/utils"
+import { useChatStore, useRobotStore, useToolsStore } from "@/stores/index"
+import { transformData } from "@/utils/chat/index"
 
-export * from "./config";
-export * from "./modelValue";
+import OllamaAI from "../ollama/ollama"
+
+import type { ChatOptions, LLMConfig } from "../../types/chat"
+import type { ModelProviderKey } from "@/ai/types/type"
+import type { FewShots, LLMParams } from "@/types/llm"
+
+export * from "./config"
+export * from "./modelValue"
 
 export const OpenaiPath = {
   ChatPath: "v1/chat/completions", // chatgpt 聊天接口
@@ -25,20 +29,20 @@ export const OpenaiPath = {
   SubsPath: "v1/dashboard/billing/subscription", // 总量查询，数据单位为 token
   ListModelPath: "v1/models", // 查询可用模型
   EmbeddingPath: "v1/embeddings", // 文本向量化
-};
+}
 
 export class OpenAiApi {
-  provider: ModelProviderKey = ModelProvider.OpenAI;
+  provider: ModelProviderKey = ModelProvider.OpenAI
 
   constructor(provider: ModelProviderKey) {
-    this.provider = provider;
+    this.provider = provider
   }
   getPath(path: string): string {
-    let baseUrl = this.accessStore().openaiUrl;
+    let baseUrl = this.accessStore().openaiUrl
     if (baseUrl.endsWith("/")) {
-      baseUrl = baseUrl.slice(0, -1);
+      baseUrl = baseUrl.slice(0, -1)
     }
-    return [baseUrl, path].join("/");
+    return [baseUrl, path].join("/")
   }
 
   /**
@@ -46,14 +50,14 @@ export class OpenAiApi {
    * @returns {Array} 工具列表
    */
   getPluginTools() {
-    const pluginList = useToolsStore().tools;
-    if (!pluginList.length) return [];
+    const pluginList = useToolsStore().tools
+    if (!pluginList.length) return []
 
     if (useRobotStore().model?.functionCall) {
-      return pluginList.map((t) => t.tools[0]);
+      return pluginList.map((t) => t.tools[0])
     }
 
-    return [];
+    return []
   }
 
   /**
@@ -61,9 +65,9 @@ export class OpenAiApi {
    */
   getPromptStore() {
     try {
-      const prompts = useRobotStore().currentProviderPrompt?.prompt;
-      const validPrompts = prompts?.filter((t) => t.content) || [];
-      return validPrompts;
+      const prompts = useRobotStore().currentProviderPrompt?.prompt
+      const validPrompts = prompts?.filter((t) => t.content) || []
+      return validPrompts
     } catch (error) {
       console.error("获取提示词失败:", error)
       return []
@@ -74,27 +78,27 @@ export class OpenAiApi {
    * 处理提示词消息
    */
   processPromptMessages(messages: FewShots, modelConfig: LLMParams) {
-    let combinedMessages = [];
-    const validPrompts = this.getPromptStore();
-    const historyCount = Math.max(Number(modelConfig.historyMessageCount) || 0, 0);
+    let combinedMessages = []
+    const validPrompts = this.getPromptStore()
+    const historyCount = Math.max(Number(modelConfig.historyMessageCount) || 0, 0)
     const recentMessages = messages.slice(-historyCount)
 
     if (validPrompts.length > 0) {
-      combinedMessages = [...validPrompts, ...recentMessages]; // prompt
+      combinedMessages = [...validPrompts, ...recentMessages] // prompt
     } else {
-      combinedMessages = recentMessages; // 上下文
+      combinedMessages = recentMessages // 上下文
     }
 
     // DeepSeek 推理模型特殊处理
     if (modelConfig.model === "deepseek-reasoner") {
-      return adjustForDeepseek(combinedMessages);
+      return adjustForDeepseek(combinedMessages)
     }
 
-    return combinedMessages;
+    return combinedMessages
   }
 
   accessStore(model = this.provider) {
-    return useAccessStore(model);
+    return useAccessStore(model)
   }
 
   getHeaders(): Record<string, string> {
@@ -102,23 +106,23 @@ export class OpenAiApi {
       "Content-Type": "application/json",
       "x-requested-with": "XMLHttpRequest",
       Authorization: `Bearer ${this.accessStore().token?.trim()}`,
-    };
-    return headers;
+    }
+    return headers
   }
 
   async extractMessage(res: any) {
     if (res?.error) {
-      return "```\n" + JSON.stringify(res, null, 4) + "\n```";
+      return "```\n" + JSON.stringify(res, null, 4) + "\n```"
     }
     // DALL-E 3模型返回图片URL
     if (res.data) {
-      return await extractImageMessage(res);
+      return await extractImageMessage(res)
     }
-    return res.choices?.[0]?.message?.content ?? res;
+    return res.choices?.[0]?.message?.content ?? res
   }
 
   async fetchOnClient(messages: FewShots) {
-    const payload = this.accessStore();
+    const payload = this.accessStore()
     const options = { messages, ...payload }
     return await new OllamaAI().chat(options, {
       callback: {},
@@ -126,28 +130,28 @@ export class OpenAiApi {
       headers: {
         Authorization: `Bearer ${this.accessStore().token?.trim()}`,
       },
-    });
+    })
   }
 
   async enableFetchOnClient(messages: FewShots, modelConfig: LLMParams) {
-    let fetcher = null; //  typeof fetch
-    const processedMessages = this.processPromptMessages(messages, modelConfig);
+    let fetcher = null //  typeof fetch
+    const processedMessages = this.processPromptMessages(messages, modelConfig)
     fetcher = async () => {
       try {
-        return await this.fetchOnClient(processedMessages);
+        return await this.fetchOnClient(processedMessages)
       } catch (error) {
-        const { errorType, error: errorContent } = error;
+        const { errorType, error: errorContent } = error
         const errorMessage = errorContent || error
         // 跟踪服务器端的错误
-        console.error(`Route: [${this.provider}] ${errorType}:`, errorMessage);
+        console.error(`Route: [${this.provider}] ${errorType}:`, errorMessage)
         return createErrorResponse(errorType, {
           error,
           // ...rest,
           // provider: this.provider
-        });
+        })
       }
-    };
-    return fetcher;
+    }
+    return fetcher
   }
 
   /**
@@ -173,55 +177,55 @@ export class OpenAiApi {
       frequency_penalty: modelConfig.frequency_penalty, // 频率惩罚度
       top_p: modelConfig.top_p, // 核采样
       // tools: [] // 工具
-    };
-    const tools = this.getPluginTools();
-    if (tools.length > 0) {
-      payload.tools = tools;
-      payload.stream = false;
     }
-    return payload;
+    const tools = this.getPluginTools()
+    if (tools.length > 0) {
+      payload.tools = tools
+      payload.stream = false
+    }
+    return payload
   }
 
   async chat(options: ChatOptions) {
-    const messages = await transformData(options.messages);
+    const messages = await transformData(options.messages)
     const modelConfig = {
       ...this.accessStore(),
       model: options.config.model,
-    };
+    }
 
-    const requestPayload = this.generateRequestPayload(messages, modelConfig, options.config);
-    console.log("[Request] OpenAI payload: ", requestPayload);
+    const requestPayload = this.generateRequestPayload(messages, modelConfig, options.config)
+    console.log("[Request] OpenAI payload: ", requestPayload)
 
-    const isDalle3 = _isDalle3(options.config.model);
-    const shouldStream = !isDalle3 && !!options.config.stream;
-    const controller = new AbortController();
+    const isDalle3 = _isDalle3(options.config.model)
+    const shouldStream = !isDalle3 && !!options.config.stream
+    const controller = new AbortController()
 
-    options.onController?.(controller);
+    options.onController?.(controller)
 
     try {
-      const chatPath = this.getPath(OpenaiPath.ChatPath);
+      const chatPath = this.getPath(OpenaiPath.ChatPath)
       const chatPayload = {
         method: "POST",
         body: JSON.stringify(requestPayload),
         // fetch: () => {},
         signal: controller.signal,
         headers: this.getHeaders(),
-      };
+      }
 
       // ollama本地模型使用自定义 fetch 请求
       if (this.isOllamaProvider()) {
-        chatPayload.fetch = await this.enableFetchOnClient(messages, modelConfig);
+        chatPayload.fetch = await this.enableFetchOnClient(messages, modelConfig)
       }
 
       // 流式输出
       if (shouldStream) {
-        await this.handleStreamingChat(chatPath, chatPayload, options, controller);
+        await this.handleStreamingChat(chatPath, chatPayload, options, controller)
       } else {
-        await this.handleNonStreamingChat(chatPath, chatPayload, options, controller);
+        await this.handleNonStreamingChat(chatPath, chatPayload, options, controller)
       }
     } catch (error) {
-      console.error("[Request] failed to make a chat reqeust", error);
-      options?.onError?.(error.message || "请求失败，请稍后重试");
+      console.error("[Request] failed to make a chat reqeust", error)
+      options?.onError?.(error.message || "请求失败，请稍后重试")
     }
   }
 
@@ -312,16 +316,11 @@ export class OpenAiApi {
   /**
    * 处理流式聊天的响应。
    */
-  async handleStreamingChat(
-    chatPath: string,
-    chatPayload: any,
-    options: ChatOptions,
-    controller: AbortController,
-  ) {
-    let responseText = ""; // 用于存储完整的响应文本
-    let remainText = ""; // 用于存储尚未处理的文本
-    let reasoningText = ""; // 用于存储完整的推理内容
-    let finished = false; // 用于标记动画是否已完成
+  async handleStreamingChat(chatPath: string, chatPayload: any, options: ChatOptions, controller: AbortController) {
+    let responseText = "" // 用于存储完整的响应文本
+    let remainText = "" // 用于存储尚未处理的文本
+    let reasoningText = "" // 用于存储完整的推理内容
+    let finished = false // 用于标记动画是否已完成
 
     /**
      * 动画响应文本的显示。
@@ -330,73 +329,70 @@ export class OpenAiApi {
     const animateResponseText = () => {
       // 如果动画已完成或请求已被中止，结束动画
       if (finished || controller.signal.aborted) {
-        responseText += remainText;
+        responseText += remainText
         console.log("[OpenAI] 流式响应完成")
         // 如果响应文本为空，触发错误回调
         if (!responseText.trim()) {
           this.updateSendingState("delete")
-          options.onError?.("服务器繁忙，请稍后再试。");
+          options.onError?.("服务器繁忙，请稍后再试。")
         }
-        return;
+        return
       }
       // 如果有剩余文本，进行文本动画更新
       if (remainText.length > 0) {
-        const chunkSize = Math.max(1, Math.round(remainText.length / 60));
-        const chunk = remainText.slice(0, chunkSize);
+        const chunkSize = Math.max(1, Math.round(remainText.length / 60))
+        const chunk = remainText.slice(0, chunkSize)
 
-        responseText += chunk;
-        remainText = remainText.slice(chunkSize);
+        responseText += chunk
+        remainText = remainText.slice(chunkSize)
 
         options?.onUpdate?.({
           message: responseText,
           fetchCount: chunk,
           think: reasoningText,
-        });
+        })
       }
 
-      requestAnimationFrame(animateResponseText);
+      requestAnimationFrame(animateResponseText)
     }
 
     // 开始动画
-    animateResponseText();
+    animateResponseText()
 
     // 完成处理函数
     const finish = () => {
       if (!finished) {
-        finished = true;
+        finished = true
         options?.onFinish?.({
           message: responseText + remainText,
           think: reasoningText,
-        });
+        })
       }
-    };
+    }
 
-    controller.signal.onabort = finish; // 设置请求中止时的处理函数
+    controller.signal.onabort = finish // 设置请求中止时的处理函数
 
     // 取消fetch请求
-    const requestTimeoutId = setTimeout(
-      () => controller?.abort(),
-      REQUEST_TIMEOUT_MS
-    );
+    const requestTimeoutId = setTimeout(() => controller?.abort(), REQUEST_TIMEOUT_MS)
 
-    const handleStreamError = this.handleStreamError;
+    const handleStreamError = this.handleStreamError
 
     await fetchEventSource(chatPath, {
       ...chatPayload,
       async onopen(res) {
-        console.log("[OpenAI] fetchEventSource", res);
-        clearTimeout(requestTimeoutId);
-        const contentType = res.headers.get("content-type");
+        console.log("[OpenAI] fetchEventSource", res)
+        clearTimeout(requestTimeoutId)
+        const contentType = res.headers.get("content-type")
         // text/event-stream; charset=utf-8
-        console.log("[OpenAI] request response content type: ", contentType);
+        console.log("[OpenAI] request response content type: ", contentType)
 
         if (contentType?.startsWith("text/plain")) {
-          responseText = await res.clone().text();
-          return finish();
+          responseText = await res.clone().text()
+          return finish()
         }
 
         // text/event-stream EventStreamContentType
-        const stream = contentType?.startsWith(EventStreamContentType);
+        const stream = contentType?.startsWith(EventStreamContentType)
 
         // 检查流式响应格式
         const isValidStream = stream && res.ok && res.status === 200
@@ -406,22 +402,22 @@ export class OpenAiApi {
         }
       },
       onmessage: (msg) => {
-        const result = this.handleStreamMessage(msg, remainText, reasoningText, options, finish);
+        const result = this.handleStreamMessage(msg, remainText, reasoningText, options, finish)
         if (result) {
-          remainText = result.remainText;
-          reasoningText = result.reasoningText;
+          remainText = result.remainText
+          reasoningText = result.reasoningText
         }
       },
       onclose() {
-        finish();
+        finish()
       },
       onerror(error) {
         console.error("[OpenAI] 流式请求错误:", error)
-        options.onError?.(error);
-        throw error;
+        options.onError?.(error)
+        throw error
       },
       openWhenHidden: true,
-    });
+    })
   }
 
   /**
@@ -497,9 +493,9 @@ export class OpenAiApi {
   /**
    * 检查连通性
    */
-  async checkConnectivity(): Promise<{ valid: boolean, error: string }> {
-    const url = this.getPath(OpenaiPath.ChatPath);
-    const payload = this.accessStore();
+  async checkConnectivity(): Promise<{ valid: boolean; error: string }> {
+    const url = this.getPath(OpenaiPath.ChatPath)
+    const payload = this.accessStore()
 
     const chatPayload = {
       method: "POST",
@@ -509,27 +505,27 @@ export class OpenAiApi {
         stream: false,
       }),
       headers: this.getHeaders(),
-    };
+    }
 
     try {
-      const res = await fetch(url, chatPayload);
+      const res = await fetch(url, chatPayload)
       if (!res.ok) {
-        const resJson = await res.json();
-        console.log("[Check] Response received:", resJson);
+        const resJson = await res.json()
+        console.log("[Check] Response received:", resJson)
         return {
           valid: false,
-          error: resJson?.error?.message || "未知错误"
-        };
+          error: resJson?.error?.message || "未知错误",
+        }
       }
       return {
         valid: true,
         error: undefined,
-      };
+      }
     } catch (error) {
       return {
         valid: false,
-        error: error?.message || "未知错误"
-      };
+        error: error?.message || "未知错误",
+      }
     }
   }
 }

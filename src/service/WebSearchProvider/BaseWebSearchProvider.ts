@@ -1,4 +1,4 @@
-import { useWebSearchStore } from '@/stores/index';
+import { useWebSearchStore } from "@/stores/index"
 
 /**
  * BaseWebSearchProvider 是所有 Web 搜索提供者的基类。
@@ -35,7 +35,7 @@ export default class BaseWebSearchProvider {
    */
   getApiKey() {
     const config = useWebSearchStore().getProviderConfig
-    return config?.apiKey || ''
+    return config?.apiKey || ""
   }
   /**
    * 获取当前 provider 的 API 主机地址
@@ -43,6 +43,6 @@ export default class BaseWebSearchProvider {
    */
   getApiHost() {
     const config = useWebSearchStore().getProviderConfig
-    return config?.apiHost || ''
+    return config?.apiHost || ""
   }
 }

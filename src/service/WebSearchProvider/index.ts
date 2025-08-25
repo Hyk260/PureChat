@@ -1,4 +1,4 @@
-import WebSearchProviderFactory from './WebSearchProviderFactory'
+import WebSearchProviderFactory from "./WebSearchProviderFactory"
 
 export default class WebSearchEngineProvider {
   sdk

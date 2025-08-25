@@ -29,13 +29,13 @@ type NonNullable<T> = T extends null | undefined ? never : T;
 
 type Recordable<T = any> = Record<string, T>;
 
-type ReadonlyRecordable<T = any> = {
+interface ReadonlyRecordable<T = any> {
   readonly [key: string]: T;
-};
+}
 
-type Indexable<T = any> = {
+interface Indexable<T = any> {
   [key: string]: T;
-};
+}
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;

@@ -1,29 +1,24 @@
-import { cloneDeep } from "lodash-es";
-import { timeFormat } from "@/utils/timeFormat";
-import { useAppStore } from "@/stores/modules/app";
+import { useAppStore } from "@/stores/modules/app"
 
-const timeline = false;
-const duration = 5 * 60;
+const timeline = false
+const duration = 5 * 60
 
 // 若当前消息与上一条消息间隔超过5分钟，会进行新的时间戳展示，否则归为上一个聊天单元。
 const isInFiveTime = (curTime: number, baseTime: number) => {
-  return Math.abs(curTime - baseTime) <= duration;
-};
+  return Math.abs(curTime - baseTime) <= duration
+}
 
 // start last
-export const getBaseTime = (
-  list: { isTimeDivider: boolean; time: number }[],
-  type = "start"
-) => {
-  if (!list.length) return 0;
-  let time = 0;
+export const getBaseTime = (list: { isTimeDivider: boolean; time: number }[], type = "start") => {
+  if (!list.length) return 0
+  let time = 0
   if (type === "start") {
-    time = list.find((t) => t.isTimeDivider)?.time || 0;
+    time = list.find((t) => t.isTimeDivider)?.time || 0
   } else {
-    time = list.findLast((t) => t.isTimeDivider)?.time || 0;
+    time = list.findLast((t) => t.isTimeDivider)?.time || 0
   }
-  return time;
-};
+  return time
+}
 
 /**
  * 根据指定的持续时间向列表中添加时间分隔符。
@@ -38,28 +33,26 @@ export const addTimeDivider = (
   baseTime = 0,
   type = "start"
 ) => {
-  if (!useAppStore().timeline) return list;
+  if (!useAppStore().timeline) return list
   if (!Array.isArray(list)) {
-    throw new Error("list must be an array");
+    throw new Error("list must be an array")
   }
 
-  let _baseTime = baseTime;
+  let _baseTime = baseTime
 
-  const validMessages = list.filter(
-    (t) => !t.isTimeDivider && !t.isDeleted
-  );
+  const validMessages = list.filter((t) => !t.isTimeDivider && !t.isDeleted)
 
-  if (!validMessages.length) return [];
+  if (!validMessages.length) return []
 
   const reducer = (acc, cur) => {
-    const curTime = cur.clientTime;
+    const curTime = cur.clientTime
     if (isInFiveTime(curTime, _baseTime)) {
-      return [...acc, cur];
+      return [...acc, cur]
     } else {
-      _baseTime = curTime;
-      return [...acc, { isTimeDivider: true, time: curTime }, cur];
+      _baseTime = curTime
+      return [...acc, { isTimeDivider: true, time: curTime }, cur]
     }
-  };
+  }
 
-  return type === "start" ? validMessages.reduce(reducer, []) : validMessages.reduceRight(reducer, []);
-};
+  return type === "start" ? validMessages.reduce(reducer, []) : validMessages.reduceRight(reducer, [])
+}

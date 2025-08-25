@@ -1,14 +1,14 @@
-import { markRaw } from "vue";
 import {
+  ChatDotSquare,
   CopyDocument,
   SortDown,
-  ChatDotSquare,
   // Download,
   // ChatDotSquare,
   // Finished,
   // DeleteFilled
-} from "@element-plus/icons-vue";
-import { BellOff, AtSign, BellRing, ListChecks, MessageSquareQuote, Trash2, Download } from 'lucide-vue-next';
+} from "@element-plus/icons-vue"
+import { AtSign, BellOff, BellRing, Download, ListChecks, MessageSquareQuote, Trash2 } from "lucide-vue-next"
+import { markRaw } from "vue"
 // 会话列表数据
 export const chatSessionListData = [
   {
@@ -16,26 +16,26 @@ export const chatSessionListData = [
     icon: "",
     svgIcon: "pinged",
     text: "置顶",
-    hide: __LOCAL_MODE__
+    hide: __LOCAL_MODE__,
   },
   {
     id: "unpin",
     icon: "",
     svgIcon: "unpin",
     text: "取消置顶",
-    hide: __LOCAL_MODE__
+    hide: __LOCAL_MODE__,
   },
   {
     id: "AcceptNotNotify",
     icon: markRaw(BellOff),
     text: "消息免打扰",
-    hide: __LOCAL_MODE__
+    hide: __LOCAL_MODE__,
   },
   {
     id: "AcceptAndNotify",
     icon: markRaw(BellRing),
     text: "允许消息提醒",
-    hide: __LOCAL_MODE__
+    hide: __LOCAL_MODE__,
   },
   {
     id: "remove",
@@ -44,7 +44,7 @@ export const chatSessionListData = [
     style: "color: #f44336;",
   },
   // { id: "clean", text: "清除消息" },
-].filter(item => !item.hide);
+].filter((item) => !item.hide)
 
 export const menuOptionsList = [
   {
@@ -91,7 +91,7 @@ export const menuOptionsList = [
     text: "删除",
     style: "color: #f44336;",
   },
-];
+]
 
 export const avatarMenu = [
   {
@@ -104,4 +104,4 @@ export const avatarMenu = [
     icon: markRaw(AtSign),
     text: "TA",
   },
-];
+]

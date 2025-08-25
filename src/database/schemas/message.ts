@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod"
 
 // https://web.sdk.qcloud.com/im/doc/zh-cn/Message.html
 export const MessageSchema = {
@@ -43,7 +43,7 @@ export const MessageSchema = {
   type: "TIMTextElem",
   createdAt: 1754536602679,
   updatedAt: 1754536602686,
-};
+}
 
 export const DB_MessageSchema = z.object({
   ID: z.string().uuid(),
@@ -86,6 +86,6 @@ export const DB_MessageSchema = z.object({
   type: z.string(),
   createdAt: z.number().optional(),
   updatedAt: z.number().optional(),
-});
+})
 
-export type DB_Message = z.infer<typeof DB_MessageSchema>;
+export type DB_Message = z.infer<typeof DB_MessageSchema>

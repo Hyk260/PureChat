@@ -61,6 +61,6 @@ const ZeroOne = {
   id: "zeroone",
   icon: "zeroone",
   name: "01.AI",
-};
+}
 
-export default ZeroOne;
+export default ZeroOne

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod"
 
 export const FileSchema = {
   id: "",
@@ -12,7 +12,7 @@ export const FileSchema = {
   count: 0,
   createdAt: 0,
   updatedAt: 0,
-};
+}
 
 export const DB_FileSchema = z.object({
   id: z.string().uuid(),
@@ -26,6 +26,6 @@ export const DB_FileSchema = z.object({
   count: z.number(),
   createdAt: z.number().optional(),
   updatedAt: z.number().optional(),
-});
+})
 
-export type DB_File = z.infer<typeof DB_FileSchema>;
+export type DB_File = z.infer<typeof DB_FileSchema>

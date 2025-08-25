@@ -1,25 +1,20 @@
-import { ElButton, type NotificationHandle } from "element-plus";
-import { type App, h } from "vue";
+import { ElButton, type NotificationHandle } from "element-plus"
+import { type App, h } from "vue"
 
-import { $t } from "@/locales";
+import { $t } from "@/locales"
 
-let isShow = false;
-let Notification: NotificationHandle | null = null;
-const {
-  DEV: isDev,
-  PROD: isProd,
-  VITE_BASE_URL,
-  VITE_AUTOMATICALLY_DETECT_UPDATE,
-} = import.meta.env;
+let isShow = false
+let Notification: NotificationHandle | null = null
+const { DEV: isDev, PROD: isProd, VITE_BASE_URL, VITE_AUTOMATICALLY_DETECT_UPDATE } = import.meta.env
 
 export function setupAppErrorHandle(app: App) {
   app.config.errorHandler = (err, vm, info) => {
-    console.error(err, vm, info);
-  };
+    console.error(err, vm, info)
+  }
 }
 
 function notify() {
-  if (Notification) Notification.close();
+  if (Notification) Notification.close()
   Notification = window.$notification!({
     title: $t("system.updateContent"),
     dangerouslyUseHTMLString: true,
@@ -28,7 +23,7 @@ function notify() {
         ElButton,
         {
           onClick() {
-            Notification?.close();
+            Notification?.close()
           },
         },
         () => $t("system.updateCancel")
@@ -38,65 +33,65 @@ function notify() {
         {
           type: "primary",
           onClick() {
-            location.reload();
-            Notification?.close();
+            location.reload()
+            Notification?.close()
           },
         },
         () => $t("system.updateConfirm")
       ),
     ]),
     onClose: () => {
-      isShow = false;
+      isShow = false
     },
     duration: 0,
-  });
+  })
 }
 
 async function getHtmlBuildTime(): Promise<string | null> {
-  const baseUrl = VITE_BASE_URL || "/";
+  const baseUrl = VITE_BASE_URL || "/"
 
   try {
-    const res = await fetch(`${baseUrl}index.html?time=${Date.now()}`);
+    const res = await fetch(`${baseUrl}index.html?time=${Date.now()}`)
 
     if (!res.ok) {
-      console.error("getHtmlBuildTime error:", res.status, res.statusText);
-      return null;
+      console.error("getHtmlBuildTime error:", res.status, res.statusText)
+      return null
     }
 
-    const html = await res.text();
-    const match = html.match(/<meta name="buildTime" content="(.*)">/);
-    return match?.[1] || null;
+    const html = await res.text()
+    const match = html.match(/<meta name="buildTime" content="(.*)">/)
+    return match?.[1] || null
   } catch (error) {
-    console.error("getHtmlBuildTime error:", error);
-    return null;
+    console.error("getHtmlBuildTime error:", error)
+    return null
   }
 }
 
 const checkForUpdates = async () => {
-  if (isShow) return;
+  if (isShow) return
 
-  const buildTime = await getHtmlBuildTime();
+  const buildTime = await getHtmlBuildTime()
 
-  const BUILD_TIME = __APP_INFO__.lastBuildTime;
+  const BUILD_TIME = __APP_INFO__.lastBuildTime
 
   // If build time hasn't changed, no update is needed
   if (buildTime === BUILD_TIME) {
-    return;
+    return
   }
 
-  isShow = true;
+  isShow = true
 
-  notify();
-};
+  notify()
+}
 
 export function setupAppVersionNotification() {
-  if (isDev || __IS_ELECTRON__) return;
-  const canAutoUpdateApp = VITE_AUTOMATICALLY_DETECT_UPDATE === "Y" && isProd;
-  if (!canAutoUpdateApp) return;
+  if (isDev || __IS_ELECTRON__) return
+  const canAutoUpdateApp = VITE_AUTOMATICALLY_DETECT_UPDATE === "Y" && isProd
+  if (!canAutoUpdateApp) return
 
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-      checkForUpdates();
+      checkForUpdates()
     }
-  });
+  })
 }

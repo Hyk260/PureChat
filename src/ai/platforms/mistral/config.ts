@@ -9,5 +9,5 @@ export const MistralConfig = () => {
     historyMessageCount: 8,
     token: VITE_MISTRAL_API_KEY,
     openaiUrl: VITE_MISTRAL_BASE_URL,
-  };
-};
+  }
+}

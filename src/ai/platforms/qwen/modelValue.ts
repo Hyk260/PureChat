@@ -1,7 +1,7 @@
-import Qwen from './models';
+import Qwen from "./models"
 
-const docs = __APP_INFO__.pkg.docs;
-const { VITE_QWEN_BASE_URL } = import.meta.env;
+const docs = __APP_INFO__.pkg.docs
+const { VITE_QWEN_BASE_URL } = import.meta.env
 
 export const QwenModelValue = () => {
   return {
@@ -56,5 +56,5 @@ export const QwenModelValue = () => {
       min: 1,
       max: 64,
     },
-  };
-};
+  }
+}

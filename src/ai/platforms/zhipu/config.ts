@@ -9,5 +9,5 @@ export const ZhiPuConfig = () => {
     historyMessageCount: 8,
     token: VITE_ZHIPU_API_KEY,
     openaiUrl: VITE_ZHIPU_BASE_URL,
-  };
-};
+  }
+}

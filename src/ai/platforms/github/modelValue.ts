@@ -1,4 +1,4 @@
-import GitHubAI from "./models";
+import GitHubAI from "./models"
 
 const { VITE_GITHUB_PROXY_URL } = import.meta.env
 
@@ -56,8 +56,7 @@ export const GitHubModelValue = () => {
     PresencePenalty: {
       ID: "presence_penalty",
       Title: "表述发散度 (presence_penalty)",
-      SubTitle:
-        "值越大，越倾向不同的表达方式，避免概念重复；值越小，越倾向使用重复的概念或叙述，表达更具一致性",
+      SubTitle: "值越大，越倾向不同的表达方式，避免概念重复；值越小，越倾向使用重复的概念或叙述，表达更具一致性",
       defaultValue: "",
       step: 0.1,
       min: 0,
@@ -81,5 +80,5 @@ export const GitHubModelValue = () => {
       min: 1,
       max: 64,
     },
-  };
-};
+  }
+}

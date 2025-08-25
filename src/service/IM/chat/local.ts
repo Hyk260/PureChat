@@ -1,11 +1,12 @@
-import { cloneDeep } from "lodash-es";
-import { getTime } from "@/utils/common";
-import { uuid } from "@/utils/uuid";
-import { localStg } from "@/utils/storage";
-import { SessionModel } from "@/database/models/session";
-import { MessageModel } from "@/database/models/message";
-import { ConversationList, UserProfile, BaseElemMessage, ProvidersList } from '@database/config';
-import emitter from "@/utils/mitt-bus";
+import { BaseElemMessage, ConversationList, ProvidersList, UserProfile } from "@database/config"
+import { cloneDeep } from "lodash-es"
+
+import { MessageModel } from "@/database/models/message"
+import { SessionModel } from "@/database/models/session"
+import { getTime } from "@/utils/common"
+import emitter from "@/utils/mitt-bus"
+import { localStg } from "@/utils/storage"
+import { uuid } from "@/utils/uuid"
 
 export class LocalChat {
   /**
@@ -14,20 +15,20 @@ export class LocalChat {
    * @static
    * @type {LocalChat|null}
    */
-  static #instance = null;
+  static #instance = null
 
   /**
    * 初始化状态标识
    * @private
    * @type {boolean}
    */
-  isInitialized = false;
+  isInitialized = false
 
   constructor() {
     if (LocalChat.#instance) {
-      throw new Error('LocalChat 是单例类，请使用 getInstance() 方法获取实例');
+      throw new Error("LocalChat 是单例类，请使用 getInstance() 方法获取实例")
     }
-    this.isInitialized = false;
+    this.isInitialized = false
   }
   /**
    * 获取单例实例
@@ -36,9 +37,9 @@ export class LocalChat {
    */
   static getInstance() {
     if (!LocalChat.#instance) {
-      LocalChat.#instance = new LocalChat();
+      LocalChat.#instance = new LocalChat()
     }
-    return LocalChat.#instance;
+    return LocalChat.#instance
   }
 
   /**
@@ -47,19 +48,19 @@ export class LocalChat {
    * @private
    * @returns {Promise<void>}
    */
-  async initialize()  {
-    if (this.isInitialized) return;
+  async initialize() {
+    if (this.isInitialized) return
 
     try {
-      const conversationList = await this.loadConversationList();
+      const conversationList = await this.loadConversationList()
 
-      this.isInitialized = true;
+      this.isInitialized = true
 
-      this.emit("sdkStateReady", { name: "sdkStateReady" });
-      this.emit("onConversationListUpdated", { data: conversationList });
+      this.emit("sdkStateReady", { name: "sdkStateReady" })
+      this.emit("onConversationListUpdated", { data: conversationList })
     } catch (error) {
-      console.error("LocalChat 初始化失败:", error);
-      throw error;
+      console.error("LocalChat 初始化失败:", error)
+      throw error
     }
   }
 
@@ -70,11 +71,11 @@ export class LocalChat {
    */
   async loadConversationList() {
     try {
-      const list = await SessionModel.query();
-      return list;
+      const list = await SessionModel.query()
+      return list
     } catch (error) {
-      console.error("加载会话列表失败:", error);
-      return [];
+      console.error("加载会话列表失败:", error)
+      return []
     }
   }
 
@@ -84,9 +85,9 @@ export class LocalChat {
    * @returns {LocalChat} LocalChat 实例
    */
   create(data) {
-    localStg.set("User-Model", { username: UserProfile.userID });
-    console.log("create local chat", data);
-    return LocalChat.getInstance();
+    localStg.set("User-Model", { username: UserProfile.userID })
+    console.log("create local chat", data)
+    return LocalChat.getInstance()
   }
 
   /**
@@ -96,8 +97,8 @@ export class LocalChat {
    * @param {Object} [context=null] 上下文对象
    */
   on(eventName, handler, context = null) {
-    const boundHandler = context ? handler.bind(context) : handler;
-    emitter.on(eventName, boundHandler);
+    const boundHandler = context ? handler.bind(context) : handler
+    emitter.on(eventName, boundHandler)
   }
 
   /**
@@ -106,7 +107,7 @@ export class LocalChat {
    * @param {Function} handler 处理函数
    */
   off(event, handler) {
-    emitter.off(event, handler);
+    emitter.off(event, handler)
   }
 
   /**
@@ -115,20 +116,20 @@ export class LocalChat {
    * @param {*} data 事件数据
    */
   emit(eventName, handler) {
-    emitter.emit(eventName, handler);
+    emitter.emit(eventName, handler)
   }
 
   async updateConversationLastMessage(id, data) {
     try {
-      const session = await SessionModel.findById(id);
+      const session = await SessionModel.findById(id)
       if (session) {
-        const conversation = cloneDeep(session);
-        conversation.lastMessage.messageForShow = data?.messageForShow || "";
-        conversation.lastMessage.lastTime = data?.lastTime || getTime();
-        await SessionModel.update(id, conversation);
+        const conversation = cloneDeep(session)
+        conversation.lastMessage.messageForShow = data?.messageForShow || ""
+        conversation.lastMessage.lastTime = data?.lastTime || getTime()
+        await SessionModel.update(id, conversation)
       }
     } catch (error) {
-      console.error("updateConversationLastMessage:", error);
+      console.error("updateConversationLastMessage:", error)
     }
   }
 
@@ -145,7 +146,7 @@ export class LocalChat {
     try {
       await this.updateConversationLastMessage(data.conversationID, {
         messageForShow: data.payload.text,
-      });
+      })
 
       const message = {
         ...data,
@@ -153,32 +154,32 @@ export class LocalChat {
         clientTime: getTime(),
         ID: data.ID || uuid(),
         status: "success",
-      };
+      }
 
       setTimeout(async () => {
         try {
-          const sessionList = await this.loadConversationList();
-          this.emit("onConversationListUpdated", { data: sessionList });
-          this.emit("onMessageReceived", { data: [message] });
+          const sessionList = await this.loadConversationList()
+          this.emit("onConversationListUpdated", { data: sessionList })
+          this.emit("onMessageReceived", { data: [message] })
         } catch (error) {
-          console.error("发送消息后处理失败:", error);
+          console.error("发送消息后处理失败:", error)
         }
-      }, 0);
+      }, 0)
 
-      return { code: 0, data: { message } };
+      return { code: 0, data: { message } }
     } catch (error) {
-      console.error("发送消息失败:", error);
-      return { code: -1, data: { message: null } };
+      console.error("发送消息失败:", error)
+      return { code: -1, data: { message: null } }
     }
   }
   getLoginUser() {
-    return UserProfile.userID;
+    return UserProfile.userID
   }
   async getMyProfile() {
     return {
       code: 0,
       data: UserProfile,
-    };
+    }
   }
 
   /**
@@ -189,16 +190,16 @@ export class LocalChat {
    */
   async getUserProfile({ userIDList = [] }) {
     try {
-      const userIDSet = new Set(userIDList);
-      const data = ProvidersList.filter(item => userIDSet.has(item.userID));
+      const userIDSet = new Set(userIDList)
+      const data = ProvidersList.filter((item) => userIDSet.has(item.userID))
 
       return {
         code: 0,
         data: data || [],
-      };
+      }
     } catch (error) {
-      console.error("获取用户资料失败:", error);
-      return { code: -1, data: [] };
+      console.error("获取用户资料失败:", error)
+      return { code: -1, data: [] }
     }
   }
   async getGroupList() {
@@ -207,7 +208,7 @@ export class LocalChat {
       data: {
         groupList: [],
       },
-    };
+    }
   }
   async getGroupMemberList() {
     return {
@@ -216,7 +217,7 @@ export class LocalChat {
         offset: 0,
         memberList: [],
       },
-    };
+    }
   }
 
   /**
@@ -230,8 +231,8 @@ export class LocalChat {
    * @returns {Promise<Object>} 消息对象
    */
   async createTextMessage(data) {
-    const { to, conversationType, payload, cloudCustomData = "", cache } = data;
-    const currentTime = getTime();
+    const { to, conversationType, payload, cloudCustomData = "", cache } = data
+    const currentTime = getTime()
 
     const messageData = {
       ...BaseElemMessage,
@@ -247,11 +248,11 @@ export class LocalChat {
       payload,
       type: "TIMTextElem",
       version: __APP_INFO__.pkg.version || "0",
-    };
+    }
 
-    if (cache) MessageModel.create(messageData.ID, messageData);
+    if (cache) MessageModel.create(messageData.ID, messageData)
 
-    return messageData;
+    return messageData
   }
 
   /**
@@ -265,8 +266,8 @@ export class LocalChat {
    * @returns {Promise<Object>} 文件消息对象
    */
   async createFileMessage(data) {
-    const { to, conversationType, payload } = data;
-    const currentTime = getTime();
+    const { to, conversationType, payload } = data
+    const currentTime = getTime()
 
     const messageData = {
       ...BaseElemMessage,
@@ -279,19 +280,19 @@ export class LocalChat {
       conversationID: `${conversationType}${to}`,
       conversationType,
       payload: {
-        fileName: payload.file.name || 'text.txt',
+        fileName: payload.file.name || "text.txt",
         fileSize: payload.file.size || 0,
-        filePath: payload.path || '',
-        fileUrl: '',
+        filePath: payload.path || "",
+        fileUrl: "",
         uuid: `${UserProfile.userID}-${uuid()}`,
       },
       type: "TIMFileElem",
       version: __APP_INFO__.pkg.version || "0",
-    };
+    }
 
-    MessageModel.create(messageData.ID, messageData);
+    MessageModel.create(messageData.ID, messageData)
 
-    return messageData;
+    return messageData
   }
 
   /**
@@ -303,8 +304,8 @@ export class LocalChat {
    * @returns {Object} 自定义消息对象
    */
   createCustomMessage(data) {
-    const { to, conversationType, payload } = data;
-    const currentTime = getTime();
+    const { to, conversationType, payload } = data
+    const currentTime = getTime()
 
     const messageData = {
       ...BaseElemMessage,
@@ -318,11 +319,11 @@ export class LocalChat {
       conversationID: `${conversationType}${to}`,
       type: "TIMCustomElem",
       version: __APP_INFO__.pkg.version || "0",
-    };
+    }
 
-    MessageModel.create(messageData.ID, messageData);
+    MessageModel.create(messageData.ID, messageData)
 
-    return messageData;
+    return messageData
   }
 
   /**
@@ -332,26 +333,26 @@ export class LocalChat {
    */
   async getConversationProfile(chatId) {
     try {
-      const data = cloneDeep(ConversationList);
-      data.conversationID = chatId;
-      data.lastMessage.lastTime = getTime();
-      data.userProfile = ProvidersList.find((item) => item.userID === chatId.replace("C2C", ""));
-      SessionModel.create(chatId, data);
+      const data = cloneDeep(ConversationList)
+      data.conversationID = chatId
+      data.lastMessage.lastTime = getTime()
+      data.userProfile = ProvidersList.find((item) => item.userID === chatId.replace("C2C", ""))
+      SessionModel.create(chatId, data)
 
-      const list = await this.loadConversationList();
-      const index = list.findIndex((t) => t.conversationID === chatId);
+      const list = await this.loadConversationList()
+      const index = list.findIndex((t) => t.conversationID === chatId)
 
-      if (index === -1) list.push(data);
+      if (index === -1) list.push(data)
 
-      this.emit("onConversationListUpdated", { data: list });
+      this.emit("onConversationListUpdated", { data: list })
 
       return {
         code: 0,
-        data: { conversation: data, },
-      };
+        data: { conversation: data },
+      }
     } catch (error) {
-      console.error("获取会话资料失败:", error);
-      return { code: -1, data: { conversation: null } };
+      console.error("获取会话资料失败:", error)
+      return { code: -1, data: { conversation: null } }
     }
   }
 
@@ -359,7 +360,7 @@ export class LocalChat {
    * 获取未读消息总数
    */
   getTotalUnreadMessageCount(): number {
-    return 0;
+    return 0
   }
 
   /**
@@ -371,8 +372,8 @@ export class LocalChat {
    */
   async getMessageList(data) {
     try {
-      const { conversationID: id, nextReqMessageID = "" } = data;
-      const messageList = await MessageModel.query({ id });
+      const { conversationID: id, nextReqMessageID = "" } = data
+      const messageList = await MessageModel.query({ id })
 
       return {
         code: 0,
@@ -381,9 +382,9 @@ export class LocalChat {
           isCompleted: false,
           messageList: messageList,
         },
-      };
+      }
     } catch (error) {
-      console.error("获取消息列表失败:", error);
+      console.error("获取消息列表失败:", error)
       return {
         code: -1,
         data: {
@@ -391,7 +392,7 @@ export class LocalChat {
           isCompleted: false,
           messageList: [],
         },
-      };
+      }
     }
   }
 
@@ -403,18 +404,18 @@ export class LocalChat {
   async deleteMessage(messages) {
     try {
       const deletePromises = messages.map(async (item) => {
-        return MessageModel.delete(item.ID);
-      });
+        return MessageModel.delete(item.ID)
+      })
 
-      await Promise.all(deletePromises);
+      await Promise.all(deletePromises)
 
       return {
         code: 0,
         data: { messageList: [] },
-      };
+      }
     } catch (error) {
-      console.error("删除消息失败:", error);
-      return { code: -1, data: { messageList: [] } };
+      console.error("删除消息失败:", error)
+      return { code: -1, data: { messageList: [] } }
     }
   }
 
@@ -427,21 +428,21 @@ export class LocalChat {
    */
   async deleteConversation({ conversationIDList = [], clearHistoryMessage = false }) {
     try {
-      const [ID] = conversationIDList;
+      const [ID] = conversationIDList
 
-      const list = await SessionModel.query();
-      const messageList = list.filter(item => item.conversationID !== ID);
+      const list = await SessionModel.query()
+      const messageList = list.filter((item) => item.conversationID !== ID)
 
-      this.emit("onConversationListUpdated", { data: messageList });
-      await SessionModel.delete(ID);
+      this.emit("onConversationListUpdated", { data: messageList })
+      await SessionModel.delete(ID)
 
       return {
         code: 0,
         data: { conversationID: ID },
-      };
+      }
     } catch (error) {
-      console.error("删除会话失败:", error);
-      return { code: -1, data: { conversationID: "" } };
+      console.error("删除会话失败:", error)
+      return { code: -1, data: { conversationID: "" } }
     }
   }
 
@@ -452,32 +453,32 @@ export class LocalChat {
    */
   async clearHistoryMessage(sessionId) {
     try {
-      const data = await MessageModel.query({ id: sessionId });
+      const data = await MessageModel.query({ id: sessionId })
 
-      const deletePromises = data.map(item => {
-        return MessageModel.delete(item.ID);
-      });
+      const deletePromises = data.map((item) => {
+        return MessageModel.delete(item.ID)
+      })
 
-      await Promise.all(deletePromises);
+      await Promise.all(deletePromises)
 
-      const sessionList = await SessionModel.query();
-      const session = sessionList.find(t => t.conversationID === sessionId);
+      const sessionList = await SessionModel.query()
+      const session = sessionList.find((t) => t.conversationID === sessionId)
 
       if (session) {
-        const newSession = cloneDeep(session);
-        newSession.lastMessage.messageForShow = '';
-        await SessionModel.update(sessionId, newSession);
-        const messageList = await SessionModel.query();
-        this.emit("onConversationListUpdated", { data: messageList });
+        const newSession = cloneDeep(session)
+        newSession.lastMessage.messageForShow = ""
+        await SessionModel.update(sessionId, newSession)
+        const messageList = await SessionModel.query()
+        this.emit("onConversationListUpdated", { data: messageList })
       }
 
       return {
         data: { conversationID: sessionId },
         code: 0,
-      };
+      }
     } catch (error) {
-      console.error("清空历史消息失败:", error);
-      return { data: { conversationID: sessionId }, code: -1 };
+      console.error("清空历史消息失败:", error)
+      return { data: { conversationID: sessionId }, code: -1 }
     }
   }
 
@@ -495,19 +496,19 @@ export class LocalChat {
         payload: {
           text: data.payload.text,
         },
-      };
+      }
 
-      await MessageModel.update(data.ID, payload);
+      await MessageModel.update(data.ID, payload)
 
-      this.emit("onMessageModified", { data: [data] });
+      this.emit("onMessageModified", { data: [data] })
 
       return {
         code: 0,
         data: { message: data },
-      };
+      }
     } catch (error) {
-      console.error("修改消息失败:", error);
-      return { code: -1, data: { message: null } };
+      console.error("修改消息失败:", error)
+      return { code: -1, data: { message: null } }
     }
   }
 
@@ -517,19 +518,19 @@ export class LocalChat {
    */
   async logout() {
     try {
-      this.isInitialized = false;
+      this.isInitialized = false
 
       return {
         code: 0,
         data: { message: {} },
-      };
+      }
     } catch (error) {
-      console.error("登出失败:", error);
-      return { code: -1, data: { message: {} } };
+      console.error("登出失败:", error)
+      return { code: -1, data: { message: {} } }
     }
   }
 }
 
-export const localChat = LocalChat.getInstance();
+export const localChat = LocalChat.getInstance()
 
-export default LocalChat;
+export default LocalChat

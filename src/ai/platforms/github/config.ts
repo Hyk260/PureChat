@@ -11,5 +11,5 @@ export const GitHubConfig = () => {
     historyMessageCount: 8,
     token: VITE_GITHUB_API_KEY,
     openaiUrl: VITE_GITHUB_PROXY_URL,
-  };
-};
+  }
+}

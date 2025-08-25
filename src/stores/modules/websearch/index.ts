@@ -1,12 +1,13 @@
-import { defineStore } from 'pinia'
-import { SetupStoreId } from '@/stores/enum';
+import { defineStore } from "pinia"
+
+import { SetupStoreId } from "@/stores/enum"
 
 const { VITE_TAVILY_API_KEY } = import.meta.env
 
 const localSearch = __IS_ELECTRON__
 // const localSearch = true
 
-export type WebSearchProvider = {
+export interface WebSearchProvider {
   id: string
   name: string
   apiKey?: string
@@ -37,21 +38,21 @@ export interface WebSearchState {
 
 const providers = [
   {
-    id: 'test',
-    name: 'Test',
-    apiKey: 'test-xxx'
+    id: "test",
+    name: "Test",
+    apiKey: "test-xxx",
   },
   {
-    id: 'tavily',
-    name: 'Tavily',
-    apiKey: VITE_TAVILY_API_KEY || '',
-    apiHost: 'https://api.tavily.com',
+    id: "tavily",
+    name: "Tavily",
+    apiKey: VITE_TAVILY_API_KEY || "",
+    apiHost: "https://api.tavily.com",
   },
   {
-    id: 'exa',
-    name: 'Exa',
-    apiKey: '',
-    apiHost: 'https://api.exa.ai',
+    id: "exa",
+    name: "Exa",
+    apiKey: "",
+    apiHost: "https://api.exa.ai",
   },
   // {
   //   id: 'local-google',
@@ -59,16 +60,16 @@ const providers = [
   //   url: 'https://www.google.com/search?q=%s'
   // },
   {
-    id: 'local-bing',
-    name: 'Bing',
-    url: 'https://cn.bing.com/search?q=%s&ensearch=1'
+    id: "local-bing",
+    name: "Bing",
+    url: "https://cn.bing.com/search?q=%s&ensearch=1",
   },
   {
-    id: 'local-baidu',
-    name: 'Baidu',
-    url: 'https://www.baidu.com/s?wd=%s'
-  }
-].filter(item => localSearch ? true : !item.id.startsWith('local-'))
+    id: "local-baidu",
+    name: "Baidu",
+    url: "https://www.baidu.com/s?wd=%s",
+  },
+].filter((item) => (localSearch ? true : !item.id.startsWith("local-")))
 
 export const useWebSearchStore = defineStore(SetupStoreId.WebSearch, {
   state: (): WebSearchState => ({
@@ -82,7 +83,7 @@ export const useWebSearchStore = defineStore(SetupStoreId.WebSearch, {
   getters: {
     getProviderConfig(): WebSearchProvider | undefined {
       return this.providers.find((t) => t.id === this.defaultProvider)
-    }
+    },
   },
   actions: {
     setDefaultProvider(action: string) {
@@ -105,7 +106,7 @@ export const useWebSearchStore = defineStore(SetupStoreId.WebSearch, {
     updateWebSearchProvider(action: WebSearchProvider) {
       const index = this.providers.findIndex((t) => t.id === action.id)
       if (index !== -1) {
-        this.providers[index].apiKey = action.apiKey || ''
+        this.providers[index].apiKey = action.apiKey || ""
       }
     },
     setSearchWithTime(action: boolean) {
@@ -119,6 +120,6 @@ export const useWebSearchStore = defineStore(SetupStoreId.WebSearch, {
     },
   },
   persist: {
-    pick: ['defaultProvider', 'checkProviders']
+    pick: ["defaultProvider", "checkProviders"],
   },
-});
+})

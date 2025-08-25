@@ -1,10 +1,9 @@
-import OpenAI from "openai";
-
-import { ChatStreamPayload } from "./chat";
+import type { ChatStreamPayload } from "./chat"
+import type OpenAI from "openai"
 
 export interface CreateChatCompletionOptions {
-  chatModel: OpenAI;
-  payload: ChatStreamPayload;
+  chatModel: OpenAI
+  payload: ChatStreamPayload
 }
 
 export enum ModelProvider {
@@ -19,4 +18,4 @@ export enum ModelProvider {
   // V0 = 'v0',
 }
 
-export type ModelProviderKey = Lowercase<keyof typeof ModelProvider>;
+export type ModelProviderKey = Lowercase<keyof typeof ModelProvider>

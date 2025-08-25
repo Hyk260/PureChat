@@ -1,5 +1,6 @@
-import NProgress from 'nprogress';
-import "nprogress/nprogress.css";
+import NProgress from "nprogress"
+
+import "nprogress/nprogress.css"
 
 /** Setup plugin NProgress */
 export function setupNProgress() {
@@ -14,10 +15,10 @@ export function setupNProgress() {
     trickleSpeed: 200,
     // 初始化时的最小百分比
     minimum: 0.3, // 0.3
-  });
+  })
 
   // mount on window
-  window.NProgress = NProgress;
+  window.NProgress = NProgress
 }
 
-export default NProgress;
+export default NProgress

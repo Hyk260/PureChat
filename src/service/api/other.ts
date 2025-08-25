@@ -1,14 +1,14 @@
-import { http } from "../request/index";
+import { http } from "../request/index"
 
-const { DEV: isDev } = import.meta.env;
+const { DEV: isDev } = import.meta.env
 
 export const getPrompt = async () => {
   return http.request({
     url: "/market",
     method: "get",
-  });
-};
+  })
+}
 
 if (isDev) {
-  (window as any).getPrompt = getPrompt;
+  ;(window as any).getPrompt = getPrompt
 }

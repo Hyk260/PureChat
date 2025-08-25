@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod"
 
 export const SessionSchema = {
   id: "",
@@ -22,7 +22,7 @@ export const SessionSchema = {
   draftText: "",
   createdAt: 0,
   updatedAt: 0,
-};
+}
 
 export const DB_SessionSchema = z.object({
   id: z.string().optional(),
@@ -46,6 +46,6 @@ export const DB_SessionSchema = z.object({
   draftText: z.string().optional(),
   createdAt: z.number().optional(),
   updatedAt: z.number().optional(),
-});
+})
 
-export type DB_Session = z.infer<typeof DB_SessionSchema>;
+export type DB_Session = z.infer<typeof DB_SessionSchema>
