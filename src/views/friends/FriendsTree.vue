@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
-import { ModelIDList } from '@shared/provider/config';
+import { ModelIDList } from '@shared/provider';
 import { getUserProfile } from "@/service/im-sdk-api/index";
 import { useGroupStore } from '@/stores/modules/group/index';
 import CardGrid from "./CardGrid.vue";

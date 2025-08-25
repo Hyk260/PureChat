@@ -1,22 +1,20 @@
-import { Profile } from "@/service/chat/types/tencent-cloud-chat";
-import type { DB_Session } from "@/database/schemas/session";
-import type { DB_Message } from "@/database/schemas/message";
-
-import emitter from "@/utils/mitt-bus";
-import chat from "@/service/IM/im-sdk/tim";
-import { C2CModelIDList } from '@shared/provider/config';
-import { scrollToDomPosition } from "@/utils/chat/index";
-import { setMessageRead } from "@/service/im-sdk-api/index";
-import { localStg } from "@/utils/storage";
+import { C2CModelIDList } from "@shared/provider";
 import { useWindowFocus } from "@vueuse/core";
 import { ElNotification } from "element-plus";
 import { cloneDeep } from "lodash-es";
-import { useUserStore, useGroupStore, useChatStore } from "@/stores/index";
-import {
-  fnCheckoutNetState,
-  getConversationList,
-  kickedOutReason,
-} from "./utils/index";
+
+import chat from "@/service/IM/im-sdk/tim";
+import { setMessageRead } from "@/service/im-sdk-api";
+import { useChatStore, useGroupStore, useUserStore } from "@/stores";
+import { scrollToDomPosition } from "@/utils/chat";
+import emitter from "@/utils/mitt-bus";
+import { localStg } from "@/utils/storage";
+
+import { fnCheckoutNetState, getConversationList, kickedOutReason } from "./utils";
+
+import type { DB_Message } from "@/database/schemas/message";
+import type { DB_Session } from "@/database/schemas/session";
+import type { Profile } from "@/service/chat/types/tencent-cloud-chat";
 
 /**
  * 浏览器窗口焦点状态监听
@@ -29,22 +27,22 @@ const isFocused = useWindowFocus();
  */
 const isRobotId = (data: DB_Message[]): boolean => {
   return C2CModelIDList.includes(data?.[0]?.conversationID ?? "");
-}
+};
 
 export class TIMProxy {
-  private userID: string = ""
-  private userSig: string = ""
-  private userProfile: Profile | null = null
-  private once: boolean = false
-  private isSDKReady: boolean = false
-  private GROUP_TIP_TYPES = {
-    MEMBER_JOIN: 1,        // 有成员加群
-    MEMBER_QUIT: 2,        // 有群成员退群
-    MEMBER_KICKED_OUT: 3,  // 有群成员被踢出群
-    MEMBER_SET_ADMIN: 4,   // 有群成员被设为管理员
-    MEMBER_CANCELED_ADMIN: 5 // 有群成员被撤销管理员
+  private userID: string = "";
+  private readonly userSig: string = "";
+  private userProfile: Profile | null = null;
+  private once: boolean = false;
+  private isSDKReady: boolean = false;
+  private readonly GROUP_TIP_TYPES = {
+    MEMBER_JOIN: 1, // 有成员加群
+    MEMBER_QUIT: 2, // 有群成员退群
+    MEMBER_KICKED_OUT: 3, // 有群成员被踢出群
+    MEMBER_SET_ADMIN: 4, // 有群成员被设为管理员
+    MEMBER_CANCELED_ADMIN: 5, // 有群成员被撤销管理员
   };
-  private GROUP_SYSTEM_NOTICE_TYPES = {
+  private readonly GROUP_SYSTEM_NOTICE_TYPES = {
     /**
      * 被踢出群组
      */
@@ -52,12 +50,10 @@ export class TIMProxy {
     /**
      * 群组被解散
      */
-    GROUP_DISMISSED: 5
-  }
+    GROUP_DISMISSED: 5,
+  };
 
-  constructor() {
-
-  }
+  constructor() {}
 
   /**
    * 保存当前实例状态到本地存储

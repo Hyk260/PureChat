@@ -13,7 +13,7 @@ import { computed, onMounted } from "vue";
 import AppProvider from "@/components/Common/app-provider.vue";
 import { useSettings } from "@/hooks/useSettings";
 import { elementPlusLocales } from "@/locales/element-plus";
-import { useAppStore, useThemeStore, useUserStore } from "@/stores/index";
+import { useAppStore, useThemeStore, useUserStore } from "@/stores";
 
 defineOptions({ name: "App" });
 

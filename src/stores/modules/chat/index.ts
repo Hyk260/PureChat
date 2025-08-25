@@ -21,7 +21,7 @@ import { generateReferencePrompt } from "@/config/prompts";
 import { SetupStoreId } from '@/stores/enum';
 import { localStg } from "@/utils/storage";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
-import { ModelIDList, ModelIDValue } from '@shared/provider/config';
+import { ModelIDList, ModelIDValue } from '@shared/provider';
 import { chatService } from "@/ai/index";
 import { timProxy } from "@/service/IM/index";
 import { MessageModel } from "@/database/models/message";

@@ -1,7 +1,7 @@
 import type { ChatSDK } from './types/tencent-cloud-chat';
 import emitter from "@/utils/mitt-bus";
 import { pureChatService as chat } from "./PureChatService";
-import { C2CModelIDList } from '@shared/provider/config';
+import { C2CModelIDList } from '@shared/provider';
 import { scrollToDomPosition } from "@/utils/chat/index";
 import { setMessageRead } from "@/service/im-sdk-api/index";
 import { localStg } from "@/utils/storage";

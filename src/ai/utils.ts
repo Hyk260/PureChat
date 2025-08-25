@@ -1,14 +1,14 @@
-import { ModelProvider, ModelProviderKey } from "@/ai/types/type";
-import { LLMParams } from '@/types/llm';
-import { ModelID, ModelIDValue } from '@shared/provider/config';
-import {
-  modelConfig,
-  modelValue,
-  AssistantAvatar,
-} from "@/ai/constant";
-import { useRobotStore } from "@/stores/index";
-import { localStg } from "@/utils/storage";
+import { ModelID } from "@shared/provider";
 import { isEmpty } from "lodash-es";
+
+import { AssistantAvatar, modelConfig, modelValue } from "@/ai/constant";
+import { ModelProvider } from "@/ai/types/type";
+import { useRobotStore } from "@/stores";
+import { localStg } from "@/utils/storage";
+
+import type { ModelProviderKey } from "@/ai/types/type";
+import type { LLMParams } from "@/types/llm";
+import type { ModelIDValue } from "@shared/provider";
 
 /**
  * 获取 AI 模型的配置信息
