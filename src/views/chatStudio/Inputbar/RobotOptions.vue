@@ -195,7 +195,7 @@ import { useState } from "@/hooks/useState";
 import { cloneDeep } from "lodash-es";
 import { ClientApi } from "@/ai/api";
 import { modelValue, modelConfig } from "@/ai/constant";
-import { useRobotStore, useChatStore } from "@/stores/index";
+import { useRobotStore, useChatStore } from "@/stores";
 import { debounce } from "lodash-es";
 import { isRange } from "./utils";
 import { openWindow } from "@/utils/common";

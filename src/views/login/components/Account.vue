@@ -95,13 +95,13 @@
 
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from "vue";
-import { getUserList } from "@/service/api/index";
+import { getUserList } from "@/service/api";
 import { Lock, User, Key } from "@element-plus/icons-vue";
 import { useOAuth } from "@/hooks/useOAuth";
 import { useState } from "@/hooks/useState";
 import { operates, thirdParty } from "../utils/enums";
 import { rules, defaultForm } from "../utils/validation";
-import { useUserStore } from "@/stores/index";
+import { useUserStore } from "@/stores/modules/user";
 import ImageVerify from "@/components/ImageVerify/index.vue";
 
 const { DEV: isDev } = import.meta.env;

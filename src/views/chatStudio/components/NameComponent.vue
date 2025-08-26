@@ -15,10 +15,10 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
-import { isSelf } from '@/utils/chat/index';
-import { useGroupStore, useChatStore } from '@/stores/index';
+import { isSelf } from '@/utils/chat';
+import { useGroupStore, useChatStore } from '@/stores';
 import emitter from '@/utils/mitt-bus';
 
 const props = defineProps({

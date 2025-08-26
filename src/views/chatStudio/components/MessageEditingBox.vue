@@ -18,10 +18,10 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
-import { useChatStore } from "@/stores/index";
-import { modifyMessage } from "@/service/im-sdk-api/index";
+import { useChatStore } from "@/stores";
+import { modifyMessage } from "@/service/im-sdk-api";
 
 const props = defineProps({
   item: {

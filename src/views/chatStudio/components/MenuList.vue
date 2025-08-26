@@ -35,11 +35,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, markRaw } from "vue";
 import { Warning } from "@element-plus/icons-vue";
 import { Trash, SquarePen, Copy, SlidersHorizontal } from "lucide-vue-next";
-import { useChatStore } from "@/stores/index";
+import { useChatStore } from "@/stores/modules/chat";
 import { handleCopyMsg } from "../utils/utils";
 
 defineOptions({

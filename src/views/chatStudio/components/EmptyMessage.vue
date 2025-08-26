@@ -7,8 +7,8 @@
   </div>
 </template>
 
-<script setup>
-import { useSidebarStore, useChatStore } from "@/stores/index";
+<script setup lang="ts">
+import { useSidebarStore, useChatStore } from "@/stores";
 
 const props = defineProps({
   className: {

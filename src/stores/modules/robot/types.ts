@@ -1,4 +1,4 @@
-import type { ModelProviderKey } from "@/ai/types/type"
+import type { ModelProviderKey } from "@/ai/types"
 
 // 模型配置类型
 export interface ModelConfig {

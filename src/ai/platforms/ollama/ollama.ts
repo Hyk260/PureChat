@@ -1,6 +1,6 @@
 import { Ollama } from "ollama/browser"
 
-import { ModelProvider } from "@/ai/types/type"
+import { ModelProvider } from "@/ai/types"
 import { useAccessStore } from "@/ai/utils"
 import { nanoid } from "@/utils/uuid"
 
@@ -13,7 +13,7 @@ import {
 } from "./protocol"
 
 import type { OllamaMessage } from "./type"
-import type { ChatMethodOptions, ChatStreamCallbacks, ChatStreamPayload, OpenAIChatMessage } from "@/ai/types/chat"
+import type { ChatMethodOptions, ChatStreamCallbacks, ChatStreamPayload, OpenAIChatMessage } from "@/ai/types"
 import type { ChatResponse, Tool } from "ollama/browser"
 
 function getIcon(modelName: string) {

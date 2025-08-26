@@ -1,7 +1,7 @@
 import { computed } from "vue"
 
-import { $t } from "@/locales/index"
-import { useChatStore } from "@/stores/modules/chat/index"
+import { $t } from "@/locales"
+import { useChatStore } from "@/stores/modules/chat"
 
 export const placeholderMap = computed(() => {
   return {

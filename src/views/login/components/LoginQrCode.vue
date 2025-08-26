@@ -10,8 +10,8 @@
   </el-button>
 </template>
 
-<script setup>
-import { useUserStore } from "@/stores/index";
+<script setup lang="ts">
+import { useUserStore } from "@/stores/modules/user";
 
 const userStore = useUserStore();
 

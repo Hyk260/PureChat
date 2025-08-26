@@ -40,10 +40,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
-// import { getGender } from "@/utils/common";
-import { useSidebarStore, useChatStore } from "@/stores/index";
+import { useSidebarStore, useChatStore } from "@/stores";
 import emitter from "@/utils/mitt-bus";
 
 const sidebarStore = useSidebarStore();

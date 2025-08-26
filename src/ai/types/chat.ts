@@ -1,4 +1,4 @@
-import type { FewShots, LLMRoleType } from "@/ai/types/llm"
+import type { FewShots, LLMRoleType } from "@/ai/types"
 
 interface OnFinishData {
   grounding?: any

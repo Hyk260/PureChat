@@ -2,12 +2,10 @@ import { ModelID } from "@shared/provider"
 import { isEmpty } from "lodash-es"
 
 import { AssistantAvatar, modelConfig, modelValue } from "@/ai/constant"
-import { ModelProvider } from "@/ai/types/type"
-import { useRobotStore } from "@/stores"
+import { useRobotStore } from "@/stores/modules/robot"
 import { localStg } from "@/utils/storage"
 
-import type { LLMParams } from "@/ai/types/llm"
-import type { ModelProviderKey } from "@/ai/types/type"
+import { ModelProvider, ModelProviderKey, LLMParams } from "@/ai/types"
 import type { ModelIDValue } from "@shared/provider"
 
 /**

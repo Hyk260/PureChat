@@ -23,7 +23,7 @@ import { ref } from "vue";
 import { showConfirmationBox } from "@/utils/message";
 import { Search, Plus } from "@element-plus/icons-vue";
 import { debounce, isEmpty } from "lodash-es";
-import { useGroupStore, useChatStore } from "@/stores/index";
+import { useGroupStore, useChatStore } from "@/stores";
 
 const input = ref("");
 const chatStore = useChatStore();

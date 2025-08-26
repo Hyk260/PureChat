@@ -81,7 +81,7 @@
 import { onMounted, ref } from "vue";
 import { chunk } from "lodash-es";
 import { ClickOutside as vClickOutside } from "element-plus";
-import { useChatStore } from "@/stores/modules/chat/index";
+import { useChatStore } from "@/stores/modules/chat";
 import { getEmojiAssetUrl, getOperatingSystem } from "@/utils/common";
 // import emojiMartData from "@emoji-mart/data";
 import { emojiArray } from "@/utils/emoji/emoji-map";

@@ -57,7 +57,7 @@ import { CircleCloseFilled, CirclePlusFilled } from "@element-plus/icons-vue";
 // import { ROLES } from "@/ai/constant";
 import { useState } from "@/hooks/useState";
 import { nanoid } from "@/utils/uuid";
-import { useRobotStore } from "@/stores/index";
+import { useRobotStore } from "@/stores/modules/robot";
 import { cloneDeep, isEmpty } from "lodash-es";
 import { prompt } from "@/ai/constant";
 import EmojiMart from "@/components/EmojiMart/index.vue";

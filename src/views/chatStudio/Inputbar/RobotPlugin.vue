@@ -20,7 +20,7 @@
 <script setup>
 import { ClickOutside as vClickOutside } from "element-plus";
 import { useState } from "@/hooks/useState";
-import { useToolsStore } from "@/stores/index";
+import { useToolsStore } from "@/stores/modules/tools";
 import emitter from "@/utils/mitt-bus";
 
 defineOptions({

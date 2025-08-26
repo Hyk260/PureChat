@@ -130,13 +130,13 @@ import {
   updateGroupProfile,
   GroupTypeMap,
   setMessageRemindType,
-} from "@/service/im-sdk-api/index";
-import { restApi } from "@/service/api/index";
+} from "@/service/im-sdk-api";
+import { restApi } from "@/service/api";
 import { useState } from "@/hooks/useState";
 import { showConfirmationBox } from "@/utils/message";
 import { isFullStaffGroup } from "@/ai/utils";
-import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat/index";
-import { useGroupStore, useUserStore, useChatStore } from "@/stores/index";
+import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat";
+import { useGroupStore, useUserStore, useChatStore } from "@/stores";
 import AddMemberPopup from "@/components/Popups/AddMemberPopup.vue";
 import emitter from "@/utils/mitt-bus";
 

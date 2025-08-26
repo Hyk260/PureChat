@@ -21,8 +21,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 import { ModelIDList } from '@shared/provider';
-import { getUserProfile } from "@/service/im-sdk-api/index";
-import { useGroupStore } from '@/stores/modules/group/index';
+import { getUserProfile } from "@/service/im-sdk-api";
+import { useGroupStore } from '@/stores/modules/group';
 import CardGrid from "./CardGrid.vue";
 import emitter from "@/utils/mitt-bus";
 

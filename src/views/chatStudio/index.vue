@@ -10,8 +10,8 @@
   </div>
 </template>
 
-<script setup>
-import { useChatStore } from "@/stores/index";
+<script setup lang="ts">
+import { useChatStore } from "@/stores";
 import MergeMessagePopup from "@/components/Popups/MergeMessagePopup.vue";
 import GroupDetails from "./chat/GroupDetails.vue";
 import Message from "./message.vue";

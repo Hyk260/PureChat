@@ -44,13 +44,13 @@
 </template>
 
 <script setup>
-import { getFileType, bytesToSize, fileToBase64, insertMention } from "@/utils/chat/index";
+import { getFileType, bytesToSize, fileToBase64, insertMention } from "@/utils/chat";
 import { isMobile } from "@/utils/common";
 import { Editor } from "@wangeditor/editor-for-vue";
 import { debounce, isEmpty } from "lodash-es";
 import { editorConfig, placeholderMap } from "../utils/configure";
 import { useState } from "@/hooks/useState";
-import { useGroupStore, useChatStore } from "@/stores/index";
+import { useGroupStore, useChatStore } from "@/stores";
 import {
   extractAitInfo,
   extractEmojiInfo,

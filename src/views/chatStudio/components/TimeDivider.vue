@@ -6,9 +6,9 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { isSelf } from "@/utils/chat/index";
+import { isSelf } from "@/utils/chat";
 import { formatTimestamp } from "@/utils/timeFormat";
-import { useChatStore } from "@/stores/index";
+import { useChatStore } from "@/stores/modules/chat";
 
 defineOptions({
   name: "TimeDivider",

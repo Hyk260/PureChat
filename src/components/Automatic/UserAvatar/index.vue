@@ -46,8 +46,8 @@
 
 <script setup>
 import { getAiAvatarUrl } from "@/ai/utils";
-import { circleUrl, squareUrl, emptyUrl } from "@/utils/chat/index";
-import { useUserStore } from "@/stores/index";
+import { circleUrl, squareUrl, emptyUrl } from "@/utils/chat";
+import { useUserStore } from "@/stores/modules/user";
 
 defineOptions({
   name: "UserAvatar",

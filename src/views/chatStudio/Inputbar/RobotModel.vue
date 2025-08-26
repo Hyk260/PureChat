@@ -57,7 +57,7 @@ import { ClickOutside as vClickOutside } from "element-plus";
 import { getModelSvg, useAccessStore, formatSizeStrict } from "@/ai/utils";
 import { modelValue } from "@/ai/constant";
 import { cloneDeep, isEmpty } from "lodash-es";
-import { useRobotStore, useChatStore } from "@/stores/index";
+import { useRobotStore, useChatStore } from "@/stores";
 import { ModelSelect } from "@/ai/resources";
 import { storeToRefs } from "pinia";
 import emitter from "@/utils/mitt-bus";

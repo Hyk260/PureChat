@@ -16,9 +16,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
-import { useChatStore } from "@/stores/index";
+import { useChatStore } from "@/stores";
 import { sendChatMessage } from "../utils/utils";
 
 const props = defineProps({

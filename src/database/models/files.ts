@@ -35,20 +35,31 @@ class _FilesModel extends BaseModel {
     const startTime = Date.now()
     const keywordLowerCase = keyword.toLowerCase()
 
-    const matchingFilesPromise = this.table
-      .where("type")
-      .equals(fileType)
-      .filter((file: DB_File) => {
+    let matchingFilesPromise: Promise<DB_File[]>
+
+    if (fileType === "all") {
+      matchingFilesPromise = this.table.filter((file: DB_File) => {
         return (
           file.name?.toLowerCase().includes(keywordLowerCase) ||
           file.origin_name?.toLowerCase().includes(keywordLowerCase)
         )
-      })
-      .toArray()
+      }).toArray()
+    } else {
+      matchingFilesPromise = this.table
+        .where("type")
+        .equals(fileType)
+        .filter((file: DB_File) => {
+          return (
+            file.name?.toLowerCase().includes(keywordLowerCase) ||
+            file.origin_name?.toLowerCase().includes(keywordLowerCase)
+          )
+        })
+        .toArray()
+    }
 
     const [matchingFiles] = await Promise.all([matchingFilesPromise])
 
-    const items = matchingFiles as DB_File[]
+    const items = matchingFiles
 
     console.log(`检索到 ${items.length} 项，耗时 ${Date.now() - startTime}ms`)
 
@@ -68,7 +79,7 @@ class _FilesModel extends BaseModel {
   // **************** Update *************** //
 
   async update(id: string, data: DB_File) {
-    return this._updateWithSync(id, data)
+    return super._updateWithSync(id, data)
   }
 }
 

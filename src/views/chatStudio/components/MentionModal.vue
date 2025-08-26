@@ -26,12 +26,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from "pinia";
 import { onClickOutside, useEventListener } from "@vueuse/core";
 import { cloneDeep } from "lodash-es";
-import { prioritizeRBTUserID, insertMention } from "@/utils/chat/index";
-import { useGroupStore, useChatStore } from "@/stores/index";
+import { prioritizeRBTUserID, insertMention } from "@/utils/chat";
+import { useGroupStore, useChatStore } from "@/stores";
 import emitter from "@/utils/mitt-bus";
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__";

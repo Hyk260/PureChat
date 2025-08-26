@@ -129,7 +129,7 @@ import {
   revokeMsg,
   translateText,
 } from "@/service/im-sdk-api/index";
-import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
+import { MULTIPLE_CHOICE_MAX } from "@/constants";
 import { download, msgType, msgOne, isSelf, isTime } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { getTime } from "@/utils/common";

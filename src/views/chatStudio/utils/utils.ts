@@ -7,9 +7,9 @@ import {
   createTextAtMessage,
   createTextMessage,
   createVideoMessage,
-} from "@/service/im-sdk-api/index"
-import { useChatStore } from "@/stores/index"
-import { base64ToFile, getBlob, getFileType } from "@/utils/chat/index"
+} from "@/service/im-sdk-api"
+import { useChatStore } from "@/stores"
+import { base64ToFile, getBlob, getFileType } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 
 export const validateLastMessage = (list) => {

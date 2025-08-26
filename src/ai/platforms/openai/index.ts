@@ -1,7 +1,6 @@
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source"
 
 import { REQUEST_TIMEOUT_MS } from "@/ai/constant"
-import { ModelProvider } from "@/ai/types/type"
 import {
   adjustForDeepseek,
   createErrorResponse,
@@ -16,9 +15,7 @@ import { transformData } from "@/utils/chat/index"
 
 import OllamaAI from "../ollama/ollama"
 
-import type { ChatOptions, LLMConfig } from "../../types/chat"
-import type { FewShots, LLMParams } from "@/ai/types/llm"
-import type { ModelProviderKey } from "@/ai/types/type"
+import { ModelProvider, FewShots, LLMParams, LLMConfig, ChatOptions, ModelProviderKey } from "@/ai/types"
 
 export * from "./config"
 export * from "./modelValue"
@@ -134,7 +131,7 @@ export class OpenAiApi {
   }
 
   async enableFetchOnClient(messages: FewShots, modelConfig: LLMParams) {
-    let fetcher = null //  typeof fetch
+    let fetcher: typeof fetch | undefined = undefined;
     const processedMessages = this.processPromptMessages(messages, modelConfig)
     fetcher = async () => {
       try {
@@ -156,17 +153,12 @@ export class OpenAiApi {
 
   /**
    * 生成请求负载
-   * @param {Array} messages - 消息列表
-   * @param {Object} modelConfig - 模型配置
-   * @param {Object} options - 选项
-   * @returns {Object} 请求负载
    */
   generateRequestPayload(messages: FewShots, modelConfig: LLMParams, options: LLMConfig) {
     // DALL-E 3特殊处理
     if (_isDalle3(modelConfig.model)) {
       return generateDalle3RequestPayload(modelConfig)
     }
-
     const payload = {
       messages: this.processPromptMessages(messages, modelConfig),
       stream: options.stream, // 流式传输
@@ -472,7 +464,6 @@ export class OpenAiApi {
 
   /**
    * 获取模型列表
-   * @returns {Promise<Array>} 模型列表
    */
   async getModels() {
     const url = this.getPath(OpenaiPath.ListModelPath)
@@ -493,7 +484,7 @@ export class OpenAiApi {
   /**
    * 检查连通性
    */
-  async checkConnectivity(): Promise<{ valid: boolean; error: string }> {
+  async checkConnectivity(): Promise<{ valid: boolean; error: string | undefined }> {
     const url = this.getPath(OpenaiPath.ChatPath)
     const payload = this.accessStore()
 

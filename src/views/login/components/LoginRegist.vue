@@ -90,8 +90,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { Lock, User, Key, Iphone } from "@element-plus/icons-vue";
-import { useAppStore, useUserStore } from "@/stores/index";
+import { Lock, User, Iphone } from "@element-plus/icons-vue";
+import { useUserStore } from "@/stores/modules/user";
 import { ruleForm, updateRules } from "../utils/validation";
 import { useVerifyCode } from "../utils/verifyCode";
 
@@ -101,7 +101,6 @@ const ruleFormRef = ref();
 
 const { isDisabled, text } = useVerifyCode();
 const userStore = useUserStore();
-const appStore = useAppStore();
 
 const onBack = () => {
   useVerifyCode().end();

@@ -2,14 +2,13 @@ import { ModelIDList } from "@shared/provider"
 import { cloneDeep } from "lodash-es"
 import { defineStore } from "pinia"
 
-import { chatService } from "@/ai/index"
+import { chatService } from "@/ai"
 import { getModelId } from "@/ai/utils"
 import { getAiAvatarUrl, getModelType } from "@/ai/utils"
 import { generateReferencePrompt } from "@/config/prompts"
-import { MULTIPLE_CHOICE_MAX } from "@/constants/index"
-import { HISTORY_MESSAGE_COUNT } from "@/constants/index"
+import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX } from "@/constants"
 import { MessageModel } from "@/database/models/message"
-import { timProxy } from "@/service/IM/index"
+import { timProxy } from "@/service/IM"
 import {
   clearHistoryMessage,
   createTextMessage,
@@ -20,19 +19,19 @@ import {
   getUnreadMsg,
   sendMessage,
   setMessageRead,
-} from "@/service/im-sdk-api/index"
+} from "@/service/im-sdk-api"
 import { SetupStoreId } from "@/stores/enum"
-import { getCloudCustomData } from "@/utils/chat/index"
-import { addTimeDivider, checkTextNotEmpty, getBaseTime, isRobot, scrollToMessage } from "@/utils/chat/index"
+import { getCloudCustomData } from "@/utils/chat"
+import { addTimeDivider, checkTextNotEmpty, getBaseTime, scrollToMessage } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 
-import { useGroupStore } from "../group/index"
-import { useRobotStore } from "../robot/index"
-import { useUserStore } from "../user/index"
+import { useGroupStore } from "../group"
+import { useRobotStore } from "../robot"
+import { useUserStore } from "../user"
 
 import type { ChatState } from "./type"
-import type { ModelProviderKey } from "@/ai/types/type"
+import type { ModelProviderKey } from "@/ai/types"
 import type { DB_Message } from "@/database/schemas/message"
 import type { DB_Session } from "@/database/schemas/session"
 import type { ModelIDValue } from "@shared/provider"
@@ -81,7 +80,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       return this.conversationList.filter((t) => !/@RBT#/.test(t.conversationID))
     },
     getNonBotC2CList(): DB_Session[] {
-      return this.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID))
+      return this.conversationList.filter((t) => t.type === "C2C" && !/@RBT#/.test(t.conversationID))
     },
     currentSessionProvider(): ModelProviderKey | "" {
       const provider = getModelType(this.toAccount)

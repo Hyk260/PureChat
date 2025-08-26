@@ -56,7 +56,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { Share2, Ellipsis, History } from "lucide-vue-next";
-import { useRobotStore, useChatStore, useToolsStore } from "@/stores/index";
+import { useRobotStore, useChatStore, useToolsStore } from "@/stores";
 import Label from "@/views/chatStudio/components/Label.vue";
 import emitter from "@/utils/mitt-bus";
 

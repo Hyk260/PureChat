@@ -1,6 +1,6 @@
 import { isEmpty } from "lodash-es"
 
-import { convertBlobUrlToDataUrl } from "@/utils/chat/index"
+import { convertBlobUrlToDataUrl } from "@/utils/chat"
 
 export function checkTextNotEmpty(arr) {
   return arr.some((obj) => {

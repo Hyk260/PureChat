@@ -6,7 +6,7 @@ import { OpenAiApi, OpenaiConfig, OpenAIModelValue } from "@/ai/platforms/openai
 import { QwenApi, QwenConfig, QwenModelValue } from "@/ai/platforms/qwen/index"
 import { ZeroOneApi, ZeroOneConfig, ZeroOneModelValue } from "@/ai/platforms/zeroone/index"
 import { ZhiPuApi, ZhiPuConfig, ZhiPuModelValue } from "@/ai/platforms/zhipu/index"
-import { ModelProvider } from "@/ai/types/type"
+import { ModelProvider } from "@/ai/types"
 
 export const ROLES = ["system", "user", "assistant"]
 

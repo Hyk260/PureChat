@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { isSelf } from "@/utils/chat/index";
+import { isSelf } from "@/utils/chat";
 
 defineOptions({
   name: "Stateful",

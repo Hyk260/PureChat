@@ -40,7 +40,7 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 import { ModelID } from '@shared/provider';
 import { useState } from "@/hooks/useState";
 import { getModelId } from "@/ai/utils";
-import { useRobotStore, useSidebarStore, useChatStore } from "@/stores/index";
+import { useRobotStore, useSidebarStore, useChatStore } from "@/stores";
 import emitter from "@/utils/mitt-bus";
 
 const cardData = ref({});

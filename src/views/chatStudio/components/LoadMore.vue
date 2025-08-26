@@ -9,7 +9,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { useChatStore } from "@/stores/modules/chat/index";
+import { useChatStore } from "@/stores/modules/chat";
 import Loader from "@/components/Loader/index.vue";
 
 const props = defineProps({

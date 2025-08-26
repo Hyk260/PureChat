@@ -2,16 +2,16 @@ import { cloneDeep } from "lodash-es"
 import { defineStore } from "pinia"
 
 import { modelValue } from "@/ai/constant"
-import { ModelProvider } from "@/ai/types/type"
+import { ModelProvider } from "@/ai/types"
 import { getModelType, useAccessStore } from "@/ai/utils"
 import WebSearchService from "@/service/WebSearchService"
 import { SetupStoreId } from "@/stores/enum"
 
-import { useChatStore } from "../chat/index"
-import { useWebSearchStore } from "../websearch/index"
+import { useChatStore } from "../chat"
+import { useWebSearchStore } from "../websearch"
 
 import type { BotToolsFlag, Model, Prompt, RobotState } from "./types"
-import type { ModelProviderKey } from "@/ai/types/type"
+import type { ModelProviderKey } from "@/ai/types"
 
 export const useRobotStore = defineStore(SetupStoreId.Robot, {
   state: (): RobotState => ({

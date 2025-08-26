@@ -11,8 +11,8 @@
   </span>
 </template>
 
-<script setup>
-import { isRobot } from "@/utils/chat/index";
+<script setup lang="ts">
+import { isRobot } from "@/utils/chat";
 import { getValueByKey, prefix, isFullStaffGroup } from "@/ai/utils";
 import { getModelSvg } from "@/ai/utils";
 

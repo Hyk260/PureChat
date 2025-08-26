@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { useSidebarStore, useChatStore } from "@/stores/index";
+import { useSidebarStore, useChatStore } from "@/stores";
 import { ProvidersList } from "@database/config";
 import { isEmpty } from "lodash-es";
 import AgentCard from "./AgentCard.vue";

@@ -19,9 +19,9 @@
   </template>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { getEmojiAssetUrl } from "@/utils/common";
-import { decodeText } from "@/utils/chat/index";
+import { decodeText } from "@/utils/chat";
 import AnalysisUrl from "./AnalysisUrl.vue";
 
 defineOptions({

@@ -20,9 +20,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
-import { getPrompt } from "@/service/api/index";
+import { getPrompt } from "@/service/api";
 import { localStg } from "@/utils/storage";
 import { options } from "./utils";
 import { marketJson } from "@database/market";

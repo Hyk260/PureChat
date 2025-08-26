@@ -39,7 +39,7 @@ import { onClickOutside } from "@vueuse/core";
 import { useState } from "@/hooks/useState";
 import { localStg } from "@/utils/storage";
 import { openWindow } from "@/utils/common";
-import { useUserStore, useChatStore } from "@/stores/index";
+import { useUserStore, useChatStore } from "@/stores";
 import emitter from "@/utils/mitt-bus";
 
 const { homepage } = __APP_INFO__.pkg;

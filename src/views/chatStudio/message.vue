@@ -36,7 +36,7 @@
 import { onActivated, onMounted } from "vue";
 import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
 import { storeToRefs } from "pinia";
-import { useChatStore } from "@/stores/index";
+import { useChatStore } from "@/stores/modules/chat";
 import emitter from "@/utils/mitt-bus";
 import Chatwin from "./chat/Chatwin.vue";
 import MessageToolbar from "@/components/Popups/MessageToolbar.vue";

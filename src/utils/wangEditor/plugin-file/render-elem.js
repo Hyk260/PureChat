@@ -1,6 +1,6 @@
 import { h } from "snabbdom";
 import { DomEditor } from "@wangeditor/editor";
-import { getFileType, renderFileIcon } from "@/utils/chat/index";
+import { getFileType, renderFileIcon } from "@/utils/chat";
 import emitter from "@/utils/mitt-bus";
 
 const FILE_ICON_STYLE = {
