@@ -11,13 +11,13 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "@/stores/modules/user";
+import { useUserStore } from "@/stores/modules/user"
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 
 const onBack = () => {
-  userStore.setCurrentPage(0);
-};
+  userStore.setCurrentPage(0)
+}
 </script>
 
 <style lang="scss" scoped>

@@ -1,9 +1,8 @@
 import { API_PROVIDER_MAP } from "@/ai/constant"
 import { OpenAiApi } from "@/ai/platforms/openai/index"
+import { LLMParams, ModelProvider, ModelProviderKey } from "@/ai/types"
 import { useAccessStore } from "@/ai/utils"
 import { useRobotStore } from "@/stores/index"
-
-import { ModelProvider, LLMParams, ModelProviderKey } from "@/ai/types"
 
 export class ClientApi {
   public llm: OpenAiApi

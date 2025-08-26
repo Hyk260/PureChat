@@ -1,6 +1,7 @@
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source"
 
 import { REQUEST_TIMEOUT_MS } from "@/ai/constant"
+import { ChatOptions, FewShots, LLMConfig, LLMParams, ModelProvider, ModelProviderKey } from "@/ai/types"
 import {
   adjustForDeepseek,
   createErrorResponse,
@@ -14,8 +15,6 @@ import { useChatStore, useRobotStore, useToolsStore } from "@/stores/index"
 import { transformData } from "@/utils/chat/index"
 
 import OllamaAI from "../ollama/ollama"
-
-import { ModelProvider, FewShots, LLMParams, LLMConfig, ChatOptions, ModelProviderKey } from "@/ai/types"
 
 export * from "./config"
 export * from "./modelValue"
@@ -131,7 +130,7 @@ export class OpenAiApi {
   }
 
   async enableFetchOnClient(messages: FewShots, modelConfig: LLMParams) {
-    let fetcher: typeof fetch | undefined = undefined;
+    let fetcher: typeof fetch | undefined = undefined
     const processedMessages = this.processPromptMessages(messages, modelConfig)
     fetcher = async () => {
       try {

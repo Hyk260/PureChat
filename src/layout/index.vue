@@ -7,9 +7,9 @@
 </template>
 
 <script setup lang="ts">
-import LaySetting from "./lay-setting/index.vue";
-import LayAside from "./lay-aside/index.vue";
-import LayContent from "./lay-content/index.vue";
+import LayAside from "./lay-aside/index.vue"
+import LayContent from "./lay-content/index.vue"
+import LaySetting from "./lay-setting/index.vue"
 </script>
 
 <style lang="scss" scoped>

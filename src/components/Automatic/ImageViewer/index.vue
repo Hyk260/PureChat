@@ -13,16 +13,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, useTemplateRef } from "vue";
-import { onClickOutside } from "@vueuse/core";
-import { useState } from "@/hooks/useState";
-import emitter from "@/utils/mitt-bus";
+import { onMounted, ref, useTemplateRef } from "vue"
 
-defineOptions({ name: "ImageViewer" });
+import { useState } from "@/hooks/useState"
+import emitter from "@/utils/mitt-bus"
 
-const imageViewerRef = useTemplateRef('imageViewerRef')
-const url = ref("");
-const [dialog, setDialog] = useState();
+defineOptions({ name: "ImageViewer" })
+
+const imageViewerRef = useTemplateRef("imageViewerRef")
+const url = ref("")
+const [dialog, setDialog] = useState()
 
 // onClickOutside(imageViewerRef, () => {
 //   setDialog(false)
@@ -31,11 +31,11 @@ const [dialog, setDialog] = useState();
 onMounted(() => {
   emitter.on("handleImageViewer", (src) => {
     if (src) {
-      url.value = src;
-      setDialog(true);
+      url.value = src
+      setDialog(true)
     }
-  });
-});
+  })
+})
 </script>
 
 <style lang="scss" scoped></style>

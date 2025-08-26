@@ -3,26 +3,26 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { ClickOutside as vClickOutside } from "element-plus";
-import { Picker } from "emoji-mart";
-import data from "@emoji-mart/data";
-import zh from '@emoji-mart/data/i18n/zh.json';
+import data from "@emoji-mart/data"
+import zh from "@emoji-mart/data/i18n/zh.json"
+import { ClickOutside as vClickOutside } from "element-plus"
+import { Picker } from "emoji-mart"
+import { ref } from "vue"
 
 defineOptions({
   name: "EmojiMart",
-});
+})
 
-const emit = defineEmits(["onClose", "emoji-selected"]);
+const emit = defineEmits(["onClose", "emoji-selected"])
 
-const emojiMartRef = ref("");
+const emojiMartRef = ref("")
 
 const handleEmojiSelect = (emoji) => {
-  emit("emoji-selected", emoji);
-};
+  emit("emoji-selected", emoji)
+}
 
 function onClickOutside() {
-  emit("onClose");
+  emit("onClose")
 }
 
 function initEmojiMart() {
@@ -34,15 +34,15 @@ function initEmojiMart() {
       skinTonePosition: "none",
       previewPosition: "none",
       onEmojiSelect: handleEmojiSelect,
-      locale: 'zh',
-      i18n: { ...zh }
-    };
-    const picker = new Picker(pickerOptions);
-    emojiMartRef.value.appendChild(picker);
+      locale: "zh",
+      i18n: { ...zh },
+    }
+    const picker = new Picker(pickerOptions)
+    emojiMartRef.value.appendChild(picker)
   }
 }
 
 onMounted(() => {
-  initEmojiMart();
-});
+  initEmojiMart()
+})
 </script>

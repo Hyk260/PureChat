@@ -1,6 +1,7 @@
 import { cloneDeep } from "lodash-es"
 
 import { ClientApi } from "@/ai/api"
+import { FewShots, ModelProvider, ModelProviderKey } from "@/ai/types"
 import { getAiAvatarUrl, prettyObject } from "@/ai/utils"
 import { restApi } from "@/service/api"
 import { createCustomMessage } from "@/service/im-sdk-api"
@@ -9,8 +10,6 @@ import { getCloudCustomData } from "@/utils/chat"
 import { getCustomMsgContent, getTime } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
-
-import { ModelProvider, ModelProviderKey, FewShots } from "@/ai/types"
 
 const handleWebSearchData = (flag = false) => {
   const webSearchResult = localStg.get("webSearchReferences")

@@ -6,39 +6,39 @@
 </template>
 
 <script setup lang="ts">
-import { createTextVNode, defineComponent } from "vue";
-import { useClipboard } from "@vueuse/core";
-import { ElMessage, ElMessageBox, ElNotification } from "element-plus";
+import { useClipboard } from "@vueuse/core"
+import { ElMessage, ElMessageBox, ElNotification } from "element-plus"
+import { createTextVNode, defineComponent } from "vue"
 
-defineOptions({ name: "AppProvider" });
+defineOptions({ name: "AppProvider" })
 
-const { copy, isSupported } = useClipboard();
+const { copy, isSupported } = useClipboard()
 
 const ContextHolder = defineComponent({
   name: "ContextHolder",
   setup() {
     function register() {
-      window.$notification = ElNotification;
-      window.$messageBox = ElMessageBox;
-      window.$message = ElMessage;
+      window.$notification = ElNotification
+      window.$messageBox = ElMessageBox
+      window.$message = ElMessage
     }
 
     function copyToClipboard(str: string) {
       if (isSupported) {
-        copy(str);
-        ElMessage.success("复制成功");
+        copy(str)
+        ElMessage.success("复制成功")
       } else {
-        ElMessage.warning("您的浏览器不支持剪贴板API");
+        ElMessage.warning("您的浏览器不支持剪贴板API")
       }
     }
 
-    window.copyToClipboard = copyToClipboard;
+    window.copyToClipboard = copyToClipboard
 
-    register();
+    register()
 
-    return () => createTextVNode();
+    return () => createTextVNode()
   },
-});
+})
 </script>
 
 <style scoped></style>

@@ -3,10 +3,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
-import MarkdownRenderer from "./markdown-renderer";
+import { computed, ref, watch } from "vue"
 
-defineOptions({ name: "Markdown" });
+import MarkdownRenderer from "./markdown-renderer"
+
+defineOptions({ name: "Markdown" })
 
 const props = defineProps({
   marked: {
@@ -17,26 +18,26 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
-});
+})
 
 const webSearchResult = computed(() => {
-  return props.cloudCustomData?.messageReply?.webSearchResult || [];
-});
+  return props.cloudCustomData?.messageReply?.webSearchResult || []
+})
 
-const renderedMarkdown = ref("");
+const renderedMarkdown = ref("")
 
 const renderMarkdownContent = () => {
   const renderer = new MarkdownRenderer({
     webSearchResults: webSearchResult.value,
-  });
-  renderedMarkdown.value = renderer.render(props.marked, webSearchResult.value);
-};
+  })
+  renderedMarkdown.value = renderer.render(props.marked, webSearchResult.value)
+}
 
-watch([() => props.marked, webSearchResult], renderMarkdownContent, { immediate: true });
+watch([() => props.marked, webSearchResult], renderMarkdownContent, { immediate: true })
 
 function handleMarkdownClick() {
-  console.log("webSearchResult:", webSearchResult.value);
-  console.log("marked:", props.marked);
+  console.log("webSearchResult:", webSearchResult.value)
+  console.log("marked:", props.marked)
 }
 </script>
 

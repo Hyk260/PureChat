@@ -29,8 +29,7 @@
       <div class="qq-number">ID {{ userInfo.userID || userInfo.groupID.replace("@TGS", "") }}</div>
 
       <div class="basic-info">
-        <span>
-        </span>
+        <span> </span>
       </div>
     </div>
     <!-- 操作按钮 -->
@@ -41,12 +40,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
-import { useSidebarStore, useChatStore } from "@/stores";
-import emitter from "@/utils/mitt-bus";
+import { onMounted, onUnmounted, ref } from "vue"
 
-const sidebarStore = useSidebarStore();
-const chatStore = useChatStore();
+import { useChatStore, useSidebarStore } from "@/stores"
+import emitter from "@/utils/mitt-bus"
+
+const sidebarStore = useSidebarStore()
+const chatStore = useChatStore()
 
 // 用户信息
 const userInfo = ref({
@@ -54,36 +54,36 @@ const userInfo = ref({
   userID: "",
   nick: "_",
   avatar: "",
-});
+})
 
 const handleConversation = ({ id, type }) => {
-  sidebarStore.toggleOutside({ path: "/chat" });
+  sidebarStore.toggleOutside({ path: "/chat" })
   chatStore.addConversation({ sessionId: `${type}${id}` })
-};
+}
 
 const sendMessage = (data) => {
   // 发送消息逻辑
   const convInfo = {
     id: data.groupID || data.userID,
     type: data.groupID ? "GROUP" : "C2C",
-  };
-  handleConversation(convInfo);
-};
+  }
+  handleConversation(convInfo)
+}
 
 const editProfile = () => {
   // 编辑资料逻辑
-};
+}
 
 onMounted(() => {
   emitter.on("handleProfile", (data) => {
-    console.log(data);
-    userInfo.value = data;
-  });
-});
+    console.log(data)
+    userInfo.value = data
+  })
+})
 
 onUnmounted(() => {
-  emitter.off("handleProfile");
-});
+  emitter.off("handleProfile")
+})
 </script>
 
 <style lang="scss" scoped>

@@ -10,10 +10,10 @@
 </template>
 
 <script setup>
-import { computed, useAttrs } from "vue";
-import { Icon } from "@iconify/vue";
+import { Icon } from "@iconify/vue"
+import { computed, useAttrs } from "vue"
 
-defineOptions({ name: "SvgIcon", inheritAttrs: false });
+defineOptions({ name: "SvgIcon", inheritAttrs: false })
 
 const props = defineProps({
   icon: String,
@@ -22,24 +22,24 @@ const props = defineProps({
     type: String,
     default: "currentColor", // currentColor #808080
   },
-});
+})
 
-const attrs = useAttrs();
+const attrs = useAttrs()
 
 const bindAttrs = computed(() => ({
   class: attrs.class || "",
   style: attrs.style || "",
-}));
+}))
 
 const symbolId = computed(() => {
-  const { VITE_ICON_LOCAL_PREFIX: prefix } = import.meta.env;
+  const { VITE_ICON_LOCAL_PREFIX: prefix } = import.meta.env
 
-  const icon = props.localIcon;
+  const icon = props.localIcon
 
-  return `#${prefix}-${icon}`;
-});
+  return `#${prefix}-${icon}`
+})
 
-const renderLocalIcon = computed(() => props.localIcon || !props.icon);
+const renderLocalIcon = computed(() => props.localIcon || !props.icon)
 </script>
 
 <style lang="scss" scoped>

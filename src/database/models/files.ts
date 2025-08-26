@@ -38,12 +38,14 @@ class _FilesModel extends BaseModel {
     let matchingFilesPromise: Promise<DB_File[]>
 
     if (fileType === "all") {
-      matchingFilesPromise = this.table.filter((file: DB_File) => {
-        return (
-          file.name?.toLowerCase().includes(keywordLowerCase) ||
-          file.origin_name?.toLowerCase().includes(keywordLowerCase)
-        )
-      }).toArray()
+      matchingFilesPromise = this.table
+        .filter((file: DB_File) => {
+          return (
+            file.name?.toLowerCase().includes(keywordLowerCase) ||
+            file.origin_name?.toLowerCase().includes(keywordLowerCase)
+          )
+        })
+        .toArray()
     } else {
       matchingFilesPromise = this.table
         .where("type")

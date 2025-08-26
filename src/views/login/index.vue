@@ -22,15 +22,16 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "@/stores/modules/user";
-import Account from "./components/Account.vue";
-import LoginQrCode from "./components/LoginQrCode.vue";
-import LoginRegist from "./components/LoginRegist.vue";
-import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
+import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
+import { useUserStore } from "@/stores/modules/user"
+
+import Account from "./components/Account.vue"
+import LoginQrCode from "./components/LoginQrCode.vue"
+import LoginRegist from "./components/LoginRegist.vue"
 
 const currentPage = computed(() => {
-  return useUserStore().currentPage;
-});
+  return useUserStore().currentPage
+})
 </script>
 
 <style lang="scss" scoped>

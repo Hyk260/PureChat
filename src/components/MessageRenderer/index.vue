@@ -8,15 +8,14 @@
     :self="self"
     v-bind="$attrs"
   />
-  <div v-else class="message-error">
-    Unknown message type: {{ message?.type }}
-  </div>
+  <div v-else class="message-error">Unknown message type: {{ message?.type }}</div>
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from 'vue'
-import { getMessageComponent } from './utils/getMessageComponent'
-import type { MessageItem, MessageComponentProps } from './types/message'
+import { computed, toRefs } from "vue"
+
+import type { MessageComponentProps, MessageItem } from "./types/message"
+import { getMessageComponent } from "./utils/getMessageComponent"
 
 interface Props extends MessageComponentProps {
   item: MessageItem
@@ -30,7 +29,7 @@ const messageComponent = computed(() => {
 })
 
 const messageKey = computed(() => {
-  return `${item.value.ID}_${item.value?.type}_${item.value?.isRevoked ? 'revoked' : 'normal'}`
+  return `${item.value.ID}_${item.value?.type}_${item.value?.isRevoked ? "revoked" : "normal"}`
 })
 
 const msgType = computed(() => {

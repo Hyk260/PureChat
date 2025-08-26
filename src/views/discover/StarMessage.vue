@@ -8,5 +8,5 @@
 </template>
 
 <script setup>
-const { homepage, bugs } = __APP_INFO__.pkg;
+const { homepage, bugs } = __APP_INFO__.pkg
 </script>

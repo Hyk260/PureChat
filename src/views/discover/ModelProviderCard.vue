@@ -15,18 +15,18 @@
 </template>
 
 <script setup>
-import { getAiAvatarUrl } from "@/ai/utils";
+import { getAiAvatarUrl } from "@/ai/utils"
 
 defineOptions({
   name: "ModelProviderCard",
-});
+})
 
 defineProps({
   agents: {
     type: Object,
     default: () => {},
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>
