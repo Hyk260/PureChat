@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import { isSelf } from "@/utils/chat/index";
 import { formatTimestamp } from "@/utils/timeFormat";

@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { isSelf } from "@/utils/chat/index";
 
 defineOptions({
@@ -26,7 +26,7 @@ const props = defineProps({
   },
 });
 
-const isShow = (value) => {
+const isShow = (value: string) => {
   // return true
   return props.status === value;
 };

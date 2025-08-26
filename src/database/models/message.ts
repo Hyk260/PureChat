@@ -34,8 +34,8 @@ class _MessageModel extends BaseModel {
     return this.table.get(id)
   }
 
-  async queryAll() {
-    const data: DB_Message[] = await this.table.orderBy("createdAt").toArray()
+  async queryAll(): Promise<DB_Message[]> {
+    const data = await this.table.orderBy("createdAt").toArray()
 
     return data
   }

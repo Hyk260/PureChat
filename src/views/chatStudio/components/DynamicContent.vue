@@ -22,7 +22,7 @@
 <script setup>
 import { getEmojiAssetUrl } from "@/utils/common";
 import { decodeText } from "@/utils/chat/index";
-import AnalysisUrl from "../components/AnalysisUrl.vue";
+import AnalysisUrl from "./AnalysisUrl.vue";
 
 defineOptions({
   name: "DynamicContent",
