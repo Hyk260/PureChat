@@ -15,7 +15,7 @@ export function setupAppErrorHandle(app: App) {
 
 function notify() {
   if (Notification) Notification.close()
-  Notification = window.$notification!({
+  Notification = window.$notification({
     title: $t("system.updateContent"),
     dangerouslyUseHTMLString: true,
     message: h("div", [

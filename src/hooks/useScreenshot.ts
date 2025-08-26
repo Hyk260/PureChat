@@ -47,7 +47,7 @@ async function copyImageToClipboard(blob: Blob) {
  */
 function downloadImage(dataUrl: string, imageType: string, title: string) {
   const link = document.createElement("a")
-  const name = `${__APP_NAME__}_${title ? `${title}_` : ""}${dayjs().format("YYYY-MM-DD")}.${imageType}`
+  const name = `${"PureChat"}_${title ? `${title}_` : ""}${dayjs().format("YYYY-MM-DD")}.${imageType}`
   link.download = name
   link.href = dataUrl
   document.body.appendChild(link)

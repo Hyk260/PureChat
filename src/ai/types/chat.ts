@@ -1,6 +1,4 @@
-import type { FewShots } from "@/types/llm"
-
-export type LLMRoleType = "user" | "system" | "assistant" | "function" | "tool"
+import type { FewShots, LLMRoleType } from "@/ai/types/llm"
 
 interface OnFinishData {
   grounding?: any

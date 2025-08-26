@@ -1,4 +1,4 @@
-import { getBuildTime } from "./time";
+import { getBuildTime } from "./time"
 
 import {
   engines,
@@ -10,7 +10,7 @@ import {
   bugs,
   version,
   docs,
-} from "../../package.json";
+} from "../../package.json"
 
 /** 平台的名称、版本、运行所需的`node`版本、依赖、最后构建时间的类型提示 */
 export const __APP_INFO__ = {
@@ -27,7 +27,7 @@ export const __APP_INFO__ = {
     dependencies,
     devDependencies,
   },
-  lastBuildTime: getBuildTime(),
+  lastBuildTime: getBuildTime()
 };
 
 export const viteDefine = (env: Env.ImportMeta) => {
@@ -37,11 +37,9 @@ export const viteDefine = (env: Env.ImportMeta) => {
     // 判断是否为本地模式
     __LOCAL_MODE__: env?.VITE_LOCAL_MODE === "Y",
     // 判断是否为 Electron 环境
-    __IS_ELECTRON__: env?.VITE_APP_ENV === "electron",
-    // 应用名称
-    __APP_NAME__: JSON.stringify(env?.VITE_APP_NAME),
+    __IS_ELECTRON__: env?.VITE_APP_ENV === "electron"
   }
-};
+}
 
 // 定义模块与 chunk 名称的映射关系
 const chunkMap = {
@@ -61,17 +59,17 @@ const chunkMap = {
   'vue-router': 'vue-router-vendor',
   'vue-i18n': 'vue-i18n-vendor',
   'pinia': 'pinia-vendor',
-  'iconify': 'iconify-vendor',
-};
+  'iconify': 'iconify-vendor'
+}
 
 export const manualChunks = (id: string) => {
-  if (!id.includes('node_modules')) return;
+  if (!id.includes('node_modules')) return
 
   for (const [key, chunkName] of Object.entries(chunkMap)) {
     if (id.includes(key)) {
-      return chunkName;
+      return chunkName
     }
   }
 
-  return 'vendor';
+  return 'vendor'
 };

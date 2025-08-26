@@ -4,8 +4,8 @@ import { ModelProvider } from "@/ai/types/type"
 import { useAccessStore } from "@/ai/utils"
 import { useRobotStore } from "@/stores/index"
 
+import type { LLMParams } from "@/ai/types/llm"
 import type { ModelProviderKey } from "@/ai/types/type"
-import type { LLMParams } from "@/types/llm"
 
 export class ClientApi {
   public llm: OpenAiApi

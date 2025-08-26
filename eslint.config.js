@@ -40,6 +40,9 @@ export default defineConfig([
       globals: {
         ...globals.browser,
         ...globals.node,
+        __APP_INFO__: "readonly",
+        __IS_ELECTRON__: "readonly",
+        __LOCAL_MODE__: "readonly",
       },
     },
     plugins: {
@@ -78,14 +81,20 @@ export default defineConfig([
       "@typescript-eslint/no-var-requires": "error",
       "@typescript-eslint/prefer-ts-expect-error": "warn",
       "@typescript-eslint/consistent-type-definitions": ["warn", "interface"],
-      "@typescript-eslint/consistent-type-imports": ["warn", { prefer: "type-imports" }],
+      "@typescript-eslint/consistent-type-imports": [
+        "off", 
+        { 
+          prefer: "type-imports",
+          fixStyle: 'separate-type-imports'
+        }
+      ],
       "@typescript-eslint/no-import-type-side-effects": "warn",
       "@typescript-eslint/prefer-readonly": "warn",
 
       // === 代码质量规则 ===
       "no-console": isProd ? "warn" : "off",
       "no-debugger": isProd ? "error" : "off",
-      // "no-undef": "warn",
+      "no-undef": "warn",
       "no-unreachable": "error",
       "no-constant-condition": "error",
       "no-dupe-keys": "error",

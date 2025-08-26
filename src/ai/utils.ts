@@ -6,8 +6,8 @@ import { ModelProvider } from "@/ai/types/type"
 import { useRobotStore } from "@/stores"
 import { localStg } from "@/utils/storage"
 
+import type { LLMParams } from "@/ai/types/llm"
 import type { ModelProviderKey } from "@/ai/types/type"
-import type { LLMParams } from "@/types/llm"
 import type { ModelIDValue } from "@shared/provider"
 
 /**

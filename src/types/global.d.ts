@@ -31,25 +31,22 @@ declare global {
    */
   export const __LOCAL_MODE__: boolean;
 
-  /**
-   * 应用名称
-   */
-  export const __APP_NAME__: string;
-
   export interface Window {
-    /** NProgress instance */
+    /** 复制文本到剪贴板 */
+    copyToClipboard?: (str: string) => void;
+    /** NProgress */
     NProgress?: import('nprogress').NProgress;
-    copyToClipboard: (str: string) => void;
-    /** MessageBox instance */
+    /** MessageBox */
     $messageBox?: import('element-plus').IElMessageBox;
-    /** Message instance */
+    /** Message */
+    // $message?: import('element-plus').Message;
     $message?: import('element-plus').Message & {
-      success: (message: string) => void;
-      warning: (message: string) => void;
-      info: (message: string) => void;
-      error: (message: string) => void;
+      success: (message: string | import('element-plus').MessageParams) => void;
+      warning: (message: string | import('element-plus').MessageParams) => void;
+      info: (message: string | import('element-plus').MessageParams) => void;
+      error: (message: string | import('element-plus').MessageParams) => void;
     };
-    /** Notification instance */
+    /** Notification */
     $notification?: import('element-plus').Notify;
     // __TIM_DEBUG__: DebugInterface;
   }

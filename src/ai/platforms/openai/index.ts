@@ -17,8 +17,8 @@ import { transformData } from "@/utils/chat/index"
 import OllamaAI from "../ollama/ollama"
 
 import type { ChatOptions, LLMConfig } from "../../types/chat"
+import type { FewShots, LLMParams } from "@/ai/types/llm"
 import type { ModelProviderKey } from "@/ai/types/type"
-import type { FewShots, LLMParams } from "@/types/llm"
 
 export * from "./config"
 export * from "./modelValue"
