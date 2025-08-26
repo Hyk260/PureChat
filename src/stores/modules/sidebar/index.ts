@@ -5,10 +5,9 @@ import { markRaw } from "vue"
 
 import router from "@/router"
 import { SetupStoreId } from "@/stores/enum"
+import { useChatStore } from "@/stores/modules/chat"
 import { openWindow } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
-
-import { useChatStore } from "../chat/index"
 
 import type { MoreListItem, SidebarItem, SidebarState } from "./type"
 
@@ -18,7 +17,7 @@ const {
   giteeHomepage,
 } = __APP_INFO__.pkg
 const {
-  // DEV: isDev
+  DEV: isDev
 } = import.meta.env
 
 const defaultOutsideList: SidebarItem[] = [
@@ -107,4 +106,7 @@ export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
       this.moreList = list
     },
   },
+  // persist: {
+  //   pick: ["outsideList", "moreList"],
+  // },
 })

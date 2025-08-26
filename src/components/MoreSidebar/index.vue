@@ -7,7 +7,7 @@
     :lock-scroll="false"
     :close-on-click-modal="true"
     title="导航栏编辑"
-    width="450px"
+    width="450"
     @close="onClose"
   >
     <div class="draggable flex-bc">
@@ -33,9 +33,9 @@
               <template v-for="item in leftEdit" :key="item.id">
                 <div class="list-group-item flex-ac" :class="item?.class">
                   <!-- 删除 -->
-                  <CircleMinus size="15" class="text-[#f44336]" @click="reduce(item)" />
+                  <CircleMinus size="15" class="icon-item text-[#f44336]" @click="reduce(item)" />
                   <!-- 图标 -->
-                  <el-icon v-if="item?.type == 'el-icon'">
+                  <el-icon class="icon-size" v-if="item?.type == 'el-icon'">
                     <component :is="item.icon" />
                   </el-icon>
                   <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
@@ -69,14 +69,14 @@
               <template v-for="item in rightEdit" :key="item.id">
                 <div class="list-group-item flex-ac" :class="item?.class">
                   <!-- 添加 -->
-                  <CirclePlus size="15" class="text-[#1890ff]" @click="increase(item)" />
+                  <CirclePlus :size="15" class="icon-item text-[#1890ff]" @click="increase(item)" />
                   <!-- 图标 -->
                   <el-icon v-if="item?.type == 'el-icon'">
                     <component :is="item.icon" />
                   </el-icon>
                   <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
-                  <GripVertical size="18" class="dragIcon" />
+                  <GripVertical :size="18" class="dragIcon" />
                 </div>
               </template>
             </VueDraggableNext>
@@ -95,7 +95,7 @@
   </el-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import { cloneDeep, uniqBy } from "lodash-es";
 import { VueDraggableNext } from "vue-draggable-next";
@@ -274,15 +274,20 @@ $draggable-height: 384px;
     padding: 0 20px;
     height: 45px;
     cursor: grab;
+    .icon-size {
+      margin-right: 5px;
+      font-size: 17px !important;
+    }
+    .icon-item {
+      margin-right: 5px;
+      font-size: 15px !important;
+      cursor: pointer;
+    }
     .title {
       user-select: none;
     }
-    .lucide {
-      margin-right: 5px;
-      cursor: pointer;
-    }
     .el-icon {
-      font-size: 17px;
+      font-size: 1px;
       margin-right: 5px;
       cursor: pointer;
     }
