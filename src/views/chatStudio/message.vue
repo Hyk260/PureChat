@@ -32,11 +32,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onActivated, onMounted } from "vue";
 import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
 import { storeToRefs } from "pinia";
-import { useAppStore, useChatStore } from "@/stores/index";
+import { useChatStore } from "@/stores/index";
 import emitter from "@/utils/mitt-bus";
 import Chatwin from "./chat/Chatwin.vue";
 import MessageToolbar from "@/components/Popups/MessageToolbar.vue";
@@ -48,7 +48,6 @@ import Header from "./components/Header.vue";
 import ReplyBox from "./components/ReplyBox.vue";
 import Search from "./components/Search.vue";
 
-const appStore = useAppStore();
 const chatStore = useChatStore();
 
 const { isChatSessionListCollapsed } = storeToRefs(chatStore);
@@ -64,6 +63,7 @@ onActivated(() => {
 });
 
 onMounted(() => {
+  emitter.emit("updateScroll");
   chatStore.setChatSessionListCollapsed(false);
 });
 </script>

@@ -1,4 +1,14 @@
-export const state = `<svg
+<template>
+  <div class="video-elem-item">
+    <div ref="artRef" class="artplayer" :style="style"></div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import Artplayer from "artplayer"
+
+const state = `<svg
   viewBox='0 0 80 80'
   xmlns='http://www.w3.org/2000/svg'
   xmlns:xlink='http://www.w3.org/1999/xlink'
@@ -56,7 +66,7 @@ export const state = `<svg
   </g>
 </svg>`
 
-export const indicator = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'>
+const indicator = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'>
     <path
       d='M16.118 3.667h.382a3.667 3.667 0 013.667 3.667v7.333a3.667 3.667 0 01-3.667 3.667h-11a3.667 3.667 0 01-3.667-3.667V7.333A3.667 3.667 0 015.5 3.666h.382L4.95 2.053a1.1 1.1 0 011.906-1.1l1.567 2.714h5.156L15.146.953a1.101 1.101 0 011.906 1.1l-.934 1.614z'
       fill='#333'
@@ -70,3 +80,73 @@ export const indicator = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2
       fill='#333'
     ></path>
   </svg>`
+
+
+const props = defineProps({
+  message: {
+    type: Object,
+    default: () => ({}),
+  },
+  // snapshotUrl 视频封面图
+  // videoSize 视频大小，单位：Byte
+})
+
+const artRef = ref(null)
+const art = ref(null)
+const loading = ref("")
+const style = ref({})
+const option = computed(() => ({
+  url: props.message.payload?.videoUrl || "",
+  contextmenu: [],
+  container: artRef.value,
+  lang: "zh-cn",
+  theme: "#23ade5",
+  fullscreen: true,
+  icons: {
+    state,
+    loading: `<img width="50" heigth="50" src="${loading.value}">`,
+    indicator,
+  }
+}))
+
+const initArt = () => {
+  Artplayer.CONTEXTMENU = false
+  art.value = new Artplayer(option.value)
+  art.value.on("ready", () => {
+    // art.value.mini = true
+  })
+}
+
+onMounted(() => {
+  initArt()
+})
+
+onBeforeUnmount(() => {
+  if (art.value && art.value.destroy) {
+    art.value.destroy(false)
+  }
+})
+</script>
+
+<style lang="scss">
+.video-elem-item {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.art-video-player {
+  z-index: 1;
+}
+.artplayer {
+  width: 240px;
+  height: 135px;
+}
+.art-state {
+  svg {
+    width: 50px;
+  }
+}
+.art-control-volume {
+  display: none !important;
+}
+</style>

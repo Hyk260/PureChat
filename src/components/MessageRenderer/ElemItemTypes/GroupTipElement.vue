@@ -4,9 +4,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { useUserStore } from '@/stores/index';
+import { useUserStore } from '@/stores/modules/user';
 
 const props = defineProps({
   message: {

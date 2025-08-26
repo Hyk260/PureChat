@@ -21,11 +21,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import { useChatStore, useUserStore } from "@/stores/index";
 import ReplyElem from "./ReplyElem.vue";
-import DynamicContent from "../components/DynamicContent.vue";
+import DynamicContent from "@/views/chatStudio/components/DynamicContent.vue";
 
 const props = defineProps({
   msgType: {

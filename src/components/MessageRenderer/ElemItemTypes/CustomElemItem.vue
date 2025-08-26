@@ -5,11 +5,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
-import Loading from "../customMsgBody/loading.vue";
-// import ToolCall from "../customMsgBody/toolCall.vue";
-// import Warning from "../customMsgBody/warning.vue";
+import Loading from "../CustomMsgBody/Loading.vue";
 
 const props = defineProps({
   message: {

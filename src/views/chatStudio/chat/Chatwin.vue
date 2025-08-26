@@ -28,7 +28,7 @@
             :id="`choice-${item.ID}`"
             class="message-view-item"
             :class="getSelectedMessageClass(item)"
-            @click="handleSelect($event, item, 'outside')"
+            @click="handleSelect(item, 'outside')"
           >
             <TimeDivider v-if="!isGroupChat" :item="item" />
             <div class="message-view-item-content" :class="classMessageViewItem(item)">
@@ -69,17 +69,17 @@
                     :self="isSelf(item)"
                     :item="item"
                   />
-                  <component
-                    :is="getMessageComponent(item)"
+                  <MessageRenderer
                     v-else
                     :key="item.ID"
                     v-contextmenu:contextmenu
+                    :item="item"
                     :message="item"
                     :status="item.status"
                     :self="isSelf(item)"
                     @contextmenu.prevent="handleContextMenuEvent($event, item)"
                   >
-                  </component>
+                  </MessageRenderer>
                   <!-- 消息发送加载状态 -->
                   <Stateful :item="item" :status="item.status" />
                   <!-- 菜单 -->
@@ -115,7 +115,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, shallowRef, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStore, useGroupStore, useAppStore, useChatStore } from "@/stores/index";
@@ -131,13 +131,14 @@ import {
 } from "@/service/im-sdk-api/index";
 import { MULTIPLE_CHOICE_MAX } from "@/constants/index";
 import { download, msgType, msgOne, isSelf, isTime } from "@/utils/chat/index";
-import { getMessageComponent } from "@/utils/chat/getMessageComponent";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { getTime } from "@/utils/common";
 import { debounce } from "lodash-es";
 import { timeFormat } from "@/utils/timeFormat";
 import { Contextmenu, ContextmenuItem } from "v-contextmenu";
+import type { DB_Message } from "@/database/schemas/message"
 import emitter from "@/utils/mitt-bus";
+import MessageRenderer from "@/components/MessageRenderer/index.vue";
 import Checkbox from "../components/Checkbox.vue";
 import LoadMore from "../components/LoadMore.vue";
 import NameComponent from "../components/NameComponent.vue";
@@ -185,7 +186,7 @@ useEventListener(window, "focus", () => {
   setMessageRead(currentConversation.value);
 });
 
-const updateLoadMore = (id) => {
+const updateLoadMore = (id: string) => {
   nextTick(() => {
     const el = document.getElementById(`choice-${id}`);
     if (el) {
@@ -231,7 +232,7 @@ const classMessageInfoView = () => {
   ];
 };
 
-const toggleMessageSelection = (item, forceChecked = null) => {
+const toggleMessageSelection = (item: DB_Message, forceChecked: boolean | null = null) => {
   // tip消息 撤回消息
   if (!isMultiSelectMode.value || item.type == "TIMGroupTipElem" || item.isRevoked) {
     return;
@@ -247,7 +248,7 @@ const toggleMessageSelection = (item, forceChecked = null) => {
   chatStore.toggleMessageSelection(item, forceChecked);
 };
 
-const handleSelect = (e, item, type = "initial") => {
+const handleSelect = (item: DB_Message, type = "initial") => {
   if (type === "choice") {
     toggleMessageSelection(item, true);
     return;
@@ -256,7 +257,7 @@ const handleSelect = (e, item, type = "initial") => {
   toggleMessageSelection(item);
 };
 
-const onClickAvatar = (e, item) => {
+const onClickAvatar = (e: Event | null, item: DB_Message) => {
   if (__LOCAL_MODE__ && isSelf(item)) {
     UserPopupRef.value.show();
     return;
@@ -289,7 +290,7 @@ const loadMoreMessages = () => {
 
 const debouncedFunc = debounce(loadMoreMessages, 300);
 
-const loadMore = (direction) => {
+const loadMore = (direction: string) => {
   if (direction === "top") {
     loadMoreMsg();
   } else if (direction === "bottom") {
@@ -430,7 +431,7 @@ const handleContextMenuEvent = (event, item) => {
 };
 
 const handleRightClick = (data) => {
-  const info = menuItemInfo.value;
+  const info = menuItemInfo.value as DB_Message;
   const { id, text } = data || {};
   switch (id) {
     case "send": // 发起会话
@@ -493,7 +494,7 @@ const handleTranslate = (data) => {
   translateText({ textList: data.payload.text });
 };
 
-const handleForward = () => {};
+const handleForward = (data: DB_Message) => {};
 
 const handleReplyMsg = (data) => {
   chatStore.setReplyMsgData(data);
@@ -510,11 +511,11 @@ const handleDeleteMsg = async (data) => {
   });
 };
 
-const handleMultiSelectMsg = (item) => {
+const handleMultiSelectMsg = (item: DB_Message) => {
   chatStore.toggleMultiSelectMode(true);
   chatStore.setReplyMsgData(null);
   // updateLoadMore(item?.ID);
-  handleSelect(null, item, "choice");
+  handleSelect(item, "choice");
 };
 
 const handleRevokeChange = (data, type) => {
@@ -537,7 +538,7 @@ const handleRevokeMsg = async (data) => {
 };
 
 function onEmitter() {
-  emitter.on("updateScroll", (type) => {
+  emitter.on("updateScroll", (type: string) => {
     if (type === "bottom") {
       isScrolledToBottom() && updateScrollBarHeight();
     } else if (type === "robot") {

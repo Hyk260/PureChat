@@ -59,7 +59,7 @@ import {
   isSelf,
   isTime,
 } from "@/utils/chat/index";
-import { getMessageComponent } from "@/utils/chat/getMessageComponent";
+import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent";
 import { useState } from "@/hooks/useState";
 import { timeFormat } from "@/utils/timeFormat";
 import { getAiAvatarUrl } from "@/ai/utils";

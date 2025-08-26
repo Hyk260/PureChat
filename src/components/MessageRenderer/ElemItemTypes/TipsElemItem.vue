@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import { CircleCloseFilled } from "@element-plus/icons-vue";
 import { useChatStore, useUserStore } from "@/stores/index";

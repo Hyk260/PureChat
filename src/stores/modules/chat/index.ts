@@ -153,7 +153,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.clearSelectedMessageIds()
       }
     },
-    setReplyMsgData(data: DB_Message) {
+    setReplyMsgData(data: DB_Message | null) {
       this.replyMsgData = data
     },
     setMsgEdit(data: DB_Message) {
@@ -424,7 +424,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     clearSelectedMessageIds() {
       this.selectedMessageIds.clear()
     },
-    toggleMessageSelection(item: DB_Message, forceChecked = null) {
+    toggleMessageSelection(item: DB_Message, forceChecked: boolean | null = null) {
       const isCurrentlySelected = this.selectedMessageIds.has(item.ID)
       const willBeSelected = forceChecked !== null ? forceChecked : !isCurrentlySelected
 

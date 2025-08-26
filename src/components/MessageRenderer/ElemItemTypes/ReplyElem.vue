@@ -26,9 +26,9 @@
   </div>
 </template>
 
-<script setup>
-import { scrollToDomPosition } from "@/utils/chat/index";
-import DynamicContent from "../components/DynamicContent.vue";
+<script setup lang="ts">
+import { scrollToDomPosition } from "@/utils/chat";
+import DynamicContent from "@/views/chatStudio/components/DynamicContent.vue";
 
 defineOptions({
   name: "ReplyElem",

@@ -17,11 +17,11 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted } from "vue";
-import { showIMPic } from "@/utils/chat/index";
-import { useChatStore } from "@/stores/index";
-import { getImageSize } from "@/utils/common";
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue"
+import { showIMPic } from "@/utils/chat"
+import { useChatStore } from "@/stores"
+import { getImageSize } from "@/utils/common"
 
 const props = defineProps({
   message: {

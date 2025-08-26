@@ -120,7 +120,7 @@ import {
   ImageType,
   imageTypeOptions,
 } from "@/hooks/useScreenshot";
-import { getMessageComponent } from "@/utils/chat/getMessageComponent";
+import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent";
 import { msgOne, msgType, isSelf } from "@/utils/chat/index";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { getBackgroundStyle, onColor, back, backgColor } from "./utils";

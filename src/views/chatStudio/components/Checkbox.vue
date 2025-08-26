@@ -6,9 +6,9 @@
   </label>
 </template>
 
-<script setup>
-import { computed } from "vue";
-import { useChatStore } from "@/stores/index";
+<script setup lang="ts">
+import { computed } from "vue"
+import { useChatStore } from "@/stores/modules/chat"
 
 const { item, isRevoked } = defineProps({
   item: {
@@ -19,17 +19,17 @@ const { item, isRevoked } = defineProps({
     type: Boolean,
     default: false,
   },
-});
+})
 
-const chatStore = useChatStore();
+const chatStore = useChatStore()
 
 const isShowCheck = computed(() => {
-  return chatStore.isMultiSelectMode && !isRevoked && item.type !== "TIMGroupTipElem";
-});
+  return chatStore.isMultiSelectMode && !isRevoked && item.type !== "TIMGroupTipElem"
+})
 
 const isChecked = computed(() => {
-  return chatStore.isMessageSelected(item.ID);
-});
+  return chatStore.isMessageSelected(item.ID)
+})
 </script>
 
 <style lang="scss" scoped>
