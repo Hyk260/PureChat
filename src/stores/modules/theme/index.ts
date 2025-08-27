@@ -1,12 +1,23 @@
+import { ThemeMode, ThemeModeKey } from "@shared/theme"
 import { defineStore } from "pinia"
 
 import { SetupStoreId } from "@/stores/enum"
 import { localStg } from "@/utils/storage"
 // import { useEventListener, usePreferredColorScheme } from "@vueuse/core";
 
+interface ThemeState {
+  themeScheme: ThemeModeKey
+  fontTheme: string
+  fontThemeList: any[]
+  page: {
+    animate: boolean
+    animateMode: string
+  }
+}
+
 export const useThemeStore = defineStore(SetupStoreId.Theme, {
-  state: () => ({
-    themeScheme: "light",
+  state: (): ThemeState => ({
+    themeScheme: ThemeMode.light,
     fontTheme: "AliFangYuan",
     fontThemeList: [{ label: "阿里方元", value: "AliFangYuan" }],
     page: {
@@ -50,18 +61,18 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
         return []
       }
     },
-    setThemeScheme(theme = localStg.get("themeScheme") || "light") {
+    setThemeScheme(theme = localStg.get("themeScheme") || ThemeMode.light) {
       this.themeScheme = theme
       this.setTheme(theme)
     },
-    toggleHtmlClass(theme: string) {
+    toggleHtmlClass(theme: ThemeModeKey) {
       document.body.setAttribute("data-theme", theme)
       document.documentElement.classList[theme === "dark" ? "add" : "remove"]("dark")
     },
     /**
      * 切换主题风格
      */
-    setTheme(themeScheme = "light" as string | "light" | "dark" | "auto") {
+    setTheme(themeScheme: ThemeModeKey = ThemeMode.light) {
       localStg.set("themeScheme", themeScheme)
       const isAuto = themeScheme === "auto"
       const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)")
