@@ -26,7 +26,7 @@ export default defineConfig([
   ...pluginVue.configs["flat/recommended"],
   // Prettier 配置（禁用与 Prettier 冲突的规则）
   prettier,
-  // TypeScript 源码文件（启用完整类型检查）
+  // TypeScript 源码文件
   {
     files: ["src/**/*.?([cm])ts"],
     languageOptions: {
@@ -77,7 +77,7 @@ export default defineConfig([
       "@typescript-eslint/no-unsafe-assignment": "warn",
       "@typescript-eslint/no-unsafe-call": "warn",
       "@typescript-eslint/no-unsafe-member-access": "warn",
-      "@typescript-eslint/no-unsafe-return": "warn",
+      "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-var-requires": "error",
       "@typescript-eslint/prefer-ts-expect-error": "warn",
       "@typescript-eslint/consistent-type-definitions": ["warn", "interface"],
@@ -153,7 +153,7 @@ export default defineConfig([
       "prettier/prettier": "warn",
     },
   },
-  // TypeScript 配置文件和测试文件（轻量级规则，不启用类型检查）
+  // TypeScript 配置文件和测试文件
   {
     files: ["**/*.config.?([cm])ts", "**/*.test.?([cm])ts", "**/*.spec.?([cm])ts"],
     languageOptions: {

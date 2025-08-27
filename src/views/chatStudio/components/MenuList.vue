@@ -2,12 +2,23 @@
   <div v-show="shouldShowMenu" class="menubar">
     <div class="flex">
       <div v-for="t in availableMenuItems" :key="t.id" class="menubar-item flex-c">
-        <el-tooltip :content="t.title" placement="top">
+        <el-tooltip :content="t.title" :disabled="t.id === 'more'" placement="top">
+          <!-- <el-dropdown v-if="t.id === 'more'">
+            <span>
+              <el-icon><Ellipsis :size="13" /></el-icon>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>Action 1</el-dropdown-item>
+                <el-dropdown-item>Action 2</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown> -->
           <component
             :is="t.icon"
             v-if="t.id !== 'delete'"
             :class="t?.class"
-            size="13"
+            :size="13"
             @click="handleMenuItemClick(t)"
           />
           <div v-else>
@@ -25,7 +36,7 @@
                 </el-button>
               </div>
               <template #reference>
-                <Trash :class="t?.class" size="13" />
+                <Trash :class="t?.class" :size="13" />
               </template>
             </el-popover>
           </div>
@@ -37,10 +48,19 @@
 
 <script setup lang="ts">
 import { ref, computed, markRaw } from "vue";
+import { ElPopover } from "element-plus";
 import { Warning } from "@element-plus/icons-vue";
-import { Trash, SquarePen, Copy, SlidersHorizontal } from "lucide-vue-next";
+import {
+  Trash, 
+  Ellipsis, 
+  SquarePen, 
+  Copy, 
+  RefreshCw, 
+  // SlidersHorizontal
+ } from "lucide-vue-next";
 import { useChatStore } from "@/stores/modules/chat";
 import { handleCopyMsg } from "../utils/utils";
+
 
 defineOptions({
   name: "MenuList",
@@ -57,7 +77,7 @@ const props = defineProps({
     type: String,
     default: "unSend",
     // unSend(未发送)fail(发送失败)success(发送成功)sending(发送中)timeout(超时)
-    validator: (value) => ["unSend", "fail", "success", "sending"].includes(value),
+    validator: (value: string) => ["unSend", "fail", "success", "sending"].includes(value),
   },
 });
 
@@ -76,16 +96,22 @@ const menuItemsConfig = [
     icon: markRaw(Copy),
   },
   {
+    id: "refresh",
+    title: "重新生成",
+    hidden: true,
+    icon: markRaw(RefreshCw),
+  },
+  {
     id: "edit",
     title: "编辑",
     hidden: !__LOCAL_MODE__,
     icon: markRaw(SquarePen),
   },
   {
-    id: "setup",
-    title: "设置",
+    id: "more",
+    title: "更多",
     hidden: true,
-    icon: markRaw(SlidersHorizontal),
+    icon: markRaw(Ellipsis),
   },
   {
     id: "delete",
@@ -95,7 +121,7 @@ const menuItemsConfig = [
   },
 ];
 
-const popoverTrashRef = ref(null);
+const popoverTrashRef = ref<InstanceType<typeof ElPopover> | null>(null);
 
 const chatStore = useChatStore();
 
@@ -155,20 +181,23 @@ const availableMenuItems = computed(() => {
     .filter((menuItem) => !menuItem?.hidden);
 });
 
-function handleMenuItemClick(data) {
+function handleMenuItemClick(data: { id: string }) {
   const { id } = data;
   const { item } = props;
   switch (id) {
-    case "copy": // 复制
+    case "refresh":
+      emit("handleSingleClick", { item: props.item, id: "refresh" });
+      break;
+    case "copy":
       handleCopyMsg(item);
       break;
-    case "edit": // 编辑
+    case "edit":
       chatStore.setMsgEdit(item);
       break;
-    case "setup": // 设置
+    case "setup":
       console.log("设置");
       break;
-    case "delete": // 删除
+    case "delete":
       handleDelete(item);
       break;
   }

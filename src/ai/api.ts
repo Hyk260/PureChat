@@ -17,7 +17,7 @@ export class ClientApi {
       this._prompts = useRobotStore().currentProviderPrompt?.prompt
       this.llm = this.createProvider(provider)
     } catch (error) {
-      throw new Error(`初始化 ClientApi 失败: ${error.message}`)
+      throw new Error(`初始化 ClientApi 失败: ${error instanceof Error ? error.message : "未知错误"}`)
     }
   }
 

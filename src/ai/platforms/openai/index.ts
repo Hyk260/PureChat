@@ -216,7 +216,7 @@ export class OpenAiApi {
       }
     } catch (error) {
       console.error("[Request] failed to make a chat reqeust", error)
-      options?.onError?.(error.message || "请求失败，请稍后重试")
+      options?.onError?.(error instanceof Error ? error.message : "请求失败，请稍后重试")
     }
   }
 

@@ -118,7 +118,8 @@
 <script setup lang="ts">
 import { ref, shallowRef, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
-import { useUserStore, useGroupStore, useAppStore, useChatStore } from "@/stores/index";
+import { ElScrollbar } from "element-plus";
+import { useUserStore, useGroupStore, useAppStore, useChatStore } from "@/stores";
 import { showConfirmationBox } from "@/utils/message";
 import { avatarMenu, menuOptionsList } from "../utils/menu";
 import { handleCopyMsg, validateLastMessage } from "../utils/utils";
@@ -128,9 +129,9 @@ import {
   getMessageList,
   revokeMsg,
   translateText,
-} from "@/service/im-sdk-api/index";
+} from "@/service/im-sdk-api";
 import { MULTIPLE_CHOICE_MAX } from "@/constants";
-import { download, msgType, msgOne, isSelf, isTime } from "@/utils/chat/index";
+import { download, msgType, msgOne, isSelf, isTime } from "@/utils/chat";
 import { getAiAvatarUrl } from "@/ai/utils";
 import { getTime } from "@/utils/common";
 import { debounce } from "lodash-es";
@@ -153,10 +154,10 @@ import AssistantMessage from "../components/AssistantMessage.vue";
 const UserPopupRef = ref();
 const timeout = ref(false);
 const isRight = ref(true);
-const contextMenuItems = shallowRef([]);
-const menuItemInfo = ref([]);
-const scrollbarRef = ref(null);
-const messageViewRef = ref(null);
+const contextMenuItems = shallowRef<ContextmenuItem[]>([]);
+const menuItemInfo = ref<DB_Message | null>(null);
+const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null);
+const messageViewRef = ref<HTMLDivElement | null>(null);
 
 const groupStore = useGroupStore();
 const chatStore = useChatStore();
@@ -174,11 +175,11 @@ const {
   currentConversation,
 } = storeToRefs(chatStore);
 
-const isMessageSelected = (messageId) => {
+const isMessageSelected = (messageId: string) => {
   return chatStore.isMessageSelected(messageId);
 };
 
-const getSelectedMessageClass = (item) => {
+const getSelectedMessageClass = (item: DB_Message) => {
   return isMessageSelected(item.ID) ? "style-select" : "";
 };
 
@@ -197,7 +198,7 @@ const updateLoadMore = (id: string) => {
   });
 };
 
-const fnAvatar = (item) => {
+const fnAvatar = (item: DB_Message) => {
   if (isSelf(item) && __LOCAL_MODE__) {
     return userStore.getUserAvatar;
   } else {
@@ -205,16 +206,16 @@ const fnAvatar = (item) => {
   }
 };
 
-const displayInfo = (info) => {
+const displayInfo = (info: string) => {
   if (!info) return "unknown";
   return info.slice(0, 2).toUpperCase();
 };
 
-const showAvatar = (item) => {
+const showAvatar = (item: DB_Message) => {
   return !item.isRevoked && item.type !== "TIMGroupTipElem";
 };
 
-const classMessageViewItem = (item) => {
+const classMessageViewItem = (item: DB_Message) => {
   return [
     isSelf(item) ? "is-self" : "is-other",
     isMultiSelectMode.value && !item.isRevoked && item.type !== "TIMGroupTipElem"
@@ -302,7 +303,7 @@ const handleScrollbar = (data) => {
   debouncedFunc(data);
 };
 
-const updateScrollBarHeight = (type) => {
+const updateScrollBarHeight = (type?: string) => {
   if (type) {
     console.log("scrollBar:", type);
   }
@@ -356,7 +357,7 @@ const loadMoreMsg = async () => {
   }
 };
 
-const handleContextAvatarMenuEvent = (event, item) => {
+const handleContextAvatarMenuEvent = (_: Event, item: DB_Message) => {
   const { flow } = item;
   const type = currentType.value;
   // 单人 & 自己发送的消息 & 系统消息
@@ -369,7 +370,7 @@ const handleContextAvatarMenuEvent = (event, item) => {
   contextMenuItems.value = avatarMenu;
 };
 
-const handleContextMenuEvent = (event, item) => {
+const handleContextMenuEvent = (_: Event, item: DB_Message) => {
   const { isRevoked, time, type } = item;
   const messageTypes = {
     isFile: type === "TIMFileElem",
@@ -430,10 +431,13 @@ const handleContextMenuEvent = (event, item) => {
   contextMenuItems.value = menuItems;
 };
 
-const handleRightClick = (data) => {
+const handleRightClick = (data: { id: string }) => {
   const info = menuItemInfo.value as DB_Message;
-  const { id, text } = data || {};
+  const { id } = data || {};
   switch (id) {
+    case "refresh": // 重新生成
+      handleRefreshMsg(info);
+      break;
     case "send": // 发起会话
       handleSendMessage(info);
       break;
@@ -472,14 +476,18 @@ const handleSingleClick = ({ item, id }) => {
   handleRightClick({ id });
 };
 
-const handleAt = (data) => {
+const handleAt = (data: DB_Message) => {
   const { from, nick, conversationType: type } = data;
   if (type === "C2C") return;
   emitter.emit("handleAt", { id: from, name: nick });
 };
 
-const handleSendMessage = (data) => {
+const handleSendMessage = (data: DB_Message) => {
   chatStore.addConversation({ sessionId: `C2C${data.from}` });
+};
+
+const handleRefreshMsg = (data: DB_Message) => {
+  console.log("handleRefreshMsg:", data);
 };
 
 const handleSave = ({ payload }) => {
@@ -490,18 +498,18 @@ const handleSave = ({ payload }) => {
   download(payload.fileUrl, payload.fileName);
 };
 
-const handleTranslate = (data) => {
+const handleTranslate = (data: DB_Message) => {
   translateText({ textList: data.payload.text });
 };
 
 const handleForward = (data: DB_Message) => {};
 
-const handleReplyMsg = (data) => {
+const handleReplyMsg = (data: DB_Message) => {
   chatStore.setReplyMsgData(data);
   if (!isSelf(data)) handleAt(data);
 };
 
-const handleDeleteMsg = async (data) => {
+const handleDeleteMsg = async (data: DB_Message) => {
   // const result = await showConfirmationBox({ message: "确定删除消息?", iconType: "warning" });
   // if (result === "cancel") return;
   chatStore.deleteMessage({
@@ -518,12 +526,12 @@ const handleMultiSelectMsg = (item: DB_Message) => {
   handleSelect(item, "choice");
 };
 
-const handleRevokeChange = (data, type) => {
+const handleRevokeChange = (data: DB_Message, type: string) => {
   if (data.type !== "TIMTextElem") return;
   chatStore.updateRevokeMsg({ data, type });
 };
 
-const handleRevokeMsg = async (data) => {
+const handleRevokeMsg = async (data: DB_Message) => {
   if (timeout.value) {
     const result = await showConfirmationBox({ message: "确定撤回这条消息?", iconType: "warning" });
     if (result === "cancel") return;
