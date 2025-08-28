@@ -33,39 +33,40 @@
 </template>
 
 <script setup lang="ts">
-import { onActivated, onMounted } from "vue";
-import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
-import { storeToRefs } from "pinia";
-import { useChatStore } from "@/stores/modules/chat";
-import emitter from "@/utils/mitt-bus";
-import Chatwin from "./chat/Chatwin.vue";
-import MessageToolbar from "@/components/Popups/MessageToolbar.vue";
+import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue"
+import { storeToRefs } from "pinia"
+import { onActivated, onMounted } from "vue"
 
-import ConversationList from "./chat/ConversationList.vue";
-import Editor from "./editor/index.vue";
-import EmptyMessage from "./components/EmptyMessage.vue";
-import Header from "./components/Header.vue";
-import ReplyBox from "./components/ReplyBox.vue";
-import Search from "./components/Search.vue";
+import MessageToolbar from "@/components/Popups/MessageToolbar.vue"
+import { useChatStore } from "@/stores/modules/chat"
+import emitter from "@/utils/mitt-bus"
 
-const chatStore = useChatStore();
+import Chatwin from "./chat/Chatwin.vue"
+import ConversationList from "./chat/ConversationList.vue"
+import EmptyMessage from "./components/EmptyMessage.vue"
+import Header from "./components/Header.vue"
+import ReplyBox from "./components/ReplyBox.vue"
+import Search from "./components/Search.vue"
+import Editor from "./editor/index.vue"
 
-const { isChatSessionListCollapsed } = storeToRefs(chatStore);
+const chatStore = useChatStore()
+
+const { isChatSessionListCollapsed } = storeToRefs(chatStore)
 
 const toggleCollapsed = () => {
   chatStore.$patch((state) => {
-    state.isChatSessionListCollapsed = !state.isChatSessionListCollapsed;
-  });
-};
+    state.isChatSessionListCollapsed = !state.isChatSessionListCollapsed
+  })
+}
 
 onActivated(() => {
-  emitter.emit("updateScroll");
-});
+  emitter.emit("updateScroll")
+})
 
 onMounted(() => {
-  emitter.emit("updateScroll");
-  chatStore.setChatSessionListCollapsed(false);
-});
+  emitter.emit("updateScroll")
+  chatStore.setChatSessionListCollapsed(false)
+})
 </script>
 
 <style lang="scss" scoped>

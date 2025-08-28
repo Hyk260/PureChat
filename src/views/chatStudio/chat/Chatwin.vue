@@ -1,21 +1,8 @@
 <template>
-  <div
-    v-show="currentConversation"
-    class="message-info-view-content"
-    :class="classMessageInfoView()"
-  >
-    <el-scrollbar
-      ref="scrollbarRef"
-      class="h-full"
-      @end-reached="loadMore"
-      @scroll="handleScrollbar"
-    >
+  <div v-show="currentConversation" class="message-info-view-content" :class="classMessageInfoView()">
+    <el-scrollbar ref="scrollbarRef" class="h-full" @end-reached="loadMore" @scroll="handleScrollbar">
       <div ref="messageViewRef" class="message-view">
-        <div
-          v-for="(item, index) in currentMessageList"
-          :key="item.ID"
-          :class="{ 'reset-select': item.isRevoked }"
-        >
+        <div v-for="(item, index) in currentMessageList" :key="item.ID" :class="{ 'reset-select': item.isRevoked }">
           <!-- 加载更多 -->
           <LoadMore :index="index" />
           <!-- 时间 -->
@@ -64,11 +51,7 @@
                 </div>
                 <div :id="item.ID" class="message-view-body" :class="msgType(item.type)">
                   <!-- 消息编辑 -->
-                  <MessageEditingBox
-                    v-if="chatStore.msgEdit?.ID === item.ID"
-                    :self="isSelf(item)"
-                    :item="item"
-                  />
+                  <MessageEditingBox v-if="chatStore.msgEdit?.ID === item.ID" :self="isSelf(item)" :item="item" />
                   <MessageRenderer
                     v-else
                     :key="item.ID"
@@ -83,11 +66,7 @@
                   <!-- 消息发送加载状态 -->
                   <Stateful :item="item" :status="item.status" />
                   <!-- 菜单 -->
-                  <MenuList
-                    :item="item"
-                    :status="item.status"
-                    @handle-single-click="handleSingleClick"
-                  />
+                  <MenuList :item="item" :status="item.status" @handle-single-click="handleSingleClick" />
                 </div>
                 <AssistantMessage v-if="isAssistant && !isSelf(item)" :item="item" />
               </div>
@@ -116,53 +95,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref, shallowRef, watch, nextTick, onMounted, onUnmounted } from "vue";
-import { storeToRefs } from "pinia";
-import { ElScrollbar } from "element-plus";
-import { useUserStore, useGroupStore, useAppStore, useChatStore } from "@/stores";
-import { showConfirmationBox } from "@/utils/message";
-import { avatarMenu, menuOptionsList } from "../utils/menu";
-import { handleCopyMsg, validateLastMessage } from "../utils/utils";
-import { useEventListener } from "@vueuse/core";
-import {
-  setMessageRead,
-  getMessageList,
-  revokeMsg,
-  translateText,
-} from "@/service/im-sdk-api";
-import { MULTIPLE_CHOICE_MAX } from "@/constants";
-import { download, msgType, msgOne, isSelf, isTime } from "@/utils/chat";
-import { getAiAvatarUrl } from "@/ai/utils";
-import { getTime } from "@/utils/common";
-import { debounce } from "lodash-es";
-import { timeFormat } from "@/utils/timeFormat";
-import { Contextmenu, ContextmenuItem } from "v-contextmenu";
+import { useEventListener } from "@vueuse/core"
+import { ElScrollbar } from "element-plus"
+import { debounce } from "lodash-es"
+import { storeToRefs } from "pinia"
+import { Contextmenu, ContextmenuItem } from "v-contextmenu"
+import { nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from "vue"
+
+import { getAiAvatarUrl } from "@/ai/utils"
+import MessageRenderer from "@/components/MessageRenderer/index.vue"
+import MyPopover from "@/components/MyPopover/index.vue"
+import UserPopup from "@/components/Popups/UserPopup.vue"
+import { MULTIPLE_CHOICE_MAX } from "@/constants"
 import type { DB_Message } from "@/database/schemas/message"
-import emitter from "@/utils/mitt-bus";
-import MessageRenderer from "@/components/MessageRenderer/index.vue";
-import Checkbox from "../components/Checkbox.vue";
-import LoadMore from "../components/LoadMore.vue";
-import NameComponent from "../components/NameComponent.vue";
-import TimeDivider from "../components/TimeDivider.vue";
-import Stateful from "../components/Stateful.vue";
-import MenuList from "../components/MenuList.vue";
-import UserPopup from "@/components/Popups/UserPopup.vue";
-import MyPopover from "@/components/MyPopover/index.vue";
-import MessageEditingBox from "../components/MessageEditingBox.vue";
-import AssistantMessage from "../components/AssistantMessage.vue";
+import { getMessageList, revokeMsg, setMessageRead, translateText } from "@/service/im-sdk-api"
+import { useAppStore, useChatStore, useGroupStore, useUserStore } from "@/stores"
+import { download, isSelf, isTime, msgOne, msgType } from "@/utils/chat"
+import { getTime } from "@/utils/common"
+import { showConfirmationBox } from "@/utils/message"
+import emitter from "@/utils/mitt-bus"
+import { timeFormat } from "@/utils/timeFormat"
 
-const UserPopupRef = ref();
-const timeout = ref(false);
-const isRight = ref(true);
-const contextMenuItems = shallowRef<ContextmenuItem[]>([]);
-const menuItemInfo = ref<DB_Message | null>(null);
-const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null);
-const messageViewRef = ref<HTMLDivElement | null>(null);
+import AssistantMessage from "../components/AssistantMessage.vue"
+import Checkbox from "../components/Checkbox.vue"
+import LoadMore from "../components/LoadMore.vue"
+import MenuList from "../components/MenuList.vue"
+import MessageEditingBox from "../components/MessageEditingBox.vue"
+import NameComponent from "../components/NameComponent.vue"
+import Stateful from "../components/Stateful.vue"
+import TimeDivider from "../components/TimeDivider.vue"
+import { avatarMenu, menuOptionsList } from "../utils/menu"
+import { handleCopyMsg, validateLastMessage } from "../utils/utils"
 
-const groupStore = useGroupStore();
-const chatStore = useChatStore();
-const appStore = useAppStore();
-const userStore = useUserStore();
+const UserPopupRef = ref()
+const timeout = ref(false)
+const isRight = ref(true)
+const contextMenuItems = shallowRef<ContextmenuItem[]>([])
+const menuItemInfo = ref<DB_Message | null>(null)
+const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null)
+const messageViewRef = ref<HTMLDivElement | null>(null)
+
+const groupStore = useGroupStore()
+const chatStore = useChatStore()
+const appStore = useAppStore()
+const userStore = useUserStore()
 
 const {
   isAssistant,
@@ -173,56 +149,54 @@ const {
   scrollTopID,
   currentMessageList,
   currentConversation,
-} = storeToRefs(chatStore);
+} = storeToRefs(chatStore)
 
 const isMessageSelected = (messageId: string) => {
-  return chatStore.isMessageSelected(messageId);
-};
+  return chatStore.isMessageSelected(messageId)
+}
 
 const getSelectedMessageClass = (item: DB_Message) => {
-  return isMessageSelected(item.ID) ? "style-select" : "";
-};
+  return isMessageSelected(item.ID) ? "style-select" : ""
+}
 
 useEventListener(window, "focus", () => {
-  setMessageRead(currentConversation.value);
-});
+  setMessageRead(currentConversation.value)
+})
 
 const updateLoadMore = (id: string) => {
   nextTick(() => {
-    const el = document.getElementById(`choice-${id}`);
+    const el = document.getElementById(`choice-${id}`)
     if (el) {
-      el.scrollIntoView({ block: "start" });
+      el.scrollIntoView({ block: "start" })
     } else {
-      console.warn("未找到对应的元素");
+      console.warn("未找到对应的元素")
     }
-  });
-};
+  })
+}
 
 const fnAvatar = (item: DB_Message) => {
   if (isSelf(item) && __LOCAL_MODE__) {
-    return userStore.getUserAvatar;
+    return userStore.getUserAvatar
   } else {
-    return item.avatar || getAiAvatarUrl(item.from);
+    return item.avatar || getAiAvatarUrl(item.from)
   }
-};
+}
 
 const displayInfo = (info: string) => {
-  if (!info) return "unknown";
-  return info.slice(0, 2).toUpperCase();
-};
+  if (!info) return "unknown"
+  return info.slice(0, 2).toUpperCase()
+}
 
 const showAvatar = (item: DB_Message) => {
-  return !item.isRevoked && item.type !== "TIMGroupTipElem";
-};
+  return !item.isRevoked && item.type !== "TIMGroupTipElem"
+}
 
 const classMessageViewItem = (item: DB_Message) => {
   return [
     isSelf(item) ? "is-self" : "is-other",
-    isMultiSelectMode.value && !item.isRevoked && item.type !== "TIMGroupTipElem"
-      ? "style-choice"
-      : "",
-  ];
-};
+    isMultiSelectMode.value && !item.isRevoked && item.type !== "TIMGroupTipElem" ? "style-choice" : "",
+  ]
+}
 
 const classMessageInfoView = () => {
   return [
@@ -230,100 +204,100 @@ const classMessageInfoView = () => {
     chatStore.replyMsgData ? "style-reply" : "",
     chatStore.isFullscreenInputActive ? "chat-h-full" : "",
     chatStore.isMultiSelectMode ? "multi-select-mode" : "",
-  ];
-};
+  ]
+}
 
 const toggleMessageSelection = (item: DB_Message, forceChecked: boolean | null = null) => {
   // tip消息 撤回消息
   if (!isMultiSelectMode.value || item.type == "TIMGroupTipElem" || item.isRevoked) {
-    return;
+    return
   }
 
-  const isCurrentlySelected = chatStore.isMessageSelected(item.ID);
+  const isCurrentlySelected = chatStore.isMessageSelected(item.ID)
 
   if (forceChecked !== null && forceChecked && !isCurrentlySelected && chatStore.isFwdDataMaxed) {
-    window.$message?.error(`最多只能选择${MULTIPLE_CHOICE_MAX}条`);
-    return;
+    window.$message?.error(`最多只能选择${MULTIPLE_CHOICE_MAX}条`)
+    return
   }
 
-  chatStore.toggleMessageSelection(item, forceChecked);
-};
+  chatStore.toggleMessageSelection(item, forceChecked)
+}
 
 const handleSelect = (item: DB_Message, type = "initial") => {
   if (type === "choice") {
-    toggleMessageSelection(item, true);
-    return;
+    toggleMessageSelection(item, true)
+    return
   }
 
-  toggleMessageSelection(item);
-};
+  toggleMessageSelection(item)
+}
 
 const onClickAvatar = (e: Event | null, item: DB_Message) => {
   if (__LOCAL_MODE__ && isSelf(item)) {
-    UserPopupRef.value.show();
-    return;
+    UserPopupRef.value.show()
+    return
   }
-  if (isSelf(item) || isMultiSelectMode.value) return;
-  const { conversationID: id } = item || {};
-  if (id === "@TIM#SYSTEM") return;
-  emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item });
-};
+  if (isSelf(item) || isMultiSelectMode.value) return
+  const { conversationID: id } = item || {}
+  if (id === "@TIM#SYSTEM") return
+  emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item })
+}
 
 // 检查滚动条是否到达页面底部
 const isScrolledToBottom = (lower = 2) => {
   try {
-    let threshold = lower;
-    const wrapRef = scrollbarRef.value?.wrapRef;
-    if (!wrapRef) return false;
+    let threshold = lower
+    const wrapRef = scrollbarRef.value?.wrapRef
+    if (!wrapRef) return false
 
-    const { scrollTop, clientHeight, scrollHeight } = wrapRef;
-    const isBot = scrollHeight - (scrollTop + clientHeight) < threshold;
-    if (isBot) console.log("isScrolledToBottom: 到底部");
-    return isBot;
+    const { scrollTop, clientHeight, scrollHeight } = wrapRef
+    const isBot = scrollHeight - (scrollTop + clientHeight) < threshold
+    if (isBot) console.log("isScrolledToBottom: 到底部")
+    return isBot
   } catch {
-    return false;
+    return false
   }
-};
+}
 
 const loadMoreMessages = () => {
-  emitter.emit("handleToBottom", isScrolledToBottom());
-};
+  emitter.emit("handleToBottom", isScrolledToBottom())
+}
 
-const debouncedFunc = debounce(loadMoreMessages, 300);
+const debouncedFunc = debounce(loadMoreMessages, 300)
 
 const loadMore = (direction: string) => {
   if (direction === "top") {
-    loadMoreMsg();
+    loadMoreMsg()
   } else if (direction === "bottom") {
-    emitter.emit("handleToBottom", true);
+    emitter.emit("handleToBottom", true)
   }
-};
+}
 
 const handleScrollbar = (data) => {
-  debouncedFunc(data);
-};
+  debouncedFunc(data)
+}
 
 const updateScrollBarHeight = (type?: string) => {
   if (type) {
-    console.log("scrollBar:", type);
+    console.log("scrollBar:", type)
   }
   nextTick(() => {
     // scrollbarRef.value?.setScrollTop(0);
-    scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight);
-  });
-};
+    scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight)
+  })
+}
 
 const updateScrollbar = () => {
   nextTick(() => {
-    scrollbarRef.value?.update();
-  });
-};
+    scrollbarRef.value?.update()
+  })
+}
 
 const loadMoreMsg = async () => {
   try {
-    const { conversationID: sessionId } = currentConversation.value;
-    const msglist = currentMessageList.value;
-    const nextMsg = validateLastMessage(msglist);
+    const { conversationID: sessionId } = currentConversation.value
+    const msglist = currentMessageList.value
+    const nextMsg = validateLastMessage(msglist)
     // console.log("nextMsg:", nextMsg);
 
     if (nextMsg?.type === "TIMCustomElem") {
@@ -338,176 +312,171 @@ const loadMoreMsg = async () => {
     const result = await getMessageList({
       conversationID: sessionId,
       nextReqMessageID: nextMsg.ID,
-    });
+    })
 
     // console.log("getMessageList:", result);
-    const { isCompleted, messageList, nextReqMessageID } = result;
+    const { isCompleted, messageList, nextReqMessageID } = result
     if (!messageList.length && isCompleted) {
       // console.log("[chat] 没有更多消息了 loadMoreMsg:");
-      chatStore.setNoMore(true);
+      chatStore.setNoMore(true)
     } else if (messageList.length) {
-      chatStore.setScrollTopID(nextMsg?.ID);
-      chatStore.loadMoreMessages({ sessionId, messages: messageList, msgId: messageList[0].ID });
+      chatStore.setScrollTopID(nextMsg?.ID)
+      chatStore.loadMoreMessages({ sessionId, messages: messageList, msgId: messageList[0].ID })
     } else {
-      chatStore.setNoMore(true);
+      chatStore.setNoMore(true)
     }
   } catch (e) {
-    console.error("loadMoreMsg:", e);
-    chatStore.setNoMore(true);
+    console.error("loadMoreMsg:", e)
+    chatStore.setNoMore(true)
   }
-};
+}
 
 const handleContextAvatarMenuEvent = (_: Event, item: DB_Message) => {
-  const { flow } = item;
-  const type = currentType.value;
+  const { flow } = item
+  const type = currentType.value
   // 单人 & 自己发送的消息 & 系统消息
   if (type === "C2C" || flow === "out" || item.type === "TIMGroupSystemNoticeElem") {
-    isRight.value = false;
-    return;
+    isRight.value = false
+    return
   }
-  isRight.value = true;
-  menuItemInfo.value = item;
-  contextMenuItems.value = avatarMenu;
-};
+  isRight.value = true
+  menuItemInfo.value = item
+  contextMenuItems.value = avatarMenu
+}
 
 const handleContextMenuEvent = (_: Event, item: DB_Message) => {
-  const { isRevoked, time, type } = item;
+  const { isRevoked, time, type } = item
   const messageTypes = {
     isFile: type === "TIMFileElem",
     isRelay: type === "TIMRelayElem",
     isCustom: type === "TIMCustomElem",
     isSystemNotice: type === "TIMGroupSystemNoticeElem",
     isGroupTip: type === "TIMGroupTipElem",
-  };
+  }
   // 撤回消息 多选状态 系统类型消息 提示类型消息
-  if (
-    isRevoked ||
-    isMultiSelectMode.value ||
-    messageTypes.isSystemNotice ||
-    messageTypes.isGroupTip
-  ) {
-    isRight.value = false;
-    return;
+  if (isRevoked || isMultiSelectMode.value || messageTypes.isSystemNotice || messageTypes.isGroupTip) {
+    isRight.value = false
+    return
   }
 
-  console.log("handleContextMenuEvent:", item);
+  console.log("handleContextMenuEvent:", item)
 
-  let menuItems = [...menuOptionsList];
-  const canRevoke = getTime() - time < 120; // 两分钟内可撤回
-  const isGroupOwner = groupStore.isOwner && currentType.value === "GROUP";
-  const isFromSelf = isSelf(item);
+  let menuItems = [...menuOptionsList]
+  const canRevoke = getTime() - time < 120 // 两分钟内可撤回
+  const isGroupOwner = groupStore.isOwner && currentType.value === "GROUP"
+  const isFromSelf = isSelf(item)
   // 对方消息 超过撤回时间
   if (!isFromSelf || !canRevoke) {
-    menuItems = menuItems.filter((t) => t.id !== "revoke");
+    menuItems = menuItems.filter((t) => t.id !== "revoke")
   }
   // 群主 & 群聊 & 不限制2分钟撤回时间
   if (isGroupOwner) {
-    menuItems = [...menuOptionsList];
+    menuItems = [...menuOptionsList]
   }
   // 合并消息
   if (messageTypes.isRelay) {
-    menuItems = menuItems.filter((t) => t.id !== "copy");
+    menuItems = menuItems.filter((t) => t.id !== "copy")
   }
   // 非文件消息过滤另存为
   if (!messageTypes.isFile) {
-    menuItems = menuItems.filter((t) => t.id !== "saveAs");
+    menuItems = menuItems.filter((t) => t.id !== "saveAs")
   }
   // 文件消息 非electron环境下过滤复制
   if (messageTypes.isFile && !__IS_ELECTRON__) {
-    menuItems = menuItems.filter((t) => t.id !== "copy");
+    menuItems = menuItems.filter((t) => t.id !== "copy")
   }
   // ai消息过滤 撤回 回复
   if (isAssistant.value) {
-    menuItems = menuItems.filter((t) => t.id !== "reply" && t.id !== "revoke");
+    menuItems = menuItems.filter((t) => t.id !== "reply" && t.id !== "revoke")
   }
 
   if (messageTypes.isCustom) {
-    menuItems = menuItems.filter((t) => t.id === "delete");
+    menuItems = menuItems.filter((t) => t.id === "delete")
   }
 
-  timeout.value = !canRevoke;
-  isRight.value = true;
-  menuItemInfo.value = item;
-  contextMenuItems.value = menuItems;
-};
+  timeout.value = !canRevoke
+  isRight.value = true
+  menuItemInfo.value = item
+  contextMenuItems.value = menuItems
+}
 
 const handleRightClick = (data: { id: string }) => {
-  const info = menuItemInfo.value as DB_Message;
-  const { id } = data || {};
+  const info = menuItemInfo.value as DB_Message
+  const { id } = data || {}
   switch (id) {
     case "refresh": // 重新生成
-      handleRefreshMsg(info);
-      break;
+      handleRefreshMsg(info)
+      break
     case "send": // 发起会话
-      handleSendMessage(info);
-      break;
+      handleSendMessage(info)
+      break
     case "ait": // @对方
-      handleAt(info);
-      break;
+      handleAt(info)
+      break
     case "copy": // 复制
-      handleCopyMsg(info);
-      break;
+      handleCopyMsg(info)
+      break
     case "translate": // 翻译
-      handleTranslate(info);
-      break;
+      handleTranslate(info)
+      break
     case "revoke": // 撤回
-      handleRevokeMsg(info);
-      break;
+      handleRevokeMsg(info)
+      break
     case "forward": // 转发
-      handleForward(info);
-      break;
+      handleForward(info)
+      break
     case "saveAs": // 另存为
-      handleSave(info);
-      break;
+      handleSave(info)
+      break
     case "reply": // 回复
-      handleReplyMsg(info);
-      break;
+      handleReplyMsg(info)
+      break
     case "multiSelect": // 多选
-      handleMultiSelectMsg(info);
-      break;
+      handleMultiSelectMsg(info)
+      break
     case "delete": // 删除
-      handleDeleteMsg(info);
-      break;
+      handleDeleteMsg(info)
+      break
   }
-};
+}
 
 const handleSingleClick = ({ item, id }) => {
-  menuItemInfo.value = item;
-  handleRightClick({ id });
-};
+  menuItemInfo.value = item
+  handleRightClick({ id })
+}
 
 const handleAt = (data: DB_Message) => {
-  const { from, nick, conversationType: type } = data;
-  if (type === "C2C") return;
-  emitter.emit("handleAt", { id: from, name: nick });
-};
+  const { from, nick, conversationType: type } = data
+  if (type === "C2C") return
+  emitter.emit("handleAt", { id: from, name: nick })
+}
 
 const handleSendMessage = (data: DB_Message) => {
-  chatStore.addConversation({ sessionId: `C2C${data.from}` });
-};
+  chatStore.addConversation({ sessionId: `C2C${data.from}` })
+}
 
 const handleRefreshMsg = (data: DB_Message) => {
-  console.log("handleRefreshMsg:", data);
-};
+  console.log("handleRefreshMsg:", data)
+}
 
 const handleSave = ({ payload }) => {
   if (!payload.fileUrl || !payload.fileName) {
-    window.$message?.error("文件不存在");
-    return;
+    window.$message?.error("文件不存在")
+    return
   }
-  download(payload.fileUrl, payload.fileName);
-};
+  download(payload.fileUrl, payload.fileName)
+}
 
 const handleTranslate = (data: DB_Message) => {
-  translateText({ textList: data.payload.text });
-};
+  translateText({ textList: data.payload.text })
+}
 
-const handleForward = (data: DB_Message) => {};
+const handleForward = (data: DB_Message) => {}
 
 const handleReplyMsg = (data: DB_Message) => {
-  chatStore.setReplyMsgData(data);
-  if (!isSelf(data)) handleAt(data);
-};
+  chatStore.setReplyMsgData(data)
+  if (!isSelf(data)) handleAt(data)
+}
 
 const handleDeleteMsg = async (data: DB_Message) => {
   // const result = await showConfirmationBox({ message: "确定删除消息?", iconType: "warning" });
@@ -516,74 +485,74 @@ const handleDeleteMsg = async (data: DB_Message) => {
     sessionId: data.conversationID,
     messageIdArray: [data.ID],
     message: [data],
-  });
-};
+  })
+}
 
 const handleMultiSelectMsg = (item: DB_Message) => {
-  chatStore.toggleMultiSelectMode(true);
-  chatStore.setReplyMsgData(null);
+  chatStore.toggleMultiSelectMode(true)
+  chatStore.setReplyMsgData(null)
   // updateLoadMore(item?.ID);
-  handleSelect(item, "choice");
-};
+  handleSelect(item, "choice")
+}
 
 const handleRevokeChange = (data: DB_Message, type: string) => {
-  if (data.type !== "TIMTextElem") return;
-  chatStore.updateRevokeMsg({ data, type });
-};
+  if (data.type !== "TIMTextElem") return
+  chatStore.updateRevokeMsg({ data, type })
+}
 
 const handleRevokeMsg = async (data: DB_Message) => {
   if (timeout.value) {
-    const result = await showConfirmationBox({ message: "确定撤回这条消息?", iconType: "warning" });
-    if (result === "cancel") return;
+    const result = await showConfirmationBox({ message: "确定撤回这条消息?", iconType: "warning" })
+    if (result === "cancel") return
   }
-  const { code, message } = await revokeMsg(data);
-  if (code !== 0) return;
-  if (message.flow !== "out") return;
-  handleRevokeChange(message, "set");
+  const { code, message } = await revokeMsg(data)
+  if (code !== 0) return
+  if (message.flow !== "out") return
+  handleRevokeChange(message, "set")
   setTimeout(() => {
-    handleRevokeChange(message, "delete");
-  }, 60000);
-};
+    handleRevokeChange(message, "delete")
+  }, 60000)
+}
 
 function onEmitter() {
   emitter.on("updateScroll", (type: string) => {
     if (type === "bottom") {
-      isScrolledToBottom() && updateScrollBarHeight();
+      isScrolledToBottom() && updateScrollBarHeight()
     } else if (type === "robot") {
-      isScrolledToBottom(10) && updateScrollBarHeight();
+      isScrolledToBottom(10) && updateScrollBarHeight()
     } else {
-      updateScrollBarHeight(type);
+      updateScrollBarHeight(type)
     }
-  });
+  })
 }
 
 function offEmitter() {
-  emitter.off("updateScroll");
+  emitter.off("updateScroll")
 }
 
 watch(
   () => scrollTopID.value,
   (data) => {
-    updateLoadMore(data);
+    updateLoadMore(data)
   }
-);
+)
 
 watch(
   () => chatStore.replyMsgData,
   () => {
-    updateScrollbar();
+    updateScrollbar()
   }
-);
+)
 
 onMounted(() => {
-  onEmitter();
-});
+  onEmitter()
+})
 
 onUnmounted(() => {
-  offEmitter();
-});
+  offEmitter()
+})
 
-defineExpose({ updateScrollbar, updateScrollBarHeight });
+defineExpose({ updateScrollbar, updateScrollBarHeight })
 </script>
 
 <style lang="scss" scoped>

@@ -11,14 +11,15 @@
 </template>
 
 <script setup lang="ts">
-import { useChatStore } from "@/stores";
-import MergeMessagePopup from "@/components/Popups/MergeMessagePopup.vue";
-import GroupDetails from "./chat/GroupDetails.vue";
-import Message from "./message.vue";
+import MergeMessagePopup from "@/components/Popups/MergeMessagePopup.vue"
+import { useChatStore } from "@/stores"
 
-const chatStore = useChatStore();
+import GroupDetails from "./chat/GroupDetails.vue"
+import Message from "./message.vue"
 
-const { currentConversation, isGroupChat } = storeToRefs(chatStore);
+const chatStore = useChatStore()
+
+const { currentConversation, isGroupChat } = storeToRefs(chatStore)
 </script>
 
 <style lang="scss" scoped></style>

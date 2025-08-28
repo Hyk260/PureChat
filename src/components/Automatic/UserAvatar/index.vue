@@ -1,15 +1,12 @@
 <template>
   <div>
-    <div
-      v-if="type === 'group'"
-      :class="['user-avatar', 'default', className, shape]"
-      :style="backInfo(url)"
-    >
+    <div v-if="type === 'group'" class="user-avatar default" :class="[className, shape]" :style="backInfo(url)">
       {{ url ? null : displayInfo(nickName) }}
     </div>
     <el-avatar
       v-else-if="type === 'single'"
-      :class="['avatar', className]"
+      class="avatar"
+      :class="[className]"
       shape="square"
       :size="size"
       :src="url || getAiAvatarUrl(sessionId) || shapeObj[shape]"
@@ -18,25 +15,16 @@
       <img :src="emptyUrl" />
     </el-avatar>
     <!-- 自己 -->
-    <div
-      v-else-if="type === 'self'"
-      class="badge"
-      :style="{ height: `${size}px`, width: `${size}px` }"
-    >
+    <div v-else-if="type === 'self'" class="badge" :style="{ height: `${size}px`, width: `${size}px` }">
       <span
         v-if="IS_LOCAL_MODE && userLocalStore?.native"
-        :style="{ fontSize: `${size-8}px` }"
+        :style="{ fontSize: `${size - 8}px` }"
         class="cursor-pointer flex-c font-size-32"
       >
         {{ userLocalStore?.native }}
       </span>
-      <el-avatar
-        v-else-if="userProfile?.avatar"
-        :size="size"
-        :src="fnAvatar(userProfile.avatar)"
-        :shape="shape"
-      />
-      <div v-else :class="['user-avatar', 'default', className, shape]" :style="backInfo(url)">
+      <el-avatar v-else-if="userProfile?.avatar" :size="size" :src="fnAvatar(userProfile.avatar)" :shape="shape" />
+      <div v-else class="user-avatar default" :class="[className, shape]" :style="backInfo(url)">
         {{ url ? null : displayInfo(userProfile.nick || userProfile.userID) }}
       </div>
       <!-- <sup v-if="isDot" class="is-dot"></sup> -->
@@ -45,13 +33,13 @@
 </template>
 
 <script setup>
-import { getAiAvatarUrl } from "@/ai/utils";
-import { circleUrl, squareUrl, emptyUrl } from "@/utils/chat";
-import { useUserStore } from "@/stores/modules/user";
+import { getAiAvatarUrl } from "@/ai/utils"
+import { useUserStore } from "@/stores/modules/user"
+import { circleUrl, emptyUrl, squareUrl } from "@/utils/chat"
 
 defineOptions({
   name: "UserAvatar",
-});
+})
 
 const props = defineProps({
   className: {
@@ -86,7 +74,7 @@ const props = defineProps({
     type: String,
     default: "group",
     validator: (value) => {
-      return ["single", "group", "self"].includes(value);
+      return ["single", "group", "self"].includes(value)
     },
   },
   shape: {
@@ -94,36 +82,36 @@ const props = defineProps({
     default: "circle",
     validator: (value) => {
       // 圆形 方形
-      return ["square", "circle"].includes(value);
+      return ["square", "circle"].includes(value)
     },
   },
-});
+})
 
 const shapeObj = {
   circle: circleUrl,
   square: squareUrl,
-};
+}
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 
-const { userProfile, userLocalStore } = storeToRefs(userStore);
+const { userProfile, userLocalStore } = storeToRefs(userStore)
 
 const displayInfo = (info) => {
-  if (!info) return "unknown";
-  return info.slice(0, props.words).toUpperCase();
-};
+  if (!info) return "unknown"
+  return info.slice(0, props.words).toUpperCase()
+}
 
 const fnAvatar = (url) => {
   if (__LOCAL_MODE__) {
-    return userStore.getUserAvatar;
+    return userStore.getUserAvatar
   } else {
-    return url;
+    return url
   }
-};
+}
 
 const backInfo = (url) => {
-  return { backgroundImage: url ? `url(${url})` : "" };
-};
+  return { backgroundImage: url ? `url(${url})` : "" }
+}
 </script>
 
 <style lang="scss" scoped>

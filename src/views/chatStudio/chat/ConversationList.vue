@@ -76,200 +76,202 @@
 </template>
 
 <script setup>
-import { h, ref, computed } from "vue";
-import { BellOff } from "lucide-vue-next";
-import { storeToRefs } from "pinia";
-import { isObject } from "lodash-es";
-import { chatSessionListData } from "../utils/menu";
-import { pinConversation } from "@/service/im-sdk-api";
-import { timeFormat } from "@/utils/timeFormat";
-import { Contextmenu, ContextmenuItem } from "v-contextmenu";
-import { chatName, formatContent } from "@/utils/chat";
-import { encodeHTML } from "@/utils/common";
-import { useHandlerDrop } from "@/hooks/useHandlerDrop";
-import { setMessageRemindType } from "@/service/im-sdk-api";
-import { useGroupStore, useUserStore, useChatStore } from "@/stores";
-import EmptyMessage from "../components/EmptyMessage.vue";
-import VirtualList from "./VirtualList.vue";
-import Label from "../components/Label.vue";
-import emitter from "@/utils/mitt-bus";
+import { isObject } from "lodash-es"
+import { BellOff } from "lucide-vue-next"
+import { storeToRefs } from "pinia"
+import { Contextmenu, ContextmenuItem } from "v-contextmenu"
+import { computed, h, ref } from "vue"
 
-const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop();
+import { useHandlerDrop } from "@/hooks/useHandlerDrop"
+import { pinConversation } from "@/service/im-sdk-api"
+import { setMessageRemindType } from "@/service/im-sdk-api"
+import { useChatStore, useGroupStore, useUserStore } from "@/stores"
+import { chatName, formatContent } from "@/utils/chat"
+import { encodeHTML } from "@/utils/common"
+import emitter from "@/utils/mitt-bus"
+import { timeFormat } from "@/utils/timeFormat"
 
-const isEnableVirtualList = ref(false);
-const isRight = ref(true);
-const contextMenuItems = ref([]);
-const contextMenuItemInfo = ref([]);
+import EmptyMessage from "../components/EmptyMessage.vue"
+import Label from "../components/Label.vue"
+import { chatSessionListData } from "../utils/menu"
+import VirtualList from "./VirtualList.vue"
 
-const groupStore = useGroupStore();
-const userStore = useUserStore();
-const chatStore = useChatStore();
+const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop()
 
-const { conversationList, searchConversationList, currentSessionId } = storeToRefs(chatStore);
+const isEnableVirtualList = ref(false)
+const isRight = ref(true)
+const contextMenuItems = ref([])
+const contextMenuItemInfo = ref([])
+
+const groupStore = useGroupStore()
+const userStore = useUserStore()
+const chatStore = useChatStore()
+
+const { conversationList, searchConversationList, currentSessionId } = storeToRefs(chatStore)
 
 const searchForData = computed(() => {
   if (searchConversationList.value.length) {
-    return searchConversationList.value;
+    return searchConversationList.value
   } else {
-    return conversationList.value;
+    return conversationList.value
   }
-});
+})
 
 const isDraft = (item) => {
-  const id = item.conversationID;
-  return id !== currentSessionId.value && chatStore.chatDraftMap.has(id);
-};
+  const id = item.conversationID
+  return id !== currentSessionId.value && chatStore.chatDraftMap.has(id)
+}
 
 const isNotify = (item) => {
-  return item.messageRemindType === "AcceptNotNotify";
-};
+  return item.messageRemindType === "AcceptNotNotify"
+}
 
 const isShowCount = (item) => {
-  return item.unreadCount === 0;
-};
+  return item.unreadCount === 0
+}
 
 const isMention = (item) => {
-  return item.groupAtInfoList?.length > 0;
-};
+  return item.groupAtInfoList?.length > 0
+}
 
-const fnClass = (item) => (item?.conversationID === currentSessionId.value ? "is-active" : "");
+const fnClass = (item) => (item?.conversationID === currentSessionId.value ? "is-active" : "")
 
 const formatNewsMessage = (data) => {
-  if (!isObject(data)) return "";
-  const { type, lastMessage, unreadCount } = data;
-  const { messageForShow: rawTip, fromAccount, isRevoked, nick, type: lastType } = lastMessage;
-  const isOther = userStore.userProfile?.userID !== fromAccount; // 其他人消息
-  const isFound = fromAccount === "@TLS#NOT_FOUND"; // 未知消息
-  const isSystem = type === "@TIM#SYSTEM"; //系统消息
-  const isGroup = type === "GROUP"; //群聊
-  const isCount = unreadCount && isNotify(data); // 未读消息计数
-  const MAX_TIP_LENGTH = 46;
+  if (!isObject(data)) return ""
+  const { type, lastMessage, unreadCount } = data
+  const { messageForShow: rawTip, fromAccount, isRevoked, nick, type: lastType } = lastMessage
+  const isOther = userStore.userProfile?.userID !== fromAccount // 其他人消息
+  const isFound = fromAccount === "@TLS#NOT_FOUND" // 未知消息
+  const isSystem = type === "@TIM#SYSTEM" //系统消息
+  const isGroup = type === "GROUP" //群聊
+  const isCount = unreadCount && isNotify(data) // 未读消息计数
+  const MAX_TIP_LENGTH = 46
 
-  const formatTip = (t) => (t.length > MAX_TIP_LENGTH ? `${t.slice(0, MAX_TIP_LENGTH)}...` : t);
+  const formatTip = (t) => (t.length > MAX_TIP_LENGTH ? `${t.slice(0, MAX_TIP_LENGTH)}...` : t)
 
-  const tip = formatTip(rawTip || "");
+  const tip = formatTip(rawTip || "")
   // 处理撤回消息
   if (isRevoked) {
-    return `${isOther ? nick : "你"}撤回了一条消息`;
+    return `${isOther ? nick : "你"}撤回了一条消息`
   }
   // 处理免打扰消息
   if (isCount) {
-    const prefix = `[${unreadCount}条] `;
+    const prefix = `[${unreadCount}条] `
     if (lastType === "TIMGroupTipElem") {
-      return `${prefix} ${tip}`;
+      return `${prefix} ${tip}`
     }
-    const sender = isGroup && isOther ? `${nick || "未知用户"}: ` : "";
-    return `${prefix}${sender}${tip}`;
+    const sender = isGroup && isOther ? `${nick || "未知用户"}: ` : ""
+    return `${prefix}${sender}${tip}`
   }
   // 处理未知或系统消息
-  if (isFound || isSystem) return tip;
+  if (isFound || isSystem) return tip
   // 处理群聊消息
   if (isGroup && isOther) {
     if (lastType === "TIMGroupTipElem") {
-      return tip;
+      return tip
     } else if (nick) {
-      return `${nick}: ${tip}`;
+      return `${nick}: ${tip}`
     } else {
-      tip;
+      tip
     }
   }
   // 默认返回消息内容
-  return tip;
-};
+  return tip
+}
 // 定义消息提示元素
 const createMessagePrompt = (type = "at") => {
-  const messageTypes = { at: "有人@我", draft: "草稿" };
-  return `<span style='color:#f44336;'>[${messageTypes[type]}]</span>`;
-};
+  const messageTypes = { at: "有人@我", draft: "草稿" }
+  return `<span style='color:#f44336;'>[${messageTypes[type]}]</span>`
+}
 
 // 定义消息提示元素
 const CustomMention = (props) => {
-  const { item } = props;
-  const { lastMessage, conversationID: ID, unreadCount } = item;
-  const { messageForShow, nick: lastNick } = lastMessage;
-  const draft = chatStore.chatDraftMap.get(ID);
+  const { item } = props
+  const { lastMessage, conversationID: ID, unreadCount } = item
+  const { messageForShow, nick: lastNick } = lastMessage
+  const draft = chatStore.chatDraftMap.get(ID)
   // 草稿
   if (draft && isDraft(item)) {
-    const str = encodeHTML(formatContent(draft));
-    return h("span", { innerHTML: `${createMessagePrompt("draft")} ${str}` });
+    const str = encodeHTML(formatContent(draft))
+    return h("span", { innerHTML: `${createMessagePrompt("draft")} ${str}` })
   }
   // @消息
-  const isUnread = unreadCount !== 0; // 消息是否未读
-  const mention = `${isUnread ? `${createMessagePrompt("at")}` : ""} ${lastNick}: ${messageForShow}`;
-  return h("span", { innerHTML: mention });
-};
+  const isUnread = unreadCount !== 0 // 消息是否未读
+  const mention = `${isUnread ? `${createMessagePrompt("at")}` : ""} ${lastNick}: ${messageForShow}`
+  return h("span", { innerHTML: mention })
+}
 // 消息列表 右键菜单
 const handleContextMenuEvent = (e, item) => {
-  const { type } = item;
-  const isSystem = type === "@TIM#SYSTEM";
+  const { type } = item
+  const isSystem = type === "@TIM#SYSTEM"
   // 系统通知屏蔽右键菜单
   if (isSystem) {
-    isRight.value = false;
-    return;
+    isRight.value = false
+    return
   }
-  isRight.value = true;
-  contextMenuItemInfo.value = item;
-  contextMenuItems.value = chatSessionListData;
+  isRight.value = true
+  contextMenuItemInfo.value = item
+  contextMenuItems.value = chatSessionListData
 
   contextMenuItems.value = contextMenuItems.value.filter((t) => {
     if (item.isPinned) {
-      return t.id !== "pinged";
+      return t.id !== "pinged"
     } else {
-      return t.id !== "unpin";
+      return t.id !== "unpin"
     }
-  });
+  })
 
   contextMenuItems.value = contextMenuItems.value.filter((t) => {
     if (item.messageRemindType === "AcceptNotNotify") {
-      return t.id !== "AcceptNotNotify";
+      return t.id !== "AcceptNotNotify"
     } else {
-      return t.id !== "AcceptAndNotify";
+      return t.id !== "AcceptAndNotify"
     }
-  });
-};
+  })
+}
 
 const handleConversationListClick = (data) => {
-  console.log("会话点击 handleConversationListClick:", data);
-  if (currentSessionId.value === data?.conversationID) return;
-  chatStore.setMsgEdit(null);
-  chatStore.setReplyMsgData(null);
-  chatStore.setForwardData({ type: "clear" });
-  chatStore.updateSelectedConversation(data);
-  chatStore.updateMessageList(data);
+  console.log("会话点击 handleConversationListClick:", data)
+  if (currentSessionId.value === data?.conversationID) return
+  chatStore.setMsgEdit(null)
+  chatStore.setReplyMsgData(null)
+  chatStore.setForwardData({ type: "clear" })
+  chatStore.updateSelectedConversation(data)
+  chatStore.updateMessageList(data)
   if (data?.type === "GROUP") {
-    groupStore.handleGroupProfile(data);
-    groupStore.handleGroupMemberList({ groupID: data.groupProfile.groupID });
+    groupStore.handleGroupProfile(data)
+    groupStore.handleGroupMemberList({ groupID: data.groupProfile.groupID })
   }
   emitter.emit("handleInsertDraft", {
     sessionId: data?.conversationID,
-  });
-  emitter.emit("updateScroll");
-};
+  })
+  emitter.emit("updateScroll")
+}
 
 const handleClickMenuItem = (item) => {
-  const data = contextMenuItemInfo.value;
+  const data = contextMenuItemInfo.value
   if (item.id === "pinged" || item.id === "unpin") {
-    pingConversation(data); // 置顶 or 取消置顶
+    pingConversation(data) // 置顶 or 取消置顶
   } else if (item.id === "AcceptNotNotify" || item.id === "AcceptAndNotify") {
-    disableRecMsg(data); // 消息免打扰 or 允许消息提醒
+    disableRecMsg(data) // 消息免打扰 or 允许消息提醒
   } else if (item.id === "remove") {
-    removeConversation(data); // 删除会话
+    removeConversation(data) // 删除会话
   } else if (item.id === "clean") {
-    console.log("清除消息"); // 清除消息
+    console.log("清除消息") // 清除消息
   }
-};
+}
 // 消息免打扰
 const disableRecMsg = async (data) => {
-  await setMessageRemindType(data);
-};
+  await setMessageRemindType(data)
+}
 
 const removeConversation = async (data) => {
-  chatStore.deleteSession({ sessionId: data.conversationID });
-};
+  chatStore.deleteSession({ sessionId: data.conversationID })
+}
 
 const pingConversation = async (data) => {
-  await pinConversation(data);
-};
+  await pinConversation(data)
+}
 </script>
 
 <style lang="scss" scoped>

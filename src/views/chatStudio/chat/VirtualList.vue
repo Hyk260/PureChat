@@ -1,11 +1,5 @@
 <template>
-  <RecycleScroller
-    v-slot="{ item }"
-    class="scroller"
-    :items="items"
-    :item-size="32"
-    key-field="conversationID"
-  >
+  <RecycleScroller v-slot="{ item }" class="scroller" :items="items" :item-size="32" key-field="conversationID">
     <div class="item">
       {{ item.name }}
     </div>
@@ -13,25 +7,25 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { RecycleScroller } from "vue-virtual-scroller";
+import { computed } from "vue"
+import { RecycleScroller } from "vue-virtual-scroller"
 
 const props = defineProps({
   list: {
     type: Array,
     default: () => [],
   },
-});
+})
 
 const items = computed(() =>
   props.list.length > 0
     ? props.list
     : Array.from({ length: 999 }, (_, i) => ({
         conversationID: i,
-        name: `Item ${i+1}`,
+        name: `Item ${i + 1}`,
         height: 32,
       }))
-);
+)
 </script>
 
 <style lang="scss" scoped>

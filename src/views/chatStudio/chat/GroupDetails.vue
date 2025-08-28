@@ -23,11 +23,7 @@
             <span class="group-name truncate">
               {{ groupProfile.name }}
             </span>
-            <el-icon
-              v-if="isOwner"
-              class="style-editPen icon-hover"
-              @click="openNamePopup"
-            >
+            <el-icon v-if="isOwner" class="style-editPen icon-hover" @click="openNamePopup">
               <EditPen />
             </el-icon>
           </div>
@@ -41,11 +37,7 @@
       <div class="group-notice">
         <div class="pb-10">
           <span>{{ $t("group.groupNotice") }}</span>
-          <el-icon
-            v-if="isOwner"
-            class="style-editPen icon-hover"
-            @click="openNoticePopup"
-          >
+          <el-icon v-if="isOwner" class="style-editPen icon-hover" @click="openNoticePopup">
             <EditPen />
           </el-icon>
         </div>
@@ -66,12 +58,7 @@
         <el-scrollbar always>
           <div class="group-member-avatar">
             <span class="iconify-icon gala-add margin" @click="groupMemberAdd"></span>
-            <div
-              v-for="item in currentMemberList"
-              :key="item.userID"
-              class="avatar margin"
-              @click="navigate(item)"
-            >
+            <div v-for="item in currentMemberList" :key="item.userID" class="avatar margin" @click="navigate(item)">
               <el-icon
                 v-if="isOwner"
                 class="style-close"
@@ -85,9 +72,7 @@
               <div v-if="item.role !== 'Member'" class="wrap-group" :class="`style-${item.role}`">
                 {{ item.role === "Owner" ? "群主" : "管理员" }}
               </div>
-              <div v-else-if="item.userID.includes('@RBT#')" class="wrap-group ai-center">
-                机器人
-              </div>
+              <div v-else-if="item.userID.includes('@RBT#')" class="wrap-group ai-center">机器人</div>
               <span class="nick">{{ item.nick || item.userID }}</span>
             </div>
           </div>
@@ -98,12 +83,7 @@
       <div class="py-12">
         <div class="flex-bc">
           <span> 消息免打扰 </span>
-          <el-switch
-            v-model="notify"
-            :loading="loading"
-            :before-change="beforeChange"
-            @change="setNotify"
-          />
+          <el-switch v-model="notify" :loading="loading" :before-change="beforeChange" @change="setNotify" />
         </div>
       </div>
       <el-divider />
@@ -123,189 +103,190 @@
 </template>
 
 <script setup>
-import { EditPen, CircleCloseFilled } from "@element-plus/icons-vue";
+import { CircleCloseFilled, EditPen } from "@element-plus/icons-vue"
+
+import { isFullStaffGroup } from "@/ai/utils"
+import AddMemberPopup from "@/components/Popups/AddMemberPopup.vue"
+import { useState } from "@/hooks/useState"
+import { restApi } from "@/service/api"
 import {
   addGroupMember,
   deleteGroupMember,
-  updateGroupProfile,
   GroupTypeMap,
   setMessageRemindType,
-} from "@/service/im-sdk-api";
-import { restApi } from "@/service/api";
-import { useState } from "@/hooks/useState";
-import { showConfirmationBox } from "@/utils/message";
-import { isFullStaffGroup } from "@/ai/utils";
-import { isByteLengthExceedingLimit, GroupModifyType } from "@/utils/chat";
-import { useGroupStore, useUserStore, useChatStore } from "@/stores";
-import AddMemberPopup from "@/components/Popups/AddMemberPopup.vue";
-import emitter from "@/utils/mitt-bus";
+  updateGroupProfile,
+} from "@/service/im-sdk-api"
+import { useChatStore, useGroupStore, useUserStore } from "@/stores"
+import { isByteLengthExceedingLimit } from "@/utils/chat"
+import { showConfirmationBox } from "@/utils/message"
+import emitter from "@/utils/mitt-bus"
 
 const { groupProfile } = defineProps({
   groupProfile: {
     type: Object,
     default: () => {},
   },
-});
+})
 
-const notify = ref(false);
-const AddMemberRef = ref();
+const notify = ref(false)
+const AddMemberRef = ref()
 
-const groupStore = useGroupStore();
-const userStore = useUserStore();
-const chatStore = useChatStore();
-const [drawer, setDrawer] = useState();
-const [loading, setLoading] = useState();
+const groupStore = useGroupStore()
+const userStore = useUserStore()
+const chatStore = useChatStore()
+const [drawer, setDrawer] = useState()
+const [loading, setLoading] = useState()
 
-const { currentMemberList, isOwner } = storeToRefs(groupStore);
-const { toAccount, currentSessionId, currentConversation } = storeToRefs(chatStore);
+const { currentMemberList, isOwner } = storeToRefs(groupStore)
+const { toAccount, currentSessionId, currentConversation } = storeToRefs(chatStore)
 
 const beforeChange = () => {
-  setLoading(true);
+  setLoading(true)
   return new Promise((resolve) => {
     setTimeout(() => {
-      setLoading(false);
-      return resolve(true);
-    }, 1000);
-  });
-};
+      setLoading(false)
+      return resolve(true)
+    }, 1000)
+  })
+}
 
 const setNotify = () => {
-  setMessageRemindType(currentConversation.value);
-};
+  setMessageRemindType(currentConversation.value)
+}
 
 const openNamePopup = async () => {
-  const { name } = groupProfile;
-  const data = { message: "输入群名", inputValue: name };
-  const result = await showConfirmationBox(data, "prompt");
-  if (result === "cancel") return;
-  const isByteLeng = isByteLengthExceedingLimit(result.value, "name");
+  const { name } = groupProfile
+  const data = { message: "输入群名", inputValue: name }
+  const result = await showConfirmationBox(data, "prompt")
+  if (result === "cancel") return
+  const isByteLeng = isByteLengthExceedingLimit(result.value, "name")
   if (isByteLeng) {
     // const long = GroupModifyType['name']
-    window.$message?.warning("名称太长");
-    return;
+    window.$message?.warning("名称太长")
+    return
   }
-  modifyGroupInfo(result.value);
-};
+  modifyGroupInfo(result.value)
+}
 
 const openNoticePopup = async () => {
-  const { notification } = groupProfile;
-  const data = { message: "输入群公告", inputValue: notification };
-  const result = await showConfirmationBox(data, "prompt");
-  if (result === "cancel") return;
-  const isByteLeng = isByteLengthExceedingLimit(result.value, "notification");
+  const { notification } = groupProfile
+  const data = { message: "输入群公告", inputValue: notification }
+  const result = await showConfirmationBox(data, "prompt")
+  if (result === "cancel") return
+  const isByteLeng = isByteLengthExceedingLimit(result.value, "notification")
   if (isByteLeng) {
     // const long = GroupModifyType['notification']
-    window.$message?.warning("公告太长");
-    return;
+    window.$message?.warning("公告太长")
+    return
   }
-  modifyGroupInfo(result.value, "notification");
-};
+  modifyGroupInfo(result.value, "notification")
+}
 
-const openDetails = () => {};
+const openDetails = () => {}
 
 const openAvatarPopup = (url) => {
-  emitter.emit("handleImageViewer", url);
-};
+  emitter.emit("handleImageViewer", url)
+}
 
 const handleClose = (done) => {
-  done();
-};
+  done()
+}
 
 const groupMemberAdd = () => {
-  AddMemberRef.value.openDialog();
-};
+  AddMemberRef.value.openDialog()
+}
 
 const navigate = (item) => {
-  chatStore.addConversation({ sessionId: `C2C${item.userID}` });
-  setDrawer(false);
+  chatStore.addConversation({ sessionId: `C2C${item.userID}` })
+  setDrawer(false)
   setTimeout(() => {
-    const dom = document.getElementById(`message_C2C${item.userID}`);
-    dom?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, 200);
-};
+    const dom = document.getElementById(`message_C2C${item.userID}`)
+    dom?.scrollIntoView({ behavior: "smooth", block: "center" })
+  }, 200)
+}
 
 const removeGroupMemberBtn = async (item) => {
-  const data = { message: `确定将 ${item.nick || item.userID} 移出群聊?`, iconType: "warning" };
-  const result = await showConfirmationBox(data);
-  if (result === "cancel") return;
-  const params = { groupID: toAccount.value, user: item.userID };
-  const { code } = await deleteGroupMember(params);
-  if (code !== 0) return;
-  updataGroup();
-};
+  const data = { message: `确定将 ${item.nick || item.userID} 移出群聊?`, iconType: "warning" }
+  const result = await showConfirmationBox(data)
+  if (result === "cancel") return
+  const params = { groupID: toAccount.value, user: item.userID }
+  const { code } = await deleteGroupMember(params)
+  if (code !== 0) return
+  updataGroup()
+}
 
 const addGroupMemberBtn = async (value) => {
-  const { groupID, type } = groupProfile;
-  const { toAccount } = value;
+  const { groupID, type } = groupProfile
+  const { toAccount } = value
   if (type === "Public") {
     const { ErrorCode } = await restApi({
       params: { groupId: groupID, member: toAccount },
       funName: "addGroupMember",
-    });
-    if (ErrorCode !== 0) return;
-    updataGroup();
+    })
+    if (ErrorCode !== 0) return
+    updataGroup()
   } else {
-    const { code, data } = await addGroupMember({ groupID, user: toAccount });
+    const { code, data } = await addGroupMember({ groupID, user: toAccount })
     if (code === 0) {
-      updataGroup();
+      updataGroup()
     } else {
-      console.log(data);
+      console.log(data)
     }
   }
-};
+}
 
 const updataGroup = () => {
   setTimeout(() => {
-    groupStore.handleGroupMemberList({ groupID: groupProfile.groupID });
-  }, 200);
-};
+    groupStore.handleGroupMemberList({ groupID: groupProfile.groupID })
+  }, 200)
+}
 // 修改群资料
 const modifyGroupInfo = async (value, modify) => {
-  const { groupID } = groupProfile;
-  const { code, group } = await updateGroupProfile({ groupID, value, modify });
+  const { groupID } = groupProfile
+  const { code, group } = await updateGroupProfile({ groupID, value, modify })
   if (code !== 0) {
-    window.$message?.warning("修改失败");
+    window.$message?.warning("修改失败")
   } else {
-    console.log("modifyGroupInfo:", group);
+    console.log("modifyGroupInfo:", group)
   }
-};
+}
 
 const handleDismissGroup = async () => {
-  const data = { message: "确定解散群聊?", iconType: "warning" };
-  const result = await showConfirmationBox(data);
-  if (result === "cancel") return;
-  groupStore.handleDismissGroup({ sessionId: currentSessionId.value, groupId: toAccount.value });
-  setDrawer(false);
-};
+  const data = { message: "确定解散群聊?", iconType: "warning" }
+  const result = await showConfirmationBox(data)
+  if (result === "cancel") return
+  groupStore.handleDismissGroup({ sessionId: currentSessionId.value, groupId: toAccount.value })
+  setDrawer(false)
+}
 
 const handleTransferGroup = async () => {
-  const data = { message: "确定转让群聊?", iconType: "warning" };
-  const result = await showConfirmationBox(data);
-  if (result === "cancel") return;
-};
+  const data = { message: "确定转让群聊?", iconType: "warning" }
+  const result = await showConfirmationBox(data)
+  if (result === "cancel") return
+}
 
 const handleQuitGroup = async () => {
-  const data = { message: "确定退出群聊?", iconType: "warning" };
-  const result = await showConfirmationBox(data);
-  if (result === "cancel") return;
-  groupStore.handleQuitGroup({ sessionId: currentSessionId.value, groupId: toAccount.value });
-  setDrawer(false);
-};
+  const data = { message: "确定退出群聊?", iconType: "warning" }
+  const result = await showConfirmationBox(data)
+  if (result === "cancel") return
+  groupStore.handleQuitGroup({ sessionId: currentSessionId.value, groupId: toAccount.value })
+  setDrawer(false)
+}
 
 onMounted(() => {
   emitter.on("handleGroupDrawer", (val) => {
-    setDrawer(val);
-  });
-});
+    setDrawer(val)
+  })
+})
 
 onBeforeUnmount(() => {
-  emitter.off("handleGroupDrawer");
-});
+  emitter.off("handleGroupDrawer")
+})
 
 watch(currentConversation, (data) => {
   // AcceptAndNotify AcceptNotNotify
-  notify.value = data.messageRemindType === "AcceptNotNotify";
-});
+  notify.value = data.messageRemindType === "AcceptNotNotify"
+})
 </script>
 
 <style lang="scss" scoped>
