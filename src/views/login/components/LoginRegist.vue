@@ -1,41 +1,18 @@
 <template>
   <el-form ref="ruleFormRef" :model="ruleForm" :rules="updateRules" size="large">
     <el-form-item prop="username">
-      <el-input
-        v-model="ruleForm.username"
-        clearable
-        :placeholder="$t('login.username')"
-        :prefix-icon="User"
-      />
+      <el-input v-model="ruleForm.username" clearable :placeholder="$t('login.username')" :prefix-icon="User" />
     </el-form-item>
     <el-form-item prop="nickname">
-      <el-input
-        v-model="ruleForm.nickname"
-        clearable
-        :placeholder="$t('login.nickname')"
-        :prefix-icon="User"
-      />
+      <el-input v-model="ruleForm.nickname" clearable :placeholder="$t('login.nickname')" :prefix-icon="User" />
     </el-form-item>
     <el-form-item prop="phone">
-      <el-input
-        v-model="ruleForm.phone"
-        clearable
-        :placeholder="$t('login.phone')"
-        :prefix-icon="Iphone"
-      />
+      <el-input v-model="ruleForm.phone" clearable :placeholder="$t('login.phone')" :prefix-icon="Iphone" />
     </el-form-item>
     <el-form-item prop="verifyCode">
       <div class="w-full flex">
-        <el-input
-          v-model="ruleForm.verifyCode"
-          clearable
-          :placeholder="$t('login.smsVerifyCode')"
-        />
-        <el-button
-          class="ml-5"
-          :disabled="isDisabled"
-          @click="useVerifyCode().start(ruleFormRef, 'phone')"
-        >
+        <el-input v-model="ruleForm.verifyCode" clearable :placeholder="$t('login.smsVerifyCode')" />
+        <el-button class="ml-5" :disabled="isDisabled" @click="useVerifyCode().start(ruleFormRef, 'phone')">
           {{ text.length > 0 ? text + $t("login.info") : $t("login.getVerifyCode") }}
         </el-button>
       </div>
@@ -67,13 +44,7 @@
       </el-button>
     </el-form-item>
     <el-form-item>
-      <el-button
-        class="w-full"
-        size="default"
-        type="primary"
-        :loading="loading"
-        @click="onUpdate(ruleFormRef)"
-      >
+      <el-button class="w-full" size="default" type="primary" :loading="loading" @click="onUpdate(ruleFormRef)">
         <template #loading>
           <div class="iconify-icon svg-spinners mr-8"></div>
         </template>
@@ -89,43 +60,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { Lock, User, Iphone } from "@element-plus/icons-vue";
-import { useUserStore } from "@/stores/modules/user";
-import { ruleForm, updateRules } from "../utils/validation";
-import { useVerifyCode } from "../utils/verifyCode";
+import { Iphone, Lock, User } from "@element-plus/icons-vue"
+import { ref } from "vue"
 
-const checked = ref(false);
-const loading = ref(false);
-const ruleFormRef = ref();
+import { useUserStore } from "@/stores/modules/user"
 
-const { isDisabled, text } = useVerifyCode();
-const userStore = useUserStore();
+import { ruleForm, updateRules } from "../utils/validation"
+import { useVerifyCode } from "../utils/verifyCode"
+
+const checked = ref(false)
+const loading = ref(false)
+const ruleFormRef = ref()
+
+const { isDisabled, text } = useVerifyCode()
+const userStore = useUserStore()
 
 const onBack = () => {
-  useVerifyCode().end();
-  userStore.setCurrentPage(0);
-};
+  useVerifyCode().end()
+  userStore.setCurrentPage(0)
+}
 
 const onUpdate = async (formEl) => {
-  loading.value = true;
-  if (!formEl) return;
+  loading.value = true
+  if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
       if (checked.value) {
         setTimeout(() => {
-          loading.value = false;
-          window.$message?.success("注册成功");
-        }, 2000);
+          loading.value = false
+          window.$message?.success("注册成功")
+        }, 2000)
       } else {
-        loading.value = false;
-        window.$message?.warning("请勾选隐私政策");
+        loading.value = false
+        window.$message?.warning("请勾选隐私政策")
       }
     } else {
-      loading.value = false;
+      loading.value = false
     }
-  });
-};
+  })
+}
 </script>
 
 <style lang="scss" scoped></style>

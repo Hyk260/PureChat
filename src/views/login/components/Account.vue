@@ -36,12 +36,7 @@
     </el-form-item>
     <!-- 验证码 -->
     <el-form-item v-if="showVerifyCode" prop="verifyCode">
-      <el-input
-        v-model="form.verifyCode"
-        size="large"
-        :placeholder="$t('login.verifyCode')"
-        clearable
-      >
+      <el-input v-model="form.verifyCode" size="large" :placeholder="$t('login.verifyCode')" clearable>
         <template #prefix>
           <el-icon><Key /></el-icon>
         </template>
@@ -65,12 +60,7 @@
   </el-form>
   <!-- other hidden -->
   <div class="mt-20 flex justify-evenly">
-    <el-button
-      v-for="item in operates"
-      :key="item.title"
-      size="default"
-      @click="setCurrentPage(item)"
-    >
+    <el-button v-for="item in operates" :key="item.title" size="default" @click="setCurrentPage(item)">
       {{ item.title }}
     </el-button>
   </div>
@@ -93,91 +83,93 @@
   </el-form-item>
 </template>
 
-<script setup>
-import { ref, watch, onMounted, onBeforeUnmount } from "vue";
-import { getUserList } from "@/service/api";
-import { Lock, User, Key } from "@element-plus/icons-vue";
-import { useOAuth } from "@/hooks/useOAuth";
-import { useState } from "@/hooks/useState";
-import { operates, thirdParty } from "../utils/enums";
-import { rules, defaultForm } from "../utils/validation";
-import { useUserStore } from "@/stores/modules/user";
-import ImageVerify from "@/components/ImageVerify/index.vue";
+<script setup lang="ts">
+import { Key, Lock, User } from "@element-plus/icons-vue"
+import { onBeforeUnmount, onMounted, ref, watch } from "vue"
 
-const { DEV: isDev } = import.meta.env;
+import ImageVerify from "@/components/ImageVerify/index.vue"
+import { useOAuth } from "@/hooks/useOAuth"
+import { useState } from "@/hooks/useState"
+import { getUserList } from "@/service/api"
+import { useUserStore } from "@/stores/modules/user"
 
-const showVerifyCode = false;
-const verifyCode = ref("");
-const formRef = ref();
-const form = ref({ ...defaultForm });
-const userSuggestions = ref([]);
+import { operates, thirdParty } from "../utils/enums"
+import { defaultForm, rules } from "../utils/validation"
 
-const userStore = useUserStore();
-const [loading, setLoading] = useState();
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const { DEV: isDev } = import.meta.env
+
+const showVerifyCode = false
+const verifyCode = ref("")
+const formRef = ref()
+const form = ref({ ...defaultForm })
+const userSuggestions = ref([])
+
+const userStore = useUserStore()
+const [loading, setLoading] = useState(false)
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const { oauthAuthorize } = useOAuth({
   onSuccess: (data) => {
-    console.log("授权成功", data);
-    userStore.handleSuccessfulAuth(data);
-    setLoading(true);
+    console.log("授权成功", data)
+    userStore.handleSuccessfulAuth(data)
+    setLoading(true)
   },
   onError: (error) => {
-    console.error("授权失败", error);
-    setLoading(false);
+    console.error("授权失败", error)
+    setLoading(false)
   },
-});
+})
 
 const handleSelect = (item) => {
-  console.log(item);
-};
+  console.log(item)
+}
 
 const handleSearch = (query, callback) => {
   const results = query
     ? userSuggestions.value.filter((user) => user.value.toLowerCase().includes(query.toLowerCase()))
-    : userSuggestions.value;
-  callback(results);
-};
+    : userSuggestions.value
+  callback(results)
+}
 
 const handleLogin = async () => {
-  if (!formRef.value) return;
-  setLoading(true);
+  if (!formRef.value) return
+  setLoading(true)
   try {
-    await formRef.value.validate();
-    if (isDev) await delay(1000);
-    await userStore.handleUserLogin(form.value);
+    await formRef.value.validate()
+    if (isDev) await delay(1000)
+    await userStore.handleUserLogin(form.value)
   } finally {
-    setLoading(false);
+    setLoading(false)
   }
-};
+}
 
 const handleSocialLogin = async ({ icon }) => {
-  setLoading(true);
-  if (icon === "github") oauthAuthorize();
-};
+  setLoading(true)
+  if (icon === "github") oauthAuthorize()
+}
 
 const setCurrentPage = (item) => {
-  userStore.setCurrentPage(item.currentPage);
-};
+  userStore.setCurrentPage(item.currentPage)
+}
 
 const handleKeyPress = ({ code }) => {
-  if (code === "Enter") handleLogin(formRef.value);
-};
+  if (code === "Enter") handleLogin(formRef.value)
+}
 
 onMounted(async () => {
-  userSuggestions.value = await getUserList();
-  window.document.addEventListener("keypress", handleKeyPress);
-});
+  userSuggestions.value = await getUserList()
+  window.document.addEventListener("keypress", handleKeyPress)
+})
 
 onBeforeUnmount(() => {
-  window.document.removeEventListener("keypress", handleKeyPress);
-});
+  window.document.removeEventListener("keypress", handleKeyPress)
+})
 
 watch(verifyCode, (value) => {
   // 测试环境自动填充图形验证码
-  if (isDev) form.value.verifyCode = value;
-  userStore.setVerifyCode(value);
-});
+  if (isDev) form.value.verifyCode = value
+  userStore.setVerifyCode(value)
+})
 </script>
 
 <style lang="scss" scoped>
