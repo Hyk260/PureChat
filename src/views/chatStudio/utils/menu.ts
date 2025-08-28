@@ -1,3 +1,4 @@
+import { markRaw } from "vue"
 import {
   ChatDotSquare,
   CopyDocument,
@@ -8,7 +9,6 @@ import {
   // DeleteFilled
 } from "@element-plus/icons-vue"
 import { AtSign, BellOff, BellRing, Download, ListChecks, MessageSquareQuote, Trash2 } from "lucide-vue-next"
-import { markRaw } from "vue"
 // 会话列表数据
 export const chatSessionListData = [
   {

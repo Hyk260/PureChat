@@ -13,6 +13,9 @@ declare global {
       version: string;
       engines: object;
       docs: string;
+      bugs: {
+        url: string;
+      };
       homepage: string;
       giteeHomepage: string;
       dependencies: Recordable<string>;

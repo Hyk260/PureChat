@@ -1,4 +1,5 @@
 import { useEventListener } from "@vueuse/core"
+
 import { debounce, isArray, isFunction, isObject, throttle } from "lodash-es"
 
 import type { Directive, DirectiveBinding } from "vue"

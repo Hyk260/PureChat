@@ -1,6 +1,6 @@
+import { computed } from "vue"
 import { Operation, Warning } from "@element-plus/icons-vue"
 import { Cloud } from "lucide-vue-next"
-import { computed } from "vue"
 
 import { ModelProvider } from "@/ai/types"
 import { $t } from "@/locales"

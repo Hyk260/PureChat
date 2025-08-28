@@ -1,5 +1,6 @@
-import { ElButton, type NotificationHandle } from "element-plus"
 import { type App, h } from "vue"
+
+import { ElButton, type NotificationHandle } from "element-plus"
 
 import { $t } from "@/locales"
 

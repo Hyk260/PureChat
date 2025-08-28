@@ -1,7 +1,8 @@
+import { markRaw } from "vue"
 import { ChatDotSquare, MoreFilled, UserFilled } from "@element-plus/icons-vue"
 import { Compass, LayoutGrid } from "lucide-vue-next"
+
 import { defineStore } from "pinia"
-import { markRaw } from "vue"
 
 import router from "@/router"
 import { SetupStoreId } from "@/stores/enum"
@@ -16,9 +17,7 @@ const {
   homepage,
   giteeHomepage,
 } = __APP_INFO__.pkg
-const {
-  DEV: isDev
-} = import.meta.env
+const { DEV: isDev } = import.meta.env
 
 const defaultOutsideList: SidebarItem[] = [
   {

@@ -1,13 +1,14 @@
-import { defineStore } from "pinia"
 import { nextTick } from "vue"
+
+import { defineStore } from "pinia"
 
 import localAvatar from "@/assets/images/avatar.png"
 import router from "@/router"
 import { login, logout } from "@/service/api/index"
+import { timProxy } from "@/service/IM"
 import chat from "@/service/IM/im-sdk/tim"
-import { timProxy } from "@/service/IM/index"
+import { useAuthStore, useChatStore } from "@/stores"
 import { SetupStoreId } from "@/stores/enum"
-import { useAuthStore, useChatStore } from "@/stores/index"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 

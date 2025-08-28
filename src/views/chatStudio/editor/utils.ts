@@ -1,5 +1,6 @@
-import { documentExts, textExts } from "@shared/config"
 import { nextTick } from "vue"
+
+import { documentExts, textExts } from "@shared/config"
 
 export const createMediaElement = (type, props) => ({
   type,
