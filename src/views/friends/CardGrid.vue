@@ -17,17 +17,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue"
 
 const props = defineProps({
   item: {
     type: Object,
-    default: () => ({})
+    default: () => ({}),
   },
   type: {
     type: String,
-    default: "GROUP" // C2C  GROUP
-  }
+    default: "GROUP", // C2C  GROUP
+  },
 })
 
 const isGroup = computed(() => props.type === "GROUP")

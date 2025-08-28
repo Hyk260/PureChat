@@ -2,13 +2,7 @@
   <div class="friends-list wh-full">
     <div class="left-list">
       <div class="search-box">
-        <el-input
-          v-model="input"
-          :placeholder="$t('chat.searchFor')"
-          :prefix-icon="Search"
-          clearable
-        >
-        </el-input>
+        <el-input v-model="input" :placeholder="$t('chat.searchFor')" :prefix-icon="Search" clearable> </el-input>
       </div>
       <div class="quick-nav">
         <!-- <div
@@ -38,30 +32,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
-import { Search } from "@element-plus/icons-vue";
-import FriendsTabs from "./FriendsTabs.vue";
-import FriendsTree from "./FriendsTree.vue";
-import ProfileCard from "./ProfileCard.vue";
-import emitter from "@/utils/mitt-bus";
+import { Search } from "@element-plus/icons-vue"
+import { onMounted, onUnmounted, ref } from "vue"
+
+import emitter from "@/utils/mitt-bus"
+
+import FriendsTabs from "./FriendsTabs.vue"
+import FriendsTree from "./FriendsTree.vue"
+import ProfileCard from "./ProfileCard.vue"
 
 const tabsList = [
   { id: 1, name: "好友通知" },
   { id: 2, name: "群通知" },
-];
-const input = ref("");
-const title = ref("");
+]
+const input = ref("")
+const title = ref("")
 
 function setActiveTab(tab) {
-  title.value = tab.name;
+  title.value = tab.name
 }
 
 onMounted(() => {
-  emitter.on("handleActiveTab", setActiveTab);
-});
+  emitter.on("handleActiveTab", setActiveTab)
+})
 onUnmounted(() => {
-  emitter.off("handleActiveTab");
-});
+  emitter.off("handleActiveTab")
+})
 </script>
 
 <style lang="scss" scoped>

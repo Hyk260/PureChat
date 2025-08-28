@@ -19,21 +19,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
-import { ModelIDList } from '@shared/provider';
-import { getUserProfile } from "@/service/im-sdk-api";
-import { useGroupStore } from '@/stores/modules/group';
-import CardGrid from "./CardGrid.vue";
-import emitter from "@/utils/mitt-bus";
+import { ModelIDList } from "@shared/provider"
+import { onMounted, onUnmounted, ref } from "vue"
+
+import { getUserProfile } from "@/service/im-sdk-api"
+import { useGroupStore } from "@/stores/modules/group"
+import emitter from "@/utils/mitt-bus"
+
+import CardGrid from "./CardGrid.vue"
 
 const groupStore = useGroupStore()
 
-const robotList = ref([]);
-const friendList = ref([]);
+const robotList = ref([])
+const friendList = ref([])
 const defaultProps = {
   children: "children",
   label: "label",
-};
+}
 const INITIAL_TREE_DATA = [
   {
     id: "aiModel",
@@ -55,67 +57,67 @@ const INITIAL_TREE_DATA = [
     children: [],
     hidden: __LOCAL_MODE__,
   },
-].filter((item) => !item.hidden);
+].filter((item) => !item.hidden)
 
-const treeData = ref(INITIAL_TREE_DATA);
+const treeData = ref(INITIAL_TREE_DATA)
 
 const handleNodeClick = (data) => {
-  if (data.children) return;
-  emitter.emit("handleActiveTab", "");
-  emitter.emit("handleProfile", data);
-};
+  if (data.children) return
+  emitter.emit("handleActiveTab", "")
+  emitter.emit("handleProfile", data)
+}
 
 const transformUserData = (data) => {
   return data.map((item) => ({
     label: item.nick,
     type: "C2C",
     ...item,
-  }));
-};
+  }))
+}
 
 const transformGroupData = (data = groupStore.groupList) => {
   return data.map((item) => ({
     ...item,
     label: item.nick,
     type: "GROUP",
-  }));
-};
+  }))
+}
 
 const getRobotList = async () => {
-  const { code, data } = await getUserProfile(ModelIDList);
-  robotList.value = data;
-  treeData.value[0].children = transformUserData(data);
-};
+  const { code, data } = await getUserProfile(ModelIDList)
+  robotList.value = data
+  treeData.value[0].children = transformUserData(data)
+}
 
 const getFriendList = async () => {
-  if (__LOCAL_MODE__) return;
-  const list = ["huangyk", "admin", "linjx", "jinwx", "zhangal"];
-  const { code, data } = await getUserProfile(list);
-  friendList.value = data;
-  treeData.value[1].children = transformUserData(data);
-  treeData.value[2].children = transformGroupData();
-};
+  if (__LOCAL_MODE__) return
+  const list = ["huangyk", "admin", "linjx", "jinwx", "zhangal"]
+  const { code, data } = await getUserProfile(list)
+  friendList.value = data
+  treeData.value[1].children = transformUserData(data)
+  treeData.value[2].children = transformGroupData()
+}
 
 const setupEventListeners = () => {
   emitter.on("handleActiveTab", (id) => {
-    console.log(id);
-  });
-};
+    console.log(id)
+  })
+}
 
 const cleanupEventListeners = () => {
-  emitter.off("handleActiveTab");
-};
+  emitter.off("handleActiveTab")
+}
 
 onMounted(() => {
   groupStore.handleGroupList()
-  getRobotList();
-  getFriendList();
-  setupEventListeners();
-});
+  getRobotList()
+  getFriendList()
+  setupEventListeners()
+})
 
 onUnmounted(() => {
-  cleanupEventListeners();
-});
+  cleanupEventListeners()
+})
 </script>
 
 <style lang="scss" scoped>

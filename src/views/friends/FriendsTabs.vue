@@ -21,44 +21,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick, onMounted } from "vue";
-import emitter from "@/utils/mitt-bus";
+import { computed, nextTick, onMounted, ref } from "vue"
+
+import emitter from "@/utils/mitt-bus"
 
 const TABS = [
   { id: 1, name: "好友" },
   { id: 2, name: "群聊" },
-];
+]
 
-const activeTab = ref(0);
-const activeTabPosition = ref(0);
-const tabWidth = ref(0);
-const tabRefs = ref(Array(TABS.length).fill(null));
+const activeTab = ref(0)
+const activeTabPosition = ref(0)
+const tabWidth = ref(0)
+const tabRefs = ref(Array(TABS.length).fill(null))
 
 const capsuleStyle = computed(() => ({
   transform: `translateX(${activeTabPosition.value}px)`,
   width: `${tabWidth.value}px`,
-}));
+}))
 
 const setTabRef = (el, index) => {
   if (el) {
-    tabRefs.value[index] = el;
+    tabRefs.value[index] = el
   }
-};
+}
 
 const handleTabClick = (index, id) => {
-  activeTab.value = index;
-  activeTabPosition.value = index * tabWidth.value;
-  emitter.emit('handleActiveTab', id);
-};
+  activeTab.value = index
+  activeTabPosition.value = index * tabWidth.value
+  emitter.emit("handleActiveTab", id)
+}
 
 onMounted(async () => {
-  await nextTick();
-  const firstTab = tabRefs.value[0];
+  await nextTick()
+  const firstTab = tabRefs.value[0]
   if (firstTab) {
-    tabWidth.value = firstTab.getBoundingClientRect().width;
-    activeTabPosition.value = activeTab.value * tabWidth.value;
+    tabWidth.value = firstTab.getBoundingClientRect().width
+    activeTabPosition.value = activeTab.value * tabWidth.value
   }
-});
+})
 </script>
 
 <style lang="scss" scoped>
@@ -71,12 +72,12 @@ onMounted(async () => {
   --tab-font-size: 14px;
   --tab-color-segment: #fff;
   width: 100%;
-  
+
   &-nav {
     display: flex;
     transition: border-color 0.3s var(--bezier);
   }
-  
+
   &-rail {
     position: relative;
     padding: 3px;
@@ -87,7 +88,7 @@ onMounted(async () => {
     display: flex;
     align-items: center;
   }
-  
+
   &-capsule {
     position: absolute;
     border-radius: var(--tab-border-radius);
@@ -97,7 +98,7 @@ onMounted(async () => {
     transition: transform 0.3s var(--bezier);
     pointer-events: none;
   }
-  
+
   &-tab {
     cursor: pointer;
     width: 100%;
@@ -116,7 +117,7 @@ onMounted(async () => {
       align-items: center;
       justify-content: center;
     }
-    
+
     &__label {
       display: flex;
       align-items: center;
