@@ -13,17 +13,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRouteStore, useThemeStore } from '@/stores/index';
+import { computed } from "vue"
 
-const themeStore = useThemeStore();
-const routeStore = useRouteStore();
+import { useRouteStore, useThemeStore } from "@/stores"
 
-const transitionName = computed(() => (themeStore.page.animate ? themeStore.page.animateMode : ''));
+const themeStore = useThemeStore()
+const routeStore = useRouteStore()
 
+const transitionName = computed(() => (themeStore.page.animate ? themeStore.page.animateMode : ""))
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .home-page {
   width: 100%;
 }

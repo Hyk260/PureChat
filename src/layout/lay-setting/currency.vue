@@ -3,34 +3,19 @@
     <li>
       <span>{{ $t("common.theme") }}</span>
       <el-select v-model="themeColor" placeholder="主题颜色">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
+        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
     </li>
     <li v-if="isDev">
       <span>{{ $t("common.language") }}</span>
       <el-select v-model="language" placeholder="选择语言">
-        <el-option
-          v-for="item in languages"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
+        <el-option v-for="item in languages" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
     </li>
     <li>
       <span>字体设置</span>
       <el-select v-model="font" placeholder="选择字体">
-        <el-option
-          v-for="item in themeStore.fontThemeList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
+        <el-option v-for="item in themeStore.fontThemeList" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
     </li>
     <li>
@@ -54,68 +39,70 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import { languages, options } from "./enums";
-import { useAppStore, useUserStore, useThemeStore } from "@/stores/index";
+import { onMounted } from "vue"
 
-const { DEV: isDev } = import.meta.env;
+import { useAppStore, useThemeStore, useUserStore } from "@/stores"
 
-const appStore = useAppStore();
-const userStore = useUserStore();
-const themeStore = useThemeStore();
+import { languages, options } from "./enums"
+
+const { DEV: isDev } = import.meta.env
+
+const appStore = useAppStore()
+const userStore = useUserStore()
+const themeStore = useThemeStore()
 
 function logout() {
-  userStore.handleUserLogout();
+  userStore.handleUserLogout()
 }
 
 const timeline = computed({
   get() {
-    return appStore.timeline;
+    return appStore.timeline
   },
   set(val) {
-    appStore.setTimeline(val);
+    appStore.setTimeline(val)
   },
-});
+})
 
 const font = computed({
   get() {
-    return themeStore.fontTheme;
+    return themeStore.fontTheme
   },
   set(val) {
-    themeStore.setFontTheme(val);
+    themeStore.setFontTheme(val)
   },
-});
+})
 
 const themeColor = computed({
   get() {
-    return themeStore.themeScheme;
+    return themeStore.themeScheme
   },
   set(val) {
-    themeStore.setThemeScheme(val);
+    themeStore.setThemeScheme(val)
   },
-});
+})
 
 const language = computed({
   get() {
-    return appStore.lang;
+    return appStore.lang
   },
   set(val) {
-    appStore.setLang(val);
+    appStore.setLang(val)
   },
-});
+})
 
 const markdownRender = computed({
   get() {
-    return appStore.markdownRender;
+    return appStore.markdownRender
   },
   set(val) {
-    appStore.setMarkdownRender(val);
+    appStore.setMarkdownRender(val)
   },
-});
+})
 
 onMounted(() => {
-  themeStore.loadSystemFonts();
-});
+  themeStore.loadSystemFonts()
+})
 </script>
 
 <style lang="scss" scoped>

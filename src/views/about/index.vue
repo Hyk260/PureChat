@@ -82,12 +82,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-const { pkg, lastBuildTime } = __APP_INFO__;
-const { dependencies, devDependencies, repository, version, docs } = pkg;
+import { computed } from "vue"
+const { pkg, lastBuildTime } = __APP_INFO__
+const { dependencies, devDependencies, repository, version, docs } = pkg
 
-const schema = [];
-const devSchema = [];
+const schema = []
+const devSchema = []
 
 const data = [
   {
@@ -123,7 +123,7 @@ const data = [
     url: `${docs}/other/logs.html`,
     title: "更新日志",
   },
-];
+]
 
 const words = [
   "markdown-it",
@@ -139,19 +139,19 @@ const words = [
   "vue-i18n",
   "vue-router",
   "sass",
-];
+]
 
 const getMainLabel = computed(() => (label) => {
-  return words.includes(label) ? "main-label" : null;
-});
+  return words.includes(label) ? "main-label" : null
+})
 
 Object.keys(dependencies).forEach((key) => {
-  schema.push({ field: dependencies[key], label: key });
-});
+  schema.push({ field: dependencies[key], label: key })
+})
 
 Object.keys(devDependencies).forEach((key) => {
-  devSchema.push({ field: devDependencies[key], label: key });
-});
+  devSchema.push({ field: devDependencies[key], label: key })
+})
 </script>
 
 <style scoped lang="scss">

@@ -11,21 +11,22 @@
   </div>
 </template>
 
-<script setup>
-import { CloseBold } from "@element-plus/icons-vue";
-import WebSearch from "./webSearch.vue";
-import Currency from "./currency.vue";
-import About from "./about.vue";
-import ProviderModel from "./providerModel.vue";
+<script setup lang="ts">
+import { CloseBold } from "@element-plus/icons-vue"
 
-const props = defineProps({
+import About from "./about.vue"
+import Currency from "./currency.vue"
+import ProviderModel from "./providerModel.vue"
+import WebSearch from "./webSearch.vue"
+
+defineProps({
   item: {
     type: Object,
     default: () => {},
   },
-});
+})
 
-const emit = defineEmits(["onClose"]);
+const emit = defineEmits(["onClose"])
 </script>
 
 <style lang="scss" scoped>

@@ -16,6 +16,9 @@ declare global {
       bugs: {
         url: string;
       };
+      repository: {
+        url: string;
+      };
       homepage: string;
       giteeHomepage: string;
       dependencies: Recordable<string>;

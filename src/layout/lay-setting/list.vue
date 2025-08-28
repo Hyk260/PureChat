@@ -21,20 +21,21 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import { list } from "./enums";
+<script setup lang="ts">
+import { ref } from "vue"
 
-const activeId = ref(list.value[0].id);
+import { list } from "./enums"
 
-const emit = defineEmits(["active"]);
+const activeId = ref(list.value[0].id)
+
+const emit = defineEmits(["active"])
 
 function handleItemClick(item) {
-  activeId.value = item.id;
-  emit("active", item);
+  activeId.value = item.id
+  emit("active", item)
 }
 
-defineExpose({ handleItemClick });
+defineExpose({ handleItemClick })
 </script>
 
 <style lang="scss" scoped>

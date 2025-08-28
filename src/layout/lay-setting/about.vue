@@ -20,12 +20,12 @@
   </div>
 </template>
 
-<script setup>
-import { openWindow } from "@/utils/common";
-const { version, docs } = __APP_INFO__.pkg;
+<script setup lang="ts">
+import { openWindow } from "@/utils/common"
+const { version, docs } = __APP_INFO__.pkg
 
 function openDocs() {
-  openWindow(`${docs}/other/logs.html`);
+  openWindow(`${docs}/other/logs.html`)
 }
 </script>
 

@@ -7,38 +7,40 @@
   </el-dialog>
 </template>
 
-<script setup>
-import { ref, onMounted } from "vue";
-import { list } from "./enums";
-import { useState } from "@/hooks/useState";
-import emitter from "@/utils/mitt-bus";
-import ItemGrid from "./itemGrid.vue";
-import List from "./list.vue";
+<script setup lang="ts">
+import { onMounted, ref } from "vue"
 
-const listRef = ref();
-const item = ref(list.value[0]);
-const [drawer, setDrawer] = useState();
+import { useState } from "@/hooks/useState"
+import emitter from "@/utils/mitt-bus"
+
+import { list } from "./enums"
+import ItemGrid from "./itemGrid.vue"
+import List from "./list.vue"
+
+const listRef = ref()
+const item = ref(list.value[0])
+const [drawer, setDrawer] = useState()
 
 function setItem(data = list.value[0]) {
-  listRef.value?.handleItemClick(data);
+  listRef.value?.handleItemClick(data)
 }
 
 function active(t) {
-  item.value = t;
+  item.value = t
 }
 
 onMounted(() => {
   emitter.on("openSetup", ({ flag, id }) => {
     if (flag) {
-      setDrawer(true);
+      setDrawer(true)
       if (id) {
-        setItem(list.value.find((v) => v.id === id));
+        setItem(list.value.find((v) => v.id === id))
       } else {
-        setItem();
+        setItem()
       }
     }
-  });
-});
+  })
+})
 
 onUnmounted(() => {
   emitter.off("openSetup")

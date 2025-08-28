@@ -7,11 +7,7 @@
 
       <div v-for="item in sidebarStore.filteredOutsideList" :key="item.id" class="sidebar-item">
         <el-tooltip :content="item.title" placement="right">
-          <div
-            class="sidebar-item-content"
-            :class="{ active: isActiveItem(item.path) }"
-            @click="handleItemClick(item)"
-          >
+          <div class="sidebar-item-content" :class="{ active: isActiveItem(item.path) }" @click="handleItemClick(item)">
             <el-badge :value="chatStore.totalUnreadMsg" :hidden="shouldHideUnreadBadge(item.id)">
               <el-icon v-if="item?.type === 'el-icon'" class="sidebar-icon">
                 <component :is="item.icon" />
@@ -40,55 +36,56 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import { Operation, QuestionFilled } from "@element-plus/icons-vue";
-import { useRouter } from "vue-router";
-import { openWindow } from "@/utils/common";
-import { useChatStore, useSidebarStore } from "@/stores/index";
-import SidebarEditDialog from "@/components/MoreSidebar/index.vue";
-import CardPopover from "@/views/chatStudio/components/CardPopover.vue";
-import UserPopup from "@/components/Popups/UserPopup.vue";
-import emitter from "@/utils/mitt-bus";
+<script setup lang="ts">
+import { ref } from "vue"
+import { Operation, QuestionFilled } from "@element-plus/icons-vue"
+import { useRouter } from "vue-router"
+
+import SidebarEditDialog from "@/components/MoreSidebar/index.vue"
+import UserPopup from "@/components/Popups/UserPopup.vue"
+import { useChatStore, useSidebarStore } from "@/stores"
+import { openWindow } from "@/utils/common"
+import emitter from "@/utils/mitt-bus"
+import CardPopover from "@/views/chatStudio/components/CardPopover.vue"
 
 defineOptions({
   name: "LayAside",
-});
+})
 
-const docs = __APP_INFO__.pkg.docs;
+const docs = __APP_INFO__.pkg.docs
 
-const UserPopupRef = ref();
-const router = useRouter();
-const chatStore = useChatStore();
-const sidebarStore = useSidebarStore();
+const UserPopupRef = ref()
+const router = useRouter()
+const chatStore = useChatStore()
+const sidebarStore = useSidebarStore()
 
 const handleAvatarClick = () => {
   if (__LOCAL_MODE__) {
-    UserPopupRef.value.show();
+    UserPopupRef.value.show()
   } else {
-    emitter.emit("setPopover");
+    emitter.emit("setPopover")
   }
-};
+}
 
 const openSettings = () => {
-  emitter.emit("openSetup", { flag: true });
-};
+  emitter.emit("openSetup", { flag: true })
+}
 
 const onOpenDocs = () => {
-  openWindow(docs);
-};
+  openWindow(docs)
+}
 
 const handleItemClick = (item) => {
-  sidebarStore.toggleOutside(item);
-};
+  sidebarStore.toggleOutside(item)
+}
 
 const isActiveItem = (path) => {
-  return router.currentRoute.value.path === path;
-};
+  return router.currentRoute.value.path === path
+}
 
 const shouldHideUnreadBadge = (id) => {
-  return id !== "chat" || chatStore.totalUnreadMsg === 0;
-};
+  return id !== "chat" || chatStore.totalUnreadMsg === 0
+}
 </script>
 
 <style lang="scss" scoped>
