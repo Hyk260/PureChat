@@ -40,32 +40,33 @@
   </el-dialog>
 </template>
 
-<script setup>
-import { reactive, ref } from "vue";
-import { updateMyProfile } from "@/service/im-sdk-api/index";
-// import { uploadFiles } from "@/service/api/index";
-import emitter from "@/utils/mitt-bus";
+<script setup lang="ts">
+import { reactive, ref } from "vue"
 
-const imagePicker = ref();
-const dialogVisible = ref(false);
+import { updateMyProfile } from "@/service/im-sdk-api"
+// import { uploadFiles } from "@/service/api/index";
+import emitter from "@/utils/mitt-bus"
+
+const imagePicker = ref()
+const dialogVisible = ref(false)
 const option = reactive({
   url: "",
   files: null,
-});
+})
 
 emitter.on("uploadAvatarDialog", (val) => {
-  dialogVisible.value = val;
-});
+  dialogVisible.value = val
+})
 
 const imageClick = () => {
-  let $el = imagePicker.value;
-  $el.value = null;
-  $el.click();
-};
+  let $el = imagePicker.value
+  $el.value = null
+  $el.click()
+}
 
 async function sendImage(e) {
-  option.url = URL.createObjectURL(e.target.files[0]);
-  option.files = e.target.files[0];
+  option.url = URL.createObjectURL(e.target.files[0])
+  option.files = e.target.files[0]
 }
 
 async function uploadAvatar() {
@@ -78,23 +79,23 @@ async function uploadAvatar() {
 }
 // 修改头像
 async function modifyMyProfile(file_url) {
-  const { code, data } = await updateMyProfile({ avatar: file_url });
+  const { code, data } = await updateMyProfile({ avatar: file_url })
   if (code === 0) {
   } else {
-    console.log("修改失败");
+    console.log("修改失败")
   }
 }
 function closeUrl() {
-  option.url = "";
+  option.url = ""
 }
 function handleConfirm() {
-  dialogVisible.value = false;
-  closeUrl();
-  uploadAvatar();
+  dialogVisible.value = false
+  closeUrl()
+  uploadAvatar()
 }
 function handleClose() {
-  dialogVisible.value = false;
-  closeUrl();
+  dialogVisible.value = false
+  closeUrl()
 }
 </script>
 

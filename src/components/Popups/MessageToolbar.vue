@@ -22,15 +22,11 @@
         </el-tooltip>
 
         <el-tooltip content="删除" placement="top">
-          <button
-            class="action-btn delete-btn"
-            :disabled="isForwardDataEmpty"
-            @click="handleDelete"
-          >
+          <button class="action-btn delete-btn" :disabled="isForwardDataEmpty" @click="handleDelete">
             <Trash2 :size="16" />
           </button>
         </el-tooltip>
-        
+
         <el-tooltip content="关闭" placement="top">
           <button class="action-btn close-btn" @click="handleClose">
             <X :size="16" />
@@ -45,162 +41,163 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import { storeToRefs } from "pinia";
-import { Share2, Trash2, X } from "lucide-vue-next";
-import { useChatStore, useUserStore } from "@/stores/index";
-import { showConfirmationBox } from "@/utils/message";
-import { createForwardMessage, createMergerMessage, sendMessage } from "@/service/im-sdk-api/index";
-import MessageForwardingPopup from "@/components/Popups/MessageForwardingPopup.vue";
-import ShareModal from "@/components/ShareModal/index.vue";
-import emitter from "@/utils/mitt-bus";
+<script setup lang="ts">
+import { Share2, Trash2, X } from "lucide-vue-next"
+import { storeToRefs } from "pinia"
+import { ref } from "vue"
 
-const chatStore = useChatStore();
-const userStore = useUserStore();
+import MessageForwardingPopup from "@/components/Popups/MessageForwardingPopup.vue"
+import ShareModal from "@/components/ShareModal/index.vue"
+import { createForwardMessage, createMergerMessage, sendMessage } from "@/service/im-sdk-api"
+import { useChatStore, useUserStore } from "@/stores"
+import { showConfirmationBox } from "@/utils/message"
+import emitter from "@/utils/mitt-bus"
 
-const wardingRef = ref(null);
-const multipleValue = ref(null);
+const chatStore = useChatStore()
+const userStore = useUserStore()
+
+const wardingRef = ref(null)
+const multipleValue = ref(null)
 
 const { getForwardCount, isForwardDataEmpty, currentSessionId, isGroupChat, currentConversation } =
-  storeToRefs(chatStore);
+  storeToRefs(chatStore)
 
 const handleShare = () => {
-  emitter.emit("handleShareModal", true);
-};
+  emitter.emit("handleShareModal", true)
+}
 
 const onMergeForward = () => {
-  if (isForwardDataEmpty.value) return;
-  setDialogVisible("MergeForward");
-};
+  if (isForwardDataEmpty.value) return
+  setDialogVisible("MergeForward")
+}
 
 const onForwardItemByItem = () => {
-  if (isForwardDataEmpty.value) return;
-  setDialogVisible("ForwardItemByItem");
-};
+  if (isForwardDataEmpty.value) return
+  setDialogVisible("ForwardItemByItem")
+}
 
 const handleDelete = async () => {
   const result = await showConfirmationBox({
     message: `确认删除选中的 ${getForwardCount.value} 条消息吗？`,
     iconType: "warning",
-  });
-  if (result === "cancel") return;
-  if (isForwardDataEmpty.value) return;
-  const data = chatStore.getSortedForwardData;
+  })
+  if (result === "cancel") return
+  if (isForwardDataEmpty.value) return
+  const data = chatStore.getSortedForwardData
   chatStore.deleteMessage({
     sessionId: currentSessionId.value,
     messageIdArray: [...data.map((item) => item.ID)],
     message: data,
-  });
-  shutdown();
-};
+  })
+  shutdown()
+}
 
 const handleClose = () => {
-  shutdown();
-};
+  shutdown()
+}
 
 const confirm = ({ value, type }) => {
-  setMultipleValue(value);
-  handleConfirm(type);
-};
+  setMultipleValue(value)
+  handleConfirm(type)
+}
 
 const handleConfirm = (type) => {
   switch (type) {
     case "MergeForward":
-      mergeForward();
-      break;
+      mergeForward()
+      break
     case "ForwardItemByItem":
-      aQuickForward();
-      break;
+      aQuickForward()
+      break
   }
-};
+}
 
 const setDialogVisible = (type = "") => {
-  wardingRef.value.openPopup(type);
-};
+  wardingRef.value.openPopup(type)
+}
 
 const setMultipleValue = (value = null) => {
-  multipleValue.value = value;
-};
+  multipleValue.value = value
+}
 
 const shutdown = () => {
-  chatStore.setForwardData({ type: "clear" });
-  chatStore.toggleMultiSelectMode(false);
-  closedState();
-  setMultipleValue();
-};
+  chatStore.setForwardData({ type: "clear" })
+  chatStore.toggleMultiSelectMode(false)
+  closedState()
+  setMultipleValue()
+}
 
 const closedState = () => {
   document.querySelectorAll(".check-btn").forEach((t) => {
-    t.checked = false;
-  });
+    t.checked = false
+  })
   document.querySelectorAll(".message-view > *").forEach((t) => {
-    t.classList.remove("style-select");
-  });
-};
+    t.classList.remove("style-select")
+  })
+}
 
 const transformData = (data) => {
   return data.map((item) => {
     if (item.type === "TIMTextElem") {
-      return `${item.nick}: ${item.payload.text}`;
+      return `${item.nick}: ${item.payload.text}`
     } else if (item.type === "TIMImageElem") {
-      return `${item.nick}: [图片]`;
+      return `${item.nick}: [图片]`
     } else if (item.type === "TIMFileElem") {
-      return `${item.nick}: [文件]`;
+      return `${item.nick}: [文件]`
     } else if (item.type === "TIMRelayElem") {
-      return `${item.nick}: [合并消息]`;
+      return `${item.nick}: [合并消息]`
     } else if (item.type === "TIMCustomElem") {
-      return `${item.nick}: [自定义消息]`;
+      return `${item.nick}: [自定义消息]`
     } else {
-      return `${item.nick}: [待开发]`;
+      return `${item.nick}: [待开发]`
     }
-  });
-};
+  })
+}
 
 const mergeTitle = () => {
-  const otherProfile = currentConversation.value.userProfile || {};
-  const self = userStore.userProfile.nick || userStore.userProfile.userID;
-  return isGroupChat.value ? "群聊的聊天记录" : `${otherProfile?.nick}和${self}的聊天记录`;
-};
+  const otherProfile = currentConversation.value.userProfile || {}
+  const self = userStore.userProfile.nick || userStore.userProfile.userID
+  return isGroupChat.value ? "群聊的聊天记录" : `${otherProfile?.nick}和${self}的聊天记录`
+}
 
 const sendAndHandleMessage = async (message) => {
-  const { code, message: data } = await sendMessage(message);
+  const { code, message: data } = await sendMessage(message)
   if (code === 0) {
-    chatStore.sendSessionMessage({ message: data });
+    chatStore.sendSessionMessage({ message: data })
   }
-};
+}
 
 const mergeForward = async () => {
-  if (!multipleValue.value) return;
-  const { toAccount, type } = multipleValue.value;
-  const forwardData = chatStore.getSortedForwardData;
+  if (!multipleValue.value) return
+  const { toAccount, type } = multipleValue.value
+  const forwardData = chatStore.getSortedForwardData
   const forwardMsg = await createMergerMessage({
     to: toAccount,
     type,
     title: mergeTitle(),
     abstractList: transformData(forwardData),
     messageList: forwardData,
-  });
-  await sendAndHandleMessage(forwardMsg);
-  shutdown();
-};
+  })
+  await sendAndHandleMessage(forwardMsg)
+  shutdown()
+}
 
 const aQuickForward = async () => {
-  if (!multipleValue.value) return;
-  const forwardData = chatStore.getSortedForwardData;
-  const { toAccount, type } = multipleValue.value;
+  if (!multipleValue.value) return
+  const forwardData = chatStore.getSortedForwardData
+  const { toAccount, type } = multipleValue.value
   await Promise.all(
     forwardData.map(async (t) => {
       const forwardMsg = await createForwardMessage({
         to: toAccount,
         type,
         message: t,
-      });
-      await sendAndHandleMessage(forwardMsg);
+      })
+      await sendAndHandleMessage(forwardMsg)
     })
-  );
-  shutdown();
-};
+  )
+  shutdown()
+}
 </script>
 
 <style lang="scss" scoped>

@@ -31,56 +31,57 @@
   </el-dialog>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import { storeToRefs } from "pinia";
-import { useChatStore } from "@/stores/index";
-import { squareUrl, chatName } from "@/utils/chat/index";
-import { getAiAvatarUrl } from "@/ai/utils";
+<script setup lang="ts">
+import { storeToRefs } from "pinia"
+import { ref } from "vue"
 
-const emit = defineEmits(["confirm"]);
+import { getAiAvatarUrl } from "@/ai/utils"
+import { useChatStore } from "@/stores/modules/chat"
+import { chatName, squareUrl } from "@/utils/chat"
 
-const chatStore = useChatStore();
-const { getNonBotList } = storeToRefs(chatStore);
+const emit = defineEmits(["confirm"])
 
-const dialog = ref(false);
-const multipleValue = ref(null);
-const dialogType = ref("");
+const chatStore = useChatStore()
+const { getNonBotList } = storeToRefs(chatStore)
+
+const dialog = ref(false)
+const multipleValue = ref(null)
+const dialogType = ref("")
 
 const onClickItem = (value) => {
-  multipleValue.value = value;
-};
+  multipleValue.value = value
+}
 
 const fnSvatar = (item) => {
-  return item.userProfile?.avatar || getAiAvatarUrl(item.conversationID) || squareUrl;
-};
+  return item.userProfile?.avatar || getAiAvatarUrl(item.conversationID) || squareUrl
+}
 
 const openPopup = (type) => {
-  dialogType.value = type;
-  dialog.value = true;
-};
+  dialogType.value = type
+  dialog.value = true
+}
 
 const setMultipleValue = (value = null) => {
-  multipleValue.value = value;
-};
+  multipleValue.value = value
+}
 
 const handleClose = (done) => {
-  setMultipleValue();
-  done();
-};
+  setMultipleValue()
+  done()
+}
 
 const handleCancel = () => {
-  dialog.value = false;
-  setMultipleValue();
-};
+  dialog.value = false
+  setMultipleValue()
+}
 
 const handleConfirm = () => {
-  emit("confirm", { value: multipleValue.value, type: dialogType.value });
-  dialog.value = false;
-  setMultipleValue();
-};
+  emit("confirm", { value: multipleValue.value, type: dialogType.value })
+  dialog.value = false
+  setMultipleValue()
+}
 
 defineExpose({
   openPopup,
-});
+})
 </script>

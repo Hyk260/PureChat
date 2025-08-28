@@ -48,46 +48,40 @@
   </el-dialog>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import { downloadMergerMessage } from "@/service/im-sdk-api/index";
-import {
-  addTimeDivider,
-  circleUrl,
-  msgOne,
-  msgType,
-  isSelf,
-  isTime,
-} from "@/utils/chat/index";
-import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent";
-import { useState } from "@/hooks/useState";
-import { timeFormat } from "@/utils/timeFormat";
-import { getAiAvatarUrl } from "@/ai/utils";
-import emitter from "@/utils/mitt-bus";
+<script setup lang="ts">
+import { ref } from "vue"
 
-const mergValue = ref({});
-const [dialogVisible, setDialogVisible] = useState();
+import { getAiAvatarUrl } from "@/ai/utils"
+import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"
+import { useState } from "@/hooks/useState"
+import { downloadMergerMessage } from "@/service/im-sdk-api/index"
+import { addTimeDivider, circleUrl, isSelf, isTime, msgOne, msgType } from "@/utils/chat/index"
+import emitter from "@/utils/mitt-bus"
+import { timeFormat } from "@/utils/timeFormat"
+
+const mergValue = ref({})
+const [dialogVisible, setDialogVisible] = useState()
 
 const messageList = computed(() => {
-  return addTimeDivider(mergValue.value.payload.messageList);
-});
+  return addTimeDivider(mergValue.value.payload.messageList)
+})
 
 function handleClose(done) {
-  setDialogVisible(false);
-  done();
+  setDialogVisible(false)
+  done()
 }
 
 onMounted(() => {
   emitter.on("openMergePopup", (data) => {
-    downloadMergerMessage(data);
-    mergValue.value = data;
-    setDialogVisible(true);
-  });
-});
+    downloadMergerMessage(data)
+    mergValue.value = data
+    setDialogVisible(true)
+  })
+})
 
 onUnmounted(() => {
-  emitter.off("openMergePopup");
-});
+  emitter.off("openMergePopup")
+})
 </script>
 
 <style lang="scss" scoped>
@@ -154,7 +148,6 @@ onUnmounted(() => {
   div {
     pointer-events: none;
   }
-  
 }
 
 .message-view-item-index {

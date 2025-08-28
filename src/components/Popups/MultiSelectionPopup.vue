@@ -15,17 +15,18 @@
   <MessageForwardingPopup ref="wardingRef" @confirm="confirm" />
 </template>
 
-<script setup>
-import { ref } from "vue";
-import { useChatStore, useUserStore } from "@/stores/index";
-import { createForwardMessage, createMergerMessage, sendMessage } from "@/service/im-sdk-api/index";
-import MessageForwardingPopup from "@/components/Popups/MessageForwardingPopup.vue";
-import ShareModal from "@/components/ShareModal/index.vue";
-import emitter from "@/utils/mitt-bus";
+<script setup lang="ts">
+import { ref } from "vue"
+
+import MessageForwardingPopup from "@/components/Popups/MessageForwardingPopup.vue"
+import ShareModal from "@/components/ShareModal/index.vue"
+import { createForwardMessage, createMergerMessage, sendMessage } from "@/service/im-sdk-api"
+import { useChatStore, useUserStore } from "@/stores"
+import emitter from "@/utils/mitt-bus"
 
 defineOptions({
   name: "MultiSelectionPopup",
-});
+})
 
 const buttonList = [
   {
@@ -54,115 +55,114 @@ const buttonList = [
     icon: "delete",
     class: "",
   },
-].filter((item) => !item.hide);
+].filter((item) => !item.hide)
 
-const chatStore = useChatStore();
-const userStore = useUserStore();
-const wardingRef = ref(null);
-const multipleValue = ref(null);
+const chatStore = useChatStore()
+const userStore = useUserStore()
+const wardingRef = ref(null)
+const multipleValue = ref(null)
 
-const { currentSessionId, isGroupChat, currentConversation, isForwardDataEmpty } =
-  storeToRefs(chatStore);
+const { currentSessionId, isGroupChat, currentConversation, isForwardDataEmpty } = storeToRefs(chatStore)
 
 const onClock = (item) => {
   switch (item.type) {
     case "share": // 截图分享
-      emitter.emit("handleShareModal", true);
-      break;
+      emitter.emit("handleShareModal", true)
+      break
     case "MergeForward": // 合并转发
-      setDialogVisible(item.type);
-      break;
+      setDialogVisible(item.type)
+      break
     case "ForwardItemByItem": // 逐条转发
-      setDialogVisible(item.type);
-      break;
+      setDialogVisible(item.type)
+      break
     case "removalMsg":
-      deleteMsg(); // 删除消息
-      break;
+      deleteMsg() // 删除消息
+      break
   }
-};
+}
 
 const handleConfirm = (type) => {
   switch (type) {
     case "MergeForward": // 合并转发
-      mergeForward();
-      break;
+      mergeForward()
+      break
     case "ForwardItemByItem": // 逐条转发
-      aQuickForward();
-      break;
+      aQuickForward()
+      break
   }
-};
+}
 
 const confirm = ({ value, type }) => {
-  setMultipleValue(value);
-  handleConfirm(type);
-};
+  setMultipleValue(value)
+  handleConfirm(type)
+}
 
 const onClose = () => {
-  shutdown();
-};
+  shutdown()
+}
 
 // 多选删除
 const deleteMsg = async () => {
-  const data = chatStore.getSortedForwardData;
+  const data = chatStore.getSortedForwardData
   chatStore.deleteMessage({
     sessionId: currentSessionId.value,
     messageIdArray: [...data.map((item) => item.ID)],
     message: data,
-  });
-  shutdown();
-};
+  })
+  shutdown()
+}
 
 const transformData = (data) => {
   return data.map((item) => {
     if (item.type === "TIMTextElem") {
-      return `${item.nick}: ${item.payload.text}`;
+      return `${item.nick}: ${item.payload.text}`
     } else if (item.type === "TIMImageElem") {
-      return `${item.nick}: [图片]`;
+      return `${item.nick}: [图片]`
     } else if (item.type === "TIMFileElem") {
-      return `${item.nick}: [文件]`;
+      return `${item.nick}: [文件]`
     } else if (item.type === "TIMRelayElem") {
-      return `${item.nick}: [合并消息]`;
+      return `${item.nick}: [合并消息]`
     } else if (item.type === "TIMCustomElem") {
-      return `${item.nick}: [自定义消息]`;
+      return `${item.nick}: [自定义消息]`
     } else {
-      return `${item.nick}: [待开发]`;
+      return `${item.nick}: [待开发]`
     }
-  });
-};
+  })
+}
 
 const mergeTitle = () => {
-  const otherProfile = currentConversation.value.userProfile || {};
-  const self = userStore.userProfile.nick || userStore.userProfile.userID;
-  return isGroupChat.value ? "群聊的聊天记录" : `${otherProfile?.nick}和${self}的聊天记录`;
-};
+  const otherProfile = currentConversation.value.userProfile || {}
+  const self = userStore.userProfile.nick || userStore.userProfile.userID
+  return isGroupChat.value ? "群聊的聊天记录" : `${otherProfile?.nick}和${self}的聊天记录`
+}
 
 const sendAndHandleMessage = async (message) => {
-  const { code, message: data } = await sendMessage(message);
+  const { code, message: data } = await sendMessage(message)
   if (code === 0) {
-    chatStore.sendSessionMessage({ message: data });
+    chatStore.sendSessionMessage({ message: data })
   }
-};
+}
 
 const mergeForward = async () => {
-  if (!multipleValue.value) return;
-  const { toAccount, type } = multipleValue.value;
-  const forwardData = chatStore.getSortedForwardData;
+  if (!multipleValue.value) return
+  const { toAccount, type } = multipleValue.value
+  const forwardData = chatStore.getSortedForwardData
   const forwardMsg = await createMergerMessage({
     to: toAccount,
     type,
     title: mergeTitle(),
     abstractList: transformData(forwardData),
     messageList: forwardData,
-  });
-  await sendAndHandleMessage(forwardMsg);
-  shutdown();
-};
+  })
+  await sendAndHandleMessage(forwardMsg)
+  shutdown()
+}
 
 // 逐条转发
 const aQuickForward = async () => {
-  if (!multipleValue.value) return;
-  const forwardData = chatStore.getSortedForwardData;
-  const { toAccount, type } = multipleValue.value;
+  if (!multipleValue.value) return
+  const forwardData = chatStore.getSortedForwardData
+  const { toAccount, type } = multipleValue.value
 
   await Promise.all(
     forwardData.map(async (t) => {
@@ -170,28 +170,28 @@ const aQuickForward = async () => {
         to: toAccount,
         type,
         message: t,
-      });
-      await sendAndHandleMessage(forwardMsg);
+      })
+      await sendAndHandleMessage(forwardMsg)
     })
-  );
-  shutdown();
-};
+  )
+  shutdown()
+}
 
 const shutdown = () => {
-  chatStore.setForwardData({ type: "clear" });
-  chatStore.toggleMultiSelectMode(false);
-  setMultipleValue();
-};
+  chatStore.setForwardData({ type: "clear" })
+  chatStore.toggleMultiSelectMode(false)
+  setMultipleValue()
+}
 
 const setDialogVisible = (type = "") => {
-  wardingRef.value.openPopup(type);
-};
+  wardingRef.value.openPopup(type)
+}
 
 const setMultipleValue = (value = null) => {
-  multipleValue.value = value;
-};
+  multipleValue.value = value
+}
 
-defineExpose({ onClose, confirm });
+defineExpose({ onClose, confirm })
 </script>
 
 <style lang="scss" scoped>

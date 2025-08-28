@@ -27,98 +27,94 @@
         />
       </div>
       <div class="py-20 flex-c">
-        <el-input
-          v-model="userName"
-          class="input"
-          placeholder="Please input"
-          @change="setUserName"
-        />
+        <el-input v-model="userName" class="input" placeholder="Please input" @change="setUserName" />
       </div>
     </div>
   </el-dialog>
 </template>
 
-<script setup>
-import { ref, computed } from "vue";
-import { useState } from "@/hooks/useState";
-import { createFileInput } from "@/utils/common";
-import { useUserStore } from "@/stores/index";
-import { fileToBase64 } from "@/utils/chat/index";
-import EmojiMart from "@/components/EmojiMart/index.vue";
+<script setup lang="ts">
+import { computed, ref } from "vue"
 
-const userName = ref("");
-const [open, setOpen] = useState(false);
-const [showEmojiPickerFlag, setShowEmojiPickerFlag] = useState(false);
+import EmojiMart from "@/components/EmojiMart/index.vue"
+import { useState } from "@/hooks/useState"
+import { useUserStore } from "@/stores/modules/user"
+import { fileToBase64 } from "@/utils/chat/index"
+import { createFileInput } from "@/utils/common"
 
-const userStore = useUserStore();
+const userName = ref("")
+const [open, setOpen] = useState(false)
+const [showEmojiPickerFlag, setShowEmojiPickerFlag] = useState(false)
+
+const userStore = useUserStore()
 
 const userAvatar = computed(() => {
-  return userStore.getUserAvatar;
-});
+  return userStore.getUserAvatar
+})
 
 const menu = [
   {
     key: "upload",
     label: "图片上传",
     onClick: () => {
-      handleUploadProfile();
+      handleUploadProfile()
     },
   },
   {
     key: "emoji",
     label: "表情选着",
     onClick: () => {
-      handleEmojiClick();
+      handleEmojiClick()
     },
   },
   {
     key: "reset",
     label: "重置头像",
     onClick: () => {
-      handleReset();
+      handleReset()
     },
   },
-];
+]
 
 const show = () => {
-  setOpen(true);
-};
+  setOpen(true)
+}
 
 const handleClose = () => {
-  setOpen(false);
-};
+  setOpen(false)
+}
 
 const setUserName = (value = "") => {
-  userStore.setUserLocalStore({ userName: value.trim() });
-};
+  userStore.setUserLocalStore({ userName: value.trim() })
+}
 
 const handleEmojiSelect = (emoji) => {
-  console.log("handleEmojiSelect", emoji);
-  userStore.setUserLocalStore({ native: emoji.native, avatar: "" });
-};
+  console.log("handleEmojiSelect", emoji)
+  userStore.setUserLocalStore({ native: emoji.native, avatar: "" })
+}
 
 const handleUploadProfile = async () => {
   createFileInput({
     accept: ["image/png", "image/jpeg", "image/gif"],
     onChange: async (file) => {
       if (file && file.length > 0) {
-        const base64 = await fileToBase64(file[0]);
-        userStore.setUserLocalStore({ avatar: base64, native: "" });
+        const base64 = await fileToBase64(file[0])
+        userStore.setUserLocalStore({ avatar: base64, native: "" })
         // handleClose();
       }
     },
-  });
-};
+  })
+}
 
 const handleEmojiClick = async () => {
-  setShowEmojiPickerFlag(true);
-};
+  setShowEmojiPickerFlag(true)
+}
 
 const handleReset = async () => {
-  userStore.setUserLocalStore({ native: "", avatar: "" });
-};
+  userStore.setUserLocalStore({ native: "", avatar: "" })
+}
 
-defineExpose({ show });
+defineExpose({ show })
 </script>
 
 <style lang="scss" scoped>

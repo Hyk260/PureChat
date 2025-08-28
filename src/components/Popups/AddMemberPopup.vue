@@ -7,10 +7,7 @@
         :class="{ 'forward-hover': memberValue?.toAccount === item.toAccount }"
         @click="onClickItem(item)"
       >
-        <img
-          :src="item.userProfile?.avatar || getAiAvatarUrl(item.conversationID) || squareUrl"
-          alt=""
-        />
+        <img :src="item.userProfile?.avatar || getAiAvatarUrl(item.conversationID) || squareUrl" alt="" />
         <div>{{ chatName(item) }}</div>
       </div>
     </div>
@@ -23,35 +20,36 @@
   </el-dialog>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import { useState } from "@/hooks/useState";
-import { chatName, squareUrl } from "@/utils/chat/index";
-import { getAiAvatarUrl } from "@/ai/utils";
-import { useChatStore } from "@/stores/index";
+<script setup lang="ts">
+import { ref } from "vue"
+
+import { getAiAvatarUrl } from "@/ai/utils"
+import { useState } from "@/hooks/useState"
+import { useChatStore } from "@/stores/index"
+import { chatName, squareUrl } from "@/utils/chat/index"
 
 defineOptions({
   name: "AddMemberPopup",
-});
+})
 
-const memberValue = ref(null);
-const emits = defineEmits(["define"]);
-const [dialog, setDialog] = useState();
-const chatStore = useChatStore();
+const memberValue = ref(null)
+const emits = defineEmits(["define"])
+const [dialog, setDialog] = useState()
+const chatStore = useChatStore()
 
 const onClickItem = (value) => {
-  memberValue.value = value;
-};
+  memberValue.value = value
+}
 const openDialog = () => {
-  setDialog(true);
-};
+  setDialog(true)
+}
 const close = () => {
-  setDialog(false);
-};
+  setDialog(false)
+}
 const define = () => {
-  emits("define", memberValue.value);
-  setDialog(false);
-};
+  emits("define", memberValue.value)
+  setDialog(false)
+}
 
-defineExpose({ openDialog });
+defineExpose({ openDialog })
 </script>
