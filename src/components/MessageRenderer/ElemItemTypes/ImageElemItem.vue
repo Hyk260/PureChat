@@ -29,10 +29,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  self: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const imgStyle = ref({})
@@ -78,7 +74,7 @@ async function initImageSize() {
   }
 }
 
-const handleImageClick = (url) => {
+const handleImageClick = (url: string) => {
   console.log("Image clicked:", url)
 }
 

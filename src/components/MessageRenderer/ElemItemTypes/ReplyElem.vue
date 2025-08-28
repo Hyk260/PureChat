@@ -41,7 +41,7 @@ const props = defineProps({
   status: {
     type: String,
     default: "unSend",
-    validator: (value) => ["unSend", "fail", "success", "sending"].includes(value),
+    validator: (value: string) => ["unSend", "fail", "success", "sending"].includes(value),
   },
 })
 

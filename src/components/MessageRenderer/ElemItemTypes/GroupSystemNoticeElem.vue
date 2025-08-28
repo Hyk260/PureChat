@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { groupSystemNotice } from "@/utils/chat/index"
 
-const props = defineProps({
+defineProps({
   message: {
     type: Object,
     default: () => ({}),

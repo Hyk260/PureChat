@@ -37,8 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
 import { Operation, QuestionFilled } from "@element-plus/icons-vue"
+import { ref } from "vue"
 import { useRouter } from "vue-router"
 
 import SidebarEditDialog from "@/components/MoreSidebar/index.vue"

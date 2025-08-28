@@ -82,7 +82,7 @@ export const BaseElemMessage = {
   isRevoked: false,
   from: "",
   to: "",
-  flow: "",
+  flow: "out",
   isSystemMessage: false,
   protocol: "JSON",
   isResend: false,

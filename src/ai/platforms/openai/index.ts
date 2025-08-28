@@ -251,7 +251,6 @@ export class OpenAiApi {
    * @param {Function} finish - 完成回调
    */
   handleStreamMessage(msg: any, remainText: string, reasoningText: string, options: ChatOptions, finish: () => void) {
-    // debugger
     console.log("[OpenAI] 收到消息:", msg)
 
     if (msg.data === "[DONE]") {

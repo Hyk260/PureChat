@@ -5,6 +5,7 @@ interface Events {
   SidebarEditDialog: boolean
   updateScroll: void
   handleAt: { id: string; name: string }
+  handleSetHtml: string
 }
 
 const emitter: Emitter<Events> = mitt<Events>()

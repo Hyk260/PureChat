@@ -19,8 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, PropType } from "vue"
 
+import { DB_Message } from "@/database/schemas/message"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({
@@ -29,18 +30,18 @@ defineOptions({
 
 const { message } = defineProps({
   message: {
-    type: Object,
+    type: Object as PropType<DB_Message>,
     required: true,
     default: () => ({}),
   },
 })
 
 const messageCount = computed(() => {
-  return message.payload.messageList?.length || message.payload.abstractList?.length
+  return message.payload?.messageList?.length || message.payload?.abstractList?.length
 })
 
 const abstractList = computed(() => {
-  return message.payload.abstractList?.slice(0, 2) || []
+  return message.payload?.abstractList?.slice(0, 2) || []
 })
 
 function handleClick() {

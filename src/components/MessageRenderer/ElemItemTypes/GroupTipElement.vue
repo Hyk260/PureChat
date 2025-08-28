@@ -38,7 +38,7 @@ const memberJoin = (message) => {
   // groupJoinType 1: "申请加群" 2: "邀请加群"
   const { groupJoinType, userIDList } = message.payload
   if (userIDList.length === 1) {
-    if (userProfile.value?.userID === userIDList[0]) {
+    if (userProfile?.userID === userIDList[0]) {
       return "你已经是群成员了，和大家打个招呼吧！🎉"
     }
   }
@@ -50,7 +50,7 @@ const memberJoin = (message) => {
 }
 
 const memberProfileUpdated = (message) => {
-  for (let member of message.payload.memberList) {
+  for (const member of message.payload.memberList) {
     if (member.muteTime > 0) {
       return `群成员：${member.userID}被禁言${member.muteTime}秒`
     } else {

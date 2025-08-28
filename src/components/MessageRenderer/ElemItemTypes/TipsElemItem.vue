@@ -12,14 +12,15 @@
 
 <script setup lang="ts">
 import { CircleCloseFilled } from "@element-plus/icons-vue"
-import { computed } from "vue"
+import { computed, PropType } from "vue"
 
+import { DB_Message } from "@/database/schemas/message"
 import { useChatStore, useUserStore } from "@/stores/index"
 import emitter from "@/utils/mitt-bus"
 
 const props = defineProps({
   message: {
-    type: Object,
+    type: Object as PropType<DB_Message>,
     default: () => ({}),
   },
 })
@@ -30,7 +31,7 @@ const userStore = useUserStore()
 const isMine = computed(() => props.message.flow === "out")
 const isReEdit = computed(() => chatStore.revokeMsgMap.get(props.message.ID))
 
-async function onClose(data) {
+async function onClose(data: DB_Message) {
   chatStore.deleteMessage({
     sessionId: data.conversationID,
     messageIdArray: [data.ID],
@@ -42,14 +43,14 @@ function onClick() {
   console.log(chatStore.revokeMsgMap)
 }
 
-function onEdit(data = props.message) {
-  console.log("[edit]:", data)
+function onEdit() {
+  const data = props.message
   emitter.emit("handleSetHtml", data?.payload?.text)
   chatStore.updateRevokeMsg({ data, type: "delete" })
 }
 
-function getChangeType(message = props.message) {
-  const { conversationType: type, nick, from, revokerInfo, payload } = message
+function getChangeType() {
+  const { conversationType: type, nick, from, revokerInfo } = props.message
   const isGroup = type === "GROUP"
   const isC2C = type === "C2C"
   if (isMine.value) {
@@ -69,6 +70,8 @@ function getChangeType(message = props.message) {
         return `${name} 撤回了成员 ${nick} 的一条消息`
       }
       return `${nick} 撤回了一条消息`
+    } else {
+      return "撤回了一条消息"
     }
   }
 }

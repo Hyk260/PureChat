@@ -31,7 +31,7 @@ defineOptions({
 
 const link = true
 
-const props = defineProps({
+defineProps({
   text: {
     type: String,
     default: "",

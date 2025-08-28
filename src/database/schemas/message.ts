@@ -36,6 +36,7 @@ export const MessageSchema = {
   isBroadcastMessage: false,
   isSupportExtension: false,
   revoker: "",
+  revokerInfo: {},
   revokeReason: "",
   payload: {
     text: "",
@@ -84,6 +85,7 @@ export const DB_MessageSchema = z.object({
   isBroadcastMessage: z.boolean(),
   isSupportExtension: z.boolean(),
   revoker: z.string(),
+  revokerInfo: z.record(z.any()).optional(),
   revokeReason: z.string(),
   payload: z.record(z.any()),
   isTimeDivider: z.boolean().optional(),

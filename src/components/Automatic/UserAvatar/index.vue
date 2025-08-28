@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { getAiAvatarUrl } from "@/ai/utils"
 import { useUserStore } from "@/stores/modules/user"
 import { circleUrl, emptyUrl, squareUrl } from "@/utils/chat"
@@ -73,17 +73,12 @@ const props = defineProps({
   type: {
     type: String,
     default: "group",
-    validator: (value) => {
-      return ["single", "group", "self"].includes(value)
-    },
+    validator: (value: string) => ["single", "group", "self"].includes(value),
   },
   shape: {
     type: String,
     default: "circle",
-    validator: (value) => {
-      // 圆形 方形
-      return ["square", "circle"].includes(value)
-    },
+    validator: (value: string) => ["square", "circle"].includes(value),
   },
 })
 
@@ -96,12 +91,12 @@ const userStore = useUserStore()
 
 const { userProfile, userLocalStore } = storeToRefs(userStore)
 
-const displayInfo = (info) => {
+const displayInfo = (info: string) => {
   if (!info) return "unknown"
-  return info.slice(0, props.words).toUpperCase()
+  return info.slice(0, Number(props.words)).toUpperCase()
 }
 
-const fnAvatar = (url) => {
+const fnAvatar = (url: string) => {
   if (__LOCAL_MODE__) {
     return userStore.getUserAvatar
   } else {
@@ -109,7 +104,7 @@ const fnAvatar = (url) => {
   }
 }
 
-const backInfo = (url) => {
+const backInfo = (url: string) => {
   return { backgroundImage: url ? `url(${url})` : "" }
 }
 </script>

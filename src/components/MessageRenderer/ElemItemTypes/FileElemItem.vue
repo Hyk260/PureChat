@@ -38,15 +38,11 @@ const props = defineProps({
     type: String,
     default: "success",
   },
-  self: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const { payload } = props.message
 
-const fileNameRef = ref(null)
+const fileNameRef = ref<HTMLDivElement | null>(null)
 const backgroundStyle = ref("")
 const shouldShowTooltip = ref(false)
 
@@ -83,10 +79,10 @@ const handleProgressUpdate = ({ uuid, num, type = "up" }) => {
     }
     dom.style.background = getBackgroundStyle(1, num)
     if (type === "up") {
-      const upProgress = dom.querySelector(".upload-progress")
+      const upProgress = dom.querySelector(".upload-progress") as HTMLElement
       upProgress.innerText = num + "%"
     } else if (type === "dow") {
-      const downProgress = dom.querySelector(".download-progress")
+      const downProgress = dom.querySelector(".download-progress") as HTMLElement
       downProgress.innerText = num + "%"
     }
   } catch (error) {
