@@ -1,12 +1,7 @@
 <template>
   <div class="header">
     <div>Discover</div>
-    <el-input
-      v-model="input"
-      placeholder="搜索名称介绍或关键词..."
-      clearable
-      @input="emit('handleClick', input)"
-    >
+    <el-input v-model="input" placeholder="搜索名称介绍或关键词..." clearable @input="emit('handleClick', input)">
       <template #prefix>
         <el-icon class="el-input__icon">
           <Search />
@@ -17,13 +12,13 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import { Search } from "@element-plus/icons-vue";
+<script setup lang="ts">
+import { Search } from "@element-plus/icons-vue"
+import { ref } from "vue"
 
-const input = ref("");
+const input = ref("")
 
-const emit = defineEmits(["handleClick"]);
+const emit = defineEmits(["handleClick"])
 </script>
 
 <style lang="scss" scoped>

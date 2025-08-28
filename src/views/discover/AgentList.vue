@@ -5,7 +5,8 @@
         <button
           v-for="item in market.tags"
           :key="item"
-          :class="['item-tags', current === item ? 'active' : '']"
+          class="item-tags"
+          :class="[current === item ? 'active' : '']"
           @click="emit('handleClick', item)"
         >
           {{ item }}
@@ -18,39 +19,30 @@
 
     <div v-if="tabsKey === 'assistant'" class="agent-list">
       <AgentSkeleton v-if="!isSkeleton" />
-      <AgentCard
-        v-for="item in agent"
-        v-else
-        :key="item.identifier"
-        :agents="item"
-        @click="cardClick(item)"
-      />
+      <AgentCard v-for="item in agent" v-else :key="item.identifier" :agents="item" @click="cardClick(item)" />
     </div>
 
     <div v-if="tabsKey === 'model_provider'" class="agent-list" style="--rows: 2">
-      <ModelProviderCard
-        v-for="item in ProvidersList"
-        :key="item.userID"
-        :agents="item"
-        @click="providerClick(item)"
-      />
+      <ModelProviderCard v-for="item in ProvidersList" :key="item.userID" :agents="item" @click="providerClick(item)" />
     </div>
   </div>
 </template>
 
-<script setup>
-import { useSidebarStore, useChatStore } from "@/stores";
-import { ProvidersList } from "@database/config";
-import { isEmpty } from "lodash-es";
-import AgentCard from "./AgentCard.vue";
-import ModelProviderCard from "./ModelProviderCard.vue";
-import AgentSkeleton from "./AgentSkeleton.vue";
-import emitter from "@/utils/mitt-bus";
+<script setup lang="ts">
+import { ProvidersList } from "@database/config"
+import { isEmpty } from "lodash-es"
 
-const emit = defineEmits(["handleClick"]);
+import { useChatStore, useSidebarStore } from "@/stores"
+import emitter from "@/utils/mitt-bus"
 
-const sidebarStore = useSidebarStore();
-const chatStore = useChatStore();
+import AgentCard from "./AgentCard.vue"
+import AgentSkeleton from "./AgentSkeleton.vue"
+import ModelProviderCard from "./ModelProviderCard.vue"
+
+const emit = defineEmits(["handleClick"])
+
+const sidebarStore = useSidebarStore()
+const chatStore = useChatStore()
 
 const props = defineProps({
   current: {
@@ -69,19 +61,19 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-});
+})
 
 const isSkeleton = computed(() => {
-  return !isEmpty(props.market);
-});
+  return !isEmpty(props.market)
+})
 
 function cardClick(item) {
-  emitter.emit("openAgentCard", item);
+  emitter.emit("openAgentCard", item)
 }
 
 function providerClick(item) {
-  sidebarStore.toggleOutside({ path: "/chat" });
-  chatStore.addConversation({ sessionId: `${"C2C"}${item.userID}` });
+  sidebarStore.toggleOutside({ path: "/chat" })
+  chatStore.addConversation({ sessionId: `${"C2C"}${item.userID}` })
 }
 </script>
 
@@ -135,10 +127,7 @@ function providerClick(item) {
   display: grid !important;
   grid-template-columns: repeat(
     auto-fill,
-    minmax(
-      max(var(--max-item-width), calc((100% - var(--gap) * (var(--rows) - 1)) / var(--rows))),
-      1fr
-    )
+    minmax(max(var(--max-item-width), calc((100% - var(--gap) * (var(--rows) - 1)) / var(--rows))), 1fr)
   );
   gap: 1em;
   padding: 15px;

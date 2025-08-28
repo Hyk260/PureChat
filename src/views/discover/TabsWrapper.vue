@@ -8,21 +8,22 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import { options } from './utils';
+<script setup lang="ts">
+import { ref } from "vue"
+
+import { options } from "./utils"
 
 defineOptions({
   name: "TabsWrapper",
-});
+})
 
-const emit = defineEmits(["handleTabs"]);
+const emit = defineEmits(["handleTabs"])
 
-const active = ref(options[0].value);
+const active = ref(options[0].value)
 
 function onCilck(item) {
-  active.value = item.value;
-  emit("handleTabs", item.value);
+  active.value = item.value
+  emit("handleTabs", item.value)
 }
 </script>
 

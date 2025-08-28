@@ -19,13 +19,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineProps({
   agents: {
     type: [Array, Object],
     default: () => [],
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>

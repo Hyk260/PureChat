@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { getAiAvatarUrl } from "@/ai/utils"
 
 defineOptions({

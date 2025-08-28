@@ -7,6 +7,6 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const { homepage, bugs } = __APP_INFO__.pkg
 </script>

@@ -36,56 +36,57 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
-import { ModelID } from '@shared/provider';
-import { useState } from "@/hooks/useState";
-import { getModelId } from "@/ai/utils";
-import { useRobotStore, useSidebarStore, useChatStore } from "@/stores";
-import emitter from "@/utils/mitt-bus";
+import { ModelID } from "@shared/provider"
+import { onBeforeUnmount, onMounted, ref } from "vue"
 
-const cardData = ref({});
-const sidebarStore = useSidebarStore();
-const robotStore = useRobotStore();
-const chatStore = useChatStore();
-const [dialog, setDialog] = useState(false);
+import { getModelId } from "@/ai/utils"
+import { useState } from "@/hooks/useState"
+import { useChatStore, useRobotStore, useSidebarStore } from "@/stores"
+import emitter from "@/utils/mitt-bus"
+
+const cardData = ref({})
+const sidebarStore = useSidebarStore()
+const robotStore = useRobotStore()
+const chatStore = useChatStore()
+const [dialog, setDialog] = useState(false)
 
 function startConversation(item = cardData.value) {
-  const { identifier, meta } = item;
-  const defaultBot = robotStore.defaultProvider;
+  const { identifier, meta } = item
+  const defaultBot = robotStore.defaultProvider
   const prompt = {
     id: identifier,
     meta,
     lang: "cn",
     prompt: [{ role: "system", content: meta.systemRole }],
-  };
-  robotStore.setPromptStore([prompt], defaultBot);
-  const id = getModelId(defaultBot) || ModelID.OpenAI;
-  setDialog(false);
-  sidebarStore.toggleOutside({ path: "/chat" });
-  chatStore.addConversation({ sessionId: `${"C2C"}${id}` });
+  }
+  robotStore.setPromptStore([prompt], defaultBot)
+  const id = getModelId(defaultBot) || ModelID.OpenAI
+  setDialog(false)
+  sidebarStore.toggleOutside({ path: "/chat" })
+  chatStore.addConversation({ sessionId: `${"C2C"}${id}` })
   setTimeout(() => {
-    chatStore.addAiPresetPromptWords();
-  }, 200);
+    chatStore.addAiPresetPromptWords()
+  }, 200)
 }
 
 function handleClose(done: () => void) {
-  done();
+  done()
 }
 
 function setAgentCard(data) {
-  cardData.value = data;
-  setDialog(true);
+  cardData.value = data
+  setDialog(true)
 }
 
 onMounted(() => {
   emitter.on("openAgentCard", (data) => {
-    setAgentCard(data);
-  });
-});
+    setAgentCard(data)
+  })
+})
 
 onBeforeUnmount(() => {
-  emitter.off("openAgentCard");
-});
+  emitter.off("openAgentCard")
+})
 </script>
 
 <style lang="scss" scoped>

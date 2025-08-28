@@ -21,71 +21,69 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount } from "vue";
-import { getPrompt } from "@/service/api";
-import { localStg } from "@/utils/storage";
-import { options } from "./utils";
-import { marketJson } from "@database/market";
-import AgentList from "./AgentList.vue";
-import AgentCardBanner from "./AgentCardBanner.vue";
-import DiscoverHeader from "./DiscoverHeader.vue";
-import TabsWrapper from "./TabsWrapper.vue";
-import StarMessage from "./StarMessage.vue";
+import { marketJson } from "@database/market"
+import { onBeforeMount, ref } from "vue"
 
-const agent = ref([]);
-const market = ref({});
-const current = ref("");
-const tabsKey = ref(options[0].value);
-const marketLocal = localStg.get("marketJson");
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+import { getPrompt } from "@/service/api"
+import { localStg } from "@/utils/storage"
+
+import AgentCardBanner from "./AgentCardBanner.vue"
+import AgentList from "./AgentList.vue"
+import DiscoverHeader from "./DiscoverHeader.vue"
+import StarMessage from "./StarMessage.vue"
+import TabsWrapper from "./TabsWrapper.vue"
+import { options } from "./utils"
+
+const agent = ref([])
+const market = ref({})
+const current = ref("")
+const tabsKey = ref(options[0].value)
+const marketLocal = localStg.get("marketJson")
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 function handleTabs(key) {
-  tabsKey.value = key;
+  tabsKey.value = key
 }
 
 function handleClick(key) {
-  current.value = current.value === key ? "" : key;
+  current.value = current.value === key ? "" : key
   if (current.value === key) {
     agent.value = market.value.agents.filter((item) => {
-      return (
-        item.meta.title.includes(key) ||
-        item.meta.tags.includes(key) ||
-        item.meta.description.includes(key)
-      );
-    });
+      return item.meta.title.includes(key) || item.meta.tags.includes(key) || item.meta.description.includes(key)
+    })
   } else {
-    agent.value = market.value.agents;
+    agent.value = market.value.agents
   }
 }
 
 function setMarketData(data) {
-  market.value = data;
-  agent.value = data.agents;
+  market.value = data
+  agent.value = data.agents
 }
 
 async function initPrompt() {
   if (__LOCAL_MODE__) {
-    setMarketData(marketJson);
-    return;
+    setMarketData(marketJson)
+    return
   }
 
   if (marketLocal) {
-    setMarketData(marketLocal);
+    setMarketData(marketLocal)
   }
 
   try {
-    const res = await getPrompt();
+    const res = await getPrompt()
     // await delay(1000)
-    setMarketData(res);
-    localStg.set("marketJson", res);
+    setMarketData(res)
+    localStg.set("marketJson", res)
   } catch (error) {
-    console.error("Failed to fetch prompt:", error);
-    setMarketData(marketJson);
-    localStg.set("marketJson", marketJson);
+    console.error("Failed to fetch prompt:", error)
+    setMarketData(marketJson)
+    localStg.set("marketJson", marketJson)
   }
 }
 
-onBeforeMount(initPrompt);
+onBeforeMount(initPrompt)
 </script>
 
 <style lang="scss" scoped>
