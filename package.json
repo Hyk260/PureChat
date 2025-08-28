@@ -23,6 +23,7 @@
     "lint": "eslint . --ext .vue,.js,.ts --fix",
     "lint:check": "eslint . --ext .vue,.js,.ts",
     "type:check": "vue-tsc --noEmit",
+    "type:watch": "vue-tsc --noEmit --watch",
     "check": "node scripts/check-all.js"
   },
   "dependencies": {

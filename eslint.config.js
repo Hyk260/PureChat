@@ -40,6 +40,7 @@ export default defineConfig([
       globals: {
         ...globals.browser,
         ...globals.node,
+        process: "readonly",
         __APP_INFO__: "readonly",
         __IS_ELECTRON__: "readonly",
         __LOCAL_MODE__: "readonly",
@@ -90,6 +91,13 @@ export default defineConfig([
       ],
       "@typescript-eslint/no-import-type-side-effects": "warn",
       "@typescript-eslint/prefer-readonly": "warn",
+      // "@typescript-eslint/strict": "error",
+      // "@typescript-eslint/no-explicit-any": "error",
+      // "@typescript-eslint/no-unsafe-argument": "error",
+      // "@typescript-eslint/no-unsafe-assignment": "error",
+      // "@typescript-eslint/no-unsafe-call": "error",
+      // "@typescript-eslint/no-unsafe-member-access": "error",
+      // "@typescript-eslint/no-unsafe-return": "error",
 
       // === 代码质量规则 ===
       "no-console": isProd ? "warn" : "off",
@@ -126,6 +134,8 @@ export default defineConfig([
           groups: [
             // Node.js 内置模块
             ["^node:"],
+            // Vue 相关包
+            ["^vue", "^@vue", "^@?\\w.*vue"],
             // 第三方包
             ["^@?\\w"],
             // 内部模块
@@ -220,6 +230,15 @@ export default defineConfig([
       "simple-import-sort/imports": "warn",
       "simple-import-sort/exports": "warn",
       "unused-imports/no-unused-imports": "warn",
+
+      // 性能相关
+      // "vue/no-watch-after-await": "warn",
+      // "vue/require-component-is": "warn",
+
+      // Composition API 最佳实践
+      // "vue/block-order": ["warn", {
+      //   "order": ["script", "template", "style"]
+      // }],
       // Prettier 规则
       "prettier/prettier": "warn",
     },

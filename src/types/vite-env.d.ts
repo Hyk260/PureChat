@@ -81,6 +81,10 @@ declare namespace Env {
     readonly VITE_GITHUB_API_KEY: string;
     /** GitHub API URL */
     readonly VITE_GITHUB_PROXY_URL: string;
+    /** Zhipu API Key */
+    readonly VITE_ZHIPU_API_KEY: string;
+    /** Zhipu API URL */
+    readonly VITE_ZHIPU_BASE_URL: string;
   }
 }
 

@@ -18,6 +18,7 @@ export const ZeroOneModelValue = () => {
       Title: "接口地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
       Placeholder: VITE_ZEROONE_BASE_URL || "",
+      apiHost: "https://api.lingyiwanwu.com/v1/chat/completions",
       defaultValue: "",
     },
     Token: {

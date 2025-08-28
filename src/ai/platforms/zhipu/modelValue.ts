@@ -18,6 +18,7 @@ export const ZhiPuModelValue = () => {
       Title: "接口地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
       Placeholder: VITE_ZHIPU_BASE_URL,
+      apiHost: "https://open.bigmodel.cn/api/paas/v4/chat/completions",
       defaultValue: "",
     },
     Token: {

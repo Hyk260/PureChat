@@ -17,6 +17,7 @@ export const GitHubModelValue = () => {
       Title: "github 服务地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
       Placeholder: VITE_GITHUB_PROXY_URL,
+      apiHost: "https://models.inference.ai.azure.com/chat/completions",
       defaultValue: "",
     },
     Token: {
