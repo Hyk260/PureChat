@@ -5,14 +5,14 @@
 </template>
 
 <script setup lang="ts">
-import { groupSystemNotice } from "@/utils/chat/index";
+import { groupSystemNotice } from "@/utils/chat/index"
 
 const props = defineProps({
   message: {
     type: Object,
     default: () => ({}),
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>

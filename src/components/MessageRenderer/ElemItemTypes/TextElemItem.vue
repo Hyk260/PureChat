@@ -1,31 +1,21 @@
 <template>
-  <div
-    class="message-view-item-text"
-    :class="messageStyleClasses"
-    @click="handleMessageClick(message)"
-  >
+  <div class="message-view-item-text" :class="messageStyleClasses" @click="handleMessageClick(message)">
     <template v-if="hasValidMessageType">
       <!-- 回复消息 -->
-      <ReplyElem
-        v-if="parsedCloudCustomData"
-        :status="message.status"
-        :original-msg="parsedCloudCustomData"
-      />
-      <Markdown
-        v-if="shouldShowMarkdown"
-        :cloud-custom-data="parsedCloudCustomData"
-        :marked="message.payload.text"
-      />
+      <ReplyElem v-if="parsedCloudCustomData" :status="message.status" :original-msg="parsedCloudCustomData" />
+      <Markdown v-if="shouldShowMarkdown" :cloud-custom-data="parsedCloudCustomData" :marked="message.payload.text" />
       <DynamicContent v-else :at-user-list="message.atUserList" :text="message.payload.text" />
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useChatStore, useUserStore } from "@/stores/index";
-import ReplyElem from "./ReplyElem.vue";
-import DynamicContent from "@/views/chatStudio/components/DynamicContent.vue";
+import { computed } from "vue"
+import { DB_Message } from '@/database/schemas/message';
+import { useChatStore, useAppStore } from "@/stores"
+import DynamicContent from "@/views/chatStudio/components/DynamicContent.vue"
+
+import ReplyElem from "./ReplyElem.vue"
 
 const props = defineProps({
   msgType: {
@@ -33,48 +23,42 @@ const props = defineProps({
     default: "",
   },
   message: {
-    type: Object,
-    default: () => ({}),
+    type: Object as PropType<DB_Message>,
   },
   self: {
     type: Boolean,
     default: false,
   },
-});
+})
 
-const chatStore = useChatStore();
-const userStore = useUserStore();
+const chatStore = useChatStore()
+const appStore = useAppStore()
 
 const hasValidMessageType = computed(() => {
-  return !!props.message?.conversationType || !!props.msgType;
-});
+  return !!props.message?.conversationType || !!props.msgType
+})
 
 const parsedCloudCustomData = computed(() => {
   try {
-    return props.message?.cloudCustomData ? JSON.parse(props.message.cloudCustomData) : null;
+    return props.message?.cloudCustomData ? JSON.parse(props.message.cloudCustomData) : null
   } catch (error) {
-    console.error("Failed to parse cloudCustomData:", error);
-    return null;
+    console.error("Failed to parse cloudCustomData:", error)
+    return null
   }
-});
+})
 
 const shouldShowMarkdown = computed(() => {
-  if (userStore.markdownRender) return true
+  if (appStore.markdownRender) return true
   return chatStore.isAssistant && props.message?.flow === "in"
-});
+})
 
 const messageStyleClasses = computed(() => {
-  return [
-      props.self ? "is-text-self" : "is-text-other",
-      shouldShowMarkdown.value ? "markdown" : ""
-    ]
-    .join(" ")
-    .trim();
-});
+  return [props.message?.flow === "out" ? "is-text-self" : "is-text-other", shouldShowMarkdown.value ? "markdown" : ""].join(" ").trim()
+})
 
 const handleMessageClick = (message) => {
-  console.log("Message clicked:", message);
-};
+  console.log("Message clicked:", message)
+}
 </script>
 
 <style lang="scss" scoped>

@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import Artplayer from "artplayer"
+import { computed, onBeforeUnmount, onMounted, ref } from "vue"
 
 const state = `<svg
   viewBox='0 0 80 80'
@@ -81,7 +81,6 @@ const indicator = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'>
     ></path>
   </svg>`
 
-
 const props = defineProps({
   message: {
     type: Object,
@@ -106,7 +105,7 @@ const option = computed(() => ({
     state,
     loading: `<img width="50" heigth="50" src="${loading.value}">`,
     indicator,
-  }
+  },
 }))
 
 const initArt = () => {

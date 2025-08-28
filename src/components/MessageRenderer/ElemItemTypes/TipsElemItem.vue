@@ -2,11 +2,7 @@
   <div class="message-view_withdraw" @click="onClick">
     <span class="withdraw">
       <span> {{ getChangeType() }} </span>
-      <el-icon
-        v-show="!isReEdit && message.type !== 'TIMCustomElem'"
-        class="close"
-        @click.stop="onClose(message)"
-      >
+      <el-icon v-show="!isReEdit && message.type !== 'TIMCustomElem'" class="close" @click.stop="onClose(message)">
         <CircleCloseFilled />
       </el-icon>
     </span>
@@ -15,63 +11,64 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { CircleCloseFilled } from "@element-plus/icons-vue";
-import { useChatStore, useUserStore } from "@/stores/index";
-import emitter from "@/utils/mitt-bus";
+import { CircleCloseFilled } from "@element-plus/icons-vue"
+import { computed } from "vue"
+
+import { useChatStore, useUserStore } from "@/stores/index"
+import emitter from "@/utils/mitt-bus"
 
 const props = defineProps({
   message: {
     type: Object,
     default: () => ({}),
   },
-});
+})
 
-const chatStore = useChatStore();
-const userStore = useUserStore();
+const chatStore = useChatStore()
+const userStore = useUserStore()
 
-const isMine = computed(() => props.message.flow === "out");
-const isReEdit = computed(() => chatStore.revokeMsgMap.get(props.message.ID));
+const isMine = computed(() => props.message.flow === "out")
+const isReEdit = computed(() => chatStore.revokeMsgMap.get(props.message.ID))
 
 async function onClose(data) {
   chatStore.deleteMessage({
     sessionId: data.conversationID,
     messageIdArray: [data.ID],
     message: [data],
-  });
+  })
 }
 
 function onClick() {
-  console.log(chatStore.revokeMsgMap);
+  console.log(chatStore.revokeMsgMap)
 }
 
 function onEdit(data = props.message) {
-  console.log("[edit]:", data);
-  emitter.emit("handleSetHtml", data?.payload?.text);
-  chatStore.updateRevokeMsg({ data, type: "delete" });
+  console.log("[edit]:", data)
+  emitter.emit("handleSetHtml", data?.payload?.text)
+  chatStore.updateRevokeMsg({ data, type: "delete" })
 }
 
 function getChangeType(message = props.message) {
-  const { conversationType: type, nick, from, revokerInfo, payload } = message;
-  const isGroup = type === "GROUP";
-  const isC2C = type === "C2C";
+  const { conversationType: type, nick, from, revokerInfo, payload } = message
+  const isGroup = type === "GROUP"
+  const isC2C = type === "C2C"
   if (isMine.value) {
     if (isGroup) {
       if (from !== revokerInfo?.userID) {
-        return `${revokerInfo?.nick} 撤回了一条成员消息`;
+        return `${revokerInfo?.nick} 撤回了一条成员消息`
       }
     }
-    return "你撤回了一条消息";
+    return "你撤回了一条消息"
   } else {
     if (isC2C) {
-      return "对方撤回了一条消息";
+      return "对方撤回了一条消息"
     }
     if (isGroup) {
       if (from !== revokerInfo?.userID) {
-        const name = userStore.userProfile?.nick === revokerInfo?.nick ? "你" : revokerInfo?.nick;
-        return `${name} 撤回了成员 ${nick} 的一条消息`;
+        const name = userStore.userProfile?.nick === revokerInfo?.nick ? "你" : revokerInfo?.nick
+        return `${name} 撤回了成员 ${nick} 的一条消息`
       }
-      return `${nick} 撤回了一条消息`;
+      return `${nick} 撤回了一条消息`
     }
   }
 }

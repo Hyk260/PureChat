@@ -19,12 +19,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import emitter from "@/utils/mitt-bus";
+import { computed } from "vue"
+
+import emitter from "@/utils/mitt-bus"
 
 defineOptions({
   name: "RelayElemItem",
-});
+})
 
 const { message } = defineProps({
   message: {
@@ -32,18 +33,18 @@ const { message } = defineProps({
     required: true,
     default: () => ({}),
   },
-});
+})
 
 const messageCount = computed(() => {
-  return message.payload.messageList?.length || message.payload.abstractList?.length;
-});
+  return message.payload.messageList?.length || message.payload.abstractList?.length
+})
 
 const abstractList = computed(() => {
-  return message.payload.abstractList?.slice(0, 2) || [];
-});
+  return message.payload.abstractList?.slice(0, 2) || []
+})
 
 function handleClick() {
-  emitter.emit("openMergePopup", message);
+  emitter.emit("openMergePopup", message)
 }
 </script>
 

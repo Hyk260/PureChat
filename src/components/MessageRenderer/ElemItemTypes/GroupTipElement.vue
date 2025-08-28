@@ -5,8 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useUserStore } from '@/stores/modules/user';
+import { computed } from "vue"
+
+import { useUserStore } from "@/stores/modules/user"
 
 const props = defineProps({
   message: {

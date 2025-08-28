@@ -12,82 +12,83 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { prettyObject } from "@/ai/utils";
-import { transformCustomElement } from "@/utils/chat/index";
+import { ref } from "vue"
+
+import { prettyObject } from "@/ai/utils"
+import { transformCustomElement } from "@/utils/chat/index"
 
 defineOptions({
   name: "ToolCall",
-});
+})
 
 const props = defineProps({
   payload: {
     type: Object,
     default: null,
   },
-});
+})
 
 // 缓存解析结果
-const parsedCache = ref(new Map());
+const parsedCache = ref(new Map())
 
 function onClick(payload) {
   try {
-    const result = transformCustomElement({ payload });
-    console.log(result);
+    const result = transformCustomElement({ payload })
+    console.log(result)
   } catch (error) {
-    console.error("转换自定义元素失败:", error);
+    console.error("转换自定义元素失败:", error)
   }
 }
 
 function getToolResult(payload) {
   try {
-    const cacheKey = `tool_result_${payload.extension}`;
-    
+    const cacheKey = `tool_result_${payload.extension}`
+
     if (parsedCache.value.has(cacheKey)) {
-      return parsedCache.value.get(cacheKey);
+      return parsedCache.value.get(cacheKey)
     }
-    
-    const data = JSON.parse(payload.extension);
-    const result = prettyObject(data);
-    
-    parsedCache.value.set(cacheKey, result);
-    return result;
+
+    const data = JSON.parse(payload.extension)
+    const result = prettyObject(data)
+
+    parsedCache.value.set(cacheKey, result)
+    return result
   } catch (error) {
-    console.warn("解析工具结果失败:", error);
-    return "解析失败";
+    console.warn("解析工具结果失败:", error)
+    return "解析失败"
   }
 }
 
 function getArguments(payload) {
   try {
-    const cacheKey = `tool_args_${payload.data}`;
-    
+    const cacheKey = `tool_args_${payload.data}`
+
     if (parsedCache.value.has(cacheKey)) {
-      return parsedCache.value.get(cacheKey);
+      return parsedCache.value.get(cacheKey)
     }
-    
-    const data = JSON.parse(payload.data);
-    const toolCalls = data.data?.message?.choices?.[0]?.message?.tool_calls;
-    
+
+    const data = JSON.parse(payload.data)
+    const toolCalls = data.data?.message?.choices?.[0]?.message?.tool_calls
+
     if (!toolCalls) {
-      return "无效的工具调用数据";
+      return "无效的工具调用数据"
     }
-    
-    const result = prettyObject(toolCalls);
-    parsedCache.value.set(cacheKey, result);
-    return result;
+
+    const result = prettyObject(toolCalls)
+    parsedCache.value.set(cacheKey, result)
+    return result
   } catch (error) {
-    console.warn("解析工具参数失败:", error);
-    return "解析失败";
+    console.warn("解析工具参数失败:", error)
+    return "解析失败"
   }
 }
 
 // 清理缓存
 const clearCache = () => {
-  parsedCache.value.clear();
-};
+  parsedCache.value.clear()
+}
 
-defineExpose({ clearCache });
+defineExpose({ clearCache })
 </script>
 
 <style lang="scss" scoped>

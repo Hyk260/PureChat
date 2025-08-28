@@ -1,10 +1,5 @@
 <template>
-  <div
-    :id="payload.uuid"
-    class="file-elem-item"
-    :style="{ background: backgroundStyle }"
-    @click="handleOpen(payload)"
-  >
+  <div :id="payload.uuid" class="file-elem-item" :style="{ background: backgroundStyle }" @click="handleOpen(payload)">
     <div class="flex">
       <div class="min-w-45 h-45">
         <img draggable="false" class="h-full" :src="icon" :alt="payload.fileName" />
@@ -25,13 +20,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
-import { getFileType, renderFileIcon, bytesToSize } from "@/utils/chat/index";
-import emitter from "@/utils/mitt-bus";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue"
+
+import { bytesToSize, getFileType, renderFileIcon } from "@/utils/chat/index"
+import emitter from "@/utils/mitt-bus"
 
 defineOptions({
   name: "FileElemItem",
-});
+})
 
 const props = defineProps({
   message: {
@@ -46,73 +42,71 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-});
+})
 
-const { payload } = props.message;
+const { payload } = props.message
 
-const fileNameRef = ref(null);
-const backgroundStyle = ref("");
-const shouldShowTooltip = ref(false);
+const fileNameRef = ref(null)
+const backgroundStyle = ref("")
+const shouldShowTooltip = ref(false)
 
-const fileType = computed(() => getFileType(payload?.fileName));
-const icon = computed(() => renderFileIcon(fileType.value));
-const formattedFileSize = computed(() => bytesToSize(payload.fileSize));
-const isSuccess = computed(() => props.status === "success");
+const fileType = computed(() => getFileType(payload?.fileName))
+const icon = computed(() => renderFileIcon(fileType.value))
+const formattedFileSize = computed(() => bytesToSize(payload.fileSize))
+const isSuccess = computed(() => props.status === "success")
 
 const checkTextOverflow = () => {
-  if (!fileNameRef.value) return;
-  const element = fileNameRef.value;
-  shouldShowTooltip.value = element.scrollWidth > element.offsetWidth;
+  if (!fileNameRef.value) return
+  const element = fileNameRef.value
+  shouldShowTooltip.value = element.scrollWidth > element.offsetWidth
 }
 
 const handleOpen = async (data) => {
   if (__IS_ELECTRON__) {
-    console.log("Open electron:");
+    console.log("Open electron:")
   } else {
-    console.log("Open web:");
+    console.log("Open web:")
   }
 }
 
 const getBackgroundStyle = (status = 0, percentage = 0) => {
-  if (percentage === 100) return "";
-  return status === 1
-    ? `linear-gradient(to right, rgba(24, 144, 255, 0.09) ${percentage}%, white 0%, white 100%)`
-    : "";
-};
+  if (percentage === 100) return ""
+  return status === 1 ? `linear-gradient(to right, rgba(24, 144, 255, 0.09) ${percentage}%, white 0%, white 100%)` : ""
+}
 
 const handleProgressUpdate = ({ uuid, num, type = "up" }) => {
   try {
-    const dom = document.getElementById(`${uuid}`);
+    const dom = document.getElementById(`${uuid}`)
     if (!dom) {
-      console.warn("DOM element not found");
-      return;
+      console.warn("DOM element not found")
+      return
     }
-    dom.style.background = getBackgroundStyle(1, num);
+    dom.style.background = getBackgroundStyle(1, num)
     if (type === "up") {
-      const upProgress = dom.querySelector(".upload-progress");
-      upProgress.innerText = num + "%";
+      const upProgress = dom.querySelector(".upload-progress")
+      upProgress.innerText = num + "%"
     } else if (type === "dow") {
-      const downProgress = dom.querySelector(".download-progress");
-      downProgress.innerText = num + "%";
+      const downProgress = dom.querySelector(".download-progress")
+      downProgress.innerText = num + "%"
     }
   } catch (error) {
-    console.error("[upload]:", error);
+    console.error("[upload]:", error)
   }
-};
+}
 
 onUpdated(() => {
-  checkTextOverflow();
-});
+  checkTextOverflow()
+})
 
 onMounted(() => {
-  checkTextOverflow();
-  emitter.on("fileUploading", handleProgressUpdate);
-  backgroundStyle.value = getBackgroundStyle();
-});
+  checkTextOverflow()
+  emitter.on("fileUploading", handleProgressUpdate)
+  backgroundStyle.value = getBackgroundStyle()
+})
 
 onBeforeUnmount(() => {
-  emitter.off("fileUploading");
-});
+  emitter.off("fileUploading")
+})
 </script>
 
 <style lang="scss" scoped>

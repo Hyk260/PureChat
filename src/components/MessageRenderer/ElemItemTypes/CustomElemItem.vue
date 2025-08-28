@@ -6,8 +6,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import Loading from "../CustomMsgBody/Loading.vue";
+import { computed } from "vue"
+import Loading from "../CustomMsgBody/Loading.vue"
 
 const props = defineProps({
   message: {
@@ -18,43 +18,43 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-});
+})
 
 const messageClass = computed(() => [
   props.self ? "is-text-self" : "is-text-other",
   // isMessageType("warning") ? "!p-0" : "",
-]);
+])
 
-const isMessageType = (type) => props?.message?.payload?.description === type;
+const isMessageType = (type: string): boolean => props?.message?.payload?.description === type
 
 const handleClick = () => {
-  console.log(props.message);
-};
+  console.log(props.message)
+}
 
-const customMessageContent = () => {
+const customMessageContent = (): string => {
   try {
-    const { data, extension, text } = props.message.payload;
+    const { data, extension, text } = props.message.payload
 
-    const payload = data ? JSON.parse(data) : {};
+    const payload = data ? JSON.parse(data) : {}
 
     if (payload.businessID === "group_create") {
-      return `${payload.opUser}${payload.content}`;
+      return `${payload.opUser}${payload.content}`
     }
 
     if (data === "group_create") {
-      return extension || "";
+      return extension || ""
     }
 
     if (payload?.onlyID === "warning") {
-      return 'API Key 不正确或为空，请检查 API Key 后重试' || "[自定义消息]";
+      return "API Key 不正确或为空，请检查 API Key 后重试"
     }
 
-    return text || "[自定义消息]";
+    return text ?? "[自定义消息]"
   } catch (error) {
-    console.error("解析消息内容失败:", error);
-    return "[自定义消息]";
+    console.error("解析消息内容失败:", error)
+    return "[自定义消息]"
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

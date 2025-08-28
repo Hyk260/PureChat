@@ -63,7 +63,11 @@ export const DB_MessageSchema = z.object({
   isRevoked: z.boolean(),
   from: z.string(),
   to: z.string(),
-  flow: z.string(),
+  /**
+   * in: 收到
+   * out: 发出
+   */
+  flow: z.enum(["in", "out"]),
   isSystemMessage: z.boolean(),
   protocol: z.enum(["JSON", "XML", "Binary"]),
   isResend: z.boolean(),

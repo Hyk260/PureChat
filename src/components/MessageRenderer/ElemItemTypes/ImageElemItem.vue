@@ -18,9 +18,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue"
-import { showIMPic } from "@/utils/chat"
+import { computed, onMounted, ref } from "vue"
+
 import { useChatStore } from "@/stores"
+import { showIMPic } from "@/utils/chat"
 import { getImageSize } from "@/utils/common"
 
 const props = defineProps({
@@ -32,56 +33,58 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-});
+})
 
-const imgStyle = ref({});
-const chatStore = useChatStore();
+const imgStyle = ref({})
+const chatStore = useChatStore()
 
 const initialIndex = computed(() => {
-  const currentUrl = getImageProperties(0)?.url;
-  return chatStore.imgUrlList.findIndex(item => item === currentUrl);
-});
+  const currentUrl = getImageProperties(0)?.url
+  return chatStore.imgUrlList.findIndex((item) => item === currentUrl)
+})
 
 function getImageProperties(num = 0) {
   try {
-    const { payload: { imageInfoArray } } = props.message;
-    return imageInfoArray[num] || null;
+    const {
+      payload: { imageInfoArray },
+    } = props.message
+    return imageInfoArray[num] || null
   } catch (error) {
-    console.error('Failed to get image properties:', error);
-    return null;
+    console.error("Failed to get image properties:", error)
+    return null
   }
 }
 
-const url = computed(() => getImageProperties(0)?.url);
+const url = computed(() => getImageProperties(0)?.url)
 
 async function initImageSize() {
   try {
-    const imageInfo = getImageProperties(0);
-    let width = imageInfo?.width || 0;
-    let height = imageInfo?.height || 0;
+    const imageInfo = getImageProperties(0)
+    let width = imageInfo?.width || 0
+    let height = imageInfo?.height || 0
 
     if (width <= 0 || height <= 0) {
-      const { width: newWidth, height: newHeight } = await getImageSize(url.value);
-      width = newWidth;
-      height = newHeight;
+      const { width: newWidth, height: newHeight } = await getImageSize(url.value)
+      width = newWidth
+      height = newHeight
     }
 
-    const { width: finalWidth, height: finalHeight } = showIMPic(width, height);
-    imgStyle.value = { width: finalWidth, height: finalHeight };
+    const { width: finalWidth, height: finalHeight } = showIMPic(width, height)
+    imgStyle.value = { width: finalWidth, height: finalHeight }
   } catch (error) {
-    console.error('Failed to initialize image size:', error);
+    console.error("Failed to initialize image size:", error)
     // Set default size if calculation fails
-    imgStyle.value = { width: '142px', height: '82px' };
+    imgStyle.value = { width: "142px", height: "82px" }
   }
 }
 
 const handleImageClick = (url) => {
-  console.log('Image clicked:', url);
-};
+  console.log("Image clicked:", url)
+}
 
 onMounted(() => {
-  initImageSize();
-});
+  initImageSize()
+})
 </script>
 
 <style lang="scss" scoped>

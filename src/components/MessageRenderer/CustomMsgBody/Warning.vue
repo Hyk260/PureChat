@@ -8,35 +8,35 @@
 </template>
 
 <script setup>
-import { openWindow } from "@/utils/common";
-import { modelValue } from "@/ai/constant";
-import emitter from "@/utils/mitt-bus";
+import { modelValue } from "@/ai/constant"
+import { openWindow } from "@/utils/common"
+import emitter from "@/utils/mitt-bus"
 
 defineOptions({
   name: "Warning",
-});
+})
 
 const props = defineProps({
   payload: {
     type: Object,
     default: null,
   },
-});
+})
 function openRobotBox() {
-  emitter.emit("onRobotBox", { ApiKeyFocus: true });
+  emitter.emit("onRobotBox", { ApiKeyFocus: true })
 }
 function jumpLink() {
-  const url = getDoubt(props.payload);
-  openWindow(url);
+  const url = getDoubt(props.payload)
+  openWindow(url)
 }
 function getDoubt(payload) {
   try {
-    const provider = JSON.parse(payload.data).data.body.text.provider;
-    let doubt = modelValue[provider].Token.doubt;
-    return doubt;
+    const provider = JSON.parse(payload.data).data.body.text.provider
+    let doubt = modelValue[provider].Token.doubt
+    return doubt
   } catch (error) {
-    console.error(error);
-    return "";
+    console.error(error)
+    return ""
   }
 }
 </script>
