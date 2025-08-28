@@ -48,7 +48,6 @@ import emitter from "@/utils/mitt-bus"
 const sidebarStore = useSidebarStore()
 const chatStore = useChatStore()
 
-// 用户信息
 const userInfo = ref({
   groupID: "",
   userID: "",
@@ -70,13 +69,10 @@ const sendMessage = (data) => {
   handleConversation(convInfo)
 }
 
-const editProfile = () => {
-  // 编辑资料逻辑
-}
+const editProfile = () => {}
 
 onMounted(() => {
   emitter.on("handleProfile", (data) => {
-    console.log(data)
     userInfo.value = data
   })
 })

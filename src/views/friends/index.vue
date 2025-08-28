@@ -13,7 +13,7 @@
       <div class="quick-nav">
         <!-- <div
           class="quick-nav-item"
-          v-for="(tab, index) in tabsCopy"
+          v-for="(tab, index) in tabsList"
           :key="tab.id"
           @click="setActiveTab(tab)"
         >
@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import FriendsTabs from "./FriendsTabs.vue";
@@ -45,7 +45,7 @@ import FriendsTree from "./FriendsTree.vue";
 import ProfileCard from "./ProfileCard.vue";
 import emitter from "@/utils/mitt-bus";
 
-const tabsCopy = [
+const tabsList = [
   { id: 1, name: "好友通知" },
   { id: 2, name: "群通知" },
 ];

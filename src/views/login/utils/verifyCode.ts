@@ -1,12 +1,15 @@
-import { cloneDeep } from "lodash-es"
 import { ref } from "vue"
+
+import { cloneDeep } from "lodash-es"
+
+import type { FormInstance, FormItemProp } from "element-plus"
 
 const isDisabled = ref(false)
 const timer = ref(null)
 const text = ref("")
 
 export const useVerifyCode = () => {
-  const start = async (formEl, props, time = 60) => {
+  const start = async (formEl: FormInstance | undefined, props: FormItemProp, time = 60) => {
     if (!formEl) return
     const initTime = cloneDeep(time)
     await formEl.validateField(props, (isValid) => {

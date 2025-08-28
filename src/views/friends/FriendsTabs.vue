@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, nextTick, onMounted } from "vue";
 import emitter from "@/utils/mitt-bus";
 
