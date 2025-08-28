@@ -3,24 +3,14 @@
     <div class="emojis">
       <el-scrollbar wrap-class="custom-scrollbar-wrap" always>
         <!-- QQ表情包 -->
-        <div v-show="table === 'QQ'" :class="['emoji_QQ', systemOs]">
+        <div v-show="table === 'QQ'" class="emoji_QQ" :class="[systemOs]">
           <p v-show="recentlyUsed.length" class="title">最近使用</p>
-          <span
-            v-for="item in recentlyUsed"
-            :key="item"
-            class="emoji"
-            @click="handleEmojiSelect(item, table)"
-          >
+          <span v-for="item in recentlyUsed" :key="item" class="emoji" @click="handleEmojiSelect(item, table)">
             <img :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
           </span>
           <p class="title">小黄脸表情</p>
           <template v-if="!rolling">
-            <span
-              v-for="item in emojiQq.emojiName"
-              :key="item"
-              class="emoji"
-              @click="handleEmojiSelect(item, table)"
-            >
+            <span v-for="item in emojiQq.emojiName" :key="item" class="emoji" @click="handleEmojiSelect(item, table)">
               <img :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
             </span>
           </template>
@@ -78,24 +68,25 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import { chunk } from "lodash-es";
-import { ClickOutside as vClickOutside } from "element-plus";
-import { useChatStore } from "@/stores/modules/chat";
-import { getEmojiAssetUrl, getOperatingSystem } from "@/utils/common";
+import { ClickOutside as vClickOutside } from "element-plus"
+import { chunk } from "lodash-es"
+import { onMounted, ref } from "vue"
+
+import { useChatStore } from "@/stores/modules/chat"
+import { getEmojiAssetUrl, getOperatingSystem } from "@/utils/common"
 // import emojiMartData from "@emoji-mart/data";
-import { emojiArray } from "@/utils/emoji/emoji-map";
-import emitter from "@/utils/mitt-bus";
-import emojiQq from "@/utils/emoji/emoji-map-qq";
-import emojiDouyin from "@/utils/emoji/emoji-map-douyin";
+import { emojiArray } from "@/utils/emoji/emoji-map"
+import emojiDouyin from "@/utils/emoji/emoji-map-douyin"
+import emojiQq from "@/utils/emoji/emoji-map-qq"
+import emitter from "@/utils/mitt-bus"
 
 defineOptions({
   name: "EmojiPicker",
-});
+})
 
-const emit = defineEmits(["onClose"]);
+const emit = defineEmits(["onClose"])
 
-const rolling = true;
+const rolling = true
 const toolbarItems = [
   {
     title: "默认表情",
@@ -112,49 +103,49 @@ const toolbarItems = [
     type: "Mart",
     content: "😀",
   },
-];
+]
 
-const EMOJI_GROUP_SIZE = 12 * 6; // 每组表情数量
-const recentlyUsed = ref([]);
-const systemOs = ref("");
-const table = ref("QQ");
-const chatStore = useChatStore();
+const EMOJI_GROUP_SIZE = 12 * 6 // 每组表情数量
+const recentlyUsed = ref([])
+const systemOs = ref("")
+const table = ref("QQ")
+const chatStore = useChatStore()
 
-const emojiPackGroup = computed(() => chunk(emojiQq.emojiName, EMOJI_GROUP_SIZE));
+const emojiPackGroup = computed(() => chunk(emojiQq.emojiName, EMOJI_GROUP_SIZE))
 
 const setClose = () => {
-  emit("onClose");
-  recentlyUsed.value = [...chatStore.recently].reverse();
-};
+  emit("onClose")
+  recentlyUsed.value = [...chatStore.recently].reverse()
+}
 
 const getParser = () => {
-  systemOs.value = getOperatingSystem();
-};
+  systemOs.value = getOperatingSystem()
+}
 
 const handleEmojiSelect = (item, type = "") => {
-  let url = "";
+  let url = ""
   if (type === "QQ") {
-    chatStore.setRecently({ data: item, type: "add" });
-    url = getEmojiAssetUrl(emojiQq.emojiMap[item]);
+    chatStore.setRecently({ data: item, type: "add" })
+    url = getEmojiAssetUrl(emojiQq.emojiMap[item])
   } else if (type === "Douyin") {
-    url = getEmojiAssetUrl(emojiDouyin.emojiMap[item]);
+    url = getEmojiAssetUrl(emojiDouyin.emojiMap[item])
   } else {
-    emitter.emit("handleToolbar", { data: item, key: "setEditHtml" });
-    setClose();
-    return;
+    emitter.emit("handleToolbar", { data: item, key: "setEditHtml" })
+    setClose()
+    return
   }
-  emitter.emit("handleToolbar", { data: { url, item }, key: "setEmoji" });
-  setClose();
-};
+  emitter.emit("handleToolbar", { data: { url, item }, key: "setEmoji" })
+  setClose()
+}
 
 const onClickOutside = () => {
-  setClose();
-};
+  setClose()
+}
 
 onMounted(() => {
-  getParser();
-  chatStore.setRecently({ type: "revert" });
-});
+  getParser()
+  chatStore.setRecently({ type: "revert" })
+})
 </script>
 
 <style lang="scss" scoped>

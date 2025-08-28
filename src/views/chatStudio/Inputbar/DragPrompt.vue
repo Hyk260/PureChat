@@ -51,76 +51,77 @@
 </template>
 
 <script setup>
-import { ref, nextTick, useTemplateRef } from "vue";
-import { storeToRefs } from "pinia";
-import { CircleCloseFilled, CirclePlusFilled } from "@element-plus/icons-vue";
+import { CircleCloseFilled, CirclePlusFilled } from "@element-plus/icons-vue"
+import { cloneDeep, isEmpty } from "lodash-es"
+import { storeToRefs } from "pinia"
+import { nextTick, ref, useTemplateRef } from "vue"
+
+import { prompt } from "@/ai/constant"
+import EmojiMart from "@/components/EmojiMart/index.vue"
 // import { ROLES } from "@/ai/constant";
-import { useState } from "@/hooks/useState";
-import { nanoid } from "@/utils/uuid";
-import { useRobotStore } from "@/stores/modules/robot";
-import { cloneDeep, isEmpty } from "lodash-es";
-import { prompt } from "@/ai/constant";
-import EmojiMart from "@/components/EmojiMart/index.vue";
+import { useState } from "@/hooks/useState"
+import { useRobotStore } from "@/stores/modules/robot"
+import { nanoid } from "@/utils/uuid"
 
 defineOptions({
   name: "DragPrompt",
-});
+})
 
-const MAX_PROMPTS = 1;
-const inputTitleRef = useTemplateRef("inputTitleRef");
-const promptItems = ref([]);
-const robotStore = useRobotStore();
-const [showEmojiPickerFlag, setShowEmojiPickerFlag] = useState(false);
-const { promptStore, modelProvider } = storeToRefs(robotStore);
+const MAX_PROMPTS = 1
+const inputTitleRef = useTemplateRef("inputTitleRef")
+const promptItems = ref([])
+const robotStore = useRobotStore()
+const [showEmojiPickerFlag, setShowEmojiPickerFlag] = useState(false)
+const { promptStore, modelProvider } = storeToRefs(robotStore)
 
 function initPromptData() {
-  const _promptStore = promptStore.value?.[modelProvider.value] || [];
+  const _promptStore = promptStore.value?.[modelProvider.value] || []
   if (isEmpty(_promptStore)) {
-    promptItems.value = cloneDeep(prompt);
-    promptItems.value.map((item) => (item.ID = nanoid()));
+    promptItems.value = cloneDeep(prompt)
+    promptItems.value.map((item) => (item.ID = nanoid()))
   } else {
-    promptItems.value = cloneDeep(_promptStore);
+    promptItems.value = cloneDeep(_promptStore)
   }
 }
 
 function handleClearAvatar(i) {
-  promptItems.value[i].meta.avatar = "";
-  savePromptData();
+  promptItems.value[i].meta.avatar = ""
+  savePromptData()
 }
 
 function savePromptData() {
-  robotStore.setPromptStore(promptItems.value, modelProvider.value);
-  robotStore.setPromptConfig(promptItems.value[0]);
+  robotStore.setPromptStore(promptItems.value, modelProvider.value)
+  robotStore.setPromptConfig(promptItems.value[0])
 }
 
 function handleEmojiSelect(emoji, i) {
-  console.log("handleEmojiSelect", emoji);
-  promptItems.value[i].meta.avatar = emoji.native;
-  savePromptData();
+  console.log("handleEmojiSelect", emoji)
+  promptItems.value[i].meta.avatar = emoji.native
+  savePromptData()
 }
 
 function onClose(i) {
-  promptItems.value.splice(i, 1);
-  robotStore.setPromptConfig("");
-  robotStore.setPromptStore([], modelProvider.value);
+  promptItems.value.splice(i, 1)
+  robotStore.setPromptConfig("")
+  robotStore.setPromptStore([], modelProvider.value)
 }
 
 function addPrompt() {
-  if (promptItems.value.length >= MAX_PROMPTS) return;
-  const newPrompt = cloneDeep(prompt);
-  console.log("newPrompt", newPrompt);
-  newPrompt.map((t) => (t.id = nanoid()));
-  promptItems.value = newPrompt;
+  if (promptItems.value.length >= MAX_PROMPTS) return
+  const newPrompt = cloneDeep(prompt)
+  console.log("newPrompt", newPrompt)
+  newPrompt.map((t) => (t.id = nanoid()))
+  promptItems.value = newPrompt
 }
 
 async function promptTitleFocus() {
-  await nextTick();
-  inputTitleRef.value[0]?.focus?.();
+  await nextTick()
+  inputTitleRef.value[0]?.focus?.()
 }
 
-initPromptData();
+initPromptData()
 
-defineExpose({ promptTitleFocus });
+defineExpose({ promptTitleFocus })
 </script>
 
 <style lang="scss" scoped>

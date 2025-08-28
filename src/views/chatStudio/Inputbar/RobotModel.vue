@@ -13,15 +13,15 @@
           :class="item.id == useRobotStore()?.model?.id ? 'active' : ''"
           @click="storeRobotModel(item)"
         >
-          <div v-if="['ollama', 'github'].includes(model.id)" :class="['icon align-icon', item.icon]">
+          <div v-if="['ollama', 'github'].includes(model.id)" class="icon align-icon" :class="[item.icon]">
             <span v-if="item.icon">
               <SvgIcon class="align-text-bottom" :local-icon="item.icon" />
             </span>
-            <span v-else :class="['icon', robotIcon]">
+            <span v-else class="icon" :class="[robotIcon]">
               <SvgIcon class="align-text-bottom" :local-icon="robotIcon" />
             </span>
           </div>
-          <div v-else :class="['icon', robotIcon]">
+          <div v-else class="icon" :class="[robotIcon]">
             <SvgIcon class="align-text-bottom" :local-icon="robotIcon" />
           </div>
           <div class="list flex-bc w-full">
@@ -30,11 +30,7 @@
               <el-tooltip v-if="item.vision" :content="ModelSelect.vision" placement="right">
                 <svg-icon class="vision" local-icon="vision" />
               </el-tooltip>
-              <el-tooltip
-                v-if="item.functionCall"
-                :content="ModelSelect.functionCall"
-                placement="right"
-              >
+              <el-tooltip v-if="item.functionCall" :content="ModelSelect.functionCall" placement="right">
                 <svg-icon class="function-call" local-icon="functionCall" />
               </el-tooltip>
               <el-tooltip v-if="item.reasoning" :content="ModelSelect.reasoning" placement="right">
@@ -52,58 +48,59 @@
 </template>
 
 <script setup>
-import { useState } from "@/hooks/useState";
-import { ClickOutside as vClickOutside } from "element-plus";
-import { getModelSvg, useAccessStore, formatSizeStrict } from "@/ai/utils";
-import { modelValue } from "@/ai/constant";
-import { cloneDeep, isEmpty } from "lodash-es";
-import { useRobotStore, useChatStore } from "@/stores";
-import { ModelSelect } from "@/ai/resources";
-import { storeToRefs } from "pinia";
-import emitter from "@/utils/mitt-bus";
+import { ClickOutside as vClickOutside } from "element-plus"
+import { cloneDeep, isEmpty } from "lodash-es"
+import { storeToRefs } from "pinia"
+
+import { modelValue } from "@/ai/constant"
+import { ModelSelect } from "@/ai/resources"
+import { formatSizeStrict, getModelSvg, useAccessStore } from "@/ai/utils"
+import { useState } from "@/hooks/useState"
+import { useChatStore, useRobotStore } from "@/stores"
+import emitter from "@/utils/mitt-bus"
 
 defineOptions({
   name: "RobotModel",
-});
+})
 
-const robotIcon = ref("");
-const model = ref({});
-const [flag, setFlag] = useState();
-const chatStore = useChatStore();
-const robotStore = useRobotStore();
-const { toAccount } = storeToRefs(chatStore);
-const { modelStore, modelProvider } = storeToRefs(robotStore);
+const robotIcon = ref("")
+const model = ref({})
+const [flag, setFlag] = useState()
+const chatStore = useChatStore()
+const robotStore = useRobotStore()
+const { toAccount } = storeToRefs(chatStore)
+const { modelStore, modelProvider } = storeToRefs(robotStore)
 
 function onClickOutside() {
-  setFlag(false);
+  setFlag(false)
 }
 
 function storeRobotModel(data) {
-  const provider = modelProvider.value;
-  const config = useAccessStore(provider);
-  robotStore.setModel(data);
-  robotStore.setAccessStore({ ...config, model: data.id }, provider);
-  robotStore.updataBotToolsFlag(data);
-  setFlag(false);
+  const provider = modelProvider.value
+  const config = useAccessStore(provider)
+  robotStore.setModel(data)
+  robotStore.setAccessStore({ ...config, model: data.id }, provider)
+  robotStore.updataBotToolsFlag(data)
+  setFlag(false)
 }
 
 function initModel() {
-  const provider = modelProvider.value;
-  const selectModel = modelStore.value[provider] || {};
-  robotIcon.value = getModelSvg(toAccount.value);
-  model.value = cloneDeep(modelValue[provider].Model.options);
+  const provider = modelProvider.value
+  const selectModel = modelStore.value[provider] || {}
+  robotIcon.value = getModelSvg(toAccount.value)
+  model.value = cloneDeep(modelValue[provider].Model.options)
   if (!isEmpty(selectModel) && model.value) {
-    const chatModels = cloneDeep(model.value.chatModels);
-    const collapse = selectModel?.Model?.collapse || [];
-    const filteredData = chatModels.filter((item) => collapse.includes(item.id));
-    model.value.chatModels = filteredData;
+    const chatModels = cloneDeep(model.value.chatModels)
+    const collapse = selectModel?.Model?.collapse || []
+    const filteredData = chatModels.filter((item) => collapse.includes(item.id))
+    model.value.chatModels = filteredData
   }
-  setFlag(true);
+  setFlag(true)
 }
 
 emitter.on("openModeList", () => {
-  initModel();
-});
+  initModel()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -139,7 +136,6 @@ emitter.on("openModeList", () => {
   cursor: pointer;
   border-radius: 3px;
   .align-icon {
-
   }
   .list {
     .tokens {

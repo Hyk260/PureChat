@@ -1,12 +1,7 @@
 <template>
   <div v-if="flag" v-click-outside="onClickOutside" class="robot-plugin-box">
     <div class="flex-bc flex-col">
-      <div
-        v-for="item in pluginData"
-        :key="item.identifier"
-        class="list flex-bc w-full"
-        @click="setChecked(item)"
-      >
+      <div v-for="item in pluginData" :key="item.identifier" class="list flex-bc w-full" @click="setChecked(item)">
         <img class="img" :src="item.imageUrl" alt="" />
         <div class="flex-bc right">
           <div>{{ item.meta.title }}</div>
@@ -18,14 +13,15 @@
 </template>
 
 <script setup>
-import { ClickOutside as vClickOutside } from "element-plus";
-import { useState } from "@/hooks/useState";
-import { useToolsStore } from "@/stores/modules/tools";
-import emitter from "@/utils/mitt-bus";
+import { ClickOutside as vClickOutside } from "element-plus"
+
+import { useState } from "@/hooks/useState"
+import { useToolsStore } from "@/stores/modules/tools"
+import emitter from "@/utils/mitt-bus"
 
 defineOptions({
   name: "RobotPlugin",
-});
+})
 
 const pluginData = ref([
   {
@@ -39,42 +35,42 @@ const pluginData = ref([
   //   prompt: "",
   //   tools: [getWeather],
   // },
-]);
+])
 
-const [flag, setFlag] = useState();
+const [flag, setFlag] = useState()
 
-const toolsStore = useToolsStore();
+const toolsStore = useToolsStore()
 
 function pluginfilter() {
-  return pluginData.value.filter((item) => item.checked);
+  return pluginData.value.filter((item) => item.checked)
 }
 
 function onClickOutside() {
-  setFlag(false);
-  toolsStore.setTools(pluginfilter());
+  setFlag(false)
+  toolsStore.setTools(pluginfilter())
 }
 
 function setChecked(item) {
-  item.checked = !item.checked;
-  toolsStore.setTools(pluginfilter());
+  item.checked = !item.checked
+  toolsStore.setTools(pluginfilter())
 }
 
 function feedBack() {
-  const plugin = toolsStore.tools;
+  const plugin = toolsStore.tools
   if (plugin) {
-    const pluginIds = new Set(plugin.map((item) => item.id));
+    const pluginIds = new Set(plugin.map((item) => item.id))
     pluginData.value.forEach((item) => {
       if (pluginIds.has(item.id)) {
-        item.checked = true;
+        item.checked = true
       }
-    });
+    })
   }
 }
 
 emitter.on("onPluginBox", () => {
-  feedBack();
-  setFlag(true);
-});
+  feedBack()
+  setFlag(true)
+})
 </script>
 
 <style lang="scss" scoped>

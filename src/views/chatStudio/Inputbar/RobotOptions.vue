@@ -19,11 +19,7 @@
           <div class="flex flex-col gap-5">
             <div class="flex gap-5 title">
               <span> {{ item.Title }}</span>
-              <el-tooltip
-                v-if="item.apiKey && ['token'].includes(item.ID)"
-                content="获取密钥"
-                placement="top"
-              >
+              <el-tooltip v-if="item.apiKey && ['token'].includes(item.ID)" content="获取密钥" placement="top">
                 <span class="flex cursor-pointer">
                   <el-icon @click="toUrl(item.apiKey)"><QuestionFilled /></el-icon>
                 </span>
@@ -54,10 +50,7 @@
                   :value="models.id"
                 >
                   <div class="bot-model-option">
-                    <div
-                      class="bot-avatar flex-c h-full"
-                      :class="reIcon(item, models) ? models.icon : robotIcon"
-                    >
+                    <div class="bot-avatar flex-c h-full" :class="reIcon(item, models) ? models.icon : robotIcon">
                       <SvgIcon v-if="reIcon(item, models)" :local-icon="models.icon" />
                       <SvgIcon v-else :local-icon="robotIcon" />
                     </div>
@@ -66,25 +59,13 @@
                         <span>
                           {{ models.displayName || models.id }}
                         </span>
-                        <el-tooltip
-                          v-if="models?.vision"
-                          :content="ModelSelect.vision"
-                          placement="top"
-                        >
+                        <el-tooltip v-if="models?.vision" :content="ModelSelect.vision" placement="top">
                           <SvgIcon class="vision" local-icon="vision" />
                         </el-tooltip>
-                        <el-tooltip
-                          v-if="models?.functionCall"
-                          :content="ModelSelect.functionCall"
-                          placement="top"
-                        >
+                        <el-tooltip v-if="models?.functionCall" :content="ModelSelect.functionCall" placement="top">
                           <SvgIcon class="function-call" local-icon="functionCall" />
                         </el-tooltip>
-                        <el-tooltip
-                          v-if="models?.reasoning"
-                          :content="ModelSelect.reasoning"
-                          placement="top"
-                        >
+                        <el-tooltip v-if="models?.reasoning" :content="ModelSelect.reasoning" placement="top">
                           <SvgIcon class="reasoning" local-icon="reasoning" />
                         </el-tooltip>
                       </div>
@@ -186,64 +167,66 @@
 </template>
 
 <script setup>
-import { QuestionFilled } from "@element-plus/icons-vue";
-import { storeToRefs } from "pinia";
-import { ModelSelect } from "@/ai/resources";
-import { useAccessStore, getModelSvg } from "@/ai/utils";
-import { useState } from "@/hooks/useState";
+import { QuestionFilled } from "@element-plus/icons-vue"
 // import { localStg } from "@/utils/storage";
-import { cloneDeep } from "lodash-es";
-import { ClientApi } from "@/ai/api";
-import { modelValue, modelConfig } from "@/ai/constant";
-import { useRobotStore, useChatStore } from "@/stores";
-import { debounce } from "lodash-es";
-import { isRange } from "./utils";
-import { openWindow } from "@/utils/common";
-import DragPrompt from "./DragPrompt.vue";
+import { cloneDeep } from "lodash-es"
+import { debounce } from "lodash-es"
+import { storeToRefs } from "pinia"
+
+import { ClientApi } from "@/ai/api"
+import { modelConfig, modelValue } from "@/ai/constant"
+import { ModelSelect } from "@/ai/resources"
+import { getModelSvg, useAccessStore } from "@/ai/utils"
+import { useState } from "@/hooks/useState"
+import { useChatStore, useRobotStore } from "@/stores"
+import { openWindow } from "@/utils/common"
 // import OllamaAI from "@/ai/platforms/ollama/ollama";
-import emitter from "@/utils/mitt-bus";
+import emitter from "@/utils/mitt-bus"
+
+import DragPrompt from "./DragPrompt.vue"
+import { isRange } from "./utils"
 
 defineOptions({
   name: "RobotOptions",
-});
+})
 
-const { DEV: isDev } = import.meta.env;
+const { DEV: isDev } = import.meta.env
 
-const robotIcon = ref("");
-const modelData = ref({});
-const promptRef = useTemplateRef("promptRef");
-const inputRefs = ref({ token: null, openaiUrl: null });
+const robotIcon = ref("")
+const modelData = ref({})
+const promptRef = useTemplateRef("promptRef")
+const inputRefs = ref({ token: null, openaiUrl: null })
 
-const [dialog, setDialog] = useState();
-const [loading, setLoading] = useState();
+const [dialog, setDialog] = useState()
+const [loading, setLoading] = useState()
 
-const chatStore = useChatStore();
-const robotStore = useRobotStore();
-const { toAccount } = storeToRefs(chatStore);
-const { isOllama, modelProvider, modelStore } = storeToRefs(robotStore);
+const chatStore = useChatStore()
+const robotStore = useRobotStore()
+const { toAccount } = storeToRefs(chatStore)
+const { isOllama, modelProvider, modelStore } = storeToRefs(robotStore)
 
 const handleClear = (data) => {
-  console.log("clear", data);
-};
+  console.log("clear", data)
+}
 
 const inputRef = (el, id) => {
-  if (el) inputRefs.value[id] = el;
-};
+  if (el) inputRefs.value[id] = el
+}
 
 const handleRemoveTag = (data) => {
-  console.log("handleRemoveTag:", data);
-};
+  console.log("handleRemoveTag:", data)
+}
 
 function reIcon(t, models) {
-  return t.options?.id === "ollama" || models.icon;
+  return t.options?.id === "ollama" || models.icon
 }
 
 function modelCount(count) {
-  return count;
+  return count
 }
 
 function modelTooltipText() {
-  return "获取模型列表";
+  return "获取模型列表"
 }
 
 async function onRefresh() {
@@ -257,136 +240,136 @@ async function onRefresh() {
 }
 
 function initModel() {
-  const provider = modelProvider.value;
-  const modelDataValue = cloneDeep(modelValue[provider]);
-  const collapse = modelStore.value[provider]?.Model?.collapse;
-  robotIcon.value = getModelSvg(toAccount.value);
+  const provider = modelProvider.value
+  const modelDataValue = cloneDeep(modelValue[provider])
+  const collapse = modelStore.value[provider]?.Model?.collapse
+  robotIcon.value = getModelSvg(toAccount.value)
   Object.values(modelDataValue).map((v) => {
-    if (v.ID === "model" && collapse) v.collapse = collapse;
-    v.defaultValue = useAccessStore(provider)[v.ID];
-    return v;
-  });
-  modelData.value = modelDataValue;
+    if (v.ID === "model" && collapse) v.collapse = collapse
+    v.defaultValue = useAccessStore(provider)[v.ID]
+    return v
+  })
+  modelData.value = modelDataValue
 }
 
 function storeRobotModel(model) {
-  const provider = modelProvider.value;
-  robotStore.setAccessStore(model, provider);
-  robotStore.setModelStore(modelData.value, provider);
-  robotStore.updateModelConfig();
+  const provider = modelProvider.value
+  robotStore.setAccessStore(model, provider)
+  robotStore.setModelStore(modelData.value, provider)
+  robotStore.updateModelConfig()
 }
 
 function handleCache() {
-  const provider = modelProvider.value;
-  robotStore.setModelStore({}, provider);
-  robotStore.setAccessStore({}, provider);
-  robotStore.updateModelConfig();
-  initModel();
+  const provider = modelProvider.value
+  robotStore.setModelStore({}, provider)
+  robotStore.setAccessStore({}, provider)
+  robotStore.updateModelConfig()
+  initModel()
 }
 
 function resetRobotModel() {
-  const model = {};
-  const provider = modelProvider.value;
-  const modelDataValue = cloneDeep(modelValue[provider]);
+  const model = {}
+  const provider = modelProvider.value
+  const modelDataValue = cloneDeep(modelValue[provider])
 
   Object.values(modelDataValue).map((v) => {
     if (v.ID === "openaiUrl" || v.ID === "token" || v.ID === "model") {
-      v.defaultValue = useAccessStore(provider)[v.ID];
+      v.defaultValue = useAccessStore(provider)[v.ID]
     } else {
-      v.defaultValue = modelConfig[provider][v.ID];
+      v.defaultValue = modelConfig[provider][v.ID]
     }
-    return v;
-  });
+    return v
+  })
 
   Object.values(modelDataValue).map((t) => {
     if (isRange(t.ID)) {
-      model[t.ID] = Number(t.defaultValue);
+      model[t.ID] = Number(t.defaultValue)
     } else {
-      model[t.ID] = t.defaultValue;
+      model[t.ID] = t.defaultValue
     }
-  });
-  
-  modelData.value = modelDataValue;
-  robotStore.setModelStore(modelDataValue, provider);
-  robotStore.setAccessStore(model, provider);
-  robotStore.updateModelConfig();
+  })
+
+  modelData.value = modelDataValue
+  robotStore.setModelStore(modelDataValue, provider)
+  robotStore.setAccessStore(model, provider)
+  robotStore.updateModelConfig()
 }
 
-const onCheckToken = debounce(handleCheckToken, 2000, { leading: true, trailing: false });
+const onCheckToken = debounce(handleCheckToken, 2000, { leading: true, trailing: false })
 
 async function handleCheckToken(item) {
-  console.log("handleCheckToken", item);
+  console.log("handleCheckToken", item)
   if (item.defaultValue) {
-    setLoading(true);
-    const provider = modelProvider.value;
-    const api = new ClientApi(provider);
-    const { valid, error } = await api.llm.checkConnectivity();
+    setLoading(true)
+    const provider = modelProvider.value
+    const api = new ClientApi(provider)
+    const { valid, error } = await api.llm.checkConnectivity()
     if (valid) {
-      setLoading(false);
-      window.$message?.success("连接成功");
+      setLoading(false)
+      window.$message?.success("连接成功")
     } else {
-      setLoading(false);
-      window.$message?.error(error);
+      setLoading(false)
+      window.$message?.error(error)
     }
   } else {
-    window.$message?.warning("请输入API密钥");
+    window.$message?.warning("请输入API密钥")
   }
 }
 
 function handleCancel() {
-  setDialog(false);
+  setDialog(false)
 }
 
 function handleReset() {
-  resetRobotModel();
-  initModel();
+  resetRobotModel()
+  initModel()
 }
 
 function handleModelData() {
-  const model = {};
+  const model = {}
   Object.values(modelData.value).forEach((t) => {
     if (isRange(t.ID)) {
-      model[t.ID] = Number(t.defaultValue);
+      model[t.ID] = Number(t.defaultValue)
     } else {
-      model[t.ID] = t.defaultValue;
+      model[t.ID] = t.defaultValue
     }
-  });
-  storeRobotModel(model);
+  })
+  storeRobotModel(model)
 }
 
 function handleConfirm() {
-  setDialog(false);
+  setDialog(false)
 }
 
 function toUrl(url) {
-  openWindow(url);
+  openWindow(url)
 }
 
 const handleRobotBoxEvent = async (data = {}) => {
-  const { ApiKeyFocus = false, promptFocus = false } = data;
+  const { ApiKeyFocus = false, promptFocus = false } = data
 
-  setDialog(true);
-  initModel();
+  setDialog(true)
+  initModel()
 
-  await nextTick();
+  await nextTick()
 
   if (ApiKeyFocus) {
-    const tokenRef = inputRefs.value?.["token"] ?? null;
-    tokenRef?.focus();
+    const tokenRef = inputRefs.value?.["token"] ?? null
+    tokenRef?.focus()
   }
 
   if (promptFocus) {
-    promptRef.value?.promptTitleFocus();
+    promptRef.value?.promptTitleFocus()
   }
-};
+}
 
 onMounted(() => {
-  emitter.on("onRobotBox", handleRobotBoxEvent);
-});
+  emitter.on("onRobotBox", handleRobotBoxEvent)
+})
 
 onUnmounted(() => {
-  emitter.off("onRobotBox");
-});
+  emitter.off("onRobotBox")
+})
 </script>
 
 <style lang="scss" scoped>
