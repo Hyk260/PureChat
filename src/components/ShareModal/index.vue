@@ -34,14 +34,12 @@
                     :type="isSelf(item) ? 'self' : 'single'"
                   />
                 </div>
-                <div class="item" :class="msgOne(item.type)">
-                  <div :class="msgType(item.type)">
+                <div class="item" :class="getMessageItemClass(item.type)">
+                  <div :class="getMessageTypeClass(item.type)">
                     <component
                       :is="getMessageComponent(item)"
                       :key="item.ID"
-                      :msg-type="item.conversationType"
                       :message="item"
-                      :self="isSelf(item)"
                     >
                     </component>
                   </div>
@@ -124,7 +122,7 @@ import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessa
 import { ImageType, imageTypeOptions, useScreenshot } from "@/hooks/useScreenshot"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores/index"
-import { isSelf, msgOne, msgType } from "@/utils/chat/index"
+import { isSelf, getMessageItemClass, getMessageTypeClass } from "@/utils/chat/index"
 import emitter from "@/utils/mitt-bus"
 import Header from "@/views/chatStudio/components/Header.vue"
 

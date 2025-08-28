@@ -44,22 +44,20 @@
                   </div>
                 </el-avatar>
               </div>
-              <div :class="msgOne(item)">
+              <div :class="getMessageItemClass(item)">
                 <div v-if="isGroupChat" class="message-view-top">
                   <NameComponent :item="item" />
                   <TimeDivider :item="item" :show-check="isMultiSelectMode" type="group" />
                 </div>
-                <div :id="item.ID" class="message-view-body" :class="msgType(item.type)">
+                <div :id="item.ID" class="message-view-body" :class="getMessageTypeClass(item.type)">
                   <!-- 消息编辑 -->
                   <MessageEditingBox v-if="chatStore.msgEdit?.ID === item.ID" :self="isSelf(item)" :item="item" />
                   <MessageRenderer
                     v-else
                     :key="item.ID"
                     v-contextmenu:contextmenu
-                    :item="item"
                     :message="item"
                     :status="item.status"
-                    :self="isSelf(item)"
                     @contextmenu.prevent="handleContextMenuEvent($event, item)"
                   >
                   </MessageRenderer>
@@ -68,7 +66,7 @@
                   <!-- 菜单 -->
                   <MenuList :item="item" :status="item.status" @handle-single-click="handleSingleClick" />
                 </div>
-                <AssistantMessage v-if="isAssistant && !isSelf(item)" :item="item" />
+                <AssistantMessage v-if="isAssistant && item.flow === 'in'" :item="item" />
               </div>
             </div>
           </div>
@@ -110,7 +108,7 @@ import { MULTIPLE_CHOICE_MAX } from "@/constants"
 import type { DB_Message } from "@/database/schemas/message"
 import { getMessageList, revokeMsg, setMessageRead, translateText } from "@/service/im-sdk-api"
 import { useAppStore, useChatStore, useGroupStore, useUserStore } from "@/stores"
-import { download, isSelf, isTime, msgOne, msgType } from "@/utils/chat"
+import { download, isSelf, isTime, getMessageItemClass, getMessageTypeClass } from "@/utils/chat"
 import { getTime } from "@/utils/common"
 import { showConfirmationBox } from "@/utils/message"
 import emitter from "@/utils/mitt-bus"
@@ -193,7 +191,7 @@ const showAvatar = (item: DB_Message) => {
 
 const classMessageViewItem = (item: DB_Message) => {
   return [
-    isSelf(item) ? "is-self" : "is-other",
+    item.flow === "in" ? "is-other" : "is-self",
     isMultiSelectMode.value && !item.isRevoked && item.type !== "TIMGroupTipElem" ? "style-choice" : "",
   ]
 }

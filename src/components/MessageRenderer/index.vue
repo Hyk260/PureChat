@@ -3,9 +3,7 @@
     :is="messageComponent"
     v-if="messageComponent"
     :key="messageKey"
-    :msg-type="msgType"
     :message="message"
-    :self="self"
     v-bind="$attrs"
   />
   <div v-else class="message-error">Unknown message type: {{ message?.type }}</div>
@@ -14,26 +12,22 @@
 <script setup lang="ts">
 import { computed, toRefs } from "vue"
 
-import type { MessageComponentProps, MessageItem } from "./types/message"
+import type { MessageItem } from "./types/message"
 import { getMessageComponent } from "./utils/getMessageComponent"
 
-interface Props extends MessageComponentProps {
-  item: MessageItem
+interface Props {
+  message: MessageItem
 }
 
 const props = defineProps<Props>()
-const { item, message, self } = toRefs(props)
+const { message } = toRefs(props)
 
 const messageComponent = computed(() => {
-  return getMessageComponent(item.value)
+  return getMessageComponent(message.value)
 })
 
 const messageKey = computed(() => {
-  return `${item.value.ID}_${item.value?.type}_${item.value?.isRevoked ? "revoked" : "normal"}`
-})
-
-const msgType = computed(() => {
-  return item.value.conversationType
+  return `${message.value.ID}_${message.value?.type}_${message.value?.isRevoked ? "revoked" : "normal"}`
 })
 </script>
 

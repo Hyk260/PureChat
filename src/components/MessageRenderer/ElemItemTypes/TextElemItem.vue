@@ -1,6 +1,6 @@
 <template>
   <div class="message-view-item-text" :class="messageStyleClasses" @click="handleMessageClick">
-    <template v-if="hasValidMessageType && message">
+    <template v-if="hasValidMessageType">
       <!-- 回复消息 -->
       <ReplyElem v-if="parsedCloudCustomData" :status="message.status" :original-msg="parsedCloudCustomData" />
       <Markdown v-if="shouldShowMarkdown" :cloud-custom-data="parsedCloudCustomData" :marked="message.payload.text" />
@@ -19,12 +19,10 @@ import DynamicContent from "@/views/chatStudio/components/DynamicContent.vue"
 import ReplyElem from "./ReplyElem.vue"
 
 const props = defineProps({
-  msgType: {
-    type: String,
-    default: "",
-  },
   message: {
     type: Object as PropType<DB_Message>,
+    required: true,
+    default: () => ({}),
   },
 })
 
@@ -32,7 +30,7 @@ const chatStore = useChatStore()
 const appStore = useAppStore()
 
 const hasValidMessageType = computed(() => {
-  return !!props.message?.conversationType || !!props.msgType
+  return !!props.message && !!props.message?.conversationType
 })
 
 const parsedCloudCustomData = computed(() => {
@@ -50,7 +48,7 @@ const shouldShowMarkdown = computed(() => {
 })
 
 const messageStyleClasses = computed(() => {
-  return [props.message?.flow === "out" ? "is-text-self" : "is-text-other", shouldShowMarkdown.value ? "markdown" : ""]
+  return [props.message?.flow === "in" ? "is-text-other" : "is-text-self", shouldShowMarkdown.value ? "markdown" : ""]
     .join(" ")
     .trim()
 })

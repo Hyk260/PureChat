@@ -1,5 +1,5 @@
 <template>
-  <div class="edit" :class="fnStyle(self)">
+  <div class="edit" :class="fnClass">
     <el-input v-model="input" resize="none" :autosize="{ minRows: 1, maxRows: 20 }" class="min-w-500" type="textarea" />
     <div class="flex justify-end">
       <el-button size="small" @click="handleCancel">
@@ -13,19 +13,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, PropType } from "vue"
 
+import { DB_Message } from "@/database/schemas/message"
 import { modifyMessage } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores"
 
 const props = defineProps({
   item: {
-    type: Object,
-    default: () => {},
-  },
-  self: {
-    type: Boolean,
-    default: false,
+    type: Object as PropType<DB_Message>,
+    default: () => ({}),
   },
 })
 
@@ -33,17 +30,15 @@ const chatStore = useChatStore()
 
 const input = ref(props.item.payload.text)
 
-function fnStyle(val) {
-  return [val ? "ml-44" : "mr-44"]
-}
+const fnClass = computed(() => {
+  return [props.item.flow === "in" ? "mr-44" : "ml-44"]
+})
 
 function handleCancel() {
   chatStore.setMsgEdit(null)
 }
 
-function handleConfirm(val) {
-  const { type } = props.item
-
+function handleConfirm(val: string) {
   const params = {
     ...props.item,
     payload: {
@@ -51,7 +46,7 @@ function handleConfirm(val) {
     },
   }
 
-  if (type === "TIMTextElem") modifyMessage(params)
+  if (props.item.type === "TIMTextElem") modifyMessage(params)
   handleCancel()
 }
 </script>

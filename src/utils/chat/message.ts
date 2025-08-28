@@ -1,25 +1,27 @@
+import { DB_Message, MessageType } from "@/database/schemas/message"
 import { localStg } from "@/utils/storage"
 
-export const isTime = (item) => {
+export const isTime = (item: DB_Message) => {
   return item?.isTimeDivider && item.time !== undefined
 }
 
-export const isSelf = (item) => {
+export const isSelf = (item: DB_Message) => {
   return item.from === localStg.get("timProxy")?.userProfile?.userID
 }
 
-export const msgOne = (item) => {
-  const { isRevoked, type, payload } = item
+export const getMessageItemClass = (item: DB_Message) => {
+  const { isRevoked, type } = item
+  // 撤回消息或群提示消息使用特殊样式
   if (isRevoked || type === "TIMGroupTipElem") {
     return "message-view-tips-elem"
-  } else {
-    return "message-view-item-index"
   }
+
+  return "message-view-item-index"
 }
 
-export const msgType = (elem_type) => {
+export const getMessageTypeClass = (type: MessageType) => {
   let resp = ""
-  switch (elem_type) {
+  switch (type) {
     case "TIMTextElem":
       resp = "message-view__text" // 文本
       break
@@ -47,19 +49,16 @@ export const msgType = (elem_type) => {
 
 /**
  * 根据图片的宽度和高度计算展示图片的样式
- * @param {number} width - 图片宽度
- * @param {number} height - 图片高度
- * @returns {Object} - 包含展示图片的宽度和高度的样式对象
  */
-export const showIMPic = (width = 0, height = 0) => {
+export const showIMPic = (width: number = 0, height: number = 0) => {
   // 确保高度不小于40px
   const minHeight = 40
   // 限制高度不超过360px
   const maxHeight = 360
 
   // 计算宽度和高度的逻辑
-  let computedWidth
-  let computedHeight
+  let computedWidth: number = 0
+  let computedHeight: number = 0
 
   if (width >= 140) {
     computedWidth = 140

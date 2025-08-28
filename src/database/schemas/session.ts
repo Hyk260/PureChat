@@ -44,7 +44,7 @@ export const DB_SessionSchema = z.object({
   id: z.string().optional(),
   conversationID: z.string(),
   toAccount: z.string().optional(),
-  type: z.string(),
+  type: z.enum(["C2C", "GROUP", "SYSTEM"]),
   subType: z.string().optional(),
   lastMessage: z.object({}).optional(),
   unreadCount: z.number().int().min(0).optional(),

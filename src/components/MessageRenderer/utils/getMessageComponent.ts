@@ -1,5 +1,7 @@
 import { type Component, markRaw, shallowRef } from "vue"
 
+import { MessageType } from "@/database/schemas/message"
+
 // const CustomElemItem = () => import("../ElemItemTypes/ElemItemTypes/CustomElemItem.vue")
 // const FileElemItem = () => import("../ElemItemTypes/ElemItemTypes/FileElemItem.vue")
 // const GroupSystemNoticeElem = () => import("../ElemItemTypes/ElemItemTypes/GroupSystemNoticeElem.vue")
@@ -17,7 +19,7 @@ import RelayElemItem from "../ElemItemTypes/RelayElemItem.vue"
 import TextElemItem from "../ElemItemTypes/TextElemItem.vue"
 import TipsElemItem from "../ElemItemTypes/TipsElemItem.vue"
 
-import type { MessageItem, MessageType } from "../types/message"
+import type { MessageItem } from "../types/message"
 import type { DefineComponent } from "vue"
 
 export type MessageComponent = Component | DefineComponent | (() => Promise<any>)

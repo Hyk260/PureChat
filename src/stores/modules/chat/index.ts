@@ -73,8 +73,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     isFwdDataMaxed(): boolean {
       return this.forwardData.size >= MULTIPLE_CHOICE_MAX
     },
-    currentType(): string {
-      return this.currentConversation?.type || ""
+    currentType(): DB_Session["type"] | "" {
+      return this.currentConversation?.type ?? ""
     },
     getNonBotList(): DB_Session[] {
       return this.conversationList.filter((t) => !/@RBT#/.test(t.conversationID))
@@ -155,7 +155,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     setReplyMsgData(data: DB_Message | null) {
       this.replyMsgData = data
     },
-    setMsgEdit(data: DB_Message) {
+    setMsgEdit(data: DB_Message | null) {
       this.msgEdit = data
     },
     setCurrentConversation(data: DB_Session) {

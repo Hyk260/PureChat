@@ -2,7 +2,8 @@ import type {
   AxiosError,
   AxiosRequestConfig,
   AxiosResponse,
-  Method} from "axios";
+  Method
+} from "axios";
 
 export type RequestMethods = Extract<
   Method,

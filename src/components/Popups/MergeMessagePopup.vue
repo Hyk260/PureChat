@@ -25,19 +25,16 @@
                 <img :src="circleUrl" />
               </el-avatar>
             </div>
-
-            <div class="message-content" :class="msgOne(item.messageBody[0].type)">
+            <div class="message-content" :class="getMessageItemClass(item.messageBody[0].type)">
               <p class="message-sender">
                 <span>{{ item.nick }}</span>
                 <!-- <span>{{ timeFormat(item.clientTime * 1000, true) }}</span> -->
               </p>
-              <div :class="msgType(item.messageBody[0].type)">
+              <div :class="getMessageTypeClass(item.messageBody[0].type)">
                 <component
                   :is="getMessageComponent(item.messageBody[0])"
-                  :key="mergValue.ID"
-                  :msg-type="mergValue.conversationType"
-                  :message="item.messageBody[0]"
-                  :self="isSelf(item)"
+                  :key="item.ID"
+                  :message="getMergValue(item)"
                 />
               </div>
             </div>
@@ -51,20 +48,30 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
+import { useUserStore } from "@/stores/modules/user"
 import { getAiAvatarUrl } from "@/ai/utils"
 import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"
 import { useState } from "@/hooks/useState"
 import { downloadMergerMessage } from "@/service/im-sdk-api/index"
-import { addTimeDivider, circleUrl, isSelf, isTime, msgOne, msgType } from "@/utils/chat/index"
+import { addTimeDivider, circleUrl, isSelf, isTime, getMessageItemClass, getMessageTypeClass } from "@/utils/chat/index"
 import emitter from "@/utils/mitt-bus"
 import { timeFormat } from "@/utils/timeFormat"
 
 const mergValue = ref({})
-const [dialogVisible, setDialogVisible] = useState()
+const userStore = useUserStore()
+const [dialogVisible, setDialogVisible] = useState(false)
 
 const messageList = computed(() => {
   return addTimeDivider(mergValue.value.payload.messageList)
 })
+
+const getMergValue = (item) => {
+  return {
+    ...item?.messageBody?.[0],
+    conversationType: mergValue.value?.conversationType,
+    flow: userStore.userProfile.userID === item.from ? "out" : "in",
+  }
+}
 
 function handleClose(done) {
   setDialogVisible(false)
