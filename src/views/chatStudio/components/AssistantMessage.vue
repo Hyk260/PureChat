@@ -17,34 +17,36 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useChatStore } from "@/stores";
-import { sendChatMessage } from "../utils/utils";
+import { computed } from "vue"
+
+import { useChatStore } from "@/stores"
+
+import { sendChatMessage } from "../utils/utils"
 
 const props = defineProps({
   item: {
     type: Object,
     required: true,
   },
-});
+})
 
-const chatStore = useChatStore();
-const { toAccount, currentType } = storeToRefs(chatStore);
+const chatStore = useChatStore()
+const { toAccount, currentType } = storeToRefs(chatStore)
 
 const parsedCustomData = computed(() => {
-  if (!props.item.cloudCustomData) return null;
+  if (!props.item.cloudCustomData) return null
 
   try {
-    const data = JSON.parse(props.item.cloudCustomData);
-    return data.messagePrompt;
+    const data = JSON.parse(props.item.cloudCustomData)
+    return data.messagePrompt
   } catch {
-    return null;
+    return null
   }
-});
+})
 
-const messageAbstract = computed(() => parsedCustomData.value?.messageAbstract ?? "");
+const messageAbstract = computed(() => parsedCustomData.value?.messageAbstract ?? "")
 
-const recommendedQuestions = computed(() => parsedCustomData.value?.recQuestion ?? []);
+const recommendedQuestions = computed(() => parsedCustomData.value?.recQuestion ?? [])
 
 /**
  * 处理问题点击事件
@@ -56,16 +58,16 @@ const handleQuestion = async (questionText) => {
       to: toAccount.value,
       type: currentType.value,
       text: questionText,
-    });
+    })
 
     if (message?.[0]) {
-      chatStore.updateSendingState(toAccount.value, "add");
-      chatStore.sendSessionMessage({ message: message[0] });
+      chatStore.updateSendingState(toAccount.value, "add")
+      chatStore.sendSessionMessage({ message: message[0] })
     }
   } catch (error) {
-    console.error("Error sending chat message:", error);
+    console.error("Error sending chat message:", error)
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

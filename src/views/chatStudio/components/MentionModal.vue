@@ -27,14 +27,15 @@
 </template>
 
 <script lang="ts">
-import { mapState } from "pinia";
-import { onClickOutside, useEventListener } from "@vueuse/core";
-import { cloneDeep } from "lodash-es";
-import { prioritizeRBTUserID, insertMention } from "@/utils/chat";
-import { useGroupStore, useChatStore } from "@/stores";
-import emitter from "@/utils/mitt-bus";
+import { onClickOutside, useEventListener } from "@vueuse/core"
+import { cloneDeep } from "lodash-es"
+import { mapState } from "pinia"
 
-const MSG_AT_ALL = "__kImSDK_MesssageAtALL__";
+import { useChatStore, useGroupStore } from "@/stores"
+import { insertMention, prioritizeRBTUserID } from "@/utils/chat"
+import emitter from "@/utils/mitt-bus"
+
+const MSG_AT_ALL = "__kImSDK_MesssageAtALL__"
 
 export default {
   name: "MentionModal",
@@ -69,143 +70,143 @@ export default {
         userID: MSG_AT_ALL,
         nick: "全体成员",
       },
-    };
+    }
   },
   computed: {
     ...mapState(useGroupStore, ["currentMemberList", "currentMembersWithoutSelf"]),
     searchedList() {
       // 群成员小于2人，不显示@列表
-      if (this.currentMemberList.length <= 1) return [];
-      return this.list;
+      if (this.currentMemberList.length <= 1) return []
+      return this.list
     },
     isVisible() {
-      return this.filtering !== "empty" && this.currentMemberList.length > 1;
+      return this.filtering !== "empty" && this.currentMemberList.length > 1
     },
     currentMembersWithoutSelfList() {
-      return this.currentMembersWithoutSelf.filter((t) => t.userID !== "@TLS#NOT_FOUND");
+      return this.currentMembersWithoutSelf.filter((t) => t.userID !== "@TLS#NOT_FOUND")
     },
   },
   created() {
-    this.initList();
+    this.initList()
   },
   mounted() {
-    document.body.appendChild(this.$el);
-    this.initMention();
+    document.body.appendChild(this.$el)
+    this.initMention()
   },
   beforeUnmount() {
-    emitter.off("handleInputKeyupHandler");
-    emitter.off("setMentionModal");
-    this.setMentionStatus(); // 隐藏 modal
+    emitter.off("handleInputKeyupHandler")
+    emitter.off("setMentionModal")
+    this.setMentionStatus() // 隐藏 modal
   },
   methods: {
     initList(owner = this.isOwner, data = []) {
-      this.list = this.filterList(data);
+      this.list = this.filterList(data)
       // 仅群主支持@全员
-      if (owner) this.list.unshift(this.allMembers);
+      if (owner) this.list.unshift(this.allMembers)
     },
     filterList(data) {
       if (data.length) {
-        return prioritizeRBTUserID(data);
+        return prioritizeRBTUserID(data)
       } else {
-        return this.filterData();
+        return this.filterData()
       }
     },
     filterData() {
-      const data = this.currentMembersWithoutSelfList;
-      return prioritizeRBTUserID(data);
+      const data = this.currentMembersWithoutSelfList
+      return prioritizeRBTUserID(data)
     },
     updateMention() {
       // 获取光标位置，定位 modal
-      const domSelection = document.getSelection();
-      const domRange = domSelection.getRangeAt(0);
-      if (domRange == null) return;
-      const selectionRect = domRange.getBoundingClientRect();
+      const domSelection = document.getSelection()
+      const domRange = domSelection.getRangeAt(0)
+      if (domRange == null) return
+      const selectionRect = domRange.getBoundingClientRect()
       // 获取编辑区域 DOM 节点的位置，以辅助定位
       // const containerRect = editor.getEditableContainer().getBoundingClientRect();
-      const height = this.$refs.listRef?.clientHeight;
+      const height = this.$refs.listRef?.clientHeight
       // 定位 modal
-      this.top = `${selectionRect.top - height - 15}px`;
-      this.left = `${selectionRect.left + 5}px`;
+      this.top = `${selectionRect.top - height - 15}px`
+      this.left = `${selectionRect.left + 5}px`
     },
     initMention() {
-      this.updateMention();
+      this.updateMention()
       onClickOutside(this.$refs.listRef, (event) => {
-        this.setMentionStatus();
-      });
+        this.setMentionStatus()
+      })
       useEventListener(document, "keydown", (e) => {
-        this.onKeydown(e);
-      });
+        this.onKeydown(e)
+      })
       emitter.on("handleInputKeyupHandler", (data) => {
-        this.inputKeyupHandler(data);
-      });
+        this.inputKeyupHandler(data)
+      })
       emitter.on("setMentionModal", (data) => {
-        const { content = [], type, searchlength = 0 } = cloneDeep(data);
-        console.log(content, type, searchlength);
-        this.filtering = type; // all success empty
+        const { content = [], type, searchlength = 0 } = cloneDeep(data)
+        console.log(content, type, searchlength)
+        this.filtering = type // all success empty
         if (type === "all") {
-          this.initList();
+          this.initList()
         } else if (type === "empty") {
-          this.setMentionStatus();
+          this.setMentionStatus()
         } else if (type === "success") {
-          this.initList(false, content);
-          this.searchValue = searchlength;
+          this.initList(false, content)
+          this.searchValue = searchlength
         }
         this.$nextTick(() => {
-          this.updateMention();
-        });
-      });
+          this.updateMention()
+        })
+      })
     },
     setMentionStatus(status = false) {
-      useChatStore().toggleMentionModal(status);
+      useChatStore().toggleMentionModal(status)
     },
     inputKeyupHandler(event) {
       if (event.key === "Enter") {
-        const firstOne = this.searchedList[this.tabIndex];
-        if (!firstOne) return;
-        const { userID, nick } = firstOne;
-        this.handleAit(userID, nick);
+        const firstOne = this.searchedList[this.tabIndex]
+        if (!firstOne) return
+        const { userID, nick } = firstOne
+        this.handleAit(userID, nick)
       }
     },
     handleAit(id, name) {
-      let nick = name ? name : id;
-      insertMention({ id, name: nick, deleteDigit: this.searchValue, editor: this.editor });
-      this.setMentionStatus(); // 隐藏 modal
-      this.searchValue = 0;
+      let nick = name ? name : id
+      insertMention({ id, name: nick, deleteDigit: this.searchValue, editor: this.editor })
+      this.setMentionStatus() // 隐藏 modal
+      this.searchValue = 0
     },
     onKeydown(event) {
       switch (event.keyCode) {
         case 38: // 上
           if (this.tabIndex > 0) {
-            this.tabIndex--;
-            this.scrollToSelectedItem();
+            this.tabIndex--
+            this.scrollToSelectedItem()
           }
-          break;
+          break
         case 40: //下
           if (this.tabIndex < this.searchedList?.length - 1) {
-            this.tabIndex++;
-            this.scrollToSelectedItem();
+            this.tabIndex++
+            this.scrollToSelectedItem()
           }
-          break;
+          break
       }
     },
     setActive(i) {
-      this.tabIndex = i;
+      this.tabIndex = i
     },
     isActive(item) {
-      if (!item) return;
+      if (!item) return
       if (this.tabIndex > -1) {
-        return item?.userID == this.searchedList[this.tabIndex]?.userID;
+        return item?.userID == this.searchedList[this.tabIndex]?.userID
       } else {
-        return false;
+        return false
       }
     },
     scrollToSelectedItem() {
-      const element = document.querySelector(".mention-active");
-      if (!element) return;
-      element.scrollIntoView({ behavior: "smooth", block: "center" });
+      const element = document.querySelector(".mention-active")
+      if (!element) return
+      element.scrollIntoView({ behavior: "smooth", block: "center" })
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -2,12 +2,7 @@
   <div v-show="isGroup && !shouldDisplay" class="message-name">
     <span v-if="isSystem" class="isSystem">系统通知</span>
     <span v-else-if="isFound" class="isFound">管理员</span>
-    <span
-      v-else-if="isGroup"
-      class="isGroup"
-      :class="{ 'mention-self': isSelf(item) }"
-      @click="handleAt"
-    >
+    <span v-else-if="isGroup" class="isGroup" :class="{ 'mention-self': isSelf(item) }" @click="handleAt">
       <span :class="styleNick">{{ item.nick || item.from }}</span>
       <span v-if="!isSelf(item)" class="mention">@</span>
       <span v-if="isLeader" class="admin">群主</span>
@@ -16,36 +11,37 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { isSelf } from '@/utils/chat';
-import { useGroupStore, useChatStore } from '@/stores';
-import emitter from '@/utils/mitt-bus';
+import { computed } from "vue"
+
+import { useChatStore, useGroupStore } from "@/stores"
+import { isSelf } from "@/utils/chat"
+import emitter from "@/utils/mitt-bus"
 
 const props = defineProps({
   item: {
     type: Object,
     default: () => {},
   },
-});
+})
 
-const groupStore = useGroupStore();
-const chatStore = useChatStore();
+const groupStore = useGroupStore()
+const chatStore = useChatStore()
 
-const groupProfile = computed(() => groupStore.groupProfile);
-const isMultiSelectMode = computed(() => chatStore.isMultiSelectMode);
-const isLeader = computed(() => groupProfile.value?.ownerID === props.item.from);
-const from = computed(() => props.item.from);
-const chatType = computed(() => props.item.conversationType);
-const isGroup = computed(() => chatType.value !== 'C2C');
-const isSystem = computed(() => from.value === '@TIM#SYSTEM');
-const isFound = computed(() => from.value === '@TLS#NOT_FOUND');
-const shouldDisplay = computed(() => props.item.isRevoked || props.item.type === 'TIMGroupTipElem');
-const styleNick = computed(() => isMultiSelectMode.value ? '' : 'nick');
+const groupProfile = computed(() => groupStore.groupProfile)
+const isMultiSelectMode = computed(() => chatStore.isMultiSelectMode)
+const isLeader = computed(() => groupProfile.value?.ownerID === props.item.from)
+const from = computed(() => props.item.from)
+const chatType = computed(() => props.item.conversationType)
+const isGroup = computed(() => chatType.value !== "C2C")
+const isSystem = computed(() => from.value === "@TIM#SYSTEM")
+const isFound = computed(() => from.value === "@TLS#NOT_FOUND")
+const shouldDisplay = computed(() => props.item.isRevoked || props.item.type === "TIMGroupTipElem")
+const styleNick = computed(() => (isMultiSelectMode.value ? "" : "nick"))
 
 function handleAt() {
-  if (isMultiSelectMode.value) return;
-  if (isSelf(props.item)) return;
-  emitter.emit('handleAt', { id: from.value, name: props.item.nick });
+  if (isMultiSelectMode.value) return
+  if (isSelf(props.item)) return
+  emitter.emit("handleAt", { id: from.value, name: props.item.nick })
 }
 </script>
 

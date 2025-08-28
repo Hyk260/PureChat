@@ -8,6 +8,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue"
+
 import { useChatStore } from "@/stores/modules/chat"
 
 const { item, isRevoked } = defineProps({

@@ -18,51 +18,48 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-// import { onKeyStroke, useEventListener } from "@vueuse/core";
-import { showConfirmationBox } from "@/utils/message";
-import { Search, Plus } from "@element-plus/icons-vue";
-import { debounce, isEmpty } from "lodash-es";
-import { useGroupStore, useChatStore } from "@/stores";
+import { Plus, Search } from "@element-plus/icons-vue"
+import { debounce, isEmpty } from "lodash-es"
+import { ref } from "vue"
 
-const input = ref("");
-const chatStore = useChatStore();
-const groupStore = useGroupStore();
+import { useChatStore, useGroupStore } from "@/stores"
+// import { onKeyStroke, useEventListener } from "@vueuse/core";
+import { showConfirmationBox } from "@/utils/message"
+
+const input = ref("")
+const chatStore = useChatStore()
+const groupStore = useGroupStore()
 
 const createGroup = async () => {
-  const data = { message: "创建群聊" };
-  const result = await showConfirmationBox(data, "prompt");
-  if (result === "cancel") return;
-  groupStore.handleCreateGroup({ groupName: result.value, positioning: true });
-};
+  const data = { message: "创建群聊" }
+  const result = await showConfirmationBox(data, "prompt")
+  if (result === "cancel") return
+  groupStore.handleCreateGroup({ groupName: result.value, positioning: true })
+}
 
 const openDialog = () => {
-  createGroup();
-};
+  createGroup()
+}
 
 const matchesFilter = (item, searchStr) => {
-  const lastMessage = item.lastMessage.messageForShow.toUpperCase();
+  const lastMessage = item.lastMessage.messageForShow.toUpperCase()
   if (item.type === "GROUP") {
-    return (
-      lastMessage.includes(searchStr) || item.groupProfile.name.toUpperCase().includes(searchStr)
-    );
+    return lastMessage.includes(searchStr) || item.groupProfile.name.toUpperCase().includes(searchStr)
   } else if (item.type === "C2C") {
-    return (
-      item.userProfile.nick.toUpperCase().includes(searchStr) || lastMessage.includes(searchStr)
-    );
+    return item.userProfile.nick.toUpperCase().includes(searchStr) || lastMessage.includes(searchStr)
   }
-  return false;
-};
+  return false
+}
 
 const debounceSearch = debounce((key) => {
   if (isEmpty(key)) {
-    chatStore.$patch({ searchConversationList: [] });
-    return;
+    chatStore.$patch({ searchConversationList: [] })
+    return
   }
-  const str = key.toUpperCase().trim();
-  const filterData = chatStore.conversationList.filter((item) => matchesFilter(item, str));
-  chatStore.$patch({ searchConversationList: filterData });
-}, 200);
+  const str = key.toUpperCase().trim()
+  const filterData = chatStore.conversationList.filter((item) => matchesFilter(item, str))
+  chatStore.$patch({ searchConversationList: filterData })
+}, 200)
 </script>
 
 <style lang="scss" scoped>

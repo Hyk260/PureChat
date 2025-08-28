@@ -1,5 +1,5 @@
 <template>
-  <span :class="['label', labelClass()]">
+  <span class="label" :class="[labelClass()]">
     <span v-if="isFullStaffGroup(item)" class="all">全员</span>
     <span v-else-if="isAuthor(item)" class="author">作者</span>
     <!-- <SvgIcon local-icon="robot" v-else-if="isRobot(userID)" /> -->
@@ -12,13 +12,13 @@
 </template>
 
 <script setup lang="ts">
-import { isRobot } from "@/utils/chat";
-import { getValueByKey, prefix, isFullStaffGroup } from "@/ai/utils";
-import { getModelSvg } from "@/ai/utils";
+import { getValueByKey, isFullStaffGroup, prefix } from "@/ai/utils"
+import { getModelSvg } from "@/ai/utils"
+import { isRobot } from "@/utils/chat"
 
 defineOptions({
   name: "Label",
-});
+})
 
 const props = defineProps({
   userID: {
@@ -33,15 +33,15 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
-});
+})
 
 const isAuthor = (data) => {
-  return getValueByKey(data?.groupProfile?.groupCustomField, prefix("Role")) === "author";
-};
+  return getValueByKey(data?.groupProfile?.groupCustomField, prefix("Role")) === "author"
+}
 
 const labelClass = (data) => {
-  return "";
-};
+  return ""
+}
 </script>
 
 <style lang="scss" scoped>

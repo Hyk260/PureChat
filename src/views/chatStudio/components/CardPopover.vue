@@ -34,22 +34,23 @@
 </template>
 
 <script setup>
-import { Operation, PieChart } from "@element-plus/icons-vue";
-import { onClickOutside } from "@vueuse/core";
-import { useState } from "@/hooks/useState";
-import { localStg } from "@/utils/storage";
-import { openWindow } from "@/utils/common";
-import { useUserStore, useChatStore } from "@/stores";
-import emitter from "@/utils/mitt-bus";
+import { Operation, PieChart } from "@element-plus/icons-vue"
+import { onClickOutside } from "@vueuse/core"
 
-const { homepage } = __APP_INFO__.pkg;
-const cardRef = useTemplateRef("cardRef");
+import { useState } from "@/hooks/useState"
+import { useChatStore, useUserStore } from "@/stores"
+import { openWindow } from "@/utils/common"
+import emitter from "@/utils/mitt-bus"
+import { localStg } from "@/utils/storage"
 
-const profile = ref({});
-const market = ref([]);
-const userStore = useUserStore();
-const chatStore = useChatStore();
-const [card, setCard] = useState();
+const { homepage } = __APP_INFO__.pkg
+const cardRef = useTemplateRef("cardRef")
+
+const profile = ref({})
+const market = ref([])
+const userStore = useUserStore()
+const chatStore = useChatStore()
+const [card, setCard] = useState()
 
 const menuItems = [
   {
@@ -69,7 +70,7 @@ const menuItems = [
     label: "社区支持",
     icon: PieChart,
     action: () => {
-      openWindow(homepage);
+      openWindow(homepage)
     },
   },
   // {
@@ -85,50 +86,50 @@ const menuItems = [
     svg: "log-out",
     hide: __LOCAL_MODE__,
     action: () => {
-      userStore.handleUserLogout();
+      userStore.handleUserLogout()
     },
   },
-].filter((item) => !item.hide);
+].filter((item) => !item.hide)
 
 const dataStatistics = ref({
   messages: "消息",
   sessions: "助手",
   topics: "话题",
-});
+})
 
 function closeCard(item) {
-  if (item) item.action?.();
-  setCard(false);
+  if (item) item.action?.()
+  setCard(false)
 }
 
 onClickOutside(cardRef, () => {
-  closeCard();
-});
+  closeCard()
+})
 
 function operation() {
-  emitter.emit("openSetup", { flag: true });
+  emitter.emit("openSetup", { flag: true })
 }
 
 const openCard = (data) => {
-  setCard(true);
-  profile.value = userStore?.userProfile || {};
-  market.value = localStg.get("marketJson")?.agents || [];
-};
+  setCard(true)
+  profile.value = userStore?.userProfile || {}
+  market.value = localStg.get("marketJson")?.agents || []
+}
 
 /** 大图预览 */
 const handlePictureCardPreview = (item) => {
   // emitter.emit("handleImageViewer", profile.value.avatar);
-};
+}
 
 onMounted(() => {
   emitter.on("setPopover", (data) => {
-    openCard(data);
-  });
-});
+    openCard(data)
+  })
+})
 
 onBeforeUnmount(() => {
-  emitter.off("setPopover");
-});
+  emitter.off("setPopover")
+})
 </script>
 <style lang="scss" scoped>
 .svg-icon,

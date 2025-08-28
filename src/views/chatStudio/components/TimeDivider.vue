@@ -5,16 +5,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { isSelf } from "@/utils/chat";
-import { formatTimestamp } from "@/utils/timeFormat";
-import { useChatStore } from "@/stores/modules/chat";
+import { computed } from "vue"
+
+import { useChatStore } from "@/stores/modules/chat"
+import { isSelf } from "@/utils/chat"
+import { formatTimestamp } from "@/utils/timeFormat"
 
 defineOptions({
   name: "TimeDivider",
-});
+})
 
-const chatStore = useChatStore();
+const chatStore = useChatStore()
 
 const props = defineProps({
   item: {
@@ -29,33 +30,24 @@ const props = defineProps({
     type: Boolean,
     default: false, // group or single
   },
-});
+})
 
 function showClientTime(item) {
   // 图片 文件 文本 合并 视频 自定义
-  const msg = [
-    "TIMImageElem",
-    "TIMFileElem",
-    "TIMTextElem",
-    "TIMRelayElem",
-    "TIMVideoFileElem",
-    "TIMCustomElem",
-  ];
-  return (
-    item.clientTime && msg.includes(item.type) && item.type !== "TIMGroupTipElem" && !item.isRevoked
-  );
+  const msg = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem", "TIMVideoFileElem", "TIMCustomElem"]
+  return item.clientTime && msg.includes(item.type) && item.type !== "TIMGroupTipElem" && !item.isRevoked
 }
 
 const fnStyle = computed(() => {
-  let _isSelf = isSelf(props.item);
+  let _isSelf = isSelf(props.item)
   if (props.type === "group") {
-    return [_isSelf ? "text-right pr-5" : "text-left pl-5"];
+    return [_isSelf ? "text-right pr-5" : "text-left pl-5"]
   } else {
-    const styleArray = [_isSelf ? "text-right pr-44 mb-4" : "text-left pl-44 mb-4"];
-    if (chatStore.isMultiSelectMode) return [...styleArray, "!opacity-0"];
-    return styleArray;
+    const styleArray = [_isSelf ? "text-right pr-44 mb-4" : "text-left pl-44 mb-4"]
+    if (chatStore.isMultiSelectMode) return [...styleArray, "!opacity-0"]
+    return styleArray
   }
-});
+})
 </script>
 
 <style lang="scss" scoped>

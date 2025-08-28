@@ -6,11 +6,7 @@
           <span class="nick">{{ chatNick("C2C", currentConversation) }}</span>
           <Label :model="robotStore.model" :user-i-d="currentConversation?.conversationID" />
           <!-- ai-prompt -->
-          <div
-            v-if="isShowPromptTitle"
-            class="cursor-pointer ml-5 ai-prompt-title"
-            @click="openPrompt"
-          >
+          <div v-if="isShowPromptTitle" class="cursor-pointer ml-5 ai-prompt-title" @click="openPrompt">
             {{ getPromptTitle }}
           </div>
           <!-- ai-tools -->
@@ -54,48 +50,49 @@
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
-import { Share2, Ellipsis, History } from "lucide-vue-next";
-import { useRobotStore, useChatStore, useToolsStore } from "@/stores";
-import Label from "@/views/chatStudio/components/Label.vue";
-import emitter from "@/utils/mitt-bus";
+import { Ellipsis, History, Share2 } from "lucide-vue-next"
+import { storeToRefs } from "pinia"
 
-const chatStore = useChatStore();
-const robotStore = useRobotStore();
-const toolsStore = useToolsStore();
+import { useChatStore, useRobotStore, useToolsStore } from "@/stores"
+import emitter from "@/utils/mitt-bus"
+import Label from "@/views/chatStudio/components/Label.vue"
 
-const { isAssistant, isGroupChat, currentType, currentConversation } = storeToRefs(chatStore);
-const { getPromptTitle, isShowBotTools, isShowPromptTitle } = storeToRefs(robotStore);
+const chatStore = useChatStore()
+const robotStore = useRobotStore()
+const toolsStore = useToolsStore()
+
+const { isAssistant, isGroupChat, currentType, currentConversation } = storeToRefs(chatStore)
+const { getPromptTitle, isShowBotTools, isShowPromptTitle } = storeToRefs(robotStore)
 
 const chatType = (type) => {
-  return currentType.value === type;
-};
+  return currentType.value === type
+}
 
 const chatNick = (type, chat) => {
   if (type === "C2C") {
-    return chat.userProfile?.nick || chat.userProfile?.userID || chat?.remark || "";
+    return chat.userProfile?.nick || chat.userProfile?.userID || chat?.remark || ""
   } else if (type === "GROUP") {
     const {
       groupProfile: { name, groupID, memberCount },
-    } = chat;
-    const count = memberCount ? `(${memberCount})` : "";
-    return `${name || groupID} ${count}`;
+    } = chat
+    const count = memberCount ? `(${memberCount})` : ""
+    return `${name || groupID} ${count}`
   }
-};
+}
 
 const openPrompt = () => {
-  emitter.emit("onRobotBox", { promptFocus: true });
-};
+  emitter.emit("onRobotBox", { promptFocus: true })
+}
 
 const openShare = () => {
-  chatStore.toggleMultiSelectMode(true);
-};
+  chatStore.toggleMultiSelectMode(true)
+}
 
 const openSetup = () => {
-  emitter.emit("handleGroupDrawer", true);
-};
+  emitter.emit("handleGroupDrawer", true)
+}
 
-const openUser = () => {};
+const openUser = () => {}
 </script>
 
 <style lang="scss" scoped>

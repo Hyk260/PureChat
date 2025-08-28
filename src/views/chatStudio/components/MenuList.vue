@@ -47,26 +47,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, markRaw } from "vue";
-import { ElPopover } from "element-plus";
-import { Warning } from "@element-plus/icons-vue";
+import { Warning } from "@element-plus/icons-vue"
+import { ElPopover } from "element-plus"
 import {
-  Trash, 
-  Ellipsis, 
-  SquarePen, 
-  Copy, 
-  RefreshCw, 
+  Copy,
+  Ellipsis,
+  RefreshCw,
+  SquarePen,
+  Trash,
   // SlidersHorizontal
- } from "lucide-vue-next";
-import { useChatStore } from "@/stores/modules/chat";
-import { handleCopyMsg } from "../utils/utils";
+} from "lucide-vue-next"
+import { computed, markRaw, ref } from "vue"
 
+import { useChatStore } from "@/stores/modules/chat"
+
+import { handleCopyMsg } from "../utils/utils"
 
 defineOptions({
   name: "MenuList",
-});
+})
 
-const emit = defineEmits(["handleSingleClick"]);
+const emit = defineEmits(["handleSingleClick"])
 
 const props = defineProps({
   item: {
@@ -79,15 +80,9 @@ const props = defineProps({
     // unSend(未发送)fail(发送失败)success(发送成功)sending(发送中)timeout(超时)
     validator: (value: string) => ["unSend", "fail", "success", "sending"].includes(value),
   },
-});
+})
 
-const supportedMessageTypes = [
-  "TIMImageElem",
-  "TIMFileElem",
-  "TIMTextElem",
-  "TIMRelayElem",
-  "TIMCustomElem",
-];
+const supportedMessageTypes = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem", "TIMCustomElem"]
 
 const menuItemsConfig = [
   {
@@ -119,41 +114,41 @@ const menuItemsConfig = [
     class: "text-[#f44336]",
     icon: markRaw(Trash),
   },
-];
+]
 
-const popoverTrashRef = ref<InstanceType<typeof ElPopover> | null>(null);
+const popoverTrashRef = ref<InstanceType<typeof ElPopover> | null>(null)
 
-const chatStore = useChatStore();
+const chatStore = useChatStore()
 
 function handleCancel() {
-  popoverTrashRef?.value?.hide?.(); 
-  popoverTrashRef?.value?.[0]?.hide?.();
+  popoverTrashRef?.value?.hide?.()
+  popoverTrashRef?.value?.[0]?.hide?.()
 }
 
 const handleDelete = () => {
-  emit("handleSingleClick", { item: props.item, id: "delete" });
-};
+  emit("handleSingleClick", { item: props.item, id: "delete" })
+}
 
 /**
  * 判断是否应该显示菜单
  */
 const shouldShowMenu = computed(() => {
-  const { item, status } = props;
+  const { item, status } = props
 
   // 消息状态检查
   if (status !== "success") {
-    return false;
+    return false
   }
 
   // 编辑状态检查
   if (chatStore.msgEdit?.ID === item?.ID) {
-    return false;
+    return false
   }
 
   // 自定义消息加载状态检查
   if (item.type === "TIMCustomElem") {
     if (item?.payload?.description === "loading") {
-      return false;
+      return false
     }
   }
 
@@ -163,43 +158,43 @@ const shouldShowMenu = computed(() => {
     !item.isRevoked &&
     !chatStore.isMultiSelectMode &&
     availableMenuItems.value.length > 0
-  );
-});
+  )
+})
 
 const availableMenuItems = computed(() => {
-  const messageType = props.item.type;
+  const messageType = props.item.type
   return menuItemsConfig
     .filter((menuItem) => {
       if (menuItem.id === "edit") {
-        return messageType === "TIMTextElem";
+        return messageType === "TIMTextElem"
       } else if (menuItem.id === "copy") {
-        return ["TIMTextElem", "TIMImageElem"].includes(messageType);
+        return ["TIMTextElem", "TIMImageElem"].includes(messageType)
       } else {
-        return true;
+        return true
       }
     })
-    .filter((menuItem) => !menuItem?.hidden);
-});
+    .filter((menuItem) => !menuItem?.hidden)
+})
 
 function handleMenuItemClick(data: { id: string }) {
-  const { id } = data;
-  const { item } = props;
+  const { id } = data
+  const { item } = props
   switch (id) {
     case "refresh":
-      emit("handleSingleClick", { item: props.item, id: "refresh" });
-      break;
+      emit("handleSingleClick", { item: props.item, id: "refresh" })
+      break
     case "copy":
-      handleCopyMsg(item);
-      break;
+      handleCopyMsg(item)
+      break
     case "edit":
-      chatStore.setMsgEdit(item);
-      break;
+      chatStore.setMsgEdit(item)
+      break
     case "setup":
-      console.log("设置");
-      break;
+      console.log("设置")
+      break
     case "delete":
-      handleDelete(item);
-      break;
+      handleDelete(item)
+      break
   }
 }
 </script>

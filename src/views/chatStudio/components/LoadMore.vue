@@ -8,21 +8,22 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useChatStore } from "@/stores/modules/chat";
-import Loader from "@/components/Loader/index.vue";
+import { computed } from "vue"
+
+import Loader from "@/components/Loader/index.vue"
+import { useChatStore } from "@/stores/modules/chat"
 
 const props = defineProps({
   index: {
     type: Number,
   },
-});
+})
 
-const chatStore = useChatStore();
+const chatStore = useChatStore()
 
 const isShowMore = computed(() => {
-  return props.index === 0;
-});
+  return props.index === 0
+})
 </script>
 
 <style lang="scss" scoped>

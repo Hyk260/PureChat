@@ -11,27 +11,29 @@
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
-import { CircleCloseFilled } from "@element-plus/icons-vue";
-import { useChatStore } from "@/stores/modules/chat";
-import { getAbstractContent, scrollToDomPosition } from "@/utils/chat";
-import DynamicContent from "./DynamicContent.vue";
+import { CircleCloseFilled } from "@element-plus/icons-vue"
+import { storeToRefs } from "pinia"
+
+import { useChatStore } from "@/stores/modules/chat"
+import { getAbstractContent, scrollToDomPosition } from "@/utils/chat"
+
+import DynamicContent from "./DynamicContent.vue"
 
 defineOptions({
   name: "ReplyBox",
-});
+})
 
-const chatStore = useChatStore();
-const { replyMsgData } = storeToRefs(chatStore);
+const chatStore = useChatStore()
+const { replyMsgData } = storeToRefs(chatStore)
 
 const onClose = () => {
-  chatStore.setReplyMsgData(null);
-};
+  chatStore.setReplyMsgData(null)
+}
 
 const onClick = () => {
-  const { ID } = replyMsgData.value || {};
-  ID && scrollToDomPosition(ID);
-};
+  const { ID } = replyMsgData.value || {}
+  ID && scrollToDomPosition(ID)
+}
 </script>
 
 <style lang="scss" scoped>

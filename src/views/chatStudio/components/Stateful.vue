@@ -8,11 +8,11 @@
 </template>
 
 <script setup lang="ts">
-import { isSelf } from "@/utils/chat";
+import { isSelf } from "@/utils/chat"
 
 defineOptions({
   name: "Stateful",
-});
+})
 
 const props = defineProps({
   item: {
@@ -24,12 +24,12 @@ const props = defineProps({
     type: String,
     default: "unSend",
   },
-});
+})
 
 const isShow = (value: string) => {
   // return true
-  return props.status === value;
-};
+  return props.status === value
+}
 
 const isShowState = (item) => {
   return (
@@ -38,8 +38,8 @@ const isShowState = (item) => {
     item.type !== "TIMTextElem" &&
     item.type !== "TIMGroupTipElem" &&
     (isShow("unSend") || isShow("fail"))
-  );
-};
+  )
+}
 </script>
 
 <style lang="scss" scoped>

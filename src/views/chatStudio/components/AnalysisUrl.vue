@@ -3,9 +3,10 @@
 </template>
 
 <script setup>
-import { h } from "vue";
-import { encodeHTML } from "@/utils/common";
-import linkifyUrls from "@/utils/linkifyUrls";
+import { h } from "vue"
+
+import { encodeHTML } from "@/utils/common"
+import linkifyUrls from "@/utils/linkifyUrls"
 
 const { atUserList } = defineProps({
   text: {
@@ -16,18 +17,18 @@ const { atUserList } = defineProps({
     type: Array,
     default: () => [],
   },
-});
+})
 
 function AnalysisUrl(props) {
-  const { text } = props;
-  const escapedUrl = encodeHTML(text);
-  const linkStr = linkifyUrls(escapedUrl);
+  const { text } = props
+  const escapedUrl = encodeHTML(text)
+  const linkStr = linkifyUrls(escapedUrl)
   return h("span", {
     innerHTML: linkStr,
     onClick: () => {
-      console.log("onClick");
+      console.log("onClick")
     },
-  });
+  })
 }
 </script>
 

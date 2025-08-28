@@ -1,30 +1,28 @@
 <template>
   <div v-if="!chatStore.currentConversation" :class="[className]">
     <el-empty :description="$t('common.emptyText')" :image-size="150" />
-    <div v-if="className === 'no-msg'" class="flex-c launch" @click="launch">
-      发起会话
-    </div>
+    <div v-if="className === 'no-msg'" class="flex-c launch" @click="launch">发起会话</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useSidebarStore, useChatStore } from "@/stores";
+import { useChatStore, useSidebarStore } from "@/stores"
 
 const props = defineProps({
   className: {
     type: String,
     default: "",
   },
-});
+})
 
-const chatStore = useChatStore();
-const sidebarStore = useSidebarStore();
+const chatStore = useChatStore()
+const sidebarStore = useSidebarStore()
 
 function launch() {
   if (__LOCAL_MODE__) {
-    sidebarStore.toggleOutside({ path: "/discover" });
+    sidebarStore.toggleOutside({ path: "/discover" })
   } else {
-    sidebarStore.toggleOutside({ path: "/friends" });
+    sidebarStore.toggleOutside({ path: "/friends" })
   }
 }
 </script>

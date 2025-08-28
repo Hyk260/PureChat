@@ -20,15 +20,16 @@
 </template>
 
 <script setup lang="ts">
-import { getEmojiAssetUrl } from "@/utils/common";
-import { decodeText } from "@/utils/chat";
-import AnalysisUrl from "./AnalysisUrl.vue";
+import { decodeText } from "@/utils/chat"
+import { getEmojiAssetUrl } from "@/utils/common"
+
+import AnalysisUrl from "./AnalysisUrl.vue"
 
 defineOptions({
   name: "DynamicContent",
-});
+})
 
-const link = true;
+const link = true
 
 const props = defineProps({
   text: {
@@ -40,5 +41,5 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-});
+})
 </script>
