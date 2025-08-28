@@ -35,7 +35,7 @@
                   <!-- 删除 -->
                   <CircleMinus size="15" class="icon-item text-[#f44336]" @click="reduce(item)" />
                   <!-- 图标 -->
-                  <el-icon class="icon-size" v-if="item?.type == 'el-icon'">
+                  <el-icon v-if="item?.type == 'el-icon'" class="icon-size">
                     <component :is="item.icon" />
                   </el-icon>
                   <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
@@ -96,137 +96,138 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
-import { cloneDeep, uniqBy } from "lodash-es";
-import { VueDraggableNext } from "vue-draggable-next";
-import { useSidebarStore } from "@/stores/modules/sidebar/index";
-import { CircleMinus, CirclePlus, GripVertical } from "lucide-vue-next";
-import emitter from "@/utils/mitt-bus";
+import { cloneDeep, uniqBy } from "lodash-es"
+import { CircleMinus, CirclePlus, GripVertical } from "lucide-vue-next"
+import { computed, nextTick, onMounted, onUnmounted, ref } from "vue"
+import { VueDraggableNext } from "vue-draggable-next"
 
-const dialogVisible = ref(false);
-const cursorStyle = ref("");
-const leftEdit = ref([]);
-const rightEdit = ref([]);
-const editRef = ref(null);
+import { useSidebarStore } from "@/stores/modules/sidebar/index"
+import emitter from "@/utils/mitt-bus"
 
-const sidebarStore = useSidebarStore();
+const dialogVisible = ref(false)
+const cursorStyle = ref("")
+const leftEdit = ref([])
+const rightEdit = ref([])
+const editRef = ref(null)
 
-const outsideList = computed(() => sidebarStore.outsideList);
-const moreList = computed(() => sidebarStore.moreList);
+const sidebarStore = useSidebarStore()
+
+const outsideList = computed(() => sidebarStore.outsideList)
+const moreList = computed(() => sidebarStore.moreList)
 
 const outsideGroup = ref({
   name: "draggable",
   put: true,
   pull: true,
-});
+})
 
 const insideGroup = ref({
   name: "draggable",
   put: true,
   pull: (e) => {
-    if (e.el.id == "right") return;
-    return true;
+    if (e.el.id == "right") return
+    return true
   },
-});
+})
 
 const cache = ref({
   deepLeft: [],
   deepRight: [],
-});
+})
 
 function record() {
-  const { leftEdit: left, rightEdit: right } = fnRepeat();
-  cache.value.deepLeft = cloneDeep(left);
-  cache.value.deepRight = cloneDeep(right);
+  const { leftEdit: left, rightEdit: right } = fnRepeat()
+  cache.value.deepLeft = cloneDeep(left)
+  cache.value.deepRight = cloneDeep(right)
 }
 
 function onRemove(e) {
-  console.log(e);
+  console.log(e)
 }
 
 function onStart() {
-  cursorStyle.value = "drag-cursor";
+  cursorStyle.value = "drag-cursor"
 }
 
 function onEnd() {
-  cursorStyle.value = "";
-  callback();
+  cursorStyle.value = ""
+  callback()
 }
 
 function onUpdate() {}
 
 function reset() {
-  sidebarStore.$reset();
-  init();
+  sidebarStore.$reset()
+  init()
 }
 
 function callback() {
   nextTick(() => {
-    sidebarStore.setOutsideList(leftEdit.value);
-    sidebarStore.setMoreList(rightEdit.value);
-  });
+    sidebarStore.setOutsideList(leftEdit.value)
+    sidebarStore.setMoreList(rightEdit.value)
+  })
 }
 
 function fnRepeat() {
-  const left = outsideList.value.filter((t) => t.id !== "more" && t?.show !== "hide");
-  const right = moreList.value;
+  const left = outsideList.value.filter((t) => t.id !== "more" && t?.show !== "hide")
+  const right = moreList.value
   return {
     leftEdit: uniqBy(left, "id"),
     rightEdit: uniqBy(right, "id"),
-  };
+  }
 }
 
 function init() {
-  const { leftEdit: left, rightEdit: right } = fnRepeat();
+  const { leftEdit: left, rightEdit: right } = fnRepeat()
   leftEdit.value = left
   rightEdit.value = right
 }
 
 function reduce(item) {
-  if (item.if_fixed == 1) return;
-  const index = leftEdit.value.indexOf(item);
-  leftEdit.value.splice(index, 1);
-  rightEdit.value.push(item);
-  callback();
+  if (item.if_fixed == 1) return
+  const index = leftEdit.value.indexOf(item)
+  leftEdit.value.splice(index, 1)
+  rightEdit.value.push(item)
+  callback()
 }
 
 function increase(item) {
-  const index = rightEdit.value.indexOf(item);
-  rightEdit.value.splice(index, 1);
-  leftEdit.value.push(item);
-  callback();
+  const index = rightEdit.value.indexOf(item)
+  rightEdit.value.splice(index, 1)
+  leftEdit.value.push(item)
+  callback()
 }
 
 function onMove(e) {
-  if (e.relatedContext.element?.if_fixed == 1) return false;
-  return true;
+  if (e.relatedContext.element?.if_fixed == 1) return false
+  return true
 }
 
 function handleConfirm() {
-  setDialog(false);
+  setDialog(false)
 }
 
 function handleCancel() {
-  setDialog(false);
+  setDialog(false)
 }
 
 function onClose() {}
 
 function setDialog(flg) {
-  dialogVisible.value = flg;
+  dialogVisible.value = flg
 }
 
 onMounted(() => {
-  init();
+  init()
   emitter.on("SidebarEditDialog", (val) => {
-    setDialog(val);
-    record();
-  });
-});
+    setDialog(val)
+    record()
+  })
+})
 
 onUnmounted(() => {
-  emitter.off("SidebarEditDialog");
-});
+  emitter.off("SidebarEditDialog")
+})
 </script>
 
 <style lang="scss" scoped>

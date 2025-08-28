@@ -6,29 +6,30 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useThemeStore } from "@/stores/index";
-import { usePreferredColorScheme } from "@vueuse/core";
+import { usePreferredColorScheme } from "@vueuse/core"
+import { computed } from "vue"
+
+import { useThemeStore } from "@/stores/index"
 
 const themeStore = useThemeStore()
-const osTheme = usePreferredColorScheme();
+const osTheme = usePreferredColorScheme()
 
 /** Dark mode */
 const darkMode = computed(() => {
   if (themeStore.themeScheme === "auto") {
-    return osTheme.value === "dark";
+    return osTheme.value === "dark"
   }
-  return themeStore.themeScheme === "dark";
-});
+  return themeStore.themeScheme === "dark"
+})
 
 const themecolor = computed({
   get() {
-    return darkMode.value;
+    return darkMode.value
   },
   set(val) {
-    themeStore.setThemeScheme(val ? "dark" : "light");
+    themeStore.setThemeScheme(val ? "dark" : "light")
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>

@@ -27,7 +27,12 @@
                 :class="isSelf(item) ? 'is-self' : 'is-other'"
               >
                 <div class="avatar">
-                  <UserAvatar :size="32" :url="fnAvatar(item)" shape="square" :type="isSelf(item) ? 'self' : 'single'" />
+                  <UserAvatar
+                    :size="32"
+                    :url="fnAvatar(item)"
+                    shape="square"
+                    :type="isSelf(item) ? 'self' : 'single'"
+                  />
                 </div>
                 <div class="item" :class="msgOne(item.type)">
                   <div :class="msgType(item.type)">
@@ -114,83 +119,78 @@
 </template>
 
 <script setup>
-import { useState } from "@/hooks/useState";
-import {
-  useScreenshot,
-  ImageType,
-  imageTypeOptions,
-} from "@/hooks/useScreenshot";
-import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent";
-import { msgOne, msgType, isSelf } from "@/utils/chat/index";
-import { getAiAvatarUrl } from "@/ai/utils";
-import { getBackgroundStyle, onColor, back, backgColor } from "./utils";
-import { useChatStore, useRobotStore } from "@/stores/index";
-import Header from "@/views/chatStudio/components/Header.vue";
-import emitter from "@/utils/mitt-bus";
+import { getAiAvatarUrl } from "@/ai/utils"
+import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"
+import { ImageType, imageTypeOptions, useScreenshot } from "@/hooks/useScreenshot"
+import { useState } from "@/hooks/useState"
+import { useChatStore, useRobotStore } from "@/stores/index"
+import { isSelf, msgOne, msgType } from "@/utils/chat/index"
+import emitter from "@/utils/mitt-bus"
+import Header from "@/views/chatStudio/components/Header.vue"
 
-const { pkg } = __APP_INFO__;
-const homepage = pkg.homepage;
-const docsUrl = pkg.docs;
-const isFooter = ref(false);
-const isQrCode = ref(true);
-const isPrompt = ref(false);
-const imageType = ref(ImageType.Blob);
-const chatStore = useChatStore();
-const robotStore = useRobotStore();
+import { back, backgColor, getBackgroundStyle, onColor } from "./utils"
 
-const emit = defineEmits(["onClose"]);
+const { pkg } = __APP_INFO__
+const homepage = pkg.homepage
+const docsUrl = pkg.docs
+const isFooter = ref(false)
+const isQrCode = ref(true)
+const isPrompt = ref(false)
+const imageType = ref(ImageType.Blob)
+const chatStore = useChatStore()
+const robotStore = useRobotStore()
 
-const [dialogVisible, setDialogVisible] = useState();
-const { isAssistant, toAccount, getSortedForwardData } = storeToRefs(chatStore);
-const { loading, onDownload } = useScreenshot();
+const emit = defineEmits(["onClose"])
+
+const [dialogVisible, setDialogVisible] = useState()
+const { isAssistant, toAccount, getSortedForwardData } = storeToRefs(chatStore)
+const { loading, onDownload } = useScreenshot()
 
 const promptContent = computed(() => {
-  if (!isAssistant.value) return "";
-  return robotStore.currentProviderPrompt?.prompt[0]?.content || "";
-});
-const showPrompt = computed(() => isAssistant.value && isPrompt.value && promptContent.value);
+  if (!isAssistant.value) return ""
+  return robotStore.currentProviderPrompt?.prompt[0]?.content || ""
+})
+const showPrompt = computed(() => isAssistant.value && isPrompt.value && promptContent.value)
 const roleText = computed(() => {
   try {
-    const data = robotStore.currentProviderPrompt?.meta || {};
-    if (!data.avatar || !data.title) return "";
-    return data ? `${data.avatar} ${data.title}` : "";
+    const data = robotStore.currentProviderPrompt?.meta || {}
+    if (!data.avatar || !data.title) return ""
+    return data ? `${data.avatar} ${data.title}` : ""
   } catch {
-    return "";
+    return ""
   }
-});
-const showRole = computed(() => roleText.value && isPrompt.value);
-const downloadButtonText = computed(() =>
-  imageType.value === ImageType.Blob ? "复制截图" : "下载截图"
-);
+})
+const showRole = computed(() => roleText.value && isPrompt.value)
+const downloadButtonText = computed(() => (imageType.value === ImageType.Blob ? "复制截图" : "下载截图"))
 
 const fnAvatar = (item) => {
-  return item.avatar || getAiAvatarUrl(item.from);
-};
+  return item.avatar || getAiAvatarUrl(item.from)
+}
 
 const handleDownload = async () => {
   // 先显示加载状态
-  loading.value = true;
+  loading.value = true
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 1000))
 
   onDownload(imageType.value, roleText.value, () => {
-    setDialogVisible(false);
-  });
-};
+    setDialogVisible(false)
+  })
+}
 
 const handleClose = (done) => {
-  done?.();
-};
+  done?.()
+}
 
 onMounted(() => {
   emitter.on("handleShareModal", (val) => {
-    setDialogVisible(val);
-  });
-});
+    setDialogVisible(val)
+  })
+})
 
 onUnmounted(() => {
-  emitter.off("handleShareModal");
-});
+  emitter.off("handleShareModal")
+})
 </script>
 
 <style lang="scss" scoped>

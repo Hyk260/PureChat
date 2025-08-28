@@ -3,10 +3,9 @@
     v-if="card && cardData"
     ref="cardRef"
     :style="{ left: left, top: top }"
+    class="robot-box fade-slide-lower"
     :class="{
-      'robot-box': true,
       'is-robot': isRobot(cardData?.from),
-      'fade-slide-lower': true,
     }"
   >
     <div class="title flex-sc">
@@ -50,119 +49,120 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, ref } from "vue";
-import { getUserProfile } from "@/service/im-sdk-api/index";
-import { isRobot, squareUrl } from "@/utils/chat/index";
-import { useState } from "@/hooks/useState";
-import { onClickOutside } from "@vueuse/core";
-import { getAiAvatarUrl } from "@/ai/utils";
+import { onClickOutside } from "@vueuse/core"
+import { onBeforeUnmount, onMounted, ref } from "vue"
+
+import { getAiAvatarUrl } from "@/ai/utils"
 // import { getGender } from "@/utils/common";
-import { getValueByKey, prefix } from "@/ai/utils";
-import { useChatStore } from "@/stores/index";
-import Label from "@/views/chatStudio/components/Label.vue";
-import emitter from "@/utils/mitt-bus";
+import { getValueByKey, prefix } from "@/ai/utils"
+import { useState } from "@/hooks/useState"
+import { getUserProfile } from "@/service/im-sdk-api/index"
+import { useChatStore } from "@/stores/index"
+import { isRobot, squareUrl } from "@/utils/chat/index"
+import emitter from "@/utils/mitt-bus"
+import Label from "@/views/chatStudio/components/Label.vue"
 
-const cardRef = ref();
-const left = ref("");
-const top = ref("");
-const cardData = ref(null);
-const userProfile = ref(null);
+const cardRef = ref()
+const left = ref("")
+const top = ref("")
+const cardData = ref(null)
+const userProfile = ref(null)
 
-const [card, setCard] = useState();
+const [card, setCard] = useState()
 const chatStore = useChatStore()
 
 const closeModal = () => {
-  userProfile.value = null;
-  setCard(false);
-};
+  userProfile.value = null
+  setCard(false)
+}
 
 const clickCard = (url) => {
   if (url) {
     // closeModal();
     // emitter.emit("handleImageViewer", url);
   }
-};
+}
 
 const getProvider = (data = userProfile.value.profileCustomField) => {
-  const provider = getValueByKey(data, prefix("Provider"));
-  return provider;
-};
+  const provider = getValueByKey(data, prefix("Provider"))
+  return provider
+}
 
 const getHomepage = (data = userProfile.value.profileCustomField) => {
-  const homepage = getValueByKey(data, prefix("Homepage"));
-  return homepage;
-};
+  const homepage = getValueByKey(data, prefix("Homepage"))
+  return homepage
+}
 
 const define = () => {
-  closeModal();
-  if (cardData.value?.conversationType === "C2C") return;
+  closeModal()
+  if (cardData.value?.conversationType === "C2C") return
   chatStore.addConversation({ sessionId: `C2C${cardData.value.from}` })
-};
+}
 
 onClickOutside(cardRef, () => {
-  closeModal();
-});
+  closeModal()
+})
 
 const setPosition = (data) => {
-  if (!data) return;
-  let offsetLeft = 30;
-  let offsetTop = 60;
-  let cardWidth = 220;
-  let cardHeight = 320;
+  if (!data) return
+  let offsetLeft = 30
+  let offsetTop = 60
+  let cardWidth = 220
+  let cardHeight = 320
   try {
-    const { pageX, pageY, clientY } = data;
-    let cardLeft = pageX + offsetLeft;
-    let cardTop = pageY - offsetTop;
-    let windowHeight = window.innerHeight; // 获取窗口的高度
-    const bottomSpace = windowHeight - clientY;
+    const { pageX, pageY, clientY } = data
+    let cardLeft = pageX + offsetLeft
+    let cardTop = pageY - offsetTop
+    let windowHeight = window.innerHeight // 获取窗口的高度
+    const bottomSpace = windowHeight - clientY
     // 判断卡片是否超出屏幕
     // if (bottomSpace < cardHeight - offsetTop) {
     //   cardTop = pageY - (cardHeight - offsetTop);
     // }
-    left.value = cardLeft + "px";
-    top.value = cardTop + "px";
+    left.value = cardLeft + "px"
+    top.value = cardTop + "px"
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 const setUserProfile = async () => {
-  const { from: _from } = cardData.value || {};
-  const { code, data } = await getUserProfile([_from]);
+  const { from: _from } = cardData.value || {}
+  const { code, data } = await getUserProfile([_from])
   if (code === 0) {
-    console.log("获取用户信息", data);
-    if (data?.[0]) userProfile.value = data?.[0];
+    console.log("获取用户信息", data)
+    if (data?.[0]) userProfile.value = data?.[0]
   } else {
-    console.log("获取用户信息失败", data);
+    console.log("获取用户信息失败", data)
   }
-};
+}
 
 const setCardData = (data) => {
   if (data?.conversationID === "@TIM#SYSTEM") {
-    cardData.value = null;
+    cardData.value = null
   } else {
-    cardData.value = data;
+    cardData.value = data
   }
-};
+}
 
 const openCard = (data) => {
-  setPosition(data.seat);
-  setCardData(data.cardData);
-  setUserProfile();
+  setPosition(data.seat)
+  setCardData(data.cardData)
+  setUserProfile()
   setTimeout(() => {
-    setCard(true);
-  }, 100);
-};
+    setCard(true)
+  }, 100)
+}
 
 onMounted(() => {
   emitter.on("setPopoverStatus", (data) => {
-    openCard(data);
-  });
-});
+    openCard(data)
+  })
+})
 
 onBeforeUnmount(() => {
-  emitter.off("setPopoverStatus");
-});
+  emitter.off("setPopoverStatus")
+})
 </script>
 
 <style lang="scss" scoped>
