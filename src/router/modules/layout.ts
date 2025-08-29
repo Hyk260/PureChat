@@ -14,7 +14,7 @@ export default [
         component: () => import("@/views/chatStudio/index.vue"),
         meta: {
           title: "chat",
-          keep: true,
+          keepAlive: true,
         },
       },
       {

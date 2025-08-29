@@ -17,6 +17,8 @@ import { useChatStore } from "@/stores"
 import GroupDetails from "./chat/GroupDetails.vue"
 import Message from "./message.vue"
 
+defineOptions({ name: "Chat" })
+
 const chatStore = useChatStore()
 
 const { currentConversation, isGroupChat } = storeToRefs(chatStore)

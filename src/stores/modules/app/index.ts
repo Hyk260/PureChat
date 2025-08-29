@@ -9,6 +9,7 @@ export const useAppStore = defineStore(SetupStoreId.App, {
   state: (): AppState => ({
     lang: "zh-CN",
     timeline: true,
+    contentXScrollable: false,
     markdownRender: false, // Markdown 渲染输入消息
   }),
   actions: {
@@ -21,6 +22,9 @@ export const useAppStore = defineStore(SetupStoreId.App, {
     },
     setMarkdownRender(val: boolean) {
       this.markdownRender = val
+    },
+    setContentXScrollable(value: boolean) {
+      this.contentXScrollable = value
     },
   },
   persist: {

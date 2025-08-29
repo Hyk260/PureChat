@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue"
 import { storeToRefs } from "pinia"
-import { onActivated, onMounted } from "vue"
+import { onActivated, onDeactivated, onMounted } from "vue"
 
 import MessageToolbar from "@/components/Popups/MessageToolbar.vue"
 import { useChatStore } from "@/stores/modules/chat"
@@ -60,7 +60,12 @@ const toggleCollapsed = () => {
 }
 
 onActivated(() => {
+  console.log("onActivated")
   emitter.emit("updateScroll")
+})
+
+onDeactivated(() => {
+  console.log("onDeactivated")
 })
 
 onMounted(() => {
