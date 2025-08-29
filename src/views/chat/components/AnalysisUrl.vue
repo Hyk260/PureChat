@@ -8,7 +8,7 @@ import { h } from "vue"
 import { encodeHTML } from "@/utils/common"
 import linkifyUrls from "@/utils/linkifyUrls"
 
-const { atUserList } = defineProps({
+defineProps({
   text: {
     type: String,
     default: "",

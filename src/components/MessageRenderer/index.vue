@@ -1,16 +1,22 @@
 <template>
-  <component :is="messageComponent" v-if="messageComponent" :key="messageKey" :message="message" v-bind="$attrs" />
-  <div v-else class="message-error">Unknown message type: {{ message?.type }}</div>
+  <div class="message-renderer">
+    <component :is="messageComponent" v-if="messageComponent" :key="messageKey" :message="message" v-bind="$attrs" />
+    <div v-else class="message-error">Unknown message type: {{ message?.type }}</div> 
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed, toRefs } from "vue"
 
-import type { MessageItem } from "./types/message"
+import type { DB_Message } from "@/database/schemas/message"
 import { getMessageComponent } from "./utils/getMessageComponent"
 
+defineOptions({
+  name: "MessageRenderer",
+})
+
 interface Props {
-  message: MessageItem
+  message: DB_Message
 }
 
 const props = defineProps<Props>()

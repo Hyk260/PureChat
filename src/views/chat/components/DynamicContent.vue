@@ -2,7 +2,7 @@
   <template v-for="item in decodeText(text)" :key="item">
     <span v-if="item.name === 'text'">
       <!-- 链接 -->
-      <AnalysisUrl v-if="link" :text="item.text" :at-user-list="atUserList" />
+      <AnalysisUrl v-if="link" :text="item.text || ''" :at-user-list="atUserList" />
       <!-- 文本 -->
       <template v-else>
         {{ item.text }}
@@ -13,7 +13,7 @@
       v-else-if="item.name === 'img'"
       draggable="false"
       class="h-23 w-23 align-sub"
-      :src="getEmojiAssetUrl(item.localSrc)"
+      :src="getEmojiAssetUrl(item.localSrc || '')"
       alt="表情包"
     />
   </template>

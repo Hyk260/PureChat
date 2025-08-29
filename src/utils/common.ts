@@ -92,7 +92,7 @@ export const createFileInput = (options: CreateFileInputOptions) => {
   input.type = "file"
   input.accept = options.accept.join(",")
   input.style.display = "none"
-  const handleChange = (event: ChangeEvent) => {
+  const handleChange = (event: any) => {
     const files = event.target.files
     cleanup()
     options.onChange(files)

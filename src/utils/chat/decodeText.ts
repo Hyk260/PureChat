@@ -1,7 +1,14 @@
 import { emojiMap, emojiUrl } from "@/utils/emoji/emoji-map"
 
-export function decodeText(text: string) {
-  const renderDom = [] // 存储渲染后的 DOM 元素
+interface RenderDom {
+  name: "text" | "img"
+  text?: string
+  src?: string
+  localSrc?: string
+}
+
+export function decodeText(text: string): Array<RenderDom> {
+  const renderDom: Array<RenderDom> = [] // 存储渲染后的 DOM 元素
   let remainingText = text // 剩余未处理的文本
   let leftBracketIndex = -1 // 左括号的索引
   let rightBracketIndex = -1 // 右括号的索引
@@ -30,7 +37,7 @@ export function decodeText(text: string) {
           renderDom.push({
             name: "img",
             src: emojiUrl + emoji,
-            localSrc: emoji, // 本地表情包地址
+            localSrc: emoji || "", // 本地表情包地址
           })
           remainingText = remainingText.substring(rightBracketIndex + 1)
         } else {

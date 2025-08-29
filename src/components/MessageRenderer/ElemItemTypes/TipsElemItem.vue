@@ -15,7 +15,7 @@ import { CircleCloseFilled } from "@element-plus/icons-vue"
 import { computed, PropType } from "vue"
 
 import { DB_Message } from "@/database/schemas/message"
-import { useChatStore, useUserStore } from "@/stores/index"
+import { useChatStore, useUserStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
 
 const props = defineProps({

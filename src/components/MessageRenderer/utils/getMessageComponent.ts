@@ -1,15 +1,15 @@
-import { type Component, markRaw, shallowRef } from "vue"
+import { type Component, markRaw } from "vue"
 
 import { MessageType } from "@/database/schemas/message"
 
-// const CustomElemItem = () => import("../ElemItemTypes/ElemItemTypes/CustomElemItem.vue")
-// const FileElemItem = () => import("../ElemItemTypes/ElemItemTypes/FileElemItem.vue")
-// const GroupSystemNoticeElem = () => import("../ElemItemTypes/ElemItemTypes/GroupSystemNoticeElem.vue")
-// const GroupTipElement = () => import("../ElemItemTypes/ElemItemTypes/GroupTipElement.vue")
-// const ImageElemItem = () => import("../ElemItemTypes/ElemItemTypes/ImageElemItem.vue")
-// const RelayElemItem = () => import("../ElemItemTypes/ElemItemTypes/RelayElemItem.vue")
-// const TextElemItem = () => import("../ElemItemTypes/ElemItemTypes/TextElemItem.vue")
-// const TipsElemItem = () => import("../ElemItemTypes/ElemItemTypes/TipsElemItem.vue")
+// const CustomElemItem = () => import("../ElemItemTypes/CustomElemItem.vue")
+// const FileElemItem = () => import("../ElemItemTypes/FileElemItem.vue")
+// const GroupSystemNoticeElem = () => import("../ElemItemTypes/GroupSystemNoticeElem.vue")
+// const GroupTipElement = () => import("../ElemItemTypes/GroupTipElement.vue")
+// const ImageElemItem = () => import("../ElemItemTypes/ImageElemItem.vue")
+// const RelayElemItem = () => import("../ElemItemTypes/RelayElemItem.vue")
+// const TextElemItem = () => import("../ElemItemTypes/TextElemItem.vue")
+// const TipsElemItem = () => import("../ElemItemTypes/TipsElemItem.vue")
 import CustomElemItem from "../ElemItemTypes/CustomElemItem.vue"
 import FileElemItem from "../ElemItemTypes/FileElemItem.vue"
 import GroupSystemNoticeElem from "../ElemItemTypes/GroupSystemNoticeElem.vue"
@@ -34,45 +34,70 @@ const MESSAGE_COMPONENT_MAP: Record<MessageType, MessageComponent> = markRaw({
   TIMGroupSystemNoticeElem: GroupSystemNoticeElem, // 系统通知
 })
 
-const componentCache = new WeakMap<MessageItem, MessageComponent>()
-const fallbackCache = shallowRef(new Map<string, MessageComponent>())
+const componentCache = new Map<string, MessageComponent>()
+
+const getCacheKey = (item: MessageItem): string => {
+  return `${item.type}_${item.isRevoked ? "revoked" : "normal"}_${item.ID}`
+}
 
 /**
  * 根据消息类型获取对应的组件
  */
-export const getMessageComponent = (item: MessageItem | null | undefined): MessageComponent | null | undefined => {
-  if (!item || typeof item !== "object") {
+export const getMessageComponent = (item: MessageItem | null): MessageComponent | null => {
+  if (!item?.type) {
     return null
   }
 
-  const { type, isRevoked = false, ID } = item
-
-  if (typeof item === "object" && componentCache.has(item)) {
-    return componentCache.get(item)
+  if (item.isRevoked) {
+    return TipsElemItem
   }
 
-  const cacheKey = `${type}_${isRevoked ? "revoked" : "normal"}_${ID}`
-  if (fallbackCache.value.has(cacheKey)) {
-    return fallbackCache.value.get(cacheKey)
+  const cacheKey = getCacheKey(item)
+
+  if (componentCache.has(cacheKey)) {
+    return componentCache.get(cacheKey) || null
   }
 
-  let component: MessageComponent | null = null
+  const component = MESSAGE_COMPONENT_MAP[item.type as MessageType] || null
 
-  if (isRevoked) {
-    component = TipsElemItem
-  } else if (type && type in MESSAGE_COMPONENT_MAP) {
-    component = MESSAGE_COMPONENT_MAP[type]
-  } else {
-    console.warn(`Unknown message type: ${type}`)
-    component = null
+  if (!component) {
+    console.warn(`Unknown message type: ${item.type}`)
+    return null
   }
 
-  if (component) {
-    if (typeof item === "object") {
-      componentCache.set(item, component)
-    }
-    fallbackCache.value.set(cacheKey, component)
-  }
-
+  componentCache.set(cacheKey, component)
   return component
+}
+
+/**
+ * 预加载组件
+ */
+export const preloadComponents = async (types: MessageType[]): Promise<void> => {
+  const promises = types.map((type) => {
+    const component = MESSAGE_COMPONENT_MAP[type]
+    if (typeof component === "function") {
+      return component()
+    }
+    return Promise.resolve(component)
+  })
+
+  try {
+    await Promise.all(promises)
+  } catch (error) {
+    console.error("Failed to preload components:", error)
+  }
+}
+
+/**
+ * 清除组件缓存
+ */
+export const clearComponentCache = (): void => {
+  componentCache.clear()
+}
+
+/**
+ * 获取所有支持的消息类型
+ */
+export const getSupportedMessageTypes = (): MessageType[] => {
+  return Object.keys(MESSAGE_COMPONENT_MAP) as MessageType[]
 }

@@ -1,5 +1,5 @@
 <template>
-  <div :id="payload.uuid" class="file-elem-item" :style="{ background: backgroundStyle }" @click="handleOpen(payload)">
+  <div :id="payload.uuid" :title="payload.fileName" class="file-elem-item" :style="{ background: backgroundStyle }" @click="handleOpen(payload)">
     <div class="flex">
       <div class="min-w-45 h-45">
         <img draggable="false" class="h-full" :src="icon" :alt="payload.fileName" />
@@ -11,8 +11,8 @@
           </div>
         </el-tooltip>
         <div class="file-size">
-          <span>{{ formattedFileSize }} </span>
-          <span v-show="!isSuccess" class="upload-progress"></span>
+          <span> {{ formattedFileSize }} </span>
+          <span v-show="message.status !== 'success'" class="upload-progress"></span>
         </div>
       </div>
     </div>
@@ -20,7 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue"
+import { DB_Message } from "@/database/schemas/message"
+import { computed, onBeforeUnmount, onMounted, ref, PropType } from "vue"
 
 import { bytesToSize, getFileType, renderFileIcon } from "@/utils/chat/index"
 import emitter from "@/utils/mitt-bus"
@@ -31,12 +32,9 @@ defineOptions({
 
 const props = defineProps({
   message: {
-    type: Object,
-    default: null,
-  },
-  status: {
-    type: String,
-    default: "success",
+    type: Object as PropType<DB_Message>,
+    required: true,
+    default: () => ({}),
   },
 })
 
@@ -49,7 +47,6 @@ const shouldShowTooltip = ref(false)
 const fileType = computed(() => getFileType(payload?.fileName))
 const icon = computed(() => renderFileIcon(fileType.value))
 const formattedFileSize = computed(() => bytesToSize(payload.fileSize))
-const isSuccess = computed(() => props.status === "success")
 
 const checkTextOverflow = () => {
   if (!fileNameRef.value) return

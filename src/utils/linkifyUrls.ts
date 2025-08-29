@@ -1,7 +1,7 @@
 const urlRegex = () =>
   /((?<!\+)https?:\/\/(?:www\.)?(?:[-\w.]+?[.@][a-zA-Z\d]{2,}|localhost)(?:[-\w.:%+~#*$!?&/=@]*?(?:,(?!\s))*?)*)/g
 
-const linkify = (href: string, options: any) => {
+const linkify = (href: string, options?: any) => {
   return `<a href="${href}" class="linkUrl" target="_blank">${href}</a>`
 }
 
@@ -13,6 +13,6 @@ const getAsString = (string: string, options: any) => {
   })
 }
 
-export default function linkifyUrls(string: string, options: any) {
+export default function linkifyUrls(string: string, options?: any) {
   return getAsString(string, options)
 }
