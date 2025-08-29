@@ -29,42 +29,19 @@ class _SessionModel extends BaseModel {
     const startTime = Date.now()
     const keywordLowerCase = keyword.toLowerCase()
 
-    const matchingSessionsPromise = this.table
-      .filter((session) => {
+    const matchingSessionsPromise: Promise<DB_Session[]> = this.table
+      .filter((session: DB_Session) => {
         return (
-          session.meta.title?.toLowerCase().includes(keywordLowerCase) ||
-          session.meta.description?.toLowerCase().includes(keywordLowerCase)
+          session.lastMessage?.messageForShow?.toLowerCase().includes(keywordLowerCase) ||
+          session.userProfile?.nick?.toLowerCase().includes(keywordLowerCase) ||
+          false
         )
       })
       .toArray()
 
-    const matchingMessagesPromise = this.db.messages
-      .filter((message) => {
-        // check content
-        if (message.content.toLowerCase().includes(keywordLowerCase)) return true
+    const [matchingSessions] = await Promise.all([matchingSessionsPromise])
 
-        // check translate content
-        if (message.translate?.content) {
-          return message.translate.content.toLowerCase().includes(keywordLowerCase)
-        }
-
-        return false
-      })
-      .toArray()
-
-    // Resolve both promises
-    const [matchingSessions, matchingMessages] = await Promise.all([matchingSessionsPromise, matchingMessagesPromise])
-
-    const sessionIdsFromMessages = matchingMessages.map((message) => message.sessionId)
-
-    // Combine session IDs from both sources
-    const combinedSessionIds = new Set([...sessionIdsFromMessages, ...matchingSessions.map((session) => session.id)])
-
-    // Retrieve unique sessions by IDs
-    const items = await this.table
-      .where("id")
-      .anyOf([...combinedSessionIds])
-      .toArray()
+    const items = matchingSessions
 
     console.log(`检索到 ${items.length} 项，耗时 ${Date.now() - startTime}ms`)
     return items

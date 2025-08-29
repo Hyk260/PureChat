@@ -1,7 +1,7 @@
 <template>
   <div class="message-renderer">
     <component :is="messageComponent" v-if="messageComponent" :key="messageKey" :message="message" v-bind="$attrs" />
-    <div v-else class="message-error">Unknown message type: {{ message?.type }}</div> 
+    <div v-else class="message-error">Unknown message type: {{ message?.type }}</div>
   </div>
 </template>
 
@@ -9,6 +9,7 @@
 import { computed, toRefs } from "vue"
 
 import type { DB_Message } from "@/database/schemas/message"
+
 import { getMessageComponent } from "./utils/getMessageComponent"
 
 defineOptions({

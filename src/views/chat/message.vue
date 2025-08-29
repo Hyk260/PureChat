@@ -3,7 +3,7 @@
     <!-- 聊天列表 -->
     <div class="message-left" :class="{ 'style-layout': isChatSessionListCollapsed }">
       <!-- 搜索框 -->
-      <Search />
+      <SearchInput />
       <div class="scroll-container">
         <!-- 会话列表 -->
         <ConversationList />
@@ -46,7 +46,7 @@ import ConversationList from "./chat/ConversationList.vue"
 import EmptyMessage from "./components/EmptyMessage.vue"
 import Header from "./components/Header.vue"
 import ReplyBox from "./components/ReplyBox.vue"
-import Search from "./components/Search.vue"
+import SearchInput from "./components/SearchInput.vue"
 import Editor from "./editor/index.vue"
 
 const chatStore = useChatStore()

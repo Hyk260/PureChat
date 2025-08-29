@@ -3,7 +3,7 @@
     <div class="container-theme">
       <RouterView v-slot="{ Component, route }">
         <Transition
-          :name="transitionName" 
+          :name="transitionName"
           :appear="true"
           mode="out-in"
           @before-leave="appStore.setContentXScrollable(true)"
@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import { useRouteStore, useThemeStore, useAppStore } from "@/stores"
+import { useAppStore, useRouteStore, useThemeStore } from "@/stores"
 
 const appStore = useAppStore()
 const themeStore = useThemeStore()
@@ -37,9 +37,9 @@ const routeStore = useRouteStore()
 const transitionName = computed(() => (themeStore.page.animate ? themeStore.page.animateMode : ""))
 
 function resetScroll() {
-  const el = document.querySelector(`#${'__SCROLL_EL_ID__'}`);
+  const el = document.querySelector(`#${"__SCROLL_EL_ID__"}`)
 
-  el?.scrollTo({ left: 0, top: 0 });
+  el?.scrollTo({ left: 0, top: 0 })
 }
 </script>
 

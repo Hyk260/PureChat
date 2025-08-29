@@ -110,7 +110,7 @@ const chatStore = useChatStore()
 const { conversationList, searchConversationList, currentSessionId } = storeToRefs(chatStore)
 
 const searchForData = computed(() => {
-  if (searchConversationList.value.length) {
+  if (searchConversationList.value?.length) {
     return searchConversationList.value
   } else {
     return conversationList.value

@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
 import type { PropType } from "vue"
+
 import { decodeText } from "@/utils/chat"
 import { getEmojiAssetUrl } from "@/utils/common"
 

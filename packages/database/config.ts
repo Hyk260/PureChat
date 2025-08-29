@@ -45,7 +45,7 @@ export const ConversationList = {
     nameCard: "",
     version: 0,
     isPeerRead: false,
-    revoker: null,
+    revoker: "",
     messageForShow: "",
   },
   peerReadTime: 0,

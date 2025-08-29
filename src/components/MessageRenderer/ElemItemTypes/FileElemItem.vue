@@ -1,5 +1,11 @@
 <template>
-  <div :id="payload.uuid" :title="payload.fileName" class="file-elem-item" :style="{ background: backgroundStyle }" @click="handleOpen(payload)">
+  <div
+    :id="payload.uuid"
+    :title="payload.fileName"
+    class="file-elem-item"
+    :style="{ background: backgroundStyle }"
+    @click="handleOpen(payload)"
+  >
     <div class="flex">
       <div class="min-w-45 h-45">
         <img draggable="false" class="h-full" :src="icon" :alt="payload.fileName" />
@@ -20,9 +26,9 @@
 </template>
 
 <script setup lang="ts">
-import { DB_Message } from "@/database/schemas/message"
-import { computed, onBeforeUnmount, onMounted, ref, PropType } from "vue"
+import { computed, onBeforeUnmount, onMounted, PropType, ref } from "vue"
 
+import { DB_Message } from "@/database/schemas/message"
 import { bytesToSize, getFileType, renderFileIcon } from "@/utils/chat/index"
 import emitter from "@/utils/mitt-bus"
 

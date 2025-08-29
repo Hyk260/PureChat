@@ -17,11 +17,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Plus, Search } from "@element-plus/icons-vue"
 import { debounce, isEmpty } from "lodash-es"
 import { ref } from "vue"
 
+import { SessionModel } from "@/database/models/session"
 import { useChatStore, useGroupStore } from "@/stores"
 // import { onKeyStroke, useEventListener } from "@vueuse/core";
 import { showConfirmationBox } from "@/utils/message"
@@ -51,14 +52,23 @@ const matchesFilter = (item, searchStr) => {
   return false
 }
 
-const debounceSearch = debounce((key) => {
-  if (isEmpty(key)) {
-    chatStore.$patch({ searchConversationList: [] })
-    return
+const debounceSearch = debounce(async (key) => {
+  if (__LOCAL_MODE__) {
+    const data = await SessionModel.queryByKeyword(key)
+    console.log(data)
+    chatStore.$patch({ searchConversationList: data })
+  } else {
+    if (isEmpty(key)) {
+      chatStore.$patch({ searchConversationList: [] })
+      return
+    }
+    const filterData = chatStore.conversationList.filter((item) => matchesFilter(item, key.toUpperCase().trim()))
+    if (isEmpty(filterData)) {
+      chatStore.$patch({ searchConversationList: [] })
+    } else {
+      chatStore.$patch({ searchConversationList: filterData })
+    }
   }
-  const str = key.toUpperCase().trim()
-  const filterData = chatStore.conversationList.filter((item) => matchesFilter(item, str))
-  chatStore.$patch({ searchConversationList: filterData })
 }, 200)
 </script>
 
