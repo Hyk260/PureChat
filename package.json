@@ -59,7 +59,7 @@
     "nanoid": "^5.0.7",
     "nprogress": "^0.2.0",
     "ollama": "^0.5.15",
-    "pinia": "^3.0.1",
+    "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.2.0",
     "pinyin-pro": "^3.18.5",
     "qrcode": "^1.5.3",
