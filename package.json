@@ -62,7 +62,7 @@
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.2.0",
     "pinyin-pro": "^3.18.5",
-    "qrcode": "^1.5.3",
+    "qrcode": "^1.5.4",
     "snabbdom": "^3.5.1",
     "tim-upload-plugin": "^1.0.5",
     "uuid": "^11.0.3",
