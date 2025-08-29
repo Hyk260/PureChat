@@ -39,7 +39,7 @@
     "@wangeditor/editor": "5.1.23",
     "@wangeditor/editor-for-vue": "5.1.12",
     "animate.css": "^4.1.1",
-    "artplayer": "^5.1.1",
+    "artplayer": "^5.2.5",
     "axios": "^0.26.1",
     "cross-env": "^7.0.3",
     "dayjs": "^1.11.11",
