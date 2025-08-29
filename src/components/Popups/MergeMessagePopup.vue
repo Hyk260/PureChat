@@ -48,12 +48,12 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-import { useUserStore } from "@/stores/modules/user"
 import { getAiAvatarUrl } from "@/ai/utils"
 import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"
 import { useState } from "@/hooks/useState"
 import { downloadMergerMessage } from "@/service/im-sdk-api/index"
-import { addTimeDivider, circleUrl, isSelf, isTime, getMessageItemClass, getMessageTypeClass } from "@/utils/chat/index"
+import { useUserStore } from "@/stores/modules/user"
+import { addTimeDivider, circleUrl, getMessageItemClass, getMessageTypeClass, isSelf, isTime } from "@/utils/chat/index"
 import emitter from "@/utils/mitt-bus"
 import { timeFormat } from "@/utils/timeFormat"
 

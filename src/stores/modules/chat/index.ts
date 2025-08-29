@@ -498,4 +498,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
     },
   },
+  persist: {
+    pick: ["noMore", "isChatBoxVisible", "currentConversation", "currentMessageList", "conversationList"],
+  },
 })

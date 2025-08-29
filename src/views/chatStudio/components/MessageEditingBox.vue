@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, PropType } from "vue"
+import { PropType, ref } from "vue"
 
 import { DB_Message } from "@/database/schemas/message"
 import { modifyMessage } from "@/service/im-sdk-api"

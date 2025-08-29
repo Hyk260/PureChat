@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import "../utils/custom-menu"
 import "./style.css"
 
@@ -173,7 +173,7 @@ const handleAssistantFile = async (file, editor) => {
   const fileType = getFileType(file?.name)
 
   if (!isTextFile(fileType) || !__IS_ELECTRON__) {
-    window.$message?.warning(`AI暂不支持${fileType}文件`)
+    window.$message?.warning(`暂不支持${fileType}文件`)
     return
   }
 

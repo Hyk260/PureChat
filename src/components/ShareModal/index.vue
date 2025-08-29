@@ -36,12 +36,7 @@
                 </div>
                 <div class="item" :class="getMessageItemClass(item.type)">
                   <div :class="getMessageTypeClass(item.type)">
-                    <component
-                      :is="getMessageComponent(item)"
-                      :key="item.ID"
-                      :message="item"
-                    >
-                    </component>
+                    <component :is="getMessageComponent(item)" :key="item.ID" :message="item"> </component>
                   </div>
                 </div>
               </div>
@@ -122,7 +117,7 @@ import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessa
 import { ImageType, imageTypeOptions, useScreenshot } from "@/hooks/useScreenshot"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores/index"
-import { isSelf, getMessageItemClass, getMessageTypeClass } from "@/utils/chat/index"
+import { getMessageItemClass, getMessageTypeClass, isSelf } from "@/utils/chat/index"
 import emitter from "@/utils/mitt-bus"
 import Header from "@/views/chatStudio/components/Header.vue"
 

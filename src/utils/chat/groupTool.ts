@@ -56,10 +56,7 @@ export const GroupModifyType = {
 }
 
 // 获取字符串的字节长度并检查是否超过指定的限制
-// @param {string} str - 要检查的字符串
-// @param {string} type - GroupModifyType 对象中定义的类型键，确定字节长度的限制
-// @returns {boolean} - 如果字符串的字节长度超过指定的限制则返回 true，否则返回 false
-export function isByteLengthExceedingLimit(str, type) {
+export const isByteLengthExceedingLimit = (str: string, type: string) => {
   const encoder = new TextEncoder()
   const byteArray = encoder.encode(str)
   const byteLength = byteArray.length

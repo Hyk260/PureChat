@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { CircleCloseFilled } from "@element-plus/icons-vue"
 import { storeToRefs } from "pinia"
 

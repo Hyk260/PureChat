@@ -1,11 +1,5 @@
 <template>
-  <component
-    :is="messageComponent"
-    v-if="messageComponent"
-    :key="messageKey"
-    :message="message"
-    v-bind="$attrs"
-  />
+  <component :is="messageComponent" v-if="messageComponent" :key="messageKey" :message="message" v-bind="$attrs" />
   <div v-else class="message-error">Unknown message type: {{ message?.type }}</div>
 </template>
 

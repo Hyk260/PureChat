@@ -2,6 +2,7 @@ import { nextTick } from "vue"
 
 import { isEmpty, throttle } from "lodash-es"
 
+import { DB_Message } from "@/database/schemas/message"
 import emitter from "@/utils/mitt-bus"
 
 /**
@@ -47,35 +48,32 @@ export async function convertBlobUrlToDataUrl(blobUrl: string) {
 }
 
 /**
- * @description: base64 to blob
+ * base64 to blob
  */
 export const dataURLtoBlob = (base64Buf: string) => {
   const arr = base64Buf.split(",")
   const typeItem = arr[0]
-  const mime = typeItem.match(/:(.*?);/)?.[1]
-  const bstr = window.atob(arr[1])
+  const mime = typeItem?.match(/:(.*?);/)?.[1]
+  const bstr = window.atob(arr[1] || "")
   let n = bstr.length
   const u8arr = new Uint8Array(n)
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n)
   }
-  return new Blob([u8arr], { type: mime })
+  return new Blob([u8arr], { type: mime || "" })
 }
 
 /**
  * 将远程图片 URL 转换为 base64 格式
- * @param {string} url 图片的 URL
- * @returns {Promise<string>} Promise 对象，resolve 后会返回转换后的 base64 数据
- * @throws {Error} 如果转换失败，则会抛出错误
  */
 export const urlToBase64 = (url: string) => {
   return new Promise((resolve, reject) => {
     const image = new Image()
     image.onload = function () {
       const canvas = document.createElement("canvas")
-      canvas.width = this.naturalWidth
-      canvas.height = this.naturalHeight
-      canvas.getContext("2d").drawImage(image, 0, 0)
+      canvas.width = (this as HTMLImageElement).naturalWidth
+      canvas.height = (this as HTMLImageElement).naturalHeight
+      canvas.getContext("2d")?.drawImage(image, 0, 0)
       const result = canvas.toDataURL("image/png")
       resolve(result)
     }
@@ -89,9 +87,6 @@ export const urlToBase64 = (url: string) => {
 
 /**
  * 获取图片的类型
- * @param {string} str 图片的 URL 或文件名
- * @returns {string} 图片的类型（不包括前缀点号），例如 "png"、"jpg"、"gif" 等
- * @throws {Error} 如果无法从输入字符串中提取图像类型，则会抛出错误
  */
 export const getImageType = (str: string) => {
   const reg = /\.(png|jpg|gif|jpeg|webp)$/
@@ -104,76 +99,65 @@ export const getImageType = (str: string) => {
 
 /**
  * 返回给定文件名的类型，即文件的扩展名。
- * @param {string} filename - 包括扩展名的文件名。
- * @returns {string} 文件的扩展名，如果没有扩展名则返回空字符串。
  */
-export const getFileType = (filename) => {
+export const getFileType = (filename: string) => {
   if (!filename) return ""
   const lastPart = filename.split("/").pop()
   if (lastPart === ".") return ""
-  const parts = lastPart.split(".")
-  if (parts.length > 1) return parts.pop()
+  const parts = lastPart?.split(".")
+  if (parts?.length && parts.length > 1) return parts.pop()
   return ""
 }
 
 /**
  * 将 base64 格式的数据转换为文件对象
- * @param {string} dataUrl base64 格式的数据，例如 "data:image/png;base64,iVBORw0KGg..."
- * @param {string} fileName 文件名，例如 "image.png"
- * @returns {File} 文件对象
  */
-export const dataURLtoFile = (dataUrl, fileName = "image.png") => {
-  let arr = dataUrl.split(","),
-    mime = arr[0].match(/:(.*?);/)?.[1],
-    bstr = atob(arr[1]),
-    n = bstr.length,
-    u8arr = new Uint8Array(n)
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n)
+export const dataURLtoFile = (dataUrl: string, fileName = "image.png") => {
+  const arr = dataUrl.split(",")
+  const mime = arr[0]?.match(/:(.*?);/)?.[1]
+  const bstr = atob(arr[1] || "")
+  const n = bstr.length
+  const u8arr = new Uint8Array(n)
+  for (let i = 0; i < n; i++) {
+    u8arr[i] = bstr.charCodeAt(i)
   }
-  return new File([u8arr], fileName, { type: mime })
+  return new File([u8arr], fileName, { type: mime || "" })
 }
 
 /**
  * 从 base64 字符串中提取 MIME 类型
- * @param base64 - 完整的 base64 字符串（包含 data: 前缀）
- * @returns 提取的 MIME 类型，如果无法提取则返回 undefined
  */
-function extractMimeTypeFromBase64(base64) {
+const extractMimeTypeFromBase64 = (base64: string) => {
   const mimeTypeMatch = base64.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/)
   return mimeTypeMatch?.[1]
 }
 
 /**
  * 将 Base64 字符串转换为 File 对象
- * @param base64 - Base64 字符串
- * @param filename - 生成的 File 对象的文件名
- * @param mimeType - 文件的 MIME 类型
- * @returns 转换后的 File 对象
  */
-export function base64ToFile(base64, filename = "image.png", mimeType) {
-  // 检查 base64 字符串格式
+export const base64ToFile = (base64: string, filename: string = "image.png", mimeType: string = "image/png"): File => {
   if (!base64.startsWith("data:")) {
     throw new Error("Invalid base64 string format")
   }
-  // 提取 MIME 类型（如果未显式提供）
+
   const detectedMimeType = mimeType || extractMimeTypeFromBase64(base64)
   if (!detectedMimeType) {
     throw new Error("Could not determine MIME type from base64 string")
   }
-  // 从 base64 字符串中提取实际数据部分
+
   const base64Data = base64.split(",")[1]
   if (!base64Data) {
+    window.$message?.warning("文件数据为空")
     throw new Error("Invalid base64 data")
   }
-  // 将 base64 转换为二进制数据
+
   const binaryString = atob(base64Data)
   const bytes = new Uint8Array(binaryString.length)
 
   for (let i = 0; i < binaryString.length; i++) {
     bytes[i] = binaryString.charCodeAt(i)
   }
-  // 创建 Blob 并转换为 File
+
   const blob = new Blob([bytes], { type: mimeType })
   return new File([blob], filename, { type: mimeType })
 }
@@ -248,8 +232,8 @@ const TypeMap = {
   TIMRelayElem: "[合并消息]",
 }
 
-export const getAbstractContent = (data) => {
-  const type = data?.type
+export const getAbstractContent = (data: DB_Message): string => {
+  const type = data?.type as keyof typeof TypeMap
   const reply = TypeMap[type] || ""
   if (reply) {
     return reply
@@ -282,7 +266,7 @@ export function getCloudCustomData(data, params) {
  * ['<img src="image.png">', "some string", '<img src="image3.png">']
  * "some string"
  */
-export function findNonImageString(arr) {
+export const findNonImageString = (arr: string[]) => {
   const regex = /^((?!<img src=).)*$/
   const result = arr.find((element) => regex.test(element))
   return result
@@ -290,10 +274,8 @@ export function findNonImageString(arr) {
 
 /**
  * 将字节数转换为可读性更强的单位
- * @param {number} bytes - 需要转换的字节数值
- * @returns {string} - 转换后的字符串，表示合适的单位和对应的数值
  */
-export function bytesToSize(bytes) {
+export function bytesToSize(bytes: number): string {
   const marker = 1024
   const decimal = 2
   const kiloBytes = marker
@@ -314,9 +296,8 @@ export function bytesToSize(bytes) {
 
 /**
  * 滚动到指定消息ID对应的DOM位置，并添加动画效果
- * @param {string} msgid - 消息的唯一标识符，用于查找对应的DOM元素
  */
-export const scrollToDomPosition = (msgid) => {
+export const scrollToDomPosition = (msgid: string) => {
   const dom = document.getElementById(`${msgid}`)
   if (!dom) {
     window.$message?.warning("无法查看上下文")
@@ -329,7 +310,7 @@ export const scrollToDomPosition = (msgid) => {
   }, 2000)
 }
 
-export function scrollToMessage(id, delay = 300) {
+export const scrollToMessage = (id: string, delay = 300) => {
   nextTick(() => {
     setTimeout(() => {
       const dom = document.getElementById(id)
@@ -351,13 +332,13 @@ export function readFromFile() {
     fileInput.accept = "application/json"
 
     fileInput.onchange = (event) => {
-      const file = event.target.files[0]
+      const file = (event.target as HTMLInputElement).files?.[0]
       const fileReader = new FileReader()
       fileReader.onload = (e) => {
-        res(e.target.result)
+        res(e.target?.result)
       }
       fileReader.onerror = (e) => rej(e)
-      fileReader.readAsText(file)
+      fileReader.readAsText(file as File)
     }
 
     fileInput.click()

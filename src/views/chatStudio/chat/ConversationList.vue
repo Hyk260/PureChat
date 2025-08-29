@@ -47,7 +47,7 @@
           <!-- 未读消息红点 -->
           <el-badge
             v-show="!isShowCount(item) && !isNotify(item) && item.type !== '@TIM#SYSTEM'"
-            :value="item.unreadCount"
+            :value="item.unreadCount || 0"
             :max="99"
           />
           <!-- 消息免打扰 -->
@@ -75,7 +75,7 @@
   </el-scrollbar>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { isObject } from "lodash-es"
 import { BellOff } from "lucide-vue-next"
 import { storeToRefs } from "pinia"

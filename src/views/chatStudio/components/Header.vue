@@ -49,7 +49,7 @@
   </header>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Ellipsis, History, Share2 } from "lucide-vue-next"
 import { storeToRefs } from "pinia"
 
