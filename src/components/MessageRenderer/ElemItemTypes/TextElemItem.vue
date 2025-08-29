@@ -14,7 +14,7 @@ import { computed, PropType } from "vue"
 
 import { DB_Message } from "@/database/schemas/message"
 import { useAppStore, useChatStore } from "@/stores"
-import DynamicContent from "@/views/chatStudio/components/DynamicContent.vue"
+import DynamicContent from "@/views/chat/components/DynamicContent.vue"
 
 import ReplyElem from "./ReplyElem.vue"
 

@@ -46,7 +46,7 @@ import UserPopup from "@/components/Popups/UserPopup.vue"
 import { useChatStore, useSidebarStore } from "@/stores"
 import { openWindow } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
-import CardPopover from "@/views/chatStudio/components/CardPopover.vue"
+import CardPopover from "@/views/chat/components/CardPopover.vue"
 
 defineOptions({
   name: "LayAside",

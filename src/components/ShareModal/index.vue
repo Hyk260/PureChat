@@ -119,7 +119,7 @@ import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores/index"
 import { getMessageItemClass, getMessageTypeClass, isSelf } from "@/utils/chat/index"
 import emitter from "@/utils/mitt-bus"
-import Header from "@/views/chatStudio/components/Header.vue"
+import Header from "@/views/chat/components/Header.vue"
 
 import { back, backgColor, getBackgroundStyle, onColor } from "./utils"
 

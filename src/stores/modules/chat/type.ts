@@ -7,7 +7,6 @@ export interface ChatState {
   currentConversation: DB_Session | null
   conversationList: DB_Session[]
   searchConversationList: DB_Session[]
-  filterConversationList: DB_Session[]
   totalUnreadMsg: number
   scrollTopID: string
   isMultiSelectMode: boolean

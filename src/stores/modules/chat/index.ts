@@ -43,7 +43,6 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     currentConversation: null, //跳转窗口的属性
     conversationList: [], // 会话列表数据
     searchConversationList: [], // 搜索后的会话列表
-    filterConversationList: [], // 过滤后的会话列表
     totalUnreadMsg: 0, // 未读消息总数
     scrollTopID: "", // 滚动到的消息ID
     isMultiSelectMode: false, // 是否多选模式
@@ -499,6 +498,13 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
   },
   persist: {
-    pick: ["noMore", "isChatBoxVisible", "currentConversation", "currentMessageList", "conversationList"],
+    pick: [
+      "noMore",
+      "isChatSessionListCollapsed",
+      "isChatBoxVisible",
+      "currentConversation",
+      "currentMessageList",
+      "conversationList",
+    ],
   },
 })

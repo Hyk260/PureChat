@@ -55,7 +55,7 @@ import { storeToRefs } from "pinia"
 
 import { useChatStore, useRobotStore, useToolsStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
-import Label from "@/views/chatStudio/components/Label.vue"
+import Label from "@/views/chat/components/Label.vue"
 
 const chatStore = useChatStore()
 const robotStore = useRobotStore()

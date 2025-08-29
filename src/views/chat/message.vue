@@ -70,7 +70,6 @@ onDeactivated(() => {
 
 onMounted(() => {
   emitter.emit("updateScroll")
-  chatStore.setChatSessionListCollapsed(false)
 })
 </script>
 

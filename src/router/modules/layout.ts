@@ -11,7 +11,7 @@ export default [
       {
         path: "/chat",
         name: "chat",
-        component: () => import("@/views/chatStudio/index.vue"),
+        component: () => import("@/views/chat/index.vue"),
         meta: {
           title: "chat",
           keepAlive: true,

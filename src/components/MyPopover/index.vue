@@ -60,7 +60,7 @@ import { getUserProfile } from "@/service/im-sdk-api/index"
 import { useChatStore } from "@/stores/index"
 import { isRobot, squareUrl } from "@/utils/chat/index"
 import emitter from "@/utils/mitt-bus"
-import Label from "@/views/chatStudio/components/Label.vue"
+import Label from "@/views/chat/components/Label.vue"
 
 const cardRef = ref()
 const left = ref("")
