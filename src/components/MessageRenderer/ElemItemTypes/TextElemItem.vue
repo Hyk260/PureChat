@@ -21,7 +21,6 @@ import ReplyElem from "./ReplyElem.vue"
 const props = defineProps({
   message: {
     type: Object as PropType<DB_Message>,
-    required: true,
     default: () => ({}),
   },
 })

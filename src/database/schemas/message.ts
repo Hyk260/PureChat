@@ -55,6 +55,16 @@ export type MessageType =
   | "TIMGroupTipElem"
   | "TIMGroupSystemNoticeElem"
 
+export const MessageTypeSchema = z.enum([
+  "TIMTextElem",
+  "TIMRelayElem",
+  "TIMImageElem",
+  "TIMFileElem",
+  "TIMCustomElem",
+  "TIMGroupTipElem",
+  "TIMGroupSystemNoticeElem",
+])
+
 export const DB_MessageSchema = z.object({
   ID: z.string().uuid(),
   conversationID: z.string(),
@@ -98,15 +108,7 @@ export const DB_MessageSchema = z.object({
   revokeReason: z.string(),
   payload: z.record(z.any()),
   isTimeDivider: z.boolean().optional(),
-  type: z.enum([
-    "TIMTextElem",
-    "TIMRelayElem",
-    "TIMImageElem",
-    "TIMFileElem",
-    "TIMCustomElem",
-    "TIMGroupTipElem",
-    "TIMGroupSystemNoticeElem",
-  ]),
+  type: MessageTypeSchema,
   createdAt: z.number().optional(),
   updatedAt: z.number().optional(),
 })

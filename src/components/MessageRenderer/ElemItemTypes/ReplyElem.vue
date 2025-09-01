@@ -25,6 +25,8 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue"
+
 import { scrollToDomPosition } from "@/utils/chat"
 import DynamicContent from "@/views/chat/components/DynamicContent.vue"
 

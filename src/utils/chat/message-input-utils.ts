@@ -3,6 +3,7 @@ import { nextTick } from "vue"
 import { isEmpty, throttle } from "lodash-es"
 
 import { DB_Message } from "@/database/schemas/message"
+import { messageUtils } from "@/utils/messageUtils"
 import emitter from "@/utils/mitt-bus"
 
 /**
@@ -198,7 +199,7 @@ export function getBlob(url) {
  * @param  {String} url - 文件地址
  * @param  {String} filename - 文件名
  */
-export function download(url, filename) {
+export function download(url: string, filename: string) {
   fetch(url)
     .then((response) => response.blob())
     .then((blob) => {
@@ -213,10 +214,10 @@ export function download(url, filename) {
 
 /**
  * 将查询字符串转换为对象
- * @param {string} String - 查询字符串，例如 "https://purechat.cn?name=John&age=30"
- * @return {object} - 转换后的对象，例如 { name: "John", age: "30" }
+ * @param {String} queryString - 查询字符串，例如 "https://purechat.cn?name=John&age=30"
+ * @return {Object} - 转换后的对象，例如 { name: "John", age: "30" }
  */
-export function queryStringToObject(queryString) {
+export function queryStringToObject(queryString: string): Record<string, string> {
   const str = queryString.split("?")[1]
   const params = new URLSearchParams(str)
   const obj = {}
@@ -226,15 +227,8 @@ export function queryStringToObject(queryString) {
   return obj
 }
 
-const TypeMap = {
-  TIMImageElem: "[图片]",
-  TIMFileElem: "[文件]",
-  TIMRelayElem: "[合并消息]",
-}
-
 export const getAbstractContent = (data: DB_Message): string => {
-  const type = data?.type as keyof typeof TypeMap
-  const reply = TypeMap[type] || ""
+  const reply = messageUtils.getMessageDisplayText(data)
   if (reply) {
     return reply
   } else {

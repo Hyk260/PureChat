@@ -5,7 +5,7 @@ import Axios, {
   // type CustomParamsSerializer
 } from "axios"
 
-import { useAuthStore } from "@/stores/index"
+import { useAuthStore } from "@/stores/modules/auth"
 import { localStg } from "@/utils/storage"
 
 import type { PureHttpError, PureHttpResponse, RequestMethods } from "./types.d"
@@ -94,7 +94,7 @@ class PureChatHttp {
   }
 
   /** 响应拦截 */
-  private handleResponse(): void {
+  private handleResponse() {
     this.service.interceptors.response.use(
       (response: PureHttpResponse) => {
         if (response.status >= 200 && response.status < 300) {

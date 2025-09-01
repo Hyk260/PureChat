@@ -19,21 +19,16 @@ export const messageUtils = {
    * 格式化消息显示文本
    */
   getMessageDisplayText(item: DB_Message): string {
-    if (item.isRevoked) {
-      return "消息已撤回"
+    const typeMap = {
+      TIMImageElem: "[图片消息]",
+      TIMFileElem: "[文件消息]",
+      TIMRelayElem: "[合并消息]",
+      TIMCustomElem: "[自定义消息]",
+      TIMGroupTipElem: "[群提示]",
+      TIMGroupSystemNoticeElem: "[系统通知]",
     }
 
-    const typeMap: Record<MessageType, string> = {
-      TIMTextElem: "文本消息",
-      TIMImageElem: "图片消息",
-      TIMFileElem: "文件消息",
-      TIMRelayElem: "转发消息",
-      TIMCustomElem: "自定义消息",
-      TIMGroupTipElem: "群提示",
-      TIMGroupSystemNoticeElem: "系统通知",
-    }
-
-    return typeMap[item.type as MessageType] || "未知消息"
+    return typeMap[item.type] || ""
   },
 
   /**

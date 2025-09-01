@@ -15,7 +15,6 @@ import Loading from "../CustomMsgBody/Loading.vue"
 const props = defineProps({
   message: {
     type: Object as PropType<DB_Message>,
-    required: true,
     default: () => ({}),
   },
 })

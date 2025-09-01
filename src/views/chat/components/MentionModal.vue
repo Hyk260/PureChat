@@ -216,7 +216,7 @@ const initMention = () => {
   useEventListener(document, "keydown", (e) => {
     handleKeydown(e)
   })
-  emitter.on("handleInputKeyupHandler", (data: KeyboardEvent) => {
+  emitter.on("handleInputKeyupHandler", (data: MouseEvent) => {
     inputKeyupHandler(data)
   })
   emitter.on("setMentionModal", (data: { content?: GroupMember[]; type: FilteringType; searchlength?: number }) => {

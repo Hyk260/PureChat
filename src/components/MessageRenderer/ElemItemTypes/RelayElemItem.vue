@@ -31,7 +31,6 @@ defineOptions({
 const { message } = defineProps({
   message: {
     type: Object as PropType<DB_Message>,
-    required: true,
     default: () => ({}),
   },
 })

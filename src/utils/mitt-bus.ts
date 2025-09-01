@@ -15,6 +15,7 @@ interface Events {
   handleInsertDraft: { sessionId: string }
   handleGroupDrawer: boolean
   handleShareModal: boolean
+  fileUploading: { uuid: string; num: number }
 }
 
 const emitter: Emitter<Events> = mitt<Events>()

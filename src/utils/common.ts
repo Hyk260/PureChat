@@ -87,13 +87,20 @@ interface CreateFileInputOptions {
   onChange: (files: FileList | null) => void
 }
 
+/**
+ * 创建并触发文件选择对话框
+ * @param options - 配置选项
+ * @param options.accept - 可接受的文件类型数组
+ * @param options.onChange - 文件选择变化时的回调函数
+ */
 export const createFileInput = (options: CreateFileInputOptions) => {
   const input = document.createElement("input")
   input.type = "file"
   input.accept = options.accept.join(",")
   input.style.display = "none"
-  const handleChange = (event: any) => {
-    const files = event.target.files
+  const handleChange = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    const files = target?.files ?? null
     cleanup()
     options.onChange(files)
   }
@@ -106,15 +113,21 @@ export const createFileInput = (options: CreateFileInputOptions) => {
     }, 300)
   }
   const cleanup = () => {
-    document.body.removeChild(input)
+    if (document.body.contains(input)) {
+      document.body.removeChild(input)
+    }
     input.removeEventListener("change", handleChange)
     window.removeEventListener("focus", handleWindowFocus)
   }
   input.addEventListener("change", handleChange)
   window.addEventListener("focus", handleWindowFocus)
-  document.body.appendChild(input)
-
-  input.click()
+  try {
+    document.body.appendChild(input)
+    input.click()
+  } catch (error) {
+    cleanup()
+    throw new Error(`Failed to create file input: ${error instanceof Error ? error.message : String(error)}`)
+  }
 }
 
 export function hasObjectKey(obj: any, key: string) {

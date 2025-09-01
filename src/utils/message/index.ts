@@ -7,7 +7,7 @@ import { $t } from "@/locales"
  */
 export interface ConfirmationBoxOptions {
   /** 对话框显示内容 */
-  message: string | VNode
+  message: string
   /** 确认按钮文本，默认为"确认" */
   confirmText?: string
   /** 取消按钮文本，默认为"取消" */
@@ -15,7 +15,7 @@ export interface ConfirmationBoxOptions {
   /** 对话框标题，默认为"提示" */
   tip?: string
   /** 图标类型，如 "warning" */
-  iconType?: string | "success" | "warning" | "info" | "error"
+  iconType?: "success" | "warning" | "info" | "error"
   /** 输入框的初始值，用于 input 类型 */
   inputValue?: string
   /** 是否居中显示 */

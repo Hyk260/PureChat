@@ -83,8 +83,6 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu"
 import { computed, h, ref } from "vue"
 
 import type { DB_Session } from "@/database/schemas/session"
-import type { DB_Message } from "@/database/schemas/message"
-
 import { useHandlerDrop } from "@/hooks/useHandlerDrop"
 import { pinConversation } from "@/service/im-sdk-api"
 import { setMessageRemindType } from "@/service/im-sdk-api"

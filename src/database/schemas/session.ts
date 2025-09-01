@@ -102,11 +102,33 @@ export const SessionSchema = {
   updatedAt: 0,
 }
 
+export const userProfileSchema = z
+  .object({
+    userID: z.string().optional(),
+    nick: z.string().optional(),
+    gender: z.string().optional(),
+    birthday: z.number().optional(),
+    location: z.string().optional(),
+    selfSignature: z.string().optional(),
+    allowType: z.string().optional(),
+    language: z.number().optional(),
+    avatar: z.string().optional(),
+    messageSettings: z.number().optional(),
+    adminForbidType: z.string().optional(),
+    level: z.number().optional(),
+    role: z.number().optional(),
+    lastUpdatedTime: z.number().optional(),
+    profileCustomField: z.array(z.any()).optional(),
+  })
+  .optional()
+
+export const SessionTypeSchema = z.enum(["C2C", "GROUP", "@TIM#SYSTEM"])
+
 export const DB_SessionSchema = z.object({
   id: z.string().optional(),
   conversationID: z.string(),
   toAccount: z.string().optional(),
-  type: z.enum(["C2C", "GROUP", "@TIM#SYSTEM"]),
+  type: SessionTypeSchema,
   subType: z.string().optional(),
   lastMessage: z
     .object({
@@ -134,25 +156,7 @@ export const DB_SessionSchema = z.object({
   peerReadTime: z.number().optional(),
   groupAtInfoList: z.array(z.any()).optional(),
   groupProfile: z.any().optional(),
-  userProfile: z
-    .object({
-      userID: z.string().optional(),
-      nick: z.string().optional(),
-      gender: z.string().optional(),
-      birthday: z.number().optional(),
-      location: z.string().optional(),
-      selfSignature: z.string().optional(),
-      allowType: z.string().optional(),
-      language: z.number().optional(),
-      avatar: z.string().optional(),
-      messageSettings: z.number().optional(),
-      adminForbidType: z.string().optional(),
-      level: z.number().optional(),
-      role: z.number().optional(),
-      lastUpdatedTime: z.number().optional(),
-      profileCustomField: z.array(z.any()).optional(),
-    })
-    .optional(),
+  userProfile: userProfileSchema,
   remark: z.string().optional(),
   isPinned: z.boolean().optional(),
   pinned: z.number().int().min(0).max(1).optional(),
