@@ -82,6 +82,7 @@ import { storeToRefs } from "pinia"
 import { Contextmenu, ContextmenuItem } from "v-contextmenu"
 import { computed, h, ref } from "vue"
 
+import type { DB_Session } from "@/database/schemas/session"
 import { useHandlerDrop } from "@/hooks/useHandlerDrop"
 import { pinConversation } from "@/service/im-sdk-api"
 import { setMessageRemindType } from "@/service/im-sdk-api"
@@ -117,29 +118,29 @@ const searchForData = computed(() => {
   }
 })
 
-const isDraft = (item) => {
+const isDraft = (item: DB_Session) => {
   const id = item.conversationID
   return id !== currentSessionId.value && chatStore.chatDraftMap.has(id)
 }
 
-const isNotify = (item) => {
+const isNotify = (item: DB_Session) => {
   return item.messageRemindType === "AcceptNotNotify"
 }
 
-const isShowCount = (item) => {
+const isShowCount = (item: DB_Session) => {
   return item.unreadCount === 0
 }
 
-const isMention = (item) => {
-  return item.groupAtInfoList?.length > 0
+const isMention = (item: DB_Session) => {
+  return (item.groupAtInfoList?.length ?? 0) > 0
 }
 
-const fnClass = (item) => (item?.conversationID === currentSessionId.value ? "is-active" : "")
+const fnClass = (item: DB_Session) => (item?.conversationID === currentSessionId.value ? "is-active" : "")
 
-const formatNewsMessage = (data) => {
+const formatNewsMessage = (data: DB_Session) => {
   if (!isObject(data)) return ""
   const { type, lastMessage, unreadCount } = data
-  const { messageForShow: rawTip, fromAccount, isRevoked, nick, type: lastType } = lastMessage
+  const { messageForShow: rawTip, fromAccount, isRevoked, nick, type: lastType } = lastMessage ?? {}
   const isOther = userStore.userProfile?.userID !== fromAccount // 其他人消息
   const isFound = fromAccount === "@TLS#NOT_FOUND" // 未知消息
   const isSystem = type === "@TIM#SYSTEM" //系统消息
@@ -147,7 +148,7 @@ const formatNewsMessage = (data) => {
   const isCount = unreadCount && isNotify(data) // 未读消息计数
   const MAX_TIP_LENGTH = 46
 
-  const formatTip = (t) => (t.length > MAX_TIP_LENGTH ? `${t.slice(0, MAX_TIP_LENGTH)}...` : t)
+  const formatTip = (t: string) => (t.length > MAX_TIP_LENGTH ? `${t.slice(0, MAX_TIP_LENGTH)}...` : t)
 
   const tip = formatTip(rawTip || "")
   // 处理撤回消息
@@ -171,24 +172,22 @@ const formatNewsMessage = (data) => {
       return tip
     } else if (nick) {
       return `${nick}: ${tip}`
-    } else {
-      tip
     }
   }
   // 默认返回消息内容
   return tip
 }
 // 定义消息提示元素
-const createMessagePrompt = (type = "at") => {
+const createMessagePrompt = (type: "at" | "draft" = "at") => {
   const messageTypes = { at: "有人@我", draft: "草稿" }
   return `<span style='color:#f44336;'>[${messageTypes[type]}]</span>`
 }
 
 // 定义消息提示元素
-const CustomMention = (props) => {
+const CustomMention = (props: { item: DB_Session }) => {
   const { item } = props
   const { lastMessage, conversationID: ID, unreadCount } = item
-  const { messageForShow, nick: lastNick } = lastMessage
+  const { messageForShow, nick: lastNick } = lastMessage ?? {}
   const draft = chatStore.chatDraftMap.get(ID)
   // 草稿
   if (draft && isDraft(item)) {
@@ -201,7 +200,7 @@ const CustomMention = (props) => {
   return h("span", { innerHTML: mention })
 }
 // 消息列表 右键菜单
-const handleContextMenuEvent = (e, item) => {
+const handleContextMenuEvent = (_, item: DB_Session) => {
   const { type } = item
   const isSystem = type === "@TIM#SYSTEM"
   // 系统通知屏蔽右键菜单
@@ -230,7 +229,7 @@ const handleContextMenuEvent = (e, item) => {
   })
 }
 
-const handleConversationListClick = (data) => {
+const handleConversationListClick = (data: DB_Session) => {
   console.log("会话点击 handleConversationListClick:", data)
   if (currentSessionId.value === data?.conversationID) return
   chatStore.setMsgEdit(null)
@@ -240,7 +239,7 @@ const handleConversationListClick = (data) => {
   chatStore.updateMessageList(data)
   if (data?.type === "GROUP") {
     groupStore.handleGroupProfile(data)
-    groupStore.handleGroupMemberList({ groupID: data.groupProfile.groupID })
+    groupStore.handleGroupMemberList({ groupID: data?.groupProfile?.groupID ?? "" })
   }
   emitter.emit("handleInsertDraft", {
     sessionId: data?.conversationID,
@@ -248,11 +247,11 @@ const handleConversationListClick = (data) => {
   emitter.emit("updateScroll")
 }
 
-const handleClickMenuItem = (item) => {
+const handleClickMenuItem = (item: { id: string }) => {
   const data = contextMenuItemInfo.value
-  if (item.id === "pinged" || item.id === "unpin") {
+  if (["pinged", "unpin"].includes(item.id)) {
     pingConversation(data) // 置顶 or 取消置顶
-  } else if (item.id === "AcceptNotNotify" || item.id === "AcceptAndNotify") {
+  } else if (["AcceptNotNotify","AcceptAndNotify"].includes(item.id)) {
     disableRecMsg(data) // 消息免打扰 or 允许消息提醒
   } else if (item.id === "remove") {
     removeConversation(data) // 删除会话
@@ -265,11 +264,11 @@ const disableRecMsg = async (data) => {
   await setMessageRemindType(data)
 }
 
-const removeConversation = async (data) => {
+const removeConversation = async (data: DB_Session) => {
   chatStore.deleteSession({ sessionId: data.conversationID })
 }
 
-const pingConversation = async (data) => {
+const pingConversation = async (data: DB_Session) => {
   await pinConversation(data)
 }
 </script>

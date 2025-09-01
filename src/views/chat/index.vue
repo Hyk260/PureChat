@@ -11,9 +11,11 @@
 </template>
 
 <script setup lang="ts">
+import { useEventListener } from "@vueuse/core"
 import { storeToRefs } from "pinia"
 
 import MergeMessagePopup from "@/components/Popups/MergeMessagePopup.vue"
+import { setMessageRead } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores"
 
 import GroupDetails from "./chat/GroupDetails.vue"
@@ -24,6 +26,10 @@ defineOptions({ name: "Chat" })
 const chatStore = useChatStore()
 
 const { currentConversation, isGroupChat } = storeToRefs(chatStore)
+
+useEventListener(window, "focus", () => {
+  setMessageRead(currentConversation.value)
+})
 </script>
 
 <style lang="scss" scoped></style>

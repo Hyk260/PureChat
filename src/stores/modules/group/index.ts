@@ -45,11 +45,11 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
   },
   actions: {
     // 更新群详情
-    setGroupProfile(payload: SetGroupProfilePayload): void {
+    setGroupProfile(payload: SetGroupProfilePayload) {
       this.groupProfile = payload.groupProfile
     },
     // 获取群成员列表
-    async handleGroupMemberList(payload: HandleGroupMemberListPayload): Promise<void> {
+    async handleGroupMemberList(payload: HandleGroupMemberListPayload) {
       const { isSort = true, groupID = "" } = payload || {}
       const groupId = groupID.replace("GROUP", "") || useChatStore().toAccount
 
@@ -66,20 +66,20 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
       }
     },
     // 获取群列表数据
-    async handleGroupList(): Promise<void> {
+    async handleGroupList() {
       const { code, groupList } = await getGroupList()
       if (code !== 0) return
       this.groupList = groupList
     },
     // 退出群聊
-    async handleQuitGroup(payload: HandleQuitGroupPayload): Promise<void> {
+    async handleQuitGroup(payload: HandleQuitGroupPayload) {
       const { sessionId, groupId } = payload
       const { code } = await quitGroup({ groupId })
       if (code !== 0) return
       useChatStore().deleteSession({ sessionId })
     },
     // 创建群聊
-    async handleCreateGroup(payload: HandleCreateGroupPayload): Promise<void> {
+    async handleCreateGroup(payload: HandleCreateGroupPayload) {
       const { groupName, positioning = true } = payload
       const { code, group } = await createGroup({ groupName })
       if (code !== 0) return
@@ -89,7 +89,7 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
       }
     },
     // 解散群组
-    async handleDismissGroup(payload: HandleDismissGroupPayload): Promise<void> {
+    async handleDismissGroup(payload: HandleDismissGroupPayload) {
       const { sessionId, groupId } = payload
       const { code, groupID } = await dismissGroup(groupId)
       console.log("解散群组 dismissGroup:", code, groupID)
@@ -100,7 +100,7 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
       useChatStore().deleteSession({ sessionId })
     },
     // 获取群详细资料
-    async handleGroupProfile(payload: HandleGroupProfilePayload): Promise<void> {
+    async handleGroupProfile(payload: HandleGroupProfilePayload) {
       const { type } = payload
       if (type !== "GROUP") return
       const { groupID } = payload.groupProfile

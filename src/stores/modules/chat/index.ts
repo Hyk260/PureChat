@@ -358,7 +358,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         }, 50)
       }
     },
-    async updateMessageList(data: DB_Message) {
+    async updateMessageList(data: DB_Session) {
       if (!timProxy.isSDKReady) {
         console.warn("TIM SDK 未初始化")
         return

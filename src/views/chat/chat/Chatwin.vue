@@ -93,7 +93,6 @@
 </template>
 
 <script setup lang="ts">
-import { useEventListener } from "@vueuse/core"
 import { ElScrollbar } from "element-plus"
 import { debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
@@ -106,7 +105,7 @@ import MyPopover from "@/components/MyPopover/index.vue"
 import UserPopup from "@/components/Popups/UserPopup.vue"
 import { MULTIPLE_CHOICE_MAX } from "@/constants"
 import type { DB_Message } from "@/database/schemas/message"
-import { getMessageList, revokeMsg, setMessageRead, translateText } from "@/service/im-sdk-api"
+import { getMessageList, revokeMsg, translateText } from "@/service/im-sdk-api"
 import { useAppStore, useChatStore, useGroupStore, useUserStore } from "@/stores"
 import { download, getMessageItemClass, getMessageTypeClass, isSelf, isTime } from "@/utils/chat"
 import { getTime } from "@/utils/common"
@@ -156,10 +155,6 @@ const isMessageSelected = (messageId: string) => {
 const getSelectedMessageClass = (item: DB_Message) => {
   return isMessageSelected(item.ID) ? "style-select" : ""
 }
-
-useEventListener(window, "focus", () => {
-  setMessageRead(currentConversation.value)
-})
 
 const updateLoadMore = (id: string) => {
   nextTick(() => {

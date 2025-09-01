@@ -10,6 +10,7 @@ interface Events {
   handleSetHtml: string
   handleInputKeyupHandler: KeyboardEvent
   setMentionModal: { content: GroupMember[]; type: string; searchlength: number }
+  handleInsertDraft: { sessionId: string }
 }
 
 const emitter: Emitter<Events> = mitt<Events>()

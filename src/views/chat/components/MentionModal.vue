@@ -39,9 +39,9 @@ import emitter from "@/utils/mitt-bus"
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__"
 
-const MODAL_WIDTH = 168; // 弹框宽度
-const MODAL_PADDING = 5; // 弹框内边距
-const MARGIN = 15; // 与光标的间距
+const MODAL_WIDTH = 168 // 弹框宽度
+const MODAL_PADDING = 5 // 弹框内边距
+const MARGIN = 15 // 与光标的间距
 
 interface Props {
   isOwner?: boolean
@@ -51,17 +51,17 @@ interface Props {
 
 interface Position {
   cursor: {
-    top: number;
-    left: number;
-  };  
+    top: number
+    left: number
+  }
   modal: {
-    width: number;
-    height: number;
-  };
+    width: number
+    height: number
+  }
   viewport: {
-    width: number;
-    height: number;
-  };
+    width: number
+    height: number
+  }
 }
 
 type FilteringType = "all" | "success" | "empty"
@@ -131,45 +131,45 @@ const filterData = () => {
  * 获取列表高度,添加重试机制
  */
 const getListHeight = async (retries = 3, delay = 10) => {
-  let height = 0;
-  let count = 0;
+  let height = 0
+  let count = 0
   while (height === 0 && count < retries) {
     if (listRef.value) {
-      height = listRef.value.clientHeight || listRef.value.offsetHeight || listRef.value.scrollHeight;        
+      height = listRef.value.clientHeight || listRef.value.offsetHeight || listRef.value.scrollHeight
     }
     if (height === 0) {
-      count++;
-      await new Promise(resolve => setTimeout(resolve, delay));
+      count++
+      await new Promise((resolve) => setTimeout(resolve, delay))
     }
   }
   // 使用默认高度
-  return height || 123;
-};
+  return height || 123
+}
 
 /**
  * 计算弹框位置,处理边界情况
  */
 const calculatePosition = ({ cursor, modal, viewport }: Position) => {
-  let top = cursor.top - modal.height - MARGIN;
-  let left = cursor.left + MODAL_PADDING;
+  let top = cursor.top - modal.height - MARGIN
+  let left = cursor.left + MODAL_PADDING
   // 处理上边界
   if (top < 0) {
-    top = cursor.top + MARGIN; 
+    top = cursor.top + MARGIN
   }
   // 处理下边界
   if (top + modal.height > viewport.height) {
-    top = viewport.height - modal.height - MARGIN;
+    top = viewport.height - modal.height - MARGIN
   }
   // 处理右边界
   if (left + modal.width > viewport.width) {
-    left = cursor.left - modal.width - MARGIN;
+    left = cursor.left - modal.width - MARGIN
   }
   // 处理左边界
   if (left < 0) {
-    left = MARGIN;
+    left = MARGIN
   }
-  return { top, left };
-};
+  return { top, left }
+}
 
 const updateMention = async () => {
   // 获取光标位置，定位 modal
@@ -184,28 +184,28 @@ const updateMention = async () => {
   await nextTick()
 
   // 获取列表高度
-  const height = await getListHeight();
-  
+  const height = await getListHeight()
+
   // 获取视窗尺寸
   const viewport = {
     width: window.innerWidth,
-    height: window.innerHeight
-  };
+    height: window.innerHeight,
+  }
   // 计算弹框位置
   const position = calculatePosition({
     cursor: {
       top: rect.top,
-      left: rect.left
+      left: rect.left,
     },
     modal: {
       width: MODAL_WIDTH,
-      height
+      height,
     },
-    viewport
-  });
+    viewport,
+  })
   // 更新位置
-  top.value = `${position.top}px`;
-  left.value = `${position.left}px`;
+  top.value = `${position.top}px`
+  left.value = `${position.left}px`
 }
 
 const initMention = () => {
