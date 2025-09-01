@@ -21,7 +21,7 @@
       @keyup.enter="handleEnter"
     />
     <!-- @提及弹框 -->
-    <MentionModal v-if="isMentionModalVisible" :pinyin-search="true" :is-owner="isOwner" :editor="editorRef" />
+    <MentionModal v-if="isMentionModalVisible" pinyin-search :is-owner="isOwner" :editor="editorRef" />
     <div class="send-button">
       <span class="tip">{{ placeholderMap[getOperatingSystem()] }}</span>
       <el-button :loading="isSending" :class="{ 'pointer-events-none': disabled }" @click="handleEnter">
@@ -68,7 +68,7 @@ const mode = "simple"
 const editorRef = shallowRef()
 const valueHtml = ref("")
 
-const [disabled, setDisabled] = useState()
+const [disabled, setDisabled] = useState(false)
 
 const chatStore = useChatStore()
 const groupStore = useGroupStore()

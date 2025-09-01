@@ -42,6 +42,7 @@ export const chatSessionListData = [
     icon: markRaw(Trash2),
     text: "删除会话",
     style: "color: #f44336;",
+    class: "",
   },
   // { id: "clean", text: "清除消息" },
 ].filter((item) => !item.hide)

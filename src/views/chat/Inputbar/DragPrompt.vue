@@ -50,7 +50,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { CircleCloseFilled, CirclePlusFilled } from "@element-plus/icons-vue"
 import { cloneDeep, isEmpty } from "lodash-es"
 import { storeToRefs } from "pinia"
@@ -84,7 +84,7 @@ function initPromptData() {
   }
 }
 
-function handleClearAvatar(i) {
+function handleClearAvatar(i: number) {
   promptItems.value[i].meta.avatar = ""
   savePromptData()
 }
@@ -100,7 +100,7 @@ function handleEmojiSelect(emoji, i) {
   savePromptData()
 }
 
-function onClose(i) {
+function onClose(i: number) {
   promptItems.value.splice(i, 1)
   robotStore.setPromptConfig("")
   robotStore.setPromptStore([], modelProvider.value)

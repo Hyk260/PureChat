@@ -11,6 +11,8 @@ interface Events {
   handleInputKeyupHandler: KeyboardEvent
   setMentionModal: { content: GroupMember[]; type: string; searchlength: number }
   handleInsertDraft: { sessionId: string }
+  handleGroupDrawer: boolean
+  handleShareModal: boolean
 }
 
 const emitter: Emitter<Events> = mitt<Events>()

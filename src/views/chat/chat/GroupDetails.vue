@@ -102,7 +102,7 @@
   </el-drawer>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { CircleCloseFilled, EditPen } from "@element-plus/icons-vue"
 
 import { isFullStaffGroup } from "@/ai/utils"
@@ -134,8 +134,8 @@ const AddMemberRef = ref()
 const groupStore = useGroupStore()
 const userStore = useUserStore()
 const chatStore = useChatStore()
-const [drawer, setDrawer] = useState()
-const [loading, setLoading] = useState()
+const [drawer, setDrawer] = useState(false)
+const [loading, setLoading] = useState(false)
 
 const { currentMemberList, isOwner } = storeToRefs(groupStore)
 const { toAccount, currentSessionId, currentConversation } = storeToRefs(chatStore)
@@ -184,11 +184,11 @@ const openNoticePopup = async () => {
 
 const openDetails = () => {}
 
-const openAvatarPopup = (url) => {
+const openAvatarPopup = (url: string) => {
   emitter.emit("handleImageViewer", url)
 }
 
-const handleClose = (done) => {
+const handleClose = (done: () => void) => {
   done()
 }
 
@@ -241,7 +241,7 @@ const updataGroup = () => {
   }, 200)
 }
 // 修改群资料
-const modifyGroupInfo = async (value, modify) => {
+const modifyGroupInfo = async (value: string, modify: string) => {
   const { groupID } = groupProfile
   const { code, group } = await updateGroupProfile({ groupID, value, modify })
   if (code !== 0) {
@@ -274,7 +274,7 @@ const handleQuitGroup = async () => {
 }
 
 onMounted(() => {
-  emitter.on("handleGroupDrawer", (val) => {
+  emitter.on("handleGroupDrawer", (val: boolean) => {
     setDrawer(val)
   })
 })

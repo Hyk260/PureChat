@@ -47,7 +47,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ClickOutside as vClickOutside } from "element-plus"
 import { cloneDeep, isEmpty } from "lodash-es"
 import { storeToRefs } from "pinia"
@@ -65,7 +65,7 @@ defineOptions({
 
 const robotIcon = ref("")
 const model = ref({})
-const [flag, setFlag] = useState()
+const [flag, setFlag] = useState(false)
 const chatStore = useChatStore()
 const robotStore = useRobotStore()
 const { toAccount } = storeToRefs(chatStore)

@@ -111,20 +111,19 @@
   </el-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { getAiAvatarUrl } from "@/ai/utils"
 import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"
 import { ImageType, imageTypeOptions, useScreenshot } from "@/hooks/useScreenshot"
 import { useState } from "@/hooks/useState"
-import { useChatStore, useRobotStore } from "@/stores/index"
-import { getMessageItemClass, getMessageTypeClass, isSelf } from "@/utils/chat/index"
+import { useChatStore, useRobotStore } from "@/stores"
+import { getMessageItemClass, getMessageTypeClass, isSelf } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 import Header from "@/views/chat/components/Header.vue"
 
 import { back, backgColor, getBackgroundStyle, onColor } from "./utils"
 
 const { pkg } = __APP_INFO__
-const homepage = pkg.homepage
 const docsUrl = pkg.docs
 const isFooter = ref(false)
 const isQrCode = ref(true)
@@ -135,8 +134,8 @@ const robotStore = useRobotStore()
 
 const emit = defineEmits(["onClose"])
 
-const [dialogVisible, setDialogVisible] = useState()
-const { isAssistant, toAccount, getSortedForwardData } = storeToRefs(chatStore)
+const [dialogVisible, setDialogVisible] = useState(false)
+const { isAssistant, getSortedForwardData } = storeToRefs(chatStore)
 const { loading, onDownload } = useScreenshot()
 
 const promptContent = computed(() => {
@@ -161,17 +160,16 @@ const fnAvatar = (item) => {
 }
 
 const handleDownload = async () => {
-  // 先显示加载状态
   loading.value = true
 
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  await new Promise((resolve) => setTimeout(resolve, 500))
 
   onDownload(imageType.value, roleText.value, () => {
     setDialogVisible(false)
   })
 }
 
-const handleClose = (done) => {
+const handleClose = (done: () => void) => {
   done?.()
 }
 

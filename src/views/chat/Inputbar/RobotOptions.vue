@@ -166,7 +166,7 @@
   </el-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { QuestionFilled } from "@element-plus/icons-vue"
 // import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es"
@@ -197,8 +197,8 @@ const modelData = ref({})
 const promptRef = useTemplateRef("promptRef")
 const inputRefs = ref({ token: null, openaiUrl: null })
 
-const [dialog, setDialog] = useState()
-const [loading, setLoading] = useState()
+const [dialog, setDialog] = useState(false)
+const [loading, setLoading] = useState(false)
 
 const chatStore = useChatStore()
 const robotStore = useRobotStore()
@@ -209,7 +209,7 @@ const handleClear = (data) => {
   console.log("clear", data)
 }
 
-const inputRef = (el, id) => {
+const inputRef = (el: any, id: string) => {
   if (el) inputRefs.value[id] = el
 }
 

@@ -462,7 +462,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const { code } = await deleteConversation({ sessionId })
       if (code === 0) this.clearCurrentMessage()
     },
-    async deleteHistoryMessage(id: string) {
+    async deleteHistoryMessage(id: string | null = null) {
       const sessionId = id || this.currentSessionId
       if (!sessionId) {
         console.error("sessionId is required")

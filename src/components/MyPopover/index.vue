@@ -48,7 +48,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onClickOutside } from "@vueuse/core"
 import { onBeforeUnmount, onMounted, ref } from "vue"
 
@@ -56,9 +56,9 @@ import { getAiAvatarUrl } from "@/ai/utils"
 // import { getGender } from "@/utils/common";
 import { getValueByKey, prefix } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
-import { getUserProfile } from "@/service/im-sdk-api/index"
-import { useChatStore } from "@/stores/index"
-import { isRobot, squareUrl } from "@/utils/chat/index"
+import { getUserProfile } from "@/service/im-sdk-api"
+import { useChatStore } from "@/stores/modules/chat"
+import { isRobot, squareUrl } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 import Label from "@/views/chat/components/Label.vue"
 
@@ -68,7 +68,7 @@ const top = ref("")
 const cardData = ref(null)
 const userProfile = ref(null)
 
-const [card, setCard] = useState()
+const [card, setCard] = useState(false)
 const chatStore = useChatStore()
 
 const closeModal = () => {

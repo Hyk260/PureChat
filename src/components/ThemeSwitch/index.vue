@@ -5,16 +5,15 @@
   </label>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { usePreferredColorScheme } from "@vueuse/core"
 import { computed } from "vue"
 
-import { useThemeStore } from "@/stores/index"
+import { useThemeStore } from "@/stores/modules/theme"
 
 const themeStore = useThemeStore()
 const osTheme = usePreferredColorScheme()
 
-/** Dark mode */
 const darkMode = computed(() => {
   if (themeStore.themeScheme === "auto") {
     return osTheme.value === "dark"

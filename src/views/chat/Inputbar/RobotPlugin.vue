@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ClickOutside as vClickOutside } from "element-plus"
 
 import { useState } from "@/hooks/useState"
@@ -37,7 +37,7 @@ const pluginData = ref([
   // },
 ])
 
-const [flag, setFlag] = useState()
+const [flag, setFlag] = useState(false)
 
 const toolsStore = useToolsStore()
 

@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Operation, PieChart } from "@element-plus/icons-vue"
 import { onClickOutside } from "@vueuse/core"
 
@@ -50,7 +50,7 @@ const profile = ref({})
 const market = ref([])
 const userStore = useUserStore()
 const chatStore = useChatStore()
-const [card, setCard] = useState()
+const [card, setCard] = useState(false)
 
 const menuItems = [
   {

@@ -56,7 +56,7 @@
     <div class="toolbar-section">
       <div
         v-for="item in toolbarItems"
-        :key="item.icon"
+        :key="item.id"
         :class="{ 'is-active': item.type === table }"
         @click="table = item.type"
       >
@@ -67,7 +67,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ClickOutside as vClickOutside } from "element-plus"
 import { chunk } from "lodash-es"
 import { onMounted, ref } from "vue"
@@ -89,16 +89,19 @@ const emit = defineEmits(["onClose"])
 const rolling = true
 const toolbarItems = [
   {
+    id: "QQ",
     title: "默认表情",
     icon: "iconxiaolian",
     type: "QQ",
   },
   {
+    id: "Douyin",
     title: "抖音",
     icon: "tiktok",
     type: "Douyin",
   },
   {
+    id: "Mart",
     title: "mart",
     type: "Mart",
     content: "😀",

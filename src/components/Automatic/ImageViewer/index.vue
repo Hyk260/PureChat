@@ -12,17 +12,21 @@
   />
 </template>
 
-<script setup>
-import { onMounted, ref, useTemplateRef } from "vue"
+<script setup lang="ts">
+import {
+  onMounted,
+  ref,
+  // useTemplateRef
+} from "vue"
 
 import { useState } from "@/hooks/useState"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({ name: "ImageViewer" })
 
-const imageViewerRef = useTemplateRef("imageViewerRef")
+// const imageViewerRef = useTemplateRef("imageViewerRef")
 const url = ref("")
-const [dialog, setDialog] = useState()
+const [dialog, setDialog] = useState(false)
 
 // onClickOutside(imageViewerRef, () => {
 //   setDialog(false)
@@ -35,6 +39,9 @@ onMounted(() => {
       setDialog(true)
     }
   })
+})
+onUnmounted(() => {
+  emitter.off("handleImageViewer")
 })
 </script>
 

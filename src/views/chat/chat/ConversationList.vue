@@ -61,11 +61,11 @@
       <ContextmenuItem
         v-for="item in contextMenuItems"
         :key="item.id"
-        :class="item.class"
-        :style="item.style"
+        :class="item?.class ?? ''"
+        :style="item?.style ?? ''"
         @click="handleClickMenuItem(item)"
       >
-        <el-icon v-if="item.icon" :class="item?.class">
+        <el-icon v-if="item.icon" :class="item?.class ?? ''">
           <component :is="item.icon" />
         </el-icon>
         <SvgIcon v-else :local-icon="item.svgIcon" class="menu-svg" />
@@ -83,6 +83,8 @@ import { Contextmenu, ContextmenuItem } from "v-contextmenu"
 import { computed, h, ref } from "vue"
 
 import type { DB_Session } from "@/database/schemas/session"
+import type { DB_Message } from "@/database/schemas/message"
+
 import { useHandlerDrop } from "@/hooks/useHandlerDrop"
 import { pinConversation } from "@/service/im-sdk-api"
 import { setMessageRemindType } from "@/service/im-sdk-api"
@@ -101,8 +103,8 @@ const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHand
 
 const isEnableVirtualList = ref(false)
 const isRight = ref(true)
-const contextMenuItems = ref([])
-const contextMenuItemInfo = ref([])
+const contextMenuItems = ref([] as typeof chatSessionListData)
+const contextMenuItemInfo = ref([] as DB_Session[])
 
 const groupStore = useGroupStore()
 const userStore = useUserStore()
@@ -251,7 +253,7 @@ const handleClickMenuItem = (item: { id: string }) => {
   const data = contextMenuItemInfo.value
   if (["pinged", "unpin"].includes(item.id)) {
     pingConversation(data) // 置顶 or 取消置顶
-  } else if (["AcceptNotNotify","AcceptAndNotify"].includes(item.id)) {
+  } else if (["AcceptNotNotify", "AcceptAndNotify"].includes(item.id)) {
     disableRecMsg(data) // 消息免打扰 or 允许消息提醒
   } else if (item.id === "remove") {
     removeConversation(data) // 删除会话
