@@ -1,6 +1,9 @@
 import { nextTick } from "vue"
 
 import { useChatStore } from "@/stores/modules/chat"
+
+import type { GroupMember } from "@/stores/modules/group/type"
+
 /**
  * 按角色对成员列表进行排序。
  *
@@ -8,9 +11,8 @@ import { useChatStore } from "@/stores/modules/chat"
  * 每个成员对象应具有一个对应于定义角色的 'role' 属性。
  * 示例成员对象: { name: 'Alice', role: 'Member' }
  *
- * @returns {Array} 排序后的成员对象数组，按照角色排序。
  */
-export function sortMembersByRole(list: { role: "Owner" | "Admin" | "Member" }[]) {
+export function sortMembersByRole(list: GroupMember[]) {
   const roles = { Owner: 1, Admin: 2, Member: 3 }
 
   return list.sort((a, b) => {
@@ -20,11 +22,8 @@ export function sortMembersByRole(list: { role: "Owner" | "Admin" | "Member" }[]
 /**
  * 机器人排在首位
  * 比较用户ID，确保带有@RBT#的用户排在前面
- * @param {Object} a - 第一个用户对象，期待有userID属性
- * @param {Object} b - 第二个用户对象，期待有userID属性
- * @returns {number} - 返回-1如果a在b前面，1如果b在a前面，0如果相等
  */
-export const prioritizeRBTUserID = (list: { userID: string }[]) => {
+export const prioritizeRBTUserID = (list: GroupMember[]) => {
   return list.sort((a, b) => {
     const isAHasRBT = a.userID.includes("@RBT#")
     const isBHasRBT = b.userID.includes("@RBT#")

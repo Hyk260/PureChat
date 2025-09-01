@@ -26,187 +26,234 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { onClickOutside, useEventListener } from "@vueuse/core"
 import { cloneDeep } from "lodash-es"
-import { mapState } from "pinia"
+import { storeToRefs } from "pinia"
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue"
 
 import { useChatStore, useGroupStore } from "@/stores"
+import type { GroupMember } from "@/stores/modules/group/type"
 import { insertMention, prioritizeRBTUserID } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__"
 
-export default {
-  name: "MentionModal",
-  props: {
-    // 群主
-    isOwner: {
-      type: Boolean,
-      default: false,
-    },
-    // 是否开启拼音搜索
-    pinyinSearch: {
-      type: Boolean,
-      default: false,
-    },
-    // 编辑器实例
-    editor: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-  data() {
-    return {
-      top: "",
-      left: "",
-      list: [],
-      filtering: "", // 搜索模式 all success empty
-      searchValue: 0, // 模糊搜索内容长度
-      tabIndex: 0,
-      magAtAll: MSG_AT_ALL,
-      allMembers: {
-        joinTime: 0,
-        userID: MSG_AT_ALL,
-        nick: "全体成员",
-      },
-    }
-  },
-  computed: {
-    ...mapState(useGroupStore, ["currentMemberList", "currentMembersWithoutSelf"]),
-    searchedList() {
-      // 群成员小于2人，不显示@列表
-      if (this.currentMemberList.length <= 1) return []
-      return this.list
-    },
-    isVisible() {
-      return this.filtering !== "empty" && this.currentMemberList.length > 1
-    },
-    currentMembersWithoutSelfList() {
-      return this.currentMembersWithoutSelf.filter((t) => t.userID !== "@TLS#NOT_FOUND")
-    },
-  },
-  created() {
-    this.initList()
-  },
-  mounted() {
-    document.body.appendChild(this.$el)
-    this.initMention()
-  },
-  beforeUnmount() {
-    emitter.off("handleInputKeyupHandler")
-    emitter.off("setMentionModal")
-    this.setMentionStatus() // 隐藏 modal
-  },
-  methods: {
-    initList(owner = this.isOwner, data = []) {
-      this.list = this.filterList(data)
-      // 仅群主支持@全员
-      if (owner) this.list.unshift(this.allMembers)
-    },
-    filterList(data) {
-      if (data.length) {
-        return prioritizeRBTUserID(data)
-      } else {
-        return this.filterData()
-      }
-    },
-    filterData() {
-      const data = this.currentMembersWithoutSelfList
-      return prioritizeRBTUserID(data)
-    },
-    updateMention() {
-      // 获取光标位置，定位 modal
-      const domSelection = document.getSelection()
-      const domRange = domSelection.getRangeAt(0)
-      if (domRange == null) return
-      const selectionRect = domRange.getBoundingClientRect()
-      // 获取编辑区域 DOM 节点的位置，以辅助定位
-      // const containerRect = editor.getEditableContainer().getBoundingClientRect();
-      const height = this.$refs.listRef?.clientHeight
-      // 定位 modal
-      this.top = `${selectionRect.top - height - 15}px`
-      this.left = `${selectionRect.left + 5}px`
-    },
-    initMention() {
-      this.updateMention()
-      onClickOutside(this.$refs.listRef, () => {
-        this.setMentionStatus()
-      })
-      useEventListener(document, "keydown", (e) => {
-        this.onKeydown(e)
-      })
-      emitter.on("handleInputKeyupHandler", (data) => {
-        this.inputKeyupHandler(data)
-      })
-      emitter.on("setMentionModal", (data) => {
-        const { content = [], type, searchlength = 0 } = cloneDeep(data)
-        console.log(content, type, searchlength)
-        this.filtering = type // all success empty
-        if (type === "all") {
-          this.initList()
-        } else if (type === "empty") {
-          this.setMentionStatus()
-        } else if (type === "success") {
-          this.initList(false, content)
-          this.searchValue = searchlength
-        }
-        this.$nextTick(() => {
-          this.updateMention()
-        })
-      })
-    },
-    setMentionStatus(status = false) {
-      useChatStore().toggleMentionModal(status)
-    },
-    inputKeyupHandler(event) {
-      if (event.key === "Enter") {
-        const firstOne = this.searchedList[this.tabIndex]
-        if (!firstOne) return
-        const { userID, nick } = firstOne
-        this.handleAit(userID, nick)
-      }
-    },
-    handleAit(id, name) {
-      let nick = name ? name : id
-      insertMention({ id, name: nick, deleteDigit: this.searchValue, editor: this.editor })
-      this.setMentionStatus() // 隐藏 modal
-      this.searchValue = 0
-    },
-    onKeydown(event) {
-      switch (event.keyCode) {
-        case 38: // 上
-          if (this.tabIndex > 0) {
-            this.tabIndex--
-            this.scrollToSelectedItem()
-          }
-          break
-        case 40: //下
-          if (this.tabIndex < this.searchedList?.length - 1) {
-            this.tabIndex++
-            this.scrollToSelectedItem()
-          }
-          break
-      }
-    },
-    setActive(i) {
-      this.tabIndex = i
-    },
-    isActive(item) {
-      if (!item) return
-      if (this.tabIndex > -1) {
-        return item?.userID == this.searchedList[this.tabIndex]?.userID
-      } else {
-        return false
-      }
-    },
-    scrollToSelectedItem() {
-      const element = document.querySelector(".mention-active")
-      if (!element) return
-      element.scrollIntoView({ behavior: "smooth", block: "center" })
-    },
-  },
+interface Props {
+  isOwner?: boolean
+  pinyinSearch?: boolean
+  editor?: object
 }
+
+type FilteringType = "all" | "success" | "empty"
+
+defineOptions({
+  name: "MentionModal",
+})
+
+const props = withDefaults(defineProps<Props>(), {
+  isOwner: false,
+  pinyinSearch: false,
+  editor: () => ({}),
+})
+
+const listRef = ref<HTMLElement>()
+const top = ref("")
+const left = ref("")
+const list = ref<GroupMember[]>([])
+const filtering = ref<FilteringType>("all")
+const searchValue = ref(0) // 模糊搜索内容长度
+const tabIndex = ref(0)
+const magAtAll = MSG_AT_ALL
+const allMembers = {
+  joinTime: 0,
+  userID: MSG_AT_ALL,
+  nick: "全体成员",
+}
+
+const groupStore = useGroupStore()
+const chatStore = useChatStore()
+const { currentMemberList, currentMembersWithoutSelf } = storeToRefs(groupStore)
+
+const searchedList = computed(() => {
+  // 群成员小于2人，不显示@列表
+  if (currentMemberList.value.length <= 1) return []
+  return list.value
+})
+
+const isVisible = computed(() => {
+  return filtering.value !== "empty" && currentMemberList.value.length > 1
+})
+
+const currentMembersWithoutSelfList = computed(() => {
+  return currentMembersWithoutSelf.value.filter((t) => t.userID !== "@TLS#NOT_FOUND")
+})
+
+const initList = (owner = props.isOwner, data: GroupMember[] = []) => {
+  list.value = filterList(data)
+  // 仅群主支持@全员
+  if (owner) list.value.unshift(allMembers)
+}
+
+const filterList = (data: GroupMember[]) => {
+  if (data.length) {
+    return prioritizeRBTUserID(data)
+  } else {
+    return filterData()
+  }
+}
+
+const filterData = () => {
+  const data = currentMembersWithoutSelfList.value
+  return prioritizeRBTUserID(data)
+}
+
+const updateMention = async () => {
+  // 获取光标位置，定位 modal
+  const domSelection = document.getSelection()
+  if (!domSelection || domSelection.rangeCount === 0) return
+
+  const domRange = domSelection?.getRangeAt(0)
+  if (domRange == null) return
+
+  const selectionRect = domRange.getBoundingClientRect()
+  // 等待DOM更新并获取高度，添加重试机制
+  await nextTick()
+
+  let height = 0
+  let width = 168
+  let retryCount = 0
+  const maxRetries = 3
+
+  // 重试获取高度，防止返回0
+  while (height === 0 && retryCount < maxRetries) {
+    if (listRef.value) {
+      height = listRef.value.clientHeight || listRef.value.offsetHeight || listRef.value.scrollHeight
+    }
+
+    if (height === 0) {
+      retryCount++
+      await new Promise((resolve) => setTimeout(resolve, 10)) // 等待10ms后重试
+    }
+  }
+
+  // 如果仍然获取不到高度，使用默认值
+  if (height === 0) {
+    height = 123 // 默认高度，基于CSS中的max-height
+    console.warn("Unable to get list height, using fallback value:", height)
+  }
+
+  // 定位 modal
+  top.value = `${Math.round(selectionRect.top - height - 15)}px`
+  left.value = `${Math.round(selectionRect.left + 5)}px`
+}
+
+const initMention = () => {
+  updateMention()
+  onClickOutside(listRef, () => {
+    setMentionStatus()
+  })
+  useEventListener(document, "keydown", (e) => {
+    handleKeydown(e)
+  })
+  emitter.on("handleInputKeyupHandler", (data: KeyboardEvent) => {
+    inputKeyupHandler(data)
+  })
+  emitter.on("setMentionModal", (data: { content: GroupMember[]; type: FilteringType; searchlength: number }) => {
+    const { content = [], type, searchlength = 0 } = cloneDeep(data)
+    filtering.value = type // all success empty
+    if (type === "all") {
+      initList()
+    } else if (type === "empty") {
+      setMentionStatus()
+    } else if (type === "success") {
+      initList(false, content)
+      searchValue.value = searchlength
+    }
+    nextTick(() => {
+      updateMention()
+    })
+  })
+}
+
+const setMentionStatus = (status = false) => {
+  chatStore.toggleMentionModal(status)
+}
+
+const inputKeyupHandler = (event: KeyboardEvent) => {
+  if (event.key === "Enter") {
+    const firstOne = searchedList.value[tabIndex.value]
+    if (!firstOne) return
+    const { userID, nick } = firstOne
+    handleAit(userID, nick)
+  }
+}
+
+const handleAit = (id: string, name: string | undefined) => {
+  let nick = name ? name : id
+  insertMention({ id, name: nick, deleteDigit: searchValue.value, editor: props.editor })
+  setMentionStatus()
+  searchValue.value = 0
+}
+
+const handleKeydown = (event: KeyboardEvent) => {
+  switch (event.key) {
+    case "ArrowUp": // 上
+      if (tabIndex.value > 0) {
+        tabIndex.value--
+        scrollToSelectedItem()
+      }
+      break
+    case "ArrowDown": //下
+      if (tabIndex.value < searchedList.value?.length - 1) {
+        tabIndex.value++
+        scrollToSelectedItem()
+      }
+      break
+    case "Escape":
+      setMentionStatus()
+      break
+  }
+}
+
+const setActive = (i: number) => {
+  tabIndex.value = i
+}
+
+const isActive = (item: GroupMember) => {
+  if (!item) return
+  if (tabIndex.value > -1) {
+    return item?.userID == searchedList.value[tabIndex.value]?.userID
+  } else {
+    return false
+  }
+}
+
+const scrollToSelectedItem = () => {
+  const element = document.querySelector(".mention-active")
+  if (!element) return
+  element.scrollIntoView({ behavior: "smooth", block: "center" })
+}
+
+onMounted(() => {
+  initList()
+  document.body.appendChild(document.querySelector(".mention-modal") as HTMLElement)
+  initMention()
+})
+
+onBeforeUnmount(() => {
+  emitter.off("handleInputKeyupHandler")
+  emitter.off("setMentionModal")
+  setMentionStatus() // 隐藏 modal
+})
+
+watchEffect(() => {
+  if (isVisible.value) {
+    nextTick(() => {
+      updateMention()
+    })
+  }
+})
 </script>
 
 <style lang="scss" scoped>

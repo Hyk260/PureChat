@@ -26,7 +26,7 @@ export function checkoutNetState(state: string) {
     case "disconnected":
       return { message: "当前网络不可用", type: "error" }
     default:
-      return ""
+      return "未知网络状态"
   }
 }
 

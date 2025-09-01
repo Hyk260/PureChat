@@ -45,7 +45,7 @@ import ProfileCard from "./ProfileCard.vue"
 //   { id: 1, name: "好友通知" },
 //   { id: 2, name: "群通知" },
 // ]
-defineOptions({ name: "Friends" }) 
+defineOptions({ name: "Friends" })
 
 const input = ref("")
 const title = ref("")

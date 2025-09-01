@@ -10,7 +10,7 @@ export interface GroupMember {
   nick?: string
   avatar?: string
   role?: GroupRole
-  joinTime?: number
+  joinTime: number
   muteUntil?: number
   memberCustomField?: Array<{ key: string; value: string }>
 }

@@ -12,6 +12,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia"
+
 import MergeMessagePopup from "@/components/Popups/MergeMessagePopup.vue"
 import { useChatStore } from "@/stores"
 
