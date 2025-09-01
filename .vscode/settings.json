@@ -1,4 +1,6 @@
 {
+  // 指定工作台中使用的文件图标主题
+  "workbench.iconTheme": "vscode-icons",
   // 要在保存时运行的代码操作种类
   "editor.codeActionsOnSave": {
     // "source.fixAll.eslint": "explicit",
@@ -8,7 +10,7 @@
   "prettier.enable": true,
   "eslint.useFlatConfig": true,
   // 在保存时格式化文件。格式化程序必须可用，延迟后文件不能保存，并且编辑器不能关闭。
-  "editor.formatOnSave": true,
+  // "editor.formatOnSave": true,
   "eslint.validate": [
     "javascript",
     "typescript",
@@ -30,7 +32,7 @@
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  //指定vscode的eslint所处理的文件的后缀
+  // 指定vscode的eslint所处理的文件的后缀
   // "eslint.options": {
   //   "extensions": [
   //     ".js",
