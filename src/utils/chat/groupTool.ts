@@ -16,7 +16,7 @@ export function sortMembersByRole(list: GroupMember[]) {
   const roles = { Owner: 1, Admin: 2, Member: 3 }
 
   return list.sort((a, b) => {
-    return roles[a.role] - roles[b.role]
+    return roles[a.role || "Member"] - roles[b.role || "Member"]
   })
 }
 /**
