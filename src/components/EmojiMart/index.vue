@@ -2,7 +2,7 @@
   <div ref="emojiMartRef" v-click-outside="onClickOutside"></div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import data from "@emoji-mart/data"
 import zh from "@emoji-mart/data/i18n/zh.json"
 import { ClickOutside as vClickOutside } from "element-plus"
@@ -15,7 +15,7 @@ defineOptions({
 
 const emit = defineEmits(["onClose", "emoji-selected"])
 
-const emojiMartRef = ref("")
+const emojiMartRef = ref<HTMLElement>()
 
 const handleEmojiSelect = (emoji) => {
   emit("emoji-selected", emoji)
@@ -38,7 +38,7 @@ function initEmojiMart() {
       i18n: { ...zh },
     }
     const picker = new Picker(pickerOptions)
-    emojiMartRef.value.appendChild(picker)
+    emojiMartRef.value?.appendChild(picker)
   }
 }
 

@@ -87,11 +87,11 @@ export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
     filteredOutsideList: (state): SidebarItem[] => state.outsideList.filter((item) => item?.show !== "hide"),
   },
   actions: {
-    setOutsideList(list: SidebarItem[]): void {
+    setOutsideList(list: SidebarItem[]) {
       const data = this.outsideList.filter((t) => t.id === "more")
       this.outsideList = [...list, ...data]
     },
-    toggleOutside(item: SidebarItem | MoreListItem): void {
+    toggleOutside(item: SidebarItem | MoreListItem) {
       if ("path" in item && item.path) {
         router.push(item.path)
         useChatStore().toggleMultiSelectMode(false)
@@ -101,7 +101,7 @@ export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
         emitter.emit("SidebarEditDialog", true)
       }
     },
-    setMoreList(list: MoreListItem[]): void {
+    setMoreList(list: MoreListItem[]) {
       this.moreList = list
     },
   },

@@ -69,7 +69,7 @@ const sendMessage = (data) => {
   handleConversation(convInfo)
 }
 
-const editProfile = () => {}
+// const editProfile = () => {}
 
 onMounted(() => {
   emitter.on("handleProfile", (data) => {

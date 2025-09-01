@@ -13,6 +13,8 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/modules/user"
 
+defineOptions({ name: "LoginQrCode" })
+
 const userStore = useUserStore()
 
 const onBack = () => {

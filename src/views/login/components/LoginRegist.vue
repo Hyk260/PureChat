@@ -67,10 +67,13 @@ import { useUserStore } from "@/stores/modules/user"
 
 import { ruleForm, updateRules } from "../utils/validation"
 import { useVerifyCode } from "../utils/verifyCode"
+import type { FormInstance } from "element-plus";
+
+defineOptions({ name: "LoginRegist" })
 
 const checked = ref(false)
 const loading = ref(false)
-const ruleFormRef = ref()
+const ruleFormRef = ref<FormInstance>()
 
 const { isDisabled, text } = useVerifyCode()
 const userStore = useUserStore()
@@ -80,10 +83,10 @@ const onBack = () => {
   userStore.setCurrentPage(0)
 }
 
-const onUpdate = async (formEl) => {
+const onUpdate = async (formEl: FormInstance | undefined) => {
   loading.value = true
   if (!formEl) return
-  await formEl.validate((valid, fields) => {
+  await formEl.validate((valid) => {
     if (valid) {
       if (checked.value) {
         setTimeout(() => {

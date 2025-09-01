@@ -130,7 +130,7 @@ export default {
     },
     initMention() {
       this.updateMention()
-      onClickOutside(this.$refs.listRef, (event) => {
+      onClickOutside(this.$refs.listRef, () => {
         this.setMentionStatus()
       })
       useEventListener(document, "keydown", (e) => {

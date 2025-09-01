@@ -41,10 +41,12 @@ import FriendsTabs from "./FriendsTabs.vue"
 import FriendsTree from "./FriendsTree.vue"
 import ProfileCard from "./ProfileCard.vue"
 
-const tabsList = [
-  { id: 1, name: "好友通知" },
-  { id: 2, name: "群通知" },
-]
+// const tabsList = [
+//   { id: 1, name: "好友通知" },
+//   { id: 2, name: "群通知" },
+// ]
+defineOptions({ name: "Friends" }) 
+
 const input = ref("")
 const title = ref("")
 

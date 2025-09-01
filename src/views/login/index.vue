@@ -22,12 +22,16 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue"
+
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import { useUserStore } from "@/stores/modules/user"
 
 import Account from "./components/Account.vue"
 import LoginQrCode from "./components/LoginQrCode.vue"
 import LoginRegist from "./components/LoginRegist.vue"
+
+defineOptions({ name: "Login" })
 
 const currentPage = computed(() => {
   return useUserStore().currentPage

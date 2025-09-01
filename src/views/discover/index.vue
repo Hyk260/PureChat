@@ -34,6 +34,8 @@ import StarMessage from "./StarMessage.vue"
 import TabsWrapper from "./TabsWrapper.vue"
 import { options } from "./utils"
 
+defineOptions({ name: "Discover" })
+
 const agent = ref([])
 const market = ref({})
 const current = ref("")

@@ -30,7 +30,6 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
     primaryKey: string = "id"
   ) {
     const result = this.schema.safeParse(data)
-    debugger
 
     if (!result.success) {
       const errorMsg = `[${this.db.name}][${this._tableName}] Failed to create new record. Error: ${result.error}`

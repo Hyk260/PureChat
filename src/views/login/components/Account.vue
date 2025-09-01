@@ -98,6 +98,8 @@ import { defaultForm, rules } from "../utils/validation"
 
 const { DEV: isDev } = import.meta.env
 
+defineOptions({ name: "Account" })
+
 const showVerifyCode = false
 const verifyCode = ref("")
 const formRef = ref()
@@ -106,7 +108,7 @@ const userSuggestions = ref([])
 
 const userStore = useUserStore()
 const [loading, setLoading] = useState(false)
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const { oauthAuthorize } = useOAuth({
   onSuccess: (data) => {
