@@ -3,17 +3,9 @@ import { defineStore } from "pinia"
 
 import { SetupStoreId } from "@/stores/enum"
 import { localStg } from "@/utils/storage"
-// import { useEventListener, usePreferredColorScheme } from "@vueuse/core";
 
-interface ThemeState {
-  themeScheme: ThemeModeKey
-  fontTheme: string
-  fontThemeList: any[]
-  page: {
-    animate: boolean
-    animateMode: string
-  }
-}
+import type { ThemeState } from "./type"
+// import { useEventListener, usePreferredColorScheme } from "@vueuse/core";
 
 export const useThemeStore = defineStore(SetupStoreId.Theme, {
   state: (): ThemeState => ({
@@ -34,30 +26,30 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
       localStg.set("font-family", theme)
       document.documentElement.style.setProperty("--font-family", theme)
     },
-    setFontThemeList(list: any) {
-      const existingValues = new Set(this.fontThemeList.map((f: any) => f.value))
-      const uniqueNewFonts = list.filter((font: any) => !existingValues.has(font.value))
+    setFontThemeList(list: { label: string; value: string }[]) {
+      const existingValues = new Set(this.fontThemeList.map((f) => f.value))
+      const uniqueNewFonts = list.filter((font) => !existingValues.has(font.value))
 
       if (uniqueNewFonts.length > 0 && this.fontThemeList.length < 20) {
         this.fontThemeList = [...this.fontThemeList, ...uniqueNewFonts]
       }
     },
     async loadSystemFonts() {
-      if (!(window as any).queryLocalFonts) {
+      if (window?.queryLocalFonts) {
         console.warn("Local Font Access API is not supported in this browser")
         return
       }
 
       try {
-        const availableFonts = await (window as any).queryLocalFonts()
-        const newFonts: any = {}
+        const availableFonts = await window.queryLocalFonts()
+        const newFonts = {}
         availableFonts.slice(0, 40).map((font: { family: string | number; fullName: any }) => {
           if (newFonts[font.family]) return
           newFonts[font.family] = { label: font.fullName, value: font.family }
         })
         this.setFontThemeList(Object.values(newFonts))
         return newFonts
-      } catch (err) {
+      } catch {
         return []
       }
     },

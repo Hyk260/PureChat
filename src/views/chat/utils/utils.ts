@@ -12,12 +12,15 @@ import { useChatStore } from "@/stores"
 import { base64ToFile, getBlob, getFileType } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 
-export const validateLastMessage = (list) => {
+import type { DB_Message } from "@/database/schemas/message"
+import type { GroupMember } from "@/stores/modules/group/type"
+
+export const validateLastMessage = (list: DB_Message[]) => {
   return list.slice().find((t) => t.ID) || ""
 }
 
 // 复制
-export const handleCopyMsg = async (data) => {
+export const handleCopyMsg = async (data: DB_Message) => {
   const { payload, type } = data
   // 文本
   if (type === "TIMTextElem") {
@@ -119,7 +122,7 @@ export const extractImageInfo = (editor) => {
   return { images }
 }
 
-function isVideoFile(fileName) {
+const isVideoFile = (fileName: string) => {
   const video = ["mp4", "wmv", "webm"]
   const name = fileName.toLowerCase()
   const regex = new RegExp(`(${video.join("|")})$`, "i")
@@ -184,10 +187,9 @@ export const extractAitInfo = (editor) => {
 
 /**
  * 根据拼音搜索当前成员列表中的匹配项。
- * @param {string} searchStr - 要搜索的拼音字符串。
- * @returns {Array} - 匹配项的数组。
  */
-export function searchByPinyin({ searchStr, list }) {
+export function searchByPinyin(options: { searchStr: string; list: GroupMember[] }) {
+  const { searchStr, list } = options
   if (!searchStr) {
     console.warn("searchStr is null")
     return "empty"
@@ -199,11 +201,11 @@ export function searchByPinyin({ searchStr, list }) {
   }
   const memberList = cloneDeep(list)
   // 存储匹配项的索引
-  const indices = []
+  const indices: GroupMember[] = []
   // 遍历过滤后的成员列表
   memberList.forEach((item) => {
     // 使用 match 函数进行拼音匹配
-    const nickPinyin = match(item.nick, searchStr)
+    const nickPinyin = match(item.nick || "", searchStr) || []
     // 如果拼音匹配结果长度大于 0，将当前项添加到索引数组中
     if (nickPinyin?.length > 0) {
       indices.push(item)
@@ -223,12 +225,12 @@ export function searchByPinyin({ searchStr, list }) {
 
 /**
  * 根据输入的字符串过滤提及列表并触发相关操作。
- * @param {string} inputStr - 输入的字符串。
  */
-export function filterMentionList({ str, list }) {
+export function filterMentionList(options: { str: string; list: GroupMember[] }) {
+  const { str, list } = options
   const inputStr = str
   // 如果输入字符串为空 且没有 "@" 符号，关闭提及模态框并返回
-  if (inputStr === "" || inputStr.lastIndexOf("@") == -1) {
+  if (inputStr === "" || inputStr.lastIndexOf("@") === -1) {
     useChatStore().$patch({ isMentionModalVisible: false })
     return
   }

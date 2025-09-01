@@ -7,7 +7,7 @@ export const useToolsStore = defineStore(SetupStoreId.Tools, {
     tools: {},
   }),
   actions: {
-    setTools(data: any) {
+    setTools(data: Record<string, any>) {
       this.tools = data
     },
   },

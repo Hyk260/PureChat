@@ -227,12 +227,12 @@ export default defineConfig([
       ...pluginVue.configs["flat/essential"].rules,
       ...pluginVue.configs["flat/strongly-recommended"].rules,
       ...pluginVue.configs["flat/recommended"].rules,
-      "vue/multi-word-component-names": "warn",
+      "vue/multi-word-component-names": "off",
       "vue/no-unused-vars": "warn",
       "vue/no-unused-components": "warn",
       "vue/prefer-import-from-vue": "warn",
       "vue/prefer-separate-static-class": "warn",
-      "vue/prefer-true-attribute-shorthand": "warn",
+      "vue/prefer-true-attribute-shorthand": "off",
 
       // Import 规则
       "simple-import-sort/imports": "warn",

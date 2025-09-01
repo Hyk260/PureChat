@@ -7,10 +7,10 @@ import {
   getGroupMemberList,
   getGroupProfile,
   quitGroup,
-} from "@/service/im-sdk-api/index"
+} from "@/service/im-sdk-api"
+import { useChatStore, useUserStore } from "@/stores"
 import { SetupStoreId } from "@/stores/enum"
-import { useChatStore, useUserStore } from "@/stores/index"
-import { findGroupChat, sortMembersByRole } from "@/utils/chat/index"
+import { findGroupChat, sortMembersByRole } from "@/utils/chat"
 
 import type {
   GroupMember,

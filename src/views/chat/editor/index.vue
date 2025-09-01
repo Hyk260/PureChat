@@ -259,8 +259,8 @@ const handlePaste = (editor, event, callback) => {
   callback?.(false)
 }
 
-const handleDrop = (event) => {
-  if (!event.dataTransfer.getData("text/plain")) {
+const handleDrop = (event: DragEvent) => {
+  if (!event.dataTransfer?.getData("text/plain")) {
     handlePaste(editorRef.value, event)
     event.preventDefault()
   }

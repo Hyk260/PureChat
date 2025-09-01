@@ -64,7 +64,7 @@ interface Position {
   }
 }
 
-type FilteringType = "all" | "success" | "empty"
+type FilteringType = "all" | "success" | "empty" | "updata"
 
 defineOptions({
   name: "MentionModal",
@@ -219,7 +219,7 @@ const initMention = () => {
   emitter.on("handleInputKeyupHandler", (data: KeyboardEvent) => {
     inputKeyupHandler(data)
   })
-  emitter.on("setMentionModal", (data: { content: GroupMember[]; type: FilteringType; searchlength: number }) => {
+  emitter.on("setMentionModal", (data: { content?: GroupMember[]; type: FilteringType; searchlength?: number }) => {
     const { content = [], type, searchlength = 0 } = cloneDeep(data)
     filtering.value = type // all success empty
     if (type === "all") {
