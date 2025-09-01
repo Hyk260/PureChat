@@ -1,33 +1,31 @@
 {
   // 要在保存时运行的代码操作种类
-  // "editor.codeActionsOnSave": {
-  //   "source.fixAll.eslint": "explicit",
-  //   // 控制是否应在文件保存时运行"整理 import 语句"操作
-  //   "source.organizeImports": "never"
-  // },
-  "prettier.enable": false,
+  "editor.codeActionsOnSave": {
+    // "source.fixAll.eslint": "explicit",
+    // 控制是否应在文件保存时运行"整理 import 语句"操作
+    "source.organizeImports": "never"
+  },
+  "prettier.enable": true,
   "eslint.useFlatConfig": true,
   // 在保存时格式化文件。格式化程序必须可用，延迟后文件不能保存，并且编辑器不能关闭。
-  // "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "eslint.validate": [
-    // "javascript", // support builtin
-    // "javascriptreact", // support builtin
-    "typescript",  // support builtin
-    // "typescriptreact", // support builtin
-    // "vue", // support builtin
-    // add the languages you want to lint
-    "html", 
-    "css", 
-    "scss", 
-    "json", 
+    "javascript",
+    "typescript",
+    "vue",
+    // 添加要 lint 的语言
+    "html",
+    "css",
+    "scss",
+    "json",
     "jsonc",
     "markdown"
   ],
   // 控制编辑器在键入一行后是否自动格式化该行。
-  // "editor.formatOnType": true,
+  "editor.formatOnType": true,
   // 针对某种语言，配置替代编辑器设置。
   "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -36,6 +34,7 @@
   // "eslint.options": {
   //   "extensions": [
   //     ".js",
+  //     ".ts",
   //     ".vue"
   //   ]
   // },
@@ -57,7 +56,10 @@
     "strings": true
   },
   // 翻译文件夹路径 (相对于项目根目录)
-  "i18n-ally.localesPaths": ["locales", "src/locales/langs"],
+  "i18n-ally.localesPaths": [
+    "locales",
+    "src/locales/langs"
+  ],
   // 翻译路径格式
   "i18n-ally.keystyle": "nested",
   // 保存排序后的JSON/YAML
@@ -65,12 +67,18 @@
   // 启用命名空间。查看文档了解更多详细信息。
   "i18n-ally.namespace": true,
   // 指定启用文件格式
-  "i18n-ally.enabledParsers": ["js", "ts", "yaml"],
+  "i18n-ally.enabledParsers": [
+    "js",
+    "ts",
+    "yaml"
+  ],
   // 翻译源语言
   "i18n-ally.sourceLanguage": "en",
   // 显示语言
   "i18n-ally.displayLanguage": "zh-CN",
   // 指定要使用的框架支持。
-  "i18n-ally.enabledFrameworks": ["vue"],
+  "i18n-ally.enabledFrameworks": [
+    "vue"
+  ],
   "Codegeex.CommitMessageStyle": "ConventionalCommits"
 }

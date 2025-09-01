@@ -207,6 +207,14 @@ export default defineConfig([
           tsconfigRootDir: import.meta.dirname,
         },
       },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        process: "readonly",
+        __APP_INFO__: "readonly",
+        __IS_ELECTRON__: "readonly",
+        __LOCAL_MODE__: "readonly",
+      },
     },
     plugins: {
       vue: pluginVue,
