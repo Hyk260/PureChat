@@ -1,6 +1,6 @@
 <template>
   <div v-show="currentConversation" class="message-info-view-content" :class="classMessageInfoView()">
-    <el-scrollbar ref="scrollbarRef" class="h-full" @end-reached="loadMore" @scroll="handleScrollbar">
+    <el-scrollbar ref="scrollbarRef" class="h-full" @end-reached="handleEnReached" @scroll="handleScrollbar">
       <div ref="messageViewRef" class="message-view">
         <div v-for="(item, index) in currentMessageList" :key="item.ID" :class="{ 'reset-select': item.isRevoked }">
           <!-- 加载更多 -->
@@ -258,7 +258,7 @@ const loadMoreMessages = () => {
 
 const debouncedFunc = debounce(loadMoreMessages, 300)
 
-const loadMore = (direction: string) => {
+const handleEnReached = (direction: string) => {
   if (direction === "top") {
     loadMoreMsg()
   } else if (direction === "bottom") {

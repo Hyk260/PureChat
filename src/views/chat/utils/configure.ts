@@ -42,11 +42,11 @@ editorConfig.MENU_CONF["codeSelectLang"] = {}
 
 // 显示 modal
 function showModal(e) {
-  // console.log("[@] 显示 showModal:", e.getText());
+  // console.log("[@] 显示 showModal:", e.getText())
   useChatStore().toggleMentionModal(true)
 }
 // 隐藏 modal
 function hideModal(e) {
-  // console.log("[@] 隐藏 hideModal:", e.getText());
+  // console.log("[@] 隐藏 hideModal:", e.getText())
   useChatStore().toggleMentionModal(false)
 }

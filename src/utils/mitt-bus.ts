@@ -16,6 +16,7 @@ interface Events {
   handleGroupDrawer: boolean
   handleShareModal: boolean
   fileUploading: { uuid: string; num: number }
+  handleToBottom: boolean
 }
 
 const emitter: Emitter<Events> = mitt<Events>()
