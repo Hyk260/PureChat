@@ -35,7 +35,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from
 import { useChatStore, useGroupStore } from "@/stores"
 import type { GroupMember } from "@/stores/modules/group/type"
 import { insertMention, prioritizeRBTUserID } from "@/utils/chat"
-import emitter from "@/utils/mitt-bus"
+import emitter, { type FilteringType } from "@/utils/mitt-bus"
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__"
 
@@ -63,8 +63,6 @@ interface Position {
     height: number
   }
 }
-
-type FilteringType = "all" | "success" | "empty" | "updata"
 
 defineOptions({
   name: "MentionModal",

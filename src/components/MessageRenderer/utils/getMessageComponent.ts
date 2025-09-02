@@ -58,7 +58,7 @@ export const getMessageComponent = (item: MessageItem | null): MessageComponent 
     return componentCache.get(cacheKey) || null
   }
 
-  const component = MESSAGE_COMPONENT_MAP[item.type as MessageType] || null
+  const component = MESSAGE_COMPONENT_MAP[item.type] || null
 
   if (!component) {
     console.warn(`Unknown message type: ${item.type}`)
