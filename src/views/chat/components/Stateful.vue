@@ -8,7 +8,9 @@
 </template>
 
 <script setup lang="ts">
-import { isSelf } from "@/utils/chat"
+import type { PropType } from "vue"
+
+import type { DB_Message } from "@/database/schemas/message"
 
 defineOptions({
   name: "Stateful",
@@ -16,7 +18,7 @@ defineOptions({
 
 const props = defineProps({
   item: {
-    type: Object,
+    type: Object as PropType<DB_Message>,
     default: null,
   },
   // unSend(未发送)fail(发送失败)success(发送成功)sending(发送中)
@@ -31,9 +33,9 @@ const isShow = (value: string) => {
   return props.status === value
 }
 
-const isShowState = (item) => {
+const isShowState = (item: DB_Message) => {
   return (
-    isSelf(item) &&
+    item.flow === "out" &&
     !item.isRevoked &&
     item.type !== "TIMTextElem" &&
     item.type !== "TIMGroupTipElem" &&

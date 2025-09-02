@@ -1,42 +1,45 @@
 <template>
-  <AnalysisUrl :text="text" />
+  <span v-html="processedText" @click="handleClick" />
 </template>
 
 <script setup lang="ts">
-import { h } from "vue"
+import { computed } from "vue"
 
 import { encodeHTML } from "@/utils/common"
-import linkifyUrls from "@/utils/linkifyUrls"
+import { linkifyUrls } from "@/utils/linkifyUrls"
 
-defineProps({
-  text: {
-    type: String,
-    default: "",
-  },
-  atUserList: {
-    type: Array,
-    default: () => [],
-  },
+interface Props {
+  text?: string
+  atUserList?: string[]
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  text: "",
+  atUserList: () => [],
 })
 
-function AnalysisUrl(props) {
-  const { text } = props
-  const escapedUrl = encodeHTML(text)
-  const linkStr = linkifyUrls(escapedUrl)
-  return h("span", {
-    innerHTML: linkStr,
-    onClick: () => {
-      console.log("onClick")
-    },
-  })
+const processedText = computed(() => {
+  const escapedText = encodeHTML(props.text)
+  return linkifyUrls(escapedText)
+})
+
+const handleClick = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+  if (target.tagName === "A") {
+    console.log("Link clicked:", target?.href)
+  }
 }
 </script>
 
-<style lang="scss" scoped>
-:deep(.linkUrl) {
+<style lang="scss">
+.linkUrl {
   cursor: pointer;
   text-decoration: underline;
   word-wrap: break-word;
   color: var(--el-color-primary);
+
+  &:hover {
+    opacity: 0.8;
+  }
 }
 </style>

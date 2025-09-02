@@ -15,6 +15,7 @@
 <script setup lang="ts">
 import {
   onMounted,
+  onUnmounted,
   ref,
   // useTemplateRef
 } from "vue"
@@ -40,6 +41,7 @@ onMounted(() => {
     }
   })
 })
+
 onUnmounted(() => {
   emitter.off("handleImageViewer")
 })

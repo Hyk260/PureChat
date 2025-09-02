@@ -1,16 +1,13 @@
 <template>
-  <template v-for="item in decodeText(text)" :key="item">
-    <span v-if="item.name === 'text'">
-      <!-- 链接 -->
-      <AnalysisUrl v-if="link" :text="item.text || ''" :at-user-list="atUserList" />
-      <!-- 文本 -->
-      <template v-else>
-        {{ item.text }}
-      </template>
+  <template v-for="(item, index) in parsedContent" :key="index">
+    <!-- 文本内容 -->
+    <span v-if="isTextContent(item)">
+      <AnalysisUrl v-if="enableLink" :text="item.text || ''" :at-user-list="atUserList" />
+      <span v-else>{{ item.text }}</span>
     </span>
     <!-- 表情包 -->
     <img
-      v-else-if="item.name === 'img'"
+      v-else-if="isEmojiContent(item)"
       draggable="false"
       class="h-23 w-23 align-sub"
       :src="getEmojiAssetUrl(item.localSrc || '')"
@@ -20,28 +17,46 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from "vue"
+import { computed } from "vue"
 
 import { decodeText } from "@/utils/chat"
 import { getEmojiAssetUrl } from "@/utils/common"
 
 import AnalysisUrl from "./AnalysisUrl.vue"
 
+interface ContentItem {
+  name: "text" | "img"
+  text?: string
+  localSrc?: string
+}
+
 defineOptions({
   name: "DynamicContent",
 })
 
-const link = true
+const props = withDefaults(
+  defineProps<{
+    text?: string
+    enableLink?: boolean
+    atUserList?: string[]
+  }>(),
+  {
+    text: "",
+    enableLink: true,
+    // @用户列表
+    atUserList: () => [],
+  }
+)
 
-defineProps({
-  text: {
-    type: String,
-    default: "",
-  },
-  // @用户列表
-  atUserList: {
-    type: Array as PropType<string[]>,
-    default: () => [],
-  },
+const isTextContent = (item: ContentItem): boolean => item.name === "text"
+const isEmojiContent = (item: ContentItem): boolean => item.name === "img"
+
+const parsedContent = computed<ContentItem[]>(() => {
+  try {
+    return decodeText(props.text)
+  } catch (error) {
+    console.error("Failed to parse content:", error)
+    return [{ name: "text", text: props.text }]
+  }
 })
 </script>
