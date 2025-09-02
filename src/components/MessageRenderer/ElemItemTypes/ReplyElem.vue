@@ -25,10 +25,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, PropType } from "vue"
 
+import DynamicContent from "@/components/Chat/DynamicContent.vue"
+import { MessageStatus, MessageStatusSchema } from "@/database/schemas/message"
 import { scrollToDomPosition } from "@/utils/chat"
-import DynamicContent from "@/views/chat/components/DynamicContent.vue"
 
 defineOptions({
   name: "ReplyElem",
@@ -39,11 +40,10 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
-  // unSend(未发送)fail(发送失败)success(发送成功)sending(发送中)
   status: {
-    type: String,
+    type: String as PropType<MessageStatus>,
     default: "unSend",
-    validator: (value: string) => ["unSend", "fail", "success", "sending"].includes(value),
+    validator: (value: string) => MessageStatusSchema.options.includes(value as MessageStatus),
   },
 })
 

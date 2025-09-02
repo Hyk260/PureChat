@@ -36,11 +36,12 @@
 
 <script setup lang="ts">
 import "../utils/custom-menu"
-import "./style.css"
+import "@/styles/wangeditor/index.css"
 
 import { Editor } from "@wangeditor/editor-for-vue"
 import { debounce } from "lodash-es"
 
+import MentionModal from "@/components/Chat/MentionModal.vue"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useGroupStore } from "@/stores"
 import { bytesToSize, fileToBase64, getFileType, insertMention } from "@/utils/chat"
@@ -48,7 +49,6 @@ import { isMobile } from "@/utils/common"
 import { getOperatingSystem } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
 
-import MentionModal from "../components/MentionModal.vue"
 import Inputbar from "../Inputbar/index.vue"
 import { editorConfig, placeholderMap } from "../utils/configure"
 import {

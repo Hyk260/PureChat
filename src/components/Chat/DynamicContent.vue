@@ -19,10 +19,9 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import AnalysisUrl from "@/components/Chat/AnalysisUrl.vue"
 import { decodeText } from "@/utils/chat"
 import { getEmojiAssetUrl } from "@/utils/common"
-
-import AnalysisUrl from "./AnalysisUrl.vue"
 
 interface ContentItem {
   name: "text" | "img"

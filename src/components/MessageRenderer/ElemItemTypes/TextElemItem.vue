@@ -12,9 +12,9 @@
 <script setup lang="ts">
 import { computed, PropType } from "vue"
 
+import DynamicContent from "@/components/Chat/DynamicContent.vue"
 import { DB_Message } from "@/database/schemas/message"
 import { useAppStore, useChatStore } from "@/stores"
-import DynamicContent from "@/views/chat/components/DynamicContent.vue"
 
 import ReplyElem from "./ReplyElem.vue"
 

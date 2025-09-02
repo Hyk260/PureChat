@@ -10,7 +10,8 @@
 <script setup lang="ts">
 import type { PropType } from "vue"
 
-import type { DB_Message } from "@/database/schemas/message"
+import type { DB_Message, MessageStatus } from "@/database/schemas/message"
+import { MessageStatusSchema } from "@/database/schemas/message"
 
 defineOptions({
   name: "Stateful",
@@ -21,10 +22,10 @@ const props = defineProps({
     type: Object as PropType<DB_Message>,
     default: null,
   },
-  // unSend(未发送)fail(发送失败)success(发送成功)sending(发送中)
   status: {
-    type: String,
+    type: String as PropType<MessageStatus>,
     default: "unSend",
+    validator: (value: string) => MessageStatusSchema.options.includes(value as MessageStatus),
   },
 })
 

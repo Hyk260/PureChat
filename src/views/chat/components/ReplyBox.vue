@@ -14,10 +14,9 @@
 import { CircleCloseFilled } from "@element-plus/icons-vue"
 import { storeToRefs } from "pinia"
 
+import DynamicContent from "@/components/Chat/DynamicContent.vue"
 import { useChatStore } from "@/stores/modules/chat"
 import { getAbstractContent, scrollToDomPosition } from "@/utils/chat"
-
-import DynamicContent from "./DynamicContent.vue"
 
 defineOptions({
   name: "ReplyBox",

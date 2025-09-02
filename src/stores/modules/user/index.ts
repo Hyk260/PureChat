@@ -71,7 +71,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       const result = await login(data)
       this.handleSuccessfulAuth(result)
     },
-    async handleUserLogout() {
+    handleUserLogout() {
       router.push("/login")
       setTimeout(() => {
         logout()

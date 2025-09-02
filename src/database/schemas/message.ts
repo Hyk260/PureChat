@@ -46,14 +46,7 @@ export const MessageSchema = {
   updatedAt: 1754536602686,
 }
 
-export type MessageType =
-  | "TIMTextElem"
-  | "TIMRelayElem"
-  | "TIMImageElem"
-  | "TIMFileElem"
-  | "TIMCustomElem"
-  | "TIMGroupTipElem"
-  | "TIMGroupSystemNoticeElem"
+export const MessageStatusSchema = z.enum(["unSend", "fail", "success", "sending", "timeout"])
 
 export const MessageTypeSchema = z.enum([
   "TIMTextElem",
@@ -84,6 +77,7 @@ export const DB_MessageSchema = z.object({
   from: z.string(),
   to: z.string(),
   /**
+   * @description 消息流向
    * in: 收到
    * out: 发出
    */
@@ -92,7 +86,7 @@ export const DB_MessageSchema = z.object({
   protocol: z.enum(["JSON", "XML", "Binary"]),
   isResend: z.boolean(),
   isRead: z.boolean(),
-  status: z.enum(["unSend", "fail", "success", "sending"]),
+  status: MessageStatusSchema,
   atUserList: z.array(z.string()),
   cloudCustomData: z.string(),
   isDeleted: z.boolean(),
@@ -114,3 +108,15 @@ export const DB_MessageSchema = z.object({
 })
 
 export type DB_Message = z.infer<typeof DB_MessageSchema>
+
+/**
+ * @description 消息状态
+ * unSend(未发送) fail(发送失败) success(发送成功) sending(发送中) timeout(超时)
+ */
+export type MessageStatus = z.infer<typeof MessageStatusSchema>
+
+/**
+ * @description 消息类型
+ * TIMTextElem(文本) TIMRelayElem(转发) TIMImageElem(图片) TIMFileElem(文件) TIMCustomElem(自定义) TIMGroupTipElem(群提示) TIMGroupSystemNoticeElem(群系统提示)
+ */
+export type MessageType = z.infer<typeof MessageTypeSchema>

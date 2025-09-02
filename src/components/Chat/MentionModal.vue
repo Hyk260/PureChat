@@ -216,7 +216,7 @@ const initMention = () => {
   useEventListener(document, "keydown", (e) => {
     handleKeydown(e)
   })
-  emitter.on("handleInputKeyupHandler", (data: MouseEvent) => {
+  emitter.on("handleInputKeyupHandler", (data) => {
     inputKeyupHandler(data)
   })
   emitter.on("setMentionModal", (data: { content?: GroupMember[]; type: FilteringType; searchlength?: number }) => {
@@ -240,7 +240,7 @@ const setMentionStatus = (status = false) => {
   chatStore.toggleMentionModal(status)
 }
 
-const inputKeyupHandler = (event: KeyboardEvent) => {
+const inputKeyupHandler = (event) => {
   if (event.key === "Enter") {
     const firstOne = searchedList.value[tabIndex.value]
     if (!firstOne) return

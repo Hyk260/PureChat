@@ -10,7 +10,7 @@ interface Events {
   updateScroll: void
   handleAt: { id: string; name: string }
   handleSetHtml: string
-  handleInputKeyupHandler: KeyboardEvent
+  handleInputKeyupHandler: any
   setMentionModal: { content?: GroupMember[]; type: FilteringType; searchlength?: number }
   handleInsertDraft: { sessionId: string }
   handleGroupDrawer: boolean

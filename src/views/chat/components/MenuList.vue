@@ -58,7 +58,9 @@ import {
   // SlidersHorizontal
 } from "lucide-vue-next"
 import { computed, markRaw, ref } from "vue"
+import { PropType } from "vue"
 
+import { DB_Message, MessageStatus, MessageStatusSchema } from "@/database/schemas/message"
 import { useChatStore } from "@/stores/modules/chat"
 
 import { handleCopyMsg } from "../utils/utils"
@@ -71,14 +73,13 @@ const emit = defineEmits(["handleSingleClick"])
 
 const props = defineProps({
   item: {
-    type: Object,
+    type: Object as PropType<DB_Message>,
     default: null,
   },
   status: {
-    type: String,
+    type: String as PropType<MessageStatus>,
     default: "unSend",
-    // unSend(未发送)fail(发送失败)success(发送成功)sending(发送中)timeout(超时)
-    validator: (value: string) => ["unSend", "fail", "success", "sending"].includes(value),
+    validator: (value: string) => MessageStatusSchema.options.includes(value as MessageStatus),
   },
 })
 
@@ -193,7 +194,7 @@ function handleMenuItemClick(data: { id: string }) {
       console.log("设置")
       break
     case "delete":
-      handleDelete(item)
+      handleDelete()
       break
   }
 }

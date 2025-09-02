@@ -17,8 +17,6 @@ type ForDataType<T> = {
 
 type AnyFunction<T> = (...args: any[]) => T;
 
-type PropType<T> = VuePropType<T>;
-
 type Writable<T> = {
   -readonly [P in keyof T]: T[P];
 };

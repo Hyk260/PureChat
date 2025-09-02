@@ -1,4 +1,4 @@
-import type { DB_Message, MessageType } from "@/database/schemas/message"
+import type { DB_Message } from "@/database/schemas/message"
 
 export const messageUtils = {
   /**
