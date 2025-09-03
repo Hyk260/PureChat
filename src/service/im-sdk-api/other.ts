@@ -1,4 +1,4 @@
-import { TRANSLATE_TEXT_OPTIONS, PIN_CONVERSATION_OPTIONS } from "@/service/chat/types/tencent-cloud-chat"
+import { PIN_CONVERSATION_OPTIONS, SET_MESSAGE_REMIND_TYPE_OPTIONS, TRANSLATE_TEXT_OPTIONS } from "@/service/chat/types/tencent-cloud-chat"
 import tim from "@/service/IM/im-sdk/tim"
 
 import type { DB_Message } from "@/database/schemas/message"
@@ -54,18 +54,18 @@ export const revokeMsg = async (params) => {
 // 消息免打扰
 export const setMessageRemindType = async (params: DB_Session) => {
   const { toAccount: userID, messageRemindType: remindType, type } = params
-  let parameter = {}
+  let parameter = {} as SET_MESSAGE_REMIND_TYPE_OPTIONS
   const isDisable = remindType === "AcceptNotNotify"
   if (type === "C2C") {
     // 单人会话
     parameter = {
-      userIDList: [userID],
+      userIDList: [userID || ""],
       messageRemindType: isDisable ? "" : "AcceptNotNotify",
     }
   } else {
     // 群聊
     parameter = {
-      groupID: userID,
+      groupID: userID || "",
       // TIM.TYPES.MSG_REMIND_ACPT_AND_NOTE  "AcceptAndNotify"
       // （SDK 接收消息并通知接入侧，接入侧做提示）
       // TIM.TYPES.MSG_REMIND_ACPT_NOT_NOTE  "AcceptNotNotify"

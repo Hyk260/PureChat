@@ -104,7 +104,7 @@ const showVerifyCode = false
 const verifyCode = ref("")
 const formRef = ref()
 const form = ref({ ...defaultForm })
-const userSuggestions = ref([])
+const userSuggestions = ref<{ value: string }[]>([])
 
 const userStore = useUserStore()
 const [loading, setLoading] = useState(false)
@@ -155,11 +155,11 @@ const setCurrentPage = (item) => {
 }
 
 const handleKeyPress = ({ code }) => {
-  if (code === "Enter") handleLogin(formRef.value)
+  if (code === "Enter") handleLogin()
 }
 
 onMounted(async () => {
-  userSuggestions.value = await getUserList()
+  userSuggestions.value = getUserList()
   window.document.addEventListener("keypress", handleKeyPress)
 })
 

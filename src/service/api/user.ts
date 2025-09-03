@@ -19,7 +19,7 @@ export const register = (data) => {
 }
 
 // 账号列表
-export const getUserList = async () => {
+export const getUserList = (): { value: string }[] => {
   return [{ value: "admin" }, { value: "zhangal" }, { value: "jinwx" }]
 }
 
