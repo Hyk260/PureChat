@@ -86,7 +86,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       return provider
     },
     isAssistant(): boolean {
-      return /@RBT#/.test(this.toAccount)
+      return /@RBT#/.test(this.toAccount) && ModelIDList.includes(this.toAccount as ModelIDValue)
     },
     isMore(): boolean {
       return this.currentMessageList?.length < HISTORY_MESSAGE_COUNT

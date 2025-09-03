@@ -48,6 +48,15 @@ const customMessageContent = (): string => {
       return "API Key 不正确或为空，请检查 API Key 后重试"
     }
 
+    if (payload?.chatbotPlugin === 2) {
+      try {
+        return payload?.chunks.map((chunk: string) => chunk).join("") || ""
+      } catch (error) {
+        console.error("解析消息内容失败:", error)
+        return "[机器人自定义消息]"
+      }
+    }
+
     return text ?? "[自定义消息]"
   } catch (error) {
     console.error("解析消息内容失败:", error)

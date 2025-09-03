@@ -4,7 +4,7 @@
       <p v-if="currentType">
         <span v-if="chatType('C2C')" class="single" @click="openUser">
           <span class="nick">{{ chatNick("C2C", currentConversation) }}</span>
-          <Label :model="robotStore.model" :user-i-d="currentConversation?.conversationID" />
+          <Label v-if="isAssistant" :model="robotStore.model" :user-i-d="currentConversation?.conversationID" />
           <!-- ai-prompt -->
           <div v-if="isShowPromptTitle" class="cursor-pointer ml-5 ai-prompt-title" @click="openPrompt">
             {{ getPromptTitle }}
