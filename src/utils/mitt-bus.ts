@@ -9,7 +9,6 @@ export interface Events {
   [key: symbol]: unknown
   handleImageViewer: string
   SidebarEditDialog: boolean
-  updateScroll: void
   handleAt: { id: string; name: string }
   handleSetHtml: string
   handleInputKeyupHandler: any
@@ -19,6 +18,7 @@ export interface Events {
   handleShareModal: boolean
   fileUploading: { uuid: string; num: number }
   handleToBottom: boolean
+  updateScroll: string
 }
 
 const emitter: Emitter<Events> = mitt<Events>()

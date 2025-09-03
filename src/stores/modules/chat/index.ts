@@ -55,7 +55,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     msgEdit: null, // 消息编辑
     recently: new Set(), // 最近使用表情包
     chatDraftMap: new Map(), // 会话草稿
-    forwardData: new Map(), // 多选数据
+    forwardData: new Map<string, DB_Message>(), // 多选数据
     revokeMsgMap: new Map(), // 撤回消息重新编辑
     sendingMap: new Map(),
     selectedMessageMap: new Map(), // 多选消息
@@ -120,7 +120,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     getForwardCount(): number {
       return this.forwardData.size
     },
-    getSortedForwardData() {
+    getSortedForwardData(): DB_Message[] {
       const chatData = Object.values(Object.fromEntries(this.forwardData))
       return chatData.sort((a, b) => a.clientTime - b.clientTime)
     },

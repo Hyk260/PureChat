@@ -11,7 +11,7 @@ import { scrollToDomPosition } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 
-import { fnCheckoutNetState, getConversationList, kickedOutReason } from "./utils"
+import { checkoutNetState, getConversationList, kickedOutReason } from "./utils"
 
 import type { DB_Message } from "@/database/schemas/message"
 import type { DB_Session } from "@/database/schemas/session"
@@ -35,7 +35,7 @@ export class TIMProxy {
   private readonly userSig: string = ""
   private userProfile: Profile | null = null
   private once: boolean = false
-  private isSDKReady: boolean = false
+  isSDKReady: boolean = false
   private readonly GROUP_TIP_TYPES = {
     MEMBER_JOIN: 1, // 有成员加群
     MEMBER_QUIT: 2, // 有群成员退群
@@ -56,11 +56,6 @@ export class TIMProxy {
 
   constructor() {}
 
-  /**
-   * 保存当前实例状态到本地存储
-   * 用于页面刷新后恢复状态
-   * @private
-   */
   saveSelfToLocalStorage() {
     const stateData = {
       userID: this.userID,
@@ -69,13 +64,6 @@ export class TIMProxy {
     }
 
     localStg.set("timProxy", stateData)
-  }
-
-  loadSelfFromLocalStorage() {
-    const stateData = localStg.get("timProxy")
-    if (!stateData) return
-
-    Object.assign(this, stateData)
   }
 
   init() {
@@ -87,7 +75,6 @@ export class TIMProxy {
     }
 
     this.once = true
-    this.loadSelfFromLocalStorage()
     this.initListener()
 
     console.log("[chat] TIMProxy 初始化完成")
@@ -202,7 +189,9 @@ export class TIMProxy {
     const currentConversation = data.find((conv) => conv.conversationID === currentSessionId)
     if (currentConversation) {
       chatStore.setCurrentConversation(cloneDeep(currentConversation))
-      this.reportedMessageRead(currentConversation)
+      this.reportedMessageRead({
+        conversationID: currentConversation.conversationID,
+      })
     }
 
     // 更新未读消息总数
@@ -267,7 +256,7 @@ export class TIMProxy {
   /**
    * 处理被踢出事件
    */
-  onKickOut({ data }) {
+  onKickOut({ data }: { data: { type: string } }) {
     console.log("[chat] 用户被踢出:", data)
 
     const reason = kickedOutReason(data.type)
@@ -279,7 +268,7 @@ export class TIMProxy {
   /**
    * 处理 SDK 错误事件
    */
-  onError({ data }) {
+  onError({ data }: { data: { message: string } }) {
     console.log("[chat] SDK 错误:", data)
     if (data.message !== "Network Error") {
       window.$message?.error(data.message)
@@ -302,7 +291,7 @@ export class TIMProxy {
    */
   onNetStateChange({ data }: { data: { state: string } }) {
     console.log("[chat] 网络状态变化:", data)
-    window.$message?.(fnCheckoutNetState(data.state))
+    window.$message?.(checkoutNetState(data.state))
   }
 
   /**
@@ -438,15 +427,17 @@ export class TIMProxy {
     if (!chatStore.currentSessionId) return
     if (isRobotId(data)) return
 
-    const message = data[0]
+    const message = data[0] as DB_Message
 
     chatStore.updateMessages({
-      sessionId: message?.conversationID ?? "",
-      message: cloneDeep(message) as DB_Message,
+      sessionId: message?.conversationID,
+      message: cloneDeep(message),
     })
 
     if (shouldMarkRead) {
-      this.reportedMessageRead(data)
+      this.reportedMessageRead({
+        conversationID: message?.conversationID ?? "",
+      })
     }
 
     emitter.emit("updateScroll", "bottom")
@@ -456,7 +447,7 @@ export class TIMProxy {
    * 上报消息已读状态
    * 只在窗口获得焦点时上报已读
    */
-  reportedMessageRead(data: DB_Message[]) {
+  reportedMessageRead(data: { unreadCount?: number; conversationID: string }) {
     if (isFocused.value) {
       setMessageRead(data)
     }
@@ -501,7 +492,7 @@ export class TIMProxy {
    * 检查消息中是否包含对当前用户的 @ 提及
    */
   handleNotificationTip(data: DB_Message[]) {
-    const message = data[0]
+    const message = data[0] as DB_Message
     const { atUserList = [] } = message
 
     if (!atUserList.length) return
@@ -520,7 +511,7 @@ export class TIMProxy {
     const isAtAll = atUserList.includes("__kImSDK_MesssageAtALL__")
     if (isAtAll) {
       console.log("[chat] @ 全体成员，发送通知")
-      this.notifyUser(message as DB_Message)
+      this.notifyUser(message)
       return
     }
 
@@ -528,7 +519,7 @@ export class TIMProxy {
     const isAtSelf = atUserList.includes(userID)
     if (isAtSelf) {
       console.log("[chat] @ 当前用户，发送通知")
-      this.notifyUser(message as DB_Message)
+      this.notifyUser(message)
     }
   }
 }

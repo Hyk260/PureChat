@@ -9,8 +9,11 @@ import type { DB_Session } from "@/database/schemas/session"
 //   return tim.getFriendList()
 // }
 
-// 删除消息 https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#deleteMessage
-export const deleteMessage = async (params) => {
+/**
+ * 删除消息
+ * @see https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#deleteMessage
+ */
+export const deleteMessage = async (params: DB_Message[]) => {
   try {
     const {
       code,
@@ -28,7 +31,10 @@ export const deleteMessage = async (params) => {
     }
   }
 }
-// 会话顶置
+
+/**
+ * 会话顶置
+ */
 export const pinConversation = async (params: PIN_CONVERSATION_OPTIONS) => {
   const { conversationID, isPinned } = params
   try {
@@ -96,7 +102,7 @@ export const getConversationProfile = async ({ sessionId }: { sessionId: string 
   }
 }
 // 消息已读上报
-export const setMessageRead = (params: DB_Session) => {
+export const setMessageRead = (params: { unreadCount?: number; conversationID: string }) => {
   if (__LOCAL_MODE__) return
   try {
     const { unreadCount = 0, conversationID } = params

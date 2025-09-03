@@ -1,5 +1,3 @@
-import { throttle } from "lodash-es"
-
 import { useChatStore } from "@/stores/modules/chat"
 
 import type { DB_Message } from "@/database/schemas/message"
@@ -17,7 +15,7 @@ export function kickedOutReason(type: string) {
   }
 }
 
-export function checkoutNetState(state: string) {
+export function checkoutNetState(state: string): { message: string; type: string } {
   switch (state) {
     case "connected":
       return { message: "已接入网络", type: "success" }
@@ -26,13 +24,9 @@ export function checkoutNetState(state: string) {
     case "disconnected":
       return { message: "当前网络不可用", type: "error" }
     default:
-      return "未知网络状态"
+      return { message: "未知网络状态", type: "error" }
   }
 }
-
-export const fnCheckoutNetState = throttle((state: string) => {
-  checkoutNetState(state)
-}, 3000)
 
 export function getConversationList(data: DB_Message[]) {
   const list = useChatStore().conversationList

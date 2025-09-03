@@ -45,13 +45,13 @@ declare global {
     /** MessageBox */
     $messageBox?: import('element-plus').IElMessageBox;
     /** Message */
-    // $message?: import('element-plus').Message;
-    $message?: import('element-plus').Message & {
-      success: (message: string | import('element-plus').MessageParams) => void;
-      warning: (message: string | import('element-plus').MessageParams) => void;
-      info: (message: string | import('element-plus').MessageParams) => void;
-      error: (message: string | import('element-plus').MessageParams) => void;
-    };
+    $message?: import('element-plus').Message;
+    // $message?: import('element-plus').Message & {
+    //   success: (message: string | import('element-plus').MessageParams) => void;
+    //   warning: (message: string | import('element-plus').MessageParams) => void;
+    //   info: (message: string | import('element-plus').MessageParams) => void;
+    //   error: (message: string | import('element-plus').MessageParams) => void;
+    // };
     /** Notification */
     $notification?: import('element-plus').Notify;
     // __TIM_DEBUG__: DebugInterface;
