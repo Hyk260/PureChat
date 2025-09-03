@@ -1,29 +1,44 @@
+import { TRANSLATE_TEXT_OPTIONS, PIN_CONVERSATION_OPTIONS } from "@/service/chat/types/tencent-cloud-chat"
 import tim from "@/service/IM/im-sdk/tim"
 
-// 获取 SDK 缓存的好友列表
-export const getFriendList = async (params) => {
-  return tim.getFriendList()
-}
+import type { DB_Message } from "@/database/schemas/message"
+import type { DB_Session } from "@/database/schemas/session"
+
+// 好友列表
+// export const getFriendList = () => {
+//   return tim.getFriendList()
+// }
 
 // 删除消息 https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#deleteMessage
 export const deleteMessage = async (params) => {
-  const {
-    code,
-    data: { messageList },
-  } = await tim.deleteMessage(params)
-  return {
-    code,
-    messageList,
+  try {
+    const {
+      code,
+      data: { messageList },
+    } = await tim.deleteMessage(params)
+    return {
+      code: code as number,
+      messageList: messageList as DB_Message[],
+    }
+  } catch (error) {
+    console.error("删除消息失败:", error)
+    return {
+      code: -1,
+      messageList: [],
+    }
   }
 }
 // 会话顶置
-export const pinConversation = async (params) => {
+export const pinConversation = async (params: PIN_CONVERSATION_OPTIONS) => {
   const { conversationID, isPinned } = params
-  const result = await tim.pinConversation({
-    conversationID,
-    isPinned: !isPinned,
-  })
-  return result
+  try {
+    await tim.pinConversation({
+      conversationID,
+      isPinned: !isPinned,
+    })
+  } catch (error) {
+    console.error("会话顶置失败:", error)
+  }
 }
 // 撤回消息
 export const revokeMsg = async (params) => {
@@ -37,7 +52,7 @@ export const revokeMsg = async (params) => {
   }
 }
 // 消息免打扰
-export const setMessageRemindType = async (params) => {
+export const setMessageRemindType = async (params: DB_Session) => {
   const { toAccount: userID, messageRemindType: remindType, type } = params
   let parameter = {}
   const isDisable = remindType === "AcceptNotNotify"
@@ -60,36 +75,43 @@ export const setMessageRemindType = async (params) => {
       messageRemindType: isDisable ? "AcceptAndNotify" : "AcceptNotNotify",
     }
   }
-  const { code, data } = await tim.setMessageRemindType(parameter)
-  if (code === 0) {
-    return data
+  try {
+    await tim.setMessageRemindType(parameter)
+  } catch (error) {
+    console.error("设置消息免打扰失败:", error)
   }
 }
 // 获取会话信息
-export const getConversationProfile = async (params) => {
+export const getConversationProfile = async ({ sessionId }: { sessionId: string }) => {
   try {
-    const { sessionId } = params
     const { code, data } = await tim.getConversationProfile(sessionId)
-    if (code == 0) {
+    if (code === 0) {
       return data
+    } else {
+      return { code: -1, data: { conversation: null } }
     }
   } catch (error) {
-    console.log(error)
+    console.error("获取会话资料失败:", error)
+    return { code: -1, data: { conversation: null } }
   }
 }
 // 消息已读上报
-export const setMessageRead = (params) => {
+export const setMessageRead = (params: DB_Session) => {
   if (__LOCAL_MODE__) return
-  const { unreadCount = 0, conversationID } = params || {}
-  if (unreadCount === 0) return
-  const promise = tim.setMessageRead({ conversationID })
-  promise
-    .then((res) => {
-      console.log("已读上报成功", res)
-    })
-    .catch((err) => {
-      console.warn("setMessageRead error:", err)
-    })
+  try {
+    const { unreadCount = 0, conversationID } = params
+    if (unreadCount === 0) return
+    const promise = tim.setMessageRead({ conversationID })
+    promise
+      .then((res) => {
+        console.log("已读上报成功", res)
+      })
+      .catch((err) => {
+        console.warn("setMessageRead error:", err)
+      })
+  } catch (error) {
+    console.error("已读上报失败:", error)
+  }
 }
 // 删除会话
 export const deleteConversation = async (params) => {
@@ -114,24 +136,17 @@ export const clearHistoryMessage = async (sessionId) => {
     ID,
   }
 }
-// 设置自己的自定义状态
-export const setSelfStatus = (status) => {
-  const { code, data } = tim.setSelfStatus({ customStatus: status })
-}
-// 查询自己的用户状态
-export const getUserStatus = (id) => {
-  const { code, data } = tim.getUserStatus({ userIDList: [id] })
-}
-// 将英文翻译成中文
-export const translateText = (params) => {
+
+// 翻译文本
+export const translateText = async (params) => {
   const { textList } = params
-  const { code, data } = tim.translateText({
-    sourceTextList: [textList],
-    sourceLanguage: "auto",
-    targetLanguage: "zh",
-  })
-  return {
-    code,
-    data,
+  try {
+    const { code, data } = await tim.translateText({
+      sourceTextList: [textList],
+      sourceLanguage: "auto",
+      targetLanguage: "zh",
+    })
+  } catch (error) {
+    console.error("翻译文本失败:", error)
   }
 }

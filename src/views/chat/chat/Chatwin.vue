@@ -416,7 +416,7 @@ const handleRightClick = (data: { id: string }) => {
       handleRevokeMsg(info)
       break
     case "forward": // 转发
-      handleForward(info)
+      // handleForward(info)
       break
     case "saveAs": // 另存为
       handleSave(info)
@@ -464,7 +464,7 @@ const handleTranslate = (data: DB_Message) => {
   translateText({ textList: data.payload.text })
 }
 
-const handleForward = (data: DB_Message) => {}
+// const handleForward = (data: DB_Message) => {}
 
 const handleReplyMsg = (data: DB_Message) => {
   chatStore.setReplyMsgData(data)

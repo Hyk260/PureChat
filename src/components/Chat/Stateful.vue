@@ -1,9 +1,9 @@
 <template>
-  <div v-if="isShowState(item)" class="stateful flex-c mt-auto">
+  <div v-if="shouldShowState(item)" class="stateful flex-c mt-auto">
     <!-- 发送中 -->
-    <div v-show="isShow('unSend')" class="iconify-icon svg-spinners"></div>
+    <div v-show="isStatus('unSend')" aria-label="发送中" class="iconify-icon svg-spinners"></div>
     <!-- 发送失败 -->
-    <div v-show="isShow('fail')" class="iconify-icon fluent-error"></div>
+    <div v-show="isStatus('fail')" aria-label="发送失败" class="iconify-icon fluent-error" @click="handleRetry"></div>
   </div>
 </template>
 
@@ -20,7 +20,7 @@ defineOptions({
 const props = defineProps({
   item: {
     type: Object as PropType<DB_Message>,
-    default: null,
+    required: true,
   },
   status: {
     type: String as PropType<MessageStatus>,
@@ -29,19 +29,23 @@ const props = defineProps({
   },
 })
 
-const isShow = (value: string) => {
+const isStatus = (value: MessageStatus) => {
   // return true
   return props.status === value
 }
 
-const isShowState = (item: DB_Message) => {
+const shouldShowState = (item: DB_Message) => {
   return (
     item.flow === "out" &&
     !item.isRevoked &&
     item.type !== "TIMTextElem" &&
     item.type !== "TIMGroupTipElem" &&
-    (isShow("unSend") || isShow("fail"))
+    (isStatus("unSend") || isStatus("fail"))
   )
+}
+
+const handleRetry = () => {
+  console.log("重试发送消息")
 }
 </script>
 
