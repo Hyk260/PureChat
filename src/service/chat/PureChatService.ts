@@ -29,7 +29,7 @@ export class PureChatService {
     if (this.chatService instanceof TencentChatService) {
       this.chatSDK = this.chatService.initialize()
     } else {
-      // this.chatSDK = this.chatService.initialize()
+      this.chatSDK = this.chatService.initialize()
     }
 
     return this.chatSDK as ChatSDK
