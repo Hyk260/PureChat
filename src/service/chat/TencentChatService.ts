@@ -1,4 +1,9 @@
-import type TencentCloudChatModule from "./types/tencent-cloud-chat"
+import TencentCloudChat from "@tencentcloud/chat"
+import GroupModule from "@tencentcloud/chat/modules/group-module.js"
+import SignalingModule from "@tencentcloud/chat/modules/signaling-module.js"
+import TIMUploadPlugin from "tim-upload-plugin"
+
+// import type TencentCloudChatModule from "./types/tencent-cloud-chat"
 import type { ChatSDK } from "./types/tencent-cloud-chat"
 
 /**
@@ -12,7 +17,7 @@ export class TencentChatService {
   /**
    * 初始化腾讯云聊天服务
    */
-  async initialize(): Promise<ChatSDK> {
+  initialize(): ChatSDK {
     const initStartTime = performance.now()
 
     try {
@@ -20,23 +25,21 @@ export class TencentChatService {
 
       // 动态加载腾讯云模块
       const moduleLoadStart = performance.now()
-      const [
-        { default: TencentCloudChat },
-        { default: GroupModule },
-        { default: SignalingModule },
-        { default: TIMUploadPlugin },
-      ] = await Promise.all([
-        // @ts-expect-error
-        import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js") as Promise<{
-          default: typeof TencentCloudChatModule
-        }>,
-        // @ts-expect-error
-        import(/* @vite-ignore */ "@tencentcloud/chat/modules/group-module.js"),
-        // @ts-expect-error
-        import(/* @vite-ignore */ "@tencentcloud/chat/modules/signaling-module.js"),
-        // @ts-expect-error
-        import(/* @vite-ignore */ "tim-upload-plugin"),
-      ])
+      // const [
+      //   { default: TencentCloudChat },
+      //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      //   { default: GroupModule },
+      //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      //   { default: SignalingModule },
+      //   { default: TIMUploadPlugin },
+      // ] = await Promise.all([
+      //   import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js") as Promise<{
+      //     default: typeof TencentCloudChatModule
+      //   }>,
+      //   import(/* @vite-ignore */ "@tencentcloud/chat/modules/group-module.js"),
+      //   import(/* @vite-ignore */ "@tencentcloud/chat/modules/signaling-module.js"),
+      //   import(/* @vite-ignore */ "tim-upload-plugin"),
+      // ])
 
       const moduleLoadTime = performance.now() - moduleLoadStart
       console.log(`📦 腾讯云模块加载完成 (${moduleLoadTime.toFixed(2)}ms)`)
@@ -80,7 +83,7 @@ export class TencentChatService {
       const totalInitTime = performance.now() - initStartTime
       console.log(`🎉 腾讯云 IM SDK 初始化完成 (总耗时: ${totalInitTime.toFixed(2)}ms)`)
 
-      return chat
+      return chat as ChatSDK
     } catch (error) {
       const failedInitTime = performance.now() - initStartTime
       console.error(`❌ 腾讯云 IM SDK 初始化失败 (耗时: ${failedInitTime.toFixed(2)}ms):`, error)

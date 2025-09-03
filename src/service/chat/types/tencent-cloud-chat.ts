@@ -2395,7 +2395,8 @@ export interface CREATE_OPTIONS {
 /**
  * TencentCloudChat is the namespace of the Chat Web SDK and provides the static method create() for creating SDK instances.
  */
-export namespace TencentCloudChat {
+// eslint-disable-next-line @typescript-eslint/no-namespace
+declare namespace TencentCloudChat {
   /**
    * Factory function of the Chat Web SDK, which is used to create SDK instances.
    * Before connecting, you need to create an Chat application in the Chat console and obtain the SDKAppID.
