@@ -3,20 +3,38 @@ import { domToBlob, domToJpeg, domToPng, domToSvg, domToWebp } from "modern-scre
 
 import { useState } from "@/hooks/useState"
 
-export const ImageType = {
-  Blob: "blob",
-  JPG: "jpg",
-  PNG: "png",
-  SVG: "svg",
-  WEBP: "webp",
+export enum ImageType {
+  Blob = "blob",
+  JPG = "jpg",
+  PNG = "png",
+  SVG = "svg",
+  WEBP = "webp",
 }
 
-export const imageTypeOptions = Object.values(ImageType).map((value) => ({
+interface ImageTypeOption {
+  label: string
+  value: ImageType
+}
+
+export const imageTypeOptions: ImageTypeOption[] = Object.values(ImageType).map((value) => ({
   label: value.toUpperCase(),
   value,
 }))
 
-const SCREENSHOT_FUNCTIONS = {
+type ScreenshotFunction = (
+  element: Element,
+  options?: {
+    features?: { removeControlCharacter: boolean }
+    scale?: number
+  }
+) => Promise<string | Blob>
+
+interface ScreenshotHook {
+  loading: boolean
+  onDownload: (imageType: ImageType, title?: string, callback?: () => void) => Promise<void>
+}
+
+const SCREENSHOT_FUNCTIONS: Record<ImageType, ScreenshotFunction> = {
   [ImageType.JPG]: domToJpeg,
   [ImageType.PNG]: domToPng,
   [ImageType.SVG]: domToSvg,
@@ -45,20 +63,22 @@ async function copyImageToClipboard(blob: Blob) {
  * @param {ImageType} imageType - 图像类型
  * @param {string} [title] - 可选标题
  */
-function downloadImage(dataUrl: string, imageType: string, title: string) {
+function downloadImage(dataUrl: string, imageType: ImageType, title: string = "") {
   const link = document.createElement("a")
-  const name = `${"PureChat"}_${title ? `${title}_` : ""}${dayjs().format("YYYY-MM-DD")}.${imageType}`
-  link.download = name
+  const fileName = `${"PureChat"}_${title ? `${title}_` : ""}${dayjs().format("YYYY-MM-DD")}.${imageType}`
+
+  link.download = fileName
   link.href = dataUrl
+
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
 }
 
-export const useScreenshot = () => {
+export const useScreenshot = (): ScreenshotHook => {
   const [loading, setLoading] = useState<boolean>(false)
 
-  const handleDownload = async (imageType = ImageType.JPG, title = "", callback: () => void) => {
+  const handleDownload = async (imageType = ImageType.JPG, title = "", callback?: () => void) => {
     setLoading(true)
 
     try {
@@ -95,7 +115,7 @@ export const useScreenshot = () => {
   }
 
   return {
-    loading,
+    loading: loading.value,
     onDownload: handleDownload,
   }
 }
