@@ -1,7 +1,7 @@
 // import { DB_Message } from "@/database/schemas/message"
-import { Message } from "@/service/chat/types/tencent-cloud-chat"
 import { timProxy } from "@/service/chat"
 import tim from "@/service/chat/PureChatService"
+import { Message } from "@/service/chat/types/tencent-cloud-chat"
 
 /**
  * 获取未读消息总数

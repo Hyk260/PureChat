@@ -1692,7 +1692,7 @@ export declare class ChatSDK {
    * - Messages sent by this API do not trigger the TencentCloudChat.EVENT.MESSAGE_RECEIVED event. Messages sent by the same account from other clients (or through the RESTful API) trigger the TencentCloudChat.EVENT.MESSAGE_RECEIVED event.
    * - Offline push is applicable only to Android or iOS terminals, and is not supported by web apps or WeChat Mini Programs.
    */
-  sendMessage(message: Message, options?: any): Promise<any>
+  sendMessage(message: Message, options?: any): Promise<{ code: number; data: { message: Message } }>
 
   /**
    * Recall a one-to-one message or a group message. If the recall is successful, the value of isRevoked for the recalled message is set to true.
@@ -2224,7 +2224,9 @@ export declare class ChatSDK {
    * Get the group member list.
    * - This API is used to pull paginated list of group members and not the complete list. To get the complete list of group members (memberNum), use getGroupProfile.
    */
-  getGroupMemberList(options: GET_GROUP_MEMBER_LIST_OPTIONS): Promise<{ code: number; data: { memberList: any[]; offset: number } }>
+  getGroupMemberList(
+    options: GET_GROUP_MEMBER_LIST_OPTIONS
+  ): Promise<{ code: number; data: { memberList: any[]; offset: number } }>
 
   /**
    * Get group member profiles, including muting durations.

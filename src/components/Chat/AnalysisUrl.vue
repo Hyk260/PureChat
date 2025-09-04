@@ -1,5 +1,5 @@
 <template>
-  <span v-html="processedText" @click="handleClick" />
+  <span @click="handleClick" v-html="processedText" />
 </template>
 
 <script setup lang="ts">
