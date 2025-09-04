@@ -8,43 +8,26 @@ import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
 
-// export class LocalChatService { }
+import type { ChatSDK } from "./types/tencent-cloud-chat"
 
-// export const localChatService = new LocalChatService()
+export class LocalChat {
+  static #instance: LocalChat | null = null
 
-export class LocalChatService {
-  /**
-   * 单例实例
-   * @private
-   * @static
-   * @type {LocalChatService|null}
-   */
-  static #instance = null
-
-  /**
-   * 初始化状态标识
-   * @private
-   * @type {boolean}
-   */
   isInitialized = false
 
   constructor() {
-    // if (LocalChatService.#instance) {
-    //   throw new Error("LocalChatService 是单例类，请使用 getInstance() 方法获取实例")
-    // }
+    if (LocalChat.#instance) {
+      throw new Error("LocalChat 是单例类，请使用 getInstance() 方法获取实例")
+    }
     this.isInitialized = false
   }
-  /**
-   * 获取单例实例
-   * @static
-   * @returns {LocalChatService} LocalChatService 实例
-   */
-  // static getInstance() {
-  //   if (!LocalChatService.#instance) {
-  //     LocalChatService.#instance = new LocalChatService()
-  //   }
-  //   return LocalChatService.#instance
-  // }
+
+  static getInstance(): LocalChat {
+    if (!LocalChat.#instance) {
+      LocalChat.#instance = new LocalChat()
+    }
+    return LocalChat.#instance
+  }
 
   /**
    * 初始化聊天系统
@@ -52,20 +35,18 @@ export class LocalChatService {
    * @private
    * @returns {Promise<void>}
    */
-  initialize() {
-    // if (this.isInitialized) return
+  async initialize() {
+    if (this.isInitialized) return
 
     try {
-      const conversationList = this.loadConversationList()
+      const conversationList = await this.loadConversationList()
 
       this.isInitialized = true
 
       this.emit("sdkStateReady", { name: "sdkStateReady" })
       this.emit("onConversationListUpdated", { data: conversationList })
-
-      return new LocalChatService()
     } catch (error) {
-      console.error("LocalChatService 初始化失败:", error)
+      console.error("LocalChat 初始化失败:", error)
       throw error
     }
   }
@@ -88,12 +69,12 @@ export class LocalChatService {
   /**
    * 创建聊天实例
    * @param {Object} [data] 创建数据
-   * @returns {LocalChatService} LocalChatService 实例
+   * @returns {LocalChat} LocalChat 实例
    */
   create(data) {
     localStg.set("User-Model", { username: UserProfile.userID })
     console.log("create local chat", data)
-    return LocalChatService.getInstance()
+    return LocalChat.getInstance()
   }
 
   /**
@@ -534,6 +515,19 @@ export class LocalChatService {
       console.error("登出失败:", error)
       return { code: -1, data: { message: {} } }
     }
+  }
+  destroy() {}
+}
+
+export const localChat = LocalChat.getInstance()
+
+export class LocalChatService {
+  constructor() {}
+  initialize(): ChatSDK {
+    if (!localChat) {
+      throw new Error("LocalChat instance is not available")
+    }
+    return localChat.create({})
   }
 }
 

@@ -83,7 +83,7 @@ export class TencentChatService {
       const totalInitTime = performance.now() - initStartTime
       console.log(`🎉 腾讯云 IM SDK 初始化完成 (总耗时: ${totalInitTime.toFixed(2)}ms)`)
 
-      return chat as ChatSDK
+      return chat as unknown as ChatSDK
     } catch (error) {
       const failedInitTime = performance.now() - initStartTime
       console.error(`❌ 腾讯云 IM SDK 初始化失败 (耗时: ${failedInitTime.toFixed(2)}ms):`, error)

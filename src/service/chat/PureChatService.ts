@@ -52,7 +52,7 @@ export class PureChatService {
       }),
     }
     console.log("🔧 开发模式：聊天服务调试工具已启用")
-    console.log("使用 window.__CHAT_DEBUG__ 访问调试功能")
+    console.log("使用 window.__TIM_DEBUG__ 访问调试功能")
   }
 
   public static getInstance(): PureChatService {
