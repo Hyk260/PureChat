@@ -1,4 +1,4 @@
-import tim from "@/service/IM/im-sdk/tim"
+import tim from "@/service/chat/PureChatService"
 import { fileUploading, getCloudCustomData } from "@/utils/chat/index"
 import { getCustomMsgContent, updateImageSize } from "@/utils/common"
 

@@ -32,7 +32,7 @@ export class PureChatService {
       this.chatSDK = this.chatService.initialize()
     }
 
-    return this.chatSDK as ChatSDK
+    return this.chatSDK
   }
 
   /**
@@ -87,3 +87,7 @@ export class PureChatService {
 }
 
 export const pureChatService = PureChatService.getInstance()
+
+export const chatInstance = pureChatService.initialize()
+
+export default chatInstance

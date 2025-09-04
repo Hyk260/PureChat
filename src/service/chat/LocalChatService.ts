@@ -11,29 +11,25 @@ import { uuid } from "@/utils/uuid"
 import type { ChatSDK } from "./types/tencent-cloud-chat"
 
 export class LocalChat {
-  static #instance: LocalChat | null = null
-
+  static instance: LocalChat | null = null
   isInitialized = false
 
   constructor() {
-    if (LocalChat.#instance) {
+    if (LocalChat.instance) {
       throw new Error("LocalChat 是单例类，请使用 getInstance() 方法获取实例")
     }
     this.isInitialized = false
   }
 
   static getInstance(): LocalChat {
-    if (!LocalChat.#instance) {
-      LocalChat.#instance = new LocalChat()
+    if (!LocalChat.instance) {
+      LocalChat.instance = new LocalChat()
     }
-    return LocalChat.#instance
+    return LocalChat.instance
   }
 
   /**
    * 初始化聊天系统
-   * 加载会话列表并触发就绪事件
-   * @private
-   * @returns {Promise<void>}
    */
   async initialize() {
     if (this.isInitialized) return
@@ -53,8 +49,6 @@ export class LocalChat {
 
   /**
    * 加载会话列表
-   * @private
-   * @returns {Promise<Array>} 会话列表
    */
   async loadConversationList() {
     try {
@@ -68,8 +62,6 @@ export class LocalChat {
 
   /**
    * 创建聊天实例
-   * @param {Object} [data] 创建数据
-   * @returns {LocalChat} LocalChat 实例
    */
   create(data) {
     localStg.set("User-Model", { username: UserProfile.userID })
@@ -79,30 +71,23 @@ export class LocalChat {
 
   /**
    * 注册事件监听器
-   * @param {string} eventName 事件名称
-   * @param {Function} handler 处理函数
-   * @param {Object} [context=null] 上下文对象
    */
-  on(eventName, handler, context = null) {
+  on(eventName: string, handler: any, context = null) {
     const boundHandler = context ? handler.bind(context) : handler
     emitter.on(eventName, boundHandler)
   }
 
   /**
    * 移除事件监听器
-   * @param {string} eventName 事件名称
-   * @param {Function} handler 处理函数
    */
-  off(event, handler) {
+  off(event: string, handler: any) {
     emitter.off(event, handler)
   }
 
   /**
    * 触发事件
-   * @param {string} eventName 事件名称
-   * @param {*} data 事件数据
    */
-  emit(eventName, handler) {
+  emit(eventName: string, handler: any) {
     emitter.emit(eventName, handler)
   }
 
@@ -352,10 +337,6 @@ export class LocalChat {
 
   /**
    * 获取消息列表
-   * @param {Object} data 查询参数
-   * @param {string} data.conversationID 会话ID
-   * @param {string} [data.nextReqMessageID=""] 下一页消息ID
-   * @returns {Promise<{code: number, data: {nextReqMessageID: string, isCompleted: boolean, messageList: Array}}>} 消息列表
    */
   async getMessageList(data) {
     try {
@@ -385,8 +366,6 @@ export class LocalChat {
 
   /**
    * 批量删除消息
-   * @param {Array<{ID: string}>} messages 要删除的消息列表
-   * @returns {Promise<{code: number, data: {messageList: Array}}>} 删除结果
    */
   async deleteMessage(messages) {
     try {
@@ -408,10 +387,6 @@ export class LocalChat {
 
   /**
    * 删除会话
-   * @param {Object} params 删除参数
-   * @param {string[]} [params.conversationIDList=[]] 会话ID列表
-   * @param {boolean} [params.clearHistoryMessage=false] 是否清空历史消息
-   * @returns {Promise<{code: number, data: {conversationID: string}}>} 删除结果
    */
   async deleteConversation({ conversationIDList = [], clearHistoryMessage = false }) {
     try {
@@ -435,8 +410,6 @@ export class LocalChat {
 
   /**
    * 清空历史消息
-   * @param {string} sessionId 会话ID
-   * @returns {Promise<{data: {conversationID: string}, code: number}>} 清空结果
    */
   async clearHistoryMessage(sessionId) {
     try {
@@ -471,11 +444,6 @@ export class LocalChat {
 
   /**
    * 修改消息
-   * @param {Object} data 修改的消息数据
-   * @param {string} data.ID 消息ID
-   * @param {Object} data.payload 消息载荷
-   * @param {string} data.payload.text 消息文本
-   * @returns {Promise<{code: number, data: {message: Object}}>} 修改结果
    */
   async modifyMessage(data) {
     try {
@@ -501,7 +469,6 @@ export class LocalChat {
 
   /**
    * 登出
-   * @returns {Promise<{code: number, data: {message: Object}}>} 登出结果
    */
   async logout() {
     try {

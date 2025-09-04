@@ -5,8 +5,8 @@ import { defineStore } from "pinia"
 import localAvatar from "@/assets/images/avatar.png"
 import router from "@/router"
 import { login, logout } from "@/service/api/index"
-import { timProxy } from "@/service/IM"
-import chat from "@/service/IM/im-sdk/tim"
+import { timProxy } from "@/service/chat"
+import chat from "@/service/chat/PureChatService"
 import { useAuthStore, useChatStore } from "@/stores"
 import { SetupStoreId } from "@/stores/enum"
 import emitter from "@/utils/mitt-bus"
@@ -18,9 +18,9 @@ import type {
   HandleUserLoginPayload,
   LoginResult,
   UserLocalStore,
-  UserProfile,
   UserState,
 } from "./type"
+import type { Profile } from "@/service/chat/types/tencent-cloud-chat"
 
 export const useUserStore = defineStore(SetupStoreId.User, {
   state: (): UserState => ({
@@ -46,7 +46,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     setVerifyCode(val: string) {
       this.verifyCode = val
     },
-    setCurrentProfile(user: UserProfile) {
+    setCurrentProfile(user: Profile) {
       this.userProfile = user
     },
     setUserLocalStore(data: Partial<UserLocalStore>) {

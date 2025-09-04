@@ -8,7 +8,7 @@ import { getAiAvatarUrl, getModelType } from "@/ai/utils"
 import { generateReferencePrompt } from "@/config/prompts"
 import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX } from "@/constants"
 import { MessageModel } from "@/database/models/message"
-import { timProxy } from "@/service/IM"
+import { timProxy } from "@/service/chat"
 import {
   clearHistoryMessage,
   createTextMessage,
@@ -497,14 +497,14 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
     },
   },
-  persist: {
-    pick: [
-      "noMore",
-      "isChatSessionListCollapsed",
-      "isChatBoxVisible",
-      "currentConversation",
-      "currentMessageList",
-      "conversationList",
-    ],
-  },
+  // persist: {
+  //   pick: [
+  //     "noMore",
+  //     "isChatSessionListCollapsed",
+  //     "isChatBoxVisible",
+  //     "currentConversation",
+  //     "currentMessageList",
+  //     "conversationList",
+  //   ],
+  // },
 })

@@ -1,4 +1,4 @@
-import tim from "@/service/IM/im-sdk/tim"
+import tim from "@/service/chat/PureChatService"
 
 const GroupType = {
   GRP_WORK: "Private", // 好友工作群，默认

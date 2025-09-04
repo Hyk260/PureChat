@@ -1,4 +1,4 @@
-import tim from "@/service/IM/im-sdk/tim"
+import tim from "@/service/chat/PureChatService"
 
 import type { Profile, UPDATE_YOUR_PROFILE_OPTIONS } from "@/service/chat/types/tencent-cloud-chat"
 

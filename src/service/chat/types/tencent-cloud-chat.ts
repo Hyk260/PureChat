@@ -1545,6 +1545,11 @@ export interface Signaling {
  */
 export declare class ChatSDK {
   /**
+   * 初始化 SDK 实例
+   * __LOCAL_MODE__ 为 true 时，使用本地聊天模式
+   */
+  initialize(): void
+  /**
    * Log in to the Chat SDK using userID and userSig. The login process contains several steps that are executed asynchronously, and the returned Promise object is used to process login success or failure.
    * - After successful login, to call APIs that require authentication, such as sendMessage, you must wait until the SDK enters the ready state (you can obtain the status of the SDK by listening to the TencentCloudChat.EVENT.SDK_READY event).<br/>
    * - By default, multi-instance login is not supported. If you use an account that has been logged in on another page to log in on the current page, the account may be forcibly logged out on the other page, which will trigger the TencentCloudChat.EVENT.KICKED_OUT event. You can proceed accordingly after detecting the event through listening.
@@ -1926,7 +1931,7 @@ export declare class ChatSDK {
   /**
    * Get your personal profile.
    */
-  getMyProfile(): Promise<any>
+  getMyProfile(): Promise<{ code: number; data: Profile }>
 
   /**
    * Get other users' profiles. This API will get both standard profile fields and custom profile fields at the same time.

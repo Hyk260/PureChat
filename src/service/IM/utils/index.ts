@@ -11,7 +11,7 @@ export function kickedOutReason(type: string) {
     case "userSigExpired":
       return "由于 userSig 过期"
     default:
-      return ""
+      return "未知原因"
   }
 }
 

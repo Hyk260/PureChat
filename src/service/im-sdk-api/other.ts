@@ -1,5 +1,5 @@
 import { PIN_CONVERSATION_OPTIONS, SET_MESSAGE_REMIND_TYPE_OPTIONS, TRANSLATE_TEXT_OPTIONS } from "@/service/chat/types/tencent-cloud-chat"
-import tim from "@/service/IM/im-sdk/tim"
+import tim from "@/service/chat/PureChatService"
 
 import type { DB_Message } from "@/database/schemas/message"
 import type { DB_Session } from "@/database/schemas/session"
