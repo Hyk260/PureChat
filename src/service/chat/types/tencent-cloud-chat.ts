@@ -2108,28 +2108,28 @@ export declare class ChatSDK {
   /**
    * Get your group list when you need to render or refresh **My Groups**.
    */
-  getGroupList(): Promise<any>
+  getGroupList(): Promise<{ code: number; data: { groupList: any[] } }>
 
   /**
    * Get a group profile.
    */
-  getGroupProfile(options: GET_GROUP_PROFILE_OPTIONS): Promise<any>
+  getGroupProfile(options: GET_GROUP_PROFILE_OPTIONS): Promise<{ code: number; data: { group: any } }>
 
   /**
    * Create a group.
    * - After creating an audio-video group (TencentCloudChat.TYPES.GRP_AVCHATROOM) via this API, you need to call the joinGroup API to join the group to enable the messaging process.
    */
-  createGroup(options: CREATE_GROUP_OPTIONS): Promise<any>
+  createGroup(options: CREATE_GROUP_OPTIONS): Promise<{ code: number; data: { group: any } }>
 
   /**
    * This API is used by a group owner to delete a group.
    */
-  dismissGroup(groupID: string): Promise<any>
+  dismissGroup(groupID: string): Promise<{ code: number; data: { groupID: string } }>
 
   /**
    * Modify a group profile.
    */
-  updateGroupProfile(options: UPDATE_GROUP_PROFILE_OPTIONS): Promise<any>
+  updateGroupProfile(options: UPDATE_GROUP_PROFILE_OPTIONS): Promise<{ code: number; data: { group: any } }>
 
   /**
    * Request to join a specific group.
@@ -2142,7 +2142,7 @@ export declare class ChatSDK {
    * Leave a group.
    * - A group owner can only leave work groups. After the group owner leaves a work group, the work group has no group owner.
    */
-  quitGroup(groupID: string): Promise<any>
+  quitGroup(groupID: string): Promise<{ code: number; data: any }>
 
   /**
    * Search for a group by groupID.
@@ -2224,7 +2224,7 @@ export declare class ChatSDK {
    * Get the group member list.
    * - This API is used to pull paginated list of group members and not the complete list. To get the complete list of group members (memberNum), use getGroupProfile.
    */
-  getGroupMemberList(options: GET_GROUP_MEMBER_LIST_OPTIONS): Promise<any>
+  getGroupMemberList(options: GET_GROUP_MEMBER_LIST_OPTIONS): Promise<{ code: number; data: { memberList: any[]; offset: number } }>
 
   /**
    * Get group member profiles, including muting durations.
@@ -2238,12 +2238,12 @@ export declare class ChatSDK {
    * - TencentCloudChat.TYPES.GRP_PUBLIC (public group)/TencentCloudChat.TYPES.GRP_MEETING (meeting group): only the app admin can invite users to the group and approval by the invitee is not required.
    * - TencentCloudChat.TYPES.GRP_AVCHATROOM (audio-video chat room): no member (including the app admin) is allowed to invite any user to the group.
    */
-  addGroupMember(options: ADD_GROUP_MEMBER_OPTIONS): Promise<any>
+  addGroupMember(options: ADD_GROUP_MEMBER_OPTIONS): Promise<{ code: number; data: any }>
 
   /**
    * Delete group members. Only the group owner can delete group members.
    */
-  deleteGroupMember(options: DELETE_GROUP_MEMBER_OPTIONS): Promise<any>
+  deleteGroupMember(options: DELETE_GROUP_MEMBER_OPTIONS): Promise<{ code: number; data: any }>
 
   /**
    * Set the muting duration for a group member. You can mute or unmute a group member. The muting and unmuting features are unavailable for work groups (TencentCloudChat.TYPES.GRP_WORK).

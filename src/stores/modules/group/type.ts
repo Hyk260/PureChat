@@ -75,24 +75,9 @@ export interface GroupProfileResponse extends ApiResponse {
   data: GroupProfile
 }
 
-// 创建群组参数
-export interface CreateGroupParams {
-  groupName: string
-  type?: GroupType
-  memberList?: string[]
-  introduction?: string
-  notification?: string
-  avatar?: string
-}
-
 // 创建群组响应
 export interface CreateGroupResponse extends ApiResponse {
   group: GroupInfo
-}
-
-// 退出群组参数
-export interface QuitGroupParams {
-  groupId: string
 }
 
 // 解散群组参数
@@ -102,18 +87,6 @@ export interface DismissGroupParams {
 
 // 解散群组响应
 export interface DismissGroupResponse extends ApiResponse {
-  groupID: string
-}
-
-// 获取群组成员列表参数
-export interface GetGroupMemberListParams {
-  groupID: string
-  count?: number
-  offset?: number
-}
-
-// 获取群组资料参数
-export interface GetGroupProfileParams {
   groupID: string
 }
 

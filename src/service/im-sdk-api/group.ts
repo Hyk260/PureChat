@@ -1,6 +1,8 @@
 import tim from "@/service/chat/PureChatService"
+import { CREATE_GROUP_OPTIONS } from "@/service/chat/types/tencent-cloud-chat"
+import TencentCloudChat from "@/service/chat/types/tencent-cloud-chat"
 
-const GroupType = {
+export const GroupType = {
   GRP_WORK: "Private", // 好友工作群，默认
   GRP_PUBLIC: "Public", // 陌生人社交群
   GRP_MEETING: "ChatRoom", // 临时会议群
@@ -23,11 +25,8 @@ const ModifyType = {
   GROUP_MUTE_ALL_MEMBERS: "muteAllMembers", // 修改群禁言
 } as const
 
-// 类型定义
-export type GroupTypeValue = (typeof GroupType)[keyof typeof GroupType]
 export type ModifyTypeValue = (typeof ModifyType)[keyof typeof ModifyType]
 
-// 创建群组参数类型
 export interface CreateGroupParams {
   groupName: string
   memberList?: string[]
@@ -36,92 +35,14 @@ export interface CreateGroupParams {
   avatar?: string
 }
 
-// 创建群组响应类型
-export interface CreateGroupResponse {
-  code: number
-  group: any // 可以根据实际需要定义更具体的类型
-}
-
-// 退出群组参数类型
-export interface QuitGroupParams {
-  groupId: string
-}
-
-// 退出群组响应类型
-export interface QuitGroupResponse {
-  code: number
-  data: any
-}
-
-// 获取群成员列表参数类型
-export interface GetGroupMemberListParams {
-  groupID: string
-  count?: number
-  offset?: number
-}
-
-// 获取群成员列表响应类型
-export interface GetGroupMemberListResponse {
-  code: number
-  memberList: any[]
-}
-
-// 更新群组资料参数类型
 export interface UpdateGroupProfileParams {
   groupID: string
   modify?: ModifyTypeValue
   value?: string | Array<{ key: string; value: string }>
 }
 
-// 更新群组资料响应类型
-export interface UpdateGroupProfileResponse {
-  code: number
-  group: any
-}
-
-// 添加群成员参数类型
-export interface AddGroupMemberParams {
-  groupID: string
-  user: string | string[]
-}
-
-// 添加群成员响应类型
-export interface AddGroupMemberResponse {
-  code: number
-  data: any
-}
-
-// 删除群成员参数类型
-export interface DeleteGroupMemberParams {
-  groupID: string
-  user: string | string[]
-}
-
-// 删除群成员响应类型
-export interface DeleteGroupMemberResponse {
-  code: number
-  data: any
-}
-
-// 获取群组列表响应类型
-export interface GetGroupListResponse {
-  code: number
-  groupList: any[]
-}
-
-// 获取群组资料参数类型
-export interface GetGroupProfileParams {
-  groupID: string
-}
-
-// 获取群组资料响应类型
-export interface GetGroupProfileResponse {
-  code: number
-  data: any
-}
-
 // 解散群
-export const dismissGroup = async (groupId: string): Promise<{ code: number; groupID: string }> => {
+export const dismissGroup = async (groupId: string) => {
   const {
     code,
     data: { groupID },
@@ -133,8 +54,8 @@ export const dismissGroup = async (groupId: string): Promise<{ code: number; gro
 // https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createGroup
 export const createGroup = async (
   params: CreateGroupParams,
-  type: GroupTypeValue = GroupType.GRP_PUBLIC
-): Promise<CreateGroupResponse> => {
+  type: CREATE_GROUP_OPTIONS["type"] = TencentCloudChat.TYPES.GRP_PUBLIC
+) => {
   const { groupName } = params
   const {
     code,
@@ -158,7 +79,7 @@ export const createGroup = async (
 }
 
 // 退出群
-export const quitGroup = async (params: QuitGroupParams): Promise<QuitGroupResponse> => {
+export const quitGroup = async (params: { groupId: string }) => {
   const { groupId } = params
   const { code, data } = await tim.quitGroup(groupId)
   return {
@@ -168,7 +89,7 @@ export const quitGroup = async (params: QuitGroupParams): Promise<QuitGroupRespo
 }
 
 // 获取群成员列表
-export const getGroupMemberList = async (params: GetGroupMemberListParams): Promise<GetGroupMemberListResponse> => {
+export const getGroupMemberList = async (params: { groupID: string; count?: number; offset?: number }) => {
   const { groupID, count = 20 } = params // offset
   const {
     code,
@@ -183,13 +104,8 @@ export const getGroupMemberList = async (params: GetGroupMemberListParams): Prom
 
 /**
  * 更新群组资料
- * @param {UpdateGroupProfileParams} params - 参数对象
- * @param {string} params.groupID - 群组 ID
- * @param {ModifyTypeValue} params.modify - 待修改的属性名称，可选值为：name、introduction、notification、groupCustomField
- * @param {string | Array<{key: string, value: string}>} params.value - 待修改的属性值，当 modify 为 groupCustomField 时，需传入数组类型的值 [{key: "xxx", value: "xxx"}]
- * @returns {Promise<UpdateGroupProfileResponse>} - 包含状态码和群组资料的对象
  */
-export const updateGroupProfile = async (params: UpdateGroupProfileParams): Promise<UpdateGroupProfileResponse> => {
+export const updateGroupProfile = async (params: UpdateGroupProfileParams) => {
   const { groupID, modify = ModifyType.GROUP_NAME, value = "" } = params
   const parameter = {
     groupID,
@@ -208,7 +124,7 @@ export const updateGroupProfile = async (params: UpdateGroupProfileParams): Prom
 }
 
 // 添加群成员
-export const addGroupMember = async (params: AddGroupMemberParams): Promise<AddGroupMemberResponse> => {
+export const addGroupMember = async (params: { groupID: string; user: string | string[] }) => {
   const { groupID, user } = params
   const parameter = {
     groupID: groupID,
@@ -221,8 +137,10 @@ export const addGroupMember = async (params: AddGroupMemberParams): Promise<AddG
   }
 }
 
-// 删除群成员
-export const deleteGroupMember = async (params: DeleteGroupMemberParams): Promise<DeleteGroupMemberResponse> => {
+/**
+ * 删除群成员
+ */
+export const deleteGroupMember = async (params: { groupID: string; user: string | string[] }) => {
   const { groupID, user } = params
   const parameter = {
     groupID: groupID,
@@ -240,8 +158,10 @@ export const deleteGroupMember = async (params: DeleteGroupMemberParams): Promis
   }
 }
 
-// 获取群组列表
-export const getGroupList = async (): Promise<GetGroupListResponse> => {
+/**
+ * 获取群组列表
+ */
+export const getGroupList = async () => {
   const {
     code,
     data: { groupList },
@@ -249,8 +169,10 @@ export const getGroupList = async (): Promise<GetGroupListResponse> => {
   return { code, groupList }
 }
 
-// 获取群详细资料
-export const getGroupProfile = async (params: GetGroupProfileParams): Promise<GetGroupProfileResponse> => {
+/**
+ * 获取群组资料
+ */
+export const getGroupProfile = async (params: { groupID: string }) => {
   try {
     const { groupID } = params
     const {

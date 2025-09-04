@@ -131,7 +131,7 @@ export class TIMProxy {
     console.log("[chat] SDK 状态更新:", name)
     this.isSDKReady = name === "sdkStateReady"
     if (!this.isSDKReady) {
-      console.warn("[chat] SDK 未就绪，等待就绪状态")
+      console.warn(`[chat] SDK 未就绪，等待就绪状态 ${name}`)
       return
     }
     // SDK 就绪后获取用户信息
