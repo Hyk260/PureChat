@@ -1,6 +1,5 @@
 import { localChat } from "@/service/IM/chat/local"
 
-// import { pureChatService } from "@/service/chat/PureChatService"
 import type TencentCloudChatModule from "@/service/chat/types/tencent-cloud-chat"
 import type { ChatSDK } from "@/service/chat/types/tencent-cloud-chat"
 
@@ -204,5 +203,3 @@ const handler: ProxyHandler<Record<string, never>> = {
 const tim: ChatInstance = new Proxy({}, handler)
 
 export default tim
-
-// export default pureChatService.initialize()

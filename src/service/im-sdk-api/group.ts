@@ -1,6 +1,6 @@
 import tim from "@/service/chat/PureChatService"
 import { CREATE_GROUP_OPTIONS } from "@/service/chat/types/tencent-cloud-chat"
-import TencentCloudChat from "@/service/chat/types/tencent-cloud-chat"
+// import TencentCloudChat from "@/service/chat/types/tencent-cloud-chat"
 
 export const GroupType = {
   GRP_WORK: "Private", // 好友工作群，默认
@@ -52,10 +52,7 @@ export const dismissGroup = async (groupId: string) => {
 
 // 创建群
 // https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createGroup
-export const createGroup = async (
-  params: CreateGroupParams,
-  type: CREATE_GROUP_OPTIONS["type"] = TencentCloudChat.TYPES.GRP_PUBLIC
-) => {
+export const createGroup = async (params: CreateGroupParams, type = GroupType.GRP_PUBLIC) => {
   const { groupName } = params
   const {
     code,
