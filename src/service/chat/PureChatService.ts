@@ -1,5 +1,5 @@
-import { LocalChatService } from "./LocalChatService"
-import { TencentChatService } from "./TencentChatService"
+import { LocalChatService, localChatService } from "./LocalChatService"
+import { TencentChatService, tencentChatService } from "./TencentChatService"
 
 import type { ChatSDK } from "./types/tencent-cloud-chat"
 
@@ -12,10 +12,10 @@ export class PureChatService {
   private constructor() {
     if (this.isLocalMode) {
       console.log("🏠 PureChatService: 使用本地聊天模式")
-      this.chatService = new LocalChatService()
+      this.chatService = localChatService
     } else {
       console.log("☁️ PureChatService: 使用腾讯云聊天模式")
-      this.chatService = new TencentChatService()
+      this.chatService = tencentChatService
     }
 
     this.initialize()

@@ -67,8 +67,6 @@ export class TIMProxy {
   }
 
   init() {
-    console.log("[chat] TIMProxy 开始初始化")
-
     if (this.once) {
       console.log("[chat] TIMProxy 已初始化，跳过重复初始化")
       return
@@ -76,8 +74,6 @@ export class TIMProxy {
 
     this.once = true
     this.initListener()
-
-    console.log("[chat] TIMProxy 初始化完成")
   }
 
   initListener() {
@@ -187,8 +183,10 @@ export class TIMProxy {
     const currentConversation = data.find((conv) => conv.conversationID === currentSessionId)
     if (currentConversation) {
       chatStore.setCurrentConversation(cloneDeep(currentConversation))
+
       this.reportedMessageRead({
         conversationID: currentConversation.conversationID,
+        unreadCount: currentConversation.unreadCount ?? 0,
       })
     }
 
@@ -435,6 +433,7 @@ export class TIMProxy {
     if (shouldMarkRead) {
       this.reportedMessageRead({
         conversationID: message?.conversationID ?? "",
+        unreadCount: 1,
       })
     }
 

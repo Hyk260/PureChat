@@ -136,70 +136,70 @@ async function initChat(): Promise<ChatInstance> {
 /**
  * Proxy 处理器对象
  */
-const handler: ProxyHandler<Record<string, never>> = {
-  /**
-   * 拦截属性访问
-   *
-   * @param {Record<string, never>} target - 代理目标对象（空对象）
-   * @param {string|symbol} propKey - 被访问的属性名
-   * @returns {*} 属性值或代理函数
-   *
-   */
-  get(target: Record<string, never>, propKey: string | symbol): any {
-    if (instance && typeof propKey === "string" && propKey in instance) {
-      const value: any = instance[propKey]
-      return typeof value === "function" ? value.bind(instance) : value
-    }
+// const handler: ProxyHandler<Record<string, never>> = {
+//   /**
+//    * 拦截属性访问
+//    *
+//    * @param {Record<string, never>} target - 代理目标对象（空对象）
+//    * @param {string|symbol} propKey - 被访问的属性名
+//    * @returns {*} 属性值或代理函数
+//    *
+//    */
+//   get(target: Record<string, never>, propKey: string | symbol): any {
+//     if (instance && typeof propKey === "string" && propKey in instance) {
+//       const value: any = instance[propKey]
+//       return typeof value === "function" ? value.bind(instance) : value
+//     }
 
-    return async (...args: any[]): Promise<any> => {
-      if (!instance) {
-        if (!isInitializing) {
-          isInitializing = true
-          initPromise = initChat()
+//     return async (...args: any[]): Promise<any> => {
+//       if (!instance) {
+//         if (!isInitializing) {
+//           isInitializing = true
+//           initPromise = initChat()
 
-          try {
-            instance = await initPromise
-          } catch (error: any) {
-            isInitializing = false
-            initPromise = null
-            throw error
-          }
+//           try {
+//             instance = await initPromise
+//           } catch (error: any) {
+//             isInitializing = false
+//             initPromise = null
+//             throw error
+//           }
 
-          isInitializing = false
-        } else {
-          await initPromise
-        }
-      }
+//           isInitializing = false
+//         } else {
+//           await initPromise
+//         }
+//       }
 
-      // 此时 instance 已经确保不为 null
-      if (!(typeof propKey === "string" && propKey in instance!)) {
-        throw new Error(`方法 '${String(propKey)}' 在 IM SDK 中不存在`)
-      }
+//       // 此时 instance 已经确保不为 null
+//       if (!(typeof propKey === "string" && propKey in instance!)) {
+//         throw new Error(`方法 '${String(propKey)}' 在 IM SDK 中不存在`)
+//       }
 
-      const method: any = instance![propKey]
+//       const method: any = instance![propKey]
 
-      if (typeof method !== "function") {
-        return method
-      }
+//       if (typeof method !== "function") {
+//         return method
+//       }
 
-      try {
-        return await method.apply(instance!, args)
-      } catch (error: any) {
-        console.error(`调用 IM SDK 方法 '${String(propKey)}' 失败:`, error)
-        throw error
-      }
-    }
-  },
+//       try {
+//         return await method.apply(instance!, args)
+//       } catch (error: any) {
+//         console.error(`调用 IM SDK 方法 '${String(propKey)}' 失败:`, error)
+//         throw error
+//       }
+//     }
+//   },
 
-  has(target: Record<string, never>, propKey: string | symbol): boolean {
-    return instance ? propKey in instance : true
-  },
+//   has(target: Record<string, never>, propKey: string | symbol): boolean {
+//     return instance ? propKey in instance : true
+//   },
 
-  ownKeys(target: Record<string, never>): (string | symbol)[] {
-    return instance ? Object.keys(instance) : []
-  },
-}
+//   ownKeys(target: Record<string, never>): (string | symbol)[] {
+//     return instance ? Object.keys(instance) : []
+//   },
+// }
 
-const tim: ChatInstance = new Proxy({}, handler)
+// const tim: ChatInstance = new Proxy({}, handler)
 
-export default tim
+// export default tim

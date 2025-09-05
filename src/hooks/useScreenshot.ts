@@ -30,7 +30,7 @@ type ScreenshotFunction = (
 ) => Promise<string | Blob>
 
 interface ScreenshotHook {
-  loading: boolean
+  loading: globalThis.Ref<boolean, boolean>
   onDownload: (imageType: ImageType, title?: string, callback?: () => void) => Promise<void>
 }
 
@@ -115,7 +115,7 @@ export const useScreenshot = (): ScreenshotHook => {
   }
 
   return {
-    loading: loading.value,
+    loading: loading,
     onDownload: handleDownload,
   }
 }

@@ -63,9 +63,8 @@ export class LocalChat {
   /**
    * 创建聊天实例
    */
-  create(data) {
+  create() {
     localStg.set("User-Model", { username: UserProfile.userID })
-    console.log("create local chat", data)
     return LocalChat.getInstance()
   }
 
@@ -489,13 +488,32 @@ export class LocalChat {
 export const localChat = LocalChat.getInstance()
 
 export class LocalChatService {
-  constructor() {}
-  initialize(): ChatSDK {
-    if (!localChat) {
-      throw new Error("LocalChat instance is not available")
+  private static instance: LocalChatService
+  private chat: ChatSDK | null = null
+
+  private constructor() {
+    // 私有构造函数，防止外部直接实例化
+  }
+
+  public static getInstance(): LocalChatService {
+    if (!LocalChatService.instance) {
+      LocalChatService.instance = new LocalChatService()
     }
-    return localChat.create({})
+    return LocalChatService.instance
+  }
+
+  /**
+   * 初始化
+   */
+  public initialize(): ChatSDK {
+    if (this.chat) {
+      console.warn("Chat SDK已经初始化，将返回现有实例")
+      return this.chat
+    }
+
+    this.chat = localChat.create({})
+    return this.chat as ChatSDK
   }
 }
 
-export const localChatService = new LocalChatService()
+export const localChatService = LocalChatService.getInstance()

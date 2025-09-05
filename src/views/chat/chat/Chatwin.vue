@@ -287,9 +287,11 @@ const updateScrollbar = () => {
 }
 
 const loadMoreMsg = async () => {
+  if (!currentConversation.value) return
   try {
     const { conversationID: sessionId } = currentConversation.value
     const msglist = currentMessageList.value
+    if (!msglist.length) return
     const nextMsg = validateLastMessage(msglist)
     // console.log("nextMsg:", nextMsg);
 
@@ -304,7 +306,7 @@ const loadMoreMsg = async () => {
 
     const result = await getMessageList({
       conversationID: sessionId,
-      nextReqMessageID: nextMsg.ID,
+      nextReqMessageID: nextMsg?.ID || "",
     })
 
     // console.log("getMessageList:", result);

@@ -15,8 +15,9 @@ import emitter from "@/utils/mitt-bus"
 import type { DB_Message } from "@/database/schemas/message"
 import type { GroupMember } from "@/stores/modules/group/type"
 
-export const validateLastMessage = (list: DB_Message[]) => {
-  return list.slice().find((t) => t.ID) || ""
+export const validateLastMessage = (list: DB_Message[]): DB_Message | null => {
+  if (!list.length) return null
+  return list.slice().find((t) => t.ID) || null
 }
 
 // 复制

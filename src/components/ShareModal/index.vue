@@ -112,6 +112,8 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref } from "vue"
+
 import { getAiAvatarUrl } from "@/ai/utils"
 import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"
 import { ImageType, imageTypeOptions, useScreenshot } from "@/hooks/useScreenshot"
@@ -160,10 +162,6 @@ const fnAvatar = (item) => {
 }
 
 const handleDownload = async () => {
-  loading.value = true
-
-  await new Promise((resolve) => setTimeout(resolve, 500))
-
   onDownload(imageType.value, roleText.value, () => {
     setDialogVisible(false)
   })

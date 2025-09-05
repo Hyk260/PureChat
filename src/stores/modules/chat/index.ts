@@ -169,8 +169,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     setNoMore(bool: boolean) {
       this.noMore = bool
     },
-    updateSendingState(sessionId: string, type: string) {
-      // set delete
+    updateSendingState(sessionId: string, type: "delete" | "add") {
       if (!this.isAssistant) return
       if (type === "delete") {
         this.sendingMap.delete(sessionId)
@@ -228,11 +227,15 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       console.log("[chat] 添加消息 addMessage:", payload)
       const { conversationID, message, isDone } = payload || {}
       if (this.currentConversation) {
-        this.currentMessageList = message
+        if (message.length) {
+          this.currentMessageList = message
+        }
       } else {
         this.currentMessageList = []
       }
-      this.historyMessageList.set(conversationID, message)
+      if (message.length) {
+        this.historyMessageList.set(conversationID, message)
+      }
       const isMore = this.isMore || isDone
       console.log("isDone:", isMore ? "没有更多" : "显示loading")
       this.setNoMore(isMore)
@@ -279,11 +282,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         console.warn("sessionId 或 ID 不存在")
         return
       }
-      const oldMessageList = this.historyMessageList.get(sessionId)
-      if (!oldMessageList) {
-        console.warn("oldMessageList 不存在")
-        return
-      }
+      const oldMessageList = this.historyMessageList.get(sessionId) || []
       __LOCAL_MODE__ && MessageModel.update(message.ID, message)
       const newMessageList = oldMessageList.map((item) => {
         return item.ID === message.ID ? payload.message : item

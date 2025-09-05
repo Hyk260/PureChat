@@ -451,7 +451,7 @@ export class OpenAiApi {
   /**
    * 更新发送状态
    */
-  updateSendingState(action = "delete") {
+  updateSendingState(action: "add" | "delete" = "delete") {
     try {
       const modelId = getModelId(this.provider)
       useChatStore().updateSendingState(modelId, action)
