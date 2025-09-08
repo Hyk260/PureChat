@@ -1,5 +1,6 @@
 import process from "node:process";
 import vue from "@vitejs/plugin-vue";
+import vueJsx from '@vitejs/plugin-vue-jsx';
 import progress from "vite-plugin-progress";
 import removeConsole from "vite-plugin-remove-console";
 import vueDevtools from "vite-plugin-vue-devtools";
@@ -19,6 +20,7 @@ import { cdn } from "./cdn";
 export function setupVitePlugins(viteEnv: Env.ImportMeta) {
   const plugins: PluginOption = [
     vue(),
+    vueJsx(),
     // 打包进度
     progress(),
     setupUnocss(viteEnv),
