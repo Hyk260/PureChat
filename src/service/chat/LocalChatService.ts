@@ -3,6 +3,8 @@ import { cloneDeep } from "lodash-es"
 
 import { MessageModel } from "@/database/models/message"
 import { SessionModel } from "@/database/models/session"
+import { DB_Message } from "@/database/schemas/message"
+import { DB_Session } from "@/database/schemas/session"
 import { getTime } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
@@ -366,11 +368,9 @@ export class LocalChat {
   /**
    * 批量删除消息
    */
-  async deleteMessage(messages) {
+  async deleteMessage(messages: DB_Message[]) {
     try {
-      const deletePromises = messages.map(async (item) => {
-        return MessageModel.delete(item.ID)
-      })
+      const deletePromises = messages.map((item) => MessageModel.delete(item.ID))
 
       await Promise.all(deletePromises)
 
@@ -410,9 +410,9 @@ export class LocalChat {
   /**
    * 清空历史消息
    */
-  async clearHistoryMessage(sessionId) {
+  async clearHistoryMessage(sessionId: string) {
     try {
-      const data = await MessageModel.query({ id: sessionId })
+      const data = (await MessageModel.query({ id: sessionId })) as DB_Message[]
 
       const deletePromises = data.map((item) => {
         return MessageModel.delete(item.ID)
@@ -424,7 +424,7 @@ export class LocalChat {
       const session = sessionList.find((t) => t.conversationID === sessionId)
 
       if (session) {
-        const newSession = cloneDeep(session)
+        const newSession = cloneDeep(session) as DB_Session
         newSession.lastMessage.messageForShow = ""
         await SessionModel.update(sessionId, newSession)
         const messageList = await SessionModel.query()
@@ -444,7 +444,7 @@ export class LocalChat {
   /**
    * 修改消息
    */
-  async modifyMessage(data) {
+  async modifyMessage(data: DB_Message) {
     try {
       const payload = {
         payload: {
@@ -506,13 +506,10 @@ export class LocalChatService {
    * 初始化
    */
   public initialize(): ChatSDK {
-    if (this.chat) {
-      console.warn("Chat SDK已经初始化，将返回现有实例")
-      return this.chat
-    }
+    if (this.chat) return this.chat
 
-    this.chat = localChat.create({})
-    return this.chat as ChatSDK
+    this.chat = localChat.create() as unknown as ChatSDK
+    return this.chat
   }
 }
 
