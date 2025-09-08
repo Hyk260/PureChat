@@ -227,7 +227,7 @@ export class OpenAiApi {
     let errorInfo = ""
 
     try {
-      const responseData = await response.clone().json()
+      const responseData = (await response.clone().json()) as string
       errorInfo = JSON.stringify(responseData, null, 2)
     } catch {
       errorInfo = await response.clone().text()
@@ -324,7 +324,7 @@ export class OpenAiApi {
         // 如果响应文本为空，触发错误回调
         if (!responseText.trim()) {
           this.updateSendingState("delete")
-          options.onError?.("服务器繁忙，请稍后再试。")
+          // options.onError?.("服务器繁忙，请稍后再试。")
         }
         return
       }

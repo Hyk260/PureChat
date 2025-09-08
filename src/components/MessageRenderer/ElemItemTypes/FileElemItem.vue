@@ -93,11 +93,11 @@ const handleProgressUpdate = ({ uuid, num, type = "up" }) => {
 }
 
 onUpdated(() => {
-  checkTextOverflow()
+  // checkTextOverflow()
 })
 
 onMounted(() => {
-  checkTextOverflow()
+  // checkTextOverflow()
   emitter.on("fileUploading", handleProgressUpdate)
   backgroundStyle.value = getBackgroundStyle()
 })

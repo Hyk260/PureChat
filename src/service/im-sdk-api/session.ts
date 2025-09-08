@@ -7,10 +7,7 @@ import { Message } from "@/service/chat/types/tencent-cloud-chat"
  * 获取未读消息总数
  */
 export const getUnreadMsg = (): number => {
-  if (!timProxy.isSDKReady) {
-    console.warn("SDK is not ready")
-    return 0
-  }
+  if (!timProxy.isSDKReady) return 0
   return tim.getTotalUnreadMessageCount()
 }
 

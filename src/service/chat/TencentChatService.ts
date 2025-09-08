@@ -116,7 +116,6 @@ export class TencentChatService {
    */
   public initialize(): ChatSDK {
     if (this.chat) {
-      console.warn("Chat SDK已经初始化，将返回现有实例")
       return this.chat
     }
     const timer = this.createPerformanceTimer()
