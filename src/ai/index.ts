@@ -3,6 +3,7 @@ import { cloneDeep } from "lodash-es"
 import { ClientApi } from "@/ai/api"
 import { FewShots, ModelProvider, ModelProviderKey } from "@/ai/types"
 import { getAiAvatarUrl, prettyObject } from "@/ai/utils"
+import { DB_Message } from "@/database/schemas/message"
 import { restApi } from "@/service/api"
 import { createCustomMessage } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores/modules/chat"
@@ -19,12 +20,16 @@ const handleWebSearchData = (flag = false) => {
   return result
 }
 
+interface AIResponse {
+  message: string
+  think?: string
+  done?: boolean
+}
+
 /**
  * 通过 REST API 发送消息
- * @param {Object} params - 聊天会话参数 (from, to)
- * @param {Object} data - 消息数据 (message, think)
  */
-const restSendMsg = async (params, data) => {
+const restSendMsg = async (params: DB_Message, data: AIResponse) => {
   const { message, think } = data
   // 在本地模式或消息为空时，不发送 REST 请求
   if (__LOCAL_MODE__ || !message) return
@@ -57,13 +62,11 @@ const restSendMsg = async (params, data) => {
 
 /**
  * 更新聊天消息状态
- * @param {Object} chat - 聊天消息对象引用
- * @param {Object} [data={}] - 更新数据 (message, think, done)
  */
-const updateMessage = (chat, data = {}) => {
+const updateMessage = (chat: DB_Message, data?: AIResponse) => {
   if (!chat) return
 
-  const { message = "", think = "", done: isFinish = false } = data
+  const { message = "", think = "", done: isFinish = false } = data || {}
 
   chat.payload.text = message
   chat.clientTime = getTime()
@@ -97,13 +100,11 @@ const updateMessage = (chat, data = {}) => {
 }
 
 /**
- * 创建并发送初始的“开始”消息（加载状态）
- * @param {Object} params - 聊天会话参数 (to, from)
- * @returns {Object} 创建的消息对象
+ * 创建并发送初始消息（加载状态）
  */
-const createStartMsg = (params) => {
+const createStartMsg = (params: DB_Message) => {
   const { to: from, from: to } = params
-  const msg = createCustomMessage({ to, customType: "loading" })
+  const msg = createCustomMessage({ to, customType: "loading" }) as unknown as DB_Message
 
   msg.conversationID = `C2C${from}`
   msg.avatar = getAiAvatarUrl(from)
@@ -119,7 +120,7 @@ const createStartMsg = (params) => {
   return msg
 }
 
-const createAlertMsg = (startMsg, provider) => {
+const createAlertMsg = (startMsg: DB_Message, provider: ModelProviderKey) => {
   const alertData = cloneDeep(startMsg)
   alertData.clientTime = getTime()
   alertData.type = "TIMCustomElem"
@@ -132,7 +133,7 @@ const createAlertMsg = (startMsg, provider) => {
 /**
  * 在发送消息前进行预检查
  */
-const beforeSend = (api: ClientApi, startMsg: any) => {
+const beforeSend = (api: ClientApi, startMsg: DB_Message) => {
   // Ollama 模型不需要 token 检查
   if (api.llm.provider === ModelProvider.Ollama) {
     return false
@@ -155,7 +156,7 @@ export const chatService = async ({
   provider,
 }: {
   messages: FewShots
-  chat: { from: string; to: string }
+  chat: DB_Message
   provider: ModelProviderKey
 }) => {
   const api = new ClientApi(provider)
@@ -178,24 +179,17 @@ export const chatService = async ({
 }
 
 /**
- * 处理 API 响应的更新事件
- * @param {Object} startMsg - 初始消息对象引用
- * @returns {Function} onUpdate 回调函数
+ * 更新
  */
-const handleUpdate = (startMsg) => (data) => {
-  // const { message = "", think = "" } = data || {};
-  // console.log("[chat] onUpdate:", message);
+const handleUpdate = (startMsg: DB_Message) => (data: AIResponse) => {
   updateMessage(startMsg, data)
 }
 
 /**
- * 处理 API 响应的完成事件
- * @param {Object} startMsg - 初始消息对象引用
- * @param {Object} chatParams - 聊天会话参数
- * @returns {Function} onFinish 回调函数
+ * 结束
  */
-const handleFinish = (startMsg, chatParams) => async (data) => {
-  const { message = "", think = "" } = data || {}
+const handleFinish = (startMsg: DB_Message, chatParams: DB_Message) => async (data: AIResponse) => {
+  const { message = "" } = data || {}
   console.log("[chat] onFinish:", message)
   if (message) {
     data.done = true
@@ -206,35 +200,29 @@ const handleFinish = (startMsg, chatParams) => async (data) => {
 }
 
 /**
- * 处理 API 响应的推理消息事件
- * @param {Object} startMsg - 初始消息对象引用
- * @returns {Function} onReasoningMessage 回调函数
+ * 推理
  */
-const handleReasoningMessage = (startMsg) => (think) => {
+const handleReasoningMessage = (startMsg: DB_Message) => (think: string) => {
   console.log("[chat] onReasoningMessage:", think)
   updateMessage(startMsg, { message: "", think })
 }
 
 /**
- * 处理 API 响应的错误事件
- * @param {Object} startMsg - 初始消息对象引用
- * @param {Object} chatParams - 聊天会话参数
- * @returns {Function} onError 回调函数
+ * 错误
  */
-const handleError = (startMsg, chatParams) => async (error) => {
-  console.error("[chat] onError:", error)
-  const errorMessage = error?.message || "未知错误"
+const handleError = (startMsg: DB_Message, chatParams: DB_Message) => async (errorText: string) => {
+  console.error("[chat] onError:", errorText)
+  const errorMessage = errorText || "未知错误"
   const content = `\n\n${prettyObject({ error: true, message: errorMessage })}`
 
-  // 在本地模式下，直接更新消息显示错误内容
   if (__LOCAL_MODE__) {
     updateMessage(startMsg, { message: content, done: true })
+  } else {
+    if (errorMessage) {
+      updateMessage(startMsg, { message: content, done: true })
+      await restSendMsg(chatParams, { message: content })
+    }
   }
-  // 如果有错误消息，尝试通过 REST API 发送
-  if (errorMessage) {
-    await restSendMsg(chatParams, { message: content })
-  }
-
   useChatStore().updateSendingState(chatParams.to, "delete")
 }
 
