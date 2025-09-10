@@ -10,7 +10,7 @@ export interface WebSearchProvider {
 
 export interface WebSearchState {
   // 默认搜索提供商的ID
-  defaultProvider: string
+  defaultProvider: WebSearchProviderId
   // 所有可用的搜索提供商列表
   providers: WebSearchProvider[]
   /**

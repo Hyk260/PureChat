@@ -1,8 +1,22 @@
 import { isEmpty } from "lodash-es"
 
+import { DB_Message } from "@/database/schemas/message"
 import { convertBlobUrlToDataUrl } from "@/utils/chat"
 
-export function checkTextNotEmpty(arr) {
+import type { LLMMessage } from "@/ai/types"
+
+type Draft = [
+  {
+    type: ""
+    children: [
+      {
+        text: ""
+      },
+    ]
+  },
+]
+
+export function checkTextNotEmpty(arr: Draft) {
   return arr.some((obj) => {
     return obj.children.some((child) => {
       return child.text !== ""
@@ -11,8 +25,8 @@ export function checkTextNotEmpty(arr) {
 }
 
 // 处理文本类型的消息
-function transformTextElement(data) {
-  let content = data.payload.text
+function transformTextElement(data: DB_Message) {
+  let content: string = data.payload.text || ""
 
   if (!isEmpty(data.cloudCustomData)) {
     try {
@@ -31,17 +45,14 @@ function transformTextElement(data) {
   }
 }
 
-export function transformCustomElement(item) {
-  // 检查 description 是否符合期待的值
+export function transformCustomElement(item: DB_Message) {
   if (item?.payload?.description !== "tool_call") {
     return {}
   }
 
   try {
-    // JSON 解析，解析失败将抛出错误
     const input = JSON.parse(item.payload.data)
 
-    // 安全提取工具调用数据 (tool_call)
     const toolCall = input.data.message.choices[0]?.message?.tool_calls
     if (!toolCall) {
       throw new Error("Tool call data is missing in the input payload")
@@ -70,7 +81,7 @@ export function transformCustomElement(item) {
 }
 
 // 处理图像类型的消息
-async function transformImageElement(data) {
+async function transformImageElement(data: DB_Message) {
   const imageUrl = await convertBlobUrlToDataUrl(data.elements[0]._imageMemoryURL)
   return {
     role: data.flow === "in" ? "assistant" : "user",
@@ -90,7 +101,7 @@ async function transformImageElement(data) {
   }
 }
 
-export async function transformData(data) {
+export async function transformData(data: DB_Message[]): Promise<LLMMessage[]> {
   if (!data || !Array.isArray(data)) {
     console.warn("data is undefined, null, or not an array")
     return []
@@ -108,12 +119,12 @@ export async function transformData(data) {
       // TIMFileElem: transformFileElement,
     }
 
-    const transformedData = await Promise.all(
-      relevantData.map(async (item) => {
+    const transformedData = (await Promise.all(
+      relevantData.map((item) => {
         const transformFn = transformMap[item.type]
         return transformFn ? transformFn(item) : null
       })
-    )
+    )) as any[]
 
     return transformedData.filter((t) => !isEmpty(t)).flat()
   } catch (error) {
@@ -124,14 +135,10 @@ export async function transformData(data) {
 
 /**
  * 渲染文件图标
- * @param {string} fileType - 文件类型
- * @returns {string} - 图标路径
  */
-export const renderFileIcon = (fileType = "") => {
-  // 统一转换为小写，避免大小写问题
+export const renderFileIcon = (fileType = ""): string => {
   const lowerCaseFileType = fileType.toLowerCase()
 
-  // 文件类型与图标类型的映射
   const fileTypeToIconMap = {
     xlsx: "form",
     xls: "form",
@@ -155,13 +162,11 @@ export const renderFileIcon = (fileType = "") => {
     exe: "exe",
     json: "json",
     js: "js",
-    // env: "dotenv", // 如果需要启用 dotenv 图标，取消注释
+    // env: "dotenv",
   }
 
-  // 获取图标类型，默认为 "default"
   const type = fileTypeToIconMap[lowerCaseFileType] || "default"
 
-  // 返回图标路径
   return new URL(`../../assets/message/${type}.png`, import.meta.url).href
 }
 

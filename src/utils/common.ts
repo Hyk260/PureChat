@@ -2,6 +2,8 @@ import { loading, warning } from "@database/custom/index"
 
 export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
+export const delay = (ms: number = 200) => new Promise((resolve) => setTimeout(resolve, ms))
+
 // Male Female
 export const getGender = (data: any, type: string = "") => {
   return data?.gender === `Gender_Type_${type}`

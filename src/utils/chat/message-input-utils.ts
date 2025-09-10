@@ -236,7 +236,7 @@ export const getAbstractContent = (data: DB_Message): string => {
   }
 }
 
-export function getCloudCustomData(data, params) {
+export function getCloudCustomData(data, params?: any) {
   if (isEmpty(data)) return ""
   const key = data?.key || "messageReply"
   const cloudCustomContent = JSON.stringify({

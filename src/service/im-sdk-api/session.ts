@@ -31,8 +31,7 @@ export const getMessageList = async (params: { conversationID: string; nextReqMe
       throw new Error("Failed to get message list")
     }
   } catch (error) {
-    console.error("Error in getMessageList:", error)
-    return { nextReqMessageID: "", isCompleted: false, messageList: [] }
+    throw new Error(`Failed to get message list ${error}`)
   }
 }
 

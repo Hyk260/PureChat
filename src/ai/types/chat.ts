@@ -1,4 +1,5 @@
-import type { FewShots, LLMRoleType } from "@/ai/types"
+import type { LLMRoleType } from "@/ai/types"
+import type { DB_Message } from "@/database/schemas/message"
 
 interface OnFinishData {
   grounding?: any
@@ -151,7 +152,7 @@ export interface LLMConfig {
 }
 
 export interface ChatOptions {
-  messages: FewShots
+  messages: DB_Message[]
   config: LLMConfig
 
   onUpdate?: ({ message, fetchCount, think }: { message: string; fetchCount?: string; think?: string }) => void

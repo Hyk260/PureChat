@@ -155,7 +155,7 @@ export const chatService = async ({
   chat,
   provider,
 }: {
-  messages: FewShots
+  messages: DB_Message[]
   chat: DB_Message
   provider: ModelProviderKey
 }) => {

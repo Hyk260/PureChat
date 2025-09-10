@@ -46,6 +46,15 @@ export const MessageSchema = {
   updatedAt: 1754536602686,
 }
 
+export const customDataWebSearchSchema = z.object({
+  webSearch: z.object({
+    messageAbstract: z.string(),
+    version: z.string(),
+  }),
+})
+
+// export const cloudCustomDataSchema = cloudCustomDataSchemaWebSearch
+
 export const MessageStatusSchema = z.enum(["unSend", "fail", "success", "sending", "timeout"])
 
 export const MessageTypeSchema = z.enum([
@@ -120,3 +129,5 @@ export type MessageStatus = z.infer<typeof MessageStatusSchema>
  * TIMTextElem(文本) TIMRelayElem(转发) TIMImageElem(图片) TIMFileElem(文件) TIMCustomElem(自定义) TIMGroupTipElem(群提示) TIMGroupSystemNoticeElem(群系统提示)
  */
 export type MessageType = z.infer<typeof MessageTypeSchema>
+
+export type customDataWebSearch = z.infer<typeof customDataWebSearchSchema>

@@ -1692,7 +1692,7 @@ export declare class ChatSDK {
    * - Messages sent by this API do not trigger the TencentCloudChat.EVENT.MESSAGE_RECEIVED event. Messages sent by the same account from other clients (or through the RESTful API) trigger the TencentCloudChat.EVENT.MESSAGE_RECEIVED event.
    * - Offline push is applicable only to Android or iOS terminals, and is not supported by web apps or WeChat Mini Programs.
    */
-  sendMessage(message: Message, options?: any): Promise<{ code: number; data: { message: Message } }>
+  sendMessage(message: Message, options?: any): Promise<{ code: number; data: { message: any } }>
 
   /**
    * Recall a one-to-one message or a group message. If the recall is successful, the value of isRevoked for the recalled message is set to true.
@@ -1788,7 +1788,7 @@ export declare class ChatSDK {
    */
   getMessageList(
     options: GET_MESSAGE_LIST_OPTIONS
-  ): Promise<{ code: number; data: { nextReqMessageID: string; isCompleted: boolean; messageList: Message[] } }>
+  ): Promise<{ code: number; data: { nextReqMessageID: string; isCompleted: boolean; messageList: any[] } }>
 
   /**
    * Pull group chat messages by sequence or Pull one-to-one chat messages by time.

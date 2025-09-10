@@ -5,7 +5,6 @@ import { defineStore } from "pinia"
 import { chatService } from "@/ai"
 import { getModelId } from "@/ai/utils"
 import { getAiAvatarUrl, getModelType } from "@/ai/utils"
-import { generateReferencePrompt } from "@/config/prompts"
 import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX } from "@/constants"
 import { MessageModel } from "@/database/models/message"
 import { timProxy } from "@/service/chat"
@@ -23,6 +22,8 @@ import {
 import { SetupStoreId } from "@/stores/enum"
 import { getCloudCustomData } from "@/utils/chat"
 import { addTimeDivider, checkTextNotEmpty, getBaseTime, scrollToMessage } from "@/utils/chat"
+import { delay } from "@/utils/common"
+import { generateReferencePrompt } from "@/utils/messageUtils/search"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 
@@ -348,13 +349,12 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.updateMessages({ sessionId, message })
       emitter.emit("updateScroll")
       if (last && ModelIDList.includes(message?.to as ModelIDValue)) {
-        setTimeout(async () => {
-          await chatService({
-            chat: message,
-            provider: getModelType(message.to),
-            messages: this.currentMessageList ?? [message],
-          })
-        }, 50)
+        await delay(50)
+        await chatService({
+          chat: message,
+          provider: getModelType(message.to),
+          messages: this.currentMessageList ?? [message],
+        })
       }
     },
     async updateMessageList(data: DB_Session) {

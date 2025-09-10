@@ -129,7 +129,7 @@ export class OpenAiApi {
     })
   }
 
-  async enableFetchOnClient(messages: FewShots, modelConfig: LLMParams) {
+  enableFetchOnClient(messages: FewShots, modelConfig: LLMParams) {
     let fetcher: typeof fetch | undefined = undefined
     const processedMessages = this.processPromptMessages(messages, modelConfig)
     fetcher = async () => {
@@ -205,7 +205,7 @@ export class OpenAiApi {
 
       // ollama本地模型使用自定义 fetch 请求
       if (this.isOllamaProvider()) {
-        chatPayload.fetch = await this.enableFetchOnClient(messages, modelConfig)
+        chatPayload.fetch = this.enableFetchOnClient(messages, modelConfig)
       }
 
       // 流式输出

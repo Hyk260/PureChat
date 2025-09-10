@@ -18,7 +18,7 @@ export interface Events {
   handleShareModal: boolean
   fileUploading: { uuid: string; num: number }
   handleToBottom: boolean
-  updateScroll: string
+  updateScroll: any
 }
 
 const emitter: Emitter<Events> = mitt<Events>()

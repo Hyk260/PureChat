@@ -11,7 +11,7 @@ export const sendMessage = async (params) => {
     } = await tim.sendMessage(params)
     return { code, message }
   } catch (error) {
-    console.log(error)
+    throw new Error(error)
   }
 }
 // 创建自定义消息
