@@ -1,13 +1,29 @@
+import { WebSearchProviderId, WebSearchState } from "@/stores/modules/websearch/type"
+
 import BaseWebSearchProvider from "./BaseWebSearchProvider"
+import { WebSearchProviderResponse } from "./types"
+
+export interface SearchItem {
+  title: string
+  url: string
+}
 
 export default class LocalSearchProvider extends BaseWebSearchProvider {
-  constructor(provider) {
+  constructor(provider: WebSearchProviderId) {
+    if (!provider) {
+      throw new Error("Provider is required")
+    }
     super(provider)
   }
 
-  async search(query, websearch, httpOptions) {
+  public async search(
+    query: string,
+    websearch: WebSearchState,
+    httpOptions?: RequestInit
+  ): Promise<WebSearchProviderResponse> {
     try {
       if (__IS_ELECTRON__) {
+        /* empty */
       } else {
         return {
           query: query,
@@ -22,7 +38,7 @@ export default class LocalSearchProvider extends BaseWebSearchProvider {
     }
   }
 
-  parseValidUrls(htmlContent) {
+  protected parseValidUrls(_htmlContent: string): SearchItem[] {
     throw new Error("Not implemented")
   }
 }

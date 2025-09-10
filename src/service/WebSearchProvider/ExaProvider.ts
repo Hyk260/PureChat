@@ -1,10 +1,14 @@
 import { ExaClient } from "@agentic/exa"
 
+import { WebSearchProviderId, WebSearchState } from "@/stores/modules/websearch/type"
+
 import BaseWebSearchProvider from "./BaseWebSearchProvider"
+import { WebSearchProviderResponse } from "./types"
 
 export default class ExaProvider extends BaseWebSearchProvider {
-  exa
-  constructor(provider) {
+  private readonly exa: ExaClient
+
+  constructor(provider: WebSearchProviderId) {
     super(provider)
     if (!this.apiKey) {
       throw new Error("API key is required for Exa provider")
@@ -15,7 +19,7 @@ export default class ExaProvider extends BaseWebSearchProvider {
     this.exa = new ExaClient({ apiKey: this.apiKey, apiBaseUrl: this.apiHost })
   }
 
-  async search(query, websearch) {
+  public async search(query: string, websearch: WebSearchState): Promise<WebSearchProviderResponse> {
     try {
       if (!query.trim()) {
         throw new Error("Search query cannot be empty")
@@ -30,7 +34,7 @@ export default class ExaProvider extends BaseWebSearchProvider {
       })
 
       return {
-        query: response.autopromptString,
+        query: response.autopromptString || "",
         results: response.results.slice(0, websearch.maxResults).map((result) => ({
           title: result.title || "No title",
           content: result.text || "",
@@ -39,6 +43,7 @@ export default class ExaProvider extends BaseWebSearchProvider {
       }
     } catch (error) {
       console.error("Exa search failed:", error)
+      throw new Error(`Search failed: ${error instanceof Error ? error.message : "Unknown error"}`)
     }
   }
 }

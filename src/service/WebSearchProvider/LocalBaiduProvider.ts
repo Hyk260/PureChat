@@ -1,8 +1,8 @@
-import LocalSearchProvider from "./LocalSearchProvider"
+import LocalSearchProvider, { SearchItem } from "./LocalSearchProvider"
 
 export default class LocalBaiduProvider extends LocalSearchProvider {
-  parseValidUrls(htmlContent) {
-    const results = []
+  protected parseValidUrls(htmlContent: string): SearchItem[] {
+    const results: SearchItem[] = []
 
     try {
       // Parse HTML string into a DOM document
@@ -20,7 +20,7 @@ export default class LocalBaiduProvider extends LocalSearchProvider {
         }
       })
     } catch (error) {
-      console.error("Failed to parse Baidu search HTML:", error)
+      console.error("Failed to parse Baidu search HTML:", error as Error)
     }
     console.log("Parsed Baidu search results:", results)
     return results
