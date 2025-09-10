@@ -3,8 +3,11 @@ import { isEmpty } from "lodash-es"
 import { REFERENCE_PROMPT } from "@/config/prompts"
 import { WebSearchProviderResult } from "@/service/WebSearchProvider/types"
 import WebSearchService from "@/service/WebSearchService"
+import { useChatStore } from "@/stores"
 import { useWebSearchStore } from "@/stores/modules/websearch"
-import { localStg } from "@/utils/storage"
+
+import type { DB_Message } from "@/database/schemas/message"
+import type { LLMMessage } from "@/ai/types"
 
 export function mapWebSearchResults(results: WebSearchProviderResult[]) {
   return results.map((t, i) => ({
@@ -15,7 +18,7 @@ export function mapWebSearchResults(results: WebSearchProviderResult[]) {
   }))
 }
 
-export async function getWebSearchReferences(message) {
+export async function getWebSearchReferences(message: { content: string }) {
   if (isEmpty(message.content)) {
     return []
   }
@@ -32,16 +35,28 @@ export async function getWebSearchReferences(message) {
   return []
 }
 
-export async function generateReferencePrompt(message) {
+export async function generateReferencePrompt(data: DB_Message, message: { content: string }) {
+  let webSearchJson = ""
   const webSearchReferences = await getWebSearchReferences(message)
-
-  localStg.set("webSearchReferences", webSearchReferences)
 
   if (!isEmpty(webSearchReferences)) {
     const referenceContent = `\`\`\`json\n${JSON.stringify(webSearchReferences, null, 2)}\n\`\`\``
 
-    return REFERENCE_PROMPT.replace("{question}", message.content).replace("{references}", referenceContent)
+    webSearchJson = REFERENCE_PROMPT.replace("{question}", message.content).replace("{references}", referenceContent)
   }
 
-  return null
+  if (webSearchJson) {
+    useChatStore().modifiedMessages({
+      ...data,
+      cloudCustomData: JSON.stringify({
+        webSearch: {
+          messageAbstract: webSearchJson,
+        },
+      }),
+    })
+
+    return webSearchReferences
+  } else {
+    return null
+  }
 }

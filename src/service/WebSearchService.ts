@@ -5,7 +5,11 @@ import { WebSearchProviderId, WebSearchState } from "@/stores/modules/websearch/
 import { hasObjectKey } from "@/utils/common"
 
 import WebSearchEngineProvider from "./WebSearchProvider"
+import searchTestResult from "./WebSearchProvider/test.json"
 import { WebSearchProviderResponse } from "./WebSearchProvider/types"
+
+// const { DEV: isDev } = import.meta.env
+const searchTestState = true
 
 /**
  * 提供网络搜索相关功能的服务类
@@ -74,6 +78,9 @@ class WebSearchService {
     }
 
     try {
+      if (searchTestState) {
+        return searchTestResult
+      }
       return await webSearchEngine.search(formattedQuery, websearch, httpOptions)
     } catch (error) {
       console.error("Search failed:", error)

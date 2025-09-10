@@ -6,17 +6,18 @@ import { getAiAvatarUrl, prettyObject } from "@/ai/utils"
 import { DB_Message } from "@/database/schemas/message"
 import { restApi } from "@/service/api"
 import { createCustomMessage } from "@/service/im-sdk-api"
-import { useChatStore } from "@/stores/modules/chat"
+import { useChatStore, useRobotStore } from "@/stores"
 import { getCloudCustomData } from "@/utils/chat"
 import { getCustomMsgContent, getTime } from "@/utils/common"
+import { generateReferencePrompt } from "@/utils/messageUtils/search"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 
-const handleWebSearchData = (flag = false) => {
-  const webSearchResult = localStg.get("webSearchReferences")
+const handleWebSearchData = (data: DB_Message, flag = false) => {
+  const webSearchResult = window.localStg.get(`web-search-${data.ID}`)
   if (!webSearchResult) return ""
   const result = getCloudCustomData({ payload: { text: "web-search" } }, { webSearchResult })
-  if (flag) localStg.remove("webSearchReferences")
+  if (flag) window.localStg.remove(`web-search-${data.ID}`)
   return result
 }
 
@@ -42,7 +43,7 @@ const restSendMsg = async (params: DB_Message, data: AIResponse) => {
       deeplyThought: "已深度思考",
     })
   } else {
-    cloudCustomData = handleWebSearchData(true)
+    cloudCustomData = handleWebSearchData(params, true)
   }
 
   try {
@@ -79,7 +80,7 @@ const updateMessage = (chat: DB_Message, data?: AIResponse) => {
       deeplyThought: "已深度思考",
     })
   } else if (isFinish) {
-    chat.cloudCustomData = handleWebSearchData()
+    chat.cloudCustomData = handleWebSearchData(chat)
     if (chat.type === "TIMTextElem") {
       chat.payload = {
         text: chat.payload.text,
@@ -163,6 +164,14 @@ export const chatService = async ({
   const startMsg = createStartMsg(chat)
 
   if (beforeSend(api, startMsg)) return
+
+  const enableWebSearch = useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel
+
+  if (enableWebSearch) {
+    const webSearchResult = await generateReferencePrompt(chat, { content: chat?.payload?.text })
+
+    window.localStg.set(`web-search-${startMsg.ID}`, webSearchResult)
+  }
 
   await api.llm.chat({
     messages,

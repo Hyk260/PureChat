@@ -23,7 +23,6 @@ import { SetupStoreId } from "@/stores/enum"
 import { getCloudCustomData } from "@/utils/chat"
 import { addTimeDivider, checkTextNotEmpty, getBaseTime, scrollToMessage } from "@/utils/chat"
 import { delay } from "@/utils/common"
-import { generateReferencePrompt } from "@/utils/messageUtils/search"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 
@@ -329,13 +328,6 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       // 消息上屏 预加载
       this.updateMessages({ sessionId, message })
       emitter.emit("updateScroll")
-
-      if (useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel) {
-        const custom = { key: "webSearch", payload: { text: "" } }
-        custom.payload.text = (await generateReferencePrompt({ content: message?.payload?.text })) || ""
-        message.cloudCustomData = getCloudCustomData(custom)
-      }
-      // 发送消息
       const { code, message: result } = await sendMessage(message)
       if (code === 0) {
         this.sendMsgSuccessCallback({ sessionId, message: result, last })

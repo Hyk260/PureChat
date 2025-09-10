@@ -6,13 +6,13 @@ declare namespace StorageType {
   }
 
   interface Local {
+    [key: string]: any;
     /** The i18n language */
     lang: App.I18n.LangType;
     /** The token */
     token: string;
     /** The theme scheme */
     themeScheme: 'light' | 'dark' | 'auto';
-    webSearchReferences: string;
     timProxy: any;
     "Emoji-Recently": string[];
     /** The user model */

@@ -10,6 +10,8 @@ import { useClipboard } from "@vueuse/core"
 import { ElMessage, ElMessageBox, ElNotification } from "element-plus"
 import { createTextVNode, defineComponent } from "vue"
 
+import { localStg } from "@/utils/storage"
+
 defineOptions({ name: "AppProvider" })
 
 const { copy, isSupported } = useClipboard()
@@ -32,6 +34,7 @@ const ContextHolder = defineComponent({
       }
     }
 
+    window.localStg = localStg
     window.copyToClipboard = copyToClipboard
 
     register()

@@ -1,6 +1,6 @@
 import { isEmpty } from "lodash-es"
 
-import { DB_Message } from "@/database/schemas/message"
+import { DB_Message, customDataWebSearch } from "@/database/schemas/message"
 import { convertBlobUrlToDataUrl } from "@/utils/chat"
 
 import type { LLMMessage } from "@/ai/types"
@@ -26,11 +26,11 @@ export function checkTextNotEmpty(arr: Draft) {
 
 // 处理文本类型的消息
 function transformTextElement(data: DB_Message) {
-  let content: string = data.payload.text || ""
+  let content: string = data.payload?.text || ""
 
   if (!isEmpty(data.cloudCustomData)) {
     try {
-      const customData = JSON.parse(data.cloudCustomData)
+      const customData = JSON.parse(data.cloudCustomData) as customDataWebSearch
       if (customData?.webSearch) {
         content = customData.webSearch?.messageAbstract
       }

@@ -3,7 +3,6 @@ import { TavilyClient } from "@agentic/tavily"
 import { WebSearchProviderId, WebSearchState } from "@/stores/modules/websearch/type"
 
 import BaseWebSearchProvider from "./BaseWebSearchProvider"
-// import searchTestResult from "./test.json"
 import { WebSearchProviderResponse } from "./types"
 
 export default class TavilyProvider extends BaseWebSearchProvider {
@@ -30,8 +29,6 @@ export default class TavilyProvider extends BaseWebSearchProvider {
         query,
         max_results: Math.max(1, websearch.maxResults),
       })
-
-      // const result = searchTestResult
 
       return {
         query: result.query,

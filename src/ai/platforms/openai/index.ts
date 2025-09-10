@@ -11,8 +11,8 @@ import {
   isDalle3 as _isDalle3,
   useAccessStore,
 } from "@/ai/utils"
-import { useChatStore, useRobotStore, useToolsStore } from "@/stores/index"
-import { transformData } from "@/utils/chat/index"
+import { useChatStore, useRobotStore, useToolsStore } from "@/stores"
+import { transformData } from "@/utils/chat"
 
 import OllamaAI from "../ollama/ollama"
 

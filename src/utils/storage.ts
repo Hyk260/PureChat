@@ -73,3 +73,5 @@ export function createLocalforage(driver: LocalforageDriver = "indexedDB") {
 }
 
 export const localStg = createStorage<StorageType.Local>("local", storagePrefix)
+
+export type LocalStg = typeof localStg

@@ -1,3 +1,4 @@
+import { LocalStg } from "@/utils/storage"
 /**
  * 全局类型声明，无需引入直接在 `.vue` 、`.ts` 文件使用即可获得类型提示
  */
@@ -38,6 +39,8 @@ declare global {
   export const __LOCAL_MODE__: boolean;
 
   export interface Window {
+    /** 本地存储 */
+    localStg: LocalStg;
     /** 复制文本到剪贴板 */
     copyToClipboard?: (str: string) => void;
     /** NProgress */
