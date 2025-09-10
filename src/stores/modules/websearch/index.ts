@@ -37,11 +37,11 @@ export interface WebSearchState {
 }
 
 const providers = [
-  {
-    id: "test",
-    name: "Test",
-    apiKey: "test-xxx",
-  },
+  // {
+  //   id: "test",
+  //   name: "Test",
+  //   apiKey: "test-xxx",
+  // },
   {
     id: "tavily",
     name: "Tavily",

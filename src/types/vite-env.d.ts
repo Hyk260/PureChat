@@ -43,6 +43,8 @@ declare namespace Env {
     readonly VITE_ICON_LOCAL_PREFIX: 'local-icon';
     /** 后端服务基础URL */
     readonly VITE_SERVICE_BASE_URL: string;
+    /** Tavily API Key */
+    readonly VITE_TAVILY_API_KEY: string
     /**
      * Iconify api provider url
      *

@@ -3,7 +3,12 @@
     <div class="flex-bc gap-5">
       <span>搜索服务商</span>
       <el-select v-model="defaultProvider" placeholder="Select" class="!w-200">
-        <el-option v-for="item in optionsProviders" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option
+          v-for="item in optionsProviders"
+          :key="item.value"
+          :label="item.label + item.description"
+          :value="item.value"
+        />
       </el-select>
     </div>
     <div v-if="localSearch">
@@ -25,12 +30,14 @@
 
 <script setup lang="ts">
 import { Promotion } from "@element-plus/icons-vue"
+import { storeToRefs } from "pinia"
+import { computed, onMounted, watch } from "vue"
 
 import { WEB_SEARCH_PROVIDER_CONFIG } from "@/config/webSearchProviders"
 import { useState } from "@/hooks/useState"
 import WebSearchService from "@/service/WebSearchService"
 import { useWebSearchStore } from "@/stores/index"
-import { openWindow } from "@/utils/common"
+import { hasObjectKey, openWindow } from "@/utils/common"
 
 const { DEV: isDev } = import.meta.env
 
@@ -38,7 +45,7 @@ const [searchInput, setSearchInput] = useState("")
 
 const webSearchStore = useWebSearchStore()
 
-const { providers, defaultProvider, getProviderConfig } = storeToRefs(webSearchStore)
+const { defaultProvider, getProviderConfig } = storeToRefs(webSearchStore)
 
 const webSearchProviderConfig = computed(() => {
   return WEB_SEARCH_PROVIDER_CONFIG[defaultProvider.value]
@@ -63,6 +70,7 @@ const optionsProviders = computed(() => {
   return filteredProviders.map((value) => ({
     value: value.id,
     label: value.name,
+    description: hasObjectKey(value, "apiKey") ? " (API 密钥)" : " (免费)",
   }))
 })
 
@@ -73,7 +81,7 @@ function onBlur() {
   })
 }
 
-function toLink(url) {
+function toLink(url: string) {
   if (url) openWindow(url)
 }
 
