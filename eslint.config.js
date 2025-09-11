@@ -233,7 +233,23 @@ export default defineConfig([
       "vue/prefer-true-attribute-shorthand": "off",
 
       // Import 规则
-      "simple-import-sort/imports": "warn",
+      "simple-import-sort/imports": [
+        "warn",
+        {
+          groups: [
+            // Vue 相关包
+            ["^vue", "^@vue", "^@?\\w.*vue"],
+            // 第三方包
+            ["^@?\\w"],
+            // 内部模块
+            ["^@/"],
+            // 相对导入
+            ["^\\."],
+            // 类型导入
+            ["^.*\\u0000$"],
+          ],
+        },
+      ],
       "simple-import-sort/exports": "warn",
       "unused-imports/no-unused-imports": "warn",
 
