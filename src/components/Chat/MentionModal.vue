@@ -30,6 +30,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue"
 import { onClickOutside, useEventListener } from "@vueuse/core"
 
+import { IDomEditor } from "@wangeditor/editor"
 import { cloneDeep } from "lodash-es"
 import { storeToRefs } from "pinia"
 
@@ -48,7 +49,7 @@ const MARGIN = 15 // 与光标的间距
 interface Props {
   isOwner?: boolean
   pinyinSearch?: boolean
-  editor?: object
+  editor: IDomEditor | undefined
 }
 
 interface Position {
@@ -73,7 +74,6 @@ defineOptions({
 const props = withDefaults(defineProps<Props>(), {
   isOwner: false,
   pinyinSearch: false,
-  editor: () => ({}),
 })
 
 const listRef = ref<HTMLElement>()

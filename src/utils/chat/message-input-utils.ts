@@ -24,7 +24,7 @@ export const bufferToBase64Url = (data: string | Buffer, type = "jpeg") => {
 /**
  * 将 File 对象转换为 Base64 字符串
  */
-export const fileToBase64 = (file: File) => {
+export const fileToBase64 = (file: File): Promise<string | ArrayBuffer | null> => {
   return new Promise((resolve) => {
     const reader = new FileReader()
     reader.onload = () => {
@@ -106,7 +106,7 @@ export const getFileType = (filename: string) => {
   const lastPart = filename.split("/").pop()
   if (lastPart === ".") return ""
   const parts = lastPart?.split(".")
-  if (parts?.length && parts.length > 1) return parts.pop()
+  if (parts?.length && parts.length > 1) return parts.pop() || ""
   return ""
 }
 

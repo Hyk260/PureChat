@@ -1,9 +1,11 @@
+import { IDomEditor } from "@wangeditor/editor"
+
 export const insertMention = (options: {
   id: string
   name: string
   backward?: boolean
   deleteDigit?: number
-  editor?: any
+  editor?: IDomEditor | null | undefined
 }) => {
   const { id, name, backward = true, deleteDigit = 0, editor = null } = options
 

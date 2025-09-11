@@ -1,5 +1,7 @@
 import { computed } from "vue"
 
+import { IDomEditor, IEditorConfig, IToolbarConfig } from "@wangeditor/editor"
+
 import { $t } from "@/locales"
 import { useChatStore } from "@/stores/modules/chat"
 
@@ -11,8 +13,10 @@ export const placeholderMap = computed(() => {
   }
 })
 
+export const toolbarConfig: Partial<IToolbarConfig> = {}
+
 // 编辑器配置
-export const editorConfig = {
+export const editorConfig: Partial<IEditorConfig> = {
   placeholder: placeholderMap.value["input"],
   // 配置编辑器是否只读，默认为 false
   // readOnly: true,
@@ -32,7 +36,7 @@ export const editorConfig = {
     },
     image: {
       // 清空 image 元素的 hoverbar
-      // menuKeys: [],
+      menuKeys: [],
     },
   },
 }
@@ -41,12 +45,12 @@ export const editorConfig = {
 editorConfig.MENU_CONF["codeSelectLang"] = {}
 
 // 显示 modal
-function showModal(e) {
+function showModal(e: IDomEditor) {
   // console.log("[@] 显示 showModal:", e.getText())
   useChatStore().toggleMentionModal(true)
 }
 // 隐藏 modal
-function hideModal(e) {
+function hideModal(e: IDomEditor) {
   // console.log("[@] 隐藏 hideModal:", e.getText())
   useChatStore().toggleMentionModal(false)
 }

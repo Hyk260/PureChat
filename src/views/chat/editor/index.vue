@@ -35,9 +35,12 @@
 </template>
 
 <script setup lang="ts">
+import { onActivated, onBeforeUnmount, onDeactivated, onMounted, ref, shallowRef, watch } from "vue"
 import { Editor } from "@wangeditor/editor-for-vue"
 
+import { IDomEditor } from "@wangeditor/editor"
 import { debounce } from "lodash-es"
+import { storeToRefs } from "pinia"
 
 import MentionModal from "@/components/Chat/MentionModal.vue"
 import { useState } from "@/hooks/useState"
@@ -66,7 +69,7 @@ import "@/styles/wangeditor/index.css"
 const MAX_FILE_SIZE_MB = 100
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 const mode = "simple"
-const editorRef = shallowRef()
+const editorRef = shallowRef<IDomEditor>()
 const valueHtml = ref("")
 
 const [disabled, setDisabled] = useState(false)
@@ -89,17 +92,18 @@ const {
   replyMsgData,
 } = storeToRefs(chatStore)
 
-const handleEditorCreated = (editor) => {
+const handleEditorCreated = (editor: IDomEditor) => {
   if (!editor) return
   editorRef.value = editor
 }
 
-const destroyEditor = (editor) => {
+const destroyEditor = (editor: IDomEditor | undefined) => {
   editor?.destroy()
 }
 
 const insertEmoji = (url, item) => {
   const editor = editorRef.value
+  if (!editor) return
   const data = createMediaElement("image", {
     class: "EmoticonPack",
     src: url,
@@ -170,7 +174,7 @@ const handleEditorChange = (editor) => {
   handleAtMention(editor)
 }
 
-const handleAssistantFile = async (file, editor) => {
+const handleAssistantFile = async (file, editor: IDomEditor) => {
   const fileType = getFileType(file?.name)
 
   if (!isTextFile(fileType) || !__IS_ELECTRON__) {
@@ -231,7 +235,7 @@ const handleFiles = async (file, type) => {
   }
 }
 
-const handleString = (item, editor) => {
+const handleString = (item, editor: IDomEditor) => {
   if (item.type === "text/plain") {
     item.getAsString((str) => {
       editor.insertText(str.trimStart())
@@ -244,7 +248,7 @@ const handleString = (item, editor) => {
   }
 }
 
-const handlePaste = (editor, event, callback) => {
+const handlePaste = (editor, event, callback?: Function) => {
   const items = event?.clipboardData?.items ?? event?.dataTransfer?.items
 
   Array.from(items).forEach((item) => {
@@ -267,7 +271,7 @@ const handleDrop = (event: DragEvent) => {
   }
 }
 
-const handleEnter = async (event) => {
+const handleEnter = async (event: KeyboardEvent) => {
   if (isSending.value || event?.ctrlKey) return
 
   if (isMentionModalVisible.value) {
@@ -349,7 +353,7 @@ const setupEventListeners = () => {
     handleFileViewer: handleFileViewer,
     handleScreenCapture: (url) => {
       const imageElement = createMediaElement("image", { src: url, style: { width: "125px" } })
-      editorRef.value.insertNode(imageElement)
+      editorRef.value?.insertNode(imageElement)
     },
   }
 
