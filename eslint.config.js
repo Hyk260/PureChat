@@ -1,22 +1,22 @@
-import js from "@eslint/js";
-import tseslint from "@typescript-eslint/eslint-plugin";
-import tsparser from "@typescript-eslint/parser";
-import { defineConfig } from "eslint/config";
-import prettier from "eslint-config-prettier";
-import prettierPlugin from "eslint-plugin-prettier";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
-import unusedImports from "eslint-plugin-unused-imports";
-import pluginVue from "eslint-plugin-vue";
+import js from "@eslint/js"
+import tseslint from "@typescript-eslint/eslint-plugin"
+import tsparser from "@typescript-eslint/parser"
+import { defineConfig } from "eslint/config"
+import prettier from "eslint-config-prettier"
+import prettierPlugin from "eslint-plugin-prettier"
+import simpleImportSort from "eslint-plugin-simple-import-sort"
+import unusedImports from "eslint-plugin-unused-imports"
+import pluginVue from "eslint-plugin-vue"
 // import * as parserVue from "vue-eslint-parser";
-import globals from "globals";
+import globals from "globals"
 
-const isProd = process.env.NODE_ENV === "production";
+const isProd = process.env.NODE_ENV === "production"
 
 /**
  * ESLint 配置
  * @see https://eslint.vuejs.org/user-guide/#configuration
  * @see https://eslint.org/docs/user-guide/configuring/configuration-files
-*/
+ */
 export default defineConfig([
   // 基础 JavaScript 规则
   js.configs.recommended,
@@ -83,11 +83,11 @@ export default defineConfig([
       "@typescript-eslint/prefer-ts-expect-error": "warn",
       "@typescript-eslint/consistent-type-definitions": ["warn", "interface"],
       "@typescript-eslint/consistent-type-imports": [
-        "off", 
-        { 
+        "off",
+        {
           prefer: "type-imports",
-          fixStyle: 'separate-type-imports'
-        }
+          fixStyle: "separate-type-imports",
+        },
       ],
       "@typescript-eslint/no-import-type-side-effects": "warn",
       "@typescript-eslint/prefer-readonly": "off",
@@ -116,7 +116,7 @@ export default defineConfig([
       "no-unneeded-ternary": "warn",
       "prefer-const": "error",
       "no-var": "error",
-      "eqeqeq": ["error", "always", { null: "ignore" }],
+      eqeqeq: ["error", "always", { null: "ignore" }],
       "no-eval": "error",
       "no-implied-eval": "error",
       "no-new-func": "error",
@@ -188,6 +188,7 @@ export default defineConfig([
       "@typescript-eslint/no-explicit-any": "off", // 配置文件中允许 any
       "@typescript-eslint/no-var-requires": "off", // 配置文件中可能需要 require
       "prettier/prettier": "warn",
+      "no-undef": "warn",
     },
   },
   // Vue 单文件组件
@@ -292,4 +293,4 @@ export default defineConfig([
       "**/*.min.js",
     ],
   },
-]);
+])

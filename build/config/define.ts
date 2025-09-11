@@ -27,8 +27,8 @@ export const __APP_INFO__ = {
     dependencies,
     devDependencies,
   },
-  lastBuildTime: getBuildTime()
-};
+  lastBuildTime: getBuildTime(),
+}
 
 export const viteDefine = (env: Env.ImportMeta) => {
   return {
@@ -37,33 +37,33 @@ export const viteDefine = (env: Env.ImportMeta) => {
     // 判断是否为本地模式
     __LOCAL_MODE__: env?.VITE_LOCAL_MODE === "Y",
     // 判断是否为 Electron 环境
-    __IS_ELECTRON__: env?.VITE_APP_ENV === "electron"
+    __IS_ELECTRON__: env?.VITE_APP_ENV === "electron",
   }
 }
 
 // 定义模块与 chunk 名称的映射关系
 const chunkMap = {
-  '@element-plus/icons-vue': 'element-icons-vendor',
-  '@wangeditor': 'wangeditor-vendor',
-  '@tencentcloud/chat': 'tencent-im-vendor',
-  '@vueuse': 'vueuse-vendor',
-  'lodash-es': 'lodash-vendor',
-  'element-plus': 'el-vendor',
-  'artplayer': 'artplayer-vendor',
-  'highlight': 'highlight-vendor',
-  'pinyin-pro': 'pinyin-pro-vendor',
-  'markdown': 'markdown-vendor',
-  'axios': 'axios-vendor',
-  'dayjs': 'dayjs-vendor',
-  'vue': 'vue-vendor',
-  'vue-router': 'vue-router-vendor',
-  'vue-i18n': 'vue-i18n-vendor',
-  'pinia': 'pinia-vendor',
-  'iconify': 'iconify-vendor'
+  "@element-plus/icons-vue": "element-icons-vendor",
+  "@wangeditor": "wangeditor-vendor",
+  "@tencentcloud/chat": "tencent-im-vendor",
+  "@vueuse": "vueuse-vendor",
+  "lodash-es": "lodash-vendor",
+  "element-plus": "el-vendor",
+  artplayer: "artplayer-vendor",
+  highlight: "highlight-vendor",
+  "pinyin-pro": "pinyin-pro-vendor",
+  markdown: "markdown-vendor",
+  axios: "axios-vendor",
+  dayjs: "dayjs-vendor",
+  vue: "vue-vendor",
+  "vue-router": "vue-router-vendor",
+  "vue-i18n": "vue-i18n-vendor",
+  pinia: "pinia-vendor",
+  iconify: "iconify-vendor",
 }
 
 export const manualChunks = (id: string) => {
-  if (!id.includes('node_modules')) return
+  if (!id.includes("node_modules")) return
 
   for (const [key, chunkName] of Object.entries(chunkMap)) {
     if (id.includes(key)) {
@@ -71,5 +71,5 @@ export const manualChunks = (id: string) => {
     }
   }
 
-  return 'vendor'
-};
+  return "vendor"
+}

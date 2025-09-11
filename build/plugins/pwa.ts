@@ -1,4 +1,4 @@
-import { VitePWA } from "vite-plugin-pwa";
+import { VitePWA } from "vite-plugin-pwa"
 
 // https://vite-pwa-org.netlify.app
 export default function setupVitePwa(viteEnv: Env.ImportMeta) {
@@ -28,5 +28,5 @@ export default function setupVitePwa(viteEnv: Env.ImportMeta) {
         },
       ],
     },
-  });
+  })
 }

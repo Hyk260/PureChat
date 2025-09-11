@@ -1,4 +1,4 @@
-import { Plugin as importToCDN } from "vite-plugin-cdn-import";
+import { Plugin as importToCDN } from "vite-plugin-cdn-import"
 
 /**
  * @description 打包时采用`cdn`模式，仅限外网使用（默认不采用，如果需要采用cdn模式，请在 .env.production 文件，将 VITE_CDN 设置成Y）
@@ -45,4 +45,4 @@ export const cdn = importToCDN({
       path: "dayjs.min.js",
     },
   ],
-});
+})

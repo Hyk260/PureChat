@@ -1,16 +1,16 @@
-import process from "node:process";
-import vue from "@vitejs/plugin-vue";
-import vueJsx from '@vitejs/plugin-vue-jsx';
-import progress from "vite-plugin-progress";
-import removeConsole from "vite-plugin-remove-console";
-import vueDevtools from "vite-plugin-vue-devtools";
-import type { PluginOption } from 'vite';
-import { visualizer } from "rollup-plugin-visualizer";
-import { setupUnplugin } from './unplugin';
-import { setupHtmlPlugin } from "./html";
-import { viteBuildInfo } from "./info";
-import { setupUnocss } from './unocss';
-import { cdn } from "./cdn";
+import process from "node:process"
+import vue from "@vitejs/plugin-vue"
+import vueJsx from "@vitejs/plugin-vue-jsx"
+import progress from "vite-plugin-progress"
+import removeConsole from "vite-plugin-remove-console"
+import vueDevtools from "vite-plugin-vue-devtools"
+import type { PluginOption } from "vite"
+import { visualizer } from "rollup-plugin-visualizer"
+import { setupUnplugin } from "./unplugin"
+import { setupHtmlPlugin } from "./html"
+import { viteBuildInfo } from "./info"
+import { setupUnocss } from "./unocss"
+import { cdn } from "./cdn"
 // import pwa from "./pwa";
 
 /**
@@ -27,16 +27,18 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta) {
     setupHtmlPlugin(),
     viteBuildInfo(),
     ...setupUnplugin(viteEnv),
-  ];
-  
+  ]
+
   if (viteEnv.VITE_REMOVE_CONSOLE === "Y") {
-    plugins.push(removeConsole());
+    plugins.push(removeConsole())
   }
-  
+
   if (viteEnv.VITE_DEV_TOOLS === "Y") {
-    plugins.push(vueDevtools({
-      launchEditor: viteEnv.VITE_DEVTOOLS_LAUNCH_EDITOR || "code", // code cursor
-    }));
+    plugins.push(
+      vueDevtools({
+        launchEditor: viteEnv.VITE_DEVTOOLS_LAUNCH_EDITOR || "code", // code cursor
+      })
+    )
   }
   // 打包视图分析
   if (process.env.npm_lifecycle_event === "report") {
@@ -46,10 +48,10 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta) {
   //   plugins.push(pwa(viteEnv));
   // }
   if (viteEnv.VITE_CDN === "Y") {
-    plugins.push(cdn);
+    plugins.push(cdn)
   }
-  
-  return plugins;
+
+  return plugins
 }
 
 /**
@@ -59,14 +61,11 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta) {
  */
 export function setupViteExternal(viteEnv: Env.ImportMeta): (RegExp | string)[] {
   // 本地模式需要排除的依赖
-  const localExternals = [
-    /^@tencentcloud\/chat/,
-    /^tim-upload-plugin/,
-  ];
+  const localExternals = [/^@tencentcloud\/chat/, /^tim-upload-plugin/]
 
   if (viteEnv.VITE_LOCAL_MODE === "Y") {
-    return localExternals;
+    return localExternals
   }
 
-  return [];
+  return []
 }
