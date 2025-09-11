@@ -8,9 +8,9 @@
 <script setup lang="ts">
 import { computed, toRefs } from "vue"
 
-import type { DB_Message } from "@/database/schemas/message"
-
 import { getMessageComponent } from "./utils/getMessageComponent"
+
+import type { DB_Message } from "@/database/schemas/message"
 
 defineOptions({
   name: "MessageRenderer",

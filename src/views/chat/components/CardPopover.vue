@@ -34,8 +34,8 @@
 </template>
 
 <script setup lang="ts">
-import { Operation, PieChart } from "@element-plus/icons-vue"
 import { onClickOutside } from "@vueuse/core"
+import { Operation, PieChart } from "@element-plus/icons-vue"
 
 import { useState } from "@/hooks/useState"
 import { useChatStore, useUserStore } from "@/stores"

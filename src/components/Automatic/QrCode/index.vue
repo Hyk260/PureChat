@@ -5,8 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import QRCode from "qrcode"
 import { onMounted, ref } from "vue"
+
+import QRCode from "qrcode"
 
 defineOptions({ name: "QrCode" })
 

@@ -68,9 +68,10 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from "vue"
+
 import { ClickOutside as vClickOutside } from "element-plus"
 import { chunk } from "lodash-es"
-import { onMounted, ref } from "vue"
 
 import { useChatStore } from "@/stores/modules/chat"
 import { getEmojiAssetUrl, getOperatingSystem } from "@/utils/common"

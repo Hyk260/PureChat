@@ -67,7 +67,7 @@ export function getModelSvg(id: string): string {
     [ModelProvider.Mistral]: "mistral",
     llava: "llava",
   }
-  return data[modelId as ModelProviderKey] || ""
+  return data[modelId] || ""
 }
 
 export function prettyObject(msg: any) {

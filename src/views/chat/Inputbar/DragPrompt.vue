@@ -51,10 +51,11 @@
 </template>
 
 <script setup lang="ts">
+import { nextTick, ref, useTemplateRef } from "vue"
 import { CircleCloseFilled, CirclePlusFilled } from "@element-plus/icons-vue"
+
 import { cloneDeep, isEmpty } from "lodash-es"
 import { storeToRefs } from "pinia"
-import { nextTick, ref, useTemplateRef } from "vue"
 
 import { prompt } from "@/ai/constant"
 import EmojiMart from "@/components/EmojiMart/index.vue"

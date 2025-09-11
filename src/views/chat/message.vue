@@ -33,9 +33,10 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue"
-import { storeToRefs } from "pinia"
 import { onActivated, onDeactivated, onMounted } from "vue"
+import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue"
+
+import { storeToRefs } from "pinia"
 
 import MessageToolbar from "@/components/Popups/MessageToolbar.vue"
 import { useChatStore } from "@/stores/modules/chat"

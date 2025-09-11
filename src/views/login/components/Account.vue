@@ -84,8 +84,8 @@
 </template>
 
 <script setup lang="ts">
-import { Key, Lock, User } from "@element-plus/icons-vue"
 import { onBeforeUnmount, onMounted, ref, watch } from "vue"
+import { Key, Lock, User } from "@element-plus/icons-vue"
 
 import ImageVerify from "@/components/ImageVerify/index.vue"
 import { useOAuth } from "@/hooks/useOAuth"

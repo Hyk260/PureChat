@@ -18,6 +18,8 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
+import { storeToRefs } from "pinia"
+
 import MessageForwardingPopup from "@/components/Popups/MessageForwardingPopup.vue"
 import ShareModal from "@/components/ShareModal/index.vue"
 import { createForwardMessage, createMergerMessage, sendMessage } from "@/service/im-sdk-api"

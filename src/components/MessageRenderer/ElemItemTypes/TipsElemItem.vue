@@ -11,8 +11,8 @@
 </template>
 
 <script setup lang="ts">
-import { CircleCloseFilled } from "@element-plus/icons-vue"
 import { computed, PropType } from "vue"
+import { CircleCloseFilled } from "@element-plus/icons-vue"
 
 import { DB_Message } from "@/database/schemas/message"
 import { useChatStore, useUserStore } from "@/stores"

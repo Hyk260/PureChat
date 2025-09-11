@@ -29,9 +29,10 @@
 </template>
 
 <script setup lang="ts">
-import { Promotion } from "@element-plus/icons-vue"
-import { storeToRefs } from "pinia"
 import { computed, onMounted, watch } from "vue"
+import { Promotion } from "@element-plus/icons-vue"
+
+import { storeToRefs } from "pinia"
 
 import { WEB_SEARCH_PROVIDER_CONFIG } from "@/config/webSearchProviders"
 import { useState } from "@/hooks/useState"

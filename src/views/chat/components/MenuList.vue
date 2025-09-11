@@ -47,8 +47,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed, markRaw, ref } from "vue"
+import { PropType } from "vue"
 import { Warning } from "@element-plus/icons-vue"
-import { ElPopover } from "element-plus"
 import {
   Copy,
   Ellipsis,
@@ -57,8 +58,8 @@ import {
   Trash,
   // SlidersHorizontal
 } from "lucide-vue-next"
-import { computed, markRaw, ref } from "vue"
-import { PropType } from "vue"
+
+import { ElPopover } from "element-plus"
 
 import { DB_Message, MessageStatus, MessageStatusSchema } from "@/database/schemas/message"
 import { useChatStore } from "@/stores/modules/chat"

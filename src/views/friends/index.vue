@@ -32,8 +32,8 @@
 </template>
 
 <script setup lang="ts">
-import { Search } from "@element-plus/icons-vue"
 import { onMounted, onUnmounted, ref } from "vue"
+import { Search } from "@element-plus/icons-vue"
 
 import emitter from "@/utils/mitt-bus"
 

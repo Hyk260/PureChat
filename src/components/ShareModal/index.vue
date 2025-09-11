@@ -114,6 +114,8 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue"
 
+import { storeToRefs } from "pinia"
+
 import { getAiAvatarUrl } from "@/ai/utils"
 import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"
 import { ImageType, imageTypeOptions, useScreenshot } from "@/hooks/useScreenshot"
@@ -133,8 +135,6 @@ const isPrompt = ref(false)
 const imageType = ref(ImageType.Blob)
 const chatStore = useChatStore()
 const robotStore = useRobotStore()
-
-const emit = defineEmits(["onClose"])
 
 const [dialogVisible, setDialogVisible] = useState(false)
 const { isAssistant, getSortedForwardData } = storeToRefs(chatStore)

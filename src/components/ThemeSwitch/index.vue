@@ -6,8 +6,8 @@
 </template>
 
 <script setup lang="ts">
-import { usePreferredColorScheme } from "@vueuse/core"
 import { computed } from "vue"
+import { usePreferredColorScheme } from "@vueuse/core"
 
 import { useThemeStore } from "@/stores/modules/theme"
 

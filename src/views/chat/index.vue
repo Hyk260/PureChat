@@ -12,6 +12,7 @@
 
 <script setup lang="ts">
 import { useEventListener } from "@vueuse/core"
+
 import { storeToRefs } from "pinia"
 
 import MergeMessagePopup from "@/components/Popups/MergeMessagePopup.vue"

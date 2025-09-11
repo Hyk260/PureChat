@@ -5,8 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import Artplayer from "artplayer"
 import { computed, onBeforeUnmount, onMounted, ref } from "vue"
+
+import Artplayer from "artplayer"
 
 const state = `<svg
   viewBox='0 0 80 80'

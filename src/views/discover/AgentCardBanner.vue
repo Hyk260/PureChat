@@ -36,8 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import { ModelID } from "@shared/provider"
 import { onBeforeUnmount, onMounted, ref } from "vue"
+
+import { ModelID } from "@shared/provider"
 
 import { getModelId } from "@/ai/utils"
 import { useState } from "@/hooks/useState"

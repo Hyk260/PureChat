@@ -93,11 +93,12 @@
 </template>
 
 <script setup lang="ts">
+import { nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from "vue"
+
 import { ElScrollbar } from "element-plus"
 import { debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
 import { Contextmenu, ContextmenuItem } from "v-contextmenu"
-import { nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from "vue"
 
 import { getAiAvatarUrl } from "@/ai/utils"
 import Stateful from "@/components/Chat/Stateful.vue"
@@ -105,7 +106,6 @@ import MessageRenderer from "@/components/MessageRenderer/index.vue"
 import MyPopover from "@/components/MyPopover/index.vue"
 import UserPopup from "@/components/Popups/UserPopup.vue"
 import { MULTIPLE_CHOICE_MAX } from "@/constants"
-import type { DB_Message } from "@/database/schemas/message"
 import { getMessageList, revokeMsg, translateText } from "@/service/im-sdk-api"
 import { useAppStore, useChatStore, useGroupStore, useUserStore } from "@/stores"
 import { download, getMessageItemClass, getMessageTypeClass, isSelf, isTime } from "@/utils/chat"
@@ -123,6 +123,8 @@ import NameComponent from "../components/NameComponent.vue"
 import TimeDivider from "../components/TimeDivider.vue"
 import { avatarMenu, menuOptionsList } from "../utils/menu"
 import { handleCopyMsg, validateLastMessage } from "../utils/utils"
+
+import type { DB_Message } from "@/database/schemas/message"
 
 const UserPopupRef = ref()
 const timeout = ref(false)

@@ -96,10 +96,11 @@
 </template>
 
 <script setup lang="ts">
-import { cloneDeep, uniqBy } from "lodash-es"
-import { CircleMinus, CirclePlus, GripVertical } from "lucide-vue-next"
 import { computed, nextTick, onMounted, onUnmounted, ref } from "vue"
 import { VueDraggableNext } from "vue-draggable-next"
+import { CircleMinus, CirclePlus, GripVertical } from "lucide-vue-next"
+
+import { cloneDeep, uniqBy } from "lodash-es"
 
 import { useSidebarStore } from "@/stores/modules/sidebar/index"
 import emitter from "@/utils/mitt-bus"

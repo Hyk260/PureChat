@@ -6,9 +6,10 @@
 </template>
 
 <script setup lang="ts">
-import { useClipboard } from "@vueuse/core"
-import { ElMessage, ElMessageBox, ElNotification } from "element-plus"
 import { createTextVNode, defineComponent } from "vue"
+import { useClipboard } from "@vueuse/core"
+
+import { ElMessage, ElMessageBox, ElNotification } from "element-plus"
 
 import { localStg } from "@/utils/storage"
 

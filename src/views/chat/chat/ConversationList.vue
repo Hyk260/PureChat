@@ -76,13 +76,13 @@
 </template>
 
 <script setup lang="ts">
-import { isObject } from "lodash-es"
+import { computed, h, ref } from "vue"
 import { BellOff } from "lucide-vue-next"
+
+import { isObject } from "lodash-es"
 import { storeToRefs } from "pinia"
 import { Contextmenu, ContextmenuItem } from "v-contextmenu"
-import { computed, h, ref } from "vue"
 
-import type { DB_Session } from "@/database/schemas/session"
 import { useHandlerDrop } from "@/hooks/useHandlerDrop"
 import { pinConversation } from "@/service/im-sdk-api"
 import { setMessageRemindType } from "@/service/im-sdk-api"
@@ -96,6 +96,8 @@ import EmptyMessage from "../components/EmptyMessage.vue"
 import Label from "../components/Label.vue"
 import { chatSessionListData } from "../utils/menu"
 import VirtualList from "./VirtualList.vue"
+
+import type { DB_Session } from "@/database/schemas/session"
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop()
 

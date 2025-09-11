@@ -29,9 +29,10 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue"
+
 import { ProvidersList } from "@database/config"
 import { isEmpty } from "lodash-es"
-import { computed } from "vue"
 
 import { useChatStore, useSidebarStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"

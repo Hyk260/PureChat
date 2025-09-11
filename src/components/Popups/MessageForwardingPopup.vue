@@ -32,8 +32,9 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia"
 import { ref } from "vue"
+
+import { storeToRefs } from "pinia"
 
 import { getAiAvatarUrl } from "@/ai/utils"
 import { useChatStore } from "@/stores/modules/chat"

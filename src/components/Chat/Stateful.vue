@@ -8,10 +8,10 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from "vue"
+import { MessageStatusSchema } from "@/database/schemas/message"
 
 import type { DB_Message, MessageStatus } from "@/database/schemas/message"
-import { MessageStatusSchema } from "@/database/schemas/message"
+import type { PropType } from "vue"
 
 defineOptions({
   name: "Stateful",

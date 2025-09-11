@@ -10,8 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import { Icon } from "@iconify/vue"
 import { computed, useAttrs } from "vue"
+import { Icon } from "@iconify/vue"
 
 defineOptions({ name: "SvgIcon", inheritAttrs: false })
 

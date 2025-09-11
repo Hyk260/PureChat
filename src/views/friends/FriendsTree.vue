@@ -19,8 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { ModelIDList } from "@shared/provider"
 import { onMounted, onUnmounted, ref } from "vue"
+
+import { ModelIDList } from "@shared/provider"
 
 import { getUserProfile } from "@/service/im-sdk-api"
 import { useGroupStore } from "@/stores/modules/group"

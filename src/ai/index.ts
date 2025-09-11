@@ -1,7 +1,7 @@
 import { cloneDeep } from "lodash-es"
 
 import { ClientApi } from "@/ai/api"
-import { FewShots, ModelProvider, ModelProviderKey } from "@/ai/types"
+import { ModelProvider, ModelProviderKey } from "@/ai/types"
 import { getAiAvatarUrl, prettyObject } from "@/ai/utils"
 import { DB_Message } from "@/database/schemas/message"
 import { restApi } from "@/service/api"

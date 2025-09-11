@@ -21,8 +21,9 @@
 </template>
 
 <script setup lang="ts">
-import { ElInput } from "element-plus"
 import { computed, nextTick, onMounted, PropType, ref } from "vue"
+
+import { ElInput } from "element-plus"
 
 import { DB_Message } from "@/database/schemas/message"
 import { modifyMessage } from "@/service/im-sdk-api"

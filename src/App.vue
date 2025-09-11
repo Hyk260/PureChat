@@ -7,8 +7,9 @@
 </template>
 
 <script setup lang="ts">
-import { ElConfigProvider } from "element-plus"
 import { computed, onMounted } from "vue"
+
+import { ElConfigProvider } from "element-plus"
 
 import AppProvider from "@/components/Common/app-provider.vue"
 import { useSettings } from "@/hooks/useSettings"

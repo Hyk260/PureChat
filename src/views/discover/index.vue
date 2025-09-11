@@ -21,8 +21,9 @@
 </template>
 
 <script setup lang="ts">
-import { marketJson } from "@database/market"
 import { onBeforeMount, ref } from "vue"
+
+import { marketJson } from "@database/market"
 
 import { getPrompt } from "@/service/api"
 import { localStg } from "@/utils/storage"

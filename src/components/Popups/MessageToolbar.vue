@@ -42,9 +42,10 @@
 </template>
 
 <script setup lang="ts">
-import { Share2, Trash2, X } from "lucide-vue-next"
-import { storeToRefs } from "pinia"
 import { ref } from "vue"
+import { Share2, Trash2, X } from "lucide-vue-next"
+
+import { storeToRefs } from "pinia"
 
 import MessageForwardingPopup from "@/components/Popups/MessageForwardingPopup.vue"
 import ShareModal from "@/components/ShareModal/index.vue"

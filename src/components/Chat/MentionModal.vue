@@ -27,15 +27,17 @@
 </template>
 
 <script setup lang="ts">
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue"
 import { onClickOutside, useEventListener } from "@vueuse/core"
+
 import { cloneDeep } from "lodash-es"
 import { storeToRefs } from "pinia"
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue"
 
 import { useChatStore, useGroupStore } from "@/stores"
-import type { GroupMember } from "@/stores/modules/group/type"
 import { insertMention, prioritizeRBTUserID } from "@/utils/chat"
 import emitter, { type FilteringType } from "@/utils/mitt-bus"
+
+import type { GroupMember } from "@/stores/modules/group/type"
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__"
 

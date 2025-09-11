@@ -1,5 +1,4 @@
 import tim from "@/service/chat/PureChatService"
-import { CREATE_GROUP_OPTIONS } from "@/service/chat/types/tencent-cloud-chat"
 // import TencentCloudChat from "@/service/chat/types/tencent-cloud-chat"
 
 export const GroupType = {

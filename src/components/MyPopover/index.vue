@@ -49,8 +49,8 @@
 </template>
 
 <script setup lang="ts">
-import { onClickOutside } from "@vueuse/core"
 import { onBeforeUnmount, onMounted, ref } from "vue"
+import { onClickOutside } from "@vueuse/core"
 
 import { getAiAvatarUrl } from "@/ai/utils"
 // import { getGender } from "@/utils/common";

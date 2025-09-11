@@ -18,9 +18,10 @@
 </template>
 
 <script setup lang="ts">
-import { Plus, Search } from "@element-plus/icons-vue"
-import { debounce, isEmpty } from "lodash-es"
 import { ref } from "vue"
+import { Plus, Search } from "@element-plus/icons-vue"
+
+import { debounce, isEmpty } from "lodash-es"
 
 import { SessionModel } from "@/database/models/session"
 import { useChatStore, useGroupStore } from "@/stores"

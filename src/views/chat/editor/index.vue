@@ -35,10 +35,8 @@
 </template>
 
 <script setup lang="ts">
-import "../utils/custom-menu"
-import "@/styles/wangeditor/index.css"
-
 import { Editor } from "@wangeditor/editor-for-vue"
+
 import { debounce } from "lodash-es"
 
 import MentionModal from "@/components/Chat/MentionModal.vue"
@@ -61,6 +59,9 @@ import {
   sendChatMessage,
 } from "../utils/utils"
 import { createMediaElement, customAlert, handleEditorKeyDown, isTextFile } from "./utils"
+
+import "../utils/custom-menu"
+import "@/styles/wangeditor/index.css"
 
 const MAX_FILE_SIZE_MB = 100
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024

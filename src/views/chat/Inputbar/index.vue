@@ -109,6 +109,7 @@
 
 <script setup lang="ts">
 import { DArrowLeft, Delete, Sunny, Warning } from "@element-plus/icons-vue"
+
 import { audioExts, documentExts, imageExts, textExts, videoExts } from "@shared/config"
 import { storeToRefs } from "pinia"
 

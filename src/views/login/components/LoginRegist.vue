@@ -60,14 +60,15 @@
 </template>
 
 <script setup lang="ts">
-import { Iphone, Lock, User } from "@element-plus/icons-vue"
-import type { FormInstance } from "element-plus"
 import { ref } from "vue"
+import { Iphone, Lock, User } from "@element-plus/icons-vue"
 
 import { useUserStore } from "@/stores/modules/user"
 
 import { ruleForm, updateRules } from "../utils/validation"
 import { useVerifyCode } from "../utils/verifyCode"
+
+import type { FormInstance } from "element-plus"
 
 defineOptions({ name: "LoginRegist" })
 
