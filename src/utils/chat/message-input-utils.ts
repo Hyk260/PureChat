@@ -165,10 +165,8 @@ export const base64ToFile = (base64: string, filename: string = "image.png", mim
 
 /**
  * 获取文件 URL 的 Blob 对象
- * @param {string} url 文件 URL
- * @returns {Promise<Blob>} 文件 Blob 对象的 Promise
  */
-export function getBlob(url) {
+export function getBlob(url: string): Promise<Blob> {
   return new Promise((resolve) => {
     const xhr = new XMLHttpRequest()
     xhr.open("GET", url, true)
@@ -255,14 +253,12 @@ export function getCloudCustomData(data, params?: any) {
 
 /**
  * 匹配不包含 <img src= 的字符串
- * @param {string[]} arr - 包含字符串和图片链接的数组
- * @returns {string} - 返回第一个匹配到的不含图片链接的字符串，如果都含有图片链接则返回 undefined
  * ['<img src="image.png">', "some string", '<img src="image3.png">']
  * "some string"
  */
-export const findNonImageString = (arr: string[]) => {
+export const findNonImageString = (arr: string[]): string => {
   const regex = /^((?!<img src=).)*$/
-  const result = arr.find((element) => regex.test(element))
+  const result = arr.find((element) => regex.test(element)) || ""
   return result
 }
 

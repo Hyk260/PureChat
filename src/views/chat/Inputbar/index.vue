@@ -43,7 +43,7 @@
       </el-button>
     </el-tooltip>
     <!-- 联网 -->
-    <el-tooltip :content="$t('chat.web_search')" placement="top">
+    <el-tooltip v-if="IS_LOCAL_MODE" :content="$t('chat.web_search')" placement="top">
       <el-button
         v-show="isWebSearchModel"
         :style="{

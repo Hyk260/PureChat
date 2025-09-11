@@ -35,11 +35,6 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
       }
     },
     async loadSystemFonts() {
-      if (window?.queryLocalFonts) {
-        console.warn("Local Font Access API is not supported in this browser")
-        return
-      }
-
       try {
         const availableFonts = await window.queryLocalFonts()
         const newFonts = {}

@@ -9,17 +9,8 @@ import { createCustomMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore } from "@/stores"
 import { getCloudCustomData } from "@/utils/chat"
 import { getCustomMsgContent, getTime } from "@/utils/common"
-import { generateReferencePrompt } from "@/utils/messageUtils/search"
+import { generateReferencePrompt, handleWebSearchData } from "@/utils/messageUtils/search"
 import emitter from "@/utils/mitt-bus"
-import { localStg } from "@/utils/storage"
-
-const handleWebSearchData = (data: DB_Message, flag = false) => {
-  const webSearchResult = window.localStg.get(`web-search-${data.ID}`)
-  if (!webSearchResult) return ""
-  const result = getCloudCustomData({ payload: { text: "web-search" } }, { webSearchResult })
-  if (flag) window.localStg.remove(`web-search-${data.ID}`)
-  return result
-}
 
 interface AIResponse {
   message: string
@@ -94,10 +85,6 @@ const updateMessage = (chat: DB_Message, data?: AIResponse) => {
   })
 
   emitter.emit("updateScroll", "robot")
-
-  if (isFinish && __LOCAL_MODE__) {
-    localStg.remove("webSearchReferences")
-  }
 }
 
 /**
@@ -167,14 +154,14 @@ export const chatService = async ({
 
   const enableWebSearch = useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel
 
-  if (enableWebSearch) {
+  if (enableWebSearch && __LOCAL_MODE__) {
     const webSearchResult = await generateReferencePrompt(chat, { content: chat?.payload?.text })
 
     window.localStg.set(`web-search-${startMsg.ID}`, webSearchResult)
   }
 
   await api.llm.chat({
-    messages,
+    messages: enableWebSearch ? useChatStore().currentMessageList : messages,
     config: {
       stream: true,
       model: api.config().model,

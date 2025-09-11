@@ -16,6 +16,7 @@ export const list = computed(() => {
       id: "webSearch",
       title: $t("settings.webSearch.title"),
       svg_icon: "internet",
+      hide: !__LOCAL_MODE__,
     },
     {
       id: "provider",

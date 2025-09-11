@@ -8,8 +8,8 @@ import WebSearchEngineProvider from "./WebSearchProvider"
 import searchTestResult from "./WebSearchProvider/test.json"
 import { WebSearchProviderResponse } from "./WebSearchProvider/types"
 
-// const { DEV: isDev } = import.meta.env
-const searchTestState = true
+const { DEV: isDev } = import.meta.env
+const searchTestState = false
 
 /**
  * 提供网络搜索相关功能的服务类
@@ -24,7 +24,6 @@ class WebSearchService {
 
   /**
    * 检查网络搜索功能是否启用
-   * @returns 如果默认搜索提供商已启用则返回true，否则返回false
    */
   public isWebSearchEnabled(): boolean {
     const { defaultProvider, providers } = this.getWebSearchState()
@@ -51,7 +50,6 @@ class WebSearchService {
 
   /**
    * 获取当前默认的网络搜索提供商
-   * @returns 网络搜索提供商
    */
   public getWebSearchProvider() {
     const { defaultProvider, providers } = this.getWebSearchState()
@@ -78,7 +76,7 @@ class WebSearchService {
     }
 
     try {
-      if (searchTestState) {
+      if (isDev && searchTestState) {
         return searchTestResult
       }
       return await webSearchEngine.search(formattedQuery, websearch, httpOptions)
@@ -92,7 +90,6 @@ class WebSearchService {
 
   /**
    * 检查搜索提供商是否正常工作
-   * @returns 如果提供商可用返回true，否则返回false
    */
   public async checkSearch(provider: WebSearchProviderId): Promise<{ valid: boolean; error?: any }> {
     try {

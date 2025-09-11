@@ -5,9 +5,10 @@ import { WebSearchProviderResult } from "@/service/WebSearchProvider/types"
 import WebSearchService from "@/service/WebSearchService"
 import { useChatStore } from "@/stores"
 import { useWebSearchStore } from "@/stores/modules/websearch"
+import { getCloudCustomData } from "@/utils/chat"
 
+// import type { LLMMessage } from "@/ai/types"
 import type { DB_Message } from "@/database/schemas/message"
-import type { LLMMessage } from "@/ai/types"
 
 export function mapWebSearchResults(results: WebSearchProviderResult[]) {
   return results.map((t, i) => ({
@@ -59,4 +60,13 @@ export async function generateReferencePrompt(data: DB_Message, message: { conte
   } else {
     return null
   }
+}
+
+export const handleWebSearchData = (data: DB_Message, flag = false) => {
+  if (!data?.ID) return ""
+  const webSearchResult = window.localStg.get(`web-search-${data.ID}`)
+  if (!webSearchResult) return ""
+  const result = getCloudCustomData({ payload: { text: "web-search" } }, { webSearchResult })
+  if (flag) window.localStg.remove(`web-search-${data.ID}`)
+  return result
 }

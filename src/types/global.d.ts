@@ -42,19 +42,19 @@ declare global {
     /** 本地存储 */
     localStg: LocalStg;
     /** 复制文本到剪贴板 */
-    copyToClipboard?: (str: string) => void;
+    copyToClipboard: (str: string) => void;
     /** NProgress */
     NProgress?: import('nprogress').NProgress;
     /** MessageBox */
     $messageBox?: import('element-plus').IElMessageBox;
     /** Message */
-    $message?: import('element-plus').Message;
-    // $message?: import('element-plus').Message & {
-    //   success: (message: string | import('element-plus').MessageParams) => void;
-    //   warning: (message: string | import('element-plus').MessageParams) => void;
-    //   info: (message: string | import('element-plus').MessageParams) => void;
-    //   error: (message: string | import('element-plus').MessageParams) => void;
-    // };
+    // $message?: import('element-plus').Message;
+    $message?: import('element-plus').Message & {
+      success: (message: string) => void;
+      warning: (message: string) => void;
+      info: (message: string) => void;
+      error: (message: string) => void;
+    };
     /** Notification */
     $notification?: import('element-plus').Notify;
     // __TIM_DEBUG__: DebugInterface;

@@ -3,7 +3,7 @@
     <div class="title">{{ $t("common.setup") }}</div>
     <ul class="menu-list">
       <li
-        v-for="item in list"
+        v-for="item in list.filter((item) => !item.hide)"
         :key="item.id"
         class="menu-item"
         :class="{
