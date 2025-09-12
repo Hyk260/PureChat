@@ -47,9 +47,7 @@ export class TencentChatService {
       const moduleLoadStart = performance.now()
       // const [
       //   { default: TencentCloudChat },
-      //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       //   { default: GroupModule },
-      //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       //   { default: SignalingModule },
       //   { default: TIMUploadPlugin },
       // ] = await Promise.all([
@@ -161,9 +159,7 @@ export class TencentChatService {
   private createChatInstance(config: ChatConfig): ChatSDK {
     // const [
     //   { default: TencentCloudChat },
-    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     //   { default: GroupModule },
-    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     //   { default: SignalingModule },
     //   { default: TIMUploadPlugin },
     // ] = await Promise.all([
