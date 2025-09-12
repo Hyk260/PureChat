@@ -842,6 +842,8 @@ declare interface MESSAGE_OPTIONS {
    * - TencentCloudChat.TYPES.CONV_GROUP (group chat)
    */
   conversationType: TencentCloudChat.TYPES
+
+  cache?: boolean
   /**
    * Message priority
    */

@@ -108,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, onMounted, onUnmounted, ref } from "vue"
 import { DArrowLeft, Delete, Sunny, Warning } from "@element-plus/icons-vue"
 
 import { audioExts, documentExts, imageExts, textExts, videoExts } from "@shared/config"

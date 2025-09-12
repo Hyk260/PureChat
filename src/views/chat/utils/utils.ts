@@ -14,6 +14,7 @@ import emitter from "@/utils/mitt-bus"
 
 import type { DB_Message } from "@/database/schemas/message"
 import type { GroupMember } from "@/stores/modules/group/type"
+import type { IDomEditor } from "@wangeditor/editor"
 
 export const validateLastMessage = (list: DB_Message[]): DB_Message | null => {
   if (!list.length) return null
@@ -23,12 +24,10 @@ export const validateLastMessage = (list: DB_Message[]): DB_Message | null => {
 // 复制
 export const handleCopyMsg = async (data: DB_Message) => {
   const { payload, type } = data
-  // 文本
+
   if (type === "TIMTextElem") {
     window.copyToClipboard(payload.text)
-  }
-  // 图片
-  if (type === "TIMImageElem") {
+  } else if (type === "TIMImageElem") {
     const url = payload.imageInfoArray[0].imageUrl
     const imageBlob = await getBlob(url)
     // 创建一个空的 ClipboardItem 对象，并将图片添加到其中
@@ -61,22 +60,22 @@ export async function sendChatMessage(options) {
 
   // 处理文件消息
   for (const t of files) {
-    const file = await createFileMessage({ to, type, file: base64ToFile(t.link, t.fileName), path: t?.path })
+    const file = createFileMessage({ to, type, file: base64ToFile(t.link, t.fileName), path: t?.path })
     messages.push(file)
   }
 
   // 处理视频消息
   for (const t of video) {
-    const videoItem = await createVideoMessage({ to, type, file: base64ToFile(t.link, t.fileName) })
+    const videoItem = createVideoMessage({ to, type, file: base64ToFile(t.link, t.fileName) })
     messages.push(videoItem)
   }
 
   // 处理文本消息（@消息或普通文本）
   if (aitStr) {
-    const atTextItem = await createTextAtMessage({ to, type, text: aitStr, atUserList, custom })
+    const atTextItem = createTextAtMessage({ to, type, text: aitStr, atUserList, custom })
     messages.push(atTextItem)
   } else if (text) {
-    const textItem = await createTextMessage({ to, type, text, custom })
+    const textItem = createTextMessage({ to, type, text, custom })
     messages.push(textItem)
   }
 
@@ -85,13 +84,10 @@ export async function sendChatMessage(options) {
 
 /**
  * 将包含表情图像的 HTML 字符串转换为对应的表情符号文本
- * @param {string} html - 待转换的 HTML 字符串
- * @param {Array} emojiMap - 表情符号和对应的图像数据数组
- * @returns {string} - 转换后的结果
  * <p>12<img src="*" alt="[我最美]" />333</p>
  * 12[我最美]333
  */
-export function extractEmojiInfo(editor) {
+export function extractEmojiInfo(editor: IDomEditor) {
   const html = editor.getHtml() // 非格式化的 html
   const emojiMap = editor.getElemsByType("image") // 所有图片
   if (!html || !emojiMap || !Array.isArray(emojiMap)) return ""
@@ -112,39 +108,41 @@ export function extractEmojiInfo(editor) {
   return text
 }
 
-/**
- * 提取图片信息
- */
-export const extractImageInfo = (editor) => {
-  let images = null
-  const image = editor.getElemsByType("image")
-  // 过滤表情包消息
-  images = image.filter((item) => item.class !== "EmoticonPack")
-  return { images }
-}
-
-const isVideoFile = (fileName: string) => {
+export const isVideoFile = (fileName: string) => {
   const video = ["mp4", "wmv", "webm"]
   const name = fileName.toLowerCase()
   const regex = new RegExp(`(${video.join("|")})$`, "i")
   return regex.test(name)
 }
+
+/**
+ * 提取图片信息
+ */
+export const extractImageInfo = (editor: IDomEditor) => {
+  let images = []
+  const image = editor.getElemsByType("image")
+  // 过滤表情包消息
+  images = image.filter((item) => item?.class !== "EmoticonPack")
+  return { images }
+}
+
 /**
  * 提取文件信息
  */
-export const extractFilesInfo = (editor) => {
-  const file = []
+export const extractFilesInfo = (editor: IDomEditor) => {
+  let file = []
   const files = editor.getElemsByType("attachment")
-  files.map((t) => !isVideoFile(getFileType(t.fileName)) && file.push(t))
+  file = files.filter((t) => !isVideoFile(getFileType(t.fileName)))
   return { files: file }
 }
+
 /**
  * 提取视频信息
  */
-export const extractVideoInfo = (editor) => {
-  const video = []
+export const extractVideoInfo = (editor: IDomEditor) => {
+  let video = []
   const files = editor.getElemsByType("attachment")
-  files.map((t) => isVideoFile(getFileType(t.fileName)) && video.push(t))
+  video = files.map((t) => isVideoFile(getFileType(t.fileName)))
   return { video }
 }
 
@@ -153,7 +151,7 @@ export const extractVideoInfo = (editor) => {
  * @param editor 编辑器实例
  * @returns 包含纯文本内容和@用户ID列表的对象
  */
-export const extractAitInfo = (editor) => {
+export const extractAitInfo = (editor: IDomEditor) => {
   let aitStr = ""
   const atUserList = []
 
@@ -163,20 +161,19 @@ export const extractAitInfo = (editor) => {
   if (!mentions.length) {
     return { aitStr, atUserList }
   }
-
+  // 移除附件标签
   const fileTagRegex = /<span\s+data-w-e-type="attachment"[^>]*>.*?<\/span>/g
+  // 移除HTML标签
   const htmlTagRegex = /<[^>]+>/g
+  // 移除&nbsp
   const nbspRegex = /&nbsp;/gi
 
-  aitStr = html
-    .replace(fileTagRegex, "") // 移除附件标签
-    .replace(htmlTagRegex, "") // 移除所有HTML标签
-    .replace(nbspRegex, "") // 移除&nbsp;
+  aitStr = html.replace(fileTagRegex, "").replace(htmlTagRegex, "").replace(nbspRegex, "")
 
   const uniqueUserIds = new Set()
-  mentions.forEach((mention) => {
-    if (mention.info?.id) {
-      uniqueUserIds.add(mention.info.id)
+  mentions.forEach((item) => {
+    if (item?.info?.id) {
+      uniqueUserIds.add(item.info.id)
     }
   })
 

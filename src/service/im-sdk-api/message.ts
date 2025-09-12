@@ -2,7 +2,9 @@ import tim from "@/service/chat/PureChatService"
 import { fileUploading, getCloudCustomData } from "@/utils/chat/index"
 import { getCustomMsgContent, updateImageSize } from "@/utils/common"
 
-// 发送消息
+/**
+ * 发送消息
+ */
 export const sendMessage = async (params) => {
   try {
     const {
@@ -14,7 +16,10 @@ export const sendMessage = async (params) => {
     throw new Error(error)
   }
 }
-// 创建自定义消息
+
+/**
+ * 创建自定义消息
+ */
 export const createCustomMessage = (params) => {
   const { to, type = "C2C", customType } = params || {}
   return tim.createCustomMessage({
@@ -24,10 +29,12 @@ export const createCustomMessage = (params) => {
   })
 }
 
-// 创建文本消息
-export const createTextMessage = async (params) => {
+/**
+ * 创建文本消息
+ */
+export const createTextMessage = (params) => {
   const { to, type = "C2C", text, custom = {}, cache = true } = params
-  return await tim.createTextMessage({
+  return tim.createTextMessage({
     to,
     cache: cache,
     conversationType: type,
@@ -36,10 +43,12 @@ export const createTextMessage = async (params) => {
   })
 }
 
-// 创建 @提醒功能的文本消息
-export const createTextAtMessage = async (params) => {
+/**
+ * 创建 @ 提醒功能的文本消息
+ */
+export const createTextAtMessage = (params) => {
   const { to, type = "C2C", text, atUserList, custom } = params
-  return await tim.createTextAtMessage({
+  return tim.createTextAtMessage({
     to,
     conversationType: type,
     payload: { text, atUserList },
@@ -47,10 +56,13 @@ export const createTextAtMessage = async (params) => {
   })
 }
 
-// 创建图片消息 https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createImageMessage
+/**
+ * 创建图片消息
+ * @see <URL> https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createImageMessage
+ */
 export const createImageMessage = async (params) => {
   const { to, type, file } = params
-  const message = await tim.createImageMessage({
+  const message = tim.createImageMessage({
     to,
     conversationType: type,
     payload: { file },
@@ -61,10 +73,13 @@ export const createImageMessage = async (params) => {
   const imageMessage = await updateImageSize(message)
   return imageMessage
 }
-// 创建文件消息
-export const createFileMessage = async (params) => {
+
+/**
+ * 创建文件消息
+ */
+export const createFileMessage = (params) => {
   const { to, type, file, path = "" } = params
-  const message = await tim.createFileMessage({
+  const message = tim.createFileMessage({
     to,
     conversationType: type,
     payload: { file, path },
@@ -74,10 +89,13 @@ export const createFileMessage = async (params) => {
   })
   return message
 }
-// 创建视频消息
-export const createVideoMessage = async (params) => {
+
+/**
+ * 创建视频消息
+ */
+export const createVideoMessage = (params) => {
   const { to, type, file } = params
-  const message = await tim.createVideoMessage({
+  const message = tim.createVideoMessage({
     to,
     conversationType: type,
     payload: { file },
@@ -87,8 +105,11 @@ export const createVideoMessage = async (params) => {
   })
   return message
 }
-// 创建合并消息
-export const createMergerMessage = async (params) => {
+
+/**
+ * 创建合并消息
+ */
+export const createMergerMessage = (params) => {
   const { to, type, messageList = [], title = "聊天记录", abstractList } = params
   return tim.createMergerMessage({
     to,
@@ -101,16 +122,22 @@ export const createMergerMessage = async (params) => {
     },
   })
 }
-// 创建转发消息
-export const createForwardMessage = async (params) => {
+
+/**
+ * 创建转发消息
+ */
+export const createForwardMessage = (params) => {
   const { to, type, message } = params
-  return await tim.createForwardMessage({
+  return tim.createForwardMessage({
     to,
     conversationType: type,
     payload: message,
   })
 }
-// 下载合并消息
+
+/**
+ * 下载合并消息
+ */
 export const downloadMergerMessage = async (message) => {
   if (message.type === "TIMRelayElem" && message.payload.downloadKey !== "") {
     try {

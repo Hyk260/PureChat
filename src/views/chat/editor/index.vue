@@ -268,21 +268,12 @@ const prepareMessageData = () => {
   const extractions = {
     ...extractAitInfo(editor),
     ...extractFilesInfo(editor),
-    // ...extractVideoInfo(editor),
     ...extractImageInfo(editor),
   }
-  const { aitStr = "", atUserList = [], files = [], video = [], images = [] } = extractions
+  const { aitStr = "", atUserList = [], files = [], images = [] } = extractions
   const emoticons = extractEmojiInfo(editor)
 
-  const hasContent = [
-    // video.length,
-    images.length,
-    files.length,
-    atUserList.length,
-    aitStr,
-    emoticons,
-    text,
-  ].some(Boolean)
+  const hasContent = [images.length, files.length, atUserList.length, aitStr, emoticons, text].some(Boolean)
 
   const finalText = emoticons || text
 

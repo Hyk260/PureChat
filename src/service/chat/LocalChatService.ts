@@ -5,7 +5,7 @@ import { MessageModel } from "@/database/models/message"
 import { SessionModel } from "@/database/models/session"
 import { DB_Message } from "@/database/schemas/message"
 import { DB_Session } from "@/database/schemas/session"
-import { getTime } from "@/utils/common"
+import { delay, getTime } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
@@ -108,12 +108,6 @@ export class LocalChat {
 
   /**
    * 发送消息
-   * @param {Object} data 消息数据
-   * @param {string} data.conversationID 会话ID
-   * @param {Object} data.payload 消息载荷
-   * @param {string} data.payload.text 消息文本
-   * @param {string} [data.ID] 消息ID
-   * @returns {Promise<{code: number, data: {message: Object}}>} 发送结果
    */
   async sendMessage(data) {
     try {
@@ -128,16 +122,14 @@ export class LocalChat {
         ID: data.ID || uuid(),
         status: "success",
       }
-
-      setTimeout(async () => {
-        try {
-          const sessionList = await this.loadConversationList()
-          this.emit("onConversationListUpdated", { data: sessionList })
-          this.emit("onMessageReceived", { data: [message] })
-        } catch (error) {
-          console.error("发送消息后处理失败:", error)
-        }
-      }, 0)
+      await delay(100)
+      try {
+        const sessionList = await this.loadConversationList()
+        this.emit("onConversationListUpdated", { data: sessionList })
+        this.emit("onMessageReceived", { data: [message] })
+      } catch (error) {
+        console.error("发送消息后处理失败:", error)
+      }
 
       return { code: 0, data: { message } }
     } catch (error) {
@@ -149,6 +141,7 @@ export class LocalChat {
     return UserProfile.userID
   }
   async getMyProfile() {
+    await delay(10)
     return {
       code: 0,
       data: UserProfile,
@@ -156,12 +149,10 @@ export class LocalChat {
   }
 
   /**
-   * 批量获取用户资料
-   * @param {Object} params 参数对象
-   * @param {string[]} [params.userIDList=[]] 用户ID列表
-   * @returns {Promise<{code: number, data: Array}>} 用户资料列表
+   * 获取用户资料
    */
   async getUserProfile({ userIDList = [] }) {
+    await delay(10)
     try {
       const userIDSet = new Set(userIDList)
       const data = ProvidersList.filter((item) => userIDSet.has(item.userID))
@@ -176,6 +167,7 @@ export class LocalChat {
     }
   }
   async getGroupList() {
+    await delay(10)
     return {
       code: 0,
       data: {
@@ -184,6 +176,7 @@ export class LocalChat {
     }
   }
   async getGroupMemberList() {
+    await delay(10)
     return {
       code: 0,
       data: {
@@ -195,15 +188,8 @@ export class LocalChat {
 
   /**
    * 创建文本消息
-   * @param {Object} data 消息数据
-   * @param {string} data.to 接收方ID
-   * @param {string} data.conversationType 会话类型
-   * @param {Object} data.payload 消息载荷
-   * @param {string} [data.cloudCustomData=""] 云端自定义数据
-   * @param {boolean} [data.cache=false] 是否缓存到数据库
-   * @returns {Promise<Object>} 消息对象
    */
-  async createTextMessage(data) {
+  createTextMessage(data) {
     const { to, conversationType, payload, cloudCustomData = "", cache } = data
     const currentTime = getTime()
 
@@ -230,15 +216,8 @@ export class LocalChat {
 
   /**
    * 创建文件消息
-   * @param {Object} data 文件消息数据
-   * @param {string} data.to 接收方ID
-   * @param {string} data.conversationType 会话类型
-   * @param {Object} data.payload 文件载荷
-   * @param {File} data.payload.file 文件对象
-   * @param {string} [data.payload.path] 文件路径
-   * @returns {Promise<Object>} 文件消息对象
    */
-  async createFileMessage(data) {
+  createFileMessage(data) {
     const { to, conversationType, payload } = data
     const currentTime = getTime()
 
@@ -270,11 +249,6 @@ export class LocalChat {
 
   /**
    * 创建自定义消息
-   * @param {Object} data 自定义消息数据
-   * @param {string} data.to 接收方ID
-   * @param {string} data.conversationType 会话类型
-   * @param {Object} data.payload 消息载荷
-   * @returns {Object} 自定义消息对象
    */
   createCustomMessage(data) {
     const { to, conversationType, payload } = data
@@ -301,8 +275,6 @@ export class LocalChat {
 
   /**
    * 获取会话资料
-   * @param {string} chatId 聊天ID
-   * @returns {Promise<{code: number, data: {conversation: Object}}>} 会话资料
    */
   async getConversationProfile(chatId) {
     try {
@@ -470,6 +442,7 @@ export class LocalChat {
    * 登出
    */
   async logout() {
+    await delay(10)
     try {
       this.isInitialized = false
 

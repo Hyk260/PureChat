@@ -184,7 +184,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const from = getModelId(defaultBot)
       const meta = useRobotStore().promptStore[defaultBot]?.[0]?.meta
       const text = `你好，我是 ${meta.avatar} ${meta.title} ${meta.description} 让我们开始对话吧！`
-      const msg = await createTextMessage({ to: from, text, cache: false })
+      const msg = createTextMessage({ to: from, text, cache: false })
       const promptContent = getCloudCustomData(
         { key: "messagePrompt", payload: { text: "预设提示词" } },
         { recQuestion: meta.recQuestion || [] }
