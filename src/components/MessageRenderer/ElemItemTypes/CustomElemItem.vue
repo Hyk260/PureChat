@@ -53,7 +53,11 @@ const customMessageContent = (): string => {
         return payload?.chunks.map((chunk: string) => chunk).join("") || ""
       } catch (error) {
         console.error("解析消息内容失败:", error)
-        return "[机器人自定义消息]"
+        if (payload?.errorInfo) {
+          return payload?.errorInfo
+        } else {
+          return "[机器人自定义消息]"
+        }
       }
     }
 
@@ -78,6 +82,7 @@ const customMessageContent = (): string => {
     display: flex;
     align-items: center;
     font-size: 14px;
+    word-break: break-all;
   }
 }
 </style>
