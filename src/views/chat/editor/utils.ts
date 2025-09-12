@@ -3,11 +3,36 @@ import { nextTick } from "vue"
 import { documentExts, textExts } from "@shared/config"
 import { IDomEditor } from "@wangeditor/editor"
 
+import { bytesToSize, fileToBase64, getFileType } from "@/utils/chat"
+
 export const createMediaElement = (type: string, props: any = {}) => ({
   type,
   ...props,
   children: [{ text: "" }],
 })
+
+export const handleAssistantFile = async (file: File, editor: IDomEditor) => {
+  if (!file) throw new Error("file is required")
+  if (!editor) throw new Error("editor is required")
+
+  const fileType = getFileType(file?.name)
+
+  if (!isTextFile(fileType) || !__IS_ELECTRON__) {
+    window.$message?.warning(`暂不支持${fileType}文件`)
+    return
+  }
+
+  const base64Url = await fileToBase64(file)
+
+  const node = createMediaElement("attachment", {
+    fileName: file.name,
+    fileSize: bytesToSize(file.size),
+    link: base64Url,
+    path: file?.path || "",
+  })
+
+  editor.insertNode(node)
+}
 
 export const insertEmoji = (option, editor: IDomEditor) => {
   if (!editor) throw new Error("editor is undefined")
@@ -31,7 +56,7 @@ export const isTextFile = (fileName: string) => {
   return TEXT_FILE_EXTENSIONS.has(`.${extension}`)
 }
 
-export const customAlert = (s, t: string) => {
+export const customAlert = (s: string, t: string) => {
   switch (t) {
     case "success":
       console.log("success")

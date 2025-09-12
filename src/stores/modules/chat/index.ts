@@ -34,6 +34,7 @@ import type { ChatState } from "./type"
 import type { ModelProviderKey } from "@/ai/types"
 import type { DB_Message } from "@/database/schemas/message"
 import type { DB_Session } from "@/database/schemas/session"
+import type { DraftData } from "@/types"
 import type { ModelIDValue } from "@shared/provider"
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
@@ -55,7 +56,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     msgEdit: null, // 消息编辑
     recently: new Set(), // 最近使用表情包
     chatDraftMap: new Map(), // 会话草稿
-    forwardData: new Map<string, DB_Message>(), // 多选数据
+    forwardData: new Map(), // 多选数据
     revokeMsgMap: new Map(), // 撤回消息重新编辑
     sendingMap: new Map(),
     selectedMessageMap: new Map(), // 多选消息
@@ -432,7 +433,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.revokeMsgMap.delete(data.ID)
       }
     },
-    updateChatDraft(data: any) {
+    updateChatDraft(data: { ID: string; payload: DraftData }) {
       if (!data) return
       const { ID, payload } = data
       if (checkTextNotEmpty(payload)) {

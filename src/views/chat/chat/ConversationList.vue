@@ -7,13 +7,13 @@
         :id="`message_${item.conversationID}`"
         :key="item.conversationID"
         v-contextmenu:contextmenu
-        class="message-item flex-bc"
+        class="message-item"
         :class="fnClass(item)"
         @click="handleConversationListClick(item)"
-        @drop="handleDrop($event, item, handleConversationListClick)"
-        @dragover="handleDragOver($event)"
-        @dragenter="handleDragEnter($event, item)"
-        @dragleave="handleDragLeave($event, item)"
+        @drop="(e) => handleDrop(e, item, handleConversationListClick)"
+        @dragover="handleDragOver"
+        @dragenter="(e) => handleDragEnter(e, item)"
+        @dragleave="(e) => handleDragLeave(e, item)"
         @contextmenu.prevent="handleContextMenuEvent($event, item)"
       >
         <!-- 置顶图标 -->
@@ -282,6 +282,9 @@ const pingConversation = async (data: DB_Session) => {
   overflow: hidden;
 }
 .message-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 12px 12px 12px 16px;
   user-select: none;
   height: 64px;

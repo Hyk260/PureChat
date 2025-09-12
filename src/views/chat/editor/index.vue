@@ -6,7 +6,6 @@
     class="wangeditor"
     :class="{ 'wang-h-full': isFullscreenInputActive }"
   >
-    <!-- 自定义工具栏 -->
     <Inputbar />
     <Editor
       v-model="valueHtml"
@@ -38,14 +37,13 @@
 import { onActivated, onBeforeUnmount, onDeactivated, onMounted, ref, shallowRef, watch } from "vue"
 import { Editor } from "@wangeditor/editor-for-vue"
 
-import { IDomEditor } from "@wangeditor/editor"
 import { debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
 
 import MentionModal from "@/components/Chat/MentionModal.vue"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useGroupStore } from "@/stores"
-import { bytesToSize, fileToBase64, getFileType, insertMention } from "@/utils/chat"
+import { bytesToSize, fileToBase64, insertMention } from "@/utils/chat"
 import { isMobile } from "@/utils/common"
 import { getOperatingSystem } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
@@ -61,7 +59,10 @@ import {
   filterMentionList,
   sendChatMessage,
 } from "../utils/utils"
-import { createMediaElement, customAlert, handleEditorKeyDown, isTextFile } from "./utils"
+import { createMediaElement, customAlert, handleAssistantFile, handleEditorKeyDown, insertEmoji } from "./utils"
+
+import type { DraftData } from "@/types"
+import type { IDomEditor } from "@wangeditor/editor"
 
 import "../utils/custom-menu"
 import "@/styles/wangeditor/index.css"
@@ -101,40 +102,25 @@ const destroyEditor = (editor: IDomEditor | undefined) => {
   editor?.destroy()
 }
 
-const insertEmoji = (url, item) => {
-  const editor = editorRef.value
-  if (!editor) return
-  const data = createMediaElement("image", {
-    class: "EmoticonPack",
-    src: url,
-    alt: item,
-    style: { width: "26px" },
-  })
-  editor.restoreSelection()
-  editor.insertNode(data)
-  editor.focus(true)
+const handleAt = ({ id, name }) => {
+  insertMention({ id, name, backward: false, editor: editorRef.value })
 }
 
-const insertContent = {
-  draft: ({ sessionId }) => {
-    const editor = editorRef.value
-    if (!sessionId || !editor) return
-    if (!isMobile) editor.focus(true)
-    clearInput()
-    const draft = chatStore.chatDraftMap.get(sessionId)
-    draft?.forEach((t) => editor.insertNode(t.children))
-  },
-  html: (text) => {
-    if (!text) {
-      console.warn("text is empty")
-      return
-    }
-    editorRef.value?.insertNode({ text })
-    editorRef.value?.focus(true)
-  },
-  mention: ({ id, name }) => {
-    insertMention({ id, name, backward: false, editor: editorRef.value })
-  },
+const handleSetHtml = (html: string) => {
+  if (!html) return
+  editorRef.value?.insertNode({ text: html })
+  editorRef.value?.focus(true)
+}
+
+const handleInsertDraft = (option) => {
+  const { sessionId } = option
+  const editor = editorRef.value
+  if (!sessionId || !editor) return
+  if (!isMobile) editor.focus(true)
+  clearInput()
+  const draft = chatStore.chatDraftMap.get(sessionId)
+  if (!draft) return
+  draft?.forEach((t) => editor.insertNode(t.children))
 }
 
 const handleToolbarAction = ({ data, key }) => {
@@ -142,10 +128,10 @@ const handleToolbarAction = ({ data, key }) => {
   if (!editor) return
 
   const actions = {
-    setEmoji: () => insertEmoji(data.url, data.item),
+    setEmoji: () => insertEmoji(data, editor),
     setPicture: () => handleFiles(data.files, "image"),
     setParseFile: () => handleFiles(data.files, "file"),
-    setEditHtml: () => insertContent.html(data),
+    setEditHtml: () => handleSetHtml(data),
   }
 
   actions[key]?.()
@@ -155,7 +141,7 @@ const handleFileViewer = (data) => {
   console.log("handleFileViewer", data)
 }
 
-const updateDraft = debounce((data) => {
+const updateDraft = debounce((data: DraftData) => {
   chatStore.updateChatDraft({ ID: currentSessionId.value, payload: data })
 }, 300)
 
@@ -168,35 +154,16 @@ const handleAtMention = debounce((editor) => {
   }
 }, 100)
 
-const handleEditorChange = (editor) => {
+const handleEditorChange = (editor: IDomEditor) => {
   setDisabled(editor.isEmpty())
   updateDraft(editor.children)
   handleAtMention(editor)
 }
 
-const handleAssistantFile = async (file, editor: IDomEditor) => {
-  const fileType = getFileType(file?.name)
-
-  if (!isTextFile(fileType) || !__IS_ELECTRON__) {
-    window.$message?.warning(`暂不支持${fileType}文件`)
-    return
-  }
-
-  const base64Url = await fileToBase64(file)
-
-  editor.insertNode(
-    createMediaElement("attachment", {
-      fileName: file.name,
-      fileSize: bytesToSize(file.size),
-      link: base64Url,
-      path: file?.path || "",
-    })
-  )
-}
-
-const handleFiles = async (file, type) => {
+const handleFiles = async (file: File | null, type: "image" | "file" = "file") => {
   const editor = editorRef.value
-  if (!editor) return
+  if (!editor) throw new Error("editor is not ready")
+  if (!file) throw new Error("file is not ready")
 
   if (isAssistant.value) {
     return handleAssistantFile(file, editor)
@@ -214,7 +181,7 @@ const handleFiles = async (file, type) => {
         style: { width: "125px" },
       })
       editor.insertNode(imageElement)
-    } else {
+    } else if (type === "file") {
       if (file.size > MAX_FILE_SIZE_BYTES) {
         window.$message?.warning(`文件不能大于${MAX_FILE_SIZE_MB}MB`)
         return
@@ -235,7 +202,7 @@ const handleFiles = async (file, type) => {
   }
 }
 
-const handleString = (item, editor: IDomEditor) => {
+const handleString = (item: DataTransferItem, editor: IDomEditor) => {
   if (item.type === "text/plain") {
     item.getAsString((str) => {
       editor.insertText(str.trimStart())
@@ -248,13 +215,13 @@ const handleString = (item, editor: IDomEditor) => {
   }
 }
 
-const handlePaste = (editor, event, callback?: Function) => {
-  const items = event?.clipboardData?.items ?? event?.dataTransfer?.items
+const handlePaste = (editor: IDomEditor, event: ClipboardEvent, callback?: Function) => {
+  console.log("text/plain:", event?.clipboardData?.getData("text/plain"))
+  const clipboardItems = Array.from(event?.clipboardData?.items || [])
 
-  Array.from(items).forEach((item) => {
+  clipboardItems.forEach((item) => {
     if (item.kind === "file") {
-      const type = item.type.match("^image/") ? "image" : "file"
-      handleFiles(item.getAsFile(), type)
+      handleFiles(item.getAsFile(), item.type.match("^image/") ? "image" : "file")
     } else if (item.kind === "string") {
       handleString(item, editor)
     }
@@ -265,13 +232,17 @@ const handlePaste = (editor, event, callback?: Function) => {
 }
 
 const handleDrop = (event: DragEvent) => {
-  if (!event.dataTransfer?.getData("text/plain")) {
-    handlePaste(editorRef.value, event)
-    event.preventDefault()
+  if (event?.dataTransfer?.getData("text/plain")) {
+    return
   }
+
+  const droppedFiles = Array.from(event.dataTransfer?.files || [])
+  droppedFiles.forEach((file) => handleFiles(file, file.type.match("^image/") ? "image" : "file"))
+
+  event.preventDefault()
 }
 
-const handleEnter = async (event: KeyboardEvent) => {
+const handleEnter = async (event: MouseEvent) => {
   if (isSending.value || event?.ctrlKey) return
 
   if (isMentionModalVisible.value) {
@@ -330,36 +301,42 @@ const prepareMessageData = () => {
 }
 
 const sendMessage = async (data) => {
-  console.log("prepareMessageData:", data)
-  const message = await sendChatMessage(data)
-  console.log("sendChatMessage:", message)
-  clearInput()
-  chatStore.updateSendingState(data.to, "add")
-  message.forEach((t, i) => {
-    chatStore.sendSessionMessage({
-      message: t,
-      last: message.length - 1 === i,
+  try {
+    const message = await sendChatMessage(data)
+    clearInput()
+    chatStore.updateSendingState(data.to, "add")
+    message.forEach((msg, index) => {
+      chatStore.sendSessionMessage({
+        message: msg,
+        last: index === message.length - 1,
+      })
     })
-  })
+  } catch (error) {
+    console.error("Send message failed:", error)
+    window.$message?.error("发送消息失败")
+  }
+}
+
+const handleScreenCapture = (url) => {
+  const imageElement = createMediaElement("image", { src: url, style: { width: "125px" } })
+  editorRef.value?.insertNode(imageElement)
 }
 
 const setupEventListeners = () => {
   const events = {
-    handleAt: insertContent.mention,
-    handleSetHtml: insertContent.html,
-    handleInsertDraft: insertContent.draft,
-    handleFileDrop: (file) => handleFiles(file, "file"),
+    handleSetHtml: handleSetHtml,
+    handleInsertDraft: handleInsertDraft,
     handleToolbar: handleToolbarAction,
     handleFileViewer: handleFileViewer,
-    handleScreenCapture: (url) => {
-      const imageElement = createMediaElement("image", { src: url, style: { width: "125px" } })
-      editorRef.value?.insertNode(imageElement)
-    },
+    handleScreenCapture: handleScreenCapture,
   }
 
   Object.entries(events).forEach(([event, handler]) => {
     emitter.on(event, handler)
   })
+
+  emitter.on("handleAt", handleAt)
+  emitter.on("handleFileDrop", handleFiles)
 }
 
 const removeEventListeners = () => {

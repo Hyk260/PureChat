@@ -4,20 +4,10 @@ import { customDataWebSearch, DB_Message } from "@/database/schemas/message"
 import { convertBlobUrlToDataUrl } from "@/utils/chat"
 
 import type { LLMMessage } from "@/ai/types"
+import type { DraftData } from "@/types"
 
-type Draft = [
-  {
-    type: ""
-    children: [
-      {
-        text: ""
-      },
-    ]
-  },
-]
-
-export function checkTextNotEmpty(arr: Draft) {
-  return arr.some((obj) => {
+export function checkTextNotEmpty(nodes: DraftData) {
+  return nodes.some((obj) => {
     return obj.children.some((child) => {
       return child.text !== ""
     })

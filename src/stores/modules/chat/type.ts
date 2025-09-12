@@ -1,5 +1,6 @@
 import type { DB_Message } from "@/database/schemas/message"
 import type { DB_Session } from "@/database/schemas/session"
+import type { DraftData } from "@/types"
 
 export interface ChatState {
   historyMessageList: Map<string, DB_Message[]>
@@ -18,7 +19,7 @@ export interface ChatState {
   replyMsgData: DB_Message | null
   msgEdit: DB_Message | null
   recently: Set<string>
-  chatDraftMap: Map<string, string>
+  chatDraftMap: Map<string, DraftData>
   forwardData: Map<string, DB_Message>
   revokeMsgMap: Map<string, any>
   sendingMap: Map<string, any>

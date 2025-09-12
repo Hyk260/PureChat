@@ -100,6 +100,7 @@ export const getImageType = (str: string) => {
 
 /**
  * 返回给定文件名的类型，即文件的扩展名。
+ * 例如，对于文件名 "example.txt"，它将返回 "txt"。
  */
 export const getFileType = (filename: string) => {
   if (!filename) return ""

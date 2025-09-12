@@ -19,6 +19,7 @@ export interface Events {
   fileUploading: { uuid: string; num: number }
   handleToBottom: boolean
   updateScroll: any
+  handleFileDrop: File
 }
 
 const emitter: Emitter<Events> = mitt<Events>()
