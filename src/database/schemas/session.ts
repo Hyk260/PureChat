@@ -60,7 +60,7 @@ export const SessionSchema = {
       onlineOnlyFlag: false,
       nick: "",
       nameCard: "",
-      revoker: null,
+      revoker: "",
       messageForShow: "",
     },
     nextMessageSeq: 341,

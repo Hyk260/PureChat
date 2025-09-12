@@ -108,6 +108,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from "vue"
 import { DArrowLeft, Delete, Sunny, Warning } from "@element-plus/icons-vue"
 
 import { audioExts, documentExts, imageExts, textExts, videoExts } from "@shared/config"
@@ -130,7 +131,7 @@ defineOptions({
   name: "Inputbar",
 })
 
-const popoverRef = ref(null)
+const popoverRef = ref()
 
 const supportExts = [
   ...textExts,
@@ -225,7 +226,7 @@ function customMessage() {
   chatStore.sendSessionMessage({ message })
 }
 
-function sendImage(files) {
+function sendImage(files: FileList) {
   if (!files) return
   emitter.emit("handleToolbar", {
     key: "setPicture",
@@ -233,7 +234,7 @@ function sendImage(files) {
   })
 }
 
-function sendFile(files) {
+function sendFile(files: FileList) {
   if (!files) return
   emitter.emit("handleToolbar", {
     key: "setParseFile",
