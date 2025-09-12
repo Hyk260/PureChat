@@ -232,7 +232,8 @@ export default defineConfig([
       "vue/prefer-import-from-vue": "warn",
       "vue/prefer-separate-static-class": "warn",
       "vue/prefer-true-attribute-shorthand": "off",
-
+      "no-debugger": isProd ? "error" : "off",
+      
       // Import 规则
       "simple-import-sort/imports": [
         "warn",
