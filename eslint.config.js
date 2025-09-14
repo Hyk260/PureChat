@@ -12,6 +12,19 @@ import globals from "globals"
 
 const isProd = process.env.NODE_ENV === "production"
 
+async function loadAutoImportGlobals() {
+  try {
+    const mod = await import("./.eslintrc-auto-import.json", {
+      with: { type: "json" },
+    })
+    return mod.default
+  } catch {
+    return require("./.eslintrc-auto-import.json")
+  }
+}
+
+const autoImportGlobals = await loadAutoImportGlobals()
+
 /**
  * ESLint 配置
  * @see https://eslint.vuejs.org/user-guide/#configuration
@@ -53,7 +66,7 @@ export default defineConfig([
       "unused-imports": unusedImports,
     },
     rules: {
-      // 继承推荐规则
+      // ts推荐规则
       ...tseslint.configs.recommended.rules,
       ...tseslint.configs["recommended-type-checked"].rules,
       // === TypeScript 特定规则 ===
@@ -174,6 +187,7 @@ export default defineConfig([
         ...globals.browser,
         ...globals.node,
         Env: "readonly",
+        process: "readonly",
       },
     },
     plugins: {
@@ -207,6 +221,7 @@ export default defineConfig([
         },
       },
       globals: {
+        ...autoImportGlobals.globals,
         ...globals.browser,
         ...globals.node,
         process: "readonly",
@@ -233,7 +248,8 @@ export default defineConfig([
       "vue/prefer-separate-static-class": "warn",
       "vue/prefer-true-attribute-shorthand": "off",
       "no-debugger": isProd ? "error" : "off",
-      
+      "no-undef": "warn",
+
       // Import 规则
       "simple-import-sort/imports": [
         "warn",

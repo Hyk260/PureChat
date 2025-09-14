@@ -25,7 +25,7 @@ export function setupUnplugin(viteEnv: Env.ImportMeta) {
         dts: "src/typings/components.d.ts",
         types: [{ from: "vue-router", names: ["RouterLink", "RouterView"] }],
         resolvers: [ElementPlusResolver()],
-        include: [/\.vue$/, /\.vue\?vue/, /\.tsx$/, /\.ts$/],
+        include: [/\.vue$/, /\.tsx$/, /\.ts$/],
       })
     )
   }
@@ -38,11 +38,16 @@ export function setupUnplugin(viteEnv: Env.ImportMeta) {
           "vue",
           "vue-router",
           "pinia",
-          // 你可以在这里添加更多的自动导入
+          // "@vueuse/core",
           // { from: 'vue-router', imports: ['RouterLink', 'RouterView'] },
         ],
         dts: "src/typings/auto-imports.d.ts",
-        include: [/\.vue$/, /\.vue\?vue/, /\.ts$/],
+        include: [/\.vue$/, /\.ts$/],
+        eslintrc: {
+          enabled: true, // 开启生成 ESLint 配置
+          filepath: "./.eslintrc-auto-import.json", // 生成的文件
+          globalsPropValue: true,
+        },
       })
     )
   }
