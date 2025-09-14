@@ -63,9 +63,9 @@ export function setupViteExternal(viteEnv: Env.ImportMeta): (RegExp | string)[] 
   // 本地模式需要排除的依赖
   const localExternals = [/^@tencentcloud\/chat/, /^tim-upload-plugin/]
 
-  // if (viteEnv.VITE_LOCAL_MODE === "Y") {
-  //   return localExternals
-  // }
+  if (viteEnv.VITE_LOCAL_MODE === "Y") {
+    return localExternals
+  }
 
   return []
 }

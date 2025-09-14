@@ -1,9 +1,9 @@
-import TencentCloudChat from "@tencentcloud/chat"
-import GroupModule from "@tencentcloud/chat/modules/group-module.js"
-import SignalingModule from "@tencentcloud/chat/modules/signaling-module.js"
-import TIMUploadPlugin from "tim-upload-plugin"
+// import TencentCloudChat from "@tencentcloud/chat"
+// import GroupModule from "@tencentcloud/chat/modules/group-module.js"
+// import SignalingModule from "@tencentcloud/chat/modules/signaling-module.js"
+// import TIMUploadPlugin from "tim-upload-plugin"
 
-// import type TencentCloudChatModule from "./types/tencent-cloud-chat"
+import type TencentCloudChatModule from "./types/tencent-cloud-chat"
 import type { ChatSDK } from "./types/tencent-cloud-chat"
 
 interface ChatConfig {
@@ -16,7 +16,7 @@ interface ChatConfig {
  * 腾讯云聊天服务实现
  * 使用腾讯云IM SDK
  */
-export class TencentChatService {
+export class TencentChatServiceCopy {
   private static instance: TencentChatService
   private chat: ChatSDK | null = null
   private readonly defaultLogLevel = 1
@@ -31,82 +31,6 @@ export class TencentChatService {
       TencentChatService.instance = new TencentChatService()
     }
     return TencentChatService.instance
-  }
-
-  public initializeCopy(): ChatSDK {
-    if (this.chat) {
-      console.warn("Chat SDK已经初始化，将返回现有实例")
-      return this.chat
-    }
-    const initStartTime = performance.now()
-
-    try {
-      console.log("☁️ 开始初始化腾讯云 IM SDK")
-
-      // 动态加载腾讯云模块
-      const moduleLoadStart = performance.now()
-      // const [
-      //   { default: TencentCloudChat },
-      //   { default: GroupModule },
-      //   { default: SignalingModule },
-      //   { default: TIMUploadPlugin },
-      // ] = await Promise.all([
-      //   import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js") as Promise<{
-      //     default: typeof TencentCloudChatModule
-      //   }>,
-      //   import(/* @vite-ignore */ "@tencentcloud/chat/modules/group-module.js"),
-      //   import(/* @vite-ignore */ "@tencentcloud/chat/modules/signaling-module.js"),
-      //   import(/* @vite-ignore */ "tim-upload-plugin"),
-      // ])
-
-      const moduleLoadTime = performance.now() - moduleLoadStart
-      console.log(`📦 腾讯云模块加载完成 (${moduleLoadTime.toFixed(2)}ms)`)
-
-      // 获取环境变量
-      const { VITE_IM_SDK_APPID: appid, VITE_LOG_LEVEL: level = "1" } = import.meta.env
-
-      if (!appid) {
-        throw new Error("缺少必需的环境变量 VITE_IM_SDK_APPID")
-      }
-
-      if (isNaN(Number(appid))) {
-        throw new Error("VITE_IM_SDK_APPID 必须是有效的数字")
-      }
-
-      console.log(`⚙️ 腾讯云配置: AppID=${appid}, LogLevel=${level}`)
-
-      // 创建腾讯云IM实例
-      const chat = TencentCloudChat.create({
-        SDKAppID: Number(appid),
-        modules: {
-          "group-module": GroupModule,
-          "signaling-module": SignalingModule,
-        },
-      })
-
-      // 设置日志级别
-      const logLevel = Number(level)
-      if (!isNaN(logLevel) && logLevel >= 0 && logLevel <= 4) {
-        chat.setLogLevel(logLevel)
-        console.log(`📝 日志级别设置为: ${logLevel}`)
-      } else {
-        console.warn(`⚠️ 无效的日志级别 ${level}，使用默认值 1`)
-        chat.setLogLevel(1)
-      }
-
-      // 注册文件上传插件
-      chat.registerPlugin({ "tim-upload-plugin": TIMUploadPlugin })
-      console.log("🔌 文件上传插件注册成功")
-
-      const totalInitTime = performance.now() - initStartTime
-      console.log(`🎉 腾讯云 IM SDK 初始化完成 (总耗时: ${totalInitTime.toFixed(2)}ms)`)
-      this.chat = chat
-      return chat as unknown as ChatSDK
-    } catch (error) {
-      const failedInitTime = performance.now() - initStartTime
-      console.error(`❌ 腾讯云 IM SDK 初始化失败 (耗时: ${failedInitTime.toFixed(2)}ms):`, error)
-      throw new Error(`腾讯云IM SDK初始化失败: ${(error as Error).message}`)
-    }
   }
 
   /**
@@ -197,6 +121,188 @@ export class TencentChatService {
     if (this.chat) {
       this.chat.registerPlugin({ "tim-upload-plugin": TIMUploadPlugin })
       console.log("🔌 文件上传插件注册成功")
+    }
+  }
+
+  /**
+   * 创建性能计时器
+   */
+  private createPerformanceTimer() {
+    const startTime = performance.now()
+    return {
+      end: (message: string) => {
+        const duration = performance.now() - startTime
+        console.log(`🕒 ${message} (耗时: ${duration.toFixed(2)}ms)`)
+      },
+    }
+  }
+
+  /**
+   * 处理初始化错误
+   */
+  private handleInitializationError(error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "未知错误"
+    console.error("❌ 腾讯云 IM SDK 初始化失败:", errorMessage)
+    throw new Error(`腾讯云 IM SDK 初始化失败: ${errorMessage}`)
+  }
+}
+
+export class TencentChatService {
+  private static instance: TencentChatService
+  private chat: ChatSDK | null = null
+  private readonly defaultLogLevel = 1
+  private readonly validLogLevels = [0, 1, 2, 3, 4]
+
+  private realChat: ChatSDK | null = null
+  private readyPromise: Promise<ChatSDK> | null = null
+  private resolveReady: ((chat: ChatSDK) => void) | null = null
+
+  private constructor() {}
+
+  public static getInstance(): TencentChatService {
+    if (!TencentChatService.instance) {
+      TencentChatService.instance = new TencentChatService()
+    }
+    return TencentChatService.instance
+  }
+
+  /**
+   * 初始化腾讯云聊天服务（同步返回 Proxy）
+   */
+  public initialize(): ChatSDK {
+    if (this.chat) {
+      return this.chat
+    }
+
+    const timer = this.createPerformanceTimer()
+    try {
+      const config = this.loadConfiguration()
+      this.validateConfiguration(config)
+
+      this.chat = this.createChatInstance(config)
+      timer.end("腾讯云 IM SDK 初始化")
+      return this.chat
+    } catch (error) {
+      timer.end("腾讯云 IM SDK 初始化失败")
+      this.handleInitializationError(error)
+      throw error
+    }
+  }
+
+  /**
+   * 等待 SDK 真正加载完成
+   */
+  public ready(): Promise<ChatSDK> {
+    if (this.realChat) {
+      return Promise.resolve(this.realChat)
+    }
+    if (!this.readyPromise) {
+      this.readyPromise = new Promise<ChatSDK>((resolve) => {
+        this.resolveReady = resolve
+      })
+    }
+    return this.readyPromise
+  }
+
+  /**
+   * 加载配置信息
+   */
+  private loadConfiguration(): ChatConfig {
+    const { VITE_IM_SDK_APPID: appId, VITE_LOG_LEVEL: logLevel = "1" } = import.meta.env
+    return {
+      appId: Number(appId),
+      logLevel: Number(logLevel),
+    }
+  }
+
+  /**
+   * 验证配置信息
+   */
+  private validateConfiguration(config: ChatConfig): void {
+    if (!config.appId || isNaN(config.appId)) {
+      throw new Error("无效的 VITE_IM_SDK_APPID: 必须提供有效的数字")
+    }
+  }
+
+  /**
+   * 创建聊天实例（返回 Proxy）
+   */
+  private createChatInstance(config: ChatConfig): ChatSDK {
+    let realChat: ChatSDK | null = null
+    const callQueue: Array<{ method: string; args: any[] }> = []
+
+    // 异步加载 SDK 模块
+    ;(async () => {
+      try {
+        const [
+          { default: TencentCloudChat },
+          { default: GroupModule },
+          { default: SignalingModule },
+          { default: TIMUploadPlugin },
+        ] = await Promise.all([
+          import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js") as Promise<{
+            default: typeof TencentCloudChatModule
+          }>,
+          import(/* @vite-ignore */ "@tencentcloud/chat/modules/group-module.js"),
+          import(/* @vite-ignore */ "@tencentcloud/chat/modules/signaling-module.js"),
+          import(/* @vite-ignore */ "tim-upload-plugin"),
+        ])
+
+        realChat = TencentCloudChat.create({
+          SDKAppID: config.appId,
+          modules: {
+            "group-module": GroupModule,
+            "signaling-module": SignalingModule,
+          },
+        }) as unknown as ChatSDK
+
+        // 配置日志
+        this.configureLogging(config.logLevel, realChat)
+
+        // 注册插件
+        realChat.registerPlugin({ "tim-upload-plugin": TIMUploadPlugin })
+        console.log("🔌 文件上传插件注册成功")
+
+        // 回放之前缓存的调用
+        for (const { method, args } of callQueue) {
+          ;(realChat as any)[method](...args)
+        }
+        callQueue.length = 0
+
+        console.log("✅ Tencent IM SDK 加载完成")
+      } catch (err) {
+        console.error("❌ 动态加载 IM SDK 失败", err)
+      }
+    })()
+
+    // Proxy 返回，先缓存调用，后续透传
+    const proxy = new Proxy(
+      {},
+      {
+        get(_, prop: string) {
+          return (...args: any[]) => {
+            if (realChat) {
+              return (realChat as any)[prop](...args)
+            }
+            console.warn(`⚠️ SDK 尚未加载完成，方法 ${String(prop)} 已加入队列`)
+            callQueue.push({ method: String(prop), args })
+          }
+        },
+      }
+    )
+
+    return proxy as ChatSDK
+  }
+
+  /**
+   * 配置日志级别
+   */
+  private configureLogging(logLevel: number = this.defaultLogLevel, chat?: ChatSDK) {
+    const target = chat ?? this.chat
+    if (target) {
+      const level = this.validLogLevels.includes(logLevel) ? logLevel : this.defaultLogLevel
+      target.setLogLevel(level)
+      console.log(`📝 日志级别设置为: ${level}`)
     }
   }
 
