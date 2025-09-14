@@ -224,7 +224,6 @@ export default defineConfig([
         ...autoImportGlobals.globals,
         ...globals.browser,
         ...globals.node,
-        process: "readonly",
         __APP_INFO__: "readonly",
         __IS_ELECTRON__: "readonly",
         __LOCAL_MODE__: "readonly",
@@ -268,6 +267,7 @@ export default defineConfig([
           ],
         },
       ],
+      "no-unused-vars": "warn",
       "simple-import-sort/exports": "warn",
       "unused-imports/no-unused-imports": "warn",
 

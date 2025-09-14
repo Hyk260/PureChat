@@ -19,7 +19,7 @@ export const download = (url: string, filename?: string) => {
         resolvedFilename = `${Date.now()}_diagram.svg`
       } else if (url.startsWith("data:")) {
         const mimeMatch = url.match(/^data:([^;,]+)[;,]/)
-        const mimeType = mimeMatch && mimeMatch[1]
+        const mimeType = mimeMatch?.[1]
         const extension = getExtensionFromMimeType(mimeType)
         resolvedFilename = `${Date.now()}_download${extension}`
       } else resolvedFilename = "download"
@@ -49,7 +49,7 @@ export const download = (url: string, filename?: string) => {
 
         // 如果URL中有文件名，使用URL中的文件名
         const urlFilename = url.split("/").pop()
-        if (urlFilename && urlFilename.includes(".")) {
+        if (urlFilename?.includes(".")) {
           finalFilename = urlFilename
         }
 

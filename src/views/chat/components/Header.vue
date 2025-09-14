@@ -54,9 +54,9 @@ import { Ellipsis, History, Share2 } from "lucide-vue-next"
 
 import { storeToRefs } from "pinia"
 
+import CustomLabel from "@/components/Chat/CustomLabel.vue"
 import { useChatStore, useRobotStore, useToolsStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
-import CustomLabel from "@/components/Chat/CustomLabel.vue"
 
 const chatStore = useChatStore()
 const robotStore = useRobotStore()
