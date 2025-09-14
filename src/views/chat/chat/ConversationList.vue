@@ -34,7 +34,7 @@
           <div class="message-item-right-top flex-bc">
             <div class="message-chat-name flex">
               <span class="name-title truncate">{{ chatName(item) }}</span>
-              <Label :item="item" :user-i-d="item.userProfile?.userID" />
+              <CustomLabel :item="item" :user-i-d="item.userProfile?.userID" />
             </div>
             <div v-if="item.lastMessage?.lastTime" class="message-time">
               {{ timeFormat(item.lastMessage.lastTime * 1000) }}
@@ -83,6 +83,7 @@ import { isObject } from "lodash-es"
 import { storeToRefs } from "pinia"
 import { Contextmenu, ContextmenuItem } from "v-contextmenu"
 
+import CustomLabel from "@/components/Chat/CustomLabel.vue"
 import { useHandlerDrop } from "@/hooks/useHandlerDrop"
 import { pinConversation } from "@/service/im-sdk-api"
 import { setMessageRemindType } from "@/service/im-sdk-api"
@@ -93,7 +94,6 @@ import emitter from "@/utils/mitt-bus"
 import { timeFormat } from "@/utils/timeFormat"
 
 import EmptyMessage from "../components/EmptyMessage.vue"
-import Label from "../components/Label.vue"
 import { chatSessionListData } from "../utils/menu"
 import VirtualList from "./VirtualList.vue"
 

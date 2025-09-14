@@ -4,7 +4,7 @@
       <p v-if="currentType">
         <span v-if="chatType('C2C')" class="single" @click="openUser">
           <span class="nick">{{ chatNick("C2C", currentConversation) }}</span>
-          <Label v-if="isAssistant" :model="robotStore.model" :user-i-d="currentConversation?.conversationID" />
+          <CustomLabel v-if="isAssistant" :model="robotStore.model" :user-i-d="currentConversation?.conversationID" />
           <!-- ai-prompt -->
           <div v-if="isShowPromptTitle" class="cursor-pointer ml-5 ai-prompt-title" @click="openPrompt">
             {{ getPromptTitle }}
@@ -23,14 +23,14 @@
             placement="bottom"
           >
             <div v-if="isAssistant" class="history ai-prompt-title">
-              <History size="16" />
+              <History :size="16" />
               <span>{{ robotStore.getBotMessageCount }}</span>
             </div>
           </el-tooltip>
         </span>
         <span v-else-if="chatType('GROUP')" class="group" @click="openSetup">
           <span class="nick"> {{ chatNick("GROUP", currentConversation) }}</span>
-          <Label :item="currentConversation" />
+          <CustomLabel :item="currentConversation" />
         </span>
         <span v-else-if="chatType('@TIM#SYSTEM')" class="system"> 系统通知 </span>
       </p>
@@ -56,7 +56,7 @@ import { storeToRefs } from "pinia"
 
 import { useChatStore, useRobotStore, useToolsStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
-import Label from "@/views/chat/components/Label.vue"
+import CustomLabel from "@/components/Chat/CustomLabel.vue"
 
 const chatStore = useChatStore()
 const robotStore = useRobotStore()

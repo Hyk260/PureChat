@@ -18,7 +18,6 @@
       <div v-if="isRobot(cardData?.from)" class="flex flex-col ml-16">
         <div class="nick flex gap-5">
           <span> {{ cardData.nick || userProfile.nick || cardData.from || "-" }}</span>
-          <Label :user-i-d="cardData?.from" />
         </div>
         <el-link
           v-if="getProvider()"
@@ -60,7 +59,6 @@ import { getUserProfile } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores/modules/chat"
 import { isRobot, squareUrl } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
-import Label from "@/views/chat/components/Label.vue"
 
 const cardRef = ref()
 const left = ref("")
