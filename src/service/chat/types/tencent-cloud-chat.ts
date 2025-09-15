@@ -1,3 +1,5 @@
+import { DB_Message } from "@/types"
+
 export interface LOGIN_OPTIONS {
   userID: string
   /**
@@ -1653,7 +1655,7 @@ export declare class ChatSDK {
    * Create a custom message. This API returns a message instance. If you need to send a custom message, call the sendMessage API to send this message instance.
    * If the SDK does not provide the capability you need, use custom messages to customize features, for example, the dice rolling feature.
    */
-  createCustomMessage(options: MESSAGE_OPTIONS): Message
+  createCustomMessage(options: MESSAGE_OPTIONS): DB_Message
 
   /**
    * Create an emoji message. This API returns a message instance. If you need to send an emoji message, call the sendMessage API to send this message instance.

@@ -319,7 +319,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       this.historyMessageList.set(sessionId, newMessageList)
     },
-    async sendSessionMessage(data: { message: DB_Message; last: boolean }) {
+    async sendSessionMessage(data: { message: DB_Message; last?: boolean }) {
       const { message, last = true } = data
       const sessionId = message.conversationID || ""
       if (!sessionId) {
