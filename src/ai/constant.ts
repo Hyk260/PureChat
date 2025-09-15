@@ -10,7 +10,7 @@ import { ModelProvider } from "@/ai/types"
 
 export const ROLES = ["system", "user", "assistant"]
 
-export const REQUEST_TIMEOUT_MS = 15000
+export const REQUEST_TIMEOUT_MS = 30000
 
 export const prompt = [
   {

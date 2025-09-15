@@ -35,6 +35,19 @@ export const handleAssistantFile = async (file: File, editor: IDomEditor) => {
   editor.insertNode(node)
 }
 
+export const handleString = (item: DataTransferItem, editor: IDomEditor) => {
+  if (item.type === "text/plain") {
+    item.getAsString((str) => {
+      editor.insertText(str.trimStart())
+      console.log("handleString text/plain:", str)
+    })
+  } else if (item.type === "text/html") {
+    item.getAsString((html) => {
+      console.log("handleString text/html:", html)
+    })
+  }
+}
+
 export const insertEmoji = (option, editor: IDomEditor) => {
   if (!editor) throw new Error("editor is undefined")
   const { url, item } = option

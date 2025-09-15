@@ -33,6 +33,7 @@ export class OpenAiApi {
   constructor(provider: ModelProviderKey) {
     this.provider = provider
   }
+
   getPath(path: string): string {
     let baseUrl = this.accessStore().openaiUrl
     if (baseUrl.endsWith("/")) {
@@ -43,7 +44,6 @@ export class OpenAiApi {
 
   /**
    * 获取插件工具列表
-   * @returns {Array} 工具列表
    */
   getPluginTools() {
     const pluginList = useToolsStore().tools
@@ -244,11 +244,6 @@ export class OpenAiApi {
 
   /**
    * 处理流式消息
-   * @param {Object} msg - 消息对象
-   * @param {string} remainText - 剩余文本引用
-   * @param {string} reasoningText - 推理文本引用
-   * @param {Object} options - 选项
-   * @param {Function} finish - 完成回调
    */
   handleStreamMessage(msg: any, remainText: string, reasoningText: string, options: ChatOptions, finish: () => void) {
     console.log("[OpenAI] 收到消息:", msg)
@@ -398,12 +393,10 @@ export class OpenAiApi {
           reasoningText = result.reasoningText
         }
       },
-      onclose() {
-        finish()
-      },
+      onclose: finish,
       onerror(error) {
         console.error("[OpenAI] 流式请求错误:", error)
-        options.onError?.(error)
+        options.onError?.(error instanceof Error ? error.message : "流式请求发生错误")
         throw error
       },
       openWhenHidden: true,
@@ -439,11 +432,10 @@ export class OpenAiApi {
       options?.onFinish({ message })
     } catch (error) {
       clearTimeout(requestTimeoutId)
-
       if (error.name === "AbortError") {
         options?.onError?.("请求超时，请稍后重试")
       } else {
-        options?.onError?.(error.message || "网络请求失败")
+        options?.onError?.(error instanceof Error ? error.message : "网络请求失败");
       }
     }
   }

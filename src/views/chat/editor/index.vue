@@ -59,7 +59,14 @@ import {
   filterMentionList,
   sendChatMessage,
 } from "../utils/utils"
-import { createMediaElement, customAlert, handleAssistantFile, handleEditorKeyDown, insertEmoji } from "./utils"
+import {
+  createMediaElement,
+  customAlert,
+  handleAssistantFile,
+  handleEditorKeyDown,
+  handleString,
+  insertEmoji,
+} from "./utils"
 
 import type { DraftData } from "@/types"
 import type { IDomEditor } from "@wangeditor/editor"
@@ -165,6 +172,11 @@ const handleFiles = async (file: File | null, type: "image" | "file" = "file") =
   if (!editor) throw new Error("editor is not ready")
   if (!file) throw new Error("file is not ready")
 
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    window.$message?.warning(`文件不能大于${MAX_FILE_SIZE_MB}MB`)
+    return
+  }
+
   if (isAssistant.value) {
     return handleAssistantFile(file, editor)
   }
@@ -182,10 +194,6 @@ const handleFiles = async (file: File | null, type: "image" | "file" = "file") =
       })
       editor.insertNode(imageElement)
     } else if (type === "file") {
-      if (file.size > MAX_FILE_SIZE_BYTES) {
-        window.$message?.warning(`文件不能大于${MAX_FILE_SIZE_MB}MB`)
-        return
-      }
       const fileElement = createMediaElement("attachment", {
         fileName: file.name,
         fileSize: bytesToSize(file.size),
@@ -199,19 +207,6 @@ const handleFiles = async (file: File | null, type: "image" | "file" = "file") =
   } catch (error) {
     console.error(`${type}处理错误:`, error)
     window.$message?.error(`${type}处理失败`)
-  }
-}
-
-const handleString = (item: DataTransferItem, editor: IDomEditor) => {
-  if (item.type === "text/plain") {
-    item.getAsString((str) => {
-      editor.insertText(str.trimStart())
-      console.log("handleString text/plain:", str)
-    })
-  } else if (item.type === "text/html") {
-    item.getAsString((html) => {
-      console.log("handleString text/html:", html)
-    })
   }
 }
 
@@ -308,14 +303,13 @@ const sendMessage = async (data) => {
   }
 }
 
-const handleScreenCapture = (url) => {
+const handleScreenCapture = (url: string) => {
   const imageElement = createMediaElement("image", { src: url, style: { width: "125px" } })
   editorRef.value?.insertNode(imageElement)
 }
 
 const setupEventListeners = () => {
   const events = {
-    handleSetHtml: handleSetHtml,
     handleInsertDraft: handleInsertDraft,
     handleToolbar: handleToolbarAction,
     handleFileViewer: handleFileViewer,
@@ -326,6 +320,7 @@ const setupEventListeners = () => {
     emitter.on(event, handler)
   })
 
+  emitter.on("handleSetHtml", handleSetHtml)
   emitter.on("handleAt", handleAt)
   emitter.on("handleFileDrop", handleFiles)
 }
