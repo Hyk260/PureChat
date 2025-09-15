@@ -21,15 +21,7 @@
     />
     <!-- @提及弹框 -->
     <MentionModal v-if="isMentionModalVisible" pinyin-search :is-owner="isOwner" :editor="editorRef" />
-    <div class="send-button">
-      <span class="tip">{{ placeholderMap[getOperatingSystem()] }}</span>
-      <el-button :loading="isSending" :class="{ 'pointer-events-none': disabled }" @click="handleEnter">
-        <template #loading>
-          <div class="iconify-icon svg-spinners mr-8"></div>
-        </template>
-        <span> {{ $t("chat.sending") }} </span>
-      </el-button>
-    </div>
+    <SendMessageButton :disabled="disabled" @send-message="handleEnter" />
   </div>
 </template>
 
@@ -45,11 +37,10 @@ import { useState } from "@/hooks/useState"
 import { useChatStore, useGroupStore } from "@/stores"
 import { bytesToSize, fileToBase64, insertMention } from "@/utils/chat"
 import { isMobile } from "@/utils/common"
-import { getOperatingSystem } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
 
 import Inputbar from "../Inputbar/index.vue"
-import { editorConfig, placeholderMap } from "../utils/configure"
+import { editorConfig } from "../utils/configure"
 import {
   extractAitInfo,
   extractEmojiInfo,
@@ -59,6 +50,7 @@ import {
   filterMentionList,
   sendChatMessage,
 } from "../utils/utils"
+import SendMessageButton from "./SendMessageButton.vue"
 import {
   createMediaElement,
   customAlert,
@@ -372,21 +364,6 @@ onBeforeUnmount(() => {
   .editor-content {
     flex: 1;
     overflow-y: hidden;
-  }
-  .send-button {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0px 10px 10px;
-    gap: 8px;
-    user-select: none;
-    .tip {
-      font-size: 12px;
-    }
-    span {
-      color: rgb(153, 153, 153);
-    }
   }
 }
 </style>

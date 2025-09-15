@@ -55,7 +55,7 @@ export const customDataWebSearchSchema = z.object({
 
 // export const cloudCustomDataSchema = cloudCustomDataSchemaWebSearch
 
-export const MessageStatusSchema = z.enum(["unSend", "fail", "success", "sending", "timeout"])
+export const MessageStatusSchema = z.enum(["unSend", "fail", "success", "sending", "searching", "paused", "timeout"])
 
 export const MessageTypeSchema = z.enum([
   "TIMTextElem",
@@ -120,7 +120,7 @@ export type DB_Message = z.infer<typeof DB_MessageSchema>
 
 /**
  * @description 消息状态
- * unSend(未发送) fail(发送失败) success(发送成功) sending(发送中) timeout(超时)
+ * unSend(未发送) fail(失败) success(成功) sending(发送中) timeout(超时) paused(暂停) searching(搜索中)
  */
 export type MessageStatus = z.infer<typeof MessageStatusSchema>
 

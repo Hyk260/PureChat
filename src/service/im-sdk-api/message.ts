@@ -1,7 +1,8 @@
 import tim from "@/service/chat/PureChatService"
-import { fileUploading, getCloudCustomData } from "@/utils/chat/index"
+import { fileUploading, getCloudCustomData } from "@/utils/chat"
 import { getCustomMsgContent, updateImageSize } from "@/utils/common"
 
+import type { MessageType } from "@/database/schemas/message"
 /**
  * 发送消息
  */
@@ -60,7 +61,7 @@ export const createTextAtMessage = (params) => {
  * 创建图片消息
  * @see <URL> https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createImageMessage
  */
-export const createImageMessage = async (params) => {
+export const createImageMessage = async (params: { to: string; type: any; file: File }) => {
   const { to, type, file } = params
   const message = tim.createImageMessage({
     to,

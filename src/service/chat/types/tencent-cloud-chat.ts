@@ -831,7 +831,7 @@ declare interface GET_TOPIC_LIST_OPTIONS {
   topicIDList: Array<string> | undefined
 }
 
-declare interface MESSAGE_OPTIONS {
+export declare interface MESSAGE_OPTIONS {
   /**
    * userID or groupID of the message recipient
    */
@@ -841,7 +841,7 @@ declare interface MESSAGE_OPTIONS {
    * - TencentCloudChat.TYPES.CONV_C2C (one-to-one chat)
    * - TencentCloudChat.TYPES.CONV_GROUP (group chat)
    */
-  conversationType: TencentCloudChat.TYPES
+  conversationType: "C2C" | "GROUP" | "SYSTEM"
 
   cache?: boolean
   /**

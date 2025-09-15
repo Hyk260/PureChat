@@ -22,7 +22,7 @@ export interface ChatState {
   chatDraftMap: Map<string, DraftData>
   forwardData: Map<string, DB_Message>
   revokeMsgMap: Map<string, any>
-  sendingMap: Map<string, any>
+  sendingMap: Map<string, boolean>
   selectedMessageMap: Map<string, any>
   selectedMessageIds: Set<string>
 }
