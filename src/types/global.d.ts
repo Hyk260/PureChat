@@ -1,4 +1,4 @@
-import { LocalStg } from "@/utils/storage"
+import { LocalStg, SessionStg } from "@/utils/storage"
 /**
  * 全局类型声明，无需引入直接在 `.vue` 、`.ts` 文件使用即可获得类型提示
  */
@@ -22,25 +22,17 @@ declare global {
       };
       homepage: string;
       giteeHomepage: string;
-      dependencies: Recordable<string>;
-      devDependencies: Recordable<string>;
+      dependencies: Record<string>;
+      devDependencies: Record<string>;
     };
     lastBuildTime: string;
   };
 
-  /**
-   * 是否为 Electron 环境
-   */
-  export const __IS_ELECTRON__: boolean;
-
-  /**
-   * 是否为本地模式
-   */
-  export const __LOCAL_MODE__: boolean;
-
   export interface Window {
     /** 本地存储 */
     localStg: LocalStg;
+    /** 会话存储 */
+    sessionStg: SessionStg;
     /** 复制文本到剪贴板 */
     copyToClipboard: (str: string) => void;
     /** NProgress */
@@ -56,10 +48,19 @@ declare global {
       error: (message: string) => void;
     };
     /** Notification */
-    $notification?: import('element-plus').Notify;
+    $notification: import('element-plus').Notify;
     // __TIM_DEBUG__: DebugInterface;
   }
 
+  /**
+   * 是否为 Electron 环境
+   */
+  export const __IS_ELECTRON__: boolean;
+
+  /**
+   * 是否为本地模式
+   */
+  export const __LOCAL_MODE__: boolean;
   /** Build time of the project */
   export const BUILD_TIME: string;
 }

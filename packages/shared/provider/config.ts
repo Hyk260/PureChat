@@ -21,11 +21,11 @@ export const ModelIDList = [
   ModelID.GitHub,
   ModelID.DeepSeek,
   ModelID.Mistral,
-];
+]
 
-export const C2CModelIDList = ModelIDList.map((id) => "C2C" + id);
+export const C2CModelIDList = ModelIDList.map((id) => "C2C" + id)
 
 /**
  * 支持的机器人ID值集合（用于类型检查）
  */
-export type ModelIDValue = (typeof ModelID)[keyof typeof ModelID];
+export type ModelIDValue = (typeof ModelID)[keyof typeof ModelID]

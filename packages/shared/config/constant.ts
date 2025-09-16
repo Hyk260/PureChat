@@ -1,7 +1,7 @@
-export const imageExts = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"];
-export const videoExts = [".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv"];
-export const audioExts = [".mp3", ".wav", ".ogg", ".flac", ".aac"];
-export const documentExts = [".pdf", ".docx", ".pptx", ".xlsx", ".odt", ".odp", ".ods"];
+export const imageExts = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"]
+export const videoExts = [".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv"]
+export const audioExts = [".mp3", ".wav", ".ogg", ".flac", ".aac"]
+export const documentExts = [".pdf", ".docx", ".pptx", ".xlsx", ".odt", ".odp", ".ods"]
 export const textExts = [
   ".txt", // 普通文本文件
   ".md", // Markdown 文件
@@ -26,4 +26,4 @@ export const textExts = [
   ".vue", // Vue.js 单文件组件
   ".jsx", // React JSX 文件
   ".tsx", // React TSX 文件
-];
+]

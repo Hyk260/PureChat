@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.web.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "checkJs": false,
+    "allowJs": true,
+    "composite": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "jsx": "preserve",
+    "moduleResolution": "bundler",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "packages/**/*.ts",
+    "uno.config.ts",
+    "**/*.config.ts",
+    "**/*.config.mts",
+    "**/*.config.cts"
+  ]
+}
+
+

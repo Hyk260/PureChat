@@ -5,7 +5,7 @@ const { VITE_STORAGE_PREFIX: storagePrefix } = import.meta.env
 /** The storage type */
 export type StorageType = "local" | "session"
 
-export function createStorage<T extends object>(type: StorageType, storagePrefix: string) {
+export function createStorage<T extends object>(type: StorageType, storagePrefix: string = "") {
   const stg = type === "session" ? window.sessionStorage : window.localStorage
 
   const storage = {
@@ -65,7 +65,7 @@ export function createLocalforage(driver: LocalforageDriver = "indexedDB") {
 
   localforage.config({
     driver: driverMap[driver],
-    name: "PURE_CHAT_DB",
+    name: "PureChat",
     storeName: "userDataStore",
   })
 
@@ -74,4 +74,8 @@ export function createLocalforage(driver: LocalforageDriver = "indexedDB") {
 
 export const localStg = createStorage<StorageType.Local>("local", storagePrefix)
 
+export const sessionStg = createStorage<StorageType.Local>("session", storagePrefix)
+
 export type LocalStg = typeof localStg
+
+export type SessionStg = typeof sessionStg

@@ -12,6 +12,7 @@ import {
   useAccessStore,
 } from "@/ai/utils"
 import { useChatStore, useRobotStore, useToolsStore } from "@/stores"
+import { addAbortController, removeAbortController } from "@/utils/abortController"
 import { transformData } from "@/utils/chat"
 
 import OllamaAI from "../ollama/ollama"
@@ -178,6 +179,12 @@ export class OpenAiApi {
   }
 
   async chat(options: ChatOptions) {
+    const { requestId } = options
+    if (!requestId) {
+      options.onError?.("请求终止功能需要传入 requestId")
+      return
+    }
+
     const messages = await transformData(options.messages)
     const modelConfig = {
       ...this.accessStore(),
@@ -191,7 +198,14 @@ export class OpenAiApi {
     const shouldStream = !isDalle3 && !!options.config.stream
     const controller = new AbortController()
 
+    const abortFn = () => controller.abort()
+    addAbortController(requestId, abortFn)
+
     options.onController?.(controller)
+
+    const cleanUp = () => {
+      removeAbortController(requestId, abortFn)
+    }
 
     try {
       const chatPath = this.getPath(OpenaiPath.ChatPath)
@@ -210,9 +224,9 @@ export class OpenAiApi {
 
       // 流式输出
       if (shouldStream) {
-        await this.handleStreamingChat(chatPath, chatPayload, options, controller)
+        await this.handleStreamingChat(chatPath, chatPayload, options, controller, cleanUp)
       } else {
-        await this.handleNonStreamingChat(chatPath, chatPayload, options, controller)
+        await this.handleNonStreamingChat(chatPath, chatPayload, options, controller, cleanUp)
       }
     } catch (error) {
       console.error("[Request] failed to make a chat reqeust", error)
@@ -301,7 +315,13 @@ export class OpenAiApi {
   /**
    * 处理流式聊天的响应。
    */
-  async handleStreamingChat(chatPath: string, chatPayload: any, options: ChatOptions, controller: AbortController) {
+  async handleStreamingChat(
+    chatPath: string,
+    chatPayload: any,
+    options: ChatOptions,
+    controller: AbortController,
+    cleanUp: () => void
+  ) {
     let responseText = "" // 用于存储完整的响应文本
     let remainText = "" // 用于存储尚未处理的文本
     let reasoningText = "" // 用于存储完整的推理内容
@@ -316,6 +336,7 @@ export class OpenAiApi {
       if (finished || controller.signal.aborted) {
         responseText += remainText
         console.log("[OpenAI] 流式响应完成")
+        cleanUp()
         // 如果响应文本为空，触发错误回调
         if (!responseText.trim()) {
           this.updateSendingState("delete")
@@ -352,10 +373,14 @@ export class OpenAiApi {
           message: responseText + remainText,
           think: reasoningText,
         })
+        cleanUp()
       }
     }
 
-    controller.signal.onabort = finish // 设置请求中止时的处理函数
+    controller.signal.onabort = () => {
+      options.onError?.("请求已手动终止")
+      finish()
+    }
 
     // 取消fetch请求
     const requestTimeoutId = setTimeout(() => controller?.abort(), REQUEST_TIMEOUT_MS)
@@ -397,6 +422,7 @@ export class OpenAiApi {
       onerror(error) {
         console.error("[OpenAI] 流式请求错误:", error)
         options.onError?.(error instanceof Error ? error.message : "流式请求发生错误")
+        cleanUp()
         throw error
       },
       openWhenHidden: true,
@@ -406,8 +432,18 @@ export class OpenAiApi {
   /**
    * 处理非流式聊天
    */
-  async handleNonStreamingChat(chatPath: string, chatPayload: any, options: ChatOptions, controller: AbortController) {
-    const requestTimeoutId = setTimeout(() => controller?.abort(), REQUEST_TIMEOUT_MS)
+  async handleNonStreamingChat(
+    chatPath: string,
+    chatPayload: any,
+    options: ChatOptions,
+    controller: AbortController,
+    cleanUp: () => void
+  ) {
+    const requestTimeoutId = setTimeout(() => {
+      controller?.abort()
+      options.onError?.("请求超时")
+      cleanUp()
+    }, REQUEST_TIMEOUT_MS)
 
     try {
       const response = await fetch(chatPath, chatPayload)
@@ -415,28 +451,31 @@ export class OpenAiApi {
 
       if (response.status === 401) {
         const errorData = await response.json()
-        // options?.onError?.(errorData)
         options?.onError?.(errorData.error?.message || "认证失败")
+        cleanUp()
         return
       }
 
       if (!response.ok) {
         const errorData = await response.json()
         options?.onError?.(errorData.error?.message || `请求失败 (${response.status})`)
+        cleanUp()
         return
       }
 
       const responseJson = await response.json()
       const message = await this.extractMessage(responseJson)
 
-      options?.onFinish({ message })
+      options?.onFinish?.({ message })
+      cleanUp()
     } catch (error) {
       clearTimeout(requestTimeoutId)
       if (error.name === "AbortError") {
         options?.onError?.("请求超时，请稍后重试")
       } else {
-        options?.onError?.(error instanceof Error ? error.message : "网络请求失败");
+        options?.onError?.(error instanceof Error ? error.message : "网络请求失败")
       }
+      cleanUp()
     }
   }
 

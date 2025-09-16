@@ -41,13 +41,13 @@ export default defineConfig([
   prettier,
   // TypeScript 源码文件
   {
-    files: ["src/**/*.?([cm])ts"],
+    files: ["**/*.?([cm])ts"],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module",
-        project: "./tsconfig.web.json",
+        project: "./tsconfig.eslint.json",
         tsconfigRootDir: import.meta.dirname,
       },
       globals: {
@@ -70,14 +70,8 @@ export default defineConfig([
       ...tseslint.configs.recommended.rules,
       ...tseslint.configs["recommended-type-checked"].rules,
       // === TypeScript 特定规则 ===
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
-      ],
+      // 仅使用 unused-imports/no-unused-vars 管理未使用变量，避免与 TS 规则产生自动修复循环
+      "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-unsafe-argument": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-non-null-assertion": "warn",
@@ -122,7 +116,8 @@ export default defineConfig([
       "no-dupe-else-if": "error",
       "no-duplicate-imports": "off",
       "no-empty": ["warn", { allowEmptyCatch: true }],
-      "no-extra-semi": "error",
+      // 交由 Prettier 处理分号，避免与 IIFE 保护分号产生循环修复
+      "no-extra-semi": "off",
       "no-irregular-whitespace": "error",
       "no-multiple-empty-lines": ["warn", { max: 2, maxEOF: 1, maxBOF: 0 }],
       "no-trailing-spaces": "error",
@@ -176,7 +171,7 @@ export default defineConfig([
   },
   // TypeScript 配置文件和测试文件
   {
-    files: ["**/*.config.?([cm])ts", "**/*.test.?([cm])ts", "**/*.spec.?([cm])ts"],
+    files: ["**/*.config.?([cm])ts", "**/*.test.?([cm])ts", "**/*.spec.?([cm])ts", "eslint.config.js"],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
@@ -188,6 +183,7 @@ export default defineConfig([
         ...globals.node,
         Env: "readonly",
         process: "readonly",
+        require: "readonly",
       },
     },
     plugins: {
@@ -203,6 +199,8 @@ export default defineConfig([
       "@typescript-eslint/no-var-requires": "off", // 配置文件中可能需要 require
       "prettier/prettier": "warn",
       "no-undef": "warn",
+      // 允许在 ESLint 配置自身中使用 require 作为回退
+      "@typescript-eslint/no-require-imports": "off",
     },
   },
   // Vue 单文件组件

@@ -83,7 +83,13 @@ export const DB_MessageSchema = z.object({
   hasRiskContent: z.boolean(),
   isPlaceMessage: z.number().int(),
   isRevoked: z.boolean(),
+  /**
+   * @description 发送方的 userID
+   */
   from: z.string(),
+  /**
+   * @description 接收方的 userID
+   */
   to: z.string(),
   /**
    * @description 消息流向
@@ -109,8 +115,15 @@ export const DB_MessageSchema = z.object({
   revoker: z.string(),
   revokerInfo: z.record(z.any()).optional(),
   revokeReason: z.string(),
+  /**
+   * @description 消息内容
+   * 文本 图片 文件 自定义 群提示消息 群系统通知 合并
+   */
   payload: z.record(z.any()),
   isTimeDivider: z.boolean().optional(),
+  /**
+   * @description 消息类型
+   */
   type: MessageTypeSchema,
   createdAt: z.number().optional(),
   updatedAt: z.number().optional(),

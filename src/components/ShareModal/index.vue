@@ -101,9 +101,9 @@
       </div>
       <div>
         <el-button class="w-full" :loading="loading" :disabled="loading" @click="handleDownload">
-          <template #loading>
+          <!-- <template #loading>
             <div class="iconify-icon svg-spinners mr-8"></div>
-          </template>
+          </template> -->
           {{ downloadButtonText }}
         </el-button>
       </div>

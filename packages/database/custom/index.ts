@@ -6,7 +6,7 @@ export const loading = {
       value: "正在输入中...",
     },
   },
-};
+}
 
 export const warning = {
   body: {
@@ -16,4 +16,4 @@ export const warning = {
       value: "Hello World",
     },
   },
-};
+}

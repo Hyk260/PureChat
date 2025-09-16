@@ -5,6 +5,8 @@ import { IDomEditor } from "@wangeditor/editor"
 
 import { bytesToSize, fileToBase64, getFileType } from "@/utils/chat"
 
+const { DEV: isDev } = import.meta.env
+
 export const createMediaElement = (type: string, props: any = {}) => ({
   type,
   ...props,
@@ -17,7 +19,7 @@ export const handleAssistantFile = async (file: File, editor: IDomEditor) => {
 
   const fileType = getFileType(file?.name)
 
-  if (!isTextFile(fileType) || !__IS_ELECTRON__) {
+  if (!isDev && (!isTextFile(fileType) || !__IS_ELECTRON__)) {
     console.log(file)
     window.$message?.warning(`暂不支持${fileType || file.name}文件`)
     return
