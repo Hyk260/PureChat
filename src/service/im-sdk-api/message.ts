@@ -2,7 +2,6 @@ import tim from "@/service/chat/PureChatService"
 import { fileUploading, getCloudCustomData } from "@/utils/chat"
 import { getCustomMsgContent, updateImageSize } from "@/utils/common"
 
-import type { MessageType } from "@/database/schemas/message"
 /**
  * 发送消息
  */

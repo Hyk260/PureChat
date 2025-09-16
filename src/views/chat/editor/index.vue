@@ -304,7 +304,6 @@ const setupEventListeners = () => {
   const events = {
     handleInsertDraft: handleInsertDraft,
     handleToolbar: handleToolbarAction,
-    handleFileViewer: handleFileViewer,
     handleScreenCapture: handleScreenCapture,
   }
 
@@ -312,6 +311,7 @@ const setupEventListeners = () => {
     emitter.on(event, handler)
   })
 
+  emitter.on("handleFileViewer", handleFileViewer)
   emitter.on("handleSetHtml", handleSetHtml)
   emitter.on("handleAt", handleAt)
   emitter.on("handleFileDrop", handleFiles)
