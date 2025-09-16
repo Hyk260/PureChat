@@ -9,38 +9,53 @@ import {
   createVideoMessage,
 } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores"
-import { base64ToFile, getBlob, getFileType } from "@/utils/chat"
+import { base64ToFile, getBlob } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 
 import type { DB_Message } from "@/database/schemas/message"
 import type { GroupMember } from "@/stores/modules/group/type"
-import type { IDomEditor } from "@wangeditor/editor"
+
+interface SendChatMessageOptions {
+  to: string
+  type: string
+  text?: string
+  aitStr?: string
+  atUserList?: string[]
+  files?: Array<{ link: string; fileName: string; path?: string }>
+  video?: Array<{ link: string; fileName: string }>
+  images?: Array<{ src: string; fileName: string }>
+  custom?: Record<string, any>
+}
+interface SearchOptions {
+  searchStr: string
+  list: GroupMember[]
+}
+type MentionModalType = "empty" | "success" | "update" | "all"
 
 export const validateLastMessage = (list: DB_Message[]): DB_Message | null => {
   if (!list.length) return null
   return list.slice().find((t) => t.ID) || null
 }
 
-// 复制
+/**
+ * 复制消息内容到剪贴板
+ */
 export const handleCopyMsg = async (data: DB_Message) => {
-  const { payload, type } = data
-
-  if (type === "TIMTextElem") {
-    window.copyToClipboard(payload.text)
-  } else if (type === "TIMImageElem") {
-    const url = payload.imageInfoArray[0].imageUrl
-    const imageBlob = await getBlob(url)
-    // 创建一个空的 ClipboardItem 对象，并将图片添加到其中
-    const clipboardItem = new ClipboardItem({ "image/png": imageBlob })
-    // 将 ClipboardItem 对象添加到剪贴板
-    navigator.clipboard
-      .write([clipboardItem])
-      .then(() => {
-        window.$message?.success("图片复制成功")
-      })
-      .catch((error) => {
-        console.error("写入剪贴板时出错:", error)
-      })
+  try {
+    const { payload, type } = data
+    if (type === "TIMTextElem") {
+      window.copyToClipboard(payload.text)
+      return
+    }
+    if (type === "TIMImageElem") {
+      const url = payload.imageInfoArray[0].imageUrl
+      const imageBlob = await getBlob(url)
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": imageBlob })])
+      window.$message?.success("图片复制成功")
+    }
+  } catch (error) {
+    console.error("复制失败:", error)
+    window.$message?.error("复制失败")
   }
 }
 
@@ -80,107 +95,6 @@ export async function sendChatMessage(options) {
   }
 
   return messages
-}
-
-/**
- * 将包含表情图像的 HTML 字符串转换为对应的表情符号文本
- * <p>12<img src="*" alt="[我最美]" />333</p>
- * 12[我最美]333
- */
-export function extractEmojiInfo(editor: IDomEditor) {
-  const html = editor.getHtml() // 非格式化的 html
-  const emojiMap = editor.getElemsByType("image") // 所有图片
-  if (!html || !emojiMap || !Array.isArray(emojiMap)) return ""
-  const filtered = emojiMap.filter((item) => item.class === "EmoticonPack")
-  if (filtered.length === 0) return ""
-  const convertedData = filtered.map((item) => ({ [item.src]: item.alt }))
-  const extended = { ...Object.assign(...convertedData) }
-  // 清除文件消息包含的字符串
-  const fileRegex = /<span\s+data-w-e-type="attachment"[^>]*>(.*?)<\/span>/g
-  const str = html.replace(fileRegex, "")
-  // 替换表情包图片为字符串 -> '[**]'
-  const regex = /<img src="([^"]+)"[^>]+>/g
-  const result = str.replace(regex, (match, src) => {
-    const emojiText = extended[src] || ""
-    return emojiText
-  })
-  const text = result.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, "")
-  return text
-}
-
-export const isVideoFile = (fileName: string) => {
-  const video = ["mp4", "wmv", "webm"]
-  const name = fileName.toLowerCase()
-  const regex = new RegExp(`(${video.join("|")})$`, "i")
-  return regex.test(name)
-}
-
-/**
- * 提取图片信息
- */
-export const extractImageInfo = (editor: IDomEditor) => {
-  let images = []
-  const image = editor.getElemsByType("image")
-  // 过滤表情包消息
-  images = image.filter((item) => item?.class !== "EmoticonPack")
-  return { images }
-}
-
-/**
- * 提取文件信息
- */
-export const extractFilesInfo = (editor: IDomEditor) => {
-  let file = []
-  const files = editor.getElemsByType("attachment")
-  file = files.filter((t) => !isVideoFile(getFileType(t.fileName)))
-  return { files: file }
-}
-
-/**
- * 提取视频信息
- */
-export const extractVideoInfo = (editor: IDomEditor) => {
-  let video = []
-  const files = editor.getElemsByType("attachment")
-  video = files.map((t) => isVideoFile(getFileType(t.fileName)))
-  return { video }
-}
-
-/**
- * 从编辑器中提取@提及信息和纯文本内容
- * @param editor 编辑器实例
- * @returns 包含纯文本内容和@用户ID列表的对象
- */
-export const extractAitInfo = (editor: IDomEditor) => {
-  let aitStr = ""
-  const atUserList = []
-
-  const html = editor.getHtml()
-  const mentions = editor.getElemsByType("mention")
-
-  if (!mentions.length) {
-    return { aitStr, atUserList }
-  }
-  // 移除附件标签
-  const fileTagRegex = /<span\s+data-w-e-type="attachment"[^>]*>.*?<\/span>/g
-  // 移除HTML标签
-  const htmlTagRegex = /<[^>]+>/g
-  // 移除&nbsp
-  const nbspRegex = /&nbsp;/gi
-
-  aitStr = html.replace(fileTagRegex, "").replace(htmlTagRegex, "").replace(nbspRegex, "")
-
-  const uniqueUserIds = new Set()
-  mentions.forEach((item) => {
-    if (item?.info?.id) {
-      uniqueUserIds.add(item.info.id)
-    }
-  })
-
-  return {
-    aitStr,
-    atUserList: Array.from(uniqueUserIds),
-  }
 }
 
 /**

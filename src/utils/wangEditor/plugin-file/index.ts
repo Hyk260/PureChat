@@ -1,16 +1,11 @@
-import { DomEditor, IDomEditor, SlateElement } from "@wangeditor/editor"
+import { DomEditor, IDomEditor } from "@wangeditor/editor"
 import { h } from "snabbdom"
 
 import { getFileType, renderFileIcon } from "@/utils/chat"
 import { encodeHTML } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
 
-interface AttachmentElement extends SlateElement {
-  type: "attachment"
-  link: string
-  fileName: string
-  fileSize?: string
-}
+import type { AttachmentElement } from "@/types"
 
 /**
  * 扩展编辑器，定义附件为inline和void元素
@@ -21,12 +16,12 @@ const withAttachment = (editor: IDomEditor) => {
   const { isInline, isVoid } = editor
 
   // 定义附件为inline元素
-  editor.isInline = (elem: SlateElement) => {
+  editor.isInline = (elem) => {
     return DomEditor.getNodeType(elem) === "attachment" || isInline(elem)
   }
 
   // 定义附件为void元素（无children）
-  editor.isVoid = (elem: SlateElement) => {
+  editor.isVoid = (elem) => {
     return DomEditor.getNodeType(elem) === "attachment" || isVoid(elem)
   }
 

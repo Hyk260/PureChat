@@ -1,25 +1,10 @@
 import { DomEditor, IDomEditor } from "@wangeditor/editor"
 import { h } from "snabbdom"
 
+import type { MentionConfig, MentionElement, MentionInfo } from "@/types"
+
 const MENTION_TYPE = "mention"
 const MENTION_SELECTOR = `span[data-w-e-type="${MENTION_TYPE}"]`
-
-interface MentionInfo {
-  [key: string]: any
-}
-
-interface MentionElement {
-  type: string
-  value: string
-  info: MentionInfo
-  children: [{ text: string }]
-}
-
-interface MentionConfig {
-  showModal?: (editor: IDomEditor) => void
-  hideModal?: (editor: IDomEditor) => void
-  pinyinSearch?: boolean
-}
 
 /**
  * 获取提及功能的配置项

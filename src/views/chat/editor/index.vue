@@ -33,6 +33,7 @@ import { debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
 
 import MentionModal from "@/components/Chat/MentionModal.vue"
+import { usePrepareMessageData } from "@/hooks/useMessageOperations"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useGroupStore } from "@/stores"
 import { bytesToSize, fileToBase64, insertMention } from "@/utils/chat"
@@ -41,15 +42,7 @@ import emitter from "@/utils/mitt-bus"
 
 import Inputbar from "../Inputbar/index.vue"
 import { editorConfig } from "../utils/configure"
-import {
-  extractAitInfo,
-  extractEmojiInfo,
-  extractFilesInfo,
-  extractImageInfo,
-  // extractVideoInfo,
-  filterMentionList,
-  sendChatMessage,
-} from "../utils/utils"
+import { filterMentionList, sendChatMessage } from "../utils/utils"
 import SendMessageButton from "./SendMessageButton.vue"
 import {
   createMediaElement,
@@ -73,6 +66,7 @@ const editorRef = shallowRef<IDomEditor>()
 const valueHtml = ref("")
 
 const [disabled, setDisabled] = useState(false)
+const { prepareMessageData } = usePrepareMessageData()
 
 const chatStore = useChatStore()
 const groupStore = useGroupStore()
@@ -81,15 +75,12 @@ const { isOwner } = storeToRefs(groupStore)
 const {
   isSending,
   isGroupChat,
-  toAccount,
   isAssistant,
-  currentType,
   isMultiSelectMode,
   isChatBoxVisible,
   isMentionModalVisible,
   isFullscreenInputActive,
   currentSessionId,
-  replyMsgData,
 } = storeToRefs(chatStore)
 
 const handleEditorCreated = (editor: IDomEditor) => {
@@ -237,7 +228,7 @@ const handleEnter = async (event: MouseEvent) => {
     return
   }
 
-  const messageData = prepareMessageData()
+  const messageData = prepareMessageData(editorRef.value)
   messageData.isHave ? await sendMessage(messageData) : clearInput()
 }
 
@@ -245,37 +236,6 @@ const clearInput = () => {
   chatStore.setReplyMsgData(null)
   chatStore.$patch({ isFullscreenInputActive: false })
   editorRef.value?.clear()
-}
-
-const prepareMessageData = () => {
-  const editor = editorRef.value
-  if (!editor) throw new Error("Editor reference is required")
-
-  const text = editor.getText().trim()
-  const extractions = {
-    ...extractAitInfo(editor),
-    ...extractFilesInfo(editor),
-    ...extractImageInfo(editor),
-  }
-  const { aitStr = "", atUserList = [], files = [], images = [] } = extractions
-  const emoticons = extractEmojiInfo(editor)
-
-  const hasContent = [images.length, files.length, atUserList.length, aitStr, emoticons, text].some(Boolean)
-
-  const finalText = emoticons || text
-
-  return {
-    to: toAccount.value,
-    type: currentType.value,
-    text: finalText,
-    aitStr: atUserList.length ? emoticons || aitStr : "",
-    atUserList,
-    images,
-    files,
-    // video,
-    custom: replyMsgData.value,
-    isHave: hasContent,
-  }
 }
 
 const sendMessage = async (data) => {
