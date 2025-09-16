@@ -12,12 +12,7 @@ import { getCustomMsgContent, getTime } from "@/utils/common"
 import { generateReferencePrompt, handleWebSearchData } from "@/utils/messageUtils/search"
 import emitter from "@/utils/mitt-bus"
 
-interface AIResponse {
-  message: string
-  think?: string
-  done?: boolean
-}
-
+import type { AIResponse } from "@/types"
 /**
  * 通过 REST API 发送消息
  */
@@ -33,8 +28,6 @@ const restSendMsg = async (params: DB_Message, data: AIResponse) => {
       thinking: "思考中...",
       deeplyThought: "已深度思考",
     })
-  } else {
-    cloudCustomData = handleWebSearchData(params, true)
   }
 
   try {
@@ -71,7 +64,7 @@ const updateMessage = (chat: DB_Message, data?: AIResponse) => {
       deeplyThought: "已深度思考",
     })
   } else if (isFinish) {
-    chat.cloudCustomData = handleWebSearchData(chat)
+    chat.cloudCustomData = handleWebSearchData(chat, true)
     if (chat.type === "TIMTextElem") {
       chat.payload = {
         text: chat.payload.text,
@@ -121,7 +114,7 @@ const createAlertMsg = (startMsg: DB_Message, provider: ModelProviderKey) => {
 /**
  * 在发送消息前进行预检查
  */
-const beforeSend = (api: ClientApi, startMsg: DB_Message) => {
+const shouldAbortSend = (api: ClientApi, startMsg: DB_Message) => {
   // Ollama 模型不需要 token 检查
   if (api.llm.provider === ModelProvider.Ollama) {
     return false
@@ -138,6 +131,19 @@ const beforeSend = (api: ClientApi, startMsg: DB_Message) => {
   }
 }
 
+const shouldUseCurrentMessages = (): boolean => {
+  return useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel
+}
+
+const handleWebSearchIfNeeded = async (chat: DB_Message, startMsg: DB_Message) => {
+  const enableWebSearch = shouldUseCurrentMessages()
+
+  if (enableWebSearch && __LOCAL_MODE__) {
+    const webSearchResult = await generateReferencePrompt(chat, { content: chat?.payload?.text })
+    window.sessionStg.set(`web-search-${startMsg.ID}`, webSearchResult)
+  }
+}
+
 export const chatService = async ({
   messages,
   chat,
@@ -150,18 +156,13 @@ export const chatService = async ({
   const api = new ClientApi(provider)
   const startMsg = createStartMsg(chat)
 
-  if (beforeSend(api, startMsg)) return
+  if (shouldAbortSend(api, startMsg)) return
 
-  const enableWebSearch = useRobotStore().enableWebSearch && useRobotStore().isWebSearchModel
-
-  if (enableWebSearch && __LOCAL_MODE__) {
-    const webSearchResult = await generateReferencePrompt(chat, { content: chat?.payload?.text })
-
-    window.localStg.set(`web-search-${startMsg.ID}`, webSearchResult)
-  }
+  await handleWebSearchIfNeeded(chat, startMsg)
 
   await api.llm.chat({
-    messages: enableWebSearch ? useChatStore().currentMessageList : messages,
+    requestId: startMsg.ID,
+    messages: shouldUseCurrentMessages() ? useChatStore().currentMessageList : messages,
     config: {
       stream: true,
       model: api.config().model,

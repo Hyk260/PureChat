@@ -64,9 +64,9 @@ export async function generateReferencePrompt(data: DB_Message, message: { conte
 
 export const handleWebSearchData = (data: DB_Message, flag = false) => {
   if (!data?.ID) return ""
-  const webSearchResult = window.localStg.get(`web-search-${data.ID}`)
+  const webSearchResult = window.sessionStg.get(`web-search-${data.ID}`)
   if (!webSearchResult) return ""
   const result = getCloudCustomData({ payload: { text: "web-search" } }, { webSearchResult })
-  if (flag) window.localStg.remove(`web-search-${data.ID}`)
+  if (flag) window.sessionStg.remove(`web-search-${data.ID}`)
   return result
 }

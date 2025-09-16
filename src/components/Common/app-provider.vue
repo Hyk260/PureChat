@@ -11,7 +11,7 @@ import { useClipboard } from "@vueuse/core"
 
 import { ElMessage, ElMessageBox, ElNotification } from "element-plus"
 
-import { localStg } from "@/utils/storage"
+import { localStg, sessionStg } from "@/utils/storage"
 
 defineOptions({ name: "AppProvider" })
 
@@ -36,6 +36,7 @@ const ContextHolder = defineComponent({
     }
 
     window.localStg = localStg
+    window.sessionStg = sessionStg
     window.copyToClipboard = copyToClipboard
 
     register()

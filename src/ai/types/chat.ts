@@ -154,10 +154,11 @@ export interface LLMConfig {
 export interface ChatOptions {
   messages: DB_Message[]
   config: LLMConfig
+  requestId: string
 
-  onUpdate?: ({ message, fetchCount, think }: { message: string; fetchCount?: string; think?: string }) => void
-  onFinish: ({ message, think }: { message: string; think?: string }) => void
+  onUpdate?: (data: { message: string; fetchCount?: string; think?: string }) => void
+  onFinish?: (data: { message: string; think?: string }) => void
   onReasoningMessage?: (message: string) => void
-  onError?: (err: Error | string) => void
+  onError?: (err: string) => void
   onController?: (controller: AbortController) => void
 }

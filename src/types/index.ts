@@ -7,3 +7,9 @@ export type DraftData = Array<{
     [key: string]: unknown
   }>
 }>
+
+export interface AIResponse {
+  message: string
+  think?: string
+  done?: boolean
+}
