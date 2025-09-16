@@ -14,16 +14,16 @@ const BaseUserProfile = {
   level: 0,
   role: 0,
   lastUpdatedTime: 0,
-  profileCustomField: []
-};
+  profileCustomField: [],
+}
 
 // 用户信息结构
 export const UserProfile = {
   ...BaseUserProfile,
   userID: "admin",
   nick: "admin",
-  avatar: "avatar"
-};
+  avatar: "avatar",
+}
 
 // 对话列表
 export const ConversationList = {
@@ -58,10 +58,10 @@ export const ConversationList = {
   conversationGroupList: [],
   draftText: "",
   userProfile: {
-    ...BaseUserProfile
+    ...BaseUserProfile,
   },
   subType: "",
-};
+}
 
 // 基础消息元素
 export const BaseElemMessage = {
@@ -102,7 +102,7 @@ export const BaseElemMessage = {
   revokeReason: "",
   payload: {},
   type: "",
-};
+}
 
 export const ProvidersList = [
   {
@@ -126,8 +126,7 @@ export const ProvidersList = [
     ...BaseUserProfile,
     userID: "@RBT#002",
     nick: "ZhiPu",
-    selfSignature:
-      "智谱 AI 提供多模态与语言模型的开放平台，支持广泛的AI应用场景，包括文本处理、图像理解与编程辅助等。",
+    selfSignature: "智谱 AI 提供多模态与语言模型的开放平台，支持广泛的AI应用场景，包括文本处理、图像理解与编程辅助等。",
     profileCustomField: [
       {
         key: "Tag_Profile_Custom_Provider",
@@ -240,4 +239,4 @@ export const ProvidersList = [
       },
     ],
   },
-];
+]

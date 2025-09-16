@@ -44,4 +44,4 @@ export const GroupData = {
     text: "@PureChat",
   },
   type: "TIMTextElem",
-};
+}
