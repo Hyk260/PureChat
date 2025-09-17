@@ -12,7 +12,7 @@
       class="editor-content"
       :mode="mode"
       :default-config="editorConfig"
-      @drop="handleDrop"
+      @drop="handleFileDrop"
       @on-change="handleEditorChange"
       @on-created="handleEditorCreated"
       @custom-paste="handlePaste"
@@ -21,7 +21,7 @@
     />
     <!-- @提及弹框 -->
     <MentionModal v-if="isMentionModalVisible" pinyin-search :is-owner="isOwner" :editor="editorRef" />
-    <SendMessageButton :disabled="disabled" @send-message="handleEnter" />
+    <SendMessageButton :disabled="isSendDisabled" @send-message="sendChatMessage" />
   </div>
 </template>
 
@@ -33,6 +33,7 @@ import { debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
 
 import MentionModal from "@/components/Chat/MentionModal.vue"
+import { useMessageCreator } from "@/hooks/useMessageCreator"
 import { usePrepareMessageData } from "@/hooks/useMessageOperations"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useGroupStore } from "@/stores"
@@ -42,7 +43,7 @@ import emitter from "@/utils/mitt-bus"
 
 import Inputbar from "../Inputbar/index.vue"
 import { editorConfig } from "../utils/configure"
-import { filterMentionList, sendChatMessage } from "../utils/utils"
+import { filterMentionList } from "../utils/utils"
 import SendMessageButton from "./SendMessageButton.vue"
 import {
   createMediaElement,
@@ -65,8 +66,9 @@ const mode = "simple"
 const editorRef = shallowRef<IDomEditor>()
 const valueHtml = ref("")
 
-const [disabled, setDisabled] = useState(false)
+const [isSendDisabled, setIsSendDisabled] = useState(false)
 const { prepareMessageData } = usePrepareMessageData()
+const { messageCreator } = useMessageCreator()
 
 const chatStore = useChatStore()
 const groupStore = useGroupStore()
@@ -131,11 +133,11 @@ const handleFileViewer = (data) => {
   console.log("handleFileViewer", data)
 }
 
-const updateDraft = debounce((data: DraftData) => {
+const updateChatDraft = debounce((data: DraftData) => {
   chatStore.updateChatDraft({ ID: currentSessionId.value, payload: data })
 }, 300)
 
-const handleAtMention = debounce((editor) => {
+const handleMentionSearch = debounce((editor) => {
   if (isGroupChat.value) {
     filterMentionList({
       str: editor.getText(),
@@ -145,9 +147,9 @@ const handleAtMention = debounce((editor) => {
 }, 100)
 
 const handleEditorChange = (editor: IDomEditor) => {
-  setDisabled(editor.isEmpty())
-  updateDraft(editor.children)
-  handleAtMention(editor)
+  setIsSendDisabled(editor.isEmpty())
+  updateChatDraft(editor.children)
+  handleMentionSearch(editor)
 }
 
 const handleFiles = async (file: File | null, type: "image" | "file" = "file") => {
@@ -209,7 +211,7 @@ const handlePaste = (editor: IDomEditor, event: ClipboardEvent, callback?: Funct
   callback?.(false)
 }
 
-const handleDrop = (event: DragEvent) => {
+const handleFileDrop = (event: DragEvent) => {
   if (event?.dataTransfer?.getData("text/plain")) {
     return
   }
@@ -228,8 +230,7 @@ const handleEnter = async (event: MouseEvent) => {
     return
   }
 
-  const messageData = prepareMessageData(editorRef.value)
-  messageData.isHave ? await sendMessage(messageData) : clearInput()
+  await sendChatMessage()
 }
 
 const clearInput = () => {
@@ -238,11 +239,20 @@ const clearInput = () => {
   editorRef.value?.clear()
 }
 
-const sendMessage = async (data) => {
+const sendChatMessage = async () => {
   try {
-    const message = await sendChatMessage(data)
+    const messageData = prepareMessageData(editorRef.value)
+    console.log("messageData", messageData)
+    if (!messageData.isHave) {
+      clearInput()
+      return
+    }
+
+    const message = await messageCreator(messageData)
     clearInput()
-    chatStore.updateSendingState(data.to, "add")
+
+    chatStore.updateSendingState(messageData.to, "add")
+
     message.forEach((msg, index) => {
       chatStore.sendSessionMessage({
         message: msg,
@@ -261,16 +271,9 @@ const handleScreenCapture = (url: string) => {
 }
 
 const setupEventListeners = () => {
-  const events = {
-    handleInsertDraft: handleInsertDraft,
-    handleToolbar: handleToolbarAction,
-    handleScreenCapture: handleScreenCapture,
-  }
-
-  Object.entries(events).forEach(([event, handler]) => {
-    emitter.on(event, handler)
-  })
-
+  emitter.on("handleInsertDraft", handleInsertDraft)
+  emitter.on("handleToolbar", handleToolbarAction)
+  emitter.on("handleScreenCapture", handleScreenCapture)
   emitter.on("handleFileViewer", handleFileViewer)
   emitter.on("handleSetHtml", handleSetHtml)
   emitter.on("handleAt", handleAt)
@@ -278,15 +281,16 @@ const setupEventListeners = () => {
 }
 
 const removeEventListeners = () => {
-  Object.keys({
-    handleAt: null,
-    handleSetHtml: null,
-    handleInsertDraft: null,
-    handleFileDrop: null,
-    handleToolbar: null,
-    handleFileViewer: null,
-    handleScreenCapture: null,
-  }).forEach((event) => emitter.off(event))
+  const events = [
+    "handleAt",
+    "handleSetHtml",
+    "handleInsertDraft",
+    "handleFileDrop",
+    "handleToolbar",
+    "handleFileViewer",
+    "handleScreenCapture",
+  ]
+  events.forEach((event) => emitter.off(event))
 }
 
 watch(isChatBoxVisible, () => {

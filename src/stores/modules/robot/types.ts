@@ -85,7 +85,7 @@ export interface RobotGetters {
   isOllama: boolean
   isShowPromptTitle: boolean
   getPromptTitle: string
-  getBotMessageCount: number
+  botMessageCount: number
 }
 
 // 机器人存储 Actions 类型

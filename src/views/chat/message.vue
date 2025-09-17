@@ -19,7 +19,7 @@
     <!-- 聊天框 -->
     <div class="message-right">
       <EmptyMessage class-name="empty" />
-      <Header />
+      <ChatHeader />
       <!-- 聊天窗口 -->
       <Chatwin />
       <!-- 消息回复框 -->
@@ -38,6 +38,7 @@ import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue"
 
 import { storeToRefs } from "pinia"
 
+import ChatHeader from "@/components/Chat/ChatHeader.vue"
 import MessageToolbar from "@/components/Popups/MessageToolbar.vue"
 import { useChatStore } from "@/stores/modules/chat"
 import emitter from "@/utils/mitt-bus"
@@ -45,7 +46,6 @@ import emitter from "@/utils/mitt-bus"
 import Chatwin from "./chat/Chatwin.vue"
 import ConversationList from "./chat/ConversationList.vue"
 import EmptyMessage from "./components/EmptyMessage.vue"
-import Header from "./components/Header.vue"
 import ReplyBox from "./components/ReplyBox.vue"
 import SearchInput from "./components/SearchInput.vue"
 import Editor from "./editor/index.vue"

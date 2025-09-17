@@ -17,20 +17,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
-
+import { useMessageCreator } from "@/hooks/useMessageCreator"
 import { useChatStore } from "@/stores"
 
-import { sendChatMessage } from "../utils/utils"
+import type { DB_Message } from "@/types"
 
 const props = defineProps({
   item: {
-    type: Object,
+    type: Object as PropType<DB_Message>,
     required: true,
   },
 })
 
 const chatStore = useChatStore()
+const { messageCreator } = useMessageCreator()
 const { toAccount, currentType } = storeToRefs(chatStore)
 
 const parsedCustomData = computed(() => {
@@ -48,22 +48,18 @@ const messageAbstract = computed(() => parsedCustomData.value?.messageAbstract ?
 
 const recommendedQuestions = computed(() => parsedCustomData.value?.recQuestion ?? [])
 
-/**
- * 处理问题点击事件
- * @param questionText 点击的问题文本
- */
-const handleQuestion = async (questionText) => {
+const handleQuestion = async (text: string) => {
   try {
-    const message = await sendChatMessage({
+    const message = await messageCreator({
       to: toAccount.value,
       type: currentType.value,
-      text: questionText,
+      text: text,
     })
 
-    if (message?.[0]) {
+    message.forEach((msg) => {
       chatStore.updateSendingState(toAccount.value, "add")
-      chatStore.sendSessionMessage({ message: message[0] })
-    }
+      chatStore.sendSessionMessage({ message: msg })
+    })
   } catch (error) {
     console.error("Error sending chat message:", error)
   }
