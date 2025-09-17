@@ -33,6 +33,7 @@ export interface PromptMeta {
   tags: string[]
   avatar: string
   title: string
+  recQuestion?: string[]
   [key: string]: any
 }
 

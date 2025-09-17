@@ -1,5 +1,4 @@
 import tim from "@/service/chat/PureChatService"
-// import TencentCloudChat from "@/service/chat/types/tencent-cloud-chat"
 
 export const GroupType = {
   GRP_WORK: "Private", // 好友工作群，默认

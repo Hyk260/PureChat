@@ -1,8 +1,3 @@
-// import TencentCloudChat from "@tencentcloud/chat"
-// import GroupModule from "@tencentcloud/chat/modules/group-module.js"
-// import SignalingModule from "@tencentcloud/chat/modules/signaling-module.js"
-// import TIMUploadPlugin from "tim-upload-plugin"
-
 import type TencentCloudChatModule from "./types/tencent-cloud-chat"
 import type { ChatSDK } from "./types/tencent-cloud-chat"
 

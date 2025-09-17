@@ -178,16 +178,16 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.sendingMap.set(sessionId, true)
       }
     },
-    async createAiPromptMsg() {
+    createAiPromptMsg() {
       const to = useUserStore()?.userProfile?.userID
       const defaultBot = useRobotStore().defaultProvider
       const from = getModelId(defaultBot)
       const meta = useRobotStore().promptStore[defaultBot]?.[0]?.meta
-      const text = `你好，我是 ${meta.avatar} ${meta.title} ${meta.description} 让我们开始对话吧！`
+      const text = `你好，我是 ${meta?.avatar} ${meta?.title} ${meta?.description} 让我们开始对话吧！`
       const msg = createTextMessage({ to: from, text, cache: false })
       const promptContent = getCloudCustomData(
         { key: "messagePrompt", payload: { text: "预设提示词" } },
-        { recQuestion: meta.recQuestion || [] }
+        { recQuestion: meta?.recQuestion || [] }
       )
       msg.conversationID = `C2C${from}`
       msg.avatar = getAiAvatarUrl(from)
@@ -199,12 +199,11 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       msg.status = "success"
       return { sessionId: `C2C${msg.from}`, message: msg }
     },
-    async addAiPresetPromptWords() {
-      const { sessionId, message } = await this.createAiPromptMsg()
+    addAiPresetPromptWords() {
+      const { sessionId, message } = this.createAiPromptMsg()
       const history = this.historyMessageList.get(sessionId)
       if (this.currentConversation && this.currentMessageList) {
-        const data = cloneDeep(history)
-        if (data) this.currentMessageList = [...data, message]
+        if (history) this.currentMessageList = [...history, message]
       }
       emitter.emit("updateScroll")
     },

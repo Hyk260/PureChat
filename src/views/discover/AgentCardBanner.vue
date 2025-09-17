@@ -80,9 +80,7 @@ function setAgentCard(data) {
 }
 
 onMounted(() => {
-  emitter.on("openAgentCard", (data) => {
-    setAgentCard(data)
-  })
+  emitter.on("openAgentCard", setAgentCard)
 })
 
 onBeforeUnmount(() => {
