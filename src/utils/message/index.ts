@@ -1,3 +1,5 @@
+import { VNode } from "vue"
+
 import { ElMessageBox } from "element-plus"
 
 import { $t } from "@/locales"
@@ -7,7 +9,7 @@ import { $t } from "@/locales"
  */
 export interface ConfirmationBoxOptions {
   /** 对话框显示内容 */
-  message: string
+  message: string | VNode
   /** 确认按钮文本，默认为"确认" */
   confirmText?: string
   /** 取消按钮文本，默认为"取消" */

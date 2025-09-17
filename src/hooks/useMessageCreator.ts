@@ -8,7 +8,7 @@ import {
 import { base64ToFile } from "@/utils/chat"
 
 import type { ImageFile, MediaFile, MessageConfig, MessagePayload, TextContent } from "./types"
-import type { DB_Message } from '@/types';
+import type { DB_Message } from "@/types"
 
 /**
  * 消息创建器 Hook
