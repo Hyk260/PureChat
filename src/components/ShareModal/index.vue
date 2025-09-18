@@ -14,7 +14,7 @@
       <div class="segmented">
         <div id="preview" class="preview" :style="back">
           <div class="content">
-            <Header />
+            <ChatHeader />
             <h2 v-if="showRole" class="role">{{ roleText }}</h2>
             <div v-if="showPrompt" class="prompt">
               <Markdown :marked="promptContent" />
@@ -117,13 +117,13 @@ import { computed, onMounted, onUnmounted, ref } from "vue"
 import { storeToRefs } from "pinia"
 
 import { getAiAvatarUrl } from "@/ai/utils"
+import ChatHeader from "@/components/Chat/ChatHeader.vue"
 import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"
 import { ImageType, imageTypeOptions, useScreenshot } from "@/hooks/useScreenshot"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"
 import { getMessageItemClass, getMessageTypeClass, isSelf } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
-import Header from "@/views/chat/components/Header.vue"
 
 import { back, backgColor, getBackgroundStyle, onColor } from "./utils"
 

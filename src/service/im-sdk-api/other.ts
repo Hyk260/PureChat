@@ -90,15 +90,10 @@ export const setMessageRemindType = async (params: DB_Session) => {
 // 获取会话信息
 export const getConversationProfile = async ({ sessionId }: { sessionId: string }) => {
   try {
-    const { code, data } = await tim.getConversationProfile(sessionId)
-    if (code === 0) {
-      return data
-    } else {
-      return { code: -1, data: { conversation: null } }
-    }
+    const { data } = await tim.getConversationProfile(sessionId)
+    return data
   } catch (error) {
-    console.error("获取会话资料失败:", error)
-    return { code: -1, data: { conversation: null } }
+    throw new Error(error)
   }
 }
 // 消息已读上报

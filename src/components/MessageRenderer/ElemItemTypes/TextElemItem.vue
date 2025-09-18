@@ -12,6 +12,7 @@
 <script setup lang="ts">
 import { computed, PropType } from "vue"
 
+// import Markdown from "@/components/Automatic/Markdown/StreamingMarkdown.vue"
 import DynamicContent from "@/components/Chat/DynamicContent.vue"
 import { DB_Message } from "@/database/schemas/message"
 import { useAppStore, useChatStore } from "@/stores"

@@ -69,7 +69,7 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       if (!avatar && !title) return ""
       return `${avatar} ${title}`
     },
-    getBotMessageCount(): number {
+    botMessageCount(): number {
       return this.modelConfig?.historyMessageCount || 1
     },
   },

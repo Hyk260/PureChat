@@ -7,34 +7,8 @@ import {
 } from "@/service/im-sdk-api"
 import { base64ToFile } from "@/utils/chat"
 
-interface MediaFile {
-  link: string
-  fileName: string
-  path?: string
-}
-
-interface ImageFile {
-  src: string
-  fileName: string
-}
-
-interface MessageConfig {
-  to: string
-  type: string
-  custom?: Record<string, any>
-}
-
-interface TextContent {
-  text?: string
-  aitStr?: string
-  atUserList?: any[]
-}
-
-interface MessagePayload extends MessageConfig, TextContent {
-  files?: MediaFile[]
-  video?: MediaFile[]
-  images?: ImageFile[]
-}
+import type { ImageFile, MediaFile, MessageConfig, MessagePayload, TextContent } from "./types"
+import type { DB_Message } from "@/types"
 
 /**
  * 消息创建器 Hook
@@ -105,9 +79,19 @@ export const useMessageCreator = () => {
   /**
    * 创建消息列表
    */
-  const createMessageList = async (payload: MessagePayload) => {
+  const messageCreator = async (payload: MessagePayload): Promise<DB_Message[]> => {
     try {
-      const { to, type, custom = {}, text, aitStr, atUserList, files = [], video = [], images = [] } = payload
+      const {
+        to,
+        type,
+        custom = {},
+        text = "",
+        aitStr = "",
+        atUserList = [],
+        files = [],
+        video = [],
+        images = [],
+      } = payload
 
       const config = { to, type, custom }
 
@@ -127,12 +111,12 @@ export const useMessageCreator = () => {
       return [...imageMessages.flat(), ...textMessages]
     } catch (error) {
       console.error("创建消息列表失败:", error)
-      throw new Error("创建消息列表失败")
+      return []
     }
   }
 
   return {
-    createMessageList,
+    messageCreator,
     createImageMessages,
     createFileMessages,
     createVideoMessages,

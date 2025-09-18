@@ -33,6 +33,7 @@ export interface PromptMeta {
   tags: string[]
   avatar: string
   title: string
+  recQuestion?: string[]
   [key: string]: any
 }
 
@@ -85,7 +86,7 @@ export interface RobotGetters {
   isOllama: boolean
   isShowPromptTitle: boolean
   getPromptTitle: string
-  getBotMessageCount: number
+  botMessageCount: number
 }
 
 // 机器人存储 Actions 类型

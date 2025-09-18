@@ -4,6 +4,8 @@ import { useChatStore } from "@/stores"
 import { abortCompletion } from "@/utils/abortController"
 import { getFileType } from "@/utils/chat"
 
+// import { useMessageCreator } from "./useMessageCreator"
+import type { MessagePayload } from "./types"
 import type { AttachmentElement, EmojiElement, ImageElement, MentionElement } from "@/types"
 import type { IDomEditor } from "@wangeditor/editor"
 
@@ -114,7 +116,7 @@ export const usePrepareMessageData = () => {
   const chatStore = useChatStore()
   const { toAccount, currentType, replyMsgData } = storeToRefs(chatStore)
 
-  const prepareMessageData = (editor: IDomEditor | undefined | null) => {
+  const prepareMessageData = (editor: IDomEditor | undefined | null): MessagePayload => {
     if (!editor) {
       throw new Error("编辑器实例不能为空")
     }

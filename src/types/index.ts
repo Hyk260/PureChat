@@ -1,6 +1,7 @@
 // import type { SlateDescendant } from "@wangeditor/editor"
 export * from "@/database/schemas/message"
-import { IDomEditor } from "@wangeditor/editor"
+export * from "@/database/schemas/session"
+import type { IDomEditor } from "@wangeditor/editor"
 
 export type DraftData = Array<{
   type: string
