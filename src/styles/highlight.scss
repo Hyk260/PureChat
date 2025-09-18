@@ -17,6 +17,18 @@
   width: 24px;
 }
 
+.markdown-body pre .hljs-language {
+  z-index: 2;
+  user-select: none;
+  color: var(--vp-code-lang-color);
+  font-size: 12px;
+  font-weight: 500;
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  transition: color 0.4s, opacity 0.4s;
+}
+
 .markdown-body pre:hover .copy-code-button {
   pointer-events: all;
   transform: translateX(0);

@@ -1,4 +1,9 @@
-import type markdownit from "markdown-it"
+import { h, render } from "vue"
+
+import CodeBlock from "./CodeBlock.vue"
+
+import type Markdownit from "markdown-it"
+import type { Options } from "markdown-it"
 
 export const EPUB_RULES = {
   footnote_ref: ["<a", '<a epub:type="noteref" target="_blank" rel="noopener noreferrer"'],
@@ -6,10 +11,12 @@ export const EPUB_RULES = {
   footnote_anchor: ["<a", '<a aria-label="back to url"'],
 }
 
-// 自定义脚注规则
-export const configureFootnoteRules = (md: markdownit, results: any[] = []) => {
+/**
+ *自定义脚注规则
+ */
+export const configureFootnoteRules = (md: Markdownit, results: any[] = []) => {
   // 脚注引用样式 (正文中的 [^1] 样式)
-  md.renderer.rules.footnote_ref = (tokens: any, id: number) => {
+  md.renderer.rules.footnote_ref = (tokens, id: number) => {
     const n = Number(tokens[id].meta.id + 1).toString()
     const data = results?.find((t) => t.id == n)
     if (data?.sourceUrl) {
@@ -34,7 +41,7 @@ export const configureFootnoteRules = (md: markdownit, results: any[] = []) => {
 
   md.renderer.rules.footnote_close = () => "</li>\n"
 
-  md.renderer.rules.footnote_anchor = (tokens: any, id: number) => {
+  md.renderer.rules.footnote_anchor = (tokens, id: number) => {
     const n = Number(tokens[id].meta.id + 1).toString()
     const data = results?.find((t) => t.id == n)
     if (data?.sourceUrl) {
@@ -47,19 +54,52 @@ export const configureFootnoteRules = (md: markdownit, results: any[] = []) => {
 }
 
 // 链接添加 target="_blank"
-export const applyLinkOpenRules = (md: markdownit) => {
-  md.renderer.rules.link_open = (tokens: any, id: number) => {
+export const applyLinkOpenRules = (md: Markdownit) => {
+  md.renderer.rules.link_open = (tokens, id: number) => {
     tokens[id].attrSet("target", "_blank")
     tokens[id].attrSet("rel", "noopener noreferrer")
     return md.renderer.renderToken(tokens, id, {})
   }
 }
 
-export const applyEpubRules = (md: markdownit) => {
+export const applyEpubRules = (md: Markdownit) => {
   Object.keys(EPUB_RULES).map((rule) => {
     const defaultRender = md.renderer.rules[rule] as any
     md.renderer.rules[rule] = (tokens: any, id: number, options: any, env: any, self: any) => {
       return defaultRender(tokens, id, options, env, self).replace(...EPUB_RULES[rule as keyof typeof EPUB_RULES])
     }
+  })
+}
+
+export const applyFenceRules = (md: Markdownit) => {
+  md.renderer.rules.fence = (tokens, idx: number, _options: Options, _env, _self) => {
+    const token = tokens[idx]
+    const lang = token.info.trim() || "plaintext"
+    const code = token.content
+    // const containerId = `code-block-${Math.random().toString(36).substr(2, 9)}`
+    // return `<div id="${containerId}" data-code="${encodeURIComponent(code)}" data-lang="${lang}" class="code-block-container"></div>`
+
+    return `
+      <div class="code-block-wrapper" data-lang="${lang}">
+        <div class="code-header">
+          <span class="lang-label">${lang}</span>
+          <button class="copy-btn">复制代码</button>
+        </div>
+        <div class="code-content">${md.options.highlight(code, lang)}</div>
+      </div>
+    `
+  }
+}
+
+export const renderCodeBlocks = () => {
+  const containers = document.querySelectorAll(".code-block-container")
+
+  containers.forEach((container) => {
+    const code = decodeURIComponent(container.getAttribute("data-code") || "")
+    const language = container.getAttribute("data-lang") || "plaintext"
+
+    const vnode = h(CodeBlock, { code, language })
+
+    render(vnode, container)
   })
 }
