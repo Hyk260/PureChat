@@ -78,11 +78,38 @@
         </el-descriptions-item>
       </el-descriptions>
     </el-card>
+    <!-- Markdown 预览示例 -->
+    <el-card class="style-card" shadow="hover">
+      <template #header>
+        <div>
+          <span>React Markdown Web Component 示例</span>
+        </div>
+      </template>
+      <div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap">
+        <el-input
+          v-model="markdownText"
+          type="textarea"
+          :autosize="{ minRows: 6 }"
+          placeholder="# Hello Markdown\n\n- item 1\n- item 2\n\n**bold** text"
+          style="flex: 1; min-width: 280px"
+        />
+        <div style="flex: 1; min-width: 280px">
+          <!-- <react-markdown-wc :markdown="markdownText" class-name="markdown-content"></react-markdown-wc> -->
+
+          <react-markdown-wc
+            :markdown.prop="markdownText"
+            :className.prop="'markdown-content'"
+            :theme.prop="'light'"
+            :enableHighlight.prop="true"
+          ></react-markdown-wc>
+        </div>
+      </div>
+    </el-card>
   </el-scrollbar>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, ref } from "vue"
 const { pkg, lastBuildTime } = __APP_INFO__
 const { dependencies, devDependencies, repository, version, docs } = pkg
 
@@ -144,6 +171,10 @@ const words = [
 const getMainLabel = computed(() => (label) => {
   return words.includes(label) ? "main-label" : null
 })
+
+const markdownText = ref(
+  `# Hello Markdown\n\nThis is **bold** and _italic_.\n\n- List item 1\n- List item 2\n\n> Blockquote\n\n\`code\` snippet`
+)
 
 Object.keys(dependencies).forEach((key) => {
   schema.push({ field: dependencies[key], label: key })

@@ -19,7 +19,13 @@ import { cdn } from "./cdn"
  */
 export function setupVitePlugins(viteEnv: Env.ImportMeta) {
   const plugins: PluginOption = [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag === "react-markdown-wc",
+        },
+      },
+    }),
     vueJsx(),
     // 打包进度
     progress(),
