@@ -7,7 +7,8 @@ import { setupI18n } from "./locales"
 import { setupPlugins } from "./plugins"
 import { setupRouter } from "./router"
 import { setupStore } from "./stores"
-import "@purechat/react-markdown-wc"
+
+// import "@purechat/ui"
 
 async function setupApp() {
   const app = createApp(App)
