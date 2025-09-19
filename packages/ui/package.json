@@ -1,0 +1,63 @@
+{
+  "name": "@purechat/ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build:w": "vite build --watch",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "dependencies": {
+    "@shikijs/transformers": "^3.12.2",
+    "antd": "^5.27.3",
+    "antd-style": "^3.7.1",
+    "class-variance-authority": "^0.7.1",
+    "code-inspector-plugin": "^1.2.10",
+    "katex": "^0.16.22",
+    "lodash-es": "^4.17.21",
+    "lucide-react": "^0.543.0",
+    "marked": "^16.3.0",
+    "mermaid": "^11.12.0",
+    "polished": "^4.3.1",
+    "react-layout-kit": "^2.0.0",
+    "react-markdown": "^10.1.0",
+    "react-merge-refs": "^3.0.2",
+    "react-to-webcomponent": "^1.7.6",
+    "rehype-github-alerts": "^4.1.1",
+    "rehype-katex": "^7.0.1",
+    "rehype-raw": "^7.0.0",
+    "remark-breaks": "^4.0.0",
+    "remark-cjk-friendly": "^1.2.1",
+    "remark-gfm": "^4.0.0",
+    "remark-math": "^6.0.0",
+    "shiki": "^3.12.2",
+    "swr": "^2.3.6",
+    "ts-md5": "^2.0.1",
+    "url-join": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^4.7.0",
+    "typescript": "^5.9.2",
+    "vite": "6.2.6"
+  }
+}

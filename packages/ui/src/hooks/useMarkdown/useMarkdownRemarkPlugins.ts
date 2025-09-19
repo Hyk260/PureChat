@@ -1,0 +1,46 @@
+'use client';
+
+import { useMemo } from 'react';
+import remarkBreaks from 'remark-breaks';
+import remarkCjkFriendly from 'remark-cjk-friendly';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import type { Pluggable } from 'unified';
+
+import { useMarkdownContext } from '@/Markdown/components/MarkdownProvider';
+import { remarkBr } from '@/Markdown/plugins/remarkBr';
+import { remarkCustomFootnotes } from '@/Markdown/plugins/remarkCustomFootnotes';
+import { remarkGfmPlus } from '@/Markdown/plugins/remarkGfmPlus';
+
+export const useMarkdownRemarkPlugins = (): Pluggable[] => {
+  const {
+    enableLatex,
+    enableCustomFootnotes,
+    remarkPlugins = [],
+    remarkPluginsAhead = [],
+    variant,
+    allowHtml,
+  } = useMarkdownContext();
+
+  const isChatMode = variant === 'chat';
+
+  const memoPlugins = useMemo(
+    () =>
+      [
+        remarkCjkFriendly,
+        // Parse math before GFM so that '|' inside $...$ isn't treated as a table separator
+        enableLatex && remarkMath,
+        [remarkGfm, { singleTilde: false }],
+        !allowHtml && remarkBr,
+        !allowHtml && remarkGfmPlus,
+        enableCustomFootnotes && remarkCustomFootnotes,
+        isChatMode && remarkBreaks,
+      ].filter(Boolean) as Pluggable[],
+    [allowHtml, isChatMode, enableLatex, enableCustomFootnotes],
+  );
+
+  return useMemo(
+    () => [...remarkPluginsAhead, ...memoPlugins, ...remarkPlugins],
+    [remarkPlugins, memoPlugins, remarkPluginsAhead],
+  );
+};
