@@ -34,7 +34,7 @@
     "@tencentcloud/chat": "3.5.8",
     "@types/markdown-it": "^14.1.2",
     "@unocss/preset-icons": "^65.4.3",
-    "@vueuse/components": "^10.7.0",
+    "@vueuse/components": "^13.9.0",
     "@vueuse/core": "^8.4.2",
     "@wangeditor/editor": "5.1.23",
     "@wangeditor/editor-for-vue": "5.1.12",
