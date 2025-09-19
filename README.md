@@ -117,9 +117,7 @@ pnpm build
 | 服务商                                                   | 状态 | 备注                                         |
 | -------------------------------------------------------- | ---- | -------------------------------------------- |
 | [AiHubMix](https://aihubmix.com/?aff=8DBz)               | ✅    | 一站式对接各种大模型。让开发更智能、更高效。 |
-| [胜算云](https://www.shengsuanyun.com/?from=CH_KYIPP758) | ✅    | 全球大模型都可调用（友情推荐）               |
-
-
+| [胜算云](https://www.shengsuanyun.com/?from=CH_XZG5OKZS) | ✅    | 全球大模型都可调用（友情推荐）               |
 
 <!-- LINK GROUP -->
 
