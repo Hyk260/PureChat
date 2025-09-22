@@ -18,6 +18,6 @@ const include = [
   "element-plus",
 ]
 
-const exclude = ["@iconify/json"]
+const exclude = ["@iconify/json", "@purechat/ui"]
 
 export { include, exclude }

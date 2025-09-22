@@ -7,6 +7,9 @@ import { defineConfig } from "vite"
 const isDev = process.env.NODE_ENV === "development"
 
 export default defineConfig({
+  define: {
+    "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || (isDev ? "development" : "production")),
+  },
   plugins: [
     react({
       // babel: {
@@ -54,23 +57,22 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, "src/index.tsx"),
-      name: "PureChatUI",
+      name: "PureChatUI", // UMD 模式下全局变量名
+      // es umd
       formats: ["es"],
+      // 文件名
       fileName: "index",
     },
     rollupOptions: {
-      external: ["react", "react-dom"],
       output: {
-        globals: {
-          react: "React",
-          "react-dom": "ReactDOM",
-        },
+        inlineDynamicImports: true,
         // 生产环境下进行代码优化
         compact: !isDev,
         // 生产环境下混淆属性名
         generatedCode: {
           reservedNamesAsProps: false,
         },
+        extend: true,
       },
       // input: {
       //   index: resolve(__dirname, "./index.html"),

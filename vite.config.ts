@@ -74,6 +74,10 @@ export default defineConfig((configEnv) => {
           assetFileNames: "static/[ext]/[name]-[hash].[ext]",
           // 手动分包 #https://cn.rollupjs.org/configuration-options/#output-manualchunks
           manualChunks,
+          // 将外部化的 @purechat/ui 映射到预构建产物路径，避免 Rollup 解析
+          paths: {
+            "@purechat/ui": "/purechat-ui/index.js",
+          },
         },
       },
       // 启用/ 禁用 gzip 压缩大小报告

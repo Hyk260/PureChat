@@ -68,10 +68,12 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta) {
 export function setupViteExternal(viteEnv: Env.ImportMeta): (RegExp | string)[] {
   // 本地模式需要排除的依赖
   const localExternals = [/^@tencentcloud\/chat/, /^tim-upload-plugin/]
+  // 始终外部化 @purechat/ui，避免被打包参与 Tree-Shaking
+  const commonExternals = [/^@purechat\/ui$/]
 
   if (viteEnv.VITE_LOCAL_MODE === "Y") {
-    return localExternals
+    return [...localExternals, ...commonExternals]
   }
 
-  return []
+  return [...commonExternals]
 }
