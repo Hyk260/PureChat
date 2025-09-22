@@ -14,6 +14,8 @@
     "isolatedModules": true,
     "paths": {
       "@/*": ["src/*"],
+      "@purechat/ui": ["src"],
+      "@purechat/ui/*": ["src/*"]
     }
   },
   "include": ["src"]

@@ -32,6 +32,7 @@
     "class-variance-authority": "^0.7.1",
     "code-inspector-plugin": "^1.2.10",
     "katex": "^0.16.22",
+    "leva": "^0.10.0",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.543.0",
     "marked": "^16.3.0",

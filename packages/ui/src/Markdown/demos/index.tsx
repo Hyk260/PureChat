@@ -1,5 +1,5 @@
-import { Markdown, MarkdownProps } from '@lobehub/ui';
-import { StoryBook, useControls, useCreateStore } from '@lobehub/ui/storybook';
+import { Markdown, MarkdownProps } from '@purechat/ui';
+import { StoryBook, useControls, useCreateStore } from '@purechat/ui/storybook';
 
 export const content = `# Markdown Showcase
 

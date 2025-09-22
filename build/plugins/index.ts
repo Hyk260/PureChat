@@ -22,7 +22,7 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta) {
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => tag === "react-markdown-wc",
+          isCustomElement: (tag) => tag === "markdown-ui",
         },
       },
     }),

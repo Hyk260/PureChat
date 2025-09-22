@@ -46,7 +46,7 @@ const Markdown = memo<MarkdownProps>((props) => {
     citations,
     ...rest
   } = props;
-
+  console.log('Markdown', props);
   const { cx, styles } = useStyles();
 
   const delayedAnimated = useDelayedAnimated(animated);

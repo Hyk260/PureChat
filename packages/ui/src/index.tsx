@@ -1,28 +1,12 @@
-import { createWebComponent } from '@/utils/createWebComponent';
+import { createWebComponent } from "@/utils/createWebComponent"
+import { default as MarkdownComponent } from "./Markdown"
+export { default as Markdown, type MarkdownProps, Typography, type TypographyProps } from "./Markdown"
 
-import Markdown from './Markdown';
-
-// createWebComponent({
-//   tagName: 'pure-button',
-//   reactComponent: Button,
-//   props: ['text'],
-// });
-
-// createWebComponent({
-//   tagName: 'markdown-component',
-//   reactComponent: MarkdownComponent,
-//   props: ['content'],
-// });
-
-// createWebComponent({
-//   tagName: 'react-markdown',
-//   reactComponent: ReactMarkdownWC,
-//   props: ['markdown'],
-// });
+const MarkdownWrapper: React.FC<any> = ({ content, ...restProps }) => (
+  <MarkdownComponent {...restProps}>{content}</MarkdownComponent>
+);
 
 createWebComponent({
-  tagName: 'pure-markdown',
-  reactComponent: Markdown,
-  props: ['children'],
-});
-
+  tagName: "markdown-ui",
+  reactComponent: MarkdownWrapper,
+})

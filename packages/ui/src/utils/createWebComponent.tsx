@@ -1,67 +1,91 @@
-// createWebComponent.ts
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import React from "react"
+import ReactDOM from "react-dom/client"
 
 interface WebComponentOptions {
-  tagName: string;
-  reactComponent: React.ComponentType<any>;
-  props?: string[];
+  tagName: string
+  reactComponent: React.ComponentType<any>
+  props?: string[]
 }
 
-export function createWebComponent({
-  tagName,
-  reactComponent: Component,
-  props = [],
-}: WebComponentOptions): void {
+const kebabToCamel = (str: string): string => str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+
+export function createWebComponent({ tagName, reactComponent: Component, props = [] }: WebComponentOptions): void {
   class WebComponentWrapper extends HTMLElement {
-    private root: ReactDOM.Root | null = null;
-    private observer: MutationObserver | null = null;
+    private root: ReactDOM.Root | null = null
+    private observer: MutationObserver | null = null
 
     static get observedAttributes(): string[] {
-      return props;
+      return props
+    }
+
+    constructor() {
+      super()
+      // 创建 Shadow DOM 来隔离样式和属性
+      // this.attachShadow({ mode: "open" })
     }
 
     connectedCallback(): void {
-      this.root = ReactDOM.createRoot(this);
-      this.renderComponent();
-      
+      this.root = ReactDOM.createRoot(this)
+      this.renderComponent()
+
       // 观察属性变化
-      this.observer = new MutationObserver(() => this.renderComponent());
-      this.observer.observe(this, { attributes: true });
+      this.observer = new MutationObserver(() => this.renderComponent())
+      this.observer.observe(this, { attributes: true })
     }
 
     disconnectedCallback(): void {
-      this.observer?.disconnect();
-      this.root?.unmount();
+      this.observer?.disconnect()
+      this.root?.unmount()
     }
 
     attributeChangedCallback(): void {
-      this.renderComponent();
+      this.renderComponent()
+    }
+
+    private getComponentProps() {
+      const allAttributes = Array.from(this.attributes)
+
+      return allAttributes.reduce((acc, attr) => {
+        // 跳过 Vue 的内部属性
+        if (attr.name.startsWith("data-v-")) return acc
+        const propName = kebabToCamel(attr.name)
+        let value = attr.value
+        // 处理布尔类型的属性
+        const booleanProps = [
+          "fullFeaturedCodeBlock",
+          "enableLatex",
+          "enableMermaid",
+          "enableImageGallery",
+          "enableCustomFootnotes",
+          "enableGithubAlert",
+          "enableStream",
+          "animated",
+          "allowHtml",
+          "showFootnotes",
+        ]
+        if (booleanProps.includes(propName)) {
+          value = value === "true"
+        }
+        // 尝试解析 JSON 格式的属性值
+        if (value && typeof value === "string" && (value.startsWith("{") || value.startsWith("["))) {
+          try {
+            value = JSON.parse(value)
+          } catch {
+            // 解析失败时保持原值
+          }
+        }
+        return { ...acc, [propName]: value }
+      }, {})
     }
 
     private renderComponent(): void {
-      const componentProps = props.reduce((acc, prop) => {
-        let value = this.getAttribute(prop);
-        
-        // 处理布尔值和JSON对象
-        if (value === 'true') value = true;
-        if (value === 'false') value = false;
-        
-        try {
-          const parsedValue = JSON.parse(value as string);
-          value = parsedValue;
-        } catch (e) {
-          // 如果不是JSON，保持原始值
-        }
-        
-        return { ...acc, [prop]: value };
-      }, {});
-
-      this.root?.render(<Component {...componentProps} />);
+      const props = this.getComponentProps()
+      console.log("props:", props)
+      this.root?.render(<Component {...props} />)
     }
   }
 
   if (!customElements.get(tagName)) {
-    customElements.define(tagName, WebComponentWrapper);
+    customElements.define(tagName, WebComponentWrapper)
   }
 }
