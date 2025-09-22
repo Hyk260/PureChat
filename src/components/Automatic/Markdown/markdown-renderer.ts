@@ -55,7 +55,7 @@ class MarkdownRenderer {
       if (str && hljs.getLanguage(lang)) {
         // 如果指定了语言且 highlight.js 支持，则高亮代码
         const codeContent = hljs.highlight(str, { language: lang, ignoreIllegals: true }).value
-        return `<pre class="hljs language-${lang ? lang : ""}">${copyButtonHtml}${langHtml}<code>${codeContent}</code></pre>`
+        return `<pre class="hljs language-${lang ? lang : ""}">${langHtml}${copyButtonHtml}<code>${codeContent}</code></pre>`
       } else {
         // 对于未知语言或无高亮的情况：转义 HTML 并用 pre/code 包装
         // 使用 markdown-it 的工具函数来安全地转义 HTML
