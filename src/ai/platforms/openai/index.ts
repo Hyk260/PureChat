@@ -513,7 +513,7 @@ export class OpenAiApi {
   /**
    * 检查连通性
    */
-  async checkConnectivity(): Promise<{ valid: boolean; error: string | undefined }> {
+  async checkConnectivity({ model = "" }: { model: string }): Promise<{ valid: boolean; error: string | undefined }> {
     const url = this.getPath(OpenaiPath.ChatPath)
     const payload = this.accessStore()
 
@@ -521,8 +521,13 @@ export class OpenAiApi {
       method: "POST",
       body: JSON.stringify({
         messages: [{ role: "user", content: "Hi, hello" }],
-        model: payload?.model,
-        stream: false,
+        model: model || payload?.model,
+        stream: true,
+        stream_options: {
+          include_usage: true,
+        },
+        temperature: 1,
+        top_p: 1,
       }),
       headers: this.getHeaders(),
     }

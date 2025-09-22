@@ -29,6 +29,12 @@ export const OllamaModelValue = () => {
     //   Placeholder: "API Key",
     //   defaultValue: "",
     // },
+    // CheckPoint: {
+    //   ID: "checkPoint",
+    //   Title: "连通性检查",
+    //   SubTitle: "测试 Api Key 与代理地址是否正确填写",
+    //   collapse: "",
+    // },
     Temperature: {
       ID: "temperature",
       Title: "创意活跃度 (temperature)",

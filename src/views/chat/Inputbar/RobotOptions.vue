@@ -76,13 +76,13 @@
               </el-select>
               <div class="flex-bc">
                 <div class="text-[#999]">共 {{ modelCount(item.collapse.length) }} 个模型可用</div>
-                <!-- <div>
-                  <el-tooltip :content="modelTooltipText()" placement="top" v-if="isOllama()">
+                <div>
+                  <!-- <el-tooltip v-if="!isOllama" :content="modelTooltipText" placement="top">
                     <el-icon class="refresh" @click="onRefresh()">
                       <Refresh />
                     </el-icon>
-                  </el-tooltip>
-                </div> -->
+                  </el-tooltip> -->
+                </div>
               </div>
             </div>
           </div>
@@ -124,7 +124,6 @@
                 <el-input
                   :ref="(e) => inputRef(e, item.ID)"
                   v-model="item.defaultValue"
-                  :class="['token'].includes(item.ID) ? '!w-310' : 'w-full'"
                   :placeholder="item.Placeholder"
                   :type="item.ID === 'token' ? 'password' : 'text'"
                   :show-password="item.ID === 'token'"
@@ -132,23 +131,51 @@
                   @change="handleModelData"
                 >
                 </el-input>
-                <el-tooltip
-                  v-if="['token'].includes(item.ID)"
-                  content="测试 Api Key 与代理地址是否正确填写"
-                  placement="top"
-                >
-                  <el-button class="check-token-btn" :loading="loading" @click="onCheckToken(item)">
-                    <template #loading>
-                      <div class="iconify-icon svg-spinners mr-8"></div>
-                    </template>
-                    <span>检查</span>
-                  </el-button>
-                </el-tooltip>
               </div>
             </div>
             <div v-if="item?.apiHost" class="text-[#999] pt-8 ml-20">
               {{ item?.apiHost }}
             </div>
+          </div>
+          <div v-else-if="['checkPoint'].includes(item.ID)">
+            <el-select v-model="item.collapse" append-to="body" class="!w-300">
+              <el-option
+                v-for="models in modelData['Model']?.options?.chatModels"
+                :key="models.id"
+                :label="models.displayName"
+                :value="models.id"
+              >
+                <div class="bot-model-option">
+                  <div class="bot-avatar flex-c h-full" :class="reIcon(item, models) ? models.icon : robotIcon">
+                    <SvgIcon v-if="reIcon(item, models)" :local-icon="models.icon" />
+                    <SvgIcon v-else :local-icon="robotIcon" />
+                  </div>
+                  <div class="flex flex-col h-full gap-4">
+                    <div class="models-name">
+                      <span>
+                        {{ models.displayName || models.id }}
+                      </span>
+                      <el-tooltip v-if="models?.vision" :content="ModelSelect.vision" placement="top">
+                        <SvgIcon class="vision" local-icon="vision" />
+                      </el-tooltip>
+                      <el-tooltip v-if="models?.functionCall" :content="ModelSelect.functionCall" placement="top">
+                        <SvgIcon class="function-call" local-icon="functionCall" />
+                      </el-tooltip>
+                      <el-tooltip v-if="models?.reasoning" :content="ModelSelect.reasoning" placement="top">
+                        <SvgIcon class="reasoning" local-icon="reasoning" />
+                      </el-tooltip>
+                    </div>
+                    <div class="models-id">{{ models.id }}</div>
+                  </div>
+                </div>
+              </el-option>
+            </el-select>
+            <el-button class="check-token-btn" :loading="loading" @click="onCheckToken(item)">
+              <template #loading>
+                <div class="iconify-icon svg-spinners mr-8"></div>
+              </template>
+              <span>检查</span>
+            </el-button>
           </div>
         </div>
       </div>
@@ -167,7 +194,7 @@
 </template>
 
 <script setup lang="ts">
-import { QuestionFilled } from "@element-plus/icons-vue"
+import { QuestionFilled, Refresh } from "@element-plus/icons-vue"
 
 // import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es"
@@ -226,9 +253,9 @@ function modelCount(count) {
   return count
 }
 
-function modelTooltipText() {
+const modelTooltipText = computed(() => {
   return "获取模型列表"
-}
+})
 
 async function onRefresh() {
   // const list = await new OllamaAI().models();
@@ -299,12 +326,11 @@ function resetRobotModel() {
 const onCheckToken = debounce(handleCheckToken, 2000, { leading: true, trailing: false })
 
 async function handleCheckToken(item) {
-  console.log("handleCheckToken", item)
-  if (item.defaultValue) {
+  if (modelData.value?.Token?.defaultValue) {
     setLoading(true)
     const provider = modelProvider.value
     const api = new ClientApi(provider)
-    const { valid, error } = await api.llm.checkConnectivity()
+    const { valid, error } = await api.llm.checkConnectivity({ model: item?.collapse })
     if (valid) {
       setLoading(false)
       window.$message?.success("连接成功")
@@ -464,7 +490,8 @@ onUnmounted(() => {
     }
   }
   .check-token-btn {
-    min-width: 86px;
+    margin-left: 5px;
+    min-width: 96px;
   }
 }
 .range {
