@@ -3,7 +3,7 @@ import { CodeInspectorPlugin } from "code-inspector-plugin"
 import { resolve } from "path"
 import { visualizer } from "rollup-plugin-visualizer"
 import { defineConfig } from "vite"
-import compression from "vite-plugin-compression"
+// import compression from "vite-plugin-compression"
 // import dts from "vite-plugin-dts"
 
 const isDev = process.env.NODE_ENV === "development"
@@ -27,24 +27,24 @@ export default defineConfig({
     // 只在开发环境下启用 CodeInspectorPlugin
     ...(isDev ? [CodeInspectorPlugin({ bundler: "vite" })] : []),
     // 生产环境启用压缩
-    ...(!isDev
-      ? [
-          // Gzip 压缩
-          compression({
-            algorithm: "gzip",
-            ext: ".gz",
-            threshold: 1024, // 仅压缩大于1kb的文件
-            deleteOriginFile: false, // 保留原始文件
-          }),
-          // Brotli 压缩
-          compression({
-            algorithm: "brotliCompress",
-            ext: ".br",
-            threshold: 1024,
-            deleteOriginFile: false,
-          }),
-        ]
-      : []),
+    // ...(!isDev
+    //   ? [
+    //       // Gzip 压缩
+    //       compression({
+    //         algorithm: "gzip",
+    //         ext: ".gz",
+    //         threshold: 1024, // 仅压缩大于1kb的文件
+    //         deleteOriginFile: false, // 保留原始文件
+    //       }),
+    //       // Brotli 压缩
+    //       compression({
+    //         algorithm: "brotliCompress",
+    //         ext: ".br",
+    //         threshold: 1024,
+    //         deleteOriginFile: false,
+    //       }),
+    //     ]
+    //   : []),
     // 包大小分析
     ...(isAnalyze
       ? [
