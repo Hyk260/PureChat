@@ -1628,7 +1628,7 @@ export declare class ChatSDK {
   /**
    * Create a text message. This API returns a message instance. If you need to send a text message, call the sendMessage API to send this message instance.
    */
-  createTextMessage(options: MESSAGE_OPTIONS): Message
+  createTextMessage(options: MESSAGE_OPTIONS): DB_Message
 
   /**
    * Create a text message with the @ notification feature. This API returns a message instance. If you need to send a text message, call the sendMessage API to send this message instance.

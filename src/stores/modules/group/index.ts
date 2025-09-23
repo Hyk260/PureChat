@@ -103,6 +103,7 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
     async handleGroupProfile(payload: HandleGroupProfilePayload) {
       const { type } = payload
       if (type !== "GROUP") return
+      if (!payload.groupProfile?.groupID) return
       const { groupID } = payload.groupProfile
       const { code, data } = await getGroupProfile({ groupID })
       if (code !== 0) return

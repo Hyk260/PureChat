@@ -2,7 +2,7 @@
   <div class="code-block-wrapper">
     <div class="code-header">
       <span class="code-language">{{ language }}</span>
-      <el-button class="copy-button" @click="copyCode" :class="{ copied: isCopied }">
+      <el-button class="copy-button" :class="{ copied: isCopied }" @click="copyCode">
         <svg v-if="!isCopied" class="copy-icon" viewBox="0 0 24 24" width="16" height="16">
           <path
             fill="currentColor"

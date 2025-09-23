@@ -124,7 +124,7 @@ export interface HandleDismissGroupPayload {
 
 export interface HandleGroupProfilePayload {
   type: string
-  groupProfile: {
+  groupProfile?: {
     groupID: string
   }
 }

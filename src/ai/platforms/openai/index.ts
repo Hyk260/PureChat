@@ -11,7 +11,7 @@ import {
   isDalle3 as _isDalle3,
   useAccessStore,
 } from "@/ai/utils"
-import { useChatStore, useRobotStore, useToolsStore } from "@/stores"
+import { useChatStore, useRobotStore } from "@/stores"
 import { addAbortController, removeAbortController } from "@/utils/abortController"
 import { hostPreview } from "@/utils/api"
 import { transformData } from "@/utils/chat"

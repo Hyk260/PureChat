@@ -5,13 +5,7 @@ import markdownItFootnote from "markdown-it-footnote"
 
 import { prettyObject } from "@/ai/utils"
 
-import {
-  applyEpubRules,
-  applyFenceRules,
-  applyLinkOpenRules,
-  configureFootnoteRules,
-  renderCodeBlocks,
-} from "./markdown"
+import { applyEpubRules, applyLinkOpenRules, configureFootnoteRules, renderCodeBlocks } from "./markdown"
 import { convertToMarkdownFootnotes, CopyIcon } from "./utils"
 
 import "@/styles/highlight.scss"

@@ -2,8 +2,8 @@ import { Ollama } from "ollama/browser"
 
 import { ModelProvider } from "@/ai/types"
 import { useAccessStore } from "@/ai/utils"
-import { nanoid } from "@/utils/uuid"
 import { hostPreview } from "@/utils/api"
+import { nanoid } from "@/utils/uuid"
 
 import {
   convertIterableToStream,

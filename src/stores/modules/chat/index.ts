@@ -221,7 +221,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       this.setNoMore(this.isMore)
       this.isChatBoxVisible = sessionId !== "@TIM#SYSTEM"
-      this.isAssistant && useRobotStore().updateModelConfig()
+      if (this.isAssistant) {
+        useRobotStore().updateModelConfig()
+      }
     },
     addMessage(payload: { conversationID: string; message: DB_Message[]; isDone: boolean }) {
       console.log("[chat] 添加消息 addMessage:", payload)
@@ -283,7 +285,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         return
       }
       const oldMessageList = this.historyMessageList.get(sessionId) || []
-      __LOCAL_MODE__ && MessageModel.update(message.ID, message)
+      if (__LOCAL_MODE__) {
+        MessageModel.update(message.ID, message)
+      }
       const newMessageList = oldMessageList.map((item) => {
         return item.ID === message.ID ? payload.message : item
       })
@@ -369,9 +373,11 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       scrollToMessage(`message_${sessionId}`)
       if (data?.type === "GROUP") {
         useGroupStore().handleGroupProfile(data)
-        useGroupStore().handleGroupMemberList({ groupID: data.groupProfile.groupID })
+        useGroupStore().handleGroupMemberList({ groupID: data.groupProfile?.groupID })
       }
-      this.isAssistant && useRobotStore().updateModelConfig()
+      if (this.isAssistant) {
+        useRobotStore().updateModelConfig()
+      }
       emitter.emit("updateScroll")
     },
     clearCurrentMessage() {
