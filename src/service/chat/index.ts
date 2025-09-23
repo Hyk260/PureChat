@@ -15,7 +15,7 @@ import { checkoutNetState, getConversationList, kickedOutReason } from "./utils"
 
 import type { DB_Message } from "@/database/schemas/message"
 import type { DB_Session } from "@/database/schemas/session"
-import type { Profile } from "@/service/chat/types/tencent-cloud-chat"
+import type { Profile } from "@/types/tencent-cloud-chat"
 
 /**
  * 浏览器窗口焦点状态监听

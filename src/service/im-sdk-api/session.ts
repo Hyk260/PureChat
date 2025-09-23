@@ -1,7 +1,7 @@
-// import { DB_Message } from "@/database/schemas/message"
 import { timProxy } from "@/service/chat"
 import tim from "@/service/chat/PureChatService"
-import { Message } from "@/service/chat/types/tencent-cloud-chat"
+
+import type { DB_Message } from "@/types"
 
 /**
  * 获取未读消息总数
@@ -38,7 +38,7 @@ export const getMessageList = async (params: { conversationID: string; nextReqMe
 /**
  * 变更消息的接口
  */
-export const modifyMessage = async (params: Message) => {
+export const modifyMessage = async (params: DB_Message) => {
   try {
     const { code, data: message } = await tim.modifyMessage(params)
     if (code === 0) {
@@ -47,6 +47,6 @@ export const modifyMessage = async (params: Message) => {
       throw new Error("Failed to modify message")
     }
   } catch {
-    return { code: -1, data: { message: {} as Message } }
+    return { code: -1, data: { message: {} as DB_Message } }
   }
 }

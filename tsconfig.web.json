@@ -36,8 +36,8 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.vue",
-    "src/typings/*.d.ts",
-    "src/types/*.d.ts",
+    "src/typings/*.ts",
+    "src/types/*.ts",
     "build/**/*.ts",
     "vite.config.ts"
   ],

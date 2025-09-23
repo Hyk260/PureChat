@@ -20,7 +20,7 @@ import type {
   UserLocalStore,
   UserState,
 } from "./type"
-import type { Profile } from "@/service/chat/types/tencent-cloud-chat"
+import type { Profile } from "@/types/tencent-cloud-chat"
 
 export const useUserStore = defineStore(SetupStoreId.User, {
   state: (): UserState => ({

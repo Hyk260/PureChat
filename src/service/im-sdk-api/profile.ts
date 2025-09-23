@@ -1,6 +1,6 @@
 import tim from "@/service/chat/PureChatService"
 
-import type { Profile, UPDATE_YOUR_PROFILE_OPTIONS } from "@/service/chat/types/tencent-cloud-chat"
+import type { Profile, UPDATE_YOUR_PROFILE_OPTIONS } from "@/types/tencent-cloud-chat"
 
 /**
  * 获取用户资料

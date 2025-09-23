@@ -1,5 +1,5 @@
-import type TencentCloudChatModule from "./types/tencent-cloud-chat"
 import type { ChatSDK } from "./types/tencent-cloud-chat"
+import type TencentCloudChatModule from "@/types/tencent-cloud-chat"
 
 interface ChatConfig {
   appId: number
@@ -101,7 +101,7 @@ export class TencentChatService {
           { default: TIMUploadPlugin },
         ] = await Promise.all([
           import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js") as Promise<{
-            default: typeof TencentCloudChatModule
+            default: TencentCloudChatModule
           }>,
           import(/* @vite-ignore */ "@tencentcloud/chat/modules/group-module.js"),
           import(/* @vite-ignore */ "@tencentcloud/chat/modules/signaling-module.js"),
