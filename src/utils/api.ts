@@ -30,6 +30,14 @@ export function formatApiHost(host: string): string {
   return forceUseOriginalHost() ? host : `${host}/v1/`
 }
 
+export const hostPreview = (apiHost: string, path: string = "chat/completions") => {
+  if (apiHost.endsWith("#")) {
+    return apiHost.replace("#", "")
+  }
+
+  return formatApiHost(apiHost) + path
+}
+
 /**
  * API key 脱敏函数。仅保留部分前后字符，中间用星号代替。
  *

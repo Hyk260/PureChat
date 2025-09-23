@@ -19,7 +19,7 @@ export const QwenModelValue = () => {
       SubTitle: "除默认地址外，必须包含 http(s)://",
       Placeholder: VITE_QWEN_BASE_URL,
       defaultValue: "",
-      apiHost: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      apiHost: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
     },
     Token: {
       ID: "token",

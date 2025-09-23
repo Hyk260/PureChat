@@ -1,12 +1,9 @@
 import { OpenAiApi } from "@/ai/platforms/openai/index"
 import { useAccessStore } from "@/ai/utils"
+import { hostPreview } from "@/utils/api"
 
 export * from "./config"
 export * from "./modelValue"
-
-export const GitHubPath = {
-  ChatPath: "chat/completions",
-}
 
 export class GitHubApi extends OpenAiApi {
   constructor(provider) {
@@ -14,7 +11,7 @@ export class GitHubApi extends OpenAiApi {
   }
   getPath() {
     const baseUrl = useAccessStore(this.provider).openaiUrl
-
-    return `${baseUrl}/${GitHubPath.ChatPath}`
+    const paths = hostPreview(baseUrl)
+    return paths
   }
 }

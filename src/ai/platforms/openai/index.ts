@@ -13,6 +13,7 @@ import {
 } from "@/ai/utils"
 import { useChatStore, useRobotStore, useToolsStore } from "@/stores"
 import { addAbortController, removeAbortController } from "@/utils/abortController"
+import { hostPreview } from "@/utils/api"
 import { transformData } from "@/utils/chat"
 
 import OllamaAI from "../ollama/ollama"
@@ -21,11 +22,11 @@ export * from "./config"
 export * from "./modelValue"
 
 export const OpenaiPath = {
-  ChatPath: "v1/chat/completions", // chatgpt 聊天接口
-  UsagePath: "v1/dashboard/billing/usage", // 用量查询，数据单位为 token
-  SubsPath: "v1/dashboard/billing/subscription", // 总量查询，数据单位为 token
-  ListModelPath: "v1/models", // 查询可用模型
-  EmbeddingPath: "v1/embeddings", // 文本向量化
+  ChatPath: "chat/completions", // chatgpt 聊天接口
+  UsagePath: "dashboard/billing/usage", // 用量查询，数据单位为 token
+  SubsPath: "dashboard/billing/subscription", // 总量查询，数据单位为 token
+  ListModelPath: "models", // 查询可用模型
+  EmbeddingPath: "embeddings", // 文本向量化
 }
 
 export class OpenAiApi {
@@ -35,24 +36,22 @@ export class OpenAiApi {
     this.provider = provider
   }
 
-  getPath(path: string): string {
-    let baseUrl = this.accessStore().openaiUrl
-    if (baseUrl.endsWith("/")) {
-      baseUrl = baseUrl.slice(0, -1)
-    }
-    return [baseUrl, path].join("/")
+  getPath(path?: string): string {
+    const baseUrl = this.accessStore().openaiUrl
+    const fullPath = hostPreview(baseUrl, path)
+    return fullPath
   }
 
   /**
    * 获取插件工具列表
    */
   getPluginTools() {
-    const pluginList = useToolsStore().tools
-    if (!pluginList.length) return []
+    // const pluginList = useToolsStore().tools
+    // if (!pluginList.length) return []
 
-    if (useRobotStore().model?.functionCall) {
-      return pluginList.map((t) => t.tools[0])
-    }
+    // if (useRobotStore().model?.functionCall) {
+    //   return pluginList.map((t) => t.tools[0])
+    // }
 
     return []
   }
@@ -75,7 +74,7 @@ export class OpenAiApi {
    * 处理提示词消息
    */
   processPromptMessages(messages: FewShots, modelConfig: LLMParams) {
-    let combinedMessages = []
+    let combinedMessages: FewShots = []
     const validPrompts = this.getPromptStore()
     const historyCount = Math.max(Number(modelConfig.historyMessageCount) || 0, 0)
     const recentMessages = messages.slice(-historyCount)
@@ -101,7 +100,7 @@ export class OpenAiApi {
   getHeaders(): Record<string, string> {
     const headers = {
       "Content-Type": "application/json",
-      "x-requested-with": "XMLHttpRequest",
+      // "x-requested-with": "XMLHttpRequest",
       Authorization: `Bearer ${this.accessStore().token?.trim()}`,
     }
     return headers
@@ -170,11 +169,11 @@ export class OpenAiApi {
       top_p: modelConfig.top_p, // 核采样
       // tools: [] // 工具
     }
-    const tools = this.getPluginTools()
-    if (tools.length > 0) {
-      payload.tools = tools
-      payload.stream = false
-    }
+    // const tools = this.getPluginTools()
+    // if (tools.length > 0) {
+    //   payload.tools = tools
+    //   payload.stream = false
+    // }
     return payload
   }
 
@@ -208,7 +207,7 @@ export class OpenAiApi {
     }
 
     try {
-      const chatPath = this.getPath(OpenaiPath.ChatPath)
+      const chatPath = this.getPath()
       const chatPayload = {
         method: "POST",
         body: JSON.stringify(requestPayload),
@@ -496,13 +495,19 @@ export class OpenAiApi {
    */
   async getModels() {
     const url = this.getPath(OpenaiPath.ListModelPath)
+    if (!url.startsWith("http")) {
+      window.$message.error("接口地址格式错误")
+      throw new Error("接口地址格式错误")
+    }
     const response = await fetch(url, {
       method: "GET",
       headers: this.getHeaders(),
     })
 
     const responseJson = await response.json()
-    const chatModels = responseJson.data.filter((model) => model.id.startsWith("gpt-") || model.id.startsWith("dall-"))
+    const chatModels = responseJson.data.filter(
+      (model) => model.id.startsWith("gpt-") || model.id.startsWith("dall-") || model.id.startsWith("openai")
+    )
 
     return chatModels.map((model) => ({
       id: model.id,
@@ -514,7 +519,13 @@ export class OpenAiApi {
    * 检查连通性
    */
   async checkConnectivity({ model = "" }: { model: string }): Promise<{ valid: boolean; error: string | undefined }> {
-    const url = this.getPath(OpenaiPath.ChatPath)
+    const url = this.getPath()
+    if (!url.startsWith("http")) {
+      return {
+        valid: false,
+        error: "接口地址格式错误",
+      }
+    }
     const payload = this.accessStore()
 
     const chatPayload = {

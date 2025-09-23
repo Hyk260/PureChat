@@ -76,13 +76,13 @@
               </el-select>
               <div class="flex-bc">
                 <div class="text-[#999]">共 {{ modelCount(item.collapse.length) }} 个模型可用</div>
-                <div>
-                  <!-- <el-tooltip v-if="!isOllama" :content="modelTooltipText" placement="top">
+                <!-- <div>
+                  <el-tooltip v-if="!isOllama" :content="modelTooltipText" placement="top">
                     <el-icon class="refresh" @click="onRefresh()">
                       <Refresh />
                     </el-icon>
-                  </el-tooltip> -->
-                </div>
+                  </el-tooltip>
+                </div> -->
               </div>
             </div>
           </div>
@@ -134,11 +134,13 @@
               </div>
             </div>
             <div v-if="item?.apiHost" class="text-[#999] pt-8 ml-20">
-              {{ item?.apiHost }}
+              {{ item?.defaultValue ? hostPreview(item?.defaultValue) : item?.apiHost }}
             </div>
+            <div v-if="item?.apiHost" class="text-[#999] pt-8 ml-20">/ 结尾忽略 v1 版本，# 结尾强制使用输入地址</div>
           </div>
+          <!-- 连通性检查 -->
           <div v-else-if="['checkPoint'].includes(item.ID)">
-            <el-select v-model="item.collapse" append-to="body" class="!w-300">
+            <el-select v-model="item.collapse" placeholder="选择测试模型" append-to="body" class="!w-300">
               <el-option
                 v-for="models in modelData['Model']?.options?.chatModels"
                 :key="models.id"
@@ -207,6 +209,7 @@ import { ModelSelect } from "@/ai/resources"
 import { getModelSvg, useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"
+import { hostPreview } from "@/utils/api"
 import { openWindow } from "@/utils/common"
 // import OllamaAI from "@/ai/platforms/ollama/ollama";
 import emitter from "@/utils/mitt-bus"
@@ -258,13 +261,10 @@ const modelTooltipText = computed(() => {
 })
 
 async function onRefresh() {
-  // const list = await new OllamaAI().models();
-  // modelData.value.Model.options.chatModels = list;
-  // localStg.set("olama-local-model-list", list);
-  // const api = new ClientApi();
+  // const provider = modelProvider.value
+  // const api = new ClientApi(provider)
   // const list = await api.llm.getModels()
-  // modelData.value.Model.options.chatModels = list;
-  // console.log(list)
+  // modelData.value.Model.options.chatModels = list
 }
 
 function initModel() {

@@ -1,22 +1,17 @@
 import { OpenAiApi } from "@/ai/platforms/openai/index"
 import { useAccessStore } from "@/ai/utils"
+import { hostPreview } from "@/utils/api"
 
 export * from "./config"
 export * from "./modelValue"
-
-export const ChatGLMPath = {
-  ChatPath: "chat/completions",
-}
 
 export class ZhiPuApi extends OpenAiApi {
   constructor(provider) {
     super(provider)
   }
   getPath() {
-    let baseUrl = useAccessStore(this.provider).openaiUrl
-    if (baseUrl.endsWith("/")) {
-      baseUrl = baseUrl.slice(0, -1)
-    }
-    return `${baseUrl}/${ChatGLMPath.ChatPath}`
+    const baseUrl = useAccessStore(this.provider).openaiUrl
+    const paths = hostPreview(baseUrl)
+    return paths
   }
 }

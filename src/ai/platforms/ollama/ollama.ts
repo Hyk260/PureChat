@@ -3,6 +3,7 @@ import { Ollama } from "ollama/browser"
 import { ModelProvider } from "@/ai/types"
 import { useAccessStore } from "@/ai/utils"
 import { nanoid } from "@/utils/uuid"
+import { hostPreview } from "@/utils/api"
 
 import {
   convertIterableToStream,
@@ -68,8 +69,9 @@ export default class OllamaAI {
    * 创建Ollama客户端实例
    */
   createOllamaClient() {
+    const host = hostPreview(this.payload.openaiUrl || import.meta.env.VITE_OLLAMA_PROXY_URL)
     return new Ollama({
-      host: this.payload.openaiUrl || import.meta.env.VITE_OLLAMA_PROXY_URL,
+      host: host,
       fetch: (input, init = {}) => {
         const headers = new Headers(init.headers)
         const authToken = this.payload.apiKey || "TestToken"

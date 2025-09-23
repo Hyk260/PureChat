@@ -18,6 +18,7 @@ export const MistralModelValue = () => {
       Title: "接口地址",
       SubTitle: "除默认地址外，必须包含 http(s)://",
       Placeholder: VITE_MISTRAL_BASE_URL,
+      apiHost: "https://api.mistral.ai/v1/chat/completions",
       defaultValue: "",
     },
     Token: {
@@ -27,6 +28,12 @@ export const MistralModelValue = () => {
       Placeholder: "Mistral API Key",
       defaultValue: "",
       doubt: `${docs}/guides/model-provider.html#vite-mistral-api-key`,
+    },
+    CheckPoint: {
+      ID: "checkPoint",
+      Title: "连通性检查",
+      SubTitle: "测试 Api Key 与代理地址是否正确填写",
+      collapse: "",
     },
     Temperature: {
       ID: "temperature",
