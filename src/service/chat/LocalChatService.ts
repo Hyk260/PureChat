@@ -10,7 +10,7 @@ import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
 
-import type { ChatSDK } from "./types/tencent-cloud-chat"
+import type { ChatSDK } from "@/types/tencent-cloud-chat"
 
 export class LocalChat {
   static instance: LocalChat | null = null

@@ -1,7 +1,7 @@
 import { LocalChatService, localChatService } from "./LocalChatService"
 import { TencentChatService, tencentChatService } from "./TencentChatService"
 
-import type { ChatSDK } from "./types/tencent-cloud-chat"
+import type { ChatSDK } from "@/types/tencent-cloud-chat"
 
 export class PureChatService {
   private static instance: PureChatService | null = null

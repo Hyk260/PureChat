@@ -1,4 +1,4 @@
-import type { ChatSDK } from "./types/tencent-cloud-chat"
+import type { ChatSDK } from "@/types/tencent-cloud-chat"
 import type TencentCloudChatModule from "@/types/tencent-cloud-chat"
 
 interface ChatConfig {
