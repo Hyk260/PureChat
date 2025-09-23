@@ -20,7 +20,7 @@
     "build:w": "vite build --watch",
     "build": "vite build",
     "preview": "vite preview",
-    "analyze": "ANALYZE=true vite build"
+    "analyze": "cross-env ANALYZE=true vite build"
   },
   "peerDependencies": {
     "react": "^19.1.1",

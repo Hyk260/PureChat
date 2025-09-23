@@ -80,7 +80,6 @@ export function createWebComponent({ tagName, reactComponent: Component, props =
 
     private renderComponent(): void {
       const props = this.getComponentProps()
-      console.log("props:", props)
       this.root?.render(<Component {...props} />)
     }
   }
