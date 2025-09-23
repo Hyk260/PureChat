@@ -23,7 +23,7 @@ const props = defineProps({
   },
 })
 function openRobotBox() {
-  emitter.emit("onRobotBox", { ApiKeyFocus: true })
+  emitter.emit("onRobotBox", { apiKeyFocus: true })
 }
 function jumpLink() {
   const url = getDoubt(props.payload)

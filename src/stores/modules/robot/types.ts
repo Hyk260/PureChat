@@ -1,18 +1,4 @@
-import type { ModelProviderKey } from "@/ai/types"
-
-// 模型配置类型
-export interface ModelConfig {
-  model: string
-  temperature: number
-  top_p: number
-  max_tokens: number
-  presence_penalty: number
-  frequency_penalty: number
-  historyMessageCount: number
-  token: string
-  openaiUrl?: string
-  [key: string]: any
-}
+import type { LLMParams, ModelProviderKey } from "@/ai/types"
 
 // 模型类型 - 基于实际的模型数据结构
 export interface Model {
@@ -68,8 +54,8 @@ export interface PromptStore {
 export interface RobotState {
   model: Model | null
   promptConfig: Prompt | null
-  modelConfig: ModelConfig | null
-  modelProvider: ModelProviderKey | ""
+  modelConfig: LLMParams | null
+  modelProvider: ModelProviderKey
   defaultProvider: ModelProviderKey
   isShowBotTools: boolean
   promptStore: PromptStore

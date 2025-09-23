@@ -496,7 +496,7 @@ export class OpenAiApi {
   async getModels() {
     const url = this.getPath(OpenaiPath.ListModelPath)
     if (!url.startsWith("http")) {
-      window.$message.error("接口地址格式错误")
+      window.$message?.error("接口地址格式错误")
       throw new Error("接口地址格式错误")
     }
     const response = await fetch(url, {
@@ -518,7 +518,7 @@ export class OpenAiApi {
   /**
    * 检查连通性
    */
-  async checkConnectivity({ model = "" }: { model: string }): Promise<{ valid: boolean; error: string | undefined }> {
+  async checkConnectivity({ model = "" }: { model: string }): Promise<{ valid: boolean; error: string }> {
     const url = this.getPath()
     if (!url.startsWith("http")) {
       return {
@@ -550,17 +550,18 @@ export class OpenAiApi {
         console.log("[Check] Response received:", resJson)
         return {
           valid: false,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           error: resJson?.error?.message || "未知错误",
         }
       }
       return {
         valid: true,
-        error: undefined,
+        error: "未知错误",
       }
     } catch (error) {
       return {
         valid: false,
-        error: error?.message || "未知错误",
+        error: error instanceof Error ? error.message : "未知错误",
       }
     }
   }

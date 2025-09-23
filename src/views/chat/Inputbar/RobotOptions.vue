@@ -217,6 +217,8 @@ import emitter from "@/utils/mitt-bus"
 import DragPrompt from "./DragPrompt.vue"
 import { isRange } from "./utils"
 
+import type { RobotBoxEventData } from "@/types"
+
 defineOptions({
   name: "RobotOptions",
 })
@@ -226,7 +228,10 @@ const { DEV: isDev } = import.meta.env
 const robotIcon = ref("")
 const modelData = ref({})
 const promptRef = useTemplateRef("promptRef")
-const inputRefs = ref({ token: null, openaiUrl: null })
+const inputRefs = ref<{ token: HTMLInputElement | null; openaiUrl: HTMLInputElement | null }>({
+  token: null,
+  openaiUrl: null,
+})
 
 const [dialog, setDialog] = useState(false)
 const [loading, setLoading] = useState(false)
@@ -368,19 +373,18 @@ function handleConfirm() {
   setDialog(false)
 }
 
-function toUrl(url) {
+function toUrl(url: string) {
   openWindow(url)
 }
 
-const handleRobotBoxEvent = async (data = {}) => {
-  const { ApiKeyFocus = false, promptFocus = false } = data
+const handleRobotBoxEvent = async (data: RobotBoxEventData = {}) => {
+  const { apiKeyFocus = false, promptFocus = false } = data
 
   setDialog(true)
+  await nextTick()
   initModel()
 
-  await nextTick()
-
-  if (ApiKeyFocus) {
+  if (apiKeyFocus) {
     const tokenRef = inputRefs.value?.["token"] ?? null
     tokenRef?.focus()
   }

@@ -57,3 +57,8 @@ export interface MentionConfig {
   hideModal?: (editor: IDomEditor) => void
   pinyinSearch?: boolean
 }
+
+export interface RobotBoxEventData {
+  apiKeyFocus?: boolean
+  promptFocus?: boolean
+}

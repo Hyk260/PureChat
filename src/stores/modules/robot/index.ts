@@ -18,7 +18,7 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     model: null,
     promptConfig: null,
     modelConfig: null,
-    modelProvider: "",
+    modelProvider: ModelProvider.OpenAI,
     defaultProvider: ModelProvider.OpenAI,
     isShowBotTools: false,
     promptStore: {
@@ -74,16 +74,16 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     },
   },
   actions: {
-    setAccessStore(data: any, provider: string): void {
+    setAccessStore(data: any, provider: string) {
       this.accessStore[provider] = data
     },
-    setModelStore(data: any, provider: string): void {
+    setModelStore(data: any, provider: string) {
       this.modelStore[provider] = data
     },
-    setPromptStore(data: Prompt[], provider: string): void {
+    setPromptStore(data: Prompt[], provider: string) {
       this.promptStore[provider] = data
     },
-    updateModelConfig(): void {
+    updateModelConfig() {
       const provider = getModelType(useChatStore().toAccount)
       if (!provider) {
         console.log("provider is null")
@@ -104,19 +104,19 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
         this.setModel(checkModel as Model)
       }
     },
-    setDefaultProvider(data: ModelProviderKey): void {
+    setDefaultProvider(data: ModelProviderKey) {
       this.defaultProvider = data
     },
-    updataBotToolsFlag(data: BotToolsFlag): void {
+    updataBotToolsFlag(data: BotToolsFlag) {
       this.isShowBotTools = Boolean(data?.functionCall)
     },
-    setModelConfig(provider: ModelProviderKey): void {
+    setModelConfig(provider: ModelProviderKey) {
       this.modelConfig = useAccessStore(provider)
     },
-    setModel(value: Model | null): void {
+    setModel(value: Model | null) {
       this.model = value
     },
-    setPromptConfig(value: Prompt | null): void {
+    setPromptConfig(value: Prompt | null) {
       this.promptConfig = value
     },
   },
