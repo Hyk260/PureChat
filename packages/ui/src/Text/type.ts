@@ -1,27 +1,27 @@
-import type { ElementType, Ref } from 'react';
+import { DivProps } from "@/types"
 
-import type { TooltipProps } from '@/Tooltip';
-import { DivProps } from '@/types';
+import type { TooltipProps } from "@/Tooltip"
+import type { ElementType, Ref } from "react"
 
 export interface TextProps extends DivProps {
-  align?: 'left' | 'center' | 'right';
-  as?: ElementType;
-  code?: boolean;
-  color?: string;
-  delete?: boolean;
-  disabled?: boolean;
+  align?: "left" | "center" | "right"
+  as?: ElementType
+  code?: boolean
+  color?: string
+  delete?: boolean
+  disabled?: boolean
   ellipsis?:
     | boolean
     | {
-        rows?: number;
-        tooltip?: boolean | string | TooltipProps;
-      };
-  fontSize?: number | string;
-  italic?: boolean;
-  mark?: boolean;
-  ref?: Ref<HTMLDivElement>;
-  strong?: boolean;
-  type?: 'secondary' | 'success' | 'warning' | 'danger' | 'info';
-  underline?: boolean;
-  weight?: 'bold' | 'bolder' | number;
+        rows?: number
+        tooltip?: boolean | string | TooltipProps
+      }
+  fontSize?: number | string
+  italic?: boolean
+  mark?: boolean
+  ref?: Ref<HTMLDivElement>
+  strong?: boolean
+  type?: "secondary" | "success" | "warning" | "danger" | "info"
+  underline?: boolean
+  weight?: "bold" | "bolder" | number
 }

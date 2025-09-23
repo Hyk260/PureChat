@@ -1,13 +1,10 @@
-import { createStyles } from 'antd-style';
-import { rgba } from 'polished';
+import { createStyles } from "antd-style"
+import { rgba } from "polished"
 
-export const CHILDREN_CLASSNAME = 'hover-card';
+export const CHILDREN_CLASSNAME = "hover-card"
 
 export const useStyles = createStyles(
-  (
-    { css, responsive, token, isDarkMode },
-    { size, borderRadius }: { borderRadius: number; size: number },
-  ) => ({
+  ({ css, responsive, token, isDarkMode }, { size, borderRadius }: { borderRadius: number; size: number }) => ({
     container: css`
       &:hover > .${CHILDREN_CLASSNAME}::after {
         opacity: 1;
@@ -47,7 +44,7 @@ export const useStyles = createStyles(
 
       &::before,
       &::after {
-        content: '';
+        content: "";
 
         position: absolute;
         inset-block-start: 0;
@@ -86,5 +83,5 @@ export const useStyles = createStyles(
         opacity: 1;
       }
     `,
-  }),
-);
+  })
+)

@@ -1,14 +1,14 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(
   (
     { css, token, isDarkMode },
-    { offset, outside, size }: { offset: { x: number; y: number }; outside: boolean; size: number },
+    { offset, outside, size }: { offset: { x: number; y: number }; outside: boolean; size: number }
   ) => {
-    const spotlightX = (offset?.x ?? 0) + 'px';
-    const spotlightY = (offset?.y ?? 0) + 'px';
-    const spotlightOpacity = outside ? '0' : '.1';
-    const spotlightSize = size + 'px';
+    const spotlightX = (offset?.x ?? 0) + "px"
+    const spotlightY = (offset?.y ?? 0) + "px"
+    const spotlightOpacity = outside ? "0" : ".1"
+    const spotlightSize = size + "px"
     return css`
       pointer-events: none;
 
@@ -19,12 +19,12 @@ export const useStyles = createStyles(
       opacity: ${spotlightOpacity};
       background: radial-gradient(
         ${spotlightSize} circle at ${spotlightX} ${spotlightY},
-        ${isDarkMode ? token.colorText : '#fff'},
-        ${isDarkMode ? 'transparent' : token.colorTextQuaternary}
+        ${isDarkMode ? token.colorText : "#fff"},
+        ${isDarkMode ? "transparent" : token.colorTextQuaternary}
       );
       border-radius: inherit;
 
       transition: all 0.2s;
-    `;
-  },
-);
+    `
+  }
+)

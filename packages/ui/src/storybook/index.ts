@@ -1,6 +1,1 @@
-export {
-  default as StoryBook,
-  type StoryBookProps,
-  useControls,
-  useCreateStore,
-} from './StoryBook';
+export { default as StoryBook, type StoryBookProps, useControls, useCreateStore } from "./StoryBook"

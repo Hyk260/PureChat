@@ -1,6 +1,6 @@
 export interface CitationItem {
-  alt?: string;
-  summary?: string;
-  title?: string;
-  url: string;
+  alt?: string
+  summary?: string
+  title?: string
+  url: string
 }

@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ stylish, prefixCls, css, token }) => ({
   borderless: stylish.variantBorderlessWithoutHover,
@@ -40,4 +40,4 @@ export const useStyles = createStyles(({ stylish, prefixCls, css, token }) => ({
       padding-inline: 4px;
     }
   `,
-}));
+}))

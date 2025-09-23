@@ -1,2 +1,2 @@
-export { default } from './Spine';
-export type * from './type';
+export { default } from "./Spine"
+export type * from "./type"

@@ -1,2 +1,2 @@
-export const TITLE = 'MicrosoftEntra';
-export const COLOR_PRIMARY = '#fff';
+export const TITLE = "MicrosoftEntra"
+export const COLOR_PRIMARY = "#fff"

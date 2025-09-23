@@ -1,18 +1,18 @@
-'use client';
+"use client"
 
-import Avatar from './components/Avatar';
-import Mono from './components/Mono';
-import { COLOR_PRIMARY, TITLE } from './style';
+import Avatar from "./components/Avatar"
+import Mono from "./components/Mono"
+import { COLOR_PRIMARY, TITLE } from "./style"
 
 export type CompoundedIcon = typeof Mono & {
-  Avatar: typeof Avatar;
+  Avatar: typeof Avatar
 
-  colorPrimary: string;
-  title: string;
-};
+  colorPrimary: string
+  title: string
+}
 
-const Icons = Mono as CompoundedIcon;
-Icons.Avatar = Avatar;
-Icons.colorPrimary = COLOR_PRIMARY;
-Icons.title = TITLE;
-export default Icons;
+const Icons = Mono as CompoundedIcon
+Icons.Avatar = Avatar
+Icons.colorPrimary = COLOR_PRIMARY
+Icons.title = TITLE
+export default Icons

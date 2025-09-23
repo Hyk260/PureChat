@@ -1,6 +1,6 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
-const IGNORE_CLASSNAME = '.ignore-markdown-style';
+const IGNORE_CLASSNAME = ".ignore-markdown-style"
 
 export const useStyles = createStyles(({ token, css }) => {
   const __root = css`
@@ -20,7 +20,7 @@ export const useStyles = createStyles(({ token, css }) => {
     font-size: var(--lobe-markdown-font-size);
     line-height: var(--lobe-markdown-line-height);
     word-break: break-word;
-  `;
+  `
   const a = css`
     a {
       color: ${token.colorInfoText};
@@ -29,7 +29,7 @@ export const useStyles = createStyles(({ token, css }) => {
         color: ${token.colorInfoHover};
       }
     }
-  `;
+  `
 
   const blockquote = css`
     blockquote {
@@ -41,7 +41,7 @@ export const useStyles = createStyles(({ token, css }) => {
 
       color: ${token.colorTextSecondary};
     }
-  `;
+  `
 
   const code = css`
     code {
@@ -63,14 +63,14 @@ export const useStyles = createStyles(({ token, css }) => {
         background: ${token.colorFillSecondary};
       }
     }
-  `;
+  `
 
   const del = css`
     del {
       color: ${token.colorTextDescription};
       text-decoration: line-through;
     }
-  `;
+  `
 
   const details = css`
     details {
@@ -89,7 +89,7 @@ export const useStyles = createStyles(({ token, css }) => {
         list-style: none;
 
         &::before {
-          content: '';
+          content: "";
 
           position: absolute;
           inset-inline-end: 1.25em;
@@ -119,7 +119,7 @@ export const useStyles = createStyles(({ token, css }) => {
         }
       }
     }
-  `;
+  `
   const header = css`
     h1,
     h2,
@@ -136,9 +136,7 @@ export const useStyles = createStyles(({ token, css }) => {
     }
 
     h1 {
-      font-size: calc(
-        var(--lobe-markdown-font-size) * (1 + 1.5 * var(--lobe-markdown-header-multiple))
-      );
+      font-size: calc(var(--lobe-markdown-font-size) * (1 + 1.5 * var(--lobe-markdown-header-multiple)));
     }
 
     h2 {
@@ -146,22 +144,18 @@ export const useStyles = createStyles(({ token, css }) => {
     }
 
     h3 {
-      font-size: calc(
-        var(--lobe-markdown-font-size) * (1 + 0.5 * var(--lobe-markdown-header-multiple))
-      );
+      font-size: calc(var(--lobe-markdown-font-size) * (1 + 0.5 * var(--lobe-markdown-header-multiple)));
     }
 
     h4 {
-      font-size: calc(
-        var(--lobe-markdown-font-size) * (1 + 0.25 * var(--lobe-markdown-header-multiple))
-      );
+      font-size: calc(var(--lobe-markdown-font-size) * (1 + 0.25 * var(--lobe-markdown-header-multiple)));
     }
 
     h5,
     h6 {
       font-size: calc(var(--lobe-markdown-font-size) * 1);
     }
-  `;
+  `
   const hr = css`
     hr {
       width: 100%;
@@ -173,7 +167,7 @@ export const useStyles = createStyles(({ token, css }) => {
       border-inline-start: none;
       border-inline-end: none;
     }
-  `;
+  `
   const img = css`
     img {
       max-width: 100%;
@@ -185,7 +179,7 @@ export const useStyles = createStyles(({ token, css }) => {
       border-radius: calc(var(--lobe-markdown-border-radius) * 1px);
       box-shadow: 0 0 0 1px var(--lobe-markdown-border-color);
     }
-  `;
+  `
 
   const list = css`
     li {
@@ -222,7 +216,7 @@ export const useStyles = createStyles(({ token, css }) => {
 
       > li {
         &::before {
-          content: '-';
+          content: "-";
 
           position: absolute;
 
@@ -240,17 +234,17 @@ export const useStyles = createStyles(({ token, css }) => {
         display: none !important;
       }
 
-      input[type='checkbox'] {
+      input[type="checkbox"] {
         margin-block: 0 0.25em;
         margin-inline: -1.6em 0.2em;
         vertical-align: middle;
       }
 
-      input[type='checkbox']:dir(rtl) {
+      input[type="checkbox"]:dir(rtl) {
         margin: 0 -1.6em 0.25em 0.2em;
       }
     }
-  `;
+  `
   const p = css`
     p {
       margin-block: 4px;
@@ -265,22 +259,22 @@ export const useStyles = createStyles(({ token, css }) => {
         margin-block-end: calc(var(--lobe-markdown-margin-multiple) * 0.5em);
       }
     }
-  `;
+  `
   const pre = css`
     pre {
       font-size: calc(var(--lobe-markdown-font-size) * 0.85);
     }
-  `;
+  `
   const strong = css`
     strong {
       font-weight: 600;
     }
-  `;
+  `
   const svg = css`
     svg {
       line-height: 1;
     }
-  `;
+  `
   const table = css`
     table {
       unicode-bidi: isolate;
@@ -324,7 +318,7 @@ export const useStyles = createStyles(({ token, css }) => {
         text-align: start;
       }
     }
-  `;
+  `
   const video = css`
     > video,
     > p > video {
@@ -336,7 +330,7 @@ export const useStyles = createStyles(({ token, css }) => {
     video {
       max-width: 100%;
     }
-  `;
+  `
 
   const footnote = css`
     .footnotes {
@@ -352,7 +346,7 @@ export const useStyles = createStyles(({ token, css }) => {
         margin: 0 !important;
       }
     }
-  `;
+  `
 
   const sup = css`
     sup {
@@ -363,7 +357,7 @@ export const useStyles = createStyles(({ token, css }) => {
       line-height: var(--lobe-markdown-line-height);
       vertical-align: baseline;
     }
-  `;
+  `
 
   const sub = css`
     sub {
@@ -374,7 +368,7 @@ export const useStyles = createStyles(({ token, css }) => {
       line-height: var(--lobe-markdown-line-height);
       vertical-align: baseline;
     }
-  `;
+  `
 
   return {
     root: css`
@@ -403,5 +397,5 @@ export const useStyles = createStyles(({ token, css }) => {
         ]}
       }
     `,
-  };
-});
+  }
+})

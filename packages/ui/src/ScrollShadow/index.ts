@@ -1,2 +1,2 @@
-export { default } from './ScrollShadow';
-export type * from './type';
+export { default } from "./ScrollShadow"
+export type * from "./type"

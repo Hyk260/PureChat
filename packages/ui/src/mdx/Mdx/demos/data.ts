@@ -9,4 +9,4 @@ Here's an example of a Callout.
 </Callout>
 
 Check out the [Built-ins Mdx Components](https://ui.lobehub.com/components/mdx/callout) for more information.
-`;
+`

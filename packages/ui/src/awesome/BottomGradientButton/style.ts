@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ cx, stylish, css, token }) =>
   cx(
@@ -10,7 +10,7 @@ export const useStyles = createStyles(({ cx, stylish, css, token }) =>
       transition: all 0.2s ease-in-out;
 
       &::before {
-        content: '';
+        content: "";
 
         position: absolute;
         inset-block-end: 0;
@@ -31,6 +31,6 @@ export const useStyles = createStyles(({ cx, stylish, css, token }) =>
           opacity: 1;
         }
       }
-    `,
-  ),
-);
+    `
+  )
+)

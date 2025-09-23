@@ -1,23 +1,23 @@
-import { visit } from 'unist-util-visit';
+import { visit } from "unist-util-visit"
 
-import type { FootnoteLink } from './remarkCustomFootnotes';
+import type { FootnoteLink } from "./remarkCustomFootnotes"
 
 // eslint-disable-next-line unicorn/consistent-function-scoping
 export const rehypeCustomFootnotes = () => (tree: any, file: any) => {
-  const linksData: Record<string, FootnoteLink> = file.data.footnoteLinks || {};
+  const linksData: Record<string, FootnoteLink> = file.data.footnoteLinks || {}
 
-  visit(tree, 'element', (node) => {
-    if (node.tagName === 'section' && node.properties.className?.includes('footnotes')) {
+  visit(tree, "element", (node) => {
+    if (node.tagName === "section" && node.properties.className?.includes("footnotes")) {
       // 转换数据格式为数组（按identifier排序）
       const sortedLinks = Object.entries(linksData)
         .sort(([a], [b]) => a.localeCompare(b))
-        .map(([id, data]) => ({ id, ...data }));
+        .map(([id, data]) => ({ id, ...data }))
       // 注入数据属性
-      node.properties['data-footnote-links'] = JSON.stringify(sortedLinks);
+      node.properties["data-footnote-links"] = JSON.stringify(sortedLinks)
     }
 
-    if (node.tagName === 'sup') {
-      const link = node.children.find((n: any) => n.tagName === 'a');
+    if (node.tagName === "sup") {
+      const link = node.children.find((n: any) => n.tagName === "a")
 
       if (link) {
         // a node example
@@ -26,11 +26,10 @@ export const rehypeCustomFootnotes = () => (tree: any, file: any) => {
         //     "id": "user-content-fnref-3-2",
         //     "dataFootnoteRef": true,
         // }
-        const linkRefIndex = link.properties?.id?.replace(/^user-content-fnref-/, '')[0];
+        const linkRefIndex = link.properties?.id?.replace(/^user-content-fnref-/, "")[0]
 
-        if (linkRefIndex !== undefined)
-          link.properties['data-link'] = JSON.stringify(linksData[linkRefIndex]);
+        if (linkRefIndex !== undefined) link.properties["data-link"] = JSON.stringify(linksData[linkRefIndex])
       }
     }
-  });
-};
+  })
+}

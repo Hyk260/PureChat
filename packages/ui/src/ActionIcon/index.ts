@@ -1,2 +1,2 @@
-export { default } from './ActionIcon';
-export type * from './type';
+export { default } from "./ActionIcon"
+export type * from "./type"

@@ -1,7 +1,7 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ css }, size: number) => {
-  const shadowSize = size + '%';
+  const shadowSize = size + "%"
   return {
     bottomShadow: css`
       mask-image: linear-gradient(180deg, #000 calc(100% - ${shadowSize}), transparent);
@@ -64,5 +64,5 @@ export const useStyles = createStyles(({ css }, size: number) => {
     vertical: css`
       overflow-y: auto;
     `,
-  };
-});
+  }
+})

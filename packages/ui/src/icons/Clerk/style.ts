@@ -1,2 +1,2 @@
-export const TITLE = 'Clerk';
-export const COLOR_PRIMARY = '#654BF6';
+export const TITLE = "Clerk"
+export const COLOR_PRIMARY = "#654BF6"

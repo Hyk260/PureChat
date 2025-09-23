@@ -17,7 +17,7 @@ export const fullThinking = `<think>
 </think>
 
 通过观察 ollama 的运行日志，我发现 think 标签的内容也被传到了上下文中，这与官方文档提到的处理方式有所偏差，然后我就找到了另一个支持 ollama 的 webui 对这个问题的处理方式供参考。
-`;
+`
 
 export const partialThinking = `<think>
 
@@ -29,7 +29,7 @@ export const partialThinking = `<think>
 
 接下来要看用户的具体意图。问题中有“ma”这个字，可能是“吗”的拼音，所以用户可能在确认是否正确。另外，中文里有时候会用“大”来指日期更晚，比如“你的生日比我大”可能指月份或日期更晚。不过数值比较的话，通常不会用“大”而是直接比较大小。
 
-`;
+`
 
 export const ollama = `<think>
 嗯，为什么天空是蓝色的呢？这个问题听起来挺简单的，但其实背后可能有很多科学原理。让我仔细想想。
@@ -77,6 +77,6 @@ export const ollama = `<think>
 
 5. **无大气情况**：如果地球没有大气层，阳光会直接到达地面，天空可能呈现深灰色或黑色。
 
-总结来说，天空呈现蓝色主要是因为蓝色光能够穿透大气层并被散射到我们眼中。`;
+总结来说，天空呈现蓝色主要是因为蓝色光能够穿透大气层并被散射到我们眼中。`
 
-export const inlineMode = `<think>inline</think>`;
+export const inlineMode = `<think>inline</think>`

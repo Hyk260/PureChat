@@ -1,15 +1,16 @@
-'use client';
+"use client"
 
-import { useMemo } from 'react';
-import { rehypeGithubAlerts } from 'rehype-github-alerts';
-import rehypeKatex from 'rehype-katex';
-import rehypeRaw from 'rehype-raw';
-import type { Pluggable } from 'unified';
+import { useMemo } from "react"
+import { rehypeGithubAlerts } from "rehype-github-alerts"
+import rehypeKatex from "rehype-katex"
+import rehypeRaw from "rehype-raw"
 
-import { useMarkdownContext } from '@/Markdown/components/MarkdownProvider';
-import { rehypeCustomFootnotes } from '@/Markdown/plugins/rehypeCustomFootnotes';
-import { rehypeKatexDir } from '@/Markdown/plugins/rehypeKatexDir';
-import { rehypeStreamAnimated } from '@/Markdown/plugins/rehypeStreamAnimated';
+import { useMarkdownContext } from "@/Markdown/components/MarkdownProvider"
+import { rehypeCustomFootnotes } from "@/Markdown/plugins/rehypeCustomFootnotes"
+import { rehypeKatexDir } from "@/Markdown/plugins/rehypeKatexDir"
+import { rehypeStreamAnimated } from "@/Markdown/plugins/rehypeStreamAnimated"
+
+import type { Pluggable } from "unified"
 
 export const useMarkdownRehypePlugins = (): Pluggable[] => {
   const {
@@ -20,7 +21,7 @@ export const useMarkdownRehypePlugins = (): Pluggable[] => {
     allowHtml,
     rehypePlugins = [],
     rehypePluginsAhead = [],
-  } = useMarkdownContext();
+  } = useMarkdownContext()
 
   const memoPlugins = useMemo(
     () =>
@@ -32,11 +33,11 @@ export const useMarkdownRehypePlugins = (): Pluggable[] => {
         enableCustomFootnotes && rehypeCustomFootnotes,
         animated && rehypeStreamAnimated,
       ].filter(Boolean) as Pluggable[],
-    [animated, enableLatex, enableGithubAlert, enableCustomFootnotes, allowHtml],
-  );
+    [animated, enableLatex, enableGithubAlert, enableCustomFootnotes, allowHtml]
+  )
 
   return useMemo(
     () => [...rehypePluginsAhead, ...memoPlugins, ...rehypePlugins],
-    [rehypePlugins, memoPlugins, rehypePluginsAhead],
-  );
-};
+    [rehypePlugins, memoPlugins, rehypePluginsAhead]
+  )
+}

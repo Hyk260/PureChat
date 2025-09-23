@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ css, token }) => {
   return {
@@ -11,7 +11,7 @@ export const useStyles = createStyles(({ css, token }) => {
       padding-inline-start: 2.5em;
 
       &::before {
-        content: '';
+        content: "";
 
         position: absolute;
         inset-block-start: 0.25em;
@@ -57,5 +57,5 @@ export const useStyles = createStyles(({ css, token }) => {
         }
       }
     `,
-  };
-});
+  }
+})

@@ -9,4 +9,4 @@ const HelloWorld = memo(({ className, style }) => {
 });
 
 export default HelloWorld;
-`;
+`

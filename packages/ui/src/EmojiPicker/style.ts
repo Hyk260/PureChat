@@ -1,5 +1,5 @@
-import { createStyles } from 'antd-style';
-import chroma from 'chroma-js';
+import { createStyles } from "antd-style"
+import chroma from "chroma-js"
 
 export const useStyles = createStyles(({ css, token, prefixCls }) => ({
   editor: css`
@@ -11,9 +11,9 @@ export const useStyles = createStyles(({ css, token, prefixCls }) => ({
     position: relative;
 
     em-emoji-picker {
-      --rgb-accent: ${chroma(token.colorPrimary) .rgb() .join(',')};
+      --rgb-accent: ${chroma(token.colorPrimary).rgb().join(",")};
       --shadow: none;
-      --rgb-background: ${chroma(token.colorBgElevated) .rgb() .join(',')};
+      --rgb-background: ${chroma(token.colorBgElevated).rgb().join(",")};
       --border-radius: 0;
     }
   `,
@@ -31,4 +31,4 @@ export const useStyles = createStyles(({ css, token, prefixCls }) => ({
       box-shadow: 0 0 0 3px ${token.colorText};
     }
   `,
-}));
+}))

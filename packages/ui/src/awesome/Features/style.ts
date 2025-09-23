@@ -1,24 +1,24 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(
   ({ token, prefixCls, css, cx }, { rowNum, hasLink }: { hasLink?: boolean; rowNum: number }) => {
-    const prefix = `${prefixCls}-features`;
-    const coverCls = `${prefix}-cover`;
-    const descCls = `${prefix}-description`;
-    const titleCls = `${prefix}-title`;
-    const imgCls = `${prefix}-img`;
+    const prefix = `${prefixCls}-features`
+    const coverCls = `${prefix}-cover`
+    const descCls = `${prefix}-description`
+    const titleCls = `${prefix}-title`
+    const imgCls = `${prefix}-img`
 
-    const scaleUnit = 20;
+    const scaleUnit = 20
 
     const genSize = (size: number) => css`
       width: ${size}px;
       height: ${size}px;
       font-size: ${size * (22 / 24)}px;
-    `;
+    `
 
     const withTransition = css`
       transition: all ${token.motionDurationSlow} ${token.motionEaseInOutCirc};
-    `;
+    `
 
     return {
       cell: css`
@@ -66,7 +66,7 @@ export const useStyles = createStyles(
               font-size: ${hasLink ? 14 : 20}px;
             }
           }
-        `,
+        `
       ),
       desc: cx(
         descCls,
@@ -86,7 +86,7 @@ export const useStyles = createStyles(
 
             color: ${token.colorTextDescription};
           }
-        `,
+        `
       ),
       img: cx(
         imgCls,
@@ -94,7 +94,7 @@ export const useStyles = createStyles(
         css`
           ${genSize(20)};
           color: ${token.colorText};
-        `,
+        `
       ),
 
       imgContainer: cx(
@@ -105,7 +105,7 @@ export const useStyles = createStyles(
           padding: 4px;
           opacity: 0.8;
           border-radius: ${token.borderRadius}px;
-        `,
+        `
       ),
 
       link: css`
@@ -125,8 +125,8 @@ export const useStyles = createStyles(
           font-size: 20px;
           line-height: ${token.lineHeightHeading3};
           color: ${token.colorText};
-        `,
+        `
       ),
-    };
-  },
-);
+    }
+  }
+)

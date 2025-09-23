@@ -1,2 +1,2 @@
-export { default } from './Features';
-export type * from './type';
+export { default } from "./Features"
+export type * from "./type"

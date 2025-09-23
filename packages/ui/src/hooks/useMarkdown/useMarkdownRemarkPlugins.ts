@@ -1,16 +1,17 @@
-'use client';
+"use client"
 
-import { useMemo } from 'react';
-import remarkBreaks from 'remark-breaks';
-import remarkCjkFriendly from 'remark-cjk-friendly';
-import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
-import type { Pluggable } from 'unified';
+import { useMemo } from "react"
+import remarkBreaks from "remark-breaks"
+import remarkCjkFriendly from "remark-cjk-friendly"
+import remarkGfm from "remark-gfm"
+import remarkMath from "remark-math"
 
-import { useMarkdownContext } from '@/Markdown/components/MarkdownProvider';
-import { remarkBr } from '@/Markdown/plugins/remarkBr';
-import { remarkCustomFootnotes } from '@/Markdown/plugins/remarkCustomFootnotes';
-import { remarkGfmPlus } from '@/Markdown/plugins/remarkGfmPlus';
+import { useMarkdownContext } from "@/Markdown/components/MarkdownProvider"
+import { remarkBr } from "@/Markdown/plugins/remarkBr"
+import { remarkCustomFootnotes } from "@/Markdown/plugins/remarkCustomFootnotes"
+import { remarkGfmPlus } from "@/Markdown/plugins/remarkGfmPlus"
+
+import type { Pluggable } from "unified"
 
 export const useMarkdownRemarkPlugins = (): Pluggable[] => {
   const {
@@ -20,9 +21,9 @@ export const useMarkdownRemarkPlugins = (): Pluggable[] => {
     remarkPluginsAhead = [],
     variant,
     allowHtml,
-  } = useMarkdownContext();
+  } = useMarkdownContext()
 
-  const isChatMode = variant === 'chat';
+  const isChatMode = variant === "chat"
 
   const memoPlugins = useMemo(
     () =>
@@ -36,11 +37,11 @@ export const useMarkdownRemarkPlugins = (): Pluggable[] => {
         enableCustomFootnotes && remarkCustomFootnotes,
         isChatMode && remarkBreaks,
       ].filter(Boolean) as Pluggable[],
-    [allowHtml, isChatMode, enableLatex, enableCustomFootnotes],
-  );
+    [allowHtml, isChatMode, enableLatex, enableCustomFootnotes]
+  )
 
   return useMemo(
     () => [...remarkPluginsAhead, ...memoPlugins, ...remarkPlugins],
-    [remarkPlugins, memoPlugins, remarkPluginsAhead],
-  );
-};
+    [remarkPlugins, memoPlugins, remarkPluginsAhead]
+  )
+}

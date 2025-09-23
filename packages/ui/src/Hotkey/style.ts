@@ -1,5 +1,5 @@
-import { createStyles } from 'antd-style';
-import { rgba } from 'polished';
+import { createStyles } from "antd-style"
+import { rgba } from "polished"
 
 export const useStyles = createStyles(({ cx, css, token, isDarkMode, stylish }) => {
   return {
@@ -7,7 +7,7 @@ export const useStyles = createStyles(({ cx, css, token, isDarkMode, stylish }) 
       stylish.variantBorderlessWithoutHover,
       css`
         padding-inline: 4px;
-      `,
+      `
     ),
     filled: stylish.variantFilledWithoutHover,
     inverseTheme: css`
@@ -33,5 +33,5 @@ export const useStyles = createStyles(({ cx, css, token, isDarkMode, stylish }) 
       border: none;
       border-radius: ${token.borderRadiusSM}px;
     `,
-  };
-});
+  }
+})

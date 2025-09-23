@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ css, responsive, token, stylish }) => ({
   actions: css`
@@ -65,4 +65,4 @@ export const useStyles = createStyles(({ css, responsive, token, stylish }) => (
       font-size: 64px;
     }
   `,
-}));
+}))

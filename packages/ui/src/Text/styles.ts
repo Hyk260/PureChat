@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ css, token }) => ({
   code: css`
@@ -91,4 +91,4 @@ export const useStyles = createStyles(({ css, token }) => ({
   warning: css`
     color: ${token.colorWarning};
   `,
-}));
+}))

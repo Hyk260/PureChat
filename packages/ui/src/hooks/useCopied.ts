@@ -1,23 +1,23 @@
-'use client';
+"use client"
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 export const useCopied = () => {
-  const [copied, setCopy] = useState(false);
+  const [copied, setCopy] = useState(false)
 
   useEffect(() => {
-    if (!copied) return;
+    if (!copied) return
 
     const timer = setTimeout(() => {
-      setCopy(false);
-    }, 2000);
+      setCopy(false)
+    }, 2000)
 
     return () => {
-      clearTimeout(timer);
-    };
-  }, [copied]);
+      clearTimeout(timer)
+    }
+  }, [copied])
 
-  const setCopied = useCallback(() => setCopy(true), []);
+  const setCopied = useCallback(() => setCopy(true), [])
 
-  return useMemo(() => ({ copied, setCopied }), [copied]);
-};
+  return useMemo(() => ({ copied, setCopied }), [copied])
+}

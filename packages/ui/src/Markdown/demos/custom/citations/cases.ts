@@ -1,13 +1,13 @@
 export const cases = {
   general: {
     citations: [
-      'https://www.weather.com.cn/weather/101210101.shtml',
-      'https://tianqi.moji.com/weather/china/zhejiang/hangzhou',
-      'https://weather.cma.cn/web/weather/58457.html',
-      'https://tianqi.so.com/weather/101210101',
-      'https://www.accuweather.com/zh/cn/hangzhou/106832/weather-forecast/106832',
-      'https://www.hzqx.com',
-      'https://www.hzqx.com/pc/hztq/',
+      "https://www.weather.com.cn/weather/101210101.shtml",
+      "https://tianqi.moji.com/weather/china/zhejiang/hangzhou",
+      "https://weather.cma.cn/web/weather/58457.html",
+      "https://tianqi.so.com/weather/101210101",
+      "https://www.accuweather.com/zh/cn/hangzhou/106832/weather-forecast/106832",
+      "https://www.hzqx.com",
+      "https://www.hzqx.com/pc/hztq/",
     ],
     markdown: `杭州今天和未来几天的天气预报如下：
 
@@ -50,16 +50,16 @@ rectangles = [[1, 2, 3, 4]]  # 一个矩形坐标 [x1, y1, x2, y2]
 
   withThinking: {
     citations: [
-      'https://finance.sina.com.cn/stock/relnews/cn/2025-02-14/doc-inekknpr4619577.shtml',
-      'https://m.yicai.com/news/102477527.html',
-      'https://www.163.com/dy/article/JOHA38VO0517ACVG.html',
-      'http://www.news.cn/world/20250217/eb91333c0dc340e8875b2202cc97045e/c.html',
-      'https://news.china.com/socialgd/10000169/20250218/47987131.html',
-      'https://www.163.com/dy/article/JOOR6J520552GY5T.html',
-      'https://finance.sina.cn/2025-02-18/detail-inekxfhz3750396.d.html?vt=4',
-      'https://www.thepaper.cn/newsDetail_forward_30183356',
-      'https://finance.sina.com.cn/jjxw/2025-02-13/doc-iekizxu0502621.shtml',
-      'https://www.stcn.com/article/detail/1529574.html',
+      "https://finance.sina.com.cn/stock/relnews/cn/2025-02-14/doc-inekknpr4619577.shtml",
+      "https://m.yicai.com/news/102477527.html",
+      "https://www.163.com/dy/article/JOHA38VO0517ACVG.html",
+      "http://www.news.cn/world/20250217/eb91333c0dc340e8875b2202cc97045e/c.html",
+      "https://news.china.com/socialgd/10000169/20250218/47987131.html",
+      "https://www.163.com/dy/article/JOOR6J520552GY5T.html",
+      "https://finance.sina.cn/2025-02-18/detail-inekxfhz3750396.d.html?vt=4",
+      "https://www.thepaper.cn/newsDetail_forward_30183356",
+      "https://finance.sina.com.cn/jjxw/2025-02-13/doc-iekizxu0502621.shtml",
+      "https://www.stcn.com/article/detail/1529574.html",
     ],
     markdown: `<think>
 好吧，用户现在想知道《哪吒2》的票房成绩。我得先看看提供的搜索结果，整理其中的数据。
@@ -112,4 +112,4 @@ rectangles = [[1, 2, 3, 4]]  # 一个矩形坐标 [x1, y1, x2, y2]
 ### 四、总结
 《哪吒2》不仅以现象级表现为国产动画树立标杆，更通过本土市场与海外拓展的双轮驱动改写全球电影格局。未来能否再创新高取决于长线票房的稳定性及国际市场可持续性推广能力。`,
   },
-};
+}

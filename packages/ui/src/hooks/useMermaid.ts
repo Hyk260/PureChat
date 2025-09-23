@@ -1,20 +1,21 @@
-'use client';
+"use client"
 
-import { useTheme } from 'antd-style';
-import type { MermaidConfig } from 'mermaid/dist/config.type';
-import { useMemo, useState } from 'react';
-import useSWR, { SWRResponse } from 'swr';
-import { Md5 } from 'ts-md5';
+import { useTheme } from "antd-style"
+import { useMemo, useState } from "react"
+import useSWR, { SWRResponse } from "swr"
+import { Md5 } from "ts-md5"
+
+import type { MermaidConfig } from "mermaid/dist/config.type"
 
 // 缓存已验证的图表内容
-const MD5_LENGTH_THRESHOLD = 10_000;
+const MD5_LENGTH_THRESHOLD = 10_000
 
 // 懒加载 mermaid 实例
 const loadMermaid = () => {
-  if (typeof window === 'undefined') return Promise.resolve(null);
-  return import('mermaid').then((mod) => mod.default);
-};
-const mermaidPromise = loadMermaid();
+  if (typeof window === "undefined") return Promise.resolve(null)
+  return import("mermaid").then((mod) => mod.default)
+}
+const mermaidPromise = loadMermaid()
 
 /**
  * 验证并处理 Mermaid 图表内容
@@ -25,13 +26,13 @@ export const useMermaid = (
     id,
     theme: customTheme,
   }: {
-    id: string;
-    theme?: MermaidConfig['theme'];
-  },
+    id: string
+    theme?: MermaidConfig["theme"]
+  }
 ): SWRResponse<string, Error> => {
-  const theme = useTheme();
+  const theme = useTheme()
   // 用于存储最近一次有效的内容
-  const [validContent, setValidContent] = useState<string>('');
+  const [validContent, setValidContent] = useState<string>("")
 
   // 提取主题相关配置到 useMemo 中
   const mermaidConfig: MermaidConfig = useMemo(
@@ -40,9 +41,9 @@ export const useMermaid = (
       gantt: {
         useWidth: 1920,
       },
-      securityLevel: 'loose',
+      securityLevel: "loose",
       startOnLoad: false,
-      theme: customTheme || (theme.isDarkMode ? 'dark' : 'neutral'),
+      theme: customTheme || (theme.isDarkMode ? "dark" : "neutral"),
       themeVariables: customTheme
         ? undefined
         : {
@@ -69,40 +70,40 @@ export const useMermaid = (
             textColor: theme.colorText,
           },
     }),
-    [theme.isDarkMode, customTheme],
-  );
+    [theme.isDarkMode, customTheme]
+  )
 
   // 为长内容生成哈希键
   const cacheKey = useMemo((): string => {
-    const hash = content.length < MD5_LENGTH_THRESHOLD ? content : Md5.hashStr(content);
-    return [id, customTheme || (theme.isDarkMode ? 'd' : 'l'), hash].filter(Boolean).join('-');
-  }, [content, id, theme.isDarkMode, customTheme]);
+    const hash = content.length < MD5_LENGTH_THRESHOLD ? content : Md5.hashStr(content)
+    return [id, customTheme || (theme.isDarkMode ? "d" : "l"), hash].filter(Boolean).join("-")
+  }, [content, id, theme.isDarkMode, customTheme])
 
   return useSWR(
     cacheKey,
     async (): Promise<string> => {
       // 检查缓存中是否已验证过
       try {
-        const mermaidInstance = await mermaidPromise;
-        if (!mermaidInstance) return content;
+        const mermaidInstance = await mermaidPromise
+        if (!mermaidInstance) return content
 
         // 验证语法
-        const isValid = await mermaidInstance.parse(content);
+        const isValid = await mermaidInstance.parse(content)
 
         if (isValid) {
           // 更新有效内容状态
-          mermaidInstance.initialize(mermaidConfig);
-          const { svg } = await mermaidInstance.render(id, content);
-          setValidContent(svg);
+          mermaidInstance.initialize(mermaidConfig)
+          const { svg } = await mermaidInstance.render(id, content)
+          setValidContent(svg)
           // 缓存验证结果
-          return svg;
+          return svg
         } else {
-          throw new Error('Mermaid 语法无效');
+          throw new Error("Mermaid 语法无效")
         }
       } catch (error) {
-        if (!validContent) console.error('Mermaid 解析错误:', error);
+        if (!validContent) console.error("Mermaid 解析错误:", error)
         // 返回最近一次有效的内容，或空字符串
-        return validContent || '';
+        return validContent || ""
       }
     },
     {
@@ -110,6 +111,6 @@ export const useMermaid = (
       errorRetryCount: 2,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-    },
-  );
-};
+    }
+  )
+}

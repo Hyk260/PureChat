@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ css }) => ({
   container: css`
@@ -17,4 +17,4 @@ export const useStyles = createStyles(({ css }) => ({
 
     text-overflow: ellipsis;
   `,
-}));
+}))

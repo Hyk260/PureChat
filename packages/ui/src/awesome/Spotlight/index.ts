@@ -1,2 +1,2 @@
-export { default } from './Spotlight';
-export type * from './type';
+export { default } from "./Spotlight"
+export type * from "./type"

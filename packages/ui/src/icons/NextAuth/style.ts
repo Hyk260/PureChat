@@ -1,2 +1,2 @@
-export const TITLE = 'NextAuth';
-export const COLOR_PRIMARY = '#000';
+export const TITLE = "NextAuth"
+export const COLOR_PRIMARY = "#000"

@@ -1,2 +1,2 @@
-export { default } from './Giscus';
-export type * from './type';
+export { default } from "./Giscus"
+export type * from "./type"

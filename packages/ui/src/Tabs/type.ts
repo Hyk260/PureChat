@@ -1,6 +1,6 @@
-import type { TabsProps as AntdTabsProps } from 'antd';
+import type { TabsProps as AntdTabsProps } from "antd"
 
 export interface TabsProps extends AntdTabsProps {
-  compact?: boolean;
-  variant?: 'square' | 'rounded' | 'point';
+  compact?: boolean
+  variant?: "square" | "rounded" | "point"
 }

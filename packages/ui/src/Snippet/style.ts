@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ css, token, stylish }) => {
   return {
@@ -30,5 +30,5 @@ export const useStyles = createStyles(({ css, token, stylish }) => {
       border-radius: ${token.borderRadius}px;
     `,
     shadow: stylish.shadow,
-  };
-});
+  }
+})

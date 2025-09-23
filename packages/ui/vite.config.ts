@@ -1,65 +1,15 @@
-import react from "@vitejs/plugin-react"
-import { CodeInspectorPlugin } from "code-inspector-plugin"
 import { resolve } from "path"
-import { visualizer } from "rollup-plugin-visualizer"
 import { defineConfig } from "vite"
-// import compression from "vite-plugin-compression"
-// import dts from "vite-plugin-dts"
+
+import { setupVitePlugins } from "./build/plugins"
 
 const isDev = process.env.NODE_ENV === "development"
-const isAnalyze = process.env.ANALYZE === "true"
 
 export default defineConfig({
   define: {
     "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || (isDev ? "development" : "production")),
   },
-  plugins: [
-    react({
-      babel: {
-        plugins: !isDev
-          ? [
-              // 生产环境移除 propTypes
-              ["transform-react-remove-prop-types", { removeImport: true }],
-            ]
-          : [],
-      },
-    }),
-    // 只在开发环境下启用 CodeInspectorPlugin
-    ...(isDev ? [CodeInspectorPlugin({ bundler: "vite" })] : []),
-    // 生产环境启用压缩
-    // ...(!isDev
-    //   ? [
-    //       // Gzip 压缩
-    //       compression({
-    //         algorithm: "gzip",
-    //         ext: ".gz",
-    //         threshold: 1024, // 仅压缩大于1kb的文件
-    //         deleteOriginFile: false, // 保留原始文件
-    //       }),
-    //       // Brotli 压缩
-    //       compression({
-    //         algorithm: "brotliCompress",
-    //         ext: ".br",
-    //         threshold: 1024,
-    //         deleteOriginFile: false,
-    //       }),
-    //     ]
-    //   : []),
-    // 包大小分析
-    ...(isAnalyze
-      ? [
-          visualizer({
-            filename: "stats.html",
-            gzipSize: true,
-            brotliSize: true,
-            open: true,
-          }),
-        ]
-      : []),
-    // dts({
-    //   insertTypesEntry: true,
-    // }),
-  ],
+  plugins: setupVitePlugins(),
   build: {
     lib: {
       entry: resolve(__dirname, "src/index.tsx"),

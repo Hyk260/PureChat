@@ -196,7 +196,7 @@
 </template>
 
 <script setup lang="ts">
-import { QuestionFilled, Refresh } from "@element-plus/icons-vue"
+import { QuestionFilled } from "@element-plus/icons-vue"
 
 // import { localStg } from "@/utils/storage";
 import { cloneDeep } from "lodash-es"

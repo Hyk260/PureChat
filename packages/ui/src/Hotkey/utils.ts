@@ -1,4 +1,4 @@
-import { KeyMapEnum } from './const';
+import { KeyMapEnum } from "./const"
 
 // https://superuser.com/questions/1238058/key-combination-order
 export const NORMATIVE_MODIFIER = [
@@ -17,40 +17,40 @@ export const NORMATIVE_MODIFIER = [
 
   // win: Shift ,mac: Shift
   KeyMapEnum.Shift,
-];
+]
 
-const orderMap = Object.fromEntries(NORMATIVE_MODIFIER.map((key, index) => [key, index]));
+const orderMap = Object.fromEntries(NORMATIVE_MODIFIER.map((key, index) => [key, index]))
 
 export const splitKeysByPlus = (keys: string): string[] => {
   return keys
-    .replaceAll('++', `+${KeyMapEnum.Equal}`)
-    .split('+')
+    .replaceAll("++", `+${KeyMapEnum.Equal}`)
+    .split("+")
     .sort((x, y) => {
-      const idxX = orderMap[x.toLowerCase()] ?? orderMap.length;
-      const idxY = orderMap[y.toLowerCase()] ?? orderMap.length;
+      const idxX = orderMap[x.toLowerCase()] ?? orderMap.length
+      const idxY = orderMap[y.toLowerCase()] ?? orderMap.length
 
-      return idxX - idxY;
-    });
-};
+      return idxX - idxY
+    })
+}
 
 export const startCase = (str: string): string => {
   return str
-    .replaceAll(/([A-Z])/g, ' $1')
+    .replaceAll(/([A-Z])/g, " $1")
     .replace(/^./, (s) => s.toUpperCase())
-    .trim();
-};
+    .trim()
+}
 
 export const checkIsAppleDevice = (isApple?: boolean) => {
   if (isApple !== undefined) {
-    return isApple;
+    return isApple
   }
 
-  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-    return false; // 处理 SSR 环境
+  if (typeof window === "undefined" || typeof navigator === "undefined") {
+    return false // 处理 SSR 环境
   }
 
-  const userAgent = navigator.userAgent.toLowerCase();
-  return /mac|iphone|ipod|ipad|ios/i.test(userAgent);
-};
+  const userAgent = navigator.userAgent.toLowerCase()
+  return /mac|iphone|ipod|ipad|ios/i.test(userAgent)
+}
 
-export const combineKeys = (keys: string[]): string => keys.join('+');
+export const combineKeys = (keys: string[]): string => keys.join("+")

@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ css, token, cx, prefixCls }) => {
   return {
@@ -81,7 +81,7 @@ export const useStyles = createStyles(({ css, token, cx, prefixCls }) => {
               background: ${token.colorErrorBg};
 
               &::before {
-                content: '-';
+                content: "-";
 
                 position: absolute;
                 inset-inline-start: 4px;
@@ -96,7 +96,7 @@ export const useStyles = createStyles(({ css, token, cx, prefixCls }) => {
               background: ${token.colorSuccessBg};
 
               &::before {
-                content: '+';
+                content: "+";
 
                 position: absolute;
                 inset-inline-start: 4px;
@@ -108,10 +108,10 @@ export const useStyles = createStyles(({ css, token, cx, prefixCls }) => {
             }
           }
         }
-      `,
+      `
     ),
     unshiki: css`
       color: ${token.colorTextDescription};
     `,
-  };
-});
+  }
+})

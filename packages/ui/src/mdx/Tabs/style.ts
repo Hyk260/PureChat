@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ css, token, prefixCls }) => {
   return {
@@ -18,5 +18,5 @@ export const useStyles = createStyles(({ css, token, prefixCls }) => {
         line-height: var(--lobe-markdown-line-height);
       }
     `,
-  };
-});
+  }
+})

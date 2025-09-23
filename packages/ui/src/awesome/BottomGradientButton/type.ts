@@ -1,3 +1,3 @@
-import type { ButtonProps } from '@/Button';
+import type { ButtonProps } from "@/Button"
 
-export type BottomGradientButtonProps = ButtonProps;
+export type BottomGradientButtonProps = ButtonProps

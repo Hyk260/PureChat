@@ -1,4 +1,4 @@
-import { createStyles, keyframes } from 'antd-style';
+import { createStyles, keyframes } from "antd-style"
 
 export const useStyles = createStyles(({ css }) => {
   const spin = keyframes`
@@ -8,10 +8,10 @@ export const useStyles = createStyles(({ css }) => {
   100% {
     rotate: 360deg;
   }
-  `;
+  `
   return {
     spin: css`
       animation: ${spin} 1s linear infinite;
     `,
-  };
-});
+  }
+})

@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ isDarkMode, css, token, stylish }) => {
   return {
@@ -42,5 +42,5 @@ export const useStyles = createStyles(({ isDarkMode, css, token, stylish }) => {
       }
     `,
     shadow: stylish.shadow,
-  };
-});
+  }
+})

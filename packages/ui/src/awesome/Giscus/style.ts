@@ -1,22 +1,22 @@
-import { css, useTheme } from 'antd-style';
-import { readableColor, rgba } from 'polished';
-import { useMemo } from 'react';
+import { css, useTheme } from "antd-style"
+import { readableColor, rgba } from "polished"
+import { useMemo } from "react"
 
 export const useStyles = () => {
-  const theme = useTheme();
-  const colorText = theme.colorText;
-  const colorTextSecondary = theme.colorTextSecondary;
-  const colorTextTertiary = theme.colorTextTertiary;
-  const colorRed = theme.colorError;
-  const colorOrange = theme.colorWarning;
-  const colorGreen = theme.colorSuccess;
-  const colorBlue = theme.colorInfo;
+  const theme = useTheme()
+  const colorText = theme.colorText
+  const colorTextSecondary = theme.colorTextSecondary
+  const colorTextTertiary = theme.colorTextTertiary
+  const colorRed = theme.colorError
+  const colorOrange = theme.colorWarning
+  const colorGreen = theme.colorSuccess
+  const colorBlue = theme.colorInfo
   const loaderContainer = theme.isDarkMode
-    ? 'https://github.com/images/modules/pulls/progressive-disclosure-line-dark.svg'
-    : 'https://github.com/images/modules/pulls/progressive-disclosure-line.svg';
+    ? "https://github.com/images/modules/pulls/progressive-disclosure-line-dark.svg"
+    : "https://github.com/images/modules/pulls/progressive-disclosure-line.svg"
   const loadingImage = theme.isDarkMode
-    ? 'https://github.githubassets.com/images/mona-loading-dark.gif'
-    : 'https://github.githubassets.com/images/mona-loading-default.gif';
+    ? "https://github.githubassets.com/images/mona-loading-dark.gif"
+    : "https://github.githubassets.com/images/mona-loading-default.gif"
   const { styles } = css`
     main {
       --color-prettylights-syntax-comment: ${colorTextTertiary};
@@ -134,17 +134,17 @@ export const useStyles = () => {
         background-image: url(${loadingImage});
       }
     }
-  `;
+  `
 
-  return useMemo(() => `data:text/css;base64,${btoa(styles)}`, [styles]);
-};
+  return useMemo(() => `data:text/css;base64,${btoa(styles)}`, [styles])
+}
 
 export const formatLang = (lang: string) => {
-  if (['zh_CN', 'zh_TW'].includes(lang)) {
-    return lang.replace('_', '-');
-  } else if (lang === 'zh_HK') {
-    return 'zh-TW';
+  if (["zh_CN", "zh_TW"].includes(lang)) {
+    return lang.replace("_", "-")
+  } else if (lang === "zh_HK") {
+    return "zh-TW"
   } else {
-    return lang.split('_')[0];
+    return lang.split("_")[0]
   }
-};
+}

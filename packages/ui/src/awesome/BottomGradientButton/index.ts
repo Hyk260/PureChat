@@ -1,2 +1,2 @@
-export { default } from './BottomGradientButton';
-export type * from './type';
+export { default } from "./BottomGradientButton"
+export type * from "./type"

@@ -1,4 +1,4 @@
-import { createStyles, keyframes } from 'antd-style';
+import { createStyles, keyframes } from "antd-style"
 
 export const useStyles = createStyles(({ cx, isDarkMode, css, responsive }) => {
   const aurora = keyframes`
@@ -8,7 +8,7 @@ export const useStyles = createStyles(({ cx, isDarkMode, css, responsive }) => {
   100% {
     background-position: 350% 50%, 350% 50%;
   }
-`;
+`
 
   const dark = css`
     background-image:
@@ -28,7 +28,7 @@ export const useStyles = createStyles(({ cx, isDarkMode, css, responsive }) => {
         rgb(221, 214, 254) 25%,
         rgb(96, 165, 250) 30%
       );
-  `;
+  `
 
   const light = css`
     background-image:
@@ -48,9 +48,9 @@ export const useStyles = createStyles(({ cx, isDarkMode, css, responsive }) => {
         rgb(221, 214, 254) 25%,
         rgb(96, 165, 250) 30%
       );
-  `;
+  `
 
-  const background = isDarkMode ? dark : light;
+  const background = isDarkMode ? dark : light
 
   return {
     bg: cx(
@@ -79,7 +79,7 @@ export const useStyles = createStyles(({ cx, isDarkMode, css, responsive }) => {
           ${background};
           position: absolute;
 
-          content: '';
+          content: "";
 
           inset: 0;
 
@@ -94,7 +94,7 @@ export const useStyles = createStyles(({ cx, isDarkMode, css, responsive }) => {
           transform: scale(2);
           max-height: 25vh;
         }
-      `,
+      `
     ),
     wrapper: css`
       position: absolute;
@@ -102,5 +102,5 @@ export const useStyles = createStyles(({ cx, isDarkMode, css, responsive }) => {
       inset: 0;
       overflow: hidden;
     `,
-  };
-});
+  }
+})

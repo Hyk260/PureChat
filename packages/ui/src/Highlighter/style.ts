@@ -1,10 +1,10 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ token, css, cx, prefixCls, stylish }) => {
-  const prefix = `${prefixCls}-highlighter`;
-  const actionsHoverCls = `${prefix}-highlighter-hover-actions`;
-  const langHoverCls = `${prefix}-highlighter-hover-lang`;
-  const expandCls = `${prefix}-highlighter-body-expand`;
+  const prefix = `${prefixCls}-highlighter`
+  const actionsHoverCls = `${prefix}-highlighter-hover-actions`
+  const langHoverCls = `${prefix}-highlighter-hover-lang`
+  const expandCls = `${prefix}-highlighter-body-expand`
 
   return {
     actions: cx(
@@ -16,7 +16,7 @@ export const useStyles = createStyles(({ token, css, cx, prefixCls, stylish }) =
         inset-inline-end: 8px;
 
         opacity: 0;
-      `,
+      `
     ),
     bodyCollapsed: css`
       height: 0;
@@ -75,7 +75,7 @@ export const useStyles = createStyles(({ token, css, cx, prefixCls, stylish }) =
         background: ${token.colorFillQuaternary};
 
         transition: opacity 0.1s;
-      `,
+      `
     ),
     nowrap: css`
       pre,
@@ -109,7 +109,7 @@ export const useStyles = createStyles(({ token, css, cx, prefixCls, stylish }) =
         code {
           background: transparent !important;
         }
-      `,
+      `
     ),
     select: css`
       user-select: none;
@@ -131,5 +131,5 @@ export const useStyles = createStyles(({ token, css, cx, prefixCls, stylish }) =
         text-wrap: wrap;
       }
     `,
-  };
-});
+  }
+})

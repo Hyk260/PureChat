@@ -1,17 +1,17 @@
-import type { ReactNode } from 'react';
+import ImageParent from "./Image"
+import PreviewGroup from "./PreviewGroup"
 
-import ImageParent from './Image';
-import PreviewGroup from './PreviewGroup';
-import type { ImageProps } from './type';
+import type { ImageProps } from "./type"
+import type { ReactNode } from "react"
 
 export interface IImage {
-  (props: ImageProps): ReactNode;
-  PreviewGroup: typeof PreviewGroup;
+  (props: ImageProps): ReactNode
+  PreviewGroup: typeof PreviewGroup
 }
 
-const Image = ImageParent as unknown as IImage;
-Image.PreviewGroup = PreviewGroup;
+const Image = ImageParent as unknown as IImage
+Image.PreviewGroup = PreviewGroup
 
-export default Image;
-export { default as PreviewGroup } from './PreviewGroup';
-export type * from './type';
+export default Image
+export { default as PreviewGroup } from "./PreviewGroup"
+export type * from "./type"

@@ -1,11 +1,8 @@
-import { createStyles, keyframes } from 'antd-style';
-import chroma from 'chroma-js';
+import { createStyles, keyframes } from "antd-style"
+import chroma from "chroma-js"
 
 export const useStyles = createStyles(
-  (
-    { css, token },
-    { reverse, backgroundColor = 'blue' }: { backgroundColor?: string; reverse?: boolean },
-  ) => {
+  ({ css, token }, { reverse, backgroundColor = "blue" }: { backgroundColor?: string; reverse?: boolean }) => {
     const highlightAnimation = keyframes`
     0% {
       mask-position: 100% 0%;
@@ -13,7 +10,7 @@ export const useStyles = createStyles(
     16%,100% {
       mask-position: 100% 200%;
     }
-  `;
+  `
     const highlightAnimationReverse = keyframes`
     0% {
       mask-position: 100% 200%;
@@ -21,16 +18,16 @@ export const useStyles = createStyles(
     16%,100% {
       mask-position: 100% 0%;
     }
-  `;
+  `
 
     const scale = chroma
       .bezier([token.colorText, backgroundColor, token.colorBgLayout])
       .scale()
-      .mode('lch')
+      .mode("lch")
       .correctLightness()
-      .colors(6);
-    const width = 24;
-    const height = 36;
+      .colors(6)
+    const width = 24
+    const height = 36
 
     return {
       background: css`
@@ -82,6 +79,6 @@ export const useStyles = createStyles(
         mask-image: linear-gradient(to bottom, transparent 40%, #fff 60%, transparent);
         mask-size: 100% 200%;
       `,
-    };
-  },
-);
+    }
+  }
+)

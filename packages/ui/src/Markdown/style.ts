@@ -1,7 +1,7 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(({ css, token, isDarkMode }) => {
-  const cyanColor = isDarkMode ? token.cyan9A : token.cyan11A;
+  const cyanColor = isDarkMode ? token.cyan9A : token.cyan11A
 
   return {
     chat: css`
@@ -127,7 +127,7 @@ export const useStyles = createStyles(({ css, token, isDarkMode }) => {
         clip: rect(0, 0, 0, 0);
       }
 
-      sup:has(*[aria-describedby='footnote-label']) {
+      sup:has(*[aria-describedby="footnote-label"]) {
         margin-inline: 2px;
         vertical-align: super !important;
 
@@ -153,7 +153,7 @@ export const useStyles = createStyles(({ css, token, isDarkMode }) => {
         gap: 0.4em;
 
         &::after {
-          content: '';
+          content: "";
 
           width: 0.66em;
           height: 0.66em;
@@ -194,5 +194,5 @@ export const useStyles = createStyles(({ css, token, isDarkMode }) => {
       overflow: hidden;
       max-width: 100%;
     `,
-  };
-});
+  }
+})

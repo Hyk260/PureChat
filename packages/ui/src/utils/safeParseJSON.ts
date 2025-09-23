@@ -1,12 +1,12 @@
 export const safeParseJSON = <T = Record<string, any>>(text?: string) => {
-  if (typeof text !== 'string') return;
+  if (typeof text !== "string") return
 
-  let json: T;
+  let json: T
   try {
-    json = JSON.parse(text);
+    json = JSON.parse(text)
   } catch {
-    return;
+    return
   }
 
-  return json;
-};
+  return json
+}

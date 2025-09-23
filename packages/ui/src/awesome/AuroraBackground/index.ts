@@ -1,2 +1,2 @@
-export { default } from './AuroraBackground';
-export type * from './type';
+export { default } from "./AuroraBackground"
+export type * from "./type"

@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style"
 
 export const useStyles = createStyles(
   (
@@ -9,16 +9,16 @@ export const useStyles = createStyles(
       minWidth,
       minHeight,
     }: {
-      maxHeight?: number | string;
-      maxWidth?: number | string;
-      minHeight?: number | string;
-      minWidth?: number | string;
-    } = {},
+      maxHeight?: number | string
+      maxWidth?: number | string
+      minHeight?: number | string
+      minWidth?: number | string
+    } = {}
   ) => {
-    const MAX_HEIGHT = typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight;
-    const MAX_WIDTH = typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth;
-    const MIN_HEIGHT = typeof minHeight === 'number' ? `${minHeight}px` : minHeight;
-    const MIN_WIDTH = typeof minWidth === 'number' ? `${minWidth}px` : minWidth;
+    const MAX_HEIGHT = typeof maxHeight === "number" ? `${maxHeight}px` : maxHeight
+    const MAX_WIDTH = typeof maxWidth === "number" ? `${maxWidth}px` : maxWidth
+    const MIN_HEIGHT = typeof minHeight === "number" ? `${minHeight}px` : minHeight
+    const MIN_WIDTH = typeof minWidth === "number" ? `${minWidth}px` : minWidth
 
     const mask = cx(css`
       pointer-events: none;
@@ -34,7 +34,7 @@ export const useStyles = createStyles(
       background: ${token.colorBgMask};
 
       transition: opacity 0.3s;
-    `);
+    `)
 
     return {
       borderless: stylish.variantBorderlessWithoutHover,
@@ -67,6 +67,6 @@ export const useStyles = createStyles(
         cursor: pointer;
         width: 100%;
       `,
-    };
-  },
-);
+    }
+  }
+)
