@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react';
-import { CodeInspectorPlugin } from 'code-inspector-plugin';
+// import { CodeInspectorPlugin } from 'code-inspector-plugin';
 import { visualizer } from 'rollup-plugin-visualizer';
 import type { PluginOption } from 'vite';
 
@@ -22,7 +22,7 @@ export function setupVitePlugins() {
       },
     }),
     // 只在开发环境下启用 CodeInspectorPlugin
-    ...(isDev ? [CodeInspectorPlugin({ bundler: 'vite' })] : []),
+    // ...(isDev ? [CodeInspectorPlugin({ bundler: 'vite' })] : []),
   ];
   
   // 包大小分析

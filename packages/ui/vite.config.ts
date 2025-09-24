@@ -20,18 +20,19 @@ export default defineConfig({
       fileName: "index",
     },
     rollupOptions: {
-      // output: {
-      //   // inlineDynamicImports: true,
-      //   // 生产环境下进行代码优化
-      //   compact: !isDev,
-      //   // 生产环境下混淆属性名
-      //   generatedCode: {
-      //     reservedNamesAsProps: false,
-      //   },
-      //   extend: true,
-      //   // 静态资源文件名哈希，避免缓存问题
-      //   assetFileNames: "assets/[name].[hash].[ext]",
-      // },
+      external: [], // 外部依赖
+      output: {
+        // inlineDynamicImports: true,
+        // 生产环境下进行代码优化
+        compact: !isDev,
+        // 生产环境下混淆属性名
+        generatedCode: {
+          reservedNamesAsProps: false,
+        },
+        extend: true,
+        // 静态资源文件名哈希，避免缓存问题
+        assetFileNames: "assets/[name].[hash].[ext]",
+      },
       // 配置treeshaking优化
       treeshake: {
         // 生产环境启用treeshaking
@@ -48,21 +49,21 @@ export default defineConfig({
     // 生产环境开启代码压缩
     // minify: !isDev ? "terser" : false,
     // 增加terser优化配置
-    terserOptions: !isDev
-      ? {
-          compress: {
-            drop_console: true, // 移除console
-            drop_debugger: true, // 移除debugger
-            pure_funcs: ["console.log", "console.warn", "console.error"], // 移除特定函数调用
-          },
-          mangle: {
-            // 混淆变量名
-            properties: {
-              regex: /^_/, // 只混淆下划线开头的属性
-            },
-          },
-        }
-      : {},
+    // terserOptions: !isDev
+    //   ? {
+    //       compress: {
+    //         drop_console: true, // 移除console
+    //         drop_debugger: true, // 移除debugger
+    //         pure_funcs: ["console.log", "console.warn", "console.error"], // 移除特定函数调用
+    //       },
+    //       mangle: {
+    //         // 混淆变量名
+    //         properties: {
+    //           regex: /^_/, // 只混淆下划线开头的属性
+    //         },
+    //       },
+    //     }
+    //   : {},
     // 配置chunk大小警告阈值
     chunkSizeWarningLimit: 600,
     // 开启CSS代码分割
