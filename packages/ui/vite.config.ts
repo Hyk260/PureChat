@@ -20,24 +20,24 @@ export default defineConfig({
       fileName: "index",
     },
     rollupOptions: {
-      output: {
-        inlineDynamicImports: true,
-        // 生产环境下进行代码优化
-        compact: !isDev,
-        // 生产环境下混淆属性名
-        generatedCode: {
-          reservedNamesAsProps: false,
-        },
-        extend: true,
-        // 静态资源文件名哈希，避免缓存问题
-        assetFileNames: "assets/[name].[hash].[ext]",
-      },
+      // output: {
+      //   // inlineDynamicImports: true,
+      //   // 生产环境下进行代码优化
+      //   compact: !isDev,
+      //   // 生产环境下混淆属性名
+      //   generatedCode: {
+      //     reservedNamesAsProps: false,
+      //   },
+      //   extend: true,
+      //   // 静态资源文件名哈希，避免缓存问题
+      //   assetFileNames: "assets/[name].[hash].[ext]",
+      // },
       // 配置treeshaking优化
       treeshake: {
         // 生产环境启用treeshaking
-        moduleSideEffects: false,
+        // moduleSideEffects: false,
         // 更严格的treeshaking
-        preset: "smallest",
+        // preset: "smallest",
       },
       // input: {
       //   index: resolve(__dirname, "./index.html"),
@@ -46,7 +46,7 @@ export default defineConfig({
     // 添加源码映射以便调试
     sourcemap: isDev,
     // 生产环境开启代码压缩
-    minify: !isDev ? "terser" : false,
+    // minify: !isDev ? "terser" : false,
     // 增加terser优化配置
     terserOptions: !isDev
       ? {

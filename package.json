@@ -86,6 +86,7 @@
     "@unocss/preset-rem-to-px": "^65.4.3",
     "@unocss/preset-uno": "^65.4.3",
     "@vitejs/plugin-vue": "^5.2.4",
+    "@vitejs/plugin-react": "^5.0.3",
     "@vitejs/plugin-vue-jsx": "^5.1.1",
     "boxen": "^8.0.1",
     "chalk": "^5.4.1",
@@ -112,6 +113,10 @@
     "vite-plugin-svg-icons": "2.0.1",
     "vite-plugin-vue-devtools": "7.7.2",
     "vue-tsc": "^2.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "engines": {
     "node": "^18.0.0 || ^20.0.0 || >=22.0.0"
