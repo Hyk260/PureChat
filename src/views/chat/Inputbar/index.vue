@@ -103,7 +103,7 @@
     <RobotModel />
     <RobotPlugin />
     <RobotOptions />
-    <EmojiPicker v-show="!isAssistant && flag" @on-close="setFlag(false)" />
+    <EmojiPicker v-if="!isAssistant && flag" @on-close="setFlag(false)" />
   </div>
 </template>
 

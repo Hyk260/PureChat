@@ -34,7 +34,7 @@ export const DeepseekModelValue = () => {
       ID: "checkPoint",
       Title: "连通性检查",
       SubTitle: "测试 Api Key 与代理地址是否正确填写",
-      collapse: "",
+      defaultValue: "deepseek-chat",
     },
     Temperature: {
       ID: "temperature",

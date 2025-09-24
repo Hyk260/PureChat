@@ -17,7 +17,7 @@
             <ChatHeader />
             <h2 v-if="showRole" class="role">{{ roleText }}</h2>
             <div v-if="showPrompt" class="prompt">
-              <Markdown :marked="promptContent" />
+              <Markdown :content="promptContent" />
             </div>
             <div class="item min-h-60">
               <div

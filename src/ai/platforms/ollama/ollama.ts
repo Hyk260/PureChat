@@ -2,7 +2,7 @@ import { Ollama } from "ollama/browser"
 
 import { ModelProvider } from "@/ai/types"
 import { useAccessStore } from "@/ai/utils"
-import { hostPreview } from "@/utils/api"
+// import { hostPreview } from "@/utils/api"
 import { nanoid } from "@/utils/uuid"
 
 import {
@@ -69,7 +69,7 @@ export default class OllamaAI {
    * 创建Ollama客户端实例
    */
   createOllamaClient() {
-    const host = hostPreview(this.payload.openaiUrl || import.meta.env.VITE_OLLAMA_PROXY_URL)
+    const host = this.payload.openaiUrl || import.meta.env.VITE_OLLAMA_PROXY_URL
     return new Ollama({
       host: host,
       fetch: (input, init = {}) => {

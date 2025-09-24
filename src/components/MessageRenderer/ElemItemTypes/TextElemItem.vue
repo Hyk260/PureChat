@@ -3,7 +3,7 @@
     <template v-if="hasValidMessageType">
       <!-- 回复消息 -->
       <ReplyElem v-if="parsedCloudCustomData" :status="message.status" :original-msg="parsedCloudCustomData" />
-      <Markdown v-if="shouldShowMarkdown" :cloud-custom-data="parsedCloudCustomData" :marked="message.payload.text" />
+      <Markdown v-if="shouldShowMarkdown" :cloud-custom-data="parsedCloudCustomData" :content="message.payload.text" />
       <DynamicContent v-else :at-user-list="message.atUserList" :text="message.payload.text" />
     </template>
   </div>

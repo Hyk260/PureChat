@@ -31,7 +31,7 @@ export const GitHubModelValue = () => {
       ID: "checkPoint",
       Title: "连通性检查",
       SubTitle: "测试 Api Key 与代理地址是否正确填写",
-      collapse: "",
+      defaultValue: "",
     },
     Temperature: {
       ID: "temperature",

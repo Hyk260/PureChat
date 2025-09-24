@@ -8,7 +8,7 @@ import MarkdownRenderer from "./markdown-renderer"
 defineOptions({ name: "Markdown" })
 
 interface Props {
-  // content: string
+  content: string
   marked: string
   cloudCustomData?: any
 }
@@ -28,20 +28,20 @@ const renderer = new MarkdownRenderer({
 })
 
 const renderContent = async () => {
-  const html = renderer.render(props.marked, webSearchResult.value)
+  const html = renderer.render(props.content, webSearchResult.value)
   renderedContent.value = html
 }
 
 function handleMarkdownClick() {
   console.log("webSearchResult:", webSearchResult.value)
-  console.log("marked:", props.marked)
+  console.log("marked:", props.content)
 }
 
 onMounted(() => {
   renderContent()
 })
 
-watch([() => props.marked], renderContent, { immediate: true })
+watch([() => props.content], renderContent, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

@@ -36,7 +36,7 @@ export function getModelType(modelId: string): ModelProviderKey {
     [ModelID.DeepSeek]: ModelProvider.DeepSeek,
     [ModelID.Mistral]: ModelProvider.Mistral,
   }
-  return modelMapping[modelId.replace("C2C", "") as ModelIDValue] || ""
+  return modelMapping[modelId.replace("C2C", "") as ModelIDValue]
 }
 
 export function getModelId(model: ModelProviderKey) {

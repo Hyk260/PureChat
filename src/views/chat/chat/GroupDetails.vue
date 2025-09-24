@@ -42,7 +42,7 @@
           </el-icon>
         </div>
         <div class="group-notice-info multi-truncate-5">
-          <Markdown :marked="groupProfile.notification" />
+          <Markdown :content="groupProfile.notification" />
         </div>
       </div>
       <el-divider />

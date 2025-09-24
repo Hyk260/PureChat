@@ -4,15 +4,37 @@ import type { LLMParams, ModelProviderKey } from "@/ai/types"
 export interface Model {
   id: string
   displayName: string
-  description?: string // 使description可选
+  description?: string
   tokens: number
   vision?: boolean
   webSearch?: boolean
   functionCall?: boolean
   reasoning?: boolean
   maxOutput?: number
+  icon?: string
   [key: string]: any
 }
+
+export interface ModelConfigItem {
+  ID: string
+  Title: string
+  SubTitle: string
+  defaultValue?: string
+  options?: {
+    id?: string
+    chatModels?: Model[]
+  }
+  collapse?: string[]
+  apiKey?: string
+  doubt?: string
+  apiHost?: string
+  Placeholder?: string
+  step?: number
+  min?: number
+  max?: number
+}
+
+export type ModelDataType = Record<string, ModelConfigItem>
 
 // 提示词元数据类型
 export interface PromptMeta {
@@ -42,7 +64,7 @@ export interface AccessStore {
 
 // 模型存储类型
 export interface ModelStore {
-  [provider: string]: any
+  [provider: string]: ModelDataType
 }
 
 // 提示词存储类型
