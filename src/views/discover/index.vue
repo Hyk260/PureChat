@@ -26,8 +26,8 @@ import { onBeforeMount, ref } from "vue"
 import { marketJson } from "@database/market"
 
 import { getPrompt } from "@/service/api"
-import { localStg } from "@/utils/storage"
 
+// import { delay } from "@/utils/common"
 import AgentCardBanner from "./AgentCardBanner.vue"
 import AgentList from "./AgentList.vue"
 import DiscoverHeader from "./DiscoverHeader.vue"
@@ -41,7 +41,7 @@ const agent = ref([])
 const market = ref({})
 const current = ref("")
 const tabsKey = ref(options[0].value)
-const marketLocal = localStg.get("marketJson")
+const marketLocal = window.localStg.get("marketJson")
 
 function handleTabs(key) {
   tabsKey.value = key
@@ -75,13 +75,13 @@ async function initPrompt() {
 
   try {
     const res = await getPrompt()
-    // await delay(1000)
+    // await delay(3000)
     setMarketData(res)
-    localStg.set("marketJson", res)
+    window.localStg.set("marketJson", res)
   } catch (error) {
     console.error("Failed to fetch prompt:", error)
     setMarketData(marketJson)
-    localStg.set("marketJson", marketJson)
+    window.localStg.set("marketJson", marketJson)
   }
 }
 
@@ -107,7 +107,7 @@ onBeforeMount(initPrompt)
       justify-items: center;
       flex-direction: column;
       width: 100%;
-      max-width: 1024px;
+      // max-width: 1024px;
     }
   }
 }

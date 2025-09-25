@@ -1,6 +1,6 @@
 <template>
   <div class="agent-list-box">
-    <div v-if="tabsKey === 'assistant'">
+    <!-- <div v-if="tabsKey === 'assistant'">
       <div v-if="isSkeleton" class="tags">
         <button
           v-for="item in market.tags"
@@ -15,14 +15,14 @@
       <div v-else class="mt-20 px-15">
         <el-skeleton :rows="3" animated />
       </div>
-    </div>
+    </div> -->
 
     <div v-if="tabsKey === 'assistant'" class="agent-list">
       <AgentSkeleton v-if="!isSkeleton" />
       <AgentCard v-for="item in agent" v-else :key="item.identifier" :agents="item" @click="cardClick(item)" />
     </div>
 
-    <div v-if="tabsKey === 'model_provider'" class="agent-list" style="--rows: 2">
+    <div v-if="tabsKey === 'model_provider'" class="agent-list" style="--rows: 3">
       <ModelProviderCard v-for="item in ProvidersList" :key="item.userID" :agents="item" @click="providerClick(item)" />
     </div>
   </div>
@@ -123,7 +123,7 @@ function providerClick(item) {
 }
 .agent-list {
   height: fit-content;
-  --rows: 3;
+  --rows: 4;
   --max-item-width: 240px;
   --gap: 1em;
   display: grid !important;
