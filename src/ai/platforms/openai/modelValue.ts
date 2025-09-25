@@ -43,7 +43,7 @@ export const OpenAIModelValue = () => {
       defaultValue: "",
       step: 0.1,
       min: 0,
-      max: 1,
+      max: 2,
     },
     TopP: {
       ID: "top_p",

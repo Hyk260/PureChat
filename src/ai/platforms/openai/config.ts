@@ -5,14 +5,14 @@ export const OpenaiConfig = () => {
     model: "gpt-4o-mini",
     /**
      * 生成文本的随机度量，用于控制文本的创造性和多样性
-     * @default 0.6
+     * @default 1
      */
-    temperature: 0.6,
+    temperature: 1,
     /**
      * 控制生成文本中最高概率的单个 token
      * @default 1
      */
-    top_p: 1,
+    top_p: 0.9,
     /**
      * 生成文本的最大长度
      */

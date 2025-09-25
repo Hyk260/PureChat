@@ -202,8 +202,12 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     addAiPresetPromptWords() {
       const { sessionId, message } = this.createAiPromptMsg()
       const history = this.historyMessageList.get(sessionId)
-      if (this.currentConversation && this.currentMessageList) {
-        if (history) this.currentMessageList = [...history, message]
+      if (this.currentConversation) {
+        if (history) {
+          this.currentMessageList = [...history, message]
+        } else {
+          this.currentMessageList = [message]
+        }
       }
       emitter.emit("updateScroll")
     },
