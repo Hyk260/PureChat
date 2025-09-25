@@ -2,14 +2,14 @@
   <el-dialog
     v-model="dialog"
     title="配置"
-    width="60%"
+    width="70%"
     class="min-w-500 max-w-980"
     align-center
     destroy-on-close
     :append-to-body="true"
     :lock-scroll="false"
     :close-on-click-modal="true"
-    :before-close="handleCancel"
+    @close="handleCancel"
   >
     <div class="container">
       <div class="container-box">
@@ -21,7 +21,7 @@
               <span> {{ item.Title }}</span>
               <el-tooltip v-if="item.apiKey && ['token'].includes(item.ID)" content="获取密钥" placement="top">
                 <span class="flex cursor-pointer">
-                  <el-icon @click="toUrl(item.apiKey)">
+                  <el-icon @click="openExternalUrl(item.apiKey)">
                     <QuestionFilled />
                   </el-icon>
                 </span>
@@ -40,8 +40,8 @@
                 collapse-tags
                 collapse-tags-tooltip
                 :max-collapse-tags="10"
-                append-to="body"
-                @change="handleModelData"
+                append-to-body
+                @change="onModelDataChanged"
                 @remove-tag="handleRemoveTag"
               >
                 <el-option
@@ -51,8 +51,11 @@
                   :value="models.id"
                 >
                   <div class="bot-model-option">
-                    <div class="bot-avatar flex-c h-full" :class="reIcon(item, models) ? models.icon : robotIcon">
-                      <SvgIcon v-if="reIcon(item, models)" :local-icon="models.icon" />
+                    <div
+                      class="bot-avatar flex-c h-full"
+                      :class="shouldUseModelIcon(item, models) ? models.icon : robotIcon"
+                    >
+                      <SvgIcon v-if="shouldUseModelIcon(item, models)" :local-icon="models.icon" />
                       <SvgIcon v-else :local-icon="robotIcon" />
                     </div>
                     <div class="flex flex-col h-full gap-4">
@@ -77,11 +80,11 @@
               </el-select>
               <div class="flex-bc">
                 <div class="text-[#999]">
-                  <span>共 {{ modelCount(item?.options?.chatModels?.length) }} 个模型可用</span>
-                  <span>已选择 {{ modelCount(item?.collapse?.length) }} 个</span>
+                  <span>共 {{ toDisplayCount(item?.options?.chatModels?.length) }} 个模型可用</span>
+                  <span>已选择 {{ toDisplayCount(item?.collapse?.length) }} 个</span>
                 </div>
                 <div>
-                  <el-tooltip v-if="item?.options?.id === 'openai'" :content="modelTooltipText" placement="top">
+                  <el-tooltip v-if="item?.options?.id === 'openai'" :content="modelTooltipLabel" placement="top">
                     <el-icon class="refresh" @click="onRefresh">
                       <Refresh />
                     </el-icon>
@@ -96,20 +99,20 @@
             </span>
             <input
               v-model="item.defaultValue"
-              :min="item.min"
-              :max="item.max"
-              :step="item.step"
+              :min="item.min ?? 0"
+              :max="item.max ?? 100"
+              :step="item.step ?? 1"
               type="range"
-              @change="handleModelData"
+              @change="onModelDataChanged"
             />
           </div>
           <div v-else-if="['max_tokens'].includes(item.ID)" class="number">
             <input
               v-model="item.defaultValue"
-              :min="item.min"
-              :max="item.max"
+              :min="item.min ?? 0"
+              :max="item.max ?? 1000000"
               type="number"
-              @change="handleModelData"
+              @change="onModelDataChanged"
             />
           </div>
           <div v-else-if="['token', 'openaiUrl'].includes(item.ID)" class="input">
@@ -117,12 +120,12 @@
               <el-tooltip content="配置教程" placement="top">
                 <!-- ollama -->
                 <span v-if="item.doubt && isOllama" class="flex cursor-pointer">
-                  <el-icon @click="toUrl(item.doubt)">
+                  <el-icon @click="openExternalUrl(item.doubt)">
                     <QuestionFilled />
                   </el-icon>
                 </span>
                 <span v-else-if="item.doubt" class="flex cursor-pointer">
-                  <el-icon @click="toUrl(item.doubt)">
+                  <el-icon @click="openExternalUrl(item.doubt)">
                     <QuestionFilled />
                   </el-icon>
                 </span>
@@ -130,13 +133,13 @@
               </el-tooltip>
               <div class="w-full flex gap-4">
                 <el-input
-                  :ref="(e) => inputRef(e, item.ID)"
+                  :ref="(e) => inputRef(e as HTMLInputElement | null, item.ID)"
                   v-model="item.defaultValue"
-                  :placeholder="item.Placeholder"
+                  :placeholder="item.Placeholder ?? ''"
                   :type="item.ID === 'token' ? 'password' : 'text'"
                   :show-password="item.ID === 'token'"
                   clearable
-                  @change="handleModelData"
+                  @change="onModelDataChanged"
                 >
                 </el-input>
               </div>
@@ -153,8 +156,8 @@
                 v-model="item.defaultValue"
                 placeholder="选择测试模型"
                 class="!w-300"
-                append-to="body"
-                @change="handleModelData"
+                append-to-body
+                @change="onModelDataChanged"
               >
                 <el-option
                   v-for="models in modelData['Model']?.options?.chatModels"
@@ -163,8 +166,11 @@
                   :value="models.id"
                 >
                   <div class="bot-model-option">
-                    <div class="bot-avatar flex-c h-full" :class="reIcon(item, models) ? models.icon : robotIcon">
-                      <SvgIcon v-if="reIcon(item, models)" :local-icon="models.icon" />
+                    <div
+                      class="bot-avatar flex-c h-full"
+                      :class="shouldUseModelIcon(item, models) ? models.icon : robotIcon"
+                    >
+                      <SvgIcon v-if="shouldUseModelIcon(item, models)" :local-icon="models.icon" />
                       <SvgIcon v-else :local-icon="robotIcon" />
                     </div>
                     <div class="flex flex-col h-full gap-4">
@@ -199,7 +205,7 @@
       </div>
     </div>
     <template #footer>
-      <el-button v-if="isDev" @click="handleCache"> 清除缓存 </el-button>
+      <el-button v-if="isDev" @click="clearRobotCache"> 清除缓存 </el-button>
       <el-button @click="handleReset"> 重置 </el-button>
       <el-button @click="handleCancel">{{ $t("common.cancel") }}</el-button>
       <el-button type="primary" @click="handleConfirm">
@@ -212,8 +218,7 @@
 <script setup lang="ts">
 import { QuestionFilled, Refresh } from "@element-plus/icons-vue"
 
-import { cloneDeep } from "lodash-es"
-import { debounce } from "lodash-es"
+import { cloneDeep, debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
 
 import { ClientApi } from "@/ai/api"
@@ -239,7 +244,7 @@ defineOptions({
 
 const { DEV: isDev } = import.meta.env
 
-const robotIcon = ref("")
+const robotIcon = ref<string>("")
 const modelData = ref<ModelDataType>({})
 const promptRef = useTemplateRef("promptRef")
 const inputRefs = ref<{ token: HTMLInputElement | null; openaiUrl: HTMLInputElement | null }>({
@@ -255,35 +260,34 @@ const robotStore = useRobotStore()
 const { toAccount } = storeToRefs(chatStore)
 const { isOllama, modelProvider, modelStore } = storeToRefs(robotStore)
 
-const inputRef = (el: any, id: string) => {
-  if (el) inputRefs.value[id] = el
+const inputRef = (el: HTMLInputElement | null, id: string) => {
+  if (el) (inputRefs.value as any)[id] = el
 }
 
-const handleRemoveTag = (ID: string) => {
-  console.log("handleRemoveTag:", ID)
+const handleRemoveTag = (_id: string) => {
+  // tag removed; persist selection changes
+  onModelDataChanged()
 }
 
-function reIcon(t: ModelConfigItem, models: Model) {
-  return t.options?.id === "ollama" || models.icon
+function shouldUseModelIcon(item: ModelConfigItem, model: Model): boolean {
+  return item.options?.id === "ollama" || Boolean(model.icon)
 }
 
-function modelCount(count: number | undefined) {
+function toDisplayCount(count: number | undefined): number {
   return count ?? 0
 }
 
-const modelTooltipText = computed(() => {
-  return "获取模型列表"
-})
+const modelTooltipLabel = "获取模型列表"
 
-function setupModelData(newModels: Model[]) {
-  if (newModels.length > 0) {
-    window.$message?.success("模型列表更新成功")
-    if (modelData.value?.Model) {
-      modelData.value.Model.collapse = []
-    }
-    if (modelData.value?.Model?.options) {
-      modelData.value.Model.options.chatModels = newModels
-    }
+function updateModelList(newModels: Model[]) {
+  if (newModels.length === 0) return
+  window.$message?.success("模型列表更新成功")
+  if (modelData.value?.Model) {
+    modelData.value.Model.collapse = []
+  }
+  if (modelData.value?.Model) {
+    modelData.value.Model.options = modelData.value.Model.options || { id: "", chatModels: [] }
+    modelData.value.Model.options.chatModels = newModels
   }
 }
 
@@ -291,67 +295,75 @@ async function onRefresh() {
   const provider = modelProvider.value
   const api = new ClientApi(provider)
   const list = await api.llm.getModels()
-  console.log("onRefresh:", list)
-  setupModelData(list)
+  updateModelList(list)
 }
 
-function initModel() {
+function initializeModelOptions() {
   const provider = modelProvider.value
   const modelDataValue = cloneDeep(modelValue[provider])
-  const _modelConfig = modelStore.value[provider]
+  const currentModelConfig = modelStore.value[provider]
   robotIcon.value = getModelSvg(toAccount.value)
-  Object.values(modelDataValue).map((v: ModelConfigItem) => {
-    if (v.ID === "model" && _modelConfig?.Model?.collapse) {
-      v.collapse = _modelConfig?.Model?.collapse
-      v.options.chatModels = _modelConfig?.Model?.options?.chatModels
+  Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {
+    if (configItem.ID === "model" && currentModelConfig?.Model?.collapse) {
+      configItem.collapse = currentModelConfig?.Model?.collapse || []
+      configItem.options = configItem.options || { id: "", chatModels: [] }
+      configItem.options.chatModels = currentModelConfig?.Model?.options?.chatModels || []
     }
-    if (v.ID === "checkPoint") {
-      v.defaultValue = _modelConfig?.CheckPoint?.defaultValue
+    if (configItem.ID === "checkPoint") {
+      configItem.defaultValue = currentModelConfig?.CheckPoint?.defaultValue || ""
     } else {
-      v.defaultValue = useAccessStore(provider)[v.ID]
+      configItem.defaultValue = useAccessStore(provider)[configItem.ID] ?? ""
     }
-    return v
   })
+  // if (modelDataValue?.Model) {
+  //   modelDataValue.Model.collapse = modelDataValue.Model.collapse || []
+  //   modelDataValue.Model.options = modelDataValue.Model.options || { id: "", chatModels: [] }
+  //   modelDataValue.Model.options.chatModels = modelDataValue.Model.options.chatModels || []
+  // }
   modelData.value = modelDataValue
 }
 
-function storeRobotModel(model: ModelDataType) {
+function persistRobotModel(model: ModelDataType) {
   const provider = modelProvider.value
   robotStore.setAccessStore(model, provider)
   robotStore.setModelStore(modelData.value, provider)
   robotStore.updateModelConfig()
 }
 
-function handleCache() {
+function clearRobotCache() {
   const provider = modelProvider.value
   robotStore.setModelStore({}, provider)
   robotStore.setAccessStore({}, provider)
   robotStore.updateModelConfig()
-  initModel()
+  initializeModelOptions()
 }
 
-function resetRobotModel() {
-  const model = {}
+function resetRobotModelConfig() {
+  const model: Record<string, any> = {}
   const provider = modelProvider.value
   const modelDataValue = cloneDeep(modelValue[provider])
 
-  Object.values(modelDataValue).map((v: ModelConfigItem) => {
-    if (v.ID === "openaiUrl" || v.ID === "token" || v.ID === "model") {
-      v.defaultValue = useAccessStore(provider)[v.ID]
+  Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {
+    if (configItem.ID === "openaiUrl" || configItem.ID === "token" || configItem.ID === "model") {
+      configItem.defaultValue = useAccessStore(provider)[configItem.ID]
     } else {
-      v.defaultValue = modelConfig[provider][v.ID]
-    }
-    return v
-  })
-
-  Object.values(modelDataValue).map((t: ModelConfigItem) => {
-    if (isRange(t.ID)) {
-      model[t.ID] = Number(t.defaultValue)
-    } else {
-      model[t.ID] = t.defaultValue
+      configItem.defaultValue = modelConfig[provider][configItem.ID]
     }
   })
 
+  Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {
+    if (isRange(configItem.ID)) {
+      model[configItem.ID] = Number(configItem.defaultValue)
+    } else {
+      model[configItem.ID] = configItem.defaultValue
+    }
+  })
+
+  // if (modelDataValue?.Model) {
+  //   modelDataValue.Model.collapse = modelDataValue.Model.collapse || []
+  //   modelDataValue.Model.options = modelDataValue.Model.options || { id: "", chatModels: [] }
+  //   modelDataValue.Model.options.chatModels = modelDataValue.Model.options.chatModels || []
+  // }
   modelData.value = modelDataValue
   robotStore.setModelStore(modelDataValue, provider)
   robotStore.setAccessStore(model, provider)
@@ -382,28 +394,33 @@ function handleCancel() {
   setDialog(false)
 }
 
-function handleReset() {
-  resetRobotModel()
-  initModel()
+function handleBeforeClose(done: () => void) {
+  handleCancel()
+  done()
 }
 
-function handleModelData() {
-  const model = {}
-  Object.values(modelData.value).forEach((t) => {
-    if (isRange(t.ID)) {
-      model[t.ID] = Number(t.defaultValue)
+function handleReset() {
+  resetRobotModelConfig()
+  initializeModelOptions()
+}
+
+function onModelDataChanged() {
+  const model: Record<string, any> = {}
+  Object.values(modelData.value).forEach((item) => {
+    if (isRange(item.ID)) {
+      model[item.ID] = Number(item.defaultValue)
     } else {
-      model[t.ID] = t.defaultValue
+      model[item.ID] = item.defaultValue
     }
   })
-  storeRobotModel(model)
+  persistRobotModel(model as unknown as ModelDataType)
 }
 
 function handleConfirm() {
   setDialog(false)
 }
 
-function toUrl(url: string) {
+function openExternalUrl(url: string) {
   openWindow(url)
 }
 
@@ -412,7 +429,7 @@ const handleRobotBoxEvent = async (data: RobotBoxEventData = {}) => {
 
   setDialog(true)
   await nextTick()
-  initModel()
+  initializeModelOptions()
 
   if (apiKeyFocus) {
     const tokenRef = inputRefs.value?.["token"] ?? null

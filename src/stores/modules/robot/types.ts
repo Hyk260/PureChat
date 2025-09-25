@@ -1,6 +1,5 @@
 import type { LLMParams, ModelProviderKey } from "@/ai/types"
 
-// 模型类型 - 基于实际的模型数据结构
 export interface Model {
   id: string
   displayName: string
@@ -74,7 +73,6 @@ export interface PromptStore {
   [provider: string]: Prompt[]
 }
 
-// 机器人存储状态类型
 export interface RobotState {
   model: Model | null
   promptConfig: Prompt | null
@@ -87,7 +85,6 @@ export interface RobotState {
   accessStore: AccessStore
 }
 
-// 机器人存储 Getters 类型
 export interface RobotGetters {
   isVision: boolean
   isWebSearchModel: boolean
@@ -99,7 +96,6 @@ export interface RobotGetters {
   botMessageCount: number
 }
 
-// 机器人存储 Actions 类型
 export interface RobotActions {
   setAccessStore(data: any, provider: string): void
   setModelStore(data: any, provider: string): void
@@ -112,10 +108,8 @@ export interface RobotActions {
   setPromptConfig(value: Prompt | null): void
 }
 
-// 机器人存储完整类型
 export interface RobotStore extends RobotState, RobotGetters, RobotActions {}
 
-// 工具标志数据类型
 export interface BotToolsFlag {
   functionCall?: boolean
   [key: string]: any

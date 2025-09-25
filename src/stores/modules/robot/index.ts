@@ -96,7 +96,9 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
         console.log("provider data not found")
         return
       }
-      const data = cloneDeep(providerData.Model.options.chatModels)
+      const data = cloneDeep(
+        this.modelStore?.[provider]?.Model?.options?.chatModels || providerData.Model.options.chatModels
+      )
       const checkModel = data.find((item) => item.id === model)
       this.setModelConfig(provider)
       this.setPromptConfig(this.promptStore[provider]?.[0] || null)

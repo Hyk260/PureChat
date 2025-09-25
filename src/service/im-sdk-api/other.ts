@@ -129,7 +129,7 @@ export const deleteConversation = async (params) => {
   }
 }
 // 清空消息
-export const clearHistoryMessage = async (sessionId) => {
+export const clearHistoryMessage = async (sessionId: string) => {
   const {
     code,
     data: { conversationID: ID },

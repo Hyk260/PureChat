@@ -1,10 +1,15 @@
 <template>
   <div v-if="flag" v-click-outside="onClickOutside" class="robot-plugin-box">
     <div class="flex-bc flex-col">
-      <div v-for="item in pluginData" :key="item.identifier" class="list flex-bc w-full" @click="setChecked(item)">
-        <img class="img" :src="item.imageUrl" alt="" />
+      <div
+        v-for="(item, idx) in pluginData"
+        :key="item.identifier || item.id || idx"
+        class="list flex-bc w-full"
+        @click="setChecked(item)"
+      >
+        <img class="img" :src="item.imageUrl || ''" alt="" />
         <div class="flex-bc right">
-          <div>{{ item.meta.title }}</div>
+          <div>{{ item.meta?.title || '' }}</div>
           <el-checkbox v-model="item.checked" class="h-20" @click.stop />
         </div>
       </div>
@@ -23,7 +28,15 @@ defineOptions({
   name: "RobotPlugin",
 })
 
-const pluginData = ref([
+interface PluginItem {
+  id?: string
+  identifier?: string
+  imageUrl?: string
+  meta?: { title?: string }
+  checked: boolean
+}
+
+const pluginData = ref<PluginItem[]>([
   {
     checked: false,
     // ...getPlugin({ key: "search-engine-serper" }),
@@ -50,13 +63,13 @@ function onClickOutside() {
   toolsStore.setTools(pluginfilter())
 }
 
-function setChecked(item) {
+function setChecked(item: PluginItem) {
   item.checked = !item.checked
   toolsStore.setTools(pluginfilter())
 }
 
 function feedBack() {
-  const plugin = toolsStore.tools
+  const plugin = toolsStore.tools as any[]
   if (plugin) {
     const pluginIds = new Set(plugin.map((item) => item.id))
     pluginData.value.forEach((item) => {

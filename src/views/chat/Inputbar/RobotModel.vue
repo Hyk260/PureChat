@@ -10,7 +10,7 @@
           v-for="item in model?.chatModels"
           :key="item.id"
           class="model flex"
-          :class="item.id == useRobotStore()?.model?.id ? 'active' : ''"
+          :class="item.id === robotStore.model?.id ? 'active' : ''"
           @click="storeRobotModel(item)"
         >
           <div v-if="['ollama', 'github'].includes(model.id)" class="icon align-icon" :class="[item.icon]">
@@ -37,7 +37,7 @@
                 <svg-icon class="reasoning" local-icon="reasoning" />
               </el-tooltip>
               <span v-if="item.tokens" class="tokens flex-c">
-                {{ formatSizeStrict(item?.tokens) }}
+                {{ formatSizeStrict(String(item?.tokens)) }}
               </span>
             </span>
           </div>
@@ -64,8 +64,8 @@ defineOptions({
   name: "RobotModel",
 })
 
-const robotIcon = ref("")
-const model = ref<ModelConfigItem["options"]>()
+const robotIcon = ref<string>("")
+const model = ref<ModelConfigItem["options"] | null>(null)
 const [flag, setFlag] = useState(false)
 
 const chatStore = useChatStore()
@@ -90,11 +90,16 @@ function initModel() {
   const provider = modelProvider.value
   const selectModel = modelStore.value[provider] || {}
   robotIcon.value = getModelSvg(toAccount.value)
-  model.value = cloneDeep(modelValue[provider].Model.options)
+  const providerValue = modelValue[provider]
+  if (!providerValue?.Model?.options) {
+    setFlag(true)
+    return
+  }
+  model.value = cloneDeep(providerValue.Model.options)
   if (!isEmpty(selectModel) && model.value) {
-    const chatModels = selectModel.Model.options.chatModels || cloneDeep(modelValue[provider].Model.options.chatModels)
+    const chatModels = selectModel?.Model?.options?.chatModels || cloneDeep(providerValue.Model.options.chatModels || [])
     const collapse = selectModel?.Model?.collapse || []
-    const filteredData = chatModels.filter((item) => collapse.includes(item.id))
+    const filteredData = chatModels.filter((item: Model) => collapse.includes(item.id))
     model.value.chatModels = filteredData
   }
   setFlag(true)
