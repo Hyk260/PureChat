@@ -2,26 +2,10 @@
   <div v-show="shouldShowMenu" class="menubar">
     <div class="flex">
       <div v-for="t in availableMenuItems" :key="t.id" class="menubar-item flex-c">
-        <el-tooltip :content="t.title" :disabled="t.id === 'more'" placement="top">
-          <!-- <el-dropdown v-if="t.id === 'more'">
-            <span>
-              <el-icon><Ellipsis :size="13" /></el-icon>
-            </span>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item>Action 1</el-dropdown-item>
-                <el-dropdown-item>Action 2</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown> -->
-          <component
-            :is="t.icon"
-            v-if="t.id !== 'delete'"
-            :class="t?.class"
-            :size="13"
-            @click="handleMenuItemClick(t)"
-          />
-          <div v-else>
+        <!-- :disabled="t.id === 'more'" -->
+        <el-tooltip :content="t.title" placement="top">
+          <component :is="t.icon" :class="t?.class" :size="13" @click="handleMenuItemClick(t)" />
+          <!-- <div v-else>
             <el-popover ref="popoverTrashRef" placement="top" trigger="click" width="190">
               <div class="flex-sc gap-5 mb-10">
                 <el-icon class="text-[#F56C6C]"><Warning /></el-icon>
@@ -39,7 +23,7 @@
                 <Trash :class="t?.class" :size="13" />
               </template>
             </el-popover>
-          </div>
+          </div> -->
         </el-tooltip>
       </div>
     </div>
@@ -47,9 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, markRaw, ref } from "vue"
-import { PropType } from "vue"
-import { Warning } from "@element-plus/icons-vue"
+// import { Warning } from "@element-plus/icons-vue"
 import {
   Copy,
   Ellipsis,
@@ -63,8 +45,7 @@ import { ElPopover } from "element-plus"
 
 import { DB_Message, MessageStatus, MessageStatusSchema } from "@/database/schemas/message"
 import { useChatStore } from "@/stores/modules/chat"
-
-import { handleCopyMsg } from "../utils/utils"
+import { handleCopyMsg } from "@/utils/chat"
 
 defineOptions({
   name: "MenuList",
@@ -75,12 +56,12 @@ const emit = defineEmits(["handleSingleClick"])
 const props = defineProps({
   item: {
     type: Object as PropType<DB_Message>,
-    default: null,
+    required: true,
   },
   status: {
     type: String as PropType<MessageStatus>,
     default: "unSend",
-    validator: (value: string) => MessageStatusSchema.options.includes(value as MessageStatus),
+    validator: (value: MessageStatus) => MessageStatusSchema.options.includes(value),
   },
 })
 
@@ -183,7 +164,7 @@ function handleMenuItemClick(data: { id: string }) {
   const { item } = props
   switch (id) {
     case "refresh":
-      emit("handleSingleClick", { item: props.item, id: "refresh" })
+      emit("handleSingleClick", { item, id: "refresh" })
       break
     case "copy":
       handleCopyMsg(item)

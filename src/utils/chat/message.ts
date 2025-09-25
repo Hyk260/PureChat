@@ -1,12 +1,13 @@
-import { DB_Message, MessageType } from "@/database/schemas/message"
-import { localStg } from "@/utils/storage"
+import { getBlob } from "./message-input-utils"
+
+import type { DB_Message, MessageType } from "@/database/schemas/message"
 
 export const isTime = (item: DB_Message) => {
   return item?.isTimeDivider && item.time !== undefined
 }
 
 export const isSelf = (item: DB_Message) => {
-  return item.from === localStg.get("timProxy")?.userProfile?.userID
+  return item.from === window.localStg.get("timProxy")?.userProfile?.userID
 }
 
 export const getMessageItemClass = (item: DB_Message) => {
@@ -98,4 +99,31 @@ export const formatContent = (data) => {
       )
     })
     .join("")
+}
+
+export const validateLastMessage = (list: DB_Message[]): DB_Message | null => {
+  if (!list.length) return null
+  return list.slice().find((t) => t.ID) || null
+}
+
+/**
+ * 复制消息内容到剪贴板
+ */
+export const handleCopyMsg = async (data: DB_Message) => {
+  try {
+    const { payload, type } = data
+    if (type === "TIMTextElem") {
+      window.copyToClipboard(payload.text)
+      return
+    }
+    if (type === "TIMImageElem") {
+      const url = payload.imageInfoArray[0].imageUrl
+      const imageBlob = await getBlob(url)
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": imageBlob })])
+      window.$message?.success("图片复制成功")
+    }
+  } catch (error) {
+    console.error("复制失败:", error)
+    window.$message?.error("复制失败")
+  }
 }

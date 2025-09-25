@@ -16,6 +16,7 @@ import { useChatStore } from "@/stores/modules/chat"
 const props = defineProps({
   index: {
     type: Number,
+    required: true,
   },
 })
 

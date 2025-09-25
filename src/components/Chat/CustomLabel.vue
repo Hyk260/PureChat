@@ -34,21 +34,6 @@ const props = withDefaults(defineProps<Props>(), {
   userID: "",
 })
 
-// const props = defineProps({
-//   userID: {
-//     type: String,
-//     default: "",
-//   },
-//   item: {
-//     type: Object,
-//     default: () => {},
-//   },
-//   model: {
-//     type: Object,
-//     default: () => {},
-//   },
-// })
-
 const isFull = computed(() => isFullStaffGroup(props.item))
 
 const isAuthor = computed(() => {

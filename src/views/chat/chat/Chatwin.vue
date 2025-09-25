@@ -17,7 +17,7 @@
             :class="getSelectedMessageClass(item)"
             @click="handleSelect(item, 'outside')"
           >
-            <TimeDivider v-if="!isGroupChat" :item="item" />
+            <TimeDivider v-if="!isGroupChat" :show-check="isMultiSelectMode" :item="item" />
             <div class="message-view-item-content" :class="classMessageViewItem(item)">
               <!-- 多选框 -->
               <Checkbox :item="item" :is-revoked="item.isRevoked" />
@@ -101,29 +101,37 @@ import { storeToRefs } from "pinia"
 import { Contextmenu, ContextmenuItem } from "v-contextmenu"
 
 import { getAiAvatarUrl } from "@/ai/utils"
+import AssistantMessage from "@/components/Chat/AssistantMessage.vue"
+import Checkbox from "@/components/Chat/Checkbox.vue"
+import MenuList from "@/components/Chat/MenuList.vue"
+import MessageEditingBox from "@/components/Chat/MessageEditingBox.vue"
 import Stateful from "@/components/Chat/Stateful.vue"
+import TimeDivider from "@/components/Chat/TimeDivider.vue"
 import MessageRenderer from "@/components/MessageRenderer/index.vue"
 import MyPopover from "@/components/MyPopover/index.vue"
 import UserPopup from "@/components/Popups/UserPopup.vue"
 import { MULTIPLE_CHOICE_MAX } from "@/constants"
 import { getMessageList, revokeMsg, translateText } from "@/service/im-sdk-api"
 import { useAppStore, useChatStore, useGroupStore, useUserStore } from "@/stores"
-import { download, getMessageItemClass, getMessageTypeClass, isSelf, isTime } from "@/utils/chat"
+import {
+  download,
+  getMessageItemClass,
+  getMessageTypeClass,
+  handleCopyMsg,
+  isSelf,
+  isTime,
+  validateLastMessage,
+} from "@/utils/chat"
 import { getTime } from "@/utils/common"
 import { showConfirmationBox } from "@/utils/message"
 import emitter from "@/utils/mitt-bus"
 import { timeFormat } from "@/utils/timeFormat"
 
-import AssistantMessage from "../components/AssistantMessage.vue"
-import Checkbox from "../components/Checkbox.vue"
 import LoadMore from "../components/LoadMore.vue"
-import MenuList from "../components/MenuList.vue"
-import MessageEditingBox from "../components/MessageEditingBox.vue"
 import NameComponent from "../components/NameComponent.vue"
-import TimeDivider from "../components/TimeDivider.vue"
 import { avatarMenu, menuOptionsList } from "../utils/menu"
-import { handleCopyMsg, validateLastMessage } from "../utils/utils"
 
+// import { validateLastMessage } from "../utils/utils"
 import type { DB_Message } from "@/database/schemas/message"
 
 const UserPopupRef = ref()

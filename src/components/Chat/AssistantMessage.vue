@@ -4,13 +4,8 @@
       {{ messageAbstract }}
     </div>
     <div class="message-view-question">
-      <div
-        v-for="(question, index) in recommendedQuestions"
-        :key="index"
-        class="cursor-pointer"
-        @click="handleQuestion(question)"
-      >
-        <span>{{ question }}</span>
+      <div v-for="(text, i) in recommendedQuestions" :key="i" @click="handleQuestion(text)">
+        <span>{{ text }}</span>
       </div>
     </div>
   </div>
@@ -21,6 +16,10 @@ import { useMessageCreator } from "@/hooks/useMessageCreator"
 import { useChatStore } from "@/stores"
 
 import type { DB_Message } from "@/types"
+
+defineOptions({
+  name: "AssistantMessage",
+})
 
 const props = defineProps({
   item: {
@@ -55,9 +54,8 @@ const handleQuestion = async (text: string) => {
       type: currentType.value,
       text: text,
     })
-
+    chatStore.updateSendingState(toAccount.value, "add")
     message.forEach((msg) => {
-      chatStore.updateSendingState(toAccount.value, "add")
       chatStore.sendSessionMessage({ message: msg })
     })
   } catch (error) {
@@ -81,6 +79,7 @@ const handleQuestion = async (text: string) => {
   margin-top: 5px;
 
   & > div {
+    cursor: pointer;
     width: fit-content;
     padding: 6px 10px;
     margin-bottom: 8px;

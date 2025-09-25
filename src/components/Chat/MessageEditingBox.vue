@@ -21,13 +21,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, PropType, ref } from "vue"
-
 import { ElInput } from "element-plus"
 
 import { DB_Message } from "@/database/schemas/message"
 import { modifyMessage } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores"
+
+defineOptions({
+  name: "MessageEditingBox",
+})
 
 const props = defineProps({
   item: {

@@ -9,55 +9,10 @@ import {
   createVideoMessage,
 } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores"
-import { base64ToFile, getBlob } from "@/utils/chat"
+import { base64ToFile } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 
-import type { DB_Message } from "@/database/schemas/message"
 import type { GroupMember } from "@/stores/modules/group/type"
-
-interface SendChatMessageOptions {
-  to: string
-  type: string
-  text?: string
-  aitStr?: string
-  atUserList?: string[]
-  files?: Array<{ link: string; fileName: string; path?: string }>
-  video?: Array<{ link: string; fileName: string }>
-  images?: Array<{ src: string; fileName: string }>
-  custom?: Record<string, any>
-}
-interface SearchOptions {
-  searchStr: string
-  list: GroupMember[]
-}
-type MentionModalType = "empty" | "success" | "update" | "all"
-
-export const validateLastMessage = (list: DB_Message[]): DB_Message | null => {
-  if (!list.length) return null
-  return list.slice().find((t) => t.ID) || null
-}
-
-/**
- * 复制消息内容到剪贴板
- */
-export const handleCopyMsg = async (data: DB_Message) => {
-  try {
-    const { payload, type } = data
-    if (type === "TIMTextElem") {
-      window.copyToClipboard(payload.text)
-      return
-    }
-    if (type === "TIMImageElem") {
-      const url = payload.imageInfoArray[0].imageUrl
-      const imageBlob = await getBlob(url)
-      await navigator.clipboard.write([new ClipboardItem({ "image/png": imageBlob })])
-      window.$message?.success("图片复制成功")
-    }
-  } catch (error) {
-    console.error("复制失败:", error)
-    window.$message?.error("复制失败")
-  }
-}
 
 /**
  * 发送聊天消息

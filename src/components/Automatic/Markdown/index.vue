@@ -9,12 +9,11 @@ defineOptions({ name: "Markdown" })
 
 interface Props {
   content: string
-  marked: string
-  cloudCustomData?: any
+  cloudCustomData?: Record<string, any> | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  cloudCustomData: () => {},
+  cloudCustomData: null,
 })
 
 const renderedContent = ref("")
@@ -48,13 +47,10 @@ watch([() => props.content], renderContent, { immediate: true })
 .markdown-body {
   user-select: text;
   -webkit-user-select: text;
-
-  /* 优化渲染性能 */
   contain: layout style paint;
   will-change: contents;
 
   &.streaming {
-    /* 流式渲染时的视觉提示 */
     position: relative;
 
     &::after {
@@ -71,11 +67,8 @@ watch([() => props.content], renderContent, { immediate: true })
 }
 
 .markdown-chunk {
-  /* 确保每个chunk都可以独立选择 */
   user-select: text;
   -webkit-user-select: text;
-
-  /* 避免chunk之间的间隙影响选择 */
   display: contents;
 }
 
