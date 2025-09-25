@@ -11,7 +11,6 @@
 import { MessageStatusSchema } from "@/database/schemas/message"
 
 import type { DB_Message, MessageStatus } from "@/database/schemas/message"
-import type { PropType } from "vue"
 
 defineOptions({
   name: "Stateful",
