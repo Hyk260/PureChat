@@ -227,7 +227,7 @@ export function formatSizeStrict(input: string) {
     return number / 1000 + "K"
   }
 
-  return Math.floor(number / 1000) + "k" // 舍弃小数，向下取整
+  return Math.floor(number / 1000) + "k"
 }
 
 export const transformOpenAIStream = (chunk, stack) => {

@@ -1,14 +1,14 @@
 <template>
   <div v-show="flag" v-click-outside="onClickOutside" class="robot-model-box">
     <el-scrollbar>
-      <div class="robot-model">
+      <div v-if="model" class="robot-model">
         <div class="item-group-title">
-          <svg-icon :local-icon="model.icon || robotIcon" />
-          <span>{{ model.name }}</span>
+          <svg-icon :local-icon="model?.icon || robotIcon" />
+          <span>{{ model?.name || "" }}</span>
         </div>
         <div
-          v-for="item in model.chatModels"
-          :key="item"
+          v-for="item in model?.chatModels"
+          :key="item.id"
           class="model flex"
           :class="item.id == useRobotStore()?.model?.id ? 'active' : ''"
           @click="storeRobotModel(item)"
@@ -37,7 +37,7 @@
                 <svg-icon class="reasoning" local-icon="reasoning" />
               </el-tooltip>
               <span v-if="item.tokens" class="tokens flex-c">
-                {{ formatSizeStrict(item.tokens) }}
+                {{ formatSizeStrict(item?.tokens) }}
               </span>
             </span>
           </div>
@@ -57,6 +57,7 @@ import { ModelSelect } from "@/ai/resources"
 import { formatSizeStrict, getModelSvg, useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"
+import { Model, ModelConfigItem } from "@/stores/modules/robot/types"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({
@@ -64,8 +65,9 @@ defineOptions({
 })
 
 const robotIcon = ref("")
-const model = ref({})
+const model = ref<ModelConfigItem["options"]>()
 const [flag, setFlag] = useState(false)
+
 const chatStore = useChatStore()
 const robotStore = useRobotStore()
 const { toAccount } = storeToRefs(chatStore)
@@ -75,7 +77,7 @@ function onClickOutside() {
   setFlag(false)
 }
 
-function storeRobotModel(data) {
+function storeRobotModel(data: Model) {
   const provider = modelProvider.value
   const config = useAccessStore(provider)
   robotStore.setModel(data)
@@ -90,7 +92,7 @@ function initModel() {
   robotIcon.value = getModelSvg(toAccount.value)
   model.value = cloneDeep(modelValue[provider].Model.options)
   if (!isEmpty(selectModel) && model.value) {
-    const chatModels = cloneDeep(model.value.chatModels)
+    const chatModels = selectModel.Model.options.chatModels || cloneDeep(modelValue[provider].Model.options.chatModels)
     const collapse = selectModel?.Model?.collapse || []
     const filteredData = chatModels.filter((item) => collapse.includes(item.id))
     model.value.chatModels = filteredData

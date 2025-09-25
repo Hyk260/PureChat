@@ -1,7 +1,15 @@
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source"
 
 import { REQUEST_TIMEOUT_MS } from "@/ai/constant"
-import { ChatOptions, FewShots, LLMConfig, LLMParams, ModelProvider, ModelProviderKey } from "@/ai/types"
+import {
+  ChatOptions,
+  FewShots,
+  LLMConfig,
+  LLMParams,
+  ModelProvider,
+  ModelProviderKey,
+  OpenAIListModelResponse,
+} from "@/ai/types"
 import {
   adjustForDeepseek,
   createErrorResponse,
@@ -504,14 +512,22 @@ export class OpenAiApi {
       headers: this.getHeaders(),
     })
 
-    const responseJson = await response.json()
-    const chatModels = responseJson.data.filter(
-      (model) => model.id.startsWith("gpt-") || model.id.startsWith("dall-") || model.id.startsWith("openai")
-    )
+    const responseJson = (await response.json()) as OpenAIListModelResponse
+    const chatModels = responseJson.data.filter((model) => model.id.startsWith("gpt-") || model.id.startsWith("openai"))
 
-    return chatModels.map((model) => ({
+    const seen = new Set<string>()
+    const uniqueModels = [] as typeof chatModels
+    for (const m of chatModels) {
+      if (!seen.has(m.id)) {
+        seen.add(m.id)
+        uniqueModels.push(m)
+      }
+    }
+
+    return uniqueModels.map((model) => ({
       id: model.id,
       icon: "",
+      displayName: model.id,
     }))
   }
 

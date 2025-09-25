@@ -76,14 +76,17 @@
                 </el-option>
               </el-select>
               <div class="flex-bc">
-                <div class="text-[#999]">共 {{ modelCount(item?.collapse?.length) }} 个模型可用</div>
-                <!-- <div>
-                  <el-tooltip v-if="!isOllama" :content="modelTooltipText" placement="top">
-                    <el-icon class="refresh" @click="onRefresh()">
+                <div class="text-[#999]">
+                  <span>共 {{ modelCount(item?.options?.chatModels?.length) }} 个模型可用</span>
+                  <span>已选择 {{ modelCount(item?.collapse?.length) }} 个</span>
+                </div>
+                <div>
+                  <el-tooltip v-if="item?.options?.id === 'openai'" :content="modelTooltipText" placement="top">
+                    <el-icon class="refresh" @click="onRefresh">
                       <Refresh />
                     </el-icon>
                   </el-tooltip>
-                </div> -->
+                </div>
               </div>
             </div>
           </div>
@@ -207,7 +210,7 @@
 </template>
 
 <script setup lang="ts">
-import { QuestionFilled } from "@element-plus/icons-vue"
+import { QuestionFilled, Refresh } from "@element-plus/icons-vue"
 
 import { cloneDeep } from "lodash-es"
 import { debounce } from "lodash-es"
@@ -272,11 +275,24 @@ const modelTooltipText = computed(() => {
   return "获取模型列表"
 })
 
+function setupModelData(newModels: Model[]) {
+  if (newModels.length > 0) {
+    window.$message?.success("模型列表更新成功")
+    if (modelData.value?.Model) {
+      modelData.value.Model.collapse = []
+    }
+    if (modelData.value?.Model?.options) {
+      modelData.value.Model.options.chatModels = newModels
+    }
+  }
+}
+
 async function onRefresh() {
-  // const provider = modelProvider.value
-  // const api = new ClientApi(provider)
-  // const list = await api.llm.getModels()
-  // modelData.value.Model.options.chatModels = list
+  const provider = modelProvider.value
+  const api = new ClientApi(provider)
+  const list = await api.llm.getModels()
+  console.log("onRefresh:", list)
+  setupModelData(list)
 }
 
 function initModel() {
@@ -287,9 +303,10 @@ function initModel() {
   Object.values(modelDataValue).map((v: ModelConfigItem) => {
     if (v.ID === "model" && _modelConfig?.Model?.collapse) {
       v.collapse = _modelConfig?.Model?.collapse
+      v.options.chatModels = _modelConfig?.Model?.options?.chatModels
     }
     if (v.ID === "checkPoint") {
-      // v.defaultValue = useAccessStore(provider)[v.ID]
+      v.defaultValue = _modelConfig?.CheckPoint?.defaultValue
     } else {
       v.defaultValue = useAccessStore(provider)[v.ID]
     }

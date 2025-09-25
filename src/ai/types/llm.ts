@@ -44,3 +44,12 @@ export interface LLMMessage {
 }
 
 export type FewShots = LLMMessage[]
+
+export interface OpenAIListModelResponse {
+  object: string
+  data: Array<{
+    id: string
+    object: string
+    root: string
+  }>
+}

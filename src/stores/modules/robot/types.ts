@@ -5,7 +5,7 @@ export interface Model {
   id: string
   displayName: string
   description?: string
-  tokens: number
+  tokens?: number
   vision?: boolean
   webSearch?: boolean
   functionCall?: boolean
@@ -21,7 +21,9 @@ export interface ModelConfigItem {
   SubTitle: string
   defaultValue?: string
   options?: {
-    id?: string
+    id: string
+    name?: string
+    icon?: string
     chatModels?: Model[]
   }
   collapse?: string[]
