@@ -8,7 +8,8 @@ import { setupPlugins } from "./plugins"
 import { setupRouter } from "./router"
 import { setupStore } from "./stores"
 
-import "@purechat/ui"
+// import "@purechat/ui"
+// "@purechat/ui": "workspace:^",
 
 async function setupApp() {
   const app = createApp(App)

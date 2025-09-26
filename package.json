@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "prebuild": "pnpm --filter @purechat/ui build && node scripts/copy-ui-dist.mjs",
+    "prebuild:ui": "pnpm --filter @purechat/ui build && node scripts/copy-ui-dist.mjs",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "build:debug": "vite build --debug",
@@ -32,7 +32,6 @@
     "@emoji-mart/data": "^1.2.1",
     "@iconify/vue": "^4.3.0",
     "@microsoft/fetch-event-source": "^2.0.1",
-    "@purechat/ui": "workspace:^",
     "@tencentcloud/chat": "3.5.8",
     "@types/markdown-it": "^14.1.2",
     "@unocss/preset-icons": "^65.4.3",
