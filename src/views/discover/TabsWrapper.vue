@@ -1,29 +1,38 @@
 <template>
   <div class="tabs-wrapper">
-    <div v-for="item in options" :key="item.value" class="tabs-item" @click="onCilck(item)">
-      <el-button :class="{ active: active === item.value }">
-        {{ item.label }}
+    <div v-for="option in tabOptions" :key="option.value" class="tab-item" @click="handleTabClick(option)">
+      <el-button :class="{ 'tab-item--active': activeTab === option.value }">
+        {{ option.label }}
       </el-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
-
 import { options } from "./utils"
+
+interface TabOption {
+  label: string
+  value: string
+  icon?: string
+}
 
 defineOptions({
   name: "TabsWrapper",
 })
 
-const emit = defineEmits(["handleTabs"])
+defineProps<{
+  activeTab: string
+}>()
 
-const active = ref(options[0].value)
+const emit = defineEmits<{
+  tabChange: [value: string]
+}>()
 
-function onCilck(item) {
-  active.value = item.value
-  emit("handleTabs", item.value)
+const tabOptions = computed<TabOption[]>(() => options)
+
+const handleTabClick = (option: TabOption) => {
+  emit("tabChange", option.value)
 }
 </script>
 
@@ -35,7 +44,7 @@ function onCilck(item) {
   position: sticky;
   top: 0;
   background: var(--color-body-bg);
-  .tabs-item {
+  .tab-item {
     display: flex;
     align-items: center;
     font-size: 14px;
@@ -44,11 +53,11 @@ function onCilck(item) {
     .el-button {
       border: none;
     }
-  }
-  .active {
-    background-color: rgb(235.9, 245.3, 255) !important;
-    border-color: rgb(197.7, 225.9, 255) !important;
-    color: #409eff !important;
+    &--active {
+      background-color: rgb(235.9, 245.3, 255) !important;
+      border-color: rgb(197.7, 225.9, 255) !important;
+      color: #409eff !important;
+    }
   }
 }
 </style>

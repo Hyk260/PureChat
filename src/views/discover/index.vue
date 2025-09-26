@@ -1,18 +1,19 @@
 <template>
-  <div class="discover-prompt">
-    <DiscoverHeader @handle-click="handleClick" />
-    <el-scrollbar class="wh-full">
-      <div class="layout-body">
-        <div class="layout-box">
-          <TabsWrapper @handle-tabs="handleTabs" />
+  <div class="discover-container">
+    <DiscoverHeader @search="handleSearch" />
+    <el-scrollbar class="discover-scrollbar">
+      <div class="discover-content">
+        <div class="discover-layout">
+          <TabsWrapper :active-tab="activeTab" @tab-change="handleTabChange" />
           <AgentList
-            :agent="agent"
-            :market="market"
-            :current="current"
-            :tabs-key="tabsKey"
-            @handle-click="handleClick"
+            :agents="filteredAgents"
+            :market-data="marketData"
+            :search-keyword="searchKeyword"
+            :active-tab="activeTab"
+            :is-loading="isLoading"
+            @agent-click="handleAgentClick"
           />
-          <StarMessage v-if="agent.length" />
+          <StarMessage v-if="filteredAgents.length > 0" />
         </div>
       </div>
     </el-scrollbar>
@@ -21,94 +22,152 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue"
-
 import { marketJson } from "@database/market"
+import { debounce } from "lodash-es"
 
 import { getPrompt } from "@/service/api"
 
-// import { delay } from "@/utils/common"
 import AgentCardBanner from "./AgentCardBanner.vue"
 import AgentList from "./AgentList.vue"
+import { useCache } from "./composables/useCache"
 import DiscoverHeader from "./DiscoverHeader.vue"
 import StarMessage from "./StarMessage.vue"
 import TabsWrapper from "./TabsWrapper.vue"
 import { options } from "./utils"
 
+interface Agent {
+  identifier: string
+  meta: {
+    title: string
+    description: string
+    tags: string[]
+    avatar: string
+    systemRole: string
+  }
+}
+
+interface MarketData {
+  agents: Agent[]
+  tags?: string[]
+}
+
 defineOptions({ name: "Discover" })
 
-const agent = ref([])
-const market = ref({})
-const current = ref("")
-const tabsKey = ref(options[0].value)
-const marketLocal = window.localStg.get("marketJson")
+const marketData = ref<MarketData>({ agents: [] })
+const searchKeyword = ref("")
+const activeTab = ref(options[0]?.value || "assistant")
+const isLoading = ref(false)
+const error = ref<string | null>(null)
 
-function handleTabs(key) {
-  tabsKey.value = key
-}
+const { set: setCache, get: getCache } = useCache<MarketData>()
 
-function handleClick(key) {
-  current.value = current.value === key ? "" : key
-  if (current.value === key) {
-    agent.value = market.value.agents.filter((item) => {
-      return item.meta.title.includes(key) || item.meta.tags.includes(key) || item.meta.description.includes(key)
-    })
-  } else {
-    agent.value = market.value.agents
-  }
-}
+const filteredAgents = computed(() => {
+  if (!marketData.value?.agents) return []
 
-function setMarketData(data) {
-  market.value = data
-  agent.value = data.agents
-}
+  let agents = marketData.value.agents
 
-async function initPrompt() {
-  if (__LOCAL_MODE__) {
-    setMarketData(marketJson)
-    return
+  if (searchKeyword.value.trim()) {
+    const keyword = searchKeyword.value.toLowerCase()
+    agents = agents.filter(
+      (agent) =>
+        agent.meta.title.toLowerCase().includes(keyword) ||
+        agent.meta.description.toLowerCase().includes(keyword) ||
+        agent.meta.tags.some((tag) => tag.toLowerCase().includes(keyword))
+    )
   }
 
-  if (marketLocal) {
-    setMarketData(marketLocal)
-  }
+  return agents
+})
+
+const handleTabChange = (tabValue: string) => {
+  activeTab.value = tabValue
+}
+
+const handleSearch = debounce((keyword: string) => {
+  searchKeyword.value = keyword
+}, 300)
+
+const handleAgentClick = (agent: Agent) => {
+  console.log("Agent clicked:", agent)
+}
+
+const setMarketData = (data: MarketData) => {
+  marketData.value = data
+  error.value = null
+}
+
+const loadMarketData = async () => {
+  isLoading.value = true
+  error.value = null
 
   try {
-    const res = await getPrompt()
-    // await delay(3000)
-    setMarketData(res)
-    window.localStg.set("marketJson", res)
-  } catch (error) {
-    console.error("Failed to fetch prompt:", error)
+    const cachedData = getCache("marketData")
+    if (cachedData) {
+      setMarketData(cachedData)
+    }
+
+    const localData = window.localStg.get("marketJson")
+    if (localData && !__LOCAL_MODE__) {
+      setMarketData(localData)
+      setCache("marketData", localData)
+      isLoading.value = false
+    }
+
+    // Load from API
+    if (!__LOCAL_MODE__) {
+      const response = await getPrompt()
+      const data = response.data
+      setMarketData(data)
+      setCache("marketData", data)
+      window.localStg.set("marketJson", data)
+    } else {
+      setMarketData(marketJson)
+      setCache("marketData", marketJson)
+    }
+  } catch (err) {
+    console.error("Failed to load market data:", err)
+    error.value = "Failed to load market data"
+    // Fallback to local data
     setMarketData(marketJson)
+    setCache("marketData", marketJson)
     window.localStg.set("marketJson", marketJson)
+  } finally {
+    isLoading.value = false
   }
 }
 
-onBeforeMount(initPrompt)
+onBeforeMount(loadMarketData)
+
+watch(activeTab, (newTab) => {
+  console.log("Active tab changed to:", newTab)
+})
 </script>
 
 <style lang="scss" scoped>
-.discover-prompt {
+.discover-container {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-content: space-between;
-  align-items: center;
   background: var(--color-body-bg);
-  .layout-body {
-    width: 100%;
-    height: calc(100% - 60px);
-    display: flex;
-    justify-content: center;
-    .layout-box {
-      display: flex;
-      justify-items: center;
-      flex-direction: column;
-      width: 100%;
-      // max-width: 1024px;
-    }
-  }
+}
+
+.discover-scrollbar {
+  flex: 1;
+  overflow: hidden;
+}
+
+.discover-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.discover-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  // max-width: 1024px;
 }
 </style>

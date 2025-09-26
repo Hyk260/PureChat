@@ -1,29 +1,26 @@
 <template>
-  <div class="agent-list-box">
-    <!-- <div v-if="tabsKey === 'assistant'">
-      <div v-if="isSkeleton" class="tags">
-        <button
-          v-for="item in market.tags"
-          :key="item"
-          class="item-tags"
-          :class="[current === item ? 'active' : '']"
-          @click="emit('handleClick', item)"
-        >
-          {{ item }}
-        </button>
-      </div>
-      <div v-else class="mt-20 px-15">
-        <el-skeleton :rows="3" animated />
-      </div>
-    </div> -->
-
-    <div v-if="tabsKey === 'assistant'" class="agent-list">
-      <AgentSkeleton v-if="!isSkeleton" />
-      <AgentCard v-for="item in agent" v-else :key="item.identifier" :agents="item" @click="cardClick(item)" />
+  <div class="agent-list-container">
+    <!-- Assistant Tab Content -->
+    <div v-if="activeTab === 'assistant'" class="agent-list">
+      <AgentSkeleton v-if="isLoading" />
+      <AgentCard
+        v-for="agent in agents"
+        v-else
+        :key="agent.identifier"
+        :agent="agent"
+        @click="handleAgentClick"
+        @tag-click="handleTagClick"
+      />
     </div>
 
-    <div v-if="tabsKey === 'model_provider'" class="agent-list" style="--rows: 3">
-      <ModelProviderCard v-for="item in ProvidersList" :key="item.userID" :agents="item" @click="providerClick(item)" />
+    <!-- Model Provider Tab Content -->
+    <div v-if="activeTab === 'model_provider'" class="agent-list model-provider-grid">
+      <ModelProviderCard
+        v-for="provider in providersList"
+        :key="provider.userID"
+        :agents="provider"
+        @click="handleProviderClick(provider)"
+      />
     </div>
   </div>
 </template>
@@ -32,7 +29,6 @@
 import { computed } from "vue"
 
 import { ProvidersList } from "@database/config"
-import { isEmpty } from "lodash-es"
 
 import { useChatStore, useSidebarStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
@@ -41,97 +37,96 @@ import AgentCard from "./AgentCard.vue"
 import AgentSkeleton from "./AgentSkeleton.vue"
 import ModelProviderCard from "./ModelProviderCard.vue"
 
-const emit = defineEmits(["handleClick"])
+interface AgentMeta {
+  title: string
+  description: string
+  tags: string[]
+  avatar: string
+  systemRole: string
+}
+
+interface Agent {
+  identifier: string
+  meta: AgentMeta
+}
+
+interface MarketData {
+  agents: Agent[]
+  tags?: string[]
+}
+
+interface Provider {
+  userID: string
+  nick: string
+  selfSignature: string
+}
+
+defineOptions({
+  name: "AgentList",
+})
+
+const props = defineProps<{
+  agents: Agent[]
+  marketData: MarketData
+  searchKeyword: string
+  activeTab: string
+  isLoading: boolean
+}>()
+
+const emit = defineEmits<{
+  agentClick: [agent: Agent]
+  tagClick: [tag: string]
+}>()
 
 const sidebarStore = useSidebarStore()
 const chatStore = useChatStore()
 
-const props = defineProps({
-  current: {
-    type: String,
-    default: "",
-  },
-  market: {
-    type: Object,
-    default: () => {},
-  },
-  tabsKey: {
-    type: String,
-    default: "",
-  },
-  agent: {
-    type: Array,
-    default: () => [],
-  },
-})
+const providersList = computed<Provider[]>(() => ProvidersList)
 
-const isSkeleton = computed(() => {
-  return !isEmpty(props.market)
-})
-
-function cardClick(item) {
-  emitter.emit("openAgentCard", item)
+const handleAgentClick = (agent: Agent) => {
+  emitter.emit("openAgentCard", agent)
+  emit("agentClick", agent)
 }
 
-function providerClick(item) {
+const handleTagClick = (tag: string) => {
+  emit("tagClick", tag)
+}
+
+const handleProviderClick = (provider: Provider) => {
   sidebarStore.toggleOutside({ path: "/chat" })
-  chatStore.addConversation({ sessionId: `${"C2C"}${item.userID}` })
+  chatStore.addConversation({ sessionId: `C2C${provider.userID}` })
 }
 </script>
 
 <style lang="scss" scoped>
-.agent-list-box {
+.agent-list-container {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.tags {
-  margin: 15px 15px 0 15px;
-  flex-wrap: wrap;
-  display: flex;
-  // flex-direction: column;
-  gap: 6px;
-  // height: 100%;
-  .item-tags {
-    color: var(--color-text);
-    height: 27px;
-    line-height: 27px;
-    border-radius: 27px;
-    padding-inline-start: 13.5px;
-    padding-inline-end: 13.5px;
-    background: var(--color-text-tags);
-    border: none;
-    outline: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-weight: 400;
-    white-space: nowrap;
-    text-align: center;
-    &:hover {
-      color: var(--color-tags-color);
-      border-color: var(--color-tags-color);
-      background: var(--color-tags-back);
-    }
-  }
-  .active {
-    background: var(--color-tags-active-back) !important;
-    color: var(--color-tags-active) !important;
+.agent-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 16px;
+
+  &.model-provider-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   }
 }
-.agent-list {
-  height: fit-content;
-  --rows: 4;
-  --max-item-width: 240px;
-  --gap: 1em;
-  display: grid !important;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(max(var(--max-item-width), calc((100% - var(--gap) * (var(--rows) - 1)) / var(--rows))), 1fr)
-  );
-  gap: 1em;
-  padding: 15px;
+
+@media (max-width: 768px) {
+  .agent-list {
+    grid-template-columns: 1fr;
+    padding: 12px;
+    gap: 12px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .agent-list {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
 }
 </style>

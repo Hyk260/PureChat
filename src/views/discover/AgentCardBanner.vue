@@ -1,33 +1,32 @@
 <template>
   <el-dialog
-    v-model="dialog"
+    v-model="isDialogVisible"
     width="40%"
     align-center
     class="p-0 min-w-500"
     :show-close="false"
     :lock-scroll="false"
-    :before-close="handleClose"
   >
     <div class="agent-card-banner">
       <div class="flex-c flex-col text-50">
         <div>
-          {{ cardData.meta.avatar }}
+          {{ agentData.meta.avatar }}
         </div>
       </div>
       <div class="flex-c flex-col relative p-16 pb-24 gap-16">
         <h2>
-          {{ cardData.meta.title }}
+          {{ agentData.meta.title }}
         </h2>
         <div class="tags flex-c flex-wrap gap-6">
-          <span v-for="item in cardData.meta.tags" :key="item">
+          <span v-for="item in agentData.meta.tags" :key="item">
             {{ item }}
           </span>
         </div>
         <div class="desc">
-          {{ cardData.meta.description }}
+          {{ agentData.meta.description }}
         </div>
       </div>
-      <Markdown class="market" :content="cardData.meta.systemRole" />
+      <Markdown class="market" :content="agentData.meta.systemRole" />
       <div class="flex-c py-20">
         <el-button class="w-306" @click="startConversation()"> 开始会话 </el-button>
       </div>
@@ -36,8 +35,6 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue"
-
 import { ModelID } from "@shared/provider"
 
 import { getModelId } from "@/ai/utils"
@@ -45,46 +42,64 @@ import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore, useSidebarStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
 
-const cardData = ref({})
+interface AgentMeta {
+  title: string
+  description: string
+  tags: string[]
+  avatar: string
+  systemRole: string
+}
+
+interface Agent {
+  identifier: string
+  meta: AgentMeta
+}
+
+defineOptions({
+  name: "AgentCardBanner",
+})
+
+const agentData = ref<Agent>({} as Agent)
+const [isDialogVisible, setIsDialogVisible] = useState(false)
+
 const sidebarStore = useSidebarStore()
 const robotStore = useRobotStore()
 const chatStore = useChatStore()
-const [dialog, setDialog] = useState(false)
 
-function startConversation(item = cardData.value) {
-  const { identifier, meta } = item
+const startConversation = () => {
+  const { identifier, meta } = agentData.value
   const defaultBot = robotStore.defaultProvider
+
   const prompt = {
     id: identifier,
     meta,
     lang: "cn",
     prompt: [{ role: "system", content: meta.systemRole }],
   }
+
   robotStore.setPromptStore([prompt], defaultBot)
-  const id = getModelId(defaultBot) || ModelID.OpenAI
-  setDialog(false)
-  sidebarStore.toggleOutside({ path: "/chat" })
-  chatStore.addConversation({ sessionId: `${"C2C"}${id}` })
+  const modelId = getModelId(defaultBot) || ModelID.OpenAI
+
+  setIsDialogVisible(false)
+  sidebarStore.toggleOutside({ path: "/chat" } as any)
+  chatStore.addConversation({ sessionId: `C2C${modelId}` })
+
   setTimeout(() => {
     chatStore.addAiPresetPromptWords()
   }, 200)
 }
 
-function handleClose(done: () => void) {
-  done()
-}
-
-function setAgentCard(data) {
-  cardData.value = data
-  setDialog(true)
+const openAgentCard = (agent: Agent) => {
+  agentData.value = agent
+  setIsDialogVisible(true)
 }
 
 onMounted(() => {
-  emitter.on("openAgentCard", setAgentCard)
+  emitter.on("openAgentCard", openAgentCard)
 })
 
 onBeforeUnmount(() => {
-  emitter.off("openAgentCard")
+  emitter.off("openAgentCard", openAgentCard)
 })
 </script>
 
