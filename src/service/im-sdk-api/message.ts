@@ -2,10 +2,12 @@ import tim from "@/service/chat/PureChatService"
 import { fileUploading, getCloudCustomData } from "@/utils/chat"
 import { getCustomMsgContent, updateImageSize } from "@/utils/common"
 
+import type { DB_Message } from "@/types"
+
 /**
  * 发送消息
  */
-export const sendMessage = async (params) => {
+export const sendMessage = async (params: DB_Message) => {
   try {
     const {
       code,

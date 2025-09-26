@@ -5,14 +5,15 @@
 </template>
 
 <script setup lang="ts">
-import { groupSystemNotice } from "@/utils/chat/index"
+import { groupSystemNotice } from "@/utils/chat"
 
-defineProps({
-  message: {
-    type: Object,
-    default: () => ({}),
-  },
-})
+import type { DB_Message } from "@/types"
+
+interface Props {
+  message: DB_Message
+}
+
+defineProps<Props>()
 </script>
 
 <style lang="scss" scoped>

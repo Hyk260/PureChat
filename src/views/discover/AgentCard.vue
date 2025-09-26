@@ -112,18 +112,17 @@ const handleTagClick = (tag: string) => {
 }
 
 .tag {
-  cursor: pointer;
   padding: 4px 8px;
   font-size: 12px;
   line-height: 1.2;
   border-radius: 4px;
   color: var(--color-text-secondary);
-  background: var(--color-tag-bg);
+  background: var(--tags-back);
   transition: all 0.2s ease;
   white-space: nowrap;
 
   &:hover {
-    background: var(--color-primary-light);
+    background: var(--tags-back-hover);
     color: var(--color-primary);
   }
 }

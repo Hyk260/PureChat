@@ -26,22 +26,21 @@
 </template>
 
 <script setup lang="ts">
-import { DB_Message } from "@/database/schemas/message"
-import { bytesToSize, getFileType, renderFileIcon } from "@/utils/chat/index"
+import { DB_Message, FilePayloadType } from "@/database/schemas/message"
+import { bytesToSize, getFileType, renderFileIcon } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({
   name: "FileElemItem",
 })
 
-const props = defineProps({
-  message: {
-    type: Object as PropType<DB_Message>,
-    default: () => ({}),
-  },
-})
+interface Props {
+  message: DB_Message
+}
 
-const { payload } = props.message
+const props = withDefaults(defineProps<Props>(), {})
+
+const payload = props.message.payload as FilePayloadType
 
 const fileNameRef = ref<HTMLDivElement | null>(null)
 const backgroundStyle = ref("")

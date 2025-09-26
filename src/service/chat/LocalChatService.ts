@@ -10,7 +10,7 @@ import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
 
-import type { ChatSDK } from "@/types/tencent-cloud-chat"
+import type { ChatSDK, MESSAGE_OPTIONS } from "@/types/tencent-cloud-chat"
 
 export class LocalChat {
   static instance: LocalChat | null = null
@@ -109,7 +109,7 @@ export class LocalChat {
   /**
    * 发送消息
    */
-  async sendMessage(data) {
+  async sendMessage(data: DB_Message) {
     try {
       await this.updateConversationLastMessage(data.conversationID, {
         messageForShow: data.payload.text,
@@ -189,7 +189,7 @@ export class LocalChat {
   /**
    * 创建文本消息
    */
-  createTextMessage(data) {
+  createTextMessage(data: MESSAGE_OPTIONS) {
     const { to, conversationType, payload, cloudCustomData = "", cache } = data
     const currentTime = getTime()
 
@@ -207,7 +207,7 @@ export class LocalChat {
       payload,
       type: "TIMTextElem",
       version: __APP_INFO__.pkg.version || "0",
-    }
+    } as DB_Message
 
     if (cache) MessageModel.create(messageData.ID, messageData)
 
@@ -217,7 +217,7 @@ export class LocalChat {
   /**
    * 创建文件消息
    */
-  createFileMessage(data) {
+  createFileMessage(data: MESSAGE_OPTIONS) {
     const { to, conversationType, payload } = data
     const currentTime = getTime()
 
@@ -240,7 +240,7 @@ export class LocalChat {
       },
       type: "TIMFileElem",
       version: __APP_INFO__.pkg.version || "0",
-    }
+    } as unknown as DB_Message
 
     MessageModel.create(messageData.ID, messageData)
 
@@ -250,7 +250,7 @@ export class LocalChat {
   /**
    * 创建自定义消息
    */
-  createCustomMessage(data) {
+  createCustomMessage(data: MESSAGE_OPTIONS) {
     const { to, conversationType, payload } = data
     const currentTime = getTime()
 
@@ -266,7 +266,7 @@ export class LocalChat {
       conversationID: `${conversationType}${to}`,
       type: "TIMCustomElem",
       version: __APP_INFO__.pkg.version || "0",
-    }
+    } as DB_Message
 
     MessageModel.create(messageData.ID, messageData)
 

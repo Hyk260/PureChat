@@ -5,8 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
-
 import { useUserStore } from "@/stores/modules/user"
 
 const props = defineProps({
@@ -57,6 +55,7 @@ const memberProfileUpdated = (message) => {
       return `群成员：${member.userID}被取消禁言`
     }
   }
+  return ""
 }
 
 const getGroupTipContent = (message) => {

@@ -1,8 +1,7 @@
 import tim from "@/service/chat/PureChatService"
 import { PIN_CONVERSATION_OPTIONS, SET_MESSAGE_REMIND_TYPE_OPTIONS } from "@/types/tencent-cloud-chat"
 
-import type { DB_Message } from "@/database/schemas/message"
-import type { DB_Session } from "@/database/schemas/session"
+import type { DB_Message, DB_Session } from "@/types"
 
 // 好友列表
 // export const getFriendList = () => {

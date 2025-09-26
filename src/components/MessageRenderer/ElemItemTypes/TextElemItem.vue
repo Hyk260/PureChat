@@ -16,12 +16,11 @@ import { useAppStore, useChatStore } from "@/stores"
 
 import ReplyElem from "./ReplyElem.vue"
 
-const props = defineProps({
-  message: {
-    type: Object as PropType<DB_Message>,
-    required: true,
-  },
-})
+interface Props {
+  message: DB_Message
+}
+
+const props = withDefaults(defineProps<Props>(), {})
 
 const chatStore = useChatStore()
 const appStore = useAppStore()

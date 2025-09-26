@@ -2,12 +2,12 @@
   <div class="relay-message" @click="handleClick">
     <div class="relay-preview">
       <div class="relay-title">
-        <span class="title-text truncate" :title="message.payload.title">
-          {{ message.payload.title }}
+        <span class="title-text truncate" :title="payload.title">
+          {{ payload.title }}
         </span>
       </div>
       <div class="relay-abstract-list">
-        <div v-for="item in abstractList" :key="item" class="abstract-item truncate">
+        <div v-for="(item, i) in abstractList" :key="i" class="abstract-item truncate">
           {{ item }}
         </div>
       </div>
@@ -19,32 +19,32 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from "vue"
-
-import { DB_Message } from "@/database/schemas/message"
+import { DB_Message, MergerPayloadType } from "@/database/schemas/message"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({
   name: "RelayElemItem",
 })
 
-const { message } = defineProps({
+const props = defineProps({
   message: {
     type: Object as PropType<DB_Message>,
     default: () => ({}),
   },
 })
 
+const payload = props.message.payload as MergerPayloadType
+
 const messageCount = computed(() => {
-  return message.payload?.messageList?.length || message.payload?.abstractList?.length
+  return payload?.messageList?.length || payload?.abstractList?.length
 })
 
 const abstractList = computed(() => {
-  return message.payload?.abstractList?.slice(0, 2) || []
+  return payload?.abstractList?.slice(0, 3) || []
 })
 
-function handleClick() {
-  emitter.emit("openMergePopup", message)
+const handleClick = () => {
+  emitter.emit("openMergePopup", props.message)
 }
 </script>
 

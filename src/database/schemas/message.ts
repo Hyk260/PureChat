@@ -71,6 +71,19 @@ export const ImagePayload = BasePayload.extend({
   ),
 })
 
+export const FilePayload = BasePayload.extend({
+  uuid: z.string(),
+  fileName: z.string(),
+  fileUrl: z.string(),
+  fileSize: z.number(),
+})
+
+export const MergerPayload = BasePayload.extend({
+  title: z.string(),
+  messageList: z.array(z.any()),
+  abstractList: z.array(z.string()),
+})
+
 export const customDataWebSearchSchema = z.object({
   webSearch: z.object({
     messageAbstract: z.string(),
@@ -190,3 +203,7 @@ export type MessageType = z.infer<typeof MessageTypeSchema>
 export type customDataWebSearch = z.infer<typeof customDataWebSearchSchema>
 
 export type ImagePayloadType = z.infer<typeof ImagePayload>
+
+export type FilePayloadType = z.infer<typeof FilePayload>
+
+export type MergerPayloadType = z.infer<typeof MergerPayload>

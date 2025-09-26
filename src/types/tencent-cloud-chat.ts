@@ -237,7 +237,7 @@ export type UPDATE_YOUR_PROFILE_OPTIONS = Partial<ProfileBase>
 /**
  * 消息发送选项配置
  */
-export declare interface MESSAGE_OPTIONS {
+export interface MESSAGE_OPTIONS {
   /**
    * 消息接收者的用户ID或群组ID
    */
@@ -312,7 +312,7 @@ export declare class ChatSDK {
    * - By default, multi-instance login is not supported. If you use an account that has been logged in on another page to log in on the current page, the account may be forcibly logged out on the other page, which will trigger the TencentCloudChat.EVENT.KICKED_OUT event. You can proceed accordingly after detecting the event through listening.
    * To support multi-instance login (allowing the use of the same account to log in concurrently on multiple pages), log in to the Chat console, locate the corresponding SDKAppID, and go to App Configuration > Feature Configuration > Online Web Instances to configure the number of instances. The configuration will take effect within 50 minutes.
    */
-  login(options: LOGIN_OPTIONS): Promise<any>
+  login(options: LOGIN_OPTIONS): Promise<{ code: number; data: any }>
 
   /**
    * This API is used to log out of the Chat SDK. It is usually called when you switch between accounts. This API clears the login status of the current account and all the data in the memory.
@@ -320,7 +320,7 @@ export declare class ChatSDK {
    * - Assume that the value of the Online Web Instances configured in the Chat console is greater than 1, and the same account has been used to log in to instances a1 and a2 (including a Mini Program instance). After a1.logout() is executed, a1 is automatically logged out and cannot receive or send messages, whereas a2 is not affected.
    * - Assume that the Online Web Instances is set to 2, and your account has been used to log in to instances a1 and a2. When you use this account to log in to instance a3, either a1 or a2 will be forcibly logged out. In most cases, the instance that first entered the login state is forcibly logged out. This is called kicked offline due to multi-instance login. If a1 is forcibly logged out, a logout process is executed within a1 and the KICKED_OUT event is triggered. The access side can listen for this event and redirect it to the login page when the event is triggered. At this time, a1 is forcibly logged out, whereas instances a2 and a3 can continue to run properly.
    */
-  logout(): Promise<void>
+  logout(): Promise<{ code: number; data: object }>
 
   /**
    * Get the userID of the logged-in user. If the user is not logged in, it returns an empty string ('').

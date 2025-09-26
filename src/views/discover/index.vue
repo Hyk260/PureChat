@@ -115,8 +115,7 @@ const loadMarketData = async () => {
 
     // Load from API
     if (!__LOCAL_MODE__) {
-      const response = await getPrompt()
-      const data = response.data
+      const data = await getPrompt()
       setMarketData(data)
       setCache("marketData", data)
       window.localStg.set("marketJson", data)

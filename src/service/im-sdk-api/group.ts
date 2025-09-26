@@ -85,7 +85,7 @@ export const quitGroup = async (params: { groupId: string }) => {
 
 // 获取群成员列表
 export const getGroupMemberList = async (params: { groupID: string; count?: number; offset?: number }) => {
-  const { groupID, count = 20 } = params // offset
+  const { groupID, count = 20 } = params
   const {
     code,
     data: { memberList, offset },
@@ -94,7 +94,7 @@ export const getGroupMemberList = async (params: { groupID: string; count?: numb
     count,
     offset: 0,
   })
-  return { code, memberList }
+  return { code, memberList, offset }
 }
 
 /**

@@ -68,7 +68,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     },
     async handleUserLogin(data: HandleUserLoginPayload) {
       console.log(data, "登录信息")
-      const result = await login(data)
+      const result = (await login(data)) as unknown as HandleSuccessfulAuthPayload
       this.handleSuccessfulAuth(result)
     },
     handleUserLogout() {
@@ -79,13 +79,15 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         this.handleIMLogout()
       }, 500)
     },
-    async handleIMLogin(user: HandleIMLoginPayload) {
+    async handleIMLogin(user: HandleIMLoginPayload, redirect: boolean = true) {
       try {
         const data = await chat.login(user)
         if (data.code === 0) {
           console.log("[chat] im登录成功 login", data)
-          window.$message?.success("登录成功")
-          router.push("/chat")
+          if (redirect) {
+            window.$message?.success("登录成功")
+            router.push("/chat")
+          }
         } else {
           this.handleUserLogout()
         }
@@ -117,7 +119,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         console.log("tryReconnect", data)
         if (data) {
           timProxy.init()
-          await this.handleIMLogin({ userID: data.username, userSig: data.userSig })
+          await this.handleIMLogin({ userID: data.username, userSig: data.userSig }, false)
         } else {
           this.handleUserLogout()
         }
