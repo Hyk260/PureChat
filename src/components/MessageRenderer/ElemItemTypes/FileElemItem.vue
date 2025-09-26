@@ -26,8 +26,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, onUpdated, PropType, ref } from "vue"
-
 import { DB_Message } from "@/database/schemas/message"
 import { bytesToSize, getFileType, renderFileIcon } from "@/utils/chat/index"
 import emitter from "@/utils/mitt-bus"

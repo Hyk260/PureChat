@@ -276,9 +276,9 @@ export class LocalChat {
   /**
    * 获取会话资料
    */
-  async getConversationProfile(chatId) {
+  async getConversationProfile(chatId: string) {
     try {
-      const data = cloneDeep(ConversationList)
+      const data = cloneDeep(ConversationList) as DB_Session
       data.conversationID = chatId
       data.lastMessage.lastTime = getTime()
       data.userProfile = ProvidersList.find((item) => item.userID === chatId.replace("C2C", ""))
@@ -311,7 +311,7 @@ export class LocalChat {
   /**
    * 获取消息列表
    */
-  async getMessageList(data) {
+  async getMessageList(data: { conversationID: string; nextReqMessageID: string }) {
     try {
       const { conversationID: id, nextReqMessageID = "" } = data
       const messageList = await MessageModel.query({ id })
@@ -359,9 +359,18 @@ export class LocalChat {
   /**
    * 删除会话
    */
-  async deleteConversation({ conversationIDList = [], clearHistoryMessage = false }) {
+  async deleteConversation({
+    conversationIDList = [],
+    // clearHistoryMessage = false,
+  }: {
+    conversationIDList: string[]
+    // clearHistoryMessage?: boolean
+  }) {
     try {
-      const [ID] = conversationIDList
+      const ID = conversationIDList[0] || ""
+      if (!ID) {
+        throw new Error("会话ID不能为空")
+      }
 
       const list = await SessionModel.query()
       const messageList = list.filter((item) => item.conversationID !== ID)
@@ -419,10 +428,11 @@ export class LocalChat {
   async modifyMessage(data: DB_Message) {
     try {
       const payload = {
+        // ...data,
         payload: {
           text: data.payload.text,
         },
-      }
+      } as DB_Message
 
       await MessageModel.update(data.ID, payload)
 

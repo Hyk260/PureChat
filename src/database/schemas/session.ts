@@ -122,36 +122,38 @@ export const userProfileSchema = z
   })
   .optional()
 
-export const SessionTypeSchema = z.enum(["C2C", "GROUP", "@TIM#SYSTEM"])
+export const TypeSchema = z.enum(["C2C", "GROUP", "@TIM#SYSTEM"])
+
+export const LastMessageSchema = z
+  .object({
+    lastTime: z.number().optional(),
+    lastSequence: z.number().optional(),
+    fromAccount: z.string().optional(),
+    type: z.string().optional(),
+    payload: z
+      .object({
+        text: z.string().optional(),
+      })
+      .optional(),
+    cloudCustomData: z.string().optional(),
+    isRevoked: z.boolean().optional(),
+    onlineOnlyFlag: z.boolean().optional(),
+    nick: z.string().optional(),
+    nameCard: z.string().optional(),
+    version: z.number().optional(),
+    isPeerRead: z.boolean().optional(),
+    revoker: z.string().optional(),
+    messageForShow: z.string().optional(),
+  })
+  .optional()
 
 export const DB_SessionSchema = z.object({
   id: z.string().optional(),
   conversationID: z.string(),
   toAccount: z.string().optional(),
-  type: SessionTypeSchema,
+  type: TypeSchema,
   subType: z.string().optional(),
-  lastMessage: z
-    .object({
-      lastTime: z.number().optional(),
-      lastSequence: z.number().optional(),
-      fromAccount: z.string().optional(),
-      type: z.string().optional(),
-      payload: z
-        .object({
-          text: z.string().optional(),
-        })
-        .optional(),
-      cloudCustomData: z.string().optional(),
-      isRevoked: z.boolean().optional(),
-      onlineOnlyFlag: z.boolean().optional(),
-      nick: z.string().optional(),
-      nameCard: z.string().optional(),
-      version: z.number().optional(),
-      isPeerRead: z.boolean().optional(),
-      revoker: z.string().optional(),
-      messageForShow: z.string().optional(),
-    })
-    .optional(),
+  lastMessage: LastMessageSchema,
   unreadCount: z.number().int().min(0).optional(),
   peerReadTime: z.number().optional(),
   groupAtInfoList: z.array(z.any()).optional(),

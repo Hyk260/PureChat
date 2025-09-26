@@ -3,7 +3,7 @@ import { z } from "zod"
 // https://web.sdk.qcloud.com/im/doc/zh-cn/Message.html
 export const MessageSchema = {
   ID: "2356550d-e59f-4a7c-9e5b-f55b6d312f05",
-  conversationID: "C2C@RBT#006",
+  conversationID: "C2C@RBT#001",
   conversationType: "C2C",
   time: 1754536602,
   sequence: 0,
@@ -36,7 +36,7 @@ export const MessageSchema = {
   isBroadcastMessage: false,
   isSupportExtension: false,
   revoker: "",
-  revokerInfo: {},
+  // revokerInfo: {},
   revokeReason: "",
   payload: {
     text: "",
@@ -45,6 +45,31 @@ export const MessageSchema = {
   createdAt: 1754536602679,
   updatedAt: 1754536602686,
 }
+
+export const BasePayload = z.object({
+  text: z.string().optional(),
+})
+
+export const TextPayload = BasePayload.extend({
+  text: z.string(),
+})
+
+export const ImagePayload = BasePayload.extend({
+  uuid: z.string(),
+  // 图片格式类型，JPG/JPEG = 1，GIF = 2，PNG = 3，BMP = 4，其他 = 255
+  imageFormat: z.number(),
+  imageInfoArray: z.array(
+    z
+      .object({
+        width: z.number(),
+        height: z.number(),
+        url: z.string(),
+        size: z.number(),
+        type: z.number(),
+      })
+      .optional()
+  ),
+})
 
 export const customDataWebSearchSchema = z.object({
   webSearch: z.object({
@@ -56,6 +81,14 @@ export const customDataWebSearchSchema = z.object({
 // export const cloudCustomDataSchema = cloudCustomDataSchemaWebSearch
 
 export const MessageStatusSchema = z.enum(["unSend", "fail", "success", "sending", "searching", "paused", "timeout"])
+
+export const RevokerInfoSchema = z
+  .object({
+    userID: z.string(),
+    nick: z.string(),
+    avatar: z.string(),
+  })
+  .optional()
 
 export const MessageTypeSchema = z.enum([
   "TIMTextElem",
@@ -70,6 +103,12 @@ export const MessageTypeSchema = z.enum([
 export const DB_MessageSchema = z.object({
   ID: z.string().uuid(),
   conversationID: z.string(),
+  /**
+   *  消息所属会话的类型
+   *  C2C: 单聊
+   *  GROUP: 群聊
+   *  SYSTEM: 系统通知
+   */
   conversationType: z.enum(["C2C", "GROUP", "SYSTEM"]),
   time: z.number(),
   sequence: z.number().int().min(0),
@@ -84,15 +123,15 @@ export const DB_MessageSchema = z.object({
   isPlaceMessage: z.number().int(),
   isRevoked: z.boolean(),
   /**
-   * @description 发送方的 userID
+   * 发送方的 userID
    */
   from: z.string(),
   /**
-   * @description 接收方的 userID
+   *  接收方的 userID
    */
   to: z.string(),
   /**
-   * @description 消息流向
+   * 消息流向
    * in: 收到
    * out: 发出
    */
@@ -112,14 +151,19 @@ export const DB_MessageSchema = z.object({
   version: z.string(),
   isBroadcastMessage: z.boolean(),
   isSupportExtension: z.boolean(),
-  revoker: z.string(),
-  revokerInfo: z.record(z.any()).optional(),
+  /**
+   * 消息撤回者的 userID
+   */
+  revoker: z.string().optional(),
+  revokerInfo: RevokerInfoSchema,
   revokeReason: z.string(),
   /**
    * @description 消息内容
    * 文本 图片 文件 自定义 群提示消息 群系统通知 合并
+   * ImagePayload
    */
-  payload: z.record(z.any()),
+  payload: TextPayload,
+  // payload: z.union([TextPayload, ImagePayload]).optional(),
   isTimeDivider: z.boolean().optional(),
   /**
    * @description 消息类型
@@ -144,3 +188,5 @@ export type MessageStatus = z.infer<typeof MessageStatusSchema>
 export type MessageType = z.infer<typeof MessageTypeSchema>
 
 export type customDataWebSearch = z.infer<typeof customDataWebSearchSchema>
+
+export type ImagePayloadType = z.infer<typeof ImagePayload>

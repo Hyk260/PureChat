@@ -21,15 +21,15 @@
 import { computed, onMounted, ref } from "vue"
 
 import { useChatStore } from "@/stores"
+import { DB_Message, ImagePayloadType } from "@/types"
 import { showIMPic } from "@/utils/chat"
 import { getImageSize } from "@/utils/common"
 
-const props = defineProps({
-  message: {
-    type: Object,
-    required: true,
-  },
-})
+interface Props {
+  message: DB_Message
+}
+
+const props = withDefaults(defineProps<Props>(), {})
 
 const imgStyle = ref({})
 const chatStore = useChatStore()
@@ -41,17 +41,15 @@ const initialIndex = computed(() => {
 
 function getImageProperties(num = 0) {
   try {
-    const {
-      payload: { imageInfoArray },
-    } = props.message
-    return imageInfoArray[num] || null
+    const data = props.message.payload as ImagePayloadType
+    return data.imageInfoArray[num] || null
   } catch (error) {
     console.error("Failed to get image properties:", error)
     return null
   }
 }
 
-const url = computed(() => getImageProperties(0)?.url)
+const url = computed(() => getImageProperties(0)?.url || "")
 
 async function initImageSize() {
   try {

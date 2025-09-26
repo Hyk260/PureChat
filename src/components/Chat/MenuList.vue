@@ -77,6 +77,7 @@ const menuItemsConfig = [
     id: "refresh",
     title: "重新生成",
     hidden: true,
+    // hidden: !__LOCAL_MODE__,
     icon: markRaw(RefreshCw),
   },
   {
@@ -152,6 +153,8 @@ const availableMenuItems = computed(() => {
         return messageType === "TIMTextElem"
       } else if (menuItem.id === "copy") {
         return ["TIMTextElem", "TIMImageElem"].includes(messageType)
+      } else if (menuItem.id === "refresh") {
+        return props.item.flow === "in" && messageType === "TIMTextElem"
       } else {
         return true
       }

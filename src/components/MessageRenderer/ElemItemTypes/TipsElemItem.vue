@@ -1,8 +1,8 @@
 <template>
   <div class="message-view_withdraw" @click="onClick">
     <span class="withdraw">
-      <span> {{ getChangeType() }} </span>
-      <el-icon v-show="!isReEdit && message.type !== 'TIMCustomElem'" class="close" @click.stop="onClose(message)">
+      <span> {{ withdrawalMessage }} </span>
+      <el-icon v-if="showCloseIcon" class="close" @click.stop="onClose(message)">
         <CircleCloseFilled />
       </el-icon>
     </span>
@@ -11,27 +11,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from "vue"
 import { CircleCloseFilled } from "@element-plus/icons-vue"
 
 import { DB_Message } from "@/database/schemas/message"
 import { useChatStore, useUserStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
 
-const props = defineProps({
-  message: {
-    type: Object as PropType<DB_Message>,
-    default: () => ({}),
-  },
-})
+interface Props {
+  message: DB_Message
+}
+
+const props = withDefaults(defineProps<Props>(), {})
 
 const chatStore = useChatStore()
 const userStore = useUserStore()
 
-const isMine = computed(() => props.message.flow === "out")
+const isOut = computed(() => props.message.flow === "out")
 const isReEdit = computed(() => chatStore.revokeMsgMap.get(props.message.ID))
+const showCloseIcon = computed(() => !isReEdit.value && props.message.type !== "TIMCustomElem")
 
-async function onClose(data: DB_Message) {
+function onClose(data: DB_Message) {
   chatStore.deleteMessage({
     sessionId: data.conversationID,
     messageIdArray: [data.ID],
@@ -40,41 +39,43 @@ async function onClose(data: DB_Message) {
 }
 
 function onClick() {
+  console.log(props.message)
   console.log(chatStore.revokeMsgMap)
 }
 
 function onEdit() {
   const data = props.message
-  emitter.emit("handleSetHtml", data?.payload?.text)
+  emitter.emit("handleSetHtml", data.payload?.text)
   chatStore.updateRevokeMsg({ data, type: "delete" })
 }
 
-function getChangeType() {
-  const { conversationType: type, nick, from, revokerInfo } = props.message
+const withdrawalMessage = computed(() => {
+  const { conversationType: type, nick, from, revoker, revokerInfo } = props.message
   const isGroup = type === "GROUP"
   const isC2C = type === "C2C"
-  if (isMine.value) {
+  // 自己的消息
+  if (isOut.value) {
     if (isGroup) {
-      if (from !== revokerInfo?.userID) {
-        return `${revokerInfo?.nick} 撤回了一条成员消息`
+      if (from !== revoker) {
+        return `${revokerInfo?.nick || "管理员"} 撤回了一条成员消息`
       }
     }
     return "你撤回了一条消息"
-  } else {
-    if (isC2C) {
-      return "对方撤回了一条消息"
-    }
-    if (isGroup) {
-      if (from !== revokerInfo?.userID) {
-        const name = userStore.userProfile?.nick === revokerInfo?.nick ? "你" : revokerInfo?.nick
-        return `${name} 撤回了成员 ${nick} 的一条消息`
-      }
-      return `${nick} 撤回了一条消息`
-    } else {
-      return "撤回了一条消息"
-    }
   }
-}
+  if (isC2C) return "对方撤回了一条消息"
+  if (isGroup) {
+    if (from !== revoker) {
+      if (!revoker) {
+        return `${nick} 撤回了一条消息`
+      }
+      const name = userStore.userProfile?.nick === revokerInfo?.nick ? "你" : revokerInfo?.nick
+      return `${name || "管理员"} 撤回了成员 ${nick} 的一条消息`
+    }
+    return `${nick} 撤回了一条消息`
+  } else {
+    return "撤回了一条消息"
+  }
+})
 </script>
 
 <style lang="scss" scoped>

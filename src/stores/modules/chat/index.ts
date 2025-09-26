@@ -435,7 +435,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.setForwardData({ type: "del", payload: item })
       }
     },
-    updateRevokeMsg({ data, type }: { data: any; type: string }) {
+    updateRevokeMsg({ data, type }: { data: DB_Message; type: string }) {
       if (type === "set") {
         this.revokeMsgMap.set(data.ID, data.payload)
       } else {
