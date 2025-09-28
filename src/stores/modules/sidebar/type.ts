@@ -1,6 +1,5 @@
 import type { Component } from "vue"
 
-// 侧边栏项目类型
 export interface SidebarItem {
   id: string
   icon: Component | string
@@ -13,7 +12,6 @@ export interface SidebarItem {
   if_fixed?: number
 }
 
-// 更多列表项目类型
 export interface MoreListItem {
   id: string
   icon: string

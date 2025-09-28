@@ -148,7 +148,12 @@ export const translateText = async (params) => {
       sourceLanguage: "auto",
       targetLanguage: "zh",
     })
+    return {
+      code,
+      data,
+    }
   } catch (error) {
     console.error("翻译文本失败:", error)
+    throw new Error(error)
   }
 }

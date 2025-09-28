@@ -1,56 +1,10 @@
 import { cloneDeep } from "lodash-es"
 import { match } from "pinyin-pro"
 
-import {
-  createFileMessage,
-  createImageMessage,
-  createTextAtMessage,
-  createTextMessage,
-  createVideoMessage,
-} from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores"
-import { base64ToFile } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 
 import type { GroupMember } from "@/stores/modules/group/type"
-
-/**
- * 发送聊天消息
- */
-export async function sendChatMessage(options) {
-  console.log("options", options)
-  const custom = options.custom || {}
-  const messages = []
-  const { to, type, text, aitStr, atUserList, files = [], video = [], images = [] } = options || {}
-  // 处理图片消息
-  for (const t of images) {
-    const img = await createImageMessage({ to, type, file: base64ToFile(t.src, t.fileName) })
-    messages.push(img)
-  }
-
-  // 处理文件消息
-  for (const t of files) {
-    const file = createFileMessage({ to, type, file: base64ToFile(t.link, t.fileName), path: t?.path })
-    messages.push(file)
-  }
-
-  // 处理视频消息
-  for (const t of video) {
-    const videoItem = createVideoMessage({ to, type, file: base64ToFile(t.link, t.fileName) })
-    messages.push(videoItem)
-  }
-
-  // 处理文本消息（@消息或普通文本）
-  if (aitStr) {
-    const atTextItem = createTextAtMessage({ to, type, text: aitStr, atUserList, custom })
-    messages.push(atTextItem)
-  } else if (text) {
-    const textItem = createTextMessage({ to, type, text, custom })
-    messages.push(textItem)
-  }
-
-  return messages
-}
 
 /**
  * 根据拼音搜索当前成员列表中的匹配项。

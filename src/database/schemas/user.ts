@@ -1,0 +1,17 @@
+export const UserSchema = {
+  userID: "",
+  nick: "",
+  gender: "",
+  birthday: 0,
+  location: "",
+  selfSignature: "",
+  allowType: "",
+  language: 0,
+  avatar: "",
+  messageSettings: 0,
+  adminForbidType: "",
+  level: 0,
+  role: 0,
+  lastUpdatedTime: 0,
+  profileCustomField: [],
+}

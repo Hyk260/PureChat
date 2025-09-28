@@ -1,7 +1,6 @@
 import { z } from "zod"
 
 export const SessionSchema = {
-  id: "",
   conversationID: "",
   toAccount: "",
   type: "",
@@ -98,8 +97,9 @@ export const SessionSchema = {
   customData: "",
   conversationGroupList: [],
   draftText: "",
-  createdAt: 0,
-  updatedAt: 0,
+  // id: "",
+  // createdAt: 0,
+  // updatedAt: 0,
 }
 
 export const userProfileSchema = z
@@ -148,7 +148,6 @@ export const LastMessageSchema = z
   .optional()
 
 export const DB_SessionSchema = z.object({
-  id: z.string().optional(),
   conversationID: z.string(),
   toAccount: z.string().optional(),
   type: TypeSchema,
@@ -167,6 +166,8 @@ export const DB_SessionSchema = z.object({
   customData: z.string().optional(),
   conversationGroupList: z.array(z.any()).optional(),
   draftText: z.string().optional(),
+  // **************** DB *************** //
+  id: z.string().optional(),
   createdAt: z.number().optional(),
   updatedAt: z.number().optional(),
 })

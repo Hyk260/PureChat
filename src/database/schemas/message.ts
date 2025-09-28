@@ -2,24 +2,24 @@ import { z } from "zod"
 
 // https://web.sdk.qcloud.com/im/doc/zh-cn/Message.html
 export const MessageSchema = {
-  ID: "2356550d-e59f-4a7c-9e5b-f55b6d312f05",
-  conversationID: "C2C@RBT#001",
+  ID: "",
+  conversationID: "",
   conversationType: "C2C",
-  time: 1754536602,
+  time: 0,
   sequence: 0,
   clientSequence: 0,
   random: 0,
   priority: "Normal",
   nick: "",
-  avatar: "avatar",
+  avatar: "",
   isPeerRead: false,
   nameCard: "",
   hasRiskContent: false,
   isPlaceMessage: 0,
   isRevoked: false,
-  from: "admin",
-  to: "@RBT#006",
-  flow: "",
+  from: "",
+  to: "",
+  flow: "out",
   isSystemMessage: false,
   protocol: "JSON",
   isResend: false,
@@ -29,7 +29,7 @@ export const MessageSchema = {
   cloudCustomData: "",
   isDeleted: false,
   isModified: false,
-  clientTime: 1754536602,
+  clientTime: 0,
   senderTinyID: "",
   needReadReceipt: false,
   version: "0.8.4",
@@ -42,8 +42,9 @@ export const MessageSchema = {
     text: "",
   },
   type: "TIMTextElem",
-  createdAt: 1754536602679,
-  updatedAt: 1754536602686,
+  // id: "",
+  // createdAt: 0,
+  // updatedAt: 0,
 }
 
 export const BasePayload = z.object({
@@ -82,6 +83,10 @@ export const MergerPayload = BasePayload.extend({
   title: z.string(),
   messageList: z.array(z.any()),
   abstractList: z.array(z.string()),
+})
+
+export const GroupSystemNoticePayload = BasePayload.extend({
+  operationType: z.number(),
 })
 
 export const customDataWebSearchSchema = z.object({
@@ -182,6 +187,8 @@ export const DB_MessageSchema = z.object({
    * @description 消息类型
    */
   type: MessageTypeSchema,
+  // **************** DB *************** //
+  id: z.string().optional(),
   createdAt: z.number().optional(),
   updatedAt: z.number().optional(),
 })
@@ -207,3 +214,5 @@ export type ImagePayloadType = z.infer<typeof ImagePayload>
 export type FilePayloadType = z.infer<typeof FilePayload>
 
 export type MergerPayloadType = z.infer<typeof MergerPayload>
+
+export type GroupSystemNoticePayloadType = z.infer<typeof GroupSystemNoticePayload>

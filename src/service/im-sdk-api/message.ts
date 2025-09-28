@@ -79,7 +79,7 @@ export const createImageMessage = async (params: { to: string; type: any; file: 
 /**
  * 创建文件消息
  */
-export const createFileMessage = (params) => {
+export const createFileMessage = (params: { to: string; type: any; file: File; path?: string | undefined }) => {
   const { to, type, file, path = "" } = params
   const message = tim.createFileMessage({
     to,

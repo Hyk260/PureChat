@@ -13,8 +13,7 @@ import { localStg } from "@/utils/storage"
 
 import { checkoutNetState, getConversationList, kickedOutReason } from "./utils"
 
-import type { DB_Message } from "@/database/schemas/message"
-import type { DB_Session } from "@/database/schemas/session"
+import type { DB_Message, DB_Session, GroupSystemNoticePayloadType } from "@/types"
 import type { Profile } from "@/types/tencent-cloud-chat"
 
 /**
@@ -84,8 +83,6 @@ export class TIMProxy {
     }
 
     this.registerCoreEvents()
-
-    console.log(`[chat] 事件监听器注册完成 (模式: ${__LOCAL_MODE__ ? "本地" : "云端"})`)
   }
 
   registerCoreEvents() {
@@ -142,7 +139,7 @@ export class TIMProxy {
       const { code, data } = await chat.getMyProfile()
 
       if (code !== 0) {
-        window.$message?.error(`获取用户信息失败: ${data}`)
+        window.$message?.error(`获取用户信息失败: ${code}`)
         return
       }
 
@@ -180,7 +177,7 @@ export class TIMProxy {
     chatStore.setConversationList(data)
 
     // 更新当前会话信息
-    const currentConversation = data.find((conv) => conv.conversationID === currentSessionId)
+    const currentConversation = data.find((t) => t.conversationID === currentSessionId)
     if (currentConversation) {
       chatStore.setCurrentConversation(cloneDeep(currentConversation))
 
@@ -356,7 +353,7 @@ export class TIMProxy {
     const icon = avatar || `${import.meta.env.VITE_CLOUD_BASE_URL}log.png`
     const notification = new window.Notification(title, {
       icon: icon,
-      body: payload.text as string,
+      body: payload.text,
       tag: conversationID, // 防止重复通知
     })
     notification.onclick = () => {
@@ -382,11 +379,11 @@ export class TIMProxy {
     const currentSessionId = useChatStore().currentSessionId
     if (currentSessionId !== data[0]?.conversationID) return
 
-    const { operationType } = message.payload
+    const { operationType } = message.payload as GroupSystemNoticePayloadType
     const memberOperationTypes = Object.values(this.GROUP_TIP_TYPES)
 
     // 检查是否为群成员相关操作
-    if (memberOperationTypes.includes(operationType as number)) {
+    if (memberOperationTypes.includes(operationType)) {
       console.log("[chat] 群成员变动，更新成员列表")
       useGroupStore().handleGroupMemberList({ groupID: currentSessionId })
     }
@@ -403,11 +400,11 @@ export class TIMProxy {
 
     console.log("[chat] 处理群系统通知:", data)
 
-    const { operationType } = message.payload
+    const { operationType } = message.payload as GroupSystemNoticePayloadType
     const { KICKED_OUT, GROUP_DISMISSED } = this.GROUP_SYSTEM_NOTICE_TYPES
 
     // 处理被踢出或群解散的情况
-    if ([KICKED_OUT, GROUP_DISMISSED].includes(operationType as number)) {
+    if ([KICKED_OUT, GROUP_DISMISSED].includes(operationType)) {
       const currentSessionId = useChatStore().currentSessionId
       console.log("[chat] 群组被解散或被踢出，删除会话")
       useChatStore().deleteSession({ sessionId: currentSessionId })
