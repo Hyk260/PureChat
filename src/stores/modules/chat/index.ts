@@ -2,12 +2,12 @@ import { ModelIDList } from "@shared/provider"
 import { cloneDeep } from "lodash-es"
 import { defineStore } from "pinia"
 
-import { chatService } from "@/ai"
 import { getModelId } from "@/ai/utils"
 import { getAiAvatarUrl, getModelType } from "@/ai/utils"
 import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX } from "@/constants"
 import { MessageModel } from "@/database/models/message"
 import { timProxy } from "@/service/chat"
+import { sendChatAssistantMessage } from "@/service/chatService"
 import {
   clearHistoryMessage,
   createTextMessage,
@@ -34,7 +34,7 @@ import type { ChatState } from "./type"
 import type { ModelProviderKey } from "@/ai/types"
 import type { DB_Message } from "@/database/schemas/message"
 import type { DB_Session } from "@/database/schemas/session"
-import type { DraftData } from "@/types"
+import type { DraftData, ImagePayloadType } from "@/types"
 import type { ModelIDValue } from "@shared/provider"
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
@@ -97,8 +97,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const filteredMessages = this.currentMessageList.filter(
         (item) => item.type === "TIMImageElem" && !item.isRevoked && !item.isDeleted
       )
-      const reversedUrls = filteredMessages.reduce((urls, data) => {
-        const url = data.payload.imageInfoArray[0].url
+      const reversedUrls = filteredMessages.reduce((urls: string[], data) => {
+        const imagePayload = data.payload as ImagePayloadType
+        const url = imagePayload?.imageInfoArray?.[0]?.url || ""
         urls.push(url)
         return urls
       }, [])
@@ -349,8 +350,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.updateMessages({ sessionId, message })
       emitter.emit("updateScroll")
       if (last && ModelIDList.includes(message?.to as ModelIDValue)) {
-        await delay(50)
-        await chatService({
+        await delay(30)
+        await sendChatAssistantMessage({
           chat: message,
           provider: getModelType(message.to),
           messages: this.currentMessageList ?? [message],

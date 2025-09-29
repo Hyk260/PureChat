@@ -63,7 +63,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         // data?.remember && localStg.set(ACCOUNT, data)
       } else {
         console.log("授权登录失败")
-        window.$message?.error(msg)
+        window.$message?.error(msg || "授权登录失败")
       }
     },
     async handleUserLogin(data: HandleUserLoginPayload) {
@@ -93,7 +93,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         }
       } catch (error) {
         this.handleUserLogout()
-        window.$message?.error(error)
+        window.$message?.error(error || "登录失败")
         console.log("[chat] im登录失败 login", error)
       }
     },

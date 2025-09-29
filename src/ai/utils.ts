@@ -6,6 +6,14 @@ import { LLMParams, ModelProvider, ModelProviderKey } from "@/ai/types"
 import { useRobotStore } from "@/stores/modules/robot"
 import { localStg } from "@/utils/storage"
 
+import {
+  isOpenAIChatCompletionOnlyModel,
+  isOpenAIOpenWeightModel,
+  isOpenAIReasoningModel,
+  isQwenMTModel,
+} from "./reasoning"
+
+import type { Model } from "@/types"
 import type { ModelIDValue } from "@shared/provider"
 
 /**
@@ -345,4 +353,20 @@ export const adjustForDeepseek = (messages) => {
   }
 
   return processed.slice(0, 8)
+}
+
+export function isNotSupportTemperatureAndTopP(model: Model): boolean {
+  if (!model) {
+    return true
+  }
+
+  if (
+    (isOpenAIReasoningModel(model) && !isOpenAIOpenWeightModel(model)) ||
+    isOpenAIChatCompletionOnlyModel(model) ||
+    isQwenMTModel(model)
+  ) {
+    return true
+  }
+
+  return false
 }

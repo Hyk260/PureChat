@@ -4,7 +4,6 @@ import { useChatStore } from "@/stores"
 import { abortCompletion } from "@/utils/abortController"
 import { getFileType } from "@/utils/chat"
 
-// import { useMessageCreator } from "./useMessageCreator"
 import type { MessagePayload } from "./types"
 import type { AttachmentElement, EmojiElement, ImageElement, MentionElement } from "@/types"
 import type { IDomEditor } from "@wangeditor/editor"
@@ -108,7 +107,7 @@ export const extractAitInfo = (editor: IDomEditor) => {
 
   return {
     aitStr,
-    atUserList: Array.from(uniqueUserIds),
+    atUserList: Array.from(uniqueUserIds) as string[],
   }
 }
 
@@ -151,7 +150,9 @@ export const usePrepareMessageData = () => {
 
 export const useMessageOperations = () => {
   const chatStore = useChatStore()
-
+  /**
+   * 暂停当前正在进行的消息生成
+   */
   const pauseMessages = () => {
     const topicMessages = chatStore.currentMessageList
     if (!topicMessages) return
@@ -165,9 +166,19 @@ export const useMessageOperations = () => {
     for (const askId of askIds) {
       abortCompletion(askId)
     }
+
+    useChatStore().updateSendingState(chatStore.toAccount, "delete")
+  }
+
+  /**
+   * 重新发送消息
+   */
+  const resendMessage = (messageId: string) => {
+    console.log("resendMessage", messageId)
   }
 
   return {
+    resendMessage,
     pauseMessages,
   }
 }

@@ -1,6 +1,7 @@
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source"
 
 import { REQUEST_TIMEOUT_MS } from "@/ai/constant"
+import { isClaudeReasoningModel } from "@/ai/reasoning"
 import {
   ChatOptions,
   FewShots,
@@ -10,6 +11,7 @@ import {
   ModelProviderKey,
   OpenAIListModelResponse,
 } from "@/ai/types"
+import { isNotSupportTemperatureAndTopP } from "@/ai/utils"
 import {
   adjustForDeepseek,
   createErrorResponse,
@@ -28,6 +30,8 @@ import OllamaAI from "../ollama/ollama"
 
 export * from "./config"
 export * from "./modelValue"
+
+import type { Model } from "@/types"
 
 export const OpenaiPath = {
   ChatPath: "chat/completions", // chatgpt 聊天接口
@@ -158,6 +162,17 @@ export class OpenAiApi {
     return fetcher
   }
 
+  getTopP(top_p: number | undefined, model: any): number | undefined {
+    if (isClaudeReasoningModel(model)) {
+      return undefined
+    }
+    if (isNotSupportTemperatureAndTopP(model)) {
+      return undefined
+    }
+
+    return top_p ? top_p : undefined
+  }
+
   /**
    * 生成请求负载
    */
@@ -174,7 +189,7 @@ export class OpenAiApi {
       temperature: modelConfig.temperature, // 随机性
       presence_penalty: modelConfig.presence_penalty, //话题新鲜度
       frequency_penalty: modelConfig.frequency_penalty, // 频率惩罚度
-      top_p: modelConfig.top_p, // 核采样
+      top_p: this.getTopP(modelConfig?.top_p, { id: modelConfig.model }), // 核采样
       // tools: [] // 工具
     }
     // const tools = this.getPluginTools()

@@ -178,7 +178,8 @@ export const DB_MessageSchema = z.object({
   /**
    * @description 消息内容
    * 文本 图片 文件 自定义 群提示消息 群系统通知 合并
-   * ImagePayload
+   * 文本 TextPayload
+   * 图片 ImagePayload
    */
   payload: TextPayload,
   // payload: z.union([TextPayload, ImagePayload]).optional(),

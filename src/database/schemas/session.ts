@@ -166,7 +166,7 @@ export const DB_SessionSchema = z.object({
   customData: z.string().optional(),
   conversationGroupList: z.array(z.any()).optional(),
   draftText: z.string().optional(),
-  // **************** DB *************** //
+  // **************** Base *************** //
   id: z.string().optional(),
   createdAt: z.number().optional(),
   updatedAt: z.number().optional(),

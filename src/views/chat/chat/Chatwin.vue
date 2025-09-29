@@ -112,6 +112,7 @@ import MessageRenderer from "@/components/MessageRenderer/index.vue"
 import MyPopover from "@/components/MyPopover/index.vue"
 import UserPopup from "@/components/Popups/UserPopup.vue"
 import { MULTIPLE_CHOICE_MAX } from "@/constants"
+import { useMessageOperations } from "@/hooks/useMessageOperations"
 import { getMessageList, revokeMsg, translateText } from "@/service/im-sdk-api"
 import { useAppStore, useChatStore, useGroupStore, useUserStore } from "@/stores"
 import {
@@ -142,6 +143,7 @@ const menuItemInfo = ref<DB_Message | null>(null)
 const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null)
 const messageViewRef = ref<HTMLDivElement | null>(null)
 
+const { resendMessage } = useMessageOperations()
 const groupStore = useGroupStore()
 const chatStore = useChatStore()
 const appStore = useAppStore()
@@ -461,7 +463,7 @@ const handleSendMessage = (data: DB_Message) => {
 }
 
 const handleRefreshMsg = (data: DB_Message) => {
-  console.log("handleRefreshMsg:", data)
+  resendMessage(data.ID)
 }
 
 const handleSave = ({ payload }) => {
