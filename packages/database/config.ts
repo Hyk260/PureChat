@@ -1,4 +1,3 @@
-// 基础用户信息结构
 const BaseUserProfile = {
   userID: "",
   nick: "",
@@ -15,93 +14,6 @@ const BaseUserProfile = {
   role: 0,
   lastUpdatedTime: 0,
   profileCustomField: [],
-}
-
-// 用户信息结构
-export const UserProfile = {
-  ...BaseUserProfile,
-  userID: "admin",
-  nick: "admin",
-  avatar: "avatar",
-}
-
-// 对话列表
-export const ConversationList = {
-  conversationID: "",
-  unreadCount: 0,
-  type: "C2C",
-  lastMessage: {
-    lastTime: 0,
-    lastSequence: 0,
-    fromAccount: "",
-    type: "",
-    payload: {
-      text: "",
-    },
-    cloudCustomData: "",
-    isRevoked: false,
-    onlineOnlyFlag: false,
-    nick: "",
-    nameCard: "",
-    version: 0,
-    isPeerRead: false,
-    revoker: "",
-    messageForShow: "",
-  },
-  peerReadTime: 0,
-  groupAtInfoList: [],
-  remark: "",
-  isPinned: false,
-  messageRemindType: "AcceptAndNotify",
-  markList: [],
-  customData: "",
-  conversationGroupList: [],
-  draftText: "",
-  userProfile: {
-    ...BaseUserProfile,
-  },
-  subType: "",
-}
-
-// 基础消息元素
-export const BaseElemMessage = {
-  ID: "",
-  conversationID: "",
-  conversationType: "C2C",
-  time: 0,
-  sequence: 0,
-  clientSequence: 0,
-  random: 0,
-  priority: "Normal",
-  nick: "",
-  avatar: "",
-  isPeerRead: false,
-  nameCard: "",
-  hasRiskContent: false,
-  isPlaceMessage: 0,
-  isRevoked: false,
-  from: "",
-  to: "",
-  flow: "out",
-  isSystemMessage: false,
-  protocol: "JSON",
-  isResend: false,
-  isRead: true,
-  status: "success",
-  atUserList: [],
-  cloudCustomData: "",
-  isDeleted: false,
-  isModified: false,
-  clientTime: 0,
-  senderTinyID: "",
-  needReadReceipt: false,
-  version: "0",
-  isBroadcastMessage: false,
-  isSupportExtension: false,
-  revoker: "",
-  revokeReason: "",
-  payload: {},
-  type: "",
 }
 
 export const ProvidersList = [

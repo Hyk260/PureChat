@@ -15,3 +15,10 @@ export const UserSchema = {
   lastUpdatedTime: 0,
   profileCustomField: [],
 }
+
+export const UserProfileSchema = {
+  ...UserSchema,
+  userID: "admin",
+  nick: "admin",
+  avatar: "avatar",
+}

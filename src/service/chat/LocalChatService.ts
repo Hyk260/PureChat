@@ -1,15 +1,19 @@
-import { BaseElemMessage, ConversationList, ProvidersList, UserProfile } from "@database/config"
+import { ProvidersList } from "@database/config"
 import { cloneDeep } from "lodash-es"
 
 import { MessageModel } from "@/database/models/message"
 import { SessionModel } from "@/database/models/session"
-import { DB_Message } from "@/database/schemas/message"
-import { DB_Session } from "@/database/schemas/session"
+import {
+  MessageSchema as BaseElemMessage,
+  SessionSchema as BaseElemSession,
+  UserProfileSchema as UserProfile,
+} from "@/types"
 import { delay, getTime } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
 
+import type { DB_Message, DB_Session } from "@/types"
 import type { ChatSDK, MESSAGE_OPTIONS } from "@/types/tencent-cloud-chat"
 
 export class LocalChat {
@@ -92,7 +96,7 @@ export class LocalChat {
     emitter.emit(eventName, handler)
   }
 
-  async updateConversationLastMessage(id, data) {
+  async updateConversationLastMessage(id: string, data) {
     try {
       const session = await SessionModel.findById(id)
       if (session) {
@@ -154,7 +158,7 @@ export class LocalChat {
   async getUserProfile({ userIDList = [] }) {
     await delay(10)
     try {
-      const userIDSet = new Set(userIDList)
+      const userIDSet = new Set(userIDList) as Set<string>
       const data = ProvidersList.filter((item) => userIDSet.has(item.userID))
 
       return {
@@ -278,7 +282,7 @@ export class LocalChat {
    */
   async getConversationProfile(chatId: string) {
     try {
-      const data = cloneDeep(ConversationList) as DB_Session
+      const data = cloneDeep(BaseElemSession) as DB_Session
       data.conversationID = chatId
       data.lastMessage.lastTime = getTime()
       data.userProfile = ProvidersList.find((item) => item.userID === chatId.replace("C2C", ""))

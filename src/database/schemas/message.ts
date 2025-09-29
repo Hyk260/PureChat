@@ -187,7 +187,7 @@ export const DB_MessageSchema = z.object({
    * @description 消息类型
    */
   type: MessageTypeSchema,
-  // **************** DB *************** //
+  // **************** Base *************** //
   id: z.string().optional(),
   createdAt: z.number().optional(),
   updatedAt: z.number().optional(),
