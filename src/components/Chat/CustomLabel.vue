@@ -1,9 +1,10 @@
 <template>
   <span class="label" :class="labelClass">
     <span v-if="isFull" class="all">全员</span>
+    <span v-else-if="item?.type === 'GROUP'" class="group">群</span>
     <span v-else-if="isAuthor" class="author">作者</span>
     <span v-if="showModel" class="model">
-      <svg-icon v-if="model.icon" :local-icon="model.icon" />
+      <svg-icon v-if="model?.icon" :local-icon="model.icon" />
       <svg-icon v-else :local-icon="modelIcon" />
       <span>{{ model?.id }}</span>
     </span>
@@ -24,12 +25,12 @@ defineOptions({
 
 interface Props {
   userID?: string | undefined
-  item?: DB_Session
-  model?: Record<string, any>
+  item?: DB_Session | null
+  model?: Record<string, any> | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  item: {},
+  item: null,
   model: null,
   userID: "",
 })
@@ -72,6 +73,7 @@ const labelClass = computed(() => {
   }
 
   .all,
+  .group,
   .model,
   .author,
   .role-title {

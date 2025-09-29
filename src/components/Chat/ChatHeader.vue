@@ -31,7 +31,7 @@
         </span>
         <!-- 群聊 -->
         <span v-else-if="isGroup" class="chat-type group" @click="openSetup">
-          <span class="nickname"> {{ groupName }}</span>
+          <span class="nickname"> {{ groupName }} </span>
           <CustomLabel :item="currentConversation" />
         </span>
         <!-- 系统通知 -->
