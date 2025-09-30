@@ -7,7 +7,7 @@ import markdownItFootnote from "markdown-it-footnote"
 
 import { prettyObject } from "@/ai/utils"
 
-import { applyEpubRules, applyLinkOpenRules, configureFootnoteRules, renderCodeBlocks } from "./markdown"
+import { applyEpubRules, applyLinkOpenRules, configureFootnoteRules, applyFenceRules } from "./markdown"
 import { convertToMarkdownFootnotes, CopyIcon } from "./utils"
 
 import "@/styles/highlight.scss"
@@ -75,7 +75,7 @@ class MarkdownRenderer {
     this.md.use(markdownItContainer) // 添加对 Markdown 容器的支持
 
     configureFootnoteRules(this.md, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）
-    // applyFenceRules(this.md) // 自定义围栏代码块的渲染方式
+    applyFenceRules(this.md, false) // 自定义围栏代码块的渲染方式
     applyLinkOpenRules(this.md) // 修改链接以在新标签页中打开并添加 noopener/noreferrer
     applyEpubRules(this.md) // 将 EPUB 特定属性应用于某些 HTML 元素
   }
@@ -100,16 +100,6 @@ class MarkdownRenderer {
     }
 
     return this.md.render(contentToRender)
-  }
-
-  renderWithCodeBlocks(content: string | object, additionalWebSearchResults: WebSearchResult[] = []): string {
-    const html = this.render(content, additionalWebSearchResults)
-
-    setTimeout(() => {
-      renderCodeBlocks()
-    }, 0)
-
-    return html
   }
 }
 

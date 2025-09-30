@@ -34,12 +34,6 @@ const renderer = new MarkdownRenderer({
   webSearchResults: webSearchResult.value,
 })
 
-// const renderContent = throttle(() => {
-//   console.log("renderContent")
-//   const html = renderer.render(props.content, webSearchResult.value)
-//   renderedContent.value = html
-// }, 20)
-
 const renderContent = async () => {
   // const html = renderer.render(props.content, webSearchResult.value)
   // renderedContent.value = html
@@ -53,7 +47,7 @@ function handleMarkdownClick() {
 
 // html转ast
 const renderedContent = computed(() => {
-  // Markdown模式添加安全过滤和样式类,并处理成dom ast
+  // Markdown模式添加安全过滤和样式类 并处理成dom ast
   return parseDocument(renderer.render(props.content, webSearchResult.value)).children
   // return parseDocument(DOMPurify.sanitize(renderer.render(props.content, webSearchResult.value))).children
 })

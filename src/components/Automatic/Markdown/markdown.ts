@@ -1,7 +1,3 @@
-import { h, render } from "vue"
-
-import CodeBlock from "./CodeBlock.vue"
-
 import type Markdownit from "markdown-it"
 import type { Options } from "markdown-it"
 
@@ -71,13 +67,12 @@ export const applyEpubRules = (md: Markdownit) => {
   })
 }
 
-export const applyFenceRules = (md: Markdownit) => {
+export const applyFenceRules = (md: Markdownit, switcher: boolean = true) => {
+  if (!switcher) return
   md.renderer.rules.fence = (tokens, idx: number, _options: Options, _env, _self) => {
     const token = tokens[idx]
     const lang = token.info.trim() || "plaintext"
     const code = token.content
-    // const containerId = `code-block-${Math.random().toString(36).substr(2, 9)}`
-    // return `<div id="${containerId}" data-code="${encodeURIComponent(code)}" data-lang="${lang}" class="code-block-container"></div>`
 
     return `
       <div class="code-block-wrapper" data-lang="${lang}">
@@ -89,17 +84,4 @@ export const applyFenceRules = (md: Markdownit) => {
       </div>
     `
   }
-}
-
-export const renderCodeBlocks = () => {
-  const containers = document.querySelectorAll(".code-block-container")
-
-  containers.forEach((container) => {
-    const code = decodeURIComponent(container.getAttribute("data-code") || "")
-    const language = container.getAttribute("data-lang") || "plaintext"
-
-    const vnode = h(CodeBlock, { code, language })
-
-    render(vnode, container)
-  })
 }
