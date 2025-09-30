@@ -11,7 +11,7 @@ import { setupHtmlPlugin } from "./html"
 import { viteBuildInfo } from "./info"
 import { setupUnocss } from "./unocss"
 import { cdn } from "./cdn"
-import react from "@vitejs/plugin-react"
+// import react from "@vitejs/plugin-react"
 // import pwa from "./pwa";
 
 /**
@@ -23,11 +23,11 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta) {
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => tag === "markdown-ui",
+          // isCustomElement: (tag) => tag === "markdown-ui",
         },
       },
     }),
-    react(),
+    // react(),
     vueJsx(),
     // 打包进度
     progress(),

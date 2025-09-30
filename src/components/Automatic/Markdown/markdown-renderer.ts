@@ -1,6 +1,8 @@
 import hljs from "highlight.js"
 import javascript from "highlight.js/lib/languages/javascript"
+import python from "highlight.js/lib/languages/python"
 import markdownit from "markdown-it"
+import markdownItContainer from "markdown-it-container"
 import markdownItFootnote from "markdown-it-footnote"
 
 import { prettyObject } from "@/ai/utils"
@@ -14,6 +16,9 @@ import "highlight.js/styles/base16/default-light.css"
 // 注册 highlight.js 语言
 hljs.registerLanguage("javascript", javascript)
 hljs.registerLanguage("vue", javascript)
+hljs.registerLanguage("python", python)
+
+// hljs.configure({ ignoreUnescapedHTML: true })
 
 // 定义构造函数选项接口
 interface MarkdownRendererOptions {
@@ -35,6 +40,7 @@ class MarkdownRenderer {
     const { webSearchResults = [] } = options
 
     const clipboard = "nextElementSibling && (window.copyToClipboard(nextElementSibling.innerText))"
+    const CopyIcon1 = `<div class='cuida--copy-outline'></div>`
 
     /**
      * markdown-it 使用的高亮函数。
@@ -43,7 +49,7 @@ class MarkdownRenderer {
      * @returns {string} 高亮后的 HTML 字符串。
      */
     const highlight = (str: string, lang: string): string => {
-      const copyButtonHtml = `<button class="copy-code-button" onclick="${clipboard}" title="copy">${CopyIcon}</button>`
+      const copyButtonHtml = `<button class="copy-code-button" onclick="${clipboard}" title="copy">${CopyIcon1}</button>`
       const langHtml = lang ? `<span class="hljs-language">${lang}</span>` : ""
 
       if (str && hljs.getLanguage(lang)) {
@@ -66,6 +72,7 @@ class MarkdownRenderer {
     })
 
     this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
+    this.md.use(markdownItContainer) // 添加对 Markdown 容器的支持
 
     configureFootnoteRules(this.md, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）
     // applyFenceRules(this.md) // 自定义围栏代码块的渲染方式
