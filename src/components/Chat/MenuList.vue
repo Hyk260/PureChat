@@ -1,10 +1,10 @@
 <template>
-  <div v-show="shouldShowMenu" class="menubar">
+  <div v-if="shouldShowMenu" class="menubar">
     <div class="flex">
-      <div v-for="t in availableMenuItems" :key="t.id" class="menubar-item flex-c">
+      <div v-for="t in availableMenuItems" :key="t.id" class="menubar-item flex-c" @click="handleMenuItemClick(t)">
         <!-- :disabled="t.id === 'more'" -->
         <el-tooltip :content="t.title" placement="top">
-          <component :is="t.icon" :class="t?.class" :size="13" @click="handleMenuItemClick(t)" />
+          <component :is="t.icon" :class="t?.class" :size="13" />
           <!-- <div v-else>
             <el-popover ref="popoverTrashRef" placement="top" trigger="click" width="190">
               <div class="flex-sc gap-5 mb-10">
@@ -43,8 +43,8 @@ import {
 
 import { ElPopover } from "element-plus"
 
-import { DB_Message, MessageStatus, MessageStatusSchema } from "@/database/schemas/message"
 import { useChatStore } from "@/stores/modules/chat"
+import { DB_Message, MessageStatus, MessageStatusSchema } from "@/types"
 import { handleCopyMsg } from "@/utils/chat"
 
 defineOptions({

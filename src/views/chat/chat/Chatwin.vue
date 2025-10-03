@@ -51,7 +51,7 @@
                 </div>
                 <div :id="item.ID" class="message-view-body" :class="getMessageTypeClass(item.type)">
                   <!-- 消息编辑 -->
-                  <MessageEditingBox v-if="chatStore.msgEdit?.ID === item.ID" :self="isSelf(item)" :item="item" />
+                  <MessageEditingBox v-if="chatStore.msgEdit?.ID === item.ID" :item="item" />
                   <MessageRenderer
                     v-else
                     :key="item.ID"

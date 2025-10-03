@@ -1,28 +1,24 @@
 <template>
-  <div class="code-block-wrapper">
-    <div class="code-header">
+  <div class="code-block-wrapper" :class="{ 'with-header': isHeader }">
+    <div v-if="isHeader" class="code-header">
+      <div class="collapse-button flex-c" @click.stop="isCollapsed = !isCollapsed">
+        <ChevronRight v-if="isCollapsed" :size="14" />
+        <ChevronDown v-else :size="14" />
+      </div>
       <span class="code-language">{{ language }}</span>
-      <el-button class="copy-button" :class="{ copied: isCopied }" @click="copyCode">
-        <svg v-if="!isCopied" class="copy-icon" viewBox="0 0 24 24" width="16" height="16">
-          <path
-            fill="currentColor"
-            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
-          />
-        </svg>
-        <svg v-else class="check-icon" viewBox="0 0 24 24" width="16" height="16">
-          <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-        </svg>
-      </el-button>
+      <div class="copy-button flex-c" :class="{ copied: isCopied }" title="copy" @click.stop="copyCode">
+        <Check v-if="isCopied" :size="14" />
+        <Copy v-else :size="14" />
+      </div>
     </div>
-    <div class="code-content" v-html="highlightedCode"></div>
+    <div class="code-content" :class="{ collapsed: isCollapsed }" v-html="highlightedCode"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { Check, ChevronDown, ChevronRight, Copy } from "lucide-vue-next"
 
-import { ElButton } from "element-plus"
-import hljs from "highlight.js"
+import { MarkdownRenderer } from "./markdown-renderer"
 
 interface Props {
   code: string
@@ -34,18 +30,16 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const isCopied = ref(false)
+const isCollapsed = ref(false)
+const isHeader = computed(() => ["html", "css", "javascript", "vue"].includes(props.language))
+
+const highlight = new MarkdownRenderer().highlight
 
 const highlightedCode = computed(() => {
-  if (props.code && hljs.getLanguage(props.language)) {
-    const result = hljs.highlight(props.code, {
-      language: props.language,
-      ignoreIllegals: true,
-    })
-    return `<pre class="hljs language-${props.language}"><code>${result.value}</code></pre>`
-  } else {
-    const escapedCode = props.code
-    return `<pre class="hljs"><code>${escapedCode}</code></pre>`
-  }
+  return highlight(props.code, props.language, {
+    showLang: !isHeader.value,
+    showCopy: !isHeader.value,
+  })
 })
 
 const copyCode = async () => {
@@ -60,5 +54,67 @@ const copyCode = async () => {
   }
 }
 </script>
+<style lang="scss">
+:root {
+  --markdown-border-radius: 4;
+  --markdown-font-size: 14px;
+  --markdown-header-multiple: 0.25;
+  --markdown-line-height: 1.6;
+  --markdown-margin-multiple: 1;
+}
+.with-header {
+  .code-content {
+    background: transparent !important;
+    border-block-start: 1px solid rgba(0, 0, 0, 0.015);
+  }
+  pre {
+    border-radius: 0 0 4px 4px !important;
+  }
+}
+</style>
+<style lang="scss" scoped>
+.code-block-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  -webkit-transition: background-color 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: background-color 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  background: rgba(0, 0, 0, 0.03);
+  margin-block: calc(var(--markdown-margin-multiple) * 0.5em);
+  border-radius: calc(var(--markdown-border-radius) * 1px);
+  box-shadow: 0 0 0 1px var(--markdown-border-color) inset;
 
-<style scoped></style>
+  .code-header {
+    background: rgba(0, 0, 0, 0.015);
+    position: relative;
+    padding: 4px;
+    display: flex;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    width: 100%;
+
+    .copy-button,
+    .collapse-button {
+      cursor: pointer;
+      border-radius: 4px;
+      width: 24px;
+      height: 24px;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.03);
+      }
+    }
+  }
+
+  .code-content {
+    background: transparent !important;
+  }
+
+  .collapsed {
+    height: 0px;
+  }
+}
+</style>

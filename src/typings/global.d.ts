@@ -61,6 +61,7 @@ declare global {
    * 是否为本地模式
    */
   export const __LOCAL_MODE__: boolean;
+
   /** Build time of the project */
   export const BUILD_TIME: string;
 }

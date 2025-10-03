@@ -1,7 +1,6 @@
 <template>
-  <!-- <div class="markdown-body" @click="handleMarkdownClick" v-html="renderedContent"></div> -->
   <div class="markdown-body" @click="handleMarkdownClick">
-    <MarkdownNodeRenderer v-for="(node, index) in renderedContent" :key="index" :node="node" />
+    <MarkdownNodeRenderer v-for="(item, index) in renderedContent" :key="index" :node="item" />
   </div>
 </template>
 
@@ -24,8 +23,6 @@ const props = withDefaults(defineProps<Props>(), {
   cloudCustomData: null,
 })
 
-// const renderedContent = ref("")
-
 const webSearchResult = computed(() => {
   return props.cloudCustomData?.messageReply?.webSearchResult || []
 })
@@ -33,11 +30,6 @@ const webSearchResult = computed(() => {
 const renderer = new MarkdownRenderer({
   webSearchResults: webSearchResult.value,
 })
-
-const renderContent = async () => {
-  // const html = renderer.render(props.content, webSearchResult.value)
-  // renderedContent.value = html
-}
 
 function handleMarkdownClick() {
   console.log("webSearchResult:", webSearchResult.value)
@@ -65,85 +57,43 @@ const MarkdownNodeRenderer = defineComponent({
       const { node } = props
       if (node.type === "text") {
         return node.data
-      }
-      // else if (node.type === "tag" && node.tagName === "pre") {
-      //   console.log("node:", node)
-      //   debugger
-      //   return h(
-      //     CodeBlock,
-      //     { ...node.attribs },
-      //     node.children.map((child, index) => h(MarkdownNodeRenderer, { node: child, key: index }))
-      //   )
-      // }
-      else {
+      } else if (node.type === "tag" && node.tagName === "pre") {
+        // 找到 <code> 子节点并提取其中的文本内容作为 code prop，同时尝试解析语言类名
+        const codeChild = (node.children || []).find((c: any) => c.type === "tag" && c.tagName === "code")
+
+        // 递归收集文本节点内容
+        const collectText = (n: any): string => {
+          if (!n) return ""
+          if (n.type === "text") return n.data || ""
+          if (n.children && n.children.length) return n.children.map((ch: any) => collectText(ch)).join("")
+          return ""
+        }
+
+        let codeText = ""
+        let language = "plaintext"
+
+        if (codeChild) {
+          codeText = collectText(codeChild)
+          const classAttr =
+            (codeChild.attribs && (codeChild.attribs.class || codeChild.attribs["className"])) ||
+            (node.attribs && (node.attribs.class || node.attribs["className"])) ||
+            ""
+          const m = /(?:language|lang)-([\w-]+)/.exec(classAttr)
+          language = m?.[1] ?? language
+        } else {
+          codeText = collectText(node)
+        }
+        return h(CodeBlock, { code: codeText, language })
+      } else {
         return h(
           node.tagName,
           { ...node.attribs },
-          node.children.map((child, index) => h(MarkdownNodeRenderer, { node: child, key: index }))
+          node.children.map((child: any, index: number) => h(MarkdownNodeRenderer, { node: child, key: index }))
         )
       }
     }
   },
 })
-
-// onMounted(() => {
-//   renderContent()
-// })
-
-// watch([() => props.content], renderContent, { immediate: true })
 </script>
 
-<style lang="scss" scoped>
-.markdown-body {
-  user-select: text;
-  -webkit-user-select: text;
-  contain: layout style paint;
-  will-change: contents;
-
-  &.streaming {
-    position: relative;
-
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 8px;
-      height: 20px;
-      background: #007acc;
-      animation: blink 1s infinite;
-    }
-  }
-}
-
-.markdown-chunk {
-  user-select: text;
-  -webkit-user-select: text;
-  display: contents;
-}
-
-@keyframes blink {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  51%,
-  100% {
-    opacity: 0;
-  }
-}
-
-.markdown-body :deep(pre),
-.markdown-body :deep(code),
-.markdown-body :deep(table),
-.markdown-body :deep(p),
-.markdown-body :deep(h1),
-.markdown-body :deep(h2),
-.markdown-body :deep(h3),
-.markdown-body :deep(h4),
-.markdown-body :deep(h5),
-.markdown-body :deep(h6) {
-  user-select: text;
-  -webkit-user-select: text;
-}
-</style>
+<style lang="scss" scoped></style>
