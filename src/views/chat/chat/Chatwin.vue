@@ -463,7 +463,7 @@ const handleSendMessage = (data: DB_Message) => {
 }
 
 const handleRefreshMsg = (data: DB_Message) => {
-  resendMessage(data.ID)
+  resendMessage(data.ID, data)
 }
 
 const handleSave = ({ payload }) => {

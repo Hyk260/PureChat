@@ -17,13 +17,15 @@ import type { AIResponse } from "@/types"
 interface ChatServiceParams {
   messages: DB_Message[]
   chat: DB_Message
+  loadMessage?: DB_Message
   provider: ModelProviderKey
 }
 
 class ChatService {
-  async sendMessage({ messages, chat, provider }: ChatServiceParams) {
+  async sendMessage({ messages, chat, provider, loadMessage }: ChatServiceParams) {
+    // debugger
     const api = new ClientApi(provider)
-    const startMsg = this.createStartMessage(chat)
+    const startMsg = loadMessage || this.createStartMessage(chat)
 
     if (this.shouldAbortSend(api, startMsg)) return
 

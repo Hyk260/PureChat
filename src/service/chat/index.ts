@@ -9,7 +9,6 @@ import { setMessageRead } from "@/service/im-sdk-api"
 import { useChatStore, useGroupStore, useUserStore } from "@/stores"
 import { scrollToDomPosition } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
-import { localStg } from "@/utils/storage"
 
 import { checkoutNetState, getConversationList, kickedOutReason } from "./utils"
 
@@ -62,7 +61,7 @@ export class TIMProxy {
       userProfile: this.userProfile,
     }
 
-    localStg.set("timProxy", stateData)
+    window.localStg.set("timProxy", stateData)
   }
 
   init() {
@@ -264,7 +263,7 @@ export class TIMProxy {
   onError({ data }: { data: { message: string } }) {
     console.log("[chat] SDK 错误:", data)
     if (data.message !== "Network Error") {
-      window.$message?.error(data.message)
+      window.$message?.error(data?.message || "发生未知错误")
     }
   }
 
@@ -276,7 +275,9 @@ export class TIMProxy {
 
     if (!data?.length) return
 
-    useChatStore().modifiedMessages(cloneDeep(data[0]) as DB_Message)
+    const messages = cloneDeep(data[0])
+
+    if (messages) useChatStore().modifiedMessages(messages)
   }
 
   /**

@@ -118,6 +118,10 @@ export class MarkdownRenderer {
   render(content: string | object, additionalWebSearchResults: WebSearchResult[] = []): string {
     let contentToRender: string = content as string
 
+    if (!contentToRender) {
+      throw new Error("内容不能为空")
+    }
+
     if (typeof contentToRender !== "string") {
       contentToRender = prettyObject(contentToRender)
     }

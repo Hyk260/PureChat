@@ -82,7 +82,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     getNonBotC2CList(): DB_Session[] {
       return this.conversationList.filter((t) => t.type === "C2C" && !/@RBT#/.test(t.conversationID))
     },
-    currentSessionProvider(): ModelProviderKey | "" {
+    currentSessionProvider(): ModelProviderKey {
       const provider = getModelType(this.toAccount)
       return provider
     },

@@ -119,6 +119,7 @@ export const MessageTypeSchema = z.enum([
 ])
 
 export const DB_MessageSchema = z.object({
+  // ***************** TIMMessage ***************** //
   ID: z.string().uuid(),
   conversationID: z.string(),
   /**
@@ -166,7 +167,7 @@ export const DB_MessageSchema = z.object({
   clientTime: z.number(),
   senderTinyID: z.string(),
   needReadReceipt: z.boolean(),
-  version: z.string(),
+  version: z.union([z.number(), z.string()]),
   isBroadcastMessage: z.boolean(),
   isSupportExtension: z.boolean(),
   /**
@@ -183,11 +184,12 @@ export const DB_MessageSchema = z.object({
    */
   payload: TextPayload,
   // payload: z.union([TextPayload, ImagePayload]).optional(),
-  isTimeDivider: z.boolean().optional(),
   /**
    * @description 消息类型
    */
   type: MessageTypeSchema,
+  // **************** Time *************** //
+  isTimeDivider: z.boolean().optional(),
   // **************** Base *************** //
   id: z.string().optional(),
   createdAt: z.number().optional(),

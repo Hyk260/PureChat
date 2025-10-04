@@ -1,11 +1,16 @@
+import { cloneDeep } from "lodash-es"
 import { storeToRefs } from "pinia"
 
+// import { getModelType } from "@/ai/utils"
+import { sendChatAssistantMessage } from "@/service/chatService"
 import { useChatStore } from "@/stores"
 import { abortCompletion } from "@/utils/abortController"
 import { getFileType } from "@/utils/chat"
+// import { createCustomMessage } from "@/service/im-sdk-api"
+import { getCustomMsgContent } from "@/utils/common"
 
 import type { MessagePayload } from "./types"
-import type { AttachmentElement, EmojiElement, ImageElement, MentionElement } from "@/types"
+import type { AttachmentElement, DB_Message, EmojiElement, ImageElement, MentionElement } from "@/types"
 import type { IDomEditor } from "@wangeditor/editor"
 
 export const isVideoFile = (fileName: string) => {
@@ -171,10 +176,34 @@ export const useMessageOperations = () => {
   }
 
   /**
-   * 重新发送消息
+   * AI助手从新生成消息
    */
-  const resendMessage = (messageId: string) => {
-    console.log("resendMessage", messageId)
+  const resendMessage = async (messageId: string, data: DB_Message) => {
+    const payload = getCustomMsgContent({ data: null, type: "loading" })
+    const message = {
+      ...data,
+      type: "TIMCustomElem",
+      payload,
+    }
+
+    const deepMessage = cloneDeep(message)
+
+    useChatStore().modifiedMessages(deepMessage)
+
+    Object.assign(message, { type: "TIMTextElem" })
+
+    // 取到当前消息列表中与 messageId 匹配之前的数据（不包含匹配的消息）
+    const allMessages = useChatStore().currentMessageList || []
+    // 有些消息对象可能使用 ID 或 id 字段，兼容两种情况
+    const matchIndex = allMessages.findIndex((m) => m.ID === messageId)
+    const priorMessages = matchIndex > -1 ? allMessages.slice(0, matchIndex) : allMessages
+
+    await sendChatAssistantMessage({
+      chat: message,
+      loadMessage: message,
+      provider: useChatStore().currentSessionProvider,
+      messages: cloneDeep(priorMessages),
+    })
   }
 
   return {
