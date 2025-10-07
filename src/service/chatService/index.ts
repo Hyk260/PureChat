@@ -10,7 +10,7 @@ import { useChatStore, useRobotStore } from "@/stores"
 import { getCloudCustomData } from "@/utils/chat"
 import { getCustomMsgContent, getTime } from "@/utils/common"
 import { generateReferencePrompt, handleWebSearchData } from "@/utils/messageUtils/search"
-import emitter from "@/utils/mitt-bus"
+import { emitUpdateScroll, emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
 import type { AIResponse } from "@/types"
 
@@ -23,7 +23,7 @@ interface ChatServiceParams {
 
 class ChatService {
   async sendMessage({ messages, chat, provider, loadMessage }: ChatServiceParams) {
-    // debugger
+    debugger
     const api = new ClientApi(provider)
     const startMsg = loadMessage || this.createStartMessage(chat)
 
@@ -40,9 +40,13 @@ class ChatService {
         model: api.config().model,
       },
       onUpdate: (data: AIResponse) => this.handleUpdate(startMsg, data),
-      onFinish: (data: AIResponse) => this.handleFinish(data, startMsg, chat),
+      onFinish: (data: AIResponse) => {
+        this.handleFinish(data, startMsg, chat)
+      },
       onReasoningMessage: (think: string) => this.handleReasoningMessage(startMsg, think),
-      onError: (errorText: string) => this.handleError(startMsg, chat, errorText),
+      onError: (errorText: string) => {
+        this.handleError(startMsg, chat, errorText)
+      },
       onController: (controller) => this.handleController(controller),
     })
   }
@@ -101,7 +105,7 @@ class ChatService {
       message: cloneDeep(chat),
     })
 
-    emitter.emit("updateScroll", "robot")
+    emitUpdateScrollImmediate("robot")
   }
 
   private createStartMessage(params: DB_Message): DB_Message {
@@ -125,14 +129,14 @@ class ChatService {
     return msg
   }
 
-  private createAlertMessage(startMsg: DB_Message, provider: ModelProviderKey) {
+  private createAlertMessage(startMsg: DB_Message) {
     const alertData = cloneDeep(startMsg)
 
     Object.assign(alertData, {
       clientTime: getTime(),
       type: "TIMCustomElem",
       status: "success",
-      payload: getCustomMsgContent({ data: { provider }, type: "warning" }),
+      payload: getCustomMsgContent({ data: null, type: "warning" }),
     })
 
     useChatStore().updateMessages({
@@ -151,7 +155,7 @@ class ChatService {
     }
 
     setTimeout(() => {
-      this.createAlertMessage(startMsg, api.llm.provider)
+      this.createAlertMessage(startMsg)
       useChatStore().updateSendingState(startMsg.from, "delete")
     }, 500)
 
@@ -206,6 +210,7 @@ class ChatService {
     try {
       const finishedData = { ...data, done: true }
       this.updateMessage(startMsg, finishedData)
+      emitUpdateScrollImmediate("robot")
       await this.sendRestMessage(chatParams, finishedData)
     } catch (error) {
       console.error("处理消息完成时出错:", error)
@@ -241,6 +246,7 @@ class ChatService {
     } catch (error) {
       console.error("处理错误消息时出错:", error)
     } finally {
+      emitUpdateScrollImmediate("robot")
       useChatStore().updateSendingState(chatParams.to, "delete")
     }
   }

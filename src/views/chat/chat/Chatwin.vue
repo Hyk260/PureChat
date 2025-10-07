@@ -249,19 +249,23 @@ const onClickAvatar = (e: Event | null, item: DB_Message) => {
 }
 
 // 检查滚动条是否到达页面底部
-const isScrolledToBottom = (lower = 2) => {
-  try {
-    let threshold = lower
-    const wrapRef = scrollbarRef.value?.wrapRef
-    if (!wrapRef) return false
+const isScrolledToBottom = (lower = 2): boolean => {
+  const threshold = Math.max(0, Number(lower) || 0)
 
-    const { scrollTop, clientHeight, scrollHeight } = wrapRef
-    const isBot = scrollHeight - (scrollTop + clientHeight) < threshold
-    if (isBot) console.log("isScrolledToBottom: 到底部")
-    return isBot
-  } catch {
+  const wrapRef = scrollbarRef.value?.wrapRef
+  if (!wrapRef) return false
+
+  const scrollTop = Number(wrapRef.scrollTop ?? 0)
+  const clientHeight = Number(wrapRef.clientHeight ?? 0)
+  const scrollHeight = Number(wrapRef.scrollHeight ?? 0)
+
+  if (!Number.isFinite(scrollTop) || !Number.isFinite(clientHeight) || !Number.isFinite(scrollHeight)) {
     return false
   }
+
+  // 计算距离底部的像素值
+  const distanceToBottom = scrollHeight - (scrollTop + clientHeight)
+  return distanceToBottom <= threshold
 }
 
 const loadMoreMessages = () => {
@@ -278,14 +282,11 @@ const handleEnReached = (direction: string) => {
   }
 }
 
-const handleScrollbar = (data) => {
-  debouncedFunc(data)
+const handleScrollbar = () => {
+  debouncedFunc()
 }
 
-const updateScrollBarHeight = (type?: string) => {
-  if (type) {
-    console.log("scrollBar:", type)
-  }
+const updateScrollBarHeight = () => {
   nextTick(() => {
     // scrollbarRef.value?.setScrollTop(0);
     scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight)
@@ -322,7 +323,7 @@ const loadMoreMsg = async () => {
     })
 
     // console.log("getMessageList:", result);
-    const { isCompleted, messageList, nextReqMessageID } = result
+    const { isCompleted, messageList } = result
     if (!messageList.length && isCompleted) {
       // console.log("[chat] 没有更多消息了 loadMoreMsg:");
       chatStore.setNoMore(true)
@@ -521,20 +522,44 @@ const handleRevokeMsg = async (data: DB_Message) => {
   }, 60000)
 }
 
-function onEmitter() {
-  emitter.on("updateScroll", (type: string) => {
+let updateScrollRaf: number | null = null
+
+const updateScrollHandler = (type?: "bottom" | "robot" | undefined) => {
+  try {
+    if (updateScrollRaf !== null) cancelAnimationFrame(updateScrollRaf)
+
     if (type === "bottom") {
-      isScrolledToBottom() && updateScrollBarHeight()
-    } else if (type === "robot") {
-      isScrolledToBottom(10) && updateScrollBarHeight()
-    } else {
-      updateScrollBarHeight(type)
+      if (isScrolledToBottom()) {
+        updateScrollBarHeight()
+      }
+      return
     }
-  })
+
+    if (type === "robot") {
+      if (isScrolledToBottom(15)) {
+        updateScrollBarHeight()
+        // updateScrollRaf = requestAnimationFrame(() => updateScrollBarHeight())
+      }
+      return
+    }
+
+    // 立即调度更新（在下一帧）
+    updateScrollRaf = requestAnimationFrame(() => updateScrollBarHeight())
+  } catch {
+    // ignore
+  }
+}
+
+function onEmitter() {
+  emitter.on("updateScroll", updateScrollHandler)
 }
 
 function offEmitter() {
-  emitter.off("updateScroll")
+  emitter.off("updateScroll", updateScrollHandler)
+  if (updateScrollRaf !== null) {
+    cancelAnimationFrame(updateScrollRaf)
+    updateScrollRaf = null
+  }
 }
 
 watch(

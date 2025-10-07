@@ -23,7 +23,7 @@ import { SetupStoreId } from "@/stores/enum"
 import { getCloudCustomData } from "@/utils/chat"
 import { addTimeDivider, checkTextNotEmpty, getBaseTime, scrollToMessage } from "@/utils/chat"
 import { delay } from "@/utils/common"
-import emitter from "@/utils/mitt-bus"
+import { emitUpdateScroll } from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 
 import { useGroupStore } from "../group"
@@ -210,7 +210,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
           this.currentMessageList = [message]
         }
       }
-      emitter.emit("updateScroll")
+      emitUpdateScroll()
     },
     updateSelectedConversation(payload: DB_Session) {
       const { conversationID: sessionId } = payload
@@ -336,7 +336,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       // 消息上屏 预加载
       this.updateMessages({ sessionId, message })
-      emitter.emit("updateScroll")
+      emitUpdateScroll()
       const { code, message: result } = await sendMessage(message)
       if (code === 0) {
         this.sendMsgSuccessCallback({ sessionId, message: result, last })
@@ -348,7 +348,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       console.log("消息发送成功 sendMsgSuccessCallback", data)
       const { sessionId, message, last } = data
       this.updateMessages({ sessionId, message })
-      emitter.emit("updateScroll")
+      emitUpdateScroll()
       if (last && ModelIDList.includes(message?.to as ModelIDValue)) {
         await delay(30)
         await sendChatAssistantMessage({
@@ -367,8 +367,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const { messageList, isCompleted: isDone } = await getMessageList({ conversationID: sessionId })
       const message = addTimeDivider(messageList)
       this.addMessage({ conversationID: sessionId, isDone, message })
-      emitter.emit("updateScroll")
-      setMessageRead(data)
+      emitUpdateScroll()
+      setMessageRead({ conversationID: data.conversationID })
     },
     async addConversation(action: { sessionId: string }) {
       const { sessionId } = action
@@ -383,7 +383,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       if (this.isAssistant) {
         useRobotStore().updateModelConfig()
       }
-      emitter.emit("updateScroll")
+      emitUpdateScroll()
     },
     clearCurrentMessage() {
       this.isChatBoxVisible = false

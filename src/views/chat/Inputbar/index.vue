@@ -85,8 +85,8 @@
       </el-button>
     </el-tooltip>
     <!-- 滚动到底部 -->
-    <el-tooltip :content="$t('chat.scrollToTheBottom')" placement="top">
-      <el-button v-show="showBottomBtn" class="chat-top animate-chat-slide-in" @click="scrollToBottomBtn">
+    <el-tooltip v-if="showBottomBtn" :content="$t('chat.scrollToTheBottom')" placement="top">
+      <el-button class="chat-top animate-chat-slide-in" @click="scrollToBottomBtn">
         <el-icon class="svg-left"><DArrowLeft /></el-icon>
       </el-button>
     </el-tooltip>
@@ -120,7 +120,7 @@ import WebSearchService from "@/service/WebSearchService"
 import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores"
 import { createFileInput } from "@/utils/common"
 import { showConfirmationBox } from "@/utils/message"
-import emitter from "@/utils/mitt-bus"
+import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
 import EmojiPicker from "./EmojiPicker.vue"
 import RobotModel from "./RobotModel.vue"
@@ -243,7 +243,7 @@ function sendFile(files: FileList) {
 }
 
 const scrollToBottomBtn = () => {
-  emitter.emit("updateScroll")
+  emitUpdateScrollImmediate()
 }
 
 onMounted(() => {

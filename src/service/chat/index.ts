@@ -8,7 +8,7 @@ import chat from "@/service/chat/PureChatService"
 import { setMessageRead } from "@/service/im-sdk-api"
 import { useChatStore, useGroupStore, useUserStore } from "@/stores"
 import { scrollToDomPosition } from "@/utils/chat"
-import emitter from "@/utils/mitt-bus"
+import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
 import { checkoutNetState, getConversationList, kickedOutReason } from "./utils"
 
@@ -435,7 +435,7 @@ export class TIMProxy {
       })
     }
 
-    emitter.emit("updateScroll", "bottom")
+    emitUpdateScrollImmediate("bottom")
   }
 
   /**

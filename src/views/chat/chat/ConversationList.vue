@@ -90,7 +90,7 @@ import { setMessageRemindType } from "@/service/im-sdk-api"
 import { useChatStore, useGroupStore, useUserStore } from "@/stores"
 import { chatName, formatContent } from "@/utils/chat"
 import { encodeHTML } from "@/utils/common"
-import emitter from "@/utils/mitt-bus"
+import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 import { timeFormat } from "@/utils/timeFormat"
 
 import EmptyMessage from "../components/EmptyMessage.vue"
@@ -246,7 +246,7 @@ const handleConversationListClick = (data: DB_Session) => {
   emitter.emit("handleInsertDraft", {
     sessionId: data?.conversationID,
   })
-  emitter.emit("updateScroll")
+  emitUpdateScrollImmediate()
 }
 
 const handleClickMenuItem = (item: { id: string }) => {

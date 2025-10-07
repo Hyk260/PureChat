@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="drawer" class="setup-modal" :lock-scroll="false" :show-close="false" width="700">
+  <el-dialog v-model="drawer" class="setup-modal" :lock-scroll="false" :show-close="false" fullscreen width="70%">
     <div class="ui-modal-body">
       <List ref="listRef" @active="active" />
       <ItemGrid :item="item" @on-close="setDrawer(false)" />
@@ -19,7 +19,7 @@ import List from "./list.vue"
 
 const listRef = ref()
 const item = ref(list.value[0])
-const [drawer, setDrawer] = useState()
+const [drawer, setDrawer] = useState(false)
 
 function setItem(data = list.value[0]) {
   listRef.value?.handleItemClick(data)
@@ -54,8 +54,13 @@ onUnmounted(() => {
 :global(body .setup-modal .el-dialog__header) {
   display: none;
 }
+:global(body .setup-modal .el-dialog__body) {
+  height: 100%;
+}
+
 .ui-modal-body {
-  height: 500px;
+  // height: 540px;
+  height: 100%;
   display: flex;
 }
 </style>

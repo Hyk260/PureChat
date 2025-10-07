@@ -1,3 +1,4 @@
+import { debounce } from "lodash-es"
 import mitt, { type Emitter } from "mitt"
 
 import type { GroupMember } from "@/stores/modules/group/type"
@@ -23,5 +24,26 @@ export interface Events {
 }
 
 const emitter: Emitter<Events> = mitt<Events>()
+
+export const emitUpdateScroll = debounce((type?: any) => {
+  try {
+    emitter.emit("updateScroll", type)
+  } catch {
+    /* ignore */
+  }
+}, 5)
+
+export const emitUpdateScrollImmediate = (type?: any) => {
+  try {
+    emitUpdateScroll.cancel?.()
+  } catch {
+    /* ignore */
+  }
+  try {
+    emitter.emit("updateScroll", type)
+  } catch {
+    /* ignore */
+  }
+}
 
 export default emitter

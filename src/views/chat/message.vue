@@ -41,7 +41,7 @@ import { storeToRefs } from "pinia"
 import ChatHeader from "@/components/Chat/ChatHeader.vue"
 import MessageToolbar from "@/components/Popups/MessageToolbar.vue"
 import { useChatStore } from "@/stores/modules/chat"
-import emitter from "@/utils/mitt-bus"
+import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
 import Chatwin from "./chat/Chatwin.vue"
 import ConversationList from "./chat/ConversationList.vue"
@@ -62,7 +62,7 @@ const toggleCollapsed = () => {
 
 onActivated(() => {
   console.log("onActivated")
-  emitter.emit("updateScroll")
+  emitUpdateScrollImmediate()
 })
 
 onDeactivated(() => {
@@ -70,7 +70,7 @@ onDeactivated(() => {
 })
 
 onMounted(() => {
-  emitter.emit("updateScroll")
+  emitUpdateScrollImmediate()
 })
 </script>
 
