@@ -1,11 +1,14 @@
 <template>
-  <div class="code-block-wrapper" :class="{ 'with-header': isHeader }">
-    <div v-if="isHeader" class="code-header">
+  <div class="code-block-wrapper" :class="{ 'with-header': showHeader }">
+    <div v-if="showHeader" class="code-header">
       <div class="collapse-button flex-c" @click.stop="isCollapsed = !isCollapsed">
         <ChevronRight v-if="isCollapsed" :size="14" />
         <ChevronDown v-else :size="14" />
       </div>
-      <span class="code-language">{{ language }}</span>
+      <div>
+        <span class="icon-slot" v-html="languageIcon" />
+        <span class="code-language">{{ language }}</span>
+      </div>
       <div class="copy-button flex-c" :class="{ copied: isCopied }" title="copy" @click.stop="copyCode">
         <Check v-if="isCopied" :size="14" />
         <Copy v-else :size="14" />
@@ -17,6 +20,8 @@
 
 <script setup lang="ts">
 import { Check, ChevronDown, ChevronRight, Copy } from "lucide-vue-next"
+
+import { getLanguageIcon, languageMapValues } from "@/utils/languageIcon"
 
 import { MarkdownRenderer } from "./markdown-renderer"
 
@@ -31,15 +36,21 @@ const props = withDefaults(defineProps<Props>(), {
 
 const isCopied = ref(false)
 const isCollapsed = ref(false)
-const isHeader = computed(() => ["html", "css", "javascript", "vue"].includes(props.language))
+const showHeader = computed(() => languageMapValues.includes(props.language))
 
 const highlight = new MarkdownRenderer().highlight
 
 const highlightedCode = computed(() => {
   return highlight(props.code, props.language, {
-    showLang: !isHeader.value,
-    showCopy: !isHeader.value,
+    showLang: !showHeader.value,
+    showCopy: !showHeader.value,
   })
+})
+
+// Computed property for language icon
+const languageIcon = computed(() => {
+  const lang = props.language.trim().toLowerCase()
+  return getLanguageIcon(lang.split(":")[0] || "")
 })
 
 const copyCode = async () => {
@@ -95,6 +106,11 @@ const copyCode = async () => {
     -webkit-box-align: center;
     align-items: center;
     width: 100%;
+    .icon-slot {
+      // display: inline-flex;
+      // align-items: center;
+      // justify-content: center;
+    }
 
     .copy-button,
     .collapse-button {

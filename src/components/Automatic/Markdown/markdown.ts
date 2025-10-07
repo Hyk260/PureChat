@@ -1,5 +1,5 @@
 import type Markdownit from "markdown-it"
-import type { Options } from "markdown-it"
+// import type { Options } from "markdown-it"
 
 export const EPUB_RULES = {
   footnote_ref: ["<a", '<a epub:type="noteref" target="_blank" rel="noopener noreferrer"'],
@@ -12,9 +12,9 @@ export const EPUB_RULES = {
  */
 export const configureFootnoteRules = (md: Markdownit, results: any[] = []) => {
   // 脚注引用样式 (正文中的 [^1] 样式)
-  md.renderer.rules.footnote_ref = (tokens, id: number) => {
+  md.renderer.rules.footnote_ref = (tokens: any, id: number) => {
     const n = Number(tokens[id].meta.id + 1).toString()
-    const data = results?.find((t) => t.id == n)
+    const data = results?.find((t) => t.id === n)
     if (data?.sourceUrl) {
       return `<sup class="footnote-ref"><a href="${data.sourceUrl}">[${n}]</a></sup>`
     } else {
@@ -37,9 +37,9 @@ export const configureFootnoteRules = (md: Markdownit, results: any[] = []) => {
 
   md.renderer.rules.footnote_close = () => "</li>\n"
 
-  md.renderer.rules.footnote_anchor = (tokens, id: number) => {
+  md.renderer.rules.footnote_anchor = (tokens: any, id: number) => {
     const n = Number(tokens[id].meta.id + 1).toString()
-    const data = results?.find((t) => t.id == n)
+    const data = results?.find((t) => t.id === n)
     if (data?.sourceUrl) {
       return ""
       // return `<a href="${data.sourceUrl}" target="_blank" rel="noopener noreferrer" class="footnote-backref">\u21a9\ufe0e</a>`;
@@ -51,7 +51,7 @@ export const configureFootnoteRules = (md: Markdownit, results: any[] = []) => {
 
 // 链接添加 target="_blank"
 export const applyLinkOpenRules = (md: Markdownit) => {
-  md.renderer.rules.link_open = (tokens, id: number) => {
+  md.renderer.rules.link_open = (tokens: any, id: number) => {
     tokens[id].attrSet("target", "_blank")
     tokens[id].attrSet("rel", "noopener noreferrer")
     return md.renderer.renderToken(tokens, id, {})
@@ -69,7 +69,7 @@ export const applyEpubRules = (md: Markdownit) => {
 
 export const applyFenceRules = (md: Markdownit, switcher: boolean = true) => {
   if (!switcher) return
-  md.renderer.rules.fence = (tokens, idx: number, _options: Options, _env, _self) => {
+  md.renderer.rules.fence = (tokens: any, idx: number) => {
     const token = tokens[idx]
     const lang = token.info.trim() || "plaintext"
     const code = token.content
