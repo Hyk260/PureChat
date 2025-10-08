@@ -48,6 +48,7 @@ const MarkdownNodeRender = defineComponent({
           codeText = collectText(node)
         }
         console.log("Rendering code block:", { language, codeText })
+        if (!codeText.trim()) return null
         return h(CodeBlock, { code: codeText, language })
       } else if (node.type === "tag" && node.tagName === "table" && props.showCustomTable) {
         // Tables 组件：把 table AST 转为 columns + data 传给 Tables 组件渲染

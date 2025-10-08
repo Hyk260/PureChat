@@ -23,7 +23,6 @@ interface ChatServiceParams {
 
 class ChatService {
   async sendMessage({ messages, chat, provider, loadMessage }: ChatServiceParams) {
-    debugger
     const api = new ClientApi(provider)
     const startMsg = loadMessage || this.createStartMessage(chat)
 

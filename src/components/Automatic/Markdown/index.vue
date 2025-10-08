@@ -13,9 +13,9 @@ import { prettyObject } from "@/ai/utils"
 
 import MarkdownRenderer from "./markdown-renderer"
 import MarkdownNodeRender from "./MarkdownNodeRenderer"
-import { parseMarkdownToStructure } from "./utils"
+// import { parseMarkdownToStructure } from "./utils"
 
-import type { BaseNode } from "./types"
+// import type { BaseNode } from "./types"
 
 defineOptions({ name: "Markdown" })
 
@@ -50,14 +50,14 @@ const renderedContent = computed(() => {
     contentToRender = prettyObject(contentToRender)
   }
   // Markdown模式添加安全过滤和样式类 并处理成dom ast
-  return parseDocument(renderer.render(contentToRender, webSearchResult.value)).children
-  // return parseDocument(DOMPurify.sanitize(renderer.render(contentToRender, webSearchResult.value))).children
+  // return parseDocument(renderer.render(contentToRender, webSearchResult.value)).children
+  return parseDocument(DOMPurify.sanitize(renderer.render(contentToRender, webSearchResult.value))).children
 })
 
-const parsedNodes = computed<BaseNode[]>(() => {
-  // 解析 content 字符串为节点数组
-  return props.content ? parseMarkdownToStructure(props.content, renderer.getMarkdown()) : []
-})
+// const parsedNodes = computed<BaseNode[]>(() => {
+//   // 解析 content 字符串为节点数组
+//   return props.content ? parseMarkdownToStructure(props.content, renderer.getMarkdown()) : []
+// })
 </script>
 
 <style lang="scss" scoped></style>

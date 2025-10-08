@@ -72,11 +72,7 @@
           </div>
         </div>
         <!-- sentinel for intersection observer to detect bottom -->
-        <div
-          ref="bottomSentinelRef"
-          class="message-bottom-sentinel"
-          style="width: 1px; height: 1px; opacity: 0; pointer-events: none"
-        ></div>
+        <div ref="bottomSentinelRef" class="message-bottom-sentinel"></div>
         <div v-show="isMultiSelectMode" class="h-45"></div>
       </div>
     </el-scrollbar>
@@ -698,6 +694,12 @@ defineExpose({ updateScrollbar, updateScrollBarHeight })
       justify-content: center;
     }
   }
+}
+.message-bottom-sentinel {
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
 }
 .style-select {
   border-radius: 3px;

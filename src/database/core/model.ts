@@ -79,7 +79,7 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
 
       const newError = new TypeError(errorMsg)
       console.error(newError)
-      throw newError
+      // throw newError
     }
 
     const success = await this.table.update(id, {
