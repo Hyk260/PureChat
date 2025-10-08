@@ -9,7 +9,6 @@
   },
   "scripts": {
     "dev": "vite",
-    "prebuild:ui": "pnpm --filter @purechat/ui build && node scripts/copy-ui-dist.mjs",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "build:debug": "vite build --debug",
@@ -67,6 +66,7 @@
     "pinia-plugin-persistedstate": "^4.2.0",
     "pinyin-pro": "^3.18.5",
     "qrcode": "^1.5.3",
+    "shiki": "^3.13.0",
     "snabbdom": "^3.5.1",
     "tim-upload-plugin": "1.4.3",
     "uuid": "^11.0.3",

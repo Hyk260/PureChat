@@ -84,7 +84,7 @@ export default defineConfig([
       "@typescript-eslint/require-await": "warn",
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/no-unsafe-call": "off",
-      "@typescript-eslint/no-unsafe-member-access": "warn",
+      "@typescript-eslint/no-unsafe-member-access": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-var-requires": "error",
       "@typescript-eslint/prefer-ts-expect-error": "warn",
@@ -246,6 +246,7 @@ export default defineConfig([
       "vue/prefer-true-attribute-shorthand": "off",
       "no-debugger": isProd ? "error" : "off",
       "no-undef": "warn",
+      "vue/no-v-html": "off", // 允许使用 v-html
 
       // Import 规则
       "simple-import-sort/imports": [
