@@ -5,10 +5,10 @@ import markdownit from "markdown-it"
 import markdownItContainer from "markdown-it-container"
 import markdownItFootnote from "markdown-it-footnote"
 
-import { prettyObject } from "@/ai/utils"
-
 import { applyEpubRules, applyFenceRules, applyLinkOpenRules, configureFootnoteRules } from "./markdown"
 import { convertToMarkdownFootnotes, CopyIcon } from "./utils"
+
+import type { MarkdownToken } from "./types"
 
 import "./style/iconify.scss"
 import "@/styles/highlight.scss"
@@ -108,22 +108,29 @@ export class MarkdownRenderer {
     }
   }
 
+  getMarkdown() {
+    return this.md
+  }
+
+  parse(content: string): MarkdownToken[] {
+    const safeMarkdown = (content ?? "").toString()
+    // Get tokens from markdown-it
+    const tokens = this.md.parse(safeMarkdown, {}) as MarkdownToken[]
+    return tokens
+  }
+
   /**
    * 将给定的 Markdown 内容渲染为 HTML 字符串。
    * 此方法处理输入内容，可选地附加脚注，然后进行渲染。
-   * @param {string | object} content - 要渲染的 Markdown 字符串。如果是一个对象，它将在渲染前被转换为美化打印的 JSON 字符串。
+   * @param {string} content - 要渲染的 Markdown 字符串
    * @param {Array<WebSearchResult>} [additionalWebSearchResults=[]] - 可选的网页搜索结果，将作为 Markdown 脚注
    * @returns {string} 渲染后的 HTML 字符串。
    */
-  render(content: string | object, additionalWebSearchResults: WebSearchResult[] = []): string {
-    let contentToRender: string = content as string
+  render(content: string, additionalWebSearchResults: WebSearchResult[] = []): string {
+    let contentToRender = content
 
     if (!contentToRender) {
       throw new Error("内容不能为空")
-    }
-
-    if (typeof contentToRender !== "string") {
-      contentToRender = prettyObject(contentToRender)
     }
 
     if (additionalWebSearchResults?.length) {

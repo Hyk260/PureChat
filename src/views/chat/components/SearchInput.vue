@@ -2,24 +2,23 @@
   <div class="header-bar">
     <!-- 搜索 -->
     <div class="flex-bc gap-10">
-      <el-input
-        v-model="input"
-        :placeholder="$t('chat.searchFor')"
-        :prefix-icon="Search"
-        clearable
-        @input="debounceSearch"
-      >
+      <el-input v-model="input" placeholder="搜索" clearable @input="debounceSearch">
+        <template #prefix>
+          <el-icon><SearchIcon /></el-icon>
+        </template>
       </el-input>
       <div v-if="!IS_LOCAL_MODE" class="header-search-add flex-c" @click="openDialog">
         <el-icon><Plus /></el-icon>
       </div>
+      <!-- <div v-else class="header-search-add flex-c" @click="openDialog">
+        <el-icon><Plus /></el-icon>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
-import { Plus, Search } from "@element-plus/icons-vue"
+import { Plus, Search as SearchIcon } from "@element-plus/icons-vue"
 
 import { debounce, isEmpty } from "lodash-es"
 
@@ -31,12 +30,16 @@ import { showConfirmationBox } from "@/utils/message"
 const input = ref("")
 const chatStore = useChatStore()
 const groupStore = useGroupStore()
+// ...existing code...
 
 const createGroup = async () => {
   const data = { message: "创建群聊" }
   const result = await showConfirmationBox(data, "prompt")
+  // showConfirmationBox returns Promise<string | Error>
+  if (result instanceof Error) return
   if (result === "cancel") return
-  groupStore.handleCreateGroup({ groupName: result.value, positioning: true })
+  // result is a string (the input value from prompt)
+  groupStore.handleCreateGroup({ groupName: String(result), positioning: true })
 }
 
 const openDialog = () => {
