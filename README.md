@@ -118,8 +118,12 @@ pnpm build
 | -------------------------------------------------------- | ---- | -------------------------------------------- |
 | [AiHubMix](https://aihubmix.com/?aff=8DBz)               | ✅    | 一站式对接各种大模型。让开发更智能、更高效。 |
 | [胜算云](https://www.shengsuanyun.com/?from=CH_XZG5OKZS) | ✅    | 全球大模型都可调用（友情推荐）               |
+| [302.AI](https://share.302.ai/S7BSJA)                    | ✅    | 企业级AI资源平台，按用量付费，全模型API接入  |
 
 【胜算云】点击享百万Tokens免费试用额度：[链接](https://www.shengsuanyun.com/?from=CH_XZG5OKZS)
+
+【302.AI】点击免费试用$1额度：[链接](https://share.302.ai/S7BSJA)
+
 
 <!-- LINK GROUP -->
 
