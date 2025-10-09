@@ -16,40 +16,44 @@ const MarkdownNodeRender = defineComponent({
     },
   },
   setup(props) {
+    const renderPreNode = (node: any) => {
+      console.log("Rendering <pre> node:", node)
+      // 找到 <code> 子节点并提取其中的文本内容作为 code prop，同时尝试解析语言类名
+      const codeChild = (node.children || []).find((c: any) => c.type === "tag" && c.tagName === "code")
+
+      // 递归收集文本节点内容
+      const collectText = (childNode: any): string => {
+        if (!childNode) return ""
+        if (childNode.type === "text") return childNode.data || ""
+        if (childNode.children?.length) return childNode.children.map((ch: any) => collectText(ch)).join("")
+        return ""
+      }
+
+      let codeText = ""
+      let language = "plaintext"
+
+      if (codeChild) {
+        codeText = collectText(codeChild)
+        const classAttr =
+          (codeChild.attribs && (codeChild.attribs.class || codeChild.attribs["className"])) ||
+          (node.attribs && (node.attribs.class || node.attribs["className"])) ||
+          ""
+        const m = /(?:language|lang)-([\w-]+)/.exec(classAttr)
+        language = m?.[1] ?? language
+      } else {
+        codeText = collectText(node)
+      }
+      console.log("Rendering code block:", { language, codeText })
+      if (!codeText.trim()) return null
+      return h(CodeBlock, { code: codeText, language })
+    }
+
     return () => {
       const { node } = props
       if (node.type === "text") {
         return node.data
       } else if (node.type === "tag" && node.tagName === "pre") {
-        console.log("Rendering <pre> node:", node)
-        // 找到 <code> 子节点并提取其中的文本内容作为 code prop，同时尝试解析语言类名
-        const codeChild = (node.children || []).find((c: any) => c.type === "tag" && c.tagName === "code")
-
-        // 递归收集文本节点内容
-        const collectText = (childNode: any): string => {
-          if (!childNode) return ""
-          if (childNode.type === "text") return childNode.data || ""
-          if (childNode.children?.length) return childNode.children.map((ch: any) => collectText(ch)).join("")
-          return ""
-        }
-
-        let codeText = ""
-        let language = "plaintext"
-
-        if (codeChild) {
-          codeText = collectText(codeChild)
-          const classAttr =
-            (codeChild.attribs && (codeChild.attribs.class || codeChild.attribs["className"])) ||
-            (node.attribs && (node.attribs.class || node.attribs["className"])) ||
-            ""
-          const m = /(?:language|lang)-([\w-]+)/.exec(classAttr)
-          language = m?.[1] ?? language
-        } else {
-          codeText = collectText(node)
-        }
-        console.log("Rendering code block:", { language, codeText })
-        if (!codeText.trim()) return null
-        return h(CodeBlock, { code: codeText, language })
+        return renderPreNode(node)
       } else if (node.type === "tag" && node.tagName === "table" && props.showCustomTable) {
         // Tables 组件：把 table AST 转为 columns + data 传给 Tables 组件渲染
         // 辅助：递归收集文本内容

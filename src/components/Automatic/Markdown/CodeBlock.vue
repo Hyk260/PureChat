@@ -9,7 +9,7 @@
       </div>
       <div>
         <span class="icon-slot" v-html="languageIcon" />
-        <span class="code-language">{{ language }}</span>
+        <span class="code-language">{{ displayLanguage }}</span>
       </div>
       <div class="header-right flex-c">
         <div class="copy-button flex-c" :class="{ copied: isCopied }" title="copy" @click.stop="copyCode">
@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { Check, ChevronDown, ChevronRight, Copy, Download, Maximize, SquareTerminal } from "lucide-vue-next"
 
-import { getLanguageIcon, languageMapValues } from "@/utils/languageIcon"
+import { getLanguageIcon, languageMap, languageMapValues } from "@/utils/languageIcon"
 
 // import { disposeHighlighter, registerHighlight } from "./highlight"
 import { MarkdownRenderer } from "./markdown-renderer"
@@ -59,13 +59,14 @@ const props = withDefaults(defineProps<Props>(), {
 const isCopied = ref(false)
 const isPreviewable = ref(false)
 const isCollapsed = ref(false)
-const showDownload = ref(false)
+// const showDownload = ref(false)
 const showMaximize = ref(false)
 
 // const highlighter = ref<Highlighter | null>(null)
 // const highlightedCode = ref<string>("")
+const languageList = ["js", "ts"].concat(languageMapValues)
 
-const showHeader = computed(() => languageMapValues.includes(props.language))
+const showHeader = computed(() => languageList.includes(props.language))
 
 const highlight = new MarkdownRenderer().highlight
 
@@ -76,10 +77,20 @@ const highlightedCode = computed(() => {
   })
 })
 
+const showDownload = computed(() => {
+  const lang = props.language.trim().toLowerCase()
+  return ["js", "ts"].includes(lang)
+})
+
 // Computed property for language icon
 const languageIcon = computed(() => {
   const lang = props.language.trim().toLowerCase()
-  return getLanguageIcon(lang.split(":")[0] || "")
+  return getLanguageIcon(lang)
+})
+
+const displayLanguage = computed(() => {
+  const lang = props.language.trim().toLowerCase()
+  return languageMap[lang] || lang
 })
 
 const copyCode = async () => {
@@ -108,7 +119,7 @@ const downloadCode = () => {
   const url = URL.createObjectURL(blob)
   const link = document.createElement("a")
   const lang = props.language.trim().toLowerCase()
-  const lowerLang = lang.split(":")[0] || "txt"
+  const lowerLang = lang || "txt"
   link.href = url
   link.download = `code.${lowerLang}`
   document.body.appendChild(link)
@@ -182,11 +193,11 @@ const previewCode = () => {
     -webkit-box-align: center;
     align-items: center;
     width: 100%;
-    .icon-slot {
-      // display: inline-flex;
-      // align-items: center;
-      // justify-content: center;
-    }
+    // .icon-slot {
+    //   display: inline-flex;
+    //   align-items: center;
+    //   justify-content: center;
+    // }
     .header-left,
     .header-right {
       & > div {
@@ -202,6 +213,7 @@ const previewCode = () => {
     .download-button,
     .maximize-button,
     .collapse-button {
+      cursor: pointer;
       &:hover {
         background: rgba(0, 0, 0, 0.03);
       }

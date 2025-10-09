@@ -1,6 +1,7 @@
 import type { Highlighter, SpecialTheme, ThemeInput } from "shiki"
 
 const langsArray = [
+  "js",
   "jsx",
   "tsx",
   "vue",

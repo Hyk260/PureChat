@@ -31,8 +31,6 @@ import OllamaAI from "../ollama/ollama"
 export * from "./config"
 export * from "./modelValue"
 
-import type { Model } from "@/types"
-
 export const OpenaiPath = {
   ChatPath: "chat/completions", // chatgpt 聊天接口
   UsagePath: "dashboard/billing/usage", // 用量查询，数据单位为 token
