@@ -6,7 +6,7 @@ import markdownItContainer from "markdown-it-container"
 import markdownItFootnote from "markdown-it-footnote"
 
 import { applyEpubRules, applyFenceRules, applyLinkOpenRules, configureFootnoteRules } from "./markdown"
-import { convertToMarkdownFootnotes, CopyIcon } from "./utils"
+import { convertToMarkdownFootnotes } from "./utils"
 
 import type { MarkdownToken } from "./types"
 
@@ -90,10 +90,10 @@ export class MarkdownRenderer {
       : this.defaultHighlightOptions
 
     const clipboard = "nextElementSibling && (window.copyToClipboard(nextElementSibling.innerText))"
-    const CopyIcon1 = `<div class='icon-copy'></div>`
+    const CopyIcon = `<div class='icon-copy'></div>`
 
     const copyButtonHtml = options.showCopy
-      ? `<button class="copy-code-button" onclick="${clipboard}" title="copy">${CopyIcon1}</button>`
+      ? `<button class="copy-code-button" onclick="${clipboard}" title="copy">${CopyIcon}</button>`
       : ""
     const langHtml = options.showLang && lang ? `<span class="hljs-language">${lang}</span>` : ""
 
@@ -105,6 +105,15 @@ export class MarkdownRenderer {
       // 对于未知语言或无高亮的情况：转义 HTML 并用 pre/code 包装
       // 使用 markdown-it 的工具函数来安全地转义 HTML
       return `<pre class="hljs">${copyButtonHtml}<code>${this.md.utils.escapeHtml(str)}</code></pre>`
+    }
+  }
+
+  highlightApi(str: string, lang: string): string {
+    if (str && hljs.getLanguage(lang)) {
+      const codeContent = hljs.highlight(str, { language: lang, ignoreIllegals: true }).value
+      return codeContent
+    } else {
+      return this.md.utils.escapeHtml(str)
     }
   }
 

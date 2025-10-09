@@ -8,7 +8,7 @@ import chat from "@/service/chat/PureChatService"
 import { setMessageRead } from "@/service/im-sdk-api"
 import { useChatStore, useGroupStore, useUserStore } from "@/stores"
 import { scrollToDomPosition } from "@/utils/chat"
-import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
+import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
 import { checkoutNetState, getConversationList, kickedOutReason } from "./utils"
 

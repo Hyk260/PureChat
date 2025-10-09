@@ -1,5 +1,5 @@
 <template>
-  <div class="code-block-wrapper code-block-container" :class="{ 'with-header': showHeader }">
+  <div class="code-block-wrapper code-block-container" :class="{ 'with-header': showHeader, collapsed: isCollapsed }">
     <div v-if="showHeader" class="code-header">
       <div class="header-left">
         <div class="collapse-button flex-c" @click.stop="isCollapsed = !isCollapsed">
@@ -7,11 +7,15 @@
           <ChevronDown v-else :size="14" />
         </div>
       </div>
-      <div>
+      <div class="header-center" @click.stop="centerClick">
         <span class="icon-slot" v-html="languageIcon" />
         <span class="code-language">{{ displayLanguage }}</span>
       </div>
       <div class="header-right flex-c">
+        <div v-if="showChevrons" class="chevrons-button flex-c" @click.stop="onChevronsClick">
+          <ChevronsUpDown v-if="isChevrons" :size="14" title="UpDown" />
+          <ChevronsDownUp v-else :size="14" title="DownUp" />
+        </div>
         <div class="copy-button flex-c" :class="{ copied: isCopied }" title="copy" @click.stop="copyCode">
           <Check v-if="isCopied" :size="14" />
           <Copy v-else :size="14" />
@@ -33,12 +37,35 @@
         </div>
       </div>
     </div>
-    <div class="code-editor-container" :class="{ collapsed: isCollapsed }" v-html="highlightedCode"></div>
+    <div
+      class="code-container"
+      :class="{ collapsed: isCollapsed, 'shiki-scroller': !isChevrons }"
+      v-html="highlightedCode"
+    ></div>
+    <!-- <div class="code-container" :class="{ collapsed: isCollapsed }">
+      <pre class="hljs" :class="`language-${language}`">
+        <span v-if="showHeader" class="hljs-language">{{ language }}</span>
+        <button v-if="showHeader" class="copy-code-button" title="copy" @click="copyCode">
+          <div class='icon-copy'></div>
+        </button>
+        <code v-html="highlightedCode"></code>
+      </pre>
+    </div> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { Check, ChevronDown, ChevronRight, Copy, Download, Maximize, SquareTerminal } from "lucide-vue-next"
+import {
+  Check,
+  ChevronDown,
+  ChevronRight,
+  ChevronsDownUp,
+  ChevronsUpDown,
+  Copy,
+  Download,
+  Maximize,
+  SquareTerminal,
+} from "lucide-vue-next"
 
 import { getLanguageIcon, languageMap, languageMapValues } from "@/utils/languageIcon"
 
@@ -57,6 +84,8 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const isCopied = ref(false)
+const showChevrons = ref(false)
+const isChevrons = ref(false)
 const isPreviewable = ref(false)
 const isCollapsed = ref(false)
 // const showDownload = ref(false)
@@ -65,10 +94,12 @@ const showMaximize = ref(false)
 // const highlighter = ref<Highlighter | null>(null)
 // const highlightedCode = ref<string>("")
 const languageList = ["js", "ts"].concat(languageMapValues)
-
-const showHeader = computed(() => languageList.includes(props.language))
+const excludeList = ["json"]
+// const showHeader = ref(false)
+const showHeader = computed(() => languageList.includes(props.language) && !excludeList.includes(props.language))
 
 const highlight = new MarkdownRenderer().highlight
+// const highlightApi = new MarkdownRenderer().highlightApi
 
 const highlightedCode = computed(() => {
   return highlight(props.code, props.language, {
@@ -77,12 +108,15 @@ const highlightedCode = computed(() => {
   })
 })
 
+// const highlightedCodeCopy = computed(() => {
+//   return highlightApi(props.code, props.language)
+// })
+
 const showDownload = computed(() => {
   const lang = props.language.trim().toLowerCase()
   return ["js", "ts"].includes(lang)
 })
 
-// Computed property for language icon
 const languageIcon = computed(() => {
   const lang = props.language.trim().toLowerCase()
   return getLanguageIcon(lang)
@@ -90,8 +124,16 @@ const languageIcon = computed(() => {
 
 const displayLanguage = computed(() => {
   const lang = props.language.trim().toLowerCase()
-  return languageMap[lang] || lang
+  if (languageMap[lang]) {
+    return languageMap[lang].toLowerCase()
+  } else {
+    return lang
+  }
 })
+
+const onChevronsClick = () => {
+  isChevrons.value = !isChevrons.value
+}
 
 const copyCode = async () => {
   try {
@@ -103,6 +145,10 @@ const copyCode = async () => {
   } catch (err) {
     console.error("Failed to copy code:", err)
   }
+}
+
+const centerClick = () => {
+  console.log("code block center clicked", props)
 }
 
 const maximizeCode = () => {
@@ -160,12 +206,22 @@ const previewCode = () => {
   --markdown-margin-multiple: 1;
 }
 .with-header {
-  .code-editor-container {
+  .code-container {
     background: transparent !important;
     border-block-start: 1px solid rgba(0, 0, 0, 0.015);
   }
   pre {
     border-radius: 0 0 4px 4px !important;
+  }
+  .shiki-scroller code {
+    overflow-y: auto;
+    max-height: 350px;
+  }
+}
+.code-block-wrapper {
+  code {
+    overflow-y: auto;
+    max-height: 350px;
   }
 }
 </style>
@@ -211,6 +267,7 @@ const previewCode = () => {
     .copy-button,
     .code-action-btn,
     .download-button,
+    .chevrons-button,
     .maximize-button,
     .collapse-button {
       cursor: pointer;
@@ -220,7 +277,7 @@ const previewCode = () => {
     }
   }
 
-  .code-editor-container {
+  .code-container {
     background: transparent !important;
     transition:
       height 180ms ease,

@@ -19,13 +19,13 @@ export interface Events {
   handleShareModal: boolean
   fileUploading: { uuid: string; num: number }
   handleToBottom: boolean
-  updateScroll: any
+  updateScroll: string | undefined
   handleFileDrop: File
 }
 
 const emitter: Emitter<Events> = mitt<Events>()
 
-export const emitUpdateScroll = debounce((type?: any) => {
+export const emitUpdateScroll = debounce((type?: string) => {
   try {
     emitter.emit("updateScroll", type)
   } catch {
@@ -33,7 +33,7 @@ export const emitUpdateScroll = debounce((type?: any) => {
   }
 }, 5)
 
-export const emitUpdateScrollImmediate = (type?: any) => {
+export const emitUpdateScrollImmediate = (type?: string) => {
   try {
     emitUpdateScroll.cancel?.()
   } catch {

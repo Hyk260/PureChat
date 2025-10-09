@@ -255,11 +255,6 @@ const onClickAvatar = (e: Event | null, item: DB_Message) => {
 
 // 检查滚动条是否到达页面底部
 const isScrolledToBottom = (lower = 2): boolean => {
-  if (bottomObserver && bottomSentinelRef.value) {
-    return Boolean(isBottomVisible.value)
-  }
-
-  // 回退到像素比较的兼容逻辑
   const threshold = Math.max(0, Number(lower) || 0)
   const wrapRef = scrollbarRef.value?.wrapRef
   if (!wrapRef) return false
@@ -284,6 +279,7 @@ const initBottomObserver = () => {
         if (!ent) return
         // 当 sentinel 可见时，表示滚动到达底部（或接近底部，取决于 rootMargin）
         isBottomVisible.value = ent.isIntersecting
+        console.log("isBottomVisible:", isBottomVisible.value)
         emitter.emit("handleToBottom", isBottomVisible.value)
       },
       {
@@ -312,12 +308,6 @@ const destroyBottomObserver = () => {
   }
 }
 
-// const loadMoreMessages = () => {
-//   emitter.emit("handleToBottom", isScrolledToBottom())
-// }
-
-// const debouncedFunc = debounce(loadMoreMessages, 300)
-
 const handleEnReached = (direction: string) => {
   console.log("handleEnReached:", direction)
   if (direction === "top") {
@@ -327,9 +317,7 @@ const handleEnReached = (direction: string) => {
   }
 }
 
-const handleScrollbar = () => {
-  // debouncedFunc()
-}
+const handleScrollbar = () => {}
 
 const updateScrollBarHeight = () => {
   nextTick(() => {
@@ -567,14 +555,10 @@ const handleRevokeMsg = async (data: DB_Message) => {
   }, 60000)
 }
 
-let updateScrollRaf: number | null = null
-
 const updateScrollHandler = (type?: "bottom" | "robot" | undefined) => {
   try {
-    if (updateScrollRaf !== null) cancelAnimationFrame(updateScrollRaf)
-
     if (type === "bottom") {
-      if (isScrolledToBottom()) {
+      if (isBottomVisible.value) {
         updateScrollBarHeight()
       }
       return
@@ -583,13 +567,11 @@ const updateScrollHandler = (type?: "bottom" | "robot" | undefined) => {
     if (type === "robot") {
       if (isScrolledToBottom(15)) {
         updateScrollBarHeight()
-        // updateScrollRaf = requestAnimationFrame(() => updateScrollBarHeight())
       }
       return
     }
 
-    // 立即调度更新（在下一帧）
-    updateScrollRaf = requestAnimationFrame(() => updateScrollBarHeight())
+    updateScrollBarHeight()
   } catch {
     // ignore
   }
@@ -601,10 +583,6 @@ function onEmitter() {
 
 function offEmitter() {
   emitter.off("updateScroll", updateScrollHandler)
-  if (updateScrollRaf !== null) {
-    cancelAnimationFrame(updateScrollRaf)
-    updateScrollRaf = null
-  }
 }
 
 watch(

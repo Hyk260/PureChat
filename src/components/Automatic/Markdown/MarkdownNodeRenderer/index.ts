@@ -17,7 +17,7 @@ const MarkdownNodeRender = defineComponent({
   },
   setup(props) {
     const renderPreNode = (node: any) => {
-      console.log("Rendering <pre> node:", node)
+      // console.log("Rendering <pre> node:", node)
       // 找到 <code> 子节点并提取其中的文本内容作为 code prop，同时尝试解析语言类名
       const codeChild = (node.children || []).find((c: any) => c.type === "tag" && c.tagName === "code")
 
@@ -43,7 +43,7 @@ const MarkdownNodeRender = defineComponent({
       } else {
         codeText = collectText(node)
       }
-      console.log("Rendering code block:", { language, codeText })
+      // console.log("Rendering code block:", { language, codeText })
       if (!codeText.trim()) return null
       return h(CodeBlock, { code: codeText, language })
     }
