@@ -23,7 +23,7 @@
               <Checkbox :item="item" :is-revoked="item.isRevoked" />
               <div v-if="showAvatar(item)" class="picture">
                 <div
-                  v-if="isSelf(item) && IS_LOCAL_MODE && userStore.userLocalStore.native"
+                  v-if="item.flow === 'out' && IS_LOCAL_MODE && userStore.userLocalStore.native"
                   class="native cursor-pointer"
                   @click="onClickAvatar(null, item)"
                 >
@@ -95,10 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from "vue"
-
 import { ElScrollbar } from "element-plus"
-import { debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
 import { Contextmenu, ContextmenuItem } from "v-contextmenu"
 
@@ -122,7 +119,6 @@ import {
   getMessageItemClass,
   getMessageTypeClass,
   handleCopyMsg,
-  isSelf,
   isTime,
   validateLastMessage,
 } from "@/utils/chat"
@@ -185,7 +181,7 @@ const updateLoadMore = (id: string) => {
 }
 
 const fnAvatar = (item: DB_Message) => {
-  if (isSelf(item) && __LOCAL_MODE__) {
+  if (item.flow === "out" && __LOCAL_MODE__) {
     return userStore.getUserAvatar
   } else {
     return item.avatar || getAiAvatarUrl(item.from)
@@ -243,13 +239,12 @@ const handleSelect = (item: DB_Message, type = "initial") => {
 }
 
 const onClickAvatar = (e: Event | null, item: DB_Message) => {
-  if (__LOCAL_MODE__ && isSelf(item)) {
+  if (__LOCAL_MODE__ && item.flow === "out") {
     UserPopupRef.value.show()
     return
   }
-  if (isSelf(item) || isMultiSelectMode.value) return
-  const { conversationID: id } = item || {}
-  if (id === "@TIM#SYSTEM") return
+  if (item.flow === "out" || isMultiSelectMode.value) return
+  if (item.conversationID === "@TIM#SYSTEM") return
   emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item })
 }
 
@@ -405,7 +400,7 @@ const handleContextMenuEvent = (_: Event, item: DB_Message) => {
   let menuItems = [...menuOptionsList]
   const canRevoke = getTime() - time < 120 // 两分钟内可撤回
   const isGroupOwner = groupStore.isOwner && currentType.value === "GROUP"
-  const isFromSelf = isSelf(item)
+  const isFromSelf = item.flow === "out"
   // 对方消息 超过撤回时间
   if (!isFromSelf || !canRevoke) {
     menuItems = menuItems.filter((t) => t.id !== "revoke")
@@ -516,7 +511,7 @@ const handleTranslate = (data: DB_Message) => {
 
 const handleReplyMsg = (data: DB_Message) => {
   chatStore.setReplyMsgData(data)
-  if (!isSelf(data)) handleAt(data)
+  if (data.flow === "in") handleAt(data)
 }
 
 const handleDeleteMsg = async (data: DB_Message) => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="code-block-wrapper code-block-container" :class="{ 'with-header': showHeader, collapsed: isCollapsed }">
+  <div class="code-block-wrapper code-block-container" :class="{ 'with-header': showHeader }">
     <div v-if="showHeader" class="code-header">
       <div class="header-left">
         <div class="collapse-button flex-c" @click.stop="isCollapsed = !isCollapsed">
@@ -7,23 +7,28 @@
           <ChevronDown v-else :size="14" />
         </div>
       </div>
-      <div class="header-center" @click.stop="centerClick">
+      <div class="header-center" @click.stop="handleCenterClick">
         <span class="icon-slot" v-html="languageIcon" />
         <span class="code-language">{{ displayLanguage }}</span>
       </div>
       <div class="header-right flex-c">
-        <div v-if="showChevrons" class="chevrons-button flex-c" @click.stop="onChevronsClick">
-          <ChevronsUpDown v-if="isChevrons" :size="14" title="UpDown" />
-          <ChevronsDownUp v-else :size="14" title="DownUp" />
+        <div
+          v-if="shouldShowChevrons"
+          class="chevrons-button flex-c"
+          :title="isChevrons ? '展开' : '收起'"
+          @click.stop="toggleChevrons"
+        >
+          <ChevronsUpDown v-if="isChevrons" :size="14" />
+          <ChevronsDownUp v-else :size="14" />
         </div>
-        <div class="copy-button flex-c" :class="{ copied: isCopied }" title="copy" @click.stop="copyCode">
+        <div class="copy-button flex-c" :class="{ copied: isCopied }" title="复制代码" @click.stop="handleCopyCode">
           <Check v-if="isCopied" :size="14" />
           <Copy v-else :size="14" />
         </div>
-        <div v-if="showDownload" class="download-button flex-c" title="download" @click.stop="downloadCode">
+        <div v-if="showDownload" class="download-button flex-c" title="下载代码" @click.stop="downloadCode">
           <Download :size="14" />
         </div>
-        <div v-if="showMaximize" class="maximize-button flex-c" title="maximize" @click.stop="maximizeCode">
+        <div v-if="showMaximize" class="maximize-button flex-c" title="最大化" @click.stop="handleMaximizeCode">
           <Maximize :size="14" />
         </div>
         <div
@@ -31,26 +36,18 @@
           title="preview"
           class="code-action-btn flex-c"
           :aria-label="'Preview'"
-          @click.stop="previewCode"
+          @click.stop="handlePreviewCode"
         >
           <SquareTerminal :size="14" />
         </div>
       </div>
     </div>
     <div
+      ref="codeContainerRef"
       class="code-container"
       :class="{ collapsed: isCollapsed, 'shiki-scroller': !isChevrons }"
       v-html="highlightedCode"
     ></div>
-    <!-- <div class="code-container" :class="{ collapsed: isCollapsed }">
-      <pre class="hljs" :class="`language-${language}`">
-        <span v-if="showHeader" class="hljs-language">{{ language }}</span>
-        <button v-if="showHeader" class="copy-code-button" title="copy" @click="copyCode">
-          <div class='icon-copy'></div>
-        </button>
-        <code v-html="highlightedCode"></code>
-      </pre>
-    </div> -->
   </div>
 </template>
 
@@ -66,6 +63,8 @@ import {
   Maximize,
   SquareTerminal,
 } from "lucide-vue-next"
+
+import { debounce } from "lodash-es"
 
 import { getLanguageIcon, languageMap, languageMapValues } from "@/utils/languageIcon"
 
@@ -84,33 +83,28 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const isCopied = ref(false)
-const showChevrons = ref(false)
+const shouldShowChevrons = ref(false)
 const isChevrons = ref(false)
 const isPreviewable = ref(false)
 const isCollapsed = ref(false)
+const codeContainerRef = ref<HTMLElement>()
 // const showDownload = ref(false)
 const showMaximize = ref(false)
 
 // const highlighter = ref<Highlighter | null>(null)
 // const highlightedCode = ref<string>("")
 const languageList = ["js", "ts"].concat(languageMapValues)
-const excludeList = ["json"]
+const excludeList = ["json", "bash"]
 // const showHeader = ref(false)
 const showHeader = computed(() => languageList.includes(props.language) && !excludeList.includes(props.language))
 
-const highlight = new MarkdownRenderer().highlight
-// const highlightApi = new MarkdownRenderer().highlightApi
-
 const highlightedCode = computed(() => {
-  return highlight(props.code, props.language, {
+  const renderer = new MarkdownRenderer()
+  return renderer.highlight(props.code, props.language, {
     showLang: !showHeader.value,
     showCopy: !showHeader.value,
   })
 })
-
-// const highlightedCodeCopy = computed(() => {
-//   return highlightApi(props.code, props.language)
-// })
 
 const showDownload = computed(() => {
   const lang = props.language.trim().toLowerCase()
@@ -131,11 +125,42 @@ const displayLanguage = computed(() => {
   }
 })
 
-const onChevronsClick = () => {
+const toggleChevrons = () => {
   isChevrons.value = !isChevrons.value
 }
 
-const copyCode = async () => {
+const checkContainerHeight = (element: HTMLElement | undefined) => {
+  return element ? element.scrollHeight >= 350 : false
+}
+
+const debouncedHeightCheck = debounce(() => {
+  shouldShowChevrons.value = checkContainerHeight(codeContainerRef.value)
+}, 180)
+
+let resizeObserver: ResizeObserver | null = null
+const initResizeObserver = () => {
+  if (typeof ResizeObserver === "undefined") {
+    window.addEventListener("resize", debouncedHeightCheck)
+    return
+  }
+  resizeObserver = new ResizeObserver(debouncedHeightCheck)
+  codeContainerRef.value && resizeObserver.observe(codeContainerRef.value)
+}
+
+const cleanupResizeObserver = () => {
+  if (resizeObserver && codeContainerRef.value) {
+    try {
+      resizeObserver.unobserve(codeContainerRef.value)
+      resizeObserver.disconnect()
+    } catch {
+      // 忽略清理错误
+    }
+    resizeObserver = null
+  }
+  window.removeEventListener("resize", debouncedHeightCheck)
+}
+
+const handleCopyCode = async () => {
   try {
     window.copyToClipboard(props.code)
     isCopied.value = true
@@ -147,12 +172,12 @@ const copyCode = async () => {
   }
 }
 
-const centerClick = () => {
+const handleCenterClick = () => {
   console.log("code block center clicked", props)
 }
 
-const maximizeCode = () => {
-  // emits('maximizeCode', {
+const handleMaximizeCode = () => {
+  // emits('handleMaximizeCode', {
   //   node: props.node,
   //   artifactType,
   //   artifactTitle,
@@ -175,15 +200,31 @@ const downloadCode = () => {
 }
 
 // 预览HTML代码
-const previewCode = () => {
+const handlePreviewCode = () => {
   if (!isPreviewable.value) return
-  // emits('previewCode', {
+  // emits('handlePreviewCode', {
   //   node: props.node,
   //   artifactType,
   //   artifactTitle,
   //   id: `temp-${lowerLang}-${Date.now()}`,
   // })
 }
+
+onMounted(() => {
+  nextTick(() => {
+    debouncedHeightCheck()
+    initResizeObserver()
+  })
+})
+
+onBeforeUnmount(() => {
+  cleanupResizeObserver()
+  debouncedHeightCheck.cancel()
+})
+
+watch(highlightedCode, () => {
+  nextTick(debouncedHeightCheck)
+})
 
 // watch(
 //   () => props.code,
@@ -214,12 +255,6 @@ const previewCode = () => {
     border-radius: 0 0 4px 4px !important;
   }
   .shiki-scroller code {
-    overflow-y: auto;
-    max-height: 350px;
-  }
-}
-.code-block-wrapper {
-  code {
     overflow-y: auto;
     max-height: 350px;
   }

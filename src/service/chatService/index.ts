@@ -86,7 +86,7 @@ class ChatService {
     chat.payload.text = message
     Object.assign(chat, {
       // payload: { text: message },
-      clientTime: getTime(),
+      // clientTime: getTime(),
       status: isFinish ? "success" : "sending",
     })
 

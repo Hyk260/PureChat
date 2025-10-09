@@ -123,43 +123,6 @@ export async function transformData(data: DB_Message[]): Promise<LLMMessage[]> {
   }
 }
 
-/**
- * 渲染文件图标
- */
-export const renderFileIcon = (fileType = ""): string => {
-  const lowerCaseFileType = fileType.toLowerCase()
-
-  const fileTypeToIconMap = {
-    xlsx: "form",
-    xls: "form",
-    doc: "document",
-    docx: "document",
-    pptx: "ppt",
-    ppt: "ppt",
-    rar: "zip",
-    zip: "zip",
-    txt: "txt",
-    log: "txt",
-    pdf: "pdf",
-    png: "picture",
-    jpg: "picture",
-    gif: "picture",
-    jpeg: "picture",
-    webp: "picture",
-    svg: "picture",
-    mp4: "video",
-    mp3: "audio",
-    exe: "exe",
-    json: "json",
-    js: "js",
-    // env: "dotenv",
-  }
-
-  const type = fileTypeToIconMap[lowerCaseFileType] || "default"
-
-  return new URL(`../../assets/message/${type}.png`, import.meta.url).href
-}
-
 export const chatName = (item) => {
   if (!item) return ""
   switch (item.type) {
