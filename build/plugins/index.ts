@@ -19,11 +19,13 @@ import { cdn } from "./cdn"
  * @param viteEnv - 环境变量配置
  */
 export function setupVitePlugins(viteEnv: Env.ImportMeta) {
+  const customElement = ["markdown-ui", "webview"]
+
   const plugins: PluginOption = [
     vue({
       template: {
         compilerOptions: {
-          // isCustomElement: (tag) => tag === "markdown-ui",
+          isCustomElement: (tag) => customElement.includes(tag),
         },
       },
     }),

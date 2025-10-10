@@ -33,16 +33,16 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
 
     if (!result.success) {
       const errorMsg = `[${this.db.name}][${this._tableName}] Failed to create new record. Error: ${result.error}`
-
-      const newError = new TypeError(errorMsg)
-      console.error(newError)
-      throw newError
+      console.warn(errorMsg)
+      // const newError = new TypeError(errorMsg)
+      // console.error(newError)
+      // throw newError
     }
 
     const tableName = this._tableName
 
     const record: any = {
-      ...result.data,
+      ...data,
       createdAt: Date.now(),
       updatedAt: Date.now(),
       [primaryKey]: id,
@@ -76,9 +76,9 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
     const result = partialSchema.safeParse(data)
     if (!result.success) {
       const errorMsg = `[${this.db.name}][${this._tableName}] Failed to update the record:${id}. Error: ${result.error}`
-
-      const newError = new TypeError(errorMsg)
-      console.error(newError)
+      console.warn(errorMsg)
+      // const newError = new TypeError(errorMsg)
+      // console.error(newError)
       // throw newError
     }
 

@@ -1,5 +1,12 @@
 <template>
-  <el-dialog v-model="drawer" class="setup-modal" :lock-scroll="false" :show-close="false" fullscreen width="70%">
+  <el-dialog
+    v-model="drawer"
+    class="setup-modal"
+    :lock-scroll="false"
+    :show-close="false"
+    :fullscreen="false"
+    width="60%"
+  >
     <div class="ui-modal-body">
       <List ref="listRef" @active="active" />
       <ItemGrid :item="item" @on-close="setDrawer(false)" />
@@ -54,13 +61,12 @@ onUnmounted(() => {
 :global(body .setup-modal .el-dialog__header) {
   display: none;
 }
-:global(body .setup-modal .el-dialog__body) {
-  height: 100%;
-}
+// :global(body .setup-modal .el-dialog__body) {
+//   height: 100%;
+// }
 
 .ui-modal-body {
-  // height: 540px;
-  height: 100%;
+  height: 600px;
   display: flex;
 }
 </style>
