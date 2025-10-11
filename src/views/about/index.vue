@@ -82,7 +82,7 @@
     <el-card class="style-card" shadow="hover">
       <template #header>
         <div>
-          <span>React Markdown Web Component 示例</span>
+          <span>Markdown 示例</span>
         </div>
       </template>
       <div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap">
@@ -94,7 +94,7 @@
           style="flex: 1; min-width: 280px"
         />
         <div style="flex: 1; min-width: 280px">
-          <markdown-ui full-featured-code-block="true" show-footnotes="true" :content="markdownText"></markdown-ui>
+          <Markdown :content="markdownText" />
         </div>
       </div>
     </el-card>

@@ -6,7 +6,9 @@ import markdownItContainer from "markdown-it-container"
 import markdownItFootnote from "markdown-it-footnote"
 
 import { applyEpubRules, applyFenceRules, applyLinkOpenRules, configureFootnoteRules } from "./markdown"
-import { preWrapperPlugin } from "./plugins/preWrapper"
+import { lineNumberPlugin } from "./plugins/lineNumbers"
+// import { applyMath } from "./plugins/math"
+// import { preWrapperPlugin } from "./plugins/preWrapper"
 import { convertToMarkdownFootnotes } from "./utils"
 
 import type { MarkdownToken } from "./types"
@@ -25,6 +27,11 @@ hljs.registerLanguage("python", python)
 // 定义构造函数选项接口
 interface MarkdownRendererOptions {
   webSearchResults?: any[]
+  /**
+   * 是否为代码块启用行号
+   * @default false
+   */
+  lineNumbers?: boolean
 }
 
 // 高亮显示的可选项：是否显示语言标签和复制按钮
@@ -64,10 +71,12 @@ export class MarkdownRenderer {
 
     this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
     this.md.use(markdownItContainer) // 添加对 Markdown 容器的支持
+    this.md.use(lineNumberPlugin, options.lineNumbers) // 添加对 Markdown 容器的支持
+    // this.md.use(applyMath)
 
     // this.md.use(preWrapperPlugin, {
-    //   // codeCopyButtonTitle: "复制代码",
-    //   // languageLabel: options.languageLabel
+    //   codeCopyButtonTitle: "复制代码",
+    //   languageLabel: options.languageLabel
     // })
 
     configureFootnoteRules(this.md, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）

@@ -60,6 +60,7 @@
     "markdown-it": "^14.1.0",
     "markdown-it-container": "^4.0.0",
     "markdown-it-footnote": "^4.0.0",
+    "markdown-it-mathjax3": "^5.2.0",
     "mitt": "^3.0.0",
     "modern-screenshot": "^4.6.2",
     "nanoid": "^5.0.7",
