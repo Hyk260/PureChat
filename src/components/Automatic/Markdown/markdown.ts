@@ -69,19 +69,35 @@ export const applyEpubRules = (md: Markdownit) => {
 
 export const applyFenceRules = (md: Markdownit, switcher: boolean = true) => {
   if (!switcher) return
-  md.renderer.rules.fence = (tokens: any, idx: number) => {
-    const token = tokens[idx]
-    const lang = token.info.trim() || "plaintext"
-    const code = token.content
+  // md.renderer.rules.fence = (tokens: any, idx: number) => {
+  //   const token = tokens[idx]
+  //   const lang = token.info.trim() || "plaintext"
+  //   const code = token.content
 
-    return `
-      <div class="code-block-wrapper" data-lang="${lang}">
-        <div class="code-header">
-          <span class="lang-label">${lang}</span>
-          <button class="copy-btn">复制代码</button>
-        </div>
-        <div class="code-content">${md.options.highlight(code, lang)}</div>
-      </div>
-    `
-  }
+  //   return `
+  //     <div class="code-block-wrapper" data-lang="${lang}">
+  //       <div class="code-header">
+  //         <span class="lang-label">${lang}</span>
+  //         <button class="copy-btn">复制代码</button>
+  //       </div>
+  //       <div class="code-content">${md.options.highlight(code, lang)}</div>
+  //     </div>
+  //   `
+  // }
+  // const fence = md.renderer.rules.fence as any
+  // md.renderer.rules.fence = function (tokens, idx, options, env, self) {
+  //   const { localeIndex = "root" } = env
+  //   const codeCopyButtonTitle = (() => {
+  //     switch (localeIndex) {
+  //       case "zh":
+  //         return "复制代码"
+  //       default:
+  //         return "Copy code"
+  //     }
+  //   })()
+  //   return fence(tokens, idx, options, env, self).replace(
+  //     '<button title="Copy Code" class="copy"></button>',
+  //     `<button title="${codeCopyButtonTitle}" class="copy"></button>`
+  //   )
+  // }
 }

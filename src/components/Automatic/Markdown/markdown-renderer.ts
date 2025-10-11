@@ -6,6 +6,7 @@ import markdownItContainer from "markdown-it-container"
 import markdownItFootnote from "markdown-it-footnote"
 
 import { applyEpubRules, applyFenceRules, applyLinkOpenRules, configureFootnoteRules } from "./markdown"
+import { preWrapperPlugin } from "./plugins/preWrapper"
 import { convertToMarkdownFootnotes } from "./utils"
 
 import type { MarkdownToken } from "./types"
@@ -63,6 +64,11 @@ export class MarkdownRenderer {
 
     this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
     this.md.use(markdownItContainer) // 添加对 Markdown 容器的支持
+
+    // this.md.use(preWrapperPlugin, {
+    //   // codeCopyButtonTitle: "复制代码",
+    //   // languageLabel: options.languageLabel
+    // })
 
     configureFootnoteRules(this.md, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）
     applyFenceRules(this.md, false) // 自定义围栏代码块的渲染方式

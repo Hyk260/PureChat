@@ -42,12 +42,23 @@
         </div>
       </div>
     </div>
-    <div
+    <!-- <div
       ref="codeContainerRef"
       class="code-container"
       :class="{ collapsed: isCollapsed, 'shiki-scroller': !isChevrons }"
       v-html="highlightedCode"
-    ></div>
+    ></div> -->
+    <div
+      ref="codeContainerRef"
+      class="code-container"
+      :class="{ collapsed: isCollapsed, 'shiki-scroller': !isChevrons }"
+    >
+      <span v-if="!showHeader" class="hljs-language">{{ language }}</span>
+      <button v-if="!showHeader" class="copy-code-button" title="copy" @click.stop="handleCopyCode">
+        <div class="icon-copy"></div>
+      </button>
+      <div v-html="highlightedCode"></div>
+    </div>
   </div>
 </template>
 
@@ -68,10 +79,10 @@ import { debounce } from "lodash-es"
 
 import { getLanguageIcon, languageMap, languageMapValues } from "@/utils/languageIcon"
 
-// import { disposeHighlighter, registerHighlight } from "./highlight"
+import { disposeHighlighter, registerHighlight } from "./highlight"
 import { MarkdownRenderer } from "./markdown-renderer"
 
-// import type { Highlighter } from "shiki"
+import type { Highlighter } from "shiki"
 
 interface Props {
   code: string
@@ -101,8 +112,10 @@ const showHeader = computed(() => languageList.includes(props.language) && !excl
 const highlightedCode = computed(() => {
   const renderer = new MarkdownRenderer()
   return renderer.highlight(props.code, props.language, {
-    showLang: !showHeader.value,
-    showCopy: !showHeader.value,
+    // showLang: !showHeader.value,
+    // showCopy: !showHeader.value,
+    showLang: false,
+    showCopy: false,
   })
 })
 
@@ -229,11 +242,27 @@ watch(highlightedCode, () => {
 // watch(
 //   () => props.code,
 //   async () => {
-//     disposeHighlighter()
 //     highlighter.value = await registerHighlight()
 //     const lang = props.language
 //     const theme = "one-light"
-//     highlightedCode.value = highlighter.value.codeToHtml(props.code, { lang, theme })
+//     highlightedCode.value = highlighter.value.codeToHtml(props.code, {
+//       lang,
+//       theme,
+//       transformers: [
+//         // {
+//         //   code(node) {
+//         //     this.addClassToHast(node, "language-js")
+//         //   },
+//         //   line(node, line) {
+//         //     node.properties["data-line"] = line
+//         //     if ([1, 3, 4].includes(line)) this.addClassToHast(node, "highlight")
+//         //   },
+//         //   span(node, line, col) {
+//         //     node.properties["data-token"] = `token:${line}:${col}`
+//         //   },
+//         // },
+//       ],
+//     })
 //   },
 //   { immediate: true }
 // )
@@ -313,6 +342,7 @@ watch(highlightedCode, () => {
   }
 
   .code-container {
+    position: relative;
     background: transparent !important;
     transition:
       height 180ms ease,
@@ -322,6 +352,47 @@ watch(highlightedCode, () => {
   .collapsed {
     height: 0px;
   }
+}
+
+.hljs-language {
+  z-index: 2;
+  user-select: none;
+  color: #929295;
+  font-size: 12px;
+  font-weight: 500;
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  transition:
+    color 0.4s,
+    opacity 0.4s;
+}
+
+.code-block-wrapper :hover .copy-code-button {
+  pointer-events: all;
+  transform: translateX(0);
+  opacity: 0.5;
+  background-color: var(--black);
+}
+
+.copy-code-button {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 10px;
+  top: 1em;
+  cursor: pointer;
+  padding: 0 5px;
+  z-index: 10;
+  color: var(--white);
+  border: var(--color-border-in-light);
+  transform: translateX(10px);
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.3s ease;
+  border-radius: 5px;
+  height: 24px;
+  width: 24px;
 }
 
 .code-block-container {

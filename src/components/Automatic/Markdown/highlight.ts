@@ -1,15 +1,14 @@
 import type { Highlighter, SpecialTheme, ThemeInput } from "shiki"
 
-const langsArray = [
+// 支持的语言列表
+const SUPPORTED_LANGUAGES = [
+  "vue",
   "js",
   "jsx",
   "tsx",
-  "vue",
-  "csharp",
   "python",
   "java",
   "c",
-  "cpp",
   "rust",
   "go",
   "powershell",
@@ -22,38 +21,14 @@ const langsArray = [
   "markdown",
   "xml",
   "yaml",
-  "toml",
-  "dockerfile",
-  "kotlin",
-  "objective-c",
-  "objective-cpp",
   "php",
   "ruby",
-  "scala",
-  "svelte",
   "swift",
-  "erlang",
-  "angular-html",
-  "angular-ts",
-  "dart",
-  "lua",
-  "mermaid",
-  "cmake",
   "nginx",
-]
-const themesArray = [
-  "andromeeda",
-  "aurora-x",
-  "ayu-dark",
-  "catppuccin-frappe",
-  "catppuccin-latte",
-  "catppuccin-macchiato",
-  "catppuccin-mocha",
-  "dark-plus",
-  "dracula",
-  "dracula-soft",
-  "everforest-dark",
-  "everforest-light",
+] as const
+
+// 支持的主题列表
+const SUPPORTED_THEMES = [
   "github-dark",
   "github-dark-default",
   "github-dark-dimmed",
@@ -61,95 +36,112 @@ const themesArray = [
   "github-light",
   "github-light-default",
   "github-light-high-contrast",
-  "gruvbox-dark-hard",
-  "gruvbox-dark-medium",
-  "gruvbox-dark-soft",
-  "gruvbox-light-hard",
-  "gruvbox-light-medium",
-  "gruvbox-light-soft",
-  "houston",
-  "kanagawa-dragon",
-  "kanagawa-lotus",
-  "kanagawa-wave",
-  "laserwave",
-  "light-plus",
-  "material-theme",
-  "material-theme-darker",
-  "material-theme-lighter",
-  "material-theme-ocean",
-  "material-theme-palenight",
-  "min-dark",
-  "min-light",
-  "monokai",
-  "night-owl",
-  "nord",
   "one-dark-pro",
   "one-light",
-  "plastic",
-  "poimandres",
-  "red",
-  "rose-pine",
-  "rose-pine-dawn",
-  "rose-pine-moon",
-  "slack-dark",
-  "slack-ochin",
-  "snazzy-light",
-  "solarized-dark",
-  "solarized-light",
-  "synthwave-84",
-  "tokyo-night",
-  "vesper",
-  "vitesse-black",
   "vitesse-dark",
   "vitesse-light",
-]
-let highlighter: Highlighter | null = null
-/**
- * Register shiki highlighter with specified themes and languages.
- * If no languages are specified, all supported languages will be registered.
- * If any unsupported languages are specified, they will be ignored with a warning.
- * @param options.themes Array of theme names or theme objects to register
- * @param options.langs Array of language IDs to register (optional)
- * @returns Promise resolving to the created Highlighter instance
- */
-export async function registerHighlight(
-  options: {
-    themes?: ThemeInput[] | SpecialTheme[]
-    langs?: string[]
-  } = {}
-) {
-  if (highlighter) return highlighter
-  const { createHighlighter } = await import("shiki")
-  if (!options.langs || options.langs.length === 0) {
-    options.langs = langsArray
-  } else if (options.langs?.some((l) => !langsArray.includes(l))) {
-    options.langs = options.langs.filter((l) => {
-      if (langsArray.includes(l)) return true
-      console.warn(`[shiki] Language "${l}" is not in the supported list and will be ignored.`)
-      return false
-    })
-  }
+] as const
 
-  if (!options.themes || options.themes.length === 0) {
-    options.themes = themesArray as any
-  } else if (
-    options.themes?.some((t) => {
-      if (typeof t === "string" && !themesArray.includes(t)) return true
-      return false
-    })
-  ) {
-    options.themes = options.themes.filter((t) => {
-      if (typeof t === "string" && !themesArray.includes(t)) {
-        console.warn(`[shiki] Theme "${t}" is not in the supported list and will be ignored.`)
-        return false
-      }
-      return true
-    }) as any
-  }
-
-  highlighter = await createHighlighter({ themes: options.themes, langs: options.langs })
-  return highlighter
+type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number]
+type SupportedTheme = (typeof SUPPORTED_THEMES)[number]
+interface HighlighterOptions {
+  themes?: ThemeInput[] | SpecialTheme[]
+  langs?: string[]
 }
-export function disposeHighlighter() {
-  highlighter = null
+// 单例高亮器实例
+let highlighterInstance: Highlighter | null = null
+/**
+ * 验证并过滤语言列表
+ * @param langs - 待验证的语言列表
+ * @returns 过滤后的有效语言列表
+ */
+function validateLanguages(langs?: string[]): string[] {
+  // 如果未提供语言列表，返回所有支持的语言
+  if (!langs?.length) {
+    return [...SUPPORTED_LANGUAGES]
+  }
+  // 过滤出支持的语言
+  return langs.filter((lang) => {
+    const isSupported = SUPPORTED_LANGUAGES.includes(lang as SupportedLanguage)
+    if (!isSupported) {
+      console.warn(`[shiki] Language "${lang}" is not supported and will be ignored.`)
+    }
+    return isSupported
+  })
+}
+/**
+ * 验证并过滤主题列表
+ * @param themes - 待验证的主题列表
+ * @returns 过滤后的有效主题列表
+ */
+function validateThemes(themes?: ThemeInput[] | SpecialTheme[]): (ThemeInput | SpecialTheme)[] {
+  // 如果未提供主题列表，返回所有支持的主题
+  if (!themes?.length) {
+    return [...SUPPORTED_THEMES] as any
+  }
+  // 过滤出支持的主题
+  return themes.filter((theme) => {
+    // 只验证字符串类型的主题
+    if (typeof theme === "string" && !SUPPORTED_THEMES.includes(theme as SupportedTheme)) {
+      console.warn(`[shiki] Theme "${theme}" is not supported and will be ignored.`)
+      return false
+    }
+    return true
+  })
+}
+/**
+ * @description
+ * 创建并缓存一个语法高亮器实例（单例模式）。
+ * - 未提供 `langs` 时，注册所有支持的语言
+ * - 未提供 `themes` 时，使用所有默认主题
+ * - 不支持的语言或主题会被过滤并在控制台显示警告
+ *
+ * @param options - 配置选项
+ * @param options.themes - 主题配置数组
+ * @param options.langs - 语言配置数组
+ * @returns Promise<Highlighter> - 高亮器实例
+ */
+export async function registerHighlight(options: HighlighterOptions = {}): Promise<Highlighter> {
+  // 如果已存在实例，直接返回
+  if (highlighterInstance) {
+    return highlighterInstance
+  }
+  try {
+    // 动态导入 shiki 以减少初始包体积
+    const { createHighlighter } = await import("shiki")
+
+    // 验证并准备配置
+    const validatedLangs = validateLanguages(options.langs)
+    const validatedThemes = validateThemes(options.themes)
+    // 创建高亮器实例
+    highlighterInstance = await createHighlighter({
+      themes: validatedThemes as any,
+      langs: validatedLangs as any,
+    })
+    return highlighterInstance
+  } catch (error) {
+    console.error("[shiki] Failed to create highlighter:", error)
+    throw error
+  }
+}
+/**
+ * 释放高亮器实例
+ * @description 清除缓存的高亮器实例，释放内存
+ */
+export function disposeHighlighter(): void {
+  highlighterInstance = null
+}
+/**
+ * 获取当前高亮器实例
+ * @returns 当前的高亮器实例或 null
+ */
+export function getHighlighter(): Highlighter | null {
+  return highlighterInstance
+}
+/**
+ * 检查高亮器是否已初始化
+ * @returns 是否已初始化
+ */
+export function isHighlighterInitialized(): boolean {
+  return highlighterInstance !== null
 }

@@ -1,6 +1,7 @@
-import type MarkdownIt from "markdown-it"
 // import mathjax3 from 'markdown-it-mathjax3'
 import * as mathjax3 from "markdown-it-mathjax3"
+
+import type MarkdownIt from "markdown-it"
 
 // Heuristic to decide whether a piece of text is likely math.
 // Matches common TeX commands, math operators, function-call patterns like f(x),
