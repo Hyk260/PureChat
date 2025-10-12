@@ -1,5 +1,4 @@
-// import mathjax3 from 'markdown-it-mathjax3'
-import * as mathjax3 from "markdown-it-mathjax3"
+import mathjax3 from "markdown-it-mathjax3"
 
 import type MarkdownIt from "markdown-it"
 

@@ -5,6 +5,7 @@ import markdownit from "markdown-it"
 import markdownItContainer from "markdown-it-container"
 import markdownItFootnote from "markdown-it-footnote"
 
+// import markdownItMark from "markdown-it-mark"
 import { applyEpubRules, applyFenceRules, applyLinkOpenRules, configureFootnoteRules } from "./markdown"
 import { lineNumberPlugin } from "./plugins/lineNumbers"
 // import { applyMath } from "./plugins/math"
@@ -71,8 +72,9 @@ export class MarkdownRenderer {
 
     this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
     this.md.use(markdownItContainer) // 添加对 Markdown 容器的支持
-    this.md.use(lineNumberPlugin, options.lineNumbers) // 添加对 Markdown 容器的支持
-    // this.md.use(applyMath)
+    this.md.use(lineNumberPlugin, options.lineNumbers) // 为代码块添加行号
+    // this.md.use(markdownItMark) // 添加对 mark 的支持
+    // applyMath(this.md) // 为数学公式添加支持
 
     // this.md.use(preWrapperPlugin, {
     //   codeCopyButtonTitle: "复制代码",
