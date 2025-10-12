@@ -10,7 +10,7 @@ export const getGender = (data: any, type: string = "") => {
 }
 
 export const getTime = () => {
-  return parseInt(new Date().getTime() / 1000)
+  return Math.floor(new Date().getTime() / 1000)
 }
 
 /**
@@ -70,9 +70,6 @@ export const updateImageSize = async (imageInput: any, index = 0) => {
   return imageInput
 }
 
-export const getEmojiAssetUrl = (url: string) => {
-  return new URL(`../assets/emoji/${url}`, import.meta.url).href
-}
 
 export function getOperatingSystem(userAgent = navigator.userAgent) {
   if (userAgent.includes("Windows")) {
@@ -162,7 +159,9 @@ export function msgContent(data: any, type: string) {
   }
   if (type === "warning") {
     _data.data.body.text.value = data?.value || ""
-    _data.data.body.text.provider = data?.provider || ""
+    if (data && typeof data === "object" && "provider" in data) {
+      _data.data.body.text.provider = (data as any)?.provider || ""
+    }
   }
   return JSON.stringify(_data)
 }

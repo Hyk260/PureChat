@@ -74,7 +74,7 @@
                   <el-icon v-if="item?.type == 'el-icon'">
                     <component :is="item.icon" />
                   </el-icon>
-                  <sSvgIcon v-else :local-icon="item.icon" class="svg-icon" />
+                  <SvgIcon v-else :local-icon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
                   <GripVertical :size="18" class="drag-icon" />
                 </div>

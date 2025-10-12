@@ -11,7 +11,7 @@
       draggable="false"
       loading="lazy"
       class="h-23 w-23 align-sub"
-      :src="getEmojiAssetUrl(item.localSrc || '')"
+      :src="getEmojiAssetUrlSync(item.localSrc || '')"
       alt="表情包"
     />
   </template>
@@ -22,7 +22,7 @@ import { computed } from "vue"
 
 import AnalysisUrl from "@/components/Chat/AnalysisUrl.vue"
 import { decodeText } from "@/utils/chat"
-import { getEmojiAssetUrl } from "@/utils/common"
+import { getEmojiAssetUrlSync } from "@/utils/emoji"
 
 interface ContentItem {
   name: "text" | "img"
