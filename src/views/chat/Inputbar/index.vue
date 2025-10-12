@@ -15,14 +15,15 @@
     <!-- 图片 -->
     <el-tooltip v-if="!isAssistant" :content="$t('chat.picture')" placement="top">
       <el-button @click="sendImageClick">
-        <ImageUp :size="16" />
+        <Image :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 文件 -->
     <el-tooltip v-if="!isAssistant" :content="$t('chat.file')" placement="top">
       <el-button @click="sendFileClick">
         <!-- <FolderOpen :size="16" /> -->
-        <FileUp :size="16" />
+        <!-- <FileUp :size="16" /> -->
+        <FolderClosed :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 截图 -->
@@ -121,14 +122,16 @@ import {
   Blocks,
   Brain,
   BrushCleaning,
-  FileUp,
+  // FileUp,
+  // FolderOpen,
+  FolderClosed,
   Globe,
-  ImageUp,
+  // ImageUp,
+  Image,
   Maximize2,
   Minimize2,
   Paperclip,
   Scissors,
-  // FolderOpen,
   SlidersHorizontal,
   Smile,
 } from "lucide-vue-next"
