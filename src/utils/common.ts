@@ -70,7 +70,6 @@ export const updateImageSize = async (imageInput: any, index = 0) => {
   return imageInput
 }
 
-
 export function getOperatingSystem(userAgent = navigator.userAgent) {
   if (userAgent.includes("Windows")) {
     return "Windows"

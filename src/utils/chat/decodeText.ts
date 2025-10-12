@@ -1,10 +1,12 @@
+import { getEmojiAssetUrlSync } from "@/utils/emoji"
 import { emojiMap, emojiUrl } from "@/utils/emoji/emoji-map"
 
-interface RenderDom {
+export interface RenderDom {
   name: "text" | "img"
   text?: string
-  src?: string
+  cloudSrc?: string
   localSrc?: string
+  testlocalSrc?: string
 }
 
 export function decodeText(text: string): Array<RenderDom> {
@@ -36,8 +38,9 @@ export function decodeText(text: string): Array<RenderDom> {
           // 将表情推入渲染数组中
           renderDom.push({
             name: "img",
-            src: emojiUrl + emoji,
+            cloudSrc: emojiUrl + emoji,
             localSrc: emoji || "", // 本地表情包地址
+            testlocalSrc: getEmojiAssetUrlSync(emoji || ""),
           })
           remainingText = remainingText.substring(rightBracketIndex + 1)
         } else {

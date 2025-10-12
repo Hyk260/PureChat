@@ -14,6 +14,7 @@
       :src="getEmojiAssetUrlSync(item.localSrc || '')"
       alt="表情包"
     />
+    <!-- <img draggable="false" loading="lazy" class="h-23 w-23 align-sub" :src="item.testlocalSrc || ''" alt="表情包" /> -->
   </template>
 </template>
 
@@ -24,11 +25,7 @@ import AnalysisUrl from "@/components/Chat/AnalysisUrl.vue"
 import { decodeText } from "@/utils/chat"
 import { getEmojiAssetUrlSync } from "@/utils/emoji"
 
-interface ContentItem {
-  name: "text" | "img"
-  text?: string
-  localSrc?: string
-}
+import type { RenderDom } from "@/utils/chat/decodeText"
 
 defineOptions({
   name: "DynamicContent",
@@ -48,10 +45,10 @@ const props = withDefaults(
   }
 )
 
-const isTextContent = (item: ContentItem): boolean => item.name === "text"
-const isEmojiContent = (item: ContentItem): boolean => item.name === "img"
+const isTextContent = (item: RenderDom): boolean => item.name === "text"
+const isEmojiContent = (item: RenderDom): boolean => item.name === "img"
 
-const parsedContent = computed<ContentItem[]>(() => {
+const parsedContent = computed<RenderDom[]>(() => {
   try {
     return decodeText(props.text)
   } catch (error) {
