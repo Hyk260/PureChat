@@ -12,7 +12,7 @@
       :src="url || getAiAvatarUrl(sessionId) || shapeObj[shape]"
       @error="() => true"
     >
-      <img :src="emptyUrl" />
+      <img :src="emptyUrl" loading="lazy" />
     </el-avatar>
     <!-- 自己 -->
     <div v-else-if="type === 'self'" class="badge" :style="{ height: `${size}px`, width: `${size}px` }">

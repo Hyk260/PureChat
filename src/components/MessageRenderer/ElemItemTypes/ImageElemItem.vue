@@ -11,7 +11,8 @@
       :max-scale="8"
       :min-scale="0.5"
       :preview-teleported="true"
-      loading="lazy"
+      :loading="loading"
+      :lazy="true"
       fit="cover"
     />
   </div>
@@ -27,9 +28,12 @@ import { getImageSize } from "@/utils/common"
 
 interface Props {
   message: DB_Message
+  loading?: "lazy" | "eager"
 }
 
-const props = withDefaults(defineProps<Props>(), {})
+const props = withDefaults(defineProps<Props>(), {
+  loading: "lazy",
+})
 
 const imgStyle = ref({})
 const chatStore = useChatStore()

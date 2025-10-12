@@ -2,7 +2,7 @@
   <div class="card">
     <div class="top">
       <span class="avatar">
-        <img class="w-40 h-40" :src="getAiAvatarUrl(agents.userID)" alt="" />
+        <img loading="lazy" class="w-40 h-40" :src="getAiAvatarUrl(agents.userID)" alt="" />
       </span>
       <span class="title">
         {{ agents.nick }}

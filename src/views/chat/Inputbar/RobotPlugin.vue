@@ -7,7 +7,7 @@
         class="list flex-bc w-full"
         @click="setChecked(item)"
       >
-        <img class="img" :src="item.imageUrl || ''" alt="" />
+        <img loading="lazy" class="img" :src="item.imageUrl || ''" alt="" />
         <div class="flex-bc right">
           <div>{{ item.meta?.title || "" }}</div>
           <el-checkbox v-model="item.checked" class="h-20" @click.stop />

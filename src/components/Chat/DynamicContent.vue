@@ -9,6 +9,7 @@
     <img
       v-else-if="isEmojiContent(item)"
       draggable="false"
+      loading="lazy"
       class="h-23 w-23 align-sub"
       :src="getEmojiAssetUrl(item.localSrc || '')"
       alt="表情包"

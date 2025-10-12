@@ -6,12 +6,12 @@
         <div v-show="table === 'QQ'" class="emoji_QQ" :class="[systemOs]">
           <p v-show="recentlyUsed.length" class="title">最近使用</p>
           <span v-for="item in recentlyUsed" :key="item" class="emoji" @click="handleEmojiSelect(item, table)">
-            <img :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
+            <img loading="lazy" :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
           </span>
           <p class="title">小黄脸表情</p>
           <template v-if="!rolling">
             <span v-for="item in emojiQq.emojiName" :key="item" class="emoji" @click="handleEmojiSelect(item, table)">
-              <img :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
+              <img loading="lazy" :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
             </span>
           </template>
           <!-- 二维数组 css 滚动贴合 -->
@@ -23,7 +23,7 @@
                 class="emoji scroll-content"
                 @click="handleEmojiSelect(item, table)"
               >
-                <img :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
+                <img loading="lazy" :src="getEmojiAssetUrl(emojiQq.emojiMap[item])" :title="item" />
               </span>
             </div>
           </template>
@@ -37,7 +37,7 @@
             class="emoji scroll-content"
             @click="handleEmojiSelect(item, table)"
           >
-            <img :src="getEmojiAssetUrl(emojiDouyin.emojiMap[item])" :title="item" />
+            <img loading="lazy" :src="getEmojiAssetUrl(emojiDouyin.emojiMap[item])" :title="item" />
           </span>
         </div>
         <div v-if="table === 'Mart'" class="emoji_mart">
