@@ -4,8 +4,8 @@
     <span v-else-if="item?.type === 'GROUP'" class="group">群</span>
     <span v-else-if="isAuthor" class="author">作者</span>
     <span v-if="showModel" class="model">
-      <svg-icon v-if="model?.icon" :local-icon="model.icon" />
-      <svg-icon v-else :local-icon="modelIcon" />
+      <SvgIcon v-if="model?.icon" :local-icon="model.icon" />
+      <SvgIcon v-else :local-icon="modelIcon" />
       <span>{{ model?.id }}</span>
     </span>
   </span>

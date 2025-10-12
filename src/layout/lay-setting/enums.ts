@@ -1,6 +1,6 @@
 import { computed } from "vue"
 import { Operation, Warning } from "@element-plus/icons-vue"
-import { Cloud } from "lucide-vue-next"
+import { Cloud, Globe } from "lucide-vue-next"
 
 import { ModelProvider } from "@/ai/types"
 import { $t } from "@/locales"
@@ -15,7 +15,7 @@ export const list = computed(() => {
     {
       id: "webSearch",
       title: $t("settings.webSearch.title"),
-      svg_icon: "internet",
+      icon: Globe,
       hide: !__LOCAL_MODE__,
     },
     {

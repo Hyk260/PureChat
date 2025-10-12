@@ -13,7 +13,7 @@
           <!-- ai-tools -->
           <!-- <template v-if="isAssistant && botTools && isShowBotTools">
             <div v-for="item in botTools" :key="item.id" class="ml-5 ai-prompt-title">
-              <svg-icon class="function-call" local-icon="functionCall" />
+              <ToyBrick class="function-call" />
               <span>{{ item.meta.title }}</span>
             </div>
           </template> -->
@@ -40,7 +40,7 @@
     </div>
     <div class="action-buttons flex gap-10">
       <!-- <div class="message-info-add" v-show="currentConversation.type === 'GROUP' && false" title="添加成员">
-        <svg-icon local-icon="tianjia" class="icon-hover" />
+        <SvgIcon local-icon="tianjia" class="icon-hover" />
       </div> -->
       <div v-if="isC2C || isGroupChat" class="action-btn share" title="分享对话" @click="openShare">
         <Share2 class="cursor-pointer icon-hover" :size="17" />

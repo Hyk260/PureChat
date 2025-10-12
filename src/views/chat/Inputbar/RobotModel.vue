@@ -3,7 +3,7 @@
     <el-scrollbar>
       <div v-if="model" class="robot-model">
         <div class="item-group-title">
-          <svg-icon :local-icon="model?.icon || robotIcon" />
+          <SvgIcon :local-icon="model?.icon || robotIcon" />
           <span>{{ model?.name || "" }}</span>
         </div>
         <div
@@ -27,18 +27,20 @@
           <div class="list flex-bc w-full">
             <span>{{ item.displayName || item.id }}</span>
             <span class="box">
-              <el-tooltip v-if="item.vision" :content="ModelSelect.vision" placement="right">
-                <svg-icon class="vision" local-icon="vision" />
+              <el-tooltip v-if="item.vision" :content="ModelSelect.vision" placement="top">
+                <Eye :size="16" color="#55b467" />
               </el-tooltip>
-              <el-tooltip v-if="item.functionCall" :content="ModelSelect.functionCall" placement="right">
-                <svg-icon class="function-call" local-icon="functionCall" />
+              <el-tooltip v-if="item.functionCall" :content="ModelSelect.functionCall" placement="top">
+                <ToyBrick :size="16" color="#369eff" />
               </el-tooltip>
-              <el-tooltip v-if="item.reasoning" :content="ModelSelect.reasoning" placement="right">
-                <svg-icon class="reasoning" local-icon="reasoning" />
+              <el-tooltip v-if="item.reasoning" :content="ModelSelect.reasoning" placement="top">
+                <Atom :size="16" color="#bd54c6" />
               </el-tooltip>
-              <span v-if="item.tokens" class="tokens flex-c">
-                {{ formatSizeStrict(String(item?.tokens)) }}
-              </span>
+              <el-tooltip v-if="item.tokens" :content="formatTokenTip(item)" placement="top">
+                <span class="tokens flex-c">
+                  {{ formatTokenNumber(item.tokens) }}
+                </span>
+              </el-tooltip>
             </span>
           </div>
         </div>
@@ -48,16 +50,19 @@
 </template>
 
 <script setup lang="ts">
+import { Atom, Eye, ToyBrick } from "lucide-vue-next"
+
 import { ClickOutside as vClickOutside } from "element-plus"
 import { cloneDeep, isEmpty } from "lodash-es"
 import { storeToRefs } from "pinia"
 
 import { modelValue } from "@/ai/constant"
 import { ModelSelect } from "@/ai/resources"
-import { formatSizeStrict, getModelSvg, useAccessStore } from "@/ai/utils"
+import { getModelSvg, useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"
 import { Model, ModelConfigItem } from "@/stores/modules/robot/types"
+import { formatTokenNumber, formatTokenTip } from "@/utils/format"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({
@@ -97,7 +102,8 @@ function initModel() {
   }
   model.value = cloneDeep(providerValue.Model.options)
   if (!isEmpty(selectModel) && model.value) {
-    const chatModels = selectModel?.Model?.options?.chatModels || cloneDeep(providerValue.Model.options.chatModels || [])
+    const chatModels =
+      selectModel?.Model?.options?.chatModels || cloneDeep(providerValue.Model.options.chatModels || [])
     const collapse = selectModel?.Model?.collapse || []
     const filteredData = chatModels.filter((item: Model) => collapse.includes(item.id))
     model.value.chatModels = filteredData
@@ -153,25 +159,12 @@ emitter.on("openModeList", () => {
       background: rgba(0, 0, 0, 0.03);
       border-radius: 4px;
     }
-    .function-call {
-      color: #369eff;
-    }
-    .vision {
-      color: #55b467;
-    }
-    .reasoning {
-      color: #bd54c6;
-    }
     .box {
       display: flex;
       align-items: center;
       flex-direction: row;
       gap: 4px;
       margin-left: 15px;
-      svg {
-        height: 15px;
-        width: 15px;
-      }
     }
   }
   .icon {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="(item, i) in promptItems" :key="item.id" class="prompt-item">
-      <!-- <SvgIcon v-if="promptItems.length > 1" local-icon="drag" class="drag-icon" />
+      <!-- <GripVertical v-if="promptItems.length > 1" class="drag-icon" />
         <el-select class="prompt-select" v-model="item.role">
           <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
         </el-select> -->

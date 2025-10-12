@@ -3,7 +3,7 @@
     <div class="toolbar-content">
       <span class="selected-count">选中 {{ getForwardCount }} 条消息</span>
       <div class="action-buttons">
-        <el-tooltip content="分享" placement="top">
+        <el-tooltip content="截图分享" placement="top">
           <button class="action-btn" :disabled="isForwardDataEmpty" @click="handleShare">
             <Share2 :size="16" />
           </button>
@@ -11,13 +11,13 @@
 
         <el-tooltip v-if="!IS_LOCAL_MODE" content="合并转发" placement="top">
           <button class="action-btn" :disabled="isForwardDataEmpty" @click="onMergeForward">
-            <SvgIcon local-icon="mergeForward" />
+            <Merge :size="16" />
           </button>
         </el-tooltip>
 
         <el-tooltip v-if="!IS_LOCAL_MODE" content="逐条转发" placement="top">
           <button class="action-btn" :disabled="isForwardDataEmpty" @click="onForwardItemByItem">
-            <SvgIcon local-icon="aQuickForward" />
+            <Forward :size="16" />
           </button>
         </el-tooltip>
 
@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
-import { Share2, Trash2, X } from "lucide-vue-next"
+import { Forward, Merge, Share2, Trash2, X } from "lucide-vue-next"
 
 import { storeToRefs } from "pinia"
 

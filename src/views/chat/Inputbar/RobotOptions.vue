@@ -64,13 +64,13 @@
                           {{ models.displayName || models.id }}
                         </span>
                         <el-tooltip v-if="models?.vision" :content="ModelSelect.vision" placement="top">
-                          <SvgIcon class="vision" local-icon="vision" />
+                          <Eye :size="16" color="#55b467" />
                         </el-tooltip>
                         <el-tooltip v-if="models?.functionCall" :content="ModelSelect.functionCall" placement="top">
-                          <SvgIcon class="function-call" local-icon="functionCall" />
+                          <ToyBrick :size="16" color="#369eff" />
                         </el-tooltip>
                         <el-tooltip v-if="models?.reasoning" :content="ModelSelect.reasoning" placement="top">
-                          <SvgIcon class="reasoning" local-icon="reasoning" />
+                          <Atom :size="16" color="#bd54c6" />
                         </el-tooltip>
                       </div>
                       <div class="models-id">{{ models.id }}</div>
@@ -179,13 +179,13 @@
                           {{ models.displayName || models.id }}
                         </span>
                         <el-tooltip v-if="models?.vision" :content="ModelSelect.vision" placement="top">
-                          <SvgIcon class="vision" local-icon="vision" />
+                          <Eye :size="16" color="#55b467" />
                         </el-tooltip>
                         <el-tooltip v-if="models?.functionCall" :content="ModelSelect.functionCall" placement="top">
-                          <SvgIcon class="function-call" local-icon="functionCall" />
+                          <ToyBrick :size="16" color="#369eff" />
                         </el-tooltip>
                         <el-tooltip v-if="models?.reasoning" :content="ModelSelect.reasoning" placement="top">
-                          <SvgIcon class="reasoning" local-icon="reasoning" />
+                          <Atom :size="16" color="#bd54c6" />
                         </el-tooltip>
                       </div>
                       <div class="models-id">{{ models.id }}</div>
@@ -216,6 +216,7 @@
 </template>
 
 <script setup lang="ts">
+import { Atom, Eye, ToyBrick } from "lucide-vue-next"
 import { QuestionFilled, Refresh } from "@element-plus/icons-vue"
 
 import { cloneDeep, debounce } from "lodash-es"
@@ -497,18 +498,6 @@ onUnmounted(() => {
     color: #666666;
     background: rgba(0, 0, 0, 0.03);
     border-radius: 4px;
-  }
-
-  .function-call {
-    color: #369eff;
-  }
-
-  .vision {
-    color: #55b467;
-  }
-
-  .reasoning {
-    color: #bd54c6;
   }
 }
 

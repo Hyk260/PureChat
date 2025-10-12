@@ -10,7 +10,7 @@
 
     <!-- 深度思考内容 -->
     <div v-else-if="deeplyThoughtContent" class="reply-content__sender flex gap-8">
-      <SvgIcon class="reasoning" local-icon="reasoning" />
+      <Atom :size="16" color="#bd54c6" />
       {{ deeplyThoughtContent }}
     </div>
 
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from "vue"
+import { Atom } from "lucide-vue-next"
 
 import DynamicContent from "@/components/Chat/DynamicContent.vue"
 import { MessageStatus, MessageStatusSchema } from "@/database/schemas/message"
@@ -75,10 +75,6 @@ const scrollToMessage = () => {
     font-size: 14px;
     font-weight: 400;
     margin-bottom: 10px;
-
-    .reasoning {
-      font-size: 15px;
-    }
   }
 
   &__mask {

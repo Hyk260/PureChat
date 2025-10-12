@@ -38,9 +38,9 @@
                   <el-icon v-if="item?.type == 'el-icon'" class="icon-size">
                     <component :is="item.icon" />
                   </el-icon>
-                  <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
+                  <SvgIcon v-else :local-icon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
-                  <svg-icon local-icon="drag" class="dragIcon" />
+                  <GripVertical :size="18" class="drag-icon" />
                 </div>
               </template>
             </VueDraggableNext>
@@ -74,9 +74,9 @@
                   <el-icon v-if="item?.type == 'el-icon'">
                     <component :is="item.icon" />
                   </el-icon>
-                  <svg-icon v-else :local-icon="item.icon" class="svg-icon" />
+                  <sSvgIcon v-else :local-icon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
-                  <GripVertical :size="18" class="dragIcon" />
+                  <GripVertical :size="18" class="drag-icon" />
                 </div>
               </template>
             </VueDraggableNext>

@@ -4,24 +4,32 @@ import {
   CopyDocument,
   SortDown,
   // Download,
-  // ChatDotSquare,
   // Finished,
   // DeleteFilled
 } from "@element-plus/icons-vue"
-import { AtSign, BellOff, BellRing, Download, ListChecks, MessageSquareQuote, Trash2 } from "lucide-vue-next"
+import {
+  AtSign,
+  BellOff,
+  BellRing,
+  Download,
+  ListChecks,
+  MessageSquareQuote,
+  Pin,
+  PinOff,
+  Trash2,
+} from "lucide-vue-next"
+
 // 会话列表数据
 export const chatSessionListData = [
   {
     id: "pinged",
-    icon: "",
-    svgIcon: "pinged",
+    icon: markRaw(Pin),
     text: "置顶",
     hide: __LOCAL_MODE__,
   },
   {
     id: "unpin",
-    icon: "",
-    svgIcon: "unpin",
+    icon: markRaw(PinOff),
     text: "取消置顶",
     hide: __LOCAL_MODE__,
   },

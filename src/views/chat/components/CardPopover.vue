@@ -36,6 +36,7 @@
 <script setup lang="ts">
 import { onClickOutside } from "@vueuse/core"
 import { Operation, PieChart } from "@element-plus/icons-vue"
+import { LogOut } from "lucide-vue-next"
 
 import { useState } from "@/hooks/useState"
 import { useChatStore, useUserStore } from "@/stores"
@@ -82,8 +83,7 @@ const menuItems = [
   {
     index: "5",
     label: "退出登录",
-    icon: "CollectionTag",
-    svg: "log-out",
+    icon: LogOut,
     hide: __LOCAL_MODE__,
     action: () => {
       userStore.handleUserLogout()
@@ -97,7 +97,7 @@ const dataStatistics = ref({
   topics: "话题",
 })
 
-function closeCard(item) {
+function closeCard(item?: any) {
   if (item) item.action?.()
   setCard(false)
 }

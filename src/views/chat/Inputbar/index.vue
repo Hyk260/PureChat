@@ -1,45 +1,46 @@
 <template>
   <div class="toolbar">
     <!-- 表情包 -->
-    <el-tooltip :content="$t('chat.emoji')" placement="top">
-      <el-button v-show="!isFullscreenInputActive && !isAssistant" @click="sendEmojiClick">
-        <SvgIcon local-icon="iconxiaolian" />
+    <el-tooltip v-if="!isFullscreenInputActive && !isAssistant" :content="$t('chat.emoji')" placement="top">
+      <el-button @click="sendEmojiClick">
+        <Smile :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 选模型 -->
-    <el-tooltip :content="$t('button.select_model')" placement="top">
-      <el-button v-show="isAssistant" @click="selectModel">
-        <SvgIcon local-icon="model" />
+    <el-tooltip v-if="isAssistant" :content="$t('button.select_model')" placement="top">
+      <el-button @click="selectModel">
+        <Brain :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 图片 -->
-    <el-tooltip :content="$t('chat.picture')" placement="top">
-      <el-button v-show="!isAssistant" @click="sendImageClick">
-        <SvgIcon local-icon="icontupian" />
+    <el-tooltip v-if="!isAssistant" :content="$t('chat.picture')" placement="top">
+      <el-button @click="sendImageClick">
+        <ImageUp :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 文件 -->
-    <el-tooltip :content="$t('chat.file')" placement="top">
-      <el-button v-show="!isAssistant" @click="sendFileClick">
-        <SvgIcon local-icon="iconwenjianjia" />
+    <el-tooltip v-if="!isAssistant" :content="$t('chat.file')" placement="top">
+      <el-button @click="sendFileClick">
+        <!-- <FolderOpen :size="16" /> -->
+        <FileUp :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 截图 -->
     <el-tooltip v-if="IS_ELECTRON" :content="$t('chat.screenshot')" placement="top">
       <el-button v-show="!isAssistant" @click="clickCscreenshot">
-        <SvgIcon local-icon="iconjietu" />
+        <Scissors class="rotate-270" :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 模型配置 -->
-    <el-tooltip :content="$t('chat.configuration')" placement="top">
-      <el-button v-show="isAssistant" @click="openRobotBox">
-        <SvgIcon local-icon="robot" />
+    <el-tooltip v-if="isAssistant" :content="$t('chat.configuration')" placement="top">
+      <el-button @click="openRobotBox">
+        <SlidersHorizontal :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 附件 -->
     <el-tooltip v-if="IS_ELECTRON" :content="$t('chat.upload_document')" placement="top">
       <el-button v-show="isAssistant" @click="sendAnnexClick">
-        <SvgIcon local-icon="paperClip" />
+        <Paperclip :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 联网 -->
@@ -51,7 +52,7 @@
         }"
         @click="onEnableWebSearch"
       >
-        <SvgIcon local-icon="internet" />
+        <Globe :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 清空消息 -->
@@ -81,7 +82,7 @@
     <!-- 插件 -->
     <el-tooltip v-if="false" content="选择插件" placement="top">
       <el-button @click="openPluginBox">
-        <SvgIcon local-icon="plugin" />
+        <Blocks :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 滚动到底部 -->
@@ -97,7 +98,8 @@
     <!-- 全屏 -->
     <el-tooltip :content="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')" placement="top">
       <el-button class="!ml-auto" @click="toggleFullScreenInput">
-        <SvgIcon :local-icon="isFullscreenInputActive ? 'narrow' : 'enlarge'" />
+        <Minimize2 v-if="isFullscreenInputActive" :size="16" />
+        <Maximize2 v-else :size="16" />
       </el-button>
     </el-tooltip>
     <RobotModel />
@@ -108,8 +110,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue"
 import { DArrowLeft, Delete, Sunny, Warning } from "@element-plus/icons-vue"
+import {
+  Blocks,
+  FileUp,
+  Globe,
+  ImageUp,
+  Maximize2,
+  Minimize2,
+  Paperclip,
+  Brain,
+  Scissors,
+  // FolderOpen,
+  SlidersHorizontal,
+  Smile,
+} from "lucide-vue-next"
 
 import { audioExts, documentExts, imageExts, textExts, videoExts } from "@shared/config"
 import { storeToRefs } from "pinia"
