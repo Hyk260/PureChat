@@ -73,7 +73,8 @@
           </div>
           <template #reference>
             <el-button>
-              <el-icon class="cursor-pointer"><Delete /></el-icon>
+              <BrushCleaning :size="16" />
+              <!-- <el-icon class="cursor-pointer"><Delete /></el-icon> -->
             </el-button>
           </template>
         </el-popover>
@@ -110,16 +111,22 @@
 </template>
 
 <script setup lang="ts">
-import { DArrowLeft, Delete, Sunny, Warning } from "@element-plus/icons-vue"
+import {
+  DArrowLeft,
+  // Delete,
+  Sunny,
+  Warning,
+} from "@element-plus/icons-vue"
 import {
   Blocks,
+  Brain,
+  BrushCleaning,
   FileUp,
   Globe,
   ImageUp,
   Maximize2,
   Minimize2,
   Paperclip,
-  Brain,
   Scissors,
   // FolderOpen,
   SlidersHorizontal,

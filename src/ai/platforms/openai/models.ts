@@ -2,6 +2,32 @@
 const OpenAI = {
   chatModels: [
     {
+      tokens: 400_000,
+      description: "更快、更经济高效的 GPT-5 版本，适用于明确定义的任务。在保持高质量输出的同时，提供更快的响应速度。",
+      displayName: "GPT-5 mini",
+      enabled: true,
+      functionCall: true,
+      id: "gpt-5-mini",
+      maxOutput: 128_000,
+      pricing: {
+        units: [
+          { name: "textInput", rate: 0.25, strategy: "fixed", unit: "millionTokens" },
+          { name: "textOutput", rate: 2, strategy: "fixed", unit: "millionTokens" },
+          { name: "textInput_cacheRead", rate: 0.03, strategy: "fixed", unit: "millionTokens" },
+        ],
+      },
+      vision: true,
+    },
+    {
+      tokens: 1_047_576,
+      description: "GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。",
+      displayName: "GPT-4.1 mini",
+      functionCall: true,
+      id: "gpt-4.1-mini",
+      maxOutput: 32_768,
+      vision: true,
+    },
+    {
       reasoning: true,
       description:
         "o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。",
