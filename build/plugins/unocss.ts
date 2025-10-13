@@ -14,6 +14,7 @@ export function setupUnocss(viteEnv: Env.ImportMeta) {
 
   return unocss({
     presets: [
+      // https://unocss.zhcndoc.com/presets/icons
       presetIcons({
         prefix: `${VITE_ICON_PREFIX}-`,
         scale: 1,

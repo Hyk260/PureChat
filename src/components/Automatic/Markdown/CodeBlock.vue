@@ -79,7 +79,7 @@ import { debounce } from "lodash-es"
 
 import { getLanguageIcon, languageMap, languageMapValues } from "@/utils/languageIcon"
 
-import { disposeHighlighter, registerHighlight } from "./highlight"
+import { registerHighlight } from "./highlight"
 import { MarkdownRenderer } from "./markdown-renderer"
 
 import type { Highlighter } from "shiki"
@@ -248,20 +248,20 @@ watch(highlightedCode, () => {
 //     highlightedCode.value = highlighter.value.codeToHtml(props.code, {
 //       lang,
 //       theme,
-//       transformers: [
-//         // {
-//         //   code(node) {
-//         //     this.addClassToHast(node, "language-js")
-//         //   },
-//         //   line(node, line) {
-//         //     node.properties["data-line"] = line
-//         //     if ([1, 3, 4].includes(line)) this.addClassToHast(node, "highlight")
-//         //   },
-//         //   span(node, line, col) {
-//         //     node.properties["data-token"] = `token:${line}:${col}`
-//         //   },
-//         // },
-//       ],
+//       // transformers: [
+//       //   {
+//       //     code(node) {
+//       //       this.addClassToHast(node, "language-js")
+//       //     },
+//       //     line(node, line) {
+//       //       node.properties["data-line"] = line
+//       //       if ([1, 3, 4].includes(line)) this.addClassToHast(node, "highlight")
+//       //     },
+//       //     span(node, line, col) {
+//       //       node.properties["data-token"] = `token:${line}:${col}`
+//       //     },
+//       //   },
+//       // ],
 //     })
 //   },
 //   { immediate: true }
