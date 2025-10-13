@@ -301,12 +301,16 @@ export const scrollToDomPosition = (msgid: string) => {
   }, 2000)
 }
 
-export const scrollToMessage = (id: string, delay = 300) => {
+export const scrollToMessage = (
+  id: string,
+  delay = 300,
+  options: ScrollIntoViewOptions | boolean = { behavior: "smooth", block: "center" }
+) => {
   nextTick(() => {
     setTimeout(() => {
       const dom = document.getElementById(id)
       if (!dom) return
-      dom.scrollIntoView({ behavior: "smooth", block: "center" })
+      dom.scrollIntoView(options)
     }, delay)
   })
 }

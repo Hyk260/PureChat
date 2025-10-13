@@ -79,10 +79,10 @@ import { debounce } from "lodash-es"
 
 import { getLanguageIcon, languageMap, languageMapValues } from "@/utils/languageIcon"
 
-import { registerHighlight } from "./highlight"
-import { MarkdownRenderer } from "./markdown-renderer"
+// import { getHighlighter } from "./highlightShiki"
+import { highlightCode } from "./utils/highlight"
 
-import type { Highlighter } from "shiki"
+import "./style/iconify.scss"
 
 interface Props {
   code: string
@@ -102,22 +102,11 @@ const codeContainerRef = ref<HTMLElement>()
 // const showDownload = ref(false)
 const showMaximize = ref(false)
 
-// const highlighter = ref<Highlighter | null>(null)
-// const highlightedCode = ref<string>("")
+const highlightedCode = ref<string>("")
 const languageList = ["js", "ts"].concat(languageMapValues)
 const excludeList = ["json", "bash"]
 // const showHeader = ref(false)
 const showHeader = computed(() => languageList.includes(props.language) && !excludeList.includes(props.language))
-
-const highlightedCode = computed(() => {
-  const renderer = new MarkdownRenderer()
-  return renderer.highlight(props.code, props.language, {
-    // showLang: !showHeader.value,
-    // showCopy: !showHeader.value,
-    showLang: false,
-    showCopy: false,
-  })
-})
 
 const showDownload = computed(() => {
   const lang = props.language.trim().toLowerCase()
@@ -239,33 +228,20 @@ watch(highlightedCode, () => {
   nextTick(debouncedHeightCheck)
 })
 
-// watch(
-//   () => props.code,
-//   async () => {
-//     highlighter.value = await registerHighlight()
-//     const lang = props.language
-//     const theme = "one-light"
-//     highlightedCode.value = highlighter.value.codeToHtml(props.code, {
-//       lang,
-//       theme,
-//       // transformers: [
-//       //   {
-//       //     code(node) {
-//       //       this.addClassToHast(node, "language-js")
-//       //     },
-//       //     line(node, line) {
-//       //       node.properties["data-line"] = line
-//       //       if ([1, 3, 4].includes(line)) this.addClassToHast(node, "highlight")
-//       //     },
-//       //     span(node, line, col) {
-//       //       node.properties["data-token"] = `token:${line}:${col}`
-//       //     },
-//       //   },
-//       // ],
-//     })
-//   },
-//   { immediate: true }
-// )
+watch(
+  () => props.code,
+  async () => {
+    highlightedCode.value = highlightCode(props.code, props.language)
+    // const highlighter = await getHighlighter()
+    // const lang = props.language
+    // const theme = "one-light"
+    // highlightedCode.value = highlighter!.codeToHtml(props.code, {
+    //   lang,
+    //   theme,
+    // })
+  },
+  { immediate: true }
+)
 </script>
 <style lang="scss">
 :root {

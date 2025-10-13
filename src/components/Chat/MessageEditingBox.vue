@@ -26,6 +26,7 @@ import { ElInput } from "element-plus"
 import { DB_Message } from "@/database/schemas/message"
 import { modifyMessage } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores"
+// import { scrollToMessage } from "@/utils/chat"
 
 defineOptions({
   name: "MessageEditingBox",
@@ -53,6 +54,7 @@ const isConfirmDisabled = computed(() => {
 
 function handleCancel() {
   chatStore.setMsgEdit(null)
+  // scrollToMessage(props.item.ID, 10)
 }
 
 function handleKeydown(event: KeyboardEvent) {
@@ -106,9 +108,9 @@ onMounted(() => {
   flex-direction: column;
   gap: 10px;
   transition: background-color 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
-  :deep(.el-textarea__inner) {
-    border: none;
-    box-shadow: none;
-  }
+  // :deep(.el-textarea__inner) {
+  //   border: none;
+  //   box-shadow: none;
+  // }
 }
 </style>

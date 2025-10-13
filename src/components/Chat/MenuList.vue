@@ -45,7 +45,7 @@ import { ElPopover } from "element-plus"
 
 import { useChatStore } from "@/stores/modules/chat"
 import { DB_Message, MessageStatus, MessageStatusSchema } from "@/types"
-import { handleCopyMsg } from "@/utils/chat"
+import { handleCopyMsg, scrollToMessage } from "@/utils/chat"
 
 defineOptions({
   name: "MenuList",
@@ -76,7 +76,6 @@ const menuItemsConfig = [
   {
     id: "refresh",
     title: "重新生成",
-    // hidden: true,
     hidden: !__LOCAL_MODE__,
     icon: markRaw(RefreshCw),
   },
@@ -173,6 +172,7 @@ function handleMenuItemClick(data: { id: string }) {
       handleCopyMsg(item)
       break
     case "edit":
+      scrollToMessage(item.ID)
       chatStore.setMsgEdit(item)
       break
     case "setup":

@@ -8,7 +8,7 @@
               <span v-if="userStore.userLocalStore.native">
                 {{ userStore.userLocalStore.native }}
               </span>
-              <el-avatar v-else class="w-70 h-70" :src="userAvatar" />
+              <el-avatar v-else class="w-70 h-70" :src="userStore.getUserAvatar" />
             </div>
             <template #dropdown>
               <el-dropdown-menu>
@@ -34,8 +34,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
-
 import EmojiMart from "@/components/EmojiMart/index.vue"
 import { useState } from "@/hooks/useState"
 import { useUserStore } from "@/stores/modules/user"
@@ -47,10 +45,6 @@ const [open, setOpen] = useState(false)
 const [showEmojiPickerFlag, setShowEmojiPickerFlag] = useState(false)
 
 const userStore = useUserStore()
-
-const userAvatar = computed(() => {
-  return userStore.getUserAvatar
-})
 
 const menu = [
   {
@@ -78,6 +72,7 @@ const menu = [
 
 const show = () => {
   setOpen(true)
+  userName.value = userStore.userLocalStore.userName
 }
 
 const handleClose = () => {
@@ -88,9 +83,8 @@ const setUserName = (value = "") => {
   userStore.setUserLocalStore({ userName: value.trim() })
 }
 
-const handleEmojiSelect = (emoji) => {
-  console.log("handleEmojiSelect", emoji)
-  userStore.setUserLocalStore({ native: emoji.native, avatar: "" })
+const handleEmojiSelect = (data) => {
+  userStore.setUserLocalStore({ native: data.native, avatar: "" })
 }
 
 const handleUploadProfile = async () => {
