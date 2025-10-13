@@ -10,7 +10,6 @@ import chat from "@/service/chat/PureChatService"
 import { useAuthStore, useChatStore } from "@/stores"
 import { SetupStoreId } from "@/stores/enum"
 import emitter from "@/utils/mitt-bus"
-import { localStg } from "@/utils/storage"
 
 import type {
   HandleIMLoginPayload,
@@ -58,9 +57,9 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       if (code === 200) {
         timProxy.init()
         await this.handleIMLogin({ userID: result.username, userSig: result.userSig })
-        localStg.set("User-Model", result)
+        window.localStg.set("User-Model", result)
         useAuthStore().setTokens(result?.accessToken, result?.refreshToken)
-        // data?.remember && localStg.set(ACCOUNT, data)
+        // data?.remember && window.localStg.set(ACCOUNT, data)
       } else {
         console.log("授权登录失败")
         window.$message?.error(msg || "授权登录失败")
@@ -115,7 +114,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       if (router.currentRoute.value.name === "login") return
       await nextTick()
       try {
-        const data = (localStg.get("User-Model") as LoginResult) || null
+        const data = (window.localStg.get("User-Model") as LoginResult) || null
         console.log("tryReconnect", data)
         if (data) {
           timProxy.init()

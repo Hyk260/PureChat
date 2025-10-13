@@ -9,3 +9,7 @@ export const dbSchemaV2 = {
 export const dbSchemaV3 = {
   files: "id, name, origin_name, path, size, ext, type, created_at, count",
 }
+
+export const dbSchemaV4 = {
+  users: "++id, uuid",
+}

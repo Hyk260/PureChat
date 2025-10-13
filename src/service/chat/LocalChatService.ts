@@ -6,7 +6,7 @@ import { SessionModel } from "@/database/models/session"
 import {
   MessageSchema as BaseElemMessage,
   SessionSchema as BaseElemSession,
-  UserProfileSchema as UserProfile,
+  UserfileSchema as UserProfile,
 } from "@/types"
 import { delay, getTime } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"

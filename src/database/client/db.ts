@@ -1,6 +1,6 @@
 import Dexie from "dexie"
 
-import { dbSchemaV1, dbSchemaV2, dbSchemaV3 } from "./schemas"
+import { dbSchemaV1, dbSchemaV2, dbSchemaV3, dbSchemaV4 } from "./schemas"
 
 import type { BrowserDBTable } from "../types/db"
 
@@ -10,16 +10,19 @@ export class BrowserDB extends Dexie {
   public files: BrowserDBTable<"files">
   public sessions: BrowserDBTable<"sessions">
   public messages: BrowserDBTable<"messages">
+  public users: BrowserDBTable<"users">
 
   constructor() {
     super("PURE_CHAT_DB")
     this.version(1).stores(dbSchemaV1)
     this.version(2).stores(dbSchemaV2)
     this.version(3).stores(dbSchemaV3)
+    this.version(4).stores(dbSchemaV4)
 
     this.messages = this.table("messages")
     this.sessions = this.table("sessions")
     this.files = this.table("files")
+    this.users = this.table("users")
   }
 }
 

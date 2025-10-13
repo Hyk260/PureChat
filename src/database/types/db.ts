@@ -3,6 +3,7 @@ import { z } from "zod"
 import type { DB_File } from "../schemas/files"
 import type { DB_Message } from "../schemas/message"
 import type { DB_Session } from "../schemas/session"
+import type { DB_User } from "../schemas/user"
 import type Dexie from "dexie"
 
 export type DBModel<T> = T & {
@@ -21,6 +22,7 @@ export interface DBSchemaMap {
   files: DB_File
   messages: DB_Message
   sessions: DB_Session
+  users: DB_User
 }
 
 export type BrowserDBSchema = {
