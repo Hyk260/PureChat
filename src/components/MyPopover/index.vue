@@ -1,13 +1,5 @@
 <template>
-  <div
-    v-if="card && cardData"
-    ref="cardRef"
-    :style="{ left: left, top: top }"
-    class="robot-box fade-slide-lower"
-    :class="{
-      'is-robot': isRobot(cardData?.from),
-    }"
-  >
+  <div v-if="card && cardData" ref="cardRef" :style="{ left: left, top: top }" class="robot-box fade-slide-lower">
     <div class="title flex-sc">
       <img
         draggable="false"
@@ -164,10 +156,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-.is-robot {
-  background-image: url(../../../assets/images/gptBack.png) !important;
-}
-
 .robot-box {
   background: #fff;
   box-shadow: 0px 0px 12px rgb(0 0 0 / 12%);

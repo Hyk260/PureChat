@@ -4,7 +4,7 @@ const importModules = (app: App) => {
   const modules: Record<string, { default: DefineComponent }> = import.meta.glob("./**/index.vue", { eager: true })
 
   Object.keys(modules).forEach((key) => {
-    const component: DefineComponent = modules[key]!.default
+    const component: DefineComponent = modules[key].default
     app.component(component.name, component)
   })
 }

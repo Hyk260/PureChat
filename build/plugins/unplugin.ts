@@ -12,7 +12,7 @@ export function setupUnplugin(viteEnv: Env.ImportMeta) {
   const plugins: PluginOption = [
     // SvgIcon
     createSvgIconsPlugin({
-      iconDirs: [path.join(process.cwd(), "src/assets/icons/svg")],
+      iconDirs: [path.join(process.cwd(), "src/assets/svg-icon")],
       symbolId: `${VITE_ICON_LOCAL_PREFIX}-[dir]-[name]`,
       inject: "body-last",
       customDomId: "__SVG_ICON_LOCAL__",

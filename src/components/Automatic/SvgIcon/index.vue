@@ -15,13 +15,16 @@ import { Icon } from "@iconify/vue"
 
 defineOptions({ name: "SvgIcon", inheritAttrs: false })
 
-const props = defineProps({
-  icon: String,
-  localIcon: String,
-  color: {
-    type: String,
-    default: "currentColor", // currentColor #808080
-  },
+interface Props {
+  icon?: string
+  localIcon?: string
+  color?: "currentColor"
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  color: "currentColor",
+  localIcon: "",
+  icon: "",
 })
 
 const attrs = useAttrs()
@@ -34,7 +37,9 @@ const bindAttrs = computed(() => ({
 const symbolId = computed(() => {
   const { VITE_ICON_LOCAL_PREFIX: prefix } = import.meta.env
 
-  const icon = props.localIcon
+  const defaultLocalIcon = "no-icon"
+
+  const icon = props.localIcon || defaultLocalIcon
 
   return `#${prefix}-${icon}`
 })

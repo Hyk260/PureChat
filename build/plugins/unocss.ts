@@ -7,7 +7,7 @@ import { FileSystemIconLoader } from "@iconify/utils/lib/loader/node-loaders"
 export function setupUnocss(viteEnv: Env.ImportMeta) {
   const { VITE_ICON_PREFIX, VITE_ICON_LOCAL_PREFIX } = viteEnv
 
-  const localIconPath = path.join(process.cwd(), "src/assets/icons/svg")
+  const localIconPath = path.join(process.cwd(), "src/assets/svg-icon")
 
   // 本地图标集合的名称
   const collectionName = VITE_ICON_LOCAL_PREFIX.replace(`${VITE_ICON_PREFIX}-`, "")

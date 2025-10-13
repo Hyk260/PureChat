@@ -15,7 +15,8 @@
     <!-- 图片 -->
     <el-tooltip v-if="!isAssistant" :content="$t('chat.picture')" placement="top">
       <el-button @click="sendImageClick">
-        <Image :size="16" />
+        <!-- <Image :size="16" /> -->
+        <SvgIcon local-icon="image" />
       </el-button>
     </el-tooltip>
     <!-- 文件 -->
@@ -23,7 +24,8 @@
       <el-button @click="sendFileClick">
         <!-- <FolderOpen :size="16" /> -->
         <!-- <FileUp :size="16" /> -->
-        <FolderClosed :size="16" />
+        <!-- <FolderClosed :size="16" /> -->
+        <SvgIcon local-icon="folder" />
       </el-button>
     </el-tooltip>
     <!-- 截图 -->
