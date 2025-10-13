@@ -109,6 +109,7 @@ export const getAvatarUrl = (id: string, type: "local" | "cloud" = "local"): str
  * 获取 AI 用户头像 URL
  * @param {string} id - 会话 ID C2C@RBT#001
  * @returns {string} 头像 URL 或空字符串
+ * @deprecated 请使用 @/ai/getAiAvatarUrl 中的新版本
  */
 export function getAiAvatarUrl(id: string): string {
   if (id.includes("@RBT#")) {
