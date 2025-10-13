@@ -1,4 +1,5 @@
-import { ModelProvider } from "@/ai/types"
+import { ModelProvider, ModelProviderKey } from "@/ai/types"
+import { getModelType } from "@/ai/utils"
 import deepseekPng from "@/assets/images/model-provider/deepseek.png"
 import githubSvg from "@/assets/images/model-provider/github.svg"
 import mistralPng from "@/assets/images/model-provider/mistral.png"
@@ -75,7 +76,6 @@ class AvatarCacheManager {
  */
 class AiModelDetector {
   private static readonly ROBOT_PATTERN = /@RBT#/
-  private static readonly C2C_PREFIX = "C2C"
 
   /**
    * 检测ID是否为AI机器人ID
@@ -91,32 +91,12 @@ class AiModelDetector {
    * @param id AI机器人ID
    * @returns 模型提供者类型
    */
-  static extractModelProvider(id: string): ModelProvider | null {
+  static extractModelProvider(id: string): ModelProviderKey | null {
     if (!this.isAiRobotId(id)) {
       return null
     }
 
-    // 移除C2C前缀并提取模型ID
-    const cleanId = id.replace(this.C2C_PREFIX, "")
-    // 模型ID到提供者的映射
-    const modelProviderMap: Record<string, ModelProvider> = {
-      "001": ModelProvider.OpenAI,
-      "002": ModelProvider.ZhiPu,
-      "003": ModelProvider.ZeroOne,
-      "004": ModelProvider.Qwen,
-      "005": ModelProvider.Ollama,
-      "006": ModelProvider.GitHub,
-      "007": ModelProvider.DeepSeek,
-      "008": ModelProvider.Mistral,
-    }
-
-    // 提取数字部分
-    const match = cleanId.match(/@RBT#(\d+)/)
-    if (match?.[1]) {
-      return modelProviderMap[match[1]] || null
-    }
-
-    return null
+    return getModelType(id) || null
   }
 }
 
