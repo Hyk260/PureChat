@@ -1,8 +1,9 @@
 import { cloneDeep } from "lodash-es"
 
 import { ClientApi } from "@/ai/api"
+import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { ModelProvider, ModelProviderKey } from "@/ai/types"
-import { getAiAvatarUrl, prettyObject } from "@/ai/utils"
+import { prettyObject } from "@/ai/utils"
 import { DB_Message } from "@/database/schemas/message"
 import { restApi } from "@/service/api"
 import { createCustomMessage } from "@/service/im-sdk-api"
@@ -10,7 +11,7 @@ import { useChatStore, useRobotStore } from "@/stores"
 import { getCloudCustomData } from "@/utils/chat"
 import { getCustomMsgContent, getTime } from "@/utils/common"
 import { generateReferencePrompt, handleWebSearchData } from "@/utils/messageUtils/search"
-import { emitUpdateScroll, emitUpdateScrollImmediate } from "@/utils/mitt-bus"
+import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
 import type { AIResponse } from "@/types"
 

@@ -99,7 +99,7 @@ import { ElScrollbar } from "element-plus"
 import { storeToRefs } from "pinia"
 import { Contextmenu, ContextmenuItem } from "v-contextmenu"
 
-import { getAiAvatarUrl } from "@/ai/utils"
+import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import AssistantMessage from "@/components/Chat/AssistantMessage.vue"
 import Checkbox from "@/components/Chat/Checkbox.vue"
 import MenuList from "@/components/Chat/MenuList.vue"

@@ -116,7 +116,7 @@ import { computed, onMounted, onUnmounted, ref } from "vue"
 
 import { storeToRefs } from "pinia"
 
-import { getAiAvatarUrl } from "@/ai/utils"
+import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import ChatHeader from "@/components/Chat/ChatHeader.vue"
 import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"
 import { ImageType, imageTypeOptions, useScreenshot } from "@/hooks/useScreenshot"

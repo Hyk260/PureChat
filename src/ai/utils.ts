@@ -1,7 +1,7 @@
 import { ModelID } from "@shared/provider"
 import { isEmpty } from "lodash-es"
 
-import { AssistantAvatar, modelConfig, modelValue } from "@/ai/constant"
+import { modelConfig, modelValue } from "@/ai/constant"
 import { LLMParams, ModelProvider, ModelProviderKey } from "@/ai/types"
 import { useRobotStore } from "@/stores/modules/robot"
 import { localStg } from "@/utils/storage"
@@ -62,7 +62,7 @@ export function getModelId(model: ModelProviderKey) {
   return modelMapping[model] || ""
 }
 
-export function getModelSvg(id: string): string {
+export function getModelIcon(id: string): string {
   const modelId = getModelType(id)
   const data = {
     [ModelProvider.OpenAI]: "openai",
@@ -90,33 +90,6 @@ export function prettyObject(msg: any) {
     return msg
   }
   return ["```json", msg, "```"].join("\n")
-}
-
-/**
- * 获取用户头像 URL
- */
-export const getAvatarUrl = (id: string, type: "local" | "cloud" = "local"): string => {
-  // icon.png
-  const suffix = AssistantAvatar[getModelType(id) as ModelProvider] || ""
-  if (type === "local") {
-    return new URL(`../assets/images/model-provider/${suffix}`, import.meta.url).href
-  } else {
-    return `${import.meta.env.VITE_CLOUD_BASE_URL}${suffix}`
-  }
-}
-
-/**
- * 获取 AI 用户头像 URL
- * @param {string} id - 会话 ID C2C@RBT#001
- * @returns {string} 头像 URL 或空字符串
- * @deprecated 请使用 @/ai/getAiAvatarUrl 中的新版本
- */
-export function getAiAvatarUrl(id: string): string {
-  if (id.includes("@RBT#")) {
-    return getAvatarUrl(id)
-  } else {
-    return ""
-  }
 }
 
 const getStatus = (errorType: string) => {

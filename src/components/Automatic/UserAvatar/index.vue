@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { getAiAvatarUrl } from "@/ai/utils"
+import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { useUserStore } from "@/stores/modules/user"
 import { circleUrl, emptyUrl, squareUrl } from "@/utils/chat"
 

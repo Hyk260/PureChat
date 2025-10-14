@@ -58,7 +58,7 @@ import { storeToRefs } from "pinia"
 
 import { modelValue } from "@/ai/constant"
 import { ModelSelect } from "@/ai/resources"
-import { getModelSvg, useAccessStore } from "@/ai/utils"
+import { getModelIcon, useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"
 import { Model, ModelConfigItem } from "@/stores/modules/robot/types"
@@ -94,7 +94,7 @@ function storeRobotModel(data: Model) {
 function initModel() {
   const provider = modelProvider.value
   const selectModel = modelStore.value[provider] || {}
-  robotIcon.value = getModelSvg(toAccount.value)
+  robotIcon.value = getModelIcon(toAccount.value)
   const providerValue = modelValue[provider]
   if (!providerValue?.Model?.options) {
     setFlag(true)

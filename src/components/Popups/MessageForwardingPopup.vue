@@ -36,7 +36,7 @@ import { ref } from "vue"
 
 import { storeToRefs } from "pinia"
 
-import { getAiAvatarUrl } from "@/ai/utils"
+import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { useChatStore } from "@/stores/modules/chat"
 import { chatName, squareUrl } from "@/utils/chat"
 

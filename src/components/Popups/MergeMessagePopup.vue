@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-import { getAiAvatarUrl } from "@/ai/utils"
+import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"
 import { useState } from "@/hooks/useState"
 import { downloadMergerMessage } from "@/service/im-sdk-api/index"

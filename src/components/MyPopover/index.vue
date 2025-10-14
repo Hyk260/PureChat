@@ -43,7 +43,7 @@
 import { onBeforeUnmount, onMounted, ref } from "vue"
 import { onClickOutside } from "@vueuse/core"
 
-import { getAiAvatarUrl } from "@/ai/utils"
+import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 // import { getGender } from "@/utils/common";
 import { getValueByKey, prefix } from "@/ai/utils"
 import { useState } from "@/hooks/useState"

@@ -25,17 +25,6 @@ export const prompt = [
   },
 ]
 
-export const AssistantAvatar = {
-  [ModelProvider.OpenAI]: "openai.png",
-  [ModelProvider.ZhiPu]: "zhipu.png",
-  [ModelProvider.ZeroOne]: "zeroone.png",
-  [ModelProvider.Qwen]: "qwen.png",
-  [ModelProvider.Ollama]: "ollama.svg",
-  [ModelProvider.GitHub]: "github.svg",
-  [ModelProvider.DeepSeek]: "deepseek.png",
-  [ModelProvider.Mistral]: "mistral.png",
-}
-
 export const modelConfig = {
   [ModelProvider.OpenAI]: OpenaiConfig(),
   [ModelProvider.GitHub]: GitHubConfig(),

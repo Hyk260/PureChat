@@ -216,8 +216,8 @@
 </template>
 
 <script setup lang="ts">
-import { Atom, Eye, ToyBrick } from "lucide-vue-next"
 import { QuestionFilled, Refresh } from "@element-plus/icons-vue"
+import { Atom, Eye, ToyBrick } from "lucide-vue-next"
 
 import { cloneDeep, debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
@@ -225,7 +225,7 @@ import { storeToRefs } from "pinia"
 import { ClientApi } from "@/ai/api"
 import { modelConfig, modelValue } from "@/ai/constant"
 import { ModelSelect } from "@/ai/resources"
-import { getModelSvg, useAccessStore } from "@/ai/utils"
+import { getModelIcon, useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"
 import { hostPreview } from "@/utils/api"
@@ -303,7 +303,7 @@ function initializeModelOptions() {
   const provider = modelProvider.value
   const modelDataValue = cloneDeep(modelValue[provider])
   const currentModelConfig = modelStore.value[provider]
-  robotIcon.value = getModelSvg(toAccount.value)
+  robotIcon.value = getModelIcon(toAccount.value)
   Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {
     if (configItem.ID === "model" && currentModelConfig?.Model?.collapse) {
       configItem.collapse = currentModelConfig?.Model?.collapse || []

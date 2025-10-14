@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-import { getAiAvatarUrl } from "@/ai/utils"
+import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { useState } from "@/hooks/useState"
 import { useChatStore } from "@/stores/index"
 import { chatName, squareUrl } from "@/utils/chat/index"
@@ -34,7 +34,7 @@ defineOptions({
 
 const memberValue = ref(null)
 const emits = defineEmits(["define"])
-const [dialog, setDialog] = useState()
+const [dialog, setDialog] = useState(false)
 const chatStore = useChatStore()
 
 const onClickItem = (value) => {
