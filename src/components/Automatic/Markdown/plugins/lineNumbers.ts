@@ -1,3 +1,5 @@
+// 用于生成行号的 markdown-it 插件。
+// 它依赖于 preWrapper 插件。
 import type MarkdownIt from "markdown-it"
 
 export const lineNumberPlugin = (md: MarkdownIt, enable = false) => {

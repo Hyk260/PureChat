@@ -4,11 +4,13 @@ import markdownItFootnote from "markdown-it-footnote"
 
 // import markdownItMark from "markdown-it-mark"
 import { applyEpubRules, applyFenceRules, applyLinkOpenRules, configureFootnoteRules } from "./markdown"
+import { highlightLinePlugin } from "./plugins/highlightLines"
+import { imagePlugin, type Options as ImageOptions } from "./plugins/image"
 import { lineNumberPlugin } from "./plugins/lineNumbers"
 // import { applyMath } from "./plugins/math"
-// import { preWrapperPlugin } from "./plugins/preWrapper"
-import { convertToMarkdownFootnotes } from "./utils"
-import { highlightCode } from "./utils/highlight"
+import { preWrapperPlugin } from "./plugins/preWrapper"
+import { highlight, highlightCode } from "./utils/highlight"
+import { convertToMarkdownFootnotes } from "./utils/utils"
 
 import type { MarkdownToken } from "./types"
 
@@ -16,10 +18,24 @@ import type { MarkdownToken } from "./types"
 interface MarkdownRendererOptions {
   webSearchResults?: any[]
   /**
+   * 代码块中复制按钮的提示文本
+   * @default 'Copy Code'
+   */
+  codeCopyButtonTitle?: string
+  /**
+   * 用于显示的自定义语言标签。
+   * 覆盖代码块中显示的默认语言标签。
+   * 键不区分大小写。
+   *
+   * @example { 'vue': 'Vue SFC' }
+   */
+  languageLabel?: Record<string, string>
+  /**
    * 是否为代码块启用行号
    * @default false
    */
   lineNumbers?: boolean
+  image?: ImageOptions
 }
 
 // 高亮显示的可选项：是否显示语言标签和复制按钮
@@ -45,28 +61,32 @@ export class MarkdownRenderer {
 
     this.highlightOptions = {
       showLang: highlightOptions.showLang ?? false,
-      showCopy: highlightOptions.showCopy ?? false,
+      // showCopy: highlightOptions.showCopy ?? false,
     }
+
+    const codeCopyButtonTitle = options.codeCopyButtonTitle || "Copy Code"
 
     this.md = markdownit({
       html: true, // 在 Markdown 源中启用 HTML 标签
+      // xhtmlOut: false, // 使用 '/' 来闭合单标签 （比如 <br />）
       breaks: true, // 将段落中的 '\n'（换行符）转换为 <br> 标签
       langPrefix: "language-", // 围栏代码块的 CSS 语言前缀（例如，"language-js"）
       typographer: true, // 启用智能引号、破折号和其他排版替换
-      highlight: highlightCode, // 为代码块分配自定义高亮函数
+      highlight: this.highlightOptions.showLang ? highlight : highlightCode, // 为代码块分配自定义高亮函数
     })
 
     this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
     this.md.use(markdownItContainer) // 添加对 Markdown 容器的支持
     this.md.use(lineNumberPlugin, options.lineNumbers) // 为代码块添加行号
+    this.md.use(imagePlugin, options.image)
+    this.md.use(highlightLinePlugin)
     // this.md.use(markdownItMark) // 添加对 mark 的支持
+    this.md.use(preWrapperPlugin, {
+      codeCopyButtonTitle,
+      languageLabel: options.languageLabel,
+    })
+
     // applyMath(this.md) // 为数学公式添加支持
-
-    // this.md.use(preWrapperPlugin, {
-    //   codeCopyButtonTitle: "复制代码",
-    //   languageLabel: options.languageLabel
-    // })
-
     configureFootnoteRules(this.md, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）
     applyFenceRules(this.md, false) // 自定义围栏代码块的渲染方式
     applyLinkOpenRules(this.md) // 修改链接以在新标签页中打开并添加 noopener/noreferrer

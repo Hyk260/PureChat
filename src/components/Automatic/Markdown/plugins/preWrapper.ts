@@ -11,6 +11,7 @@ export function preWrapperPlugin(md: MarkdownIt, options: Options) {
   )
 
   const fence = md.renderer.rules.fence as any
+
   md.renderer.rules.fence = (...args) => {
     const [tokens, idx] = args
     const token = tokens[idx] as any
@@ -23,11 +24,12 @@ export function preWrapperPlugin(md: MarkdownIt, options: Options) {
 
     const lang = extractLang(token.info)
     const label = langLabel[lang.toLowerCase()] || lang.replace(/_/g, " ")
+    const CopyIcon = `<div class='icon-copy'></div>`
 
     return (
       `<div class="language-${lang}${active}">` +
-      `<button title="${options.codeCopyButtonTitle}" class="copy"></button>` +
-      `<span class="lang">${label}</span>` +
+      `<button title="${options.codeCopyButtonTitle}" class="copy copy-code-button">${CopyIcon}</button>` +
+      `<span class="lang hljs-language">${label}</span>` +
       fence(...args) +
       "</div>"
     )

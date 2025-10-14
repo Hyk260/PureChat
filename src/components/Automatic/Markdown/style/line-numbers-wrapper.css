@@ -1,0 +1,73 @@
+.markdown-body .line-numbers-wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  border-right: 1px solid var(--vp-code-block-divider-color);
+  padding-top: 20px;
+  width: 32px;
+  text-align: center;
+  font-family: var(--vp-font-family-mono);
+  line-height: var(--vp-code-line-height);
+  font-size: var(--vp-code-font-size);
+  color: var(--vp-code-line-number-color);
+  transition:
+    border-color 0.5s,
+    color 0.5s;
+}
+
+.markdown-body div[class*='language-'].line-numbers-mode {
+  padding-left: 32px;
+}
+
+/**
+ * copy lang
+ * -------------------------------------------------------------------------- */
+
+.markdown-body [class*='language-'] > button.copy {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 10px;
+  top: 1em;
+  cursor: pointer;
+  padding: 0 5px;
+  color: var(--white);
+  border: var(--color-border-in-light);
+  transform: translateX(10px);
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.3s ease;
+  border-radius: 5px;
+  height: 24px;
+  width: 24px;
+}
+
+.markdown-body [class*='language-']:hover > button.copy,
+.markdown-body [class*='language-'] > button.copy:focus {
+  pointer-events: all;
+  transform: translateX(0);
+  opacity: 0.5;
+  background-color: var(--black);
+}
+
+.markdown-body [class*='language-'] > span.lang {
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  z-index: 2;
+  font-size: 12px;
+  font-weight: 500;
+  user-select: none;
+  color: var(--vp-code-lang-color);
+  transition:
+    color 0.4s,
+    opacity 0.4s;
+}
+
+.markdown-body div[class*='language-'] {
+  position: relative;
+  overflow-x: auto;
+  transition: background-color 0.5s;
+}

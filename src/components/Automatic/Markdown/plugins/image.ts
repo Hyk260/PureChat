@@ -2,7 +2,7 @@ import type MarkdownIt from "markdown-it"
 
 export interface Options {
   /**
-   * Support native lazy loading for the `<img>` tag.
+   * 支持<img>标签的原生延迟加载。
    * @default false
    */
   lazyLoading?: boolean
