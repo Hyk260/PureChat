@@ -1,39 +1,61 @@
 // 用于生成行号的 markdown-it 插件。
 // 它依赖于 preWrapper 插件。
-import type MarkdownIt from "markdown-it"
+import MarkdownIt from "markdown-it"
 
-export const lineNumberPlugin = (md: MarkdownIt, enable = false) => {
-  const fence = md.renderer.rules.fence as any
-  md.renderer.rules.fence = (...args) => {
-    const rawCode = fence(...args)
+/** 行号指令相关正则 */
+const REG_LINE_NUMBERS = /:line-numbers(?:=(\d+))?(?=$|\s)/ // 例 :line-numbers 或 :line-numbers=5
+const REG_NO_LINE_NUMBERS = /:no-line-numbers(?=$|\s)/ // 例 :no-line-numbers
+const REG_CLOSE_DIV = /<\/div>$/ // 匹配最外层 </div>
+const REG_PRE_LANG_CLASS = /"(language-[^"]*?)"/ // 提取 language-xxx class
 
-    const [tokens, idx] = args
-    const info = tokens[idx].info as any
+export const lineNumberPlugin = (md: MarkdownIt, globalEnable = false) => {
+  // 保留原有 fence 渲染函数
+  const originFence = md.renderer.rules.fence?.bind(md.renderer.rules)
 
-    if ((!enable && !/:line-numbers($| |=)/.test(info)) || (enable && /:no-line-numbers($| )/.test(info))) {
-      return rawCode
-    }
+  md.renderer.rules.fence = (tokens, idx, options, env, self): string => {
+    const rawHtml = originFence?.(tokens, idx, options, env, self) ?? ""
+    const info = tokens[idx]?.info ?? ""
 
-    let startLineNumber = 1
-    const matchStartLineNumber = info.match(/=(\d*)/)
-    if (matchStartLineNumber && matchStartLineNumber[1]) {
-      startLineNumber = parseInt(matchStartLineNumber[1])
-    }
+    /* ---------- 1. 判断是否需要渲染行号 ---------- */
+    const hasLineDirective = REG_LINE_NUMBERS.test(info)
+    const hasNoLineDirective = REG_NO_LINE_NUMBERS.test(info)
+    const needLineNumber = globalEnable ? !hasNoLineDirective : hasLineDirective
 
-    const code = rawCode.slice(rawCode.indexOf("<code>"), rawCode.indexOf("</code>"))
+    if (!needLineNumber) return rawHtml // 早返回，保持最小开销
 
-    const lines = code.split("\n")
+    /* ---------- 2. 解析起始行号 ---------- */
+    const [, startStr] = info.match(REG_LINE_NUMBERS) ?? []
+    const startLine = startStr ? Number(startStr) : 1
 
-    const lineNumbersCode = [...Array(lines.length)]
-      .map((_, index) => `<span class="line-number">${index + startLineNumber}</span><br>`)
-      .join("")
+    /* ---------- 3. 抽取 <code> 内容 ---------- */
+    const codeOpenIdx = rawHtml.indexOf("<code>")
+    const codeCloseIdx = rawHtml.indexOf("</code>")
 
-    const lineNumbersWrapperCode = `<div class="line-numbers-wrapper" aria-hidden="true">${lineNumbersCode}</div>`
+    // 若解析失败则直接返回原 HTML，避免 runtime error
+    if (codeOpenIdx === -1 || codeCloseIdx === -1) return rawHtml
 
-    const finalCode = rawCode
-      .replace(/<\/div>$/, `${lineNumbersWrapperCode}</div>`)
-      .replace(/"(language-[^"]*?)"/, '"$1 line-numbers-mode"')
+    const codeContent = rawHtml.slice(codeOpenIdx + 6, codeCloseIdx) // 6 = "<code>".length
 
-    return finalCode
+    /* ---------- 4. 计算正确的行数 ---------- */
+    const lines = codeContent.split("\n")
+    if (lines.at(-1) === "") lines.pop()
+    const totalLines = lines.length
+
+    /* ---------- 4. 生成行号 HTML ---------- */
+    const lineNumberHtml = Array.from(
+      { length: totalLines },
+      (_, i) => `<span class="line-number">${i + startLine}</span><br>`
+    ).join("")
+
+    const lineNumberWrapper = `<div class="line-numbers-wrapper" aria-hidden="true">${lineNumberHtml}</div>`
+
+    /* ---------- 5. 拼装最终 HTML ---------- */
+    return (
+      rawHtml
+        // a) 在最外层 </div> 前插入行号包裹
+        .replace(REG_CLOSE_DIV, `${lineNumberWrapper}</div>`)
+        // b) 给 <pre> 标签额外加一个 line-numbers-mode class
+        .replace(REG_PRE_LANG_CLASS, '"$1 line-numbers-mode"')
+    )
   }
 }

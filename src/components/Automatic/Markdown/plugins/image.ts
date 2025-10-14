@@ -11,9 +11,10 @@ export interface Options {
 export const EXTERNAL_URL_RE = /^(?:[a-z]+:|\/\/)/i
 
 export const imagePlugin = (md: MarkdownIt, { lazyLoading }: Options = {}) => {
-  const imageRule = md.renderer.rules.image
+  const imageRule = md.renderer.rules.image as any
+
   md.renderer.rules.image = (tokens, idx, options, env, self) => {
-    const token = tokens[idx]
+    const token = tokens[idx] as any
     let url = token.attrGet("src")
     if (url && !EXTERNAL_URL_RE.test(url)) {
       if (!/^\.?\//.test(url)) url = "./" + url

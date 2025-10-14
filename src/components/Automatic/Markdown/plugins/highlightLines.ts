@@ -1,48 +1,60 @@
-// 改编自 https://github.com/egoist/markdown-it-highlight-lines
-// 现在此插件仅用于规范化行属性。
-// 行高亮逻辑的 else 部分位于 './highlight.ts' 中。
-
+// https://github.com/egoist/markdown-it-highlight-lines
 import type MarkdownIt from "markdown-it"
 
-const RE = /{([\d,-]+)}/
+// 行号匹配正则：匹配 {1,2-5,8} 格式
+const LINE_RANGE_RE = /{([\d,-]+)}/
+// 纯行号验证正则
+const LINE_NUMBERS_RE = /^[\d,-]+$/
 
-export const highlightLinePlugin = (md: MarkdownIt) => {
-  const fence = md.renderer.rules.fence!
+/**
+ * 从 token 中提取行号信息
+ * @param token - markdown token
+ * @returns 行号字符串或 null
+ */
+const extractLineNumbers = (token: any): string | null => {
+  // 优先从 attrs 中获取（markdown-it-attrs 插件处理后的结果）
+  const attrValue = token?.attrs?.[0]?.[0]
+  if (attrValue && LINE_NUMBERS_RE.test(attrValue)) {
+    return attrValue
+  }
+
+  // 从原始 info 中提取（markdown-it-attrs 被禁用的情况）
+  const rawInfo = token.info
+  if (!rawInfo) return null
+
+  const match = LINE_RANGE_RE.exec(rawInfo)
+  if (!match) return null
+
+  // 清理 token.info，移除行号部分
+  token.info = rawInfo.replace(LINE_RANGE_RE, "").trim()
+
+  return match?.[1] || null
+}
+
+/**
+ * Markdown-it 插件：处理代码块行高亮语法
+ * 支持两种语法：
+ * 1. ```js {1,3-5}
+ * 2. ```js {.line-numbers}
+ */
+export const highlightLinePlugin = (md: MarkdownIt): void => {
+  const originalFence = md.renderer.rules.fence as any
+
   md.renderer.rules.fence = (...args) => {
     const [tokens, idx] = args
     const token = tokens[idx] as any
 
-    // due to use of markdown-it-attrs, the {0} syntax would have been
-    // converted to attrs on the token
-    const attr = token.attrs && token.attrs[0]
+    // 提取行号信息
+    const lineNumbers = extractLineNumbers(token)
 
-    let lines = null
-
-    if (!attr) {
-      // markdown-it-attrs maybe disabled
-      const rawInfo = token.info
-
-      if (!rawInfo || !RE.test(rawInfo)) {
-        return fence(...args)
-      }
-
-      const langName = rawInfo.replace(RE, "").trim()
-
-      // ensure the next plugin get the correct lang
-      token.info = langName
-
-      lines = RE.exec(rawInfo)![1]
+    // 如果没有行号信息，使用原始渲染
+    if (!lineNumbers) {
+      return originalFence(...args)
     }
 
-    if (!lines) {
-      lines = attr![0]
+    // 将行号信息附加到 token.info，供后续插件使用
+    token.info = `${token.info} ${lineNumbers}`.trim()
 
-      if (!lines || !/[\d,-]+/.test(lines)) {
-        return fence(...args)
-      }
-    }
-
-    token.info += " " + lines
-    return fence(...args)
+    return originalFence(...args)
   }
 }

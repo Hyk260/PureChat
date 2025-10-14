@@ -1,4 +1,5 @@
 import markdownit from "markdown-it"
+import attrsPlugin from "markdown-it-attrs"
 import markdownItContainer from "markdown-it-container"
 import markdownItFootnote from "markdown-it-footnote"
 
@@ -36,6 +37,16 @@ interface MarkdownRendererOptions {
    */
   lineNumbers?: boolean
   image?: ImageOptions
+  /**
+   * Options for `markdown-it-attrs`
+   * @see https://github.com/arve0/markdown-it-attrs
+   */
+  attrs?: {
+    leftDelimiter?: string
+    rightDelimiter?: string
+    allowedAttributes?: Array<string | RegExp>
+    disable?: boolean
+  }
 }
 
 // 高亮显示的可选项：是否显示语言标签和复制按钮
@@ -75,16 +86,20 @@ export class MarkdownRenderer {
       highlight: this.highlightOptions.showLang ? highlight : highlightCode, // 为代码块分配自定义高亮函数
     })
 
-    this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
-    this.md.use(markdownItContainer) // 添加对 Markdown 容器的支持
-    this.md.use(lineNumberPlugin, options.lineNumbers) // 为代码块添加行号
+    // this.md.use(preWrapperPlugin, {
+    //   codeCopyButtonTitle,
+    //   languageLabel: options.languageLabel,
+    // })
     this.md.use(imagePlugin, options.image)
     this.md.use(highlightLinePlugin)
     // this.md.use(markdownItMark) // 添加对 mark 的支持
-    this.md.use(preWrapperPlugin, {
-      codeCopyButtonTitle,
-      languageLabel: options.languageLabel,
-    })
+    this.md.use(lineNumberPlugin, options.lineNumbers) // 为代码块添加行号
+    // third party plugins
+    if (!options.attrs?.disable) {
+      this.md.use(attrsPlugin, options.attrs)
+    }
+    this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
+    this.md.use(markdownItContainer) // 添加对 Markdown 容器的支持
 
     // applyMath(this.md) // 为数学公式添加支持
     configureFootnoteRules(this.md, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）

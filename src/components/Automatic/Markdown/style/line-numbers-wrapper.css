@@ -1,3 +1,12 @@
+:root {
+  --vp-code-line-height: 1.7;
+  --vp-code-font-size: 0.875em;
+}
+
+/**
+ * line numbers
+ * -------------------------------------------------------------------------- */
+
 .markdown-body .line-numbers-wrapper {
   position: absolute;
   top: 0;
@@ -5,7 +14,7 @@
   left: 0;
   z-index: 3;
   border-right: 1px solid var(--vp-code-block-divider-color);
-  padding-top: 20px;
+  padding-top: 1em;
   width: 32px;
   text-align: center;
   font-family: var(--vp-font-family-mono);
@@ -44,8 +53,7 @@
   width: 24px;
 }
 
-.markdown-body [class*='language-']:hover > button.copy,
-.markdown-body [class*='language-'] > button.copy:focus {
+.markdown-body [class*='language-']:hover button.copy {
   pointer-events: all;
   transform: translateX(0);
   opacity: 0.5;
@@ -70,4 +78,15 @@
   position: relative;
   overflow-x: auto;
   transition: background-color 0.5s;
+}
+
+/**
+ * highlight-line
+ * -------------------------------------------------------------------------- */
+
+.highlighted-line {
+  background-color: #14161a;
+  display: block;
+  margin: 0 -1.575rem;
+  padding: 0 1.575rem;
 }

@@ -48,7 +48,7 @@ const MarkdownNodeRender = defineComponent({
     },
     showCustompPre: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   setup(props) {

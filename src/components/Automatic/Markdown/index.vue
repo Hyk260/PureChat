@@ -35,7 +35,7 @@ const webSearchResult = computed(() => {
 
 const renderer = new MarkdownRenderer({
   webSearchResults: webSearchResult.value,
-  lineNumbers: true,
+  lineNumbers: false,
 })
 
 function handleMarkdownClick() {
