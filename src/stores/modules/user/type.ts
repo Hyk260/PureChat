@@ -45,7 +45,7 @@ export interface LoginResult {
 export interface UserState {
   verifyCode: string
   currentPage: number
-  userProfile: UserProfile | Record<string, any>
+  userProfile: UserProfile
   userLocalStore: UserLocalStore
 }
 

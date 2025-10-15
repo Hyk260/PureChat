@@ -1,33 +1,29 @@
-// 用于生成行号的 markdown-it 插件。
-// 它依赖于 preWrapper 插件。
 import MarkdownIt from "markdown-it"
 
-/** 行号指令相关正则 */
 const REG_LINE_NUMBERS = /:line-numbers(?:=(\d+))?(?=$|\s)/ // 例 :line-numbers 或 :line-numbers=5
 const REG_NO_LINE_NUMBERS = /:no-line-numbers(?=$|\s)/ // 例 :no-line-numbers
 const REG_CLOSE_DIV = /<\/div>$/ // 匹配最外层 </div>
 const REG_PRE_LANG_CLASS = /"(language-[^"]*?)"/ // 提取 language-xxx class
 
 export const lineNumberPlugin = (md: MarkdownIt, globalEnable = false) => {
-  // 保留原有 fence 渲染函数
   const originFence = md.renderer.rules.fence?.bind(md.renderer.rules)
 
   md.renderer.rules.fence = (tokens, idx, options, env, self): string => {
     const rawHtml = originFence?.(tokens, idx, options, env, self) ?? ""
     const info = tokens[idx]?.info ?? ""
 
-    /* ---------- 1. 判断是否需要渲染行号 ---------- */
+    /* ---------- 判断是否需要渲染行号 ---------- */
     const hasLineDirective = REG_LINE_NUMBERS.test(info)
     const hasNoLineDirective = REG_NO_LINE_NUMBERS.test(info)
     const needLineNumber = globalEnable ? !hasNoLineDirective : hasLineDirective
 
     if (!needLineNumber) return rawHtml // 早返回，保持最小开销
 
-    /* ---------- 2. 解析起始行号 ---------- */
+    /* ---------- 解析起始行号 ---------- */
     const [, startStr] = info.match(REG_LINE_NUMBERS) ?? []
     const startLine = startStr ? Number(startStr) : 1
 
-    /* ---------- 3. 抽取 <code> 内容 ---------- */
+    /* ---------- 抽取 <code> 内容 ---------- */
     const codeOpenIdx = rawHtml.indexOf("<code>")
     const codeCloseIdx = rawHtml.indexOf("</code>")
 
@@ -36,12 +32,12 @@ export const lineNumberPlugin = (md: MarkdownIt, globalEnable = false) => {
 
     const codeContent = rawHtml.slice(codeOpenIdx + 6, codeCloseIdx) // 6 = "<code>".length
 
-    /* ---------- 4. 计算正确的行数 ---------- */
+    /* ---------- 计算正确的行数 ---------- */
     const lines = codeContent.split("\n")
     if (lines.at(-1) === "") lines.pop()
     const totalLines = lines.length
 
-    /* ---------- 4. 生成行号 HTML ---------- */
+    /* ---------- 生成行号 HTML ---------- */
     const lineNumberHtml = Array.from(
       { length: totalLines },
       (_, i) => `<span class="line-number">${i + startLine}</span><br>`
@@ -49,7 +45,7 @@ export const lineNumberPlugin = (md: MarkdownIt, globalEnable = false) => {
 
     const lineNumberWrapper = `<div class="line-numbers-wrapper" aria-hidden="true">${lineNumberHtml}</div>`
 
-    /* ---------- 5. 拼装最终 HTML ---------- */
+    /* ---------- 拼装最终 HTML ---------- */
     return (
       rawHtml
         // a) 在最外层 </div> 前插入行号包裹

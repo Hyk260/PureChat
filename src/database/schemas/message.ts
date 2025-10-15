@@ -130,6 +130,9 @@ export const DB_MessageSchema = z.object({
    */
   conversationType: z.enum(["C2C", "GROUP", "SYSTEM"]),
   time: z.number(),
+  /**
+   * 消息序列号
+   */
   sequence: z.number().int().min(0),
   clientSequence: z.number().int().min(0),
   random: z.number().int(),
@@ -161,6 +164,9 @@ export const DB_MessageSchema = z.object({
   isRead: z.boolean(),
   status: MessageStatusSchema,
   atUserList: z.array(z.string()),
+  /**
+   * 消息自定义数据
+   */
   cloudCustomData: z.string(),
   isDeleted: z.boolean(),
   isModified: z.boolean(),

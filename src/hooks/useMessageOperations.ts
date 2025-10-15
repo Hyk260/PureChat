@@ -1,11 +1,14 @@
 import { cloneDeep } from "lodash-es"
 import { storeToRefs } from "pinia"
 
+import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
+import { getModelId } from "@/ai/utils"
 // import { getModelType } from "@/ai/utils"
 import { sendChatAssistantMessage } from "@/service/chatService"
-import { useChatStore } from "@/stores"
+import { createTextMessage } from "@/service/im-sdk-api"
+import { useChatStore, useRobotStore, useUserStore } from "@/stores"
 import { abortCompletion } from "@/utils/abortController"
-import { getFileType } from "@/utils/chat"
+import { getCloudCustomData, getFileType } from "@/utils/chat"
 // import { createCustomMessage } from "@/service/im-sdk-api"
 import { getCustomMsgContent } from "@/utils/common"
 
@@ -118,6 +121,9 @@ export const extractAitInfo = (editor: IDomEditor) => {
 
 export const usePrepareMessageData = () => {
   const chatStore = useChatStore()
+  const userStore = useUserStore()
+  const robotStore = useRobotStore()
+
   const { toAccount, currentType, replyMsgData } = storeToRefs(chatStore)
 
   const prepareMessageData = (editor: IDomEditor | undefined | null): MessagePayload => {
@@ -148,7 +154,30 @@ export const usePrepareMessageData = () => {
     }
   }
 
+  const createAssistantPromptMessage = () => {
+    const to = userStore?.userProfile?.userID
+    const defaultBot = robotStore.defaultProvider
+    const from = getModelId(defaultBot)
+    const meta = robotStore.promptStore[defaultBot]?.[0]?.meta
+    const text = `你好，我是 ${meta?.avatar} ${meta?.title} ${meta?.description} 让我们开始对话吧！`
+    const msg = createTextMessage({ to: from, text, cache: false })
+    const promptContent = getCloudCustomData(
+      { key: "messagePrompt", payload: { text: "预设提示词" } },
+      { recQuestion: meta?.recQuestion || [] }
+    )
+    msg.conversationID = `C2C${from}`
+    msg.avatar = getAiAvatarUrl(from)
+    msg.cloudCustomData = promptContent
+    msg.flow = "in"
+    msg.to = to
+    msg.from = from
+    msg.nick = ""
+    msg.status = "success"
+    return { sessionId: `C2C${msg.from}`, message: msg }
+  }
+
   return {
+    createAssistantPromptMessage,
     prepareMessageData,
   }
 }

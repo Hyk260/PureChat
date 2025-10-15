@@ -2,8 +2,6 @@ import { ModelIDList } from "@shared/provider"
 import { cloneDeep } from "lodash-es"
 import { defineStore } from "pinia"
 
-import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
-import { getModelId } from "@/ai/utils"
 import { getModelType } from "@/ai/utils"
 import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX } from "@/constants"
 import { MessageModel } from "@/database/models/message"
@@ -11,7 +9,6 @@ import { timProxy } from "@/service/chat"
 import { sendChatAssistantMessage } from "@/service/chatService"
 import {
   clearHistoryMessage,
-  createTextMessage,
   deleteConversation,
   deleteMessage,
   getConversationProfile,
@@ -21,7 +18,6 @@ import {
   setMessageRead,
 } from "@/service/im-sdk-api"
 import { SetupStoreId } from "@/stores/enum"
-import { getCloudCustomData } from "@/utils/chat"
 import { addTimeDivider, checkTextNotEmpty, getBaseTime, scrollToMessage } from "@/utils/chat"
 import { delay } from "@/utils/common"
 import { emitUpdateScroll } from "@/utils/mitt-bus"
@@ -29,13 +25,10 @@ import { localStg } from "@/utils/storage"
 
 import { useGroupStore } from "../group"
 import { useRobotStore } from "../robot"
-import { useUserStore } from "../user"
 
 import type { ChatState } from "./type"
 import type { ModelProviderKey } from "@/ai/types"
-import type { DB_Message } from "@/database/schemas/message"
-import type { DB_Session } from "@/database/schemas/session"
-import type { DraftData, ImagePayloadType } from "@/types"
+import type { DB_Message, DB_Session, DraftData, ImagePayloadType } from "@/types"
 import type { ModelIDValue } from "@shared/provider"
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
@@ -180,32 +173,11 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.sendingMap.set(sessionId, true)
       }
     },
-    createAiPromptMsg() {
-      const to = useUserStore()?.userProfile?.userID
-      const defaultBot = useRobotStore().defaultProvider
-      const from = getModelId(defaultBot)
-      const meta = useRobotStore().promptStore[defaultBot]?.[0]?.meta
-      const text = `你好，我是 ${meta?.avatar} ${meta?.title} ${meta?.description} 让我们开始对话吧！`
-      const msg = createTextMessage({ to: from, text, cache: false })
-      const promptContent = getCloudCustomData(
-        { key: "messagePrompt", payload: { text: "预设提示词" } },
-        { recQuestion: meta?.recQuestion || [] }
-      )
-      msg.conversationID = `C2C${from}`
-      msg.avatar = getAiAvatarUrl(from)
-      msg.cloudCustomData = promptContent
-      msg.flow = "in"
-      msg.to = to
-      msg.from = from
-      msg.nick = ""
-      msg.status = "success"
-      return { sessionId: `C2C${msg.from}`, message: msg }
-    },
-    addAiPresetPromptWords() {
-      const { sessionId, message } = this.createAiPromptMsg()
+    addAiPresetPromptWords(data: { sessionId: string; message: DB_Message }) {
+      const { sessionId, message } = data
       const history = this.historyMessageList.get(sessionId)
       if (this.currentConversation) {
-        if (history) {
+        if (history?.length) {
           this.currentMessageList = [...history, message]
         } else {
           this.currentMessageList = [message]
@@ -272,7 +244,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       // 历史消息
       const history = this.historyMessageList.get(sessionId) || []
       if (history.map((t) => t?.ID).includes(msgId)) {
-        console.warn("重复加载", msgId)
+        console.log("重复加载", msgId)
         this.setNoMore(true)
         return
       }
@@ -351,7 +323,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.updateMessages({ sessionId, message })
       emitUpdateScroll()
       if (last && ModelIDList.includes(message?.to as ModelIDValue)) {
-        await delay(30)
+        await delay(200)
         await sendChatAssistantMessage({
           chat: message,
           provider: getModelType(message.to),
@@ -368,8 +340,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const { messageList, isCompleted: isDone } = await getMessageList({ conversationID: sessionId })
       const message = addTimeDivider(messageList)
       this.addMessage({ conversationID: sessionId, isDone, message })
-      emitUpdateScroll()
       setMessageRead({ conversationID: data.conversationID })
+      emitUpdateScroll()
     },
     async addConversation(action: { sessionId: string }) {
       const { sessionId } = action

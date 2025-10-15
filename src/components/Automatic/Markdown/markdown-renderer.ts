@@ -18,6 +18,7 @@ import type { MarkdownToken } from "./types"
 // 定义构造函数选项接口
 interface MarkdownRendererOptions {
   webSearchResults?: any[]
+  highlightOptions?: HighlightOptions
   /**
    * 代码块中复制按钮的提示文本
    * @default 'Copy Code'
@@ -36,6 +37,7 @@ interface MarkdownRendererOptions {
    * @default false
    */
   lineNumbers?: boolean
+  enablePreWrapper?: boolean
   image?: ImageOptions
   /**
    * Options for `markdown-it-attrs`
@@ -67,7 +69,7 @@ export class MarkdownRenderer {
   private readonly md: markdownit
   private readonly highlightOptions: HighlightOptions
 
-  constructor(options: MarkdownRendererOptions & { highlightOptions?: HighlightOptions } = {}) {
+  constructor(options: MarkdownRendererOptions) {
     const { webSearchResults = [], highlightOptions = {} } = options
 
     this.highlightOptions = {
@@ -86,10 +88,13 @@ export class MarkdownRenderer {
       highlight: this.highlightOptions.showLang ? highlight : highlightCode, // 为代码块分配自定义高亮函数
     })
 
-    // this.md.use(preWrapperPlugin, {
-    //   codeCopyButtonTitle,
-    //   languageLabel: options.languageLabel,
-    // })
+    if (options?.enablePreWrapper) {
+      this.md.use(preWrapperPlugin, {
+        codeCopyButtonTitle,
+        languageLabel: options.languageLabel,
+      })
+    }
+
     this.md.use(imagePlugin, options.image)
     this.md.use(highlightLinePlugin)
     // this.md.use(markdownItMark) // 添加对 mark 的支持

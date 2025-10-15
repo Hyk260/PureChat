@@ -38,6 +38,7 @@
 import { ModelID } from "@shared/provider"
 
 import { getModelId } from "@/ai/utils"
+import { usePrepareMessageData } from "@/hooks/useMessageOperations"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore, useSidebarStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
@@ -61,6 +62,7 @@ defineOptions({
 
 const agentData = ref<Agent>({} as Agent)
 const [isDialogVisible, setIsDialogVisible] = useState(false)
+const { createAssistantPromptMessage } = usePrepareMessageData()
 
 const sidebarStore = useSidebarStore()
 const robotStore = useRobotStore()
@@ -85,7 +87,8 @@ const startConversation = () => {
   chatStore.addConversation({ sessionId: `C2C${modelId}` })
 
   setTimeout(() => {
-    chatStore.addAiPresetPromptWords()
+    const data = createAssistantPromptMessage()
+    chatStore.addAiPresetPromptWords(data)
   }, 200)
 }
 

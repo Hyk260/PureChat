@@ -29,6 +29,34 @@ export interface GET_MESSAGE_LIST_OPTIONS {
   nextReqMessageID?: string
 }
 
+export interface GET_MESSAGE_LIST_HOPPING_OPTIONS {
+  /**
+   * 会话 ID。会话 ID 组成方式：
+   * - C2C${userID} 单聊
+   * - GROUP${groupID} 群聊
+   * - GROUP${topicID} 话题
+   */
+  conversationID: string
+  /**
+   * 用于拉群组会话漫游消息的起始 sequence。
+   */
+  sequence?: number
+  /**
+   * 消息的服务端时间，用于拉 C2C 会话漫游消息的起始时间。
+   */
+  time?: number
+  /**
+   * 消息拉取方向，默认 0。
+   * 0 向上拉，拉更旧的消息
+   * 1 向下拉，拉更新的消息
+   */
+  direction?: number
+  /**
+   * 需要拉取的消息数量，默认值和最大值为15。
+   */
+  count?: number
+}
+
 export interface GET_CONVERSATION_LIST_OPTIONS {
   type?: "C2C" | "GROUP" | "@TIM#SYSTEM"
   groupName?: string
@@ -469,23 +497,28 @@ export declare class ChatSDK {
   deleteMessage(messageList: Array<DB_Message>): Promise<any>
 
   /**
-   * Translate texts.
+   * 翻译文本。
    */
   translateText(options: TRANSLATE_TEXT_OPTIONS): Promise<any>
 
   /**
-   * Modify a message.
+   * 修改消息。
    */
   modifyMessage(message: DB_Message): Promise<{ code: number; data: { message: DB_Message } }>
 
-  // ----------- Conversation -----------
+  // ----------- 会话 -----------
 
   /**
-   * Pull by page the message list of a specified conversation. This API is called when the message list is rendered for the first time after the user enters the conversation, or when the user pulls down the list to see more messages.
+   * 逐页提取指定对话的消息列表。当用户进入对话后首次呈现消息列表时，或者当用户下拉列表以查看更多消息时，会调用此API。
    */
   getMessageList(
     options: GET_MESSAGE_LIST_OPTIONS
-  ): Promise<{ code: number; data: { nextReqMessageID: string; isCompleted: boolean; messageList: any[] } }>
+  ): Promise<{ code: number; data: { nextReqMessageID: string; isCompleted: boolean; messageList: DB_Message[] } }>
+
+  /**
+   * 按顺序拉取群聊消息或按时间拉取一对一聊天消息。
+   */
+  getMessageListHopping(options: GET_MESSAGE_LIST_HOPPING_OPTIONS): Promise<any>
 
   /**
    * Set the unread messages of a conversation to the read state. Messages set to the read state are not counted as unread messages. This API is called when you open or switch a conversation. If this API is not called when you open or switch a conversation, the corresponding messages remain in the unread state.

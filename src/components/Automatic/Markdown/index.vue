@@ -36,6 +36,7 @@ const webSearchResult = computed(() => {
 const renderer = new MarkdownRenderer({
   webSearchResults: webSearchResult.value,
   lineNumbers: false,
+  // enablePreWrapper: true
 })
 
 function handleMarkdownClick() {

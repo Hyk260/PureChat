@@ -99,48 +99,33 @@ const shouldShowChevrons = ref(false)
 const isChevrons = ref(false)
 const isPreviewable = ref(false)
 const isCollapsed = ref(false)
-const codeContainerRef = ref<HTMLElement>()
+const codeContainerRef = ref<HTMLElement | null>(null)
 // const showDownload = ref(false)
-const showMaximize = ref(false)
-
-const highlightedCode = ref<string>("")
-const languageList = ["js", "ts"].concat(languageMapValues)
-const excludeList = ["json", "bash"]
 // const showHeader = ref(false)
-const showHeader = computed(() => languageList.includes(props.language) && !excludeList.includes(props.language))
+const showMaximize = ref(false)
+const highlightedCode = ref<string>("")
 
-const showDownload = computed(() => {
-  const lang = props.language.trim().toLowerCase()
-  return ["js", "ts"].includes(lang)
-})
+let resizeObserver: ResizeObserver | null = null
 
-const languageIcon = computed(() => {
-  const lang = props.language.trim().toLowerCase()
-  return getLanguageIcon(lang)
-})
+const languageList = ["js", "ts", ...languageMapValues]
+const excludeList = new Set(["json", "bash"])
 
-const displayLanguage = computed(() => {
-  const lang = props.language.trim().toLowerCase()
-  if (languageMap[lang]) {
-    return languageMap[lang].toLowerCase()
-  } else {
-    return lang
-  }
-})
+const normalizedLang = computed(() => (props.language || "plaintext").trim().toLowerCase())
+const showHeader = computed(() => languageList.includes(props.language) && !excludeList.has(normalizedLang.value))
+const showDownload = computed(() => ["js", "ts"].includes(normalizedLang.value))
+const languageIcon = computed(() => getLanguageIcon(normalizedLang.value))
+const displayLanguage = computed(() => (languageMap[normalizedLang.value] ?? normalizedLang.value).toLowerCase())
 
 const toggleChevrons = () => {
   isChevrons.value = !isChevrons.value
 }
 
-const checkContainerHeight = (element: HTMLElement | undefined) => {
-  return element ? element.scrollHeight >= 350 : false
-}
+const checkContainerHeight = (el: HTMLElement | null) => (el ? el.scrollHeight >= 350 : false)
 
 const debouncedHeightCheck = debounce(() => {
   shouldShowChevrons.value = checkContainerHeight(codeContainerRef.value)
 }, 180)
 
-let resizeObserver: ResizeObserver | null = null
 const initResizeObserver = () => {
   if (typeof ResizeObserver === "undefined") {
     window.addEventListener("resize", debouncedHeightCheck)
@@ -156,7 +141,7 @@ const cleanupResizeObserver = () => {
       resizeObserver.unobserve(codeContainerRef.value)
       resizeObserver.disconnect()
     } catch {
-      // 忽略清理错误
+      // ignore
     }
     resizeObserver = null
   }
@@ -225,21 +210,23 @@ onBeforeUnmount(() => {
   debouncedHeightCheck.cancel()
 })
 
-watch(highlightedCode, () => {
-  nextTick(debouncedHeightCheck)
-})
-
 watch(
   () => props.code,
   async () => {
-    highlightedCode.value = highlightCode(props.code, props.language)
-    // const highlighter = await getHighlighter()
-    // const lang = props.language
-    // const theme = "one-light"
-    // highlightedCode.value = highlighter!.codeToHtml(props.code, {
-    //   lang,
-    //   theme,
-    // })
+    try {
+      highlightedCode.value = highlightCode(props.code, props.language)
+      // const highlighter = await getHighlighter()
+      // const lang = props.language
+      // const theme = "one-light"
+      // highlightedCode.value = highlighter!.codeToHtml(props.code, {
+      //   lang,
+      //   theme,
+      // })
+    } catch (err) {
+      console.error("Highlight failed:", err)
+      highlightedCode.value = props.code
+    }
+    nextTick(debouncedHeightCheck)
   },
   { immediate: true }
 )
@@ -374,7 +361,7 @@ watch(
 
 .code-block-container {
   contain: content;
-  /* 新增：显著减少离屏 codeblock 的布局/绘制与样式计算 */
+  /* 显著减少离屏 codeblock 的布局/绘制与样式计算 */
   content-visibility: auto;
   contain-intrinsic-size: 320px 180px;
 }
