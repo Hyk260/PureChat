@@ -30,9 +30,9 @@ export const useAccessStore = (model: ModelProviderKey = ModelProvider.OpenAI): 
  * @param {string} modelId - '@RBT#001' 模型ID，用于识别不同的模型类型。
  * @returns {ModelProviderKey | string} - 'openai' 返回对应的模型类型，如果模型ID无效则返回''。
  */
-export function getModelType(modelId: string): ModelProviderKey {
+export function getModelType(modelId: string): ModelProviderKey | "" {
   if (!/@RBT#/.test(modelId)) {
-    throw new Error("Invalid modelId")
+    return ""
   }
   const modelMapping = {
     [ModelID.OpenAI]: ModelProvider.OpenAI,

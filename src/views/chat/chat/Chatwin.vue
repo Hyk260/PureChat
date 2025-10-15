@@ -170,6 +170,7 @@ const getSelectedMessageClass = (item: DB_Message) => {
 }
 
 const updateLoadMore = (id: string) => {
+  if (!id) return
   nextTick(() => {
     const el = document.getElementById(`choice-${id}`)
     if (el) {
@@ -334,15 +335,15 @@ const loadMoreMsg = async () => {
     const msglist = currentMessageList.value
     if (!msglist.length) return
     const nextMsg = validateLastMessage(msglist)
-    // console.log("nextMsg:", nextMsg);
+    // console.log("nextMsg:", nextMsg)
 
     if (nextMsg?.type === "TIMCustomElem") {
       // console.log("nextMsg:text", nextMsg?.payload?.data);
     } else if (nextMsg?.type === "TIMTextElem") {
-      // console.log("nextMsg:text", nextMsg?.payload?.text);
-      // console.log("nextMsg:ID", nextMsg?.ID);
-      // const el = document.getElementById(`choice-${nextMsg?.ID}`);
-      // console.log("nextMsg:el", el);
+      // console.log("nextMsg:text", nextMsg?.payload?.text)
+      // console.log("nextMsg:ID", nextMsg?.ID)
+      // const el = document.getElementById(`choice-${nextMsg?.ID}`)
+      // console.log("nextMsg:el", el)
     }
 
     const result = await getMessageList({
@@ -350,14 +351,14 @@ const loadMoreMsg = async () => {
       nextReqMessageID: nextMsg?.ID || "",
     })
 
-    // console.log("getMessageList:", result);
+    // console.log("getMessageList:", result)
     const { isCompleted, messageList } = result
     if (!messageList.length && isCompleted) {
-      // console.log("[chat] 没有更多消息了 loadMoreMsg:");
+      // console.log("[chat] 没有更多消息了 loadMoreMsg:")
       chatStore.setNoMore(true)
     } else if (messageList.length) {
+      chatStore.loadMoreMessages({ sessionId, messages: messageList, msgId: messageList?.[0]?.ID || "" })
       chatStore.setScrollTopID(nextMsg?.ID)
-      chatStore.loadMoreMessages({ sessionId, messages: messageList, msgId: messageList[0].ID })
     } else {
       chatStore.setNoMore(true)
     }
@@ -527,7 +528,6 @@ const handleDeleteMsg = async (data: DB_Message) => {
 const handleMultiSelectMsg = (item: DB_Message) => {
   chatStore.toggleMultiSelectMode(true)
   chatStore.setReplyMsgData(null)
-  // updateLoadMore(item?.ID);
   handleSelect(item, "choice")
 }
 
@@ -584,7 +584,8 @@ watch(
   () => scrollTopID.value,
   (data) => {
     updateLoadMore(data)
-  }
+  },
+  { immediate: true }
 )
 
 watch(

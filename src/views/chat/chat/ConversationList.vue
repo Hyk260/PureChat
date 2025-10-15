@@ -235,6 +235,7 @@ const handleConversationListClick = (data: DB_Session) => {
   console.log("会话点击 handleConversationListClick:", data)
   if (currentSessionId.value === data?.conversationID) return
   chatStore.setMsgEdit(null)
+  chatStore.setScrollTopID("")
   chatStore.setReplyMsgData(null)
   chatStore.setForwardData({ type: "clear" })
   chatStore.updateSelectedConversation(data)

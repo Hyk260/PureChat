@@ -313,19 +313,28 @@ export class LocalChat {
   }
 
   /**
-   * 获取消息列表
+   * @param data.conversationID 会话ID
+   * @param data.nextReqMessageID 下一页请求的消息ID
+   *   - 首次拉取时不传入此参数，获取最新20条消息
+   *   - 下拉加载更多时传入此参数，返回指定消息前面的历史消息20条（不包含当前传入的消息）
+   * @param data.count 返回消息数量，默认20，最大20
    */
-  async getMessageList(data: { conversationID: string; nextReqMessageID: string }) {
+  async getMessageList(data: { conversationID: string; nextReqMessageID?: string; count?: number }) {
     try {
-      const { conversationID: id, nextReqMessageID = "" } = data
-      const messageList = await MessageModel.query({ id })
+      const { conversationID, nextReqMessageID, count = 20 } = data
+
+      if (!conversationID) {
+        throw new Error("会话ID不能为空")
+      }
+
+      const result = await MessageModel.queryMessagesWithPagination(conversationID, nextReqMessageID, count)
 
       return {
         code: 0,
         data: {
-          nextReqMessageID: "",
-          isCompleted: false,
-          messageList: messageList,
+          nextReqMessageID: result.nextReqMessageID,
+          isCompleted: result.isCompleted,
+          messageList: result.messages,
         },
       }
     } catch (error) {
@@ -339,6 +348,10 @@ export class LocalChat {
         },
       }
     }
+  }
+
+  async getMessageListHopping(_data = { conversationID: "", sequence: "", time: "", count: 15, direction: 0 }) {
+    return {}
   }
 
   /**

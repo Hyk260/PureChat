@@ -240,17 +240,21 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
     loadMoreMessages(payload: { sessionId: string; messages: DB_Message[]; msgId: string }) {
       console.log("[chat] 加载更多消息 loadMoreMessages:", payload)
-      const { sessionId, messages, msgId = "" } = payload
-      // 历史消息
+      const { sessionId, messages } = payload
       const history = this.historyMessageList.get(sessionId) || []
-      if (history.map((t) => t?.ID).includes(msgId)) {
-        console.log("重复加载", msgId)
+
+      const historyIds = new Set(history.map((t) => t?.ID))
+      const cleanedMessages = messages.filter((msg) => !historyIds.has(msg.ID))
+
+      // console.log("原始消息数量:", messages.length, "清理后消息数量:", cleanedMessages.length)
+
+      if (cleanedMessages.length === 0) {
         this.setNoMore(true)
         return
       }
-      console.log("历史消息 history:", history)
+
       const baseTime = getBaseTime(history, "last")
-      const timeDividerResult = addTimeDivider(messages.reverse(), baseTime, "last")
+      const timeDividerResult = addTimeDivider(cleanedMessages.reverse(), baseTime, "last")
       const newHistory = [...timeDividerResult, ...history]
       this.currentMessageList = newHistory
       this.historyMessageList.set(sessionId, newHistory)
