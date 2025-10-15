@@ -14,8 +14,6 @@ import { prettyObject } from "@/ai/utils"
 import MarkdownRenderer from "./markdown-renderer"
 import MarkdownNodeRender from "./MarkdownNodeRenderer"
 
-// import { parseMarkdownToStructure } from "./utils"
-// import type { BaseNode } from "./types"
 import "./style/markdown.scss"
 
 defineOptions({ name: "Markdown" })

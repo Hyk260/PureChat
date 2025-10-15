@@ -80,10 +80,10 @@ import { debounce } from "lodash-es"
 import { getLanguageIcon, languageMap, languageMapValues } from "@/utils/languageIcon"
 
 // import { getHighlighter } from "./utils/highlightShiki"
-import { highlightCode } from "./utils/highlight"
+import { highlightCode } from "../../utils/highlight"
 
-import "./style/iconify.scss"
-import "./style/line-numbers-wrapper.css"
+import "../../style/iconify.scss"
+import "../../style/line-numbers-wrapper.css"
 
 interface Props {
   code: string

@@ -1,7 +1,18 @@
-import { defineComponent, h } from "vue"
+import { defineAsyncComponent, defineComponent, h } from "vue"
 
-import CodeBlock from "../CodeBlock.vue"
-import Tables from "../Tables.vue"
+// import CodeBlock from "../components/CodeBlockNode"
+// import Table from "../components/TableNode"
+
+// 异步按需加载 CodeBlock 组件
+const CodeBlockNodeAsync = defineAsyncComponent(async () => {
+  const mod = await import("../components/CodeBlockNode")
+  return mod.default
+})
+
+const TableNodeAsync = defineAsyncComponent(async () => {
+  const mod = await import("../components/TableNode")
+  return mod.default
+})
 
 const renderPreNode = (node: any) => {
   // console.log("Rendering <pre> node:", node)
@@ -32,7 +43,7 @@ const renderPreNode = (node: any) => {
   }
   // console.log("Rendering code block:", { language, codeText })
   if (!codeText.trim()) return null
-  return h(CodeBlock, { code: codeText, language })
+  return h(CodeBlockNodeAsync, { code: codeText, language })
 }
 
 const MarkdownNodeRender = defineComponent({
@@ -124,7 +135,7 @@ const MarkdownNodeRender = defineComponent({
 
         const columns = keys.map((k, i) => ({ prop: k, label: headers[i] || k, width: 180 }))
 
-        return h(Tables, { data, columns })
+        return h(TableNodeAsync, { data, columns })
       } else {
         return h(
           node.tagName,

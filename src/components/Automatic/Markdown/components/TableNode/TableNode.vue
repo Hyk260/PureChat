@@ -5,8 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
-
 interface Column {
   prop: string
   label?: string | undefined

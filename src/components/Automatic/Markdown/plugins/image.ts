@@ -16,6 +16,7 @@ export const imagePlugin = (md: MarkdownIt, { lazyLoading }: Options = {}) => {
   md.renderer.rules.image = (tokens, idx, options, env, self) => {
     const token = tokens[idx] as any
     let url = token.attrGet("src")
+    // 如果url是相对路径，则添加./
     if (url && !EXTERNAL_URL_RE.test(url)) {
       if (!/^\.?\//.test(url)) url = "./" + url
       token.attrSet("src", decodeURIComponent(url))
