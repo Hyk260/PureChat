@@ -2,8 +2,9 @@
   <Teleport to="body">
     <el-dialog
       v-model="visible"
+      :show-close="false"
       :title="title"
-      :width="isFullscreen ? '100vw' : '90vw'"
+      :width="isFullscreen ? '100vw' : '85vw'"
       :fullscreen="isFullscreen"
       :close-on-click-modal="false"
       :close-on-press-escape="true"
@@ -20,33 +21,24 @@
           <div class="header-center">
             <div class="view-controls">
               <el-button
-                :type="viewMode === 'split' ? 'primary' : 'default'"
-                size="small"
-                @click="setViewMode('split')"
+                v-for="mode in viewModes"
+                :key="mode.value"
+                :type="viewMode === mode.value ? 'primary' : 'default'"
+                @click="setViewMode(mode.value)"
               >
-                <el-icon><Grid /></el-icon>
-                分屏
-              </el-button>
-              <el-button :type="viewMode === 'code' ? 'primary' : 'default'" size="small" @click="setViewMode('code')">
-                <el-icon><Document /></el-icon>
-                代码
-              </el-button>
-              <el-button
-                :type="viewMode === 'preview' ? 'primary' : 'default'"
-                size="small"
-                @click="setViewMode('preview')"
-              >
-                <el-icon><View /></el-icon>
-                预览
+                <div class="flex-c gap-5">
+                  <component :is="mode.icon" :size="16" />
+                  <span>{{ mode.label }}</span>
+                </div>
               </el-button>
             </div>
           </div>
 
           <div class="header-right">
             <el-dropdown trigger="click" @command="handleCapture">
-              <el-button type="text" size="small">
-                <el-icon><Camera /></el-icon>
-              </el-button>
+              <div class="flex-c">
+                <Camera :size="16" />
+              </div>
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item command="file">保存为文件</el-dropdown-item>
@@ -55,89 +47,56 @@
               </template>
             </el-dropdown>
 
-            <el-button type="text" size="small" @click="toggleFullscreen">
-              <el-icon><FullScreen v-if="!isFullscreen" /><Aim v-else /></el-icon>
-            </el-button>
+            <div class="flex-c" @click="toggleFullscreen">
+              <Minimize v-if="isFullscreen" :size="16" />
+              <Maximize v-else :size="16" />
+            </div>
 
-            <el-button type="text" size="small" @click="handleClose">
-              <el-icon><Close /></el-icon>
-            </el-button>
+            <div class="flex-c" @click="handleClose">
+              <X :size="16" />
+            </div>
           </div>
         </div>
       </template>
 
       <div class="popup-content">
-        <div v-if="viewMode === 'split'" class="split-view">
-          <div class="code-panel">
-            <div class="code-editor">
-              <textarea
-                v-model="htmlContent"
-                class="html-editor"
-                placeholder="HTML 代码..."
-                @input="handleCodeChange"
-              />
-            </div>
-            <div class="code-toolbar">
-              <el-button type="primary" size="small" @click="handleSave">
-                {{ saved ? "已保存" : "保存" }}
-              </el-button>
-            </div>
-          </div>
+        <CodeEditor
+          v-if="viewMode === 'code'"
+          v-model="htmlContent"
+          :saved="saved"
+          @change="handleCodeChange"
+          @save="handleSave"
+        />
 
-          <div class="preview-panel">
-            <div v-if="htmlContent.trim()" class="preview-frame">
-              <iframe
-                ref="previewFrameRef"
-                :srcdoc="htmlContent"
-                title="HTML Preview"
-                sandbox="allow-scripts allow-same-origin allow-forms"
-              />
-            </div>
-            <div v-else class="empty-preview">
-              <p>没有内容可预览</p>
-            </div>
-          </div>
-        </div>
+        <PreviewPanel v-else-if="viewMode === 'preview'" ref="previewPanelRef" :html="htmlContent" />
 
-        <div v-else-if="viewMode === 'code'" class="code-only-view">
-          <div class="code-editor">
-            <textarea v-model="htmlContent" class="html-editor" placeholder="HTML 代码..." @input="handleCodeChange" />
-          </div>
-          <div class="code-toolbar">
-            <el-button type="primary" size="small" @click="handleSave">
-              {{ saved ? "已保存" : "保存" }}
-            </el-button>
-          </div>
-        </div>
-
-        <div v-else-if="viewMode === 'preview'" class="preview-only-view">
-          <div v-if="htmlContent.trim()" class="preview-frame">
-            <iframe
-              ref="previewFrameRef"
-              :srcdoc="htmlContent"
-              title="HTML Preview"
-              sandbox="allow-scripts allow-same-origin allow-forms"
-            />
-          </div>
-          <div v-else class="empty-preview">
-            <p>没有内容可预览</p>
-          </div>
-        </div>
+        <SplitView
+          v-else
+          ref="splitViewRef"
+          v-model="htmlContent"
+          :saved="saved"
+          @change="handleCodeChange"
+          @save="handleSave"
+        />
       </div>
     </el-dialog>
   </Teleport>
 </template>
 
 <script setup lang="ts">
-import { Aim, Camera, Close, Document, FullScreen, Grid, View } from "@element-plus/icons-vue"
+import { Camera, Code, Eye, Maximize, Minimize, SquareSplitHorizontal as Split, X } from "lucide-vue-next"
 
 import { ElMessage } from "element-plus"
+
+import CodeEditor from "./components/CodeEditor.vue"
+import PreviewPanel from "./components/PreviewPanel.vue"
+import SplitView from "./components/SplitView.vue"
 
 interface Props {
   open: boolean
   title: string
   html: string
-  onSave?: (html: string) => void
+  onSave?: () => void
   onClose: () => void
 }
 
@@ -146,6 +105,12 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   close: []
 }>()
+
+const viewModes = [
+  { value: "split", label: "分屏", icon: Split },
+  { value: "code", label: "代码", icon: Code },
+  { value: "preview", label: "预览", icon: Eye },
+]
 
 const visible = computed({
   get: () => props.open,
@@ -160,9 +125,9 @@ const viewMode = ref<"split" | "code" | "preview">("split")
 const isFullscreen = ref(false)
 const saved = ref(false)
 const htmlContent = ref("")
-const previewFrameRef = ref<HTMLIFrameElement | null>(null)
+const previewPanelRef = ref<InstanceType<typeof PreviewPanel> | null>(null)
+const splitViewRef = ref<InstanceType<typeof SplitView> | null>(null)
 
-// 监听 HTML 内容变化
 watch(
   () => props.html,
   (newHtml) => {
@@ -171,13 +136,8 @@ watch(
   { immediate: true }
 )
 
-// 监听全屏状态，防止 body 滚动
 watch(isFullscreen, (isFull) => {
-  if (isFull) {
-    document.body.style.overflow = "hidden"
-  } else {
-    document.body.style.overflow = ""
-  }
+  document.body.style.overflow = isFull ? "hidden" : ""
 })
 
 const setViewMode = (mode: "split" | "code" | "preview") => {
@@ -196,32 +156,17 @@ const handleSave = () => {
   saved.value = true
   ElMessage.success({ message: "保存成功" })
 
-  // 2秒后重置保存状态
   setTimeout(() => {
     saved.value = false
   }, 2000)
 }
 
 const handleCapture = async (command: "file" | "clipboard") => {
-  if (!previewFrameRef.value) return
-
   try {
     if (command === "file") {
-      // 创建临时文件并下载
-      const blob = new Blob([htmlContent.value], { type: "text/html" })
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement("a")
-      link.href = url
-      link.download = `${props.title || "html-preview"}.html`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(url)
-      ElMessage.success({ message: "文件已保存" })
+      await downloadHtmlFile()
     } else if (command === "clipboard") {
-      // 复制到剪贴板
-      await navigator.clipboard.writeText(htmlContent.value)
-      ElMessage.success({ message: "已复制到剪贴板" })
+      await copyToClipboard()
     }
   } catch (error) {
     console.error("Capture failed:", error)
@@ -229,20 +174,41 @@ const handleCapture = async (command: "file" | "clipboard") => {
   }
 }
 
+const downloadHtmlFile = async () => {
+  const blob = new Blob([htmlContent.value], { type: "text/html" })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.href = url
+  link.download = `${props.title || "html-preview"}.html`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+  ElMessage.success({ message: "文件已保存" })
+}
+
+const copyToClipboard = async () => {
+  await navigator.clipboard.writeText(htmlContent.value)
+  ElMessage.success({ message: "已复制到剪贴板" })
+}
+
 const handleClose = () => {
-  // 恢复 body 滚动
   document.body.style.overflow = ""
   props.onClose()
   emit("close")
 }
 
-// 组件卸载时恢复 body 滚动
 onBeforeUnmount(() => {
   document.body.style.overflow = ""
 })
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-dialog.is-fullscreen) {
+  .popup-content {
+    height: calc(100vh - 120px);
+  }
+}
 .html-artifacts-popup {
   .popup-header {
     display: flex;
@@ -276,7 +242,7 @@ onBeforeUnmount(() => {
 
       .view-controls {
         display: flex;
-        gap: 8px;
+        // gap: 8px;
         padding: 4px;
         background: var(--el-bg-color-page);
         border-radius: 8px;
@@ -290,6 +256,15 @@ onBeforeUnmount(() => {
       align-items: center;
       justify-content: flex-end;
       gap: 8px;
+      div {
+        cursor: pointer;
+        border-radius: 4px;
+        width: 24px;
+        height: 24px;
+        &:hover {
+          background: rgba(0, 0, 0, 0.03);
+        }
+      }
     }
   }
 
@@ -297,148 +272,6 @@ onBeforeUnmount(() => {
     height: 80vh;
     display: flex;
     flex-direction: column;
-
-    .split-view {
-      display: flex;
-      height: 100%;
-      gap: 1px;
-      background: var(--el-border-color);
-
-      .code-panel {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        background: var(--el-bg-color);
-
-        .code-editor {
-          flex: 1;
-          position: relative;
-
-          .html-editor {
-            width: 100%;
-            height: 100%;
-            border: none;
-            outline: none;
-            padding: 16px;
-            font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            background: var(--el-bg-color);
-            color: var(--el-text-color-primary);
-            resize: none;
-            box-sizing: border-box;
-          }
-        }
-
-        .code-toolbar {
-          padding: 12px 16px;
-          border-top: 1px solid var(--el-border-color);
-          background: var(--el-bg-color-page);
-          display: flex;
-          justify-content: flex-end;
-        }
-      }
-
-      .preview-panel {
-        flex: 1;
-        background: white;
-        position: relative;
-
-        .preview-frame {
-          width: 100%;
-          height: 100%;
-
-          iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: white;
-          }
-        }
-
-        .empty-preview {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: var(--el-bg-color-page);
-          color: var(--el-text-color-secondary);
-          font-size: 14px;
-        }
-      }
-    }
-
-    .code-only-view {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      background: var(--el-bg-color);
-
-      .code-editor {
-        flex: 1;
-        position: relative;
-
-        .html-editor {
-          width: 100%;
-          height: 100%;
-          border: none;
-          outline: none;
-          padding: 16px;
-          font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-          font-size: 14px;
-          line-height: 1.5;
-          background: var(--el-bg-color);
-          color: var(--el-text-color-primary);
-          resize: none;
-          box-sizing: border-box;
-        }
-      }
-
-      .code-toolbar {
-        padding: 12px 16px;
-        border-top: 1px solid var(--el-border-color);
-        background: var(--el-bg-color-page);
-        display: flex;
-        justify-content: flex-end;
-      }
-    }
-
-    .preview-only-view {
-      height: 100%;
-      background: white;
-      position: relative;
-
-      .preview-frame {
-        width: 100%;
-        height: 100%;
-
-        iframe {
-          width: 100%;
-          height: 100%;
-          border: none;
-          background: white;
-        }
-      }
-
-      .empty-preview {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: var(--el-bg-color-page);
-        color: var(--el-text-color-secondary);
-        font-size: 14px;
-      }
-    }
-  }
-}
-
-// 全屏模式样式
-:deep(.el-dialog.is-fullscreen) {
-  .popup-content {
-    height: calc(100vh - 120px);
   }
 }
 </style>
