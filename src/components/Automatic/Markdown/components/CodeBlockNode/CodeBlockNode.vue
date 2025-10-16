@@ -32,7 +32,7 @@
           <Maximize :size="14" />
         </div>
         <div
-          v-if="isPreviewable"
+          v-if="isPreviewable && showPreviewButton"
           title="preview"
           class="code-action-btn flex-c"
           :aria-label="'Preview'"
@@ -88,18 +88,20 @@ import "../../style/line-numbers-wrapper.css"
 interface Props {
   code: string
   language?: string
+  showPreviewButton?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   language: "plaintext",
+  showPreviewButton: false,
 })
 
 const isCopied = ref(false)
 const shouldShowChevrons = ref(false)
 const isChevrons = ref(false)
-const isPreviewable = ref(false)
 const isCollapsed = ref(false)
 const codeContainerRef = ref<HTMLElement | null>(null)
+// const isPreviewable = ref(false)
 // const showDownload = ref(false)
 // const showHeader = ref(false)
 const showMaximize = ref(false)
@@ -115,6 +117,10 @@ const showHeader = computed(() => languageList.includes(props.language) && !excl
 const showDownload = computed(() => ["js", "ts"].includes(normalizedLang.value))
 const languageIcon = computed(() => getLanguageIcon(normalizedLang.value))
 const displayLanguage = computed(() => (languageMap[normalizedLang.value] ?? normalizedLang.value).toLowerCase())
+
+const isPreviewable = computed(() => {
+  return normalizedLang.value === "html"
+})
 
 const toggleChevrons = () => {
   isChevrons.value = !isChevrons.value

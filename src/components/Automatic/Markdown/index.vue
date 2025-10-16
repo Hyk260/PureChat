@@ -21,10 +21,12 @@ defineOptions({ name: "Markdown" })
 interface Props {
   content: string | undefined
   cloudCustomData?: Record<string, any> | null
+  enableDOMPurify?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   cloudCustomData: null,
+  enableDOMPurify: true,
 })
 
 const webSearchResult = computed(() => {
@@ -50,9 +52,11 @@ const renderedContent = computed(() => {
   if (typeof contentToRender !== "string") {
     contentToRender = prettyObject(contentToRender)
   }
+  const content = renderer.render(contentToRender, webSearchResult.value)
   // Markdown模式添加安全过滤和样式类 并处理成dom ast
-  // return parseDocument(renderer.render(contentToRender, webSearchResult.value)).children
-  return parseDocument(DOMPurify.sanitize(renderer.render(contentToRender, webSearchResult.value))).children
+  // return parseDocument(content).children
+  const sanitizedContent = props.enableDOMPurify ? DOMPurify.sanitize(content, { ADD_ATTR: ["target"] }) : content
+  return parseDocument(sanitizedContent).children
 })
 
 // const parsedNodes = computed<BaseNode[]>(() => {

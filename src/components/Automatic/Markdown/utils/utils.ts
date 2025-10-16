@@ -1,9 +1,10 @@
 import { parseFenceToken } from "../markdown-parser/inline-parsers/fence-parser"
 
 import type { MarkdownToken, ParsedNode } from "../types"
+import type { KnowledgeReference } from "@/types"
 import type MarkdownIt from "markdown-it"
 
-const TRUNCATE_LENGTH = 80
+const TRUNCATE_LENGTH = 100
 const ELLIPSIS = "..."
 
 const truncateContent = (t: string) => {
@@ -15,7 +16,7 @@ const truncateContent = (t: string) => {
  * @param data 脚注数据数组
  * @returns 格式化后的 Markdown 脚注字符串
  */
-export function convertToMarkdownFootnotes(data: any[]) {
+export function convertToMarkdownFootnotes(data: KnowledgeReference[]) {
   if (!data?.length) return ""
   const footnotes = data.map(({ id, content, sourceUrl }) => {
     const truncatedContent = truncateContent(content?.trim() || "")

@@ -75,3 +75,13 @@ export interface Model {
    */
   supported_text_delta?: boolean
 }
+
+export type KnowledgeItemType = "file" | "url"
+
+export interface KnowledgeReference {
+  id: number
+  content: string
+  sourceUrl: string
+  type: KnowledgeItemType
+  metadata?: Record<string, any>
+}

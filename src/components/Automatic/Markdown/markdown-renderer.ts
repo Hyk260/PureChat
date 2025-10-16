@@ -4,10 +4,11 @@ import markdownItContainer from "markdown-it-container"
 import markdownItFootnote from "markdown-it-footnote"
 
 // import markdownItMark from "markdown-it-mark"
-import { applyEpubRules, applyFenceRules, applyLinkOpenRules, configureFootnoteRules } from "./markdown"
+import { configureFootnoteRules } from "./markdown"
 import { highlightLinePlugin } from "./plugins/highlightLines"
 import { imagePlugin, type Options as ImageOptions } from "./plugins/image"
 import { lineNumberPlugin } from "./plugins/lineNumbers"
+import { linkPlugin } from "./plugins/link"
 // import { applyMath } from "./plugins/math"
 import { preWrapperPlugin } from "./plugins/preWrapper"
 import { highlight, highlightCode } from "./utils/highlight"
@@ -105,12 +106,10 @@ export class MarkdownRenderer {
     }
     this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
     this.md.use(markdownItContainer) // 添加对 Markdown 容器的支持
+    this.md.use(linkPlugin) // 修改链接以在新标签页中打开并添加 noopener/noreferrer
 
     // applyMath(this.md) // 为数学公式添加支持
     configureFootnoteRules(this.md, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）
-    applyFenceRules(this.md, false) // 自定义围栏代码块的渲染方式
-    applyLinkOpenRules(this.md) // 修改链接以在新标签页中打开并添加 noopener/noreferrer
-    applyEpubRules(this.md) // 将 EPUB 特定属性应用于某些 HTML 元素
   }
 
   getMarkdown() {
