@@ -59,6 +59,14 @@
       </button>
       <div v-html="highlightedCode"></div>
     </div>
+
+    <!-- HTML 预览弹窗 -->
+    <HtmlArtifactsPopup
+      :open="showHtmlPreview"
+      :title="'HTML Preview'"
+      :html="props.code"
+      @close="showHtmlPreview = false"
+    />
   </div>
 </template>
 
@@ -77,6 +85,7 @@ import {
 
 import { debounce } from "lodash-es"
 
+import HtmlArtifactsPopup from "@/components/CodeBlockView/HtmlArtifactsPopup.vue"
 import { getLanguageIcon, languageMap, languageMapValues } from "@/utils/languageIcon"
 
 // import { getHighlighter } from "./utils/highlightShiki"
@@ -96,6 +105,8 @@ const props = withDefaults(defineProps<Props>(), {
   showPreviewButton: false,
 })
 
+const emits = defineEmits(["previewCode"])
+
 const isCopied = ref(false)
 const shouldShowChevrons = ref(false)
 const isChevrons = ref(false)
@@ -106,6 +117,7 @@ const codeContainerRef = ref<HTMLElement | null>(null)
 // const showHeader = ref(false)
 const showMaximize = ref(false)
 const highlightedCode = ref<string>("")
+const showHtmlPreview = ref(false)
 
 let resizeObserver: ResizeObserver | null = null
 
@@ -171,8 +183,8 @@ const handleCenterClick = () => {
 }
 
 const handleMaximizeCode = () => {
-  // emits('handleMaximizeCode', {
-  //   node: props.node,
+  // emits('maximizeCode', {
+  //   code: props.code,
   //   artifactType,
   //   artifactTitle,
   //   id: `temp-${lowerLang}-${Date.now()}`,
@@ -196,8 +208,18 @@ const downloadCode = () => {
 // 预览HTML代码
 const handlePreviewCode = () => {
   if (!isPreviewable.value) return
-  // emits('handlePreviewCode', {
-  //   node: props.node,
+
+  if (normalizedLang.value === "html") {
+    showHtmlPreview.value = true
+    return
+  }
+
+  // 其他语言使用原有的预览逻辑
+  // const lowerLang = normalizedLang.value
+  // const artifactType = lowerLang === "html" ? "text/html" : "image/svg+xml"
+  // const artifactTitle = lowerLang === "html" ? "HTML Preview" : "SVG Preview"
+  // emits("previewCode", {
+  //   code: props.code,
   //   artifactType,
   //   artifactTitle,
   //   id: `temp-${lowerLang}-${Date.now()}`,
