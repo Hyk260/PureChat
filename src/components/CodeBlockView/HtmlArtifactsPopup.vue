@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <el-dialog
-      v-model="visible"
+      v-model="dialogVisible"
       :show-close="false"
       :title="title"
       :width="isFullscreen ? '100vw' : '85vw'"
@@ -60,24 +60,9 @@
       </template>
 
       <div class="popup-content">
-        <CodeEditor
-          v-if="viewMode === 'code'"
-          v-model="htmlContent"
-          :saved="saved"
-          @change="handleCodeChange"
-          @save="handleSave"
-        />
-
-        <PreviewPanel v-else-if="viewMode === 'preview'" ref="previewPanelRef" :html="htmlContent" />
-
-        <SplitView
-          v-else
-          ref="splitViewRef"
-          v-model="htmlContent"
-          :saved="saved"
-          @change="handleCodeChange"
-          @save="handleSave"
-        />
+        <CodeEditor v-if="viewMode === 'code'" :code="htmlContent" @change="handleCodeChange" />
+        <PreviewPanel v-else-if="viewMode === 'preview'" ref="previewPanelRef" :code="htmlContent" />
+        <SplitView v-else ref="splitViewRef" :code="htmlContent" @change="handleCodeChange" />
       </div>
     </el-dialog>
   </Teleport>
@@ -88,23 +73,27 @@ import { Camera, Code, Eye, Maximize, Minimize, SquareSplitHorizontal as Split, 
 
 import { ElMessage } from "element-plus"
 
-import CodeEditor from "./components/CodeEditor.vue"
-import PreviewPanel from "./components/PreviewPanel.vue"
-import SplitView from "./components/SplitView.vue"
+import CodeEditor from "../CodeEditor/CodeEditor.vue"
+import PreviewPanel from "../CodeEditor/PreviewPanel.vue"
+import SplitView from "../CodeEditor/SplitView.vue"
+
+type ViewMode = "split" | "code" | "preview"
 
 interface Props {
   open: boolean
   title: string
   html: string
-  onSave?: () => void
   onClose: () => void
+}
+
+interface Emits {
+  (e: 'close'): void
+  (e: 'content-change', html: string): void
 }
 
 const props = defineProps<Props>()
 
-const emit = defineEmits<{
-  close: []
-}>()
+const emit = defineEmits<Emits>()
 
 const viewModes = [
   { value: "split", label: "分屏", icon: Split },
@@ -112,7 +101,7 @@ const viewModes = [
   { value: "preview", label: "预览", icon: Eye },
 ]
 
-const visible = computed({
+const dialogVisible = computed({
   get: () => props.open,
   set: (value) => {
     if (!value) {
@@ -121,9 +110,8 @@ const visible = computed({
   },
 })
 
-const viewMode = ref<"split" | "code" | "preview">("split")
+const viewMode = ref<ViewMode>("split")
 const isFullscreen = ref(false)
-const saved = ref(false)
 const htmlContent = ref("")
 const previewPanelRef = ref<InstanceType<typeof PreviewPanel> | null>(null)
 const splitViewRef = ref<InstanceType<typeof SplitView> | null>(null)
@@ -148,17 +136,9 @@ const toggleFullscreen = () => {
   isFullscreen.value = !isFullscreen.value
 }
 
-const handleCodeChange = () => {
-  saved.value = false
-}
-
-const handleSave = () => {
-  saved.value = true
-  ElMessage.success({ message: "保存成功" })
-
-  setTimeout(() => {
-    saved.value = false
-  }, 2000)
+const handleCodeChange = (newContent: string) => {
+  htmlContent.value = newContent
+  emit("content-change", newContent)
 }
 
 const handleCapture = async (command: "file" | "clipboard") => {

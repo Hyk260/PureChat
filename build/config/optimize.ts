@@ -16,6 +16,7 @@ const include = [
   "markdown-it",
   "highlight.js",
   "element-plus",
+  "monaco-editor",
 ]
 
 const exclude = ["@iconify/json", "@purechat/ui"]

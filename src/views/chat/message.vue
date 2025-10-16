@@ -33,7 +33,6 @@
 </template>
 
 <script setup lang="ts">
-import { onActivated, onDeactivated, onMounted } from "vue"
 import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue"
 
 import { storeToRefs } from "pinia"

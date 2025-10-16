@@ -2,11 +2,16 @@ import { defineAsyncComponent, defineComponent, h } from "vue"
 
 // import CodeBlock from "../components/CodeBlockNode"
 // import Table from "../components/TableNode"
+import PreCodeNode from "../components/PreCodeNode"
 
 // 异步按需加载 CodeBlock 组件
 const CodeBlockNodeAsync = defineAsyncComponent(async () => {
-  const mod = await import("../components/CodeBlockNode")
-  return mod.default
+  try {
+    const mod = await import("../components/CodeBlockNode")
+    return mod.default
+  } catch {
+    return PreCodeNode
+  }
 })
 
 const TableNodeAsync = defineAsyncComponent(async () => {

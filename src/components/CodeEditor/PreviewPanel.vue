@@ -1,9 +1,9 @@
 <template>
   <div class="preview-only-view">
-    <div v-if="html.trim()" class="preview-frame">
+    <div v-if="code.trim()" class="preview-frame">
       <iframe
         ref="iframeRef"
-        :srcdoc="html"
+        :srcdoc="code"
         title="HTML Preview"
         sandbox="allow-scripts allow-same-origin allow-forms"
       />
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 interface Props {
-  html: string
+  code: string
 }
 
 defineProps<Props>()
