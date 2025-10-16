@@ -1,15 +1,16 @@
 <template>
   <div class="code-only-view">
     <div class="code-editor">
-      <VueMonacoEditor
-        v-if="!useTextarea"
-        :value="code"
-        :language="language"
-        :theme="theme"
-        :options="editorOptions"
-        @mount="handleEditorMount"
-        @change="handleCodeChange"
-      />
+      <template v-if="VueMonacoEditor && !useTextarea">
+        <VueMonacoEditor
+          :value="code"
+          :language="language"
+          :theme="theme"
+          :options="editorOptions"
+          @mount="handleEditorMount"
+          @change="handleCodeChange"
+        />
+      </template>
       <textarea
         v-else
         :value="code"
@@ -27,8 +28,6 @@
 </template>
 
 <script setup lang="ts">
-// import { VueMonacoEditor } from "@guolao/vue-monaco-editor"
-
 import type { editor } from "monaco-editor"
 
 interface Props {

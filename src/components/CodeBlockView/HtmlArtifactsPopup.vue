@@ -20,7 +20,8 @@
 
           <div class="header-center">
             <div class="view-controls">
-              <el-button
+              <!-- <Segmented v-model:value="value1" :options="dataq" /> -->
+              <!-- <el-button
                 v-for="mode in viewModes"
                 :key="mode.value"
                 :type="viewMode === mode.value ? 'primary' : 'default'"
@@ -30,7 +31,15 @@
                   <component :is="mode.icon" :size="16" />
                   <span>{{ mode.label }}</span>
                 </div>
-              </el-button>
+              </el-button> -->
+              <el-segmented v-model="viewMode" :options="viewModes">
+                <template #default="scope">
+                  <div class="flex-c gap-5">
+                    <component :is="scope.item.icon" :size="16" />
+                    <div>{{ scope.item.label }}</div>
+                  </div>
+                </template>
+              </el-segmented>
             </div>
           </div>
 
@@ -69,8 +78,10 @@
 </template>
 
 <script setup lang="ts">
+// import { Segmented } from "ant-design-vue"
 import { Camera, Code, Eye, Maximize, Minimize, SquareSplitHorizontal as Split, X } from "lucide-vue-next"
 
+import { ElSegmented } from "element-plus"
 import { ElMessage } from "element-plus"
 
 import CodeEditor from "../CodeEditor/CodeEditor.vue"
@@ -87,19 +98,13 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'close'): void
-  (e: 'content-change', html: string): void
+  (e: "close"): void
+  (e: "content-change", html: string): void
 }
 
 const props = defineProps<Props>()
 
 const emit = defineEmits<Emits>()
-
-const viewModes = [
-  { value: "split", label: "分屏", icon: Split },
-  { value: "code", label: "代码", icon: Code },
-  { value: "preview", label: "预览", icon: Eye },
-]
 
 const dialogVisible = computed({
   get: () => props.open,
@@ -115,6 +120,12 @@ const isFullscreen = ref(false)
 const htmlContent = ref("")
 const previewPanelRef = ref<InstanceType<typeof PreviewPanel> | null>(null)
 const splitViewRef = ref<InstanceType<typeof SplitView> | null>(null)
+
+const viewModes = ref([
+  { value: "split", label: "分屏 ", icon: Split },
+  { value: "code", label: "代码", icon: Code },
+  { value: "preview", label: "预览", icon: Eye },
+])
 
 watch(
   () => props.html,
