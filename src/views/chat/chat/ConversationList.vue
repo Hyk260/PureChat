@@ -56,6 +56,7 @@
       </div>
     </template>
     <VirtualList v-else />
+    <!-- <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleClickMenuItem" /> -->
     <!-- 右键菜单 -->
     <Contextmenu ref="contextmenu" :disabled="!isRight">
       <ContextmenuItem
@@ -65,10 +66,9 @@
         :style="item?.style ?? ''"
         @click="handleClickMenuItem(item)"
       >
-        <el-icon v-if="item.icon" :class="item?.class ?? ''">
+        <el-icon :class="item?.class ?? ''">
           <component :is="item.icon" />
         </el-icon>
-        <SvgIcon v-else :local-icon="item.svgIcon" class="menu-svg" />
         <span> {{ item.text }}</span>
       </ContextmenuItem>
     </Contextmenu>
@@ -76,7 +76,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h, ref } from "vue"
 import { BellOff } from "lucide-vue-next"
 
 import { isObject } from "lodash-es"
@@ -84,6 +83,8 @@ import { storeToRefs } from "pinia"
 import { Contextmenu, ContextmenuItem } from "v-contextmenu"
 
 import CustomLabel from "@/components/Chat/CustomLabel.vue"
+// import ContextMenu from "@/components/ContextMenu"
+import { useContextMenu } from "@/composables/useContextMenu"
 import { useHandlerDrop } from "@/hooks/useHandlerDrop"
 import { pinConversation } from "@/service/im-sdk-api"
 import { setMessageRemindType } from "@/service/im-sdk-api"
@@ -104,11 +105,17 @@ const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHand
 const isEnableVirtualList = ref(false)
 const isRight = ref(true)
 const contextMenuItems = ref([] as typeof chatSessionListData)
-const contextMenuItemInfo = ref([] as DB_Session[])
+const contextMenuItemInfo = ref<DB_Session | null>(null)
 
 const groupStore = useGroupStore()
 const userStore = useUserStore()
 const chatStore = useChatStore()
+
+const { contextMenuRef, showContextMenu } = useContextMenu({
+  onBeforeShow: (event, data) => {
+    return true
+  },
+})
 
 const { conversationList, searchConversationList, currentSessionId } = storeToRefs(chatStore)
 
@@ -135,6 +142,10 @@ const isShowCount = (item: DB_Session) => {
 
 const isMention = (item: DB_Session) => {
   return (item.groupAtInfoList?.length ?? 0) > 0
+}
+
+const handleContextMenu = (event: MouseEvent, item: DB_Session): void => {
+  showContextMenu(event, item)
 }
 
 const fnClass = (item: DB_Session) => (item?.conversationID === currentSessionId.value ? "is-active" : "")
@@ -252,6 +263,7 @@ const handleConversationListClick = (data: DB_Session) => {
 
 const handleClickMenuItem = (item: { id: string }) => {
   const data = contextMenuItemInfo.value
+  if (!data) return
   if (["pinged", "unpin"].includes(item.id)) {
     pingConversation(data) // 置顶 or 取消置顶
   } else if (["AcceptNotNotify", "AcceptAndNotify"].includes(item.id)) {
@@ -263,7 +275,7 @@ const handleClickMenuItem = (item: { id: string }) => {
   }
 }
 // 消息免打扰
-const disableRecMsg = async (data) => {
+const disableRecMsg = async (data: DB_Session) => {
   await setMessageRemindType(data)
 }
 
@@ -272,7 +284,10 @@ const removeConversation = async (data: DB_Session) => {
 }
 
 const pingConversation = async (data: DB_Session) => {
-  await pinConversation(data)
+  await pinConversation({
+    conversationID: data.conversationID,
+    isPinned: Boolean(data?.isPinned),
+  })
 }
 </script>
 
