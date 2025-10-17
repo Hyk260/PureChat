@@ -4,7 +4,7 @@
     append-to-body
     :show-close="false"
     :title="title"
-    :width="isFullscreen ? '100vw' : '85vw'"
+    :width="dialogWidth"
     :fullscreen="isFullscreen"
     align-center
     :close-on-click-modal="false"
@@ -18,7 +18,7 @@
     <template #header>
       <div class="popup-header" @dblclick="toggleFullscreen">
         <div class="header-left">
-          <span class="title-text">{{ title }}</span>
+          <span class="title-text">{{ displayTitle }}</span>
         </div>
 
         <div class="header-center">
@@ -37,7 +37,7 @@
         <div class="header-right">
           <el-dropdown trigger="click" @command="handleCapture">
             <div class="flex-c">
-              <Camera :size="16" />
+              <Camera :size="17" />
             </div>
             <template #dropdown>
               <el-dropdown-menu>
@@ -73,6 +73,7 @@ import { Camera, Code, Eye, Maximize, Minimize, SquareSplitHorizontal as Split, 
 
 import { ElMessage, ElSegmented } from "element-plus"
 
+import { useHtmlArtifacts } from "../../composables/useHtmlArtifacts"
 // import CodeEditor from "../CodeEditor/CodeEditor.vue"
 // import PreviewPanel from "../CodeEditor/PreviewPanel.vue"
 // import SplitView from "../CodeEditor/SplitView.vue"
@@ -96,24 +97,33 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<Emits>()
 
+const { extractTitle } = useHtmlArtifacts()
+
 const dialogVisible = computed({
   get: () => props.open,
   set: (value) => !value && handleClose(),
 })
 
+const DEFAULT_WIDTH = "85vw"
+const FULLSCREEN_WIDTH = "100vw"
+
 const viewMode = ref<ViewMode>("split")
 const isFullscreen = ref(false)
 const htmlContent = ref("")
 
-const viewModes = ref([
+const viewModes = [
   { value: "split", label: "分屏 ", icon: Split },
   { value: "code", label: "代码", icon: Code },
   { value: "preview", label: "预览", icon: Eye },
-])
+]
 
 const toggleFullscreen = () => {
   isFullscreen.value = !isFullscreen.value
 }
+
+const dialogWidth = computed(() => (isFullscreen.value ? FULLSCREEN_WIDTH : DEFAULT_WIDTH))
+
+const displayTitle = computed(() => extractTitle(props.html))
 
 const handleCodeChange = (newContent: string) => {
   htmlContent.value = newContent
@@ -221,6 +231,7 @@ watch(
     justify-content: flex-end;
     gap: 8px;
     div {
+      color: #000000e0;
       cursor: pointer;
       border-radius: 4px;
       width: 24px;

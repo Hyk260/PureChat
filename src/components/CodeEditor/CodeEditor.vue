@@ -20,14 +20,26 @@
         @input="handleTextareaInput"
       />
     </div>
-    <!-- <div class="code-toolbar">
-      <el-button v-if="!useTextarea" @click="formatCode"> 格式化 </el-button>
-      <el-button type="primary" @click="handleSaveChange"> 保存 </el-button>
-    </div> -->
+    <div class="code-toolbar">
+      <el-tooltip v-if="!useTextarea" content="格式化" placement="top">
+        <el-button circle @click="formatCode">
+          <Sparkles :size="16" />
+        </el-button>
+      </el-tooltip>
+      <el-tooltip content="保存修改" placement="top">
+        <el-button circle @click="handleSaveChange">
+          <Save :size="16" />
+        </el-button>
+      </el-tooltip>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Save, Sparkles } from "lucide-vue-next"
+
+import { MONACO_OPTIONS } from "@/config/monaco-editor-config"
+
 import type { editor } from "monaco-editor"
 
 interface Props {
@@ -44,7 +56,7 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   language: "html",
-  theme: "vs-dark",
+  theme: "hc-black", // hc-black hc-light vs-dark
   readOnly: false,
   debounce: 300,
 })
@@ -57,49 +69,15 @@ const editorInstance = shallowRef<editor.IStandaloneCodeEditor>()
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
-const MONACO_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
-  automaticLayout: true,
-  fontSize: 14,
-  fontFamily: "'Fira Code', 'Cascadia Code', 'Consolas', monospace",
-  fontLigatures: true,
-  lineNumbers: "on",
-  folding: true,
-  foldingStrategy: "indentation",
-  minimap: { enabled: false },
-  scrollbar: {
-    vertical: "visible",
-    horizontal: "visible",
-    verticalScrollbarSize: 10,
-    horizontalScrollbarSize: 10,
-  },
-  wordWrap: "on",
-  tabSize: 2,
-  insertSpaces: true,
-  detectIndentation: true,
-  quickSuggestions: {
-    other: true,
-    comments: false,
-    strings: false,
-  },
-  suggestOnTriggerCharacters: true,
-  acceptSuggestionOnEnter: "on",
-  matchBrackets: "always",
-  bracketPairColorization: { enabled: true },
-  renderWhitespace: "selection",
-  renderControlCharacters: false,
-  renderLineHighlight: "line",
-  contextmenu: true,
-  mouseWheelZoom: true,
-  smoothScrolling: true,
-}
-
 const editorOptions = computed<editor.IStandaloneEditorConstructionOptions>(() => ({
   ...MONACO_OPTIONS,
   readOnly: props.readOnly,
+  language: "html",
 }))
 
 const handleEditorMount = (editor: editor.IStandaloneCodeEditor) => {
   editorInstance.value = editor
+  // setupCustomContextMenu(editor)
   editor.focus()
 }
 
