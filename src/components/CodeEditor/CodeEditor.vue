@@ -1,7 +1,7 @@
 <template>
   <div class="code-only-view">
     <div class="code-editor">
-      <template v-if="VueMonacoEditor && !useTextarea">
+      <template v-if="!useTextarea && VueMonacoEditor">
         <VueMonacoEditor
           :value="code"
           :language="language"
@@ -20,10 +20,10 @@
         @input="handleTextareaInput"
       />
     </div>
-    <div class="code-toolbar">
+    <!-- <div class="code-toolbar">
       <el-button v-if="!useTextarea" @click="formatCode"> 格式化 </el-button>
-      <el-button type="primary" @click="$emit('save')"> 保存 </el-button>
-    </div>
+      <el-button type="primary" @click="handleSaveChange"> 保存 </el-button>
+    </div> -->
   </div>
 </template>
 
@@ -40,7 +40,6 @@ interface Props {
 
 interface Emits {
   (e: "change", code: string): void
-  (e: "save"): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -103,6 +102,8 @@ const handleEditorMount = (editor: editor.IStandaloneCodeEditor) => {
   editorInstance.value = editor
   editor.focus()
 }
+
+const handleSaveChange = () => {}
 
 const loadMonacoEditor = async () => {
   try {

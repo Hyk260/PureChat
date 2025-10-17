@@ -1,6 +1,6 @@
 import { getBlob } from "./message-input-utils"
 
-import type { DB_Message, MessageType } from "@/database/schemas/message"
+import type { DB_Message, MessageType, ImagePayloadType } from "@/types"
 
 export const isTime = (item: DB_Message) => {
   return item?.isTimeDivider && item.time !== undefined
@@ -117,7 +117,8 @@ export const handleCopyMsg = async (data: DB_Message) => {
       return
     }
     if (type === "TIMImageElem") {
-      const url = payload.imageInfoArray[0].imageUrl
+      const imagePayload = data.payload as ImagePayloadType
+      const url = imagePayload?.imageInfoArray?.[0]?.url || ""
       const imageBlob = await getBlob(url)
       await navigator.clipboard.write([new ClipboardItem({ "image/png": imageBlob })])
       window.$message?.success("图片复制成功")

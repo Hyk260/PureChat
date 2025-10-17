@@ -4,7 +4,7 @@ import AutoImport from "unplugin-auto-import/vite"
 import Components from "unplugin-vue-components/vite"
 import type { PluginOption } from "vite"
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons"
-import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
+import { ElementPlusResolver, AntDesignVueResolver } from "unplugin-vue-components/resolvers"
 
 export function setupUnplugin(viteEnv: Env.ImportMeta) {
   const { VITE_AUTO_COMPONENT, VITE_ICON_LOCAL_PREFIX, VITE_AUTO_IMPORT } = viteEnv
@@ -24,7 +24,12 @@ export function setupUnplugin(viteEnv: Env.ImportMeta) {
       Components({
         dts: "src/typings/components.d.ts",
         types: [{ from: "vue-router", names: ["RouterLink", "RouterView"] }],
-        resolvers: [ElementPlusResolver()],
+        resolvers: [
+          ElementPlusResolver(),
+          AntDesignVueResolver({
+            importStyle: "css",
+          }),
+        ],
         include: [/\.vue$/, /\.tsx$/, /\.ts$/],
       })
     )
@@ -33,7 +38,10 @@ export function setupUnplugin(viteEnv: Env.ImportMeta) {
   if (VITE_AUTO_IMPORT === "Y") {
     plugins.push(
       AutoImport({
-        // resolvers: [ElementPlusResolver()],
+        resolvers: [
+          // ElementPlusResolver(),
+          // AntDesignVueResolver()
+        ],
         imports: [
           "vue",
           "vue-router",

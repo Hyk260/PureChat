@@ -3,10 +3,21 @@
     <div class="code-panel">
       <CodeEditor :code="code" @change="handleCodeChange" />
     </div>
-
     <div class="preview-panel">
       <PreviewPanel ref="previewPanelRef" :code="code" />
     </div>
+    <!-- <el-splitter>
+      <el-splitter-panel>
+        <div class="code-panel">
+          <CodeEditor :code="code" @change="handleCodeChange" />
+        </div>
+      </el-splitter-panel>
+      <el-splitter-panel>
+        <div class="preview-panel">
+          <PreviewPanel ref="previewPanelRef" :code="code" />
+        </div>
+      </el-splitter-panel>
+    </el-splitter> -->
   </div>
 </template>
 
@@ -19,7 +30,7 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'change', code: string): void
+  (e: "change", code: string): void
 }
 
 defineProps<Props>()
@@ -38,7 +49,6 @@ defineExpose({ previewPanelRef })
 .split-view {
   display: flex;
   height: 100%;
-  gap: 1px;
   background: var(--el-border-color);
 
   .code-panel {
@@ -46,12 +56,13 @@ defineExpose({ previewPanelRef })
     display: flex;
     flex-direction: column;
     background: var(--el-bg-color);
+    min-width: 400px;
   }
 
   .preview-panel {
     flex: 1;
     background: white;
-    position: relative;
+    min-width: 400px;
   }
 }
 </style>
