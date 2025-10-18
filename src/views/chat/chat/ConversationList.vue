@@ -62,7 +62,6 @@
 <script setup lang="ts">
 import { BellOff } from "lucide-vue-next"
 
-import { isObject } from "lodash-es"
 import { storeToRefs } from "pinia"
 
 import CustomLabel from "@/components/Chat/CustomLabel.vue"
@@ -86,6 +85,7 @@ import type { MenuItem } from "@/types/contextMenu"
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop()
 
+const MAX_TIP_LENGTH = 46
 const isEnableVirtualList = ref(false)
 const contextMenuItems = ref<MenuItem[] | []>([])
 const contextMenuItemInfo = ref<DB_Session | null>(null)
@@ -137,9 +137,10 @@ const handleContextMenu = (event: MouseEvent, item: DB_Session) => {
 }
 
 const fnClass = (item: DB_Session) => (item?.conversationID === currentSessionId.value ? "is-active" : "")
+const truncateTip = (t: string) => (t.length > MAX_TIP_LENGTH ? `${t.slice(0, MAX_TIP_LENGTH)}...` : t)
 
 const formatNewsMessage = (data: DB_Session) => {
-  if (!isObject(data)) return ""
+  if (!data) return ""
   const { type, lastMessage, unreadCount } = data
   const { messageForShow: rawTip, fromAccount, isRevoked, nick, type: lastType } = lastMessage ?? {}
   const isOther = userStore.userProfile?.userID !== fromAccount // 其他人消息
@@ -147,14 +148,12 @@ const formatNewsMessage = (data: DB_Session) => {
   const isSystem = type === "@TIM#SYSTEM" //系统消息
   const isGroup = type === "GROUP" //群聊
   const isCount = unreadCount && isNotify(data) // 未读消息计数
-  const MAX_TIP_LENGTH = 46
 
-  const formatTip = (t: string) => (t.length > MAX_TIP_LENGTH ? `${t.slice(0, MAX_TIP_LENGTH)}...` : t)
-
-  const tip = formatTip(rawTip || "")
-  // 处理撤回消息
+  const tip = truncateTip(rawTip || "")
+  // 撤回消息
   if (isRevoked) {
-    return `${isOther ? nick : "你"}撤回了一条消息`
+    const actor = isOther ? (nick ?? "未知用户") : "你"
+    return `${actor}撤回了一条消息`
   }
   // 处理免打扰消息
   if (isCount) {
@@ -188,7 +187,7 @@ const createMessagePrompt = (type: "at" | "draft" = "at") => {
 const CustomMention = (props: { item: DB_Session }) => {
   const { item } = props
   const { lastMessage, conversationID: ID, unreadCount } = item
-  const { messageForShow, nick: lastNick } = lastMessage ?? {}
+  const { messageForShow, nick: lastNick = "未知用户" } = lastMessage ?? {}
   const draft = chatStore.chatDraftMap.get(ID)
   // 草稿
   if (draft && isDraft(item)) {
@@ -203,23 +202,10 @@ const CustomMention = (props: { item: DB_Session }) => {
 // 消息列表 右键菜单
 const handleContextMenuEvent = (_, item: DB_Session) => {
   contextMenuItemInfo.value = item
-  contextMenuItems.value = chatSessionListData
-
-  contextMenuItems.value = contextMenuItems.value.filter((t) => {
-    if (item.isPinned) {
-      return t.key !== "pin"
-    } else {
-      return t.key !== "unpin"
-    }
-  })
-
-  contextMenuItems.value = contextMenuItems.value.filter((t) => {
-    if (item.messageRemindType === "AcceptNotNotify") {
-      return t.key !== "mute"
-    } else {
-      return t.key !== "unmute"
-    }
-  })
+  const hiddenKeys = new Set<string>()
+  item.isPinned ? hiddenKeys.add("pin") : hiddenKeys.add("unpin")
+  isNotify(item) ? hiddenKeys.add("mute") : hiddenKeys.add("unmute")
+  contextMenuItems.value = chatSessionListData.filter((t) => !hiddenKeys.has(t.key))
 }
 
 const handleConversationListClick = (data: DB_Session) => {

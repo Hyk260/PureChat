@@ -7,53 +7,7 @@ import {
   // Finished,
   // DeleteFilled
 } from "@element-plus/icons-vue"
-import {
-  AtSign,
-  BellOff,
-  BellRing,
-  Download,
-  ListChecks,
-  MessageSquareQuote,
-  Pin,
-  PinOff,
-  Trash2,
-} from "lucide-vue-next"
-
-// 会话列表数据
-export const chatSessionListData = [
-  {
-    id: "pinged",
-    icon: markRaw(Pin),
-    text: "置顶",
-    hide: __LOCAL_MODE__,
-  },
-  {
-    id: "unpin",
-    icon: markRaw(PinOff),
-    text: "取消置顶",
-    hide: __LOCAL_MODE__,
-  },
-  {
-    id: "AcceptNotNotify",
-    icon: markRaw(BellOff),
-    text: "消息免打扰",
-    hide: __LOCAL_MODE__,
-  },
-  {
-    id: "AcceptAndNotify",
-    icon: markRaw(BellRing),
-    text: "允许消息提醒",
-    hide: __LOCAL_MODE__,
-  },
-  {
-    id: "remove",
-    icon: markRaw(Trash2),
-    text: "删除会话",
-    style: "color: #f44336;",
-    class: "",
-  },
-  // { id: "clean", text: "清除消息" },
-].filter((item) => !item.hide)
+import { AtSign, Download, ListChecks, MessageSquareQuote, Trash2 } from "lucide-vue-next"
 
 export const menuOptionsList = [
   {

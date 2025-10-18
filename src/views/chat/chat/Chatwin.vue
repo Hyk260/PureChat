@@ -79,7 +79,7 @@
     <!-- 卡片 -->
     <MyPopover />
     <UserPopup ref="UserPopupRef" />
-    <Contextmenu ref="contextmenu" :disabled="!isRight">
+    <Contextmenu :disabled="!isRight">
       <ContextmenuItem
         v-for="item in contextMenuItems"
         :key="item.id"

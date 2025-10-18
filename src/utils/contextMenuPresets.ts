@@ -65,9 +65,9 @@ export const chatSessionListData: MenuItem[] = [
     hide: __LOCAL_MODE__,
     // children: [
     //   {
-    //     key: "1pin",
+    //     key: "text",
     //     icon: markRaw(Pin),
-    //     label: "chatSessionListData",
+    //     label: "",
     //   },
     // ],
   },
