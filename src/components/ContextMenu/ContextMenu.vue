@@ -1,71 +1,116 @@
 <template>
-  <Dropdown
-    v-model:open="visible"
-    :trigger="['contextmenu']"
-    :placement="placement"
-    :overlay-style="{ minWidth: '200px' }"
-    @open-change="handleOpenChange"
-  >
-    <template #default>
-      <div @contextmenu.prevent="handleContextMenu">
-        <slot />
+  <Teleport to="body">
+    <Transition name="context-menu" @before-enter="onBeforeEnter" @after-leave="onAfterLeave">
+      <div
+        v-if="visible"
+        ref="menuContainerRef"
+        class="context-menu-wrapper"
+        :style="menuStyle"
+        @click.stop
+        @contextmenu.prevent
+      >
+        <!-- @click="handleMenuClick" -->
+        <Menu>
+          <template v-for="item in items" :key="item.key">
+            <!-- <SubMenu v-if="false && item.children && item.children.length">
+              <template #title>
+                <div class="flex gap-4 items-center">
+                  <component :is="item.icon" v-if="item.icon" :size="16"></component>
+                  <span>
+                    {{ item.label }}
+                  </span>
+                </div>
+              </template>
+              <template v-for="child in item.children" :key="child.key">
+                <MenuItem>
+                  <div class="flex gap-4 items-center">
+                    <component :is="child.icon" v-if="child.icon" :size="16"></component>
+                    <span>
+                      {{ child.label }}
+                    </span>
+                  </div>
+                </MenuItem>
+              </template>
+            </SubMenu> -->
+            <MenuItem @click.stop="handleMenuItemClick(item)">
+              <div class="flex gap-4 items-center">
+                <component :is="item.icon" v-if="item.icon" :size="16"></component>
+                <span>
+                  {{ item.label }}
+                </span>
+              </div>
+            </MenuItem>
+          </template>
+        </Menu>
       </div>
-    </template>
-
-    <template #overlay>
-      <Menu @click="handleMenuClick">
-        <template v-for="item in items" :key="item.id">
-          <a-menu-item>{{ item.text }}</a-menu-item>
-        </template>
-      </Menu>
-    </template>
-  </Dropdown>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
-import { Dropdown, Menu, MenuDivider, MenuItem as AMenuItem, SubMenu } from "ant-design-vue"
+import { Menu, MenuItem, SubMenu } from "ant-design-vue"
 
-import type { ContextMenuProps, MenuItem } from "@/types/contextMenu"
+import type { MenuItem as MenuItemType } from "@/types/contextMenu"
 import type { MenuProps } from "ant-design-vue"
 
-// 定义 props
-const props = withDefaults(defineProps<ContextMenuProps>(), {
-  items: () => [],
+export interface Props {
+  items: MenuItemType[] | []
+  triggerData?: any
+}
+
+const props = withDefaults(defineProps<Props>(), {
   triggerData: null,
 })
 
-// 定义 emits
 const emit = defineEmits<{
-  "menu-click": [item: MenuItem, data?: any]
+  "menu-click": [item: MenuItemType, data?: any]
   "open-change": [open: boolean]
+  close: []
 }>()
 
-// 控制菜单显示隐藏
 const visible = ref<boolean>(false)
+const menuContainerRef = ref<HTMLElement>()
+const position = ref({ x: 0, y: 0 })
+const menuSize = ref({ width: 0, height: 0 })
 
-// 动态计算弹出位置
-const placement = ref<"bottomLeft" | "bottomRight" | "topLeft" | "topRight">("bottomLeft")
+const menuStyle = computed(() => ({
+  position: "fixed",
+  left: `${position.value.x}px`,
+  top: `${position.value.y}px`,
+  zIndex: 9999,
+}))
 
-// 处理右键点击事件
-const handleContextMenu = (event: MouseEvent): void => {
-  // 根据鼠标位置动态调整菜单弹出位置
-  const { clientX, clientY } = event
-  const { innerWidth, innerHeight } = window
+const calculatePosition = (x: number, y: number) => {
+  const viewportWidth = window.innerWidth
+  const viewportHeight = window.innerHeight
+  const menuWidth = menuSize.value.width || 200 // Default width
+  const menuHeight = menuSize.value.height || 300 // Default height
 
-  if (clientX > innerWidth / 2) {
-    placement.value = clientY > innerHeight / 2 ? "topRight" : "bottomRight"
-  } else {
-    placement.value = clientY > innerHeight / 2 ? "topLeft" : "bottomLeft"
+  let finalX = x
+  let finalY = y
+
+  // Adjust horizontal position
+  if (x + menuWidth > viewportWidth) {
+    finalX = viewportWidth - menuWidth - 10
+  }
+  if (finalX < 0) {
+    finalX = 10
   }
 
-  visible.value = true
+  // Adjust vertical position
+  if (y + menuHeight > viewportHeight) {
+    finalY = viewportHeight - menuHeight - 10
+  }
+  if (finalY < 0) {
+    finalY = 10
+  }
+
+  return { x: finalX, y: finalY }
 }
 
-// 处理菜单项点击
-const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
-  // 查找点击的菜单项
-  const findMenuItem = (items: MenuItem[], targetKey: string): MenuItem | null => {
+const handleMenuClick: MenuProps["onClick"] = (data) => {
+  const { key } = data
+  const findMenuItem = (items: MenuItemType[], targetKey: string): MenuItemType | null => {
     for (const item of items) {
       if (item.key === targetKey) return item
       if (item.children) {
@@ -76,31 +121,135 @@ const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
     return null
   }
 
-  const clickedItem = findMenuItem(props.items, key as string)
+  const clickedItem = findMenuItem(props.items, key)
 
   if (clickedItem) {
-    // 执行菜单项的 action
-    clickedItem.action?.(clickedItem, props.triggerData)
-    // 触发组件事件
-    emit("menu-click", clickedItem, props.triggerData)
+    clickedItem.action?.(clickedItem)
+    emit("menu-click", clickedItem)
   }
 
-  // 关闭菜单
   visible.value = false
 }
 
-// 处理菜单打开/关闭
+const handleMenuItemClick = (item: MenuItemType) => {
+  if (item) {
+    emit("menu-click", item)
+  }
+  visible.value = false
+}
+
 const handleOpenChange = (open: boolean): void => {
   emit("open-change", open)
 }
 
+const open = async (event?: MouseEvent) => {
+  if (event) {
+    const pos = calculatePosition(event.clientX, event.clientY)
+    position.value = pos
+  }
+
+  visible.value = true
+
+  await nextTick()
+
+  if (menuContainerRef.value) {
+    const rect = menuContainerRef.value.getBoundingClientRect()
+    menuSize.value = { width: rect.width, height: rect.height + 10 }
+
+    if (event) {
+      const adjustedPos = calculatePosition(event.clientX, event.clientY)
+      position.value = adjustedPos
+    }
+  }
+}
+
+const handleClickOutside = (event: MouseEvent) => {
+  if (visible.value && menuContainerRef.value && !menuContainerRef.value.contains(event.target as Node)) {
+    close()
+  }
+}
+
+const onBeforeEnter = () => {
+  emit("open-change", true)
+}
+
+const onAfterLeave = () => {
+  emit("open-change", false)
+}
+
+const handleEscape = (event: KeyboardEvent) => {
+  if (event.key === "Escape" && visible.value) {
+    close()
+  }
+}
+
+const close = () => {
+  visible.value = false
+  emit("close")
+}
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside)
+  document.addEventListener("contextmenu", handleClickOutside)
+  document.addEventListener("keydown", handleEscape)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside)
+  document.removeEventListener("contextmenu", handleClickOutside)
+  document.removeEventListener("keydown", handleEscape)
+})
+
 defineExpose({
-  open: () => {
-    visible.value = true
-  },
-  close: () => {
-    visible.value = false
-  },
-  handleContextMenu,
+  open,
+  close,
+  visible,
 })
 </script>
+
+<style lang="scss" scoped>
+:deep(.ant-menu-item) {
+  height: 32px;
+  line-height: 32px;
+}
+
+:deep(.ant-menu-submenu) {
+  height: 32px;
+  line-height: 32px;
+}
+:deep(.ant-menu-submenu-title) {
+  height: 32px !important;
+  line-height: 32px !important;
+}
+
+.context-menu-wrapper {
+  isolation: isolate;
+  min-width: 120px;
+  background: white;
+  border-radius: 8px;
+  box-shadow:
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+
+  .menu-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+}
+
+/* 菜单过渡动画 */
+.context-menu-enter-active,
+.context-menu-leave-active {
+  transition: all 0.2s ease;
+}
+
+.context-menu-enter-from,
+.context-menu-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+</style>

@@ -239,7 +239,7 @@ export default defineConfig([
       ...pluginVue.configs["flat/strongly-recommended"].rules,
       ...pluginVue.configs["flat/recommended"].rules,
       "vue/multi-word-component-names": "off",
-      "vue/no-unused-vars": "warn",
+      "vue/no-unused-vars": "off",
       "vue/no-unused-components": "warn",
       "vue/prefer-import-from-vue": "warn",
       "vue/prefer-separate-static-class": "warn",
@@ -268,7 +268,7 @@ export default defineConfig([
       ],
       "no-unused-vars": "warn",
       "simple-import-sort/exports": "warn",
-      "unused-imports/no-unused-imports": "warn",
+      "unused-imports/no-unused-imports": "off",
 
       // 性能相关
       // "vue/no-watch-after-await": "warn",

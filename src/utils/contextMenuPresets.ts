@@ -11,6 +11,7 @@ import {
   AtSign,
   BellOff,
   BellRing,
+  BrushCleaning,
   Download,
   ListChecks,
   MessageSquareQuote,
@@ -62,6 +63,13 @@ export const chatSessionListData: MenuItem[] = [
     icon: markRaw(Pin),
     label: "置顶",
     hide: __LOCAL_MODE__,
+    // children: [
+    //   {
+    //     key: "1pin",
+    //     icon: markRaw(Pin),
+    //     label: "chatSessionListData",
+    //   },
+    // ],
   },
   {
     key: "unpin",
@@ -89,8 +97,9 @@ export const chatSessionListData: MenuItem[] = [
   },
   {
     key: "clean",
-    icon: "",
+    icon: markRaw(BrushCleaning),
     label: "清除消息",
+    hide: true,
   },
 ].filter((item) => !item.hide)
 
@@ -129,6 +138,7 @@ export const messageContextMenuItems: MenuItem[] = [
   },
   // {
   //   key: "forward",
+  //   icon: "Forward",
   //   label: "转发",
   // },
   {

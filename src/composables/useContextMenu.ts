@@ -1,7 +1,6 @@
 import { ref, shallowRef } from "vue"
 
 import type { MenuItem } from "@/types/contextMenu"
-
 export interface UseContextMenuOptions {
   onBeforeShow?: (event: MouseEvent, data?: any) => boolean | void
   onAfterShow?: () => void
@@ -13,7 +12,7 @@ export function useContextMenu(options?: UseContextMenuOptions) {
   const contextMenuRef = ref()
   const currentData = shallowRef<any>(null)
 
-  const showContextMenu = (event: MouseEvent, data?: any): void => {
+  const showContextMenu = (event: MouseEvent, data?: any) => {
     event.preventDefault()
     event.stopPropagation()
 
@@ -21,8 +20,7 @@ export function useContextMenu(options?: UseContextMenuOptions) {
     if (shouldShow === false) return
 
     currentData.value = data
-    contextMenuRef.value?.open()
-    // contextMenuRef.value?.handleContextMenu(event)
+    contextMenuRef.value?.open(event)
 
     options?.onAfterShow?.()
   }
@@ -37,7 +35,7 @@ export function useContextMenu(options?: UseContextMenuOptions) {
     options?.onAfterHide?.()
   }
 
-  const updateMenuItem = (key: string, updates: Partial<MenuItem>): void => {}
+  const updateMenuItem = (key: string, updates: Partial<MenuItem>) => {}
 
   return {
     contextMenuRef,

@@ -6,7 +6,6 @@
         v-for="item in searchForData"
         :id="`message_${item.conversationID}`"
         :key="item.conversationID"
-        v-contextmenu:contextmenu
         class="message-item"
         :class="fnClass(item)"
         @click="handleConversationListClick(item)"
@@ -14,7 +13,7 @@
         @dragover="handleDragOver"
         @dragenter="(e) => handleDragEnter(e, item)"
         @dragleave="(e) => handleDragLeave(e, item)"
-        @contextmenu.prevent="handleContextMenuEvent($event, item)"
+        @contextmenu.prevent="handleContextMenu($event, item)"
       >
         <!-- 置顶图标 -->
         <div v-show="item.isPinned" class="pinned-tag"></div>
@@ -56,22 +55,7 @@
       </div>
     </template>
     <VirtualList v-else />
-    <!-- <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleClickMenuItem" /> -->
-    <!-- 右键菜单 -->
-    <Contextmenu ref="contextmenu" :disabled="!isRight">
-      <ContextmenuItem
-        v-for="item in contextMenuItems"
-        :key="item.id"
-        :class="item?.class ?? ''"
-        :style="item?.style ?? ''"
-        @click="handleClickMenuItem(item)"
-      >
-        <el-icon :class="item?.class ?? ''">
-          <component :is="item.icon" />
-        </el-icon>
-        <span> {{ item.text }}</span>
-      </ContextmenuItem>
-    </Contextmenu>
+    <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleClickMenuItem" />
   </el-scrollbar>
 </template>
 
@@ -80,10 +64,9 @@ import { BellOff } from "lucide-vue-next"
 
 import { isObject } from "lodash-es"
 import { storeToRefs } from "pinia"
-import { Contextmenu, ContextmenuItem } from "v-contextmenu"
 
 import CustomLabel from "@/components/Chat/CustomLabel.vue"
-// import ContextMenu from "@/components/ContextMenu"
+import ContextMenu from "@/components/ContextMenu"
 import { useContextMenu } from "@/composables/useContextMenu"
 import { useHandlerDrop } from "@/hooks/useHandlerDrop"
 import { pinConversation } from "@/service/im-sdk-api"
@@ -91,20 +74,20 @@ import { setMessageRemindType } from "@/service/im-sdk-api"
 import { useChatStore, useGroupStore, useUserStore } from "@/stores"
 import { chatName, formatContent } from "@/utils/chat"
 import { encodeHTML } from "@/utils/common"
+import { chatSessionListData } from "@/utils/contextMenuPresets"
 import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 import { timeFormat } from "@/utils/timeFormat"
 
 import EmptyMessage from "../components/EmptyMessage.vue"
-import { chatSessionListData } from "../utils/menu"
 import VirtualList from "./VirtualList.vue"
 
-import type { DB_Session } from "@/database/schemas/session"
+import type { DB_Session } from "@/types"
+import type { MenuItem } from "@/types/contextMenu"
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop()
 
 const isEnableVirtualList = ref(false)
-const isRight = ref(true)
-const contextMenuItems = ref([] as typeof chatSessionListData)
+const contextMenuItems = ref<MenuItem[] | []>([])
 const contextMenuItemInfo = ref<DB_Session | null>(null)
 
 const groupStore = useGroupStore()
@@ -112,7 +95,11 @@ const userStore = useUserStore()
 const chatStore = useChatStore()
 
 const { contextMenuRef, showContextMenu } = useContextMenu({
-  onBeforeShow: (event, data) => {
+  onBeforeShow: (_, data) => {
+    if (data.type === "@TIM#SYSTEM") {
+      contextMenuRef.value?.close()
+      return false
+    }
     return true
   },
 })
@@ -144,7 +131,8 @@ const isMention = (item: DB_Session) => {
   return (item.groupAtInfoList?.length ?? 0) > 0
 }
 
-const handleContextMenu = (event: MouseEvent, item: DB_Session): void => {
+const handleContextMenu = (event: MouseEvent, item: DB_Session) => {
+  handleContextMenuEvent(event, item)
   showContextMenu(event, item)
 }
 
@@ -214,30 +202,22 @@ const CustomMention = (props: { item: DB_Session }) => {
 }
 // 消息列表 右键菜单
 const handleContextMenuEvent = (_, item: DB_Session) => {
-  const { type } = item
-  const isSystem = type === "@TIM#SYSTEM"
-  // 系统通知屏蔽右键菜单
-  if (isSystem) {
-    isRight.value = false
-    return
-  }
-  isRight.value = true
   contextMenuItemInfo.value = item
   contextMenuItems.value = chatSessionListData
 
   contextMenuItems.value = contextMenuItems.value.filter((t) => {
     if (item.isPinned) {
-      return t.id !== "pinged"
+      return t.key !== "pin"
     } else {
-      return t.id !== "unpin"
+      return t.key !== "unpin"
     }
   })
 
   contextMenuItems.value = contextMenuItems.value.filter((t) => {
     if (item.messageRemindType === "AcceptNotNotify") {
-      return t.id !== "AcceptNotNotify"
+      return t.key !== "mute"
     } else {
-      return t.id !== "AcceptAndNotify"
+      return t.key !== "unmute"
     }
   })
 }
@@ -261,16 +241,16 @@ const handleConversationListClick = (data: DB_Session) => {
   emitUpdateScrollImmediate()
 }
 
-const handleClickMenuItem = (item: { id: string }) => {
+const handleClickMenuItem = (item: { key: string }) => {
   const data = contextMenuItemInfo.value
   if (!data) return
-  if (["pinged", "unpin"].includes(item.id)) {
+  if (["pin", "unpin"].includes(item.key)) {
     pingConversation(data) // 置顶 or 取消置顶
-  } else if (["AcceptNotNotify", "AcceptAndNotify"].includes(item.id)) {
+  } else if (["mute", "unmute"].includes(item.key)) {
     disableRecMsg(data) // 消息免打扰 or 允许消息提醒
-  } else if (item.id === "remove") {
+  } else if (item.key === "delete") {
     removeConversation(data) // 删除会话
-  } else if (item.id === "clean") {
+  } else if (item.key === "clean") {
     console.log("清除消息") // 清除消息
   }
 }
@@ -385,9 +365,5 @@ const pingConversation = async (data: DB_Session) => {
 }
 .over-style {
   background: var(--color-message-active) !important;
-}
-.menu-svg {
-  color: rgba(0, 0, 0, 0.65);
-  font-size: 12px;
 }
 </style>

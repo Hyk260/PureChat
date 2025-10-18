@@ -4,6 +4,7 @@ export interface MenuItem {
   icon?: any
   disabled?: boolean
   danger?: boolean
+  hide?: boolean
   divider?: boolean
   children?: MenuItem[]
   action?: (item: MenuItem, data?: any) => void
