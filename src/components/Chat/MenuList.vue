@@ -1,7 +1,12 @@
 <template>
   <div v-if="shouldShowMenu" class="menubar">
     <div class="flex">
-      <div v-for="t in availableMenuItems" :key="t.id" class="menubar-item flex-c" @click="handleMenuItemClick(t)">
+      <div
+        v-for="t in availableMenuItems"
+        :key="t.key"
+        class="menubar-item flex-c"
+        @click="handleMenuItemClick($event, t)"
+      >
         <!-- :disabled="t.id === 'more'" -->
         <el-tooltip :content="t.title" placement="top">
           <component :is="t.icon" :class="t?.class" :size="13" />
@@ -51,7 +56,7 @@ defineOptions({
   name: "MenuList",
 })
 
-const emit = defineEmits(["handleSingleClick"])
+const emit = defineEmits(["handleSingleClick", "handleContextMenu"])
 
 const props = defineProps({
   item: {
@@ -69,30 +74,30 @@ const supportedMessageTypes = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TI
 
 const menuItemsConfig = [
   {
-    id: "copy",
+    key: "copy",
     title: "复制",
     icon: markRaw(Copy),
   },
   {
-    id: "refresh",
+    key: "refresh",
     title: "重新生成",
     hidden: !__LOCAL_MODE__,
     icon: markRaw(RefreshCw),
   },
   {
-    id: "edit",
+    key: "edit",
     title: "编辑",
     hidden: !__LOCAL_MODE__,
     icon: markRaw(SquarePen),
   },
   {
-    id: "delete",
+    key: "delete",
     title: "删除",
     class: "text-[#f44336]",
     icon: markRaw(Trash),
   },
   {
-    id: "more",
+    key: "more",
     title: "更多",
     // hidden: true,
     icon: markRaw(Ellipsis),
@@ -109,7 +114,7 @@ function handleCancel() {
 }
 
 const handleDelete = () => {
-  emit("handleSingleClick", { item: props.item, id: "delete" })
+  emit("handleSingleClick", { item: props.item, key: "delete" })
 }
 
 /**
@@ -147,12 +152,12 @@ const shouldShowMenu = computed(() => {
 const availableMenuItems = computed(() => {
   const messageType = props.item.type
   return menuItemsConfig
-    .filter((menuItem) => {
-      if (menuItem.id === "edit") {
+    .filter((t) => {
+      if (t.key === "edit") {
         return messageType === "TIMTextElem"
-      } else if (menuItem.id === "copy") {
+      } else if (t.key === "copy") {
         return ["TIMTextElem", "TIMImageElem"].includes(messageType)
-      } else if (menuItem.id === "refresh") {
+      } else if (t.key === "refresh") {
         return props.item.flow === "in" && messageType === "TIMTextElem"
       } else {
         return true
@@ -161,12 +166,12 @@ const availableMenuItems = computed(() => {
     .filter((menuItem) => !menuItem?.hidden)
 })
 
-function handleMenuItemClick(data: { id: string }) {
-  const { id } = data
+function handleMenuItemClick(event: MouseEvent, data: { key: string }) {
+  const { key } = data
   const { item } = props
-  switch (id) {
+  switch (key) {
     case "refresh":
-      emit("handleSingleClick", { item, id: "refresh" })
+      emit("handleSingleClick", { item, key: "refresh" })
       break
     case "copy":
       handleCopyMsg(item)
@@ -175,8 +180,8 @@ function handleMenuItemClick(data: { id: string }) {
       scrollToMessage(item.ID)
       chatStore.setMsgEdit(item)
       break
-    case "setup":
-      console.log("设置")
+    case "more":
+      emit("handleContextMenu", event, item)
       break
     case "delete":
       handleDelete()

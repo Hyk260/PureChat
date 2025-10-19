@@ -61,7 +61,12 @@
                   <!-- 消息发送加载状态 -->
                   <Stateful :item="item" :status="item.status" />
                   <!-- 菜单 -->
-                  <MenuList :item="item" :status="item.status" @handle-single-click="handleSingleClick" />
+                  <MenuList
+                    :item="item"
+                    :status="item.status"
+                    @handle-context-menu="handleContextMenuEvent"
+                    @handle-single-click="handleSingleClick"
+                  />
                 </div>
                 <AssistantMessage v-if="isAssistant && item.flow === 'in'" :item="item" />
               </div>
@@ -462,9 +467,9 @@ const handleClickMenuItem = (data: MenuItem) => {
   }
 }
 
-const handleSingleClick = ({ item, id }) => {
+const handleSingleClick = ({ item, key }: { item: DB_Message; key: string }) => {
   menuItemInfo.value = item
-  handleClickMenuItem({ id })
+  handleClickMenuItem({ key })
 }
 
 const handleAt = (data: DB_Message) => {
