@@ -86,16 +86,16 @@ const menuItemsConfig = [
     icon: markRaw(SquarePen),
   },
   {
-    id: "more",
-    title: "更多",
-    hidden: true,
-    icon: markRaw(Ellipsis),
-  },
-  {
     id: "delete",
     title: "删除",
     class: "text-[#f44336]",
     icon: markRaw(Trash),
+  },
+  {
+    id: "more",
+    title: "更多",
+    // hidden: true,
+    icon: markRaw(Ellipsis),
   },
 ]
 

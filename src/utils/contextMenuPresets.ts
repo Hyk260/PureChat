@@ -1,23 +1,18 @@
 import { markRaw } from "vue"
 import {
-  ChatDotSquare,
-  CopyDocument,
-  SortDown,
-  // Download,
-  // Finished,
-  // DeleteFilled
-} from "@element-plus/icons-vue"
-import {
   AtSign,
   BellOff,
   BellRing,
   BrushCleaning,
+  Copy,
   Download,
   ListChecks,
   MessageSquareQuote,
   Pin,
   PinOff,
+  Send,
   Trash2 as Trash,
+  Undo,
 } from "lucide-vue-next"
 
 import type { MenuItem } from "@/types/contextMenu"
@@ -109,12 +104,12 @@ export const chatSessionListData: MenuItem[] = [
 export const messageContextMenuItems: MenuItem[] = [
   {
     key: "copy",
-    icon: markRaw(CopyDocument),
+    icon: markRaw(Copy),
     label: "复制",
   },
   {
     key: "revoke",
-    icon: markRaw(SortDown),
+    icon: markRaw(Undo),
     label: "撤回",
   },
   // {
@@ -159,13 +154,13 @@ export const messageContextMenuItems: MenuItem[] = [
  */
 export const avatarContextMenuItems: MenuItem[] = [
   {
-    key: "sendMessage",
-    icon: markRaw(ChatDotSquare),
+    key: "send",
+    icon: markRaw(Send),
     label: "发送消息",
   },
   {
     key: "at",
     icon: markRaw(AtSign),
-    label: "@TA",
+    label: "TA",
   },
 ]

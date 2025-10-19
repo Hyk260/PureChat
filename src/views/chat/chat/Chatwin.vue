@@ -25,19 +25,18 @@
                 <div
                   v-if="item.flow === 'out' && IS_LOCAL_MODE && userStore.userLocalStore.native"
                   class="native cursor-pointer"
-                  @click="onClickAvatar(null, item)"
+                  @click="handleClickAvatar(null, item)"
                 >
                   {{ userStore.userLocalStore.native }}
                 </div>
                 <el-avatar
                   v-else
-                  v-contextmenu:contextmenu
                   :size="36"
                   :src="fnAvatar(item)"
                   shape="square"
                   @error="() => true"
-                  @click.stop="onClickAvatar($event, item)"
-                  @contextmenu.prevent="handleContextAvatarMenuEvent($event, item)"
+                  @click.stop="handleClickAvatar($event, item)"
+                  @contextmenu.prevent="handleContextAvatarMenu($event, item)"
                 >
                   <div class="h-36 w-36 flex-c bg-[#5cadff]">
                     {{ displayInfo(item.from) }}
@@ -55,12 +54,10 @@
                   <MessageRenderer
                     v-else
                     :key="item.ID"
-                    v-contextmenu:contextmenu
                     :message="item"
                     :status="item.status"
                     @contextmenu.prevent="handleContextMenuEvent($event, item)"
-                  >
-                  </MessageRenderer>
+                  />
                   <!-- 消息发送加载状态 -->
                   <Stateful :item="item" :status="item.status" />
                   <!-- 菜单 -->
@@ -78,26 +75,14 @@
     </el-scrollbar>
     <!-- 卡片 -->
     <MyPopover />
-    <UserPopup ref="UserPopupRef" />
-    <Contextmenu :disabled="!isRight">
-      <ContextmenuItem
-        v-for="item in contextMenuItems"
-        :key="item.id"
-        :class="item.class"
-        :style="item.style"
-        @click="handleRightClick(item)"
-      >
-        <el-icon><component :is="item.icon" /> </el-icon>
-        <span>{{ item.text }}</span>
-      </ContextmenuItem>
-    </Contextmenu>
+    <UserPopup ref="userPopupRef" />
+    <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleClickMenuItem" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ElScrollbar } from "element-plus"
 import { storeToRefs } from "pinia"
-import { Contextmenu, ContextmenuItem } from "v-contextmenu"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import AssistantMessage from "@/components/Chat/AssistantMessage.vue"
@@ -107,9 +92,11 @@ import MessageEditingBox from "@/components/Chat/MessageEditingBox.vue"
 import NameComponent from "@/components/Chat/NameComponent.vue"
 import Stateful from "@/components/Chat/Stateful.vue"
 import TimeDivider from "@/components/Chat/TimeDivider.vue"
+import ContextMenu from "@/components/ContextMenu"
 import MessageRenderer from "@/components/MessageRenderer/index.vue"
 import MyPopover from "@/components/MyPopover/index.vue"
 import UserPopup from "@/components/Popups/UserPopup.vue"
+import { useContextMenu } from "@/composables/useContextMenu"
 import { MULTIPLE_CHOICE_MAX } from "@/constants"
 import { useMessageOperations } from "@/hooks/useMessageOperations"
 import { getMessageList, revokeMsg, translateText } from "@/service/im-sdk-api"
@@ -123,20 +110,19 @@ import {
   validateLastMessage,
 } from "@/utils/chat"
 import { getTime } from "@/utils/common"
+import { avatarContextMenuItems, messageContextMenuItems } from "@/utils/contextMenuPresets"
 import { showConfirmationBox } from "@/utils/message"
 import emitter from "@/utils/mitt-bus"
 import { timeFormat } from "@/utils/timeFormat"
 
 import LoadMore from "../components/LoadMore.vue"
-import { avatarMenu, menuOptionsList } from "../utils/menu"
 
-// import { validateLastMessage } from "../utils/utils"
-import type { DB_Message } from "@/database/schemas/message"
+import type { DB_Message } from "@/types"
+import type { MenuItem } from "@/types/contextMenu"
 
-const UserPopupRef = ref()
+const userPopupRef = ref()
 const timeout = ref(false)
-const isRight = ref(true)
-const contextMenuItems = shallowRef<ContextmenuItem[]>([])
+const contextMenuItems = ref<MenuItem[] | []>([])
 const menuItemInfo = ref<DB_Message | null>(null)
 const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null)
 const messageViewRef = ref<HTMLDivElement | null>(null)
@@ -145,6 +131,9 @@ const isBottomVisible = ref(false)
 let bottomObserver: IntersectionObserver | null = null
 
 const { resendMessage } = useMessageOperations()
+const { contextMenuRef, showContextMenu } = useContextMenu({
+  // onBeforeShow: (_, data) => {},
+})
 const groupStore = useGroupStore()
 const chatStore = useChatStore()
 const appStore = useAppStore()
@@ -239,9 +228,9 @@ const handleSelect = (item: DB_Message, type = "initial") => {
   toggleMessageSelection(item)
 }
 
-const onClickAvatar = (e: Event | null, item: DB_Message) => {
+const handleClickAvatar = (e: Event | null, item: DB_Message) => {
   if (__LOCAL_MODE__ && item.flow === "out") {
-    UserPopupRef.value.show()
+    userPopupRef.value.show()
     return
   }
   if (item.flow === "out" || isMultiSelectMode.value) return
@@ -368,20 +357,19 @@ const loadMoreMsg = async () => {
   }
 }
 
-const handleContextAvatarMenuEvent = (_: Event, item: DB_Message) => {
+const handleContextAvatarMenu = (event: MouseEvent, item: DB_Message) => {
   const { flow } = item
   const type = currentType.value
   // 单人 & 自己发送的消息 & 系统消息
   if (type === "C2C" || flow === "out" || item.type === "TIMGroupSystemNoticeElem") {
-    isRight.value = false
     return
   }
-  isRight.value = true
+  showContextMenu(event, item)
   menuItemInfo.value = item
-  contextMenuItems.value = avatarMenu
+  contextMenuItems.value = avatarContextMenuItems
 }
 
-const handleContextMenuEvent = (_: Event, item: DB_Message) => {
+const handleContextMenuEvent = (event: MouseEvent, item: DB_Message) => {
   const { isRevoked, time, type } = item
   const messageTypes = {
     isFile: type === "TIMFileElem",
@@ -392,69 +380,66 @@ const handleContextMenuEvent = (_: Event, item: DB_Message) => {
   }
   // 撤回消息 多选状态 系统类型消息 提示类型消息
   if (isRevoked || isMultiSelectMode.value || messageTypes.isSystemNotice || messageTypes.isGroupTip) {
-    isRight.value = false
     return
   }
+  showContextMenu(event, item)
 
-  console.log("handleContextMenuEvent:", item)
-
-  let menuItems = [...menuOptionsList]
+  let menuItems = [...messageContextMenuItems]
   const canRevoke = getTime() - time < 120 // 两分钟内可撤回
   const isGroupOwner = groupStore.isOwner && currentType.value === "GROUP"
   const isFromSelf = item.flow === "out"
   // 对方消息 超过撤回时间
   if (!isFromSelf || !canRevoke) {
-    menuItems = menuItems.filter((t) => t.id !== "revoke")
+    menuItems = menuItems.filter((t) => t.key !== "revoke")
   }
   // 群主 & 群聊 & 不限制2分钟撤回时间
   if (isGroupOwner) {
-    menuItems = [...menuOptionsList]
+    menuItems = [...messageContextMenuItems]
   }
   // 合并消息
   if (messageTypes.isRelay) {
-    menuItems = menuItems.filter((t) => t.id !== "copy")
+    menuItems = menuItems.filter((t) => t.key !== "copy")
   }
   // 非文件消息过滤另存为
   if (!messageTypes.isFile) {
-    menuItems = menuItems.filter((t) => t.id !== "saveAs")
+    menuItems = menuItems.filter((t) => t.key !== "saveAs")
   }
   // 文件消息 非electron环境下过滤复制
   if (messageTypes.isFile && !__IS_ELECTRON__) {
-    menuItems = menuItems.filter((t) => t.id !== "copy")
+    menuItems = menuItems.filter((t) => t.key !== "copy")
   }
-  // ai消息过滤 撤回 回复
+  // ai消息过滤 引用回复 撤回
   if (isAssistant.value) {
-    menuItems = menuItems.filter((t) => t.id !== "reply" && t.id !== "revoke")
+    menuItems = menuItems.filter((t) => t.key !== "quote" && t.key !== "revoke")
   }
 
   if (messageTypes.isCustom) {
-    menuItems = menuItems.filter((t) => t.id === "delete")
+    menuItems = menuItems.filter((t) => t.key === "delete")
   }
 
   timeout.value = !canRevoke
-  isRight.value = true
   menuItemInfo.value = item
   contextMenuItems.value = menuItems
 }
 
-const handleRightClick = (data: { id: string }) => {
-  const info = menuItemInfo.value as DB_Message
-  const { id } = data || {}
-  switch (id) {
+const handleClickMenuItem = (data: MenuItem) => {
+  const info = menuItemInfo.value
+  if (!info) return
+  switch (data.key) {
     case "refresh": // 重新生成
       handleRefreshMsg(info)
       break
     case "send": // 发起会话
       handleSendMessage(info)
       break
-    case "ait": // @对方
+    case "at": // @对方
       handleAt(info)
       break
     case "copy": // 复制
       handleCopyMsg(info)
       break
     case "translate": // 翻译
-      handleTranslate(info)
+      // handleTranslate(info)
       break
     case "revoke": // 撤回
       handleRevokeMsg(info)
@@ -465,7 +450,7 @@ const handleRightClick = (data: { id: string }) => {
     case "saveAs": // 另存为
       handleSave(info)
       break
-    case "reply": // 回复
+    case "quote": // 引用回复
       handleReplyMsg(info)
       break
     case "multiSelect": // 多选
@@ -479,7 +464,7 @@ const handleRightClick = (data: { id: string }) => {
 
 const handleSingleClick = ({ item, id }) => {
   menuItemInfo.value = item
-  handleRightClick({ id })
+  handleClickMenuItem({ id })
 }
 
 const handleAt = (data: DB_Message) => {

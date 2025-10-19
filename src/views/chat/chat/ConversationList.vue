@@ -13,7 +13,7 @@
         @dragover="handleDragOver"
         @dragenter="(e) => handleDragEnter(e, item)"
         @dragleave="(e) => handleDragLeave(e, item)"
-        @contextmenu.prevent="handleContextMenu($event, item)"
+        @contextmenu.prevent="handleContextMenuEvent($event, item)"
       >
         <!-- 置顶图标 -->
         <div v-show="item.isPinned" class="pinned-tag"></div>
@@ -131,8 +131,8 @@ const isMention = (item: DB_Session) => {
   return (item.groupAtInfoList?.length ?? 0) > 0
 }
 
-const handleContextMenu = (event: MouseEvent, item: DB_Session) => {
-  handleContextMenuEvent(event, item)
+const handleContextMenuEvent = (event: MouseEvent, item: DB_Session) => {
+  handleContextMenu(item)
   showContextMenu(event, item)
 }
 
@@ -200,7 +200,7 @@ const CustomMention = (props: { item: DB_Session }) => {
   return h("span", { innerHTML: mention })
 }
 // 消息列表 右键菜单
-const handleContextMenuEvent = (_, item: DB_Session) => {
+const handleContextMenu = (item: DB_Session) => {
   contextMenuItemInfo.value = item
   const hiddenKeys = new Set<string>()
   item.isPinned ? hiddenKeys.add("pin") : hiddenKeys.add("unpin")

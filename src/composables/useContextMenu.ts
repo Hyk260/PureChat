@@ -25,7 +25,7 @@ export function useContextMenu(options?: UseContextMenuOptions) {
     options?.onAfterShow?.()
   }
 
-  const hideContextMenu = (): void => {
+  const hideContextMenu = () => {
     const shouldHide = options?.onBeforeHide?.()
     if (shouldHide === false) return
 

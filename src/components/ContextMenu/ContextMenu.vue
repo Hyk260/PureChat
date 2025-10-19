@@ -32,9 +32,9 @@
                 </MenuItem>
               </template>
             </SubMenu> -->
-            <MenuItem @click.stop="handleMenuItemClick(item)">
-              <div class="flex gap-4 items-center">
-                <component :is="item.icon" v-if="item.icon" :size="16"></component>
+            <MenuItem :danger="item.danger ?? false" @click.stop="handleMenuItemClick(item)">
+              <div class="flex gap-4 text-[12px] items-center">
+                <component :is="item.icon" v-if="item.icon" :size="12"></component>
                 <span>
                   {{ item.label }}
                 </span>
@@ -209,28 +209,34 @@ defineExpose({
 
 <style lang="scss" scoped>
 :deep(.ant-menu-item) {
-  height: 32px;
-  line-height: 32px;
+  height: 28px;
+  line-height: 28px;
+  padding-inline: 8px;
 }
 
 :deep(.ant-menu-submenu) {
-  height: 32px;
-  line-height: 32px;
+  height: 28px;
+  line-height: 28px;
 }
 :deep(.ant-menu-submenu-title) {
-  height: 32px !important;
-  line-height: 32px !important;
+  height: 28px !important;
+  line-height: 28px !important;
 }
 
 .context-menu-wrapper {
   isolation: isolate;
-  min-width: 120px;
+  min-width: 100px;
   background: white;
   border-radius: 8px;
+  // box-shadow:
+  //   0 3px 6px -4px rgba(0, 0, 0, 0.12),
+  //   0 6px 16px 0 rgba(0, 0, 0, 0.08),
+  //   0 9px 28px 8px rgba(0, 0, 0, 0.05);
   box-shadow:
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.03),
     0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05) !important;
   overflow: hidden;
 
   .menu-icon {
