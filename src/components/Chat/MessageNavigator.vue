@@ -77,7 +77,8 @@ const initIntersectionObserver = async () => {
     },
     {
       root: rootEl,
-      rootMargin: "-20% 0px -20% 0px",
+      // rootMargin: "-20% 0px -20% 0px",
+      rootMargin: "-20% 0px -70% 0px",
       threshold: [0, 0.1, 0.5, 1],
     }
   )

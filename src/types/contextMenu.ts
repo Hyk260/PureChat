@@ -9,8 +9,3 @@ export interface MenuItem {
   children?: MenuItem[]
   action?: (item: MenuItem, data?: any) => void
 }
-
-export interface ContextMenuProps {
-  items: MenuItem[]
-  triggerData?: any
-}

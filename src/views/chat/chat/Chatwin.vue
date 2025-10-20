@@ -714,8 +714,10 @@ defineExpose({ updateScrollbar, updateScrollBarHeight })
   }
   .message-view-body {
     display: flex;
-    align-items: center;
+    // align-items: center;
     gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
     &:hover .menubar {
       opacity: 1;
     }

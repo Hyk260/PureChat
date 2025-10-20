@@ -55,12 +55,9 @@ import type { MenuProps } from "ant-design-vue"
 
 export interface Props {
   items: MenuItemType[] | []
-  triggerData?: any
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  triggerData: null,
-})
+const props = withDefaults(defineProps<Props>(), {})
 
 const emit = defineEmits<{
   "menu-click": [item: MenuItemType, data?: any]
@@ -89,15 +86,12 @@ const calculatePosition = (x: number, y: number) => {
   let finalX = x
   let finalY = y
 
-  // Adjust horizontal position
   if (x + menuWidth > viewportWidth) {
     finalX = viewportWidth - menuWidth - 10
   }
   if (finalX < 0) {
     finalX = 10
   }
-
-  // Adjust vertical position
   if (y + menuHeight > viewportHeight) {
     finalY = viewportHeight - menuHeight - 10
   }

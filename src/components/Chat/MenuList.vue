@@ -1,42 +1,22 @@
 <template>
   <div v-if="shouldShowMenu" class="menubar">
     <div class="flex">
-      <div
-        v-for="t in availableMenuItems"
-        :key="t.key"
-        class="menubar-item flex-c"
-        @click="handleMenuItemClick($event, t)"
-      >
-        <!-- :disabled="t.id === 'more'" -->
-        <el-tooltip :content="t.label" placement="top">
-          <component :is="t.icon" :class="t?.class" :size="13" />
-          <!-- <div v-else>
-            <el-popover ref="popoverTrashRef" placement="top" trigger="click" width="190">
-              <div class="flex-sc gap-5 mb-10">
-                <el-icon class="text-[#F56C6C]"><Warning /></el-icon>
-                <p>确定要删除此消息吗？</p>
-              </div>
-              <div class="flex">
-                <el-button class="ml-auto" size="small" @click="handleCancel">
-                  {{ $t("common.cancel") }}
-                </el-button>
-                <el-button size="small" type="primary" @click="handleDelete">
-                  {{ $t("common.confirm") }}
-                </el-button>
-              </div>
-              <template #reference>
-                <Trash :class="t?.class" :size="13" />
-              </template>
-            </el-popover>
-          </div> -->
-        </el-tooltip>
-      </div>
+      <template v-for="items in availableMenuItems" :key="items.key">
+        <Tooltip placement="top">
+          <template #title>
+            {{ items.label }}
+          </template>
+          <div class="menubar-item flex-c" @click="handleMenuItemClick($event, items)">
+            <component :is="items.icon" :class="items?.class" :size="13" />
+          </div>
+        </Tooltip>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// import { Warning } from "@element-plus/icons-vue"
+import { Tooltip } from "ant-design-vue"
 import {
   Copy,
   Ellipsis,
@@ -45,8 +25,6 @@ import {
   Trash,
   // SlidersHorizontal
 } from "lucide-vue-next"
-
-import { ElPopover } from "element-plus"
 
 import { useChatStore } from "@/stores/modules/chat"
 import { DB_Message, MessageStatus, MessageStatusSchema } from "@/types"
@@ -104,14 +82,9 @@ const menuItemsConfig = [
   },
 ]
 
-const popoverTrashRef = ref<InstanceType<typeof ElPopover> | null>(null)
-
 const chatStore = useChatStore()
 
-function handleCancel() {
-  popoverTrashRef?.value?.hide?.()
-  popoverTrashRef?.value?.[0]?.hide?.()
-}
+function handleCancel() {}
 
 const handleDelete = () => {
   emit("handleSingleClick", { item: props.item, key: "delete" })
