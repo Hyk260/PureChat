@@ -8,7 +8,7 @@
         @click="handleMenuItemClick($event, t)"
       >
         <!-- :disabled="t.id === 'more'" -->
-        <el-tooltip :content="t.title" placement="top">
+        <el-tooltip :content="t.label" placement="top">
           <component :is="t.icon" :class="t?.class" :size="13" />
           <!-- <div v-else>
             <el-popover ref="popoverTrashRef" placement="top" trigger="click" width="190">
@@ -75,31 +75,31 @@ const supportedMessageTypes = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TI
 const menuItemsConfig = [
   {
     key: "copy",
-    title: "复制",
+    label: "复制",
     icon: markRaw(Copy),
   },
   {
     key: "refresh",
-    title: "重新生成",
-    hidden: !__LOCAL_MODE__,
+    label: "重新生成",
+    hide: !__LOCAL_MODE__,
     icon: markRaw(RefreshCw),
   },
   {
     key: "edit",
-    title: "编辑",
-    hidden: !__LOCAL_MODE__,
+    label: "编辑",
+    hide: !__LOCAL_MODE__,
     icon: markRaw(SquarePen),
   },
   {
     key: "delete",
-    title: "删除",
+    label: "删除",
     class: "text-[#f44336]",
     icon: markRaw(Trash),
   },
   {
     key: "more",
-    title: "更多",
-    // hidden: true,
+    label: "更多",
+    // hide: true,
     icon: markRaw(Ellipsis),
   },
 ]
@@ -163,7 +163,7 @@ const availableMenuItems = computed(() => {
         return true
       }
     })
-    .filter((menuItem) => !menuItem?.hidden)
+    .filter((t) => !t?.hide)
 })
 
 function handleMenuItemClick(event: MouseEvent, data: { key: string }) {

@@ -6,11 +6,15 @@ import {
   BrushCleaning,
   Copy,
   Download,
+  Languages,
   ListChecks,
   MessageSquareQuote,
   Pin,
   PinOff,
+  RefreshCw,
   Send,
+  Share2 as Share,
+  SquarePen,
   Trash2 as Trash,
   Undo,
 } from "lucide-vue-next"
@@ -112,15 +116,31 @@ export const messageContextMenuItems: MenuItem[] = [
     icon: markRaw(Undo),
     label: "撤回",
   },
-  // {
-  //   key: "edit",
-  //   icon: "Edit",
-  //   label: "编辑",
-  // },
-  // {
-  //   key: "translate",
-  //   label: "翻译",
-  // },
+  {
+    key: "refresh",
+    label: "重新生成",
+    hide: !__LOCAL_MODE__,
+    icon: markRaw(RefreshCw),
+  },
+  {
+    key: "share",
+    label: "截图分享",
+    hide: true,
+    icon: markRaw(Share),
+  },
+  {
+    key: "edit",
+    label: "编辑",
+    hide: true,
+    // hide: !__LOCAL_MODE__,
+    icon: markRaw(SquarePen),
+  },
+  {
+    key: "translate",
+    icon: markRaw(Languages),
+    hide: true,
+    label: "翻译",
+  },
   {
     key: "saveAs",
     icon: markRaw(Download),
@@ -147,7 +167,7 @@ export const messageContextMenuItems: MenuItem[] = [
     label: "删除",
     danger: true,
   },
-]
+].filter((item) => !item.hide)
 
 /**
  * 头像上下文菜单项

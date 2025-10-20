@@ -42,7 +42,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
 import { Forward, Merge, Share2, Trash2, X } from "lucide-vue-next"
 
 import { storeToRefs } from "pinia"

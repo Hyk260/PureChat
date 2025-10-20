@@ -378,6 +378,7 @@ const handleContextMenuEvent = (event: MouseEvent, item: DB_Message) => {
   const { isRevoked, time, type } = item
   const messageTypes = {
     isFile: type === "TIMFileElem",
+    isText: type === "TIMTextElem",
     isRelay: type === "TIMRelayElem",
     isCustom: type === "TIMCustomElem",
     isSystemNotice: type === "TIMGroupSystemNoticeElem",
@@ -416,6 +417,13 @@ const handleContextMenuEvent = (event: MouseEvent, item: DB_Message) => {
   // ai消息过滤 引用回复 撤回
   if (isAssistant.value) {
     menuItems = menuItems.filter((t) => t.key !== "quote" && t.key !== "revoke")
+  }
+  if (!messageTypes.isText) {
+    menuItems = menuItems.filter((t) => t.key !== "edit")
+  }
+
+  if (!messageTypes.isText || item.flow === "out") {
+    menuItems = menuItems.filter((t) => t.key !== "refresh")
   }
 
   if (messageTypes.isCustom) {
