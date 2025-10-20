@@ -26,11 +26,11 @@
           <Sparkles :size="16" />
         </el-button>
       </el-tooltip>
-      <el-tooltip content="保存修改" placement="top">
+      <!-- <el-tooltip content="保存修改" placement="top">
         <el-button circle @click="handleSaveChange">
           <Save :size="16" />
         </el-button>
-      </el-tooltip>
+      </el-tooltip> -->
     </div>
   </div>
 </template>

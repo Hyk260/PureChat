@@ -13,6 +13,7 @@
           <div
             v-else-if="item.ID && !isTime(item) && !item.isDeleted"
             :id="`choice-${item.ID}`"
+            :ref="(el) => setMessageRef(item.ID, el)"
             class="message-view-item"
             :class="getSelectedMessageClass(item)"
             @click="handleSelect(item, 'outside')"
@@ -73,7 +74,6 @@
             </div>
           </div>
         </div>
-        <!-- sentinel for intersection observer to detect bottom -->
         <div ref="bottomSentinelRef" class="message-bottom-sentinel"></div>
         <div v-show="isMultiSelectMode" class="h-45"></div>
       </div>
@@ -82,6 +82,7 @@
     <MyPopover />
     <UserPopup ref="userPopupRef" />
     <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleClickMenuItem" />
+    <!-- <MessageNavigator :message-view="scrollbarRef" :message-ref-map="messageRefs" :messages="currentMessageList" /> -->
   </div>
 </template>
 
@@ -94,6 +95,7 @@ import AssistantMessage from "@/components/Chat/AssistantMessage.vue"
 import Checkbox from "@/components/Chat/Checkbox.vue"
 import MenuList from "@/components/Chat/MenuList.vue"
 import MessageEditingBox from "@/components/Chat/MessageEditingBox.vue"
+// import MessageNavigator from "@/components/Chat/MessageNavigator.vue"
 import NameComponent from "@/components/Chat/NameComponent.vue"
 import Stateful from "@/components/Chat/Stateful.vue"
 import TimeDivider from "@/components/Chat/TimeDivider.vue"
@@ -133,6 +135,8 @@ const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null)
 const messageViewRef = ref<HTMLDivElement | null>(null)
 const bottomSentinelRef = ref<HTMLElement | null>(null)
 const isBottomVisible = ref(false)
+const messageRefs = new Map<string, HTMLElement>()
+
 let bottomObserver: IntersectionObserver | null = null
 
 const { resendMessage } = useMessageOperations()
@@ -157,6 +161,12 @@ const {
 
 const isMessageSelected = (messageId: string) => {
   return chatStore.isMessageSelected(messageId)
+}
+
+const setMessageRef = (id: string, el: any) => {
+  if (el) {
+    messageRefs.set(id, el as HTMLElement)
+  }
 }
 
 const getSelectedMessageClass = (item: DB_Message) => {
@@ -624,6 +634,7 @@ defineExpose({ updateScrollbar, updateScrollBarHeight })
   width: 100%;
 }
 .message-info-view-content {
+  position: relative;
   height: calc(100% - 60px - 200px);
 }
 .style-msg-box {
