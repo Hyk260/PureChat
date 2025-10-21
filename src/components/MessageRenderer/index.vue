@@ -1,11 +1,6 @@
 <template>
   <div class="message-renderer">
-    <Suspense v-if="messageComponent">
-      <component :is="messageComponent" :key="messageKey" :message="message" v-bind="$attrs" />
-      <template #fallback>
-        <div class="message-loading">加载中...</div>
-      </template>
-    </Suspense>
+    <component :is="messageComponent" v-if="messageComponent" :message="message" v-bind="$attrs" />
     <div v-else class="message-error">
       <span class="error-icon">⚠️</span>
       <span>未知的消息类型: {{ message?.type || "Unknown message type" }}</span>
@@ -36,24 +31,21 @@ const messageComponent = computed(() => {
     return null
   }
 })
-
-const messageKey = computed(() => {
-  const { ID, type, isRevoked } = props.message
-  const status = isRevoked ? "revoked" : "normal"
-  return `${ID}_${type}_${status}`
-})
 </script>
 
 <style scoped lang="scss">
 .message-loading {
+  min-height: 36px;
   padding: 8px;
+  border-radius: 5px;
   color: #666;
   font-size: 12px;
   text-align: center;
-  opacity: 0.7;
+  background: var(--other-msg-color);
 }
 
 .message-error {
+  min-height: 36px;
   padding: 8px;
   background-color: #fee;
   border: 1px solid #fcc;

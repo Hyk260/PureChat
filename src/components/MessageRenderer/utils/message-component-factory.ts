@@ -15,12 +15,12 @@ interface AsyncComponentConfig {
  */
 const DEFAULT_LOADING_COMPONENT = {
   template: '<div class="message-loading">加载中...</div>',
-  style: { padding: "8px", color: "#666", fontSize: "12px" },
+  style: { height: "36px", color: "#666", fontSize: "12px" },
 }
 
 const DEFAULT_ERROR_COMPONENT = {
   template: '<div class="message-error">组件加载失败</div>',
-  style: { padding: "8px", color: "#c33", fontSize: "12px" },
+  style: { height: "36px", color: "#c33", fontSize: "12px" },
 }
 
 /**

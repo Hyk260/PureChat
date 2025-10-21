@@ -327,7 +327,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.updateMessages({ sessionId, message })
       emitUpdateScroll()
       if (last && ModelIDList.includes(message?.to as ModelIDValue)) {
-        await delay(500)
+        await delay(20)
         await sendChatAssistantMessage({
           chat: message,
           provider: getModelType(message.to),

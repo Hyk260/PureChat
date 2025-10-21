@@ -108,6 +108,9 @@ export const TypeSchema = z.enum(["C2C", "GROUP", "@TIM#SYSTEM"])
 
 export const LastMessageSchema = z
   .object({
+    /**
+     *  当前会话最新消息的时间戳，单位：秒
+     */
     lastTime: z.number().optional(),
     lastSequence: z.number().optional(),
     fromAccount: z.string().optional(),
@@ -147,8 +150,9 @@ export const DB_SessionSchema = z.object({
   customData: z.string().optional(),
   conversationGroupList: z.array(z.any()).optional(),
   draftText: z.string().optional(),
-  // **************** Base *************** //
+  // **************** Custom *************** //
   pinned: z.number().int().min(0).max(1).optional(),
+  // **************** Base *************** //
   id: z.string().optional(),
   createdAt: z.number().optional(),
   updatedAt: z.number().optional(),

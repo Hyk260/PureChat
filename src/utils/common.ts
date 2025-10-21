@@ -9,8 +9,37 @@ export const getGender = (data: any, type: string = "") => {
   return data?.gender === `Gender_Type_${type}`
 }
 
-export const getTime = () => {
-  return Math.floor(new Date().getTime() / 1000)
+/**
+ * 获取当前时间戳（秒级）
+ * @returns {number} 返回当前时间的Unix时间戳（秒级）
+ */
+export const getTime = (): number => {
+  return Math.floor(Date.now() / 1000)
+}
+
+/**
+ * 获取当前Unix时间戳（秒级）
+ * @returns {number} 当前Unix时间戳（秒级）
+ */
+export const getUnixTimestampSec = (): number => {
+  return Math.floor(Date.now() / 1000)
+}
+
+/**
+ * 获取当前Unix时间戳（毫秒级）
+ * @returns {number} 当前Unix时间戳（毫秒级）
+ */
+export const getUnixTimestampMs = (): number => {
+  return Date.now()
+}
+
+/**
+ * 获取比当前实际时间快1秒的Unix时间戳（秒级）
+ * @returns {number} 超前1秒的秒级Unix时间戳（实际时间的秒级时间戳 + 1）
+ */
+export const getUnixTimestampSecPlusOne = (): number => {
+  // 先获取当前毫秒级时间戳，转换为秒级后加1
+  return Math.floor(Date.now() / 1000) + 1
 }
 
 /**

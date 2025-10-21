@@ -18,9 +18,12 @@ import ReplyElem from "./ReplyElem.vue"
 
 interface Props {
   message: DB_Message
+  showMarkdown?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {})
+const props = withDefaults(defineProps<Props>(), {
+  showMarkdown: true,
+})
 
 const chatStore = useChatStore()
 const appStore = useAppStore()
@@ -39,6 +42,7 @@ const parsedCloudCustomData = computed(() => {
 })
 
 const shouldShowMarkdown = computed(() => {
+  if (!props.showMarkdown) return false
   if (appStore.markdownRender) return true
   return chatStore.isAssistant && props.message?.flow === "in"
 })

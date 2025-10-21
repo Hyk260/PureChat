@@ -9,7 +9,7 @@ import { restApi } from "@/service/api"
 import { createCustomMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore } from "@/stores"
 import { getCloudCustomData } from "@/utils/chat"
-import { getCustomMsgContent, getTime } from "@/utils/common"
+import { getCustomMsgContent, getUnixTimestampSec } from "@/utils/common"
 import { generateReferencePrompt, handleWebSearchData } from "@/utils/messageUtils/search"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
@@ -87,7 +87,7 @@ class ChatService {
     chat.payload.text = message
     Object.assign(chat, {
       // payload: { text: message },
-      // clientTime: getTime(),
+      // clientTime: getUnixTimestampSec(),
       status: isFinish ? "success" : "sending",
     })
 
@@ -133,7 +133,7 @@ class ChatService {
     const alertData = cloneDeep(startMsg)
 
     Object.assign(alertData, {
-      clientTime: getTime(),
+      clientTime: getUnixTimestampSec(),
       type: "TIMCustomElem",
       status: "success",
       payload: getCustomMsgContent({ data: null, type: "warning" }),
@@ -157,7 +157,7 @@ class ChatService {
     setTimeout(() => {
       this.createAlertMessage(startMsg)
       useChatStore().updateSendingState(startMsg.from, "delete")
-    }, 500)
+    }, 200)
 
     return true
   }

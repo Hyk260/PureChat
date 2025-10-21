@@ -24,7 +24,7 @@ export const MessageSchema = {
   protocol: "JSON",
   isResend: false,
   isRead: true,
-  status: "success",
+  status: "unSend",
   atUserList: [],
   cloudCustomData: "",
   isDeleted: false,
@@ -98,7 +98,18 @@ export const customDataWebSearchSchema = z.object({
 
 // export const cloudCustomDataSchema = cloudCustomDataSchemaWebSearch
 
-export const MessageStatusSchema = z.enum(["unSend", "fail", "success", "sending", "searching", "paused", "timeout"])
+export const MessageStatusSchema = z.enum([
+  /**
+   *  unSend(未发送)
+   */
+  "unSend",
+  "fail",
+  "success",
+  "sending",
+  "searching",
+  "paused",
+  "timeout",
+])
 
 export const RevokerInfoSchema = z
   .object({
@@ -129,6 +140,9 @@ export const DB_MessageSchema = z.object({
    *  SYSTEM: 系统通知
    */
   conversationType: z.enum(["C2C", "GROUP", "SYSTEM"]),
+  /**
+   *  消息时间戳。单位：秒
+   */
   time: z.number(),
   /**
    * 消息序列号
@@ -168,8 +182,14 @@ export const DB_MessageSchema = z.object({
    * 消息自定义数据
    */
   cloudCustomData: z.string(),
+  /**
+   *  是否被删除的消息
+   */
   isDeleted: z.boolean(),
   isModified: z.boolean(),
+  /**
+   *  消息时间戳。单位：秒
+   */
   clientTime: z.number(),
   senderTinyID: z.string(),
   needReadReceipt: z.boolean(),
@@ -198,7 +218,13 @@ export const DB_MessageSchema = z.object({
   isTimeDivider: z.boolean().optional(),
   // **************** Base *************** //
   id: z.string().optional(),
+  /**
+   * 初始化后不修改 消息时间戳。单位：毫秒
+   */
   createdAt: z.number().optional(),
+  /**
+   * 消息更新时间戳。单位：毫秒
+   */
   updatedAt: z.number().optional(),
 })
 
@@ -206,7 +232,13 @@ export type DB_Message = z.infer<typeof DB_MessageSchema>
 
 /**
  * @description 消息状态
- * unSend(未发送) fail(失败) success(成功) sending(发送中) timeout(超时) paused(暂停) searching(搜索中)
+ * unSend(未发送)
+ * fail(失败)
+ * success(成功)
+ * sending(发送中)
+ * timeout(超时)
+ * paused(暂停)
+ * searching(搜索中)
  */
 export type MessageStatus = z.infer<typeof MessageStatusSchema>
 

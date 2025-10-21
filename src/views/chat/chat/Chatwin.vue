@@ -56,15 +56,13 @@
                     v-else
                     :key="item.ID"
                     :message="item"
-                    :status="item.status"
                     @contextmenu.prevent="handleContextMenuEvent($event, item)"
                   />
                   <!-- 消息发送加载状态 -->
-                  <Stateful :item="item" :status="item.status" />
+                  <Stateful :item="item" />
                   <!-- 菜单 -->
                   <MenuList
                     :item="item"
-                    :status="item.status"
                     @handle-context-menu="handleContextMenuEvent"
                     @handle-single-click="handleSingleClick"
                   />
@@ -118,7 +116,7 @@ import {
   scrollToMessage,
   validateLastMessage,
 } from "@/utils/chat"
-import { getTime } from "@/utils/common"
+import { getUnixTimestampSec } from "@/utils/common"
 import { avatarContextMenuItems, messageContextMenuItems } from "@/utils/contextMenuPresets"
 import { showConfirmationBox } from "@/utils/message"
 import emitter from "@/utils/mitt-bus"
@@ -378,7 +376,7 @@ const handleContextMenuEvent = (event: MouseEvent, item: DB_Message) => {
   showContextMenu(event, item)
 
   let menuItems = [...messageContextMenuItems]
-  const canRevoke = getTime() - time < 120 // 两分钟内可撤回
+  const canRevoke = getUnixTimestampSec() - time < 120 // 两分钟内可撤回
   const isGroupOwner = groupStore.isOwner && currentType.value === "GROUP"
   const isFromSelf = item.flow === "out"
   // 对方消息 超过撤回时间

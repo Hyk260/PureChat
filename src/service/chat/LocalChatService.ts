@@ -8,7 +8,7 @@ import {
   SessionSchema as BaseElemSession,
   UserfileSchema as UserProfile,
 } from "@/types"
-import { delay, getTime } from "@/utils/common"
+import { delay, getUnixTimestampSec, getUnixTimestampSecPlusOne } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
@@ -102,7 +102,7 @@ export class LocalChat {
       if (session) {
         const conversation = cloneDeep(session)
         conversation.lastMessage.messageForShow = data?.messageForShow || ""
-        conversation.lastMessage.lastTime = data?.lastTime || getTime()
+        conversation.lastMessage.lastTime = data?.lastTime || getUnixTimestampSec()
         await SessionModel.update(id, conversation)
       }
     } catch (error) {
@@ -118,11 +118,12 @@ export class LocalChat {
       await this.updateConversationLastMessage(data.conversationID, {
         messageForShow: data.payload.text,
       })
+      const currentTime = getUnixTimestampSec()
 
       const message = {
         ...data,
-        time: getTime(),
-        clientTime: getTime(),
+        time: currentTime,
+        clientTime: currentTime,
         ID: data.ID || uuid(),
         status: "success",
       }
@@ -195,7 +196,7 @@ export class LocalChat {
    */
   createTextMessage(data: MESSAGE_OPTIONS) {
     const { to, conversationType, payload, cloudCustomData = "", cache } = data
-    const currentTime = getTime()
+    const currentTime = getUnixTimestampSecPlusOne()
 
     const messageData = {
       ...BaseElemMessage,
@@ -223,7 +224,7 @@ export class LocalChat {
    */
   createFileMessage(data: MESSAGE_OPTIONS) {
     const { to, conversationType, payload } = data
-    const currentTime = getTime()
+    const currentTime = getUnixTimestampSecPlusOne()
 
     const messageData = {
       ...BaseElemMessage,
@@ -256,7 +257,7 @@ export class LocalChat {
    */
   createCustomMessage(data: MESSAGE_OPTIONS) {
     const { to, conversationType, payload } = data
-    const currentTime = getTime()
+    const currentTime = getUnixTimestampSecPlusOne()
 
     const messageData = {
       ...BaseElemMessage,
@@ -284,7 +285,7 @@ export class LocalChat {
     try {
       const data = cloneDeep(BaseElemSession) as DB_Session
       data.conversationID = chatId
-      data.lastMessage.lastTime = getTime()
+      data.lastMessage.lastTime = getUnixTimestampSec()
       data.userProfile = ProvidersList.find((item) => item.userID === chatId.replace("C2C", ""))
       SessionModel.create(chatId, data)
 
