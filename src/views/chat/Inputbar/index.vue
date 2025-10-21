@@ -1,26 +1,54 @@
 <template>
   <div class="toolbar">
     <!-- 表情包 -->
-    <el-tooltip v-if="!isFullscreenInputActive && !isAssistant" :content="$t('chat.emoji')" placement="top">
+    <el-tooltip
+      v-if="!isFullscreenInputActive && !isAssistant"
+      :content="$t('chat.emoji')"
+      placement="top"
+      :show-arrow="false"
+      :offset="2"
+      transition="slide-fade"
+    >
       <el-button @click="sendEmojiClick">
         <Smile :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 选模型 -->
-    <el-tooltip v-if="isAssistant" :content="$t('button.select_model')" placement="top">
+    <el-tooltip
+      v-if="isAssistant"
+      :content="$t('button.select_model')"
+      placement="top"
+      :show-arrow="false"
+      :offset="2"
+      transition="slide-fade"
+    >
       <el-button @click="selectModel">
         <Brain :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 图片 -->
-    <el-tooltip v-if="!isAssistant" :content="$t('chat.picture')" placement="top">
+    <el-tooltip
+      v-if="!isAssistant"
+      :content="$t('chat.picture')"
+      placement="top"
+      :show-arrow="false"
+      :offset="2"
+      transition="slide-fade"
+    >
       <el-button @click="sendImageClick">
         <!-- <Image :size="16" /> -->
         <SvgIcon local-icon="image" />
       </el-button>
     </el-tooltip>
     <!-- 文件 -->
-    <el-tooltip v-if="!isAssistant" :content="$t('chat.file')" placement="top">
+    <el-tooltip
+      v-if="!isAssistant"
+      :content="$t('chat.file')"
+      placement="top"
+      :show-arrow="false"
+      :offset="2"
+      transition="slide-fade"
+    >
       <el-button @click="sendFileClick">
         <!-- <FolderOpen :size="16" /> -->
         <!-- <FileUp :size="16" /> -->
@@ -29,25 +57,53 @@
       </el-button>
     </el-tooltip>
     <!-- 截图 -->
-    <el-tooltip v-if="IS_ELECTRON" :content="$t('chat.screenshot')" placement="top">
+    <el-tooltip
+      v-if="IS_ELECTRON"
+      :content="$t('chat.screenshot')"
+      placement="top"
+      :show-arrow="false"
+      :offset="2"
+      transition="slide-fade"
+    >
       <el-button v-show="!isAssistant" @click="clickCscreenshot">
         <Scissors class="rotate-270" :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 模型配置 -->
-    <el-tooltip v-if="isAssistant" :content="$t('chat.configuration')" placement="top">
+    <el-tooltip
+      v-if="isAssistant"
+      :content="$t('chat.configuration')"
+      placement="top"
+      :show-arrow="false"
+      :offset="2"
+      transition="slide-fade"
+    >
       <el-button @click="openRobotBox">
         <SlidersHorizontal :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 附件 -->
-    <el-tooltip v-if="IS_ELECTRON" :content="$t('chat.upload_document')" placement="top">
+    <el-tooltip
+      v-if="IS_ELECTRON"
+      :content="$t('chat.upload_document')"
+      placement="top"
+      :show-arrow="false"
+      :offset="2"
+      transition="slide-fade"
+    >
       <el-button v-show="isAssistant" @click="sendAnnexClick">
         <Paperclip :size="16" />
       </el-button>
     </el-tooltip>
     <!-- 联网 -->
-    <el-tooltip v-if="IS_LOCAL_MODE" :content="$t('chat.web_search')" placement="top">
+    <el-tooltip
+      v-if="IS_LOCAL_MODE"
+      :content="$t('chat.web_search')"
+      placement="top"
+      :show-arrow="false"
+      :offset="2"
+      transition="slide-fade"
+    >
       <el-button
         v-show="isWebSearchModel"
         :style="{
@@ -59,11 +115,11 @@
       </el-button>
     </el-tooltip>
     <!-- 清空消息 -->
-    <el-tooltip content="清空消息" placement="top">
+    <el-tooltip content="清空消息" placement="top" :show-arrow="false" :offset="2" transition="slide-fade">
       <div>
         <el-popover ref="popoverRef" placement="top" trigger="click" width="250">
           <div class="flex-c gap-5 mb-10">
-            <el-icon class="text-[#F56C6C]"><Warning /></el-icon>
+            <CircleAlert :size="15" color="#F56C6C" />
             <p>确定要清除当前会话所有消息吗?</p>
           </div>
           <div class="flex">
@@ -77,7 +133,6 @@
           <template #reference>
             <el-button>
               <BrushCleaning :size="16" />
-              <!-- <el-icon class="cursor-pointer"><Delete /></el-icon> -->
             </el-button>
           </template>
         </el-popover>
@@ -89,21 +144,35 @@
         <Blocks :size="16" />
       </el-button>
     </el-tooltip>
-    <!-- 滚动到底部 -->
-    <el-tooltip v-if="showBottomBtn" :content="$t('chat.scrollToTheBottom')" placement="top">
-      <el-button class="chat-top animate-chat-slide-in" @click="scrollToBottomBtn">
-        <el-icon class="svg-left"><DArrowLeft /></el-icon>
+    <!-- 自定义消息 -->
+    <el-tooltip v-if="false" content="BugPlay" placement="top" :show-arrow="false" :offset="2" transition="slide-fade">
+      <el-button @click="customMessage">
+        <BugPlay :size="16" />
       </el-button>
     </el-tooltip>
-    <!-- 自定义消息 -->
-    <el-button v-if="false" @click="customMessage">
-      <el-icon><Sunny /></el-icon>
-    </el-button>
+    <!-- 滚动到底部 -->
+    <el-tooltip
+      v-if="showBottomBtn"
+      :content="$t('chat.scrollToTheBottom')"
+      placement="top"
+      :show-arrow="false"
+      :offset="2"
+      transition="slide-fade"
+    >
+      <el-button class="animate-chat-slide-in" @click="scrollToBottomBtn">
+        <ChevronsDown :size="18" />
+      </el-button>
+    </el-tooltip>
     <!-- 全屏 -->
-    <el-tooltip :content="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')" placement="top">
+    <el-tooltip
+      :content="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
+      placement="top"
+      :show-arrow="false"
+      :offset="2"
+      transition="slide-fade"
+    >
       <el-button class="!ml-auto" @click="toggleFullScreenInput">
-        <Minimize2 v-if="isFullscreenInputActive" :size="16" />
-        <Maximize2 v-else :size="16" />
+        <component :is="isFullscreenInputActive ? Minimize2 : Maximize2" :size="16" />
       </el-button>
     </el-tooltip>
     <RobotModel />
@@ -115,18 +184,15 @@
 
 <script setup lang="ts">
 import {
-  DArrowLeft,
-  // Delete,
-  Sunny,
-  Warning,
-} from "@element-plus/icons-vue"
-import {
   Blocks,
   Brain,
   BrushCleaning,
+  BugPlay,
+  ChevronsDown,
   // FileUp,
   // FolderOpen,
   // FolderClosed,
+  CircleAlert,
   Globe,
   // ImageUp,
   // Image,
@@ -302,18 +368,6 @@ onUnmounted(() => {
     margin-left: 0;
     &:hover {
       color: var(--el-color-info-dark-3);
-    }
-  }
-  .svg-icon {
-    cursor: pointer;
-  }
-  .chat-top {
-    .svg-left {
-      transform: rotate(-90deg);
-    }
-
-    .el-icon {
-      cursor: pointer;
     }
   }
 }

@@ -135,7 +135,7 @@ export default defineConfig([
 
       // === Import/Export 规则 ===
       "simple-import-sort/imports": [
-        "warn",
+        "off",
         {
           groups: [
             // Node.js 内置模块
@@ -250,7 +250,7 @@ export default defineConfig([
 
       // Import 规则
       "simple-import-sort/imports": [
-        "warn",
+        "off",
         {
           groups: [
             // Vue 相关包

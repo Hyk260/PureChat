@@ -131,8 +131,7 @@ export const messageContextMenuItems: MenuItem[] = [
   {
     key: "edit",
     label: "编辑",
-    hide: true,
-    // hide: !__LOCAL_MODE__,
+    hide: !__LOCAL_MODE__,
     icon: markRaw(SquarePen),
   },
   {

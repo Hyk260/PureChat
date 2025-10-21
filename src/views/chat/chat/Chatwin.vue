@@ -114,6 +114,7 @@ import {
   getMessageTypeClass,
   handleCopyMsg,
   isTime,
+  scrollToMessage,
   validateLastMessage,
 } from "@/utils/chat"
 import { getTime } from "@/utils/common"
@@ -408,7 +409,7 @@ const handleContextMenuEvent = (event: MouseEvent, item: DB_Message) => {
   if (!isFromSelf || !canRevoke) {
     menuItems = menuItems.filter((t) => t.key !== "revoke")
   }
-  // 群主 & 群聊 & 不限制2分钟撤回时间
+  // 群主不限制2分钟撤回时间
   if (isGroupOwner) {
     menuItems = [...messageContextMenuItems]
   }
@@ -428,6 +429,7 @@ const handleContextMenuEvent = (event: MouseEvent, item: DB_Message) => {
   if (isAssistant.value) {
     menuItems = menuItems.filter((t) => t.key !== "quote" && t.key !== "revoke")
   }
+  // 仅文本消息支持编辑
   if (!messageTypes.isText) {
     menuItems = menuItems.filter((t) => t.key !== "edit")
   }
@@ -458,6 +460,9 @@ const handleClickMenuItem = (data: MenuItem) => {
     case "at": // @对方
       handleAt(info)
       break
+    case "edit": // 编辑
+      handleEdit(info)
+      break
     case "copy": // 复制
       handleCopyMsg(info)
       break
@@ -482,12 +487,19 @@ const handleClickMenuItem = (data: MenuItem) => {
     case "delete": // 删除
       handleDeleteMsg(info)
       break
+    default:
+      console.log("未定义操作")
   }
 }
 
 const handleSingleClick = ({ item, key }: { item: DB_Message; key: string }) => {
   menuItemInfo.value = item
-  handleClickMenuItem({ key })
+  handleClickMenuItem({ key, label: "" })
+}
+
+const handleEdit = (item: DB_Message) => {
+  scrollToMessage(item.ID)
+  chatStore.setMsgEdit(item)
 }
 
 const handleAt = (data: DB_Message) => {

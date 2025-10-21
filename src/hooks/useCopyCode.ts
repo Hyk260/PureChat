@@ -72,8 +72,8 @@ async function copyToClipboard(text: string) {
     document.body.removeChild(element)
 
     if (originalRange) {
-      selection.removeAllRanges() // originalRange can't be truthy when selection is falsy
-      selection.addRange(originalRange)
+      selection?.removeAllRanges() // originalRange can't be truthy when selection is falsy
+      selection?.addRange(originalRange)
     }
 
     // Get the focus back on the previously focused element, if any

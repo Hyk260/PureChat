@@ -2,10 +2,7 @@
   <div v-if="shouldShowMenu" class="menubar">
     <div class="flex">
       <template v-for="items in availableMenuItems" :key="items.key">
-        <Tooltip placement="top">
-          <template #title>
-            {{ items.label }}
-          </template>
+        <Tooltip placement="top" :title="items.label" :arrow="false">
           <div class="menubar-item flex-c" @click="handleMenuItemClick($event, items)">
             <component :is="items.icon" :class="items?.class" :size="13" />
           </div>

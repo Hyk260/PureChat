@@ -33,6 +33,20 @@
   animation: fade 500ms infinite;
 }
 
+.slide-fade-enter-active {
+  transition: opacity 0.3s ease;
+}
+
+.slide-fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(10px) scale(0.8);
+  opacity: 0;
+}
+
 @keyframes fade {
   from {
     opacity: 1;
