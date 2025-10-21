@@ -11,7 +11,6 @@ import { setupHtmlPlugin } from "./html"
 import { viteBuildInfo } from "./info"
 import { setupUnocss } from "./unocss"
 import { cdn } from "./cdn"
-// import react from "@vitejs/plugin-react"
 // import pwa from "./pwa";
 
 /**
@@ -29,7 +28,6 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta) {
         },
       },
     }),
-    // react(),
     vueJsx(),
     // 打包进度
     progress(),
