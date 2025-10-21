@@ -6,6 +6,7 @@
         v-for="item in searchForData"
         :id="`message_${item.conversationID}`"
         :key="item.conversationID"
+        v-memo="[item.conversationID === currentSessionId]"
         class="message-item"
         :class="fnClass(item)"
         @click="handleConversationListClick(item)"

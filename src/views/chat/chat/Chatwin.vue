@@ -89,6 +89,7 @@
 <script setup lang="ts">
 import { ElScrollbar } from "element-plus"
 import { storeToRefs } from "pinia"
+import { useIntersectionObserver } from "@vueuse/core"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import AssistantMessage from "@/components/Chat/AssistantMessage.vue"
@@ -135,10 +136,8 @@ const menuItemInfo = ref<DB_Message | null>(null)
 const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null)
 const messageViewRef = ref<HTMLDivElement | null>(null)
 const bottomSentinelRef = ref<HTMLElement | null>(null)
-const isBottomVisible = ref(false)
+const isBottomVisible = shallowRef(false)
 const messageRefs = new Map<string, HTMLElement>()
-
-let bottomObserver: IntersectionObserver | null = null
 
 const { resendMessage } = useMessageOperations()
 const { contextMenuRef, showContextMenu } = useContextMenu({
@@ -270,44 +269,21 @@ const isScrolledToBottom = (lower = 2): boolean => {
   return distanceToBottom <= threshold
 }
 
-const initBottomObserver = () => {
-  if (bottomObserver) return
-
-  try {
-    bottomObserver = new IntersectionObserver(
-      (entries) => {
-        const ent = entries[0]
-        if (!ent) return
-        // 当 sentinel 可见时，表示滚动到达底部（或接近底部，取决于 rootMargin）
-        isBottomVisible.value = ent.isIntersecting
-        console.log("isBottomVisible:", isBottomVisible.value)
-        emitter.emit("handleToBottom", isBottomVisible.value)
-      },
-      {
-        root: scrollbarRef.value?.wrapRef || null,
-        rootMargin: "0px 0px 10px 0px",
-        threshold: 0.01,
-      }
-    )
-
-    if (bottomSentinelRef.value) {
-      bottomObserver.observe(bottomSentinelRef.value)
-    }
-  } catch {
-    bottomObserver = null
+useIntersectionObserver(
+  bottomSentinelRef,
+  ([entry]) => {
+    const isVisible = entry?.isIntersecting || false
+    isBottomVisible.value = isVisible
+    nextTick(() => {
+      emitter.emit("handleToBottom", isVisible)
+    })
+  },
+  {
+    root: scrollbarRef.value?.wrapRef || null,
+    rootMargin: "0px 0px 10px 0px",
+    threshold: 1.0,
   }
-}
-
-const destroyBottomObserver = () => {
-  try {
-    if (bottomObserver) {
-      bottomObserver.disconnect()
-      bottomObserver = null
-    }
-  } catch {
-    // ignore
-  }
-}
+)
 
 const handleEnReached = (direction: string) => {
   console.log("handleEnReached:", direction)
@@ -617,12 +593,10 @@ watch(
 
 onMounted(() => {
   onEmitter()
-  initBottomObserver()
 })
 
 onUnmounted(() => {
   offEmitter()
-  destroyBottomObserver()
 })
 
 defineExpose({ updateScrollbar, updateScrollBarHeight })
