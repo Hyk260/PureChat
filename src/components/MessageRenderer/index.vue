@@ -1,13 +1,19 @@
 <template>
   <div class="message-renderer">
-    <component :is="messageComponent" v-if="messageComponent" :key="messageKey" :message="message" v-bind="$attrs" />
-    <div v-else class="message-error">Unknown message type: {{ message?.type }}</div>
+    <Suspense v-if="messageComponent">
+      <component :is="messageComponent" :key="messageKey" :message="message" v-bind="$attrs" />
+      <template #fallback>
+        <div class="message-loading">加载中...</div>
+      </template>
+    </Suspense>
+    <div v-else class="message-error">
+      <span class="error-icon">⚠️</span>
+      <span>未知的消息类型: {{ message?.type || "Unknown message type" }}</span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from "vue"
-
 import { getMessageComponent } from "./utils/getMessageComponent"
 
 import type { DB_Message } from "@/database/schemas/message"
@@ -21,18 +27,32 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const { message } = toRefs(props)
 
 const messageComponent = computed(() => {
-  return getMessageComponent(message.value)
+  try {
+    return getMessageComponent(props.message)
+  } catch (error) {
+    console.error("[MessageRenderer] 获取消息组件失败:", error)
+    return null
+  }
 })
 
 const messageKey = computed(() => {
-  return `${message.value.ID}_${message.value?.type}_${message.value?.isRevoked ? "revoked" : "normal"}`
+  const { ID, type, isRevoked } = props.message
+  const status = isRevoked ? "revoked" : "normal"
+  return `${ID}_${type}_${status}`
 })
 </script>
 
 <style scoped lang="scss">
+.message-loading {
+  padding: 8px;
+  color: #666;
+  font-size: 12px;
+  text-align: center;
+  opacity: 0.7;
+}
+
 .message-error {
   padding: 8px;
   background-color: #fee;
