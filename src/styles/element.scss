@@ -15,3 +15,9 @@
   --el-segmented-item-selected-color: var(--el-text-color-primary);
   --el-segmented-item-selected-bg-color: #ffffff;
 }
+
+.el-popper {
+  padding: 4px 10px;
+  --el-popover-border-radius: 6px;
+}
+

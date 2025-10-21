@@ -11,36 +11,64 @@
         <span class="icon-slot" v-html="languageIcon" />
         <span class="code-language">{{ displayLanguage }}</span>
       </div>
-      <div class="header-right flex-c">
-        <div
-          v-if="shouldShowChevrons"
-          class="chevrons-button flex-c"
-          :title="isChevrons ? '收起' : '展开'"
-          @click.stop="toggleChevrons"
+      <div class="header-right flex justify-end">
+        <el-tooltip
+          :disabled="!shouldShowChevrons && isCollapsed"
+          :content="isChevrons ? '收起' : '展开'"
+          :show-arrow="false"
+          :offset="8"
+          placement="top"
+          transition="slide-fade"
         >
-          <ChevronsUpDown v-if="isChevrons" :size="14" />
-          <ChevronsDownUp v-else :size="14" />
-        </div>
-        <div v-if="showDownload" class="download-button flex-c" title="下载代码" @click.stop="downloadCode">
+          <div
+            class="copy-button flex-c"
+            :class="{ invisible: !shouldShowChevrons || isCollapsed }"
+            @click.stop="toggleChevrons"
+          >
+            <ChevronsUpDown v-if="isChevrons" :size="14" />
+            <ChevronsDownUp v-else :size="14" />
+          </div>
+        </el-tooltip>
+
+        <el-tooltip
+          v-if="showDownload"
+          content="下载代码"
+          placement="top"
+          :show-arrow="false"
+          :offset="8"
+          transition="slide-fade"
+        >
+          <div class="download-button flex-c" @click.stop="downloadCode">
+            <Download :size="14" />
+          </div>
+        </el-tooltip>
+
+        <!-- <div v-if="showDownload" class="download-button flex-c" title="下载代码" @click.stop="downloadCode">
           <Download :size="14" />
-        </div>
+        </div> -->
         <div v-if="showMaximize" class="maximize-button flex-c" title="最大化" @click.stop="handleMaximizeCode">
           <Maximize :size="14" />
         </div>
-        <div
+
+        <el-tooltip
           v-if="isPreviewable && showPreviewButton"
-          title="preview"
-          class="code-action-btn flex-c"
-          :aria-label="'Preview'"
-          @click.stop="handlePreviewCode"
+          content="预览代码"
+          placement="top"
+          :show-arrow="false"
+          :offset="8"
+          transition="slide-fade"
         >
-          <!-- <SquareTerminal :size="14" /> -->
-          <Eye :size="14" />
-        </div>
-        <div class="copy-button flex-c" :class="{ copied: isCopied }" title="复制代码" @click.stop="handleCopyCode">
-          <Check v-if="isCopied" :size="14" />
-          <Copy v-else :size="14" />
-        </div>
+          <div class="code-action-btn flex-c" @click.stop="handlePreviewCode">
+            <Eye :size="14" />
+          </div>
+        </el-tooltip>
+
+        <el-tooltip content="复制代码" placement="top" :show-arrow="false" :offset="8" transition="slide-fade">
+          <div class="copy-button flex-c" @click.stop="handleCopyCode">
+            <Check v-if="isCopied" :size="14" />
+            <Copy v-else :size="14" />
+          </div>
+        </el-tooltip>
       </div>
     </div>
     <!-- <div
@@ -259,6 +287,7 @@ watch(
     // }
     .header-left,
     .header-right {
+      min-width: 72px;
       & > div {
         cursor: pointer;
         border-radius: 4px;
