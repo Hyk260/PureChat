@@ -58,7 +58,7 @@ const handleSave = (newContent: string) => {
     props.onSave(newContent)
   }
   emit("save", newContent)
-  ElMessage.success("保存成功")
+  window.$message?.success("保存成功")
 }
 </script>
 

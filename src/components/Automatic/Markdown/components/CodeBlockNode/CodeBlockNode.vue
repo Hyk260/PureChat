@@ -43,9 +43,6 @@
           </div>
         </el-tooltip>
 
-        <!-- <div v-if="showDownload" class="download-button flex-c" title="下载代码" @click.stop="downloadCode">
-          <Download :size="14" />
-        </div> -->
         <div v-if="showMaximize" class="maximize-button flex-c" title="最大化" @click.stop="handleMaximizeCode">
           <Maximize :size="14" />
         </div>

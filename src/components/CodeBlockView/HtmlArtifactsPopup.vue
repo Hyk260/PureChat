@@ -140,7 +140,7 @@ const saveAsFile = async () => {
     link.download = `${props.title || "html-preview"}.html`
     link.click()
 
-    ElMessage.success({ message: "文件已保存" })
+    window.$message?.success("文件已保存")
   } finally {
     URL.revokeObjectURL(url)
   }

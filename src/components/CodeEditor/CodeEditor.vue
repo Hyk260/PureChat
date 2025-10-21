@@ -21,16 +21,23 @@
       />
     </div>
     <div class="code-toolbar">
-      <el-tooltip v-if="!useTextarea" content="格式化" placement="top">
+      <el-tooltip
+        v-if="!useTextarea"
+        content="格式化"
+        :show-arrow="false"
+        :offset="8"
+        transition="slide-fade"
+        placement="top"
+      >
         <el-button circle @click="formatCode">
           <Sparkles :size="16" />
         </el-button>
       </el-tooltip>
-      <!-- <el-tooltip content="保存修改" placement="top">
+      <el-tooltip v-if="false" content="保存" :show-arrow="false" :offset="8" transition="slide-fade" placement="top">
         <el-button circle @click="handleSaveChange">
           <Save :size="16" />
         </el-button>
-      </el-tooltip> -->
+      </el-tooltip>
     </div>
   </div>
 </template>

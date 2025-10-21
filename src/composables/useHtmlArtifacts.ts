@@ -85,7 +85,7 @@ export function useHtmlArtifacts() {
       }, 1000)
     } catch (error) {
       console.error("Failed to open external:", error)
-      ElMessage.error({ message: "打开外部窗口失败" })
+      window.$message?.error("打开外部窗口失败")
     }
   }
 
@@ -95,10 +95,10 @@ export function useHtmlArtifacts() {
   const copyHtml = async (html: string) => {
     try {
       await navigator.clipboard.writeText(html)
-      ElMessage.success({ message: "已复制到剪贴板" })
+      window.$message?.success("已复制到剪贴板")
     } catch (error) {
       console.error("复制失败:", error)
-      ElMessage.error({ message: "复制失败" })
+      window.$message?.error("复制失败")
     }
   }
 
