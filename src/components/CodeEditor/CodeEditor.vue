@@ -63,7 +63,7 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   language: "html",
-  theme: "hc-black", // hc-black hc-light vs-dark
+  theme: "vs-dark", // hc-black hc-light vs-dark
   readOnly: false,
   debounce: 300,
 })

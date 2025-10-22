@@ -1,27 +1,22 @@
 <template>
   <div class="split-view">
-    <div class="code-panel">
-      <CodeEditor :code="code" @change="handleCodeChange" />
-    </div>
-    <div class="preview-panel">
-      <PreviewPanel ref="previewPanelRef" :code="code" />
-    </div>
-    <!-- <el-splitter>
-      <el-splitter-panel>
+    <el-splitter>
+      <el-splitter-panel :min="400">
         <div class="code-panel">
           <CodeEditor :code="code" @change="handleCodeChange" />
         </div>
       </el-splitter-panel>
-      <el-splitter-panel>
+      <el-splitter-panel :min="400">
         <div class="preview-panel">
           <PreviewPanel ref="previewPanelRef" :code="code" />
         </div>
       </el-splitter-panel>
-    </el-splitter> -->
+    </el-splitter>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ElSplitter, ElSplitterPanel } from "element-plus"
 import CodeEditor from "./CodeEditor.vue"
 import PreviewPanel from "./PreviewPanel.vue"
 
@@ -52,6 +47,7 @@ defineExpose({ previewPanelRef })
   background: var(--el-border-color);
 
   .code-panel {
+    height: 100%;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -60,6 +56,7 @@ defineExpose({ previewPanelRef })
   }
 
   .preview-panel {
+    height: 100%;
     flex: 1;
     background: white;
     min-width: 400px;

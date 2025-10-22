@@ -60,7 +60,7 @@ interface Props {
 
 interface Emits {
   (e: "change", code: string): void
-  (e:"save", code: string): void
+  (e: "save", code: string): void
 }
 
 withDefaults(defineProps<Props>(), {
@@ -89,6 +89,7 @@ const handleCodeChange = (newCode: string) => {
 }
 
 .editor-container {
+  height: 100%;
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -107,6 +108,7 @@ const handleCodeChange = (newCode: string) => {
 }
 
 .preview-container {
+  height: 100%;
   flex: 1;
   min-width: 0;
   overflow: hidden;

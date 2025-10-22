@@ -60,10 +60,10 @@
     </template>
 
     <div class="popup-content">
-      <!-- <CodeEditor v-if="viewMode === 'code'" :code="htmlContent" @change="handleCodeChange" />
-      <PreviewPanel v-else-if="viewMode === 'preview'" :code="htmlContent" />
-      <SplitView v-else :code="htmlContent" @change="handleCodeChange" /> -->
-      <HtmlEditorView :mode="viewMode" :code="htmlContent" @change="handleCodeChange" />
+      <CodeEditor v-if="viewMode === 'code'" :code="htmlContent" @change="handleCodeChange" />
+      <SplitView v-else-if="viewMode === 'split'" :code="htmlContent" @change="handleCodeChange" />
+      <PreviewPanel v-else :code="htmlContent" />
+      <!-- <HtmlEditorView :mode="viewMode" :code="htmlContent" @change="handleCodeChange" /> -->
     </div>
   </el-dialog>
 </template>
@@ -74,10 +74,10 @@ import { Camera, Code, Eye, Maximize, Minimize, SquareSplitHorizontal as Split, 
 import { ElMessage, ElSegmented } from "element-plus"
 
 import { useHtmlArtifacts } from "../../composables/useHtmlArtifacts"
-// import CodeEditor from "../CodeEditor/CodeEditor.vue"
-// import PreviewPanel from "../CodeEditor/PreviewPanel.vue"
-// import SplitView from "../CodeEditor/SplitView.vue"
-import HtmlEditorView, { type ViewMode } from "../CodeEditor/HtmlEditorView.vue"
+import CodeEditor from "../CodeEditor/CodeEditor.vue"
+import PreviewPanel from "../CodeEditor/PreviewPanel.vue"
+import SplitView from "../CodeEditor/SplitView.vue"
+// import HtmlEditorView, { type ViewMode } from "../CodeEditor/HtmlEditorView.vue"
 
 type CaptureCommand = "file" | "clipboard"
 
@@ -107,7 +107,7 @@ const dialogVisible = computed({
 const DEFAULT_WIDTH = "85vw"
 const FULLSCREEN_WIDTH = "100vw"
 
-const viewMode = ref<ViewMode>("split")
+const viewMode = ref<"split" | "code" | "preview">("split")
 const isFullscreen = ref(false)
 const htmlContent = ref("")
 
