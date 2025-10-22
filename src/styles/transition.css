@@ -1,0 +1,95 @@
+/* https://cn.vuejs.org/guide/built-ins/transition for detail */
+
+/* fade-slide */
+.fade-slide-leave-active,
+.fade-slide-enter-active {
+  transition: all 0.2s;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.fade-slide-lower {
+  animation: lower .2s ease;
+}
+
+.fade-slide-upper {
+  animation: upper .2s ease;
+}
+
+.fade-slide-fade-in {
+  animation: fade-in .2s ease;
+}
+
+.shrink-style {
+  animation: fade 500ms infinite;
+}
+
+.slide-fade-enter-active {
+  transition: opacity 0.3s ease;
+}
+
+.slide-fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(10px) scale(0.8);
+  opacity: 0;
+}
+
+@keyframes fade {
+  from {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lower {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes upper {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

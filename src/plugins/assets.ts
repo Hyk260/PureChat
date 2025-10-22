@@ -1,9 +1,7 @@
 import "uno.css"
 // import 'virtual:unocss-devtools'
-import "@/styles/css/iconify.css"
-import "@/styles/theme/default.scss"
-import "@/styles/global/index.scss"
-import "@/styles/index.scss"
+import "@/styles/global/index.css"
+import "@/styles/index.css"
 // https://animate.style/
 import "animate.css"
 // SvgIcon

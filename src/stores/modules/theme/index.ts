@@ -2,7 +2,6 @@ import { ThemeMode, ThemeModeKey } from "@shared/theme"
 import { defineStore } from "pinia"
 
 import { SetupStoreId } from "@/stores/enum"
-import { localStg } from "@/utils/storage"
 
 import type { ThemeState } from "./type"
 // import { useEventListener, usePreferredColorScheme } from "@vueuse/core";
@@ -11,7 +10,15 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
   state: (): ThemeState => ({
     themeScheme: ThemeMode.light,
     fontTheme: "AliFangYuan",
-    fontThemeList: [{ label: "阿里方元", value: "AliFangYuan" }],
+    fontThemeList: [
+      { label: "阿里方元", value: "AliFangYuan" },
+      // {
+      //   label: "Twemoji",
+      //   value: "Twemoji Country Flags",
+      // },
+      // { label: "VF Regular", value: "VF Regular" },
+      // { label: "阿里妈妈刀隶体 Regular", value: "阿里妈妈刀隶体 Regular" },
+    ],
     page: {
       animate: true,
       animateMode: "fade-slide",
@@ -21,10 +28,11 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
     isDarkMode() {},
   },
   actions: {
-    setFontTheme(theme = localStg.get("font-family") || "AliFangYuan") {
-      this.fontTheme = theme
-      localStg.set("font-family", theme)
-      document.documentElement.style.setProperty("--font-family", theme)
+    setFontTheme(theme?: string) {
+      const fontName = theme || window.localStg.get("font-family") || "AliFangYuan"
+      this.fontTheme = fontName
+      window.localStg.set("font-family", fontName)
+      document.documentElement.style.setProperty("--user-font-family", fontName)
     },
     setFontThemeList(list: { label: string; value: string }[]) {
       const existingValues = new Set(this.fontThemeList.map((f) => f.value))
@@ -48,8 +56,9 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
         return []
       }
     },
-    setThemeScheme(theme = localStg.get("themeScheme") || ThemeMode.light) {
-      this.themeScheme = theme
+    setThemeScheme(theme?: ThemeModeKey) {
+      const themeNmae = theme || window.localStg.get("themeScheme") || ThemeMode.light
+      this.themeScheme = themeNmae
       this.setTheme(theme)
     },
     toggleHtmlClass(theme: ThemeModeKey) {
@@ -60,7 +69,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
      * 切换主题风格
      */
     setTheme(themeScheme: ThemeModeKey = ThemeMode.light) {
-      localStg.set("themeScheme", themeScheme)
+      window.localStg.set("themeScheme", themeScheme)
       const isAuto = themeScheme === "auto"
       const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)")
 

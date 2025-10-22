@@ -331,7 +331,8 @@ const pingConversation = async (data: DB_Session) => {
     .message-item-right-bottom {
       font-size: 12px;
       color: var(--color-time-divider);
-      width: 179px;
+      width: 180px;
+      max-width: 200px;
     }
     .svg-icon {
       color: rgba(0, 0, 0, 0.45);

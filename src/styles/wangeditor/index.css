@@ -18,6 +18,12 @@
   --w-e-modal-button-border-color: #d9d9d9;
 }
 
+[data-theme="dark"] {
+  --w-e-textarea-bg-color: reg(27, 27, 27);
+  --w-e-textarea-color: #fff;
+  --w-e-textarea-slight-bg-color: #333;
+}
+
 .w-e-text-container *,
 .w-e-toolbar * {
   box-sizing: border-box;

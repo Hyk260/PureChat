@@ -45,7 +45,7 @@
 
   pre,
   code {
-    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    font-family: var(--code-font-family);
   }
 
   pre code {

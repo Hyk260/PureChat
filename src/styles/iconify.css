@@ -1,0 +1,41 @@
+.iconify-icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  background-color: currentColor;
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+}
+
+.gala-add {
+  cursor: pointer;
+  color: darkgray;
+  width: 2.5em;
+  height: 2.5em;
+  --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cg fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='8'%3E%3Ccircle cx='128' cy='128' r='112'/%3E%3Cpath d='M 79.999992,128 H 176.0001'/%3E%3Cpath d='m 128.00004,79.99995 v 96.0001'/%3E%3C/g%3E%3C/svg%3E");
+  mask-image: var(--svg);
+}
+
+.svg-spinners {
+  --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg stroke='%23000'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke-linecap='round' stroke-width='3'%3E%3Canimate attributeName='stroke-dasharray' calcMode='spline' dur='1.5s' keySplines='0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1' keyTimes='0;0.475;0.95;1' repeatCount='indefinite' values='0 150;42 150;42 150;42 150'/%3E%3Canimate attributeName='stroke-dashoffset' calcMode='spline' dur='1.5s' keySplines='0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1' keyTimes='0;0.475;0.95;1' repeatCount='indefinite' values='0;-16;-59;-59'/%3E%3C/circle%3E%3CanimateTransform attributeName='transform' dur='2s' repeatCount='indefinite' type='rotate' values='0 12 12;360 12 12'/%3E%3C/g%3E%3C/svg%3E");
+  mask-image: var(--svg);
+  color: #e7ca85;
+}
+
+.fluent-error {
+  --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23000' d='M8 2a6 6 0 1 1 0 12A6 6 0 0 1 8 2m0 8a.75.75 0 1 0 0 1.5a.75.75 0 0 0 0-1.5m0-5.5a.5.5 0 0 0-.492.41L7.5 5v3.5l.008.09a.5.5 0 0 0 .984 0L8.5 8.5V5l-.008-.09A.5.5 0 0 0 8 4.5'/%3E%3C/svg%3E");
+  mask-image: var(--svg);
+  color: #f44336;
+}
+
+.openai {
+  background: rgb(25, 195, 125);
+}
+
+.yi {
+  color: rgb(0, 52, 37) !important;
+}
+
+.llava {
+  background: linear-gradient(-45deg, rgb(203, 45, 48), rgb(237, 130, 58));
+}

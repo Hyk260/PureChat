@@ -1,0 +1,88 @@
+@font-face {
+  font-family: 'AliFangYuan';
+  src: url('/src/assets/fonts/Alimama.woff2') format("woff2");
+  /* src: url('//ljx-1307934606.cos.ap-beijing.myqcloud.com/font/AlimamaFangYuanTiVF-Thin.ttf') format("ttf"); */
+  font-display: swap;
+
+}
+
+/* 国旗字体样式类 */
+.country-flag-font {
+  font-family: 'Twemoji Country Flags', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+}
+
+:root {
+  /* 字体系列 */
+  --font-family:
+    var(--user-font-family),
+    "HarmonyOS Sans", "SF Pro Display",
+    /* 主流系统特定字体 */
+    -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell,
+    /* 跨平台系统字体 */
+    "Open Sans", "Helvetica Neue", Arial, "Noto Sans",
+    /* 通用无衬线字体 */
+    "HarmonyOS Sans SC", "PingFang SC", "Hiragino Sans GB",
+    /* 中文字体(大陆/台湾/日本) */
+    "Microsoft Yahei UI", "Microsoft Yahei", "Source Han Sans CN",
+    "Segoe UI", system-ui,
+    /* 系统UI字体 */
+    "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji",
+    /* Emoji字体 */
+    "Twemoji Mozilla", "Noto Color Emoji", "Android Emoji",
+    /* 最终后备 */
+    sans-serif;
+
+  /* 衬线字体系列 */
+  --font-family-serif:
+    serif,
+    'Segoe UI',
+    system-ui,
+    'Open Sans',
+    'Helvetica Neue',
+    Arial, 'Noto Sans',
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Noto Color Emoji';
+
+  /* 代码字体系列 */
+  --code-font-family:
+    var(--user-code-font-family, 'Consolas'),
+    'Cascadia Code',
+    'Fira Code',
+    'Consolas',
+    Menlo,
+    Courier,
+    monospace;
+}
+
+/* Windows系统专用字体配置 */
+body[os='windows'] {
+  --font-family:
+    var(--user-font-family),
+    'Twemoji Country Flags',
+    'Segoe UI',
+    system-ui,
+    'Open Sans',
+    'Helvetica Neue',
+    Arial,
+    'Noto Sans',
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Noto Color Emoji';
+
+  --code-font-family:
+    var(--user-code-font-family, 'Fira Code'),
+    'Fira Code',
+    'Cascadia Code'
+    'Consolas',
+    Monaco,
+    'Sarasa Mono SC',
+    'Microsoft YaHei UI',
+    Courier,
+    "Andale Mono",
+    "Ubuntu Mono"
+    monospace;
+}

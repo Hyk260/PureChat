@@ -1,0 +1,23 @@
+.el-drawer__header {
+  margin: 0 !important;
+}
+
+.el-drawer {
+  -webkit-app-region: no-drag;
+  border-radius: 6px 0 0 6px;
+}
+
+.el-message {
+  --el-message-padding: 8px 15px;
+}
+
+.el-segmented {
+  --el-segmented-item-selected-color: var(--el-text-color-primary);
+  --el-segmented-item-selected-bg-color: #ffffff;
+}
+
+.el-popper {
+  padding: 4px 10px;
+  --el-popover-border-radius: 6px;
+}
+
