@@ -43,7 +43,7 @@ import emitter from "@/utils/mitt-bus"
 
 import Inputbar from "../Inputbar/index.vue"
 import { editorConfig } from "../utils/configure"
-import { filterMentionList } from "../utils/utils"
+import { filterMentionList } from "@/utils/pinyin/utils"
 import SendMessageButton from "./SendMessageButton.vue"
 import {
   createMediaElement,

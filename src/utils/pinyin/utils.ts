@@ -1,8 +1,8 @@
 import { cloneDeep } from "lodash-es"
-import { match } from "pinyin-pro"
 
 import { useChatStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
+import { matchPinyinSync } from "@/utils/pinyin"
 
 import type { GroupMember } from "@/stores/modules/group/type"
 
@@ -25,8 +25,8 @@ export function searchByPinyin(options: { searchStr: string; list: GroupMember[]
   const indices: GroupMember[] = []
   // 遍历过滤后的成员列表
   memberList.forEach((item) => {
-    // 使用 match 函数进行拼音匹配
-    const nickPinyin = match(item.nick || "", searchStr) || []
+    // 使用动态导入的拼音匹配函数进行匹配
+    const nickPinyin = matchPinyinSync(item.nick || "", searchStr) || []
     // 如果拼音匹配结果长度大于 0，将当前项添加到索引数组中
     if (nickPinyin?.length > 0) {
       indices.push(item)
