@@ -24,7 +24,7 @@ export const MessageSchema = {
   protocol: "JSON",
   isResend: false,
   isRead: true,
-  status: "unSend",
+  status: "success",
   atUserList: [],
   cloudCustomData: "",
   isDeleted: false,
@@ -157,6 +157,9 @@ export const DB_MessageSchema = z.object({
   nameCard: z.string(),
   hasRiskContent: z.boolean(),
   isPlaceMessage: z.number().int(),
+  /**
+   * 是否被撤回的消息
+   */
   isRevoked: z.boolean(),
   /**
    * 发送方的 userID

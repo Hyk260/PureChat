@@ -1,5 +1,5 @@
 <template>
-  <div v-if="shouldShowMenu" class="menubar">
+  <div v-show="shouldShowMenu" class="menubar">
     <div class="flex">
       <template v-for="items in availableMenuItems" :key="items.key">
         <Tooltip placement="top" :title="items.label" :arrow="false">
@@ -25,7 +25,7 @@ import {
 import { useChatStore } from "@/stores/modules/chat"
 import { handleCopyMsg, scrollToMessage } from "@/utils/chat"
 
-import type { DB_Message } from "@/types"
+import type { DB_Message, MessageStatus } from "@/types"
 
 defineOptions({
   name: "MenuList",
@@ -36,6 +36,10 @@ const emit = defineEmits(["handleSingleClick", "handleContextMenu"])
 const props = defineProps({
   item: {
     type: Object as PropType<DB_Message>,
+    required: true,
+  },
+  status: {
+    type: String as PropType<MessageStatus>,
     required: true,
   },
 })
@@ -86,10 +90,9 @@ const handleDelete = () => {
  * 判断是否应该显示菜单
  */
 const shouldShowMenu = computed(() => {
-  const { item } = props
+  const { item, status } = props
 
-  // 消息状态检查
-  if (item.status !== "success") {
+  if (status !== "success") {
     return false
   }
 

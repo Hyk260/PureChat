@@ -15,7 +15,7 @@
     "build:github": "cross-env VITE_BASE_URL=/PureChat/ vite build",
     "build:cdn": "cross-env VITE_CDN=Y vite build",
     "build:preview": "vite build && vite preview",
-    "report": "rimraf dist && vite build",
+    "analyze": "rimraf dist && vite build",
     "preview": "vite preview",
     "preview:github": "cross-env VITE_BASE_URL=/PureChat/ vite preview",
     "clean": "rimraf dist",

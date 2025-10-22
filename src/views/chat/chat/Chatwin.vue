@@ -59,10 +59,11 @@
                     @contextmenu.prevent="handleContextMenuEvent($event, item)"
                   />
                   <!-- 消息发送加载状态 -->
-                  <Stateful :item="item" />
+                  <Stateful :item="item" :status="item.status" />
                   <!-- 菜单 -->
                   <MenuList
                     :item="item"
+                    :status="item.status"
                     @handle-context-menu="handleContextMenuEvent"
                     @handle-single-click="handleSingleClick"
                   />

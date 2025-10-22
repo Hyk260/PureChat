@@ -1,17 +1,20 @@
 <template>
   <div v-if="shouldShowState(item)" class="stateful flex-c mt-auto">
     <!-- 发送中 -->
-    <div v-show="isStatus('unSend') || isStatus('sending')" aria-label="发送中" class="iconify-icon svg-spinners"></div>
+    <div v-if="isStatus('unSend') || isStatus('sending')" aria-label="发送中" class="iconify-icon svg-spinners"></div>
     <!-- 发送失败 -->
-    <div v-show="isStatus('fail')" aria-label="发送失败" class="iconify-icon fluent-error" @click="handleRetry"></div>
+    <CircleAlert v-else-if="isStatus('fail')" class="fluent-fail" :size="14" @click="handleRetry" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { CircleAlert } from "lucide-vue-next"
+
 import type { DB_Message, MessageStatus } from "@/database/schemas/message"
 
 interface Props {
   item: DB_Message
+  status: MessageStatus
   testStatus?: MessageStatus
   testShow?: boolean
 }
@@ -21,13 +24,13 @@ defineOptions({
 })
 
 const props = withDefaults(defineProps<Props>(), {
-  testStatus: "unSend",
+  testStatus: "sending",
   testShow: true,
 })
 
 const isStatus = (value: MessageStatus) => {
   // return props.testStatus === value
-  return props.item.status === value
+  return props.status === value
 }
 
 const shouldShowState = (item: DB_Message) => {
@@ -37,7 +40,7 @@ const shouldShowState = (item: DB_Message) => {
     !item.isRevoked &&
     item.type !== "TIMTextElem" &&
     item.type !== "TIMGroupTipElem" &&
-    (isStatus("unSend") || isStatus("fail"))
+    (isStatus("unSend") || isStatus("sending") || isStatus("fail"))
   )
 }
 
@@ -49,6 +52,10 @@ const handleRetry = () => {
 <style lang="scss" scoped>
 .stateful {
   .fluent-error {
+    cursor: pointer;
+  }
+  .fluent-fail {
+    color: #f44336;
     cursor: pointer;
   }
 }

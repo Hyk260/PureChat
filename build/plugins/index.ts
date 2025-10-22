@@ -49,7 +49,7 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta) {
     )
   }
   // 打包视图分析
-  if (process.env.npm_lifecycle_event === "report") {
+  if (process.env.npm_lifecycle_event === "analyze") {
     plugins.push(visualizer({ open: true, brotliSize: true, filename: "report.html" }))
   }
   // if (viteEnv.VITE_PWA === "Y" && viteEnv.VITE_VERCEL === "Y") {
