@@ -25,6 +25,7 @@ import { localStg } from "@/utils/storage"
 
 import { useGroupStore } from "../group"
 import { useRobotStore } from "../robot"
+import { useAppStore } from "../app"
 
 import type { ChatState } from "./type"
 import type { ModelProviderKey } from "@/ai/types"
@@ -253,9 +254,15 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         return
       }
 
+      const appStore = useAppStore()
+      let resultMessages: DB_Message[] = []
       const baseTime = getBaseTime(history, "last")
-      const timeDividerResult = addTimeDivider(cleanedMessages.reverse(), baseTime, "last")
-      const newHistory = [...timeDividerResult, ...history]
+      if (appStore.timeline) {
+        resultMessages = addTimeDivider(cleanedMessages.reverse(), baseTime, "last")
+      } else {
+        resultMessages = cleanedMessages
+      }
+      const newHistory = [...resultMessages, ...history]
       this.currentMessageList = newHistory
       this.historyMessageList.set(sessionId, newHistory)
     },

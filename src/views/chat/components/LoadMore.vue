@@ -8,8 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
-
 import Loader from "@/components/Loader/index.vue"
 import { useChatStore } from "@/stores/modules/chat"
 

@@ -55,13 +55,15 @@ const menuItemsConfig = [
   {
     key: "refresh",
     label: "重新生成",
-    hide: !__LOCAL_MODE__,
+    hide: true,
+    // hide: !__LOCAL_MODE__,
     icon: markRaw(RefreshCw),
   },
   {
     key: "edit",
     label: "编辑",
-    hide: !__LOCAL_MODE__,
+    hide: true,
+    // hide: !__LOCAL_MODE__,
     icon: markRaw(SquarePen),
   },
   {

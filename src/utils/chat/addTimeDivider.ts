@@ -24,11 +24,11 @@ export const getBaseTime = (list: DB_Message[], type = "start") => {
 /**
  * 根据指定的持续时间向列表中添加时间分隔符。
  * 当列表中连续项目之间的时间间隔超过指定的持续时间时，将添加时间分隔符。
- * @param {Array} list - 要添加时间分隔符的项目列表。
+ * @param {DB_Message[]} list - 要添加时间分隔符的项目列表。
  * @param {number} [baseTime=0] - 用于计算时间间隔的基准时间。如果未提供，则默认为0。
  * @param {string} [type="start"] - 时间分隔符的位置。可以是"start"或"last"。默认为"start"。
  */
-export const addTimeDivider = (list: DB_Message[], baseTime = 0, type = "start"): DB_Message[] => {
+export const addTimeDivider = (list: DB_Message[], baseTime: number = 0, type: string = "start"): DB_Message[] => {
   if (!useAppStore().timeline) return list
   if (!Array.isArray(list)) {
     throw new Error("list must be an array")

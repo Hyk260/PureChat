@@ -157,7 +157,7 @@ class ChatService {
     setTimeout(() => {
       this.createAlertMessage(startMsg)
       useChatStore().updateSendingState(startMsg.from, "delete")
-    }, 200)
+    }, 1000)
 
     return true
   }
