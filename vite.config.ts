@@ -59,8 +59,8 @@ export default defineConfig((configEnv) => {
       // emptyOutDir: true,
       // 生成生产源映射
       sourcemap: viteEnv.VITE_SOURCE_MAP === "Y",
-      // 消除打包大小超过500kb警告
-      chunkSizeWarningLimit: 4000,
+      // 调整块大小警告阈值（以kB为单位）
+      chunkSizeWarningLimit: 2000,
       rollupOptions: {
         external: setupViteExternal(viteEnv),
         input: {
