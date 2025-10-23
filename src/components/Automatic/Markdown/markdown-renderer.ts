@@ -15,10 +15,25 @@ import { highlight, highlightCode } from "./utils/highlight"
 import { convertToMarkdownFootnotes } from "./utils/utils"
 
 import type { MarkdownToken } from "./types"
+import type { KnowledgeReference } from "@/types"
+
+// 高亮显示的可选项：是否显示语言标签和复制按钮
+interface HighlightOptions {
+  showLang?: boolean
+  showCopy?: boolean
+}
+
+// 网页搜索结果接口
+// interface WebSearchResult {
+//   title?: string
+//   url?: string
+//   snippet?: string
+//   [key: string]: any
+// }
 
 // 定义构造函数选项接口
 interface MarkdownRendererOptions {
-  webSearchResults?: any[]
+  webSearchResults?: KnowledgeReference[]
   highlightOptions?: HighlightOptions
   /**
    * 代码块中复制按钮的提示文本
@@ -50,20 +65,6 @@ interface MarkdownRendererOptions {
     allowedAttributes?: Array<string | RegExp>
     disable?: boolean
   }
-}
-
-// 高亮显示的可选项：是否显示语言标签和复制按钮
-interface HighlightOptions {
-  showLang?: boolean
-  showCopy?: boolean
-}
-
-// 定义网页搜索结果接口
-interface WebSearchResult {
-  title?: string
-  url?: string
-  snippet?: string
-  [key: string]: any
 }
 
 export class MarkdownRenderer {
@@ -104,12 +105,12 @@ export class MarkdownRenderer {
     if (!options.attrs?.disable) {
       this.md.use(attrsPlugin, options.attrs)
     }
+
+    // applyMath(this.md) // 为数学公式添加支持
     this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
     this.md.use(markdownItContainer) // 添加对 Markdown 容器的支持
     this.md.use(linkPlugin) // 修改链接以在新标签页中打开并添加 noopener/noreferrer
-
-    // applyMath(this.md) // 为数学公式添加支持
-    configureFootnoteRules(this.md, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）
+    this.md.use(configureFootnoteRules, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）
   }
 
   getMarkdown() {
@@ -127,10 +128,10 @@ export class MarkdownRenderer {
    * 将给定的 Markdown 内容渲染为 HTML 字符串。
    * 此方法处理输入内容，可选地附加脚注，然后进行渲染。
    * @param {string} content - 要渲染的 Markdown 字符串
-   * @param {Array<WebSearchResult>} [additionalWebSearchResults=[]] - 可选的网页搜索结果，将作为 Markdown 脚注
+   * @param {Array} additionalWebSearchResults 可选的网页搜索结果，将作为 Markdown 脚注
    * @returns {string} 渲染后的 HTML 字符串。
    */
-  render(content: string, additionalWebSearchResults: WebSearchResult[] = []): string {
+  render(content: string, additionalWebSearchResults: KnowledgeReference[] = []): string {
     let contentToRender = content
 
     if (!contentToRender) {

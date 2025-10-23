@@ -60,7 +60,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
     setThemeScheme(theme?: ThemeModeKey) {
       const themeNmae = theme || window.localStg.get("themeScheme") || ThemeMode.light
       this.themeScheme = themeNmae
-      this.setTheme(theme)
+      this.setTheme(themeNmae)
     },
     toggleHtmlClass(theme: ThemeModeKey) {
       document.body.setAttribute("data-theme", theme)

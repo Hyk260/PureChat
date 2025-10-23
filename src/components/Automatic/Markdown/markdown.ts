@@ -1,8 +1,14 @@
 import type { KnowledgeReference } from "@/types"
 import type Markdownit from "markdown-it"
 
+export const footnotesContent = `Here is a footnote reference,[^1] and another.[^2]
+
+[^1]: [Here is the footnote](https://fanyi.baidu.com/)
+
+[^2]: [Here's one with multiple blocks](https://www.bing.com/)`
+
 /**
- *自定义脚注规则
+ * 自定义脚注规则
  */
 export const configureFootnoteRules = (md: Markdownit, results: KnowledgeReference[] = []) => {
   // 脚注引用样式 (正文中的 [^1] 样式)
@@ -10,9 +16,9 @@ export const configureFootnoteRules = (md: Markdownit, results: KnowledgeReferen
     const n = Number(tokens[id].meta.id + 1)
     const data = results?.find((t) => t.id === n)
     if (data?.sourceUrl) {
-      return `<sup class="footnote-ref"><a target="_blank" rel="noopener noreferrer" href="${data.sourceUrl}">[${n}]</a></sup>`
+      return `<sup class="footnote-ref"><a target="_blank" rel="noopener noreferrer" href="${data.sourceUrl}">${n}</a></sup>`
     } else {
-      return `<sup class="footnote-ref">[${n}]</sup>`
+      return `<sup class="footnote-ref">${n}</sup>`
     }
   }
 

@@ -25,8 +25,8 @@
             :class="{ invisible: !shouldShowChevrons || isCollapsed }"
             @click.stop="toggleChevrons"
           >
-            <ChevronsUpDown v-if="isChevrons" :size="14" />
-            <ChevronsDownUp v-else :size="14" />
+            <ChevronsDownUp v-if="isChevrons" :size="14" />
+            <ChevronsUpDown v-else :size="14" />
           </div>
         </el-tooltip>
 
@@ -110,13 +110,22 @@ import {
   Maximize,
 } from "lucide-vue-next"
 
-import { registerHighlight, getHighlighter, isHighlighterInitialized } from "../../utils/highlightShiki"
+import { usePreferredColorScheme } from "@vueuse/core"
+// import {
+//   registerHighlight,
+//   disposeHighlighter,
+//   getHighlighter,
+//   isHighlighterInitialized,
+// } from "../../utils/highlightShiki"
 import HtmlArtifactsPopup from "@/components/CodeBlockView/HtmlArtifactsPopup.vue"
 import { useCodeBlock } from "@/composables/useCodeBlock"
 import { useResizeObserver } from "@/composables/useResizeObserver"
 import { getLanguageIcon, languageMap, languageMapValues } from "@/utils/languageIcon"
+import { useThemeStore } from "@/stores/modules/theme"
 
 import { highlightCode } from "../../utils/highlight"
+
+import type { Highlighter } from "shiki"
 
 import "../../style/iconify.scss"
 import "../../style/line-numbers-wrapper.css"
@@ -135,6 +144,8 @@ const props = withDefaults(defineProps<Props>(), {
 const { isCopied, copyCode, downloadCode: downloadCodeFile } = useCodeBlock()
 const { shouldShowChevrons, initResizeObserver, cleanupResizeObserver } = useResizeObserver()
 
+const highlighter = ref<Highlighter | null>(null)
+
 const isChevrons = ref(false)
 const isCollapsed = ref(false)
 const codeContainerRef = ref<HTMLElement | null>(null)
@@ -144,6 +155,16 @@ const showHtmlPreview = ref(false)
 
 const languageList = ["js", "ts", ...languageMapValues]
 const excludeList = new Set(["json", "bash"])
+
+const preferredColor = usePreferredColorScheme()
+const themeStore = useThemeStore()
+
+const isDarkMode = computed(() => {
+  if (themeStore.themeScheme === "auto") {
+    return preferredColor.value === "dark"
+  }
+  return themeStore.themeScheme === "dark"
+})
 
 const normalizedLang = computed(() => (props.language || "plaintext").trim().toLowerCase())
 const showHeader = computed(() => languageList.includes(props.language) && !excludeList.has(normalizedLang.value))
@@ -203,12 +224,13 @@ const heightCheck = () => {
 
 onMounted(async () => {
   heightCheck()
-  if (!isHighlighterInitialized()) {
-    // await registerHighlight()
-  }
+  // if (!isHighlighterInitialized()) {
+  //   highlighter.value = await registerHighlight()
+  // }
 })
 
 onBeforeUnmount(() => {
+  highlighter.value?.dispose()
   cleanupResizeObserver()
 })
 
@@ -216,15 +238,15 @@ watch(
   () => props.code,
   async () => {
     try {
-      const highlighter = getHighlighter()
-      if (highlighter) {
-        highlightedCode.value = highlighter.codeToHtml(props.code, {
-          lang: props.language,
-          theme: "one-light",
-        })
-      } else {
-        highlightedCode.value = highlightCode(props.code, props.language)
-      }
+      // if (highlighter.value) {
+      //   highlightedCode.value = highlighter.value.codeToHtml(props.code, {
+      //     lang: props.language,
+      //     theme: isDarkMode.value ? "one-dark-pro" : "one-light",
+      //   })
+      // } else {
+      //   highlightedCode.value = highlightCode(props.code, props.language)
+      // }
+      highlightedCode.value = highlightCode(props.code, props.language)
     } catch (err) {
       console.error("Highlight failed:", err)
       highlightedCode.value = highlightCode(props.code, props.language)
@@ -233,6 +255,17 @@ watch(
   },
   { immediate: true }
 )
+
+// watch(isDarkMode, async () => {
+//   disposeHighlighter()
+//   highlighter.value = await registerHighlight()
+//   if (highlighter.value) {
+//     highlightedCode.value = highlighter.value.codeToHtml(props.code, {
+//       lang: props.language,
+//       theme: isDarkMode.value ? "one-dark-pro" : "one-light",
+//     })
+//   }
+// })
 </script>
 <style lang="scss">
 :root {

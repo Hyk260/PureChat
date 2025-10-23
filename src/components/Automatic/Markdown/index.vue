@@ -11,6 +11,7 @@ import { parseDocument } from "htmlparser2"
 // import { throttle } from "lodash-es"
 import { prettyObject } from "@/ai/utils"
 
+import { convertToMarkdownFootnotes } from "./utils/utils"
 import MarkdownRenderer from "./markdown-renderer"
 import MarkdownNodeRender from "./MarkdownNodeRenderer"
 
@@ -43,6 +44,7 @@ function handleMarkdownClick() {
   console.log("webSearchResult:", webSearchResult.value)
   console.log("marked:", props.content)
   console.log("renderedContent:", renderedContent.value)
+  console.log("renderer:", props.content + convertToMarkdownFootnotes(webSearchResult.value))
 }
 
 // html转ast
