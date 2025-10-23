@@ -12,10 +12,11 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
     fontTheme: "AliFangYuan",
     fontThemeList: [
       { label: "阿里方元", value: "AliFangYuan" },
-      // {
-      //   label: "Twemoji",
-      //   value: "Twemoji Country Flags",
-      // },
+      { label: "微软雅黑", value: "微软雅黑" },
+      {
+        label: "Inter",
+        value: "Inter",
+      },
       // { label: "VF Regular", value: "VF Regular" },
       // { label: "阿里妈妈刀隶体 Regular", value: "阿里妈妈刀隶体 Regular" },
     ],

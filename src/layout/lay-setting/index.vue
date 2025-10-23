@@ -1,11 +1,13 @@
 <template>
   <el-dialog
     v-model="drawer"
+    center
+    align-center
     class="setup-modal"
+    append-to-body
     :lock-scroll="false"
     :show-close="false"
-    :fullscreen="false"
-    width="60%"
+    width="65%"
   >
     <div class="ui-modal-body">
       <List ref="listRef" @active="active" />
@@ -15,12 +17,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
-
 import { useState } from "@/hooks/useState"
 import emitter from "@/utils/mitt-bus"
 
-import { list } from "./enums"
+import { list } from "./settings"
 import ItemGrid from "./itemGrid.vue"
 import List from "./list.vue"
 
@@ -61,10 +61,9 @@ onUnmounted(() => {
 :global(body .setup-modal .el-dialog__header) {
   display: none;
 }
-// :global(body .setup-modal .el-dialog__body) {
-//   height: 100%;
-// }
-
+:global(body .setup-modal) {
+  min-width: 600px;
+}
 .ui-modal-body {
   height: 600px;
   display: flex;

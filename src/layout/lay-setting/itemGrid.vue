@@ -32,6 +32,7 @@ const emit = defineEmits(["onClose"])
 <style lang="scss" scoped>
 .panel-wrapper {
   padding: 1.25rem;
+  min-width: 300px;
   .title {
     margin-bottom: 20px;
     line-height: 26px;

@@ -3,7 +3,7 @@
     <div class="title">{{ $t("common.setup") }}</div>
     <ul class="menu-list">
       <li
-        v-for="item in list.filter((item) => !item.hide)"
+        v-for="item in list"
         :key="item.id"
         class="menu-item"
         :class="{
@@ -11,10 +11,7 @@
         }"
         @click="handleItemClick(item)"
       >
-        <el-icon v-if="item.icon">
-          <component :is="item.icon" />
-        </el-icon>
-        <SvgIcon v-else :local-icon="item.svg_icon" />
+        <component :is="item.icon" v-if="item.icon" :size="16" />
         <div class="menu-item__title">{{ item.title }}</div>
       </li>
     </ul>
@@ -24,7 +21,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-import { list } from "./enums"
+import { list } from "./settings"
 
 const activeId = ref(list.value[0].id)
 
@@ -73,37 +70,4 @@ defineExpose({ handleItemClick })
     }
   }
 }
-
-// .panel-wrapper {
-//   position: relative;
-//   width: 256px;
-//   height: 100%;
-//   min-width: 256px;
-//   flex-grow: 0;
-//   flex-shrink: 0;
-//   padding: 20px 0;
-//   border-right: 1px solid var(--color-border-color-split);
-// }
-// .title {
-//   padding: 0 20px 20px 20px;
-//   font-size: 1.125rem;
-// }
-// .select {
-//   color: rgb(114, 184, 249);
-//   background-color: var(--color-message-active);
-// }
-// .ui-menu-vertical {
-//   margin: 0 20px;
-//   .menu-list {
-//     border-radius: 4px;
-//     cursor: pointer;
-//     display: flex;
-//     align-items: center;
-//     height: 40px;
-//     padding: 0 16px;
-//   }
-//   .title-content {
-//     margin-left: 10px;
-//   }
-// }
 </style>

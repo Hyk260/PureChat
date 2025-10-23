@@ -3,7 +3,12 @@
     <li>
       <span>{{ $t("common.theme") }}</span>
       <el-select v-model="themeColor" placeholder="主题颜色">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+          <div class="flex items-center gap-5">
+            <component :is="item.icon" :size="16" />
+            <span> {{ item.label }}</span>
+          </div>
+        </el-option>
       </el-select>
     </li>
     <li v-if="isDev">
@@ -26,9 +31,19 @@
     </li>
     <li v-if="isDev">
       <div class="flex items-center gap-5">
-        <span>Markdown渲染输入消息</span>
+        <el-badge value="Dev" :offset="[8, -2]">
+          <span>Markdown 渲染输入消息</span>
+        </el-badge>
       </div>
       <el-switch v-model="markdownRender" />
+    </li>
+    <li v-if="isDev">
+      <div class="flex items-center gap-5">
+        <el-badge value="Dev" :offset="[8, -2]">
+          <span>Markdown 渲染助手消息</span>
+        </el-badge>
+      </div>
+      <el-switch v-model="appStore.markdownAssistantRender" />
     </li>
     <li v-if="!IS_LOCAL_MODE">
       <el-button type="primary" @click="logout">
@@ -39,11 +54,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue"
-
 import { useAppStore, useThemeStore, useUserStore } from "@/stores"
 
-import { languages, options } from "./enums"
+import { languages, options } from "./settings"
 
 const { DEV: isDev } = import.meta.env
 

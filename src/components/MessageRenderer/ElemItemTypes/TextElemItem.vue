@@ -43,8 +43,15 @@ const parsedCloudCustomData = computed(() => {
 
 const shouldShowMarkdown = computed(() => {
   if (!props.showMarkdown) return false
-  if (appStore.markdownRender) return true
-  return chatStore.isAssistant && props.message?.flow === "in"
+  if (chatStore.isAssistant) {
+    // 支持输入消息markdown渲染
+    if (appStore.markdownRender && props.message?.flow === "out") return true
+    // 助手消息markdown渲染
+    if (appStore.markdownAssistantRender && props.message?.flow === "in") return true
+    return false
+  } else {
+    return false
+  }
 })
 
 const messageStyleClasses = computed(() => {

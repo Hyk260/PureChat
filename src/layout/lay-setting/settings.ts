@@ -1,6 +1,5 @@
 import { computed } from "vue"
-import { Operation, Warning } from "@element-plus/icons-vue"
-import { Cloud, Globe } from "lucide-vue-next"
+import { Cloud, Globe, Settings2 as Settings, CircleAlert, Sun, Moon, Monitor } from "lucide-vue-next"
 
 import { ModelProvider } from "@/ai/types"
 import { $t } from "@/locales"
@@ -9,8 +8,8 @@ export const list = computed(() => {
   return [
     {
       id: "currency",
-      title: "常规设置",
-      icon: Operation,
+      title: "通用设置",
+      icon: Settings,
     },
     {
       id: "webSearch",
@@ -26,23 +25,26 @@ export const list = computed(() => {
     {
       id: "about",
       title: $t("common.about"),
-      icon: Warning,
+      icon: CircleAlert,
     },
-  ]
+  ].filter((item) => !item.hide)
 })
 
 export const options = computed(() => {
   return [
     {
       value: "auto",
+      icon: Monitor,
       label: $t("common.auto"),
     },
     {
       value: "light",
+      icon: Sun,
       label: $t("common.light"),
     },
     {
       value: "dark",
+      icon: Moon,
       label: $t("common.dark"),
     },
   ]

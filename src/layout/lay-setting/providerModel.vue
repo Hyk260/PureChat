@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { useRobotStore } from "@/stores/modules/robot"
 
-import { optionsModel } from "./enums"
+import { optionsModel } from "./settings"
 
 const robotStore = useRobotStore()
 

@@ -11,6 +11,7 @@ export const useAppStore = defineStore(SetupStoreId.App, {
     timeline: true,
     contentXScrollable: false,
     markdownRender: false, // Markdown 渲染输入消息
+    markdownAssistantRender: true, // Markdown 渲染助手消息
   }),
   actions: {
     setLang(lang: App.I18n.LangType) {
@@ -28,6 +29,6 @@ export const useAppStore = defineStore(SetupStoreId.App, {
     },
   },
   persist: {
-    pick: ["lang", "timeline", "markdownRender"],
+    pick: ["lang", "timeline", "markdownRender", "markdownAssistantRender"],
   },
 })

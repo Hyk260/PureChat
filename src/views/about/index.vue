@@ -102,7 +102,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
 const { pkg, lastBuildTime } = __APP_INFO__
 const { dependencies, devDependencies, repository, version, docs } = pkg
 
