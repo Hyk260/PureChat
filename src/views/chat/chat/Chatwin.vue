@@ -1,46 +1,48 @@
 <template>
-  <div v-show="currentConversation" class="message-info-view-content" :class="classMessageInfoView()">
+  <div v-show="currentConversation" class="message-info-view-content" :class="getMessageViewClasses()">
     <el-scrollbar ref="scrollbarRef" class="h-full" @end-reached="handleEnReached" @scroll="handleScrollbar">
       <div ref="messageViewRef" class="message-view">
-        <div v-for="(item, index) in currentMessageList" :key="item.ID" :class="{ 'reset-select': item.isRevoked }">
+        <div v-for="item in currentMessageList" :key="item.ID" :class="{ 'reset-select': item.isRevoked }">
           <!-- 加载更多 -->
-          <LoadMore :index="index" />
+          <!-- <LoadMore :index="index" /> -->
           <!-- 时间 -->
           <div v-if="isTime(item) && appStore.timeline" class="message-time-divider">
             {{ timeFormat(item.time * 1000, true) }}
           </div>
-          <!-- 消息体 -->
+          <!-- 消息内容 -->
           <div
-            v-else-if="item.ID && !isTime(item) && !item.isDeleted"
+            v-else-if="isValidMessage(item)"
             :id="`choice-${item.ID}`"
-            :ref="(el) => setMessageRef(item.ID, el)"
+            :ref="(el) => setMessageElementRef(item.ID, el)"
             class="message-view-item"
-            :class="getSelectedMessageClass(item)"
-            @click="handleSelect(item, 'outside')"
+            :class="getMessageSelectionClass(item)"
+            @click="handleMessageSelect(item)"
           >
+            <!-- 非群聊时间分隔器 -->
             <TimeDivider v-if="!isGroupChat" :show-check="isMultiSelectMode" :item="item" />
-            <div class="message-view-item-content" :class="classMessageViewItem(item)">
+            <div class="message-view-item-content" :class="getMessageItemClasses(item)">
               <!-- 多选框 -->
               <Checkbox :item="item" :is-revoked="item.isRevoked" />
-              <div v-if="showAvatar(item)" class="picture">
+              <!-- 头像区域 -->
+              <div v-if="shouldShowAvatar(item)" class="picture">
                 <div
-                  v-if="item.flow === 'out' && IS_LOCAL_MODE && userStore.userLocalStore.native"
+                  v-if="isLocalOutgoingMessage(item) && userStore.userLocalStore.native"
                   class="native cursor-pointer"
-                  @click="handleClickAvatar(null, item)"
+                  @click="handleAvatarClick(null, item)"
                 >
                   {{ userStore.userLocalStore.native }}
                 </div>
                 <el-avatar
                   v-else
                   :size="36"
-                  :src="fnAvatar(item)"
+                  :src="getAvatarUrl(item)"
                   shape="square"
                   @error="() => true"
-                  @click.stop="handleClickAvatar($event, item)"
-                  @contextmenu.prevent="handleContextAvatarMenu($event, item)"
+                  @click.stop="handleAvatarClick($event, item)"
+                  @contextmenu.prevent="handleAvatarContextMenu($event, item)"
                 >
                   <div class="h-36 w-36 flex-c bg-[#5cadff]">
-                    {{ displayInfo(item.from) }}
+                    {{ getDisplayName(item.from) }}
                   </div>
                 </el-avatar>
               </div>
@@ -56,7 +58,7 @@
                     v-else
                     :key="item.ID"
                     :message="item"
-                    @contextmenu.prevent="handleContextMenuEvent($event, item)"
+                    @contextmenu.prevent="handleMessageContextMenu($event, item)"
                   />
                   <!-- 消息发送加载状态 -->
                   <Stateful :item="item" :status="item.status" />
@@ -64,7 +66,7 @@
                   <MenuList
                     :item="item"
                     :status="item.status"
-                    @handle-context-menu="handleContextMenuEvent"
+                    @handle-context-menu="handleMessageContextMenu"
                     @handle-single-click="handleSingleClick"
                   />
                 </div>
@@ -80,8 +82,8 @@
     <!-- 卡片 -->
     <MyPopover />
     <UserPopup ref="userPopupRef" />
-    <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleClickMenuItem" />
-    <!-- <MessageNavigator :message-view="scrollbarRef" :message-ref-map="messageRefs" :messages="currentMessageList" /> -->
+    <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleContextMenuItemClick" />
+    <!-- <MessageNavigator :message-view="scrollbarRef" :message-ref-map="messageElementRefs" :messages="currentMessageList" /> -->
   </div>
 </template>
 
@@ -123,29 +125,30 @@ import { showConfirmationBox } from "@/utils/message"
 import emitter from "@/utils/mitt-bus"
 import { timeFormat } from "@/utils/timeFormat"
 
-import LoadMore from "../components/LoadMore.vue"
+// import LoadMore from "../components/LoadMore.vue"
 
-import type { DB_Message } from "@/types"
+import type { DB_Message, FilePayloadType } from "@/types"
 import type { MenuItem } from "@/types/contextMenu"
 
-const userPopupRef = ref()
-const timeout = ref(false)
-const contextMenuItems = ref<MenuItem[] | []>([])
-const menuItemInfo = ref<DB_Message | null>(null)
+const userPopupRef = ref<InstanceType<typeof UserPopup>>()
 const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null)
 const messageViewRef = ref<HTMLDivElement | null>(null)
 const bottomSentinelRef = ref<HTMLElement | null>(null)
-const isBottomVisible = shallowRef(false)
-const messageRefs = new Map<string, HTMLElement>()
 
-const { resendMessage } = useMessageOperations()
-const { contextMenuRef, showContextMenu } = useContextMenu({
-  // onBeforeShow: (_, data) => {},
-})
+const contextMenuItems = ref<MenuItem[] | []>([])
+const currentMenuItem = ref<DB_Message | null>(null)
+const isBottomVisible = shallowRef(false)
+
+// 消息元素引用映射
+const messageElementRefs = new Map<string, HTMLElement>()
+
 const groupStore = useGroupStore()
 const chatStore = useChatStore()
 const appStore = useAppStore()
 const userStore = useUserStore()
+
+const { resendMessage } = useMessageOperations()
+const { contextMenuRef, showContextMenu } = useContextMenu()
 
 const {
   isAssistant,
@@ -158,57 +161,62 @@ const {
   currentConversation,
 } = storeToRefs(chatStore)
 
-const isMessageSelected = (messageId: string) => {
-  return chatStore.isMessageSelected(messageId)
-}
+const REVOKE_TIME_LIMIT = 120 // 2分钟撤回时限
 
-const setMessageRef = (id: string, el: any) => {
+const setMessageElementRef = (id: string, el: any) => {
   if (el) {
-    messageRefs.set(id, el as HTMLElement)
+    messageElementRefs.set(id, el as HTMLElement)
   }
 }
 
-const getSelectedMessageClass = (item: DB_Message) => {
-  return isMessageSelected(item.ID) ? "style-select" : ""
+const isValidMessage = (item: DB_Message) => {
+  return item.ID && !isTime(item) && !item.isDeleted
 }
 
-const updateLoadMore = (id: string) => {
-  if (!id) return
+const getMessageSelectionClass = (item: DB_Message) => {
+  return chatStore.isMessageSelected(item.ID) ? "style-select" : ""
+}
+
+const scrollToMessagePosition = (messageId: string) => {
+  if (!messageId) return
+
   nextTick(() => {
-    const el = document.getElementById(`choice-${id}`)
-    if (el) {
-      el.scrollIntoView({ block: "start" })
-    } else {
-      console.warn("未找到对应的元素")
-    }
+    const element = document.getElementById(`choice-${messageId}`)
+    element?.scrollIntoView({ block: "start" })
   })
 }
 
-const fnAvatar = (item: DB_Message) => {
-  if (item.flow === "out" && __LOCAL_MODE__) {
+const getAvatarUrl = (item: DB_Message) => {
+  if (isLocalOutgoingMessage(item)) {
     return userStore.getUserAvatar
   } else {
     return item.avatar || getAiAvatarUrl(item.from)
   }
 }
 
-const displayInfo = (info: string) => {
-  if (!info) return "unknown"
-  return info.slice(0, 2).toUpperCase()
+const getDisplayName = (name: string) => {
+  return name?.slice(0, 2).toUpperCase() || "unknown"
 }
 
-const showAvatar = (item: DB_Message) => {
+const shouldShowAvatar = (item: DB_Message) => {
   return !item.isRevoked && item.type !== "TIMGroupTipElem"
 }
 
-const classMessageViewItem = (item: DB_Message) => {
+/**
+ * 本地模式且是自己发送的消息
+ */
+const isLocalOutgoingMessage = (message: DB_Message) => {
+  return message.flow === "out" && __LOCAL_MODE__
+}
+
+const getMessageItemClasses = (item: DB_Message) => {
   return [
     item.flow === "in" ? "is-other" : "is-self",
     isMultiSelectMode.value && !item.isRevoked && item.type !== "TIMGroupTipElem" ? "style-choice" : "",
   ]
 }
 
-const classMessageInfoView = () => {
+const getMessageViewClasses = () => {
   return [
     isChatBoxVisible.value ? "" : "style-msg-box",
     chatStore.replyMsgData ? "style-reply" : "",
@@ -223,9 +231,9 @@ const toggleMessageSelection = (item: DB_Message, forceChecked: boolean | null =
     return
   }
 
-  const isCurrentlySelected = chatStore.isMessageSelected(item.ID)
+  const isSelected = chatStore.isMessageSelected(item.ID)
 
-  if (forceChecked !== null && forceChecked && !isCurrentlySelected && chatStore.isFwdDataMaxed) {
+  if (forceChecked && !isSelected && chatStore.isFwdDataMaxed) {
     window.$message?.error(`最多只能选择${MULTIPLE_CHOICE_MAX}条`)
     return
   }
@@ -233,18 +241,13 @@ const toggleMessageSelection = (item: DB_Message, forceChecked: boolean | null =
   chatStore.toggleMessageSelection(item, forceChecked)
 }
 
-const handleSelect = (item: DB_Message, type = "initial") => {
-  if (type === "choice") {
-    toggleMessageSelection(item, true)
-    return
-  }
-
+const handleMessageSelect = (item: DB_Message) => {
   toggleMessageSelection(item)
 }
 
-const handleClickAvatar = (e: Event | null, item: DB_Message) => {
-  if (__LOCAL_MODE__ && item.flow === "out") {
-    userPopupRef.value.show()
+const handleAvatarClick = (e: Event | null, item: DB_Message) => {
+  if (isLocalOutgoingMessage(item)) {
+    userPopupRef.value?.show()
     return
   }
   if (item.flow === "out" || isMultiSelectMode.value) return
@@ -252,19 +255,13 @@ const handleClickAvatar = (e: Event | null, item: DB_Message) => {
   emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item })
 }
 
-// 检查滚动条是否到达页面底部
-const isScrolledToBottom = (lower = 2): boolean => {
-  const threshold = Math.max(0, Number(lower) || 0)
-  const wrapRef = scrollbarRef.value?.wrapRef
-  if (!wrapRef) return false
+const isScrolledToBottom = (threshold: number = 2): boolean => {
+  const scrollContainer = scrollbarRef.value?.wrapRef
+  if (!scrollContainer) return false
 
-  const scrollTop = Number(wrapRef.scrollTop ?? 0)
-  const clientHeight = Number(wrapRef.clientHeight ?? 0)
-  const scrollHeight = Number(wrapRef.scrollHeight ?? 0)
-
-  if (!Number.isFinite(scrollTop) || !Number.isFinite(clientHeight) || !Number.isFinite(scrollHeight)) return false
-
+  const { scrollTop, clientHeight, scrollHeight } = scrollContainer
   const distanceToBottom = scrollHeight - (scrollTop + clientHeight)
+
   return distanceToBottom <= threshold
 }
 
@@ -285,9 +282,9 @@ useIntersectionObserver(
 )
 
 const handleEnReached = (direction: string) => {
-  console.log("handleEnReached:", direction)
+  console.log("滚动方向:", direction)
   if (direction === "top") {
-    loadMoreMsg()
+    loadMoreMessages()
   } else if (direction === "bottom") {
     emitter.emit("handleToBottom", true)
   }
@@ -295,10 +292,9 @@ const handleEnReached = (direction: string) => {
 
 const handleScrollbar = () => {}
 
-const updateScrollBarHeight = () => {
+const scrollToBottom = () => {
   nextTick(() => {
-    // scrollbarRef.value?.setScrollTop(0);
-    scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight)
+    scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight || 0)
   })
 }
 
@@ -308,159 +304,156 @@ const updateScrollbar = () => {
   })
 }
 
-const loadMoreMsg = async () => {
+const loadMoreMessages = async () => {
   if (!currentConversation.value) return
   try {
     const { conversationID: sessionId } = currentConversation.value
-    const msglist = currentMessageList.value
-    if (!msglist.length) return
-    const nextMsg = validateLastMessage(msglist)
-    // console.log("nextMsg:", nextMsg)
-
-    if (nextMsg?.type === "TIMCustomElem") {
-      // console.log("nextMsg:text", nextMsg?.payload?.data);
-    } else if (nextMsg?.type === "TIMTextElem") {
-      // console.log("nextMsg:text", nextMsg?.payload?.text)
-      // console.log("nextMsg:ID", nextMsg?.ID)
-      // const el = document.getElementById(`choice-${nextMsg?.ID}`)
-      // console.log("nextMsg:el", el)
-    }
+    const messages = currentMessageList.value
+    if (!messages.length) return
+    const lastMessage = validateLastMessage(messages)
 
     const result = await getMessageList({
       conversationID: sessionId,
-      nextReqMessageID: nextMsg?.ID || "",
+      nextReqMessageID: lastMessage?.ID || "",
     })
 
-    // console.log("getMessageList:", result)
     const { isCompleted, messageList } = result
     if (!messageList.length && isCompleted) {
-      // console.log("[chat] 没有更多消息了 loadMoreMsg:")
       chatStore.setNoMore(true)
     } else if (messageList.length) {
       chatStore.loadMoreMessages({ sessionId, messages: messageList, msgId: messageList?.[0]?.ID || "" })
-      chatStore.setScrollTopID(nextMsg?.ID)
+      chatStore.setScrollTopID(lastMessage?.ID)
     } else {
       chatStore.setNoMore(true)
     }
-  } catch (e) {
-    console.error("loadMoreMsg:", e)
+  } catch (error) {
+    console.error("加载更多消息失败:", error)
     chatStore.setNoMore(true)
   }
 }
 
-const handleContextAvatarMenu = (event: MouseEvent, item: DB_Message) => {
-  const { flow } = item
-  const type = currentType.value
-  // 单人 & 自己发送的消息 & 系统消息
-  if (type === "C2C" || flow === "out" || item.type === "TIMGroupSystemNoticeElem") {
-    return
-  }
-  showContextMenu(event, item)
-  menuItemInfo.value = item
-  contextMenuItems.value = avatarContextMenuItems
-}
+/**
+ * 获取过滤后的上下文菜单项
+ */
+const getFilteredContextMenuItems = (message: DB_Message): MenuItem[] => {
+  const { flow, type, time } = message
+  let menuItems = [...messageContextMenuItems]
 
-const handleContextMenuEvent = (event: MouseEvent, item: DB_Message) => {
-  const { isRevoked, time, type } = item
+  // 消息类型检查
   const messageTypes = {
     isFile: type === "TIMFileElem",
     isText: type === "TIMTextElem",
     isRelay: type === "TIMRelayElem",
     isCustom: type === "TIMCustomElem",
-    isSystemNotice: type === "TIMGroupSystemNoticeElem",
-    isGroupTip: type === "TIMGroupTipElem",
   }
-  // 撤回消息 多选状态 系统类型消息 提示类型消息
-  if (isRevoked || isMultiSelectMode.value || messageTypes.isSystemNotice || messageTypes.isGroupTip) {
+
+  // 撤回权限检查
+  const canRevoke = getUnixTimestampSec() - time < REVOKE_TIME_LIMIT
+  const isGroupOwner = groupStore.isOwner && currentType.value === "GROUP"
+  const isFromSelf = flow === "out"
+
+  const filterRules = [
+    // 两分钟内消息可撤回
+    { condition: !isFromSelf || !canRevoke, key: "revoke" },
+    // 群主可撤回所有消息
+    { condition: isGroupOwner, action: "reset" },
+    // 合并消息不支持复制
+    { condition: messageTypes.isRelay, key: "copy" },
+    // 非文件消息不支持另存为
+    { condition: !messageTypes.isFile, key: "saveAs" },
+    // 文件消息在非客户端（Electron）环境下不支持复制
+    { condition: messageTypes.isFile && !__IS_ELECTRON__, key: "copy" },
+    // AI消息不支持引用回复和撤回
+    { condition: isAssistant.value, keys: ["quote", "revoke"] },
+    // 非文本消息不支持编辑
+    { condition: !messageTypes.isText, key: "edit" },
+    // 非文本消息或自己发送的消息不支持重新生成
+    { condition: !messageTypes.isText || isFromSelf, key: "refresh" },
+    // 自定义消息只保留删除
+    { condition: messageTypes.isCustom, preserve: ["delete"] },
+  ]
+
+  filterRules.forEach((rule) => {
+    if (rule.condition) {
+      if (rule.action === "reset") {
+        menuItems = [...messageContextMenuItems]
+      } else if (rule.preserve) {
+        menuItems = menuItems.filter((item) => rule.preserve!.includes(item.key))
+      } else if (rule.keys) {
+        menuItems = menuItems.filter((item) => !rule.keys!.includes(item.key))
+      } else if (rule.key) {
+        menuItems = menuItems.filter((item) => item.key !== rule.key)
+      }
+    }
+  })
+
+  return menuItems
+}
+
+const handleAvatarContextMenu = (event: MouseEvent, item: DB_Message) => {
+  const { flow, type } = item
+  const conversationType = currentType.value
+  // 单人聊天、自己发送的消息、系统消息不显示菜单
+  if (conversationType === "C2C" || flow === "out" || type === "TIMGroupSystemNoticeElem") {
     return
   }
   showContextMenu(event, item)
-
-  let menuItems = [...messageContextMenuItems]
-  const canRevoke = getUnixTimestampSec() - time < 120 // 两分钟内可撤回
-  const isGroupOwner = groupStore.isOwner && currentType.value === "GROUP"
-  const isFromSelf = item.flow === "out"
-  // 对方消息 超过撤回时间
-  if (!isFromSelf || !canRevoke) {
-    menuItems = menuItems.filter((t) => t.key !== "revoke")
-  }
-  // 群主不限制2分钟撤回时间
-  if (isGroupOwner) {
-    menuItems = [...messageContextMenuItems]
-  }
-  // 合并消息
-  if (messageTypes.isRelay) {
-    menuItems = menuItems.filter((t) => t.key !== "copy")
-  }
-  // 非文件消息过滤另存为
-  if (!messageTypes.isFile) {
-    menuItems = menuItems.filter((t) => t.key !== "saveAs")
-  }
-  // 文件消息 非electron环境下过滤复制
-  if (messageTypes.isFile && !__IS_ELECTRON__) {
-    menuItems = menuItems.filter((t) => t.key !== "copy")
-  }
-  // ai消息过滤 引用回复 撤回
-  if (isAssistant.value) {
-    menuItems = menuItems.filter((t) => t.key !== "quote" && t.key !== "revoke")
-  }
-  // 仅文本消息支持编辑
-  if (!messageTypes.isText) {
-    menuItems = menuItems.filter((t) => t.key !== "edit")
-  }
-
-  if (!messageTypes.isText || item.flow === "out") {
-    menuItems = menuItems.filter((t) => t.key !== "refresh")
-  }
-
-  if (messageTypes.isCustom) {
-    menuItems = menuItems.filter((t) => t.key === "delete")
-  }
-
-  timeout.value = !canRevoke
-  menuItemInfo.value = item
-  contextMenuItems.value = menuItems
+  currentMenuItem.value = item
+  contextMenuItems.value = avatarContextMenuItems
 }
 
-const handleClickMenuItem = (data: MenuItem) => {
-  const info = menuItemInfo.value
-  if (!info) return
-  switch (data.key) {
+const handleMessageContextMenu = (event: MouseEvent, item: DB_Message) => {
+  const { isRevoked, type } = item
+  const invalidTypes = ["TIMGroupSystemNoticeElem", "TIMGroupTipElem"]
+  // 撤回消息、多选状态、系统类型消息、提示类型消息不显示菜单
+  if (isRevoked || isMultiSelectMode.value || invalidTypes.includes(type)) {
+    return
+  }
+
+  showContextMenu(event, item)
+  currentMenuItem.value = item
+  contextMenuItems.value = getFilteredContextMenuItems(item)
+}
+
+const handleContextMenuItemClick = (menuItem: MenuItem) => {
+  const message = currentMenuItem.value
+  if (!message) return
+  switch (menuItem.key) {
     case "refresh": // 重新生成
-      handleRefreshMsg(info)
+      handleRefreshMessage(message)
       break
     case "send": // 发起会话
-      handleSendMessage(info)
+      handleSendMessage(message)
       break
     case "at": // @对方
-      handleAt(info)
+      handleAtUser(message)
       break
     case "edit": // 编辑
-      handleEdit(info)
+      handleEditMessage(message)
       break
     case "copy": // 复制
-      handleCopyMsg(info)
+      handleCopyMsg(message)
       break
     case "translate": // 翻译
-      // handleTranslate(info)
+      // handleTranslate(message)
       break
     case "revoke": // 撤回
-      handleRevokeMsg(info)
+      handleRevokeMessage(message)
       break
     case "forward": // 转发
-      // handleForward(info)
+      // handleForward(message)
       break
     case "saveAs": // 另存为
-      handleSave(info)
+      handleSaveFile(message)
       break
     case "quote": // 引用回复
-      handleReplyMsg(info)
+      handleReplyMessage(message)
       break
     case "multiSelect": // 多选
-      handleMultiSelectMsg(info)
+      handleMultiSelectMessage(message)
       break
     case "delete": // 删除
-      handleDeleteMsg(info)
+      handleDeleteMessage(message)
       break
     default:
       console.log("未定义操作")
@@ -468,16 +461,16 @@ const handleClickMenuItem = (data: MenuItem) => {
 }
 
 const handleSingleClick = ({ item, key }: { item: DB_Message; key: string }) => {
-  menuItemInfo.value = item
-  handleClickMenuItem({ key, label: "" })
+  currentMenuItem.value = item
+  handleContextMenuItemClick({ key, label: "" })
 }
 
-const handleEdit = (item: DB_Message) => {
+const handleEditMessage = (item: DB_Message) => {
   scrollToMessage(item.ID)
   chatStore.setMsgEdit(item)
 }
 
-const handleAt = (data: DB_Message) => {
+const handleAtUser = (data: DB_Message) => {
   const { from, nick, conversationType: type } = data
   if (type === "C2C") return
   emitter.emit("handleAt", { id: from, name: nick })
@@ -487,43 +480,42 @@ const handleSendMessage = (data: DB_Message) => {
   chatStore.addConversation({ sessionId: `C2C${data.from}` })
 }
 
-const handleRefreshMsg = (data: DB_Message) => {
+const handleRefreshMessage = (data: DB_Message) => {
   resendMessage(data.ID, data)
 }
 
-const handleSave = ({ payload }) => {
-  if (!payload.fileUrl || !payload.fileName) {
+const handleSaveFile = (message: DB_Message) => {
+  const { fileUrl, fileName } = (message.payload as FilePayloadType) || {}
+  if (!fileUrl || !fileName) {
     window.$message?.error("文件不存在")
     return
   }
-  download(payload.fileUrl, payload.fileName)
+  download(fileUrl, fileName)
 }
 
 const handleTranslate = (data: DB_Message) => {
   translateText({ textList: data.payload.text })
 }
 
-// const handleForward = (data: DB_Message) => {}
+const handleForward = (data: DB_Message) => {}
 
-const handleReplyMsg = (data: DB_Message) => {
+const handleReplyMessage = (data: DB_Message) => {
   chatStore.setReplyMsgData(data)
-  if (data.flow === "in") handleAt(data)
+  if (data.flow === "in") handleAtUser(data)
 }
 
-const handleDeleteMsg = async (data: DB_Message) => {
-  // const result = await showConfirmationBox({ message: "确定删除消息?", iconType: "warning" });
-  // if (result === "cancel") return;
+const handleDeleteMessage = async (message: DB_Message) => {
   chatStore.deleteMessage({
-    sessionId: data.conversationID,
-    messageIdArray: [data.ID],
-    message: [data],
+    sessionId: message.conversationID,
+    messageIdArray: [message.ID],
+    message: [message],
   })
 }
 
-const handleMultiSelectMsg = (item: DB_Message) => {
+const handleMultiSelectMessage = (item: DB_Message) => {
   chatStore.toggleMultiSelectMode(true)
   chatStore.setReplyMsgData(null)
-  handleSelect(item, "choice")
+  toggleMessageSelection(item, true)
 }
 
 const handleRevokeChange = (data: DB_Message, type: string) => {
@@ -531,14 +523,14 @@ const handleRevokeChange = (data: DB_Message, type: string) => {
   chatStore.updateRevokeMsg({ data, type })
 }
 
-const handleRevokeMsg = async (data: DB_Message) => {
-  if (timeout.value) {
+const handleRevokeMessage = async (data: DB_Message) => {
+  const isTimeout = getUnixTimestampSec() - data.time > REVOKE_TIME_LIMIT
+  if (isTimeout) {
     const result = await showConfirmationBox({ message: "确定撤回这条消息?", iconType: "warning" })
     if (result === "cancel") return
   }
   const { code, message } = await revokeMsg(data)
-  if (code !== 0) return
-  if (message.flow !== "out") return
+  if (code !== 0 || message.flow !== "out") return
   handleRevokeChange(message, "set")
   setTimeout(() => {
     handleRevokeChange(message, "delete")
@@ -549,19 +541,19 @@ const updateScrollHandler = (type?: "bottom" | "robot" | undefined) => {
   try {
     if (type === "bottom") {
       if (isBottomVisible.value) {
-        updateScrollBarHeight()
+        scrollToBottom()
       }
       return
     }
 
     if (type === "robot") {
       if (isScrolledToBottom(15)) {
-        updateScrollBarHeight()
+        scrollToBottom()
       }
       return
     }
 
-    updateScrollBarHeight()
+    scrollToBottom()
   } catch {
     // ignore
   }
@@ -577,8 +569,8 @@ function offEmitter() {
 
 watch(
   () => scrollTopID.value,
-  (data) => {
-    updateLoadMore(data)
+  (messageId) => {
+    scrollToMessagePosition(messageId)
   },
   { immediate: true }
 )
@@ -598,7 +590,7 @@ onUnmounted(() => {
   offEmitter()
 })
 
-defineExpose({ updateScrollbar, updateScrollBarHeight })
+defineExpose({ updateScrollbar, scrollToBottom })
 </script>
 
 <style lang="scss" scoped>

@@ -135,8 +135,8 @@ export function disposeHighlighter(): void {
  * 获取当前高亮器实例
  * @returns 当前的高亮器实例或 null
  */
-export async function getHighlighter(): Promise<Highlighter | null> {
-  return registerHighlight()
+export function getHighlighter(): Highlighter | null {
+  return highlighterInstance
 }
 /**
  * 检查高亮器是否已初始化

@@ -94,6 +94,6 @@ div:focus {
   border-radius: 5px;
 }
 
-.forward-action:hover {
+.forward-action :hover {
   background: #e3e7ed;
 }

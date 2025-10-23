@@ -110,7 +110,7 @@ import {
   Maximize,
 } from "lucide-vue-next"
 
-// import { getHighlighter } from '../../utils/highlightShiki';
+import { registerHighlight, getHighlighter, isHighlighterInitialized } from "../../utils/highlightShiki"
 import HtmlArtifactsPopup from "@/components/CodeBlockView/HtmlArtifactsPopup.vue"
 import { useCodeBlock } from "@/composables/useCodeBlock"
 import { useResizeObserver } from "@/composables/useResizeObserver"
@@ -201,8 +201,11 @@ const heightCheck = () => {
   })
 }
 
-onMounted(() => {
+onMounted(async () => {
   heightCheck()
+  if (!isHighlighterInitialized()) {
+    // await registerHighlight()
+  }
 })
 
 onBeforeUnmount(() => {
@@ -213,15 +216,18 @@ watch(
   () => props.code,
   async () => {
     try {
-      highlightedCode.value = highlightCode(props.code, props.language)
-      // const highlighter = await getHighlighter()
-      // highlightedCode.value = highlighter!.codeToHtml(props.code, {
-      //   lang: props.language,
-      //   theme: "one-light",
-      // })
+      const highlighter = getHighlighter()
+      if (highlighter) {
+        highlightedCode.value = highlighter.codeToHtml(props.code, {
+          lang: props.language,
+          theme: "one-light",
+        })
+      } else {
+        highlightedCode.value = highlightCode(props.code, props.language)
+      }
     } catch (err) {
       console.error("Highlight failed:", err)
-      highlightedCode.value = props.code
+      highlightedCode.value = highlightCode(props.code, props.language)
     }
     heightCheck()
   },
