@@ -59,8 +59,10 @@ export default defineConfig((configEnv) => {
       // emptyOutDir: true,
       // 生成生产源映射
       sourcemap: viteEnv.VITE_SOURCE_MAP === "Y",
-      // 调整块大小警告阈值（以kB为单位）
-      chunkSizeWarningLimit: 2000,
+      // 调整块大小警告阈值（kB单位）
+      chunkSizeWarningLimit: 1024,
+      // 启用/ 禁用 gzip 压缩大小报告
+      reportCompressedSize: false,
       rollupOptions: {
         external: setupViteExternal(viteEnv),
         input: {
@@ -80,8 +82,6 @@ export default defineConfig((configEnv) => {
           // },
         },
       },
-      // 启用/ 禁用 gzip 压缩大小报告
-      reportCompressedSize: false,
     },
   }
 })

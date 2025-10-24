@@ -1,3 +1,7 @@
+/**
+ * https://vitejs.cn/vite3-cn/config/dep-optimization-options.html#optimizedeps-include
+ * 强制预构建链接的包
+ */
 const include = [
   "vue",
   "sass",
@@ -19,6 +23,10 @@ const include = [
   "monaco-editor",
 ]
 
+/**
+ * https://vitejs.cn/vite3-cn/config/dep-optimization-options.html#optimizedeps-exclude
+ * 在预构建中强制排除的依赖项
+ */
 const exclude = ["@iconify/json", "@purechat/ui"]
 
 export { include, exclude }
