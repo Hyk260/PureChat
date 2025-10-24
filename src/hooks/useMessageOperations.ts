@@ -8,7 +8,9 @@ import { sendChatAssistantMessage } from "@/service/chatService"
 import { createTextMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore, useUserStore } from "@/stores"
 import { abortCompletion } from "@/utils/abortController"
-import { getCloudCustomData, getFileType } from "@/utils/chat"
+import { getFileType } from "@/utils/chat"
+import { createPromptMessageCustomData } from "@/utils/chat/customData"
+
 // import { createCustomMessage } from "@/service/im-sdk-api"
 import { getCustomMsgContent } from "@/utils/common"
 
@@ -161,10 +163,7 @@ export const usePrepareMessageData = () => {
     const meta = robotStore.promptStore[defaultBot]?.[0]?.meta
     const text = `你好，我是 ${meta?.avatar} ${meta?.title} ${meta?.description} 让我们开始对话吧！`
     const msg = createTextMessage({ to: from, text, cache: false })
-    const promptContent = getCloudCustomData(
-      { key: "messagePrompt", payload: { text: "预设提示词" } },
-      { recQuestion: meta?.recQuestion || [] }
-    )
+    const promptContent = createPromptMessageCustomData({ payload: { text: "预设提示词" } }, meta?.recQuestion)
     msg.conversationID = `C2C${from}`
     msg.avatar = getAiAvatarUrl(from)
     msg.cloudCustomData = promptContent

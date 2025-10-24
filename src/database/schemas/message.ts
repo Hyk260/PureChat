@@ -62,8 +62,11 @@ export const ImagePayload = BasePayload.extend({
   imageInfoArray: z.array(
     z
       .object({
+        // https://cos.ap-shanghai.myqcloud.com/70721.gif?imageMogr2
+        imageUrl: z.string(),
         width: z.number(),
         height: z.number(),
+        // blob:http://localhost:8080/6beefb1f-b30b-439e-9f1d-1b05d5ebbf0f
         url: z.string(),
         size: z.number(),
         type: z.number(),
@@ -89,14 +92,48 @@ export const GroupSystemNoticePayload = BasePayload.extend({
   operationType: z.number(),
 })
 
+export const CustomPayload = BasePayload.extend({
+  data: z.string(),
+  description: z.string(),
+  extension: z.string(),
+})
+
 export const customDataWebSearchSchema = z.object({
   webSearch: z.object({
     messageAbstract: z.string(),
-    version: z.string(),
+    version: z.string().optional(),
+    webSearchResult: z.any().optional(),
   }),
 })
 
-// export const cloudCustomDataSchema = cloudCustomDataSchemaWebSearch
+export const customDataDeepThinkingSchema = z.object({
+  deepThinking: z.object({
+    messageAbstract: z.string(),
+    version: z.string().optional(),
+    model: z.string().optional(),
+    thinking: z.string().optional(),
+    deeplyThought: z.string().optional(),
+  }),
+})
+
+export const customDataReplyMessageSchema = z.object({
+  messageReply: z.object({
+    messageAbstract: z.string(),
+    messageSender: z.string(),
+    version: z.string(),
+    messageID: z.string(),
+    thinking: z.string(),
+    deeplyThought: z.string(),
+  }),
+})
+
+export const customDataPromptMessageSchema = z.object({
+  messagePrompt: z.object({
+    messageAbstract: z.string(),
+    version: z.string(),
+    recQuestion: z.array(z.string()),
+  }),
+})
 
 export const MessageStatusSchema = z.enum([
   /**
@@ -182,7 +219,11 @@ export const DB_MessageSchema = z.object({
   status: MessageStatusSchema,
   atUserList: z.array(z.string()),
   /**
-   * 消息自定义数据
+   * 消息自定义数据 该字段为 JSON 格式字符串
+   *
+   * web搜索 customDataWebSearchSchema
+   * 深度思考 customDataDeepThinkingSchema
+   * 回复消息 customDataReplyMessageSchema
    */
   cloudCustomData: z.string(),
   /**
@@ -210,6 +251,7 @@ export const DB_MessageSchema = z.object({
    * 文本 图片 文件 自定义 群提示消息 群系统通知 合并
    * 文本 TextPayload
    * 图片 ImagePayload
+   * 自定义 CustomPayload
    */
   payload: TextPayload,
   // payload: z.union([TextPayload, ImagePayload]).optional(),
@@ -252,6 +294,8 @@ export type MessageStatus = z.infer<typeof MessageStatusSchema>
 export type MessageType = z.infer<typeof MessageTypeSchema>
 
 export type customDataWebSearch = z.infer<typeof customDataWebSearchSchema>
+
+export type customDataPromptMessage = z.infer<typeof customDataPromptMessageSchema>
 
 export type ImagePayloadType = z.infer<typeof ImagePayload>
 

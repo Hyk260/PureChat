@@ -15,7 +15,7 @@
 import { useMessageCreator } from "@/hooks/useMessageCreator"
 import { useChatStore } from "@/stores"
 
-import type { DB_Message } from "@/types"
+import type { DB_Message, customDataPromptMessage } from "@/types"
 
 defineOptions({
   name: "AssistantMessage",
@@ -36,7 +36,7 @@ const parsedCustomData = computed(() => {
   if (!props.item.cloudCustomData) return null
 
   try {
-    const data = JSON.parse(props.item.cloudCustomData)
+    const data = JSON.parse(props.item.cloudCustomData) as customDataPromptMessage
     return data.messagePrompt
   } catch {
     return null

@@ -4,7 +4,7 @@ import { customDataWebSearch, DB_Message } from "@/database/schemas/message"
 import { convertBlobUrlToDataUrl } from "@/utils/chat"
 
 import type { LLMMessage } from "@/ai/types"
-import type { DraftData } from "@/types"
+import type { DraftData, ImagePayloadType } from "@/types"
 
 export function checkTextNotEmpty(nodes: DraftData) {
   return nodes.some((obj) => {
@@ -15,10 +15,10 @@ export function checkTextNotEmpty(nodes: DraftData) {
 }
 
 // 处理文本类型的消息
-function transformTextElement(data: DB_Message) {
+export function transformTextElement(data: DB_Message) {
   let content: string = data.payload?.text || ""
 
-  if (!isEmpty(data.cloudCustomData)) {
+  if (!isEmpty(data.cloudCustomData) && data.flow === "out") {
     try {
       const customData = JSON.parse(data.cloudCustomData) as customDataWebSearch
       if (customData?.webSearch) {
@@ -71,15 +71,16 @@ export function transformCustomElement(item: DB_Message) {
 }
 
 // 处理图像类型的消息
-async function transformImageElement(data: DB_Message) {
-  const imageUrl = await convertBlobUrlToDataUrl(data.elements[0]._imageMemoryURL)
+export async function transformImageElement(data: DB_Message) {
+  const imagePayload = data.payload as ImagePayloadType
+  const imageUrl = await convertBlobUrlToDataUrl(imagePayload.imageInfoArray?.[0]?.url || "unknown")
   return {
     role: data.flow === "in" ? "assistant" : "user",
     content: [
-      // {
-      //   text: "",
-      //   type: "text",
-      // },
+      {
+        text: "",
+        type: "text",
+      },
       {
         image_url: {
           detail: "auto",

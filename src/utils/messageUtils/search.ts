@@ -1,13 +1,13 @@
 import { isEmpty } from "lodash-es"
 
 import { REFERENCE_PROMPT } from "@/config/prompts"
-import { WebSearchProviderResult } from "@/service/WebSearchProvider/types"
 import WebSearchService from "@/service/WebSearchService"
 import { useChatStore } from "@/stores"
 import { useWebSearchStore } from "@/stores/modules/websearch"
-import { getCloudCustomData } from "@/utils/chat"
+import { createWebSearchCustomData } from "@/utils/chat/customData"
 
 // import type { LLMMessage } from "@/ai/types"
+import type { WebSearchProviderResult, WebSearchResult } from "@/service/WebSearchProvider/types"
 import type { DB_Message } from "@/database/schemas/message"
 
 export function mapWebSearchResults(results: WebSearchProviderResult[]) {
@@ -64,9 +64,9 @@ export async function generateReferencePrompt(data: DB_Message, message: { conte
 
 export const handleWebSearchData = (data: DB_Message, flag = false) => {
   if (!data?.ID) return ""
-  const webSearchResult = window.sessionStg.get(`web-search-${data.ID}`)
+  const webSearchResult = window.sessionStg.get(`web-search-${data.ID}`) as WebSearchResult[]
   if (!webSearchResult) return ""
-  const result = getCloudCustomData({ payload: { text: "web-search" } }, { webSearchResult })
+  const result = createWebSearchCustomData({ payload: { text: "web-search" } }, webSearchResult)
   if (flag) window.sessionStg.remove(`web-search-${data.ID}`)
   return result
 }

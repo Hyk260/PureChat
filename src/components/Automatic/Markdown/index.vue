@@ -10,18 +10,18 @@ import { parseDocument } from "htmlparser2"
 
 // import { throttle } from "lodash-es"
 import { prettyObject } from "@/ai/utils"
-
 import { convertToMarkdownFootnotes } from "./utils/utils"
 import MarkdownRenderer from "./markdown-renderer"
 import MarkdownNodeRender from "./MarkdownNodeRenderer"
 
+import { customDataWebSearch } from "@/types"
 import "./style/markdown.scss"
 
 defineOptions({ name: "Markdown" })
 
 interface Props {
   content: string | undefined
-  cloudCustomData?: Record<string, any> | null
+  cloudCustomData?: customDataWebSearch | null
   enableDOMPurify?: boolean
 }
 
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const webSearchResult = computed(() => {
-  return props.cloudCustomData?.messageReply?.webSearchResult || []
+  return props.cloudCustomData?.webSearch?.webSearchResult || []
 })
 
 const renderer = new MarkdownRenderer({

@@ -3,17 +3,6 @@
     <!-- 回复发送者 -->
     <div v-if="replySender" class="reply-content__sender">{{ replySender }}:</div>
 
-    <!-- 思考状态内容 -->
-    <div v-if="showThinkingContent">
-      {{ thinkingContent }}
-    </div>
-
-    <!-- 深度思考内容 -->
-    <div v-else-if="deeplyThoughtContent" class="reply-content__sender flex gap-8">
-      <Atom :size="16" color="#bd54c6" />
-      {{ deeplyThoughtContent }}
-    </div>
-
     <!-- 回复内容 -->
     <template v-if="messageAbstract">
       <div class="reply-content__content">
@@ -25,8 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { Atom } from "lucide-vue-next"
-
 import DynamicContent from "@/components/Chat/DynamicContent.vue"
 import { MessageStatus, MessageStatusSchema } from "@/database/schemas/message"
 import { scrollToDomPosition } from "@/utils/chat"
@@ -50,11 +37,8 @@ const props = defineProps({
 const messageReply = computed(() => props.originalMsg?.messageReply || null)
 const hasReplyContent = computed(() => !!messageReply.value)
 const replySender = computed(() => messageReply.value.messageSender)
-const thinkingContent = computed(() => messageReply.value.thinking)
-const deeplyThoughtContent = computed(() => messageReply.value.deeplyThought)
 const messageAbstract = computed(() => messageReply.value.messageAbstract)
 const messageID = computed(() => messageReply.value.messageID)
-const showThinkingContent = computed(() => thinkingContent.value && props.status === "sending")
 
 const scrollToMessage = () => {
   if (messageID.value) {

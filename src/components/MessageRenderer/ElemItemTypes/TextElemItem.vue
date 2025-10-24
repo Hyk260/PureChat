@@ -3,6 +3,11 @@
     <template v-if="hasValidMessageType">
       <!-- 回复消息 -->
       <ReplyElem v-if="parsedCloudCustomData" :status="message.status" :original-msg="parsedCloudCustomData" />
+      <!-- 思考过程 -->
+      <DeepThinking v-if="parsedCloudCustomData" :status="message.status" :original-msg="parsedCloudCustomData" />
+      <!-- web搜索 -->
+      <WebSearch v-if="parsedCloudCustomData" :status="message.status" :original-msg="parsedCloudCustomData" />
+      <!-- Markdown消息 -->
       <Markdown v-if="shouldShowMarkdown" :cloud-custom-data="parsedCloudCustomData" :content="message.payload.text" />
       <DynamicContent v-else :at-user-list="message.atUserList" :text="message.payload.text" />
     </template>
@@ -15,6 +20,8 @@ import { DB_Message } from "@/database/schemas/message"
 import { useAppStore, useChatStore } from "@/stores"
 
 import ReplyElem from "./ReplyElem.vue"
+import DeepThinking from "../CloudCustomData/DeepThinking.vue"
+import WebSearch from "../CloudCustomData/WebSearch.vue"
 
 interface Props {
   message: DB_Message

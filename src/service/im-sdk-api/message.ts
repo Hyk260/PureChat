@@ -1,5 +1,5 @@
 import tim from "@/service/chat/PureChatService"
-import { fileUploading, getCloudCustomData } from "@/utils/chat"
+import { fileUploading, createReplyMessageCustomData } from "@/utils/chat"
 import { getCustomMsgContent, updateImageSize } from "@/utils/common"
 
 import type { DB_Message } from "@/types"
@@ -41,7 +41,7 @@ export const createTextMessage = (params) => {
     cache: cache,
     conversationType: type,
     payload: { text },
-    cloudCustomData: getCloudCustomData(custom),
+    cloudCustomData: createReplyMessageCustomData(custom),
   })
 }
 
@@ -54,7 +54,7 @@ export const createTextAtMessage = (params) => {
     to,
     conversationType: type,
     payload: { text, atUserList },
-    cloudCustomData: getCloudCustomData(custom),
+    cloudCustomData: createReplyMessageCustomData(custom),
   })
 }
 

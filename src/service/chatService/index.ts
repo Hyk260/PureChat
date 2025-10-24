@@ -8,7 +8,7 @@ import { DB_Message } from "@/database/schemas/message"
 import { restApi } from "@/service/api"
 import { createCustomMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore } from "@/stores"
-import { getCloudCustomData } from "@/utils/chat"
+import { createDeepThinkingCustomData } from "@/utils/chat/customData"
 import { getCustomMsgContent, getUnixTimestampSec } from "@/utils/common"
 import { generateReferencePrompt, handleWebSearchData } from "@/utils/messageUtils/search"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
@@ -60,7 +60,7 @@ class ChatService {
     // 本地模式或消息为空时跳过
     if (__LOCAL_MODE__ || !message) return
 
-    const cloudCustomData = think ? this.getCloudCustomData(think) : ""
+    const cloudCustomData = think ? createDeepThinkingCustomData({ payload: { text: think } }) : ""
 
     try {
       await restApi({
@@ -92,7 +92,7 @@ class ChatService {
     })
 
     if (think) {
-      chat.cloudCustomData = this.getCloudCustomData(think)
+      chat.cloudCustomData = createDeepThinkingCustomData({ payload: { text: think } })
     } else if (isFinish) {
       chat.cloudCustomData = handleWebSearchData(chat, true)
       if (chat.type === "TIMTextElem") {
@@ -178,14 +178,6 @@ class ChatService {
     } catch (error) {
       console.error("网络搜索处理失败:", error)
     }
-  }
-
-  private getCloudCustomData(think: string): string {
-    return getCloudCustomData(think, {
-      messageAbstract: think,
-      thinking: "思考中...",
-      deeplyThought: "已深度思考",
-    })
   }
 
   /**

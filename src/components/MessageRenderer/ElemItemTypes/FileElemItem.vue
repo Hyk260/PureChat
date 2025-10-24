@@ -60,7 +60,7 @@ const handleOpen = async (data) => {
   if (__IS_ELECTRON__) {
     console.log("Open electron:")
   } else {
-    console.log("Open web:")
+    console.log("Open web:", props.message)
   }
 }
 

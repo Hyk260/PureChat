@@ -30,16 +30,13 @@ import { showConfirmationBox } from "@/utils/message"
 const input = ref("")
 const chatStore = useChatStore()
 const groupStore = useGroupStore()
-// ...existing code...
 
 const createGroup = async () => {
   const data = { message: "创建群聊" }
   const result = await showConfirmationBox(data, "prompt")
-  // showConfirmationBox returns Promise<string | Error>
   if (result instanceof Error) return
   if (result === "cancel") return
-  // result is a string (the input value from prompt)
-  groupStore.handleCreateGroup({ groupName: String(result), positioning: true })
+  groupStore.handleCreateGroup({ groupName: result?.value, positioning: true })
 }
 
 const openDialog = () => {

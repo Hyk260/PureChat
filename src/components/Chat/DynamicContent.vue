@@ -48,6 +48,7 @@ const isEmojiContent = (item: RenderDom): boolean => item.name === "img"
 
 const parsedContent = computed<RenderDom[]>(() => {
   try {
+    if (__LOCAL_MODE__) return [{ name: "text", text: props.text }]
     return decodeText(props.text)
   } catch (error) {
     console.error("Failed to parse content:", error)

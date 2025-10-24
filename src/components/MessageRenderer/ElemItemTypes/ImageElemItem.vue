@@ -77,6 +77,7 @@ async function initImageSize() {
 }
 
 const handleImageClick = (url: string) => {
+  console.log("Image message:", props.message)
   console.log("Image clicked:", url)
 }
 

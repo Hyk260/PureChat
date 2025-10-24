@@ -6,6 +6,8 @@ import { DB_Message } from "@/database/schemas/message"
 import { messageUtils } from "@/utils/messageUtils"
 import emitter from "@/utils/mitt-bus"
 
+export * from "./customData"
+
 /**
  * 将二进制数据转换为 base64 URL 格式
  */
@@ -233,23 +235,6 @@ export const getAbstractContent = (data: DB_Message): string => {
   } else {
     return data?.payload?.text
   }
-}
-
-export function getCloudCustomData(data, params?: any) {
-  if (isEmpty(data)) return ""
-  const key = data?.key || "messageReply"
-  const cloudCustomContent = JSON.stringify({
-    [key]: {
-      messageID: data?.ID || undefined,
-      messageAbstract: getAbstractContent(data),
-      messageSender: data?.nick || undefined,
-      messageType: 0,
-      version: __APP_INFO__.pkg.version || "",
-      model: data?.model || "",
-      ...params,
-    },
-  })
-  return cloudCustomContent
 }
 
 /**
