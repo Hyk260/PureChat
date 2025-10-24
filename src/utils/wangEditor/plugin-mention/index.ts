@@ -1,7 +1,8 @@
-import { DomEditor, IDomEditor } from "@wangeditor/editor"
+import { DomEditor } from "@wangeditor/editor"
 import { h } from "snabbdom"
 
 import type { MentionConfig, MentionElement, MentionInfo } from "@/types"
+import type { IDomEditor } from "@wangeditor/editor"
 
 const MENTION_TYPE = "mention"
 const MENTION_SELECTOR = `span[data-w-e-type="${MENTION_TYPE}"]`
@@ -11,11 +12,11 @@ const MENTION_SELECTOR = `span[data-w-e-type="${MENTION_TYPE}"]`
  * @param {Object} editor 编辑器实例
  * @returns {Object} 提及功能配置
  */
-function getMentionConfig(editor: IDomEditor): MentionConfig {
+const getMentionConfig = (editor: IDomEditor): MentionConfig => {
   return editor.getConfig().EXTEND_CONF?.mentionConfig || {}
 }
 
-function withMention(editor: IDomEditor) {
+const withMention = (editor: IDomEditor) => {
   const { insertText, isInline, isVoid } = editor
   const { showModal, hideModal, pinyinSearch } = getMentionConfig(editor)
 
@@ -99,7 +100,7 @@ const safeJsonParse = (str: string): MentionInfo | string => {
   }
 }
 
-function parseHtml(elem: Element): MentionElement {
+const parseHtml = (elem: Element): MentionElement => {
   const value = elem.getAttribute("data-value") || ""
   const rawInfo = decodeURIComponent(elem.getAttribute("data-info") || "")
 
@@ -132,7 +133,7 @@ const getMentionStyles = (isSelected: boolean) => ({
   ...(isSelected ? mentionStyles.selected : mentionStyles.unselected),
 })
 
-function renderMention(elem: MentionElement, _children: null, editor: IDomEditor) {
+const renderMention = (elem: MentionElement, _children: null, editor: IDomEditor) => {
   const isSelected = DomEditor.isNodeSelected(editor, elem)
   const value = elem.value?.trim() ?? ""
 

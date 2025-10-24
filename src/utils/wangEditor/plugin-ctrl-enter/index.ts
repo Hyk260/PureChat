@@ -1,6 +1,8 @@
-import { DomEditor, IDomEditor } from "@wangeditor/editor"
+import { DomEditor } from "@wangeditor/editor"
 
-function withCtrlEnter(editor: IDomEditor) {
+import type { IDomEditor } from "@wangeditor/editor"
+
+export const withCtrlEnter = (editor: IDomEditor) => {
   const { insertBreak } = editor
 
   setTimeout(() => {

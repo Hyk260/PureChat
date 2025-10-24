@@ -27,16 +27,40 @@
           <div class="list flex-bc w-full">
             <span>{{ item.displayName || item.id }}</span>
             <span class="box">
-              <el-tooltip v-if="item.vision" :content="ModelSelect.vision" placement="top">
+              <el-tooltip
+                v-if="item.vision"
+                :enterable="false"
+                :show-arrow="false"
+                :content="ModelSelect.vision"
+                placement="right"
+              >
                 <Eye :size="16" color="#55b467" />
               </el-tooltip>
-              <el-tooltip v-if="item.functionCall" :content="ModelSelect.functionCall" placement="top">
+              <el-tooltip
+                v-if="item.functionCall"
+                :enterable="false"
+                :show-arrow="false"
+                :content="ModelSelect.functionCall"
+                placement="right"
+              >
                 <ToyBrick :size="16" color="#369eff" />
               </el-tooltip>
-              <el-tooltip v-if="item.reasoning" :content="ModelSelect.reasoning" placement="top">
+              <el-tooltip
+                v-if="item.reasoning"
+                :enterable="false"
+                :show-arrow="false"
+                :content="ModelSelect.reasoning"
+                placement="right"
+              >
                 <Atom :size="16" color="#bd54c6" />
               </el-tooltip>
-              <el-tooltip v-if="item.tokens" :content="formatTokenTip(item)" placement="top">
+              <el-tooltip
+                v-if="item.tokens"
+                :enterable="false"
+                :show-arrow="false"
+                :content="formatTokenTip(item)"
+                placement="right"
+              >
                 <span class="tokens flex-c">
                   {{ formatTokenNumber(item.tokens) }}
                 </span>

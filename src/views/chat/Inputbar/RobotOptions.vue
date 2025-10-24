@@ -63,13 +63,31 @@
                         <span>
                           {{ models.displayName || models.id }}
                         </span>
-                        <el-tooltip v-if="models?.vision" :content="ModelSelect.vision" placement="top">
+                        <el-tooltip
+                          v-if="models?.vision"
+                          :show-arrow="false"
+                          :enterable="false"
+                          :content="ModelSelect.vision"
+                          placement="top"
+                        >
                           <Eye :size="16" color="#55b467" />
                         </el-tooltip>
-                        <el-tooltip v-if="models?.functionCall" :content="ModelSelect.functionCall" placement="top">
+                        <el-tooltip
+                          v-if="models?.functionCall"
+                          :show-arrow="false"
+                          :enterable="false"
+                          :content="ModelSelect.functionCall"
+                          placement="top"
+                        >
                           <ToyBrick :size="16" color="#369eff" />
                         </el-tooltip>
-                        <el-tooltip v-if="models?.reasoning" :content="ModelSelect.reasoning" placement="top">
+                        <el-tooltip
+                          v-if="models?.reasoning"
+                          :show-arrow="false"
+                          :enterable="false"
+                          :content="ModelSelect.reasoning"
+                          placement="top"
+                        >
                           <Atom :size="16" color="#bd54c6" />
                         </el-tooltip>
                       </div>
@@ -178,17 +196,7 @@
                         <span>
                           {{ models.displayName || models.id }}
                         </span>
-                        <el-tooltip v-if="models?.vision" :content="ModelSelect.vision" placement="top">
-                          <Eye :size="16" color="#55b467" />
-                        </el-tooltip>
-                        <el-tooltip v-if="models?.functionCall" :content="ModelSelect.functionCall" placement="top">
-                          <ToyBrick :size="16" color="#369eff" />
-                        </el-tooltip>
-                        <el-tooltip v-if="models?.reasoning" :content="ModelSelect.reasoning" placement="top">
-                          <Atom :size="16" color="#bd54c6" />
-                        </el-tooltip>
                       </div>
-                      <div class="models-id">{{ models.id }}</div>
                     </div>
                   </div>
                 </el-option>

@@ -3,6 +3,8 @@
     <!-- 表情包 -->
     <el-tooltip
       v-if="!isFullscreenInputActive && !isAssistant"
+      :enterable="false"
+      :show-after="500"
       :content="$t('chat.emoji')"
       placement="top"
       :show-arrow="false"
@@ -16,6 +18,8 @@
     <!-- 选模型 -->
     <el-tooltip
       v-if="isAssistant"
+      :enterable="false"
+      :show-after="500"
       :content="$t('button.select_model')"
       placement="top"
       :show-arrow="false"
@@ -29,6 +33,8 @@
     <!-- 图片 -->
     <el-tooltip
       v-if="!isAssistant"
+      :enterable="false"
+      :show-after="500"
       :content="$t('chat.picture')"
       placement="top"
       :show-arrow="false"
@@ -43,6 +49,8 @@
     <!-- 文件 -->
     <el-tooltip
       v-if="!isAssistant"
+      :enterable="false"
+      :show-after="500"
       :content="$t('chat.file')"
       placement="top"
       :show-arrow="false"
@@ -59,6 +67,8 @@
     <!-- 截图 -->
     <el-tooltip
       v-if="IS_ELECTRON"
+      :enterable="false"
+      :show-after="500"
       :content="$t('chat.screenshot')"
       placement="top"
       :show-arrow="false"
@@ -72,6 +82,8 @@
     <!-- 模型配置 -->
     <el-tooltip
       v-if="isAssistant"
+      :enterable="false"
+      :show-after="500"
       :content="$t('chat.configuration')"
       placement="top"
       :show-arrow="false"
@@ -85,6 +97,8 @@
     <!-- 附件 -->
     <el-tooltip
       v-if="IS_ELECTRON"
+      :enterable="false"
+      :show-after="500"
       :content="$t('chat.upload_document')"
       placement="top"
       :show-arrow="false"
@@ -98,6 +112,8 @@
     <!-- 联网 -->
     <el-tooltip
       v-if="IS_LOCAL_MODE"
+      :enterable="false"
+      :show-after="500"
       :content="$t('chat.web_search')"
       placement="top"
       :show-arrow="false"
@@ -115,7 +131,15 @@
       </el-button>
     </el-tooltip>
     <!-- 清空消息 -->
-    <el-tooltip content="清空消息" placement="top" :show-arrow="false" :offset="2" transition="slide-fade">
+    <el-tooltip
+      content="清空消息"
+      placement="top"
+      :show-arrow="false"
+      :enterable="false"
+      :show-after="500"
+      :offset="2"
+      transition="slide-fade"
+    >
       <div>
         <el-popover ref="popoverRef" placement="top" trigger="click" width="250">
           <div class="flex-c gap-5 mb-10">
@@ -153,6 +177,8 @@
     <!-- 滚动到底部 -->
     <el-tooltip
       v-if="showBottomBtn"
+      :enterable="false"
+      :show-after="500"
       :content="$t('chat.scrollToTheBottom')"
       placement="top"
       :show-arrow="false"
@@ -165,6 +191,8 @@
     </el-tooltip>
     <!-- 全屏 -->
     <el-tooltip
+      :enterable="false"
+      :show-after="500"
       :content="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
       placement="top"
       :show-arrow="false"

@@ -1,4 +1,4 @@
-import { DomEditor, IDomEditor } from "@wangeditor/editor"
+import { DomEditor } from "@wangeditor/editor"
 import { h } from "snabbdom"
 
 import { getFileType, renderFileIcon } from "@/utils/chat"
@@ -6,6 +6,7 @@ import { encodeHTML } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
 
 import type { AttachmentElement } from "@/types"
+import type { IDomEditor } from "@wangeditor/editor"
 
 /**
  * 扩展编辑器，定义附件为inline和void元素
