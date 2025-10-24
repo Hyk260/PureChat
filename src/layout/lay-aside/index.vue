@@ -21,11 +21,11 @@
 
     <div class="sidebar-footer">
       <el-tooltip content="帮助文档" placement="right">
-        <el-icon class="icon" @click="onOpenDocs"><QuestionFilled /></el-icon>
+        <el-icon class="icon" @click="onOpenDocs"><CircleQuestionMark /></el-icon>
       </el-tooltip>
       <el-tooltip content="设置" placement="right">
         <el-icon class="icon" @click="openSettings">
-          <Operation />
+          <Settings />
         </el-icon>
       </el-tooltip>
     </div>
@@ -37,9 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { Settings, CircleQuestionMark } from "lucide-vue-next"
 import { useRouter } from "vue-router"
-import { Operation, QuestionFilled } from "@element-plus/icons-vue"
 
 import SidebarEditDialog from "@/components/MoreSidebar/index.vue"
 import UserPopup from "@/components/Popups/UserPopup.vue"

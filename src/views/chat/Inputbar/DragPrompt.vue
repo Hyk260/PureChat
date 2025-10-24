@@ -10,7 +10,7 @@
           <div class="group">
             <span class="text-22"> {{ item.meta.avatar }} </span>
             <el-icon class="avatar-close-icon" @click.stop="handleClearAvatar(i)">
-              <CircleCloseFilled />
+              <CircleX />
             </el-icon>
           </div>
           <EmojiMart
@@ -38,21 +38,20 @@
           @blur="savePromptData"
         />
         <el-button v-if="false" class="flex-c w-31 h-31" @click="onClose(i)">
-          <el-icon><CircleCloseFilled /></el-icon>
+          <el-icon><CircleX /></el-icon>
         </el-button>
       </div>
     </div>
-    <div v-if="promptItems.length < MAX_PROMPTS">
+    <div v-if="false">
       <el-button class="w-full" @click="addPrompt">
-        <el-icon><CirclePlusFilled /></el-icon>
+        <el-icon><CirclePlus /></el-icon>
       </el-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, useTemplateRef } from "vue"
-import { CircleCloseFilled, CirclePlusFilled } from "@element-plus/icons-vue"
+import { CirclePlus, CircleX } from "lucide-vue-next"
 
 import { cloneDeep, isEmpty } from "lodash-es"
 import { storeToRefs } from "pinia"

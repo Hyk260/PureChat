@@ -2,7 +2,9 @@
   <div class="panel-wrapper w-full flex flex-col">
     <div class="title flex-bc">
       <span>{{ item.title }}</span>
-      <el-icon @click="emit('onClose')"><CloseBold /></el-icon>
+      <el-icon @click="emit('onClose')">
+        <Close />
+      </el-icon>
     </div>
     <Currency v-if="item.id === 'currency'" />
     <WebSearch v-else-if="item.id === 'webSearch'" />
@@ -12,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { CloseBold } from "@element-plus/icons-vue"
+import { X as Close } from "lucide-vue-next"
 
 import About from "./about.vue"
 import Currency from "./currency.vue"

@@ -7,11 +7,7 @@
     @save="handleSave"
   />
 
-  <CodeBlockDisplay
-    v-else
-    :code="children"
-    :language="language"
-  />
+  <CodeBlockDisplay v-else :code="children" :language="language" />
 </template>
 
 <script setup lang="ts">

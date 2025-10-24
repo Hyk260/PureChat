@@ -1,6 +1,6 @@
 import { nextTick } from "vue"
 
-import { isEmpty, throttle } from "lodash-es"
+import { throttle } from "lodash-es"
 
 import { DB_Message } from "@/database/schemas/message"
 import { messageUtils } from "@/utils/messageUtils"

@@ -10,8 +10,8 @@
       </div>
       <div class="layout-center">
         <div @click="toggleCollapsed">
-          <el-icon v-if="isChatSessionListCollapsed"><ArrowRight /></el-icon>
-          <el-icon v-else><ArrowLeft /></el-icon>
+          <el-icon v-if="isChatSessionListCollapsed"><ChevronRight /></el-icon>
+          <el-icon v-else><ChevronLeft /></el-icon>
         </div>
       </div>
       <!-- <div class="sidebar-drag"></div> -->
@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue"
+import { ChevronLeft, ChevronRight } from "lucide-vue-next"
 
 import { storeToRefs } from "pinia"
 

@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { Search } from "@element-plus/icons-vue"
+import { Search } from "lucide-vue-next"
 
 defineOptions({
   name: "DiscoverHeader",

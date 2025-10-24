@@ -3,8 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
-
 import data from "@emoji-mart/data"
 import zh from "@emoji-mart/data/i18n/zh.json"
 import { ClickOutside as vClickOutside } from "element-plus"

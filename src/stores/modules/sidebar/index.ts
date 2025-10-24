@@ -1,6 +1,5 @@
 import { markRaw } from "vue"
-import { ChatDotSquare, MoreFilled, UserFilled } from "@element-plus/icons-vue"
-import { Compass, LayoutGrid } from "lucide-vue-next"
+import { Compass, LayoutGrid, Ellipsis, MessageSquareMore, User } from "lucide-vue-next"
 
 import { defineStore } from "pinia"
 
@@ -22,7 +21,7 @@ const { DEV: isDev } = import.meta.env
 const defaultOutsideList: SidebarItem[] = [
   {
     id: "chat",
-    icon: markRaw(ChatDotSquare),
+    icon: markRaw(MessageSquareMore),
     title: "会话",
     // class: "fix-ed",
     // if_fixed: 1,
@@ -31,7 +30,7 @@ const defaultOutsideList: SidebarItem[] = [
   },
   {
     id: "friends",
-    icon: markRaw(UserFilled),
+    icon: markRaw(User),
     title: "联系人",
     path: "/friends",
     type: "el-icon",
@@ -54,7 +53,7 @@ const defaultOutsideList: SidebarItem[] = [
   },
   {
     id: "more",
-    icon: markRaw(MoreFilled),
+    icon: markRaw(Ellipsis),
     title: "更多",
     mode: "other",
     type: "el-icon",

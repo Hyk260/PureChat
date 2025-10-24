@@ -65,7 +65,7 @@
                 :class="{ hidden: userStore.userProfile.userID === item.userID }"
                 @click.stop="removeGroupMemberBtn(item)"
               >
-                <CircleCloseFilled />
+                <CircleX />
               </el-icon>
               <UserAvatar :url="item.avatar" :nick-name="item.nick || item.userID" />
               <!-- Admin Owner -->
@@ -103,7 +103,8 @@
 </template>
 
 <script setup lang="ts">
-import { CircleCloseFilled, EditPen } from "@element-plus/icons-vue"
+import { CircleX } from "lucide-vue-next"
+import { EditPen } from "@element-plus/icons-vue"
 
 import { isFullStaffGroup } from "@/ai/utils"
 import AddMemberPopup from "@/components/Popups/AddMemberPopup.vue"

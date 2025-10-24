@@ -1,13 +1,9 @@
 <template>
   <div class="card-content">
     <GeneratingContent v-if="isStreaming && !hasContent" />
-    
-    <StreamingContent
-      v-else-if="isStreaming && hasContent"
-      :last-lines="lastLines"
-      @preview="$emit('preview')"
-    />
-    
+
+    <StreamingContent v-else-if="isStreaming && hasContent" :last-lines="lastLines" @preview="$emit('preview')" />
+
     <StaticContent
       v-else
       :has-content="hasContent"

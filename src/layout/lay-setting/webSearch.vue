@@ -15,7 +15,7 @@
       <el-divider class="my-20" />
       <div class="flex gap-5 mb-20">
         <span>{{ defaultProvider }}</span>
-        <el-icon class="cursor-pointer" @click="toLink(officialWebsite)"><Promotion /></el-icon>
+        <el-icon class="cursor-pointer" @click="toLink(officialWebsite)"><ExternalLink /></el-icon>
       </div>
       <div class="flex gap-10">
         <el-input v-model="searchInput" type="password" placeholder="API密钥" show-password clearable @input="onBlur" />
@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, watch } from "vue"
-import { Promotion } from "@element-plus/icons-vue"
+import { ExternalLink } from "lucide-vue-next"
 
 import { storeToRefs } from "pinia"
 

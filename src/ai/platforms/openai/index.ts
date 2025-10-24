@@ -579,7 +579,7 @@ export class OpenAiApi {
         console.log("[Check] Response received:", resJson)
         return {
           valid: false,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
           error: resJson?.error?.message || "未知错误",
         }
       }

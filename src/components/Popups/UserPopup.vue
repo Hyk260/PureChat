@@ -131,7 +131,8 @@ defineExpose({ show })
   position: absolute;
   bottom: 100px;
   left: 50%;
-  top: 170px;
+  top: 115px;
+  z-index: 99;
   transform: translateX(-50%);
 }
 .input {

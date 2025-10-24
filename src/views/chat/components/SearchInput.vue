@@ -4,21 +4,18 @@
     <div class="flex-bc gap-10">
       <el-input v-model="input" placeholder="搜索" clearable @input="debounceSearch">
         <template #prefix>
-          <el-icon><SearchIcon /></el-icon>
+          <el-icon><Search /></el-icon>
         </template>
       </el-input>
       <div v-if="!IS_LOCAL_MODE" class="header-search-add flex-c" @click="openDialog">
-        <el-icon><Plus /></el-icon>
+        <el-icon><MessageSquarePlus /></el-icon>
       </div>
-      <!-- <div v-else class="header-search-add flex-c" @click="openDialog">
-        <el-icon><Plus /></el-icon>
-      </div> -->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Plus, Search as SearchIcon } from "@element-plus/icons-vue"
+import { Search, MessageSquarePlus } from "lucide-vue-next"
 
 import { debounce, isEmpty } from "lodash-es"
 
@@ -56,7 +53,6 @@ const matchesFilter = (item, searchStr) => {
 const debounceSearch = debounce(async (key) => {
   if (__LOCAL_MODE__) {
     const data = await SessionModel.queryByKeyword(key)
-    console.log(data)
     chatStore.$patch({ searchConversationList: data })
   } else {
     if (isEmpty(key)) {
@@ -90,10 +86,15 @@ const debounceSearch = debounce(async (key) => {
 .header-search-add {
   min-width: 32px;
   height: 32px;
-  background: #54b4ef;
-  border-radius: 2px;
+  border-radius: 5px;
   font-size: 18px;
-  color: #fff;
   cursor: pointer;
+  color: rgb(96, 98, 102);
+  transition:
+    color 400ms cubic-bezier(0.215, 0.61, 0.355, 1),
+    background 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
 }
 </style>

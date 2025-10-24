@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue"
-import { Search } from "@element-plus/icons-vue"
+import { Search } from "lucide-vue-next"
 
 import emitter from "@/utils/mitt-bus"
 

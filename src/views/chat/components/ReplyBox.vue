@@ -1,6 +1,6 @@
 <template>
   <div v-if="replyMsgData" class="reply-box flex-bc" @click="onClick">
-    <el-icon class="close" @click="onClose"><CircleCloseFilled /></el-icon>
+    <el-icon class="close" @click="onClose"><CircleX /></el-icon>
     <div class="reply-box-content multi-truncate-2">
       <div v-if="replyMsgData?.nick" class="nick">{{ replyMsgData?.nick }} :</div>
       <div v-if="replyMsgData" class="text">
@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { CircleCloseFilled } from "@element-plus/icons-vue"
+import { CircleX } from "lucide-vue-next"
 
 import { storeToRefs } from "pinia"
 

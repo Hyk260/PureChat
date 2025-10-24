@@ -1,5 +1,5 @@
 import { computed } from "vue"
-import { Cloud, Globe, Settings2 as Settings, CircleAlert, Sun, Moon, Monitor } from "lucide-vue-next"
+import { Cloud, Brain, Globe, Settings2 as Settings, CircleAlert, Sun, Moon, Monitor } from "lucide-vue-next"
 
 import { ModelProvider } from "@/ai/types"
 import { $t } from "@/locales"
@@ -16,6 +16,12 @@ export const list = computed(() => {
       title: $t("settings.webSearch.title"),
       icon: Globe,
       hide: !__LOCAL_MODE__,
+    },
+    {
+      id: "aiProvider",
+      title: "AI服务商",
+      hide: true,
+      icon: Brain,
     },
     {
       id: "provider",

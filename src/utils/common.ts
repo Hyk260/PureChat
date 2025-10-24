@@ -188,7 +188,7 @@ export function msgContent(data: any, type: string) {
   if (type === "warning") {
     _data.data.body.text.value = data?.value || ""
     if (data && typeof data === "object" && "provider" in data) {
-      _data.data.body.text.provider = (data as any)?.provider || ""
+      _data.data.body.text.provider = data?.provider || ""
     }
   }
   return JSON.stringify(_data)

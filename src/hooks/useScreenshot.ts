@@ -16,7 +16,8 @@ interface ImageTypeOption {
   value: ImageType
 }
 
-export const imageTypeOptions: ImageTypeOption[] = Object.values(ImageType).map((value) => ({
+export const imageTypeOptions: ImageTypeOption[] = Object.values(ImageType)
+  .map((value) => ({
     label: value.toUpperCase(),
     value,
   }))

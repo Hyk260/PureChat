@@ -224,8 +224,7 @@
 </template>
 
 <script setup lang="ts">
-import { QuestionFilled, Refresh } from "@element-plus/icons-vue"
-import { Atom, Eye, ToyBrick } from "lucide-vue-next"
+import { Atom, Eye, ToyBrick, CircleQuestionMark as QuestionFilled, RefreshCcw as Refresh } from "lucide-vue-next"
 
 import { cloneDeep, debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
