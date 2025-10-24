@@ -17,9 +17,10 @@ interface ImageTypeOption {
 }
 
 export const imageTypeOptions: ImageTypeOption[] = Object.values(ImageType).map((value) => ({
-  label: value.toUpperCase(),
-  value,
-}))
+    label: value.toUpperCase(),
+    value,
+  }))
+  .filter((option) => option.value !== ImageType.Blob)
 
 type ScreenshotFunction = (
   element: Element,

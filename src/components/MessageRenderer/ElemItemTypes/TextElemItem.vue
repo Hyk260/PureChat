@@ -6,7 +6,11 @@
       <!-- 思考过程 -->
       <DeepThinking v-if="parsedCloudCustomData" :status="message.status" :original-msg="parsedCloudCustomData" />
       <!-- web搜索 -->
-      <WebSearch v-if="parsedCloudCustomData" :status="message.status" :original-msg="parsedCloudCustomData" />
+      <WebSearch
+        v-if="parsedCloudCustomData && message?.flow === 'in'"
+        :status="message.status"
+        :original-msg="parsedCloudCustomData"
+      />
       <!-- Markdown消息 -->
       <Markdown v-if="shouldShowMarkdown" :cloud-custom-data="parsedCloudCustomData" :content="message.payload.text" />
       <DynamicContent v-else :at-user-list="message.atUserList" :text="message.payload.text" />
@@ -19,7 +23,7 @@ import DynamicContent from "@/components/Chat/DynamicContent.vue"
 import { DB_Message } from "@/database/schemas/message"
 import { useAppStore, useChatStore } from "@/stores"
 
-import ReplyElem from "./ReplyElem.vue"
+import ReplyElem from "../CloudCustomData/ReplyElem.vue"
 import DeepThinking from "../CloudCustomData/DeepThinking.vue"
 import WebSearch from "../CloudCustomData/WebSearch.vue"
 

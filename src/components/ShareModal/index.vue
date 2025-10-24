@@ -7,12 +7,12 @@
     class="share-modal-dialog min-w-460"
     align-center
     title="截图分享"
-    width="60%"
+    width="80%"
     @close="handleClose"
   >
     <div class="share-modal">
       <div class="segmented">
-        <div id="preview" class="preview" :style="back">
+        <div id="preview" class="preview" :style="backgroundStyle">
           <div class="content">
             <ChatHeader />
             <h2 v-if="showRole" class="role">{{ roleText }}</h2>
@@ -29,91 +29,87 @@
                 <div class="avatar">
                   <UserAvatar
                     :size="32"
-                    :url="fnAvatar(item)"
+                    :url="getAvatarUrl(item)"
                     shape="square"
                     :type="isSelf(item) ? 'self' : 'single'"
                   />
                 </div>
-                <div class="item" :class="getMessageItemClass(item.type)">
+                <div class="item" :class="getMessageItemClass(item)">
                   <div :class="getMessageTypeClass(item.type)">
                     <component :is="getMessageComponent(item)" :key="item.ID" :message="item"> </component>
                   </div>
                 </div>
               </div>
             </div>
-            <div v-if="isFooter" class="footer p-16" :class="{ 'opacity-0': !isFooter }">
+            <div v-if="showFooter" class="footer p-16" :class="{ 'opacity-0': !showFooter }">
               <div class="flex-c">
                 <img class="size-22" loading="lazy" src="@/assets/images/log.png" alt="" />
                 <div class="title ml-8">PureChat</div>
               </div>
-              <span class="link"> {{ docsUrl }}</span>
-              <QrCode v-show="isQrCode" class="qr-code" :text="docsUrl" />
+              <span class="link">{{ docsUrl }}</span>
+              <QrCode v-show="showQrCode" class="qr-code" :text="docsUrl" />
             </div>
           </div>
         </div>
       </div>
-      <div class="form-item-props">
-        <el-scrollbar>
-          <div class="px-10">
-            <div class="flex-bc my-5 h-32">
-              <div>背景色</div>
-              <div class="grid grid-cols-7 gap-5">
-                <div
-                  v-for="(item, i) in backgColor"
-                  :key="i"
-                  class="w-28 h-28 relative rounded-50% cursor-pointer"
-                  :style="getBackgroundStyle(item)"
-                  @click="onColor(item)"
-                ></div>
+      <div class="min-w-350">
+        <div class="form-item-props">
+          <el-scrollbar>
+            <div class="px-10">
+              <div class="flex-bc my-5 h-32">
+                <div>背景色</div>
+                <div class="flex grid grid-cols-7 gap-5">
+                  <div
+                    v-for="(item, i) in backgroundColors"
+                    :key="i"
+                    class="w-28 h-28 relative rounded-50% cursor-pointer"
+                    :style="getBackgroundStyle(item)"
+                    @click="changeBackgroundColor(item)"
+                  ></div>
+                </div>
+              </div>
+              <el-divider />
+              <div v-if="promptContent" class="flex-bc my-5 h-32">
+                <div>包含助手提示词</div>
+                <div><el-switch v-model="includePrompt" /></div>
+              </div>
+              <el-divider v-if="promptContent" />
+              <div class="flex-bc my-5 h-32">
+                <div>包含页脚</div>
+                <div><el-switch v-model="showFooter" /></div>
+              </div>
+              <el-divider />
+              <div v-if="false" class="flex-bc my-5 h-32">
+                <div>包含二维码</div>
+                <div><el-switch v-model="showQrCode" :disabled="!showFooter" /></div>
+              </div>
+              <!-- <el-divider /> -->
+              <div class="flex-bc my-5 h-32">
+                <div>图片格式</div>
+                <div>
+                  <el-radio-group v-model="selectedImageType" size="small">
+                    <el-radio-button
+                      v-for="item in imageTypeOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-radio-group>
+                </div>
               </div>
             </div>
-            <el-divider />
-            <div v-if="promptContent" class="flex-bc my-5 h-32">
-              <div>包含助手提示词</div>
-              <div><el-switch v-model="isPrompt" /></div>
-            </div>
-            <el-divider v-if="promptContent" />
-            <div class="flex-bc my-5 h-32">
-              <div>包含页脚</div>
-              <div><el-switch v-model="isFooter" /></div>
-            </div>
-            <el-divider />
-            <div v-if="false" class="flex-bc my-5 h-32">
-              <div>包含二维码</div>
-              <div><el-switch v-model="isQrCode" :disabled="!isFooter" /></div>
-            </div>
-            <!-- <el-divider /> -->
-            <div class="flex-bc my-5 h-32">
-              <div>图片格式</div>
-              <div>
-                <el-radio-group v-model="imageType" size="small">
-                  <el-radio-button
-                    v-for="item in imageTypeOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-radio-group>
-              </div>
-            </div>
-          </div>
-        </el-scrollbar>
-      </div>
-      <div>
-        <el-button class="w-full" :loading="loading" :disabled="loading" @click="handleDownload">
-          <!-- <template #loading>
-            <div class="iconify-icon svg-spinners mr-8"></div>
-          </template> -->
-          {{ downloadButtonText }}
-        </el-button>
+          </el-scrollbar>
+        </div>
+        <div class="form-footer">
+          <el-button class="w-full" :disabled="loading" @click="handleCopy"> 复制截图 </el-button>
+          <el-button class="w-full" :disabled="loading" @click="handleDownload"> 下载截图 </el-button>
+        </div>
       </div>
     </div>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue"
-
 import { storeToRefs } from "pinia"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
@@ -125,17 +121,20 @@ import { useChatStore, useRobotStore } from "@/stores"
 import { getMessageItemClass, getMessageTypeClass, isSelf } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 
-import { back, backgColor, getBackgroundStyle, onColor } from "./utils"
+import { backgroundColors, backgroundStyle, getBackgroundStyle, changeBackgroundColor } from "./utils"
+
+import type { DB_Message } from "@/types"
 
 const { pkg } = __APP_INFO__
 const docsUrl = pkg.docs
-const isFooter = ref(false)
-const isQrCode = ref(true)
-const isPrompt = ref(false)
-const imageType = ref(ImageType.Blob)
+
+const showFooter = ref(false)
+const showQrCode = ref(true)
+const includePrompt = ref(false)
+const selectedImageType = ref(ImageType.JPG)
+
 const chatStore = useChatStore()
 const robotStore = useRobotStore()
-
 const [dialogVisible, setDialogVisible] = useState(false)
 const { isAssistant, getSortedForwardData } = storeToRefs(chatStore)
 const { loading, onDownload } = useScreenshot()
@@ -144,30 +143,38 @@ const promptContent = computed(() => {
   if (!isAssistant.value) return ""
   return robotStore.currentProviderPrompt?.prompt[0]?.content || ""
 })
-const showPrompt = computed(() => isAssistant.value && isPrompt.value && promptContent.value)
+
+const showPrompt = computed(() => isAssistant.value && includePrompt.value && promptContent.value)
+
 const roleText = computed(() => {
   try {
     const data = robotStore.currentProviderPrompt?.meta || {}
     if (!data.avatar || !data.title) return ""
-    return data ? `${data.avatar} ${data.title}` : ""
+    return `${data.avatar} ${data.title}`
   } catch {
     return ""
   }
 })
-const showRole = computed(() => roleText.value && isPrompt.value)
-const downloadButtonText = computed(() => (imageType.value === ImageType.Blob ? "复制截图" : "下载截图"))
 
-const fnAvatar = (item) => {
+const showRole = computed(() => roleText.value && includePrompt.value)
+
+const getAvatarUrl = (item: DB_Message): string => {
   return item.avatar || getAiAvatarUrl(item.from)
 }
 
-const handleDownload = async () => {
-  onDownload(imageType.value, roleText.value, () => {
+const handleCopy = async (): Promise<void> => {
+  onDownload(ImageType.Blob, roleText.value, () => {
     setDialogVisible(false)
   })
 }
 
-const handleClose = (done: () => void) => {
+const handleDownload = async (): Promise<void> => {
+  onDownload(selectedImageType.value, roleText.value, () => {
+    setDialogVisible(false)
+  })
+}
+
+const handleClose = (done?: () => void): void => {
   done?.()
 }
 
@@ -207,9 +214,8 @@ onUnmounted(() => {
 
 .share-modal {
   display: flex;
-  flex-direction: column;
   gap: 16px;
-  height: 100%;
+  height: 75vh;
 
   :deep(.history) {
     display: none;
@@ -224,7 +230,6 @@ onUnmounted(() => {
 
 .segmented {
   width: 100%;
-  max-height: 42vh;
   background: #f8f8f8;
   border: 1px solid #dddddd;
   border-radius: 8px;
@@ -240,6 +245,15 @@ onUnmounted(() => {
     margin: 10px 0;
   }
 }
+.form-footer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+  :deep(.el-button) {
+    margin-left: 0;
+  }
+}
 
 .preview {
   padding: 10px;
@@ -252,7 +266,7 @@ onUnmounted(() => {
     border: 2px solid #dddddd;
     border-radius: 8px;
     background: var(--color-body-bg);
-    // pointer-events: none;
+    pointer-events: none;
   }
 
   .footer {
