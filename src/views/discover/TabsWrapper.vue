@@ -2,19 +2,20 @@
   <div class="tabs-wrapper">
     <div v-for="option in tabOptions" :key="option.value" class="tab-item" @click="handleTabClick(option)">
       <el-button :class="{ 'tab-item--active': activeTab === option.value }">
-        {{ option.label }}
+        <el-icon><component :is="option.icon"></component></el-icon>
+        <span> {{ option.label }}</span>
       </el-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { options } from "./utils"
+import { options as tabOptions } from "./utils"
 
 interface TabOption {
   label: string
   value: string
-  icon?: string
+  icon?: any
 }
 
 defineOptions({
@@ -28,8 +29,6 @@ defineProps<{
 const emit = defineEmits<{
   tabChange: [value: string]
 }>()
-
-const tabOptions = computed<TabOption[]>(() => options)
 
 const handleTabClick = (option: TabOption) => {
   emit("tabChange", option.value)

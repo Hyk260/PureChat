@@ -84,7 +84,7 @@ const withdrawalMessage = computed(() => {
   vertical-align: middle;
   word-wrap: normal;
   word-break: break-all;
-  margin-top: 5px;
+  // margin-top: 5px;
   line-height: 16px;
   display: flex;
   align-items: center;

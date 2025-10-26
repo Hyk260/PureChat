@@ -27,11 +27,13 @@
         v-model="form.password"
         type="password"
         :placeholder="$t('login.password')"
-        :prefix-icon="Lock"
         size="large"
         clearable
         show-password
       >
+        <template #prefix>
+          <el-icon><Lock /></el-icon>
+        </template>
       </el-input>
     </el-form-item>
     <!-- 验证码 -->
@@ -84,8 +86,8 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from "vue"
-import { Key, Lock, User } from "@element-plus/icons-vue"
+import { Lock, User } from "lucide-vue-next"
+import { Key } from "@element-plus/icons-vue"
 
 import ImageVerify from "@/components/ImageVerify/index.vue"
 import { useOAuth } from "@/hooks/useOAuth"

@@ -1,5 +1,6 @@
 import { z } from "zod"
 
+import { TextPayload } from "./message"
 import { UserProfileSchema } from "./user"
 
 export const SessionSchema = {
@@ -115,11 +116,7 @@ export const LastMessageSchema = z
     lastSequence: z.number().optional(),
     fromAccount: z.string().optional(),
     type: z.string().optional(),
-    payload: z
-      .object({
-        text: z.string().optional(),
-      })
-      .optional(),
+    payload: TextPayload,
     cloudCustomData: z.string().optional(),
     isRevoked: z.boolean().optional(),
     onlineOnlyFlag: z.boolean().optional(),

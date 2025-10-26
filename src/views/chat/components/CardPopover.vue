@@ -34,9 +34,9 @@
 </template>
 
 <script setup lang="ts">
+import { Settings2 as Operation, ChartPie, LogOut } from "lucide-vue-next"
+// import { Operation, PieChart } from "@element-plus/icons-vue"
 import { onClickOutside } from "@vueuse/core"
-import { Operation, PieChart } from "@element-plus/icons-vue"
-import { LogOut } from "lucide-vue-next"
 
 import { useState } from "@/hooks/useState"
 import { useChatStore, useUserStore } from "@/stores"
@@ -69,7 +69,7 @@ const menuItems = [
   {
     index: "3",
     label: "社区支持",
-    icon: PieChart,
+    icon: ChartPie,
     action: () => {
       openWindow(homepage)
     },

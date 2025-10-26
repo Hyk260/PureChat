@@ -1,3 +1,5 @@
+import { Bot, BrainCircuit } from "lucide-vue-next"
+
 export const options = [
   // {
   //   label: "首页",
@@ -7,7 +9,7 @@ export const options = [
   {
     label: "助手",
     value: "assistant",
-    icon: "assistant_icon",
+    icon: Bot,
   },
   // {
   //   label: "插件",
@@ -22,6 +24,6 @@ export const options = [
   {
     label: "模型服务商",
     value: "model_provider",
-    icon: "model_provider_icon",
+    icon: BrainCircuit,
   },
 ]

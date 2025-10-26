@@ -103,8 +103,8 @@
 </template>
 
 <script setup lang="ts">
-import { CircleX } from "lucide-vue-next"
-import { EditPen } from "@element-plus/icons-vue"
+import { CircleX, SquarePen as EditPen } from "lucide-vue-next"
+// import { EditPen } from "@element-plus/icons-vue"
 
 import { isFullStaffGroup } from "@/ai/utils"
 import AddMemberPopup from "@/components/Popups/AddMemberPopup.vue"
@@ -373,7 +373,7 @@ watch(currentConversation, (data) => {
       font-size: 14px;
       font-weight: 400;
       color: var(--color-message-chat-name);
-      margin-right: 8px;
+      // margin-right: 8px;
     }
 
     .group-type {
