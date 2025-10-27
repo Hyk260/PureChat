@@ -1,4 +1,5 @@
-import OllamaAI from "./models"
+import Ollama from "./models"
+// import Ollama from "@/config/modelProviders/ollama"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_OLLAMA_PROXY_URL } = import.meta.env
@@ -10,8 +11,8 @@ export const OllamaModelValue = () => {
       Title: "模型列表",
       SubTitle: "选择的模型会在模型列表中展示",
       defaultValue: "",
-      collapse: OllamaAI.chatModels.map((t) => t.id),
-      options: OllamaAI,
+      collapse: Ollama.chatModels.map((t) => t.id),
+      options: Ollama,
     },
     OpenaiUrl: {
       ID: "openaiUrl",

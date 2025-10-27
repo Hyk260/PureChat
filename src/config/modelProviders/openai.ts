@@ -1,5 +1,7 @@
+import { ModelProviderCard } from "@/types/llm"
+
 // ref https://platform.openai.com/docs/models
-const OpenAI = {
+const OpenAI: ModelProviderCard = {
   chatModels: [
     {
       tokens: 400_000,
@@ -9,13 +11,6 @@ const OpenAI = {
       functionCall: true,
       id: "gpt-5-mini",
       maxOutput: 128_000,
-      pricing: {
-        units: [
-          { name: "textInput", rate: 0.25, strategy: "fixed", unit: "millionTokens" },
-          { name: "textOutput", rate: 2, strategy: "fixed", unit: "millionTokens" },
-          { name: "textInput_cacheRead", rate: 0.03, strategy: "fixed", unit: "millionTokens" },
-        ],
-      },
       vision: true,
     },
     {
@@ -114,6 +109,8 @@ const OpenAI = {
     },
   ],
   checkModel: "gpt-4o-mini",
+  enabled: true,
+  modelList: { showModelFetcher: true },
   description:
     "OpenAI 是全球领先的人工智能研究机构，其开发的模型如GPT系列推动了自然语言处理的前沿。OpenAI 致力于通过创新和高效的AI解决方案改变多个行业。他们的产品具有显著的性能和经济性，广泛用于研究、商业和创新应用。",
   modelsUrl: "https://platform.openai.com/docs/models",

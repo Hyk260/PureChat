@@ -1,4 +1,4 @@
-import DeepSeek from "./models"
+import DeepSeek from "@/config/modelProviders/deepseek"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_DEEPSEEK_BASE_URL } = import.meta.env

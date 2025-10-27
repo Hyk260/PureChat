@@ -107,7 +107,7 @@ export class MarkdownRenderer {
     }
 
     // applyMath(this.md) // 为数学公式添加支持
-    this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
+    // this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
     this.md.use(markdownItContainer) // 添加对 Markdown 容器的支持
     this.md.use(linkPlugin) // 修改链接以在新标签页中打开并添加 noopener/noreferrer
     this.md.use(configureFootnoteRules, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）

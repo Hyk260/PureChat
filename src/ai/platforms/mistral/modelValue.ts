@@ -1,4 +1,4 @@
-import Mistral from "./models"
+import Mistral from "@/config/modelProviders/mistral"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_MISTRAL_BASE_URL } = import.meta.env

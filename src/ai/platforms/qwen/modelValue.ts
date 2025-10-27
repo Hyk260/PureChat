@@ -1,4 +1,4 @@
-import Qwen from "./models"
+import Qwen from "@/config/modelProviders/qwen"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_QWEN_BASE_URL } = import.meta.env

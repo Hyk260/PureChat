@@ -1,4 +1,4 @@
-import ZhiPu from "./models"
+import ZeroOne from "@/config/modelProviders/zeroone"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_ZEROONE_BASE_URL } = import.meta.env
@@ -10,8 +10,8 @@ export const ZeroOneModelValue = () => {
       Title: "模型列表",
       SubTitle: "选择的模型会在模型列表中展示",
       defaultValue: "",
-      collapse: ZhiPu.chatModels.map((t) => t.id),
-      options: ZhiPu,
+      collapse: ZeroOne.chatModels.map((t) => t.id),
+      options: ZeroOne,
     },
     OpenaiUrl: {
       ID: "openaiUrl",
