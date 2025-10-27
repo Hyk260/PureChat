@@ -37,7 +37,7 @@ import { useMessageOperations } from "@/hooks/useMessageOperations"
 import { useChatStore } from "@/stores"
 import { getOperatingSystem } from "@/utils/common"
 
-import { placeholderMap } from "../utils/configure"
+import { placeholderMap } from "@/utils/wangEditor/editor-config"
 
 const { DEV: isDev } = import.meta.env
 

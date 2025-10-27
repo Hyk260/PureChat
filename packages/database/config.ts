@@ -76,11 +76,11 @@ export const ProvidersList = [
     profileCustomField: [
       {
         key: "Tag_Profile_Custom_Provider",
-        value: "",
+        value: "Qwen",
       },
       {
         key: "Tag_Profile_Custom_Homepage",
-        value: "",
+        value: "https://www.aliyun.com/product/bailian/",
       },
     ],
   },

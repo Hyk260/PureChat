@@ -1,6 +1,6 @@
 import { computed } from "vue"
 
-import { IDomEditor, IEditorConfig, IToolbarConfig } from "@wangeditor/editor"
+import type { IDomEditor, IEditorConfig, IToolbarConfig } from "@wangeditor/editor"
 
 import { $t } from "@/locales"
 import { useChatStore } from "@/stores/modules/chat"
@@ -21,7 +21,9 @@ export const editorConfig: Partial<IEditorConfig> = {
   // 配置编辑器是否只读，默认为 false
   // readOnly: true,
   /* 菜单配置 */
-  MENU_CONF: {},
+  MENU_CONF: {
+    codeSelectLang: {},
+  },
   EXTEND_CONF: {
     mentionConfig: {
       pinyinSearch: true,
@@ -42,15 +44,16 @@ export const editorConfig: Partial<IEditorConfig> = {
 }
 
 // 代码语言
-editorConfig.MENU_CONF["codeSelectLang"] = {}
+// editorConfig.MENU_CONF["codeSelectLang"] = {}
 
 // 显示 modal
-function showModal(e: IDomEditor) {
+function showModal(_: IDomEditor) {
   // console.log("[@] 显示 showModal:", e.getText())
   useChatStore().toggleMentionModal(true)
 }
+
 // 隐藏 modal
-function hideModal(e: IDomEditor) {
+function hideModal(_: IDomEditor) {
   // console.log("[@] 隐藏 hideModal:", e.getText())
   useChatStore().toggleMentionModal(false)
 }

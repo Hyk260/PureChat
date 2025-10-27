@@ -1,23 +1,23 @@
 import { defineAsyncComponent, defineComponent, h } from "vue"
 
-// import CodeBlock from "../components/CodeBlockNode"
-// import Table from "../components/TableNode"
-import PreCodeNode from "../components/PreCodeNode"
+import CodeBlock from "../components/CodeBlockNode"
+import Table from "../components/TableNode"
+// import PreCodeNode from "../components/PreCodeNode"
 
 // 异步按需加载 CodeBlock 组件
-const CodeBlockNodeAsync = defineAsyncComponent(async () => {
-  try {
-    const mod = await import("../components/CodeBlockNode")
-    return mod.default
-  } catch {
-    return PreCodeNode
-  }
-})
+// const CodeBlockNodeAsync = defineAsyncComponent(async () => {
+//   try {
+//     const mod = await import("../components/CodeBlockNode")
+//     return mod.default
+//   } catch {
+//     return PreCodeNode
+//   }
+// })
 
-const TableNodeAsync = defineAsyncComponent(async () => {
-  const mod = await import("../components/TableNode")
-  return mod.default
-})
+// const TableNodeAsync = defineAsyncComponent(async () => {
+//   const mod = await import("../components/TableNode")
+//   return mod.default
+// })
 
 const renderPreNode = (node: any) => {
   // console.log("Rendering <pre> node:", node)
@@ -48,7 +48,7 @@ const renderPreNode = (node: any) => {
   }
   // console.log("Rendering code block:", { language, codeText })
   if (!codeText.trim()) return null
-  return h(CodeBlockNodeAsync, { code: codeText, language })
+  return h(CodeBlock, { code: codeText, language })
 }
 
 const MarkdownNodeRender = defineComponent({
@@ -140,7 +140,7 @@ const MarkdownNodeRender = defineComponent({
 
         const columns = keys.map((k, i) => ({ prop: k, label: headers[i] || k, width: 180 }))
 
-        return h(TableNodeAsync, { data, columns })
+        return h(Table, { data, columns })
       } else {
         return h(
           node.tagName,

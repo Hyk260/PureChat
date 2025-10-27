@@ -4,7 +4,7 @@ import ctrlEnterModule from "@/utils/wangEditor/plugin-ctrl-enter"
 import fileModule from "@/utils/wangEditor/plugin-file"
 import mentionModule from "@/utils/wangEditor/plugin-mention"
 
-// 注册插件s
+// 注册插件
 Boot.registerModule(fileModule) // 文件
 Boot.registerModule(mentionModule) // @提及
 Boot.registerModule(ctrlEnterModule) // ctrl+Enter 换行

@@ -40,7 +40,6 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue"
 import { onClickOutside } from "@vueuse/core"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"

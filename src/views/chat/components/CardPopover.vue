@@ -21,10 +21,7 @@
       <div v-for="item in menuItems" :key="item.index" class="menu-root">
         <div class="menu-item">
           <div @click="closeCard(item)">
-            <SvgIcon v-if="item.svg" :local-icon="item.svg" />
-            <el-icon v-else>
-              <component :is="item.icon" />
-            </el-icon>
+            <el-icon><component :is="item.icon" v-if="item.icon" /></el-icon>
             <span>{{ item.label }}</span>
           </div>
         </div>

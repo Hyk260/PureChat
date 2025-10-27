@@ -30,7 +30,6 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue"
 import { onClickOutside, useEventListener } from "@vueuse/core"
 
-import { IDomEditor } from "@wangeditor/editor"
 import { cloneDeep } from "lodash-es"
 import { storeToRefs } from "pinia"
 
@@ -38,6 +37,7 @@ import { useChatStore, useGroupStore } from "@/stores"
 import { insertMention, prioritizeRBTUserID } from "@/utils/chat"
 import emitter, { type FilteringType } from "@/utils/mitt-bus"
 
+import type { IDomEditor } from "@wangeditor/editor"
 import type { GroupMember } from "@/stores/modules/group/type"
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__"

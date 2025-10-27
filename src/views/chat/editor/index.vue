@@ -42,7 +42,7 @@ import { isMobile } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
 
 import Inputbar from "../Inputbar/index.vue"
-import { editorConfig } from "../utils/configure"
+import { editorConfig } from "@/utils/wangEditor/editor-config"
 import { filterMentionList } from "@/utils/pinyin/utils"
 import SendMessageButton from "./SendMessageButton.vue"
 import {
@@ -57,7 +57,7 @@ import {
 import type { DraftData } from "@/types"
 import type { IDomEditor } from "@wangeditor/editor"
 
-import "../utils/custom-menu"
+import "@/utils/wangEditor/editor-config/plugin"
 import "@/styles/wangeditor/index.css"
 
 const MAX_FILE_SIZE_MB = 100

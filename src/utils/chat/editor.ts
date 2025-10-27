@@ -1,4 +1,4 @@
-import { IDomEditor } from "@wangeditor/editor"
+import type { IDomEditor } from "@wangeditor/editor"
 
 export const insertMention = (options: {
   id: string
