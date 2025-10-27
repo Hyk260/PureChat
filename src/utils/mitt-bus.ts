@@ -6,8 +6,6 @@ import type { GroupMember } from "@/stores/modules/group/type"
 export type FilteringType = "all" | "success" | "empty" | "updata"
 
 export interface Events {
-  [key: string]: unknown
-  [key: symbol]: unknown
   handleImageViewer: string
   SidebarEditDialog: boolean
   handleAt: { id: string; name: string }

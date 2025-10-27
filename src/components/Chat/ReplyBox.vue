@@ -1,9 +1,12 @@
 <template>
-  <div v-if="replyMsgData" class="reply-box flex-bc" @click="onClick">
-    <el-icon class="close" @click="onClose"><CircleX /></el-icon>
+  <div v-if="replyMsgData" class="reply-box flex-bc" @click="handleReplyClick">
+    <el-icon class="close" @click="handleClose">
+      <CircleX />
+    </el-icon>
+
     <div class="reply-box-content multi-truncate-2">
-      <div v-if="replyMsgData?.nick" class="nick">{{ replyMsgData?.nick }} :</div>
-      <div v-if="replyMsgData" class="text">
+      <div v-if="hasNickname" class="nick">{{ replyMsgData.nick }} :</div>
+      <div class="text">
         <DynamicContent :text="getAbstractContent(replyMsgData)" />
       </div>
     </div>
@@ -26,13 +29,15 @@ defineOptions({
 const chatStore = useChatStore()
 const { replyMsgData } = storeToRefs(chatStore)
 
-const onClose = () => {
+const hasNickname = computed(() => Boolean(replyMsgData.value?.nick))
+
+const handleClose = () => {
   chatStore.setReplyMsgData(null)
 }
 
-const onClick = () => {
-  const { ID } = replyMsgData.value || {}
-  ID && scrollToDomPosition(ID)
+const handleReplyClick = () => {
+  const messageId = replyMsgData.value?.ID
+  messageId && scrollToDomPosition(messageId)
 }
 </script>
 

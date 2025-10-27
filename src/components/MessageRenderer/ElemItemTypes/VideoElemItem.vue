@@ -5,9 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue"
-
-import Artplayer from "artplayer"
+// import Artplayer from "artplayer"
 
 const state = `<svg
   viewBox='0 0 80 80'
@@ -110,11 +108,11 @@ const option = computed(() => ({
 }))
 
 const initArt = () => {
-  Artplayer.CONTEXTMENU = false
-  art.value = new Artplayer(option.value)
-  art.value.on("ready", () => {
-    // art.value.mini = true
-  })
+  // Artplayer.CONTEXTMENU = false
+  // art.value = new Artplayer(option.value)
+  // art.value.on("ready", () => {
+  //   // art.value.mini = true
+  // })
 }
 
 onMounted(() => {

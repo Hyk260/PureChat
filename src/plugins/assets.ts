@@ -3,6 +3,6 @@ import "uno.css"
 import "@/styles/global/index.css"
 import "@/styles/index.css"
 // https://animate.style/
-import "animate.css"
+// import "animate.css"
 // SvgIcon
 import "virtual:svg-icons-register"

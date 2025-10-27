@@ -43,22 +43,33 @@ export const viteDefine = (env: Env.ImportMeta) => {
 
 // 定义模块与 chunk 名称的映射关系
 const chunkMap = {
+  // 核心框架
+  vue: "vue-vendor",
+  "vue-router": "vue-router-vendor",
+  pinia: "pinia-vendor",
+  // UI 库
   "@element-plus/icons-vue": "element-icons-vendor",
+  "element-plus": "element-plus-vendor",
+  "ant-design-vue": "ant-vendor",
+  // 编辑器相关
   "@wangeditor": "wangeditor-vendor",
+  "monaco-editor": "monaco-editor-vendor",
+  // AI 相关
+  ollama: "ollama-vendor",
+  // IMsdk
   "@tencentcloud/chat": "tencent-im-vendor",
-  "@vueuse": "vueuse-vendor",
+  // 工具库
   "lodash-es": "lodash-vendor",
-  "element-plus": "el-vendor",
+  "@vueuse": "vueuse-vendor",
+  dayjs: "dayjs-vendor",
+  axios: "axios-vendor",
+  // 其他
+  "emoji-mart": "emoji-mart-vendor",
   // artplayer: "artplayer-vendor",
   highlight: "highlight-vendor",
   "pinyin-pro": "pinyin-pro-vendor",
-  // markdown: "markdown-vendor",
-  axios: "axios-vendor",
-  dayjs: "dayjs-vendor",
-  vue: "vue-vendor",
-  "vue-router": "vue-router-vendor",
+  // markdown-it: "markdown-it-vendor",
   "vue-i18n": "vue-i18n-vendor",
-  pinia: "pinia-vendor",
   iconify: "iconify-vendor",
 }
 

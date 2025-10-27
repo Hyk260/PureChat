@@ -45,7 +45,7 @@ import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 import Chatwin from "./chat/Chatwin.vue"
 import ConversationList from "./chat/ConversationList.vue"
 import EmptyMessage from "./components/EmptyMessage.vue"
-import ReplyBox from "./components/ReplyBox.vue"
+import ReplyBox from "@/components/Chat/ReplyBox.vue"
 import SearchInput from "./components/SearchInput.vue"
 import Editor from "./editor/index.vue"
 

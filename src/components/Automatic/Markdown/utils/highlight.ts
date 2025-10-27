@@ -1,14 +1,26 @@
-import hljs from "highlight.js"
+import hljs from "highlight.js/lib/core"
 import javascript from "highlight.js/lib/languages/javascript"
+import typescript from "highlight.js/lib/languages/typescript"
 import python from "highlight.js/lib/languages/python"
+import json from "highlight.js/lib/languages/json"
+import java from "highlight.js/lib/languages/java"
+import html from "highlight.js/lib/languages/xml"
+import css from "highlight.js/lib/languages/css"
+import markdown from "highlight.js/lib/languages/markdown"
 
 import "../style/highlight.scss"
 import "highlight.js/styles/base16/default-light.css"
 
 // 注册 highlight.js 语言
+hljs.registerLanguage("markdown", markdown)
+hljs.registerLanguage("html", html)
+hljs.registerLanguage("css", css)
+hljs.registerLanguage("json", json)
 hljs.registerLanguage("javascript", javascript)
+hljs.registerLanguage("typescript", typescript)
 hljs.registerLanguage("vue", javascript)
 hljs.registerLanguage("python", python)
+hljs.registerLanguage("java", java)
 
 // hljs.configure({ ignoreUnescapedHTML: true })
 

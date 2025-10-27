@@ -30,12 +30,9 @@ const SUPPORTED_LANGUAGES = [
 // 支持的主题列表
 const SUPPORTED_THEMES = [
   "github-dark",
-  "github-dark-default",
-  "github-dark-dimmed",
-  "github-dark-high-contrast",
   "github-light",
+  "github-dark-default",
   "github-light-default",
-  "github-light-high-contrast",
   "one-dark-pro",
   "one-light",
   "vitesse-dark",

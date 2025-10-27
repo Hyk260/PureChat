@@ -92,8 +92,9 @@ const handleSaveChange = () => {}
 
 const loadMonacoEditor = async () => {
   try {
-    const module = await import("@guolao/vue-monaco-editor")
-    VueMonacoEditor.value = module.VueMonacoEditor
+    useTextarea.value = true
+    // const module = await import("@guolao/vue-monaco-editor")
+    // VueMonacoEditor.value = module.VueMonacoEditor
   } catch (error) {
     console.warn("Monaco Editor 加载失败，切换到备用编辑器:", error)
     useTextarea.value = true
