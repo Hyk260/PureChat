@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
-    "@emoji-mart/data": "^1.2.1",
     "@guolao/vue-monaco-editor": "^1.5.5",
     "@iconify/vue": "^4.3.0",
     "@microsoft/fetch-event-source": "^2.0.1",
@@ -42,9 +41,7 @@
     "@vueuse/core": "^8.4.2",
     "@wangeditor/editor": "5.1.23",
     "@wangeditor/editor-for-vue": "5.1.12",
-    "animate.css": "^4.1.1",
-    "ant-design-vue": "~4.2.6",
-    "artplayer": "^5.1.1",
+    "ant-design-vue": "4.2.6",
     "axios": "^0.26.1",
     "cross-env": "^7.0.3",
     "dayjs": "^1.11.11",
