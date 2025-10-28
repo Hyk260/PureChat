@@ -57,14 +57,8 @@ import {
   // ElTreeV2,
   // ElUpload,
   // ElWatermark,
-  ElLoading, // v-loading 指令
   ElMain,
   ElMenu,
-  // ElInfiniteScroll, // v-infinite-scroll 指令
-  // ElPopoverDirective, // v-popover 指令
-  ElMessage, // $message 全局属性对象globalProperties
-  ElMessageBox, // $msgbox、$alert、$confirm、$prompt 全局属性对象globalProperties
-  ElNotification, // $notify 全局属性对象globalProperties
   ElOption,
   // ElMenuItem,
   // ElMenuItemGroup,
@@ -108,6 +102,13 @@ import {
   ElTooltip,
   // ElTransfer,
   ElTree,
+
+  // ElLoading, // v-loading 指令
+  // ElInfiniteScroll, // v-infinite-scroll 指令
+  // ElPopoverDirective, // v-popover 指令
+  // ElMessage, // $message 全局属性对象globalProperties
+  // ElMessageBox, // $msgbox、$alert、$confirm、$prompt 全局属性对象globalProperties
+  // ElNotification, // $notify 全局属性对象globalProperties
 } from "element-plus"
 
 import type { App, Component } from "vue"
@@ -218,12 +219,12 @@ const components = [
 ]
 
 const plugins = [
-  ElLoading,
+  // ElLoading,
   // ElInfiniteScroll,
   // ElPopoverDirective,
-  ElMessage,
-  ElMessageBox,
-  ElNotification,
+  // ElMessage,
+  // ElMessageBox,
+  // ElNotification,
 ]
 
 const { VITE_AUTO_COMPONENT } = import.meta.env

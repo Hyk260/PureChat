@@ -9,7 +9,11 @@
 import { createTextVNode, defineComponent } from "vue"
 import { useClipboard } from "@vueuse/core"
 
-import { ElMessage, ElMessageBox, ElNotification } from "element-plus"
+import {
+  ElMessage,
+  // ElMessageBox,
+  // ElNotification
+} from "element-plus"
 
 import { localStg, sessionStg } from "@/utils/storage"
 
@@ -21,8 +25,8 @@ const ContextHolder = defineComponent({
   name: "ContextHolder",
   setup() {
     function register() {
-      window.$notification = ElNotification
-      window.$messageBox = ElMessageBox
+      // window.$notification = ElNotification
+      // window.$messageBox = ElMessageBox
       window.$message = ElMessage
     }
 

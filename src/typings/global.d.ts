@@ -38,7 +38,9 @@ declare global {
     /** NProgress */
     NProgress?: import('nprogress').NProgress;
     /** MessageBox */
-    $messageBox?: import('element-plus').IElMessageBox;
+    // $messageBox?: import('element-plus').IElMessageBox;
+    /** Notification */
+    // $notification: import('element-plus').Notify;
     /** Message */
     // $message?: import('element-plus').Message;
     $message?: import('element-plus').Message & {
@@ -47,8 +49,6 @@ declare global {
       info: (message: string) => void;
       error: (message: string) => void;
     };
-    /** Notification */
-    $notification: import('element-plus').Notify;
     // __TIM_DEBUG__: DebugInterface;
   }
 

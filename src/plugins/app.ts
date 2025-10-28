@@ -1,5 +1,6 @@
 import { type App, h } from "vue"
 
+import { ElNotification } from "element-plus"
 import { ElButton, type NotificationHandle } from "element-plus"
 
 import { $t } from "@/locales"
@@ -16,7 +17,7 @@ export function setupAppErrorHandle(app: App) {
 
 function notify() {
   if (Notification) Notification.close()
-  Notification = window.$notification({
+  Notification = ElNotification({
     title: $t("system.updateContent"),
     dangerouslyUseHTMLString: true,
     message: h("div", [
