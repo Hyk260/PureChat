@@ -13,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+import { ElImageViewer } from "element-plus"
 import {
   onMounted,
   onUnmounted,

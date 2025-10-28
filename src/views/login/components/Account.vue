@@ -86,6 +86,7 @@
 </template>
 
 <script setup lang="ts">
+import { ElAutocomplete } from "element-plus"
 import { Lock, User } from "lucide-vue-next"
 import { Key } from "@element-plus/icons-vue"
 
