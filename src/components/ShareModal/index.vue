@@ -41,13 +41,17 @@
                 </div>
               </div>
             </div>
-            <div v-if="showFooter" class="footer p-16" :class="{ 'opacity-0': !showFooter }">
+            <div
+              v-if="shareSettings.showFooter"
+              class="footer p-16"
+              :class="{ 'opacity-0': !shareSettings.showFooter }"
+            >
               <div class="flex-c">
                 <img class="size-22" loading="lazy" src="@/assets/images/log.png" alt="" />
                 <div class="title ml-8">PureChat</div>
               </div>
               <span class="link">{{ docsUrl }}</span>
-              <QrCode v-show="showQrCode" class="qr-code" :text="docsUrl" />
+              <QrCode v-show="shareSettings.showQrCode && shareSettings.showFooter" class="qr-code" :text="docsUrl" />
             </div>
           </div>
         </div>
@@ -71,23 +75,19 @@
               <el-divider />
               <div v-if="promptContent" class="flex-bc my-5 h-32">
                 <div>包含助手提示词</div>
-                <div><el-switch v-model="includePrompt" /></div>
+                <div><el-switch v-model="shareSettings.includePrompt" /></div>
               </div>
               <el-divider v-if="promptContent" />
               <div class="flex-bc my-5 h-32">
                 <div>包含页脚</div>
-                <div><el-switch v-model="showFooter" /></div>
+                <div><el-switch v-model="shareSettings.showFooter" /></div>
               </div>
               <el-divider />
-              <div v-if="false" class="flex-bc my-5 h-32">
-                <div>包含二维码</div>
-                <div><el-switch v-model="showQrCode" :disabled="!showFooter" /></div>
-              </div>
-              <!-- <el-divider /> -->
+              <!-- 二维码选项暂时禁用 -->
               <div class="flex-bc my-5 h-32">
                 <div>图片格式</div>
                 <div>
-                  <el-radio-group v-model="selectedImageType" size="small">
+                  <el-radio-group v-model="shareSettings.selectedImageType" size="small">
                     <el-radio-button
                       v-for="item in imageTypeOptions"
                       :key="item.value"
@@ -110,6 +110,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, onUnmounted, reactive } from "vue"
 import { storeToRefs } from "pinia"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
@@ -124,14 +125,17 @@ import emitter from "@/utils/mitt-bus"
 import { backgroundColors, backgroundStyle, getBackgroundStyle, changeBackgroundColor } from "./utils"
 
 import type { DB_Message } from "@/types"
+import type { ShareOptions } from "./types"
 
 const { pkg } = __APP_INFO__
 const docsUrl = pkg.docs
 
-const showFooter = ref(false)
-const showQrCode = ref(true)
-const includePrompt = ref(false)
-const selectedImageType = ref(ImageType.JPG)
+const shareSettings = reactive<ShareOptions>({
+  showFooter: false,
+  showQrCode: true,
+  includePrompt: false,
+  selectedImageType: ImageType.JPG,
+})
 
 const chatStore = useChatStore()
 const robotStore = useRobotStore()
@@ -139,39 +143,73 @@ const [dialogVisible, setDialogVisible] = useState(false)
 const { isAssistant, getSortedForwardData } = storeToRefs(chatStore)
 const { loading, onDownload } = useScreenshot()
 
-const promptContent = computed(() => {
+/**
+ * 获取助手提示词内容
+ */
+const promptContent = computed((): string => {
   if (!isAssistant.value) return ""
   return robotStore.currentProviderPrompt?.prompt[0]?.content || ""
 })
 
-const showPrompt = computed(() => isAssistant.value && includePrompt.value && promptContent.value)
+/**
+ * 是否显示助手提示词
+ */
+const showPrompt = computed((): boolean => isAssistant.value && shareSettings.includePrompt && promptContent.value)
 
-const roleText = computed(() => {
+/**
+ * 获取助手角色文本
+ */
+const roleText = computed((): string => {
   try {
     const data = robotStore.currentProviderPrompt?.meta || {}
     if (!data.avatar || !data.title) return ""
     return `${data.avatar} ${data.title}`
-  } catch {
+  } catch (error) {
+    console.error("获取角色文本失败:", error)
     return ""
   }
 })
 
-const showRole = computed(() => roleText.value && includePrompt.value)
+/**
+ * 是否显示角色信息
+ */
+const showRole = computed((): boolean => roleText.value && shareSettings.includePrompt)
 
+/**
+ * 获取消息头像URL
+ * @param item 消息对象
+ * @returns 头像URL
+ */
 const getAvatarUrl = (item: DB_Message): string => {
   return item.avatar || getAiAvatarUrl(item.from)
 }
 
-const handleCopy = async (): Promise<void> => {
-  onDownload(ImageType.Blob, roleText.value, () => {
-    setDialogVisible(false)
-  })
+/**
+ * 处理截图操作的通用函数
+ * @param imageType 图片类型
+ */
+const processScreenshot = async (imageType: ImageType): Promise<void> => {
+  try {
+    await onDownload(imageType, roleText.value, () => {
+      setDialogVisible(false)
+    })
+  } catch (error) {
+    console.error("截图操作失败:", error)
+  }
 }
 
-const handleDownload = async (): Promise<void> => {
-  onDownload(selectedImageType.value, roleText.value, () => {
-    setDialogVisible(false)
-  })
+/**
+ * 复制截图到剪贴板
+ */
+const handleCopy = (): Promise<void> => {
+  return processScreenshot(ImageType.Blob)
+}
+
+/**
+ * 下载截图文件
+ */
+const handleDownload = (): Promise<void> => {
+  return processScreenshot(shareSettings.selectedImageType)
 }
 
 const handleClose = (done?: () => void): void => {
@@ -179,7 +217,7 @@ const handleClose = (done?: () => void): void => {
 }
 
 onMounted(() => {
-  emitter.on("handleShareModal", (val) => {
+  emitter.on("handleShareModal", (val: boolean) => {
     setDialogVisible(val)
   })
 })
@@ -217,12 +255,9 @@ onUnmounted(() => {
   gap: 16px;
   height: 75vh;
 
-  :deep(.history) {
-    display: none;
-  }
-  :deep(.setup) {
-    display: none;
-  }
+  /* 隐藏不需要在截图中显示的元素 */
+  :deep(.history),
+  :deep(.setup),
   :deep(.share) {
     display: none;
   }
@@ -241,16 +276,19 @@ onUnmounted(() => {
   background: rgba(0, 0, 0, 0.015);
   border: 1px solid #e3e3e3;
   border-radius: 8px;
+
   :deep(.el-divider) {
     margin: 10px 0;
   }
 }
+
 .form-footer {
   margin-top: 10px;
   display: flex;
-  justify-content: flex-end;
   gap: 5px;
+
   :deep(.el-button) {
+    flex: 1;
     margin-left: 0;
   }
 }
