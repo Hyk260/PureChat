@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from "vue"
-
+import { useCopyCode } from "@/hooks/useCopyCode"
 import { ElConfigProvider } from "element-plus"
 
 import AppProvider from "@/components/Common/app-provider.vue"
@@ -27,6 +27,8 @@ onMounted(() => {
   themeStore.setFontTheme()
   themeStore.setThemeScheme()
   userStore.tryReconnect()
+  // setup global copy code handler
+  useCopyCode()
   useSettings()
 })
 </script>

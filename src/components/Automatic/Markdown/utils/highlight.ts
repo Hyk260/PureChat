@@ -33,6 +33,8 @@ export function escapeHtml(html: string): string {
   return html.replace(/</g, "&lt;").replace(/>/g, "&gt;")
 }
 
+export const clipboard = "nextElementSibling && (window.copyToClipboard(nextElementSibling.innerText))"
+
 /**
  * 高亮code函数
  * @param {string} str - 要高亮的代码字符串。
@@ -40,7 +42,6 @@ export function escapeHtml(html: string): string {
  * @returns {string} 高亮后的 HTML 字符串。
  */
 export const highlight = (str: string, lang: string): string => {
-  const clipboard = "nextElementSibling && (window.copyToClipboard(nextElementSibling.innerText))"
   const CopyIcon = `<div class='icon-copy'></div>`
 
   const copyButtonHtml = `<button class="copy-code-button" onclick="${clipboard}" title="copy">${CopyIcon}</button>`

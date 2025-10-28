@@ -214,12 +214,12 @@ const handlePreviewCode = () => {
 }
 
 const heightCheck = () => {
-  nextTick(() => {
-    const debouncedHeightCheck = initResizeObserver(codeContainerRef.value)
-    if (debouncedHeightCheck) {
-      debouncedHeightCheck(codeContainerRef.value)
-    }
-  })
+  // nextTick(() => {
+  //   const debouncedHeightCheck = initResizeObserver(codeContainerRef.value)
+  //   if (debouncedHeightCheck) {
+  //     debouncedHeightCheck(codeContainerRef.value)
+  //   }
+  // })
 }
 
 onMounted(async () => {
@@ -231,7 +231,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   highlighter.value?.dispose()
-  cleanupResizeObserver()
+  // cleanupResizeObserver()
 })
 
 watch(

@@ -3,6 +3,10 @@ import attrsPlugin from "markdown-it-attrs"
 import markdownItContainer from "markdown-it-container"
 import markdownItFootnote from "markdown-it-footnote"
 
+import DOMPurify from "dompurify"
+import { parseDocument } from "htmlparser2"
+
+import { prettyObject } from "@/ai/utils"
 // import markdownItMark from "markdown-it-mark"
 import { configureFootnoteRules } from "./markdown"
 import { highlightLinePlugin } from "./plugins/highlightLines"
@@ -13,6 +17,7 @@ import { linkPlugin } from "./plugins/link"
 import { preWrapperPlugin } from "./plugins/preWrapper"
 import { highlight, highlightCode } from "./utils/highlight"
 import { convertToMarkdownFootnotes } from "./utils/utils"
+import { parseMarkdownToStructure } from "./markdown-parser"
 
 import type { MarkdownToken } from "./types"
 import type { KnowledgeReference } from "@/types"
@@ -76,9 +81,10 @@ export class MarkdownRenderer {
 
     this.highlightOptions = {
       showLang: highlightOptions.showLang ?? false,
-      // showCopy: highlightOptions.showCopy ?? false,
+      showCopy: highlightOptions.showCopy ?? false,
     }
 
+    const isWrapper = this.highlightOptions.showCopy || this.highlightOptions.showLang
     const codeCopyButtonTitle = options.codeCopyButtonTitle || "Copy Code"
 
     this.md = markdownit({
@@ -87,7 +93,7 @@ export class MarkdownRenderer {
       breaks: true, // 将段落中的 '\n'（换行符）转换为 <br> 标签
       langPrefix: "language-", // 围栏代码块的 CSS 语言前缀（例如，"language-js"）
       typographer: true, // 启用智能引号、破折号和其他排版替换
-      highlight: this.highlightOptions.showLang ? highlight : highlightCode, // 为代码块分配自定义高亮函数
+      highlight: isWrapper ? highlight : highlightCode, // 为代码块分配自定义高亮函数
     })
 
     if (options?.enablePreWrapper) {
@@ -107,7 +113,7 @@ export class MarkdownRenderer {
     }
 
     // applyMath(this.md) // 为数学公式添加支持
-    // this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
+    this.md.use(markdownItFootnote) // 添加对 Markdown 脚注的支持
     this.md.use(markdownItContainer) // 添加对 Markdown 容器的支持
     this.md.use(linkPlugin) // 修改链接以在新标签页中打开并添加 noopener/noreferrer
     this.md.use(configureFootnoteRules, webSearchResults) // 自定义脚注的渲染方式（例如，链接到来源）
@@ -119,9 +125,25 @@ export class MarkdownRenderer {
 
   parse(content: string): MarkdownToken[] {
     const safeMarkdown = (content ?? "").toString()
-    // Get tokens from markdown-it
     const tokens = this.md.parse(safeMarkdown, {}) as MarkdownToken[]
     return tokens
+  }
+
+  getParseMarkdownToStructure(content: string) {
+    return parseMarkdownToStructure(content, this.md)
+  }
+
+  renderParsedNodes(text: string, webSearchResult?: KnowledgeReference[], enableDOMPurify: boolean = true) {
+    let contentToRender: string = text || ""
+    if (!contentToRender) return []
+    if (typeof contentToRender !== "string") {
+      contentToRender = prettyObject(contentToRender)
+    }
+    const content = this.render(contentToRender, webSearchResult)
+    // Markdown模式添加安全过滤和样式类 并处理成dom ast
+    // return parseDocument(content).children
+    const sanitizedContent = enableDOMPurify ? DOMPurify.sanitize(content, { ADD_ATTR: ["target"] }) : content
+    return parseDocument(sanitizedContent).children
   }
 
   /**

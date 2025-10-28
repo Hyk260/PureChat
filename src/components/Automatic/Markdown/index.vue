@@ -5,16 +5,12 @@
 </template>
 
 <script setup lang="ts">
-import DOMPurify from "dompurify"
-import { parseDocument } from "htmlparser2"
-
 // import { throttle } from "lodash-es"
-import { prettyObject } from "@/ai/utils"
 import { convertToMarkdownFootnotes } from "./utils/utils"
 import MarkdownRenderer from "./markdown-renderer"
 import MarkdownNodeRender from "./MarkdownNodeRenderer"
 
-import { customDataWebSearch } from "@/types"
+import type { customDataWebSearch } from "@/types"
 import "./style/markdown.scss"
 
 defineOptions({ name: "Markdown" })
@@ -37,7 +33,7 @@ const webSearchResult = computed(() => {
 const renderer = new MarkdownRenderer({
   webSearchResults: webSearchResult.value,
   lineNumbers: false,
-  // enablePreWrapper: true
+  enablePreWrapper: false,
 })
 
 function handleMarkdownClick() {
@@ -45,24 +41,15 @@ function handleMarkdownClick() {
   console.log("marked:", props.content)
   console.log("renderedContent:", renderedContent.value)
   console.log("renderer:", props.content + convertToMarkdownFootnotes(webSearchResult.value))
+  renderer.getParseMarkdownToStructure(props.content || "")
 }
 
 // html转ast
 const renderedContent = computed(() => {
-  let contentToRender: string = props.content || ""
-  if (!contentToRender) return []
-  if (typeof contentToRender !== "string") {
-    contentToRender = prettyObject(contentToRender)
-  }
-  const content = renderer.render(contentToRender, webSearchResult.value)
-  // Markdown模式添加安全过滤和样式类 并处理成dom ast
-  // return parseDocument(content).children
-  const sanitizedContent = props.enableDOMPurify ? DOMPurify.sanitize(content, { ADD_ATTR: ["target"] }) : content
-  return parseDocument(sanitizedContent).children
+  return renderer.renderParsedNodes(props.content || "", webSearchResult.value)
 })
 
 // const parsedNodes = computed<BaseNode[]>(() => {
-//   // 解析 content 字符串为节点数组
 //   return props.content ? parseMarkdownToStructure(props.content, renderer.getMarkdown()) : []
 // })
 </script>

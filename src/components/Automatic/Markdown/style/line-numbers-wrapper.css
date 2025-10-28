@@ -51,6 +51,7 @@
   border-radius: 5px;
   height: 24px;
   width: 24px;
+  z-index: 1;
 }
 
 .markdown-body [class*='language-']:hover button.copy {
@@ -68,7 +69,7 @@
   font-size: 12px;
   font-weight: 500;
   user-select: none;
-  color: var(--vp-code-lang-color);
+  color: #929295;
   transition:
     color 0.4s,
     opacity 0.4s;

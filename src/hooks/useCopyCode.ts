@@ -1,16 +1,30 @@
 const shellRE = /language-(shellscript|shell|bash|sh|zsh)/
 const ignoredNodes = [".vp-copy-ignore", ".diff.remove"].join(", ")
 
+let hasRegisteredCopyListener = false
+
 export function useCopyCode() {
+  if (hasRegisteredCopyListener) return
+  hasRegisteredCopyListener = true
+
   const timeoutIdMap: WeakMap<HTMLElement, NodeJS.Timeout> = new WeakMap()
-  window.addEventListener("click", (e) => {
-    const el = e.target as HTMLElement
-    if (el.matches('div[class*="language-"] > button.copy')) {
+
+  window.addEventListener(
+    "click",
+    (e) => {
+      const target = e.target as HTMLElement
+
+      const el = target.closest('div[class*="language-"] > button.copy') as HTMLElement | null
+      if (!el) return
+
       const parent = el.parentElement
       const sibling = el.nextElementSibling?.nextElementSibling // <pre> tag
       if (!parent || !sibling) {
         return
       }
+
+      e.stopImmediatePropagation?.()
+      e.stopPropagation?.()
 
       const isShell = shellRE.test(parent.className)
 
@@ -29,6 +43,7 @@ export function useCopyCode() {
 
       copyToClipboard(text).then(() => {
         el.classList.add("copied")
+        window.$message?.success("复制成功")
         clearTimeout(timeoutIdMap.get(el))
         const timeoutId = setTimeout(() => {
           el.classList.remove("copied")
@@ -37,8 +52,9 @@ export function useCopyCode() {
         }, 2000)
         timeoutIdMap.set(el, timeoutId)
       })
-    }
-  })
+    },
+    { capture: true, passive: false }
+  )
 }
 
 async function copyToClipboard(text: string) {
