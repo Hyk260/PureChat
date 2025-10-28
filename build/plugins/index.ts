@@ -56,7 +56,7 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta) {
   //   plugins.push(pwa(viteEnv));
   // }
   if (viteEnv.VITE_CDN === "Y") {
-    plugins.push(cdn)
+    plugins.push(cdn())
   }
 
   return plugins
