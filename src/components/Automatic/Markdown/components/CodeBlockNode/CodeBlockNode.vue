@@ -68,24 +68,19 @@
         </el-tooltip>
       </div>
     </div>
-    <!-- <div
-      ref="codeContainerRef"
-      class="code-container"
-      :class="{ collapsed: isCollapsed, 'shiki-scroller': !isChevrons }"
-      v-html="highlightedCode"
-    ></div> -->
     <div
       ref="codeContainerRef"
       class="code-container"
       :class="{ collapsed: isCollapsed, 'shiki-scroller': !isChevrons }"
     >
-      <span v-if="!showHeader" class="hljs-language">{{ language }}</span>
-      <button v-if="!showHeader" class="copy-code-button" title="copy" @click.stop="handleCopyCode">
-        <div class="icon-copy"></div>
-      </button>
-      <div v-html="highlightedCode"></div>
+      <template v-if="!showHeader">
+        <span class="hljs-language">{{ language }}</span>
+        <button class="copy-code-button" title="copy" @click.stop="handleCopyCode">
+          <div class="icon-copy"></div>
+        </button>
+      </template>
+      <div ref="codeBlockRef" class="code-block" v-html="highlightedCode"></div>
     </div>
-
     <!-- HTML 预览弹窗 -->
     <HtmlArtifactsPopup
       :open="showHtmlPreview"
@@ -109,8 +104,7 @@ import {
   Eye,
   Maximize,
 } from "lucide-vue-next"
-
-import { usePreferredColorScheme } from "@vueuse/core"
+import { usePreferredColorScheme, useIntersectionObserver } from "@vueuse/core"
 // import {
 //   registerHighlight,
 //   disposeHighlighter,
@@ -119,7 +113,7 @@ import { usePreferredColorScheme } from "@vueuse/core"
 // } from "../../utils/highlightShiki"
 import HtmlArtifactsPopup from "@/components/CodeBlockView/HtmlArtifactsPopup.vue"
 import { useCodeBlock } from "@/composables/useCodeBlock"
-import { useResizeObserver } from "@/composables/useResizeObserver"
+import { useHeightCheck } from "@/composables/useResizeObserver"
 import { getLanguageIcon, languageMap, languageMapValues } from "@/utils/languageIcon"
 import { useThemeStore } from "@/stores/modules/theme"
 
@@ -142,13 +136,15 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { isCopied, copyCode, downloadCode: downloadCodeFile } = useCodeBlock()
-const { shouldShowChevrons, initResizeObserver, cleanupResizeObserver } = useResizeObserver()
+const { shouldShowChevrons, heightCheck } = useHeightCheck()
 
 const highlighter = ref<Highlighter | null>(null)
 
 const isChevrons = ref(false)
 const isCollapsed = ref(false)
-const codeContainerRef = ref<HTMLElement | null>(null)
+const codeContainerRef = useTemplateRef("codeContainerRef")
+const codeBlockRef = useTemplateRef("codeBlockRef")
+
 const showMaximize = ref(false)
 const highlightedCode = ref<string>("")
 const showHtmlPreview = ref(false)
@@ -213,17 +209,20 @@ const handlePreviewCode = () => {
   }
 }
 
-const heightCheck = () => {
-  // nextTick(() => {
-  //   const debouncedHeightCheck = initResizeObserver(codeContainerRef.value)
-  //   if (debouncedHeightCheck) {
-  //     debouncedHeightCheck(codeContainerRef.value)
-  //   }
-  // })
-}
+useIntersectionObserver(
+  codeContainerRef,
+  ([entry]) => {
+    const isVisible = entry?.isIntersecting || false
+    isVisible && heightCheck(codeBlockRef.value)
+  },
+  {
+    root: document.querySelector("#message-view-scrollbar"),
+    rootMargin: "0px 0px 10px 0px",
+    threshold: 1.0,
+  }
+)
 
 onMounted(async () => {
-  heightCheck()
   // if (!isHighlighterInitialized()) {
   //   highlighter.value = await registerHighlight()
   // }
@@ -231,7 +230,6 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   highlighter.value?.dispose()
-  // cleanupResizeObserver()
 })
 
 watch(
@@ -251,7 +249,6 @@ watch(
       console.error("Highlight failed:", err)
       highlightedCode.value = highlightCode(props.code, props.language)
     }
-    heightCheck()
   },
   { immediate: true }
 )

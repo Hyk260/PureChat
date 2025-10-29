@@ -1,6 +1,12 @@
 <template>
   <div v-show="currentConversation" class="message-info-view-content" :class="getMessageViewClasses()">
-    <el-scrollbar ref="scrollbarRef" class="h-full" @end-reached="handleEnReached" @scroll="handleScrollbar">
+    <el-scrollbar
+      id="message-view-scrollbar"
+      ref="scrollbarRef"
+      class="h-full"
+      @end-reached="handleEnReached"
+      @scroll="handleScrollbar"
+    >
       <div ref="messageViewRef" class="message-view">
         <div v-for="item in currentMessageList" :key="item.ID" :class="{ 'reset-select': item.isRevoked }">
           <!-- 加载更多 -->
@@ -123,6 +129,7 @@ import { getUnixTimestampSec } from "@/utils/common"
 import { avatarContextMenuItems, messageContextMenuItems } from "@/utils/contextMenuPresets"
 import { showConfirmationBox } from "@/utils/message"
 import emitter from "@/utils/mitt-bus"
+import { delay } from "@/utils/common"
 import { timeFormat } from "@/utils/timeFormat"
 
 // import LoadMore from "../components/LoadMore.vue"
@@ -292,9 +299,13 @@ const handleEnReached = (direction: string) => {
 
 const handleScrollbar = () => {}
 
-const scrollToBottom = () => {
+const scrollToBottom = async () => {
+  // await delay(10)
   nextTick(() => {
-    scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight || 0)
+    if (!currentConversation.value) return
+    bottomSentinelRef.value?.scrollIntoView()
+    // bottomSentinelRef.value?.scrollIntoView({ behavior: "smooth" })
+    // scrollbarRef.value?.scrollTo(0, messageViewRef.value?.scrollHeight || 0)
   })
 }
 
