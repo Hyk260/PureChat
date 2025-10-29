@@ -12,9 +12,9 @@
     <el-form-item prop="verifyCode">
       <div class="w-full flex">
         <el-input v-model="ruleForm.verifyCode" clearable :placeholder="$t('login.smsVerifyCode')" />
-        <el-button class="ml-5" :disabled="isDisabled" @click="useVerifyCode().start(ruleFormRef, 'phone')">
+        <ElButton class="ml-5" :disabled="isDisabled" @click="useVerifyCode().start(ruleFormRef, 'phone')">
           {{ text.length > 0 ? text + $t("login.info") : $t("login.getVerifyCode") }}
-        </el-button>
+        </ElButton>
       </div>
     </el-form-item>
     <el-form-item prop="password">
@@ -39,22 +39,22 @@
       <el-checkbox v-model="checked">
         {{ $t("login.readAccept") }}
       </el-checkbox>
-      <el-button link type="primary">
+      <ElButton link type="primary">
         {{ $t("login.privacyPolicy") }}
-      </el-button>
+      </ElButton>
     </el-form-item>
     <el-form-item>
-      <el-button class="w-full" size="default" type="primary" :loading="loading" @click="onUpdate(ruleFormRef)">
+      <ElButton class="w-full" size="default" type="primary" :loading="loading" @click="onUpdate(ruleFormRef)">
         <template #loading>
           <div class="iconify-icon svg-spinners mr-8"></div>
         </template>
         {{ $t("login.definite") }}
-      </el-button>
+      </ElButton>
     </el-form-item>
     <el-form-item>
-      <el-button class="w-full" size="default" @click="onBack">
+      <ElButton class="w-full" size="default" @click="onBack">
         {{ $t("login.back") }}
-      </el-button>
+      </ElButton>
     </el-form-item>
   </el-form>
 </template>

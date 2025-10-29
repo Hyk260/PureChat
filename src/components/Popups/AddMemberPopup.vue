@@ -13,8 +13,8 @@
     </div>
     <template #footer>
       <span>
-        <el-button @click="close"> {{ $t("common.cancel") }} </el-button>
-        <el-button type="primary" @click="define"> {{ $t("common.confirm") }} </el-button>
+        <ElButton @click="close"> {{ $t("common.cancel") }} </ElButton>
+        <ElButton type="primary" @click="define"> {{ $t("common.confirm") }} </ElButton>
       </span>
     </template>
   </el-dialog>

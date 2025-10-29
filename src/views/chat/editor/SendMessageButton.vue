@@ -1,15 +1,15 @@
 <template>
   <div class="send-button">
     <span class="tip">{{ placeholderMap[getOperatingSystem()] }}</span>
-    <!-- <el-button :disabled="disabled" circle @click="handleTranslate">
+    <!-- <ElButton :disabled="disabled" circle @click="handleTranslate">
       <div v-if="translateDing" class="iconify-icon svg-spinners"></div>
       <Languages v-else :size="15" />
-    </el-button> -->
-    <!-- <el-button :disabled="disabled" circle @click="handlePolish">
+    </ElButton> -->
+    <!-- <ElButton :disabled="disabled" circle @click="handlePolish">
       <div v-if="polishDing" class="iconify-icon svg-spinners"></div>
       <WandSparkles :size="15" />
-    </el-button> -->
-    <el-button :loading="isSending" :class="{ 'pointer-events-none': disabled }" @click="onSend">
+    </ElButton> -->
+    <ElButton :loading="isSending" :class="{ 'pointer-events-none': disabled }" @click="onSend">
       <template #loading>
         <div class="iconify-icon svg-spinners mr-8"></div>
       </template>
@@ -17,11 +17,11 @@
         <!-- <Send :size="15" /> -->
         {{ $t("chat.send") }}
       </span>
-    </el-button>
-    <el-button v-if="isSending && isDev" class="!ml-0" @click="onPause">
+    </ElButton>
+    <ElButton v-if="isSending && isDev" class="!ml-0" @click="onPause">
       <CirclePause class="mr-8" :size="14" />
       <span> {{ $t("chat.pause") }} </span>
-    </el-button>
+    </ElButton>
   </div>
 </template>
 

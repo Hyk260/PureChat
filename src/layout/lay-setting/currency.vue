@@ -46,9 +46,9 @@
       <ElSwitch v-model="appStore.markdownAssistantRender" />
     </li>
     <li v-if="!IS_LOCAL_MODE">
-      <el-button type="primary" @click="logout">
+      <ElButton type="primary" @click="logout">
         {{ $t("login.logout") }}
-      </el-button>
+      </ElButton>
     </li>
   </ul>
 </template>

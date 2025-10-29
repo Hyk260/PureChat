@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="flex">
-        <el-button @click="openDocs"> {{ $t("settings.about.releases.title") }} </el-button>
+        <ElButton @click="openDocs"> {{ $t("settings.about.releases.title") }} </ElButton>
       </div>
     </div>
     <div class="divider"></div>

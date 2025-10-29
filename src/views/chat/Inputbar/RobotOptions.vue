@@ -201,24 +201,24 @@
                   </div>
                 </el-option>
               </el-select>
-              <el-button class="check-token-btn" :loading="loading" @click="onCheckToken(item)">
+              <ElButton class="check-token-btn" :loading="loading" @click="onCheckToken(item)">
                 <template #loading>
                   <div class="iconify-icon svg-spinners mr-8"></div>
                 </template>
                 <span>检查</span>
-              </el-button>
+              </ElButton>
             </div>
           </div>
         </div>
       </div>
     </div>
     <template #footer>
-      <el-button v-if="isDev" @click="clearRobotCache"> 清除缓存 </el-button>
-      <el-button @click="handleReset"> 重置 </el-button>
-      <el-button @click="handleCancel">{{ $t("common.cancel") }}</el-button>
-      <el-button type="primary" @click="handleConfirm">
+      <ElButton v-if="isDev" @click="clearRobotCache"> 清除缓存 </ElButton>
+      <ElButton @click="handleReset"> 重置 </ElButton>
+      <ElButton @click="handleCancel">{{ $t("common.cancel") }}</ElButton>
+      <ElButton type="primary" @click="handleConfirm">
         {{ $t("common.confirm") }}
-      </el-button>
+      </ElButton>
     </template>
   </el-dialog>
 </template>

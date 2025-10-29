@@ -11,9 +11,9 @@
       :offset="2"
       transition="slide-fade"
     >
-      <el-button @click="sendEmojiClick">
+      <ElButton @click="sendEmojiClick">
         <Smile :size="16" />
-      </el-button>
+      </ElButton>
     </el-tooltip>
     <!-- 选模型 -->
     <el-tooltip
@@ -26,9 +26,9 @@
       :offset="2"
       transition="slide-fade"
     >
-      <el-button @click="selectModel">
+      <ElButton @click="selectModel">
         <Brain :size="16" />
-      </el-button>
+      </ElButton>
     </el-tooltip>
     <!-- 图片 -->
     <el-tooltip
@@ -41,10 +41,10 @@
       :offset="2"
       transition="slide-fade"
     >
-      <el-button @click="sendImageClick">
+      <ElButton @click="sendImageClick">
         <!-- <Image :size="16" /> -->
         <SvgIcon local-icon="image" />
-      </el-button>
+      </ElButton>
     </el-tooltip>
     <!-- 文件 -->
     <el-tooltip
@@ -57,12 +57,12 @@
       :offset="2"
       transition="slide-fade"
     >
-      <el-button @click="sendFileClick">
+      <ElButton @click="sendFileClick">
         <!-- <FolderOpen :size="16" /> -->
         <!-- <FileUp :size="16" /> -->
         <!-- <FolderClosed :size="16" /> -->
         <SvgIcon local-icon="folder" />
-      </el-button>
+      </ElButton>
     </el-tooltip>
     <!-- 截图 -->
     <el-tooltip
@@ -75,9 +75,9 @@
       :offset="2"
       transition="slide-fade"
     >
-      <el-button v-show="!isAssistant" @click="clickCscreenshot">
+      <ElButton v-show="!isAssistant" @click="clickCscreenshot">
         <Scissors class="rotate-270" :size="16" />
-      </el-button>
+      </ElButton>
     </el-tooltip>
     <!-- 模型配置 -->
     <el-tooltip
@@ -90,9 +90,9 @@
       :offset="2"
       transition="slide-fade"
     >
-      <el-button @click="openRobotBox">
+      <ElButton @click="openRobotBox">
         <SlidersHorizontal :size="16" />
-      </el-button>
+      </ElButton>
     </el-tooltip>
     <!-- 附件 -->
     <el-tooltip
@@ -105,9 +105,9 @@
       :offset="2"
       transition="slide-fade"
     >
-      <el-button v-show="isAssistant" @click="sendAnnexClick">
+      <ElButton v-show="isAssistant" @click="sendAnnexClick">
         <Paperclip :size="16" />
-      </el-button>
+      </ElButton>
     </el-tooltip>
     <!-- 联网 -->
     <el-tooltip
@@ -120,15 +120,15 @@
       :offset="2"
       transition="slide-fade"
     >
-      <el-button
+      <ElButton
         v-show="isWebSearchModel"
         :style="{
-          color: enableWebSearch ? 'var(--el-button-hover-text-color)' : '',
+          color: enableWebSearch ? 'var(--ElButton-hover-text-color)' : '',
         }"
         @click="onEnableWebSearch"
       >
         <Globe :size="16" />
-      </el-button>
+      </ElButton>
     </el-tooltip>
     <!-- 清空消息 -->
     <el-tooltip
@@ -147,32 +147,32 @@
             <p>确定要清除当前会话所有消息吗?</p>
           </div>
           <div class="flex">
-            <el-button class="ml-auto" size="small" @click="handleCancel">
+            <ElButton class="ml-auto" size="small" @click="handleCancel">
               {{ $t("common.cancel") }}
-            </el-button>
-            <el-button size="small" type="primary" @click="cleanTopicShortcut">
+            </ElButton>
+            <ElButton size="small" type="primary" @click="cleanTopicShortcut">
               {{ $t("common.confirm") }}
-            </el-button>
+            </ElButton>
           </div>
           <template #reference>
-            <el-button>
+            <ElButton>
               <BrushCleaning :size="16" />
-            </el-button>
+            </ElButton>
           </template>
         </el-popover>
       </div>
     </el-tooltip>
     <!-- 插件 -->
     <el-tooltip v-if="false" content="选择插件" placement="top">
-      <el-button @click="openPluginBox">
+      <ElButton @click="openPluginBox">
         <Blocks :size="16" />
-      </el-button>
+      </ElButton>
     </el-tooltip>
     <!-- 自定义消息 -->
     <el-tooltip v-if="false" content="BugPlay" placement="top" :show-arrow="false" :offset="2" transition="slide-fade">
-      <el-button @click="customMessage">
+      <ElButton @click="customMessage">
         <BugPlay :size="16" />
-      </el-button>
+      </ElButton>
     </el-tooltip>
     <!-- 滚动到底部 -->
     <el-tooltip
@@ -185,9 +185,9 @@
       :offset="2"
       transition="slide-fade"
     >
-      <el-button class="animate-chat-slide-in" @click="scrollToBottomBtn">
+      <ElButton class="animate-chat-slide-in" @click="scrollToBottomBtn">
         <ChevronsDown :size="18" />
-      </el-button>
+      </ElButton>
     </el-tooltip>
     <!-- 全屏 -->
     <el-tooltip
@@ -199,9 +199,9 @@
       :offset="2"
       transition="slide-fade"
     >
-      <el-button class="!ml-auto" @click="toggleFullScreenInput">
+      <ElButton class="!ml-auto" @click="toggleFullScreenInput">
         <component :is="isFullscreenInputActive ? Minimize2 : Maximize2" :size="16" />
-      </el-button>
+      </ElButton>
     </el-tooltip>
     <RobotModel />
     <RobotPlugin />

@@ -5,9 +5,9 @@
   <ElDivider>
     <p>{{ $t("login.tip") }}</p>
   </ElDivider>
-  <el-button class="w-full" @click="onBack">
+  <ElButton class="w-full" @click="onBack">
     {{ $t("login.back") }}
-  </el-button>
+  </ElButton>
 </template>
 
 <script setup lang="ts">

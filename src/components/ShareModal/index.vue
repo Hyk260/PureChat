@@ -101,8 +101,8 @@
           </el-scrollbar>
         </div>
         <div class="form-footer">
-          <el-button class="w-full" :disabled="loading" @click="handleCopy"> 复制截图 </el-button>
-          <el-button class="w-full" :disabled="loading" @click="handleDownload"> 下载截图 </el-button>
+          <ElButton class="w-full" :disabled="loading" @click="handleCopy"> 复制截图 </ElButton>
+          <ElButton class="w-full" :disabled="loading" @click="handleDownload"> 下载截图 </ElButton>
         </div>
       </div>
     </div>

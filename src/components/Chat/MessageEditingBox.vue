@@ -1,6 +1,6 @@
 <template>
   <div class="edit" :class="containerClass">
-    <el-input
+    <ElInput
       ref="textInputRef"
       v-model="inputText"
       resize="none"
@@ -10,12 +10,12 @@
       @keydown="handleKeydown"
     />
     <div class="flex justify-end">
-      <el-button size="small" @click="handleCancel">
+      <ElButton size="small" @click="handleCancel">
         {{ $t("common.cancel") }}
-      </el-button>
-      <el-button size="small" :disabled="isConfirmDisabled" type="primary" @click="handleConfirm">
+      </ElButton>
+      <ElButton size="small" :disabled="isConfirmDisabled" type="primary" @click="handleConfirm">
         {{ $t("common.confirm") }}
-      </el-button>
+      </ElButton>
     </div>
   </div>
 </template>

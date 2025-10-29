@@ -34,7 +34,7 @@
     </div>
     <!-- 操作按钮 -->
     <div class="actions">
-      <el-button type="primary" @click="sendMessage(userInfo)">发消息</el-button>
+      <ElButton type="primary" @click="sendMessage(userInfo)">发消息</ElButton>
     </div>
   </div>
 </template>

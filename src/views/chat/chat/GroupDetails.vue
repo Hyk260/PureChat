@@ -89,12 +89,12 @@
       <ElDivider />
       <!-- 解散 退出 转让 -->
       <div v-if="!isFullStaffGroup(currentConversation)" class="group-operator flex-c">
-        <el-button v-if="isOwner" type="danger" @click="handleDismissGroup"> 解散群组 </el-button>
-        <el-button v-else type="danger" @click="handleQuitGroup"> 退出群组 </el-button>
+        <ElButton v-if="isOwner" type="danger" @click="handleDismissGroup"> 解散群组 </ElButton>
+        <ElButton v-else type="danger" @click="handleQuitGroup"> 退出群组 </ElButton>
         <!-- <div class="w-12"></div> -->
-        <!-- <el-button type="primary" plain v-if="isOwner" @click="handleTransferGroup">
+        <!-- <ElButton type="primary" plain v-if="isOwner" @click="handleTransferGroup">
           转让群组
-        </el-button> -->
+        </ElButton> -->
       </div>
       <!-- 添加成员弹框 -->
       <AddMemberPopup ref="AddMemberRef" @define="addGroupMemberBtn" />

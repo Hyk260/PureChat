@@ -53,18 +53,18 @@
       <div class="forget-password">{{ $t("login.forget") }}</div>
     </div>
     <!-- 登录 -->
-    <el-button type="primary" class="login-btn" :loading="loading" @click="handleLogin">
+    <ElButton type="primary" class="login-btn" :loading="loading" @click="handleLogin">
       <template #loading>
         <div class="iconify-icon svg-spinners mr-8"></div>
       </template>
       <span> {{ $t("login.login") }}</span>
-    </el-button>
+    </ElButton>
   </el-form>
   <!-- other hidden -->
   <div class="mt-20 flex justify-evenly">
-    <el-button v-for="item in operates" :key="item.title" size="default" @click="setCurrentPage(item)">
+    <ElButton v-for="item in operates" :key="item.title" size="default" @click="setCurrentPage(item)">
       {{ item.title }}
-    </el-button>
+    </ElButton>
   </div>
   <!-- 第三方登录 -->
   <el-form-item>

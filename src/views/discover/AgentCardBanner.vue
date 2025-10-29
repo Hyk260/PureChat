@@ -28,7 +28,7 @@
       </div>
       <Markdown class="market" :content="agentData.meta.systemRole" />
       <div class="flex-c py-20">
-        <el-button class="w-306" @click="startConversation()"> 开始会话 </el-button>
+        <ElButton class="w-306" @click="startConversation()"> 开始会话 </ElButton>
       </div>
     </div>
   </el-dialog>

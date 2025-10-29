@@ -19,7 +19,7 @@
       </div>
       <div class="flex gap-10">
         <el-input v-model="searchInput" type="password" placeholder="API密钥" show-password clearable @input="onBlur" />
-        <el-button @click="checkApiKey">检查</el-button>
+        <ElButton @click="checkApiKey">检查</ElButton>
       </div>
       <div class="mt-10">
         <ElLink :href="apiKeyWebsite" target="_blank" type="primary">点击这里获取密钥</ElLink>

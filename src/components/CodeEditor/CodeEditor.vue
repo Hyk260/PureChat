@@ -30,14 +30,14 @@
         transition="slide-fade"
         placement="top"
       >
-        <el-button circle @click="formatCode">
+        <ElButton circle @click="formatCode">
           <Sparkles :size="16" />
-        </el-button>
+        </ElButton>
       </el-tooltip>
       <el-tooltip v-if="false" content="保存" :show-arrow="false" :offset="8" transition="slide-fade" placement="top">
-        <el-button circle @click="handleSaveChange">
+        <ElButton circle @click="handleSaveChange">
           <Save :size="16" />
-        </el-button>
+        </ElButton>
       </el-tooltip>
     </div>
   </div>

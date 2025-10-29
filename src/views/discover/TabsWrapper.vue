@@ -1,10 +1,10 @@
 <template>
   <div class="tabs-wrapper">
     <div v-for="option in tabOptions" :key="option.value" class="tab-item" @click="handleTabClick(option)">
-      <el-button :class="{ 'tab-item--active': activeTab === option.value }">
+      <ElButton :class="{ 'tab-item--active': activeTab === option.value }">
         <el-icon><component :is="option.icon"></component></el-icon>
         <span> {{ option.label }}</span>
-      </el-button>
+      </ElButton>
     </div>
   </div>
 </template>

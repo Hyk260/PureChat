@@ -20,12 +20,12 @@
     </div>
     <template #footer>
       <span>
-        <el-button @click="handleCancel()">
+        <ElButton @click="handleCancel()">
           {{ $t("common.cancel") }}
-        </el-button>
-        <el-button type="primary" @click="handleConfirm()">
+        </ElButton>
+        <ElButton type="primary" @click="handleConfirm()">
           {{ $t("common.confirm") }}
-        </el-button>
+        </ElButton>
       </span>
     </template>
   </el-dialog>

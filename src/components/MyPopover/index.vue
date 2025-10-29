@@ -32,9 +32,9 @@
       </div>
     </div>
     <div class="footer">
-      <el-button class="w-full" type="primary" @click="define">
+      <ElButton class="w-full" type="primary" @click="define">
         {{ $t("chat.sendMessage") }}
-      </el-button>
+      </ElButton>
     </div>
   </div>
 </template>

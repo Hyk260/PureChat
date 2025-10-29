@@ -6,7 +6,7 @@
           <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
         </el-select> -->
       <div class="flex gap-5">
-        <el-button class="avatar relative size-32 p-0" @click="setShowEmojiPickerFlag(true)">
+        <ElButton class="avatar relative size-32 p-0" @click="setShowEmojiPickerFlag(true)">
           <div class="group">
             <span class="text-22"> {{ item.meta.avatar }} </span>
             <el-icon class="avatar-close-icon" @click.stop="handleClearAvatar(i)">
@@ -19,7 +19,7 @@
             @on-close="setShowEmojiPickerFlag(false)"
             @emoji-selected="(emoji) => handleEmojiSelect(emoji, i)"
           />
-        </el-button>
+        </ElButton>
         <el-input
           ref="inputTitleRef"
           v-model="item.meta.title"
@@ -37,15 +37,15 @@
           placeholder="prompt"
           @blur="savePromptData"
         />
-        <el-button v-if="false" class="flex-c w-31 h-31" @click="onClose(i)">
+        <ElButton v-if="false" class="flex-c w-31 h-31" @click="onClose(i)">
           <el-icon><CircleX /></el-icon>
-        </el-button>
+        </ElButton>
       </div>
     </div>
     <div v-if="false">
-      <el-button class="w-full" @click="addPrompt">
+      <ElButton class="w-full" @click="addPrompt">
         <el-icon><CirclePlus /></el-icon>
-      </el-button>
+      </ElButton>
     </div>
   </div>
 </template>
