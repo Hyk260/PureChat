@@ -217,10 +217,13 @@ const isLocalOutgoingMessage = (message: DB_Message) => {
 }
 
 const getMessageItemClasses = (item: DB_Message) => {
-  return [
-    item.flow === "in" ? "is-other" : "is-self",
-    isMultiSelectMode.value && !item.isRevoked && item.type !== "TIMGroupTipElem" ? "style-choice" : "",
-  ]
+  const classes: string[] = [item.flow === "in" ? "is-other" : "is-self"]
+
+  if (isMultiSelectMode.value && !item.isRevoked && item.type !== "TIMGroupTipElem") {
+    classes.push("style-choice")
+  }
+
+  return classes
 }
 
 const getMessageViewClasses = () => {
@@ -679,14 +682,9 @@ defineExpose({ updateScrollbar, scrollToBottom })
 .reset-select {
   border-radius: 3px;
 }
-.style-choice {
-  padding-left: 35px;
-  padding-right: 10px;
-  user-select: none;
-  pointer-events: none;
-}
 .message-view-item {
-  padding: 10px 0 10px 0;
+  padding: 10px 0;
+  contain: layout style paint;
   &:hover .time-divider {
     visibility: visible;
   }
@@ -695,11 +693,18 @@ defineExpose({ updateScrollbar, scrollToBottom })
   position: relative;
   display: flex;
   flex-direction: row;
-  transition: all 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    opacity 0.15s ease;
   gap: 8px;
+  min-height: 56px;
+  padding-left: 0;
+  padding-right: 0;
+
   .message-view-top {
     display: flex;
   }
+
   .message-view-body {
     display: flex;
     align-items: center;
@@ -709,6 +714,13 @@ defineExpose({ updateScrollbar, scrollToBottom })
     &:hover .menubar {
       opacity: 1;
     }
+  }
+
+  &.style-choice {
+    padding-left: 35px;
+    padding-right: 10px;
+    user-select: none;
+    pointer-events: none;
   }
 }
 

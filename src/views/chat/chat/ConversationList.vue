@@ -3,11 +3,11 @@
     <EmptyMessage v-if="conversationList.length === 0" class-name="no-msg" />
     <template v-if="!isEnableVirtualList">
       <div
-        v-for="item in searchForData"
+        v-for="item in displayData"
         :id="`message_${item.conversationID}`"
         :key="item.conversationID"
         class="message-item"
-        :class="fnClass(item)"
+        :class="{ 'is-active': item._isActive }"
         @click="handleConversationListClick(item)"
         @drop="(e) => handleDrop(e, item, handleConversationListClick)"
         @dragover="handleDragOver"
@@ -24,7 +24,7 @@
             shape="square"
             :session-id="item.conversationID"
             :type="item.type === 'C2C' ? 'single' : 'group'"
-            :nick-name="chatName(item)"
+            :nick-name="item._displayName"
             :url="item.type === 'C2C' ? item.userProfile?.avatar : item?.groupProfile?.avatar"
           />
         </el-badge>
@@ -32,25 +32,21 @@
         <div class="message-item-right">
           <div class="message-item-right-top flex-bc">
             <div class="message-chat-name flex">
-              <span class="name-title truncate">{{ chatName(item) }}</span>
-              <CustomLabel :item="item" :user-i-d="item.userProfile?.userID" />
+              <span class="name-title truncate">{{ item._displayName }}</span>
+              <CustomLabel v-if="item.userProfile?.userID" :item="item" :user-i-d="item.userProfile.userID" />
             </div>
-            <div v-if="item.lastMessage?.lastTime" class="message-time">
-              {{ timeFormat(item.lastMessage.lastTime * 1000) }}
+            <div v-if="item._displayTime" class="message-time">
+              {{ item._displayTime }}
             </div>
           </div>
           <div class="message-item-right-bottom truncate">
-            <CustomMention v-if="isMention(item) || isDraft(item)" :item="item" />
-            <span v-else>{{ formatNewsMessage(item) }}</span>
+            <CustomMention v-if="item._isMention || item._hasDraft" :item="item" />
+            <span v-else>{{ item._displayMessage }}</span>
           </div>
           <!-- 未读消息红点 -->
-          <el-badge
-            v-show="!isShowCount(item) && !isNotify(item) && item.type !== '@TIM#SYSTEM'"
-            :value="item.unreadCount || 0"
-            :max="99"
-          />
+          <el-badge v-show="item._showUnreadCount" :value="item._unreadCount" :max="99" />
           <!-- 消息免打扰 -->
-          <BellOff v-show="isNotify(item)" :size="15" class="dont" />
+          <BellOff v-show="item._showDontNotify" :size="15" class="dont" />
         </div>
       </div>
     </template>
@@ -114,10 +110,34 @@ const searchForData = computed(() => {
   }
 })
 
-const isDraft = (item: DB_Session) => {
-  const id = item.conversationID
-  return id !== currentSessionId.value && chatStore.chatDraftMap.has(id)
-}
+const displayData = computed(() => {
+  return searchForData.value.map((item) => {
+    const conversationID = item.conversationID
+    const name = chatName(item)
+    const lastMessageTime = item.lastMessage?.lastTime
+    const time = lastMessageTime ? timeFormat(lastMessageTime * 1000) : ""
+    const messageContent = formatNewsMessage(item)
+    const isActive = conversationID === currentSessionId.value
+    const unreadCount = item.unreadCount ?? 0
+    const showUnreadCount = unreadCount > 0 && unreadCount <= 99 && !isNotify(item) && item.type !== "@TIM#SYSTEM"
+    const isMentioned = (item.groupAtInfoList?.length ?? 0) > 0
+    const hasDraft = conversationID !== currentSessionId.value && chatStore.chatDraftMap.has(conversationID)
+    const showDontNotify = isNotify(item) && !isShowCount(item) && item.type !== "@TIM#SYSTEM"
+
+    return {
+      ...item,
+      _displayName: name,
+      _displayTime: time,
+      _displayMessage: messageContent,
+      _isActive: isActive,
+      _showUnreadCount: showUnreadCount,
+      _isMention: isMentioned,
+      _hasDraft: hasDraft,
+      _showDontNotify: showDontNotify,
+      _unreadCount: unreadCount,
+    }
+  })
+})
 
 const isNotify = (item: DB_Session) => {
   return item.messageRemindType === "AcceptNotNotify"
@@ -127,16 +147,11 @@ const isShowCount = (item: DB_Session) => {
   return item.unreadCount === 0
 }
 
-const isMention = (item: DB_Session) => {
-  return (item.groupAtInfoList?.length ?? 0) > 0
-}
-
 const handleContextMenuEvent = (event: MouseEvent, item: DB_Session) => {
   handleContextMenu(item)
   showContextMenu(event, item)
 }
 
-const fnClass = (item: DB_Session) => (item?.conversationID === currentSessionId.value ? "is-active" : "")
 const truncateTip = (t: string) => (t.length > MAX_TIP_LENGTH ? `${t.slice(0, MAX_TIP_LENGTH)}...` : t)
 
 const formatNewsMessage = (data: DB_Session) => {
@@ -190,7 +205,7 @@ const CustomMention = (props: { item: DB_Session }) => {
   const { messageForShow, nick: lastNick = "未知用户" } = lastMessage ?? {}
   const draft = chatStore.chatDraftMap.get(ID)
   // 草稿
-  if (draft && isDraft(item)) {
+  if (draft && ID !== currentSessionId.value) {
     const str = encodeHTML(formatContent(draft))
     return h("span", { innerHTML: `${createMessagePrompt("draft")} ${str}` })
   }
@@ -211,16 +226,34 @@ const handleContextMenu = (item: DB_Session) => {
 const handleConversationListClick = (data: DB_Session) => {
   console.log("会话点击 handleConversationListClick:", data)
   if (currentSessionId.value === data?.conversationID) return
+
   chatStore.setMsgEdit(null)
   chatStore.setScrollTopID("")
   chatStore.setReplyMsgData(null)
   chatStore.setForwardData({ type: "clear" })
   chatStore.updateSelectedConversation(data)
-  chatStore.updateMessageList(data)
-  if (data?.type === "GROUP") {
-    groupStore.handleGroupProfile(data)
-    groupStore.handleGroupMemberList({ groupID: data?.groupProfile?.groupID ?? "" })
+
+  if (typeof requestIdleCallback !== "undefined") {
+    requestIdleCallback(
+      () => {
+        chatStore.updateMessageList(data)
+        if (data?.type === "GROUP") {
+          groupStore.handleGroupProfile(data)
+          groupStore.handleGroupMemberList({ groupID: data?.groupProfile?.groupID ?? "" })
+        }
+      },
+      { timeout: 100 }
+    )
+  } else {
+    setTimeout(() => {
+      chatStore.updateMessageList(data)
+      if (data?.type === "GROUP") {
+        groupStore.handleGroupProfile(data)
+        groupStore.handleGroupMemberList({ groupID: data?.groupProfile?.groupID ?? "" })
+      }
+    }, 0)
   }
+
   emitter.emit("handleInsertDraft", {
     sessionId: data?.conversationID,
   })

@@ -1,6 +1,6 @@
 import { ref, shallowRef } from "vue"
-
 import type { MenuItem } from "@/types/contextMenu"
+
 export interface UseContextMenuOptions {
   onBeforeShow?: (event: MouseEvent, data?: any) => boolean | void
   onAfterShow?: () => void

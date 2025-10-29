@@ -79,7 +79,17 @@
           <div class="icon-copy"></div>
         </button>
       </template>
-      <div ref="codeBlockRef" class="code-block" v-html="highlightedCode"></div>
+      <template v-if="highlightedCode">
+        <div ref="codeBlockRef" class="code-block" v-html="highlightedCode"></div>
+      </template>
+      <div v-else ref="codeBlockRef" class="code-block code-skeleton-wrapper">
+        <!-- 骨架屏占位，在代码未高亮时显示 -->
+        <div class="code-skeleton">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line skeleton-line-short"></div>
+          <div class="skeleton-line"></div>
+        </div>
+      </div>
     </div>
     <!-- HTML 预览弹窗 -->
     <HtmlArtifactsPopup
@@ -113,7 +123,7 @@ import { usePreferredColorScheme, useIntersectionObserver } from "@vueuse/core"
 // } from "../../utils/highlightShiki"
 import HtmlArtifactsPopup from "@/components/CodeBlockView/HtmlArtifactsPopup.vue"
 import { useCodeBlock } from "@/composables/useCodeBlock"
-import { useHeightCheck } from "@/composables/useResizeObserver"
+import { useHeightCheck } from "@/composables/useHeightCheck"
 import { getLanguageIcon, languageMap, languageMapValues } from "@/utils/languageIcon"
 import { useThemeStore } from "@/stores/modules/theme"
 
@@ -155,12 +165,12 @@ const excludeList = new Set(["json", "bash"])
 const preferredColor = usePreferredColorScheme()
 const themeStore = useThemeStore()
 
-const isDarkMode = computed(() => {
-  if (themeStore.themeScheme === "auto") {
-    return preferredColor.value === "dark"
-  }
-  return themeStore.themeScheme === "dark"
-})
+// const isDarkMode = computed(() => {
+//   if (themeStore.themeScheme === "auto") {
+//     return preferredColor.value === "dark"
+//   }
+//   return themeStore.themeScheme === "dark"
+// })
 
 const normalizedLang = computed(() => (props.language || "plaintext").trim().toLowerCase())
 const showHeader = computed(() => languageList.includes(props.language) && !excludeList.has(normalizedLang.value))
@@ -216,8 +226,8 @@ useIntersectionObserver(
     isVisible && heightCheck(codeBlockRef.value)
   },
   {
-    root: document.querySelector("#message-view-scrollbar"),
-    rootMargin: "0px 0px 10px 0px",
+    root: document.querySelector("#message-info-view-content"),
+    rootMargin: "0px 0px 0px 0px",
     threshold: 1.0,
   }
 )
@@ -235,6 +245,7 @@ onBeforeUnmount(() => {
 watch(
   () => props.code,
   async () => {
+    await nextTick()
     try {
       // if (highlighter.value) {
       //   highlightedCode.value = highlighter.value.codeToHtml(props.code, {
@@ -245,6 +256,7 @@ watch(
       //   highlightedCode.value = highlightCode(props.code, props.language)
       // }
       highlightedCode.value = highlightCode(props.code, props.language)
+      !shouldShowChevrons.value && heightCheck(codeBlockRef.value)
     } catch (err) {
       console.error("Highlight failed:", err)
       highlightedCode.value = highlightCode(props.code, props.language)
@@ -295,6 +307,7 @@ watch(
   overflow: hidden;
   width: 100%;
   min-width: 200px;
+  min-height: 32px;
   -webkit-transition: background-color 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: background-color 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
   background: rgba(0, 0, 0, 0.03);
@@ -313,6 +326,8 @@ watch(
     -webkit-box-align: center;
     align-items: center;
     width: 100%;
+    min-height: 32px;
+    height: 32px;
     // .icon-slot {
     //   display: inline-flex;
     //   align-items: center;
@@ -345,6 +360,7 @@ watch(
   .code-container {
     position: relative;
     background: transparent !important;
+    // min-height: 40px;
     transition:
       height 180ms ease,
       max-height 180ms ease;
@@ -352,6 +368,7 @@ watch(
 
   .collapsed {
     height: 0px;
+    // display: none;
   }
 }
 
@@ -396,10 +413,42 @@ watch(
   width: 24px;
 }
 
-.code-block-container {
+/* 代码块骨架屏 */
+.code-skeleton-wrapper {
+  min-height: 60px;
+}
+
+.code-skeleton {
+  padding: 12px;
+  min-height: 60px;
+
+  .skeleton-line {
+    height: 14px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.06) 25%, rgba(0, 0, 0, 0.03) 50%, rgba(0, 0, 0, 0.06) 75%);
+    background-size: 200% 100%;
+    border-radius: 2px;
+    margin-bottom: 8px;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+
+    &.skeleton-line-short {
+      width: 60%;
+    }
+  }
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* 优化：移除 content-visibility 以减少 CLS */
+/* .code-block-container {
   contain: content;
-  /* 显著减少离屏 codeblock 的布局/绘制与样式计算 */
   content-visibility: auto;
   contain-intrinsic-size: 320px 180px;
-}
+} */
 </style>

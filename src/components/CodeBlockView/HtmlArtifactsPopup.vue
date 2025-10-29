@@ -184,16 +184,16 @@ watch(
 .html-artifacts-popup {
   padding: 0;
   min-width: 900px;
-  height: 80vh;
+  height: 85vh;
 }
 .html-artifacts-header {
   padding-bottom: 0;
 }
 .html-artifacts-body {
-  height: 100%;
+  height: calc(100% - 48px);
 }
 .is-fullscreen .html-artifacts-body {
-  height: calc(100vh - 52px);
+  height: calc(100% - 48px);
 }
 </style>
 
@@ -204,7 +204,7 @@ watch(
   justify-content: space-between;
   gap: 16px;
   position: relative;
-  padding: 10px;
+  // padding: 10px;
 
   .header-left {
     flex: 1;
@@ -248,6 +248,7 @@ watch(
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 0 0 6px 6px;
+  // border-radius: 0 0 6px 6px;
+  border-radius: 5px;
 }
 </style>

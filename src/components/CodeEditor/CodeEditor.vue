@@ -11,14 +11,15 @@
           @change="handleCodeChange"
         />
       </template>
-      <textarea
-        v-else
-        :value="code"
-        :readonly="readOnly"
-        class="html-editor"
-        placeholder="HTML 代码..."
-        @input="handleTextareaInput"
-      />
+      <div v-else class="h-full">
+        <textarea
+          :value="code"
+          :readonly="readOnly"
+          class="html-editor"
+          placeholder="HTML 代码..."
+          @input="handleTextareaInput"
+        />
+      </div>
     </div>
     <div class="code-toolbar">
       <el-tooltip
@@ -45,7 +46,7 @@
 <script setup lang="ts">
 import { Save, Sparkles } from "lucide-vue-next"
 
-import { MONACO_OPTIONS } from "@/config/monaco-editor-config"
+import { MONACO_OPTIONS } from "@/config/monaco-editor/config"
 
 import type { editor } from "monaco-editor"
 
@@ -93,8 +94,14 @@ const handleSaveChange = () => {}
 const loadMonacoEditor = async () => {
   try {
     useTextarea.value = true
-    // const module = await import("@guolao/vue-monaco-editor")
-    // VueMonacoEditor.value = module.VueMonacoEditor
+    const module = await import("@guolao/vue-monaco-editor")
+    module.loader.config({
+      // "vs/nls": { availableLanguages: { "*": "zh" } },
+      paths: {
+        vs: "https://cdn.bootcdn.net/ajax/libs/monaco-editor/0.53.0/min/vs",
+      },
+    })
+    VueMonacoEditor.value = module.VueMonacoEditor
   } catch (error) {
     console.warn("Monaco Editor 加载失败，切换到备用编辑器:", error)
     useTextarea.value = true
