@@ -2,9 +2,9 @@
   <div>
     <QrCode class="qr-code" />
   </div>
-  <el-divider>
+  <ElDivider>
     <p>{{ $t("login.tip") }}</p>
-  </el-divider>
+  </ElDivider>
   <el-button class="w-full" @click="onBack">
     {{ $t("login.back") }}
   </el-button>

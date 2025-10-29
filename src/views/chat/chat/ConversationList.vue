@@ -18,7 +18,7 @@
         <!-- 置顶图标 -->
         <div v-show="item.isPinned" class="pinned-tag"></div>
         <!-- 头像 -->
-        <el-badge class="avatar" is-dot :hidden="isShowCount(item) || !isNotify(item)">
+        <ElBadge class="avatar" is-dot :hidden="isShowCount(item) || !isNotify(item)">
           <UserAvatar
             words="3"
             shape="square"
@@ -27,7 +27,7 @@
             :nick-name="item._displayName"
             :url="item.type === 'C2C' ? item.userProfile?.avatar : item?.groupProfile?.avatar"
           />
-        </el-badge>
+        </ElBadge>
         <!-- 消息 -->
         <div class="message-item-right">
           <div class="message-item-right-top flex-bc">
@@ -44,7 +44,7 @@
             <span v-else>{{ item._displayMessage }}</span>
           </div>
           <!-- 未读消息红点 -->
-          <el-badge v-show="item._showUnreadCount" :value="item._unreadCount" :max="99" />
+          <ElBadge v-show="item._showUnreadCount" :value="item._unreadCount" :max="99" />
           <!-- 消息免打扰 -->
           <BellOff v-show="item._showDontNotify" :size="15" class="dont" />
         </div>

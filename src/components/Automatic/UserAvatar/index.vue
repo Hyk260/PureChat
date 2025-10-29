@@ -3,7 +3,7 @@
     <div v-if="type === 'group'" class="user-avatar default" :class="[className, shape]" :style="backInfo(url)">
       {{ url ? null : displayInfo(nickName) }}
     </div>
-    <el-avatar
+    <ElAvatar
       v-else-if="type === 'single'"
       class="avatar"
       :class="[className]"
@@ -13,7 +13,7 @@
       @error="() => true"
     >
       <img :src="emptyUrl" loading="lazy" />
-    </el-avatar>
+    </ElAvatar>
     <!-- 自己 -->
     <div v-else-if="type === 'self'" class="badge" :style="{ height: `${size}px`, width: `${size}px` }">
       <span
@@ -23,7 +23,7 @@
       >
         {{ userLocalStore?.native }}
       </span>
-      <el-avatar v-else-if="userProfile?.avatar" :size="size" :src="fnAvatar(userProfile.avatar)" :shape="shape" />
+      <ElAvatar v-else-if="userProfile?.avatar" :size="size" :src="fnAvatar(userProfile.avatar)" :shape="shape" />
       <div v-else class="user-avatar default" :class="[className, shape]" :style="backInfo(url)">
         {{ url ? null : displayInfo(userProfile.nick || userProfile.userID) }}
       </div>

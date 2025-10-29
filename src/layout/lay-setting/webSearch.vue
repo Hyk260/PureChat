@@ -12,7 +12,7 @@
       </el-select>
     </div>
     <div v-if="localSearch">
-      <el-divider class="my-20" />
+      <ElDivider class="my-20" />
       <div class="flex gap-5 mb-20">
         <span>{{ defaultProvider }}</span>
         <el-icon class="cursor-pointer" @click="toLink(officialWebsite)"><ExternalLink /></el-icon>
@@ -22,7 +22,7 @@
         <el-button @click="checkApiKey">检查</el-button>
       </div>
       <div class="mt-10">
-        <el-link :href="apiKeyWebsite" target="_blank" type="primary">点击这里获取密钥</el-link>
+        <ElLink :href="apiKeyWebsite" target="_blank" type="primary">点击这里获取密钥</ElLink>
       </div>
     </div>
   </div>
@@ -30,6 +30,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, watch } from "vue"
+import { ElLink } from "element-plus"
 import { ExternalLink } from "lucide-vue-next"
 
 import { storeToRefs } from "pinia"

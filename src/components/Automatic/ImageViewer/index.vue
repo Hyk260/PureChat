@@ -1,5 +1,5 @@
 <template>
-  <el-image-viewer
+  <ElImageViewer
     v-if="dialog"
     ref="imageViewerRef"
     :initial-index="0"

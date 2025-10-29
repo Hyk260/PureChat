@@ -8,7 +8,7 @@
               <span v-if="userStore.userLocalStore.native">
                 {{ userStore.userLocalStore.native }}
               </span>
-              <el-avatar v-else class="w-70 h-70" :src="userStore.getUserAvatar" />
+              <ElAvatar v-else class="w-70 h-70" :src="userStore.getUserAvatar" />
             </div>
             <template #dropdown>
               <el-dropdown-menu>

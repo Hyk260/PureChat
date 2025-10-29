@@ -1,7 +1,7 @@
 <template>
   <div class="h-full">
-    <el-scrollbar>
-      <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick">
+    <ElScrollbar>
+      <ElTree :data="treeData" :props="defaultProps" @node-click="handleNodeClick">
         <template #default="{ data }">
           <div v-if="data.children" class="w-full flex-bc pr-12">
             <span>{{ data.label }}</span>
@@ -13,12 +13,13 @@
             <CardGrid :type="data.type" :item="data" />
           </div>
         </template>
-      </el-tree>
-    </el-scrollbar>
+      </ElTree>
+    </ElScrollbar>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ElTree } from "element-plus"
 import { onMounted, onUnmounted, ref } from "vue"
 
 import { ModelIDList } from "@shared/provider"

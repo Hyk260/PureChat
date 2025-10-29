@@ -1,6 +1,6 @@
 <template>
   <div class="image-preview" @click="handleImageClick(url)">
-    <el-image
+    <ElImage
       :src="url"
       :style="imgStyle"
       :preview-src-list="chatStore.imgUrlList"
@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
+import { ElImage } from "element-plus"
 
 import { useChatStore } from "@/stores"
 import { DB_Message, ImagePayloadType } from "@/types"

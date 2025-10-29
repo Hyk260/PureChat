@@ -1,5 +1,5 @@
 <template>
-  <el-drawer
+  <ElDrawer
     v-model="drawer"
     size="360px"
     modal-class="group-drawer-modal"
@@ -32,7 +32,7 @@
           </span>
         </div>
       </div>
-      <el-divider />
+      <ElDivider />
       <!-- 群公告 -->
       <div class="group-notice">
         <div class="pb-10">
@@ -45,7 +45,7 @@
           <Markdown :content="groupProfile.notification" />
         </div>
       </div>
-      <el-divider />
+      <ElDivider />
       <!-- 群成员 -->
       <div class="group-member">
         <div class="group-member-title">
@@ -78,15 +78,15 @@
           </div>
         </el-scrollbar>
       </div>
-      <el-divider />
+      <ElDivider />
       <!-- 免打扰 -->
       <div class="py-12">
         <div class="flex-bc">
           <span> 消息免打扰 </span>
-          <el-switch v-model="notify" :loading="loading" :before-change="beforeChange" @change="setNotify" />
+          <ElSwitch v-model="notify" :loading="loading" :before-change="beforeChange" @change="setNotify" />
         </div>
       </div>
-      <el-divider />
+      <ElDivider />
       <!-- 解散 退出 转让 -->
       <div v-if="!isFullStaffGroup(currentConversation)" class="group-operator flex-c">
         <el-button v-if="isOwner" type="danger" @click="handleDismissGroup"> 解散群组 </el-button>
@@ -99,10 +99,11 @@
       <!-- 添加成员弹框 -->
       <AddMemberPopup ref="AddMemberRef" @define="addGroupMemberBtn" />
     </div>
-  </el-drawer>
+  </ElDrawer>
 </template>
 
 <script setup lang="ts">
+import { ElDrawer } from "element-plus"
 import { CircleX, SquarePen as EditPen } from "lucide-vue-next"
 // import { EditPen } from "@element-plus/icons-vue"
 

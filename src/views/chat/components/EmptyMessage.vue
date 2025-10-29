@@ -1,11 +1,12 @@
 <template>
   <div v-if="!chatStore.currentConversation" :class="[className]">
-    <el-empty :description="$t('common.emptyText')" :image-size="150" />
+    <ElEmpty :description="$t('common.emptyText')" :image-size="150" />
     <div v-if="className === 'no-msg'" class="flex-c launch" @click="launch">发起会话</div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ElEmpty } from "element-plus"
 import { useChatStore, useSidebarStore } from "@/stores"
 
 const props = defineProps({

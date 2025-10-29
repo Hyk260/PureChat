@@ -8,12 +8,12 @@
       <div v-for="item in sidebarStore.filteredOutsideList" :key="item.id" class="sidebar-item">
         <el-tooltip :content="item.title" placement="right">
           <div class="sidebar-item-content" :class="{ active: isActiveItem(item.path) }" @click="handleItemClick(item)">
-            <el-badge :value="chatStore.totalUnreadMsg" :hidden="shouldHideUnreadBadge(item.id)">
+            <ElBadge :value="chatStore.totalUnreadMsg" :hidden="shouldHideUnreadBadge(item.id)">
               <el-icon v-if="item?.type === 'el-icon'" class="sidebar-icon">
                 <component :is="item.icon" />
               </el-icon>
               <SvgIcon v-else :local-icon="item.icon" class="sidebar-icon" />
-            </el-badge>
+            </ElBadge>
           </div>
         </el-tooltip>
       </div>

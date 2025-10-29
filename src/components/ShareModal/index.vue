@@ -72,29 +72,29 @@
                   ></div>
                 </div>
               </div>
-              <el-divider />
+              <ElDivider />
               <div v-if="promptContent" class="flex-bc my-5 h-32">
                 <div>包含助手提示词</div>
-                <div><el-switch v-model="shareSettings.includePrompt" /></div>
+                <div><ElSwitch v-model="shareSettings.includePrompt" /></div>
               </div>
-              <el-divider v-if="promptContent" />
+              <ElDivider v-if="promptContent" />
               <div class="flex-bc my-5 h-32">
                 <div>包含页脚</div>
-                <div><el-switch v-model="shareSettings.showFooter" /></div>
+                <div><ElSwitch v-model="shareSettings.showFooter" /></div>
               </div>
-              <el-divider />
+              <ElDivider />
               <!-- 二维码选项暂时禁用 -->
               <div class="flex-bc my-5 h-32">
                 <div>图片格式</div>
                 <div>
-                  <el-radio-group v-model="shareSettings.selectedImageType" size="small">
-                    <el-radio-button
+                  <ElRadioGroup v-model="shareSettings.selectedImageType" size="small">
+                    <ElRadioButton
                       v-for="item in imageTypeOptions"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value"
                     />
-                  </el-radio-group>
+                  </ElRadioGroup>
                 </div>
               </div>
             </div>
@@ -111,6 +111,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, reactive } from "vue"
+import { ElRadioGroup, ElRadioButton } from "element-plus"
 import { storeToRefs } from "pinia"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"

@@ -27,23 +27,23 @@
       <div class="flex items-center gap-5">
         <span>消息时间线</span>
       </div>
-      <el-switch v-model="timeline" />
+      <ElSwitch v-model="timeline" />
     </li>
     <li v-if="isDev">
       <div class="flex items-center gap-5">
-        <el-badge value="Dev" :offset="[8, -2]">
+        <ElBadge value="Dev" :offset="[8, -2]">
           <span>Markdown 渲染输入消息</span>
-        </el-badge>
+        </ElBadge>
       </div>
-      <el-switch v-model="markdownRender" />
+      <ElSwitch v-model="markdownRender" />
     </li>
     <li v-if="isDev">
       <div class="flex items-center gap-5">
-        <el-badge value="Dev" :offset="[8, -2]">
+        <ElBadge value="Dev" :offset="[8, -2]">
           <span>Markdown 渲染助手消息</span>
-        </el-badge>
+        </ElBadge>
       </div>
-      <el-switch v-model="appStore.markdownAssistantRender" />
+      <ElSwitch v-model="appStore.markdownAssistantRender" />
     </li>
     <li v-if="!IS_LOCAL_MODE">
       <el-button type="primary" @click="logout">

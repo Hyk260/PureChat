@@ -3,7 +3,7 @@
     <!-- 头部信息 -->
     <div class="header">
       <div class="avatar">
-        <!-- <el-avatar :size="80" :src="userInfo.avatar" /> -->
+        <!-- <ElAvatar :size="80" :src="userInfo.avatar" /> -->
         <UserAvatar
           words="3"
           shape="circle"

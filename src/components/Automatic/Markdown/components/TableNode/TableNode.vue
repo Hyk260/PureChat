@@ -1,10 +1,12 @@
 <template>
-  <el-table :data="tableData" style="width: 100%" :fit="true">
-    <el-table-column v-for="(col, idx) in columnsComputed" :key="col.prop || idx" :prop="col.prop" :label="col.label" />
-  </el-table>
+  <ElTable :data="tableData" style="width: 100%" :fit="true">
+    <ElTableColumn v-for="(col, idx) in columnsComputed" :key="col.prop || idx" :prop="col.prop" :label="col.label" />
+  </ElTable>
 </template>
 
 <script setup lang="ts">
+import { ElTable, ElTableColumn } from "element-plus"
+
 interface Column {
   prop: string
   label?: string | undefined

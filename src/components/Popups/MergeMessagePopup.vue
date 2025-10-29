@@ -16,14 +16,14 @@
           </div>
           <div v-else class="flex" :class="isSelf(item) ? 'item-self' : 'item-other'">
             <div class="message-avatar">
-              <el-avatar
+              <ElAvatar
                 shape="square"
                 :size="36"
                 :src="item.avatar || getAiAvatarUrl(item.from) || circleUrl"
                 @error="() => true"
               >
                 <img :src="circleUrl" />
-              </el-avatar>
+              </ElAvatar>
             </div>
             <div class="message-content" :class="getMessageItemClass(item.messageBody[0].type)">
               <p class="message-sender">

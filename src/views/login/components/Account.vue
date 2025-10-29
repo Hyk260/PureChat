@@ -68,9 +68,9 @@
   </div>
   <!-- 第三方登录 -->
   <el-form-item>
-    <el-divider>
+    <ElDivider>
       <p class="text-gray-500">{{ $t("login.thirdLogin") }}</p>
-    </el-divider>
+    </ElDivider>
     <div class="social-login">
       <span
         v-for="(item, index) in thirdParty"

@@ -1,44 +1,38 @@
 <template>
-  <el-scrollbar>
-    <el-card class="style-header" shadow="never">
+  <ElScrollbar>
+    <ElCard class="style-header" shadow="never">
       <template #header>
         <div>
           <span class="name"> PureChat </span>
         </div>
       </template>
       <span class="describe"> 聊天应用与AI开发框架 </span>
-    </el-card>
+    </ElCard>
     <!-- 项目信息 -->
-    <el-card class="style-card" shadow="hover">
+    <ElCard class="style-card" shadow="hover">
       <template #header>
         <div>
           <span>项目信息</span>
         </div>
       </template>
-      <el-descriptions :column="2" border>
-        <el-descriptions-item
-          v-for="item in data"
-          :key="item.label"
-          :label="item.label"
-          label-align="left"
-          align="left"
-        >
+      <ElDescriptions :column="2" border>
+        <ElDescriptionsItem v-for="item in data" :key="item.label" :label="item.label" label-align="left" align="left">
           <el-tag v-if="item?.tag">{{ item.tag }}</el-tag>
           <a v-else-if="item?.url" :href="item.url" target="_blank">
             <span class="style-color"> {{ item.title }} </span>
           </a>
-        </el-descriptions-item>
-      </el-descriptions>
-    </el-card>
+        </ElDescriptionsItem>
+      </ElDescriptions>
+    </ElCard>
     <!-- 生产环境依赖 -->
-    <el-card class="style-card" shadow="hover">
+    <ElCard class="style-card" shadow="hover">
       <template #header>
         <div>
           <span>生产环境依赖</span>
         </div>
       </template>
-      <el-descriptions border>
-        <el-descriptions-item
+      <ElDescriptions border>
+        <ElDescriptionsItem
           v-for="(item, index) in schema"
           :key="index"
           :label="item.label"
@@ -51,18 +45,18 @@
               {{ item.field }}
             </span>
           </a>
-        </el-descriptions-item>
-      </el-descriptions>
-    </el-card>
+        </ElDescriptionsItem>
+      </ElDescriptions>
+    </ElCard>
     <!-- 开发环境依赖 -->
-    <el-card class="style-card" shadow="hover">
+    <ElCard class="style-card" shadow="hover">
       <template #header>
         <div>
           <span>开发环境依赖</span>
         </div>
       </template>
-      <el-descriptions border>
-        <el-descriptions-item
+      <ElDescriptions border>
+        <ElDescriptionsItem
           v-for="(item, index) in devSchema"
           :key="index"
           :label="item.label"
@@ -75,18 +69,18 @@
               {{ item.field }}
             </span>
           </a>
-        </el-descriptions-item>
-      </el-descriptions>
-    </el-card>
+        </ElDescriptionsItem>
+      </ElDescriptions>
+    </ElCard>
     <!-- Markdown 预览示例 -->
-    <el-card class="style-card" shadow="hover">
+    <ElCard class="style-card" shadow="hover">
       <template #header>
         <div>
           <span>Markdown 示例</span>
         </div>
       </template>
       <div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap">
-        <el-input
+        <ElInput
           v-model="markdownText"
           type="textarea"
           :autosize="{ minRows: 6 }"
@@ -97,11 +91,13 @@
           <Markdown :content="markdownText" />
         </div>
       </div>
-    </el-card>
-  </el-scrollbar>
+    </ElCard>
+  </ElScrollbar>
 </template>
 
 <script setup lang="ts">
+import { ElCard, ElDescriptions, ElDescriptionsItem } from "element-plus"
+
 const { pkg, lastBuildTime } = __APP_INFO__
 const { dependencies, devDependencies, repository, version, docs } = pkg
 

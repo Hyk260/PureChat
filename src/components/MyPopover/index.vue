@@ -11,7 +11,7 @@
         <div class="nick flex gap-5">
           <span> {{ cardData.nick || userProfile.nick || cardData.from || "-" }}</span>
         </div>
-        <el-link
+        <ElLink
           v-if="getProvider()"
           :href="getHomepage()"
           target="_blank"
@@ -20,7 +20,7 @@
           class="!justify-start"
         >
           {{ getProvider() }}
-        </el-link>
+        </ElLink>
       </div>
       <div v-else class="flex ml-16">
         <span class="nick">{{ cardData.nick || userProfile.nick || cardData.from || "-" }}</span>
@@ -40,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+import { ElLink } from "element-plus"
 import { onClickOutside } from "@vueuse/core"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
