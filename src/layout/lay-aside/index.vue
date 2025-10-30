@@ -5,14 +5,13 @@
         <UserAvatar type="self" is-dot shape="square" @click="handleAvatarClick" />
       </div>
 
-      <div v-for="item in sidebarStore.filteredOutsideList" :key="item.id" class="sidebar-item">
+      <div v-for="item in outsideList" :key="item.id" class="sidebar-item">
         <ElTooltip :content="item.title" placement="right">
           <div class="sidebar-item-content" :class="{ active: isActiveItem(item.path) }" @click="handleItemClick(item)">
-            <ElBadge :value="chatStore.totalUnreadMsg" :hidden="shouldHideUnreadBadge(item.id)">
-              <ElIcon v-if="item?.type === 'el-icon'" class="sidebar-icon">
+            <ElBadge :value="totalUnreadMsg" :hidden="shouldHideUnreadBadge(item.id)">
+              <ElIcon class="sidebar-icon">
                 <component :is="item.icon" />
               </ElIcon>
-              <SvgIcon v-else :local-icon="item.icon" class="sidebar-icon" />
             </ElBadge>
           </div>
         </ElTooltip>
@@ -30,7 +29,7 @@
       </ElTooltip>
     </div>
 
-    <SidebarEditDialog />
+    <!-- <SidebarEditDialog /> -->
     <CardPopover />
     <UserPopup ref="UserPopupRef" />
   </div>
@@ -40,7 +39,7 @@
 import { Settings, CircleQuestionMark } from "lucide-vue-next"
 import { useRouter } from "vue-router"
 
-import SidebarEditDialog from "@/components/MoreSidebar/index.vue"
+// import SidebarEditDialog from "@/components/MoreSidebar/index.vue"
 import UserPopup from "@/components/Popups/UserPopup.vue"
 import { useChatStore, useSidebarStore } from "@/stores"
 import { openWindow } from "@/utils/common"
@@ -53,14 +52,17 @@ defineOptions({
 
 const docs = __APP_INFO__.pkg.docs
 
-const UserPopupRef = ref()
+const UserPopupRef = useTemplateRef("UserPopupRef")
 const router = useRouter()
 const chatStore = useChatStore()
 const sidebarStore = useSidebarStore()
 
+const { totalUnreadMsg } = storeToRefs(chatStore)
+const { outsideList } = storeToRefs(sidebarStore)
+
 const handleAvatarClick = () => {
   if (__LOCAL_MODE__) {
-    UserPopupRef.value.show()
+    UserPopupRef.value?.show()
   } else {
     emitter.emit("setPopover")
   }
@@ -82,7 +84,7 @@ const isActiveItem = (path) => {
   return router.currentRoute.value.path === path
 }
 
-const shouldHideUnreadBadge = (id) => {
+const shouldHideUnreadBadge = (id: string) => {
   return id !== "chat" || chatStore.totalUnreadMsg === 0
 }
 </script>

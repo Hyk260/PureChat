@@ -76,7 +76,7 @@ const props = withDefaults(defineProps<Props>(), {
   pinyinSearch: false,
 })
 
-const listRef = ref<HTMLElement>()
+const listRef = useTemplateRef("listRef")
 const top = ref("")
 const left = ref("")
 const list = ref<GroupMember[]>([])

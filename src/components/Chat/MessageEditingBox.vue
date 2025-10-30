@@ -41,7 +41,7 @@ const props = defineProps({
 
 const chatStore = useChatStore()
 
-const textInputRef = ref<InstanceType<typeof ElInput> | null>(null)
+const textInputRef = useTemplateRef("textInputRef")
 const inputText = ref(props.item.payload.text)
 
 const containerClass = computed(() => {

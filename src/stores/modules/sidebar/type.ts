@@ -5,8 +5,7 @@ export interface SidebarItem {
   icon: Component | string
   title: string
   path?: string
-  type: "el-icon" | "svg-icon"
-  show?: "hide" | ""
+  show?: string | undefined // "hide"
   mode?: "other"
   class?: string
   if_fixed?: number

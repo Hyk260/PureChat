@@ -26,21 +26,18 @@ const defaultOutsideList: SidebarItem[] = [
     // class: "fix-ed",
     // if_fixed: 1,
     path: "/chat",
-    type: "el-icon",
   },
   {
     id: "friends",
     icon: markRaw(User),
     title: "联系人",
     path: "/friends",
-    type: "el-icon",
     show: __LOCAL_MODE__ ? "hide" : "",
   },
   {
     id: "discover",
     icon: markRaw(Compass),
     title: "发现",
-    type: "el-icon",
     path: "/discover",
   },
   {
@@ -48,17 +45,15 @@ const defaultOutsideList: SidebarItem[] = [
     icon: markRaw(LayoutGrid),
     title: "小程序",
     path: "/apps",
-    type: "el-icon",
     show: __IS_ELECTRON__ ? "" : "hide",
   },
-  {
-    id: "more",
-    icon: markRaw(Ellipsis),
-    title: "更多",
-    mode: "other",
-    type: "el-icon",
-  },
-]
+  // {
+  //   id: "more",
+  //   icon: markRaw(Ellipsis),
+  //   title: "更多",
+  //   mode: "other",
+  // },
+].filter((item) => item?.show !== "hide")
 
 const defaultMoreList: MoreListItem[] = [
   {
@@ -79,8 +74,8 @@ const defaultMoreList: MoreListItem[] = [
 
 export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
   state: (): SidebarState => ({
-    outsideList: [...defaultOutsideList],
-    moreList: [...defaultMoreList],
+    outsideList: defaultOutsideList,
+    moreList: defaultMoreList,
   }),
   getters: {
     filteredOutsideList: (state): SidebarItem[] => state.outsideList.filter((item) => item?.show !== "hide"),

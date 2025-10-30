@@ -123,7 +123,7 @@
       <ElButton
         v-show="isWebSearchModel"
         :style="{
-          color: enableWebSearch ? 'var(--ElButton-hover-text-color)' : '',
+          color: enableWebSearch ? 'var(--el-button-hover-text-color)' : '',
         }"
         @click="onEnableWebSearch"
       >

@@ -1,4 +1,4 @@
-import { ref, shallowRef } from "vue"
+import { ref, useTemplateRef, shallowRef } from "vue"
 import type { MenuItem } from "@/types/contextMenu"
 
 export interface UseContextMenuOptions {

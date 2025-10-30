@@ -53,6 +53,10 @@ import { Menu, MenuItem, SubMenu } from "ant-design-vue"
 import type { MenuItem as MenuItemType } from "@/types/contextMenu"
 import type { MenuProps } from "ant-design-vue"
 
+defineOptions({
+  name: "ContextMenu",
+})
+
 export interface Props {
   items: MenuItemType[] | []
 }
@@ -60,15 +64,15 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {})
 
 const emit = defineEmits<{
-  "menu-click": [item: MenuItemType, data?: any]
-  "open-change": [open: boolean]
+  "menu-click": [item: MenuItemType]
   close: []
 }>()
 
 const visible = ref<boolean>(false)
-const menuContainerRef = ref<HTMLElement>()
 const position = ref({ x: 0, y: 0 })
 const menuSize = ref({ width: 0, height: 0 })
+
+const menuContainerRef = useTemplateRef("menuContainerRef")
 
 const menuStyle = computed(() => ({
   position: "fixed",
@@ -126,14 +130,8 @@ const handleMenuClick: MenuProps["onClick"] = (data) => {
 }
 
 const handleMenuItemClick = (item: MenuItemType) => {
-  if (item) {
-    emit("menu-click", item)
-  }
+  if (item) emit("menu-click", item)
   visible.value = false
-}
-
-const handleOpenChange = (open: boolean): void => {
-  emit("open-change", open)
 }
 
 const open = async (event?: MouseEvent) => {
@@ -163,13 +161,9 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 }
 
-const onBeforeEnter = () => {
-  emit("open-change", true)
-}
+const onBeforeEnter = () => {}
 
-const onAfterLeave = () => {
-  emit("open-change", false)
-}
+const onAfterLeave = () => {}
 
 const handleEscape = (event: KeyboardEvent) => {
   if (event.key === "Escape" && visible.value) {
