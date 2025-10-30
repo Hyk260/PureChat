@@ -51,6 +51,7 @@
 </template>
 
 <script setup lang="ts">
+import { ElInput } from "element-plus"
 import { CirclePlus, CircleX } from "lucide-vue-next"
 
 import { cloneDeep, isEmpty } from "lodash-es"
@@ -114,9 +115,16 @@ function addPrompt() {
   promptItems.value = newPrompt
 }
 
-async function promptTitleFocus() {
-  await nextTick()
-  inputTitleRef.value[0]?.focus?.()
+function promptTitleFocus() {
+  nextTick(() => {
+    if (!inputTitleRef.value) return
+    try {
+      inputTitleRef.value?.focus()
+      inputTitleRef.value[0]?.focus()
+    } catch (error) {
+      console.log(error)
+    }
+  })
 }
 
 initPromptData()

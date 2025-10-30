@@ -137,10 +137,10 @@ import { timeFormat } from "@/utils/timeFormat"
 import type { DB_Message, FilePayloadType } from "@/types"
 import type { MenuItem } from "@/types/contextMenu"
 
-const userPopupRef = ref<InstanceType<typeof UserPopup>>()
-const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null)
-const messageViewRef = ref<HTMLDivElement | null>(null)
-const bottomSentinelRef = ref<HTMLElement | null>(null)
+const userPopupRef = useTemplateRef("userPopupRef")
+const scrollbarRef = useTemplateRef("scrollbarRef")
+const messageViewRef = useTemplateRef("messageViewRef")
+const bottomSentinelRef = useTemplateRef("bottomSentinelRef")
 
 const contextMenuItems = ref<MenuItem[] | []>([])
 const currentMenuItem = ref<DB_Message | null>(null)

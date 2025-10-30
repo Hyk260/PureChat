@@ -56,7 +56,7 @@ import emitter from "@/utils/mitt-bus"
 const chatStore = useChatStore()
 const userStore = useUserStore()
 
-const wardingRef = ref(null)
+const wardingRef = useTemplateRef("wardingRef")
 const multipleValue = ref(null)
 
 const { getForwardCount, isForwardDataEmpty, currentSessionId, isGroupChat, currentConversation } =
@@ -113,7 +113,7 @@ const handleConfirm = (type) => {
 }
 
 const setDialogVisible = (type = "") => {
-  wardingRef.value.openPopup(type)
+  wardingRef.value?.openPopup(type)
 }
 
 const setMultipleValue = (value = null) => {
@@ -123,17 +123,7 @@ const setMultipleValue = (value = null) => {
 const shutdown = () => {
   chatStore.setForwardData({ type: "clear" })
   chatStore.toggleMultiSelectMode(false)
-  closedState()
   setMultipleValue()
-}
-
-const closedState = () => {
-  document.querySelectorAll(".check-btn").forEach((t) => {
-    t.checked = false
-  })
-  document.querySelectorAll(".message-view > *").forEach((t) => {
-    t.classList.remove("style-select")
-  })
 }
 
 const transformData = (data) => {

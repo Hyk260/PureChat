@@ -1,5 +1,5 @@
 <template>
-  <ElDialog v-model="open" center align-center append-to-body width="300" :before-close="handleClose">
+  <ElDialog v-model="open" center align-center append-to-body width="300" @close="handleClose">
     <div>
       <div class="flex-c">
         <div>
