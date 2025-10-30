@@ -70,43 +70,28 @@
 
 <script setup lang="ts">
 import { Camera, Code, Eye, Maximize, Minimize, SquareSplitHorizontal as Split, X } from "lucide-vue-next"
-
-import { ElMessage, ElSegmented } from "element-plus"
-
+import { ElSegmented } from "element-plus"
 import { useHtmlArtifacts } from "../../composables/useHtmlArtifacts"
 import CodeEditor from "../CodeEditor/CodeEditor.vue"
 import PreviewPanel from "../CodeEditor/PreviewPanel.vue"
 import SplitView from "../CodeEditor/SplitView.vue"
 // import HtmlEditorView, { type ViewMode } from "../CodeEditor/HtmlEditorView.vue"
+import emitter from "@/utils/mitt-bus"
 
 type CaptureCommand = "file" | "clipboard"
 
 interface Props {
-  open: boolean
   title: string
-  html: string
-  onClose: () => void
-}
-
-interface Emits {
-  (e: "close"): void
-  (e: "content-change", html: string): void
 }
 
 const props = defineProps<Props>()
 
-const emit = defineEmits<Emits>()
-
 const { extractTitle } = useHtmlArtifacts()
-
-const dialogVisible = computed({
-  get: () => props.open,
-  set: (value) => !value && handleClose(),
-})
 
 const DEFAULT_WIDTH = "85vw"
 const FULLSCREEN_WIDTH = "100vw"
 
+const dialogVisible = ref(false)
 const viewMode = ref<"split" | "code" | "preview">("split")
 const isFullscreen = ref(false)
 const htmlContent = ref("")
@@ -123,11 +108,10 @@ const toggleFullscreen = () => {
 
 const dialogWidth = computed(() => (isFullscreen.value ? FULLSCREEN_WIDTH : DEFAULT_WIDTH))
 
-const displayTitle = computed(() => extractTitle(props.html))
+const displayTitle = computed(() => extractTitle(htmlContent.value))
 
 const handleCodeChange = (newContent: string) => {
   htmlContent.value = newContent
-  emit("content-change", newContent)
 }
 
 const saveAsFile = async () => {
@@ -155,29 +139,24 @@ const handleCapture = async (command: CaptureCommand) => {
     await captureHandlers[command]()
   } catch (error) {
     console.error(`捕获操作失败 [${command}]:`, error)
-    ElMessage.error({ message: "操作失败，请重试" })
+    window.$message?.error("操作失败，请重试")
   }
 }
 
 const handleClose = () => {
-  props.onClose()
-  emit("close")
+  dialogVisible.value = false
 }
 
-watch(
-  () => props.html,
-  (newHtml) => {
-    htmlContent.value = newHtml
-  },
-  { immediate: true }
-)
+onMounted(() => {
+  emitter.on("openHtmlArtifactsPopup", (data) => {
+    dialogVisible.value = data.visible
+    htmlContent.value = data.code
+  })
+})
 
-watch(
-  () => props.open,
-  (isOpen) => {
-    if (isOpen) htmlContent.value = props.html
-  }
-)
+onBeforeUnmount(() => {
+  emitter.off("openHtmlArtifactsPopup")
+})
 </script>
 
 <style>
@@ -188,6 +167,7 @@ watch(
 }
 .html-artifacts-header {
   padding-bottom: 0;
+  margin: 16px;
 }
 .html-artifacts-body {
   height: calc(100% - 48px);

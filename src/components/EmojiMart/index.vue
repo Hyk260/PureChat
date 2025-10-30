@@ -24,13 +24,20 @@ function onClickOutside() {
 
 async function initEmojiMart() {
   try {
-    const [zh, data] = await Promise.all([
+    const [
+      zh,
+      // data
+    ] = await Promise.all([
       import("@/assets/emoji-mart/langs/zh.json"),
-      import("@/assets/emoji-mart/data/native.json"),
+      // import("@/assets/emoji-mart/data/native.json"),
     ])
     if (emojiMartRef.value) {
       const pickerOptions = {
-        data: data.default || data,
+        // data: data.default || data,
+        data: async () => {
+          const response = await fetch("https://cdn.jsdelivr.net/npm/@emoji-mart/data")
+          return response.json()
+        },
         noCountryFlags: true,
         theme: "light", // auto, light, dark
         skinTonePosition: "none",

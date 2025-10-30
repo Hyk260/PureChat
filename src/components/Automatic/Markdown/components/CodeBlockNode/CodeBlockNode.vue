@@ -91,13 +91,6 @@
         </div>
       </div>
     </div>
-    <!-- HTML 预览弹窗 -->
-    <HtmlArtifactsPopup
-      :open="showHtmlPreview"
-      title="HTML Preview"
-      :html="props.code"
-      @close="() => (showHtmlPreview = false)"
-    />
   </div>
 </template>
 
@@ -121,11 +114,12 @@ import { usePreferredColorScheme, useIntersectionObserver } from "@vueuse/core"
 //   getHighlighter,
 //   isHighlighterInitialized,
 // } from "../../utils/highlightShiki"
-import HtmlArtifactsPopup from "@/components/CodeBlockView/HtmlArtifactsPopup.vue"
+// import HtmlArtifactsPopup from "@/components/CodeBlockView/HtmlArtifactsPopup.vue"
 import { useCodeBlock } from "@/composables/useCodeBlock"
 import { useHeightCheck } from "@/composables/useHeightCheck"
 import { getLanguageIcon, languageMap, languageMapValues } from "@/utils/languageIcon"
 import { useThemeStore } from "@/stores/modules/theme"
+import emitter from "@/utils/mitt-bus"
 
 import { highlightCode } from "../../utils/highlight"
 
@@ -157,7 +151,6 @@ const codeBlockRef = useTemplateRef("codeBlockRef")
 
 const showMaximize = ref(false)
 const highlightedCode = ref<string>("")
-const showHtmlPreview = ref(false)
 
 const languageList = ["js", "ts", ...languageMapValues]
 const excludeList = new Set(["json", "bash"])
@@ -214,7 +207,10 @@ const handlePreviewCode = () => {
   if (!isPreviewable.value) return
 
   if (normalizedLang.value === "html") {
-    showHtmlPreview.value = true
+    emitter.emit("openHtmlArtifactsPopup", {
+      code: props.code,
+      visible: true,
+    })
     return
   }
 }

@@ -96,13 +96,13 @@ export const getConversationProfile = async ({ sessionId }: { sessionId: string 
   }
 }
 // 消息已读上报
-export const setMessageRead = (params: { unreadCount?: number; conversationID: string }) => {
+export const setMessageRead = (params: { unreadCount?: number | undefined; conversationID: string }) => {
   if (__LOCAL_MODE__) return
   if (!params) return
   if (!params?.conversationID) return
   try {
     const { unreadCount = 0, conversationID } = params
-    if (unreadCount === 0) return
+    if (unreadCount === 0 || unreadCount === undefined) return
     const promise = tim.setMessageRead({ conversationID })
     promise
       .then((res) => {
