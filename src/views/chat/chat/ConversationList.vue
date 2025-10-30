@@ -90,15 +90,7 @@ const groupStore = useGroupStore()
 const userStore = useUserStore()
 const chatStore = useChatStore()
 
-const { contextMenuRef, showContextMenu } = useContextMenu({
-  onBeforeShow: (_, data) => {
-    if (data.type === "@TIM#SYSTEM") {
-      contextMenuRef.value?.close()
-      return false
-    }
-    return true
-  },
-})
+const { contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu()
 
 const { conversationList, searchConversationList, currentSessionId } = storeToRefs(chatStore)
 
@@ -148,6 +140,10 @@ const isShowCount = (item: DB_Session) => {
 }
 
 const handleContextMenuEvent = (event: MouseEvent, item: DB_Session) => {
+  if (item.type === "@TIM#SYSTEM") {
+    hideContextMenu()
+    return
+  }
   handleContextMenu(item)
   showContextMenu(event, item)
 }
