@@ -4,11 +4,11 @@
     <div class="flex-bc gap-10">
       <ElInput v-model="input" placeholder="搜索" clearable @input="debounceSearch">
         <template #prefix>
-          <el-icon><Search /></el-icon>
+          <ElIcon><Search /></ElIcon>
         </template>
       </ElInput>
       <div v-if="!IS_LOCAL_MODE" class="header-search-add flex-c" @click="openDialog">
-        <el-icon><MessageSquarePlus /></el-icon>
+        <ElIcon><MessageSquarePlus /></ElIcon>
       </div>
     </div>
   </div>

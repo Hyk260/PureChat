@@ -1,17 +1,17 @@
 <template>
   <div class="split-view">
-    <el-splitter>
-      <el-splitter-panel :min="400">
+    <ElSplitter>
+      <ElSplitterPanel :min="400">
         <div class="code-panel">
           <CodeEditor :code="code" @change="handleCodeChange" />
         </div>
-      </el-splitter-panel>
-      <el-splitter-panel :min="400">
+      </ElSplitterPanel>
+      <ElSplitterPanel :min="400">
         <div class="preview-panel">
           <PreviewPanel ref="previewPanelRef" :code="code" />
         </div>
-      </el-splitter-panel>
-    </el-splitter>
+      </ElSplitterPanel>
+    </ElSplitter>
   </div>
 </template>
 

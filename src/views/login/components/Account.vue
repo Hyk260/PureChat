@@ -2,7 +2,7 @@
   <ElForm ref="formRef" :model="form" :rules="rules">
     <!-- 账号 -->
     <ElFormItem prop="username">
-      <el-autocomplete
+      <ElAutocomplete
         v-model="form.username"
         clearable
         size="large"
@@ -32,7 +32,7 @@
         show-password
       >
         <template #prefix>
-          <el-icon><Lock /></el-icon>
+          <ElIcon><Lock /></ElIcon>
         </template>
       </ElInput>
     </ElFormItem>
@@ -40,7 +40,7 @@
     <ElFormItem v-if="showVerifyCode" prop="verifyCode">
       <ElInput v-model="form.verifyCode" size="large" :placeholder="$t('login.verifyCode')" clearable>
         <template #prefix>
-          <el-icon><Key /></el-icon>
+          <ElIcon><Key /></ElIcon>
         </template>
         <template #append>
           <ImageVerify v-model:code="verifyCode" />

@@ -21,9 +21,9 @@
               <span> {{ item.Title }}</span>
               <ElTooltip v-if="item.apiKey && ['token'].includes(item.ID)" content="获取密钥" placement="top">
                 <span class="flex cursor-pointer">
-                  <el-icon @click="openExternalUrl(item.apiKey)">
+                  <ElIcon @click="openExternalUrl(item.apiKey)">
                     <QuestionFilled />
-                  </el-icon>
+                  </ElIcon>
                 </span>
               </ElTooltip>
             </div>
@@ -103,9 +103,9 @@
                 </div>
                 <div>
                   <ElTooltip v-if="item?.options?.id === 'openai'" :content="modelTooltipLabel" placement="top">
-                    <el-icon class="refresh" @click="onRefresh">
+                    <ElIcon class="refresh" @click="onRefresh">
                       <Refresh />
-                    </el-icon>
+                    </ElIcon>
                   </ElTooltip>
                 </div>
               </div>
@@ -138,14 +138,14 @@
               <ElTooltip content="配置教程" placement="top">
                 <!-- ollama -->
                 <span v-if="item.doubt && isOllama" class="flex cursor-pointer">
-                  <el-icon @click="openExternalUrl(item.doubt)">
+                  <ElIcon @click="openExternalUrl(item.doubt)">
                     <QuestionFilled />
-                  </el-icon>
+                  </ElIcon>
                 </span>
                 <span v-else-if="item.doubt" class="flex cursor-pointer">
-                  <el-icon @click="openExternalUrl(item.doubt)">
+                  <ElIcon @click="openExternalUrl(item.doubt)">
                     <QuestionFilled />
-                  </el-icon>
+                  </ElIcon>
                 </span>
                 <span v-else class="w-14"></span>
               </ElTooltip>

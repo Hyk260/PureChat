@@ -1,18 +1,18 @@
 <template>
   <div class="card-header">
     <div class="icon-wrapper" :class="{ streaming: isStreaming }">
-      <el-icon v-if="isStreaming" class="streaming-icon">
+      <ElIcon v-if="isStreaming" class="streaming-icon">
         <Loading />
-      </el-icon>
-      <el-icon v-else class="static-icon">
+      </ElIcon>
+      <ElIcon v-else class="static-icon">
         <Document />
-      </el-icon>
+      </ElIcon>
     </div>
 
     <div class="title-section">
       <div class="title">{{ title }}</div>
       <div class="type-badge">
-        <el-icon><Document /></el-icon>
+        <ElIcon><Document /></ElIcon>
         <span>HTML</span>
       </div>
     </div>

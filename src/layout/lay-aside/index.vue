@@ -9,9 +9,9 @@
         <ElTooltip :content="item.title" placement="right">
           <div class="sidebar-item-content" :class="{ active: isActiveItem(item.path) }" @click="handleItemClick(item)">
             <ElBadge :value="chatStore.totalUnreadMsg" :hidden="shouldHideUnreadBadge(item.id)">
-              <el-icon v-if="item?.type === 'el-icon'" class="sidebar-icon">
+              <ElIcon v-if="item?.type === 'el-icon'" class="sidebar-icon">
                 <component :is="item.icon" />
-              </el-icon>
+              </ElIcon>
               <SvgIcon v-else :local-icon="item.icon" class="sidebar-icon" />
             </ElBadge>
           </div>
@@ -21,12 +21,12 @@
 
     <div class="sidebar-footer">
       <ElTooltip content="帮助文档" placement="right">
-        <el-icon class="icon" @click="onOpenDocs"><CircleQuestionMark /></el-icon>
+        <ElIcon class="icon" @click="onOpenDocs"><CircleQuestionMark /></ElIcon>
       </ElTooltip>
       <ElTooltip content="设置" placement="right">
-        <el-icon class="icon" @click="openSettings">
+        <ElIcon class="icon" @click="openSettings">
           <Settings />
-        </el-icon>
+        </ElIcon>
       </ElTooltip>
     </div>
 

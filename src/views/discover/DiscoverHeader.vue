@@ -9,9 +9,9 @@
       @input="handleSearchInput"
     >
       <template #prefix>
-        <el-icon class="search-icon">
+        <ElIcon class="search-icon">
           <Search />
-        </el-icon>
+        </ElIcon>
       </template>
     </ElInput>
     <div class="header-spacer"></div>

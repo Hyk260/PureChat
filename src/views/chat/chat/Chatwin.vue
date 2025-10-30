@@ -38,7 +38,7 @@
                 >
                   {{ userStore.userLocalStore.native }}
                 </div>
-                <el-avatar
+                <ElAvatar
                   v-else
                   :size="36"
                   :src="getAvatarUrl(item)"
@@ -50,7 +50,7 @@
                   <div class="h-36 w-36 flex-c bg-[#5cadff]">
                     {{ getDisplayName(item.from) }}
                   </div>
-                </el-avatar>
+                </ElAvatar>
               </div>
               <div :class="getMessageItemClass(item)">
                 <div v-if="isGroupChat" class="message-view-top">

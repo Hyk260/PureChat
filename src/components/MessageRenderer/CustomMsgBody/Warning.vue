@@ -1,6 +1,6 @@
 <template>
   <div class="warning flex items-center">
-    <el-icon><Warning /></el-icon>
+    <ElIcon><Warning /></ElIcon>
     <span> API Key 不正确或为空，请检查 API Key 后重试</span>
     <span class="cursor-pointer ml-4 text-[#0072f5]" @click="openRobotBox()"> [配置] </span>
     <span class="cursor-pointer ml-4 text-[#0072f5]" @click="jumpLink()"> [文档] </span>
@@ -49,7 +49,7 @@ function getDoubt(payload) {
   min-height: 36px;
   padding: 0 8px;
   border-radius: 3px;
-  .el-icon {
+  .ElIcon {
     margin: 0 5px;
   }
 }

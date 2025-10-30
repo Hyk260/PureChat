@@ -23,9 +23,9 @@
             <span class="group-name truncate">
               {{ groupProfile.name }}
             </span>
-            <el-icon v-if="isOwner" class="style-editPen icon-hover" @click="openNamePopup">
+            <ElIcon v-if="isOwner" class="style-editPen icon-hover" @click="openNamePopup">
               <EditPen />
-            </el-icon>
+            </ElIcon>
           </div>
           <span class="group-type">
             {{ GroupTypeMap[groupProfile.type] }}
@@ -37,9 +37,9 @@
       <div class="group-notice">
         <div class="pb-10">
           <span>{{ $t("group.groupNotice") }}</span>
-          <el-icon v-if="isOwner" class="style-editPen icon-hover" @click="openNoticePopup">
+          <ElIcon v-if="isOwner" class="style-editPen icon-hover" @click="openNoticePopup">
             <EditPen />
-          </el-icon>
+          </ElIcon>
         </div>
         <div class="group-notice-info multi-truncate-5">
           <Markdown :content="groupProfile.notification" />
@@ -59,14 +59,14 @@
           <div class="group-member-avatar">
             <span class="iconify-icon gala-add margin" @click="groupMemberAdd"></span>
             <div v-for="item in currentMemberList" :key="item.userID" class="avatar margin" @click="navigate(item)">
-              <el-icon
+              <ElIcon
                 v-if="isOwner"
                 class="style-close"
                 :class="{ hidden: userStore.userProfile.userID === item.userID }"
                 @click.stop="removeGroupMemberBtn(item)"
               >
                 <CircleX />
-              </el-icon>
+              </ElIcon>
               <UserAvatar :url="item.avatar" :nick-name="item.nick || item.userID" />
               <!-- Admin Owner -->
               <div v-if="item.role !== 'Member'" class="wrap-group" :class="`style-${item.role}`">

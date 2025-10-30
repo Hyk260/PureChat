@@ -1,6 +1,6 @@
 <template>
   <div class="generating-container">
-    <el-icon class="loading-icon"><Loading /></el-icon>
+    <ElIcon class="loading-icon"><Loading /></ElIcon>
     <span class="generating-text">正在生成内容...</span>
   </div>
 </template>

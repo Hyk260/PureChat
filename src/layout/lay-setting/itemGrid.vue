@@ -2,9 +2,9 @@
   <div class="panel-wrapper w-full flex flex-col">
     <div class="title flex-bc">
       <span>{{ item.title }}</span>
-      <el-icon @click="emit('onClose')">
+      <ElIcon @click="emit('onClose')">
         <Close />
-      </el-icon>
+      </ElIcon>
     </div>
     <Currency v-if="item.id === 'currency'" />
     <WebSearch v-else-if="item.id === 'webSearch'" />

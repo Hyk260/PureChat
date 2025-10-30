@@ -9,9 +9,9 @@
         <ElButton class="avatar relative size-32 p-0" @click="setShowEmojiPickerFlag(true)">
           <div class="group">
             <span class="text-22"> {{ item.meta.avatar }} </span>
-            <el-icon class="avatar-close-icon" @click.stop="handleClearAvatar(i)">
+            <ElIcon class="avatar-close-icon" @click.stop="handleClearAvatar(i)">
               <CircleX />
-            </el-icon>
+            </ElIcon>
           </div>
           <EmojiMart
             v-if="showEmojiPickerFlag"
@@ -38,13 +38,13 @@
           @blur="savePromptData"
         />
         <ElButton v-if="false" class="flex-c w-31 h-31" @click="onClose(i)">
-          <el-icon><CircleX /></el-icon>
+          <ElIcon><CircleX /></ElIcon>
         </ElButton>
       </div>
     </div>
     <div v-if="false">
       <ElButton class="w-full" @click="addPrompt">
-        <el-icon><CirclePlus /></el-icon>
+        <ElIcon><CirclePlus /></ElIcon>
       </ElButton>
     </div>
   </div>

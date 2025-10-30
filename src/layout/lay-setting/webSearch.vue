@@ -15,7 +15,7 @@
       <ElDivider class="my-20" />
       <div class="flex gap-5 mb-20">
         <span>{{ defaultProvider }}</span>
-        <el-icon class="cursor-pointer" @click="toLink(officialWebsite)"><ExternalLink /></el-icon>
+        <ElIcon class="cursor-pointer" @click="toLink(officialWebsite)"><ExternalLink /></ElIcon>
       </div>
       <div class="flex gap-10">
         <ElInput v-model="searchInput" type="password" placeholder="API密钥" show-password clearable @input="onBlur" />

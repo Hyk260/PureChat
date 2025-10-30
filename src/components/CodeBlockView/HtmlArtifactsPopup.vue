@@ -23,14 +23,14 @@
 
         <div class="header-center">
           <div class="view-controls">
-            <el-segmented v-model="viewMode" :options="viewModes">
+            <ElSegmented v-model="viewMode" :options="viewModes">
               <template #default="scope">
                 <div class="flex-c gap-5">
                   <component :is="scope.item.icon" :size="15" />
                   <div>{{ scope.item.label }}</div>
                 </div>
               </template>
-            </el-segmented>
+            </ElSegmented>
           </div>
         </div>
 

@@ -1,20 +1,20 @@
 <template>
   <div class="static-content">
     <div class="button-container">
-      <el-button type="primary" :disabled="!hasContent" @click="$emit('preview')">
-        <el-icon><View /></el-icon>
+      <ElButton type="primary" :disabled="!hasContent" @click="$emit('preview')">
+        <ElIcon><View /></ElIcon>
         预览
-      </el-button>
+      </ElButton>
 
-      <el-button type="default" :disabled="!hasContent" @click="$emit('external')">
-        <el-icon><Link /></el-icon>
+      <ElButton type="default" :disabled="!hasContent" @click="$emit('external')">
+        <ElIcon><Link /></ElIcon>
         外部打开
-      </el-button>
+      </ElButton>
 
-      <el-button type="default" :disabled="!hasContent" @click="$emit('download')">
-        <el-icon><Download /></el-icon>
+      <ElButton type="default" :disabled="!hasContent" @click="$emit('download')">
+        <ElIcon><Download /></ElIcon>
         下载
-      </el-button>
+      </ElButton>
     </div>
   </div>
 </template>

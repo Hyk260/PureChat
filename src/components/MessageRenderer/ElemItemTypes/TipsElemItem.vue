@@ -2,9 +2,9 @@
   <div class="message-view_withdraw" @click="onClick">
     <span class="withdraw">
       <span> {{ withdrawalMessage }} </span>
-      <el-icon v-if="showCloseIcon" class="close" @click.stop="onClose(message)">
+      <ElIcon v-if="showCloseIcon" class="close" @click.stop="onClose(message)">
         <CircleCloseFilled />
-      </el-icon>
+      </ElIcon>
     </span>
     <span v-if="isReEdit" class="edit" @click.stop="onEdit">重新编辑</span>
   </div>

@@ -1,12 +1,12 @@
 <template>
   <div class="loading-component">
     <div class="loading-content">
-      <el-icon class="loading-icon" :size="48">
+      <ElIcon class="loading-icon" :size="48">
         <div class="iconify-icon svg-spinners"></div>
-      </el-icon>
+      </ElIcon>
       <p class="loading-text">{{ loadingText }}</p>
       <div class="loading-progress">
-        <el-progress :percentage="progress" :show-text="false" :stroke-width="4" color="#409eff" />
+        <ElProgress :percentage="progress" :show-text="false" :stroke-width="4" color="#409eff" />
       </div>
     </div>
   </div>

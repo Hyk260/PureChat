@@ -10,8 +10,8 @@
       </div>
       <div class="layout-center">
         <div @click="toggleCollapsed">
-          <el-icon v-if="isChatSessionListCollapsed"><ChevronRight /></el-icon>
-          <el-icon v-else><ChevronLeft /></el-icon>
+          <ElIcon v-if="isChatSessionListCollapsed"><ChevronRight /></ElIcon>
+          <ElIcon v-else><ChevronLeft /></ElIcon>
         </div>
       </div>
       <!-- <div class="sidebar-drag"></div> -->

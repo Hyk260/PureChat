@@ -1,8 +1,8 @@
 <template>
   <div v-if="replyMsgData" class="reply-box flex-bc" @click="handleReplyClick">
-    <el-icon class="close" @click="handleClose">
+    <ElIcon class="close" @click="handleClose">
       <CircleX />
-    </el-icon>
+    </ElIcon>
 
     <div class="reply-box-content multi-truncate-2">
       <div v-if="hasNickname" class="nick">{{ replyMsgData.nick }} :</div>

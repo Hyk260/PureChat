@@ -13,10 +13,10 @@
     </div>
 
     <div class="button-container">
-      <el-button type="primary" @click="$emit('preview')">
-        <el-icon><View /></el-icon>
+      <ElButton type="primary" @click="$emit('preview')">
+        <ElIcon><View /></ElIcon>
         预览
-      </el-button>
+      </ElButton>
     </div>
   </div>
 </template>

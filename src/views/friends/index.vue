@@ -12,7 +12,7 @@
           @click="setActiveTab(tab)"
         >
           <div>{{ tab.name }}</div>
-          <el-icon><ArrowRight /></el-icon>
+          <ElIcon><ArrowRight /></ElIcon>
         </div> -->
       </div>
       <div v-if="false" class="friends-tabs">

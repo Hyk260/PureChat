@@ -35,9 +35,9 @@
                   <!-- 删除 -->
                   <CircleMinus size="15" class="icon-item text-[#f44336]" @click="reduce(item)" />
                   <!-- 图标 -->
-                  <el-icon v-if="item?.type == 'el-icon'" class="icon-size">
+                  <ElIcon v-if="item?.type == 'el-icon'" class="icon-size">
                     <component :is="item.icon" />
-                  </el-icon>
+                  </ElIcon>
                   <SvgIcon v-else :local-icon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
                   <GripVertical :size="18" class="drag-icon" />
@@ -71,9 +71,9 @@
                   <!-- 添加 -->
                   <CirclePlus :size="15" class="icon-item text-[#1890ff]" @click="increase(item)" />
                   <!-- 图标 -->
-                  <el-icon v-if="item?.type == 'el-icon'">
+                  <ElIcon v-if="item?.type == 'el-icon'">
                     <component :is="item.icon" />
-                  </el-icon>
+                  </ElIcon>
                   <SvgIcon v-else :local-icon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
                   <GripVertical :size="18" class="drag-icon" />

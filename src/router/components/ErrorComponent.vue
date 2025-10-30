@@ -1,20 +1,20 @@
 <template>
   <div class="error-component">
     <div class="error-content">
-      <el-icon class="error-icon" :size="64">
+      <ElIcon class="error-icon" :size="64">
         <WarningFilled />
-      </el-icon>
+      </ElIcon>
       <h3 class="error-title">组件加载失败</h3>
       <p class="error-message">{{ errorMessage }}</p>
       <div class="error-actions">
-        <el-button type="primary" @click="handleRetry">
-          <el-icon><Refresh /></el-icon>
+        <ElButton type="primary" @click="handleRetry">
+          <ElIcon><Refresh /></ElIcon>
           重新加载
-        </el-button>
-        <el-button @click="handleGoBack">
-          <el-icon><Back /></el-icon>
+        </ElButton>
+        <ElButton @click="handleGoBack">
+          <ElIcon><Back /></ElIcon>
           返回上一页
-        </el-button>
+        </ElButton>
       </div>
     </div>
   </div>
