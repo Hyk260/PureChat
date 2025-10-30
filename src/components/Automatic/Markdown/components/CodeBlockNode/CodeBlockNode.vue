@@ -12,7 +12,7 @@
         <span class="code-language">{{ displayLanguage }}</span>
       </div>
       <div class="header-right flex justify-end">
-        <el-tooltip
+        <ElTooltip
           :disabled="!shouldShowChevrons && isCollapsed"
           :content="isChevrons ? '收起' : '展开'"
           :show-arrow="false"
@@ -28,9 +28,9 @@
             <ChevronsDownUp v-if="isChevrons" :size="14" />
             <ChevronsUpDown v-else :size="14" />
           </div>
-        </el-tooltip>
+        </ElTooltip>
 
-        <el-tooltip
+        <ElTooltip
           v-if="showDownload"
           content="下载代码"
           placement="top"
@@ -41,13 +41,13 @@
           <div class="download-button flex-c" @click.stop="downloadCode">
             <Download :size="14" />
           </div>
-        </el-tooltip>
+        </ElTooltip>
 
         <div v-if="showMaximize" class="maximize-button flex-c" title="最大化" @click.stop="handleMaximizeCode">
           <Maximize :size="14" />
         </div>
 
-        <el-tooltip
+        <ElTooltip
           v-if="isPreviewable && showPreviewButton"
           content="预览代码"
           placement="top"
@@ -58,14 +58,14 @@
           <div class="code-action-btn flex-c" @click.stop="handlePreviewCode">
             <Eye :size="14" />
           </div>
-        </el-tooltip>
+        </ElTooltip>
 
-        <el-tooltip content="复制代码" placement="top" :show-arrow="false" :offset="8" transition="slide-fade">
+        <ElTooltip content="复制代码" placement="top" :show-arrow="false" :offset="8" transition="slide-fade">
           <div class="copy-button flex-c" @click.stop="handleCopyCode">
             <Check v-if="isCopied" :size="14" />
             <Copy v-else :size="14" />
           </div>
-        </el-tooltip>
+        </ElTooltip>
       </div>
     </div>
     <div
@@ -233,6 +233,8 @@ useIntersectionObserver(
 )
 
 onMounted(async () => {
+  await nextTick()
+  !shouldShowChevrons.value && heightCheck(codeBlockRef.value)
   // if (!isHighlighterInitialized()) {
   //   highlighter.value = await registerHighlight()
   // }
@@ -256,7 +258,6 @@ watch(
       //   highlightedCode.value = highlightCode(props.code, props.language)
       // }
       highlightedCode.value = highlightCode(props.code, props.language)
-      !shouldShowChevrons.value && heightCheck(codeBlockRef.value)
     } catch (err) {
       console.error("Highlight failed:", err)
       highlightedCode.value = highlightCode(props.code, props.language)

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <ElDialog
     v-model="dialogVisible"
     :append-to-body="true"
     title="上传头像"
@@ -37,7 +37,7 @@
         <ElButton type="primary" @click="handleConfirm"> {{ $t("common.confirm") }} </ElButton>
       </span>
     </template>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <script setup lang="ts">

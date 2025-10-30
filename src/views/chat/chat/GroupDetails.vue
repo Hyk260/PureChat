@@ -55,7 +55,7 @@
             <!-- <span><a @click="openDetails">查看</a></span> -->
           </span>
         </div>
-        <el-scrollbar always>
+        <ElScrollbar always>
           <div class="group-member-avatar">
             <span class="iconify-icon gala-add margin" @click="groupMemberAdd"></span>
             <div v-for="item in currentMemberList" :key="item.userID" class="avatar margin" @click="navigate(item)">
@@ -76,7 +76,7 @@
               <span class="nick">{{ item.nick || item.userID }}</span>
             </div>
           </div>
-        </el-scrollbar>
+        </ElScrollbar>
       </div>
       <ElDivider />
       <!-- 免打扰 -->

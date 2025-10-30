@@ -11,11 +11,11 @@
         <img draggable="false" class="h-full" :src="icon" :alt="payload.fileName" />
       </div>
       <div class="file-content">
-        <el-tooltip placement="top" :content="payload.fileName" :disabled="!shouldShowTooltip">
+        <ElTooltip placement="top" :content="payload.fileName" :disabled="!shouldShowTooltip">
           <div ref="fileNameRef" class="file-name truncate">
             {{ payload.fileName }}
           </div>
-        </el-tooltip>
+        </ElTooltip>
         <div class="file-size">
           <span> {{ formattedFileSize }} </span>
           <span v-show="message.status !== 'success'" class="upload-progress"></span>

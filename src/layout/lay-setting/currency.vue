@@ -2,26 +2,26 @@
   <ul class="setting w-full">
     <li>
       <span>{{ $t("common.theme") }}</span>
-      <el-select v-model="themeColor" placeholder="主题颜色">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+      <ElSelect v-model="themeColor" placeholder="主题颜色">
+        <ElOption v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
           <div class="flex items-center gap-5">
             <component :is="item.icon" :size="16" />
             <span> {{ item.label }}</span>
           </div>
-        </el-option>
-      </el-select>
+        </ElOption>
+      </ElSelect>
     </li>
     <li v-if="isDev">
       <span>{{ $t("common.language") }}</span>
-      <el-select v-model="language" placeholder="选择语言">
-        <el-option v-for="item in languages" :key="item.value" :label="item.label" :value="item.value" />
-      </el-select>
+      <ElSelect v-model="language" placeholder="选择语言">
+        <ElOption v-for="item in languages" :key="item.value" :label="item.label" :value="item.value" />
+      </ElSelect>
     </li>
     <li>
       <span>字体设置</span>
-      <el-select v-model="font" placeholder="选择字体">
-        <el-option v-for="item in themeStore.fontThemeList" :key="item.value" :label="item.label" :value="item.value" />
-      </el-select>
+      <ElSelect v-model="font" placeholder="选择字体">
+        <ElOption v-for="item in themeStore.fontThemeList" :key="item.value" :label="item.label" :value="item.value" />
+      </ElSelect>
     </li>
     <li>
       <div class="flex items-center gap-5">

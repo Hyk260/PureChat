@@ -2,9 +2,9 @@
   <ul class="setting w-full">
     <li>
       <span>{{ $t("settings.defaultProvider") }} </span>
-      <el-select v-model="defaultProvider">
-        <el-option v-for="item in optionsModel" :key="item.value" :label="item.label" :value="item.value" />
-      </el-select>
+      <ElSelect v-model="defaultProvider">
+        <ElOption v-for="item in optionsModel" :key="item.value" :label="item.label" :value="item.value" />
+      </ElSelect>
     </li>
   </ul>
 </template>

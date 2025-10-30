@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <ElDialog
     ref="editRef"
     v-model="dialogVisible"
     :modal="true"
@@ -14,7 +14,7 @@
       <div class="draggable-container">
         <p class="left-text">显示在导航栏上</p>
         <div class="edit-area h-full">
-          <el-scrollbar>
+          <ElScrollbar>
             <VueDraggableNext
               class="drag-area"
               filter=".fix-ed"
@@ -44,13 +44,13 @@
                 </div>
               </template>
             </VueDraggableNext>
-          </el-scrollbar>
+          </ElScrollbar>
         </div>
       </div>
       <div class="draggable-container">
         <p class="left-text">更多</p>
         <div class="edit-area h-full">
-          <el-scrollbar>
+          <ElScrollbar>
             <VueDraggableNext
               class="drag-area"
               filter=".fix-ed"
@@ -81,7 +81,7 @@
               </template>
             </VueDraggableNext>
             <div v-if="rightEdit.length == 0" class="empty h-full">全部都显示在侧边栏了</div>
-          </el-scrollbar>
+          </ElScrollbar>
         </div>
       </div>
     </div>
@@ -92,7 +92,7 @@
         <ElButton type="primary" @click="handleConfirm"> {{ $t("common.confirm") }} </ElButton>
       </span>
     </template>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <script setup lang="ts">

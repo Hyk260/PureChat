@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <ElDialog
     v-model="dialog"
     title="配置"
     width="70%"
@@ -19,13 +19,13 @@
           <div class="flex flex-col gap-5">
             <div class="flex gap-5 title">
               <span> {{ item.Title }}</span>
-              <el-tooltip v-if="item.apiKey && ['token'].includes(item.ID)" content="获取密钥" placement="top">
+              <ElTooltip v-if="item.apiKey && ['token'].includes(item.ID)" content="获取密钥" placement="top">
                 <span class="flex cursor-pointer">
                   <el-icon @click="openExternalUrl(item.apiKey)">
                     <QuestionFilled />
                   </el-icon>
                 </span>
-              </el-tooltip>
+              </ElTooltip>
             </div>
             <div class="subTitle">
               <Markdown :content="item.SubTitle" />
@@ -34,7 +34,7 @@
           <!-- 模型 -->
           <div v-if="item.options">
             <div class="flex gap-8 flex-col">
-              <el-select
+              <ElSelect
                 v-model="item.collapse"
                 multiple
                 collapse-tags
@@ -44,7 +44,7 @@
                 @change="onModelDataChanged"
                 @remove-tag="handleRemoveTag"
               >
-                <el-option
+                <ElOption
                   v-for="models in item.options.chatModels"
                   :key="models.id"
                   :label="models.displayName"
@@ -63,7 +63,7 @@
                         <span>
                           {{ models.displayName || models.id }}
                         </span>
-                        <el-tooltip
+                        <ElTooltip
                           v-if="models?.vision"
                           :show-arrow="false"
                           :enterable="false"
@@ -71,8 +71,8 @@
                           placement="top"
                         >
                           <Eye :size="16" color="#55b467" />
-                        </el-tooltip>
-                        <el-tooltip
+                        </ElTooltip>
+                        <ElTooltip
                           v-if="models?.functionCall"
                           :show-arrow="false"
                           :enterable="false"
@@ -80,8 +80,8 @@
                           placement="top"
                         >
                           <ToyBrick :size="16" color="#369eff" />
-                        </el-tooltip>
-                        <el-tooltip
+                        </ElTooltip>
+                        <ElTooltip
                           v-if="models?.reasoning"
                           :show-arrow="false"
                           :enterable="false"
@@ -89,24 +89,24 @@
                           placement="top"
                         >
                           <Atom :size="16" color="#bd54c6" />
-                        </el-tooltip>
+                        </ElTooltip>
                       </div>
                       <div class="models-id">{{ models.id }}</div>
                     </div>
                   </div>
-                </el-option>
-              </el-select>
+                </ElOption>
+              </ElSelect>
               <div class="flex-bc">
                 <div class="text-[#999]">
                   <span>共 {{ toDisplayCount(item?.options?.chatModels?.length) }} 个模型可用</span>
                   <span>已选择 {{ toDisplayCount(item?.collapse?.length) }} 个</span>
                 </div>
                 <div>
-                  <el-tooltip v-if="item?.options?.id === 'openai'" :content="modelTooltipLabel" placement="top">
+                  <ElTooltip v-if="item?.options?.id === 'openai'" :content="modelTooltipLabel" placement="top">
                     <el-icon class="refresh" @click="onRefresh">
                       <Refresh />
                     </el-icon>
-                  </el-tooltip>
+                  </ElTooltip>
                 </div>
               </div>
             </div>
@@ -135,7 +135,7 @@
           </div>
           <div v-else-if="['token', 'openaiUrl'].includes(item.ID)" class="input">
             <div class="gap-5 flex-bc">
-              <el-tooltip content="配置教程" placement="top">
+              <ElTooltip content="配置教程" placement="top">
                 <!-- ollama -->
                 <span v-if="item.doubt && isOllama" class="flex cursor-pointer">
                   <el-icon @click="openExternalUrl(item.doubt)">
@@ -148,9 +148,9 @@
                   </el-icon>
                 </span>
                 <span v-else class="w-14"></span>
-              </el-tooltip>
+              </ElTooltip>
               <div class="w-full flex gap-4">
-                <el-input
+                <ElInput
                   :ref="(e) => inputRef(e as HTMLInputElement | null, item.ID)"
                   v-model="item.defaultValue"
                   :placeholder="item.Placeholder ?? ''"
@@ -159,7 +159,7 @@
                   clearable
                   @change="onModelDataChanged"
                 >
-                </el-input>
+                </ElInput>
               </div>
             </div>
             <div v-if="item?.apiHost" class="text-[#999] pt-8 ml-20 max-w-400">
@@ -170,14 +170,14 @@
           <!-- 连通性检查 -->
           <div v-else-if="['checkPoint'].includes(item.ID)">
             <div class="flex">
-              <el-select
+              <ElSelect
                 v-model="item.defaultValue"
                 placeholder="选择测试模型"
                 class="!w-300"
                 append-to-body
                 @change="onModelDataChanged"
               >
-                <el-option
+                <ElOption
                   v-for="models in modelData['Model']?.options?.chatModels"
                   :key="models.id"
                   :label="models.displayName"
@@ -199,8 +199,8 @@
                       </div>
                     </div>
                   </div>
-                </el-option>
-              </el-select>
+                </ElOption>
+              </ElSelect>
               <ElButton class="check-token-btn" :loading="loading" @click="onCheckToken(item)">
                 <template #loading>
                   <div class="iconify-icon svg-spinners mr-8"></div>
@@ -220,7 +220,7 @@
         {{ $t("common.confirm") }}
       </ElButton>
     </template>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <script setup lang="ts">

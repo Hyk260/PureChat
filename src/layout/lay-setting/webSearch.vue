@@ -2,14 +2,14 @@
   <div>
     <div class="flex-bc gap-5">
       <span>搜索服务商</span>
-      <el-select v-model="defaultProvider" placeholder="Select" class="!w-200">
-        <el-option
+      <ElSelect v-model="defaultProvider" placeholder="Select" class="!w-200">
+        <ElOption
           v-for="item in optionsProviders"
           :key="item.value"
           :label="item.label + item.description"
           :value="item.value"
         />
-      </el-select>
+      </ElSelect>
     </div>
     <div v-if="localSearch">
       <ElDivider class="my-20" />
@@ -18,7 +18,7 @@
         <el-icon class="cursor-pointer" @click="toLink(officialWebsite)"><ExternalLink /></el-icon>
       </div>
       <div class="flex gap-10">
-        <el-input v-model="searchInput" type="password" placeholder="API密钥" show-password clearable @input="onBlur" />
+        <ElInput v-model="searchInput" type="password" placeholder="API密钥" show-password clearable @input="onBlur" />
         <ElButton @click="checkApiKey">检查</ElButton>
       </div>
       <div class="mt-10">

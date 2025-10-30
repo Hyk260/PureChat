@@ -6,7 +6,7 @@
       </div>
 
       <div v-for="item in sidebarStore.filteredOutsideList" :key="item.id" class="sidebar-item">
-        <el-tooltip :content="item.title" placement="right">
+        <ElTooltip :content="item.title" placement="right">
           <div class="sidebar-item-content" :class="{ active: isActiveItem(item.path) }" @click="handleItemClick(item)">
             <ElBadge :value="chatStore.totalUnreadMsg" :hidden="shouldHideUnreadBadge(item.id)">
               <el-icon v-if="item?.type === 'el-icon'" class="sidebar-icon">
@@ -15,19 +15,19 @@
               <SvgIcon v-else :local-icon="item.icon" class="sidebar-icon" />
             </ElBadge>
           </div>
-        </el-tooltip>
+        </ElTooltip>
       </div>
     </div>
 
     <div class="sidebar-footer">
-      <el-tooltip content="帮助文档" placement="right">
+      <ElTooltip content="帮助文档" placement="right">
         <el-icon class="icon" @click="onOpenDocs"><CircleQuestionMark /></el-icon>
-      </el-tooltip>
-      <el-tooltip content="设置" placement="right">
+      </ElTooltip>
+      <ElTooltip content="设置" placement="right">
         <el-icon class="icon" @click="openSettings">
           <Settings />
         </el-icon>
-      </el-tooltip>
+      </ElTooltip>
     </div>
 
     <SidebarEditDialog />

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <ElDialog
     v-model="dialogVisible"
     :title="mergValue?.payload?.title"
     width="55%"
@@ -8,7 +8,7 @@
     :lock-scroll="false"
     :before-close="handleClose"
   >
-    <el-scrollbar>
+    <ElScrollbar>
       <div class="merge-message-container">
         <div v-for="item in messageList" :key="item.ID" class="message-item">
           <div v-if="isTime(item)" class="message-time-divider flex-c">
@@ -41,8 +41,8 @@
           </div>
         </div>
       </div>
-    </el-scrollbar>
-  </el-dialog>
+    </ElScrollbar>
+  </ElDialog>
 </template>
 
 <script setup lang="ts">

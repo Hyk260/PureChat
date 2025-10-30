@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <ElDialog
     v-model="dialogVisible"
     :modal="true"
     :append-to-body="true"
@@ -58,7 +58,7 @@
       </div>
       <div class="min-w-350">
         <div class="form-item-props">
-          <el-scrollbar>
+          <ElScrollbar>
             <div class="px-10">
               <div class="flex-bc my-5 h-32">
                 <div>背景色</div>
@@ -98,7 +98,7 @@
                 </div>
               </div>
             </div>
-          </el-scrollbar>
+          </ElScrollbar>
         </div>
         <div class="form-footer">
           <ElButton class="w-full" :disabled="loading" @click="handleCopy"> 复制截图 </ElButton>
@@ -106,7 +106,7 @@
         </div>
       </div>
     </div>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <script setup lang="ts">

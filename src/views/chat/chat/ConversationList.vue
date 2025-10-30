@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar class="scrollbar-list">
+  <ElScrollbar class="scrollbar-list">
     <EmptyMessage v-if="conversationList.length === 0" class-name="no-msg" />
     <template v-if="!isEnableVirtualList">
       <div
@@ -52,7 +52,7 @@
     </template>
     <VirtualList v-else />
     <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleClickMenuItem" />
-  </el-scrollbar>
+  </ElScrollbar>
 </template>
 
 <script setup lang="ts">

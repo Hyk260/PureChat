@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <ElDialog
     v-model="dialogVisible"
     append-to-body
     :show-close="false"
@@ -35,17 +35,17 @@
         </div>
 
         <div class="header-right">
-          <el-dropdown trigger="click" @command="handleCapture">
+          <ElDropdown trigger="click" @command="handleCapture">
             <div class="flex-c">
               <Camera :size="17" />
             </div>
             <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item command="file">保存为文件</el-dropdown-item>
-                <el-dropdown-item command="clipboard">复制到剪贴板</el-dropdown-item>
-              </el-dropdown-menu>
+              <ElDropdownMenu>
+                <ElDropdownItem command="file">保存为文件</ElDropdownItem>
+                <ElDropdownItem command="clipboard">复制到剪贴板</ElDropdownItem>
+              </ElDropdownMenu>
             </template>
-          </el-dropdown>
+          </ElDropdown>
 
           <div class="flex-c" @click="toggleFullscreen">
             <Minimize v-if="isFullscreen" :size="16" />
@@ -65,7 +65,7 @@
       <PreviewPanel v-else :code="htmlContent" />
       <!-- <HtmlEditorView :mode="viewMode" :code="htmlContent" @change="handleCodeChange" /> -->
     </div>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <script setup lang="ts">

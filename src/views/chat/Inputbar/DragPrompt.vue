@@ -2,9 +2,9 @@
   <div>
     <div v-for="(item, i) in promptItems" :key="item.id" class="prompt-item">
       <!-- <GripVertical v-if="promptItems.length > 1" class="drag-icon" />
-        <el-select class="prompt-select" v-model="item.role">
-          <el-option v-for="item in ROLES" :key="item" :label="item" :value="item" />
-        </el-select> -->
+        <ElSelect class="prompt-select" v-model="item.role">
+          <ElOption v-for="item in ROLES" :key="item" :label="item" :value="item" />
+        </ElSelect> -->
       <div class="flex gap-5">
         <ElButton class="avatar relative size-32 p-0" @click="setShowEmojiPickerFlag(true)">
           <div class="group">
@@ -20,7 +20,7 @@
             @emoji-selected="(emoji) => handleEmojiSelect(emoji, i)"
           />
         </ElButton>
-        <el-input
+        <ElInput
           ref="inputTitleRef"
           v-model="item.meta.title"
           maxlength="30"
@@ -30,7 +30,7 @@
         />
       </div>
       <div class="prompt-content">
-        <el-input
+        <ElInput
           v-model="item.prompt[0].content"
           :autosize="{ minRows: 2, maxRows: 6 }"
           type="textarea"

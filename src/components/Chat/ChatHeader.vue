@@ -17,7 +17,7 @@
               <span>{{ item.meta.title }}</span>
             </div>
           </template> -->
-          <el-tooltip
+          <ElTooltip
             v-if="isAssistant"
             :show-arrow="false"
             :content="`助手将只记住最后${botMessageCount}条消息`"
@@ -27,7 +27,7 @@
               <History :size="16" />
               <span>{{ botMessageCount }}</span>
             </div>
-          </el-tooltip>
+          </ElTooltip>
         </span>
         <!-- 群聊 -->
         <span v-else-if="isGroup" class="chat-type group" @click="openSetup">

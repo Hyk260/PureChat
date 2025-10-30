@@ -1,7 +1,7 @@
 <template>
   <div v-show="isVisible" class="mention-modal" :style="{ top: top, left: left }">
     <ul ref="listRef" class="mention-list">
-      <el-scrollbar>
+      <ElScrollbar>
         <div class="mention-list-box">
           <li
             v-for="(item, i) in searchedList"
@@ -21,7 +21,7 @@
             <span class="nick truncate">{{ item.nick || item.userID }}</span>
           </li>
         </div>
-      </el-scrollbar>
+      </ElScrollbar>
     </ul>
   </div>
 </template>

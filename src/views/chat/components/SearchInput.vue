@@ -2,11 +2,11 @@
   <div class="header-bar">
     <!-- 搜索 -->
     <div class="flex-bc gap-10">
-      <el-input v-model="input" placeholder="搜索" clearable @input="debounceSearch">
+      <ElInput v-model="input" placeholder="搜索" clearable @input="debounceSearch">
         <template #prefix>
           <el-icon><Search /></el-icon>
         </template>
-      </el-input>
+      </ElInput>
       <div v-if="!IS_LOCAL_MODE" class="header-search-add flex-c" @click="openDialog">
         <el-icon><MessageSquarePlus /></el-icon>
       </div>

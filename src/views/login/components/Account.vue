@@ -1,7 +1,7 @@
 <template>
-  <el-form ref="formRef" :model="form" :rules="rules">
+  <ElForm ref="formRef" :model="form" :rules="rules">
     <!-- 账号 -->
-    <el-form-item prop="username">
+    <ElFormItem prop="username">
       <el-autocomplete
         v-model="form.username"
         clearable
@@ -12,18 +12,18 @@
         :fetch-suggestions="handleSearch"
         @select="handleSelect"
       />
-      <!-- <el-input
+      <!-- <ElInput
         v-model="form.username"
         :placeholder="$t('login.username')"
         :prefix-icon="User"
         size="large"
         clearable
       >
-      </el-input> -->
-    </el-form-item>
+      </ElInput> -->
+    </ElFormItem>
     <!-- 密码 -->
-    <el-form-item prop="password">
-      <el-input
+    <ElFormItem prop="password">
+      <ElInput
         v-model="form.password"
         type="password"
         :placeholder="$t('login.password')"
@@ -34,22 +34,22 @@
         <template #prefix>
           <el-icon><Lock /></el-icon>
         </template>
-      </el-input>
-    </el-form-item>
+      </ElInput>
+    </ElFormItem>
     <!-- 验证码 -->
-    <el-form-item v-if="showVerifyCode" prop="verifyCode">
-      <el-input v-model="form.verifyCode" size="large" :placeholder="$t('login.verifyCode')" clearable>
+    <ElFormItem v-if="showVerifyCode" prop="verifyCode">
+      <ElInput v-model="form.verifyCode" size="large" :placeholder="$t('login.verifyCode')" clearable>
         <template #prefix>
           <el-icon><Key /></el-icon>
         </template>
         <template #append>
           <ImageVerify v-model:code="verifyCode" />
         </template>
-      </el-input>
-    </el-form-item>
+      </ElInput>
+    </ElFormItem>
     <!-- 记住密码 -->
     <div class="login-options">
-      <el-checkbox v-model="form.remember">{{ $t("login.remember") }}</el-checkbox>
+      <ElCheckbox v-model="form.remember">{{ $t("login.remember") }}</ElCheckbox>
       <div class="forget-password">{{ $t("login.forget") }}</div>
     </div>
     <!-- 登录 -->
@@ -59,7 +59,7 @@
       </template>
       <span> {{ $t("login.login") }}</span>
     </ElButton>
-  </el-form>
+  </ElForm>
   <!-- other hidden -->
   <div class="mt-20 flex justify-evenly">
     <ElButton v-for="item in operates" :key="item.title" size="default" @click="setCurrentPage(item)">
@@ -67,7 +67,7 @@
     </ElButton>
   </div>
   <!-- 第三方登录 -->
-  <el-form-item>
+  <ElFormItem>
     <ElDivider>
       <p class="text-gray-500">{{ $t("login.thirdLogin") }}</p>
     </ElDivider>
@@ -82,7 +82,7 @@
         <SvgIcon class="social-icon" :local-icon="item.icon" />
       </span>
     </div>
-  </el-form-item>
+  </ElFormItem>
 </template>
 
 <script setup lang="ts">

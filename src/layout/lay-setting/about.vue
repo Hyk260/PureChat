@@ -8,7 +8,7 @@
         <div class="ui-col flex items-start flex-col">
           <div class="col-title">PureChat</div>
           <div class="version">
-            <el-tag type="primary">v{{ version }}</el-tag>
+            <ElTag type="primary">v{{ version }}</ElTag>
           </div>
         </div>
       </div>

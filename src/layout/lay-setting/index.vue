@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <ElDialog
     v-model="drawer"
     center
     align-center
@@ -13,7 +13,7 @@
       <List ref="listRef" @active="active" />
       <ItemGrid :item="item" @on-close="setDrawer(false)" />
     </div>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <script setup lang="ts">

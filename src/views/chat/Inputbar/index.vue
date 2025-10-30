@@ -1,7 +1,7 @@
 <template>
   <div class="toolbar">
     <!-- 表情包 -->
-    <el-tooltip
+    <ElTooltip
       v-if="!isFullscreenInputActive && !isAssistant"
       :enterable="false"
       :show-after="500"
@@ -14,9 +14,9 @@
       <ElButton @click="sendEmojiClick">
         <Smile :size="16" />
       </ElButton>
-    </el-tooltip>
+    </ElTooltip>
     <!-- 选模型 -->
-    <el-tooltip
+    <ElTooltip
       v-if="isAssistant"
       :enterable="false"
       :show-after="500"
@@ -29,9 +29,9 @@
       <ElButton @click="selectModel">
         <Brain :size="16" />
       </ElButton>
-    </el-tooltip>
+    </ElTooltip>
     <!-- 图片 -->
-    <el-tooltip
+    <ElTooltip
       v-if="!isAssistant"
       :enterable="false"
       :show-after="500"
@@ -45,9 +45,9 @@
         <!-- <Image :size="16" /> -->
         <SvgIcon local-icon="image" />
       </ElButton>
-    </el-tooltip>
+    </ElTooltip>
     <!-- 文件 -->
-    <el-tooltip
+    <ElTooltip
       v-if="!isAssistant"
       :enterable="false"
       :show-after="500"
@@ -63,9 +63,9 @@
         <!-- <FolderClosed :size="16" /> -->
         <SvgIcon local-icon="folder" />
       </ElButton>
-    </el-tooltip>
+    </ElTooltip>
     <!-- 截图 -->
-    <el-tooltip
+    <ElTooltip
       v-if="IS_ELECTRON"
       :enterable="false"
       :show-after="500"
@@ -78,9 +78,9 @@
       <ElButton v-show="!isAssistant" @click="clickCscreenshot">
         <Scissors class="rotate-270" :size="16" />
       </ElButton>
-    </el-tooltip>
+    </ElTooltip>
     <!-- 模型配置 -->
-    <el-tooltip
+    <ElTooltip
       v-if="isAssistant"
       :enterable="false"
       :show-after="500"
@@ -93,9 +93,9 @@
       <ElButton @click="openRobotBox">
         <SlidersHorizontal :size="16" />
       </ElButton>
-    </el-tooltip>
+    </ElTooltip>
     <!-- 附件 -->
-    <el-tooltip
+    <ElTooltip
       v-if="IS_ELECTRON"
       :enterable="false"
       :show-after="500"
@@ -108,9 +108,9 @@
       <ElButton v-show="isAssistant" @click="sendAnnexClick">
         <Paperclip :size="16" />
       </ElButton>
-    </el-tooltip>
+    </ElTooltip>
     <!-- 联网 -->
-    <el-tooltip
+    <ElTooltip
       v-if="IS_LOCAL_MODE"
       :enterable="false"
       :show-after="500"
@@ -129,9 +129,9 @@
       >
         <Globe :size="16" />
       </ElButton>
-    </el-tooltip>
+    </ElTooltip>
     <!-- 清空消息 -->
-    <el-tooltip
+    <ElTooltip
       content="清空消息"
       placement="top"
       :show-arrow="false"
@@ -141,7 +141,7 @@
       transition="slide-fade"
     >
       <div>
-        <el-popover ref="popoverRef" placement="top" trigger="click" width="250">
+        <ElPopover ref="popoverRef" placement="top" trigger="click" width="250">
           <div class="flex-c gap-5 mb-10">
             <CircleAlert :size="15" color="#F56C6C" />
             <p>确定要清除当前会话所有消息吗?</p>
@@ -159,23 +159,23 @@
               <BrushCleaning :size="16" />
             </ElButton>
           </template>
-        </el-popover>
+        </ElPopover>
       </div>
-    </el-tooltip>
+    </ElTooltip>
     <!-- 插件 -->
-    <el-tooltip v-if="false" content="选择插件" placement="top">
+    <ElTooltip v-if="false" content="选择插件" placement="top">
       <ElButton @click="openPluginBox">
         <Blocks :size="16" />
       </ElButton>
-    </el-tooltip>
+    </ElTooltip>
     <!-- 自定义消息 -->
-    <el-tooltip v-if="false" content="BugPlay" placement="top" :show-arrow="false" :offset="2" transition="slide-fade">
+    <ElTooltip v-if="false" content="BugPlay" placement="top" :show-arrow="false" :offset="2" transition="slide-fade">
       <ElButton @click="customMessage">
         <BugPlay :size="16" />
       </ElButton>
-    </el-tooltip>
+    </ElTooltip>
     <!-- 滚动到底部 -->
-    <el-tooltip
+    <ElTooltip
       v-if="showBottomBtn"
       :enterable="false"
       :show-after="500"
@@ -188,9 +188,9 @@
       <ElButton class="animate-chat-slide-in" @click="scrollToBottomBtn">
         <ChevronsDown :size="18" />
       </ElButton>
-    </el-tooltip>
+    </ElTooltip>
     <!-- 全屏 -->
-    <el-tooltip
+    <ElTooltip
       :enterable="false"
       :show-after="500"
       :content="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
@@ -202,7 +202,7 @@
       <ElButton class="!ml-auto" @click="toggleFullScreenInput">
         <component :is="isFullscreenInputActive ? Minimize2 : Maximize2" :size="16" />
       </ElButton>
-    </el-tooltip>
+    </ElTooltip>
     <RobotModel />
     <RobotPlugin />
     <RobotOptions />

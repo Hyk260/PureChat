@@ -1,62 +1,62 @@
 <template>
-  <el-form ref="ruleFormRef" :model="ruleForm" :rules="updateRules" size="large">
-    <el-form-item prop="username">
-      <el-input v-model="ruleForm.username" clearable :placeholder="$t('login.username')" :prefix-icon="User" />
-    </el-form-item>
-    <el-form-item prop="nickname">
-      <el-input v-model="ruleForm.nickname" clearable :placeholder="$t('login.nickname')" :prefix-icon="User" />
-    </el-form-item>
-    <el-form-item prop="phone">
-      <el-input v-model="ruleForm.phone" clearable :placeholder="$t('login.phone')" :prefix-icon="Iphone" />
-    </el-form-item>
-    <el-form-item prop="verifyCode">
+  <ElForm ref="ruleFormRef" :model="ruleForm" :rules="updateRules" size="large">
+    <ElFormItem prop="username">
+      <ElInput v-model="ruleForm.username" clearable :placeholder="$t('login.username')" :prefix-icon="User" />
+    </ElFormItem>
+    <ElFormItem prop="nickname">
+      <ElInput v-model="ruleForm.nickname" clearable :placeholder="$t('login.nickname')" :prefix-icon="User" />
+    </ElFormItem>
+    <ElFormItem prop="phone">
+      <ElInput v-model="ruleForm.phone" clearable :placeholder="$t('login.phone')" :prefix-icon="Iphone" />
+    </ElFormItem>
+    <ElFormItem prop="verifyCode">
       <div class="w-full flex">
-        <el-input v-model="ruleForm.verifyCode" clearable :placeholder="$t('login.smsVerifyCode')" />
+        <ElInput v-model="ruleForm.verifyCode" clearable :placeholder="$t('login.smsVerifyCode')" />
         <ElButton class="ml-5" :disabled="isDisabled" @click="useVerifyCode().start(ruleFormRef, 'phone')">
           {{ text.length > 0 ? text + $t("login.info") : $t("login.getVerifyCode") }}
         </ElButton>
       </div>
-    </el-form-item>
-    <el-form-item prop="password">
-      <el-input
+    </ElFormItem>
+    <ElFormItem prop="password">
+      <ElInput
         v-model="ruleForm.password"
         clearable
         show-password
         :placeholder="$t('login.password')"
         :prefix-icon="Lock"
       />
-    </el-form-item>
-    <el-form-item prop="repeatPassword">
-      <el-input
+    </ElFormItem>
+    <ElFormItem prop="repeatPassword">
+      <ElInput
         v-model="ruleForm.repeatPassword"
         clearable
         show-password
         :placeholder="$t('login.sure')"
         :prefix-icon="Lock"
       />
-    </el-form-item>
-    <el-form-item>
-      <el-checkbox v-model="checked">
+    </ElFormItem>
+    <ElFormItem>
+      <ElCheckbox v-model="checked">
         {{ $t("login.readAccept") }}
-      </el-checkbox>
+      </ElCheckbox>
       <ElButton link type="primary">
         {{ $t("login.privacyPolicy") }}
       </ElButton>
-    </el-form-item>
-    <el-form-item>
+    </ElFormItem>
+    <ElFormItem>
       <ElButton class="w-full" size="default" type="primary" :loading="loading" @click="onUpdate(ruleFormRef)">
         <template #loading>
           <div class="iconify-icon svg-spinners mr-8"></div>
         </template>
         {{ $t("login.definite") }}
       </ElButton>
-    </el-form-item>
-    <el-form-item>
+    </ElFormItem>
+    <ElFormItem>
       <ElButton class="w-full" size="default" @click="onBack">
         {{ $t("login.back") }}
       </ElButton>
-    </el-form-item>
-  </el-form>
+    </ElFormItem>
+  </ElForm>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialog" title="添加成员" width="600px" align-center>
+  <ElDialog v-model="dialog" title="添加成员" width="600px" align-center>
     <div class="forward-action">
       <div
         v-for="item in chatStore.getNonBotC2CList"
@@ -17,7 +17,7 @@
         <ElButton type="primary" @click="define"> {{ $t("common.confirm") }} </ElButton>
       </span>
     </template>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <script setup lang="ts">

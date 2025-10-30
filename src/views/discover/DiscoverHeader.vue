@@ -1,7 +1,7 @@
 <template>
   <header class="discover-header">
     <h1 class="header-title">Discover</h1>
-    <el-input
+    <ElInput
       v-model="searchInput"
       placeholder="搜索名称介绍或关键词..."
       clearable
@@ -13,7 +13,7 @@
           <Search />
         </el-icon>
       </template>
-    </el-input>
+    </ElInput>
     <div class="header-spacer"></div>
   </header>
 </template>

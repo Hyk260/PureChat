@@ -1,7 +1,7 @@
 <template>
   <div v-click-outside="onClickOutside" class="emoji-section">
     <div class="emojis">
-      <el-scrollbar wrap-class="custom-scrollbar-wrap" always>
+      <ElScrollbar wrap-class="custom-scrollbar-wrap" always>
         <!-- QQ表情包 -->
         <div v-show="table === 'QQ'" class="emoji_QQ" :class="[systemOs]">
           <p v-show="recentlyUsed.length" class="title">最近使用</p>
@@ -60,7 +60,7 @@
           </template>
           <div v-else-if="loading" class="loading-placeholder">加载中...</div>
         </div>
-      </el-scrollbar>
+      </ElScrollbar>
     </div>
     <div class="toolbar-section">
       <div

@@ -1,6 +1,6 @@
 <template>
   <div v-show="currentConversation" class="message-info-view-content" :class="getMessageViewClasses()">
-    <el-scrollbar
+    <ElScrollbar
       id="message-view-scrollbar"
       ref="scrollbarRef"
       class="h-full"
@@ -84,7 +84,7 @@
         <div ref="bottomSentinelRef" class="message-bottom-sentinel"></div>
         <div v-show="isMultiSelectMode" class="h-45"></div>
       </div>
-    </el-scrollbar>
+    </ElScrollbar>
     <!-- 卡片 -->
     <MyPopover />
     <UserPopup ref="userPopupRef" />

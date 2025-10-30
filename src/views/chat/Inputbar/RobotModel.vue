@@ -1,6 +1,6 @@
 <template>
   <div v-show="flag" v-click-outside="onClickOutside" class="robot-model-box">
-    <el-scrollbar>
+    <ElScrollbar>
       <div v-if="model" class="robot-model">
         <div class="item-group-title">
           <SvgIcon :local-icon="model?.icon || robotIcon" />
@@ -27,7 +27,7 @@
           <div class="list flex-bc w-full">
             <span>{{ item.displayName || item.id }}</span>
             <span class="box">
-              <el-tooltip
+              <ElTooltip
                 v-if="item.vision"
                 :enterable="false"
                 :show-arrow="false"
@@ -35,8 +35,8 @@
                 placement="right"
               >
                 <Eye :size="16" color="#55b467" />
-              </el-tooltip>
-              <el-tooltip
+              </ElTooltip>
+              <ElTooltip
                 v-if="item.functionCall"
                 :enterable="false"
                 :show-arrow="false"
@@ -44,8 +44,8 @@
                 placement="right"
               >
                 <ToyBrick :size="16" color="#369eff" />
-              </el-tooltip>
-              <el-tooltip
+              </ElTooltip>
+              <ElTooltip
                 v-if="item.reasoning"
                 :enterable="false"
                 :show-arrow="false"
@@ -53,8 +53,8 @@
                 placement="right"
               >
                 <Atom :size="16" color="#bd54c6" />
-              </el-tooltip>
-              <el-tooltip
+              </ElTooltip>
+              <ElTooltip
                 v-if="item.tokens"
                 :enterable="false"
                 :show-arrow="false"
@@ -64,12 +64,12 @@
                 <span class="tokens flex-c">
                   {{ formatTokenNumber(item.tokens) }}
                 </span>
-              </el-tooltip>
+              </ElTooltip>
             </span>
           </div>
         </div>
       </div>
-    </el-scrollbar>
+    </ElScrollbar>
   </div>
 </template>
 

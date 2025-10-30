@@ -17,7 +17,7 @@
       </template>
       <ElDescriptions :column="2" border>
         <ElDescriptionsItem v-for="item in data" :key="item.label" :label="item.label" label-align="left" align="left">
-          <el-tag v-if="item?.tag">{{ item.tag }}</el-tag>
+          <ElTag v-if="item?.tag">{{ item.tag }}</ElTag>
           <a v-else-if="item?.url" :href="item.url" target="_blank">
             <span class="style-color"> {{ item.title }} </span>
           </a>

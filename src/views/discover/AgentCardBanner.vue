@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <ElDialog
     v-model="isDialogVisible"
     width="40%"
     align-center
@@ -31,7 +31,7 @@
         <ElButton class="w-306" @click="startConversation()"> 开始会话 </ElButton>
       </div>
     </div>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <script setup lang="ts">

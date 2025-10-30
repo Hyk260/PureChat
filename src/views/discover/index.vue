@@ -1,7 +1,7 @@
 <template>
   <div class="discover-container">
     <DiscoverHeader @search="handleSearch" />
-    <el-scrollbar class="discover-scrollbar">
+    <ElScrollbar class="discover-scrollbar">
       <div class="discover-content">
         <div class="discover-layout">
           <TabsWrapper :active-tab="activeTab" @tab-change="handleTabChange" />
@@ -16,7 +16,7 @@
           <StarMessage v-if="filteredAgents.length > 0" />
         </div>
       </div>
-    </el-scrollbar>
+    </ElScrollbar>
     <AgentCardBanner />
   </div>
 </template>

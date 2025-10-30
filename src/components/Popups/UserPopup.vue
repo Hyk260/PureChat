@@ -1,9 +1,9 @@
 <template>
-  <el-dialog v-model="open" center align-center append-to-body width="300" :before-close="handleClose">
+  <ElDialog v-model="open" center align-center append-to-body width="300" :before-close="handleClose">
     <div>
       <div class="flex-c">
         <div>
-          <el-dropdown trigger="click">
+          <ElDropdown trigger="click">
             <div class="avatar">
               <span v-if="userStore.userLocalStore.native">
                 {{ userStore.userLocalStore.native }}
@@ -11,13 +11,13 @@
               <ElAvatar v-else class="w-70 h-70" :src="userStore.getUserAvatar" />
             </div>
             <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item v-for="item in menu" :key="item.key" @click="item.onClick">
+              <ElDropdownMenu>
+                <ElDropdownItem v-for="item in menu" :key="item.key" @click="item.onClick">
                   {{ item.label }}
-                </el-dropdown-item>
-              </el-dropdown-menu>
+                </ElDropdownItem>
+              </ElDropdownMenu>
             </template>
-          </el-dropdown>
+          </ElDropdown>
         </div>
         <EmojiMart
           v-if="showEmojiPickerFlag"
@@ -27,10 +27,10 @@
         />
       </div>
       <div class="py-20 flex-c">
-        <el-input v-model="userName" class="input" placeholder="Please input" @change="setUserName" />
+        <ElInput v-model="userName" class="input" placeholder="Please input" @change="setUserName" />
       </div>
     </div>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <script setup lang="ts">

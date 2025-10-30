@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="code-toolbar">
-      <el-tooltip
+      <ElTooltip
         v-if="!useTextarea"
         content="格式化"
         :show-arrow="false"
@@ -33,12 +33,12 @@
         <ElButton circle @click="formatCode">
           <Sparkles :size="16" />
         </ElButton>
-      </el-tooltip>
-      <el-tooltip v-if="false" content="保存" :show-arrow="false" :offset="8" transition="slide-fade" placement="top">
+      </ElTooltip>
+      <ElTooltip v-if="false" content="保存" :show-arrow="false" :offset="8" transition="slide-fade" placement="top">
         <ElButton circle @click="handleSaveChange">
           <Save :size="16" />
         </ElButton>
-      </el-tooltip>
+      </ElTooltip>
     </div>
   </div>
 </template>
