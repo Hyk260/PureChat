@@ -1,40 +1,32 @@
 <template>
   <Teleport to="body">
     <Transition name="context-menu" @before-enter="onBeforeEnter" @after-leave="onAfterLeave">
-      <div
-        v-if="visible"
-        ref="menuContainerRef"
-        class="context-menu-wrapper"
-        :style="menuStyle"
-        @click.stop
-        @contextmenu.prevent
-      >
-        <!-- @click="handleMenuClick" -->
+      <div v-if="isMenuVisible" ref="menuContainerRef" class="context-menu-wrapper" :style="menuStyle">
         <Menu>
           <template v-for="item in items" :key="item.key">
-            <!-- <SubMenu v-if="false && item.children && item.children.length">
+            <SubMenu v-if="item.children && item.children.length">
               <template #title>
                 <div class="flex gap-4 items-center">
-                  <component :is="item.icon" v-if="item.icon" :size="16"></component>
+                  <component :is="item.icon" v-if="item.icon" :size="12" />
                   <span>
                     {{ item.label }}
                   </span>
                 </div>
               </template>
-              <template v-for="child in item.children" :key="child.key">
-                <MenuItem>
+              <template v-for="(child, i) in item.children" :key="child.key">
+                <MenuItem @click.stop="handleMenuItemClick(item.children[i])">
                   <div class="flex gap-4 items-center">
-                    <component :is="child.icon" v-if="child.icon" :size="16"></component>
+                    <component :is="child.icon" v-if="child.icon" :size="12" />
                     <span>
                       {{ child.label }}
                     </span>
                   </div>
                 </MenuItem>
               </template>
-            </SubMenu> -->
-            <MenuItem :danger="item.danger ?? false" @click.stop="handleMenuItemClick(item)">
+            </SubMenu>
+            <MenuItem v-else :danger="item.danger ?? false" @click.stop="handleMenuItemClick(item)">
               <div class="flex gap-4 text-[12px] items-center">
-                <component :is="item.icon" v-if="item.icon" :size="12"></component>
+                <component :is="item.icon" v-if="item.icon" :size="12" />
                 <span>
                   {{ item.label }}
                 </span>
@@ -49,9 +41,10 @@
 
 <script setup lang="ts">
 import { Menu, MenuItem, SubMenu } from "ant-design-vue"
+import { useEventListener } from "@vueuse/core"
+import type { CSSProperties } from "vue"
 
 import type { MenuItem as MenuItemType } from "@/types/contextMenu"
-import type { MenuProps } from "ant-design-vue"
 
 defineOptions({
   name: "ContextMenu",
@@ -61,31 +54,31 @@ export interface Props {
   items: MenuItemType[] | []
 }
 
-const props = withDefaults(defineProps<Props>(), {})
+defineProps<Props>()
 
 const emit = defineEmits<{
   "menu-click": [item: MenuItemType]
   close: []
 }>()
 
-const visible = ref<boolean>(false)
-const position = ref({ x: 0, y: 0 })
-const menuSize = ref({ width: 0, height: 0 })
+const isMenuVisible = ref<boolean>(false)
+const menuPosition = ref({ x: 0, y: 0 })
+const menuDimensions = ref({ width: 0, height: 0 })
 
 const menuContainerRef = useTemplateRef("menuContainerRef")
 
-const menuStyle = computed(() => ({
+const menuStyle = computed<CSSProperties>(() => ({
   position: "fixed",
-  left: `${position.value.x}px`,
-  top: `${position.value.y}px`,
+  left: `${menuPosition.value.x}px`,
+  top: `${menuPosition.value.y}px`,
   zIndex: 9999,
 }))
 
 const calculatePosition = (x: number, y: number) => {
   const viewportWidth = window.innerWidth
   const viewportHeight = window.innerHeight
-  const menuWidth = menuSize.value.width || 200 // Default width
-  const menuHeight = menuSize.value.height || 300 // Default height
+  const menuWidth = menuDimensions.value.width || 200 // Default width
+  const menuHeight = menuDimensions.value.height || 300 // Default height
 
   let finalX = x
   let finalY = y
@@ -106,57 +99,34 @@ const calculatePosition = (x: number, y: number) => {
   return { x: finalX, y: finalY }
 }
 
-const handleMenuClick: MenuProps["onClick"] = (data) => {
-  const { key } = data
-  const findMenuItem = (items: MenuItemType[], targetKey: string): MenuItemType | null => {
-    for (const item of items) {
-      if (item.key === targetKey) return item
-      if (item.children) {
-        const found = findMenuItem(item.children, targetKey)
-        if (found) return found
-      }
-    }
-    return null
-  }
-
-  const clickedItem = findMenuItem(props.items, key)
-
-  if (clickedItem) {
-    clickedItem.action?.(clickedItem)
-    emit("menu-click", clickedItem)
-  }
-
-  visible.value = false
-}
-
-const handleMenuItemClick = (item: MenuItemType) => {
+const handleMenuItemClick = (item: MenuItemType | undefined) => {
   if (item) emit("menu-click", item)
-  visible.value = false
+  isMenuVisible.value = false
 }
 
 const open = async (event?: MouseEvent) => {
   if (event) {
     const pos = calculatePosition(event.clientX, event.clientY)
-    position.value = pos
+    menuPosition.value = pos
   }
 
-  visible.value = true
+  isMenuVisible.value = true
 
   await nextTick()
 
   if (menuContainerRef.value) {
     const rect = menuContainerRef.value.getBoundingClientRect()
-    menuSize.value = { width: rect.width, height: rect.height + 10 }
+    menuDimensions.value = { width: rect.width, height: rect.height + 10 }
 
     if (event) {
       const adjustedPos = calculatePosition(event.clientX, event.clientY)
-      position.value = adjustedPos
+      menuPosition.value = adjustedPos
     }
   }
 }
 
 const handleClickOutside = (event: MouseEvent) => {
-  if (visible.value && menuContainerRef.value && !menuContainerRef.value.contains(event.target as Node)) {
+  if (isMenuVisible.value && menuContainerRef.value && !menuContainerRef.value.contains(event.target as Node)) {
     close()
   }
 }
@@ -166,56 +136,62 @@ const onBeforeEnter = () => {}
 const onAfterLeave = () => {}
 
 const handleEscape = (event: KeyboardEvent) => {
-  if (event.key === "Escape" && visible.value) {
+  if (event.key === "Escape" && isMenuVisible.value) {
     close()
   }
 }
 
 const close = () => {
-  visible.value = false
+  isMenuVisible.value = false
   emit("close")
 }
 
-onMounted(() => {
-  document.addEventListener("click", handleClickOutside)
-  document.addEventListener("contextmenu", handleClickOutside)
-  document.addEventListener("keydown", handleEscape)
-})
-
-onBeforeUnmount(() => {
-  document.removeEventListener("click", handleClickOutside)
-  document.removeEventListener("contextmenu", handleClickOutside)
-  document.removeEventListener("keydown", handleEscape)
-})
+useEventListener(document, "click", handleClickOutside)
+useEventListener(document, "contextmenu", handleClickOutside)
+useEventListener(document, "keydown", handleEscape)
 
 defineExpose({
   open,
   close,
-  visible,
+  visible: isMenuVisible,
 })
 </script>
-
+<style>
+.ant-menu-item-only-child {
+  height: 28px !important;
+  line-height: 28px !important;
+  padding-inline: 8px;
+  border-radius: 4px;
+}
+</style>
 <style lang="scss" scoped>
 :deep(.ant-menu-item) {
-  height: 28px;
-  line-height: 28px;
+  height: 28px !important;
+  line-height: 28px !important;
   padding-inline: 8px;
+  border-radius: 4px;
 }
 
 :deep(.ant-menu-submenu) {
   height: 28px;
   line-height: 28px;
 }
+
 :deep(.ant-menu-submenu-title) {
   height: 28px !important;
   line-height: 28px !important;
+  padding: 0 8px;
+}
+
+:deep(.ant-menu) {
+  border-inline-end: none !important;
 }
 
 .context-menu-wrapper {
   isolation: isolate;
-  min-width: 100px;
+  min-width: 120px;
   background: white;
-  border-radius: 8px;
+  border-radius: 4px;
   // box-shadow:
   //   0 3px 6px -4px rgba(0, 0, 0, 0.12),
   //   0 6px 16px 0 rgba(0, 0, 0, 0.08),
@@ -235,7 +211,6 @@ defineExpose({
   }
 }
 
-/* 菜单过渡动画 */
 .context-menu-enter-active,
 .context-menu-leave-active {
   transition: all 0.2s ease;
