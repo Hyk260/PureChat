@@ -11,6 +11,7 @@
 </template>
 
 <script setup lang="ts">
+import QrCode from "@/components/QrCode/index.vue"
 import { useUserStore } from "@/stores/modules/user"
 
 defineOptions({ name: "LoginQrCode" })

@@ -1,4 +1,4 @@
-import { getEmojiAssetUrlSync } from "@/utils/emoji"
+// import { getEmojiAssetUrlSync } from "@/utils/emoji"
 import { emojiMap, emojiUrl } from "@/utils/emoji/emoji-map"
 
 export interface RenderDom {
@@ -40,7 +40,7 @@ export function decodeText(text: string): Array<RenderDom> {
             name: "img",
             cloudSrc: emojiUrl + emoji,
             localSrc: emoji || "", // 本地表情包地址
-            testlocalSrc: getEmojiAssetUrlSync(emoji || ""),
+            // testlocalSrc: getEmojiAssetUrlSync(emoji || ""),
           })
           remainingText = remainingText.substring(rightBracketIndex + 1)
         } else {

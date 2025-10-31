@@ -114,6 +114,8 @@ import { computed, onMounted, onUnmounted, reactive } from "vue"
 import { ElRadioGroup, ElRadioButton } from "element-plus"
 import { storeToRefs } from "pinia"
 
+import Markdown from "@/components/Markdown/index.vue"
+import QrCode from "@/components/QrCode/index.vue"
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import ChatHeader from "@/components/Chat/ChatHeader.vue"
 import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"

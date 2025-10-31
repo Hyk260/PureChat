@@ -6,6 +6,20 @@
         v-for="item in displayData"
         :id="`message_${item.conversationID}`"
         :key="item.conversationID"
+        v-memo="[
+          item.conversationID,
+          item._displayName,
+          item._displayMessage,
+          item._displayTime,
+          item._isActive,
+          item._showUnreadCount,
+          item._unreadCount,
+          item._isMention,
+          item._hasDraft,
+          item._showDontNotify,
+          item.isPinned,
+          currentSessionId,
+        ]"
         class="message-item"
         :class="{ 'is-active': item._isActive }"
         @click="handleConversationListClick(item)"
@@ -61,14 +75,14 @@ import { BellOff } from "lucide-vue-next"
 import { storeToRefs } from "pinia"
 
 import CustomLabel from "@/components/Chat/CustomLabel.vue"
+import CustomMention from "@/components/Chat/CustomMention.vue"
 import ContextMenu from "@/components/ContextMenu"
 import { useContextMenu } from "@/composables/useContextMenu"
 import { useHandlerDrop } from "@/hooks/useHandlerDrop"
 import { pinConversation } from "@/service/im-sdk-api"
 import { setMessageRemindType } from "@/service/im-sdk-api"
 import { useChatStore, useGroupStore, useUserStore } from "@/stores"
-import { chatName, formatContent } from "@/utils/chat"
-import { encodeHTML } from "@/utils/common"
+import { chatName } from "@/utils/chat"
 import { chatSessionListData } from "@/utils/contextMenuPresets"
 import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 import { timeFormat } from "@/utils/timeFormat"
@@ -102,22 +116,64 @@ const searchForData = computed(() => {
   }
 })
 
+interface DisplayCacheItem {
+  _displayName: string
+  _displayTime: string
+  _displayMessage: string
+  _isActive: boolean
+  _showUnreadCount: boolean
+  _isMention: boolean
+  _hasDraft: boolean
+  _showDontNotify: boolean
+  _unreadCount: number
+  cacheKey: string
+}
+
+const displayCache = new Map<string, DisplayCacheItem>()
+
+const getCacheKey = (item: DB_Session, currentId: string) => {
+  const lastMsg = item.lastMessage
+  const lastMessageTime = lastMsg?.lastTime
+  const lastMessageContent = lastMsg?.messageForShow
+  const lastMessageType = lastMsg?.type
+  const lastMessageFrom = lastMsg?.fromAccount
+  const lastMessageNick = lastMsg?.nick
+  const lastMessageRevoked = lastMsg?.isRevoked
+  const hasDraft = chatStore.chatDraftMap.has(item.conversationID)
+  const atCount = item.groupAtInfoList?.length ?? 0
+
+  // 使用简短的键来减少内存占用和字符串拼接成本
+  return `${item.conversationID}|${currentId}|${item.unreadCount}|${item.messageRemindType}|${lastMessageTime}|${lastMessageContent?.slice(0, 30) ?? ""}|${lastMessageType}|${lastMessageFrom}|${lastMessageNick}|${lastMessageRevoked}|${atCount}|${hasDraft}`
+}
+
 const displayData = computed(() => {
+  const currentId = currentSessionId.value
   return searchForData.value.map((item) => {
     const conversationID = item.conversationID
+    const cacheKey = getCacheKey(item, currentId)
+
+    // 检查缓存
+    const cached = displayCache.get(cacheKey)
+    if (cached && cached.cacheKey === cacheKey) {
+      return {
+        ...item,
+        ...cached,
+      }
+    }
+
+    // 计算显示数据
     const name = chatName(item)
     const lastMessageTime = item.lastMessage?.lastTime
     const time = lastMessageTime ? timeFormat(lastMessageTime * 1000) : ""
     const messageContent = formatNewsMessage(item)
-    const isActive = conversationID === currentSessionId.value
+    const isActive = conversationID === currentId
     const unreadCount = item.unreadCount ?? 0
     const showUnreadCount = unreadCount > 0 && unreadCount <= 99 && !isNotify(item) && item.type !== "@TIM#SYSTEM"
     const isMentioned = (item.groupAtInfoList?.length ?? 0) > 0
-    const hasDraft = conversationID !== currentSessionId.value && chatStore.chatDraftMap.has(conversationID)
+    const hasDraft = conversationID !== currentId && chatStore.chatDraftMap.has(conversationID)
     const showDontNotify = isNotify(item) && !isShowCount(item) && item.type !== "@TIM#SYSTEM"
 
-    return {
-      ...item,
+    const computedData: DisplayCacheItem = {
       _displayName: name,
       _displayTime: time,
       _displayMessage: messageContent,
@@ -127,6 +183,18 @@ const displayData = computed(() => {
       _hasDraft: hasDraft,
       _showDontNotify: showDontNotify,
       _unreadCount: unreadCount,
+      cacheKey,
+    }
+
+    if (displayCache.size > 20) {
+      const firstKey = displayCache.keys().next().value
+      displayCache.delete(firstKey)
+    }
+    displayCache.set(cacheKey, computedData)
+
+    return {
+      ...item,
+      ...computedData,
     }
   })
 })
@@ -187,28 +255,6 @@ const formatNewsMessage = (data: DB_Session) => {
   }
   // 默认返回消息内容
   return tip
-}
-// 定义消息提示元素
-const createMessagePrompt = (type: "at" | "draft" = "at") => {
-  const messageTypes = { at: "有人@我", draft: "草稿" }
-  return `<span style='color:#f44336;'>[${messageTypes[type]}]</span>`
-}
-
-// 定义消息提示元素
-const CustomMention = (props: { item: DB_Session }) => {
-  const { item } = props
-  const { lastMessage, conversationID: ID, unreadCount } = item
-  const { messageForShow, nick: lastNick = "未知用户" } = lastMessage ?? {}
-  const draft = chatStore.chatDraftMap.get(ID)
-  // 草稿
-  if (draft && ID !== currentSessionId.value) {
-    const str = encodeHTML(formatContent(draft))
-    return h("span", { innerHTML: `${createMessagePrompt("draft")} ${str}` })
-  }
-  // @消息
-  const isUnread = unreadCount !== 0 // 消息是否未读
-  const mention = `${isUnread ? `${createMessagePrompt("at")}` : ""} ${lastNick}: ${messageForShow}`
-  return h("span", { innerHTML: mention })
 }
 // 消息列表 右键菜单
 const handleContextMenu = (item: DB_Session) => {
@@ -303,6 +349,12 @@ const pingConversation = async (data: DB_Session) => {
   position: relative;
   box-sizing: border-box;
   color: var(--color-text);
+  /* 优化渲染性能：使用 content-visibility 延迟渲染屏幕外的元素 */
+  content-visibility: auto;
+  contain-intrinsic-size: 0 64px;
+  /* 使用 GPU 加速 */
+  transform: translateZ(0);
+  will-change: transform;
   &:hover {
     background: var(--icon-hover-color);
   }
@@ -362,6 +414,14 @@ const pingConversation = async (data: DB_Session) => {
       color: var(--color-time-divider);
       width: 180px;
       max-width: 200px;
+      /* 优化 LCP：使用 content-visibility 延迟渲染非关键内容 */
+      content-visibility: auto;
+      contain-intrinsic-size: 0 18px;
+      /* 优化文本渲染性能 */
+      text-rendering: optimizeSpeed;
+      /* 避免不必要的重绘 */
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
     .svg-icon {
       color: rgba(0, 0, 0, 0.45);

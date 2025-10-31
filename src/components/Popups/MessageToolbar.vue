@@ -196,10 +196,10 @@ const aQuickForward = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
-  bottom: 0;
-  width: 100%;
-  // background-color: #f8f9fa;
+  // padding: 20px;
+  bottom: 60px;
+  transform: translateX(-50%);
+  left: 50%;
 
   .toolbar-content {
     display: flex;

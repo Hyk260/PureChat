@@ -82,7 +82,7 @@
           </div>
         </div>
         <div ref="bottomSentinelRef" class="message-bottom-sentinel"></div>
-        <div v-show="isMultiSelectMode" class="h-45"></div>
+        <div v-show="isMultiSelectMode" class="h-200"></div>
       </div>
     </ElScrollbar>
     <!-- 卡片 -->
@@ -552,6 +552,7 @@ const handleRevokeMessage = async (data: DB_Message) => {
 }
 
 const updateScrollHandler = (type?: "bottom" | "robot" | undefined) => {
+  // return
   try {
     if (type === "bottom") {
       if (isBottomVisible.value) {
@@ -648,7 +649,7 @@ defineExpose({ updateScrollbar, scrollToBottom })
   flex-direction: column;
   min-width: 375px;
   height: 100%;
-  padding: 0 16px 16px 16px;
+  padding: 0 16px 5px 16px;
   box-sizing: border-box;
   overflow-y: overlay;
   overflow-x: hidden;
@@ -684,7 +685,7 @@ defineExpose({ updateScrollbar, scrollToBottom })
 }
 .message-view-item {
   padding: 10px 0;
-  contain: layout style paint;
+  // contain: layout style paint;
   &:hover .time-divider {
     visibility: visible;
   }

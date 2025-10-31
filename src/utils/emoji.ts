@@ -92,7 +92,7 @@ export const getEmojiData = async (type: string): Promise<any> => {
       }
       break
     case "Mart":
-      module = await import("./emoji/emoji-map")
+      module = await import("./emoji/emoji-map-mart")
       data = {
         emojiArray: module.emojiArray,
       }

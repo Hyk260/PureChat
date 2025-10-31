@@ -96,6 +96,7 @@
 </template>
 
 <script setup lang="ts">
+import Markdown from "@/components/Markdown/index.vue"
 import { ElCard, ElDescriptions, ElDescriptionsItem } from "element-plus"
 
 const { pkg, lastBuildTime } = __APP_INFO__

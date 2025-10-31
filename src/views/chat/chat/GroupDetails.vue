@@ -107,6 +107,7 @@ import { ElDrawer } from "element-plus"
 import { CircleX, SquarePen as EditPen } from "lucide-vue-next"
 // import { EditPen } from "@element-plus/icons-vue"
 
+import Markdown from "@/components/Markdown/index.vue"
 import { isFullStaffGroup } from "@/ai/utils"
 import AddMemberPopup from "@/components/Popups/AddMemberPopup.vue"
 import { useState } from "@/hooks/useState"

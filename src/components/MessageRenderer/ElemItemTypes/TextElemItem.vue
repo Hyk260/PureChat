@@ -23,6 +23,7 @@ import DynamicContent from "@/components/Chat/DynamicContent.vue"
 import { DB_Message } from "@/database/schemas/message"
 import { useAppStore, useChatStore } from "@/stores"
 
+import Markdown from "@/components/Markdown/index.vue"
 import ReplyElem from "../CloudCustomData/ReplyElem.vue"
 import DeepThinking from "../CloudCustomData/DeepThinking.vue"
 import WebSearch from "../CloudCustomData/WebSearch.vue"

@@ -240,6 +240,7 @@ import { openWindow } from "@/utils/common"
 // import OllamaAI from "@/ai/platforms/ollama/ollama";
 import emitter from "@/utils/mitt-bus"
 
+import Markdown from "@/components/Markdown/index.vue"
 import DragPrompt from "./DragPrompt.vue"
 import { isRange } from "./utils"
 
