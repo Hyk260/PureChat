@@ -7,6 +7,13 @@ import { bytesToSize, fileToBase64, getFileType } from "@/utils/chat"
 
 const { DEV: isDev } = import.meta.env
 
+export const TEXT_FILE_EXTENSIONS = new Set([...textExts, ...documentExts])
+
+export const isTextFile = (fileName: string) => {
+  const extension = fileName.toLowerCase()
+  return TEXT_FILE_EXTENSIONS.has(`.${extension}`)
+}
+
 export const createMediaElement = (type: string, props: any = {}) => ({
   type,
   ...props,
@@ -14,15 +21,21 @@ export const createMediaElement = (type: string, props: any = {}) => ({
 })
 
 export const handleAssistantFile = async (file: File, editor: IDomEditor) => {
-  if (!file) throw new Error("file is required")
-  if (!editor) throw new Error("editor is required")
+  if (!file || !editor) return
 
   const fileType = getFileType(file?.name)
-
-  if (!isDev && (!isTextFile(fileType) || !__IS_ELECTRON__)) {
-    console.log(file)
-    window.$message?.warning(`暂不支持${fileType || file.name}文件`)
-    return
+  const openTest = true
+  // electron web
+  if (__IS_ELECTRON__) {
+    if (!isTextFile(fileType)) {
+      window.$message?.warning(`暂不支持${fileType || file.name}文件`)
+      return
+    }
+  } else {
+    if (openTest) {
+      window.$message?.warning(`web 暂不支持文件消息`)
+      return
+    }
   }
 
   const base64Url = await fileToBase64(file)
@@ -63,13 +76,6 @@ export const insertEmoji = (option, editor: IDomEditor) => {
   editor.restoreSelection()
   editor.insertNode(data)
   editor.focus(true)
-}
-
-export const TEXT_FILE_EXTENSIONS = new Set([...textExts, ...documentExts])
-
-export const isTextFile = (fileName: string) => {
-  const extension = fileName.toLowerCase()
-  return TEXT_FILE_EXTENSIONS.has(`.${extension}`)
 }
 
 export const customAlert = (s: string, t: string) => {

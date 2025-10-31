@@ -2,28 +2,61 @@
   <div v-if="hasReplyContent" class="think-content">
     <!-- 思考状态内容 -->
     <div v-if="showThinkingContent">
-      {{ thinkingContent }}
+      <!-- {{ thinkingContent }} -->
     </div>
 
     <!-- 深度思考内容 -->
     <div v-else-if="deeplyThoughtContent" class="flex gap-8">
-      <Atom :size="16" color="#bd54c6" />
-      {{ deeplyThoughtContent }}
+      <!-- <Atom :size="16" color="#bd54c6" /> -->
+      <!-- {{ deeplyThoughtContent }} -->
     </div>
 
-    <!-- 内容 -->
-    <template v-if="messageAbstract">
-      <div class="think-content__content">
-        <DynamicContent :text="messageAbstract" />
-      </div>
-    </template>
+    <ElCollapse v-model="activeNames">
+      <ElCollapseItem name="1">
+        <template #title>
+          <div class="px-5 flex items-center gap-8">
+            <Atom :size="16" color="#bd54c6" />
+            <span>深度思考</span>
+            <!-- （用时 36.1 秒） -->
+          </div>
+        </template>
+        <template #icon="{ isActive }">
+          <div class="header">
+            <ElTooltip
+              v-if="isActive"
+              content="复制代码"
+              placement="top"
+              :show-arrow="false"
+              :offset="8"
+              transition="slide-fade"
+            >
+              <div class="copy-button flex-c" @click.stop="handleCopyCode(messageAbstract)">
+                <Check v-if="isCopied" :size="14" />
+                <Copy v-else :size="14" />
+              </div>
+            </ElTooltip>
+
+            <div class="copy-button flex-c" @click.stop="setActive(!isActive)">
+              <ChevronRight v-if="!isActive" :size="14" />
+              <ChevronDown v-else :size="14" />
+            </div>
+          </div>
+        </template>
+        <template v-if="messageAbstract">
+          <div class="think-content__content">
+            {{ messageAbstract }}
+            <!-- <Markdown :content="messageAbstract" /> -->
+          </div>
+        </template>
+      </ElCollapseItem>
+    </ElCollapse>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Atom } from "lucide-vue-next"
-
-import DynamicContent from "@/components/Chat/DynamicContent.vue"
+import { ElCollapse, ElCollapseItem } from "element-plus"
+import { Check, Copy, Atom, ChevronDown, ChevronRight } from "lucide-vue-next"
+// import Markdown from "@/components/Markdown/index.vue"
 import { MessageStatus, MessageStatusSchema } from "@/database/schemas/message"
 
 defineOptions({
@@ -42,20 +75,86 @@ const props = defineProps({
   },
 })
 
+const isCopied = ref(false)
+const activeNames = ref(["0"])
+
 const messageThink = computed(() => props.originalMsg?.deepThinking || null)
 const hasReplyContent = computed(() => !!messageThink.value)
 const thinkingContent = computed(() => messageThink.value.thinking)
 const deeplyThoughtContent = computed(() => messageThink.value.deeplyThought)
 const messageAbstract = computed(() => messageThink.value.messageAbstract)
 const showThinkingContent = computed(() => thinkingContent.value && props.status === "sending")
+
+const setActive = (bol: boolean) => {
+  activeNames.value = [bol ? "1" : "0"]
+}
+
+const handleCopyCode = (code: string) => {
+  isCopied.value = true
+  window.copyToClipboard(code)
+  setTimeout(() => {
+    isCopied.value = false
+  }, 2000)
+}
+
+watch(
+  () => props.status,
+  (newVal) => {
+    if (newVal === "sending") {
+      if (activeNames.value?.[0] === "1") return
+      setActive(true)
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-collapse-item__content) {
+  padding-bottom: 0 !important;
+}
+.el-collapse-item__wrap {
+  background-color: inherit;
+  border-bottom: none;
+}
+.el-collapse {
+  border-radius: 5px;
+  --el-collapse-header-height: 32px;
+  --el-collapse-header-bg-color: inherit;
+  --el-collapse-content-bg-color: inherit;
+}
+.el-collapse-item__header {
+  border-bottom: none;
+}
 .think-content {
-  border-left: 3px solid #ccc;
-  padding-left: 10px;
   color: #666;
   margin-bottom: 10px;
   position: relative;
+  &__content {
+    padding-inline: 10px;
+    color: #999999;
+  }
+}
+
+.header {
+  display: flex;
+  & > div {
+    cursor: pointer;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.copy-button,
+.code-action-btn,
+.download-button,
+.chevrons-button,
+.maximize-button,
+.collapse-button {
+  cursor: pointer;
+  &:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
 }
 </style>

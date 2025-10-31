@@ -45,14 +45,7 @@ import Inputbar from "../Inputbar/index.vue"
 import { editorConfig } from "@/utils/wangEditor/editor-config"
 import { filterMentionList } from "@/utils/pinyin/utils"
 import SendMessageButton from "./SendMessageButton.vue"
-import {
-  createMediaElement,
-  customAlert,
-  handleAssistantFile,
-  handleEditorKeyDown,
-  handleString,
-  insertEmoji,
-} from "./utils"
+import { customAlert, handleAssistantFile, handleEditorKeyDown, handleString, insertEmoji } from "./utils"
 
 import type { DraftData } from "@/types"
 import type { IDomEditor } from "@wangeditor/editor"
@@ -154,8 +147,7 @@ const handleEditorChange = (editor: IDomEditor) => {
 
 const handleFiles = async (file: File | null, type: "image" | "file" = "file") => {
   const editor = editorRef.value
-  if (!editor) throw new Error("editor is not ready")
-  if (!file) throw new Error("file is not ready")
+  if (!editor || !file) throw new Error("file editor is not ready")
 
   if (file.size > MAX_FILE_SIZE_BYTES) {
     window.$message?.warning(`文件不能大于${MAX_FILE_SIZE_MB}MB`)
@@ -172,19 +164,23 @@ const handleFiles = async (file: File | null, type: "image" | "file" = "file") =
     editor.restoreSelection()
 
     if (type === "image") {
-      const imageElement = createMediaElement("image", {
+      const imageElement = {
+        type: "image",
         src: base64Url,
         fileName: file.name,
         style: { width: "125px" },
-      })
+        children: [{ text: "" }],
+      }
       editor.insertNode(imageElement)
     } else if (type === "file") {
-      const fileElement = createMediaElement("attachment", {
+      const fileElement = {
+        type: "attachment",
         fileName: file.name,
         fileSize: bytesToSize(file.size),
         link: base64Url,
         path: file?.path || "",
-      })
+        children: [{ text: "" }],
+      }
       editor.insertNode(fileElement)
     }
 
@@ -266,7 +262,12 @@ const sendChatMessage = async () => {
 }
 
 const handleScreenCapture = (url: string) => {
-  const imageElement = createMediaElement("image", { src: url, style: { width: "125px" } })
+  const imageElement = {
+    type: "image",
+    src: url,
+    style: { width: "125px" },
+    children: [{ text: "" }],
+  }
   editorRef.value?.insertNode(imageElement)
 }
 
