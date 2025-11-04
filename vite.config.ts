@@ -51,10 +51,14 @@ export default defineConfig((configEnv) => {
     optimizeDeps: {
       include,
       exclude,
+      // entries,
+    },
+    worker: {
+      format: "es",
     },
     build: {
       // https://cn.vitejs.dev/config/build-options.html#build-target
-      // target: "es2015",
+      // target: "esnext",
       // 打包时清除dist目录
       // emptyOutDir: true,
       // 生成生产源映射
