@@ -7,7 +7,7 @@
     append-to-body
     :lock-scroll="false"
     :show-close="false"
-    width="65%"
+    width="70%"
   >
     <div class="ui-modal-body">
       <List ref="listRef" @active="active" />
@@ -62,10 +62,10 @@ onUnmounted(() => {
   display: none;
 }
 :global(body .setup-modal) {
-  min-width: 600px;
+  min-width: 650px;
 }
 .ui-modal-body {
-  height: 600px;
+  height: 80vh;
   display: flex;
 }
 </style>

@@ -315,9 +315,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-.wang-h-full {
-  height: calc(100% - 60px) !important;
-}
 .wangeditor {
   position: relative;
   z-index: 2;
@@ -330,5 +327,9 @@ onBeforeUnmount(() => {
     flex: 1;
     overflow-y: hidden;
   }
+}
+.wang-h-full {
+  height: calc(100% - 60px) !important;
+  border-top: none;
 }
 </style>
