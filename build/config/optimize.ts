@@ -29,4 +29,6 @@ const include = [
  */
 const exclude = ["@iconify/json", "@purechat/ui"]
 
-export { include, exclude }
+const entries = []
+
+export { include, exclude, entries }
