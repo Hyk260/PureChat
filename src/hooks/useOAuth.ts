@@ -1,7 +1,7 @@
 import { watch } from "vue"
 import { useRoute } from "vue-router"
 
-import { githubAuth, openAuthUrl } from "@/service/api/index"
+import { githubAuth, openAuthUrl } from "@/service/api"
 import { openWindow } from "@/utils/common"
 
 interface OAuthOptions {

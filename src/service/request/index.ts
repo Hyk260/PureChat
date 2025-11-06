@@ -8,7 +8,7 @@ import Axios, {
 import { useAuthStore } from "@/stores/modules/auth"
 import { localStg } from "@/utils/storage"
 
-import type { PureHttpError, PureHttpResponse, RequestMethods } from "./types.d"
+import type { PureHttpError, PureHttpResponse, RequestMethods } from "./types"
 
 // 状态码错误消息映射
 const statusMessageMap: Record<number, string> = {
@@ -27,13 +27,14 @@ const errorHandler = (error: AxiosError) => {
   const status = error.response?.status
   const errMessage = status ? (statusMessageMap[status] ?? `连接错误 ${status}`) : "无法连接到服务器！"
 
-  window.$message?.error(errMessage)
+  console.warn("errMessage", errMessage)
 
-  return Promise.reject(error)
+  // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+  return Promise.reject(error?.response?.data ?? {})
 }
 
 /** 请求白名单，放置一些不需要`token`的接口（通过设置请求白名单，防止`token`过期后再请求造成的死循环问题） */
-const whiteList = ["/refresh-token", "/login"]
+const whiteList = ["/api/auth/refresh", "/api/auth/login"]
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -131,11 +132,11 @@ class PureChatHttp {
         this.isRefreshing = true
 
         try {
-          const { data } = await this.refreshService.post("/refresh-token", {
+          const { data } = await this.refreshService.post("/api/auth/refresh", {
             refreshToken: useAuthStore().refreshToken,
           })
 
-          useAuthStore().setTokens(data.accessToken, data.refreshToken)
+          useAuthStore().setTokens(data.result.accessToken, data.result.refreshToken)
 
           const newToken = formatToken(data.accessToken)
 

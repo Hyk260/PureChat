@@ -1,8 +1,8 @@
-import { http } from "../request/index"
+import { http } from "@/service/request"
 
 export const getPrompt = async () => {
   return http.request({
-    url: "/market",
+    url: "/api/agents",
     method: "get",
   })
 }

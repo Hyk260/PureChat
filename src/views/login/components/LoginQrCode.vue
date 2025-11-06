@@ -23,32 +23,4 @@ const onBack = () => {
 }
 </script>
 
-<style lang="scss" scoped>
-.qr-code {
-  animation: anima_tada 1s linear;
-}
-@keyframes anima_tada {
-  0% {
-    -webkit-transform: scale(1);
-  }
-  5%,
-  10% {
-    -webkit-transform: scale(0.8) rotate(-5deg);
-  }
-  15%,
-  25%,
-  35%,
-  45% {
-    -webkit-transform: scale(1.1) rotate(3deg);
-  }
-  20%,
-  30%,
-  40% {
-    -webkit-transform: scale(1.1) rotate(-3deg);
-  }
-  50%,
-  100% {
-    -webkit-transform: scale(1);
-  }
-}
-</style>
+<style lang="scss" scoped></style>

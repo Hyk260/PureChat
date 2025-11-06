@@ -1,8 +1,8 @@
-import { http } from "../request/index"
+import { http } from "@/service/request"
 
 export const restApi = (data) => {
   return http.request({
-    url: "/rest-api",
+    url: "/api/rest-api",
     method: "post",
     data,
   })

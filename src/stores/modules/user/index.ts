@@ -53,7 +53,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     },
     async handleSuccessfulAuth(data: HandleSuccessfulAuthPayload) {
       console.log("授权登录信息 handleSuccessfulAuth", data)
-      const { code, msg, result } = data
+      const { code, result } = data
       if (code === 200) {
         timProxy.init()
         await this.handleIMLogin({ userID: result.username, userSig: result.userSig })
@@ -61,14 +61,17 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         useAuthStore().setTokens(result?.accessToken, result?.refreshToken)
         // data?.remember && window.localStg.set(ACCOUNT, data)
       } else {
-        console.log("授权登录失败")
-        window.$message?.error(msg || "授权登录失败")
+        window.$message?.error("授权登录失败")
       }
     },
     async handleUserLogin(data: HandleUserLoginPayload) {
-      console.log(data, "登录信息")
-      const result = (await login(data)) as unknown as HandleSuccessfulAuthPayload
-      this.handleSuccessfulAuth(result)
+      try {
+        console.log(data, "登录信息")
+        const result = (await login(data)) as unknown as HandleSuccessfulAuthPayload
+        this.handleSuccessfulAuth(result)
+      } catch (error) {
+        window.$message?.error(error.message || "登录失败")
+      }
     },
     handleUserLogout() {
       router.push("/login")
