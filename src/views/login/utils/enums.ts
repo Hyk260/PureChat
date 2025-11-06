@@ -1,20 +1,20 @@
 import { computed } from "vue"
-// import { $t } from "@/locales";
+import { $t } from "@/locales"
 
 export const operates = computed(() => {
   return [
     // {
-    //   title:  $t('login.phoneLogin'),
+    //   title: $t("login.phoneLogin"),
     //   currentPage: 1,
     // },
-    // {
-    //   title: $t("login.qRCodeLogin"),
-    //   currentPage: 2,
-    // },
-    // {
-    //   title: $t("login.register"),
-    //   currentPage: 3,
-    // },
+    {
+      title: $t("login.qRCodeLogin"),
+      currentPage: 2,
+    },
+    {
+      title: $t("login.register"),
+      currentPage: 3,
+    },
   ]
 })
 

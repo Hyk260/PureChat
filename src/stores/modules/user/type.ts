@@ -51,7 +51,7 @@ export interface UserState {
 
 export interface HandleSuccessfulAuthPayload {
   code: number
-  msg: string
+  message: string
   result: LoginResult
 }
 

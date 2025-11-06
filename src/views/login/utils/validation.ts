@@ -4,6 +4,7 @@ import { $t } from "@/locales"
 import { useUserStore } from "@/stores"
 import { localStg } from "@/utils/storage"
 
+const { DEV: isDev } = import.meta.env
 /** 6位数字验证码正则 */
 const REGEXP_SIX = /^\d{6}$/
 
@@ -13,11 +14,14 @@ const REGEXP_PWD =
 
 const pattern = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 
+/** 邮箱正则 */
+const REGEXP_EMAIL = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
 const { username, password, remember } = localStg.get("ACCOUNT") || {}
 
 export const defaultForm = reactive({
   username: username || "",
-  password: password || "123456",
+  password: password || "123456qwer",
   remember: remember || false,
   verifyCode: "",
 })
@@ -56,11 +60,24 @@ export const rules = reactive({
 export const ruleForm = reactive({
   username: "",
   nickname: "",
+  email: "",
   phone: "",
   verifyCode: "",
   password: "",
   repeatPassword: "",
 })
+
+if (isDev) {
+  Object.assign(ruleForm, {
+    username: "zhangshan",
+    nickname: "张三",
+    email: "2607881950@qq.com",
+    phone: "17612345678",
+    verifyCode: "",
+    password: "123456qwer",
+    repeatPassword: "123456qwer",
+  })
+}
 
 export const updateRules = reactive({
   username: [
@@ -71,9 +88,23 @@ export const updateRules = reactive({
     },
   ],
   nickname: [
+    // {
+    //   required: true,
+    //   message: "请输入昵称",
+    //   trigger: "blur",
+    // },
+  ],
+  email: [
     {
-      required: true,
-      message: "请输入昵称",
+      validator: (rule, value, callback) => {
+        if (value === "") {
+          callback(new Error("请输入邮箱"))
+        } else if (!REGEXP_EMAIL.test(value)) {
+          callback(new Error("请输入正确的邮箱格式"))
+        } else {
+          callback()
+        }
+      },
       trigger: "blur",
     },
   ],

@@ -6,10 +6,13 @@
     <ElFormItem prop="nickname">
       <ElInput v-model="ruleForm.nickname" clearable :placeholder="$t('login.nickname')" :prefix-icon="User" />
     </ElFormItem>
-    <ElFormItem prop="phone">
+    <ElFormItem prop="email">
+      <ElInput v-model="ruleForm.email" clearable placeholder="邮箱" :prefix-icon="Message" />
+    </ElFormItem>
+    <ElFormItem v-if="false" prop="phone">
       <ElInput v-model="ruleForm.phone" clearable :placeholder="$t('login.phone')" :prefix-icon="Iphone" />
     </ElFormItem>
-    <ElFormItem prop="verifyCode">
+    <ElFormItem v-if="false" prop="verifyCode">
       <div class="w-full flex">
         <ElInput v-model="ruleForm.verifyCode" clearable :placeholder="$t('login.smsVerifyCode')" />
         <ElButton class="ml-5" :disabled="isDisabled" @click="useVerifyCode().start(ruleFormRef, 'phone')">
@@ -60,11 +63,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
-import { Iphone, Lock, User } from "@element-plus/icons-vue"
+import { Iphone, Lock, Message, User } from "@element-plus/icons-vue"
 
 import { useUserStore } from "@/stores/modules/user"
-
+import { register } from "@/service/api"
 import { ruleForm, updateRules } from "../utils/validation"
 import { useVerifyCode } from "../utils/verifyCode"
 
@@ -74,7 +76,7 @@ defineOptions({ name: "LoginRegist" })
 
 const checked = ref(false)
 const loading = ref(false)
-const ruleFormRef = ref<FormInstance>()
+const ruleFormRef = useTemplateRef("ruleFormRef")
 
 const { isDisabled, text } = useVerifyCode()
 const userStore = useUserStore()
@@ -90,10 +92,21 @@ const onUpdate = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid) => {
     if (valid) {
       if (checked.value) {
-        setTimeout(() => {
-          loading.value = false
-          window.$message?.success("注册成功")
-        }, 2000)
+        register(ruleForm)
+          .then((res) => {
+            if (res.code === 200) {
+              loading.value = false
+              window.$message?.success("注册成功")
+              onBack()
+            } else {
+              loading.value = false
+              window.$message?.error(res?.error || "注册失败")
+            }
+          })
+          .catch((err) => {
+            loading.value = false
+            window.$message?.error(err.error || "注册失败")
+          })
       } else {
         loading.value = false
         window.$message?.warning("请勾选隐私政策")

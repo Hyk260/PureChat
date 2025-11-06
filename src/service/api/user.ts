@@ -1,9 +1,9 @@
-import { http } from "../request/index"
+import { http } from "@/service/request"
 
 // 登录接口
 export const login = (data) => {
   return http.request({
-    url: "/login",
+    url: "/api/auth/login",
     method: "post",
     data,
   })
@@ -12,7 +12,7 @@ export const login = (data) => {
 // 注册接口
 export const register = (data) => {
   return http.request({
-    url: "/register",
+    url: "/api/auth/register",
     method: "post",
     data,
   })
