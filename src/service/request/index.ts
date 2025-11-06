@@ -38,7 +38,7 @@ const whiteList = ["/api/auth/refresh", "/api/auth/login"]
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
-  // baseURL: "https://api.purechat.cn", // 生产
+  // baseURL: "https://next.purechat.cn", // 生产
   // baseURL: "http://localhost:8081", // 开发
   baseURL: import.meta.env.VITE_SERVICE_BASE_URL,
   // 请求超时时间

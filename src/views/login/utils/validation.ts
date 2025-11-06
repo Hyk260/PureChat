@@ -21,7 +21,7 @@ const { username, password, remember } = localStg.get("ACCOUNT") || {}
 
 export const defaultForm = reactive({
   username: username || "",
-  password: password || "123456",
+  password: password || "123456qwer",
   remember: remember || false,
   verifyCode: "",
 })

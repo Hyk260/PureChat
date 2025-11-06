@@ -61,7 +61,7 @@
     </ElButton>
   </ElForm>
   <!-- other hidden -->
-  <div class="mt-20 flex justify-evenly">
+  <div v-if="isDev" class="mt-20 flex justify-evenly">
     <ElButton v-for="item in operates" :key="item.title" size="default" @click="setCurrentPage(item)">
       {{ item.title }}
     </ElButton>
@@ -114,13 +114,17 @@ const [loading, setLoading] = useState(false)
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const { oauthAuthorize } = useOAuth({
+  onStart: () => {
+    setLoading(true)
+  },
   onSuccess: (data) => {
     console.log("授权成功", data)
     userStore.handleSuccessfulAuth(data)
     setLoading(true)
   },
-  onError: (error) => {
-    console.error("授权失败", error)
+  onError: (data) => {
+    window.$message?.error(data.error || "授权失败")
+    console.error("授权失败", data)
     setLoading(false)
   },
 })

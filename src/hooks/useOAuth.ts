@@ -6,6 +6,7 @@ import { openWindow } from "@/utils/common"
 
 interface OAuthOptions {
   onSuccess?: (data: any) => void
+  onStart?: () => void
   onError?: (error: any) => void
   autoWatch?: boolean
 }
@@ -25,7 +26,7 @@ export function extractRouteInfoFromURL(url: string) {
 }
 
 export function useOAuth(options: OAuthOptions) {
-  const { onSuccess, onError, autoWatch = true } = options
+  const { onSuccess, onStart, onError, autoWatch = true } = options
   const route = useRoute()
 
   // History 模式: http://localhost:8080/login?code=xxx
@@ -80,6 +81,7 @@ export function useOAuth(options: OAuthOptions) {
     }
 
     try {
+      onStart?.()
       const data = await githubAuth({ code: authCode })
       onSuccess?.(data)
     } catch (error) {
