@@ -59,37 +59,6 @@ export interface ApiResponse<T = any> {
   message?: string
 }
 
-// 群组列表响应
-export interface GroupListResponse extends ApiResponse {
-  groupList: GroupListItem[]
-}
-
-// 群组成员列表响应
-export interface GroupMemberListResponse extends ApiResponse {
-  memberList: GroupMember[]
-  offset: number
-}
-
-// 群组资料响应
-export interface GroupProfileResponse extends ApiResponse {
-  data: GroupProfile
-}
-
-// 创建群组响应
-export interface CreateGroupResponse extends ApiResponse {
-  group: GroupInfo
-}
-
-// 解散群组参数
-export interface DismissGroupParams {
-  groupId: string
-}
-
-// 解散群组响应
-export interface DismissGroupResponse extends ApiResponse {
-  groupID: string
-}
-
 // 群组Store状态类型
 export interface GroupState {
   groupList: GroupListItem[]

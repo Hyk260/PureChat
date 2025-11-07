@@ -1,7 +1,9 @@
 import { http } from "@/service/request"
+import type { ApiResponse } from "@/service/request/types"
+import type { LoginResult } from "@/stores/modules/user/type"
 
 export const openAuthUrl = () => {
-  return http.request({
+  return http.request<{ url: string }>({
     url: "/api/auth/github",
     method: "get",
     params: {
@@ -11,7 +13,7 @@ export const openAuthUrl = () => {
 }
 
 export const githubAuth = ({ code }: { code: string }) => {
-  return http.request({
+  return http.request<ApiResponse<LoginResult>>({
     url: "/api/auth/github/callback",
     method: "get",
     params: {

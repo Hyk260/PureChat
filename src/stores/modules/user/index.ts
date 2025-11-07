@@ -10,6 +10,7 @@ import chat from "@/service/chat/PureChatService"
 import { useAuthStore, useChatStore } from "@/stores"
 import { SetupStoreId } from "@/stores/enum"
 import emitter from "@/utils/mitt-bus"
+import { delay } from "@/utils/common"
 
 import type {
   HandleIMLoginPayload,
@@ -25,7 +26,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
   state: (): UserState => ({
     verifyCode: "",
     currentPage: 0,
-    userProfile: {},
+    userProfile: null,
     userLocalStore: {
       native: "",
       avatar: "",
@@ -53,7 +54,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     },
     async handleSuccessfulAuth(data: HandleSuccessfulAuthPayload) {
       console.log("授权登录信息 handleSuccessfulAuth", data)
-      const { code, result } = data
+      const { code, data: result } = data
       if (code === 200) {
         timProxy.init()
         await this.handleIMLogin({ userID: result.username, userSig: result.userSig })
@@ -67,19 +68,19 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     async handleUserLogin(data: HandleUserLoginPayload) {
       try {
         console.log(data, "登录信息")
-        const result = (await login(data)) as unknown as HandleSuccessfulAuthPayload
+        const result = await login(data)
         this.handleSuccessfulAuth(result)
       } catch (error) {
-        window.$message?.error(error.message || "登录失败")
+        console.log(error, "登录失败")
+        window.$message?.error(error?.error || "登录失败")
       }
     },
-    handleUserLogout() {
+    async handleUserLogout() {
       router.push("/login")
-      setTimeout(() => {
-        logout()
-        emitter.all.clear()
-        this.handleIMLogout()
-      }, 500)
+      await delay(500)
+      await logout()
+      emitter.all.clear()
+      this.handleIMLogout()
     },
     async handleIMLogin(user: HandleIMLoginPayload, redirect: boolean = true) {
       try {
@@ -95,7 +96,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         }
       } catch (error) {
         this.handleUserLogout()
-        window.$message?.error(error || "登录失败")
+        window.$message?.error("登录失败")
         console.log("[chat] im登录失败 login", error)
       }
     },

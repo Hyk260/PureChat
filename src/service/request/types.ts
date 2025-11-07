@@ -2,6 +2,14 @@ import type { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from "axio
 
 export type RequestMethods = Extract<Method, "get" | "post" | "put">
 
+// API响应类型
+export interface ApiResponse<T = any> {
+  code: number
+  massage?: string
+  error?: string
+  data: T
+}
+
 export interface PureHttpError extends AxiosError {
   isCancelRequest?: boolean
 }

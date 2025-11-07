@@ -7,8 +7,9 @@ import Axios, {
 
 import { useAuthStore } from "@/stores/modules/auth"
 import { localStg } from "@/utils/storage"
+import type { LoginResult } from "@/stores/modules/user/type"
 
-import type { PureHttpError, PureHttpResponse, RequestMethods } from "./types"
+import type { PureHttpError, PureHttpResponse, RequestMethods, ApiResponse } from "./types"
 
 // 状态码错误消息映射
 const statusMessageMap: Record<number, string> = {
@@ -29,8 +30,12 @@ const errorHandler = (error: AxiosError) => {
 
   console.warn("errMessage", errMessage)
 
-  // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-  return Promise.reject(error?.response?.data ?? {})
+  if (error.response?.data && typeof error.response.data === "object") {
+    Object.assign(error, error.response.data)
+  }
+  error.message = errMessage
+
+  return Promise.reject(error)
 }
 
 /** 请求白名单，放置一些不需要`token`的接口（通过设置请求白名单，防止`token`过期后再请求造成的死循环问题） */
@@ -58,6 +63,8 @@ const defaultConfig: AxiosRequestConfig = {
 function formatToken(token: string) {
   return "Bearer " + token
 }
+
+type RefreshTokenResult = Pick<LoginResult, "accessToken" | "refreshToken">
 
 class PureChatHttp {
   private readonly service: AxiosInstance
@@ -105,7 +112,22 @@ class PureChatHttp {
           }
           return response.data
         }
-        return Promise.reject(response.data)
+
+        const rejectionMessage = (() => {
+          if (response.data && typeof response.data === "object") {
+            const payload = response.data as Record<string, unknown>
+            const candidate = payload.message ?? payload.msg ?? payload.error
+            return typeof candidate === "string" ? candidate : "请求失败"
+          }
+          return response.statusText || "请求失败"
+        })()
+
+        const rejection = new Error(rejectionMessage)
+        if (response.data && typeof response.data === "object") {
+          Object.assign(rejection, response.data)
+        }
+
+        return Promise.reject(rejection)
       },
       async (error: PureHttpError) => {
         const { config, response } = error
@@ -123,7 +145,7 @@ class PureChatHttp {
         if (this.isRefreshing) {
           return new Promise((resolve) => {
             this.refreshSubscribers.push((token) => {
-              if (extendedConfig.headers) extendedConfig.headers.Authorization = formatToken(token)
+              if (extendedConfig.headers) extendedConfig.headers.Authorization = token
               resolve(this.service(extendedConfig))
             })
           })
@@ -132,13 +154,15 @@ class PureChatHttp {
         this.isRefreshing = true
 
         try {
-          const { data } = await this.refreshService.post("/api/auth/refresh", {
+          const { data } = await this.refreshService.post<ApiResponse<RefreshTokenResult>>("/api/auth/refresh", {
             refreshToken: useAuthStore().refreshToken,
           })
 
-          useAuthStore().setTokens(data.result.accessToken, data.result.refreshToken)
+          const { accessToken, refreshToken } = data.data
 
-          const newToken = formatToken(data.accessToken)
+          useAuthStore().setTokens(accessToken, refreshToken)
+
+          const newToken = formatToken(accessToken)
 
           this.refreshSubscribers.forEach((cb) => cb(newToken))
           this.refreshSubscribers = []
@@ -148,7 +172,7 @@ class PureChatHttp {
         } catch (e) {
           this.refreshSubscribers = []
           useAuthStore().logout()
-          return Promise.reject(e)
+          return Promise.reject(e instanceof Error ? e : new Error(String(e)))
         } finally {
           this.isRefreshing = false
         }
@@ -157,38 +181,30 @@ class PureChatHttp {
   }
 
   /** 通用请求工具函数 */
-  public request(config: AxiosRequestConfig) {
-    return this.service.request(config)
+  public request<T = unknown, D = unknown>(config: AxiosRequestConfig<D>): Promise<T> {
+    return this.service.request(config) as unknown as Promise<T>
   }
 
-  public _request<T>(method: RequestMethods, url: string, param?: AxiosRequestConfig): Promise<T> {
-    const config = {
+  public _request<T = unknown, D = unknown>(
+    method: RequestMethods,
+    url: string,
+    config?: AxiosRequestConfig<D>
+  ): Promise<T> {
+    return this.request<T, D>({
       method,
       url,
-      ...param,
-    }
-
-    // 单独处理自定义请求/响应回调
-    return new Promise((resolve, reject) => {
-      this.service
-        .request(config)
-        .then((response) => {
-          resolve(response as T)
-        })
-        .catch((error) => {
-          reject(error as Error)
-        })
+      ...(config ?? {}),
     })
   }
 
   /** 单独抽离的`post`工具函数 */
-  public post<T, P>(url: string, params?: AxiosRequestConfig<P>): Promise<T> {
-    return this._request<T>("post", url, params)
+  public post<T = unknown, D = unknown>(url: string, config?: AxiosRequestConfig<D>): Promise<T> {
+    return this._request<T, D>("post", url, config)
   }
 
   /** 单独抽离的`get`工具函数 */
-  public get<T, P>(url: string, params?: AxiosRequestConfig<P>): Promise<T> {
-    return this._request<T>("get", url, params)
+  public get<T = unknown, D = unknown>(url: string, config?: AxiosRequestConfig<D>): Promise<T> {
+    return this._request<T, D>("get", url, config)
   }
 }
 

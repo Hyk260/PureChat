@@ -1,22 +1,8 @@
+import { Profile } from "@/types/tencent-cloud-chat"
+import { ApiResponse } from "@/service/request/types"
+
 // 用户基本信息
-export interface UserProfile {
-  userID: string
-  nick?: string
-  avatar?: string
-  email?: string
-  signature?: string
-  gender?: number
-  birthday?: number
-  location?: string
-  allowType?: string
-  language?: number
-  messageSettings?: number
-  adminForbidType?: string
-  level?: number
-  role?: number
-  lastMessageTime?: number
-  customField?: Array<{ key: string; value: string }>
-}
+export type UserProfile = Profile
 
 // 用户本地存储信息
 export interface UserLocalStore {
@@ -24,13 +10,6 @@ export interface UserLocalStore {
   avatar: string
   userName: string
   localAvatar: string
-}
-
-// API响应类型
-export interface ApiResponse<T = any> {
-  code: number
-  msg: string
-  result: T
 }
 
 // 登录响应结果
@@ -45,20 +24,15 @@ export interface LoginResult {
 export interface UserState {
   verifyCode: string
   currentPage: number
-  userProfile: UserProfile
+  userProfile: UserProfile | null
   userLocalStore: UserLocalStore
 }
 
-export interface HandleSuccessfulAuthPayload {
-  code: number
-  message: string
-  result: LoginResult
-}
+export type HandleSuccessfulAuthPayload = ApiResponse<LoginResult>
 
 export interface HandleUserLoginPayload {
   username: string
   password: string
-  remember?: boolean
 }
 
 export interface HandleIMLoginPayload {

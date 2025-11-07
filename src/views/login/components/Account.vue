@@ -93,7 +93,7 @@ import { useOAuth } from "@/hooks/useOAuth"
 import { useState } from "@/hooks/useState"
 import { getUserList } from "@/service/api"
 import { useUserStore } from "@/stores/modules/user"
-
+import { delay } from "@/utils/common"
 import { operates, thirdParty } from "../utils/enums"
 import { defaultForm, rules } from "../utils/validation"
 
@@ -110,7 +110,6 @@ const userSuggestions = ref<{ value: string }[]>([])
 
 const userStore = useUserStore()
 const [loading, setLoading] = useState(false)
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const { oauthAuthorize } = useOAuth({
   onStart: () => {
@@ -144,8 +143,8 @@ const handleLogin = async () => {
   setLoading(true)
   try {
     await formRef.value.validate()
-    if (isDev) await delay(1000)
-    await userStore.handleUserLogin(form.value)
+    if (isDev) await delay(500)
+    userStore.handleUserLogin(form.value)
   } finally {
     setLoading(false)
   }
