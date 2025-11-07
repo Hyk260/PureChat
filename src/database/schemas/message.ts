@@ -92,6 +92,30 @@ export const GroupSystemNoticePayload = BasePayload.extend({
   operationType: z.number(),
 })
 
+export const GroupTipPayload = BasePayload.extend({
+  operatorID: z.string(),
+  /**
+   * 0	默认值
+   * 1	申请加群
+   * 2	邀请加群
+   */
+  groupJoinType: z.number(),
+  operationType: z.number(),
+  memberList: z.array(
+    z.object({
+      userID: z.string(),
+      muteTime: z.number(),
+    })
+  ),
+  userIDList: z.array(z.string()),
+  operatorInfo: z.object({
+    userID: z.string(),
+    role: z.number(),
+    nick: z.string(),
+    avatar: z.string(),
+  }),
+})
+
 export const CustomPayload = BasePayload.extend({
   data: z.string(),
   description: z.string(),
@@ -252,9 +276,10 @@ export const DB_MessageSchema = z.object({
    * 文本 TextPayload
    * 图片 ImagePayload
    * 自定义 CustomPayload
+   * 群提示消息 GroupTipPayload
    */
-  payload: TextPayload,
-  // payload: z.union([TextPayload, ImagePayload]).optional(),
+  // payload: TextPayload,
+  payload: z.union([TextPayload, ImagePayload, TextPayload, GroupTipPayload, CustomPayload]).optional(),
   /**
    * @description 消息类型
    */
@@ -300,6 +325,8 @@ export type customDataPromptMessage = z.infer<typeof customDataPromptMessageSche
 export type ImagePayloadType = z.infer<typeof ImagePayload>
 
 export type FilePayloadType = z.infer<typeof FilePayload>
+
+export type GroupTipPayloadType = z.infer<typeof GroupTipPayload>
 
 export type MergerPayloadType = z.infer<typeof MergerPayload>
 
