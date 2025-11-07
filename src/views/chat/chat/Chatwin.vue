@@ -499,7 +499,8 @@ const handleRefreshMessage = (data: DB_Message) => {
 }
 
 const handleSaveFile = (message: DB_Message) => {
-  const { fileUrl, fileName } = (message.payload as FilePayloadType) || {}
+  const filePayload = message.payload as unknown as FilePayloadType
+  const { fileUrl, fileName } = filePayload
   if (!fileUrl || !fileName) {
     window.$message?.error("文件不存在")
     return
@@ -508,7 +509,7 @@ const handleSaveFile = (message: DB_Message) => {
 }
 
 const handleTranslate = (data: DB_Message) => {
-  translateText({ textList: data.payload.text })
+  translateText({ textList: data.payload?.text || "" })
 }
 
 const handleForward = (data: DB_Message) => {}

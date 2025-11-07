@@ -40,7 +40,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {})
 
-const payload = props.message.payload as FilePayloadType
+const payload = props.message.payload as unknown as FilePayloadType
 
 const fileNameRef = ref<HTMLDivElement | null>(null)
 const backgroundStyle = ref("")

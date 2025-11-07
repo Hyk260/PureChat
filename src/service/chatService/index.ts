@@ -96,7 +96,7 @@ class ChatService {
     } else if (isFinish) {
       chat.cloudCustomData = handleWebSearchData(chat, true)
       if (chat.type === "TIMTextElem") {
-        chat.payload = { text: chat.payload.text }
+        chat.payload = { text: chat.payload?.text || "" }
       }
     }
 
@@ -172,7 +172,7 @@ class ChatService {
 
     try {
       const webSearchResult = await generateReferencePrompt(chat, {
-        content: chat.payload.text,
+        content: chat.payload?.text || "",
       })
       window.sessionStg.set(`web-search-${startMsg.ID}`, webSearchResult)
     } catch (error) {

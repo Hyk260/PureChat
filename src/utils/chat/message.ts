@@ -112,7 +112,7 @@ export const validateLastMessage = (list: DB_Message[]): DB_Message | null => {
 export const handleCopyMsg = async (data: DB_Message) => {
   try {
     const { payload, type } = data
-    if (type === "TIMTextElem") {
+    if (type === "TIMTextElem" && payload?.text) {
       window.copyToClipboard(payload.text)
       return
     }

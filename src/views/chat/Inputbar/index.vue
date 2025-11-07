@@ -192,6 +192,7 @@
     <!-- 全屏 -->
     <ElTooltip
       :enterable="false"
+      disabled
       :show-after="500"
       :content="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
       placement="top"

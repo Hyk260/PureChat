@@ -448,7 +448,7 @@ export class LocalChat {
       const payload = {
         // ...data,
         payload: {
-          text: data.payload.text,
+          text: data.payload?.text ?? "",
         },
       } as DB_Message
 

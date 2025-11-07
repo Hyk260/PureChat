@@ -12,8 +12,8 @@
         :original-msg="parsedCloudCustomData"
       />
       <!-- Markdown消息 -->
-      <Markdown v-if="shouldShowMarkdown" :cloud-custom-data="parsedCloudCustomData" :content="message.payload.text" />
-      <DynamicContent v-else :at-user-list="message.atUserList" :text="message.payload.text" />
+      <Markdown v-if="shouldShowMarkdown" :cloud-custom-data="parsedCloudCustomData" :content="messageText" />
+      <DynamicContent v-else :at-user-list="message.atUserList" :text="messageText" />
     </template>
   </div>
 </template>
@@ -39,6 +39,10 @@ const props = withDefaults(defineProps<Props>(), {
 
 const chatStore = useChatStore()
 const appStore = useAppStore()
+
+const messageText = computed(() => {
+  return props.message.payload?.text || ""
+})
 
 const hasValidMessageType = computed(() => {
   return !!props.message && !!props.message?.conversationType

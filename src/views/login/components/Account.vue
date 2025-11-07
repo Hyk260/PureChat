@@ -2,24 +2,22 @@
   <ElForm ref="formRef" :model="form" :rules="rules">
     <!-- 账号 -->
     <ElFormItem prop="username">
-      <ElAutocomplete
-        v-model="form.username"
-        clearable
-        size="large"
-        :debounce="200"
-        :prefix-icon="User"
-        :placeholder="$t('login.username')"
-        :fetch-suggestions="handleSearch"
-        @select="handleSelect"
-      />
-      <!-- <ElInput
-        v-model="form.username"
-        :placeholder="$t('login.username')"
-        :prefix-icon="User"
-        size="large"
-        clearable
-      >
-      </ElInput> -->
+      <template v-if="isAutoComplete">
+        <ElAutocomplete
+          v-model="form.username"
+          clearable
+          size="large"
+          :debounce="200"
+          :prefix-icon="User"
+          :placeholder="$t('login.username')"
+          :fetch-suggestions="handleSearch"
+          @select="handleSelect"
+        />
+      </template>
+      <template v-else>
+        <ElInput v-model="form.username" :placeholder="$t('login.username')" :prefix-icon="User" size="large" clearable>
+        </ElInput>
+      </template>
     </ElFormItem>
     <!-- 密码 -->
     <ElFormItem prop="password">
@@ -104,6 +102,7 @@ const { DEV: isDev } = import.meta.env
 defineOptions({ name: "Account" })
 
 const showVerifyCode = false
+const isAutoComplete = true
 const verifyCode = ref("")
 const formRef = ref()
 const form = ref({ ...defaultForm })

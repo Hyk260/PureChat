@@ -354,7 +354,7 @@ export class TIMProxy {
     const icon = avatar || `${import.meta.env.VITE_CLOUD_BASE_URL}log.png`
     const notification = new window.Notification(title, {
       icon: icon,
-      body: payload.text,
+      body: payload?.text || "",
       tag: conversationID, // 防止重复通知
     })
     notification.onclick = () => {
@@ -472,7 +472,7 @@ export class TIMProxy {
 
     const Notification = ElNotification({
       title: `${nick}提到了你`,
-      message: payload.text,
+      message: payload?.text || "",
       duration: 6000,
       // type: "info",
       onClick: () => {

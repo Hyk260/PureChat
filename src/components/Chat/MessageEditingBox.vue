@@ -42,7 +42,7 @@ const props = defineProps({
 const chatStore = useChatStore()
 
 const textInputRef = useTemplateRef("textInputRef")
-const inputText = ref(props.item.payload.text)
+const inputText = ref(props.item.payload?.text || "")
 
 const containerClass = computed(() => {
   return props.item.flow === "in" ? "mr-44" : "ml-44"

@@ -152,7 +152,7 @@ onUnmounted(() => {
           <Popover placement="left">
             <template #content>
               <span class="max-w-200 max-h-120 multi-truncate-5">
-                {{ item.payload.text }}
+                {{ item.payload?.text || "" }}
               </span>
             </template>
             <button
