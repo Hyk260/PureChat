@@ -1,11 +1,27 @@
-import { DeepSeekApi, DeepseekConfig, DeepseekModelValue } from "@/ai/platforms/deepseek/index"
-import { GitHubApi, GitHubConfig, GitHubModelValue } from "@/ai/platforms/github/index"
-import { MistralApi, MistralConfig, MistralModelValue } from "@/ai/platforms/mistral/index"
-import { OllamaApi, OllamaConfig, OllamaModelValue } from "@/ai/platforms/ollama/index"
-import { OpenAiApi, OpenaiConfig, OpenAIModelValue } from "@/ai/platforms/openai/index"
-import { QwenApi, QwenConfig, QwenModelValue } from "@/ai/platforms/qwen/index"
-import { ZeroOneApi, ZeroOneConfig, ZeroOneModelValue } from "@/ai/platforms/zeroone/index"
-import { ZhiPuApi, ZhiPuConfig, ZhiPuModelValue } from "@/ai/platforms/zhipu/index"
+import { DeepseekConfig } from "@/ai/platforms/deepseek/config"
+import { DeepseekModelValue } from "@/ai/platforms/deepseek/modelValue"
+
+import { GitHubConfig } from "@/ai/platforms/github/config"
+import { GitHubModelValue } from "@/ai/platforms/github/modelValue"
+
+import { MistralConfig } from "@/ai/platforms/mistral/config"
+import { MistralModelValue } from "@/ai/platforms/mistral/modelValue"
+
+import { OllamaConfig } from "@/ai/platforms/ollama/config"
+import { OllamaModelValue } from "@/ai/platforms/ollama/modelValue"
+
+import { OpenaiConfig } from "@/ai/platforms/openai/config"
+import { OpenAIModelValue } from "@/ai/platforms/openai/modelValue"
+
+import { QwenConfig } from "@/ai/platforms/qwen/config"
+import { QwenModelValue } from "@/ai/platforms/qwen/modelValue"
+
+import { ZeroOneModelValue } from "@/ai/platforms/zeroone/modelValue"
+import { ZeroOneConfig } from "@/ai/platforms/zeroone/config"
+
+import { ZhiPuModelValue } from "@/ai/platforms/zhipu/modelValue"
+import { ZhiPuConfig } from "@/ai/platforms/zhipu/config"
+
 import { ModelProvider } from "@/ai/types"
 
 export const ROLES = ["system", "user", "assistant"]
@@ -26,34 +42,23 @@ export const prompt = [
 ]
 
 export const modelConfig = {
-  [ModelProvider.OpenAI]: OpenaiConfig(),
-  [ModelProvider.GitHub]: GitHubConfig(),
-  [ModelProvider.ZhiPu]: ZhiPuConfig(),
-  [ModelProvider.ZeroOne]: ZeroOneConfig(),
-  [ModelProvider.Qwen]: QwenConfig(),
-  [ModelProvider.Ollama]: OllamaConfig(),
-  [ModelProvider.DeepSeek]: DeepseekConfig(),
-  [ModelProvider.Mistral]: MistralConfig(),
+  [ModelProvider.OpenAI]: OpenaiConfig,
+  [ModelProvider.GitHub]: GitHubConfig,
+  [ModelProvider.ZhiPu]: ZhiPuConfig,
+  [ModelProvider.ZeroOne]: ZeroOneConfig,
+  [ModelProvider.Qwen]: QwenConfig,
+  [ModelProvider.Ollama]: OllamaConfig,
+  [ModelProvider.DeepSeek]: DeepseekConfig,
+  [ModelProvider.Mistral]: MistralConfig,
 }
 
 export const modelValue = {
-  [ModelProvider.OpenAI]: OpenAIModelValue(),
-  [ModelProvider.GitHub]: GitHubModelValue(),
-  [ModelProvider.ZhiPu]: ZhiPuModelValue(),
-  [ModelProvider.ZeroOne]: ZeroOneModelValue(),
-  [ModelProvider.Qwen]: QwenModelValue(),
-  [ModelProvider.Ollama]: OllamaModelValue(),
-  [ModelProvider.DeepSeek]: DeepseekModelValue(),
-  [ModelProvider.Mistral]: MistralModelValue(),
-}
-
-export const API_PROVIDER_MAP = {
-  [ModelProvider.DeepSeek]: DeepSeekApi,
-  [ModelProvider.ZhiPu]: ZhiPuApi,
-  [ModelProvider.ZeroOne]: ZeroOneApi,
-  [ModelProvider.Qwen]: QwenApi,
-  [ModelProvider.Ollama]: OllamaApi,
-  [ModelProvider.GitHub]: GitHubApi,
-  [ModelProvider.OpenAI]: OpenAiApi,
-  [ModelProvider.Mistral]: MistralApi,
+  [ModelProvider.OpenAI]: OpenAIModelValue,
+  [ModelProvider.GitHub]: GitHubModelValue,
+  [ModelProvider.ZhiPu]: ZhiPuModelValue,
+  [ModelProvider.ZeroOne]: ZeroOneModelValue,
+  [ModelProvider.Qwen]: QwenModelValue,
+  [ModelProvider.Ollama]: OllamaModelValue,
+  [ModelProvider.DeepSeek]: DeepseekModelValue,
+  [ModelProvider.Mistral]: MistralModelValue,
 }

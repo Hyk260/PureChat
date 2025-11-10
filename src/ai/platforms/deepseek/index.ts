@@ -1,17 +1,13 @@
-import { OpenAiApi } from "@/ai/platforms/openai/index"
-import { useAccessStore } from "@/ai/utils"
-import { hostPreview } from "@/utils/api"
+import { OpenAIAPIClient } from "@/ai/platforms/openai/index"
 
-export * from "./config"
-export * from "./modelValue"
+import type { Provider } from "@/ai/types"
 
-export class DeepSeekApi extends OpenAiApi {
-  constructor(provider) {
+export class DeepSeekApi extends OpenAIAPIClient {
+  constructor(provider: Provider) {
     super(provider)
   }
-  getPath(path?: string): string {
-    const baseUrl = useAccessStore(this.provider).openaiUrl
-    const paths = hostPreview(baseUrl, path)
-    return paths
+
+  getBaseURL() {
+    return super.getBaseURL() || import.meta.env.VITE_DEEPSEEK_BASE_URL
   }
 }

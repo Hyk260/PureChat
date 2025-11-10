@@ -1,6 +1,6 @@
 import { cloneDeep } from "lodash-es"
 
-import { ClientApi } from "@/ai/api"
+import AiProvider from "@/ai"
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { ModelProvider, ModelProviderKey } from "@/ai/types"
 import { prettyObject } from "@/ai/utils"
@@ -24,7 +24,7 @@ interface ChatServiceParams {
 
 class ChatService {
   async sendMessage({ messages, chat, provider, loadMessage }: ChatServiceParams) {
-    const api = new ClientApi(provider)
+    const api = new AiProvider(provider)
     const startMsg = loadMessage || this.createStartMessage(chat)
 
     if (this.shouldAbortSend(api, startMsg)) return
@@ -37,7 +37,7 @@ class ChatService {
       messages: this.shouldUseCurrentMessages() ? useChatStore().currentMessageList : messages,
       config: {
         stream: true,
-        model: api.config().model,
+        model: api.config.model,
       },
       onUpdate: (data: AIResponse) => this.handleUpdate(startMsg, data),
       onFinish: (data: AIResponse) => {
@@ -148,9 +148,9 @@ class ChatService {
   /**
    * 检查是否应该中止发送消息
    */
-  private shouldAbortSend(api: ClientApi, startMsg: DB_Message): boolean {
+  private shouldAbortSend(api: AiProvider, startMsg: DB_Message): boolean {
     // Ollama 模型不需要 token 检查
-    if (api.llm.provider === ModelProvider.Ollama || api.config().token) {
+    if (api.llm.provider === ModelProvider.Ollama || api.config.token) {
       return false
     }
 

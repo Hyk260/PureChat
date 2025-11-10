@@ -18,4 +18,6 @@ export enum ModelProvider {
   // V0 = 'v0',
 }
 
+export type Provider = Lowercase<keyof typeof ModelProvider>
+
 export type ModelProviderKey = Lowercase<keyof typeof ModelProvider>

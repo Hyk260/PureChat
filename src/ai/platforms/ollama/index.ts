@@ -1,10 +1,9 @@
-import { OpenAiApi } from "@/ai/platforms/openai/index"
+import { OpenAIAPIClient } from "@/ai/platforms/openai/index"
 
-export * from "./config"
-export * from "./modelValue"
+import type { Provider } from "@/ai/types"
 
-export class OllamaApi extends OpenAiApi {
-  constructor(provider) {
+export class OllamaApi extends OpenAIAPIClient {
+  constructor(provider: Provider) {
     super(provider)
   }
 }

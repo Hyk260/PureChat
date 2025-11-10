@@ -229,7 +229,7 @@ import { Atom, Eye, ToyBrick, CircleQuestionMark as QuestionFilled, RefreshCcw a
 import { cloneDeep, debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
 
-import { ClientApi } from "@/ai/api"
+import AiProvider from "@/ai"
 import { modelConfig, modelValue } from "@/ai/constant"
 import { ModelSelect } from "@/ai/resources"
 import { getModelIcon, useAccessStore } from "@/ai/utils"
@@ -302,7 +302,7 @@ function updateModelList(newModels: Model[]) {
 
 async function onRefresh() {
   const provider = modelProvider.value
-  const api = new ClientApi(provider)
+  const api = new AiProvider(provider)
   const list = await api.llm.getModels()
   updateModelList(list)
 }
@@ -385,7 +385,7 @@ async function handleCheckToken(item: ModelConfigItem) {
   if (modelData.value?.Token?.defaultValue) {
     setLoading(true)
     const provider = modelProvider.value
-    const api = new ClientApi(provider)
+    const api = new AiProvider(provider)
     const { valid, error } = await api.llm.checkConnectivity({ model: item?.defaultValue ?? "" })
     if (valid) {
       setLoading(false)
