@@ -11,8 +11,9 @@ import { scrollToDomPosition } from "@/utils/chat"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
 import { checkoutNetState, getConversationList, kickedOutReason } from "./utils"
+import { GROUP_TIP_OPERATION_TYPE } from "@/database/schemas/message"
 
-import type { DB_Message, DB_Session, GroupSystemNoticePayloadType } from "@/types"
+import type { DB_Message, DB_Session, GroupSystemNoticePayloadType, GroupTipOperationType } from "@/types"
 import type { Profile } from "@/types/tencent-cloud-chat"
 
 /**
@@ -34,23 +35,6 @@ export class TIMProxy {
   private userProfile: Profile | null = null
   private once: boolean = false
   isSDKReady: boolean = false
-  private readonly GROUP_TIP_TYPES = {
-    MEMBER_JOIN: 1, // 有成员加群
-    MEMBER_QUIT: 2, // 有群成员退群
-    MEMBER_KICKED_OUT: 3, // 有群成员被踢出群
-    MEMBER_SET_ADMIN: 4, // 有群成员被设为管理员
-    MEMBER_CANCELED_ADMIN: 5, // 有群成员被撤销管理员
-  }
-  private readonly GROUP_SYSTEM_NOTICE_TYPES = {
-    /**
-     * 被踢出群组
-     */
-    KICKED_OUT: 4,
-    /**
-     * 群组被解散
-     */
-    GROUP_DISMISSED: 5,
-  }
 
   constructor() {}
 
@@ -65,11 +49,7 @@ export class TIMProxy {
   }
 
   init() {
-    if (this.once) {
-      console.log("[chat] TIMProxy 已初始化，跳过重复初始化")
-      return
-    }
-
+    if (this.once) return
     this.once = true
     this.initListener()
   }
@@ -85,41 +65,26 @@ export class TIMProxy {
   }
 
   registerCoreEvents() {
-    const coreEvents = [
-      { event: "sdkStateReady", handler: this.onReadyStateUpdate },
-      { event: "sdkStateNotReady", handler: this.onReadyStateUpdate },
-      { event: "onConversationListUpdated", handler: this.onUpdateConversationList },
-      { event: "onMessageModified", handler: this.onMessageModified },
-      { event: "onMessageReceived", handler: this.onReceiveMessage },
-    ]
-
-    coreEvents.forEach(({ event, handler }) => {
-      chat.on(event, handler, this)
-    })
+    chat.on("sdkStateReady", (data: { name: string }) => this.onReadyStateUpdate(data))
+    chat.on("sdkStateNotReady", (data: { name: string }) => this.onReadyStateUpdate(data))
+    chat.on("onConversationListUpdated", (data: { data: DB_Session[] }) => this.onUpdateConversationList(data))
+    chat.on("onMessageModified", (data: { data: DB_Message[] }) => this.onMessageModified(data))
+    chat.on("onMessageReceived", (data: { data: DB_Message[] }) => this.onReceiveMessage(data))
   }
 
   registerCloudEvents() {
-    const cloudEvents = [
-      { event: "onMessageRevoked", handler: this.onMessageRevoked },
-      { event: "onGroupListUpdated", handler: this.onUpdateGroupList },
-      { event: "kickedOut", handler: this.onKickOut },
-      { event: "error", handler: this.onError },
-      { event: "netStateChange", handler: this.onNetStateChange },
-      { event: "onTotalUnreadMessageCountUpdated", handler: this.onTotalUnreadMessageCountUpdated },
-      // { event: "onFriendApplicationListUpdated", handler: this.onFriendApplicationListUpdated }
-      // { event: "onFriendGroupListUpdated", handler: this.onFriendGroupListUpdated }
-      // { event: "onUserStatusUpdated", handler: this.onUserStatusUpdated }
-    ]
-
-    cloudEvents.forEach(({ event, handler }) => {
-      chat.on(event, handler, this)
-    })
+    chat.on("onMessageRevoked", (data: { data: DB_Message[] }) => this.onMessageRevoked(data))
+    chat.on("onGroupListUpdated", (data: { data: any }) => this.onUpdateGroupList(data))
+    chat.on("kickedOut", (data: { data: { type: string } }) => this.onKickOut(data))
+    chat.on("error", (data: { data: { message: string } }) => this.onError(data))
+    chat.on("netStateChange", (data: { data: { state: string } }) => this.onNetStateChange(data))
+    chat.on("onTotalUnreadMessageCountUpdated", (data: { data: any }) => this.onTotalUnreadMessageCountUpdated(data))
   }
 
   /**
    * 处理 SDK 就绪状态更新
    */
-  onReadyStateUpdate({ name }: { name: string }) {
+  private onReadyStateUpdate({ name }: { name: string }) {
     console.log("[chat] SDK 状态更新:", name)
     this.isSDKReady = name === "sdkStateReady"
     if (!this.isSDKReady) {
@@ -207,7 +172,7 @@ export class TIMProxy {
   /**
    * 根据消息类型进行处理
    */
-  processMessageByType(data: DB_Message[]) {
+  private processMessageByType(data: DB_Message[]) {
     const message = data[0]
 
     switch (message?.type) {
@@ -381,10 +346,10 @@ export class TIMProxy {
     if (currentSessionId !== data[0]?.conversationID) return
 
     const { operationType } = message.payload as GroupSystemNoticePayloadType
-    const memberOperationTypes = Object.values(this.GROUP_TIP_TYPES)
+    const memberOperationTypes = Object.values(GROUP_TIP_OPERATION_TYPE)
 
     // 检查是否为群成员相关操作
-    if (memberOperationTypes.includes(operationType)) {
+    if (memberOperationTypes.includes(operationType as GroupTipOperationType)) {
       console.log("[chat] 群成员变动，更新成员列表")
       useGroupStore().handleGroupMemberList({ groupID: currentSessionId })
     }
@@ -402,10 +367,9 @@ export class TIMProxy {
     console.log("[chat] 处理群系统通知:", data)
 
     const { operationType } = message.payload as GroupSystemNoticePayloadType
-    const { KICKED_OUT, GROUP_DISMISSED } = this.GROUP_SYSTEM_NOTICE_TYPES
 
     // 处理被踢出或群解散的情况
-    if ([KICKED_OUT, GROUP_DISMISSED].includes(operationType)) {
+    if ([4, 5].includes(operationType)) {
       const currentSessionId = useChatStore().currentSessionId
       console.log("[chat] 群组被解散或被踢出，删除会话")
       useChatStore().deleteSession({ sessionId: currentSessionId })

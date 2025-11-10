@@ -88,9 +88,38 @@ export const MergerPayload = BasePayload.extend({
   abstractList: z.array(z.string()),
 })
 
+/**
+ * 群系统通知的 payload 结构
+ * @see https://web.sdk.qcloud.com/im/doc/zh-cn/Message.html#.GroupSystemNoticePayload
+ */
 export const GroupSystemNoticePayload = BasePayload.extend({
   operationType: z.number(),
 })
+
+/**
+ * 群提示消息操作类型常量
+ * 对应 TIM.TYPES 中的群提示类型
+ */
+export const GROUP_TIP_OPERATION_TYPE = {
+  /** 有成员加群 */
+  GRP_TIP_MBR_JOIN: 1,
+  /** 有群成员退群 */
+  GRP_TIP_MBR_QUIT: 2,
+  /** 有群成员被踢出群 */
+  GRP_TIP_MBR_KICKED_OUT: 3,
+  /** 有群成员被设为管理员 */
+  GRP_TIP_MBR_SET_ADMIN: 4,
+  /** 有群成员被撤销管理员 */
+  GRP_TIP_MBR_CANCELED_ADMIN: 5,
+  /** 群组资料变更 */
+  GRP_TIP_GRP_PROFILE_UPDATED: 6,
+  /** 群成员资料变更，例如：群成员被禁言 */
+  GRP_TIP_MBR_PROFILE_UPDATED: 7,
+  /** 封禁直播群群成员 */
+  GRP_TIP_BAN_AVCHATROOM_MEMBER: 10,
+  /** 解封直播群群成员 */
+  GRP_TIP_UNBAN_AVCHATROOM_MEMBER: 11,
+} as const
 
 export const GroupTipPayload = BasePayload.extend({
   operatorID: z.string(),
@@ -100,6 +129,10 @@ export const GroupTipPayload = BasePayload.extend({
    * 2	邀请加群
    */
   groupJoinType: z.number(),
+  /**
+   * 操作类型
+   * @see GROUP_TIP_OPERATION_TYPE
+   */
   operationType: z.number(),
   memberList: z.array(
     z.object({
@@ -331,3 +364,8 @@ export type GroupTipPayloadType = z.infer<typeof GroupTipPayload>
 export type MergerPayloadType = z.infer<typeof MergerPayload>
 
 export type GroupSystemNoticePayloadType = z.infer<typeof GroupSystemNoticePayload>
+
+/**
+ * 群提示消息操作类型
+ */
+export type GroupTipOperationType = (typeof GROUP_TIP_OPERATION_TYPE)[keyof typeof GROUP_TIP_OPERATION_TYPE]
