@@ -69,6 +69,7 @@
     "nprogress": "^0.2.0",
     "numeral": "^2.0.6",
     "ollama": "^0.5.15",
+    "openai": "^6.8.1",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.2.0",
     "pinyin-pro": "^3.18.5",
