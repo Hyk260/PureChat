@@ -14,6 +14,7 @@
 <script setup lang="ts">
 import { getModelIcon, getValueByKey, isFullStaffGroup, prefix } from "@/ai/utils"
 import { isRobot } from "@/utils/chat"
+import { getBaseModelName } from "@/ai/reasoning"
 
 import type { DB_Session } from "@/database/schemas/session"
 
@@ -60,7 +61,7 @@ const modelInfo = computed(() => {
 
   return {
     visible: isVisible,
-    id: props.model?.id ?? "",
+    id: getBaseModelName(props.model?.id ?? ""),
     icon: props.model?.icon ? props.model?.icon : getModelIcon(props.userID || ""),
   }
 })

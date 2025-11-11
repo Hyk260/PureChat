@@ -13,7 +13,7 @@ export const formatTokenNumber = (num: number): string => {
   return kiloToken < 1000 ? `${kiloToken}K` : `${Math.floor(kiloToken / 1000)}M`
 }
 
-export function formatTokenTip(item: { tokens: number }) {
+export function formatTokenTip(item: { tokens?: number }) {
   const token = item.tokens === 0 ? "∞" : numeral(item.tokens).format("0,0")
   return `该模型单个会话最多支持 {{tokens}} Tokens`.replace("{{tokens}}", token)
 }

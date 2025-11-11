@@ -25,7 +25,7 @@
             <SvgIcon class="align-text-bottom" :local-icon="robotIcon" />
           </div>
           <div class="list flex-bc w-full">
-            <span>{{ item.displayName || item.id }}</span>
+            <span>{{ getBaseModelName(item.displayName || item.id) }}</span>
             <span class="box">
               <ElTooltip
                 v-if="item.vision"
@@ -81,6 +81,7 @@ import { cloneDeep, isEmpty } from "lodash-es"
 import { storeToRefs } from "pinia"
 
 import { modelValue } from "@/ai/constant"
+import { getBaseModelName } from "@/ai/reasoning"
 import { ModelSelect } from "@/ai/resources"
 import { getModelIcon, useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"

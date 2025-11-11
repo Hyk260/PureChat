@@ -254,6 +254,14 @@ const Ollama: ModelProviderCard = {
       id: "command-r-plus",
     },
     {
+      tokens: 65_536,
+      description:
+        "DeepSeek-R1 是一款强化学习（RL）驱动的推理模型，解决了模型中的重复性和可读性问题。在 RL 之前，DeepSeek-R1 引入了冷启动数据，进一步优化了推理性能。它在数学、代码和推理任务中与 OpenAI-o1 表现相当，并且通过精心设计的训练方法，提升了整体效果。",
+      displayName: "DeepSeek R1",
+      id: "deepseek-r1",
+      reasoning: true,
+    },
+    {
       tokens: 32_768,
       description: "DeepSeek V2 是高效的 Mixture-of-Experts 语言模型，适用于经济高效的处理需求。",
       displayName: "DeepSeek V2 16B",

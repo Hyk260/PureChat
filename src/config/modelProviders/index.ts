@@ -6,6 +6,7 @@ import GithubProvider from "./github"
 import DeepSeekProvider from "./deepseek"
 import QwenProvider from "./qwen"
 import MistralProvider from "./mistral"
+import { ModelProviderCard, ChatModelCard } from "@/types/llm"
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
   OpenAIProvider,
@@ -17,6 +18,32 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   DeepSeekProvider,
   MistralProvider,
 ]
+
+export const buildDefaultModelList = (map: Record<string, ModelProviderCard>) => {
+  let models: ChatModelCard[] = []
+
+  Object.entries(map).forEach(([_provider, providerCard]) => {
+    if (providerCard?.chatModels && Array.isArray(providerCard.chatModels)) {
+      const newModels = providerCard.chatModels.map((model) => ({
+        ...model,
+      }))
+      models = models.concat(newModels)
+    }
+  })
+
+  return models
+}
+
+export const DEFAULT_MODEL_LIST = buildDefaultModelList({
+  openai: OpenAIProvider,
+  zhipu: ZhiPuProvider,
+  qwen: QwenProvider,
+  zeroone: ZeroOneProvider,
+  ollama: OllamaProvider,
+  github: GithubProvider,
+  deepseek: DeepSeekProvider,
+  mistral: MistralProvider,
+})
 
 export { default as DeepSeekProviderCard } from "./deepseek"
 export { default as GithubProviderCard } from "./github"

@@ -47,7 +47,7 @@
                 <ElOption
                   v-for="models in item.options.chatModels"
                   :key="models.id"
-                  :label="models.displayName"
+                  :label="getBaseModelName(models.displayName)"
                   :value="models.id"
                 >
                   <div class="bot-model-option">
@@ -61,7 +61,7 @@
                     <div class="flex flex-col h-full gap-4">
                       <div class="models-name">
                         <span>
-                          {{ models.displayName || models.id }}
+                          {{ getBaseModelName(models.displayName || models.id) }}
                         </span>
                         <ElTooltip
                           v-if="models?.vision"
@@ -91,7 +91,7 @@
                           <Atom :size="16" color="#bd54c6" />
                         </ElTooltip>
                       </div>
-                      <div class="models-id">{{ models.id }}</div>
+                      <div class="models-id">{{ getLowerBaseModelName(models.id) }}</div>
                     </div>
                   </div>
                 </ElOption>
@@ -102,7 +102,11 @@
                   <span>已选择 {{ toDisplayCount(item?.collapse?.length) }} 个</span>
                 </div>
                 <div>
-                  <ElTooltip v-if="item?.options?.id === 'openai'" :content="modelTooltipLabel" placement="top">
+                  <ElTooltip
+                    v-if="['openai', 'deepseek'].includes(item?.options?.id)"
+                    :content="modelTooltipLabel"
+                    placement="top"
+                  >
                     <ElIcon class="refresh" @click="onRefresh">
                       <Refresh />
                     </ElIcon>
@@ -180,7 +184,7 @@
                 <ElOption
                   v-for="models in modelData['Model']?.options?.chatModels"
                   :key="models.id"
-                  :label="models.displayName"
+                  :label="getBaseModelName(models.displayName)"
                   :value="models.id"
                 >
                   <div class="bot-model-option">
@@ -194,7 +198,7 @@
                     <div class="flex flex-col h-full gap-4">
                       <div class="models-name">
                         <span>
-                          {{ models.displayName || models.id }}
+                          {{ getBaseModelName(models.displayName || models.id) }}
                         </span>
                       </div>
                     </div>
@@ -230,6 +234,7 @@ import { cloneDeep, debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
 
 import AiProvider from "@/ai"
+import { getLowerBaseModelName, getBaseModelName } from "@/ai/reasoning"
 import { modelConfig, modelValue } from "@/ai/constant"
 import { ModelSelect } from "@/ai/resources"
 import { getModelIcon, useAccessStore } from "@/ai/utils"

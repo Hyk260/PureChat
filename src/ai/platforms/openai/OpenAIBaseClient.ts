@@ -1,7 +1,8 @@
+import { OpenAI } from "openai"
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source"
 
 import { REQUEST_TIMEOUT_MS } from "@/ai/constant"
-import { isClaudeReasoningModel } from "@/ai/reasoning"
+import { isClaudeReasoningModel, getLowerBaseModelName } from "@/ai/reasoning"
 import { ChatOptions, FewShots, LLMConfig, LLMParams, ModelProvider, OpenAIListModelResponse } from "@/ai/types"
 import { isNotSupportTemperatureAndTopP } from "@/ai/utils"
 import {
@@ -37,7 +38,7 @@ export abstract class OpenAIBaseClient {
     this.provider = provider
   }
 
-  getBaseURL(): string {
+  protected getBaseURL(): string {
     return useAccessStore(this.provider).openaiUrl
   }
 
@@ -507,36 +508,84 @@ export abstract class OpenAIBaseClient {
   }
 
   /**
-   * 获取模型列表
+   * 获取原始模型列表
    */
-  async getModels() {
+  async listModels(): Promise<OpenAI.Models.Model[]> {
     const url = this.getPath(OpenaiPath.ListModelPath)
     if (!url.startsWith("http")) {
       window.$message?.error("接口地址格式错误")
       throw new Error("接口地址格式错误")
     }
-    const response = await fetch(url, {
-      method: "GET",
-      headers: this.getHeaders(),
-    })
 
-    const responseJson = (await response.json()) as OpenAIListModelResponse
-    const chatModels = responseJson.data.filter((model) => model.id.startsWith("gpt-") || model.id.startsWith("openai"))
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: this.getHeaders(),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        const errorMessage = errorData.error?.message || `获取模型列表失败 (${response.status})`
+        window.$message?.error(errorMessage)
+        throw new Error(errorMessage)
+      }
+
+      const responseJson = (await response.json()) as OpenAIListModelResponse
+      return responseJson.data.map((model) => ({
+        id: model.id,
+        object: model.object || "model",
+        created: (model as any).created || 0,
+        owned_by: (model as any).owned_by || "",
+      })) as OpenAI.Models.Model[]
+    } catch (error) {
+      if (error instanceof Error && error.message) throw error
+      const errorMessage = error instanceof Error ? error.message : "获取模型列表失败"
+      window.$message?.error(errorMessage)
+      throw new Error(errorMessage)
+    }
+  }
+
+  /**
+   * 判断模型是否应该被包含在结果中
+   * 子类可以覆盖此方法来实现自定义过滤逻辑
+   */
+  protected shouldIncludeModel(model: OpenAI.Models.Model): boolean {
+    const modelId = model.id.toLowerCase()
+    return modelId.startsWith("gpt-") || modelId.startsWith("openai")
+  }
+
+  /**
+   * 获取模型列表
+   */
+  async getModels() {
+    const { DEFAULT_MODEL_LIST } = await import("@/config/modelProviders")
+    const models = await this.listModels()
+    const filteredModels = models.filter((model) => this.shouldIncludeModel(model))
 
     const seen = new Set<string>()
-    const uniqueModels = [] as typeof chatModels
-    for (const m of chatModels) {
-      if (!seen.has(m.id)) {
-        seen.add(m.id)
-        uniqueModels.push(m)
+    const uniqueModels: OpenAI.Models.Model[] = []
+    for (const model of filteredModels) {
+      if (!seen.has(model.id)) {
+        seen.add(model.id)
+        uniqueModels.push(model)
       }
     }
 
-    return uniqueModels.map((model) => ({
-      id: model.id,
-      icon: "",
-      displayName: model.id,
-    }))
+    return uniqueModels.map((model) => {
+      const knownModel = DEFAULT_MODEL_LIST.find(
+        (m) => m.id === getLowerBaseModelName(model.id) || m.displayName === model.id
+      )
+      return {
+        id: model.id,
+        icon: "",
+        tokens: knownModel?.tokens || 0,
+        // enabled: knownModel?.enabled || false,
+        functionCall: knownModel?.functionCall || false,
+        reasoning: knownModel?.displayName?.toLowerCase().includes("deepseek-r1") || knownModel?.reasoning || false,
+        vision: knownModel?.vision || false,
+        displayName: model.id,
+      }
+    })
   }
 
   /**
@@ -574,7 +623,6 @@ export abstract class OpenAIBaseClient {
         console.log("[Check] Response received:", resJson)
         return {
           valid: false,
-
           error: resJson?.error?.message || "未知错误",
         }
       }

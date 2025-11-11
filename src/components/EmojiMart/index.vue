@@ -32,6 +32,9 @@ const DEFAULT_CDN_SOURCES = [
   "https://cdn.bootcdn.net/ajax/libs/emoji-mart/data", // BootCDN
 ]
 
+const EMOJI_DATA_CACHE_KEY = "emoji_mart_data_cache"
+const EMOJI_I18N_CACHE_KEY = "emoji_mart_i18n_cache"
+
 const PICKER_OPTIONS = {
   noCountryFlags: true,
   skinTonePosition: "none" as const,
@@ -67,26 +70,108 @@ const loadLocalData = async () => {
   return { data: "", i18n: "" }
 }
 
+/**
+ * 从 localStorage 获取缓存的 emoji 数据
+ */
+const getCachedEmojiData = (): { data: any; i18n: any } | null => {
+  try {
+    const cachedData = localStorage.getItem(EMOJI_DATA_CACHE_KEY)
+    const cachedI18n = localStorage.getItem(EMOJI_I18N_CACHE_KEY)
+
+    if (cachedData && cachedI18n) {
+      return {
+        data: JSON.parse(cachedData),
+        i18n: JSON.parse(cachedI18n),
+      }
+    }
+  } catch (error) {
+    console.warn("读取 emoji 缓存失败:", error)
+    // 清除可能损坏的缓存
+    localStorage.removeItem(EMOJI_DATA_CACHE_KEY)
+    localStorage.removeItem(EMOJI_I18N_CACHE_KEY)
+  }
+  return null
+}
+
+/**
+ * 将 emoji 数据保存到 localStorage
+ */
+const setCachedEmojiData = (data: any, i18n: any): void => {
+  try {
+    localStorage.setItem(EMOJI_DATA_CACHE_KEY, JSON.stringify(data))
+    localStorage.setItem(EMOJI_I18N_CACHE_KEY, JSON.stringify(i18n))
+  } catch (error) {
+    console.warn("保存 emoji 缓存失败:", error)
+    // 如果存储空间不足，尝试清除旧缓存
+    try {
+      localStorage.removeItem(EMOJI_DATA_CACHE_KEY)
+      localStorage.removeItem(EMOJI_I18N_CACHE_KEY)
+      localStorage.setItem(EMOJI_DATA_CACHE_KEY, JSON.stringify(data))
+      localStorage.setItem(EMOJI_I18N_CACHE_KEY, JSON.stringify(i18n))
+    } catch (retryError) {
+      console.error("重试保存 emoji 缓存失败:", retryError)
+    }
+  }
+}
+
+/**
+ * 从单个 CDN 源获取数据
+ */
 const fetchCdnData = async (url: string): Promise<any> => {
   const response = await fetch(url)
   if (!response.ok) throw new Error(`HTTP ${response.status}`)
   return response.json()
 }
 
+/**
+ * 并行从多个 CDN 源加载数据，使用最先成功的响应
+ * 支持缓存机制，优先使用 localStorage 中的缓存
+ */
 const loadCdnData = async (sources: string[]): Promise<any> => {
-  const errors: Error[] = []
-
-  for (const url of sources) {
-    try {
-      const data = await fetchCdnData(url)
-      const zh = await import("@/assets/emoji-mart/langs/zh.json")
-      return { data, i18n: zh.default || zh }
-    } catch (error) {
-      errors.push(error as Error)
-    }
+  // 优先检查缓存
+  const cachedData = getCachedEmojiData()
+  if (cachedData) {
+    return cachedData
   }
 
-  throw new AggregateError(errors, "所有CDN源加载失败")
+  // 加载 i18n 数据（本地资源）
+  const zh = await import("@/assets/emoji-mart/langs/zh.json")
+  const i18n = zh.default || zh
+
+  // 创建一个 Promise，它会在第一个成功的请求完成时 resolve
+  // 如果所有请求都失败，则 reject
+  return new Promise((resolve, reject) => {
+    let completedCount = 0
+    const errors: Array<{ url: string; error: any }> = []
+    let hasResolved = false
+
+    // 为每个 CDN 源创建一个请求
+    sources.forEach((url) => {
+      fetchCdnData(url)
+        .then((data) => {
+          // 如果还没有成功的结果，使用这个数据
+          if (!hasResolved) {
+            hasResolved = true
+            // 保存到缓存
+            setCachedEmojiData(data, i18n)
+            resolve({ data, i18n })
+          }
+        })
+        .catch((error) => {
+          // 收集错误信息
+          errors.push({ url, error })
+          completedCount++
+
+          // 如果所有请求都完成了且没有成功的，则 reject
+          if (completedCount === sources.length && !hasResolved) {
+            const errorMessages = errors.map(
+              ({ url, error }) => new Error(`CDN源 ${url} 加载失败: ${error?.message || error || "未知错误"}`)
+            )
+            reject(new AggregateError(errorMessages, "所有CDN源加载失败"))
+          }
+        })
+    })
+  })
 }
 
 const loadEmojiData = async (): Promise<{ data: any; i18n: any }> => {
