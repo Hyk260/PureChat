@@ -53,6 +53,7 @@ defineExpose({ previewPanelRef })
     flex-direction: column;
     background: var(--el-bg-color);
     min-width: 400px;
+    // padding-right: 5px;
   }
 
   .preview-panel {
@@ -60,6 +61,7 @@ defineExpose({ previewPanelRef })
     flex: 1;
     background: white;
     min-width: 400px;
+    // padding-left: 5px;
   }
 }
 </style>

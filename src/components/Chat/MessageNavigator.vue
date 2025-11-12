@@ -1,119 +1,158 @@
 <script setup lang="ts">
 import { Popover } from "ant-design-vue"
 import { ChevronDown, ChevronUp } from "lucide-vue-next"
+import { useIntersectionObserver } from "@vueuse/core"
+import { useState } from "@/hooks/useState"
 
 import type { DB_Message } from "@/types"
 
+const MIN_WIDTH = 16
+const MAX_WIDTH = 30
+const MAX_CONTENT_LENGTH = 320
+const MIN_MESSAGES = 4
+
 const props = defineProps<{
   messages: DB_Message[]
-  messageRefMap: Map<string, HTMLElement>
-  messageView: any
-}>()
-
-const emit = defineEmits<{
-  navigate: [index: number]
+  scrollbarRef: Ref<HTMLElement | null>
 }>()
 
 const activeIndex = ref<number>(0)
-const intersectionObserver = ref<IntersectionObserver | null>(null)
+const [isHovered, setIsHovered] = useState(false)
 
 const scrollToMessage = (messageId: string, i: number) => {
-  const el = props.messageRefMap.get(messageId)
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "start" })
-    activeIndex.value = i
-    emit("navigate", i)
-  }
+  const el = document.getElementById(`choice-${messageId}`)
+  if (!el) return
+  el.scrollIntoView({ behavior: "smooth", block: "start" })
+  activeIndex.value = i
 }
 
 const messagesList = computed(() => props.messages.filter((t) => !t?.isTimeDivider))
 
-const getScrollContainer = (): HTMLElement | null => {
-  const mv = props.messageView as any
-  if (!mv) {
-    return document.querySelector(".message-info-view-content")
-  }
-  if (mv instanceof HTMLElement) return mv
-  if (mv.$el instanceof HTMLElement) return mv.$el
-  if (mv.el instanceof HTMLElement) return mv.el
-  return null
+const showNavigator = computed(() => messagesList.value.length > MIN_MESSAGES)
+
+// const initIntersectionObserver = async () => {
+//   if (!messagesList.value.length) return
+
+//   const rootEl = getScrollContainer()
+
+//   if (intersectionObserver.value) {
+//     intersectionObserver.value.disconnect()
+//   }
+
+//   intersectionObserver.value = new IntersectionObserver(
+//     (entries) => {
+//       // 找到最接近视口顶部的可见元素
+//       let best: { entry: IntersectionObserverEntry; distance: number } | null = null
+
+//       for (const entry of entries) {
+//         if (!entry.isIntersecting) continue // 只处理可见的元素
+
+//         const rect = entry.boundingClientRect
+//         const distance = Math.abs(rect.top) // 距离视口顶部绝对距离
+
+//         if (!best || distance < best.distance) {
+//           best = { entry, distance }
+//         }
+//       }
+
+//       if (best) {
+//         const msgId = (best.entry.target as HTMLElement).getAttribute("data-message-id")
+//         if (msgId) {
+//           const idx = messagesList.value.findIndex((msg) => msg.ID === msgId)
+//           if (idx !== -1 && idx !== activeIndex.value) {
+//             activeIndex.value = idx
+//           }
+//         }
+//       }
+//     },
+//     {
+//       root: rootEl,
+//       // rootMargin: "-20% 0px -20% 0px",
+//       rootMargin: "-20% 0px -70% 0px",
+//       threshold: [0, 0.1, 0.5, 1],
+//     }
+//   )
+
+//   // messagesList.value.forEach((message) => {
+//   //   const element = props.messageRefMap.get(message.ID)
+//   //   if (element) {
+//   //     element.setAttribute("data-message-id", message.ID)
+//   //     intersectionObserver.value?.observe(element)
+//   //   }
+//   // })
+// }
+
+const getIndicatorWidth = (content: string | undefined) => {
+  if (!content) return MIN_WIDTH
+
+  const ratio = Math.min(content.length / MAX_CONTENT_LENGTH, 1)
+
+  return MIN_WIDTH + (MAX_WIDTH - MIN_WIDTH) * ratio
 }
 
-const initIntersectionObserver = async () => {
-  if (!messagesList.value.length) return
+const getPreviewText = (content: string | undefined) => {
+  if (!content) return ""
 
-  const rootEl = getScrollContainer()
+  const normalized = content.replaceAll(/\s+/g, " ").trim()
+  if (!normalized) return ""
 
-  if (intersectionObserver.value) {
-    intersectionObserver.value.disconnect()
-  }
+  return normalized.slice(0, 100) + (normalized.length > 100 ? "…" : "")
+}
 
-  intersectionObserver.value = new IntersectionObserver(
-    (entries) => {
-      // 找到最接近视口顶部的可见元素
-      let best: { entry: IntersectionObserverEntry; distance: number } | null = null
-
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue // 只处理可见的元素
-
-        const rect = entry.boundingClientRect
-        const distance = Math.abs(rect.top) // 距离视口顶部绝对距离
-
-        if (!best || distance < best.distance) {
-          best = { entry, distance }
-        }
+const handleStep = (direction: "prev" | "next") => {
+  if (direction === "prev") {
+    if (activeIndex.value > 0) {
+      const prevIndex = activeIndex.value - 1
+      const prevMessage = messagesList.value[prevIndex]
+      if (prevMessage) {
+        scrollToMessage(prevMessage.ID, prevIndex)
       }
-
-      if (best) {
-        const msgId = (best.entry.target as HTMLElement).getAttribute("data-message-id")
-        if (msgId) {
-          const idx = messagesList.value.findIndex((msg) => msg.ID === msgId)
-          if (idx !== -1 && idx !== activeIndex.value) {
-            activeIndex.value = idx
-            emit("navigate", idx)
-          }
-        }
-      }
-    },
-    {
-      root: rootEl,
-      // rootMargin: "-20% 0px -20% 0px",
-      rootMargin: "-20% 0px -70% 0px",
-      threshold: [0, 0.1, 0.5, 1],
     }
-  )
+  } else {
+    if (activeIndex.value > 0) {
+      const prevIndex = activeIndex.value - 1
+      const prevMessage = messagesList.value[prevIndex]
+      if (prevMessage) {
+        scrollToMessage(prevMessage.ID, prevIndex)
+      }
+    }
+  }
+}
 
+const initIntersectionObserver = () => {
   messagesList.value.forEach((message) => {
-    const element = props.messageRefMap.get(message.ID)
-    if (element) {
-      element.setAttribute("data-message-id", message.ID)
-      intersectionObserver.value?.observe(element)
+    const el = document.getElementById(message.ID)
+    if (el) {
+      useIntersectionObserver(
+        el,
+        ([entry]) => {
+          if (!entry) return
+          // debugger
+          const msgId = entry.target.getAttribute("id")
+
+          // console.log("msgId", entry.target?.innerText)
+          if (msgId) {
+            const idx = messagesList.value.findIndex((msg) => msg.ID === msgId)
+            if (idx !== -1 && idx !== activeIndex.value) {
+              activeIndex.value = idx
+            }
+          }
+
+          const isVisible = entry?.isIntersecting || false
+          console.log("isVisible", isVisible)
+        },
+        {
+          root: props.scrollbarRef?.wrapRef,
+          rootMargin: "0px 0px 10px 0px",
+          threshold: 1.0,
+        }
+      )
     }
   })
 }
 
-const navigatePrev = () => {
-  if (activeIndex.value > 0) {
-    const prevIndex = activeIndex.value - 1
-    const prevMessage = messagesList.value[prevIndex]
-    if (prevMessage) {
-      scrollToMessage(prevMessage.ID, prevIndex)
-    }
-  }
-}
-
-const navigateNext = () => {
-  if (activeIndex.value < messagesList.value.length - 1) {
-    const nextIndex = activeIndex.value + 1
-    const nextMessage = messagesList.value[nextIndex]
-    if (nextMessage) {
-      scrollToMessage(nextMessage.ID, nextIndex)
-    }
-  }
-}
-
 watch(
-  () => [props.messages, props.messageRefMap],
+  () => [props.messages],
   () => {
     nextTick(() => {
       initIntersectionObserver()
@@ -122,28 +161,24 @@ watch(
   { deep: true }
 )
 
-onMounted(() => {
-  nextTick(() => {
-    initIntersectionObserver()
-  })
+onMounted(async () => {
+  await nextTick()
+  initIntersectionObserver()
 })
 
-onUnmounted(() => {
-  if (intersectionObserver.value) {
-    intersectionObserver.value.disconnect()
-  }
-})
+onUnmounted(() => {})
 </script>
 
 <template>
-  <div class="message-nav">
-    <div class="message-nav__panel">
+  <div v-if="showNavigator" class="message-nav">
+    <div class="message-nav__panel" @mouseenter="setIsHovered(true)" @mouseleave="setIsHovered(false)">
       <button
+        v-show="isHovered"
         aria-label="上一条消息"
         class="message-nav__btn"
         type="button"
         :disabled="activeIndex === 0"
-        @click="navigatePrev"
+        @click="handleStep('prev')"
       >
         <ChevronUp :size="16" :color="activeIndex === 0 ? '#999999' : ''" />
       </button>
@@ -151,30 +186,32 @@ onUnmounted(() => {
         <template v-for="(item, index) in messagesList" :key="item.ID">
           <Popover placement="left">
             <template #content>
-              <span class="max-w-200 max-h-120 multi-truncate-5">
-                {{ item.payload?.text || "" }}
+              <span class="max-w-200 max-h-120 multi-truncate-3">
+                {{ getPreviewText(item.payload?.text) }}
               </span>
             </template>
             <button
-              :aria-label="`跳转至第 ${index + 1} 条消息`"
               class="message-nav__dot-btn"
               type="button"
+              :aria-label="`跳转至第 ${index + 1} 条消息`"
               :aria-current="activeIndex === index ? true : false"
               @click="scrollToMessage(item.ID, index)"
             >
-              <span
+              <div
+                :style="{ width: `${getIndicatorWidth(item.payload?.text)}px` }"
                 :class="activeIndex === index ? 'message-nav__dot message-nav__dot--active' : 'message-nav__dot'"
-              ></span>
+              ></div>
             </button>
           </Popover>
         </template>
       </div>
       <button
+        v-show="isHovered"
         aria-label="下一条消息"
         class="message-nav__btn"
         type="button"
         :disabled="activeIndex === messagesList.length - 1"
-        @click="navigateNext"
+        @click="handleStep('next')"
       >
         <ChevronDown :size="16" :color="activeIndex === messagesList.length - 1 ? '#999999' : ''" />
       </button>
@@ -182,7 +219,7 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .message-nav {
   width: 32px;
   position: absolute;
@@ -260,6 +297,7 @@ onUnmounted(() => {
   display: inline-block;
 }
 .message-nav__dot--active {
+  // background: rgba(0, 0, 0, 0.12);
   background-color: #222222;
   box-shadow: 0 0 0 4px rgba(24, 144, 255, 0.15);
 }

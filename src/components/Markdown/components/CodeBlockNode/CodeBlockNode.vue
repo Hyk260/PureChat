@@ -2,7 +2,7 @@
   <div class="code-block-wrapper code-block-container" :class="{ 'with-header': showHeader }">
     <div v-if="showHeader" class="code-header">
       <div class="header-left">
-        <div class="collapse-button flex-c" @click.stop="isCollapsed = !isCollapsed">
+        <div class="collapse-button flex-c" @click.stop="toggleCollapse">
           <ChevronRight v-if="isCollapsed" :size="14" />
           <ChevronDown v-else :size="14" />
         </div>
@@ -91,6 +91,15 @@
         </div>
       </div>
     </div>
+    <!-- <HighlighterComp
+        ref="highlighterRef"
+        :show-header="showHeader"
+        :language="language"
+        :highlighted-code="highlightedCode"
+        :is-chevrons="isChevrons"
+        :is-collapsed="isCollapsed"
+        @copy="handleCopyCode"
+      /> -->
   </div>
 </template>
 
@@ -124,6 +133,7 @@ import emitter from "@/utils/mitt-bus"
 import { highlightCode } from "../../utils/highlight"
 
 import type { Highlighter } from "shiki"
+// import HighlighterComp from "@/components/Highlighter/index.vue"
 
 import "../../style/iconify.scss"
 import "../../style/line-numbers-wrapper.css"
@@ -183,6 +193,10 @@ const handleCopyCode = () => {
   copyCode(props.code)
 }
 
+const toggleCollapse = () => {
+  isCollapsed.value = !isCollapsed.value
+}
+
 const handleCenterClick = () => {
   console.log("code block center clicked", props)
 }
@@ -197,8 +211,7 @@ const handleMaximizeCode = () => {
 }
 
 const downloadCode = () => {
-  const lang = props.language.trim().toLowerCase()
-  const lowerLang = lang || "txt"
+  const lowerLang = normalizedLang.value || "txt"
   downloadCodeFile(props.code, lowerLang)
 }
 

@@ -143,9 +143,9 @@ const handleLogin = async () => {
   setLoading(true)
   try {
     await formRef.value.validate()
-    if (isDev) await delay(500)
+    if (isDev) await delay(300)
     userStore.handleUserLogin(form.value)
-  } finally {
+  } catch {
     setLoading(false)
   }
 }
