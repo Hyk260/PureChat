@@ -19,7 +19,6 @@
           <div
             v-else-if="isValidMessage(item)"
             :id="`choice-${item.ID}`"
-            :ref="(el) => setMessageElementRef(item.ID, el)"
             class="message-view-item"
             :class="getMessageSelectionClass(item)"
             @click="handleMessageSelect(item)"
@@ -81,15 +80,15 @@
             </div>
           </div>
         </div>
-        <div ref="bottomSentinelRef" class="message-bottom-sentinel"></div>
         <div v-show="isMultiSelectMode" class="h-200"></div>
+        <div ref="bottomSentinelRef" class="message-bottom-sentinel"></div>
       </div>
     </ElScrollbar>
     <!-- 卡片 -->
     <MyPopover />
     <UserPopup ref="userPopupRef" />
     <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleContextMenuItemClick" />
-    <!-- <MessageNavigator :message-view="scrollbarRef" :message-ref-map="messageElementRefs" :messages="currentMessageList" /> -->
+    <MessageNavigator v-if="currentConversation" :scrollbar-ref="scrollbarRef" />
   </div>
 </template>
 
@@ -103,7 +102,7 @@ import AssistantMessage from "@/components/Chat/AssistantMessage.vue"
 import Checkbox from "@/components/Chat/Checkbox.vue"
 import MenuList from "@/components/Chat/MenuList.vue"
 import MessageEditingBox from "@/components/Chat/MessageEditingBox.vue"
-// import MessageNavigator from "@/components/Chat/MessageNavigator.vue"
+import MessageNavigator from "@/components/Chat/MessageNavigator.vue"
 import NameComponent from "@/components/Chat/NameComponent.vue"
 import Stateful from "@/components/Chat/Stateful.vue"
 import TimeDivider from "@/components/Chat/TimeDivider.vue"
@@ -146,9 +145,6 @@ const contextMenuItems = ref<MenuItem[] | []>([])
 const currentMenuItem = ref<DB_Message | null>(null)
 const isBottomVisible = shallowRef(false)
 
-// 消息元素引用映射
-const messageElementRefs = new Map<string, HTMLElement>()
-
 const groupStore = useGroupStore()
 const chatStore = useChatStore()
 const appStore = useAppStore()
@@ -169,12 +165,6 @@ const {
 } = storeToRefs(chatStore)
 
 const REVOKE_TIME_LIMIT = 120 // 2分钟撤回时限
-
-const setMessageElementRef = (id: string, el: any) => {
-  if (el) {
-    messageElementRefs.set(id, el as HTMLElement)
-  }
-}
 
 const isValidMessage = (item: DB_Message) => {
   return item.ID && !isTime(item) && !item.isDeleted
