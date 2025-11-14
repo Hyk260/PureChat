@@ -36,7 +36,8 @@ defineOptions({
 })
 
 interface Props {
-  Icon?: Component
+  // eslint-disable-next-line vue/prop-name-casing
+  Icon: Component | undefined
   background?: string
   color?: string
   iconClassName?: string

@@ -11,14 +11,13 @@
     :aria-label="TITLE"
     v-bind="$attrs"
   >
-    <component :is="IconComponent" :size="iconSize" />
+    <Mono :size="iconSize" />
     <Text :size="textSize" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue"
-import Color from "./Color.vue"
 import Mono from "./Mono.vue"
 import Text from "./Text.vue"
 import { COMBINE_SPACE_MULTIPLE, COMBINE_TEXT_MULTIPLE, TITLE } from "../style"
@@ -39,8 +38,6 @@ const props = withDefaults(defineProps<Props>(), {
   size: "1em",
   extraStyle: () => ({}),
 })
-
-const IconComponent = computed(() => (props.type === "color" ? Color : Mono))
 
 const iconSize = computed(() => props.size)
 

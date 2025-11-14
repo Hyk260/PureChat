@@ -61,14 +61,12 @@ const renderComponent = computed(() => {
     case "combine": {
       if (!Icon) return DefaultIcon
       if (Icon.Combine) return Icon.Combine
-      if (Icon.Brand) return Icon.Brand
       if (Icon.Text) return Icon.Text
       return Icon || DefaultIcon
     }
     case "combine-color": {
       if (!Icon) return DefaultIcon
       if (Icon.Combine) return Icon.Combine
-      if (Icon.BrandColor) return Icon.BrandColor
       if (Icon.Text) return Icon.Text
       return Icon || DefaultIcon
     }

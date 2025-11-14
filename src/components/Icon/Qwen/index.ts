@@ -1,5 +1,4 @@
 import Avatar from "./components/Avatar.vue"
-import Color from "./components/Color.vue"
 import Combine from "./components/Combine.vue"
 import Mono from "./components/Mono.vue"
 import Text from "./components/Text.vue"
@@ -7,7 +6,6 @@ import { COLOR_GRADIENT, COLOR_PRIMARY, TITLE } from "./style"
 
 export type CompoundedIcon = typeof Mono & {
   Avatar: typeof Avatar
-  Color: typeof Color
   Combine: typeof Combine
   Text: typeof Text
   colorGradient: string
@@ -16,7 +14,7 @@ export type CompoundedIcon = typeof Mono & {
 }
 
 const Icons = Mono as unknown as CompoundedIcon
-Icons.Color = Color
+
 Icons.Text = Text
 Icons.Combine = Combine
 Icons.Avatar = Avatar

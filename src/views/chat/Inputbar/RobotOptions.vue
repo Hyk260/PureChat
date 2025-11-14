@@ -51,12 +51,8 @@
                   :value="models.id"
                 >
                   <div class="bot-model-option">
-                    <div
-                      class="bot-avatar flex-c h-full"
-                      :class="shouldUseModelIcon(item, models) ? models.icon : robotIcon"
-                    >
-                      <SvgIcon v-if="shouldUseModelIcon(item, models)" :local-icon="models.icon" />
-                      <SvgIcon v-else :local-icon="robotIcon" />
+                    <div class="bot-avatar flex-c h-full">
+                      <ModelIcon :model="models.id" :size="26" type="avatar" />
                     </div>
                     <div class="flex flex-col h-full gap-4">
                       <div class="models-name">
@@ -188,12 +184,8 @@
                   :value="models.id"
                 >
                   <div class="bot-model-option">
-                    <div
-                      class="bot-avatar flex-c h-full"
-                      :class="shouldUseModelIcon(item, models) ? models.icon : robotIcon"
-                    >
-                      <SvgIcon v-if="shouldUseModelIcon(item, models)" :local-icon="models.icon" />
-                      <SvgIcon v-else :local-icon="robotIcon" />
+                    <div class="bot-avatar flex-c h-full">
+                      <ModelIcon :model="models.id" :size="26" type="avatar" />
                     </div>
                     <div class="flex flex-col h-full gap-4">
                       <div class="models-name">
@@ -234,6 +226,7 @@ import { cloneDeep, debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
 
 import AiProvider from "@/ai"
+import { ModelIcon } from "@/components/Features"
 import { getLowerBaseModelName, getBaseModelName } from "@/ai/reasoning"
 import { modelConfig, modelValue } from "@/ai/constant"
 import { ModelSelect } from "@/ai/resources"
@@ -281,10 +274,6 @@ const inputRef = (el: HTMLInputElement | null, id: string) => {
 const handleRemoveTag = (_id: string) => {
   // tag removed; persist selection changes
   onModelDataChanged()
-}
-
-function shouldUseModelIcon(item: ModelConfigItem, model: Model): boolean {
-  return item.options?.id === "ollama" || Boolean(model.icon)
 }
 
 function toDisplayCount(count: number | undefined): number {
@@ -490,7 +479,7 @@ onUnmounted(() => {
 
 .el-select-dropdown__item {
   height: auto;
-  padding: 0 15px 0 15px;
+  padding: 0 8px 0 8px;
   line-height: normal;
 
   .models-id {

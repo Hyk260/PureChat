@@ -12,8 +12,6 @@ import { ModelProvider } from "@/ai/types"
 
 type ProviderIconType = Component & {
   Avatar?: Component
-  Brand?: Component
-  BrandColor?: Component
   Color?: Component
   Combine?: Component
   Text?: Component

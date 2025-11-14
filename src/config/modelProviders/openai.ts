@@ -14,15 +14,6 @@ const OpenAI: ModelProviderCard = {
       vision: true,
     },
     {
-      tokens: 1_047_576,
-      description: "GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。",
-      displayName: "GPT-4.1 mini",
-      functionCall: true,
-      id: "gpt-4.1-mini",
-      maxOutput: 32_768,
-      vision: true,
-    },
-    {
       reasoning: true,
       description:
         "o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。",
@@ -45,6 +36,15 @@ const OpenAI: ModelProviderCard = {
       displayName: "OpenAI o1-preview",
       id: "o1-preview",
       tokens: 128_000,
+    },
+    {
+      tokens: 1_047_576,
+      description: "GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。",
+      displayName: "GPT-4.1 mini",
+      functionCall: true,
+      id: "gpt-4.1-mini",
+      maxOutput: 32_768,
+      vision: true,
     },
     {
       description: "Currently points to gpt-4o-mini-2024-07-18",

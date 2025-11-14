@@ -5,19 +5,14 @@
       flex: 'none',
       background: background || themeColor,
       borderRadius: shape === 'circle' ? '50%' : `${Math.floor(size * 0.1)}px`,
-      color: color || undefined,
+      color,
       height: `${size}px`,
       width: `${size}px`,
       ...style,
     }"
     v-bind="$attrs"
   >
-    <DefaultIcon
-      :color="color ?? ''"
-      :class="iconClassName"
-      :size="Math.floor(size * iconMultiple)"
-      :style="iconStyle"
-    />
+    <DefaultIcon :color="color" :class="iconClassName" :size="Math.floor(size * iconMultiple)" :style="iconStyle" />
   </div>
 </template>
 
@@ -43,8 +38,11 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  color: "",
   shape: "circle",
   size: 12,
+  background: "",
+  iconClassName: "",
   iconMultiple: 0.6,
   style: () => ({}),
   iconStyle: () => ({}),

@@ -6,8 +6,17 @@ import Yi from "@/components/Icon/Yi"
 import Meta from "@/components/Icon/Meta"
 import ChatGLM from "@/components/Icon/ChatGLM"
 
+import type { Component } from "vue"
+
+type ProviderIconType = Component & {
+  Avatar?: Component
+  Color?: Component
+  Combine?: Component
+  Text?: Component
+}
+
 export interface ModelMapping {
-  Icon: any
+  Icon: ProviderIconType
   keywords: string[]
   props?: any
 }

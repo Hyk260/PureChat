@@ -12,14 +12,7 @@
     }"
     v-bind="$attrs"
   >
-    <DefaultIcon
-      v-if="color !== undefined"
-      :class="iconClassName"
-      :color="color"
-      :size="Math.floor(size * iconMultiple)"
-      :style="iconStyle"
-    />
-    <DefaultIcon v-else :class="iconClassName" :size="Math.floor(size * iconMultiple)" :style="iconStyle" />
+    <DefaultIcon :color="color" :class="iconClassName" :size="Math.floor(size * iconMultiple)" :style="iconStyle" />
   </div>
 </template>
 

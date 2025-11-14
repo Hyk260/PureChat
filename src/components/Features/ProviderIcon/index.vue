@@ -10,8 +10,7 @@ import DefaultIcon from "./DefaultIcon.vue"
 
 interface Props {
   className?: string
-  forceMono?: boolean
-  provider?: string
+  provider: string
   shape?: "circle" | "square"
   size?: number
   style?: Record<string, any>
@@ -23,17 +22,13 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const props = defineProps<Props>()
-
-const finalProps = {
-  size: props.size ?? 12,
-  type: props.type ?? "avatar",
-  shape: props.shape ?? "circle",
-  style: props.style ?? {},
-  className: props.className,
-  provider: props.provider,
-  forceMono: props.forceMono ?? false,
-}
+const props = withDefaults(defineProps<Props>(), {
+  size: 12,
+  className: "",
+  type: "avatar",
+  shape: "circle",
+  style: () => ({}),
+})
 
 const matchedProvider = computed(() => {
   if (!props.provider) return null
@@ -51,7 +46,7 @@ const renderComponent = computed(() => {
   const Render = matchedProvider.value
   const Icon = Render?.Icon
 
-  switch (finalProps.type) {
+  switch (props.type) {
     case "avatar": {
       if (!Icon) return DefaultAvatar
       return Icon.Avatar || DefaultAvatar
@@ -67,14 +62,12 @@ const renderComponent = computed(() => {
     case "combine": {
       if (!Icon) return DefaultIcon
       if (Icon.Combine) return Icon.Combine
-      if (Icon.Brand) return Icon.Brand
       if (Icon.Text) return Icon.Text
       return Icon || DefaultIcon
     }
     case "combine-color": {
       if (!Icon) return DefaultIcon
       if (Icon.Combine) return Icon.Combine
-      if (Icon.BrandColor) return Icon.BrandColor
       if (Icon.Text) return Icon.Text
       return Icon || DefaultIcon
     }
@@ -86,24 +79,24 @@ const renderComponent = computed(() => {
 
 const finalComponentProps = computed(() => {
   const baseProps: Record<string, any> = {
-    size: finalProps.size,
+    size: props.size,
     ...matchedProvider.value?.props,
-    ...finalProps.style,
+    ...props.style,
   }
 
-  if (finalProps.type === "avatar") {
-    baseProps.shape = finalProps.shape
+  if (props.type === "avatar") {
+    baseProps.shape = props.shape
   }
 
-  if (finalProps.type === "combine" && renderComponent.value) {
-    const componentName = renderComponent.value.name || renderComponent.value.__name
+  if (props.type === "combine" && renderComponent.value) {
+    const componentName = renderComponent.value.name
     if (componentName === "OpenAICombine" || componentName === "QwenCombine") {
       baseProps.type = "mono"
     }
   }
 
-  if (finalProps.type === "combine-color" && renderComponent.value) {
-    const componentName = renderComponent.value.name || renderComponent.value.__name
+  if (props.type === "combine-color" && renderComponent.value) {
+    const componentName = renderComponent.value.name
     if (componentName === "OpenAICombine" || componentName === "QwenCombine") {
       baseProps.type = "color"
     }
