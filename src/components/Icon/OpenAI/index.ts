@@ -1,0 +1,46 @@
+import Avatar from "./components/Avatar.vue"
+import Combine from "./components/Combine.vue"
+import Mono from "./components/Mono.vue"
+import Text from "./components/Text.vue"
+import {
+  COLOR_GPT_3,
+  COLOR_GPT_4,
+  COLOR_GPT_5,
+  COLOR_OSS,
+  COLOR_O_1,
+  COLOR_PLATFORM,
+  COLOR_PRIMARY,
+  TITLE,
+} from "./style"
+
+export type CompoundedIcon = typeof Mono & {
+  Avatar: typeof Avatar
+  Combine: typeof Combine
+  Text: typeof Text
+  colorGpt3: string
+  colorGpt4: string
+  colorGpt5?: string
+  colorO1: string
+  colorO3: string
+  colorOss?: string
+  colorPlatform?: string
+  colorPrimary: string
+  title: string
+}
+
+const Icons = Mono as unknown as CompoundedIcon
+
+Icons.Text = Text
+Icons.Combine = Combine
+Icons.Avatar = Avatar
+Icons.colorPrimary = COLOR_PRIMARY
+Icons.colorGpt3 = COLOR_GPT_3
+Icons.colorGpt4 = COLOR_GPT_4
+Icons.colorGpt5 = COLOR_GPT_5
+Icons.colorO1 = COLOR_O_1
+Icons.colorO3 = COLOR_O_1
+Icons.colorOss = COLOR_OSS
+Icons.colorPlatform = COLOR_PLATFORM
+Icons.title = TITLE
+
+export default Icons

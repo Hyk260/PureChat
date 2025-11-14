@@ -3,8 +3,7 @@
     <ElScrollbar>
       <div v-if="model" class="robot-model">
         <div class="item-group-title">
-          <SvgIcon :local-icon="model?.icon || robotIcon" />
-          <span>{{ model?.name || "" }}</span>
+          <ProviderIcon :provider="model.id" :size="22" type="combine-color" />
         </div>
         <div
           v-for="item in model?.chatModels"
@@ -13,17 +12,7 @@
           :class="item.id === robotStore.model?.id ? 'active' : ''"
           @click="storeRobotModel(item)"
         >
-          <div v-if="['ollama', 'github'].includes(model.id)" class="icon align-icon" :class="[item.icon]">
-            <span v-if="item.icon">
-              <SvgIcon class="align-text-bottom" :local-icon="item.icon" />
-            </span>
-            <span v-else class="icon" :class="[robotIcon]">
-              <SvgIcon class="align-text-bottom" :local-icon="robotIcon" />
-            </span>
-          </div>
-          <div v-else class="icon" :class="[robotIcon]">
-            <SvgIcon class="align-text-bottom" :local-icon="robotIcon" />
-          </div>
+          <ModelIcon :model="item.id" :size="24" type="avatar" />
           <div class="list flex-bc w-full">
             <span>{{ getBaseModelName(item.displayName || item.id) }}</span>
             <span class="box">
@@ -75,12 +64,11 @@
 
 <script setup lang="ts">
 import { Atom, Eye, ToyBrick } from "lucide-vue-next"
-
 import { ClickOutside as vClickOutside } from "element-plus"
 import { cloneDeep, isEmpty } from "lodash-es"
 import { storeToRefs } from "pinia"
-
 import { modelValue } from "@/ai/constant"
+import { ModelIcon, ProviderIcon } from "@/components/Features"
 import { getBaseModelName } from "@/ai/reasoning"
 import { ModelSelect } from "@/ai/resources"
 import { getModelIcon, useAccessStore } from "@/ai/utils"

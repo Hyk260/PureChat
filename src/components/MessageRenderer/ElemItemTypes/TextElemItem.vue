@@ -28,6 +28,8 @@ import ReplyElem from "../CloudCustomData/ReplyElem.vue"
 import DeepThinking from "../CloudCustomData/DeepThinking.vue"
 import WebSearch from "../CloudCustomData/WebSearch.vue"
 
+const { DEV: isDev } = import.meta.env
+
 interface Props {
   message: DB_Message
   showMarkdown?: boolean
@@ -66,6 +68,10 @@ const shouldShowMarkdown = computed(() => {
     if (appStore.markdownAssistantRender && props.message?.flow === "in") return true
     return false
   } else {
+    if (isDev) {
+      if (appStore.markdownRender && props.message?.flow === "out") return true
+      if (appStore.markdownAssistantRender && props.message?.flow === "in") return true
+    }
     return false
   }
 })
