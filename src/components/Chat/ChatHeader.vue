@@ -5,11 +5,17 @@
         <!-- 单聊 -->
         <span v-if="isC2C" class="chat-type single" @click="openUser">
           <span class="nick">{{ nickName }}</span>
-          <CustomLabel v-if="isAssistant" :model="robotStore.model" :user-i-d="currentConversation?.conversationID" />
-          <!-- ai-prompt -->
-          <div v-if="isShowPromptTitle" class="cursor-pointer ml-5 ai-prompt-title" @click="openPrompt">
+          <!-- Model -->
+          <ModelTag v-if="isAssistant" :model="robotStore.model?.id || ''" />
+          <!-- Prompt -->
+          <ElTag v-if="isShowPromptTitle" type="primary" size="small" class="cursor-pointer ml-5" @click="openPrompt">
             {{ getPromptTitle }}
-          </div>
+          </ElTag>
+          <!-- <CustomLabel v-if="isAssistant" :model="robotStore.model" :user-i-d="currentConversation?.conversationID" /> -->
+          <!-- ai-prompt -->
+          <!-- <div v-if="isShowPromptTitle" class="cursor-pointer ml-5 ai-prompt-title" @click="openPrompt">
+            {{ getPromptTitle }}
+          </div> -->
           <!-- ai-tools -->
           <!-- <template v-if="isAssistant && botTools && isShowBotTools">
             <div v-for="item in botTools" :key="item.id" class="ml-5 ai-prompt-title">
@@ -23,10 +29,14 @@
             :content="`助手将只记住最后${botMessageCount}条消息`"
             placement="bottom"
           >
-            <div v-if="isAssistant" class="history ai-prompt-title">
+            <!-- <div v-if="isAssistant" class="history ai-prompt-title">
               <History :size="16" />
               <span>{{ botMessageCount }}</span>
-            </div>
+            </div> -->
+            <ElTag v-if="isAssistant" class="ml-5" type="warning" size="small">
+              <History :size="14" />
+              {{ botMessageCount }}
+            </ElTag>
           </ElTooltip>
         </span>
         <!-- 群聊 -->
@@ -54,7 +64,7 @@
 
 <script setup lang="ts">
 import { Ellipsis, History, Share2 } from "lucide-vue-next"
-
+import ModelTag from '@/components/Features/ModelTag';
 import { storeToRefs } from "pinia"
 
 import CustomLabel from "@/components/Chat/CustomLabel.vue"
@@ -134,21 +144,21 @@ const openUser = () => {}
       }
     }
   }
-  .ai-prompt-title {
-    white-space: nowrap;
-    background: #fffbe6;
-    border: 0.64px solid rgb(255 209 60);
-    color: #faad14;
-    border-radius: 2px;
-    font-size: 12px;
-    padding: 0 5px;
-    display: inline-block;
-    height: 20px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 4px;
-  }
+  // .ai-prompt-title {
+  //   white-space: nowrap;
+  //   background: #fffbe6;
+  //   border: 0.64px solid rgb(255 209 60);
+  //   color: #faad14;
+  //   border-radius: 2px;
+  //   font-size: 12px;
+  //   padding: 0 5px;
+  //   display: inline-block;
+  //   height: 20px;
+  //   display: flex;
+  //   flex-direction: row;
+  //   align-items: center;
+  //   gap: 4px;
+  // }
   .history {
     margin-left: 5px;
   }

@@ -1,7 +1,11 @@
 <template>
   <span class="label" :class="`label--${variant}`">
     <!-- 普通身份标签：全员 / 群 / 作者 -->
-    <span v-if="variantText" :class="variant">{{ variantText }}</span>
+    <!-- <span v-if="variantText" :class="variant">{{ variantText }}</span> -->
+
+    <ElTag v-if="variantText" type="info" size="small" class="ml-5">
+      {{ variantText }}
+    </ElTag>
 
     <!-- 机器人模型标签 -->
     <span v-if="modelInfo.visible" class="model">
