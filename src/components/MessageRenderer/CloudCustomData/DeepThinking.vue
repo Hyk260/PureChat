@@ -30,13 +30,13 @@
               :offset="8"
               transition="slide-fade"
             >
-              <div class="copy-button flex-c" @click.stop="handleCopyCode(messageAbstract)">
+              <div class="handle-button flex-c" @click.stop="handleCopyCode(messageAbstract)">
                 <Check v-if="isCopied" :size="14" />
                 <Copy v-else :size="14" />
               </div>
             </ElTooltip>
 
-            <div class="copy-button flex-c" @click.stop="setActive(!isActive)">
+            <div class="handle-button flex-c" @click.stop="setActive(!isActive)">
               <ChevronRight v-if="!isActive" :size="14" />
               <ChevronDown v-else :size="14" />
             </div>
@@ -113,18 +113,19 @@ watch(
 :deep(.el-collapse-item__content) {
   padding-bottom: 0 !important;
 }
+:deep(.el-collapse-item__header) {
+  border-bottom: none;
+}
 .el-collapse-item__wrap {
   background-color: inherit;
   border-bottom: none;
 }
 .el-collapse {
+  border: none;
   border-radius: 5px;
   --el-collapse-header-height: 32px;
   --el-collapse-header-bg-color: inherit;
   --el-collapse-content-bg-color: inherit;
-}
-.el-collapse-item__header {
-  border-bottom: none;
 }
 .think-content {
   color: #666;
@@ -146,12 +147,7 @@ watch(
   }
 }
 
-.copy-button,
-.code-action-btn,
-.download-button,
-.chevrons-button,
-.maximize-button,
-.collapse-button {
+.handle-button {
   cursor: pointer;
   &:hover {
     background: rgba(0, 0, 0, 0.03);

@@ -41,7 +41,10 @@
 
 <script setup lang="ts">
 import { Menu, MenuItem, SubMenu } from "ant-design-vue"
-import { useEventListener } from "@vueuse/core"
+import {
+  useEventListener,
+  // onClickOutside
+} from "@vueuse/core"
 import type { CSSProperties } from "vue"
 
 import type { MenuItem as MenuItemType } from "@/types/contextMenu"
@@ -84,13 +87,13 @@ const calculatePosition = (x: number, y: number) => {
   let finalY = y
 
   if (x + menuWidth > viewportWidth) {
-    finalX = viewportWidth - menuWidth - 10
+    finalX = viewportWidth - menuWidth - 20
   }
   if (finalX < 0) {
     finalX = 10
   }
   if (y + menuHeight > viewportHeight) {
-    finalY = viewportHeight - menuHeight - 10
+    finalY = viewportHeight - menuHeight - 20
   }
   if (finalY < 0) {
     finalY = 10
