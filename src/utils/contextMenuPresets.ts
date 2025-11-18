@@ -130,7 +130,7 @@ export const messageContextMenuItems: MenuItem[] = [
   {
     key: "translate",
     icon: markRaw(Languages),
-    // hide: true,
+    hide: true,
     label: "翻译",
     children: [
       // {

@@ -42,6 +42,7 @@
 <script setup lang="ts">
 import { Menu, MenuItem, SubMenu } from "ant-design-vue"
 import {
+  onKeyStroke,
   useEventListener,
   // onClickOutside
 } from "@vueuse/core"
@@ -138,10 +139,8 @@ const onBeforeEnter = () => {}
 
 const onAfterLeave = () => {}
 
-const handleEscape = (event: KeyboardEvent) => {
-  if (event.key === "Escape" && isMenuVisible.value) {
-    close()
-  }
+const handleEscape = () => {
+  close()
 }
 
 const close = () => {
@@ -151,7 +150,8 @@ const close = () => {
 
 useEventListener(document, "click", handleClickOutside)
 useEventListener(document, "contextmenu", handleClickOutside)
-useEventListener(document, "keydown", handleEscape)
+
+onKeyStroke("Escape", handleEscape)
 
 defineExpose({
   open,

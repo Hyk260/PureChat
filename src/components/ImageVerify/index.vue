@@ -11,13 +11,18 @@ defineOptions({
   name: "ImageVerify",
 })
 
-const emit = defineEmits()
+interface Props {
+  code?: string
+}
 
-const props = defineProps({
-  code: {
-    type: [String, Boolean],
-    required: true,
-  },
+interface Emits {
+  (e: "update:code", code: string): void
+}
+
+const emit = defineEmits<Emits>()
+
+const props = withDefaults(defineProps<Props>(), {
+  code: "",
 })
 
 const { domRef, imgCode, setImgCode, getImgCode } = useImageVerify()

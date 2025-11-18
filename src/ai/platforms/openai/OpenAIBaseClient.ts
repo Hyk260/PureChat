@@ -401,7 +401,7 @@ export abstract class OpenAIBaseClient {
     // 取消fetch请求
     const requestTimeoutId = setTimeout(() => controller?.abort(), REQUEST_TIMEOUT_MS)
 
-    const handleStreamError = this.handleStreamError
+    const handleStreamError = this.handleStreamError.bind(this)
 
     await fetchEventSource(chatPath, {
       ...chatPayload,

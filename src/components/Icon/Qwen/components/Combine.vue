@@ -55,4 +55,3 @@ const space = computed(() => {
   return numericSize * COMBINE_SPACE_MULTIPLE
 })
 </script>
-
