@@ -14,7 +14,7 @@
                 </div>
               </template>
               <template v-for="(child, i) in item.children" :key="child.key">
-                <MenuItem @click.stop="handleMenuItemClick(item.children[i])">
+                <MenuItem @click.stop="handleMenuItemClick(item, i)">
                   <div class="flex gap-4 items-center">
                     <component :is="child.icon" v-if="child.icon" :size="12" />
                     <span>
@@ -60,7 +60,7 @@ export interface Props {
 defineProps<Props>()
 
 const emit = defineEmits<{
-  "menu-click": [item: MenuItemType]
+  "menu-click": [item: MenuItemType, index?: number]
   close: []
 }>()
 
@@ -102,8 +102,8 @@ const calculatePosition = (x: number, y: number) => {
   return { x: finalX, y: finalY }
 }
 
-const handleMenuItemClick = (item: MenuItemType | undefined) => {
-  if (item) emit("menu-click", item)
+const handleMenuItemClick = (item: MenuItemType | undefined, i?: number) => {
+  if (item) emit("menu-click", item, i)
   isMenuVisible.value = false
 }
 

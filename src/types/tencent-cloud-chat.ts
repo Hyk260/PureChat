@@ -320,8 +320,17 @@ export interface MESSAGE_OPTIONS {
 }
 
 export interface TRANSLATE_TEXT_OPTIONS {
+  /**
+   * 待翻译文本数组
+   */
   sourceTextList: Array<string>
+  /**
+   * 源语言 可以设置为特定语言或 "auto" "auto" 表示自动识别源语言
+   */
   sourceLanguage: string
+  /**
+   * 目标语言 支持的目标语言有多种，例如：英语-"en"，简体中文-"zh"，法语-"fr"，德语-"de"等
+   */
   targetLanguage: string
 }
 

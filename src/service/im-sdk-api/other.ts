@@ -140,13 +140,13 @@ export const clearHistoryMessage = async (sessionId: string) => {
 }
 
 // 翻译文本
-export const translateText = async (params) => {
-  const { textList } = params
+export const translateText = async (params: { text: string; target?: string; source?: string }) => {
+  const { text, source, target } = params
   try {
     const { code, data } = await tim.translateText({
-      sourceTextList: [textList],
-      sourceLanguage: "auto",
-      targetLanguage: "zh",
+      sourceTextList: [text],
+      sourceLanguage: source || "auto",
+      targetLanguage: target || "zh",
     })
     return {
       code,

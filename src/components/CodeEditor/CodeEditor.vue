@@ -1,18 +1,24 @@
 <template>
   <div class="code-only-view">
     <div class="code-editor">
-      <template v-if="!useTextarea && VueMonacoEditor">
-        <VueMonacoEditor
-          :value="code"
-          :language="language"
-          :theme="theme"
-          :options="editorOptions"
-          @mount="handleEditorMount"
-          @change="handleCodeChange"
-        />
-      </template>
+      <!-- 动态渲染 Monaco 组件（如果加载成功且未切换到 textarea） -->
+      <component
+        :is="monacoComponent"
+        v-if="!useTextarea && monacoComponent"
+        :value="code"
+        :language="language"
+        :theme="theme"
+        :options="editorOptions"
+        @mount="handleEditorMount"
+        @change="handleCodeChange"
+      >
+        <slot>loading...</slot>
+        <slot name="failure">load failure</slot>
+      </component>
+      <!-- 备用 textarea（当 Monaco 加载失败或强制使用 textarea 时） -->
       <div v-else class="h-full">
         <textarea
+          ref="textareaRef"
           :value="code"
           :readonly="readOnly"
           class="html-editor"
@@ -45,9 +51,7 @@
 
 <script setup lang="ts">
 import { Save, Sparkles } from "lucide-vue-next"
-
 import { MONACO_OPTIONS } from "@/config/monaco-editor/config"
-
 import type { editor } from "monaco-editor"
 
 interface Props {
@@ -72,39 +76,52 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 
 const useTextarea = ref(false)
-const VueMonacoEditor = shallowRef<Component | null>(null)
-const editorInstance = shallowRef<editor.IStandaloneCodeEditor>()
+const monacoComponent = shallowRef<Component | null>(null)
+const editorRef = shallowRef<editor.IStandaloneCodeEditor>()
+const textareaRef = ref<HTMLTextAreaElement | null>(null)
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
+/**
+ * 编辑器配置
+ */
 const editorOptions = computed<editor.IStandaloneEditorConstructionOptions>(() => ({
   ...MONACO_OPTIONS,
   readOnly: props.readOnly,
-  language: "html",
+  language: props.language,
 }))
 
-const handleEditorMount = (editor: editor.IStandaloneCodeEditor) => {
-  editorInstance.value = editor
+const handleEditorMount = (editorInstance: editor.IStandaloneCodeEditor) => {
+  editorRef.value = editorInstance
   // setupCustomContextMenu(editor)
-  editor.focus()
+  try {
+    editorInstance.focus()
+  } catch (e) {
+    console.warn("focus editor failed:", e)
+  }
 }
 
 const handleSaveChange = () => {}
 
 const loadMonacoEditor = async () => {
   try {
-    useTextarea.value = true
     const module = await import("@guolao/vue-monaco-editor")
-    module.loader.config({
-      // "vs/nls": { availableLanguages: { "*": "zh" } },
-      paths: {
-        vs: "https://cdn.bootcdn.net/ajax/libs/monaco-editor/0.53.0/min/vs",
-      },
-    })
-    VueMonacoEditor.value = module.VueMonacoEditor
+    if (module && typeof module.loader === "object" && typeof module.loader.config === "function") {
+      module.loader.config({
+        paths: {
+          vs: "https://cdn.bootcdn.net/ajax/libs/monaco-editor/0.53.0/min/vs",
+        },
+      })
+    }
+
+    monacoComponent.value = module.VueMonacoEditor ?? module.default ?? null
+    if (!monacoComponent.value) {
+      throw new Error("Monaco component not found in module")
+    }
   } catch (error) {
     console.warn("Monaco Editor 加载失败，切换到备用编辑器:", error)
     useTextarea.value = true
+    monacoComponent.value = null
   }
 }
 
@@ -129,43 +146,26 @@ const handleCodeChange = (value: string | undefined) => {
 }
 
 const formatCode = () => {
-  editorInstance.value?.getAction("editor.action.formatDocument")?.run()
+  editorRef.value?.getAction("editor.action.formatDocument")?.run()
 }
-
-watch(
-  () => props.code,
-  (newValue) => {
-    if (!editorInstance.value) return
-
-    const currentValue = editorInstance.value?.getValue()
-    if (newValue !== currentValue) {
-      const position = editorInstance.value.getPosition()
-      editorInstance.value.setValue(newValue)
-      if (position) {
-        // 恢复光标位置
-        editorInstance.value.setPosition(position)
-      }
-    }
-  }
-)
 
 const clearCode = () => {
   const emptyValue = ""
 
-  if (editorInstance.value) {
-    editorInstance.value.setValue(emptyValue)
+  if (editorRef.value) {
+    editorRef.value.setValue(emptyValue)
   }
 
   emit("change", emptyValue)
 }
 
 const getCode = (): string => {
-  return editorInstance.value?.getValue() || props.code
+  return editorRef.value?.getValue() || props.code
 }
 
 const focusEditor = () => {
-  if (editorInstance.value) {
-    editorInstance.value.focus()
+  if (editorRef.value) {
+    editorRef.value.focus()
   } else if (useTextarea.value) {
     // 如果是 textarea，获取 DOM 元素并聚焦
     nextTick(() => {
@@ -176,11 +176,28 @@ const focusEditor = () => {
 }
 
 const getEditor = () => {
-  return editorInstance.value
+  return editorRef.value
 }
 
+watch(
+  () => props.code,
+  (newValue) => {
+    if (!editorRef.value) return
+
+    const currentValue = editorRef.value?.getValue()
+    if (newValue !== currentValue) {
+      const position = editorRef.value.getPosition()
+      editorRef.value.setValue(newValue)
+      if (position) {
+        // 恢复光标位置
+        editorRef.value.setPosition(position)
+      }
+    }
+  }
+)
+
 onMounted(() => {
-  loadMonacoEditor()
+  // loadMonacoEditor()
 })
 
 onBeforeUnmount(() => {

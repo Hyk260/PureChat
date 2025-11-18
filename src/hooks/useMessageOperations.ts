@@ -15,7 +15,7 @@ import { createPromptMessageCustomData } from "@/utils/chat/customData"
 import { getCustomMsgContent } from "@/utils/common"
 
 import type { MessagePayload } from "./types"
-import type { AttachmentElement, DB_Message, EmojiElement, ImageElement, MentionElement } from "@/types"
+import type { AttachmentElement, DB_Message, EmojiElement, ImageElement, MentionElement, MessageType } from "@/types"
 import type { IDomEditor } from "@wangeditor/editor"
 
 export const isVideoFile = (fileName: string) => {
@@ -157,7 +157,7 @@ export const usePrepareMessageData = () => {
   }
 
   const createAssistantPromptMessage = () => {
-    const to = userStore?.userProfile?.userID
+    const to = userStore?.userProfile?.userID || ""
     const defaultBot = robotStore.defaultProvider
     const from = getModelId(defaultBot)
     const meta = robotStore.promptStore[defaultBot]?.[0]?.meta
@@ -210,7 +210,7 @@ export const useMessageOperations = () => {
     const payload = getCustomMsgContent({ data: null, type: "loading" })
     const message = {
       ...data,
-      type: "TIMCustomElem",
+      type: "TIMCustomElem" as MessageType,
       payload,
     }
 

@@ -14,7 +14,7 @@ import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
 
 import type { DB_Message, DB_Session } from "@/types"
-import type { ChatSDK, MESSAGE_OPTIONS } from "@/types/tencent-cloud-chat"
+import type { ChatSDK, MESSAGE_OPTIONS, TRANSLATE_TEXT_OPTIONS } from "@/types/tencent-cloud-chat"
 
 export class LocalChat {
   static instance: LocalChat | null = null
@@ -151,6 +151,13 @@ export class LocalChat {
       code: 0,
       data: UserProfile,
     }
+  }
+
+  async translateText(data: TRANSLATE_TEXT_OPTIONS) {
+    const { sourceTextList = [], sourceLanguage, targetLanguage } = data
+
+    await delay(10)
+    return { code: 0, data: { text: "翻译结果" } }
   }
 
   /**

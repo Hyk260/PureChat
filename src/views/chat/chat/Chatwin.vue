@@ -419,8 +419,10 @@ const handleMessageContextMenu = (event: MouseEvent, item: DB_Message) => {
   contextMenuItems.value = getFilteredContextMenuItems(item)
 }
 
-const handleContextMenuItemClick = (menuItem: MenuItem) => {
+const handleContextMenuItemClick = (menuItem: MenuItem, i?: number) => {
+  const subMenuItem = i !== undefined ? (menuItem.children?.[i] ?? menuItem) : menuItem
   const message = currentMenuItem.value
+
   if (!message) return
   switch (menuItem.key) {
     case "refresh": // 重新生成
@@ -439,7 +441,7 @@ const handleContextMenuItemClick = (menuItem: MenuItem) => {
       handleCopyMsg(message)
       break
     case "translate": // 翻译
-      // handleTranslate(message)
+      handleTranslate(message, subMenuItem)
       break
     case "revoke": // 撤回
       handleRevokeMessage(message)
@@ -498,8 +500,8 @@ const handleSaveFile = (message: DB_Message) => {
   download(fileUrl, fileName)
 }
 
-const handleTranslate = (data: DB_Message) => {
-  translateText({ textList: data.payload?.text || "" })
+const handleTranslate = async (item: DB_Message, menu?: { key: string }) => {
+  const data = await translateText({ text: item.payload?.text || "", target: menu?.key || "zh" })
 }
 
 const handleForward = (data: DB_Message) => {}
