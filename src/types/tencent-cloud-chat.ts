@@ -17,14 +17,14 @@ export interface LOGIN_OPTIONS {
 
 export interface GET_MESSAGE_LIST_OPTIONS {
   /**
-   * Conversation ID. Supported formats are as follows:
-   * - C2C${userID} (one-to-one chat)
-   * - GROUP${groupID} (group chat)
-   * - @TIM#SYSTEM (system notification conversation)
+   * 对话ID。支持的格式如下：
+   * - C2C${userID} (单聊)
+   * - GROUP${groupID} (群聊)
+   * - @TIM#SYSTEM (系统通知对话)
    */
   conversationID: string
   /**
-   * Message ID, which is used to continue pulling messages by page. This parameter can be left unspecified the first time messages are pulled. Every time the API is called, this parameter is returned, and you need to specify it for the next pulling.
+   * 消息ID，用于继续按页提取消息。首次提取消息时，可以不指定此参数。每次调用API时，都会返回此参数，您需要为下一次拉取指定该参数。
    */
   nextReqMessageID?: string
 }
@@ -67,12 +67,12 @@ export interface GET_CONVERSATION_LIST_OPTIONS {
 
 export interface DELETE_CONVERSATION_OPTIONS {
   /**
-   * conversation ID list
+   * 对话ID列表
    */
   conversationIDList: Array<string>
   /**
-   * - true, By default, clears chat history with a user or clears chat history from a group from local and the cloud.
-   * - false, delete conversations only, keep the chat history.
+   * - true，默认情况下，清除与用户的聊天历史记录，或从本地和云中清除组的聊天历史
+   * - false，仅删除对话，保留聊天历史记录
    */
   clearHistoryMessage?: boolean
 }
@@ -80,7 +80,7 @@ export interface DELETE_CONVERSATION_OPTIONS {
 export interface GET_GROUP_PROFILE_OPTIONS {
   groupID: string
   /**
-   * Group-specific custom field filter, which specifies the group custom fields to pull.
+   * 组特定的自定义字段筛选器，指定要提取的组自定义字段。
    */
   groupCustomFieldFilter?: Array<string>
 }
@@ -150,9 +150,9 @@ export interface ProfileBase {
   nick: string
   /**
    * 性别：
-   * - TencentCloudChat.TYPES.GENDER_UNKNOWN: 未指定
-   * - TencentCloudChat.TYPES.GENDER_FEMALE: 女
-   * - TencentCloudChat.TYPES.GENDER_MALE: 男
+   * - unspecified 未指定
+   * - female: 女
+   * - male: 男
    */
   gender: "female" | "male" | "unspecified"
   /**
@@ -173,9 +173,9 @@ export interface ProfileBase {
   selfSignature: string
   /**
    * 好友请求验证方式：
-   * - TencentCloudChat.TYPES.ALLOW_TYPE_ALLOW_ANY: 自动接受所有好友请求
-   * - TencentCloudChat.TYPES.ALLOW_TYPE_NEED_CONFIRM: 手动接受好友请求
-   * - TencentCloudChat.TYPES.ALLOW_TYPE_DENY_ANY: 自动拒绝所有好友请求
+   * - ALLOW_TYPE_ALLOW_ANY: 自动接受所有好友请求
+   * - ALLOW_TYPE_NEED_CONFIRM: 手动接受好友请求
+   * - ALLOW_TYPE_DENY_ANY: 自动拒绝所有好友请求
    */
   allowType: "ALLOW_TYPE_ALLOW_ANY" | "ALLOW_TYPE_NEED_CONFIRM" | "ALLOW_TYPE_DENY_ANY"
   /**
@@ -192,8 +192,8 @@ export interface ProfileBase {
   messageSettings: number
   /**
    * 管理员是否禁止用户发起好友请求
-   * - TencentCloudChat.TYPES.FORBID_TYPE_NONE: 允许用户发起好友请求（默认值）
-   * - TencentCloudChat.TYPES.FORBID_TYPE_SEND_OUT: 禁止用户发起好友请求
+   * - FORBID_TYPE_NONE: 允许用户发起好友请求（默认值）
+   * - FORBID_TYPE_SEND_OUT: 禁止用户发起好友请求
    */
   adminForbidType: "FORBID_TYPE_NONE" | "FORBID_TYPE_SEND_OUT"
   /**
@@ -334,9 +334,6 @@ export interface TRANSLATE_TEXT_OPTIONS {
   targetLanguage: string
 }
 
-/**
- * TencentCloudChat SDK supports Internet Explorer 9+, Chrome, WeChat, Mobile QQ, QQ Browser, Firefox, Opera, and Safari.
- */
 export declare class ChatSDK {
   /**
    * 初始化 SDK 实例
@@ -360,22 +357,22 @@ export declare class ChatSDK {
   logout(): Promise<{ code: number; data: object }>
 
   /**
-   * Get the userID of the logged-in user. If the user is not logged in, it returns an empty string ('').
+   * 获取登录用户的用户ID。如果用户未登录，则返回空字符串（''）。
    */
   getLoginUser(): string
 
   /**
-   * Get server time.
+   * 获取服务器时间。
    */
   getServerTime(): number
 
   /**
-   * Get ready status of the SDK. When the SDK is ready, developers can call APIs that require authentication, such as sendMessage
+   * 获取SDK的准备状态。当SDK准备就绪时，开发人员可以调用需要身份验证的API，如sendMessage
    */
   isReady(): boolean
 
   /**
-   * Terminate the SDK instance. The SDK will log out, disconnect the WebSocket persistent connection, and then release resources.
+   * 终止SDK实例。SDK将注销，断开WebSocket持久连接，然后释放资源。
    */
   destroy(): Promise<void>
 

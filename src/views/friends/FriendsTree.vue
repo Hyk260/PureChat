@@ -4,10 +4,8 @@
       <ElTree :data="treeData" :props="defaultProps" @node-click="handleNodeClick">
         <template #default="{ data }">
           <div v-if="data.children" class="w-full flex-bc pr-12">
-            <span>{{ data.label }}</span>
-            <span>
-              {{ data.children.length }}
-            </span>
+            <span> {{ data.label }} </span>
+            <span> {{ data.children.length }} </span>
           </div>
           <div v-else>
             <CardGrid :type="data.type" :item="data" />
@@ -20,48 +18,53 @@
 
 <script setup lang="ts">
 import { ElTree } from "element-plus"
-import { onMounted, onUnmounted, ref } from "vue"
-
 import { ModelIDList } from "@shared/provider"
-
 import { getUserProfile } from "@/service/im-sdk-api"
 import { useGroupStore } from "@/stores/modules/group"
 import emitter from "@/utils/mitt-bus"
-
 import CardGrid from "./CardGrid.vue"
+
+type TreeNode = {
+  key: string
+  label: string
+  type?: "C2C" | "GROUP"
+  children?: TreeNode[]
+  hidden?: boolean
+}
 
 const groupStore = useGroupStore()
 
+const treeData = ref<TreeNode[]>([])
 const robotList = ref([])
 const friendList = ref([])
+
 const defaultProps = {
   children: "children",
   label: "label",
 }
+const ROBOT_MODEL_IDS = ModelIDList
+const FRIEND_IDS = ["huangyk", "admin", "linjx", "jinwx", "zhangal"]
 const INITIAL_TREE_DATA = [
   {
-    id: "aiModel",
-    level: 0,
-    label: "AI大模型",
+    key: "provider",
+    label: "服务商",
     children: [],
   },
   {
-    id: "contacts",
-    level: 0,
+    key: "contacts",
     label: "常用联系人",
     children: [],
     hidden: __LOCAL_MODE__,
   },
   {
-    id: "group",
-    level: 0,
+    key: "group",
     label: "我的群聊",
     children: [],
     hidden: __LOCAL_MODE__,
   },
 ].filter((item) => !item.hidden)
 
-const treeData = ref(INITIAL_TREE_DATA)
+treeData.value = INITIAL_TREE_DATA
 
 const handleNodeClick = (data) => {
   if (data.children) return
@@ -77,7 +80,7 @@ const transformUserData = (data) => {
   }))
 }
 
-const transformGroupData = (data = groupStore.groupList) => {
+const transformGroupData = (data) => {
   return data.map((item) => ({
     ...item,
     label: item.nick,
@@ -86,18 +89,29 @@ const transformGroupData = (data = groupStore.groupList) => {
 }
 
 const getRobotList = async () => {
-  const { code, data } = await getUserProfile(ModelIDList)
-  robotList.value = data
-  treeData.value[0].children = transformUserData(data)
+  try {
+    const { code, data } = await getUserProfile(ROBOT_MODEL_IDS)
+    if (data && Array.isArray(data)) {
+      robotList.value = data
+      treeData.value[0].children = transformUserData(data)
+    }
+  } catch (err) {
+    console.error("[getRobotList] failed:", err)
+  }
 }
 
 const getFriendList = async () => {
   if (__LOCAL_MODE__) return
-  const list = ["huangyk", "admin", "linjx", "jinwx", "zhangal"]
-  const { code, data } = await getUserProfile(list)
-  friendList.value = data
-  treeData.value[1].children = transformUserData(data)
-  treeData.value[2].children = transformGroupData()
+  try {
+    const { code, data } = await getUserProfile(FRIEND_IDS)
+    if (data && Array.isArray(data)) {
+      friendList.value = data
+      treeData.value[1].children = transformUserData(data)
+      treeData.value[2].children = transformGroupData(groupStore.groupList)
+    }
+  } catch (err) {
+    console.error("[getFriendList] failed:", err)
+  }
 }
 
 const setupEventListeners = () => {
