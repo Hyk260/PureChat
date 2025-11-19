@@ -81,6 +81,7 @@ async function uploadAvatar() {
 async function modifyMyProfile(file_url) {
   const { code, data } = await updateMyProfile({ avatar: file_url })
   if (code === 0) {
+    console.log("修改成功")
   } else {
     console.log("修改失败")
   }

@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import { Ellipsis, History, Share2 } from "lucide-vue-next"
-import ModelTag from '@/components/Features/ModelTag';
+import ModelTag from "@/components/Features/ModelTag"
 import { storeToRefs } from "pinia"
 
 import CustomLabel from "@/components/Chat/CustomLabel.vue"

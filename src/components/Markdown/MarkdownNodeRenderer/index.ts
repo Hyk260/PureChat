@@ -1,4 +1,4 @@
-import { defineAsyncComponent, defineComponent, h } from "vue"
+import { defineComponent, h } from "vue"
 
 import CodeBlock from "../components/CodeBlockNode"
 import Table from "../components/TableNode"

@@ -5,14 +5,14 @@
         <div class="tabs-capsule" :style="capsuleStyle"></div>
         <div
           v-for="(tab, index) in TABS"
-          :key="tab.id"
+          :key="tab.key"
           :ref="(el) => setTabRef(el, index)"
           class="tabs-tab-wrapper"
           :class="{ active: activeTab === index }"
-          @click="handleTabClick(index, tab.id)"
+          @click="handleTabClick(index, tab.key)"
         >
           <div class="tabs-tab">
-            <span class="tabs-tab__label">{{ tab.name }}</span>
+            <span class="tabs-tab__label">{{ tab.label }}</span>
           </div>
         </div>
       </div>
@@ -21,13 +21,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref } from "vue"
-
 import emitter from "@/utils/mitt-bus"
 
 const TABS = [
-  { id: 1, name: "好友" },
-  { id: 2, name: "群聊" },
+  { key: "friend", label: "好友" },
+  { key: "group", label: "群聊" },
 ]
 
 const activeTab = ref(0)
@@ -40,16 +38,16 @@ const capsuleStyle = computed(() => ({
   width: `${tabWidth.value}px`,
 }))
 
-const setTabRef = (el, index) => {
+const setTabRef = (el: Element | null, index: number) => {
   if (el) {
     tabRefs.value[index] = el
   }
 }
 
-const handleTabClick = (index, id) => {
+const handleTabClick = (index: number, key: string) => {
   activeTab.value = index
   activeTabPosition.value = index * tabWidth.value
-  emitter.emit("handleActiveTab", id)
+  emitter.emit("handleActiveTab", key)
 }
 
 onMounted(async () => {

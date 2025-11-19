@@ -60,7 +60,7 @@
   </ElForm>
   <!-- other hidden -->
   <div v-if="isDev" class="mt-20 flex justify-evenly">
-    <ElButton v-for="item in operates" :key="item.title" size="default" @click="setCurrentPage(item)">
+    <ElButton v-for="item in operates" :key="item.title" @click="setCurrentPage(item)">
       {{ item.title }}
     </ElButton>
   </div>
@@ -89,6 +89,7 @@ import { Lock, User } from "lucide-vue-next"
 import { Key } from "@element-plus/icons-vue"
 
 import ImageVerify from "@/components/ImageVerify/index.vue"
+import { onKeyStroke } from "@vueuse/core"
 import { useOAuth } from "@/hooks/useOAuth"
 import { useState } from "@/hooks/useState"
 import { getUserList } from "@/service/api"
@@ -159,18 +160,13 @@ const setCurrentPage = (item) => {
   userStore.setCurrentPage(item.currentPage)
 }
 
-const handleKeyPress = ({ code }) => {
-  if (code === "Enter") handleLogin()
-}
+onKeyStroke("Enter", handleLogin)
 
 onMounted(async () => {
   userSuggestions.value = getUserList()
-  window.document.addEventListener("keypress", handleKeyPress)
 })
 
-onBeforeUnmount(() => {
-  window.document.removeEventListener("keypress", handleKeyPress)
-})
+onBeforeUnmount(() => {})
 
 watch(verifyCode, (value) => {
   // 测试环境自动填充图形验证码

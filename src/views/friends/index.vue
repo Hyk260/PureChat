@@ -2,22 +2,11 @@
   <div class="friends-list wh-full">
     <div class="left-list">
       <div class="search-box">
-        <ElInput v-model="input" :placeholder="$t('chat.searchFor')" :prefix-icon="Search" clearable />
+        <ElInput v-model="input" :placeholder="$t('chat.searchFor')" :prefix-icon="Search" clearable> </ElInput>
       </div>
-      <div class="quick-nav">
-        <!-- <div
-          class="quick-nav-item"
-          v-for="(tab, index) in tabsList"
-          :key="tab.id"
-          @click="setActiveTab(tab)"
-        >
-          <div>{{ tab.name }}</div>
-          <ElIcon><ArrowRight /></ElIcon>
-        </div> -->
-      </div>
-      <div v-if="false" class="friends-tabs">
+      <!-- <div class="friends-tabs">
         <FriendsTabs />
-      </div>
+      </div> -->
       <div class="friends-tree">
         <FriendsTree />
       </div>
@@ -32,26 +21,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue"
 import { Search } from "lucide-vue-next"
-
-import emitter from "@/utils/mitt-bus"
-
 import FriendsTabs from "./FriendsTabs.vue"
 import FriendsTree from "./FriendsTree.vue"
 import ProfileCard from "./ProfileCard.vue"
+import emitter from "@/utils/mitt-bus"
 
-// const tabsList = [
-//   { id: 1, name: "好友通知" },
-//   { id: 2, name: "群通知" },
-// ]
 defineOptions({ name: "Friends" })
 
 const input = ref("")
 const title = ref("")
 
-function setActiveTab(tab) {
-  title.value = tab.name
+function setActiveTab(tab: string) {
+  title.value = tab
 }
 
 onMounted(() => {
