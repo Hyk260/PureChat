@@ -59,8 +59,7 @@ interface Props {
 }
 
 interface Emits {
-  (e: "change", code: string): void
-  (e: "save", code: string): void
+  (e: "change", value: string): void
 }
 
 withDefaults(defineProps<Props>(), {

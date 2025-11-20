@@ -44,16 +44,18 @@ defineOptions({
   name: "ContextMenu",
 })
 
-export interface Props {
+interface Props {
   items: MenuItemType[]
+}
+
+interface Emits {
+  (e: "menu-click", item: MenuItemType, index?: number): void
+  (e: "close"): void
 }
 
 defineProps<Props>()
 
-const emit = defineEmits<{
-  "menu-click": [item: MenuItemType, index?: number]
-  close: []
-}>()
+const emit = defineEmits<Emits>()
 
 const isMenuVisible = ref<boolean>(false)
 const menuPosition = ref({ x: 0, y: 0 })

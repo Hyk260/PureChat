@@ -266,7 +266,7 @@ export default defineConfig([
           ],
         },
       ],
-      "no-unused-vars": "warn",
+      "no-unused-vars": "off",
       "simple-import-sort/exports": "warn",
       "unused-imports/no-unused-imports": "off",
 

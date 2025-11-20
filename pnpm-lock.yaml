@@ -69,8 +69,8 @@ importers:
         specifier: ^3.2.7
         version: 3.2.7
       element-plus:
-        specifier: ^2.11.7
-        version: 2.11.8(vue@3.5.22(typescript@5.9.2))
+        specifier: 2.11.7
+        version: 2.11.7(vue@3.5.22(typescript@5.9.2))
       emoji-mart:
         specifier: ^5.6.0
         version: 5.6.0
@@ -2150,8 +2150,8 @@ packages:
   electron-to-chromium@1.5.197:
     resolution: {integrity: sha512-m1xWB3g7vJ6asIFz+2pBUbq3uGmfmln1M9SSvBe4QIFWYrRHylP73zL/3nMjDmwz8V+1xAXQDfBd6+HPW0WvDQ==}
 
-  element-plus@2.11.8:
-    resolution: {integrity: sha512-2wzSj2uubFU1f0t/gHkkE1d09mUgV18fSZX5excw3Ar6hyWcxph4E57U8dgYLDt7HwkKYv1BiqPyBdy0WqWlOA==}
+  element-plus@2.11.7:
+    resolution: {integrity: sha512-Bh47wuzsqaNBNDkbtlOlZER1cGcOB8GsXp/+C9b95MOrk0wvoHUV4NKKK7xMkfYNFYdYysQ752oMhnExgAL6+g==}
     peerDependencies:
       vue: ^3.2.0
 
@@ -6539,7 +6539,7 @@ snapshots:
 
   electron-to-chromium@1.5.197: {}
 
-  element-plus@2.11.8(vue@3.5.22(typescript@5.9.2)):
+  element-plus@2.11.7(vue@3.5.22(typescript@5.9.2)):
     dependencies:
       '@ctrl/tinycolor': 3.6.1
       '@element-plus/icons-vue': 2.3.2(vue@3.5.22(typescript@5.9.2))
