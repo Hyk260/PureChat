@@ -39,8 +39,8 @@ importers:
         specifier: ^65.4.3
         version: 65.5.0
       '@vueuse/components':
-        specifier: ^10.7.0
-        version: 10.11.1(vue@3.5.22(typescript@5.9.2))
+        specifier: ^14.0.0
+        version: 14.0.0(vue@3.5.22(typescript@5.9.2))
       '@vueuse/core':
         specifier: ^8.4.2
         version: 8.9.4(vue@3.5.22(typescript@5.9.2))
@@ -1201,8 +1201,8 @@ packages:
   '@types/web-bluetooth@0.0.16':
     resolution: {integrity: sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==}
 
-  '@types/web-bluetooth@0.0.20':
-    resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
+  '@types/web-bluetooth@0.0.21':
+    resolution: {integrity: sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==}
 
   '@typescript-eslint/eslint-plugin@8.39.0':
     resolution: {integrity: sha512-bhEz6OZeUR+O/6yx9Jk6ohX6H9JSFTaiY0v9/PuKT3oGK0rn0jNplLmyFUGV+a9gfYnVNwGDwS/UkLIuXNb2Rw==}
@@ -1493,11 +1493,15 @@ packages:
   '@vue/shared@3.5.22':
     resolution: {integrity: sha512-F4yc6palwq3TT0u+FYf0Ns4Tfl9GRFURDN2gWG7L1ecIaS/4fCIuFOjMTnCyjsu/OK6vaDKLCrGAa+KvvH+h4w==}
 
-  '@vueuse/components@10.11.1':
-    resolution: {integrity: sha512-ThcreQCX/eq61sLkLKjigD4PQvs3Wy4zglICvQH9tP6xl87y5KsQEoizn6OI+R3hrOgwQHLJe7Y0wLLh3fBKcg==}
+  '@vueuse/components@14.0.0':
+    resolution: {integrity: sha512-0PFAbAzKo+Ipt45R0OVHvZwjTj9oDZJQ/lc77d020fKl9GrxEIRvVIzMW1CZVn1vwmGhXEZPIF3erjixW2yqpg==}
+    peerDependencies:
+      vue: ^3.5.0
 
-  '@vueuse/core@10.11.1':
-    resolution: {integrity: sha512-guoy26JQktXPcz+0n3GukWIy/JDNKti9v6VEMu6kV2sYBsWuGiTU8OWdg+ADfUbHg3/3DlqySDe7JmdHrktiww==}
+  '@vueuse/core@14.0.0':
+    resolution: {integrity: sha512-d6tKRWkZE8IQElX2aHBxXOMD478fHIYV+Dzm2y9Ag122ICBpNKtGICiXKOhWU3L1kKdttDD9dCMS4bGP3jhCTQ==}
+    peerDependencies:
+      vue: ^3.5.0
 
   '@vueuse/core@8.9.4':
     resolution: {integrity: sha512-B/Mdj9TK1peFyWaPof+Zf/mP9XuGAngaJZBwPaXBvU3aCTZlx3ltlrFFFyMV4iGBwsjSCeUCgZrtkEj9dS2Y3Q==}
@@ -1513,8 +1517,8 @@ packages:
   '@vueuse/core@9.13.0':
     resolution: {integrity: sha512-pujnclbeHWxxPRqXWmdkKV5OX4Wk4YeK7wusHqRwU0Q7EFusHoqNA/aPhB6KCh9hEqJkLAJo7bb0Lh9b+OIVzw==}
 
-  '@vueuse/metadata@10.11.1':
-    resolution: {integrity: sha512-IGa5FXd003Ug1qAZmyE8wF3sJ81xGLSqTqtQ6jaVfkeZ4i5kS2mwQF61yhVqojRnenVew5PldLyRgvdl4YYuSw==}
+  '@vueuse/metadata@14.0.0':
+    resolution: {integrity: sha512-6yoGqbJcMldVCevkFiHDBTB1V5Hq+G/haPlGIuaFZHpXC0HADB0EN1ryQAAceiW+ryS3niUwvdFbGiqHqBrfVA==}
 
   '@vueuse/metadata@8.9.4':
     resolution: {integrity: sha512-IwSfzH80bnJMzqhaapqJl9JRIiyQU0zsRGEgnxN6jhq7992cPUJIRfV+JHRIZXjYqbwt07E1gTEp0R0zPJ1aqw==}
@@ -1522,8 +1526,10 @@ packages:
   '@vueuse/metadata@9.13.0':
     resolution: {integrity: sha512-gdU7TKNAUVlXXLbaF+ZCfte8BjRJQWPCa2J55+7/h+yDtzw3vOoGQDRXzI6pyKyo6bXFT5/QoPE4hAknExjRLQ==}
 
-  '@vueuse/shared@10.11.1':
-    resolution: {integrity: sha512-LHpC8711VFZlDaYUXEBbFBCQ7GS3dVU9mjOhhMhXP6txTV4EhYQg/KGnQuvt/sPAtoUKq7VVUnL6mVtFoL42sA==}
+  '@vueuse/shared@14.0.0':
+    resolution: {integrity: sha512-mTCA0uczBgurRlwVaQHfG0Ja7UdGe4g9mwffiJmvLiTtp1G4AQyIjej6si/k8c8pUwTfVpNufck+23gXptPAkw==}
+    peerDependencies:
+      vue: ^3.5.0
 
   '@vueuse/shared@8.9.4':
     resolution: {integrity: sha512-wt+T30c4K6dGRMVqPddexEVLa28YwxW5OFIPmzUHICjphfAuBFTTdDoyqREZNDOFJZ44ARH1WWQNCUK8koJ+Ag==}
@@ -5332,7 +5338,7 @@ snapshots:
 
   '@types/web-bluetooth@0.0.16': {}
 
-  '@types/web-bluetooth@0.0.20': {}
+  '@types/web-bluetooth@0.0.21': {}
 
   '@typescript-eslint/eslint-plugin@8.39.0(@typescript-eslint/parser@8.39.0(eslint@9.32.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.32.0(jiti@2.5.1))(typescript@5.9.2)':
     dependencies:
@@ -5827,24 +5833,18 @@ snapshots:
 
   '@vue/shared@3.5.22': {}
 
-  '@vueuse/components@10.11.1(vue@3.5.22(typescript@5.9.2))':
+  '@vueuse/components@14.0.0(vue@3.5.22(typescript@5.9.2))':
     dependencies:
-      '@vueuse/core': 10.11.1(vue@3.5.22(typescript@5.9.2))
-      '@vueuse/shared': 10.11.1(vue@3.5.22(typescript@5.9.2))
-      vue-demi: 0.14.10(vue@3.5.22(typescript@5.9.2))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
+      '@vueuse/core': 14.0.0(vue@3.5.22(typescript@5.9.2))
+      '@vueuse/shared': 14.0.0(vue@3.5.22(typescript@5.9.2))
+      vue: 3.5.22(typescript@5.9.2)
 
-  '@vueuse/core@10.11.1(vue@3.5.22(typescript@5.9.2))':
+  '@vueuse/core@14.0.0(vue@3.5.22(typescript@5.9.2))':
     dependencies:
-      '@types/web-bluetooth': 0.0.20
-      '@vueuse/metadata': 10.11.1
-      '@vueuse/shared': 10.11.1(vue@3.5.22(typescript@5.9.2))
-      vue-demi: 0.14.10(vue@3.5.22(typescript@5.9.2))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
+      '@types/web-bluetooth': 0.0.21
+      '@vueuse/metadata': 14.0.0
+      '@vueuse/shared': 14.0.0(vue@3.5.22(typescript@5.9.2))
+      vue: 3.5.22(typescript@5.9.2)
 
   '@vueuse/core@8.9.4(vue@3.5.22(typescript@5.9.2))':
     dependencies:
@@ -5865,18 +5865,15 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@vueuse/metadata@10.11.1': {}
+  '@vueuse/metadata@14.0.0': {}
 
   '@vueuse/metadata@8.9.4': {}
 
   '@vueuse/metadata@9.13.0': {}
 
-  '@vueuse/shared@10.11.1(vue@3.5.22(typescript@5.9.2))':
+  '@vueuse/shared@14.0.0(vue@3.5.22(typescript@5.9.2))':
     dependencies:
-      vue-demi: 0.14.10(vue@3.5.22(typescript@5.9.2))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
+      vue: 3.5.22(typescript@5.9.2)
 
   '@vueuse/shared@8.9.4(vue@3.5.22(typescript@5.9.2))':
     dependencies:
