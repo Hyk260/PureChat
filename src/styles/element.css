@@ -21,3 +21,8 @@
   --el-popover-border-radius: 6px;
 }
 
+.el-slider {
+  --el-slider-button-size: 12px;
+}
+
+

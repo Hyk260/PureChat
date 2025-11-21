@@ -79,7 +79,7 @@ export const OpenAIModelValue = {
     min: 0,
     max: 2,
   },
-  historyMessageCount: {
+  HistoryMessageCount: {
     ID: "historyMessageCount",
     Title: "附带历史消息数",
     SubTitle: "每次请求携带的历史消息数",

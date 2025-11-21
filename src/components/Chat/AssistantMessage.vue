@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="message-view-bottom">
+    <div v-if="messageAbstract" class="message-view-bottom">
       {{ messageAbstract }}
     </div>
     <div class="message-view-question">
@@ -21,12 +21,11 @@ defineOptions({
   name: "AssistantMessage",
 })
 
-const props = defineProps({
-  item: {
-    type: Object as PropType<DB_Message>,
-    required: true,
-  },
-})
+interface Props {
+  item: DB_Message
+}
+
+const props = withDefaults(defineProps<Props>(), {})
 
 const chatStore = useChatStore()
 const { messageCreator } = useMessageCreator()

@@ -29,19 +29,18 @@ defineOptions({
   name: "DynamicContent",
 })
 
-const props = withDefaults(
-  defineProps<{
-    text?: string
-    enableLink?: boolean
-    atUserList?: string[]
-  }>(),
-  {
-    text: "",
-    enableLink: true,
-    // @用户列表
-    atUserList: () => [],
-  }
-)
+interface Props {
+  text?: string
+  enableLink?: boolean
+  atUserList?: string[]
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  text: "",
+  enableLink: true,
+  // @用户列表
+  atUserList: () => [],
+})
 
 const isTextContent = (item: RenderDom): boolean => item.name === "text"
 const isEmojiContent = (item: RenderDom): boolean => item.name === "img"

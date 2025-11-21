@@ -1,9 +1,13 @@
 <template>
   <div class="tabs-wrapper">
+    <!-- <ElTabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+      <ElTabPane label="User" name="first">User</ElTabPane>
+      <ElTabPane label="Config" name="second">Config</ElTabPane>
+    </ElTabs> -->
     <div v-for="option in tabOptions" :key="option.value" class="tab-item" @click="handleTabClick(option)">
       <ElButton :class="{ 'tab-item--active': activeTab === option.value }">
         <ElIcon><component :is="option.icon"></component></ElIcon>
-        <span> {{ option.label }}</span>
+        <span> {{ option.label }} </span>
       </ElButton>
     </div>
   </div>
@@ -11,11 +15,17 @@
 
 <script setup lang="ts">
 import { options as tabOptions } from "./utils"
+// import { ElTabs, ElTabPane } from "element-plus"
+import type { TabsPaneContext } from "element-plus"
 
 interface TabOption {
   label: string
   value: string
   icon?: any
+}
+
+interface Emits {
+  (e: "tabChange", value: string): void
 }
 
 defineOptions({
@@ -26,9 +36,11 @@ defineProps<{
   activeTab: string
 }>()
 
-const emit = defineEmits<{
-  tabChange: [value: string]
-}>()
+const emit = defineEmits<Emits>()
+
+const handleClick = (tab: TabsPaneContext, event: Event) => {
+  console.log(tab, event)
+}
 
 const handleTabClick = (option: TabOption) => {
   emit("tabChange", option.value)

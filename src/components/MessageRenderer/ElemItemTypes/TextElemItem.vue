@@ -14,6 +14,7 @@
       <!-- Markdown消息 -->
       <Markdown v-if="shouldShowMarkdown" :cloud-custom-data="parsedCloudCustomData" :content="messageText" />
       <DynamicContent v-else :at-user-list="message.atUserList" :text="messageText" />
+      <!-- <AssistantMessageExtra v-if="chatStore.isAssistant && message.flow === 'in'" /> -->
     </template>
   </div>
 </template>
@@ -23,6 +24,7 @@ import DynamicContent from "@/components/Chat/DynamicContent.vue"
 import { DB_Message } from "@/database/schemas/message"
 import { useAppStore, useChatStore } from "@/stores"
 
+// import AssistantMessageExtra from "@/components/Chat/AssistantMessageExtra.vue"
 import Markdown from "@/components/Markdown/index.vue"
 import ReplyElem from "../CloudCustomData/ReplyElem.vue"
 import DeepThinking from "../CloudCustomData/DeepThinking.vue"

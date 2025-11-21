@@ -1,4 +1,5 @@
 import type { LLMParams, ModelProviderKey } from "@/ai/types"
+import type { LLMRoleType } from "@/types/llm"
 
 export interface Model {
   id: string
@@ -52,7 +53,7 @@ export interface Prompt {
   meta: PromptMeta
   lang: string
   prompt: Array<{
-    role: string
+    role: LLMRoleType
     content: string
   }>
   [key: string]: any

@@ -353,7 +353,7 @@ const getFilteredContextMenuItems = (message: DB_Message): MenuItem[] => {
 
   // 撤回权限检查
   const canRevoke = getUnixTimestampSec() - time < REVOKE_TIME_LIMIT
-  const isGroupOwner = groupStore.isOwner && currentType.value === "GROUP"
+  const isGroupOwner = groupStore.isOwner && isGroupChat.value
   const isFromSelf = flow === "out"
 
   const filterRules = [
@@ -396,9 +396,8 @@ const getFilteredContextMenuItems = (message: DB_Message): MenuItem[] => {
 
 const handleAvatarContextMenu = (event: MouseEvent, item: DB_Message) => {
   const { flow, type } = item
-  const conversationType = currentType.value
   // 单人聊天、自己发送的消息、系统消息不显示菜单
-  if (conversationType === "C2C" || flow === "out" || type === "TIMGroupSystemNoticeElem") {
+  if (currentType.value === "C2C" || flow === "out" || type === "TIMGroupSystemNoticeElem") {
     return
   }
   showContextMenu(event, item)
