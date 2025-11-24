@@ -14,7 +14,9 @@
         </ElIcon>
       </template>
     </ElInput>
-    <div class="header-spacer"></div>
+    <div class="header-spacer">
+      <!-- <ElButton>创作</ElButton> -->
+    </div>
   </header>
 </template>
 
@@ -66,6 +68,6 @@ const handleSearchInput = (value: string) => {
 }
 
 .header-spacer {
-  width: 64px;
+  // width: 64px;
 }
 </style>

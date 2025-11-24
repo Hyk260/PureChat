@@ -39,7 +39,7 @@ export const GitHubModelValue = {
     defaultValue: "",
     step: 0.1,
     min: 0,
-    max: 1,
+    max: 2,
   },
   TopP: {
     ID: "top_p",
@@ -50,14 +50,6 @@ export const GitHubModelValue = {
     min: 0,
     max: 1,
   },
-  // MaxTokens: {
-  //   ID: "max_tokens",
-  //   Title: "单次回复限制 (max_tokens)",
-  //   SubTitle: "单次交互所用的最大 Token 数",
-  //   defaultValue: "",
-  //   min: 1024,
-  //   max: 8192,
-  // },
   PresencePenalty: {
     ID: "presence_penalty",
     Title: "表述发散度 (presence_penalty)",
@@ -67,16 +59,24 @@ export const GitHubModelValue = {
     min: 0,
     max: 2,
   },
-  // FrequencyPenalty: {
-  //   ID: "frequency_penalty",
-  //   Title: "频率惩罚度 (frequency_penalty)",
-  //   SubTitle: "值越大，越有可能降低重复字词",
+  FrequencyPenalty: {
+    ID: "frequency_penalty",
+    Title: "频率惩罚度 (frequency_penalty)",
+    SubTitle: "值越大，越有可能降低重复字词",
+    defaultValue: "",
+    step: 0.1,
+    min: 0,
+    max: 2,
+  },
+  // MaxTokens: {
+  //   ID: "max_tokens",
+  //   Title: "单次回复限制 (max_tokens)",
+  //   SubTitle: "单次交互所用的最大 Token 数",
   //   defaultValue: "",
-  //   step: 0.1,
   //   min: 0,
-  //   max: 2,
+  //   max: 32000,
   // },
-  historyMessageCount: {
+  HistoryMessageCount: {
     ID: "historyMessageCount",
     Title: "附带历史消息数",
     SubTitle: "每次请求携带的历史消息数",

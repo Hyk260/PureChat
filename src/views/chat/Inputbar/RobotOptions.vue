@@ -31,7 +31,7 @@
               <Markdown :content="item.SubTitle" />
             </div>
           </div>
-          <!-- 模型 -->
+          <!-- 模型列表 -->
           <div v-if="item.options">
             <div class="flex gap-8 flex-col">
               <ElSelect
@@ -112,27 +112,29 @@
             </div>
           </div>
           <div v-else-if="isRange(item.ID)" class="range">
-            <span class="break-normal min-w-18">
-              {{ item.defaultValue }}
-            </span>
-            <input
+            <ElSlider
               v-model="item.defaultValue"
+              size="small"
+              :step="item.step ?? 1"
               :min="item.min ?? 0"
               :max="item.max ?? 100"
-              :step="item.step ?? 1"
-              type="range"
+              :marks="getMarks(item)"
+              show-input
               @change="onModelDataChanged"
             />
           </div>
-          <div v-else-if="['max_tokens'].includes(item.ID)" class="number">
-            <input
+          <div v-else-if="['max_tokens'].includes(item.ID)" class="flex justify-end number">
+            <!-- <ElSwitch /> -->
+            <ElSlider
               v-model="item.defaultValue"
               :min="item.min ?? 0"
-              :max="item.max ?? 1000000"
-              type="number"
+              :max="item.max ?? 32000"
+              size="small"
+              show-input
               @change="onModelDataChanged"
             />
           </div>
+          <!-- API Key 接口地址-->
           <div v-else-if="['token', 'openaiUrl'].includes(item.ID)" class="input">
             <div class="gap-5 flex-bc">
               <ElTooltip content="配置教程" placement="top">
@@ -151,7 +153,7 @@
               </ElTooltip>
               <div class="w-full flex gap-4">
                 <ElInput
-                  :ref="(e) => inputRef(e as HTMLInputElement | null, item.ID)"
+                  :ref="(e) => inputRef(e, item.ID)"
                   v-model="item.defaultValue"
                   :placeholder="item.Placeholder ?? ''"
                   :type="item.ID === 'token' ? 'password' : 'text'"
@@ -221,10 +223,9 @@
 
 <script setup lang="ts">
 import { Atom, Eye, ToyBrick, CircleQuestionMark as QuestionFilled, RefreshCcw as Refresh } from "lucide-vue-next"
-
+import { ElSlider } from "element-plus"
 import { cloneDeep, debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
-
 import AiProvider from "@/ai"
 import { ModelIcon } from "@/components/Features"
 import { getLowerBaseModelName, getBaseModelName } from "@/ai/reasoning"
@@ -237,16 +238,27 @@ import { hostPreview } from "@/utils/api"
 import { openWindow } from "@/utils/common"
 // import OllamaAI from "@/ai/platforms/ollama/ollama";
 import emitter from "@/utils/mitt-bus"
-
 import Markdown from "@/components/Markdown/index.vue"
 import DragPrompt from "./DragPrompt.vue"
 import { isRange } from "./utils"
 
 import type { Model, ModelConfigItem, ModelDataType } from "@/stores/modules/robot/types"
 import type { RobotBoxEventData } from "@/types"
+import type { CSSProperties } from "vue"
 
 defineOptions({
   name: "RobotOptions",
+})
+
+interface Mark {
+  style: CSSProperties
+  label: string
+}
+
+type Marks = Record<number, Mark | string>
+
+const marks = reactive<Marks>({
+  1: "1",
 })
 
 const { DEV: isDev } = import.meta.env
@@ -272,7 +284,6 @@ const inputRef = (el: HTMLInputElement | null, id: string) => {
 }
 
 const handleRemoveTag = (_id: string) => {
-  // tag removed; persist selection changes
   onModelDataChanged()
 }
 
@@ -397,9 +408,8 @@ function handleCancel() {
   setDialog(false)
 }
 
-function handleBeforeClose(done: () => void) {
-  handleCancel()
-  done()
+function getMarks() {
+  return null
 }
 
 function handleReset() {
@@ -556,6 +566,18 @@ onUnmounted(() => {
   }
 }
 
+:deep(.show-input) {
+  margin-right: 10px;
+  min-width: 100px;
+}
+
+.number {
+  border-radius: 10px;
+  border: 1px solid #dedede;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
 .range {
   border: 1px solid #dedede;
   max-width: 40%;
@@ -567,68 +589,68 @@ onUnmounted(() => {
   justify-content: space-between;
 }
 
-input[type="range"] {
-  appearance: none;
-  background-color: var(--color-range);
-  color: #303030;
-  margin: 2px;
-}
+// input[type="range"] {
+//   appearance: none;
+//   background-color: var(--color-range);
+//   color: #303030;
+//   margin: 2px;
+// }
 
-input[type="number"],
-input[type="text"],
-input[type="password"] {
-  appearance: none;
-  border-radius: 10px;
-  border: 1px solid #dedede;
-  min-height: 36px;
-  box-sizing: border-box;
-  background: #fff;
-  color: #303030;
-  padding: 0 10px;
-  max-width: 100%;
-  font-family: inherit;
-}
+// input[type="number"],
+// input[type="text"],
+// input[type="password"] {
+//   appearance: none;
+//   border-radius: 10px;
+//   border: 1px solid #dedede;
+//   min-height: 36px;
+//   box-sizing: border-box;
+//   background: #fff;
+//   color: #303030;
+//   padding: 0 10px;
+//   max-width: 100%;
+//   font-family: inherit;
+// }
 
-@mixin thumb() {
-  appearance: none;
-  height: 8px;
-  width: 20px;
-  background-color: rgb(29, 147, 171);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all ease 0.3s;
-  margin-left: 5px;
-  border: none;
-}
+// @mixin thumb() {
+//   appearance: none;
+//   height: 8px;
+//   width: 20px;
+//   background-color: rgb(29, 147, 171);
+//   border-radius: 10px;
+//   cursor: pointer;
+//   transition: all ease 0.3s;
+//   margin-left: 5px;
+//   border: none;
+// }
 
-@mixin thumbHover() {
-  transform: scaleY(1.2);
-  width: 24px;
-}
+// @mixin thumbHover() {
+//   transform: scaleY(1.2);
+//   width: 24px;
+// }
 
-input[type="range"]::-webkit-slider-thumb {
-  @include thumb();
-}
+// input[type="range"]::-webkit-slider-thumb {
+//   @include thumb();
+// }
 
-input[type="range"]::-moz-range-thumb {
-  @include thumb();
-}
+// input[type="range"]::-moz-range-thumb {
+//   @include thumb();
+// }
 
-input[type="range"]::-ms-thumb {
-  @include thumb();
-}
+// input[type="range"]::-ms-thumb {
+//   @include thumb();
+// }
 
-input[type="range"]::-webkit-slider-thumb:hover {
-  @include thumbHover();
-}
+// input[type="range"]::-webkit-slider-thumb:hover {
+//   @include thumbHover();
+// }
 
-input[type="range"]::-moz-range-thumb:hover {
-  @include thumbHover();
-}
+// input[type="range"]::-moz-range-thumb:hover {
+//   @include thumbHover();
+// }
 
-input[type="range"]::-ms-thumb:hover {
-  @include thumbHover();
-}
+// input[type="range"]::-ms-thumb:hover {
+//   @include thumbHover();
+// }
 
 @media (max-width: 990px) {
   .container-item {

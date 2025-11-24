@@ -39,9 +39,9 @@ export const MistralModelValue = {
     Title: "创意活跃度 (temperature)",
     SubTitle: "数值越大，回答越有创意和想象力；数值越小，回答越严谨",
     defaultValue: "",
-    step: 0.01,
+    step: 0.1,
     min: 0,
-    max: 1,
+    max: 2,
   },
   TopP: {
     ID: "top_p",
@@ -52,7 +52,7 @@ export const MistralModelValue = {
     min: 0,
     max: 1,
   },
-  historyMessageCount: {
+  HistoryMessageCount: {
     ID: "historyMessageCount",
     Title: "附带历史消息数",
     SubTitle: "每次请求携带的历史消息数",
