@@ -42,10 +42,10 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue"
 
-import { useChatStore, useSidebarStore } from "@/stores"
+import { useChatStore, useRouteStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
 
-const sidebarStore = useSidebarStore()
+const routeStore = useRouteStore()
 const chatStore = useChatStore()
 
 const userInfo = ref({
@@ -56,7 +56,7 @@ const userInfo = ref({
 })
 
 const handleConversation = ({ id, type }) => {
-  sidebarStore.toggleOutside({ path: "/chat" })
+  routeStore.routerPush("/chat")
   chatStore.addConversation({ sessionId: `${type}${id}` })
 }
 

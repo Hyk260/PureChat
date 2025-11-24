@@ -1,5 +1,5 @@
 import type { LLMParams, ModelProviderKey } from "@/ai/types"
-import type { LLMRoleType } from "@/types/llm"
+import type { LLMRoleType } from "@/ai/types"
 
 export interface Model {
   id: string

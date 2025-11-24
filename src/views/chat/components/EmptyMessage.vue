@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ElEmpty } from "element-plus"
-import { useChatStore, useSidebarStore } from "@/stores"
+import { useChatStore, useRouteStore } from "@/stores"
 
 const props = defineProps({
   className: {
@@ -17,13 +17,13 @@ const props = defineProps({
 })
 
 const chatStore = useChatStore()
-const sidebarStore = useSidebarStore()
+const routeStore = useRouteStore()
 
 function launch() {
   if (__LOCAL_MODE__) {
-    sidebarStore.toggleOutside({ path: "/discover" })
+    routeStore.routerPush("/discover")
   } else {
-    sidebarStore.toggleOutside({ path: "/friends" })
+    routeStore.routerPush("/friends")
   }
 }
 </script>

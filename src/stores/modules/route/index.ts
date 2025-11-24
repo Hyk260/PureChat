@@ -1,9 +1,8 @@
 import { defineStore } from "pinia"
-
 import { SetupStoreId } from "@/stores/enum"
-
 import { getCacheRouteNames, getTabIdByRoute } from "./shared"
-
+import { useChatStore } from "@/stores/modules/chat"
+import router from "@/router"
 // export type RouteKey = keyof RouteMap;
 
 export interface RouteStore {
@@ -29,6 +28,10 @@ export const useRouteStore = defineStore(SetupStoreId.Route, {
   getters: {},
   actions: {
     getTabIdByRoute,
+    routerPush(routeName: string) {
+      router.push(routeName)
+      useChatStore().toggleMultiSelectMode(false)
+    },
     addCacheRoute(routeName: string) {
       if (!this.cacheRoutes.includes(routeName)) {
         this.cacheRoutes.push(routeName)

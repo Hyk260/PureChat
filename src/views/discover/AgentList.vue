@@ -30,7 +30,7 @@ import { computed } from "vue"
 
 import { ProvidersList } from "@database/config"
 
-import { useChatStore, useSidebarStore } from "@/stores"
+import { useChatStore, useRouteStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
 
 import AgentCard from "./AgentCard.vue"
@@ -78,7 +78,7 @@ const emit = defineEmits<{
   tagClick: [tag: string]
 }>()
 
-const sidebarStore = useSidebarStore()
+const routeStore = useRouteStore()
 const chatStore = useChatStore()
 
 const providersList = computed<Provider[]>(() => ProvidersList)
@@ -93,7 +93,7 @@ const handleTagClick = (tag: string) => {
 }
 
 const handleProviderClick = (provider: Provider) => {
-  sidebarStore.toggleOutside({ path: "/chat" })
+  routeStore.routerPush("/chat")
   chatStore.addConversation({ sessionId: `C2C${provider.userID}` })
 }
 </script>

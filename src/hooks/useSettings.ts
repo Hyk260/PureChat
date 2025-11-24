@@ -2,7 +2,7 @@ import { h, watch } from "vue"
 import { useRoute } from "vue-router"
 
 import { getModelId, useAccessStore } from "@/ai/utils"
-import { useChatStore, useRobotStore, useSidebarStore } from "@/stores"
+import { useChatStore, useRobotStore, useRouteStore } from "@/stores"
 import { showConfirmationBox } from "@/utils/message"
 
 const { VITE_OPENAI_API_KEY, VITE_OPENAI_PROXY_URL, DEV: isDev } = import.meta.env
@@ -92,7 +92,7 @@ export async function autofillProvider(settings: UrlSettings) {
   if (!settings?.keyVaults) return
 
   const robotStore = useRobotStore()
-  const sidebarStore = useSidebarStore()
+  const routeStore = useRouteStore()
   const chatStore = useChatStore()
 
   const { keyVaults } = settings
@@ -124,7 +124,7 @@ export async function autofillProvider(settings: UrlSettings) {
     openaiUrl: openaiConfig.baseURL,
   }
   robotStore.setAccessStore(config, "openai")
-  sidebarStore.toggleOutside({ path: "/chat" })
+  routeStore.routerPush("/chat")
   chatStore.addConversation({ sessionId: `C2C${getModelId("openai")}` })
 }
 

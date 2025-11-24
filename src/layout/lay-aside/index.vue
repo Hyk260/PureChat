@@ -41,9 +41,10 @@ import { useRouter } from "vue-router"
 
 // import SidebarEditDialog from "@/components/MoreSidebar/index.vue"
 import UserPopup from "@/components/Popups/UserPopup.vue"
-import { useChatStore, useSidebarStore } from "@/stores"
+import { useChatStore, useSidebarStore, useRouteStore } from "@/stores"
 import { openWindow } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
+import { SidebarItem } from "@/stores/modules/sidebar/type"
 import CardPopover from "@/views/chat/components/CardPopover.vue"
 
 defineOptions({
@@ -55,6 +56,7 @@ const docs = __APP_INFO__.pkg.docs
 const UserPopupRef = useTemplateRef("UserPopupRef")
 const router = useRouter()
 const chatStore = useChatStore()
+const routeStore = useRouteStore()
 const sidebarStore = useSidebarStore()
 
 const { totalUnreadMsg } = storeToRefs(chatStore)
@@ -76,11 +78,12 @@ const onOpenDocs = () => {
   openWindow(docs)
 }
 
-const handleItemClick = (item) => {
-  sidebarStore.toggleOutside(item)
+const handleItemClick = (item: SidebarItem) => {
+  if (!item?.path) return
+  routeStore.routerPush(item.path)
 }
 
-const isActiveItem = (path) => {
+const isActiveItem = (path: string | undefined) => {
   return router.currentRoute.value.path === path
 }
 

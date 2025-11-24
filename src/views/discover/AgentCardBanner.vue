@@ -41,7 +41,7 @@ import { ModelID } from "@shared/provider"
 import { getModelId } from "@/ai/utils"
 import { usePrepareMessageData } from "@/hooks/useMessageOperations"
 import { useState } from "@/hooks/useState"
-import { useChatStore, useRobotStore, useSidebarStore } from "@/stores"
+import { useChatStore, useRobotStore, useRouteStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
 
 interface AgentMeta {
@@ -65,7 +65,7 @@ const agentData = ref<Agent>({} as Agent)
 const [isDialogVisible, setIsDialogVisible] = useState(false)
 const { createAssistantPromptMessage } = usePrepareMessageData()
 
-const sidebarStore = useSidebarStore()
+const routeStore = useRouteStore()
 const robotStore = useRobotStore()
 const chatStore = useChatStore()
 
@@ -84,7 +84,7 @@ const startConversation = () => {
   const modelId = getModelId(defaultBot) || ModelID.OpenAI
 
   setIsDialogVisible(false)
-  sidebarStore.toggleOutside({ path: "/chat" } as any)
+  routeStore.routerPush("/chat")
   chatStore.addConversation({ sessionId: `C2C${modelId}` })
 
   setTimeout(() => {
