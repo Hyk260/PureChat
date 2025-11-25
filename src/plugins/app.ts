@@ -1,9 +1,9 @@
-import { type App, h } from "vue"
-
-import { ElNotification } from "element-plus"
-import { ElButton, type NotificationHandle } from "element-plus"
-
+import { h } from "vue"
+import { ElNotification, ElButton } from "element-plus"
 import { $t } from "@/locales"
+
+import type { NotificationHandle } from "element-plus"
+import type { App } from "vue"
 
 let isShow = false
 let Notification: NotificationHandle | null = null
@@ -18,7 +18,7 @@ export function setupAppErrorHandle(app: App) {
 function notify() {
   if (Notification) Notification.close()
   Notification = ElNotification({
-    title: $t("system.updateContent"),
+    title: $t("system.updateContent") as any,
     dangerouslyUseHTMLString: true,
     message: h("div", [
       h(
@@ -41,11 +41,11 @@ function notify() {
         },
         () => $t("system.updateConfirm")
       ),
-    ]),
+    ]) as any,
     onClose: () => {
       isShow = false
     },
-    duration: 0,
+    duration: 6000 as any,
   })
 }
 

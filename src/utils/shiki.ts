@@ -61,7 +61,7 @@ export async function loadLanguageIfNeeded(
         const langData = await languageImportFn()
         await highlighter.loadLanguage(langData)
       }
-    } catch (error) {
+    } catch {
       await highlighter.loadLanguage("text")
       loadedLanguage = "text"
     }

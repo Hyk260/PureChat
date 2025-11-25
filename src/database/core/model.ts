@@ -32,7 +32,7 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
     const result = this.schema.safeParse(data)
 
     if (!result.success) {
-      const errorMsg = `[${this.db.name}][${this._tableName}] Failed to create new record. Error: ${result.error}`
+      const errorMsg = `[${this.db.name}][${this._tableName}] Failed to create new record. Error: ${result.error.message}`
       console.warn(errorMsg)
       // const newError = new TypeError(errorMsg)
       // console.error(newError)
@@ -75,7 +75,7 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
 
     const result = partialSchema.safeParse(data)
     if (!result.success) {
-      const errorMsg = `[${this.db.name}][${this._tableName}] Failed to update the record:${id}. Error: ${result.error}`
+      const errorMsg = `[${this.db.name}][${this._tableName}] Failed to update the record:${id}. Error: ${result.error.message}`
       console.warn(errorMsg)
       // const newError = new TypeError(errorMsg)
       // console.error(newError)

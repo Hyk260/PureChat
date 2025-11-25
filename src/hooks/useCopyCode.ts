@@ -7,7 +7,7 @@ export function useCopyCode() {
   if (hasRegisteredCopyListener) return
   hasRegisteredCopyListener = true
 
-  const timeoutIdMap: WeakMap<HTMLElement, NodeJS.Timeout> = new WeakMap()
+  const timeoutIdMap: WeakMap<HTMLElement, ReturnType<typeof window.setTimeout>> = new WeakMap()
 
   window.addEventListener(
     "click",

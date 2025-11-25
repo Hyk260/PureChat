@@ -317,7 +317,7 @@ export function readFromFile() {
       fileReader.onload = (e) => {
         res(e.target?.result)
       }
-      fileReader.onerror = (e) => rej(e)
+      fileReader.onerror = () => rej(new Error("文件读取失败"))
       fileReader.readAsText(file as File)
     }
 

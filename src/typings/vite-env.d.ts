@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 /**
  * 环境变量命名空间
  *
@@ -8,6 +9,7 @@ declare namespace Env {
   type RouterHistoryMode = 'hash' | 'history';
 
   /** import.meta 接口定义 */
+  // eslint-disable-next-line no-undef
   interface ImportMeta extends ImportMetaEnv {
     /** IM SDK AppID */
     readonly VITE_IM_SDK_APPID: string;

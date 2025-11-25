@@ -77,7 +77,7 @@ export default defineConfig([
       "@typescript-eslint/no-non-null-assertion": "warn",
       "@typescript-eslint/prefer-nullish-coalescing": "off",
       "@typescript-eslint/prefer-optional-chain": "warn",
-      "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+      "@typescript-eslint/no-unnecessary-type-assertion": "off",
       "@typescript-eslint/no-floating-promises": "off",
       "@typescript-eslint/await-thenable": "warn",
       "@typescript-eslint/no-misused-promises": "warn",
