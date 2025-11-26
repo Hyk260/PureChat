@@ -2,11 +2,11 @@
   <div class="card-content">
     <GeneratingContent v-if="isStreaming && !hasContent" />
 
-    <StreamingContent v-else-if="isStreaming && hasContent" :last-lines="lastLines" @preview="$emit('preview')" />
+    <StreamingContent v-else-if="isStreaming && hasContent" :lastLines="lastLines" @preview="$emit('preview')" />
 
     <StaticContent
       v-else
-      :has-content="hasContent"
+      :hasContent="hasContent"
       @preview="$emit('preview')"
       @external="$emit('external')"
       @download="$emit('download')"

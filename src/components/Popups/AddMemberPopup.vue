@@ -1,5 +1,5 @@
 <template>
-  <ElDialog v-model="dialog" title="添加成员" width="600px" align-center>
+  <ElDialog v-model="dialog" title="添加成员" width="600px" alignCenter>
     <div class="forward-action">
       <div
         v-for="item in chatStore.getNonBotC2CList"

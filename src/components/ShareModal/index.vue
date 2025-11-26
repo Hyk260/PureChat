@@ -2,10 +2,10 @@
   <ElDialog
     v-model="dialogVisible"
     :modal="true"
-    :append-to-body="true"
-    :lock-scroll="false"
+    :appendToBody="true"
+    :lockScroll="false"
     class="share-modal-dialog min-w-460"
-    align-center
+    alignCenter
     title="截图分享"
     width="80%"
     @close="handleClose"

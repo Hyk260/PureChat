@@ -2,20 +2,20 @@
   <ElDrawer
     v-model="drawer"
     size="360px"
-    modal-class="group-drawer-modal"
+    modalClass="group-drawer-modal"
     :title="$t('group.groupDetails')"
     :modal="true"
-    :before-close="handleClose"
-    :close-on-press-escape="true"
-    :append-to-body="false"
-    :show-close="false"
-    :with-header="true"
+    :beforeClose="handleClose"
+    :closeOnPressEscape="true"
+    :appendToBody="false"
+    :showClose="false"
+    :withHeader="true"
   >
     <div>
       <div class="group-info">
         <UserAvatar
           :url="groupProfile.avatar"
-          :nick-name="groupProfile.name"
+          :nickName="groupProfile.name"
           @click="openAvatarPopup(groupProfile.avatar)"
         />
         <div class="group-info-text">
@@ -67,7 +67,7 @@
               >
                 <CircleX />
               </ElIcon>
-              <UserAvatar :url="item.avatar" :nick-name="item.nick || item.userID" />
+              <UserAvatar :url="item.avatar" :nickName="item.nick || item.userID" />
               <!-- Admin Owner -->
               <div v-if="item.role !== 'Member'" class="wrap-group" :class="`style-${item.role}`">
                 {{ item.role === "Owner" ? "群主" : "管理员" }}
@@ -83,7 +83,7 @@
       <div class="py-12">
         <div class="flex-bc">
           <span> 消息免打扰 </span>
-          <ElSwitch v-model="notify" :loading="loading" :before-change="beforeChange" @change="setNotify" />
+          <ElSwitch v-model="notify" :loading="loading" :beforeChange="beforeChange" @change="setNotify" />
         </div>
       </div>
       <ElDivider />

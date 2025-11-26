@@ -19,7 +19,7 @@
               <ElTooltip
                 v-if="item.vision"
                 :enterable="false"
-                :show-arrow="false"
+                :showArrow="false"
                 :content="ModelSelect.vision"
                 placement="right"
               >
@@ -28,7 +28,7 @@
               <ElTooltip
                 v-if="item.functionCall"
                 :enterable="false"
-                :show-arrow="false"
+                :showArrow="false"
                 :content="ModelSelect.functionCall"
                 placement="right"
               >
@@ -37,7 +37,7 @@
               <ElTooltip
                 v-if="item.reasoning"
                 :enterable="false"
-                :show-arrow="false"
+                :showArrow="false"
                 :content="ModelSelect.reasoning"
                 placement="right"
               >
@@ -46,7 +46,7 @@
               <ElTooltip
                 v-if="item.tokens"
                 :enterable="false"
-                :show-arrow="false"
+                :showArrow="false"
                 :content="formatTokenTip(item)"
                 placement="right"
               >

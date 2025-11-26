@@ -1,5 +1,4 @@
 import { locale } from "dayjs"
-
 import { localStg } from "@/utils/storage"
 
 import "dayjs/locale/zh-cn"

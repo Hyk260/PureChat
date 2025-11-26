@@ -1,7 +1,7 @@
 <template>
   <div v-click-outside="onClickOutside" class="emoji-section">
     <div class="emojis">
-      <ElScrollbar wrap-class="custom-scrollbar-wrap" always>
+      <ElScrollbar wrapClass="custom-scrollbar-wrap" always>
         <!-- QQ表情包 -->
         <div v-show="table === 'QQ'" class="emoji_QQ" :class="[systemOs]">
           <p v-show="recentlyUsed.length" class="title">最近使用</p>
@@ -69,7 +69,7 @@
         :class="{ 'is-active': item.type === table }"
         @click="table = item.type"
       >
-        <SvgIcon v-if="item.svgIcon" :local-icon="item.svgIcon" />
+        <SvgIcon v-if="item.svgIcon" :localIcon="item.svgIcon" />
         <component :is="item.icon" v-else-if="item.icon" :size="16" />
         <span v-else>{{ item.content }}</span>
       </div>

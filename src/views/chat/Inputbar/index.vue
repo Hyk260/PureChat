@@ -4,10 +4,10 @@
     <ElTooltip
       v-if="!isFullscreenInputActive && !isAssistant"
       :enterable="false"
-      :show-after="500"
+      :showAfter="500"
       :content="$t('chat.emoji')"
       placement="top"
-      :show-arrow="false"
+      :showArrow="false"
       :offset="2"
       transition="slide-fade"
     >
@@ -19,10 +19,10 @@
     <ElTooltip
       v-if="isAssistant"
       :enterable="false"
-      :show-after="500"
+      :showAfter="500"
       :content="$t('button.select_model')"
       placement="top"
-      :show-arrow="false"
+      :showArrow="false"
       :offset="2"
       transition="slide-fade"
     >
@@ -34,26 +34,26 @@
     <ElTooltip
       v-if="!isAssistant"
       :enterable="false"
-      :show-after="500"
+      :showAfter="500"
       :content="$t('chat.picture')"
       placement="top"
-      :show-arrow="false"
+      :showArrow="false"
       :offset="2"
       transition="slide-fade"
     >
       <ElButton @click="sendImageClick">
         <!-- <Image :size="16" /> -->
-        <SvgIcon local-icon="image" />
+        <SvgIcon localIcon="image" />
       </ElButton>
     </ElTooltip>
     <!-- 文件 -->
     <ElTooltip
       v-if="!isAssistant"
       :enterable="false"
-      :show-after="500"
+      :showAfter="500"
       :content="$t('chat.file')"
       placement="top"
-      :show-arrow="false"
+      :showArrow="false"
       :offset="2"
       transition="slide-fade"
     >
@@ -61,17 +61,17 @@
         <!-- <FolderOpen :size="16" /> -->
         <!-- <FileUp :size="16" /> -->
         <!-- <FolderClosed :size="16" /> -->
-        <SvgIcon local-icon="folder" />
+        <SvgIcon localIcon="folder" />
       </ElButton>
     </ElTooltip>
     <!-- 截图 -->
     <ElTooltip
       v-if="IS_ELECTRON"
       :enterable="false"
-      :show-after="500"
+      :showAfter="500"
       :content="$t('chat.screenshot')"
       placement="top"
-      :show-arrow="false"
+      :showArrow="false"
       :offset="2"
       transition="slide-fade"
     >
@@ -83,10 +83,10 @@
     <ElTooltip
       v-if="isAssistant"
       :enterable="false"
-      :show-after="500"
+      :showAfter="500"
       :content="$t('chat.configuration')"
       placement="top"
-      :show-arrow="false"
+      :showArrow="false"
       :offset="2"
       transition="slide-fade"
     >
@@ -98,10 +98,10 @@
     <ElTooltip
       v-if="IS_ELECTRON"
       :enterable="false"
-      :show-after="500"
+      :showAfter="500"
       :content="$t('chat.upload_document')"
       placement="top"
-      :show-arrow="false"
+      :showArrow="false"
       :offset="2"
       transition="slide-fade"
     >
@@ -113,10 +113,10 @@
     <ElTooltip
       v-if="IS_LOCAL_MODE"
       :enterable="false"
-      :show-after="500"
+      :showAfter="500"
       :content="$t('chat.web_search')"
       placement="top"
-      :show-arrow="false"
+      :showArrow="false"
       :offset="2"
       transition="slide-fade"
     >
@@ -134,9 +134,9 @@
     <ElTooltip
       content="清空消息"
       placement="top"
-      :show-arrow="false"
+      :showArrow="false"
       :enterable="false"
-      :show-after="500"
+      :showAfter="500"
       :offset="2"
       transition="slide-fade"
     >
@@ -169,7 +169,7 @@
       </ElButton>
     </ElTooltip>
     <!-- 自定义消息 -->
-    <ElTooltip v-if="false" content="BugPlay" placement="top" :show-arrow="false" :offset="2" transition="slide-fade">
+    <ElTooltip v-if="false" content="BugPlay" placement="top" :showArrow="false" :offset="2" transition="slide-fade">
       <ElButton @click="customMessage">
         <BugPlay :size="16" />
       </ElButton>
@@ -178,10 +178,10 @@
     <ElTooltip
       v-if="showBottomBtn"
       :enterable="false"
-      :show-after="500"
+      :showAfter="500"
       :content="$t('chat.scrollToTheBottom')"
       placement="top"
-      :show-arrow="false"
+      :showArrow="false"
       :offset="2"
       transition="slide-fade"
     >
@@ -193,10 +193,10 @@
     <ElTooltip
       :enterable="false"
       disabled
-      :show-after="500"
+      :showAfter="500"
       :content="isFullscreenInputActive ? $t('chat.recover') : $t('chat.launch')"
       placement="top"
-      :show-arrow="false"
+      :showArrow="false"
       :offset="2"
       transition="slide-fade"
     >

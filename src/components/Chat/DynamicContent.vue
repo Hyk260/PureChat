@@ -2,7 +2,7 @@
   <template v-for="(item, index) in parsedContent" :key="index">
     <!-- 文本内容 -->
     <span v-if="isTextContent(item)">
-      <AnalysisUrl v-if="enableLink" :text="item.text || ''" :at-user-list="atUserList" />
+      <AnalysisUrl v-if="enableLink" :text="item.text || ''" :atUserList="atUserList" />
       <span v-else>{{ item.text }}</span>
     </span>
     <!-- 表情包 -->

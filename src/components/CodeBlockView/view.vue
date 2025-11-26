@@ -2,8 +2,8 @@
   <HtmlArtifactsCard
     v-if="isHtml"
     :html="htmlContent"
-    :is-streaming="isStreaming"
-    :on-save="handleSave"
+    :isStreaming="isStreaming"
+    :onSave="handleSave"
     @save="handleSave"
   />
 

@@ -12,7 +12,7 @@
         :code="code"
         :language="language"
         :theme="theme"
-        :read-only="readOnly"
+        :readOnly="readOnly"
         :debounce="debounce"
         @change="handleCodeChange"
       />

@@ -18,7 +18,7 @@
     </div>
     <!-- 聊天框 -->
     <div class="message-right">
-      <EmptyMessage class-name="empty" />
+      <EmptyMessage className="empty" />
       <ChatHeader />
       <!-- 聊天窗口 -->
       <Chatwin />

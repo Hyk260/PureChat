@@ -1,6 +1,6 @@
 <template>
   <div v-if="!chatStore.currentConversation" :class="[className]">
-    <ElEmpty :description="$t('common.emptyText')" :image-size="150" />
+    <ElEmpty :description="$t('common.emptyText')" :imageSize="150" />
     <div v-if="className === 'no-msg'" class="flex-c launch" @click="launch">发起会话</div>
   </div>
 </template>

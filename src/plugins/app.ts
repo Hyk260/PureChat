@@ -18,7 +18,7 @@ export function setupAppErrorHandle(app: App) {
 function notify() {
   if (Notification) Notification.close()
   Notification = ElNotification({
-    title: $t("system.updateContent") as any,
+    title: $t("system.updateContent"),
     dangerouslyUseHTMLString: true,
     message: h("div", [
       h(
@@ -41,11 +41,11 @@ function notify() {
         },
         () => $t("system.updateConfirm")
       ),
-    ]) as any,
+    ]),
     onClose: () => {
       isShow = false
     },
-    duration: 6000 as any,
+    duration: 6000,
   })
 }
 

@@ -3,9 +3,9 @@
     v-model="dialog"
     title="选择要转发的联系人"
     width="600px"
-    append-to-body
-    align-center
-    :lock-scroll="false"
+    appendToBody
+    alignCenter
+    :lockScroll="false"
     @close="handleClose"
   >
     <div class="forward-action">

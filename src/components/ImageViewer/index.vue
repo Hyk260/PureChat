@@ -2,12 +2,12 @@
   <ElImageViewer
     v-if="dialog"
     ref="imageViewerRef"
-    :initial-index="0"
-    :hide-on-click-modal="true"
-    :url-list="[url]"
-    :zoom-rate="1.2"
-    :max-scale="7"
-    :min-scale="0.2"
+    :initialIndex="0"
+    :hideOnClickModal="true"
+    :urlList="[url]"
+    :zoomRate="1.2"
+    :maxScale="7"
+    :minScale="0.2"
     @close="setDialog(false)"
   />
 </template>

@@ -26,7 +26,7 @@
               v-if="isActive"
               content="复制代码"
               placement="top"
-              :show-arrow="false"
+              :showArrow="false"
               :offset="8"
               transition="slide-fade"
             >

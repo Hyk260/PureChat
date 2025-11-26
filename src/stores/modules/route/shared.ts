@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteRecordRaw } from "vue-router"
+import type { RouteRecordRaw } from "vue-router"
 
 /**
  * Get cache route names
@@ -22,7 +22,7 @@ export function getCacheRouteNames(routes: RouteRecordRaw[]) {
  *
  * @param route
  */
-export function getTabIdByRoute(route: RouteLocationNormalized) {
+export function getTabIdByRoute(route: any) {
   const { path, query = {}, meta } = route
 
   let id = path

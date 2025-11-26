@@ -1,11 +1,11 @@
 <template>
   <div class="html-artifacts-card" :class="{ streaming: isStreaming }">
-    <CardHeader :is-streaming="isStreaming" :title="displayTitle" />
+    <CardHeader :isStreaming="isStreaming" :title="displayTitle" />
 
     <CardContent
-      :is-streaming="isStreaming"
-      :has-content="hasContent"
-      :last-lines="lastLines"
+      :isStreaming="isStreaming"
+      :hasContent="hasContent"
+      :lastLines="lastLines"
       @preview="openPopup"
       @external="openExternal"
       @download="downloadHtml"
@@ -16,7 +16,7 @@
       :open="popupOpen"
       :title="displayTitle"
       :html="htmlContent"
-      :on-save="onSave"
+      :onSave="onSave"
       @close="closePopup"
       @save="handleSave"
     />
@@ -32,7 +32,7 @@ import HtmlArtifactsPopup from "./HtmlArtifactsPopup.vue"
 
 interface Props {
   html: string
-  onSave?: (html: string) => void
+  onSave: (html: string) => void
   isStreaming?: boolean
 }
 

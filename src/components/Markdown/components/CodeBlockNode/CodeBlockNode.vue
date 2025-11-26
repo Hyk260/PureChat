@@ -15,7 +15,7 @@
         <ElTooltip
           :disabled="!shouldShowChevrons && isCollapsed"
           :content="isChevrons ? '收起' : '展开'"
-          :show-arrow="false"
+          :showArrow="false"
           :offset="8"
           placement="top"
           transition="slide-fade"
@@ -34,7 +34,7 @@
           v-if="showDownload"
           content="下载代码"
           placement="top"
-          :show-arrow="false"
+          :showArrow="false"
           :offset="8"
           transition="slide-fade"
         >
@@ -51,7 +51,7 @@
           v-if="isPreviewable && showPreviewButton"
           content="预览代码"
           placement="top"
-          :show-arrow="false"
+          :showArrow="false"
           :offset="8"
           transition="slide-fade"
         >
@@ -60,7 +60,7 @@
           </div>
         </ElTooltip>
 
-        <ElTooltip content="复制代码" placement="top" :show-arrow="false" :offset="8" transition="slide-fade">
+        <ElTooltip content="复制代码" placement="top" :showArrow="false" :offset="8" transition="slide-fade">
           <div class="copy-button flex-c" @click.stop="handleCopyCode">
             <Check v-if="isCopied" :size="14" />
             <Copy v-else :size="14" />

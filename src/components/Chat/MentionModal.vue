@@ -13,10 +13,10 @@
             <UserAvatar
               words="1"
               shape="square"
-              class-name="mention-avatar"
+              className="mention-avatar"
               :url="item.avatar"
               :type="item.avatar ? 'single' : 'group'"
-              :nick-name="item.userID === magAtAll ? '@' : item.nick || item.userID"
+              :nickName="item.userID === magAtAll ? '@' : item.nick || item.userID"
             />
             <span class="nick truncate">{{ item.nick || item.userID }}</span>
           </li>

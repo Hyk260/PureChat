@@ -1,10 +1,10 @@
 <template>
   <ElDialog
     v-model="dialogVisible"
-    :append-to-body="true"
+    :appendToBody="true"
     title="上传头像"
     width="560px"
-    :before-close="handleClose"
+    :beforeClose="handleClose"
     draggable
   >
     <div class="upload-avatar">

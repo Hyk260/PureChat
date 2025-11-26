@@ -31,7 +31,7 @@
       <ElTooltip
         v-if="!useTextarea"
         content="格式化"
-        :show-arrow="false"
+        :showArrow="false"
         :offset="8"
         transition="slide-fade"
         placement="top"
@@ -40,7 +40,7 @@
           <Sparkles :size="16" />
         </ElButton>
       </ElTooltip>
-      <ElTooltip v-if="false" content="保存" :show-arrow="false" :offset="8" transition="slide-fade" placement="top">
+      <ElTooltip v-if="false" content="保存" :showArrow="false" :offset="8" transition="slide-fade" placement="top">
         <ElButton circle @click="handleSaveChange">
           <Save :size="16" />
         </ElButton>

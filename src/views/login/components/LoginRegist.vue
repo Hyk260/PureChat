@@ -1,16 +1,16 @@
 <template>
   <ElForm ref="ruleFormRef" :model="ruleForm" :rules="updateRules" size="large">
     <ElFormItem prop="username">
-      <ElInput v-model="ruleForm.username" clearable :placeholder="$t('login.username')" :prefix-icon="User" />
+      <ElInput v-model="ruleForm.username" clearable :placeholder="$t('login.username')" :prefixIcon="User" />
     </ElFormItem>
     <ElFormItem prop="nickname">
-      <ElInput v-model="ruleForm.nickname" clearable :placeholder="$t('login.nickname')" :prefix-icon="User" />
+      <ElInput v-model="ruleForm.nickname" clearable :placeholder="$t('login.nickname')" :prefixIcon="User" />
     </ElFormItem>
     <ElFormItem prop="email">
-      <ElInput v-model="ruleForm.email" clearable placeholder="邮箱" :prefix-icon="Message" />
+      <ElInput v-model="ruleForm.email" clearable placeholder="邮箱" :prefixIcon="Message" />
     </ElFormItem>
     <ElFormItem v-if="false" prop="phone">
-      <ElInput v-model="ruleForm.phone" clearable :placeholder="$t('login.phone')" :prefix-icon="Iphone" />
+      <ElInput v-model="ruleForm.phone" clearable :placeholder="$t('login.phone')" :prefixIcon="Iphone" />
     </ElFormItem>
     <ElFormItem v-if="false" prop="verifyCode">
       <div class="w-full flex">
@@ -24,18 +24,18 @@
       <ElInput
         v-model="ruleForm.password"
         clearable
-        show-password
+        showPassword
         :placeholder="$t('login.password')"
-        :prefix-icon="Lock"
+        :prefixIcon="Lock"
       />
     </ElFormItem>
     <ElFormItem prop="repeatPassword">
       <ElInput
         v-model="ruleForm.repeatPassword"
         clearable
-        show-password
+        showPassword
         :placeholder="$t('login.sure')"
-        :prefix-icon="Lock"
+        :prefixIcon="Lock"
       />
     </ElFormItem>
     <ElFormItem>

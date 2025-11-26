@@ -25,7 +25,7 @@
           </template> -->
           <ElTooltip
             v-if="isAssistant"
-            :show-arrow="false"
+            :showArrow="false"
             :content="`助手将只记住最后${botMessageCount}条消息`"
             placement="bottom"
           >

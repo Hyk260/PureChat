@@ -18,7 +18,7 @@
         <ElIcon class="cursor-pointer" @click="toLink(officialWebsite)"><ExternalLink /></ElIcon>
       </div>
       <div class="flex gap-10">
-        <ElInput v-model="searchInput" type="password" placeholder="API密钥" show-password clearable @input="onBlur" />
+        <ElInput v-model="searchInput" type="password" placeholder="API密钥" showPassword clearable @input="onBlur" />
         <ElButton @click="checkApiKey">检查</ElButton>
       </div>
       <div class="mt-10">

@@ -1,5 +1,5 @@
 <template>
-  <RecycleScroller v-slot="{ item }" class="scroller" :items="items" :item-size="32" key-field="conversationID">
+  <RecycleScroller v-slot="{ item }" class="scroller" :items="items" :itemSize="32" keyField="conversationID">
     <div class="item">
       {{ item.name }}
     </div>

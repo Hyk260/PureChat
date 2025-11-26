@@ -1,5 +1,5 @@
 export interface AppState {
-  lang: App.I18n.LangType
+  lang: "en" | "zh-CN"
   timeline: boolean
   markdownRender: boolean
   markdownAssistantRender: boolean

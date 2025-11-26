@@ -2,11 +2,11 @@
   <ElDialog
     v-model="drawer"
     center
-    align-center
+    alignCenter
     class="setup-modal"
-    append-to-body
-    :lock-scroll="false"
-    :show-close="false"
+    appendToBody
+    :lockScroll="false"
+    :showClose="false"
     width="70%"
   >
     <div class="ui-modal-body">

@@ -6,7 +6,7 @@
     <!-- 合并消息弹框 -->
     <MergeMessagePopup />
     <!-- 群详情 -->
-    <GroupDetails v-if="isGroupChat && currentConversation" :group-profile="currentConversation.groupProfile" />
+    <GroupDetails v-if="isGroupChat && currentConversation" :groupProfile="currentConversation.groupProfile" />
     <!-- HTML 预览弹窗 -->
     <HtmlArtifactsPopup title="HTML Preview" />
   </div>

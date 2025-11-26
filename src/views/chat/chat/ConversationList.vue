@@ -1,6 +1,6 @@
 <template>
   <ElScrollbar class="scrollbar-list">
-    <EmptyMessage v-if="conversationList.length === 0" class-name="no-msg" />
+    <EmptyMessage v-if="conversationList.length === 0" className="no-msg" />
     <template v-if="!isEnableVirtualList">
       <div
         v-for="item in displayData"
@@ -32,13 +32,13 @@
         <!-- 置顶图标 -->
         <div v-show="item.isPinned" class="pinned-tag"></div>
         <!-- 头像 -->
-        <ElBadge class="avatar" is-dot :hidden="isShowCount(item) || !isNotify(item)">
+        <ElBadge class="avatar" isDot :hidden="isShowCount(item) || !isNotify(item)">
           <UserAvatar
             words="3"
             shape="square"
-            :session-id="item.conversationID"
+            :sessionId="item.conversationID"
             :type="item.type === 'C2C' ? 'single' : 'group'"
-            :nick-name="item._displayName"
+            :nickName="item._displayName"
             :url="item.type === 'C2C' ? item.userProfile?.avatar : item?.groupProfile?.avatar"
           />
         </ElBadge>
@@ -47,7 +47,7 @@
           <div class="message-item-right-top flex-bc">
             <div class="message-chat-name flex">
               <span class="name-title truncate">{{ item._displayName }}</span>
-              <CustomLabel v-if="item.userProfile?.userID" :item="item" :user-i-d="item.userProfile.userID" />
+              <CustomLabel v-if="item.userProfile?.userID" :item="item" :userID="item.userProfile.userID" />
             </div>
             <div v-if="item._displayTime" class="message-time">
               {{ item._displayTime }}

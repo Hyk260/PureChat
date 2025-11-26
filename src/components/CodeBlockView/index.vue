@@ -1,5 +1,5 @@
 <template>
-  <CodeBlockView :children="code" :language="language" :on-save="onSave" @save="handleSave" />
+  <CodeBlockView :children="code" :language="language" :onSave="onSave" @save="handleSave" />
 </template>
 
 <script setup lang="ts">

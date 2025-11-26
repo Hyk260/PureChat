@@ -9,7 +9,7 @@
 
     <!-- 机器人模型标签 -->
     <span v-if="modelInfo.visible" class="model">
-      <SvgIcon :local-icon="modelInfo.icon" />
+      <SvgIcon :localIcon="modelInfo.icon" />
       <span>{{ modelInfo.id }}</span>
     </span>
   </span>

@@ -54,6 +54,8 @@ export default defineConfig([
         ...globals.browser,
         ...globals.node,
         process: "readonly",
+        App: "readonly",
+        Env: "readonly",
         __APP_INFO__: "readonly",
         __IS_ELECTRON__: "readonly",
         __LOCAL_MODE__: "readonly",
@@ -269,6 +271,15 @@ export default defineConfig([
       "no-unused-vars": "off",
       "simple-import-sort/exports": "warn",
       "unused-imports/no-unused-imports": "off",
+      // "always" | "never"
+      "vue/attribute-hyphenation": [
+        "warn",
+        "never",
+        {
+          ignore: [],
+          ignoreTags: [],
+        },
+      ],
 
       // 性能相关
       // "vue/no-watch-after-await": "warn",

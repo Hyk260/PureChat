@@ -1,6 +1,7 @@
 <template>
   <div
     class="flex-c"
+    v-bind="$attrs"
     :style="{
       flex: 'none',
       background: background || themeColor,
@@ -10,7 +11,6 @@
       width: `${size}px`,
       ...style,
     }"
-    v-bind="$attrs"
   >
     <DefaultIcon :color="color" :class="iconClassName" :size="Math.floor(size * iconMultiple)" :style="iconStyle" />
   </div>

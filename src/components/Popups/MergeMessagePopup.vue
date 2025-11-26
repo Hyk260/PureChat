@@ -4,9 +4,9 @@
     :title="mergValue?.payload?.title"
     width="55%"
     class="merge-message-dialog"
-    align-center
-    :lock-scroll="false"
-    :before-close="handleClose"
+    alignCenter
+    :lockScroll="false"
+    :beforeClose="handleClose"
   >
     <ElScrollbar>
       <div class="merge-message-container">

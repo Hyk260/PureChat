@@ -4,13 +4,13 @@
     <ElScrollbar class="discover-scrollbar">
       <div class="discover-content">
         <div class="discover-layout">
-          <TabsWrapper :active-tab="activeTab" @tab-change="handleTabChange" />
+          <TabsWrapper :activeTab="activeTab" @tab-change="handleTabChange" />
           <AgentList
             :agents="filteredAgents"
-            :market-data="marketData"
-            :search-keyword="searchKeyword"
-            :active-tab="activeTab"
-            :is-loading="isLoading"
+            :marketData="marketData"
+            :searchKeyword="searchKeyword"
+            :activeTab="activeTab"
+            :isLoading="isLoading"
             @agent-click="handleAgentClick"
           />
           <StarMessage v-if="filteredAgents.length > 0" />

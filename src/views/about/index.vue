@@ -16,7 +16,7 @@
         </div>
       </template>
       <ElDescriptions :column="2" border>
-        <ElDescriptionsItem v-for="item in data" :key="item.label" :label="item.label" label-align="left" align="left">
+        <ElDescriptionsItem v-for="item in data" :key="item.label" :label="item.label" labelAlign="left" align="left">
           <ElTag v-if="item?.tag">{{ item.tag }}</ElTag>
           <a v-else-if="item?.url" :href="item.url" target="_blank">
             <span class="style-color"> {{ item.title }} </span>
@@ -36,8 +36,8 @@
           v-for="(item, index) in schema"
           :key="index"
           :label="item.label"
-          :label-class-name="getMainLabel(item.label)"
-          label-align="left"
+          :labelClassName="getMainLabel(item.label)"
+          labelAlign="left"
           align="left"
         >
           <a :href="'https://www.npmjs.com/package/' + item.label" target="_blank">
@@ -60,8 +60,8 @@
           v-for="(item, index) in devSchema"
           :key="index"
           :label="item.label"
-          :label-class-name="getMainLabel(item.label)"
-          label-align="left"
+          :labelClassName="getMainLabel(item.label)"
+          labelAlign="left"
           align="left"
         >
           <a :href="'https://www.npmjs.com/package/' + item.label" target="_blank">

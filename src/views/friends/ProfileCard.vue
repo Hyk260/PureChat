@@ -8,8 +8,8 @@
           words="3"
           shape="circle"
           :size="80"
-          :session-id="userInfo.userID"
-          :nick-name="userInfo.avatar || userInfo.name || userInfo.nick"
+          :sessionId="userInfo.userID"
+          :nickName="userInfo.avatar || userInfo.name || userInfo.nick"
           :url="userInfo.avatar || ''"
           :type="userInfo.groupID ? 'group' : 'single'"
         />

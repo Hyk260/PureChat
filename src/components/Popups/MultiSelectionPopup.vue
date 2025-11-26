@@ -3,7 +3,7 @@
     <ElIcon class="close" @click="onClose"><CircleCloseFilled /></ElIcon>
     <div v-for="item in buttonList" :key="item.icon" class="flex-c flex-col">
       <div class="icon flex-c" :class="isForwardDataEmpty ? 'disabled' : ''" @click="onClock(item)">
-        <SvgIcon :class="item.class" :local-icon="item.icon" />
+        <SvgIcon :class="item.class" :localIcon="item.icon" />
       </div>
       <span class="text">
         {{ item.value }}

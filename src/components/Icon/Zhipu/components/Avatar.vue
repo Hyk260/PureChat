@@ -4,7 +4,7 @@
     :aria-label="TITLE"
     :background="AVATAR_BACKGROUND"
     :color="AVATAR_COLOR"
-    :icon-multiple="AVATAR_ICON_MULTIPLE"
+    :iconMultiple="AVATAR_ICON_MULTIPLE"
     v-bind="$attrs"
   />
 </template>

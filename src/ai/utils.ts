@@ -130,7 +130,7 @@ export async function uploadImage(file: File | Blob) {
   })
   const res_1 = await res.json()
   console.log("res", res_1)
-  if (res_1?.code == 0 && res_1?.data) {
+  if (res_1?.code === 0 && res_1?.data) {
     return res_1?.data
   }
   throw Error(`upload Error: ${res_1?.msg}`)

@@ -8,14 +8,14 @@
           clearable
           size="large"
           :debounce="200"
-          :prefix-icon="User"
+          :prefixIcon="User"
           :placeholder="$t('login.username')"
-          :fetch-suggestions="handleSearch"
+          :fetchSuggestions="handleSearch"
           @select="handleSelect"
         />
       </template>
       <template v-else>
-        <ElInput v-model="form.username" :placeholder="$t('login.username')" :prefix-icon="User" size="large" clearable>
+        <ElInput v-model="form.username" :placeholder="$t('login.username')" :prefixIcon="User" size="large" clearable>
         </ElInput>
       </template>
     </ElFormItem>
@@ -27,7 +27,7 @@
         :placeholder="$t('login.password')"
         size="large"
         clearable
-        show-password
+        showPassword
       >
         <template #prefix>
           <ElIcon><Lock /></ElIcon>
@@ -77,7 +77,7 @@
         :class="loading ? 'pointer-events-none' : ''"
         @click="handleSocialLogin(item)"
       >
-        <SvgIcon class="social-icon" :local-icon="item.icon" />
+        <SvgIcon class="social-icon" :localIcon="item.icon" />
       </span>
     </div>
   </ElFormItem>

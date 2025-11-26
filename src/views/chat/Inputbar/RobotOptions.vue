@@ -4,11 +4,11 @@
     title="配置"
     width="70%"
     class="min-w-500 max-w-980"
-    align-center
-    destroy-on-close
-    :append-to-body="true"
-    :lock-scroll="false"
-    :close-on-click-modal="true"
+    alignCenter
+    destroyOnClose
+    :appendToBody="true"
+    :lockScroll="false"
+    :closeOnClickModal="true"
     @close="handleCancel"
   >
     <div class="container">
@@ -37,10 +37,10 @@
               <ElSelect
                 v-model="item.collapse"
                 multiple
-                collapse-tags
-                collapse-tags-tooltip
-                :max-collapse-tags="10"
-                append-to-body
+                collapseTags
+                collapseTagsTooltip
+                :maxCollapseTags="10"
+                appendToBody
                 @change="onModelDataChanged"
                 @remove-tag="handleRemoveTag"
               >
@@ -61,7 +61,7 @@
                         </span>
                         <ElTooltip
                           v-if="models?.vision"
-                          :show-arrow="false"
+                          :showArrow="false"
                           :enterable="false"
                           :content="ModelSelect.vision"
                           placement="top"
@@ -70,7 +70,7 @@
                         </ElTooltip>
                         <ElTooltip
                           v-if="models?.functionCall"
-                          :show-arrow="false"
+                          :showArrow="false"
                           :enterable="false"
                           :content="ModelSelect.functionCall"
                           placement="top"
@@ -79,7 +79,7 @@
                         </ElTooltip>
                         <ElTooltip
                           v-if="models?.reasoning"
-                          :show-arrow="false"
+                          :showArrow="false"
                           :enterable="false"
                           :content="ModelSelect.reasoning"
                           placement="top"
@@ -119,7 +119,7 @@
               :min="item.min ?? 0"
               :max="item.max ?? 100"
               :marks="getMarks(item)"
-              show-input
+              showInput
               @change="onModelDataChanged"
             />
           </div>
@@ -130,7 +130,7 @@
               :min="item.min ?? 0"
               :max="item.max ?? 32000"
               size="small"
-              show-input
+              showInput
               @change="onModelDataChanged"
             />
           </div>
@@ -157,7 +157,7 @@
                   v-model="item.defaultValue"
                   :placeholder="item.Placeholder ?? ''"
                   :type="item.ID === 'token' ? 'password' : 'text'"
-                  :show-password="item.ID === 'token'"
+                  :showPassword="item.ID === 'token'"
                   clearable
                   @change="onModelDataChanged"
                 >
@@ -176,7 +176,7 @@
                 v-model="item.defaultValue"
                 placeholder="选择测试模型"
                 class="!w-300"
-                append-to-body
+                appendToBody
                 @change="onModelDataChanged"
               >
                 <ElOption

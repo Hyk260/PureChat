@@ -2,10 +2,10 @@
   <ElDialog
     v-model="isDialogVisible"
     width="40%"
-    align-center
+    alignCenter
     class="p-0 min-w-500"
-    :show-close="false"
-    :lock-scroll="false"
+    :showClose="false"
+    :lockScroll="false"
   >
     <div class="agent-card-banner">
       <div class="flex-c flex-col text-50">

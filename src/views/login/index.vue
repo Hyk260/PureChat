@@ -2,7 +2,7 @@
   <div class="login flex">
     <div class="login-inner">
       <!-- 背景 -->
-      <SvgIcon local-icon="loginBg" class="wave" />
+      <SvgIcon localIcon="loginBg" class="wave" />
       <!-- 主题开关 -->
       <ThemeSwitch />
       <!-- 标题 -->

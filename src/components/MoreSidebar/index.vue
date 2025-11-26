@@ -3,9 +3,9 @@
     ref="editRef"
     v-model="dialogVisible"
     :modal="true"
-    :append-to-body="true"
-    :lock-scroll="false"
-    :close-on-click-modal="true"
+    :appendToBody="true"
+    :lockScroll="false"
+    :closeOnClickModal="true"
     title="导航栏编辑"
     width="450"
     @close="onClose"
@@ -21,9 +21,9 @@
               :move="onMove"
               :list="leftEdit"
               :group="outsideGroup"
-              :force-fallback="true"
-              ghost-class="ghost"
-              drag-class="chosen"
+              :forceFallback="true"
+              ghostClass="ghost"
+              dragClass="chosen"
               animation="200"
               @update="onUpdate"
               @remove="onRemove"
@@ -38,7 +38,7 @@
                   <ElIcon v-if="item?.type == 'el-icon'" class="icon-size">
                     <component :is="item.icon" />
                   </ElIcon>
-                  <SvgIcon v-else :local-icon="item.icon" class="svg-icon" />
+                  <SvgIcon v-else :localIcon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
                   <GripVertical :size="18" class="drag-icon" />
                 </div>
@@ -57,9 +57,9 @@
               :move="onMove"
               :list="rightEdit"
               :group="insideGroup"
-              :force-fallback="true"
-              ghost-class="ghost"
-              drag-class="chosen"
+              :forceFallback="true"
+              ghostClass="ghost"
+              dragClass="chosen"
               animation="200"
               @update="onUpdate"
               @remove="onRemove"
@@ -74,7 +74,7 @@
                   <ElIcon v-if="item?.type == 'el-icon'">
                     <component :is="item.icon" />
                   </ElIcon>
-                  <SvgIcon v-else :local-icon="item.icon" class="svg-icon" />
+                  <SvgIcon v-else :localIcon="item.icon" class="svg-icon" />
                   <span class="title">{{ item.title }}</span>
                   <GripVertical :size="18" class="drag-icon" />
                 </div>

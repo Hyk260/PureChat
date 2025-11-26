@@ -6,7 +6,7 @@
       </ElIcon>
       <p class="loading-text">{{ loadingText }}</p>
       <div class="loading-progress">
-        <ElProgress :percentage="progress" :show-text="false" :stroke-width="4" color="#409eff" />
+        <ElProgress :percentage="progress" :showText="false" :stroke-width="4" color="#409eff" />
       </div>
     </div>
   </div>

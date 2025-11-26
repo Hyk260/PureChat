@@ -44,11 +44,12 @@ interface Props {
   iconMultiple?: number
   iconStyle?: Record<string, any>
   shape?: "circle" | "square"
-  size: number
+  size?: number
   style?: Record<string, any>
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  size: 24,
   shape: "circle",
   color: "#fff",
   background: "",

@@ -11,7 +11,7 @@
       v-model="valueHtml"
       class="editor-content"
       :mode="mode"
-      :default-config="editorConfig"
+      :defaultConfig="editorConfig"
       @drop="handleFileDrop"
       @on-change="handleEditorChange"
       @on-created="handleEditorCreated"
@@ -20,7 +20,7 @@
       @keyup.enter="handleEnter"
     />
     <!-- @提及弹框 -->
-    <MentionModal v-if="isMentionModalVisible" pinyin-search :is-owner="isOwner" :editor="editorRef" />
+    <MentionModal v-if="isMentionModalVisible" pinyinSearch :isOwner="isOwner" :editor="editorRef" />
     <SendMessageButton :disabled="isSendDisabled" @send-message="sendChatMessage" />
   </div>
 </template>

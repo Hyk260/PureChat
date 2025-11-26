@@ -2,18 +2,18 @@
   <div class="message-view-item-text" :class="messageStyleClasses" @click="handleMessageClick">
     <template v-if="hasValidMessageType">
       <!-- 回复消息 -->
-      <ReplyElem v-if="parsedCloudCustomData" :status="message.status" :original-msg="parsedCloudCustomData" />
+      <ReplyElem v-if="parsedCloudCustomData" :status="message.status" :originalMsg="parsedCloudCustomData" />
       <!-- 思考过程 -->
-      <DeepThinking v-if="parsedCloudCustomData" :status="message.status" :original-msg="parsedCloudCustomData" />
+      <DeepThinking v-if="parsedCloudCustomData" :status="message.status" :originalMsg="parsedCloudCustomData" />
       <!-- web搜索 -->
       <WebSearch
         v-if="parsedCloudCustomData && message?.flow === 'in'"
         :status="message.status"
-        :original-msg="parsedCloudCustomData"
+        :originalMsg="parsedCloudCustomData"
       />
       <!-- Markdown消息 -->
-      <Markdown v-if="shouldShowMarkdown" :cloud-custom-data="parsedCloudCustomData" :content="messageText" />
-      <DynamicContent v-else :at-user-list="message.atUserList" :text="messageText" />
+      <Markdown v-if="shouldShowMarkdown" :cloudCustomData="parsedCloudCustomData" :content="messageText" />
+      <DynamicContent v-else :atUserList="message.atUserList" :text="messageText" />
       <!-- <AssistantMessageExtra v-if="chatStore.isAssistant && message.flow === 'in'" /> -->
     </template>
   </div>

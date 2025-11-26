@@ -2,7 +2,7 @@
   <div class="friends-list wh-full">
     <div class="left-list">
       <div class="search-box">
-        <ElInput v-model="input" :placeholder="$t('chat.searchFor')" :prefix-icon="Search" clearable> </ElInput>
+        <ElInput v-model="input" :placeholder="$t('chat.searchFor')" :prefixIcon="Search" clearable> </ElInput>
       </div>
       <!-- <div class="friends-tabs">
         <FriendsTabs />

@@ -1,17 +1,17 @@
 <template>
   <ElDialog
     v-model="dialogVisible"
-    append-to-body
-    :show-close="false"
+    appendToBody
+    :showClose="false"
     :title="title"
     :width="dialogWidth"
     :fullscreen="isFullscreen"
-    align-center
-    :close-on-click-modal="false"
-    :close-on-press-escape="true"
-    :destroy-on-close="true"
-    header-class="html-artifacts-header"
-    body-class="html-artifacts-body"
+    alignCenter
+    :closeOnClickModal="false"
+    :closeOnPressEscape="true"
+    :destroyOnClose="true"
+    headerClass="html-artifacts-header"
+    bodyClass="html-artifacts-body"
     class="html-artifacts-popup"
     @close="handleClose"
   >

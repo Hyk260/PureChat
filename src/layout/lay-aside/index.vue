@@ -2,7 +2,7 @@
   <div class="sidebar-container">
     <div class="sidebar-content">
       <div class="avatar-container">
-        <UserAvatar type="self" is-dot shape="square" @click="handleAvatarClick" />
+        <UserAvatar type="self" isDot shape="square" @click="handleAvatarClick" />
       </div>
 
       <div v-for="item in outsideList" :key="item.id" class="sidebar-item">

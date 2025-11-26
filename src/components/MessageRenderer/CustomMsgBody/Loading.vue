@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SvgIcon local-icon="Loader" />
+    <SvgIcon localIcon="Loader" />
     <!-- <l-orbit size="25" speed="1.5" color="black"></l-orbit> -->
   </div>
 </template>

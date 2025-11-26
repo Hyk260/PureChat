@@ -14,7 +14,7 @@ export const useAppStore = defineStore(SetupStoreId.App, {
     markdownAssistantRender: true, // Markdown 渲染助手消息
   }),
   actions: {
-    setLang(lang: App.I18n.LangType) {
+    setLang(lang: "en" | "zh-CN") {
       this.lang = lang
       setLocale(lang)
     },

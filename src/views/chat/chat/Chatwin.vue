@@ -24,10 +24,10 @@
             @click="handleMessageSelect(item)"
           >
             <!-- 非群聊时间分隔器 -->
-            <TimeDivider v-if="!isGroupChat" :show-check="isMultiSelectMode" :item="item" />
+            <TimeDivider v-if="!isGroupChat" :showCheck="isMultiSelectMode" :item="item" />
             <div class="message-view-item-content" :class="getMessageItemClasses(item)">
               <!-- 多选框 -->
-              <Checkbox :item="item" :is-revoked="item.isRevoked" />
+              <Checkbox :item="item" :isRevoked="item.isRevoked" />
               <!-- 头像区域 -->
               <div v-if="shouldShowAvatar(item)" class="picture">
                 <div
@@ -54,7 +54,7 @@
               <div :class="getMessageItemClass(item)">
                 <div v-if="isGroupChat" class="message-view-top">
                   <NameComponent :item="item" />
-                  <TimeDivider :item="item" :show-check="isMultiSelectMode" type="group" />
+                  <TimeDivider :item="item" :showCheck="isMultiSelectMode" type="group" />
                 </div>
                 <div :id="item.ID" class="message-view-body" :class="getMessageTypeClass(item.type)">
                   <!-- 消息编辑 -->
@@ -88,7 +88,7 @@
     <MyPopover />
     <UserPopup ref="userPopupRef" />
     <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleContextMenuItemClick" />
-    <MessageNavigator v-if="currentConversation" :scrollbar-ref="scrollbarRef" />
+    <MessageNavigator v-if="currentConversation" :scrollbarRef="scrollbarRef" />
   </div>
 </template>
 
