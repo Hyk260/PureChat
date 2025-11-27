@@ -107,6 +107,20 @@ export const SessionSchema = {
 
 export const TypeSchema = z.enum(["C2C", "GROUP", "@TIM#SYSTEM"])
 
+export const GroupProfileSchema = z.object({
+  avatar: z.string().optional(),
+  createTime: z.number().optional(),
+  // groupCustomField: z.array(z.string()).optional(),
+  groupID: z.string().optional(),
+  infoSequence: z.string().optional(),
+  introduction: z.string().optional(),
+  notification: z.string().optional(),
+  ownerID: z.string().optional(),
+  // joinOption:
+  type: z.enum(["Private", "Public"]).optional(),
+  name: z.string().optional(),
+})
+
 export const LastMessageSchema = z
   .object({
     /**
@@ -138,7 +152,7 @@ export const DB_SessionSchema = z.object({
   unreadCount: z.number().int().min(0).optional(),
   peerReadTime: z.number().optional(),
   groupAtInfoList: z.array(z.any()).optional(),
-  groupProfile: z.any().optional(),
+  groupProfile: GroupProfileSchema,
   userProfile: UserProfileSchema,
   remark: z.string().optional(),
   isPinned: z.boolean(),
@@ -156,3 +170,5 @@ export const DB_SessionSchema = z.object({
 })
 
 export type DB_Session = z.infer<typeof DB_SessionSchema>
+
+export type GroupProfileSchemaType = z.infer<typeof GroupProfileSchema>

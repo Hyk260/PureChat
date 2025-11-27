@@ -36,7 +36,7 @@ export interface CreateGroupParams {
 export interface UpdateGroupProfileParams {
   groupID: string
   modify?: ModifyTypeValue
-  value?: string | Array<{ key: string; value: string }>
+  value?: string
 }
 
 // 解散群

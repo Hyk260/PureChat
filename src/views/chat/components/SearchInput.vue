@@ -67,7 +67,7 @@ const handleCreateAssistant = async () => {}
 const matchesFilter = (item: DB_Session, searchStr: string) => {
   const lastMessage = item.lastMessage?.messageForShow?.toUpperCase()
   if (item.type === "GROUP") {
-    return lastMessage?.includes(searchStr) || item.groupProfile.name.toUpperCase().includes(searchStr)
+    return lastMessage?.includes(searchStr) || item.groupProfile?.name?.toUpperCase().includes(searchStr)
   }
   if (item.type === "C2C") {
     return item.userProfile?.nick?.toUpperCase().includes(searchStr) || lastMessage?.includes(searchStr)

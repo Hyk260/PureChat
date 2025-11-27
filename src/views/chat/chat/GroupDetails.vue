@@ -16,7 +16,7 @@
         <UserAvatar
           :url="groupProfile.avatar"
           :nickName="groupProfile.name"
-          @click="openAvatarPopup(groupProfile.avatar)"
+          @click="openAvatarPopup(groupProfile?.avatar)"
         />
         <div class="group-info-text">
           <div>
@@ -62,10 +62,10 @@
               <ElIcon
                 v-if="isOwner"
                 class="style-close"
-                :class="{ hidden: userStore.userProfile.userID === item.userID }"
+                :class="{ hidden: userStore.userProfile?.userID === item.userID }"
                 @click.stop="removeGroupMemberBtn(item)"
               >
-                <CircleX />
+                <CircleCloseFilled />
               </ElIcon>
               <UserAvatar :url="item.avatar" :nickName="item.nick || item.userID" />
               <!-- Admin Owner -->
@@ -103,9 +103,15 @@
 </template>
 
 <script setup lang="ts">
-import { ElDrawer } from "element-plus"
-import { CircleX, SquarePen as EditPen } from "lucide-vue-next"
-// import { EditPen } from "@element-plus/icons-vue"
+import { ElDrawer, ElMessageBox } from "element-plus"
+import {
+  // CircleX,
+  SquarePen as EditPen,
+} from "lucide-vue-next"
+import {
+  // EditPen,
+  CircleCloseFilled,
+} from "@element-plus/icons-vue"
 
 import Markdown from "@/components/Markdown/index.vue"
 import { isFullStaffGroup } from "@/ai/utils"
@@ -121,18 +127,24 @@ import {
 } from "@/service/im-sdk-api"
 import { useChatStore, useGroupStore, useUserStore } from "@/stores"
 import { isByteLengthExceedingLimit } from "@/utils/chat"
-import { showConfirmationBox } from "@/utils/message"
 import emitter from "@/utils/mitt-bus"
 
-const { groupProfile } = defineProps({
-  groupProfile: {
-    type: Object,
-    default: () => {},
-  },
+import type { DB_Session } from "@/types"
+import type { ModifyTypeValue } from "@/service/im-sdk-api/group"
+import type { GroupMember, GroupProfile } from "@/stores/modules/group/type"
+
+interface Props {
+  groupProfile: GroupProfile
+}
+
+defineOptions({
+  name: "GroupDetails",
 })
 
+const props = withDefaults(defineProps<Props>(), {})
+
 const notify = ref(false)
-const AddMemberRef = ref()
+const AddMemberRef = useTemplateRef("AddMemberRef")
 
 const groupStore = useGroupStore()
 const userStore = useUserStore()
@@ -143,7 +155,7 @@ const [loading, setLoading] = useState(false)
 const { currentMemberList, isOwner } = storeToRefs(groupStore)
 const { toAccount, currentSessionId, currentConversation } = storeToRefs(chatStore)
 
-const beforeChange = () => {
+const beforeChange = (): Promise<boolean> => {
   setLoading(true)
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -154,14 +166,20 @@ const beforeChange = () => {
 }
 
 const setNotify = () => {
-  setMessageRemindType(currentConversation.value)
+  const conversation = currentConversation.value
+  if (!conversation) return
+  setMessageRemindType(conversation)
 }
 
 const openNamePopup = async () => {
-  const { name } = groupProfile
-  const data = { message: "输入群名", inputValue: name }
-  const result = await showConfirmationBox(data, "prompt")
-  if (result === "cancel") return
+  const { name } = props.groupProfile
+
+  const result = await ElMessageBox.prompt("输入群名", "提示", {
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+    inputValue: name,
+  })
+
   const isByteLeng = isByteLengthExceedingLimit(result.value, "name")
   if (isByteLeng) {
     // const long = GroupModifyType['name']
@@ -172,10 +190,12 @@ const openNamePopup = async () => {
 }
 
 const openNoticePopup = async () => {
-  const { notification } = groupProfile
-  const data = { message: "输入群公告", inputValue: notification }
-  const result = await showConfirmationBox(data, "prompt")
-  if (result === "cancel") return
+  const { notification } = props.groupProfile
+  const result = await ElMessageBox.prompt("输入群公告", "提示", {
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+    inputValue: notification,
+  })
   const isByteLeng = isByteLengthExceedingLimit(result.value, "notification")
   if (isByteLeng) {
     // const long = GroupModifyType['notification']
@@ -187,7 +207,8 @@ const openNoticePopup = async () => {
 
 const openDetails = () => {}
 
-const openAvatarPopup = (url: string) => {
+const openAvatarPopup = (url: string | undefined) => {
+  if (!url) return
   emitter.emit("handleImageViewer", url)
 }
 
@@ -196,10 +217,10 @@ const handleClose = () => {
 }
 
 const groupMemberAdd = () => {
-  AddMemberRef.value.openDialog()
+  AddMemberRef.value?.openDialog()
 }
 
-const navigate = (item) => {
+const navigate = (item: GroupMember) => {
   chatStore.addConversation({ sessionId: `C2C${item.userID}` })
   setDrawer(false)
   setTimeout(() => {
@@ -208,9 +229,12 @@ const navigate = (item) => {
   }, 200)
 }
 
-const removeGroupMemberBtn = async (item) => {
-  const data = { message: `确定将 ${item.nick || item.userID} 移出群聊?`, iconType: "warning" }
-  const result = await showConfirmationBox(data)
+const removeGroupMemberBtn = async (item: GroupMember) => {
+  const result = await ElMessageBox.confirm(`确定将 ${item.nick || item.userID || "群成员"} 移出群聊?`, "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
   if (result === "cancel") return
   const params = { groupID: toAccount.value, user: item.userID }
   const { code } = await deleteGroupMember(params)
@@ -218,8 +242,8 @@ const removeGroupMemberBtn = async (item) => {
   updataGroup()
 }
 
-const addGroupMemberBtn = async (value) => {
-  const { groupID, type } = groupProfile
+const addGroupMemberBtn = async (value: DB_Session) => {
+  const { groupID, type } = props.groupProfile
   const { toAccount } = value
   if (type === "Public") {
     const { ErrorCode } = await restApi({
@@ -229,7 +253,7 @@ const addGroupMemberBtn = async (value) => {
     if (ErrorCode !== 0) return
     updataGroup()
   } else {
-    const { code, data } = await addGroupMember({ groupID, user: toAccount })
+    const { code, data } = await addGroupMember({ groupID, user: toAccount ?? "" })
     if (code === 0) {
       updataGroup()
     } else {
@@ -240,13 +264,13 @@ const addGroupMemberBtn = async (value) => {
 
 const updataGroup = () => {
   setTimeout(() => {
-    groupStore.handleGroupMemberList({ groupID: groupProfile.groupID })
+    groupStore.handleGroupMemberList({ groupID: props.groupProfile.groupID })
   }, 200)
 }
 // 修改群资料
-const modifyGroupInfo = async (value: string, modify: string) => {
-  const { groupID } = groupProfile
-  const { code, group } = await updateGroupProfile({ groupID, value, modify })
+const modifyGroupInfo = async (value: string, modify?: ModifyTypeValue) => {
+  const { groupID } = props.groupProfile
+  const { code, group } = await updateGroupProfile({ groupID, modify, value })
   if (code !== 0) {
     window.$message?.warning("修改失败")
   } else {
@@ -255,31 +279,38 @@ const modifyGroupInfo = async (value: string, modify: string) => {
 }
 
 const handleDismissGroup = async () => {
-  const data = { message: "确定解散群聊?", iconType: "warning" }
-  const result = await showConfirmationBox(data)
+  const result = await ElMessageBox.confirm("确定解散群聊?", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
   if (result === "cancel") return
   groupStore.handleDismissGroup({ sessionId: currentSessionId.value, groupId: toAccount.value })
   setDrawer(false)
 }
 
 const handleTransferGroup = async () => {
-  const data = { message: "确定转让群聊?", iconType: "warning" }
-  const result = await showConfirmationBox(data)
+  const result = await ElMessageBox.confirm("确定转让群聊?", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
   if (result === "cancel") return
 }
 
 const handleQuitGroup = async () => {
-  const data = { message: "确定退出群聊?", iconType: "warning" }
-  const result = await showConfirmationBox(data)
+  const result = await ElMessageBox.confirm("确定退出群聊?", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
   if (result === "cancel") return
   groupStore.handleQuitGroup({ sessionId: currentSessionId.value, groupId: toAccount.value })
   setDrawer(false)
 }
 
 onMounted(() => {
-  emitter.on("handleGroupDrawer", (val: boolean) => {
-    setDrawer(val)
-  })
+  emitter.on("handleGroupDrawer", setDrawer)
 })
 
 onBeforeUnmount(() => {
