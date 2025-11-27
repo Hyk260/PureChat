@@ -13,8 +13,21 @@ import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
 
-import type { DB_Message, DB_Session } from "@/types"
-import type { ChatSDK, MESSAGE_OPTIONS, TRANSLATE_TEXT_OPTIONS } from "@/types/tencent-cloud-chat"
+import type { DB_Message, DB_Session, MessageType } from "@/types"
+import type {
+  ChatSDK,
+  MESSAGE_OPTIONS,
+  TRANSLATE_TEXT_OPTIONS,
+  GET_MESSAGE_LIST_OPTIONS,
+  DELETE_CONVERSATION_OPTIONS,
+} from "@/types/tencent-cloud-chat"
+
+type EventHandler<T = unknown> = (data: T) => void
+
+interface LastMessageData {
+  messageForShow?: string
+  lastTime?: number
+}
 
 export class LocalChat {
   static instance: LocalChat | null = null
@@ -74,37 +87,39 @@ export class LocalChat {
     return LocalChat.getInstance()
   }
 
-  /**
-   * 注册事件监听器
-   */
-  on(eventName: string, handler: any, context = null) {
+  // ==================== 事件系统 ====================
+
+  on<T = unknown>(eventName: string, handler: EventHandler<T>, context?: object) {
     const boundHandler = context ? handler.bind(context) : handler
     emitter.on(eventName, boundHandler)
   }
 
-  /**
-   * 移除事件监听器
-   */
-  off(event: string, handler: any) {
+  off<T = unknown>(event: string, handler: EventHandler<T>) {
     emitter.off(event, handler)
   }
 
-  /**
-   * 触发事件
-   */
-  emit(eventName: string, handler: any) {
-    emitter.emit(eventName, handler)
+  emit<T = unknown>(eventName: string, data: T) {
+    emitter.emit(eventName, data)
   }
 
-  async updateConversationLastMessage(id: string, data) {
+  async updateConversationLastMessage(id: string, data: LastMessageData) {
     try {
       const session = await SessionModel.findById(id)
-      if (session) {
-        const conversation = cloneDeep(session)
-        conversation.lastMessage.messageForShow = data?.messageForShow || ""
-        conversation.lastMessage.lastTime = data?.lastTime || getUnixTimestampSec()
-        await SessionModel.update(id, conversation)
+      if (!session) return
+
+      // const updatedSession = cloneDeep(session)
+      // updatedSession.lastMessage.messageForShow = data?.messageForShow || ""
+      // updatedSession.lastMessage.lastTime = data?.lastTime || getUnixTimestampSec()
+      const updatedSession: DB_Session = {
+        ...session,
+        lastMessage: {
+          ...session.lastMessage,
+          payload: session.lastMessage?.payload || { text: "" },
+          messageForShow: data.messageForShow ?? "",
+          lastTime: data.lastTime ?? getUnixTimestampSec(),
+        },
       }
+      await SessionModel.update(id, updatedSession)
     } catch (error) {
       console.error("updateConversationLastMessage:", error)
     }
@@ -116,8 +131,9 @@ export class LocalChat {
   async sendMessage(data: DB_Message) {
     try {
       await this.updateConversationLastMessage(data.conversationID, {
-        messageForShow: data.payload.text,
+        messageForShow: data.payload?.text,
       })
+
       const currentTime = getUnixTimestampSec()
 
       const message = {
@@ -127,14 +143,12 @@ export class LocalChat {
         ID: data.ID || uuid(),
         status: "success",
       }
+
       await delay(100)
-      try {
-        const sessionList = await this.loadConversationList()
-        this.emit("onConversationListUpdated", { data: sessionList })
-        this.emit("onMessageReceived", { data: [message] })
-      } catch (error) {
-        console.error("发送消息后处理失败:", error)
-      }
+
+      const sessionList = await this.loadConversationList()
+      this.emit("onConversationListUpdated", { data: sessionList })
+      this.emit("onMessageReceived", { data: [message] })
 
       return { code: 0, data: { message } }
     } catch (error) {
@@ -142,9 +156,13 @@ export class LocalChat {
       return { code: -1, data: { message: null } }
     }
   }
+
+  // ==================== 用户相关 ====================
+
   getLoginUser() {
     return UserProfile.userID
   }
+
   async getMyProfile() {
     await delay(10)
     return {
@@ -155,7 +173,7 @@ export class LocalChat {
 
   async translateText(data: TRANSLATE_TEXT_OPTIONS) {
     const { sourceTextList = [], sourceLanguage, targetLanguage } = data
-
+    console.log("translateText", sourceTextList, sourceLanguage, targetLanguage)
     await delay(10)
     return { code: 0, data: { text: "翻译结果" } }
   }
@@ -198,91 +216,72 @@ export class LocalChat {
     }
   }
 
+  // ==================== 消息创建 ====================
+
   /**
-   * 创建文本消息
+   * 创建基础消息结构
    */
-  createTextMessage(data: MESSAGE_OPTIONS) {
-    const { to, conversationType, payload, cloudCustomData = "", cache } = data
+  private createBaseMessage(data: MESSAGE_OPTIONS, type: MessageType, payload: DB_Message["payload"]): DB_Message {
+    const { to, conversationType, cloudCustomData = "" } = data
     const currentTime = getUnixTimestampSecPlusOne()
 
-    const messageData = {
+    return {
       ...BaseElemMessage,
+      ID: uuid(),
       time: currentTime,
       clientTime: currentTime,
-      ID: uuid(),
       to,
-      cloudCustomData,
       from: UserProfile.userID,
       avatar: UserProfile.avatar,
       conversationID: `${conversationType}${to}`,
       conversationType,
+      cloudCustomData,
       payload,
-      type: "TIMTextElem",
+      type,
       version: __APP_INFO__.pkg.version || "0",
     } as DB_Message
+  }
 
-    if (cache) MessageModel.create(messageData.ID, messageData)
+  /**
+   * 创建文本消息
+   */
+  createTextMessage(data: MESSAGE_OPTIONS) {
+    const message = this.createBaseMessage(data, "TIMTextElem", data.payload)
 
-    return messageData
+    if (data.cache) {
+      MessageModel.create(message.ID, message)
+    }
+
+    return message
   }
 
   /**
    * 创建文件消息
    */
   createFileMessage(data: MESSAGE_OPTIONS) {
-    const { to, conversationType, payload } = data
-    const currentTime = getUnixTimestampSecPlusOne()
+    const { payload } = data
+    const filePayload = {
+      fileName: payload.file?.name || "text.txt",
+      fileSize: payload.file?.size || 0,
+      filePath: payload.path || "",
+      fileUrl: "",
+      uuid: `${UserProfile.userID}-${uuid()}`,
+    } as unknown as DB_Message["payload"]
 
-    const messageData = {
-      ...BaseElemMessage,
-      time: currentTime,
-      clientTime: currentTime,
-      ID: uuid(),
-      to: to,
-      from: UserProfile.userID,
-      avatar: UserProfile.avatar,
-      conversationID: `${conversationType}${to}`,
-      conversationType,
-      payload: {
-        fileName: payload.file.name || "text.txt",
-        fileSize: payload.file.size || 0,
-        filePath: payload.path || "",
-        fileUrl: "",
-        uuid: `${UserProfile.userID}-${uuid()}`,
-      },
-      type: "TIMFileElem",
-      version: __APP_INFO__.pkg.version || "0",
-    } as unknown as DB_Message
+    const message = this.createBaseMessage(data, "TIMFileElem", filePayload)
+    MessageModel.create(message.ID, message)
 
-    MessageModel.create(messageData.ID, messageData)
-
-    return messageData
+    return message
   }
 
   /**
    * 创建自定义消息
    */
   createCustomMessage(data: MESSAGE_OPTIONS) {
-    const { to, conversationType, payload } = data
-    const currentTime = getUnixTimestampSecPlusOne()
+    const message = this.createBaseMessage(data, "TIMCustomElem", data.payload)
+    MessageModel.create(message.ID, message)
 
-    const messageData = {
-      ...BaseElemMessage,
-      to: to,
-      from: UserProfile.userID,
-      payload,
-      ID: uuid(),
-      time: currentTime,
-      clientTime: currentTime,
-      conversationType,
-      conversationID: `${conversationType}${to}`,
-      type: "TIMCustomElem",
-      version: __APP_INFO__.pkg.version || "0",
-    } as DB_Message
-
-    MessageModel.create(messageData.ID, messageData)
-
-    return messageData
+    return message
   }
 
   /**
@@ -290,10 +289,16 @@ export class LocalChat {
    */
   async getConversationProfile(chatId: string) {
     try {
-      const data = cloneDeep(BaseElemSession) as DB_Session
-      data.conversationID = chatId
-      data.lastMessage.lastTime = getUnixTimestampSec()
-      data.userProfile = ProvidersList.find((item) => item.userID === chatId.replace("C2C", ""))
+      const data: DB_Session = {
+        ...(BaseElemSession as DB_Session),
+        conversationID: chatId,
+        lastMessage: {
+          ...BaseElemSession.lastMessage,
+          lastTime: getUnixTimestampSec(),
+        },
+        userProfile: ProvidersList.find((item) => item.userID === chatId.replace("C2C", "")),
+      }
+
       SessionModel.create(chatId, data)
 
       const list = await this.loadConversationList()
@@ -321,13 +326,9 @@ export class LocalChat {
   }
 
   /**
-   * @param data.conversationID 会话ID
-   * @param data.nextReqMessageID 下一页请求的消息ID
-   *   - 首次拉取时不传入此参数，获取最新20条消息
-   *   - 下拉加载更多时传入此参数，返回指定消息前面的历史消息20条（不包含当前传入的消息）
-   * @param data.count 返回消息数量，默认20，最大20
+   * 获取消息列表（分页）
    */
-  async getMessageList(data: { conversationID: string; nextReqMessageID?: string; count?: number }) {
+  async getMessageList(data: GET_MESSAGE_LIST_OPTIONS) {
     try {
       const { conversationID, nextReqMessageID, count = 20 } = data
 
@@ -359,7 +360,9 @@ export class LocalChat {
   }
 
   async getMessageListHopping(_data = { conversationID: "", sequence: "", time: "", count: 15, direction: 0 }) {
-    return {}
+    return new Promise((resolve) => {
+      resolve({})
+    })
   }
 
   /**
@@ -384,15 +387,9 @@ export class LocalChat {
   /**
    * 删除会话
    */
-  async deleteConversation({
-    conversationIDList = [],
-    // clearHistoryMessage = false,
-  }: {
-    conversationIDList: string[]
-    // clearHistoryMessage?: boolean
-  }) {
+  async deleteConversation(data: DELETE_CONVERSATION_OPTIONS) {
     try {
-      const ID = conversationIDList[0] || ""
+      const ID = data.conversationIDList[0] || ""
       if (!ID) {
         throw new Error("会话ID不能为空")
       }
@@ -430,9 +427,15 @@ export class LocalChat {
       const session = sessionList.find((t) => t.conversationID === sessionId)
 
       if (session) {
-        const newSession = cloneDeep(session) as DB_Session
-        newSession.lastMessage.messageForShow = ""
-        await SessionModel.update(sessionId, newSession)
+        const updatedSession: DB_Session = {
+          ...session,
+          lastMessage: {
+            ...session.lastMessage,
+            messageForShow: "",
+            payload: session.lastMessage?.payload || { text: "" },
+          },
+        }
+        await SessionModel.update(sessionId, updatedSession)
         const messageList = await SessionModel.query()
         this.emit("onConversationListUpdated", { data: messageList })
       }
@@ -478,16 +481,10 @@ export class LocalChat {
    */
   async logout() {
     await delay(10)
-    try {
-      this.isInitialized = false
-
-      return {
-        code: 0,
-        data: { message: {} },
-      }
-    } catch (error) {
-      console.error("登出失败:", error)
-      return { code: -1, data: { message: {} } }
+    this.isInitialized = false
+    return {
+      code: 0,
+      data: { message: {} },
     }
   }
   destroy() {}

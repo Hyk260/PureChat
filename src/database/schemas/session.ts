@@ -141,7 +141,7 @@ export const DB_SessionSchema = z.object({
   groupProfile: z.any().optional(),
   userProfile: UserProfileSchema,
   remark: z.string().optional(),
-  isPinned: z.boolean().optional(),
+  isPinned: z.boolean(),
   messageRemindType: z.string().optional(),
   markList: z.array(z.any()).optional(),
   customData: z.string().optional(),

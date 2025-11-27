@@ -24,7 +24,7 @@ export const handleAssistantFile = async (file: File, editor: IDomEditor) => {
   if (!file || !editor) return
 
   const fileType = getFileType(file?.name)
-  const openTest = true
+  const openTest = false
   // electron web
   if (__IS_ELECTRON__) {
     if (!isTextFile(fileType)) {

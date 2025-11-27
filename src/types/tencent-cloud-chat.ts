@@ -27,6 +27,10 @@ export interface GET_MESSAGE_LIST_OPTIONS {
    * 消息ID，用于继续按页提取消息。首次提取消息时，可以不指定此参数。每次调用API时，都会返回此参数，您需要为下一次拉取指定该参数。
    */
   nextReqMessageID?: string
+  /**
+   * 拉取消息条数，目前一次最多20条。默认值：20
+   */
+  count?: number
 }
 
 export interface GET_MESSAGE_LIST_HOPPING_OPTIONS {

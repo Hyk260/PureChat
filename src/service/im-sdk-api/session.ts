@@ -37,10 +37,15 @@ export const getMessageList = async (params: { conversationID: string; nextReqMe
 
 export const getMessageListHopping = async (params: { conversationID: string }) => {
   try {
-    // const { conversationID } = params
-    // const { code, data } = await tim.getMessageListHopping({
-    //   conversationID,
-    // })
+    const { conversationID } = params
+    const { code, data } = await tim.getMessageListHopping({
+      conversationID,
+    })
+    if (code === 0) {
+      return data
+    } else {
+      throw new Error("Failed to get message list")
+    }
   } catch (error) {
     throw new Error(`Failed to get message list ${error}`)
   }
