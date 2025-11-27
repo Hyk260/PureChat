@@ -107,9 +107,6 @@ export class LocalChat {
       const session = await SessionModel.findById(id)
       if (!session) return
 
-      // const updatedSession = cloneDeep(session)
-      // updatedSession.lastMessage.messageForShow = data?.messageForShow || ""
-      // updatedSession.lastMessage.lastTime = data?.lastTime || getUnixTimestampSec()
       const updatedSession: DB_Session = {
         ...session,
         lastMessage: {

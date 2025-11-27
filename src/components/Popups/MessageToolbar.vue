@@ -43,14 +43,13 @@
 
 <script setup lang="ts">
 import { Forward, Merge, Share2, Trash2, X } from "lucide-vue-next"
-
+import { ElMessageBox } from "element-plus"
 import { storeToRefs } from "pinia"
 
 import MessageForwardingPopup from "@/components/Popups/MessageForwardingPopup.vue"
 import ShareModal from "@/components/ShareModal/index.vue"
 import { createForwardMessage, createMergerMessage, sendMessage } from "@/service/im-sdk-api"
 import { useChatStore, useUserStore } from "@/stores"
-import { showConfirmationBox } from "@/utils/message"
 import emitter from "@/utils/mitt-bus"
 
 const chatStore = useChatStore()
@@ -77,9 +76,10 @@ const onForwardItemByItem = () => {
 }
 
 const handleDelete = async () => {
-  const result = await showConfirmationBox({
-    message: `确认删除选中的 ${getForwardCount.value} 条消息吗？`,
-    iconType: "warning",
+  const result = await ElMessageBox.confirm(`确认删除选中的 ${getForwardCount.value} 条消息吗？`, "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
   })
   if (result === "cancel") return
   if (isForwardDataEmpty.value) return

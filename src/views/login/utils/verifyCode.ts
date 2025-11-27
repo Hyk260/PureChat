@@ -1,11 +1,9 @@
 import { ref } from "vue"
-
 import { cloneDeep } from "lodash-es"
-
 import type { FormInstance, FormItemProp } from "element-plus"
 
 const isDisabled = ref(false)
-const timer = ref(null)
+const timer = ref<ReturnType<typeof setInterval> | null>(null)
 const text = ref("")
 
 export const useVerifyCode = () => {
@@ -14,7 +12,9 @@ export const useVerifyCode = () => {
     const initTime = cloneDeep(time)
     await formEl.validateField(props, (isValid) => {
       if (isValid) {
-        clearInterval(timer.value)
+        if (timer.value) {
+          clearInterval(timer.value)
+        }
         isDisabled.value = true
         text.value = `${time}`
         timer.value = setInterval(() => {
@@ -24,7 +24,9 @@ export const useVerifyCode = () => {
           } else {
             text.value = ""
             isDisabled.value = false
-            clearInterval(timer.value)
+            if (timer.value) {
+              clearInterval(timer.value)
+            }
             time = initTime
           }
         }, 1000)
@@ -35,7 +37,9 @@ export const useVerifyCode = () => {
   const end = () => {
     text.value = ""
     isDisabled.value = false
-    clearInterval(timer.value)
+    if (timer.value) {
+      clearInterval(timer.value)
+    }
   }
 
   return {

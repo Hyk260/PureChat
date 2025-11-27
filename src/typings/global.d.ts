@@ -36,19 +36,14 @@ declare global {
     /** 复制文本到剪贴板 */
     copyToClipboard: (str: string) => void;
     /** NProgress */
-    NProgress?: import('nprogress').NProgress;
+    NProgress: import('nprogress').NProgress;
     /** MessageBox */
     // $messageBox?: import('element-plus').IElMessageBox;
     /** Notification */
     // $notification: import('element-plus').Notify;
     /** Message */
     // $message?: import('element-plus').Message;
-    $message?: import('element-plus').Message & {
-      success: (message: string) => void;
-      warning: (message: string) => void;
-      info: (message: string) => void;
-      error: (message: string) => void;
-    };
+    $message: import('element-plus').Message;
     // __TIM_DEBUG__: DebugInterface;
   }
 

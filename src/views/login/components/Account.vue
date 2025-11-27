@@ -15,8 +15,13 @@
         />
       </template>
       <template v-else>
-        <ElInput v-model="form.username" :placeholder="$t('login.username')" :prefixIcon="User" size="large" clearable>
-        </ElInput>
+        <ElInput
+          v-model="form.username"
+          :placeholder="$t('login.username')"
+          :prefixIcon="User"
+          size="large"
+          clearable
+        />
       </template>
     </ElFormItem>
     <!-- 密码 -->
@@ -128,11 +133,11 @@ const { oauthAuthorize } = useOAuth({
   },
 })
 
-const handleSelect = (item) => {
+const handleSelect = (item: Record<string, any>) => {
   console.log(item)
 }
 
-const handleSearch = (query, callback) => {
+const handleSearch = (query: string, callback: Function) => {
   const results = query
     ? userSuggestions.value.filter((user) => user.value.toLowerCase().includes(query.toLowerCase()))
     : userSuggestions.value
@@ -145,8 +150,8 @@ const handleLogin = async () => {
   try {
     await formRef.value.validate()
     if (isDev) await delay(300)
-    userStore.handleUserLogin(form.value)
-  } catch {
+    await userStore.handleUserLogin(form.value)
+  } catch (error) {
     setLoading(false)
   }
 }

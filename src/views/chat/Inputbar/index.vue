@@ -253,7 +253,7 @@ defineOptions({
   name: "Inputbar",
 })
 
-const popoverRef = ref()
+const popoverRef = useTemplateRef("popoverRef")
 
 const supportExts = [
   ...textExts,
