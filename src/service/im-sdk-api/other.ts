@@ -58,14 +58,15 @@ export const revokeMsg = async (params) => {
 }
 // 消息免打扰
 export const setMessageRemindType = async (params: DB_Session) => {
-  const { toAccount: userID, messageRemindType: remindType, type } = params
+  const { conversationID, messageRemindType: remindType, type } = params
+  const userID = conversationID.replace("GROUP", "").replace("C2C", "")
   let parameter = {} as SET_MESSAGE_REMIND_TYPE_OPTIONS
   const isDisable = remindType === "AcceptNotNotify"
   if (type === "C2C") {
     // 单人会话
     parameter = {
       userIDList: [userID || ""],
-      messageRemindType: isDisable ? "" : "AcceptNotNotify",
+      messageRemindType: isDisable ? "AcceptAndNotify" : "AcceptNotNotify",
     }
   } else {
     // 群聊
@@ -81,7 +82,8 @@ export const setMessageRemindType = async (params: DB_Session) => {
     }
   }
   try {
-    await tim.setMessageRemindType(parameter)
+    const data = await tim.setMessageRemindType(parameter)
+    console.log("设置消息免打扰成功:", data)
   } catch (error) {
     console.error("设置消息免打扰失败:", error)
   }

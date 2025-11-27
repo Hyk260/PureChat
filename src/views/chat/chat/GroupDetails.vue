@@ -5,11 +5,11 @@
     modalClass="group-drawer-modal"
     :title="$t('group.groupDetails')"
     :modal="true"
-    :beforeClose="handleClose"
     :closeOnPressEscape="true"
     :appendToBody="false"
     :showClose="false"
     :withHeader="true"
+    @close="handleClose"
   >
     <div>
       <div class="group-info">
@@ -191,8 +191,8 @@ const openAvatarPopup = (url: string) => {
   emitter.emit("handleImageViewer", url)
 }
 
-const handleClose = (done: () => void) => {
-  done()
+const handleClose = () => {
+  setDrawer(false)
 }
 
 const groupMemberAdd = () => {
@@ -287,6 +287,7 @@ onBeforeUnmount(() => {
 })
 
 watch(currentConversation, (data) => {
+  if (!data) return
   // AcceptAndNotify AcceptNotNotify
   notify.value = data.messageRemindType === "AcceptNotNotify"
 })

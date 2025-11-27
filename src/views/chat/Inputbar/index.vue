@@ -241,7 +241,7 @@ import { createCustomMessage } from "@/service/im-sdk-api"
 import WebSearchService from "@/service/WebSearchService"
 import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores"
 import { createFileInput } from "@/utils/common"
-import { showConfirmationBox } from "@/utils/message"
+import { ElMessageBox } from "element-plus"
 import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
 import EmojiPicker from "./EmojiPicker.vue"
@@ -282,18 +282,16 @@ const cleanTopicShortcut = () => {
 
 const onEnableWebSearch = async () => {
   const isWebSearchEnabled = WebSearchService.isWebSearchEnabled()
-  if (!isWebSearchEnabled) {
-    const result = await showConfirmationBox({
-      tip: "开启网络搜索",
-      message: "需要先在设置中检查网络搜索连通性",
-      iconType: "warning",
-      confirmText: "去设置",
-      // center: true,
+  if (isWebSearchEnabled) {
+    webSearchStore.updateCheckProviders(modelProvider.value)
+  } else {
+    const result = await ElMessageBox.confirm("需要先在设置中检查网络搜索连通性", "开启网络搜索", {
+      confirmButtonText: "去设置",
+      cancelButtonText: "取消",
+      type: "warning",
     })
     if (result === "cancel") return
     emitter.emit("openSetup", { flag: true, id: "webSearch" })
-  } else {
-    webSearchStore.updateCheckProviders(modelProvider.value)
   }
 }
 

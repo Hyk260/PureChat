@@ -1,9 +1,8 @@
 import { h, watch } from "vue"
 import { useRoute } from "vue-router"
-
+import { ElMessageBox } from "element-plus"
 import { getModelId, useAccessStore } from "@/ai/utils"
 import { useChatStore, useRobotStore, useRouteStore } from "@/stores"
-import { showConfirmationBox } from "@/utils/message"
 
 const { VITE_OPENAI_API_KEY, VITE_OPENAI_PROXY_URL, DEV: isDev } = import.meta.env
 
@@ -98,8 +97,15 @@ export async function autofillProvider(settings: UrlSettings) {
   const { keyVaults } = settings
   const openaiConfig = keyVaults.openai
 
-  // 验证必要配置项
-  if (!openaiConfig?.apiKey || !openaiConfig?.baseURL) return
+  if (!openaiConfig?.baseURL) {
+    console.warn("baseURL is not found")
+    return
+  }
+
+  if (!openaiConfig?.apiKey) {
+    console.warn("apiKey is not found")
+    return
+  }
 
   const confirmationMessage = h("div", { style: "line-height: 20px;" }, [
     h("div", null, "检测到链接中包含了预制设置，是否自动填入？"),
@@ -107,15 +113,12 @@ export async function autofillProvider(settings: UrlSettings) {
     h("div", null, `"baseURL": ${openaiConfig.baseURL}`),
   ])
 
-  const result = await showConfirmationBox({
+  await ElMessageBox.confirm("检测到链接中包含了预制设置，是否自动填入？", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
     message: confirmationMessage,
-    iconType: "warning",
+    type: "warning",
   })
-
-  if (result === "cancel") {
-    console.warn("用户取消了自动填充设置")
-    return
-  }
 
   const config = {
     ...useAccessStore("openai"),

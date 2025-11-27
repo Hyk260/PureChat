@@ -126,7 +126,7 @@ import {
 } from "@/utils/chat"
 import { getUnixTimestampSec } from "@/utils/common"
 import { avatarContextMenuItems, messageContextMenuItems } from "@/utils/contextMenuPresets"
-import { showConfirmationBox } from "@/utils/message"
+import { ElMessageBox } from "element-plus"
 import emitter from "@/utils/mitt-bus"
 import { delay } from "@/utils/common"
 import { timeFormat } from "@/utils/timeFormat"
@@ -531,8 +531,12 @@ const handleRevokeChange = (data: DB_Message, type: string) => {
 
 const handleRevokeMessage = async (data: DB_Message) => {
   const isTimeout = getUnixTimestampSec() - data.time > REVOKE_TIME_LIMIT
-  if (isTimeout) {
-    const result = await showConfirmationBox({ message: "确定撤回这条消息?", iconType: "warning" })
+  if (!isTimeout) {
+    const result = await ElMessageBox.confirm("确定撤回这条消息?", "提示", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    })
     if (result === "cancel") return
   }
   const { code, message } = await revokeMsg(data)

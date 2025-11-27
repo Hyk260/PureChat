@@ -4,7 +4,7 @@ import { customDataWebSearch, DB_Message } from "@/database/schemas/message"
 import { convertBlobUrlToDataUrl } from "@/utils/chat"
 
 import type { LLMMessage } from "@/ai/types"
-import type { DraftData, ImagePayloadType } from "@/types"
+import type { DraftData, ImagePayloadType, DB_Session } from "@/types"
 
 export function checkTextNotEmpty(nodes: DraftData) {
   return nodes.some((obj) => {
@@ -124,7 +124,7 @@ export async function transformData(data: DB_Message[]): Promise<LLMMessage[]> {
   }
 }
 
-export const chatName = (item) => {
+export const chatName = (item: DB_Session): string => {
   if (!item) return ""
   switch (item.type) {
     case "C2C":

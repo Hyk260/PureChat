@@ -6,20 +6,6 @@
         v-for="item in displayData"
         :id="`message_${item.conversationID}`"
         :key="item.conversationID"
-        v-memo="[
-          item.conversationID,
-          item._displayName,
-          item._displayMessage,
-          item._displayTime,
-          item._isActive,
-          item._showUnreadCount,
-          item._unreadCount,
-          item._isMention,
-          item._hasDraft,
-          item._showDontNotify,
-          item.isPinned,
-          currentSessionId,
-        ]"
         class="message-item"
         :class="{ 'is-active': item._isActive }"
         @click="handleConversationListClick(item)"
@@ -58,7 +44,7 @@
             <span v-else>{{ item._displayMessage }}</span>
           </div>
           <!-- 未读消息红点 -->
-          <ElBadge v-show="item._showUnreadCount" :value="item._unreadCount" :max="99" />
+          <ElBadge v-show="item._showUnreadCount" :value="item.unreadCount" :max="99" />
           <!-- 消息免打扰 -->
           <BellOff v-show="item._showDontNotify" :size="15" class="dont" />
         </div>
@@ -125,53 +111,21 @@ interface DisplayCacheItem {
   _isMention: boolean
   _hasDraft: boolean
   _showDontNotify: boolean
-  _unreadCount: number
-  cacheKey: string
-}
-
-const displayCache = new Map<string, DisplayCacheItem>()
-
-const getCacheKey = (item: DB_Session, currentId: string) => {
-  const lastMsg = item.lastMessage
-  const lastMessageTime = lastMsg?.lastTime
-  const lastMessageContent = lastMsg?.messageForShow
-  const lastMessageType = lastMsg?.type
-  const lastMessageFrom = lastMsg?.fromAccount
-  const lastMessageNick = lastMsg?.nick
-  const lastMessageRevoked = lastMsg?.isRevoked
-  const hasDraft = chatStore.chatDraftMap.has(item.conversationID)
-  const atCount = item.groupAtInfoList?.length ?? 0
-
-  // 使用简短的键来减少内存占用和字符串拼接成本
-  return `${item.conversationID}|${currentId}|${item.unreadCount}|${item.messageRemindType}|${lastMessageTime}|${lastMessageContent?.slice(0, 30) ?? ""}|${lastMessageType}|${lastMessageFrom}|${lastMessageNick}|${lastMessageRevoked}|${atCount}|${hasDraft}`
 }
 
 const displayData = computed(() => {
   const currentId = currentSessionId.value
   return searchForData.value.map((item) => {
     const conversationID = item.conversationID
-    const cacheKey = getCacheKey(item, currentId)
-
-    // 检查缓存
-    const cached = displayCache.get(cacheKey)
-    if (cached && cached.cacheKey === cacheKey) {
-      return {
-        ...item,
-        ...cached,
-      }
-    }
-
-    // 计算显示数据
     const name = chatName(item)
     const lastMessageTime = item.lastMessage?.lastTime
     const time = lastMessageTime ? timeFormat(lastMessageTime * 1000) : ""
     const messageContent = formatNewsMessage(item)
     const isActive = conversationID === currentId
-    const unreadCount = item.unreadCount ?? 0
-    const showUnreadCount = unreadCount > 0 && unreadCount <= 99 && !isNotify(item) && item.type !== "@TIM#SYSTEM"
+    const showUnreadCount = !isShowCount(item) && !isNotify(item) && item.type !== "@TIM#SYSTEM"
     const isMentioned = (item.groupAtInfoList?.length ?? 0) > 0
     const hasDraft = conversationID !== currentId && chatStore.chatDraftMap.has(conversationID)
-    const showDontNotify = isNotify(item) && !isShowCount(item) && item.type !== "@TIM#SYSTEM"
+    const showDontNotify = isNotify(item)
 
     const computedData: DisplayCacheItem = {
       _displayName: name,
@@ -182,15 +136,7 @@ const displayData = computed(() => {
       _isMention: isMentioned,
       _hasDraft: hasDraft,
       _showDontNotify: showDontNotify,
-      _unreadCount: unreadCount,
-      cacheKey,
     }
-
-    if (displayCache.size > 20) {
-      const firstKey = displayCache.keys().next().value
-      displayCache.delete(firstKey)
-    }
-    displayCache.set(cacheKey, computedData)
 
     return {
       ...item,
