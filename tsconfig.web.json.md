@@ -43,8 +43,46 @@
 - **官方文档**: https://www.typescriptlang.org/tsconfig#checkJs
 
 #### `strict: false`
-- **作用**: 禁用所有严格类型检查选项
+- **作用**: 禁用所有严格类型检查选项（但单独启用了部分严格检查选项）
+- **说明**: 虽然 `strict` 为 `false`，但项目单独启用了 `strictNullChecks`、`noImplicitReturns`、`noImplicitThis` 等选项，以获得更精细的类型检查控制
 - **官方文档**: https://www.typescriptlang.org/tsconfig#strict
+
+#### `strictNullChecks: true`
+- **作用**: 启用严格的 null 检查，要求显式处理 null 和 undefined
+- **官方文档**: https://www.typescriptlang.org/tsconfig#strictNullChecks
+
+#### `noImplicitAny: false`
+- **作用**: 允许隐式的 any 类型
+- **说明**: 设置为 `false` 以允许在迁移过程中使用隐式 any
+- **官方文档**: https://www.typescriptlang.org/tsconfig#noImplicitAny
+
+#### `noImplicitReturns: true`
+- **作用**: 确保函数的所有代码路径都有返回值
+- **官方文档**: https://www.typescriptlang.org/tsconfig#noImplicitReturns
+
+#### `noImplicitThis: true`
+- **作用**: 禁止隐式的 this 类型
+- **官方文档**: https://www.typescriptlang.org/tsconfig#noImplicitThis
+
+#### `noUnusedLocals: true`
+- **作用**: 报告未使用的局部变量错误
+- **官方文档**: https://www.typescriptlang.org/tsconfig#noUnusedLocals
+
+#### `noUnusedParameters: true`
+- **作用**: 报告未使用的参数错误
+- **官方文档**: https://www.typescriptlang.org/tsconfig#noUnusedParameters
+
+#### `noFallthroughCasesInSwitch: true`
+- **作用**: 报告 switch 语句中 fallthrough 情况的错误
+- **官方文档**: https://www.typescriptlang.org/tsconfig#noFallthroughCasesInSwitch
+
+#### `noUncheckedIndexedAccess: true`
+- **作用**: 在索引访问时添加 undefined 到类型中，提高类型安全性
+- **官方文档**: https://www.typescriptlang.org/tsconfig#noUncheckedIndexedAccess
+
+#### `forceConsistentCasingInFileNames: true`
+- **作用**: 强制文件名大小写一致，避免在不同操作系统上出现导入错误
+- **官方文档**: https://www.typescriptlang.org/tsconfig#forceConsistentCasingInFileNames
 
 ### 模块解析选项
 
@@ -95,31 +133,32 @@
 
 ### 类型定义
 
-#### `types: ["vite/client"]`
-- **作用**: 包含 Vite 客户端的类型定义
+#### `types: ["vite/client", "node", "element-plus/global"]`
+- **作用**: 指定要包含的类型定义包
+- **配置**:
+  - `"vite/client"` - Vite 客户端的类型定义（支持 import.meta.env 等）
+  - `"node"` - Node.js 环境的类型定义
+  - `"element-plus/global"` - Element Plus 组件的全局类型定义
 - **官方文档**: https://www.typescriptlang.org/tsconfig#types
 
 ### 文件包含/排除
 
 #### `include`
-- **作用**: 指定要包含的文件
+- **作用**: 指定要包含的文件和目录
 - **配置**: 
+  - `"src/**/*.ts"` - src 目录下的所有 TypeScript 文件
+  - `"src/**/*.vue"` - src 目录下的所有 Vue 单文件组件
+  - `"src/typings/*.ts"` - src/typings 目录下的类型定义文件
+  - `"src/types/*.ts"` - src/types 目录下的类型定义文件
   - `"build/**/*.ts"` - build 目录下的 TypeScript 文件
-  - `"src/**/*.ts"` - src 目录下的 TypeScript 文件
-  - `"src/**/*.vue"` - Vue 单文件组件
-  - `"packages/**/*.ts"` - packages 目录下的 TypeScript 文件
   - `"vite.config.ts"` - Vite 配置文件
-  - `"package.json"` - 包配置文件
 - **官方文档**: https://www.typescriptlang.org/tsconfig#include
 
 #### `exclude`
-- **作用**: 指定要排除的文件
+- **作用**: 指定要排除的文件和目录
 - **配置**:
   - `"node_modules"` - 依赖包目录
-  - `"**/*.js"` - 所有 JavaScript 文件
   - `"dist"` - 构建输出目录
-  - `"*.d.ts"` - 声明文件
-  - `"packages/**/*.js"` - packages 目录下的 JavaScript 文件
 - **官方文档**: https://www.typescriptlang.org/tsconfig#exclude
 
 ## 官方资源
