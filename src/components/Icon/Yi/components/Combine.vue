@@ -1,16 +1,5 @@
 <template>
-  <div
-    class="yi-combine flex-c"
-    :style="{
-      gap: '4px',
-      flex: 'none',
-      lineHeight: 1,
-      fontWeight: 600,
-      ...extraStyle,
-    }"
-    :aria-label="TITLE"
-    v-bind="$attrs"
-  >
+  <div class="yi-combine flex-c gap-4" :aria-label="TITLE" v-bind="$attrs">
     <Mono :size="size" />
     <Text :size="textSize" />
   </div>
@@ -29,12 +18,10 @@ defineOptions({
 
 interface Props {
   size?: string | number
-  extraStyle?: Record<string, any>
 }
 
 const props = withDefaults(defineProps<Props>(), {
   size: "1em",
-  extraStyle: () => ({}),
 })
 
 const textSize = computed(() => {

@@ -1,5 +1,5 @@
 <template>
-  <div ref="emojiMartRef" v-click-outside="onClickOutside">
+  <div ref="emojiMartRef" v-click-outside="onClickOutside" class="fade-slide-fade-in">
     <div v-if="isLoading" class="loading-container">
       <span class="loading-icon el-icon-loading" />
       <span>加载中...</span>

@@ -1,9 +1,9 @@
 <template>
-  <div v-show="flag" v-click-outside="onClickOutside" class="robot-model-box">
+  <div v-show="flag" v-click-outside="onClickOutside" class="robot-model-box fade-slide-fade-in">
     <ElScrollbar>
       <div v-if="model" class="robot-model">
         <div class="item-group-title">
-          <ProviderIcon :provider="model.id" :size="22" type="combine-color" />
+          <ProviderIcon :provider="model.id" :size="22" type="combine" />
         </div>
         <div
           v-for="item in model?.chatModels"

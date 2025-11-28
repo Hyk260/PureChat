@@ -7,8 +7,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
-
 import { useChatStore } from "@/stores/modules/chat"
 
 import type { DB_Message } from "@/types"
@@ -94,10 +92,10 @@ $checkmark-border-width: 0.15em;
 }
 .checkbox-input {
   position: absolute;
+  cursor: pointer;
   opacity: 0;
   width: 0;
   height: 0;
-  cursor: pointer;
 
   &:checked ~ .checkbox-indicator {
     background-color: $checkbox-active-color;

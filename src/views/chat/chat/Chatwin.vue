@@ -692,7 +692,8 @@ defineExpose({ updateScrollbar, scrollToBottom })
   flex-direction: row;
   transition:
     background-color 0.15s ease,
-    opacity 0.15s ease;
+    opacity 0.15s ease,
+    padding 0.1s ease;
   gap: 8px;
   min-height: 56px;
   padding-left: 0;

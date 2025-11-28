@@ -17,12 +17,10 @@ defineOptions({
 
 interface Props {
   size?: string | number
-  extraStyle?: Record<string, any>
 }
 
 const props = withDefaults(defineProps<Props>(), {
   size: "1em",
-  extraStyle: () => ({}),
 })
 
 const textSize = computed(() => {

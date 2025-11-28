@@ -78,7 +78,7 @@ function downloadImage(dataUrl: string, imageType: ImageType, title: string = ""
 }
 
 export const useScreenshot = (): ScreenshotHook => {
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState(false)
 
   const handleDownload = async (imageType = ImageType.JPG, title = "", callback?: () => void) => {
     setLoading(true)

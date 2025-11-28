@@ -1,5 +1,5 @@
 <template>
-  <div v-click-outside="onClickOutside" class="emoji-section">
+  <div v-click-outside="onClickOutside" class="emoji-section fade-slide-fade-in">
     <div class="emojis">
       <ElScrollbar wrapClass="custom-scrollbar-wrap" always>
         <!-- QQ表情包 -->
