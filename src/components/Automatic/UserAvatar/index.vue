@@ -1,8 +1,16 @@
 <template>
-  <div>
+  <div class="avatar-container">
     <div v-if="type === 'group'" class="user-avatar default" :class="[className, shape]" :style="backInfo(url)">
       {{ url ? null : displayInfo(nickName) }}
     </div>
+    <!-- <img
+      v-else-if="type === 'single'"
+      v-lazy="url || getAiAvatarUrl(sessionId) || shapeObj[shape]"
+      class="lazy avatar"
+      :size="size"
+      :src="url || getAiAvatarUrl(sessionId) || shapeObj[shape]"
+      alt=""
+    /> -->
     <ElAvatar
       v-else-if="type === 'single'"
       class="avatar"
@@ -25,7 +33,7 @@
       </span>
       <ElAvatar v-else-if="userProfile?.avatar" :size="size" :src="fnAvatar(userProfile.avatar)" :shape="shape" />
       <div v-else class="user-avatar default" :class="[className, shape]" :style="backInfo(url)">
-        {{ url ? null : displayInfo(userProfile.nick || userProfile.userID) }}
+        {{ url ? null : displayInfo(userProfile?.nick || userProfile?.userID || "") }}
       </div>
       <!-- <sup v-if="isDot" class="is-dot"></sup> -->
     </div>
@@ -41,45 +49,28 @@ defineOptions({
   name: "UserAvatar",
 })
 
-const props = defineProps({
-  className: {
-    type: String,
-    default: "",
-  },
-  sessionId: {
-    type: String,
-    default: "",
-  },
-  url: {
-    type: String,
-    default: "",
-  },
-  nickName: {
-    type: String,
-    default: "",
-  },
-  words: {
-    type: String || Number,
-    default: "2",
-  },
-  size: {
-    type: Number,
-    default: 40,
-  },
-  isDot: {
-    type: Boolean,
-    default: false,
-  },
-  type: {
-    type: String,
-    default: "group",
-    validator: (value: string) => ["single", "group", "self"].includes(value),
-  },
-  shape: {
-    type: String,
-    default: "circle",
-    validator: (value: string) => ["square", "circle"].includes(value),
-  },
+interface Props {
+  className?: string
+  sessionId?: string
+  url?: string
+  nickName?: string
+  words?: string | number
+  size?: number
+  isDot?: boolean
+  type?: "group" | "single" | "self"
+  shape?: "circle" | "square"
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  className: "",
+  sessionId: "",
+  url: "",
+  nickName: "",
+  words: "2",
+  size: 40,
+  isDot: false,
+  type: "group",
+  shape: "circle",
 })
 
 const shapeObj = {
@@ -124,8 +115,8 @@ const backInfo = (url: string) => {
 }
 .avatar {
   --el-text-color-disabled: #ffffff00;
-  width: var(--el-avatar-size);
-  height: var(--el-avatar-size);
+  width: var(--el-avatar-size, 40px);
+  height: var(--el-avatar-size, 40px);
   border-radius: 3px;
 }
 .default {

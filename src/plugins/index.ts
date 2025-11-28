@@ -4,6 +4,7 @@ import { useElementPlus } from "./elementPlus"
 // import { setupNProgress } from "./nprogress"
 import { setupIconifyOffline } from "./iconify"
 import { useElIcons } from "./icons"
+import { useLazyLoad } from "./lazyload"
 
 import type { App } from "vue"
 
@@ -22,6 +23,7 @@ export function setupPlugins(app: App) {
   app.use(useElIcons)
   app.use(useElementPlus)
   app.use(useGlobalProperties)
+  app.use(useLazyLoad)
   setupIconifyOffline()
   // setupNProgress()
   setupAppVersionNotification()

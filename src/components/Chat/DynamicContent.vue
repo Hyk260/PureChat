@@ -8,9 +8,10 @@
     <!-- 表情包 -->
     <img
       v-else-if="isEmojiContent(item)"
+      v-lazy="getEmojiAssetUrlSync(item.localSrc || '')"
       draggable="false"
       loading="lazy"
-      class="h-23 w-23 align-sub"
+      class="lazy h-23 w-23 align-sub"
       :src="getEmojiAssetUrlSync(item.localSrc || '')"
       alt="表情包"
     />

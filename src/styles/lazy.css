@@ -1,0 +1,22 @@
+/* 懒加载状态样式 */
+.lazy {
+  /* opacity: 0; */
+  transition: opacity 0.4s ease;
+}
+
+.lazy-loaded {
+  opacity: 1;
+}
+
+.lazy-loading {
+  opacity: 0.5;
+}
+
+/* .lazy-entered {
+  
+} */
+
+.lazy-error {
+  opacity: 1;
+  background: #fee2e2;
+}
