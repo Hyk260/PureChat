@@ -4,10 +4,10 @@
     v-bind="$attrs"
     :style="{
       flex: 'none',
+      color,
       background,
       borderRadius: shape === 'circle' ? '50%' : `${Math.floor(size * 0.1)}px`,
       boxShadow: avatarShadow,
-      color,
       height: `${size}px`,
       width: `${size}px`,
       ...style,

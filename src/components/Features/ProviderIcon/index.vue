@@ -65,8 +65,8 @@ const renderComponent = computed(() => {
 const finalComponentProps = computed(() => {
   const baseProps: Record<string, any> = {
     size: props.size,
-    // ...matchedProvider.value?.props,
-    // ...props.style,
+    ...matchedProvider.value?.props,
+    ...props.style,
   }
 
   return baseProps

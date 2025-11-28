@@ -22,7 +22,6 @@
 
 <script setup lang="ts">
 import { ElInput } from "element-plus"
-
 import { DB_Message } from "@/database/schemas/message"
 import { modifyMessage } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores"
@@ -32,12 +31,11 @@ defineOptions({
   name: "MessageEditingBox",
 })
 
-const props = defineProps({
-  item: {
-    type: Object as PropType<DB_Message>,
-    required: true,
-  },
-})
+interface Props {
+  item: DB_Message
+}
+
+const props = defineProps<Props>()
 
 const chatStore = useChatStore()
 

@@ -26,12 +26,11 @@ defineOptions({
   name: "RelayElemItem",
 })
 
-const props = defineProps({
-  message: {
-    type: Object as PropType<DB_Message>,
-    default: () => ({}),
-  },
-})
+interface Props {
+  message: DB_Message
+}
+
+const props = defineProps<Props>()
 
 const payload = props.message.payload as MergerPayloadType
 

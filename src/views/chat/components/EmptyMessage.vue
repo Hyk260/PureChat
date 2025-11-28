@@ -9,12 +9,11 @@
 import { ElEmpty } from "element-plus"
 import { useChatStore, useRouteStore } from "@/stores"
 
-const props = defineProps({
-  className: {
-    type: String,
-    default: "",
-  },
-})
+interface Props {
+  className: string
+}
+
+defineProps<Props>()
 
 const chatStore = useChatStore()
 const routeStore = useRouteStore()

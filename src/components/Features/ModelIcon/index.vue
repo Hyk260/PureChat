@@ -19,7 +19,7 @@ interface Props {
   shape?: "circle" | "square"
   size?: number
   style?: Record<string, any>
-  type?: "avatar" | "mono" | "color" | "combine" | "combine-color"
+  type?: "avatar" | "mono" | "combine"
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -54,17 +54,7 @@ const renderComponent = computed(() => {
       if (!Icon) return DefaultIcon
       return Icon || DefaultIcon
     }
-    case "color": {
-      if (!Icon) return DefaultIcon
-      return Icon.Color || Icon || DefaultIcon
-    }
     case "combine": {
-      if (!Icon) return DefaultIcon
-      if (Icon.Combine) return Icon.Combine
-      if (Icon.Text) return Icon.Text
-      return Icon || DefaultIcon
-    }
-    case "combine-color": {
       if (!Icon) return DefaultIcon
       if (Icon.Combine) return Icon.Combine
       if (Icon.Text) return Icon.Text
@@ -81,24 +71,6 @@ const finalComponentProps = computed(() => {
     size: props.size,
     ...matchedIcon.value?.props,
     ...props.style,
-  }
-
-  if (props.type === "avatar") {
-    baseProps.shape = props.shape
-  }
-
-  if (props.type === "combine" && renderComponent.value) {
-    const componentName = renderComponent.value.name
-    if (componentName === "OpenAICombine") {
-      baseProps.type = "mono"
-    }
-  }
-
-  if (props.type === "combine-color" && renderComponent.value) {
-    const componentName = renderComponent.value.name
-    if (componentName === "OpenAICombine") {
-      baseProps.type = "color"
-    }
   }
 
   return baseProps

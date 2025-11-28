@@ -10,7 +10,6 @@ import type { Component } from "vue"
 
 type ProviderIconType = Component & {
   Avatar?: Component
-  Color?: Component
   Combine?: Component
   Text?: Component
 }
