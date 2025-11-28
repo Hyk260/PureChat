@@ -28,7 +28,7 @@ export type CompoundedIcon = typeof Mono & {
   title: string
 }
 
-const Icons = Mono as unknown as CompoundedIcon
+const Icons = Mono as CompoundedIcon
 
 Icons.Text = Text
 Icons.Combine = Combine
