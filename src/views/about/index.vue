@@ -99,13 +99,27 @@
 import Markdown from "@/components/Markdown/index.vue"
 import { ElCard, ElDescriptions, ElDescriptionsItem } from "element-plus"
 
+interface DependencySchemaItem {
+  field: string
+  label: string
+}
+
+interface ProjectInfoItem {
+  label: string
+  tag?: string
+  url?: string
+  title?: string
+}
+
+type MainLabelResolver = (label: string) => string | undefined
+
 const { pkg, lastBuildTime } = __APP_INFO__
 const { dependencies, devDependencies, repository, version, docs } = pkg
 
-const schema = []
-const devSchema = []
+const schema: DependencySchemaItem[] = []
+const devSchema: DependencySchemaItem[] = []
 
-const data = [
+const data: ProjectInfoItem[] = [
   {
     label: "版本",
     tag: version,
@@ -157,8 +171,10 @@ const words = [
   "sass",
 ]
 
-const getMainLabel = computed(() => (label) => {
-  return words.includes(label) ? "main-label" : null
+const mainLabelSet = new Set<string>(words)
+
+const getMainLabel = computed<MainLabelResolver>(() => (label) => {
+  return mainLabelSet.has(label) ? "main-label" : undefined
 })
 
 const markdownText = ref(
@@ -166,11 +182,15 @@ const markdownText = ref(
 )
 
 Object.keys(dependencies).forEach((key) => {
-  schema.push({ field: dependencies[key], label: key })
+  const field = dependencies[key]
+  if (!field) return
+  schema.push({ field, label: key })
 })
 
 Object.keys(devDependencies).forEach((key) => {
-  devSchema.push({ field: devDependencies[key], label: key })
+  const field = devDependencies[key]
+  if (!field) return
+  devSchema.push({ field, label: key })
 })
 </script>
 

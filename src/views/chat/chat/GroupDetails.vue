@@ -61,8 +61,8 @@
             <div v-for="item in currentMemberList" :key="item.userID" class="avatar margin" @click="navigate(item)">
               <ElIcon
                 v-if="isOwner"
+                v-show="userStore.userProfile?.userID !== item.userID"
                 class="style-close"
-                :class="{ hidden: userStore.userProfile?.userID === item.userID }"
                 @click.stop="removeGroupMemberBtn(item)"
               >
                 <CircleCloseFilled />
