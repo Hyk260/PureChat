@@ -10,12 +10,11 @@
 import { computed } from "vue"
 import { RecycleScroller } from "vue-virtual-scroller"
 
-const props = defineProps({
-  list: {
-    type: Array,
-    default: () => [],
-  },
-})
+interface Props {
+  list: () => []
+}
+
+const props = defineProps<Props>()
 
 const items = computed(() =>
   props.list.length > 0

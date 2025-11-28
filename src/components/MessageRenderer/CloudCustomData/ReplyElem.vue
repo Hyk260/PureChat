@@ -15,23 +15,22 @@
 
 <script setup lang="ts">
 import DynamicContent from "@/components/Chat/DynamicContent.vue"
-import { MessageStatus, MessageStatusSchema } from "@/database/schemas/message"
+
 import { scrollToDomPosition } from "@/utils/chat"
+
+import type { MessageStatus } from "@/database/schemas/message"
 
 defineOptions({
   name: "ReplyElem",
 })
 
-const props = defineProps({
-  originalMsg: {
-    type: Object,
-    default: () => ({}),
-  },
-  status: {
-    type: String as PropType<MessageStatus>,
-    default: "unSend",
-    validator: (value: string) => MessageStatusSchema.options.includes(value as MessageStatus),
-  },
+interface Props {
+  originalMsg: any
+  status?: MessageStatus
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  status: "unSend",
 })
 
 const messageReply = computed(() => props.originalMsg?.messageReply || null)

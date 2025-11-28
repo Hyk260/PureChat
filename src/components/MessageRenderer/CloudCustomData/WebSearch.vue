@@ -16,12 +16,11 @@ defineOptions({
   name: "WebSearch",
 })
 
-const props = defineProps({
-  originalMsg: {
-    type: Object,
-    default: () => ({}),
-  },
-})
+interface Props {
+  originalMsg: any
+}
+
+const props = withDefaults(defineProps<Props>(), {})
 
 const webSearch = computed(() => props.originalMsg?.webSearch || null)
 const hasReplyContent = computed(() => !!webSearch.value)

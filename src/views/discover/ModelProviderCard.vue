@@ -21,12 +21,11 @@ defineOptions({
   name: "ModelProviderCard",
 })
 
-defineProps({
-  agents: {
-    type: Object,
-    default: () => {},
-  },
-})
+interface Props {
+  agents: any
+}
+
+const props = defineProps<Props>()
 </script>
 
 <style lang="scss" scoped>

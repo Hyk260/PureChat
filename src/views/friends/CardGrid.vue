@@ -19,15 +19,13 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-const props = defineProps({
-  item: {
-    type: Object,
-    default: () => ({}),
-  },
-  type: {
-    type: String,
-    default: "GROUP", // C2C  GROUP
-  },
+interface Props {
+  item: any
+  type?: "C2C" | "GROUP"
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  type: "GROUP",
 })
 
 const isGroup = computed(() => props.type === "GROUP")

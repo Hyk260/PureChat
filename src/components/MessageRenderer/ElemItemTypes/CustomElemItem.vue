@@ -6,18 +6,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from "vue"
-
-import { DB_Message } from "@/database/schemas/message"
-
 import Loading from "../CustomMsgBody/Loading.vue"
 
-const props = defineProps({
-  message: {
-    type: Object as PropType<DB_Message>,
-    default: () => ({}),
-  },
-})
+import type { DB_Message } from "@/types"
+
+interface Props {
+  message: DB_Message
+}
+
+const props = defineProps<Props>()
 
 const messageClass = computed(() => [
   props.message.flow === "out" ? "is-text-self" : "is-text-other",

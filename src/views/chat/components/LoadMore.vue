@@ -11,12 +11,11 @@
 import Loader from "@/components/Loader/index.vue"
 import { useChatStore } from "@/stores/modules/chat"
 
-const props = defineProps({
-  index: {
-    type: Number,
-    required: true,
-  },
-})
+interface Props {
+  index: number
+}
+
+const props = defineProps<Props>()
 
 const chatStore = useChatStore()
 

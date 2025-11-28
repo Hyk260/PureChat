@@ -57,22 +57,19 @@
 import { ElCollapse, ElCollapseItem } from "element-plus"
 import { Check, Copy, Atom, ChevronDown, ChevronRight } from "lucide-vue-next"
 // import Markdown from "@/components/Markdown/index.vue"
-import { MessageStatus, MessageStatusSchema } from "@/database/schemas/message"
+import { MessageStatus } from "@/types"
 
 defineOptions({
   name: "DeepThinking",
 })
 
-const props = defineProps({
-  originalMsg: {
-    type: Object,
-    default: () => ({}),
-  },
-  status: {
-    type: String as PropType<MessageStatus>,
-    default: "unSend",
-    validator: (value: string) => MessageStatusSchema.options.includes(value as MessageStatus),
-  },
+interface Props {
+  originalMsg: any
+  status?: MessageStatus
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  status: "unSend",
 })
 
 const isCopied = ref(false)
