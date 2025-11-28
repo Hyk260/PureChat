@@ -31,6 +31,8 @@ declare namespace Env {
     readonly VITE_LOCAL_MODE: 'Y' | 'N';
     /** 是否开启devtools */
     readonly VITE_DEV_TOOLS: 'Y' | 'N';
+    /** 是否禁用浏览器开发者工具面板（阻止F12和右键菜单） */
+    readonly VITE_DISABLE_DEVTOOLS: 'Y' | 'N';
     /** 是否启用removeConsole插件 */
     readonly VITE_REMOVE_CONSOLE: 'Y' | 'N';
     /** 应用环境 */

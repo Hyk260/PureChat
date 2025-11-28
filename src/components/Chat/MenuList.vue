@@ -27,22 +27,18 @@ import { handleCopyMsg, scrollToMessage } from "@/utils/chat"
 
 import type { DB_Message, MessageStatus } from "@/types"
 
+interface Props {
+  item: DB_Message
+  status: MessageStatus
+}
+
 defineOptions({
   name: "MenuList",
 })
 
 const emit = defineEmits(["handleSingleClick", "handleContextMenu"])
 
-const props = defineProps({
-  item: {
-    type: Object as PropType<DB_Message>,
-    required: true,
-  },
-  status: {
-    type: String as PropType<MessageStatus>,
-    required: true,
-  },
-})
+const props = defineProps<Props>()
 
 const supportedMessageTypes = ["TIMImageElem", "TIMFileElem", "TIMTextElem", "TIMRelayElem", "TIMCustomElem"]
 

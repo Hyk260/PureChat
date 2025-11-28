@@ -1,6 +1,7 @@
 import { createApp } from "vue"
 
 import App from "./App.vue"
+import { addPreventDefault } from "@/utils/preventDefault"
 import { loadAllAssembly } from "./components/Automatic"
 import { setupDirectives } from "./directives"
 import { setupI18n } from "./locales"
@@ -19,4 +20,5 @@ async function setupApp() {
   app.mount("#app")
 }
 
+addPreventDefault()
 setupApp()

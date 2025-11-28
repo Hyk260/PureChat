@@ -7,21 +7,52 @@
       :hideOnClickModal="true"
       :initialIndex="initialIndex"
       :infinite="false"
+      :scale="0.7"
       :zoomRate="1.2"
       :maxScale="8"
-      :minScale="0.5"
+      :minScale="0.3"
       :previewTeleported="true"
       :loading="loading"
       :lazy="true"
+      alt="图片"
       fit="cover"
-    />
+    >
+      <template #progress="{ activeIndex, total }">
+        <span>{{ activeIndex + 1 + "-" + total }}</span>
+      </template>
+      <template #toolbar="{ actions, prev, next, reset, activeIndex }">
+        <ElIcon @click="prev"><Back /></ElIcon>
+        <ElIcon @click="next"><Right /></ElIcon>
+        <ElIcon @click="actions('zoomOut')"><ZoomOut /></ElIcon>
+        <ElIcon @click="actions('zoomIn', { zoomRate: 2 })">
+          <ZoomIn />
+        </ElIcon>
+        <ElIcon @click="actions('clockwise', { rotateDeg: 90 })">
+          <RefreshRight />
+        </ElIcon>
+        <ElIcon @click="actions('clockwise', { rotateDeg: -90 })">
+          <RefreshLeft />
+        </ElIcon>
+        <ElIcon @click="reset"><Refresh /></ElIcon>
+        <!-- <ElIcon @click="download(activeIndex)"><Download /></ElIcon> -->
+      </template>
+    </ElImage>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
 import { ElImage } from "element-plus"
-
+import {
+  Back,
+  DArrowRight,
+  Download,
+  Refresh,
+  RefreshLeft,
+  RefreshRight,
+  Right,
+  ZoomIn,
+  ZoomOut,
+} from "@element-plus/icons-vue"
 import { useChatStore } from "@/stores"
 import { DB_Message, ImagePayloadType } from "@/types"
 import { showIMPic } from "@/utils/chat"
@@ -75,6 +106,25 @@ async function initImageSize() {
     // Set default size if calculation fails
     imgStyle.value = { width: "142px", height: "82px" }
   }
+}
+
+const download = (index: number) => {
+  const url = chatStore.imgUrlList[index] || ""
+  const suffix = url.slice(url.lastIndexOf("."))
+  const filename = Date.now() + suffix
+
+  fetch(url)
+    .then((response) => response.blob())
+    .then((blob) => {
+      const blobUrl = URL.createObjectURL(new Blob([blob]))
+      const link = document.createElement("a")
+      link.href = blobUrl
+      link.download = filename
+      document.body.appendChild(link)
+      link.click()
+      URL.revokeObjectURL(blobUrl)
+      link.remove()
+    })
 }
 
 const handleImageClick = (url: string) => {
