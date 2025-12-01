@@ -32,9 +32,11 @@ defineOptions({
   name: "TabsWrapper",
 })
 
-defineProps<{
+interface Props {
   activeTab: string
-}>()
+}
+
+const props = defineProps<Props>()
 
 const emit = defineEmits<Emits>()
 

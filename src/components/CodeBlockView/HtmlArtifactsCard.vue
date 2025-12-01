@@ -40,9 +40,11 @@ const props = withDefaults(defineProps<Props>(), {
   isStreaming: false,
 })
 
-const emit = defineEmits<{
-  save: [html: string]
-}>()
+interface Emits {
+  (e: "save", html: string): void
+}
+
+const emit = defineEmits<Emits>()
 
 const {
   popupOpen,

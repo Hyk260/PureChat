@@ -8,7 +8,7 @@ declare namespace StorageType {
   interface Local {
     [key: string]: any;
     /** The i18n language */
-    lang: "en" | "zh-CN";
+    lang: App.I18n.LangType;
     /** The token */
     token: string;
     /** The theme scheme */

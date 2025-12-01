@@ -31,14 +31,18 @@ defineOptions({
   name: "AgentCard",
 })
 
-const props = defineProps<{
+interface Props {
   agent: Agent
-}>()
+}
 
-const emit = defineEmits<{
-  click: [agent: Agent]
-  tagClick: [tag: string]
-}>()
+const props = defineProps<Props>()
+
+interface Emits {
+  (e: "click", agent: Agent): void
+  (e: "tagClick", tag: string): void
+}
+
+const emit = defineEmits<Emits>()
 
 const handleCardClick = () => {
   emit("click", props.agent)

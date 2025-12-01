@@ -80,14 +80,11 @@ const indicator = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'>
     ></path>
   </svg>`
 
-const props = defineProps({
-  message: {
-    type: Object,
-    default: () => ({}),
-  },
-  // snapshotUrl 视频封面图
-  // videoSize 视频大小，单位：Byte
-})
+interface Props {
+  message: any
+}
+
+const props = defineProps<Props>()
 
 const artRef = ref(null)
 const art = ref(null)

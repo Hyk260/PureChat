@@ -1,8 +1,10 @@
 <script setup lang="ts">
-const props = defineProps<{
+interface Props {
   language: string
   code: string
-}>()
+}
+
+const props = defineProps<Props>()
 
 const languageClass = computed(() => {
   const lang = props?.language || ""

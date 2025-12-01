@@ -15,9 +15,11 @@ withDefaults(defineProps<Props>(), {
   language: "plaintext",
 })
 
-const emit = defineEmits<{
-  save: [content: string]
-}>()
+interface Emits {
+  (e: "save", content: string): void
+}
+
+const emit = defineEmits<Emits>()
 
 const handleSave = (content: string) => {
   emit("save", content)

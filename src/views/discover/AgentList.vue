@@ -65,18 +65,22 @@ defineOptions({
   name: "AgentList",
 })
 
-const props = defineProps<{
-  agents: Agent[]
+interface Props {
+  item: Agent[]
   marketData: MarketData
   searchKeyword: string
   activeTab: string
   isLoading: boolean
-}>()
+}
 
-const emit = defineEmits<{
-  agentClick: [agent: Agent]
-  tagClick: [tag: string]
-}>()
+const props = defineProps<Props>()
+
+interface Emits {
+  (e: "agentClick", agent: Agent): void
+  (e: "tagClick", tag: string): void
+}
+
+const emit = defineEmits<Emits>()
 
 const routeStore = useRouteStore()
 const chatStore = useChatStore()

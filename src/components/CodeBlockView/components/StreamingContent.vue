@@ -30,9 +30,11 @@ interface Props {
 
 defineProps<Props>()
 
-defineEmits<{
-  preview: []
-}>()
+interface Emits {
+  (e: "preview"): void
+}
+
+const emit = defineEmits<Emits>()
 </script>
 
 <style lang="scss" scoped>

@@ -42,7 +42,6 @@ declare global {
     /** Notification */
     // $notification: import('element-plus').Notify;
     /** Message */
-    // $message?: import('element-plus').Message;
     $message: import('element-plus').Message;
     // __TIM_DEBUG__: DebugInterface;
   }

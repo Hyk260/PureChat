@@ -18,7 +18,7 @@ import CodeBlockDisplay from "./components/CodeBlockDisplay.vue"
 
 interface Props {
   children: string
-  language: string
+  language?: string
   onSave?: (newContent: string) => void
 }
 
@@ -26,9 +26,11 @@ const props = withDefaults(defineProps<Props>(), {
   language: "plaintext",
 })
 
-const emit = defineEmits<{
-  save: [content: string]
-}>()
+interface Emits {
+  (e: "save", content: string): void
+}
+
+const emit = defineEmits<Emits>()
 
 const isStreaming = ref(false)
 const htmlContent = ref(props.children)

@@ -27,9 +27,11 @@ defineOptions({
   name: "DiscoverHeader",
 })
 
-const emit = defineEmits<{
-  search: [keyword: string]
-}>()
+interface Emits {
+  (e: "search", keyword: string): void
+}
+
+const emit = defineEmits<Emits>()
 
 const searchInput = ref("")
 

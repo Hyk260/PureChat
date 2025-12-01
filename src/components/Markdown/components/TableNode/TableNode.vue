@@ -1,6 +1,11 @@
 <template>
-  <ElTable :data="tableData" style="width: 100%" :fit="true">
-    <ElTableColumn v-for="(col, idx) in columnsComputed" :key="col.prop || idx" :prop="col.prop" :label="col.label" />
+  <ElTable :data="tableData" class="w-full" :fit="true">
+    <ElTableColumn
+      v-for="(item, idx) in columnsComputed"
+      :key="item.prop || idx"
+      :prop="item.prop"
+      :label="item.label"
+    />
   </ElTable>
 </template>
 
@@ -18,7 +23,10 @@ interface Props {
   columns?: Array<Column>
 }
 
-const props = withDefaults(defineProps<Props>(), { data: () => [], columns: () => [] })
+const props = withDefaults(defineProps<Props>(), {
+  data: () => [],
+  columns: () => [],
+})
 
 const sampleData = [
   {
@@ -33,19 +41,19 @@ const sampleData = [
   },
 ]
 
-const tableData = computed<Array<Record<string, any>>>(() => {
-  return props.data && props.data.length ? (props.data as Array<Record<string, any>>) : sampleData
+const tableData = computed(() => {
+  return props.data && props.data.length ? props.data : sampleData
 })
 
-const columnsComputed = computed<Column[]>(() => {
-  if (props.columns && props.columns.length) return props.columns as Column[]
+const columnsComputed = computed(() => {
+  if (props.columns && props.columns.length) return props.columns
   const first = tableData.value && tableData.value[0]
   if (!first) return []
-  return Object.keys(first).map((k) => ({
-    prop: k,
-    label: String(k).charAt(0).toUpperCase() + String(k).slice(1),
+  return Object.keys(first).map((key) => ({
+    prop: key,
+    label: String(key).charAt(0).toUpperCase() + String(key).slice(1),
     width: undefined,
-  })) as Column[]
+  }))
 })
 </script>
 

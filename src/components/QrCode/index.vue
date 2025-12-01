@@ -5,17 +5,16 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
-
 import QRCode from "qrcode"
 
 defineOptions({ name: "QrCode" })
 
-const props = defineProps({
-  text: {
-    type: String,
-    default: "https://purechat.cn",
-  },
+interface Props {
+  text?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  text: "https://purechat.cn",
 })
 
 const qrCodeUrl = ref("")

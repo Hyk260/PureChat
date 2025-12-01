@@ -10,8 +10,8 @@ export const useAppStore = defineStore(SetupStoreId.App, {
     lang: "zh-CN",
     timeline: true,
     contentXScrollable: false,
-    markdownRender: false, // Markdown 渲染输入消息
-    markdownAssistantRender: true, // Markdown 渲染助手消息
+    markdownRender: false,
+    markdownAssistantRender: true,
   }),
   actions: {
     setLang(lang: "en" | "zh-CN") {

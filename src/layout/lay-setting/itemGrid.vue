@@ -21,12 +21,11 @@ import Currency from "./currency.vue"
 import ProviderModel from "./providerModel.vue"
 import WebSearch from "./webSearch.vue"
 
-defineProps({
-  item: {
-    type: Object,
-    default: () => {},
-  },
-})
+interface Props {
+  item: any
+}
+
+withDefaults(defineProps<Props>(), {})
 
 const emit = defineEmits(["onClose"])
 </script>

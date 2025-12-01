@@ -20,9 +20,11 @@ const MAX_CONTENT_LENGTH = 320
 const MIN_MESSAGES = 5
 const PREVIEW_MAX_LEN = 100
 
-const props = defineProps<{
+interface Props {
   scrollbarRef: Ref<ScrollEl | null>
-}>()
+}
+
+const props = defineProps<Props>()
 
 const activeIndex = ref<number>(0)
 const [isHovered, setIsHovered] = useState(false)

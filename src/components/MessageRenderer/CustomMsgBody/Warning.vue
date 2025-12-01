@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { modelValue } from "@/ai/constant"
 import { openWindow } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
@@ -16,12 +16,12 @@ defineOptions({
   name: "Warning",
 })
 
-const props = defineProps({
-  payload: {
-    type: Object,
-    default: null,
-  },
-})
+interface Props {
+  payload: any
+}
+
+const props = defineProps<Props>()
+
 function openRobotBox() {
   emitter.emit("onRobotBox", { apiKeyFocus: true })
 }

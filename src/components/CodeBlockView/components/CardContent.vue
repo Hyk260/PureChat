@@ -27,11 +27,13 @@ interface Props {
 
 defineProps<Props>()
 
-defineEmits<{
-  preview: []
-  external: []
-  download: []
-}>()
+interface Emits {
+  (e: "preview"): void
+  (e: "external"): void
+  (e: "download"): void
+}
+
+const emit = defineEmits<Emits>()
 </script>
 
 <style lang="scss" scoped>

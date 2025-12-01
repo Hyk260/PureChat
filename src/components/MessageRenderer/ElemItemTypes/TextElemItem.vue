@@ -44,6 +44,8 @@ const props = withDefaults(defineProps<Props>(), {
 const chatStore = useChatStore()
 const appStore = useAppStore()
 
+const isOut = computed(() => props.message.flow === "out")
+
 const messageText = computed(() => {
   return props.message.payload?.text || ""
 })
@@ -63,18 +65,16 @@ const parsedCloudCustomData = computed(() => {
 
 const shouldShowMarkdown = computed(() => {
   if (!props.showMarkdown) return false
-  if (chatStore.isAssistant) {
-    // 支持输入消息markdown渲染
-    if (appStore.markdownRender && props.message?.flow === "out") return true
-    // 助手消息markdown渲染
-    if (appStore.markdownAssistantRender && props.message?.flow === "in") return true
-    return false
+  // 发出消息
+  if (isOut.value) {
+    return appStore.markdownRender
   } else {
-    if (isDev) {
-      if (appStore.markdownRender && props.message?.flow === "out") return true
-      if (appStore.markdownAssistantRender && props.message?.flow === "in") return true
+    // 接收消息
+    if (chatStore.isAssistant) {
+      return appStore.markdownAssistantRender
+    } else {
+      return false
     }
-    return false
   }
 })
 

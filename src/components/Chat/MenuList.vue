@@ -36,7 +36,12 @@ defineOptions({
   name: "MenuList",
 })
 
-const emit = defineEmits(["handleSingleClick", "handleContextMenu"])
+interface Emits {
+  (e: "handleSingleClick", payload: { item: DB_Message; key: string }): void
+  (e: "handleContextMenu", event: MouseEvent, item: DB_Message): void
+}
+
+const emit = defineEmits<Emits>()
 
 const props = defineProps<Props>()
 

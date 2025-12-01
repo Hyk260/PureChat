@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue"
 
 import { prettyObject } from "@/ai/utils"
@@ -21,12 +21,11 @@ defineOptions({
   name: "ToolCall",
 })
 
-const props = defineProps({
-  payload: {
-    type: Object,
-    default: null,
-  },
-})
+interface Props {
+  payload: any
+}
+
+const props = defineProps<Props>()
 
 // 缓存解析结果
 const parsedCache = ref(new Map())
