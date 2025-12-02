@@ -2,13 +2,12 @@
   <template v-for="(item, index) in parsedContent" :key="index">
     <!-- 文本内容 -->
     <span v-if="isTextContent(item)">
-      <AnalysisUrl v-if="enableLink" :text="item.text || ''" :atUserList="atUserList" />
+      <LinkifyText v-if="enableLink" :text="item.text || ''" :atUserList="atUserList" />
       <span v-else>{{ item.text }}</span>
     </span>
     <!-- 表情包 -->
     <img
       v-else-if="isEmojiContent(item)"
-      v-lazy="getEmojiAssetUrlSync(item.localSrc || '')"
       draggable="false"
       loading="lazy"
       class="lazy h-23 w-23 align-sub"
@@ -20,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import AnalysisUrl from "@/components/Chat/AnalysisUrl.vue"
+import LinkifyText from "@/components/Chat/LinkifyText.vue"
 import { decodeText } from "@/utils/chat"
 import { getEmojiAssetUrlSync } from "@/utils/emoji"
 
