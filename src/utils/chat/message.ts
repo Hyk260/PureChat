@@ -1,6 +1,6 @@
 import { getBlob } from "./message-input-utils"
 
-import type { DB_Message, MessageType, ImagePayloadType } from "@/types"
+import type { DB_Message, MessageType, ImagePayloadType, DraftData } from "@/types"
 
 export const isTime = (item: DB_Message) => {
   return item?.isTimeDivider && item.time !== undefined
@@ -82,20 +82,20 @@ export const showIMPic = (width: number = 0, height: number = 0) => {
   return imageStyle
 }
 
-export const formatContent = (data) => {
+export const formatContent = (data: DraftData) => {
   return data
     .filter((item) => item.type === "paragraph")
     .map(({ children }) => {
       return (
         children
           ?.map((t) => {
-            if (t.type === "image" && t?.alt && t?.class === "EmoticonPack") return t.alt
+            if (t.type === "image" && t?.alt && t?.class === "EmoticonPack") return String(t.alt)
             if (t.type === "image") return "[图片]"
             if (t.type === "attachment") return "[文件]"
-            if (t.type === "mention") return `@${t.value}`
-            return t.text || "" // 处理文本
+            if (t.type === "mention") return String(`@${t.value}`)
+            return String(t.text || "")
           })
-          .join("") || "" // 确保返回字符串
+          .join("") || ""
       )
     })
     .join("")

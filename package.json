@@ -1,6 +1,6 @@
 {
   "name": "pure-chat",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "PureChat - A chat application built with Vue and Vite",
   "type": "module",
   "author": {
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
+    "@fingerprintjs/fingerprintjs": "^5.0.1",
     "@guolao/vue-monaco-editor": "^1.5.5",
     "@iconify/vue": "^4.3.0",
     "@microsoft/fetch-event-source": "^2.0.1",

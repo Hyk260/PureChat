@@ -7,8 +7,12 @@ import type { IDomEditor } from "@wangeditor/editor"
 export type DraftData = Array<{
   type: string
   children: Array<{
+    [key: string]: string | undefined
     text: string
-    [key: string]: unknown
+    type?: string
+    alt?: string
+    value?: string
+    class?: string
   }>
 }>
 

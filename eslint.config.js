@@ -136,25 +136,26 @@ export default defineConfig([
       "prefer-promise-reject-errors": "error",
 
       // === Import/Export 规则 ===
-      "simple-import-sort/imports": [
-        "off",
-        {
-          groups: [
-            // Node.js 内置模块
-            ["^node:"],
-            // Vue 相关包
-            ["^vue", "^@vue", "^@?\\w.*vue"],
-            // 第三方包
-            ["^@?\\w"],
-            // 内部模块
-            ["^@/"],
-            // 相对导入
-            ["^\\."],
-            // 类型导入
-            ["^.*\\u0000$"],
-          ],
-        },
-      ],
+      "simple-import-sort/imports": "off",
+      // "simple-import-sort/imports": [
+      //   "warn",
+      //   {
+      //     groups: [
+      //       // Node.js 内置模块
+      //       ["^node:"],
+      //       // Vue 相关包
+      //       ["^vue", "^@vue", "^@?\\w.*vue"],
+      //       // 第三方包
+      //       ["^@?\\w"],
+      //       // 内部模块
+      //       ["^@/"],
+      //       // 相对导入
+      //       ["^\\."],
+      //       // 类型导入
+      //       ["^.*\\u0000$"],
+      //     ],
+      //   },
+      // ],
       "simple-import-sort/exports": "warn",
       "unused-imports/no-unused-imports": "warn",
       "unused-imports/no-unused-vars": [
@@ -248,26 +249,27 @@ export default defineConfig([
       "vue/prefer-true-attribute-shorthand": "off",
       "no-debugger": isProd ? "error" : "off",
       "no-undef": "warn",
-      "vue/no-v-html": "off", // 允许使用 v-html
+      "vue/no-v-html": "off",
 
       // Import 规则
-      "simple-import-sort/imports": [
-        "off",
-        {
-          groups: [
-            // Vue 相关包
-            ["^vue", "^@vue", "^@?\\w.*vue"],
-            // 第三方包
-            ["^@?\\w"],
-            // 内部模块
-            ["^@/"],
-            // 相对导入
-            ["^\\."],
-            // 类型导入
-            ["^.*\\u0000$"],
-          ],
-        },
-      ],
+      "simple-import-sort/imports": "off",
+      // "simple-import-sort/imports": [
+      //   "warn",
+      //   {
+      //     groups: [
+      //       // Vue 相关包
+      //       ["^vue", "^@vue", "^@?\\w.*vue"],
+      //       // 第三方包
+      //       ["^@?\\w"],
+      //       // 内部模块
+      //       ["^@/"],
+      //       // 相对导入
+      //       ["^\\."],
+      //       // 类型导入
+      //       ["^.*\\u0000$"],
+      //     ],
+      //   },
+      // ],
       "no-unused-vars": "off",
       "simple-import-sort/exports": "warn",
       "unused-imports/no-unused-imports": "off",

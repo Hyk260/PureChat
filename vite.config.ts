@@ -61,6 +61,10 @@ export default defineConfig((configEnv) => {
       // target: "esnext",
       // 打包时清除dist目录
       // emptyOutDir: true,
+      // 启用 CSS 代码拆分
+      // cssCodeSplit: true,
+      // 指定使用哪种混淆器
+      // minify: "esbuild",
       // 生成生产源映射
       sourcemap: viteEnv.VITE_SOURCE_MAP === "Y",
       // 调整块大小警告阈值（kB单位）
