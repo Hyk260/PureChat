@@ -242,6 +242,7 @@ export default defineConfig([
       ...pluginVue.configs["flat/strongly-recommended"].rules,
       ...pluginVue.configs["flat/recommended"].rules,
       "vue/multi-word-component-names": "off",
+      "vue/v-on-event-hyphenation": "off",
       "vue/no-unused-vars": "off",
       "vue/no-unused-components": "warn",
       "vue/prefer-import-from-vue": "warn",

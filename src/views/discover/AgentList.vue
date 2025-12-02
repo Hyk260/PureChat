@@ -4,7 +4,7 @@
     <div v-if="activeTab === 'assistant'" class="agent-list">
       <AgentSkeleton v-if="isLoading" />
       <AgentCard
-        v-for="agent in agents"
+        v-for="agent in item"
         v-else
         :key="agent.identifier"
         :agent="agent"

@@ -1,5 +1,4 @@
 import { ProvidersList } from "@database/config"
-import { cloneDeep } from "lodash-es"
 
 import { MessageModel } from "@/database/models/message"
 import { SessionModel } from "@/database/models/session"
