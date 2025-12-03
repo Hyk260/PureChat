@@ -1,6 +1,4 @@
-import type { DB_Message } from "@/database/schemas/message"
-import type { DB_Session } from "@/database/schemas/session"
-import type { DraftData } from "@/types"
+import type { DB_Message, DB_Session, DraftData } from "@/types"
 
 export interface ChatState {
   historyMessageList: Map<string, DB_Message[]>

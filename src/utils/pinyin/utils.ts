@@ -4,7 +4,7 @@ import { useChatStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
 import { matchPinyinSync } from "@/utils/pinyin"
 
-import type { GroupMember } from "@/stores/modules/group/type"
+import type { GroupMemberType as GroupMember } from "@/types"
 
 /**
  * 根据拼音搜索当前成员列表中的匹配项。

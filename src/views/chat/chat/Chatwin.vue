@@ -695,7 +695,7 @@ defineExpose({ updateScrollbar, scrollToBottom })
     opacity 0.15s ease,
     padding 0.1s ease;
   gap: 8px;
-  min-height: 56px;
+  // min-height: 56px;
   padding-left: 0;
   padding-right: 0;
 

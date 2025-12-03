@@ -1,4 +1,4 @@
-import type { GroupMember } from "@/stores/modules/group/type"
+import type { GroupMemberType as GroupMember } from "@/types"
 
 interface LinkifyOptions {
   target?: string

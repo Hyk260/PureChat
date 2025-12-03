@@ -119,7 +119,7 @@ export const GROUP_TIP_OPERATION_TYPE = {
   GRP_TIP_BAN_AVCHATROOM_MEMBER: 10,
   /** 解封直播群群成员 */
   GRP_TIP_UNBAN_AVCHATROOM_MEMBER: 11,
-} as const
+}
 
 export const GroupTipPayload = BasePayload.extend({
   operatorID: z.string(),
@@ -223,6 +223,10 @@ export const MessageTypeSchema = z.enum([
   "TIMGroupSystemNoticeElem",
 ])
 
+export const payloadSchema = z
+  .union([TextPayload, ImagePayload, TextPayload, GroupTipPayload, CustomPayload])
+  .optional()
+
 export const DB_MessageSchema = z.object({
   // ***************** TIMMessage ***************** //
   ID: z.string().uuid(),
@@ -312,7 +316,7 @@ export const DB_MessageSchema = z.object({
    * 群提示消息 GroupTipPayload
    */
   // payload: TextPayload,
-  payload: z.union([TextPayload, ImagePayload, TextPayload, GroupTipPayload, CustomPayload]).optional(),
+  payload: payloadSchema,
   /**
    * @description 消息类型
    */

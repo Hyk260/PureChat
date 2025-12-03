@@ -6,7 +6,7 @@
 import { linkifySegment } from "@/utils/linkifyUrls"
 import { useGroupStore } from "@/stores/modules/group"
 
-import type { GroupMember } from "@/stores/modules/group/type"
+import type { GroupMemberType as GroupMember } from "@/types"
 import type { LinkSegment } from "@/utils/linkifyUrls"
 
 interface Props {

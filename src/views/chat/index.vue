@@ -6,7 +6,7 @@
     <!-- 合并消息弹框 -->
     <MergeMessagePopup />
     <!-- 群详情 -->
-    <GroupDetails v-if="isGroupChat && currentConversation" :groupProfile="currentConversation.groupProfile" />
+    <GroupDetails v-if="showGroupChat" :groupProfile="groupProfile" />
     <!-- HTML 预览弹窗 -->
     <HtmlArtifactsPopup title="HTML Preview" />
   </div>
@@ -31,6 +31,14 @@ defineOptions({ name: "Chat" })
 const chatStore = useChatStore()
 
 const { currentConversation, isGroupChat } = storeToRefs(chatStore)
+
+const groupProfile = computed(() => {
+  return currentConversation.value?.groupProfile
+})
+
+const showGroupChat = computed(() => {
+  return isGroupChat.value && !!currentConversation.value && !!groupProfile.value
+})
 
 useEventListener(window, "focus", () => {
   if (currentConversation.value) {

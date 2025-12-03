@@ -1,4 +1,5 @@
 // import type { SlateDescendant } from "@wangeditor/editor"
+export * from "@/database/schemas/group"
 export * from "@/database/schemas/message"
 export * from "@/database/schemas/session"
 export * from "@/database/schemas/user"

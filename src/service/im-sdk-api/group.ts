@@ -1,18 +1,19 @@
 import tim from "@/service/chat/PureChatService"
+// import { GroupTypeSchemaType as GroupType } from "@/types"
 
 export const GroupType = {
   GRP_WORK: "Private", // 好友工作群，默认
   GRP_PUBLIC: "Public", // 陌生人社交群
   GRP_MEETING: "ChatRoom", // 临时会议群
   GRP_AVCHATROOM: "AVChatRoom", // 直播群
-} as const
+}
 
 export const GroupTypeMap = {
   Private: "好友工作群(Work)",
   Public: "陌生人社交群(Public)",
   ChatRoom: "临时会议群(Meeting)",
   AVChatRoom: "直播群(AVChatRoom)",
-} as const
+}
 
 const ModifyType = {
   GROUP_NAME: "name", // 修改群名称
@@ -21,7 +22,7 @@ const ModifyType = {
   GROUP_NOTIFICATION: "notification", // 修改群公告
   GROUP_CUSTOM_FIELD: "groupCustomField", // 修改群组维度自定义字段
   GROUP_MUTE_ALL_MEMBERS: "muteAllMembers", // 修改群禁言
-} as const
+}
 
 export type ModifyTypeValue = (typeof ModifyType)[keyof typeof ModifyType]
 

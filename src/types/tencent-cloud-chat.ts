@@ -101,7 +101,7 @@ export interface CREATE_GROUP_OPTIONS {
    * - TencentCloudChat.TYPES.GRP_MEETING: meeting group
    * - TencentCloudChat.TYPES.GRP_AVCHATROOM: audio-video group
    */
-  type: "GRP_WORK" | "GRP_PUBLIC" | "GRP_MEETING" | "GRP_AVCHATROOM"
+  type: "Private" | "Public" | "ChatRoom" | "AVChatRoom"
   /**
    * Group ID. If no value is specified, the SDK automatically creates a unique group ID.
    */

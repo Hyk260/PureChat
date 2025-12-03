@@ -50,7 +50,7 @@
         </div>
       </div>
     </template>
-    <VirtualList v-else />
+    <VirtualList v-else :list="displayData" />
     <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleClickMenuItem" />
   </ElScrollbar>
 </template>

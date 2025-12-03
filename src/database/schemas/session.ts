@@ -1,31 +1,33 @@
 import { z } from "zod"
+import { payloadSchema } from "./message"
+import { GroupProfileSchema } from "./group"
+import { UserProfileSchema, UserSchema } from "./user"
 
-import { TextPayload } from "./message"
-import { UserProfileSchema } from "./user"
+export const lastMessage = {
+  lastTime: 0,
+  lastSequence: 0,
+  fromAccount: "",
+  type: "TIMTextElem",
+  payload: {
+    text: "",
+  },
+  cloudCustomData: "",
+  isRevoked: false,
+  onlineOnlyFlag: false,
+  nick: "",
+  nameCard: "",
+  version: 0,
+  isPeerRead: false,
+  revoker: "",
+  messageForShow: "",
+}
 
 export const SessionSchema = {
   conversationID: "",
   toAccount: "",
   type: "C2C",
   subType: "",
-  lastMessage: {
-    lastTime: 0,
-    lastSequence: 0,
-    fromAccount: "",
-    type: "TIMTextElem",
-    payload: {
-      text: "",
-    },
-    cloudCustomData: "",
-    isRevoked: false,
-    onlineOnlyFlag: false,
-    nick: "",
-    nameCard: "",
-    version: 0,
-    isPeerRead: false,
-    revoker: "",
-    messageForShow: "",
-  },
+  lastMessage,
   unreadCount: 0,
   peerReadTime: 0,
   groupAtInfoList: [],
@@ -75,23 +77,7 @@ export const SessionSchema = {
   //   isSupportTopic: false,
   //   muteAllMember: "Off",
   // },
-  userProfile: {
-    userID: "",
-    nick: "",
-    gender: "",
-    birthday: 0,
-    location: "",
-    selfSignature: "",
-    allowType: "",
-    language: 0,
-    avatar: "",
-    messageSettings: 0,
-    adminForbidType: "",
-    level: 0,
-    role: 0,
-    lastUpdatedTime: 0,
-    profileCustomField: [],
-  },
+  userProfile: UserSchema,
   remark: "",
   isPinned: false,
   pinned: 0,
@@ -107,20 +93,6 @@ export const SessionSchema = {
 
 export const TypeSchema = z.enum(["C2C", "GROUP", "@TIM#SYSTEM"])
 
-export const GroupProfileSchema = z.object({
-  avatar: z.string().optional(),
-  createTime: z.number().optional(),
-  // groupCustomField: z.array(z.string()).optional(),
-  groupID: z.string().optional(),
-  infoSequence: z.string().optional(),
-  introduction: z.string().optional(),
-  notification: z.string().optional(),
-  ownerID: z.string().optional(),
-  // joinOption:
-  type: z.enum(["Private", "Public"]).optional(),
-  name: z.string().optional(),
-})
-
 export const LastMessageSchema = z
   .object({
     /**
@@ -130,7 +102,7 @@ export const LastMessageSchema = z
     lastSequence: z.number().optional(),
     fromAccount: z.string().optional(),
     type: z.string().optional(),
-    payload: TextPayload,
+    payload: payloadSchema,
     cloudCustomData: z.string().optional(),
     isRevoked: z.boolean().optional(),
     onlineOnlyFlag: z.boolean().optional(),
@@ -170,5 +142,3 @@ export const DB_SessionSchema = z.object({
 })
 
 export type DB_Session = z.infer<typeof DB_SessionSchema>
-
-export type GroupProfileSchemaType = z.infer<typeof GroupProfileSchema>

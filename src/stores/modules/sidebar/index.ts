@@ -84,7 +84,6 @@ export const useSidebarStore = defineStore(SetupStoreId.Sidebar, {
       this.outsideList = [...list, ...data]
     },
     toggleOutside(item: SidebarItem | MoreListItem) {
-      debugger
       if ("path" in item && item.path) {
         router.push(item.path)
         useChatStore().toggleMultiSelectMode(false)

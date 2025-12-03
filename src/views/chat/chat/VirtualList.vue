@@ -1,17 +1,17 @@
 <template>
-  <RecycleScroller v-slot="{ item }" class="scroller" :items="items" :itemSize="32" keyField="conversationID">
+  <RecycleScroller v-slot="{ item }" class="scroller" :items="items" :itemSize="64" keyField="conversationID">
     <div class="item">
-      {{ item.name }}
+      {{ item._displayName }}
     </div>
   </RecycleScroller>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
 import { RecycleScroller } from "vue-virtual-scroller"
+import type { DB_Session } from "@/types"
 
 interface Props {
-  list: () => []
+  list: DB_Session[]
 }
 
 const props = defineProps<Props>()
@@ -34,8 +34,7 @@ const items = computed(() =>
 }
 
 .item {
-  height: 32px;
-  line-height: 32px;
+  height: 64px;
   padding: 0 16px;
   box-sizing: border-box;
 }
