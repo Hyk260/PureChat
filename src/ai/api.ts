@@ -1,5 +1,5 @@
 // import { API_PROVIDER_MAP } from "@/ai/constant"
-// import { OpenAIAPIClient } from "@/ai/platforms/openai/index"
+// import { OpenAIAPIClient } from "@/ai/platforms/openai"
 // import { LLMParams, ModelProvider, Provider } from "@/ai/types"
 // import { useAccessStore } from "@/ai/utils"
 

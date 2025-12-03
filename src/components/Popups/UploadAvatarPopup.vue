@@ -44,7 +44,7 @@
 import { reactive, ref } from "vue"
 
 import { updateMyProfile } from "@/service/im-sdk-api"
-// import { uploadFiles } from "@/service/api/index";
+// import { uploadFiles } from "@/service/api";
 import emitter from "@/utils/mitt-bus"
 
 const imagePicker = ref()

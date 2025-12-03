@@ -38,7 +38,7 @@ import { storeToRefs } from "pinia"
 import { WEB_SEARCH_PROVIDER_CONFIG } from "@/config/webSearchProviders"
 import { useState } from "@/hooks/useState"
 import WebSearchService from "@/service/WebSearchService"
-import { useWebSearchStore } from "@/stores/index"
+import { useWebSearchStore } from "@/stores"
 import { hasObjectKey, openWindow } from "@/utils/common"
 
 const { DEV: isDev } = import.meta.env

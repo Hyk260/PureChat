@@ -4,7 +4,7 @@ import { defineStore } from "pinia"
 
 import localAvatar from "@/assets/images/avatar.png"
 import router from "@/router"
-import { login, logout } from "@/service/api/index"
+import { login, logout } from "@/service/api"
 import { timProxy } from "@/service/chat"
 import chat from "@/service/chat/PureChatService"
 import { useAuthStore, useChatStore } from "@/stores"

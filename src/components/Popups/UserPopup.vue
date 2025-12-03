@@ -37,7 +37,7 @@
 import EmojiMart from "@/components/EmojiMart/index.vue"
 import { useState } from "@/hooks/useState"
 import { useUserStore } from "@/stores/modules/user"
-import { fileToBase64 } from "@/utils/chat/index"
+import { fileToBase64 } from "@/utils/chat"
 import { createFileInput } from "@/utils/common"
 
 const userName = ref("")

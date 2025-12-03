@@ -15,7 +15,7 @@
 import { ref } from "vue"
 
 import { prettyObject } from "@/ai/utils"
-import { transformCustomElement } from "@/utils/chat/index"
+import { transformCustomElement } from "@/utils/chat"
 
 defineOptions({
   name: "ToolCall",

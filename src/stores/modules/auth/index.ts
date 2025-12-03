@@ -3,7 +3,7 @@ import { defineStore } from "pinia"
 import { SetupStoreId } from "@/stores/enum"
 import { localStg } from "@/utils/storage"
 
-import { useUserStore } from "../user/index"
+import { useUserStore } from "../user"
 
 export const useAuthStore = defineStore(SetupStoreId.Auth, {
   state: () => ({

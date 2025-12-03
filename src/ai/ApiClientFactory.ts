@@ -1,5 +1,5 @@
 import { OpenAIAPIClient } from "@/ai/platforms/openai"
-import { DeepSeekApi } from "@/ai/platforms/deepseek/index"
+import { DeepSeekApi } from "@/ai/platforms/deepseek"
 import { GitHubApi } from "@/ai/platforms/github"
 import { MistralApi } from "@/ai/platforms/mistral"
 import { OllamaApi } from "@/ai/platforms/ollama"

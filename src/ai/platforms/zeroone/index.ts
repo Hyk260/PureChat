@@ -1,4 +1,4 @@
-import { OpenAIAPIClient } from "@/ai/platforms/openai/index"
+import { OpenAIAPIClient } from "@/ai/platforms/openai"
 
 import type { Provider } from "@/ai/types"
 

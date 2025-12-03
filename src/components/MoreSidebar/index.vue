@@ -102,7 +102,7 @@ import { CircleMinus, CirclePlus, GripVertical } from "lucide-vue-next"
 
 import { cloneDeep, uniqBy } from "lodash-es"
 
-import { useSidebarStore } from "@/stores/modules/sidebar/index"
+import { useSidebarStore } from "@/stores/modules/sidebar"
 import emitter from "@/utils/mitt-bus"
 
 const dialogVisible = ref(false)

@@ -12,4 +12,4 @@ export function setupStore(app: App) {
   app.use(store)
 }
 
-export * from "./modules/index"
+export * from "./modules"
