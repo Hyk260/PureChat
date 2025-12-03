@@ -26,7 +26,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const activeIndex = ref<number>(0)
+const activeIndex = ref<number>(-1)
 const [isHovered, setIsHovered] = useState(false)
 
 const chatStore = useChatStore()
@@ -174,13 +174,13 @@ const initIntersectionObserver = () => {
   })
 }
 
-watch(
-  () => messagesList.value.map((m) => m.ID).join("|"),
-  async () => {
-    await nextTick()
-    initIntersectionObserver()
-  }
-)
+// watch(
+//   () => messagesList.value.map((m) => m.ID).join("|"),
+//   async () => {
+//     await nextTick()
+//     initIntersectionObserver()
+//   }
+// )
 
 watch(activeIndex, (val) => {
   scrollToMessageByIndex(val)
@@ -188,7 +188,7 @@ watch(activeIndex, (val) => {
 
 onMounted(async () => {
   await nextTick()
-  initIntersectionObserver()
+  // initIntersectionObserver()
 })
 
 onUnmounted(() => {
@@ -257,7 +257,7 @@ onUnmounted(() => {
 .message-nav {
   position: absolute;
   right: 4px;
-  height: 100%;
+  // height: 100%;
   display: flex;
   align-items: center;
   transform: translateY(-50%);

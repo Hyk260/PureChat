@@ -3,8 +3,10 @@
 </template>
 
 <script setup lang="ts">
+import { Popover } from "ant-design-vue"
 import { linkifySegment } from "@/utils/linkifyUrls"
 import { useGroupStore } from "@/stores/modules/group"
+import CitationTooltip from "@/components/CitationTooltip/index.vue"
 
 import type { GroupMemberType as GroupMember } from "@/types"
 import type { LinkSegment } from "@/utils/linkifyUrls"
@@ -31,7 +33,7 @@ const findMemberByMention = (list: string[] = props.atUserList): GroupMember[] |
 }
 
 const renderLink = (item: LinkSegment, index: number): VNode => {
-  return h(
+  const linkElement = h(
     "a",
     {
       key: `link-${index}`,
@@ -41,6 +43,21 @@ const renderLink = (item: LinkSegment, index: number): VNode => {
       rel: "noopener noreferrer",
     },
     item.content
+  )
+
+  return h(
+    Popover,
+    {
+      key: `popover-${index}`,
+      placement: "top",
+      arrow: false,
+      trigger: "hover",
+      // trigger: "click",
+    },
+    {
+      default: () => linkElement,
+      content: () => h(CitationTooltip, { url: item.url }),
+    }
   )
 }
 
