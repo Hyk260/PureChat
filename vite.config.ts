@@ -1,8 +1,6 @@
 import process from "node:process"
 import { fileURLToPath, URL } from "node:url"
-
 import { defineConfig, loadEnv } from "vite"
-
 import { manualChunks, viteDefine } from "./build/config/define"
 import { exclude, include } from "./build/config/optimize"
 import { setupViteExternal, setupVitePlugins } from "./build/plugins"
@@ -39,6 +37,10 @@ export default defineConfig((configEnv) => {
         clientFiles: ["./index.html", "./src/{views,components}/*"],
       },
     },
+    // esbuild: {
+    //   pure: viteEnv.PROD ? ["console.log", "console.info", "console.debug", "console.warn"] : [],
+    //   drop: viteEnv.PROD ? ["debugger"] : [],
+    // },
     plugins: setupVitePlugins(viteEnv),
     css: {
       preprocessorOptions: {

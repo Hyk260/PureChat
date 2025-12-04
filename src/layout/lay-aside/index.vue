@@ -19,14 +19,44 @@
     </div>
 
     <div class="sidebar-footer">
-      <ElTooltip content="帮助文档" placement="right">
-        <ElIcon class="icon" @click="onOpenDocs"><CircleQuestionMark /></ElIcon>
+      <!-- <ElTooltip content="帮助文档" placement="right">
+        <ElIcon class="icon" @click="onOpenDocs">
+          <CircleQuestionMark />
+        </ElIcon>
       </ElTooltip>
       <ElTooltip content="设置" placement="right">
         <ElIcon class="icon" @click="openSettings">
           <Settings />
         </ElIcon>
-      </ElTooltip>
+      </ElTooltip> -->
+
+      <Popover
+        placement="rightBottom"
+        :arrow="false"
+        trigger="click"
+        :overlayStyle="{ width: '150px' }"
+        :overlayInnerStyle="{ padding: '2px' }"
+      >
+        <template #content>
+          <Menu :selectable="false">
+            <MenuItem>
+              <div class="flex-sc gap-5" @click="onOpenDocs">
+                <ElIcon class="icon"><CircleQuestionMark /></ElIcon>
+                <span>帮助文档</span>
+              </div>
+            </MenuItem>
+            <MenuItem>
+              <div class="flex-sc gap-5" @click="openSettings">
+                <ElIcon><SlidersHorizontal /></ElIcon>
+                <span>设置</span>
+              </div>
+            </MenuItem>
+          </Menu>
+        </template>
+        <ElIcon class="icon">
+          <Settings />
+        </ElIcon>
+      </Popover>
     </div>
 
     <!-- <SidebarEditDialog /> -->
@@ -36,16 +66,17 @@
 </template>
 
 <script setup lang="ts">
-import { Settings, CircleQuestionMark } from "lucide-vue-next"
+import { Popover, Menu, MenuItem } from "ant-design-vue"
+import { Ellipsis, Settings, CircleQuestionMark, SlidersHorizontal, MessageSquarePlus } from "lucide-vue-next"
 import { useRouter } from "vue-router"
-
+import { useChatStore, useSidebarStore, useRouteStore } from "@/stores"
 // import SidebarEditDialog from "@/components/MoreSidebar/index.vue"
 import UserPopup from "@/components/Popups/UserPopup.vue"
-import { useChatStore, useSidebarStore, useRouteStore } from "@/stores"
+import CardPopover from "@/views/chat/components/CardPopover.vue"
 import { openWindow } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
-import { SidebarItem } from "@/stores/modules/sidebar/type"
-import CardPopover from "@/views/chat/components/CardPopover.vue"
+
+import type { SidebarItem } from "@/stores/modules/sidebar/type"
 
 defineOptions({
   name: "LayAside",
@@ -83,7 +114,7 @@ const handleItemClick = (item: SidebarItem) => {
   routeStore.routerPush(item.path)
 }
 
-const isActiveItem = (path: string | undefined) => {
+const isActiveItem = (path?: string) => {
   return router.currentRoute.value.path === path
 }
 

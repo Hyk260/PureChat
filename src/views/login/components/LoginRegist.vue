@@ -86,7 +86,7 @@ const onBack = () => {
   userStore.setCurrentPage(0)
 }
 
-const onUpdate = async (formEl: FormInstance | undefined) => {
+const onUpdate = async (formEl?: FormInstance) => {
   loading.value = true
   if (!formEl) return
   await formEl.validate((valid) => {

@@ -17,7 +17,6 @@ export const copy: Directive = {
     if (!value) {
       throw new Error('文本复制指令需要绑定值，如 v-copy="modelValue"')
     }
-
     el.copyValue = value
     const arg = binding.arg ?? "click"
     useEventListener(el, arg, () => {

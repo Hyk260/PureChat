@@ -27,9 +27,20 @@
               <EditPen />
             </ElIcon>
           </div>
-          <span class="group-type">
-            {{ GroupTypeMap[groupProfile.type] }}
-          </span>
+          <div class="flex-sc gap-5">
+            <span v-copy="groupID" class="group-id">
+              <ElTag type="info" size="small">
+                {{ groupID }}
+              </ElTag>
+            </span>
+            <span v-if="isDev" class="group-type">
+              {{ GroupTypeMap[groupProfile.type] }}
+            </span>
+          </div>
+        </div>
+        <div class="group-qrcode-btn" @click="openQrCodePopup">
+          <!-- <ElButton :icon="QrCode" round>二维码</ElButton> -->
+          <ElIcon :size="18" class="cursor-pointer"><QrCode /></ElIcon>
         </div>
       </div>
       <ElDivider />
@@ -98,6 +109,8 @@
       </div>
       <!-- 添加成员弹框 -->
       <AddMemberPopup ref="AddMemberRef" @define="addGroupMemberBtn" />
+      <!-- 群二维码弹框 -->
+      <GroupQrCodePopup ref="GroupQrCodeRef" :groupProfile="groupProfile" />
     </div>
   </ElDrawer>
 </template>
@@ -106,6 +119,7 @@
 import { ElDrawer, ElMessageBox } from "element-plus"
 import {
   // CircleX,
+  QrCode,
   SquarePen as EditPen,
 } from "lucide-vue-next"
 import {
@@ -116,6 +130,7 @@ import {
 import Markdown from "@/components/Markdown/index.vue"
 import { isFullStaffGroup } from "@/ai/utils"
 import AddMemberPopup from "@/components/Popups/AddMemberPopup.vue"
+import GroupQrCodePopup from "@/components/Popups/GroupQrCodePopup.vue"
 import { useState } from "@/hooks/useState"
 import { restApi } from "@/service/api"
 import {
@@ -126,7 +141,7 @@ import {
   updateGroupProfile,
 } from "@/service/im-sdk-api"
 import { useChatStore, useGroupStore, useUserStore } from "@/stores"
-import { isByteLengthExceedingLimit } from "@/utils/chat"
+import { isByteLengthExceedingLimit, formatGroupID } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 
 import type { DB_Session, GroupMemberType as GroupMember, GroupProfileSchemaType as GroupProfile } from "@/types"
@@ -142,8 +157,11 @@ defineOptions({
 
 const props = withDefaults(defineProps<Props>(), {})
 
+const { DEV: isDev } = import.meta.env
+
 const notify = ref(false)
 const AddMemberRef = useTemplateRef("AddMemberRef")
+const GroupQrCodeRef = useTemplateRef("GroupQrCodeRef")
 
 const groupStore = useGroupStore()
 const userStore = useUserStore()
@@ -153,6 +171,8 @@ const [loading, setLoading] = useState(false)
 
 const { currentMemberList, isOwner } = storeToRefs(groupStore)
 const { toAccount, currentSessionId, currentConversation } = storeToRefs(chatStore)
+
+const groupID = computed(() => formatGroupID(props.groupProfile.groupID))
 
 const beforeChange = (): Promise<boolean> => {
   setLoading(true)
@@ -206,7 +226,7 @@ const openNoticePopup = async () => {
 
 const openDetails = () => {}
 
-const openAvatarPopup = (url: string | undefined) => {
+const openAvatarPopup = (url?: string) => {
   if (!url) return
   emitter.emit("handleImageViewer", url)
 }
@@ -217,6 +237,10 @@ const handleClose = () => {
 
 const groupMemberAdd = () => {
   AddMemberRef.value?.openDialog()
+}
+
+const openQrCodePopup = () => {
+  GroupQrCodeRef.value?.openDialog()
 }
 
 const navigate = (item: GroupMember) => {
@@ -266,7 +290,7 @@ const updataGroup = () => {
     groupStore.handleGroupMemberList({ groupID: props.groupProfile.groupID })
   }, 200)
 }
-// 修改群资料
+
 const modifyGroupInfo = async (value: string, modify?: ModifyTypeValue) => {
   const { groupID } = props.groupProfile
   const { code, group } = await updateGroupProfile({ groupID, modify, value })
@@ -360,7 +384,8 @@ watch(currentConversation, (data) => {
 
 .style-editPen {
   cursor: pointer;
-  vertical-align: bottom;
+  font-size: 15px;
+  vertical-align: text-bottom;
   margin-left: 5px;
 }
 
@@ -399,6 +424,7 @@ watch(currentConversation, (data) => {
     flex-direction: column;
     margin-left: 8px;
     gap: 4px;
+    flex: 1;
     .group-name {
       display: inline-block;
       vertical-align: bottom;
@@ -409,7 +435,8 @@ watch(currentConversation, (data) => {
       // margin-right: 8px;
     }
 
-    .group-type {
+    .group-type,
+    .group-id {
       font-size: 12px;
       font-weight: 400;
       color: #999999;

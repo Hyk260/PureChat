@@ -185,7 +185,7 @@
       :offset="2"
       transition="slide-fade"
     >
-      <ElButton class="animate-chat-slide-in" @click="scrollToBottomBtn">
+      <ElButton class="fade-slide-fade-in" @click="scrollToBottomBtn">
         <ChevronsDown :size="18" />
       </ElButton>
     </ElTooltip>
@@ -207,7 +207,7 @@
     <RobotModel />
     <RobotPlugin />
     <RobotOptions />
-    <EmojiPicker v-if="!isAssistant && flag" @on-close="setFlag(false)" />
+    <EmojiPicker v-if="!isAssistant && flag" @onClose="setFlag(false)" />
   </div>
 </template>
 

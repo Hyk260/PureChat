@@ -287,7 +287,7 @@ const handleRemoveTag = (_id: string) => {
   onModelDataChanged()
 }
 
-function toDisplayCount(count: number | undefined): number {
+function toDisplayCount(count?: number) {
   return count ?? 0
 }
 

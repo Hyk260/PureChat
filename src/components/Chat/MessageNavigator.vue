@@ -31,11 +31,13 @@ const [isHovered, setIsHovered] = useState(false)
 
 const chatStore = useChatStore()
 
-const { currentMessageList } = storeToRefs(chatStore)
+const { currentMessageList, isFullscreenInputActive } = storeToRefs(chatStore)
 
 const messagesList = computed(() => currentMessageList.value.filter((t) => !t?.isTimeDivider))
 
-const showNavigator = computed(() => messagesList.value.length > MIN_MESSAGES && __LOCAL_MODE__)
+const showNavigator = computed(
+  () => messagesList.value.length > MIN_MESSAGES && !isFullscreenInputActive.value && __LOCAL_MODE__
+)
 
 const idToIndexMap = computed<Map<string, number>>(() => new Map(messagesList.value.map((m, i) => [m.ID, i])))
 
@@ -62,13 +64,13 @@ const scrollToMessageByIndex = (i: number) => {
   navEl.scrollIntoView({ behavior: "smooth", block: "center" })
 }
 
-const getIndicatorWidth = (content: string | undefined): number => {
+const getIndicatorWidth = (content?: string): number => {
   if (!content) return MIN_WIDTH
   const ratio = Math.min(content.length / MAX_CONTENT_LENGTH, 1)
   return MIN_WIDTH + (MAX_WIDTH - MIN_WIDTH) * ratio
 }
 
-const getPreviewText = (content: string | undefined): string => {
+const getPreviewText = (content?: string): string => {
   if (!content) return ""
   const normalized = content.replace(/\s+/g, " ").trim()
   if (!normalized) return ""

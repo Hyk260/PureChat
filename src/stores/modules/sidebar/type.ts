@@ -2,10 +2,10 @@ import type { Component } from "vue"
 
 export interface SidebarItem {
   id: string
-  icon: Component | string
+  icon: Component
   title: string
   path?: string
-  show?: string | undefined // "hide"
+  show?: string // "hide"
   mode?: "other"
   class?: string
   if_fixed?: number

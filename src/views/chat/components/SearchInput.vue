@@ -12,18 +12,18 @@
         </div>
         <template #overlay>
           <Menu>
-            <MenuItem key="0">
+            <MenuItem>
               <div class="flex-c gap-5" @click="handleCreateGroup">
                 <ElIcon><MessageSquarePlus /></ElIcon>
                 <span>创建群聊</span>
               </div>
             </MenuItem>
-            <!-- <MenuItem key="1">
+            <MenuItem v-if="false">
               <div class="flex-c gap-5" @click="handleCreateAssistant">
                 <ElIcon><Bot /></ElIcon>
                 <span>新建助手</span>
               </div>
-            </MenuItem> -->
+            </MenuItem>
           </Menu>
         </template>
       </Dropdown>

@@ -547,7 +547,7 @@ const handleRevokeMessage = async (data: DB_Message) => {
   }, 60000)
 }
 
-const updateScrollHandler = (type?: "bottom" | "robot" | undefined) => {
+const updateScrollHandler = (type?: "bottom" | "robot") => {
   // return
   try {
     if (type === "bottom") {

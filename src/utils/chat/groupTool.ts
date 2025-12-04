@@ -1,5 +1,4 @@
 import { nextTick } from "vue"
-
 import { useChatStore } from "@/stores/modules/chat"
 
 import type { GroupMemberType as GroupMember } from "@/types"
@@ -99,4 +98,10 @@ export const groupSystemNotice = (message) => {
     default:
       return "待开发"
   }
+}
+
+export const formatGroupID = (id: string) => {
+  if (!id) return ""
+  if (id.includes("@TGS#")) return id.replace("@TGS#", "")
+  return id
 }
