@@ -49,7 +49,7 @@ interface Props {
 }
 
 interface Emits {
-  (e: "menu-click", item: MenuItemType, index?: number): void
+  (e: "menuClick", item: MenuItemType, index?: number): void
   (e: "close"): void
 }
 

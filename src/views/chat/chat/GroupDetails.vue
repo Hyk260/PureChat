@@ -342,7 +342,6 @@ onBeforeUnmount(() => {
 
 watch(currentConversation, (data) => {
   if (!data) return
-  // AcceptAndNotify AcceptNotNotify
   notify.value = data.messageRemindType === "AcceptNotNotify"
 })
 </script>

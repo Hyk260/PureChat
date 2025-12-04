@@ -51,28 +51,27 @@
       </div>
     </template>
     <VirtualList v-else :list="displayData" />
-    <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleClickMenuItem" />
+    <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menuClick="handleClickMenuItem" />
   </ElScrollbar>
 </template>
 
 <script setup lang="ts">
 import { BellOff } from "lucide-vue-next"
-
 import { storeToRefs } from "pinia"
 
-import CustomLabel from "@/components/Chat/CustomLabel.vue"
-import CustomMention from "@/components/Chat/CustomMention.vue"
-import ContextMenu from "@/components/ContextMenu"
 import { useContextMenu } from "@/composables/useContextMenu"
 import { useHandlerDrop } from "@/hooks/useHandlerDrop"
 import { pinConversation } from "@/service/im-sdk-api"
 import { setMessageRemindType } from "@/service/im-sdk-api"
-import { useChatStore, useGroupStore, useUserStore } from "@/stores"
-import { chatName } from "@/utils/chat"
+import { useChatStore, useGroupStore, useUserStore, useRouteStore } from "@/stores"
+import { chatName, formatNewsMessage, isShowCount, isNotify } from "@/utils/chat"
 import { chatSessionListData } from "@/utils/contextMenuPresets"
-import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 import { timeFormat } from "@/utils/timeFormat"
+import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
+import CustomLabel from "@/components/Chat/CustomLabel.vue"
+import CustomMention from "@/components/Chat/CustomMention.vue"
+import ContextMenu from "@/components/ContextMenu"
 import EmptyMessage from "../components/EmptyMessage.vue"
 import VirtualList from "./VirtualList.vue"
 
@@ -81,7 +80,6 @@ import type { MenuItem } from "@/types/contextMenu"
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop()
 
-const MAX_TIP_LENGTH = 46
 const isEnableVirtualList = ref(false)
 const contextMenuItems = ref<MenuItem[] | []>([])
 const contextMenuItemInfo = ref<DB_Session | null>(null)
@@ -89,6 +87,7 @@ const contextMenuItemInfo = ref<DB_Session | null>(null)
 const groupStore = useGroupStore()
 const userStore = useUserStore()
 const chatStore = useChatStore()
+const routeStore = useRouteStore()
 
 const { contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu()
 
@@ -120,7 +119,7 @@ const displayData = computed(() => {
     const name = chatName(item)
     const lastMessageTime = item.lastMessage?.lastTime
     const time = lastMessageTime ? timeFormat(lastMessageTime * 1000) : ""
-    const messageContent = formatNewsMessage(item)
+    const messageContent = formatNewsMessage(item, userStore.userProfile?.userID)
     const isActive = conversationID === currentId
     const showUnreadCount = !isShowCount(item) && !isNotify(item) && item.type !== "@TIM#SYSTEM"
     const isMentioned = (item.groupAtInfoList?.length ?? 0) > 0
@@ -145,14 +144,6 @@ const displayData = computed(() => {
   })
 })
 
-const isNotify = (item: DB_Session) => {
-  return item.messageRemindType === "AcceptNotNotify"
-}
-
-const isShowCount = (item: DB_Session) => {
-  return item.unreadCount === 0
-}
-
 const handleContextMenuEvent = (event: MouseEvent, item: DB_Session) => {
   if (item.type === "@TIM#SYSTEM") {
     hideContextMenu()
@@ -162,47 +153,6 @@ const handleContextMenuEvent = (event: MouseEvent, item: DB_Session) => {
   showContextMenu(event, item)
 }
 
-const truncateTip = (t: string) => (t.length > MAX_TIP_LENGTH ? `${t.slice(0, MAX_TIP_LENGTH)}...` : t)
-
-const formatNewsMessage = (data: DB_Session) => {
-  if (!data) return ""
-  const { type, lastMessage, unreadCount } = data
-  const { messageForShow: rawTip, fromAccount, isRevoked, nick, type: lastType } = lastMessage ?? {}
-  const isOther = userStore.userProfile?.userID !== fromAccount // 其他人消息
-  const isFound = fromAccount === "@TLS#NOT_FOUND" // 未知消息
-  const isSystem = type === "@TIM#SYSTEM" //系统消息
-  const isGroup = type === "GROUP" //群聊
-  const isCount = unreadCount && isNotify(data) // 未读消息计数
-
-  const tip = truncateTip(rawTip || "")
-  // 撤回消息
-  if (isRevoked) {
-    const actor = isOther ? (nick ?? "未知用户") : "你"
-    return `${actor}撤回了一条消息`
-  }
-  // 处理免打扰消息
-  if (isCount) {
-    const prefix = `[${unreadCount}条] `
-    if (lastType === "TIMGroupTipElem") {
-      return `${prefix} ${tip}`
-    }
-    const sender = isGroup && isOther ? `${nick || "未知用户"}: ` : ""
-    return `${prefix}${sender}${tip}`
-  }
-  // 处理未知或系统消息
-  if (isFound || isSystem) return tip
-  // 处理群聊消息
-  if (isGroup && isOther) {
-    if (lastType === "TIMGroupTipElem") {
-      return tip
-    } else if (nick) {
-      return `${nick}: ${tip}`
-    }
-  }
-  // 默认返回消息内容
-  return tip
-}
-// 消息列表 右键菜单
 const handleContextMenu = (item: DB_Session) => {
   contextMenuItemInfo.value = item
   const hiddenKeys = new Set<string>()
@@ -220,6 +170,7 @@ const handleConversationListClick = (data: DB_Session) => {
   chatStore.setReplyMsgData(null)
   chatStore.setForwardData({ type: "clear" })
   chatStore.updateSelectedConversation(data)
+  routeStore.handleSessionClick(data.conversationID)
 
   if (typeof requestIdleCallback !== "undefined") {
     requestIdleCallback(

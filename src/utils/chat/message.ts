@@ -1,4 +1,5 @@
 import { getBlob } from "./message-input-utils"
+import type { DB_Session } from "@/types"
 
 import type { DB_Message, MessageType, ImagePayloadType, DraftData } from "@/types"
 
@@ -127,4 +128,55 @@ export const handleCopyMsg = async (data: DB_Message) => {
     console.error("复制失败:", error)
     window.$message?.error("复制失败")
   }
+}
+
+const MAX_TIP_LENGTH = 46
+
+export const isNotify = (item: DB_Session) => {
+  return item.messageRemindType === "AcceptNotNotify"
+}
+
+export const isShowCount = (item: DB_Session) => {
+  return item.unreadCount === 0
+}
+
+export const truncateTip = (t: string) => (t.length > MAX_TIP_LENGTH ? `${t.slice(0, MAX_TIP_LENGTH)}...` : t)
+
+export const formatNewsMessage = (data: DB_Session, userID?: string) => {
+  if (!data) return ""
+  const { type, lastMessage, unreadCount } = data
+  const { messageForShow: rawTip, fromAccount, isRevoked, nick, type: lastType } = lastMessage ?? {}
+  const isOther = userID !== fromAccount // 其他人消息
+  const isFound = fromAccount === "@TLS#NOT_FOUND" // 未知消息
+  const isSystem = type === "@TIM#SYSTEM" //系统消息
+  const isGroup = type === "GROUP" //群聊
+  const isCount = unreadCount && isNotify(data) // 未读消息计数
+
+  const tip = truncateTip(rawTip || "")
+  // 撤回消息
+  if (isRevoked) {
+    const actor = isOther ? (nick ?? "未知用户") : "你"
+    return `${actor}撤回了一条消息`
+  }
+  // 处理免打扰消息
+  if (isCount) {
+    const prefix = `[${unreadCount}条] `
+    if (lastType === "TIMGroupTipElem") {
+      return `${prefix} ${tip}`
+    }
+    const sender = isGroup && isOther ? `${nick || "未知用户"}: ` : ""
+    return `${prefix}${sender}${tip}`
+  }
+  // 处理未知或系统消息
+  if (isFound || isSystem) return tip
+  // 处理群聊消息
+  if (isGroup && isOther) {
+    if (lastType === "TIMGroupTipElem") {
+      return tip
+    } else if (nick) {
+      return `${nick}: ${tip}`
+    }
+  }
+  // 默认返回消息内容
+  return tip
 }

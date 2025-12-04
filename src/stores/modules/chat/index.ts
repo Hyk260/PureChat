@@ -34,6 +34,7 @@ import type { ModelIDValue } from "@shared/provider"
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
   state: (): ChatState => ({
+    sessionId: "inbox", // 当前会话id
     historyMessageList: new Map(), //历史消息
     currentMessageList: [], //当前消息列表(窗口聊天消息)
     currentConversation: null, //跳转窗口的属性
@@ -190,6 +191,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const { conversationID: sessionId } = payload
       const oldSessionId = this.currentConversation?.conversationID
       if (sessionId === oldSessionId) return
+      this.sessionId = sessionId
       this.currentConversation = payload
       this.toggleMultiSelectMode(false)
       if (payload) {
@@ -442,7 +444,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     async deleteSession(data: { sessionId: string }) {
       const { sessionId } = data
       if (!sessionId) {
-        console.error("sessionId is required")
+        console.warn("sessionId is required")
         return
       }
       const { code } = await deleteConversation({ sessionId })
@@ -483,14 +485,15 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
     },
   },
-  // persist: {
-  //   pick: [
-  //     "noMore",
-  //     "isChatSessionListCollapsed",
-  //     "isChatBoxVisible",
-  //     "currentConversation",
-  //     "currentMessageList",
-  //     "conversationList",
-  //   ],
-  // },
+  persist: {
+    pick: [
+      "sessionId",
+      // "noMore",
+      // "isChatSessionListCollapsed",
+      // "isChatBoxVisible",
+      // "currentConversation",
+      // "currentMessageList",
+      // "conversationList",
+    ],
+  },
 })

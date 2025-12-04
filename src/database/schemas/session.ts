@@ -2,6 +2,7 @@ import { z } from "zod"
 import { payloadSchema } from "./message"
 import { GroupProfileSchema } from "./group"
 import { UserProfileSchema, UserSchema } from "./user"
+// import { SET_MESSAGE_REMIND_TYPE_OPTIONS } from "@/types/tencent-cloud-chat"
 
 export const lastMessage = {
   lastTime: 0,
@@ -91,6 +92,8 @@ export const SessionSchema = {
   // updatedAt: 0,
 }
 
+export const messageRemindType = z.enum(["AcceptAndNotify", "AcceptNotNotify", "Discard"])
+
 export const TypeSchema = z.enum(["C2C", "GROUP", "@TIM#SYSTEM"])
 
 export const LastMessageSchema = z
@@ -128,7 +131,12 @@ export const DB_SessionSchema = z.object({
   userProfile: UserProfileSchema,
   remark: z.string().optional(),
   isPinned: z.boolean(),
-  messageRemindType: z.string().optional(),
+  /**
+   * AcceptAndNotify: 接受并提醒 (默认)
+   * AcceptNotNotify: 接受不提醒
+   * Discard: 拒绝
+   */
+  messageRemindType: messageRemindType,
   markList: z.array(z.any()).optional(),
   customData: z.string().optional(),
   conversationGroupList: z.array(z.any()).optional(),

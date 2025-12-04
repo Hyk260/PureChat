@@ -29,8 +29,19 @@ export const useRouteStore = defineStore(SetupStoreId.Route, {
   actions: {
     getTabIdByRoute,
     routerPush(routeName: string) {
-      router.push(routeName)
-      useChatStore().toggleMultiSelectMode(false)
+      const chatStore = useChatStore()
+      if (routeName === "/chat") {
+        this.handleSessionClick(chatStore.sessionId)
+      } else {
+        router.push(routeName)
+      }
+      chatStore.toggleMultiSelectMode(false)
+    },
+    handleSessionClick(session: string) {
+      router.push({
+        path: "/chat",
+        query: { session: session ?? "inbox" },
+      })
     },
     addCacheRoute(routeName: string) {
       if (!this.cacheRoutes.includes(routeName)) {

@@ -252,10 +252,10 @@ export interface SET_MESSAGE_REMIND_TYPE_OPTIONS {
   userIDList?: Array<string>
   /**
    * 消息提醒类型：
-   * - TencentCloudChat.TYPES.MSG_REMIND_ACPT_AND_NOTE：SDK接收消息并抛出MESSAGE_RECEIVED事件通知接入方，接入方发送通知
-   * - TencentCloudChat.TYPES.MSG_REMIND_ACPT_NOT_NOTE：SDK接收消息并抛出MESSAGE_RECEIVED事件通知接入方，接入方不发送通知
-   * - TencentCloudChat.TYPES.MSG_REMIND_DISCARD：SDK拒绝接收消息
-   * - TencentCloudChat.TYPES.NOT_RECEIVE_OFFLINE_PUSH_EXCEPT_AT：SDK在线时接收消息，离线时仅接收@消息的离线推送
+   * - AcceptAndNotify: SDK接收消息并抛出MESSAGE_RECEIVED事件通知接入方，接入方发送通知
+   * - AcceptNotNotify: SDK接收消息并抛出MESSAGE_RECEIVED事件通知接入方，接入方不发送通知(消息免打扰)
+   * - Discard: SDK拒绝接收消息
+   * - NotReceiveOfflinePushExceptAt: SDK在线时接收消息，离线时仅接收@消息的离线推送
    */
   messageRemindType: "AcceptAndNotify" | "AcceptNotNotify" | "Discard" | "NotReceiveOfflinePushExceptAt"
 }

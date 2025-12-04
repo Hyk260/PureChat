@@ -1,6 +1,7 @@
 import type { DB_Message, DB_Session, DraftData } from "@/types"
 
 export interface ChatState {
+  sessionId: string
   historyMessageList: Map<string, DB_Message[]>
   currentMessageList: DB_Message[]
   currentConversation: DB_Session | null
