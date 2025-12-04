@@ -67,6 +67,7 @@ import { useChatStore, useGroupStore, useUserStore, useRouteStore } from "@/stor
 import { chatName, formatNewsMessage, isShowCount, isNotify } from "@/utils/chat"
 import { chatSessionListData } from "@/utils/contextMenuPresets"
 import { timeFormat } from "@/utils/timeFormat"
+import { delay } from "@/utils/common"
 import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
 import CustomLabel from "@/components/Chat/CustomLabel.vue"
@@ -91,7 +92,8 @@ const routeStore = useRouteStore()
 
 const { contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu()
 
-const { conversationList, searchConversationList, currentSessionId } = storeToRefs(chatStore)
+const { currentConversation, conversationList, searchConversationList, currentSessionId, sessionId } =
+  storeToRefs(chatStore)
 
 const searchForData = computed(() => {
   if (searchConversationList.value?.length) {
@@ -170,7 +172,6 @@ const handleConversationListClick = (data: DB_Session) => {
   chatStore.setReplyMsgData(null)
   chatStore.setForwardData({ type: "clear" })
   chatStore.updateSelectedConversation(data)
-  routeStore.handleSessionClick(data.conversationID)
 
   if (typeof requestIdleCallback !== "undefined") {
     requestIdleCallback(
@@ -227,6 +228,19 @@ const pingConversation = async (data: DB_Session) => {
     isPinned: Boolean(data?.isPinned),
   })
 }
+
+onMounted(async () => {
+  await nextTick()
+  if (!currentConversation.value) {
+    if (sessionId.value !== "inbox") {
+      await delay(200)
+      const matchedConversation = conversationList.value.find((item) => item.conversationID === sessionId.value)
+      if (matchedConversation) {
+        handleConversationListClick(matchedConversation)
+      }
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>
