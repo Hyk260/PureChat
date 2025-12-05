@@ -38,7 +38,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     sessionId: "inbox", // 当前会话id
     historyMessageList: new Map(), // 历史消息
     currentMessageList: [], // 当前消息列表(窗口聊天消息)
-    currentConversation: null, //跳转窗口的属性
+    currentConversation: null, // 跳转窗口的属性
     conversationList: [], // 会话列表数据
     searchConversationList: [], // 搜索后的会话列表
     totalUnreadMsg: 0, // 未读消息总数

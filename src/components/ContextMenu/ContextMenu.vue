@@ -104,7 +104,7 @@ const calculatePosition = (x: number, y: number) => {
 }
 
 const handleMenuItemClick = (item: MenuItemType, index?: number) => {
-  emit("menu-click", item, index)
+  emit("menuClick", item, index)
   close()
 }
 

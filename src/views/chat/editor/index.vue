@@ -329,7 +329,7 @@ onBeforeUnmount(() => {
   }
 }
 .wang-h-full {
-  height: calc(100% - 60px) !important;
+  height: 100% !important;
   border-top: none;
 }
 </style>

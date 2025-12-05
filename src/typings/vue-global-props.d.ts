@@ -11,6 +11,7 @@ declare module 'vue' {
       isLocalMode: boolean
     }
 
+    IS_DEV: boolean
     IS_ELECTRON: boolean
     IS_LOCAL_MODE: boolean
   }

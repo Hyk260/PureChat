@@ -30,8 +30,6 @@ import ReplyElem from "../CloudCustomData/ReplyElem.vue"
 import DeepThinking from "../CloudCustomData/DeepThinking.vue"
 import WebSearch from "../CloudCustomData/WebSearch.vue"
 
-const { DEV: isDev } = import.meta.env
-
 interface Props {
   message: DB_Message
   showMarkdown?: boolean

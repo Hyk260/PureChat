@@ -48,27 +48,42 @@
         <span v-else-if="isSystem" class="chat-type system"> 系统通知 </span>
       </p>
     </div>
-    <div class="action-buttons flex gap-10">
-      <!-- <div class="message-info-add" v-show="currentConversation.type === 'GROUP' && false" title="添加成员">
-        <SvgIcon local-icon="tianjia" class="icon-hover" />
-      </div> -->
-      <div v-if="isC2C || isGroupChat" class="action-btn share" title="分享对话" @click="openShare">
-        <Share2 class="cursor-pointer icon-hover" :size="17" />
-      </div>
-      <div v-if="isGroupChat" class="action-btn setup" title="群详情" @click="openSetup">
-        <Ellipsis class="cursor-pointer icon-hover" :size="17" />
-      </div>
+    <div class="action-buttons flex gap-4">
+      <ElTooltip :showArrow="false" content="邀请加群" placement="bottom">
+        <ElButton v-if="isGroupChat && false" class="action-btn message-info-add" title="添加成员">
+          <MessageCirclePlus :size="18" />
+        </ElButton>
+      </ElTooltip>
+
+      <ElTooltip :showArrow="false" content="分享" placement="bottom">
+        <ElButton v-if="isC2C || isGroupChat" class="action-btn share" @click="openShare">
+          <Share :size="18" />
+        </ElButton>
+      </ElTooltip>
+
+      <ElTooltip v-if="IS_DEV && IS_LOCAL_MODE" :showArrow="false" content="显示/隐藏话题面板" placement="bottom">
+        <ElButton class="action-btn panel" @click="portalStore.togglePortal">
+          <PanelRightClose v-if="showPortal" :size="18" />
+          <PanelLeftClose v-else :size="18" />
+        </ElButton>
+      </ElTooltip>
+
+      <ElTooltip :showArrow="false" content="群详情" placement="bottom">
+        <ElButton v-if="isGroupChat" class="action-btn setup" @click="openSetup">
+          <Menu :size="18" />
+        </ElButton>
+      </ElTooltip>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { Ellipsis, History, Share2 } from "lucide-vue-next"
-import ModelTag from "@/components/Features/ModelTag"
+import { Menu, MessageCirclePlus, PanelRightClose, PanelLeftClose, History, Share2 as Share } from "lucide-vue-next"
 import { storeToRefs } from "pinia"
 
+import { useChatStore, useRobotStore, usePortalStore } from "@/stores"
+import ModelTag from "@/components/Features/ModelTag"
 import CustomLabel from "@/components/Chat/CustomLabel.vue"
-import { useChatStore, useRobotStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({
@@ -77,9 +92,11 @@ defineOptions({
 
 const chatStore = useChatStore()
 const robotStore = useRobotStore()
+const portalStore = usePortalStore()
 
 const { isAssistant, isGroupChat, currentType, currentConversation } = storeToRefs(chatStore)
 const { getPromptTitle, botMessageCount, isShowPromptTitle } = storeToRefs(robotStore)
+const { showPortal } = storeToRefs(portalStore)
 
 const isC2C = computed(() => currentType.value === "C2C")
 const isGroup = computed(() => currentType.value === "GROUP")
@@ -88,7 +105,7 @@ const isSystem = computed(() => currentType.value === "@TIM#SYSTEM")
 const nickName = computed(() => {
   if (!currentConversation.value) return ""
   const { userProfile } = currentConversation.value
-  return userProfile?.nick || userProfile?.userID || userProfile?.remark || ""
+  return userProfile?.nick || userProfile?.userID || ""
 })
 
 const groupName = computed(() => {
@@ -163,9 +180,22 @@ const openUser = () => {}
     margin-left: 5px;
   }
   .action-buttons {
-    .action-btn {
-      transition: all 0.2s ease;
+    :deep(.el-button) {
+      font-size: 16px;
+      width: 32px;
+      height: 32px;
+      padding: 0px;
+      border-radius: 50%;
+      border: none;
+      background-color: unset;
+      margin-left: 0;
+      &:hover {
+        color: var(--el-color-info-dark-3);
+      }
     }
+    // .action-btn {
+    //   transition: all 0.2s ease;
+    // }
   }
 }
 </style>

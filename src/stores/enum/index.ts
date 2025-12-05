@@ -4,6 +4,7 @@ export enum SetupStoreId {
   Chat = "chat",
   Route = "route",
   Group = "group",
+  Portal = "portal",
   Robot = "robot",
   Sidebar = "sidebar",
   Theme = "theme",

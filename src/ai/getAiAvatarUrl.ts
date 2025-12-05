@@ -188,10 +188,7 @@ export function getAiAvatarUrl(id: string, options: AiAvatarOptions = { source: 
   }
 
   // 检测是否为AI机器人ID
-  if (!AiModelDetector.isAiRobotId(id)) {
-    console.warn("getAiAvatarUrl: ID is not a valid AI robot ID", id)
-    return ""
-  }
+  if (!AiModelDetector.isAiRobotId(id)) return ""
 
   // 提取模型提供者
   const modelProvider = AiModelDetector.extractModelProvider(id)

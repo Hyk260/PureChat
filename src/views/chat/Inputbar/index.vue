@@ -176,7 +176,7 @@
     </ElTooltip>
     <!-- 滚动到底部 -->
     <ElTooltip
-      v-if="showBottomBtn"
+      v-if="showBottomBtn && !isFullscreenInputActive"
       :enterable="false"
       :showAfter="500"
       :content="$t('chat.scrollToTheBottom')"

@@ -23,7 +23,7 @@
             <span class="group-name truncate">
               {{ groupProfile.name }}
             </span>
-            <ElIcon v-if="isOwner" class="style-editPen icon-hover" @click="openNamePopup">
+            <ElIcon v-if="isOwner" class="style-editPen" @click="openNamePopup">
               <EditPen />
             </ElIcon>
           </div>
@@ -33,7 +33,7 @@
                 {{ groupID }}
               </ElTag>
             </span>
-            <span v-if="isDev" class="group-type">
+            <span v-if="IS_DEV" class="group-type">
               {{ GroupTypeMap[groupProfile.type] }}
             </span>
           </div>
@@ -48,7 +48,7 @@
       <div class="group-notice">
         <div class="pb-10">
           <span>{{ $t("group.groupNotice") }}</span>
-          <ElIcon v-if="isOwner" class="style-editPen icon-hover" @click="openNoticePopup">
+          <ElIcon v-if="isOwner" class="style-editPen" @click="openNoticePopup">
             <EditPen />
           </ElIcon>
         </div>
@@ -128,9 +128,9 @@ import {
 } from "@element-plus/icons-vue"
 
 import Markdown from "@/components/Markdown/index.vue"
-import { isFullStaffGroup } from "@/ai/utils"
 import AddMemberPopup from "@/components/Popups/AddMemberPopup.vue"
 import GroupQrCodePopup from "@/components/Popups/GroupQrCodePopup.vue"
+import { isFullStaffGroup } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { restApi } from "@/service/api"
 import {
@@ -156,8 +156,6 @@ defineOptions({
 })
 
 const props = withDefaults(defineProps<Props>(), {})
-
-const { DEV: isDev } = import.meta.env
 
 const notify = ref(false)
 const AddMemberRef = useTemplateRef("AddMemberRef")

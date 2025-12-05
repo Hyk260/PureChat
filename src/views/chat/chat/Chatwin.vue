@@ -87,7 +87,7 @@
     <!-- 卡片 -->
     <MyPopover />
     <UserPopup ref="userPopupRef" />
-    <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menu-click="handleContextMenuItemClick" />
+    <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menuClick="handleContextMenuItemClick" />
     <MessageNavigator v-if="currentConversation" :scrollbarRef="scrollbarRef" />
   </div>
 </template>
@@ -623,7 +623,8 @@ defineExpose({ updateScrollbar, scrollToBottom })
 }
 .message-info-view-content {
   position: relative;
-  height: calc(100% - 60px - 200px);
+  // height: calc(100% - 60px - 200px);
+  height: calc(100% - 200px);
 }
 .style-msg-box {
   height: calc(100% - 60px) !important;

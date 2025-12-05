@@ -260,10 +260,8 @@ onMounted(async () => {
   position: relative;
   box-sizing: border-box;
   color: var(--color-text);
-  /* 优化渲染性能：使用 content-visibility 延迟渲染屏幕外的元素 */
   content-visibility: auto;
   contain-intrinsic-size: 0 64px;
-  /* 使用 GPU 加速 */
   transform: translateZ(0);
   will-change: transform;
   &:hover {

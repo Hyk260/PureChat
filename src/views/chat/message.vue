@@ -20,14 +20,19 @@
     <div class="message-right">
       <EmptyMessage className="empty" />
       <ChatHeader />
-      <!-- 聊天窗口 -->
-      <Chatwin />
-      <!-- 消息回复框 -->
-      <ReplyBox />
-      <!-- 编辑器 -->
-      <Editor />
-      <!-- 多选工具栏 -->
-      <MessageToolbar />
+      <div class="message-container">
+        <div class="w-full">
+          <!-- 聊天窗口 -->
+          <Chatwin />
+          <!-- 消息回复框 -->
+          <ReplyBox />
+          <!-- 编辑器 -->
+          <Editor />
+          <!-- 多选工具栏 -->
+          <MessageToolbar />
+        </div>
+        <TopicPanel />
+      </div>
     </div>
   </div>
 </template>
@@ -38,6 +43,7 @@ import { ChevronLeft, ChevronRight } from "lucide-vue-next"
 import { storeToRefs } from "pinia"
 
 import ChatHeader from "@/components/Chat/ChatHeader.vue"
+import TopicPanel from "@/components/Chat/TopicPanel.vue"
 import MessageToolbar from "@/components/Popups/MessageToolbar.vue"
 import { useChatStore } from "@/stores/modules/chat"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
@@ -91,11 +97,16 @@ onMounted(() => {
   background: var(--color-body-bg);
   display: flex;
   flex-direction: column;
-  flex: 1;
+  // flex: 1;
+  flex: 1 1 0%;
   height: 100%;
   position: relative;
   overflow: hidden;
   min-width: 375px;
+  .message-container {
+    height: calc(100% - 60px);
+    display: flex;
+  }
 }
 .scroll-container {
   height: calc(100% - 60px);
