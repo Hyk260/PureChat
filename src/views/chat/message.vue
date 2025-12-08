@@ -143,12 +143,12 @@ onMounted(() => {
   pointer-events: all;
   position: absolute;
   z-index: 1;
-  top: 0;
+  top: 60px;
   right: -16px;
   display: flex;
   align-items: center;
   width: 16px;
-  height: 100%;
+  height: calc(100% - 60px - 200px);
   & > div {
     display: flex;
     align-items: center;

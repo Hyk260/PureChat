@@ -198,6 +198,7 @@ const aQuickForward = async () => {
   justify-content: center;
   // padding: 20px;
   bottom: 60px;
+  z-index: 5;
   transform: translateX(-50%);
   left: 50%;
 

@@ -63,7 +63,7 @@ import { useContextMenu } from "@/composables/useContextMenu"
 import { useHandlerDrop } from "@/hooks/useHandlerDrop"
 import { pinConversation } from "@/service/im-sdk-api"
 import { setMessageRemindType } from "@/service/im-sdk-api"
-import { useChatStore, useGroupStore, useUserStore, useRouteStore } from "@/stores"
+import { useChatStore, useGroupStore, useUserStore, useRouteStore, useTopicStore, useRobotStore } from "@/stores"
 import { chatName, formatNewsMessage, isShowCount, isNotify } from "@/utils/chat"
 import { chatSessionListData } from "@/utils/contextMenuPresets"
 import { timeFormat } from "@/utils/timeFormat"
@@ -87,7 +87,10 @@ const contextMenuItemInfo = ref<DB_Session | null>(null)
 
 const groupStore = useGroupStore()
 const userStore = useUserStore()
+const topicStore = useTopicStore()
+const robotStore = useRobotStore()
 const chatStore = useChatStore()
+
 const routeStore = useRouteStore()
 
 const { contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu()
@@ -172,6 +175,7 @@ const handleConversationListClick = (data: DB_Session) => {
   chatStore.setReplyMsgData(null)
   chatStore.setForwardData({ type: "clear" })
   chatStore.updateSelectedConversation(data)
+  topicStore.setRolePrompt(robotStore.promptConfig?.prompt[0]?.content || "")
 
   if (typeof requestIdleCallback !== "undefined") {
     requestIdleCallback(

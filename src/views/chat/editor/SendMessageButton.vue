@@ -1,24 +1,27 @@
 <template>
   <div class="send-button">
     <span class="tip">{{ placeholderMap[getOperatingSystem()] }}</span>
-    <!-- <ElButton :disabled="disabled" circle @click="handleTranslate">
+    <ElButton v-if="false" :disabled="disabled" circle @click="handleTranslate">
       <div v-if="translateDing" class="iconify-icon svg-spinners"></div>
       <Languages v-else :size="15" />
-    </ElButton> -->
-    <!-- <ElButton :disabled="disabled" circle @click="handlePolish">
+    </ElButton>
+    <ElButton v-if="false" :disabled="disabled" circle @click="handlePolish">
       <div v-if="polishDing" class="iconify-icon svg-spinners"></div>
       <WandSparkles :size="15" />
-    </ElButton> -->
+    </ElButton>
+    <ElButton v-if="true && IS_DEV && IS_LOCAL_MODE" @click="handleAddTopic">
+      <MessageCirclePlus :size="15" />
+    </ElButton>
     <ElButton :loading="isSending" :class="{ 'pointer-events-none': disabled }" @click="onSend">
       <template #loading>
         <div class="iconify-icon svg-spinners mr-8"></div>
       </template>
       <span>
-        <!-- <Send :size="15" /> -->
+        <Send v-if="false" :size="15" />
         {{ $t("chat.send") }}
       </span>
     </ElButton>
-    <ElButton v-if="isSending && isDev" class="!ml-0" @click="onPause">
+    <ElButton v-if="isSending && IS_DEV" class="!ml-0" @click="onPause">
       <CirclePause class="mr-8" :size="14" />
       <span> {{ $t("chat.pause") }} </span>
     </ElButton>
@@ -26,23 +29,19 @@
 </template>
 
 <script setup lang="ts">
-import {
-  CirclePause,
-  // Languages,
-  // Send,
-  // WandSparkles,
-} from "lucide-vue-next"
-
+import { CirclePause, Languages, Send, WandSparkles, MessageCirclePlus } from "lucide-vue-next"
 import { useMessageOperations } from "@/hooks/useMessageOperations"
-import { useChatStore } from "@/stores"
+import { useChatStore, useTopicStore } from "@/stores"
 import { getOperatingSystem } from "@/utils/common"
 
 import { placeholderMap } from "@/utils/wangEditor/editor-config"
 
-const { DEV: isDev } = import.meta.env
-
 type Props = {
   disabled?: boolean
+}
+
+interface Emits {
+  (e: "sendMessage", value: MouseEvent): void
 }
 
 const translateDing = ref(false)
@@ -52,12 +51,18 @@ withDefaults(defineProps<Props>(), {
   disabled: false,
 })
 
-const emit = defineEmits(["sendMessage"])
+const emit = defineEmits<Emits>()
 
+const topicStore = useTopicStore()
 const chatStore = useChatStore()
+
 const { pauseMessages } = useMessageOperations()
 
 const { isSending } = storeToRefs(chatStore)
+
+const handleAddTopic = () => {
+  topicStore.addTopic("title")
+}
 
 const onSend = (e: MouseEvent) => {
   emit("sendMessage", e)
@@ -66,8 +71,7 @@ const onSend = (e: MouseEvent) => {
 const onPause = async () => {
   pauseMessages()
 }
-// 输入一个提示词进行优化
-// 优化提示词
+
 const handleTranslate = () => {
   translateDing.value = true
   setTimeout(() => {

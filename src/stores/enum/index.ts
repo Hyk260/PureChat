@@ -9,6 +9,7 @@ export enum SetupStoreId {
   Sidebar = "sidebar",
   Theme = "theme",
   Tools = "tools",
+  Topic = "topic",
   User = "user",
   WebSearch = "webSearch",
 }

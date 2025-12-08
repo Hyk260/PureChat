@@ -110,14 +110,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, reactive } from "vue"
 import { ElRadioGroup, ElRadioButton } from "element-plus"
 import { storeToRefs } from "pinia"
 
 import Markdown from "@/components/Markdown/index.vue"
 import QrCode from "@/components/QrCode/index.vue"
-import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import ChatHeader from "@/components/Chat/ChatHeader.vue"
+import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"
 import { ImageType, imageTypeOptions, useScreenshot } from "@/hooks/useScreenshot"
 import { useState } from "@/hooks/useState"
@@ -140,9 +139,11 @@ const shareSettings = reactive<ShareOptions>({
   selectedImageType: ImageType.JPG,
 })
 
+const [dialogVisible, setDialogVisible] = useState(false)
+
 const chatStore = useChatStore()
 const robotStore = useRobotStore()
-const [dialogVisible, setDialogVisible] = useState(false)
+
 const { isAssistant, getSortedForwardData } = storeToRefs(chatStore)
 const { loading, onDownload } = useScreenshot()
 
@@ -157,15 +158,15 @@ const promptContent = computed((): string => {
 /**
  * 是否显示助手提示词
  */
-const showPrompt = computed((): boolean => isAssistant.value && shareSettings.includePrompt && promptContent.value)
+const showPrompt = computed((): boolean => isAssistant.value && shareSettings.includePrompt && !!promptContent.value)
 
 /**
  * 获取助手角色文本
  */
 const roleText = computed((): string => {
   try {
-    const data = robotStore.currentProviderPrompt?.meta || {}
-    if (!data.avatar || !data.title) return ""
+    const data = robotStore.currentProviderPrompt?.meta || null
+    if (!data?.avatar || !data.title) return ""
     return `${data.avatar} ${data.title}`
   } catch (error) {
     console.error("获取角色文本失败:", error)
@@ -176,7 +177,7 @@ const roleText = computed((): string => {
 /**
  * 是否显示角色信息
  */
-const showRole = computed((): boolean => roleText.value && shareSettings.includePrompt)
+const showRole = computed((): boolean => !!roleText.value && shareSettings.includePrompt)
 
 /**
  * 获取消息头像URL
@@ -191,7 +192,7 @@ const getAvatarUrl = (item: DB_Message): string => {
  * 处理截图操作的通用函数
  * @param imageType 图片类型
  */
-const processScreenshot = async (imageType: ImageType): Promise<void> => {
+const processScreenshot = async (imageType: ImageType) => {
   try {
     await onDownload(imageType, roleText.value, () => {
       setDialogVisible(false)
@@ -204,19 +205,19 @@ const processScreenshot = async (imageType: ImageType): Promise<void> => {
 /**
  * 复制截图到剪贴板
  */
-const handleCopy = (): Promise<void> => {
+const handleCopy = () => {
   return processScreenshot(ImageType.Blob)
 }
 
 /**
  * 下载截图文件
  */
-const handleDownload = (): Promise<void> => {
+const handleDownload = () => {
   return processScreenshot(shareSettings.selectedImageType)
 }
 
-const handleClose = (done?: () => void): void => {
-  done?.()
+const handleClose = () => {
+  setDialogVisible(false)
 }
 
 onMounted(() => {
@@ -260,6 +261,7 @@ onUnmounted(() => {
 
   /* 隐藏不需要在截图中显示的元素 */
   :deep(.history),
+  :deep(.action-btn),
   :deep(.setup),
   :deep(.share) {
     display: none;

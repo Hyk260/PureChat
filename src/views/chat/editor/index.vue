@@ -13,15 +13,15 @@
       :mode="mode"
       :defaultConfig="editorConfig"
       @drop="handleFileDrop"
-      @on-change="handleEditorChange"
-      @on-created="handleEditorCreated"
-      @custom-paste="handlePaste"
-      @custom-alert="customAlert"
+      @onChange="handleEditorChange"
+      @onCreated="handleEditorCreated"
+      @customPaste="handlePaste"
+      @customAlert="customAlert"
       @keyup.enter="handleEnter"
     />
     <!-- @提及弹框 -->
     <MentionModal v-if="isMentionModalVisible" pinyinSearch :isOwner="isOwner" :editor="editorRef" />
-    <SendMessageButton :disabled="isSendDisabled" @send-message="sendChatMessage" />
+    <SendMessageButton :disabled="isSendDisabled" @sendMessage="sendChatMessage" />
   </div>
 </template>
 
