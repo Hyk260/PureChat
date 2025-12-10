@@ -1,11 +1,6 @@
-export interface Topic {
-  id: string
-  title: string
-  createdAt: number // 时间戳（秒）
-  isFavorite: boolean
-  isDefault?: boolean // 是否为默认话题
-  isTemporary?: boolean // 是否为临时话题
-}
+import { ChatTopic } from "@/types/topic"
+
+export type Topic = ChatTopic
 
 export interface TopicState {
   // 角色设定 prompt，按会话ID分组
@@ -14,4 +9,7 @@ export interface TopicState {
   topicsSession: Record<string, Topic[]>
   // 当前搜索关键词
   searchKeyword: string
+  // 话题ID
+  topicId: string
+  defaultTopic: Topic
 }

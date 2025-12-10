@@ -81,12 +81,15 @@ export const SessionSchema = {
   userProfile: UserSchema,
   remark: "",
   isPinned: false,
-  pinned: 0,
-  messageRemindType: "",
+  messageRemindType: "AcceptAndNotify",
   markList: [],
   customData: "",
   conversationGroupList: [],
   draftText: "",
+  // ***************** Custom ***************** //
+  topicId: "",
+  pinned: 0,
+  // **************** Base *************** //
   // id: "",
   // createdAt: 0,
   // updatedAt: 0,
@@ -142,6 +145,7 @@ export const DB_SessionSchema = z.object({
   conversationGroupList: z.array(z.any()).optional(),
   draftText: z.string().optional(),
   // **************** Custom *************** //
+  topicId: z.string().nullable().optional(),
   pinned: z.number().int().min(0).max(1).optional(),
   // **************** Base *************** //
   id: z.string().optional(),

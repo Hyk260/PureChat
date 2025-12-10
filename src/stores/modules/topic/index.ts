@@ -1,6 +1,11 @@
 import { defineStore } from "pinia"
 import { SetupStoreId } from "@/stores/enum"
 import { useChatStore } from "@/stores/modules/chat"
+import { TopicModel, type QueryTopicParams } from "@/database/models/topic"
+import { MessageModel } from "@/database/models/message"
+import { SessionModel } from "@/database/models/session"
+import router from "@/router"
+
 import type { TopicState, Topic } from "./types"
 
 export const useTopicStore = defineStore(SetupStoreId.Topic, {
@@ -8,6 +13,15 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
     rolePromptsSession: {},
     topicsSession: {},
     searchKeyword: "",
+    topicId: "",
+    defaultTopic: {
+      id: "",
+      sessionId: "",
+      createdAt: 0,
+      updatedAt: 0,
+      favorite: false,
+      title: "默认主题",
+    },
   }),
   getters: {
     // 获取当前会话的角色设定 prompt
@@ -36,7 +50,7 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
       const grouped: Record<string, Topic[]> = {}
 
       topics.forEach((topic) => {
-        const date = new Date(topic.createdAt * 1000)
+        const date = new Date(topic.createdAt)
         const year = date.getFullYear().toString()
 
         if (!grouped[year]) {
@@ -52,13 +66,8 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
 
       return grouped
     },
-    // 获取默认话题
-    defaultTopic(): Topic | null {
-      return this.currentTopics.find((t) => t.isDefault) || this.currentTopics.find((t) => t.isTemporary) || null
-    },
   },
   actions: {
-    // 设置角色设定 prompt
     setRolePrompt(prompt: string, sessionId?: string) {
       const chatStore = useChatStore()
       const sid = sessionId || chatStore.currentSessionId
@@ -67,29 +76,42 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
 
       this.rolePromptsSession[sid] = prompt
     },
-    // 添加话题
-    addTopic(title: string, sessionId?: string) {
+    async getTopics(params: QueryTopicParams): Promise<Topic[]> {
+      return TopicModel.query(params)
+    },
+    async selectTopic(topic: Topic, sessionId?: string) {
+      if (!topic) return
+      const chatStore = useChatStore()
+      const sid = sessionId || chatStore.sessionId
+      this.topicId = topic.id
+      const query: Record<string, string> = { session: sid }
+      if (topic.id) {
+        query.topic = topic.id
+      }
+      await SessionModel.update(sid, { topicId: topic.id })
+      router.push({ path: "/chat", query })
+
+      const data = await MessageModel.queryByTopicId(topic.id)
+      console.log(data)
+    },
+    async addTopic(title: string, sessionId?: string) {
       const chatStore = useChatStore()
       const sid = sessionId || chatStore.currentSessionId
-
       if (!sid) return
-
-      const newTopic: Topic = {
-        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        title,
-        createdAt: Math.floor(Date.now() / 1000),
-        isFavorite: false,
-        isTemporary: false,
-      }
-
-      if (!this.topicsSession[sid]) {
-        this.topicsSession[sid] = []
-      }
-
-      this.topicsSession[sid].push(newTopic)
-      return newTopic
+      await TopicModel.create({ title, sessionId: sid })
+      this.initDefaultTopic(sid)
     },
-    // 删除话题
+    async clearTopics(sessionId?: string) {
+      const chatStore = useChatStore()
+      const sid = sessionId || chatStore.currentSessionId
+      await TopicModel.batchDeleteBySessionId(sid)
+      this.initDefaultTopic(sid)
+    },
+    async updateTopic(id: string, data: Partial<Topic>) {
+      const favorite = typeof data.favorite !== "undefined" ? (data.favorite ? 1 : 0) : undefined
+
+      return TopicModel.update(id, { ...data, favorite })
+    },
     removeTopic(topicId: string, sessionId?: string) {
       const chatStore = useChatStore()
       const sid = sessionId || chatStore.currentSessionId
@@ -97,8 +119,8 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
       if (!sid || !this.topicsSession[sid]) return
 
       this.topicsSession[sid] = this.topicsSession[sid].filter((t) => t.id !== topicId)
+      TopicModel.delete(topicId)
     },
-    // 切换收藏状态
     toggleFavorite(topicId: string, sessionId?: string) {
       const chatStore = useChatStore()
       const sid = sessionId || chatStore.currentSessionId
@@ -107,38 +129,29 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
 
       const topic = this.topicsSession[sid].find((t) => t.id === topicId)
       if (topic) {
-        topic.isFavorite = !topic.isFavorite
+        const isFavorite = !topic.favorite
+        topic.favorite = isFavorite
+        TopicModel.toggleFavorite(topicId, isFavorite)
       }
     },
-    // 设置搜索关键词
-    setSearchKeyword(keyword: string) {
+    async setSearchKeyword(keyword: string, sessionId?: string) {
       this.searchKeyword = keyword
+      const chatStore = useChatStore()
+      const sid = sessionId || chatStore.currentSessionId
+      await TopicModel.queryByKeyword(keyword, sid)
     },
-    // 初始化默认话题
-    initDefaultTopic(sessionId?: string) {
+    async initDefaultTopic(sessionId?: string) {
       const chatStore = useChatStore()
       const sid = sessionId || chatStore.currentSessionId
 
       if (!sid) return
-
+      this.topicId = ""
       if (!this.topicsSession[sid]) {
         this.topicsSession[sid] = []
       }
 
-      // 检查是否已有默认话题
-      const hasDefault = this.topicsSession[sid].some((t) => t.isDefault || t.isTemporary)
-
-      if (!hasDefault) {
-        const defaultTopic: Topic = {
-          id: `default-${sid}`,
-          title: "默认话题",
-          createdAt: Math.floor(Date.now() / 1000),
-          isFavorite: false,
-          isDefault: false,
-          isTemporary: true,
-        }
-        this.topicsSession[sid].unshift(defaultTopic)
-      }
+      const topics = await this.getTopics({ containerId: sid })
+      this.topicsSession[sid] = topics
     },
   },
   persist: true,

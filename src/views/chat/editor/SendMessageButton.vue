@@ -61,7 +61,7 @@ const { pauseMessages } = useMessageOperations()
 const { isSending } = storeToRefs(chatStore)
 
 const handleAddTopic = () => {
-  topicStore.addTopic("title")
+  topicStore.addTopic("默认话题")
 }
 
 const onSend = (e: MouseEvent) => {

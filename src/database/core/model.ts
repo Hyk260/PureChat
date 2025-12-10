@@ -1,11 +1,10 @@
 import { nanoid } from "@/utils/uuid"
-
 import { browserDB } from "../client/db"
 
 import type { BrowserDB } from "../client/db"
 import type { BrowserDBSchema } from "../types/db"
-import type Dexie from "dexie"
 import type { ZodObject } from "zod"
+import type Dexie from "dexie"
 
 export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchema[N]["table"]> {
   protected readonly db: BrowserDB
@@ -24,7 +23,7 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
 
   // **************** Create *************** //
 
-  async _addWithSync<T = BrowserDBSchema[N]["model"]>(
+  protected async _addWithSync<T = BrowserDBSchema[N]["model"]>(
     id: string | number = nanoid(),
     data: T,
     primaryKey: string = "id"
@@ -43,9 +42,9 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
 
     const record: any = {
       ...data,
+      [primaryKey]: id,
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      [primaryKey]: id,
     }
 
     const newId = await this.db[tableName].add(record)
@@ -55,13 +54,17 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
 
   // **************** Delete *************** //
 
-  async _deleteWithSync(id: string) {
+  protected async _deleteWithSync(id: string) {
     const result = await this.table.delete(id)
 
     return result
   }
 
-  async _clearWithSync() {
+  protected async _bulkDeleteWithSync(keys: string[]) {
+    await this.table.bulkDelete(keys)
+  }
+
+  protected async _clearWithSync() {
     const result = await this.table.clear()
 
     return result
@@ -69,7 +72,7 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
 
   // **************** Update *************** //
 
-  async _updateWithSync(id: string, data: Partial<T>) {
+  protected async _updateWithSync(id: string, data: Partial<T>) {
     const keys = Object.keys(data)
     const partialSchema = this.schema.pick(Object.fromEntries(keys.map((key) => [key, true])))
 
@@ -90,9 +93,13 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
     return { success }
   }
 
-  async _putWithSync(data: any, id: string) {
+  protected async _putWithSync(data: any, id: string) {
     const result = await this.table.put(data, id)
 
     return result
+  }
+
+  protected async _bulkPutWithSync(items: T[]) {
+    await this.table.bulkPut(items)
   }
 }

@@ -1,5 +1,4 @@
 import { ProvidersList } from "@database/config"
-
 import { MessageModel } from "@/database/models/message"
 import { SessionModel } from "@/database/models/session"
 import {
@@ -8,6 +7,7 @@ import {
   UserfileSchema as UserProfile,
 } from "@/types"
 import { delay, getUnixTimestampSec, getUnixTimestampSecPlusOne } from "@/utils/common"
+import { useTopicStore } from "@/stores/modules/topic"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
@@ -220,6 +220,7 @@ export class LocalChat {
   private createBaseMessage(data: MESSAGE_OPTIONS, type: MessageType, payload: DB_Message["payload"]): DB_Message {
     const { to, conversationType, cloudCustomData = "" } = data
     const currentTime = getUnixTimestampSecPlusOne()
+    const topicStore = useTopicStore()
 
     return {
       ...BaseElemMessage,
@@ -230,10 +231,12 @@ export class LocalChat {
       from: UserProfile.userID,
       avatar: UserProfile.avatar,
       conversationID: `${conversationType}${to}`,
+      sessionId: `${conversationType}${to}`,
       conversationType,
       cloudCustomData,
       payload,
       type,
+      topicId: topicStore.topicId,
       version: __APP_INFO__.pkg.version || "0",
     } as DB_Message
   }
@@ -331,8 +334,14 @@ export class LocalChat {
       if (!conversationID) {
         throw new Error("会话ID不能为空")
       }
+      const topicStore = useTopicStore()
 
-      const result = await MessageModel.queryMessagesWithPagination(conversationID, nextReqMessageID, count)
+      const result = await MessageModel.queryMessagesWithPagination({
+        conversationID,
+        nextReqMessageID,
+        count,
+        topicId: topicStore.topicId,
+      })
 
       return {
         code: 0,
@@ -411,7 +420,7 @@ export class LocalChat {
    */
   async clearHistoryMessage(sessionId: string) {
     try {
-      const data = (await MessageModel.query({ id: sessionId })) as DB_Message[]
+      const data = await MessageModel.query({ sessionId })
 
       const deletePromises = data.map((item) => {
         return MessageModel.delete(item.ID)

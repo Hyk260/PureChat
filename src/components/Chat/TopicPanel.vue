@@ -11,7 +11,7 @@
         <div class="role-section">
           <div class="section-header">
             <h3 class="section-title">角色设定</h3>
-            <ElButton v-if="!isEditingRole" class="edit-btn" text size="small" @click="startEditRole">
+            <!-- <ElButton v-if="!isEditingRole" class="edit-btn" text size="small" @click="startEditRole">
               <Pencil :size="16" />
             </ElButton>
             <div v-else class="edit-actions">
@@ -21,7 +21,7 @@
               <ElButton class="save-btn" text size="small" @click="saveRolePrompt">
                 <Check :size="16" />
               </ElButton>
-            </div>
+            </div> -->
           </div>
           <div v-if="!isEditingRole" class="role-content" @click="startEditRole">
             <p v-if="rolePrompt" class="role-text">{{ rolePrompt }}</p>
@@ -43,7 +43,9 @@
           <div class="section-header">
             <h3 class="section-title">
               <span>话题</span>
-              <span v-if="filteredTopics.length" class="ml-4">{{ filteredTopics.length }}</span>
+              <span v-if="filteredTopics.length" class="ml-4">
+                {{ filteredTopics.length }}
+              </span>
             </h3>
             <div class="header-actions">
               <ElButton class="search-btn w-24 h-24" text size="small" @click="toggleSearch">
@@ -55,7 +57,7 @@
                 </ElButton>
                 <template #overlay>
                   <Menu>
-                    <MenuItem danger>
+                    <MenuItem danger @click="clearTopics">
                       <div class="flex-c gap-5">
                         <ElIcon><Trash /></ElIcon>
                         <span>删除全部会话</span>
@@ -77,9 +79,17 @@
           </div>
 
           <!-- 默认话题 -->
-          <div v-if="defaultTopic" class="default-topic">
+          <div
+            v-if="defaultTopic"
+            class="default-topic"
+            :class="{ 'is-active': defaultTopic.id === topicId }"
+            @click="handleTopicClick(defaultTopic)"
+          >
+            <ElIcon color="var(--el-color-info-light-3)" class="w-24 h-24" :size="16">
+              <MessageSquareDashed />
+            </ElIcon>
             <span class="topic-label">{{ defaultTopic.title }}</span>
-            <span v-if="defaultTopic.isTemporary" class="temp-badge">临时</span>
+            <span class="temp-badge">临时</span>
           </div>
 
           <!-- 话题列表（按时间分组） -->
@@ -92,12 +102,12 @@
                     v-for="topic in topics"
                     :key="topic.id"
                     class="topic-item"
-                    :class="{ favorite: topic.isFavorite, default: topic.isDefault || topic.isTemporary }"
+                    :class="{ favorite: topic.favorite, 'is-active': topic.id === topicId }"
                     @click="selectTopic(topic)"
                   >
                     <ElButton
                       class="favorite-btn w-24 h-24"
-                      :class="{ 'is-favorite': topic.isFavorite }"
+                      :class="{ 'is-favorite': topic.favorite }"
                       text
                       size="small"
                       @click.stop="toggleFavorite(topic.id)"
@@ -105,16 +115,22 @@
                       <Star :size="16" />
                     </ElButton>
                     <span class="topic-title">{{ topic.title }}</span>
-                    <Dropdown :trigger="['click']" :overlayStyle="{ width: '120px' }">
-                      <ElButton class="more-btn w-24 h-24" text size="small">
+                    <Dropdown :trigger="['click']" :overlayStyle="{ 'min-width': '120px' }">
+                      <ElButton class="more-btn w-24 h-24" text size="small" @click.stop>
                         <EllipsisVertical :size="16" />
                       </ElButton>
                       <template #overlay>
                         <Menu>
-                          <MenuItem>
+                          <MenuItem v-if="false" @click="startRename(topic)">
                             <div class="flex-sc gap-5">
                               <ElIcon><Pencil /></ElIcon>
                               <span>重命名</span>
+                            </div>
+                          </MenuItem>
+                          <MenuItem v-if="false" @click="handleSmartRename(topic)">
+                            <div class="flex-sc gap-5">
+                              <ElIcon><WandSparkles /></ElIcon>
+                              <span>智能重命名</span>
                             </div>
                           </MenuItem>
                           <MenuItem danger @click="deleteTopic(topic)">
@@ -145,7 +161,9 @@ import {
   EllipsisVertical,
   Pencil,
   Check,
+  WandSparkles,
   X,
+  MessageSquareDashed,
   Search,
   Trash,
   MoreHorizontal,
@@ -166,32 +184,36 @@ const topicStore = useTopicStore()
 const { showPortal } = storeToRefs(portalStore)
 const { currentConversation, currentSessionId } = storeToRefs(chatStore)
 
-const { rolePrompt, filteredTopics, groupedTopicsByTime, defaultTopic, searchKeyword } = storeToRefs(topicStore)
+const { topicId, rolePrompt, filteredTopics, groupedTopicsByTime, defaultTopic, searchKeyword } =
+  storeToRefs(topicStore)
 
 const isEditingRole = ref(false)
 const editingRolePrompt = ref("")
 const roleInputRef = ref()
 const showSearch = ref(false)
 
-watch(
-  () => currentSessionId.value,
-  (sessionId) => {
-    if (!sessionId) return
-    topicStore.initDefaultTopic(sessionId)
-  },
-  { immediate: true }
-)
+const handleSmartRename = async (topic: Topic) => {
+  // await topicStore.smartRenameTopic(topic.id)
+}
 
-watch(
-  () => rolePrompt.value,
-  (val) => {
-    editingRolePrompt.value = val
-  },
-  { immediate: true }
-)
+const startRename = (topic: Topic) => {
+  // isRenaming.value = true
+  // renamingTopicId.value = topic.id
+  // editingTitle.value = topic.title
+}
+
+const saveRename = () => {
+  // if (editingTitle.value.trim()) {
+  //   topicStore.updateTopicTitle(renamingTopicId.value, editingTitle.value.trim())
+  // }
+}
 
 const deleteTopic = (topic: Topic) => {
   topicStore.removeTopic(topic.id)
+}
+
+const clearTopics = () => {
+  topicStore.clearTopics()
 }
 
 const startEditRole = () => {
@@ -228,10 +250,31 @@ const toggleFavorite = (topicId: string) => {
 }
 
 const selectTopic = (topic: Topic) => {
-  console.log("选择话题:", topic)
+  topicStore.selectTopic(topic)
+}
+
+const handleTopicClick = (topic: Topic) => {
+  topicStore.selectTopic({ ...topic, id: "" })
 }
 
 onUnmounted(() => {})
+
+watch(
+  () => currentSessionId.value,
+  (sessionId) => {
+    if (!sessionId) return
+    topicStore.initDefaultTopic(sessionId)
+  },
+  { immediate: true }
+)
+
+watch(
+  () => rolePrompt.value,
+  (val) => {
+    editingRolePrompt.value = val
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -436,11 +479,16 @@ onUnmounted(() => {})
 .default-topic {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   padding: 8px 12px;
   margin-bottom: 12px;
-  background: var(--color-message-active);
+  cursor: pointer;
+  // background: var(--color-message-active);
   border-radius: 6px;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.12);
+  }
 
   .topic-label {
     font-size: 13px;
@@ -480,7 +528,9 @@ onUnmounted(() => {})
     margin-bottom: 4px;
   }
 }
-
+.is-active {
+  background-color: rgba(0, 0, 0, 0.08);
+}
 .topic-item {
   display: flex;
   align-items: center;
@@ -490,7 +540,7 @@ onUnmounted(() => {})
   cursor: pointer;
   transition: background-color 0.2s;
   &:hover {
-    background-color: rgba(0, 0, 0, 0.03);
+    background: rgba(0, 0, 0, 0.12);
   }
 
   &.favorite {

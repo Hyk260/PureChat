@@ -28,23 +28,25 @@ export const GroupMemberSchema = z.object({
     .optional(),
 })
 
-export const GroupInfoSchema = z.object({
-  groupID: z.string(),
-  type: GroupTypeSchema,
-  name: z.string(),
-  avatar: z.string().optional(),
-  introduction: z.string().optional(),
-  notification: z.string().optional(),
-  ownerID: z.string(),
-  createTime: z.number(),
-  memberCount: z.number(),
-  maxMemberCount: z.number().optional(),
-  muteAllMembers: z.boolean().optional(),
-  groupCustomField: z.array(z.any()).optional(),
-  selfInfo: selfInfoSchema,
-  lastMessage: z.any().optional(),
-  // memberList: GroupMemberSchema.array(),
-})
+export const GroupInfoSchema = z
+  .object({
+    groupID: z.string(),
+    type: GroupTypeSchema,
+    name: z.string(),
+    avatar: z.string().optional(),
+    introduction: z.string().optional(),
+    notification: z.string().optional(),
+    ownerID: z.string(),
+    createTime: z.number(),
+    memberCount: z.number(),
+    maxMemberCount: z.number().optional(),
+    muteAllMembers: z.boolean().optional(),
+    groupCustomField: z.array(z.any()).optional(),
+    selfInfo: selfInfoSchema,
+    lastMessage: z.any().optional(),
+    // memberList: GroupMemberSchema.array(),
+  })
+  .optional()
 
 export const GroupProfileSchema = GroupInfoSchema
 

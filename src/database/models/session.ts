@@ -76,7 +76,7 @@ class _SessionModel extends BaseModel {
     return super._addWithSync(id, dataDB)
   }
 
-  async batchCreate(sessions) {}
+  async batchCreate(_sessions: DB_Session[]) {}
 
   // **************** Delete *************** //
 
@@ -93,7 +93,7 @@ class _SessionModel extends BaseModel {
 
   // **************** Update *************** //
 
-  async update(id: string, data: DB_Session) {
+  async update(id: string, data: Partial<DB_Session>) {
     return super._updateWithSync(id, data)
   }
 

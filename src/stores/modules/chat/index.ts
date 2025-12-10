@@ -192,10 +192,10 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const { conversationID: sessionId } = payload
       const oldSessionId = this.currentConversation?.conversationID
       if (sessionId === oldSessionId) return
-      useRouteStore().handleSessionClick(payload.conversationID)
       this.sessionId = sessionId
       this.currentConversation = payload
       this.toggleMultiSelectMode(false)
+      useRouteStore().handleSessionClick(sessionId)
       if (payload) {
         const history = this.historyMessageList.get(sessionId)
         this.currentMessageList = cloneDeep(history) ?? []

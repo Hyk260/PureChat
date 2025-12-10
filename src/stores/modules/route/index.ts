@@ -2,6 +2,8 @@ import { defineStore } from "pinia"
 import { SetupStoreId } from "@/stores/enum"
 import { getCacheRouteNames, getTabIdByRoute } from "./shared"
 import { useChatStore } from "@/stores/modules/chat"
+import { useTopicStore } from "@/stores/modules/topic"
+
 import router from "@/router"
 // export type RouteKey = keyof RouteMap;
 
@@ -38,10 +40,12 @@ export const useRouteStore = defineStore(SetupStoreId.Route, {
       chatStore.toggleMultiSelectMode(false)
     },
     handleSessionClick(session: string) {
-      router.push({
-        path: "/chat",
-        query: { session: session ?? "inbox" },
-      })
+      const topicStore = useTopicStore()
+      const query: Record<string, string> = { session }
+      if (topicStore.topicId) {
+        // query.topic = topicStore.topicId
+      }
+      router.push({ path: "/chat", query })
     },
     addCacheRoute(routeName: string) {
       if (!this.cacheRoutes.includes(routeName)) {

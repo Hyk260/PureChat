@@ -43,6 +43,7 @@ export const MessageSchema = {
   },
   type: "TIMTextElem",
   // id: "",
+  // sessionId: "",
   // createdAt: 0,
   // updatedAt: 0,
 }
@@ -321,6 +322,7 @@ export const DB_MessageSchema = z.object({
    * @description 消息类型
    */
   type: MessageTypeSchema,
+  sessionId: z.string(),
   // **************** Time *************** //
   isTimeDivider: z.boolean().optional(),
   // **************** Base *************** //
@@ -333,6 +335,11 @@ export const DB_MessageSchema = z.object({
    * 消息更新时间戳。单位：毫秒
    */
   updatedAt: z.number().optional(),
+  // **************** topic *************** //
+  /**
+   * 话题
+   */
+  topicId: z.string().nullable().optional(),
 })
 
 export type DB_Message = z.infer<typeof DB_MessageSchema>

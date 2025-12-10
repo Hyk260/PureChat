@@ -2,11 +2,20 @@ import { BaseModel } from "../core/model"
 import { DB_MessageSchema } from "../schemas/message"
 
 import type { DB_Message } from "../schemas/message"
+import type { DBModel } from "@/database/types/db"
+
+import type { GET_MESSAGE_LIST_OPTIONS } from "@/types/tencent-cloud-chat"
 
 export interface QueryMessageParams {
   current?: number
   pageSize?: number
-  id: string
+  topicId?: string
+  sessionId: string
+}
+
+// topicId 用于区分同一会话下的不同子主题消息
+type QueryMessageWithPaginationParams = GET_MESSAGE_LIST_OPTIONS & {
+  topicId?: string
 }
 
 class _MessageModel extends BaseModel {
@@ -16,12 +25,19 @@ class _MessageModel extends BaseModel {
 
   // **************** Query *************** //
 
-  async query({ id, pageSize = 99, current = 0 }: QueryMessageParams) {
+  async query({ sessionId, pageSize = 99, current = 0, topicId }: QueryMessageParams): Promise<DB_Message[]> {
     const offset = current * pageSize
+    //  TODO：针对消息的查询 {"sessionId":"xxx","topicId":"xxx"} 将受益于复合索引 [sessionId+topicId]
+    // const query = this.table.where("conversationID").equals(id)
 
-    const query = this.table.where("conversationID").equals(id)
+    const query = topicId
+      ? this.table.where({ sessionId, topicId })
+      : this.table
+          .where("sessionId")
+          .equals(sessionId)
+          .and((message) => !message.topicId)
 
-    const dbMessages = await query.sortBy("createdAt").then((sortedArray) => {
+    const dbMessages: DBModel<DB_Message>[] = await query.sortBy("createdAt").then((sortedArray) => {
       return sortedArray.slice(offset, offset + pageSize)
     })
 
@@ -36,15 +52,23 @@ class _MessageModel extends BaseModel {
    * @param nextReqMessageID 下一页请求的消息ID，为空时获取最新消息
    * @param count 返回消息数量，默认20，最大20
    */
-  async queryMessagesWithPagination(
-    conversationID: string,
-    nextReqMessageID?: string,
-    count: number = 20
-  ): Promise<{ messages: DB_Message[]; nextReqMessageID: string; isCompleted: boolean }> {
+  async queryMessagesWithPagination({
+    conversationID: sessionId,
+    nextReqMessageID,
+    count = 20,
+    topicId,
+  }: QueryMessageWithPaginationParams): Promise<{
+    messages: DB_Message[]
+    nextReqMessageID: string
+    isCompleted: boolean
+  }> {
     const limit = Math.min(count, 20)
 
+    const query = topicId ? this.table.where({ sessionId, topicId }) : this.table.where("sessionId").equals(sessionId)
+    // .and((message) => !message.topicId)
+
     // 获取该会话的所有消息，按时间正序排列（最旧的在前）
-    const allMessages = await this.table.where("conversationID").equals(conversationID).sortBy("createdAt")
+    const allMessages = await query.sortBy("createdAt")
 
     // 保持正序排列，这样最新的消息在数组末尾
     const sortedMessages = allMessages
@@ -103,7 +127,13 @@ class _MessageModel extends BaseModel {
   }
 
   async queryBySessionId(id: string) {
-    return this.table.where("ID").equals(id).toArray()
+    return this.table.where("sessionId").equals(id).toArray()
+  }
+
+  async queryByTopicId(topicId: string) {
+    const dbMessages = await this.table.where("topicId").equals(topicId).toArray()
+
+    return dbMessages.map((message) => this.mapToChatMessage(message))
   }
 
   async count() {
@@ -133,10 +163,52 @@ class _MessageModel extends BaseModel {
     return super._clearWithSync()
   }
 
+  /**
+   * 删除与topicId相关的所有消息
+   * @param topicId
+   */
+  async batchDeleteByTopicId(topicId: string): Promise<void> {
+    const messageIds = await this.table.where("topicId").equals(topicId).primaryKeys()
+
+    return super._bulkDeleteWithSync(messageIds)
+  }
+
   // **************** Update *************** //
 
   async update(id: string, data: DB_Message) {
     return super._updateWithSync(id, data)
+  }
+
+  /**
+   * 批量更新指定消息的多个字段。
+   *
+   * @param {string[]} messageIds - 要更新的消息的标识符。
+   * @param {Partial<DB_Message>} updateFields - 包含要更新的字段及其新值的对象。
+   * @returns {Promise<number>} - 更新的消息数。
+   */
+  async batchUpdate(messageIds: string[], updateFields: Partial<DB_Message>): Promise<number> {
+    // 按ID检索消息
+    const messagesToUpdate = await this.table.where("id").anyOf(messageIds).toArray()
+
+    // 更新每条消息的指定字段
+    const updatedMessages = messagesToUpdate.map((message) => ({
+      ...message,
+      ...updateFields,
+    }))
+
+    // 使用bulkPut批量更新消息
+    await super._bulkPutWithSync(updatedMessages)
+
+    return updatedMessages.length
+  }
+
+  // **************** Helper *************** //
+
+  private mapToChatMessage = ({ ...item }: DBModel<DB_Message>): DB_Message => {
+    return {
+      ...item,
+      topicId: item.topicId ?? undefined,
+    }
   }
 }
 

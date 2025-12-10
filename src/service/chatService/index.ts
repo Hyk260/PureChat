@@ -110,17 +110,17 @@ class ChatService {
 
   private createStartMessage(params: DB_Message): DB_Message {
     const { to: from, from: to } = params
-    const msg = createCustomMessage({ to, customType: "loading" }) as unknown as DB_Message
+    const msg = createCustomMessage({ to, customType: "loading" })
 
     Object.assign(msg, {
       conversationID: `C2C${from}`,
+      sessionId: `C2C${from}`,
       avatar: getAiAvatarUrl(from),
       flow: "in",
       to,
       from,
       nick: "",
       status: "success",
-      // type: "TIMTextElem",
     })
 
     this.updateMessage(msg)
