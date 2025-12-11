@@ -70,8 +70,16 @@
           </div>
 
           <!-- 搜索框 -->
-          <div v-if="showSearch" class="search-box">
-            <ElInput v-model="searchKeyword" placeholder="搜索话题..." clearable class="h-32" @input="handleSearch">
+          <div v-if="showSearch" class="search-box flex-c h-40">
+            <ElInput
+              ref="searchInputRef"
+              v-model="searchKeyword"
+              placeholder="搜索话题..."
+              clearable
+              class="h-32"
+              @input="handleSearch"
+              @blur="handleSearchBlur"
+            >
               <template #prefix>
                 <Search :size="14" />
               </template>
@@ -80,7 +88,7 @@
 
           <!-- 默认话题 -->
           <div
-            v-if="defaultTopic"
+            v-if="defaultTopic && !showSearch"
             class="default-topic"
             :class="{ 'is-active': defaultTopic.id === topicId }"
             @click="handleTopicClick(defaultTopic)"
@@ -114,14 +122,30 @@
                     >
                       <Star :size="16" />
                     </ElButton>
-                    <span class="topic-title">{{ topic.title }}</span>
+                    <template v-if="renamingTopicId === topic.id">
+                      <ElInput
+                        ref="renamingInputRef"
+                        v-model="editingTitle"
+                        size="small"
+                        class="topic-rename-input h-24"
+                        @click.stop
+                        @keydown.enter.stop.prevent="saveRename"
+                        @keydown.esc.stop.prevent="cancelRename"
+                        @blur="saveRename"
+                      />
+                    </template>
+                    <template v-else>
+                      <Tooltip placement="left" :title="topic.title" :arrow="false">
+                        <span class="topic-title">{{ topic.title }}</span>
+                      </Tooltip>
+                    </template>
                     <Dropdown :trigger="['click']" :overlayStyle="{ 'min-width': '120px' }">
                       <ElButton class="more-btn w-24 h-24" text size="small" @click.stop>
                         <EllipsisVertical :size="16" />
                       </ElButton>
                       <template #overlay>
                         <Menu>
-                          <MenuItem v-if="false" @click="startRename(topic)">
+                          <MenuItem @click="startRename(topic)">
                             <div class="flex-sc gap-5">
                               <ElIcon><Pencil /></ElIcon>
                               <span>重命名</span>
@@ -160,9 +184,9 @@
 import {
   EllipsisVertical,
   Pencil,
-  Check,
   WandSparkles,
-  X,
+  // Check,
+  // X,
   MessageSquareDashed,
   Search,
   Trash,
@@ -171,7 +195,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-vue-next"
-import { Dropdown, Menu, MenuItem } from "ant-design-vue"
+import { Tooltip, Dropdown, Menu, MenuItem } from "ant-design-vue"
 import { storeToRefs } from "pinia"
 
 import { useChatStore, usePortalStore, useTopicStore } from "@/stores"
@@ -192,20 +216,40 @@ const editingRolePrompt = ref("")
 const roleInputRef = ref()
 const showSearch = ref(false)
 
-const handleSmartRename = async (topic: Topic) => {
+const renamingTopicId = ref("")
+const editingTitle = ref("")
+const searchInputRef = useTemplateRef("searchInputRef")
+const renamingInputRef = useTemplateRef("renamingInputRef")
+
+const handleSmartRename = async (_topic?: Topic) => {
   // await topicStore.smartRenameTopic(topic.id)
 }
 
 const startRename = (topic: Topic) => {
-  // isRenaming.value = true
-  // renamingTopicId.value = topic.id
-  // editingTitle.value = topic.title
+  renamingTopicId.value = topic.id
+  editingTitle.value = topic.title
+  nextTick(() => {
+    renamingInputRef.value?.[0]?.focus?.()
+  })
 }
 
-const saveRename = () => {
-  // if (editingTitle.value.trim()) {
-  //   topicStore.updateTopicTitle(renamingTopicId.value, editingTitle.value.trim())
-  // }
+const cancelRename = () => {
+  renamingTopicId.value = ""
+  editingTitle.value = ""
+}
+
+const saveRename = async () => {
+  if (!renamingTopicId.value) {
+    cancelRename()
+    return
+  }
+  const newTitle = editingTitle.value.trim()
+  if (!newTitle) {
+    cancelRename()
+    return
+  }
+  topicStore.updateTopicTitle(renamingTopicId.value, newTitle)
+  cancelRename()
 }
 
 const deleteTopic = (topic: Topic) => {
@@ -229,20 +273,26 @@ const saveRolePrompt = () => {
   isEditingRole.value = false
 }
 
-const cancelEditRole = () => {
-  editingRolePrompt.value = rolePrompt.value || ""
-  isEditingRole.value = false
-}
-
 const toggleSearch = () => {
   showSearch.value = !showSearch.value
   if (!showSearch.value) {
     topicStore.setSearchKeyword("")
   }
+  if (showSearch.value) {
+    nextTick(() => {
+      searchInputRef.value?.focus()
+    })
+  }
 }
 
 const handleSearch = () => {
   topicStore.setSearchKeyword(searchKeyword.value)
+}
+
+const handleSearchBlur = () => {
+  if (!searchKeyword.value) {
+    showSearch.value = false
+  }
 }
 
 const toggleFavorite = (topicId: string) => {
@@ -263,6 +313,7 @@ watch(
   () => currentSessionId.value,
   (sessionId) => {
     if (!sessionId) return
+    topicStore.setTopicId(currentConversation.value?.topicId || "")
     topicStore.initDefaultTopic(sessionId)
   },
   { immediate: true }
@@ -585,6 +636,10 @@ watch(
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+}
+
+.topic-rename-input {
+  flex: 1;
 }
 
 .empty-topic {

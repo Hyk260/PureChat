@@ -166,9 +166,9 @@ const handleContextMenu = (item: DB_Session) => {
   contextMenuItems.value = chatSessionListData.filter((t) => !hiddenKeys.has(t.key))
 }
 
-const handleConversationListClick = (data: DB_Session) => {
+const handleConversationListClick = (data: DB_Session, isActive: boolean = true) => {
   console.log("会话点击 handleConversationListClick:", data)
-  if (currentSessionId.value === data?.conversationID) return
+  if (currentSessionId.value === data?.conversationID && isActive) return
 
   chatStore.setMsgEdit(null)
   chatStore.setScrollTopID("")
@@ -233,8 +233,7 @@ const pingConversation = async (data: DB_Session) => {
   })
 }
 
-onMounted(async () => {
-  await nextTick()
+const handleInitialConversationSelection = async () => {
   if (!currentConversation.value) {
     if (sessionId.value !== "inbox") {
       await delay(200)
@@ -244,6 +243,27 @@ onMounted(async () => {
       }
     }
   }
+}
+
+const handleSelection = async () => {
+  if (sessionId.value !== "inbox") {
+    const matchedConversation = conversationList.value.find((item) => item.conversationID === sessionId.value)
+    if (matchedConversation) {
+      handleConversationListClick(matchedConversation, false)
+    }
+  }
+}
+
+onMounted(async () => {
+  await nextTick()
+  await handleInitialConversationSelection()
+  emitter.on("handleSelection", async () => {
+    await handleSelection()
+  })
+})
+
+onBeforeUnmount(() => {
+  emitter.off("updateConversationList")
 })
 </script>
 

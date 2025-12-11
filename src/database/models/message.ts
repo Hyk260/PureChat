@@ -64,8 +64,12 @@ class _MessageModel extends BaseModel {
   }> {
     const limit = Math.min(count, 20)
 
-    const query = topicId ? this.table.where({ sessionId, topicId }) : this.table.where("sessionId").equals(sessionId)
-    // .and((message) => !message.topicId)
+    const query = topicId
+      ? this.table.where({ sessionId, topicId })
+      : this.table
+          .where("sessionId")
+          .equals(sessionId)
+          .and((message) => !message.topicId)
 
     // 获取该会话的所有消息，按时间正序排列（最旧的在前）
     const allMessages = await query.sortBy("createdAt")

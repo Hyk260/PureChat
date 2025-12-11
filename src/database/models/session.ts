@@ -97,7 +97,7 @@ class _SessionModel extends BaseModel {
     return super._updateWithSync(id, data)
   }
 
-  async updateConfig(id: string, data: DB_Session) {}
+  async updateConfig(_id: string, _data: DB_Session) {}
 
   // **************** Helper *************** //
 

@@ -26,6 +26,7 @@ import { localStg } from "@/utils/storage"
 import { useGroupStore } from "../group"
 import { useRobotStore } from "../robot"
 import { useRouteStore } from "../route"
+import { useTopicStore } from "../topic"
 import { useAppStore } from "../app"
 
 import type { ChatState } from "./type"
@@ -129,7 +130,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
     totalUnreadCount(): number {
       if (!this.currentConversation) return 0
-      const result = this.conversationList.reduce((count: number, data: DB_Session) => {
+      const result = this.conversationList.reduce((count, data) => {
         if (this.currentConversation?.conversationID === data.conversationID) {
           return count
         }
@@ -159,9 +160,36 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     setCurrentConversation(data: DB_Session) {
       this.currentConversation = data
     },
+    updateCurrentConversation(data: Partial<DB_Session>) {
+      if (!this.currentConversation) return
+      Object.assign(this.currentConversation, data)
+    },
     setConversationList(list: DB_Session[] = []) {
       this.conversationList = list
     },
+    updateConversationList(data: Partial<DB_Session>) {
+      const { conversationID, topicId } = data
+      if (!conversationID) return
+
+      const index = this.conversationList.findIndex((item) => item.conversationID === conversationID)
+
+      if (index !== -1 && this.conversationList[index]) {
+        Object.assign(this.conversationList[index], { topicId: topicId ?? "" })
+      }
+    },
+    getHistoryMessageList(sessionId: string) {
+      const history = this.historyMessageList.get(sessionId)
+      if (history) {
+        const topicStore = useTopicStore()
+        if (topicStore?.topicId) {
+          return history.filter((item) => item.topicId === topicStore.topicId)
+        } else {
+          return history
+        }
+      }
+      return history
+    },
+    setHistoryMessageList() {},
     setScrollTopID(id: string = "") {
       this.scrollTopID = id
     },
@@ -178,7 +206,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
     addAiPresetPromptWords(data: { sessionId: string; message: DB_Message }) {
       const { sessionId, message } = data
-      const history = this.historyMessageList.get(sessionId)
+      const history = this.getHistoryMessageList(sessionId)
       if (this.currentConversation) {
         if (history?.length) {
           this.currentMessageList = [...history, message]
@@ -195,9 +223,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.sessionId = sessionId
       this.currentConversation = payload
       this.toggleMultiSelectMode(false)
-      useRouteStore().handleSessionClick(sessionId)
+      useRouteStore().handleSessionClick(payload)
       if (payload) {
-        const history = this.historyMessageList.get(sessionId)
+        const history = this.getHistoryMessageList(sessionId)
         this.currentMessageList = cloneDeep(history) ?? []
       } else {
         this.currentMessageList = []
@@ -212,9 +240,10 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       console.log("[chat] 添加消息 addMessage:", payload)
       const { conversationID, message, isDone } = payload || {}
       if (this.currentConversation) {
-        if (message.length) {
-          this.currentMessageList = message
-        }
+        // if (message.length) {
+        //   this.currentMessageList = message
+        // }
+        this.currentMessageList = message
       } else {
         this.currentMessageList = []
       }
@@ -233,7 +262,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         console.error("[chat] 删除消息失败")
         return
       }
-      const history = this.historyMessageList.get(sessionId)
+      const history = this.getHistoryMessageList(sessionId)
       if (!history) {
         console.error("[chat] 删除消息失败，历史消息不存在")
         return
@@ -246,7 +275,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     loadMoreMessages(payload: { sessionId: string; messages: DB_Message[]; msgId: string }) {
       console.log("[chat] 加载更多消息 loadMoreMessages:", payload)
       const { sessionId, messages } = payload
-      const history = this.historyMessageList.get(sessionId) || []
+      const history = this.getHistoryMessageList(sessionId) || []
 
       const historyIds = new Set(history.map((t) => t?.ID))
       const cleanedMessages = messages.filter((msg) => !historyIds.has(msg.ID))
@@ -277,7 +306,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         console.warn("sessionId 或 ID 不存在")
         return
       }
-      const oldMessageList = this.historyMessageList.get(sessionId) || []
+      const oldMessageList = this.getHistoryMessageList(sessionId) || []
       if (__LOCAL_MODE__) {
         MessageModel.update(message.ID, message)
       }
@@ -302,7 +331,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         return
       }
       const sessionId = message.conversationID
-      const oldMessageList = this.historyMessageList.get(sessionId)
+      const oldMessageList = this.getHistoryMessageList(sessionId)
       if (!oldMessageList) {
         console.warn("oldMessageList 不存在")
         return

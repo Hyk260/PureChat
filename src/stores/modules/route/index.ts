@@ -5,6 +5,7 @@ import { useChatStore } from "@/stores/modules/chat"
 import { useTopicStore } from "@/stores/modules/topic"
 
 import router from "@/router"
+import type { DB_Session } from "@/types"
 // export type RouteKey = keyof RouteMap;
 
 export interface RouteStore {
@@ -33,17 +34,25 @@ export const useRouteStore = defineStore(SetupStoreId.Route, {
     routerPush(routeName: string) {
       const chatStore = useChatStore()
       if (routeName === "/chat") {
-        this.handleSessionClick(chatStore.sessionId)
+        this.handleSessionClick({
+          conversationID: chatStore.sessionId,
+        })
       } else {
         router.push(routeName)
       }
       chatStore.toggleMultiSelectMode(false)
     },
-    handleSessionClick(session: string) {
+    handleSessionClick(payload: Partial<DB_Session>) {
       const topicStore = useTopicStore()
-      const query: Record<string, string> = { session }
+      const query: Record<string, string> = {}
+      if (payload.conversationID) {
+        query.session = payload.conversationID
+      }
       if (topicStore.topicId) {
         // query.topic = topicStore.topicId
+      }
+      if (payload.topicId) {
+        query.topic = payload.topicId
       }
       router.push({ path: "/chat", query })
     },
