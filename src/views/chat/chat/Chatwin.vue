@@ -80,7 +80,7 @@
             </div>
           </div>
         </div>
-        <div v-show="isMultiSelectMode" class="h-200"></div>
+        <!-- <div v-show="isMultiSelectMode" class="h-20"></div> -->
         <div ref="bottomSentinelRef" class="message-bottom-sentinel"></div>
       </div>
     </ElScrollbar>
@@ -612,7 +612,7 @@ defineExpose({ updateScrollbar, scrollToBottom })
   }
 }
 .multi-select-mode {
-  height: calc(100% - 60px) !important;
+  height: 100% !important;
 }
 .chat-h-full {
   height: 0px !important;

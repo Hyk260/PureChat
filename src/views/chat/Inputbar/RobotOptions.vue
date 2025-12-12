@@ -42,7 +42,7 @@
                 :maxCollapseTags="10"
                 appendToBody
                 @change="onModelDataChanged"
-                @remove-tag="handleRemoveTag"
+                @removeTag="handleRemoveTag"
               >
                 <ElOption
                   v-for="models in item.options.chatModels"
@@ -118,7 +118,6 @@
               :step="item.step ?? 1"
               :min="item.min ?? 0"
               :max="item.max ?? 100"
-              :marks="getMarks(item)"
               showInput
               @change="onModelDataChanged"
             />
@@ -153,15 +152,24 @@
               </ElTooltip>
               <div class="w-full flex gap-4">
                 <ElInput
-                  :ref="(e) => inputRef(e, item.ID)"
+                  v-if="item.ID === 'openaiUrl'"
+                  ref="inputUrlRefs"
                   v-model="item.defaultValue"
                   :placeholder="item.Placeholder ?? ''"
-                  :type="item.ID === 'token' ? 'password' : 'text'"
-                  :showPassword="item.ID === 'token'"
+                  type="text"
                   clearable
                   @change="onModelDataChanged"
-                >
-                </ElInput>
+                />
+                <ElInput
+                  v-else-if="item.ID === 'token'"
+                  ref="inputTokenRefs"
+                  v-model="item.defaultValue"
+                  :placeholder="item.Placeholder ?? ''"
+                  type="password"
+                  showPassword
+                  clearable
+                  @change="onModelDataChanged"
+                />
               </div>
             </div>
             <div v-if="item?.apiHost" class="text-[#999] pt-8 ml-20 max-w-400">
@@ -226,7 +234,6 @@ import { Atom, Eye, ToyBrick, CircleQuestionMark as QuestionFilled, RefreshCcw a
 import { ElSlider } from "element-plus"
 import { cloneDeep, debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
-import AiProvider from "@/ai"
 import { ModelIcon } from "@/components/Features"
 import { getLowerBaseModelName, getBaseModelName } from "@/ai/reasoning"
 import { modelConfig, modelValue } from "@/ai/constant"
@@ -235,12 +242,13 @@ import { getModelIcon, useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"
 import { hostPreview } from "@/utils/api"
-import { openWindow } from "@/utils/common"
+import { openWindow, delay } from "@/utils/common"
+import { isRange } from "./utils"
 // import OllamaAI from "@/ai/platforms/ollama/ollama";
+import AiProvider from "@/ai"
 import emitter from "@/utils/mitt-bus"
 import Markdown from "@/components/Markdown/index.vue"
 import DragPrompt from "./DragPrompt.vue"
-import { isRange } from "./utils"
 
 import type { Model, ModelConfigItem, ModelDataType } from "@/stores/modules/robot/types"
 import type { RobotBoxEventData } from "@/types"
@@ -265,11 +273,10 @@ const { DEV: isDev } = import.meta.env
 
 const robotIcon = ref<string>("")
 const modelData = ref<ModelDataType>({})
+const inputTokenRefs = useTemplateRef("inputTokenRefs")
 const promptRef = useTemplateRef("promptRef")
-const inputRefs = ref<{ token: HTMLInputElement | null; openaiUrl: HTMLInputElement | null }>({
-  token: null,
-  openaiUrl: null,
-})
+
+// const instance = getCurrentInstance()
 
 const [dialog, setDialog] = useState(false)
 const [loading, setLoading] = useState(false)
@@ -278,10 +285,6 @@ const chatStore = useChatStore()
 const robotStore = useRobotStore()
 const { toAccount } = storeToRefs(chatStore)
 const { isOllama, modelProvider, modelStore } = storeToRefs(robotStore)
-
-const inputRef = (el: HTMLInputElement | null, id: string) => {
-  if (el) (inputRefs.value as any)[id] = el
-}
 
 const handleRemoveTag = (_id: string) => {
   onModelDataChanged()
@@ -441,16 +444,20 @@ const handleRobotBoxEvent = async (data: RobotBoxEventData = {}) => {
   const { apiKeyFocus = false, promptFocus = false } = data
 
   setDialog(true)
-  await nextTick()
   initializeModelOptions()
 
   if (apiKeyFocus) {
-    const tokenRef = inputRefs.value?.["token"] ?? null
-    tokenRef?.focus()
-  }
-
-  if (promptFocus) {
-    promptRef.value?.promptTitleFocus()
+    await delay(100)
+    nextTick(() => {
+      const tokenRef = inputTokenRefs.value
+      tokenRef?.[0]?.ref?.scrollIntoView({ behavior: "smooth" })
+      tokenRef?.[0]?.focus()
+    })
+  } else if (promptFocus) {
+    await delay(100)
+    nextTick(() => {
+      promptRef.value?.promptTitleFocus()
+    })
   }
 }
 

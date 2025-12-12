@@ -25,7 +25,7 @@ import {
 import { useChatStore } from "@/stores/modules/chat"
 import { handleCopyMsg, scrollToMessage } from "@/utils/chat"
 
-import type { DB_Message, MessageStatus } from "@/types"
+import type { DB_Message, MessageStatus, CustomPayloadType } from "@/types"
 
 interface Props {
   item: DB_Message
@@ -106,7 +106,8 @@ const shouldShowMenu = computed(() => {
 
   // 自定义消息加载状态检查
   if (item.type === "TIMCustomElem") {
-    if (item?.payload?.description === "loading") {
+    const customElem = item.payload as CustomPayloadType
+    if (customElem?.description === "loading") {
       return false
     }
   }

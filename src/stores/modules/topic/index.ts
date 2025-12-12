@@ -141,6 +141,8 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
 
       this.topicsSession[sid] = this.topicsSession[sid].filter((t) => t.id !== topicId)
       TopicModel.delete(topicId)
+      this.setTopicId("")
+      this.selectTopic({ id: "" })
     },
     toggleFavorite(topicId: string, sessionId?: string) {
       const chatStore = useChatStore()

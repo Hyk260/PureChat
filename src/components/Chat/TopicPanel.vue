@@ -8,7 +8,8 @@
     </div>
     <div v-if="isShowPortal" class="topic-panel-container">
       <div class="resize-container">
-        <div class="role-section">
+        <!-- 角色设定 -->
+        <div v-if="isShowPromptTitle" class="role-section">
           <div class="section-header">
             <h3 class="section-title">角色设定</h3>
             <div v-if="isEditingRole" class="edit-actions">
@@ -61,7 +62,7 @@
                     <MenuItem danger @click="clearTopics">
                       <div class="flex-c gap-5">
                         <ElIcon><Trash /></ElIcon>
-                        <span>删除全部会话</span>
+                        <span>删除全部话题</span>
                       </div>
                     </MenuItem>
                   </Menu>
@@ -199,15 +200,17 @@ import {
 import { Tooltip, Dropdown, Menu, MenuItem } from "ant-design-vue"
 import { storeToRefs } from "pinia"
 import { useState } from "@/hooks/useState"
-import { useChatStore, usePortalStore, useTopicStore } from "@/stores"
+import { useChatStore, usePortalStore, useTopicStore, useRobotStore } from "@/stores"
 
 import type { Topic } from "@/stores/modules/topic/types"
 
-const portalStore = usePortalStore()
 const chatStore = useChatStore()
+const robotStore = useRobotStore()
 const topicStore = useTopicStore()
+const portalStore = usePortalStore()
 
 const { showPortal } = storeToRefs(portalStore)
+const { isShowPromptTitle } = storeToRefs(robotStore)
 const { currentConversation, currentSessionId, isShowNavigator } = storeToRefs(chatStore)
 
 const { topicId, rolePrompt, filteredTopics, groupedTopicsByTime, defaultTopic, searchKeyword } =
@@ -236,7 +239,7 @@ const startRename = (topic: Topic) => {
   renamingTopicId.value = topic.id
   editingTitle.value = topic.title
   nextTick(() => {
-    renamingInputRef.value?.[0]?.focus?.()
+    renamingInputRef.value?.[0]?.focus()
   })
 }
 

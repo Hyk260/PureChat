@@ -167,19 +167,18 @@ class _TopicModel extends BaseModel {
   }
 
   /**
-   * 根据topic ID删除多个主题。
+   * 根据topic ID删除多个消息
    *
-   * @param {string} sessionId - The identifier of the assistant associated with the messages.
+   * @param {string} sessionId - 会话ID
    * @returns {Promise<void>}
    */
   async batchDeleteBySessionId(sessionId: string): Promise<void> {
-    // use sessionId as the filter criteria in the query.
     const query = this.table.where("sessionId").equals(sessionId)
 
-    // Retrieve a collection of message IDs that satisfy the criteria
+    // 检索满足条件的消息ID集合
     const topicIds = await query.primaryKeys()
 
-    // Use the bulkDelete method to delete all selected messages in bulk
+    // 使用bulkDelete方法批量删除所有选定的消息
     return super._bulkDeleteWithSync(topicIds)
   }
 

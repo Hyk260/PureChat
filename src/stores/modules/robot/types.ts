@@ -19,7 +19,7 @@ export interface ModelConfigItem {
   ID: string
   Title: string
   SubTitle: string
-  defaultValue?: string
+  defaultValue: string
   options?: {
     id: string
     name?: string

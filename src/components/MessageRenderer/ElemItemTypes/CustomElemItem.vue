@@ -1,14 +1,16 @@
 <template>
   <div class="message-item-custom" :class="messageClass" @click="handleClick">
     <Loading v-if="isMessageType('loading')" />
+    <Warning v-else-if="isMessageType('warning')" :payload="message.payload" />
     <div v-else class="text">{{ customMessageContent() }}</div>
   </div>
 </template>
 
 <script setup lang="ts">
 import Loading from "../CustomMsgBody/Loading.vue"
+import Warning from "../CustomMsgBody/Warning.vue"
 
-import type { DB_Message } from "@/types"
+import type { DB_Message, CustomPayloadType } from "@/types"
 
 interface Props {
   message: DB_Message
@@ -18,18 +20,19 @@ const props = defineProps<Props>()
 
 const messageClass = computed(() => [
   props.message.flow === "out" ? "is-text-self" : "is-text-other",
-  // isMessageType("warning") ? "!p-0" : "",
+  isMessageType("warning") ? "!p-0" : "",
 ])
 
 const isMessageType = (type: string): boolean => props?.message?.payload?.description === type
 
 const handleClick = () => {
-  console.log(props.message)
+  console.log("CustomMsgBody:", props.message)
 }
 
 const customMessageContent = (): string => {
   try {
-    const { data, extension, text } = props.message.payload
+    const messagePayload = props.message.payload as CustomPayloadType
+    const { data, extension, text } = messagePayload
 
     const payload = data ? JSON.parse(data) : {}
 
@@ -53,7 +56,7 @@ const customMessageContent = (): string => {
         if (payload?.errorInfo) {
           return payload?.errorInfo
         } else {
-          return "[机器人自定义消息]"
+          return "[chatbot自定义消息]"
         }
       }
     }

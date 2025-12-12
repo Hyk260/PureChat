@@ -225,7 +225,14 @@ export const MessageTypeSchema = z.enum([
 ])
 
 export const payloadSchema = z
-  .union([TextPayload, ImagePayload, TextPayload, GroupTipPayload, CustomPayload])
+  .union([
+    TextPayload, // 文本消息
+    ImagePayload, // 图片消息
+    FilePayload, // 文件消息
+    MergerPayload, // 合并消息
+    GroupTipPayload, // 群组提示消息
+    CustomPayload, // 自定义消息
+  ])
   .optional()
 
 export const DB_MessageSchema = z.object({
@@ -373,6 +380,8 @@ export type FilePayloadType = z.infer<typeof FilePayload>
 export type GroupTipPayloadType = z.infer<typeof GroupTipPayload>
 
 export type MergerPayloadType = z.infer<typeof MergerPayload>
+
+export type CustomPayloadType = z.infer<typeof CustomPayload>
 
 export type GroupSystemNoticePayloadType = z.infer<typeof GroupSystemNoticePayload>
 

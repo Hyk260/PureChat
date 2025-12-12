@@ -1,5 +1,5 @@
 <template>
-  <div v-if="chatStore.isMultiSelectMode" class="message-toolbar">
+  <div v-if="isMultiSelectMode" class="message-toolbar">
     <div class="toolbar-content">
       <span class="selected-count">选中 {{ getForwardCount }} 条消息</span>
       <div class="action-buttons">
@@ -35,7 +35,7 @@
       </div>
     </div>
     <!-- 截图分享弹窗 -->
-    <ShareModal @on-close="handleClose" />
+    <ShareModal @onClose="handleClose" />
     <!-- 合并/逐条转发弹窗 -->
     <MessageForwardingPopup ref="wardingRef" @confirm="confirm" />
   </div>
@@ -58,7 +58,7 @@ const userStore = useUserStore()
 const wardingRef = useTemplateRef("wardingRef")
 const multipleValue = ref(null)
 
-const { getForwardCount, isForwardDataEmpty, currentSessionId, isGroupChat, currentConversation } =
+const { getForwardCount, isForwardDataEmpty, isMultiSelectMode, currentSessionId, isGroupChat, currentConversation } =
   storeToRefs(chatStore)
 
 const handleShare = () => {
@@ -209,6 +209,7 @@ const aQuickForward = async () => {
     border: 1px solid #e1e5e9;
     border-radius: 8px;
     padding: 6px 8px;
+    min-width: 240px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     gap: 8px;
 

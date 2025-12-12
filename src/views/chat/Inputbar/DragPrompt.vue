@@ -69,10 +69,14 @@ defineOptions({
 })
 
 const MAX_PROMPTS = 1
-const inputTitleRef = useTemplateRef("inputTitleRef")
+
 const promptItems = ref([])
+const inputTitleRef = useTemplateRef("inputTitleRef")
+
 const robotStore = useRobotStore()
+
 const [showEmojiPickerFlag, setShowEmojiPickerFlag] = useState(false)
+
 const { promptStore, modelProvider } = storeToRefs(robotStore)
 
 function initPromptData() {
@@ -96,7 +100,6 @@ function savePromptData() {
 }
 
 function handleEmojiSelect(emoji, i) {
-  console.log("handleEmojiSelect", emoji)
   promptItems.value[i].meta.avatar = emoji.native
   savePromptData()
 }
@@ -110,20 +113,13 @@ function onClose(i: number) {
 function addPrompt() {
   if (promptItems.value.length >= MAX_PROMPTS) return
   const newPrompt = cloneDeep(prompt)
-  console.log("newPrompt", newPrompt)
   newPrompt.map((t) => (t.id = nanoid()))
   promptItems.value = newPrompt
 }
 
 function promptTitleFocus() {
   nextTick(() => {
-    if (!inputTitleRef.value) return
-    try {
-      inputTitleRef.value?.focus()
-      inputTitleRef.value[0]?.focus()
-    } catch (error) {
-      console.log(error)
-    }
+    inputTitleRef.value?.[0]?.focus()
   })
 }
 

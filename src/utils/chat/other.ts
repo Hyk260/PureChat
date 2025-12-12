@@ -4,7 +4,7 @@ import { customDataWebSearch, DB_Message } from "@/database/schemas/message"
 import { convertBlobUrlToDataUrl } from "@/utils/chat"
 
 import type { LLMMessage } from "@/ai/types"
-import type { DraftData, ImagePayloadType, DB_Session } from "@/types"
+import type { DraftData, ImagePayloadType, CustomPayloadType, DB_Session } from "@/types"
 
 export function checkTextNotEmpty(nodes: DraftData) {
   return nodes.some((obj) => {
@@ -36,12 +36,13 @@ export function transformTextElement(data: DB_Message) {
 }
 
 export function transformCustomElement(item: DB_Message) {
-  if (item?.payload?.description !== "tool_call") {
+  const payload = item?.payload as CustomPayloadType
+  if (payload?.description !== "tool_call") {
     return {}
   }
 
   try {
-    const input = JSON.parse(item.payload.data)
+    const input = JSON.parse(payload.data)
 
     const toolCall = input.data.message.choices[0]?.message?.tool_calls
     if (!toolCall) {
@@ -58,7 +59,7 @@ export function transformCustomElement(item: DB_Message) {
       {
         role: "tool",
         name: toolCall[0].function?.name,
-        content: item.payload.extension,
+        content: payload.extension,
         tool_call_id: toolCall[0].id,
       },
     ]

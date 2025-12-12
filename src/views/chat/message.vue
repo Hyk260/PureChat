@@ -21,7 +21,7 @@
       <EmptyMessage className="empty" />
       <ChatHeader />
       <div class="message-container">
-        <div class="w-full">
+        <div class="w-full relative">
           <!-- 聊天窗口 -->
           <Chatwin />
           <!-- 消息回复框 -->
