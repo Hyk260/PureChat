@@ -154,3 +154,5 @@ export const DB_SessionSchema = z.object({
 })
 
 export type DB_Session = z.infer<typeof DB_SessionSchema>
+
+export type TypeSchemaType = z.infer<typeof TypeSchema>

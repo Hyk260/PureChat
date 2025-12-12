@@ -110,7 +110,7 @@ defineOptions({ name: "Account" })
 const showVerifyCode = false
 const isAutoComplete = true
 const verifyCode = ref("")
-const formRef = ref()
+const formRef = useTemplateRef("formRef")
 const form = ref({ ...defaultForm })
 const userSuggestions = ref<{ value: string }[]>([])
 

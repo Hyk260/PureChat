@@ -2,6 +2,8 @@
 export const HISTORY_MESSAGE_COUNT = 15
 // 多选消息最大计数
 export const MULTIPLE_CHOICE_MAX = 30
+
+export const MIN_MESSAGES = 6
 // 请求头-内容类型
 export const ContentType = {
   JSON: "application/json;charset=UTF-8",

@@ -11,5 +11,6 @@ export interface TopicState {
   searchKeyword: string
   // 话题ID
   topicId: string
+  // 默认话题
   defaultTopic: Topic
 }

@@ -17,7 +17,6 @@ type ScrollEl = HTMLElement & { wrapRef?: HTMLElement }
 const MIN_WIDTH = 12
 const MAX_WIDTH = 24
 const MAX_CONTENT_LENGTH = 320
-const MIN_MESSAGES = 5
 const PREVIEW_MAX_LEN = 100
 
 interface Props {
@@ -26,18 +25,14 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const activeIndex = ref<number>(-1)
+const activeIndex = ref(-1)
 const [isHovered, setIsHovered] = useState(false)
 
 const chatStore = useChatStore()
 
-const { currentMessageList, isFullscreenInputActive } = storeToRefs(chatStore)
+const { currentMessageList, isShowNavigator } = storeToRefs(chatStore)
 
 const messagesList = computed(() => currentMessageList.value.filter((t) => !t?.isTimeDivider))
-
-const showNavigator = computed(
-  () => messagesList.value.length > MIN_MESSAGES && !isFullscreenInputActive.value && __LOCAL_MODE__
-)
 
 const idToIndexMap = computed<Map<string, number>>(() => new Map(messagesList.value.map((m, i) => [m.ID, i])))
 
@@ -204,7 +199,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="showNavigator" class="message-nav">
+  <div v-if="isShowNavigator" class="message-nav">
     <div class="message-nav__panel scroll-hidden" @mouseenter="setIsHovered(true)" @mouseleave="setIsHovered(false)">
       <button
         aria-label="上一条消息"

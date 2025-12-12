@@ -11,7 +11,7 @@
   >
     <div class="ui-modal-body">
       <List ref="listRef" @active="active" />
-      <ItemGrid :item="item" @on-close="setDrawer(false)" />
+      <ItemGrid :item="item" @onClose="setDrawer(false)" />
     </div>
   </ElDialog>
 </template>
@@ -24,7 +24,7 @@ import { list } from "./settings"
 import ItemGrid from "./itemGrid.vue"
 import List from "./list.vue"
 
-const listRef = ref()
+const listRef = useTemplateRef("listRef")
 const item = ref(list.value[0])
 const [drawer, setDrawer] = useState(false)
 

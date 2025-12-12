@@ -31,7 +31,7 @@ interface Emits {
 defineProps<Props>()
 const emit = defineEmits<Emits>()
 
-const previewPanelRef = ref<InstanceType<typeof PreviewPanel> | null>(null)
+const previewPanelRef = useTemplateRef("previewPanelRef")
 
 const handleCodeChange = (newCode: string) => {
   emit("change", newCode)

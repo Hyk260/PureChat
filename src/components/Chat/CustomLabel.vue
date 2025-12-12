@@ -41,7 +41,7 @@ const variant = computed(() => {
   if (isFullStaffGroup(props.item)) return "all"
   if (props.item?.type === "GROUP") return "group"
 
-  const role = getValueByKey(props.item?.groupProfile?.groupCustomField, prefix("Role"))
+  const role = getValueByKey(props.item?.groupProfile?.groupCustomField || [], prefix("Role"))
 
   return role === "author" ? "author" : "default"
 })

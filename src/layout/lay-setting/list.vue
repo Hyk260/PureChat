@@ -23,7 +23,7 @@ import { ref } from "vue"
 
 import { list } from "./settings"
 
-const activeId = ref(list.value[0].id)
+const activeId = ref(list.value[0]?.id || "")
 
 const emit = defineEmits(["active"])
 

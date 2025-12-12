@@ -1,42 +1,43 @@
 <template>
   <div class="topic-panel">
-    <div v-if="false" class="layout-topic">
+    <div v-if="!isShowNavigator && false" class="layout-topic">
       <div @click="portalStore.togglePortal">
         <ElIcon v-if="showPortal"><ChevronRight /></ElIcon>
         <ElIcon v-else><ChevronLeft /></ElIcon>
       </div>
     </div>
-    <div v-if="showPortal && IS_LOCAL_MODE && currentConversation" class="topic-panel-container">
+    <div v-if="isShowPortal" class="topic-panel-container">
       <div class="resize-container">
         <div class="role-section">
           <div class="section-header">
             <h3 class="section-title">角色设定</h3>
-            <!-- <ElButton v-if="!isEditingRole" class="edit-btn" text size="small" @click="startEditRole">
-              <Pencil :size="16" />
-            </ElButton>
-            <div v-else class="edit-actions">
+            <div v-if="isEditingRole" class="edit-actions">
               <ElButton class="cancel-btn" text size="small" @click="cancelEditRole">
                 <X :size="16" />
               </ElButton>
               <ElButton class="save-btn" text size="small" @click="saveRolePrompt">
                 <Check :size="16" />
               </ElButton>
-            </div> -->
+            </div>
+            <ElButton v-else class="edit-btn" text size="small" @click="startEditRole">
+              <Pencil :size="16" />
+            </ElButton>
           </div>
-          <div v-if="!isEditingRole" class="role-content" @click="startEditRole">
+          <div v-if="isEditingRole" class="h-full">
+            <ElInput
+              ref="roleInputRef"
+              v-model="editingRolePrompt"
+              type="textarea"
+              :autosize="{ minRows: 6, maxRows: 6 }"
+              class="role-input"
+              placeholder="输入角色设定 prompt..."
+              @blur="saveRolePromptBlur"
+            />
+          </div>
+          <div v-else class="role-content" @click="startEditRole">
             <p v-if="rolePrompt" class="role-text">{{ rolePrompt }}</p>
             <p v-else class="role-placeholder">点击编辑角色设定...</p>
           </div>
-          <ElInput
-            v-else
-            ref="roleInputRef"
-            v-model="editingRolePrompt"
-            type="textarea"
-            :autosize="{ minRows: 4, maxRows: 8 }"
-            class="role-input"
-            placeholder="输入角色设定 prompt..."
-            @blur="saveRolePrompt"
-          />
         </div>
         <!-- 话题列表 -->
         <div class="topic-section">
@@ -185,8 +186,8 @@ import {
   EllipsisVertical,
   Pencil,
   WandSparkles,
-  // Check,
-  // X,
+  Check,
+  X,
   MessageSquareDashed,
   Search,
   Trash,
@@ -197,8 +198,9 @@ import {
 } from "lucide-vue-next"
 import { Tooltip, Dropdown, Menu, MenuItem } from "ant-design-vue"
 import { storeToRefs } from "pinia"
-
+import { useState } from "@/hooks/useState"
 import { useChatStore, usePortalStore, useTopicStore } from "@/stores"
+
 import type { Topic } from "@/stores/modules/topic/types"
 
 const portalStore = usePortalStore()
@@ -206,20 +208,25 @@ const chatStore = useChatStore()
 const topicStore = useTopicStore()
 
 const { showPortal } = storeToRefs(portalStore)
-const { currentConversation, currentSessionId } = storeToRefs(chatStore)
+const { currentConversation, currentSessionId, isShowNavigator } = storeToRefs(chatStore)
 
 const { topicId, rolePrompt, filteredTopics, groupedTopicsByTime, defaultTopic, searchKeyword } =
   storeToRefs(topicStore)
 
-const isEditingRole = ref(false)
 const editingRolePrompt = ref("")
-const roleInputRef = ref()
 const showSearch = ref(false)
 
 const renamingTopicId = ref("")
 const editingTitle = ref("")
+const roleInputRef = useTemplateRef("roleInputRef")
 const searchInputRef = useTemplateRef("searchInputRef")
 const renamingInputRef = useTemplateRef("renamingInputRef")
+
+const [isEditingRole, setIsEditingRole] = useState(false)
+
+const isShowPortal = computed(() => {
+  return showPortal.value && __LOCAL_MODE__ && currentConversation.value
+})
 
 const handleSmartRename = async (_topic?: Topic) => {
   // await topicStore.smartRenameTopic(topic.id)
@@ -261,17 +268,23 @@ const clearTopics = () => {
 }
 
 const startEditRole = () => {
-  isEditingRole.value = true
+  setIsEditingRole(true)
   editingRolePrompt.value = rolePrompt.value || ""
   nextTick(() => {
     roleInputRef.value?.focus()
   })
 }
 
-const saveRolePrompt = () => {
-  topicStore.setRolePrompt(editingRolePrompt.value)
-  isEditingRole.value = false
+const cancelEditRole = () => {
+  setIsEditingRole(false)
 }
+
+const saveRolePrompt = () => {
+  setIsEditingRole(false)
+  // topicStore.setRolePrompt(editingRolePrompt.value)
+}
+
+const saveRolePromptBlur = () => {}
 
 const toggleSearch = () => {
   showSearch.value = !showSearch.value
@@ -313,6 +326,8 @@ watch(
   () => currentSessionId.value,
   (sessionId) => {
     if (!sessionId) return
+    setIsEditingRole(false)
+    topicStore.setSearchKeyword("")
     topicStore.setTopicId(currentConversation.value?.topicId || "")
     topicStore.initDefaultTopic(sessionId)
   },
@@ -481,6 +496,7 @@ watch(
   min-height: 0;
 
   :deep(.el-textarea__inner) {
+    height: 100%;
     font-size: 13px;
     line-height: 1.6;
     resize: none;

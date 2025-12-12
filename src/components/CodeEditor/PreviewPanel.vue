@@ -21,7 +21,7 @@ interface Props {
 
 defineProps<Props>()
 
-const iframeRef = ref<HTMLIFrameElement | null>(null)
+const iframeRef = useTemplateRef("iframeRef")
 
 defineExpose({ iframeRef })
 </script>

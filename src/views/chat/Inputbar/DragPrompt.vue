@@ -57,8 +57,8 @@ import { CirclePlus, CircleX } from "lucide-vue-next"
 import { cloneDeep, isEmpty } from "lodash-es"
 import { storeToRefs } from "pinia"
 
-import { prompt } from "@/ai/constant"
 import EmojiMart from "@/components/EmojiMart/index.vue"
+import { prompt } from "@/ai/constant"
 // import { ROLES } from "@/ai/constant";
 import { useState } from "@/hooks/useState"
 import { useRobotStore } from "@/stores/modules/robot"
@@ -103,7 +103,7 @@ function handleEmojiSelect(emoji, i) {
 
 function onClose(i: number) {
   promptItems.value.splice(i, 1)
-  robotStore.setPromptConfig("")
+  robotStore.setPromptConfig(null)
   robotStore.setPromptStore([], modelProvider.value)
 }
 
@@ -127,7 +127,9 @@ function promptTitleFocus() {
   })
 }
 
-initPromptData()
+onMounted(() => {
+  initPromptData()
+})
 
 defineExpose({ promptTitleFocus })
 </script>

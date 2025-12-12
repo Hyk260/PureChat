@@ -3,7 +3,7 @@ import { cloneDeep } from "lodash-es"
 import { defineStore } from "pinia"
 
 import { getModelType } from "@/ai/utils"
-import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX } from "@/constants"
+import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX, MIN_MESSAGES } from "@/constants"
 import { MessageModel } from "@/database/models/message"
 import { timProxy } from "@/service/chat"
 import { sendChatAssistantMessage } from "@/service/chatService"
@@ -31,7 +31,7 @@ import { useAppStore } from "../app"
 
 import type { ChatState } from "./type"
 import type { ModelProviderKey } from "@/ai/types"
-import type { DB_Message, DB_Session, DraftData, ImagePayloadType } from "@/types"
+import type { DB_Message, DB_Session, TypeSchemaType, DraftData, ImagePayloadType } from "@/types"
 import type { ModelIDValue } from "@shared/provider"
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
@@ -71,7 +71,10 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     isFwdDataMaxed(): boolean {
       return this.forwardData.size >= MULTIPLE_CHOICE_MAX
     },
-    currentType(): DB_Session["type"] | "" {
+    isShowNavigator(): boolean {
+      return this.currentMessageList.length > MIN_MESSAGES && !this.isFullscreenInputActive && __LOCAL_MODE__
+    },
+    currentType(): TypeSchemaType | "" {
       return this.currentConversation?.type ?? ""
     },
     getNonBotList(): DB_Session[] {

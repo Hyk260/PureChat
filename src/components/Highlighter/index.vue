@@ -23,8 +23,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, defineExpose } from "vue"
-
 defineEmits(["copy"])
 
 interface Props {

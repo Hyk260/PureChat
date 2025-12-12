@@ -11,7 +11,7 @@
     </div>
   </div>
   <!-- 截图分享 -->
-  <ShareModal @on-close="onClose" />
+  <ShareModal @onClose="onClose" />
   <MessageForwardingPopup ref="wardingRef" @confirm="confirm" />
 </template>
 
@@ -61,7 +61,7 @@ const buttonList = [
 
 const chatStore = useChatStore()
 const userStore = useUserStore()
-const wardingRef = ref(null)
+const wardingRef = useTemplateRef("wardingRef")
 const multipleValue = ref(null)
 
 const { currentSessionId, isGroupChat, currentConversation, isForwardDataEmpty } = storeToRefs(chatStore)
@@ -186,7 +186,7 @@ const shutdown = () => {
 }
 
 const setDialogVisible = (type = "") => {
-  wardingRef.value.openPopup(type)
+  wardingRef.value?.openPopup(type)
 }
 
 const setMultipleValue = (value = null) => {
