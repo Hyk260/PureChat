@@ -80,7 +80,7 @@
             </div>
           </div>
         </div>
-        <!-- <div v-show="isMultiSelectMode" class="h-20"></div> -->
+        <div v-show="isMultiSelectMode" class="h-200"></div>
         <div ref="bottomSentinelRef" class="message-bottom-sentinel"></div>
       </div>
     </ElScrollbar>

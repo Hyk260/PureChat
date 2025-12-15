@@ -28,7 +28,6 @@ class _MessageModel extends BaseModel {
   async query({ sessionId, pageSize = 99, current = 0, topicId }: QueryMessageParams): Promise<DB_Message[]> {
     const offset = current * pageSize
     //  TODO：针对消息的查询 {"sessionId":"xxx","topicId":"xxx"} 将受益于复合索引 [sessionId+topicId]
-    // const query = this.table.where("conversationID").equals(id)
 
     const query = topicId
       ? this.table.where({ sessionId, topicId })
