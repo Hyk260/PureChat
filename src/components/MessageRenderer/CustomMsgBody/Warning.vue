@@ -1,9 +1,5 @@
 <template>
-  <div class="warning flex-c">
-    <!-- <ElIcon><Warning /></ElIcon>
-    <span> API Key 不正确或为空，请检查 API Key 后重试</span>
-    <span class="cursor-pointer ml-4 text-[#0072f5]" @click="openRobotBox()"> [配置] </span>
-    <span class="cursor-pointer ml-4 text-[#0072f5]" @click="jumpLink()"> [文档] </span> -->
+  <div class="flex-c">
     <ElAlert type="warning" showIcon :closable="false">
       <template #icon>
         <ElIcon :size="18">
@@ -12,8 +8,8 @@
       </template>
       <template #default>
         <span>API Key 不正确或为空，请检查 API Key 后重试</span>
-        <span class="cursor-pointer ml-4 text-[#0072f5]" @click="openRobotBox()"> 配置 </span>
-        <span class="cursor-pointer ml-4 text-[#0072f5]" @click="jumpLink()"> 文档 </span>
+        <span class="cursor-pointer ml-4 text-[#0072f5]" @click="openRobotBox"> 配置 </span>
+        <span class="cursor-pointer ml-4 text-[#0072f5]" @click="jumpLink"> 文档 </span>
       </template>
     </ElAlert>
   </div>
@@ -24,45 +20,41 @@ import { ElAlert } from "element-plus"
 import { TriangleAlert } from "lucide-vue-next"
 import { modelValue } from "@/ai/constant"
 import { openWindow } from "@/utils/common"
+import { WarningCustomMessageBasse } from "@database/custom"
 import emitter from "@/utils/mitt-bus"
+
+import type { CustomPayloadType } from "@/types"
 
 defineOptions({
   name: "Warning",
 })
 
 interface Props {
-  payload: any
+  payload: CustomPayloadType
 }
 
 const props = defineProps<Props>()
 
-function openRobotBox() {
+const openRobotBox = () => {
   emitter.emit("onRobotBox", { apiKeyFocus: true })
 }
 
-function jumpLink() {
-  const url = getDoubt(props.payload)
+const jumpLink = () => {
+  const url = getDoubt()
   openWindow(url)
 }
 
-function getDoubt(payload) {
+const getDoubt = () => {
   try {
-    const provider = JSON.parse(payload.data).data.body.text.provider
+    const payload = JSON.parse(props.payload.data) as WarningCustomMessageBasse
+    const provider = payload.data.body.text.provider
     let doubt = modelValue[provider].Token.doubt
     return doubt
   } catch (error) {
-    console.error(error)
+    console.error("Error parsing payload:", error)
     return ""
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.warning {
-  font-size: 12px;
-  color: #e6a23c;
-  background-color: rgb(252.5, 245.7, 235.5);
-  min-height: 36px;
-  border-radius: 3px;
-}
-</style>
+<style lang="scss" scoped></style>

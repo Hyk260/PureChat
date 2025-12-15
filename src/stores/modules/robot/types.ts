@@ -1,5 +1,7 @@
 import type { LLMParams, ModelProviderKey } from "@/ai/types"
-import type { LLMRoleType } from "@/ai/types"
+// import type { LLMRoleType } from "@/ai/types"
+
+import { Prompt } from "@/types/llm"
 
 export interface Model {
   id: string
@@ -44,18 +46,6 @@ export interface PromptMeta {
   avatar: string
   title: string
   recQuestion?: string[]
-  [key: string]: any
-}
-
-// 提示词类型
-export interface Prompt {
-  id: string
-  meta: PromptMeta
-  lang: string
-  prompt: Array<{
-    role: LLMRoleType
-    content: string
-  }>
   [key: string]: any
 }
 

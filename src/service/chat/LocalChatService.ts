@@ -8,9 +8,9 @@ import {
 } from "@/types"
 import { delay, getUnixTimestampSec, getUnixTimestampSecPlusOne } from "@/utils/common"
 import { useTopicStore } from "@/stores/modules/topic"
-import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
+import emitter from "@/utils/mitt-bus"
 
 import type { DB_Message, DB_Session, MessageType } from "@/types"
 import type {
@@ -402,8 +402,8 @@ export class LocalChat {
       const list = await SessionModel.query()
       const messageList = list.filter((item) => item.conversationID !== ID)
 
-      this.emit("onConversationListUpdated", { data: messageList })
       await SessionModel.delete(ID)
+      this.emit("onConversationListUpdated", { data: messageList })
 
       return {
         code: 0,
@@ -420,13 +420,9 @@ export class LocalChat {
    */
   async clearHistoryMessage(sessionId: string) {
     try {
-      const data = await MessageModel.query({ sessionId })
+      const topicStore = useTopicStore()
 
-      const deletePromises = data.map((item) => {
-        return MessageModel.delete(item.ID)
-      })
-
-      await Promise.all(deletePromises)
+      await MessageModel.batchDelete(sessionId, topicStore.topicId)
 
       const sessionList = await SessionModel.query()
       const session = sessionList.find((t) => t.conversationID === sessionId)

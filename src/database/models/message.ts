@@ -125,9 +125,9 @@ class _MessageModel extends BaseModel {
   }
 
   async queryAll(): Promise<DB_Message[]> {
-    const data = await this.table.orderBy("createdAt").toArray()
+    const data: DBModel<DB_Message>[] = await this.table.orderBy("updatedAt").toArray()
 
-    return data
+    return data.map((message) => this.mapToChatMessage(message))
   }
 
   async queryBySessionId(id: string) {
@@ -163,15 +163,52 @@ class _MessageModel extends BaseModel {
     return super._deleteWithSync(id)
   }
 
+  /**
+   * 批量删除
+   */
+  async bulkDelete(ids: string[]) {
+    return super._bulkDeleteWithSync(ids)
+  }
+
   async clearTable() {
     return super._clearWithSync()
+  }
+
+  /**
+   * 根据sessionId和topicId（可选）删除多条消息。
+   * 如果未提供topicId，则会删除topicId未定义或为null的消息。
+   * 如果提供了topicId，它将删除具有该特定topicId的消息。
+   *
+   * @param {string} sessionId - 与消息关联的助手的标识符。
+   * @param {string} topicId - 与消息关联的 topic 标识符（可选）。
+   */
+  async batchDelete(sessionId: string, topicId?: string) {
+    const query = topicId
+      ? this.table.where({ sessionId, topicId })
+      : this.table
+          .where("sessionId")
+          .equals(sessionId)
+          .and((message) => !message.topicId)
+
+    // 检索满足条件的消息ID集合
+    const messageIds = await query.primaryKeys()
+
+    // 使用bulkDelete方法批量删除所有选定的消息
+    return super._bulkDeleteWithSync(messageIds)
+  }
+
+  async batchDeleteBySessionId(sessionId: string) {
+    const messageIds = await this.table.where("sessionId").equals(sessionId).primaryKeys()
+
+    // 使用bulkDelete方法批量删除所有选定的消息
+    return super._bulkDeleteWithSync(messageIds)
   }
 
   /**
    * 删除与topicId相关的所有消息
    * @param topicId
    */
-  async batchDeleteByTopicId(topicId: string): Promise<void> {
+  async batchDeleteByTopicId(topicId: string) {
     const messageIds = await this.table.where("topicId").equals(topicId).primaryKeys()
 
     return super._bulkDeleteWithSync(messageIds)

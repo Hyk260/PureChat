@@ -23,12 +23,13 @@ import { ZhiPuModelValue } from "@/ai/platforms/zhipu/modelValue"
 import { ZhiPuConfig } from "@/ai/platforms/zhipu/config"
 
 import { ModelProvider } from "@/ai/types"
+import { Prompt } from "@/types/llm"
 
 export const ROLES = ["system", "user", "assistant"]
 
 export const REQUEST_TIMEOUT_MS = 60000
 
-export const prompt = [
+export const prompt: Prompt[] = [
   {
     id: "0",
     meta: {

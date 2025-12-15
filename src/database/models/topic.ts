@@ -63,24 +63,23 @@ class _TopicModel extends BaseModel {
     console.time("queryTopicsByKeyword")
     const keywordLowerCase = keyword.toLowerCase()
 
-    // Find topics with matching title
+    // 查找标题匹配的消息
     const queryTable = sessionId ? this.table.where("sessionId").equals(sessionId) : this.table
     const matchingTopicsPromise = queryTable
       .filter((topic) => topic.title.toLowerCase().includes(keywordLowerCase))
       .toArray()
 
-    // Find messages with matching content or translate.content
+    // 查找匹配内容的消息
     const queryMessages = sessionId ? this.db.messages.where("sessionId").equals(sessionId) : this.db.messages
     const matchingMessagesPromise = queryMessages
       .filter((message) => {
         const content = message.payload?.text ?? ""
-        // check content
+        // 检查内容'content'
         if (content.toLowerCase().includes(keywordLowerCase)) return true
         return false
       })
       .toArray()
 
-    // Resolve both promises
     const [matchingTopics, matchingMessages] = await Promise.all([matchingTopicsPromise, matchingMessagesPromise])
 
     // Extract topic IDs from messages
@@ -99,7 +98,7 @@ class _TopicModel extends BaseModel {
     return uniqueTopics.map((i) => ({ ...i, favorite: !!i.favorite }))
   }
 
-  async findBySessionId(sessionId: string) {
+  async findBySessionId(sessionId: string): Promise<DBModel<DB_Topic>[]> {
     return this.table.where({ sessionId }).toArray()
   }
 
@@ -155,7 +154,7 @@ class _TopicModel extends BaseModel {
   // **************** Delete *************** //
 
   /**
-   * Deletes a topic and all messages associated with it.
+   * 删除主题及其关联的所有消息。
    */
   async delete(id: string) {
     return this.db.transaction("rw", [this.table, this.db.messages], async () => {
@@ -183,13 +182,12 @@ class _TopicModel extends BaseModel {
   }
 
   /**
-   * Deletes multiple topics and all messages associated with them in a transaction.
+   * 在一个事务中删除多个话题及其关联的所有消息。
    */
   async batchDelete(topicIds: string[]) {
     return this.db.transaction("rw", [this.table, this.db.messages], async () => {
-      // Iterate over each topicId and delete related messages, then delete the topic itself
       for (const topicId of topicIds) {
-        // Delete all messages associated with the topic
+        // 删除该话题关联的所有消息
         await this.delete(topicId)
       }
     })

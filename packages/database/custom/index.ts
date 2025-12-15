@@ -1,4 +1,7 @@
-export const loading = {
+import { WarningCustomMessage, LoadingCustomMessage } from "./types"
+export * from "./types"
+
+export const loading: LoadingCustomMessage = {
   body: {
     bodyType: "loadingBody",
     text: {
@@ -8,7 +11,7 @@ export const loading = {
   },
 }
 
-export const warning = {
+export const warning: WarningCustomMessage = {
   body: {
     bodyType: "alertBody",
     text: {

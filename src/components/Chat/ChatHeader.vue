@@ -86,7 +86,7 @@ const chatStore = useChatStore()
 const robotStore = useRobotStore()
 const portalStore = usePortalStore()
 
-const { isAssistant, isGroupChat, currentType, currentConversation } = storeToRefs(chatStore)
+const { isMultiSelectMode, isAssistant, isGroupChat, currentType, currentConversation } = storeToRefs(chatStore)
 const { getPromptTitle, botMessageCount, isShowPromptTitle } = storeToRefs(robotStore)
 const { showPortal } = storeToRefs(portalStore)
 
@@ -112,7 +112,7 @@ const openPrompt = () => {
 }
 
 const openShare = () => {
-  chatStore.toggleMultiSelectMode(true)
+  chatStore.toggleMultiSelectMode(!isMultiSelectMode.value)
 }
 
 const openSetup = () => {

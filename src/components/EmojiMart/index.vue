@@ -23,7 +23,7 @@ interface Props {
 
 interface EmitEvents {
   (e: "onClose"): void
-  (e: "emoji-selected", emoji: EmojiSelectEvent): void
+  (e: "emojiSelected", emoji: EmojiSelectEvent): void
 }
 
 const DEFAULT_CDN_SOURCES = [

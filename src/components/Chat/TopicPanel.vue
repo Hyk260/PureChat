@@ -37,7 +37,7 @@
           </div>
           <div v-else class="role-content" @click="startEditRole">
             <p v-if="rolePrompt" class="role-text">{{ rolePrompt }}</p>
-            <p v-else class="role-placeholder">点击编辑角色设定...</p>
+            <p v-else class="role-placeholder">请输入角色 Prompt 提示词...</p>
           </div>
         </div>
         <!-- 话题列表 -->
@@ -217,7 +217,7 @@ const { topicId, rolePrompt, filteredTopics, groupedTopicsByTime, defaultTopic, 
   storeToRefs(topicStore)
 
 const editingRolePrompt = ref("")
-const showSearch = ref(false)
+// const showSearch = ref(false)
 
 const renamingTopicId = ref("")
 const editingTitle = ref("")
@@ -226,6 +226,7 @@ const searchInputRef = useTemplateRef("searchInputRef")
 const renamingInputRef = useTemplateRef("renamingInputRef")
 
 const [isEditingRole, setIsEditingRole] = useState(false)
+const [showSearch, setShowSearch] = useState(false)
 
 const isShowPortal = computed(() => {
   return showPortal.value && __LOCAL_MODE__ && currentConversation.value
@@ -267,7 +268,7 @@ const deleteTopic = (topic: Topic) => {
 }
 
 const clearTopics = () => {
-  topicStore.clearTopics()
+  topicStore.batchRemoveTopics()
 }
 
 const startEditRole = () => {
@@ -290,14 +291,13 @@ const saveRolePrompt = () => {
 const saveRolePromptBlur = () => {}
 
 const toggleSearch = () => {
-  showSearch.value = !showSearch.value
-  if (!showSearch.value) {
-    topicStore.setSearchKeyword("")
-  }
+  setShowSearch(!showSearch.value)
   if (showSearch.value) {
     nextTick(() => {
       searchInputRef.value?.focus()
     })
+  } else {
+    topicStore.setSearchKeyword("")
   }
 }
 
@@ -306,9 +306,9 @@ const handleSearch = () => {
 }
 
 const handleSearchBlur = () => {
-  if (!searchKeyword.value) {
-    showSearch.value = false
-  }
+  // if (!searchKeyword.value) {
+  //   setShowSearch(false)
+  // }
 }
 
 const toggleFavorite = (topicId: string) => {
@@ -328,7 +328,9 @@ onUnmounted(() => {})
 watch(
   () => currentSessionId.value,
   (sessionId) => {
+    console.log("TopicPanel sessionId:", sessionId)
     if (!sessionId) return
+    setShowSearch(false)
     setIsEditingRole(false)
     topicStore.setSearchKeyword("")
     topicStore.setTopicId(currentConversation.value?.topicId || "")
@@ -594,7 +596,6 @@ watch(
     font-size: 12px;
     font-weight: 600;
     color: var(--color-time-divider);
-    padding: 4px 0;
     margin-bottom: 4px;
   }
 }

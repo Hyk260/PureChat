@@ -8,6 +8,22 @@ import router from "@/router"
 import type { DB_Session } from "@/types"
 // export type RouteKey = keyof RouteMap;
 
+/**
+ * 路由查询参数类型
+ */
+export interface RouteQueryParams {
+  session?: string
+  topicId?: string
+}
+
+/**
+ * routerPushQuery 函数参数类型
+ */
+export interface RouterPushQueryOptions {
+  path?: string
+  query?: RouteQueryParams
+}
+
 export interface RouteStore {
   reloadFlag: boolean
   /**
@@ -31,6 +47,19 @@ export const useRouteStore = defineStore(SetupStoreId.Route, {
   getters: {},
   actions: {
     getTabIdByRoute,
+    routerPushQuery({ path = "/chat", query }: RouterPushQueryOptions) {
+      const _query: Record<string, string> = {}
+
+      if (query?.session) {
+        _query.session = query.session
+      }
+
+      if (query?.topicId) {
+        _query.topic = query.topicId
+      }
+
+      router.push({ path, query: _query })
+    },
     routerPush(routeName: string) {
       const chatStore = useChatStore()
       if (routeName === "/chat") {
@@ -44,17 +73,12 @@ export const useRouteStore = defineStore(SetupStoreId.Route, {
     },
     handleSessionClick(payload: Partial<DB_Session>) {
       const topicStore = useTopicStore()
-      const query: Record<string, string> = {}
-      if (payload.conversationID) {
-        query.session = payload.conversationID
-      }
-      if (topicStore.topicId) {
-        // query.topic = topicStore.topicId
-      }
-      if (payload.topicId) {
-        query.topic = payload.topicId
-      }
-      router.push({ path: "/chat", query })
+      this.routerPushQuery({
+        query: {
+          session: payload.conversationID,
+          topicId: topicStore.topicId || "",
+        },
+      })
     },
     addCacheRoute(routeName: string) {
       if (!this.cacheRoutes.includes(routeName)) {

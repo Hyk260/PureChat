@@ -10,8 +10,9 @@ import { SetupStoreId } from "@/stores/enum"
 import { useChatStore } from "../chat"
 import { useWebSearchStore } from "../websearch"
 
-import type { BotToolsFlag, Model, Prompt, RobotState } from "./types"
+import type { BotToolsFlag, Model, RobotState } from "./types"
 import type { ModelProviderKey } from "@/ai/types"
+import type { Prompt } from "@/types/llm"
 
 export const useRobotStore = defineStore(SetupStoreId.Robot, {
   state: (): RobotState => ({

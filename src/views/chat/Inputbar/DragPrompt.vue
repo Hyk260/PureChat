@@ -16,8 +16,8 @@
           <EmojiMart
             v-if="showEmojiPickerFlag"
             class="emoji-picker"
-            @on-close="setShowEmojiPickerFlag(false)"
-            @emoji-selected="(emoji) => handleEmojiSelect(emoji, i)"
+            @onClose="setShowEmojiPickerFlag(false)"
+            @emojiSelected="(emoji) => handleEmojiSelect(emoji, i)"
           />
         </ElButton>
         <ElInput
@@ -31,7 +31,7 @@
       </div>
       <div class="prompt-content">
         <ElInput
-          v-model="item.prompt[0].content"
+          v-model="item.prompt[0]!.content"
           :autosize="{ minRows: 2, maxRows: 6 }"
           type="textarea"
           placeholder="prompt"
@@ -64,13 +64,15 @@ import { useState } from "@/hooks/useState"
 import { useRobotStore } from "@/stores/modules/robot"
 import { nanoid } from "@/utils/uuid"
 
+import type { Prompt } from "@/types/llm"
+
 defineOptions({
   name: "DragPrompt",
 })
 
 const MAX_PROMPTS = 1
 
-const promptItems = ref([])
+const promptItems = ref<Prompt[]>([])
 const inputTitleRef = useTemplateRef("inputTitleRef")
 
 const robotStore = useRobotStore()
@@ -90,17 +92,17 @@ function initPromptData() {
 }
 
 function handleClearAvatar(i: number) {
-  promptItems.value[i].meta.avatar = ""
+  promptItems.value[i]!.meta.avatar = ""
   savePromptData()
 }
 
 function savePromptData() {
   robotStore.setPromptStore(promptItems.value, modelProvider.value)
-  robotStore.setPromptConfig(promptItems.value[0])
+  robotStore.setPromptConfig(promptItems.value[0] || null)
 }
 
-function handleEmojiSelect(emoji, i) {
-  promptItems.value[i].meta.avatar = emoji.native
+function handleEmojiSelect(emoji: any, i: number) {
+  promptItems.value[i]!.meta.avatar = emoji.native
   savePromptData()
 }
 

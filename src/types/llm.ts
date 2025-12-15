@@ -105,3 +105,24 @@ export interface ModelProviderCard {
    */
   url: string
 }
+
+export type LLMRoleType = "user" | "system" | "assistant" | "tool"
+
+export interface PromptMeta {
+  [key: string]: any
+  tags: string[]
+  avatar: string
+  title: string
+  recQuestion?: string[]
+}
+
+export interface Prompt {
+  [key: string]: any
+  id: string
+  meta: PromptMeta
+  lang: string
+  prompt: Array<{
+    role: LLMRoleType
+    content: string
+  }>
+}

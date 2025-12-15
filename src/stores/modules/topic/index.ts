@@ -1,11 +1,11 @@
 import { defineStore } from "pinia"
 import { SetupStoreId } from "@/stores/enum"
 import { useChatStore } from "@/stores/modules/chat"
+import { useRouteStore } from "@/stores/modules/route"
 import { TopicModel, type QueryTopicParams } from "@/database/models/topic"
-import { MessageModel } from "@/database/models/message"
+// import { MessageModel } from "@/database/models/message"
 import { SessionModel } from "@/database/models/session"
 import emitter from "@/utils/mitt-bus"
-import router from "@/router"
 
 import type { TopicState, Topic } from "./types"
 
@@ -89,15 +89,18 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
     async selectTopic(topic: Partial<Topic>, sessionId?: string) {
       if (!topic) return
       const chatStore = useChatStore()
+      const routeStore = useRouteStore()
       const sid = sessionId || chatStore.sessionId
       this.topicId = topic.id || ""
-      const query: Record<string, string> = { session: sid }
-      if (topic.id) {
-        query.topic = topic.id
-      }
       chatStore.updateConversationList({ conversationID: sid, topicId: topic.id })
       await SessionModel.update(sid, { topicId: topic.id })
-      router.push({ path: "/chat", query })
+      routeStore.routerPushQuery({
+        path: "/chat",
+        query: {
+          session: sid,
+          topicId: topic.id,
+        },
+      })
       emitter.emit("handleSelection")
       // const data = await MessageModel.queryByTopicId(topic.id)
       // console.log(data)
@@ -107,13 +110,24 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
       const sid = sessionId || chatStore.currentSessionId
       if (!sid) return
       const data = await TopicModel.create({ title, sessionId: sid })
-      this.initDefaultTopic(sid)
       this.selectTopic({ id: data.id })
+      this.initDefaultTopic(sid)
+    },
+    async batchRemoveTopics(sessionId?: string) {
+      const chatStore = useChatStore()
+      const sid = sessionId || chatStore.currentSessionId
+      const topics = await TopicModel.findBySessionId(sid)
+      TopicModel.batchDelete(topics.map((t) => t.id))
+      this.setTopicId("")
+      this.selectTopic({ id: "" })
+      this.initDefaultTopic(sid)
     },
     async clearTopics(sessionId?: string) {
       const chatStore = useChatStore()
       const sid = sessionId || chatStore.currentSessionId
       await TopicModel.batchDeleteBySessionId(sid)
+      this.setTopicId("")
+      this.selectTopic({ id: "" })
       this.initDefaultTopic(sid)
     },
     updateTopicTitle(id: string, text: string, sessionId?: string) {

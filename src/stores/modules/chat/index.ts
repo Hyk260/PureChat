@@ -192,7 +192,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       return history
     },
-    setHistoryMessageList() {},
+    setHistoryMessageList(sessionId: string, message: DB_Message[] | []) {
+      this.historyMessageList.set(sessionId, message)
+    },
     setScrollTopID(id: string = "") {
       this.scrollTopID = id
     },
@@ -251,7 +253,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         this.currentMessageList = []
       }
       if (message.length) {
-        this.historyMessageList.set(conversationID, message)
+        this.setHistoryMessageList(conversationID, message)
       }
       const isMore = this.isMore || isDone
       console.log("isDone:", isMore ? "没有更多" : "显示loading")
@@ -273,7 +275,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const newHistory = history.filter((t) => !t.isTimeDivider && !t.isDeleted && !messageIdArray.includes(t.ID))
       const newHistoryList = addTimeDivider(newHistory)
       this.currentMessageList = cloneDeep(newHistoryList)
-      this.historyMessageList.set(sessionId, newHistoryList)
+      this.setHistoryMessageList(sessionId, newHistoryList)
     },
     loadMoreMessages(payload: { sessionId: string; messages: DB_Message[]; msgId: string }) {
       console.log("[chat] 加载更多消息 loadMoreMessages:", payload)
@@ -300,7 +302,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       const newHistory = [...resultMessages, ...history]
       this.currentMessageList = newHistory
-      this.historyMessageList.set(sessionId, newHistory)
+      this.setHistoryMessageList(sessionId, newHistory)
     },
     updateMessages(payload: { sessionId: string; message: DB_Message }) {
       console.log("[chat] 更新消息 updateMessages:", payload)
@@ -325,7 +327,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       if (this.currentConversation?.conversationID === sessionId) {
         this.currentMessageList = newMessageList
       }
-      this.historyMessageList.set(sessionId, newMessageList)
+      this.setHistoryMessageList(sessionId, newMessageList)
     },
     modifiedMessages(message: DB_Message) {
       console.log("[chat] 历史消息更新 modifiedMessages:", message)
@@ -345,7 +347,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       if (this.currentConversation?.conversationID === sessionId) {
         this.currentMessageList = newMessageList
       }
-      this.historyMessageList.set(sessionId, newMessageList)
+      this.setHistoryMessageList(sessionId, newMessageList)
     },
     async sendSessionMessage(data: { message: DB_Message; last?: boolean }) {
       const { message, last = true } = data
@@ -486,14 +488,11 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
     async deleteHistoryMessage(id?: string) {
       const sessionId = id || this.currentSessionId
-      if (!sessionId) {
-        console.error("sessionId is required")
-        return
-      }
+      if (!sessionId) return
       const { code } = await clearHistoryMessage(sessionId)
       if (code === 0) {
         this.currentMessageList = []
-        this.historyMessageList.set(sessionId, [])
+        this.setHistoryMessageList(sessionId, [])
       }
     },
     setRecently({ data = "", type }: { data: string; type: string }) {
