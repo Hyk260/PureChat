@@ -77,6 +77,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     currentType(): TypeSchemaType | "" {
       return this.currentConversation?.type ?? ""
     },
+    hasConversationList(): boolean {
+      return this.conversationList?.length > 0
+    },
     getNonBotList(): DB_Session[] {
       return this.conversationList.filter((t) => !/@RBT#/.test(t.conversationID))
     },

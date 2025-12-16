@@ -176,7 +176,7 @@
     </ElTooltip>
     <!-- 滚动到底部 -->
     <ElTooltip
-      v-if="showBottomBtn && !isFullscreenInputActive"
+      v-if="showBottomBtn && !isFullscreenInputActive && hasConversationList"
       :enterable="false"
       :showAfter="500"
       :content="$t('chat.scrollToTheBottom')"
@@ -268,7 +268,7 @@ const robotStore = useRobotStore()
 const chatStore = useChatStore()
 const webSearchStore = useWebSearchStore()
 
-const { toAccount, isAssistant, currentType, isFullscreenInputActive } = storeToRefs(chatStore)
+const { toAccount, isAssistant, currentType, isFullscreenInputActive, hasConversationList } = storeToRefs(chatStore)
 const { modelProvider, enableWebSearch, isWebSearchModel } = storeToRefs(robotStore)
 
 function handleCancel() {

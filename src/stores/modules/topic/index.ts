@@ -190,5 +190,8 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
       this.topicsSession[sid] = topics
     },
   },
-  persist: true,
+  persist: {
+    pick: ["topicId"],
+  },
+  // persist: true,
 })

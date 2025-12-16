@@ -216,11 +216,9 @@ const { currentConversation, currentSessionId, isShowNavigator } = storeToRefs(c
 const { topicId, rolePrompt, filteredTopics, groupedTopicsByTime, defaultTopic, searchKeyword } =
   storeToRefs(topicStore)
 
-const editingRolePrompt = ref("")
-// const showSearch = ref(false)
-
-const renamingTopicId = ref("")
 const editingTitle = ref("")
+const renamingTopicId = ref("")
+const editingRolePrompt = ref("")
 const roleInputRef = useTemplateRef("roleInputRef")
 const searchInputRef = useTemplateRef("searchInputRef")
 const renamingInputRef = useTemplateRef("renamingInputRef")
@@ -328,6 +326,7 @@ onUnmounted(() => {})
 watch(
   () => currentSessionId.value,
   (sessionId) => {
+    if (!isShowPortal.value) return
     console.log("TopicPanel sessionId:", sessionId)
     if (!sessionId) return
     setShowSearch(false)
@@ -342,6 +341,7 @@ watch(
 watch(
   () => rolePrompt.value,
   (val) => {
+    if (!isShowPortal.value) return
     editingRolePrompt.value = val
   },
   { immediate: true }
@@ -383,7 +383,6 @@ watch(
 }
 
 .topic-panel {
-  border-left: 1px solid var(--color-border-default);
   background: var(--color-body-bg);
   position: relative;
   display: flex;
@@ -391,6 +390,7 @@ watch(
 }
 
 .topic-panel-container {
+  border-left: 1px solid var(--color-border-default);
   flex: 0 0 auto;
   height: 100%;
   max-height: 100vh;

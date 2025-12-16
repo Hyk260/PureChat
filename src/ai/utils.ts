@@ -63,7 +63,12 @@ export function getModelId(model: ModelProviderKey) {
 }
 
 export function getModelIcon(id: string): string {
-  const modelId = getModelType(id)
+  let modelId = ""
+  try {
+    modelId = getModelType(id)
+  } catch {
+    modelId = ""
+  }
   const data = {
     [ModelProvider.OpenAI]: "openai",
     [ModelProvider.ZhiPu]: "chatglm",
