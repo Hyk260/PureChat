@@ -82,12 +82,20 @@ pnpm build
 ```
 
 ### 📊 GitHub Stats
+<!-- https://star-history.com/ -->
+<!-- ![Star History](./images/star-history.png) -->
 
 ![Alt](https://repobeats.axiom.co/api/embed/5f9a9bb83bee403abed7ee7ffa36c4470d8e2544.svg "Repobeats analytics image")
 
-### Star History
-<!-- https://star-history.com/ -->
-<!-- ![Star History](./images/star-history.png) -->
+### 👨‍💻 贡献者
+<!-- &chart=list,bubble -->
+<!-- &latestMonth=12,3 -->
+
+<a href="https://openomy.com/Hyk260/PureChat" target="_blank" style="display: block; width: 100%;" align="center">
+  <img src="https://openomy.com/svg?repo=Hyk260/PureChat&chart=bubble&latestMonth=12" target="_blank" alt="Contribution Leaderboard" style="display: block; width: 100%;" />
+</a>
+
+### ⭐ Star 历史
 
 [![Star History Chart](https://api.star-history.com/svg?repos=Hyk260/PureChat&type=Date)](https://www.star-history.com/#Hyk260/PureChat&Date)
 
