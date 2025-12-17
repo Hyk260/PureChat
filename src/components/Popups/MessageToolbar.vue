@@ -3,31 +3,31 @@
     <div class="toolbar-content">
       <span class="selected-count">选中 {{ getForwardCount }} 条消息</span>
       <div class="action-buttons">
-        <ElTooltip content="截图分享" placement="top">
+        <ElTooltip :showArrow="false" :offset="10" content="截图分享" placement="top">
           <button class="action-btn" :disabled="isForwardDataEmpty" @click="handleShare">
             <Share2 :size="16" />
           </button>
         </ElTooltip>
 
-        <ElTooltip v-if="!IS_LOCAL_MODE" content="合并转发" placement="top">
+        <ElTooltip v-if="!IS_LOCAL_MODE" :showArrow="false" :offset="10" content="合并转发" placement="top">
           <button class="action-btn" :disabled="isForwardDataEmpty" @click="onMergeForward">
             <Merge :size="16" />
           </button>
         </ElTooltip>
 
-        <ElTooltip v-if="!IS_LOCAL_MODE" content="逐条转发" placement="top">
+        <ElTooltip v-if="!IS_LOCAL_MODE" :showArrow="false" :offset="10" content="逐条转发" placement="top">
           <button class="action-btn" :disabled="isForwardDataEmpty" @click="onForwardItemByItem">
             <Forward :size="16" />
           </button>
         </ElTooltip>
 
-        <ElTooltip content="删除" placement="top">
+        <ElTooltip :showArrow="false" :offset="10" content="删除" placement="top">
           <button class="action-btn delete-btn" :disabled="isForwardDataEmpty" @click="handleDelete">
             <Trash2 :size="16" />
           </button>
         </ElTooltip>
 
-        <ElTooltip content="关闭" placement="top">
+        <ElTooltip :showArrow="false" :offset="10" content="关闭" placement="top">
           <button class="action-btn close-btn" @click="handleClose">
             <X :size="16" />
           </button>

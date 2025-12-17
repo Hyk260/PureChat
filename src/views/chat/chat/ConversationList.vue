@@ -32,7 +32,9 @@
         <div class="message-item-right">
           <div class="message-item-right-top flex-bc">
             <div class="message-chat-name flex">
-              <span class="name-title truncate">{{ item._displayName }}</span>
+              <span class="name-title truncate">
+                {{ item._displayName }}
+              </span>
               <CustomLabel v-if="item.userProfile?.userID" :item="item" :userID="item.userProfile.userID" />
             </div>
             <div v-if="item._displayTime" class="message-time">
@@ -170,6 +172,7 @@ const handleConversationListClick = (data: DB_Session, isActive: boolean = true)
   console.log("会话点击 handleConversationListClick:", data)
   if (currentSessionId.value === data?.conversationID && isActive) return
 
+  topicStore.setTopicId(data.topicId || "")
   chatStore.setMsgEdit(null)
   chatStore.setScrollTopID("")
   chatStore.setReplyMsgData(null)

@@ -97,8 +97,12 @@ const handleMessageClick = () => {
 }
 
 .message-view-item-text {
-  width: fit-content;
-  max-width: 570px;
+  // width: fit-content;
+  // width: 100%;
+  max-width: 100%;
+  min-width: 0px;
+  // max-width: 570px;
+  // max-width: calc(100% - 300px);
   min-height: 36px;
   padding: 10px;
   box-sizing: border-box;
@@ -115,6 +119,6 @@ const handleMessageClick = () => {
 .markdown-body {
   position: relative;
   overflow: hidden;
-  max-width: 580px;
+  // max-width: 580px;
 }
 </style>

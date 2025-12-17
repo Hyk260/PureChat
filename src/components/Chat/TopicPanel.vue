@@ -327,12 +327,11 @@ watch(
   () => currentSessionId.value,
   (sessionId) => {
     if (!isShowPortal.value) return
-    console.log("TopicPanel sessionId:", sessionId)
     if (!sessionId) return
+    console.log("TopicPanel sessionId:", sessionId)
     setShowSearch(false)
     setIsEditingRole(false)
     topicStore.setSearchKeyword("")
-    topicStore.setTopicId(currentConversation.value?.topicId || "")
     topicStore.initDefaultTopic(sessionId)
   },
   { immediate: true }

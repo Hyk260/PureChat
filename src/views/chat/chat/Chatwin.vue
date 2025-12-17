@@ -252,7 +252,7 @@ const handleAvatarClick = (e: Event | null, item: DB_Message) => {
   }
   if (item.flow === "out" || isMultiSelectMode.value) return
   if (item.conversationID === "@TIM#SYSTEM") return
-  emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item })
+  // emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item })
 }
 
 const isScrolledToBottom = (threshold: number = 2): boolean => {
@@ -620,6 +620,7 @@ defineExpose({ updateScrollbar, scrollToBottom })
 }
 .message-view-item-index {
   width: 100%;
+  max-width: calc(100% - 36px - 16px - 72px);
 }
 .message-info-view-content {
   position: relative;
@@ -682,6 +683,8 @@ defineExpose({ updateScrollbar, scrollToBottom })
 }
 .message-view-item {
   padding: 10px 0;
+  overflow: hidden;
+  max-width: 100%;
   // contain: layout style paint;
   &:hover .time-divider {
     visibility: visible;

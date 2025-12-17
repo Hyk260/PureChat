@@ -5,7 +5,7 @@
       v-model="inputText"
       resize="none"
       :autosize="{ minRows: 1, maxRows: 20 }"
-      class="min-w-500"
+      class="min-w-400"
       type="textarea"
       @keydown="handleKeydown"
     />
@@ -43,7 +43,8 @@ const textInputRef = useTemplateRef("textInputRef")
 const inputText = ref(props.item.payload?.text || "")
 
 const containerClass = computed(() => {
-  return props.item.flow === "in" ? "mr-44" : "ml-44"
+  return ""
+  // return props.item.flow === "in" ? "mr-44" : "ml-44"
 })
 
 const isConfirmDisabled = computed(() => {

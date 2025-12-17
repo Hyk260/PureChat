@@ -1,5 +1,5 @@
 <template>
-  <label v-show="shouldShowCheckbox" class="message-checkbox fade-slide-fade-in">
+  <label v-if="shouldShowCheckbox" class="message-checkbox fade-slide-fade-in">
     <input type="checkbox" class="checkbox-input" :checked="isMessageChecked" aria-label="选择消息" />
     <div class="checkbox-indicator"></div>
     <div v-show="chatStore.isFwdDataMaxed" class="disabled-mask"></div>

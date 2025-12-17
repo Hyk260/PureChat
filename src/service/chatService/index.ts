@@ -63,7 +63,7 @@ class ChatService {
     const cloudCustomData = think ? createDeepThinkingCustomData({ payload: { text: think } }) : ""
 
     try {
-      await restApi({
+      const data = await restApi({
         params: {
           To_Account: params.from,
           From_Account: params.to,
@@ -72,6 +72,7 @@ class ChatService {
         },
         funName: "restSendMsg",
       })
+      console.log("REST API 发送消息成功:", data)
     } catch (error) {
       console.error("REST API 发送消息失败:", error)
     }

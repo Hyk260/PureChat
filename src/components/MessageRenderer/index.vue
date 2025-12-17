@@ -1,6 +1,6 @@
 <template>
   <div class="message-renderer">
-    <component :is="messageComponent" v-if="messageComponent" :message="message" v-bind="$attrs" />
+    <component :is="messageComponent" v-if="messageComponent" :message="message" v-bind="attrs" />
     <div v-else class="message-error">
       <span class="error-icon">⚠️</span>
       <span>未知的消息类型: {{ message?.type || "Unknown message type" }}</span>
@@ -23,6 +23,8 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const attrs = useAttrs()
+
 const messageComponent = computed(() => {
   try {
     return getMessageComponent(props.message)
@@ -34,6 +36,12 @@ const messageComponent = computed(() => {
 </script>
 
 <style scoped lang="scss">
+.message-renderer {
+  max-width: 100%;
+  min-width: 0px;
+  // width: 100%;
+  // width: fit-content;
+}
 .message-loading {
   min-height: 36px;
   padding: 8px;

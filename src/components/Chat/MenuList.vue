@@ -1,5 +1,5 @@
 <template>
-  <div v-show="shouldShowMenu" class="menubar">
+  <div :class="{ visible: shouldShowMenu }" class="menubar">
     <div class="flex">
       <template v-for="items in availableMenuItems" :key="items.key">
         <Tooltip placement="top" :title="items.label" :arrow="false">

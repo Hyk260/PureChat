@@ -91,7 +91,7 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
       const chatStore = useChatStore()
       const routeStore = useRouteStore()
       const sid = sessionId || chatStore.sessionId
-      this.topicId = topic.id || ""
+      this.setTopicId(topic.id || "")
       chatStore.updateConversationList({ conversationID: sid, topicId: topic.id })
       await SessionModel.update(sid, { topicId: topic.id })
       routeStore.routerPushQuery({

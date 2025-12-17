@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div v-if="messageAbstract" class="message-view-bottom">
+  <div v-if="showView">
+    <div class="message-view-bottom">
       {{ messageAbstract }}
     </div>
     <div class="message-view-question">
@@ -37,23 +37,30 @@ const parsedCustomData = computed(() => {
   try {
     const data = JSON.parse(props.item.cloudCustomData) as customDataPromptMessage
     return data.messagePrompt
-  } catch {
+  } catch (error) {
+    console.error("Failed to parse cloudCustomData:", error)
     return null
   }
 })
 
 const messageAbstract = computed(() => parsedCustomData.value?.messageAbstract ?? "")
-
 const recommendedQuestions = computed(() => parsedCustomData.value?.recQuestion ?? [])
+const showView = computed(() => messageAbstract.value || recommendedQuestions.value.length > 0)
 
 const handleQuestion = async (text: string) => {
+  await sendQuestionMessage(text)
+}
+
+const sendQuestionMessage = async (text: string) => {
   try {
     const message = await messageCreator({
       to: toAccount.value,
       type: currentType.value,
       text: text,
     })
+
     chatStore.updateSendingState(toAccount.value, "add")
+
     message.forEach((msg) => {
       chatStore.sendSessionMessage({ message: msg })
     })

@@ -9,7 +9,7 @@
       <div v-if="polishDing" class="iconify-icon svg-spinners"></div>
       <WandSparkles :size="15" />
     </ElButton>
-    <ElButton v-if="true && IS_DEV && IS_LOCAL_MODE" @click="handleAddTopic">
+    <ElButton v-if="showPortal && IS_DEV && IS_LOCAL_MODE" @click="handleAddTopic">
       <MessageCirclePlus :size="15" />
     </ElButton>
     <ElButton :loading="isSending" :class="{ 'pointer-events-none': disabled }" @click="onSend">
@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { CirclePause, Languages, Send, WandSparkles, MessageCirclePlus } from "lucide-vue-next"
 import { useMessageOperations } from "@/hooks/useMessageOperations"
-import { useChatStore, useTopicStore } from "@/stores"
+import { useChatStore, useTopicStore, usePortalStore } from "@/stores"
 import { getOperatingSystem } from "@/utils/common"
 
 import { placeholderMap } from "@/utils/wangEditor/editor-config"
@@ -55,10 +55,12 @@ const emit = defineEmits<Emits>()
 
 const topicStore = useTopicStore()
 const chatStore = useChatStore()
+const portalStore = usePortalStore()
 
 const { pauseMessages } = useMessageOperations()
 
 const { isSending } = storeToRefs(chatStore)
+const { showPortal } = storeToRefs(portalStore)
 
 const handleAddTopic = () => {
   topicStore.addTopic("默认话题")

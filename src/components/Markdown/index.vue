@@ -38,7 +38,7 @@ const renderer = new MarkdownRenderer({
 
 function handleMarkdownClick() {
   console.log("webSearchResult:", webSearchResult.value)
-  console.log("marked:", props.content)
+  console.log("content:", props.content)
   console.log("renderedContent:", renderedContent.value)
   console.log("renderer:", props.content + convertToMarkdownFootnotes(webSearchResult.value))
   renderer.getParseMarkdownToStructure(props.content || "")

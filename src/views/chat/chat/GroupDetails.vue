@@ -267,11 +267,11 @@ const addGroupMemberBtn = async (value: DB_Session) => {
   const { groupID, type } = props.groupProfile
   const { toAccount } = value
   if (type === "Public") {
-    const { ErrorCode } = await restApi({
+    const data = await restApi({
       params: { groupId: groupID, member: toAccount },
       funName: "addGroupMember",
     })
-    if (ErrorCode !== 0) return
+    if (data.result.ErrorCode !== 0) return
     updataGroup()
   } else {
     const { code, data } = await addGroupMember({ groupID, user: toAccount ?? "" })
