@@ -61,13 +61,13 @@ export const chatSessionListData: MenuItem[] = [
     key: "pin",
     icon: markRaw(Pin),
     label: "置顶",
-    hide: __LOCAL_MODE__,
+    // hide: __LOCAL_MODE__,
   },
   {
     key: "unpin",
     icon: markRaw(PinOff),
     label: "取消置顶",
-    hide: __LOCAL_MODE__,
+    // hide: __LOCAL_MODE__,
   },
   {
     key: "mute",

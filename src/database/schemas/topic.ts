@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { DBModel } from "../types/db"
 
 export const DB_TopicSchema = z.object({
   title: z.string(),
@@ -7,3 +8,5 @@ export const DB_TopicSchema = z.object({
 })
 
 export type DB_Topic = z.infer<typeof DB_TopicSchema>
+
+export type ChatTopic = DBModel<DB_Topic>

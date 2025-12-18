@@ -37,10 +37,11 @@ export const deleteMessage = async (params: DB_Message[]) => {
 export const pinConversation = async (params: PIN_CONVERSATION_OPTIONS) => {
   const { conversationID, isPinned } = params
   try {
-    await tim.pinConversation({
+    const data = await tim.pinConversation({
       conversationID,
       isPinned: !isPinned,
     })
+    return data
   } catch (error) {
     console.error("会话顶置失败:", error)
   }

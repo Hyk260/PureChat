@@ -65,7 +65,14 @@ import { useContextMenu } from "@/composables/useContextMenu"
 import { useHandlerDrop } from "@/hooks/useHandlerDrop"
 import { pinConversation } from "@/service/im-sdk-api"
 import { setMessageRemindType } from "@/service/im-sdk-api"
-import { useChatStore, useGroupStore, useUserStore, useRouteStore, useTopicStore, useRobotStore } from "@/stores"
+import {
+  useChatStore,
+  useGroupStore,
+  useUserStore,
+  // useRouteStore,
+  useTopicStore,
+  useRobotStore,
+} from "@/stores"
 import { chatName, formatNewsMessage, isShowCount, isNotify } from "@/utils/chat"
 import { chatSessionListData } from "@/utils/contextMenuPresets"
 import { timeFormat } from "@/utils/timeFormat"
@@ -78,7 +85,7 @@ import ContextMenu from "@/components/ContextMenu"
 import EmptyMessage from "../components/EmptyMessage.vue"
 import VirtualList from "./VirtualList.vue"
 
-import type { DB_Session } from "@/types"
+import type { DisplayCacheItem, DB_Session } from "@/types"
 import type { MenuItem } from "@/types/contextMenu"
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop()
@@ -93,7 +100,7 @@ const topicStore = useTopicStore()
 const robotStore = useRobotStore()
 const chatStore = useChatStore()
 
-const routeStore = useRouteStore()
+// const routeStore = useRouteStore()
 
 const { contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu()
 
@@ -107,17 +114,6 @@ const searchForData = computed(() => {
     return conversationList.value
   }
 })
-
-interface DisplayCacheItem {
-  _displayName: string
-  _displayTime: string
-  _displayMessage: string
-  _isActive: boolean
-  _showUnreadCount: boolean
-  _isMention: boolean
-  _hasDraft: boolean
-  _showDontNotify: boolean
-}
 
 const displayData = computed(() => {
   const currentId = currentSessionId.value
@@ -232,7 +228,7 @@ const removeConversation = async (data: DB_Session) => {
 const pingConversation = async (data: DB_Session) => {
   await pinConversation({
     conversationID: data.conversationID,
-    isPinned: Boolean(data?.isPinned),
+    isPinned: data?.isPinned,
   })
 }
 

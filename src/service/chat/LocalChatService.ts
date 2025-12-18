@@ -12,12 +12,13 @@ import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
 import emitter from "@/utils/mitt-bus"
 
-import type { DB_Message, DB_Session, MessageType } from "@/types"
+import type { DB_Message, DB_Session, MessageType, payloadSchemaType, FilePayloadType } from "@/types"
 import type {
   ChatSDK,
   MESSAGE_OPTIONS,
   TRANSLATE_TEXT_OPTIONS,
   GET_MESSAGE_LIST_OPTIONS,
+  PIN_CONVERSATION_OPTIONS,
   DELETE_CONVERSATION_OPTIONS,
 } from "@/types/tencent-cloud-chat"
 
@@ -66,12 +67,30 @@ export class LocalChat {
   }
 
   /**
+   * 排序会话列表
+   * 排序规则：优先按 pinned 降序，其次按 lastMessage.lastTime 降序
+   */
+  private sortConversationList(list: DB_Session[]): DB_Session[] {
+    return list.sort((a, b) => {
+      const pinnedA = a.pinned ?? 0
+      const pinnedB = b.pinned ?? 0
+      if (pinnedA !== pinnedB) {
+        return pinnedB - pinnedA
+      }
+
+      const lastTimeA = a.lastMessage?.lastTime ?? 0
+      const lastTimeB = b.lastMessage?.lastTime ?? 0
+      return lastTimeB - lastTimeA
+    })
+  }
+
+  /**
    * 加载会话列表
    */
   async loadConversationList() {
     try {
       const list = await SessionModel.query()
-      return list
+      return this.sortConversationList(list)
     } catch (error) {
       console.error("加载会话列表失败:", error)
       return []
@@ -217,7 +236,7 @@ export class LocalChat {
   /**
    * 创建基础消息结构
    */
-  private createBaseMessage(data: MESSAGE_OPTIONS, type: MessageType, payload: DB_Message["payload"]): DB_Message {
+  private createBaseMessage(data: MESSAGE_OPTIONS, type: MessageType, payload: payloadSchemaType): DB_Message {
     const { to, conversationType, cloudCustomData = "" } = data
     const currentTime = getUnixTimestampSecPlusOne()
     const topicStore = useTopicStore()
@@ -265,7 +284,7 @@ export class LocalChat {
       filePath: payload.path || "",
       fileUrl: "",
       uuid: `${UserProfile.userID}-${uuid()}`,
-    } as unknown as DB_Message["payload"]
+    } as FilePayloadType
 
     const message = this.createBaseMessage(data, "TIMFileElem", filePayload)
     MessageModel.create(message.ID, message)
@@ -288,22 +307,20 @@ export class LocalChat {
    */
   async getConversationProfile(chatId: string) {
     try {
+      const session = BaseElemSession as DB_Session
       const data: DB_Session = {
-        ...(BaseElemSession as DB_Session),
+        ...session,
         conversationID: chatId,
         lastMessage: {
-          ...BaseElemSession.lastMessage,
+          ...session.lastMessage,
           lastTime: getUnixTimestampSec(),
         },
         userProfile: ProvidersList.find((item) => item.userID === chatId.replace("C2C", "")),
       }
 
-      SessionModel.create(chatId, data)
+      await SessionModel.create(chatId, data)
 
       const list = await this.loadConversationList()
-      const index = list.findIndex((t) => t.conversationID === chatId)
-
-      if (index === -1) list.push(data)
 
       this.emit("onConversationListUpdated", { data: list })
 
@@ -322,6 +339,18 @@ export class LocalChat {
    */
   getTotalUnreadMessageCount(): number {
     return 0
+  }
+
+  /**
+   * 置顶会话
+   */
+  async pinConversation({ conversationID, isPinned }: PIN_CONVERSATION_OPTIONS) {
+    await SessionModel.update(conversationID, {
+      isPinned,
+    })
+    const sessionList = await this.loadConversationList()
+    this.emit("onConversationListUpdated", { data: sessionList })
+    return { code: 0, data: {} }
   }
 
   /**
@@ -497,9 +526,7 @@ export class LocalChatService {
   private static instance: LocalChatService
   private chat: ChatSDK | null = null
 
-  private constructor() {
-    // 私有构造函数，防止外部直接实例化
-  }
+  private constructor() {}
 
   public static getInstance(): LocalChatService {
     if (!LocalChatService.instance) {

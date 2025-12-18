@@ -1,4 +1,4 @@
-import { ChatTopic } from "@/types/topic"
+import { ChatTopic } from "@/types"
 
 export type Topic = ChatTopic
 

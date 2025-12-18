@@ -1,6 +1,7 @@
 import { BaseModel } from "../core/model"
 import { DB_SessionSchema } from "../schemas/session"
 
+import type { DBModel } from "@/database/types/db"
 import type { DB_Session } from "../schemas/session"
 
 export interface QuerySessionParams {
@@ -16,11 +17,43 @@ class _SessionModel extends BaseModel {
   // **************** Query *************** //
 
   async query({ pageSize = 99, current = 0 }: QuerySessionParams = {}) {
+    // const offset = current * pageSize
+
+    // const items: DBModel<DB_Session>[] = await this.table
+    //   .orderBy("updatedAt")
+    //   .reverse()
+    //   .offset(offset)
+    //   .limit(pageSize)
+    //   .toArray()
+
+    // return this.mapToAgentSessions(items)
+    return this.queryOrderByPinnedAndUpdatedAt({ pageSize, current })
+  }
+
+  /**
+   * 根据 pinned（1 在前）和 updatedAt 排序
+   * 排序优先级：pinned(1>0) > updatedAt(新>旧)
+   */
+  async queryOrderByPinnedAndUpdatedAt({ pageSize = 99, current = 0 }: QuerySessionParams = {}) {
     const offset = current * pageSize
 
-    const items = await this.table.orderBy("updatedAt").reverse().offset(offset).limit(pageSize).toArray()
+    const items: DBModel<DB_Session>[] = await this.table.toArray()
 
-    return this.mapToAgentSessions(items)
+    items.sort((a, b) => {
+      const pinnedA = a.pinned ?? 0
+      const pinnedB = b.pinned ?? 0
+      if (pinnedA !== pinnedB) {
+        return pinnedB - pinnedA
+      }
+
+      const updatedA = a.updatedAt ?? 0
+      const updatedB = b.updatedAt ?? 0
+      return updatedB - updatedA
+    })
+
+    const pagedItems = items.slice(offset, offset + pageSize)
+
+    return this.mapToAgentSessions(pagedItems)
   }
 
   async queryByKeyword(keyword: string) {
@@ -31,11 +64,9 @@ class _SessionModel extends BaseModel {
 
     const matchingSessionsPromise: Promise<DB_Session[]> = this.table
       .filter((session: DB_Session) => {
-        return (
-          session.lastMessage?.messageForShow?.toLowerCase().includes(keywordLowerCase) ||
-          session.userProfile?.nick?.toLowerCase().includes(keywordLowerCase) ||
-          false
-        )
+        const messageMatch = session.lastMessage?.messageForShow?.toLowerCase().includes(keywordLowerCase) ?? false
+        const nickMatch = session.userProfile?.nick?.toLowerCase().includes(keywordLowerCase) ?? false
+        return messageMatch || nickMatch
       })
       .toArray()
 
@@ -44,13 +75,13 @@ class _SessionModel extends BaseModel {
     const items = matchingSessions
 
     console.log(`检索到 ${items.length} 项，耗时 ${Date.now() - startTime}ms`)
-    return items
+    return this.mapToAgentSessions(items)
   }
 
   async getPinnedSessions(): Promise<DB_Session[]> {
-    const items = await this.table.where("pinned").equals(1).reverse().sortBy("updatedAt")
+    const items: DBModel<DB_Session>[] = await this.table.where("pinned").equals(1).reverse().sortBy("updatedAt")
 
-    return items
+    return this.mapToAgentSessions(items)
   }
 
   async findById(id: string): Promise<DB_Session> {
@@ -94,7 +125,11 @@ class _SessionModel extends BaseModel {
   // **************** Update *************** //
 
   async update(id: string, data: Partial<DB_Session>) {
-    return super._updateWithSync(id, data)
+    const _data = {
+      ...data,
+      pinned: data.isPinned ? 1 : 0,
+    }
+    return super._updateWithSync(id, _data)
   }
 
   async updateConfig(_id: string, _data: DB_Session) {}

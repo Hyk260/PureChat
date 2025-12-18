@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { TypeSchema } from "../types"
 
 // https://web.sdk.qcloud.com/im/doc/zh-cn/Message.html
 export const MessageSchema = {
@@ -79,6 +80,7 @@ export const ImagePayload = BasePayload.extend({
 export const FilePayload = BasePayload.extend({
   uuid: z.string(),
   fileName: z.string(),
+  filePath: z.string().optional(),
   fileUrl: z.string(),
   fileSize: z.number(),
 })
@@ -245,7 +247,7 @@ export const DB_MessageSchema = z.object({
    *  GROUP: 群聊
    *  SYSTEM: 系统通知
    */
-  conversationType: z.enum(["C2C", "GROUP", "SYSTEM"]),
+  conversationType: TypeSchema,
   /**
    *  消息时间戳。单位：秒
    */
@@ -368,6 +370,8 @@ export type MessageStatus = z.infer<typeof MessageStatusSchema>
  * TIMTextElem(文本) TIMRelayElem(转发) TIMImageElem(图片) TIMFileElem(文件) TIMCustomElem(自定义) TIMGroupTipElem(群提示) TIMGroupSystemNoticeElem(群系统提示)
  */
 export type MessageType = z.infer<typeof MessageTypeSchema>
+
+export type payloadSchemaType = z.infer<typeof payloadSchema>
 
 export type customDataWebSearch = z.infer<typeof customDataWebSearchSchema>
 

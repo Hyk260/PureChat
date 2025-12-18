@@ -2,6 +2,7 @@
 export * from "@/database/schemas/group"
 export * from "@/database/schemas/message"
 export * from "@/database/schemas/session"
+export * from "@/database/schemas/topic"
 export * from "@/database/schemas/user"
 import type { IDomEditor } from "@wangeditor/editor"
 
@@ -89,4 +90,15 @@ export interface KnowledgeReference {
   sourceUrl: string
   type: KnowledgeItemType
   metadata?: Record<string, any>
+}
+
+export interface DisplayCacheItem {
+  _displayName: string
+  _displayTime: string
+  _displayMessage: string
+  _isActive: boolean
+  _showUnreadCount: boolean
+  _isMention: boolean
+  _hasDraft: boolean
+  _showDontNotify: boolean
 }
