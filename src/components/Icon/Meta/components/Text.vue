@@ -1,11 +1,10 @@
 <template>
   <svg
-    :height="props.size"
-    :style="{ flex: 'none', lineHeight: 1, ...props.style }"
+    :height="size"
+    :width="size"
+    :style="{ flex: 'none', lineHeight: 1, ...style }"
     viewBox="0 0 75 24"
     xmlns="http://www.w3.org/2000/svg"
-    :width="props.size"
-    v-bind="$attrs"
   >
     <title>{{ TITLE }}</title>
     <path

@@ -1,5 +1,5 @@
 <template>
-  <div class="github-combine gap-4 flex-c" :aria-label="TITLE" v-bind="$attrs">
+  <div class="github-combine gap-4 flex-c" :aria-label="TITLE">
     <Mono :size="size" />
     <Text :size="textSize" />
   </div>

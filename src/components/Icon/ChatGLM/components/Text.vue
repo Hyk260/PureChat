@@ -5,7 +5,6 @@
     viewBox="0 0 75 24"
     xmlns="http://www.w3.org/2000/svg"
     :width="size"
-    v-bind="$attrs"
   >
     <title>{{ TITLE }}</title>
     <path

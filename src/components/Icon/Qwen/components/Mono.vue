@@ -7,7 +7,6 @@
     :style="{ flex: 'none', lineHeight: 1, ...style }"
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
-    v-bind="$attrs"
   >
     <title>{{ TITLE }}</title>
     <path

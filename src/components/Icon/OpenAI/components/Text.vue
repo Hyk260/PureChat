@@ -4,7 +4,6 @@
     fill-rule="evenodd"
     :height="size"
     :style="{ flex: 'none', lineHeight: 1, ...style }"
-    v-bind="$attrs"
     viewBox="0 0 84 24"
     xmlns="http://www.w3.org/2000/svg"
   >

@@ -14,12 +14,12 @@ defineOptions({
 })
 
 interface Props {
-  className?: string
   model: string
+  className?: string
   shape?: "circle" | "square"
   size?: number
   style?: Record<string, any>
-  type?: "avatar" | "mono" | "combine"
+  type?: "avatar" | "mono"
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -52,12 +52,6 @@ const renderComponent = computed(() => {
     }
     case "mono": {
       if (!Icon) return DefaultIcon
-      return Icon || DefaultIcon
-    }
-    case "combine": {
-      if (!Icon) return DefaultIcon
-      if (Icon.Combine) return Icon.Combine
-      if (Icon.Text) return Icon.Text
       return Icon || DefaultIcon
     }
     default: {

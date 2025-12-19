@@ -2,11 +2,10 @@
   <svg
     fill="currentColor"
     fill-rule="evenodd"
-    :height="props.size"
-    :style="{ flex: 'none', lineHeight: 1, ...props.style }"
+    :height="size"
+    :style="{ flex: 'none', lineHeight: 1, ...style }"
     viewBox="0 0 134 24"
     xmlns="http://www.w3.org/2000/svg"
-    v-bind="$attrs"
   >
     <title>{{ TITLE }}</title>
     <path
@@ -26,12 +25,10 @@ defineOptions({
 interface Props {
   size?: string | number
   style?: Record<string, any>
-  fill?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   size: "1em",
-  fill: "currentColor",
   style: () => ({}),
 })
 </script>

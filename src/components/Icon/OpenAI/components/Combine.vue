@@ -1,12 +1,11 @@
 <template>
-  <div class="openai-combine flex-c gap-4" :aria-label="TITLE" v-bind="$attrs">
+  <div class="openai-combine flex-c gap-4" :aria-label="TITLE">
     <Mono :size="size" />
     <Text :size="textSize" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
 import Mono from "./Mono.vue"
 import Text from "./Text.vue"
 import { COMBINE_TEXT_MULTIPLE, TITLE } from "../style"

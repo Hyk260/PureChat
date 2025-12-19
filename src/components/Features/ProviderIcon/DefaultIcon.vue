@@ -1,5 +1,5 @@
 <template>
-  <Radar :size="size" :color="computedColor" :style="style" :class="className" v-bind="$attrs" />
+  <Radar :size="size" :color="computedColor" :style="style" :class="className" />
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <Brain :size="size" :color="computedColor" :style="style" :class="className" v-bind="$attrs" />
+  <Brain :size="size" :color="computedColor" :style="style" :class="className" />
 </template>
 
 <script setup lang="ts">

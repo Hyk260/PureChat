@@ -1,30 +1,15 @@
 <template>
-  <div
-    class="openai-avatar flex-c"
-    :style="{
-      width: `${size}px`,
-      height: `${size}px`,
-      borderRadius: '50%',
-      backgroundColor: background,
-      color: AVATAR_COLOR,
-      flex: 'none',
-      ...style,
-    }"
+  <IconAvatar
+    :Icon="Mono"
     :aria-label="TITLE"
-    v-bind="$attrs"
-  >
-    <Mono
-      :size="iconSize"
-      :style="{
-        width: iconSize,
-        height: iconSize,
-      }"
-    />
-  </div>
+    :background="background"
+    :color="AVATAR_COLOR"
+    :iconMultiple="AVATAR_ICON_MULTIPLE"
+  />
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
+import IconAvatar from "@/components/Features/IconAvatar/index.vue"
 import Mono from "./Mono.vue"
 import {
   AVATAR_BACKGROUND,
@@ -45,7 +30,7 @@ defineOptions({
 })
 
 interface Props {
-  type?: "normal" | "gpt3" | "gpt4" | "gpt5" | "o1" | "o3" | "oss" | "platform"
+  type?: "normal" | "platform" | "gpt3" | "gpt4" | "gpt5" | "o1" | "o3" | "oss"
   size?: string | number
   style?: Record<string, any>
 }
@@ -74,11 +59,5 @@ const background = computed(() => {
     default:
       return AVATAR_BACKGROUND
   }
-})
-
-const iconSize = computed(() => {
-  const sizeValue = typeof props.size === "string" ? props.size : `${props.size}px`
-  const numericSize = typeof props.size === "number" ? props.size : parseFloat(sizeValue) || 16
-  return `${numericSize * AVATAR_ICON_MULTIPLE}px`
 })
 </script>

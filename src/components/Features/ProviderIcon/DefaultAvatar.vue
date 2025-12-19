@@ -10,15 +10,14 @@
       width: `${size}px`,
       ...style,
     }"
-    v-bind="$attrs"
   >
     <DefaultIcon :color="color" :class="iconClassName" :size="Math.floor(size * iconMultiple)" :style="iconStyle" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useThemeStore } from "@/stores/modules/theme"
 import { usePreferredColorScheme } from "@vueuse/core"
+import { useThemeStore } from "@/stores/modules/theme"
 import DefaultIcon from "./DefaultIcon.vue"
 
 defineOptions({

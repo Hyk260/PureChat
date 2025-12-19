@@ -1,7 +1,6 @@
 <template>
   <div
     class="flex-c"
-    v-bind="$attrs"
     :style="{
       flex: 'none',
       background: background || themeColor,

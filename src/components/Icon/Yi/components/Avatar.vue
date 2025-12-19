@@ -5,7 +5,6 @@
     :background="AVATAR_BACKGROUND"
     :color="AVATAR_COLOR"
     :iconMultiple="AVATAR_ICON_MULTIPLE"
-    v-bind="$attrs"
   />
 </template>
 

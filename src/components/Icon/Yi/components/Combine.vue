@@ -1,5 +1,5 @@
 <template>
-  <div class="yi-combine flex-c gap-4" :aria-label="TITLE" v-bind="$attrs">
+  <div class="yi-combine flex-c gap-4" :aria-label="TITLE">
     <Mono :size="size" />
     <Text :size="textSize" />
   </div>

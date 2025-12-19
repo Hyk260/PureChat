@@ -18,7 +18,7 @@ defineOptions({
 
 interface Props {
   model: string
-  type?: "color" | "mono"
+  type?: "avatar" | "mono"
 }
 
 const props = withDefaults(defineProps<Props>(), {

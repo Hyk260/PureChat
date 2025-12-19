@@ -2,7 +2,6 @@
   <svg
     :height="size"
     :width="size"
-    v-bind="$attrs"
     fill="currentColor"
     fill-rule="evenodd"
     viewBox="0 0 24 24"

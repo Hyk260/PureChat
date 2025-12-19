@@ -8,11 +8,11 @@ import { providerMappings } from "../providerConfig"
 import DefaultIcon from "./DefaultIcon.vue"
 
 interface Props {
-  className?: string
   provider: string
-  shape?: "circle" | "square"
+  className?: string
   size?: number
   style?: Record<string, any>
+  shape?: "circle" | "square"
   type?: "mono" | "combine"
 }
 
