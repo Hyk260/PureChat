@@ -99,11 +99,11 @@
                 </div>
                 <div>
                   <ElTooltip
-                    v-if="['openai', 'deepseek'].includes(item?.options?.id)"
+                    v-if="['openai', 'deepseek', 'qwen', 'zeroone', 'zhipu'].includes(item?.options?.id)"
                     :content="modelTooltipLabel"
                     placement="top"
                   >
-                    <ElIcon class="refresh" @click="onRefresh">
+                    <ElIcon class="refresh flex-c" :size="15" @click="onRefresh">
                       <Refresh />
                     </ElIcon>
                   </ElTooltip>
@@ -526,8 +526,8 @@ onUnmounted(() => {
 
 .refresh {
   cursor: pointer;
-  margin-left: auto;
-  margin-right: 5px;
+  // margin-left: auto;
+  // margin-right: 5px;
 }
 
 .container {

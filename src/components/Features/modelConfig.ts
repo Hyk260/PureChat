@@ -34,7 +34,7 @@ export const modelMappings: ModelMapping[] = [
     Icon: OpenAI,
     keywords: [
       "text-embedding-",
-      "tts-",
+      // "tts-",
       "whisper-",
       "codex",
       "davinci",
@@ -51,7 +51,7 @@ export const modelMappings: ModelMapping[] = [
     Icon: OpenAI,
     keywords: ["^gpt-", "/gpt-", "openai"],
   },
-  { Icon: Qwen, keywords: ["qwen", "qwq", "qvq", "wanx", "wan\\d/", "wan\\d\\.\\d-", "tongyi"] },
+  { Icon: Qwen, keywords: ["qwen", "qwen3", "qwq", "qvq", "wanx", "wan\\d/", "wan\\d\\.\\d-", "tongyi"] },
   { Icon: DeepSeek, keywords: ["deepseek"] },
   { Icon: Yi, keywords: ["^yi-", "/yi-", "-yi-"] },
   { Icon: Meta, keywords: ["llama", "/l3"] },

@@ -1,5 +1,4 @@
 import { useWindowFocus } from "@vueuse/core"
-
 import { C2CModelIDList } from "@shared/provider"
 import { ElNotification } from "element-plus"
 import { cloneDeep } from "lodash-es"
@@ -15,6 +14,21 @@ import { GROUP_TIP_OPERATION_TYPE } from "@/database/schemas/message"
 
 import type { DB_Message, DB_Session, GroupSystemNoticePayloadType, GroupTipOperationType } from "@/types"
 import type { Profile } from "@/types/tencent-cloud-chat"
+
+type EventHandler = (payload: any) => void
+type EventConfig = ReadonlyArray<readonly [string, EventHandler]>
+
+interface SDKState {
+  readonly userID: string
+  readonly userSig: string
+  readonly userProfile: Profile | null
+}
+
+interface InitializationState {
+  isInitialized: boolean
+  isSDKReady: boolean
+  initStartTime: number
+}
 
 /**
  * 浏览器窗口焦点状态监听
@@ -33,28 +47,43 @@ export class TIMProxy {
   private userID: string = ""
   private readonly userSig: string = ""
   private userProfile: Profile | null = null
-  private once: boolean = false
-  isSDKReady: boolean = false
+
+  private initState: InitializationState = {
+    isInitialized: false,
+    isSDKReady: false,
+    initStartTime: 0,
+  }
 
   constructor() {}
 
+  get isSDKReady() {
+    return this.initState.isSDKReady
+  }
+
+  init() {
+    if (this.initState.isInitialized) {
+      console.warn("[TIMProxy] 已经初始化，跳过重复初始化")
+      return
+    }
+    this.initState.isInitialized = true
+    this.initState.initStartTime = Date.now()
+    this.initListener()
+  }
+
   private saveSelfToLocalStorage() {
-    const stateData = {
+    const state: SDKState = {
       userID: this.userID,
       userSig: this.userSig,
       userProfile: this.userProfile,
     }
 
-    window.localStg.set("timProxy", stateData)
+    window.localStg.set("timProxy", state)
   }
 
-  init() {
-    if (this.once) return
-    this.once = true
-    this.initListener()
-  }
+  private initListener() {
+    const mode = __LOCAL_MODE__ ? "本地模式" : "云端模式"
+    console.log(`[TIMProxy] 初始化监听器 - ${mode}`)
 
-  initListener() {
     if (__LOCAL_MODE__) {
       chat.initialize()
     } else {
@@ -62,10 +91,13 @@ export class TIMProxy {
     }
 
     this.registerCoreEvents()
+
+    const elapsed = Date.now() - this.initState.initStartTime
+    console.log(`[TIMProxy] 初始化完成，耗时: ${elapsed}ms`)
   }
 
   private registerCoreEvents() {
-    const events: Array<[string, (payload: any) => void]> = [
+    const events: EventConfig = [
       ["sdkStateReady", this.onReadyStateUpdate.bind(this)],
       ["sdkStateNotReady", this.onReadyStateUpdate.bind(this)],
       ["onConversationListUpdated", this.onUpdateConversationList.bind(this)],
@@ -77,7 +109,7 @@ export class TIMProxy {
   }
 
   private registerCloudEvents() {
-    const events: Array<[string, (payload: any) => void]> = [
+    const events: EventConfig = [
       ["onMessageRevoked", this.onMessageRevoked.bind(this)],
       ["onGroupListUpdated", this.onUpdateGroupList.bind(this)],
       ["kickedOut", this.onKickOut.bind(this)],
@@ -89,7 +121,7 @@ export class TIMProxy {
     this.safeRegisterEvents(events)
   }
 
-  private safeRegisterEvents(events: Array<[string, (payload: any) => void]>): void {
+  private safeRegisterEvents(events: EventConfig): void {
     try {
       events.forEach(([eventName, handler]) => {
         chat.on(eventName, handler)
@@ -104,8 +136,8 @@ export class TIMProxy {
    */
   private onReadyStateUpdate({ name }: { name: string }) {
     console.log("[chat] SDK 状态更新:", name)
-    this.isSDKReady = name === "sdkStateReady"
-    if (!this.isSDKReady) {
+    this.initState.isSDKReady = name === "sdkStateReady"
+    if (!this.initState.isSDKReady) {
       console.warn(`[chat] SDK 未就绪，等待就绪状态 ${name}`)
       return
     }

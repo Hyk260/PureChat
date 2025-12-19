@@ -19,6 +19,7 @@ const DeepSeek: ModelProviderCard = {
       displayName: "DeepSeek R1",
       enabled: true,
       reasoning: true,
+      functionCall: true,
       id: "deepseek-reasoner",
     },
   ],

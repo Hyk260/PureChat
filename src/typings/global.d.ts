@@ -1,4 +1,6 @@
 import { LocalStg, SessionStg } from "@/utils/storage"
+import { DebugTools } from "@/service/chat/PureChatService"
+
 /**
  * 全局类型声明，无需引入直接在 `.vue` 、`.ts` 文件使用即可获得类型提示
  */
@@ -43,7 +45,8 @@ declare global {
     // $notification: import('element-plus').Notify;
     /** Message */
     $message: import('element-plus').Message;
-    // __TIM_DEBUG__: DebugInterface;
+    /** DebugTools */
+    __TIM_DEBUG__?: DebugTools
   }
 
   /**

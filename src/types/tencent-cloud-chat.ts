@@ -819,7 +819,7 @@ export interface CREATE_OPTIONS {
 }
 
 export interface TencentCloudChat {
-  create(options: CREATE_OPTIONS): any
+  create(options: CREATE_OPTIONS): ChatSDK
 }
 
 export default TencentCloudChat

@@ -33,7 +33,7 @@ interface LastMessageData {
 
 export class LocalChat {
   static instance: LocalChat | null = null
-  isInitialized = false
+  private isInitialized = false
 
   constructor() {
     if (LocalChat.instance) {
@@ -64,6 +64,7 @@ export class LocalChat {
       this.emit("onConversationListUpdated", { data: conversationList })
     } catch (error) {
       console.error("LocalChat 初始化失败:", error)
+      this.isInitialized = false
       throw error
     }
   }
@@ -255,6 +256,8 @@ export class LocalChat {
     const currentTime = getUnixTimestampSecPlusOne()
     const topicStore = useTopicStore()
 
+    const conversationID = `${conversationType}${to}`
+
     return {
       ...BaseElemMessage,
       ID: uuid(),
@@ -263,8 +266,8 @@ export class LocalChat {
       to,
       from: UserProfile.userID,
       avatar: UserProfile.avatar,
-      conversationID: `${conversationType}${to}`,
-      sessionId: `${conversationType}${to}`,
+      conversationID,
+      sessionId: conversationID,
       conversationType,
       cloudCustomData,
       payload,
@@ -545,7 +548,10 @@ export class LocalChat {
       data: { message: {} },
     }
   }
-  destroy() {}
+
+  destroy() {
+    this.isInitialized = false
+  }
 }
 
 export const localChat = LocalChat.getInstance()
