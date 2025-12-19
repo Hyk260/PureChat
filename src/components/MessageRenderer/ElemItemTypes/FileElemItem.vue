@@ -28,6 +28,7 @@
 <script setup lang="ts">
 import { DB_Message, FilePayloadType } from "@/database/schemas/message"
 import { bytesToSize, getFileType, renderFileIcon } from "@/utils/chat"
+import { clientS3Storage } from "@/service/file/ClientS3"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({
@@ -40,7 +41,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {})
 
-const payload = props.message.payload as unknown as FilePayloadType
+const payload = props.message.payload as FilePayloadType
 
 const fileNameRef = useTemplateRef("fileNameRef")
 const backgroundStyle = ref("")
@@ -56,10 +57,12 @@ const checkTextOverflow = () => {
   shouldShowTooltip.value = element.scrollWidth > element.offsetWidth
 }
 
-const handleOpen = async (data) => {
+const handleOpen = async (data: FilePayloadType) => {
   if (__IS_ELECTRON__) {
     console.log("Open electron:")
   } else {
+    const client = await clientS3Storage.getObject(data?.id || "")
+    console.log("Open web: client:", client)
     console.log("Open web:", props.message)
   }
 }

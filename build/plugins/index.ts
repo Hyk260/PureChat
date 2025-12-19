@@ -4,7 +4,6 @@ import vueJsx from "@vitejs/plugin-vue-jsx"
 import progress from "vite-plugin-progress"
 import removeConsole from "vite-plugin-remove-console"
 import vueDevtools from "vite-plugin-vue-devtools"
-import type { PluginOption } from "vite"
 import { visualizer } from "rollup-plugin-visualizer"
 import { setupUnplugin } from "./unplugin"
 import { setupHtmlPlugin } from "./html"
@@ -12,6 +11,8 @@ import { viteBuildInfo } from "./info"
 import { setupUnocss } from "./unocss"
 import { cdn } from "./cdn"
 // import pwa from "./pwa";
+
+import type { PluginOption } from "vite"
 
 /**
  * vite插件

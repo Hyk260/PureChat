@@ -22,8 +22,8 @@
         <EmojiMart
           v-if="showEmojiPickerFlag"
           class="emoji-picker"
-          @on-close="setShowEmojiPickerFlag(false)"
-          @emoji-selected="handleEmojiSelect"
+          @onClose="setShowEmojiPickerFlag(false)"
+          @emojiSelected="handleEmojiSelect"
         />
       </div>
       <div class="py-20 flex-c">

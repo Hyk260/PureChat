@@ -1,5 +1,6 @@
 import { BaseModel } from "../core/model"
 import { DB_FileSchema } from "../schemas/files"
+// import { clientS3Storage } from "@/service/file/ClientS3"
 
 import type { DB_File } from "../schemas/files"
 
@@ -14,6 +15,7 @@ class _FilesModel extends BaseModel {
     const exist = await this.findById(id)
     if (exist) return
 
+    // clientS3Storage.putObject(id, file)
     return super._addWithSync(id, file)
   }
 

@@ -15,7 +15,6 @@ export const FileSchema = {
 }
 
 export const DB_FileSchema = z.object({
-  id: z.string().uuid(),
   origin_name: z.string(),
   name: z.string(),
   path: z.string(),
@@ -24,8 +23,9 @@ export const DB_FileSchema = z.object({
   ext: z.string(), // .png
   type: z.string(),
   count: z.number(),
-  createdAt: z.number().optional(),
-  updatedAt: z.number().optional(),
+  // id: z.string().uuid(),
+  // createdAt: z.number().optional(),
+  // updatedAt: z.number().optional(),
 })
 
 export type DB_File = z.infer<typeof DB_FileSchema>

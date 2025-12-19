@@ -1,4 +1,5 @@
 import { ProvidersList } from "@database/config"
+import { FilesModel } from "@/database/models/files"
 import { MessageModel } from "@/database/models/message"
 import { SessionModel } from "@/database/models/session"
 import {
@@ -7,6 +8,7 @@ import {
   UserfileSchema as UserProfile,
 } from "@/types"
 import { delay, getUnixTimestampSec, getUnixTimestampSecPlusOne } from "@/utils/common"
+import { clientS3Storage } from "@/service/file/ClientS3"
 import { useTopicStore } from "@/stores/modules/topic"
 import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
@@ -120,6 +122,17 @@ export class LocalChat {
     emitter.emit(eventName, data)
   }
 
+  getMessageForShow(data: DB_Message) {
+    if (data.type === "TIMTextElem") {
+      return data.payload?.text || ""
+    } else if (data.type === "TIMFileElem") {
+      const filePayload = data.payload as FilePayloadType
+      return `[文件] ${filePayload?.fileName ?? ""}`
+    } else {
+      return ""
+    }
+  }
+
   async updateConversationLastMessage(id: string, data: LastMessageData) {
     try {
       const session = await SessionModel.findById(id)
@@ -145,8 +158,9 @@ export class LocalChat {
    */
   async sendMessage(data: DB_Message) {
     try {
+      const messageForShow = this.getMessageForShow(data)
       await this.updateConversationLastMessage(data.conversationID, {
-        messageForShow: data.payload?.text,
+        messageForShow,
       })
 
       const currentTime = getUnixTimestampSec()
@@ -278,11 +292,25 @@ export class LocalChat {
    */
   createFileMessage(data: MESSAGE_OPTIONS) {
     const { payload } = data
+    // const id = `file-${uuid()}`
+    // clientS3Storage.putObject(id, payload.file)
+    // FilesModel.create(id, {
+    //   origin_name: "",
+    //   name: payload.file?.name,
+    //   path: payload.path || "",
+    //   created_at: new Date().toISOString(),
+    //   size: payload.file?.size,
+    //   ext: "",
+    //   type: payload.file?.type,
+    //   count: 1,
+    // })
     const filePayload = {
       fileName: payload.file?.name || "text.txt",
       fileSize: payload.file?.size || 0,
       filePath: payload.path || "",
       fileUrl: "",
+      // localPath: `client-s3://${0}`,
+      // id,
       uuid: `${UserProfile.userID}-${uuid()}`,
     } as FilePayloadType
 

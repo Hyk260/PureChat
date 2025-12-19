@@ -78,6 +78,7 @@ export const ImagePayload = BasePayload.extend({
 })
 
 export const FilePayload = BasePayload.extend({
+  id: z.string(),
   uuid: z.string(),
   fileName: z.string(),
   filePath: z.string().optional(),

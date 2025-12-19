@@ -5,7 +5,7 @@ import { useIntersectionObserver } from "@vueuse/core"
 import { useState } from "@/hooks/useState"
 import { useChatStore } from "@/stores/modules/chat"
 
-import type { DB_Message } from "@/types"
+import type { DB_Message, FilePayloadType, CustomPayloadType } from "@/types"
 
 interface MessageCache {
   width: number
@@ -17,7 +17,7 @@ type ScrollEl = HTMLElement & { wrapRef?: HTMLElement }
 const MIN_WIDTH = 12
 const MAX_WIDTH = 24
 const MAX_CONTENT_LENGTH = 320
-const PREVIEW_MAX_LEN = 100
+const PREVIEW_MAX_LEN = 160
 
 interface Props {
   scrollbarRef: Ref<ScrollEl | null>
@@ -72,9 +72,23 @@ const getPreviewText = (content?: string): string => {
   return normalized.length > PREVIEW_MAX_LEN ? normalized.slice(0, PREVIEW_MAX_LEN) + "…" : normalized
 }
 
+const getPayloadText = (data: DB_Message): string => {
+  if (data.type === "TIMTextElem") {
+    return data.payload?.text || ""
+  } else if (data.type === "TIMFileElem") {
+    const filePayload = data.payload as FilePayloadType
+    return `[文件] ${filePayload?.fileName ?? ""}`
+  } else if (data.type === "TIMCustomElem") {
+    const customPayload = data.payload as CustomPayloadType
+    return `[Custom] ${customPayload?.description ?? ""}`
+  } else {
+    return ""
+  }
+}
+
 const messagesWithCache = computed<Array<{ message: DB_Message; cache: MessageCache }>>(() => {
   return messagesList.value.map((message) => {
-    const content = message.payload?.text
+    const content = getPayloadText(message)
     return {
       message,
       cache: {
@@ -215,7 +229,7 @@ onUnmounted(() => {
         <template v-for="(item, index) in messagesWithCache" :key="item.message.ID">
           <Popover placement="left">
             <template #content>
-              <span class="max-w-200 max-h-120 multi-truncate-3">
+              <span class="max-w-200 max-h-120 multi-truncate-5">
                 <p>{{ item.cache.senderLabel }}</p>
                 <p>{{ item.cache.previewText }}</p>
               </span>

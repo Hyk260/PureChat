@@ -1,6 +1,6 @@
 {
   "name": "pure-chat",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "PureChat - A chat application built with Vue and Vite",
   "type": "module",
   "author": {
@@ -52,6 +52,7 @@
     "emoji-mart": "^5.6.0",
     "highlight.js": "11.9.0",
     "htmlparser2": "^10.0.0",
+    "idb-keyval": "^6.2.2",
     "js-cookie": "^3.0.5",
     "ldrs": "^1.0.2",
     "localforage": "^1.10.0",

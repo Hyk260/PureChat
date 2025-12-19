@@ -54,7 +54,7 @@ const emojiMartRef = useTemplateRef("emojiMartRef")
 const currentPicker = ref<Picker | null>()
 
 const handleEmojiSelect = (emoji: EmojiSelectEvent) => {
-  emit("emoji-selected", emoji)
+  emit("emojiSelected", emoji)
 }
 
 const onClickOutside = () => {
