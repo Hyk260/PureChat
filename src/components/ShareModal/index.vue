@@ -158,12 +158,12 @@ const promptContent = computed((): string => {
 /**
  * 是否显示助手提示词
  */
-const showPrompt = computed((): boolean => isAssistant.value && shareSettings.includePrompt && !!promptContent.value)
+const showPrompt = computed(() => isAssistant.value && shareSettings.includePrompt && !!promptContent.value)
 
 /**
  * 获取助手角色文本
  */
-const roleText = computed((): string => {
+const roleText = computed(() => {
   try {
     const data = robotStore.currentProviderPrompt?.meta || null
     if (!data?.avatar || !data.title) return ""
@@ -177,14 +177,14 @@ const roleText = computed((): string => {
 /**
  * 是否显示角色信息
  */
-const showRole = computed((): boolean => !!roleText.value && shareSettings.includePrompt)
+const showRole = computed(() => !!roleText.value && shareSettings.includePrompt)
 
 /**
  * 获取消息头像URL
  * @param item 消息对象
  * @returns 头像URL
  */
-const getAvatarUrl = (item: DB_Message): string => {
+const getAvatarUrl = (item: DB_Message) => {
   return item.avatar || getAiAvatarUrl(item.from)
 }
 

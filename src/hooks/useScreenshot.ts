@@ -102,9 +102,9 @@ export const useScreenshot = (): ScreenshotHook => {
       })
 
       if (imageType === ImageType.Blob) {
-        await copyImageToClipboard(dataUrl)
+        await copyImageToClipboard(dataUrl as Blob)
       } else {
-        downloadImage(dataUrl, imageType, title)
+        downloadImage(dataUrl as string, imageType, title)
       }
 
       callback?.()
