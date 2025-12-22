@@ -194,11 +194,10 @@ export class LocalChat {
   }
 
   async getMyProfile() {
-    await delay(10)
-    return {
+    return Promise.resolve({
       code: 0,
       data: UserProfile,
-    }
+    })
   }
 
   async translateText(data: TRANSLATE_TEXT_OPTIONS) {
@@ -212,38 +211,43 @@ export class LocalChat {
    * 获取用户资料
    */
   async getUserProfile({ userIDList = [] }) {
-    await delay(10)
-    try {
-      const userIDSet = new Set(userIDList) as Set<string>
-      const data = ProvidersList.filter((item) => userIDSet.has(item.userID))
+    return new Promise((resolve) => {
+      try {
+        const userIDSet = new Set(userIDList) as Set<string>
+        const data = ProvidersList.filter((item) => userIDSet.has(item.userID))
 
-      return {
-        code: 0,
-        data: data || [],
+        resolve({
+          code: 0,
+          data: data,
+        })
+      } catch (error) {
+        console.error("获取用户资料失败:", error)
+        resolve({ code: -1, data: [] })
       }
-    } catch (error) {
-      console.error("获取用户资料失败:", error)
-      return { code: -1, data: [] }
-    }
+    })
   }
+
   async getGroupList() {
-    await delay(10)
-    return {
-      code: 0,
-      data: {
-        groupList: [],
-      },
-    }
+    return new Promise((resolve) => {
+      resolve({
+        code: 0,
+        data: {
+          groupList: [],
+        },
+      })
+    })
   }
+
   async getGroupMemberList() {
-    await delay(10)
-    return {
-      code: 0,
-      data: {
-        offset: 0,
-        memberList: [],
-      },
-    }
+    return new Promise((resolve) => {
+      resolve({
+        code: 0,
+        data: {
+          offset: 0,
+          memberList: [],
+        },
+      })
+    })
   }
 
   // ==================== 消息创建 ====================

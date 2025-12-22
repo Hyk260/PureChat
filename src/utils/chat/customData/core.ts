@@ -6,7 +6,7 @@ export type CustomDataType = "webSearch" | "deepThinking" | "messageReply" | "me
 
 import type { WebSearchParams, DeepThinkingParams, PromptMessageParams } from "./types"
 
-export function getCloudCustomDataTyped(data: DB_Message, type: CustomDataType, params?: any): string {
+export function getCloudCustomDataTyped(data: Partial<DB_Message>, type: CustomDataType, params?: any): string {
   if (isEmpty(data)) return ""
 
   const baseData = {

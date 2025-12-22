@@ -18,7 +18,7 @@ export const messageUtils = {
   /**
    * 格式化消息显示文本
    */
-  getMessageDisplayText(item: DB_Message): string {
+  getMessageDisplayText(item: Partial<DB_Message>): string {
     const typeMap = {
       TIMImageElem: "[图片消息]",
       TIMFileElem: "[文件消息]",
@@ -27,6 +27,7 @@ export const messageUtils = {
       TIMGroupTipElem: "[群提示]",
       TIMGroupSystemNoticeElem: "[系统通知]",
     }
+    if (!item.type) return ""
 
     return typeMap[item.type] || ""
   },

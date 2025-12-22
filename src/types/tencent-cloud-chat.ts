@@ -639,7 +639,7 @@ export declare class ChatSDK {
 
   // ----------- Profile -----------
   /**
-   * Get your personal profile.
+   * 获取个人资料。
    */
   getMyProfile(): Promise<{ code: number; data: Profile }>
 
