@@ -4,6 +4,9 @@
   "private": true,
   "description": "Type definitions for PureChat",
   "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "dependencies": {
     "type-fest": "^4.41.0",
     "zod": "^3.25.76"

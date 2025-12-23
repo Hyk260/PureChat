@@ -1,9 +1,8 @@
 import { ModelIDList } from "@shared/provider"
 import { cloneDeep } from "lodash-es"
 import { defineStore } from "pinia"
-
+import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX, MIN_MESSAGES, INBOX_SESSION_ID } from "@purechat/const"
 import { getModelType } from "@/ai/utils"
-import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX, MIN_MESSAGES } from "@/constants"
 import { MessageModel } from "@/database/models/message"
 import { timProxy } from "@/service/chat"
 import { sendChatAssistantMessage } from "@/service/chatService"
@@ -36,7 +35,7 @@ import type { ModelIDValue } from "@shared/provider"
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
   state: (): ChatState => ({
-    sessionId: "inbox", // 当前会话id
+    sessionId: INBOX_SESSION_ID, // 当前会话id
     historyMessageList: new Map(), // 历史消息
     currentMessageList: [], // 当前消息列表(窗口聊天消息)
     currentConversation: null, // 跳转窗口的属性

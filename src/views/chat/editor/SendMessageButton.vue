@@ -9,7 +9,7 @@
       <div v-if="polishDing" class="iconify-icon svg-spinners"></div>
       <WandSparkles :size="15" />
     </ElButton>
-    <ElButton v-if="showPortal && IS_DEV && IS_LOCAL_MODE" @click="handleAddTopic">
+    <ElButton v-if="showPortal && IS_LOCAL_MODE" @click="handleAddTopic">
       <MessageCirclePlus :size="15" />
     </ElButton>
     <ElButton :loading="isSending" :class="{ 'pointer-events-none': disabled }" @click="onSend">

@@ -30,7 +30,8 @@
       "~/*": ["./*"],
       "@shared/*": ["./packages/shared/*"],
       "@database/*": ["./packages/database/*"],
-      "@purechat/types": ["./packages/types/src"]
+      "@purechat/types": ["./packages/types/src"],
+      "@purechat/const": ["./packages/const/src"]
     },
     "types": ["vite/client", "node", "element-plus/global"]
   },

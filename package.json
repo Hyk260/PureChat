@@ -35,6 +35,7 @@
     "@shikijs/core": "^3.12.0",
     "@shikijs/transformers": "^3.12.0",
     "@shikijs/types": "^3.12.0",
+    "@purechat/const": "workspace:*",
     "@tencentcloud/chat": "3.5.8",
     "@types/markdown-it": "^14.1.2",
     "@unocss/preset-icons": "^65.4.3",

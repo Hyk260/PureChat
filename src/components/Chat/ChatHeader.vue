@@ -53,7 +53,7 @@
         </ElButton>
       </ElTooltip>
 
-      <ElTooltip v-if="IS_DEV && IS_LOCAL_MODE" :showArrow="false" content="显示/隐藏话题面板" placement="bottom">
+      <ElTooltip v-if="IS_LOCAL_MODE" :showArrow="false" content="显示/隐藏话题面板" placement="bottom">
         <ElButton class="action-btn panel" @click="portalStore.togglePortal">
           <PanelRightClose v-if="showPortal" :size="18" />
           <PanelLeftClose v-else :size="18" />
