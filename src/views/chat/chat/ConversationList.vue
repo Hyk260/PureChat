@@ -86,7 +86,7 @@ import EmptyMessage from "../components/EmptyMessage.vue"
 import VirtualList from "./VirtualList.vue"
 
 import type { DisplayCacheItem, DB_Session } from "@/types"
-import type { MenuItem } from "@purechat/types"
+import type { MenuItem } from "@pure/types"
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop()
 

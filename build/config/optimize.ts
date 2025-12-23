@@ -27,7 +27,7 @@ const include = [
  * https://vitejs.cn/vite3-cn/config/dep-optimization-options.html#optimizedeps-exclude
  * 在预构建中强制排除的依赖项
  */
-const exclude = ["@iconify/json", "@purechat/ui"]
+const exclude = ["@iconify/json", "@pure/ui"]
 
 const entries = []
 

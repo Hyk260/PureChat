@@ -19,7 +19,7 @@ import {
   Undo,
 } from "lucide-vue-next"
 
-import type { MenuItem } from "@purechat/types"
+import type { MenuItem } from "@pure/types"
 
 export const commonMenuItems: Record<string, MenuItem> = {
   edit: {

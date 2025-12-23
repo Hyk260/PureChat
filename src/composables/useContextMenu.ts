@@ -1,5 +1,5 @@
 import { useTemplateRef, shallowRef } from "vue"
-import type { MenuItem } from "@purechat/types"
+import type { MenuItem } from "@pure/types"
 import type ContextMenu from "@/components/ContextMenu/ContextMenu.vue"
 
 interface ContextMenuInstance {

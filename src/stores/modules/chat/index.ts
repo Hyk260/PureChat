@@ -1,6 +1,6 @@
 import { cloneDeep } from "lodash-es"
 import { defineStore } from "pinia"
-import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX, MIN_MESSAGES, INBOX_SESSION_ID } from "@purechat/const"
+import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX, MIN_MESSAGES, INBOX_SESSION_ID } from "@pure/const"
 import { getModelType } from "@/ai/utils"
 import { MessageModel } from "@/database/models/message"
 import { timProxy } from "@/service/chat"

@@ -233,7 +233,7 @@ import {
   Smile,
 } from "lucide-vue-next"
 import { ElMessageBox } from "element-plus"
-import { audioExts, documentExts, imageExts, textExts, videoExts } from "@purechat/const"
+import { audioExts, documentExts, imageExts, textExts, videoExts } from "@pure/const"
 import { storeToRefs } from "pinia"
 
 import { useState } from "@/hooks/useState"

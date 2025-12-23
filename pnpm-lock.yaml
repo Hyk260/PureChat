@@ -23,10 +23,10 @@ importers:
       '@microsoft/fetch-event-source':
         specifier: ^2.0.1
         version: 2.0.1
-      '@purechat/const':
+      '@pure/const':
         specifier: workspace:*
         version: link:packages/const
-      '@purechat/utils':
+      '@pure/utils':
         specifier: workspace:*
         version: link:packages/utils
       '@shikijs/core':
@@ -207,7 +207,7 @@ importers:
       '@eslint/js':
         specifier: ^9.32.0
         version: 9.32.0
-      '@purechat/types':
+      '@pure/types':
         specifier: workspace:*
         version: link:packages/types
       '@types/node':
@@ -338,10 +338,10 @@ importers:
 
   packages/utils:
     dependencies:
-      '@purechat/const':
+      '@pure/const':
         specifier: workspace:*
         version: link:../const
-      '@purechat/types':
+      '@pure/types':
         specifier: workspace:*
         version: link:../types
       dayjs:

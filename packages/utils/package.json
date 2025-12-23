@@ -1,5 +1,5 @@
 {
-  "name": "@purechat/utils",
+  "name": "@pure/utils",
   "version": "1.0.0",
   "private": true,
   "exports": {
@@ -12,8 +12,8 @@
     "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
-    "@purechat/const": "workspace:*",
-    "@purechat/types": "workspace:*",
+    "@pure/const": "workspace:*",
+    "@pure/types": "workspace:*",
     "dayjs": "^1.11.18",
     "dompurify": "^3.2.7"
   },

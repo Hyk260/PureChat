@@ -38,7 +38,7 @@ import { Menu, MenuItem, SubMenu } from "ant-design-vue"
 import { onKeyStroke, useEventListener } from "@vueuse/core"
 import type { CSSProperties } from "vue"
 
-import type { MenuItem as MenuItemType } from "@purechat/types"
+import type { MenuItem as MenuItemType } from "@pure/types"
 
 defineOptions({
   name: "ContextMenu",

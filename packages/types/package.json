@@ -1,5 +1,5 @@
 {
-  "name": "@purechat/types",
+  "name": "@pure/types",
   "version": "1.0.0",
   "private": true,
   "description": "Type definitions for PureChat",

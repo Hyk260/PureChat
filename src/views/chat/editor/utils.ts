@@ -1,6 +1,6 @@
 import { nextTick } from "vue"
 
-import { documentExts, textExts } from "@purechat/const"
+import { documentExts, textExts } from "@pure/const"
 import { IDomEditor } from "@wangeditor/editor"
 
 import { bytesToSize, fileToBase64, getFileType } from "@/utils/chat"

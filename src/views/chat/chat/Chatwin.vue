@@ -96,7 +96,7 @@
 import { ElScrollbar } from "element-plus"
 import { storeToRefs } from "pinia"
 import { useIntersectionObserver } from "@vueuse/core"
-import { MULTIPLE_CHOICE_MAX } from "@purechat/const"
+import { MULTIPLE_CHOICE_MAX } from "@pure/const"
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import AssistantMessage from "@/components/Chat/AssistantMessage.vue"
 import Checkbox from "@/components/Chat/Checkbox.vue"
@@ -133,7 +133,7 @@ import { timeFormat } from "@/utils/timeFormat"
 // import LoadMore from "../components/LoadMore.vue"
 
 import type { DB_Message, FilePayloadType } from "@/types"
-import type { MenuItem } from "@purechat/types"
+import type { MenuItem } from "@pure/types"
 
 const userPopupRef = useTemplateRef("userPopupRef")
 const scrollbarRef = useTemplateRef("scrollbarRef")

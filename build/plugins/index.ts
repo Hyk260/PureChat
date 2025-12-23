@@ -77,8 +77,8 @@ export function setupViteExternal(viteEnv: Env.ImportMeta): (RegExp | string)[] 
     // 拼音搜索依赖
     /^pinyin-pro/,
   ]
-  // 始终外部化 @purechat/ui，避免被打包参与 Tree-Shaking
-  const commonExternals = [/^@purechat\/ui$/]
+  // 始终外部化 @pure/ui，避免被打包参与 Tree-Shaking
+  const commonExternals = [/^@pure\/ui$/]
 
   if (viteEnv.VITE_LOCAL_MODE === "Y") {
     return [...localExternals, ...commonExternals]

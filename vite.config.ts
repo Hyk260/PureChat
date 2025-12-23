@@ -21,13 +21,13 @@ export default defineConfig((configEnv) => {
         // 配置共享路径别名@shared
         // "@shared": fileURLToPath(new URL("./packages/shared", import.meta.url)),
         // 配置数据库路径别名@database
-        "@database": fileURLToPath(new URL("./packages/database", import.meta.url)),
-        // 配置类型包别名@purechat/types
-        // "@purechat/types": fileURLToPath(new URL("./packages/types", import.meta.url)),
-        // // 配置const路径别名@purechat/const
-        // "@purechat/const": fileURLToPath(new URL("./packages/const", import.meta.url)),
-        // // 配置utils路径别名@purechat/utils
-        // "@purechat/utils": fileURLToPath(new URL("./packages/utils", import.meta.url)),
+        // "@database": fileURLToPath(new URL("./packages/database", import.meta.url)),
+        // 配置类型包别名@pure/types
+        // "@pure/types": fileURLToPath(new URL("./packages/types", import.meta.url)),
+        // 配置const路径别名@pure/const
+        // "@pure/const": fileURLToPath(new URL("./packages/const", import.meta.url)),
+        // 配置utils路径别名@pure/utils
+        // "@pure/utils": fileURLToPath(new URL("./packages/utils", import.meta.url)),
       },
       extensions: [".js", ".ts", ".json"],
     },
@@ -92,9 +92,9 @@ export default defineConfig((configEnv) => {
           assetFileNames: "static/[ext]/[name]-[hash].[ext]",
           // 手动分包 #https://cn.rollupjs.org/configuration-options/#output-manualchunks
           manualChunks,
-          // 将外部化的 @purechat/ui 映射到预构建产物路径，避免 Rollup 解析
+          // 将外部化的 @pure/ui 映射到预构建产物路径，避免 Rollup 解析
           // paths: {
-          //   "@purechat/ui": "/purechat-ui/index.js",
+          //   "@pure/ui": "/purechat-ui/index.js",
           // },
         },
       },
