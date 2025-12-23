@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { ElTree } from "element-plus"
-import { ModelIDList } from "@shared/provider"
+import { ModelIDList } from "@/types/provider"
 import { getUserProfile } from "@/service/im-sdk-api"
 import { useGroupStore } from "@/stores/modules/group"
 import emitter from "@/utils/mitt-bus"

@@ -232,16 +232,15 @@ import {
   SlidersHorizontal,
   Smile,
 } from "lucide-vue-next"
-
-import { audioExts, documentExts, imageExts, textExts, videoExts } from "@shared/config"
+import { ElMessageBox } from "element-plus"
+import { audioExts, documentExts, imageExts, textExts, videoExts } from "@purechat/const"
 import { storeToRefs } from "pinia"
 
 import { useState } from "@/hooks/useState"
 import { createCustomMessage } from "@/service/im-sdk-api"
-import WebSearchService from "@/service/WebSearchService"
 import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores"
 import { createFileInput } from "@/utils/common"
-import { ElMessageBox } from "element-plus"
+import WebSearchService from "@/service/WebSearchService"
 import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
 import EmojiPicker from "./EmojiPicker.vue"

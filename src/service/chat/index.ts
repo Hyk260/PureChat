@@ -1,5 +1,4 @@
 import { useWindowFocus } from "@vueuse/core"
-import { C2CModelIDList } from "@shared/provider"
 import { ElNotification } from "element-plus"
 import { cloneDeep } from "lodash-es"
 
@@ -8,6 +7,7 @@ import { setMessageRead } from "@/service/im-sdk-api"
 import { useChatStore, useGroupStore, useUserStore } from "@/stores"
 import { scrollToDomPosition } from "@/utils/chat"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
+import { C2CModelIDList } from "@/types/provider"
 
 import { checkoutNetState, getConversationList, kickedOutReason } from "./utils"
 import { GROUP_TIP_OPERATION_TYPE } from "@/database/schemas/message"

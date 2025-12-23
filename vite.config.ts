@@ -23,11 +23,11 @@ export default defineConfig((configEnv) => {
         // 配置数据库路径别名@database
         "@database": fileURLToPath(new URL("./packages/database", import.meta.url)),
         // 配置类型包别名@purechat/types
-        "@purechat/types": fileURLToPath(new URL("./packages/types", import.meta.url)),
+        "@purechat/types": fileURLToPath(new URL("./packages/types/src", import.meta.url)),
         // 配置const路径别名@purechat/const
-        "@purechat/const": fileURLToPath(new URL("./packages/const", import.meta.url)),
+        "@purechat/const": fileURLToPath(new URL("./packages/const/src", import.meta.url)),
         // 配置utils路径别名@purechat/utils
-        "@purechat/utils": fileURLToPath(new URL("./packages/utils", import.meta.url)),
+        "@purechat/utils": fileURLToPath(new URL("./packages/utils/src", import.meta.url)),
       },
       extensions: [".js", ".ts", ".json"],
     },

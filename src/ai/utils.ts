@@ -1,4 +1,4 @@
-import { ModelID } from "@shared/provider"
+import { ModelID } from "@/types/provider"
 import { isEmpty } from "lodash-es"
 
 import { modelConfig, modelValue } from "@/ai/constant"
@@ -14,7 +14,7 @@ import {
 } from "./reasoning"
 
 import type { Model } from "@/types"
-import type { ModelIDValue } from "@shared/provider"
+import type { ModelIDValue } from "@/types/provider"
 
 /**
  * 获取 AI 模型的配置信息

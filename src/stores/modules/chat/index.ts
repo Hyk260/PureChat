@@ -1,4 +1,3 @@
-import { ModelIDList } from "@shared/provider"
 import { cloneDeep } from "lodash-es"
 import { defineStore } from "pinia"
 import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX, MIN_MESSAGES, INBOX_SESSION_ID } from "@purechat/const"
@@ -19,6 +18,7 @@ import {
 import { SetupStoreId } from "@/stores/enum"
 import { addTimeDivider, checkTextNotEmpty, getBaseTime, scrollToMessage } from "@/utils/chat"
 import { delay } from "@/utils/common"
+import { ModelIDList } from "@/types/provider"
 import { emitUpdateScroll } from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 
@@ -31,7 +31,7 @@ import { useAppStore } from "../app"
 import type { ChatState } from "./type"
 import type { ModelProviderKey } from "@/ai/types"
 import type { DB_Message, DB_Session, TypeSchemaType, DraftData, ImagePayloadType } from "@/types"
-import type { ModelIDValue } from "@shared/provider"
+import type { ModelIDValue } from "@/types/provider"
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
   state: (): ChatState => ({

@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import Markdown from "@/components/Markdown/index.vue"
-import { ModelID } from "@shared/provider"
+import { ModelID } from "@/types/provider"
 
 import { getModelId } from "@/ai/utils"
 import { usePrepareMessageData } from "@/hooks/useMessageOperations"
