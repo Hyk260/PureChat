@@ -12,6 +12,7 @@ import { clientS3Storage } from "@/service/file/ClientS3"
 import { useTopicStore } from "@/stores/modules/topic"
 import { localStg } from "@/utils/storage"
 import { uuid } from "@/utils/uuid"
+import { idGenerator } from "@/utils/idGenerator"
 import emitter from "@/utils/mitt-bus"
 
 import type { DB_Message, DB_Session, MessageType, payloadSchemaType, FilePayloadType } from "@/types"
@@ -151,6 +152,23 @@ export class LocalChat {
       await SessionModel.update(id, updatedSession)
     } catch (error) {
       console.error("updateConversationLastMessage:", error)
+    }
+  }
+
+  /**
+   * 批量删除消息里的文件附件
+   */
+  private async deleteFileAttachments(messages: DB_Message[]) {
+    const fileIds = messages
+      .filter((item) => item.type === "TIMFileElem")
+      .map((item) => {
+        const payload = item.payload as FilePayloadType
+        return payload?.id
+      })
+      .filter((id): id is string => Boolean(id))
+
+    if (fileIds.length > 0) {
+      await FilesModel.bulkDelete(fileIds)
     }
   }
 
@@ -299,26 +317,26 @@ export class LocalChat {
    */
   createFileMessage(data: MESSAGE_OPTIONS) {
     const { payload } = data
-    // const id = `file-${uuid()}`
-    // clientS3Storage.putObject(id, payload.file)
-    // FilesModel.create(id, {
-    //   origin_name: "",
-    //   name: payload.file?.name,
-    //   path: payload.path || "",
-    //   created_at: new Date().toISOString(),
-    //   size: payload.file?.size,
-    //   ext: "",
-    //   type: payload.file?.type,
-    //   count: 1,
-    // })
+    const id = idGenerator("files")
+    clientS3Storage.putObject(id, payload.file)
+    FilesModel.create(id, {
+      origin_name: "",
+      name: payload.file?.name,
+      path: payload.path || "",
+      created_at: new Date().toISOString(),
+      size: payload.file?.size,
+      ext: "",
+      type: payload.file?.type,
+      count: 1,
+    })
     const filePayload = {
+      id,
+      uuid: `${UserProfile.userID}-${uuid()}`,
       fileName: payload.file?.name || "text.txt",
       fileSize: payload.file?.size || 0,
       filePath: payload.path || "",
       fileUrl: "",
-      // localPath: `client-s3://${0}`,
-      // id,
-      uuid: `${UserProfile.userID}-${uuid()}`,
+      localPath: `client-s3://${id}`,
     } as FilePayloadType
 
     const message = this.createBaseMessage(data, "TIMFileElem", filePayload)
@@ -439,9 +457,20 @@ export class LocalChat {
    */
   async deleteMessage(messages: DB_Message[]) {
     try {
-      const deletePromises = messages.map((item) => MessageModel.delete(item.ID))
+      if (!messages || messages.length === 0) {
+        return {
+          code: 0,
+          data: { messageList: [] },
+        }
+      }
 
-      await Promise.all(deletePromises)
+      // 提取消息ID并批量删除
+      const messageIds = messages.map((item) => item.ID).filter(Boolean)
+      if (messageIds.length > 0) {
+        await MessageModel.bulkDelete(messageIds)
+      }
+
+      await this.deleteFileAttachments(messages)
 
       return {
         code: 0,
@@ -465,8 +494,11 @@ export class LocalChat {
 
       const list = await SessionModel.query()
       const messageList = list.filter((item) => item.conversationID !== ID)
-
-      await SessionModel.delete(ID)
+      if (data?.clearHistoryMessage) {
+        await SessionModel.deleteWithRelations(ID)
+      } else {
+        await SessionModel.delete(ID)
+      }
       this.emit("onConversationListUpdated", { data: messageList })
 
       return {
@@ -485,6 +517,10 @@ export class LocalChat {
   async clearHistoryMessage(sessionId: string) {
     try {
       const topicStore = useTopicStore()
+
+      const messages = await MessageModel.query({ sessionId, topicId: topicStore.topicId })
+
+      await this.deleteFileAttachments(messages)
 
       await MessageModel.batchDelete(sessionId, topicStore.topicId)
 

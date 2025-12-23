@@ -59,11 +59,11 @@ const convertAttachmentToHtml = (elem: AttachmentElement): string => {
   const { link = "", fileName = "" } = elem
 
   const html = `
-    <span 
-      data-w-e-type="attachment" 
-      data-w-e-is-inline 
-      data-w-e-is-void 
-      data-link="${encodeURIComponent(link)}" 
+    <span
+      data-w-e-type="attachment"
+      data-w-e-is-inline
+      data-w-e-is-void
+      data-link="${encodeURIComponent(link)}"
       data-fileName="${encodeURIComponent(fileName)}"
     >
       ${encodeHTML(fileName)}
@@ -150,6 +150,7 @@ const renderFileAttachment = (data: {
     "div",
     {
       props: { contentEditable: false },
+      title: fileName,
       style: getContainerStyle(selected),
       on: { click: () => handleClick({ elem }) },
     },

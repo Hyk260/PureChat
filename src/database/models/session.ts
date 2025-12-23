@@ -1,6 +1,7 @@
 import { BaseModel } from "../core/model"
 import { DB_SessionSchema } from "../schemas/session"
-
+import { MessageModel } from "@/database/models/message"
+import { TopicModel } from "@/database/models/topic"
 import type { DBModel } from "@/database/types/db"
 import type { DB_Session } from "../schemas/session"
 
@@ -116,6 +117,20 @@ class _SessionModel extends BaseModel {
    */
   async delete(id: string) {
     return await super._deleteWithSync(id)
+  }
+
+  /**
+   * 删除会话，同时删除关联的所有messages和topic。
+   */
+  async deleteWithRelations(id: string) {
+    return this.db.transaction("rw", [this.table, this.db.topics, this.db.messages], async () => {
+      // 删除该会话下所有消息
+      await MessageModel.batchDeleteBySessionId(id)
+      // 删除该会话下所有话题
+      await TopicModel.batchDeleteBySessionId(id)
+      // 最后删除会话本身
+      await super._deleteWithSync(id)
+    })
   }
 
   async clearTable() {

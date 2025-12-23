@@ -2,8 +2,9 @@ import { BaseModel } from "@/database/core/model"
 import { DBModel } from "@/database/types/db"
 import { MessageModel } from "@/database/models/message"
 import { DB_Topic, DB_TopicSchema } from "@/database/schemas/topic"
-import { ChatTopic } from "@/types/topic"
-import { nanoid } from "@/utils/uuid"
+import { ChatTopic } from "@/types"
+// import { nanoid } from "@/utils/uuid"
+import { idGenerator } from "@/utils/idGenerator"
 
 export interface CreateTopicParams {
   favorite?: boolean
@@ -112,8 +113,8 @@ class _TopicModel extends BaseModel {
 
   // **************** Create *************** //
 
-  async create({ title, favorite, sessionId, messages }: CreateTopicParams, id = nanoid()) {
-    const topic = await this._addWithSync(id, { favorite: favorite ? 1 : 0, sessionId, title: title })
+  async create({ title, favorite, sessionId, messages }: CreateTopicParams, id = idGenerator("topics")) {
+    const topic = await super._addWithSync(id, { favorite: favorite ? 1 : 0, sessionId, title: title })
 
     // add topicId to these messages
     if (messages) {
@@ -139,15 +140,15 @@ class _TopicModel extends BaseModel {
 
       // const duplicateMessages = await MessageModel.duplicateMessages(originalMessages)
 
-      const { id } = await this.create({
-        ...this.mapToChatTopic(topic),
-        // messages: duplicateMessages.map((m) => m.id),
-        // messages: originalMessages,
-        sessionId: topic.sessionId || "inbox",
-        title: newTitle || topic.title,
-      })
+      // const { id } = await this.create({
+      //   ...this.mapToChatTopic(topic),
+      //   // messages: duplicateMessages.map((m) => m.id),
+      //   // messages: originalMessages,
+      //   sessionId: topic.sessionId || "inbox",
+      //   title: newTitle || topic.title,
+      // })
 
-      return id
+      // return id
     })
   }
 
@@ -169,9 +170,8 @@ class _TopicModel extends BaseModel {
    * 根据topic ID删除多个消息
    *
    * @param {string} sessionId - 会话ID
-   * @returns {Promise<void>}
    */
-  async batchDeleteBySessionId(sessionId: string): Promise<void> {
+  async batchDeleteBySessionId(sessionId: string) {
     const query = this.table.where("sessionId").equals(sessionId)
 
     // 检索满足条件的消息ID集合

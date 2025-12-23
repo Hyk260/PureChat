@@ -78,12 +78,17 @@ export const ImagePayload = BasePayload.extend({
 })
 
 export const FilePayload = BasePayload.extend({
-  id: z.string(),
   uuid: z.string(),
   fileName: z.string(),
-  filePath: z.string().optional(),
   fileUrl: z.string(),
   fileSize: z.number(),
+  // ***************** Custom ***************** //
+  /**
+   * description: Electron 文件路径
+   * example: /Users/xxx/Downloads/xxx.pdf
+   */
+  filePath: z.string().optional(),
+  id: z.string(),
 })
 
 export const MergerPayload = BasePayload.extend({

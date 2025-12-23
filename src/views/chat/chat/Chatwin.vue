@@ -71,8 +71,8 @@
                   <MenuList
                     :item="item"
                     :status="item.status"
-                    @handle-context-menu="handleMessageContextMenu"
-                    @handle-single-click="handleSingleClick"
+                    @handleContextMenu="handleMessageContextMenu"
+                    @handleSingleClick="handleSingleClick"
                   />
                 </div>
                 <AssistantMessage v-if="isAssistant && item.flow === 'in'" :item="item" />

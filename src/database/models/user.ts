@@ -1,8 +1,7 @@
 // import { AgentConfig } from '@/types/agent';
-import { uuid } from "@/utils/uuid"
-
 import { BaseModel } from "../core/model"
 import { DB_Settings, DB_User, DB_UserSchema } from "../schemas/user"
+import { uuid } from "@/utils/uuid"
 
 import type { PartialDeep } from "type-fest"
 

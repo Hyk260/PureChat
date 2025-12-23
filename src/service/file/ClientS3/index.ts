@@ -1,4 +1,4 @@
-import { createStore, del, get, set, type UseStore } from "idb-keyval"
+import { createStore, del, get, set, clear, type UseStore } from "idb-keyval"
 
 const BROWSER_S3_DB_NAME = "purechat-local-s3"
 
@@ -50,6 +50,44 @@ export class BrowserS3Storage {
       throw new Error(`Failed to delete object (key=${key}): ${(e as Error).message}`)
     }
   }
+
+  /**
+   * 清空所有数据
+   */
+  clearAll = async (): Promise<void> => {
+    try {
+      await clear(this.store)
+    } catch (e) {
+      throw new Error(`Failed to clear all data: ${(e as Error).message}`)
+    }
+  }
 }
 
 export const clientS3Storage = new BrowserS3Storage()
+
+if (import.meta.env.DEV) {
+  console.log(
+    `%c🗑️ 一键清空 ${BROWSER_S3_DB_NAME} 数据`,
+    "color: #ff6b6b; font-size: 16px; font-weight: bold; padding: 8px; background: #fff3cd; border-radius: 4px;"
+  )
+
+  // 同时在控制台输出可执行的函数
+  ;(window as any).__CLEAR_S3_STORAGE__ = async () => {
+    if (confirm(`确定要清空所有 ${BROWSER_S3_DB_NAME} 数据吗？此操作不可恢复！`)) {
+      try {
+        await clientS3Storage.clearAll()
+        console.log("%c✅ 数据已清空", "color: #28a745; font-size: 14px; font-weight: bold;")
+        return "数据已成功清空！"
+      } catch (error) {
+        console.error("%c❌ 清空数据失败:", "color: #dc3545; font-size: 14px; font-weight: bold;", error)
+        throw error
+      }
+    }
+    return "操作已取消"
+  }
+
+  console.log(
+    "%c💡 提示: 在控制台执行 window.__CLEAR_S3_STORAGE__() 来清空数据",
+    "color: #17a2b8; font-size: 12px; font-style: italic;"
+  )
+}

@@ -89,6 +89,10 @@ const handleDelete = () => {
   emit("handleSingleClick", { item: props.item, key: "delete" })
 }
 
+const handleRefresh = () => {
+  emit("handleSingleClick", { item: props.item, key: "refresh" })
+}
+
 /**
  * 判断是否应该显示菜单
  */
@@ -143,7 +147,7 @@ function handleMenuItemClick(event: MouseEvent, data: { key: string }) {
   const { item } = props
   switch (key) {
     case "refresh":
-      emit("handleSingleClick", { item, key: "refresh" })
+      handleRefresh()
       break
     case "copy":
       handleCopyMsg(item)

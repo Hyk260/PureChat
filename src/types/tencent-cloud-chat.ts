@@ -572,7 +572,7 @@ export declare class ChatSDK {
   /**
    * Delete a conversation or conversations. At the same time, you can choose whether to delete chat history.
    */
-  deleteConversation(options: string | DELETE_CONVERSATION_OPTIONS): Promise<any>
+  deleteConversation(options: string | DELETE_CONVERSATION_OPTIONS): Promise<{ code: number; data: DB_Session }>
 
   /**
    * Set draft of the conversation.

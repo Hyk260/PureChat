@@ -24,7 +24,7 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
   // **************** Create *************** //
 
   protected async _addWithSync<T = BrowserDBSchema[N]["model"]>(
-    id: string | number = nanoid(),
+    id: string | number,
     data: T,
     primaryKey: string = "id"
   ) {

@@ -1,9 +1,9 @@
 import { BaseModel } from "../core/model"
 import { DB_MessageSchema } from "../schemas/message"
+import { FilesModel } from "@/database/models/files"
 
 import type { DB_Message } from "../schemas/message"
 import type { DBModel } from "@/database/types/db"
-
 import type { GET_MESSAGE_LIST_OPTIONS } from "@/types/tencent-cloud-chat"
 
 export interface QueryMessageParams {
@@ -169,11 +169,16 @@ class _MessageModel extends BaseModel {
     return super._bulkDeleteWithSync(ids)
   }
 
+  /**
+   * 清空messages表
+   */
   async clearTable() {
     return super._clearWithSync()
   }
 
   /**
+   * @summary 批量删除
+   * @description
    * 根据sessionId和topicId（可选）删除多条消息。
    * 如果未提供topicId，则会删除topicId未定义或为null的消息。
    * 如果提供了topicId，它将删除具有该特定topicId的消息。
