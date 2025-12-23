@@ -22,18 +22,17 @@
 </template>
 
 <script setup lang="ts">
-import { marketJson } from "@database/market"
 import { debounce } from "lodash-es"
 
 import { getPrompt } from "@/service/api"
-
+import { marketJson } from "@/config/market"
+import { useCache } from "./composables/useCache"
+import { options } from "./utils"
 import AgentCardBanner from "./AgentCardBanner.vue"
 import AgentList from "./AgentList.vue"
-import { useCache } from "./composables/useCache"
 import DiscoverHeader from "./DiscoverHeader.vue"
 import StarMessage from "./StarMessage.vue"
 import TabsWrapper from "./TabsWrapper.vue"
-import { options } from "./utils"
 
 interface Agent {
   identifier: string
