@@ -26,6 +26,8 @@ export default defineConfig((configEnv) => {
         "@purechat/types": fileURLToPath(new URL("./packages/types", import.meta.url)),
         // 配置const路径别名@purechat/const
         "@purechat/const": fileURLToPath(new URL("./packages/const", import.meta.url)),
+        // 配置utils路径别名@purechat/utils
+        "@purechat/utils": fileURLToPath(new URL("./packages/utils", import.meta.url)),
       },
       extensions: [".js", ".ts", ".json"],
     },

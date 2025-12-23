@@ -20,7 +20,7 @@ import { ElAlert } from "element-plus"
 import { TriangleAlert } from "lucide-vue-next"
 import { modelValue } from "@/ai/constant"
 import { openWindow } from "@/utils/common"
-import { WarningCustomMessageBasse } from "@database/custom"
+import { WarningCustomMessageBasse } from "@/config/custom"
 import emitter from "@/utils/mitt-bus"
 
 import type { CustomPayloadType } from "@/types"

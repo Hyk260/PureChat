@@ -31,7 +31,8 @@
       "@shared/*": ["./packages/shared/*"],
       "@database/*": ["./packages/database/*"],
       "@purechat/types": ["./packages/types/src"],
-      "@purechat/const": ["./packages/const/src"]
+      "@purechat/const": ["./packages/const/src"],
+      "@purechat/utils": ["./packages/utils/src"]
     },
     "types": ["vite/client", "node", "element-plus/global"]
   },

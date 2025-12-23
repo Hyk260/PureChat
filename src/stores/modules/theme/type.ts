@@ -1,4 +1,4 @@
-import { ThemeModeKey } from "@shared/theme"
+import type { ThemeModeKey } from "@/theme/settings"
 
 export interface ThemeState {
   themeScheme: ThemeModeKey

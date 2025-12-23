@@ -1,0 +1,24 @@
+{
+  "name": "@purechat/utils",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage --silent='passed-only'"
+  },
+  "dependencies": {
+    "@purechat/const": "workspace:*",
+    "@purechat/types": "workspace:*",
+    "dayjs": "^1.11.18",
+    "dompurify": "^3.2.7"
+  },
+  "devDependencies": {
+    "happy-dom": "^20.0.11",
+    "vitest-canvas-mock": "^0.3.3"
+  }
+}

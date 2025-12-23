@@ -1,4 +1,4 @@
-import { ProvidersList } from "@database/config"
+import { providersList } from "@/config/providers"
 import { FilesModel } from "@/database/models/files"
 import { MessageModel } from "@/database/models/message"
 import { SessionModel } from "@/database/models/session"
@@ -232,7 +232,7 @@ export class LocalChat {
     return new Promise((resolve) => {
       try {
         const userIDSet = new Set(userIDList) as Set<string>
-        const data = ProvidersList.filter((item) => userIDSet.has(item.userID))
+        const data = providersList.filter((item) => userIDSet.has(item.userID))
 
         resolve({
           code: 0,
@@ -368,7 +368,7 @@ export class LocalChat {
           ...session.lastMessage,
           lastTime: getUnixTimestampSec(),
         },
-        userProfile: ProvidersList.find((item) => item.userID === chatId.replace("C2C", "")),
+        userProfile: providersList.find((item) => item.userID === chatId.replace("C2C", "")),
       }
 
       await SessionModel.create(chatId, data)

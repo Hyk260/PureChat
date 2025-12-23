@@ -26,9 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
-
-import { ProvidersList } from "@database/config"
+import { providersList } from "@/config/providers"
 
 import { useChatStore, useRouteStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
@@ -84,8 +82,6 @@ const emit = defineEmits<Emits>()
 
 const routeStore = useRouteStore()
 const chatStore = useChatStore()
-
-const providersList = computed<Provider[]>(() => ProvidersList)
 
 const handleAgentClick = (agent: Agent) => {
   emitter.emit("openAgentCard", agent)

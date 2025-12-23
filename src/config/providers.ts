@@ -1,4 +1,4 @@
-const BaseUserProfile = {
+const baseUserProfile = {
   userID: "",
   nick: "",
   gender: "",
@@ -16,9 +16,9 @@ const BaseUserProfile = {
   profileCustomField: [],
 }
 
-export const ProvidersList = [
+export const providersList = [
   {
-    ...BaseUserProfile,
+    ...baseUserProfile,
     userID: "@RBT#001",
     nick: "OpenAI",
     selfSignature:
@@ -35,7 +35,7 @@ export const ProvidersList = [
     ],
   },
   {
-    ...BaseUserProfile,
+    ...baseUserProfile,
     userID: "@RBT#002",
     nick: "ZhiPu",
     selfSignature: "智谱 AI 提供多模态与语言模型的开放平台，支持广泛的AI应用场景，包括文本处理、图像理解与编程辅助等。",
@@ -51,7 +51,7 @@ export const ProvidersList = [
     ],
   },
   {
-    ...BaseUserProfile,
+    ...baseUserProfile,
     userID: "@RBT#003",
     nick: "ZeroOne",
     selfSignature:
@@ -68,7 +68,7 @@ export const ProvidersList = [
     ],
   },
   {
-    ...BaseUserProfile,
+    ...baseUserProfile,
     userID: "@RBT#004",
     nick: "Qwen",
     selfSignature:
@@ -85,7 +85,7 @@ export const ProvidersList = [
     ],
   },
   {
-    ...BaseUserProfile,
+    ...baseUserProfile,
     userID: "@RBT#005",
     nick: "Ollama",
     selfSignature:
@@ -102,7 +102,7 @@ export const ProvidersList = [
     ],
   },
   {
-    ...BaseUserProfile,
+    ...baseUserProfile,
     userID: "@RBT#006",
     nick: "GitHub",
     selfSignature: "通过GitHub模型，开发人员可以成为AI工程师，并使用行业领先的AI模型进行构建。",
@@ -118,7 +118,7 @@ export const ProvidersList = [
     ],
   },
   {
-    ...BaseUserProfile,
+    ...baseUserProfile,
     userID: "@RBT#007",
     nick: "DeepSeek",
     selfSignature:
@@ -135,7 +135,7 @@ export const ProvidersList = [
     ],
   },
   {
-    ...BaseUserProfile,
+    ...baseUserProfile,
     userID: "@RBT#008",
     nick: "Mistral",
     selfSignature:

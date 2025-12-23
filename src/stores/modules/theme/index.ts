@@ -1,4 +1,4 @@
-import { ThemeMode, ThemeModeKey } from "@shared/theme"
+import { ThemeMode, ThemeModeKey } from "@/theme/settings"
 import { defineStore } from "pinia"
 
 import { SetupStoreId } from "@/stores/enum"
@@ -11,7 +11,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
     themeScheme: ThemeMode.light,
     fontTheme: "AliFangYuan",
     fontThemeList: [
-      { label: "阿里方元", value: "AliFangYuan" },
+      { label: "阿里方园", value: "AliFangYuan" },
       { label: "微软雅黑", value: "微软雅黑" },
       {
         label: "Inter",

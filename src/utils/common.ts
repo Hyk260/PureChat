@@ -1,4 +1,4 @@
-import { loading, warning } from "@database/custom"
+import { loading, warning } from "@/config/custom"
 
 /**
  * 检测是否为移动设备
