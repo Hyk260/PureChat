@@ -1,4 +1,3 @@
-import { nanoid } from "@/utils/uuid"
 import { browserDB } from "../client/db"
 
 import type { BrowserDB } from "../client/db"

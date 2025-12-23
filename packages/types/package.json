@@ -1,0 +1,11 @@
+{
+  "name": "@purechat/types",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Type definitions for PureChat",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "type-fest": "^4.41.0",
+    "zod": "^3.25.76"
+  }
+}

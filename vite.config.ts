@@ -22,6 +22,8 @@ export default defineConfig((configEnv) => {
         "@shared": fileURLToPath(new URL("./packages/shared", import.meta.url)),
         // 配置数据库路径别名@database
         "@database": fileURLToPath(new URL("./packages/database", import.meta.url)),
+        // 配置类型包别名@purechat/types
+        "@purechat/types": fileURLToPath(new URL("./packages/types", import.meta.url)),
       },
       extensions: [".js", ".ts", ".json"],
     },

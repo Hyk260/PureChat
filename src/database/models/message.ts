@@ -1,6 +1,5 @@
 import { BaseModel } from "../core/model"
 import { DB_MessageSchema } from "../schemas/message"
-import { FilesModel } from "@/database/models/files"
 
 import type { DB_Message } from "../schemas/message"
 import type { DBModel } from "@/database/types/db"

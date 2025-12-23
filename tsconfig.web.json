@@ -29,7 +29,8 @@
       "@/*": ["./src/*"],
       "~/*": ["./*"],
       "@shared/*": ["./packages/shared/*"],
-      "@database/*": ["./packages/database/*"]
+      "@database/*": ["./packages/database/*"],
+      "@purechat/types": ["./packages/types/src"]
     },
     "types": ["vite/client", "node", "element-plus/global"]
   },

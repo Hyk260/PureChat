@@ -134,7 +134,7 @@ import { timeFormat } from "@/utils/timeFormat"
 // import LoadMore from "../components/LoadMore.vue"
 
 import type { DB_Message, FilePayloadType } from "@/types"
-import type { MenuItem } from "@/types/contextMenu"
+import type { MenuItem } from "@purechat/types"
 
 const userPopupRef = useTemplateRef("userPopupRef")
 const scrollbarRef = useTemplateRef("scrollbarRef")
