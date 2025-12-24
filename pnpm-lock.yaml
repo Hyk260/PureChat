@@ -26,6 +26,9 @@ importers:
       '@pure/const':
         specifier: workspace:*
         version: link:packages/const
+      '@pure/icons':
+        specifier: workspace:*
+        version: link:packages/icons
       '@pure/utils':
         specifier: workspace:*
         version: link:packages/utils
@@ -330,6 +333,8 @@ importers:
 
   packages/const: {}
 
+  packages/icons: {}
+
   packages/model-bank:
     dependencies:
       zod:
@@ -344,9 +349,6 @@ importers:
       model-bank:
         specifier: workspace:*
         version: link:../model-bank
-      type-fest:
-        specifier: ^4.41.0
-        version: 4.41.0
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -359,12 +361,6 @@ importers:
       '@pure/types':
         specifier: workspace:*
         version: link:../types
-      dayjs:
-        specifier: ^1.11.18
-        version: 1.11.19
-      dompurify:
-        specifier: ^3.2.7
-        version: 3.2.7
     devDependencies:
       happy-dom:
         specifier: ^20.0.11

@@ -1,4 +1,4 @@
-import type { ChatStreamCallbacks } from "@/ai/types"
+import type { ChatStreamCallbacks } from "@pure/types"
 import type { ChatResponse } from "ollama/browser"
 
 export interface StreamContext {
