@@ -68,19 +68,6 @@ export interface RobotBoxEventData {
   promptFocus?: boolean
 }
 
-export interface Model {
-  id: string
-  provider: string
-  name: string
-  group: string
-  owned_by?: string
-  description?: string
-  /**
-   * @deprecated
-   */
-  supported_text_delta?: boolean
-}
-
 export type KnowledgeItemType = "file" | "url"
 
 export interface KnowledgeReference {

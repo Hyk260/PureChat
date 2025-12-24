@@ -18,7 +18,7 @@ import {
 import { SetupStoreId } from "@/stores/enum"
 import { addTimeDivider, checkTextNotEmpty, getBaseTime, scrollToMessage } from "@/utils/chat"
 import { delay } from "@/utils/common"
-import { ModelIDList } from "@/types/provider"
+import { ModelIDList } from "model-bank"
 import { emitUpdateScroll } from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 
@@ -31,7 +31,7 @@ import { useAppStore } from "../app"
 import type { ChatState } from "./type"
 import type { Provider } from "model-bank"
 import type { DB_Message, DB_Session, TypeSchemaType, DraftData, ImagePayloadType } from "@/types"
-import type { ModelIDValue } from "@/types/provider"
+import type { ModelIDValue } from "model-bank"
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
   state: (): ChatState => ({

@@ -183,7 +183,7 @@
               <ElSelect
                 v-model="item.defaultValue"
                 placeholder="选择测试模型"
-                class="!w-300"
+                class="w-300!"
                 appendToBody
                 @change="onModelDataChanged"
               >
@@ -234,7 +234,7 @@ import { Atom, Eye, ToyBrick, CircleQuestionMark as QuestionFilled, RefreshCcw a
 import { ElSlider } from "element-plus"
 import { cloneDeep, debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
-import { ModelIcon } from "@/components/Features"
+import { ModelIcon } from "@pure/icons"
 import { getLowerBaseModelName, getBaseModelName } from "@/ai/reasoning"
 import { modelConfig, modelValue } from "@/ai/constant"
 import { ModelSelect } from "@/ai/resources"

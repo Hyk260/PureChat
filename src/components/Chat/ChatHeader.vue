@@ -74,7 +74,7 @@ import { Menu, MessageCirclePlus, PanelRightClose, PanelLeftClose, History, Shar
 import { storeToRefs } from "pinia"
 
 import { useChatStore, useRobotStore, usePortalStore } from "@/stores"
-import ModelTag from "@/components/Features/ModelTag"
+import { ModelTag } from "@pure/icons"
 import CustomLabel from "@/components/Chat/CustomLabel.vue"
 import emitter from "@/utils/mitt-bus"
 

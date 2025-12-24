@@ -132,3 +132,16 @@ export interface AIBaseModelCard {
 
   releasedAt?: string
 }
+
+export interface Model {
+  id: string
+  provider: string
+  name: string
+  group: string
+  owned_by?: string
+  description?: string
+  /**
+   * @deprecated
+   */
+  supported_text_delta?: boolean
+}

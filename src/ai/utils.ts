@@ -1,20 +1,14 @@
-import { ModelID } from "@/types/provider"
 import { isEmpty } from "lodash-es"
-
 import { modelConfig, modelValue } from "@/ai/constant"
-import { LLMParams, ModelProvider, Provider } from "model-bank"
+import { LLMParams, ModelProvider, Provider, ModelID, type ModelIDValue, type Model } from "model-bank"
 import { useRobotStore } from "@/stores/modules/robot"
 import { localStg } from "@/utils/storage"
-
 import {
   isOpenAIChatCompletionOnlyModel,
   isOpenAIOpenWeightModel,
   isOpenAIReasoningModel,
   isQwenMTModel,
 } from "./reasoning"
-
-import type { Model } from "@/types"
-import type { ModelIDValue } from "@/types/provider"
 
 /**
  * 获取 AI 模型的配置信息
