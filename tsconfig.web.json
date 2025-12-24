@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "useDefineForClassFields": true,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
     "allowJs": true,
     "checkJs": false,
     "esModuleInterop": true,
+    "useDefineForClassFields": true,
     "allowSyntheticDefaultImports": true,
     "strict": false,
     "strictNullChecks": true,
@@ -27,8 +27,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "~/*": ["./*"],
-      "@database/*": ["./packages/database/*"],
+      "~/*": ["./*"]
     },
     "types": ["vite/client", "node", "element-plus/global"]
   },

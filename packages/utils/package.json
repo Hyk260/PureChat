@@ -13,9 +13,7 @@
   },
   "dependencies": {
     "@pure/const": "workspace:*",
-    "@pure/types": "workspace:*",
-    "dayjs": "^1.11.18",
-    "dompurify": "^3.2.7"
+    "@pure/types": "workspace:*"
   },
   "devDependencies": {
     "happy-dom": "^20.0.11",
