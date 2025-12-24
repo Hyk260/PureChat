@@ -1,4 +1,4 @@
-import type { LLMRoleType } from "@/ai/types"
+import type { LLMRoleType } from "@pure/types"
 import type { DB_Message } from "@/database/schemas/message"
 
 interface OnFinishData {

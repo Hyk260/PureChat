@@ -1,5 +1,4 @@
-import type { LLMParams, ModelProviderKey } from "@/ai/types"
-// import type { LLMRoleType } from "@/ai/types"
+import type { LLMParams, Provider } from "@/ai/types"
 
 import { Prompt } from "@/types/llm"
 
@@ -68,8 +67,8 @@ export interface RobotState {
   model: Model | null
   promptConfig: Prompt | null
   modelConfig: LLMParams | null
-  modelProvider: ModelProviderKey
-  defaultProvider: ModelProviderKey
+  modelProvider: Provider
+  defaultProvider: Provider
   isShowBotTools: boolean
   promptStore: PromptStore
   modelStore: ModelStore

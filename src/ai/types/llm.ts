@@ -36,15 +36,6 @@ export interface LLMParams {
   openaiUrl: string
 }
 
-export type LLMRoleType = "user" | "system" | "assistant" | "tool"
-
-export interface LLMMessage {
-  content: string
-  role: LLMRoleType
-}
-
-export type FewShots = LLMMessage[]
-
 export interface OpenAIListModelResponse {
   object: string
   data: Array<{

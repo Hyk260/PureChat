@@ -11,7 +11,7 @@ import { useChatStore } from "../chat"
 import { useWebSearchStore } from "../websearch"
 
 import type { BotToolsFlag, Model, RobotState } from "./types"
-import type { ModelProviderKey } from "@/ai/types"
+import type { Provider } from "@/ai/types"
 import type { Prompt } from "@/types/llm"
 
 export const useRobotStore = defineStore(SetupStoreId.Robot, {
@@ -107,13 +107,13 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
         this.setModel(checkModel as Model)
       }
     },
-    setDefaultProvider(data: ModelProviderKey) {
+    setDefaultProvider(data: Provider) {
       this.defaultProvider = data
     },
     updataBotToolsFlag(data: BotToolsFlag) {
       this.isShowBotTools = Boolean(data?.functionCall)
     },
-    setModelConfig(provider: ModelProviderKey) {
+    setModelConfig(provider: Provider) {
       this.modelConfig = useAccessStore(provider)
     },
     setModel(value: Model | null) {

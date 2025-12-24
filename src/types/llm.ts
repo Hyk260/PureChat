@@ -106,8 +106,6 @@ export interface ModelProviderCard {
   url: string
 }
 
-export type LLMRoleType = "user" | "system" | "assistant" | "tool"
-
 export interface PromptMeta {
   [key: string]: any
   tags: string[]
@@ -122,7 +120,7 @@ export interface Prompt {
   meta: PromptMeta
   lang: string
   prompt: Array<{
-    role: LLMRoleType
+    role: string
     content: string
   }>
 }

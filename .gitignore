@@ -25,6 +25,6 @@ pnpm-debug.log*
 /dist
 /report.html
 
-# purechat
-*/purechat-ui
+# pure
+*/pure-ui
 stats.html

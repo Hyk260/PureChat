@@ -19,5 +19,3 @@ export enum ModelProvider {
 }
 
 export type Provider = Lowercase<keyof typeof ModelProvider>
-
-export type ModelProviderKey = Lowercase<keyof typeof ModelProvider>

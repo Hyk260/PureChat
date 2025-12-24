@@ -94,7 +94,7 @@ export default defineConfig((configEnv) => {
           manualChunks,
           // 将外部化的 @pure/ui 映射到预构建产物路径，避免 Rollup 解析
           // paths: {
-          //   "@pure/ui": "/purechat-ui/index.js",
+          //   "@pure/ui": "/pure-ui/index.js",
           // },
         },
       },

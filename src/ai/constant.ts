@@ -27,8 +27,6 @@ import { Prompt } from "@/types/llm"
 
 export const ROLES = ["system", "user", "assistant"]
 
-export const REQUEST_TIMEOUT_MS = 60000
-
 export const prompt: Prompt[] = [
   {
     id: "0",

@@ -6,7 +6,6 @@ import { useChatStore } from "@/stores"
 import { useWebSearchStore } from "@/stores/modules/websearch"
 import { createWebSearchCustomData } from "@/utils/chat/customData"
 
-// import type { LLMMessage } from "@/ai/types"
 import type { WebSearchProviderResult, WebSearchResult } from "@/service/WebSearchProvider/types"
 import type { DB_Message } from "@/database/schemas/message"
 

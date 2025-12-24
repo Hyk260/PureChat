@@ -1,4 +1,4 @@
-import { ModelProvider, ModelProviderKey } from "@/ai/types"
+import { ModelProvider, Provider } from "@/ai/types"
 import { getModelType } from "@/ai/utils"
 import deepseekPng from "@/assets/images/model-provider/deepseek.png"
 import githubSvg from "@/assets/images/model-provider/github.svg"
@@ -91,7 +91,7 @@ class AiModelDetector {
    * @param id AI机器人ID
    * @returns 模型提供者类型
    */
-  static extractModelProvider(id: string): ModelProviderKey | null {
+  static extractModelProvider(id: string): Provider | null {
     if (!this.isAiRobotId(id)) {
       return null
     }

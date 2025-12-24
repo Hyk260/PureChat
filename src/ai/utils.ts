@@ -2,7 +2,7 @@ import { ModelID } from "@/types/provider"
 import { isEmpty } from "lodash-es"
 
 import { modelConfig, modelValue } from "@/ai/constant"
-import { LLMParams, ModelProvider, ModelProviderKey } from "@/ai/types"
+import { LLMParams, ModelProvider, Provider } from "@/ai/types"
 import { useRobotStore } from "@/stores/modules/robot"
 import { localStg } from "@/utils/storage"
 
@@ -19,7 +19,7 @@ import type { ModelIDValue } from "@/types/provider"
 /**
  * 获取 AI 模型的配置信息
  */
-export const useAccessStore = (model: ModelProviderKey = ModelProvider.OpenAI): LLMParams => {
+export const useAccessStore = (model: Provider = ModelProvider.OpenAI): LLMParams => {
   const access = useRobotStore().accessStore?.[model] || ""
 
   return isEmpty(access) ? modelConfig[model] : access
@@ -28,9 +28,9 @@ export const useAccessStore = (model: ModelProviderKey = ModelProvider.OpenAI): 
 /**
  * 根据提供的模型ID获取模型类型。
  * @param {string} modelId - '@RBT#001' 模型ID，用于识别不同的模型类型。
- * @returns {ModelProviderKey | string} - 'openai' 返回对应的模型类型，如果模型ID无效则返回''。
+ * @returns {Provider | string} - 'openai' 返回对应的模型类型，如果模型ID无效则返回''。
  */
-export function getModelType(modelId: string): ModelProviderKey {
+export function getModelType(modelId: string): Provider {
   if (!/@RBT#/.test(modelId)) {
     throw new Error("Invalid modelId")
   }
@@ -47,7 +47,7 @@ export function getModelType(modelId: string): ModelProviderKey {
   return modelMapping[modelId.replace("C2C", "") as ModelIDValue]
 }
 
-export function getModelId(model: ModelProviderKey) {
+export function getModelId(model: Provider) {
   if (!model) return ""
   const modelMapping = {
     [ModelProvider.OpenAI]: ModelID.OpenAI,

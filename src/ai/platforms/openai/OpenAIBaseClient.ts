@@ -1,9 +1,10 @@
 import { OpenAI } from "openai"
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source"
 
-import { REQUEST_TIMEOUT_MS } from "@/ai/constant"
+import { FewShots } from "@pure/types"
+import { REQUEST_TIMEOUT_MS } from "@pure/const"
 import { isClaudeReasoningModel, getLowerBaseModelName } from "@/ai/reasoning"
-import { ChatOptions, FewShots, LLMConfig, LLMParams, ModelProvider, OpenAIListModelResponse } from "@/ai/types"
+import { ChatOptions, LLMConfig, LLMParams, ModelProvider, OpenAIListModelResponse } from "@/ai/types"
 import { isNotSupportTemperatureAndTopP } from "@/ai/utils"
 import {
   adjustForDeepseek,

@@ -29,7 +29,7 @@ import { useTopicStore } from "../topic"
 import { useAppStore } from "../app"
 
 import type { ChatState } from "./type"
-import type { ModelProviderKey } from "@/ai/types"
+import type { Provider } from "@/ai/types"
 import type { DB_Message, DB_Session, TypeSchemaType, DraftData, ImagePayloadType } from "@/types"
 import type { ModelIDValue } from "@/types/provider"
 
@@ -85,7 +85,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     getNonBotC2CList(): DB_Session[] {
       return this.conversationList.filter((t) => t.type === "C2C" && !/@RBT#/.test(t.conversationID))
     },
-    currentSessionProvider(): ModelProviderKey {
+    currentSessionProvider(): Provider {
       const provider = getModelType(this.toAccount)
       return provider
     },

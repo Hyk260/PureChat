@@ -2,7 +2,7 @@ import { cloneDeep } from "lodash-es"
 
 import AiProvider from "@/ai"
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
-import { ModelProvider, ModelProviderKey } from "@/ai/types"
+import { ModelProvider, Provider } from "@/ai/types"
 import { prettyObject } from "@/ai/utils"
 import { DB_Message } from "@/database/schemas/message"
 import { restApi } from "@/service/api"
@@ -19,7 +19,7 @@ interface ChatServiceParams {
   messages: DB_Message[]
   chat: DB_Message
   loadMessage?: DB_Message
-  provider: ModelProviderKey
+  provider: Provider
 }
 
 class ChatService {

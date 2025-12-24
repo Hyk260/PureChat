@@ -3,7 +3,7 @@ import { isEmpty } from "lodash-es"
 import { customDataWebSearch, DB_Message } from "@/database/schemas/message"
 import { convertBlobUrlToDataUrl } from "@/utils/chat"
 
-import type { LLMMessage } from "@/ai/types"
+import type { LLMMessage } from "@pure/types"
 import type { DraftData, ImagePayloadType, CustomPayloadType, DB_Session } from "@/types"
 
 export function checkTextNotEmpty(nodes: DraftData) {
