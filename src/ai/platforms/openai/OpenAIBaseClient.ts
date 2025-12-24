@@ -1,10 +1,11 @@
 import { OpenAI } from "openai"
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source"
 
-import { FewShots } from "@pure/types"
+import { FewShots, OpenAIListModelResponse } from "@pure/types"
 import { REQUEST_TIMEOUT_MS } from "@pure/const"
+import { LLMConfig, LLMParams, ModelProvider } from "model-bank"
 import { isClaudeReasoningModel, getLowerBaseModelName } from "@/ai/reasoning"
-import { ChatOptions, LLMConfig, LLMParams, ModelProvider, OpenAIListModelResponse } from "@/ai/types"
+import { ChatOptions } from "@/ai/types"
 import { isNotSupportTemperatureAndTopP } from "@/ai/utils"
 import {
   adjustForDeepseek,
@@ -22,7 +23,7 @@ import { transformData } from "@/utils/chat"
 
 import OllamaAI from "../ollama/ollama"
 
-import type { Provider } from "@/ai/types"
+import type { Provider } from "model-bank"
 
 export const OpenaiPath = {
   ChatPath: "chat/completions", // chatgpt 聊天接口
@@ -534,9 +535,9 @@ export abstract class OpenAIBaseClient {
       const responseJson = (await response.json()) as OpenAIListModelResponse
       return responseJson.data.map((model) => ({
         id: model.id,
-        object: model.object || "model",
-        created: (model as any).created || 0,
-        owned_by: (model as any).owned_by || "",
+        object: model?.object || "model",
+        created: model?.created || 0,
+        owned_by: model?.owned_by || "",
       })) as OpenAI.Models.Model[]
     } catch (error) {
       if (error instanceof Error && error.message) throw error

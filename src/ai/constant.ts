@@ -22,8 +22,8 @@ import { ZeroOneConfig } from "@/ai/platforms/zeroone/config"
 import { ZhiPuModelValue } from "@/ai/platforms/zhipu/modelValue"
 import { ZhiPuConfig } from "@/ai/platforms/zhipu/config"
 
-import { ModelProvider } from "@/ai/types"
-import { Prompt } from "@/types/llm"
+import { ModelProvider } from "model-bank"
+import { Prompt } from "@pure/types"
 
 export const ROLES = ["system", "user", "assistant"]
 

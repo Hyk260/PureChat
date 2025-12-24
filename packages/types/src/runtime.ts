@@ -1,5 +1,5 @@
 import type { LLMRoleType } from "@pure/types"
-import type { DB_Message } from "@/database/schemas/message"
+import type { LLMConfig } from "model-bank"
 
 interface OnFinishData {
   grounding?: any
@@ -142,17 +142,8 @@ export interface ChatMethodOptions {
   user?: string
 }
 
-export interface LLMConfig {
-  model: string
-  temperature?: number
-  top_p?: number
-  stream?: boolean
-  presence_penalty?: number
-  frequency_penalty?: number
-}
-
 export interface ChatOptions {
-  messages: DB_Message[]
+  messages: any[]
   config: LLMConfig
   requestId: string
 

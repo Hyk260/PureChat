@@ -64,7 +64,7 @@ import { useState } from "@/hooks/useState"
 import { useRobotStore } from "@/stores/modules/robot"
 import { nanoid } from "@/utils/uuid"
 
-import type { Prompt } from "@/types/llm"
+import type { Prompt } from "@pure/types"
 
 defineOptions({
   name: "DragPrompt",

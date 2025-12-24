@@ -2,7 +2,7 @@ import { ModelID } from "@/types/provider"
 import { isEmpty } from "lodash-es"
 
 import { modelConfig, modelValue } from "@/ai/constant"
-import { LLMParams, ModelProvider, Provider } from "@/ai/types"
+import { LLMParams, ModelProvider, Provider } from "model-bank"
 import { useRobotStore } from "@/stores/modules/robot"
 import { localStg } from "@/utils/storage"
 

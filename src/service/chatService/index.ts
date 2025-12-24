@@ -2,7 +2,7 @@ import { cloneDeep } from "lodash-es"
 
 import AiProvider from "@/ai"
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
-import { ModelProvider, Provider } from "@/ai/types"
+import { ModelProvider, Provider } from "model-bank"
 import { prettyObject } from "@/ai/utils"
 import { DB_Message } from "@/database/schemas/message"
 import { restApi } from "@/service/api"

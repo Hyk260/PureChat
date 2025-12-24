@@ -1,6 +1,6 @@
 import { Ollama } from "ollama/browser"
 
-import { ModelProvider } from "@/ai/types"
+import { ModelProvider } from "model-bank"
 import { useAccessStore } from "@/ai/utils"
 // import { hostPreview } from "@/utils/api"
 import { nanoid } from "@/utils/uuid"
@@ -13,8 +13,8 @@ import {
   transformOllamaStream,
 } from "./protocol"
 
-import type { OllamaMessage } from "./type"
-import type { ChatMethodOptions, ChatStreamCallbacks, ChatStreamPayload, OpenAIChatMessage } from "@/ai/types"
+import type { LLMMessage } from "@pure/types"
+import type { ChatMethodOptions, ChatStreamCallbacks, ChatStreamPayload, OpenAIChatMessage } from "@pure/types"
 import type { ChatResponse, Tool } from "ollama/browser"
 
 function getIcon(modelName: string) {
@@ -87,12 +87,12 @@ export default class OllamaAI {
     return messages.map((t) => this.convertContentToOllamaMessage(t))
   }
 
-  private readonly convertContentToOllamaMessage = (message: OpenAIChatMessage): OllamaMessage => {
+  private readonly convertContentToOllamaMessage = (message: OpenAIChatMessage): LLMMessage => {
     if (typeof message.content === "string") {
       return { content: message.content, role: message.role }
     }
 
-    const ollamaMessage: OllamaMessage = {
+    const ollamaMessage: LLMMessage = {
       content: "",
       role: message.role,
     }

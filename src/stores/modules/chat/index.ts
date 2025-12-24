@@ -29,7 +29,7 @@ import { useTopicStore } from "../topic"
 import { useAppStore } from "../app"
 
 import type { ChatState } from "./type"
-import type { Provider } from "@/ai/types"
+import type { Provider } from "model-bank"
 import type { DB_Message, DB_Session, TypeSchemaType, DraftData, ImagePayloadType } from "@/types"
 import type { ModelIDValue } from "@/types/provider"
 

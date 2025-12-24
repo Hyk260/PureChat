@@ -1,6 +1,5 @@
-import type { LLMParams, Provider } from "@/ai/types"
-
-import { Prompt } from "@/types/llm"
+import type { LLMParams, Provider } from "model-bank"
+import type { Prompt } from "@pure/types"
 
 export interface Model {
   id: string

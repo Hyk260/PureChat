@@ -1,7 +1,7 @@
 import { computed } from "vue"
 import { Cloud, Brain, Globe, Settings2 as Settings, CircleAlert, Sun, Moon, Monitor } from "lucide-vue-next"
 
-import { ModelProvider } from "@/ai/types"
+import { ModelProvider } from "model-bank"
 import { $t } from "@/locales"
 
 export const list = computed(() => {

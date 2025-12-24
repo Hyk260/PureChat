@@ -1,4 +1,4 @@
-import { ModelProvider, Provider } from "@/ai/types"
+import { ModelProvider, Provider } from "model-bank"
 import { getModelType } from "@/ai/utils"
 import deepseekPng from "@/assets/images/model-provider/deepseek.png"
 import githubSvg from "@/assets/images/model-provider/github.svg"

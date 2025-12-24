@@ -1,11 +1,3 @@
-import type { ChatStreamPayload } from "./chat"
-import type OpenAI from "openai"
-
-export interface CreateChatCompletionOptions {
-  chatModel: OpenAI
-  payload: ChatStreamPayload
-}
-
 export enum ModelProvider {
   OpenAI = "openai",
   ZhiPu = "zhipu",
@@ -15,7 +7,7 @@ export enum ModelProvider {
   GitHub = "github",
   DeepSeek = "deepseek",
   Mistral = "mistral",
-  // V0 = 'v0',
+  V0 = "v0",
 }
 
 export type Provider = Lowercase<keyof typeof ModelProvider>

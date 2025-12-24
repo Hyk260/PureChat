@@ -8,7 +8,7 @@ import Github from "@/components/Icon/Github"
 import Ollama from "@/components/Icon/Ollama"
 
 import type { Component } from "vue"
-import { ModelProvider } from "@/ai/types"
+import { ModelProvider } from "model-bank"
 
 type ProviderIconType = Component & {
   Avatar?: Component

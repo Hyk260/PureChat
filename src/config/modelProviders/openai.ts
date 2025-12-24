@@ -1,4 +1,4 @@
-import { ModelProviderCard } from "@/types/llm"
+import { ModelProviderCard } from "@pure/types"
 
 // ref https://platform.openai.com/docs/models
 const OpenAI: ModelProviderCard = {

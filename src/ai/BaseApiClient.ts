@@ -1,4 +1,4 @@
-import type { Provider } from "@/ai/types"
+import type { Provider } from "model-bank"
 
 /**
  * API客户端的抽象基类.

@@ -6,7 +6,7 @@ import GithubProvider from "./github"
 import DeepSeekProvider from "./deepseek"
 import QwenProvider from "./qwen"
 import MistralProvider from "./mistral"
-import { ModelProviderCard, ChatModelCard } from "@/types/llm"
+import { ModelProviderCard, ChatModelCard } from "@pure/types"
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
   OpenAIProvider,

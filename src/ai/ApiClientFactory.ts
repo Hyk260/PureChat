@@ -7,7 +7,7 @@ import { QwenApi } from "@/ai/platforms/qwen"
 import { ZeroOneApi } from "@/ai/platforms/zeroone"
 import { ZhiPuApi } from "@/ai/platforms/zhipu"
 
-import type { Provider } from "@/ai/types"
+import type { Provider } from "model-bank"
 
 /**
  * 创建ApiClient实例的工厂

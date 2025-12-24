@@ -8,6 +8,8 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "model-bank": "workspace:*",
+    "@pure/types": "workspace:*",
     "type-fest": "^4.41.0",
     "zod": "^3.25.76"
   }

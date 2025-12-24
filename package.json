@@ -67,6 +67,7 @@
     "markdown-it-mark": "^4.0.0",
     "markdown-it-mathjax3": "^5.2.0",
     "mitt": "^3.0.0",
+    "model-bank": "workspace:*",
     "modern-screenshot": "^4.6.2",
     "monaco-editor": "^0.54.0",
     "nanoid": "^5.0.7",
