@@ -1,5 +1,5 @@
 import { OpenAI } from "openai"
-import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source"
+import { EventStreamContentType, fetchEventSource, fetchSSE } from "@pure/utils"
 
 import { REQUEST_TIMEOUT_MS } from "@pure/const"
 import { LLMConfig, LLMParams, ModelProvider } from "model-bank"
@@ -21,7 +21,7 @@ import { transformData } from "@/utils/chat"
 
 import OllamaAI from "../ollama/ollama"
 
-import type { FewShots, OpenAIListModelResponse, ChatOptions } from "@pure/types"
+import type { FewShots, OpenAIListModelResponse, ChatOptions, ChatPayload } from "@pure/types"
 import type { Provider } from "model-bank"
 
 export const OpenaiPath = {
@@ -47,20 +47,6 @@ export abstract class OpenAIBaseClient {
     const baseUrl = this.getBaseURL()
     const fullPath = hostPreview(baseUrl, path)
     return fullPath
-  }
-
-  /**
-   * 获取插件工具列表
-   */
-  getPluginTools() {
-    // const pluginList = useToolsStore().tools
-    // if (!pluginList.length) return []
-
-    // if (useRobotStore().model?.functionCall) {
-    //   return pluginList.map((t) => t.tools[0])
-    // }
-
-    return []
   }
 
   /**
@@ -187,11 +173,6 @@ export abstract class OpenAIBaseClient {
       top_p: this.getTopP(modelConfig?.top_p, { id: modelConfig.model }), // 核采样
       // tools: [] // 工具
     }
-    // const tools = this.getPluginTools()
-    // if (tools.length > 0) {
-    //   payload.tools = tools
-    //   payload.stream = false
-    // }
     return payload
   }
 
@@ -226,7 +207,7 @@ export abstract class OpenAIBaseClient {
 
     try {
       const chatPath = this.getPath()
-      const chatPayload = {
+      const chatPayload: ChatPayload = {
         method: "POST",
         body: JSON.stringify(requestPayload),
         // fetch: () => {},
@@ -249,6 +230,24 @@ export abstract class OpenAIBaseClient {
       console.error("[Request] failed to make a chat reqeust", error)
       options?.onError?.(error instanceof Error ? error.message : "请求失败，请稍后重试")
     }
+  }
+
+  handleOpen(res: Response) {
+    console.log("[OpenAI] fetchEventSource", res)
+    // clearTimeout(requestTimeoutId)
+    // const contentType = res.headers.get("content-type")
+    // // text/event-stream; charset=utf-8
+    // console.log("[OpenAI] request response content type: ", contentType)
+    // if (contentType?.startsWith("text/plain")) {
+    //   responseText = await res.clone().text()
+    //   return finish()
+    // }
+    // const stream = contentType?.startsWith(EventStreamContentType)
+    // // 检查流式响应格式
+    // const isValidStream = stream && res.ok && res.status === 200
+    // if (!isValidStream) {
+    //   await handleStreamError(res, options, finish)
+    // }
   }
 
   /**
@@ -334,7 +333,7 @@ export abstract class OpenAIBaseClient {
    */
   async handleStreamingChat(
     chatPath: string,
-    chatPayload: any,
+    chatPayload: ChatPayload,
     options: ChatOptions,
     controller: AbortController,
     cleanUp: () => void
@@ -404,8 +403,31 @@ export abstract class OpenAIBaseClient {
 
     const handleStreamError = this.handleStreamError.bind(this)
 
+    // const handleOpen = this.handleOpen.bind(this)
+
+    // await fetchSSE(chatPath, {
+    //   ...chatPayload,
+    //   onAbort: (data) => {
+    //     console.log("onAbort", data)
+    //   },
+    //   onOpenHandle: (res) => {
+    //     handleOpen(res)
+    //     console.log("onOpenHandle")
+    //   },
+    //   onErrorHandle: (data) => {
+    //     console.log("onErrorHandle", data)
+    //   },
+    //   onFinish: (data) => {
+    //     console.log("onFinish", data)
+    //   },
+    //   onMessageHandle: (data) => {
+    //     console.log("onMessageHandle", data)
+    //   },
+    //   responseAnimation: "smooth",
+    // })
+
     await fetchEventSource(chatPath, {
-      ...chatPayload,
+      ...(chatPayload as unknown as Record<string, string>),
       async onopen(res) {
         console.log("[OpenAI] fetchEventSource", res)
         clearTimeout(requestTimeoutId)
@@ -418,7 +440,6 @@ export abstract class OpenAIBaseClient {
           return finish()
         }
 
-        // text/event-stream EventStreamContentType
         const stream = contentType?.startsWith(EventStreamContentType)
 
         // 检查流式响应格式
@@ -451,7 +472,7 @@ export abstract class OpenAIBaseClient {
    */
   async handleNonStreamingChat(
     chatPath: string,
-    chatPayload: any,
+    chatPayload: ChatPayload,
     options: ChatOptions,
     controller: AbortController,
     cleanUp: () => void

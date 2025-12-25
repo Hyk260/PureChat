@@ -91,6 +91,7 @@ export default defineConfig([
       "@typescript-eslint/no-var-requires": "error",
       "@typescript-eslint/prefer-ts-expect-error": "warn",
       "@typescript-eslint/consistent-type-definitions": ["warn", "interface"],
+      "@typescript-eslint/only-throw-error": "off",
       "@typescript-eslint/consistent-type-imports": [
         "off",
         {

@@ -1,4 +1,4 @@
-import { Model } from "@/types"
+import { Model } from "model-bank"
 /**
  * 从模型 ID 中提取基础名称。
  * 例如：

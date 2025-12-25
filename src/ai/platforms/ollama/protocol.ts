@@ -1,51 +1,5 @@
-import type { ChatStreamCallbacks } from "@pure/types"
+import type { ChatStreamCallbacks, StreamProtocolChunk, StreamContext } from "@pure/types"
 import type { ChatResponse } from "ollama/browser"
-
-export interface StreamContext {
-  id: string
-  returnedCitation?: boolean
-  startReasoning?: boolean
-  thinking?: {
-    id: string
-    name: string
-  }
-  thinkingInContent?: boolean
-  tool?: {
-    id: string
-    index: number
-    name: string
-  }
-  toolIndex?: number
-}
-
-export interface StreamProtocolChunk {
-  data: any
-  id?: string
-  type: // pure text
-  | "text"
-    // base64 format image
-    | "base64_image"
-    // Tools use
-    | "tool_calls"
-    // Model Thinking
-    | "reasoning"
-    // use for reasoning signature, maybe only anthropic
-    | "reasoning_signature"
-    // flagged reasoning signature
-    | "flagged_reasoning_signature"
-    // Search or Grounding
-    | "grounding"
-    // stop signal
-    | "stop"
-    // Error
-    | "error"
-    // token usage
-    | "usage"
-    // performance monitor
-    | "speed"
-    // unknown data result
-    | "data"
-}
 
 export const transformOllamaStream = (chunk: ChatResponse, stack: StreamContext): StreamProtocolChunk => {
   if (chunk.done && !chunk.message.content) {

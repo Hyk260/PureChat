@@ -1,6 +1,6 @@
 /**
- * file copy from https://github.com/Azure/fetch-event-source/blob/45ac3cfffd30b05b79fbf95c21e67d4ef59aa56a/src/fetch.ts
- * and remove some code
+ * 文件从 https://github.com/Azure/fetch-event-source/blob/45ac3cfffd30b05b79fbf95c21e67d4ef59aa56a/src/fetch.ts 复制
+ * 并移除了一些代码
  */
 import { EventSourceMessage, getBytes, getLines, getMessages } from "./parse"
 
@@ -11,49 +11,43 @@ const LastEventId = "last-event-id"
 
 export interface FetchEventSourceInit extends RequestInit {
   /**
-   * The request headers. FetchEventSource only supports the Record<string,string> format.
+   * 请求头。FetchEventSource 仅支持 Record<string,string> 格式。
    */
   headers?: Record<string, string>
 
   /**
-   * Called when a response is received. Use this to validate that the response
-   * actually matches what you expect (and throw if it doesn't.) If not provided,
-   * will default to a basic validation to ensure the content-type is text/event-stream.
+   * 当接收到响应时调用。使用此函数验证响应是否与您期望的匹配（如果不匹配则抛出错误）。
+   * 如果未提供，将默认进行基本验证，确保 content-type 是 text/event-stream。
    */
   onopen?: (response: Response) => Promise<void>
 
   /**
-   * Called when a message is received. NOTE: Unlike the default browser
-   * EventSource.onmessage, this callback is called for _all_ events,
-   * even ones with a custom `event` field.
+   * 当接收到消息时调用。注意：与默认浏览器的 EventSource.onmessage 不同，
+   * 此回调会为所有事件调用，即使是带有自定义 `event` 字段的事件。
    */
   onmessage?: (ev: EventSourceMessage) => void
 
   /**
-   * Called when a response finishes. If you don't expect the server to kill
-   * the connection, you can throw an exception here and retry using onerror.
+   * 当响应结束时调用。如果您不希望服务器终止连接，可以在此处抛出异常并使用 onerror 重试。
    */
   onclose?: () => void
 
   /**
-   * Called when there is any error making the request / processing messages /
-   * handling callbacks etc. Use this to control the retry strategy: if the
-   * error is fatal, rethrow the error inside the callback to stop the entire
-   * operation. Otherwise, you can return an interval (in milliseconds) after
-   * which the request will automatically retry (with the last-event-id).
-   * If this callback is not specified, or it returns undefined, fetchEventSource
-   * will treat every error as retriable and will try again after 1 second.
+   * 当请求/处理消息/处理回调等出现任何错误时调用。使用此函数控制重试策略：
+   * 如果错误是致命的，在回调内部重新抛出错误以停止整个操作。否则，
+   * 您可以返回一个间隔时间（以毫秒为单位），之后请求将自动重试（带有 last-event-id）。
+   * 如果未指定此回调，或者它返回 undefined，fetchEventSource 将把每个错误视为可重试的，
+   * 并在 1 秒后再次尝试。
    */
   onerror?: (err: any) => number | null | undefined | void
 
   /**
-   * If true, will keep the request open even if the document is hidden.
-   * By default, fetchEventSource will close the request and reopen it
-   * automatically when the document becomes visible again.
+   * 如果为 true，即使文档隐藏也会保持请求打开。
+   * 默认情况下，fetchEventSource 会关闭请求，并在文档再次可见时自动重新打开。
    */
   openWhenHidden?: boolean
 
-  /** The Fetch function to use. Defaults to window.fetch */
+  /** 要使用的 Fetch 函数。默认为 window.fetch */
   fetch?: typeof fetch
 }
 
@@ -72,7 +66,7 @@ export function fetchEventSource(
   }: FetchEventSourceInit
 ) {
   return new Promise<void>((resolve, reject) => {
-    // make a copy of the input headers since we may modify it below:
+    // 复制输入的 headers，因为我们可能会在下面修改它：
     const headers = { ...inputHeaders }
     if (!headers.accept) {
       headers.accept = EventStreamContentType
@@ -98,10 +92,10 @@ export function fetchEventSource(
       curRequestController.abort()
     }
 
-    // if the incoming signal aborts, dispose resources and resolve:
+    // 如果传入的信号中止，释放资源并解决 Promise：
     inputSignal?.addEventListener("abort", () => {
       dispose()
-      resolve() // don't waste time constructing/logging errors
+      resolve() // 不浪费时间构建/记录错误
     })
 
     const fetch = inputFetch ?? window.fetch
@@ -118,15 +112,15 @@ export function fetchEventSource(
         await onopen(response)
 
         await getBytes(
-          response.body!,
+          response.body,
           getLines(
             getMessages(
               (id) => {
                 if (id) {
-                  // store the id and send it back on the next retry:
+                  // 存储 id 并在下次重试时发送回去：
                   headers[LastEventId] = id
                 } else {
-                  // don't send the last-event-id header anymore:
+                  // 不再发送 last-event-id 头部：
                   delete headers[LastEventId]
                 }
               },
@@ -143,14 +137,14 @@ export function fetchEventSource(
         resolve()
       } catch (err) {
         if (!curRequestController.signal.aborted) {
-          // if we haven't aborted the request ourselves:
+          // 如果我们自己没有中止请求：
           try {
-            // check if we need to retry:
+            // 检查是否需要重试：
             const interval: any = onerror?.(err) ?? retryInterval
             window.clearTimeout(retryTimer)
             retryTimer = window.setTimeout(create, interval)
           } catch (innerErr) {
-            // we should not retry anymore:
+            // 我们不应该再重试了：
             dispose()
             reject(innerErr)
           }
@@ -165,6 +159,6 @@ export function fetchEventSource(
 function defaultOnOpen(response: Response) {
   const contentType = response.headers.get("content-type")
   if (!contentType?.startsWith(EventStreamContentType)) {
-    throw new Error(`Expected content-type to be ${EventStreamContentType}, Actual: ${contentType}`)
+    throw new Error(`期望的 content-type 是 ${EventStreamContentType}，实际值: ${contentType}`)
   }
 }

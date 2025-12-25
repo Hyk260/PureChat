@@ -1,3 +1,7 @@
+export * from "./aiProvider"
 export * from "./contextMenu"
+export * from "./fetch"
 export * from "./llm"
+export * from "./message"
+export * from "./protocol"
 export * from "./runtime"
