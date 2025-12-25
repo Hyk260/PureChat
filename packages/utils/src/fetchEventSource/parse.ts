@@ -116,7 +116,11 @@ export function getLines(onLine: (line: Uint8Array, fieldLength: number) => void
  * @param onMessage A function that will be called on each message.
  * @returns A function that should be called for each incoming line buffer.
  */
-export function getMessages(onId: (id: string) => void, onMessage?: (msg: EventSourceMessage) => void) {
+export function getMessages(
+  onId: (id: string) => void,
+  onRetry: (retry: number) => void,
+  onMessage?: (msg: EventSourceMessage) => void
+) {
   let message = newMessage()
   const decoder = new TextDecoder()
 
@@ -145,6 +149,13 @@ export function getMessages(onId: (id: string) => void, onMessage?: (msg: EventS
           break
         case "id":
           onId((message.id = value))
+          break
+        case "retry":
+          const retry = parseInt(value, 10)
+          if (!isNaN(retry)) {
+            // per spec, ignore non-integers
+            onRetry((message.retry = retry))
+          }
           break
       }
     }
