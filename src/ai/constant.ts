@@ -23,22 +23,6 @@ import { ZhiPuModelValue } from "@/ai/platforms/zhipu/modelValue"
 import { ZhiPuConfig } from "@/ai/platforms/zhipu/config"
 
 import { ModelProvider } from "model-bank"
-import { Prompt } from "@pure/types"
-
-export const ROLES = ["system", "user", "assistant"]
-
-export const prompt: Prompt[] = [
-  {
-    id: "0",
-    meta: {
-      tags: [],
-      avatar: "🌟",
-      title: "",
-    },
-    lang: "cn",
-    prompt: [{ role: "system", content: "" }],
-  },
-]
 
 export const modelConfig = {
   [ModelProvider.OpenAI]: OpenaiConfig,

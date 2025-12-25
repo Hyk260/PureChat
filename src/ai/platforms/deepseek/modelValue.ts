@@ -59,7 +59,7 @@ export const DeepseekModelValue = {
     SubTitle: "值越大，越倾向不同的表达方式，避免概念重复；值越小，越倾向使用重复的概念或叙述，表达更具一致性",
     defaultValue: "",
     step: 0.1,
-    min: 0,
+    min: -2,
     max: 2,
   },
   FrequencyPenalty: {
@@ -68,7 +68,7 @@ export const DeepseekModelValue = {
     SubTitle: "值越大，用词越丰富多样；值越低，用词更朴实简单",
     defaultValue: "",
     step: 0.1,
-    min: 0,
+    min: -2,
     max: 2,
   },
   HistoryMessageCount: {

@@ -58,8 +58,7 @@ import { cloneDeep, isEmpty } from "lodash-es"
 import { storeToRefs } from "pinia"
 
 import EmojiMart from "@/components/EmojiMart/index.vue"
-import { prompt } from "@/ai/constant"
-// import { ROLES } from "@/ai/constant";
+import { prompt } from "@pure/const"
 import { useState } from "@/hooks/useState"
 import { useRobotStore } from "@/stores/modules/robot"
 import { nanoid } from "@/utils/uuid"
@@ -85,7 +84,7 @@ function initPromptData() {
   const _promptStore = promptStore.value?.[modelProvider.value] || []
   if (isEmpty(_promptStore)) {
     promptItems.value = cloneDeep(prompt)
-    promptItems.value.map((item) => (item.ID = nanoid()))
+    promptItems.value.map((item) => (item.id = nanoid()))
   } else {
     promptItems.value = cloneDeep(_promptStore)
   }

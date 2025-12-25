@@ -128,7 +128,6 @@ export interface ModelProviderCard {
 }
 
 export interface PromptMeta {
-  [key: string]: any
   tags: string[]
   avatar: string
   title: string
@@ -136,12 +135,11 @@ export interface PromptMeta {
 }
 
 export interface Prompt {
-  [key: string]: any
   id: string
   meta: PromptMeta
   lang: string
   prompt: Array<{
-    role: string
+    role: LLMRoleType
     content: string
   }>
 }

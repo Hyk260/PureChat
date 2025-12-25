@@ -1,11 +1,9 @@
 import { OpenAI } from "openai"
 import { EventStreamContentType, fetchEventSource } from "@microsoft/fetch-event-source"
 
-import { FewShots, OpenAIListModelResponse } from "@pure/types"
 import { REQUEST_TIMEOUT_MS } from "@pure/const"
 import { LLMConfig, LLMParams, ModelProvider } from "model-bank"
 import { isClaudeReasoningModel, getLowerBaseModelName } from "@/ai/reasoning"
-import { ChatOptions } from "@/ai/types"
 import { isNotSupportTemperatureAndTopP } from "@/ai/utils"
 import {
   adjustForDeepseek,
@@ -23,6 +21,7 @@ import { transformData } from "@/utils/chat"
 
 import OllamaAI from "../ollama/ollama"
 
+import type { FewShots, OpenAIListModelResponse, ChatOptions } from "@pure/types"
 import type { Provider } from "model-bank"
 
 export const OpenaiPath = {
