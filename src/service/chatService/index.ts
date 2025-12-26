@@ -39,15 +39,15 @@ class ChatService {
         stream: true,
         model: api.config.model,
       },
-      onUpdate: (data: AIResponse) => this.handleUpdate(startMsg, data),
+      onUpdate: (data: AIResponse) => this.updateMessage(startMsg, data),
       onFinish: (data: AIResponse) => {
         this.handleFinish(data, startMsg, chat)
       },
-      onReasoningMessage: (think: string) => this.handleReasoningMessage(startMsg, think),
+      // onReasoningMessage: (think: string) => this.handleReasoningMessage(startMsg, think),
       onError: (errorText: string) => {
         this.handleError(startMsg, chat, errorText)
       },
-      onController: (controller) => this.handleController(controller),
+      // onController: (controller) => this.handleController(controller),
     })
   }
 
@@ -179,13 +179,6 @@ class ChatService {
     } catch (error) {
       console.error("网络搜索处理失败:", error)
     }
-  }
-
-  /**
-   * 处理消息更新
-   */
-  private handleUpdate(startMsg: DB_Message, data: AIResponse) {
-    this.updateMessage(startMsg, data)
   }
 
   /**

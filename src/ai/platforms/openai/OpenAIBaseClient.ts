@@ -329,7 +329,7 @@ export abstract class OpenAIBaseClient {
     cleanUp: () => void
   ) {
     let responseText = "" // 用于存储完整的响应文本
-    let remainText = "" // 用于存储尚未处理的文本
+    // let remainText = "" // 用于存储尚未处理的文本
     let reasoningText = "" // 用于存储完整的推理内容
     let finished = false // 用于标记动画是否已完成
 
@@ -337,46 +337,45 @@ export abstract class OpenAIBaseClient {
      * 动画响应文本的显示。
      * 根据剩余文本的长度逐步更新响应文本。
      */
-    const animateResponseText = () => {
-      // 如果动画已完成或请求已被中止，结束动画
-      if (finished || controller.signal.aborted) {
-        responseText += remainText
-        console.log("[OpenAI] 流式响应完成")
-        cleanUp()
-        // 如果响应文本为空，触发错误回调
-        if (!responseText.trim()) {
-          this.updateSendingState("delete")
-          // options.onError?.("服务器繁忙，请稍后再试。")
-        }
-        return
-      }
-      // 如果有剩余文本，进行文本动画更新
-      if (remainText.length > 0) {
-        const chunkSize = Math.max(1, Math.round(remainText.length / 60))
-        const chunk = remainText.slice(0, chunkSize)
+    // const animateResponseText = () => {
+    //   // 如果动画已完成或请求已被中止，结束动画
+    //   if (finished || controller.signal.aborted) {
+    //     responseText += remainText
+    //     console.log("[OpenAI] 流式响应完成")
+    //     cleanUp()
+    //     // 如果响应文本为空，触发错误回调
+    //     if (!responseText.trim()) {
+    //       this.updateSendingState("delete")
+    //       // options.onError?.("服务器繁忙，请稍后再试。")
+    //     }
+    //     return
+    //   }
+    //   // 如果有剩余文本，进行文本动画更新
+    //   if (remainText.length > 0) {
+    //     const chunkSize = Math.max(1, Math.round(remainText.length / 60))
+    //     const chunk = remainText.slice(0, chunkSize)
 
-        responseText += chunk
-        remainText = remainText.slice(chunkSize)
+    //     responseText += chunk
+    //     remainText = remainText.slice(chunkSize)
 
-        options?.onUpdate?.({
-          message: responseText,
-          fetchCount: chunk,
-          think: reasoningText,
-        })
-      }
+    //     options?.onUpdate?.({
+    //       message: responseText,
+    //       think: reasoningText,
+    //     })
+    //   }
 
-      requestAnimationFrame(animateResponseText)
-    }
+    //   requestAnimationFrame(animateResponseText)
+    // }
 
     // 开始动画
-    animateResponseText()
+    // animateResponseText()
 
     // 完成处理函数
     const finish = () => {
       if (!finished) {
         finished = true
         options?.onFinish?.({
-          message: responseText + remainText,
+          message: responseText,
           think: reasoningText,
         })
         cleanUp()
@@ -388,80 +387,95 @@ export abstract class OpenAIBaseClient {
       finish()
     }
 
-    // 取消fetch请求
     const requestTimeoutId = setTimeout(() => controller?.abort(), REQUEST_TIMEOUT_MS)
 
-    const handleStreamError = this.handleStreamError.bind(this)
+    // const handleStreamError = this.handleStreamError.bind(this)
 
     // const handleOpen = this.handleOpen.bind(this)
 
-    // await fetchSSE(chatPath, {
-    //   ...chatPayload,
-    //   onAbort: async (data) => {
-    //     console.log("onAbort", data)
-    //   },
-    //   onClose: () => {
-    //     finish()
-    //     console.log("onClose")
-    //   },
-    //   onOpenHandle: (res) => {
-    //     // handleOpen(res)
-    //     clearTimeout(requestTimeoutId)
-    //     console.log("onOpenHandle", res)
-    //   },
-    //   onErrorHandle: (data) => {
-    //     clearTimeout(requestTimeoutId)
-    //     console.log("onErrorHandle 流式请求错误:", data)
-    //     finish()
-    //   },
-    //   onFinish: async (data) => {
-    //     console.log("onFinish", data)
-    //     finish()
-    //   },
-    //   onMessageHandle: (data) => {
-    //     console.log("onMessageHandle", data)
-    //   },
-    //   responseAnimation: "smooth",
-    // })
-
-    await fetchEventSource(chatPath, {
-      ...(chatPayload as unknown as Record<string, string>),
-      async onopen(res) {
-        console.log("[OpenAI] fetchEventSource", res)
+    await fetchSSE(chatPath, {
+      ...chatPayload,
+      onAbort: (data) => {
+        console.log("onAbort", data)
+      },
+      onClose: () => {
+        console.log("onClose")
+        finish()
+      },
+      onOpenHandle: (res) => {
+        console.log("onOpenHandle:", res)
         clearTimeout(requestTimeoutId)
-        const contentType = res.headers.get("content-type")
-        // text/event-stream; charset=utf-8
-        console.log("[OpenAI] request response content type: ", contentType)
-
-        if (contentType?.startsWith("text/plain")) {
-          responseText = await res.clone().text()
-          return finish()
-        }
-
-        const stream = contentType?.startsWith(EventStreamContentType)
-
-        // 检查流式响应格式
-        const isValidStream = stream && res.ok && res.status === 200
-
-        if (!isValidStream) {
-          await handleStreamError(res, options, finish)
+      },
+      onErrorHandle: (data) => {
+        console.log("onErrorHandle 流式请求错误:", data)
+        clearTimeout(requestTimeoutId)
+        // options?.onFinish?.({ message: JSON.stringify(data) })
+        responseText = JSON.stringify(data)
+        finish()
+      },
+      onFinish: (text, context) => {
+        console.log("onFinish:", text, context)
+        clearTimeout(requestTimeoutId)
+        // options?.onFinish?.({ message: text, think: context.reasoning?.content })
+        responseText = text
+        finish()
+      },
+      onMessageHandle: (data) => {
+        if (data.type === "text") {
+          responseText += data.text
+          console.log("[text] onMessageHandle: ", responseText)
+          options?.onUpdate?.({
+            message: responseText,
+          })
+        } else if (data.type === "reasoning") {
+          reasoningText += data.text
+          console.log("[reasoning] onMessageHandle: ", reasoningText)
+          options?.onUpdate?.({
+            think: reasoningText,
+          })
         }
       },
-      onmessage: (msg) => {
-        const result = this.handleStreamMessage(msg, remainText, reasoningText, options, finish)
-        if (result) {
-          remainText = result.remainText
-          reasoningText = result.reasoningText
-        }
-      },
-      onclose: finish,
-      onerror(error) {
-        console.error("[OpenAI] 流式请求错误:", error)
-        options.onError?.(error instanceof Error ? error.message : "流式请求发生错误")
-        cleanUp()
-        throw error
-      },
+      responseAnimation: "smooth",
     })
+
+    // await fetchEventSource(chatPath, {
+    //   ...(chatPayload as unknown as Record<string, string>),
+    //   async onopen(res) {
+    //     console.log("[OpenAI] fetchEventSource", res)
+    //     clearTimeout(requestTimeoutId)
+    //     const contentType = res.headers.get("content-type")
+    //     // text/event-stream; charset=utf-8
+    //     console.log("[OpenAI] request response content type: ", contentType)
+
+    //     if (contentType?.startsWith("text/plain")) {
+    //       responseText = await res.clone().text()
+    //       return finish()
+    //     }
+
+    //     const stream = contentType?.startsWith(EventStreamContentType)
+
+    //     // 检查流式响应格式
+    //     const isValidStream = stream && res.ok && res.status === 200
+
+    //     if (!isValidStream) {
+    //       await handleStreamError(res, options, finish)
+    //     }
+    //   },
+    //   onmessage: (msg) => {
+    //     const result = this.handleStreamMessage(msg, remainText, reasoningText, options, finish)
+    //     if (result) {
+    //       remainText = result.remainText
+    //       reasoningText = result.reasoningText
+    //     }
+    //   },
+    //   onclose: finish,
+    //   onerror(error) {
+    //     console.error("[OpenAI] 流式请求错误:", error)
+    //     options.onError?.(error instanceof Error ? error.message : "流式请求发生错误")
+    //     cleanUp()
+    //     throw error
+    //   },
+    // })
   }
 
   /**

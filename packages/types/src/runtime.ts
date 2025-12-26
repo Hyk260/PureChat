@@ -147,8 +147,8 @@ export interface ChatOptions {
   config: LLMConfig
   requestId: string
 
-  onUpdate?: (data: { message: string; fetchCount?: string; think?: string }) => void
-  onFinish?: (data: { message: string; think?: string }) => void
+  onUpdate?: (data: { message?: string; think?: string }) => void
+  onFinish?: (data: { message?: string; think?: string }) => void
   onReasoningMessage?: (message: string) => void
   onError?: (err: string) => void
   onController?: (controller: AbortController) => void

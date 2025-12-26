@@ -6,6 +6,7 @@ import {
   ChatImageChunk,
   ChatMessageError,
   ModelReasoning,
+  ModelUsage,
   ResponseAnimation,
   ResponseAnimationStyle,
 } from "@pure/types"
@@ -21,9 +22,15 @@ export type OnFinishHandler = (
   context: {
     images?: ChatImageChunk[]
     reasoning?: ModelReasoning
+    usage?: ModelUsage
     type?: SSEFinishType
   }
-) => Promise<void>
+) => void
+
+export interface MessageUsageChunk {
+  type: "usage"
+  usage: ModelUsage
+}
 
 export interface MessageTextChunk {
   text: string
@@ -45,22 +52,23 @@ export interface MessageReasoningChunk {
 
 export interface FetchSSEOptions {
   fetcher?: typeof fetch
-  onAbort?: (text: string) => Promise<void>
+  onAbort?: (text: string) => void
   onClose?: () => void
   onOpenHandle?: (response: Response) => void
   onErrorHandle?: (error: ChatMessageError) => void
   onFinish?: OnFinishHandler
-  onMessageHandle?: (chunk: MessageTextChunk | MessageReasoningChunk | MessageBase64ImageChunk) => void
+  onMessageHandle?: (
+    chunk: MessageTextChunk | MessageUsageChunk | MessageReasoningChunk | MessageBase64ImageChunk
+  ) => void
   responseAnimation?: ResponseAnimation
 }
 
 const START_ANIMATION_SPEED = 10 // 默认起始速度
 
 export const transformOpenAIStream = (
-  chunk: OpenAI.ChatCompletionChunk,
-  _streamContext?: StreamContext
+  chunk: OpenAI.ChatCompletionChunk
 ): {
-  data: string
+  data: any
   id: string
   type: string
 } => {
@@ -68,33 +76,31 @@ export const transformOpenAIStream = (
     const item = chunk?.choices?.[0]
 
     if (!item) {
-      return { data: chunk, id: chunk.id, type: "text" }
+      if (chunk?.choices?.length === 0) {
+        return { data: "", id: chunk.id, type: "text" }
+      }
+      return { data: "", id: chunk.id, type: "text" }
     }
 
     if (typeof item.delta?.content === "string") {
       return { data: item.delta.content, id: chunk.id, type: "text" }
     }
 
-    if (item.finish_reason) {
-      return { data: item.delta.content, id: chunk.id, type: "stop" }
+    if (item.finish_reason === "stop") {
+      return { data: "", id: chunk.id, type: "stop" }
     }
 
     // DeepSeek reasoner will put thinking in the reasoning_content field
-    if (
-      item.delta &&
-      "reasoning_content" in item.delta &&
-      typeof item.delta.reasoning_content === "string" &&
-      item.delta.reasoning_content !== ""
-    ) {
+    if (item.delta && "reasoning_content" in item.delta && typeof item.delta.reasoning_content === "string") {
       return { data: item.delta.reasoning_content, id: chunk.id, type: "reasoning" }
     }
 
     if (item.delta?.content === null) {
-      return { data: item.delta, id: chunk.id, type: "text" }
+      return { data: "", id: chunk.id, type: "text" }
     }
 
     return {
-      data: item.delta,
+      data: typeof item.delta === "string" ? item.delta : "",
       id: chunk.id,
       type: "text",
     }
@@ -132,7 +138,7 @@ const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: strin
   let animationFrameId: number | null = null
   let lastFrameTime = 0
   let accumulatedTime = 0
-  let currentSpeed = startSpeed
+  let currentSpeed = startSpeed || 200
   let lastQueueLength = 0 // 记录上一帧的队列长度
 
   const stopAnimation = () => {
@@ -225,7 +231,6 @@ export const standardizeAnimationStyle = (
 }
 
 export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptions = {}) => {
-  debugger
   let triggerOnMessageHandler = false
 
   let finishedType: SSEFinishType = "done"
@@ -277,6 +282,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     }
   }
 
+  let usage: ModelUsage | undefined = undefined
   const images: ChatImageChunk[] = []
 
   await fetchEventSource(url, {
@@ -332,7 +338,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
       switch (type) {
         case "text": {
-          // skip empty text
           if (!data) break
 
           if (shouldSkipTextProcessing) {
@@ -380,6 +385,12 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
             }
           }
 
+          break
+        }
+
+        case "usage": {
+          usage = data
+          options.onMessageHandle?.({ type: "usage", usage: data })
           break
         }
 
@@ -432,10 +443,11 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         await textController.startAnimation(smoothingSpeed)
       }
 
-      await options?.onFinish?.(output, {
+      options?.onFinish?.(output, {
         images: images.length > 0 ? images : undefined,
         reasoning: thinking ? { content: thinking, signature: thinkingSignature } : undefined,
         type: finishedType,
+        usage,
       })
     }
   }
