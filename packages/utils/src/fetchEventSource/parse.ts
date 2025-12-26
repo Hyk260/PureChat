@@ -75,7 +75,6 @@ export function getLines(onLine: (line: Uint8Array, fieldLength: number) => void
         switch (buffer[position]) {
           case ControlChars.Colon:
             if (fieldLength === -1) {
-              // 行中的第一个冒号
               fieldLength = position - lineStart
             }
             break
@@ -114,27 +113,18 @@ export function getLines(onLine: (line: Uint8Array, fieldLength: number) => void
 /**
  * 将行缓冲区解析为 EventSourceMessages。
  * @param onId 对每个 `id` 字段将被调用的函数。
- * @param onRetry 对每个 `retry` 字段将被调用的函数。
  * @param onMessage 对每个消息将被调用的函数。
  * @returns 应对每个传入行缓冲区调用的函数。
  */
-export function getMessages(
-  onId: (id: string) => void,
-  onRetry: (retry: number) => void,
-  onMessage?: (msg: EventSourceMessage) => void
-) {
+export function getMessages(onId: (id: string) => void, onMessage?: (msg: EventSourceMessage) => void) {
   let message = newMessage()
   const decoder = new TextDecoder()
 
-  // 返回一个可以处理每个传入行缓冲区的函数：
   return function onLine(line: Uint8Array, fieldLength: number) {
     if (line.length === 0) {
-      // 空行表示消息结束。触发回调并开始新消息：
       onMessage?.(message)
       message = newMessage()
     } else if (fieldLength > 0) {
-      // 排除注释和没有值的行
-      // 行的格式为 "<field>:<value>" 或 "<field>: <value>"
       // https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation
       const field = decoder.decode(line.subarray(0, fieldLength))
       const valueOffset = fieldLength + (line[fieldLength + 1] === ControlChars.Space ? 2 : 1)
@@ -142,9 +132,7 @@ export function getMessages(
 
       switch (field) {
         case "data":
-          // 如果此消息已有数据，将新值追加到旧值。
-          // 否则，只需设置为新值：
-          message.data = message.data ? message.data + "\n" + value : value // otherwise,
+          message.data = message.data ? message.data + "\n" + value : value
           break
         case "event":
           message.event = value
@@ -152,14 +140,6 @@ export function getMessages(
         case "id":
           onId((message.id = value))
           break
-        case "retry": {
-          const retry = parseInt(value, 10)
-          if (!isNaN(retry)) {
-            // 根据规范，忽略非整数
-            onRetry((message.retry = retry))
-          }
-          break
-        }
       }
     }
   }

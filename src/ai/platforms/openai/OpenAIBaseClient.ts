@@ -1,6 +1,6 @@
 import { OpenAI } from "openai"
 import { EventStreamContentType, fetchEventSource, fetchSSE } from "@pure/utils"
-
+import { cleanObject } from "@pure/utils/object"
 import { REQUEST_TIMEOUT_MS } from "@pure/const"
 import { LLMConfig, LLMParams, ModelProvider } from "model-bank"
 import { isClaudeReasoningModel, getLowerBaseModelName } from "@/ai/reasoning"
@@ -15,7 +15,7 @@ import {
   useAccessStore,
 } from "@/ai/utils"
 import { useChatStore, useRobotStore } from "@/stores"
-import { addAbortController, removeAbortController } from "@/utils/abortController"
+import { addAbortController, removeAbortController } from "@pure/utils"
 import { hostPreview } from "@/utils/api"
 import { transformData } from "@/utils/chat"
 
@@ -143,6 +143,10 @@ export abstract class OpenAIBaseClient {
     return fetcher
   }
 
+  getTools() {
+    return null
+  }
+
   getTopP(top_p: number | undefined, model: any): number | undefined {
     if (isClaudeReasoningModel(model)) {
       return undefined
@@ -171,9 +175,9 @@ export abstract class OpenAIBaseClient {
       presence_penalty: modelConfig.presence_penalty, //话题新鲜度
       frequency_penalty: modelConfig.frequency_penalty, // 频率惩罚度
       top_p: this.getTopP(modelConfig?.top_p, { id: modelConfig.model }), // 核采样
-      // tools: [] // 工具
+      tools: this.getTools(), // 工具
     }
-    return payload
+    return cleanObject(payload)
   }
 
   async chat(options: ChatOptions) {
@@ -210,7 +214,6 @@ export abstract class OpenAIBaseClient {
       const chatPayload: ChatPayload = {
         method: "POST",
         body: JSON.stringify(requestPayload),
-        // fetch: () => {},
         signal: controller.signal,
         headers: this.getHeaders(),
       }
@@ -232,22 +235,9 @@ export abstract class OpenAIBaseClient {
     }
   }
 
-  handleOpen(res: Response) {
+  async handleOpen(res: Response) {
     console.log("[OpenAI] fetchEventSource", res)
     // clearTimeout(requestTimeoutId)
-    // const contentType = res.headers.get("content-type")
-    // // text/event-stream; charset=utf-8
-    // console.log("[OpenAI] request response content type: ", contentType)
-    // if (contentType?.startsWith("text/plain")) {
-    //   responseText = await res.clone().text()
-    //   return finish()
-    // }
-    // const stream = contentType?.startsWith(EventStreamContentType)
-    // // 检查流式响应格式
-    // const isValidStream = stream && res.ok && res.status === 200
-    // if (!isValidStream) {
-    //   await handleStreamError(res, options, finish)
-    // }
   }
 
   /**
@@ -394,7 +384,7 @@ export abstract class OpenAIBaseClient {
     }
 
     controller.signal.onabort = () => {
-      options.onError?.("请求已手动终止")
+      options.onError?.("请求已终止")
       finish()
     }
 
@@ -407,18 +397,26 @@ export abstract class OpenAIBaseClient {
 
     // await fetchSSE(chatPath, {
     //   ...chatPayload,
-    //   onAbort: (data) => {
+    //   onAbort: async (data) => {
     //     console.log("onAbort", data)
     //   },
+    //   onClose: () => {
+    //     finish()
+    //     console.log("onClose")
+    //   },
     //   onOpenHandle: (res) => {
-    //     handleOpen(res)
-    //     console.log("onOpenHandle")
+    //     // handleOpen(res)
+    //     clearTimeout(requestTimeoutId)
+    //     console.log("onOpenHandle", res)
     //   },
     //   onErrorHandle: (data) => {
-    //     console.log("onErrorHandle", data)
+    //     clearTimeout(requestTimeoutId)
+    //     console.log("onErrorHandle 流式请求错误:", data)
+    //     finish()
     //   },
-    //   onFinish: (data) => {
+    //   onFinish: async (data) => {
     //     console.log("onFinish", data)
+    //     finish()
     //   },
     //   onMessageHandle: (data) => {
     //     console.log("onMessageHandle", data)
@@ -463,7 +461,6 @@ export abstract class OpenAIBaseClient {
         cleanUp()
         throw error
       },
-      openWhenHidden: true,
     })
   }
 

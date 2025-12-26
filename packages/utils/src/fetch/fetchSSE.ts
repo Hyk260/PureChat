@@ -12,7 +12,7 @@ import {
 
 import { fetchEventSource } from "../fetchEventSource"
 import { getMessageError } from "./parseError"
-// import { nanoid } from "../uuid"
+import { nanoid } from "../uuid"
 
 type SSEFinishType = "done" | "error" | "abort"
 
@@ -56,12 +56,19 @@ export interface FetchSSEOptions {
 
 const START_ANIMATION_SPEED = 10 // 默认起始速度
 
-export const transformOpenAIStream = (chunk: OpenAI.ChatCompletionChunk, _streamContext?: StreamContext) => {
+export const transformOpenAIStream = (
+  chunk: OpenAI.ChatCompletionChunk,
+  _streamContext?: StreamContext
+): {
+  data: string
+  id: string
+  type: string
+} => {
   try {
-    const item = chunk.choices[0]
+    const item = chunk?.choices?.[0]
 
     if (!item) {
-      return { data: chunk, id: chunk.id, type: "data" }
+      return { data: chunk, id: chunk.id, type: "text" }
     }
 
     if (typeof item.delta?.content === "string") {
@@ -69,7 +76,7 @@ export const transformOpenAIStream = (chunk: OpenAI.ChatCompletionChunk, _stream
     }
 
     if (item.finish_reason) {
-      return { data: item.finish_reason, id: chunk.id, type: "stop" }
+      return { data: item.delta.content, id: chunk.id, type: "stop" }
     }
 
     // DeepSeek reasoner will put thinking in the reasoning_content field
@@ -83,13 +90,13 @@ export const transformOpenAIStream = (chunk: OpenAI.ChatCompletionChunk, _stream
     }
 
     if (item.delta?.content === null) {
-      return { data: item.delta, id: chunk.id, type: "data" }
+      return { data: item.delta, id: chunk.id, type: "text" }
     }
 
     return {
       data: item.delta,
       id: chunk.id,
-      type: "data",
+      type: "text",
     }
   } catch (e) {
     const errorName = "StreamChunkError"
@@ -218,6 +225,7 @@ export const standardizeAnimationStyle = (
 }
 
 export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptions = {}) => {
+  debugger
   let triggerOnMessageHandler = false
 
   let finishedType: SSEFinishType = "done"
@@ -239,6 +247,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   }
 
   let output = ""
+  // 文本控制器，用于平滑输出文本
   const textController = createSmoothMessage({
     onTextUpdate: (delta, text) => {
       output = text
@@ -249,7 +258,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   let thinking = ""
   let thinkingSignature: string | undefined
-
+  // 思考控制器，用于平滑输出思考
   const thinkingController = createSmoothMessage({
     onTextUpdate: (delta, text) => {
       thinking = text
@@ -299,9 +308,9 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     },
     onmessage: (ev) => {
       triggerOnMessageHandler = true
-      let result: any
+      let result
       try {
-        result = JSON.parse(ev.data)
+        result = ev.data === "[DONE]" ? "" : JSON.parse(ev.data)
       } catch (e) {
         console.warn("parse error:", e)
         options.onErrorHandle?.({
@@ -379,14 +388,14 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         //   break
         // }
 
-        // case "base64_image": {
-        //   const id = "tmp_img_" + nanoid()
-        //   const item = { data, id, isBase64: true }
-        //   images.push(item)
+        case "base64_image": {
+          const id = "tmp_img_" + nanoid()
+          const item = { data, id, isBase64: true }
+          images.push(item)
 
-        //   options.onMessageHandle?.({ id, image: item, images, type: "base64_image" })
-        //   break
-        // }
+          options.onMessageHandle?.({ id, image: item, images, type: "base64_image" })
+          break
+        }
       }
     },
     onopen: async (res) => {
@@ -398,7 +407,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       options.onOpenHandle?.(res)
     },
     signal: options.signal,
-    openWhenHidden: true,
   })
 
   if (response) {

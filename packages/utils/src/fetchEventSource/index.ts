@@ -1,12 +1,11 @@
 /**
  * 文件从 https://github.com/Azure/fetch-event-source/blob/45ac3cfffd30b05b79fbf95c21e67d4ef59aa56a/src/fetch.ts 复制
- * 并移除了一些代码
+ * 并调整了一些代码
  */
 import { EventSourceMessage, getBytes, getLines, getMessages } from "./parse"
 
 export const EventStreamContentType = "text/event-stream"
 
-const DefaultRetryInterval = 1000
 const LastEventId = "last-event-id"
 
 export interface FetchEventSourceInit extends RequestInit {
@@ -41,12 +40,6 @@ export interface FetchEventSourceInit extends RequestInit {
    */
   onerror?: (err: any) => number | null | undefined | void
 
-  /**
-   * 如果为 true，即使文档隐藏也会保持请求打开。
-   * 默认情况下，fetchEventSource 会关闭请求，并在文档再次可见时自动重新打开。
-   */
-  openWhenHidden?: boolean
-
   /** 要使用的 Fetch 函数。默认为 window.fetch */
   fetch?: typeof fetch
 }
@@ -60,105 +53,50 @@ export function fetchEventSource(
     onmessage,
     onclose,
     onerror,
-    openWhenHidden,
     fetch: inputFetch,
     ...rest
   }: FetchEventSourceInit
 ) {
-  return new Promise<void>((resolve, reject) => {
-    // 复制输入的 headers，因为我们可能会在下面修改它：
+  return new Promise<void>((resolve) => {
     const headers = { ...inputHeaders }
     if (!headers.accept) {
       headers.accept = EventStreamContentType
     }
 
-    let curRequestController: AbortController
-    function onVisibilityChange() {
-      curRequestController.abort() // close existing request on every visibility change
-      if (!document.hidden) {
-        create() // page is now visible again, recreate request.
-      }
-    }
-
-    if (!openWhenHidden) {
-      document.addEventListener("visibilitychange", onVisibilityChange)
-    }
-
-    let retryInterval = DefaultRetryInterval
-    let retryTimer = 0
-    function dispose() {
-      document.removeEventListener("visibilitychange", onVisibilityChange)
-      window.clearTimeout(retryTimer)
-      curRequestController.abort()
-    }
-
-    // 如果传入的信号中止，释放资源并解决 Promise：
-    inputSignal?.addEventListener("abort", () => {
-      dispose()
-      resolve() // 不浪费时间构建/记录错误
-    })
-
     const fetch = inputFetch ?? window.fetch
-    const onopen = inputOnOpen ?? defaultOnOpen
+
     async function create() {
-      curRequestController = new AbortController()
       try {
         const response = await fetch(input, {
           ...rest,
           headers,
-          signal: curRequestController.signal,
+          signal: inputSignal,
         })
 
-        await onopen(response)
+        await inputOnOpen?.(response)
 
-        await getBytes(
-          response.body,
-          getLines(
-            getMessages(
-              (id) => {
-                if (id) {
-                  // 存储 id 并在下次重试时发送回去：
-                  headers[LastEventId] = id
-                } else {
-                  // 不再发送 last-event-id 头部：
-                  delete headers[LastEventId]
-                }
-              },
-              (retry) => {
-                retryInterval = retry
-              },
-              onmessage
-            )
-          )
+        const chunk = getLines(
+          getMessages((id) => {
+            if (id) {
+              // 存储 id 并在下次重试时发送回去：
+              headers[LastEventId] = id
+            } else {
+              // 不再发送 last-event-id 头部：
+              delete headers[LastEventId]
+            }
+          }, onmessage)
         )
 
+        await getBytes(response?.body as ReadableStream, chunk)
+
         onclose?.()
-        dispose()
         resolve()
       } catch (err) {
-        if (!curRequestController.signal.aborted) {
-          // 如果我们自己没有中止请求：
-          try {
-            // 检查是否需要重试：
-            const interval: any = onerror?.(err) ?? retryInterval
-            window.clearTimeout(retryTimer)
-            retryTimer = window.setTimeout(create, interval)
-          } catch (innerErr) {
-            // 我们不应该再重试了：
-            dispose()
-            reject(innerErr)
-          }
-        }
+        onerror?.(err)
+        resolve()
       }
     }
 
     create()
   })
-}
-
-function defaultOnOpen(response: Response) {
-  const contentType = response.headers.get("content-type")
-  if (!contentType?.startsWith(EventStreamContentType)) {
-    throw new Error(`期望的 content-type 是 ${EventStreamContentType}，实际值: ${contentType}`)
-  }
 }

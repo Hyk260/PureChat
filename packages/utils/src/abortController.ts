@@ -19,12 +19,16 @@ export const addAbortController = (id: string, abortFn: () => void) => {
  * @param id 唯一标识，对应需要操作的中断函数组
  * @param abortFn 可选，要移除的特定中断函数；若不提供，则删除整个id对应的函数组
  */
-export const removeAbortController = (id: string, abortFn: () => void) => {
+export const removeAbortController = (id: string, abortFn?: () => void) => {
   const callbackArr = abortMap.get(id)
   if (abortFn && callbackArr) {
     const index = callbackArr.indexOf(abortFn)
     if (index !== -1) {
       callbackArr.splice(index, 1)
+    }
+    // 如果移除后数组为空，则删除整个id对应的函数组
+    if (callbackArr.length === 0) {
+      abortMap.delete(id)
     }
   } else {
     abortMap.delete(id)

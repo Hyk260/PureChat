@@ -7,7 +7,7 @@ import { getModelId } from "@/ai/utils"
 import { sendChatAssistantMessage } from "@/service/chatService"
 import { createTextMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore, useUserStore } from "@/stores"
-import { abortCompletion } from "@/utils/abortController"
+import { abortCompletion } from "@pure/utils"
 import { getFileType } from "@/utils/chat"
 import { createPromptMessageCustomData } from "@/utils/chat/customData"
 
