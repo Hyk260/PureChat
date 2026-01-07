@@ -43,7 +43,7 @@ class ChatService {
       onFinish: (data: AIResponse) => {
         this.handleFinish(data, startMsg, chat)
       },
-      // onReasoningMessage: (think: string) => this.handleReasoningMessage(startMsg, think),
+      onReasoningMessage: (think: string) => this.handleReasoningMessage(startMsg, think),
       onError: (errorText: string) => {
         this.handleError(startMsg, chat, errorText)
       },
