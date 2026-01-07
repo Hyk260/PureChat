@@ -359,7 +359,7 @@ export abstract class OpenAIBaseClient {
         remainText = remainText.slice(chunkSize)
 
         options?.onUpdate?.({
-          message: responseText,
+          message: responseText + remainText,
           think: reasoningText,
         })
       }

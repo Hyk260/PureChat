@@ -11,8 +11,7 @@ import { delay, getUnixTimestampSec, getUnixTimestampSecPlusOne } from "@/utils/
 import { clientS3Storage } from "@/service/file/ClientS3"
 import { useTopicStore } from "@/stores/modules/topic"
 import { localStg } from "@/utils/storage"
-import { uuid } from "@/utils/uuid"
-import { idGenerator } from "@/utils/idGenerator"
+import { uuid, idGenerator } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import type { DB_Message, DB_Session, MessageType, payloadSchemaType, FilePayloadType } from "@/types"

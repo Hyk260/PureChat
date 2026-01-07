@@ -197,20 +197,6 @@ export function isFullStaffGroup(data: any) {
   return getValueByKey(groupProfile?.groupCustomField, "custom_info") === "all_staff"
 }
 
-export function formatSizeStrict(input: string) {
-  const number = parseInt(input.toString().replace("_", ""), 10)
-
-  if (isNaN(number)) {
-    throw new Error("Invalid input: The input is not a valid number.")
-  }
-
-  if (number % 1000 === 0) {
-    return number / 1000 + "K"
-  }
-
-  return Math.floor(number / 1000) + "k"
-}
-
 /**
  * 确保消息交替排列的强化处理方法
  * 1. 保留所有系统消息

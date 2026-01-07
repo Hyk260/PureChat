@@ -1,7 +1,8 @@
-import { ChatTopic, GroupedTopic, TimeGroupId } from "@/types"
 import dayjs from "dayjs"
 import isToday from "dayjs/plugin/isToday"
 import isYesterday from "dayjs/plugin/isYesterday"
+
+import type { ChatTopic, GroupedTopic, TimeGroupId } from "@pure/types"
 
 // 初始化 dayjs 插件
 dayjs.extend(isToday)

@@ -75,7 +75,7 @@ import { getModelIcon, useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"
 import { Model, ModelConfigItem } from "@/stores/modules/robot/types"
-import { formatTokenNumber, formatTokenTip } from "@/utils/format"
+import { formatTokenNumber, formatTokenTip } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({

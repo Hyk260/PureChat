@@ -2,9 +2,10 @@ import { BaseModel } from "@/database/core/model"
 import { DBModel } from "@/database/types/db"
 import { MessageModel } from "@/database/models/message"
 import { DB_Topic, DB_TopicSchema } from "@/database/schemas/topic"
-import { ChatTopic } from "@/types"
-// import { nanoid } from "@/utils/uuid"
-import { idGenerator } from "@/utils/idGenerator"
+// import { nanoid } from "@pure/utils"
+import { idGenerator } from "@pure/utils"
+
+import type { ChatTopic } from "@pure/types"
 
 export interface CreateTopicParams {
   favorite?: boolean

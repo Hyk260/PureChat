@@ -23,17 +23,17 @@ export const monthsAgo = (months: number) => dayjs().subtract(months, "month").s
 export const lastMonth = () => monthsAgo(1).endOf("month")
 
 /**
- * Get the date in the format of YYYYMMdd_HHmmss like 20240101_235959
+ * 获取 YYYYMMdd_HHmmss 格式的日期，例如 20240101_235959
  *
  * @example
  *
  * ```ts
- * getYYYYmmddHHMMss(new Date('2024-01-01 23:59:59')); // returns '20240101_235959'
- * getYYYYmmddHHMMss(new Date('2024-12-31 00:00:00')); // returns '20241231_000000'
+ * getYYYYmmddHHMMss(new Date('2024-01-01 23:59:59')); // 返回 '20240101_235959'
+ * getYYYYmmddHHMMss(new Date('2024-12-31 00:00:00')); // 返回 '20241231_000000'
  * ```
  *
- * @param date - The date to format
- * @returns A string in YYYYMMdd_HHmmss format with underscore separator between date and time
+ * @param date - 要格式化的日期
+ * @returns 返回 YYYYMMdd_HHmmss 格式的字符串，日期和时间之间用下划线分隔
  * @see https://day.js.org/docs/en/display/format
  */
 export function getYYYYmmddHHMMss(date: Date) {
