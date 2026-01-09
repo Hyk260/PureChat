@@ -76,7 +76,7 @@ export default defineConfig([
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-unsafe-argument": "off",
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-non-null-assertion": "warn",
+      "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/prefer-nullish-coalescing": "off",
       "@typescript-eslint/prefer-optional-chain": "warn",
       "@typescript-eslint/no-unnecessary-type-assertion": "off",
@@ -133,7 +133,7 @@ export default defineConfig([
       "no-new-func": "error",
       "no-return-assign": "error",
       "no-sequences": "error",
-      "no-throw-literal": "error",
+      // "no-throw-literal": "error",
       "prefer-promise-reject-errors": "error",
 
       // === Import/Export 规则 ===

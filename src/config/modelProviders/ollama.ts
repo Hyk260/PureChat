@@ -8,7 +8,7 @@ const Ollama: ModelProviderCard = {
       displayName: "Llama 3.1 8B",
       enabled: true,
       functionCall: true,
-      id: "llama3.1",
+      id: "llama3.1:8b",
     },
     {
       tokens: 128_000,
@@ -107,7 +107,7 @@ const Ollama: ModelProviderCard = {
       description: "Qwen2 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。",
       displayName: "Qwen2 7B",
       functionCall: true,
-      id: "qwen2",
+      id: "qwen2:7b",
     },
     {
       tokens: 128_000,

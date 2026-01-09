@@ -1,5 +1,4 @@
-import Ollama from "./models"
-// import Ollama from "@/config/modelProviders/ollama"
+import Ollama from "@/config/modelProviders/ollama"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_OLLAMA_PROXY_URL } = import.meta.env

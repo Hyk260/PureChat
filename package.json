@@ -49,6 +49,7 @@
     "axios": "^0.26.1",
     "cross-env": "^7.0.3",
     "dayjs": "^1.11.11",
+    "debug": "^4.4.3",
     "dexie": "^4.0.10",
     "dompurify": "^3.2.7",
     "element-plus": "2.11.8",

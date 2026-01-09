@@ -37,3 +37,10 @@ export interface StreamContext {
   }
   toolIndex?: number
 }
+
+export interface ChatPayloadForTransformStream {
+  model?: string
+  pricing?: any
+  pricingOptions?: any
+  provider?: string
+}
