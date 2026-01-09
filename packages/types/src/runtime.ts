@@ -1,5 +1,7 @@
 import type { LLMRoleType } from "@pure/types"
 import type { LLMConfig } from "model-bank"
+import type { OnFinishHandler } from "@pure/utils/fetch"
+import type { messageHandle } from "@/types"
 
 interface OnFinishData {
   grounding?: any
@@ -146,10 +148,7 @@ export interface ChatOptions {
   messages: any[]
   config: LLMConfig
   requestId: string
-
-  onUpdate?: (data: { message?: string; think?: string }) => void
-  onFinish?: (data: { message?: string; think?: string }) => void
-  onReasoningMessage?: (message: string) => void
-  onError?: (err: string) => void
-  onController?: (controller: AbortController) => void
+  onUpdate?: (data: messageHandle) => void
+  onFinish?: OnFinishHandler
+  onError?: (text: string) => void
 }

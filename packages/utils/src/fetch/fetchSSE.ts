@@ -17,16 +17,15 @@ import { nanoid } from "../uuid"
 
 type SSEFinishType = "done" | "error" | "abort"
 
-export type OnFinishHandler = (
-  text: string,
-  context: {
-    images?: ChatImageChunk[]
-    reasoning?: ModelReasoning
-    usage?: ModelUsage
-    speed?: ModelPerformance
-    type?: SSEFinishType
-  }
-) => void
+export interface contextParams {
+  images?: ChatImageChunk[]
+  reasoning?: ModelReasoning
+  usage?: ModelUsage
+  speed?: ModelPerformance
+  type?: SSEFinishType
+}
+
+export type OnFinishHandler = (text: string, context?: contextParams) => void
 
 export interface MessageUsageChunk {
   type: "usage"
@@ -263,7 +262,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       }
     },
     onmessage: (ev) => {
-      // debugger
       triggerOnMessageHandler = true
       let data: any
       try {

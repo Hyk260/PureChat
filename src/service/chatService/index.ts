@@ -13,7 +13,8 @@ import { getCustomMsgContent, getUnixTimestampSec } from "@/utils/common"
 import { generateReferencePrompt, handleWebSearchData } from "@/utils/messageUtils/search"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
-import type { AIResponse } from "@/types"
+import type { messageHandle } from "@/types"
+import type { contextParams } from "@pure/utils/fetch"
 
 interface ChatServiceParams {
   messages: DB_Message[]
@@ -39,35 +40,38 @@ class ChatService {
         stream: true,
         model: api.config.model,
       },
-      onUpdate: (data: AIResponse) => this.updateMessage(startMsg, data),
-      onFinish: (data: AIResponse) => {
-        this.handleFinish(data, startMsg, chat)
+      onUpdate: (data) => {
+        console.log("ChatService onUpdate:", data)
+        this.updateMessage(startMsg, data)
       },
-      onReasoningMessage: (think: string) => this.handleReasoningMessage(startMsg, think),
+      onFinish: (text, context: contextParams) => {
+        console.log("ChatService onFinish:", { text, context })
+        this.handleFinish({ text, context }, startMsg, chat)
+      },
       onError: (errorText: string) => {
+        console.log("ChatService onError:", errorText)
         this.handleError(startMsg, chat, errorText)
       },
-      // onController: (controller) => this.handleController(controller),
     })
   }
 
   /**
    * 通过 REST API 发送消息到服务器
    */
-  private async sendRestMessage(params: DB_Message, data: AIResponse) {
-    const { message, think } = data
+  private async sendRestMessage(params: DB_Message, data: messageHandle) {
+    const { text, thinking } = data
 
     // 本地模式或消息为空时跳过
-    if (__LOCAL_MODE__ || !message) return
+    if (__LOCAL_MODE__ || !text) return
 
-    const cloudCustomData = think ? createDeepThinkingCustomData({ payload: { text: think } }) : ""
+    const cloudCustomData = thinking ? createDeepThinkingCustomData({ payload: { text: thinking } }) : ""
 
     try {
       const data = await restApi({
         params: {
           To_Account: params.from,
           From_Account: params.to,
-          Text: message,
+          Text: text,
           CloudCustomData: cloudCustomData,
         },
         funName: "restSendMsg",
@@ -81,19 +85,19 @@ class ChatService {
   /**
    * 更新聊天消息状态
    */
-  private updateMessage(chat: DB_Message, data?: AIResponse) {
+  private updateMessage(chat: DB_Message, data?: messageHandle) {
     if (!chat) return
 
-    const { message = "", think = "", done: isFinish = false } = data ?? {}
-    chat.payload.text = message
+    const { text = "", thinking = "", done: isFinish = false } = data ?? {}
+    chat.payload!.text = text
     Object.assign(chat, {
-      // payload: { text: message },
+      // payload: { text: text },
       // clientTime: getUnixTimestampSec(),
       status: isFinish ? "success" : "sending",
     })
 
-    if (think) {
-      chat.cloudCustomData = createDeepThinkingCustomData({ payload: { text: think } })
+    if (thinking) {
+      chat.cloudCustomData = createDeepThinkingCustomData({ payload: { text: thinking } })
     } else if (isFinish) {
       chat.cloudCustomData = handleWebSearchData(chat, true)
       if (chat.type === "TIMTextElem") {
@@ -184,17 +188,21 @@ class ChatService {
   /**
    * 处理消息发送完成
    */
-  private async handleFinish(data: AIResponse, startMsg: DB_Message, chatParams: DB_Message) {
-    const { message = "" } = data ?? {}
-    console.log("[chat] onFinish:", message)
+  private async handleFinish(
+    data: { text: string; context: contextParams },
+    startMsg: DB_Message,
+    chatParams: DB_Message
+  ) {
+    const { text, context } = data
+    console.log("handleFinish", { text, context, startMsg, chatParams })
 
-    if (!message) {
+    if (!text || context.type === "done") {
       useChatStore().updateSendingState(chatParams.to, "delete")
       return
     }
 
     try {
-      const finishedData = { ...data, done: true }
+      const finishedData = { text, done: true }
       this.updateMessage(startMsg, finishedData)
       emitUpdateScrollImmediate("robot")
       await this.sendRestMessage(chatParams, finishedData)
@@ -203,14 +211,6 @@ class ChatService {
     } finally {
       useChatStore().updateSendingState(chatParams.to, "delete")
     }
-  }
-
-  /**
-   * 处理推理消息
-   */
-  private handleReasoningMessage(startMsg: DB_Message, think: string) {
-    console.log("[chat] onReasoningMessage:", think)
-    this.updateMessage(startMsg, { message: "", think })
   }
 
   /**
@@ -223,11 +223,11 @@ class ChatService {
     const content = `\n\n${prettyObject({ error: true, message: errorMessage })}`
 
     try {
-      this.updateMessage(startMsg, { message: content, done: true })
+      this.updateMessage(startMsg, { text: content, done: true })
 
       // 非本地模式下发送错误信息到服务器
       if (!__LOCAL_MODE__ && errorMessage) {
-        await this.sendRestMessage(chatParams, { message: content })
+        await this.sendRestMessage(chatParams, { text: content })
       }
     } catch (error) {
       console.error("处理错误消息时出错:", error)
@@ -235,13 +235,6 @@ class ChatService {
       emitUpdateScrollImmediate("robot")
       useChatStore().updateSendingState(chatParams.to, "delete")
     }
-  }
-
-  /**
-   * 处理控制器
-   */
-  private handleController(controller: AbortController) {
-    console.log("[chat] onController:", controller)
   }
 }
 

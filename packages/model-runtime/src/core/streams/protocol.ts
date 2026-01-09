@@ -1,16 +1,4 @@
 import type { ChatStreamCallbacks, StreamProtocolChunk, StreamContext } from "@pure/types"
-import type { ChatResponse } from "ollama/browser"
-
-export const transformOllamaStream = (chunk: ChatResponse, stack: StreamContext): StreamProtocolChunk => {
-  if (chunk.done && !chunk.message.content) {
-    return { data: "[DONE]", id: stack.id, type: "stop" }
-  }
-  return {
-    data: chunk,
-    id: stack.id,
-    type: stack?.thinkingInContent ? "reasoning" : "text",
-  }
-}
 
 /**
  * 一个异步生成器函数，用于从给定的流中逐步获取响应。
@@ -108,9 +96,9 @@ export const createCallbacksTransformer = (cb: ChatStreamCallbacks | undefined) 
       controller.enqueue(textEncoder.encode(chunk))
 
       if (chunk.startsWith("event:")) {
-        currentType = chunk.split("event:")[1].trim() as unknown as StreamProtocolChunk["type"]
+        currentType = chunk?.split("event:")?.[1]?.trim() as unknown as StreamProtocolChunk["type"]
       } else if (chunk.startsWith("data:")) {
-        const content = chunk.split("data:")[1].trim()
+        const content = chunk?.split("data:")?.[1]?.trim() ?? ""
 
         switch (currentType) {
           case "text": {
@@ -133,7 +121,7 @@ export const parseDataUri = (dataUri: string): UriParserResult => {
   const dataUriMatch = dataUri.match(/^data:([^;]+);base64,(.+)$/)
 
   if (dataUriMatch) {
-    return { base64: dataUriMatch[2], mimeType: dataUriMatch[1], type: "base64" }
+    return { base64: dataUriMatch[2] ?? null, mimeType: dataUriMatch[1] ?? null, type: "base64" }
   }
 
   try {
@@ -142,4 +130,87 @@ export const parseDataUri = (dataUri: string): UriParserResult => {
   } catch {
     return { base64: null, mimeType: null, type: null }
   }
+}
+
+export const FIRST_CHUNK_ERROR_KEY = "_isFirstChunkError"
+
+export const createFirstErrorHandleTransformer = (errorHandler?: (errorJson: any) => any, provider?: string) => {
+  return new TransformStream({
+    transform(chunk, controller) {
+      if (chunk.toString().startsWith(ERROR_CHUNK_PREFIX)) {
+        const errorData = JSON.parse(chunk.toString().replace(ERROR_CHUNK_PREFIX, ""))
+
+        controller.enqueue({
+          ...errorData,
+          [FIRST_CHUNK_ERROR_KEY]: true,
+          errorType: errorHandler?.(errorData) || "unknown",
+          provider,
+        })
+      } else {
+        controller.enqueue(chunk)
+      }
+    },
+  })
+}
+
+export const TOKEN_SPEED_CHUNK_ID = "output_speed"
+
+/**
+ * Create a middleware to calculate the token generate speed
+ * @requires createSSEProtocolTransformer
+ */
+export const createTokenSpeedCalculator = (
+  transformer: (chunk: any, stack: StreamContext) => StreamProtocolChunk | StreamProtocolChunk[],
+  {
+    inputStartAt,
+    streamStack,
+    enableStreaming = true, // 选择 TPS 计算方式（非流式时传 false）
+  }: { enableStreaming?: boolean; inputStartAt?: number; streamStack?: StreamContext } = {}
+) => {
+  let outputStartAt: number | undefined
+
+  const process = (chunk: StreamProtocolChunk) => {
+    const result = [chunk]
+    // if the chunk is the first text or reasoning chunk, set as output start
+    if (!outputStartAt && (chunk.type === "text" || chunk.type === "reasoning")) {
+      outputStartAt = Date.now()
+    }
+
+    // if the chunk is the stop chunk, set as output finish
+    if (inputStartAt && outputStartAt && chunk.type === "usage") {
+      // TPS should always include all generated tokens (including reasoning tokens)
+      // because it measures generation speed, not just visible content
+      const usage = chunk.data
+      const outputTokens = usage?.totalOutputTokens ?? 0
+      const now = Date.now()
+      const elapsed = now - (enableStreaming ? outputStartAt : inputStartAt)
+      const duration = now - outputStartAt
+      const latency = now - inputStartAt
+      const ttft = outputStartAt - inputStartAt
+      const tps = elapsed === 0 ? undefined : (outputTokens / elapsed) * 1000
+
+      result.push({
+        data: {
+          duration,
+          latency,
+          tps,
+          ttft,
+        },
+        id: TOKEN_SPEED_CHUNK_ID,
+        type: "speed",
+      })
+    }
+    return result
+  }
+
+  return new TransformStream({
+    transform(chunk, controller) {
+      let result = transformer(chunk, streamStack || { id: "" })
+      if (!Array.isArray(result)) result = [result]
+      result.forEach((r) => {
+        const processed = process(r)
+        if (processed) processed.forEach((p) => controller.enqueue(p))
+      })
+    },
+  })
 }

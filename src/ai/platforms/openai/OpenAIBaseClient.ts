@@ -1,8 +1,8 @@
 import { OpenAI } from "openai"
-import { EventStreamContentType, fetchEventSource, fetchSSE } from "@pure/utils"
+import { fetchSSE, FetchOptions } from "@pure/utils"
 import { cleanObject } from "@pure/utils/object"
 import { REQUEST_TIMEOUT_MS } from "@pure/const"
-import { LLMConfig, LLMParams, ModelProvider } from "model-bank"
+import { Provider, LLMConfig, LLMParams, ModelProvider } from "model-bank"
 import { isClaudeReasoningModel, getLowerBaseModelName } from "@/ai/reasoning"
 import { isNotSupportTemperatureAndTopP } from "@/ai/utils"
 import {
@@ -10,19 +10,16 @@ import {
   createErrorResponse,
   extractImageMessage,
   generateDalle3RequestPayload,
-  getModelId,
   isDalle3 as _isDalle3,
   useAccessStore,
 } from "@/ai/utils"
-import { useChatStore, useRobotStore } from "@/stores"
+import { useRobotStore } from "@/stores"
 import { addAbortController, removeAbortController } from "@pure/utils"
 import { hostPreview } from "@/utils/api"
 import { transformData } from "@/utils/chat"
+import { initializeWithClientStore } from "@/service/chatService/clientModelRuntime"
 
-import OllamaAI from "../ollama/ollama"
-
-import type { FewShots, OpenAIListModelResponse, ChatOptions, ChatPayload } from "@pure/types"
-import type { Provider } from "model-bank"
+import type { FewShots, OpenAIListModelResponse, ChatOptions, ChatPayload, ChatStreamPayload } from "@pure/types"
 
 export const OpenaiPath = {
   ChatPath: "chat/completions", // chatgpt 聊天接口
@@ -34,6 +31,7 @@ export const OpenaiPath = {
 
 export abstract class OpenAIBaseClient {
   provider: Provider = ModelProvider.OpenAI
+  finalPayload: ChatStreamPayload
 
   constructor(provider: Provider) {
     this.provider = provider
@@ -49,9 +47,6 @@ export abstract class OpenAIBaseClient {
     return fullPath
   }
 
-  /**
-   * 获取提示词存储
-   */
   getPromptStore() {
     try {
       const prompts = useRobotStore().currentProviderPrompt?.prompt
@@ -63,9 +58,6 @@ export abstract class OpenAIBaseClient {
     }
   }
 
-  /**
-   * 处理提示词消息
-   */
   processPromptMessages(messages: FewShots, modelConfig: LLMParams) {
     let combinedMessages: FewShots = []
     const validPrompts = this.getPromptStore()
@@ -110,19 +102,24 @@ export abstract class OpenAIBaseClient {
     return res.choices?.[0]?.message?.content ?? res
   }
 
-  async fetchOnClient(messages: FewShots) {
+  private async fetchOnClient(messages: FewShots) {
+    debugger
     const payload = this.accessStore()
     const options = { messages, ...payload }
-    return await new OllamaAI().chat(options, {
-      callback: {},
-      // signal: ""
-      headers: {
-        Authorization: `Bearer ${this.accessStore().token?.trim()}`,
+
+    const agentRuntime = initializeWithClientStore({
+      provider: this.provider,
+      payload: {
+        apiKey: options.token,
+        baseURL: options.openaiUrl,
+        ...options,
       },
     })
+
+    return await agentRuntime.chat(this.finalPayload)
   }
 
-  enableFetchOnClient(messages: FewShots, modelConfig: LLMParams) {
+  private enableFetchOnClient(messages: FewShots, modelConfig: LLMParams) {
     let fetcher: typeof fetch | undefined = undefined
     const processedMessages = this.processPromptMessages(messages, modelConfig)
     fetcher = async () => {
@@ -143,11 +140,11 @@ export abstract class OpenAIBaseClient {
     return fetcher
   }
 
-  getTools() {
+  private getTools() {
     return null
   }
 
-  getTopP(top_p: number | undefined, model: any): number | undefined {
+  private getTopP(top_p: number | undefined, model: any): number | undefined {
     if (isClaudeReasoningModel(model)) {
       return undefined
     }
@@ -158,10 +155,7 @@ export abstract class OpenAIBaseClient {
     return top_p ? top_p : undefined
   }
 
-  /**
-   * 生成请求负载
-   */
-  generateRequestPayload(messages: FewShots, modelConfig: LLMParams, options: LLMConfig) {
+  private generateRequestPayload(messages: FewShots, modelConfig: LLMParams, options: LLMConfig) {
     // DALL-E 3特殊处理
     if (_isDalle3(modelConfig.model)) {
       return generateDalle3RequestPayload(modelConfig)
@@ -177,7 +171,11 @@ export abstract class OpenAIBaseClient {
       top_p: this.getTopP(modelConfig?.top_p, { id: modelConfig.model }), // 核采样
       tools: this.getTools(), // 工具
     }
-    return cleanObject(payload)
+    const cleanPayload = cleanObject(payload)
+
+    this.finalPayload = cleanPayload
+
+    return cleanPayload
   }
 
   async chat(options: ChatOptions) {
@@ -210,7 +208,6 @@ export abstract class OpenAIBaseClient {
     }
 
     try {
-      const chatPath = this.getPath()
       const chatPayload: ChatPayload = {
         method: "POST",
         body: JSON.stringify(requestPayload),
@@ -218,16 +215,13 @@ export abstract class OpenAIBaseClient {
         headers: this.getHeaders(),
       }
 
-      // ollama本地模型使用自定义 fetch 请求
-      if (this.isOllamaProvider()) {
-        chatPayload.fetch = this.enableFetchOnClient(messages, modelConfig)
-      }
+      chatPayload.fetch = this.enableFetchOnClient(messages, modelConfig)
 
       // 流式输出
       if (shouldStream) {
-        await this.handleStreamingChat(chatPath, chatPayload, options, controller, cleanUp)
+        await this.handleStreamingChat(chatPayload, options)
       } else {
-        await this.handleNonStreamingChat(chatPath, chatPayload, options, controller, cleanUp)
+        await this.handleNonStreamingChat(chatPayload, options, controller, cleanUp)
       }
     } catch (error) {
       console.error("[Request] failed to make a chat reqeust", error)
@@ -235,254 +229,80 @@ export abstract class OpenAIBaseClient {
     }
   }
 
-  async handleOpen(res: Response) {
-    console.log("[OpenAI] fetchEventSource", res)
-    // clearTimeout(requestTimeoutId)
-  }
+  async getChatCompletion(params: Partial<ChatStreamPayload>, options?: FetchOptions) {
+    const { signal, responseAnimation } = options ?? {}
 
-  /**
-   * 处理流式响应错误
-   */
-  async handleStreamError(response: Response, options: ChatOptions, finish: () => void) {
-    let errorInfo = ""
+    const { provider = ModelProvider.OpenAI, ...res } = params
+    const chatPath = this.getPath()
 
-    try {
-      const responseData = (await response.clone().json()) as string
-      errorInfo = JSON.stringify(responseData, null, 2)
-    } catch {
-      errorInfo = await response.clone().text()
-    }
+    let fetcher: typeof fetch | undefined = undefined
 
-    if (response.status === 401) {
-      options?.onError?.("认证失败，请检查 API 密钥")
-    } else {
-      options?.onError?.(errorInfo || `请求失败 (${response.status})`)
-    }
-
-    finish()
-  }
-
-  /**
-   * 处理流式消息
-   */
-  handleStreamMessage(msg: any, remainText: string, reasoningText: string, options: ChatOptions, finish: () => void) {
-    console.log("[OpenAI] 收到消息:", msg)
-
-    if (msg.data === "[DONE]") {
-      finish()
-      return null
-    }
-
-    try {
-      const data = JSON.parse(msg.data)
-
-      if (this.isOllamaProvider()) {
-        if (data === "[DONE]") {
-          finish()
-          return null
-        }
-        const delta = data.message?.content
-        if (delta) {
-          remainText += delta
-        }
-      } else {
-        const choice = data.choices?.[0]
-        if (!choice) return null
-
-        // 处理普通内容
-        const delta = choice.delta?.content
-        if (delta) {
-          remainText += delta
-        } else {
-          // 处理推理内容（如 DeepSeek）
-          const reasoning = choice.delta?.reasoning_content
-          if (reasoning) {
-            reasoningText += reasoning
-            options?.onReasoningMessage?.(reasoningText)
-          }
-        }
-      }
-
-      // 返回更新后的值
-      return { remainText, reasoningText }
-    } catch (error) {
-      console.error("[OpenAI] 解析消息失败:", error, msg.data)
-      return null
-    }
-  }
-
-  /**
-   * 检查是否为 Ollama
-   */
-  isOllamaProvider(): boolean {
-    return this.provider === ModelProvider.Ollama
+    return fetchSSE(chatPath, {
+      // body: JSON.stringify(payload),
+      fetcher: fetcher,
+      headers: this.getHeaders(),
+      method: "POST",
+      onAbort: options?.onAbort,
+      onErrorHandle: options?.onErrorHandle,
+      onFinish: options?.onFinish,
+      onMessageHandle: options?.onMessageHandle,
+      responseAnimation,
+      signal,
+    })
   }
 
   /**
    * 处理流式聊天的响应。
    */
-  async handleStreamingChat(
-    chatPath: string,
-    chatPayload: ChatPayload,
-    options: ChatOptions,
-    controller: AbortController,
-    cleanUp: () => void
-  ) {
-    let responseText = "" // 用于存储完整的响应文本
-    let remainText = "" // 用于存储尚未处理的文本
-    let reasoningText = "" // 用于存储完整的推理内容
-    let finished = false // 用于标记动画是否已完成
+  private async handleStreamingChat(chatPayload: ChatPayload, options: ChatOptions) {
+    let output = ""
+    let thinking = ""
 
-    /**
-     * 动画响应文本的显示。
-     * 根据剩余文本的长度逐步更新响应文本。
-     */
-    const animateResponseText = () => {
-      // 如果动画已完成或请求已被中止，结束动画
-      if (finished || controller.signal.aborted) {
-        responseText += remainText
-        console.log("[OpenAI] 流式响应完成")
-        cleanUp()
-        // 如果响应文本为空，触发错误回调
-        if (!responseText.trim()) {
-          this.updateSendingState("delete")
-          // options.onError?.("服务器繁忙，请稍后再试。")
-        }
-        return
-      }
-      // 如果有剩余文本，进行文本动画更新
-      if (remainText.length > 0) {
-        const chunkSize = Math.max(1, Math.round(remainText.length / 60))
-        const chunk = remainText.slice(0, chunkSize)
+    const chatPath = this.getPath()
 
-        responseText += chunk
-        remainText = remainText.slice(chunkSize)
-
-        options?.onUpdate?.({
-          message: responseText + remainText,
-          think: reasoningText,
-        })
-      }
-
-      requestAnimationFrame(animateResponseText)
-    }
-
-    // 开始动画
-    animateResponseText()
-
-    // 完成处理函数
-    const finish = () => {
-      if (!finished) {
-        finished = true
-        options?.onFinish?.({
-          message: responseText + remainText,
-          think: reasoningText,
-        })
-        cleanUp()
-      }
-    }
-
-    controller.signal.onabort = () => {
-      options.onError?.("请求已终止")
-      finish()
-    }
-
-    const requestTimeoutId = setTimeout(() => controller?.abort(), REQUEST_TIMEOUT_MS)
-
-    const handleStreamError = this.handleStreamError.bind(this)
-
-    // const handleOpen = this.handleOpen.bind(this)
-
-    // await fetchSSE(chatPath, {
-    //   ...chatPayload,
-    //   onAbort: (data) => {
-    //     console.log("onAbort", data)
-    //   },
-    //   onClose: () => {
-    //     console.log("onClose")
-    //     finish()
-    //   },
-    //   onOpenHandle: (res) => {
-    //     console.log("onOpenHandle:", res)
-    //     clearTimeout(requestTimeoutId)
-    //   },
-    //   onErrorHandle: (data) => {
-    //     console.log("onErrorHandle 流式请求错误:", data)
-    //     clearTimeout(requestTimeoutId)
-    //     // options?.onFinish?.({ message: JSON.stringify(data) })
-    //     responseText = JSON.stringify(data)
-    //     finish()
-    //   },
-    //   onFinish: (text, context) => {
-    //     console.log("onFinish:", text, context)
-    //     clearTimeout(requestTimeoutId)
-    //     // options?.onFinish?.({ message: text, think: context.reasoning?.content })
-    //     responseText = text
-    //     finish()
-    //   },
-    //   onMessageHandle: (data) => {
-    //     if (data.type === "text") {
-    //       responseText += data.text
-    //       console.log("[text] onMessageHandle: ", responseText)
-    //       options?.onUpdate?.({
-    //         message: responseText,
-    //       })
-    //     } else if (data.type === "reasoning") {
-    //       reasoningText += data.text
-    //       console.log("[reasoning] onMessageHandle: ", reasoningText)
-    //       options?.onUpdate?.({
-    //         think: reasoningText,
-    //       })
-    //     }
-    //   },
-    //   responseAnimation: "smooth",
-    // })
-
-    await fetchEventSource(chatPath, {
-      ...(chatPayload as unknown as Record<string, string>),
-      async onopen(res) {
-        console.log("[OpenAI] fetchEventSource", res)
-        clearTimeout(requestTimeoutId)
-        const contentType = res.headers.get("content-type")
-        // text/event-stream; charset=utf-8
-        console.log("[OpenAI] request response content type: ", contentType)
-
-        if (contentType?.startsWith("text/plain")) {
-          responseText = await res.clone().text()
-          return finish()
-        }
-
-        const stream = contentType?.startsWith(EventStreamContentType)
-
-        // 检查流式响应格式
-        const isValidStream = stream && res.ok && res.status === 200
-
-        if (!isValidStream) {
-          await handleStreamError(res, options, finish)
+    return await fetchSSE(chatPath, {
+      ...chatPayload,
+      fetcher: chatPayload.fetch,
+      onAbort: (data) => {
+        console.log("onAbort", data)
+      },
+      onClose: () => {
+        console.log("onClose")
+      },
+      onOpenHandle: (res) => {
+        console.log("onOpenHandle:", res)
+      },
+      onErrorHandle: (data) => {
+        console.log("onErrorHandle:", data)
+      },
+      onFinish: (text, context) => {
+        console.log("onFinish: [text]", text)
+        console.log("onFinish: [context]", context)
+        options?.onFinish?.(text, context)
+      },
+      onMessageHandle: (chunk) => {
+        console.log("onMessageHandle:", chunk)
+        switch (chunk.type) {
+          case "text": {
+            output += chunk.text
+            options?.onUpdate?.({ text: output })
+            break
+          }
+          case "reasoning": {
+            thinking += chunk.text
+            options?.onUpdate?.({ thinking })
+            break
+          }
         }
       },
-      onmessage: (msg) => {
-        const result = this.handleStreamMessage(msg, remainText, reasoningText, options, finish)
-        if (result) {
-          remainText = result.remainText
-          reasoningText = result.reasoningText
-        }
-      },
-      onclose: finish,
-      onerror(error) {
-        console.error("[OpenAI] 流式请求错误:", error)
-        options.onError?.(error instanceof Error ? error.message : "流式请求发生错误")
-        cleanUp()
-        throw error
-      },
+      responseAnimation: "smooth",
     })
   }
 
   /**
    * 处理非流式聊天
    */
-  async handleNonStreamingChat(
-    chatPath: string,
+  private async handleNonStreamingChat(
     chatPayload: ChatPayload,
     options: ChatOptions,
     controller: AbortController,
@@ -495,6 +315,7 @@ export abstract class OpenAIBaseClient {
     }, REQUEST_TIMEOUT_MS)
 
     try {
+      const chatPath = this.getPath()
       const response = await fetch(chatPath, chatPayload)
       clearTimeout(requestTimeoutId)
 
@@ -513,9 +334,9 @@ export abstract class OpenAIBaseClient {
       }
 
       const responseJson = await response.json()
-      const message = await this.extractMessage(responseJson)
+      const message: string = await this.extractMessage(responseJson)
 
-      options?.onFinish?.({ message })
+      options?.onFinish?.(message)
       cleanUp()
     } catch (error) {
       clearTimeout(requestTimeoutId)
@@ -525,18 +346,6 @@ export abstract class OpenAIBaseClient {
         options?.onError?.(error instanceof Error ? error.message : "网络请求失败")
       }
       cleanUp()
-    }
-  }
-
-  /**
-   * 更新发送状态
-   */
-  updateSendingState(action: "add" | "delete" = "delete") {
-    try {
-      const modelId = getModelId(this.provider)
-      useChatStore().updateSendingState(modelId, action)
-    } catch (error) {
-      console.error("更新发送状态失败:", error)
     }
   }
 

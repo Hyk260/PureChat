@@ -17,9 +17,9 @@ export type DraftData = Array<{
   }>
 }>
 
-export interface AIResponse {
-  message: string
-  think?: string
+export interface messageHandle {
+  text?: string
+  thinking?: string
   done?: boolean
 }
 

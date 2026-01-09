@@ -4,7 +4,8 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*.ts"
+    "./*": "./src/*.ts",
+    "./fetch": "./src/fetch/index.ts"
   },
   "scripts": {
     "test": "vitest",

@@ -1,0 +1,23 @@
+{
+  "name": "@pure/model-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage --silent='passed-only'",
+    "test:ui": "vitest --ui",
+    "test:update": "vitest -u"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.862.0",
+    "@pure/const": "workspace:*",
+    "@pure/types": "workspace:*",
+    "@pure/utils": "workspace:*",
+    "debug": "^4.4.1",
+    "model-bank": "workspace:*",
+    "openai": "^4.104.0"
+  }
+}

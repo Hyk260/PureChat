@@ -35,6 +35,7 @@
     "@pure/const": "workspace:*",
     "@pure/utils": "workspace:*",
     "@pure/icons": "workspace:*",
+    "@pure/model-runtime": "workspace:*",
     "@shikijs/core": "^3.12.0",
     "@shikijs/transformers": "^3.12.0",
     "@shikijs/types": "^3.12.0",
