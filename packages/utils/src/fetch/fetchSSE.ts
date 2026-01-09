@@ -1,12 +1,12 @@
-import OpenAI from "openai"
+// import OpenAI from "openai"
 import { MESSAGE_CANCEL_FLAT } from "@pure/const"
-import { StreamContext } from "@pure/types"
 import {
   ChatErrorType,
   ChatImageChunk,
   ChatMessageError,
   ModelReasoning,
   ModelUsage,
+  ModelPerformance,
   ResponseAnimation,
   ResponseAnimationStyle,
 } from "@pure/types"
@@ -23,6 +23,7 @@ export type OnFinishHandler = (
     images?: ChatImageChunk[]
     reasoning?: ModelReasoning
     usage?: ModelUsage
+    speed?: ModelPerformance
     type?: SSEFinishType
   }
 ) => void
@@ -35,6 +36,11 @@ export interface MessageUsageChunk {
 export interface MessageTextChunk {
   text: string
   type: "text"
+}
+
+export interface MessageSpeedChunk {
+  speed: ModelPerformance
+  type: "speed"
 }
 
 export interface MessageBase64ImageChunk {
@@ -58,76 +64,18 @@ export interface FetchSSEOptions {
   onErrorHandle?: (error: ChatMessageError) => void
   onFinish?: OnFinishHandler
   onMessageHandle?: (
-    chunk: MessageTextChunk | MessageUsageChunk | MessageReasoningChunk | MessageBase64ImageChunk
+    chunk: MessageTextChunk | MessageUsageChunk | MessageReasoningChunk | MessageBase64ImageChunk | MessageSpeedChunk
   ) => void
   responseAnimation?: ResponseAnimation
 }
 
-const START_ANIMATION_SPEED = 10 // 默认起始速度
-
-export const transformOpenAIStream = (
-  chunk: OpenAI.ChatCompletionChunk
-): {
-  data: any
-  id: string
-  type: string
-} => {
-  try {
-    const item = chunk?.choices?.[0]
-
-    if (!item) {
-      if (chunk?.choices?.length === 0) {
-        return { data: "", id: chunk.id, type: "text" }
-      }
-      return { data: "", id: chunk.id, type: "text" }
-    }
-
-    if (typeof item.delta?.content === "string") {
-      return { data: item.delta.content, id: chunk.id, type: "text" }
-    }
-
-    if (item.finish_reason === "stop") {
-      return { data: "", id: chunk.id, type: "stop" }
-    }
-
-    // DeepSeek reasoner will put thinking in the reasoning_content field
-    if (item.delta && "reasoning_content" in item.delta && typeof item.delta.reasoning_content === "string") {
-      return { data: item.delta.reasoning_content, id: chunk.id, type: "reasoning" }
-    }
-
-    if (item.delta?.content === null) {
-      return { data: "", id: chunk.id, type: "text" }
-    }
-
-    return {
-      data: typeof item.delta === "string" ? item.delta : "",
-      id: chunk.id,
-      type: "text",
-    }
-  } catch (e) {
-    const errorName = "StreamChunkError"
-    console.error(`[${errorName}]`, e)
-    console.error(`[${errorName}] raw chunk:`, chunk)
-
-    const err = e
-
-    const errorData = {
-      body: {
-        message: "chat response streaming chunk parse error, please contact your API Provider to fix it.",
-        context: { error: { message: err.message, name: err.name }, chunk },
-      },
-      type: errorName,
-    }
-
-    console.error(`[${errorName}]`, errorData)
-
-    return {
-      data: "chat response streaming chunk parse error, please contact your API Provider to fix it.",
-      id: chunk.id,
-      type: "error",
-    }
-  }
+export interface FetchOptions extends FetchSSEOptions {
+  historySummary?: string
+  isWelcomeQuestion?: boolean
+  signal?: AbortSignal | undefined
 }
+
+const START_ANIMATION_SPEED = 10 // 默认起始速度
 
 const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: string) => void; startSpeed?: number }) => {
   const { startSpeed = START_ANIMATION_SPEED } = params
@@ -283,7 +231,8 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   }
 
   let usage: ModelUsage | undefined = undefined
-  const images: ChatImageChunk[] = []
+  let speed: ModelPerformance | undefined = undefined
+  let images: ChatImageChunk[] = []
 
   await fetchEventSource(url, {
     body: options.body,
@@ -291,6 +240,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     headers: options.headers as Record<string, string>,
     method: options.method,
     onerror: (error) => {
+      console.warn("onerror:", error)
       if (error === MESSAGE_CANCEL_FLAT || (error as TypeError).name === "AbortError") {
         finishedType = "abort"
         options?.onAbort?.(output)
@@ -313,10 +263,11 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       }
     },
     onmessage: (ev) => {
+      // debugger
       triggerOnMessageHandler = true
-      let result
+      let data: any
       try {
-        result = ev.data === "[DONE]" ? "" : JSON.parse(ev.data)
+        data = JSON.parse(ev.data)
       } catch (e) {
         console.warn("parse error:", e)
         options.onErrorHandle?.({
@@ -333,10 +284,8 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
         return
       }
-
-      const { data, type } = transformOpenAIStream(result)
-
-      switch (type) {
+      console.log("onmessage: [ev]", ev)
+      switch (ev.event) {
         case "text": {
           if (!data) break
 
@@ -394,10 +343,10 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           break
         }
 
-        // case "reasoning_signature": {
-        //   thinkingSignature = data
-        //   break
-        // }
+        case "reasoning_signature": {
+          thinkingSignature = data
+          break
+        }
 
         case "base64_image": {
           const id = "tmp_img_" + nanoid()
@@ -407,19 +356,32 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           options.onMessageHandle?.({ id, image: item, images, type: "base64_image" })
           break
         }
+        // 速度
+        case "speed": {
+          speed = data
+          options.onMessageHandle?.({ speed: data, type: "speed" })
+          break
+        }
+
+        case "error": {
+          finishedType = "error"
+          options.onErrorHandle?.(data)
+          break
+        }
       }
     },
     onopen: async (res) => {
+      options.onOpenHandle?.(res)
       response = res.clone()
       // 如果不 ok 说明有请求错误
       if (!response.ok) {
         throw await getMessageError(res)
       }
-      options.onOpenHandle?.(res)
     },
     signal: options.signal,
   })
-
+  // 仅在response可用时调用onFinish
+  // 因此像abort这样的情况，不需要调用onFinish
   if (response) {
     textController.stopAnimation()
 
@@ -434,6 +396,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     }
 
     if (response.ok) {
+      // 如果没有消息处理器，应该先调用onHandleMessage
       if (!triggerOnMessageHandler) {
         output = await response.clone().text()
         options.onMessageHandle?.({ text: output, type: "text" })
@@ -443,10 +406,11 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         await textController.startAnimation(smoothingSpeed)
       }
 
-      options?.onFinish?.(output, {
+      await options?.onFinish?.(output, {
         images: images.length > 0 ? images : undefined,
         reasoning: thinking ? { content: thinking, signature: thinkingSignature } : undefined,
         type: finishedType,
+        speed,
         usage,
       })
     }

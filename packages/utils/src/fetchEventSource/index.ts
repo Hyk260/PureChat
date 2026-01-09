@@ -62,7 +62,6 @@ export function fetchEventSource(
     if (!headers.accept) {
       headers.accept = EventStreamContentType
     }
-
     const fetch = inputFetch ?? window.fetch
 
     async function create() {

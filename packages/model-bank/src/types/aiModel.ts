@@ -54,6 +54,7 @@ export const AiModelAbilitiesSchema = z.object({
 export interface LLMConfig {
   model: string
   temperature?: number
+  messages?: any[]
   top_p?: number
   stream?: boolean
   presence_penalty?: number
