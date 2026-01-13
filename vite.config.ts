@@ -18,16 +18,6 @@ export default defineConfig((configEnv) => {
         "~": fileURLToPath(new URL("./", import.meta.url)),
         // 配置主路径别名@
         "@": fileURLToPath(new URL("./src", import.meta.url)),
-        // 配置共享路径别名@shared
-        // "@shared": fileURLToPath(new URL("./packages/shared", import.meta.url)),
-        // 配置数据库路径别名@database
-        // "@database": fileURLToPath(new URL("./packages/database", import.meta.url)),
-        // 配置类型包别名@pure/types
-        // "@pure/types": fileURLToPath(new URL("./packages/types", import.meta.url)),
-        // 配置const路径别名@pure/const
-        // "@pure/const": fileURLToPath(new URL("./packages/const", import.meta.url)),
-        // 配置utils路径别名@pure/utils
-        // "@pure/utils": fileURLToPath(new URL("./packages/utils", import.meta.url)),
       },
       extensions: [".js", ".ts", ".json"],
     },

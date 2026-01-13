@@ -158,6 +158,6 @@ onUnmounted(() => {
 }
 
 .message-view-item-index {
-  width: 80%;
+  // width: 80%;
 }
 </style>

@@ -27,13 +27,18 @@ export function formatApiHost(host: string): string {
     return host.endsWith("volces.com/api/v3")
   }
 
-  return forceUseOriginalHost() ? host : `${host}/v1/`
+  // return forceUseOriginalHost() ? host : `${host}/v1/`
+
+  return forceUseOriginalHost() ? host : `${host}/`
+
 }
 
-export const hostPreview = (apiHost: string, path: string = "chat/completions") => {
+export function hostPreview(apiHost: string, path: string = "chat/completions") {
   if (apiHost.endsWith("#")) {
     return apiHost.replace("#", "")
   }
+
+  // return apiHost + path
 
   return formatApiHost(apiHost) + path
 }

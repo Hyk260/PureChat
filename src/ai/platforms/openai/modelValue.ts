@@ -1,4 +1,4 @@
-import OpenAI from "@/config/modelProviders/openai"
+import { OpenAIProviderCard as OpenAI } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_OPENAI_PROXY_URL } = import.meta.env

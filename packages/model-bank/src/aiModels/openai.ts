@@ -31,8 +31,7 @@ const OpenAI: ModelProviderCard = {
     },
     {
       reasoning: true,
-      description:
-        "o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。",
+      description: "o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。",
       displayName: "OpenAI o1-preview",
       id: "o1-preview",
       tokens: 128_000,

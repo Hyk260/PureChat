@@ -11,10 +11,6 @@ export const params = {
   debug: {
     chatCompletion: () => false,
   },
-  generateObject: {
-    useToolsCalling: true,
-  },
-  // models: async ({ client }) => {},
   provider: ModelProvider.DeepSeek,
 } satisfies OpenAICompatibleFactoryOptions
 

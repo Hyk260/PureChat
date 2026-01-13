@@ -29,10 +29,7 @@ export const transformOllamaStream = (chunk: ChatResponse, stack: StreamContext)
   }
 }
 
-export const OllamaStream = (
-  response: ReadableStream<ChatResponse>,
-  callback?: ChatStreamCallbacks
-): ReadableStream<string> => {
+export const OllamaStream = (response: ReadableStream<ChatResponse>, callback?: ChatStreamCallbacks): ReadableStream<string> => {
   const streamStack = { id: `chat_${nanoid()}` }
 
   return response

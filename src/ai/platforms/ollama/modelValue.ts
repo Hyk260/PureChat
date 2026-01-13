@@ -1,4 +1,4 @@
-import Ollama from "@/config/modelProviders/ollama"
+import { OllamaProviderCard as Ollama } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_OLLAMA_PROXY_URL } = import.meta.env

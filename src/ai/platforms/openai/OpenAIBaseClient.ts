@@ -1,7 +1,7 @@
 import { OpenAI } from "openai"
 import { fetchSSE, FetchOptions } from "@pure/utils"
 import { cleanObject } from "@pure/utils/object"
-import { REQUEST_TIMEOUT_MS } from "@pure/const"
+import { REQUEST_TIMEOUT_MS, OpenaiPath } from "@pure/const"
 import { Provider, LLMConfig, LLMParams, ModelProvider } from "model-bank"
 import { isClaudeReasoningModel, getLowerBaseModelName } from "@/ai/reasoning"
 import { isNotSupportTemperatureAndTopP } from "@/ai/utils"
@@ -9,25 +9,17 @@ import {
   adjustForDeepseek,
   createErrorResponse,
   extractImageMessage,
-  generateDalle3RequestPayload,
-  isDalle3 as _isDalle3,
+  // generateDalle3RequestPayload,
+  // isDalle3 as _isDalle3,
   useAccessStore,
 } from "@/ai/utils"
 import { useRobotStore } from "@/stores"
-import { addAbortController, removeAbortController } from "@pure/utils"
-import { hostPreview } from "@/utils/api"
+import { addAbortController, removeAbortController, hostPreview } from "@pure/utils"
 import { transformData } from "@/utils/chat"
 import { initializeWithClientStore } from "@/service/chatService/clientModelRuntime"
-
+import { ChatErrorType } from "@pure/types"
+import { ChatCompletionErrorPayload } from "@pure/model-runtime"
 import type { FewShots, OpenAIListModelResponse, ChatOptions, ChatPayload, ChatStreamPayload } from "@pure/types"
-
-export const OpenaiPath = {
-  ChatPath: "chat/completions", // chatgpt 聊天接口
-  UsagePath: "dashboard/billing/usage", // 用量查询，数据单位为 token
-  SubsPath: "dashboard/billing/subscription", // 总量查询，数据单位为 token
-  ListModelPath: "models", // 查询可用模型
-  EmbeddingPath: "embeddings", // 文本向量化
-}
 
 export abstract class OpenAIBaseClient {
   provider: Provider = ModelProvider.OpenAI
@@ -96,44 +88,44 @@ export abstract class OpenAIBaseClient {
       return "```\n" + JSON.stringify(res, null, 4) + "\n```"
     }
     // DALL-E 3模型返回图片URL
-    if (res.data) {
-      return await extractImageMessage(res)
-    }
+    // if (res.data) {
+    //   return await extractImageMessage(res)
+    // }
     return res.choices?.[0]?.message?.content ?? res
   }
 
-  private async fetchOnClient(messages: FewShots) {
-    debugger
-    const payload = this.accessStore()
-    const options = { messages, ...payload }
+  private async fetchOnClient(params: { payload: Partial<ChatStreamPayload>; provider: string; signal?: AbortSignal }) {
+    const data = params.payload as ChatStreamPayload
 
     const agentRuntime = initializeWithClientStore({
-      provider: this.provider,
+      provider: params.provider,
       payload: {
-        apiKey: options.token,
-        baseURL: options.openaiUrl,
-        ...options,
+        apiKey: this.accessStore().token?.trim(),
+        baseURL: this.accessStore().openaiUrl?.trim(),
+        ...params.payload,
       },
     })
-
-    return await agentRuntime.chat(this.finalPayload)
+    const headers = this.getHeaders()
+    return await agentRuntime.chat(data, { requestHeaders: headers, signal: params.signal })
   }
 
-  private enableFetchOnClient(messages: FewShots, modelConfig: LLMParams) {
+  private enableFetchOnClient() {
     let fetcher: typeof fetch | undefined = undefined
-    const processedMessages = this.processPromptMessages(messages, modelConfig)
     fetcher = async () => {
       try {
-        return await this.fetchOnClient(processedMessages)
+        return await this.fetchOnClient({
+          payload: this.finalPayload,
+          provider: this.provider,
+        })
       } catch (error) {
-        const { errorType, error: errorContent } = error
+        const { errorType = ChatErrorType.BadRequest, error: errorContent } = error as ChatCompletionErrorPayload
         const errorMessage = errorContent || error
-        // 跟踪服务器端的错误
+
         console.error(`Route: [${this.provider}] ${errorType}:`, errorMessage)
+
         return createErrorResponse(errorType, {
           error,
-          // ...rest,
-          // provider: this.provider
+          provider: this.provider,
         })
       }
     }
@@ -156,10 +148,6 @@ export abstract class OpenAIBaseClient {
   }
 
   private generateRequestPayload(messages: FewShots, modelConfig: LLMParams, options: LLMConfig) {
-    // DALL-E 3特殊处理
-    if (_isDalle3(modelConfig.model)) {
-      return generateDalle3RequestPayload(modelConfig)
-    }
     const payload = {
       messages: this.processPromptMessages(messages, modelConfig),
       stream: options.stream, // 流式传输
@@ -181,7 +169,7 @@ export abstract class OpenAIBaseClient {
   async chat(options: ChatOptions) {
     const { requestId } = options
     if (!requestId) {
-      options.onError?.("请求终止功能需要传入 requestId")
+      // options.onError?.("请求终止功能需要传入 requestId")
       return
     }
 
@@ -194,14 +182,11 @@ export abstract class OpenAIBaseClient {
     const requestPayload = this.generateRequestPayload(messages, modelConfig, options.config)
     console.log("[Request] OpenAI payload: ", requestPayload)
 
-    const isDalle3 = _isDalle3(options.config.model)
-    const shouldStream = !isDalle3 && !!options.config.stream
+    const shouldStream = !!options.config.stream
     const controller = new AbortController()
 
     const abortFn = () => controller.abort()
     addAbortController(requestId, abortFn)
-
-    options.onController?.(controller)
 
     const cleanUp = () => {
       removeAbortController(requestId, abortFn)
@@ -215,7 +200,7 @@ export abstract class OpenAIBaseClient {
         headers: this.getHeaders(),
       }
 
-      chatPayload.fetch = this.enableFetchOnClient(messages, modelConfig)
+      chatPayload.fetch = this.enableFetchOnClient()
 
       // 流式输出
       if (shouldStream) {
@@ -225,7 +210,7 @@ export abstract class OpenAIBaseClient {
       }
     } catch (error) {
       console.error("[Request] failed to make a chat reqeust", error)
-      options?.onError?.(error instanceof Error ? error.message : "请求失败，请稍后重试")
+      // options?.onError?.(error instanceof Error ? error.message : "请求失败，请稍后重试")
     }
   }
 
@@ -274,6 +259,7 @@ export abstract class OpenAIBaseClient {
       },
       onErrorHandle: (data) => {
         console.log("onErrorHandle:", data)
+        options?.onError?.(data)
       },
       onFinish: (text, context) => {
         console.log("onFinish: [text]", text)
@@ -302,15 +288,10 @@ export abstract class OpenAIBaseClient {
   /**
    * 处理非流式聊天
    */
-  private async handleNonStreamingChat(
-    chatPayload: ChatPayload,
-    options: ChatOptions,
-    controller: AbortController,
-    cleanUp: () => void
-  ) {
+  private async handleNonStreamingChat(chatPayload: ChatPayload, options: ChatOptions, controller: AbortController, cleanUp: () => void) {
     const requestTimeoutId = setTimeout(() => {
       controller?.abort()
-      options.onError?.("请求超时")
+      // options.onError?.("请求超时")
       cleanUp()
     }, REQUEST_TIMEOUT_MS)
 
@@ -320,15 +301,15 @@ export abstract class OpenAIBaseClient {
       clearTimeout(requestTimeoutId)
 
       if (response.status === 401) {
-        const errorData = await response.json()
-        options?.onError?.(errorData.error?.message || "认证失败")
+        // const errorData = await response.json()
+        // options?.onError?.(errorData.error?.message || "认证失败")
         cleanUp()
         return
       }
 
       if (!response.ok) {
-        const errorData = await response.json()
-        options?.onError?.(errorData.error?.message || `请求失败 (${response.status})`)
+        // const errorData = await response.json()
+        // options?.onError?.(errorData.error?.message || `请求失败 (${response.status})`)
         cleanUp()
         return
       }
@@ -341,9 +322,9 @@ export abstract class OpenAIBaseClient {
     } catch (error) {
       clearTimeout(requestTimeoutId)
       if (error.name === "AbortError") {
-        options?.onError?.("请求超时，请稍后重试")
+        // options?.onError?.("请求超时，请稍后重试")
       } else {
-        options?.onError?.(error instanceof Error ? error.message : "网络请求失败")
+        // options?.onError?.(error instanceof Error ? error.message : "网络请求失败")
       }
       cleanUp()
     }
@@ -400,7 +381,7 @@ export abstract class OpenAIBaseClient {
    * 获取模型列表
    */
   async getModels() {
-    const { DEFAULT_MODEL_LIST } = await import("@/config/modelProviders")
+    const { DEFAULT_MODEL_LIST } = await import("model-bank")
     const models = await this.listModels()
     const filteredModels = models.filter((model) => this.shouldIncludeModel(model))
 
@@ -414,9 +395,7 @@ export abstract class OpenAIBaseClient {
     }
 
     return uniqueModels.map((model) => {
-      const knownModel = DEFAULT_MODEL_LIST.find(
-        (m) => m.id === getLowerBaseModelName(model.id) || m.displayName === model.id
-      )
+      const knownModel = DEFAULT_MODEL_LIST.find((m) => m.id === getLowerBaseModelName(model.id) || m.displayName === model.id)
       return {
         id: model.id,
         icon: "",

@@ -171,9 +171,7 @@ const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: strin
   }
 }
 
-export const standardizeAnimationStyle = (
-  animationStyle?: ResponseAnimation
-): Exclude<ResponseAnimation, ResponseAnimationStyle> => {
+export const standardizeAnimationStyle = (animationStyle?: ResponseAnimation): Exclude<ResponseAnimation, ResponseAnimationStyle> => {
   return typeof animationStyle === "object" ? animationStyle : { text: animationStyle }
 }
 
@@ -185,11 +183,16 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   const { text, speed: smoothingSpeed } = standardizeAnimationStyle(options.responseAnimation ?? {})
   const shouldSkipTextProcessing = text === "none"
+  /**
+   * 平滑效果
+   */
   const textSmoothing = text === "smooth"
+
+  console.log("standardizeAnimation:", text)
 
   let textBuffer = ""
   let bufferTimer: ReturnType<typeof setTimeout> | null = null
-  const BUFFER_INTERVAL = 300 // 300ms
+  const BUFFER_INTERVAL = 100 // 300ms
 
   const flushTextBuffer = () => {
     if (textBuffer) {
@@ -297,10 +300,8 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           } else {
             output += data
 
-            // 使用buffer机制
             textBuffer += data
 
-            // 如果还没有设置计时器，创建一个
             if (!bufferTimer) {
               bufferTimer = setTimeout(() => {
                 flushTextBuffer()
@@ -313,17 +314,18 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         }
 
         case "reasoning": {
-          if (textSmoothing) {
+          if (shouldSkipTextProcessing) {
+            thinking += data
+            options.onMessageHandle?.({ text: data, type: "reasoning" })
+          } else if (textSmoothing) {
             thinkingController.pushToQueue(data)
 
             if (!thinkingController.isAnimationActive) thinkingController.startAnimation()
           } else {
             thinking += data
 
-            // 使用buffer机制
             thinkingBuffer += data
 
-            // 如果还没有设置计时器，创建一个
             if (!thinkingBufferTimer) {
               thinkingBufferTimer = setTimeout(() => {
                 flushThinkingBuffer()

@@ -1,3 +1,4 @@
+import { ModelProviderCard, ChatModelCard } from "@pure/types"
 import OpenAIProvider from "./openai"
 import ZhiPuProvider from "./zhipu"
 import ZeroOneProvider from "./zeroone"
@@ -6,7 +7,6 @@ import GithubProvider from "./github"
 import DeepSeekProvider from "./deepseek"
 import QwenProvider from "./qwen"
 import MistralProvider from "./mistral"
-import { ModelProviderCard, ChatModelCard } from "@pure/types"
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
   OpenAIProvider,

@@ -47,6 +47,8 @@ declare global {
     $message: import('element-plus').Message;
     /** DebugTools */
     __TIM_DEBUG__?: DebugTools
+    /** 清空 S3 存储桶 */
+    __CLEAR_S3_STORAGE__: () => Promise<string>;
   }
 
   /**

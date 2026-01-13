@@ -1,34 +1,25 @@
-import debug from "debug"
 import OpenAI, { ClientOptions } from "openai"
 // import { Stream } from "openai/streaming"
+// import dayjs from "dayjs"
+// import utc from "dayjs/plugin/utc"
+// import { DEFAULT_MODEL_LIST } from "model-bank"
 
 import { debugResponse, debugStream } from "../../utils/debugStream"
 import { StreamingResponse } from "../../utils/response"
+import { handleOpenAIError } from "../../utils/handleOpenAIError"
 import { RuntimeAI } from "../BaseAI"
 import { OpenAIStream, OpenAIStreamOptions } from "../streams"
 import { transformResponseToStream } from "./nonStreamToStream"
+import { AgentRuntimeError } from "../../utils/createError"
+import { ChatCompletionErrorPayload, IAgentRuntimeErrorType, AgentRuntimeErrorType } from "../../types"
 
 export * from "./nonStreamToStream"
+import type { ChatModelCard } from "@pure/types"
 import type { ChatMethodOptions, ChatStreamPayload } from "@pure/types"
 
-export const CHAT_MODELS_BLOCK_LIST = [
-  "embedding",
-  "davinci",
-  "curie",
-  "moderation",
-  "ada",
-  "babbage",
-  "tts",
-  "whisper",
-  "dall-e",
-]
+export const CHAT_MODELS_BLOCK_LIST = ["embedding", "davinci", "curie", "moderation", "ada", "babbage", "tts", "whisper", "dall-e"]
 
 type ConstructorOptions<T extends Record<string, any> = any> = ClientOptions & T
-
-export type CreateImageOptions = Omit<ClientOptions, "apiKey"> & {
-  apiKey: string
-  provider: string
-}
 
 export interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
   apiKey?: string
@@ -40,27 +31,8 @@ export interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = 
     responses?: () => boolean
   }
   errorType?: {
-    bizError: any
-    invalidAPIKey: any
-  }
-  generateObject?: {
-    /**
-     * Transform schema before sending to the provider (e.g., filter unsupported properties)
-     */
-    handleSchema?: (schema: any) => any
-    /**
-     * If true, route generateObject requests to Responses API path directly
-     */
-    useResponse?: boolean
-    /**
-     * Allow only some models to use Responses API by simple matching.
-     * If any string appears in model id or RegExp matches, Responses API is used.
-     */
-    useResponseModels?: Array<string | RegExp>
-    /**
-     * Use tool calling to simulate structured output for providers that don't support native structured output
-     */
-    useToolsCalling?: boolean
+    bizError: IAgentRuntimeErrorType
+    invalidAPIKey: IAgentRuntimeErrorType
   }
   models?: any
   provider: string
@@ -73,9 +45,16 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
   provider,
   baseURL: DEFAULT_BASE_URL,
   apiKey: DEFAULT_API_LEY,
+  errorType,
+  models,
   debug: debugParams,
   constructorOptions,
 }: OpenAICompatibleFactoryOptions<T>) => {
+  const ErrorType = {
+    bizError: errorType?.bizError || AgentRuntimeErrorType.ProviderBizError,
+    invalidAPIKey: errorType?.invalidAPIKey || AgentRuntimeErrorType.InvalidProviderAPIKey,
+  }
+
   return class OpenAICompatibleAI implements RuntimeAI {
     client!: OpenAI
     baseURL!: string
@@ -94,7 +73,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = _options
       this._options = _options as ConstructorOptions<T>
 
-      if (!apiKey) throw new Error("apiKey is required")
+      if (!apiKey) throw AgentRuntimeError.createError(ErrorType?.invalidAPIKey)
 
       const initOptions = { apiKey, baseURL, ...constructorOptions, ...res }
 
@@ -106,24 +85,31 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       this.logPrefix = `model-runtime:${this.id}`
     }
 
-    async chat({ ...payload }: ChatStreamPayload, options?: ChatMethodOptions) {
+    async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatMethodOptions) {
       try {
         const inputStartAt = Date.now()
 
-        const isStreaming = payload.stream !== false
+        console.log(`${this.logPrefix} chat called with model: %s, stream: %s`, payload.model, payload.stream ?? true)
+
+        const isStreaming = payload.stream
 
         const postPayload = {
-          // ...payload,
           messages: payload.messages,
           model: payload.model,
-          // stream: payload.stream,
-          // input: [],
-          stream: !isStreaming ? undefined : isStreaming,
+          top_p: payload.top_p,
+          temperature: payload.temperature,
+          presence_penalty: payload.presence_penalty,
+          frequency_penalty: payload.frequency_penalty,
+          // input: "",
+          stream: isStreaming,
         }
         // as OpenAI.Responses.ResponseCreateParamsStreaming | OpenAI.Responses.ResponseCreateParams
 
         const response = await this.client.chat.completions.create(postPayload, {
-          headers: { Accept: "*/*", ...options?.requestHeaders },
+          headers: {
+            Accept: "*/*",
+            ...options?.requestHeaders,
+          },
           signal: options?.signal,
         })
 
@@ -161,6 +147,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           debugResponse(response)
         }
 
+        if (responseMode === "json") {
+          console.log("returning JSON response mode")
+          return Response.json(response)
+        }
+
         const transformHandler = transformResponseToStream
         const stream = transformHandler(response as unknown as OpenAI.ChatCompletion)
 
@@ -172,11 +163,56 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       }
     }
 
-    async models() {}
+    async models() {
+      console.log("fetching available models")
 
-    protected handleError(error: any) {
-      const log = debug(`${this.logPrefix}:error`)
-      log("handling error: %O", error)
+      let resultModels: ChatModelCard[] = []
+
+      if (typeof models === "function") {
+        console.log("using custom models function")
+        // resultModels = await models({ client: this.client })
+      } else {
+        console.log("fetching models from client API")
+        const list = await this.client.models.list()
+
+        resultModels = list.data
+      }
+    }
+
+    protected handleError(error: any): ChatCompletionErrorPayload {
+      console.log("handling error: %O", error)
+
+      let desensitizedEndpoint = this.baseURL
+
+      if ("status" in (error as any)) {
+        const status = (error as Response).status
+
+        switch (status) {
+          case 401: {
+            return AgentRuntimeError.chat({
+              endpoint: desensitizedEndpoint,
+              error: error as any,
+              errorType: ErrorType.invalidAPIKey,
+              provider: this.id,
+            })
+          }
+
+          default: {
+            break
+          }
+        }
+      }
+
+      const { errorResult, RuntimeError } = handleOpenAIError(error)
+
+      console.log("error code: %s, message: %s", errorResult?.code, errorResult?.message)
+
+      return AgentRuntimeError.chat({
+        endpoint: desensitizedEndpoint,
+        error: error as any,
+        errorType: RuntimeError || ErrorType.bizError,
+        provider: this.id,
+      })
     }
   }
 }

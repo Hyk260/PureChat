@@ -1,4 +1,4 @@
-import Qwen from "@/config/modelProviders/qwen"
+import { QwenProviderCard as Qwen } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_QWEN_BASE_URL } = import.meta.env

@@ -77,10 +77,8 @@ export function fetchEventSource(
         const chunk = getLines(
           getMessages((id) => {
             if (id) {
-              // 存储 id 并在下次重试时发送回去：
               headers[LastEventId] = id
             } else {
-              // 不再发送 last-event-id 头部：
               delete headers[LastEventId]
             }
           }, onmessage)

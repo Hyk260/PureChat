@@ -13,7 +13,7 @@ import { getCustomMsgContent, getUnixTimestampSec } from "@/utils/common"
 import { generateReferencePrompt, handleWebSearchData } from "@/utils/messageUtils/search"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
-import type { messageHandle } from "@/types"
+import type { DB_Session, messageHandle } from "@/types"
 import type { contextParams } from "@pure/utils/fetch"
 
 interface ChatServiceParams {
@@ -24,12 +24,19 @@ interface ChatServiceParams {
 }
 
 class ChatService {
+  startMsg: DB_Message
+  chatMsg: DB_Message
+
+  // createAssistantMessage = (text: string) => { }
+
   async sendMessage({ messages, chat, provider, loadMessage }: ChatServiceParams) {
     const api = new AiProvider(provider)
-    const startMsg = loadMessage || this.createStartMessage(chat)
+    const startMsg = loadMessage || this.createLoadingMessage(chat)
 
     if (this.shouldAbortSend(api, startMsg)) return
 
+    this.startMsg = startMsg
+    this.chatMsg = chat
     await this.handleWebSearchIfNeeded(chat, startMsg)
 
     // 发送 AI 聊天请求
@@ -42,15 +49,15 @@ class ChatService {
       },
       onUpdate: (data) => {
         console.log("ChatService onUpdate:", data)
-        this.updateMessage(startMsg, data)
+        this.updateMessage({ message: startMsg, data })
       },
       onFinish: (text, context: contextParams) => {
         console.log("ChatService onFinish:", { text, context })
-        this.handleFinish({ text, context }, startMsg, chat)
+        this.handleFinish({ text, context })
       },
-      onError: (errorText: string) => {
-        console.log("ChatService onError:", errorText)
-        this.handleError(startMsg, chat, errorText)
+      onError: (error) => {
+        console.log("ChatService onError:", error)
+        this.handleError(error)
       },
     })
   }
@@ -85,10 +92,15 @@ class ChatService {
   /**
    * 更新聊天消息状态
    */
-  private updateMessage(chat: DB_Message, data?: messageHandle) {
+  private updateMessage({ message, data }: { message?: DB_Message; data?: messageHandle }) {
+    const chat = message || this.chatMsg
     if (!chat) return
 
     const { text = "", thinking = "", done: isFinish = false } = data ?? {}
+
+    console.log("text:", text)
+    console.log("thinking:", thinking)
+
     chat.payload!.text = text
     Object.assign(chat, {
       // payload: { text: text },
@@ -99,7 +111,7 @@ class ChatService {
     if (thinking) {
       chat.cloudCustomData = createDeepThinkingCustomData({ payload: { text: thinking } })
     } else if (isFinish) {
-      chat.cloudCustomData = handleWebSearchData(chat, true)
+      // chat.cloudCustomData = handleWebSearchData(chat, true)
       if (chat.type === "TIMTextElem") {
         chat.payload = { text: chat.payload?.text || "" }
       }
@@ -113,7 +125,7 @@ class ChatService {
     emitUpdateScrollImmediate("robot")
   }
 
-  private createStartMessage(params: DB_Message): DB_Message {
+  private createLoadingMessage(params: DB_Message): DB_Message {
     const { to: from, from: to } = params
     const msg = createCustomMessage({ to, customType: "loading" })
 
@@ -128,13 +140,15 @@ class ChatService {
       status: "success",
     })
 
-    this.updateMessage(msg)
+    this.updateMessage({
+      message: msg,
+    })
 
     Object.assign(msg, { type: "TIMTextElem" })
     return msg
   }
 
-  private createAlertMessage(startMsg: DB_Message) {
+  private createAssistantAlertMessage(startMsg: DB_Message) {
     const alertData = cloneDeep(startMsg)
 
     Object.assign(alertData, {
@@ -160,9 +174,9 @@ class ChatService {
     }
 
     setTimeout(() => {
-      this.createAlertMessage(startMsg)
+      this.createAssistantAlertMessage(startMsg)
       useChatStore().updateSendingState(startMsg.from, "delete")
-    }, 1000)
+    }, 500)
 
     return true
   }
@@ -188,26 +202,26 @@ class ChatService {
   /**
    * 处理消息发送完成
    */
-  private async handleFinish(
-    data: { text: string; context: contextParams },
-    startMsg: DB_Message,
-    chatParams: DB_Message
-  ) {
+  private async handleFinish(data: { text: string; context?: contextParams }) {
     const { text, context } = data
+    const startMsg = this.startMsg
+    const chatParams = this.chatMsg
     console.log("handleFinish", { text, context, startMsg, chatParams })
 
-    if (!text || context.type === "done") {
-      useChatStore().updateSendingState(chatParams.to, "delete")
-      return
-    }
+    const finishedData = { text, done: true }
 
     try {
-      const finishedData = { text, done: true }
-      this.updateMessage(startMsg, finishedData)
+      this.updateMessage({
+        message: startMsg,
+        data: finishedData,
+      })
       emitUpdateScrollImmediate("robot")
-      await this.sendRestMessage(chatParams, finishedData)
+      if (context?.type === "done") {
+        useChatStore().updateSendingState(chatParams.to, "delete")
+        await this.sendRestMessage(chatParams, finishedData)
+      }
     } catch (error) {
-      console.error("处理消息完成时出错:", error)
+      console.error("handleFinish error:", error)
     } finally {
       useChatStore().updateSendingState(chatParams.to, "delete")
     }
@@ -216,14 +230,18 @@ class ChatService {
   /**
    * 处理错误情况
    */
-  private async handleError(startMsg: DB_Message, chatParams: DB_Message, errorText: string) {
-    console.error("[chat] onError:", errorText)
+  private async handleError(errorText) {
+    const chatParams = this.chatMsg
+    console.log("[chat] onError:", errorText)
 
     const errorMessage = errorText || "未知错误"
     const content = `\n\n${prettyObject({ error: true, message: errorMessage })}`
 
     try {
-      this.updateMessage(startMsg, { text: content, done: true })
+      this.updateMessage({
+        message: this.startMsg,
+        data: { text: content, done: true },
+      })
 
       // 非本地模式下发送错误信息到服务器
       if (!__LOCAL_MODE__ && errorMessage) {

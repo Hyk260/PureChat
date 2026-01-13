@@ -11,7 +11,7 @@ const config = {
   /** Tab 键的空格数 */
   tabWidth: 2,
   /** 每一行的宽度 */
-  printWidth: 140,
+  printWidth: 120,
   /** 是否换行 */
   proseWrap: "preserve",
   /** 箭头函数的参数无论有几个，都要括号包裹 */

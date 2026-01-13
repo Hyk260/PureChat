@@ -1,4 +1,4 @@
-import ZeroOne from "@/config/modelProviders/zeroone"
+import { ZeroOneProviderCard as ZeroOne } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_ZEROONE_BASE_URL } = import.meta.env

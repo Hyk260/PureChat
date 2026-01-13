@@ -52,24 +52,3 @@ export const MODEL_LIST_CONFIGS = {
     visionKeywords: ["glm-4v", "glm-4.1v", "glm-4.5v"],
   },
 } as const
-
-/**
- * 处理单一提供商的模型列表
- * @param modelList 模型列表
- * @param config 提供商配置
- * @param provider 提供商类型（可选，用于优先匹配对应的本地配置, 当提供了 provider 时，才会尝试从本地配置覆盖 enabled）
- * @returns 处理后的模型卡片列表
- */
-export const processModelList = async (
-  modelList: Array<{ id: string }>,
-  config: ModelProcessorConfig,
-  provider?: keyof typeof MODEL_LIST_CONFIGS
-): Promise<ChatModelCard[]> => {
-  // const { DEFAULT_MODEL_LIST } = await import("model-bank")
-  // 如果提供了 provider，尝试获取该提供商的本地配置
-  // const providerLocalConfig = await getProviderLocalConfig(provider as ModelProviderKey)
-  // return Promise.all(
-  //   modelList.map(async (model) => {
-  //   })
-  // ).then((results) => results.filter((result) => !!result))
-}

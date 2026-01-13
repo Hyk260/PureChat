@@ -7,13 +7,15 @@ import { convertIterableToStream, parseDataUri } from "../../core/streams/protoc
 import { OllamaStream } from "../../core/streams"
 import { debugStream } from "../../utils/debugStream"
 import { StreamingResponse } from "../../utils/response"
+import { AgentRuntimeErrorType } from "../../types/error"
+import { AgentRuntimeError } from "../../utils/createError"
 
 import { OllamaMessage } from "./type"
 import type { ChatMethodOptions, ChatStreamPayload, OpenAIChatMessage } from "@pure/types"
 import type { Tool } from "ollama/browser"
 
 export const params = {
-  baseURL: undefined,
+  baseURL: "http://127.0.0.1:11434",
   debug: {
     chatCompletion: () => false,
   },
@@ -28,8 +30,8 @@ export class OllamaAI implements RuntimeAI {
   constructor({ baseURL }: ClientOptions = {}) {
     try {
       if (baseURL) new URL(baseURL)
-    } catch {
-      throw new Error(`Invalid baseURL: ${baseURL}`)
+    } catch (e) {
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs, e)
     }
 
     if (baseURL) this.baseURL = baseURL
@@ -127,20 +129,26 @@ export class OllamaAI implements RuntimeAI {
         status_code: number
       }
 
-      if (e.message === "Failed to fetch") {
-        const Error = {
-          message: "请检查您的olama服务是否可用",
-          errorType: "请求 Ollama 服务出错，请检查后重试",
+      if (e.message === "fetch failed") {
+        throw AgentRuntimeError.chat({
+          error: {
+            message: "please check whether your ollama service is available",
+          },
+          errorType: AgentRuntimeErrorType.OllamaServiceUnavailable,
           provider: ModelProvider.Ollama,
-        }
-        throw Error
+        })
       }
-      const Error = {
-        message: e,
-        errorType: "请求 Ollama 服务出错，请检查后重试",
+
+      throw AgentRuntimeError.chat({
+        error: {
+          ...(typeof e.error !== "string" ? e.error : undefined),
+          message: String(e.error?.message || e.message),
+          name: e.name,
+          status_code: e.status_code,
+        },
+        errorType: AgentRuntimeErrorType.OllamaBizError,
         provider: ModelProvider.Ollama,
-      }
-      throw Error
+      })
     }
   }
 

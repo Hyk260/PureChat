@@ -241,7 +241,7 @@ import { ModelSelect } from "@/ai/resources"
 import { getModelIcon, useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"
-import { hostPreview } from "@/utils/api"
+import { hostPreview } from "@pure/utils"
 import { openWindow, delay } from "@/utils/common"
 import { isRange } from "./utils"
 // import OllamaAI from "@/ai/platforms/ollama/ollama";

@@ -1,4 +1,4 @@
-import DeepSeek from "@/config/modelProviders/deepseek"
+import { DeepSeekProviderCard as DeepSeek } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_DEEPSEEK_BASE_URL } = import.meta.env

@@ -1,4 +1,4 @@
-import type { LLMRoleType } from "@pure/types"
+import type { LLMRoleType, ChatMessageError } from "@pure/types"
 import type { LLMConfig } from "model-bank"
 import type { OnFinishHandler } from "@pure/utils/fetch"
 import type { messageHandle } from "@/types"
@@ -123,8 +123,11 @@ export interface ChatStreamPayload {
    * @default 1
    */
   top_p?: number
-  tools?: ChatCompletionTool[]
+  tools?: ChatCompletionTool[] | null
   truncation?: "auto" | "disabled"
+
+  token?: string
+  openaiUrl?: string
 }
 
 export interface ChatMethodOptions {
@@ -150,5 +153,5 @@ export interface ChatOptions {
   requestId: string
   onUpdate?: (data: messageHandle) => void
   onFinish?: OnFinishHandler
-  onError?: (text: string) => void
+  onError?: (error: ChatMessageError) => void
 }

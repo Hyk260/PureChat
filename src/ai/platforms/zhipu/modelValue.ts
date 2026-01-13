@@ -1,4 +1,4 @@
-import Zhipu from "@/config/modelProviders/zhipu"
+import { ZhiPuProviderCard as Zhipu } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_ZHIPU_BASE_URL } = import.meta.env

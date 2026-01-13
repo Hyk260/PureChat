@@ -96,7 +96,7 @@ const getStatus = (errorType: string) => {
   else return 400
 }
 
-export const createErrorResponse = (errorType: string, body: any) => {
+export const createErrorResponse = (errorType: any, body: any) => {
   const statusCode = getStatus(errorType)
 
   const data = { body, errorType }
