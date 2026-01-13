@@ -18,7 +18,7 @@ import { getModelIcon, getValueByKey, isFullStaffGroup, prefix } from "@/ai/util
 import { isRobot } from "@/utils/chat"
 import { getBaseModelName } from "@/ai/reasoning"
 
-import type { DB_Session } from "@/database/schemas/session"
+import type { DB_Session } from "@pure/database/schemas"
 
 defineOptions({ name: "CustomLabel" })
 

@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { CircleAlert } from "lucide-vue-next"
 
-import type { DB_Message, MessageStatus } from "@/database/schemas/message"
+import type { DB_Message, MessageStatus } from "@pure/database/schemas"
 
 interface Props {
   item: DB_Message

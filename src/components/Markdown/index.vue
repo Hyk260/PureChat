@@ -10,7 +10,7 @@ import { convertToMarkdownFootnotes } from "./utils/utils"
 import MarkdownRenderer from "./markdown-renderer"
 import MarkdownNodeRender from "./MarkdownNodeRenderer"
 
-import type { customDataWebSearch } from "@/types"
+import type { customDataWebSearch } from "@pure/database/schemas"
 import "./style/markdown.scss"
 
 defineOptions({ name: "Markdown" })

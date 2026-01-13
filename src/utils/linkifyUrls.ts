@@ -1,4 +1,4 @@
-import type { GroupMemberType as GroupMember } from "@/types"
+import type { GroupMemberType as GroupMember } from "@pure/database/schemas"
 
 interface LinkifyOptions {
   target?: string

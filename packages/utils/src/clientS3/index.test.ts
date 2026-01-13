@@ -25,7 +25,7 @@ beforeEach(() => {
 describe("BrowserS3Storage", () => {
   describe("constructor", () => {
     it("should create store when in browser environment", () => {
-      expect(createStore).toHaveBeenCalledWith("lobechat-local-s3", "objects")
+      expect(createStore).toHaveBeenCalledWith("chat-local-s3", "objects")
     })
   })
 
@@ -82,14 +82,12 @@ describe("BrowserS3Storage", () => {
       expect(result).toBeUndefined()
     })
 
-    // it('should throw error when get operation fails', async () => {
-    //   const mockError = new Error('Storage error');
-    //   (get as any).mockRejectedValue(mockError);
-    //
-    //   await expect(storage.getObject('test-key')).rejects.toThrow(
-    //     'Failed to get object (key=test-key): Storage error',
-    //   );
-    // });
+    it("should throw error when get operation fails", async () => {
+      const mockError = new Error("Storage error")
+      ;(get as any).mockRejectedValue(mockError)
+
+      await expect(storage.getObject("test-key")).rejects.toThrow("Failed to get object (key=test-key): Storage error")
+    })
   })
 
   describe("deleteObject", () => {

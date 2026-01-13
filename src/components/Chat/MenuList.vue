@@ -25,7 +25,7 @@ import {
 import { useChatStore } from "@/stores/modules/chat"
 import { handleCopyMsg, scrollToMessage } from "@/utils/chat"
 
-import type { DB_Message, MessageStatus, CustomPayloadType } from "@/types"
+import type { DB_Message, MessageStatus, CustomPayloadType } from "@pure/database/schemas"
 
 interface Props {
   item: DB_Message

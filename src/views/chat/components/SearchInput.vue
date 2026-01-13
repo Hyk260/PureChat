@@ -38,12 +38,12 @@ import { Dropdown, Menu, MenuItem } from "ant-design-vue"
 import { debounce, isEmpty } from "lodash-es"
 import { ElMessageBox } from "element-plus"
 
-import { SessionModel } from "@/database/models/session"
+import { SessionModel } from "@pure/database"
 import { useChatStore, useGroupStore } from "@/stores"
 // import { onKeyStroke, useEventListener } from "@vueuse/core";
 import { $t } from "@/locales"
 
-import { DB_Session } from "@/types"
+import { DB_Session } from "@pure/database/schemas"
 
 const input = ref("")
 const chatStore = useChatStore()

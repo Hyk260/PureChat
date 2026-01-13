@@ -1,10 +1,11 @@
 import { isEmpty } from "lodash-es"
 
-import { customDataWebSearch, DB_Message } from "@/database/schemas/message"
+import { customDataWebSearch, DB_Message } from "@pure/database/schemas"
 import { convertBlobUrlToDataUrl } from "@/utils/chat"
 
 import type { LLMMessage } from "@pure/types"
-import type { DraftData, ImagePayloadType, CustomPayloadType, DB_Session } from "@/types"
+import type { ImagePayloadType, CustomPayloadType, DB_Session } from "@pure/database/schemas"
+import type { DraftData } from "@/types"
 
 export function checkTextNotEmpty(nodes: DraftData) {
   return nodes.some((obj) => {

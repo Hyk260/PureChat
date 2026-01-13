@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { ElInput } from "element-plus"
-import { DB_Message } from "@/database/schemas/message"
+import { DB_Message } from "@pure/database/schemas"
 import { modifyMessage } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores"
 // import { scrollToMessage } from "@/utils/chat"

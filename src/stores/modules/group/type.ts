@@ -1,4 +1,4 @@
-import type { GroupMemberType as GroupMember, GroupProfileSchemaType as GroupProfile } from "@/types"
+import type { GroupMemberType as GroupMember, GroupProfileSchemaType as GroupProfile } from "@pure/database/schemas"
 
 export interface GroupState {
   groupList: any[]

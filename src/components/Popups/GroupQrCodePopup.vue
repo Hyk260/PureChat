@@ -66,7 +66,7 @@ import { openWindow } from "@/utils/common"
 import { formatGroupID } from "@/utils/chat"
 import QrCode from "@/components/QrCode/index.vue"
 
-import type { GroupProfileSchemaType } from "@/types"
+import type { GroupProfileSchemaType } from "@pure/database/schemas"
 
 defineOptions({
   name: "GroupQrCodePopup",

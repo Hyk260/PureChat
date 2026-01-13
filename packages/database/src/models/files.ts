@@ -1,8 +1,7 @@
+import { clientS3Storage } from "@pure/utils"
 import { BaseModel } from "../core/model"
-import { DB_FileSchema } from "../schemas/files"
-import { clientS3Storage } from "@/service/file/ClientS3"
 
-import type { DB_File } from "../schemas/files"
+import { type DB_File, DB_FileSchema } from "../schemas/files"
 
 class _FilesModel extends BaseModel {
   constructor() {

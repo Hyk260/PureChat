@@ -38,7 +38,7 @@ import { insertMention, prioritizeRBTUserID } from "@/utils/chat"
 import emitter, { type FilteringType } from "@/utils/mitt-bus"
 
 import type { IDomEditor } from "@wangeditor/editor"
-import type { GroupMemberType as GroupMember } from "@/types"
+import type { GroupMemberType as GroupMember } from "@pure/database/schemas"
 
 const MSG_AT_ALL = "__kImSDK_MesssageAtALL__"
 

@@ -4,8 +4,6 @@ import { DebugTools } from "@/service/chat/PureChatService"
 /**
  * 全局类型声明，无需引入直接在 `.vue` 、`.ts` 文件使用即可获得类型提示
  */
-export { };
-
 declare global {
   /**
    * 平台的名称、版本、运行所需的`node`和`pnpm`版本、依赖、最后构建时间的类型提示
@@ -64,3 +62,5 @@ declare global {
   /** Build time of the project */
   export const BUILD_TIME: string;
 }
+
+export { };

@@ -1,8 +1,4 @@
-export * from "@/database/schemas/group"
-export * from "@/database/schemas/message"
-export * from "@/database/schemas/session"
-export * from "@/database/schemas/topic"
-export * from "@/database/schemas/user"
+// export * from "@pure/database/schemas"
 import type { IDomEditor } from "@wangeditor/editor"
 
 export type DraftData = Array<{

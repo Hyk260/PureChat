@@ -1,9 +1,10 @@
 import { BaseModel } from "../core/model"
-import { DB_SessionSchema } from "../schemas/session"
-import { MessageModel } from "@/database/models/message"
-import { TopicModel } from "@/database/models/topic"
-import type { DBModel } from "@/database/types/db"
-import type { DB_Session } from "../schemas/session"
+import { MessageModel } from "../models/message"
+import { TopicModel } from "../models/topic"
+
+import { type DB_Session, DB_SessionSchema } from "../schemas/session"
+
+import type { DBModel } from "../types/db"
 
 export interface QuerySessionParams {
   current?: number

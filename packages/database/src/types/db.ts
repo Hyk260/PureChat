@@ -13,6 +13,8 @@ export type DBModel<T> = T & {
   updatedAt: number
 }
 
+export const TypeSchema = z.enum(["C2C", "GROUP", "@TIM#SYSTEM"])
+
 export const DBBaseFieldsSchema = z.object({
   id: z.string(),
   createdAt: z.number().or(z.string()),

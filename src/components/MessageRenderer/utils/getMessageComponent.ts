@@ -1,6 +1,6 @@
 import { messageComponentManager } from "./message-component-manager"
 import type { MessageItem } from "../types/message"
-import type { MessageType } from "@/database/schemas/message"
+import type { MessageType } from "@pure/database/schemas"
 import type { MessageComponent } from "./message-component-manager"
 
 /**

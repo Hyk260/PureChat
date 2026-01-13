@@ -17,7 +17,17 @@ export * from "./nonStreamToStream"
 import type { ChatModelCard } from "@pure/types"
 import type { ChatMethodOptions, ChatStreamPayload } from "@pure/types"
 
-export const CHAT_MODELS_BLOCK_LIST = ["embedding", "davinci", "curie", "moderation", "ada", "babbage", "tts", "whisper", "dall-e"]
+export const CHAT_MODELS_BLOCK_LIST = [
+  "embedding",
+  "davinci",
+  "curie",
+  "moderation",
+  "ada",
+  "babbage",
+  "tts",
+  "whisper",
+  "dall-e",
+]
 
 type ConstructorOptions<T extends Record<string, any> = any> = ClientOptions & T
 

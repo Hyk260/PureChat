@@ -7,7 +7,7 @@ import { useWebSearchStore } from "@/stores/modules/websearch"
 import { createWebSearchCustomData } from "@/utils/chat/customData"
 
 import type { WebSearchProviderResult, WebSearchResult } from "@/service/WebSearchProvider/types"
-import type { DB_Message } from "@/database/schemas/message"
+import type { DB_Message } from "@pure/database/schemas"
 
 export function mapWebSearchResults(results: WebSearchProviderResult[]) {
   return results.map((t, i) => ({

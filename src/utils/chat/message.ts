@@ -1,7 +1,7 @@
 import { getBlob } from "./message-input-utils"
-import type { DB_Session } from "@/types"
 
-import type { DB_Message, MessageType, ImagePayloadType, DraftData } from "@/types"
+import type { DB_Message, MessageType, ImagePayloadType, DB_Session } from "@pure/database/schemas"
+import type { DraftData } from "@/types"
 
 export const isTime = (item: DB_Message) => {
   return item?.isTimeDivider && item.time !== undefined

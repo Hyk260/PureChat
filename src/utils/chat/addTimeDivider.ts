@@ -1,6 +1,6 @@
 import { useAppStore } from "@/stores/modules/app"
 
-import type { DB_Message } from "@/database/schemas/message"
+import type { DB_Message } from "@pure/database/schemas"
 
 const duration = 5 * 60
 

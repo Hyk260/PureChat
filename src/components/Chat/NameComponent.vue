@@ -26,7 +26,7 @@
 import { useChatStore, useGroupStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
 
-import type { DB_Message } from "@/types"
+import type { DB_Message } from "@pure/database/schemas"
 
 interface Props {
   item: DB_Message

@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import DynamicContent from "@/components/Chat/DynamicContent.vue"
-import { DB_Message } from "@/database/schemas/message"
+import { DB_Message } from "@pure/database/schemas"
 import { useAppStore, useChatStore } from "@/stores"
 
 // import AssistantMessageExtra from "@/components/Chat/AssistantMessageExtra.vue"

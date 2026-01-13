@@ -15,7 +15,7 @@
 import { useMessageCreator } from "@/hooks/useMessageCreator"
 import { useChatStore } from "@/stores"
 
-import type { DB_Message, customDataPromptMessage } from "@/types"
+import type { DB_Message, customDataPromptMessage } from "@pure/database/schemas"
 
 defineOptions({
   name: "AssistantMessage",

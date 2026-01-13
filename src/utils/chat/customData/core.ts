@@ -1,5 +1,5 @@
 import { isEmpty } from "lodash-es"
-import { DB_Message } from "@/database/schemas/message"
+import { DB_Message } from "@pure/database/schemas"
 import { messageUtils } from "@/utils/messageUtils"
 
 export type CustomDataType = "webSearch" | "deepThinking" | "messageReply" | "messagePrompt"

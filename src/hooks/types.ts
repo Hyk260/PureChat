@@ -1,4 +1,4 @@
-import { ChatSchemaType } from "@/types"
+import { ChatSchemaType } from "@pure/database/schemas"
 
 export interface MediaFile {
   /**

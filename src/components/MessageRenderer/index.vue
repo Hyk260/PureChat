@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { getMessageComponent } from "./utils/getMessageComponent"
 
-import type { DB_Message } from "@/database/schemas/message"
+import type { DB_Message } from "@pure/database/schemas"
 
 defineOptions({
   name: "MessageRenderer",

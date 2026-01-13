@@ -126,7 +126,7 @@ import emitter from "@/utils/mitt-bus"
 
 import { backgroundColors, backgroundStyle, getBackgroundStyle, changeBackgroundColor } from "./utils"
 
-import type { DB_Message } from "@/types"
+import type { DB_Message } from "@pure/database/schemas"
 import type { ShareOptions } from "./types"
 
 const { pkg } = __APP_INFO__

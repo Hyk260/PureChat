@@ -22,7 +22,7 @@ import type {
   SetGroupProfilePayload,
 } from "./type"
 
-import type { GroupMemberType as GroupMember } from "@/types"
+import type { GroupMemberType as GroupMember } from "@pure/database/schemas"
 
 export const useGroupStore = defineStore(SetupStoreId.Group, {
   state: (): GroupState => ({

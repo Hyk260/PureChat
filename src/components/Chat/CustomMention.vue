@@ -7,7 +7,7 @@ import { computed } from "vue"
 import { storeToRefs } from "pinia"
 import { useChatStore } from "@/stores/modules/chat"
 import { formatContent } from "@/utils/chat"
-import type { DB_Session } from "@/types"
+import type { DB_Session } from "@pure/database/schemas"
 
 interface Props {
   item: DB_Session

@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { RecycleScroller } from "vue-virtual-scroller"
-import type { DB_Session } from "@/types"
+import type { DB_Session } from "@pure/database/schemas"
 
 interface Props {
   list: DB_Session[]

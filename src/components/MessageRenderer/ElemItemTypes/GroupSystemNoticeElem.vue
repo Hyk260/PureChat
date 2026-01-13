@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { groupSystemNotice } from "@/utils/chat"
 
-import type { DB_Message } from "@/types"
+import type { DB_Message } from "@pure/database/schemas"
 
 interface Props {
   message: DB_Message

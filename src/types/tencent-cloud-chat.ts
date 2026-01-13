@@ -1,5 +1,4 @@
-import type { DB_Message } from "@/database/schemas/message"
-import type { DB_Session } from "@/database/schemas/session"
+import type { DB_Message, DB_Session } from "@pure/database/schemas"
 
 /**
  * 登录选项

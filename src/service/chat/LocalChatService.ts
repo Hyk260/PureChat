@@ -1,20 +1,17 @@
 import { providersList } from "@/config/providers"
-import { FilesModel } from "@/database/models/files"
-import { MessageModel } from "@/database/models/message"
-import { SessionModel } from "@/database/models/session"
+import { MessageModel, SessionModel, FilesModel } from "@pure/database/models"
 import {
   MessageSchema as BaseElemMessage,
   SessionSchema as BaseElemSession,
   UserfileSchema as UserProfile,
-} from "@/types"
+} from "@pure/database/schemas"
 import { delay, getUnixTimestampSec, getUnixTimestampSecPlusOne } from "@/utils/common"
-import { clientS3Storage } from "@/service/file/ClientS3"
 import { useTopicStore } from "@/stores/modules/topic"
 import { localStg } from "@/utils/storage"
-import { uuid, idGenerator } from "@pure/utils"
+import { uuid, idGenerator, clientS3Storage } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
-import type { DB_Message, DB_Session, MessageType, payloadSchemaType, FilePayloadType } from "@/types"
+import type { DB_Message, DB_Session, MessageType, payloadSchemaType, FilePayloadType } from "@pure/database/schemas"
 import type {
   ChatSDK,
   MESSAGE_OPTIONS,

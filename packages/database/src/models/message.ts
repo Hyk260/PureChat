@@ -2,8 +2,7 @@ import { BaseModel } from "../core/model"
 import { DB_MessageSchema } from "../schemas/message"
 
 import type { DB_Message } from "../schemas/message"
-import type { DBModel } from "@/database/types/db"
-import type { GET_MESSAGE_LIST_OPTIONS } from "@/types/tencent-cloud-chat"
+import type { DBModel } from "../types/db"
 
 export interface QueryMessageParams {
   current?: number
@@ -13,8 +12,11 @@ export interface QueryMessageParams {
 }
 
 // topicId 用于区分同一会话下的不同子主题消息
-type QueryMessageWithPaginationParams = GET_MESSAGE_LIST_OPTIONS & {
+interface QueryMessageWithPaginationParams {
   topicId?: string
+  conversationID: string
+  nextReqMessageID?: string
+  count?: number
 }
 
 class _MessageModel extends BaseModel {

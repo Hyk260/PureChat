@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { DB_Message, MergerPayloadType } from "@/database/schemas/message"
+import { DB_Message, MergerPayloadType } from "@pure/database/schemas"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({

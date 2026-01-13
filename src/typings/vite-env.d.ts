@@ -1,8 +1,5 @@
-/// <reference types="vite/client" />
 /**
  * 环境变量命名空间
- *
- * import.meta对象的类型定义
  */
 declare namespace Env {
   /** 路由器历史模式类型 */

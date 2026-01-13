@@ -18,7 +18,7 @@ import DynamicContent from "@/components/Chat/DynamicContent.vue"
 
 import { scrollToDomPosition } from "@/utils/chat"
 
-import type { MessageStatus } from "@/database/schemas/message"
+import type { MessageStatus } from "@pure/database/schemas"
 
 defineOptions({
   name: "ReplyElem",

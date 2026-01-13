@@ -10,7 +10,7 @@
 import Loading from "../CustomMsgBody/Loading.vue"
 import Warning from "../CustomMsgBody/Warning.vue"
 
-import type { DB_Message, CustomPayloadType } from "@/types"
+import type { DB_Message, CustomPayloadType } from "@pure/database/schemas"
 
 interface Props {
   message: DB_Message

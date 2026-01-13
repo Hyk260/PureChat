@@ -25,7 +25,7 @@ export interface contextParams {
   type?: SSEFinishType
 }
 
-export type OnFinishHandler = (text: string, context?: contextParams) => void
+export type OnFinishHandler = (text: string, context?: contextParams) => Promise<void>
 
 export interface MessageUsageChunk {
   type: "usage"
@@ -171,7 +171,9 @@ const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: strin
   }
 }
 
-export const standardizeAnimationStyle = (animationStyle?: ResponseAnimation): Exclude<ResponseAnimation, ResponseAnimationStyle> => {
+export const standardizeAnimationStyle = (
+  animationStyle?: ResponseAnimation
+): Exclude<ResponseAnimation, ResponseAnimationStyle> => {
   return typeof animationStyle === "object" ? animationStyle : { text: animationStyle }
 }
 

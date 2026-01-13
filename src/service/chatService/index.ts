@@ -4,16 +4,16 @@ import AiProvider from "@/ai"
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { ModelProvider, Provider } from "model-bank"
 import { prettyObject } from "@/ai/utils"
-import { DB_Message } from "@/database/schemas/message"
+import { DB_Message } from "@pure/database/schemas"
 import { restApi } from "@/service/api"
 import { createCustomMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore } from "@/stores"
 import { createDeepThinkingCustomData } from "@/utils/chat/customData"
 import { getCustomMsgContent, getUnixTimestampSec } from "@/utils/common"
-import { generateReferencePrompt, handleWebSearchData } from "@/utils/messageUtils/search"
+import { generateReferencePrompt } from "@/utils/messageUtils/search"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
-import type { DB_Session, messageHandle } from "@/types"
+import type { messageHandle } from "@/types"
 import type { contextParams } from "@pure/utils/fetch"
 
 interface ChatServiceParams {
@@ -51,9 +51,9 @@ class ChatService {
         console.log("ChatService onUpdate:", data)
         this.updateMessage({ message: startMsg, data })
       },
-      onFinish: (text, context: contextParams) => {
+      onFinish: async (text, context: contextParams) => {
         console.log("ChatService onFinish:", { text, context })
-        this.handleFinish({ text, context })
+        await this.handleFinish({ text, context })
       },
       onError: (error) => {
         console.log("ChatService onError:", error)
@@ -99,7 +99,6 @@ class ChatService {
     const { text = "", thinking = "", done: isFinish = false } = data ?? {}
 
     console.log("text:", text)
-    console.log("thinking:", thinking)
 
     chat.payload!.text = text
     Object.assign(chat, {
@@ -109,6 +108,7 @@ class ChatService {
     })
 
     if (thinking) {
+      console.log("thinking:", thinking)
       chat.cloudCustomData = createDeepThinkingCustomData({ payload: { text: thinking } })
     } else if (isFinish) {
       // chat.cloudCustomData = handleWebSearchData(chat, true)

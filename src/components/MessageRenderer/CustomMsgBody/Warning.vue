@@ -23,7 +23,7 @@ import { openWindow } from "@/utils/common"
 import { WarningCustomMessageBasse } from "@/config/custom"
 import emitter from "@/utils/mitt-bus"
 
-import type { CustomPayloadType } from "@/types"
+import type { CustomPayloadType } from "@pure/database/schemas"
 
 defineOptions({
   name: "Warning",

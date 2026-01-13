@@ -1,7 +1,7 @@
 import { debounce } from "lodash-es"
 import mitt, { type Emitter } from "mitt"
 
-import type { GroupMemberType as GroupMember } from "@/types"
+import type { GroupMemberType as GroupMember } from "@pure/database/schemas"
 
 export type FilteringType = "all" | "success" | "empty" | "updata"
 

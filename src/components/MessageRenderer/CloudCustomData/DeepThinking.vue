@@ -57,7 +57,7 @@
 import { ElCollapse, ElCollapseItem } from "element-plus"
 import { Check, Copy, Atom, ChevronDown, ChevronRight } from "lucide-vue-next"
 // import Markdown from "@/components/Markdown/index.vue"
-import { MessageStatus } from "@/types"
+import { MessageStatus } from "@pure/database/schemas"
 
 defineOptions({
   name: "DeepThinking",

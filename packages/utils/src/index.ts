@@ -1,6 +1,7 @@
 export * from "./abortController"
 export * from "./api"
 export * from "./base64"
+export * from "./clientS3"
 export * from "./fetch"
 export * from "./fetchEventSource"
 export * from "./format"

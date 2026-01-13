@@ -1,7 +1,7 @@
 import { delay } from "@/utils/common"
 import emitter from "@/utils/mitt-bus"
 
-import type { DB_Session } from "@/database/schemas/session"
+import type { DB_Session } from "@pure/database/schemas"
 
 interface DragHandlerProps {
   event: DragEvent

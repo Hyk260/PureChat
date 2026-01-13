@@ -132,7 +132,7 @@ import { timeFormat } from "@/utils/timeFormat"
 
 // import LoadMore from "../components/LoadMore.vue"
 
-import type { DB_Message, FilePayloadType } from "@/types"
+import type { DB_Message, FilePayloadType } from "@pure/database/schemas"
 import type { MenuItem } from "@pure/types"
 
 const userPopupRef = useTemplateRef("userPopupRef")

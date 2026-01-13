@@ -1,5 +1,4 @@
 import tim from "@/service/chat/PureChatService"
-// import { GroupTypeSchemaType as GroupType } from "@/types"
 
 export const GroupType = {
   GRP_WORK: "Private", // 好友工作群，默认

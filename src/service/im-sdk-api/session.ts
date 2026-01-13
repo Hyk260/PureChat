@@ -1,7 +1,7 @@
 import { timProxy } from "@/service/chat"
 import tim from "@/service/chat/PureChatService"
 
-import type { DB_Message } from "@/types"
+import type { DB_Message } from "@pure/database/schemas"
 
 /**
  * 获取未读消息总数

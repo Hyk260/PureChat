@@ -1,6 +1,6 @@
 import { getCloudCustomDataTyped } from "./core"
 
-import { DB_Message } from "@/database/schemas/message"
+import { DB_Message } from "@pure/database/schemas"
 
 /**
  * Web 搜索自定义数据生成器

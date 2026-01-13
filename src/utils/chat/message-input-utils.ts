@@ -2,7 +2,7 @@ import { nextTick } from "vue"
 
 import { throttle } from "lodash-es"
 
-import { DB_Message } from "@/database/schemas/message"
+import { DB_Message } from "@pure/database/schemas"
 import { messageUtils } from "@/utils/messageUtils"
 import emitter from "@/utils/mitt-bus"
 

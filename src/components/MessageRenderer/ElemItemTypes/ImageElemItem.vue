@@ -54,7 +54,7 @@ import {
   ZoomOut,
 } from "@element-plus/icons-vue"
 import { useChatStore } from "@/stores"
-import { DB_Message, ImagePayloadType } from "@/types"
+import { DB_Message, ImagePayloadType } from "@pure/database/schemas"
 import { showIMPic } from "@/utils/chat"
 import { getImageSize } from "@/utils/common"
 

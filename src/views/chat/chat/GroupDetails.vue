@@ -144,7 +144,11 @@ import { useChatStore, useGroupStore, useUserStore } from "@/stores"
 import { isByteLengthExceedingLimit, formatGroupID } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 
-import type { DB_Session, GroupMemberType as GroupMember, GroupProfileSchemaType as GroupProfile } from "@/types"
+import type {
+  DB_Session,
+  GroupMemberType as GroupMember,
+  GroupProfileSchemaType as GroupProfile,
+} from "@pure/database/schemas"
 import type { ModifyTypeValue } from "@/service/im-sdk-api/group"
 
 interface Props {

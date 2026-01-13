@@ -109,7 +109,7 @@ export abstract class OpenAIBaseClient {
     return await agentRuntime.chat(data, { requestHeaders: headers, signal: params.signal })
   }
 
-  private enableFetchOnClient() {
+  private getFetchOnClient() {
     let fetcher: typeof fetch | undefined = undefined
     fetcher = async () => {
       try {
@@ -200,7 +200,7 @@ export abstract class OpenAIBaseClient {
         headers: this.getHeaders(),
       }
 
-      chatPayload.fetch = this.enableFetchOnClient()
+      chatPayload.fetch = this.getFetchOnClient()
 
       // 流式输出
       if (shouldStream) {
@@ -221,6 +221,8 @@ export abstract class OpenAIBaseClient {
     const chatPath = this.getPath()
 
     let fetcher: typeof fetch | undefined = undefined
+
+    fetcher = this.getFetchOnClient()
 
     return fetchSSE(chatPath, {
       // body: JSON.stringify(payload),
@@ -261,10 +263,10 @@ export abstract class OpenAIBaseClient {
         console.log("onErrorHandle:", data)
         options?.onError?.(data)
       },
-      onFinish: (text, context) => {
+      onFinish: async (text, context) => {
         console.log("onFinish: [text]", text)
         console.log("onFinish: [context]", context)
-        options?.onFinish?.(text, context)
+        await options?.onFinish?.(text, context)
       },
       onMessageHandle: (chunk) => {
         console.log("onMessageHandle:", chunk)
@@ -281,14 +283,22 @@ export abstract class OpenAIBaseClient {
           }
         }
       },
-      responseAnimation: "smooth",
+      responseAnimation: {
+        speed: 100,
+        text: "smooth",
+      },
     })
   }
 
   /**
    * 处理非流式聊天
    */
-  private async handleNonStreamingChat(chatPayload: ChatPayload, options: ChatOptions, controller: AbortController, cleanUp: () => void) {
+  private async handleNonStreamingChat(
+    chatPayload: ChatPayload,
+    options: ChatOptions,
+    controller: AbortController,
+    cleanUp: () => void
+  ) {
     const requestTimeoutId = setTimeout(() => {
       controller?.abort()
       // options.onError?.("请求超时")

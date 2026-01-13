@@ -1,4 +1,5 @@
-import type { DB_Message, DB_Session, DraftData } from "@/types"
+import type { DraftData } from "@/types"
+import type { DB_Message, DB_Session } from "@pure/database/schemas"
 
 export interface ChatState {
   sessionId: string

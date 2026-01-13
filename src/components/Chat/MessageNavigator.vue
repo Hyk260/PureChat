@@ -5,7 +5,7 @@ import { useIntersectionObserver } from "@vueuse/core"
 import { useState } from "@/hooks/useState"
 import { useChatStore } from "@/stores/modules/chat"
 
-import type { DB_Message, FilePayloadType, CustomPayloadType } from "@/types"
+import type { DB_Message, FilePayloadType, CustomPayloadType } from "@pure/database/schemas"
 
 interface MessageCache {
   width: number

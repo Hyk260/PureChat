@@ -85,7 +85,8 @@ import ContextMenu from "@/components/ContextMenu"
 import EmptyMessage from "../components/EmptyMessage.vue"
 import VirtualList from "./VirtualList.vue"
 
-import type { DisplayCacheItem, DB_Session } from "@/types"
+import type { DB_Session } from "@pure/database/schemas"
+import type { DisplayCacheItem } from "@/types"
 import type { MenuItem } from "@pure/types"
 
 const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop()

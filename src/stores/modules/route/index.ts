@@ -5,7 +5,7 @@ import { useChatStore } from "@/stores/modules/chat"
 import { useTopicStore } from "@/stores/modules/topic"
 
 import router from "@/router"
-import type { DB_Session } from "@/types"
+import type { DB_Session } from "@pure/database/schemas"
 // export type RouteKey = keyof RouteMap;
 
 /**

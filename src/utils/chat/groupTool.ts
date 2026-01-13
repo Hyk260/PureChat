@@ -1,7 +1,7 @@
 import { nextTick } from "vue"
 import { useChatStore } from "@/stores/modules/chat"
 
-import type { GroupMemberType as GroupMember } from "@/types"
+import type { GroupMemberType as GroupMember } from "@pure/database/schemas"
 
 /**
  * 按角色对成员列表进行排序。

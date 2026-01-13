@@ -11,7 +11,7 @@ import { computed } from "vue"
 import { isSelf } from "@/utils/chat"
 import { formatTimestamp } from "@/utils/timeFormat"
 
-import type { DB_Message } from "@/types"
+import type { DB_Message } from "@pure/database/schemas"
 
 defineOptions({
   name: "TimeDivider",

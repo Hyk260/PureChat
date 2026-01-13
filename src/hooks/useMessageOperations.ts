@@ -15,7 +15,9 @@ import { createPromptMessageCustomData } from "@/utils/chat/customData"
 import { getCustomMsgContent } from "@/utils/common"
 
 import type { MessagePayload } from "./types"
-import type { AttachmentElement, DB_Message, EmojiElement, ImageElement, MentionElement, MessageType } from "@/types"
+
+import type { MessageType, DB_Message } from "@pure/database/schemas"
+import type { AttachmentElement, EmojiElement, ImageElement, MentionElement } from "@/types"
 import type { IDomEditor } from "@wangeditor/editor"
 
 export const isVideoFile = (fileName: string) => {

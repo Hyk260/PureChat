@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/modules/user"
 
-import type { DB_Message, GroupTipPayloadType } from "@/types"
+import type { DB_Message, GroupTipPayloadType } from "@pure/database/schemas"
 
 interface Props {
   message: DB_Message

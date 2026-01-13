@@ -1,5 +1,5 @@
 import { markRaw, type Component } from "vue"
-import type { MessageType } from "@/database/schemas/message"
+import type { MessageType } from "@pure/database/schemas"
 // import { createAsyncMessageComponent } from "./message-component-factory"
 import type { MessageItem } from "../types/message"
 import type { DefineComponent } from "vue"

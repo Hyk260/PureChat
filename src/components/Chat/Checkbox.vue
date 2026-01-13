@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { useChatStore } from "@/stores/modules/chat"
 
-import type { DB_Message } from "@/types"
+import type { DB_Message } from "@pure/database/schemas"
 
 defineOptions({
   name: "Checkbox",
