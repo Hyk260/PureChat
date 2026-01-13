@@ -40,7 +40,7 @@
     "@types/markdown-it": "^14.1.2",
     "@unocss/preset-icons": "^65.4.3",
     "@vueuse/components": "^10.7.0",
-    "@vueuse/core": "^8.4.2",
+    "@vueuse/core": "^14.0.0",
     "@wangeditor/editor": "5.1.23",
     "@wangeditor/editor-for-vue": "5.1.12",
     "ant-design-vue": "4.2.6",
