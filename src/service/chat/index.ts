@@ -12,7 +12,12 @@ import { C2CModelIDList } from "model-bank"
 import { checkoutNetState, getConversationList, kickedOutReason } from "./utils"
 import { GROUP_TIP_OPERATION_TYPE } from "@pure/database/schemas"
 
-import type { DB_Message, DB_Session, GroupSystemNoticePayloadType, GroupTipOperationType } from "@/types"
+import type {
+  DB_Message,
+  DB_Session,
+  GroupSystemNoticePayloadType,
+  GroupTipOperationType,
+} from "@pure/database/schemas"
 import type { Profile } from "@/types/tencent-cloud-chat"
 
 type EventHandler = (payload: any) => void

@@ -9,13 +9,7 @@ import { ZhiPuApi } from "@/ai/platforms/zhipu"
 
 import type { Provider } from "model-bank"
 
-/**
- * 创建ApiClient实例的工厂
- */
 export class ApiClientFactory {
-  /**
-   * 创建ApiClient实例
-   */
   static create(provider: Provider): OpenAIAPIClient {
     let instance: OpenAIAPIClient
 

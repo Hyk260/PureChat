@@ -4,7 +4,6 @@ import isYesterday from "dayjs/plugin/isYesterday"
 
 import type { ChatTopic, GroupedTopic, TimeGroupId } from "@pure/types"
 
-// 初始化 dayjs 插件
 dayjs.extend(isToday)
 dayjs.extend(isYesterday)
 

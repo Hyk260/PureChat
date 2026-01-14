@@ -89,3 +89,19 @@ export const isQwenMTModel = (model: Model): boolean => {
   const modelId = getLowerBaseModelName(model.id)
   return modelId.includes("qwen-mt")
 }
+
+export function isNotSupportTemperatureAndTopP(model: Model): boolean {
+  if (!model) {
+    return true
+  }
+
+  if (
+    (isOpenAIReasoningModel(model) && !isOpenAIOpenWeightModel(model)) ||
+    isOpenAIChatCompletionOnlyModel(model) ||
+    isQwenMTModel(model)
+  ) {
+    return true
+  }
+
+  return false
+}

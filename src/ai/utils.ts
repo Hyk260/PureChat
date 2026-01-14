@@ -8,7 +8,7 @@ import {
   isOpenAIOpenWeightModel,
   isOpenAIReasoningModel,
   isQwenMTModel,
-} from "./reasoning"
+} from "@pure/utils"
 
 /**
  * 获取 AI 模型的配置信息
@@ -240,20 +240,4 @@ export const adjustForDeepseek = (messages) => {
   }
 
   return processed.slice(0, 8)
-}
-
-export function isNotSupportTemperatureAndTopP(model: Model): boolean {
-  if (!model) {
-    return true
-  }
-
-  if (
-    (isOpenAIReasoningModel(model) && !isOpenAIOpenWeightModel(model)) ||
-    isOpenAIChatCompletionOnlyModel(model) ||
-    isQwenMTModel(model)
-  ) {
-    return true
-  }
-
-  return false
 }

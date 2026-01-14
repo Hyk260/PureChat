@@ -110,6 +110,7 @@ const handleMessageClick = () => {
   word-break: break-all;
   white-space: pre-wrap;
   color: var(--color-text);
+  transition: all 0.3s ease;
 }
 
 .markdown {

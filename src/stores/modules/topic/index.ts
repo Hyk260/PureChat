@@ -2,16 +2,23 @@ import { defineStore } from "pinia"
 import { SetupStoreId } from "@/stores/enum"
 import { useChatStore } from "@/stores/modules/chat"
 import { useRouteStore } from "@/stores/modules/route"
-import { TopicModel, type QueryTopicParams } from "@pure/database/models"
-import { SessionModel } from "@pure/database/models"
+import { SessionModel, TopicModel, type QueryTopicParams } from "@pure/database/models"
+import { groupTopicsByTime } from "@pure/utils"
+import { TopicDisplayMode } from "@pure/types"
 import emitter from "@/utils/mitt-bus"
 
+import type { ChatTopic, GroupedTopic } from "@pure/types"
 import type { TopicState, Topic } from "./types"
+
+const currentFavTopics = (s: ChatTopic[]) => s.filter((s) => s.favorite) || []
+
+const currentUnFavTopics = (s: ChatTopic[]) => s.filter((s) => !s.favorite) || []
 
 export const useTopicStore = defineStore(SetupStoreId.Topic, {
   state: (): TopicState => ({
     rolePromptsSession: {},
     topicsSession: {},
+    topicDisplayMode: TopicDisplayMode.ByTime,
     searchKeyword: "",
     topicId: "",
     defaultTopic: {
@@ -44,30 +51,23 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
       const keyword = this.searchKeyword.toLowerCase()
       return this.currentTopics.filter((topic) => topic.title.toLowerCase().includes(keyword))
     },
-    // 按时间分组的话题
-    groupedTopicsByTime(): Record<string, Topic[]> {
+    groupedTopicsSelector(): GroupedTopic[] {
       const topics = this.filteredTopics
-      const grouped: Record<string, Topic[]> = {}
 
-      topics.forEach((topic) => {
-        const date = new Date(topic.createdAt)
-        const year = date.getFullYear().toString()
+      if (!topics) return []
+      const favTopics = currentFavTopics(topics)
+      const unfavTopics = currentUnFavTopics(topics)
 
-        if (!grouped[year]) {
-          grouped[year] = []
-        }
-        grouped[year].push(topic)
-      })
-
-      // 按时间倒序排序每个分组
-      Object.keys(grouped).forEach((year) => {
-        const list = grouped[year]
-        if (list) {
-          list.sort((a, b) => b.createdAt - a.createdAt)
-        }
-      })
-
-      return grouped
+      return favTopics.length > 0
+        ? [
+            {
+              children: favTopics,
+              id: "favorite",
+              title: "收藏",
+            },
+            ...groupTopicsByTime(unfavTopics),
+          ]
+        : groupTopicsByTime(topics)
     },
   },
   actions: {
@@ -81,6 +81,9 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
     },
     setTopicId(id: string) {
       this.topicId = id
+    },
+    setTopicDisplayMode(val: TopicDisplayMode) {
+      this.topicDisplayMode = val
     },
     async getTopics(params: QueryTopicParams): Promise<Topic[]> {
       return TopicModel.query(params)

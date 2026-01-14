@@ -11,8 +11,12 @@ import { AgentRuntimeErrorType } from "../../types/error"
 import { AgentRuntimeError } from "../../utils/createError"
 
 import { OllamaMessage } from "./type"
-import type { ChatMethodOptions, ChatStreamPayload, OpenAIChatMessage } from "@pure/types"
+import type { ChatMethodOptions, ChatStreamPayload, OpenAIChatMessage, ChatModelCard } from "@pure/types"
 import type { Tool } from "ollama/browser"
+
+export interface OllamaModelCard {
+  name: string
+}
 
 export const params = {
   baseURL: "http://127.0.0.1:11434",
@@ -39,7 +43,7 @@ export class OllamaAI implements RuntimeAI {
   }
 
   private createOllamaClient(url?: string) {
-    const host = url || import.meta.env.VITE_OLLAMA_PROXY_URL
+    const host = url ?? import.meta.env.VITE_OLLAMA_PROXY_URL
     return new Ollama({
       host: host,
       // fetch: (input: RequestInfo | URL, init: RequestInit = {}) => {
@@ -153,11 +157,27 @@ export class OllamaAI implements RuntimeAI {
   }
 
   async models() {
-    // const { models } = await this.client.list()
-    // return models.map((model) => ({
-    //   id: model.name,
-    //   icon: getIcon(model.name),
-    // }))
+    const { DEFAULT_MODEL_LIST } = await import("model-bank")
+
+    const list = await this.client.list()
+
+    const modelList: OllamaModelCard[] = list.models
+
+    return modelList
+      .map((model) => {
+        const knownModel = DEFAULT_MODEL_LIST.find((m) => model.name.toLowerCase() === m.id.toLowerCase())
+
+        return {
+          tokens: knownModel?.tokens ?? undefined,
+          displayName: knownModel?.displayName ?? undefined,
+          enabled: knownModel?.enabled || false,
+          functionCall: knownModel?.functionCall || false,
+          id: model.name,
+          reasoning: knownModel?.reasoning || false,
+          vision: knownModel?.vision || false,
+        }
+      })
+      .filter(Boolean) as ChatModelCard[]
   }
 }
 

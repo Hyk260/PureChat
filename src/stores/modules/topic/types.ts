@@ -1,4 +1,4 @@
-import { ChatTopic } from "@pure/types"
+import { ChatTopic, TopicDisplayMode } from "@pure/types"
 
 export type Topic = ChatTopic
 
@@ -7,6 +7,7 @@ export interface TopicState {
   rolePromptsSession: Record<string, string>
   // 话题列表，按会话ID分组
   topicsSession: Record<string, Topic[]>
+  topicDisplayMode: TopicDisplayMode
   // 当前搜索关键词
   searchKeyword: string
   // 话题ID

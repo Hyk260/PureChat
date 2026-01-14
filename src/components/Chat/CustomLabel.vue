@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { getModelIcon, getValueByKey, isFullStaffGroup, prefix } from "@/ai/utils"
 import { isRobot } from "@/utils/chat"
-import { getBaseModelName } from "@/ai/reasoning"
+import { getBaseModelName } from "@pure/utils"
 
 import type { DB_Session } from "@pure/database/schemas"
 

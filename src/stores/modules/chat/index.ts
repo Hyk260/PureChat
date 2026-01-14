@@ -320,7 +320,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         MessageModel.update(message.ID, message)
       }
       const newMessageList = oldMessageList.map((item) => {
-        return item.ID === message.ID ? payload.message : item
+        return item.ID === message.ID ? message : item
       })
       const latest = !newMessageList.some((item) => item.ID === message.ID)
       if (latest) {

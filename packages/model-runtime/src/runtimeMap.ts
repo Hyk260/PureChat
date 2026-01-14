@@ -1,5 +1,7 @@
 import { OpenAI } from "./providers/openai"
 import { OllamaAI } from "./providers/ollama"
+import { MistralAI } from "./providers/mistral"
+
 // import { DeepSeekAI } from './providers/deepseek';
 // import { GithubAI } from './providers/github';
 // import { GoogleAI } from './providers/google';
@@ -13,6 +15,7 @@ export const providerRuntimeMap = {
   // google: GoogleAI,
   ollama: OllamaAI,
   openai: OpenAI,
+  mistral: MistralAI,
   // qwen: QwenAI,
   // zeroone: ZeroOneAI,
   // zhipu: ZhipuAI,

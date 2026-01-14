@@ -59,8 +59,20 @@
                 </ElButton>
                 <template #overlay>
                   <Menu>
+                    <MenuItem>
+                      <div class="flex-sc gap-5" @click="setDisplayModeByTime">
+                        <ElIcon :class="{ 'opacity-0': topicDisplayMode === 'flat' }"><Check /></ElIcon>
+                        <span>按时间分组</span>
+                      </div>
+                    </MenuItem>
+                    <MenuItem>
+                      <div class="flex-sc gap-5" @click="setDisplayModeFlat">
+                        <ElIcon :class="{ 'opacity-0': topicDisplayMode === 'byTime' }"><Check /></ElIcon>
+                        <span>不分组</span>
+                      </div>
+                    </MenuItem>
                     <MenuItem danger @click="clearTopics">
-                      <div class="flex-c gap-5">
+                      <div class="flex-sc gap-5">
                         <ElIcon><Trash /></ElIcon>
                         <span>删除全部话题</span>
                       </div>
@@ -105,11 +117,13 @@
           <!-- 话题列表（按时间分组） -->
           <ElScrollbar class="topic-list-scrollbar">
             <div class="topic-list">
-              <template v-for="(topics, year) in groupedTopicsByTime" :key="year">
+              <template v-for="(topics, year) in groupedTopicsSelector" :key="year">
                 <div class="year-group">
-                  <div class="year-title">{{ year }}</div>
+                  <div v-if="topicDisplayMode === 'byTime'" class="year-title">
+                    {{ topics.title || topicLanguage.groupTitle.byTime?.[topics.id] || topics.id }}
+                  </div>
                   <div
-                    v-for="topic in topics"
+                    v-for="topic in topics.children"
                     :key="topic.id"
                     class="topic-item"
                     :class="{ favorite: topic.favorite, 'is-active': topic.id === topicId }"
@@ -137,7 +151,7 @@
                       />
                     </template>
                     <template v-else>
-                      <Tooltip placement="left" :title="topic.title" :arrow="false">
+                      <Tooltip placement="top" :title="topic.title" :arrow="false">
                         <span class="topic-title">{{ topic.title }}</span>
                       </Tooltip>
                     </template>
@@ -201,8 +215,10 @@ import { Tooltip, Dropdown, Menu, MenuItem } from "ant-design-vue"
 import { storeToRefs } from "pinia"
 import { useState } from "@/hooks/useState"
 import { useChatStore, usePortalStore, useTopicStore, useRobotStore } from "@/stores"
-
+import topicLanguage from "@/locales/default/topic"
 import type { Topic } from "@/stores/modules/topic/types"
+
+import { TopicDisplayMode } from "@pure/types"
 
 const chatStore = useChatStore()
 const robotStore = useRobotStore()
@@ -213,7 +229,7 @@ const { showPortal } = storeToRefs(portalStore)
 const { isShowPromptTitle } = storeToRefs(robotStore)
 const { currentConversation, currentSessionId, isShowNavigator } = storeToRefs(chatStore)
 
-const { topicId, rolePrompt, filteredTopics, groupedTopicsByTime, defaultTopic, searchKeyword } =
+const { topicId, rolePrompt, topicDisplayMode, filteredTopics, groupedTopicsSelector, defaultTopic, searchKeyword } =
   storeToRefs(topicStore)
 
 const editingTitle = ref("")
@@ -307,6 +323,14 @@ const handleSearchBlur = () => {
   // if (!searchKeyword.value) {
   //   setShowSearch(false)
   // }
+}
+
+const setDisplayModeByTime = () => {
+  topicStore.setTopicDisplayMode(TopicDisplayMode.ByTime)
+}
+
+const setDisplayModeFlat = () => {
+  topicStore.setTopicDisplayMode(TopicDisplayMode.Flat)
 }
 
 const toggleFavorite = (topicId: string) => {
@@ -583,7 +607,7 @@ watch(
 .topic-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .year-group {

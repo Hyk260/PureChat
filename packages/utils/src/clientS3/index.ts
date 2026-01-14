@@ -85,5 +85,8 @@ if (import.meta.env.DEV) {
     return "操作已取消"
   }
 
-  console.log(`%c💡 提示: 在控制台执行 window.__CLEAR_S3_STORAGE__() 可清空 ${BROWSER_S3_DB_NAME} 数据`, "color: #17a2b8; font-size: 12px;")
+  console.log(
+    `%c💡 提示: 在控制台执行 window.__CLEAR_S3_STORAGE__() 可清空 ${BROWSER_S3_DB_NAME} 数据`,
+    "color: #17a2b8; font-size: 12px;"
+  )
 }

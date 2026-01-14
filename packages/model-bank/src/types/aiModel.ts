@@ -116,6 +116,8 @@ export interface AIBaseModelCard {
    * the context window (or input + output tokens limit)
    */
   contextWindowTokens?: number
+  token?: number
+
   description?: string
   /**
    * the name show for end user

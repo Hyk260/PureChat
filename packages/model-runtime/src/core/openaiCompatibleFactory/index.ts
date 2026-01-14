@@ -3,7 +3,8 @@ import OpenAI, { ClientOptions } from "openai"
 // import dayjs from "dayjs"
 // import utc from "dayjs/plugin/utc"
 // import { DEFAULT_MODEL_LIST } from "model-bank"
-
+import { getModelPropertyWithFallback } from "../../utils/getFallbackModelProperty"
+import { postProcessModelList } from "../../utils/postProcessModelList"
 import { debugResponse, debugStream } from "../../utils/debugStream"
 import { StreamingResponse } from "../../utils/response"
 import { handleOpenAIError } from "../../utils/handleOpenAIError"
@@ -15,6 +16,7 @@ import { ChatCompletionErrorPayload, IAgentRuntimeErrorType, AgentRuntimeErrorTy
 
 export * from "./nonStreamToStream"
 import type { ChatModelCard } from "@pure/types"
+import type { AiModelType } from "model-bank"
 import type { ChatMethodOptions, ChatStreamPayload } from "@pure/types"
 
 export const CHAT_MODELS_BLOCK_LIST = [
@@ -113,7 +115,6 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           // input: "",
           stream: isStreaming,
         }
-        // as OpenAI.Responses.ResponseCreateParamsStreaming | OpenAI.Responses.ResponseCreateParams
 
         const response = await this.client.chat.completions.create(postPayload, {
           headers: {
@@ -181,11 +182,16 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       if (typeof models === "function") {
         console.log("using custom models function")
         // resultModels = await models({ client: this.client })
+        return resultModels
       } else {
         console.log("fetching models from client API")
         const list = await this.client.models.list()
 
         resultModels = list.data
+
+        return await postProcessModelList(resultModels, (modelId) =>
+          getModelPropertyWithFallback<AiModelType>(modelId, "type")
+        )
       }
     }
 
@@ -196,9 +202,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       if ("status" in (error as any)) {
         const status = (error as Response).status
+        console.log("HTTP error with status: %d", status)
 
         switch (status) {
           case 401: {
+            console.log("invalid API key error")
             return AgentRuntimeError.chat({
               endpoint: desensitizedEndpoint,
               error: error as any,
@@ -217,9 +225,43 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       console.log("error code: %s, message: %s", errorResult?.code, errorResult?.message)
 
+      const errorMessage = errorResult.error?.message || errorResult?.message
+      if (errorMessage?.includes("Insufficient Balance")) {
+        console.log("insufficient balance error detected in message")
+        return AgentRuntimeError.chat({
+          endpoint: desensitizedEndpoint,
+          error: errorResult,
+          errorType: AgentRuntimeErrorType.InsufficientQuota,
+          provider: this.id,
+        })
+      }
+
+      switch (errorResult.code) {
+        case "insufficient_quota": {
+          console.log("insufficient quota error")
+          return AgentRuntimeError.chat({
+            endpoint: desensitizedEndpoint,
+            error: errorResult,
+            errorType: AgentRuntimeErrorType.InsufficientQuota,
+            provider: this.id,
+          })
+        }
+
+        case "model_not_found": {
+          console.log("model not found error")
+          return AgentRuntimeError.chat({
+            endpoint: desensitizedEndpoint,
+            error: errorResult,
+            errorType: AgentRuntimeErrorType.ModelNotFound,
+            provider: this.id,
+          })
+        }
+      }
+
+      console.log("returning generic error")
       return AgentRuntimeError.chat({
         endpoint: desensitizedEndpoint,
-        error: error as any,
+        error: errorResult,
         errorType: RuntimeError || ErrorType.bizError,
         provider: this.id,
       })

@@ -3,8 +3,7 @@ import { fetchSSE, FetchOptions } from "@pure/utils"
 import { cleanObject } from "@pure/utils/object"
 import { REQUEST_TIMEOUT_MS, OpenaiPath } from "@pure/const"
 import { Provider, LLMConfig, LLMParams, ModelProvider } from "model-bank"
-import { isClaudeReasoningModel, getLowerBaseModelName } from "@/ai/reasoning"
-import { isNotSupportTemperatureAndTopP } from "@/ai/utils"
+import { isClaudeReasoningModel, getLowerBaseModelName, isNotSupportTemperatureAndTopP } from "@pure/utils"
 import {
   adjustForDeepseek,
   createErrorResponse,
@@ -349,33 +348,41 @@ export abstract class OpenAIBaseClient {
       window.$message?.error("接口地址格式错误")
       throw new Error("接口地址格式错误")
     }
+    const agentRuntime = initializeWithClientStore({
+      provider: this.provider,
+      payload: {
+        apiKey: this.accessStore().token?.trim(),
+        baseURL: this.accessStore().openaiUrl?.trim(),
+      },
+    })
+    return await agentRuntime.models()
 
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: this.getHeaders(),
-      })
+    // try {
+    //   const response = await fetch(url, {
+    //     method: "GET",
+    //     headers: this.getHeaders(),
+    //   })
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        const errorMessage = errorData.error?.message || `获取模型列表失败 (${response.status})`
-        window.$message?.error(errorMessage)
-        throw new Error(errorMessage)
-      }
+    //   if (!response.ok) {
+    //     const errorData = await response.json().catch(() => ({}))
+    //     const errorMessage = errorData.error?.message || `获取模型列表失败 (${response.status})`
+    //     window.$message?.error(errorMessage)
+    //     throw new Error(errorMessage)
+    //   }
 
-      const responseJson = (await response.json()) as OpenAIListModelResponse
-      return responseJson.data.map((model) => ({
-        id: model.id,
-        object: model?.object || "model",
-        created: model?.created || 0,
-        owned_by: model?.owned_by || "",
-      })) as OpenAI.Models.Model[]
-    } catch (error) {
-      if (error instanceof Error && error.message) throw error
-      const errorMessage = error instanceof Error ? error.message : "获取模型列表失败"
-      window.$message?.error(errorMessage)
-      throw new Error(errorMessage)
-    }
+    //   const responseJson = (await response.json()) as OpenAIListModelResponse
+    //   return responseJson.data.map((model) => ({
+    //     id: model.id,
+    //     object: model?.object || "model",
+    //     created: model?.created || 0,
+    //     owned_by: model?.owned_by || "",
+    //   })) as OpenAI.Models.Model[]
+    // } catch (error) {
+    //   if (error instanceof Error && error.message) throw error
+    //   const errorMessage = error instanceof Error ? error.message : "获取模型列表失败"
+    //   window.$message?.error(errorMessage)
+    //   throw new Error(errorMessage)
+    // }
   }
 
   /**
@@ -405,7 +412,9 @@ export abstract class OpenAIBaseClient {
     }
 
     return uniqueModels.map((model) => {
-      const knownModel = DEFAULT_MODEL_LIST.find((m) => m.id === getLowerBaseModelName(model.id) || m.displayName === model.id)
+      const knownModel = DEFAULT_MODEL_LIST.find(
+        (m) => m.id === getLowerBaseModelName(model.id) || m.displayName === model.id
+      )
       return {
         id: model.id,
         icon: "",

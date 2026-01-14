@@ -98,11 +98,8 @@
                   <span>已选择 {{ toDisplayCount(item?.collapse?.length) }} 个</span>
                 </div>
                 <div>
-                  <ElTooltip
-                    v-if="['openai', 'deepseek', 'qwen', 'zeroone', 'zhipu'].includes(item?.options?.id)"
-                    :content="modelTooltipLabel"
-                    placement="top"
-                  >
+                  <!-- v-if="['openai', 'deepseek', 'qwen', 'zeroone', 'zhipu', 'ollama'].includes(item?.options?.id)" -->
+                  <ElTooltip :content="modelTooltipLabel" placement="top">
                     <ElIcon class="refresh flex-c" :size="15" @click="onRefresh">
                       <Refresh />
                     </ElIcon>
@@ -235,7 +232,7 @@ import { ElSlider } from "element-plus"
 import { cloneDeep, debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
 import { ModelIcon } from "@pure/icons"
-import { getLowerBaseModelName, getBaseModelName } from "@/ai/reasoning"
+import { getLowerBaseModelName, getBaseModelName } from "@pure/utils"
 import { modelConfig, modelValue } from "@/ai/constant"
 import { ModelSelect } from "@/ai/resources"
 import { getModelIcon, useAccessStore } from "@/ai/utils"
