@@ -46,18 +46,20 @@ export interface ModelUsage extends ModelTokensUsage {
 export interface ModelPerformance {
   /**
    * tokens per second
+   * 每秒令牌数
    */
   tps?: number
   /**
    * time to first token (ms)
+   * 首次标记时间（毫秒）
    */
   ttft?: number
   /**
-   * from output start to output finish (ms)
+   * 从输出开始到输出完成（毫秒）
    */
   duration?: number
   /**
-   * from input start to output finish (ms)
+   * 从输入开始到输出完成（毫秒）
    */
   latency?: number
 }

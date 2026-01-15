@@ -101,17 +101,14 @@
           </div>
 
           <!-- 默认话题 -->
-          <div
-            v-if="defaultTopic && !showSearch"
-            class="default-topic"
-            :class="{ 'is-active': defaultTopic.id === topicId }"
-            @click="handleTopicClick(defaultTopic)"
-          >
-            <ElIcon color="var(--el-color-info-light-3)" class="w-24 h-24" :size="16">
-              <MessageSquareDashed />
-            </ElIcon>
-            <span class="topic-label">{{ defaultTopic.title }}</span>
-            <span class="temp-badge">临时</span>
+          <div v-if="defaultTopic && !showSearch" class="default-topic" @click="handleTopicClick(defaultTopic)">
+            <div :class="{ 'is-active': defaultTopic.id === topicId }">
+              <ElIcon color="var(--el-color-info-light-3)" class="w-24 h-24" :size="16">
+                <MessageSquareDashed />
+              </ElIcon>
+              <span class="topic-label">{{ defaultTopic.title }}</span>
+              <span class="temp-badge">临时</span>
+            </div>
           </div>
 
           <!-- 话题列表（按时间分组） -->
@@ -461,7 +458,7 @@ watch(
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  padding: 12px;
 
   .section-title {
     font-size: 14px;
@@ -469,7 +466,6 @@ watch(
     color: var(--color-text-default);
     margin: 0;
     .header-actions {
-      // height: 36px;
       .search-btn,
       .more-btn {
         height: 36px;
@@ -560,11 +556,11 @@ watch(
   min-height: 100px;
   display: flex;
   flex-direction: column;
-  padding: 12px;
   overflow: hidden;
 }
 
 .search-box {
+  padding: 0 12px;
   margin-bottom: 12px;
   :deep(.el-input__wrapper) {
     padding: 6px 12px;
@@ -572,17 +568,18 @@ watch(
 }
 
 .default-topic {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 8px 12px;
+  padding: 0 12px;
   margin-bottom: 12px;
-  cursor: pointer;
-  // background: var(--color-message-active);
-  border-radius: 6px;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.12);
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    &:hover {
+      background: rgba(0, 0, 0, 0.12);
+    }
   }
 
   .topic-label {
@@ -600,6 +597,7 @@ watch(
 }
 
 .topic-list-scrollbar {
+  padding: 0 12px;
   flex: 1;
   min-height: 0;
 }
@@ -616,6 +614,9 @@ watch(
   gap: 4px;
 
   .year-title {
+    overflow-anchor: none;
+    position: sticky;
+    z-index: 1;
     font-size: 12px;
     font-weight: 600;
     color: var(--color-time-divider);

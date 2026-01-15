@@ -172,13 +172,13 @@ export const customDataWebSearchSchema = z.object({
   }),
 })
 
-export const customDataDeepThinkingSchema = z.object({
-  deepThinking: z.object({
-    messageAbstract: z.string(),
+export const customDataThinkingSchema = z.object({
+  thinking: z.object({
+    content: z.string(),
+    reasoningType: z.enum(["thinking", "done"]).optional(),
+    duration: z.number().optional(),
     version: z.string().optional(),
     model: z.string().optional(),
-    thinking: z.string().optional(),
-    deeplyThought: z.string().optional(),
   }),
 })
 
@@ -189,7 +189,6 @@ export const customDataReplyMessageSchema = z.object({
     version: z.string(),
     messageID: z.string(),
     thinking: z.string(),
-    deeplyThought: z.string(),
   }),
 })
 
@@ -299,7 +298,7 @@ export const DB_MessageSchema = z.object({
    * 消息自定义数据 该字段为 JSON 格式字符串
    *
    * web搜索 customDataWebSearchSchema
-   * 深度思考 customDataDeepThinkingSchema
+   * 深度思考 customDataThinkingSchema
    * 回复消息 customDataReplyMessageSchema
    */
   cloudCustomData: z.string(),
@@ -380,6 +379,8 @@ export type MessageType = z.infer<typeof MessageTypeSchema>
 export type payloadSchemaType = z.infer<typeof payloadSchema>
 
 export type customDataWebSearch = z.infer<typeof customDataWebSearchSchema>
+
+export type customDataThinking = z.infer<typeof customDataThinkingSchema>
 
 export type customDataPromptMessage = z.infer<typeof customDataPromptMessageSchema>
 

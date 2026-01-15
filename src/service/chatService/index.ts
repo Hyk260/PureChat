@@ -8,7 +8,7 @@ import { DB_Message } from "@pure/database/schemas"
 import { restApi } from "@/service/api"
 import { createCustomMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore } from "@/stores"
-import { createDeepThinkingCustomData } from "@/utils/chat/customData"
+import { createThinkingCustomData } from "@/utils/chat/customData"
 import { getCustomMsgContent, getUnixTimestampSec } from "@/utils/common"
 import { generateReferencePrompt } from "@/utils/messageUtils/search"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
@@ -71,7 +71,7 @@ class ChatService {
     // 本地模式或消息为空时跳过
     if (__LOCAL_MODE__ || !text) return
 
-    const cloudCustomData = thinking ? createDeepThinkingCustomData({ payload: { text: thinking } }) : ""
+    const cloudCustomData = thinking ? createThinkingCustomData({ payload: { text: thinking } }) : ""
 
     try {
       const data = await restApi({
@@ -96,7 +96,7 @@ class ChatService {
     const chat = message || this.chatMsg
     if (!chat) return
 
-    const { text = "", thinking = "", done: isFinish = false } = data ?? {}
+    const { text = "", thinking = "", done: isFinish = false, reasoning } = data ?? {}
 
     console.log("text:", text)
 
@@ -107,9 +107,9 @@ class ChatService {
       status: isFinish ? "success" : "sending",
     })
 
-    if (thinking) {
+    if (reasoning?.content) {
       console.log("thinking:", thinking)
-      chat.cloudCustomData = createDeepThinkingCustomData({ payload: { text: thinking } })
+      chat.cloudCustomData = createThinkingCustomData({ payload: { text: thinking } }, data?.reasoning)
     } else if (isFinish) {
       // chat.cloudCustomData = handleWebSearchData(chat, true)
       if (chat.type === "TIMTextElem") {

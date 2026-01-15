@@ -1,44 +1,32 @@
 <template>
   <div v-if="hasReplyContent" class="think-content">
-    <!-- 思考状态内容 -->
-    <div v-if="showThinkingContent">
-      <!-- {{ thinkingContent }} -->
-    </div>
-
-    <!-- 深度思考内容 -->
-    <div v-else-if="deeplyThoughtContent" class="flex gap-8">
-      <!-- <Atom :size="16" color="#bd54c6" /> -->
-      <!-- {{ deeplyThoughtContent }} -->
-    </div>
-
-    <ElCollapse v-model="activeNames">
+    <ElCollapse v-model="activeNames" accordion>
       <ElCollapseItem name="1">
         <template #title>
           <div class="px-5 flex items-center gap-8">
-            <Atom :size="16" color="#bd54c6" />
-            <span>深度思考</span>
-            <!-- （用时 36.1 秒） -->
+            <Atom :size="16" :color="activeNames === '1' ? '#bd54c6' : 'currentColor'" />
+            <span v-if="isThinking">深度思考中...</span>
+            <span v-else>
+              {{ duration ? `已深度思考（用时 ${((duration || 0) / 1000).toFixed(1)} 秒）` : "已深度思考" }}
+            </span>
           </div>
         </template>
         <template #icon="{ isActive }">
           <div class="header">
             <ElTooltip
               v-if="isActive"
-              content="复制代码"
+              content="复制"
               placement="top"
               :showArrow="false"
               :offset="8"
               transition="slide-fade"
             >
-              <div class="handle-button flex-c" @click.stop="handleCopyCode(messageAbstract)">
-                <Check v-if="isCopied" :size="14" />
-                <Copy v-else :size="14" />
+              <div class="handle-button flex-c" @click.stop="onCopy(messageAbstract)">
+                <Component :is="isCopied ? Check : Copy" :size="14" />
               </div>
             </ElTooltip>
-
-            <div class="handle-button flex-c" @click.stop="setActive(!isActive)">
-              <ChevronRight v-if="!isActive" :size="14" />
-              <ChevronDown v-else :size="14" />
+            <div class="handle-button flex-c" @click.stop="toggleCollapse(!isActive)">
+              <Component :is="isActive ? ChevronDown : ChevronRight" :size="14" />
             </div>
           </div>
         </template>
@@ -57,14 +45,14 @@
 import { ElCollapse, ElCollapseItem } from "element-plus"
 import { Check, Copy, Atom, ChevronDown, ChevronRight } from "lucide-vue-next"
 // import Markdown from "@/components/Markdown/index.vue"
-import { MessageStatus } from "@pure/database/schemas"
+import { MessageStatus, customDataThinking } from "@pure/database/schemas"
 
 defineOptions({
-  name: "DeepThinking",
+  name: "Thinking",
 })
 
 interface Props {
-  originalMsg: any
+  originalMsg: customDataThinking
   status?: MessageStatus
 }
 
@@ -72,21 +60,23 @@ const props = withDefaults(defineProps<Props>(), {
   status: "unSend",
 })
 
+const COLLAPSE_OPEN = "1"
+const COLLAPSE_CLOSE = "0"
+
 const isCopied = ref(false)
-const activeNames = ref(["0"])
+const activeNames = ref(COLLAPSE_CLOSE)
 
-const messageThink = computed(() => props.originalMsg?.deepThinking || null)
-const hasReplyContent = computed(() => !!messageThink.value)
-const thinkingContent = computed(() => messageThink.value.thinking)
-const deeplyThoughtContent = computed(() => messageThink.value.deeplyThought)
-const messageAbstract = computed(() => messageThink.value.messageAbstract)
-const showThinkingContent = computed(() => thinkingContent.value && props.status === "sending")
+const thinking = computed(() => props.originalMsg?.thinking)
+const hasReplyContent = computed(() => !!thinking.value)
+const messageAbstract = computed(() => thinking.value.content)
+const duration = computed(() => thinking.value.duration)
+const isThinking = computed(() => thinking.value?.reasoningType === "thinking")
 
-const setActive = (bol: boolean) => {
-  activeNames.value = [bol ? "1" : "0"]
+const toggleCollapse = (bol?: boolean) => {
+  activeNames.value = bol ? COLLAPSE_OPEN : COLLAPSE_CLOSE
 }
 
-const handleCopyCode = (code: string) => {
+const onCopy = (code: string) => {
   isCopied.value = true
   window.copyToClipboard(code)
   setTimeout(() => {
@@ -95,12 +85,9 @@ const handleCopyCode = (code: string) => {
 }
 
 watch(
-  () => props.status,
-  (newVal) => {
-    if (newVal === "sending") {
-      if (activeNames.value?.[0] === "1") return
-      setActive(true)
-    }
+  () => isThinking.value,
+  (val) => {
+    toggleCollapse(val)
   },
   { immediate: true }
 )

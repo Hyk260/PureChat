@@ -4,7 +4,7 @@
       <!-- 回复消息 -->
       <ReplyElem v-if="parsedCloudCustomData" :status="message.status" :originalMsg="parsedCloudCustomData" />
       <!-- 思考过程 -->
-      <DeepThinking v-if="parsedCloudCustomData" :status="message.status" :originalMsg="parsedCloudCustomData" />
+      <Thinking v-if="parsedCloudCustomData" :status="message.status" :originalMsg="parsedCloudCustomData" />
       <!-- web搜索 -->
       <WebSearch
         v-if="parsedCloudCustomData && message?.flow === 'in'"
@@ -27,7 +27,7 @@ import { useAppStore, useChatStore } from "@/stores"
 // import AssistantMessageExtra from "@/components/Chat/AssistantMessageExtra.vue"
 import Markdown from "@/components/Markdown/index.vue"
 import ReplyElem from "../CloudCustomData/ReplyElem.vue"
-import DeepThinking from "../CloudCustomData/DeepThinking.vue"
+import Thinking from "../CloudCustomData/Thinking.vue"
 import WebSearch from "../CloudCustomData/WebSearch.vue"
 
 interface Props {

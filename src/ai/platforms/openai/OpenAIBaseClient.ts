@@ -243,6 +243,8 @@ export abstract class OpenAIBaseClient {
   private async handleStreamingChat(chatPayload: ChatPayload, options: ChatOptions) {
     let output = ""
     let thinking = ""
+    let thinkingStartAt: number
+    let duration: number
 
     const chatPath = this.getPath()
 
@@ -272,12 +274,28 @@ export abstract class OpenAIBaseClient {
         switch (chunk.type) {
           case "text": {
             output += chunk.text
-            options?.onUpdate?.({ text: output })
+            // 推理结束
+            if (!duration) {
+              console.log("推理结束")
+              duration = Date.now() - thinkingStartAt
+              // toggleChatReasoning(false)
+            }
+            options?.onUpdate?.({
+              text: output,
+              reasoning: duration ? { content: thinking, reasoningType: "done", duration } : undefined,
+            })
             break
           }
           case "reasoning": {
             thinking += chunk.text
-            options?.onUpdate?.({ thinking })
+            // 推理开始
+            if (!thinkingStartAt) {
+              console.log("推理开始")
+              thinkingStartAt = Date.now()
+              // toggleChatReasoning(true)
+            }
+            duration = Date.now() - thinkingStartAt
+            options?.onUpdate?.({ thinking, reasoning: { content: thinking, reasoningType: "thinking", duration } })
             break
           }
         }

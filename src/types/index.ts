@@ -16,6 +16,11 @@ export type DraftData = Array<{
 export interface messageHandle {
   text?: string
   thinking?: string
+  reasoning?: {
+    content?: string
+    reasoningType?: "thinking" | "done"
+    duration?: number
+  }
   done?: boolean
 }
 

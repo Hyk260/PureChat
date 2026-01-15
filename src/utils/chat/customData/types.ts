@@ -20,7 +20,9 @@ export interface WebSearchParams {
  */
 export interface DeepThinkingParams {
   thinking?: string | undefined
-  deeplyThought?: string | undefined
+  content?: string | undefined
+  reasoningType?: "thinking" | "done" | undefined
+  duration?: number | undefined
 }
 /**
  * 提示消息自定义数据参数

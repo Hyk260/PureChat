@@ -12,15 +12,8 @@ export function createWebSearchCustomData(data: Partial<DB_Message>, webSearchRe
 /**
  * 深度思考自定义数据生成器
  */
-export function createDeepThinkingCustomData(
-  data: Partial<DB_Message>,
-  thinking?: string,
-  deeplyThought?: string
-): string {
-  return getCloudCustomDataTyped(data, "deepThinking", {
-    thinking: thinking,
-    deeplyThought: deeplyThought,
-  })
+export function createThinkingCustomData(data: Partial<DB_Message>, reasoning?: any): string {
+  return getCloudCustomDataTyped(data, "thinking", reasoning)
 }
 
 /**

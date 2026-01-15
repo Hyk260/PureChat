@@ -2,7 +2,7 @@ import { isEmpty } from "lodash-es"
 import { DB_Message } from "@pure/database/schemas"
 import { messageUtils } from "@/utils/messageUtils"
 
-export type CustomDataType = "webSearch" | "deepThinking" | "messageReply" | "messagePrompt"
+export type CustomDataType = "webSearch" | "thinking" | "messageReply" | "messagePrompt"
 
 import type { WebSearchParams, DeepThinkingParams, PromptMessageParams } from "./types"
 
@@ -26,12 +26,13 @@ export function getCloudCustomDataTyped(data: Partial<DB_Message>, type: CustomD
       }
       break
 
-    case "deepThinking":
+    case "thinking":
       customData = {
-        deepThinking: {
+        thinking: {
           ...baseData,
-          thinking: (params as DeepThinkingParams)?.thinking || "思考中...",
-          deeplyThought: (params as DeepThinkingParams)?.deeplyThought || "已深度思考",
+          content: (params as DeepThinkingParams)?.content,
+          reasoningType: (params as DeepThinkingParams)?.reasoningType,
+          duration: (params as DeepThinkingParams)?.duration,
         },
       }
       break
