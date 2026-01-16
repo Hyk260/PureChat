@@ -294,7 +294,7 @@ export abstract class OpenAIBaseClient {
               thinkingStartAt = Date.now()
               // toggleChatReasoning(true)
             }
-            duration = Date.now() - thinkingStartAt
+            // duration = Date.now() - thinkingStartAt
             options?.onUpdate?.({ thinking, reasoning: { content: thinking, reasoningType: "thinking", duration } })
             break
           }

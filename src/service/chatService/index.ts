@@ -66,12 +66,14 @@ class ChatService {
    * 通过 REST API 发送消息到服务器
    */
   private async sendRestMessage(params: DB_Message, data: messageHandle) {
-    const { text, thinking } = data
+    const { text, reasoning } = data
 
     // 本地模式或消息为空时跳过
     if (__LOCAL_MODE__ || !text) return
 
-    const cloudCustomData = thinking ? createThinkingCustomData({ payload: { text: thinking } }) : ""
+    const cloudCustomData = reasoning
+      ? createThinkingCustomData({ payload: { text: reasoning?.content || "" } }, data?.reasoning)
+      : ""
 
     try {
       const data = await restApi({
@@ -208,7 +210,7 @@ class ChatService {
     const chatParams = this.chatMsg
     console.log("handleFinish", { text, context, startMsg, chatParams })
 
-    const finishedData = { text, done: true }
+    const finishedData = { text, done: true, reasoning: context?.reasoning }
 
     try {
       this.updateMessage({
