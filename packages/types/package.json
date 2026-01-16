@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "model-bank": "workspace:*",
-    "@pure/types": "workspace:*",
     "zod": "^3.25.76"
   }
 }

@@ -1,4 +1,4 @@
-const baseUserProfile = {
+export const baseUserProfile = {
   userID: "",
   nick: "",
   gender: "",

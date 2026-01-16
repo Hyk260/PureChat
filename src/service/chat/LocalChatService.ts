@@ -308,14 +308,8 @@ export class LocalChat {
     return message
   }
 
-  /**
-   * 创建文件消息
-   */
-  createFileMessage(data: MESSAGE_OPTIONS) {
-    const { payload } = data
-    const id = idGenerator("files")
-    clientS3Storage.putObject(id, payload.file)
-    FilesModel.create(id, {
+  createDBFile(payload: any) {
+    return {
       origin_name: "",
       name: payload.file?.name,
       path: payload.path || "",
@@ -324,7 +318,17 @@ export class LocalChat {
       ext: "",
       type: payload.file?.type,
       count: 1,
-    })
+    }
+  }
+
+  /**
+   * 创建文件消息
+   */
+  createFileMessage(data: MESSAGE_OPTIONS) {
+    const { payload } = data
+    const id = idGenerator("files")
+    const dBFile = this.createDBFile(payload)
+    FilesModel.createWithUpload(id, dBFile, payload?.file)
     const filePayload = {
       id,
       uuid: `${UserProfile.userID}-${uuid()}`,

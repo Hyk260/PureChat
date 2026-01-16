@@ -1,4 +1,5 @@
-import type { LLMRoleType, ChatMessageError } from "@pure/types"
+import type { ChatMessageError } from "./fetch"
+import type { LLMRoleType } from "./llm"
 import type { LLMConfig } from "model-bank"
 import type { OnFinishHandler } from "@pure/utils/fetch"
 import type { messageHandle } from "@/types"
@@ -16,12 +17,12 @@ export interface ChatStreamCallbacks {
   onText?: (content: string) => Promise<void> | void
 }
 
-interface UserMessageContentPartText {
+export interface UserMessageContentPartText {
   text: string
   type: "text"
 }
 
-interface UserMessageContentPartImage {
+export interface UserMessageContentPartImage {
   image_url: {
     detail?: "auto" | "low" | "high"
     url: string
@@ -55,6 +56,11 @@ export interface OpenAIChatMessage {
    * @description 消息发送者的角色
    */
   role: LLMRoleType
+
+  reasoning?: {
+    content?: string
+    duration?: number
+  }
 }
 
 /**

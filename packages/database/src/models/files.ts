@@ -14,8 +14,12 @@ class _FilesModel extends BaseModel {
     const exist = await this.findById(id)
     if (exist) return
 
-    // clientS3Storage.putObject(id, file)
     return super._addWithSync(id, file)
+  }
+
+  async createWithUpload(id: string, file: DB_File, files?: File) {
+    if (files) clientS3Storage.putObject(id, files)
+    return this.create(id, file)
   }
 
   // **************** Query *************** //

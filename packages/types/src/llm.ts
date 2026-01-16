@@ -1,4 +1,4 @@
-export type LLMRoleType = "user" | "system" | "assistant" | "tool"
+export type LLMRoleType = "user" | "system" | "assistant" | "function" | "tool"
 
 export interface LLMMessage {
   content: string

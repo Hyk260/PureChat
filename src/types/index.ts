@@ -1,4 +1,3 @@
-// export * from "@pure/database/schemas"
 import type { IDomEditor } from "@wangeditor/editor"
 
 export type DraftData = Array<{
