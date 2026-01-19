@@ -1,14 +1,14 @@
-import { providersList } from "@/config/providers"
+import { providersList, baseUserProfile } from "@/config/providers"
 import { MessageModel, SessionModel, FilesModel } from "@pure/database/models"
 import {
   MessageSchema as BaseElemMessage,
   SessionSchema as BaseElemSession,
   UserfileSchema as UserProfile,
-} from "@pure/database/schemas"
+} from "@pure/const"
 import { delay, getUnixTimestampSec, getUnixTimestampSecPlusOne } from "@/utils/common"
 import { useTopicStore } from "@/stores/modules/topic"
 import { localStg } from "@/utils/storage"
-import { uuid, idGenerator, clientS3Storage } from "@pure/utils"
+import { uuid, idGenerator } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import type { DB_Message, DB_Session, MessageType, payloadSchemaType, FilePayloadType } from "@pure/database/schemas"
@@ -358,20 +358,21 @@ export class LocalChat {
   /**
    * 获取会话资料
    */
-  async getConversationProfile(chatId: string) {
+  async getConversationProfile(id: string) {
     try {
       const session = BaseElemSession as DB_Session
+      const userProfile = providersList.find((item) => item.userID === id.replace("C2C", ""))
       const data: DB_Session = {
         ...session,
-        conversationID: chatId,
+        conversationID: id,
         lastMessage: {
           ...session.lastMessage,
           lastTime: getUnixTimestampSec(),
         },
-        userProfile: providersList.find((item) => item.userID === chatId.replace("C2C", "")),
+        userProfile: userProfile ?? { ...baseUserProfile, nick: "自定义助手" },
       }
 
-      await SessionModel.create(chatId, data)
+      await SessionModel.create(id, data)
 
       const list = await this.loadConversationList()
 

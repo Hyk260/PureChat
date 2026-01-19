@@ -1,46 +1,45 @@
 <template>
   <div class="avatar-container">
-    <div v-if="type === 'group'" class="user-avatar default" :class="[className, shape]" :style="backInfo(url)">
-      {{ url ? null : displayInfo(nickName) }}
-    </div>
-    <!-- <img
-      v-else-if="type === 'single'"
-      v-lazy="url || getAiAvatarUrl(sessionId) || shapeObj[shape]"
-      class="lazy avatar"
-      :size="size"
-      :src="url || getAiAvatarUrl(sessionId) || shapeObj[shape]"
-      alt=""
-    /> -->
-    <ElAvatar
-      v-else-if="type === 'single'"
-      class="avatar"
-      :class="[className]"
-      shape="square"
-      :size="size"
-      :src="url || getAiAvatarUrl(sessionId) || shapeObj[shape]"
-      @error="() => true"
-    >
-      <img :src="emptyUrl" loading="lazy" />
-    </ElAvatar>
-    <!-- 自己 -->
-    <div v-else-if="type === 'self'" class="badge" :style="{ height: `${size}px`, width: `${size}px` }">
-      <span
-        v-if="IS_LOCAL_MODE && userLocalStore?.native"
-        :style="{ fontSize: `${size - 8}px` }"
-        class="cursor-pointer flex-c font-size-32"
-      >
-        {{ userLocalStore?.native }}
-      </span>
-      <ElAvatar v-else-if="userProfile?.avatar" :size="size" :src="fnAvatar(userProfile.avatar)" :shape="shape" />
-      <div v-else class="user-avatar default" :class="[className, shape]" :style="backInfo(url)">
-        {{ url ? null : displayInfo(userProfile?.nick || userProfile?.userID || "") }}
+    <template v-if="type === 'group'">
+      <div class="user-avatar default" :class="[className, shape]" :style="backInfo(url)">
+        {{ url ? null : displayInfo(nickName) }}
       </div>
-      <!-- <sup v-if="isDot" class="is-dot"></sup> -->
-    </div>
+    </template>
+    <template v-else-if="type === 'single'">
+      <span v-if="native && isRobot(sessionId)" :style="{ fontSize: `${size - 8}px` }">{{ native }}</span>
+      <ElAvatar
+        v-else
+        class="avatar"
+        :class="[className]"
+        shape="square"
+        :size="size"
+        :src="url || getAiAvatarUrl(sessionId) || shapeObj[shape]"
+        @error="() => true"
+      >
+        <img :src="emptyUrl" loading="lazy" />
+      </ElAvatar>
+    </template>
+    <template v-else-if="type === 'self'">
+      <div class="badge" :style="{ height: `${size}px`, width: `${size}px` }">
+        <span
+          v-if="IS_LOCAL_MODE && userLocalStore?.native"
+          :style="{ fontSize: `${size - 8}px` }"
+          class="cursor-pointer flex-c font-size-32"
+        >
+          {{ userLocalStore?.native }}
+        </span>
+        <ElAvatar v-else-if="userProfile?.avatar" :size="size" :src="fnAvatar(userProfile.avatar)" :shape="shape" />
+        <div v-else class="user-avatar default" :class="[className, shape]" :style="backInfo(url)">
+          {{ url ? null : displayInfo(userProfile?.nick || userProfile?.userID || "") }}
+        </div>
+        <!-- <sup v-if="isDot" class="is-dot"></sup> -->
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
+import { isRobot } from "@pure/utils"
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { useUserStore } from "@/stores/modules/user"
 import { circleUrl, emptyUrl, squareUrl } from "@/utils/chat"
@@ -59,6 +58,7 @@ interface Props {
   isDot?: boolean
   type?: "group" | "single" | "self"
   shape?: "circle" | "square"
+  native?: string // "🤖" "😀"
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -71,6 +71,7 @@ const props = withDefaults(defineProps<Props>(), {
   isDot: false,
   type: "group",
   shape: "circle",
+  native: "",
 })
 
 const shapeObj = {

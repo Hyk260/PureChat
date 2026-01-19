@@ -1,30 +1,5 @@
 import { z } from "zod"
 
-export const UserSchema = {
-  userID: "",
-  nick: "",
-  gender: "",
-  birthday: 0,
-  location: "",
-  selfSignature: "",
-  allowType: "",
-  language: 0,
-  avatar: "",
-  messageSettings: 0,
-  adminForbidType: "",
-  level: 0,
-  role: 0,
-  lastUpdatedTime: 0,
-  profileCustomField: [],
-}
-
-export const UserfileSchema = {
-  ...UserSchema,
-  userID: "admin",
-  nick: "admin",
-  avatar: "avatar",
-}
-
 export const UserProfileSchema = z
   .object({
     userID: z.string().optional(),
@@ -42,6 +17,7 @@ export const UserProfileSchema = z
     role: z.number().optional(),
     lastUpdatedTime: z.number().optional(),
     profileCustomField: z.array(z.any()).optional(),
+    native: z.string().optional(),
   })
   .optional()
 

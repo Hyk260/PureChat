@@ -1,7 +1,7 @@
 import { nextTick } from "vue"
 
 import { defineStore } from "pinia"
-
+import { DEFAULT_USER_AVATAR } from "@pure/const"
 import localAvatar from "@/assets/images/avatar.png"
 import router from "@/router"
 import { login, logout } from "@/service/api"
@@ -28,8 +28,8 @@ export const useUserStore = defineStore(SetupStoreId.User, {
     currentPage: 0,
     userProfile: null,
     userLocalStore: {
-      native: "",
-      avatar: "",
+      native: DEFAULT_USER_AVATAR,
+      avatar: "admin",
       userName: "",
       localAvatar,
     },

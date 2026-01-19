@@ -1,54 +1,6 @@
 import { z } from "zod"
 import { TypeSchema } from "../types"
 
-// https://web.sdk.qcloud.com/im/doc/zh-cn/Message.html
-export const MessageSchema = {
-  ID: "",
-  conversationID: "",
-  conversationType: "C2C",
-  time: 0,
-  sequence: 0,
-  clientSequence: 0,
-  random: 0,
-  priority: "Normal",
-  nick: "",
-  avatar: "",
-  isPeerRead: false,
-  nameCard: "",
-  hasRiskContent: false,
-  isPlaceMessage: 0,
-  isRevoked: false,
-  from: "",
-  to: "",
-  flow: "out",
-  isSystemMessage: false,
-  protocol: "JSON",
-  isResend: false,
-  isRead: true,
-  status: "success",
-  atUserList: [],
-  cloudCustomData: "",
-  isDeleted: false,
-  isModified: false,
-  clientTime: 0,
-  senderTinyID: "",
-  needReadReceipt: false,
-  version: "0.8.4",
-  isBroadcastMessage: false,
-  isSupportExtension: false,
-  revoker: "",
-  // revokerInfo: {},
-  revokeReason: "",
-  payload: {
-    text: "",
-  },
-  type: "TIMTextElem",
-  // id: "",
-  // sessionId: "",
-  // createdAt: 0,
-  // updatedAt: 0,
-}
-
 export const BasePayload = z.object({
   text: z.string().optional(),
 })

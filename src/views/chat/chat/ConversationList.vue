@@ -25,6 +25,7 @@
             :sessionId="item.conversationID"
             :type="item.type === 'C2C' ? 'single' : 'group'"
             :nickName="item._displayName"
+            :native="item?.userProfile?.native"
             :url="item.type === 'C2C' ? item.userProfile?.avatar : item?.groupProfile?.avatar"
           />
         </ElBadge>

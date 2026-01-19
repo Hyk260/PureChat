@@ -3,12 +3,7 @@ import { modelConfig, modelValue } from "@/ai/constant"
 import { LLMParams, ModelProvider, Provider, ModelID, type ModelIDValue, type Model } from "model-bank"
 import { useRobotStore } from "@/stores/modules/robot"
 import { localStg } from "@/utils/storage"
-import {
-  isOpenAIChatCompletionOnlyModel,
-  isOpenAIOpenWeightModel,
-  isOpenAIReasoningModel,
-  isQwenMTModel,
-} from "@pure/utils"
+import { isRobot } from "@pure/utils"
 
 /**
  * 获取 AI 模型的配置信息
@@ -25,7 +20,7 @@ export const useAccessStore = (model: Provider = ModelProvider.OpenAI): LLMParam
  * @returns {Provider | string} - 'openai' 返回对应的模型类型，如果模型ID无效则返回''。
  */
 export function getModelType(modelId: string): Provider {
-  if (!/@RBT#/.test(modelId)) {
+  if (!isRobot(modelId)) {
     throw new Error("Invalid modelId")
   }
   const modelMapping = {

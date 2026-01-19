@@ -42,6 +42,7 @@
 <script setup lang="ts">
 import { ElLink } from "element-plus"
 import { onClickOutside } from "@vueuse/core"
+import { isRobot } from "@pure/utils"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 // import { getGender } from "@/utils/common";
@@ -49,7 +50,7 @@ import { getValueByKey, prefix } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { getUserProfile } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores/modules/chat"
-import { isRobot, squareUrl } from "@/utils/chat"
+import { squareUrl } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 
 const cardRef = ref()

@@ -181,7 +181,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       if (typeof models === "function") {
         console.log("using custom models function")
-        // resultModels = await models({ client: this.client })
+        resultModels = await models({ client: this.client })
         return resultModels
       } else {
         console.log("fetching models from client API")

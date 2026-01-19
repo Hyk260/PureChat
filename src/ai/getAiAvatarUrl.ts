@@ -1,3 +1,4 @@
+import { isRobot } from "@pure/utils"
 import { ModelProvider, Provider } from "model-bank"
 import { getModelType } from "@/ai/utils"
 import deepseekPng from "@/assets/images/model-provider/deepseek.png"
@@ -75,15 +76,13 @@ class AvatarCacheManager {
  * 专门用于检测和验证AI模型ID
  */
 class AiModelDetector {
-  private static readonly ROBOT_PATTERN = /@RBT#/
-
   /**
    * 检测ID是否为AI机器人ID
    * @param id 待检测的ID
    * @returns 是否为AI机器人ID
    */
   static isAiRobotId(id: string): boolean {
-    return typeof id === "string" && this.ROBOT_PATTERN.test(id)
+    return typeof id === "string" && isRobot(id)
   }
 
   /**

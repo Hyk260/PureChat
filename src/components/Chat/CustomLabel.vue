@@ -14,9 +14,8 @@
 </template>
 
 <script setup lang="ts">
+import { isRobot, getBaseModelName } from "@pure/utils"
 import { getModelIcon, getValueByKey, isFullStaffGroup, prefix } from "@/ai/utils"
-import { isRobot } from "@/utils/chat"
-import { getBaseModelName } from "@pure/utils"
 
 import type { DB_Session } from "@pure/database/schemas"
 

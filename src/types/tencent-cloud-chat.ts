@@ -222,6 +222,10 @@ export interface Profile extends ProfileBase {
    */
   userID: string
   /**
+   * emoji 😀
+   */
+  native?: string
+  /**
    * 最后更新时间，采用用户本地时间
    */
   lastUpdatedNumber: number

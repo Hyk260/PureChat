@@ -300,11 +300,6 @@ export const scrollToMessage = (
   })
 }
 
-// 匹配机器人账号
-export const isRobot = (text: string) => {
-  return /@RBT#/.test(text)
-}
-
 export function readFromFile() {
   return new Promise((res, rej) => {
     const fileInput = document.createElement("input")

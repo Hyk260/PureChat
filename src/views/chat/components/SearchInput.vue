@@ -7,18 +7,18 @@
         </template>
       </ElInput>
       <Dropdown :trigger="['click']">
-        <div v-if="!IS_LOCAL_MODE" class="header-search-add flex-c">
+        <div class="header-search-add flex-c">
           <ElIcon><Plus /></ElIcon>
         </div>
         <template #overlay>
           <Menu>
-            <MenuItem>
+            <MenuItem v-if="!IS_LOCAL_MODE">
               <div class="flex-c gap-5" @click="handleCreateGroup">
                 <ElIcon><MessageSquarePlus /></ElIcon>
                 <span>创建群聊</span>
               </div>
             </MenuItem>
-            <MenuItem v-if="false">
+            <MenuItem>
               <div class="flex-c gap-5" @click="handleCreateAssistant">
                 <ElIcon><Bot /></ElIcon>
                 <span>新建助手</span>
@@ -37,6 +37,7 @@ import { Bot, Search, MessageSquarePlus } from "lucide-vue-next"
 import { Dropdown, Menu, MenuItem } from "ant-design-vue"
 import { debounce, isEmpty } from "lodash-es"
 import { ElMessageBox } from "element-plus"
+import { idGenerator } from "@pure/utils"
 
 import { SessionModel } from "@pure/database"
 import { useChatStore, useGroupStore } from "@/stores"
@@ -62,7 +63,9 @@ const handleCreateGroup = async () => {
     })
 }
 
-const handleCreateAssistant = async () => {}
+const handleCreateAssistant = async () => {
+  // chatStore.addConversation({ sessionId: `C2C@RBT#Agent_${idGenerator("sessions")}` })
+}
 
 const matchesFilter = (item: DB_Session, searchStr: string) => {
   const lastMessage = item.lastMessage?.messageForShow?.toUpperCase()

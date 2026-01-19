@@ -2,6 +2,7 @@ import { cloneDeep } from "lodash-es"
 import { defineStore } from "pinia"
 import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX, MIN_MESSAGES, INBOX_SESSION_ID } from "@pure/const"
 import { getModelType } from "@/ai/utils"
+import { isRobot } from "@pure/utils"
 import { MessageModel } from "@pure/database/models"
 import { timProxy } from "@/service/chat"
 import { sendChatAssistantMessage } from "@/service/chatService"
@@ -82,17 +83,18 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       return this.conversationList?.length > 0
     },
     getNonBotList(): DB_Session[] {
-      return this.conversationList.filter((t) => !/@RBT#/.test(t.conversationID))
+      return this.conversationList.filter((t) => !isRobot(t.conversationID))
     },
     getNonBotC2CList(): DB_Session[] {
-      return this.conversationList.filter((t) => t.type === "C2C" && !/@RBT#/.test(t.conversationID))
+      return this.conversationList.filter((t) => t.type === "C2C" && !isRobot(t.conversationID))
     },
     currentSessionProvider(): Provider {
       const provider = getModelType(this.toAccount)
       return provider
     },
     isAssistant(): boolean {
-      return /@RBT#/.test(this.toAccount) && ModelIDList.includes(this.toAccount as ModelIDValue)
+      return isRobot(this.toAccount)
+      // return isRobot(this.toAccount) && ModelIDList.includes(this.toAccount as ModelIDValue)
     },
     isMore(): boolean {
       return this.currentMessageList?.length < HISTORY_MESSAGE_COUNT
