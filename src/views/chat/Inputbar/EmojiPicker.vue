@@ -3,7 +3,7 @@
     <div class="emojis">
       <ElScrollbar wrapClass="custom-scrollbar-wrap" always>
         <!-- QQ表情包 -->
-        <div v-show="table === 'QQ'" class="emoji_QQ" :class="[systemOs]">
+        <div v-show="table === 'QQ'" class="emoji_QQ">
           <p v-show="recentlyUsed.length" class="title">最近使用</p>
           <span v-for="item in recentlyUsed" :key="item" class="emoji" @click="handleEmojiSelect(item, table)">
             <img loading="lazy" :src="getEmojiAssetUrlSync(emojiQq?.emojiMap?.[item] || '')" :title="item" />
@@ -85,7 +85,6 @@ import { ClickOutside as vClickOutside } from "element-plus"
 import { chunk } from "lodash-es"
 
 import { useChatStore } from "@/stores/modules/chat"
-import { getOperatingSystem } from "@/utils/common"
 import { getEmojiAssetUrlSync, getEmojiData } from "@/utils/emoji"
 import emitter from "@/utils/mitt-bus"
 
@@ -119,7 +118,6 @@ const toolbarItems = [
 
 const EMOJI_GROUP_SIZE = 12 * 6 // 每组表情数量
 const recentlyUsed = ref<string[]>([])
-const systemOs = ref("")
 const table = ref("QQ")
 const chatStore = useChatStore()
 
@@ -140,10 +138,6 @@ const emojiPackGroup = computed(() => {
 const setClose = () => {
   emit("onClose")
   recentlyUsed.value = [...chatStore.recently].reverse()
-}
-
-const getParser = () => {
-  systemOs.value = getOperatingSystem()
 }
 
 // 按需加载表情包数据
@@ -208,7 +202,6 @@ const onClickOutside = () => {
 }
 
 onMounted(() => {
-  getParser()
   chatStore.setRecently({ data: "", type: "revert" })
 })
 </script>

@@ -47,18 +47,6 @@ export const getUnixTimestampSecPlusOne = (): number => {
 }
 
 /**
- * 检测是否为 macOS 或 iOS 设备
- * @returns 是否为 Apple 系统
- */
-export function isMacOS(): boolean {
-  if (typeof window !== "undefined") {
-    const userAgent = window.navigator.userAgent.toLowerCase()
-    return /iphone|ipad|ipod|macintosh/.test(userAgent)
-  }
-  return false
-}
-
-/**
  * 图片信息接口
  */
 export interface ImageInfo {
@@ -137,21 +125,6 @@ export const updateImageSize = async (imageInput: ImageInputData, index: number 
 
   // 返回更新后的对象
   return imageInput
-}
-
-/**
- * 获取操作系统类型
- * @param userAgent 用户代理字符串，默认为navigator.userAgent
- * @returns 操作系统名称（"Windows"、"macOS"或空字符串）
- */
-export function getOperatingSystem(userAgent: string = navigator.userAgent): string {
-  if (userAgent.includes("Windows")) {
-    return "Windows"
-  } else if (userAgent.includes("Macintosh")) {
-    return "macOS"
-  } else {
-    return ""
-  }
 }
 
 /**

@@ -8,7 +8,7 @@ import { useChatStore } from "@/stores/modules/chat"
 export const placeholderMap = computed(() => {
   return {
     Windows: $t("chat.buttonPrompt"),
-    macOS: $t("chat.buttonPromptMac"),
+    "Mac OS": $t("chat.buttonPromptMac"),
     input: $t("chat.PromptInputContent"),
   }
 })

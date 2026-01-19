@@ -1,6 +1,6 @@
 <template>
   <div class="send-button">
-    <span class="tip">{{ placeholderMap[getOperatingSystem()] }}</span>
+    <span class="tip">{{ placeholderMap[browserInfo?.os || "Windows"] }}</span>
     <ElButton v-if="false" :disabled="disabled" circle @click="handleTranslate">
       <div v-if="translateDing" class="iconify-icon svg-spinners"></div>
       <Languages v-else :size="15" />
@@ -9,9 +9,11 @@
       <div v-if="polishDing" class="iconify-icon svg-spinners"></div>
       <WandSparkles :size="15" />
     </ElButton>
-    <ElButton v-if="showPortal && IS_LOCAL_MODE" @click="handleAddTopic">
-      <MessageCirclePlus :size="15" />
-    </ElButton>
+    <Tooltip placement="top" title="开启新话题" :arrow="false">
+      <ElButton v-if="showPortal && IS_LOCAL_MODE" @click="handleAddTopic">
+        <MessageSquarePlus :size="15" />
+      </ElButton>
+    </Tooltip>
     <ElButton :loading="isSending" :class="{ 'pointer-events-none': disabled }" @click="onSend">
       <template #loading>
         <div class="iconify-icon svg-spinners mr-8"></div>
@@ -29,10 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import { CirclePause, Languages, Send, WandSparkles, MessageCirclePlus } from "lucide-vue-next"
+import { Tooltip } from "ant-design-vue"
+import { CirclePause, Languages, Send, WandSparkles, MessageSquarePlus } from "lucide-vue-next"
 import { useMessageOperations } from "@/hooks/useMessageOperations"
 import { useChatStore, useTopicStore, usePortalStore } from "@/stores"
-import { getOperatingSystem } from "@/utils/common"
+import { browserInfo } from "@pure/utils"
 
 import { placeholderMap } from "@/utils/wangEditor/editor-config"
 

@@ -56,7 +56,6 @@ export const VARIABLE_GENERATORS = {
   random: () => Math.floor(Math.random() * 1_000_000 + 1).toString(),
   random_bool: () => (Math.random() > 0.5 ? "true" : "false"),
   random_float: () => (Math.random() * 100).toFixed(2),
-  // eslint-disable-next-line prettier/prettier
   random_hex: () =>
     Math.floor(Math.random() * 16_777_215)
       .toString(16)

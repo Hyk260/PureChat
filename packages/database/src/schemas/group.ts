@@ -2,7 +2,7 @@ import { z } from "zod"
 
 export const GroupRoleSchema = z.enum(["Owner", "Admin", "Member"])
 
-export const GroupTypeSchema = z.enum(["Private", "Public", "ChatRoom", "AVChatRoom"])
+export const GroupTypeSchema = z.enum(["Private", "Public", "ChatRoom", "AVChatRoom"]).optional()
 
 export const selfInfoSchema = z.object({
   role: GroupRoleSchema,
