@@ -32,6 +32,7 @@ export function getModelType(modelId: string): Provider {
     [ModelID.GitHub]: ModelProvider.GitHub,
     [ModelID.DeepSeek]: ModelProvider.DeepSeek,
     [ModelID.Mistral]: ModelProvider.Mistral,
+    [ModelID.Minimax]: ModelProvider.Minimax,
   }
   return modelMapping[modelId.replace("C2C", "") as ModelIDValue]
 }
@@ -47,6 +48,7 @@ export function getModelId(model: Provider) {
     [ModelProvider.GitHub]: ModelID.GitHub,
     [ModelProvider.DeepSeek]: ModelID.DeepSeek,
     [ModelProvider.Mistral]: ModelID.Mistral,
+    [ModelProvider.Minimax]: ModelID.Minimax,
   }
   return modelMapping[model] || null
 }
@@ -67,6 +69,7 @@ export function getModelIcon(id: string): string {
     [ModelProvider.GitHub]: "openai",
     [ModelProvider.DeepSeek]: "deepseek",
     [ModelProvider.Mistral]: "mistral",
+    [ModelProvider.Minimax]: "minimax",
     llava: "llava",
   }
   return data[modelId] || ""

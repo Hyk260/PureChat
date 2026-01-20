@@ -1,4 +1,4 @@
-import { GithubProviderCard } from "model-bank"
+import { github } from "model-bank"
 
 const { VITE_GITHUB_PROXY_URL } = import.meta.env
 
@@ -8,8 +8,8 @@ export const GitHubModelValue = {
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: GithubProviderCard.chatModels.map((t) => t.id),
-    options: GithubProviderCard,
+    collapse: github.chatModels.map((t) => t.id),
+    options: github,
   },
   OpenaiUrl: {
     ID: "openaiUrl",

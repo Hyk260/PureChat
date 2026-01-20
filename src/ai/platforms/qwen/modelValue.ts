@@ -1,4 +1,4 @@
-import { QwenProviderCard as Qwen } from "model-bank"
+import { qwen } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_QWEN_BASE_URL } = import.meta.env
@@ -9,8 +9,8 @@ export const QwenModelValue = {
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: Qwen.chatModels.map((t) => t.id),
-    options: Qwen,
+    collapse: qwen.chatModels.map((t) => t.id),
+    options: qwen,
   },
   OpenaiUrl: {
     ID: "openaiUrl",

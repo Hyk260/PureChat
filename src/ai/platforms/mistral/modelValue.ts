@@ -1,4 +1,4 @@
-import { MistralProviderCard as Mistral } from "model-bank"
+import { mistral } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_MISTRAL_BASE_URL } = import.meta.env
@@ -9,8 +9,8 @@ export const MistralModelValue = {
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: Mistral.chatModels.map((t) => t.id),
-    options: Mistral,
+    collapse: mistral.chatModels.map((t) => t.id),
+    options: mistral,
   },
   OpenaiUrl: {
     ID: "openaiUrl",

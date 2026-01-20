@@ -1,4 +1,4 @@
-import { ZeroOneProviderCard as ZeroOne } from "model-bank"
+import { zeroone } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_ZEROONE_BASE_URL } = import.meta.env
@@ -9,8 +9,8 @@ export const ZeroOneModelValue = {
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: ZeroOne.chatModels.map((t) => t.id),
-    options: ZeroOne,
+    collapse: zeroone.chatModels.map((t) => t.id),
+    options: zeroone,
   },
   OpenaiUrl: {
     ID: "openaiUrl",

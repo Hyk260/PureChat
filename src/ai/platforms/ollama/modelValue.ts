@@ -1,4 +1,4 @@
-import { OllamaProviderCard as Ollama } from "model-bank"
+import { ollama } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_OLLAMA_PROXY_URL } = import.meta.env
@@ -9,8 +9,8 @@ export const OllamaModelValue = {
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: Ollama.chatModels.map((t) => t.id),
-    options: Ollama,
+    collapse: ollama.chatModels.map((t) => t.id),
+    options: ollama,
   },
   OpenaiUrl: {
     ID: "openaiUrl",

@@ -1,4 +1,4 @@
-import { DeepSeekProviderCard as DeepSeek } from "model-bank"
+import { deepseek } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_DEEPSEEK_BASE_URL } = import.meta.env
@@ -9,8 +9,8 @@ export const DeepseekModelValue = {
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: DeepSeek.chatModels.map((t) => t.id),
-    options: DeepSeek,
+    collapse: deepseek.chatModels.map((t) => t.id),
+    options: deepseek,
   },
   OpenaiUrl: {
     ID: "openaiUrl",

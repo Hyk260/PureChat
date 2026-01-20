@@ -7,8 +7,9 @@ import GithubProvider from "./github"
 import DeepSeekProvider from "./deepseek"
 import QwenProvider from "./qwen"
 import MistralProvider from "./mistral"
+import MinimaxProvider from "./minimax"
 
-export const DEFAULT_MODEL_PROVIDER_LIST = [
+export const DEFAULT_MODEL_PROVIDER_LIST: ChatModelCard[] = [
   OpenAIProvider,
   ZhiPuProvider,
   QwenProvider,
@@ -17,6 +18,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   GithubProvider,
   DeepSeekProvider,
   MistralProvider,
+  MinimaxProvider,
 ]
 
 export const buildDefaultModelList = (map: Record<string, ModelProviderCard>) => {
@@ -43,13 +45,15 @@ export const DEFAULT_MODEL_LIST = buildDefaultModelList({
   github: GithubProvider,
   deepseek: DeepSeekProvider,
   mistral: MistralProvider,
+  minimax: MinimaxProvider,
 })
 
-export { default as DeepSeekProviderCard } from "./deepseek"
-export { default as GithubProviderCard } from "./github"
-export { default as MistralProviderCard } from "./mistral"
-export { default as OllamaProviderCard } from "./ollama"
-export { default as OpenAIProviderCard } from "./openai"
-export { default as QwenProviderCard } from "./qwen"
-export { default as ZeroOneProviderCard } from "./zeroone"
-export { default as ZhiPuProviderCard } from "./zhipu"
+export { default as deepseek } from "./deepseek"
+export { default as github } from "./github"
+export { default as minimax } from "./minimax"
+export { default as mistral } from "./mistral"
+export { default as ollama } from "./ollama"
+export { default as openai } from "./openai"
+export { default as qwen } from "./qwen"
+export { default as zeroone } from "./zeroone"
+export { default as zhipu } from "./zhipu"

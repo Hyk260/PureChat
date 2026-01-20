@@ -1,4 +1,4 @@
-import { OpenAIProviderCard as OpenAI } from "model-bank"
+import { openai } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_OPENAI_PROXY_URL } = import.meta.env
@@ -9,8 +9,8 @@ export const OpenAIModelValue = {
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: OpenAI.chatModels.map((t) => t.id),
-    options: OpenAI,
+    collapse: openai.chatModels.map((t) => t.id),
+    options: openai,
   },
   OpenaiUrl: {
     ID: "openaiUrl",

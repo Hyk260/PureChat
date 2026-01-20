@@ -1,4 +1,4 @@
-import { ZhiPuProviderCard as Zhipu } from "model-bank"
+import { zhipu } from "model-bank"
 
 const docs = __APP_INFO__.pkg.docs
 const { VITE_ZHIPU_BASE_URL } = import.meta.env
@@ -9,8 +9,8 @@ export const ZhiPuModelValue = {
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: Zhipu.chatModels.map((t) => t.id),
-    options: Zhipu,
+    collapse: zhipu.chatModels.map((t) => t.id),
+    options: zhipu,
   },
   OpenaiUrl: {
     ID: "openaiUrl",
