@@ -124,7 +124,7 @@ describe("fetchSSE", () => {
     })
   })
 
-  describe("reasoning 推理", () => {
+  describe("reasoning", () => {
     it("should handle reasoning event without smoothing", async () => {
       const mockOnMessageHandle = vi.fn()
       const mockOnFinish = vi.fn()
@@ -148,7 +148,7 @@ describe("fetchSSE", () => {
       expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: " World", type: "reasoning" })
 
       expect(mockOnFinish).toHaveBeenCalledWith("hi", {
-        reasoning: { content: "Hello World" },
+        reasoning: { content: "Hello World", duration: undefined, signature: undefined },
         type: "done",
       })
     })

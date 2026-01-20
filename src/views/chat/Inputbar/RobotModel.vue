@@ -20,7 +20,7 @@
                 v-if="item.vision"
                 :enterable="false"
                 :showArrow="false"
-                :content="ModelSelect.vision"
+                :content="$t('ModelSelect.featureTag.vision')"
                 placement="right"
               >
                 <Eye :size="16" color="#55b467" />
@@ -29,7 +29,7 @@
                 v-if="item.functionCall"
                 :enterable="false"
                 :showArrow="false"
-                :content="ModelSelect.functionCall"
+                :content="$t('ModelSelect.featureTag.functionCall')"
                 placement="right"
               >
                 <ToyBrick :size="16" color="#369eff" />
@@ -38,7 +38,7 @@
                 v-if="item.reasoning"
                 :enterable="false"
                 :showArrow="false"
-                :content="ModelSelect.reasoning"
+                :content="$t('ModelSelect.featureTag.reasoning')"
                 placement="right"
               >
                 <Atom :size="16" color="#bd54c6" />
@@ -47,7 +47,7 @@
                 v-if="item.tokens"
                 :enterable="false"
                 :showArrow="false"
-                :content="formatTokenTip(item)"
+                :content="$t('ModelSelect.featureTag.tokens', { tokens: formatToken(item) })"
                 placement="right"
               >
                 <span class="tokens flex-c">
@@ -70,12 +70,11 @@ import { storeToRefs } from "pinia"
 import { modelValue } from "@/ai/constant"
 import { ModelIcon, ProviderIcon } from "@pure/icons"
 import { getBaseModelName } from "@pure/utils"
-import { ModelSelect } from "@/ai/resources"
 import { getModelIcon, useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"
 import { Model, ModelConfigItem } from "@/stores/modules/robot/types"
-import { formatTokenNumber, formatTokenTip } from "@pure/utils"
+import { formatTokenNumber, formatToken } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({

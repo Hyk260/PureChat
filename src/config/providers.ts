@@ -137,4 +137,20 @@ export const providersList = [
       },
     ],
   },
+  // {
+  //   ...baseUserProfile,
+  //   userID: "@RBT#009",
+  //   nick: "Minimax",
+  //   selfSignature: "",
+  //   profileCustomField: [
+  //     {
+  //       key: "Tag_Profile_Custom_Provider",
+  //       value: "Minimax",
+  //     },
+  //     {
+  //       key: "Tag_Profile_Custom_Homepage",
+  //       value: "",
+  //     },
+  //   ],
+  // },
 ]

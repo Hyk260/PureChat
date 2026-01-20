@@ -6,7 +6,7 @@ import markdownItFootnote from "markdown-it-footnote"
 import DOMPurify from "dompurify"
 import { parseDocument } from "htmlparser2"
 
-import { prettyObject } from "@/ai/utils"
+import { prettyObject } from "@pure/utils"
 // import markdownItMark from "markdown-it-mark"
 import { configureFootnoteRules } from "./markdown"
 import { highlightLinePlugin } from "./plugins/highlightLines"

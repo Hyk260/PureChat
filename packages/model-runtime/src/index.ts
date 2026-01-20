@@ -6,3 +6,4 @@ export { OllamaAI } from "./providers/ollama"
 
 export * from "./types"
 export * from "./types/error"
+export * from "./utils/errorResponse"

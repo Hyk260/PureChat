@@ -63,7 +63,7 @@
                           v-if="models?.vision"
                           :showArrow="false"
                           :enterable="false"
-                          :content="ModelSelect.vision"
+                          :content="$t('ModelSelect.featureTag.vision')"
                           placement="top"
                         >
                           <Eye :size="16" color="#55b467" />
@@ -72,7 +72,7 @@
                           v-if="models?.functionCall"
                           :showArrow="false"
                           :enterable="false"
-                          :content="ModelSelect.functionCall"
+                          :content="$t('ModelSelect.featureTag.functionCall')"
                           placement="top"
                         >
                           <ToyBrick :size="16" color="#369eff" />
@@ -81,7 +81,7 @@
                           v-if="models?.reasoning"
                           :showArrow="false"
                           :enterable="false"
-                          :content="ModelSelect.reasoning"
+                          :content="$t('ModelSelect.featureTag.reasoning')"
                           placement="top"
                         >
                           <Atom :size="16" color="#bd54c6" />
@@ -234,7 +234,6 @@ import { storeToRefs } from "pinia"
 import { ModelIcon } from "@pure/icons"
 import { getLowerBaseModelName, getBaseModelName } from "@pure/utils"
 import { modelConfig, modelValue } from "@/ai/constant"
-import { ModelSelect } from "@/ai/resources"
 import { getModelIcon, useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"

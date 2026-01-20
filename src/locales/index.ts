@@ -8,7 +8,7 @@ import type { App } from "vue"
 
 const i18n = createI18n({
   locale: localStg.get("lang") || "zh-CN",
-  fallbackLocale: "en",
+  fallbackLocale: "zh-CN",
   messages,
   legacy: false,
   globalInjection: true,

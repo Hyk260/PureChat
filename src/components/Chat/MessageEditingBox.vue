@@ -5,7 +5,6 @@
       v-model="inputText"
       resize="none"
       :autosize="{ minRows: 1, maxRows: 20 }"
-      class="min-w-400"
       type="textarea"
       @keydown="handleKeydown"
     />

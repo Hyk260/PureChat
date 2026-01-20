@@ -19,7 +19,7 @@ export default {
       imageOutput: "该模型支持生成图片",
       reasoning: "该模型支持深度思考",
       search: "该模型支持联网搜索",
-      tokens: "该模型单个会话最多支持 {{tokens}} Tokens",
+      tokens: "该模型单个会话最多支持 {tokens} Tokens",
       video: "该模型支持视频识别",
       vision: "该模型支持视觉识别",
     },
@@ -27,7 +27,7 @@ export default {
   },
   Thinking: {
     thinking: "深度思考中...",
-    thought: "已深度思考（用时 {{duration}} 秒）",
+    thought: "已深度思考（用时 {duration} 秒）",
     thoughtWithDuration: "已深度思考",
   },
 }

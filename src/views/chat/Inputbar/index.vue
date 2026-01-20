@@ -130,9 +130,8 @@
         <Globe :size="16" />
       </ElButton>
     </ElTooltip>
-    <!-- 清空消息 -->
     <ElTooltip
-      content="清空消息"
+      :content="$t('chat.clearCurrentMessages')"
       placement="top"
       :showArrow="false"
       :enterable="false"

@@ -8,3 +8,17 @@ import { isNil, omitBy } from "lodash-es"
 export const cleanObject = <T extends Record<string, any>>(obj: T): T => {
   return omitBy(obj, (value) => isNil(value) || value === "") as T
 }
+
+export function prettyObject(msg: any) {
+  const obj = msg
+  if (typeof msg !== "string") {
+    msg = JSON.stringify(msg, null, "  ")
+  }
+  if (msg === "{}") {
+    return obj.toString()
+  }
+  if (msg.startsWith("```json")) {
+    return msg
+  }
+  return ["```json", msg, "```"].join("\n")
+}

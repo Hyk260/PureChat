@@ -44,7 +44,7 @@
         <div class="topic-section">
           <div class="section-header">
             <h3 class="section-title">
-              <span>话题</span>
+              <span>{{ $t("topic.title") }}</span>
               <span v-if="filteredTopics.length" class="ml-4">
                 {{ filteredTopics.length }}
               </span>
@@ -62,19 +62,19 @@
                     <MenuItem>
                       <div class="flex-sc gap-5" @click="setDisplayModeByTime">
                         <ElIcon :class="{ 'opacity-0': topicDisplayMode === 'flat' }"><Check /></ElIcon>
-                        <span>按时间分组</span>
+                        <span>{{ $t("topic.groupMode.byTime") }}</span>
                       </div>
                     </MenuItem>
                     <MenuItem>
                       <div class="flex-sc gap-5" @click="setDisplayModeFlat">
                         <ElIcon :class="{ 'opacity-0': topicDisplayMode === 'byTime' }"><Check /></ElIcon>
-                        <span>不分组</span>
+                        <span>{{ $t("topic.groupMode.flat") }}</span>
                       </div>
                     </MenuItem>
                     <MenuItem danger @click="clearTopics">
                       <div class="flex-sc gap-5">
                         <ElIcon><Trash /></ElIcon>
-                        <span>删除全部话题</span>
+                        <span>{{ $t("topic.actions.removeAll") }}</span>
                       </div>
                     </MenuItem>
                   </Menu>
@@ -88,7 +88,7 @@
             <ElInput
               ref="searchInputRef"
               v-model="searchKeyword"
-              placeholder="搜索话题..."
+              :placeholder="$t('topic.searchPlaceholder')"
               clearable
               class="h-32"
               @input="handleSearch"
@@ -106,8 +106,8 @@
               <ElIcon color="var(--el-color-info-light-3)" class="w-24 h-24" :size="16">
                 <MessageSquareDashed />
               </ElIcon>
-              <span class="topic-label">{{ defaultTopic.title }}</span>
-              <span class="temp-badge">临时</span>
+              <span class="topic-label">{{ defaultTopic.title ? "" : $t("topic.defaultTitle") }}</span>
+              <span class="temp-badge">{{ $t("topic.temp") }}</span>
             </div>
           </div>
 
@@ -117,7 +117,7 @@
               <template v-for="(topics, year) in groupedTopicsSelector" :key="year">
                 <div class="year-group">
                   <div v-if="topicDisplayMode === 'byTime'" class="year-title">
-                    {{ topics.title || topicLanguage.groupTitle.byTime?.[topics.id] || topics.id }}
+                    {{ topics?.title ? topics.title : timeTitle({ id: topics?.id }) }}
                   </div>
                   <div
                     v-for="topic in topics.children"
@@ -184,6 +184,7 @@
               </template>
               <div v-if="filteredTopics.length === 0" class="empty-topic">
                 <p>暂无话题</p>
+                <!-- <p>{{ $t("topic.noTopic") }}</p> -->
               </div>
             </div>
           </ElScrollbar>
@@ -212,10 +213,11 @@ import { Tooltip, Dropdown, Menu, MenuItem } from "ant-design-vue"
 import { storeToRefs } from "pinia"
 import { useState } from "@/hooks/useState"
 import { useChatStore, usePortalStore, useTopicStore, useRobotStore } from "@/stores"
-import topicLanguage from "@/locales/default/topic"
-import type { Topic } from "@/stores/modules/topic/types"
+import { $t } from "@/locales"
+import dayjs from "dayjs"
 
 import { TopicDisplayMode } from "@pure/types"
+import type { Topic } from "@/stores/modules/topic/types"
 
 const chatStore = useChatStore()
 const robotStore = useRobotStore()
@@ -242,6 +244,9 @@ const [showSearch, setShowSearch] = useState(false)
 const isShowPortal = computed(() => {
   return showPortal.value && __LOCAL_MODE__ && currentConversation.value
 })
+const timeTitle = ({ id }) => {
+  return preformat(id) ?? $t(`topic.groupTitle.byTime.${id}`)
+}
 
 const handleSmartRename = async (_topic?: Topic) => {
   // await topicStore.smartRenameTopic(topic.id)
@@ -273,6 +278,8 @@ const saveRename = async () => {
   topicStore.updateTopicTitle(renamingTopicId.value, newTitle)
   cancelRename()
 }
+
+const preformat = (id: string) => (id.startsWith("20") ? (id.includes("-") ? dayjs(id).format("MMMM") : id) : undefined)
 
 const deleteTopic = (topic: Topic) => {
   topicStore.removeTopic(topic.id)

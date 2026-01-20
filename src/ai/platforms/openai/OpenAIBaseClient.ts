@@ -4,20 +4,13 @@ import { cleanObject } from "@pure/utils/object"
 import { REQUEST_TIMEOUT_MS, OpenaiPath } from "@pure/const"
 import { Provider, LLMConfig, LLMParams, ModelProvider } from "model-bank"
 import { isClaudeReasoningModel, getLowerBaseModelName, isNotSupportTemperatureAndTopP } from "@pure/utils"
-import {
-  adjustForDeepseek,
-  createErrorResponse,
-  extractImageMessage,
-  // generateDalle3RequestPayload,
-  // isDalle3 as _isDalle3,
-  useAccessStore,
-} from "@/ai/utils"
+import { useAccessStore } from "@/ai/utils"
 import { useRobotStore } from "@/stores"
 import { addAbortController, removeAbortController, hostPreview } from "@pure/utils"
 import { transformData } from "@/utils/chat"
 import { initializeWithClientStore } from "@/service/chatService/clientModelRuntime"
 import { ChatErrorType } from "@pure/types"
-import { ChatCompletionErrorPayload } from "@pure/model-runtime"
+import { ChatCompletionErrorPayload, createErrorResponse } from "@pure/model-runtime"
 import type { FewShots, OpenAIListModelResponse, ChatOptions, ChatPayload, ChatStreamPayload } from "@pure/types"
 
 export abstract class OpenAIBaseClient {
@@ -61,11 +54,6 @@ export abstract class OpenAIBaseClient {
       combinedMessages = recentMessages // 上下文
     }
 
-    // DeepSeek 推理模型特殊处理
-    if (modelConfig.model === "deepseek-reasoner") {
-      return adjustForDeepseek(combinedMessages)
-    }
-
     return combinedMessages
   }
 
@@ -86,10 +74,6 @@ export abstract class OpenAIBaseClient {
     if (res?.error) {
       return "```\n" + JSON.stringify(res, null, 4) + "\n```"
     }
-    // DALL-E 3模型返回图片URL
-    // if (res.data) {
-    //   return await extractImageMessage(res)
-    // }
     return res.choices?.[0]?.message?.content ?? res
   }
 

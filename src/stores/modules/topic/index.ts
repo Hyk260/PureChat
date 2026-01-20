@@ -5,6 +5,7 @@ import { useRouteStore } from "@/stores/modules/route"
 import { SessionModel, TopicModel, type QueryTopicParams } from "@pure/database/models"
 import { groupTopicsByTime } from "@pure/utils"
 import { TopicDisplayMode } from "@pure/types"
+import { $t } from "@/locales"
 import emitter from "@/utils/mitt-bus"
 
 import type { ChatTopic, GroupedTopic } from "@pure/types"
@@ -27,7 +28,7 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
       createdAt: 0,
       updatedAt: 0,
       favorite: false,
-      title: "默认主题",
+      title: "",
     },
   }),
   getters: {
@@ -63,7 +64,7 @@ export const useTopicStore = defineStore(SetupStoreId.Topic, {
             {
               children: favTopics,
               id: "favorite",
-              title: "收藏",
+              title: $t("topic.favorite"),
             },
             ...groupTopicsByTime(unfavTopics),
           ]

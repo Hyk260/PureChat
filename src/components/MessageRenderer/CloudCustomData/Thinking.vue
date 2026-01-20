@@ -5,9 +5,13 @@
         <template #title>
           <div class="px-5 flex items-center gap-8">
             <Atom :size="16" :color="activeNames === '1' ? '#bd54c6' : 'currentColor'" />
-            <span v-if="isThinking">深度思考中...</span>
+            <span v-if="isThinking"> {{ $t('Thinking.thinking') }}</span>
             <span v-else>
-              {{ duration ? `已深度思考（用时 ${((duration || 0) / 1000).toFixed(1)} 秒）` : "已深度思考" }}
+              {{
+                duration
+                  ? $t("Thinking.thought", { duration: ((duration || 0) / 1000).toFixed(1) })
+                  : $t("Thinking.thoughtWithDuration")
+              }}
             </span>
           </div>
         </template>
@@ -15,7 +19,7 @@
           <div class="header">
             <ElTooltip
               v-if="isActive"
-              content="复制"
+              :content="$t('common.copy')"
               placement="top"
               :showArrow="false"
               :offset="8"

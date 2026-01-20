@@ -23,6 +23,8 @@ export const DB_FileSchema = z.object({
   ext: z.string(), // .png
   type: z.string(),
   count: z.number(),
+  // ArrayBuffer
+  // data: z.instanceof(Uint8Array).optional(),
   // id: z.string().uuid(),
   // createdAt: z.number().optional(),
   // updatedAt: z.number().optional(),

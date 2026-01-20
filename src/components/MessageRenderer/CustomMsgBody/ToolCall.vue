@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-import { prettyObject } from "@/ai/utils"
+import { prettyObject } from "@pure/utils"
 import { transformCustomElement } from "@/utils/chat"
 
 defineOptions({

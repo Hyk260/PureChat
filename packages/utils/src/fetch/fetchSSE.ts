@@ -417,13 +417,17 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         await textController.startAnimation(smoothingSpeed)
       }
 
-      await options?.onFinish?.(output, {
+      const data = {
         images: images.length > 0 ? images : undefined,
         reasoning: thinking ? { content: thinking, signature: thinkingSignature, duration } : undefined,
         type: finishedType,
         speed,
         usage,
-      })
+      }
+
+      console.log("onFinish:", output, data)
+
+      await options?.onFinish?.(output, data)
     }
   }
 
