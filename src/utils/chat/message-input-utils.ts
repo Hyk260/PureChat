@@ -249,28 +249,6 @@ export const findNonImageString = (arr: string[]): string => {
 }
 
 /**
- * 将字节数转换为可读性更强的单位
- */
-export function bytesToSize(bytes: number): string {
-  const marker = 1024
-  const decimal = 2
-  const kiloBytes = marker
-  const megaBytes = marker * marker
-  const gigaBytes = marker * marker * marker
-  const lang = "en"
-
-  if (bytes < kiloBytes) {
-    return bytes + (lang === "en" ? " Bytes" : "字节")
-  } else if (bytes < megaBytes) {
-    return (bytes / kiloBytes).toFixed(decimal) + " KB"
-  } else if (bytes < gigaBytes) {
-    return (bytes / megaBytes).toFixed(decimal) + " MB"
-  } else {
-    return (bytes / gigaBytes).toFixed(decimal) + " GB"
-  }
-}
-
-/**
  * 滚动到指定消息ID对应的DOM位置，并添加动画效果
  */
 export const scrollToDomPosition = (msgid: string) => {

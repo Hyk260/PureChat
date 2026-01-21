@@ -49,40 +49,6 @@ export const getMessageTypeClass = (type: MessageType) => {
   return resp
 }
 
-/**
- * 根据图片的宽度和高度计算展示图片的样式
- */
-export const showIMPic = (width: number = 0, height: number = 0) => {
-  // 确保高度不小于40px
-  const minHeight = 40
-  // 限制高度不超过360px
-  const maxHeight = 360
-
-  // 计算宽度和高度的逻辑
-  let computedWidth: number = 0
-  let computedHeight: number = 0
-
-  if (width >= 140) {
-    computedWidth = 140
-    computedHeight = Math.max(Math.round((140 / width) * height), minHeight)
-  } else if (width <= 35) {
-    computedWidth = 45
-    computedHeight = Math.max(Math.round((45 / width) * height), minHeight)
-  } else {
-    computedWidth = width
-    computedHeight = Math.max(height, minHeight)
-  }
-
-  computedHeight = Math.min(computedHeight, maxHeight)
-
-  const imageStyle = {
-    width: `${computedWidth}px`,
-    height: `${computedHeight}px`,
-  }
-
-  return imageStyle
-}
-
 export const formatContent = (data: DraftData) => {
   return data
     .filter((item) => item.type === "paragraph")

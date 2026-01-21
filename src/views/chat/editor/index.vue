@@ -37,8 +37,8 @@ import { useMessageCreator } from "@/hooks/useMessageCreator"
 import { usePrepareMessageData } from "@/hooks/useMessageOperations"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useGroupStore } from "@/stores"
-import { bytesToSize, fileToBase64, insertMention } from "@/utils/chat"
-import { browserInfo } from "@pure/utils"
+import { fileToBase64, insertMention } from "@/utils/chat"
+import { formatSize, browserInfo } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import Inputbar from "../Inputbar/index.vue"
@@ -176,7 +176,7 @@ const handleFiles = async (file: File | null, type: "image" | "file" = "file") =
       const fileElement = {
         type: "attachment",
         fileName: file.name,
-        fileSize: bytesToSize(file.size),
+        fileSize: formatSize(file.size),
         link: base64Url,
         path: file?.path || "",
         children: [{ text: "" }],

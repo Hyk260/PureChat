@@ -55,8 +55,7 @@ import {
 } from "@element-plus/icons-vue"
 import { useChatStore } from "@/stores"
 import { DB_Message, ImagePayloadType } from "@pure/database/schemas"
-import { showIMPic } from "@/utils/chat"
-import { getImageSize } from "@/utils/common"
+import { getImageSize, calculateImageStyle } from "@pure/utils"
 
 interface Props {
   message: DB_Message
@@ -99,7 +98,7 @@ async function initImageSize() {
       height = newHeight
     }
 
-    const { width: finalWidth, height: finalHeight } = showIMPic(width, height)
+    const { width: finalWidth, height: finalHeight } = calculateImageStyle({ width, height })
     imgStyle.value = { width: finalWidth, height: finalHeight }
   } catch (error) {
     console.error("Failed to initialize image size:", error)

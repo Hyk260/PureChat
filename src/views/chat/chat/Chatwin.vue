@@ -123,10 +123,9 @@ import {
   scrollToMessage,
   validateLastMessage,
 } from "@/utils/chat"
-import { getUnixTimestampSec } from "@/utils/common"
 import { avatarContextMenuItems, messageContextMenuItems } from "@/utils/contextMenuPresets"
 import { ElMessageBox } from "element-plus"
-import { timeFormat } from "@pure/utils"
+import { getUnixTimestampSec, timeFormat } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 // import LoadMore from "../components/LoadMore.vue"

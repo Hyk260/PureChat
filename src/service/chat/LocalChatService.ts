@@ -5,10 +5,9 @@ import {
   SessionSchema as BaseElemSession,
   UserfileSchema as UserProfile,
 } from "@pure/const"
-import { getUnixTimestampSec, getUnixTimestampSecPlusOne } from "@/utils/common"
 import { useTopicStore } from "@/stores/modules/topic"
 import { localStg } from "@/utils/storage"
-import { delay, uuid, idGenerator } from "@pure/utils"
+import { delay, uuid, idGenerator, getUnixTimestampSec, getUnixTimestampSecPlusOne } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import type { DB_Message, DB_Session, MessageType, payloadSchemaType, FilePayloadType } from "@pure/database/schemas"

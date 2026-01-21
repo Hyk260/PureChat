@@ -39,3 +39,27 @@ export const lastMonth = () => monthsAgo(1).endOf("month")
 export function getYYYYmmddHHMMss(date: Date) {
   return dayjs(date).format("YYYYMMDD_HHmmss")
 }
+
+/**
+ * 获取当前Unix时间戳（秒级）
+ * @returns 当前Unix时间戳（秒级）
+ */
+export const getUnixTimestampSec = (): number => {
+  return Math.floor(Date.now() / 1000)
+}
+
+/**
+ * 获取当前Unix时间戳（毫秒级）
+ * @returns 当前Unix时间戳（毫秒级）
+ */
+export const getUnixTimestampMs = (): number => {
+  return Date.now()
+}
+
+/**
+ * 获取比当前实际时间快1秒的Unix时间戳（秒级）
+ * @returns 超前1秒的秒级Unix时间戳
+ */
+export const getUnixTimestampSecPlusOne = (): number => {
+  return getUnixTimestampSec() + 1
+}

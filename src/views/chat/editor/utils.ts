@@ -3,7 +3,8 @@ import { nextTick } from "vue"
 import { documentExts, textExts } from "@pure/const"
 import { IDomEditor } from "@wangeditor/editor"
 
-import { bytesToSize, fileToBase64, getFileType } from "@/utils/chat"
+import { fileToBase64, getFileType } from "@/utils/chat"
+import { formatSize } from "@pure/utils"
 
 const { DEV: isDev } = import.meta.env
 
@@ -42,7 +43,7 @@ export const handleAssistantFile = async (file: File, editor: IDomEditor) => {
 
   const node = createMediaElement("attachment", {
     fileName: file.name,
-    fileSize: bytesToSize(file.size),
+    fileSize: formatSize(file.size),
     link: base64Url,
     path: file?.path || "",
   })

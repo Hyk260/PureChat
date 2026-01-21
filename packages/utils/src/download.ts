@@ -19,7 +19,7 @@ export const download = (url: string, filename?: string) => {
         resolvedFilename = `${Date.now()}_diagram.svg`
       } else if (url.startsWith("data:")) {
         const mimeMatch = url.match(/^data:([^;,]+)[;,]/)
-        const mimeType = mimeMatch?.[1]
+        const mimeType = mimeMatch?.[1] ?? null
         const extension = getExtensionFromMimeType(mimeType)
         resolvedFilename = `${Date.now()}_download${extension}`
       } else resolvedFilename = "download"
@@ -34,7 +34,7 @@ export const download = (url: string, filename?: string) => {
 
   // 处理普通 URL
   fetch(url)
-    .then((response) => {
+    .then(async (response) => {
       let finalFilename = filename || "download"
 
       if (!filename) {
@@ -43,7 +43,7 @@ export const download = (url: string, filename?: string) => {
         if (contentDisposition) {
           const filenameMatch = contentDisposition.match(/filename="?(.+)"?/i)
           if (filenameMatch) {
-            finalFilename = filenameMatch[1]
+            finalFilename = filenameMatch[1] ?? "download"
           }
         }
 
@@ -64,7 +64,8 @@ export const download = (url: string, filename?: string) => {
         finalFilename = `${Date.now()}_${finalFilename}`
       }
 
-      return response.blob().then((blob) => ({ blob, finalFilename }))
+      const blob = await response.blob()
+      return { blob, finalFilename }
     })
     .then(({ blob, finalFilename }) => {
       const blobUrl = URL.createObjectURL(new Blob([blob]))
