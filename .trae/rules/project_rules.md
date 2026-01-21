@@ -1,164 +1,66 @@
 # PureChat 项目规则文档
 
 ## 1. 项目概述
+PureChat 是基于 Vue.js 的聊天应用，集成 AI 功能，支持多平台部署。
 
-PureChat 是一个基于 Vue.js 的聊天应用项目，集成了 AI 功能，支持多平台部署。本规则文档旨在规范项目开发流程，确保代码质量和团队协作效率。
+## 2. 技术栈
+- **前端**: Vue 3.x + TypeScript 5.x
+- **构建**: Vite 5.x
+- **UI**: Element Plus 2.x
+- **状态**: Pinia 2.x
+- **路由**: Vue Router 4.x
+- **HTTP**: Axios 1.x
+- **样式**: SCSS
 
-## 2. 开发环境要求
+## 3. 架构规范
+- **分层架构**: 表现层 → 应用层 → 领域层 → 基础设施层
+- **目录结构**: src/ 下按功能模块划分（components、pages、stores、services 等）
+- **数据流**: 组件 → composables/services → Pinia store → 组件
 
-- **Node.js**: 建议使用项目根目录下 `.nvmrc` 指定的版本
-- **包管理器**: 使用 pnpm（参考项目中的 `pnpm-usage.md`）
-- **IDE**: 推荐使用 VS Code，并安装推荐的插件
-- **代码格式化**: 遵循项目中的 `.prettierrc.js` 配置
+## 4. 代码规范
+- **命名**: 组件 PascalCase，工具 camelCase，常量全大写
+- **TypeScript**: 避免 any，使用接口定义复杂结构
+- **Vue**: 使用 Composition API，props/ emits 类型明确
+- **状态管理**: Pinia，按模块划分 store
+- **路由**: 路径 kebab-case，名称 PascalCase
 
-## 3. 代码规范
+## 5. 分支管理
+- **main**: 稳定版本
+- **develop**: 开发分支
+- **feature/***: 功能开发
+- **bugfix/***: 修复 bug
+- **hotfix/***: 紧急修复
 
-### 3.1 命名约定
+## 6. 提交规范
+- **格式**: <type>[scope]: <description>
+- **类型**: feat/fix/docs/style/refactor/perf/test/build/ci/chore
 
-- **文件命名**:
-  - 组件文件: 采用 PascalCase (如 `ChatWindow.vue`)
-  - 工具函数: 采用 camelCase (如 `formatTime.ts`)
-  - 类型定义: 采用 PascalCase (如 `ChatMessage.ts`)
-  - 常量文件: 采用全大写并使用下划线分隔 (如 `API_CONSTANTS.ts`)
+## 7. 开发流程
+1. 从 develop 创建功能分支
+2. 完成开发并编写测试
+3. 提交 PR 到 develop
+4. 代码审查通过后合并
 
-- **变量命名**:
-  - 普通变量: camelCase
-  - 常量: 全大写并使用下划线分隔
-  - 类名/接口名: PascalCase
-  - 私有属性/方法: 以下划线开头
+## 8. 测试规范
+- **覆盖率**: 核心功能 ≥80%
+- **工具**: Vitest + Vue Test Utils
+- **执行**: 提交前运行所有测试
 
-### 3.2 TypeScript 规范
-
-- 所有文件必须使用 TypeScript (.ts 或 .vue)
-- 避免使用 `any` 类型，尽可能提供明确的类型定义
-- 使用接口定义复杂数据结构
-- 函数参数和返回值必须有类型注解
-
-### 3.3 Vue 组件规范
-
-- 组件应遵循单一职责原则
-- 使用 Composition API 进行开发
-- props 和 emits 必须有明确的类型定义
-- 组件命名应体现其功能
-
-## 4. 分支管理
-
-### 4.1 分支策略
-
-- **main**: 主分支，仅包含稳定版本
-- **develop**: 开发分支，包含最新的开发代码
-- **feature/**: 功能分支，从 develop 分支创建，用于开发新功能
-- **bugfix/**: 修复分支，从 develop 分支创建，用于修复 bug
-- **hotfix/**: 热修复分支，从 main 分支创建，用于紧急修复线上问题
-
-### 4.2 分支命名规范
-
-- feature/功能名称 (如: feature/ai-chat)
-- bugfix/问题描述 (如: bugfix/message-format-error)
-- hotfix/问题描述 (如: hotfix/auth-failure)
-
-## 5. 提交规范
-
-### 5.1 提交消息格式
-
-提交消息必须遵循以下格式：
-
-```
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-### 5.2 提交类型 (Type)
-
-- **feat**: 新增功能
-- **fix**: 修复 bug
-- **docs**: 文档更新
-- **style**: 代码风格调整（不影响功能）
-- **refactor**: 代码重构
-- **perf**: 性能优化
-- **test**: 测试相关
-- **build**: 构建相关
-- **ci**: CI 配置更新
-- **chore**: 其他变更
-
-### 5.3 提交示例
-
-```
-feat(chat): 添加 AI 回复功能
-
-实现了基于 OpenAI 的聊天回复功能，支持流式输出
-
-BREAKING CHANGE: 修改了消息数据结构
-```
-
-## 6. 开发工作流程
-
-1. 从 develop 分支创建 feature 分支
-2. 完成功能开发并编写测试
-3. 提交 Pull Request 到 develop 分支
-4. 通过代码审查
-5. 合并到 develop 分支
-6. 定期从 develop 分支创建发布版本并合并到 main 分支
-
-## 7. 测试规范
-
-- 编写单元测试覆盖核心功能
-- 确保新功能有对应的测试用例
-- 保持测试的简洁性和可读性
-- 运行测试确保所有测试通过后再提交代码
-
-## 8. 文档要求
-
-- 代码中添加必要的注释，特别是复杂逻辑
-- 更新相关文档以反映代码变更
-- API 接口必须有详细的文档说明
-- 新功能需要添加使用说明
-
-## 9. 性能优化
-
-- 避免不必要的重渲染
-- 合理使用缓存
-- 优化大型列表渲染
-- 关注前端加载性能
+## 9. 部署规范
+- **环境**: 开发/测试/生产
+- **配置**: 使用 .env 文件管理
+- **流程**: CI/CD 自动化构建部署
 
 ## 10. 安全规范
+- 避免前端存储敏感信息
+- 使用 HTTPS
+- 对输入进行验证
+- 保护 AI API 密钥
 
-- 避免在前端存储敏感信息
-- 使用 HTTPS 进行网络请求
-- 对用户输入进行验证和过滤
-- 遵循安全最佳实践
+## 11. AI 功能规范
+- 配置集中管理
+- 支持流式响应
+- 处理错误和重试
+- 优化用户体验
 
-## 11. AI 功能开发规范
-
-- AI 模型配置应集中管理
-- 遵循各平台 AI API 的使用规范
-- 合理处理 AI 响应错误
-- 保护用户隐私，避免不必要的数据传输
-
-## 12. 部署规范
-
-- 开发环境使用 `.env.development` 配置
-- 生产环境使用 `.env.production` 配置
-- 敏感配置应使用环境变量管理
-- 遵循 CI/CD 流程进行自动化部署
-
-## 13. 代码审查标准
-
-- 代码风格一致性
-- 功能实现的正确性
-- 潜在的性能问题
-- 安全性考虑
-- 代码可读性和可维护性
-
-## 14. 问题反馈与处理
-
-- 使用项目管理工具跟踪问题
-- 问题描述应清晰详细
-- 修复问题后应验证并关闭相关票据
-
----
-
-本规则文档将根据项目发展持续更新，请团队成员定期查阅并遵守相关规范。
+**最后更新**: 2026-01-21
