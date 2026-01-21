@@ -7,6 +7,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@pure/types": "workspace:*"
+    "@pure/types": "workspace:*",
+    "@pure/database": "workspace:*"
   }
 }

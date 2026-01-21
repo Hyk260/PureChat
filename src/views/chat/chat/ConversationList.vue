@@ -76,7 +76,7 @@ import {
 } from "@/stores"
 import { chatName, formatNewsMessage, isShowCount, isNotify } from "@/utils/chat"
 import { chatSessionListData } from "@/utils/contextMenuPresets"
-import { timeFormat } from "@/utils/timeFormat"
+import { timeFormat } from "@pure/utils"
 import { delay } from "@/utils/common"
 import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 

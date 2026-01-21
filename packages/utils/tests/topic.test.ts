@@ -1,6 +1,6 @@
 import dayjs from "dayjs"
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest"
-import { groupTopicsByTime } from "./topic"
+import { groupTopicsByTime } from "../src/topic"
 
 import type { ChatTopic } from "@pure/types"
 

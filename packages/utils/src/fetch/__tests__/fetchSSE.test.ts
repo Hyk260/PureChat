@@ -148,8 +148,11 @@ describe("fetchSSE", () => {
       expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: " World", type: "reasoning" })
 
       expect(mockOnFinish).toHaveBeenCalledWith("hi", {
-        reasoning: { content: "Hello World", duration: undefined, signature: undefined },
+        images: undefined,
+        reasoning: { content: "Hello World", duration: expect.any(Number), signature: undefined },
         type: "done",
+        speed: undefined,
+        usage: undefined,
       })
     })
   })

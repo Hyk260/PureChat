@@ -54,8 +54,8 @@ import { useState } from "@/hooks/useState"
 import { downloadMergerMessage } from "@/service/im-sdk-api"
 import { useUserStore } from "@/stores/modules/user"
 import { addTimeDivider, circleUrl, getMessageItemClass, getMessageTypeClass, isSelf, isTime } from "@/utils/chat"
+import { timeFormat } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
-import { timeFormat } from "@/utils/timeFormat"
 
 const mergValue = ref({})
 const userStore = useUserStore()

@@ -126,9 +126,8 @@ import {
 import { getUnixTimestampSec } from "@/utils/common"
 import { avatarContextMenuItems, messageContextMenuItems } from "@/utils/contextMenuPresets"
 import { ElMessageBox } from "element-plus"
+import { timeFormat } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
-import { delay } from "@/utils/common"
-import { timeFormat } from "@/utils/timeFormat"
 
 // import LoadMore from "../components/LoadMore.vue"
 

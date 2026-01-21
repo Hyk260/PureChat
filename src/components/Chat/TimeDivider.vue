@@ -9,7 +9,7 @@ import { computed } from "vue"
 
 // import { useChatStore } from "@/stores/modules/chat"
 import { isSelf } from "@/utils/chat"
-import { formatTimestamp } from "@/utils/timeFormat"
+import { formatTimestamp } from "@pure/utils"
 
 import type { DB_Message } from "@pure/database/schemas"
 
