@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { safeParseJSON } from "./safeParseJSON"
+import { safeParseJSON } from "../src/safeParseJSON"
 
 describe("safeParseJSON", () => {
   it("should parse a valid JSON string", () => {

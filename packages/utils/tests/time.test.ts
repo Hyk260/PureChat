@@ -13,7 +13,7 @@ import {
   thisYear,
   today,
   weeksAgo,
-} from "./time"
+} from "../src/time"
 
 describe("time utilities", () => {
   beforeEach(() => {

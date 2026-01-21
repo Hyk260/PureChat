@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { hydrationPrompt } from "./promptTemplate"
+import { hydrationPrompt } from "../src/promptTemplate"
 
 describe("hydrationPrompt", () => {
   it("should replace basic variables", () => {

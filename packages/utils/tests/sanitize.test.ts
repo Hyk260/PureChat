@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { sanitizeSVGContent } from "./sanitize"
+import { sanitizeSVGContent } from "../src/sanitize"
 
 describe("sanitizeSVGContent", () => {
   it("should preserve safe SVG elements and attributes", () => {
