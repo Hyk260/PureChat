@@ -99,7 +99,7 @@ import { useOAuth } from "@/hooks/useOAuth"
 import { useState } from "@/hooks/useState"
 import { getUserList } from "@/service/api"
 import { useUserStore } from "@/stores/modules/user"
-import { delay } from "@/utils/common"
+import { delay } from "@pure/utils"
 import { operates, thirdParty } from "../utils/enums"
 import { defaultForm, rules } from "../utils/validation"
 

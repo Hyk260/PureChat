@@ -238,7 +238,7 @@ import { storeToRefs } from "pinia"
 import { useState } from "@/hooks/useState"
 import { createCustomMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores"
-import { createFileInput } from "@/utils/common"
+import { createFileInput } from "@pure/utils"
 import WebSearchService from "@/service/WebSearchService"
 import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 

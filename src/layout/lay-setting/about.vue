@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { openWindow } from "@/utils/common"
+import { openWindow } from "@pure/utils"
 const { version, docs } = __APP_INFO__.pkg
 
 function openDocs() {

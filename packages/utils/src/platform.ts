@@ -15,6 +15,9 @@ export const getBrowser = () => {
 
 export const browserInfo = {
   browser: getBrowser(),
+  /**
+   * description: 是否是移动端
+   */
   isMobile: getParser().getDevice().type === "mobile",
   os: getParser().getOS().name, // Mac OS, Windows, Linux, Android, iOS
 }

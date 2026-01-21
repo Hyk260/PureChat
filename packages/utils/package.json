@@ -5,7 +5,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*.ts",
-    "./fetch": "./src/fetch/index.ts"
+    "./fetch": "./src/fetch/index.ts",
+    "./storage": "./src/storage.ts"
   },
   "scripts": {
     "test": "vitest",

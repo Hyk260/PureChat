@@ -2,7 +2,7 @@ import { watch } from "vue"
 import { useRoute } from "vue-router"
 
 import { githubAuth, openAuthUrl } from "@/service/api"
-import { openWindow } from "@/utils/common"
+import { openWindow } from "@pure/utils"
 
 interface OAuthOptions {
   onSuccess?: (data: any) => void

@@ -37,7 +37,7 @@ import { onClickOutside } from "@vueuse/core"
 
 import { useState } from "@/hooks/useState"
 import { useChatStore, useUserStore } from "@/stores"
-import { openWindow } from "@/utils/common"
+import { openWindow } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 

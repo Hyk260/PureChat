@@ -26,6 +26,7 @@ declare namespace Env {
     readonly VITE_PORT: number;
     /** 是否为本地模式 */
     readonly VITE_LOCAL_MODE: 'Y' | 'N';
+    readonly VITE_STORAGE_PREFIX: string;
     /** 是否开启devtools */
     readonly VITE_DEV_TOOLS: 'Y' | 'N';
     /** 是否禁用浏览器开发者工具面板（阻止F12和右键菜单） */

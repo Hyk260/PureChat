@@ -6,7 +6,7 @@ import { defineStore } from "pinia"
 import router from "@/router"
 import { SetupStoreId } from "@/stores/enum"
 import { useChatStore } from "@/stores/modules/chat"
-import { openWindow } from "@/utils/common"
+import { openWindow } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import type { MoreListItem, SidebarItem, SidebarState } from "./type"

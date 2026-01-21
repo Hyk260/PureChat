@@ -1,4 +1,4 @@
-import { delay } from "@/utils/common"
+import { delay } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import type { DB_Session } from "@pure/database/schemas"

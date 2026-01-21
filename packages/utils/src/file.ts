@@ -40,3 +40,23 @@ export async function blobToBase64UrlEnhanced(blob: Blob, options: BlobToBase64U
     reader.readAsDataURL(blob)
   })
 }
+
+export function readFromFile() {
+  return new Promise((res, rej) => {
+    const fileInput = document.createElement("input")
+    fileInput.type = "file"
+    fileInput.accept = "application/json"
+
+    fileInput.onchange = (event) => {
+      const file = (event.target as HTMLInputElement).files?.[0]
+      const fileReader = new FileReader()
+      fileReader.onload = (e) => {
+        res(e.target?.result)
+      }
+      fileReader.onerror = () => rej(new Error("文件读取失败"))
+      fileReader.readAsText(file as File)
+    }
+
+    fileInput.click()
+  })
+}

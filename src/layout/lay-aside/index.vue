@@ -73,7 +73,7 @@ import { useChatStore, useSidebarStore, useRouteStore } from "@/stores"
 // import SidebarEditDialog from "@/components/MoreSidebar/index.vue"
 import UserPopup from "@/components/Popups/UserPopup.vue"
 import CardPopover from "@/views/chat/components/CardPopover.vue"
-import { openWindow } from "@/utils/common"
+import { openWindow } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import type { SidebarItem } from "@/stores/modules/sidebar/type"

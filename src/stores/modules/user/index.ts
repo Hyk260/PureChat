@@ -10,7 +10,7 @@ import chat from "@/service/chat/PureChatService"
 import { useAuthStore, useChatStore } from "@/stores"
 import { SetupStoreId } from "@/stores/enum"
 import emitter from "@/utils/mitt-bus"
-import { delay } from "@/utils/common"
+import { delay } from "@pure/utils"
 
 import type {
   HandleIMLoginPayload,

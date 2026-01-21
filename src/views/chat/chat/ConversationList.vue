@@ -76,8 +76,7 @@ import {
 } from "@/stores"
 import { chatName, formatNewsMessage, isShowCount, isNotify } from "@/utils/chat"
 import { chatSessionListData } from "@/utils/contextMenuPresets"
-import { timeFormat } from "@pure/utils"
-import { delay } from "@/utils/common"
+import { timeFormat, delay } from "@pure/utils"
 import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
 import CustomLabel from "@/components/Chat/CustomLabel.vue"

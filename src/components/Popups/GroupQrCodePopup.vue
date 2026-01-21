@@ -62,7 +62,7 @@ import { X, Copy, Forward, MessageCircle, Link, Download } from "lucide-vue-next
 import { ElDialog } from "element-plus"
 
 import { useState } from "@/hooks/useState"
-import { openWindow } from "@/utils/common"
+import { openWindow } from "@pure/utils"
 import { formatGroupID } from "@/utils/chat"
 import QrCode from "@/components/QrCode/index.vue"
 

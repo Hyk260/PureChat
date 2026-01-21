@@ -11,7 +11,7 @@
 import { ref, onMounted, watch, nextTick } from "vue"
 import { ClickOutside as vClickOutside } from "element-plus"
 import { Picker } from "emoji-mart"
-import { delay } from "@/utils/common"
+// import { delay } from "@pure/utils"
 
 type EmojiDataSource = "local" | "cdn" | string | string[]
 type EmojiSelectEvent = { native: string }

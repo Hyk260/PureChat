@@ -38,7 +38,7 @@ import { usePrepareMessageData } from "@/hooks/useMessageOperations"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useGroupStore } from "@/stores"
 import { bytesToSize, fileToBase64, insertMention } from "@/utils/chat"
-import { isMobile } from "@/utils/common"
+import { browserInfo } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import Inputbar from "../Inputbar/index.vue"
@@ -101,7 +101,7 @@ const handleInsertDraft = (option) => {
   const { sessionId } = option
   const editor = editorRef.value
   if (!sessionId || !editor) return
-  if (!isMobile) editor.focus(true)
+  if (!browserInfo.isMobile) editor.focus(true)
   clearInput()
   const draft = chatStore.chatDraftMap.get(sessionId)
   if (!draft) return
