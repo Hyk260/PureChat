@@ -5,7 +5,13 @@
         <template #title>
           <div class="px-5 flex items-center gap-8">
             <Atom :size="16" :color="activeNames === '1' ? '#bd54c6' : 'currentColor'" />
-            <span v-if="isThinking"> {{ $t('Thinking.thinking') }}</span>
+            <span v-if="isThinking">
+              {{
+                duration
+                  ? $t("Thinking.thinkingWithDuration", { duration: ((duration || 0) / 1000).toFixed(1) })
+                  : $t("Thinking.thinking")
+              }}
+            </span>
             <span v-else>
               {{
                 duration

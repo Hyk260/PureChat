@@ -1,0 +1,63 @@
+export default {
+  chat: {
+    noMore: "No More",
+    whole: "Whole",
+    unread: "Unread",
+    mention: "Mention",
+    document: "Document",
+    more: "More",
+    message: "Message",
+    buttonPromptMac: "Press Enter to send the message，Meta⌘ + Enter to wrap",
+    buttonPrompt: "Press Enter to send the message，Ctrl + Enter to wrap",
+    send: "Send",
+    pause: "Pausar",
+    PromptInputContent: "Please input content…",
+    sendMessage: "Send Message",
+    searchFor: "Search...",
+    emoji: "Emoji",
+    picture: "Picture",
+    file: "File",
+    screenshot: "Screenshot",
+    configuration: "Configuration",
+    windowJitter: "Window Jitter",
+    scrollToTheBottom: "Scroll To The Bottom",
+    addressBook: "Address Book",
+    launch: "Launch",
+    recover: "Recover",
+    web_search: "Enable web search",
+    upload_document: "Upload document file",
+    save: "Save",
+    clearCurrentMessages: "Clear current messages",
+    newAgent: "New Assistant",
+    createGroup: "Create Group Chat",
+    history: {
+      title: "The assistant will only remember the last {count} messages",
+    },
+    search: {
+      grounding: {
+        searchQueries: "Search Keywords",
+        title: "Found {count} results",
+      },
+      mode: {
+        auto: {
+          desc: "Intelligently determine if search is needed based on conversation content",
+          title: "Smart Internet Connection",
+        },
+        off: {
+          desc: "Only use the model's basic knowledge, no web search",
+          title: "Turn off Internet Connection",
+        },
+        on: {
+          desc: "Continuously perform web searches to get the latest information",
+          title: "Always Connected to Internet",
+        },
+        useModelBuiltin: "Use model's built-in search engine",
+      },
+      searchModel: {
+        desc: "The current model does not support function calls, so it needs to be paired with a model that supports function calls for web search",
+        title: "Search Assistant Model",
+      },
+      title: "Web Search",
+    },
+  },
+}

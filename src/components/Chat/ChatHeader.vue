@@ -12,7 +12,7 @@
             {{ getPromptTitle }}
           </ElTag>
           <!-- Tools -->
-          <!-- <template v-if="isAssistant && botTools && isShowBotTools">
+          <!-- <template v-if="isAssistant && botTools">
             <div v-for="item in botTools" :key="item.id" class="ml-5 ai-prompt-title">
               <ToyBrick class="function-call" />
               <span>{{ item.meta.title }}</span>
@@ -22,7 +22,7 @@
           <ElTooltip
             v-if="isAssistant"
             :showArrow="false"
-            :content="`助手将只记住最后${botMessageCount}条消息`"
+            :content="$t('chat.history.title', { count: botMessageCount })"
             placement="bottom"
           >
             <ElTag v-if="isAssistant" class="history ml-5" type="warning" size="small">

@@ -10,7 +10,7 @@ import { SetupStoreId } from "@/stores/enum"
 import { useChatStore } from "../chat"
 import { useWebSearchStore } from "../websearch"
 
-import type { BotToolsFlag, Model, RobotState } from "./types"
+import type { Model, RobotState } from "./types"
 import type { Prompt } from "@pure/types"
 
 export const useRobotStore = defineStore(SetupStoreId.Robot, {
@@ -20,7 +20,6 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     modelConfig: null,
     modelProvider: ModelProvider.OpenAI,
     defaultProvider: ModelProvider.OpenAI,
-    isShowBotTools: false,
     promptStore: {
       // [ModelProvider.OpenAI]: [],
     },
@@ -108,9 +107,6 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     },
     setDefaultProvider(data: Provider) {
       this.defaultProvider = data
-    },
-    updataBotToolsFlag(data: BotToolsFlag) {
-      this.isShowBotTools = Boolean(data?.functionCall)
     },
     setModelConfig(provider: Provider) {
       this.modelConfig = useAccessStore(provider)

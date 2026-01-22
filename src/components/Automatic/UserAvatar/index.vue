@@ -6,9 +6,8 @@
       </div>
     </template>
     <template v-else-if="type === 'single'">
-      <span v-if="native && isRobot(sessionId)" :style="{ fontSize: `${size - 8}px` }">{{ native }}</span>
+      <!-- <span v-if="native && isRobot(sessionId)" :style="{ fontSize: `${size - 8}px` }">{{ native }}</span> -->
       <ElAvatar
-        v-else
         class="avatar"
         :class="[className]"
         shape="square"

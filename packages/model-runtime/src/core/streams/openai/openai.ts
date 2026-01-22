@@ -154,13 +154,13 @@ const transformOpenAIStream = (
         // 判断是否有 citations 内容，更新 returnedCitation 状态
         if (!streamContext?.returnedCitation) {
           const citations =
-            // in Perplexity api, the citation is in every chunk, but we only need to return it once
+            // 在 Perplexity API 中，每条分片都包含引用信息，只需返回一次
             ("citations" in chunk && chunk.citations) ||
             // in Hunyuan api, the citation is in every chunk
             ("search_info" in chunk && (chunk.search_info as any)?.search_results) ||
             // in Wenxin api, the citation is in the first and last chunk
             ("search_results" in chunk && chunk.search_results) ||
-            // in Zhipu api, the citation is in the first chunk
+            // 在智谱 API 中，引用信息位于首条分片
             ("web_search" in chunk && chunk.web_search)
 
           if (citations) {

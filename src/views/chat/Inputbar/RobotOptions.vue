@@ -169,10 +169,10 @@
                 />
               </div>
             </div>
-            <div v-if="item?.apiHost" class="text-[#999] pt-8 ml-20 max-w-400">
+            <!-- <div v-if="item?.apiHost" class="text-[#999] pt-8 ml-20 max-w-400">
               {{ item?.defaultValue ? hostPreview(item?.defaultValue) : item?.apiHost }}
             </div>
-            <div v-if="item?.apiHost" class="text-[#999] pt-8 ml-20">/ 结尾忽略 v1 版本，# 结尾强制使用输入地址</div>
+            <div v-if="item?.apiHost" class="text-[#999] pt-8 ml-20">/ 结尾忽略 v1 版本，# 结尾强制使用输入地址</div> -->
           </div>
           <!-- 连通性检查 -->
           <div v-else-if="['checkPoint'].includes(item.ID)">

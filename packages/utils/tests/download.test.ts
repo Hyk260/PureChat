@@ -13,8 +13,8 @@ const mockRevokeObjectURL = vi.fn()
 // Mock fetch
 const mockFetch = vi.fn()
 
-// Mock window.toast
-const mockedToast = {
+// Mock window.$message
+const mockedMessage = {
   error: vi.fn(),
   success: vi.fn(),
   warning: vi.fn(),
@@ -35,8 +35,8 @@ describe("download", () => {
     beforeEach(() => {
       vi.clearAllMocks()
 
-      // 设置 window.toast mock
-      Object.defineProperty(window, "toast", { value: mockedToast, writable: true })
+      // 设置 window.$message mock
+      Object.defineProperty(window, "$message", { value: mockedMessage, writable: true })
 
       // 设置 DOM mock
       const mockElement = {
@@ -205,7 +205,7 @@ describe("download", () => {
         expect(() => download("https://example.com/file.pdf")).not.toThrow()
         await waitForAsync()
 
-        expect(mockedToast.error).toHaveBeenCalledWith("下载失败：Network error")
+        expect(mockedMessage.error).toHaveBeenCalledWith("下载失败：Network error")
       })
 
       it("should handle fetch errors without message", async () => {
@@ -214,10 +214,10 @@ describe("download", () => {
         expect(() => download("https://example.com/file.pdf")).not.toThrow()
         await waitForAsync()
 
-        expect(mockedToast.error).toHaveBeenCalledWith("下载失败")
+        expect(mockedMessage.error).toHaveBeenCalledWith("下载失败")
       })
 
-      it("should handle HTTP errors gracefully", async () => {
+      it("should handle HTTP errors gracefully", () => {
         mockFetch.mockResolvedValue({ ok: false, status: 404 })
 
         expect(() => download("https://example.com/file.pdf")).not.toThrow()

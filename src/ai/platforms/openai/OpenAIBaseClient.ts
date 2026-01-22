@@ -259,7 +259,7 @@ export abstract class OpenAIBaseClient {
           case "text": {
             output += chunk.text
             // 推理结束
-            if (!duration) {
+            if (!duration && thinkingStartAt !== undefined) {
               console.log("推理结束")
               duration = Date.now() - thinkingStartAt
               // toggleChatReasoning(false)
@@ -278,7 +278,9 @@ export abstract class OpenAIBaseClient {
               thinkingStartAt = Date.now()
               // toggleChatReasoning(true)
             }
-            // duration = Date.now() - thinkingStartAt
+            if (thinkingStartAt !== undefined) {
+              duration = Date.now() - thinkingStartAt
+            }
             options?.onUpdate?.({ thinking, reasoning: { content: thinking, reasoningType: "thinking", duration } })
             break
           }

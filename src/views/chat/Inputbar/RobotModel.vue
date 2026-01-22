@@ -99,7 +99,6 @@ function storeRobotModel(data: Model) {
   const config = useAccessStore(provider)
   robotStore.setModel(data)
   robotStore.setAccessStore({ ...config, model: data.id }, provider)
-  robotStore.updataBotToolsFlag(data)
   setFlag(false)
 }
 

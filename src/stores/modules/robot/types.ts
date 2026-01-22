@@ -68,7 +68,6 @@ export interface RobotState {
   modelConfig: LLMParams | null
   modelProvider: Provider
   defaultProvider: Provider
-  isShowBotTools: boolean
   promptStore: PromptStore
   modelStore: ModelStore
   accessStore: AccessStore
@@ -91,15 +90,9 @@ export interface RobotActions {
   setPromptStore(data: Prompt[], provider: string): void
   updateModelConfig(): void
   setDefaultProvider(data: string): void
-  updataBotToolsFlag(data: BotToolsFlag): void
   setModelConfig(provider: string): void
   setModel(value: Model | null): void
   setPromptConfig(value: Prompt | null): void
 }
 
 export interface RobotStore extends RobotState, RobotGetters, RobotActions {}
-
-export interface BotToolsFlag {
-  functionCall?: boolean
-  [key: string]: any
-}

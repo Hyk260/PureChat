@@ -1,0 +1,62 @@
+export default {
+  chat: {
+    noMore: "没有更多了",
+    whole: "全部",
+    unread: "未读",
+    mention: "{'@'}我",
+    document: "文档",
+    more: "更多",
+    message: "消息",
+    buttonPromptMac: "Enter 发送， Meta⌘ + Enter 换行",
+    buttonPrompt: "Enter 发送，Ctrl + Enter 换行",
+    send: "发送",
+    pause: "暂停",
+    PromptInputContent: "请输入内容...",
+    sendMessage: "发送消息",
+    searchFor: "搜索...",
+    emoji: "表情",
+    picture: "图片",
+    file: "文件",
+    screenshot: "截图",
+    configuration: "配置",
+    windowJitter: "窗口抖动",
+    scrollToTheBottom: "滚动到底部",
+    addressBook: "通讯录",
+    launch: "展开",
+    recover: "收起",
+    web_search: "开启网络搜索",
+    upload_document: "上传文档",
+    clearCurrentMessages: "清空当前会话消息",
+    newAgent: "新建助手",
+    createGroup: "创建群聊",
+    history: {
+      title: "助手将只记住最后{count}条消息",
+    },
+    search: {
+      grounding: {
+        searchQueries: "搜索关键词",
+        title: "已搜索到 {count} 个结果",
+      },
+      mode: {
+        auto: {
+          desc: "根据对话内容智能判断是否需要搜索",
+          title: "智能联网",
+        },
+        off: {
+          desc: "仅使用模型的基础知识，不进行网络搜索",
+          title: "关闭联网",
+        },
+        on: {
+          desc: "持续进行网络搜索，获取最新信息",
+          title: "始终联网",
+        },
+        useModelBuiltin: "使用模型内置搜索引擎",
+      },
+      searchModel: {
+        desc: "当前模型不支持函数调用，因此需要搭配支持函数调用的模型才能联网搜索",
+        title: "搜索辅助模型",
+      },
+      title: "联网搜索",
+    },
+  },
+}

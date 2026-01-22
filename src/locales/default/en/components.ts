@@ -28,6 +28,7 @@ export default {
   },
   Thinking: {
     thinking: "Deep Thinking...",
+    thinkingWithDuration: "Deep Thinking... (in {duration} seconds)",
     thought: "Deeply Thought (in {duration} seconds)",
     thoughtWithDuration: "Deeply Thought",
   },

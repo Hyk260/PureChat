@@ -1,7 +1,7 @@
 <template>
   <div class="header-bar">
     <div class="flex-bc gap-10">
-      <ElInput v-model="input" placeholder="搜索" clearable @input="debounceSearch">
+      <ElInput v-model="input" :placeholder="$t('chat.searchFor')" clearable @input="debounceSearch">
         <template #prefix>
           <ElIcon><Search /></ElIcon>
         </template>
@@ -15,13 +15,13 @@
             <MenuItem v-if="!IS_LOCAL_MODE">
               <div class="flex-c gap-5" @click="handleCreateGroup">
                 <ElIcon><MessageSquarePlus /></ElIcon>
-                <span>创建群聊</span>
+                <span>{{ $t("chat.createGroup") }}</span>
               </div>
             </MenuItem>
             <MenuItem>
               <div class="flex-c gap-5" @click="handleCreateAssistant">
                 <ElIcon><Bot /></ElIcon>
-                <span>新建助手</span>
+                <span>{{ $t("chat.newAgent") }}</span>
               </div>
             </MenuItem>
           </Menu>

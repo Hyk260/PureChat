@@ -110,7 +110,25 @@
       </ElButton>
     </ElTooltip>
     <!-- 联网 -->
-    <ElTooltip
+    <Popover v-if="IS_LOCAL_MODE && false" placement="topLeft" :arrow="false" trigger="click">
+      <template #content>
+        <div class="network-mode-popover">
+          <div v-for="value in workOptions" :key="value.value" class="mode-item" @click="setNetworkMode(value.value)">
+            <div class="mode-icon">
+              <Component :is="value.icon" :size="16" />
+            </div>
+            <div class="mode-content">
+              <div class="mode-title">{{ value.label }}</div>
+              <div class="mode-desc">{{ value.description }}</div>
+            </div>
+          </div>
+        </div>
+      </template>
+      <ElButton>
+        <Component :is="enableWebSearch ? Globe : GlobeOffIcon" :size="16" />
+      </ElButton>
+    </Popover>
+    <!-- <ElTooltip
       v-if="IS_LOCAL_MODE"
       :enterable="false"
       :showAfter="500"
@@ -127,9 +145,9 @@
         }"
         @click="onEnableWebSearch"
       >
-        <Globe :size="16" />
+        <component :is="enableWebSearch ? Globe : GlobeOffIcon" :size="16" />
       </ElButton>
-    </ElTooltip>
+    </ElTooltip> -->
     <ElTooltip
       :content="$t('chat.clearCurrentMessages')"
       placement="top"
@@ -200,7 +218,7 @@
       transition="slide-fade"
     >
       <ElButton class="!ml-auto" @click="toggleFullScreenInput">
-        <component :is="isFullscreenInputActive ? Minimize2 : Maximize2" :size="16" />
+        <Component :is="isFullscreenInputActive ? Minimize2 : Maximize2" :size="16" />
       </ElButton>
     </ElTooltip>
     <RobotModel />
@@ -224,17 +242,22 @@ import {
   Globe,
   // ImageUp,
   // Image,
+  SparkleIcon,
   Maximize2,
   Minimize2,
   Paperclip,
   Scissors,
   SlidersHorizontal,
   Smile,
+  type LucideIcon,
 } from "lucide-vue-next"
+import { GlobeOffIcon } from "@pure/icons"
+import { Popover } from "ant-design-vue"
 import { ElMessageBox } from "element-plus"
 import { audioExts, documentExts, imageExts, textExts, videoExts } from "@pure/const"
 import { storeToRefs } from "pinia"
 
+import { $t } from "@/locales"
 import { useState } from "@/hooks/useState"
 import { createCustomMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores"
@@ -246,6 +269,8 @@ import EmojiPicker from "./EmojiPicker.vue"
 import RobotModel from "./RobotModel.vue"
 import RobotOptions from "./RobotOptions.vue"
 import RobotPlugin from "./RobotPlugin.vue"
+
+import type { SearchMode } from "@pure/types"
 
 defineOptions({
   name: "Inputbar",
@@ -268,6 +293,31 @@ const webSearchStore = useWebSearchStore()
 
 const { toAccount, isAssistant, currentType, isFullscreenInputActive, hasConversationList } = storeToRefs(chatStore)
 const { modelProvider, enableWebSearch, isWebSearchModel } = storeToRefs(robotStore)
+
+interface NetworkOption {
+  description: string
+  disable?: boolean
+  icon: LucideIcon
+  label: string
+  value: SearchMode
+}
+
+const workOptions = computed<NetworkOption[]>(() => {
+  return [
+    {
+      description: $t("chat.search.mode.off.desc"),
+      icon: GlobeOffIcon,
+      label: $t("chat.search.mode.off.title"),
+      value: "off",
+    },
+    {
+      description: $t("chat.search.mode.auto.desc"),
+      icon: SparkleIcon,
+      label: $t("chat.search.mode.auto.title"),
+      value: "auto",
+    },
+  ]
+})
 
 function handleCancel() {
   popoverRef.value?.hide()
@@ -364,6 +414,13 @@ const scrollToBottomBtn = () => {
   emitUpdateScrollImmediate()
 }
 
+const setNetworkMode = async (mode: "off" | "auto" | "on") => {
+  // 这里可以添加设置网络模式的逻辑
+  console.log("设置网络模式:", mode)
+  // 例如：webSearchStore.updateNetworkMode(mode)
+  // onEnableWebSearch()
+}
+
 onMounted(() => {
   emitter.on("handleToBottom", (state) => {
     setShowBottomBtn(!state)
@@ -393,6 +450,51 @@ onUnmounted(() => {
     margin-left: 0;
     &:hover {
       color: var(--el-color-info-dark-3);
+    }
+  }
+}
+
+.network-mode-popover {
+  width: 300px;
+}
+
+.mode-item {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: var(--color-message-active);
+  }
+
+  .mode-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    background-color: var(--el-bg-color-secondary);
+    border-radius: 50%;
+  }
+
+  .mode-content {
+    flex: 1;
+
+    .mode-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--el-text-color-primary);
+    }
+
+    .mode-desc {
+      font-size: 12px;
+      color: var(--el-text-color-secondary);
+      line-height: 1.4;
     }
   }
 }
