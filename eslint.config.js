@@ -56,6 +56,7 @@ export default defineConfig([
         process: "readonly",
         App: "readonly",
         Env: "readonly",
+        StorageType: "readonly",
         __APP_INFO__: "readonly",
         __IS_ELECTRON__: "readonly",
         __LOCAL_MODE__: "readonly",
