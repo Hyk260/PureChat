@@ -1,6 +1,6 @@
 import { isEmpty } from "lodash-es"
 import { DB_Message } from "@pure/database/schemas"
-import { messageUtils } from "@/utils/messageUtils"
+import { getAbstractContent } from "@pure/utils"
 
 export type CustomDataType = "webSearch" | "thinking" | "messageReply" | "messagePrompt"
 
@@ -10,7 +10,7 @@ export function getCloudCustomDataTyped(data: Partial<DB_Message>, type: CustomD
   if (isEmpty(data)) return ""
 
   const baseData = {
-    messageAbstract: messageUtils.getMessageDisplayText(data) || data?.payload?.text || "",
+    messageAbstract: getAbstractContent(data),
     version: __APP_INFO__.pkg.version || "",
   }
 

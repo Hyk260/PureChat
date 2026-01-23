@@ -2,7 +2,7 @@ import { cloneDeep } from "lodash-es"
 import { defineStore } from "pinia"
 import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX, MIN_MESSAGES, INBOX_SESSION_ID } from "@pure/const"
 import { getModelType } from "@/ai/utils"
-import { isRobot, delay } from "@pure/utils"
+import { isRobot, delay, timeFormat, getBaseTime, addTimeDivider } from "@pure/utils"
 import { MessageModel } from "@pure/database/models"
 import { timProxy } from "@/service/chat"
 import { sendChatAssistantMessage } from "@/service/chatService"
@@ -17,7 +17,7 @@ import {
   setMessageRead,
 } from "@/service/im-sdk-api"
 import { SetupStoreId } from "@/stores/enum"
-import { addTimeDivider, checkTextNotEmpty, getBaseTime, scrollToMessage } from "@/utils/chat"
+import { checkTextNotEmpty, scrollToMessage } from "@/utils/chat"
 import { ModelIDList } from "model-bank"
 import { emitUpdateScroll } from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
@@ -277,8 +277,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         console.error("[chat] 删除消息失败，历史消息不存在")
         return
       }
+      const appStore = useAppStore()
       const newHistory = history.filter((t) => !t.isTimeDivider && !t.isDeleted && !messageIdArray.includes(t.ID))
-      const newHistoryList = addTimeDivider(newHistory)
+      const newHistoryList = addTimeDivider({ list: newHistory, timeline: appStore.timeline })
       this.currentMessageList = cloneDeep(newHistoryList)
       this.setHistoryMessageList(sessionId, newHistoryList)
     },
@@ -299,9 +300,10 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
 
       const appStore = useAppStore()
       let resultMessages: DB_Message[] = []
-      const baseTime = getBaseTime(history, "last")
+      const baseTime = getBaseTime(history)
+      // const time = timeFormat(baseTime * 1000, true)
       if (appStore.timeline) {
-        resultMessages = addTimeDivider(cleanedMessages.reverse(), baseTime, "last")
+        resultMessages = addTimeDivider({ list: cleanedMessages, baseTime, type: "last" })
       } else {
         resultMessages = cleanedMessages
       }
@@ -326,7 +328,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const latest = !newMessageList.some((item) => item.ID === message.ID)
       if (latest) {
         const baseTime = getBaseTime(newMessageList, "last")
-        const timeDividerResult = addTimeDivider([message], baseTime)
+        const appStore = useAppStore()
+        const timeDividerResult = addTimeDivider({ list: [message], baseTime, timeline: appStore.timeline })
         newMessageList.push(...timeDividerResult)
       }
       if (this.currentConversation?.conversationID === sessionId) {
@@ -392,7 +395,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
       const { conversationID: sessionId } = data
       const { messageList, isCompleted: isDone } = await getMessageList({ conversationID: sessionId })
-      const message = addTimeDivider(messageList)
+      const appStore = useAppStore()
+      const message = addTimeDivider({ list: messageList, timeline: appStore.timeline })
       this.addMessage({ conversationID: sessionId, isDone, message })
       setMessageRead({ conversationID: data.conversationID })
       emitUpdateScroll()

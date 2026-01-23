@@ -114,18 +114,10 @@ import { useContextMenu } from "@/composables/useContextMenu"
 import { useMessageOperations } from "@/hooks/useMessageOperations"
 import { getMessageList, revokeMsg, translateText } from "@/service/im-sdk-api"
 import { useAppStore, useChatStore, useGroupStore, useUserStore } from "@/stores"
-import {
-  download,
-  getMessageItemClass,
-  getMessageTypeClass,
-  handleCopyMsg,
-  isTime,
-  scrollToMessage,
-  validateLastMessage,
-} from "@/utils/chat"
+import { getMessageItemClass, getMessageTypeClass, handleCopyMsg, isTime, scrollToMessage } from "@/utils/chat"
 import { avatarContextMenuItems, messageContextMenuItems } from "@/utils/contextMenuPresets"
 import { ElMessageBox } from "element-plus"
-import { getUnixTimestampSec, timeFormat } from "@pure/utils"
+import { getUnixTimestampSec, timeFormat, download, validateLastMessage } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 // import LoadMore from "../components/LoadMore.vue"

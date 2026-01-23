@@ -20,7 +20,8 @@ import { storeToRefs } from "pinia"
 
 import DynamicContent from "@/components/Chat/DynamicContent.vue"
 import { useChatStore } from "@/stores/modules/chat"
-import { getAbstractContent, scrollToDomPosition } from "@/utils/chat"
+import { scrollToDomPosition } from "@/utils/chat"
+import { getAbstractContent } from "@pure/utils"
 
 defineOptions({
   name: "ReplyBox",

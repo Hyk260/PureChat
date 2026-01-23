@@ -2,9 +2,7 @@ import { nextTick } from "vue"
 
 import { documentExts, textExts } from "@pure/const"
 import { IDomEditor } from "@wangeditor/editor"
-
-import { fileToBase64, getFileType } from "@/utils/chat"
-import { formatSize } from "@pure/utils"
+import { getFileType, fileToBase64, formatSize } from "@pure/utils"
 
 const { DEV: isDev } = import.meta.env
 
@@ -39,16 +37,26 @@ export const handleAssistantFile = async (file: File, editor: IDomEditor) => {
     }
   }
 
+  const type = file.type.match("^image/") ? "image" : "file"
   const base64Url = await fileToBase64(file)
-
-  const node = createMediaElement("attachment", {
-    fileName: file.name,
-    fileSize: formatSize(file.size),
-    link: base64Url,
-    path: file?.path || "",
-  })
-
-  editor.insertNode(node)
+  if (type === "image") {
+    const imageElement = {
+      type: "image",
+      src: base64Url,
+      fileName: file.name,
+      style: { width: "125px" },
+      children: [{ text: "" }],
+    }
+    editor.insertNode(imageElement)
+  } else if (type === "file") {
+    const node = createMediaElement("attachment", {
+      fileName: file.name,
+      fileSize: formatSize(file.size),
+      link: base64Url,
+      path: file?.path || "",
+    })
+    editor.insertNode(node)
+  }
 }
 
 export const handleString = (item: DataTransferItem, editor: IDomEditor) => {

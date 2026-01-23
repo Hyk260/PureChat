@@ -1,8 +1,8 @@
 import { DomEditor } from "@wangeditor/editor"
 import { h } from "snabbdom"
 
-import { getFileType, renderFileIcon } from "@/utils/chat"
-import { encodeHTML } from "@pure/utils"
+import { renderFileIcon } from "@/utils/chat"
+import { encodeHTML, getFileType } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import type { AttachmentElement } from "@/types"

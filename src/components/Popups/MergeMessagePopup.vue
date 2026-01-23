@@ -53,8 +53,8 @@ import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessa
 import { useState } from "@/hooks/useState"
 import { downloadMergerMessage } from "@/service/im-sdk-api"
 import { useUserStore } from "@/stores/modules/user"
-import { addTimeDivider, circleUrl, getMessageItemClass, getMessageTypeClass, isSelf, isTime } from "@/utils/chat"
-import { timeFormat } from "@pure/utils"
+import { circleUrl, getMessageItemClass, getMessageTypeClass, isSelf, isTime } from "@/utils/chat"
+import { timeFormat, addTimeDivider } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 const mergValue = ref({})
@@ -62,7 +62,7 @@ const userStore = useUserStore()
 const [dialogVisible, setDialogVisible] = useState(false)
 
 const messageList = computed(() => {
-  return addTimeDivider(mergValue.value.payload.messageList)
+  return addTimeDivider({ list: mergValue.value?.payload?.messageList })
 })
 
 const getMergValue = (item) => {

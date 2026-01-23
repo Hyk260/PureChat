@@ -141,7 +141,7 @@ import {
   updateGroupProfile,
 } from "@/service/im-sdk-api"
 import { useChatStore, useGroupStore, useUserStore } from "@/stores"
-import { isByteLengthExceedingLimit, formatGroupID } from "@/utils/chat"
+import { isByteLengthExceedingLimit, formatGroupID } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import type {
@@ -174,7 +174,7 @@ const [loading, setLoading] = useState(false)
 const { currentMemberList, isOwner } = storeToRefs(groupStore)
 const { toAccount, currentSessionId, currentConversation } = storeToRefs(chatStore)
 
-const groupID = computed(() => formatGroupID(props.groupProfile.groupID))
+const groupID = computed(() => formatGroupID(props.groupProfile?.groupID))
 
 const beforeChange = (): Promise<boolean> => {
   setLoading(true)

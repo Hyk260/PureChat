@@ -37,8 +37,7 @@
 import EmojiMart from "@/components/EmojiMart/index.vue"
 import { useState } from "@/hooks/useState"
 import { useUserStore } from "@/stores/modules/user"
-import { fileToBase64 } from "@/utils/chat"
-import { createFileInput } from "@pure/utils"
+import { createFileInput, fileToBase64 } from "@pure/utils"
 
 const userName = ref("")
 const [open, setOpen] = useState(false)
@@ -92,7 +91,7 @@ const handleUploadProfile = async () => {
     accept: ["image/png", "image/jpeg", "image/gif"],
     onChange: async (file) => {
       if (file && file.length > 0) {
-        const base64 = await fileToBase64(file[0])
+        const base64 = await fileToBase64(file[0]!)
         userStore.setUserLocalStore({ avatar: base64, native: "" })
         // handleClose();
       }

@@ -1,7 +1,7 @@
 import { isEmpty } from "lodash-es"
 
 import { customDataWebSearch, DB_Message } from "@pure/database/schemas"
-import { convertBlobUrlToDataUrl } from "@/utils/chat"
+import { convertBlobUrlToDataUrl } from "@pure/utils"
 
 import type { LLMMessage } from "@pure/types"
 import type { ImagePayloadType, CustomPayloadType, DB_Session } from "@pure/database/schemas"
@@ -86,7 +86,7 @@ export async function transformImageElement(data: DB_Message) {
       {
         image_url: {
           detail: "auto",
-          url: imageUrl,
+          url: imageUrl || "unknown",
         },
         type: "image_url",
       },

@@ -5,7 +5,7 @@ import {
   createTextMessage,
   createVideoMessage,
 } from "@/service/im-sdk-api"
-import { base64ToFile } from "@/utils/chat"
+import { base64ToFile } from "@pure/utils"
 
 import type { ImageFile, MediaFile, MessageConfig, MessagePayload, TextContent } from "./types"
 import type { DB_Message } from "@pure/database/schemas"

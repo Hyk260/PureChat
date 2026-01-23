@@ -1,14 +1,8 @@
-import { copyImageToClipboard } from "@pure/utils"
-
-import type { DB_Message, MessageType, ImagePayloadType, DB_Session } from "@pure/database/schemas"
-import type { DraftData } from "@/types"
+import { formatTitleLength } from "./genOG"
+import type { DB_Message, MessageType, DB_Session } from "@pure/database/schemas"
 
 export const isTime = (item: DB_Message) => {
   return item?.isTimeDivider && item.time !== undefined
-}
-
-export const isSelf = (item: DB_Message) => {
-  return item.from === window.localStg.get("timProxy")?.userProfile?.userID
 }
 
 export const getMessageItemClass = (item: DB_Message) => {
@@ -49,48 +43,10 @@ export const getMessageTypeClass = (type: MessageType) => {
   return resp
 }
 
-export const formatContent = (data: DraftData) => {
-  return data
-    .filter((item) => item.type === "paragraph")
-    .map(({ children }) => {
-      return (
-        children
-          ?.map((t) => {
-            if (t.type === "image" && t?.alt && t?.class === "EmoticonPack") return String(t.alt)
-            if (t.type === "image") return "[图片]"
-            if (t.type === "attachment") return "[文件]"
-            if (t.type === "mention") return String(`@${t.value}`)
-            return String(t.text || "")
-          })
-          .join("") || ""
-      )
-    })
-    .join("")
+export const validateLastMessage = (list: DB_Message[]): DB_Message | null => {
+  if (!list.length) return null
+  return list.slice().find((t) => t.ID) || null
 }
-
-/**
- * 复制消息内容到剪贴板
- */
-export const handleCopyMsg = async (data: DB_Message) => {
-  try {
-    const { payload, type } = data
-    if (type === "TIMTextElem" && payload?.text) {
-      window.copyToClipboard(payload.text)
-      return
-    }
-    if (type === "TIMImageElem") {
-      const imagePayload = data.payload as ImagePayloadType
-      const url = imagePayload?.imageInfoArray?.[0]?.url || ""
-      await copyImageToClipboard(url)
-      window.$message?.success("图片复制成功")
-    }
-  } catch (error) {
-    console.error("复制失败:", error)
-    window.$message?.error("复制失败")
-  }
-}
-
-const MAX_TIP_LENGTH = 46
 
 export const isNotify = (item: DB_Session) => {
   return item.messageRemindType === "AcceptNotNotify"
@@ -99,8 +55,6 @@ export const isNotify = (item: DB_Session) => {
 export const isShowCount = (item: DB_Session) => {
   return item.unreadCount === 0
 }
-
-export const truncateTip = (t: string) => (t.length > MAX_TIP_LENGTH ? `${t.slice(0, MAX_TIP_LENGTH)}...` : t)
 
 export const formatNewsMessage = (data: DB_Session, userID?: string) => {
   if (!data) return ""
@@ -112,7 +66,7 @@ export const formatNewsMessage = (data: DB_Session, userID?: string) => {
   const isGroup = type === "GROUP" //群聊
   const isCount = unreadCount && isNotify(data) // 未读消息计数
 
-  const tip = truncateTip(rawTip || "")
+  const tip = formatTitleLength(rawTip || "")
   // 撤回消息
   if (isRevoked) {
     const actor = isOther ? (nick ?? "未知用户") : "你"
@@ -139,4 +93,28 @@ export const formatNewsMessage = (data: DB_Session, userID?: string) => {
   }
   // 默认返回消息内容
   return tip
+}
+
+export const getMessageDisplayText = (item: Partial<DB_Message>): string => {
+  const typeMap = {
+    TIMImageElem: "[图片消息]",
+    TIMFileElem: "[文件消息]",
+    TIMRelayElem: "[合并消息]",
+    TIMCustomElem: "[自定义消息]",
+    TIMGroupTipElem: "[群提示]",
+    TIMGroupSystemNoticeElem: "[系统通知]",
+  }
+
+  if (!item.type) return ""
+
+  return typeMap[item.type] || ""
+}
+
+export const getAbstractContent = (data: Partial<DB_Message>): string => {
+  const reply = getMessageDisplayText(data)
+  if (reply) {
+    return reply
+  } else {
+    return data?.payload?.text || ""
+  }
 }

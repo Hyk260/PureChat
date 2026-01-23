@@ -43,3 +43,14 @@ export const imageUrlToBase64 = async (imageUrl: string): Promise<{ base64: stri
     throw error
   }
 }
+
+export const imageUrlToBlob = async (imageUrl: string): Promise<Blob> => {
+  try {
+    const res = await fetch(imageUrl)
+    const blob = await res.blob()
+    return blob
+  } catch (error) {
+    console.error("Error converting image to blob:", error)
+    throw error
+  }
+}

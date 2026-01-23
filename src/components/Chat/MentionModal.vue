@@ -27,14 +27,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue"
 import { onClickOutside, useEventListener } from "@vueuse/core"
 
 import { cloneDeep } from "lodash-es"
 import { storeToRefs } from "pinia"
 
 import { useChatStore, useGroupStore } from "@/stores"
-import { insertMention, prioritizeRBTUserID } from "@/utils/chat"
+import { prioritizeRBTUserID } from "@pure/utils"
+import { insertMention } from "@/utils/chat"
 import emitter, { type FilteringType } from "@/utils/mitt-bus"
 
 import type { IDomEditor } from "@wangeditor/editor"
@@ -88,6 +88,7 @@ const allMembers = {
   joinTime: 0,
   userID: MSG_AT_ALL,
   nick: "全体成员",
+  role: "Owner",
 }
 
 const groupStore = useGroupStore()

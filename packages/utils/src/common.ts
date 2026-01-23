@@ -9,6 +9,7 @@ export function generateDalle3RequestPayload(config: any) {
     style: "vivid",
   }
 }
+
 export async function uploadImage(file: File | Blob) {
   const body = new FormData()
   body.append("file", file)
@@ -171,4 +172,19 @@ export const createFileInput = (options: CreateFileInputOptions): void => {
     cleanup()
     throw new Error(`Failed to create file input: ${error instanceof Error ? error.message : String(error)}`)
   }
+}
+
+/**
+ * 将查询字符串转换为对象
+ * @param {String} queryString - 查询字符串，例如 "https://purechat.cn?name=John&age=30"
+ * @return {Object} - 转换后的对象，例如 { name: "John", age: "30" }
+ */
+export function queryStringToObject(queryString: string): Record<string, string> {
+  const str = queryString.split("?")[1]
+  const params = new URLSearchParams(str)
+  const obj = {}
+  for (const [key, value] of params) {
+    obj[key] = value
+  }
+  return obj
 }

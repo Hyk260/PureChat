@@ -10,8 +10,8 @@ import {
 } from "@/service/im-sdk-api"
 import { useChatStore, useUserStore } from "@/stores"
 import { SetupStoreId } from "@/stores/enum"
-import { findGroupChat, sortMembersByRole } from "@/utils/chat"
-
+import { findGroupChat } from "@/utils/chat"
+import { sortMembersRole } from "@pure/utils"
 import type {
   GroupState,
   HandleCreateGroupPayload,
@@ -59,7 +59,7 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
       const { memberList, code } = await getGroupMemberList({ groupID: groupId })
       if (code !== 0) return
       if (isSort) {
-        this.currentMemberList = sortMembersByRole(memberList)
+        this.currentMemberList = sortMembersRole(memberList)
       } else {
         this.currentMemberList = memberList
       }

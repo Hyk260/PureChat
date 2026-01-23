@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { groupSystemNotice } from "@/utils/chat"
+import { groupSystemNotice } from "@pure/utils"
 
 import type { DB_Message } from "@pure/database/schemas"
 

@@ -27,8 +27,8 @@
 
 <script setup lang="ts">
 import { DB_Message, FilePayloadType } from "@pure/database/schemas"
-import { getFileType, renderFileIcon } from "@/utils/chat"
-import { clientS3Storage, formatSize } from "@pure/utils"
+import { renderFileIcon } from "@/utils/chat"
+import { getFileType, clientS3Storage, formatSize } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({
