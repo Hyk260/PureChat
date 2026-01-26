@@ -1,8 +1,7 @@
 import { DomEditor } from "@wangeditor/editor"
 import { h } from "snabbdom"
 
-import { renderFileIcon } from "@/utils/chat"
-import { encodeHTML, getFileType } from "@pure/utils"
+import { getFileIcon, encodeHTML, getFileType } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import type { AttachmentElement } from "@/types"
@@ -157,7 +156,7 @@ const renderFileAttachment = (data: {
     [
       h("img", {
         props: {
-          src: renderFileIcon(fileType),
+          src: getFileIcon(fileType),
           alt: `${fileType}文件图标`,
         },
         style: FILE_ICON_STYLE,

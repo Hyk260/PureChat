@@ -27,8 +27,7 @@
 
 <script setup lang="ts">
 import { DB_Message, FilePayloadType } from "@pure/database/schemas"
-import { renderFileIcon } from "@/utils/chat"
-import { getFileType, clientS3Storage, formatSize } from "@pure/utils"
+import { getFileIcon, getFileType, clientS3Storage, formatSize } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({
@@ -48,7 +47,7 @@ const backgroundStyle = ref("")
 const shouldShowTooltip = ref(false)
 
 const fileType = computed(() => getFileType(payload?.fileName))
-const icon = computed(() => renderFileIcon(fileType.value))
+const icon = computed(() => getFileIcon(fileType.value))
 const formattedFileSize = computed(() => formatSize(payload.fileSize))
 
 const checkTextOverflow = () => {

@@ -1,4 +1,4 @@
-import { createStorage, type StorageType } from "@pure/utils/storage"
+import { createStorage } from "@pure/utils/storage"
 
 const { VITE_STORAGE_PREFIX: storagePrefix } = import.meta.env
 
