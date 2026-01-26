@@ -2,12 +2,10 @@ import { cloneDeep } from "lodash-es"
 import { storeToRefs } from "pinia"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
-import { getModelId } from "@/ai/utils"
-// import { getModelType } from "@/ai/utils"
 import { sendChatAssistantMessage } from "@/service/chatService"
 import { createTextMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore, useUserStore } from "@/stores"
-import { abortCompletion, getFileType } from "@pure/utils"
+import { abortCompletion, getModelId, getFileType } from "@pure/utils"
 import { createPromptMessageCustomData } from "@/utils/chat/customData"
 
 // import { createCustomMessage } from "@/service/im-sdk-api"

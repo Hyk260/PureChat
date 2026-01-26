@@ -38,7 +38,7 @@
 import Markdown from "@/components/Markdown/index.vue"
 import { ModelID } from "model-bank"
 
-import { getModelId } from "@/ai/utils"
+import { getModelId } from "@pure/utils"
 import { usePrepareMessageData } from "@/hooks/useMessageOperations"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore, useRouteStore } from "@/stores"

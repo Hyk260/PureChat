@@ -13,7 +13,7 @@
     }"
   >
     <template v-if="Icon">
-      <component
+      <Component
         :is="Icon"
         :class="iconClassName"
         :color="color"

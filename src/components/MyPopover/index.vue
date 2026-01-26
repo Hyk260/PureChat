@@ -42,11 +42,10 @@
 <script setup lang="ts">
 import { ElLink } from "element-plus"
 import { onClickOutside } from "@vueuse/core"
-import { isRobot } from "@pure/utils"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 // import { getGender } from "@/utils/common";
-import { getValueByKey, prefix } from "@/ai/utils"
+import { isRobot, getValueKey, prefix } from "@pure/utils"
 import { useState } from "@/hooks/useState"
 import { getUserProfile } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores/modules/chat"
@@ -75,12 +74,12 @@ const clickCard = (url) => {
 }
 
 const getProvider = (data = userProfile.value.profileCustomField) => {
-  const provider = getValueByKey(data, prefix("Provider"))
+  const provider = getValueKey(data, prefix("Provider"))
   return provider
 }
 
 const getHomepage = (data = userProfile.value.profileCustomField) => {
-  const homepage = getValueByKey(data, prefix("Homepage"))
+  const homepage = getValueKey(data, prefix("Homepage"))
   return homepage
 }
 

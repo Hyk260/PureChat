@@ -1,12 +1,12 @@
 <template>
-  <component :is="renderContent" />
+  <Component :is="renderContent" />
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue"
 import { storeToRefs } from "pinia"
 import { useChatStore } from "@/stores/modules/chat"
-import { formatContent } from "@/utils/chat"
+import { formatContent } from "@pure/utils"
 import type { DB_Session } from "@pure/database/schemas"
 
 interface Props {

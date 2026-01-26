@@ -234,10 +234,10 @@ import { storeToRefs } from "pinia"
 import { ModelIcon } from "@pure/icons"
 import { getLowerBaseModelName, getBaseModelName, openWindow } from "@pure/utils"
 import { modelConfig, modelValue } from "@/ai/constant"
-import { getModelIcon, useAccessStore } from "@/ai/utils"
+import { useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"
-import { hostPreview } from "@pure/utils"
+// import { hostPreview } from "@pure/utils"
 import { delay } from "@pure/utils"
 import { isRange } from "./utils"
 // import OllamaAI from "@/ai/platforms/ollama/ollama";
@@ -267,7 +267,6 @@ const marks = reactive<Marks>({
 
 const { DEV: isDev } = import.meta.env
 
-const robotIcon = ref<string>("")
 const modelData = ref<ModelDataType>({})
 const inputTokenRefs = useTemplateRef("inputTokenRefs")
 const promptRef = useTemplateRef("promptRef")
@@ -315,7 +314,6 @@ function initializeModelOptions() {
   const provider = modelProvider.value
   const modelDataValue = cloneDeep(modelValue[provider])
   const currentModelConfig = modelStore.value[provider]
-  robotIcon.value = getModelIcon(toAccount.value)
   Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {
     if (configItem.ID === "model" && currentModelConfig?.Model?.collapse) {
       configItem.collapse = currentModelConfig?.Model?.collapse || []

@@ -4,18 +4,11 @@
     <ElTag v-if="variantText" type="info" size="small" class="ml-5">
       {{ variantText }}
     </ElTag>
-
-    <!-- 机器人模型标签 -->
-    <span v-if="modelInfo?.visible" class="model">
-      <SvgIcon :localIcon="modelInfo.icon" />
-      <span>{{ modelInfo.id }}</span>
-    </span>
   </span>
 </template>
 
 <script setup lang="ts">
-import { isRobot, getBaseModelName } from "@pure/utils"
-import { getModelIcon, getValueByKey, isFullStaffGroup, prefix } from "@/ai/utils"
+import { getValueKey, isFullStaffGroup, prefix } from "@pure/utils"
 
 import type { DB_Session } from "@pure/database/schemas"
 
@@ -40,7 +33,7 @@ const variant = computed(() => {
   if (isFullStaffGroup(props.item)) return "all"
   if (props.item?.type === "GROUP") return "group"
 
-  const role = getValueByKey(props.item?.groupProfile?.groupCustomField || [], prefix("Role"))
+  const role = getValueKey(props.item?.groupProfile?.groupCustomField || [], prefix("Role"))
 
   return role === "author" ? "author" : "default"
 })
@@ -52,19 +45,6 @@ const variantText = computed(() => {
     author: "作者",
   }
   return map[variant.value] || ""
-})
-
-/**
- * ai模型相关信息
- */
-const modelInfo = computed(() => {
-  const isVisible = isRobot(props.userID) && Boolean(props.model?.id)
-
-  return {
-    visible: isVisible,
-    id: getBaseModelName(props.model?.id ?? ""),
-    icon: props.model?.icon ? props.model?.icon : getModelIcon(props.userID || ""),
-  }
 })
 </script>
 

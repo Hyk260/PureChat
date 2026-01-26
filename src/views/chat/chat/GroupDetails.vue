@@ -130,7 +130,6 @@ import {
 import Markdown from "@/components/Markdown/index.vue"
 import AddMemberPopup from "@/components/Popups/AddMemberPopup.vue"
 import GroupQrCodePopup from "@/components/Popups/GroupQrCodePopup.vue"
-import { isFullStaffGroup } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { restApi } from "@/service/api"
 import {
@@ -141,7 +140,7 @@ import {
   updateGroupProfile,
 } from "@/service/im-sdk-api"
 import { useChatStore, useGroupStore, useUserStore } from "@/stores"
-import { isByteLengthExceedingLimit, formatGroupID } from "@pure/utils"
+import { isByteLengthExceedingLimit, formatGroupID, isFullStaffGroup } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import type {

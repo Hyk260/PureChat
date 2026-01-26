@@ -52,6 +52,4 @@ const GlobeOffIcon = createLucideIcon("GlobeOff", [
   ],
 ])
 
-GlobeOffIcon.displayName = "GlobeOffIcon"
-
 export default GlobeOffIcon

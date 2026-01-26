@@ -6,7 +6,7 @@
     </ElTabs> -->
     <div v-for="option in tabOptions" :key="option.value" class="tab-item" @click="handleTabClick(option)">
       <ElButton :class="{ 'tab-item--active': activeTab === option.value }">
-        <ElIcon><component :is="option.icon"></component></ElIcon>
+        <ElIcon><Component :is="option.icon"></Component></ElIcon>
         <span> {{ option.label }} </span>
       </ElButton>
     </div>

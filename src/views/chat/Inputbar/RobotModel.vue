@@ -70,9 +70,12 @@ import { storeToRefs } from "pinia"
 import { modelValue } from "@/ai/constant"
 import { ModelIcon, ProviderIcon } from "@pure/icons"
 import { getBaseModelName } from "@pure/utils"
-import { getModelIcon, useAccessStore } from "@/ai/utils"
+import { useAccessStore } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
-import { useChatStore, useRobotStore } from "@/stores"
+import {
+  // useChatStore,
+  useRobotStore,
+} from "@/stores"
 import { Model, ModelConfigItem } from "@/stores/modules/robot/types"
 import { formatTokenNumber, formatToken } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
@@ -81,13 +84,12 @@ defineOptions({
   name: "RobotModel",
 })
 
-const robotIcon = ref<string>("")
 const model = ref<ModelConfigItem["options"] | null>(null)
 const [flag, setFlag] = useState(false)
 
-const chatStore = useChatStore()
+// const chatStore = useChatStore()
 const robotStore = useRobotStore()
-const { toAccount } = storeToRefs(chatStore)
+// const { toAccount } = storeToRefs(chatStore)
 const { modelStore, modelProvider } = storeToRefs(robotStore)
 
 function onClickOutside() {
@@ -105,7 +107,6 @@ function storeRobotModel(data: Model) {
 function initModel() {
   const provider = modelProvider.value
   const selectModel = modelStore.value[provider] || {}
-  robotIcon.value = getModelIcon(toAccount.value)
   const providerValue = modelValue[provider]
   if (!providerValue?.Model?.options) {
     setFlag(true)

@@ -69,8 +69,19 @@
         :class="{ 'is-active': item.type === table }"
         @click="table = item.type"
       >
-        <SvgIcon v-if="item.svgIcon" :localIcon="item.svgIcon" />
-        <component :is="item.icon" v-else-if="item.icon" :size="16" />
+        <svg
+          v-if="item.id === 'Douyin'"
+          xmlns="http://www.w3.org/2000/svg"
+          width="1.2em"
+          height="1.2em"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill="#000"
+            d="M8.3 1.01c.75-.01 1.5 0 2.25-.01c.05.89.36 1.8 1.01 2.43c.64.65 1.55.94 2.44 1.04v2.35c-.83-.03-1.66-.2-2.42-.56c-.33-.15-.63-.34-.93-.54c0 1.7 0 3.41-.01 5.1c-.04.82-.31 1.63-.78 2.3c-.75 1.12-2.06 1.85-3.4 1.87c-.82.05-1.65-.18-2.35-.6c-1.16-.69-1.98-1.97-2.1-3.33q-.03-.435 0-.87c.1-1.11.65-2.17 1.49-2.89c.95-.84 2.29-1.24 3.54-1c.01.86-.02 1.73-.02 2.59c-.57-.19-1.24-.13-1.74.22c-.37.24-.64.6-.79 1.02c-.12.3-.09.62-.08.94c.14.96 1.05 1.76 2.01 1.67c.64 0 1.26-.39 1.59-.94c.11-.19.23-.39.24-.62c.06-1.04.03-2.08.04-3.13c0-2.35 0-4.7.01-7.04"
+          />
+        </svg>
+        <Component :is="item.icon" v-else-if="item.icon" :size="16" />
         <span v-else>{{ item.content }}</span>
       </div>
     </div>
@@ -78,11 +89,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue"
 import { Smile } from "lucide-vue-next"
 
 import { ClickOutside as vClickOutside } from "element-plus"
 import { chunk } from "lodash-es"
+import { TiktokIcon } from "@pure/icons"
 
 import { useChatStore } from "@/stores/modules/chat"
 import { getEmojiAssetUrlSync, getEmojiData } from "@/utils/emoji"
@@ -105,7 +116,7 @@ const toolbarItems = [
   {
     id: "Douyin",
     title: "抖音",
-    svgIcon: "tiktok",
+    icon: TiktokIcon,
     type: "Douyin",
   },
   {

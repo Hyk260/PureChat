@@ -7,14 +7,14 @@
             <SubMenu v-if="item.children && item.children.length">
               <template #title>
                 <div class="flex gap-4 items-center text-[12px]">
-                  <component :is="item.icon" v-if="item.icon" :size="12" />
+                  <Component :is="item.icon" v-if="item.icon" :size="12" />
                   <span>{{ item.label }}</span>
                 </div>
               </template>
               <template v-for="(child, i) in item.children" :key="child.key">
                 <MenuItem @click.stop="handleMenuItemClick(item, i)">
                   <div class="flex gap-4 items-center text-[12px]">
-                    <component :is="child.icon" v-if="child.icon" :size="12" />
+                    <Component :is="child.icon" v-if="child.icon" :size="12" />
                     <span>{{ child.label }}</span>
                   </div>
                 </MenuItem>
@@ -22,7 +22,7 @@
             </SubMenu>
             <MenuItem v-else :danger="item.danger ?? false" @click.stop="handleMenuItemClick(item)">
               <div class="flex gap-4 items-center text-[12px]">
-                <component :is="item.icon" v-if="item.icon" :size="12" />
+                <Component :is="item.icon" v-if="item.icon" :size="12" />
                 <span>{{ item.label }}</span>
               </div>
             </MenuItem>

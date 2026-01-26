@@ -1,6 +1,6 @@
 import { formatTitleLength } from "./genOG"
 import type { DB_Message, MessageType, DB_Session } from "@pure/database/schemas"
-import type { DraftData } from "@pure/types"
+import type { DraftData, DraftChild } from "@pure/types"
 
 export const isTime = (item: { isTimeDivider?: boolean; time?: string }) => {
   return item?.isTimeDivider && item?.time !== undefined
@@ -108,6 +108,25 @@ export function checkTextNotEmpty(nodes: DraftData): boolean {
   })
 }
 
+export const formatContent = (data: DraftData) => {
+  return data
+    .filter((item) => item.type === "paragraph")
+    .map(({ children }) => {
+      return (
+        children
+          ?.map((t) => {
+            if (t.type === "image" && t?.alt && t?.class === "EmoticonPack") return t.alt
+            if (t.type === "image") return "[图片]"
+            if (t.type === "attachment") return "[文件]"
+            if (t.type === "mention") return `@${t.value ?? ""}`
+            return t.text || ""
+          })
+          .join("") || ""
+      )
+    })
+    .join("")
+}
+
 export const getMessageDisplayText = (item: Partial<DB_Message>): string => {
   const typeMap = {
     TIMImageElem: "[图片消息]",
@@ -144,4 +163,26 @@ export const chatName = (item: DB_Session): string => {
     default:
       return ""
   }
+}
+
+/**
+ * description: 获取自定义字段前缀
+ * @param key 自定义字段key
+ * @returns 自定义字段前缀 Tag_Profile_Custom_${key}
+ */
+export function prefix(key: string) {
+  const prefix = "Tag_Profile_Custom_"
+  return `${prefix}${key}`
+}
+
+export function getValueKey(array: any[], key: string) {
+  if (!array?.length || !key) return null
+  const item = array.find((t) => t.key === key)
+  return item?.value ? item.value : null
+}
+
+// 全员群
+export function isFullStaffGroup(data: any) {
+  const { groupProfile } = data || {}
+  return getValueKey(groupProfile?.groupCustomField, "custom_info") === "all_staff"
 }

@@ -1,6 +1,5 @@
-import { isRobot } from "@pure/utils"
+import { isRobot, getModelType } from "@pure/utils"
 import { ModelProvider, Provider } from "model-bank"
-import { getModelType } from "@/ai/utils"
 import deepseekPng from "@/assets/images/model-provider/deepseek.png"
 import githubSvg from "@/assets/images/model-provider/github.svg"
 import mistralPng from "@/assets/images/model-provider/mistral.png"

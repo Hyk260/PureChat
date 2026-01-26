@@ -3,9 +3,9 @@ import { defineStore } from "pinia"
 
 import { modelValue } from "@/ai/constant"
 import { ModelProvider, Provider } from "model-bank"
-import { getModelType, useAccessStore } from "@/ai/utils"
-import WebSearchService from "@/service/WebSearchService"
+import { useAccessStore } from "@/ai/utils"
 import { SetupStoreId } from "@/stores/enum"
+import WebSearchService from "@/service/WebSearchService"
 
 import { useChatStore } from "../chat"
 import { useWebSearchStore } from "../websearch"
@@ -83,7 +83,7 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       this.promptStore[provider] = data
     },
     updateModelConfig() {
-      const provider = getModelType(useChatStore().toAccount)
+      const provider = useChatStore().currentSessionProvider
       if (!provider) {
         console.log("provider is null")
         return

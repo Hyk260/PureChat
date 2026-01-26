@@ -1,7 +1,8 @@
 import { h, watch } from "vue"
 import { useRoute } from "vue-router"
 import { ElMessageBox } from "element-plus"
-import { getModelId, useAccessStore } from "@/ai/utils"
+import { useAccessStore } from "@/ai/utils"
+import { getModelId } from "@pure/utils"
 import { useChatStore, useRobotStore, useRouteStore } from "@/stores"
 
 const { VITE_OPENAI_API_KEY, VITE_OPENAI_PROXY_URL, DEV: isDev } = import.meta.env
