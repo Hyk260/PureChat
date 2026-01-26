@@ -1,11 +1,7 @@
 import { copyImageToClipboard } from "@pure/utils"
 
-import type { DB_Message, MessageType, ImagePayloadType, DB_Session } from "@pure/database/schemas"
-import type { DraftData } from "@/types"
-
-export const isTime = (item: DB_Message) => {
-  return item?.isTimeDivider && item.time !== undefined
-}
+import type { DB_Message, ImagePayloadType } from "@pure/database/schemas"
+import type { DraftData } from "@pure/types"
 
 export const isSelf = (item: DB_Message) => {
   return item.from === window.localStg.get("timProxy")?.userProfile?.userID
@@ -50,12 +46,4 @@ export const handleCopyMsg = async (data: DB_Message) => {
     console.error("复制失败:", error)
     window.$message?.error("复制失败")
   }
-}
-
-export const isNotify = (item: DB_Session) => {
-  return item.messageRemindType === "AcceptNotNotify"
-}
-
-export const isShowCount = (item: DB_Session) => {
-  return item.unreadCount === 0
 }

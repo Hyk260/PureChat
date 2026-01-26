@@ -2,7 +2,7 @@ import { cloneDeep } from "lodash-es"
 import { defineStore } from "pinia"
 import { HISTORY_MESSAGE_COUNT, MULTIPLE_CHOICE_MAX, MIN_MESSAGES, INBOX_SESSION_ID } from "@pure/const"
 import { getModelType } from "@/ai/utils"
-import { isRobot, delay, timeFormat, getBaseTime, addTimeDivider } from "@pure/utils"
+import { isRobot, delay, checkTextNotEmpty, timeFormat, getBaseTime, addTimeDivider } from "@pure/utils"
 import { MessageModel } from "@pure/database/models"
 import { timProxy } from "@/service/chat"
 import { sendChatAssistantMessage } from "@/service/chatService"
@@ -17,7 +17,7 @@ import {
   setMessageRead,
 } from "@/service/im-sdk-api"
 import { SetupStoreId } from "@/stores/enum"
-import { checkTextNotEmpty, scrollToMessage } from "@/utils/chat"
+import { scrollToMessage } from "@/utils/chat"
 import { ModelIDList } from "model-bank"
 import { emitUpdateScroll } from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
@@ -32,7 +32,7 @@ import type { ChatState } from "./type"
 import type { Provider } from "model-bank"
 
 import type { DB_Message, DB_Session, TypeSchemaType, ImagePayloadType } from "@pure/database/schemas"
-import type { DraftData } from "@/types"
+import type { DraftData } from "@pure/types"
 import type { ModelIDValue } from "model-bank"
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {

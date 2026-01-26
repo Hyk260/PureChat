@@ -4,16 +4,7 @@ import { customDataWebSearch, DB_Message } from "@pure/database/schemas"
 import { convertBlobUrlToDataUrl } from "@pure/utils"
 
 import type { LLMMessage } from "@pure/types"
-import type { ImagePayloadType, CustomPayloadType, DB_Session } from "@pure/database/schemas"
-import type { DraftData } from "@/types"
-
-export function checkTextNotEmpty(nodes: DraftData) {
-  return nodes.some((obj) => {
-    return obj.children.some((child) => {
-      return child.text !== ""
-    })
-  })
-}
+import type { ImagePayloadType, CustomPayloadType } from "@pure/database/schemas"
 
 // 处理文本类型的消息
 export function transformTextElement(data: DB_Message) {
@@ -123,19 +114,5 @@ export async function transformData(data: DB_Message[]): Promise<LLMMessage[]> {
   } catch (error) {
     console.error("Error transforming data:", error)
     return []
-  }
-}
-
-export const chatName = (item: DB_Session): string => {
-  if (!item) return ""
-  switch (item.type) {
-    case "C2C":
-      return item?.userProfile?.nick || item?.userProfile?.userID || "C2C"
-    case "GROUP":
-      return item?.groupProfile?.name || "GROUP"
-    case "@TIM#SYSTEM":
-      return "系统通知"
-    default:
-      return ""
   }
 }

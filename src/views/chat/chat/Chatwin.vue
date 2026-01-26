@@ -114,13 +114,14 @@ import { useContextMenu } from "@/composables/useContextMenu"
 import { useMessageOperations } from "@/hooks/useMessageOperations"
 import { getMessageList, revokeMsg, translateText } from "@/service/im-sdk-api"
 import { useAppStore, useChatStore, useGroupStore, useUserStore } from "@/stores"
-import { handleCopyMsg, isTime, scrollToMessage } from "@/utils/chat"
+import { handleCopyMsg, scrollToMessage } from "@/utils/chat"
 import { avatarContextMenuItems, messageContextMenuItems } from "@/utils/contextMenuPresets"
 import { ElMessageBox } from "element-plus"
 import {
   getUnixTimestampSec,
   timeFormat,
   download,
+  isTime,
   validateLastMessage,
   getMessageItemClass,
   getMessageTypeClass,

@@ -50,7 +50,7 @@ import { getValueByKey, prefix } from "@/ai/utils"
 import { useState } from "@/hooks/useState"
 import { getUserProfile } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores/modules/chat"
-import { squareUrl } from "@/utils/chat"
+import { squareUrl } from "@pure/const"
 import emitter from "@/utils/mitt-bus"
 
 const cardRef = ref()

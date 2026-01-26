@@ -47,7 +47,7 @@ import { filterMentionList } from "@/utils/pinyin/utils"
 import SendMessageButton from "./SendMessageButton.vue"
 import { customAlert, handleAssistantFile, handleEditorKeyDown, handleString, insertEmoji } from "./utils"
 
-import type { DraftData } from "@/types"
+import type { DraftData } from "@pure/types"
 import type { IDomEditor } from "@wangeditor/editor"
 
 import "@/utils/wangEditor/editor-config/plugin"

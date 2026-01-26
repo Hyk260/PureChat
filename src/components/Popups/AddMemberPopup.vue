@@ -26,7 +26,8 @@ import { ref } from "vue"
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { useState } from "@/hooks/useState"
 import { useChatStore } from "@/stores"
-import { chatName, squareUrl } from "@/utils/chat"
+import { chatName } from "@pure/utils"
+import { squareUrl } from "@pure/const"
 
 defineOptions({
   name: "AddMemberPopup",

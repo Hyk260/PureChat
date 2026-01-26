@@ -48,7 +48,7 @@ export const linkifyUrls = (text: string, options?: LinkifyOptions): string => {
  * @mention 匹配的正则表达式
  * 匹配 @ 后面跟非空白字符，直到遇到空白字符、标点符号或文本结束
  */
-export const MENTION_REGEX = /@([^\s@]+)/g
+export const MENTION_REGEX = /@([a-zA-Z0-9_\u4e00-\u9fa5]+)/g
 
 export interface LinkSegment {
   content: string
@@ -67,12 +67,13 @@ export const hasLink = (text: string): boolean => {
  * 判断是否为有效的 URL
  */
 export const isValidUrl = (text: string): boolean => {
-  const urlRegex = /^(https?|ftp):\/\/[\w.-]+(?:\/[\w.-]*)*$/
-  return urlRegex.test(text)
+  try {
+    const url = new URL(text)
+    return ["http:", "https:", "ftp:"].includes(url.protocol)
+  } catch {
+    return false
+  }
 }
-
-// 优化：更精确的 URL 正则，处理末尾标点符号
-// const URL_REGEX = /https?:\/\/[^\s<>"{}|\\^`[\]]+?(?=[.,;:!?)]*(?:\s|$)|$)/gi
 
 /**
  * 解析文本，将 URL text @mention 分离为独立片段

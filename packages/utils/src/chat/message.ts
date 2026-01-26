@@ -1,8 +1,9 @@
 import { formatTitleLength } from "./genOG"
 import type { DB_Message, MessageType, DB_Session } from "@pure/database/schemas"
+import type { DraftData } from "@pure/types"
 
-export const isTime = (item: DB_Message) => {
-  return item?.isTimeDivider && item.time !== undefined
+export const isTime = (item: { isTimeDivider?: boolean; time?: string }) => {
+  return item?.isTimeDivider && item?.time !== undefined
 }
 
 export const getMessageItemClass = (item: DB_Message) => {
@@ -48,12 +49,16 @@ export const validateLastMessage = (list: DB_Message[]): DB_Message | null => {
   return list.slice().find((t) => t.ID) || null
 }
 
-export const isNotify = (item: DB_Session) => {
-  return item.messageRemindType === "AcceptNotNotify"
+export const isNotify = (item: { messageRemindType?: string }) => {
+  return item?.messageRemindType === "AcceptNotNotify"
 }
 
-export const isShowCount = (item: DB_Session) => {
-  return item.unreadCount === 0
+/**
+ * description
+ * unreadCount === 0
+ */
+export const isShowCount = (item: { unreadCount?: number }) => {
+  return item?.unreadCount === 0
 }
 
 export const formatNewsMessage = (data: DB_Session, userID?: string) => {
@@ -95,6 +100,14 @@ export const formatNewsMessage = (data: DB_Session, userID?: string) => {
   return tip
 }
 
+export function checkTextNotEmpty(nodes: DraftData): boolean {
+  if (!Array.isArray(nodes) || nodes.length === 0) return false
+  return nodes.some((node) => {
+    if (!node?.children || !Array.isArray(node.children)) return false
+    return node.children.some((child) => child?.text?.trim() !== "")
+  })
+}
+
 export const getMessageDisplayText = (item: Partial<DB_Message>): string => {
   const typeMap = {
     TIMImageElem: "[图片消息]",
@@ -116,5 +129,19 @@ export const getAbstractContent = (data: Partial<DB_Message>): string => {
     return reply
   } else {
     return data?.payload?.text || ""
+  }
+}
+
+export const chatName = (item: DB_Session): string => {
+  if (!item) return ""
+  switch (item.type) {
+    case "C2C":
+      return item?.userProfile?.nick || item?.userProfile?.userID || "C2C"
+    case "GROUP":
+      return item?.groupProfile?.name || "GROUP"
+    case "@TIM#SYSTEM":
+      return "系统通知"
+    default:
+      return ""
   }
 }

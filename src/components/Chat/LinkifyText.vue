@@ -4,12 +4,11 @@
 
 <script setup lang="ts">
 import { Popover } from "ant-design-vue"
-import { linkifySegment } from "@/utils/linkifyUrls"
+import { linkifySegment, type LinkSegment } from "@pure/utils"
 import { useGroupStore } from "@/stores/modules/group"
 import CitationTooltip from "@/components/CitationTooltip/index.vue"
 
 import type { GroupMemberType as GroupMember } from "@pure/database/schemas"
-import type { LinkSegment } from "@/utils/linkifyUrls"
 
 interface Props {
   text?: string

@@ -39,7 +39,8 @@ import { storeToRefs } from "pinia"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { useChatStore } from "@/stores/modules/chat"
-import { chatName, squareUrl } from "@/utils/chat"
+import { chatName } from "@pure/utils"
+import { squareUrl } from "@pure/const"
 
 const emit = defineEmits(["confirm"])
 

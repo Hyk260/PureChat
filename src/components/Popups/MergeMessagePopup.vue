@@ -53,8 +53,9 @@ import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessa
 import { useState } from "@/hooks/useState"
 import { downloadMergerMessage } from "@/service/im-sdk-api"
 import { useUserStore } from "@/stores/modules/user"
-import { circleUrl, isSelf, isTime } from "@/utils/chat"
-import { timeFormat, addTimeDivider, getMessageTypeClass, getMessageItemClass } from "@pure/utils"
+import { isSelf } from "@/utils/chat"
+import { circleUrl } from "@pure/const"
+import { isTime, timeFormat, addTimeDivider, getMessageTypeClass, getMessageItemClass } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 const mergValue = ref({})
