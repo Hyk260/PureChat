@@ -121,7 +121,8 @@ import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessa
 import { ImageType, imageTypeOptions, useScreenshot } from "@/hooks/useScreenshot"
 import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore } from "@/stores"
-import { getMessageItemClass, getMessageTypeClass, isSelf } from "@/utils/chat"
+import { getMessageItemClass, getMessageTypeClass } from "@pure/utils"
+import { isSelf } from "@/utils/chat"
 import emitter from "@/utils/mitt-bus"
 
 import { backgroundColors, backgroundStyle, getBackgroundStyle, changeBackgroundColor } from "./utils"
