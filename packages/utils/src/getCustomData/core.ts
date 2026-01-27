@@ -1,6 +1,6 @@
 import { isEmpty } from "lodash-es"
 import { DB_Message } from "@pure/database/schemas"
-import { getAbstractContent } from "@pure/utils"
+import { getAbstractContent } from "../chat"
 
 export type CustomDataType = "webSearch" | "thinking" | "messageReply" | "messagePrompt"
 
@@ -11,7 +11,7 @@ export function getCloudCustomDataTyped(data: Partial<DB_Message>, type: CustomD
 
   const baseData = {
     messageAbstract: getAbstractContent(data),
-    version: __APP_INFO__.pkg.version || "",
+    // version: __APP_INFO__.pkg.version || "",
   }
 
   let customData = {}
@@ -29,8 +29,8 @@ export function getCloudCustomDataTyped(data: Partial<DB_Message>, type: CustomD
     case "thinking":
       customData = {
         thinking: {
-          ...baseData,
           content: (params as DeepThinkingParams)?.content,
+          // version: __APP_INFO__.pkg.version || "",
           reasoningType: (params as DeepThinkingParams)?.reasoningType,
           duration: (params as DeepThinkingParams)?.duration,
         },

@@ -125,7 +125,7 @@ const displayData = computed(() => {
     const messageContent = formatNewsMessage(item, userStore.userProfile?.userID)
     const isActive = conversationID === currentId
     const showUnreadCount = !isShowCount(item) && !isNotify(item) && item.type !== "@TIM#SYSTEM"
-    const isMentioned = (item.groupAtInfoList?.length ?? 0) > 0
+    const isMentioned = (item?.groupAtInfoList?.length ?? 0) > 0
     const hasDraft = conversationID !== currentId && chatStore.chatDraftMap.has(conversationID)
     const showDontNotify = isNotify(item)
 

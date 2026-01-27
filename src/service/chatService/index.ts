@@ -8,7 +8,7 @@ import { DB_Message } from "@pure/database/schemas"
 import { restApi } from "@/service/api"
 import { createCustomMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore } from "@/stores"
-import { createThinkingCustomData } from "@/utils/chat/customData"
+import { createThinkingCustomData } from "@pure/utils"
 import { getCustomMsgContent } from "@/utils/common"
 import { generateReferencePrompt } from "@/utils/messageUtils/search"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
@@ -30,6 +30,8 @@ class ChatService {
   // createAssistantMessage = (text: string) => { }
 
   async sendMessage({ messages, chat, provider, loadMessage }: ChatServiceParams) {
+    const chatStore = useChatStore()
+    chatStore.updateSendingState(chat?.to, "add")
     const api = new AiProvider(provider)
     const startMsg = loadMessage || this.createLoadingMessage(chat)
 
@@ -42,7 +44,7 @@ class ChatService {
     // 发送 AI 聊天请求
     await api.llm.chat({
       requestId: startMsg.ID,
-      messages: this.shouldUseCurrentMessages() ? useChatStore().currentMessageList : messages,
+      messages: this.shouldUseCurrentMessages() ? chatStore.currentMessageList : messages,
       config: {
         stream: true,
         model: api.config.model,

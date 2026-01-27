@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasReplyContent" class="think-content">
+  <div v-if="hasThinkingContent" class="think-content">
     <ElCollapse v-model="activeNames" accordion>
       <ElCollapseItem name="1">
         <template #title>
@@ -31,7 +31,7 @@
               :offset="8"
               transition="slide-fade"
             >
-              <div class="handle-button flex-c" @click.stop="onCopy(messageAbstract)">
+              <div class="handle-button flex-c" @click.stop="onCopy(thinkingContent)">
                 <Component :is="isCopied ? Check : Copy" :size="14" />
               </div>
             </ElTooltip>
@@ -40,10 +40,10 @@
             </div>
           </div>
         </template>
-        <template v-if="messageAbstract">
+        <template v-if="thinkingContent">
           <div class="think-content__content">
-            {{ messageAbstract }}
-            <!-- <Markdown :content="messageAbstract" /> -->
+            {{ thinkingContent }}
+            <!-- <Markdown :content="thinkingContent" /> -->
           </div>
         </template>
       </ElCollapseItem>
@@ -77,8 +77,8 @@ const isCopied = ref(false)
 const activeNames = ref(COLLAPSE_CLOSE)
 
 const thinking = computed(() => props.originalMsg?.thinking)
-const hasReplyContent = computed(() => !!thinking.value)
-const messageAbstract = computed(() => thinking.value.content)
+const hasThinkingContent = computed(() => !!thinking.value)
+const thinkingContent = computed(() => thinking.value.content)
 const duration = computed(() => thinking.value.duration)
 const isThinking = computed(() => thinking.value?.reasoningType === "thinking")
 

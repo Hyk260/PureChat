@@ -1,7 +1,7 @@
 import tim from "@/service/chat/PureChatService"
-import { fileUploading, createReplyMessageCustomData } from "@/utils/chat"
+import { fileUploading } from "@/utils/chat"
 import { getCustomMsgContent } from "@/utils/common"
-import { updateImageSize } from "@pure/utils"
+import { updateImageSize, createReplyMessageCustomData } from "@pure/utils"
 
 import type { DB_Message, ChatSchemaType } from "@pure/database/schemas"
 

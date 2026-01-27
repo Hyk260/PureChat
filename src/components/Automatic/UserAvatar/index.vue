@@ -6,8 +6,9 @@
       </div>
     </template>
     <template v-else-if="type === 'single'">
-      <!-- <span v-if="native && isRobot(sessionId)" :style="{ fontSize: `${size - 8}px` }">{{ native }}</span> -->
+      <span v-if="native && isAgent(sessionId)" :style="{ fontSize: `${size - 12}px` }">{{ native }}</span>
       <ElAvatar
+        v-else
         class="avatar"
         :class="[className]"
         shape="square"
@@ -38,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-// import { isRobot } from "@pure/utils"
+import { isAgent } from "@pure/utils"
 import { circleUrl, emptyUrl, squareUrl } from "@pure/const"
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { useUserStore } from "@/stores/modules/user"

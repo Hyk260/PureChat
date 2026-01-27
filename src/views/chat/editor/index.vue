@@ -247,8 +247,6 @@ const sendChatMessage = async () => {
     const message = await messageCreator(messageData)
     clearInput()
 
-    chatStore.updateSendingState(messageData.to, "add")
-
     message.forEach((msg, index) => {
       chatStore.sendSessionMessage({
         message: msg,

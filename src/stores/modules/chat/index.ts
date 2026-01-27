@@ -74,8 +74,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     isShowNavigator(): boolean {
       return this.currentMessageList.length > MIN_MESSAGES && !this.isFullscreenInputActive && __LOCAL_MODE__
     },
-    currentType(): TypeSchemaType | "" {
-      return this.currentConversation?.type ?? ""
+    currentType(): TypeSchemaType {
+      return this.currentConversation?.type ?? "C2C"
     },
     hasConversationList(): boolean {
       return this.conversationList?.length > 0

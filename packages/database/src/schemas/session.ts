@@ -46,7 +46,7 @@ export const DB_SessionSchema = z.object({
    * AcceptNotNotify: 接受不提醒
    * Discard: 拒绝
    */
-  messageRemindType: messageRemindType,
+  messageRemindType: messageRemindType.optional(),
   markList: z.array(z.any()).optional(),
   customData: z.string().optional(),
   conversationGroupList: z.array(z.any()).optional(),

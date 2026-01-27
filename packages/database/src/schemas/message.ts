@@ -212,16 +212,16 @@ export const DB_MessageSchema = z.object({
   /**
    * 消息序列号
    */
-  sequence: z.number().int().min(0),
-  clientSequence: z.number().int().min(0),
+  sequence: z.number().int().min(0).optional(),
+  clientSequence: z.number().int().min(0).optional(),
   random: z.number().int(),
-  priority: z.string(),
+  priority: z.string().optional(),
   nick: z.string(),
   avatar: z.string(),
-  isPeerRead: z.boolean(),
-  nameCard: z.string(),
-  hasRiskContent: z.boolean(),
-  isPlaceMessage: z.number().int(),
+  isPeerRead: z.boolean().optional(),
+  nameCard: z.string().optional(),
+  hasRiskContent: z.boolean().optional(),
+  isPlaceMessage: z.number().int().optional(),
   /**
    * 是否被撤回的消息
    */
@@ -240,10 +240,10 @@ export const DB_MessageSchema = z.object({
    * out: 发出
    */
   flow: z.enum(["in", "out"]),
-  isSystemMessage: z.boolean(),
-  protocol: z.enum(["JSON", "XML", "Binary"]),
-  isResend: z.boolean(),
-  isRead: z.boolean(),
+  isSystemMessage: z.boolean().optional(),
+  protocol: z.enum(["JSON", "XML", "Binary"]).optional(),
+  isResend: z.boolean().optional(),
+  isRead: z.boolean().optional(),
   status: MessageStatusSchema,
   atUserList: z.array(z.string()),
   /**
@@ -258,22 +258,22 @@ export const DB_MessageSchema = z.object({
    *  是否被删除的消息
    */
   isDeleted: z.boolean(),
-  isModified: z.boolean(),
+  isModified: z.boolean().optional(),
   /**
    *  消息时间戳。单位：秒
    */
   clientTime: z.number(),
-  senderTinyID: z.string(),
-  needReadReceipt: z.boolean(),
+  senderTinyID: z.string().optional(),
+  needReadReceipt: z.boolean().optional(),
   version: z.union([z.number(), z.string()]),
-  isBroadcastMessage: z.boolean(),
-  isSupportExtension: z.boolean(),
+  isBroadcastMessage: z.boolean().optional(),
+  isSupportExtension: z.boolean().optional(),
   /**
    * 消息撤回者的 userID
    */
   revoker: z.string().optional(),
   revokerInfo: RevokerInfoSchema,
-  revokeReason: z.string(),
+  revokeReason: z.string().optional(),
   /**
    * @description 消息内容
    * 文本 图片 文件 自定义 群提示消息 群系统通知 合并

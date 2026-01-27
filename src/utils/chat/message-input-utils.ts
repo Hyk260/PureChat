@@ -2,8 +2,6 @@ import { nextTick } from "vue"
 import { throttle } from "lodash-es"
 import emitter from "@/utils/mitt-bus"
 
-export * from "./customData"
-
 /**
  * 滚动到指定消息ID对应的DOM位置，并添加动画效果
  */

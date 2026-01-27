@@ -4,7 +4,7 @@ import { REFERENCE_PROMPT } from "@/config/prompts"
 import WebSearchService from "@/service/WebSearchService"
 import { useChatStore } from "@/stores"
 import { useWebSearchStore } from "@/stores/modules/websearch"
-import { createWebSearchCustomData } from "@/utils/chat/customData"
+import { createWebSearchCustomData } from "@pure/utils"
 
 import type { WebSearchProviderResult, WebSearchResult } from "@/service/WebSearchProvider/types"
 import type { DB_Message } from "@pure/database/schemas"
