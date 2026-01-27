@@ -142,6 +142,24 @@ export const getMessageDisplayText = (item: Partial<DB_Message>): string => {
   return typeMap[item.type] || ""
 }
 
+export const generateAbstractList = (item: DB_Message[]) => {
+  return item.map((t) => {
+    if (t.type === "TIMTextElem") {
+      return `${t.nick}: ${t?.payload?.text || ""}`
+    } else if (t.type === "TIMImageElem") {
+      return `${t?.nick}: [图片]`
+    } else if (t.type === "TIMFileElem") {
+      return `${t.nick}: [文件]`
+    } else if (t.type === "TIMRelayElem") {
+      return `${t.nick}: [合并消息]`
+    } else if (t.type === "TIMCustomElem") {
+      return `${t.nick}: [自定义消息]`
+    } else {
+      return `${t.nick}: [待开发]`
+    }
+  })
+}
+
 export const getAbstractContent = (data: Partial<DB_Message>): string => {
   const reply = getMessageDisplayText(data)
   if (reply) {

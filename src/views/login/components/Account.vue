@@ -82,7 +82,7 @@
         :class="loading ? 'pointer-events-none' : ''"
         @click="handleSocialLogin(item)"
       >
-        <SvgIcon class="social-icon" :localIcon="item.icon" />
+        <Component :is="item.icon" class="social-icon" />
       </span>
     </div>
   </ElFormItem>

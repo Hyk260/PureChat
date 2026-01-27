@@ -46,6 +46,7 @@ import { Forward, Merge, Share2, Trash2, X } from "lucide-vue-next"
 import { ElMessageBox } from "element-plus"
 import { storeToRefs } from "pinia"
 
+import { generateAbstractList } from "@pure/utils"
 import MessageForwardingPopup from "@/components/Popups/MessageForwardingPopup.vue"
 import ShareModal from "@/components/ShareModal/index.vue"
 import { createForwardMessage, createMergerMessage, sendMessage } from "@/service/im-sdk-api"
@@ -126,24 +127,6 @@ const shutdown = () => {
   setMultipleValue()
 }
 
-const transformData = (data) => {
-  return data.map((item) => {
-    if (item.type === "TIMTextElem") {
-      return `${item.nick}: ${item.payload.text}`
-    } else if (item.type === "TIMImageElem") {
-      return `${item.nick}: [图片]`
-    } else if (item.type === "TIMFileElem") {
-      return `${item.nick}: [文件]`
-    } else if (item.type === "TIMRelayElem") {
-      return `${item.nick}: [合并消息]`
-    } else if (item.type === "TIMCustomElem") {
-      return `${item.nick}: [自定义消息]`
-    } else {
-      return `${item.nick}: [待开发]`
-    }
-  })
-}
-
 const mergeTitle = () => {
   const otherProfile = currentConversation.value.userProfile || {}
   const self = userStore.userProfile.nick || userStore.userProfile.userID
@@ -165,7 +148,7 @@ const mergeForward = async () => {
     to: toAccount,
     type,
     title: mergeTitle(),
-    abstractList: transformData(forwardData),
+    abstractList: generateAbstractList(forwardData),
     messageList: forwardData,
   })
   await sendAndHandleMessage(forwardMsg)

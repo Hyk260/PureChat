@@ -43,7 +43,8 @@
     >
       <ElButton @click="sendImageClick">
         <!-- <Image :size="16" /> -->
-        <SvgIcon localIcon="image" />
+        <!-- <SvgIcon localIcon="image" /> -->
+        <ImageIcon />
       </ElButton>
     </ElTooltip>
     <!-- 文件 -->
@@ -61,7 +62,8 @@
         <!-- <FolderOpen :size="16" /> -->
         <!-- <FileUp :size="16" /> -->
         <!-- <FolderClosed :size="16" /> -->
-        <SvgIcon localIcon="folder" />
+        <!-- <SvgIcon localIcon="folder" /> -->
+        <FolderIcon />
       </ElButton>
     </ElTooltip>
     <!-- 截图 -->
@@ -251,7 +253,7 @@ import {
   Smile,
   type LucideIcon,
 } from "lucide-vue-next"
-import { GlobeOffIcon } from "@pure/icons"
+import { GlobeOffIcon, ImageIcon, FolderIcon } from "@pure/icons"
 import { Popover } from "ant-design-vue"
 import { ElMessageBox } from "element-plus"
 import { audioExts, documentExts, imageExts, textExts, videoExts } from "@pure/const"

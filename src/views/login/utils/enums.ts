@@ -1,4 +1,5 @@
 import { computed } from "vue"
+import { GithubIcon } from "@pure/icons"
 import { $t } from "@/locales"
 
 export const operates = computed(() => {
@@ -25,7 +26,7 @@ export const thirdParty = [
   // },
   {
     title: "GitHub",
-    icon: "github",
+    icon: GithubIcon,
   },
   // {
   //   title: "Gitee",
