@@ -146,9 +146,6 @@ emitter.on("openModeList", () => {
       padding: 7px 12px;
       color: #999999;
       transition: all 0.2s;
-      .svg-icon {
-        font-size: 20px;
-      }
     }
   }
 }

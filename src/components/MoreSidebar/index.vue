@@ -268,9 +268,6 @@ $draggable-height: 384px;
   .fix-ed {
     opacity: 0.5;
     cursor: not-allowed !important;
-    .svg-icon {
-      cursor: not-allowed !important;
-    }
   }
   .list-group-item {
     padding: 0 20px;

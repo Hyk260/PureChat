@@ -1,16 +1,6 @@
 import { loading, warning } from "@/config/custom"
 
 /**
- * 检查用户性别
- * @param data 包含性别信息的对象
- * @param type 性别类型（"Male"或"Female"）
- * @returns 是否为指定性别
- */
-export const getGender = (data: { gender?: string }, type: string = ""): boolean => {
-  return data?.gender === `Gender_Type_${type}`
-}
-
-/**
  * 消息内容类型
  */
 type MessageContentType = "loading" | "warning"

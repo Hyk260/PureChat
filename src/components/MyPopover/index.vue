@@ -44,7 +44,6 @@ import { ElLink } from "element-plus"
 import { onClickOutside } from "@vueuse/core"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
-// import { getGender } from "@/utils/common";
 import { isRobot, getValueKey, prefix } from "@pure/utils"
 import { useState } from "@/hooks/useState"
 import { getUserProfile } from "@/service/im-sdk-api"

@@ -2,7 +2,7 @@ import { formatTitleLength } from "./genOG"
 import type { DB_Message, MessageType, DB_Session } from "@pure/database/schemas"
 import type { DraftData, DraftChild } from "@pure/types"
 
-export const isTime = (item: { isTimeDivider?: boolean; time?: string }) => {
+export const isTime = (item: { isTimeDivider?: boolean; time?: string | number }) => {
   return item?.isTimeDivider && item?.time !== undefined
 }
 

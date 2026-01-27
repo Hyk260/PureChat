@@ -62,7 +62,6 @@
         <!-- <FolderOpen :size="16" /> -->
         <!-- <FileUp :size="16" /> -->
         <!-- <FolderClosed :size="16" /> -->
-        <!-- <SvgIcon localIcon="folder" /> -->
         <FolderIcon />
       </ElButton>
     </ElTooltip>
@@ -219,7 +218,7 @@
       :offset="2"
       transition="slide-fade"
     >
-      <ElButton class="!ml-auto" @click="toggleFullScreenInput">
+      <ElButton v-show="!replyMsgData" class="!ml-auto" @click="toggleFullScreenInput">
         <Component :is="isFullscreenInputActive ? Minimize2 : Maximize2" :size="16" />
       </ElButton>
     </ElTooltip>
@@ -293,7 +292,7 @@ const robotStore = useRobotStore()
 const chatStore = useChatStore()
 const webSearchStore = useWebSearchStore()
 
-const { toAccount, isAssistant, currentType, isFullscreenInputActive, hasConversationList } = storeToRefs(chatStore)
+const { toAccount, replyMsgData, isAssistant, currentType, isFullscreenInputActive, hasConversationList } = storeToRefs(chatStore)
 const { modelProvider, enableWebSearch, isWebSearchModel } = storeToRefs(robotStore)
 
 interface NetworkOption {

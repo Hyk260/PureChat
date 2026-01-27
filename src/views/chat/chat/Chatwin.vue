@@ -621,14 +621,13 @@ defineExpose({ updateScrollbar, scrollToBottom })
 }
 .message-info-view-content {
   position: relative;
-  // height: calc(100% - 60px - 200px);
   height: calc(100% - 200px);
 }
 .style-msg-box {
   height: calc(100% - 60px) !important;
 }
 .style-reply {
-  height: calc(100% - 60px - 200px - 60px) !important;
+  height: calc(100% - 60px - 200px) !important;
 }
 .message-time-divider {
   position: relative;

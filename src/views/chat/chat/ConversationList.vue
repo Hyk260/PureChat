@@ -355,9 +355,6 @@ onBeforeUnmount(() => {
       transform: translateZ(0);
       backface-visibility: hidden;
     }
-    .svg-icon {
-      color: rgba(0, 0, 0, 0.45);
-    }
     .el-badge {
       position: absolute;
       right: 0px;

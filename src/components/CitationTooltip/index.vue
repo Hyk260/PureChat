@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue"
-import { getFaviconUrl } from "@/utils/favicon"
+import { getFaviconUrl } from "@pure/utils"
 
 interface Props {
   url?: string

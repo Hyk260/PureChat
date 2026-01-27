@@ -53,9 +53,4 @@
   width: 28px;
   font-size: 16px;
 }
-.svg-icon {
-  stroke: none;
-  fill: rgb(153, 153, 153);
-  width: 32px;
-}
 </style>

@@ -129,7 +129,6 @@ onBeforeUnmount(() => {
 })
 </script>
 <style lang="scss" scoped>
-.svg-icon,
 .el-icon {
   width: 24px;
 }
