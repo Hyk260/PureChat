@@ -5,4 +5,4 @@ import "@/styles/index.css"
 // https://animate.style/
 // import "animate.css"
 // SvgIcon
-import "virtual:svg-icons-register"
+// import "virtual:svg-icons-register"

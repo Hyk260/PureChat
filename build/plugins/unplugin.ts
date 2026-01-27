@@ -1,9 +1,9 @@
-import process from "node:process"
-import path from "node:path"
+// import process from "node:process"
+// import path from "node:path"
 import AutoImport from "unplugin-auto-import/vite"
 import Components from "unplugin-vue-components/vite"
 import type { PluginOption } from "vite"
-import { createSvgIconsPlugin } from "vite-plugin-svg-icons"
+// import { createSvgIconsPlugin } from "vite-plugin-svg-icons"
 import { ElementPlusResolver, AntDesignVueResolver } from "unplugin-vue-components/resolvers"
 
 export function setupUnplugin(viteEnv: Env.ImportMeta) {
@@ -11,12 +11,12 @@ export function setupUnplugin(viteEnv: Env.ImportMeta) {
 
   const plugins: PluginOption = [
     // SvgIcon
-    createSvgIconsPlugin({
-      iconDirs: [path.join(process.cwd(), "src/assets/svg-icon")],
-      symbolId: `${VITE_ICON_LOCAL_PREFIX}-[dir]-[name]`,
-      inject: "body-last",
-      customDomId: "__SVG_ICON_LOCAL__",
-    }),
+    // createSvgIconsPlugin({
+    //   iconDirs: [path.join(process.cwd(), "src/assets/svg-icon")],
+    //   symbolId: `${VITE_ICON_LOCAL_PREFIX}-[dir]-[name]`,
+    //   inject: "body-last",
+    //   customDomId: "__SVG_ICON_LOCAL__",
+    // }),
   ]
 
   if (VITE_AUTO_COMPONENT === "Y") {
