@@ -223,7 +223,7 @@ onUnmounted(() => {
         :disabled="activeIndex === 0"
         @click="handleStep('prev')"
       >
-        <ChevronUp :size="16" :color="activeIndex === 0 ? '#999999' : ''" />
+        <ChevronUp :size="16" />
       </button>
       <div class="message-nav__dots scroll-hidden">
         <template v-for="(item, index) in messagesWithCache" :key="item.message.ID">
@@ -258,7 +258,7 @@ onUnmounted(() => {
         :disabled="activeIndex === messagesList.length - 1"
         @click="handleStep('next')"
       >
-        <ChevronDown :size="16" :color="activeIndex === messagesList.length - 1 ? '#999999' : ''" />
+        <ChevronDown :size="16" />
       </button>
     </div>
   </div>

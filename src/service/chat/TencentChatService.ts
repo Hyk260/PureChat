@@ -54,7 +54,6 @@ export class TencentChatService {
       const config = this.loadConfiguration()
       this.validateConfiguration(config)
 
-      // this.chatProxy = this.createChatInstance(config)
       this.chatProxy = this.createChatProxy(config)
       timer.end("腾讯云 IM SDK 初始化")
       return this.chatProxy
@@ -207,75 +206,6 @@ export class TencentChatService {
     })
 
     return proxy
-  }
-
-  /**
-   * 创建聊天实例（返回 Proxy）
-   */
-  private createChatInstance(config: ChatConfig): ChatSDK {
-    let realChat: ChatSDK | null = null
-    const callQueue: Array<{ method: string; args: any[] }> = []
-
-    // 异步加载 SDK 模块
-    ;(async () => {
-      try {
-        const [
-          { default: TencentCloudChat },
-          { default: GroupModule },
-          { default: SignalingModule },
-          { default: TIMUploadPlugin },
-        ] = await Promise.all([
-          import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js") as Promise<{
-            default: TencentCloudChatModule
-          }>,
-          import(/* @vite-ignore */ "@tencentcloud/chat/modules/group-module.js"),
-          import(/* @vite-ignore */ "@tencentcloud/chat/modules/signaling-module.js"),
-          import(/* @vite-ignore */ "tim-upload-plugin"),
-        ])
-
-        realChat = TencentCloudChat.create({
-          SDKAppID: config.appId,
-          modules: {
-            "group-module": GroupModule,
-            "signaling-module": SignalingModule,
-          },
-        })
-
-        // 配置日志
-        this.configureLogging(config.logLevel, realChat)
-
-        // 注册插件
-        realChat.registerPlugin({ "tim-upload-plugin": TIMUploadPlugin })
-        console.log("🔌 文件上传插件注册成功")
-
-        // 回放之前缓存的调用
-        for (const { method, args } of callQueue) {
-          ;(realChat as any)[method](...args)
-        }
-        callQueue.length = 0
-
-        console.log("✅ Tencent IM SDK 加载完成")
-      } catch (err) {
-        console.error("❌ 动态加载 IM SDK 失败", err)
-      }
-    })()
-
-    const proxy = new Proxy(
-      {},
-      {
-        get(_, prop: string) {
-          return (...args: any[]) => {
-            if (realChat) {
-              return (realChat as any)[prop](...args)
-            }
-            console.warn(`⚠️ SDK 尚未加载完成，方法 ${String(prop)} 已加入队列`)
-            callQueue.push({ method: String(prop), args })
-          }
-        },
-      }
-    )
-
-    return proxy as ChatSDK
   }
 
   /**

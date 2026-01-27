@@ -1,4 +1,3 @@
-export * from "./decodeText"
 export * from "./editor"
 export * from "./groupTool"
 export * from "./message"

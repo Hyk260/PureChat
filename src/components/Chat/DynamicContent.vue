@@ -20,10 +20,9 @@
 
 <script setup lang="ts">
 import LinkifyText from "@/components/Chat/LinkifyText.vue"
-import { decodeText } from "@/utils/chat"
+import { decodeText, type RenderDom } from "@pure/utils"
+import { emojiMap } from "@/utils/emoji/emoji-map"
 import { getEmojiAssetUrlSync } from "@/utils/emoji"
-
-import type { RenderDom } from "@/utils/chat/decodeText"
 
 defineOptions({
   name: "DynamicContent",
@@ -48,7 +47,7 @@ const isEmojiContent = (item: RenderDom): boolean => item.name === "img"
 const parsedContent = computed<RenderDom[]>(() => {
   try {
     if (__LOCAL_MODE__) return [{ name: "text", text: props.text }]
-    return decodeText(props.text)
+    return decodeText({ text: props.text, emojiMap })
   } catch (error) {
     console.error("Failed to parse content:", error)
     return [{ name: "text", text: props.text }]
