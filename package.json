@@ -1,6 +1,6 @@
 {
   "name": "pure-chat",
-  "version": "0.9.8",
+  "version": "0.9.9",
   "description": "PureChat - A chat application built with Vue and Vite",
   "type": "module",
   "author": {
@@ -136,7 +136,6 @@
     "vite-plugin-cdn-import": "^1.0.1",
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-remove-console": "^2.2.0",
-    "vite-plugin-svg-icons": "2.0.1",
     "vite-plugin-vue-devtools": "7.7.2",
     "vitest": "^3.2.4",
     "vue-tsc": "^2.0.0"
