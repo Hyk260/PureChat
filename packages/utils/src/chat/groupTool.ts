@@ -9,10 +9,13 @@ import type { GroupMemberType as GroupMember } from "@pure/database/schemas"
  *
  */
 export function sortMembersRole(list: GroupMember[]) {
-  const roles = { Owner: 1, Admin: 2, Member: 3 }
+  const roles = { Owner: 1, Admin: 2, Agent: 3, Member: 4 }
 
   return list.sort((a, b) => {
-    return roles[a.role || "Member"] - roles[b.role || "Member"]
+    const roleA = a.userID.includes("@RBT#") ? "Agent" : a.role
+    const roleB = b.userID.includes("@RBT#") ? "Agent" : b.role
+
+    return roles[roleA || "Member"] - roles[roleB || "Member"]
   })
 }
 /**

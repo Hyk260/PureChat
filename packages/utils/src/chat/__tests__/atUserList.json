@@ -1,0 +1,23 @@
+[
+  {
+    "userID": "huangyk",
+    "avatar": "https://ljx-1307934606.cos.ap-beijing.myqcloud.com/huangyk.jpg",
+    "nick": "PureChat",
+    "role": "Owner",
+    "joinTime": 1700804539
+  },
+  {
+    "userID": "zhangal",
+    "avatar": "https://ljx-1307934606.cos.ap-beijing.myqcloud.com/zhangal.jpg",
+    "nick": "张爱玲",
+    "role": "Member",
+    "joinTime": 1700804655
+  },
+  {
+    "userID": "C2C@RBT#1721379674Oebf9ZOa",
+    "avatar": "https://ljx-1307934606.cos.ap-beijing.myqcloud.com/liuhf.jpg",
+    "nick": "@角色IP-贾维斯",
+    "role": "Member",
+    "joinTime": 1700804655
+  }
+]

@@ -48,7 +48,7 @@ export const linkifyUrls = (text: string, options?: LinkifyOptions): string => {
  * @mention 匹配的正则表达式
  * 匹配 @ 后面跟非空白字符，直到遇到空白字符、标点符号或文本结束
  */
-export const MENTION_REGEX = /@([a-zA-Z0-9_\u4e00-\u9fa5]+)/g
+export const MENTION_REGEX = /@([a-zA-Z0-9_\u4e00-\u9fa5-]+)/g
 
 export interface LinkSegment {
   content: string

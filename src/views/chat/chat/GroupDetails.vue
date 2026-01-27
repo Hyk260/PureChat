@@ -80,10 +80,10 @@
               </ElIcon>
               <UserAvatar :url="item.avatar" :nickName="item.nick || item.userID" />
               <!-- Admin Owner -->
-              <div v-if="item.role !== 'Member'" class="wrap-group" :class="`style-${item.role}`">
+              <div v-if="item.role !== 'Member'" class="wrap-group" :class="`style-${item.role}`" @click.stop>
                 {{ item.role === "Owner" ? "群主" : "管理员" }}
               </div>
-              <div v-else-if="item.userID.includes('@RBT#')" class="wrap-group ai-center">机器人</div>
+              <div v-else-if="isRobot(item.userID)" class="wrap-group ai-center" @click.stop>Agent</div>
               <span class="nick">{{ item.nick || item.userID }}</span>
             </div>
           </div>
@@ -140,7 +140,7 @@ import {
   updateGroupProfile,
 } from "@/service/im-sdk-api"
 import { useChatStore, useGroupStore, useUserStore } from "@/stores"
-import { isByteLengthExceedingLimit, formatGroupID, isFullStaffGroup } from "@pure/utils"
+import { isRobot, isByteLengthExceedingLimit, formatGroupID, isFullStaffGroup } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import type {
