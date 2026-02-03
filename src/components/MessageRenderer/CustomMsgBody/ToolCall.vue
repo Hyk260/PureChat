@@ -12,10 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
-
 import { prettyObject } from "@pure/utils"
-import { transformCustomElement } from "@/utils/chat"
 
 defineOptions({
   name: "ToolCall",
@@ -31,12 +28,7 @@ const props = defineProps<Props>()
 const parsedCache = ref(new Map())
 
 function onClick(payload) {
-  try {
-    const result = transformCustomElement({ payload })
-    console.log(result)
-  } catch (error) {
-    console.error("转换自定义元素失败:", error)
-  }
+  console.log(payload)
 }
 
 function getToolResult(payload) {

@@ -6,12 +6,11 @@ import { Provider, LLMConfig, LLMParams, ModelProvider } from "model-bank"
 import { isClaudeReasoningModel, getLowerBaseModelName, isNotSupportTemperatureAndTopP } from "@pure/utils"
 import { useAccessStore } from "@/ai/utils"
 import { useRobotStore } from "@/stores"
-import { addAbortController, removeAbortController, hostPreview } from "@pure/utils"
-import { transformData } from "@/utils/chat"
+import { addAbortController, removeAbortController, hostPreview, transformContent } from "@pure/utils"
 import { initializeWithClientStore } from "@/service/chatService/clientModelRuntime"
 import { ChatErrorType } from "@pure/types"
 import { ChatCompletionErrorPayload, createErrorResponse } from "@pure/model-runtime"
-import type { FewShots, OpenAIListModelResponse, ChatOptions, ChatPayload, ChatStreamPayload } from "@pure/types"
+import type { FewShots, ChatOptions, ChatPayload, ChatStreamPayload } from "@pure/types"
 
 export abstract class OpenAIBaseClient {
   provider: Provider = ModelProvider.OpenAI
@@ -156,7 +155,7 @@ export abstract class OpenAIBaseClient {
       return
     }
 
-    const messages = await transformData(options.messages)
+    const messages = await transformContent(options.messages)
     const modelConfig = {
       ...this.accessStore(),
       model: options.config.model,
