@@ -66,6 +66,22 @@ function transformCustomElement(item: DB_Message) {
   ]
 }
 
+export const transformFileElement = async (data) => {
+  const { payload: file } = data
+  try {
+    return {
+      role: data.flow === "in" ? "assistant" : "user",
+      content: "file: ",
+    }
+  } catch (error) {
+    console.error("transformFileElement error", error)
+    return {
+      role: "user",
+      content: "file: Unknown",
+    }
+  }
+}
+
 // 处理图像类型的消息
 async function transformImageElement(data: DB_Message) {
   const imagePayload = data.payload as ImagePayloadType
@@ -88,7 +104,7 @@ const transformers = {
   TIMTextElem: transformTextElement,
   TIMCustomElem: transformCustomElement,
   TIMImageElem: transformImageElement,
-  // TIMFileElem: transformFileElement,
+  TIMFileElem: transformFileElement,
 } as const
 
 type SupportedType = keyof typeof transformers

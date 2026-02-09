@@ -38,7 +38,6 @@
                   <ElIcon v-if="item?.type == 'el-icon'" class="icon-size">
                     <component :is="item.icon" />
                   </ElIcon>
-                  <!-- <SvgIcon v-else :localIcon="item.icon" class="svg-icon" /> -->
                   <span class="title">{{ item.title }}</span>
                   <GripVertical :size="18" class="drag-icon" />
                 </div>
@@ -74,7 +73,6 @@
                   <ElIcon v-if="item?.type == 'el-icon'">
                     <component :is="item.icon" />
                   </ElIcon>
-                  <!-- <SvgIcon v-else :localIcon="item.icon" class="svg-icon" /> -->
                   <span class="title">{{ item.title }}</span>
                   <GripVertical :size="18" class="drag-icon" />
                 </div>
@@ -234,9 +232,6 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 $draggable-height: 384px;
 
-.svg-icon {
-  margin-right: 5px;
-}
 .draggable {
   .draggable-container {
     width: 195px;

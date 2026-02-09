@@ -2,12 +2,13 @@
   <ElConfigProvider :locale="locale">
     <AppProvider>
       <RouterView />
+      <!-- <Icon icon="cil:locomotive" :inline="true" /> -->
     </AppProvider>
   </ElConfigProvider>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue"
+// import { Icon } from "@iconify/vue"
 import { useCopyCode } from "@/hooks/useCopyCode"
 import { ElConfigProvider } from "element-plus"
 

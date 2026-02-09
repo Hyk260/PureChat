@@ -2,6 +2,7 @@
   <svg
     t="1663123090236"
     viewBox="0 0 1024 1024"
+    fill="currentColor"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     p-id="6902"
