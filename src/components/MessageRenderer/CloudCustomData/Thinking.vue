@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { ElCollapse, ElCollapseItem } from "element-plus"
 import { Check, Copy, Atom, ChevronDown, ChevronRight } from "lucide-vue-next"
-// import Markdown from "@/components/Markdown/index.vue"
+// import { Markdown } from "@pure/ui"
 import { MessageStatus, customDataThinking } from "@pure/database/schemas"
 
 defineOptions({

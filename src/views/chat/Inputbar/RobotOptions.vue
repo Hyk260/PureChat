@@ -243,7 +243,7 @@ import { isRange } from "./utils"
 // import OllamaAI from "@/ai/platforms/ollama/ollama";
 import AiProvider from "@/ai"
 import emitter from "@/utils/mitt-bus"
-import Markdown from "@/components/Markdown/index.vue"
+import { Markdown } from "@pure/ui"
 import DragPrompt from "./DragPrompt.vue"
 
 import type { Model, ModelConfigItem, ModelDataType } from "@/stores/modules/robot/types"

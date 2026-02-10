@@ -25,7 +25,7 @@ import { DB_Message } from "@pure/database/schemas"
 import { useAppStore, useChatStore } from "@/stores"
 
 // import AssistantMessageExtra from "@/components/Chat/AssistantMessageExtra.vue"
-import Markdown from "@/components/Markdown/index.vue"
+import { Markdown } from "@pure/ui"
 import ReplyElem from "../CloudCustomData/ReplyElem.vue"
 import Thinking from "../CloudCustomData/Thinking.vue"
 import WebSearch from "../CloudCustomData/WebSearch.vue"

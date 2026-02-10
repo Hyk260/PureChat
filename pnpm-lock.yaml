@@ -32,6 +32,9 @@ importers:
       '@pure/prompts':
         specifier: workspace:*
         version: link:packages/prompts
+      '@pure/ui':
+        specifier: workspace:*
+        version: link:packages/ui
       '@pure/utils':
         specifier: workspace:*
         version: link:packages/utils
@@ -418,6 +421,25 @@ importers:
       zod:
         specifier: ^3.25.76
         version: 3.25.76
+
+  packages/ui:
+    dependencies:
+      '@pure/const':
+        specifier: workspace:*
+        version: link:../const
+      '@pure/database':
+        specifier: workspace:*
+        version: link:../database
+      '@pure/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      happy-dom:
+        specifier: ^20.0.11
+        version: 20.3.9
+      vitest-canvas-mock:
+        specifier: ^0.3.3
+        version: 0.3.3(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.7)(@vitest/browser@3.2.4)(@vitest/ui@4.0.18(vitest@3.2.4))(happy-dom@20.3.9)(jiti@2.6.1)(jsdom@26.1.0)(sass@1.97.3)(tsx@4.21.0)(yaml@2.8.2))
 
   packages/utils:
     dependencies:

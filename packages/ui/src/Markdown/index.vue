@@ -1,17 +1,17 @@
 <template>
   <div v-if="content" class="markdown-body" @click="handleMarkdownClick">
-    <MarkdownNodeRender v-for="(item, index) in renderedContent" :key="index" :node="item" />
+    <NodeRender v-for="(item, index) in renderedContent" :key="index" :node="item" />
   </div>
 </template>
 
 <script setup lang="ts">
 // import { throttle } from "lodash-es"
-import { convertToMarkdownFootnotes } from "./utils/utils"
-import MarkdownRenderer from "./markdown-renderer"
-import MarkdownNodeRender from "./MarkdownNodeRenderer"
+import { convertToMarkdownFootnotes } from "../utils"
+import MarkdownRenderer from "../utils/markdown-renderer"
+import NodeRender from "../components/NodeRenderer"
 
 import type { customDataWebSearch } from "@pure/database/schemas"
-import "./style/markdown.scss"
+import "../style/markdown.scss"
 
 defineOptions({ name: "Markdown" })
 

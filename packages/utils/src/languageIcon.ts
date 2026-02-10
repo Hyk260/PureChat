@@ -236,6 +236,7 @@ export const languageMap: Record<string, string> = {
   sql: "SQL",
   yaml: "YAML",
   md: "Markdown",
+  "": "Plain Text",
   plain: "Plain Text",
 }
 

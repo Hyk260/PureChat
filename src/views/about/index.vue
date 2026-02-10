@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import Markdown from "@/components/Markdown/index.vue"
+import { Markdown } from "@pure/ui"
 import { ElCard, ElDescriptions, ElDescriptionsItem } from "element-plus"
 
 interface DependencySchemaItem {

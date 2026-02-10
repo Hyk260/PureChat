@@ -3,23 +3,22 @@ import attrsPlugin from "markdown-it-attrs"
 import markdownItContainer from "markdown-it-container"
 import markdownItFootnote from "markdown-it-footnote"
 
-import DOMPurify from "dompurify"
 import { parseDocument } from "htmlparser2"
 
-import { prettyObject } from "@pure/utils"
+import { prettyObject, sanitizeHTMLContent } from "@pure/utils"
 // import markdownItMark from "markdown-it-mark"
 import { configureFootnoteRules } from "./markdown"
-import { highlightLinePlugin } from "./plugins/highlightLines"
-import { imagePlugin, type Options as ImageOptions } from "./plugins/image"
-import { lineNumberPlugin } from "./plugins/lineNumbers"
-import { linkPlugin } from "./plugins/link"
+import { highlightLinePlugin } from "../plugins/highlightLines"
+import { imagePlugin, type Options as ImageOptions } from "../plugins/image"
+import { lineNumberPlugin } from "../plugins/lineNumbers"
+import { linkPlugin } from "../plugins/link"
 // import { applyMath } from "./plugins/math"
-import { preWrapperPlugin } from "./plugins/preWrapper"
-import { highlight, highlightCode } from "./utils/highlight"
-import { convertToMarkdownFootnotes } from "./utils/utils"
+import { preWrapperPlugin } from "../plugins/preWrapper"
+import { highlight, highlightCode } from "./highlight"
+import { convertToMarkdownFootnotes } from "./common"
 import { parseMarkdownToStructure } from "./markdown-parser"
 
-import type { MarkdownToken } from "./types"
+import type { MarkdownToken } from "../types"
 import type { KnowledgeReference } from "@/types"
 
 // 高亮显示的可选项：是否显示语言标签和复制按钮
@@ -142,7 +141,7 @@ export class MarkdownRenderer {
     const content = this.render(contentToRender, webSearchResult)
     // Markdown模式添加安全过滤和样式类 并处理成dom ast
     // return parseDocument(content).children
-    const sanitizedContent = enableDOMPurify ? DOMPurify.sanitize(content, { ADD_ATTR: ["target"] }) : content
+    const sanitizedContent = enableDOMPurify ? sanitizeHTMLContent(content) : content
     return parseDocument(sanitizedContent).children
   }
 

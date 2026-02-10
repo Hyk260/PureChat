@@ -127,7 +127,7 @@ import {
   CircleCloseFilled,
 } from "@element-plus/icons-vue"
 
-import Markdown from "@/components/Markdown/index.vue"
+import { Markdown } from "@pure/ui"
 import AddMemberPopup from "@/components/Popups/AddMemberPopup.vue"
 import GroupQrCodePopup from "@/components/Popups/GroupQrCodePopup.vue"
 import { useState } from "@/hooks/useState"

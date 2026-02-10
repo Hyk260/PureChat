@@ -1,4 +1,4 @@
-import type { MarkdownToken, ParsedNode } from "../types"
+import type { MarkdownToken, ParsedNode } from "../../types"
 import type MarkdownIt from "markdown-it"
 
 /**

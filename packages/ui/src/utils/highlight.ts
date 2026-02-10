@@ -65,3 +65,11 @@ export const highlightCode = (str: string, lang: string): string => {
     return `<pre class="hljs"><code>${escapeHtml(str)}</code></pre>`
   }
 }
+
+export const highlightCodeNode = (str: string, lang: string): string => {
+  if (str && hljs.getLanguage(lang)) {
+    return hljs.highlight(str, { language: lang, ignoreIllegals: true }).value
+  } else {
+    return escapeHtml(str)
+  }
+}

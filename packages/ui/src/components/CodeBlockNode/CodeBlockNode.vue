@@ -79,17 +79,30 @@
           <div class="icon-copy"></div>
         </button>
       </template>
+
       <template v-if="highlightedCode">
-        <div ref="codeBlockRef" class="code-block" v-html="highlightedCode"></div>
-      </template>
-      <div v-else ref="codeBlockRef" class="code-block code-skeleton-wrapper">
-        <!-- 骨架屏占位，在代码未高亮时显示 -->
-        <div class="code-skeleton">
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line skeleton-line-short"></div>
-          <div class="skeleton-line"></div>
+        <!-- <div ref="codeBlockRef" class="code-block">
+          <PreCodeNode :code="highlightCodeNode(code, language)" :language="language" />
+        </div> -->
+        <!-- <ElScrollbar class="max-h-350">
+          <div ref="codeBlockRef" class="code-block" v-html="highlightedCode"></div>
+        </ElScrollbar> -->
+        <div ref="codeBlockRef" class="code-block">
+          <ElScrollbar ref="scrollbarRef">
+            <div v-html="highlightedCode"></div>
+          </ElScrollbar>
         </div>
-      </div>
+      </template>
+      <template v-else>
+        <!-- 骨架屏占位，在代码未高亮时显示 -->
+        <div ref="codeBlockRef" class="code-block code-skeleton-wrapper">
+          <div class="code-skeleton">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line skeleton-line-short"></div>
+            <div class="skeleton-line"></div>
+          </div>
+        </div>
+      </template>
     </div>
     <!-- <HighlighterComp
         ref="highlighterRef"
@@ -124,13 +137,14 @@ import { usePreferredColorScheme, useIntersectionObserver } from "@vueuse/core"
 //   isHighlighterInitialized,
 // } from "../../utils/highlightShiki"
 // import HtmlArtifactsPopup from "@/components/CodeBlockView/HtmlArtifactsPopup.vue"
-import { useCodeBlock } from "@/composables/useCodeBlock"
-import { useHeightCheck } from "@/composables/useHeightCheck"
-import { useThemeStore } from "@/stores/modules/theme"
+import { useCodeBlock } from "../../composables/useCodeBlock"
+import { useHeightCheck } from "../../composables/useHeightCheck"
+// import { useThemeStore } from "@/stores/modules/theme"
 import { getLanguageIcon, languageMap, languageMapValues } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
+import PreCodeNode from "../PreCodeNode"
 
-import { highlightCode } from "../../utils/highlight"
+import { highlightCode, highlightCodeNode } from "../../utils/highlight"
 
 import type { Highlighter } from "shiki"
 // import HighlighterComp from "@/components/Highlighter/index.vue"
@@ -165,8 +179,8 @@ const highlightedCode = ref<string>("")
 const languageList = ["js", "ts", ...languageMapValues]
 const excludeList = new Set(["json", "bash"])
 
-const preferredColor = usePreferredColorScheme()
-const themeStore = useThemeStore()
+// const preferredColor = usePreferredColorScheme()
+// const themeStore = useThemeStore()
 
 // const isDarkMode = computed(() => {
 //   if (themeStore.themeScheme === "auto") {
@@ -305,6 +319,11 @@ watch(
     border-radius: 0 0 4px 4px !important;
   }
 
+  .code-container code {
+    max-height: none;
+    transition: max-height 300ms ease-out;
+  }
+
   .shiki-scroller code {
     overflow-y: auto;
     max-height: 350px;
@@ -371,13 +390,13 @@ watch(
     position: relative;
     background: transparent !important;
     // min-height: 40px;
-    transition:
-      height 180ms ease,
-      max-height 180ms ease;
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 180ms ease-out;
   }
 
   .collapsed {
-    height: 0px;
+    max-height: 0px;
     // display: none;
   }
 }
@@ -395,6 +414,11 @@ watch(
     color 0.4s,
     opacity 0.4s;
 }
+
+// .code-block code {
+//   overflow-x: clip !important;
+//   overflow-y: clip !important;
+// }
 
 .code-block-wrapper :hover .copy-code-button {
   pointer-events: all;

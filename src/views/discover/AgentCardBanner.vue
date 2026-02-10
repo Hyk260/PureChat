@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import Markdown from "@/components/Markdown/index.vue"
+import { Markdown } from "@pure/ui"
 import { ModelID } from "model-bank"
 
 import { getModelId } from "@pure/utils"

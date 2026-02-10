@@ -113,7 +113,7 @@
 import { ElRadioGroup, ElRadioButton } from "element-plus"
 import { storeToRefs } from "pinia"
 
-import Markdown from "@/components/Markdown/index.vue"
+import { Markdown } from "@pure/ui"
 import QrCode from "@/components/QrCode/index.vue"
 import ChatHeader from "@/components/Chat/ChatHeader.vue"
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
