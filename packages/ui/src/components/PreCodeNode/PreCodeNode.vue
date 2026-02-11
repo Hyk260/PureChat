@@ -13,10 +13,9 @@ const languageClass = computed(() => {
 </script>
 
 <template>
-  <ElScrollbar>
-    <pre :class="languageClass" tabindex="0">
-      <!-- <code>{{ code }}</code> -->
-      <code translate="no" v-text="code"></code>
-    </pre>
-  </ElScrollbar>
+  <pre :class="languageClass" tabindex="0">
+    <!-- <code>{{ code }}</code> -->
+    <code v-html="code"></code>
+    <!-- <code translate="no" v-text="code"></code> -->
+  </pre>
 </template>

@@ -88,9 +88,7 @@
           <div ref="codeBlockRef" class="code-block" v-html="highlightedCode"></div>
         </ElScrollbar> -->
         <div ref="codeBlockRef" class="code-block">
-          <ElScrollbar ref="scrollbarRef">
-            <div v-html="highlightedCode"></div>
-          </ElScrollbar>
+          <div v-html="highlightedCode"></div>
         </div>
       </template>
       <template v-else>
@@ -257,7 +255,7 @@ useIntersectionObserver(
 
 onMounted(async () => {
   await nextTick()
-  !shouldShowChevrons.value && heightCheck(codeBlockRef.value)
+  !shouldShowChevrons.value && heightCheck(codeBlockRef.value, 250)
   // if (!isHighlighterInitialized()) {
   //   highlighter.value = await registerHighlight()
   // }
@@ -326,7 +324,25 @@ watch(
 
   .shiki-scroller code {
     overflow-y: auto;
-    max-height: 350px;
+    max-height: 250px;
+  }
+}
+
+.code-block {
+  // max-height: 250px;
+  // overflow-y: auto;
+
+  // pre {
+  //   overflow-x: clip !important;
+  //   overflow-y: clip !important;
+  // }
+  code {
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: auto;
+
+    // overflow-x: clip !important;
+    // overflow-y: clip !important;
   }
 }
 </style>
@@ -391,7 +407,6 @@ watch(
     background: transparent !important;
     // min-height: 40px;
     max-height: 1000px;
-    overflow: hidden;
     transition: max-height 180ms ease-out;
   }
 
@@ -414,11 +429,6 @@ watch(
     color 0.4s,
     opacity 0.4s;
 }
-
-// .code-block code {
-//   overflow-x: clip !important;
-//   overflow-y: clip !important;
-// }
 
 .code-block-wrapper :hover .copy-code-button {
   pointer-events: all;

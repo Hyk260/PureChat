@@ -5,7 +5,6 @@ export default [
     component: () => import("@/layout/index.vue"),
     meta: {
       title: "home",
-      icon: "Eleme",
     },
     children: [
       {
@@ -31,6 +30,14 @@ export default [
         component: () => import("@/views/discover/index.vue"),
         meta: {
           title: "discover",
+        },
+      },
+      {
+        path: "/settings",
+        name: "settings",
+        component: () => import("@/views/settings/index.vue"),
+        meta: {
+          title: "settings",
         },
       },
       {

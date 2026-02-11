@@ -64,7 +64,7 @@
     </ElButton>
   </ElForm>
   <!-- other hidden -->
-  <div v-if="isDev" class="mt-20 flex justify-evenly">
+  <div v-if="IS_DEV" class="mt-20 flex justify-evenly">
     <ElButton v-for="item in operates" :key="item.title" @click="setCurrentPage(item)">
       {{ item.title }}
     </ElButton>
@@ -93,7 +93,7 @@ import { ElAutocomplete } from "element-plus"
 import { Lock, User } from "lucide-vue-next"
 import { Key } from "@element-plus/icons-vue"
 
-import ImageVerify from "@/components/ImageVerify/index.vue"
+import { ImageVerify } from "@pure/ui"
 import { onKeyStroke } from "@vueuse/core"
 import { useOAuth } from "@/hooks/useOAuth"
 import { useState } from "@/hooks/useState"

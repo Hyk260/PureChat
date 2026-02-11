@@ -83,9 +83,6 @@ importers:
       dexie:
         specifier: ^4.0.10
         version: 4.2.1
-      dompurify:
-        specifier: ^3.2.7
-        version: 3.3.1
       element-plus:
         specifier: 2.11.8
         version: 2.11.8(vue@3.5.22(typescript@5.9.3))
@@ -95,9 +92,6 @@ importers:
       highlight.js:
         specifier: 11.9.0
         version: 11.9.0
-      htmlparser2:
-        specifier: ^10.0.0
-        version: 10.1.0
       idb-keyval:
         specifier: ^6.2.2
         version: 6.2.2
@@ -116,24 +110,6 @@ importers:
       lucide-vue-next:
         specifier: ^0.562.0
         version: 0.562.0(vue@3.5.22(typescript@5.9.3))
-      markdown-it:
-        specifier: ^14.1.0
-        version: 14.1.0
-      markdown-it-attrs:
-        specifier: ^4.3.1
-        version: 4.3.1(markdown-it@14.1.0)
-      markdown-it-container:
-        specifier: ^4.0.0
-        version: 4.0.0
-      markdown-it-footnote:
-        specifier: ^4.0.0
-        version: 4.0.0
-      markdown-it-mark:
-        specifier: ^4.0.0
-        version: 4.0.0
-      markdown-it-mathjax3:
-        specifier: ^5.2.0
-        version: 5.2.0
       mitt:
         specifier: ^3.0.0
         version: 3.0.1
@@ -225,9 +201,6 @@ importers:
       '@pure/types':
         specifier: workspace:*
         version: link:packages/types
-      '@types/markdown-it':
-        specifier: ^14.1.2
-        version: 14.1.2
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.7
@@ -433,7 +406,31 @@ importers:
       '@pure/utils':
         specifier: workspace:*
         version: link:../utils
+      htmlparser2:
+        specifier: ^10.0.0
+        version: 10.1.0
+      markdown-it:
+        specifier: ^14.1.0
+        version: 14.1.0
+      markdown-it-attrs:
+        specifier: ^4.3.1
+        version: 4.3.1(markdown-it@14.1.0)
+      markdown-it-container:
+        specifier: ^4.0.0
+        version: 4.0.0
+      markdown-it-footnote:
+        specifier: ^4.0.0
+        version: 4.0.0
+      markdown-it-mark:
+        specifier: ^4.0.0
+        version: 4.0.0
+      markdown-it-mathjax3:
+        specifier: ^5.2.0
+        version: 5.2.0
     devDependencies:
+      '@types/markdown-it':
+        specifier: ^14.1.2
+        version: 14.1.2
       happy-dom:
         specifier: ^20.0.11
         version: 20.3.9

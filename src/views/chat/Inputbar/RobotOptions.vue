@@ -216,7 +216,7 @@
       </div>
     </div>
     <template #footer>
-      <ElButton v-if="isDev" @click="clearRobotCache"> 清除缓存 </ElButton>
+      <ElButton v-if="IS_DEV" @click="clearRobotCache"> 清除缓存 </ElButton>
       <ElButton @click="handleReset"> 重置 </ElButton>
       <ElButton @click="handleCancel">{{ $t("common.cancel") }}</ElButton>
       <ElButton type="primary" @click="handleConfirm">
@@ -264,8 +264,6 @@ type Marks = Record<number, Mark | string>
 const marks = reactive<Marks>({
   1: "1",
 })
-
-const { DEV: isDev } = import.meta.env
 
 const modelData = ref<ModelDataType>({})
 const inputTokenRefs = useTemplateRef("inputTokenRefs")

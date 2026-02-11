@@ -31,6 +31,11 @@ export default defineConfig<Theme>({
     "flex-ss": "flex justify-start items-start",
     truncate: "overflow-hidden text-ellipsis whitespace-nowrap",
   },
+  theme: {
+    colors: {
+      // ...
+    },
+  },
   rules: [
     [
       /^multi-truncate-(\d+)$/,
@@ -42,6 +47,12 @@ export default defineConfig<Theme>({
         overflow: "hidden",
         "text-overflow": "ellipsis",
       }),
+    ],
+    [
+      "animate-blink",
+      {
+        animation: "blink 1s step-end infinite",
+      },
     ],
   ],
 })
