@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 // import { Icon } from "@iconify/vue"
-import { useCopyCode } from "@/hooks/useCopyCode"
+import { useCopyCode } from "@pure/utils/hooks"
 import { ElConfigProvider } from "element-plus"
 
 import AppProvider from "@/components/Common/app-provider.vue"

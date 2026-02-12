@@ -97,7 +97,6 @@
     </ElTooltip>
     <!-- 附件 -->
     <ElTooltip
-      v-if="IS_ELECTRON"
       :enterable="false"
       :showAfter="500"
       :content="$t('chat.upload_document')"
@@ -159,7 +158,7 @@
       transition="slide-fade"
     >
       <div>
-        <ElPopover ref="popoverRef" placement="top" trigger="click" width="250">
+        <ElPopover ref="popoverRef" placement="top" :showArrow="false" trigger="click" width="250">
           <div class="flex-c gap-5 mb-10">
             <CircleAlert :size="15" color="#F56C6C" />
             <p>确定要清除当前会话所有消息吗?</p>
@@ -404,6 +403,10 @@ function sendImage(files: FileList) {
 }
 
 function sendFile(files: FileList) {
+  if (files[0]?.size === 0) {
+    window?.$message.warning("文件不能为空")
+    return
+  }
   if (!files) return
   emitter.emit("handleToolbar", {
     key: "setParseFile",

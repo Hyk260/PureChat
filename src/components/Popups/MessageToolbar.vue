@@ -188,10 +188,11 @@ const aQuickForward = async () => {
   .toolbar-content {
     display: flex;
     align-items: center;
+    justify-content: center;
     background-color: white;
     border: 1px solid #e1e5e9;
     border-radius: 8px;
-    padding: 6px 8px;
+    padding: 8px 8px;
     min-width: 240px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     gap: 8px;

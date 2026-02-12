@@ -69,12 +69,12 @@ const extractMimeTypeFromBase64 = (base64: string) => {
 /**
  * 将 Base64 字符串转换为 File 对象
  */
-export const base64ToFile = (base64: string, filename: string = "image.png", mimeType: string = "image/png"): File => {
+export const base64ToFile = (base64: string, filename: string = "file.png", mimeType: string = "image/png"): File => {
   if (!base64.startsWith("data:")) {
     throw new Error("Invalid base64 string format")
   }
 
-  const detectedMimeType = mimeType || extractMimeTypeFromBase64(base64)
+  const detectedMimeType = extractMimeTypeFromBase64(base64) || mimeType
   if (!detectedMimeType) {
     throw new Error("Could not determine MIME type from base64 string")
   }
@@ -89,6 +89,6 @@ export const base64ToFile = (base64: string, filename: string = "image.png", mim
     bytes[i] = binaryString.charCodeAt(i)
   }
 
-  const blob = new Blob([bytes], { type: mimeType })
-  return new File([blob], filename, { type: mimeType })
+  const blob = new Blob([bytes], { type: detectedMimeType })
+  return new File([blob], filename, { type: detectedMimeType })
 }

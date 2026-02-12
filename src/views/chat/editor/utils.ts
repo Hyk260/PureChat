@@ -23,18 +23,10 @@ export const handleAssistantFile = async (file: File, editor: IDomEditor) => {
   if (!file || !editor) return
 
   const fileType = getFileType(file?.name)
-  const openTest = false
-  // electron web
-  if (__IS_ELECTRON__) {
-    if (!isTextFile(fileType)) {
-      window.$message?.warning(`暂不支持${fileType || file.name}文件`)
-      return
-    }
-  } else {
-    if (openTest) {
-      window.$message?.warning(`web 暂不支持文件消息`)
-      return
-    }
+
+  if (!isTextFile(fileType)) {
+    window.$message?.warning(`暂不支持${fileType || file.name}文件`)
+    return
   }
 
   const type = file.type.match("^image/") ? "image" : "file"

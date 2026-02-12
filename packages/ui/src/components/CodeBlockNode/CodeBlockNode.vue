@@ -88,7 +88,7 @@
           <div ref="codeBlockRef" class="code-block" v-html="highlightedCode"></div>
         </ElScrollbar> -->
         <div ref="codeBlockRef" class="code-block">
-          <div v-html="highlightedCode"></div>
+          <RenderHighlightedCode :html="highlightedCode" />
         </div>
       </template>
       <template v-else>
@@ -115,6 +115,7 @@
 </template>
 
 <script setup lang="ts">
+import { h } from "vue"
 import {
   Check,
   ChevronDown,
@@ -143,7 +144,7 @@ import emitter from "@/utils/mitt-bus"
 import PreCodeNode from "../PreCodeNode"
 
 import { highlightCode, highlightCodeNode } from "../../utils/highlight"
-
+import type { VNode } from "vue"
 import type { Highlighter } from "shiki"
 // import HighlighterComp from "@/components/Highlighter/index.vue"
 
@@ -173,6 +174,67 @@ const codeBlockRef = useTemplateRef("codeBlockRef")
 
 const showMaximize = ref(false)
 const highlightedCode = ref<string>("")
+
+const createElementVNode = (el: Element): VNode => {
+  const children: Array<VNode | string> = []
+
+  el.childNodes.forEach((child) => {
+    if (child.nodeType === Node.TEXT_NODE) {
+      if (child.textContent) {
+        children.push(child.textContent)
+      }
+    } else if (child.nodeType === Node.ELEMENT_NODE) {
+      children.push(createElementVNode(child as Element))
+    }
+  })
+
+  const props: Record<string, unknown> = {}
+
+  Array.from(el.attributes).forEach((attr) => {
+    if (attr.name === "class") {
+      props.class = attr.value
+    } else if (attr.name === "style") {
+      props.style = attr.value
+    } else {
+      props[attr.name] = attr.value
+    }
+  })
+
+  return h(el.tagName.toLowerCase(), props, children)
+}
+
+const createVNodesFromHtml = (html: string): Array<VNode | string> => {
+  if (!html) return []
+
+  if (typeof window === "undefined" || typeof DOMParser === "undefined") {
+    return []
+  }
+
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(html, "text/html")
+  const nodes: Array<VNode | string> = []
+
+  doc.body.childNodes.forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      if (node.textContent) {
+        nodes.push(node.textContent)
+      }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      nodes.push(createElementVNode(node as Element))
+    }
+  })
+
+  return nodes
+}
+
+const RenderHighlightedCode = (props: { html: string }) => {
+  if (!props.html) {
+    return null
+  }
+
+  const children = createVNodesFromHtml(props.html)
+  return h("div", children)
+}
 
 const languageList = ["js", "ts", ...languageMapValues]
 const excludeList = new Set(["json", "bash"])
@@ -247,7 +309,7 @@ useIntersectionObserver(
     isVisible && heightCheck(codeBlockRef.value)
   },
   {
-    root: document.querySelector("#message-info-view-content"),
+    root: document.querySelector<HTMLElement>("#message-info-view-content"),
     rootMargin: "0px 0px 0px 0px",
     threshold: 1.0,
   }

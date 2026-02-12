@@ -6,7 +6,9 @@
     ".": "./src/index.ts",
     "./*": "./src/*.ts",
     "./fetch": "./src/fetch/index.ts",
-    "./storage": "./src/storage.ts"
+    "./storage": "./src/storage.ts",
+    "./hooks": "./src/hooks/index.ts"
+    
   },
   "scripts": {
     "test": "vitest",

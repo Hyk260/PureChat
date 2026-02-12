@@ -15,7 +15,7 @@
     <ElFormItem v-if="false" prop="verifyCode">
       <div class="w-full flex">
         <ElInput v-model="ruleForm.verifyCode" clearable :placeholder="$t('login.smsVerifyCode')" />
-        <ElButton class="ml-5" :disabled="isDisabled" @click="useVerifyCode().start(ruleFormRef, 'phone')">
+        <ElButton class="ml-5" :disabled="isDisabled" @click="start(ruleFormRef, 'phone')">
           {{ text.length > 0 ? text + $t("login.info") : $t("login.getVerifyCode") }}
         </ElButton>
       </div>
@@ -68,7 +68,7 @@ import { Iphone, Lock, Message, User } from "@element-plus/icons-vue"
 import { useUserStore } from "@/stores/modules/user"
 import { register } from "@/service/api"
 import { ruleForm, updateRules } from "../utils/validation"
-import { useVerifyCode } from "../utils/verifyCode"
+import { useVerifyCode } from "@pure/utils/hooks"
 
 import type { FormInstance } from "element-plus"
 
@@ -78,11 +78,11 @@ const checked = ref(false)
 const loading = ref(false)
 const ruleFormRef = useTemplateRef("ruleFormRef")
 
-const { isDisabled, text } = useVerifyCode()
+const { isDisabled, text, start, end } = useVerifyCode()
 const userStore = useUserStore()
 
 const onBack = () => {
-  useVerifyCode().end()
+  end()
   userStore.setCurrentPage(0)
 }
 

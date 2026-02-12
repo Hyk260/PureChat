@@ -1,4 +1,5 @@
 import { customDataWebSearch, DB_Message } from "@pure/database/schemas"
+import { FilesModel } from "@pure/database/models"
 import { convertBlobUrlToDataUrl, safeParseJSON } from "@pure/utils"
 
 import type { FewShots } from "@pure/types"
@@ -68,6 +69,8 @@ function transformCustomElement(item: DB_Message) {
 
 export const transformFileElement = async (data) => {
   const { payload: file } = data
+
+  const dBile = await FilesModel.findById(file.id)
   try {
     return {
       role: data.flow === "in" ? "assistant" : "user",

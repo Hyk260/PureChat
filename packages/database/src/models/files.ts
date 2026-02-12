@@ -29,18 +29,19 @@ class _FilesModel extends BaseModel {
     if (!item) return
 
     // arrayBuffer to url
-    // let base64
-    // if (!item.data) {
-    //   const hash = (item.url as string).replace("client-s3://", "")
-    //   base64 = await this.getBase64ByFileHash(hash)
-    // } else {
-    //   base64 = Buffer.from(item.data).toString("base64")
-    // }
+    let base64: string
+    if (!item.data) {
+      const hash = item.id
+      base64 = await this.getBase64ByFileHash(hash)
+    } else {
+      base64 = btoa(String.fromCharCode(...new Uint8Array(item.data)))
+      // base64 = Buffer.from(item.data).toString("base64")
+    }
 
     return {
       ...item,
-      // base64,
-      // url: `data:${item.fileType};base64,${base64}`
+      base64,
+      url: `data:${item.type};base64,${base64}`,
     }
   }
 
@@ -116,7 +117,10 @@ class _FilesModel extends BaseModel {
     const fileItem = await clientS3Storage.getObject(hash)
     if (!fileItem) throw new Error("file not found")
 
-    return Buffer.from(await fileItem.arrayBuffer()).toString("base64")
+    const arrayBuffer = await fileItem.arrayBuffer()
+    return btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
+
+    // return Buffer.from(await fileItem.arrayBuffer()).toString("base64")
   }
 
   private async beforeBulkDelete(ids: string[]) {

@@ -13,19 +13,30 @@
         </div>
       </div>
       <div class="flex">
-        <ElButton @click="openDocs"> {{ $t("settings.about.releases.title") }} </ElButton>
+        <ElButton @click="openLogs"> {{ $t("settings.about.releases.title") }} </ElButton>
       </div>
     </div>
-    <div class="divider"></div>
+    <div class="mt-20 divider"></div>
+    <div class="gap-20 flex-bc">
+      <div>帮助文档</div>
+      <div>
+        <ElButton @click="openDocs"> 查看 </ElButton>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { openWindow } from "@pure/utils"
+
 const { version, docs } = __APP_INFO__.pkg
 
-function openDocs() {
+function openLogs() {
   openWindow(`${docs}/other/logs.html`)
+}
+
+const openDocs = () => {
+  openWindow(docs)
 }
 </script>
 
