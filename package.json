@@ -24,7 +24,9 @@
     "lint:check": "eslint . --ext .vue,.js,.ts",
     "type:check": "vue-tsc --noEmit",
     "type:watch": "vue-tsc --noEmit --watch",
-    "check": "node scripts/check-all.js"
+    "check": "node scripts/check-all.js",
+    "skills:sync": "tsx scripts/skills-sync.ts",
+    "skills:check": "tsx scripts/skills-check.ts"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",

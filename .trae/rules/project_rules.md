@@ -1,3 +1,6 @@
+---
+alwaysApply: false
+---
 # PureChat 项目规则文档
 
 ## 1. 项目概述
