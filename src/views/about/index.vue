@@ -47,11 +47,11 @@
           v-for="(item, index) in schema"
           :key="index"
           :label="item.label"
-          :labelClassName="getMainLabel(item.label)"
+          :labelClassName="getMainLabel(item.label, item.field)"
           labelAlign="left"
           align="left"
         >
-          <a :href="'https://www.npmjs.com/package/' + item.label" target="_blank">
+          <a :href="getPackageUrl(item.label, item.field)" target="_blank">
             <span class="style-color">
               {{ item.field }}
             </span>
@@ -71,11 +71,11 @@
           v-for="(item, index) in devSchema"
           :key="index"
           :label="item.label"
-          :labelClassName="getMainLabel(item.label)"
+          :labelClassName="getMainLabel(item.label, item.field)"
           labelAlign="left"
           align="left"
         >
-          <a :href="'https://www.npmjs.com/package/' + item.label" target="_blank">
+          <a :href="getPackageUrl(item.label, item.field)" target="_blank">
             <span class="style-color">
               {{ item.field }}
             </span>
@@ -179,7 +179,7 @@ interface ProjectInfoItem {
   title?: string
 }
 
-type MainLabelResolver = (label: string) => string | undefined
+type MainLabelResolver = (label: string, field?: string) => string | undefined
 
 const { pkg, lastBuildTime } = __APP_INFO__
 const { dependencies, devDependencies, repository, version, docs } = pkg
@@ -225,6 +225,7 @@ const data: ProjectInfoItem[] = [
 
 const words = [
   "markdown-it",
+  "typescript",
   "unocss",
   "pinia",
   "vite",
@@ -241,9 +242,23 @@ const words = [
 
 const mainLabelSet = new Set<string>(words)
 
-const getMainLabel = computed<MainLabelResolver>(() => (label) => {
-  return mainLabelSet.has(label) ? "main-label" : undefined
+const getMainLabel = computed<MainLabelResolver>(() => (label, field) => {
+  if (mainLabelSet.has(label)) {
+    return "main-label"
+  }
+  if (field && field.includes("workspace:")) {
+    return "workspace-label"
+  }
+  return undefined
 })
+
+const getPackageUrl = (label: string, field: string) => {
+  if (field && field.includes("workspace:")) {
+    const packageName = label.replace(/^@[^/]+\//, "")
+    return `https://github.com/Hyk260/PureChat/tree/main/packages/${packageName}`
+  }
+  return `https://www.npmjs.com/package/${label}`
+}
 
 const welcomeMessages = computed(() => {
   const currentLocale = locale.value
@@ -270,6 +285,10 @@ Object.keys(devDependencies).forEach((key) => {
 :deep(.main-label) {
   font-size: 16px !important;
   color: var(--el-color-danger) !important;
+}
+:deep(.workspace-label) {
+  font-size: 16px !important;
+  color: var(--el-color-success) !important;
 }
 .style-color {
   color: var(--el-color-primary);
