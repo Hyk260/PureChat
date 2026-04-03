@@ -12,8 +12,9 @@ import {
 } from './skills-common'
 
 /**
- * Ensures `.claude/skills/<skillName>` is a symlink pointing to
- * `../../.agents/skills/<skillName>` (relative to `.claude/skills/`).
+ * 确保 .claude/skills/<skillName> 是指向 ../../.agents/skills/<skillName> 的符号链接
+ * @param skillName 技能名称
+ * @returns 如果创建或更新了符号链接则返回 true，否则返回 false
  */
 function ensureClaudeSkillSymlink(skillName: string): boolean {
   const agentsSkillDir = path.join(AGENTS_SKILLS_DIR, skillName)

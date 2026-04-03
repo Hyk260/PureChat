@@ -129,7 +129,6 @@ describe("linkifyUrls utilities", () => {
   })
 
   describe("linkifySegment", () => {
-
     it("should return empty array for empty input", () => {
       expect(linkifySegment("", [])).toEqual([])
     })

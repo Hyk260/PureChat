@@ -30,7 +30,6 @@ export function formatApiHost(host: string): string {
   // return forceUseOriginalHost() ? host : `${host}/v1/`
 
   return forceUseOriginalHost() ? host : `${host}/`
-
 }
 
 export function hostPreview(apiHost: string, path: string = "chat/completions") {

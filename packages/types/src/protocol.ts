@@ -2,7 +2,7 @@ export interface StreamProtocolChunk {
   data: any
   id?: string
   type: // pure text
-  | "text"
+    | "text"
     // base64 format image
     | "base64_image"
     // Model Thinking
