@@ -18,9 +18,9 @@ type LogLevel = 0 | 1 | 2 | 3 | 4
 
 interface SDKModules {
   TencentCloudChat: TencentCloudChatModule
-  GroupModule: any
-  SignalingModule: any
-  TIMUploadPlugin: any
+  // GroupModule: any
+  // SignalingModule: any
+  // TIMUploadPlugin: any
 }
 
 export class TencentChatService {
@@ -111,36 +111,48 @@ export class TencentChatService {
   }
 
   private async loadSDKModules(): Promise<SDKModules> {
+    // const [
+    //   { default: TencentCloudChat },
+    //   { default: GroupModule },
+    //   { default: SignalingModule },
+    //   { default: TIMUploadPlugin },
+    // ] = await Promise.all([
+    //   import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js") as Promise<{
+    //     default: TencentCloudChatModule
+    //   }>,
+    //   import(/* @vite-ignore */ "@tencentcloud/chat/modules/group-module.js"),
+    //   import(/* @vite-ignore */ "@tencentcloud/chat/modules/signaling-module.js"),
+    //   import(/* @vite-ignore */ "tim-upload-plugin"),
+    // ])
+
+    // return { TencentCloudChat, GroupModule, SignalingModule, TIMUploadPlugin }
+
     const [
       { default: TencentCloudChat },
-      { default: GroupModule },
-      { default: SignalingModule },
-      { default: TIMUploadPlugin },
     ] = await Promise.all([
-      import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js") as Promise<{
+      // @tencentcloud/lite-chat
+      // @tencentcloud/lite-chat/standard.es.js
+      import(/* @vite-ignore */ "@tencentcloud/lite-chat") as unknown as Promise<{
         default: TencentCloudChatModule
       }>,
-      import(/* @vite-ignore */ "@tencentcloud/chat/modules/group-module.js"),
-      import(/* @vite-ignore */ "@tencentcloud/chat/modules/signaling-module.js"),
-      import(/* @vite-ignore */ "tim-upload-plugin"),
     ])
 
-    return { TencentCloudChat, GroupModule, SignalingModule, TIMUploadPlugin }
+    return { TencentCloudChat }
   }
 
   private initializeRealSDK(config: ChatConfig, modules: SDKModules): ChatSDK {
     const chat = modules.TencentCloudChat.create({
       SDKAppID: config.appId,
-      modules: {
-        "group-module": modules.GroupModule,
-        "signaling-module": modules.SignalingModule,
-      },
+      // modules: {
+      //   "group-module": modules.GroupModule,
+      //   "signaling-module": modules.SignalingModule,
+      // },
     })
 
     this.configureLogging(config.logLevel, chat)
 
-    chat.registerPlugin({ "tim-upload-plugin": modules.TIMUploadPlugin })
-    console.log("🔌 文件上传插件注册成功")
+    // chat.registerPlugin({ "tim-upload-plugin": modules.TIMUploadPlugin })
+    // console.log("🔌 文件上传插件注册成功")
 
     return chat
   }
