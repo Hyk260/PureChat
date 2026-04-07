@@ -12,7 +12,7 @@
     </span>
     <span
       v-if="showCursor"
-      class="inline-block ml-[1px] translate-y-[1px]"
+      class="inline-block ml-1 translate-y-1"
       :class="[cursorHidden ? 'opacity-0' : '', cursorStyleClass, cursorClass]"
       :style="cursorColorStyle"
     >
@@ -182,12 +182,12 @@ const cursorStyleClass = computed(() => {
     case "block":
       return "w-[0.6em] h-[1.1em] bg-current animate-blink"
     case "underscore":
-      return "w-[0.6em] h-[2px] bg-current animate-blink self-end mb-[2px]"
+      return "w-[0.6em] h-2 bg-current animate-blink self-end mb-2"
     case "dot":
-      return "w-[0.4em] h-[0.4em] rounded-full bg-current animate-blink self-end mb-[3px]"
+      return "w-[0.4em] h-[0.4em] rounded-full bg-current animate-blink self-end mb-3"
     case "pipe":
     default:
-      return "w-[2px] h-[1.1em] bg-current animate-blink"
+      return "w-2 h-[1.1em] bg-current animate-blink"
   }
 })
 
