@@ -23,6 +23,8 @@
     "@pure/types": "workspace:*"
   },
   "devDependencies": {
+    "chokidar": "^3.6.0",
+    "google-auth-library": "^10.3.0",
     "promptfoo": "^0.118.17",
     "tsx": "^4.20.4"
   }
