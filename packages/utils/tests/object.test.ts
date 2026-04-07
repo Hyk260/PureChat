@@ -32,6 +32,6 @@ describe("prettyObject", () => {
   it("should wrap string in code block", () => {
     const input = '{"a": 1}'
     const res = prettyObject(input)
-    expect(res).toBe("```json\n{\"a\": 1}\n```")
+    expect(res).toBe('```json\n{"a": 1}\n```')
   })
 })

@@ -224,7 +224,6 @@ const data: ProjectInfoItem[] = [
 ]
 
 const words = [
-  "markdown-it",
   "typescript",
   "unocss",
   "pinia",

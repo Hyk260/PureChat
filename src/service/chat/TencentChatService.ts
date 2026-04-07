@@ -127,9 +127,7 @@ export class TencentChatService {
 
     // return { TencentCloudChat, GroupModule, SignalingModule, TIMUploadPlugin }
 
-    const [
-      { default: TencentCloudChat },
-    ] = await Promise.all([
+    const [{ default: TencentCloudChat }] = await Promise.all([
       // @tencentcloud/lite-chat
       // @tencentcloud/lite-chat/standard.es.js
       import(/* @vite-ignore */ "@tencentcloud/lite-chat") as unknown as Promise<{
