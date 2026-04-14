@@ -87,7 +87,8 @@
     "vue-eslint-parser": "^10.2.0",
     "vue-i18n": "11.3.0",
     "vue-router": "4.6.4",
-    "vue-virtual-scroller": "^2.0.0"
+    "vue-virtual-scroller": "^2.0.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@agentic/exa": "^7.3.3",
@@ -100,8 +101,8 @@
     "@types/ua-parser-js": "^0.7.39",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
-    "@unocss/preset-rem-to-px": "^66.0.0",
     "@unocss/preset-icons": "^66.0.0",
+    "@unocss/preset-rem-to-px": "^66.0.0",
     "@unocss/preset-uno": "^66.0.0",
     "@vitejs/plugin-vue": "^6.0.5",
     "@vitejs/plugin-vue-jsx": "^5.1.5",
