@@ -45,7 +45,7 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta) {
   if (viteEnv.VITE_DEV_TOOLS === "Y") {
     plugins.push(
       vueDevtools({
-        launchEditor: viteEnv.VITE_DEVTOOLS_LAUNCH_EDITOR || "code", // code cursor
+        launchEditor: viteEnv.VITE_DEVTOOLS_LAUNCH_EDITOR || "code", // code cursor trae
       })
     )
   }

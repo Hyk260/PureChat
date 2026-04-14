@@ -43,7 +43,7 @@ p {
 }
 
 .scroll-hidden {
-  overflow: auto; 
+  overflow: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -96,7 +96,7 @@ div:focus {
   margin-right: 10px;
 }
 
-.forward-action>div {
+.forward-action > div {
   height: 52px;
   display: flex;
   align-items: center;

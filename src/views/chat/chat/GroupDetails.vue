@@ -149,6 +149,7 @@ import type {
   GroupProfileSchemaType as GroupProfile,
 } from "@pure/database/schemas"
 import type { ModifyTypeValue } from "@/service/im-sdk-api/group"
+import { extractUserId } from "@/utils/chat"
 
 interface Props {
   groupProfile: GroupProfile
@@ -267,17 +268,16 @@ const removeGroupMemberBtn = async (item: GroupMember) => {
 }
 
 const addGroupMemberBtn = async (value: DB_Session) => {
-  const { groupID, type } = props.groupProfile
-  const { toAccount } = value
+  const { groupID, type } = props.groupProfile || {}
   if (type === "Public") {
     const data = await restApi({
-      params: { groupId: groupID, member: toAccount },
+      params: { groupId: groupID, member: extractUserId(value.conversationID) },
       funName: "addGroupMember",
     })
     if (data.result.ErrorCode !== 0) return
     updataGroup()
   } else {
-    const { code, data } = await addGroupMember({ groupID, user: toAccount ?? "" })
+    const { code, data } = await addGroupMember({ groupID: groupID || "", user: value.conversationID ?? "" })
     if (code === 0) {
       updataGroup()
     } else {

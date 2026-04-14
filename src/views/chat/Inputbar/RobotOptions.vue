@@ -274,9 +274,9 @@ const promptRef = useTemplateRef("promptRef")
 const [dialog, setDialog] = useState(false)
 const [loading, setLoading] = useState(false)
 
-const chatStore = useChatStore()
+// const chatStore = useChatStore()
 const robotStore = useRobotStore()
-const { toAccount } = storeToRefs(chatStore)
+// const { toAccount } = storeToRefs(chatStore)
 const { isOllama, modelProvider, modelStore } = storeToRefs(robotStore)
 
 const handleRemoveTag = (_id: string) => {

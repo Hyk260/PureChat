@@ -16,7 +16,7 @@ import {
   setMessageRead,
 } from "@/service/im-sdk-api"
 import { SetupStoreId } from "@/stores/enum"
-import { scrollToMessage } from "@/utils/chat"
+import { extractUserId, scrollToMessage } from "@/utils/chat"
 import { ModelIDList } from "model-bank"
 import { emitUpdateScroll } from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
@@ -114,8 +114,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       return this.currentConversation?.conversationID || ""
     },
     toAccount(): string {
-      const ID = this.currentConversation?.conversationID || ""
-      return ID?.replace(/^(C2C|GROUP)/, "")
+      return extractUserId(this.currentSessionId)
     },
     isGroupChat(): boolean {
       if (!this.currentConversation) return false

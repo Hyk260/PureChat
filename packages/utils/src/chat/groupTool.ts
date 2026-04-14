@@ -85,7 +85,7 @@ export const groupSystemNotice = (message: any) => {
   }
 }
 
-export const formatGroupID = (id: string) => {
+export const formatGroupID = (id?: string) => {
   if (!id) return ""
   if (id.includes("@TGS#")) return id.replace("@TGS#", "")
   return id

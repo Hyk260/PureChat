@@ -1,4 +1,5 @@
 import tim from "@/service/chat/PureChatService"
+import { extractUserId, extractUserIdList } from "@/utils/chat"
 
 export const GroupType = {
   GRP_WORK: "Private", // 好友工作群，默认
@@ -123,7 +124,8 @@ export const addGroupMember = async (params: { groupID: string; user: string | s
   const { groupID, user } = params
   const parameter = {
     groupID: groupID,
-    userIDList: Array.isArray(user) ? user : [user], // ['user1', 'user2', 'user3']
+    // ['user1', 'user2', 'user3']
+    userIDList: Array.isArray(user) ? extractUserIdList(user) : [extractUserId(user)],
   }
   const { code, data } = await tim.addGroupMember(parameter)
   return {

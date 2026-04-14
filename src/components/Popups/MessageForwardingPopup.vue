@@ -11,8 +11,8 @@
     <div class="forward-action">
       <div
         v-for="item in getNonBotList"
-        :key="item.toAccount"
-        :class="{ 'forward-hover': multipleValue?.toAccount === item.toAccount }"
+        :key="item.conversationID"
+        :class="{ 'forward-hover': multipleValue?.conversationID === item.conversationID }"
         @click="onClickItem(item)"
       >
         <img :src="fnSvatar(item)" alt="" />
@@ -21,10 +21,10 @@
     </div>
     <template #footer>
       <span>
-        <ElButton @click="handleCancel()">
+        <ElButton @click="handleCancel">
           {{ $t("common.cancel") }}
         </ElButton>
-        <ElButton type="primary" @click="handleConfirm()">
+        <ElButton type="primary" @click="handleConfirm">
           {{ $t("common.confirm") }}
         </ElButton>
       </span>
@@ -33,8 +33,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
-
 import { storeToRefs } from "pinia"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
@@ -42,29 +40,31 @@ import { useChatStore } from "@/stores/modules/chat"
 import { chatName } from "@pure/utils"
 import { squareUrl } from "@pure/const"
 
+import type { DB_Session } from "@pure/database/schemas"
+
 const emit = defineEmits(["confirm"])
 
 const chatStore = useChatStore()
 const { getNonBotList } = storeToRefs(chatStore)
 
 const dialog = ref(false)
-const multipleValue = ref(null)
 const dialogType = ref("")
+const multipleValue = ref<DB_Session | null>(null)
 
-const onClickItem = (value) => {
+const onClickItem = (value: DB_Session) => {
   multipleValue.value = value
 }
 
-const fnSvatar = (item) => {
+const fnSvatar = (item: DB_Session) => {
   return item.userProfile?.avatar || getAiAvatarUrl(item.conversationID) || squareUrl
 }
 
-const openPopup = (type) => {
+const openPopup = (type: string) => {
   dialogType.value = type
   dialog.value = true
 }
 
-const setMultipleValue = (value = null) => {
+const setMultipleValue = (value: DB_Session | null = null) => {
   multipleValue.value = value
 }
 

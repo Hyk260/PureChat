@@ -1,5 +1,5 @@
 import tim from "@/service/chat/PureChatService"
-import { fileUploading } from "@/utils/chat"
+import { fileUploading, extractUserId } from "@/utils/chat"
 import { getCustomMsgContent } from "@/utils/common"
 import { updateImageSize, createReplyMessageCustomData } from "@pure/utils"
 
@@ -115,7 +115,7 @@ export const createVideoMessage = (params) => {
 export const createMergerMessage = (params) => {
   const { to, type, messageList = [], title = "聊天记录", abstractList } = params
   return tim.createMergerMessage({
-    to,
+    to: extractUserId(to),
     conversationType: type,
     payload: {
       title,
@@ -132,7 +132,7 @@ export const createMergerMessage = (params) => {
 export const createForwardMessage = (params) => {
   const { to, type, message } = params
   return tim.createForwardMessage({
-    to,
+    to: extractUserId(to),
     conversationType: type,
     payload: message,
   })

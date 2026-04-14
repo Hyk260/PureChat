@@ -25,7 +25,7 @@ export const lastMessage = {
 
 export const SessionSchema: DB_Session = {
   conversationID: "",
-  toAccount: "",
+  // toAccount: "",
   type: "C2C",
   // subType: "",
   lastMessage,

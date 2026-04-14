@@ -142,10 +142,10 @@ const sendAndHandleMessage = async (message) => {
 
 const mergeForward = async () => {
   if (!multipleValue.value) return
-  const { toAccount, type } = multipleValue.value
+  const { conversationID, type } = multipleValue.value
   const forwardData = chatStore.getSortedForwardData
   const forwardMsg = createMergerMessage({
-    to: toAccount,
+    to: conversationID,
     type,
     title: mergeTitle(),
     abstractList: generateAbstractList(forwardData),
@@ -158,11 +158,11 @@ const mergeForward = async () => {
 const aQuickForward = async () => {
   if (!multipleValue.value) return
   const forwardData = chatStore.getSortedForwardData
-  const { toAccount, type } = multipleValue.value
+  const { conversationID, type } = multipleValue.value
   await Promise.all(
     forwardData.map(async (t) => {
       const forwardMsg = createForwardMessage({
-        to: toAccount,
+        to: conversationID,
         type,
         message: t,
       })

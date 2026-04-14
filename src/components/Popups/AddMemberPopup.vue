@@ -2,9 +2,9 @@
   <ElDialog v-model="dialog" title="添加成员" width="600px" alignCenter>
     <div class="forward-action">
       <div
-        v-for="item in chatStore.getNonBotC2CList"
-        :key="item.toAccount"
-        :class="{ 'forward-hover': memberValue?.toAccount === item.toAccount }"
+        v-for="item in getNonBotC2CList"
+        :key="item.conversationID"
+        :class="{ 'forward-hover': memberValue?.conversationID === item.conversationID }"
         @click="onClickItem(item)"
       >
         <img :src="item.userProfile?.avatar || getAiAvatarUrl(item.conversationID) || squareUrl" alt="" />
@@ -21,24 +21,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
-
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { useState } from "@/hooks/useState"
 import { useChatStore } from "@/stores"
 import { chatName } from "@pure/utils"
 import { squareUrl } from "@pure/const"
 
+import type { DB_Session } from "@pure/database/schemas"
+
 defineOptions({
   name: "AddMemberPopup",
 })
 
-const memberValue = ref(null)
-const emits = defineEmits(["define"])
+const memberValue = ref<DB_Session | null>(null)
 const [dialog, setDialog] = useState(false)
-const chatStore = useChatStore()
 
-const onClickItem = (value) => {
+const emits = defineEmits(["define"])
+
+const chatStore = useChatStore()
+const { getNonBotC2CList } = storeToRefs(chatStore)
+
+const onClickItem = (value: DB_Session) => {
   memberValue.value = value
 }
 const openDialog = () => {

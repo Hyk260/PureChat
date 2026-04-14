@@ -19,7 +19,6 @@
     "@pure/const": "workspace:*",
     "@pure/types": "workspace:*",
     "dompurify": "^3.2.7",
-    "dayjs": "^1.11.11",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
     "remark-html": "^16.0.1"

@@ -1,4 +1,5 @@
 import tim from "@/service/chat/PureChatService"
+import { extractUserId } from "@/utils/chat"
 import { PIN_CONVERSATION_OPTIONS, SET_MESSAGE_REMIND_TYPE_OPTIONS } from "@/types/tencent-cloud-chat"
 
 import type { DB_Message, DB_Session } from "@pure/database/schemas"
@@ -60,7 +61,7 @@ export const revokeMsg = async (params) => {
 // 消息免打扰
 export const setMessageRemindType = async (params: DB_Session) => {
   const { conversationID, messageRemindType: remindType, type } = params
-  const userID = conversationID.replace("GROUP", "").replace("C2C", "")
+  const userID = extractUserId(conversationID)
   let parameter = {} as SET_MESSAGE_REMIND_TYPE_OPTIONS
   const isDisable = remindType === "AcceptNotNotify"
   if (type === "C2C") {

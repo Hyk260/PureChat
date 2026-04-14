@@ -30,12 +30,12 @@ export const LastMessageSchema = z
 
 export const DB_SessionSchema = z.object({
   conversationID: z.string(),
-  toAccount: z.string().optional(),
+  // toAccount: z.string().optional(),
   type: TypeSchema,
   subType: z.string().optional(),
   lastMessage: LastMessageSchema,
   unreadCount: z.number().int().min(0).optional(),
-  peerReadTime: z.number().optional(),
+  // peerReadTime: z.number().optional(),
   groupAtInfoList: z.array(z.any()).optional(),
   groupProfile: GroupProfileSchema,
   userProfile: UserProfileSchema,

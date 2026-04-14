@@ -6,6 +6,12 @@ export const isSelf = (item: DB_Message) => {
   return item.from === window.localStg.get("timProxy")?.userProfile?.userID
 }
 
+const PREFIX_REGEX = /GROUP|C2C/g
+
+export const extractUserId = (id: string) => id.replace(PREFIX_REGEX, "")
+
+export const extractUserIdList = (ids: string[]) => ids.map(extractUserId)
+
 /**
  * 复制消息内容到剪贴板
  */

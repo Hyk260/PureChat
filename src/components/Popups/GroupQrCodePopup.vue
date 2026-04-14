@@ -79,7 +79,7 @@ const props = withDefaults(defineProps<Props>(), {})
 
 const [dialogVisible, setDialogVisible] = useState(false)
 
-const groupID = computed(() => formatGroupID(props.groupProfile.groupID))
+const groupID = computed(() => formatGroupID(props.groupProfile?.groupID))
 
 const generateQrCodeText = (groupID: string) => {
   return `${window.location.origin}?joinGroup=${groupID}`
