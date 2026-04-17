@@ -396,6 +396,10 @@ function customMessage() {
 
 function sendImage(files: FileList) {
   if (!files) return
+  if (files[0]?.size === 0) {
+    window?.$message.warning("图片不能为空")
+    return
+  }
   emitter.emit("handleToolbar", {
     key: "setPicture",
     data: { files: files[0] },
@@ -403,11 +407,11 @@ function sendImage(files: FileList) {
 }
 
 function sendFile(files: FileList) {
+  if (!files) return
   if (files[0]?.size === 0) {
     window?.$message.warning("文件不能为空")
     return
   }
-  if (!files) return
   emitter.emit("handleToolbar", {
     key: "setParseFile",
     data: { files: files[0] },

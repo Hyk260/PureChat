@@ -36,7 +36,7 @@
                 </div>
                 <div class="item" :class="getMessageItemClass(item)">
                   <div :class="getMessageTypeClass(item.type)">
-                    <component :is="getMessageComponent(item)" :key="item.ID" :message="item"> </component>
+                    <Component :is="getMessageComponent(item)" :key="item.ID" :message="item" />
                   </div>
                 </div>
               </div>

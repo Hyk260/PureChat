@@ -18,7 +18,7 @@
                 <span>{{ $t("chat.createGroup") }}</span>
               </div>
             </MenuItem>
-            <MenuItem>
+            <MenuItem v-if="false">
               <div class="flex-c gap-5" @click="handleCreateAssistant">
                 <ElIcon><Bot /></ElIcon>
                 <span>{{ $t("chat.newAgent") }}</span>

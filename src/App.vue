@@ -29,7 +29,11 @@ onMounted(() => {
   themeStore.setThemeScheme()
   userStore.tryReconnect()
   // setup global copy code handler
-  useCopyCode()
+  useCopyCode({
+    onSuccess: () => {
+      window.$message?.success("复制成功")
+    },
+  })
   useSettings()
 })
 </script>

@@ -11,7 +11,7 @@
     :withHeader="true"
     @close="handleClose"
   >
-    <div>
+    <div v-if="groupProfile">
       <div class="group-info">
         <UserAvatar
           :url="groupProfile.avatar"
@@ -33,7 +33,7 @@
                 {{ groupID }}
               </ElTag>
             </span>
-            <span v-if="IS_DEV" class="group-type">
+            <span v-if="IS_DEV && groupProfile?.type" class="group-type">
               {{ GroupTypeMap[groupProfile.type] }}
             </span>
           </div>
@@ -433,6 +433,9 @@ watch(currentConversation, (data) => {
       font-weight: 400;
       color: var(--color-message-chat-name);
       // margin-right: 8px;
+    }
+    .group-id {
+      cursor: pointer;
     }
 
     .group-type,

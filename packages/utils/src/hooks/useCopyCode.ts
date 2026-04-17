@@ -3,7 +3,11 @@ const ignoredNodes = [".vp-copy-ignore", ".diff.remove"].join(", ")
 
 let hasRegisteredCopyListener = false
 
-export function useCopyCode() {
+export interface UseCopyCodeOptions {
+  onSuccess?: () => void
+}
+
+export function useCopyCode(options?: UseCopyCodeOptions) {
   if (hasRegisteredCopyListener) return
   hasRegisteredCopyListener = true
 
@@ -18,7 +22,7 @@ export function useCopyCode() {
       if (!el) return
 
       const parent = el.parentElement
-      const sibling = el.nextElementSibling?.nextElementSibling // <pre> tag
+      const sibling = el.nextElementSibling?.nextElementSibling
       if (!parent || !sibling) {
         return
       }
@@ -28,11 +32,8 @@ export function useCopyCode() {
 
       const isShell = shellRE.test(parent.className)
 
-      // Clone the node and remove the ignored nodes
       const clone = sibling.cloneNode(true) as HTMLElement
       clone.querySelectorAll(ignoredNodes).forEach((node) => node.remove())
-      // remove extra newlines left after removing ignored nodes (affecting textContent because it is inside `<pre>`)
-      // doesn't affect the newlines already in the code because they are rendered as `\n<span class="line"></span>`
       clone.innerHTML = clone.innerHTML.replace(/\n+/g, "\n")
 
       let text = clone.textContent || ""
@@ -43,7 +44,9 @@ export function useCopyCode() {
 
       copyToClipboard(text).then(() => {
         el.classList.add("copied")
-        window.$message?.success("复制成功")
+        if (options?.onSuccess) {
+          options.onSuccess()
+        }
         clearTimeout(timeoutIdMap.get(el))
         const timeoutId = setTimeout(() => {
           el.classList.remove("copied")
