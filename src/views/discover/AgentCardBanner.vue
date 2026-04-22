@@ -38,9 +38,8 @@
 import { Markdown } from "@pure/ui"
 import { ModelID } from "model-bank"
 
-import { getModelId } from "@pure/utils"
+import { getModelId, useState } from "@pure/utils"
 import { usePrepareMessageData } from "@/hooks/useMessageOperations"
-import { useState } from "@/hooks/useState"
 import { useChatStore, useRobotStore, useRouteStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"
 

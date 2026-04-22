@@ -21,7 +21,7 @@ import {
   // useTemplateRef
 } from "vue"
 
-import { useState } from "@/hooks/useState"
+import { useState } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({ name: "ImageViewer" })

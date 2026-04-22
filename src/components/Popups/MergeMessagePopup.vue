@@ -50,12 +50,11 @@ import { ref } from "vue"
 
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
 import { getMessageComponent } from "@/components/MessageRenderer/utils/getMessageComponent"
-import { useState } from "@/hooks/useState"
 import { downloadMergerMessage } from "@/service/im-sdk-api"
 import { useUserStore } from "@/stores/modules/user"
 import { isSelf } from "@/utils/chat"
 import { circleUrl } from "@pure/const"
-import { isTime, timeFormat, addTimeDivider, getMessageTypeClass, getMessageItemClass } from "@pure/utils"
+import { isTime, timeFormat, addTimeDivider, getMessageTypeClass, getMessageItemClass, useState } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 const mergValue = ref({})

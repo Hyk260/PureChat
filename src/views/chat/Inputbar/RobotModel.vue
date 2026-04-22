@@ -71,13 +71,12 @@ import { modelValue } from "@/ai/constant"
 import { ModelIcon, ProviderIcon } from "@pure/icons"
 import { getBaseModelName } from "@pure/utils"
 import { useAccessStore } from "@/ai/utils"
-import { useState } from "@/hooks/useState"
 import {
   // useChatStore,
   useRobotStore,
 } from "@/stores"
 import { Model, ModelConfigItem } from "@/stores/modules/robot/types"
-import { formatTokenNumber, formatToken } from "@pure/utils"
+import { formatTokenNumber, formatToken, useState } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 defineOptions({

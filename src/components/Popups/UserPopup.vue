@@ -35,9 +35,8 @@
 
 <script setup lang="ts">
 import EmojiMart from "@/components/EmojiMart/index.vue"
-import { useState } from "@/hooks/useState"
 import { useUserStore } from "@/stores/modules/user"
-import { createFileInput, fileToBase64 } from "@pure/utils"
+import { createFileInput, fileToBase64, useState } from "@pure/utils"
 
 const userName = ref("")
 const [open, setOpen] = useState(false)

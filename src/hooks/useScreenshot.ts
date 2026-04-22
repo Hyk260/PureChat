@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import { domToBlob, domToJpeg, domToPng, domToSvg, domToWebp } from "modern-screenshot"
 
-import { useState } from "@/hooks/useState"
+import { useState } from "@pure/utils"
 
 export enum ImageType {
   Blob = "blob",

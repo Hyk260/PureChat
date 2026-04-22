@@ -22,9 +22,8 @@
 
 <script setup lang="ts">
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
-import { useState } from "@/hooks/useState"
 import { useChatStore } from "@/stores"
-import { chatName } from "@pure/utils"
+import { chatName, useState } from "@pure/utils"
 import { squareUrl } from "@pure/const"
 
 import type { DB_Session } from "@pure/database/schemas"

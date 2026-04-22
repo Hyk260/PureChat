@@ -209,9 +209,10 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-vue-next"
+import { ElMessageBox } from "element-plus"
 import { Tooltip, Dropdown, Menu, MenuItem } from "ant-design-vue"
 import { storeToRefs } from "pinia"
-import { useState } from "@/hooks/useState"
+import { useState } from "@pure/utils"
 import { useChatStore, usePortalStore, useTopicStore, useRobotStore } from "@/stores"
 import { $t } from "@/locales"
 import dayjs from "dayjs"
@@ -282,11 +283,25 @@ const saveRename = async () => {
 const preformat = (id: string) => (id.startsWith("20") ? (id.includes("-") ? dayjs(id).format("MMMM") : id) : undefined)
 
 const deleteTopic = (topic: Topic) => {
-  topicStore.removeTopic(topic.id)
+  ElMessageBox.confirm("您即将删除此话题，此操作无法撤销。", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+    showClose: false,
+  }).then(() => {
+    topicStore.removeTopic(topic.id)
+  })
 }
 
 const clearTopics = () => {
-  topicStore.batchRemoveTopics()
+  ElMessageBox.confirm("您即将删除所有话题，此操作无法撤销。", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+    showClose: false,
+  }).then(() => {
+    topicStore.batchRemoveTopics()
+  })
 }
 
 const startEditRole = () => {

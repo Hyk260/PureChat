@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { useState } from "@/hooks/useState"
+import { useState } from "@pure/utils"
 // import emitter from "@/utils/mitt-bus"
 
 import { list } from "./settings"

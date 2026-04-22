@@ -59,9 +59,8 @@ import { storeToRefs } from "pinia"
 
 import EmojiMart from "@/components/EmojiMart/index.vue"
 import { prompt } from "@pure/const"
-import { useState } from "@/hooks/useState"
 import { useRobotStore } from "@/stores/modules/robot"
-import { nanoid } from "@pure/utils"
+import { nanoid, useState } from "@pure/utils"
 
 import type { Prompt } from "@pure/types"
 

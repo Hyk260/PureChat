@@ -35,9 +35,8 @@ import { Settings2 as Operation, ChartPie, LogOut } from "lucide-vue-next"
 // import { Operation, PieChart } from "@element-plus/icons-vue"
 import { onClickOutside } from "@vueuse/core"
 
-import { useState } from "@/hooks/useState"
 import { useChatStore, useUserStore } from "@/stores"
-import { openWindow } from "@pure/utils"
+import { openWindow, useState } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 import { localStg } from "@/utils/storage"
 

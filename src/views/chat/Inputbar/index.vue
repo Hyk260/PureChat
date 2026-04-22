@@ -258,10 +258,9 @@ import { audioExts, documentExts, imageExts, textExts, videoExts } from "@pure/c
 import { storeToRefs } from "pinia"
 
 import { $t } from "@/locales"
-import { useState } from "@/hooks/useState"
 import { createCustomMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores"
-import { createFileInput } from "@pure/utils"
+import { createFileInput, useState } from "@pure/utils"
 import WebSearchService from "@/service/WebSearchService"
 import emitter, { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 
