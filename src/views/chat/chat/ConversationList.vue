@@ -9,7 +9,7 @@
         class="message-item"
         :class="{ 'is-active': item._isActive }"
         @click="handleConversationListClick(item)"
-        @drop="(e) => handleDrop(e, item, handleConversationListClick)"
+        @drop="(e) => handleDrop(e, item)"
         @dragover="handleDragOver"
         @dragenter="(e) => handleDragEnter(e, item)"
         @dragleave="(e) => handleDragLeave(e, item)"
@@ -63,7 +63,7 @@ import { BellOff } from "lucide-vue-next"
 import { storeToRefs } from "pinia"
 
 import { useContextMenu } from "@/composables/useContextMenu"
-import { useHandlerDrop } from "@/hooks/useHandlerDrop"
+import { useHandlerDrop } from "@pure/utils/hooks"
 import { pinConversation } from "@/service/im-sdk-api"
 import { setMessageRemindType } from "@/service/im-sdk-api"
 import {
@@ -88,7 +88,13 @@ import type { DB_Session } from "@pure/database/schemas"
 import type { DisplayCacheItem } from "@/types"
 import type { MenuItem } from "@pure/types"
 
-const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop()
+const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } = useHandlerDrop({
+  onFileDrop: async (file, item) => {
+    handleConversationListClick(item)
+    await delay(100)
+    emitter.emit("handleFileDrop", file)
+  },
+})
 
 const isEnableVirtualList = ref(false)
 const contextMenuItems = ref<MenuItem[] | []>([])

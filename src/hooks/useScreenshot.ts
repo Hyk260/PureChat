@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import { domToBlob, domToJpeg, domToPng, domToSvg, domToWebp } from "modern-screenshot"
 
-import { useState } from "@pure/utils"
+import { useState } from "@pure/utils/hooks"
 
 export enum ImageType {
   Blob = "blob",
@@ -31,6 +31,11 @@ type ScreenshotFunction = (
   }
 ) => Promise<string | Blob>
 
+interface UseScreenshotOptions {
+  onError?: (message: string, error?: unknown) => void
+  onCopySuccess?: () => void
+}
+
 interface ScreenshotHook {
   loading: globalThis.Ref<boolean, boolean>
   onDownload: (imageType: ImageType, title?: string, callback?: () => void) => Promise<void>
@@ -44,15 +49,23 @@ const SCREENSHOT_FUNCTIONS: Record<ImageType, ScreenshotFunction> = {
   [ImageType.Blob]: domToBlob,
 }
 
+const PREVIEW_SELECTOR = "#preview"
+const SCREENSHOT_OPTIONS = {
+  features: {
+    removeControlCharacter: false,
+  },
+  scale: 2,
+} as const
+
 /**
  * 将图像数据URL写入系统的剪贴板
  * @param {Blob} blob - 图像Blob对象
  */
-async function copyImageToClipboard(blob: Blob) {
+async function copyImageToClipboard(blob: Blob, onCopySuccess?: () => void) {
   try {
     const clipboardItem = new ClipboardItem({ "image/png": blob })
     await navigator.clipboard.write([clipboardItem])
-    window.$message?.success("图片复制成功")
+    onCopySuccess?.()
   } catch (error) {
     console.error("写入剪贴板时出错:", error)
     throw error
@@ -77,7 +90,16 @@ function downloadImage(dataUrl: string, imageType: ImageType, title: string = ""
   document.body.removeChild(link)
 }
 
-export const useScreenshot = (): ScreenshotHook => {
+function getPreviewElement() {
+  const element = document.querySelector(PREVIEW_SELECTOR)
+  if (!element) {
+    throw new Error("Preview element not found")
+  }
+  return element
+}
+
+export const useScreenshot = (options: UseScreenshotOptions = {}): ScreenshotHook => {
+  const { onError, onCopySuccess } = options
   const [loading, setLoading] = useState(false)
 
   const handleDownload = async (imageType = ImageType.JPG, title = "", callback?: () => void) => {
@@ -91,26 +113,26 @@ export const useScreenshot = (): ScreenshotHook => {
         throw new Error(`Unsupported image type: ${imageType}`)
       }
 
-      const element = document.querySelector("#preview")
-      if (!element) throw new Error("Preview element not found")
+      const element = getPreviewElement()
 
-      const dataUrl = await screenshotFn(element, {
-        features: {
-          removeControlCharacter: false,
-        },
-        scale: 2,
-      })
+      const dataUrl = await screenshotFn(element, SCREENSHOT_OPTIONS)
 
       if (imageType === ImageType.Blob) {
-        await copyImageToClipboard(dataUrl as Blob)
+        if (!(dataUrl instanceof Blob)) {
+          throw new TypeError("Expected Blob data for clipboard operation")
+        }
+        await copyImageToClipboard(dataUrl, onCopySuccess)
       } else {
-        downloadImage(dataUrl as string, imageType, title)
+        if (typeof dataUrl !== "string") {
+          throw new TypeError("Expected string data URL for download operation")
+        }
+        downloadImage(dataUrl, imageType, title)
       }
 
       callback?.()
     } catch (error) {
       console.error("Failed to capture image", error)
-      window.$message?.error("截图失败")
+      onError?.("截图失败", error)
     } finally {
       setLoading(false)
     }

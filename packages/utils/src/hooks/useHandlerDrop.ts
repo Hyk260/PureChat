@@ -1,19 +1,27 @@
-import { delay } from "@pure/utils"
-import emitter from "@/utils/mitt-bus"
-
 import type { DB_Session } from "@pure/database/schemas"
+
+type DropAction = "add" | "remove"
+
+interface UseHandlerDropOptions {
+  overClassName?: string
+  getDropZoneElementId?: (item: DB_Session) => string
+  onFileDrop?: (file: File, item: DB_Session) => void
+}
 
 interface DragHandlerProps {
   event: DragEvent
   item: DB_Session
-  callback?: (arg0: any) => void
 }
 
 /**
  * 处理拖拽相关操作的 Hook
  * @returns 返回拖拽相关的处理函数
  */
-export const useHandlerDrop = () => {
+export const useHandlerDrop = ({
+  overClassName = "over-style",
+  getDropZoneElementId = (item) => `message_${item.conversationID}`,
+  onFileDrop,
+}: UseHandlerDropOptions = {}) => {
   let lastEnterElement: EventTarget | null = null
 
   /**
@@ -29,9 +37,9 @@ export const useHandlerDrop = () => {
    * 清除所有拖拽样式
    */
   const clearAllDropZoneStyles = () => {
-    const elements = document.querySelectorAll(".over-style")
+    const elements = document.querySelectorAll(`.${overClassName}`)
     elements.forEach((element) => {
-      element.classList.remove("over-style")
+      element.classList.remove(overClassName)
     })
   }
 
@@ -40,15 +48,15 @@ export const useHandlerDrop = () => {
    * @param item Session 数据
    * @param action 添加或移除样式
    */
-  function setOverStyle(item: DB_Session, action: "add" | "remove") {
+  function setOverStyle(item: DB_Session, action: DropAction) {
     try {
-      const element = document.getElementById(`message_${item.conversationID}`)
+      const element = document.getElementById(getDropZoneElementId(item))
       if (element) {
         if (action === "add") {
           clearAllDropZoneStyles()
-          element.classList.add("over-style")
+          element.classList.add(overClassName)
         } else {
-          element.classList.remove("over-style")
+          element.classList.remove(overClassName)
         }
       }
     } catch (error) {
@@ -59,7 +67,7 @@ export const useHandlerDrop = () => {
   /**
    * 处理拖拽释放
    */
-  const handleDrop = async ({ event, item, callback }: DragHandlerProps) => {
+  const handleDrop = ({ event, item }: DragHandlerProps) => {
     if (!isValidDragData(event)) return
 
     event.preventDefault()
@@ -68,9 +76,7 @@ export const useHandlerDrop = () => {
 
     const files = event.dataTransfer?.files
     if (files?.[0]) {
-      callback?.(item)
-      await delay(100)
-      emitter.emit("handleFileDrop", files[0])
+      onFileDrop?.(files[0], item)
     }
   }
 
@@ -107,7 +113,7 @@ export const useHandlerDrop = () => {
   }
 
   return {
-    handleDrop: (e: DragEvent, item: DB_Session, callback: any) => handleDrop({ event: e, item, callback }),
+    handleDrop: (e: DragEvent, item: DB_Session) => handleDrop({ event: e, item }),
     handleDragEnter: (e: DragEvent, item: DB_Session) => handleDragEnter({ event: e, item }),
     handleDragLeave: (e: DragEvent, item: DB_Session) => handleDragLeave({ event: e, item }),
     handleDragOver,

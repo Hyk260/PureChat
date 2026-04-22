@@ -101,8 +101,13 @@
           </ElScrollbar>
         </div>
         <div class="form-footer">
-          <ElButton class="w-full" :disabled="loading" @click="handleCopy"> 复制截图 </ElButton>
-          <ElButton class="w-full" :disabled="loading" @click="handleDownload"> 下载截图 </ElButton>
+          <ElButton class="w-full" :disabled="loading" @click="handleCopy">
+            <!-- <SpinnersRingResize v-if="loading" class="mr-5" /> -->
+            <span>复制截图</span>
+          </ElButton>
+          <ElButton class="w-full" :disabled="loading" @click="handleDownload">
+            <span>下载截图</span>
+          </ElButton>
         </div>
       </div>
     </div>
@@ -114,6 +119,7 @@ import { ElRadioGroup, ElRadioButton } from "element-plus"
 import { storeToRefs } from "pinia"
 
 import { Markdown } from "@pure/ui"
+import { SpinnersRingResize } from "@pure/icons"
 import QrCode from "@/components/QrCode/index.vue"
 import ChatHeader from "@/components/Chat/ChatHeader.vue"
 import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
@@ -145,7 +151,14 @@ const chatStore = useChatStore()
 const robotStore = useRobotStore()
 
 const { isAssistant, getSortedForwardData } = storeToRefs(chatStore)
-const { loading, onDownload } = useScreenshot()
+const { loading, onDownload } = useScreenshot({
+  onCopySuccess: () => {
+    window.$message?.success("图片复制成功")
+  },
+  onError: (message) => {
+    window.$message?.error(message)
+  },
+})
 
 /**
  * 获取助手提示词内容
@@ -195,7 +208,7 @@ const getAvatarUrl = (item: DB_Message) => {
 const processScreenshot = async (imageType: ImageType) => {
   try {
     await onDownload(imageType, roleText.value, () => {
-      setDialogVisible(false)
+      // setDialogVisible(false)
     })
   } catch (error) {
     console.error("截图操作失败:", error)

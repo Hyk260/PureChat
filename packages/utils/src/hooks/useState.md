@@ -23,7 +23,7 @@ npm install -D typescript
 ### 导入
 
 ```typescript
-import { useState } from '@/hooks/useState';
+import { useState } from '@pure/utils';
 ```
 
 ### 基本状态管理
@@ -108,7 +108,7 @@ function useState<T>(
 </template>
 
 <script setup lang="ts">
-import { useState } from '@/hooks/useState';
+import { useState } from '@pure/utils';
 
 interface User {
   name: string;
