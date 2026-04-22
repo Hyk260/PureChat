@@ -1,5 +1,5 @@
-import { LocalChatService, localChatService } from "./LocalChatService"
-import { TencentChatService, tencentChatService } from "./TencentChatService"
+import { LocalChatService } from "./LocalChatService"
+import { TencentChatService } from "./TencentChatService"
 
 import type { ChatSDK } from "@/types/tencent-cloud-chat"
 
@@ -26,7 +26,7 @@ export class PureChatService {
   private chatSDK: ChatSDK | null = null
 
   private constructor() {
-    this.chatService = this.isLocalMode ? localChatService : tencentChatService
+    this.chatService = this.isLocalMode ? LocalChatService.getInstance() : TencentChatService.getInstance()
 
     console.log(this.isLocalMode ? "🏠 PureChatService: 使用本地聊天模式" : "☁️ PureChatService: 使用腾讯云聊天模式")
 
@@ -47,14 +47,17 @@ export class PureChatService {
    * 设置开发环境调试工具
    */
   private setupDebugTools() {
+    if (window.__TIM_DEBUG__) {
+      return
+    }
+
     window.__TIM_DEBUG__ = {
       getInstance: () => this.chatService,
       getMode: () => this.getMode(),
       resetService: () => PureChatService.resetInstance(),
       getPerformanceInfo: () => this.getPerformanceInfo(),
     }
-    console.log("🔧 开发模式：聊天服务调试工具已启用")
-    console.log("使用 window.__TIM_DEBUG__ 访问调试功能")
+    console.log("🔧 开发模式：聊天服务调试工具已启用, 使用 window.__TIM_DEBUG__ 访问调试功能")
   }
 
   private getPerformanceInfo(): PerformanceInfo {

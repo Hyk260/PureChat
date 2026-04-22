@@ -256,5 +256,3 @@ export class TencentChatService {
     throw new Error(`腾讯云 IM SDK 初始化失败: ${errorMessage}`)
   }
 }
-
-export const tencentChatService = TencentChatService.getInstance()

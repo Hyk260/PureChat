@@ -594,8 +594,6 @@ export class LocalChat {
   }
 }
 
-export const localChat = LocalChat.getInstance()
-
 export class LocalChatService {
   private static instance: LocalChatService
   private chat: ChatSDK | null = null
@@ -615,9 +613,7 @@ export class LocalChatService {
   public initialize(): ChatSDK {
     if (this.chat) return this.chat
 
-    this.chat = localChat.create() as unknown as ChatSDK
+    this.chat = LocalChat.getInstance().create() as unknown as ChatSDK
     return this.chat
   }
 }
-
-export const localChatService = LocalChatService.getInstance()
