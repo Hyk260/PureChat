@@ -5,7 +5,7 @@
       <ElSelect v-model="themeColor" placeholder="主题颜色">
         <ElOption v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
           <div class="flex items-center gap-5">
-            <component :is="item.icon" :size="16" />
+            <Component :is="item.icon" :size="16" />
             <span> {{ item.label }}</span>
           </div>
         </ElOption>

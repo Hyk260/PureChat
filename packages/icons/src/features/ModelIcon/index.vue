@@ -1,5 +1,5 @@
 <template>
-  <component :is="renderComponent" v-bind="finalComponentProps" />
+  <Component :is="renderComponent" v-bind="finalComponentProps" />
 </template>
 
 <script setup lang="ts">

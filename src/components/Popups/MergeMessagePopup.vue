@@ -31,7 +31,7 @@
                 <!-- <span>{{ timeFormat(item.clientTime * 1000, true) }}</span> -->
               </p>
               <div :class="getMessageTypeClass(item.messageBody[0].type)">
-                <component
+                <Component
                   :is="getMessageComponent(item.messageBody[0])"
                   :key="item.ID"
                   :message="getMergValue(item)"

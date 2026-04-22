@@ -4,7 +4,7 @@
       <template v-for="items in availableMenuItems" :key="items.key">
         <Tooltip placement="top" :title="items.label" :arrow="false">
           <div class="menubar-item flex-c" @click="handleMenuItemClick($event, items)">
-            <component :is="items.icon" :class="items?.class" :size="13" />
+            <Component :is="items.icon" :class="items?.class" :size="13" />
           </div>
         </Tooltip>
       </template>

@@ -11,7 +11,7 @@
         }"
         @click="handleItemClick(item)"
       >
-        <component :is="item.icon" v-if="item.icon" :size="16" />
+        <Component :is="item.icon" v-if="item.icon" :size="16" />
         <div class="menu-item__title">{{ item.title }}</div>
       </li>
     </ul>

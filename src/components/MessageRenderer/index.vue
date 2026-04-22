@@ -1,6 +1,6 @@
 <template>
   <div class="message-renderer">
-    <component :is="messageComponent" v-if="messageComponent" :message="message" v-bind="attrs" />
+    <Component :is="messageComponent" v-if="messageComponent" :message="message" v-bind="attrs" />
     <div v-else class="message-error">
       <span class="error-icon">⚠️</span>
       <span>未知的消息类型: {{ message?.type || "Unknown message type" }}</span>

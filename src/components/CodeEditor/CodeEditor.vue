@@ -2,7 +2,7 @@
   <div class="code-only-view">
     <div class="code-editor">
       <!-- 动态渲染 Monaco 组件（如果加载成功且未切换到 textarea） -->
-      <component
+      <Component
         :is="monacoComponent"
         v-if="!useTextarea && monacoComponent"
         :value="code"
@@ -14,7 +14,7 @@
       >
         <slot>loading...</slot>
         <slot name="failure">load failure</slot>
-      </component>
+      </Component>
       <!-- 备用 textarea（当 Monaco 加载失败或强制使用 textarea 时） -->
       <div v-else class="h-full">
         <textarea

@@ -10,7 +10,7 @@
           <div class="sidebar-item-content" :class="{ active: isActiveItem(item.path) }" @click="handleItemClick(item)">
             <ElBadge :value="totalUnreadMsg" :hidden="shouldHideUnreadBadge(item.id)">
               <ElIcon class="sidebar-icon">
-                <component :is="item.icon" />
+                <Component :is="item.icon" />
               </ElIcon>
             </ElBadge>
           </div>

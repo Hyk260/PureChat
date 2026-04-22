@@ -1,5 +1,5 @@
 <template>
-  <component :is="renderNodes" />
+  <Component :is="renderNodes" />
 </template>
 
 <script setup lang="ts">

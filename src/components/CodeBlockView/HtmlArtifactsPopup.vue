@@ -26,7 +26,7 @@
             <ElSegmented v-model="viewMode" :options="viewModes">
               <template #default="scope">
                 <div class="flex-c gap-5">
-                  <component :is="scope.item.icon" :size="15" />
+                  <Component :is="scope.item.icon" :size="15" />
                   <div>{{ scope.item.label }}</div>
                 </div>
               </template>

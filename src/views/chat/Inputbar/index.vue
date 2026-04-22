@@ -145,7 +145,7 @@
         }"
         @click="onEnableWebSearch"
       >
-        <component :is="enableWebSearch ? Globe : GlobeOffIcon" :size="16" />
+        <Component :is="enableWebSearch ? Globe : GlobeOffIcon" :size="16" />
       </ElButton>
     </ElTooltip> -->
     <ElTooltip

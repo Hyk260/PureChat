@@ -11,13 +11,13 @@
           @after-enter="appStore.setContentXScrollable(false)"
         >
           <!-- <KeepAlive :include="routeStore.cacheRoutes" :exclude="routeStore.excludeCacheRoutes" :max="3">
-            <component :is="Component" v-if="routeStore.reloadFlag" :key="routeStore.getTabIdByRoute(route)" />
+            <Component :is="Component" v-if="routeStore.reloadFlag" :key="routeStore.getTabIdByRoute(route)" />
           </KeepAlive> -->
           <KeepAlive v-if="route.meta?.keepAlive">
-            <component :is="Component" v-if="Component" :key="route.path" />
+            <Component :is="Component" v-if="Component" :key="route.path" />
           </KeepAlive>
           <template v-else>
-            <component :is="Component" v-if="Component" :key="route.path" />
+            <Component :is="Component" v-if="Component" :key="route.path" />
           </template>
         </Transition>
       </RouterView>
