@@ -1,5 +1,5 @@
 :root {
-  --other-msg-color: rgba(0, 0, 0, .05);
+  --other-msg-color: rgba(0, 0, 0, 0.05);
   --self-msg-color: #e7f8ff;
   --icon-hover-color: #00000008;
   --tags-back-hover: rgb(0, 0, 0, 0.12);
@@ -40,7 +40,7 @@
   --self-msg-color: #000;
   --icon-hover-color: #ffffff0f;
   --tags-back-hover: rgba(255, 255, 255, 0.16);
-  --tags-back: rgba(255, 255, 255, 0.10);
+  --tags-back: rgba(255, 255, 255, 0.1);
   --white: rgb(30, 30, 30);
   --black: rgb(187, 187, 187);
   --gray: rgb(21, 21, 21);
@@ -49,7 +49,7 @@
   --navbar-background: #1f1f1f;
 
   /* color */
-  --color-card: rgba(255, 255, 255, 0.10);
+  --color-card: rgba(255, 255, 255, 0.1);
   --color-tags-active: #000000;
   --color-tags-active-back: #eeeeee;
   --color-tags-color: #ffffff;
@@ -61,7 +61,7 @@
   --color-text-default: #fff;
   --color-primary-bg: #bbcdff;
   --color-navbar-bg: rgba(34, 34, 34, 0.86);
-  --color-message-active: rgba(255, 255, 255, 0.10);
+  --color-message-active: rgba(255, 255, 255, 0.1);
   --color-border-default: #30363d;
   --color-time-divider: #fff;
   --color-message-chat-name: #fff;
