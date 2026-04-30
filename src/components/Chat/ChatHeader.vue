@@ -25,7 +25,7 @@
             :content="$t('chat.history.title', { count: botMessageCount })"
             placement="bottom"
           >
-            <ElTag v-if="isAssistant" class="history ml-5" type="warning" size="small">
+            <ElTag class="history ml-5" type="warning" size="small">
               <History :size="14" />
               <span class="ml-2 align-middle">{{ botMessageCount }}</span>
             </ElTag>
@@ -41,14 +41,14 @@
       </p>
     </div>
     <div class="action-buttons flex gap-4">
-      <ElTooltip :showArrow="false" content="邀请加群" placement="bottom">
-        <ElButton v-if="isGroupChat && false" class="action-btn message-info-add" title="添加成员">
+      <ElTooltip v-if="isGroupChat && false" :showArrow="false" content="邀请加群" placement="bottom">
+        <ElButton class="action-btn message-info-add" title="添加成员">
           <MessageCirclePlus :size="18" />
         </ElButton>
       </ElTooltip>
 
-      <ElTooltip :showArrow="false" content="分享" placement="bottom">
-        <ElButton v-if="isC2C || isGroupChat" class="action-btn share" @click="openShare">
+      <ElTooltip v-if="isC2C || isGroupChat" :showArrow="false" content="分享" placement="bottom">
+        <ElButton class="action-btn share" @click="openShare">
           <Share :size="18" />
         </ElButton>
       </ElTooltip>
@@ -60,8 +60,8 @@
         </ElButton>
       </ElTooltip>
 
-      <ElTooltip :showArrow="false" content="群详情" placement="bottom">
-        <ElButton v-if="isGroupChat" class="action-btn setup" @click="openSetup">
+      <ElTooltip v-if="isGroupChat" :showArrow="false" content="群详情" placement="bottom">
+        <ElButton class="action-btn setup" @click="openSetup">
           <Menu :size="18" />
         </ElButton>
       </ElTooltip>

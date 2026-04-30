@@ -97,6 +97,7 @@
     </ElTooltip>
     <!-- 附件 -->
     <ElTooltip
+      v-if="isAssistant"
       :enterable="false"
       :showAfter="500"
       :content="$t('chat.upload_document')"
@@ -105,7 +106,7 @@
       :offset="2"
       transition="slide-fade"
     >
-      <ElButton v-show="isAssistant" @click="sendAnnexClick">
+      <ElButton @click="sendAnnexClick">
         <Paperclip :size="16" />
       </ElButton>
     </ElTooltip>
@@ -208,6 +209,7 @@
     </ElTooltip>
     <!-- 全屏 -->
     <ElTooltip
+      v-if="!replyMsgData"
       :enterable="false"
       disabled
       :showAfter="500"
@@ -217,7 +219,7 @@
       :offset="2"
       transition="slide-fade"
     >
-      <ElButton v-show="!replyMsgData" class="!ml-auto" @click="toggleFullScreenInput">
+      <ElButton class="!ml-auto" @click="toggleFullScreenInput">
         <Component :is="isFullscreenInputActive ? Minimize2 : Maximize2" :size="16" />
       </ElButton>
     </ElTooltip>

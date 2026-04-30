@@ -6,7 +6,7 @@
           <ElIcon><Search /></ElIcon>
         </template>
       </ElInput>
-      <Dropdown :trigger="['click']">
+      <Dropdown v-if="!IS_LOCAL_MODE" :trigger="['click']">
         <div class="header-search-add flex-c">
           <ElIcon><Plus /></ElIcon>
         </div>
@@ -18,12 +18,12 @@
                 <span>{{ $t("chat.createGroup") }}</span>
               </div>
             </MenuItem>
-            <MenuItem v-if="false">
+            <!-- <MenuItem>
               <div class="flex-c gap-5" @click="handleCreateAssistant">
                 <ElIcon><Bot /></ElIcon>
                 <span>{{ $t("chat.newAgent") }}</span>
               </div>
-            </MenuItem>
+            </MenuItem> -->
           </Menu>
         </template>
       </Dropdown>
