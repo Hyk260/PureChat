@@ -84,7 +84,7 @@ const quickLinks = [
           <RouterLink to="/" class="btn btn-primary">
             <Home class="btn-icon" />
             返回首页
-            <ArrowLeft class="btn-icon arrow-icon" />
+            <!-- <ArrowLeft class="btn-icon arrow-icon" /> -->
           </RouterLink>
 
           <button class="btn btn-secondary" @click="$router.go(-1)">

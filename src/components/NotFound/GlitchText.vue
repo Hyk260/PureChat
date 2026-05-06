@@ -24,7 +24,6 @@ const triggerGlitch = () => {
 }
 
 onMounted(() => {
-  // Random glitch effect
   glitchInterval = setInterval(() => {
     if (Math.random() > 0.7) {
       triggerGlitch()

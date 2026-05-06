@@ -14,7 +14,6 @@ interface Particle {
 }
 
 const particles = ref<Particle[]>([])
-const containerRef = ref<HTMLElement | null>(null)
 let animationId: number | null = null
 
 const createParticles = () => {
@@ -73,7 +72,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="containerRef" class="particles-container">
+  <div class="particles-container">
     <!-- Geometric shapes -->
     <div
       v-for="particle in particles"
