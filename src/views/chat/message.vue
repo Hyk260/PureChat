@@ -20,7 +20,7 @@
     <div class="message-right">
       <EmptyMessage className="empty" />
       <ChatHeader />
-      <div class="message-container">
+      <div v-if="chatStore.currentConversation" class="message-container">
         <div class="w-full relative" :style="{ contain: 'strict' }">
           <!-- 聊天窗口 -->
           <Chatwin />

@@ -27,6 +27,7 @@
 [![deepwiki][deepwiki-shield]][deepwiki-link]
 [![Docs][docs-shield]][docs-link]
 [![GitHub license](https://img.shields.io/github/license/Hyk260/PureChat)](https://github.com/Hyk260/PureChat/blob/master/LICENSE)
+[![Deploy](https://img.shields.io/badge/Deploy-Vercel-000000?style=flat&labelColor=555&logo=vercel&logoColor=fff)](https://docs.purechat.cn/other/deploy.html)
 
 <!-- SHIELD GROUP -->
 
