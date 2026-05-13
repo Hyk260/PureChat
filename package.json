@@ -44,7 +44,7 @@
     "@shikijs/types": "^3.12.0",
     "@tencentcloud/lite-chat": "4.2.8",
     "@vueuse/components": "^10.7.0",
-    "@vueuse/core": "^8.4.2",
+    "@vueuse/core": "^14.3.0",
     "@wangeditor/editor": "5.1.23",
     "@wangeditor/editor-for-vue": "5.1.12",
     "ant-design-vue": "^4.2.6",
