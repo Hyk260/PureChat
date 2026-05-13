@@ -20,7 +20,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '20'
   PNPM_VERSION: '9'
 
 jobs:
@@ -40,7 +39,7 @@ jobs:
       - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: '.node-version'
           cache: 'pnpm'
 
       - name: 安装依赖
@@ -73,7 +72,7 @@ jobs:
       - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: '.node-version'
           cache: 'pnpm'
 
       - name: 获取 pnpm 存储目录

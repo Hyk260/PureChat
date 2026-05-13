@@ -1,28 +1,51 @@
 # Dependabot 自动更新配置
+# 说明见 .github/dependabot.md
 version: 2
 updates:
-  # 启用 npm 依赖更新
+  # pnpm 工作区：单 lockfile 时根目录一项即可覆盖 packages/*
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"        # 每周检查一次
-      day: "monday"             # 周一检查
-      time: "09:00"             # 上午9点执行
-      timezone: "Asia/Shanghai" # 使用上海时区
-    # 版本更新策略
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
     versioning-strategy: "auto"
-    # 忽略特定包
-    ignore:
-      - dependency-name: "@types/*"        # 忽略类型定义包
-      - dependency-name: "eslint*"         # 忽略ESLint相关包
-      - dependency-name: "prettier*"       # 忽略Prettier相关包
-      - dependency-name: "vitest*"         # 忽略Vitest测试包
-      - dependency-name: "@vitejs/*"       # 忽略Vite相关包
-      - dependency-name: "vite*"           # 忽略Vite包
-      - dependency-name: "unplugin*"       # 忽略unplugin插件包
-      - dependency-name: "unocss*"         # 忽略UnoCSS包
-      - dependency-name: "sass"            # 忽略Sass包
-      - dependency-name: "rimraf"          # 忽略rimraf包
-      - dependency-name: "chalk"           # 忽略chalk包
-      - dependency-name: "boxen"           # 忽略boxen包
-      - dependency-name: "gradient-string" # 忽略gradient-string包
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "npm"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
