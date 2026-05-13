@@ -165,7 +165,6 @@
   },
   "license": "MIT",
   "docs": "https://docs.purechat.cn",
-  "packageManager": "pnpm@9.7.1",
   "pnpm": {
     "peerDependencyRules": {
       "allowedVersions": {
@@ -181,6 +180,7 @@
       }
     }
   },
+  "packageManager": "pnpm@10.33.4",
   "lint-staged": {
     "*.{vue,js,ts,cjs,mjs,cts,mts}": [
       "prettier --write",

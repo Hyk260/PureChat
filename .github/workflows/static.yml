@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PNPM_VERSION: '9'
+  PNPM_VERSION: '10.33.4'
 
 jobs:
   # 代码质量检查
@@ -31,16 +31,13 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: 设置 pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - name: 设置 Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.node-version'
-          cache: 'pnpm'
+
+      - name: 安装 pnpm
+        run: corepack enable && corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate && pnpm --version
 
       - name: 安装依赖
         run: pnpm install --frozen-lockfile
@@ -64,16 +61,13 @@ jobs:
           # 获取完整历史用于更好的缓存
           fetch-depth: 0
 
-      - name: 设置 pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - name: 设置 Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.node-version'
-          cache: 'pnpm'
+
+      - name: 安装 pnpm
+        run: corepack enable && corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate && pnpm --version
 
       - name: 获取 pnpm 存储目录
         shell: bash
