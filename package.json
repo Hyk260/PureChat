@@ -50,7 +50,7 @@
     "ant-design-vue": "^4.2.6",
     "axios": "0.26.1",
     "cross-env": "^7.0.3",
-    "dayjs": "1.11.11",
+    "dayjs": "1.11.20",
     "debug": "^4.4.3",
     "dexie": "^4.0.10",
     "element-plus": "2.13.6",
