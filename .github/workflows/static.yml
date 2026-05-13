@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: 设置 pnpm
         uses: pnpm/action-setup@v3
@@ -59,7 +59,7 @@ jobs:
     
     steps:
       - name: 检出代码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # 获取完整历史用于更好的缓存
           fetch-depth: 0
