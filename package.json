@@ -103,7 +103,7 @@
     "@typescript-eslint/parser": "^8.0.0",
     "@unocss/preset-icons": "^66.0.0",
     "@unocss/preset-rem-to-px": "^66.0.0",
-    "@unocss/preset-uno": "^66.0.0",
+    "@unocss/preset-uno": "^66.6.8",
     "@vitejs/plugin-vue": "^6.0.5",
     "@vitejs/plugin-vue-jsx": "^5.1.5",
     "@vitest/browser": "^3.2.4",
