@@ -113,7 +113,7 @@ jobs:
           ls -la dist/
 
       - name: 设置 Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v6
 
       - name: 上传构建产物
         uses: actions/upload-pages-artifact@v3
