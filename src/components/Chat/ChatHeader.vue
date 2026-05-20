@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { Menu, MessageCirclePlus, PanelRightClose, PanelLeftClose, History, Share2 as Share } from "lucide-vue-next"
+import { Menu, MessageCirclePlus, PanelRightClose, PanelLeftClose, History, Share2 as Share } from "@lucide/vue"
 import { storeToRefs } from "pinia"
 
 import { useChatStore, useRobotStore, usePortalStore } from "@/stores"

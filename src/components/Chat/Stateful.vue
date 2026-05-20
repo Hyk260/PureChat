@@ -1,14 +1,22 @@
 <template>
   <div v-if="shouldShowState(item)" class="stateful flex-c mt-auto">
     <!-- 发送中 -->
-    <div v-if="isStatus('unSend') || isStatus('sending')" aria-label="发送中" class="iconify-icon svg-spinners"></div>
+    <SpinnersRingResize v-if="isStatus('unSend') || isStatus('sending')" aria-label="发送中" />
+    <!-- <div v-if="isStatus('unSend') || isStatus('sending')" aria-label="发送中" class="iconify-icon svg-spinners"></div> -->
     <!-- 发送失败 -->
-    <CircleAlert v-else-if="isStatus('fail')" class="fluent-fail" :size="14" @click="handleRetry" />
+    <CircleAlert
+      v-else-if="isStatus('fail')"
+      class="fluent-fail"
+      aria-label="发送失败"
+      :size="16"
+      @click="handleRetry"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { CircleAlert } from "lucide-vue-next"
+import { SpinnersRingResize } from "@pure/icons"
+import { CircleAlert } from "@lucide/vue"
 
 import type { DB_Message, MessageStatus } from "@pure/database/schemas"
 
@@ -25,16 +33,16 @@ defineOptions({
 
 const props = withDefaults(defineProps<Props>(), {
   testStatus: "sending",
-  testShow: true,
+  testShow: false,
 })
 
 const isStatus = (value: MessageStatus) => {
-  // return props.testStatus === value
+  if (props.testShow) return props.testStatus === value
   return props.status === value
 }
 
 const shouldShowState = (item: DB_Message) => {
-  // return props.testShow
+  if (props.testShow) return true
   return (
     item.flow === "out" &&
     !item.isRevoked &&

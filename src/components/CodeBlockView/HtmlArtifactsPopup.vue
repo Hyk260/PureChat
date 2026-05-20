@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { Camera, Code, Eye, Maximize, Minimize, SquareSplitHorizontal as Split, X } from "lucide-vue-next"
+import { Camera, Code, Eye, Maximize, Minimize, SquareSplitHorizontal as Split, X } from "@lucide/vue"
 import { ElSegmented } from "element-plus"
 import { useHtmlArtifacts } from "../../composables/useHtmlArtifacts"
 import CodeEditor from "../CodeEditor/CodeEditor.vue"

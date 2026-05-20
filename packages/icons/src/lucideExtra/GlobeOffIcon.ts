@@ -1,4 +1,4 @@
-import { createLucideIcon } from "lucide-vue-next"
+import { createLucideIcon } from "@lucide/vue"
 
 const GlobeOffIcon = createLucideIcon("GlobeOff", [
   [

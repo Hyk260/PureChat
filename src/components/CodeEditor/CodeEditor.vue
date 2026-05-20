@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { Save, Sparkles } from "lucide-vue-next"
+import { Save, Sparkles } from "@lucide/vue"
 import { MONACO_OPTIONS } from "@/config/monaco-editor/config"
 import type { editor } from "monaco-editor"
 

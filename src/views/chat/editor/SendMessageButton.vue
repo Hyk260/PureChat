@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { Tooltip } from "ant-design-vue"
-import { CirclePause, Languages, Send, WandSparkles, MessageSquarePlus } from "lucide-vue-next"
+import { CirclePause, Languages, Send, WandSparkles, MessageSquarePlus } from "@lucide/vue"
 import { useMessageOperations } from "@/hooks/useMessageOperations"
 import { useChatStore, useTopicStore, usePortalStore } from "@/stores"
 import { browserInfo } from "@pure/utils"

@@ -21,7 +21,7 @@ import {
   SquarePen,
   Trash,
   // SlidersHorizontal
-} from "lucide-vue-next"
+} from "@lucide/vue"
 import { useChatStore } from "@/stores/modules/chat"
 import { handleCopyMsg, scrollToMessage } from "@/utils/chat"
 

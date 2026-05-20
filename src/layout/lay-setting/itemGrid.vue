@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { X as Close } from "lucide-vue-next"
+import { X as Close } from "@lucide/vue"
 
 import About from "./about.vue"
 import Currency from "./currency.vue"

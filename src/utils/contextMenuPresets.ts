@@ -17,7 +17,7 @@ import {
   SquarePen,
   Trash2 as Trash,
   Undo,
-} from "lucide-vue-next"
+} from "@lucide/vue"
 
 import type { MenuItem } from "@pure/types"
 

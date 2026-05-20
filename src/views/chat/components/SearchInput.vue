@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { Plus } from "@element-plus/icons-vue"
-import { Bot, Search, MessageSquarePlus } from "lucide-vue-next"
+import { Bot, Search, MessageSquarePlus } from "@lucide/vue"
 import { Dropdown, Menu, MenuItem } from "ant-design-vue"
 import { debounce, isEmpty } from "lodash-es"
 import { ElMessageBox } from "element-plus"

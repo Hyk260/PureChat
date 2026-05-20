@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import { Popover, Menu, MenuItem } from "ant-design-vue"
-import { Ellipsis, Settings, CircleQuestionMark, SlidersHorizontal, MessageSquarePlus } from "lucide-vue-next"
+import { Ellipsis, Settings, CircleQuestionMark, SlidersHorizontal, MessageSquarePlus } from "@lucide/vue"
 import { useRouter } from "vue-router"
 import { useChatStore, useSidebarStore, useRouteStore } from "@/stores"
 // import SidebarEditDialog from "@/components/MoreSidebar/index.vue"

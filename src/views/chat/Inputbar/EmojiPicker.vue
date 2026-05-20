@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { Smile } from "lucide-vue-next"
+import { Smile } from "@lucide/vue"
 
 import { ClickOutside as vClickOutside } from "element-plus"
 import { chunk } from "lodash-es"

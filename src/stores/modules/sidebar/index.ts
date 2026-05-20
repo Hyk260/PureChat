@@ -1,5 +1,5 @@
 import { markRaw } from "vue"
-import { Compass, LayoutGrid, MessageSquareMore, User } from "lucide-vue-next"
+import { Compass, LayoutGrid, MessageSquareMore, User } from "@lucide/vue"
 
 import { defineStore } from "pinia"
 

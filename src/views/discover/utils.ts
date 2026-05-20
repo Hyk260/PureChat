@@ -1,4 +1,4 @@
-import { Bot, BrainCircuit } from "lucide-vue-next"
+import { Bot, BrainCircuit } from "@lucide/vue"
 
 export const options = [
   // {

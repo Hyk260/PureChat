@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { Radar } from "lucide-vue-next"
+import { Radar } from "@lucide/vue"
 import { useThemeStore } from "@/stores/modules/theme"
 import { usePreferredColorScheme } from "@vueuse/core"
 

@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { Atom, Eye, ToyBrick } from "lucide-vue-next"
+import { Atom, Eye, ToyBrick } from "@lucide/vue"
 import { ClickOutside as vClickOutside } from "element-plus"
 import { cloneDeep, isEmpty } from "lodash-es"
 import { storeToRefs } from "pinia"

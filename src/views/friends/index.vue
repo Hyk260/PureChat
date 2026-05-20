@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { Search } from "lucide-vue-next"
+import { Search } from "@lucide/vue"
 import FriendsTabs from "./FriendsTabs.vue"
 import FriendsTree from "./FriendsTree.vue"
 import ProfileCard from "./ProfileCard.vue"

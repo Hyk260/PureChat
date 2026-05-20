@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { BellOff } from "lucide-vue-next"
+import { BellOff } from "@lucide/vue"
 import { storeToRefs } from "pinia"
 
 import { useContextMenu } from "@/composables/useContextMenu"
@@ -108,7 +108,7 @@ const chatStore = useChatStore()
 
 // const routeStore = useRouteStore()
 
-const { contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu()
+const { showContextMenu, hideContextMenu } = useContextMenu()
 
 const { currentConversation, conversationList, searchConversationList, currentSessionId, sessionId } =
   storeToRefs(chatStore)

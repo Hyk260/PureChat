@@ -96,7 +96,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref } from "vue"
 import { VueDraggableNext } from "vue-draggable-next"
-import { CircleMinus, CirclePlus, GripVertical } from "lucide-vue-next"
+import { CircleMinus, CirclePlus, GripVertical } from "@lucide/vue"
 
 import { cloneDeep, uniqBy } from "lodash-es"
 

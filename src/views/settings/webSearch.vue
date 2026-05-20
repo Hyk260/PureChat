@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from "vue"
 import { ElLink } from "element-plus"
-import { ExternalLink } from "lucide-vue-next"
+import { ExternalLink } from "@lucide/vue"
 
 import { storeToRefs } from "pinia"
 

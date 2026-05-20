@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { ElAlert } from "element-plus"
-import { TriangleAlert } from "lucide-vue-next"
+import { TriangleAlert } from "@lucide/vue"
 import { modelValue } from "@/ai/constant"
 import { openWindow } from "@pure/utils"
 import { WarningCustomMessageBasse } from "@/config/custom"

@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { CircleX } from "lucide-vue-next"
+import { CircleX } from "@lucide/vue"
 
 import { storeToRefs } from "pinia"
 

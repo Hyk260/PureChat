@@ -208,7 +208,7 @@ import {
   Star,
   ChevronLeft,
   ChevronRight,
-} from "lucide-vue-next"
+} from "@lucide/vue"
 import { ElMessageBox } from "element-plus"
 import { Tooltip, Dropdown, Menu, MenuItem } from "ant-design-vue"
 import { storeToRefs } from "pinia"

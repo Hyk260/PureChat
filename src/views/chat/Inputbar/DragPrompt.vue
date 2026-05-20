@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import { ElInput } from "element-plus"
-import { CirclePlus, CircleX } from "lucide-vue-next"
+import { CirclePlus, CircleX } from "@lucide/vue"
 
 import { cloneDeep, isEmpty } from "lodash-es"
 import { storeToRefs } from "pinia"

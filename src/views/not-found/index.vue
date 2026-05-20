@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue"
 import { RouterLink, useRoute } from "vue-router"
-import { Home, ArrowLeft, Search, Compass, RefreshCw } from "lucide-vue-next"
+import { Home, ArrowLeft, Search, Compass, RefreshCw } from "@lucide/vue"
 import FloatingParticles from "@/components/NotFound/FloatingParticles.vue"
 import GlitchText from "@/components/NotFound/GlitchText.vue"
 import "@/styles/not-found.css"

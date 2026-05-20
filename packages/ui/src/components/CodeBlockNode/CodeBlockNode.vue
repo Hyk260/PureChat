@@ -127,7 +127,7 @@ import {
   // SquareTerminal,
   Eye,
   Maximize,
-} from "lucide-vue-next"
+} from "@lucide/vue"
 import { usePreferredColorScheme, useIntersectionObserver } from "@vueuse/core"
 // import {
 //   registerHighlight,

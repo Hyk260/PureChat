@@ -148,7 +148,7 @@ const appStore = useAppStore()
 const userStore = useUserStore()
 
 const { resendMessage } = useMessageOperations()
-const { contextMenuRef, showContextMenu } = useContextMenu()
+const { showContextMenu } = useContextMenu()
 
 const {
   isAssistant,

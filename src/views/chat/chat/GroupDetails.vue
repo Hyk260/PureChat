@@ -121,7 +121,7 @@ import {
   // CircleX,
   QrCode,
   SquarePen as EditPen,
-} from "lucide-vue-next"
+} from "@lucide/vue"
 import {
   // EditPen,
   CircleCloseFilled,

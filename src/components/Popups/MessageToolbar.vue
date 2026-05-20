@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { Forward, Merge, Share2, Trash2, X } from "lucide-vue-next"
+import { Forward, Merge, Share2, Trash2, X } from "@lucide/vue"
 import { ElMessageBox } from "element-plus"
 import { storeToRefs } from "pinia"
 

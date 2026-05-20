@@ -1,5 +1,5 @@
 import { computed } from "vue"
-import { Cloud, Brain, Globe, Settings2 as Settings, CircleAlert, Sun, Moon, Monitor } from "lucide-vue-next"
+import { Cloud, Brain, Globe, Settings2 as Settings, CircleAlert, Sun, Moon, Monitor } from "@lucide/vue"
 
 import { ModelProvider } from "model-bank"
 import { $t } from "@/locales"

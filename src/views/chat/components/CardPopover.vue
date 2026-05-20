@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { Settings2 as Operation, ChartPie, LogOut } from "lucide-vue-next"
+import { Settings2 as Operation, ChartPie, LogOut } from "@lucide/vue"
 // import { Operation, PieChart } from "@element-plus/icons-vue"
 import { onClickOutside } from "@vueuse/core"
 

@@ -252,7 +252,7 @@ import {
   SlidersHorizontal,
   Smile,
   type LucideIcon,
-} from "lucide-vue-next"
+} from "@lucide/vue"
 import { GlobeOffIcon, ImageIcon, FolderIcon } from "@pure/icons"
 import { Popover } from "ant-design-vue"
 import { ElMessageBox } from "element-plus"

@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { X, Copy, Forward, MessageCircle, Link, Download } from "lucide-vue-next"
+import { X, Copy, Forward, MessageCircle, Link, Download } from "@lucide/vue"
 import { ElDialog } from "element-plus"
 
 import { openWindow, formatGroupID, useState } from "@pure/utils"

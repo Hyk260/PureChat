@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Popover } from "ant-design-vue"
-import { ChevronDown, ChevronUp } from "lucide-vue-next"
+import { ChevronDown, ChevronUp } from "@lucide/vue"
 import { useIntersectionObserver } from "@vueuse/core"
 import { useState } from "@pure/utils"
 import { useChatStore } from "@/stores/modules/chat"
