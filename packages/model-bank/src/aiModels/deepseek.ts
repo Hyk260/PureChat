@@ -22,6 +22,26 @@ const DeepSeek: ModelProviderCard = {
       functionCall: true,
       id: "deepseek-reasoner",
     },
+    {
+      tokens: 1_048_576,
+      displayName: "DeepSeek V4 Flash",
+      enabled: true,
+      description:
+        "DeepSeek V4 Flash 是 V4 系列中具备高性价比的模型，提供 100 万上下文窗口与混合思考模式。默认开启思考模式，可通过 `thinking` 参数切换；非思考模式适用于低延迟场景。",
+      id: "deepseek-v4-flash",
+      functionCall: true,
+      reasoning: true,
+    },
+    {
+      tokens: 1_000_000,
+      description:
+        "DeepSeek V4 Pro 是 V4 系列旗舰，针对高强度推理、Agent 工作流和长程规划进行优化。默认开启思考模式，可通过 `thinking` 参数切换。",
+      displayName: "DeepSeek V4 Pro",
+      id: "deepseek-v4-pro",
+      functionCall: true,
+      reasoning: true,
+      enabled: true,
+    },
   ],
   checkModel: "deepseek-chat",
   description:
