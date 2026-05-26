@@ -57,7 +57,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       const { code, data: result } = data
       if (code === 200) {
         timProxy.init()
-        await this.handleIMLogin({ userID: result.username, userSig: result.userSig })
+        await this.handleIMLogin({ userID: result.userId, userSig: result.userSig })
         window.localStg.set("User-Model", result)
         useAuthStore().setTokens(result?.accessToken, result?.refreshToken)
         // data?.remember && window.localStg.set(ACCOUNT, data)
@@ -124,7 +124,7 @@ export const useUserStore = defineStore(SetupStoreId.User, {
         console.log("tryReconnect", data)
         if (data) {
           timProxy.init()
-          await this.handleIMLogin({ userID: data.username, userSig: data.userSig }, false)
+          await this.handleIMLogin({ userID: data.userId, userSig: data.userSig }, false)
         } else {
           this.handleUserLogout()
         }

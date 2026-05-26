@@ -1,10 +1,10 @@
 <template>
   <ElForm ref="formRef" :model="form" :rules="rules">
     <!-- 账号 -->
-    <ElFormItem prop="username">
+    <ElFormItem prop="userId">
       <template v-if="isAutoComplete">
         <ElAutocomplete
-          v-model="form.username"
+          v-model="form.userId"
           clearable
           size="large"
           :debounce="200"
@@ -15,13 +15,7 @@
         />
       </template>
       <template v-else>
-        <ElInput
-          v-model="form.username"
-          :placeholder="$t('login.username')"
-          :prefixIcon="User"
-          size="large"
-          clearable
-        />
+        <ElInput v-model="form.userId" :placeholder="$t('login.username')" :prefixIcon="User" size="large" clearable />
       </template>
     </ElFormItem>
     <!-- 密码 -->

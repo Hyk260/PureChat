@@ -100,7 +100,7 @@ export class LocalChat {
    * 创建聊天实例
    */
   create() {
-    localStg.set("User-Model", { username: UserProfile.userID })
+    localStg.set("User-Model", { userId: UserProfile.userID })
     return LocalChat.getInstance()
   }
 

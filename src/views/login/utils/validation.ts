@@ -17,17 +17,17 @@ const pattern = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 /** 邮箱正则 */
 const REGEXP_EMAIL = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
-const { username, password, remember } = localStg.get("ACCOUNT") || {}
+const { userId, password, remember } = localStg.get("ACCOUNT") || {}
 
 export const defaultForm = reactive({
-  username: username || "",
+  userId: userId || "",
   password: password || "123456qwer",
   remember: remember || false,
   verifyCode: "",
 })
 
 export const rules = reactive({
-  username: [
+  userId: [
     {
       required: true,
       message: "用户名是必须的",
@@ -58,7 +58,7 @@ export const rules = reactive({
 })
 
 export const ruleForm = reactive({
-  username: "",
+  userId: "",
   nickname: "",
   email: "",
   phone: "",
@@ -69,7 +69,7 @@ export const ruleForm = reactive({
 
 if (isDev) {
   Object.assign(ruleForm, {
-    username: "zhangshan",
+    userId: "zhangshan",
     nickname: "张三",
     email: "2607881950@qq.com",
     phone: "17612345678",
@@ -80,7 +80,7 @@ if (isDev) {
 }
 
 export const updateRules = reactive({
-  username: [
+  userId: [
     {
       required: true,
       message: "账号格式应为字母、数字组合 （张爱玲）zhangal（张三） zhangsan",

@@ -2,27 +2,22 @@ import { http } from "@/service/request"
 import type { ApiResponse } from "@/service/request/types"
 import type { LoginResult } from "@/stores/modules/user/type"
 
-interface RegisterPayload {
-  username: string
+interface UserAuthBase {
+  userId: string
   password: string
+  nickname?: string
+  email?: string
+  phone?: string
+  verifyCode?: string
+}
+
+interface RegisterPayload extends UserAuthBase {
   repeatPassword?: string
-  nickname?: string
-  email?: string
-  phone?: string
-  verifyCode?: string
 }
 
-interface loginPayload {
-  username: string
-  password: string
-  nickname?: string
-  email?: string
-  phone?: string
-  verifyCode?: string
-}
+type LoginPayload = UserAuthBase
 
-// 登录接口
-export const login = (data: loginPayload) => {
+export const login = (data: LoginPayload) => {
   return http.request<ApiResponse<LoginResult>>({
     url: "/api/auth/login",
     method: "post",

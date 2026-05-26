@@ -111,22 +111,6 @@ export class TencentChatService {
   }
 
   private async loadSDKModules(): Promise<SDKModules> {
-    // const [
-    //   { default: TencentCloudChat },
-    //   { default: GroupModule },
-    //   { default: SignalingModule },
-    //   { default: TIMUploadPlugin },
-    // ] = await Promise.all([
-    //   import(/* @vite-ignore */ "@tencentcloud/chat/index.es.js") as Promise<{
-    //     default: TencentCloudChatModule
-    //   }>,
-    //   import(/* @vite-ignore */ "@tencentcloud/chat/modules/group-module.js"),
-    //   import(/* @vite-ignore */ "@tencentcloud/chat/modules/signaling-module.js"),
-    //   import(/* @vite-ignore */ "tim-upload-plugin"),
-    // ])
-
-    // return { TencentCloudChat, GroupModule, SignalingModule, TIMUploadPlugin }
-
     const [{ default: TencentCloudChat }] = await Promise.all([
       // @tencentcloud/lite-chat
       // @tencentcloud/lite-chat/standard.es.js
@@ -148,9 +132,6 @@ export class TencentChatService {
     })
 
     this.configureLogging(config.logLevel, chat)
-
-    // chat.registerPlugin({ "tim-upload-plugin": modules.TIMUploadPlugin })
-    // console.log("🔌 文件上传插件注册成功")
 
     return chat
   }

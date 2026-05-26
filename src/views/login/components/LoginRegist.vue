@@ -1,7 +1,7 @@
 <template>
   <ElForm ref="ruleFormRef" :model="ruleForm" :rules="updateRules" size="large">
-    <ElFormItem prop="username">
-      <ElInput v-model="ruleForm.username" clearable :placeholder="$t('login.username')" :prefixIcon="User" />
+    <ElFormItem prop="userId">
+      <ElInput v-model="ruleForm.userId" clearable :placeholder="$t('login.username')" :prefixIcon="User" />
     </ElFormItem>
     <ElFormItem prop="nickname">
       <ElInput v-model="ruleForm.nickname" clearable :placeholder="$t('login.nickname')" :prefixIcon="User" />

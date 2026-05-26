@@ -14,7 +14,7 @@ export interface UserLocalStore {
 
 // 登录响应结果
 export interface LoginResult {
-  username: string
+  userId: string
   userSig: string
   accessToken: string
   refreshToken: string
@@ -31,7 +31,7 @@ export interface UserState {
 export type HandleSuccessfulAuthPayload = ApiResponse<LoginResult>
 
 export interface HandleUserLoginPayload {
-  username: string
+  userId: string
   password: string
 }
 
