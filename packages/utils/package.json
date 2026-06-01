@@ -20,7 +20,8 @@
     "dompurify": "^3.2.7",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
-    "remark-html": "^16.0.1"
+    "remark-html": "^16.0.1",
+    "modern-screenshot": "^4.6.2"
   },
   "devDependencies": {
     "happy-dom": "^20.0.11",

@@ -1,4 +1,5 @@
 export * from "./useCopyCode"
 export * from "./useHandlerDrop"
+export * from "./useScreenshot"
 export * from "./useState"
 export * from "./useVerifyCode"

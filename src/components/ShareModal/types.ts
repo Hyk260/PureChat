@@ -1,4 +1,4 @@
-import { ImageType } from "@/hooks/useScreenshot"
+import { ImageType } from "@pure/utils/hooks"
 
 /**
  * 分享设置选项接口

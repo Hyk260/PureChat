@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import { domToBlob, domToJpeg, domToPng, domToSvg, domToWebp } from "modern-screenshot"
 
-import { useState } from "@pure/utils/hooks"
+import { useState } from "./useState"
 
 export enum ImageType {
   Blob = "blob",
@@ -32,6 +32,7 @@ type ScreenshotFunction = (
 ) => Promise<string | Blob>
 
 interface UseScreenshotOptions {
+  target?: string | globalThis.Ref<Element | null, Element | null>
   onError?: (message: string, error?: unknown) => void
   onCopySuccess?: () => void
 }
@@ -57,12 +58,31 @@ const SCREENSHOT_OPTIONS = {
   scale: 2,
 } as const
 
+function waitForIdle() {
+  return new Promise<void>((resolve) => {
+    if (typeof window.requestIdleCallback === "function") {
+      window.requestIdleCallback(() => resolve())
+      return
+    }
+
+    window.setTimeout(resolve, 0)
+  })
+}
+
+function sanitizeFileName(value: string) {
+  return value.replace(/[\\/:*?"<>|]/g, "_").trim()
+}
+
 /**
  * 将图像数据URL写入系统的剪贴板
  * @param {Blob} blob - 图像Blob对象
  */
 async function copyImageToClipboard(blob: Blob, onCopySuccess?: () => void) {
   try {
+    if (!navigator.clipboard || typeof ClipboardItem === "undefined") {
+      throw new Error("Clipboard API is not available")
+    }
+
     const clipboardItem = new ClipboardItem({ "image/png": blob })
     await navigator.clipboard.write([clipboardItem])
     onCopySuccess?.()
@@ -80,7 +100,8 @@ async function copyImageToClipboard(blob: Blob, onCopySuccess?: () => void) {
  */
 function downloadImage(dataUrl: string, imageType: ImageType, title: string = "") {
   const link = document.createElement("a")
-  const fileName = `${"PureChat"}_${title ? `${title}_` : ""}${dayjs().format("YYYY-MM-DD")}.${imageType}`
+  const safeTitle = sanitizeFileName(title)
+  const fileName = `${"PureChat"}_${safeTitle ? `${safeTitle}_` : ""}${dayjs().format("YYYY-MM-DD")}.${imageType}`
 
   link.download = fileName
   link.href = dataUrl
@@ -90,30 +111,50 @@ function downloadImage(dataUrl: string, imageType: ImageType, title: string = ""
   document.body.removeChild(link)
 }
 
-function getPreviewElement() {
+function getTargetElement(target: UseScreenshotOptions["target"]) {
+  if (typeof target === "string") {
+    const element = document.querySelector(target)
+    if (!element) {
+      throw new Error(`Screenshot target not found: ${target}`)
+    }
+    return element
+  }
+
+  if (target?.value) {
+    return target.value
+  }
+
+  if (target) {
+    throw new Error("Screenshot target is not mounted")
+  }
+
   const element = document.querySelector(PREVIEW_SELECTOR)
   if (!element) {
-    throw new Error("Preview element not found")
+    throw new Error(`Screenshot target not found: ${PREVIEW_SELECTOR}`)
   }
   return element
 }
 
 export const useScreenshot = (options: UseScreenshotOptions = {}): ScreenshotHook => {
-  const { onError, onCopySuccess } = options
+  const { target, onError, onCopySuccess } = options
   const [loading, setLoading] = useState(false)
 
   const handleDownload = async (imageType = ImageType.JPG, title = "", callback?: () => void) => {
+    if (loading.value) return
+
     setLoading(true)
 
     try {
-      await new Promise((resolve) => requestIdleCallback(resolve))
+      if (imageType !== ImageType.Blob) {
+        await waitForIdle()
+      }
 
       const screenshotFn = SCREENSHOT_FUNCTIONS[imageType]
       if (!screenshotFn) {
         throw new Error(`Unsupported image type: ${imageType}`)
       }
 
-      const element = getPreviewElement()
+      const element = getTargetElement(target)
 
       const dataUrl = await screenshotFn(element, SCREENSHOT_OPTIONS)
 

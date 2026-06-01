@@ -65,7 +65,6 @@
     "markdown-it": "^14.1.0",
     "mitt": "3.0.1",
     "model-bank": "workspace:*",
-    "modern-screenshot": "^4.6.2",
     "monaco-editor": "^0.54.0",
     "nanoid": "^5.0.7",
     "nprogress": "^0.2.0",
