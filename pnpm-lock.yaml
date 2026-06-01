@@ -118,9 +118,6 @@ importers:
       model-bank:
         specifier: workspace:*
         version: link:packages/model-bank
-      modern-screenshot:
-        specifier: ^4.6.2
-        version: 4.6.8
       monaco-editor:
         specifier: ^0.54.0
         version: 0.54.0
@@ -463,6 +460,9 @@ importers:
       dompurify:
         specifier: ^3.2.7
         version: 3.3.3
+      modern-screenshot:
+        specifier: ^4.6.2
+        version: 4.6.8
       remark:
         specifier: ^15.0.1
         version: 15.0.1
