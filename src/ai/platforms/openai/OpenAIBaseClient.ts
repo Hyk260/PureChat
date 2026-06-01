@@ -303,7 +303,6 @@ export abstract class OpenAIBaseClient {
   ) {
     const requestTimeoutId = setTimeout(() => {
       controller?.abort()
-      // options.onError?.("请求超时")
       cleanUp()
     }, REQUEST_TIMEOUT_MS)
 
@@ -313,15 +312,11 @@ export abstract class OpenAIBaseClient {
       clearTimeout(requestTimeoutId)
 
       if (response.status === 401) {
-        // const errorData = await response.json()
-        // options?.onError?.(errorData.error?.message || "认证失败")
         cleanUp()
         return
       }
 
       if (!response.ok) {
-        // const errorData = await response.json()
-        // options?.onError?.(errorData.error?.message || `请求失败 (${response.status})`)
         cleanUp()
         return
       }
@@ -331,13 +326,8 @@ export abstract class OpenAIBaseClient {
 
       options?.onFinish?.(message)
       cleanUp()
-    } catch (error) {
+    } catch {
       clearTimeout(requestTimeoutId)
-      if (error.name === "AbortError") {
-        // options?.onError?.("请求超时，请稍后重试")
-      } else {
-        // options?.onError?.(error instanceof Error ? error.message : "网络请求失败")
-      }
       cleanUp()
     }
   }
@@ -359,33 +349,6 @@ export abstract class OpenAIBaseClient {
       },
     })
     return await agentRuntime.models()
-
-    // try {
-    //   const response = await fetch(url, {
-    //     method: "GET",
-    //     headers: this.getHeaders(),
-    //   })
-
-    //   if (!response.ok) {
-    //     const errorData = await response.json().catch(() => ({}))
-    //     const errorMessage = errorData.error?.message || `获取模型列表失败 (${response.status})`
-    //     window.$message?.error(errorMessage)
-    //     throw new Error(errorMessage)
-    //   }
-
-    //   const responseJson = (await response.json()) as OpenAIListModelResponse
-    //   return responseJson.data.map((model) => ({
-    //     id: model.id,
-    //     object: model?.object || "model",
-    //     created: model?.created || 0,
-    //     owned_by: model?.owned_by || "",
-    //   })) as OpenAI.Models.Model[]
-    // } catch (error) {
-    //   if (error instanceof Error && error.message) throw error
-    //   const errorMessage = error instanceof Error ? error.message : "获取模型列表失败"
-    //   window.$message?.error(errorMessage)
-    //   throw new Error(errorMessage)
-    // }
   }
 
   /**

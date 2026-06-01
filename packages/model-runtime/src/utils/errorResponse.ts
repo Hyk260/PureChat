@@ -39,10 +39,10 @@ const getStatus = (errorType: IAgentRuntimeErrorType | ErrorType) => {
 
     // all local provider connection error
     case AgentRuntimeErrorType.OllamaServiceUnavailable:
-    case ChatErrorType.OllamaServiceUnavailable:
-    case AgentRuntimeErrorType.OllamaBizError: {
-      return 472
-    }
+    // case ChatErrorType.OllamaServiceUnavailable:
+    // case AgentRuntimeErrorType.OllamaBizError: {
+    //   return 472
+    // }
   }
 
   return errorType as number

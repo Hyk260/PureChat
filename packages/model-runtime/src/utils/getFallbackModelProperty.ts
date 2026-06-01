@@ -16,7 +16,7 @@ export const getModelPropertyWithFallback = async <T>(
   if (providerId) {
     const exactMatch = DEFAULT_MODEL_LIST.find((m) => m.id === modelId)
 
-    if (exactMatch && exactMatch[propertyName] !== undefined) {
+    if (exactMatch?.[propertyName] !== undefined) {
       return exactMatch[propertyName] as T
     }
   }
@@ -24,7 +24,7 @@ export const getModelPropertyWithFallback = async <T>(
   // Step 2: Fallback to a match ignoring the provider (match id only)
   const fallbackMatch = DEFAULT_MODEL_LIST.find((m) => m.id === modelId)
 
-  if (fallbackMatch && fallbackMatch[propertyName] !== undefined) {
+  if (fallbackMatch?.[propertyName] !== undefined) {
     return fallbackMatch[propertyName] as T
   }
 

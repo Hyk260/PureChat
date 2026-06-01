@@ -1,3 +1,5 @@
+import { AiModelType } from "model-bank"
+
 export type LLMRoleType = "user" | "system" | "assistant" | "function" | "tool"
 
 export interface LLMMessage {
@@ -61,7 +63,7 @@ export interface ChatModelCard {
    */
   reasoning?: boolean
 
-  type?: "chat" | "image"
+  type?: AiModelType
 
   /**
    *  whether model supports vision

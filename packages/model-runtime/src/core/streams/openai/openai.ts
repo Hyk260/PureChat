@@ -325,7 +325,7 @@ const transformOpenAIStream = (
     }
 
     // 无内容情况
-    if (item?.delta && item.delta.content === null) {
+    if (item?.delta?.content === null) {
       return { data: item.delta, id: chunk.id, type: "data" }
     }
 
