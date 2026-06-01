@@ -37,6 +37,11 @@ export interface MessageTextChunk {
   type: "text"
 }
 
+export interface MessageStopChunk {
+  reason: string
+  type: "stop"
+}
+
 export interface MessageSpeedChunk {
   speed: ModelPerformance
   type: "speed"
@@ -63,7 +68,13 @@ export interface FetchSSEOptions {
   onErrorHandle?: (error: ChatMessageError) => void
   onFinish?: OnFinishHandler
   onMessageHandle?: (
-    chunk: MessageTextChunk | MessageUsageChunk | MessageReasoningChunk | MessageBase64ImageChunk | MessageSpeedChunk
+    chunk:
+      | MessageTextChunk
+      | MessageUsageChunk
+      | MessageReasoningChunk
+      | MessageBase64ImageChunk
+      | MessageSpeedChunk
+      | MessageStopChunk
   ) => void
   responseAnimation?: ResponseAnimation
 }
@@ -162,7 +173,15 @@ const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: strin
     outputQueue.push(...text.split(""))
   }
 
+  const flushQueue = () => {
+    if (outputQueue.length === 0) return
+    const remaining = outputQueue.splice(0).join("")
+    buffer += remaining
+    params.onTextUpdate(remaining, buffer)
+  }
+
   return {
+    flushQueue,
     isAnimationActive,
     isTokenRemain: () => outputQueue.length > 0,
     pushToQueue,
@@ -182,6 +201,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   let finishedType: SSEFinishType = "done"
   let response!: Response
+  const fetchStartTime = Date.now()
 
   const { text, speed: smoothingSpeed } = standardizeAnimationStyle(options.responseAnimation ?? {})
   const shouldSkipTextProcessing = text === "none"
@@ -254,11 +274,20 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       } else {
         finishedType = "error"
 
+        const elapsedMs = Date.now() - fetchStartTime
+        const networkStatus = typeof navigator !== "undefined" ? navigator.onLine : undefined
+
+        const contextBody = {
+          elapsedMs,
+          networkStatus,
+        }
+
         const chatError = {
           body: {
             message: error.message,
             name: error.name,
             stack: error.stack,
+            ...contextBody,
           },
           message: error.message,
           type: ChatErrorType.UnknownChatFetchError,
@@ -275,14 +304,17 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         data = JSON.parse(ev.data)
       } catch (e) {
         console.warn("parse error:", e)
-        options.onErrorHandle?.({
-          body: {
-            context: {
-              chunk: ev.data,
-              error: { message: (e as Error).message, name: (e as Error).name },
-            },
-            message: "chat response streaming chunk parse error, please contact your API Provider to fix it.",
+
+        const chatError = {
+          context: {
+            chunk: ev.data,
+            error: { message: (e as Error).message, name: (e as Error).name },
           },
+          message: "chat response streaming chunk parse error, please contact your API Provider to fix it.",
+        }
+
+        options.onErrorHandle?.({
+          body: chatError,
           message: "parse error",
           type: "StreamChunkError",
         })
@@ -320,7 +352,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
           break
         }
-
+        // 思考
         case "reasoning": {
           if (!thinkingStartAt) {
             thinkingStartAt = Date.now()
@@ -374,6 +406,11 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           break
         }
 
+        case "stop": {
+          options.onMessageHandle?.({ reason: data, type: "stop" })
+          break
+        }
+
         case "error": {
           finishedType = "error"
           options.onErrorHandle?.(data)
@@ -391,10 +428,10 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     },
     signal: options.signal,
   })
-  // 仅在response可用时调用onFinish
-  // 因此像abort这样的情况，不需要调用onFinish
+
   if (response) {
     textController.stopAnimation()
+    thinkingController.stopAnimation()
 
     if (bufferTimer) {
       clearTimeout(bufferTimer)
@@ -407,15 +444,17 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     }
 
     if (response.ok) {
-      // 如果没有消息处理器，应该先调用onHandleMessage
       if (!triggerOnMessageHandler) {
         output = await response.clone().text()
         options.onMessageHandle?.({ text: output, type: "text" })
       }
 
-      if (textController.isTokenRemain()) {
-        await textController.startAnimation(smoothingSpeed)
-      }
+      // if (textController.isTokenRemain()) {
+      //   await textController.startAnimation(smoothingSpeed)
+      // }
+
+      textController.flushQueue()
+      thinkingController.flushQueue()
 
       const data = {
         images: images.length > 0 ? images : undefined,
