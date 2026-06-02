@@ -7,32 +7,26 @@ export interface DeepSeekModelCard {
   id: string
 }
 
+const fetchDeepSeekModels = async ({ client }: { client: OpenAI | unknown }): Promise<ChatModelCard[]> => {
+  // const modelClient = client as {
+  //   models?: { list?: () => Promise<{ data?: DeepSeekModelCard[] }> }
+  // }
+
+  // if (modelClient.models?.list) {
+  //   const modelsPage = await modelClient.models.list()
+  //   const modelList = modelsPage.data || []
+
+  //   return processModelList(modelList, MODEL_LIST_CONFIGS.deepseek, "deepseek")
+  // }
+
+  // const { deepseek } = await import("model-bank")
+
+  // return processModelList(deepseek, MODEL_LIST_CONFIGS.deepseek, "deepseek")
+}
+
 export const params = {
   baseURL: "https://api.deepseek.com/v1",
-  // chatCompletion: {
-  //   handlePayload: (payload) => {
-  //     // Transform reasoning object to reasoning_content string for multi-turn conversations
-  //     const messages = payload.messages.map((message: any) => {
-  //       // Only transform if message has reasoning.content
-  //       if (message.reasoning?.content) {
-  //         const { reasoning, ...rest } = message
-  //         return {
-  //           ...rest,
-  //           reasoning_content: reasoning.content,
-  //         }
-  //       }
-  //       // If message has reasoning but no content, remove reasoning field entirely
-  //       delete message?.reasoning
-  //       return message
-  //     })
-
-  //     return {
-  //       ...payload,
-  //       messages,
-  //       stream: payload.stream ?? true,
-  //     } as any
-  //   },
-  // },
+  // chatCompletion: {},
   debug: {
     chatCompletion: () => false,
   },
@@ -42,6 +36,7 @@ export const params = {
 
   //   return processModelList(modelList, MODEL_LIST_CONFIGS.deepseek, "deepseek")
   // },
+  models: fetchDeepSeekModels,
   provider: ModelProvider.DeepSeek,
 } satisfies OpenAICompatibleFactoryOptions
 

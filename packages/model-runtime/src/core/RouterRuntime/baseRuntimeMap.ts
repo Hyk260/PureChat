@@ -8,4 +8,8 @@ export const baseRuntimeMap = {
   openai: OpenAI,
   // google: GoogleAI,
   // qwen: LobeQwenAI,
-} satisfies Record<ApiType, RuntimeClass>
+  // deepseek: DeepSeekAI,
+  // minimax: MinimaxAI,
+  // xiaomimimo: XiaomiMimoAI,
+  // zhipu: ZhipuAI,
+} satisfies Record<ApiType, RuntimeClass | undefined>

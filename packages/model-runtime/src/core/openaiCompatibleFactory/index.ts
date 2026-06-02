@@ -2,6 +2,7 @@ import OpenAI, { ClientOptions } from "openai"
 // import { Stream } from "openai/streaming"
 // import dayjs from "dayjs"
 // import utc from "dayjs/plugin/utc"
+import debug from "debug"
 // import { DEFAULT_MODEL_LIST } from "model-bank"
 import { getModelPropertyWithFallback } from "../../utils/getFallbackModelProperty"
 import { postProcessModelList } from "../../utils/postProcessModelList"
@@ -99,9 +100,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
     async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatMethodOptions) {
       try {
+        debugger
+        const log = debug(`${this.logPrefix}:chat`)
         const inputStartAt = Date.now()
 
-        console.log(`${this.logPrefix} chat called with model: %s, stream: %s`, payload.model, payload.stream ?? true)
+        log(`chat called with model: %s, stream: %s`, payload.model, payload.stream ?? true)
 
         const isStreaming = payload.stream
 
@@ -135,6 +138,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         }
 
         if (payload.stream) {
+          log("processing streaming response")
           const [prod, debug] = response.tee()
 
           if (debugParams?.chatCompletion?.()) {
@@ -159,10 +163,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         }
 
         if (responseMode === "json") {
-          console.log("returning JSON response mode")
+          log("returning JSON response mode")
           return Response.json(response)
         }
 
+        log("transforming non-streaming response to stream")
         const transformHandler = transformResponseToStream
         const stream = transformHandler(response as unknown as OpenAI.ChatCompletion)
 

@@ -15,8 +15,8 @@ export interface ModelProcessorConfig {
 // 模型能力标签关键词配置
 export const MODEL_LIST_CONFIGS = {
   deepseek: {
-    functionCallKeywords: ["v3", "r1", "deepseek-chat"],
-    reasoningKeywords: ["r1", "deepseek-reasoner", "v3.1", "v3.2"],
+    functionCallKeywords: ["v3", "v4", "r1", "deepseek-chat"],
+    reasoningKeywords: ["r1", "deepseek-reasoner", "v3.", "v4"],
     visionKeywords: ["ocr"],
   },
   google: {
@@ -35,9 +35,9 @@ export const MODEL_LIST_CONFIGS = {
   },
   openai: {
     excludeKeywords: ["audio"],
-    functionCallKeywords: ["4o", "4.1", "o3", "o4", "oss"],
-    reasoningKeywords: ["o1", "o3", "o4", "oss"],
-    visionKeywords: ["4o", "4.1", "o4"],
+    functionCallKeywords: ["4o", "4.1", "o3", "o4", "oss", "-5"],
+    reasoningKeywords: ["o1", "o3", "o4", "oss", "-5"],
+    visionKeywords: ["4o", "4.1", "o4", "-5"],
   },
   qwen: {
     functionCallKeywords: ["qwen-max", "qwen-plus", "qwen-turbo", "qwen-long", "qwen1.5", "qwen2", "qwen2.5", "qwen3"],
@@ -66,9 +66,8 @@ const getProviderLocalConfig = async (provider?: ModelProviderKey): Promise<any[
     try {
       const modules = await import("model-bank")
 
-      providerLocalConfig = modules[provider]
+      providerLocalConfig = modules[provider] as unknown as any[]
     } catch {
-      // 如果配置文件不存在或导入失败，保持为 null
       providerLocalConfig = null
     }
   }
@@ -85,24 +84,20 @@ const findKnownModelByProvider = async (modelId: string, provider: keyof typeof 
   const lowerModelId = modelId.toLowerCase()
 
   try {
-    // 尝试动态导入对应的配置文件
     const modules = await import("model-bank")
 
-    // 如果提供商配置文件不存在，跳过
     if (!(provider in modules)) {
       return null
     }
 
     const providerModels = modules[provider as keyof typeof modules] as AIBaseModelCard[]
 
-    // 如果导入成功且有数据，进行查找
     if (Array.isArray(providerModels)) {
       return providerModels.find((m) => m.id.toLowerCase() === lowerModelId)
     }
 
     return null
   } catch {
-    // 如果导入失败（文件不存在或其他错误），返回 null
     return null
   }
 }

@@ -9,10 +9,6 @@ export const params = {
   },
   provider: ModelProvider.Mistral,
   constructorOptions: {
-    // defaultHeaders: {
-    //   "x-stainless-timeout": undefined,
-    //   "x-stainless-os": undefined,
-    // },
     fetch: (input: RequestInfo | URL, init: RequestInit = {}) => {
       if (init?.headers) {
         const headers = new Headers(init.headers)

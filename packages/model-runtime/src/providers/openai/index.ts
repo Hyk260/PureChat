@@ -11,6 +11,13 @@ export const params = {
     chatCompletion: () => false,
     responses: () => false,
   },
+  // models: async ({ client }) => {
+  //   const modelsPage = (await client.models.list()) as any
+  //   const modelList: OpenAIModelCard[] = modelsPage.data
+
+  //   // Automatically detect model provider and select corresponding configuration
+  //   return processMultiProviderModelList(modelList, "openai")
+  // },
   provider: ModelProvider.OpenAI,
 } satisfies OpenAICompatibleFactoryOptions
 
