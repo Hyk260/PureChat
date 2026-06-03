@@ -18,3 +18,18 @@ export const DEFAULT_AGENT_CHAT_CONFIG = {
   searchFCModel: DEFAULT_AGENT_SEARCH_FC_MODEL,
   searchMode: "off",
 }
+
+export const DEFAULT_AGENT_CONFIG = {
+  chatConfig: DEFAULT_AGENT_CHAT_CONFIG,
+  model: DEFAULT_MODEL,
+  openingQuestions: [],
+  params: {
+    frequency_penalty: 0,
+    presence_penalty: 0,
+    temperature: 1,
+    top_p: 1,
+  },
+  plugins: [],
+  provider: DEFAULT_PROVIDER,
+  systemRole: "",
+}
