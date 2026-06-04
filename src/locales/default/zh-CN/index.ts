@@ -3,8 +3,10 @@ import topic from "./topic"
 import chat from "./chat"
 import welcome from "./welcome"
 import components from "./components"
+import setting from "./setting"
 
 const resources = {
+  ...setting,
   ...common,
   ...welcome,
   ...chat,

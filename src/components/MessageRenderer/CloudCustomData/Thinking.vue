@@ -5,20 +5,7 @@
         <template #title>
           <div class="px-5 flex items-center gap-8">
             <Atom :size="16" :color="activeNames === '1' ? '#bd54c6' : 'currentColor'" />
-            <span v-if="isThinking">
-              {{
-                duration
-                  ? $t("Thinking.thinkingWithDuration", { duration: ((duration || 0) / 1000).toFixed(1) })
-                  : $t("Thinking.thinking")
-              }}
-            </span>
-            <span v-else>
-              {{
-                duration
-                  ? $t("Thinking.thought", { duration: ((duration || 0) / 1000).toFixed(1) })
-                  : $t("Thinking.thoughtWithDuration")
-              }}
-            </span>
+            <span>{{ displayText }}</span>
           </div>
         </template>
         <template #icon="{ isActive }">
@@ -56,6 +43,7 @@ import { ElCollapse, ElCollapseItem } from "element-plus"
 import { Check, Copy, Atom, ChevronDown, ChevronRight } from "@lucide/vue"
 // import { Markdown } from "@pure/ui"
 import { MessageStatus, customDataThinking } from "@pure/database/schemas"
+import { useI18n } from "vue-i18n"
 
 defineOptions({
   name: "Thinking",
@@ -81,6 +69,18 @@ const hasThinkingContent = computed(() => !!thinking.value)
 const thinkingContent = computed(() => thinking.value.content)
 const duration = computed(() => thinking.value.duration)
 const isThinking = computed(() => thinking.value?.reasoningType === "thinking")
+
+const { t } = useI18n()
+
+const durationSeconds = computed(() => ((duration.value || 0) / 1000).toFixed(1))
+const displayText = computed(() => {
+  if (isThinking.value) {
+    return duration.value
+      ? t("Thinking.thinkingWithDuration", { duration: durationSeconds.value })
+      : t("Thinking.thinking")
+  }
+  return duration.value ? t("Thinking.thought", { duration: durationSeconds.value }) : t("Thinking.thoughtWithDuration")
+})
 
 const toggleCollapse = (bol?: boolean) => {
   activeNames.value = bol ? COLLAPSE_OPEN : COLLAPSE_CLOSE

@@ -1,7 +1,7 @@
 <template>
   <ElDialog
     v-model="dialog"
-    title="配置"
+    :title="$t('settingModel.dialog.title')"
     width="70%"
     class="min-w-500 max-w-980"
     alignCenter
@@ -18,8 +18,12 @@
         <div v-for="item in modelData" :key="item.ID" class="container-item">
           <div class="flex flex-col gap-5">
             <div class="flex gap-5 title">
-              <span> {{ item.Title }}</span>
-              <ElTooltip v-if="item.apiKey && ['token'].includes(item.ID)" content="获取密钥" placement="top">
+              <span>{{ $t(`${item.labelKey}`) }}</span>
+              <ElTooltip
+                v-if="item.apiKey && ['token'].includes(item.ID)"
+                :content="$t('settingModel.dialog.getApiKey')"
+                placement="top"
+              >
                 <span class="flex cursor-pointer">
                   <ElIcon @click="openExternalUrl(item.apiKey)">
                     <QuestionFilled />
@@ -28,7 +32,7 @@
               </ElTooltip>
             </div>
             <div class="subTitle">
-              <Markdown :content="item.SubTitle" />
+              <Markdown :content="getItemDesc(item)" />
             </div>
           </div>
           <!-- 模型列表 -->
@@ -94,12 +98,18 @@
               </ElSelect>
               <div class="flex-bc">
                 <div class="text-[#999]">
-                  <span>共 {{ toDisplayCount(item?.options?.chatModels?.length) }} 个模型可用</span>
-                  <span>已选择 {{ toDisplayCount(item?.collapse?.length) }} 个</span>
+                  <span>{{
+                    $t("settingModel.dialog.modelCount", {
+                      count: toDisplayCount(item?.options?.chatModels?.length),
+                    })
+                  }}</span>
+                  <span>{{
+                    $t("settingModel.dialog.selectedCount", { count: toDisplayCount(item?.collapse?.length) })
+                  }}</span>
                 </div>
                 <div>
                   <!-- v-if="['openai', 'deepseek', 'qwen', 'zeroone', 'zhipu', 'ollama'].includes(item?.options?.id)" -->
-                  <ElTooltip :content="modelTooltipLabel" placement="top">
+                  <ElTooltip :content="$t('settingModel.dialog.refreshModels')" placement="top">
                     <ElIcon class="refresh flex-c" :size="15" @click="onRefresh">
                       <Refresh />
                     </ElIcon>
@@ -133,7 +143,7 @@
           <!-- API Key 接口地址-->
           <div v-else-if="['token', 'openaiUrl'].includes(item.ID)" class="input">
             <div class="gap-5 flex-bc">
-              <ElTooltip content="配置教程" placement="top">
+              <ElTooltip :content="$t('settingModel.dialog.configGuide')" placement="top">
                 <!-- ollama -->
                 <span v-if="item.doubt && isOllama" class="flex cursor-pointer">
                   <ElIcon @click="openExternalUrl(item.doubt)">
@@ -152,7 +162,7 @@
                   v-if="item.ID === 'openaiUrl'"
                   ref="inputUrlRefs"
                   v-model="item.defaultValue"
-                  :placeholder="item.Placeholder ?? ''"
+                  :placeholder="getItemPlaceholder(item)"
                   type="text"
                   clearable
                   @change="onModelDataChanged"
@@ -161,7 +171,7 @@
                   v-else-if="item.ID === 'token'"
                   ref="inputTokenRefs"
                   v-model="item.defaultValue"
-                  :placeholder="item.Placeholder ?? ''"
+                  :placeholder="getItemPlaceholder(item)"
                   type="password"
                   showPassword
                   clearable
@@ -179,7 +189,7 @@
             <div class="flex">
               <ElSelect
                 v-model="item.defaultValue"
-                placeholder="选择测试模型"
+                :placeholder="$t('settingModel.dialog.selectTestModel')"
                 class="w-300!"
                 appendToBody
                 @change="onModelDataChanged"
@@ -245,6 +255,7 @@ import emitter from "@/utils/mitt-bus"
 import { Markdown } from "@pure/ui"
 import DragPrompt from "./DragPrompt.vue"
 import { chatService } from "@/service/chatService"
+import { $t } from "@/locales"
 
 import type { Model, ModelConfigItem, ModelDataType } from "@/stores/modules/robot/types"
 import type { RobotBoxEventData } from "@/types"
@@ -287,11 +298,22 @@ function toDisplayCount(count?: number) {
   return count ?? 0
 }
 
-const modelTooltipLabel = "获取模型列表"
+function getItemLabel(item: ModelConfigItem) {
+  return item.labelKey ? $t(item.labelKey) : ""
+}
+
+function getItemDesc(item: ModelConfigItem) {
+  return item.descKey ? $t(item.descKey, { provider: item.providerNameKey }) : ""
+}
+
+function getItemPlaceholder(item: ModelConfigItem) {
+  return ''
+  // return $t(item.placeholderKey, { provider: item.providerNameKey })
+}
 
 function updateModelList(newModels: Model[]) {
   if (newModels.length === 0) return
-  window.$message?.success("模型列表更新成功")
+  window.$message?.success($t("settingModel.dialog.updateSuccess"))
   if (modelData.value?.Model) {
     modelData.value.Model.collapse = []
   }

@@ -17,8 +17,12 @@ export interface Model {
 
 export interface ModelConfigItem {
   ID: string
-  Title: string
-  SubTitle: string
+  Title?: string
+  SubTitle?: string
+  labelKey?: string
+  descKey?: string
+  placeholderKey?: string
+  providerNameKey?: string
   defaultValue: string
   options?: {
     id: string
