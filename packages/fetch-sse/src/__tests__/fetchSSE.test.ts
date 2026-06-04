@@ -2,13 +2,16 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { MESSAGE_CANCEL_FLAT } from "@pure/const"
 import { ChatMessageError } from "@pure/types"
 
-import { FetchEventSourceInit, fetchEventSource } from "../../fetchEventSource"
-import { sleep } from "../../sleep"
+import { FetchEventSourceInit, fetchEventSource, sleep } from "@pure/utils"
 import { fetchSSE } from "../fetchSSE"
 
-vi.mock("../../fetchEventSource", () => ({
-  fetchEventSource: vi.fn(),
-}))
+vi.mock("@pure/utils", async () => {
+  const utils = await vi.importActual("@pure/utils")
+  return {
+    ...utils,
+    fetchEventSource: vi.fn(),
+  }
+})
 
 // 在每次测试后清理所有模拟
 afterEach(() => {

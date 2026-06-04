@@ -11,9 +11,8 @@ import {
   ResponseAnimationStyle,
 } from "@pure/types"
 
-import { fetchEventSource } from "../fetchEventSource"
+import { fetchEventSource, nanoid } from "@pure/utils"
 import { getMessageError } from "./parseError"
-import { nanoid } from "../uuid"
 
 type SSEFinishType = "done" | "error" | "abort"
 

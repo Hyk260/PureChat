@@ -28,6 +28,9 @@ importers:
       '@pure/database':
         specifier: workspace:*
         version: link:packages/database
+      '@pure/fetch-sse':
+        specifier: workspace:*
+        version: link:packages/fetch-sse
       '@pure/icons':
         specifier: workspace:*
         version: link:packages/icons
@@ -345,6 +348,18 @@ importers:
       vitest-canvas-mock:
         specifier: ^0.3.3
         version: 0.3.3(vitest@3.2.4)
+
+  packages/fetch-sse:
+    dependencies:
+      '@pure/const':
+        specifier: workspace:*
+        version: link:../const
+      '@pure/types':
+        specifier: workspace:*
+        version: link:../types
+      '@pure/utils':
+        specifier: workspace:*
+        version: link:../utils
 
   packages/icons: {}
 

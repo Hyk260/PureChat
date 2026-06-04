@@ -1,0 +1,31 @@
+{
+  "name": "@pure/fetch-sse",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SSE fetch utilities with streaming support",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./headers": {
+      "types": "./src/headers.ts",
+      "default": "./src/headers.ts"
+    },
+    "./parseError": {
+      "types": "./src/parseError.ts",
+      "default": "./src/parseError.ts"
+    }
+  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage --silent='passed-only'"
+  },
+  "dependencies": {
+    "@pure/const": "workspace:*",
+    "@pure/types": "workspace:*",
+    "@pure/utils": "workspace:*"
+  }
+}

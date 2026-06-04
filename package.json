@@ -36,6 +36,7 @@
     "@pure/database": "workspace:*",
     "@pure/icons": "workspace:*",
     "@pure/model-runtime": "workspace:*",
+    "@pure/fetch-sse": "workspace:*",
     "@pure/prompts": "workspace:*",
     "@pure/ui": "workspace:*",
     "@pure/utils": "workspace:*",
