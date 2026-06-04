@@ -23,9 +23,31 @@ env:
   PNPM_VERSION: '10.33.4'
 
 jobs:
+  # 检查 VITE_APP_ENV 是否为 web
+  check-env:
+    runs-on: ubuntu-latest
+    outputs:
+      is-web: ${{ steps.check.outputs.is-web }}
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 检查 VITE_APP_ENV
+        id: check
+        run: |
+          VITE_APP_ENV=$(grep -oP '^VITE_APP_ENV\s*=\s*"\K[^"]+' .env || grep -oP '^VITE_APP_ENV\s*=\s*\K\S+' .env)
+          echo "VITE_APP_ENV=$VITE_APP_ENV"
+          if [ "$VITE_APP_ENV" = "web" ]; then
+            echo "is-web=true" >> $GITHUB_OUTPUT
+          else
+            echo "is-web=false" >> $GITHUB_OUTPUT
+            echo "⚠️ VITE_APP_ENV is '$VITE_APP_ENV', skipping workflow (only 'web' is allowed)"
+          fi
+
   # 代码质量检查
   quality-check:
-    if: github.event_name == 'pull_request'
+    needs: check-env
+    if: needs.check-env.outputs.is-web == 'true' && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
@@ -47,8 +69,8 @@ jobs:
 
   # 构建和部署
   deploy:
-    # 仅在推送到main分支或手动触发时运行
-    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    needs: check-env
+    if: needs.check-env.outputs.is-web == 'true' && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     environment:
       name: github-pages

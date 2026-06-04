@@ -89,6 +89,10 @@ declare namespace Env {
     readonly VITE_ZHIPU_API_KEY: string;
     /** Zhipu API URL */
     readonly VITE_ZHIPU_BASE_URL: string;
+    /** MiniMax API Key */
+    readonly VITE_MINIMAX_API_KEY: string;
+    /** MiniMax API URL */
+    readonly VITE_MINIMAX_BASE_URL: string;
   }
 }
 

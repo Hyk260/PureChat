@@ -1,0 +1,16 @@
+# i18n Ally 项目级配置（与 .vscode/settings.json 保持一致）
+localesPaths:
+  - src/locales/default
+namespace: false
+dirStructure: dir
+keystyle: nested
+ignoreFiles:
+  - '**/index.{ts,js}'
+sourceLanguage: en
+displayLanguage: zh-CN
+enabledParsers:
+  - js
+  - ts
+  - yaml
+enabledFrameworks:
+  - vue

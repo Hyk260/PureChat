@@ -59,15 +59,20 @@
   },
   // 翻译文件夹路径 (相对于项目根目录)
   "i18n-ally.localesPaths": [
-    "locales",
+    "src/locales/default",
     "src/locales/langs"
   ],
+  // 每个 locale 目录下的分片文件都在根级合并，不把文件名作为命名空间
+  "i18n-ally.namespace": false,
+  "i18n-ally.ignoreFiles": [
+    "**/index.{ts,js}"
+  ],
+  // locale 为子目录（zh-CN/setting.ts），非平铺单文件（zh-CN.ts）
+  "i18n-ally.dirStructure": "dir",
   // 翻译路径格式
   "i18n-ally.keystyle": "nested",
   // 保存排序后的JSON/YAML
   "i18n-ally.sortKeys": true,
-  // 启用命名空间。查看文档了解更多详细信息。
-  "i18n-ally.namespace": true,
   // 指定启用文件格式
   "i18n-ally.enabledParsers": [
     "js",
