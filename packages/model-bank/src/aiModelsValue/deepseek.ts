@@ -1,39 +1,40 @@
-import { ollama } from "model-bank"
+import deepseek from "../aiModels/deepseek"
 
 const docs = __APP_INFO__.pkg.docs
-const { VITE_OLLAMA_PROXY_URL } = import.meta.env
+const { VITE_DEEPSEEK_BASE_URL } = import.meta.env
 
-export const OllamaModelValue = {
+export const DeepseekModelValue = {
   Model: {
     ID: "model",
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: ollama.chatModels.map((t) => t.id),
-    options: ollama,
+    collapse: deepseek.chatModels.map((t) => t.id),
+    options: deepseek,
   },
   OpenaiUrl: {
     ID: "openaiUrl",
-    Title: "Ollama 服务地址",
+    Title: "接口地址",
     SubTitle: "除默认地址外，必须包含 http(s)://",
-    Placeholder: VITE_OLLAMA_PROXY_URL,
-    apiHost: `${VITE_OLLAMA_PROXY_URL}/api/chat`,
+    Placeholder: VITE_DEEPSEEK_BASE_URL,
+    apiHost: `${VITE_DEEPSEEK_BASE_URL}/chat/completions`,
     defaultValue: "",
-    doubt: `${docs}/guides/olama-usage`,
   },
-  // Token: {
-  //   ID: "token",
-  //   Title: "API Key",
-  //   SubTitle: "API Key",
-  //   Placeholder: "API Key",
-  //   defaultValue: "",
-  // },
-  // CheckPoint: {
-  //   ID: "checkPoint",
-  //   Title: "连通性检查",
-  //   SubTitle: "测试 Api Key 与代理地址是否正确填写",
-  //   defaultValue: "",
-  // },
+  Token: {
+    ID: "token",
+    Title: "API Key",
+    SubTitle: "请填写你的 DeepSeek API Key",
+    Placeholder: "DeepSeek API Key",
+    defaultValue: "",
+    apiKey: "https://platform.deepseek.com/api_keys",
+    doubt: `${docs}/guides/model-provider.html#vite-deepseek-api-key`,
+  },
+  CheckPoint: {
+    ID: "checkPoint",
+    Title: "连通性检查",
+    SubTitle: "测试 Api Key 与代理地址是否正确填写",
+    defaultValue: "deepseek-chat",
+  },
   Temperature: {
     ID: "temperature",
     Title: "创意活跃度 (temperature)",
@@ -58,7 +59,7 @@ export const OllamaModelValue = {
     SubTitle: "值越大，越倾向不同的表达方式，避免概念重复；值越小，越倾向使用重复的概念或叙述，表达更具一致性",
     defaultValue: "",
     step: 0.1,
-    min: 0,
+    min: -2,
     max: 2,
   },
   FrequencyPenalty: {
@@ -67,7 +68,7 @@ export const OllamaModelValue = {
     SubTitle: "值越大，用词越丰富多样；值越低，用词更朴实简单",
     defaultValue: "",
     step: 0.1,
-    min: 0,
+    min: -2,
     max: 2,
   },
   HistoryMessageCount: {

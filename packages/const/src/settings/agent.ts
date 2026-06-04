@@ -13,7 +13,7 @@ export const DEFAULT_AGENT_CHAT_CONFIG = {
   enableHistoryCount: true,
   enableReasoning: false,
   enableStreaming: true,
-  historyCount: 20,
+  historyCount: 10,
   reasoningBudgetToken: 1024,
   searchFCModel: DEFAULT_AGENT_SEARCH_FC_MODEL,
   searchMode: "off",
@@ -24,6 +24,7 @@ export const DEFAULT_AGENT_CONFIG = {
   model: DEFAULT_MODEL,
   openingQuestions: [],
   params: {
+    max_tokens: 1024,
     frequency_penalty: 0,
     presence_penalty: 0,
     temperature: 1,

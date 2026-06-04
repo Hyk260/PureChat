@@ -204,17 +204,17 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   const fetchStartTime = Date.now()
 
   const { text, speed: smoothingSpeed } = standardizeAnimationStyle(options.responseAnimation ?? {})
-  const shouldSkipTextProcessing = text === "none"
   /**
    * 平滑效果
    */
   const textSmoothing = text === "smooth"
+  const shouldSkipTextProcessing = text === "none"
 
   console.log("standardizeAnimation:", text)
 
   let textBuffer = ""
   let bufferTimer: ReturnType<typeof setTimeout> | null = null
-  const BUFFER_INTERVAL = 100 // 300ms
+  const BUFFER_INTERVAL = 300 // 300ms
 
   const flushTextBuffer = () => {
     if (textBuffer) {
@@ -235,8 +235,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   let thinking = ""
   let thinkingSignature: string | undefined
-  let thinkingStartAt: number = 0
-  let duration: number = 0
   // 思考控制器，用于平滑输出思考
   const thinkingController = createSmoothMessage({
     onTextUpdate: (delta, text) => {
@@ -326,10 +324,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         case "text": {
           if (!data) break
 
-          if (!duration) {
-            duration = Date.now() - thinkingStartAt
-          }
-
           if (shouldSkipTextProcessing) {
             output += data
             options.onMessageHandle?.({ text: data, type: "text" })
@@ -354,9 +348,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         }
         // 思考
         case "reasoning": {
-          if (!thinkingStartAt) {
-            thinkingStartAt = Date.now()
-          }
           if (shouldSkipTextProcessing) {
             thinking += data
             options.onMessageHandle?.({ text: data, type: "reasoning" })
@@ -458,7 +449,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
       const data = {
         images: images.length > 0 ? images : undefined,
-        reasoning: thinking ? { content: thinking, signature: thinkingSignature, duration } : undefined,
+        reasoning: thinking ? { content: thinking, signature: thinkingSignature } : undefined,
         type: finishedType,
         speed,
         usage,

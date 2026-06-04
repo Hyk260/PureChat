@@ -1,4 +1,4 @@
-import { ChatErrorType, ErrorResponse, ErrorType } from "@pure/types"
+import { ErrorResponse, ErrorType } from "@pure/types"
 
 import { AgentRuntimeErrorType, IAgentRuntimeErrorType } from "../types"
 

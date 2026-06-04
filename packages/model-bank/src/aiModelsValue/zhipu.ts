@@ -1,39 +1,38 @@
-import { deepseek } from "model-bank"
+import zhipu from "../aiModels/zhipu"
 
 const docs = __APP_INFO__.pkg.docs
-const { VITE_DEEPSEEK_BASE_URL } = import.meta.env
+const { VITE_ZHIPU_BASE_URL } = import.meta.env
 
-export const DeepseekModelValue = {
+export const ZhiPuModelValue = {
   Model: {
     ID: "model",
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: deepseek.chatModels.map((t) => t.id),
-    options: deepseek,
+    collapse: zhipu.chatModels.map((t) => t.id),
+    options: zhipu,
   },
   OpenaiUrl: {
     ID: "openaiUrl",
     Title: "接口地址",
     SubTitle: "除默认地址外，必须包含 http(s)://",
-    Placeholder: VITE_DEEPSEEK_BASE_URL,
-    apiHost: `${VITE_DEEPSEEK_BASE_URL}/chat/completions`,
+    Placeholder: VITE_ZHIPU_BASE_URL,
+    apiHost: "https://open.bigmodel.cn/api/paas/v4/chat/completions",
     defaultValue: "",
   },
   Token: {
     ID: "token",
     Title: "API Key",
-    SubTitle: "请填写你的 DeepSeek API Key",
-    Placeholder: "DeepSeek API Key",
+    SubTitle: "请填写你的 ZhiPu API Key",
+    Placeholder: "ZhiPu API Key",
     defaultValue: "",
-    apiKey: "https://platform.deepseek.com/api_keys",
-    doubt: `${docs}/guides/model-provider.html#vite-deepseek-api-key`,
+    doubt: `${docs}/guides/model-provider.html#vite-zhipu-api-key`,
   },
   CheckPoint: {
     ID: "checkPoint",
     Title: "连通性检查",
     SubTitle: "测试 Api Key 与代理地址是否正确填写",
-    defaultValue: "deepseek-chat",
+    defaultValue: "",
   },
   Temperature: {
     ID: "temperature",
@@ -52,24 +51,6 @@ export const DeepseekModelValue = {
     step: 0.1,
     min: 0,
     max: 1,
-  },
-  PresencePenalty: {
-    ID: "presence_penalty",
-    Title: "表述发散度 (presence_penalty)",
-    SubTitle: "值越大，越倾向不同的表达方式，避免概念重复；值越小，越倾向使用重复的概念或叙述，表达更具一致性",
-    defaultValue: "",
-    step: 0.1,
-    min: -2,
-    max: 2,
-  },
-  FrequencyPenalty: {
-    ID: "frequency_penalty",
-    Title: "词汇丰富度 (frequency_penalty)",
-    SubTitle: "值越大，用词越丰富多样；值越低，用词更朴实简单",
-    defaultValue: "",
-    step: 0.1,
-    min: -2,
-    max: 2,
   },
   HistoryMessageCount: {
     ID: "historyMessageCount",

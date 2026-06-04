@@ -1,20 +1,33 @@
-import { cloneDeep } from "lodash-es"
+import { cloneDeep, merge } from "lodash-es"
 
-import AiProvider from "@/ai"
-import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
+import { getAiAvatarUrl } from "@pure/utils"
 import { ModelProvider, Provider } from "model-bank"
 import { prettyObject, getUnixTimestampSec } from "@pure/utils"
 import { DB_Message } from "@pure/database/schemas"
 import { restApi } from "@/service/api"
 import { createCustomMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore } from "@/stores"
-import { createThinkingCustomData } from "@pure/utils"
+import { createThinkingCustomData, hostPreview } from "@pure/utils"
 import { getCustomMsgContent } from "@/utils/common"
 import { generateReferencePrompt } from "@/utils/messageUtils/search"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
+import { fetchSSE, FetchOptions } from "@pure/utils"
+import { useAccessStore } from "@/ai/utils"
+import { initializeWithClientStore } from "@/service/chatService/clientModelRuntime"
+import { DEFAULT_AGENT_CONFIG } from "@pure/const"
+import { standardizeAnimationStyle } from "@pure/utils/fetch"
+
+import { contextEngineering } from "./mecha"
 
 import type { messageHandle } from "@/types"
-import type { contextParams } from "@pure/utils/fetch"
+import type { contextParams, FetchSSEOptions } from "@pure/utils/fetch"
+// import type { FetchSSEOptions } from "@pure/fetch-sse"
+import { ChatErrorType, ResponseAnimation } from "@pure/types"
+import { ChatCompletionErrorPayload, createErrorResponse } from "@pure/model-runtime"
+import type { ChatStreamPayload, OpenAIChatMessage } from "@pure/types"
+
+import { StreamingHandler } from "./agents/StreamingHandler"
+import type { StreamChunk } from "./agents/types/streaming"
 
 interface ChatServiceParams {
   messages: DB_Message[]
@@ -23,42 +36,295 @@ interface ChatServiceParams {
   provider: Provider
 }
 
+interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, "messages">> {
+  messages: OpenAIChatMessage[] | DB_Message[]
+}
+
+type ChatStreamInputParams = Partial<Omit<ChatStreamPayload, "messages">> & {
+  messages?: OpenAIChatMessage[]
+}
+
+interface FetchAITaskResultParams extends FetchSSEOptions {
+  abortController?: AbortController
+  onError?: (e: Error, rawError?: any) => void
+  /**
+   * Loading state change handler function
+   * @param loading - Whether in loading state
+   */
+  onLoadingChange?: (loading: boolean) => void
+  /**
+   * Request object
+   */
+  params: ChatStreamInputParams
+}
+
+interface CreateAssistantMessageStream extends FetchSSEOptions {
+  abortController?: AbortController
+  historySummary?: string
+  /** Initial context for page editor (captured at operation start) */
+  params: GetChatCompletionPayload
+}
+
 class ChatService {
+  protected getBaseURL(provider: any): string {
+    return useAccessStore(provider).openaiUrl
+  }
+
+  private getPath(provider: any, path?: string): string {
+    const baseUrl = this.getBaseURL(provider)
+    const fullPath = hostPreview(baseUrl, path)
+    return fullPath
+  }
+
+  private getHeaders(provider: any): Record<string, string> {
+    const headers = {
+      "Content-Type": "application/json",
+      // "x-requested-with": "XMLHttpRequest",
+      Authorization: `Bearer ${useAccessStore(provider).token?.trim()}`,
+    }
+    return headers
+  }
+
+  private async fetchOnClient(params: { payload: Partial<ChatStreamPayload>; provider: string; signal?: AbortSignal }) {
+    const data = params.payload as ChatStreamPayload
+
+    const agentRuntime = initializeWithClientStore({
+      provider: params.provider,
+      payload: {
+        ...params.payload,
+      },
+    })
+    return await agentRuntime.chat(data, { signal: params.signal })
+  }
+
+  private getFetchOnClient({ provider, payload }: { provider: any; payload: Partial<ChatStreamPayload> }) {
+    let fetcher: typeof fetch | undefined = undefined
+    fetcher = async () => {
+      try {
+        return await this.fetchOnClient({
+          payload,
+          provider,
+        })
+      } catch (error) {
+        const { errorType = ChatErrorType.BadRequest, error: errorContent } = error as ChatCompletionErrorPayload
+        const errorMessage = errorContent || error
+
+        console.error(`Route: [${provider}] ${errorType}:`, errorMessage)
+
+        return createErrorResponse(errorType, {
+          error,
+          provider,
+        })
+      }
+    }
+    return fetcher
+  }
+
+  createAssistantMessage = async ({ messages, ...params }: GetChatCompletionPayload, options?: FetchOptions) => {
+    const payload = merge(
+      {
+        model: DEFAULT_AGENT_CONFIG.model,
+        stream: true,
+        ...DEFAULT_AGENT_CONFIG.params,
+      },
+      params
+    )
+    console.log("payload", payload)
+
+    const modelMessages = await contextEngineering({
+      messages,
+      model: payload.model,
+      // plugins,
+      provider: payload.provider!,
+      historyCount: payload?.historyMessageCount,
+    })
+
+    return this.getChatCompletion(
+      {
+        ...params,
+        // ...extendParams,
+        messages: modelMessages,
+        // Use the chatConfig from the target agent for streaming preference
+        stream: true,
+        // tools,
+      },
+      { ...options }
+    )
+  }
+
+  async createAssistantMessageStream({
+    params,
+    abortController,
+    historySummary,
+    onAbort,
+    onMessageHandle,
+    onErrorHandle,
+    onFinish,
+  }: CreateAssistantMessageStream) {
+    await this.createAssistantMessage(params, {
+      historySummary,
+      onAbort,
+      onErrorHandle,
+      onFinish,
+      onMessageHandle,
+      signal: abortController?.signal,
+    })
+  }
+
+  async getChatCompletion(params: Partial<ChatStreamPayload>, options?: FetchOptions) {
+    const { signal, responseAnimation } = options ?? {}
+
+    const { provider = ModelProvider.OpenAI, ...res } = params
+    const chatPath = this.getPath(provider)
+
+    let fetcher: typeof fetch | undefined = undefined
+
+    const payload = {
+      ...res,
+      messages: res.messages || [],
+    }
+
+    fetcher = this.getFetchOnClient({ provider, payload })
+
+    const userPreferTransitionMode = {
+      speed: 200,
+      text: "smooth",
+    } as ResponseAnimation
+
+    // The order of the array is very important.
+    const mergedResponseAnimation = [userPreferTransitionMode, responseAnimation].reduce(
+      (acc, cur) => merge(acc, standardizeAnimationStyle(cur)),
+      {}
+    )
+
+    return fetchSSE(chatPath, {
+      body: JSON.stringify(payload),
+      fetcher: fetcher,
+      headers: this.getHeaders(provider),
+      method: "POST",
+      onAbort: options?.onAbort,
+      onErrorHandle: options?.onErrorHandle,
+      onFinish: options?.onFinish,
+      onMessageHandle: options?.onMessageHandle,
+      responseAnimation: mergedResponseAnimation,
+      signal,
+    })
+  }
+
+  fetchPresetTaskResult = async ({
+    params,
+    onMessageHandle,
+    onFinish,
+    onError,
+    onLoadingChange,
+    abortController,
+  }: FetchAITaskResultParams) => {
+    const errorHandle = (error: Error, errorContent?: any) => {
+      onLoadingChange?.(false)
+      if (abortController?.signal.aborted) {
+        return
+      }
+      onError?.(error, errorContent)
+      console.error(error)
+    }
+
+    onLoadingChange?.(true)
+
+    try {
+      const llmMessages = params.messages
+
+      await this.getChatCompletion(
+        { ...params, messages: llmMessages },
+        {
+          onErrorHandle: (error) => {
+            errorHandle(new Error(error.message), error)
+          },
+          onFinish,
+          onMessageHandle,
+          signal: abortController?.signal,
+        }
+      )
+
+      onLoadingChange?.(false)
+    } catch (e) {
+      errorHandle(e as Error)
+    }
+  }
+}
+
+export const chatService = new ChatService()
+
+class ChatServiceMessage {
   startMsg: DB_Message
   chatMsg: DB_Message
-
-  // createAssistantMessage = (text: string) => { }
 
   async sendMessage({ messages, chat, provider, loadMessage }: ChatServiceParams) {
     const chatStore = useChatStore()
     chatStore.updateSendingState(chat?.to, "add")
-    const api = new AiProvider(provider)
     const startMsg = loadMessage || this.createLoadingMessage(chat)
 
-    if (this.shouldAbortSend(api, startMsg)) return
+    if (this.shouldAbortSend(provider, startMsg)) return
 
     this.startMsg = startMsg
     this.chatMsg = chat
     await this.handleWebSearchIfNeeded(chat, startMsg)
 
-    // 发送 AI 聊天请求
-    await api.llm.chat({
-      requestId: startMsg.ID,
-      messages: this.shouldUseCurrentMessages() ? chatStore.currentMessageList : messages,
-      config: {
-        stream: true,
-        model: api.config.model,
+    const llmMessages = this.shouldUseCurrentMessages() ? chatStore.currentMessageList : messages
+
+    const handler = new StreamingHandler(
+      {},
+      {
+        onContentUpdate: (content, reasoning) => {
+          this.updateMessage({
+            message: startMsg,
+            data: {
+              text: content,
+              reasoning: reasoning
+                ? {
+                    content: reasoning.content,
+                    reasoningType: reasoning.reasoningType,
+                    duration: reasoning.duration,
+                  }
+                : undefined,
+            },
+          })
+        },
+        onReasoningUpdate: (reasoning) => {
+          this.updateMessage({
+            message: startMsg,
+            data: {
+              thinking: reasoning.content,
+              reasoning: {
+                content: reasoning.content,
+                reasoningType: reasoning.reasoningType,
+                duration: reasoning.duration,
+              },
+            },
+          })
+        },
+      }
+    )
+
+    chatService.createAssistantMessageStream({
+      params: {
+        messages: llmMessages,
+        provider,
+        ...useAccessStore(provider),
       },
-      onUpdate: (data) => {
-        console.log("ChatService onUpdate:", data)
-        this.updateMessage({ message: startMsg, data })
+      onMessageHandle: (chunk) => {
+        handler.handleChunk(chunk as StreamChunk)
       },
       onFinish: async (text, context: contextParams) => {
-        console.log("ChatService onFinish:", { text, context })
-        await this.handleFinish({ text, context })
+        const result = await handler.handleFinish(text, context)
+        await this.handleFinish({
+          text,
+          context: {
+            reasoning: result.metadata.reasoning,
+            type: result.finishType,
+          },
+        })
       },
-      onError: (error) => {
-        console.log("ChatService onError:", error)
+      onErrorHandle: (error) => {
         this.handleError(error)
       },
     })
@@ -171,9 +437,10 @@ class ChatService {
   /**
    * 检查是否应该中止发送消息
    */
-  private shouldAbortSend(api: AiProvider, startMsg: DB_Message): boolean {
+  private shouldAbortSend(provider: any, startMsg: DB_Message): boolean {
+    const params = useAccessStore(provider)
     // Ollama 模型不需要 token 检查
-    if (api.llm.provider === ModelProvider.Ollama || api.config.token) {
+    if (provider === ModelProvider.Ollama || params.token) {
       return false
     }
 
@@ -260,6 +527,6 @@ class ChatService {
   }
 }
 
-export const chatService = new ChatService()
+export const chatServiceMessage = new ChatServiceMessage()
 
-export const sendChatAssistantMessage = (params: ChatServiceParams) => chatService.sendMessage(params)
+export const sendChatAssistantMessage = (params: ChatServiceParams) => chatServiceMessage.sendMessage(params)

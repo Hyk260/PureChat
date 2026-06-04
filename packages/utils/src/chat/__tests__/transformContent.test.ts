@@ -47,7 +47,13 @@ describe("transformContent", () => {
       { type: "TIMTextElem", isTimeDivider: true, isDeleted: false, isRevoked: false } as DB_Message,
       { type: "TIMTextElem", isTimeDivider: false, isDeleted: true, isRevoked: false } as DB_Message,
       { type: "TIMTextElem", isTimeDivider: false, isDeleted: false, isRevoked: true } as DB_Message,
-      { type: "TIMTextElem", isTimeDivider: false, isDeleted: false, isRevoked: false, payload: { text: "valid" } } as DB_Message,
+      {
+        type: "TIMTextElem",
+        isTimeDivider: false,
+        isDeleted: false,
+        isRevoked: false,
+        payload: { text: "valid" },
+      } as DB_Message,
     ]
 
     const result = await transformContent(messages)
@@ -68,9 +74,7 @@ describe("transformContent", () => {
       } as DB_Message
 
       const result = await transformContent([message])
-      expect(result).toEqual([
-        { role: "user", content: "Hello" },
-      ])
+      expect(result).toEqual([{ role: "user", content: "Hello" }])
     })
 
     it("应该使用 cloudCustomData 中的 messageAbstract（如果存在）", async () => {
@@ -85,9 +89,7 @@ describe("transformContent", () => {
       } as DB_Message
 
       const result = await transformContent([message])
-      expect(result).toEqual([
-        { role: "user", content: "Abstract" },
-      ])
+      expect(result).toEqual([{ role: "user", content: "Abstract" }])
     })
 
     it("应该将 flow: 'in' 映射为 assistant 角色", async () => {
@@ -102,9 +104,7 @@ describe("transformContent", () => {
       } as DB_Message
 
       const result = await transformContent([message])
-      expect(result).toEqual([
-        { role: "assistant", content: "Hi" },
-      ])
+      expect(result).toEqual([{ role: "assistant", content: "Hi" }])
     })
   })
 
@@ -126,13 +126,13 @@ describe("transformContent", () => {
       const toolCallData = {
         data: {
           message: {
-            choices: [{
-              message: {
-                tool_calls: [
-                  { id: "call_123", function: { name: "get_weather" } },
-                ],
+            choices: [
+              {
+                message: {
+                  tool_calls: [{ id: "call_123", function: { name: "get_weather" } }],
+                },
               },
-            }],
+            ],
           },
         },
       }
@@ -228,9 +228,29 @@ describe("transformContent", () => {
 
   it("应该处理混合消息类型", async () => {
     const messages: DB_Message[] = [
-      { type: "TIMTextElem", flow: "out", payload: { text: "Hello" }, isTimeDivider: false, isDeleted: false, isRevoked: false } as DB_Message,
-      { type: "TIMImageElem", flow: "in", payload: { imageInfoArray: [{ url: "blob:test" }] }, isTimeDivider: false, isDeleted: false, isRevoked: false } as DB_Message,
-      { type: "TIMCustomElem", payload: { description: "other" }, isTimeDivider: false, isDeleted: false, isRevoked: false } as DB_Message,
+      {
+        type: "TIMTextElem",
+        flow: "out",
+        payload: { text: "Hello" },
+        isTimeDivider: false,
+        isDeleted: false,
+        isRevoked: false,
+      } as DB_Message,
+      {
+        type: "TIMImageElem",
+        flow: "in",
+        payload: { imageInfoArray: [{ url: "blob:test" }] },
+        isTimeDivider: false,
+        isDeleted: false,
+        isRevoked: false,
+      } as DB_Message,
+      {
+        type: "TIMCustomElem",
+        payload: { description: "other" },
+        isTimeDivider: false,
+        isDeleted: false,
+        isRevoked: false,
+      } as DB_Message,
     ]
 
     const result = await transformContent(messages)

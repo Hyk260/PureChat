@@ -1,3 +1,5 @@
 export * from "./aiModels"
+export * from "./aiModelsConfig"
+export * from "./aiModelsValue"
 export * from "./const/modelProvider"
 export * from "./types"

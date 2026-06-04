@@ -1,32 +1,32 @@
-import { mistral } from "model-bank"
+import qwen from "../aiModels/qwen"
 
 const docs = __APP_INFO__.pkg.docs
-const { VITE_MISTRAL_BASE_URL } = import.meta.env
+const { VITE_QWEN_BASE_URL } = import.meta.env
 
-export const MistralModelValue = {
+export const QwenModelValue = {
   Model: {
     ID: "model",
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: mistral.chatModels.map((t) => t.id),
-    options: mistral,
+    collapse: qwen.chatModels.map((t) => t.id),
+    options: qwen,
   },
   OpenaiUrl: {
     ID: "openaiUrl",
     Title: "接口地址",
     SubTitle: "除默认地址外，必须包含 http(s)://",
-    Placeholder: VITE_MISTRAL_BASE_URL,
-    apiHost: "https://api.mistral.ai/v1/chat/completions",
+    Placeholder: VITE_QWEN_BASE_URL,
     defaultValue: "",
+    apiHost: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
   },
   Token: {
     ID: "token",
     Title: "API Key",
-    SubTitle: "请填写你的 Mistral API Key",
-    Placeholder: "Mistral API Key",
+    SubTitle: "请填写你的 Qwen API Key",
+    Placeholder: "Qwen API Key",
     defaultValue: "",
-    doubt: `${docs}/guides/model-provider.html#vite-mistral-api-key`,
+    doubt: `${docs}/guides/model-provider.html#vite-qwen-api-key`,
   },
   CheckPoint: {
     ID: "checkPoint",

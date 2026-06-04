@@ -43,7 +43,7 @@
 import { ElLink } from "element-plus"
 import { onClickOutside } from "@vueuse/core"
 
-import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
+import { getAiAvatarUrl } from "@pure/utils"
 import { isRobot, getValueKey, prefix, useState } from "@pure/utils"
 import { getUserProfile } from "@/service/im-sdk-api"
 import { useChatStore } from "@/stores/modules/chat"

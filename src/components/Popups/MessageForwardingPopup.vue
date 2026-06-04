@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia"
 
-import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
+import { getAiAvatarUrl } from "@pure/utils"
 import { useChatStore } from "@/stores/modules/chat"
 import { chatName } from "@pure/utils"
 import { squareUrl } from "@pure/const"

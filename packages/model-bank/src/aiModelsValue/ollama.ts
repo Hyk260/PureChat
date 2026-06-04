@@ -1,36 +1,25 @@
-import { github } from "model-bank"
+import ollama from "../aiModels/ollama"
 
-const { VITE_GITHUB_PROXY_URL } = import.meta.env
+const docs = __APP_INFO__.pkg.docs
+const { VITE_OLLAMA_PROXY_URL } = import.meta.env
 
-export const GitHubModelValue = {
+export const OllamaModelValue = {
   Model: {
     ID: "model",
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: github.chatModels.map((t) => t.id),
-    options: github,
+    collapse: ollama.chatModels.map((t) => t.id),
+    options: ollama,
   },
   OpenaiUrl: {
     ID: "openaiUrl",
-    Title: "github 服务地址",
+    Title: "Ollama 服务地址",
     SubTitle: "除默认地址外，必须包含 http(s)://",
-    Placeholder: VITE_GITHUB_PROXY_URL,
-    apiHost: "https://models.inference.ai.azure.com/chat/completions",
+    Placeholder: VITE_OLLAMA_PROXY_URL,
+    apiHost: `${VITE_OLLAMA_PROXY_URL}/api/chat`,
     defaultValue: "",
-  },
-  Token: {
-    ID: "token",
-    Title: "Github PAT",
-    SubTitle: "填入你的 Github PAT，点击 [这里](https://github.com/settings/tokens) 创建",
-    Placeholder: "ghp_xxxxxx",
-    defaultValue: "",
-  },
-  CheckPoint: {
-    ID: "checkPoint",
-    Title: "连通性检查",
-    SubTitle: "测试 Api Key 与代理地址是否正确填写",
-    defaultValue: "",
+    doubt: `${docs}/guides/olama-usage`,
   },
   Temperature: {
     ID: "temperature",
@@ -61,21 +50,13 @@ export const GitHubModelValue = {
   },
   FrequencyPenalty: {
     ID: "frequency_penalty",
-    Title: "频率惩罚度 (frequency_penalty)",
-    SubTitle: "值越大，越有可能降低重复字词",
+    Title: "词汇丰富度 (frequency_penalty)",
+    SubTitle: "值越大，用词越丰富多样；值越低，用词更朴实简单",
     defaultValue: "",
     step: 0.1,
     min: 0,
     max: 2,
   },
-  // MaxTokens: {
-  //   ID: "max_tokens",
-  //   Title: "单次回复限制 (max_tokens)",
-  //   SubTitle: "单次交互所用的最大 Token 数",
-  //   defaultValue: "",
-  //   min: 0,
-  //   max: 32000,
-  // },
   HistoryMessageCount: {
     ID: "historyMessageCount",
     Title: "附带历史消息数",

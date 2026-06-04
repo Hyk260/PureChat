@@ -1,38 +1,39 @@
-import { zeroone } from "model-bank"
+import minimax from "../aiModels/minimax"
 
 const docs = __APP_INFO__.pkg.docs
-const { VITE_ZEROONE_BASE_URL } = import.meta.env
+const { VITE_MINIMAX_BASE_URL } = import.meta.env
 
-export const ZeroOneModelValue = {
+export const MinimaxModelValue = {
   Model: {
     ID: "model",
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: zeroone.chatModels.map((t) => t.id),
-    options: zeroone,
+    collapse: minimax.chatModels.map((t) => t.id),
+    options: minimax,
   },
   OpenaiUrl: {
     ID: "openaiUrl",
     Title: "接口地址",
     SubTitle: "除默认地址外，必须包含 http(s)://",
-    Placeholder: VITE_ZEROONE_BASE_URL || "",
-    apiHost: "https://api.lingyiwanwu.com/v1/chat/completions",
+    Placeholder: VITE_MINIMAX_BASE_URL,
+    apiHost: `${VITE_MINIMAX_BASE_URL}/chat/completions`,
     defaultValue: "",
   },
   Token: {
     ID: "token",
     Title: "API Key",
-    SubTitle: "请填写你的 01.AI API Key",
-    Placeholder: "ZeroOne API Key",
+    SubTitle: "请填写你的 MiniMax API Key",
+    Placeholder: "MiniMax API Key",
     defaultValue: "",
-    doubt: `${docs}/guides/model-provider.html#vite-zeroone-api-key`,
+    apiKey: "https://platform.minimaxi.com/user-center/basic-information/interface-key",
+    doubt: `${docs}/guides/model-provider.html#vite-minimax-api-key`,
   },
   CheckPoint: {
     ID: "checkPoint",
     Title: "连通性检查",
     SubTitle: "测试 Api Key 与代理地址是否正确填写",
-    defaultValue: "",
+    defaultValue: "MiniMax-M2",
   },
   Temperature: {
     ID: "temperature",

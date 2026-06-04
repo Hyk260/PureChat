@@ -1,7 +1,7 @@
 import { cloneDeep } from "lodash-es"
 import { storeToRefs } from "pinia"
 
-import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
+import { getAiAvatarUrl } from "@pure/utils"
 import { sendChatAssistantMessage } from "@/service/chatService"
 import { createTextMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore, useUserStore } from "@/stores"

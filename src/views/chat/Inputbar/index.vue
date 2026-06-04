@@ -292,7 +292,8 @@ const robotStore = useRobotStore()
 const chatStore = useChatStore()
 const webSearchStore = useWebSearchStore()
 
-const { toAccount, replyMsgData, isAssistant, currentType, isFullscreenInputActive, hasConversationList } = storeToRefs(chatStore)
+const { toAccount, replyMsgData, isAssistant, currentType, isFullscreenInputActive, hasConversationList } =
+  storeToRefs(chatStore)
 const { modelProvider, enableWebSearch, isWebSearchModel } = storeToRefs(robotStore)
 
 interface NetworkOption {

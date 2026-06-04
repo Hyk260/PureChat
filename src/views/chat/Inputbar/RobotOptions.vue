@@ -47,7 +47,7 @@
                 <ElOption
                   v-for="models in item.options.chatModels"
                   :key="models.id"
-                  :label="getBaseModelName(models.displayName)"
+                  :label="getBaseModelName(models.displayName || models.id)"
                   :value="models.id"
                 >
                   <div class="bot-model-option">
@@ -187,7 +187,7 @@
                 <ElOption
                   v-for="models in modelData['Model']?.options?.chatModels"
                   :key="models.id"
-                  :label="getBaseModelName(models.displayName)"
+                  :label="getBaseModelName(models.displayName || models.id)"
                   :value="models.id"
                 >
                   <div class="bot-model-option">
@@ -233,17 +233,18 @@ import { cloneDeep, debounce } from "lodash-es"
 import { storeToRefs } from "pinia"
 import { ModelIcon } from "@pure/icons"
 import { getLowerBaseModelName, getBaseModelName, openWindow } from "@pure/utils"
-import { modelConfig, modelValue } from "@/ai/constant"
+import { aiModelsConfig, aiModelsValue } from "model-bank"
 import { useAccessStore } from "@/ai/utils"
 import { useChatStore, useRobotStore } from "@/stores"
 // import { hostPreview } from "@pure/utils"
+import { modelsService } from "@/service/models"
+
 import { delay, useState } from "@pure/utils"
 import { isRange } from "./utils"
-// import OllamaAI from "@/ai/platforms/ollama/ollama";
-import AiProvider from "@/ai"
 import emitter from "@/utils/mitt-bus"
 import { Markdown } from "@pure/ui"
 import DragPrompt from "./DragPrompt.vue"
+import { chatService } from "@/service/chatService"
 
 import type { Model, ModelConfigItem, ModelDataType } from "@/stores/modules/robot/types"
 import type { RobotBoxEventData } from "@/types"
@@ -301,15 +302,13 @@ function updateModelList(newModels: Model[]) {
 }
 
 async function onRefresh() {
-  const provider = modelProvider.value
-  const api = new AiProvider(provider)
-  const list = await api.llm.getModels()
-  updateModelList(list)
+  const models = await modelsService.getModels(modelProvider.value)
+  updateModelList(models || [])
 }
 
 function initializeModelOptions() {
   const provider = modelProvider.value
-  const modelDataValue = cloneDeep(modelValue[provider])
+  const modelDataValue = cloneDeep(aiModelsValue[provider])
   const currentModelConfig = modelStore.value[provider]
   Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {
     if (configItem.ID === "model" && currentModelConfig?.Model?.collapse) {
@@ -349,13 +348,13 @@ function clearRobotCache() {
 function resetRobotModelConfig() {
   const model: Record<string, any> = {}
   const provider = modelProvider.value
-  const modelDataValue = cloneDeep(modelValue[provider])
+  const modelDataValue = cloneDeep(aiModelsValue[provider])
 
   Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {
     if (configItem.ID === "openaiUrl" || configItem.ID === "token" || configItem.ID === "model") {
       configItem.defaultValue = useAccessStore(provider)[configItem.ID]
     } else {
-      configItem.defaultValue = modelConfig[provider][configItem.ID]
+      configItem.defaultValue = aiModelsConfig[provider][configItem.ID]
     }
   })
 
@@ -383,16 +382,35 @@ const onCheckToken = debounce(handleCheckToken, 2000, { leading: true, trailing:
 async function handleCheckToken(item: ModelConfigItem) {
   if (modelData.value?.Token?.defaultValue) {
     setLoading(true)
-    const provider = modelProvider.value
-    const api = new AiProvider(provider)
-    const { valid, error } = await api.llm.checkConnectivity({ model: item?.defaultValue ?? "" })
-    if (valid) {
-      setLoading(false)
-      window.$message?.success("连接成功")
-    } else {
-      setLoading(false)
-      window.$message?.error(error)
-    }
+    let isError = false
+
+    await chatService.fetchPresetTaskResult({
+      params: {
+        messages: [
+          {
+            content: "hello",
+            role: "user",
+          },
+        ],
+        model: item?.defaultValue ?? "",
+        provider: modelProvider.value,
+      },
+      onError: (_, rawError) => {
+        console.error(rawError)
+        isError = true
+      },
+      onFinish: async (value) => {
+        console.log(value)
+        if (!isError && value) {
+          window.$message?.success("连接成功")
+        } else {
+          window.$message?.error("连接失败")
+        }
+      },
+      onLoadingChange: (loading) => {
+        setLoading(loading)
+      },
+    })
   } else {
     window.$message?.warning("请输入API密钥")
   }

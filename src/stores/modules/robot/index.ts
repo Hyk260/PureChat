@@ -1,8 +1,7 @@
 import { cloneDeep } from "lodash-es"
 import { defineStore } from "pinia"
 
-import { modelValue } from "@/ai/constant"
-import { ModelProvider, Provider } from "model-bank"
+import { aiModelsValue, ModelProvider, Provider } from "model-bank"
 import { useAccessStore } from "@/ai/utils"
 import { SetupStoreId } from "@/stores/enum"
 import WebSearchService from "@/service/WebSearchService"
@@ -90,7 +89,7 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       }
       this.modelProvider = provider
       const model = useAccessStore(provider)?.model
-      const providerData = modelValue[provider as ModelProvider]
+      const providerData = aiModelsValue[provider as ModelProvider]
       if (!providerData?.Model?.options?.chatModels) {
         console.log("provider data not found")
         return

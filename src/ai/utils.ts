@@ -1,6 +1,5 @@
 import { isEmpty } from "lodash-es"
-import { modelConfig } from "@/ai/constant"
-import { LLMParams, ModelProvider, Provider } from "model-bank"
+import { aiModelsConfig, LLMParams, ModelProvider, Provider } from "model-bank"
 import { useRobotStore } from "@/stores/modules/robot"
 
 /**
@@ -9,5 +8,5 @@ import { useRobotStore } from "@/stores/modules/robot"
 export const useAccessStore = (model: Provider = ModelProvider.OpenAI): LLMParams => {
   const access = useRobotStore().accessStore?.[model] || ""
 
-  return isEmpty(access) ? modelConfig[model] : access
+  return isEmpty(access) ? aiModelsConfig[model] : access
 }

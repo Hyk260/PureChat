@@ -100,7 +100,6 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
     async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatMethodOptions) {
       try {
-        debugger
         const log = debug(`${this.logPrefix}:chat`)
         const inputStartAt = Date.now()
 
@@ -180,38 +179,41 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async models() {
-      console.log("fetching available models")
+      const log = debug(`${this.logPrefix}:models`)
+      log("fetching available models")
 
       let resultModels: ChatModelCard[] = []
 
       if (typeof models === "function") {
-        console.log("using custom models function")
+        log("using custom models function")
         resultModels = await models({ client: this.client })
-        return resultModels
       } else {
-        console.log("fetching models from client API")
+        log("fetching models from client API")
         const list = await this.client.models.list()
 
         resultModels = list.data
-
-        return await postProcessModelList(resultModels, (modelId) =>
-          getModelPropertyWithFallback<AiModelType>(modelId, "type")
-        )
       }
+
+      log("fetched %d models", resultModels.length)
+
+      return await postProcessModelList(resultModels, (modelId) =>
+        getModelPropertyWithFallback<AiModelType>(modelId, "type")
+      )
     }
 
     protected handleError(error: any): ChatCompletionErrorPayload {
-      console.log("handling error: %O", error)
+      const log = debug(`${this.logPrefix}:error`)
+      log("handling error: %O", error)
 
       let desensitizedEndpoint = this.baseURL
 
       if ("status" in (error as any)) {
         const status = (error as Response).status
-        console.log("HTTP error with status: %d", status)
+        log("HTTP error with status: %d", status)
 
         switch (status) {
           case 401: {
-            console.log("invalid API key error")
+            log("invalid API key error")
             return AgentRuntimeError.chat({
               endpoint: desensitizedEndpoint,
               error: error as any,
@@ -228,22 +230,23 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       const { errorResult, RuntimeError } = handleOpenAIError(error)
 
-      console.log("error code: %s, message: %s", errorResult?.code, errorResult?.message)
+      log("error code: %s, message: %s", errorResult.code, errorResult.message)
 
-      const errorMessage = errorResult.error?.message || errorResult?.message
-      if (errorMessage?.includes("Insufficient Balance")) {
-        console.log("insufficient balance error detected in message")
-        return AgentRuntimeError.chat({
-          endpoint: desensitizedEndpoint,
-          error: errorResult,
-          errorType: AgentRuntimeErrorType.InsufficientQuota,
-          provider: this.id,
-        })
-      }
+      // const errorMessage = errorResult.error?.message || errorResult?.message
+
+      // if (errorMessage?.includes("Insufficient Balance")) {
+      //   console.log("insufficient balance error detected in message")
+      //   return AgentRuntimeError.chat({
+      //     endpoint: desensitizedEndpoint,
+      //     error: errorResult,
+      //     errorType: AgentRuntimeErrorType.InsufficientQuota,
+      //     provider: this.id,
+      //   })
+      // }
 
       switch (errorResult.code) {
         case "insufficient_quota": {
-          console.log("insufficient quota error")
+          log("insufficient quota error")
           return AgentRuntimeError.chat({
             endpoint: desensitizedEndpoint,
             error: errorResult,
@@ -253,7 +256,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         }
 
         case "model_not_found": {
-          console.log("model not found error")
+          log("model not found error")
           return AgentRuntimeError.chat({
             endpoint: desensitizedEndpoint,
             error: errorResult,
@@ -263,7 +266,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         }
       }
 
-      console.log("returning generic error")
+      log("returning generic error")
       return AgentRuntimeError.chat({
         endpoint: desensitizedEndpoint,
         error: errorResult,

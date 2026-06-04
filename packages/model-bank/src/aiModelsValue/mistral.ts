@@ -1,32 +1,32 @@
-import { zhipu } from "model-bank"
+import mistral from "../aiModels/mistral"
 
 const docs = __APP_INFO__.pkg.docs
-const { VITE_ZHIPU_BASE_URL } = import.meta.env
+const { VITE_MISTRAL_BASE_URL } = import.meta.env
 
-export const ZhiPuModelValue = {
+export const MistralModelValue = {
   Model: {
     ID: "model",
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: zhipu.chatModels.map((t) => t.id),
-    options: zhipu,
+    collapse: mistral.chatModels.map((t) => t.id),
+    options: mistral,
   },
   OpenaiUrl: {
     ID: "openaiUrl",
     Title: "接口地址",
     SubTitle: "除默认地址外，必须包含 http(s)://",
-    Placeholder: VITE_ZHIPU_BASE_URL,
-    apiHost: "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+    Placeholder: VITE_MISTRAL_BASE_URL,
+    apiHost: "https://api.mistral.ai/v1/chat/completions",
     defaultValue: "",
   },
   Token: {
     ID: "token",
     Title: "API Key",
-    SubTitle: "请填写你的 ZhiPu API Key",
-    Placeholder: "ZhiPu API Key",
+    SubTitle: "请填写你的 Mistral API Key",
+    Placeholder: "Mistral API Key",
     defaultValue: "",
-    doubt: `${docs}/guides/model-provider.html#vite-zhipu-api-key`,
+    doubt: `${docs}/guides/model-provider.html#vite-mistral-api-key`,
   },
   CheckPoint: {
     ID: "checkPoint",

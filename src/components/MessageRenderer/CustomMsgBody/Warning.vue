@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { ElAlert } from "element-plus"
 import { TriangleAlert } from "@lucide/vue"
-import { modelValue } from "@/ai/constant"
+import { aiModelsValue } from "model-bank"
 import { openWindow } from "@pure/utils"
 import { WarningCustomMessageBasse } from "@/config/custom"
 import emitter from "@/utils/mitt-bus"
@@ -48,7 +48,7 @@ const getDoubt = () => {
   try {
     const payload = JSON.parse(props.payload.data) as WarningCustomMessageBasse
     const provider = payload.data.body.text.provider
-    let doubt = modelValue[provider].Token.doubt
+    let doubt = aiModelsValue[provider].Token.doubt
     return doubt
   } catch (error) {
     console.error("Error parsing payload:", error)

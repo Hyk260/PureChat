@@ -1,38 +1,39 @@
-import { qwen } from "model-bank"
+import openai from "../aiModels/openai"
 
 const docs = __APP_INFO__.pkg.docs
-const { VITE_QWEN_BASE_URL } = import.meta.env
+const { VITE_OPENAI_PROXY_URL } = import.meta.env
 
-export const QwenModelValue = {
+export const OpenAIModelValue = {
   Model: {
     ID: "model",
     Title: "模型列表",
     SubTitle: "选择的模型会在模型列表中展示",
     defaultValue: "",
-    collapse: qwen.chatModels.map((t) => t.id),
-    options: qwen,
+    collapse: openai.chatModels.map((t) => t.id),
+    options: openai,
   },
   OpenaiUrl: {
     ID: "openaiUrl",
     Title: "接口地址",
     SubTitle: "除默认地址外，必须包含 http(s)://",
-    Placeholder: VITE_QWEN_BASE_URL,
+    Placeholder: VITE_OPENAI_PROXY_URL,
+    apiHost: "https://api.openai.com/v1/chat/completions",
     defaultValue: "",
-    apiHost: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
   },
   Token: {
     ID: "token",
     Title: "API Key",
-    SubTitle: "请填写你的 Qwen API Key",
-    Placeholder: "Qwen API Key",
+    SubTitle: "请填写你的 OpenAI API Key",
+    Placeholder: "OpenAI API Key",
     defaultValue: "",
-    doubt: `${docs}/guides/model-provider.html#vite-qwen-api-key`,
+    apiKey: "https://platform.openai.com/api-keys",
+    doubt: `${docs}/guides/model-provider.html#vite-openai-api-key`,
   },
   CheckPoint: {
     ID: "checkPoint",
     Title: "连通性检查",
     SubTitle: "测试 Api Key 与代理地址是否正确填写",
-    defaultValue: "",
+    defaultValue: "gpt-4o-mini",
   },
   Temperature: {
     ID: "temperature",
@@ -51,6 +52,32 @@ export const QwenModelValue = {
     step: 0.1,
     min: 0,
     max: 1,
+  },
+  PresencePenalty: {
+    ID: "presence_penalty",
+    Title: "表述发散度 (presence_penalty)",
+    SubTitle: "值越大，越倾向不同的表达方式，避免概念重复；值越小，越倾向使用重复的概念或叙述，表达更具一致性",
+    defaultValue: "",
+    step: 0.1,
+    min: 0,
+    max: 2,
+  },
+  FrequencyPenalty: {
+    ID: "frequency_penalty",
+    Title: "词汇丰富度 (frequency_penalty)",
+    SubTitle: "值越大，用词越丰富多样；值越低，用词更朴实简单",
+    defaultValue: "",
+    step: 0.1,
+    min: 0,
+    max: 2,
+  },
+  MaxTokens: {
+    ID: "max_tokens",
+    Title: "单次回复限制 (max_tokens)",
+    SubTitle: "单次交互所用的最大 Token 数",
+    defaultValue: "",
+    min: 0,
+    max: 32000,
   },
   HistoryMessageCount: {
     ID: "historyMessageCount",

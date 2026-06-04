@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
+import { getAiAvatarUrl } from "@pure/utils"
 
 defineOptions({
   name: "ModelProviderCard",

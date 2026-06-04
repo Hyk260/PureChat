@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { isAgent } from "@pure/utils"
 import { circleUrl, emptyUrl, squareUrl } from "@pure/const"
-import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
+import { getAiAvatarUrl } from "@pure/utils"
 import { useUserStore } from "@/stores/modules/user"
 
 defineOptions({

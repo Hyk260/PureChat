@@ -54,7 +54,9 @@ describe("BrowserS3Storage", () => {
       const mockError = new Error("Storage error")
       ;(set as any).mockRejectedValue(mockError)
 
-      await expect(storage.putObject("test-key", mockFile)).rejects.toThrow("Failed to put file test.txt: Storage error")
+      await expect(storage.putObject("test-key", mockFile)).rejects.toThrow(
+        "Failed to put file test.txt: Storage error"
+      )
     })
   })
 
@@ -103,7 +105,9 @@ describe("BrowserS3Storage", () => {
       const mockError = new Error("Storage error")
       ;(del as any).mockRejectedValue(mockError)
 
-      await expect(storage.deleteObject("test-key")).rejects.toThrow("Failed to delete object (key=test-key): Storage error")
+      await expect(storage.deleteObject("test-key")).rejects.toThrow(
+        "Failed to delete object (key=test-key): Storage error"
+      )
     })
   })
 })

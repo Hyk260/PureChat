@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { getAiAvatarUrl } from "@/ai/getAiAvatarUrl"
+import { getAiAvatarUrl } from "@pure/utils"
 import { useChatStore } from "@/stores"
 import { chatName, useState } from "@pure/utils"
 import { squareUrl } from "@pure/const"

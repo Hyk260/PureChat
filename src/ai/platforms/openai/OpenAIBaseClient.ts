@@ -1,9 +1,8 @@
-import { OpenAI } from "openai"
-import { fetchSSE, FetchOptions } from "@pure/utils"
+import { fetchSSE } from "@pure/utils"
 import { cleanObject } from "@pure/utils/object"
-import { REQUEST_TIMEOUT_MS, OpenaiPath } from "@pure/const"
+import { REQUEST_TIMEOUT_MS } from "@pure/const"
 import { Provider, LLMConfig, LLMParams, ModelProvider } from "model-bank"
-import { isClaudeReasoningModel, getLowerBaseModelName, isNotSupportTemperatureAndTopP } from "@pure/utils"
+import { isClaudeReasoningModel, isNotSupportTemperatureAndTopP } from "@pure/utils"
 import { useAccessStore } from "@/ai/utils"
 import { useRobotStore } from "@/stores"
 import { addAbortController, removeAbortController, hostPreview, transformContent } from "@pure/utils"
@@ -196,30 +195,6 @@ export abstract class OpenAIBaseClient {
     }
   }
 
-  async getChatCompletion(params: Partial<ChatStreamPayload>, options?: FetchOptions) {
-    const { signal, responseAnimation } = options ?? {}
-
-    const { provider = ModelProvider.OpenAI, ...res } = params
-    const chatPath = this.getPath()
-
-    let fetcher: typeof fetch | undefined = undefined
-
-    fetcher = this.getFetchOnClient()
-
-    return fetchSSE(chatPath, {
-      // body: JSON.stringify(payload),
-      fetcher: fetcher,
-      headers: this.getHeaders(),
-      method: "POST",
-      onAbort: options?.onAbort,
-      onErrorHandle: options?.onErrorHandle,
-      onFinish: options?.onFinish,
-      onMessageHandle: options?.onMessageHandle,
-      responseAnimation,
-      signal,
-    })
-  }
-
   /**
    * 处理流式聊天的响应。
    */
@@ -333,114 +308,52 @@ export abstract class OpenAIBaseClient {
   }
 
   /**
-   * 获取原始模型列表
-   */
-  async listModels(): Promise<OpenAI.Models.Model[]> {
-    const url = this.getPath(OpenaiPath.ListModelPath)
-    if (!url.startsWith("http")) {
-      window.$message?.error("接口地址格式错误")
-      throw new Error("接口地址格式错误")
-    }
-    const agentRuntime = initializeWithClientStore({
-      provider: this.provider,
-      payload: {
-        apiKey: this.accessStore().token?.trim(),
-        baseURL: this.accessStore().openaiUrl?.trim(),
-      },
-    })
-    return await agentRuntime.models()
-  }
-
-  /**
-   * 判断模型是否应该被包含在结果中
-   * 子类可以覆盖此方法来实现自定义过滤逻辑
-   */
-  protected shouldIncludeModel(model: OpenAI.Models.Model): boolean {
-    const modelId = model.id.toLowerCase()
-    return modelId.startsWith("gpt-") || modelId.startsWith("openai")
-  }
-
-  /**
-   * 获取模型列表
-   */
-  async getModels() {
-    const { DEFAULT_MODEL_LIST } = await import("model-bank")
-    const models = await this.listModels()
-    const filteredModels = models.filter((model) => this.shouldIncludeModel(model))
-
-    const seen = new Set<string>()
-    const uniqueModels: OpenAI.Models.Model[] = []
-    for (const model of filteredModels) {
-      if (!seen.has(model.id)) {
-        seen.add(model.id)
-        uniqueModels.push(model)
-      }
-    }
-
-    return uniqueModels.map((model) => {
-      const knownModel = DEFAULT_MODEL_LIST.find(
-        (m) => m.id === getLowerBaseModelName(model.id) || m.displayName === model.id
-      )
-      return {
-        id: model.id,
-        icon: "",
-        tokens: knownModel?.tokens || 0,
-        // enabled: knownModel?.enabled || false,
-        functionCall: knownModel?.functionCall || false,
-        reasoning: knownModel?.displayName?.toLowerCase().includes("deepseek-r1") || knownModel?.reasoning || false,
-        vision: knownModel?.vision || false,
-        displayName: model.id,
-      }
-    })
-  }
-
-  /**
    * 检查连通性
    */
-  async checkConnectivity({ model = "" }: { model: string }): Promise<{ valid: boolean; error: string }> {
-    const url = this.getPath()
-    if (!url.startsWith("http")) {
-      return {
-        valid: false,
-        error: "接口地址格式错误",
-      }
-    }
-    const payload = this.accessStore()
+  // async checkConnectivity({ model = "" }: { model: string }): Promise<{ valid: boolean; error: string }> {
+  //   const url = this.getPath()
+  //   if (!url.startsWith("http")) {
+  //     return {
+  //       valid: false,
+  //       error: "接口地址格式错误",
+  //     }
+  //   }
+  //   const payload = this.accessStore()
 
-    const chatPayload = {
-      method: "POST",
-      body: JSON.stringify({
-        messages: [{ role: "user", content: "Hi, hello" }],
-        model: model || payload?.model,
-        stream: true,
-        stream_options: {
-          include_usage: true,
-        },
-        temperature: 1,
-        top_p: 1,
-      }),
-      headers: this.getHeaders(),
-    }
+  //   const chatPayload = {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       messages: [{ role: "user", content: "Hi, hello" }],
+  //       model: model || payload?.model,
+  //       stream: true,
+  //       stream_options: {
+  //         include_usage: true,
+  //       },
+  //       temperature: 1,
+  //       top_p: 1,
+  //     }),
+  //     headers: this.getHeaders(),
+  //   }
 
-    try {
-      const res = await fetch(url, chatPayload)
-      if (!res.ok) {
-        const resJson = await res.json()
-        console.log("[Check] Response received:", resJson)
-        return {
-          valid: false,
-          error: resJson?.error?.message || "未知错误",
-        }
-      }
-      return {
-        valid: true,
-        error: "未知错误",
-      }
-    } catch (error) {
-      return {
-        valid: false,
-        error: error instanceof Error ? error.message : "未知错误",
-      }
-    }
-  }
+  //   try {
+  //     const res = await fetch(url, chatPayload)
+  //     if (!res.ok) {
+  //       const resJson = await res.json()
+  //       console.log("[Check] Response received:", resJson)
+  //       return {
+  //         valid: false,
+  //         error: resJson?.error?.message || "未知错误",
+  //       }
+  //     }
+  //     return {
+  //       valid: true,
+  //       error: "未知错误",
+  //     }
+  //   } catch (error) {
+  //     return {
+  //       valid: false,
+  //       error: error instanceof Error ? error.message : "未知错误",
+  //     }
+  //   }
+  // }
 }

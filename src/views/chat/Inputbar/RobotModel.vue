@@ -67,7 +67,7 @@ import { Atom, Eye, ToyBrick } from "@lucide/vue"
 import { ClickOutside as vClickOutside } from "element-plus"
 import { cloneDeep, isEmpty } from "lodash-es"
 import { storeToRefs } from "pinia"
-import { modelValue } from "@/ai/constant"
+import { aiModelsValue } from "model-bank"
 import { ModelIcon, ProviderIcon } from "@pure/icons"
 import { getBaseModelName } from "@pure/utils"
 import { useAccessStore } from "@/ai/utils"
@@ -106,7 +106,7 @@ function storeRobotModel(data: Model) {
 function initModel() {
   const provider = modelProvider.value
   const selectModel = modelStore.value[provider] || {}
-  const providerValue = modelValue[provider]
+  const providerValue = aiModelsValue[provider]
   if (!providerValue?.Model?.options) {
     setFlag(true)
     return
