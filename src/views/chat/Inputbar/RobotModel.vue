@@ -70,7 +70,7 @@ import { storeToRefs } from "pinia"
 import { aiModelsValue } from "model-bank"
 import { ModelIcon, ProviderIcon } from "@pure/icons"
 import { getBaseModelName } from "@pure/utils"
-import { useAccessStore } from "@/ai/utils"
+
 import {
   // useChatStore,
   useRobotStore,
@@ -97,7 +97,7 @@ function onClickOutside() {
 
 function storeRobotModel(data: Model) {
   const provider = modelProvider.value
-  const config = useAccessStore(provider)
+  const config = robotStore.getAccessStore(provider)
   robotStore.setModel(data)
   robotStore.setAccessStore({ ...config, model: data.id }, provider)
   setFlag(false)

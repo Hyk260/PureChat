@@ -1,5 +1,5 @@
 import { ModelRuntime } from "@pure/model-runtime"
-import { useAccessStore } from "@/ai/utils"
+import { useRobotStore } from "@/stores"
 
 export interface InitializeWithClientStoreOptions {
   payload?: any
@@ -7,7 +7,7 @@ export interface InitializeWithClientStoreOptions {
 }
 
 export const createPayloadWithKeyVaults = (provider: any) => {
-  const keyVaults = useAccessStore(provider) || {}
+  const keyVaults = useRobotStore().getAccessStore(provider) || {}
 
   return {
     ...keyVaults,

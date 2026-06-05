@@ -233,7 +233,7 @@ import { storeToRefs } from "pinia"
 import { ModelIcon } from "@pure/icons"
 import { getLowerBaseModelName, getBaseModelName, openWindow } from "@pure/utils"
 import { aiModelsConfig, aiModelsValue } from "model-bank"
-import { useAccessStore } from "@/ai/utils"
+
 import { useRobotStore } from "@/stores"
 import { modelsService } from "@/service/models"
 
@@ -264,7 +264,8 @@ const robotStore = useRobotStore()
 const { modelProvider, modelStore } = storeToRefs(robotStore)
 
 const handleRemoveTag = (_id: string) => {
-  onModelDataChanged()
+  console.log(_id)
+  // onModelDataChanged()
 }
 
 function isRange(id: string) {
@@ -285,7 +286,7 @@ function getItemDesc(item: ModelConfigItem) {
 
 function getItemPlaceholder(item: ModelConfigItem) {
   if (item.placeholderKey) return $t(item.placeholderKey, { provider: item.providerNameKey })
-  return item.Placeholder ?? ""
+  return item.placeholder ?? ""
 }
 
 function isModelListItem(item: ModelConfigItem) {
@@ -352,7 +353,7 @@ function initializeModelOptions() {
   const provider = modelProvider.value
   const modelDataValue = cloneDeep(aiModelsValue[provider])
   const currentModelConfig = modelStore.value[provider]
-  const accessConfig = useAccessStore(provider) as RobotAccessConfig
+  const accessConfig = useRobotStore().getAccessStore(provider) as RobotAccessConfig
 
   Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {
     if (configItem.ID === "model" && currentModelConfig?.Model?.collapse) {
@@ -387,7 +388,7 @@ function resetRobotModelConfig() {
   const model: RobotAccessConfig = {}
   const provider = modelProvider.value
   const modelDataValue = cloneDeep(aiModelsValue[provider])
-  const accessConfig = useAccessStore(provider) as RobotAccessConfig
+  const accessConfig = useRobotStore().getAccessStore(provider) as RobotAccessConfig
   const defaultConfig = aiModelsConfig[provider] as RobotAccessConfig
 
   Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {

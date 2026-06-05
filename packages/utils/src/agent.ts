@@ -15,20 +15,19 @@ export const isAgent = (text: string) => {
   return /@RBT#Agent/.test(text)
 }
 
+type ModelProviderKey = keyof typeof ModelProvider
+
+const providerToModelId = Object.fromEntries(
+  (Object.keys(ModelProvider) as ModelProviderKey[]).map((key) => [ModelProvider[key], ModelID[key]])
+) as Record<Provider, ModelIDValue>
+
+const modelIdToProvider = Object.fromEntries(
+  (Object.keys(ModelID) as ModelProviderKey[]).map((key) => [ModelID[key], ModelProvider[key]])
+) as Record<ModelIDValue, Provider>
+
 export function getModelId(model: Provider) {
   if (!model) return ""
-  const modelMapping = {
-    [ModelProvider.OpenAI]: ModelID.OpenAI,
-    [ModelProvider.ZhiPu]: ModelID.ZhiPu,
-    [ModelProvider.ZeroOne]: ModelID.ZeroOne,
-    [ModelProvider.Qwen]: ModelID.Qwen,
-    [ModelProvider.Ollama]: ModelID.Ollama,
-    [ModelProvider.GitHub]: ModelID.GitHub,
-    [ModelProvider.DeepSeek]: ModelID.DeepSeek,
-    [ModelProvider.Mistral]: ModelID.Mistral,
-    [ModelProvider.Minimax]: ModelID.Minimax,
-  }
-  return modelMapping[model] || null
+  return providerToModelId[model] ?? null
 }
 
 /**
@@ -40,16 +39,5 @@ export function getModelType(modelId: string): Provider {
   if (!isRobot(modelId)) {
     throw new Error("Invalid modelId")
   }
-  const modelMapping = {
-    [ModelID.OpenAI]: ModelProvider.OpenAI,
-    [ModelID.ZhiPu]: ModelProvider.ZhiPu,
-    [ModelID.ZeroOne]: ModelProvider.ZeroOne,
-    [ModelID.Qwen]: ModelProvider.Qwen,
-    [ModelID.Ollama]: ModelProvider.Ollama,
-    [ModelID.GitHub]: ModelProvider.GitHub,
-    [ModelID.DeepSeek]: ModelProvider.DeepSeek,
-    [ModelID.Mistral]: ModelProvider.Mistral,
-    [ModelID.Minimax]: ModelProvider.Minimax,
-  }
-  return modelMapping[modelId.replace("C2C", "") as ModelIDValue] || ""
+  return modelIdToProvider[modelId.replace("C2C", "") as ModelIDValue] ?? ""
 }

@@ -12,7 +12,7 @@ import { getCustomMsgContent } from "@/utils/common"
 import { generateReferencePrompt } from "@/utils/messageUtils/search"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 import { fetchSSE, FetchOptions, standardizeAnimationStyle } from "@pure/fetch-sse"
-import { useAccessStore } from "@/ai/utils"
+
 import { initializeWithClientStore } from "@/service/chatService/clientModelRuntime"
 import { DEFAULT_AGENT_CONFIG } from "@pure/const"
 
@@ -65,7 +65,7 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
 
 class ChatService {
   protected getBaseURL(provider: any): string {
-    return useAccessStore(provider).openaiUrl
+    return useRobotStore().getAccessStore(provider).openaiUrl
   }
 
   private getPath(provider: any, path?: string): string {
@@ -78,7 +78,7 @@ class ChatService {
     const headers = {
       "Content-Type": "application/json",
       // "x-requested-with": "XMLHttpRequest",
-      Authorization: `Bearer ${useAccessStore(provider).token?.trim()}`,
+      Authorization: `Bearer ${useRobotStore().getAccessStore(provider).token?.trim()}`,
     }
     return headers
   }
@@ -307,7 +307,7 @@ class ChatServiceMessage {
       params: {
         messages: llmMessages,
         provider,
-        ...useAccessStore(provider),
+        ...useRobotStore().getAccessStore(provider),
       },
       onMessageHandle: (chunk) => {
         handler.handleChunk(chunk as StreamChunk)
@@ -436,7 +436,7 @@ class ChatServiceMessage {
    * 检查是否应该中止发送消息
    */
   private shouldAbortSend(provider: any, startMsg: DB_Message): boolean {
-    const params = useAccessStore(provider)
+    const params = useRobotStore().getAccessStore(provider)
     // Ollama 模型不需要 token 检查
     if (provider === ModelProvider.Ollama || params.token) {
       return false

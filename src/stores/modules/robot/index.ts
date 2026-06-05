@@ -1,8 +1,7 @@
-import { cloneDeep } from "lodash-es"
+import { cloneDeep, isEmpty } from "lodash-es"
 import { defineStore } from "pinia"
 
-import { aiModelsValue, ModelProvider, Provider } from "model-bank"
-import { useAccessStore } from "@/ai/utils"
+import { aiModelsConfig, aiModelsValue, LLMParams, ModelProvider, Provider } from "model-bank"
 import { SetupStoreId } from "@/stores/enum"
 import WebSearchService from "@/service/WebSearchService"
 
@@ -19,15 +18,9 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     modelConfig: null,
     modelProvider: ModelProvider.OpenAI,
     defaultProvider: ModelProvider.OpenAI,
-    promptStore: {
-      // [ModelProvider.OpenAI]: [],
-    },
-    modelStore: {
-      // [ModelProvider.OpenAI]: {},
-    },
-    accessStore: {
-      // [ModelProvider.OpenAI]: {},
-    },
+    promptStore: {},
+    modelStore: {},
+    accessStore: {},
   }),
   getters: {
     isVision(): boolean {
@@ -88,8 +81,8 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
         return
       }
       this.modelProvider = provider
-      const model = useAccessStore(provider)?.model
-      const providerData = aiModelsValue[provider as ModelProvider]
+      const model = this.getAccessStore(provider)?.model
+      const providerData = aiModelsValue[provider]
       if (!providerData?.Model?.options?.chatModels) {
         console.log("provider data not found")
         return
@@ -108,13 +101,18 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       this.defaultProvider = data
     },
     setModelConfig(provider: Provider) {
-      this.modelConfig = useAccessStore(provider)
+      this.modelConfig = this.getAccessStore(provider)
     },
     setModel(value: Model | null) {
       this.model = value
     },
     setPromptConfig(value: Prompt | null) {
       this.promptConfig = value
+    },
+    getAccessStore(provider: Provider = ModelProvider.OpenAI): LLMParams {
+      const access = this.accessStore?.[provider] || ""
+
+      return isEmpty(access) ? aiModelsConfig[provider] : (access as LLMParams)
     },
   },
   persist: true,

@@ -1,7 +1,7 @@
 import { h, watch } from "vue"
 import { useRoute } from "vue-router"
 import { ElMessageBox } from "element-plus"
-import { useAccessStore } from "@/ai/utils"
+
 import { getModelId } from "@pure/utils"
 import { useChatStore, useRobotStore, useRouteStore } from "@/stores"
 
@@ -122,7 +122,7 @@ export async function autofillProvider(settings: UrlSettings) {
   })
 
   const config = {
-    ...useAccessStore("openai"),
+    ...useRobotStore().getAccessStore("openai"),
     // model: "gpt-4o-mini",
     token: openaiConfig.apiKey,
     openaiUrl: openaiConfig.baseURL,

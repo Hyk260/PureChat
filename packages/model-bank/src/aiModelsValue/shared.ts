@@ -10,7 +10,7 @@ export interface ModelValueField {
   step?: number
   min?: number
   max?: number
-  Placeholder?: string
+  placeholder?: string
   placeholderKey?: string
   providerNameKey?: string
   apiKey?: string
@@ -119,7 +119,7 @@ export function createOpenaiUrl(options: {
     ID: "openaiUrl",
     labelKey: labelKeyMap[variant],
     descKey: I18N.apiUrl.descKey,
-    Placeholder: options.placeholder,
+    placeholder: options.placeholder,
     apiHost: options.apiHost,
     defaultValue: "",
     ...(options.doubt ? { doubt: options.doubt } : {}),

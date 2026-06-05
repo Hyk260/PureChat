@@ -17,8 +17,6 @@ export interface Model {
 
 export interface ModelConfigItem {
   ID: string
-  Title?: string
-  SubTitle?: string
   labelKey?: string
   descKey?: string
   placeholderKey?: string
@@ -34,7 +32,7 @@ export interface ModelConfigItem {
   apiKey?: string
   doubt?: string
   apiHost?: string
-  Placeholder?: string
+  placeholder?: string
   step?: number
   min?: number
   max?: number
