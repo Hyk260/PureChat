@@ -57,29 +57,31 @@
     "comments": true,
     "strings": true
   },
+  "npm.packageManager": "pnpm",
+  // https://lydanne.github.io/i18n-ally-next/zh-CN/config/settings#vscode-settings-json
   // 翻译文件夹路径 (相对于项目根目录)
   "i18n-ally.localesPaths": [
-    "locales",
-    "src/locales",
-    "src/locales/default",
-    "src/locales/langs"
+    // "locales",
+    // "src/locales",
+    "src/locales/langs",
   ],
-  // 每个 locale 目录下的分片文件都在根级合并，不把文件名作为命名空间
-  "i18n-ally.namespace": false,
+  // "i18n-ally.namespace": false,
   "i18n-ally.ignoreFiles": [
-    "**/index.{ts,js}"
+    "node_modules/**",
+    "dist/**"
   ],
-  // locale 为子目录（zh-CN/setting.ts），非平铺单文件（zh-CN.ts）
-  "i18n-ally.dirStructure": "dir",
-  // 翻译路径格式
+  // "auto" | "file" | "dir"
+  // "i18n-ally.dirStructure": "auto",
+  // 翻译路径格式 "auto" | "nested" | "flat"
   "i18n-ally.keystyle": "nested",
   // 保存排序后的JSON/YAML
   "i18n-ally.sortKeys": true,
   // 指定启用文件格式
   "i18n-ally.enabledParsers": [
-    "js",
+    // "js",
     "ts",
-    "yaml"
+    // "json",
+    // "yaml"
   ],
   // 翻译源语言
   "i18n-ally.sourceLanguage": "en",
@@ -89,5 +91,11 @@
   "i18n-ally.enabledFrameworks": [
     "vue"
   ],
+  "i18n-ally.parsers.typescript.compilerOptions": {
+    "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
+    "rootDir": ".",
+    "baseUrl": "."
+  },
   "Codegeex.CommitMessageStyle": "ConventionalCommits"
 }

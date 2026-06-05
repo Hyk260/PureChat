@@ -115,8 +115,8 @@ import { ElCard, ElDescriptions, ElDescriptionsItem, ElButton } from "element-pl
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { shuffle } from "lodash-es"
-import enWelcome from "@/locales/default/en/welcome"
-import zhWelcome from "@/locales/default/zh-CN/welcome"
+import enWelcome from "@/locales/langs/en"
+import zhWelcome from "@/locales/langs/zh-CN"
 
 const { locale } = useI18n()
 

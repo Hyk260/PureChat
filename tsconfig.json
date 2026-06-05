@@ -1,14 +1,36 @@
 {
-  "tsDecorders": "legacy",
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.web.json"
-    }
-  ],
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "useDefineForClassFields": true
-  }
+    "target": "ESNext",
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "lib": ["DOM", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "types": ["vite/client", "node", "element-plus/global"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "~/*": ["./*"]
+    },
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "src/typings/*.ts",
+    "src/types/*.ts",
+    "build/**/*.ts",
+    "vite.config.ts",
+    "uno.config.ts",
+    "packages/**/*.ts",
+    "packages/**/*.vue"
+  ],
+  "exclude": ["node_modules", "dist"]
 }

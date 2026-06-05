@@ -47,7 +47,7 @@ export default defineConfig([
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module",
-        project: "./tsconfig.eslint.json",
+        project: "./tsconfig.json",
         tsconfigRootDir: import.meta.dirname,
       },
       globals: {
@@ -218,7 +218,7 @@ export default defineConfig([
         extraFileExtensions: [".vue"],
         parser: tsparser,
         parserOptions: {
-          project: "./tsconfig.web.json",
+          project: "./tsconfig.json",
           tsconfigRootDir: import.meta.dirname,
         },
       },

@@ -1,7 +1,7 @@
 # TypeScript 配置文件说明
 
 ## 文件概述
-`tsconfig.web.json` 是 PureChat 前端项目的 TypeScript 配置文件，用于设置编译器行为、模块解析和类型检查规则。
+`tsconfig.json` 是 PureChat 前端项目的 TypeScript 配置文件，用于设置编译器行为、模块解析和类型检查规则。
 
 ## 配置选项详解
 
