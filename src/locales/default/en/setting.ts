@@ -10,6 +10,11 @@ export default {
       refreshModels: "Refresh model list",
       modelCount: "{count} models available",
       selectedCount: "{count} selected",
+      checkConnection: "Check",
+      clearCache: "Clear Cache",
+      connectionSuccess: "Connected successfully",
+      connectionFailed: "Connection failed",
+      apiKeyRequired: "Enter an API key",
       updateSuccess: "Model list updated successfully",
     },
     model: {
@@ -55,7 +60,7 @@ export default {
       title: "Vocabulary Richness",
       desc: "The higher the value, the more diverse and rich the vocabulary; the lower the value, the simpler and more straightforward the language.",
     },
-    historyMessageCount: {
+    historyCount: {
       title: "History Message Count",
       desc: "Number of historical messages included in each request",
     },

@@ -6,7 +6,7 @@ export interface ModelValueField {
   ID: string
   labelKey: string
   descKey: string
-  defaultValue: string
+  defaultValue: string | number
   step?: number
   min?: number
   max?: number
@@ -64,9 +64,9 @@ const I18N = {
     labelKey: "settingModel.frequencyPenalty.title",
     descKey: "settingModel.frequencyPenalty.desc",
   },
-  historyMessageCount: {
-    labelKey: "settingModel.historyMessageCount.title",
-    descKey: "settingModel.historyMessageCount.desc",
+  historyCount: {
+    labelKey: "settingModel.historyCount.title",
+    descKey: "settingModel.historyCount.desc",
   },
   maxTokens: {
     labelKey: "settingModel.maxTokens.title",
@@ -206,9 +206,9 @@ export function createFrequencyPenalty(overrides?: SliderOverrides): ModelValueF
 
 export function createHistoryMessageCount(overrides?: SliderOverrides): ModelValueField {
   return createSliderField(
-    "historyMessageCount",
-    I18N.historyMessageCount.labelKey,
-    I18N.historyMessageCount.descKey,
+    "historyCount",
+    I18N.historyCount.labelKey,
+    I18N.historyCount.descKey,
     { min: 1, max: 64, step: 1 },
     overrides
   )

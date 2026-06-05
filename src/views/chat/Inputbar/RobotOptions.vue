@@ -15,12 +15,12 @@
       <div class="container-box">
         <!-- prompt -->
         <DragPrompt ref="promptRef" />
-        <div v-for="item in modelData" :key="item.ID" class="container-item">
+        <div v-for="item in configItems" :key="item.ID" class="container-item">
           <div class="flex flex-col gap-5">
             <div class="flex gap-5 title">
-              <span>{{ $t(`${item.labelKey}`) }}</span>
+              <span>{{ getItemLabel(item) }}</span>
               <ElTooltip
-                v-if="item.apiKey && ['token'].includes(item.ID)"
+                v-if="isApiKeyHelpVisible(item)"
                 :content="$t('settingModel.dialog.getApiKey')"
                 placement="top"
               >
@@ -36,7 +36,7 @@
             </div>
           </div>
           <!-- 模型列表 -->
-          <div v-if="item.options">
+          <div v-if="isModelListItem(item)">
             <div class="flex gap-8 flex-col">
               <ElSelect
                 v-model="item.collapse"
@@ -49,7 +49,7 @@
                 @removeTag="handleRemoveTag"
               >
                 <ElOption
-                  v-for="models in item.options.chatModels"
+                  v-for="models in getModelOptions(item)"
                   :key="models.id"
                   :label="getBaseModelName(models.displayName || models.id)"
                   :value="models.id"
@@ -98,17 +98,14 @@
               </ElSelect>
               <div class="flex-bc">
                 <div class="text-[#999]">
-                  <span>{{
-                    $t("settingModel.dialog.modelCount", {
-                      count: toDisplayCount(item?.options?.chatModels?.length),
-                    })
-                  }}</span>
-                  <span>{{
-                    $t("settingModel.dialog.selectedCount", { count: toDisplayCount(item?.collapse?.length) })
-                  }}</span>
+                  <span>
+                    {{ $t("settingModel.dialog.modelCount", { count: toDisplayCount(getModelOptions(item).length) }) }}
+                  </span>
+                  <span>
+                    {{ $t("settingModel.dialog.selectedCount", { count: toDisplayCount(item?.collapse?.length) }) }}
+                  </span>
                 </div>
                 <div>
-                  <!-- v-if="['openai', 'deepseek', 'qwen', 'zeroone', 'zhipu', 'ollama'].includes(item?.options?.id)" -->
                   <ElTooltip :content="$t('settingModel.dialog.refreshModels')" placement="top">
                     <ElIcon class="refresh flex-c" :size="15" @click="onRefresh">
                       <Refresh />
@@ -129,8 +126,7 @@
               @change="onModelDataChanged"
             />
           </div>
-          <div v-else-if="['max_tokens'].includes(item.ID)" class="flex justify-end number">
-            <!-- <ElSwitch /> -->
+          <div v-else-if="isMaxTokensItem(item)" class="flex justify-end number">
             <ElSlider
               v-model="item.defaultValue"
               :min="item.min ?? 0"
@@ -141,16 +137,10 @@
             />
           </div>
           <!-- API Key 接口地址-->
-          <div v-else-if="['token', 'openaiUrl'].includes(item.ID)" class="input">
+          <div v-else-if="isCredentialItem(item)" class="input">
             <div class="gap-5 flex-bc">
               <ElTooltip :content="$t('settingModel.dialog.configGuide')" placement="top">
-                <!-- ollama -->
-                <span v-if="item.doubt && isOllama" class="flex cursor-pointer">
-                  <ElIcon @click="openExternalUrl(item.doubt)">
-                    <QuestionFilled />
-                  </ElIcon>
-                </span>
-                <span v-else-if="item.doubt" class="flex cursor-pointer">
+                <span v-if="item.doubt" class="flex cursor-pointer">
                   <ElIcon @click="openExternalUrl(item.doubt)">
                     <QuestionFilled />
                   </ElIcon>
@@ -160,7 +150,6 @@
               <div class="w-full flex gap-4">
                 <ElInput
                   v-if="item.ID === 'openaiUrl'"
-                  ref="inputUrlRefs"
                   v-model="item.defaultValue"
                   :placeholder="getItemPlaceholder(item)"
                   type="text"
@@ -179,13 +168,9 @@
                 />
               </div>
             </div>
-            <!-- <div v-if="item?.apiHost" class="text-[#999] pt-8 ml-20 max-w-400">
-              {{ item?.defaultValue ? hostPreview(item?.defaultValue) : item?.apiHost }}
-            </div>
-            <div v-if="item?.apiHost" class="text-[#999] pt-8 ml-20">/ 结尾忽略 v1 版本，# 结尾强制使用输入地址</div> -->
           </div>
           <!-- 连通性检查 -->
-          <div v-else-if="['checkPoint'].includes(item.ID)">
+          <div v-else-if="isCheckPointItem(item)">
             <div class="flex">
               <ElSelect
                 v-model="item.defaultValue"
@@ -195,7 +180,7 @@
                 @change="onModelDataChanged"
               >
                 <ElOption
-                  v-for="models in modelData['Model']?.options?.chatModels"
+                  v-for="models in modelOptions"
                   :key="models.id"
                   :label="getBaseModelName(models.displayName || models.id)"
                   :value="models.id"
@@ -218,7 +203,7 @@
                 <template #loading>
                   <div class="iconify-icon svg-spinners mr-8"></div>
                 </template>
-                <span>检查</span>
+                <span>{{ $t("settingModel.dialog.checkConnection") }}</span>
               </ElButton>
             </div>
           </div>
@@ -226,8 +211,12 @@
       </div>
     </div>
     <template #footer>
-      <ElButton v-if="IS_DEV" @click="clearRobotCache"> 清除缓存 </ElButton>
-      <ElButton @click="handleReset"> 重置 </ElButton>
+      <ElButton v-if="IS_DEV" @click="clearRobotCache">
+        {{ $t("settingModel.dialog.clearCache") }}
+      </ElButton>
+      <ElButton @click="handleReset">
+        {{ $t("common.reset") }}
+      </ElButton>
       <ElButton @click="handleCancel">{{ $t("common.cancel") }}</ElButton>
       <ElButton type="primary" @click="handleConfirm">
         {{ $t("common.confirm") }}
@@ -245,53 +234,41 @@ import { ModelIcon } from "@pure/icons"
 import { getLowerBaseModelName, getBaseModelName, openWindow } from "@pure/utils"
 import { aiModelsConfig, aiModelsValue } from "model-bank"
 import { useAccessStore } from "@/ai/utils"
-import { useChatStore, useRobotStore } from "@/stores"
-// import { hostPreview } from "@pure/utils"
+import { useRobotStore } from "@/stores"
 import { modelsService } from "@/service/models"
 
 import { delay, useState } from "@pure/utils"
-import { isRange } from "./utils"
 import emitter from "@/utils/mitt-bus"
 import { Markdown } from "@pure/ui"
 import DragPrompt from "./DragPrompt.vue"
 import { chatService } from "@/service/chatService"
 import { $t } from "@/locales"
 
-import type { Model, ModelConfigItem, ModelDataType } from "@/stores/modules/robot/types"
+import type { Model, ModelConfigItem, ModelDataType, RobotAccessConfig } from "@/stores/modules/robot/types"
 import type { RobotBoxEventData } from "@/types"
-import type { CSSProperties } from "vue"
 
 defineOptions({
   name: "RobotOptions",
 })
 
-interface Mark {
-  style: CSSProperties
-  label: string
-}
-
-type Marks = Record<number, Mark | string>
-
-const marks = reactive<Marks>({
-  1: "1",
-})
-
 const modelData = ref<ModelDataType>({})
+const configItems = computed(() => Object.values(modelData.value))
+const modelOptions = computed(() => modelData.value.Model?.options?.chatModels ?? [])
 const inputTokenRefs = useTemplateRef("inputTokenRefs")
 const promptRef = useTemplateRef("promptRef")
-
-// const instance = getCurrentInstance()
 
 const [dialog, setDialog] = useState(false)
 const [loading, setLoading] = useState(false)
 
-// const chatStore = useChatStore()
 const robotStore = useRobotStore()
-// const { toAccount } = storeToRefs(chatStore)
-const { isOllama, modelProvider, modelStore } = storeToRefs(robotStore)
+const { modelProvider, modelStore } = storeToRefs(robotStore)
 
 const handleRemoveTag = (_id: string) => {
   onModelDataChanged()
+}
+
+function isRange(id: string) {
+  return ["temperature", "top_p", "presence_penalty", "frequency_penalty", "historyCount"].includes(id)
 }
 
 function toDisplayCount(count?: number) {
@@ -307,8 +284,54 @@ function getItemDesc(item: ModelConfigItem) {
 }
 
 function getItemPlaceholder(item: ModelConfigItem) {
-  return ''
-  // return $t(item.placeholderKey, { provider: item.providerNameKey })
+  if (item.placeholderKey) return $t(item.placeholderKey, { provider: item.providerNameKey })
+  return item.Placeholder ?? ""
+}
+
+function isModelListItem(item: ModelConfigItem) {
+  return Boolean(item.options)
+}
+
+function isApiKeyHelpVisible(item: ModelConfigItem) {
+  return item.ID === "token" && Boolean(item.apiKey)
+}
+
+function isCredentialItem(item: ModelConfigItem) {
+  return item.ID === "token" || item.ID === "openaiUrl"
+}
+
+function isCheckPointItem(item: ModelConfigItem) {
+  return item.ID === "checkPoint"
+}
+
+function isMaxTokensItem(item: ModelConfigItem) {
+  return item.ID === "max_tokens"
+}
+
+function isNumberConfigItem(item: ModelConfigItem) {
+  return isRange(item.ID) || isMaxTokensItem(item)
+}
+
+function getModelOptions(item: ModelConfigItem): Model[] {
+  return item.options?.chatModels ?? []
+}
+
+function ensureModelOptions(item: ModelConfigItem) {
+  item.options = item.options || { id: "", chatModels: [] }
+  item.options.chatModels = item.options.chatModels || []
+  return item.options
+}
+
+function toAccessValue(item: ModelConfigItem) {
+  if (isNumberConfigItem(item)) return Number(item.defaultValue)
+  return item.defaultValue
+}
+
+function buildAccessConfig(data: ModelDataType): RobotAccessConfig {
+  return Object.values(data).reduce<RobotAccessConfig>((config, item) => {
+    config[item.ID] = toAccessValue(item)
+    return config
+  }, {})
 }
 
 function updateModelList(newModels: Model[]) {
@@ -316,10 +339,7 @@ function updateModelList(newModels: Model[]) {
   window.$message?.success($t("settingModel.dialog.updateSuccess"))
   if (modelData.value?.Model) {
     modelData.value.Model.collapse = []
-  }
-  if (modelData.value?.Model) {
-    modelData.value.Model.options = modelData.value.Model.options || { id: "", chatModels: [] }
-    modelData.value.Model.options.chatModels = newModels
+    ensureModelOptions(modelData.value.Model).chatModels = newModels
   }
 }
 
@@ -332,27 +352,23 @@ function initializeModelOptions() {
   const provider = modelProvider.value
   const modelDataValue = cloneDeep(aiModelsValue[provider])
   const currentModelConfig = modelStore.value[provider]
+  const accessConfig = useAccessStore(provider) as RobotAccessConfig
+
   Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {
     if (configItem.ID === "model" && currentModelConfig?.Model?.collapse) {
       configItem.collapse = currentModelConfig?.Model?.collapse || []
-      configItem.options = configItem.options || { id: "", chatModels: [] }
-      configItem.options.chatModels = currentModelConfig?.Model?.options?.chatModels || []
+      ensureModelOptions(configItem).chatModels = currentModelConfig?.Model?.options?.chatModels || []
     }
     if (configItem.ID === "checkPoint") {
       configItem.defaultValue = currentModelConfig?.CheckPoint?.defaultValue || ""
     } else {
-      configItem.defaultValue = useAccessStore(provider)[configItem.ID] ?? ""
+      configItem.defaultValue = accessConfig[configItem.ID] ?? ""
     }
   })
-  // if (modelDataValue?.Model) {
-  //   modelDataValue.Model.collapse = modelDataValue.Model.collapse || []
-  //   modelDataValue.Model.options = modelDataValue.Model.options || { id: "", chatModels: [] }
-  //   modelDataValue.Model.options.chatModels = modelDataValue.Model.options.chatModels || []
-  // }
   modelData.value = modelDataValue
 }
 
-function persistRobotModel(model: ModelDataType) {
+function persistRobotModel(model: RobotAccessConfig) {
   const provider = modelProvider.value
   robotStore.setAccessStore(model, provider)
   robotStore.setModelStore(modelData.value, provider)
@@ -368,31 +384,24 @@ function clearRobotCache() {
 }
 
 function resetRobotModelConfig() {
-  const model: Record<string, any> = {}
+  const model: RobotAccessConfig = {}
   const provider = modelProvider.value
   const modelDataValue = cloneDeep(aiModelsValue[provider])
+  const accessConfig = useAccessStore(provider) as RobotAccessConfig
+  const defaultConfig = aiModelsConfig[provider] as RobotAccessConfig
 
   Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {
     if (configItem.ID === "openaiUrl" || configItem.ID === "token" || configItem.ID === "model") {
-      configItem.defaultValue = useAccessStore(provider)[configItem.ID]
+      configItem.defaultValue = accessConfig[configItem.ID] ?? ""
     } else {
-      configItem.defaultValue = aiModelsConfig[provider][configItem.ID]
+      configItem.defaultValue = defaultConfig[configItem.ID] ?? ""
     }
   })
 
   Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {
-    if (isRange(configItem.ID)) {
-      model[configItem.ID] = Number(configItem.defaultValue)
-    } else {
-      model[configItem.ID] = configItem.defaultValue
-    }
+    model[configItem.ID] = toAccessValue(configItem)
   })
 
-  // if (modelDataValue?.Model) {
-  //   modelDataValue.Model.collapse = modelDataValue.Model.collapse || []
-  //   modelDataValue.Model.options = modelDataValue.Model.options || { id: "", chatModels: [] }
-  //   modelDataValue.Model.options.chatModels = modelDataValue.Model.options.chatModels || []
-  // }
   modelData.value = modelDataValue
   robotStore.setModelStore(modelDataValue, provider)
   robotStore.setAccessStore(model, provider)
@@ -402,48 +411,44 @@ function resetRobotModelConfig() {
 const onCheckToken = debounce(handleCheckToken, 2000, { leading: true, trailing: false })
 
 async function handleCheckToken(item: ModelConfigItem) {
-  if (modelData.value?.Token?.defaultValue) {
-    setLoading(true)
-    let isError = false
-
-    await chatService.fetchPresetTaskResult({
-      params: {
-        messages: [
-          {
-            content: "hello",
-            role: "user",
-          },
-        ],
-        model: item?.defaultValue ?? "",
-        provider: modelProvider.value,
-      },
-      onError: (_, rawError) => {
-        console.error(rawError)
-        isError = true
-      },
-      onFinish: async (value) => {
-        console.log(value)
-        if (!isError && value) {
-          window.$message?.success("连接成功")
-        } else {
-          window.$message?.error("连接失败")
-        }
-      },
-      onLoadingChange: (loading) => {
-        setLoading(loading)
-      },
-    })
-  } else {
-    window.$message?.warning("请输入API密钥")
+  if (!modelData.value.Token?.defaultValue) {
+    window.$message?.warning($t("settingModel.dialog.apiKeyRequired"))
+    return
   }
+
+  let isError = false
+  setLoading(true)
+
+  await chatService.fetchPresetTaskResult({
+    params: {
+      messages: [
+        {
+          content: "hello",
+          role: "user",
+        },
+      ],
+      model: String(item.defaultValue ?? ""),
+      provider: modelProvider.value,
+    },
+    onError: (_, rawError) => {
+      console.error(rawError)
+      isError = true
+    },
+    onFinish: async (value) => {
+      if (!isError && value) {
+        window.$message?.success($t("settingModel.dialog.connectionSuccess"))
+      } else {
+        window.$message?.error($t("settingModel.dialog.connectionFailed"))
+      }
+    },
+    onLoadingChange: (loading) => {
+      setLoading(loading)
+    },
+  })
 }
 
 function handleCancel() {
   setDialog(false)
-}
-
-function getMarks() {
-  return null
 }
 
 function handleReset() {
@@ -452,15 +457,7 @@ function handleReset() {
 }
 
 function onModelDataChanged() {
-  const model: Record<string, any> = {}
-  Object.values(modelData.value).forEach((item) => {
-    if (isRange(item.ID)) {
-      model[item.ID] = Number(item.defaultValue)
-    } else {
-      model[item.ID] = item.defaultValue
-    }
-  })
-  persistRobotModel(model as unknown as ModelDataType)
+  persistRobotModel(buildAccessConfig(modelData.value))
 }
 
 function handleConfirm() {
@@ -497,7 +494,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  emitter.off("onRobotBox")
+  emitter.off("onRobotBox", handleRobotBoxEvent)
 })
 </script>
 
@@ -557,8 +554,6 @@ onUnmounted(() => {
 
 .refresh {
   cursor: pointer;
-  // margin-left: auto;
-  // margin-right: 5px;
 }
 
 .container {
@@ -574,7 +569,6 @@ onUnmounted(() => {
     align-items: center;
     justify-content: space-between;
     color-scheme: light;
-    // user-select: none;
     color: var(--color-text-default);
     min-height: 40px;
     padding: 10px 0;
@@ -626,69 +620,6 @@ onUnmounted(() => {
   align-items: center;
   justify-content: space-between;
 }
-
-// input[type="range"] {
-//   appearance: none;
-//   background-color: var(--color-range);
-//   color: #303030;
-//   margin: 2px;
-// }
-
-// input[type="number"],
-// input[type="text"],
-// input[type="password"] {
-//   appearance: none;
-//   border-radius: 10px;
-//   border: 1px solid #dedede;
-//   min-height: 36px;
-//   box-sizing: border-box;
-//   background: #fff;
-//   color: #303030;
-//   padding: 0 10px;
-//   max-width: 100%;
-//   font-family: inherit;
-// }
-
-// @mixin thumb() {
-//   appearance: none;
-//   height: 8px;
-//   width: 20px;
-//   background-color: rgb(29, 147, 171);
-//   border-radius: 10px;
-//   cursor: pointer;
-//   transition: all ease 0.3s;
-//   margin-left: 5px;
-//   border: none;
-// }
-
-// @mixin thumbHover() {
-//   transform: scaleY(1.2);
-//   width: 24px;
-// }
-
-// input[type="range"]::-webkit-slider-thumb {
-//   @include thumb();
-// }
-
-// input[type="range"]::-moz-range-thumb {
-//   @include thumb();
-// }
-
-// input[type="range"]::-ms-thumb {
-//   @include thumb();
-// }
-
-// input[type="range"]::-webkit-slider-thumb:hover {
-//   @include thumbHover();
-// }
-
-// input[type="range"]::-moz-range-thumb:hover {
-//   @include thumbHover();
-// }
-
-// input[type="range"]::-ms-thumb:hover {
-//   @include thumbHover();
-// }
 
 @media (max-width: 990px) {
   .container-item {

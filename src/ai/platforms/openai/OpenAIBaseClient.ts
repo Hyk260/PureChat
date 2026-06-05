@@ -43,7 +43,7 @@ export abstract class OpenAIBaseClient {
   processPromptMessages(messages: FewShots, modelConfig: LLMParams) {
     let combinedMessages: FewShots = []
     const validPrompts = this.getPromptStore()
-    const historyCount = Math.max(Number(modelConfig.historyMessageCount) || 0, 0)
+    const historyCount = Math.max(Number(modelConfig.historyCount) || 0, 0)
     const recentMessages = messages.slice(-historyCount)
 
     if (validPrompts.length > 0) {

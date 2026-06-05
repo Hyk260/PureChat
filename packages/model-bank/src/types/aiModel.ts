@@ -100,7 +100,7 @@ export interface LLMParams {
    * 附带历史消息数，每次请求携带的历史消息数量
    * @default 8
    */
-  historyMessageCount?: number
+  historyCount?: number
   /**
    * API Key，用于身份认证
    */

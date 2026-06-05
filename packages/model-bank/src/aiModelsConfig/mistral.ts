@@ -5,7 +5,7 @@ export const MistralConfig = {
   temperature: 1,
   top_p: 0.9,
   max_tokens: 1024,
-  historyMessageCount: 8,
+  historyCount: 8,
   token: VITE_MISTRAL_API_KEY,
   openaiUrl: VITE_MISTRAL_BASE_URL,
 }

@@ -10,6 +10,11 @@ export default {
       refreshModels: "获取模型列表",
       modelCount: "共 {count} 个模型可用",
       selectedCount: "已选择 {count} 个",
+      checkConnection: "检查",
+      clearCache: "清除缓存",
+      connectionSuccess: "连接成功",
+      connectionFailed: "连接失败",
+      apiKeyRequired: "请输入 API 密钥",
       updateSuccess: "模型列表更新成功",
     },
     model: {
@@ -55,7 +60,7 @@ export default {
       title: "词汇丰富度",
       desc: "值越大，用词越丰富多样；值越低，用词更朴实简单",
     },
-    historyMessageCount: {
+    historyCount: {
       title: "附带历史消息数",
       desc: "每次请求携带的历史消息数",
     },

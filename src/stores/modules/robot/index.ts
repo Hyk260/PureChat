@@ -9,7 +9,7 @@ import WebSearchService from "@/service/WebSearchService"
 import { useChatStore } from "../chat"
 import { useWebSearchStore } from "../websearch"
 
-import type { Model, RobotState } from "./types"
+import type { Model, ModelDataType, RobotAccessConfig, RobotState } from "./types"
 import type { Prompt } from "@pure/types"
 
 export const useRobotStore = defineStore(SetupStoreId.Robot, {
@@ -68,14 +68,14 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
       return `${avatar} ${title}`
     },
     botMessageCount(): number {
-      return this.modelConfig?.historyMessageCount || 1
+      return this.modelConfig?.historyCount || 1
     },
   },
   actions: {
-    setAccessStore(data: any, provider: string) {
+    setAccessStore(data: RobotAccessConfig, provider: Provider) {
       this.accessStore[provider] = data
     },
-    setModelStore(data: any, provider: string) {
+    setModelStore(data: ModelDataType, provider: Provider) {
       this.modelStore[provider] = data
     },
     setPromptStore(data: Prompt[], provider: string) {

@@ -59,6 +59,8 @@
   },
   // 翻译文件夹路径 (相对于项目根目录)
   "i18n-ally.localesPaths": [
+    "locales",
+    "src/locales",
     "src/locales/default",
     "src/locales/langs"
   ],

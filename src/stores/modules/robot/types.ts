@@ -23,7 +23,7 @@ export interface ModelConfigItem {
   descKey?: string
   placeholderKey?: string
   providerNameKey?: string
-  defaultValue: string
+  defaultValue: string | number
   options?: {
     id: string
     name?: string
@@ -41,6 +41,7 @@ export interface ModelConfigItem {
 }
 
 export type ModelDataType = Record<string, ModelConfigItem>
+export type RobotAccessConfig = Partial<LLMParams> & Record<string, string | number | undefined>
 
 // 提示词元数据类型
 export interface PromptMeta {
@@ -53,7 +54,7 @@ export interface PromptMeta {
 
 // 访问存储类型
 export interface AccessStore {
-  [provider: string]: any
+  [provider: string]: RobotAccessConfig
 }
 
 // 模型存储类型
@@ -89,8 +90,8 @@ export interface RobotGetters {
 }
 
 export interface RobotActions {
-  setAccessStore(data: any, provider: string): void
-  setModelStore(data: any, provider: string): void
+  setAccessStore(data: RobotAccessConfig, provider: Provider): void
+  setModelStore(data: ModelDataType, provider: Provider): void
   setPromptStore(data: Prompt[], provider: string): void
   updateModelConfig(): void
   setDefaultProvider(data: string): void

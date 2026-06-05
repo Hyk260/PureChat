@@ -5,7 +5,7 @@ export const DeepseekConfig = {
   temperature: 1,
   top_p: 1,
   max_tokens: 1024,
-  historyMessageCount: 8,
+  historyCount: 8,
   presence_penalty: 0,
   frequency_penalty: 0,
   token: VITE_DEEPSEEK_API_KEY,

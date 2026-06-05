@@ -134,7 +134,7 @@ class ChatService {
       model: payload.model,
       // plugins,
       provider: payload.provider!,
-      historyCount: payload?.historyMessageCount,
+      historyCount: payload?.historyCount,
     })
 
     return this.getChatCompletion(

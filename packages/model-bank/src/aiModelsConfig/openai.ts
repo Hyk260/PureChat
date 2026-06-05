@@ -30,7 +30,7 @@ export const OpenaiConfig = {
    * 附带历史消息数
    * @default 8
    */
-  historyMessageCount: 8,
+  historyCount: 8,
   token: VITE_OPENAI_API_KEY,
   openaiUrl: VITE_OPENAI_PROXY_URL,
 }
