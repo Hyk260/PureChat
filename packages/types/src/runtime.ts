@@ -1,8 +1,4 @@
-import type { ChatMessageError } from "./fetch"
 import type { LLMRoleType } from "./llm"
-import type { LLMConfig } from "model-bank"
-import type { OnFinishHandler } from "@pure/utils/fetch"
-import type { messageHandle } from "@/types"
 
 interface OnFinishData {
   grounding?: any
@@ -132,6 +128,8 @@ export interface ChatStreamPayload {
   tools?: ChatCompletionTool[] | null
   truncation?: "auto" | "disabled"
 
+  historyCount?: number
+
   token?: string
   openaiUrl?: string
 }
@@ -151,13 +149,4 @@ export interface ChatMethodOptions {
    * userId for the chat completion
    */
   user?: string
-}
-
-export interface ChatOptions {
-  messages: any[]
-  config: LLMConfig
-  requestId: string
-  onUpdate?: (data: messageHandle) => void
-  onFinish?: OnFinishHandler
-  onError?: (error: ChatMessageError) => void
 }

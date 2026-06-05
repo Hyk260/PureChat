@@ -14,7 +14,7 @@ const i18n = createI18n({
   globalInjection: true,
 })
 
-export const $t = i18n.global.t as App.I18n.$T
+export const $t = i18n.global.t
 
 export function setupI18n(app: App) {
   app.use(i18n)

@@ -3,7 +3,7 @@ import { FilesModel } from "@pure/database/models"
 import { convertBlobUrlToDataUrl, safeParseJSON } from "@pure/utils"
 
 import type { FewShots } from "@pure/types"
-import type { ImagePayloadType, CustomPayloadType } from "@pure/database/schemas"
+import type { CustomPayloadType, FilePayloadType, ImagePayloadType } from "@pure/database/schemas"
 
 const EXCLUDED_FLAGS: (keyof DB_Message)[] = ["isTimeDivider", "isDeleted", "isRevoked"]
 
@@ -12,8 +12,7 @@ const isExcludedMessage = (msg: DB_Message): boolean => EXCLUDED_FLAGS.some((fla
 /** flow -> role 映射 */
 const getRoleFlow = (flow: DB_Message["flow"]): "assistant" | "user" => (flow === "in" ? "assistant" : "user")
 
-const asArray = <T>(value: T | T[] | null | undefined): T[] =>
-  value == null ? [] : Array.isArray(value) ? value : [value]
+const asArray = (value: unknown): unknown[] => (value == null ? [] : Array.isArray(value) ? value : [value])
 
 // 处理文本类型的消息
 function transformTextElement(data: DB_Message) {
@@ -34,24 +33,15 @@ function transformTextElement(data: DB_Message) {
 
 function transformCustomElement(item: DB_Message) {
   const payload = item?.payload as CustomPayloadType
-  if (payload?.description !== "tool_call") {
-    return {}
-  }
+  if (payload?.description !== "tool_call") return null
 
   const input = safeParseJSON<{ data: { message: { choices: Array<{ message?: { tool_calls?: any } }> } } }>(
     payload.data
   )
   const toolCall = input?.data?.message?.choices?.[0]?.message?.tool_calls
-
-  if (!toolCall) {
-    return {}
-  }
+  if (!toolCall?.length) return null
 
   const firstToolCall = toolCall[0]
-  if (!firstToolCall) {
-    return {}
-  }
-
   return [
     {
       content: "",
@@ -67,21 +57,13 @@ function transformCustomElement(item: DB_Message) {
   ]
 }
 
-export const transformFileElement = async (data) => {
-  const { payload: file } = data
+export const transformFileElement = async (data: DB_Message) => {
+  const payload = data.payload as FilePayloadType
 
-  const dBile = await FilesModel.findById(file.id)
-  try {
-    return {
-      role: data.flow === "in" ? "assistant" : "user",
-      content: "file: ",
-    }
-  } catch (error) {
-    console.error("transformFileElement error", error)
-    return {
-      role: "user",
-      content: "file: Unknown",
-    }
+  await FilesModel.findById(payload.id)
+  return {
+    role: getRoleFlow(data.flow),
+    content: "file: ",
   }
 }
 

@@ -51,7 +51,7 @@ export const contextEngineering = async ({
   provider,
   historyCount,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
-  const messages = await transformContent(originalMessages)
+  const messages = await transformContent(originalMessages as DB_Message[])
 
   const combinedMessages = processPromptMessages(messages, { historyCount })
 

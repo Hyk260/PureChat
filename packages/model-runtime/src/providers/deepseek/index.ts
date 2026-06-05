@@ -3,7 +3,7 @@ import { ModelProvider } from "model-bank"
 import { type OpenAICompatibleFactoryOptions, createOpenAICompatibleRuntime } from "../../core/openaiCompatibleFactory"
 import { MODEL_LIST_CONFIGS, processModelList } from "../../utils/modelParse"
 import type OpenAI from "openai"
-import { ChatModelCard } from "@pure/types"
+import type { ChatModelCard } from "@pure/types"
 
 export interface DeepSeekModelCard {
   id: string
