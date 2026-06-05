@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
-import compressImage from "./compressImage"
+import compressImage from "../src/compressImage"
 
 const getContextSpy = vi.spyOn(global.HTMLCanvasElement.prototype, "getContext")
 const drawImageSpy = vi.spyOn(CanvasRenderingContext2D.prototype, "drawImage")

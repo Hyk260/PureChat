@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-import { isArc, isSonomaOrLaterSafari } from "./platform"
+import { isArc, isSonomaOrLaterSafari } from "../src/platform"
 
 describe("isSonomaOrLaterSafari", () => {
   beforeEach(() => {

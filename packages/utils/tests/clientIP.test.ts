@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { getClientIP } from "./clientIP"
+import { getClientIP } from "../src/clientIP"
 
 describe("getClientIP", () => {
   const createHeaders = (entries: [string, string][]) => {

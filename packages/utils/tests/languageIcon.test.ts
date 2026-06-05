@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { getLanguageIcon, setLanguageIconResolver } from "./languageIcon"
-import ShellIcon from "../icon/shell.svg?raw"
-import SquareCodeIcon from "../icon/square-code.svg?raw"
+import { getLanguageIcon, setLanguageIconResolver } from "../src/languageIcon"
+import ShellIcon from "../src/icon/shell.svg?raw"
+import SquareCodeIcon from "../src/icon/square-code.svg?raw"
 
 describe("languageIcon", () => {
   beforeEach(() => {

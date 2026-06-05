@@ -5,7 +5,7 @@ import {
   removeAbortController,
   abortCompletion,
   createAbortPromise,
-} from "./abortController"
+} from "../src/abortController"
 
 describe("abortController", () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest"
 
-import { createBasicAuthCredentials, decodeFromBase64, encodeToBase64 } from "./base64"
+import { createBasicAuthCredentials, decodeFromBase64, encodeToBase64 } from "../src/base64"
 
 describe("base64 utilities", () => {
   describe("encodeToBase64", () => {

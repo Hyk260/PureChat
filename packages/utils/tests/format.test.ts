@@ -11,7 +11,7 @@ import {
   formatSpeed,
   formatTime,
   formatTokenNumber,
-} from "./format"
+} from "../src/format"
 
 describe("format", () => {
   describe("formatSize", () => {

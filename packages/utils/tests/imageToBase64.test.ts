@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-import { imageToBase64, imageUrlToBase64 } from "./imageToBase64"
+import { imageToBase64, imageUrlToBase64 } from "../src/imageToBase64"
 
 describe("imageToBase64", () => {
   let mockImage: HTMLImageElement

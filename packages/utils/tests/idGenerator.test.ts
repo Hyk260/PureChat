@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { idGenerator } from "./idGenerator"
+import { idGenerator } from "../src/idGenerator"
 
 describe("idGenerator", () => {
   it("should generate an ID with the correct prefix and length", () => {
