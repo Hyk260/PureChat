@@ -137,20 +137,21 @@ export const providersList = [
       },
     ],
   },
-  // {
-  //   ...baseUserProfile,
-  //   userID: "@RBT#009",
-  //   nick: "Minimax",
-  //   selfSignature: "",
-  //   profileCustomField: [
-  //     {
-  //       key: "Tag_Profile_Custom_Provider",
-  //       value: "Minimax",
-  //     },
-  //     {
-  //       key: "Tag_Profile_Custom_Homepage",
-  //       value: "",
-  //     },
-  //   ],
-  // },
+  {
+    ...baseUserProfile,
+    userID: "@RBT#009",
+    nick: "Minimax",
+    selfSignature:
+      "Founded in 2021, MiniMax builds general-purpose AI with multimodal foundation models, including trillion-parameter MoE text models, speech models, and vision models, along with apps like Hailuo AI.",
+    profileCustomField: [
+      {
+        key: "Tag_Profile_Custom_Provider",
+        value: "Minimax",
+      },
+      {
+        key: "Tag_Profile_Custom_Homepage",
+        value: "",
+      },
+    ],
+  },
 ]

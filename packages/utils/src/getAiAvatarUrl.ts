@@ -9,6 +9,7 @@ import openaiPng from "../assets/model-provider/openai.png"
 import qwenPng from "../assets/model-provider/qwen.png"
 import zeroonePng from "../assets/model-provider/zeroone.png"
 import zhipuPng from "../assets/model-provider/zhipu.png"
+import minimaxPng from "../assets/model-provider/minimax.png"
 
 const assistantAvatar: Partial<Record<Provider, string>> = {
   [ModelProvider.OpenAI]: openaiPng,
@@ -19,6 +20,7 @@ const assistantAvatar: Partial<Record<Provider, string>> = {
   [ModelProvider.GitHub]: githubSvg,
   [ModelProvider.DeepSeek]: deepseekPng,
   [ModelProvider.Mistral]: mistralPng,
+  [ModelProvider.Minimax]: minimaxPng,
 }
 
 export function getAiAvatarUrl(id?: string): string {
