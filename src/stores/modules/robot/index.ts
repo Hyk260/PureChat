@@ -8,7 +8,7 @@ import WebSearchService from "@/service/WebSearchService"
 import { useChatStore } from "../chat"
 import { useWebSearchStore } from "../websearch"
 
-import type { Model, ModelDataType, RobotAccessConfig, RobotState } from "./types"
+import type { Model, RobotAccessConfig, RobotState } from "./types"
 import type { Prompt } from "@pure/types"
 
 export const useRobotStore = defineStore(SetupStoreId.Robot, {
@@ -19,7 +19,6 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     modelProvider: ModelProvider.OpenAI,
     defaultProvider: ModelProvider.OpenAI,
     promptStore: {},
-    modelStore: {},
     accessStore: {},
   }),
   getters: {
@@ -68,9 +67,6 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
     setAccessStore(data: RobotAccessConfig, provider: Provider) {
       this.accessStore[provider] = data
     },
-    setModelStore(data: ModelDataType, provider: Provider) {
-      this.modelStore[provider] = data
-    },
     setPromptStore(data: Prompt[], provider: string) {
       this.promptStore[provider] = data
     },
@@ -88,7 +84,7 @@ export const useRobotStore = defineStore(SetupStoreId.Robot, {
         return
       }
       const data = cloneDeep(
-        this.modelStore?.[provider]?.Model?.options?.chatModels || providerData.Model.options.chatModels
+        (this.accessStore[provider] as RobotAccessConfig)?.chatModels || providerData.Model.options.chatModels
       )
       const checkModel = data.find((item) => item.id === model)
       this.setModelConfig(provider)

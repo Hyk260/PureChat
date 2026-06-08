@@ -75,7 +75,7 @@ import {
   // useChatStore,
   useRobotStore,
 } from "@/stores"
-import { Model, ModelConfigItem } from "@/stores/modules/robot/types"
+import { Model, ModelConfigItem, RobotAccessConfig } from "@/stores/modules/robot/types"
 import { formatTokenNumber, formatToken, useState } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
@@ -89,7 +89,7 @@ const [flag, setFlag] = useState(false)
 // const chatStore = useChatStore()
 const robotStore = useRobotStore()
 // const { toAccount } = storeToRefs(chatStore)
-const { modelStore, modelProvider } = storeToRefs(robotStore)
+const { modelProvider } = storeToRefs(robotStore)
 
 function onClickOutside() {
   setFlag(false)
@@ -105,17 +105,16 @@ function storeRobotModel(data: Model) {
 
 function initModel() {
   const provider = modelProvider.value
-  const selectModel = modelStore.value[provider] || {}
+  const accessConfig = robotStore.getAccessStore(provider) as RobotAccessConfig
   const providerValue = aiModelsValue[provider]
   if (!providerValue?.Model?.options) {
     setFlag(true)
     return
   }
   model.value = cloneDeep(providerValue.Model.options)
-  if (!isEmpty(selectModel) && model.value) {
-    const chatModels =
-      selectModel?.Model?.options?.chatModels || cloneDeep(providerValue.Model.options.chatModels || [])
-    const collapse = selectModel?.Model?.collapse || []
+  if (!isEmpty(accessConfig) && model.value) {
+    const chatModels = accessConfig?.chatModels || cloneDeep(providerValue.Model.options.chatModels || [])
+    const collapse = accessConfig?.collapse || []
     const filteredData = chatModels.filter((item: Model) => collapse.includes(item.id))
     model.value.chatModels = filteredData
   }

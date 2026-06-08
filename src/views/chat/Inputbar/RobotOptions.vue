@@ -261,7 +261,7 @@ const [dialog, setDialog] = useState(false)
 const [loading, setLoading] = useState(false)
 
 const robotStore = useRobotStore()
-const { modelProvider, modelStore } = storeToRefs(robotStore)
+const { modelProvider } = storeToRefs(robotStore)
 
 const handleRemoveTag = (_id: string) => {
   console.log(_id)
@@ -352,33 +352,28 @@ async function onRefresh() {
 function initializeModelOptions() {
   const provider = modelProvider.value
   const modelDataValue = cloneDeep(aiModelsValue[provider])
-  const currentModelConfig = modelStore.value[provider]
   const accessConfig = useRobotStore().getAccessStore(provider) as RobotAccessConfig
 
   Object.values(modelDataValue).forEach((configItem: ModelConfigItem) => {
-    if (configItem.ID === "model" && currentModelConfig?.Model?.collapse) {
-      configItem.collapse = currentModelConfig?.Model?.collapse || []
-      ensureModelOptions(configItem).chatModels = currentModelConfig?.Model?.options?.chatModels || []
+    if (configItem.ID === "model" && accessConfig?.collapse) {
+      configItem.collapse = accessConfig.collapse || []
+      ensureModelOptions(configItem).chatModels = accessConfig.chatModels || []
     }
-    if (configItem.ID === "checkPoint") {
-      configItem.defaultValue = currentModelConfig?.CheckPoint?.defaultValue || ""
-    } else {
-      configItem.defaultValue = accessConfig[configItem.ID] ?? ""
-    }
+    configItem.defaultValue = accessConfig[configItem.ID] ?? ""
   })
   modelData.value = modelDataValue
 }
 
 function persistRobotModel(model: RobotAccessConfig) {
   const provider = modelProvider.value
+  model.collapse = modelData.value.Model?.collapse || []
+  model.chatModels = modelData.value.Model?.options?.chatModels || []
   robotStore.setAccessStore(model, provider)
-  robotStore.setModelStore(modelData.value, provider)
   robotStore.updateModelConfig()
 }
 
 function clearRobotCache() {
   const provider = modelProvider.value
-  robotStore.setModelStore({}, provider)
   robotStore.setAccessStore({}, provider)
   robotStore.updateModelConfig()
   initializeModelOptions()
@@ -404,7 +399,6 @@ function resetRobotModelConfig() {
   })
 
   modelData.value = modelDataValue
-  robotStore.setModelStore(modelDataValue, provider)
   robotStore.setAccessStore(model, provider)
   robotStore.updateModelConfig()
 }

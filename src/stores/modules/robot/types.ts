@@ -38,8 +38,13 @@ export interface ModelConfigItem {
   max?: number
 }
 
+export interface LLMParamsConfig {
+  collapse: string[]
+  chatModels?: Model[]
+}
+
 export type ModelDataType = Record<string, ModelConfigItem>
-export type RobotAccessConfig = Partial<LLMParams> & Record<string, string | number | undefined>
+export type RobotAccessConfig = Partial<LLMParams & LLMParamsConfig> & Record<string, string | number | undefined>
 
 // 提示词元数据类型
 export interface PromptMeta {
@@ -55,11 +60,6 @@ export interface AccessStore {
   [provider: string]: RobotAccessConfig
 }
 
-// 模型存储类型
-export interface ModelStore {
-  [provider: string]: ModelDataType
-}
-
 // 提示词存储类型
 export interface PromptStore {
   [provider: string]: Prompt[]
@@ -72,7 +72,6 @@ export interface RobotState {
   modelProvider: Provider
   defaultProvider: Provider
   promptStore: PromptStore
-  modelStore: ModelStore
   accessStore: AccessStore
 }
 
@@ -89,7 +88,6 @@ export interface RobotGetters {
 
 export interface RobotActions {
   setAccessStore(data: RobotAccessConfig, provider: Provider): void
-  setModelStore(data: ModelDataType, provider: Provider): void
   setPromptStore(data: Prompt[], provider: string): void
   updateModelConfig(): void
   setDefaultProvider(data: string): void
