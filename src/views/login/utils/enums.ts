@@ -26,6 +26,7 @@ export const thirdParty = [
   // },
   {
     title: "GitHub",
+    key: "github",
     icon: GithubIcon,
   },
   // {

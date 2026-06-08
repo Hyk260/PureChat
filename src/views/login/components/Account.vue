@@ -149,12 +149,11 @@ const handleLogin = async () => {
   }
 }
 
-const handleSocialLogin = async ({ icon }) => {
-  setLoading(true)
-  if (icon === "github") oauthAuthorize()
+const handleSocialLogin = async ({ key }: { key: string }) => {
+  if (key === "github") oauthAuthorize()
 }
 
-const setCurrentPage = (item) => {
+const setCurrentPage = (item: { currentPage: number }) => {
   userStore.setCurrentPage(item.currentPage)
 }
 
