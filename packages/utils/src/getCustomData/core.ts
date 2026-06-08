@@ -1,64 +1,60 @@
-import { isEmpty } from "lodash-es"
-import { DB_Message } from "@pure/database/schemas"
+
 import { getAbstractContent } from "../chat"
 
-export type CustomDataType = "webSearch" | "thinking" | "messageReply" | "messagePrompt"
+import type { DeepThinkingParams } from "./types"
+import type { DB_Message } from "@pure/database/schemas"
 
-import type { WebSearchParams, DeepThinkingParams, PromptMessageParams } from "./types"
+/** 提取消息摘要的公共数据 */
+const getBaseData = (data: Partial<DB_Message>) => ({
+  messageAbstract: getAbstractContent(data),
+})
 
-export function getCloudCustomDataTyped(data: Partial<DB_Message>, type: CustomDataType, params?: any): string {
-  if (isEmpty(data)) return ""
+/**
+ * Web 搜索自定义数据生成器
+ */
+export function createWebSearchCustomData(data: Partial<DB_Message>, webSearchResult?: unknown): string {
+  return JSON.stringify({
+    webSearch: {
+      ...getBaseData(data),
+      webSearchResult,
+    },
+  })
+}
 
-  const baseData = {
-    messageAbstract: getAbstractContent(data),
-    // version: __APP_INFO__.pkg.version || "",
-  }
+/**
+ * 深度思考自定义数据生成器
+ */
+export function createThinkingCustomData(data: Partial<DB_Message>, reasoning?: DeepThinkingParams): string {
+  return JSON.stringify({
+    thinking: {
+      content: reasoning?.content,
+      reasoningType: reasoning?.reasoningType,
+      duration: reasoning?.duration,
+    },
+  })
+}
 
-  let customData = {}
+/**
+ * 回复消息自定义数据生成器
+ */
+export function createReplyMessageCustomData(data: Partial<DB_Message>): string {
+  return JSON.stringify({
+    messageReply: {
+      ...getBaseData(data),
+      messageID: data.ID,
+      messageSender: data.nick,
+    },
+  })
+}
 
-  switch (type) {
-    case "webSearch":
-      customData = {
-        webSearch: {
-          ...baseData,
-          webSearchResult: (params as WebSearchParams)?.webSearchResult,
-        },
-      }
-      break
-
-    case "thinking":
-      customData = {
-        thinking: {
-          content: (params as DeepThinkingParams)?.content,
-          // version: __APP_INFO__.pkg.version || "",
-          reasoningType: (params as DeepThinkingParams)?.reasoningType,
-          duration: (params as DeepThinkingParams)?.duration,
-        },
-      }
-      break
-
-    case "messageReply":
-      customData = {
-        messageReply: {
-          ...baseData,
-          messageID: data.ID,
-          messageSender: data.nick,
-        },
-      }
-      break
-
-    case "messagePrompt":
-      customData = {
-        messagePrompt: {
-          ...baseData,
-          recQuestion: (params as PromptMessageParams)?.recQuestion || [],
-        },
-      }
-      break
-
-    default:
-      throw new Error(`不支持的自定义数据类型: ${type as string}`)
-  }
-
-  return JSON.stringify(customData)
+/**
+ * AI 助手推荐问消息自定义数据生成器
+ */
+export function createPromptMessageCustomData(data: Partial<DB_Message>, recQuestion?: string[]): string {
+  return JSON.stringify({
+    messagePrompt: {
+      ...getBaseData(data),
+      recQuestion: recQuestion ?? [],
+    },
+  })
 }
