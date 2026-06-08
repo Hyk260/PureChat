@@ -1,4 +1,4 @@
-import type { Model } from "../types/aiModel"
+import type { ChatModelCard } from "@pure/types"
 
 type SliderOverrides = Partial<{ min: number; max: number; step: number }>
 
@@ -21,7 +21,7 @@ export interface ModelValueField {
     id: string
     name?: string
     icon?: string
-    chatModels?: Model[]
+    chatModels?: ChatModelCard[]
   }
 }
 

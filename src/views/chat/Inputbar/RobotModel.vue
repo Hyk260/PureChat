@@ -113,10 +113,12 @@ function initModel() {
   }
   model.value = cloneDeep(providerValue.Model.options)
   if (!isEmpty(accessConfig) && model.value) {
-    const chatModels = accessConfig?.chatModels || cloneDeep(providerValue.Model.options.chatModels || [])
-    const collapse = accessConfig?.collapse || []
-    const filteredData = chatModels.filter((item: Model) => collapse.includes(item.id))
-    model.value.chatModels = filteredData
+    const chatModels = accessConfig.chatModels || model.value.chatModels || []
+    const collapse = accessConfig.collapse
+    // 仅当 collapse 有值时做过滤，否则保留全部模型
+    if (collapse?.length) {
+      model.value.chatModels = chatModels.filter((item) => collapse.includes(item.id))
+    }
   }
   setFlag(true)
 }

@@ -339,8 +339,11 @@ function updateModelList(newModels: Model[]) {
   if (newModels.length === 0) return
   window.$message?.success($t("settingModel.dialog.updateSuccess"))
   if (modelData.value?.Model) {
-    modelData.value.Model.collapse = []
-    ensureModelOptions(modelData.value.Model).chatModels = newModels
+    const options = ensureModelOptions(modelData.value.Model)
+    const existing = options.chatModels ?? []
+    // 以接口返回为准，id 重复则替换旧模型，新模型追加到末尾
+    const newIds = new Set(newModels.map((m) => m.id))
+    options.chatModels = [...existing.filter((m) => !newIds.has(m.id)), ...newModels]
   }
 }
 

@@ -1,16 +1,7 @@
 import type { LLMParams, Provider } from "model-bank"
-import type { Prompt } from "@pure/types"
+import type { ChatModelCard, Prompt } from "@pure/types"
 
-export interface Model {
-  id: string
-  displayName: string
-  description?: string
-  tokens?: number
-  vision?: boolean
-  webSearch?: boolean
-  functionCall?: boolean
-  reasoning?: boolean
-  maxOutput?: number
+export interface Model extends ChatModelCard {
   icon?: string
   [key: string]: any
 }
