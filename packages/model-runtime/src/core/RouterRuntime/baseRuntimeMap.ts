@@ -7,7 +7,7 @@ import type { ApiType, RuntimeClass } from "./apiTypes"
 export const baseRuntimeMap = {
   openai: OpenAI,
   // google: GoogleAI,
-  // qwen: LobeQwenAI,
+  // qwen: QwenAI,
   // deepseek: DeepSeekAI,
   // minimax: MinimaxAI,
   // xiaomimimo: XiaomiMimoAI,

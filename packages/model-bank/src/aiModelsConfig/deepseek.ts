@@ -1,13 +1,11 @@
+import { DEFAULT_AGENT_CONFIG } from "@pure/const"
+
 const { VITE_DEEPSEEK_API_KEY, VITE_DEEPSEEK_BASE_URL } = import.meta.env
 
 export const DeepseekConfig = {
+  ...DEFAULT_AGENT_CONFIG.params,
   model: "deepseek-chat",
-  temperature: 1,
-  top_p: 1,
-  max_tokens: 1024,
   historyCount: 8,
-  presence_penalty: 0,
-  frequency_penalty: 0,
   token: VITE_DEEPSEEK_API_KEY,
   openaiUrl: VITE_DEEPSEEK_BASE_URL,
 }

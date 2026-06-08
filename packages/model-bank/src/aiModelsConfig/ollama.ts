@@ -1,9 +1,8 @@
+import { DEFAULT_AGENT_CONFIG } from "@pure/const"
+
 export const OllamaConfig = {
+  ...DEFAULT_AGENT_CONFIG.params,
   model: "llama3.1:8b",
-  temperature: 1,
-  top_p: 1,
-  presence_penalty: 0,
-  frequency_penalty: 0,
   historyCount: 12,
   token: "",
   openaiUrl: import.meta.env.VITE_OLLAMA_PROXY_URL,
