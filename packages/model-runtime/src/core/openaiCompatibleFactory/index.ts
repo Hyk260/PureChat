@@ -1,5 +1,5 @@
 import OpenAI, { ClientOptions } from "openai"
-// import { Stream } from "openai/streaming"
+import { Stream } from "openai/streaming"
 // import dayjs from "dayjs"
 // import utc from "dayjs/plugin/utc"
 import debug from "debug"
@@ -47,7 +47,7 @@ export interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = 
     bizError: IAgentRuntimeErrorType
     invalidAPIKey: IAgentRuntimeErrorType
   }
-  models?: any
+  models?: (params: { client: OpenAI }) => Promise<ChatModelCard[]>
   provider: string
   responses?: {
     handlePayload?: (payload: ChatStreamPayload, options: ConstructorOptions<T>) => ChatStreamPayload
@@ -118,13 +118,13 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           stream: isStreaming,
         }
 
-        const response = await this.client.chat.completions.create(postPayload, {
+        const response = (await this.client.chat.completions.create(postPayload as any, {
           headers: {
             Accept: "*/*",
             ...options?.requestHeaders,
           },
           signal: options?.signal,
-        })
+        })) as unknown as Stream<OpenAI.Chat.Completions.ChatCompletionChunk>
 
         const streamOptions: OpenAIStreamOptions = {
           // bizErrorTypeTransformer: "",

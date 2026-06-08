@@ -13,7 +13,7 @@ export const params = {
     responses: () => false,
   },
   models: async ({ client }) => {
-    const modelsPage = (await client.models.list()) as any
+    const modelsPage = await client.models.list()
     const modelList: OpenAIModelCard[] = modelsPage.data
 
     return processMultiProviderModelList(modelList, "openai")
