@@ -1,4 +1,4 @@
-
+import { isEmpty } from "lodash-es"
 import { getAbstractContent } from "../chat"
 
 import type { DeepThinkingParams } from "./types"
@@ -13,6 +13,7 @@ const getBaseData = (data: Partial<DB_Message>) => ({
  * Web 搜索自定义数据生成器
  */
 export function createWebSearchCustomData(data: Partial<DB_Message>, webSearchResult?: unknown): string {
+  if (isEmpty(data)) return ""
   return JSON.stringify({
     webSearch: {
       ...getBaseData(data),
@@ -25,6 +26,7 @@ export function createWebSearchCustomData(data: Partial<DB_Message>, webSearchRe
  * 深度思考自定义数据生成器
  */
 export function createThinkingCustomData(data: Partial<DB_Message>, reasoning?: DeepThinkingParams): string {
+  if (isEmpty(data)) return ""
   return JSON.stringify({
     thinking: {
       content: reasoning?.content,
@@ -38,11 +40,12 @@ export function createThinkingCustomData(data: Partial<DB_Message>, reasoning?: 
  * 回复消息自定义数据生成器
  */
 export function createReplyMessageCustomData(data: Partial<DB_Message>): string {
+  if (isEmpty(data)) return ""
   return JSON.stringify({
     messageReply: {
       ...getBaseData(data),
-      messageID: data.ID,
-      messageSender: data.nick,
+      messageID: data?.ID || "",
+      messageSender: data?.nick || "",
     },
   })
 }
@@ -51,6 +54,7 @@ export function createReplyMessageCustomData(data: Partial<DB_Message>): string 
  * AI 助手推荐问消息自定义数据生成器
  */
 export function createPromptMessageCustomData(data: Partial<DB_Message>, recQuestion?: string[]): string {
+  if (isEmpty(data)) return ""
   return JSON.stringify({
     messagePrompt: {
       ...getBaseData(data),

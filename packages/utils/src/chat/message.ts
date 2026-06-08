@@ -127,36 +127,25 @@ export const formatContent = (data: DraftData) => {
     .join("")
 }
 
+const MESSAGE_TYPE_LABEL: Record<string, string> = {
+  TIMImageElem: "[图片]",
+  TIMFileElem: "[文件]",
+  TIMRelayElem: "[合并消息]",
+  TIMCustomElem: "[自定义消息]",
+  TIMGroupTipElem: "[群提示]",
+  TIMGroupSystemNoticeElem: "[系统通知]",
+}
+
 export const getMessageDisplayText = (item: Partial<DB_Message>): string => {
-  const typeMap = {
-    TIMImageElem: "[图片消息]",
-    TIMFileElem: "[文件消息]",
-    TIMRelayElem: "[合并消息]",
-    TIMCustomElem: "[自定义消息]",
-    TIMGroupTipElem: "[群提示]",
-    TIMGroupSystemNoticeElem: "[系统通知]",
-  }
-
-  if (!item.type) return ""
-
-  return typeMap[item.type] || ""
+  if (!item?.type) return ""
+  return MESSAGE_TYPE_LABEL[item.type] || ""
 }
 
 export const generateAbstractList = (item: DB_Message[]) => {
   return item.map((t) => {
-    if (t.type === "TIMTextElem") {
-      return `${t.nick}: ${t?.payload?.text || ""}`
-    } else if (t.type === "TIMImageElem") {
-      return `${t?.nick}: [图片]`
-    } else if (t.type === "TIMFileElem") {
-      return `${t.nick}: [文件]`
-    } else if (t.type === "TIMRelayElem") {
-      return `${t.nick}: [合并消息]`
-    } else if (t.type === "TIMCustomElem") {
-      return `${t.nick}: [自定义消息]`
-    } else {
-      return `${t.nick}: [待开发]`
-    }
+    const text = t.type === "TIMTextElem" ? t?.payload?.text || "" : ""
+    const label = text || getMessageDisplayText(t) || "[待开发]"
+    return `${t.nick}: ${label}`
   })
 }
 
