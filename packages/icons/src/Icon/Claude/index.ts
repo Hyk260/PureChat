@@ -1,25 +1,15 @@
-import Avatar from './components/Avatar';
-import Color from './components/Color';
-import Combine from './components/Combine';
-import Mono from './components/Mono';
-import Text from './components/Text';
-import { COLOR_PRIMARY, TITLE } from './style';
+import Mono from "./components/Mono.vue"
+import Text from "./components/Text.vue"
+import Avatar from "./components/Avatar.vue"
+// import Color from "./components/Color.vue"
+import { COLOR_PRIMARY, TITLE, COMBINE_TEXT_MULTIPLE } from "./style"
+import { createIcon } from "../shared/createIcon"
+import { createCombineComponent } from "../shared/createCombineComponent"
 
-export type CompoundedIcon = typeof Mono & {
-  Avatar: typeof Avatar;
-  Color: typeof Color;
-  Combine: typeof Combine;
-  Text: typeof Text;
-  colorPrimary: string;
-  title: string;
-};
+const Combine = createCombineComponent("ClaudeCombine", Mono, Text, COMBINE_TEXT_MULTIPLE, TITLE)
 
-const Icons = Mono as CompoundedIcon;
-Icons.Color = Color;
-Icons.Text = Text;
-Icons.Combine = Combine;
-Icons.Avatar = Avatar;
-Icons.colorPrimary = COLOR_PRIMARY;
-Icons.title = TITLE;
+const icon = createIcon(Mono, Text, Combine, Avatar, { colorPrimary: COLOR_PRIMARY }, TITLE)
 
-export default Icons;
+// icon.Color = Color
+
+export default icon

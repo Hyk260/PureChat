@@ -7,7 +7,7 @@ import Meta from "../Icon/Meta"
 import ChatGLM from "../Icon/ChatGLM"
 import Minimax from "../Icon/Minimax"
 import Anthropic from "../Icon/Anthropic"
-// import Claude from "../Icon/Claude"
+import Claude from "../Icon/Claude"
 
 import type { Component } from "vue"
 
@@ -88,5 +88,5 @@ export const modelMappings: ModelMapping[] = [
   // Anthropic
   { Icon: Anthropic, keywords: ["anthropic"] },
   // Claude
-  // { Icon: Claude, keywords: ["claude"] },
+  { Icon: Claude, keywords: ["claude"] },
 ]

@@ -7,7 +7,7 @@ import { createCombineComponent } from "../shared/createCombineComponent"
 
 const Combine = createCombineComponent("MetaCombine", Mono, Text, COMBINE_TEXT_MULTIPLE, TITLE)
 
-const colors: Record<string, string> = {
+const colors = {
   colorGradient: COLOR_GRADIENT,
   colorPrimary: COLOR_PRIMARY,
 }
