@@ -6,6 +6,8 @@ import Mistral from "../Icon/Mistral"
 import ZeroOne from "../Icon/ZeroOne"
 import Github from "../Icon/Github"
 import Ollama from "../Icon/Ollama"
+import Minimax from "../Icon/Minimax"
+import Anthropic from "../Icon/Anthropic"
 
 import type { Component } from "vue"
 import { ModelProvider } from "model-bank"
@@ -31,4 +33,6 @@ export const providerMappings: ProviderMapping[] = [
   { Icon: ZeroOne, keywords: [ModelProvider.ZeroOne] },
   { Icon: Github, keywords: [ModelProvider.GitHub] },
   { Icon: Ollama, keywords: [ModelProvider.Ollama] },
+  { Icon: Minimax, keywords: [ModelProvider.Minimax] },
+  { Icon: Anthropic, keywords: [ModelProvider.Anthropic] },
 ]

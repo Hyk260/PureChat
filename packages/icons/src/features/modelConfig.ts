@@ -5,6 +5,9 @@ import Mistral from "../Icon/Mistral"
 import Yi from "../Icon/Yi"
 import Meta from "../Icon/Meta"
 import ChatGLM from "../Icon/ChatGLM"
+import Minimax from "../Icon/Minimax"
+import Anthropic from "../Icon/Anthropic"
+// import Claude from "../Icon/Claude"
 
 import type { Component } from "vue"
 
@@ -52,6 +55,8 @@ export const modelMappings: ModelMapping[] = [
     Icon: OpenAI,
     keywords: ["^gpt-", "/gpt-", "openai"],
   },
+  // Dalle
+  // { Icon: Dalle, keywords: ["dalle", "dall-e"] },
   // Qwen
   { Icon: Qwen, keywords: ["qwen", "qwen3", "qwq", "qvq", "wanx", "wan\\d/", "wan\\d\\.\\d-", "tongyi"] },
   // DeepSeek
@@ -61,7 +66,7 @@ export const modelMappings: ModelMapping[] = [
   // Meta
   { Icon: Meta, keywords: ["llama", "/l3"] },
   // ChatGLM
-  { Icon: ChatGLM, keywords: ["^glm-", "/glm-", "chatglm"] },
+  { Icon: ChatGLM, keywords: ["^glm-", "/glm-", "chatglm", "-glm-"] },
   // Mistral
   {
     Icon: Mistral,
@@ -78,4 +83,10 @@ export const modelMappings: ModelMapping[] = [
       "voxtral",
     ],
   },
+  // Minimax
+  { Icon: Minimax, keywords: ["minimax", "abab", "^image-"] },
+  // Anthropic
+  { Icon: Anthropic, keywords: ["anthropic"] },
+  // Claude
+  // { Icon: Claude, keywords: ["claude"] },
 ]
