@@ -115,13 +115,11 @@ const { oauthAuthorize } = useOAuth({
     setLoading(true)
   },
   onSuccess: (data) => {
-    console.log("授权成功", data)
     userStore.handleSuccessfulAuth(data)
-    setLoading(true)
+    setLoading(false)
   },
   onError: (data) => {
     window.$message?.error(data.error || "授权失败")
-    console.error("授权失败", data)
     setLoading(false)
   },
 })

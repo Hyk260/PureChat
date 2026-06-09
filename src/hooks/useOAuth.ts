@@ -60,6 +60,7 @@ export function useOAuth(options: OAuthOptions) {
    */
   const oauthAuthorize = async () => {
     try {
+      onStart?.()
       const { url } = await openAuthUrl()
       openWindow(url, { target: __IS_ELECTRON__ ? "_blank" : "_self" })
     } catch (error) {
@@ -81,7 +82,6 @@ export function useOAuth(options: OAuthOptions) {
     }
 
     try {
-      onStart?.()
       const data = await githubAuth({ code: authCode })
       onSuccess?.(data)
     } catch (error) {
