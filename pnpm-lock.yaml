@@ -365,6 +365,15 @@ importers:
 
   packages/model-bank:
     dependencies:
+      '@pure/const':
+        specifier: workspace:*
+        version: link:../const
+      '@pure/types':
+        specifier: workspace:*
+        version: link:../types
+      '@pure/utils':
+        specifier: workspace:*
+        version: link:../utils
       zod:
         specifier: ^3.25.76
         version: 3.25.76

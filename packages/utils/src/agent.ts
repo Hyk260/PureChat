@@ -1,4 +1,5 @@
-import { ModelProvider, Provider, ModelID, ModelIDValue } from "model-bank"
+import { providerToModelId, modelIdToProvider, type Provider, type ModelIDValue } from "model-bank"
+
 /**
  * description: 判断是否是ai
  * "@RBT#001" - AI
@@ -14,16 +15,6 @@ export const isRobot = (text: string) => {
 export const isAgent = (text: string) => {
   return /@RBT#Agent/.test(text)
 }
-
-type ModelProviderKey = keyof typeof ModelProvider
-
-const providerToModelId = Object.fromEntries(
-  (Object.keys(ModelProvider) as ModelProviderKey[]).map((key) => [ModelProvider[key], ModelID[key]])
-) as Record<Provider, ModelIDValue>
-
-const modelIdToProvider = Object.fromEntries(
-  (Object.keys(ModelID) as ModelProviderKey[]).map((key) => [ModelID[key], ModelProvider[key]])
-) as Record<ModelIDValue, Provider>
 
 export function getModelId(model: Provider) {
   if (!model) return ""

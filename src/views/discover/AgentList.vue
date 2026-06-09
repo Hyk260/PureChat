@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { providersList } from "@/config/providers"
+import { providersList } from "model-bank"
 
 import { useChatStore, useRouteStore } from "@/stores"
 import emitter from "@/utils/mitt-bus"

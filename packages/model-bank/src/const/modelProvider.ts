@@ -40,3 +40,13 @@ export const ModelIDList = [
 ]
 
 export const C2CModelIDList = ModelIDList.map((id) => "C2C" + id)
+
+type ModelProviderKey = keyof typeof ModelProvider
+
+export const providerToModelId: Record<Provider, ModelIDValue> = Object.fromEntries(
+  (Object.keys(ModelProvider) as ModelProviderKey[]).map((key) => [ModelProvider[key], ModelID[key]])
+) as Record<Provider, ModelIDValue>
+
+export const modelIdToProvider: Record<ModelIDValue, Provider> = Object.fromEntries(
+  (Object.keys(ModelID) as ModelProviderKey[]).map((key) => [ModelID[key], ModelProvider[key]])
+) as Record<ModelIDValue, Provider>

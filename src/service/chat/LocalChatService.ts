@@ -1,9 +1,10 @@
-import { providersList, baseUserProfile } from "@/config/providers"
+import { providersList } from "model-bank"
 import { MessageModel, SessionModel, FilesModel } from "@pure/database/models"
 import {
   MessageSchema as BaseElemMessage,
   SessionSchema as BaseElemSession,
   UserfileSchema as UserProfile,
+  UserSchema as baseUserProfile,
 } from "@pure/const"
 import { useTopicStore } from "@/stores/modules/topic"
 import { localStg } from "@/utils/storage"
