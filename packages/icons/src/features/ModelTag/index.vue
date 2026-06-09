@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import ModelIcon from "../ModelIcon"
+import ModelIcon from "../ModelIcon/index.vue"
 
 defineOptions({
   name: "ModelTag",
@@ -21,7 +21,7 @@ interface Props {
   type?: "avatar" | "mono"
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   type: "mono",
 })
 </script>

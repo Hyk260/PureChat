@@ -19,7 +19,7 @@ type ProviderIconType = Component & {
 export interface ProviderMapping {
   Icon?: ProviderIconType
   keywords: string[]
-  props?: any
+  props?: Record<string, unknown>
 }
 
 export const providerMappings: ProviderMapping[] = [

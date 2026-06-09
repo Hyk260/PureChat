@@ -17,8 +17,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue"
-import { useThemeStore } from "@/stores/modules/theme"
-import { usePreferredColorScheme } from "@vueuse/core"
+import { useIsDarkMode } from "../composables/useIsDarkMode"
 import DefaultIcon from "./DefaultIcon.vue"
 
 defineOptions({
@@ -31,9 +30,9 @@ interface Props {
   color?: string
   background?: string
   size?: number
-  style?: Record<string, any>
+  style?: Record<string, string>
   iconMultiple?: number
-  iconStyle?: Record<string, any>
+  iconStyle?: Record<string, string>
   iconClassName?: string
 }
 
@@ -48,11 +47,9 @@ const props = withDefaults(defineProps<Props>(), {
   iconStyle: () => ({}),
 })
 
-const themeStore = useThemeStore()
-const osTheme = usePreferredColorScheme()
+const isDarkMode = useIsDarkMode()
 
 const themeColor = computed(() => {
-  const isDark = themeStore.themeScheme === "auto" ? osTheme.value === "dark" : themeStore.themeScheme === "dark"
-  return isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)"
+  return isDarkMode.value ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)"
 })
 </script>

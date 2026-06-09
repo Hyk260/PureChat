@@ -17,10 +17,11 @@ type ProviderIconType = Component & {
 export interface ModelMapping {
   Icon: ProviderIconType
   keywords: string[]
-  props?: any
+  props?: Record<string, unknown>
 }
 
 export const modelMappings: ModelMapping[] = [
+  // OpenAI
   { Icon: OpenAI, keywords: ["gpt-3"], props: { type: "gpt3" } },
   { Icon: OpenAI, keywords: ["gpt-4"], props: { type: "gpt4" } },
   { Icon: OpenAI, keywords: ["gpt-5"], props: { type: "gpt5" } },
@@ -51,11 +52,17 @@ export const modelMappings: ModelMapping[] = [
     Icon: OpenAI,
     keywords: ["^gpt-", "/gpt-", "openai"],
   },
+  // Qwen
   { Icon: Qwen, keywords: ["qwen", "qwen3", "qwq", "qvq", "wanx", "wan\\d/", "wan\\d\\.\\d-", "tongyi"] },
+  // DeepSeek
   { Icon: DeepSeek, keywords: ["deepseek"] },
+  // Yi
   { Icon: Yi, keywords: ["^yi-", "/yi-", "-yi-"] },
+  // Meta
   { Icon: Meta, keywords: ["llama", "/l3"] },
+  // ChatGLM
   { Icon: ChatGLM, keywords: ["^glm-", "/glm-", "chatglm"] },
+  // Mistral
   {
     Icon: Mistral,
     keywords: [

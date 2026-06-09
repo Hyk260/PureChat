@@ -18,7 +18,7 @@ interface Props {
   className?: string
   shape?: "circle" | "square"
   size?: number
-  style?: Record<string, any>
+  style?: Record<string, string>
   type?: "avatar" | "mono"
 }
 
@@ -29,6 +29,12 @@ const props = withDefaults(defineProps<Props>(), {
   shape: "circle",
   style: () => ({}),
 })
+
+interface ComponentProps {
+  size?: number
+  style?: Record<string, string>
+  [key: string]: unknown
+}
 
 const matchedIcon = computed(() => {
   if (!props.model) return null
@@ -60,13 +66,11 @@ const renderComponent = computed(() => {
   }
 })
 
-const finalComponentProps = computed(() => {
-  const baseProps: Record<string, any> = {
+const finalComponentProps = computed<ComponentProps>(() => {
+  return {
     size: props.size,
-    ...matchedIcon.value?.props,
+    ...(matchedIcon.value?.props as ComponentProps | undefined),
     ...props.style,
   }
-
-  return baseProps
 })
 </script>

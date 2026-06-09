@@ -1,7 +1,7 @@
-export { default as IconAvatar } from "./IconAvatar"
-export { default as ModelIcon } from "./ModelIcon"
-export { default as ModelTag } from "./ModelTag"
-export { default as ProviderIcon } from "./ProviderIcon"
+export { default as IconAvatar } from "./IconAvatar/index.vue"
+export { default as ModelIcon } from "./ModelIcon/index.vue"
+export { default as ModelTag } from "./ModelTag/index.vue"
+export { default as ProviderIcon } from "./ProviderIcon/index.vue"
 // Config
-export { modelMappings } from "./modelConfig"
-export { providerMappings } from "./providerConfig"
+export { type ModelMapping, modelMappings } from "./modelConfig"
+export { type ProviderMapping, providerMappings } from "./providerConfig"

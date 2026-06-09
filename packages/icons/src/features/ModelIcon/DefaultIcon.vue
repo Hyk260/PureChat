@@ -3,9 +3,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue"
 import { Brain } from "@lucide/vue"
-import { useThemeStore } from "@/stores/modules/theme"
-import { usePreferredColorScheme } from "@vueuse/core"
+import { useIsDarkMode } from "../composables/useIsDarkMode"
 
 defineOptions({
   name: "DefaultIcon",
@@ -16,7 +16,7 @@ interface Props {
   className?: string
   color?: string
   size?: number
-  style?: Record<string, any>
+  style?: Record<string, string>
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -26,12 +26,10 @@ const props = withDefaults(defineProps<Props>(), {
   style: () => ({}),
 })
 
-const themeStore = useThemeStore()
-const osTheme = usePreferredColorScheme()
+const isDarkMode = useIsDarkMode()
 
 const computedColor = computed(() => {
   if (props.color) return props.color
-  const isDark = themeStore.themeScheme === "auto" ? osTheme.value === "dark" : themeStore.themeScheme === "dark"
-  return isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(0, 0, 0, 0.45)"
+  return isDarkMode.value ? "rgba(255, 255, 255, 0.45)" : "rgba(0, 0, 0, 0.45)"
 })
 </script>

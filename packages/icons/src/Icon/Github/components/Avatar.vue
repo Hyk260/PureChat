@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import IconAvatar from "../../../features/IconAvatar"
+import { IconAvatar } from "../../../features"
 import Mono from "./Mono.vue"
 import { AVATAR_BACKGROUND, AVATAR_COLOR, AVATAR_ICON_MULTIPLE, TITLE } from "../style"
 

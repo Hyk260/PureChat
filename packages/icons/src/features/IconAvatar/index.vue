@@ -25,8 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import { useThemeStore } from "@/stores/modules/theme"
-import { usePreferredColorScheme } from "@vueuse/core"
+import type { Component } from "vue"
+import { computed } from "vue"
+import { useIsDarkMode } from "../composables/useIsDarkMode"
 import { getAvatarShadow, roundToEven } from "./util"
 
 defineOptions({
@@ -41,10 +42,10 @@ interface Props {
   color?: string
   iconClassName?: string
   iconMultiple?: number
-  iconStyle?: Record<string, any>
+  iconStyle?: Record<string, string>
   shape?: "circle" | "square"
   size?: number
-  style?: Record<string, any>
+  style?: Record<string, string>
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -58,12 +59,7 @@ const props = withDefaults(defineProps<Props>(), {
   iconStyle: () => ({}),
 })
 
-const themeStore = useThemeStore()
-const osTheme = usePreferredColorScheme()
-
-const isDarkMode = computed(() => {
-  return themeStore.themeScheme === "auto" ? osTheme.value === "dark" : themeStore.themeScheme === "dark"
-})
+const isDarkMode = useIsDarkMode()
 
 const avatarShadow = computed(() => {
   return getAvatarShadow(isDarkMode.value, props.background)
