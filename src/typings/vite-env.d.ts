@@ -93,6 +93,10 @@ declare namespace Env {
     readonly VITE_MINIMAX_API_KEY: string;
     /** MiniMax API URL */
     readonly VITE_MINIMAX_BASE_URL: string;
+    /** Anthropic API Key */
+    readonly VITE_ANTHROPIC_API_KEY: string;
+    /** Anthropic API URL */
+    readonly VITE_ANTHROPIC_BASE_URL: string;
   }
 }
 

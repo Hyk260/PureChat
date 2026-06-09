@@ -1,4 +1,5 @@
 import { ModelProvider } from "../const/modelProvider"
+import { AnthropicModelValue } from "./anthropic"
 import { DeepseekModelValue } from "./deepseek"
 import { GitHubModelValue } from "./github"
 import { MinimaxModelValue } from "./minimax"
@@ -19,8 +20,10 @@ export const aiModelsValue = {
   [ModelProvider.DeepSeek]: DeepseekModelValue,
   [ModelProvider.Mistral]: MistralModelValue,
   [ModelProvider.Minimax]: MinimaxModelValue,
+  [ModelProvider.Anthropic]: AnthropicModelValue,
 }
 
+export { AnthropicModelValue } from "./anthropic"
 export { DeepseekModelValue } from "./deepseek"
 export { GitHubModelValue } from "./github"
 export { MinimaxModelValue } from "./minimax"

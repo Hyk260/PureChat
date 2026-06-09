@@ -1,4 +1,4 @@
-import { ModelProviderCard } from "@pure/types"
+import type { ModelProviderCard } from "@pure/types"
 
 // ref: https://platform.deepseek.com/api-docs/pricing
 const DeepSeek: ModelProviderCard = {

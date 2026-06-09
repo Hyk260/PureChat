@@ -8,6 +8,7 @@ export enum ModelProvider {
   DeepSeek = "deepseek",
   Mistral = "mistral",
   Minimax = "minimax",
+  Anthropic = "anthropic",
   // V0 = "v0",
 }
 
@@ -23,6 +24,7 @@ export enum ModelID {
   DeepSeek = "@RBT#007",
   Mistral = "@RBT#008",
   Minimax = "@RBT#009",
+  Anthropic = "@RBT#010",
 }
 
 export type ModelIDValue = (typeof ModelID)[keyof typeof ModelID]
@@ -37,6 +39,7 @@ export const ModelIDList = [
   ModelID.DeepSeek,
   ModelID.Mistral,
   ModelID.Minimax,
+  ModelID.Anthropic,
 ]
 
 export const C2CModelIDList = ModelIDList.map((id) => "C2C" + id)

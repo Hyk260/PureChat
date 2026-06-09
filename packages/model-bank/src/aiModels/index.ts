@@ -1,4 +1,5 @@
 import { ModelProviderCard, ChatModelCard } from "@pure/types"
+import AnthropicProvider from "./anthropic"
 import OpenAIProvider from "./openai"
 import ZhiPuProvider from "./zhipu"
 import ZeroOneProvider from "./zeroone"
@@ -10,15 +11,16 @@ import MistralProvider from "./mistral"
 import MinimaxProvider from "./minimax"
 
 export const DEFAULT_MODEL_PROVIDER_LIST: ChatModelCard[] = [
+  AnthropicProvider,
   OpenAIProvider,
+  DeepSeekProvider,
+  MinimaxProvider,
   ZhiPuProvider,
   QwenProvider,
   ZeroOneProvider,
   OllamaProvider,
   GithubProvider,
-  DeepSeekProvider,
   MistralProvider,
-  MinimaxProvider,
 ]
 
 export const buildDefaultModelList = (map: Record<string, ModelProviderCard>) => {
@@ -37,6 +39,7 @@ export const buildDefaultModelList = (map: Record<string, ModelProviderCard>) =>
 }
 
 export const DEFAULT_MODEL_LIST = buildDefaultModelList({
+  anthropic: AnthropicProvider,
   openai: OpenAIProvider,
   zhipu: ZhiPuProvider,
   qwen: QwenProvider,
@@ -48,6 +51,7 @@ export const DEFAULT_MODEL_LIST = buildDefaultModelList({
   minimax: MinimaxProvider,
 })
 
+export { default as anthropic } from "./anthropic"
 export { default as deepseek } from "./deepseek"
 export { default as github } from "./github"
 export { default as minimax } from "./minimax"

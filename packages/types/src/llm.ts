@@ -1,5 +1,7 @@
 import { AiModelType } from "model-bank"
 
+import { AiProviderSettings } from "@pure/types"
+
 export type LLMRoleType = "user" | "system" | "assistant" | "function" | "tool"
 
 export interface LLMMessage {
@@ -127,6 +129,8 @@ export interface ModelProviderCard {
    * provider's website url
    */
   url: string
+
+  settings?: AiProviderSettings
 }
 
 export interface PromptMeta {

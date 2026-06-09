@@ -1,3 +1,5 @@
+import type { ChatModelCard } from "@pure/types"
+
 import { z } from "zod"
 
 export type ModelPriceCurrency = "CNY" | "USD"
@@ -39,6 +41,11 @@ export interface ModelAbilities {
    *  whether model supports vision
    */
   vision?: boolean
+}
+
+export interface AIChatModelCard extends ChatModelCard {
+  abilities?: ModelAbilities
+  releasedAt?: string
 }
 
 export const AiModelAbilitiesSchema = z.object({
