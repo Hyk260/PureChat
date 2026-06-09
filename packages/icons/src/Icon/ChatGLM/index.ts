@@ -1,25 +1,15 @@
-import Avatar from "./components/Avatar.vue"
-import Combine from "./components/Combine.vue"
 import Mono from "./components/Mono.vue"
 import Text from "./components/Text.vue"
-import { COLOR_GRADIENT, COLOR_PRIMARY, TITLE } from "./style"
+import Avatar from "./components/Avatar.vue"
+import { COLOR_GRADIENT, COLOR_PRIMARY, TITLE, COMBINE_TEXT_MULTIPLE } from "./style"
+import { createIcon } from "../shared/createIcon"
+import { createCombineComponent } from "../shared/createCombineComponent"
 
-export type CompoundedIcon = typeof Mono & {
-  Avatar: typeof Avatar
-  Combine: typeof Combine
-  Text: typeof Text
-  colorGradient: string
-  colorPrimary: string
-  title: string
+const Combine = createCombineComponent("ChatGLMCombine", Mono, Text, COMBINE_TEXT_MULTIPLE, TITLE)
+
+const colors: Record<string, string> = {
+  colorGradient: COLOR_GRADIENT,
+  colorPrimary: COLOR_PRIMARY,
 }
 
-const Icons = Mono as CompoundedIcon
-
-Icons.Text = Text
-Icons.Combine = Combine
-Icons.Avatar = Avatar
-Icons.colorPrimary = COLOR_PRIMARY
-Icons.colorGradient = COLOR_GRADIENT
-Icons.title = TITLE
-
-export default Icons
+export default createIcon(Mono, Text, Combine, Avatar, colors, TITLE)

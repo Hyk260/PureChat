@@ -32,7 +32,7 @@ defineOptions({
 interface Props {
   type?: "normal" | "platform" | "gpt3" | "gpt4" | "gpt5" | "o1" | "o3" | "oss"
   size?: string | number
-  style?: Record<string, any>
+  style?: Record<string, string>
 }
 
 const props = withDefaults(defineProps<Props>(), {

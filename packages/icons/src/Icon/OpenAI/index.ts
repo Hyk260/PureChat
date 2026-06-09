@@ -1,7 +1,6 @@
-import Avatar from "./components/Avatar.vue"
-import Combine from "./components/Combine.vue"
 import Mono from "./components/Mono.vue"
 import Text from "./components/Text.vue"
+import Avatar from "./components/Avatar.vue"
 import {
   COLOR_GPT_3,
   COLOR_GPT_4,
@@ -11,36 +10,27 @@ import {
   COLOR_PLATFORM,
   COLOR_PRIMARY,
   TITLE,
+  COMBINE_TEXT_MULTIPLE,
 } from "./style"
+import { createIcon } from "../shared/createIcon"
+import { createCombineComponent } from "../shared/createCombineComponent"
 
-export type CompoundedIcon = typeof Mono & {
-  Avatar: typeof Avatar
-  Combine: typeof Combine
-  Text: typeof Text
-  colorGpt3: string
-  colorGpt4: string
-  colorGpt5?: string
-  colorO1: string
-  colorO3: string
-  colorOss?: string
-  colorPlatform?: string
-  colorPrimary: string
-  title: string
-}
+const Combine = createCombineComponent("OpenAICombine", Mono, Text, COMBINE_TEXT_MULTIPLE, TITLE)
 
-const Icons = Mono as CompoundedIcon
-
-Icons.Text = Text
-Icons.Combine = Combine
-Icons.Avatar = Avatar
-Icons.colorPrimary = COLOR_PRIMARY
-Icons.colorGpt3 = COLOR_GPT_3
-Icons.colorGpt4 = COLOR_GPT_4
-Icons.colorGpt5 = COLOR_GPT_5
-Icons.colorO1 = COLOR_O_1
-Icons.colorO3 = COLOR_O_1
-Icons.colorOss = COLOR_OSS
-Icons.colorPlatform = COLOR_PLATFORM
-Icons.title = TITLE
-
-export default Icons
+export default createIcon(
+  Mono,
+  Text,
+  Combine,
+  Avatar,
+  {
+    colorPrimary: COLOR_PRIMARY,
+    colorGpt3: COLOR_GPT_3,
+    colorGpt4: COLOR_GPT_4,
+    colorGpt5: COLOR_GPT_5,
+    colorO1: COLOR_O_1,
+    colorO3: COLOR_O_1,
+    colorOss: COLOR_OSS,
+    colorPlatform: COLOR_PLATFORM,
+  },
+  TITLE
+)

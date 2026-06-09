@@ -26,7 +26,7 @@ defineOptions({
 
 interface Props {
   size?: string | number
-  style?: Record<string, any>
+  style?: Record<string, string>
 }
 
 const props = withDefaults(defineProps<Props>(), {
