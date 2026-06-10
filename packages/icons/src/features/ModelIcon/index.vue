@@ -19,7 +19,7 @@ interface Props {
   shape?: "circle" | "square"
   size?: number
   style?: Record<string, string>
-  type?: "avatar" | "mono"
+  type?: "avatar" | "mono" | "color"
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -59,6 +59,10 @@ const renderComponent = computed(() => {
     case "mono": {
       if (!Icon) return DefaultIcon
       return Icon || DefaultIcon
+    }
+    case "color": {
+      if (!Icon) return DefaultIcon
+      return Icon.Color || DefaultIcon
     }
     default: {
       return DefaultIcon

@@ -1,7 +1,6 @@
 import Mono from "./components/Mono.vue"
 import Text from "./components/Text.vue"
 import Avatar from "./components/Avatar.vue"
-// import Color from "./components/Color.vue"
 import { COLOR_PRIMARY, TITLE, COMBINE_TEXT_MULTIPLE } from "./style"
 import { createIcon } from "../shared/createIcon"
 import { createCombineComponent } from "../shared/createCombineComponent"
@@ -9,7 +8,5 @@ import { createCombineComponent } from "../shared/createCombineComponent"
 const Combine = createCombineComponent("ClaudeCombine", Mono, Text, COMBINE_TEXT_MULTIPLE, TITLE)
 
 const icon = createIcon(Mono, Text, Combine, Avatar, { colorPrimary: COLOR_PRIMARY }, TITLE)
-
-// icon.Color = Color
 
 export default icon

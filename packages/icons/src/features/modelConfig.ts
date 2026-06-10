@@ -16,6 +16,7 @@ type ProviderIconType = Component & {
   Avatar?: Component
   Combine?: Component
   Text?: Component
+  Color?: Component
 }
 
 export interface ModelMapping {

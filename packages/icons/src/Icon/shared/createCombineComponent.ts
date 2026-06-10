@@ -1,10 +1,6 @@
 import type { Component } from "vue"
 import { computed, defineComponent, h } from "vue"
 
-/**
- * 工厂函数：生成一个 Combine 组件，将 Mono 图标和 Text 文本并排展示。
- * 消除了 11 个 Icon 目录中 Combine.vue 的重复模板和逻辑。
- */
 export function createCombineComponent(
   name: string,
   Mono: Component,

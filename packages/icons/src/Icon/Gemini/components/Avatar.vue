@@ -1,6 +1,6 @@
 <template>
   <IconAvatar
-    :Icon="Mono"
+    :Icon="Color"
     :aria-label="TITLE"
     :background="background"
     :color="AVATAR_COLOR"
@@ -10,7 +10,8 @@
 
 <script setup lang="ts">
 import { IconAvatar } from "../../../features"
-import Mono from "./Mono.vue"
+// import Mono from "./Mono.vue"
+import Color from "./Color.vue"
 import { AVATAR_BACKGROUND, AVATAR_COLOR, AVATAR_ICON_MULTIPLE, TITLE } from "../style"
 
 defineOptions({
