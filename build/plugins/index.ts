@@ -79,7 +79,7 @@ export function setupViteExternal(viteEnv: Env.ImportMeta): (RegExp | string)[] 
     /^pinyin-pro/,
   ]
   // 始终外部化 @pure/ui，避免被打包参与 Tree-Shaking
-  const commonExternals = [
+  const commonExternals: (RegExp | string)[] = [
     // /^@pure\/ui$/
   ]
 

@@ -43,7 +43,7 @@ export function viteBuildInfo(): Plugin {
         const outDir = config.build?.outDir ?? "dist"
         getPackageSize({
           folder: outDir,
-          callback: (size: string) => {
+          callback: (size: string | number) => {
             const duration = dayjs.duration(endTime.diff(startTime)).format("mm分ss秒")
             const info = `🎉 恭喜打包完成（总用时${duration}，打包后的大小为${size}）`
             console.log(boxen(gradient(["cyan", "magenta"]).multiline(info), boxenOptions))

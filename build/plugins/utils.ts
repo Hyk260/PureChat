@@ -42,7 +42,7 @@ export const getPackageSize = async (options: {
           const subFolderSize = await new Promise((resolve) => {
             getPackageSize({
               folder: path,
-              callback: (result: number) => resolve(typeof result === "number" ? result : 0),
+              callback: (result: string | number) => resolve(typeof result === "number" ? result : 0),
               format: false,
             })
           })
