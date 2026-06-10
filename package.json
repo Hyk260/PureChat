@@ -67,7 +67,7 @@
     "mitt": "3.0.1",
     "model-bank": "workspace:*",
     "monaco-editor": "^0.54.0",
-    "nanoid": "^5.0.7",
+    "nanoid": "^5.1.11",
     "nprogress": "^0.2.0",
     "numeral": "^2.0.6",
     "ollama": "^0.5.15",
