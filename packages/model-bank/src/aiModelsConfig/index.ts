@@ -10,6 +10,7 @@ import { OpenaiConfig } from "./openai"
 import { QwenConfig } from "./qwen"
 import { ZeroOneConfig } from "./zeroone"
 import { ZhiPuConfig } from "./zhipu"
+import { GoogleConfig } from "./google"
 
 export const aiModelsConfig: Record<ModelProvider, LLMParams> = {
   [ModelProvider.OpenAI]: OpenaiConfig,
@@ -22,6 +23,7 @@ export const aiModelsConfig: Record<ModelProvider, LLMParams> = {
   [ModelProvider.Mistral]: MistralConfig,
   [ModelProvider.Minimax]: MinimaxConfig,
   [ModelProvider.Anthropic]: AnthropicConfig,
+  [ModelProvider.Google]: GoogleConfig,
 }
 
 export { AnthropicConfig } from "./anthropic"
@@ -34,3 +36,4 @@ export { OpenaiConfig } from "./openai"
 export { QwenConfig } from "./qwen"
 export { ZeroOneConfig } from "./zeroone"
 export { ZhiPuConfig } from "./zhipu"
+export { GoogleConfig } from "./google"

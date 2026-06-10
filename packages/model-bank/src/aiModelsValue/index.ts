@@ -9,8 +9,10 @@ import { OpenAIModelValue } from "./openai"
 import { QwenModelValue } from "./qwen"
 import { ZeroOneModelValue } from "./zeroone"
 import { ZhiPuModelValue } from "./zhipu"
+import { GoogleModelValue } from "./google"
 
 export const aiModelsValue = {
+  [ModelProvider.Google]: GoogleModelValue,
   [ModelProvider.OpenAI]: OpenAIModelValue,
   [ModelProvider.GitHub]: GitHubModelValue,
   [ModelProvider.ZhiPu]: ZhiPuModelValue,
@@ -33,3 +35,4 @@ export { OpenAIModelValue } from "./openai"
 export { QwenModelValue } from "./qwen"
 export { ZeroOneModelValue } from "./zeroone"
 export { ZhiPuModelValue } from "./zhipu"
+export { GoogleModelValue } from "./google"

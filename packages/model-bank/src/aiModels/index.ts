@@ -9,10 +9,11 @@ import DeepSeekProvider from "./deepseek"
 import QwenProvider from "./qwen"
 import MistralProvider from "./mistral"
 import MinimaxProvider from "./minimax"
-// import GoogleProvider from "./google"
+import GoogleProvider from "./google"
 
 export const DEFAULT_MODEL_PROVIDER_LIST: ChatModelCard[] = [
-  AnthropicProvider,
+  // AnthropicProvider,
+  // GoogleProvider,
   OpenAIProvider,
   DeepSeekProvider,
   MinimaxProvider,
@@ -22,7 +23,6 @@ export const DEFAULT_MODEL_PROVIDER_LIST: ChatModelCard[] = [
   OllamaProvider,
   GithubProvider,
   MistralProvider,
-  // GoogleProvider,
 ]
 
 export const buildDefaultModelList = (map: Record<string, ModelProviderCard>) => {
@@ -51,13 +51,13 @@ export const DEFAULT_MODEL_LIST = buildDefaultModelList({
   deepseek: DeepSeekProvider,
   mistral: MistralProvider,
   minimax: MinimaxProvider,
-  // google: GoogleProvider,
+  google: GoogleProvider,
 })
 
 export { default as anthropic } from "./anthropic"
 export { default as deepseek } from "./deepseek"
-// export { default as google } from "./google"
 export { default as github } from "./github"
+export { default as google } from "./google"
 export { default as minimax } from "./minimax"
 export { default as mistral } from "./mistral"
 export { default as ollama } from "./ollama"
