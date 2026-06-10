@@ -421,6 +421,8 @@ importers:
         specifier: ^4.20.4
         version: 4.21.0
 
+  packages/static-avatar: {}
+
   packages/types:
     dependencies:
       model-bank:
@@ -478,6 +480,9 @@ importers:
       '@pure/const':
         specifier: workspace:*
         version: link:../const
+      '@pure/icons-static-avatar':
+        specifier: workspace:*
+        version: link:../static-avatar
       '@pure/types':
         specifier: workspace:*
         version: link:../types
