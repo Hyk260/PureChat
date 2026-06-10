@@ -8,6 +8,7 @@ import Github from "../Icon/Github"
 import Ollama from "../Icon/Ollama"
 import Minimax from "../Icon/Minimax"
 import Anthropic from "../Icon/Anthropic"
+// import Gemini from "../Icon/Gemini"
 
 import type { Component } from "vue"
 import { ModelProvider } from "model-bank"
@@ -35,4 +36,5 @@ export const providerMappings: ProviderMapping[] = [
   { Icon: Ollama, keywords: [ModelProvider.Ollama] },
   { Icon: Minimax, keywords: [ModelProvider.Minimax] },
   { Icon: Anthropic, keywords: [ModelProvider.Anthropic] },
+  // { Icon: Gemini, keywords: [ModelProvider.Gemini] },
 ]

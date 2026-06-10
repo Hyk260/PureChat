@@ -8,6 +8,7 @@ import ChatGLM from "../Icon/ChatGLM"
 import Minimax from "../Icon/Minimax"
 import Anthropic from "../Icon/Anthropic"
 import Claude from "../Icon/Claude"
+import Gemini from "../Icon/Gemini"
 
 import type { Component } from "vue"
 
@@ -89,4 +90,6 @@ export const modelMappings: ModelMapping[] = [
   { Icon: Anthropic, keywords: ["anthropic"] },
   // Claude
   { Icon: Claude, keywords: ["claude"] },
+  // Gemini
+  { Icon: Gemini, keywords: ["gemini"] },
 ]

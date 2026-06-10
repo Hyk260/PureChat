@@ -1,0 +1,19 @@
+{
+  "name": "@pure/icons-static-avatar",
+  "version": "1.0.0",
+  "description": "Popular AI / LLM Model Brand SVG Logo and Icon Collection",
+  "keywords": [
+    "llm icons",
+    "llm brand logo",
+    "avatar"
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "files": [
+    "avatars"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
+}
