@@ -30,7 +30,7 @@
         </ElIcon>
       </ElTooltip> -->
 
-      <Popover
+      <!-- <Popover
         placement="rightBottom"
         :arrow="false"
         trigger="click"
@@ -54,9 +54,12 @@
           </Menu>
         </template>
         <ElIcon class="icon">
-          <Settings />
+          <Settings @click="openSettings" />
         </ElIcon>
-      </Popover>
+      </Popover> -->
+      <ElIcon class="icon">
+        <Settings @click="openSettings" />
+      </ElIcon>
     </div>
 
     <!-- <SidebarEditDialog /> -->
@@ -102,7 +105,7 @@ const handleAvatarClick = () => {
 }
 
 const openSettings = () => {
-  emitter.emit("openSetup", { flag: true })
+  router.push("/settings")
 }
 
 const onOpenDocs = () => {

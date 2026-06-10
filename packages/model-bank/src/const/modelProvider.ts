@@ -41,8 +41,8 @@ export const ModelIDList = [
   ModelID.DeepSeek,
   ModelID.Mistral,
   ModelID.Minimax,
-  ModelID.Anthropic,
-  ModelID.Google,
+  // ModelID.Anthropic,
+  // ModelID.Google,
 ]
 
 export const C2CModelIDList = ModelIDList.map((id) => "C2C" + id)

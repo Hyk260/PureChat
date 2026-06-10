@@ -1,60 +1,47 @@
 <template>
-  <div class="ui-modal-body">
+  <div class="settings-page">
     <List ref="listRef" @active="active" />
-    <ItemGrid :item="item" @onClose="setDrawer(false)" />
+    <ItemGrid :item="item" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useState } from "@pure/utils"
-// import emitter from "@/utils/mitt-bus"
+import { ref, watch } from "vue"
+import { useRoute } from "vue-router"
 
 import { list } from "./settings"
 import ItemGrid from "./itemGrid.vue"
 import List from "./list.vue"
 
-// const listRef = useTemplateRef("listRef")
+const route = useRoute()
+const listRef = ref()
 const item = ref(list.value[0])
-const [drawer, setDrawer] = useState(false)
 
-// function setItem(data = list.value[0]) {
-//   listRef.value?.handleItemClick(data)
-// }
+function setItem(data = list.value[0]) {
+  listRef.value?.handleItemClick(data)
+}
 
 function active(t) {
   item.value = t
 }
 
-// onMounted(() => {
-//   emitter.on("openSetup", ({ flag, id }) => {
-//     if (flag) {
-//       setDrawer(true)
-//       if (id) {
-//         setItem(list.value.find((v) => v.id === id))
-//       } else {
-//         setItem()
-//       }
-//     }
-//   })
-// })
-
-// onUnmounted(() => {
-//   emitter.off("openSetup")
-// })
+watch(
+  () => route.query.tab,
+  (tab) => {
+    if (tab) {
+      const matched = list.value.find((v) => v.id === tab)
+      if (matched) {
+        setItem(matched)
+      }
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>
-// :global(body .setup-modal) {
-//   padding: 0;
-// }
-// :global(body .setup-modal .el-dialog__header) {
-//   display: none;
-// }
-// :global(body .setup-modal) {
-//   min-width: 650px;
-// }
-.ui-modal-body {
-  // height: 80vh;
+.settings-page {
+  height: 100%;
   display: flex;
 }
 </style>

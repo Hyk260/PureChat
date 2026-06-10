@@ -2,14 +2,12 @@
   <main class="app-main">
     <LayAside />
     <LayContent />
-    <LaySetting />
   </main>
 </template>
 
 <script setup lang="ts">
 import LayAside from "./lay-aside/index.vue"
 import LayContent from "./lay-content/index.vue"
-import LaySetting from "./lay-setting/index.vue"
 </script>
 
 <style lang="scss" scoped>

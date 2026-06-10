@@ -305,7 +305,7 @@ export class TIMProxy {
    */
   private onNetStateChange({ data }: { data: { state: string } }) {
     console.log("[chat] 网络状态变化:", data)
-    window.$message?.(checkoutNetState(data.state))
+    // window.$message?.(checkoutNetState(data.state))
   }
 
   /**

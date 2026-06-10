@@ -34,6 +34,7 @@
 import { Settings2 as Operation, ChartPie, LogOut } from "@lucide/vue"
 // import { Operation, PieChart } from "@element-plus/icons-vue"
 import { onClickOutside } from "@vueuse/core"
+import { useRouter } from "vue-router"
 
 import { useChatStore, useUserStore } from "@/stores"
 import { openWindow, useState } from "@pure/utils"
@@ -47,6 +48,7 @@ const profile = ref({})
 const market = ref([])
 const userStore = useUserStore()
 const chatStore = useChatStore()
+const router = useRouter()
 const [card, setCard] = useState(false)
 
 const menuItems = [
@@ -103,7 +105,7 @@ onClickOutside(cardRef, () => {
 })
 
 function operation() {
-  emitter.emit("openSetup", { flag: true })
+  router.push("/settings")
 }
 
 const openCard = (data) => {

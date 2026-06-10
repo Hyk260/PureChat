@@ -259,6 +259,7 @@ import { ElMessageBox } from "element-plus"
 import { audioExts, documentExts, imageExts, textExts, videoExts } from "@pure/const"
 import { storeToRefs } from "pinia"
 
+import { useRouter } from "vue-router"
 import { $t } from "@/locales"
 import { createCustomMessage } from "@/service/im-sdk-api"
 import { useChatStore, useRobotStore, useWebSearchStore } from "@/stores"
@@ -285,6 +286,7 @@ const supportExts = [
 ]
 const fileExts = [...textExts, ...documentExts, ...imageExts, ...audioExts, ...videoExts]
 
+const router = useRouter()
 const [flag, setFlag] = useState(false)
 const [showBottomBtn, setShowBottomBtn] = useState(false)
 
@@ -341,7 +343,7 @@ const onEnableWebSearch = async () => {
       type: "warning",
     })
     if (result === "cancel") return
-    emitter.emit("openSetup", { flag: true, id: "webSearch" })
+    router.push("/settings?tab=webSearch")
   }
 }
 

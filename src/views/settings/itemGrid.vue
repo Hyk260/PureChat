@@ -2,6 +2,9 @@
   <div class="panel-wrapper w-full flex flex-col">
     <div class="title flex-bc">
       <span>{{ item.title }}</span>
+      <el-icon @click="router.back()">
+        <ArrowLeft :size="18" />
+      </el-icon>
     </div>
     <Currency v-if="item.id === 'currency'" />
     <WebSearch v-else-if="item.id === 'webSearch'" />
@@ -11,6 +14,9 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowLeft } from "@lucide/vue"
+import { useRouter } from "vue-router"
+
 import About from "./about.vue"
 import Currency from "./currency.vue"
 import ProviderModel from "./providerModel.vue"
@@ -22,7 +28,7 @@ interface Props {
 
 withDefaults(defineProps<Props>(), {})
 
-const emit = defineEmits(["onClose"])
+const router = useRouter()
 </script>
 
 <style lang="scss" scoped>
