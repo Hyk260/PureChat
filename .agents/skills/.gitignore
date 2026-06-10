@@ -4,5 +4,7 @@
 !.gitignore
 !README*.md
 !public-skills.txt
+!code-review/
+!code-review/**
 !create-skill/
 !create-skill/**
