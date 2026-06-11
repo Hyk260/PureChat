@@ -1,4 +1,4 @@
-import type { KnowledgeReference } from "@/types"
+import type { KnowledgeReference } from "../types"
 import type Markdownit from "markdown-it"
 
 export const footnotesContent = `Here is a footnote reference,[^1] and another.[^2]

@@ -20,6 +20,16 @@ export interface MarkdownToken {
   map?: [number, number]
 }
 
+export type KnowledgeItemType = "file" | "url"
+
+export interface KnowledgeReference {
+  id: number
+  content: string
+  sourceUrl: string
+  type: KnowledgeItemType
+  metadata?: Record<string, any>
+}
+
 export interface BaseNode {
   type: string
   raw: string
@@ -44,14 +54,10 @@ export interface CodeBlockNode extends BaseNode {
   type: "code_block"
   language: string
   code: string
-  // Optional: source line range [start, end) from markdown-it token.map
   startLine?: number
   endLine?: number
-  // Whether this block is still incomplete (e.g., missing closing fence)
   loading?: boolean
-  // Whether this code block represents a diff
   diff?: boolean
-  // If diff is true, original and updated code versions
   originalCode?: string
   updatedCode?: string
   raw: string

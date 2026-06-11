@@ -1,11 +1,10 @@
 <template>
   <div v-if="content" class="markdown-body" @click="handleMarkdownClick">
-    <NodeRender v-for="(item, index) in renderedContent" :key="index" :node="item" />
+    <NodeRender v-for="(item, index) in renderedContent" :key="index" :node="item" @preview-code="handlePreviewCode" />
   </div>
 </template>
 
 <script setup lang="ts">
-// import { throttle } from "lodash-es"
 import { convertToMarkdownFootnotes } from "../utils"
 import MarkdownRenderer from "../utils/markdown-renderer"
 import NodeRender from "../components/NodeRenderer"
@@ -19,12 +18,20 @@ interface Props {
   content: string | undefined
   cloudCustomData?: customDataWebSearch | null
   enableDOMPurify?: boolean
+  lineNumbers?: boolean
+  enablePreWrapper?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   cloudCustomData: null,
   enableDOMPurify: true,
+  lineNumbers: false,
+  enablePreWrapper: false,
 })
+
+const emit = defineEmits<{
+  previewCode: [data: { code: string }]
+}>()
 
 const webSearchResult = computed(() => {
   return props.cloudCustomData?.webSearch?.webSearchResult || []
@@ -32,9 +39,13 @@ const webSearchResult = computed(() => {
 
 const renderer = new MarkdownRenderer({
   webSearchResults: webSearchResult.value,
-  lineNumbers: false,
-  enablePreWrapper: false,
+  lineNumbers: props.lineNumbers,
+  enablePreWrapper: props.enablePreWrapper,
 })
+
+function handlePreviewCode(data: { code: string }) {
+  emit("previewCode", data)
+}
 
 function handleMarkdownClick() {
   console.log("webSearchResult:", webSearchResult.value)
@@ -44,14 +55,9 @@ function handleMarkdownClick() {
   renderer.getParseMarkdownToStructure(props.content || "")
 }
 
-// html转ast
 const renderedContent = computed(() => {
   return renderer.renderParsedNodes(props.content || "", webSearchResult.value)
 })
-
-// const parsedNodes = computed<BaseNode[]>(() => {
-//   return props.content ? parseMarkdownToStructure(props.content, renderer.getMarkdown()) : []
-// })
 </script>
 
 <style lang="scss" scoped></style>

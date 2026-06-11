@@ -1,4 +1,4 @@
-import type { KnowledgeReference } from "@/types"
+import type { KnowledgeReference } from "../types"
 
 const TRUNCATE_LENGTH = 100
 const ELLIPSIS = "..."

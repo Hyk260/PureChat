@@ -124,29 +124,16 @@ import {
   ChevronsUpDown,
   Copy,
   Download,
-  // SquareTerminal,
   Eye,
   Maximize,
 } from "@lucide/vue"
-import { usePreferredColorScheme, useIntersectionObserver } from "@vueuse/core"
-// import {
-//   registerHighlight,
-//   disposeHighlighter,
-//   getHighlighter,
-//   isHighlighterInitialized,
-// } from "../../utils/highlightShiki"
-// import HtmlArtifactsPopup from "@/components/CodeBlockView/HtmlArtifactsPopup.vue"
+import { useIntersectionObserver } from "@vueuse/core"
 import { useCodeBlock } from "../../composables/useCodeBlock"
 import { useHeightCheck } from "../../composables/useHeightCheck"
-// import { useThemeStore } from "@/stores/modules/theme"
 import { getLanguageIcon, languageMap, languageMapValues } from "@pure/utils"
-import emitter from "@/utils/mitt-bus"
-import PreCodeNode from "../PreCodeNode"
 
-import { highlightCode, highlightCodeNode } from "../../utils/highlight"
+import { highlightCode } from "../../utils/highlight"
 import type { VNode } from "vue"
-import type { Highlighter } from "shiki"
-// import HighlighterComp from "@/components/Highlighter/index.vue"
 
 import "../../style/iconify.scss"
 import "../../style/line-numbers-wrapper.css"
@@ -162,10 +149,12 @@ const props = withDefaults(defineProps<Props>(), {
   showPreviewButton: true,
 })
 
+const emit = defineEmits<{
+  previewCode: [data: { code: string }]
+}>()
+
 const { isCopied, copyCode, downloadCode: downloadCodeFile } = useCodeBlock()
 const { shouldShowChevrons, heightCheck } = useHeightCheck()
-
-const highlighter = ref<Highlighter | null>(null)
 
 const isChevrons = ref(false)
 const isCollapsed = ref(false)
@@ -239,16 +228,6 @@ const RenderHighlightedCode = (props: { html: string }) => {
 const languageList = ["js", "ts", ...languageMapValues]
 const excludeList = new Set(["json", "bash"])
 
-// const preferredColor = usePreferredColorScheme()
-// const themeStore = useThemeStore()
-
-// const isDarkMode = computed(() => {
-//   if (themeStore.themeScheme === "auto") {
-//     return preferredColor.value === "dark"
-//   }
-//   return themeStore.themeScheme === "dark"
-// })
-
 const normalizedLang = computed(() => (props.language || "plaintext").trim().toLowerCase())
 const showHeader = computed(() => languageList.includes(props.language) && !excludeList.has(normalizedLang.value))
 const showDownload = computed(() => ["js", "ts"].includes(normalizedLang.value))
@@ -294,10 +273,7 @@ const handlePreviewCode = () => {
   if (!isPreviewable.value) return
 
   if (normalizedLang.value === "html") {
-    emitter.emit("openHtmlArtifactsPopup", {
-      code: props.code,
-      visible: true,
-    })
+    emit("previewCode", { code: props.code })
     return
   }
 }
@@ -318,13 +294,6 @@ useIntersectionObserver(
 onMounted(async () => {
   await nextTick()
   !shouldShowChevrons.value && heightCheck(codeBlockRef.value, 250)
-  // if (!isHighlighterInitialized()) {
-  //   highlighter.value = await registerHighlight()
-  // }
-})
-
-onBeforeUnmount(() => {
-  highlighter.value?.dispose()
 })
 
 watch(
@@ -332,14 +301,6 @@ watch(
   async () => {
     await nextTick()
     try {
-      // if (highlighter.value) {
-      //   highlightedCode.value = highlighter.value.codeToHtml(props.code, {
-      //     lang: props.language,
-      //     theme: isDarkMode.value ? "one-dark-pro" : "one-light",
-      //   })
-      // } else {
-      //   highlightedCode.value = highlightCode(props.code, props.language)
-      // }
       highlightedCode.value = highlightCode(props.code, props.language)
     } catch (err) {
       console.error("Highlight failed:", err)
@@ -348,17 +309,6 @@ watch(
   },
   { immediate: true }
 )
-
-// watch(isDarkMode, async () => {
-//   disposeHighlighter()
-//   highlighter.value = await registerHighlight()
-//   if (highlighter.value) {
-//     highlightedCode.value = highlighter.value.codeToHtml(props.code, {
-//       lang: props.language,
-//       theme: isDarkMode.value ? "one-dark-pro" : "one-light",
-//     })
-//   }
-// })
 </script>
 <style lang="scss">
 :root {

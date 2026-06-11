@@ -19,7 +19,7 @@ import { convertToMarkdownFootnotes } from "./common"
 import { parseMarkdownToStructure } from "./markdown-parser"
 
 import type { MarkdownToken } from "../types"
-import type { KnowledgeReference } from "@/types"
+import type { KnowledgeReference } from "../types"
 
 // 高亮显示的可选项：是否显示语言标签和复制按钮
 interface HighlightOptions {
