@@ -1,6 +1,10 @@
-import { AiModelType } from "model-bank"
+import { z } from "zod"
 
-import { AiProviderSettings } from "@pure/types"
+import { AiProviderSettings } from "./aiProvider"
+
+export const AiModelTypeSchema = z.enum(["chat", "embedding", "tts", "image", "realtime"])
+
+export type AiModelType = z.infer<typeof AiModelTypeSchema>
 
 export type LLMRoleType = "user" | "system" | "assistant" | "function" | "tool"
 

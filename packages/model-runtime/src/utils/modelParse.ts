@@ -1,5 +1,5 @@
-import { ChatModelCard } from "@pure/types"
-import { AIBaseModelCard, AiModelType, AiModelTypeSchema } from "model-bank"
+import { AiModelType, AiModelTypeSchema, ChatModelCard } from "@pure/types"
+import { AIBaseModelCard } from "model-bank"
 import type { ModelProviderKey } from "../types"
 
 export interface ModelProcessorConfig {

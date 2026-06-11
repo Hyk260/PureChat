@@ -8,7 +8,6 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "model-bank": "workspace:*",
     "zod": "^3.25.76"
   }
 }

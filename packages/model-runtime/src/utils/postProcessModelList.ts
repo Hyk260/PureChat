@@ -1,5 +1,4 @@
-import { AiModelType } from "model-bank"
-import type { ChatModelCard } from "@pure/types"
+import { AiModelType, ChatModelCard } from "@pure/types"
 
 /**
  * Process model list: ensure type field exists and generate image generation models for whitelisted models

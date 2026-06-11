@@ -4,10 +4,6 @@ import { z } from "zod"
 
 export type ModelPriceCurrency = "CNY" | "USD"
 
-export const AiModelTypeSchema = z.enum(["chat", "embedding", "tts", "image", "realtime"])
-
-export type AiModelType = z.infer<typeof AiModelTypeSchema>
-
 export interface ModelAbilities {
   /**
    * whether model supports file upload
