@@ -2,16 +2,15 @@ import { AiModelType } from "model-bank"
 import type { ChatModelCard } from "@pure/types"
 
 /**
- * Process model list: ensure type field exists and generate image generation models for whitelisted models
- * @param models Original model list
- * @param getModelTypeProperty Optional callback function to get model type property
- * @returns Processed model list (including image generation models)
+ * 处理模型列表：确保 type 字段存在，并为白名单模型生成图像生成模型
+ * @param models 原始模型列表
+ * @param getModelTypeProperty 可选的回调函数，用于获取模型类型属性
+ * @returns 处理后的模型列表（包含图像生成模型）
  */
 export async function postProcessModelList(
   models: ChatModelCard[],
   getModelTypeProperty?: (modelId: string) => Promise<AiModelType>
 ): Promise<ChatModelCard[]> {
-  // 1. Ensure all models have type field
   const finalModels = await Promise.all(
     models.map(async (model) => {
       let modelType: AiModelType | undefined = model.type

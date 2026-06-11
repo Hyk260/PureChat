@@ -28,3 +28,4 @@ pnpm-debug.log*
 # pure
 */pure-ui
 stats.html
+.trae/specs/*

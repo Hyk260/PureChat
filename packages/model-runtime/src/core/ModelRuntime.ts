@@ -26,7 +26,7 @@ export class ModelRuntime {
   }
 
   static initializeWithProvider(provider: string, params: Partial<ClientOptions>) {
-    const providerAI = providerRuntimeMap[provider] ?? OpenAI
+    const providerAI = providerRuntimeMap[provider as keyof typeof providerRuntimeMap] ?? OpenAI
 
     const runtimeModel: RuntimeAI = new providerAI(params)
 

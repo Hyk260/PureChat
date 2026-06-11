@@ -12,12 +12,11 @@
     "test:update": "vitest -u"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.862.0",
     "@pure/const": "workspace:*",
     "@pure/types": "workspace:*",
     "@pure/utils": "workspace:*",
-    "debug": "^4.4.1",
     "model-bank": "workspace:*",
+    "ollama": "^0.6.3",
     "openai": "^4.104.0"
   }
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { StreamingResponse } from "./response"
+import { StreamingResponse } from "../response"
 
 describe("StreamingResponse", () => {
   it("should create Response with default headers", () => {
