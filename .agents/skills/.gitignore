@@ -4,6 +4,8 @@
 !.gitignore
 !README*.md
 !public-skills.txt
+!check-deps-sync/
+!check-deps-sync/**
 !code-review/
 !code-review/**
 !create-skill/

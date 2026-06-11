@@ -3,5 +3,6 @@
 *
 !.gitignore
 !README*.md
+!check-deps-sync
 !code-review
 !create-skill
