@@ -314,7 +314,6 @@ const Google: ModelProviderCard = {
     "Google's Gemini family is its most advanced general-purpose AI, built by Google DeepMind for multimodal use across text, code, images, audio, and video. It scales from data centers to mobile devices with strong efficiency and reach.",
   enabled: true,
   id: "google",
-  modelList: { showModelFetcher: true },
   modelsUrl: "https://ai.google.dev/gemini-api/docs/models/gemini",
   name: "Google",
   settings: {

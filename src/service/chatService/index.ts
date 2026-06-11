@@ -118,7 +118,7 @@ class ChatService {
     return fetcher
   }
 
-  createAssistantMessage = async ({ messages, ...params }: GetChatCompletionPayload, options?: FetchOptions) => {
+  async createAssistantMessage({ messages, ...params }: GetChatCompletionPayload, options?: FetchOptions) {
     const payload = merge(
       {
         model: DEFAULT_AGENT_CONFIG.model,
@@ -209,14 +209,14 @@ class ChatService {
     })
   }
 
-  fetchPresetTaskResult = async ({
+  async fetchPresetTaskResult({
     params,
     onMessageHandle,
     onFinish,
     onError,
     onLoadingChange,
     abortController,
-  }: FetchAITaskResultParams) => {
+  }: FetchAITaskResultParams) {
     const errorHandle = (error: Error, errorContent?: any) => {
       onLoadingChange?.(false)
       if (abortController?.signal.aborted) {

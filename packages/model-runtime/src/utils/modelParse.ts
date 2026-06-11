@@ -1,5 +1,5 @@
-import { ChatModelCard } from "@pure/types"
-import { AIBaseModelCard, AiModelType, AiModelTypeSchema } from "model-bank"
+import { ChatModelCard, ModelProviderCard } from "@pure/types"
+import { AiModelType, AiModelTypeSchema } from "model-bank"
 import type { ModelProviderKey } from "../types"
 
 export interface ModelProcessorConfig {
@@ -12,11 +12,13 @@ export interface ModelProcessorConfig {
   visionKeywords?: readonly string[]
 }
 
-// Default keyword: any model ID containing -search is considered to support internet search
-const DEFAULT_SEARCH_KEYWORDS = ["-search"] as const
-
 // 模型能力标签关键词配置
 export const MODEL_LIST_CONFIGS = {
+  anthropic: {
+    functionCallKeywords: ["claude"],
+    reasoningKeywords: ["-3-7", "3.7", "-4"],
+    visionKeywords: ["claude"],
+  },
   deepseek: {
     functionCallKeywords: ["v3", "v4", "r1", "deepseek-chat"],
     reasoningKeywords: ["r1", "deepseek-reasoner", "v3.", "v4"],
@@ -35,6 +37,11 @@ export const MODEL_LIST_CONFIGS = {
     functionCallKeywords: ["llama-3.2", "llama-3.3", "llama-4"],
     reasoningKeywords: [],
     visionKeywords: ["llava"],
+  },
+  minimax: {
+    functionCallKeywords: ["minimax"],
+    reasoningKeywords: ["-m"],
+    visionKeywords: ["-vl", "Text-01"],
   },
   openai: {
     excludeKeywords: ["audio"],
@@ -88,16 +95,15 @@ const normalizeModelType = (value: unknown): AiModelType | undefined => {
 }
 
 /**
- * Process model display name
- * @param displayName Original display name
- * @returns Processed display name
+ * 处理模型显示名称，将包含 "3.1 Flash Image Preview" 的名称替换为 "Nano Banana 2"
+ * @param displayName 原始显示名称
+ * @returns 处理后的显示名称
  */
 const processDisplayName = (displayName: string): string => {
   if (displayName.includes("Gemini 3.1 Flash Image Preview")) {
     return displayName.replace("Gemini 3.1 Flash Image Preview", "Nano Banana 2")
   }
 
-  // If it contains "Gemini 2.5 Flash Image Preview", replace the corresponding part with "Nano Banana"
   if (displayName.includes("Gemini 2.5 Flash Image Preview")) {
     return displayName.replace("Gemini 2.5 Flash Image Preview", "Nano Banana")
   }
@@ -106,14 +112,14 @@ const processDisplayName = (displayName: string): string => {
 }
 
 /**
- * Detect whether a keyword list matches a model ID (supports multiple matching patterns)
- * @param modelId Model ID (lowercase)
- * @param keywords Keyword list, supports the following prefixes:
- *   - ^ prefix: match only at the start of model ID
- *   - ! prefix: exclude match, highest priority
- *   - re: prefix: regular expression match (supports !re: for regex exclusion)
- *   - no prefix: contains match (default behavior)
- * @returns Whether it matches (exclusion logic takes priority)
+ * 检测关键词列表是否匹配模型ID（支持多种匹配模式）
+ * @param modelId 模型ID（小写）
+ * @param keywords 关键词列表，支持以下前缀：
+ *   - ^ 前缀：仅在模型ID开头匹配
+ *   - ! 前缀：排除匹配，优先级最高
+ *   - re: 前缀：正则表达式匹配（支持 !re: 用于正则排除）
+ *   - 无前缀：包含匹配（默认行为）
+ * @returns 是否匹配（排除逻辑优先）
  */
 const isKeywordListMatch = (modelId: string, keywords: readonly string[]): boolean => {
   const matchKeyword = (keyword: string): boolean => {
@@ -134,7 +140,6 @@ const isKeywordListMatch = (modelId: string, keywords: readonly string[]): boole
     return modelId.includes(rawKeyword)
   }
 
-  // First check exclusion rules (starting with exclamation mark, including !re:)
   const excludeKeywords = keywords.filter((keyword) => keyword.startsWith("!"))
   const includeKeywords = keywords.filter((keyword) => !keyword.startsWith("!"))
 
@@ -144,7 +149,6 @@ const isKeywordListMatch = (modelId: string, keywords: readonly string[]): boole
     }
   }
 
-  // Check inclusion rules
   return includeKeywords.some((keyword) => matchKeyword(keyword))
 }
 
@@ -183,10 +187,10 @@ const findKnownModelByProvider = async (modelId: string, provider: keyof typeof 
       return null
     }
 
-    const providerModels = modules[provider as keyof typeof modules] as AIBaseModelCard[]
+    const providerModels = modules[provider as keyof typeof modules] as ModelProviderCard
 
-    if (Array.isArray(providerModels)) {
-      return providerModels.find((m) => m.id.toLowerCase() === lowerModelId)
+    if (Array.isArray(providerModels.chatModels)) {
+      return providerModels.chatModels.find((m) => m.id.toLowerCase() === lowerModelId)
     }
 
     return null
@@ -196,9 +200,9 @@ const findKnownModelByProvider = async (modelId: string, provider: keyof typeof 
 }
 
 /**
- * Detect the provider type of a single model
- * @param modelId Model ID
- * @returns Detected provider configuration key name, defaults to 'openai'
+ * 检测单个模型的提供商类型
+ * @param modelId 模型ID
+ * @returns 检测到的提供商配置键名，默认为 'openai'
  */
 export const detectModelProvider = (modelId: string): keyof typeof MODEL_LIST_CONFIGS => {
   const lowerModelId = modelId.toLowerCase()
@@ -215,42 +219,45 @@ export const detectModelProvider = (modelId: string): keyof typeof MODEL_LIST_CO
 }
 
 /**
- * Common logic for processing model cards
+ * Get model local configuration
+ * @param providerLocalConfig Local configuration of the model provider
+ * @param model Model object
+ * @returns Model local configuration
  */
+export const getModelLocalEnableConfig = (providerLocalConfig: any[], model: { id: string }): any | null => {
+  let providerLocalModelConfig = null
+  if (providerLocalConfig && Array.isArray(providerLocalConfig)) {
+    providerLocalModelConfig = providerLocalConfig.find((m) => m.id === model.id)
+  }
+  return providerLocalModelConfig
+}
+
 const processModelCard = (
   model: { [key: string]: any; id: string },
   config: ModelProcessorConfig,
   knownModel?: any
 ): ChatModelCard | undefined => {
-  const {
-    functionCallKeywords = [],
-    visionKeywords = [],
-    reasoningKeywords = [],
-    excludeKeywords = [],
-    // searchKeywords = DEFAULT_SEARCH_KEYWORDS,
-    // imageOutputKeywords = [],
-    // videoKeywords = [],
-  } = config
+  const { functionCallKeywords = [], visionKeywords = [], reasoningKeywords = [], excludeKeywords = [] } = config
 
   const isExcludedModel = isKeywordListMatch(model.id.toLowerCase(), excludeKeywords)
   const normalizedModelType = normalizeModelType(model.type)
   const modelType = normalizedModelType
+  const isFunctionCallEnabled = isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) && !isExcludedModel
+  const isReasoningEnabled = isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) && !isExcludedModel
+  const isVisionEnabled = isKeywordListMatch(model.id.toLowerCase(), visionKeywords) && !isExcludedModel
 
   return {
     tokens: model.tokens ?? knownModel?.tokens ?? undefined,
     description: model.description ?? knownModel?.description ?? "",
     displayName: processDisplayName(model.displayName ?? knownModel?.displayName ?? model.id),
     enabled: model?.enabled || false,
-    functionCall:
-      model.functionCall ??
-      ((isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) && !isExcludedModel) || false),
+    functionCall: model.functionCall ?? (isFunctionCallEnabled || false),
     id: model.id,
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
-    reasoning:
-      model.reasoning ?? ((isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) && !isExcludedModel) || false),
+    reasoning: model.reasoning ?? (isReasoningEnabled || false),
     // releasedAt: processReleasedAt(model, knownModel),
     type: modelType,
-    vision: model.vision ?? ((isKeywordListMatch(model.id.toLowerCase(), visionKeywords) && !isExcludedModel) || false),
+    vision: model.vision ?? (isVisionEnabled || false),
   }
 }
 
@@ -290,10 +297,10 @@ export const processModelList = async (
 }
 
 /**
- * Process model list for mixed providers
- * @param modelList Model list
- * @param providerid Optional provider ID, used to get its local configuration file
- * @returns Processed model card list
+ * 处理多提供商混合的模型列表
+ * @param modelList 模型列表
+ * @param providerid 可选的提供商ID，用于获取其本地配置文件
+ * @returns 处理后的模型卡片列表
  */
 export const processMultiProviderModelList = async (
   modelList: Array<{ id: string }>,
@@ -301,7 +308,6 @@ export const processMultiProviderModelList = async (
 ): Promise<ChatModelCard[]> => {
   const { DEFAULT_MODEL_LIST } = await import("model-bank")
 
-  // If providerid is provided, try to get the local configuration for that provider
   const providerLocalConfig = await getProviderLocalConfig(providerid)
 
   console.log("providerLocalConfig", providerLocalConfig)
@@ -310,10 +316,9 @@ export const processMultiProviderModelList = async (
     modelList.map(async (model) => {
       const detectedProvider = detectModelProvider(model.id)
       const config = MODEL_LIST_CONFIGS[detectedProvider]
-      // Prioritize using provider-specific configuration
+
       let knownModel = await findKnownModelByProvider(model.id, detectedProvider)
 
-      // If not found, fall back to global configuration
       if (!knownModel) {
         knownModel = DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase())
       }

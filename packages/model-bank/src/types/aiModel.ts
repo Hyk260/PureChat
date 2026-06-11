@@ -132,10 +132,6 @@ export interface AIBaseModelCard {
   displayName?: string
   enabled?: boolean
   id: string
-  /**
-   * whether model is legacy (deprecated but not removed yet)
-   */
-  legacy?: boolean
   maxOutput?: number
   /**
    * who create this model
@@ -152,8 +148,4 @@ export interface Model {
   group: string
   owned_by?: string
   description?: string
-  /**
-   * @deprecated
-   */
-  supported_text_delta?: boolean
 }

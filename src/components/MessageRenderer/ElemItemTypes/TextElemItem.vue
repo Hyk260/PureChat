@@ -12,7 +12,12 @@
         :originalMsg="parsedCloudCustomData"
       />
       <!-- Markdown消息 -->
-      <Markdown v-if="shouldShowMarkdown" :cloudCustomData="parsedCloudCustomData" :content="messageText" />
+      <Markdown
+        v-if="shouldShowMarkdown"
+        :cloudCustomData="parsedCloudCustomData"
+        :content="messageText"
+        @preview-code="handlePreviewCode"
+      />
       <DynamicContent v-else :atUserList="message.atUserList" :text="messageText" />
       <!-- <AssistantMessageExtra v-if="chatStore.isAssistant && message.flow === 'in'" /> -->
     </template>
@@ -29,6 +34,7 @@ import { Markdown } from "@pure/ui"
 import ReplyElem from "../CloudCustomData/ReplyElem.vue"
 import Thinking from "../CloudCustomData/Thinking.vue"
 import WebSearch from "../CloudCustomData/WebSearch.vue"
+import emitter from "@/utils/mitt-bus"
 
 interface Props {
   message: DB_Message
@@ -84,6 +90,13 @@ const messageStyleClasses = computed(() => {
 
 const handleMessageClick = () => {
   console.log("Message clicked:", props.message)
+}
+
+const handlePreviewCode = (data: { code: string }) => {
+  emitter.emit("openHtmlArtifactsPopup", {
+    code: data.code,
+    visible: true,
+  })
 }
 </script>
 

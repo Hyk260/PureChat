@@ -48,13 +48,6 @@ export interface AiProviderSettings {
    */
   defaultShowBrowserRequest?: boolean
   /**
-   * some provider server like stepfun and aliyun don't support browser request,
-   * So we should disable it
-   *
-   * @default false
-   */
-  disableBrowserRequest?: boolean
-  /**
    * whether provider support edit model
    *
    * @default true
@@ -74,5 +67,6 @@ export interface AiProviderSettings {
    * default openai
    */
   sdkType?: AiProviderSDKType
+
   showModelFetcher?: boolean
 }

@@ -33,11 +33,6 @@ export const AgentRuntimeErrorType = {
   InvalidGithubToken: "InvalidGithubToken",
 
   ConnectionCheckFailed: "ConnectionCheckFailed",
-
-  /**
-   * @deprecated
-   */
-  NoOpenAIAPIKey: "NoOpenAIAPIKey",
 } as const
 
 export const AGENT_RUNTIME_ERROR_SET = new Set<string>(Object.values(AgentRuntimeErrorType))

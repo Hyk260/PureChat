@@ -41,32 +41,24 @@ export interface ChatModelCard {
    * whether model supports file upload
    */
   files?: boolean
-  /**
-   * 模型是否支持函数调用
-   */
-  functionCall?: boolean
   id: string
   /**
    * whether model is custom
    */
   isCustom?: boolean
-  /**
-   * whether model is legacy (deprecated but not removed yet)
-   */
-  legacy?: boolean
   maxOutput?: number
 
   webSearch?: boolean
 
-  // pricing?: Pricing
-
+  type?: AiModelType
   /**
    *  whether model supports reasoning
    */
   reasoning?: boolean
-
-  type?: AiModelType
-
+  /**
+   * 模型是否支持函数调用
+   */
+  functionCall?: boolean
   /**
    *  whether model supports vision
    */
@@ -85,23 +77,10 @@ export interface ModelProviderCard {
   checkModel?: string
   description?: string
   /**
-   * some provider server like stepfun and aliyun don't support browser request,
-   * So we should disable it
-   * @deprecated
-   * @default false
-   */
-  disableBrowserRequest?: boolean
-  /**
    * whether provider is enabled by default
    */
   enabled?: boolean
   id: string
-  /**
-   * @deprecated
-   */
-  modelList?: {
-    showModelFetcher?: boolean
-  }
   /**
    * the url show the all models in the provider
    */
@@ -110,17 +89,6 @@ export interface ModelProviderCard {
    * the name show for end user
    */
   name: string
-  /**
-   * whether show api key in the provider config
-   * so provider like ollama don't need api key field
-   * @deprecated
-   */
-  showApiKey?: boolean
-  /**
-   * whether show checker in the provider config
-   * @deprecated
-   */
-  showChecker?: boolean
   /**
    * whether to show the provider config
    */
