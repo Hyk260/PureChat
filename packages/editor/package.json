@@ -1,0 +1,25 @@
+{
+  "name": "@pure/editor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts",
+    "./config": "./src/config.ts",
+    "./plugin-file": "./src/plugin-file.ts",
+    "./plugin-ctrl-enter": "./src/plugin-ctrl-enter.ts",
+    "./plugin-mention": "./src/plugin-mention.ts"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage --silent='passed-only'"
+  },
+  "dependencies": {
+    "@pure/utils": "workspace:*",
+    "@wangeditor/editor": "5.1.23",
+    "snabbdom": "^3.5.1"
+  },
+  "devDependencies": {}
+}

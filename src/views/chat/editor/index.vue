@@ -41,7 +41,8 @@ import { fileToBase64, formatSize, browserInfo, useState } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import Inputbar from "../Inputbar/index.vue"
-import { editorConfig } from "@/utils/wangEditor/editor-config"
+import { createEditorConfig, setFilePluginOptions } from "@pure/editor"
+import { placeholderMap } from "@/utils/editor-placeholder"
 import { filterMentionList } from "@/utils/pinyin/utils"
 import SendMessageButton from "./SendMessageButton.vue"
 import { customAlert, handleAssistantFile, handleEditorKeyDown, handleString, insertEmoji } from "./utils"
@@ -49,8 +50,21 @@ import { customAlert, handleAssistantFile, handleEditorKeyDown, handleString, in
 import type { DraftData } from "@pure/types"
 import type { IDomEditor } from "@wangeditor/editor"
 
-import "@/utils/wangEditor/editor-config/plugin"
-import "@/styles/wangeditor/index.css"
+import "@pure/editor"
+
+const { editorConfig } = createEditorConfig({
+  placeholder: placeholderMap.value.input,
+  mentionConfig: {
+    showModal: () => useChatStore().toggleMentionModal(true),
+    hideModal: () => useChatStore().toggleMentionModal(false),
+  },
+})
+
+const handleFileViewer = (data) => {
+  console.log("handleFileViewer", data)
+}
+
+setFilePluginOptions({ onFileClick: handleFileViewer })
 
 const MAX_FILE_SIZE_MB = 100
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
@@ -119,10 +133,6 @@ const handleToolbarAction = ({ data, key }) => {
   }
 
   actions[key]?.()
-}
-
-const handleFileViewer = (data) => {
-  console.log("handleFileViewer", data)
 }
 
 const updateChatDraft = debounce((data: DraftData) => {
@@ -239,7 +249,6 @@ const sendChatMessage = async () => {
     const messageData = prepareMessageData(editorRef.value)
     console.log("messageData", messageData)
     if (!messageData.isHave) {
-      clearInput()
       return
     }
 
@@ -272,7 +281,6 @@ const setupEventListeners = () => {
   emitter.on("handleInsertDraft", handleInsertDraft)
   emitter.on("handleToolbar", handleToolbarAction)
   emitter.on("handleScreenCapture", handleScreenCapture)
-  emitter.on("handleFileViewer", handleFileViewer)
   emitter.on("handleSetHtml", handleSetHtml)
   emitter.on("handleAt", handleAt)
   emitter.on("handleFileDrop", handleFiles)
@@ -285,7 +293,6 @@ const removeEventListeners = () => {
     "handleInsertDraft",
     "handleFileDrop",
     "handleToolbar",
-    "handleFileViewer",
     "handleScreenCapture",
   ]
   events.forEach((event) => emitter.off(event))

@@ -1,7 +1,7 @@
 import { DomEditor } from "@wangeditor/editor"
 import { h } from "snabbdom"
 
-import type { MentionConfig, MentionElement, MentionInfo } from "@/types"
+import type { MentionConfig, MentionElement, MentionInfo } from "./types"
 import type { IDomEditor } from "@wangeditor/editor"
 
 const MENTION_TYPE = "mention"
@@ -9,14 +9,12 @@ const MENTION_SELECTOR = `span[data-w-e-type="${MENTION_TYPE}"]`
 
 /**
  * 获取提及功能的配置项
- * @param {Object} editor 编辑器实例
- * @returns {Object} 提及功能配置
  */
 const getMentionConfig = (editor: IDomEditor): MentionConfig => {
   return editor.getConfig().EXTEND_CONF?.mentionConfig || {}
 }
 
-const withMention = (editor: IDomEditor) => {
+const withMention = (editor: IDomEditor): IDomEditor => {
   const { insertText, isInline, isVoid } = editor
   const { showModal, hideModal, pinyinSearch } = getMentionConfig(editor)
 
@@ -60,46 +58,35 @@ const withMention = (editor: IDomEditor) => {
   }
 
   editor.isInline = (elem) => {
-    return DomEditor.getNodeType(elem) === "mention" || isInline(elem)
+    return DomEditor.getNodeType(elem) === MENTION_TYPE || isInline(elem)
   }
 
   editor.isVoid = (elem) => {
-    return DomEditor.getNodeType(elem) === "mention" || isVoid(elem)
+    return DomEditor.getNodeType(elem) === MENTION_TYPE || isVoid(elem)
   }
 
   return editor
 }
 
+/** 将 MentionElement 转换为 HTML 字符串 */
 const mentionToHtml = (elem: MentionElement): string => {
   const { value = "", info = {} } = elem
 
   const infoStr = encodeURIComponent(JSON.stringify(info))
 
-  const html = `
-    <span
-      data-w-e-type="mention"
-      data-w-e-is-void
-      data-w-e-is-inline
-      data-value="${encodeURIComponent(value)}"
-      data-info="${infoStr}"
-    >
-      @${value.trim()}
-    </span>
-  `
-    .replace(/\n\s*/g, " ")
-    .trim()
-
-  return html
+  return `<span data-w-e-type="mention" data-w-e-is-void data-w-e-is-inline data-value="${encodeURIComponent(value)}" data-info="${infoStr}">@${value.trim()}</span>`
 }
 
+/** 安全 JSON 解析 */
 const safeJsonParse = (str: string): MentionInfo | string => {
   try {
-    return JSON.parse(str)
+    return JSON.parse(str) as MentionInfo
   } catch {
     return str
   }
 }
 
+/** 从 HTML 元素解析 MentionElement */
 const parseHtml = (elem: Element): MentionElement => {
   const value = elem.getAttribute("data-value") || ""
   const rawInfo = decodeURIComponent(elem.getAttribute("data-info") || "")
@@ -114,44 +101,29 @@ const parseHtml = (elem: Element): MentionElement => {
   }
 }
 
-const mentionStyles = {
-  base: {
-    borderRadius: "3px",
-    padding: "0 3px",
-    color: "#54b4ef",
-  },
-  selected: {
-    border: "2px solid var(--w-e-textarea-selected-border-color)",
-  },
-  unselected: {
-    border: "2px solid transparent",
-  },
-}
-
-const getMentionStyles = (isSelected: boolean) => ({
-  ...mentionStyles.base,
-  ...(isSelected ? mentionStyles.selected : mentionStyles.unselected),
-})
-
+/** 渲染 mention 元素 */
 const renderMention = (elem: MentionElement, _children: null, editor: IDomEditor) => {
   const isSelected = DomEditor.isNodeSelected(editor, elem)
   const value = elem.value?.trim() ?? ""
 
-  const vnode = h(
+  return h(
     "span",
     {
       props: {
         contentEditable: false,
       },
-      style: getMentionStyles(isSelected),
+      style: {
+        borderRadius: "3px",
+        padding: "0 3px",
+        color: "#54b4ef",
+        border: isSelected ? "2px solid var(--w-e-textarea-selected-border-color)" : "2px solid transparent",
+      },
     },
     `@${value}`
   )
-
-  return vnode
 }
 
-const module = {
+const mentionModule = {
   editorPlugin: withMention,
   renderElems: [
     {
@@ -173,4 +145,4 @@ const module = {
   ],
 }
 
-export default module
+export default mentionModule

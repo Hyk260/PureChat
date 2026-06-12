@@ -1,0 +1,45 @@
+import type { IDomEditor } from "@wangeditor/editor"
+
+/** 提及用户信息 */
+export interface MentionInfo {
+  id: string
+  [key: string]: unknown
+}
+
+/** 提及元素 */
+export interface MentionElement {
+  type: "mention"
+  value: string
+  info: MentionInfo
+  children: [{ text: string }]
+}
+
+/** 附件元素 */
+export interface AttachmentElement {
+  type: "attachment"
+  link: string
+  fileName: string
+  fileSize?: string
+  children: [{ text: string }]
+}
+
+/** 提及插件配置 */
+export interface MentionConfig {
+  showModal?: (editor: IDomEditor) => void
+  hideModal?: (editor: IDomEditor) => void
+  pinyinSearch?: boolean
+}
+
+/** 文件附件插件配置 */
+export interface FilePluginOptions {
+  /** 附件点击回调 */
+  onFileClick?: (elem: AttachmentElement) => void
+}
+
+/** 编辑器配置选项 */
+export interface EditorConfigOptions {
+  /** 占位文本 */
+  placeholder?: string
+  /** 提及配置 */
+  mentionConfig?: Partial<MentionConfig>
+}

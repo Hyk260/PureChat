@@ -1,5 +1,3 @@
-import type { IDomEditor } from "@wangeditor/editor"
-
 export interface messageHandle {
   text?: string
   thinking?: string
@@ -11,25 +9,8 @@ export interface messageHandle {
   done?: boolean
 }
 
-export interface MentionInfo {
-  id: string
-  [key: string]: any
-}
-
-export interface MentionElement {
-  type: "mention"
-  value: string
-  info: MentionInfo
-  children: [{ text: string }]
-}
-
-export interface AttachmentElement {
-  type: "attachment"
-  link: string
-  fileName: string
-  fileSize?: string
-  children: [{ text: string }]
-}
+// 编辑器相关类型从 @pure/editor re-export（向后兼容）
+export type { MentionInfo, MentionElement, AttachmentElement, MentionConfig } from "@pure/editor"
 
 export interface ImageElement {
   type: "image"
@@ -43,12 +24,6 @@ export interface ImageElement {
 export interface EmojiElement extends ImageElement {
   alt: string
   class: "EmoticonPack"
-}
-
-export interface MentionConfig {
-  showModal?: (editor: IDomEditor) => void
-  hideModal?: (editor: IDomEditor) => void
-  pinyinSearch?: boolean
 }
 
 export interface RobotBoxEventData {

@@ -1,6 +1,6 @@
 <template>
   <div class="send-button">
-    <span class="tip">{{ placeholderMap[browserInfo?.os || "Windows"] }}</span>
+    <span class="tip">{{ currentPlaceholder }}</span>
     <ElButton v-if="false" :disabled="disabled" circle @click="handleTranslate">
       <div v-if="translateDing" class="iconify-icon svg-spinners"></div>
       <Languages v-else :size="15" />
@@ -37,7 +37,12 @@ import { useMessageOperations } from "@/hooks/useMessageOperations"
 import { useChatStore, useTopicStore, usePortalStore } from "@/stores"
 import { browserInfo } from "@pure/utils"
 
-import { placeholderMap } from "@/utils/wangEditor/editor-config"
+import { placeholderMap } from "@/utils/editor-placeholder"
+
+const currentPlaceholder = computed(() => {
+  const key = (browserInfo?.os || "Windows") as keyof typeof placeholderMap.value
+  return placeholderMap.value[key]
+})
 
 type Props = {
   disabled?: boolean
