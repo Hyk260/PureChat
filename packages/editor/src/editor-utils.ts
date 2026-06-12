@@ -16,12 +16,12 @@ export const isTextFile = (fileName: string): boolean => {
 /** 创建媒体元素 */
 export const createMediaElement = (type: string, props: Record<string, unknown> = {}) => ({
   type,
-  ...props,
   children: [{ text: "" }],
+  ...props,
 })
 
 /** 处理 AI 助手上传的文件 */
-export const handleAssistantFile = async (file: File, editor: IDomEditor): Promise<void> => {
+export const handleAssistantFile = async (file: File, editor: IDomEditor) => {
   if (!file || !editor) return
 
   const fileType = getFileType(file?.name)
@@ -34,22 +34,20 @@ export const handleAssistantFile = async (file: File, editor: IDomEditor): Promi
   const type = file.type.match("^image/") ? "image" : "file"
   const base64Url = await fileToBase64(file)
   if (type === "image") {
-    const imageElement = {
-      type: "image",
+    const imageElement = createMediaElement("image", {
       src: base64Url,
       fileName: file.name,
       style: { width: "125px" },
-      children: [{ text: "" }],
-    }
+    })
     editor.insertNode(imageElement)
   } else if (type === "file") {
-    const node = createMediaElement("attachment", {
+    const fileElement = createMediaElement("attachment", {
       fileName: file.name,
       fileSize: formatSize(file.size),
       link: base64Url,
       path: (file as { path?: string }).path || "",
     })
-    editor.insertNode(node)
+    editor.insertNode(fileElement)
   }
 }
 
@@ -63,18 +61,18 @@ export const handleString = (item: DataTransferItem, editor: IDomEditor): void =
 }
 
 /** 插入表情 */
-export const insertEmoji = (option: { url: string; item: string }, editor: IDomEditor): void => {
+export const insertEmoji = (option: { url: string; item: string }, editor: IDomEditor) => {
   if (!editor) throw new Error("editor is undefined")
   const { url, item } = option
 
-  const data = createMediaElement("image", {
+  const emojiElement = createMediaElement("image", {
     class: "EmoticonPack",
     src: url,
     alt: item,
     style: { width: "26px" },
   })
   editor.restoreSelection()
-  editor.insertNode(data)
+  editor.insertNode(emojiElement)
   editor.focus(true)
 }
 
@@ -91,7 +89,7 @@ export const customAlert = (s: string, t: string): void => {
   }
 }
 
-export const handleEditorKeyDown = async (visible: boolean): Promise<void> => {
+export const handleEditorKeyDown = (visible: boolean): void => {
   if (!visible) return
   const container = document.querySelector(".w-e-text-container") as HTMLDivElement
   if (!container) return
@@ -213,4 +211,178 @@ export const extractAitInfo = (
     aitStr: cleanedHtml,
     atUserList: Array.from(uniqueUserIds),
   }
+}
+
+// ---------------------------------------------------------------------------
+// 文件处理
+// ---------------------------------------------------------------------------
+
+/** 最大文件大小 (MB) */
+export const MAX_FILE_SIZE_MB = 100
+
+/** 最大文件大小 (Bytes) */
+export const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
+
+/** 文件处理外部回调 */
+export interface FileHandlerCallbacks {
+  /** 警告消息回调 */
+  onWarning?: (message: string) => void
+  /** 错误消息回调 */
+  onError?: (message: string) => void
+}
+
+/** handleFiles 选项 */
+export interface HandleFilesOptions {
+  /** 是否为 AI 助手模式 */
+  isAssistant?: boolean
+  /** 最大文件大小 (MB)，默认 MAX_FILE_SIZE_MB */
+  maxFileSizeMB?: number
+  /** 外部回调 */
+  callbacks?: FileHandlerCallbacks
+}
+
+/**
+ * 处理文件拖拽/粘贴到编辑器
+ * 在 AI 助手模式下会路由到 handleAssistantFile，否则将文件转为 base64 插入编辑器
+ *
+ * @param file - 文件对象
+ * @param editor - 编辑器实例
+ * @param type - 插入类型：image 或 file，默认 file
+ * @param options - 可选配置
+ */
+export const handleFiles = async (
+  file: File | null,
+  editor?: IDomEditor,
+  type: "image" | "file" = "file",
+  options: HandleFilesOptions = {}
+): Promise<void> => {
+  if (!editor || !file) throw new Error("file editor is not ready")
+
+  const { isAssistant = false, maxFileSizeMB = MAX_FILE_SIZE_MB, callbacks } = options
+  const maxFileSizeBytes = maxFileSizeMB * 1024 * 1024
+
+  if (file.size > maxFileSizeBytes) {
+    callbacks?.onWarning?.(`文件不能大于${maxFileSizeMB}MB`)
+    return
+  }
+
+  if (isAssistant) {
+    return handleAssistantFile(file, editor)
+  }
+
+  try {
+    const base64Url = await fileToBase64(file)
+    editor.restoreSelection()
+
+    if (type === "image") {
+      const imageElement = createMediaElement("image", {
+        src: base64Url,
+        fileName: file.name,
+        style: { width: "125px" },
+      })
+      editor.insertNode(imageElement)
+    } else if (type === "file") {
+      const fileElement = createMediaElement("attachment", {
+        fileName: file.name,
+        fileSize: formatSize(file.size),
+        link: base64Url,
+        path: (file as { path?: string }).path || "",
+      })
+      editor.insertNode(fileElement)
+    }
+
+    editor.move(1)
+  } catch (error) {
+    console.error(`${type}处理错误:`, error)
+    callbacks?.onError?.(`${type}处理失败`)
+  }
+}
+
+/**
+ * 处理编辑器粘贴事件
+ *
+ * @param editor - 编辑器实例
+ * @param event - 剪贴板事件
+ * @param onFile - 文件处理回调，接收 File 对象和类型
+ * @param callback - wangeditor paste 完成回调（传 false 阻止默认行为）
+ */
+export const handlePaste = (
+  editor: IDomEditor,
+  event: ClipboardEvent,
+  onFile?: (file: File, type: "image" | "file") => void,
+  callback?: (continuePaste: boolean) => void
+): void => {
+  const clipboardItems = Array.from(event?.clipboardData?.items || [])
+
+  clipboardItems.forEach((item) => {
+    if (item.kind === "file") {
+      const file = item.getAsFile()
+      if (file && onFile) {
+        onFile(file, item.type.match("^image/") ? "image" : "file")
+      }
+    } else if (item.kind === "string") {
+      handleString(item, editor)
+    }
+  })
+
+  event.preventDefault()
+  callback?.(false)
+}
+
+/**
+ * 处理编辑器文件拖放事件
+ *
+ * @param event - 拖放事件
+ * @param onFile - 文件处理回调，接收 File 对象和类型
+ */
+export const handleFileDrop = (event: DragEvent, onFile?: (file: File, type: "image" | "file") => void): void => {
+  // 文本拖放由浏览器默认处理
+  if (event?.dataTransfer?.getData("text/plain")) return
+
+  const droppedFiles = Array.from(event.dataTransfer?.files || [])
+  droppedFiles.forEach((file) => {
+    onFile?.(file, file.type.match("^image/") ? "image" : "file")
+  })
+
+  event.preventDefault()
+}
+
+/**
+ * 插入 @mention 节点到编辑器
+ *
+ * @param options.id - 用户 ID
+ * @param options.name - 显示名称
+ * @param options.backward - 是否回退删除一个字符（默认 true）
+ * @param options.deleteDigit - 删除指定数量的字符（优先级高于 backward）
+ * @param options.editor - 编辑器实例
+ */
+export const insertMention = (options: {
+  id: string
+  name: string
+  backward?: boolean
+  deleteDigit?: number
+  editor?: IDomEditor | null
+}): void => {
+  const { id, name, backward = true, deleteDigit = 0, editor = null } = options
+
+  if (!editor) {
+    console.warn("editor is null")
+    return
+  }
+
+  const mentionNode = createMediaElement("mention", {
+    value: `${name} `,
+    info: { id },
+  })
+
+  editor.restoreSelection()
+  if (deleteDigit) {
+    for (let i = 0; i < deleteDigit; i++) {
+      editor.deleteBackward("character")
+    }
+  } else if (backward) {
+    editor.deleteBackward("character")
+  }
+  editor.insertNode(mentionNode)
+  editor.move(1)
 }

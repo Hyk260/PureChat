@@ -36,22 +36,23 @@ import MentionModal from "@/components/Chat/MentionModal.vue"
 import { useMessageCreator } from "@/hooks/useMessageCreator"
 import { usePrepareMessageData } from "@/hooks/useMessageOperations"
 import { useChatStore, useGroupStore } from "@/stores"
-import { insertMention } from "@/utils/chat"
-import { fileToBase64, formatSize, browserInfo, useState } from "@pure/utils"
+import { insertMention } from "@pure/editor"
+import { browserInfo, useState } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
 import Inputbar from "../Inputbar/index.vue"
 import { createEditorConfig, setFilePluginOptions } from "@pure/editor"
+import {
+  customAlert,
+  handleEditorKeyDown,
+  handleFileDrop as handleEditorFileDrop,
+  handleFiles,
+  handlePaste as handleEditorPaste,
+  insertEmoji,
+} from "@pure/editor/editor-utils"
 import { placeholderMap } from "@/utils/editor-placeholder"
 import { filterMentionList } from "@/utils/pinyin/utils"
 import SendMessageButton from "./SendMessageButton.vue"
-import {
-  customAlert,
-  handleAssistantFile,
-  handleEditorKeyDown,
-  handleString,
-  insertEmoji,
-} from "@pure/editor/editor-utils"
 
 import type { DraftData } from "@pure/types"
 import type { IDomEditor } from "@wangeditor/editor"
@@ -72,8 +73,6 @@ const handleFileViewer = (data) => {
 
 setFilePluginOptions({ onFileClick: handleFileViewer })
 
-const MAX_FILE_SIZE_MB = 100
-const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 const mode = "simple"
 const editorRef = shallowRef<IDomEditor>()
 const valueHtml = ref("")
@@ -106,7 +105,7 @@ const destroyEditor = (editor: IDomEditor | undefined) => {
   editor?.destroy()
 }
 
-const handleAt = ({ id, name }) => {
+const handleAt = ({ id, name }: { id: string; name: string }) => {
   insertMention({ id, name, backward: false, editor: editorRef.value })
 }
 
@@ -133,8 +132,8 @@ const handleToolbarAction = ({ data, key }) => {
 
   const actions = {
     setEmoji: () => insertEmoji(data, editor),
-    setPicture: () => handleFiles(data.files, "image"),
-    setParseFile: () => handleFiles(data.files, "file"),
+    setPicture: () => onFile(data.files, "image"),
+    setParseFile: () => onFile(data.files, "file"),
     setEditHtml: () => handleSetHtml(data),
   }
 
@@ -160,77 +159,23 @@ const handleEditorChange = (editor: IDomEditor) => {
   handleMentionSearch(editor)
 }
 
-const handleFiles = async (file: File | null, type: "image" | "file" = "file") => {
-  const editor = editorRef.value
-  if (!editor || !file) throw new Error("file editor is not ready")
-
-  if (file.size > MAX_FILE_SIZE_BYTES) {
-    window.$message?.warning(`文件不能大于${MAX_FILE_SIZE_MB}MB`)
-    return
-  }
-
-  if (isAssistant.value) {
-    return handleAssistantFile(file, editor)
-  }
-
-  try {
-    const base64Url = await fileToBase64(file)
-
-    editor.restoreSelection()
-
-    if (type === "image") {
-      const imageElement = {
-        type: "image",
-        src: base64Url,
-        fileName: file.name,
-        style: { width: "125px" },
-        children: [{ text: "" }],
-      }
-      editor.insertNode(imageElement)
-    } else if (type === "file") {
-      const fileElement = {
-        type: "attachment",
-        fileName: file.name,
-        fileSize: formatSize(file.size),
-        link: base64Url,
-        path: file?.path || "",
-        children: [{ text: "" }],
-      }
-      editor.insertNode(fileElement)
-    }
-
-    editor.move(1)
-  } catch (error) {
-    console.error(`${type}处理错误:`, error)
-    window.$message?.error(`${type}处理失败`)
-  }
+const onFile = (file: File, type: "image" | "file") => {
+  handleFiles(file, editorRef.value, type, {
+    isAssistant: isAssistant.value,
+    callbacks: {
+      onWarning: (msg) => window.$message?.warning(msg),
+      onError: (msg) => window.$message?.error(msg),
+    },
+  })
 }
 
 const handlePaste = (editor: IDomEditor, event: ClipboardEvent, callback?: Function) => {
   console.log("text/plain:", event?.clipboardData?.getData("text/plain"))
-  const clipboardItems = Array.from(event?.clipboardData?.items || [])
-
-  clipboardItems.forEach((item) => {
-    if (item.kind === "file") {
-      handleFiles(item.getAsFile(), item.type.match("^image/") ? "image" : "file")
-    } else if (item.kind === "string") {
-      handleString(item, editor)
-    }
-  })
-
-  event.preventDefault()
-  callback?.(false)
+  handleEditorPaste(editor, event, onFile, (continuePaste) => callback?.(continuePaste))
 }
 
 const handleFileDrop = (event: DragEvent) => {
-  if (event?.dataTransfer?.getData("text/plain")) {
-    return
-  }
-
-  const droppedFiles = Array.from(event.dataTransfer?.files || [])
-  droppedFiles.forEach((file) => handleFiles(file, file.type.match("^image/") ? "image" : "file"))
-
-  event.preventDefault()
+  handleEditorFileDrop(event, onFile)
 }
 
 const handleEnter = async (event: MouseEvent) => {
@@ -289,7 +234,7 @@ const setupEventListeners = () => {
   emitter.on("handleScreenCapture", handleScreenCapture)
   emitter.on("handleSetHtml", handleSetHtml)
   emitter.on("handleAt", handleAt)
-  emitter.on("handleFileDrop", handleFiles)
+  emitter.on("handleFileDrop", (file: File) => onFile(file, file.type.match("^image/") ? "image" : "file"))
 }
 
 const removeEventListeners = () => {

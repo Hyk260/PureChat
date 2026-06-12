@@ -1,8 +1,7 @@
-import { DomEditor } from "@wangeditor/editor"
+import { DomEditor, type IDomEditor } from "@wangeditor/editor"
 import { h } from "snabbdom"
 
 import type { MentionConfig, MentionElement, MentionInfo } from "./types"
-import type { IDomEditor } from "@wangeditor/editor"
 
 const MENTION_TYPE = "mention"
 const MENTION_SELECTOR = `span[data-w-e-type="${MENTION_TYPE}"]`

@@ -34,7 +34,7 @@ import { storeToRefs } from "pinia"
 
 import { useChatStore, useGroupStore } from "@/stores"
 import { prioritizeRBTUserID } from "@pure/utils"
-import { insertMention } from "@/utils/chat"
+import { insertMention } from "@pure/editor"
 import emitter, { type FilteringType } from "@/utils/mitt-bus"
 
 import type { IDomEditor } from "@wangeditor/editor"
@@ -249,8 +249,7 @@ const inputKeyupHandler = (event: KeyboardEvent) => {
 }
 
 const handleAit = (id: string, name: string | undefined) => {
-  let nick = name ? name : id
-  insertMention({ id, name: nick, deleteDigit: searchValue.value, editor: props.editor })
+  insertMention({ id, name: name || id, deleteDigit: searchValue.value, editor: props.editor })
   setMentionStatus()
   searchValue.value = 0
 }

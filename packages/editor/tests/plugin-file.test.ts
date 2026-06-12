@@ -10,9 +10,7 @@ vi.mock("@wangeditor/editor", () => ({
 
 vi.mock("@pure/utils", () => ({
   getFileIcon: vi.fn((type: string) => `/icons/${type}.svg`),
-  encodeHTML: vi.fn((str: string) =>
-    str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-  ),
+  encodeHTML: vi.fn((str: string) => str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")),
   getFileType: vi.fn((name: string) => name.split(".").pop() || ""),
 }))
 

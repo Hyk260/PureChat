@@ -12,33 +12,10 @@ Boot.registerModule(mentionModule)
 Boot.registerModule(ctrlEnterModule)
 
 export { createEditorConfig, toolbarConfig } from "./config"
-export {
-  createMediaElement,
-  customAlert,
-  extractAitInfo,
-  extractEmojiInfo,
-  extractFilesInfo,
-  extractImageInfo,
-  extractVideoInfo,
-  handleAssistantFile,
-  handleEditorKeyDown,
-  handleString,
-  insertEmoji,
-  isTextFile,
-  isVideoFile,
-  TEXT_FILE_EXTENSIONS,
-} from "./editor-utils"
+export type { FileHandlerCallbacks, HandleFilesOptions } from "./editor-utils"
+export * from "./editor-utils"
 export { default as ctrlEnterModule } from "./plugin-ctrl-enter"
 export { setFilePluginOptions } from "./plugin-file"
 export { default as fileModule } from "./plugin-file"
 export { default as mentionModule } from "./plugin-mention"
-export type {
-  AttachmentElement,
-  EditorConfigOptions,
-  EmojiElement,
-  FilePluginOptions,
-  ImageElement,
-  MentionConfig,
-  MentionElement,
-  MentionInfo,
-} from "./types"
+export * from "./types"

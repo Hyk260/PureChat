@@ -1,6 +1,4 @@
-import { DomEditor } from "@wangeditor/editor"
-
-import type { IDomEditor } from "@wangeditor/editor"
+import { DomEditor, type IDomEditor } from "@wangeditor/editor"
 
 /**
  * Ctrl/Meta + Enter 换行插件

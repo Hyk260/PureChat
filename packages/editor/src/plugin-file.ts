@@ -1,10 +1,9 @@
-import { DomEditor } from "@wangeditor/editor"
+import { DomEditor, type IDomEditor } from "@wangeditor/editor"
 import { h } from "snabbdom"
 
 import { getFileIcon, encodeHTML, getFileType } from "@pure/utils"
 
 import type { AttachmentElement, FilePluginOptions } from "./types"
-import type { IDomEditor } from "@wangeditor/editor"
 
 const ATTACHMENT_TYPE = "attachment"
 const ATTACHMENT_SELECTOR = `span[data-w-e-type="${ATTACHMENT_TYPE}"]`

@@ -9,14 +9,13 @@ export interface messageHandle {
   done?: boolean
 }
 
-// 编辑器相关类型从 @pure/editor re-export（向后兼容）
 export type {
-  MentionInfo,
-  MentionElement,
   AttachmentElement,
-  MentionConfig,
-  ImageElement,
   EmojiElement,
+  ImageElement,
+  MentionConfig,
+  MentionElement,
+  MentionInfo,
 } from "@pure/editor"
 
 export interface RobotBoxEventData {
