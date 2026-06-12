@@ -10,21 +10,14 @@ export interface messageHandle {
 }
 
 // 编辑器相关类型从 @pure/editor re-export（向后兼容）
-export type { MentionInfo, MentionElement, AttachmentElement, MentionConfig } from "@pure/editor"
-
-export interface ImageElement {
-  type: "image"
-  fileName: string
-  id: string
-  src: string
-  class: string
-  children: [{ text: string }]
-}
-
-export interface EmojiElement extends ImageElement {
-  alt: string
-  class: "EmoticonPack"
-}
+export type {
+  MentionInfo,
+  MentionElement,
+  AttachmentElement,
+  MentionConfig,
+  ImageElement,
+  EmojiElement,
+} from "@pure/editor"
 
 export interface RobotBoxEventData {
   apiKeyFocus?: boolean

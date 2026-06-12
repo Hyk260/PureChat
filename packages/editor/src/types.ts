@@ -43,3 +43,19 @@ export interface EditorConfigOptions {
   /** 提及配置 */
   mentionConfig?: Partial<MentionConfig>
 }
+
+/** 图片元素 */
+export interface ImageElement {
+  type: "image"
+  fileName: string
+  id: string
+  src: string
+  class: string
+  children: [{ text: string }]
+}
+
+/** 表情图片元素 */
+export interface EmojiElement extends ImageElement {
+  alt: string
+  class: "EmoticonPack"
+}
