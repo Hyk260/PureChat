@@ -312,19 +312,26 @@ export type DB_Message = z.infer<typeof DB_MessageSchema>
 
 /**
  * @description 消息状态
- * unSend(未发送)
- * fail(失败)
- * success(成功)
- * sending(发送中)
- * timeout(超时)
- * paused(暂停)
- * searching(搜索中)
+ * - unSend(未发送)
+ * - fail(失败)
+ * - success(成功)
+ * - sending(发送中)
+ * - timeout(超时)
+ * - paused(暂停)
+ * - searching(搜索中)
  */
 export type MessageStatus = z.infer<typeof MessageStatusSchema>
 
 /**
  * @description 消息类型
- * TIMTextElem(文本) TIMRelayElem(转发) TIMImageElem(图片) TIMFileElem(文件) TIMCustomElem(自定义) TIMGroupTipElem(群提示) TIMGroupSystemNoticeElem(群系统提示)
+ * - 文本消息 TIMTextElem
+ * - 图片消息 TIMImageElem
+ * - 文件消息 TIMFileElem
+ * - 转发消息 TIMRelayElem
+ * - 自定义消息 TIMCustomElem
+ * - 群提示消息 TIMGroupTipElem
+ * - 合并消息 TIMMergerElem
+ * - 群系统提示 TIMGroupSystemNoticeElem
  */
 export type MessageType = z.infer<typeof MessageTypeSchema>
 

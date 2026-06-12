@@ -60,10 +60,13 @@ function transformCustomElement(item: DB_Message) {
 export const transformFileElement = async (data: DB_Message) => {
   const payload = data.payload as FilePayloadType
 
-  await FilesModel.findById(payload.id)
+  let file = "unknown" as any
+  if (payload?.id) {
+    file = await FilesModel.findById(payload.id || "")
+  }
   return {
     role: getRoleFlow(data.flow),
-    content: "file: ",
+    content: `file: ${file}`,
   }
 }
 
