@@ -45,7 +45,13 @@ import { createEditorConfig, setFilePluginOptions } from "@pure/editor"
 import { placeholderMap } from "@/utils/editor-placeholder"
 import { filterMentionList } from "@/utils/pinyin/utils"
 import SendMessageButton from "./SendMessageButton.vue"
-import { customAlert, handleAssistantFile, handleEditorKeyDown, handleString, insertEmoji } from "./utils"
+import {
+  customAlert,
+  handleAssistantFile,
+  handleEditorKeyDown,
+  handleString,
+  insertEmoji,
+} from "@pure/editor/editor-utils"
 
 import type { DraftData } from "@pure/types"
 import type { IDomEditor } from "@wangeditor/editor"

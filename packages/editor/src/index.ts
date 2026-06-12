@@ -13,12 +13,20 @@ Boot.registerModule(ctrlEnterModule)
 
 export { createEditorConfig, toolbarConfig } from "./config"
 export {
+  createMediaElement,
+  customAlert,
   extractAitInfo,
   extractEmojiInfo,
   extractFilesInfo,
   extractImageInfo,
   extractVideoInfo,
+  handleAssistantFile,
+  handleEditorKeyDown,
+  handleString,
+  insertEmoji,
+  isTextFile,
   isVideoFile,
+  TEXT_FILE_EXTENSIONS,
 } from "./editor-utils"
 export { default as ctrlEnterModule } from "./plugin-ctrl-enter"
 export { setFilePluginOptions } from "./plugin-file"

@@ -148,9 +148,6 @@ importers:
       shiki:
         specifier: ^3.13.0
         version: 3.23.0
-      snabbdom:
-        specifier: ^3.5.1
-        version: 3.6.3
       type-fest:
         specifier: ^5.0.1
         version: 5.5.0
@@ -342,6 +339,9 @@ importers:
 
   packages/editor:
     dependencies:
+      '@pure/const':
+        specifier: workspace:*
+        version: link:../const
       '@pure/utils':
         specifier: workspace:*
         version: link:../utils
