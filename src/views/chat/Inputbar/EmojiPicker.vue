@@ -188,11 +188,12 @@ const handleEmojiSelect = async (item: string, type = "") => {
   } else if (type === "Douyin") {
     url = getEmojiAssetUrlSync(emojiDouyin.value?.emojiMap?.[item] || "")
   } else {
-    emitter.emit("handleToolbar", { data: item, key: "setEditHtml" })
+    emitter.emit("handleToolbar", { data: { html: item }, key: "setEditHtml" })
     setClose()
     return
   }
-  emitter.emit("handleToolbar", { data: { url, item }, key: "setEmoji" })
+  const emoji = { url, item }
+  emitter.emit("handleToolbar", { data: { emoji }, key: "setEmoji" })
   setClose()
 }
 

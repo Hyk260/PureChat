@@ -38,7 +38,7 @@ import { usePrepareMessageData } from "@/hooks/useMessageOperations"
 import { useChatStore, useGroupStore } from "@/stores"
 import { insertMention } from "@pure/editor"
 import { browserInfo, useState } from "@pure/utils"
-import emitter from "@/utils/mitt-bus"
+import emitter, { type ToolbarAction } from "@/utils/mitt-bus"
 
 import Inputbar from "../Inputbar/index.vue"
 import { createEditorConfig, setFilePluginOptions } from "@pure/editor"
@@ -54,7 +54,7 @@ import { placeholderMap } from "@/utils/editor-placeholder"
 import { filterMentionList } from "@/utils/pinyin/utils"
 import SendMessageButton from "./SendMessageButton.vue"
 
-import type { DraftData } from "@pure/types"
+import type { DraftData } from "@pure/editor/types"
 import type { IDomEditor } from "@wangeditor/editor"
 
 import "@pure/editor"
@@ -115,7 +115,7 @@ const handleSetHtml = (html: string) => {
   editorRef.value?.focus(true)
 }
 
-const handleInsertDraft = (option) => {
+const handleInsertDraft = (option: { sessionId: string }) => {
   const { sessionId } = option
   const editor = editorRef.value
   if (!sessionId || !editor) return
@@ -126,15 +126,16 @@ const handleInsertDraft = (option) => {
   draft?.forEach((t) => editor.insertNode(t.children))
 }
 
-const handleToolbarAction = ({ data, key }) => {
+const handleToolbarAction = (payload: ToolbarAction) => {
+  const { data, key } = payload
   const editor = editorRef.value
   if (!editor) return
 
   const actions = {
-    setEmoji: () => insertEmoji(data, editor),
-    setPicture: () => onFile(data.files, "image"),
-    setParseFile: () => onFile(data.files, "file"),
-    setEditHtml: () => handleSetHtml(data),
+    setEmoji: () => insertEmoji(data.emoji!, editor),
+    setPicture: () => onFile(data.files!, "image"),
+    setParseFile: () => onFile(data.files!, "file"),
+    setEditHtml: () => handleSetHtml(data.html!),
   }
 
   actions[key]?.()
@@ -155,7 +156,7 @@ const handleMentionSearch = debounce((editor) => {
 
 const handleEditorChange = (editor: IDomEditor) => {
   setIsSendDisabled(editor.isEmpty())
-  updateChatDraft(editor.children)
+  updateChatDraft(editor.children as DraftData)
   handleMentionSearch(editor)
 }
 

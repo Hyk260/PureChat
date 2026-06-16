@@ -31,7 +31,7 @@ import type { ChatState } from "./type"
 import type { Provider } from "model-bank"
 
 import type { DB_Message, DB_Session, TypeSchemaType, ImagePayloadType } from "@pure/database/schemas"
-import type { DraftData } from "@pure/types"
+import type { DraftData } from "@pure/editor/types"
 import type { ModelIDValue } from "model-bank"
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {

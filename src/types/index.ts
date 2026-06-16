@@ -9,15 +9,6 @@ export interface messageHandle {
   done?: boolean
 }
 
-export type {
-  AttachmentElement,
-  EmojiElement,
-  ImageElement,
-  MentionConfig,
-  MentionElement,
-  MentionInfo,
-} from "@pure/editor"
-
 export interface RobotBoxEventData {
   apiKeyFocus?: boolean
   promptFocus?: boolean

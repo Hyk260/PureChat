@@ -5,6 +5,19 @@ import type { GroupMemberType as GroupMember } from "@pure/database/schemas"
 
 export type FilteringType = "all" | "success" | "empty" | "updata"
 
+export type ToolbarKey = "setEmoji" | "setPicture" | "setParseFile" | "setEditHtml"
+
+export interface ToolbarData {
+  emoji?: { url: string; item: string }
+  files?: File
+  html?: string
+}
+
+export interface ToolbarAction {
+  data: ToolbarData
+  key: ToolbarKey
+}
+
 export interface Events {
   [key: string | symbol]: unknown
   handleImageViewer: string
@@ -20,6 +33,8 @@ export interface Events {
   handleToBottom: boolean
   updateScroll: string | undefined
   handleFileDrop: File
+  handleToolbar: ToolbarAction
+  handleScreenCapture: string
 }
 
 const emitter: Emitter<Events> = mitt<Events>()

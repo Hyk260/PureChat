@@ -1,13 +1,12 @@
-export type DraftChild = Array<{
-  [key: string]: string | undefined
-  text: string
-  type?: string
-  alt?: string
-  value?: string
-  class?: string
-}>
+// export type DraftChild = Array<{
+//   text: string
+//   type?: string
+//   alt?: string
+//   value?: string
+//   class?: string
+// }>
 
-export type DraftData = Array<{
-  type: string
-  children: DraftChild
-}>
+// export type DraftData = Array<{
+//   type: "paragraph"
+//   children: DraftChild
+// }>

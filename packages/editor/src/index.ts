@@ -1,4 +1,4 @@
-import { Boot } from "@wangeditor/editor"
+import { Boot, IModuleConf } from "@wangeditor/editor"
 
 import "./style/index.css"
 
@@ -7,15 +7,11 @@ import fileModule from "./plugin-file"
 import mentionModule from "./plugin-mention"
 
 // 注册编辑器插件
-Boot.registerModule(fileModule)
-Boot.registerModule(mentionModule)
-Boot.registerModule(ctrlEnterModule)
+Boot.registerModule(fileModule as unknown as Partial<IModuleConf>)
+Boot.registerModule(mentionModule as unknown as Partial<IModuleConf>)
+Boot.registerModule(ctrlEnterModule as unknown as Partial<IModuleConf>)
 
 export { createEditorConfig, toolbarConfig } from "./config"
-export type { FileHandlerCallbacks, HandleFilesOptions } from "./editor-utils"
 export * from "./editor-utils"
-export { default as ctrlEnterModule } from "./plugin-ctrl-enter"
 export { setFilePluginOptions } from "./plugin-file"
-export { default as fileModule } from "./plugin-file"
-export { default as mentionModule } from "./plugin-mention"
 export * from "./types"

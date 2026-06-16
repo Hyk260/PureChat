@@ -6,6 +6,12 @@ export interface MentionInfo {
   [key: string]: unknown
 }
 
+/** 文本元素 */
+export interface TextElement {
+  type: "text"
+  children: [{ text: string }]
+}
+
 /** 提及元素 */
 export interface MentionElement {
   type: "mention"
@@ -47,7 +53,7 @@ export interface EditorConfigOptions {
 /** 图片元素 */
 export interface ImageElement {
   type: "image"
-  fileName: string
+  fileName?: string
   id: string
   src: string
   class: string
@@ -59,3 +65,47 @@ export interface EmojiElement extends ImageElement {
   alt: string
   class: "EmoticonPack"
 }
+
+export type DraftChild = Array<{
+  text: string
+  type?: string
+  alt?: string
+  value?: string
+  class?: string
+  children?: DraftChild
+}>
+// | AttachmentElement
+// | MentionElement
+// | EmojiElement
+// | ImageElement
+
+export type DraftData = Array<{
+  type: "paragraph"
+  children: DraftChild
+}>
+
+// [
+//   {
+//     type: "paragraph",
+//     children: [
+//       {
+//         text: "",
+//       },
+//       {
+//         type: "attachment",
+//         children: [
+//           {
+//             text: "",
+//           },
+//         ],
+//         fileName: "eslint.config.js",
+//         fileSize: "10.2 KB",
+//         link: "data:text/javascript;base64,...",
+//         path: "",
+//       },
+//       {
+//         text: "",
+//       },
+//     ],
+//   },
+// ]
