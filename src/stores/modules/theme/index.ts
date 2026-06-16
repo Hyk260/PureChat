@@ -6,6 +6,9 @@ import { SetupStoreId } from "@/stores/enum"
 import type { ThemeState } from "./type"
 // import { useEventListener, usePreferredColorScheme } from "@vueuse/core";
 
+// 系统主题变化监听器引用，用于移除旧的监听器
+let systemThemeChangeHandler: ((e: MediaQueryListEvent) => void) | null = null
+
 export const useThemeStore = defineStore(SetupStoreId.Theme, {
   state: (): ThemeState => ({
     themeScheme: ThemeMode.light,
@@ -77,13 +80,20 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, {
       const theme = isAuto ? (systemThemeQuery.matches ? "light" : "dark") : themeScheme
       this.toggleHtmlClass(theme)
 
+      // 移除旧的监听器，防止内存泄漏
+      if (systemThemeChangeHandler) {
+        systemThemeQuery.removeEventListener("change", systemThemeChangeHandler)
+        systemThemeChangeHandler = null
+      }
+
       // 监听系统主题变化，仅在自动模式下生效
       if (isAuto) {
-        systemThemeQuery.addEventListener("change", (e) => {
+        systemThemeChangeHandler = (e: MediaQueryListEvent) => {
           if (this.themeScheme === "auto") {
             this.toggleHtmlClass(e.matches ? "light" : "dark")
           }
-        })
+        }
+        systemThemeQuery.addEventListener("change", systemThemeChangeHandler)
       }
     },
   },

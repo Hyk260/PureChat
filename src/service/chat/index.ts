@@ -9,7 +9,7 @@ import { scrollToDomPosition } from "@/utils/chat"
 import { emitUpdateScrollImmediate } from "@/utils/mitt-bus"
 import { C2CModelIDList } from "model-bank"
 
-import { checkoutNetState, getConversationList, kickedOutReason } from "./utils"
+import { getConversationList, kickedOutReason } from "./utils"
 import { GROUP_TIP_OPERATION_TYPE } from "@pure/database/schemas"
 
 import type {
