@@ -1,5 +1,6 @@
 <template>
-  <div :class="{ visible: shouldShowMenu }" class="menubar">
+  <div v-if="shouldShowMenu" class="menubar">
+    <!-- :class="{ visible: shouldShowMenu }" -->
     <div class="flex">
       <template v-for="items in availableMenuItems" :key="items.key">
         <Tooltip placement="top" :title="items.label" :arrow="false">
@@ -93,13 +94,14 @@ const handleRefresh = () => {
   emit("handleSingleClick", { item: props.item, key: "refresh" })
 }
 
-/**
- * 判断是否应该显示菜单
- */
 const shouldShowMenu = computed(() => {
   const { item, status } = props
 
   if (status !== "success") {
+    return false
+  }
+
+  if (item.isRevoked) {
     return false
   }
 
@@ -119,7 +121,6 @@ const shouldShowMenu = computed(() => {
   return (
     supportedMessageTypes.includes(item.type) &&
     item.type !== "TIMGroupTipElem" &&
-    !item.isRevoked &&
     !chatStore.isMultiSelectMode &&
     availableMenuItems.value.length > 0
   )
