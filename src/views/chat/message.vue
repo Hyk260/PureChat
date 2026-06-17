@@ -60,9 +60,7 @@ const chatStore = useChatStore()
 const { isChatSessionListCollapsed } = storeToRefs(chatStore)
 
 const toggleCollapsed = () => {
-  chatStore.$patch((state) => {
-    state.isChatSessionListCollapsed = !state.isChatSessionListCollapsed
-  })
+  chatStore.toggleSessionList()
 }
 
 onActivated(() => {

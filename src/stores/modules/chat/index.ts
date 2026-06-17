@@ -36,29 +36,29 @@ import type { ModelIDValue } from "model-bank"
 
 export const useChatStore = defineStore(SetupStoreId.Chat, {
   state: (): ChatState => ({
-    sessionId: INBOX_SESSION_ID, // 当前会话id
-    historyMessageList: new Map(), // 历史消息
-    currentMessageList: [], // 当前消息列表(窗口聊天消息)
-    currentConversation: null, // 跳转窗口的属性
-    conversationList: [], // 会话列表数据
-    searchConversationList: [], // 搜索后的会话列表
-    totalUnreadMsg: 0, // 未读消息总数
-    scrollTopID: "", // 滚动到的消息ID
-    isMultiSelectMode: false, // 是否多选模式
-    noMore: false, // 加载更多  false ? 显示loading : 没有更多
-    isChatBoxVisible: false, // 聊天框是否显示
-    isMentionModalVisible: false, // @成员弹窗
-    isFullscreenInputActive: false, // 是否全屏输入框
-    isChatSessionListCollapsed: false, // 聊天会话列表是否折叠
-    replyMsgData: null, // 回复消息数据
-    msgEdit: null, // 消息编辑
-    recently: new Set(), // 最近使用表情包
-    chatDraftMap: new Map(), // 会话草稿
-    forwardData: new Map(), // 多选数据
-    revokeMsgMap: new Map(), // 撤回消息重新编辑
+    sessionId: INBOX_SESSION_ID,
+    historyMessageList: new Map(),
+    currentMessageList: [],
+    currentConversation: null,
+    conversationList: [],
+    searchConversationList: [],
+    totalUnreadMsg: 0,
+    scrollTopID: "",
+    isMultiSelectMode: false,
+    noMore: false,
+    isChatBoxVisible: false,
+    isMentionModalVisible: false,
+    isFullscreenInputActive: false,
+    isChatSessionListCollapsed: false,
+    replyMsgData: null,
+    msgEdit: null,
+    recently: new Set(),
+    chatDraftMap: new Map(),
+    forwardData: new Map(),
+    revokeMsgMap: new Map(),
     sendingMap: new Map(),
-    selectedMessageMap: new Map(), // 多选消息
-    selectedMessageIds: new Set(), // 选中的消息ID集合
+    selectedMessageMap: new Map(),
+    selectedMessageIds: new Set(),
   }),
   getters: {
     isSending(): boolean {
@@ -146,8 +146,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
   },
   actions: {
-    setChatSessionListCollapsed(bol: boolean) {
-      this.isChatSessionListCollapsed = bol
+    toggleSessionList() {
+      this.isChatSessionListCollapsed = !this.isChatSessionListCollapsed
     },
     toggleMultiSelectMode(bool: boolean) {
       this.isMultiSelectMode = bool
