@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest"
 import { linkifyUrls, hasLink, isValidUrl, linkifySegment, MENTION_REGEX } from "../linkifyUrls"
 import atUserList from "./atUserList.json"
+import type { GroupMemberType as GroupMember } from "@pure/database/schemas"
+
+// JSON 导入的 role 为 string，断言为目标类型避免 linter 报错
+const memberList = atUserList as GroupMember[]
 
 describe("linkifyUrls utilities", () => {
   describe("linkifyUrls", () => {
@@ -135,63 +139,74 @@ describe("linkifyUrls utilities", () => {
 
     it("should return text segment when no URLs or mentions are present", () => {
       const text = "This is a test without any links or mentions"
-      const expected = [{ content: text, type: "text", isLink: false }]
+      const expected = [{ content: text, type: "text" }]
       expect(linkifySegment(text, [])).toEqual(expected)
     })
 
     it("should identify URL segments", () => {
       const text = "Check out https://example.com"
       const expected = [
-        { content: "Check out ", type: "text", isLink: false },
-        { content: "https://example.com", type: "link", isLink: true, url: "https://example.com" },
+        { content: "Check out ", type: "text" },
+        { content: "https://example.com", type: "link", url: "https://example.com" },
       ]
       expect(linkifySegment(text, [])).toEqual(expected)
     })
 
     it("should identify mention segments when user exists", () => {
       const text = "Hello @PureChat"
-      const result = linkifySegment(text, atUserList)
+      const result = linkifySegment(text, memberList)
       expect(result).toHaveLength(2)
-      expect(result[0]).toEqual({ content: "Hello ", type: "text", isLink: false })
+      expect(result[0]).toEqual({ content: "Hello ", type: "text" })
       expect(result[1]).toEqual({
         content: "@PureChat",
         type: "mention",
-        isLink: false,
-        member: atUserList[0],
+        member: memberList[0],
       })
     })
 
     it("should identify Chinese nickname mention segments when user exists", () => {
       const text = "Hello @张爱玲"
-      const result = linkifySegment(text, atUserList)
+      const result = linkifySegment(text, memberList)
       expect(result).toHaveLength(2)
-      expect(result[0]).toEqual({ content: "Hello ", type: "text", isLink: false })
+      expect(result[0]).toEqual({ content: "Hello ", type: "text" })
       expect(result[1]).toEqual({
         content: "@张爱玲",
         type: "mention",
-        isLink: false,
-        member: atUserList[1],
+        member: memberList[1],
+      })
+    })
+
+    it("should match mention with prefix when extra characters follow nickname", () => {
+      const text = "@张爱玲1"
+      const result = linkifySegment(text, memberList)
+      expect(result).toHaveLength(2)
+      expect(result[0]).toEqual({
+        content: "@张爱玲",
+        type: "mention",
+        member: memberList[1],
+      })
+      expect(result[1]).toEqual({
+        content: "1",
+        type: "text",
       })
     })
 
     //  @角色IP-贾维斯  @张爱玲 https://fanyi.baidu.com
     it("should handle mixed content with non-existent mention, existing mention, and URL", () => {
       const text = "@角色IP-贾维斯 @张爱玲 https://fanyi.baidu.com"
-      const result = linkifySegment(text, atUserList)
+      const result = linkifySegment(text, memberList)
       expect(result).toHaveLength(5)
-      expect(result[0]).toEqual({ content: "@角色IP-贾维斯", type: "text", isLink: false })
-      expect(result[1]).toEqual({ content: " ", type: "text", isLink: false })
+      expect(result[0]).toEqual({ content: "@角色IP-贾维斯", type: "text" })
+      expect(result[1]).toEqual({ content: " ", type: "text" })
       expect(result[2]).toEqual({
         content: "@张爱玲",
         type: "mention",
-        isLink: false,
-        member: atUserList[1],
+        member: memberList[1],
       })
-      expect(result[3]).toEqual({ content: " ", type: "text", isLink: false })
+      expect(result[3]).toEqual({ content: " ", type: "text" })
       expect(result[4]).toEqual({
         content: "https://fanyi.baidu.com",
         type: "link",
-        isLink: true,
         url: "https://fanyi.baidu.com",
       })
     })
@@ -199,38 +214,36 @@ describe("linkifyUrls utilities", () => {
     it("should treat non-existent mentions as text", () => {
       const text = "Hello @nonExistentUser"
       const expected = [
-        { content: "Hello ", type: "text", isLink: false },
-        { content: "@nonExistentUser", type: "text", isLink: false },
+        { content: "Hello ", type: "text" },
+        { content: "@nonExistentUser", type: "text" },
       ]
-      expect(linkifySegment(text, atUserList)).toEqual(expected)
+      expect(linkifySegment(text, memberList)).toEqual(expected)
     })
 
     it("should handle mixed content (text, URLs, mentions)", () => {
       const text = "Check out https://example.com and @PureChat"
-      const result = linkifySegment(text, atUserList)
+      const result = linkifySegment(text, memberList)
       expect(result).toHaveLength(4)
-      expect(result[0]).toEqual({ content: "Check out ", type: "text", isLink: false })
+      expect(result[0]).toEqual({ content: "Check out ", type: "text" })
       expect(result[1]).toEqual({
         content: "https://example.com",
         type: "link",
-        isLink: true,
         url: "https://example.com",
       })
-      expect(result[2]).toEqual({ content: " and ", type: "text", isLink: false })
+      expect(result[2]).toEqual({ content: " and ", type: "text" })
       expect(result[3]).toEqual({
         content: "@PureChat",
         type: "mention",
-        isLink: false,
-        member: atUserList[0],
+        member: memberList[0],
       })
     })
 
     it("should work without atUserList", () => {
       const text = "Check out https://example.com and @user1"
       const expected = [
-        { content: "Check out ", type: "text", isLink: false },
-        { content: "https://example.com", type: "link", isLink: true, url: "https://example.com" },
-        { content: " and @user1", type: "text", isLink: false },
+        { content: "Check out ", type: "text" },
+        { content: "https://example.com", type: "link", url: "https://example.com" },
+        { content: " and @user1", type: "text" },
       ]
       expect(linkifySegment(text, [])).toEqual(expected)
     })

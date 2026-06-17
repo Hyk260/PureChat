@@ -52,7 +52,6 @@ export const MENTION_REGEX = /@([a-zA-Z0-9_\u4e00-\u9fa5-]+)/g
 
 export interface LinkSegment {
   content: string
-  isLink: boolean
   url?: string
   member?: GroupMember
   type: "link" | "mention" | "text"
@@ -95,17 +94,17 @@ export function linkifySegment(text: string, atUserList: GroupMember[] | []): Li
 
     // URL 前的普通文本
     if (matchStart > lastIndex) {
-      segments.push({ content: text.slice(lastIndex, matchStart), type: "text", isLink: false })
+      segments.push({ content: text.slice(lastIndex, matchStart), type: "text" })
     }
 
     // URL 片段
-    segments.push({ content: matchedUrl, type: "link", isLink: true, url: matchedUrl })
+    segments.push({ content: matchedUrl, type: "link", url: matchedUrl })
     lastIndex = matchStart + matchedUrl.length
   }
 
   // 剩余文本
   if (lastIndex < text.length) {
-    segments.push({ content: text.slice(lastIndex), type: "text", isLink: false })
+    segments.push({ content: text.slice(lastIndex), type: "text" })
   }
 
   // 如果没有 atUserList，直接返回 URL 分段结果
@@ -115,6 +114,9 @@ export function linkifySegment(text: string, atUserList: GroupMember[] | []): Li
 
   // 进一步在普通文本片段中拆分出 @mention
   const result: LinkSegment[] = []
+
+  // 按昵称长度降序排序，确保优先匹配最长昵称（如 "张爱玲" 优先于 "张"）
+  const sortedMembers = [...atUserList].sort((a, b) => (b.nick?.length || 0) - (a.nick?.length || 0))
 
   for (const seg of segments) {
     // 链接片段保持不变
@@ -140,27 +142,38 @@ export function linkifySegment(text: string, atUserList: GroupMember[] | []): Li
         result.push({
           content: value.slice(lastTextIndex, matchStart),
           type: "text",
-          isLink: false,
         })
       }
 
-      // 在 atUserList 中查找对应成员
-      const member = atUserList.find((m) => m.nick === mentionKey)
+      // 使用 startsWith 前缀匹配，支持 @张爱玲1 → 匹配 nick="张爱玲"
+      const member = sortedMembers.find((m) => m.nick && mentionKey.startsWith(m.nick))
 
-      if (member) {
-        // 命中的 @mention 片段
+      if (member?.nick) {
+        // 命中的 @mention 片段 —— 仅使用匹配的昵称部分（如 "@张爱玲"）
+        const mentionContent = `@${member.nick}`
         result.push({
-          content: matchText,
+          content: mentionContent,
           type: "mention",
-          isLink: false,
           member,
         })
+
+        // 昵称后的剩余字符作为独立文本片段（如 "1"）
+        const remaining = mentionKey.slice(member.nick.length)
+        if (remaining) {
+          result.push({
+            content: remaining,
+            type: "text",
+          })
+        }
+
+        // lastTextIndex 推进到完整匹配文本的末尾
+        lastTextIndex = matchStart + matchText.length
+        continue
       } else {
         // atUserList 里不存在的 @xxx，当普通文本处理
         result.push({
           content: matchText,
           type: "text",
-          isLink: false,
         })
       }
 
@@ -172,7 +185,6 @@ export function linkifySegment(text: string, atUserList: GroupMember[] | []): Li
       result.push({
         content: value.slice(lastTextIndex),
         type: "text",
-        isLink: false,
       })
     }
   }
