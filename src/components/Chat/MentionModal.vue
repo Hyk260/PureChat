@@ -49,7 +49,7 @@ const MARGIN = 15 // 与光标的间距
 interface Props {
   isOwner?: boolean
   pinyinSearch?: boolean
-  editor: IDomEditor | undefined
+  editor?: IDomEditor | null
 }
 
 interface Position {
@@ -74,6 +74,7 @@ defineOptions({
 const props = withDefaults(defineProps<Props>(), {
   isOwner: false,
   pinyinSearch: false,
+  editor: null,
 })
 
 const listRef = useTemplateRef("listRef")
@@ -88,7 +89,7 @@ const allMembers = {
   joinTime: 0,
   userID: MSG_AT_ALL,
   nick: "全体成员",
-  role: "Owner",
+  role: "Owner" as GroupMember["role"],
 }
 
 const groupStore = useGroupStore()

@@ -250,12 +250,10 @@ const removeEventListeners = () => {
   events.forEach((event) => emitter.off(event))
 }
 
-watch(isChatBoxVisible, () => {
-  handleEditorKeyDown(isMentionModalVisible.value)
-})
-// watch(lang, () => {
-//   handleToggleLanguage();
-// });
+// 当 @提及弹窗可见性变化时，控制键盘事件拦截
+// 防止 ↑/↓ 键导致输入框光标跳转到文字前方
+watch(isMentionModalVisible, handleEditorKeyDown)
+
 onActivated(() => {
   handleEditorKeyDown(isMentionModalVisible.value)
 })

@@ -89,12 +89,21 @@ export const customAlert = (s: string, t: string): void => {
   }
 }
 
-export const handleEditorKeyDown = (visible: boolean): void => {
-  if (!visible) return
-  const container = document.querySelector(".w-e-text-container") as HTMLDivElement
+/**
+ * 控制编辑器键盘事件拦截
+ * 当 @提及弹窗可见时，拦截 ↑/↓ 键，防止光标跳转到输入框前方
+ * @param enabled - 是否启用拦截
+ */
+export const handleEditorKeyDown = (enabled: boolean): void => {
+  const container = document.querySelector<HTMLDivElement>(".w-e-text-container")
   if (!container) return
-  container.onkeydown = (e) => {
-    // 键盘上下键
+
+  // 清除已有绑定，避免重复注册
+  container.onkeydown = null
+  if (!enabled) return
+
+  // 38 = ↑, 40 = ↓ —— 阻止默认光标移动，避免 @弹窗与输入框光标冲突
+  container.onkeydown = (e: KeyboardEvent) => {
     if ([38, 40].includes(e.keyCode)) {
       return false
     }
