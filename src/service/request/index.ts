@@ -107,7 +107,7 @@ class PureChatHttp {
       (response: PureHttpResponse) => {
         if (response.status >= 200 && response.status < 300) {
           const token = response.headers?.authorization
-          if (token) {
+          if (token && typeof token === "string" && token.trim().length > 0) {
             localStg.set("Access-Token", token)
           }
           return response.data
@@ -158,7 +158,15 @@ class PureChatHttp {
             refreshToken: useAuthStore().refreshToken,
           })
 
-          const { accessToken, refreshToken } = data.data
+          const payload = data && typeof data === "object" ? (data as ApiResponse<RefreshTokenResult>).data : null
+          if (!payload || typeof payload !== "object") {
+            throw new Error(`Unexpected token refresh response: ${typeof data === "object" ? JSON.stringify(data) : String(data)}`)
+          }
+
+          const { accessToken, refreshToken } = payload
+          if (typeof accessToken !== "string" || !accessToken) {
+            throw new Error("Token refresh returned invalid accessToken")
+          }
 
           useAuthStore().setTokens(accessToken, refreshToken)
 
