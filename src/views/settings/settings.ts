@@ -1,8 +1,22 @@
 import { computed } from "vue"
-import { Cloud, Brain, Globe, Settings2 as Settings, CircleAlert, Sun, Moon, Monitor } from "@lucide/vue"
+import {
+  Cloud,
+  Brain,
+  Globe,
+  Settings2 as Settings,
+  CircleAlert,
+  Sun,
+  Moon,
+  Monitor,
+  Zap,
+  Waves,
+  CircleOff,
+} from "@lucide/vue"
 
 import { ModelProvider } from "model-bank"
+import type { ResponseAnimation } from "@pure/types"
 import { $t } from "@/locales"
+import type { ResponseAnimationSpeed } from "@/stores/modules/app/type"
 
 export const list = computed(() => {
   return [
@@ -75,3 +89,19 @@ export const languages = [
     label: "English",
   },
 ]
+
+/** 响应动画速度选项 */
+export const animationSpeedOptions = computed(() => {
+  return [
+    { value: "disabled", label: "关闭", icon: CircleOff },
+    { value: "agile", label: "敏捷", icon: Zap },
+    { value: "elegant", label: "优雅", icon: Waves },
+  ]
+})
+
+/** 将动画速度预设映射为 ResponseAnimation 对象 */
+export const animationSpeedMap: Record<ResponseAnimationSpeed, ResponseAnimation> = {
+  disabled: { text: "none" },
+  agile: { text: "fadeIn" },
+  elegant: { text: "smooth" },
+}

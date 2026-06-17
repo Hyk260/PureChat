@@ -12,6 +12,7 @@ export const useAppStore = defineStore(SetupStoreId.App, {
     contentXScrollable: false,
     markdownRender: false,
     markdownAssistantRender: true,
+    responseAnimation: "elegant",
   }),
   actions: {
     setLang(lang: "en" | "zh-CN") {
@@ -27,8 +28,11 @@ export const useAppStore = defineStore(SetupStoreId.App, {
     setContentXScrollable(value: boolean) {
       this.contentXScrollable = value
     },
+    setResponseAnimation(val: AppState["responseAnimation"]) {
+      this.responseAnimation = val
+    },
   },
   persist: {
-    pick: ["lang", "timeline", "markdownRender", "markdownAssistantRender"],
+    pick: ["lang", "timeline", "markdownRender", "markdownAssistantRender", "responseAnimation"],
   },
 })

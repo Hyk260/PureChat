@@ -1,3 +1,6 @@
+/** 响应动画速度预设 */
+export type ResponseAnimationSpeed = "disabled" | "agile" | "elegant"
+
 export interface AppState {
   lang: "en" | "zh-CN"
   timeline: boolean
@@ -10,4 +13,6 @@ export interface AppState {
    */
   markdownAssistantRender: boolean
   contentXScrollable: boolean
+  /** 响应动画速度：关闭 / 敏捷 / 优雅 */
+  responseAnimation: ResponseAnimationSpeed
 }

@@ -29,6 +29,20 @@
       </div>
       <ElSwitch v-model="timeline" />
     </li>
+    <li>
+      <div class="flex flex-col gap-1">
+        <span>响应动画</span>
+        <!-- <span class="text-secondary">选择应用程序的操作响应的动画速度</span> -->
+      </div>
+      <ElSegmented v-model="responseAnimation" :options="animationSpeedOptions">
+        <template #default="{ item }">
+          <div class="flex items-center gap-2">
+            <Component :is="item.icon" size="16" />
+            <div>{{ item.label }}</div>
+          </div>
+        </template>
+      </ElSegmented>
+    </li>
     <li v-if="IS_DEV">
       <div class="flex items-center gap-5">
         <ElBadge value="Dev" :offset="[8, -2]">
@@ -54,9 +68,10 @@
 </template>
 
 <script setup lang="ts">
+import { ElSegmented } from "element-plus"
 import { useAppStore, useThemeStore, useUserStore } from "@/stores"
 
-import { languages, options } from "./settings"
+import { languages, options, animationSpeedOptions } from "./settings"
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -108,6 +123,15 @@ const markdownRender = computed({
   },
   set(val) {
     appStore.setMarkdownRender(val)
+  },
+})
+
+const responseAnimation = computed({
+  get() {
+    return appStore.responseAnimation
+  },
+  set(val) {
+    appStore.setResponseAnimation(val)
   },
 })
 

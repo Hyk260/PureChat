@@ -6,7 +6,7 @@ import { prettyObject, getUnixTimestampSec } from "@pure/utils"
 import { DB_Message } from "@pure/database/schemas"
 import { restApi } from "@/service/api"
 import { createCustomMessage } from "@/service/im-sdk-api"
-import { useChatStore, useRobotStore } from "@/stores"
+import { useChatStore, useRobotStore, useAppStore } from "@/stores"
 import { createThinkingCustomData, hostPreview } from "@pure/utils"
 import { getCustomMsgContent } from "@/utils/common"
 import { generateReferencePrompt } from "@/utils/messageUtils/search"
@@ -17,10 +17,11 @@ import { initializeWithClientStore } from "@/service/chatService/clientModelRunt
 import { DEFAULT_AGENT_CONFIG } from "@pure/const"
 
 import { contextEngineering } from "./mecha"
+import { animationSpeedMap } from "@/views/settings/settings"
 
 import type { messageHandle } from "@/types"
 import type { contextParams, FetchSSEOptions } from "@pure/fetch-sse"
-import { ChatErrorType, ResponseAnimation } from "@pure/types"
+import { ChatErrorType } from "@pure/types"
 import { ChatCompletionErrorPayload, createErrorResponse } from "@pure/model-runtime"
 import type { ChatStreamPayload, OpenAIChatMessage } from "@pure/types"
 
@@ -184,12 +185,10 @@ class ChatService {
 
     fetcher = this.getFetchOnClient({ provider, payload })
 
-    const userPreferTransitionMode = {
-      speed: 200,
-      text: "smooth",
-    } as ResponseAnimation
+    const appStore = useAppStore()
+    const userPreferTransitionMode = animationSpeedMap[appStore.responseAnimation]
 
-    // The order of the array is very important.
+    // The order of the array is very important —— user preference as base, responseAnimation overrides it.
     const mergedResponseAnimation = [userPreferTransitionMode, responseAnimation].reduce(
       (acc, cur) => merge(acc, standardizeAnimationStyle(cur)),
       {}

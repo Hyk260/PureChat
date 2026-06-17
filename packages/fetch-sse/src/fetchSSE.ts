@@ -95,7 +95,7 @@ const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: strin
   let animationFrameId: number | null = null
   let lastFrameTime = 0
   let accumulatedTime = 0
-  let currentSpeed = startSpeed || 200
+  let currentSpeed = startSpeed
   let lastQueueLength = 0 // 记录上一帧的队列长度
 
   const stopAnimation = () => {
@@ -209,8 +209,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   const textSmoothing = text === "smooth"
   const shouldSkipTextProcessing = text === "none"
 
-  console.log("standardizeAnimation:", text)
-
   let textBuffer = ""
   let bufferTimer: ReturnType<typeof setTimeout> | null = null
   const BUFFER_INTERVAL = 300 // 300ms
@@ -318,7 +316,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
         return
       }
-      console.log("onmessage: [ev]", ev)
+      // console.log("onmessage: [ev]", ev)
       switch (ev.event) {
         case "text": {
           if (!data) break
@@ -453,8 +451,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         speed,
         usage,
       }
-
-      console.log("onFinish:", output, data)
 
       await options?.onFinish?.(output, data)
     }
