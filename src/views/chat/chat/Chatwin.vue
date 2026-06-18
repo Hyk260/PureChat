@@ -112,7 +112,7 @@ import MyPopover from "@/components/MyPopover/index.vue"
 import UserPopup from "@/components/Popups/UserPopup.vue"
 import { useContextMenu } from "@/composables/useContextMenu"
 import { useMessageOperations } from "@/hooks/useMessageOperations"
-import { getMessageList, revokeMsg, translateText } from "@/service/im-sdk-api"
+import { getMessageList, getMessageListHopping, revokeMsg, translateText } from "@/service/im-sdk-api"
 import { useAppStore, useChatStore, useGroupStore, useUserStore } from "@/stores"
 import { handleCopyMsg, scrollToMessage } from "@/utils/chat"
 import { avatarContextMenuItems, messageContextMenuItems } from "@/utils/contextMenuPresets"
@@ -159,6 +159,7 @@ const {
   scrollTopID,
   currentMessageList,
   currentConversation,
+  currentSessionId,
 } = storeToRefs(chatStore)
 
 const REVOKE_TIME_LIMIT = 120 // 2分钟撤回时限
@@ -306,23 +307,25 @@ const updateScrollbar = () => {
 }
 
 const loadMoreMessages = async () => {
-  if (!currentConversation.value) return
+  const sessionId = currentSessionId.value
+  if (!sessionId) return
+
+  const messages = currentMessageList.value
+  if (!messages.length) return
+
+  const lastMessage = validateLastMessage(messages)
+  const lastMsgId = lastMessage?.ID || ""
+  const lastSequence = lastMessage?.sequence || 0
+
+  const fetchMessages = __LOCAL_MODE__
+    ? getMessageList({ conversationID: sessionId, nextReqMessageID: lastMsgId })
+    : getMessageListHopping({ conversationID: sessionId, direction: 0, sequence: lastSequence })
+
   try {
-    const { conversationID: sessionId } = currentConversation.value
-    const messages = currentMessageList.value
-    if (!messages.length) return
-    const lastMessage = validateLastMessage(messages)
+    const { isCompleted, messageList } = await fetchMessages
 
-    const result = await getMessageList({
-      conversationID: sessionId,
-      nextReqMessageID: lastMessage?.ID || "",
-    })
-
-    const { isCompleted, messageList } = result
-    if (!messageList.length && isCompleted) {
-      chatStore.setNoMore(true)
-    } else if (messageList.length) {
-      chatStore.loadMoreMessages({ sessionId, messages: messageList, msgId: messageList?.[0]?.ID || "" })
+    if (messageList.length) {
+      chatStore.loadMoreMessages({ sessionId, messages: messageList })
       chatStore.setScrollTopID(lastMessage?.ID)
     } else {
       chatStore.setNoMore(true)

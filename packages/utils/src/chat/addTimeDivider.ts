@@ -77,7 +77,7 @@ export const addTimeDivider = ({
     }
   } else {
     for (let i = validMessages.length - 1; i >= 0; i--) {
-      const message = validMessages[i]!
+      const message = validMessages[i]
       const curTime = message?.clientTime || 0
       if (!isInFiveTime(curTime, _baseTime)) {
         result.unshift({ isTimeDivider: true, time: curTime } as DB_Message)

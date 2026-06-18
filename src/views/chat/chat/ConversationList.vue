@@ -175,34 +175,17 @@ const handleConversationListClick = (data: DB_Session, isActive: boolean = true)
   if (currentSessionId.value === data?.conversationID && isActive) return
 
   topicStore.setTopicId(data.topicId || "")
+  topicStore.setRolePrompt(robotStore.promptConfig?.prompt[0]?.content || "")
   chatStore.setMsgEdit(null)
   chatStore.setScrollTopID("")
   chatStore.setReplyMsgData(null)
   chatStore.setForwardData({ type: "clear" })
   chatStore.updateSelectedConversation(data)
-  topicStore.setRolePrompt(robotStore.promptConfig?.prompt[0]?.content || "")
-
-  if (typeof requestIdleCallback !== "undefined") {
-    requestIdleCallback(
-      () => {
-        chatStore.updateMessageList(data)
-        if (data?.type === "GROUP") {
-          groupStore.handleGroupProfile(data)
-          groupStore.handleGroupMemberList({ groupID: data?.groupProfile?.groupID ?? "" })
-        }
-      },
-      { timeout: 100 }
-    )
-  } else {
-    setTimeout(() => {
-      chatStore.updateMessageList(data)
-      if (data?.type === "GROUP") {
-        groupStore.handleGroupProfile(data)
-        groupStore.handleGroupMemberList({ groupID: data?.groupProfile?.groupID ?? "" })
-      }
-    }, 0)
+  chatStore.updateMessageList(data)
+  if (data?.type === "GROUP") {
+    groupStore.handleGroupProfile(data)
+    groupStore.handleGroupMemberList({ groupID: data?.groupProfile?.groupID ?? "" })
   }
-
   emitter.emit("handleInsertDraft", {
     sessionId: data?.conversationID,
   })

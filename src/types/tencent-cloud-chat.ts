@@ -531,7 +531,9 @@ export declare class ChatSDK {
   /**
    * 按顺序拉取群聊消息或按时间拉取一对一聊天消息。
    */
-  getMessageListHopping(options: GET_MESSAGE_LIST_HOPPING_OPTIONS): Promise<any>
+  getMessageListHopping(
+    options: GET_MESSAGE_LIST_HOPPING_OPTIONS
+  ): Promise<{ code: number; data: { nextReqMessageID: string; isCompleted: boolean; messageList: DB_Message[] } }>
 
   /**
    * Set the unread messages of a conversation to the read state. Messages set to the read state are not counted as unread messages. This API is called when you open or switch a conversation. If this API is not called when you open or switch a conversation, the corresponding messages remain in the unread state.

@@ -183,15 +183,18 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         Object.assign(this.conversationList[index], { topicId: topicId ?? "" })
       }
     },
-    getHistoryMessageList(sessionId: string) {
+    getHistoryMessageList(sessionId: string, excludeTimeDivider?: boolean) {
       const history = this.historyMessageList.get(sessionId)
       if (history) {
         const topicStore = useTopicStore()
+        let result = history
         if (topicStore?.topicId) {
-          return history.filter((item) => item.topicId === topicStore.topicId)
-        } else {
-          return history
+          result = history.filter((item) => item.topicId === topicStore.topicId)
         }
+        if (excludeTimeDivider) {
+          result = result.filter((item) => !item.isTimeDivider)
+        }
+        return result
       }
       return history
     },
@@ -248,9 +251,6 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       console.log("[chat] 添加消息 addMessage:", payload)
       const { conversationID, message, isDone } = payload || {}
       if (this.currentConversation) {
-        // if (message.length) {
-        //   this.currentMessageList = message
-        // }
         this.currentMessageList = message
       } else {
         this.currentMessageList = []
@@ -281,15 +281,13 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       this.currentMessageList = cloneDeep(newHistoryList)
       this.setHistoryMessageList(sessionId, newHistoryList)
     },
-    loadMoreMessages(payload: { sessionId: string; messages: DB_Message[]; msgId: string }) {
+    loadMoreMessages(payload: { sessionId: string; messages: DB_Message[] }) {
       console.log("[chat] 加载更多消息 loadMoreMessages:", payload)
       const { sessionId, messages } = payload
-      const history = this.getHistoryMessageList(sessionId) || []
+      const history = this.getHistoryMessageList(sessionId, true) || []
 
-      const historyIds = new Set(history.map((t) => t?.ID))
+      const historyIds = new Set(history.map((t) => t?.ID).filter(Boolean))
       const cleanedMessages = messages.filter((msg) => !historyIds.has(msg.ID))
-
-      // console.log("原始消息数量:", messages.length, "清理后消息数量:", cleanedMessages.length)
 
       if (cleanedMessages.length === 0) {
         this.setNoMore(true)
@@ -299,9 +297,8 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const appStore = useAppStore()
       let resultMessages: DB_Message[] = []
       const baseTime = getBaseTime(history)
-      // const time = timeFormat(baseTime * 1000, true)
       if (appStore.timeline) {
-        resultMessages = addTimeDivider({ list: cleanedMessages, baseTime, type: "last" })
+        resultMessages = addTimeDivider({ list: cleanedMessages, baseTime })
       } else {
         resultMessages = cleanedMessages
       }
