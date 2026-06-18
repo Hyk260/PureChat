@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import { Popover } from "ant-design-vue"
 import { linkifySegment, type LinkSegment } from "@pure/utils"
+import { MSG_AT_ALL, allMembers } from "@pure/const"
 import { useGroupStore } from "@/stores/modules/group"
 import CitationTooltip from "@/components/CitationTooltip/index.vue"
 
@@ -32,7 +33,10 @@ const matchedMembers = computed<GroupMember[]>(() => {
   if (!groupStore.currentMemberList) return []
 
   return list
-    .map((id) => groupStore.currentMemberList.find((member) => member.userID === id))
+    .map((id) => {
+      if (id === MSG_AT_ALL) return allMembers
+      return groupStore.currentMemberList.find((member) => member.userID === id)
+    })
     .filter((member): member is GroupMember => member !== undefined)
 })
 

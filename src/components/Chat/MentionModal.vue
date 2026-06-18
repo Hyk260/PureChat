@@ -34,13 +34,12 @@ import { storeToRefs } from "pinia"
 
 import { useChatStore, useGroupStore } from "@/stores"
 import { prioritizeRBTUserID } from "@pure/utils"
+import { MSG_AT_ALL, allMembers } from "@pure/const"
 import { insertMention } from "@pure/editor"
 import emitter, { type FilteringType } from "@/utils/mitt-bus"
 
 import type { IDomEditor } from "@wangeditor/editor"
 import type { GroupMemberType as GroupMember } from "@pure/database/schemas"
-
-const MSG_AT_ALL = "__kImSDK_MesssageAtALL__"
 
 const MODAL_WIDTH = 168 // 弹框宽度
 const MODAL_PADDING = 5 // 弹框内边距
@@ -85,12 +84,6 @@ const filtering = ref<FilteringType>("all")
 const searchValue = ref(0) // 模糊搜索内容长度
 const tabIndex = ref(0)
 const magAtAll = MSG_AT_ALL
-const allMembers = {
-  joinTime: 0,
-  userID: MSG_AT_ALL,
-  nick: "全体成员",
-  role: "Owner" as GroupMember["role"],
-}
 
 const groupStore = useGroupStore()
 const chatStore = useChatStore()
@@ -113,7 +106,7 @@ const currentMembersWithoutSelfList = computed(() => {
 const initList = (owner = props.isOwner, data: GroupMember[] = []) => {
   list.value = filterList(data)
   // 仅群主支持@全员
-  if (owner) list.value.unshift(allMembers)
+  if (owner) list.value.unshift(allMembers as GroupMember)
 }
 
 const filterList = (data: GroupMember[]) => {
@@ -145,7 +138,7 @@ const getListHeight = async (retries = 3, delay = 10) => {
     }
   }
   // 使用默认高度
-  return height || 123
+  return height || 120
 }
 
 /**
@@ -291,10 +284,35 @@ const isActive = (item: GroupMember) => {
   }
 }
 
+/** 每个列表项的高度（与样式保持一致） */
+const ITEM_HEIGHT = 24
+/** 可见区域可完整展示的项数（容器 max-height: 120px） */
+const VISIBLE_COUNT = 5
+
+/**
+ * 获取 ElScrollbar 内部的实际滚动容器
+ */
+const getScrollContainer = (): HTMLElement | null => {
+  return listRef.value?.querySelector(".el-scrollbar__wrap") as HTMLElement | null
+}
+
 const scrollToSelectedItem = () => {
-  const element = document.querySelector(".mention-active")
-  if (!element) return
-  element.scrollIntoView({ behavior: "smooth", block: "center" })
+  const scrollEl = getScrollContainer()
+  if (!scrollEl) return
+
+  requestAnimationFrame(() => {
+    const firstVisibleIndex = Math.floor(scrollEl.scrollTop / ITEM_HEIGHT)
+    const lastVisibleIndex = firstVisibleIndex + VISIBLE_COUNT - 1
+
+    if (tabIndex.value > lastVisibleIndex) {
+      // 焦点移出可见范围底部 → 向下滚动一个项目高度
+      const scrollTarget = (tabIndex.value - VISIBLE_COUNT + 1) * ITEM_HEIGHT
+      scrollEl.scrollTop = Math.min(scrollTarget, scrollEl.scrollHeight - scrollEl.clientHeight)
+    } else if (tabIndex.value < firstVisibleIndex) {
+      // 焦点移出可见范围顶部 → 向上滚动一个项目高度
+      scrollEl.scrollTop = tabIndex.value * ITEM_HEIGHT
+    }
+  })
 }
 
 onMounted(() => {
@@ -337,7 +355,7 @@ watchEffect(() => {
 }
 .mention-list {
   .mention-list-box {
-    max-height: 123px;
+    max-height: 120px;
   }
   .nick {
     font-size: 14px;

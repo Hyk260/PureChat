@@ -44,3 +44,12 @@ export const groupProfile = {
   isSupportTopic: false,
   muteAllMember: "Off",
 }
+
+export const MSG_AT_ALL = "__kImSDK_MesssageAtALL__"
+
+export const allMembers = {
+  joinTime: 0,
+  userID: MSG_AT_ALL,
+  nick: "全体成员",
+  role: "Owner",
+}
