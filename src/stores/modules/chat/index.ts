@@ -43,7 +43,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     conversationList: [],
     searchConversationList: [],
     totalUnreadMsg: 0,
-    scrollTopID: "",
+    // scrollTopID: "",
     isMultiSelectMode: false,
     noMore: false,
     isChatBoxVisible: false,
@@ -201,9 +201,9 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     setHistoryMessageList(sessionId: string, message: DB_Message[] | []) {
       this.historyMessageList.set(sessionId, message)
     },
-    setScrollTopID(id: string = "") {
-      this.scrollTopID = id
-    },
+    // setScrollTopID(id: string = "") {
+    //   this.scrollTopID = id
+    // },
     setNoMore(bool: boolean) {
       this.noMore = bool
     },

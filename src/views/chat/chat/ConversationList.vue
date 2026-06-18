@@ -171,24 +171,31 @@ const handleContextMenu = (item: DB_Session) => {
 }
 
 const handleConversationListClick = (data: DB_Session, isActive: boolean = true) => {
-  console.log("会话点击 handleConversationListClick:", data)
   if (currentSessionId.value === data?.conversationID && isActive) return
+  switchConversation(data)
+}
 
-  topicStore.setTopicId(data.topicId || "")
-  topicStore.setRolePrompt(robotStore.promptConfig?.prompt[0]?.content || "")
+const resetConversationState = () => {
   chatStore.setMsgEdit(null)
-  chatStore.setScrollTopID("")
+  // chatStore.setScrollTopID("")
   chatStore.setReplyMsgData(null)
   chatStore.setForwardData({ type: "clear" })
+}
+
+const loadGroupContext = (data: DB_Session) => {
+  if (data.type !== "GROUP") return
+  groupStore.handleGroupProfile(data)
+  groupStore.handleGroupMemberList({ groupID: data?.groupProfile?.groupID ?? "" })
+}
+
+const switchConversation = (data: DB_Session) => {
+  topicStore.setTopicId(data.topicId || "")
+  topicStore.setRolePrompt(robotStore.promptConfig?.prompt[0]?.content || "")
+  resetConversationState()
   chatStore.updateSelectedConversation(data)
   chatStore.updateMessageList(data)
-  if (data?.type === "GROUP") {
-    groupStore.handleGroupProfile(data)
-    groupStore.handleGroupMemberList({ groupID: data?.groupProfile?.groupID ?? "" })
-  }
-  emitter.emit("handleInsertDraft", {
-    sessionId: data?.conversationID,
-  })
+  loadGroupContext(data)
+  emitter.emit("handleInsertDraft", { sessionId: data?.conversationID })
   emitUpdateScrollImmediate()
 }
 
@@ -251,7 +258,7 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
-  emitter.off("updateConversationList")
+  emitter.off("handleSelection")
 })
 </script>
 

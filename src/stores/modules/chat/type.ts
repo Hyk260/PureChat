@@ -17,7 +17,7 @@ export interface ChatState {
   /** 未读消息总数 */
   totalUnreadMsg: number
   /** 滚动到的消息ID */
-  scrollTopID: string
+  // scrollTopID: string
   /** 是否多选模式 */
   isMultiSelectMode: boolean
   /** 加载更多 false ? 显示loading : 没有更多 */

@@ -8,9 +8,9 @@
       @scroll="handleScrollbar"
     >
       <div ref="messageViewRef" class="message-view">
-        <div v-for="item in currentMessageList" :key="item.ID" :class="{ 'reset-select': item.isRevoked }">
+        <div v-for="(item, index) in currentMessageList" :key="item.ID" :class="{ 'reset-select': item.isRevoked }">
           <!-- 加载更多 -->
-          <!-- <LoadMore :index="index" /> -->
+          <LoadMore v-if="!IS_LOCAL_MODE" :index="index" />
           <!-- 时间 -->
           <div v-if="isTime(item) && appStore.timeline" class="message-time-divider">
             {{ timeFormat(item.time * 1000, true) }}
@@ -122,13 +122,14 @@ import {
   timeFormat,
   download,
   isTime,
+  delay,
   validateLastMessage,
   getMessageItemClass,
   getMessageTypeClass,
 } from "@pure/utils"
 import emitter from "@/utils/mitt-bus"
 
-// import LoadMore from "../components/LoadMore.vue"
+import LoadMore from "../components/LoadMore.vue"
 
 import type { DB_Message, FilePayloadType } from "@pure/database/schemas"
 import type { MenuItem } from "@pure/types"
@@ -156,7 +157,7 @@ const {
   currentType,
   isMultiSelectMode,
   isChatBoxVisible,
-  scrollTopID,
+  // scrollTopID,
   currentMessageList,
   currentConversation,
   currentSessionId,
@@ -280,7 +281,6 @@ useIntersectionObserver(
 )
 
 const handleEnReached = (direction: string) => {
-  console.log("滚动方向:", direction)
   if (direction === "top") {
     loadMoreMessages()
   } else if (direction === "bottom") {
@@ -310,10 +310,10 @@ const loadMoreMessages = async () => {
   const sessionId = currentSessionId.value
   if (!sessionId) return
 
-  const messages = currentMessageList.value
-  if (!messages.length) return
+  const currentMessages = currentMessageList.value
+  if (!currentMessages.length) return
 
-  const lastMessage = validateLastMessage(messages)
+  const lastMessage = validateLastMessage(currentMessages)
   const lastMsgId = lastMessage?.ID || ""
   const lastSequence = lastMessage?.sequence || 0
 
@@ -322,14 +322,41 @@ const loadMoreMessages = async () => {
     : getMessageListHopping({ conversationID: sessionId, direction: 0, sequence: lastSequence })
 
   try {
-    const { isCompleted, messageList } = await fetchMessages
+    if (!__LOCAL_MODE__) await delay(300)
 
-    if (messageList.length) {
-      chatStore.loadMoreMessages({ sessionId, messages: messageList })
-      chatStore.setScrollTopID(lastMessage?.ID)
-    } else {
+    const { messageList } = await fetchMessages
+
+    if (!messageList.length) {
       chatStore.setNoMore(true)
+      return
     }
+
+    // 在 DOM 更新前，找到视口中首个可见的消息元素作为锚点，记录其位置
+    const scrollContainer = scrollbarRef.value?.wrapRef
+    const anchorMsg = scrollContainer
+      ? currentMessages.find((msg) => {
+          const el = document.getElementById(`choice-${msg.ID}`)
+          return el && el.getBoundingClientRect().bottom >= scrollContainer.getBoundingClientRect().top
+        })
+      : undefined
+    const anchorEl = anchorMsg ? document.getElementById(`choice-${anchorMsg.ID}`) : null
+    const prevAnchorOffset =
+      anchorEl && scrollContainer
+        ? anchorEl.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
+        : null
+
+    // 将新消息插入消息列表顶部
+    chatStore.loadMoreMessages({ sessionId, messages: messageList })
+
+    // 等 DOM 稳定后，根据锚点位移差修正滚动位置
+    await nextTick()
+    requestAnimationFrame(() => {
+      if (!scrollContainer || prevAnchorOffset === null || !anchorMsg) return
+      const el = document.getElementById(`choice-${anchorMsg.ID}`)
+      if (!el) return
+      const currentAnchorOffset = el.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
+      scrollContainer.scrollTop += currentAnchorOffset - prevAnchorOffset
+    })
   } catch (error) {
     console.error("加载更多消息失败:", error)
     chatStore.setNoMore(true)
@@ -578,13 +605,13 @@ function offEmitter() {
   emitter.off("updateScroll", updateScrollHandler)
 }
 
-watch(
-  () => scrollTopID.value,
-  (messageId) => {
-    scrollToMessagePosition(messageId)
-  },
-  { immediate: true }
-)
+// watch(
+//   () => scrollTopID.value,
+//   (messageId) => {
+//     scrollToMessagePosition(messageId)
+//   },
+//   { immediate: true }
+// )
 
 watch(
   () => chatStore.replyMsgData,
