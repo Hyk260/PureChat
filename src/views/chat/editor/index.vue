@@ -192,7 +192,7 @@ const handleEnter = async (event: MouseEvent) => {
 
 const clearInput = () => {
   chatStore.setReplyMsgData(null)
-  chatStore.$patch({ isFullscreenInputActive: false })
+  chatStore.setFullscreenInputActive(false)
   editorRef.value?.clear()
 }
 
@@ -215,7 +215,6 @@ const sendChatMessage = async () => {
     })
   } catch (error) {
     console.error("Send message failed:", error)
-    window.$message?.error("发送消息失败")
   }
 }
 

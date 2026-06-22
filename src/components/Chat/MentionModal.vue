@@ -262,7 +262,7 @@ const handleKeydown = (event: KeyboardEvent) => {
       }
       break
     case "Enter":
-      inputKeyupHandler(event)
+      // inputKeyupHandler(event)
       break
     case "Escape":
       setMentionStatus()

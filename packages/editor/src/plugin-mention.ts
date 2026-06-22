@@ -110,6 +110,7 @@ const renderMention = (elem: MentionElement, _children: null, editor: IDomEditor
     {
       props: {
         contentEditable: false,
+        title: `@${value}`,
       },
       style: {
         borderRadius: "3px",

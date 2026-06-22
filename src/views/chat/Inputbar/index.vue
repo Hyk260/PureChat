@@ -384,9 +384,7 @@ const sendFileClick = () => {
 const clickCscreenshot = () => {}
 
 const toggleFullScreenInput = () => {
-  chatStore.$patch((state) => {
-    state.isFullscreenInputActive = !state.isFullscreenInputActive
-  })
+  chatStore.setFullscreenInputActive(!isFullscreenInputActive.value)
 }
 
 function customMessage() {

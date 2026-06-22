@@ -146,6 +146,12 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
     },
   },
   actions: {
+    setSearchConversationList(list: DB_Session[] = []) {
+      this.searchConversationList = list
+    },
+    setFullscreenInputActive(bool: boolean) {
+      this.isFullscreenInputActive = bool
+    },
     toggleSessionList() {
       this.isChatSessionListCollapsed = !this.isChatSessionListCollapsed
     },
@@ -184,7 +190,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       }
     },
     getHistoryMessageList(sessionId: string, excludeTimeDivider?: boolean) {
-      const history = this.historyMessageList.get(sessionId)
+      const history = this.historyMessageList.get(sessionId) || null
       if (history) {
         const topicStore = useTopicStore()
         let result = history
@@ -220,7 +226,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const history = this.getHistoryMessageList(sessionId)
       if (this.currentConversation) {
         if (history?.length) {
-          this.currentMessageList = [...history, message]
+          this.currentMessageList = cloneDeep([...history, message])
         } else {
           this.currentMessageList = [message]
         }
@@ -237,7 +243,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       useRouteStore().handleSessionClick(payload)
       if (payload) {
         const history = this.getHistoryMessageList(sessionId)
-        this.currentMessageList = cloneDeep(history) ?? []
+        this.currentMessageList = history ? cloneDeep(history) : []
       } else {
         this.currentMessageList = []
       }
@@ -406,15 +412,15 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
         useGroupStore().handleGroupProfile(data)
         useGroupStore().handleGroupMemberList({ groupID: data.groupProfile?.groupID })
       }
-      if (this.isAssistant) {
-        useRobotStore().updateModelConfig()
-      }
       emitUpdateScroll()
     },
     clearCurrentMessage() {
       this.isChatBoxVisible = false
       this.currentConversation = null
       this.currentMessageList = []
+    },
+    setMentionModalVisible(visible: boolean) {
+      this.isMentionModalVisible = visible
     },
     toggleMentionModal(flag: boolean) {
       if (this.isGroupChat) {

@@ -28,7 +28,7 @@
       </div>
       <Markdown class="market" :content="agentData.meta.systemRole" />
       <div class="flex-c py-20">
-        <ElButton class="w-306" @click="startConversation()"> 开始会话 </ElButton>
+        <ElButton class="w-306" @click="startConversation"> 开始会话 </ElButton>
       </div>
     </div>
   </ElDialog>
@@ -72,14 +72,16 @@ const startConversation = () => {
   const { identifier, meta } = agentData.value
   const defaultBot = robotStore.defaultProvider
 
-  const prompt = {
-    id: identifier,
-    meta,
-    lang: "cn",
-    prompt: [{ role: "system", content: meta.systemRole }],
-  }
+  const prompt = [
+    {
+      id: identifier,
+      meta,
+      lang: "cn",
+      prompt: [{ role: "system", content: meta.systemRole }],
+    },
+  ]
 
-  robotStore.setPromptStore([prompt], defaultBot)
+  robotStore.setPromptStore(prompt, defaultBot)
   const modelId = getModelId(defaultBot) || ModelID.OpenAI
 
   setIsDialogVisible(false)

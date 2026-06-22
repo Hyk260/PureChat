@@ -83,18 +83,18 @@ const debounceSearch = debounce(async (key) => {
 
   if (__LOCAL_MODE__) {
     const data = await SessionModel.queryByKeyword(trimmedKey)
-    chatStore.$patch({ searchConversationList: data })
+    chatStore.setSearchConversationList(data)
     return
   }
 
   if (isEmpty(trimmedKey)) {
-    chatStore.$patch({ searchConversationList: [] })
+    chatStore.setSearchConversationList([])
     return
   }
 
   const searchStr = trimmedKey.toUpperCase()
   const filterData = chatStore.conversationList.filter((item) => matchesFilter(item, searchStr))
-  chatStore.$patch({ searchConversationList: filterData })
+  chatStore.setSearchConversationList(filterData)
 }, 200)
 </script>
 
