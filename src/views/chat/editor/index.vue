@@ -37,7 +37,7 @@ import { useMessageCreator } from "@/hooks/useMessageCreator"
 import { usePrepareMessageData } from "@/hooks/useMessageOperations"
 import { useChatStore, useGroupStore } from "@/stores"
 import { insertMention } from "@pure/editor"
-import { browserInfo, useState } from "@pure/utils"
+import { browserInfo, useState, handleMentionInput } from "@pure/utils"
 import emitter, { type ToolbarAction } from "@/utils/mitt-bus"
 
 import Inputbar from "../Inputbar/index.vue"
@@ -51,7 +51,6 @@ import {
   insertEmoji,
 } from "@pure/editor/editor-utils"
 import { placeholderMap } from "@/utils/editor-placeholder"
-import { filterMentionList } from "@/utils/pinyin/utils"
 import SendMessageButton from "./SendMessageButton.vue"
 
 import type { DraftData } from "@pure/editor/types"
@@ -147,9 +146,18 @@ const updateChatDraft = debounce((data: DraftData) => {
 
 const handleMentionSearch = debounce((editor) => {
   if (isGroupChat.value) {
-    filterMentionList({
+    handleMentionInput({
       str: editor.getText(),
       list: groupStore.currentMembersWithoutSelf,
+      callbacks: {
+        onCloseModal: () => chatStore.setMentionModalVisible(false),
+        onSearchResult: (data) =>
+          emitter.emit("setMentionModal", {
+            content: data.content,
+            type: data.type,
+            searchlength: data.searchLength,
+          }),
+      },
     })
   }
 }, 100)

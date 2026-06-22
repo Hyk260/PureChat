@@ -22,8 +22,8 @@ declare global {
       };
       homepage: string;
       giteeHomepage: string;
-      dependencies: Record<string>;
-      devDependencies: Record<string>;
+      dependencies: Record<string, string>;
+      devDependencies: Record<string, string>;
     };
     lastBuildTime: string;
   };
@@ -36,11 +36,11 @@ declare global {
     /** 复制文本到剪贴板 */
     copyToClipboard: (str: string) => void;
     /** NProgress */
-    NProgress: import('nprogress').NProgress;
+    // NProgress: import('nprogress').NProgress;
     /** MessageBox */
-    // $messageBox?: import('element-plus').IElMessageBox;
+    $messageBox?: import('element-plus').IElMessageBox;
     /** Notification */
-    // $notification: import('element-plus').Notify;
+    $notification: import('element-plus').Notify;
     /** Message */
     $message: import('element-plus').Message;
     /** DebugTools */

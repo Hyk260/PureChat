@@ -74,7 +74,6 @@ export function setupViteExternal(viteEnv: Env.ImportMeta): (RegExp | string)[] 
     // IMsdk依赖
     // /^@tencentcloud\/chat/,
     /^@tencentcloud\/lite-chat/,
-    // /^tim-upload-plugin/,
     // 拼音搜索依赖
     /^pinyin-pro/,
   ]

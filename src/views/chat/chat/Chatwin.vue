@@ -85,7 +85,7 @@
       </div>
     </ElScrollbar>
     <!-- 卡片 -->
-    <MyPopover />
+    <ContactCard />
     <UserPopup ref="userPopupRef" />
     <ContextMenu ref="contextMenuRef" :items="contextMenuItems" @menuClick="handleContextMenuItemClick" />
     <MessageNavigator v-if="currentConversation" :scrollbarRef="scrollbarRef" />
@@ -108,7 +108,7 @@ import Stateful from "@/components/Chat/Stateful.vue"
 import TimeDivider from "@/components/Chat/TimeDivider.vue"
 import ContextMenu from "@/components/ContextMenu"
 import MessageRenderer from "@/components/MessageRenderer/index.vue"
-import MyPopover from "@/components/MyPopover/index.vue"
+import ContactCard from "@/components/ContactCard/index.vue"
 import UserPopup from "@/components/Popups/UserPopup.vue"
 import { useContextMenu } from "@/composables/useContextMenu"
 import { useMessageOperations } from "@/hooks/useMessageOperations"
@@ -251,7 +251,12 @@ const handleAvatarClick = (e: Event | null, item: DB_Message) => {
   }
   if (item.flow === "out" || isMultiSelectMode.value) return
   if (item.conversationID === "@TIM#SYSTEM") return
-  // emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item })
+  const mouseEvent = e as MouseEvent | null
+  emitter.emit("setPopoverStatus", {
+    status: true,
+    seat: { pageX: mouseEvent?.pageX ?? 0, pageY: mouseEvent?.pageY ?? 0 },
+    cardData: item,
+  })
 }
 
 const isScrolledToBottom = (threshold: number = 2): boolean => {
