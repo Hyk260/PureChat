@@ -208,9 +208,8 @@ const initMention = () => {
   onClickOutside(listRef, () => {
     setMentionStatus()
   })
-  useEventListener(document, "keydown", (e) => {
-    handleKeydown(e)
-  })
+  useEventListener(document, "keydown", handleKeydown)
+  useEventListener(window, "blur", () => setMentionStatus())
   emitter.on("handleInputKeyupHandler", inputKeyupHandler)
   emitter.on("setMentionModal", (data: { content?: GroupMember[]; type: FilteringType; searchlength?: number }) => {
     const { content = [], type, searchlength = 0 } = cloneDeep(data)
@@ -256,14 +255,14 @@ const handleKeydown = (event: KeyboardEvent) => {
         scrollToSelectedItem()
       }
       break
-    case "ArrowDown": //下
+    case "ArrowDown": // 下
       if (tabIndex.value < searchedList.value?.length - 1) {
         tabIndex.value++
         scrollToSelectedItem()
       }
       break
     case "Enter":
-      // handleAit(id, nick)
+      inputKeyupHandler(event)
       break
     case "Escape":
       setMentionStatus()
