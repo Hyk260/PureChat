@@ -12,8 +12,7 @@ export const THREAD_DRAFT_ID = "__THREAD_DRAFT_ID__"
 
 export const MESSAGE_FLAGGED_THINKING = "FLAGGED_THINKING"
 
-// https://web.sdk.qcloud.com/im/doc/zh-cn/Message.html
-export const MessageSchema: DB_Message = {
+export const createMessageSchema = (): DB_Message => ({
   ID: "",
   conversationID: "",
   conversationType: "C2C",
@@ -60,4 +59,6 @@ export const MessageSchema: DB_Message = {
   // id: "",
   // createdAt: 0,
   // updatedAt: 0,
-}
+})
+
+export const MessageSchema = createMessageSchema()

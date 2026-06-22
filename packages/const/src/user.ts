@@ -1,7 +1,7 @@
 export const DEFAULT_AVATAR = "🤖"
 export const DEFAULT_USER_AVATAR = "😀"
 
-export const UserSchema = {
+export const createUserSchema = () => ({
   userID: "",
   nick: "",
   gender: "",
@@ -19,10 +19,12 @@ export const UserSchema = {
   profileCustomField: [],
 
   native: DEFAULT_AVATAR,
-}
+})
+
+export const UserSchema = createUserSchema()
 
 export const UserfileSchema = {
-  ...UserSchema,
+  ...createUserSchema(),
   userID: "admin",
   nick: "admin",
   avatar: "avatar",

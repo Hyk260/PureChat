@@ -4,7 +4,7 @@ import { UserSchema } from "./user"
 
 export const INBOX_SESSION_ID = "inbox"
 
-export const lastMessage = {
+export const createLastMessage = () => ({
   lastTime: 0,
   // lastSequence: 0,
   fromAccount: "",
@@ -21,19 +21,21 @@ export const lastMessage = {
   // isPeerRead: false,
   revoker: "",
   messageForShow: "",
-}
+})
 
-export const SessionSchema: DB_Session = {
+export const lastMessage = createLastMessage()
+
+export const createSessionSchema = (): DB_Session => ({
   conversationID: "",
   // toAccount: "",
   type: "C2C",
   // subType: "",
-  lastMessage,
+  lastMessage: createLastMessage(),
   unreadCount: 0,
   // peerReadTime: 0,
   // groupAtInfoList: [],
   // groupProfile,
-  userProfile: UserSchema,
+  userProfile: { ...UserSchema },
   // remark: "",
   isPinned: false,
   // messageRemindType: "AcceptAndNotify",
@@ -48,4 +50,6 @@ export const SessionSchema: DB_Session = {
   // id: "",
   // createdAt: 0,
   // updatedAt: 0,
-}
+})
+
+export const SessionSchema = createSessionSchema()

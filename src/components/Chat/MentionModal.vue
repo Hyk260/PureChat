@@ -16,7 +16,7 @@
               className="mention-avatar"
               :url="item.avatar"
               :type="item.avatar ? 'single' : 'group'"
-              :nickName="item.userID === magAtAll ? '@' : item.nick || item.userID"
+              :nickName="item.userID === magAtAll ? '@全体成员' : item.nick || item.userID"
             />
             <span class="nick truncate">{{ item.nick || item.userID }}</span>
           </li>
