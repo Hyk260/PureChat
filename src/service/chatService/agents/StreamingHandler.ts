@@ -8,7 +8,7 @@ import type {
   StreamingResult,
 } from "./types/streaming"
 
-const log = debug("store:streaming-handler")
+const log = debug("service:streaming-handler")
 
 /**
  * Streaming message handler

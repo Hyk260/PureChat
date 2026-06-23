@@ -21,6 +21,7 @@
   "types": "./src/index.ts",
   "scripts": {
     "test": "vitest",
+    "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {

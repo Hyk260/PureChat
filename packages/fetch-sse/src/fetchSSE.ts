@@ -86,17 +86,29 @@ export interface FetchOptions extends FetchSSEOptions {
 
 const START_ANIMATION_SPEED = 10 // 默认起始速度
 
-const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: string) => void; startSpeed?: number }) => {
+/**
+ * 统一平滑消息控制器。
+ * 内部维护 reasoning 和 text 两条独立队列，在单动画循环中强制 reasoning 优先输出，
+ * 确保 reasoning 消息完全输出完毕后才开始输出 text 消息，杜绝混合渲染。
+ */
+const createSmoothMessage = (params: {
+  onReasoningUpdate: (delta: string, fullText: string) => void
+  onTextUpdate: (delta: string, fullText: string) => void
+  startSpeed?: number
+}) => {
   const { startSpeed = START_ANIMATION_SPEED } = params
 
-  let buffer = ""
-  const outputQueue: string[] = []
+  const reasoningQueue: string[] = []
+  const textQueue: string[] = []
+  let reasoningBuffer = ""
+  let textBuffer = ""
   let isAnimationActive = false
   let animationFrameId: number | null = null
   let lastFrameTime = 0
   let accumulatedTime = 0
   let currentSpeed = startSpeed
-  let lastQueueLength = 0 // 记录上一帧的队列长度
+  let lastReasoningQueueLength = 0
+  let lastTextQueueLength = 0
 
   const stopAnimation = () => {
     isAnimationActive = false
@@ -104,6 +116,31 @@ const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: strin
       cancelAnimationFrame(animationFrameId)
       animationFrameId = null
     }
+  }
+
+  /** 在当前活跃队列中消费 charsToProcess 个字符；返回该队列是否还有剩余。 */
+  const consumeActiveQueue = (charsToProcess: number): boolean => {
+    if (reasoningQueue.length > 0) {
+      const actual = Math.min(charsToProcess, reasoningQueue.length)
+      const chars = reasoningQueue.splice(0, actual).join("")
+      reasoningBuffer += chars
+      params.onReasoningUpdate(chars, reasoningBuffer)
+      return reasoningQueue.length > 0
+    }
+    if (textQueue.length > 0) {
+      const actual = Math.min(charsToProcess, textQueue.length)
+      const chars = textQueue.splice(0, actual).join("")
+      textBuffer += chars
+      params.onTextUpdate(chars, textBuffer)
+      return textQueue.length > 0
+    }
+    return false
+  }
+
+  /** 当前活跃队列的长度（reasoning 优先） */
+  const activeQueueLength = (): number => {
+    if (reasoningQueue.length > 0) return reasoningQueue.length
+    return textQueue.length
   }
 
   const startAnimation = (speed = startSpeed) => {
@@ -117,7 +154,8 @@ const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: strin
       lastFrameTime = performance.now()
       accumulatedTime = 0
       currentSpeed = speed
-      lastQueueLength = 0 // 重置上一帧队列长度
+      lastReasoningQueueLength = 0
+      lastTextQueueLength = 0
 
       const updateText = (timestamp: number) => {
         if (!isAnimationActive) {
@@ -133,11 +171,15 @@ const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: strin
         accumulatedTime += frameDuration
 
         let charsToProcess = 0
-        if (outputQueue.length > 0) {
-          // 更平滑的速度调整
-          const targetSpeed = Math.max(speed, outputQueue.length)
-          // 根据队列长度变化调整速度变化率
-          const speedChangeRate = Math.abs(outputQueue.length - lastQueueLength) * 0.0008 + 0.005
+        const queueLen = activeQueueLength()
+        if (queueLen > 0) {
+          const targetSpeed = Math.max(speed, queueLen)
+          const activeDelta = Math.abs(
+            reasoningQueue.length > 0
+              ? reasoningQueue.length - lastReasoningQueueLength
+              : textQueue.length - lastTextQueueLength
+          )
+          const speedChangeRate = activeDelta * 0.0008 + 0.005
           currentSpeed += (targetSpeed - currentSpeed) * speedChangeRate
 
           charsToProcess = Math.floor((accumulatedTime * currentSpeed) / 1000)
@@ -145,17 +187,13 @@ const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: strin
 
         if (charsToProcess > 0) {
           accumulatedTime -= (charsToProcess * 1000) / currentSpeed
-
-          const actualChars = Math.min(charsToProcess, outputQueue.length)
-
-          const charsToAdd = outputQueue.splice(0, actualChars).join("")
-          buffer += charsToAdd
-          params.onTextUpdate(charsToAdd, buffer)
+          consumeActiveQueue(charsToProcess)
         }
 
-        lastQueueLength = outputQueue.length // 更新上一帧的队列长度
+        lastReasoningQueueLength = reasoningQueue.length
+        lastTextQueueLength = textQueue.length
 
-        if (outputQueue.length > 0 && isAnimationActive) {
+        if (activeQueueLength() > 0 && isAnimationActive) {
           animationFrameId = requestAnimationFrame(updateText)
         } else {
           isAnimationActive = false
@@ -168,22 +206,34 @@ const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: strin
     })
   }
 
-  const pushToQueue = (text: string) => {
-    outputQueue.push(...text.split(""))
+  const pushReasoning = (text: string) => {
+    reasoningQueue.push(...text.split(""))
   }
 
+  const pushText = (text: string) => {
+    textQueue.push(...text.split(""))
+  }
+
+  /** 清空所有队列，reasoning 优先确保顺序 */
   const flushQueue = () => {
-    if (outputQueue.length === 0) return
-    const remaining = outputQueue.splice(0).join("")
-    buffer += remaining
-    params.onTextUpdate(remaining, buffer)
+    if (reasoningQueue.length > 0) {
+      const chars = reasoningQueue.splice(0).join("")
+      reasoningBuffer += chars
+      params.onReasoningUpdate(chars, reasoningBuffer)
+    }
+    if (textQueue.length > 0) {
+      const chars = textQueue.splice(0).join("")
+      textBuffer += chars
+      params.onTextUpdate(chars, textBuffer)
+    }
   }
 
   return {
     flushQueue,
     isAnimationActive,
-    isTokenRemain: () => outputQueue.length > 0,
-    pushToQueue,
+    isTokenRemain: () => reasoningQueue.length > 0 || textQueue.length > 0,
+    pushReasoning,
+    pushText,
     startAnimation,
     stopAnimation,
   }
@@ -221,22 +271,17 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   }
 
   let output = ""
-  // 文本控制器，用于平滑输出文本
-  const textController = createSmoothMessage({
-    onTextUpdate: (delta, text) => {
-      output = text
-      options.onMessageHandle?.({ text: delta, type: "text" })
-    },
-    startSpeed: smoothingSpeed,
-  })
-
   let thinking = ""
   let thinkingSignature: string | undefined
-  // 思考控制器，用于平滑输出思考
-  const thinkingController = createSmoothMessage({
-    onTextUpdate: (delta, text) => {
-      thinking = text
+  // 统一平滑控制器：reasoning 优先，text 在后，杜绝混合输出
+  const smoothController = createSmoothMessage({
+    onReasoningUpdate: (delta, fullText) => {
+      thinking = fullText
       options.onMessageHandle?.({ text: delta, type: "reasoning" })
+    },
+    onTextUpdate: (delta, fullText) => {
+      output = fullText
+      options.onMessageHandle?.({ text: delta, type: "text" })
     },
     startSpeed: smoothingSpeed,
   })
@@ -265,7 +310,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       if (error === MESSAGE_CANCEL_FLAT || (error as TypeError).name === "AbortError") {
         finishedType = "abort"
         options?.onAbort?.(output)
-        textController.stopAnimation()
+        smoothController.stopAnimation()
       } else {
         finishedType = "error"
 
@@ -320,14 +365,15 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       switch (ev.event) {
         case "text": {
           if (!data) break
+          // console.log("onmessage text:", data)
 
           if (shouldSkipTextProcessing) {
             output += data
             options.onMessageHandle?.({ text: data, type: "text" })
           } else if (textSmoothing) {
-            textController.pushToQueue(data)
+            smoothController.pushText(data)
 
-            if (!textController.isAnimationActive) textController.startAnimation()
+            if (!smoothController.isAnimationActive) smoothController.startAnimation()
           } else {
             output += data
 
@@ -345,13 +391,16 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         }
         // 思考
         case "reasoning": {
-          if (shouldSkipTextProcessing) {
-            thinking += data
-            options.onMessageHandle?.({ text: data, type: "reasoning" })
-          } else if (textSmoothing) {
-            thinkingController.pushToQueue(data)
+          if (!data) break
+          // console.log("onmessage reasoning:", data)
+          // if (shouldSkipTextProcessing) {
+          //   thinking += data
+          //   options.onMessageHandle?.({ text: data, type: "reasoning" })
+          // } else
+          if (textSmoothing) {
+            smoothController.pushReasoning(data)
 
-            if (!thinkingController.isAnimationActive) thinkingController.startAnimation()
+            if (!smoothController.isAnimationActive) smoothController.startAnimation()
           } else {
             thinking += data
 
@@ -418,8 +467,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   })
 
   if (response) {
-    textController.stopAnimation()
-    thinkingController.stopAnimation()
+    smoothController.stopAnimation()
 
     if (bufferTimer) {
       clearTimeout(bufferTimer)
@@ -441,8 +489,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       //   await textController.startAnimation(smoothingSpeed)
       // }
 
-      textController.flushQueue()
-      thinkingController.flushQueue()
+      smoothController.flushQueue()
 
       const data = {
         images: images.length > 0 ? images : undefined,
