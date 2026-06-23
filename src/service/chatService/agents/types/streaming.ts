@@ -4,11 +4,11 @@ import type { ChatImageItem } from "@pure/types"
  * Streaming context - immutable configuration
  */
 export interface StreamingContext {
-  agentId?: string
-  groupId?: string
+  // agentId?: string
+  // groupId?: string
   messageId?: string
-  operationId?: string
-  topicId?: string | null
+  // operationId?: string
+  // topicId?: string | null
 }
 
 /**

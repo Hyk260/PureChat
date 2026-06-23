@@ -192,9 +192,9 @@ const switchConversation = (data: DB_Session) => {
   topicStore.setTopicId(data.topicId || "")
   topicStore.setRolePrompt(robotStore.promptConfig?.prompt[0]?.content || "")
   resetConversationState()
+  loadGroupContext(data)
   chatStore.updateSelectedConversation(data)
   chatStore.updateMessageList(data)
-  loadGroupContext(data)
   emitter.emit("handleInsertDraft", { sessionId: data?.conversationID })
   emitUpdateScrollImmediate()
 }

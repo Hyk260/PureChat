@@ -1,3 +1,4 @@
+import debug from "debug"
 import type {
   FinishData,
   ReasoningState,
@@ -6,6 +7,8 @@ import type {
   StreamingContext,
   StreamingResult,
 } from "./types/streaming"
+
+const log = debug("store:streaming-handler")
 
 /**
  * Streaming message handler
@@ -123,14 +126,20 @@ export class StreamingHandler {
   // ==================== Chunk handling methods ====================
 
   private handleTextChunk(chunk: { text: string; type: "text" }): void {
+    log("[text stream] text chunk: %s", chunk.text)
     this.output += chunk.text
+
+    // log("[text stream] messageId=%s, output=%s", this.context.messageId, this.output)
 
     this.callbacks.onContentUpdate(this.output, this.buildDoneReasoningState())
   }
 
   private handleReasoningChunk(chunk: { text: string; type: "reasoning" }): void {
+    log("[reasoning stream] reasoning chunk: %s", chunk.text)
     this.startReasoningIfNeeded()
     this.thinkingContent += chunk.text
+
+    // log("[reasoning stream] messageId=%s, thinking=%s", this.context.messageId, this.thinkingContent)
 
     this.callbacks.onReasoningUpdate?.(this.buildThinkingReasoningState())
   }

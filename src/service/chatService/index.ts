@@ -1,5 +1,6 @@
 import { cloneDeep, merge } from "lodash-es"
 
+import debug from "debug"
 import { getAiAvatarUrl } from "@pure/utils"
 import { ModelProvider, Provider } from "model-bank"
 import { prettyObject, getUnixTimestampSec } from "@pure/utils"
@@ -63,6 +64,8 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
   /** Initial context for page editor (captured at operation start) */
   params: GetChatCompletionPayload
 }
+
+const log = debug("store:agent-executors")
 
 class ChatService {
   protected getBaseURL(provider: any): string {
@@ -252,8 +255,8 @@ class ChatService {
 export const chatService = new ChatService()
 
 class ChatServiceMessage {
-  startMsg: DB_Message
-  chatMsg: DB_Message
+  startMsg: DB_Message | undefined
+  chatMsg: DB_Message | undefined
 
   async sendMessage({ messages, chat, provider, loadMessage }: ChatServiceParams) {
     const chatStore = useChatStore()
@@ -269,7 +272,9 @@ class ChatServiceMessage {
     const llmMessages = this.shouldUseCurrentMessages() ? chatStore.currentMessageList : messages
 
     const handler = new StreamingHandler(
-      {},
+      {
+        messageId: startMsg?.ID,
+      },
       {
         onContentUpdate: (content, reasoning) => {
           this.updateMessage({
@@ -302,7 +307,7 @@ class ChatServiceMessage {
       }
     )
 
-    chatService.createAssistantMessageStream({
+    await chatService.createAssistantMessageStream({
       params: {
         messages: llmMessages,
         provider,
@@ -325,6 +330,13 @@ class ChatServiceMessage {
         this.handleError(error)
       },
     })
+
+    const content = handler.getOutput()
+
+    // Log llm result
+    if (content) {
+      log(`[${this.chatMsg?.ID}][content]`, content)
+    }
   }
 
   /**
@@ -360,12 +372,11 @@ class ChatServiceMessage {
    * 更新聊天消息状态
    */
   private updateMessage({ message, data }: { message?: DB_Message; data?: messageHandle }) {
+    const chatStore = useChatStore()
     const chat = message || this.chatMsg
     if (!chat) return
 
     const { text = "", thinking = "", done: isFinish = false, reasoning } = data ?? {}
-
-    console.log("text:", text)
 
     chat.payload!.text = text
     Object.assign(chat, {
@@ -375,7 +386,6 @@ class ChatServiceMessage {
     })
 
     if (reasoning?.content) {
-      console.log("thinking:", thinking)
       chat.cloudCustomData = createThinkingCustomData({ payload: { text: thinking } }, data?.reasoning)
     } else if (isFinish) {
       // chat.cloudCustomData = handleWebSearchData(chat, true)
@@ -384,10 +394,12 @@ class ChatServiceMessage {
       }
     }
 
-    useChatStore().updateMessages({
+    const messages = {
       sessionId: `C2C${chat.from}`,
       message: cloneDeep(chat),
-    })
+    }
+
+    chatStore.updateMessages(messages)
 
     emitUpdateScrollImmediate("robot")
   }
