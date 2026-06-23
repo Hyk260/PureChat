@@ -126,20 +126,19 @@ export class StreamingHandler {
   // ==================== Chunk handling methods ====================
 
   private handleTextChunk(chunk: { text: string; type: "text" }): void {
-    log("[text stream] text chunk: %s", chunk.text)
-    this.output += chunk.text
+    log("[TextChunk] text chunk: %s", chunk.text)
 
-    // log("[text stream] messageId=%s, output=%s", this.context.messageId, this.output)
+    this.output += chunk.text
 
     this.callbacks.onContentUpdate(this.output, this.buildDoneReasoningState())
   }
 
   private handleReasoningChunk(chunk: { text: string; type: "reasoning" }): void {
-    log("[reasoning stream] reasoning chunk: %s", chunk.text)
-    this.startReasoningIfNeeded()
-    this.thinkingContent += chunk.text
+    log("[ReasoningChunk] reasoning chunk: %s", chunk.text)
 
-    // log("[reasoning stream] messageId=%s, thinking=%s", this.context.messageId, this.thinkingContent)
+    this.startReasoningIfNeeded()
+
+    this.thinkingContent += chunk.text
 
     this.callbacks.onReasoningUpdate?.(this.buildThinkingReasoningState())
   }

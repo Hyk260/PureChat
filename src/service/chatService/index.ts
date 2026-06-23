@@ -65,7 +65,7 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
   params: GetChatCompletionPayload
 }
 
-const log = debug("store:agent-executors")
+const log = debug("service:agent-executors")
 
 class ChatService {
   protected getBaseURL(provider: any): string {
@@ -255,8 +255,8 @@ class ChatService {
 export const chatService = new ChatService()
 
 class ChatServiceMessage {
-  startMsg: DB_Message | undefined
-  chatMsg: DB_Message | undefined
+  private startMsg?: DB_Message
+  private chatMsg?: DB_Message
 
   async sendMessage({ messages, chat, provider, loadMessage }: ChatServiceParams) {
     const chatStore = useChatStore()
@@ -281,27 +281,14 @@ class ChatServiceMessage {
             message: startMsg,
             data: {
               text: content,
-              reasoning: reasoning
-                ? {
-                    content: reasoning.content,
-                    reasoningType: reasoning.reasoningType,
-                    duration: reasoning.duration,
-                  }
-                : undefined,
+              reasoning,
             },
           })
         },
         onReasoningUpdate: (reasoning) => {
           this.updateMessage({
             message: startMsg,
-            data: {
-              thinking: reasoning.content,
-              reasoning: {
-                content: reasoning.content,
-                reasoningType: reasoning.reasoningType,
-                duration: reasoning.duration,
-              },
-            },
+            data: { reasoning },
           })
         },
       }
@@ -316,13 +303,13 @@ class ChatServiceMessage {
       onMessageHandle: (chunk) => {
         handler.handleChunk(chunk as StreamChunk)
       },
-      onFinish: async (text, context: contextParams) => {
-        const result = await handler.handleFinish(text, context)
+      onFinish: async (text, context) => {
+        const result = await handler.handleFinish(text, context || {})
         await this.handleFinish({
           text,
           context: {
             reasoning: result.metadata.reasoning,
-            type: result.finishType,
+            type: result.finishType as contextParams["type"],
           },
         })
       },
@@ -372,11 +359,12 @@ class ChatServiceMessage {
    * 更新聊天消息状态
    */
   private updateMessage({ message, data }: { message?: DB_Message; data?: messageHandle }) {
+    log("[updateMessage] data=%0", data)
     const chatStore = useChatStore()
     const chat = message || this.chatMsg
     if (!chat) return
 
-    const { text = "", thinking = "", done: isFinish = false, reasoning } = data ?? {}
+    const { text = "", done: isFinish = false, reasoning } = data ?? {}
 
     chat.payload!.text = text
     Object.assign(chat, {
@@ -386,7 +374,7 @@ class ChatServiceMessage {
     })
 
     if (reasoning?.content) {
-      chat.cloudCustomData = createThinkingCustomData({ payload: { text: thinking } }, data?.reasoning)
+      chat.cloudCustomData = createThinkingCustomData({ payload: { text: reasoning.content } }, reasoning)
     } else if (isFinish) {
       // chat.cloudCustomData = handleWebSearchData(chat, true)
       if (chat.type === "TIMTextElem") {
@@ -483,6 +471,7 @@ class ChatServiceMessage {
    * 处理消息发送完成
    */
   private async handleFinish(data: { text: string; context?: contextParams }) {
+    const chatStore = useChatStore()
     const { text, context } = data
     const startMsg = this.startMsg
     const chatParams = this.chatMsg
@@ -497,13 +486,13 @@ class ChatServiceMessage {
       })
       emitUpdateScrollImmediate("robot")
       if (context?.type === "done") {
-        useChatStore().updateSendingState(chatParams.to, "delete")
+        chatStore.updateSendingState(chatParams.to, "delete")
         await this.sendRestMessage(chatParams, finishedData)
       }
     } catch (error) {
       console.error("handleFinish error:", error)
     } finally {
-      useChatStore().updateSendingState(chatParams.to, "delete")
+      chatStore.updateSendingState(chatParams.to, "delete")
     }
   }
 

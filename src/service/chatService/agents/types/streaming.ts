@@ -26,7 +26,7 @@ export interface ReasoningState {
  * Streaming callbacks - for notifying external state changes
  */
 export interface StreamingCallbacks {
-  /** Content update */
+  /** 内容更新 */
   onContentUpdate: (
     content: string,
     reasoning?: ReasoningState,
@@ -36,11 +36,11 @@ export interface StreamingCallbacks {
   // onGroundingUpdate?: (grounding: GroundingData) => void
   /** Image list update */
   onImagesUpdate?: (images: ChatImageItem[]) => void
-  /** Complete reasoning operation */
+  /** 推理完成 */
   onReasoningComplete?: (operationId: string) => void
-  /** Start reasoning operation */
+  /** 开始推理 */
   onReasoningStart?: () => string | undefined
-  /** Reasoning state update */
+  /** 推理状态更新 */
   onReasoningUpdate?: (reasoning: ReasoningState) => void
   /** Upload base64 image */
   uploadBase64Image?: (base64Data: string) => Promise<{ id?: string; url?: string }>

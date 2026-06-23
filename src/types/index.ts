@@ -1,6 +1,5 @@
 export interface messageHandle {
   text?: string
-  thinking?: string
   reasoning?: {
     content?: string
     reasoningType?: "thinking" | "done"

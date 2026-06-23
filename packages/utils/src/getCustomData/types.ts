@@ -19,10 +19,9 @@ export interface WebSearchParams {
  * 深度思考自定义数据参数
  */
 export interface DeepThinkingParams {
-  thinking?: string | undefined
-  content?: string | undefined
-  reasoningType?: "thinking" | "done" | undefined
-  duration?: number | undefined
+  content?: string
+  reasoningType?: "thinking" | "done"
+  duration?: number
 }
 /**
  * 提示消息自定义数据参数
