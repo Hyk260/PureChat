@@ -123,8 +123,12 @@ function initModel() {
   setFlag(true)
 }
 
-emitter.on("openModeList", () => {
-  initModel()
+onMounted(() => {
+  emitter.on("openModeList", initModel)
+})
+
+onUnmounted(() => {
+  emitter.off("openModeList", initModel)
 })
 </script>
 

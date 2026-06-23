@@ -30,7 +30,7 @@
           <div class="flex-sc gap-5">
             <span v-copy="groupID" class="group-id">
               <ElTag type="info" size="small">
-                {{ groupID }}
+                <span class="align-sub">{{ groupID }} <Copy :size="12" /> </span>
               </ElTag>
             </span>
             <span v-if="IS_DEV && groupProfile?.type" class="group-type">
@@ -119,6 +119,7 @@
 import { ElDrawer, ElMessageBox } from "element-plus"
 import {
   // CircleX,
+  Copy,
   QrCode,
   SquarePen as EditPen,
 } from "@lucide/vue"
