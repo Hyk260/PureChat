@@ -85,11 +85,13 @@ export interface FetchOptions extends FetchSSEOptions {
 }
 
 const START_ANIMATION_SPEED = 10 // 默认起始速度
+const MAX_TARGET_SPEED = 100 // 自适应速度上限，防止队列突增时动画大幅加速
+const MAX_CHARS_PER_FRAME = 5 // 单帧最大消费字符数，防止一次性大量输出
 
 /**
- * 统一平滑消息控制器。
+ * 平滑消息控制器。
  * 内部维护 reasoning 和 text 两条独立队列，在单动画循环中强制 reasoning 优先输出，
- * 确保 reasoning 消息完全输出完毕后才开始输出 text 消息，杜绝混合渲染。
+ * 确保 reasoning 消息完全输出完毕后才开始输出 text 消息
  */
 const createSmoothMessage = (params: {
   onReasoningUpdate: (delta: string, fullText: string) => void
@@ -109,7 +111,22 @@ const createSmoothMessage = (params: {
   let currentSpeed = startSpeed
   let lastReasoningQueueLength = 0
   let lastTextQueueLength = 0
+  /** 跟踪当前动画 Promise，用于外部 await 等待动画自然完成 */
+  let animationPromise: Promise<void> | null = null
 
+  const cleanupAnimation = () => {
+    isAnimationActive = false
+    animationPromise = null
+    if (animationFrameId !== null) {
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+    }
+  }
+
+  /**
+   * 强制终止动画（仅用于 abort/error 场景）。
+   * stopAnimation 之后已有的 animationPromise 会因为 isAnimationActive=false 而 resolve。
+   */
   const stopAnimation = () => {
     isAnimationActive = false
     if (animationFrameId !== null) {
@@ -143,13 +160,16 @@ const createSmoothMessage = (params: {
     return textQueue.length
   }
 
-  const startAnimation = (speed = startSpeed) => {
-    return new Promise<void>((resolve) => {
-      if (isAnimationActive) {
-        resolve()
-        return
-      }
+  /**
+   * 启动动画循环。如果动画已在运行，返回已有的 Promise 等待其自然完成；
+   * 否则创建新动画并返回 Promise，在队列清空时 resolve。
+   */
+  const startAnimation = (speed = startSpeed): Promise<void> => {
+    if (animationPromise) {
+      return animationPromise
+    }
 
+    animationPromise = new Promise<void>((resolve) => {
       isAnimationActive = true
       lastFrameTime = performance.now()
       accumulatedTime = 0
@@ -162,6 +182,8 @@ const createSmoothMessage = (params: {
           if (animationFrameId !== null) {
             cancelAnimationFrame(animationFrameId)
           }
+          animationPromise = null
+          animationFrameId = null
           resolve()
           return
         }
@@ -173,7 +195,7 @@ const createSmoothMessage = (params: {
         let charsToProcess = 0
         const queueLen = activeQueueLength()
         if (queueLen > 0) {
-          const targetSpeed = Math.max(speed, queueLen)
+          const targetSpeed = Math.min(Math.max(speed, queueLen), MAX_TARGET_SPEED)
           const activeDelta = Math.abs(
             reasoningQueue.length > 0
               ? reasoningQueue.length - lastReasoningQueueLength
@@ -182,7 +204,7 @@ const createSmoothMessage = (params: {
           const speedChangeRate = activeDelta * 0.0008 + 0.005
           currentSpeed += (targetSpeed - currentSpeed) * speedChangeRate
 
-          charsToProcess = Math.floor((accumulatedTime * currentSpeed) / 1000)
+          charsToProcess = Math.min(Math.floor((accumulatedTime * currentSpeed) / 1000), MAX_CHARS_PER_FRAME)
         }
 
         if (charsToProcess > 0) {
@@ -196,14 +218,15 @@ const createSmoothMessage = (params: {
         if (activeQueueLength() > 0 && isAnimationActive) {
           animationFrameId = requestAnimationFrame(updateText)
         } else {
-          isAnimationActive = false
-          animationFrameId = null
+          cleanupAnimation()
           resolve()
         }
       }
 
       animationFrameId = requestAnimationFrame(updateText)
     })
+
+    return animationPromise
   }
 
   const pushReasoning = (text: string) => {
@@ -214,7 +237,7 @@ const createSmoothMessage = (params: {
     textQueue.push(...text.split(""))
   }
 
-  /** 清空所有队列，reasoning 优先确保顺序 */
+  /** 清空所有队列，reasoning 优先确保顺序（仅作为动画未正常完成的兜底） */
   const flushQueue = () => {
     if (reasoningQueue.length > 0) {
       const chars = reasoningQueue.splice(0).join("")
@@ -261,7 +284,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   let textBuffer = ""
   let bufferTimer: ReturnType<typeof setTimeout> | null = null
-  const BUFFER_INTERVAL = 300 // 300ms
+  const BUFFER_INTERVAL = 50 // ms
 
   const flushTextBuffer = () => {
     if (textBuffer) {
@@ -273,7 +296,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   let output = ""
   let thinking = ""
   let thinkingSignature: string | undefined
-  // 统一平滑控制器：reasoning 优先，text 在后，杜绝混合输出
+
   const smoothController = createSmoothMessage({
     onReasoningUpdate: (delta, fullText) => {
       thinking = fullText
@@ -389,7 +412,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
           break
         }
-        // 思考
+        // 推理
         case "reasoning": {
           if (!data) break
           // console.log("onmessage reasoning:", data)
@@ -458,7 +481,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     onopen: async (res) => {
       options.onOpenHandle?.(res)
       response = res.clone()
-      // 如果不 ok 说明有请求错误
       if (!response.ok) {
         throw await getMessageError(res)
       }
@@ -467,8 +489,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   })
 
   if (response) {
-    smoothController.stopAnimation()
-
     if (bufferTimer) {
       clearTimeout(bufferTimer)
       flushTextBuffer()
@@ -480,14 +500,16 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     }
 
     if (response.ok) {
+      if (textSmoothing) {
+        await smoothController.startAnimation()
+      } else {
+        smoothController.stopAnimation()
+      }
+
       if (!triggerOnMessageHandler) {
         output = await response.clone().text()
         options.onMessageHandle?.({ text: output, type: "text" })
       }
-
-      // if (textController.isTokenRemain()) {
-      //   await textController.startAnimation(smoothingSpeed)
-      // }
 
       smoothController.flushQueue()
 
@@ -500,6 +522,8 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       }
 
       await options?.onFinish?.(output, data)
+    } else {
+      smoothController.stopAnimation()
     }
   }
 

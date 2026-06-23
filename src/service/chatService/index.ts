@@ -359,7 +359,7 @@ class ChatServiceMessage {
    * 更新聊天消息状态
    */
   private updateMessage({ message, data }: { message?: DB_Message; data?: messageHandle }) {
-    log("[updateMessage] data=%0", data)
+    log(`[updateMessage]`, data)
     const chatStore = useChatStore()
     const chat = message || this.chatMsg
     if (!chat) return
