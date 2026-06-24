@@ -179,7 +179,7 @@ export class TIMProxy {
   /**
    * 处理未读消息总数更新
    */
-  private onTotalUnreadMessageCountUpdated({ data }) {
+  private onTotalUnreadMessageCountUpdated({ data }: { data: number }) {
     console.log("[chat] 未读消息总数更新:", data)
   }
 
@@ -196,14 +196,11 @@ export class TIMProxy {
     chatStore.setConversationList(data)
 
     // 更新当前会话信息
-    const currentConversation = data.find((t) => t.conversationID === currentSessionId)
-    if (currentConversation) {
-      chatStore.setCurrentConversation(cloneDeep(currentConversation))
+    const message = data.find((t) => t.conversationID === currentSessionId)
+    if (message) {
+      chatStore.setCurrentConversation(cloneDeep(message))
 
-      this.reportedMessageRead({
-        conversationID: currentConversation.conversationID,
-        unreadCount: currentConversation.unreadCount ?? 0,
-      })
+      this.reportedMessageRead(message)
     }
 
     // 更新未读消息总数
@@ -219,7 +216,7 @@ export class TIMProxy {
     const message = data[0]
     const isCurrentConversation = useChatStore().currentSessionId === message?.conversationID
     // 处理不同类型的消息
-    this.processMessageByType(data)
+    this.processMessageType(data)
     // 更新消息列表
     this.handleUpdateMessage(data, isCurrentConversation)
   }
@@ -227,7 +224,7 @@ export class TIMProxy {
   /**
    * 根据消息类型进行处理
    */
-  private processMessageByType(data: DB_Message[]) {
+  private processMessageType(data: DB_Message[]) {
     const message = data[0]
 
     switch (message?.type) {
@@ -238,8 +235,7 @@ export class TIMProxy {
         this.handleGroupSystemNoticeTip(data)
         break
       default:
-        // 处理普通消息的通知
-        this.handleNotificationTip(data)
+        this.handleNotificationTip(data) // 处理普通消息的通知
         break
     }
   }
@@ -252,16 +248,19 @@ export class TIMProxy {
 
     if (!data?.length) return
 
-    useChatStore().updateMessages({
-      sessionId: data[0]?.conversationID ?? "",
-      message: cloneDeep(data[0]) as DB_Message,
-    })
+    for (const msg of data) {
+      if (!msg?.ID || !msg?.conversationID) continue
+      useChatStore().updateMessages({
+        sessionId: msg.conversationID,
+        message: cloneDeep(msg),
+      })
+    }
   }
 
   /**
    * 处理群组列表更新
    */
-  private onUpdateGroupList({ data }) {
+  private onUpdateGroupList({ data }: { data: DB_Message[] }) {
     console.log("[chat] 群组列表更新:", data)
   }
 
@@ -311,15 +310,15 @@ export class TIMProxy {
   /**
    * 处理好友申请列表更新
    */
-  private onFriendApplicationListUpdated({ data }) {
-    console.log("[chat] 好友申请列表更新:", data)
-  }
-  private onFriendGroupListUpdated({ data }) {
-    console.log(data)
-  }
-  private onUserStatusUpdated({ data }) {
-    console.log(data)
-  }
+  // private onFriendApplicationListUpdated({ data }) {
+  //   console.log("[chat] 好友申请列表更新:", data)
+  // }
+  // private onFriendGroupListUpdated({ data }) {
+  //   console.log(data)
+  // }
+  // private onUserStatusUpdated({ data }) {
+  //   console.log(data)
+  // }
 
   /**
    * 发送系统通知给用户
@@ -459,10 +458,11 @@ export class TIMProxy {
 
   /**
    * 上报消息已读状态
-   * 只在窗口获得焦点时上报已读
+   * 仅在窗口聚焦且消息属于当前会话时上报已读
    */
-  private reportedMessageRead(data: { unreadCount?: number; conversationID: string }) {
-    if (isFocused.value) {
+  private reportedMessageRead(data: Partial<DB_Session>) {
+    const chatStore = useChatStore()
+    if (isFocused.value && data.conversationID === chatStore.currentSessionId) {
       setMessageRead(data)
     }
   }

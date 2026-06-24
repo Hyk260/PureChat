@@ -399,7 +399,7 @@ export const useChatStore = defineStore(SetupStoreId.Chat, {
       const appStore = useAppStore()
       const message = addTimeDivider({ list: messageList, timeline: appStore.timeline })
       this.addMessage({ conversationID: sessionId, isDone, message })
-      setMessageRead({ conversationID: data.conversationID })
+      setMessageRead(data)
       emitUpdateScroll()
     },
     async addConversation(action: { sessionId: string }) {

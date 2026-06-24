@@ -70,19 +70,20 @@ if (import.meta.env.DEV) {
     `%c🗑️ 一键清空 ${BROWSER_S3_DB_NAME} 数据`,
     "color: #ff6b6b; font-size: 16px; font-weight: bold; padding: 8px; background: #fff3cd; border-radius: 4px;"
   )
-
-  window.__CLEAR_S3_STORAGE__ = async () => {
-    if (confirm(`确定要清空所有 ${BROWSER_S3_DB_NAME} 数据吗？此操作不可恢复！`)) {
-      try {
-        await clientS3Storage.clearAll()
-        console.log("%c✅ 数据已清空", "color: #28a745; font-size: 14px; font-weight: bold;")
-        return "数据已成功清空！"
-      } catch (error) {
-        console.error("%c❌ 清空数据失败:", "color: #dc3545; font-size: 14px; font-weight: bold;", error)
-        return "清空数据失败！"
+  if (typeof window !== "undefined") {
+    window.__CLEAR_S3_STORAGE__ = async () => {
+      if (confirm(`确定要清空所有 ${BROWSER_S3_DB_NAME} 数据吗？此操作不可恢复！`)) {
+        try {
+          await clientS3Storage.clearAll()
+          console.log("%c✅ 数据已清空", "color: #28a745; font-size: 14px; font-weight: bold;")
+          return "数据已成功清空！"
+        } catch (error) {
+          console.error("%c❌ 清空数据失败:", "color: #dc3545; font-size: 14px; font-weight: bold;", error)
+          return "清空数据失败！"
+        }
       }
+      return "操作已取消"
     }
-    return "操作已取消"
   }
 
   console.log(

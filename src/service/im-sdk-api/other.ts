@@ -94,23 +94,16 @@ export const getConversationProfile = async ({ sessionId }: { sessionId: string 
   }
 }
 // 消息已读上报
-export const setMessageRead = (params: { unreadCount?: number; conversationID: string }) => {
+export const setMessageRead = async (params: { unreadCount?: number; conversationID?: string }) => {
   if (__LOCAL_MODE__) return
-  if (!params) return
-  if (!params?.conversationID) return
+  const { unreadCount, conversationID } = params || {}
+  if (!unreadCount || !conversationID) return
   try {
-    const { unreadCount = 0, conversationID } = params
-    if (unreadCount === 0 || unreadCount === undefined) return
-    const promise = tim.setMessageRead({ conversationID })
-    promise
-      .then((res) => {
-        console.log("已读上报成功", res)
-      })
-      .catch((err) => {
-        console.warn("setMessageRead error:", err)
-      })
+    const data = await tim.setMessageRead({ conversationID })
+    console.log("已读上报成功", data)
+    return data
   } catch (error) {
-    console.error("已读上报失败:", error)
+    console.error("setMessageRead error:", error)
   }
 }
 // 删除会话
