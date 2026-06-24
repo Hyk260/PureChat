@@ -30,7 +30,7 @@ jobs:
       is-web: ${{ steps.check.outputs.is-web }}
     steps:
       - name: 检出代码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: 检查 VITE_APP_ENV
         id: check
@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: 设置 Node.js
         uses: actions/setup-node@v6
@@ -78,7 +78,7 @@ jobs:
     
     steps:
       - name: 检出代码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # 获取完整历史用于更好的缓存
           fetch-depth: 0
