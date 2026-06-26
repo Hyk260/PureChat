@@ -2,16 +2,24 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { MESSAGE_CANCEL_FLAT } from "@pure/const"
 import { ChatMessageError } from "@pure/types"
 
-import { FetchEventSourceInit, fetchEventSource, sleep } from "@pure/utils"
+import type { FetchEventSourceInit } from "@pure/utils/fetchEventSource"
+import { fetchEventSource } from "@pure/utils/fetchEventSource" // mocked by vi.mock below
+
 import { fetchSSE } from "../fetchSSE"
 
-vi.mock("@pure/utils", async () => {
-  const utils = await vi.importActual("@pure/utils")
-  return {
-    ...utils,
-    fetchEventSource: vi.fn(),
-  }
-})
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+// Polyfill browser APIs not available in Node.js (vitest)
+// globalThis.requestAnimationFrame = (fn: FrameRequestCallback): number => {
+//   return setTimeout(() => fn(performance.now()), 16) as unknown as number
+// }
+// globalThis.cancelAnimationFrame = (id: number) => {
+//   clearTimeout(id)
+// }
+
+vi.mock("@pure/utils/fetchEventSource", () => ({
+  fetchEventSource: vi.fn(),
+}))
 
 // 在每次测试后清理所有模拟
 afterEach(() => {
@@ -273,7 +281,7 @@ describe("fetchSSE", () => {
 
       try {
         await fetchSSE("/", { onErrorHandle: mockOnErrorHandle })
-      } catch (e) {}
+      } catch {}
 
       expect(mockOnErrorHandle).toHaveBeenCalledWith(mockError)
     })
@@ -288,7 +296,7 @@ describe("fetchSSE", () => {
 
       try {
         await fetchSSE("/", { onErrorHandle: mockOnErrorHandle })
-      } catch (e) {}
+      } catch {}
 
       expect(mockOnErrorHandle).toHaveBeenCalledWith({
         type: "UnknownChatFetchError",
@@ -312,12 +320,12 @@ describe("fetchSSE", () => {
 
         try {
           await options.onopen?.(res as any)
-        } catch (e) {}
+        } catch {}
       })
 
       try {
         await fetchSSE("/", { onErrorHandle: mockOnErrorHandle })
-      } catch (e) {
+      } catch {
         expect(mockOnErrorHandle).toHaveBeenCalledWith({
           body: undefined,
           message: "translated_response.SomeError",
@@ -343,7 +351,7 @@ describe("fetchSSE", () => {
 
       try {
         await fetchSSE("/", { onErrorHandle: mockOnErrorHandle })
-      } catch (e) {}
+      } catch {}
 
       expect(mockOnErrorHandle).toHaveBeenCalledWith(mockError)
     })
@@ -358,7 +366,7 @@ describe("fetchSSE", () => {
 
       try {
         await fetchSSE("/", { onErrorHandle: mockOnErrorHandle })
-      } catch (e) {}
+      } catch {}
 
       expect(mockOnErrorHandle).toHaveBeenCalledWith({
         body: {

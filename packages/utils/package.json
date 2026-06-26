@@ -7,7 +7,8 @@
     "./*": "./src/*.ts",
     "./fetch": "./src/fetch/index.ts",
     "./storage": "./src/storage.ts",
-    "./hooks": "./src/hooks/index.ts"
+    "./hooks": "./src/hooks/index.ts",
+    "./fetchEventSource": "./src/fetchEventSource/index.ts"
   },
   "scripts": {
     "test": "vitest",
