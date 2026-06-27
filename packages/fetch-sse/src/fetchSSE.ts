@@ -524,6 +524,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       await options?.onFinish?.(output, data)
     } else {
       smoothController.stopAnimation()
+      smoothController.flushQueue()
     }
   }
 
