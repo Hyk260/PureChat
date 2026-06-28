@@ -260,7 +260,14 @@ class ChatServiceMessage {
 
   async sendMessage({ messages, chat, provider, loadMessage }: ChatServiceParams) {
     const chatStore = useChatStore()
-    chatStore.updateSendingState(chat?.to, "add")
+
+    // 安全检查：确保 chat 存在且包含必要的字段
+    if (!chat?.to) {
+      console.warn("sendMessage: chat 或 to 不存在，跳过发送")
+      return
+    }
+
+    chatStore.updateSendingState(chat.to, "add")
     const startMsg = loadMessage || this.createLoadingMessage(chat)
 
     if (this.shouldAbortSend(provider, startMsg)) return
@@ -366,7 +373,13 @@ class ChatServiceMessage {
 
     const { text = "", done: isFinish = false, reasoning } = data ?? {}
 
-    chat.payload!.text = text
+    // 安全更新 payload，避免空引用崩溃
+    if (!chat.payload) {
+      chat.payload = { text }
+    } else {
+      chat.payload.text = text
+    }
+
     Object.assign(chat, {
       // payload: { text: text },
       // clientTime: getUnixTimestampSec(),
@@ -477,6 +490,12 @@ class ChatServiceMessage {
     const chatParams = this.chatMsg
     console.log("handleFinish", { text, context, startMsg, chatParams })
 
+    // 安全检查：确保 chatParams 存在
+    if (!chatParams?.to) {
+      console.warn("handleFinish: chatParams 或 to 不存在")
+      return
+    }
+
     const finishedData = { text, done: true, reasoning: context?.reasoning }
 
     try {
@@ -485,13 +504,15 @@ class ChatServiceMessage {
         data: finishedData,
       })
       emitUpdateScrollImmediate("robot")
+
+      // 只在正常完成时删除发送状态，避免重复删除
       if (context?.type === "done") {
-        chatStore.updateSendingState(chatParams.to, "delete")
         await this.sendRestMessage(chatParams, finishedData)
       }
     } catch (error) {
       console.error("handleFinish error:", error)
     } finally {
+      // 统一在 finally 中删除发送状态，确保状态清理
       chatStore.updateSendingState(chatParams.to, "delete")
     }
   }

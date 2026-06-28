@@ -62,6 +62,16 @@ class _MessageModel extends BaseModel {
     nextReqMessageID: string
     isCompleted: boolean
   }> {
+    // 安全检查：确保 sessionId 存在
+    if (!sessionId) {
+      console.warn("queryMessagesWithPagination: sessionId 不存在")
+      return {
+        messages: [],
+        nextReqMessageID: "",
+        isCompleted: true,
+      }
+    }
+
     const limit = Math.min(count, 20)
 
     const query = topicId
@@ -91,7 +101,10 @@ class _MessageModel extends BaseModel {
 
         // 设置下一页的消息ID
         if (startIndex > 0) {
-          nextReqMessageIDResult = sortedMessages[startIndex - 1].ID
+          const nextMsg = sortedMessages[startIndex - 1]
+          // 安全检查：确保消息存在且有 ID
+          nextReqMessageIDResult = nextMsg?.ID || ""
+          isCompleted = !nextReqMessageIDResult
         } else {
           isCompleted = true
         }
@@ -107,7 +120,10 @@ class _MessageModel extends BaseModel {
 
       // 设置下一页的消息ID
       if (startIndex > 0) {
-        nextReqMessageIDResult = sortedMessages[startIndex - 1].ID
+        const nextMsg = sortedMessages[startIndex - 1]
+        // 安全检查：确保消息存在且有 ID
+        nextReqMessageIDResult = nextMsg?.ID || ""
+        isCompleted = !nextReqMessageIDResult
       } else {
         isCompleted = true
       }
