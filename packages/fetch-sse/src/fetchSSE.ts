@@ -332,10 +332,13 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       console.warn("onerror:", error)
       if (error === MESSAGE_CANCEL_FLAT || (error as TypeError).name === "AbortError") {
         finishedType = "abort"
-        options?.onAbort?.(output)
         smoothController.stopAnimation()
+        smoothController.flushQueue()
+        options?.onAbort?.(output)
       } else {
         finishedType = "error"
+        smoothController.stopAnimation()
+        smoothController.flushQueue()
 
         const elapsedMs = Date.now() - fetchStartTime
         const networkStatus = typeof navigator !== "undefined" ? navigator.onLine : undefined
@@ -524,6 +527,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       await options?.onFinish?.(output, data)
     } else {
       smoothController.stopAnimation()
+      smoothController.flushQueue()
     }
   }
 

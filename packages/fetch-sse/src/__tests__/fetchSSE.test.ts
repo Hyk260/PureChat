@@ -230,6 +230,59 @@ describe("fetchSSE", () => {
     })
   })
 
+  describe("data integrity on error/abort", () => {
+    it("should flush queued text on abort in smooth mode", async () => {
+      const mockOnMessageHandle = vi.fn()
+      const mockOnAbort = vi.fn()
+
+      ;(fetchEventSource as any).mockImplementationOnce(async (url: string, options: FetchEventSourceInit) => {
+        options.onopen?.({ clone: () => ({ ok: true, headers: new Headers() }) } as any)
+        options.onmessage?.({ event: "text", data: JSON.stringify("Test") } as any)
+        await sleep(20)
+        options.onerror?.({ name: "AbortError" })
+      })
+
+      await fetchSSE("/", {
+        onAbort: mockOnAbort,
+        onMessageHandle: mockOnMessageHandle,
+        responseAnimation: "smooth",
+      })
+
+      // Verify that queued text "Test" was flushed before onAbort was called
+      expect(mockOnAbort).toHaveBeenCalledWith("Test")
+
+      // Verify text was output through smooth animation
+      const textCalls = mockOnMessageHandle.mock.calls.filter((call) => call[0].type === "text")
+      expect(textCalls.length).toBeGreaterThan(0)
+      const fullText = textCalls.map((call) => call[0].text).join("")
+      expect(fullText).toBe("Test")
+    })
+
+    it("should flush queued reasoning on error in smooth mode", async () => {
+      const mockOnMessageHandle = vi.fn()
+      const mockOnErrorHandle = vi.fn()
+
+      ;(fetchEventSource as any).mockImplementationOnce(async (url: string, options: FetchEventSourceInit) => {
+        options.onopen?.({ clone: () => ({ ok: true, headers: new Headers() }) } as any)
+        options.onmessage?.({ event: "reasoning", data: JSON.stringify("Thinking") } as any)
+        await sleep(20)
+        options.onerror?.(new Error("Network error"))
+      })
+
+      await fetchSSE("/", {
+        onErrorHandle: mockOnErrorHandle,
+        onMessageHandle: mockOnMessageHandle,
+        responseAnimation: "smooth",
+      })
+
+      // Verify reasoning was output before error handler
+      const reasoningCalls = mockOnMessageHandle.mock.calls.filter((call) => call[0].type === "reasoning")
+      expect(reasoningCalls.length).toBeGreaterThan(0)
+      const fullReasoning = reasoningCalls.map((call) => call[0].text).join("")
+      expect(fullReasoning).toBe("Thinking")
+    })
+  })
+
   describe("onAbort", () => {
     it("should call onAbort when AbortError is thrown", async () => {
       const mockOnAbort = vi.fn()
