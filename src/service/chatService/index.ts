@@ -340,7 +340,7 @@ class ChatServiceMessage {
       : ""
 
     try {
-      const data = await restApi({
+      const result = await restApi({
         params: {
           To_Account: params.from,
           From_Account: params.to,
@@ -349,7 +349,7 @@ class ChatServiceMessage {
         },
         funName: "restSendMsg",
       })
-      console.log("REST API 发送消息成功:", data)
+      console.log("REST API 发送消息成功:", result)
     } catch (error) {
       console.error("REST API 发送消息失败:", error)
     }
@@ -485,8 +485,7 @@ class ChatServiceMessage {
         data: finishedData,
       })
       emitUpdateScrollImmediate("robot")
-      if (context?.type === "done") {
-        chatStore.updateSendingState(chatParams.to, "delete")
+      if (!__LOCAL_MODE__ && text) {
         await this.sendRestMessage(chatParams, finishedData)
       }
     } catch (error) {
