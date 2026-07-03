@@ -17,21 +17,52 @@ const pattern = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 /** 邮箱正则 */
 const REGEXP_EMAIL = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
-const { userId, password, remember } = localStg.get("ACCOUNT") || {}
+// const { userId, password, remember } = localStg.get("ACCOUNT") || {} // userId 已废弃
+const { email, password, remember } = localStg.get("ACCOUNT") || {}
 
-export const defaultForm = reactive({
-  userId: userId || "",
+export interface AccountForm {
+  userId: string // userId 已废弃，保留供旧模板引用
+  email: string
+  password: string
+  remember: boolean
+  verifyCode: string
+}
+
+export const defaultForm = reactive<AccountForm>({
+  userId: "",
+  email: email || "",
   password: password || "123456qwer",
   remember: remember || false,
   verifyCode: "",
 })
 
+if (isDev) {
+  Object.assign(defaultForm, {
+    email: "2607881950@qq.com",
+  })
+}
+
 export const rules = reactive({
-  userId: [
+  // userId 已废弃
+  // userId: [
+  //   {
+  //     required: true,
+  //     message: "用户名是必须的",
+  //     trigger: "change",
+  //   },
+  // ],
+  email: [
     {
-      required: true,
-      message: "用户名是必须的",
-      trigger: "change",
+      validator: (rule, value, callback) => {
+        if (value === "") {
+          callback(new Error($t("login.emailReg")))
+        } else if (!REGEXP_EMAIL.test(value)) {
+          callback(new Error($t("login.emailCorrectReg")))
+        } else {
+          callback()
+        }
+      },
+      trigger: "blur",
     },
   ],
   password: [
@@ -80,20 +111,20 @@ if (isDev) {
 }
 
 export const updateRules = reactive({
-  userId: [
-    {
-      required: true,
-      message: "账号格式应为字母、数字组合 （张爱玲）zhangal（张三） zhangsan",
-      trigger: "blur",
-    },
-  ],
-  nickname: [
-    // {
-    //   required: true,
-    //   message: "请输入昵称",
-    //   trigger: "blur",
-    // },
-  ],
+  // userId: [
+  //   {
+  //     required: true,
+  //     message: "账号格式应为字母、数字组合 （张爱玲）zhangal（张三） zhangsan",
+  //     trigger: "blur",
+  //   },
+  // ],
+  // nickname: [
+  // {
+  //   required: true,
+  //   message: "请输入昵称",
+  //   trigger: "blur",
+  // },
+  // ],
   email: [
     {
       validator: (rule, value, callback) => {

@@ -1,25 +1,25 @@
 <template>
   <ElForm ref="ruleFormRef" :model="ruleForm" :rules="updateRules" size="large">
-    <ElFormItem prop="userId">
+    <!-- <ElFormItem prop="userId">
       <ElInput v-model="ruleForm.userId" clearable :placeholder="$t('login.username')" :prefixIcon="User" />
-    </ElFormItem>
-    <ElFormItem prop="nickname">
+    </ElFormItem> -->
+    <!-- <ElFormItem prop="nickname">
       <ElInput v-model="ruleForm.nickname" clearable :placeholder="$t('login.nickname')" :prefixIcon="User" />
-    </ElFormItem>
+    </ElFormItem> -->
     <ElFormItem prop="email">
       <ElInput v-model="ruleForm.email" clearable placeholder="邮箱" :prefixIcon="Message" />
     </ElFormItem>
-    <ElFormItem v-if="false" prop="phone">
+    <!-- <ElFormItem v-if="false" prop="phone">
       <ElInput v-model="ruleForm.phone" clearable :placeholder="$t('login.phone')" :prefixIcon="Iphone" />
-    </ElFormItem>
-    <ElFormItem v-if="false" prop="verifyCode">
+    </ElFormItem> -->
+    <!-- <ElFormItem v-if="false" prop="verifyCode">
       <div class="w-full flex">
         <ElInput v-model="ruleForm.verifyCode" clearable :placeholder="$t('login.smsVerifyCode')" />
         <ElButton class="ml-5" :disabled="isDisabled" @click="start(ruleFormRef, 'phone')">
           {{ text.length > 0 ? text + $t("login.info") : $t("login.getVerifyCode") }}
         </ElButton>
       </div>
-    </ElFormItem>
+    </ElFormItem> -->
     <ElFormItem prop="password">
       <ElInput
         v-model="ruleForm.password"

@@ -65,6 +65,7 @@ export default {
   },
   login: {
     username: "账号",
+    email: "邮箱",
     nickname: "昵称",
     password: "密码",
     verifyCode: "验证码",
@@ -95,6 +96,8 @@ export default {
     getVerifyCode: "获取验证码",
     info: "秒后重新获取",
     usernameReg: "请输入账号",
+    emailReg: "请输入邮箱",
+    emailCorrectReg: "请输入正确的邮箱格式",
     passwordReg: "请输入密码",
     verifyCodeReg: "请输入验证码",
     verifyCodeCorrectReg: "请输入正确的验证码",

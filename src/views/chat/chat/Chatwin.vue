@@ -251,12 +251,7 @@ const handleAvatarClick = (e: Event | null, item: DB_Message) => {
   }
   if (item.flow === "out" || isMultiSelectMode.value) return
   if (item.conversationID === "@TIM#SYSTEM") return
-  const mouseEvent = e as MouseEvent | null
-  emitter.emit("setPopoverStatus", {
-    status: true,
-    seat: { pageX: mouseEvent?.pageX ?? 0, pageY: mouseEvent?.pageY ?? 0 },
-    cardData: item,
-  })
+  emitter.emit("setPopoverStatus", { status: true, seat: e, cardData: item })
 }
 
 const isScrolledToBottom = (threshold: number = 2): boolean => {

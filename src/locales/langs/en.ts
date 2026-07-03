@@ -63,6 +63,7 @@ export default {
   },
   login: {
     username: "Username",
+    email: "Email",
     nickname: "Nickname",
     password: "Password",
     verifyCode: "VerifyCode",
@@ -93,6 +94,8 @@ export default {
     getVerifyCode: "Get VerifyCode",
     info: "Seconds",
     usernameReg: "Please enter username",
+    emailReg: "Please enter email",
+    emailCorrectReg: "Please enter a valid email address",
     passwordReg: "Please enter password",
     verifyCodeReg: "Please enter verify code",
     verifyCodeCorrectReg: "Please enter correct verify code",

@@ -35,7 +35,6 @@ export interface Events {
   handleFileDrop: File
   handleToolbar: ToolbarAction
   handleScreenCapture: string
-  setPopoverStatus: { status: boolean; seat: { pageX: number; pageY: number }; cardData: unknown }
 }
 
 const emitter: Emitter<Events> = mitt<Events>()

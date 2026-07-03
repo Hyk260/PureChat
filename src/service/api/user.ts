@@ -15,7 +15,11 @@ interface RegisterPayload extends UserAuthBase {
   repeatPassword?: string
 }
 
-type LoginPayload = UserAuthBase
+interface LoginPayload {
+  email: string
+  password: string
+  // userId?: string // userId 已废弃
+}
 
 export const login = (data: LoginPayload) => {
   return http.request<ApiResponse<LoginResult>>({

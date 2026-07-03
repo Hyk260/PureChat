@@ -1,7 +1,7 @@
 <template>
   <ElForm ref="formRef" :model="form" :rules="rules">
     <!-- 账号 -->
-    <ElFormItem prop="userId">
+    <ElFormItem v-if="false" prop="userId">
       <template v-if="isAutoComplete">
         <ElAutocomplete
           v-model="form.userId"
@@ -10,13 +10,19 @@
           :debounce="200"
           :prefixIcon="User"
           :placeholder="$t('login.username')"
-          :fetchSuggestions="handleSearch"
-          @select="handleSelect"
         />
       </template>
       <template v-else>
         <ElInput v-model="form.userId" :placeholder="$t('login.username')" :prefixIcon="User" size="large" clearable />
       </template>
+    </ElFormItem>
+    <!-- 邮箱 -->
+    <ElFormItem prop="email">
+      <ElInput v-model="form.email" :placeholder="$t('login.email')" size="large" clearable>
+        <template #prefix>
+          <ElIcon><Message /></ElIcon>
+        </template>
+      </ElInput>
     </ElFormItem>
     <!-- 密码 -->
     <ElFormItem prop="password">
@@ -85,16 +91,17 @@
 <script setup lang="ts">
 import { ElAutocomplete } from "element-plus"
 import { Lock, User } from "@lucide/vue"
-import { Key } from "@element-plus/icons-vue"
+import { Key, Message } from "@element-plus/icons-vue"
 
 import { ImageVerify } from "@pure/ui"
 import { onKeyStroke } from "@vueuse/core"
 import { useOAuth } from "@/hooks/useOAuth"
-import { getUserList } from "@/service/api"
+// import { getUserList } from "@/service/api" // userId 已废弃
 import { useUserStore } from "@/stores/modules/user"
+import { localStg } from "@/utils/storage"
 import { delay, useState } from "@pure/utils"
 import { operates, thirdParty } from "../utils/enums"
-import { defaultForm, rules } from "../utils/validation"
+import { defaultForm, rules, type AccountForm } from "../utils/validation"
 
 const { DEV: isDev } = import.meta.env
 
@@ -104,8 +111,8 @@ const showVerifyCode = false
 const isAutoComplete = true
 const verifyCode = ref("")
 const formRef = useTemplateRef("formRef")
-const form = ref({ ...defaultForm })
-const userSuggestions = ref<{ value: string }[]>([])
+const form = ref<AccountForm>({ ...defaultForm })
+// const userSuggestions = ref<{ value: string }[]>([]) // userId 已废弃
 
 const userStore = useUserStore()
 const [loading, setLoading] = useState(false)
@@ -124,16 +131,17 @@ const { oauthAuthorize } = useOAuth({
   },
 })
 
-const handleSelect = (item: Record<string, any>) => {
-  console.log(item)
-}
+// userId 已废弃
+// const handleSelect = (item: Record<string, any>) => {
+//   console.log(item)
+// }
 
-const handleSearch = (query: string, callback: Function) => {
-  const results = query
-    ? userSuggestions.value.filter((user) => user.value.toLowerCase().includes(query.toLowerCase()))
-    : userSuggestions.value
-  callback(results)
-}
+// const handleSearch = (query: string, callback: Function) => {
+//   const results = query
+//     ? userSuggestions.value.filter((user) => user.value.toLowerCase().includes(query.toLowerCase()))
+//     : userSuggestions.value
+//   callback(results)
+// }
 
 const handleLogin = async () => {
   if (!formRef.value) return
@@ -141,7 +149,19 @@ const handleLogin = async () => {
   try {
     await formRef.value.validate()
     if (isDev) await delay(300)
-    await userStore.handleUserLogin(form.value)
+    await userStore.handleUserLogin({
+      email: form.value.email,
+      password: form.value.password,
+    })
+    if (form.value.remember) {
+      localStg.set("ACCOUNT", {
+        email: form.value.email,
+        password: form.value.password,
+        remember: true,
+      })
+    } else {
+      localStg.remove("ACCOUNT")
+    }
   } catch (error) {
     setLoading(false)
   }
@@ -157,9 +177,10 @@ const setCurrentPage = (item: { currentPage: number }) => {
 
 onKeyStroke("Enter", handleLogin)
 
-onMounted(async () => {
-  userSuggestions.value = getUserList()
-})
+// userId 已废弃
+// onMounted(async () => {
+//   userSuggestions.value = getUserList()
+// })
 
 onBeforeUnmount(() => {})
 

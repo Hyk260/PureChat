@@ -31,8 +31,9 @@ export interface UserState {
 export type HandleSuccessfulAuthPayload = ApiResponse<LoginResult>
 
 export interface HandleUserLoginPayload {
-  userId: string
+  email: string
   password: string
+  // userId: string // userId 已废弃
 }
 
 export interface HandleIMLoginPayload {
