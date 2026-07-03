@@ -273,7 +273,7 @@ describe("fetchSSE", () => {
 
       try {
         await fetchSSE("/", { onErrorHandle: mockOnErrorHandle })
-      } catch (e) {}
+      } catch {}
 
       expect(mockOnErrorHandle).toHaveBeenCalledWith(mockError)
     })
@@ -288,7 +288,7 @@ describe("fetchSSE", () => {
 
       try {
         await fetchSSE("/", { onErrorHandle: mockOnErrorHandle })
-      } catch (e) {}
+      } catch {}
 
       expect(mockOnErrorHandle).toHaveBeenCalledWith({
         type: "UnknownChatFetchError",
@@ -312,12 +312,12 @@ describe("fetchSSE", () => {
 
         try {
           await options.onopen?.(res as any)
-        } catch (e) {}
+        } catch {}
       })
 
       try {
         await fetchSSE("/", { onErrorHandle: mockOnErrorHandle })
-      } catch (e) {
+      } catch {
         expect(mockOnErrorHandle).toHaveBeenCalledWith({
           body: undefined,
           message: "translated_response.SomeError",
@@ -343,7 +343,7 @@ describe("fetchSSE", () => {
 
       try {
         await fetchSSE("/", { onErrorHandle: mockOnErrorHandle })
-      } catch (e) {}
+      } catch {}
 
       expect(mockOnErrorHandle).toHaveBeenCalledWith(mockError)
     })
@@ -358,7 +358,7 @@ describe("fetchSSE", () => {
 
       try {
         await fetchSSE("/", { onErrorHandle: mockOnErrorHandle })
-      } catch (e) {}
+      } catch {}
 
       expect(mockOnErrorHandle).toHaveBeenCalledWith({
         body: {
@@ -374,6 +374,103 @@ describe("fetchSSE", () => {
         message: "parse error",
         type: "StreamChunkError",
       })
+    })
+  })
+
+  describe("Bug Fix Tests", () => {
+    it("should flush queue when abort happens in smooth mode (Bug1)", async () => {
+      const mockOnMessageHandle = vi.fn()
+      const mockOnAbort = vi.fn()
+
+      ;(fetchEventSource as any).mockImplementationOnce(async (url: string, options: FetchEventSourceInit) => {
+        options.onopen?.({ clone: () => ({ ok: true, headers: new Headers() }) } as any)
+        options.onmessage?.({ event: "text", data: JSON.stringify("Hello") } as any)
+        await sleep(10)
+        options.onerror?.({ name: "AbortError" })
+      })
+
+      await fetchSSE("/", {
+        onMessageHandle: mockOnMessageHandle,
+        onAbort: mockOnAbort,
+        responseAnimation: "smooth",
+      })
+
+      expect(mockOnAbort).toHaveBeenCalledWith("Hello")
+    })
+
+    it("should handle reasoning with shouldSkipTextProcessing (Bug2)", async () => {
+      const mockOnMessageHandle = vi.fn()
+      const mockOnFinish = vi.fn()
+
+      ;(fetchEventSource as any).mockImplementationOnce((url: string, options: FetchEventSourceInit) => {
+        options.onopen?.({ clone: () => ({ ok: true, headers: new Headers() }) } as any)
+        options.onmessage?.({ event: "reasoning", data: JSON.stringify("Thinking") } as any)
+        options.onmessage?.({ event: "text", data: JSON.stringify("Hi") } as any)
+      })
+
+      await fetchSSE("/", {
+        onMessageHandle: mockOnMessageHandle,
+        onFinish: mockOnFinish,
+        responseAnimation: "none",
+      })
+
+      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: "Thinking", type: "reasoning" })
+      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: "Hi", type: "text" })
+      expect(mockOnFinish).toHaveBeenCalledWith("Hi", {
+        reasoning: { content: "Thinking", signature: undefined },
+        type: "done",
+      })
+    })
+
+    it("should include reasoning content in onFinish after flush (Bug3)", async () => {
+      const mockOnMessageHandle = vi.fn()
+      const mockOnFinish = vi.fn()
+
+      ;(fetchEventSource as any).mockImplementationOnce(async (url: string, options: FetchEventSourceInit) => {
+        options.onopen?.({ clone: () => ({ ok: true, headers: new Headers() }) } as any)
+        options.onmessage?.({ event: "reasoning", data: JSON.stringify("Hello") } as any)
+        await sleep(100)
+        options.onmessage?.({ event: "reasoning", data: JSON.stringify(" World") } as any)
+        await sleep(100)
+        options.onmessage?.({ event: "text", data: JSON.stringify("Hi") } as any)
+      })
+
+      await fetchSSE("/", {
+        onMessageHandle: mockOnMessageHandle,
+        onFinish: mockOnFinish,
+        responseAnimation: "smooth",
+      })
+
+      expect(mockOnFinish).toHaveBeenCalledWith("Hi", {
+        reasoning: { content: "Hello World", signature: undefined },
+        type: "done",
+      })
+    })
+
+    it("should stop processing messages after error event (Bug4)", async () => {
+      const mockOnMessageHandle = vi.fn()
+      const mockOnErrorHandle = vi.fn()
+
+      ;(fetchEventSource as any).mockImplementationOnce((url: string, options: FetchEventSourceInit) => {
+        options.onopen?.({ clone: () => ({ ok: true, headers: new Headers() }) } as any)
+        options.onmessage?.({ event: "text", data: JSON.stringify("Hello") } as any)
+        options.onmessage?.({
+          event: "error",
+          data: JSON.stringify({ type: "TestError", message: "test" }),
+        } as any)
+        options.onmessage?.({ event: "text", data: JSON.stringify("Should not be processed") } as any)
+      })
+
+      try {
+        await fetchSSE("/", {
+          onMessageHandle: mockOnMessageHandle,
+          onErrorHandle: mockOnErrorHandle,
+          responseAnimation: "fadeIn",
+        })
+      } catch {}
+
+      expect(mockOnMessageHandle).toHaveBeenCalledTimes(1)
+      expect(mockOnMessageHandle).toHaveBeenCalledWith({ text: "Hello", type: "text" })
     })
   })
 })

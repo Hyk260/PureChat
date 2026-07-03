@@ -270,6 +270,7 @@ export const standardizeAnimationStyle = (
 
 export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptions = {}) => {
   let triggerOnMessageHandler = false
+  let isStopped = false
 
   let finishedType: SSEFinishType = "done"
   let response!: Response
@@ -314,6 +315,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   const flushThinkingBuffer = () => {
     if (thinkingBuffer) {
+      thinking += thinkingBuffer
       options.onMessageHandle?.({ text: thinkingBuffer, type: "reasoning" })
       thinkingBuffer = ""
     }
@@ -330,10 +332,12 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     method: options.method,
     onerror: (error) => {
       console.warn("onerror:", error)
+      smoothController.flushQueue()
+      smoothController.stopAnimation()
+
       if (error === MESSAGE_CANCEL_FLAT || (error as TypeError).name === "AbortError") {
         finishedType = "abort"
         options?.onAbort?.(output)
-        smoothController.stopAnimation()
       } else {
         finishedType = "error"
 
@@ -361,6 +365,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       }
     },
     onmessage: (ev) => {
+      if (isStopped) return
       triggerOnMessageHandler = true
       let data: any
       try {
@@ -415,12 +420,11 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         // 推理
         case "reasoning": {
           if (!data) break
-          // console.log("onmessage reasoning:", data)
-          // if (shouldSkipTextProcessing) {
-          //   thinking += data
-          //   options.onMessageHandle?.({ text: data, type: "reasoning" })
-          // } else
-          if (textSmoothing) {
+
+          if (shouldSkipTextProcessing) {
+            thinking += data
+            options.onMessageHandle?.({ text: data, type: "reasoning" })
+          } else if (textSmoothing) {
             smoothController.pushReasoning(data)
 
             if (!smoothController.isAnimationActive) smoothController.startAnimation()
@@ -473,6 +477,9 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
         case "error": {
           finishedType = "error"
+          isStopped = true
+          smoothController.flushQueue()
+          smoothController.stopAnimation()
           options.onErrorHandle?.(data)
           break
         }
