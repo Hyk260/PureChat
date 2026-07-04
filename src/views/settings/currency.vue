@@ -68,6 +68,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted } from "vue"
 import { ElSegmented } from "element-plus"
 import { useAppStore, useThemeStore, useUserStore } from "@/stores"
 

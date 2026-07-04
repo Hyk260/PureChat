@@ -18,7 +18,7 @@ class WebSearchService {
    * 获取当前存储的网络搜索状态
    */
   getWebSearchState(): WebSearchState {
-    return useWebSearchStore()
+    return useWebSearchStore().$state
   }
 
   /**
