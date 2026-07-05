@@ -123,16 +123,9 @@ const createSmoothMessage = (params: {
     }
   }
 
-  /**
-   * 强制终止动画（仅用于 abort/error 场景）。
-   * stopAnimation 之后已有的 animationPromise 会因为 isAnimationActive=false 而 resolve。
-   */
   const stopAnimation = () => {
-    isAnimationActive = false
-    if (animationFrameId !== null) {
-      cancelAnimationFrame(animationFrameId)
-      animationFrameId = null
-    }
+    cleanupAnimation()
+    flushQueue()
   }
 
   /** 在当前活跃队列中消费 charsToProcess 个字符；返回该队列是否还有剩余。 */
@@ -253,7 +246,7 @@ const createSmoothMessage = (params: {
 
   return {
     flushQueue,
-    isAnimationActive,
+    isAnimationActive: () => isAnimationActive,
     isTokenRemain: () => reasoningQueue.length > 0 || textQueue.length > 0,
     pushReasoning,
     pushText,
@@ -396,7 +389,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           } else if (textSmoothing) {
             smoothController.pushText(data)
 
-            if (!smoothController.isAnimationActive) smoothController.startAnimation()
+            if (!smoothController.isAnimationActive()) smoothController.startAnimation()
           } else {
             output += data
 
@@ -423,7 +416,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           if (textSmoothing) {
             smoothController.pushReasoning(data)
 
-            if (!smoothController.isAnimationActive) smoothController.startAnimation()
+            if (!smoothController.isAnimationActive()) smoothController.startAnimation()
           } else {
             thinking += data
 
