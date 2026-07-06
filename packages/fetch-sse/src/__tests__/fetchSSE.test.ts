@@ -152,7 +152,7 @@ describe("fetchSSE", () => {
 
       expect(mockOnFinish).toHaveBeenCalledWith("hi", {
         images: undefined,
-        reasoning: { content: "Hello World", duration: expect.any(Number), signature: undefined },
+        reasoning: { content: "Hello World", signature: undefined },
         type: "done",
         speed: undefined,
         usage: undefined,
@@ -297,6 +297,8 @@ describe("fetchSSE", () => {
           message: "Unknown error",
           name: "Error",
           stack: expect.any(String),
+          elapsedMs: expect.any(Number),
+          networkStatus: expect.any(Boolean),
         },
       })
     })

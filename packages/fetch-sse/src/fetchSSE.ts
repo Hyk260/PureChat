@@ -129,6 +129,7 @@ const createSmoothMessage = (params: {
    */
   const stopAnimation = () => {
     isAnimationActive = false
+    animationPromise = null
     if (animationFrameId !== null) {
       cancelAnimationFrame(animationFrameId)
       animationFrameId = null
@@ -253,7 +254,7 @@ const createSmoothMessage = (params: {
 
   return {
     flushQueue,
-    isAnimationActive,
+    isAnimationActive: () => isAnimationActive,
     isTokenRemain: () => reasoningQueue.length > 0 || textQueue.length > 0,
     pushReasoning,
     pushText,
@@ -415,15 +416,14 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         // 推理
         case "reasoning": {
           if (!data) break
-          // console.log("onmessage reasoning:", data)
-          // if (shouldSkipTextProcessing) {
-          //   thinking += data
-          //   options.onMessageHandle?.({ text: data, type: "reasoning" })
-          // } else
-          if (textSmoothing) {
+
+          if (shouldSkipTextProcessing) {
+            thinking += data
+            options.onMessageHandle?.({ text: data, type: "reasoning" })
+          } else if (textSmoothing) {
             smoothController.pushReasoning(data)
 
-            if (!smoothController.isAnimationActive) smoothController.startAnimation()
+            if (!smoothController.isAnimationActive()) smoothController.startAnimation()
           } else {
             thinking += data
 
