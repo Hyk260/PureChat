@@ -56,9 +56,11 @@ export const rules = reactive({
       validator: (rule, value, callback) => {
         if (value === "") {
           callback(new Error($t("login.emailReg")))
-        } else if (!REGEXP_EMAIL.test(value)) {
-          callback(new Error($t("login.emailCorrectReg")))
-        } else {
+        }
+        // else if (!REGEXP_EMAIL.test(value)) {
+        //   callback(new Error($t("login.emailCorrectReg")))
+        // }
+        else {
           callback()
         }
       },
@@ -89,10 +91,10 @@ export const rules = reactive({
 })
 
 export const ruleForm = reactive({
-  userId: "",
-  nickname: "",
+  // userId: "",
+  // nickname: "",
   email: "",
-  phone: "",
+  // phone: "",
   verifyCode: "",
   password: "",
   repeatPassword: "",
@@ -100,10 +102,10 @@ export const ruleForm = reactive({
 
 if (isDev) {
   Object.assign(ruleForm, {
-    userId: "zhangshan",
-    nickname: "张三",
+    // userId: "zhangshan",
+    // nickname: "张三",
     email: "2607881950@qq.com",
-    phone: "17612345678",
+    // phone: "17612345678",
     verifyCode: "",
     password: "123456qwer",
     repeatPassword: "123456qwer",

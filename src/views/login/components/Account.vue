@@ -63,7 +63,7 @@
       <span> {{ $t("login.login") }}</span>
     </ElButton>
   </ElForm>
-  <!-- other hidden -->
+  <!-- other hidden IS_DEV -->
   <div v-if="IS_DEV" class="mt-20 flex justify-evenly">
     <ElButton v-for="item in operates" :key="item.title" @click="setCurrentPage(item)">
       {{ item.title }}
@@ -99,7 +99,7 @@ import { useOAuth } from "@/hooks/useOAuth"
 // import { getUserList } from "@/service/api" // userId 已废弃
 import { useUserStore } from "@/stores/modules/user"
 import { localStg } from "@/utils/storage"
-import { delay, useState } from "@pure/utils"
+import { delay, openWindow, useState } from "@pure/utils"
 import { operates, thirdParty } from "../utils/enums"
 import { defaultForm, rules, type AccountForm } from "../utils/validation"
 
@@ -172,7 +172,11 @@ const handleSocialLogin = async ({ key }: { key: string }) => {
 }
 
 const setCurrentPage = (item: { currentPage: number }) => {
-  userStore.setCurrentPage(item.currentPage)
+  if (item.currentPage === 3) {
+    openWindow(`${import.meta.env.VITE_SERVICE_BASE_URL}/signup`)
+  } else {
+    userStore.setCurrentPage(item.currentPage)
+  }
 }
 
 onKeyStroke("Enter", handleLogin)
