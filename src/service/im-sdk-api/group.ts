@@ -42,60 +42,79 @@ export interface UpdateGroupProfileParams {
 
 // 解散群
 export const dismissGroup = async (groupId: string) => {
-  const {
-    code,
-    data: { groupID },
-  } = await tim.dismissGroup(groupId)
-  return { code, groupID }
+  try {
+    const {
+      code,
+      data: { groupID },
+    } = await tim.dismissGroup(groupId)
+    return { code, groupID }
+  } catch (error) {
+    return { code: -1, groupID: error }
+  }
 }
 
 // 创建群
 // https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createGroup
 export const createGroup = async (params: CreateGroupParams, type = GroupType.GRP_PUBLIC) => {
-  const { groupName } = params
-  const {
-    code,
-    data: { group },
-  } = await tim.createGroup({
-    type,
-    name: groupName,
-    // inviteOption: "NeedPermission",
-    // memberList: [
-    // {
-    //   userID: "user1",
-    //   // 群成员维度的自定义字段，默认情况是没有的，需要开通，详情请参阅自定义字段
-    //   memberCustomField: [{ key: "group_member_test", value: "test" }],
-    // },
-    // {
-    //   userID: "user2",
-    // },
-    // ], // 如果填写了 memberList，则必须填写 userID
-  })
-  return { code, group }
+  try {
+    const { groupName } = params
+    const {
+      code,
+      data: { group },
+    } = await tim.createGroup({
+      type,
+      name: groupName,
+      // inviteOption: "NeedPermission",
+      // memberList: [
+      // {
+      //   userID: "user1",
+      //   // 群成员维度的自定义字段，默认情况是没有的，需要开通，详情请参阅自定义字段
+      //   memberCustomField: [{ key: "group_member_test", value: "test" }],
+      // },
+      // {
+      //   userID: "user2",
+      // },
+      // ], // 如果填写了 memberList，则必须填写 userID
+    })
+    return { code, group }
+  } catch (error) {
+    return { code: -1, group: error }
+  }
 }
 
 // 退出群
 export const quitGroup = async (params: { groupId: string }) => {
-  const { groupId } = params
-  const { code, data } = await tim.quitGroup(groupId)
-  return {
-    code,
-    data,
+  try {
+    const { groupId } = params
+    const { code, data } = await tim.quitGroup(groupId)
+    return {
+      code,
+      data,
+    }
+  } catch (error) {
+    return {
+      code: -1,
+      data: error,
+    }
   }
 }
 
 // 获取群成员列表
 export const getGroupMemberList = async (params: { groupID: string; count?: number; offset?: number }) => {
-  const { groupID, count = 20 } = params
-  const {
-    code,
-    data: { memberList, offset },
-  } = await tim.getGroupMemberList({
-    groupID,
-    count,
-    offset: 0,
-  })
-  return { code, memberList, offset }
+  try {
+    const { groupID, count = 20, offset = 0 } = params
+    const {
+      code,
+      data: { memberList, offset: returnedOffset },
+    } = await tim.getGroupMemberList({
+      groupID,
+      count,
+      offset,
+    })
+    return { code, memberList, offset: returnedOffset }
+  } catch (error) {
+    return { code: -1, memberList: error, offset: 0 }
+  }
 }
 
 /**
@@ -121,16 +140,23 @@ export const updateGroupProfile = async (params: UpdateGroupProfileParams) => {
 
 // 添加群成员
 export const addGroupMember = async (params: { groupID: string; user: string | string[] }) => {
-  const { groupID, user } = params
-  const parameter = {
-    groupID: groupID,
-    // ['user1', 'user2', 'user3']
-    userIDList: Array.isArray(user) ? extractUserIdList(user) : [extractUserId(user)],
-  }
-  const { code, data } = await tim.addGroupMember(parameter)
-  return {
-    code,
-    data,
+  try {
+    const { groupID, user } = params
+    const parameter = {
+      groupID: groupID,
+      // ['user1', 'user2', 'user3']
+      userIDList: Array.isArray(user) ? extractUserIdList(user) : [extractUserId(user)],
+    }
+    const { code, data } = await tim.addGroupMember(parameter)
+    return {
+      code,
+      data,
+    }
+  } catch (error) {
+    return {
+      code: -1,
+      data: error,
+    }
   }
 }
 
@@ -159,11 +185,15 @@ export const deleteGroupMember = async (params: { groupID: string; user: string 
  * 获取群组列表
  */
 export const getGroupList = async () => {
-  const {
-    code,
-    data: { groupList },
-  } = await tim.getGroupList()
-  return { code, groupList }
+  try {
+    const {
+      code,
+      data: { groupList },
+    } = await tim.getGroupList()
+    return { code, groupList }
+  } catch (error) {
+    return { code: -1, groupList: error }
+  }
 }
 
 /**
