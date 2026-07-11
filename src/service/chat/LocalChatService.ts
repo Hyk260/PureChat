@@ -252,12 +252,12 @@ export class LocalChat {
     })
   }
 
-  async getGroupMemberList() {
+  async getGroupMemberList(params: { groupID: string; count?: number; offset?: number }) {
     return new Promise((resolve) => {
       resolve({
         code: 0,
         data: {
-          offset: 0,
+          offset: params.offset || 0,
           memberList: [],
         },
       })
