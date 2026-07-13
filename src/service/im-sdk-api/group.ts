@@ -86,16 +86,16 @@ export const quitGroup = async (params: { groupId: string }) => {
 
 // 获取群成员列表
 export const getGroupMemberList = async (params: { groupID: string; count?: number; offset?: number }) => {
-  const { groupID, count = 20 } = params
+  const { groupID, count = 20, offset = 0 } = params
   const {
     code,
-    data: { memberList, offset },
+    data: { memberList, offset: returnOffset },
   } = await tim.getGroupMemberList({
     groupID,
     count,
-    offset: 0,
+    offset,
   })
-  return { code, memberList, offset }
+  return { code, memberList, offset: returnOffset }
 }
 
 /**
@@ -127,10 +127,17 @@ export const addGroupMember = async (params: { groupID: string; user: string | s
     // ['user1', 'user2', 'user3']
     userIDList: Array.isArray(user) ? extractUserIdList(user) : [extractUserId(user)],
   }
-  const { code, data } = await tim.addGroupMember(parameter)
-  return {
-    code,
-    data,
+  try {
+    const { code, data } = await tim.addGroupMember(parameter)
+    return {
+      code,
+      data,
+    }
+  } catch (error) {
+    return {
+      code: -1,
+      data: error,
+    }
   }
 }
 
@@ -141,7 +148,7 @@ export const deleteGroupMember = async (params: { groupID: string; user: string 
   const { groupID, user } = params
   const parameter = {
     groupID: groupID,
-    userIDList: Array.isArray(user) ? user : [user],
+    userIDList: Array.isArray(user) ? extractUserIdList(user) : [extractUserId(user)],
     // reason: '你违规了，我要踢你！'
   }
   try {
