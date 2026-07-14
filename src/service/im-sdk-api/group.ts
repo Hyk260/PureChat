@@ -52,25 +52,27 @@ export const dismissGroup = async (groupId: string) => {
 // 创建群
 // https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createGroup
 export const createGroup = async (params: CreateGroupParams, type = GroupType.GRP_PUBLIC) => {
-  const { groupName } = params
+  const { groupName, memberList, introduction, notification, avatar } = params
+  const createParams: Record<string, any> = {
+    type,
+    name: groupName,
+  }
+  if (memberList?.length) {
+    createParams.memberList = memberList.map((userID) => ({ userID }))
+  }
+  if (introduction) {
+    createParams.introduction = introduction
+  }
+  if (notification) {
+    createParams.notification = notification
+  }
+  if (avatar) {
+    createParams.avatar = avatar
+  }
   const {
     code,
     data: { group },
-  } = await tim.createGroup({
-    type,
-    name: groupName,
-    // inviteOption: "NeedPermission",
-    // memberList: [
-    // {
-    //   userID: "user1",
-    //   // 群成员维度的自定义字段，默认情况是没有的，需要开通，详情请参阅自定义字段
-    //   memberCustomField: [{ key: "group_member_test", value: "test" }],
-    // },
-    // {
-    //   userID: "user2",
-    // },
-    // ], // 如果填写了 memberList，则必须填写 userID
-  })
+  } = await tim.createGroup(createParams)
   return { code, group }
 }
 
@@ -114,8 +116,8 @@ export const updateGroupProfile = async (params: UpdateGroupProfileParams) => {
       data: { group },
     } = await tim.updateGroupProfile(parameter)
     return { code, group }
-  } catch (error) {
-    return { code: -1, group: error }
+  } catch {
+    return { code: -1, group: null }
   }
 }
 
@@ -141,7 +143,7 @@ export const deleteGroupMember = async (params: { groupID: string; user: string 
   const { groupID, user } = params
   const parameter = {
     groupID: groupID,
-    userIDList: Array.isArray(user) ? user : [user],
+    userIDList: Array.isArray(user) ? extractUserIdList(user) : [extractUserId(user)],
     // reason: '你违规了，我要踢你！'
   }
   try {

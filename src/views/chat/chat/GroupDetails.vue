@@ -274,14 +274,17 @@ const addGroupMemberBtn = async (value: DB_Session) => {
       params: { GroupId: groupID, Member_Account: extractUserId(value.conversationID) },
       funName: "addGroupMember",
     })
-    if (data.result.ErrorCode !== 0) return
+    if (data.result.ErrorCode !== 0) {
+      window.$message?.error(data.result.ErrorInfo || "添加成员失败")
+      return
+    }
     updataGroup()
   } else {
     const { code, data } = await addGroupMember({ groupID: groupID || "", user: value.conversationID ?? "" })
     if (code === 0) {
       updataGroup()
     } else {
-      console.log(data)
+      window.$message?.error(data?.message || "添加成员失败")
     }
   }
 }
@@ -294,11 +297,9 @@ const updataGroup = () => {
 
 const modifyGroupInfo = async (value: string, modify?: ModifyTypeValue) => {
   const { groupID } = props.groupProfile
-  const { code, group } = await updateGroupProfile({ groupID, modify, value })
+  const { code } = await updateGroupProfile({ groupID, modify, value })
   if (code !== 0) {
     window.$message?.warning("修改失败")
-  } else {
-    console.log("modifyGroupInfo:", group)
   }
 }
 
