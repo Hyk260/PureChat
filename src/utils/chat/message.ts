@@ -6,7 +6,7 @@ export const isSelf = (item: DB_Message) => {
   return item.from === window.localStg.get("timProxy")?.userProfile?.userID
 }
 
-const PREFIX_REGEX = /GROUP|C2C/g
+const PREFIX_REGEX = /GROUP|C2C/
 
 export const extractUserId = (id: string) => id.replace(PREFIX_REGEX, "")
 

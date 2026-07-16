@@ -50,7 +50,7 @@ export const useGroupStore = defineStore(SetupStoreId.Group, {
     },
     async handleGroupMemberList(payload: HandleGroupMemberListPayload) {
       const { isSort = true, groupID = "" } = payload || {}
-      const groupId = groupID.replace("GROUP", "") || useChatStore().toAccount
+      const groupId = groupID.replace(/GROUP/g, "") || useChatStore().toAccount
 
       if (!groupId) {
         console.error("群ID不存在")

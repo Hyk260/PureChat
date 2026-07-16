@@ -288,7 +288,10 @@ const addGroupMemberBtn = async (value: DB_Session) => {
 
 const updataGroup = () => {
   setTimeout(() => {
-    groupStore.handleGroupMemberList({ groupID: props.groupProfile.groupID })
+    const groupID = props.groupProfile?.groupID
+    if (groupID) {
+      groupStore.handleGroupMemberList({ groupID })
+    }
   }, 200)
 }
 

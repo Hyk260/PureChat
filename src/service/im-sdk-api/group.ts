@@ -127,10 +127,11 @@ export const addGroupMember = async (params: { groupID: string; user: string | s
     // ['user1', 'user2', 'user3']
     userIDList: Array.isArray(user) ? extractUserIdList(user) : [extractUserId(user)],
   }
-  const { code, data } = await tim.addGroupMember(parameter)
-  return {
-    code,
-    data,
+  try {
+    const { code, data } = await tim.addGroupMember(parameter)
+    return { code, data }
+  } catch (error) {
+    return { code: -1, data: error }
   }
 }
 
