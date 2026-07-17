@@ -82,6 +82,8 @@ export const useUserStore = defineStore(SetupStoreId.User, {
       await delay(500)
       await logout()
       emitter.all.clear()
+      useAuthStore().clearTokens()
+      window.localStg.remove("User-Model")
       this.handleIMLogout()
     },
     async handleIMLogin(user: HandleIMLoginPayload, redirect: boolean = true) {

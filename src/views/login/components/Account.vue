@@ -156,7 +156,6 @@ const handleLogin = async () => {
     if (form.value.remember) {
       localStg.set("ACCOUNT", {
         email: form.value.email,
-        password: form.value.password,
         remember: true,
       })
     } else {

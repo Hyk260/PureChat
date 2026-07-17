@@ -18,7 +18,7 @@ const pattern = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 const REGEXP_EMAIL = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
 // const { userId, password, remember } = localStg.get("ACCOUNT") || {} // userId 已废弃
-const { email, password, remember } = localStg.get("ACCOUNT") || {}
+const { email, remember } = localStg.get("ACCOUNT") || {}
 
 export interface AccountForm {
   userId: string // userId 已废弃，保留供旧模板引用
@@ -31,7 +31,7 @@ export interface AccountForm {
 export const defaultForm = reactive<AccountForm>({
   userId: "",
   email: email || "",
-  password: password || "123456qwer",
+  password: "",
   remember: remember || false,
   verifyCode: "",
 })
