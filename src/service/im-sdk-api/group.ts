@@ -84,18 +84,17 @@ export const quitGroup = async (params: { groupId: string }) => {
   }
 }
 
-// 获取群成员列表
 export const getGroupMemberList = async (params: { groupID: string; count?: number; offset?: number }) => {
-  const { groupID, count = 20 } = params
+  const { groupID, count = 20, offset = 0 } = params
   const {
     code,
-    data: { memberList, offset },
+    data: { memberList, offset: returnedOffset },
   } = await tim.getGroupMemberList({
     groupID,
     count,
-    offset: 0,
+    offset,
   })
-  return { code, memberList, offset }
+  return { code, memberList, offset: returnedOffset }
 }
 
 /**
@@ -119,12 +118,14 @@ export const updateGroupProfile = async (params: UpdateGroupProfileParams) => {
   }
 }
 
-// 添加群成员
 export const addGroupMember = async (params: { groupID: string; user: string | string[] }) => {
   const { groupID, user } = params
+  if (!user) {
+    console.error("addGroupMember: user 参数不能为空")
+    return { code: -1, data: null }
+  }
   const parameter = {
     groupID: groupID,
-    // ['user1', 'user2', 'user3']
     userIDList: Array.isArray(user) ? extractUserIdList(user) : [extractUserId(user)],
   }
   const { code, data } = await tim.addGroupMember(parameter)
@@ -134,15 +135,15 @@ export const addGroupMember = async (params: { groupID: string; user: string | s
   }
 }
 
-/**
- * 删除群成员
- */
 export const deleteGroupMember = async (params: { groupID: string; user: string | string[] }) => {
   const { groupID, user } = params
+  if (!user) {
+    console.error("deleteGroupMember: user 参数不能为空")
+    return { code: -1, data: null }
+  }
   const parameter = {
     groupID: groupID,
-    userIDList: Array.isArray(user) ? user : [user],
-    // reason: '你违规了，我要踢你！'
+    userIDList: Array.isArray(user) ? extractUserIdList(user) : [extractUserId(user)],
   }
   try {
     const { code, data } = await tim.deleteGroupMember(parameter)

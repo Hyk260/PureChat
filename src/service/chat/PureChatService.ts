@@ -38,8 +38,11 @@ export class PureChatService {
   }
 
   initialize(): ChatSDK {
-    this.chatSDK = this.chatService.initialize()
-
+    const sdk = this.chatService.initialize()
+    if (!sdk) {
+      throw new Error("聊天服务初始化失败：SDK 返回 null")
+    }
+    this.chatSDK = sdk
     return this.chatSDK
   }
 

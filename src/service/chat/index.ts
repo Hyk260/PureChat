@@ -221,13 +221,11 @@ export class TIMProxy {
     this.handleUpdateMessage(data, isCurrentConversation)
   }
 
-  /**
-   * 根据消息类型进行处理
-   */
   private processMessageType(data: DB_Message[]) {
     const message = data[0]
+    if (!message) return
 
-    switch (message?.type) {
+    switch (message.type) {
       case "TIMGroupTipElem":
         this.handleQuitGroupTip(data)
         break
@@ -235,7 +233,7 @@ export class TIMProxy {
         this.handleGroupSystemNoticeTip(data)
         break
       default:
-        this.handleNotificationTip(data) // 处理普通消息的通知
+        this.handleNotificationTip(data)
         break
     }
   }
@@ -397,12 +395,12 @@ export class TIMProxy {
     console.log("[chat] 处理群组提示", data)
 
     const currentSessionId = useChatStore().currentSessionId
-    if (currentSessionId !== data[0]?.conversationID) return
+    if (currentSessionId !== message.conversationID) return
 
+    if (!message.payload) return
     const { operationType } = message.payload as GroupSystemNoticePayloadType
     const memberOperationTypes = Object.values(GROUP_TIP_OPERATION_TYPE)
 
-    // 检查是否为群成员相关操作
     if (memberOperationTypes.includes(operationType as GroupTipOperationType)) {
       console.log("[chat] 群成员变动，更新成员列表")
       useGroupStore().handleGroupMemberList({ groupID: currentSessionId })
@@ -420,9 +418,9 @@ export class TIMProxy {
 
     console.log("[chat] 处理群系统通知:", data)
 
+    if (!message.payload) return
     const { operationType } = message.payload as GroupSystemNoticePayloadType
 
-    // 处理被踢出或群解散的情况
     if ([4, 5].includes(operationType)) {
       const currentSessionId = useChatStore().currentSessionId
       console.log("[chat] 群组被解散或被踢出，删除会话")

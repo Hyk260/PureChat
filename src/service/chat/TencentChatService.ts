@@ -28,6 +28,7 @@ export class TencentChatService {
   private chatProxy: ChatSDK | null = null
   private realChatSDK: ChatSDK | null = null
   private readyPromise: Promise<ChatSDK> | null = null
+  private readyCheckInterval: ReturnType<typeof setInterval> | null = null
 
   private readonly defaultLogLevel = 1
   private readonly validLogLevels: ReadonlyArray<LogLevel> = [0, 1, 2, 3, 4]
@@ -64,9 +65,6 @@ export class TencentChatService {
     }
   }
 
-  /**
-   * 等待 SDK 真正加载完成
-   */
   public ready(): Promise<ChatSDK> {
     if (this.realChatSDK) {
       return Promise.resolve(this.realChatSDK)
@@ -77,9 +75,12 @@ export class TencentChatService {
         if (this.realChatSDK) {
           resolve(this.realChatSDK)
         } else {
-          const checkInterval = setInterval(() => {
+          this.readyCheckInterval = setInterval(() => {
             if (this.realChatSDK) {
-              clearInterval(checkInterval)
+              if (this.readyCheckInterval) {
+                clearInterval(this.readyCheckInterval)
+                this.readyCheckInterval = null
+              }
               resolve(this.realChatSDK)
             }
           }, 50)
@@ -228,12 +229,20 @@ export class TencentChatService {
     }
   }
 
-  /**
-   * 处理初始化错误
-   */
   private handleInitializationError(error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "未知错误"
     console.error("❌ 腾讯云 IM SDK 初始化失败:", errorMessage)
     throw new Error(`腾讯云 IM SDK 初始化失败: ${errorMessage}`)
+  }
+
+  public destroy(): void {
+    if (this.readyCheckInterval) {
+      clearInterval(this.readyCheckInterval)
+      this.readyCheckInterval = null
+    }
+    this.realChatSDK?.destroy?.()
+    this.realChatSDK = null
+    this.chatProxy = null
+    this.readyPromise = null
   }
 }
