@@ -264,6 +264,30 @@ export class LocalChat {
     })
   }
 
+  async addGroupMember({ groupID, userIDList }) {
+    return new Promise((resolve) => {
+      resolve({
+        code: 0,
+        data: {
+          groupID,
+          userIDList,
+        },
+      })
+    })
+  }
+
+  async deleteGroupMember({ groupID, userIDList }) {
+    return new Promise((resolve) => {
+      resolve({
+        code: 0,
+        data: {
+          groupID,
+          userIDList,
+        },
+      })
+    })
+  }
+
   // ==================== 消息创建 ====================
 
   /**
