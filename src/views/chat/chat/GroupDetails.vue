@@ -269,6 +269,7 @@ const removeGroupMemberBtn = async (item: GroupMember) => {
 
 const addGroupMemberBtn = async (value: DB_Session) => {
   const { groupID, type } = props.groupProfile || {}
+  if (!groupID || !value?.conversationID) return
   if (type === "Public") {
     const data = await restApi({
       params: { GroupId: groupID, Member_Account: extractUserId(value.conversationID) },
@@ -277,11 +278,11 @@ const addGroupMemberBtn = async (value: DB_Session) => {
     if (data.result.ErrorCode !== 0) return
     updataGroup()
   } else {
-    const { code, data } = await addGroupMember({ groupID: groupID || "", user: value.conversationID ?? "" })
+    const { code, data } = await addGroupMember({ groupID, user: extractUserId(value.conversationID) })
     if (code === 0) {
       updataGroup()
     } else {
-      console.log(data)
+      window.$message?.error("添加成员失败")
     }
   }
 }
