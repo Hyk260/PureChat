@@ -141,7 +141,7 @@ export const deleteGroupMember = async (params: { groupID: string; user: string 
   const { groupID, user } = params
   const parameter = {
     groupID: groupID,
-    userIDList: Array.isArray(user) ? user : [user],
+    userIDList: Array.isArray(user) ? extractUserIdList(user) : [extractUserId(user)],
     // reason: '你违规了，我要踢你！'
   }
   try {
