@@ -71,6 +71,7 @@ class PureChatHttp {
   private readonly refreshService: AxiosInstance
   private isRefreshing: boolean
   private refreshSubscribers: Array<(token: string) => void>
+  private refreshRejectSubscribers: Array<(error: Error) => void>
 
   constructor() {
     // 主服务实例
@@ -81,6 +82,7 @@ class PureChatHttp {
     this.isRefreshing = false
     // 刷新订阅队列
     this.refreshSubscribers = []
+    this.refreshRejectSubscribers = []
 
     this.initInterceptors()
   }
@@ -143,10 +145,13 @@ class PureChatHttp {
 
         // 如果正在刷新 Token，则将当前请求加入队列等待
         if (this.isRefreshing) {
-          return new Promise((resolve) => {
+          return new Promise((resolve, reject) => {
             this.refreshSubscribers.push((token) => {
               if (extendedConfig.headers) extendedConfig.headers.Authorization = token
               resolve(this.service(extendedConfig))
+            })
+            this.refreshRejectSubscribers.push((error) => {
+              reject(error)
             })
           })
         }
@@ -170,9 +175,12 @@ class PureChatHttp {
           if (extendedConfig.headers) extendedConfig.headers.Authorization = newToken
           return this.service(extendedConfig)
         } catch (e) {
+          const error = e instanceof Error ? e : new Error(String(e))
+          this.refreshRejectSubscribers.forEach((cb) => cb(error))
           this.refreshSubscribers = []
+          this.refreshRejectSubscribers = []
           useAuthStore().logout()
-          return Promise.reject(e instanceof Error ? e : new Error(String(e)))
+          return Promise.reject(error)
         } finally {
           this.isRefreshing = false
         }

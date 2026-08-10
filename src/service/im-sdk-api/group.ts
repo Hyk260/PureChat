@@ -52,24 +52,17 @@ export const dismissGroup = async (groupId: string) => {
 // 创建群
 // https://web.sdk.qcloud.com/im/doc/v3/zh-cn/SDK.html#createGroup
 export const createGroup = async (params: CreateGroupParams, type = GroupType.GRP_PUBLIC) => {
-  const { groupName } = params
+  const { groupName, memberList, introduction, notification, avatar } = params
   const {
     code,
     data: { group },
   } = await tim.createGroup({
     type,
     name: groupName,
-    // inviteOption: "NeedPermission",
-    // memberList: [
-    // {
-    //   userID: "user1",
-    //   // 群成员维度的自定义字段，默认情况是没有的，需要开通，详情请参阅自定义字段
-    //   memberCustomField: [{ key: "group_member_test", value: "test" }],
-    // },
-    // {
-    //   userID: "user2",
-    // },
-    // ], // 如果填写了 memberList，则必须填写 userID
+    ...(memberList?.length ? { memberList: memberList.map((userID) => ({ userID })) } : {}),
+    ...(introduction ? { introduction } : {}),
+    ...(notification ? { notification } : {}),
+    ...(avatar ? { avatar } : {}),
   })
   return { code, group }
 }
@@ -86,16 +79,16 @@ export const quitGroup = async (params: { groupId: string }) => {
 
 // 获取群成员列表
 export const getGroupMemberList = async (params: { groupID: string; count?: number; offset?: number }) => {
-  const { groupID, count = 20 } = params
+  const { groupID, count = 20, offset = 0 } = params
   const {
     code,
-    data: { memberList, offset },
+    data: { memberList, offset: nextOffset },
   } = await tim.getGroupMemberList({
     groupID,
     count,
-    offset: 0,
+    offset,
   })
-  return { code, memberList, offset }
+  return { code, memberList, offset: nextOffset }
 }
 
 /**
