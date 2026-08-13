@@ -83,7 +83,7 @@ pnpm build
 ```
 
 ### 📊 GitHub Stats
-<!-- https://star-history.com/ -->
+<!-- https://star-history.dera.page/ -->
 <!-- ![Star History](./images/star-history.png) -->
 
 ![Alt](https://repobeats.axiom.co/api/embed/5f9a9bb83bee403abed7ee7ffa36c4470d8e2544.svg "Repobeats analytics image")
@@ -98,7 +98,7 @@ pnpm build
 
 ### ⭐ Star 历史
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Hyk260/PureChat&type=Date)](https://www.star-history.com/#Hyk260/PureChat&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=Hyk260/PureChat&type=Date)](https://star-history.dera.page/#Hyk260/PureChat&type=date)
 
 ### 🖼️ 截图
 
