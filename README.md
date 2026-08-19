@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> **本仓库是旧版 PureChat（Vue / Electron）**
+>
+> 当前维护项目：[Hyk260/PureChatNext](https://github.com/Hyk260/PureChatNext) · [在线体验](https://next.purechat.cn)。新部署、功能建议和问题反馈请前往新仓库。
+
 <p align="center">
   <a>
     <img src="./images/log.png" alt="logo" width="128" height="128">
