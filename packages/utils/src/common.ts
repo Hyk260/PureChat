@@ -176,7 +176,7 @@ export const createFileInput = (options: CreateFileInputOptions): void => {
 
 /**
  * 将查询字符串转换为对象
- * @param {String} queryString - 查询字符串，例如 "https://purechat.cn?name=John&age=30"
+ * @param {String} queryString - 查询字符串，例如 "https://im.purechat.cn?name=John&age=30"
  * @return {Object} - 转换后的对象，例如 { name: "John", age: "30" }
  */
 export function queryStringToObject(queryString: string): Record<string, string> {

@@ -14,7 +14,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  text: "https://purechat.cn",
+  text: "https://im.purechat.cn",
 })
 
 const qrCodeUrl = ref("")

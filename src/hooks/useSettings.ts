@@ -36,10 +36,10 @@ const generateKeyVaults = () => {
 }
 
 if (isDev) {
-  // https://purechat.cn/chat?settings={"keyVaults":{"openai":{"apiKey":"","baseURL":""}}}
+  // https://im.purechat.cn/chat?settings={"keyVaults":{"openai":{"apiKey":"","baseURL":""}}}
   const params = `?settings={"keyVaults":${generateKeyVaults()}}`
-  console.log("useSettings 测试链接:", `https://purechat.cn/chat${params}`)
-  console.log("useSettings decodeURI 测试链接:", `https://purechat.cn/chat${encodeURIComponent(params)}}`)
+  console.log("useSettings 测试链接:", `https://im.purechat.cn/chat${params}`)
+  console.log("useSettings decodeURI 测试链接:", `https://im.purechat.cn/chat${encodeURIComponent(params)}}`)
 }
 
 /**
